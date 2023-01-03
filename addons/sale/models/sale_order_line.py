@@ -1,16 +1,19 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from collections import defaultdict
 from datetime import timedelta
 
 from odoo import api, fields, models, _
 from odoo.exceptions import UserError
+from odoo.fields import Command
 from odoo.osv import expression
 from odoo.tools import float_is_zero, float_compare, float_round
 
 
 class SaleOrderLine(models.Model):
     _name = 'sale.order.line'
+    _inherit = 'analytic.mixin'
     _description = "Sales Order Line"
     _rec_names_search = ['name', 'order_id.name']
     _order = 'order_id, sequence, id'
@@ -76,13 +79,13 @@ class SaleOrderLine(models.Model):
     product_id = fields.Many2one(
         comodel_name='product.product',
         string="Product",
-        change_default=True, ondelete='restrict', check_company=True,
+        change_default=True, ondelete='restrict', check_company=True, index='btree_not_null',
         domain="[('sale_ok', '=', True), '|', ('company_id', '=', False), ('company_id', '=', company_id)]")
     product_template_id = fields.Many2one(
         string="Product Template",
         related='product_id.product_tmpl_id',
         domain=[('sale_ok', '=', True)])
-    product_uom_category_id = fields.Many2one(related='product_id.uom_id.category_id')
+    product_uom_category_id = fields.Many2one(related='product_id.uom_id.category_id', depends=['product_id'])
 
     product_custom_attribute_value_ids = fields.One2many(
         comodel_name='product.attribute.custom.value', inverse_name='sale_order_line_id',
@@ -139,11 +142,6 @@ class SaleOrderLine(models.Model):
         digits='Discount',
         store=True, readonly=False, precompute=True)
 
-    price_reduce = fields.Float(
-        string="Price Reduce",
-        compute='_compute_price_reduce',
-        digits='Product Price',
-        store=True, precompute=True)
     price_subtotal = fields.Monetary(
         string="Subtotal",
         compute='_compute_amount',
@@ -215,11 +213,6 @@ class SaleOrderLine(models.Model):
         digits='Product Unit of Measure',
         store=True)
 
-    analytic_tag_ids = fields.Many2many(
-        comodel_name='account.analytic.tag',
-        string="Analytic Tags",
-        compute='_compute_analytic_tag_ids', store=True, readonly=False,
-        domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]")
     analytic_line_ids = fields.One2many(
         comodel_name='account.analytic.line', inverse_name='so_line',
         string="Analytic lines")
@@ -250,6 +243,7 @@ class SaleOrderLine(models.Model):
         store=True)
 
     # Technical computed fields for UX purposes (hide/make fields readonly, ...)
+    product_type = fields.Selection(related='product_id.detailed_type', depends=['product_id'])
     product_updatable = fields.Boolean(
         string="Can Edit Product",
         compute='_compute_product_updatable')
@@ -291,7 +285,17 @@ class SaleOrderLine(models.Model):
         for line in self:
             if not line.product_id:
                 continue
-            line.name = line.with_context(lang=line.order_partner_id.lang)._get_sale_order_line_multiline_description_sale()
+
+            name = line.with_context(lang=line.order_partner_id.lang)._get_sale_order_line_multiline_description_sale()
+            if line.is_downpayment and not line.display_type:
+                context = {'lang': line.order_partner_id.lang}
+                dp_state = line._get_downpayment_state()
+                if dp_state == 'draft':
+                    name = _("%(line_description)s (Draft)", line_description=name)
+                elif dp_state == 'cancel':
+                    name = _("%(line_description)s (Canceled)", line_description=name)
+                del context
+            line.name = name
 
     def _get_sale_order_line_multiline_description_sale(self):
         """ Compute a default multiline description for this sales order line.
@@ -359,15 +363,30 @@ class SaleOrderLine(models.Model):
 
     @api.depends('product_id')
     def _compute_tax_id(self):
+        taxes_by_product_company = defaultdict(lambda: self.env['account.tax'])
+        lines_by_company = defaultdict(lambda: self.env['sale.order.line'])
+        cached_taxes = {}
         for line in self:
-            line = line.with_company(line.company_id)
-            taxes = line.product_id.taxes_id.filtered(lambda t: t.company_id == line.env.company)
-            if not line.product_id or not taxes:
-                # Nothing to map
-                line.tax_id = False
-                continue
-            # If company_id is set, always filter taxes by the company
-            line.tax_id = line.order_id.fiscal_position_id.map_tax(taxes)
+            lines_by_company[line.company_id] += line
+        for product in self.product_id:
+            for tax in product.taxes_id:
+                taxes_by_product_company[(product, tax.company_id)] += tax
+        for company, lines in lines_by_company.items():
+            for line in lines.with_company(company):
+                taxes = taxes_by_product_company[(line.product_id, company)]
+                if not line.product_id or not taxes:
+                    # Nothing to map
+                    line.tax_id = False
+                    continue
+                fiscal_position = line.order_id.fiscal_position_id
+                cache_key = (fiscal_position.id, company.id, tuple(taxes.ids))
+                if cache_key in cached_taxes:
+                    result = cached_taxes[cache_key]
+                else:
+                    result = fiscal_position.map_tax(taxes)
+                    cached_taxes[cache_key] = result
+                # If company_id is set, always filter taxes by the company
+                line.tax_id = result
 
     @api.depends('product_id', 'product_uom', 'product_uom_qty')
     def _compute_pricelist_item_id(self):
@@ -378,8 +397,8 @@ class SaleOrderLine(models.Model):
                 line.pricelist_item_id = line.order_id.pricelist_id._get_product_rule(
                     line.product_id,
                     line.product_uom_qty or 1.0,
-                    line.product_uom,
-                    line.order_id.date_order,
+                    uom=line.product_uom,
+                    date=line.order_id.date_order,
                 )
 
     @api.depends('product_id', 'product_uom', 'product_uom_qty')
@@ -441,9 +460,10 @@ class SaleOrderLine(models.Model):
         order_date = self.order_id.date_order or fields.Date.today()
         product = self.product_id.with_context(**self._get_product_price_context())
         qty = self.product_uom_qty or 1.0
+        uom = self.product_uom or self.product_id.uom_id
 
         price = pricelist_rule._compute_price(
-            product, qty, self.product_uom, order_date, self.currency_id)
+            product, qty, uom, order_date, currency=self.currency_id)
 
         return price
 
@@ -538,11 +558,6 @@ class SaleOrderLine(models.Model):
                     # otherwise it's a surcharge which shouldn't be shown to the customer
                     line.discount = discount
 
-    @api.depends('price_unit', 'discount')
-    def _compute_price_reduce(self):
-        for line in self:
-            line.price_reduce = line.price_unit * (1.0 - line.discount / 100.0)
-
     def _convert_to_tax_base_line_dict(self):
         """ Convert the current record to a dictionary in order to use the generic taxes computation method
         defined on account.tax.
@@ -568,7 +583,9 @@ class SaleOrderLine(models.Model):
         Compute the amounts of the SO line.
         """
         for line in self:
-            tax_results = self.env['account.tax']._compute_taxes([line._convert_to_tax_base_line_dict()])
+            tax_results = self.env['account.tax']._compute_taxes([
+                line._convert_to_tax_base_line_dict()
+            ])
             totals = list(tax_results['totals'].values())[0]
             amount_untaxed = totals['amount_untaxed']
             amount_tax = totals['amount_tax']
@@ -600,7 +617,7 @@ class SaleOrderLine(models.Model):
             # Find biggest suitable packaging
             if line.product_id and line.product_uom_qty and line.product_uom:
                 line.product_packaging_id = line.product_id.packaging_ids.filtered(
-                    'sales')._find_suitable_product_packaging(line.product_uom_qty, line.product_uom)
+                    'sales')._find_suitable_product_packaging(line.product_uom_qty, line.product_uom) or line.product_packaging_id
 
     @api.depends('product_packaging_id', 'product_uom', 'product_uom_qty')
     def _compute_product_packaging_qty(self):
@@ -620,7 +637,7 @@ class SaleOrderLine(models.Model):
     def _compute_customer_lead(self):
         self.customer_lead = 0.0
 
-    @api.depends('state', 'is_expense')
+    @api.depends('is_expense')
     def _compute_qty_delivered_method(self):
         """ Sale module compute delivered qty for product [('type', 'in', ['consu']), ('service_type', '=', 'manual')]
                 - consu + expense_policy : analytic (sum of analytic unit_amount)
@@ -653,6 +670,20 @@ class SaleOrderLine(models.Model):
         mapping = lines_by_analytic._get_delivered_quantity_by_analytic([('amount', '<=', 0.0)])
         for so_line in lines_by_analytic:
             so_line.qty_delivered = mapping.get(so_line.id or so_line._origin.id, 0.0)
+
+    def _get_downpayment_state(self):
+        self.ensure_one()
+
+        if self.display_type:
+            return ''
+
+        invoice_lines = self._get_invoice_lines()
+        if all(line.parent_state == 'draft' for line in invoice_lines):
+            return 'draft'
+        if all(line.parent_state == 'cancel' for line in invoice_lines):
+            return 'cancel'
+
+        return ''
 
     def _get_delivered_quantity_by_analytic(self, additional_domain):
         """ Compute and write the delivered quantity of current SO lines, based on their related
@@ -704,7 +735,7 @@ class SaleOrderLine(models.Model):
         for line in self:
             qty_invoiced = 0.0
             for invoice_line in line._get_invoice_lines():
-                if invoice_line.move_id.state != 'cancel':
+                if invoice_line.move_id.state != 'cancel' or invoice_line.move_id.payment_state == 'invoicing_legacy':
                     if invoice_line.move_id.move_type == 'out_invoice':
                         qty_invoiced += invoice_line.product_uom_id._compute_quantity(invoice_line.quantity, line.product_uom)
                     elif invoice_line.move_id.move_type == 'out_refund':
@@ -788,7 +819,7 @@ class SaleOrderLine(models.Model):
                         amount_invoiced -= invoice_line.currency_id._convert(invoice_line.price_subtotal, line.currency_id, line.company_id, invoice_date)
             line.untaxed_amount_invoiced = amount_invoiced
 
-    @api.depends('state', 'price_reduce', 'product_id', 'untaxed_amount_invoiced', 'qty_delivered', 'product_uom_qty')
+    @api.depends('state', 'product_id', 'untaxed_amount_invoiced', 'qty_delivered', 'product_uom_qty')
     def _compute_untaxed_amount_to_invoice(self):
         """ Total of remaining amount to invoice on the sale order line (taxes excl.) as
                 total_sol - amount already invoiced
@@ -836,18 +867,18 @@ class SaleOrderLine(models.Model):
 
             line.untaxed_amount_to_invoice = amount_to_invoice
 
-    @api.depends('product_id', 'order_id.date_order', 'order_id.partner_id')
-    def _compute_analytic_tag_ids(self):
+    @api.depends('order_id.partner_id', 'product_id')
+    def _compute_analytic_distribution(self):
         for line in self:
-            if not line.display_type and not line.analytic_tag_ids:
-                default_analytic_account = line.env['account.analytic.default'].sudo().account_get(
-                    product_id=line.product_id.id,
-                    partner_id=line.order_id.partner_id.id,
-                    user_id=self.env.uid,
-                    date=line.order_id.date_order,
-                    company_id=line.company_id.id,
-                )
-                line.analytic_tag_ids = default_analytic_account.analytic_tag_ids
+            if not line.display_type and line.state == 'draft':
+                distribution = line.env['account.analytic.distribution.model']._get_distribution({
+                    "product_id": line.product_id.id,
+                    "product_categ_id": line.product_id.categ_id.id,
+                    "partner_id": line.order_id.partner_id.id,
+                    "partner_category_id": line.order_id.partner_id.category_id.ids,
+                    "company_id": line.company_id.id,
+                })
+                line.analytic_distribution = distribution or line.analytic_distribution
 
     @api.depends('product_id', 'state', 'qty_invoiced', 'qty_delivered')
     def _compute_product_updatable(self):
@@ -952,12 +983,23 @@ class SaleOrderLine(models.Model):
                 % '\n'.join(fields.mapped('field_description'))
             )
 
-        return super().write(values)
+        result = super().write(values)
+
+        # Don't recompute the package_id if we are setting the quantity of the items and the quantity of packages
+        if 'product_uom_qty' in values and 'product_packaging_qty' in values and 'product_packaging_id' not in values:
+            self.env.remove_to_compute(self._fields['product_packaging_id'], self)
+
+        return result
 
     def _get_protected_fields(self):
+        """ Give the fields that should not be modified on a locked SO.
+
+        :returns: list of field names
+        :rtype: list
+        """
         return [
             'product_id', 'name', 'price_unit', 'product_uom', 'product_uom_qty',
-            'tax_id', 'analytic_tag_ids'
+            'tax_id', 'analytic_distribution'
         ]
 
     def _update_line_quantity(self, values):
@@ -979,21 +1021,26 @@ class SaleOrderLine(models.Model):
             order.message_post(body=msg)
 
     def _check_line_unlink(self):
-        """
-        Check whether a line can be deleted or not.
+        """ Check whether given lines can be deleted or not.
 
-        Lines cannot be deleted if the order is confirmed; downpayment
-        lines who have not yet been invoiced bypass that exception.
-        Also, allow deleting UX lines (notes/sections).
-        :rtype: recordset sale.order.line
-        :returns: set of lines that cannot be deleted
+        * Lines cannot be deleted if the order is confirmed.
+        * Down payment lines who have not yet been invoiced bypass that exception.
+        * Sections and Notes can always be deleted.
+
+        :returns: Sales Order Lines that cannot be deleted
+        :rtype: `sale.order.line` recordset
         """
-        return self.filtered(lambda line: line.state in ('sale', 'done') and (line.invoice_lines or not line.is_downpayment) and not line.display_type)
+        return self.filtered(
+            lambda line:
+                line.state in ('sale', 'done')
+                and (line.invoice_lines or not line.is_downpayment)
+                and not line.display_type
+        )
 
     @api.ondelete(at_uninstall=False)
     def _unlink_except_confirmed(self):
         if self._check_line_unlink():
-            raise UserError(_('You can not remove an order line once the sales order is confirmed.\nYou should rather set the quantity to 0.'))
+            raise UserError(_("You can not remove an order line once the sales order is confirmed.\nYou should rather set the quantity to 0."))
 
     #=== BUSINESS METHODS ===#
 
@@ -1018,11 +1065,10 @@ class SaleOrderLine(models.Model):
         return new or old
 
     def _prepare_invoice_line(self, **optional_values):
-        """
-        Prepare the dict of values to create the new invoice line for a sales order line.
+        """Prepare the values to create the new invoice line for a sales order line.
 
-        :param qty: float quantity to invoice
         :param optional_values: any parameter that should be added to the returned invoice line
+        :rtype: dict
         """
         self.ensure_one()
         res = {
@@ -1034,12 +1080,18 @@ class SaleOrderLine(models.Model):
             'quantity': self.qty_to_invoice,
             'discount': self.discount,
             'price_unit': self.price_unit,
-            'tax_ids': [(6, 0, self.tax_id.ids)],
-            'analytic_tag_ids': [(6, 0, self.analytic_tag_ids.ids)],
-            'sale_line_ids': [(4, self.id)],
+            'tax_ids': [Command.set(self.tax_id.ids)],
+            'analytic_distribution': self.analytic_distribution,
+            'sale_line_ids': [Command.link(self.id)],
+            'is_downpayment': self.is_downpayment,
         }
-        if self.order_id.analytic_account_id:
-            res['analytic_account_id'] = self.order_id.analytic_account_id.id
+        analytic_account_id = self.order_id.analytic_account_id.id
+        if analytic_account_id and not self.display_type:
+            res['analytic_distribution'] = res['analytic_distribution'] or {}
+            if self.analytic_distribution:
+                res['analytic_distribution'][analytic_account_id] = self.analytic_distribution.get(analytic_account_id, 0) + 100
+            else:
+                res['analytic_distribution'][analytic_account_id] = 100
         if optional_values:
             res.update(optional_values)
         if self.display_type:
@@ -1052,6 +1104,14 @@ class SaleOrderLine(models.Model):
         be used in move/po creation.
         """
         return {}
+
+    def _validate_analytic_distribution(self):
+        for line in self.filtered(lambda l: not l.display_type and l.state in ['draft', 'sent']):
+            line._validate_distribution(**{
+                'product': line.product_id.id,
+                'business_domain': 'sale_order',
+                'company_id': line.company_id.id,
+            })
 
     #=== CORE METHODS OVERRIDES ===#
 

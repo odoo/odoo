@@ -92,8 +92,8 @@
                         </h1>
                     </div>
                     <div class="row">
-                        <h2 class="col-6 ps-0">
-                            <field name="job_title" placeholder="Job Position" attrs="{'readonly': [('can_edit', '=', False)]}"/>
+                        <h2 class="col-lg-6 ps-lg-0">
+                            <field name="job_title" class="w-100" placeholder="Job Position" attrs="{'readonly': [('can_edit', '=', False)]}"/>
                         </h2>
                     </div>
                     <group>
@@ -116,7 +116,7 @@
                 <notebook position="inside">
                     <page name="public" string="Work Information">
                         <div id="o_work_employee_container" class="d-lg-flex"> <!-- These two div are used to position org_chart -->
-                            <div id="o_work_employee_main">
+                            <div id="o_work_employee_main" class="flex-grow-1">
                                 <group string="Location">
                                     <field name="department_id" attrs="{'readonly': [('can_edit', '=', False)]}"/>
                                     <field name="address_id"

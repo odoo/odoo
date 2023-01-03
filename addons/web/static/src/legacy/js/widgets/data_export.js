@@ -105,7 +105,7 @@ var DataExport = Dialog.extend({
                     $label.html(_.str.sprintf("%s — %s", format.label, format.error));
                 }
 
-                $fmts.append($("<div class='radio form-check form-check-inline ps-4'></div>").append($radio, $label));
+                $fmts.append($("<div class='radio form-check-inline ps-4'></div>").append($radio, $label));
             });
 
             self.$exportFormatInputs = $fmts.find('input');

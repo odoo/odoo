@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import fields, models, tools
+from odoo import api, fields, models, tools
 
 
 class StockValuationLayer(models.Model):
@@ -20,7 +20,7 @@ class StockValuationLayer(models.Model):
     quantity = fields.Float('Quantity', readonly=True, digits='Product Unit of Measure')
     uom_id = fields.Many2one(related='product_id.uom_id', readonly=True, required=True)
     currency_id = fields.Many2one('res.currency', 'Currency', related='company_id.currency_id', readonly=True, required=True)
-    unit_cost = fields.Monetary('Unit Value', readonly=True)
+    unit_cost = fields.Monetary('Unit Value', readonly=True, group_operator=None)
     value = fields.Monetary('Total Value', readonly=True)
     remaining_qty = fields.Float(readonly=True, digits='Product Unit of Measure')
     remaining_value = fields.Monetary('Remaining Value', readonly=True)
@@ -28,7 +28,10 @@ class StockValuationLayer(models.Model):
     stock_valuation_layer_id = fields.Many2one('stock.valuation.layer', 'Linked To', readonly=True, check_company=True)
     stock_valuation_layer_ids = fields.One2many('stock.valuation.layer', 'stock_valuation_layer_id')
     stock_move_id = fields.Many2one('stock.move', 'Stock Move', readonly=True, check_company=True, index=True)
-    account_move_id = fields.Many2one('account.move', 'Journal Entry', readonly=True, check_company=True)
+    account_move_id = fields.Many2one('account.move', 'Journal Entry', readonly=True, check_company=True, index="btree_not_null")
+    account_move_line_id = fields.Many2one('account.move.line', 'Invoice Line', readonly=True, check_company=True, index="btree_not_null")
+    reference = fields.Char(related='stock_move_id.reference')
+    price_diff_value = fields.Float('Invoice value correction with invoice currency')
 
     def init(self):
         tools.create_index(
@@ -39,11 +42,14 @@ class StockValuationLayer(models.Model):
     def _validate_accounting_entries(self):
         am_vals = []
         for svl in self:
-            if not svl.product_id.valuation == 'real_time':
+            if not svl.with_company(svl.company_id).product_id.valuation == 'real_time':
                 continue
             if svl.currency_id.is_zero(svl.value):
                 continue
-            am_vals += svl.stock_move_id._account_entry_move(svl.quantity, svl.description, svl.id, svl.value)
+            move = svl.stock_move_id
+            if not move:
+                move = svl.stock_valuation_layer_id.stock_move_id
+            am_vals += move.with_company(svl.company_id)._account_entry_move(svl.quantity, svl.description, svl.id, svl.value)
         if am_vals:
             account_moves = self.env['account.move'].sudo().create(am_vals)
             account_moves._post()
@@ -55,3 +61,43 @@ class StockValuationLayer(models.Model):
     def _validate_analytic_accounting_entries(self):
         for svl in self:
             svl.stock_move_id._account_analytic_entry_move()
+
+    def action_open_layer(self):
+        self.ensure_one()
+        return {
+            'res_model': self._name,
+            'type': 'ir.actions.act_window',
+            'views': [[False, "form"]],
+            'res_id': self.id,
+        }
+
+    def action_valuation_at_date(self):
+        #  Handler called when the user clicked on the 'Valuation at Date' button.
+        #  Opens wizard to display, at choice, the products inventory or a computed
+        #  inventory at a given date.
+        context = {}
+        if ("default_product_id" in self.env.context):
+            context.product_id = self.env.context.default_product_id
+        elif ("product_tmpl_id" in self.env.context):
+            context.product_tmpl_id = self.env.context.product_tmpl_id
+
+        return {
+            "res_model": "stock.quantity.history",
+            "views": [[False, "form"]],
+            "target": "new",
+            "type": "ir.actions.act_window",
+            "context": context,
+        }
+
+    def action_open_reference(self):
+        self.ensure_one()
+        if self.stock_move_id:
+            action = self.stock_move_id.action_open_reference()
+            if action['res_model'] != 'stock.move':
+                return action
+        return {
+            'res_model': self._name,
+            'type': 'ir.actions.act_window',
+            'views': [[False, "form"]],
+            'res_id': self.id,
+        }

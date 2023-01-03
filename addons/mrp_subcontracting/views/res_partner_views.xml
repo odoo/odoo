@@ -15,11 +15,10 @@
         <field name="name">res.partner.select.inherit</field>
         <field name="model">res.partner</field>
         <field name="inherit_id" ref="base.view_res_partner_filter" />
-        <field name="groups_id" eval="[(4, ref('mrp.group_mrp_user'))]"/>
         <field name="arch" type="xml">
             <xpath expr="//filter[@name='inactive']" position="before">
-                <filter string="Subcontractors" name="type_subcontractors" domain="[('is_subcontractor', '=', True)]" />
-                <separator/>
+                <filter string="Subcontractors" name="type_subcontractors" domain="[('is_subcontractor', '=', True)]" groups="mrp.group_mrp_user"/>
+                <separator groups="mrp.group_mrp_user"/>
             </xpath>
         </field>
     </record>

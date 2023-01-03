@@ -347,12 +347,10 @@ class TestInherits(TransactionCase):
             'employee': True,
         })
         foo_before, = user_foo.read()
-        del foo_before['__last_update']
         del foo_before['create_date']
         del foo_before['write_date']
         user_bar = user_foo.copy({'login': 'bar'})
         foo_after, = user_foo.read()
-        del foo_after['__last_update']
         del foo_after['create_date']
         del foo_after['write_date']
         self.assertEqual(foo_before, foo_after)
@@ -370,14 +368,12 @@ class TestInherits(TransactionCase):
         partner_bar = self.env['res.partner'].create({'name': 'Bar'})
 
         foo_before, = user_foo.read()
-        del foo_before['__last_update']
         del foo_before['create_date']
         del foo_before['write_date']
         del foo_before['login_date']
         partners_before = self.env['res.partner'].search([])
         user_bar = user_foo.copy({'partner_id': partner_bar.id, 'login': 'bar'})
         foo_after, = user_foo.read()
-        del foo_after['__last_update']
         del foo_after['create_date']
         del foo_after['write_date']
         del foo_after['login_date']

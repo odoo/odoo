@@ -13,7 +13,6 @@ var _t = core._t;
  */
 var QuestionFormWidget = publicWidget.Widget.extend({
     template: 'slide.quiz.question.input',
-    xmlDependencies: ['/website_slides/static/src/xml/slide_quiz_create.xml'],
     events: {
         'click .o_wslides_js_quiz_validate_question': '_validateQuestion',
         'click .o_wslides_js_quiz_cancel_question': '_cancelValidation',

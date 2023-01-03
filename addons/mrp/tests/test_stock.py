@@ -144,7 +144,14 @@ class TestWarehouseMrp(common.TestMrpCommon):
             scrap_id.do_scrap()
 
         # Scrap Product Wood with lot.
-        self.env['stock.scrap'].with_context(active_model='mrp.production', active_id=production_3.id).create({'product_id': self.product_2.id, 'scrap_qty': 1.0, 'product_uom_id': self.product_2.uom_id.id, 'location_id': location_id, 'lot_id': lot_product_2.id, 'production_id': production_3.id})
+        scrap_id = self.env['stock.scrap'].with_context(active_model='mrp.production', active_id=production_3.id).create({'product_id': self.product_2.id, 'scrap_qty': 1.0, 'product_uom_id': self.product_2.uom_id.id, 'location_id': location_id, 'lot_id': lot_product_2.id, 'production_id': production_3.id})
+        scrap_id.do_scrap()
+        scrap_move = scrap_id.move_id
+
+        self.assertTrue(scrap_move.raw_material_production_id)
+        self.assertTrue(scrap_move.scrapped)
+        self.assertEqual(scrap_move.location_dest_id, scrap_id.scrap_location_id)
+        self.assertEqual(scrap_move.price_unit, scrap_move.product_id.standard_price)
 
         #Check scrap move is created for this production order.
         #TODO: should check with scrap objects link in between

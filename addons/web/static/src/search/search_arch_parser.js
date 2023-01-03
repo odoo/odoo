@@ -20,7 +20,7 @@ const DEFAULT_VIEWS_WITH_SEARCH_PANEL = ["kanban", "list"];
 function getContextGroubBy(context) {
     try {
         return makeContext([context]).group_by.split(":");
-    } catch (_err) {
+    } catch {
         return [];
     }
 }
@@ -110,11 +110,9 @@ export class SearchArchParser extends XMLParser {
     visitField(node) {
         this.pushGroup("field");
         const preField = { type: "field" };
-        if (node.hasAttribute("modifiers")) {
-            const modifiers = JSON.parse(node.getAttribute("modifiers"));
-            if (modifiers.invisible) {
-                preField.invisible = true;
-            }
+        const modifiers = JSON.parse(node.getAttribute("modifiers") || "{}");
+        if (modifiers.invisible === true) {
+            preField.invisible = true;
         }
         if (node.hasAttribute("domain")) {
             preField.domain = node.getAttribute("domain");
@@ -162,7 +160,7 @@ export class SearchArchParser extends XMLParser {
                     preField.defaultAutocompleteValue.label = option[1];
                 } else if (fieldType === "many2one") {
                     this.labels.push((orm) => {
-                        orm.call(relation, "name_get", [value], { context }).then((results) => {
+                        return orm.call(relation, "name_get", [value], { context }).then((results) => {
                             preField.defaultAutocompleteValue.label = results[0][1];
                         });
                     });
@@ -210,7 +208,9 @@ export class SearchArchParser extends XMLParser {
                 preSearchItem.fieldType = this.fields[fieldName].type;
                 preSearchItem.defaultGeneratorIds = [DEFAULT_PERIOD];
                 if (node.hasAttribute("default_period")) {
-                    preSearchItem.defaultGeneratorIds = node.getAttribute("default_period").split(',');
+                    preSearchItem.defaultGeneratorIds = node
+                        .getAttribute("default_period")
+                        .split(",");
                 }
             } else {
                 let stringRepr = "[]";
@@ -220,17 +220,15 @@ export class SearchArchParser extends XMLParser {
                 preSearchItem.domain = stringRepr;
             }
         }
-        if (node.hasAttribute("modifiers")) {
-            const modifiers = JSON.parse(node.getAttribute("modifiers"));
-            if (modifiers.invisible) {
-                preSearchItem.invisible = true;
-                const fieldName = preSearchItem.fieldName;
-                if (fieldName && !this.fields[fieldName]) {
-                    // In some case when a field is limited to specific groups
-                    // on the model, we need to ensure to discard related filter
-                    // as it may still be present in the view (in 'invisible' state)
-                    return;
-                }
+        const modifiers = JSON.parse(node.getAttribute("modifiers") || "{}");
+        if (modifiers.invisible === true) {
+            preSearchItem.invisible = true;
+            const fieldName = preSearchItem.fieldName;
+            if (fieldName && !this.fields[fieldName]) {
+                // In some case when a field is limited to specific groups
+                // on the model, we need to ensure to discard related filter
+                // as it may still be present in the view (in 'invisible' state)
+                return;
             }
         }
         preSearchItem.groupNumber = this.groupNumber;
@@ -291,8 +289,8 @@ export class SearchArchParser extends XMLParser {
             if (node.nodeType !== 1 || node.tagName !== "field") {
                 continue;
             }
-            const isInvisible = Boolean(evaluateExpr(node.getAttribute("invisible") || "0"));
-            if (isInvisible) {
+            const modifiers = JSON.parse(node.getAttribute("modifiers") || "{}");
+            if (modifiers.invisible === true) {
                 continue;
             }
             const attrs = {};

@@ -28,9 +28,9 @@ class TestChannelAccessRights(MailCommon):
         cls.user_portal = mail_new_test_user(cls.env, login='user_portal', groups='base.group_portal', name='Chell Gladys')
 
         # Channel for certain group
-        cls.group_restricted_channel = cls.env['mail.channel'].browse(cls.env['mail.channel'].channel_create(name='Channel for Groups', privacy='groups', group_id=cls.env.ref('base.group_user').id)['id'])
+        cls.group_restricted_channel = cls.env['mail.channel'].browse(cls.env['mail.channel'].channel_create(name='Channel for Groups', group_id=cls.env.ref('base.group_user').id)['id'])
         # Public Channel
-        cls.public_channel = cls.env['mail.channel'].browse(cls.env['mail.channel'].channel_create(name='Public Channel', privacy='public')['id'])
+        cls.public_channel = cls.env['mail.channel'].browse(cls.env['mail.channel'].channel_create(name='Public Channel', group_id=None)['id'])
         # Group
         cls.private_group = cls.env['mail.channel'].browse(cls.env['mail.channel'].create_group(partners_to=cls.user_employee.partner_id.ids, name="Group")['id'])
         # Chat
@@ -220,11 +220,7 @@ class TestChannelInternals(MailCommon):
     @classmethod
     def setUpClass(cls):
         super(TestChannelInternals, cls).setUpClass()
-        cls.test_channel = cls.env['mail.channel'].with_context(cls._test_context).create({
-            'channel_type': 'channel',
-            'name': 'Channel',
-            'public': 'public',
-        })
+        cls.test_channel = cls.env['mail.channel'].browse(cls.env['mail.channel'].with_context(cls._test_context).channel_create(name='Channel', group_id=None)['id'])
         cls.test_partner = cls.env['res.partner'].with_context(cls._test_context).create({
             'name': 'Test Partner',
             'email': 'test_customer@example.com',
@@ -239,15 +235,6 @@ class TestChannelInternals(MailCommon):
             signature='--\nEvite'
         )
         cls.partner_employee_nomail = cls.user_employee_nomail.partner_id
-
-    @users('employee')
-    def test_channel_form(self):
-        """A user that create a private channel should be able to read it."""
-        channel_form = Form(self.env['mail.channel'].with_user(self.user_employee))
-        channel_form.name = 'Test private channel'
-        channel_form.public = 'private'
-        channel = channel_form.save()
-        self.assertEqual(channel.name, 'Test private channel', 'Must be able to read the created channel')
 
     @users('employee')
     def test_channel_members(self):
@@ -331,27 +318,19 @@ class TestChannelInternals(MailCommon):
 
     @mute_logger('odoo.models.unlink')
     def test_channel_user_synchronize(self):
-        """Archiving / deleting a user should automatically unsubscribe related partner from private channels"""
-        test_channel_private = self.env['mail.channel'].with_context(self._test_context).create({
-            'name': 'Winden caves',
-            'description': 'Channel to travel through time',
-            'public': 'private',
-        })
-        group_restricted_channel = self.env['mail.channel'].browse(self.env['mail.channel'].channel_create(name='Sic Mundus', privacy='groups', group_id=self.env.ref('base.group_user').id)['id'])
+        """Archiving / deleting a user should automatically unsubscribe related partner from group restricted channels"""
+        group_restricted_channel = self.env['mail.channel'].browse(self.env['mail.channel'].channel_create(name='Sic Mundus', group_id=self.env.ref('base.group_user').id)['id'])
 
         self.test_channel.add_members((self.partner_employee | self.partner_employee_nomail).ids)
-        test_channel_private.add_members((self.partner_employee | self.partner_employee_nomail).ids)
         group_restricted_channel.add_members((self.partner_employee | self.partner_employee_nomail).ids)
 
         # Unsubscribe archived user from the private channels, but not from public channels
         self.user_employee.active = False
-        self.assertEqual(test_channel_private.channel_partner_ids, self.partner_employee_nomail)
         self.assertEqual(group_restricted_channel.channel_partner_ids, self.partner_employee_nomail)
         self.assertEqual(self.test_channel.channel_partner_ids, self.user_employee.partner_id | self.partner_employee_nomail)
 
         # Unsubscribe deleted user from the private channels, but not from public channels
         self.user_employee_nomail.unlink()
-        self.assertEqual(test_channel_private.channel_partner_ids, self.env['res.partner'])
         self.assertEqual(group_restricted_channel.channel_partner_ids, self.env['res.partner'])
         self.assertEqual(self.test_channel.channel_partner_ids, self.user_employee.partner_id | self.partner_employee_nomail)
 
@@ -359,7 +338,8 @@ class TestChannelInternals(MailCommon):
     def test_channel_info_get(self):
         # `channel_get` should return a new channel the first time a partner is given
         initial_channel_info = self.env['mail.channel'].channel_get(partners_to=self.test_partner.ids)
-        self.assertEqual(set(p['id'] for p in initial_channel_info['members']), {self.partner_employee_nomail.id, self.test_partner.id})
+        # shape of channelMembers is [('insert', data...)], [0][1] accesses the data
+        self.assertEqual(set(m['persona']['partner']['id'] for m in initial_channel_info['channel']['channelMembers'][0][1]), {self.partner_employee_nomail.id, self.test_partner.id})
 
         # `channel_get` should return the existing channel every time the same partner is given
         same_channel_info = self.env['mail.channel'].channel_get(partners_to=self.test_partner.ids)
@@ -373,7 +353,8 @@ class TestChannelInternals(MailCommon):
         # even if a channel containing the current partner together with other partners already exists
         solo_channel_info = self.env['mail.channel'].channel_get(partners_to=self.partner_employee_nomail.ids)
         self.assertNotEqual(solo_channel_info['id'], initial_channel_info['id'])
-        self.assertEqual(set(p['id'] for p in solo_channel_info['members']), {self.partner_employee_nomail.id})
+        # shape of channelMembers is [('insert', data...)], [0][1] accesses the data
+        self.assertEqual(set(m['persona']['partner']['id'] for m in solo_channel_info['channel']['channelMembers'][0][1]), {self.partner_employee_nomail.id})
 
         # `channel_get` should return the existing channel every time the current partner is given
         same_solo_channel_info = self.env['mail.channel'].channel_get(partners_to=self.partner_employee_nomail.ids)
@@ -431,15 +412,8 @@ class TestChannelInternals(MailCommon):
             "name": "Jonas",
         })
         test_partner = test_user.partner_id
-        test_channel_private = self.env['mail.channel'].with_context(self._test_context).create({
-            'name': 'Winden caves',
-            'description': 'Channel to travel through time',
-            'public': 'private',
-            'channel_partner_ids': [Command.link(self.user_employee.partner_id.id), Command.link(test_partner.id)],
-        })
         group_restricted_channel = self.env['mail.channel'].with_context(self._test_context).create({
             'name': 'Sic Mundus',
-            'public': 'groups',
             'group_public_id': self.env.ref('base.group_user').id,
             'channel_partner_ids': [Command.link(self.user_employee.partner_id.id), Command.link(test_partner.id)],
         })
@@ -449,21 +423,18 @@ class TestChannelInternals(MailCommon):
         private_group = self.env['mail.channel'].with_user(self.user_employee).with_context(self._test_context).create({
             'name': 'test',
             'channel_type': 'group',
-            'public': 'private',
             'channel_partner_ids': [Command.link(self.user_employee.partner_id.id), Command.link(test_partner.id)],
         })
 
         # Unsubscribe archived user from the private channels, but not from public channels and not from group
         self.user_employee.active = False
         (private_group | self.test_channel).invalidate_recordset(['channel_partner_ids'])
-        self.assertEqual(test_channel_private.channel_partner_ids, test_partner)
         self.assertEqual(group_restricted_channel.channel_partner_ids, test_partner)
         self.assertEqual(self.test_channel.channel_partner_ids, self.user_employee.partner_id | test_partner)
         self.assertEqual(private_group.channel_partner_ids, self.user_employee.partner_id | test_partner)
 
         # Unsubscribe deleted user from the private channels, but not from public channels and not from group
         test_user.unlink()
-        self.assertEqual(test_channel_private.channel_partner_ids, self.env['res.partner'])
         self.assertEqual(group_restricted_channel.channel_partner_ids, self.env['res.partner'])
         self.assertEqual(self.test_channel.channel_partner_ids, self.user_employee.partner_id | test_partner)
         self.assertEqual(private_group.channel_partner_ids, self.user_employee.partner_id | test_partner)
@@ -472,8 +443,8 @@ class TestChannelInternals(MailCommon):
     @mute_logger('odoo.models.unlink')
     def test_channel_private_unfollow(self):
         """ Test that a partner can leave (unfollow) a channel/group/chat. """
-        group_restricted_channel = self.env['mail.channel'].browse(self.env['mail.channel'].channel_create(name='Channel for Groups', privacy='groups', group_id=self.env.ref('base.group_user').id)['id'])
-        public_channel = self.env['mail.channel'].browse(self.env['mail.channel'].channel_create(name='Channel for Everyone', privacy='public')['id'])
+        group_restricted_channel = self.env['mail.channel'].browse(self.env['mail.channel'].channel_create(name='Channel for Groups', group_id=self.env.ref('base.group_user').id)['id'])
+        public_channel = self.env['mail.channel'].browse(self.env['mail.channel'].channel_create(name='Channel for Everyone', group_id=None)['id'])
         private_group = self.env['mail.channel'].browse(self.env['mail.channel'].create_group(partners_to=self.user_employee.partner_id.ids, name="Group")['id'])
         chat_user_current = self.env['mail.channel'].browse(self.env['mail.channel'].channel_get(self.env.user.partner_id.ids)['id'])
 
@@ -530,7 +501,7 @@ class TestChannelInternals(MailCommon):
         self.assertEqual(messages_1, messages_2)
 
     def test_channel_should_generate_correct_default_avatar(self):
-        test_channel = self.env['mail.channel'].browse(self.env['mail.channel'].channel_create(name='Channel')['id'])
+        test_channel = self.env['mail.channel'].browse(self.env['mail.channel'].channel_create(name='Channel', group_id=self.env.ref('base.group_user').id)['id'])
         test_channel.uuid = 'channel-uuid'
         private_group = self.env['mail.channel'].browse(self.env['mail.channel'].create_group(partners_to=self.user_employee.partner_id.ids)['id'])
         private_group.uuid = 'group-uuid'
@@ -555,37 +526,39 @@ class TestChannelInternals(MailCommon):
         with self.assertBus(
             [(self.cr.dbname, 'mail.channel', channel.id)],
             [{
-                "type": "mail.channel/insert",
+                "type": "mail.record/insert",
                 "payload": {
-                    "id": channel.id,
-                    "avatarCacheKey": avatar_cache_key,
+                    'Channel': {
+                        "avatarCacheKey": avatar_cache_key,
+                        "id": channel.id,
+                    }
                 },
             }]
         ):
             channel.image_128 = base64.b64encode(("<svg/>").encode())
 
-    def test_mail_message_starred_private_channel(self):
-        """ Test starred message computation for a private channel. A starred
-        message in a private channel should be considered only if:
+    def test_mail_message_starred_group(self):
+        """ Test starred message computation for a group. A starred
+        message in a group should be considered only if:
             - It's our message
             - OR we have access to the channel
         """
         self.assertEqual(self.user_employee._init_messaging()['starred_counter'], 0)
-        private_channel = self.env['mail.channel'].create({
+        test_group = self.env['mail.channel'].create({
             'name': 'Private Channel',
-            'public': 'private',
+            'channel_type': 'group',
             'channel_partner_ids': [(6, 0, self.partner_employee.id)]
         })
 
-        private_channel_own_message = private_channel.with_user(self.user_employee.id).message_post(body='TestingMessage')
-        private_channel_own_message.write({'starred_partner_ids': [(6, 0, self.partner_employee.ids)]})
+        test_group_own_message = test_group.with_user(self.user_employee.id).message_post(body='TestingMessage')
+        test_group_own_message.write({'starred_partner_ids': [(6, 0, self.partner_employee.ids)]})
         self.assertEqual(self.user_employee.with_user(self.user_employee)._init_messaging()['starred_counter'], 1)
 
-        private_channel_message = private_channel.message_post(body='TestingMessage')
-        private_channel_message.write({'starred_partner_ids': [(6, 0, self.partner_employee.ids)]})
+        test_group_message = test_group.message_post(body='TestingMessage')
+        test_group_message.write({'starred_partner_ids': [(6, 0, self.partner_employee.ids)]})
         self.assertEqual(self.user_employee.with_user(self.user_employee)._init_messaging()['starred_counter'], 2)
 
-        private_channel.write({'channel_partner_ids': False})
+        test_group.write({'channel_partner_ids': False})
         self.assertEqual(self.user_employee.with_user(self.user_employee)._init_messaging()['starred_counter'], 1)
 
     def test_multi_company_chat(self):
@@ -597,3 +570,11 @@ class TestChannelInternals(MailCommon):
                 allowed_company_ids=self.company_admin.ids
             ).channel_get(self.partner_employee_c2.ids)
             self.assertTrue(initial_channel_info, 'should be able to chat with multi company user')
+
+    @users('employee')
+    def test_create_chat_channel_should_only_pin_the_channel_for_the_current_user(self):
+        chat = self.env['mail.channel'].channel_get(partners_to=self.test_partner.ids)
+        member_of_current_user = self.env['mail.channel.member'].search([('channel_id', '=', chat['id']), ('partner_id', '=', self.env.user.partner_id.id)])
+        member_of_correspondent = self.env['mail.channel.member'].search([('channel_id', '=', chat['id']), ('partner_id', '=', self.test_partner.id)])
+        self.assertTrue(member_of_current_user.is_pinned)
+        self.assertFalse(member_of_correspondent.is_pinned)

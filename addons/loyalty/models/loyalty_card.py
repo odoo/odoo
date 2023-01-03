@@ -17,20 +17,22 @@ class LoyaltyCard(models.Model):
         """
         Barcode identifiable codes.
         """
-        return '044' + str(uuid4())[4:-8][3:]
+        return '044' + str(uuid4())[7:-18]
 
     def name_get(self):
         return [(card.id, f'{card.program_id.name}: {card.code}') for card in self]
 
-    program_id = fields.Many2one('loyalty.program', ondelete='restrict')
+    program_id = fields.Many2one('loyalty.program', ondelete='restrict', default=lambda self: self.env.context.get('active_id', None))
+    program_type = fields.Selection(related='program_id.program_type')
     company_id = fields.Many2one(related='program_id.company_id', store=True)
     currency_id = fields.Many2one(related='program_id.currency_id')
     # Reserved for this partner if non-empty
     partner_id = fields.Many2one('res.partner', index=True)
     points = fields.Float(tracking=True)
     point_name = fields.Char(related='program_id.portal_point_name', readonly=True)
+    points_display = fields.Char(compute='_compute_points_display')
 
-    code = fields.Char(default=lambda self: self._generate_code(), required=True, readonly=True, index=True)
+    code = fields.Char(default=lambda self: self._generate_code(), required=True)
     expiration_date = fields.Date()
 
     use_count = fields.Integer(compute='_compute_use_count')
@@ -44,6 +46,11 @@ class LoyaltyCard(models.Model):
         # Prevent a coupon from having the same code a program
         if self.env['loyalty.rule'].search_count([('mode', '=', 'with_code'), ('code', 'in', self.mapped('code'))]):
             raise ValidationError(_('A trigger with the same code as one of your coupon already exists.'))
+
+    @api.depends('points', 'point_name')
+    def _compute_points_display(self):
+        for card in self:
+            card.points_display = "%.2f %s" % (card.points or 0, card.point_name or '')
 
     # Meant to be overriden
     def _compute_use_count(self):
@@ -62,6 +69,9 @@ class LoyaltyCard(models.Model):
         self.ensure_one()
         return None
 
+    def _has_source_order(self):
+        return False
+
     def action_coupon_send(self):
         """ Open a window to compose an email, with the default template returned by `_get_default_template`
             message loaded by default
@@ -76,7 +86,6 @@ class LoyaltyCard(models.Model):
             default_template_id=default_template and default_template.id,
             default_composition_mode='comment',
             default_email_layout_xmlid='mail.mail_notification_light',
-            mark_coupon_as_sent=True,
             force_email=True,
         )
         return {
@@ -94,7 +103,7 @@ class LoyaltyCard(models.Model):
         """
         Sends the 'At Creation' communication plan if it exist for the given coupons.
         """
-        if self.env.context.get('loyalty_no_mail', False):
+        if self.env.context.get('loyalty_no_mail', False) or self.env.context.get('action_no_send_mail', False):
             return
         # Ideally one per program, but multiple is supported
         create_comm_per_program = dict()

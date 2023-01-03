@@ -3,7 +3,7 @@
 import { startWebClient } from "@web/start";
 
 import { ChromeAdapter } from "@point_of_sale/entry/chrome_adapter";
-import Registries from "point_of_sale.Registries";
+import Registries from "@point_of_sale/js/Registries";
 import { registry } from "@web/core/registry";
 
 const { Component, xml } = owl;

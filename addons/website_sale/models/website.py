@@ -46,7 +46,8 @@ class Website(models.Model):
             return False
 
     cart_recovery_mail_template_id = fields.Many2one('mail.template', string='Cart Recovery Email', default=_default_recovery_mail_template, domain="[('model', '=', 'sale.order')]")
-    cart_abandoned_delay = fields.Float("Abandoned Delay", default=1.0)
+    cart_abandoned_delay = fields.Float(string="Abandoned Delay", default=10.0)
+    send_abandoned_cart_email = fields.Boolean(string="Send email to customers who abandoned their cart.")
 
     shop_ppg = fields.Integer(default=20, string="Number of products in the grid on the shop")
     shop_ppr = fields.Integer(default=4, string="Number of grid columns on the shop")
@@ -105,6 +106,7 @@ class Website(models.Model):
     prevent_zero_price_sale_text = fields.Char(string="Text to show instead of price", translate=True,
                                                default="Not Available For Sale")
     contact_us_button_url = fields.Char(string="Contact Us Button URL", translate=True, default="/contactus")
+    enabled_portal_reorder_button = fields.Boolean(string="Re-order From Portal")
 
     @api.depends('all_pricelist_ids')
     def _compute_pricelist_ids(self):
@@ -228,7 +230,7 @@ class Website(models.Model):
         return pl_id in self.get_pricelist_available(show_visible=False).ids
 
     def _get_geoip_country_code(self):
-        return request and request.geoip.get('country_code') or False
+        return request and request.geoip.country_code or False
 
     def _get_cached_pricelist_id(self):
         return request and request.session.get('website_sale_current_pl') or None
@@ -304,7 +306,7 @@ class Website(models.Model):
 
         if sale_order_id:
             sale_order_sudo = SaleOrder.browse(sale_order_id).exists()
-        elif not self.env.user._is_public():
+        elif self.env.user and not self.env.user._is_public():
             sale_order_sudo = self.env.user.partner_id.last_website_so_id
             if sale_order_sudo:
                 available_pricelists = self.get_pricelist_available()
@@ -325,6 +327,13 @@ class Website(models.Model):
                         sale_order_sudo = SaleOrder
         else:
             sale_order_sudo = SaleOrder
+
+        # Ignore the current order if a payment has been initiated. We don't want to retrieve the
+        # cart and allow the user to update it when the payment is about to confirm it.
+        if sale_order_sudo and sale_order_sudo.get_portal_last_transaction().state in (
+            'pending', 'authorized', 'done'
+        ):
+            sale_order_sudo = None
 
         if not (sale_order_sudo or force_create):
             # Do not create a SO record unless needed
@@ -387,7 +396,7 @@ class Website(models.Model):
         if update_pricelist:
             request.session['website_sale_current_pl'] = pricelist_id
             sale_order_sudo.write({'pricelist_id': pricelist_id})
-            sale_order_sudo.update_prices()
+            sale_order_sudo._recompute_prices()
 
         return sale_order_sudo
 
@@ -454,9 +463,8 @@ class Website(models.Model):
         # If the current user is the website public user, the fiscal position
         # is computed according to geolocation.
         if request.website.partner_id.id == partner_sudo.id:
-            country_code = request.geoip.get('country_code')
-            if country_code:
-                country_id = self.env['res.country'].search([('code', '=', country_code)], limit=1).id
+            if request.geoip.country_code:
+                country_id = self.env['res.country'].search([('code', '=', request.geoip.country_code)], limit=1).id
                 fpos = AccountFiscalPosition._get_fpos_by_region(country_id)
 
         if not fpos:
@@ -516,6 +524,34 @@ class Website(models.Model):
         return spacing_map.get(self.product_page_image_spacing) + ' ' +\
                 columns_map.get(self.product_page_grid_columns)
 
+    @api.model
+    def _send_abandoned_cart_email(self):
+        for website in self.search([]):
+            if not website.send_abandoned_cart_email:
+                continue
+            all_abandoned_carts = self.env['sale.order'].search([
+                ('is_abandoned_cart', '=', True),
+                ('cart_recovery_email_sent', '=', False),
+                ('website_id', '=', website.id),
+            ])
+            if not all_abandoned_carts:
+                continue
+
+            abandoned_carts = all_abandoned_carts._filter_can_send_abandoned_cart_mail()
+            # Mark abandoned carts that failed the filter as sent to avoid rechecking them again and again.
+            (all_abandoned_carts - abandoned_carts).cart_recovery_email_sent = True
+            for sale_order in abandoned_carts:
+                template = self.env.ref('website_sale.mail_template_sale_cart_recovery')
+                template.send_mail(sale_order.id, email_values=dict(email_to=sale_order.partner_id.email))
+                sale_order.cart_recovery_email_sent = True
+
+    def _display_partner_b2b_fields(self):
+        """ This method is to be inherited by localizations and return
+        True if localization should always displayed b2b fields """
+        self.ensure_one()
+
+        return self.is_view_active('website_sale.address_b2b')
+
 class WebsiteSaleExtraField(models.Model):
     _name = 'website.sale.extra.field'
     _description = 'E-Commerce Extra Info Shown on product page'
@@ -525,7 +561,9 @@ class WebsiteSaleExtraField(models.Model):
     sequence = fields.Integer(default=10)
     field_id = fields.Many2one(
         'ir.model.fields',
-        domain=[('model_id.model', '=', 'product.template'), ('ttype', 'in', ['char', 'binary'])]
+        domain=[('model_id.model', '=', 'product.template'), ('ttype', 'in', ['char', 'binary'])],
+        required=True,
+        ondelete='cascade'
     )
     label = fields.Char(related='field_id.field_description')
     name = fields.Char(related='field_id.name')

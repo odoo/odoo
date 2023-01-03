@@ -4,7 +4,6 @@ import { ColorList } from "@web/core/colorlist/colorlist";
 import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
-import { registry } from "@web/core/registry";
 import { useTooltip } from "@web/core/tooltip/tooltip_hook";
 import { useService } from "@web/core/utils/hooks";
 import { sprintf } from "@web/core/utils/strings";
@@ -20,13 +19,11 @@ import { KanbanCompiler } from "./kanban_compiler";
 import { KanbanCoverImageDialog } from "./kanban_cover_image_dialog";
 import { KanbanDropdownMenuWrapper } from "./kanban_dropdown_menu_wrapper";
 
-const { Component, onMounted, onWillUpdateProps, useRef, xml } = owl;
+import { Component, onMounted, onWillUpdateProps, useRef } from "@odoo/owl";
 const { COLORS } = ColorList;
 
-const formatters = registry.category("formatters");
-
 // These classes determine whether a click on a record should open it.
-const CANCEL_GLOBAL_CLICK = ["a", ".dropdown", ".oe_kanban_action"].join(",");
+export const CANCEL_GLOBAL_CLICK = ["a", ".dropdown", ".oe_kanban_action"].join(",");
 const ALLOW_GLOBAL_CLICK = [".oe_kanban_global_click", ".oe_kanban_global_click_edit"].join(",");
 
 /**
@@ -69,7 +66,7 @@ function getColorName(value) {
  *  exist
  * @returns {string}
  */
-function getImageSrcFromRecordInfo(record, model, field, idOrIds, placeholder) {
+export function getImageSrcFromRecordInfo(record, model, field, idOrIds, placeholder) {
     const id = (Array.isArray(idOrIds) ? idOrIds[0] : idOrIds) || null;
     const isCurrentRecord =
         record.resModel === model && (record.resId === id || (!record.resId && !id));
@@ -87,51 +84,9 @@ function getImageSrcFromRecordInfo(record, model, field, idOrIds, placeholder) {
             model,
             field,
             id,
-            unique: imageCacheKey(record.data.__last_update),
+            unique: imageCacheKey(record.data.write_date),
         });
     }
-}
-
-/**
- * Returns a "raw" version of the field value on a given record.
- *
- * @param {Record} record
- * @param {string} fieldName
- * @returns {any}
- */
-function getRawValue(record, fieldName) {
-    const field = record.fields[fieldName];
-    const value = record.data[fieldName];
-    switch (field.type) {
-        case "one2many":
-        case "many2many": {
-            return value.count ? value.currentIds : [];
-        }
-        case "many2one": {
-            return (value && value[0]) || false;
-        }
-        case "date":
-        case "datetime": {
-            return value && value.toJSDate();
-        }
-        default: {
-            return value;
-        }
-    }
-}
-
-/**
- * Returns a formatted version of the field value on a given record.
- *
- * @param {Record} record
- * @param {string} fieldName
- * @returns {string}
- */
-function getValue(record, fieldName) {
-    const field = record.fields[fieldName];
-    const value = record.data[fieldName];
-    const formatter = formatters.get(field.type, String);
-    return formatter(value, { field, data: record.data });
 }
 
 function isBinSize(value) {
@@ -149,7 +104,7 @@ function isBinSize(value) {
  * @param {string} innerHTML
  * @returns {boolean} true if no content found or if containing only formatting tags
  */
-function isHtmlEmpty(innerHTML = "") {
+export function isHtmlEmpty(innerHTML = "") {
     const div = Object.assign(document.createElement("div"), { innerHTML });
     return div.innerText.trim() === "";
 }
@@ -163,13 +118,13 @@ export class KanbanRecord extends Component {
 
         const { archInfo, Compiler, templates } = this.props;
         const { arch } = archInfo;
-        const ViewCompiler = Compiler || KanbanCompiler;
+        const ViewCompiler = Compiler || this.constructor.Compiler;
 
-        this.templates = useViewCompiler(ViewCompiler, arch, templates, KANBAN_BOX_ATTRIBUTE);
+        this.templates = useViewCompiler(ViewCompiler, arch, templates);
 
         if (KANBAN_TOOLTIP_ATTRIBUTE in templates) {
             useTooltip("root", {
-                info: this,
+                info: { ...this, record: this.props.record.formattedRecord },
                 template: this.templates[KANBAN_TOOLTIP_ATTRIBUTE],
             });
         }
@@ -189,25 +144,13 @@ export class KanbanRecord extends Component {
      * @param {Object} props
      */
     createRecordAndWidget(props) {
-        const { archInfo, list, record } = props;
+        const { archInfo, list } = props;
         const { activeActions } = archInfo;
 
-        // Record
-        this.record = Object.create(null);
-        for (const fieldName in record.data) {
-            this.record[fieldName] = {
-                get value() {
-                    return getValue(record, fieldName);
-                },
-                get raw_value() {
-                    return getRawValue(record, fieldName);
-                },
-            };
-        }
-
+        this.record = this.props.record.formattedRecord;
         // Widget
         const deletable = activeActions.delete && (!list.groupedBy || !list.groupedBy("m2m"));
-        const editable = archInfo.activeActions.edit;
+        const editable = activeActions.edit;
         this.widget = {
             deletable,
             editable,
@@ -221,7 +164,7 @@ export class KanbanRecord extends Component {
 
     getRecordClasses() {
         const { archInfo, canResequence, forceGlobalClick, group, record } = this.props;
-        const classes = ["o_kanban_record"];
+        const classes = ["o_kanban_record d-flex"];
         if (canResequence) {
             classes.push("o_record_draggable");
         }
@@ -236,8 +179,8 @@ export class KanbanRecord extends Component {
             const value = record.data[archInfo.cardColorField];
             classes.push(getColorClass(value));
         }
-        if (record.model.useSampleModel) {
-            classes.push("o_sample_data_disabled");
+        if (!this.props.list.isGrouped) {
+            classes.push("flex-grow-1 flex-md-shrink-1 flex-shrink-0");
         }
         return classes.join(" ");
     }
@@ -331,54 +274,31 @@ export class KanbanRecord extends Component {
         }
     }
 
-    //-------------------------------------------------------------------------
-    // KANBAN SPECIAL GETTERS AND FUNCTIONS
-    //
-    // Note: the names of these getters and functions answer to outdated standards
-    // but should not be altered for the sake of compatibility.
-    //-------------------------------------------------------------------------
-
-    get context() {
-        return this.props.record.context;
-    }
-
-    get luxon() {
-        return luxon;
-    }
-
-    get JSON() {
-        return JSON;
-    }
-
-    get read_only_mode() {
-        return this.props.readonly;
-    }
-
-    get selection_mode() {
-        return this.props.forceGlobalClick;
-    }
-
-    get user_context() {
-        return this.user.context;
-    }
-
-    kanban_color() {
-        return getColorClass(...arguments);
-    }
-
-    kanban_getcolor() {
-        return getColorIndex(...arguments);
-    }
-
-    kanban_getcolorname() {
-        return getColorName(...arguments);
-    }
-
-    kanban_image() {
-        return getImageSrcFromRecordInfo(this.props.record, ...arguments);
+    /**
+     * Returns the kanban-box template's rendering context.
+     *
+     * Note: the keys answer to outdated standards but should not be altered for
+     * the sake of compatibility.
+     *
+     * @returns {Object}
+     */
+    get renderingContext() {
+        return {
+            context: this.props.record.context,
+            JSON,
+            kanban_color: getColorClass,
+            kanban_getcolor: getColorIndex,
+            kanban_getcolorname: getColorName,
+            kanban_image: (...args) => getImageSrcFromRecordInfo(this.props.record, ...args),
+            luxon,
+            read_only_mode: this.props.readonly,
+            record: this.record,
+            selection_mode: this.props.forceGlobalClick,
+            user_context: this.user.context,
+            widget: this.widget,
+        };
     }
 }
-
 KanbanRecord.components = {
     Dropdown,
     DropdownItem,
@@ -405,13 +325,6 @@ KanbanRecord.props = [
     "record",
     "templates",
 ];
-KanbanRecord.template = xml`
-    <div
-        role="article"
-        t-att-class="getRecordClasses()"
-        t-att-data-id="props.canResequence and props.record.id"
-        t-att-tabindex="props.record.model.useSampleModel ? -1 : 0"
-        t-on-click="onGlobalClick"
-        t-ref="root">
-        <t t-call="{{ templates['${KANBAN_BOX_ATTRIBUTE}'] }}"/>
-    </div>`;
+KanbanRecord.Compiler = KanbanCompiler;
+KanbanRecord.KANBAN_BOX_ATTRIBUTE = KANBAN_BOX_ATTRIBUTE;
+KanbanRecord.template = "web.KanbanRecord";

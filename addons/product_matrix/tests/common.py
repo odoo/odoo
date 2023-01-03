@@ -3,7 +3,6 @@
 from odoo.tests import tagged, common
 
 
-@tagged('post_install', '-at_install')
 class TestMatrixCommon(common.HttpCase):
 
     def setUp(self):

@@ -96,6 +96,12 @@ class ProductProduct(models.Model):
 
     value_svl = fields.Float(compute='_compute_value_svl', compute_sudo=True)
     quantity_svl = fields.Float(compute='_compute_value_svl', compute_sudo=True)
+    avg_cost = fields.Monetary(string="Average Cost", compute='_compute_value_svl', compute_sudo=True, currency_field='company_currency_id')
+    total_value = fields.Monetary(string="Total Value", compute='_compute_value_svl', compute_sudo=True, currency_field='company_currency_id')
+    company_currency_id = fields.Many2one(
+        'res.currency', 'Valuation Currency', compute='_compute_value_svl', compute_sudo=True,
+        help="Technical field to correctly show the currently selected company's currency that corresponds "
+             "to the totaled value of the product's valuation layers")
     stock_valuation_layer_ids = fields.One2many('stock.valuation.layer', 'product_id')
     valuation = fields.Selection(related="categ_id.property_valuation", readonly=True)
     cost_method = fields.Selection(related="categ_id.property_cost_method", readonly=True)
@@ -108,11 +114,12 @@ class ProductProduct(models.Model):
     @api.depends('stock_valuation_layer_ids')
     @api.depends_context('to_date', 'company')
     def _compute_value_svl(self):
-        """Compute `value_svl` and `quantity_svl`."""
-        company_id = self.env.company.id
+        """Compute totals of multiple svl related values"""
+        company_id = self.env.company
+        self.company_currency_id = company_id.currency_id
         domain = [
             ('product_id', 'in', self.ids),
-            ('company_id', '=', company_id),
+            ('company_id', '=', company_id.id),
         ]
         if self.env.context.get('to_date'):
             to_date = fields.Datetime.to_datetime(self.env.context['to_date'])
@@ -121,12 +128,18 @@ class ProductProduct(models.Model):
         products = self.browse()
         for group in groups:
             product = self.browse(group['product_id'][0])
-            product.value_svl = self.env.company.currency_id.round(group['value'])
+            value_svl = company_id.currency_id.round(group['value'])
+            avg_cost = value_svl / group['quantity'] if group['quantity'] else 0
+            product.value_svl = value_svl
             product.quantity_svl = group['quantity']
+            product.avg_cost = avg_cost
+            product.total_value = avg_cost * product.sudo(False).qty_available
             products |= product
         remaining = (self - products)
         remaining.value_svl = 0
         remaining.quantity_svl = 0
+        remaining.avg_cost = 0
+        remaining.total_value = 0
 
     # -------------------------------------------------------------------------
     # Actions
@@ -158,16 +171,15 @@ class ProductProduct(models.Model):
         self.ensure_one()
         company_id = self.env.context.get('force_company', self.env.company.id)
         company = self.env['res.company'].browse(company_id)
-        vals = {
+        value = company.currency_id.round(unit_cost * quantity)
+        return {
             'product_id': self.id,
-            'value': company.currency_id.round(unit_cost * quantity),
+            'value': value,
             'unit_cost': unit_cost,
             'quantity': quantity,
+            'remaining_qty': quantity,
+            'remaining_value': value,
         }
-        if self.cost_method in ('average', 'fifo'):
-            vals['remaining_qty'] = quantity
-            vals['remaining_value'] = vals['value']
-        return vals
 
     def _prepare_out_svl_vals(self, quantity, company):
         """Prepare the values for a stock valuation layer created by a delivery.
@@ -188,24 +200,23 @@ class ProductProduct(models.Model):
             'unit_cost': self.standard_price,
             'quantity': quantity,
         }
-        if self.cost_method in ('average', 'fifo'):
-            fifo_vals = self._run_fifo(abs(quantity), company)
-            vals['remaining_qty'] = fifo_vals.get('remaining_qty')
-            # In case of AVCO, fix rounding issue of standard price when needed.
-            if self.cost_method == 'average':
-                rounding_error = currency.round(self.standard_price * self.quantity_svl - self.value_svl)
-                if rounding_error:
-                    # If it is bigger than the (smallest number of the currency * quantity) / 2,
-                    # then it isn't a rounding error but a stock valuation error, we shouldn't fix it under the hood ...
-                    if abs(rounding_error) <= (abs(quantity) * currency.rounding) / 2:
-                        vals['value'] += rounding_error
-                        vals['rounding_adjustment'] = '\nRounding Adjustment: %s%s %s' % (
-                            '+' if rounding_error > 0 else '',
-                            float_repr(rounding_error, precision_digits=currency.decimal_places),
-                            currency.symbol
-                        )
-            if self.cost_method == 'fifo':
-                vals.update(fifo_vals)
+        fifo_vals = self._run_fifo(abs(quantity), company)
+        vals['remaining_qty'] = fifo_vals.get('remaining_qty')
+        # In case of AVCO, fix rounding issue of standard price when needed.
+        if self.cost_method == 'average':
+            rounding_error = currency.round(self.standard_price * self.quantity_svl - self.value_svl)
+            if rounding_error:
+                # If it is bigger than the (smallest number of the currency * quantity) / 2,
+                # then it isn't a rounding error but a stock valuation error, we shouldn't fix it under the hood ...
+                if abs(rounding_error) <= (abs(quantity) * currency.rounding) / 2:
+                    vals['value'] += rounding_error
+                    vals['rounding_adjustment'] = '\nRounding Adjustment: %s%s %s' % (
+                        '+' if rounding_error > 0 else '',
+                        float_repr(rounding_error, precision_digits=currency.decimal_places),
+                        currency.symbol
+                    )
+        if self.cost_method == 'fifo':
+            vals.update(fifo_vals)
         return vals
 
     def _change_standard_price(self, new_price):
@@ -342,9 +353,16 @@ class ProductProduct(models.Model):
                     new_standard_price = next_candidates and next_candidates[0].unit_cost or new_standard_price
                 break
 
-        # Update the standard price with the price of the last used candidate, if any.
-        if new_standard_price and self.cost_method == 'fifo':
-            self.sudo().with_company(company.id).with_context(disable_auto_svl=True).standard_price = new_standard_price
+        # Fifo out will change the AVCO value of the product. So in case of out,
+        # we recompute it base on the remaining value and quantities.
+        if self.cost_method == 'fifo':
+            quantity_svl = sum(candidates.mapped('remaining_qty'))
+            value_svl = sum(candidates.mapped('remaining_value'))
+            product = self.sudo().with_company(company.id).with_context(disable_auto_svl=True)
+            if float_compare(quantity_svl, 0.0, precision_rounding=self.uom_id.rounding) > 0:
+                product.standard_price = value_svl / quantity_svl
+            elif candidates and not float_is_zero(qty_to_take_on_candidates, precision_rounding=self.uom_id.rounding):
+                product.standard_price = new_standard_price
 
         # If there's still quantity to value but we're out of candidates, we fall in the
         # negative stock use case. We chose to value the out move at the price of the
@@ -463,7 +481,7 @@ class ProductProduct(models.Model):
 
         # If some negative stock were fixed, we need to recompute the standard price.
         product = self.with_company(company.id)
-        if product.cost_method == 'average' and not float_is_zero(product.quantity_svl, precision_rounding=self.uom_id.rounding):
+        if product.cost_method in ['average', 'fifo'] and not float_is_zero(product.quantity_svl, precision_rounding=self.uom_id.rounding):
             product.sudo().with_context(disable_auto_svl=True).write({'standard_price': product.value_svl / product.quantity_svl})
 
         self.env['stock.valuation.layer'].browse(x[0].id for x in as_svls)._validate_accounting_entries()
@@ -511,7 +529,7 @@ class ProductProduct(models.Model):
         move_lines = vacuum_svl.stock_move_id._prepare_account_move_line(
             vacuum_svl.quantity, vacuum_svl.value * -1,
             accounts['stock_output'].id, accounts['expense'].id,
-            description)
+            vacuum_svl, description)
         new_account_move = AccountMove.sudo().create({
             'journal_id': accounts['stock_journal'].id,
             'line_ids': move_lines,

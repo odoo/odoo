@@ -58,3 +58,7 @@ class SaleOrderLine(models.Model):
     def _show_in_cart(self):
         self.ensure_one()
         return True
+
+    def _is_reorder_allowed(self):
+        self.ensure_one()
+        return self.product_id._is_add_to_cart_allowed()

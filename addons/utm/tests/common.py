@@ -5,7 +5,6 @@ from odoo.tests import common
 from odoo.tests.common import tagged
 
 
-@tagged('post_install', '-at_install', 'utm_consistency')
 class TestUTMCommon(common.TransactionCase):
 
     @classmethod

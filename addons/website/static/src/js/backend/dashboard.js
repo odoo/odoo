@@ -2,7 +2,7 @@ odoo.define('website.backend.dashboard', function (require) {
 'use strict';
 
 var AbstractAction = require('web.AbstractAction');
-var ajax = require('web.ajax');
+const { loadBundle } = require("@web/core/assets");
 var core = require('web.core');
 var field_utils = require('web.field_utils');
 var pyUtils = require('web.py_utils');
@@ -53,7 +53,7 @@ var Dashboard = AbstractAction.extend({
 
     willStart: function() {
         var self = this;
-        return Promise.all([ajax.loadLibs(this), this._super()]).then(function() {
+        return Promise.all([loadBundle(this), this._super()]).then(function() {
             return self.fetch_data();
         }).then(function(){
             var website = _.findWhere(self.websites, {selected: true});

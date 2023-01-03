@@ -1,8 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates xml:space="preserve">
     <t t-name="mail.ActivityMenuContainer" owl="1">
-        <t t-if="activityMenuView">
-            <ActivityMenuView record="activityMenuView"/>
-        </t>
+        <ActivityMenuView t-if="activityMenuView" record="activityMenuView"/>
     </t>
 </templates>

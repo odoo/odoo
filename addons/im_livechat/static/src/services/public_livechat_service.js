@@ -11,7 +11,9 @@ export const publicLivechatService = {
         return {
             mountLivechatButton() {
                 const livechatButton = new LivechatButton(rootWidget, messaging);
-                livechatButton.appendTo(document.body);
+                livechatButton.appendTo(document.body).catch(error => {
+                    console.info("Can't load 'LivechatButton' because:", error);
+                });
                 return livechatButton;
             },
         };

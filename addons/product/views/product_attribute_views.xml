@@ -88,7 +88,6 @@
     <record id="product_template_attribute_value_view_tree" model="ir.ui.view">
         <field name="name">product.template.attribute.value.view.tree</field>
         <field name="model">product.template.attribute.value</field>
-        <field name="type">tree</field>
         <field name="arch" type="xml">
             <tree string="Attributes" create="0" delete="0">
                 <field name="attribute_id" optional="hide"/>
@@ -105,7 +104,6 @@
     <record id="product_template_attribute_value_view_form" model="ir.ui.view">
         <field name="name">product.template.attribute.value.view.form.</field>
         <field name="model">product.template.attribute.value</field>
-        <field name="type">form</field>
         <field name="arch" type="xml">
             <form string="Product Attribute" create="0" delete="0">
                 <sheet>

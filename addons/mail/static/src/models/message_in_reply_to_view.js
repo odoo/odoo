@@ -1,46 +1,34 @@
 /** @odoo-module **/
 
-import { registerModel } from '@mail/model/model_core';
-import { attr, one } from '@mail/model/model_field';
-import { markEventHandled } from '@mail/utils/utils';
+import { attr, one, Model } from "@mail/model";
+import { markEventHandled } from "@mail/utils/utils";
 
-registerModel({
-    name: 'MessageInReplyToView',
+Model({
+    name: "MessageInReplyToView",
+    template: "mail.MessageInReplyToView",
     recordMethods: {
         /**
          * @private
          * @param {MouseEvent} ev
          */
         onClickReply(ev) {
-            markEventHandled(ev, 'MessageInReplyToView.ClickMessageInReplyTo');
-            const messageListViewMessageViewItem = this.messageView && this.messageView.messageListViewMessageViewItemOwner;
+            markEventHandled(ev, "MessageInReplyToView.ClickMessageInReplyTo");
+            const messageListViewItem =
+                this.messageView && this.messageView.messageListViewItemOwner;
             const parentMessage = this.messageView.message.parentMessage;
-            if (!messageListViewMessageViewItem || !parentMessage) {
+            if (!messageListViewItem || !parentMessage) {
                 return;
             }
-            const parentMessageListViewMessageViewItem = this.messaging.models['MessageListViewMessageViewItem'].findFromIdentifyingData({
+            const parentMessageListViewItem = this.messaging.models[
+                "MessageListViewItem"
+            ].findFromIdentifyingData({
                 message: parentMessage,
-                messageListViewOwner: messageListViewMessageViewItem.messageListViewOwner,
+                messageListViewOwner: messageListViewItem.messageListViewOwner,
             });
-            if (!parentMessageListViewMessageViewItem) {
+            if (!parentMessageListViewItem) {
                 return;
             }
-            parentMessageListViewMessageViewItem.messageView.update({ doHighlight: true });
-        },
-        /**
-         * @private
-         * @returns {boolean}
-         */
-        _computeHasAttachmentBackLink() {
-            const parentMessage = this.messageView.message.parentMessage;
-            return parentMessage.isBodyEmpty && parentMessage.hasAttachments;
-        },
-        /**
-         * @private
-         * @returns {boolean}
-         */
-        _computeHasBodyBackLink() {
-            return !this.messageView.message.parentMessage.isBodyEmpty;
+            parentMessageListViewItem.messageView.update({ doHighlight: true });
         },
     },
     fields: {
@@ -49,17 +37,19 @@ registerModel({
          * message.
          */
         hasAttachmentBackLink: attr({
-            compute: '_computeHasAttachmentBackLink',
+            compute() {
+                const parentMessage = this.messageView.message.parentMessage;
+                return parentMessage.isBodyEmpty && parentMessage.hasAttachments;
+            },
         }),
         /**
          * Determines if the reply has a back link to a non-empty body.
          */
         hasBodyBackLink: attr({
-            compute: '_computeHasBodyBackLink',
+            compute() {
+                return !this.messageView.message.parentMessage.isBodyEmpty;
+            },
         }),
-        messageView: one('MessageView', {
-            identifying: true,
-            inverse: 'messageInReplyToView',
-        }),
+        messageView: one("MessageView", { identifying: true, inverse: "messageInReplyToView" }),
     },
 });

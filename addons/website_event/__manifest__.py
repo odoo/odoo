@@ -33,6 +33,7 @@
         'views/website_event_menu_views.xml',
         'views/website_visitor_views.xml',
         'views/event_menus.xml',
+        'views/website_pages_views.xml',
         'views/event_event_add.xml',
         'security/ir.model.access.csv',
         'security/event_security.xml',
@@ -51,6 +52,7 @@
             'website_event/static/tests/**/*',
         ],
         'web.assets_frontend': [
+            'website_event/static/src/js/tours/**/*',
             'website_event/static/src/scss/event_templates_common.scss',
             'website_event/static/src/scss/event_templates_list.scss',
             'website_event/static/src/scss/event_templates_page.scss',
@@ -65,7 +67,6 @@
         ],
         'website.assets_editor': [
             'website_event/static/src/js/systray_items/*.js',
-            'website_event/static/src/js/components/navbar/navbar.js',
         ],
     },
     'license': 'LGPL-3',

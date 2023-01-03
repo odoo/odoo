@@ -8,17 +8,29 @@ const RELATIONAL_TYPES = [...X2M_TYPES, "many2one"];
 const NUMERIC_TYPES = ["integer", "float", "monetary"];
 
 /**
+ * @typedef ViewActiveActions {
+ * @property {"view"} type
+ * @property {boolean} edit
+ * @property {boolean} create
+ * @property {boolean} delete
+ * @property {boolean} duplicate
+ */
+
+/**
  * Add dependencies to activeFields
  *
  * @param {Object} activeFields
  * @param {Object} [dependencies={}]
  */
-export function addFieldDependencies(activeFields, dependencies = {}) {
+export function addFieldDependencies(activeFields, fields, dependencies = {}) {
     for (const [name, dependency] of Object.entries(dependencies)) {
         if (!(name in activeFields)) {
             activeFields[name] = Object.assign({ name, rawAttrs: {} }, dependency, {
                 modifiers: { invisible: true },
             });
+        }
+        if (!(name in fields)) {
+            fields[name] = { ...dependency };
         }
     }
 }
@@ -42,15 +54,9 @@ export function archParseBoolean(str, trueIfEmpty = false) {
  * @param {Object} fields
  * @param {Object} fieldAttrs
  * @param {string[]} activeMeasures
- * @param {string[]} [additionalMeasures=[]]
  * @returns {Object}
  */
-export const computeReportMeasures = (
-    fields,
-    fieldAttrs,
-    activeMeasures,
-    additionalMeasures = []
-) => {
+export const computeReportMeasures = (fields, fieldAttrs, activeMeasures) => {
     const measures = {
         __count: { name: "__count", string: _t("Count"), type: "integer" },
     };
@@ -59,13 +65,10 @@ export const computeReportMeasures = (
             continue;
         }
         const { isInvisible } = fieldAttrs[fieldName] || {};
-        if (isInvisible && !additionalMeasures.includes(fieldName)) {
+        if (isInvisible) {
             continue;
         }
-        if (
-            ["integer", "float", "monetary"].includes(field.type) ||
-            additionalMeasures.includes(fieldName)
-        ) {
+        if (["integer", "float", "monetary"].includes(field.type)) {
             measures[fieldName] = field;
         }
     }
@@ -111,8 +114,13 @@ export function evalDomain(modifier, evalContext) {
     return Boolean(modifier);
 }
 
+/**
+ * @param {Element} rootNode
+ * @returns {ViewActiveActions}
+ */
 export function getActiveActions(rootNode) {
     return {
+        type: "view",
         edit: archParseBoolean(rootNode.getAttribute("edit"), true),
         create: archParseBoolean(rootNode.getAttribute("create"), true),
         delete: archParseBoolean(rootNode.getAttribute("delete"), true),
@@ -120,12 +128,21 @@ export function getActiveActions(rootNode) {
     };
 }
 
+export function getClassNameFromDecoration(decoration) {
+    if (decoration === "bf") {
+        return "fw-bold";
+    } else if (decoration === "it") {
+        return "fst-italic";
+    }
+    return `text-${decoration}`;
+}
+
 export function getDecoration(rootNode) {
     const decorations = [];
     for (const name of rootNode.getAttributeNames()) {
         if (name.startsWith("decoration-")) {
             decorations.push({
-                class: name.replace("decoration", "text"),
+                class: getClassNameFromDecoration(name.replace("decoration-", "")),
                 condition: rootNode.getAttribute(name),
             });
         }
@@ -175,6 +192,14 @@ export function isNumeric(field) {
     return NUMERIC_TYPES.includes(field.type);
 }
 
+/**
+ * @param {any} value
+ * @returns {boolean}
+ */
+export function isNull(value) {
+    return [null, undefined].includes(value);
+}
+
 export function processButton(node) {
     return {
         className: node.getAttribute("class") || "",
@@ -183,7 +208,9 @@ export function processButton(node) {
         string: node.getAttribute("string") || undefined,
         options: JSON.parse(node.getAttribute("options") || "{}"),
         modifiers: JSON.parse(node.getAttribute("modifiers") || "{}"),
+        display: node.getAttribute("display") || "selection",
         clickParams: {
+            close: archParseBoolean(node.getAttribute("close"), false),
             context: node.getAttribute("context") || "{}",
             name: node.getAttribute("name"),
             type: node.getAttribute("type"),
@@ -251,4 +278,16 @@ export function stringToOrderBy(string) {
  */
 export function toStringExpression(str) {
     return `\`${str.replaceAll("`", "\\`")}\``;
+}
+
+/**
+ * Generate a unique identifier (64 bits) in hexadecimal.
+ *
+ * @returns {string}
+ */
+export function uuid() {
+    const array = new Uint8Array(8);
+    window.crypto.getRandomValues(array);
+    // Uint8Array to hex
+    return [...array].map((b) => b.toString(16).padStart(2, "0")).join("");
 }

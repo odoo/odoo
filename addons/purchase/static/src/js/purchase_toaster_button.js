@@ -7,7 +7,6 @@ odoo.define('purchase.ToasterButton', function (require) {
 
     const ToasterButton = Widget.extend({
         template: 'purchase.ToasterButton',
-        xmlDependencies: ['/purchase/static/src/xml/purchase_toaster_button.xml'],
         events: Object.assign({}, Widget.prototype.events, {
             'click .fa-info-circle': '_onClickButton',
         }),

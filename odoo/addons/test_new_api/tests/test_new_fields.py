@@ -13,7 +13,7 @@ import psycopg2
 
 from odoo import models, fields, Command
 from odoo.addons.base.tests.common import TransactionCaseWithUserDemo
-from odoo.exceptions import AccessError, UserError, ValidationError
+from odoo.exceptions import AccessError, MissingError, UserError, ValidationError
 from odoo.tests import common
 from odoo.tools import mute_logger, float_repr
 from odoo.tools.date_utils import add, subtract, start_of, end_of
@@ -933,6 +933,23 @@ class TestFields(TransactionCaseWithUserDemo):
         })
         check(1.0)
 
+    def test_20_monetary_related(self):
+        """ test value rounding with related currency """
+        currency = self.env.ref('base.USD')
+        monetary_base = self.env['test_new_api.monetary_base'].create({
+            'base_currency_id': currency.id
+        })
+        monetary_related = self.env['test_new_api.monetary_related'].create({
+            'monetary_id': monetary_base.id,
+            'total': 1/3,
+        })
+        self.env.cr.execute(
+            "SELECT total FROM test_new_api_monetary_related WHERE id=%s",
+            monetary_related.ids,
+        )
+        [total] = self.env.cr.fetchone()
+        self.assertEqual(total, .33)
+
     def test_20_like(self):
         """ test filtered_domain() on char fields. """
         record = self.env['test_new_api.multi.tag'].create({'name': 'Foo'})
@@ -1607,6 +1624,57 @@ class TestFields(TransactionCaseWithUserDemo):
         with self.assertRaises(AccessError):
             cat1.name
 
+    def test_32_prefetch_missing_error(self):
+        """ Test that prefetching non-column fields works in the presence of deleted records. """
+        Discussion = self.env['test_new_api.discussion']
+
+        # add an ir.rule that forces reading field 'name'
+        self.env['ir.rule'].create({
+            'model_id': self.env['ir.model']._get(Discussion._name).id,
+            'groups': [self.env.ref('base.group_user').id],
+            'domain_force': "[('name', '!=', 'Super Secret discution')]",
+        })
+
+        records = Discussion.with_user(self.user_demo).create([
+            {'name': 'EXISTING'},
+            {'name': 'MISSING'},
+        ])
+
+        # unpack to keep the prefetch on each recordset
+        existing, deleted = records
+        self.assertEqual(existing._prefetch_ids, records._ids)
+
+        # this invalidates the caches but the prefetching remains the same
+        deleted.unlink()
+
+        # this should not trigger a MissingError
+        existing.categories
+
+        # invalidate 'categories' for the assertQueryCount
+        records.invalidate_model(['categories'])
+        with self.assertQueryCount(4):
+            # <categories>.__get__(existing)
+            #  -> records._fetch_field(['categories'])
+            #      -> records._read(['categories'])
+            #          -> records.check_access_rule('read')
+            #              -> records._filter_access_rules_python('read')
+            #                  -> records.filtered_domain(...)
+            #                      -> <name>.__get__(existing)
+            #                          -> records._fetch_field(['name'])
+            #                              -> records._read(['name', ...])
+            #                                  -> ONE QUERY to read ['name', ...] of records
+            #                                  -> ONE QUERY for deleted.exists() / code: forbidden = missing.exists()
+            #          -> ONE QUERY for records.exists() / code: self = self.exists()
+            #          -> ONE QUERY to read the many2many of existing
+            existing.categories
+
+        # this one must trigger a MissingError
+        with self.assertRaises(MissingError):
+            deleted.categories
+
+        # special case: should not fail
+        Discussion.browse([None]).read(['categories'])
+
     def test_40_real_vs_new(self):
         """ test field access on new records vs real records. """
         Model = self.env['test_new_api.category']
@@ -2155,7 +2223,6 @@ class TestFields(TransactionCaseWithUserDemo):
         self.assertEqual(discussion2.categories.ids, category21.ids)
 
     def test_80_copy(self):
-        Translations = self.env['ir.translation']
         discussion = self.env.ref('test_new_api.discussion_0')
         message = self.env.ref('test_new_api.message_0_0')
         message1 = self.env.ref('test_new_api.message_0_1')
@@ -2165,27 +2232,20 @@ class TestFields(TransactionCaseWithUserDemo):
 
         self.env['res.lang']._activate_lang('fr_FR')
 
-        def count(msg):
-            # return the number of translations of msg.label
-            return Translations.search_count([
-                ('name', '=', 'test_new_api.message,label'),
-                ('res_id', '=', msg.id),
-            ])
-
         # set a translation for message.label
         email.with_context(lang='fr_FR').label = "bonjour"
-        self.assertEqual(count(message), 1)
-        self.assertEqual(count(message1), 0)
+        self.assertEqual(message.with_context(lang='fr_FR').label, 'bonjour')
+        self.assertFalse(message1.label)
 
         # setting the parent record should not copy its translations
         email.copy({'message': message1.id})
-        self.assertEqual(count(message), 1)
-        self.assertEqual(count(message1), 0)
+        self.assertEqual(message.with_context(lang='fr_FR').label, 'bonjour')
+        self.assertFalse(message1.label)
 
         # setting a one2many should not copy translations on the lines
         discussion.copy({'messages': [Command.set(message1.ids)]})
-        self.assertEqual(count(message), 1)
-        self.assertEqual(count(message1), 0)
+        self.assertEqual(message.with_context(lang='fr_FR').label, 'bonjour')
+        self.assertFalse(message1.label)
 
     def test_85_binary_guess_zip(self):
         from odoo.addons.base.tests.test_mimetypes import ZIP
@@ -2553,11 +2613,11 @@ class TestFields(TransactionCaseWithUserDemo):
         # translated '_rec_name' field should be prefetched
         self.assertTrue(Model.name.prefetch)
 
-        # parameter 'prefetch' can be always overridden
+        # translated fields should be prefetch=True by default
         self.assertTrue(Model.description.prefetch)
         self.assertTrue(Model.html_description.prefetch)
 
-        # translated fields should be prefetch=False by default
+        # parameter 'prefetch' can be always overridden
         self.assertFalse(Model.rare_description.prefetch)
         self.assertFalse(Model.rare_html_description.prefetch)
 
@@ -2587,9 +2647,9 @@ class TestFields(TransactionCaseWithUserDemo):
         with self.assertQueries(["""
             SELECT
                 "test_new_api_prefetch"."id" AS "id",
-                "test_new_api_prefetch"."name" AS "name",
-                "test_new_api_prefetch"."description" AS "description",
-                "test_new_api_prefetch"."html_description" AS "html_description",
+                "test_new_api_prefetch"."name"->>'en_US' AS "name",
+                "test_new_api_prefetch"."description"->>'en_US' AS "description",
+                "test_new_api_prefetch"."html_description"->>'en_US' AS "html_description",
                 "test_new_api_prefetch"."create_uid" AS "create_uid",
                 "test_new_api_prefetch"."create_date" AS "create_date",
                 "test_new_api_prefetch"."write_uid" AS "write_uid",
@@ -4085,3 +4145,91 @@ class TestPrecompute(common.TransactionCase):
         ]
         with self.assertQueries(QUERIES):
             model.create({})
+
+
+class TestModifiedPerformance(common.TransactionCase):
+
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        cls.Modified = cls.env['test_new_api.modified']
+        cls.ModifiedLine = cls.env['test_new_api.modified.line']
+        cls.modified_a = cls.Modified.create({
+            'name': 'Test',
+        })
+        cls.modified_line_a = cls.ModifiedLine.create({
+            'modified_id': cls.modified_a.id,
+            'quantity': 5,
+            'price': 1,
+        })
+        cls.modified_line_a_child = cls.ModifiedLine.create({
+            'modified_id': cls.modified_a.id,
+            'quantity': 5,
+            'price': 2,
+            'parent_id': cls.modified_line_a.id,
+        })
+        cls.modified_line_a_child_child = cls.ModifiedLine.create({
+            'modified_id': cls.modified_a.id,
+            'quantity': 5,
+            'price': 3,
+            'parent_id': cls.modified_line_a_child.id,
+        })
+        cls.env.invalidate_all()  # Clean the cache
+
+    def test_modified_trigger_related(self):
+        with self.assertQueryCount(0, flush=False):
+            # No queries because `modified_name` has a empty cache
+            self.modified_a.name = "Other"
+
+        self.assertEqual(self.modified_line_a.modified_name, 'Other')  # check
+
+    def test_modified_trigger_no_store_compute(self):
+        with self.assertQueryCount(0, flush=False):
+            # No queries because `total_quantity` has a empty cache
+            self.modified_line_a.quantity = 8
+
+        self.assertEqual(self.modified_a.total_quantity, 18)
+
+    def test_modified_trigger_recursive_empty_cache(self):
+        with self.assertQueryCount(0, flush=False):
+            # No queries because `total_price` has a empty cache
+            self.modified_line_a_child_child.price = 4
+
+        self.assertEqual(self.modified_line_a.total_price, 7)
+        self.assertEqual(self.modified_line_a.total_price_quantity, 35)
+        self.assertEqual(self.modified_line_a_child.total_price, 6)
+        self.assertEqual(self.modified_line_a_child.total_price_quantity, 30)
+
+    def test_modified_trigger_recursive_fill_cache(self):
+        self.assertEqual(self.modified_line_a.total_price, 6)
+        self.assertEqual(self.modified_line_a.total_price_quantity, 30)
+        with self.assertQueryCount(0, flush=False):
+            # No query because the `modified_line_a.total_price` has fetch every data needed
+            self.modified_line_a_child_child.price = 4
+
+        self.assertEqual(self.modified_line_a.total_price_quantity, 35)
+        self.assertEqual(self.modified_line_a.total_price, 7)
+
+    def test_modified_trigger_recursive_partial_invalidate(self):
+        self.assertEqual(self.modified_line_a_child.total_price_quantity, 25)
+        self.modified_line_a_child_child.invalidate_recordset()
+
+        self.modified_line_a_child.price
+        with self.assertQueries(["""
+        SELECT "test_new_api_modified_line"."id" AS "id", "test_new_api_modified_line"."modified_id" AS "modified_id",
+               "test_new_api_modified_line"."quantity" AS "quantity", "test_new_api_modified_line"."price" AS "price",
+               "test_new_api_modified_line"."parent_id" AS "parent_id", "test_new_api_modified_line"."create_uid" AS "create_uid",
+               "test_new_api_modified_line"."create_date" AS "create_date", "test_new_api_modified_line"."write_uid" AS "write_uid",
+               "test_new_api_modified_line"."write_date" AS "write_date"
+         FROM "test_new_api_modified_line"
+        WHERE "test_new_api_modified_line".id IN %s
+        """] * 2, flush=False):
+            # Two requests:
+            # - one for fetch modified_line_a_child_child data (invalidate just before)
+            # - one because modified_line_a_child.parent_id (invalidate just before because we invalidate inverse in `_invalidate_cache`,
+            # see TODO) -> We should change that
+            self.modified_line_a_child_child.price = 4
+        self.assertEqual(self.modified_line_a_child_child.total_price_quantity, 20)
+        self.assertEqual(self.modified_line_a_child.total_price_quantity, 30)
+        self.assertEqual(self.modified_line_a.total_price_quantity, 35)
+        self.assertEqual(self.modified_line_a.total_price, 7)

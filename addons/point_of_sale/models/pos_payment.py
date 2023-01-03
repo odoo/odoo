@@ -33,7 +33,6 @@ class PosPayment(models.Model):
     is_change = fields.Boolean(string='Is this payment change?', default=False)
     account_move_id = fields.Many2one('account.move')
 
-    @api.model
     def name_get(self):
         res = []
         for payment in self:
@@ -84,7 +83,7 @@ class PosPayment(models.Model):
             payment.write({'account_move_id': payment_move.id})
             amounts = pos_session._update_amounts({'amount': 0, 'amount_converted': 0}, {'amount': payment.amount}, payment.payment_date)
             credit_line_vals = pos_session._credit_amounts({
-                'account_id': accounting_partner.property_account_receivable_id.id,
+                'account_id': accounting_partner.with_company(order.company_id).property_account_receivable_id.id,  # The field being company dependant, we need to make sure the right value is received.
                 'partner_id': accounting_partner.id,
                 'move_id': payment_move.id,
             }, amounts['amount'], amounts['amount_converted'])

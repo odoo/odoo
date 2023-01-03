@@ -81,6 +81,23 @@ class Lang(models.Model):
                                             'Please refer to the list of allowed directives, '
                                             'displayed when you edit a language.'))
 
+    @api.onchange('time_format', 'date_format')
+    def _onchange_format(self):
+        warning = {
+            'warning': {
+                'title': _("Using 24-hour clock format with AM/PM can cause issues."),
+                'message': _("Changing to 12-hour clock format instead."),
+                'type': 'notification'
+            }
+        }
+        for lang in self:
+            if lang.date_format and "%H" in lang.date_format and "%p" in lang.date_format:
+                lang.date_format = lang.date_format.replace("%H", "%I")
+                return warning
+            if lang.time_format and "%H" in lang.time_format and "%p" in lang.time_format:
+                lang.time_format = lang.time_format.replace("%H", "%I")
+                return warning
+
     @api.constrains('grouping')
     def _check_grouping(self):
         warning = _('The Separator Format should be like [,n] where 0 < n :starting from Unit digit. '
@@ -98,12 +115,6 @@ class Lang(models.Model):
         # check that there is at least one active language
         if not self.search_count([]):
             _logger.error("No language is active.")
-
-    # TODO remove me after v14
-    def load_lang(self, lang, lang_name=None):
-        _logger.warning("Call to deprecated method load_lang, use _create_lang or _activate_lang instead")
-        language = self._activate_lang(lang) or self._create_lang(lang, lang_name)
-        return language.id
 
     def _activate_lang(self, code):
         """ Activate languages
@@ -305,8 +316,6 @@ class Lang(models.Model):
                 raise UserError(_("You cannot delete the language which is Active!\nPlease de-activate the language first."))
 
     def unlink(self):
-        for language in self:
-            self.env['ir.translation'].search([('lang', '=', language.code)]).unlink()
         self.clear_caches()
         return super(Lang, self).unlink()
 

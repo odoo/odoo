@@ -48,6 +48,11 @@ class Pricelist(models.Model):
         comodel_name='product.pricelist.item',
         inverse_name='pricelist_id',
         string="Pricelist Rules",
+        domain=[
+            '&',
+            '|', ('product_tmpl_id', '=', None), ('product_tmpl_id.active', '=', True),
+            '|', ('product_id', '=', None), ('product_id.active', '=', True),
+        ],
         copy=True)
 
     def name_get(self):
@@ -107,10 +112,10 @@ class Pricelist(models.Model):
         """
         self.ensure_one()
         return self._compute_price_rule(
-            product, quantity, uom=uom, date=date, **kwargs
+            product, quantity, uom=uom, date=date, compute_price=False, **kwargs
         )[product.id][1]
 
-    def _compute_price_rule(self, products, qty, uom=None, date=False, **kwargs):
+    def _compute_price_rule(self, products, qty, uom=None, date=False, compute_price=True, **kwargs):
         """ Low-level method - Mono pricelist, multi products
         Returns: dict{product_id: (price, suitable_rule) for the given pricelist}
 
@@ -120,6 +125,7 @@ class Pricelist(models.Model):
             If not specified, prices returned are expressed in product uoms
         :param date: date to use for price computation and currency conversions
         :type date: date or datetime
+        :param bool compute_price: whether the price should be computed (default: True)
 
         :returns: product_id: (price, pricelist_rule)
         :rtype: dict
@@ -155,8 +161,11 @@ class Pricelist(models.Model):
                     suitable_rule = rule
                     break
 
-            kwargs['pricelist'] = self
-            price = suitable_rule._compute_price(product, qty, target_uom, date=date, currency=self.currency_id)
+            if compute_price:
+                price = suitable_rule._compute_price(product, qty, target_uom, date=date, currency=self.currency_id)
+            else:
+                # Skip price computation when only the rule is requested.
+                price = 0.0
             results[product.id] = (price, suitable_rule.id)
 
         return results
@@ -181,7 +190,7 @@ class Pricelist(models.Model):
 
         return [
             ('pricelist_id', '=', self.id),
-            '|', ('categ_id', '=', False), ('categ_id', 'child_of', products.categ_id.ids),
+            '|', ('categ_id', '=', False), ('categ_id', 'parent_of', products.categ_id.ids),
             '|', ('product_tmpl_id', '=', False), templates_domain,
             '|', ('product_id', '=', False), products_domain,
             '|', ('date_start', '=', False), ('date_start', '<=', date),

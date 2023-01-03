@@ -1,9 +1,9 @@
 /** @odoo-module **/
 
-import PaymentScreen from 'point_of_sale.PaymentScreen';
-import Registries from 'point_of_sale.Registries';
-import session from 'web.session';
-import { PosLoyaltyCard } from '@pos_loyalty/js/Loyalty';
+import PaymentScreen from "@point_of_sale/js/Screens/PaymentScreen/PaymentScreen";
+import Registries from "@point_of_sale/js/Registries";
+import session from "web.session";
+import { PosLoyaltyCard } from "@pos_loyalty/js/Loyalty";
 
 export const PosLoyaltyPaymentScreen = (PaymentScreen) =>
     class extends PaymentScreen {
@@ -14,7 +14,7 @@ export const PosLoyaltyPaymentScreen = (PaymentScreen) =>
             for (const pe of Object.values(this.currentOrder.couponPointChanges)) {
                 if (pe.coupon_id > 0) {
                     pointChanges[pe.coupon_id] = pe.points;
-                } else if (pe.barcode) {
+                } else if (pe.barcode && !pe.giftCardId) {
                     // New coupon with a specific code, validate that it does not exist
                     newCodes.push(pe.barcode);
                 }
@@ -29,15 +29,15 @@ export const PosLoyaltyPaymentScreen = (PaymentScreen) =>
                     pointChanges[line.coupon_id] -= line.points_cost;
                 }
             }
-            if (!await this._isOrderValid(isForceValidate)) {
+            if (!(await this._isOrderValid(isForceValidate))) {
                 return;
             }
             // No need to do an rpc if no existing coupon is being used.
             if (!_.isEmpty(pointChanges) || newCodes.length) {
                 try {
-                    const {successful, payload} = await this.rpc({
-                        model: 'pos.order',
-                        method: 'validate_coupon_programs',
+                    const { successful, payload } = await this.rpc({
+                        model: "pos.order",
+                        method: "validate_coupon_programs",
                         args: [[], pointChanges, newCodes],
                         kwargs: { context: session.user_context },
                     });
@@ -55,16 +55,19 @@ export const PosLoyaltyPaymentScreen = (PaymentScreen) =>
                                 delete this.env.pos.couponCache[couponId];
                             }
                         }
-                        this.currentOrder.codeActivatedCoupons = this.currentOrder.codeActivatedCoupons.filter((coupon) => !payload.removed_coupons.includes(coupon.id));
+                        this.currentOrder.codeActivatedCoupons =
+                            this.currentOrder.codeActivatedCoupons.filter(
+                                (coupon) => !payload.removed_coupons.includes(coupon.id)
+                            );
                     }
                     if (!successful) {
-                        this.showPopup('ErrorPopup', {
-                            title: this.env._t('Error validating rewards'),
+                        this.showPopup("ErrorPopup", {
+                            title: this.env._t("Error validating rewards"),
                             body: payload.message,
                         });
                         return;
                     }
-                } catch (_e) {
+                } catch {
                     // Do nothing with error, while this validation step is nice for error messages
                     // it should not be blocking.
                 }
@@ -78,21 +81,16 @@ export const PosLoyaltyPaymentScreen = (PaymentScreen) =>
         async _postPushOrderResolve(order, server_ids) {
             // Compile data for our function
             const rewardLines = order._get_reward_lines();
-            const loyaltyProgramId = this.env.pos.config.loyalty_program_id ? this.env.pos.config.loyalty_program_id[0] : 0;
             const partner = order.get_partner();
-            let partnerLoyaltyCardId = partner ? partner.loyalty_card_id : 0;
             let couponData = Object.values(order.couponPointChanges).reduce((agg, pe) => {
                 agg[pe.coupon_id] = Object.assign({}, pe, {
-                    points: pe.points - order._getPointsCorrection(this.env.pos.program_by_id[pe.program_id]),
+                    points:
+                        pe.points -
+                        order._getPointsCorrection(this.env.pos.program_by_id[pe.program_id]),
                 });
                 const program = this.env.pos.program_by_id[pe.program_id];
-                if (program.is_nominative && order.get_partner()) {
+                if (program.is_nominative && partner) {
                     agg[pe.coupon_id].partner_id = partner.id;
-                }
-                if (program.id === loyaltyProgramId) {
-                    if (!partnerLoyaltyCardId) {
-                        partnerLoyaltyCardId = pe.coupon_id;
-                    }
                 }
                 return agg;
             }, {});
@@ -104,7 +102,7 @@ export const PosLoyaltyPaymentScreen = (PaymentScreen) =>
                         program_id: reward.program_id.id,
                         coupon_id: line.coupon_id,
                         barcode: false,
-                    }
+                    };
                 }
                 if (!couponData[line.coupon_id].line_codes) {
                     couponData[line.coupon_id].line_codes = [];
@@ -115,17 +113,19 @@ export const PosLoyaltyPaymentScreen = (PaymentScreen) =>
                 couponData[line.coupon_id].points -= line.points_cost;
             }
             // We actually do not care about coupons for 'current' programs that did not claim any reward, they will be lost if not validated
-            couponData = Object.fromEntries(Object.entries(couponData).filter(([key, value]) => {
-                const program = this.env.pos.program_by_id[value.program_id];
-                if (program.applies_on === 'current') {
-                    return value.line_codes && value.line_codes.length;
-                }
-                return true;
-            }));
+            couponData = Object.fromEntries(
+                Object.entries(couponData).filter(([key, value]) => {
+                    const program = this.env.pos.program_by_id[value.program_id];
+                    if (program.applies_on === "current") {
+                        return value.line_codes && value.line_codes.length;
+                    }
+                    return true;
+                })
+            );
             if (!_.isEmpty(couponData)) {
                 const payload = await this.rpc({
-                    model: 'pos.order',
-                    method: 'confirm_coupon_programs',
+                    model: "pos.order",
+                    method: "confirm_coupon_programs",
                     args: [server_ids, couponData],
                     kwargs: { context: session.user_context },
                 });
@@ -138,10 +138,12 @@ export const PosLoyaltyPaymentScreen = (PaymentScreen) =>
                             dbCoupon.code = couponUpdate.code;
                         } else {
                             dbCoupon = new PosLoyaltyCard(
-                                couponUpdate.code, couponUpdate.id, couponUpdate.program_id, couponUpdate.partner_id, couponUpdate.points);
-                        }
-                        if (couponUpdate.old_id === partnerLoyaltyCardId) {
-                            partner.loyalty_card_id = couponUpdate.id;
+                                couponUpdate.code,
+                                couponUpdate.id,
+                                couponUpdate.program_id,
+                                couponUpdate.partner_id,
+                                couponUpdate.points
+                            );
                         }
                         delete this.env.pos.couponCache[couponUpdate.old_id];
                         this.env.pos.couponCache[couponUpdate.id] = dbCoupon;
@@ -158,10 +160,10 @@ export const PosLoyaltyPaymentScreen = (PaymentScreen) =>
                 }
                 if (payload.coupon_report) {
                     for (const report_entry of Object.entries(payload.coupon_report)) {
-                        this.env.legacyActionManager.do_action(report_entry[0], {
+                        await this.env.legacyActionManager.do_action(report_entry[0], {
                             additional_context: {
                                 active_ids: report_entry[1],
-                            }
+                            },
                         });
                     }
                 }

@@ -31,6 +31,18 @@ class IapAccount(models.Model):
                 ('company_ids', '=', False)
         ]
         accounts = self.search(domain, order='id desc')
+        accounts_without_token = accounts.filtered(lambda acc: not acc.account_token)
+        if accounts_without_token:
+            with self.pool.cursor() as cr:
+                # In case of a further error that will rollback the database, we should
+                # use a different SQL cursor to avoid undo the accounts deletion.
+
+                # Flush the pending operations to avoid a deadlock.
+                self.flush()
+                IapAccount = self.with_env(self.env(cr=cr))
+                # Need to use sudo because regular users do not have delete right
+                IapAccount.search(domain + [('account_token', '=', False)]).sudo().unlink()
+                accounts = accounts - accounts_without_token
         if not accounts:
             with self.pool.cursor() as cr:
                 # Since the account did not exist yet, we will encounter a NoCreditError,
@@ -118,26 +130,3 @@ class IapAccount(models.Model):
                 credit = -1
 
         return credit
-
-    def _neutralize(self):
-        super()._neutralize()
-        self.env.flush_all()
-        self.env.invalidate_all()
-
-        self.env.cr.execute("""
-            INSERT INTO ir_config_parameter(key, value)
-            VALUES ('iap.endpoint', 'https://iap-sandbox.odoo.com')
-            ON CONFLICT (key) DO UPDATE SET value = 'https://iap-sandbox.odoo.com'
-        """)
-
-        iap_service_endpoints = self._get_iap_config_parameters()
-        if iap_service_endpoints:
-            self.env.cr.execute("""
-                UPDATE ir_config_parameter
-                SET value = 'https://iap-services-test.odoo.com'
-                WHERE key IN %s
-            """, [tuple(iap_service_endpoints)])
-
-    def _get_iap_config_parameters(self):
-        """override this method to extend the list with each parameter"""
-        return []

@@ -32,7 +32,7 @@ class TestPurchaseInvoice(AccountTestInvoicingCommon):
         })
 
         cls.account_expense_product = cls.env['account.account'].create({
-            'code': 'EXPENSE_PROD111',
+            'code': 'EXPENSE.PROD111',
             'name': 'Expense - Test Account',
             'account_type': 'expense',
         })

@@ -1,7 +1,7 @@
 /** @odoo-module **/
 
 import { getNextTabableElement } from "@web/core/utils/ui";
-import { click, editInput, getFixture } from "@web/../tests/helpers/utils";
+import { click, clickSave, editInput, getFixture } from "@web/../tests/helpers/utils";
 import { makeView, setupViewRegistries } from "@web/../tests/views/helpers";
 
 let serverData;
@@ -31,11 +31,12 @@ QUnit.module("Fields", (hooks) => {
 
     QUnit.module("PhoneField");
 
-    QUnit.test("PhoneField in form view on normal screens", async function (assert) {
+    QUnit.test("PhoneField in form view on normal screens (readonly)", async function (assert) {
         await makeView({
             serverData,
             type: "form",
             resModel: "partner",
+            mode: "readonly",
             arch: `
                 <form>
                     <sheet>
@@ -55,27 +56,51 @@ QUnit.module("Fields", (hooks) => {
         );
         assert.strictEqual(phone.textContent, "yop", "value should be displayed properly");
         assert.hasAttrValue(phone, "href", "tel:yop", "should have proper tel prefix");
+    });
 
-        // switch to edit mode and check the result
-        await click(target.querySelector(".o_form_button_edit"));
+    QUnit.test("PhoneField in form view on normal screens (edit)", async function (assert) {
+        await makeView({
+            serverData,
+            type: "form",
+            resModel: "partner",
+            arch: `
+                <form>
+                    <sheet>
+                        <group>
+                            <field name="foo" widget="phone"/>
+                        </group>
+                    </sheet>
+                </form>`,
+            resId: 1,
+        });
+
         assert.containsOnce(
             target,
-            'input[type="phone"]',
+            'input[type="tel"]',
             "should have an input for the phone field"
         );
         assert.strictEqual(
-            target.querySelector('input[type="phone"]').value,
+            target.querySelector('input[type="tel"]').value,
             "yop",
             "input should contain field value in edit mode"
         );
 
+        const phoneLink = target.querySelector(".o_field_phone a");
+        assert.containsOnce(
+            target,
+            phoneLink,
+            "should have rendered the phone number as a link with correct classes"
+        );
+        assert.strictEqual(phoneLink.textContent, "Call", "link is shown with the right text");
+        assert.hasAttrValue(phoneLink, "href", "tel:yop", "should have proper tel prefix");
+
         // change value in edit mode
-        await editInput(target, "input[type='phone']", "new");
+        await editInput(target, "input[type='tel']", "new");
 
         // save
-        await click(target.querySelector(".o_form_button_save"));
+        await clickSave(target);
         assert.strictEqual(
-            target.querySelector(".o_field_phone a").textContent,
+            target.querySelector("input[type='tel']").value,
             "new",
             "new value should be displayed properly"
         );
@@ -98,7 +123,7 @@ QUnit.module("Fields", (hooks) => {
 
         assert.containsN(
             target,
-            ".o_field_widget a.o_form_uri.o_phone_link",
+            ".o_field_widget a.o_form_uri",
             2,
             "should have the correct classnames"
         );
@@ -129,7 +154,7 @@ QUnit.module("Fields", (hooks) => {
         );
         assert.containsN(
             target,
-            ".o_field_widget a.o_form_uri.o_phone_link",
+            ".o_field_widget a.o_form_uri",
             2,
             "should still have links with correct classes"
         );
@@ -183,6 +208,29 @@ QUnit.module("Fields", (hooks) => {
         assert.strictEqual(
             target.querySelector(".o_field_widget[name='foo'] input").placeholder,
             "Placeholder"
+        );
+    });
+
+    QUnit.test("unset and readonly PhoneField", async function (assert) {
+        serverData.models.partner.fields.foo.default = false;
+
+        await makeView({
+            type: "form",
+            resModel: "partner",
+            serverData,
+            arch: `
+                <form>
+                    <sheet>
+                        <group>
+                            <field name="foo" widget="phone" readonly="1" placeholder="Placeholder"/>
+                        </group>
+                    </sheet>
+                </form>`,
+        });
+        assert.containsNone(
+            target.querySelector(".o_field_widget[name='foo']"),
+            "a",
+            "The readonly field don't contain a link if no value is set"
         );
     });
 });

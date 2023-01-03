@@ -9,9 +9,6 @@
             <field name="filter_fiscal_position" eval="1"/>
             <field name="default_opening_date_filter">last_month</field>
             <field name="only_tax_exigible" eval="True"/>
-            <field name="dynamic_lines_generator">_dynamic_lines_generator_generic_tax_report</field>
-            <field name="custom_options_initializer">_custom_options_initializer_tax_report</field>
-            <field name="caret_options_initializer">_caret_options_initializer_generic_tax_report</field>
             <field name="column_ids">
                 <record id="generic_tax_report_column_net" model="account.report.column">
                     <field name="name">NET</field>
@@ -27,8 +24,6 @@
         <record id="generic_tax_report_account_tax" model="account.report">
             <field name="name">Group by: Account &gt; Tax </field>
             <field name="root_report_id" ref="generic_tax_report"/>
-            <field name="dynamic_lines_generator">_dynamic_lines_generator_generic_tax_report_account_tax_grouping</field>
-            <field name="caret_options_initializer">_caret_options_initializer_generic_tax_report</field>
             <field name="column_ids">
                 <record id="generic_tax_report_account_tax_column_net" model="account.report.column">
                     <field name="name">NET</field>
@@ -44,8 +39,6 @@
         <record id="generic_tax_report_tax_account" model="account.report">
             <field name="name">Group by: Tax &gt; Account </field>
             <field name="root_report_id" ref="generic_tax_report"/>
-            <field name="dynamic_lines_generator">_dynamic_lines_generator_generic_tax_report_tax_account_grouping</field>
-            <field name="caret_options_initializer">_caret_options_initializer_generic_tax_report</field>
             <field name="column_ids">
                 <record id="generic_tax_report_tax_account_column_net" model="account.report.column">
                     <field name="name">NET</field>

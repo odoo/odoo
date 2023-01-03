@@ -86,7 +86,7 @@ class OgoneController(http.Controller):
             raise Forbidden()
 
         # Compare the received signature with the expected signature computed from the data
-        expected_signature = tx_sudo.acquirer_id._ogone_generate_signature(notification_data)
+        expected_signature = tx_sudo.provider_id._ogone_generate_signature(notification_data)
         if not hmac.compare_digest(received_signature, expected_signature.upper()):
             _logger.warning("received notification with invalid signature")
             raise Forbidden()

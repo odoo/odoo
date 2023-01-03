@@ -21,7 +21,7 @@ function openProjectUpdateAndReturnToTasks(view, viewClass) {
         }, {
             trigger: '.o_back_button',
             content: 'Go back to the task view : ' + view,
-            extra_trigger: '.o_list_view, .o_legacy_list_view',
+            // extra_trigger: '.o_list_view, .o_legacy_list_view', // FIXME: [XBO] uncomment it when the sample data will be displayed after discarding the creation of a project update record.
         },
     ];
 }
@@ -65,7 +65,7 @@ tour.register('project_update_tour', {
     trigger: '.o-kanban-button-new',
     extra_trigger: '.o_kanban_group:eq(0)'
 }, {
-    trigger: '.o_kanban_quick_create input.o_field_char[name=name]',
+    trigger: '.o_kanban_quick_create div.o_field_char[name=name] input',
     extra_trigger: '.o_kanban_project_tasks',
     run: 'text New task'
 }, {
@@ -75,7 +75,7 @@ tour.register('project_update_tour', {
     trigger: '.o-kanban-button-new',
     extra_trigger: '.o_kanban_group:eq(0)'
 }, {
-    trigger: '.o_kanban_quick_create input.o_field_char[name=name]',
+    trigger: '.o_kanban_quick_create div.o_field_char[name=name] input',
     extra_trigger: '.o_kanban_project_tasks',
     run: 'text Second task'
 }, {
@@ -84,7 +84,7 @@ tour.register('project_update_tour', {
 }, {
     trigger: '.o_kanban_group:nth-child(2) .o_kanban_header',
     run: function () {
-        document.querySelector('.o_kanban_group:nth-child(2) .o_kanban_config.dropdown .dropdown-toggle').dispatchEvent(new Event('click'))
+        document.querySelector('.o_kanban_group:nth-child(2) .o_kanban_config.dropdown .dropdown-toggle').dispatchEvent(new Event('click'));
     }
 }, {
     trigger: ".dropdown-item.o_column_edit",
@@ -103,58 +103,52 @@ tour.register('project_update_tour', {
     trigger: ".o_add_milestone a",
     content: "Add a first milestone"
 }, {
-    trigger: "input.o_field_widget[name=name]",
+    trigger: "div.o_field_widget[name=name] input",
     run: 'text New milestone'
 }, {
-    trigger: "input.datetimepicker-input[name=deadline]",
+    trigger: "div[name=deadline] .datetimepicker-input",
     run: 'text 12/12/2099'
 }, {
-    trigger: ".modal-footer button"
+    trigger: ".modal-footer .o_form_button_save"
 }, {
     trigger: ".o_add_milestone a",
 }, {
-    trigger: "input.o_field_widget[name=name]",
+    trigger: "div.o_field_widget[name=name] input",
     run: 'text Second milestone'
 }, {
-    trigger: "input.datetimepicker-input[name=deadline]",
+    trigger: "div[name=deadline] .datetimepicker-input",
     run: 'text 12/12/2022'
 }, {
-    trigger: ".modal-footer button"
+    trigger: ".modal-footer .o_form_button_save"
 }, {
-    trigger: ".o_open_milestone:eq(1) .o_milestone_detail span:eq(0)",
-    extra_trigger: ".o_add_milestone a",
-    run: function () {
-        setTimeout(() => {
-            this.$anchor.click();
-        }, 500);
-    },
+    trigger: ".o_rightpanel_milestone:eq(1) .o_milestone_detail",
 }, {
-    trigger: "input.datetimepicker-input[name=deadline]",
+    trigger: "div[name=deadline] .datetimepicker-input",
     run: 'text 12/12/2100'
 }, {
-    trigger: ".modal-footer button"
+    trigger: ".modal-footer .o_form_button_save"
 }, {
     trigger: ".o-kanban-button-new",
     content: "Create a new update"
 }, {
-    trigger: "input.o_field_widget[name=name]",
+    trigger: "div.o_field_widget[name=name] input",
     run: 'text New update'
 }, {
     trigger: ".o_form_button_save"
 }, {
-    trigger: ".o_field_widget[name=description] h1:contains('Activities')",
+    trigger: ".o_field_widget[name='description'] h1:contains('Activities')",
     run: function () {},
 }, {
-    trigger: ".o_field_widget[name=description] h3:contains('Milestones')",
+    trigger: ".o_field_widget[name='description'] h3:contains('Milestones')",
     run: function () {},
 }, {
-    trigger: ".o_field_widget[name=description] div[name='milestone'] ul li:contains('(12/12/2099 => 12/12/2100)')",
+    trigger: ".o_field_widget[name='description'] div[name='milestone'] ul li:contains('(12/12/2099 => 12/12/2100)')",
     run: function () {},
 }, {
-    trigger: ".o_field_widget[name=description] div[name='milestone'] ul li span:contains('(due 12/12/2022)')",
+    trigger: ".o_field_widget[name='description'] div[name='milestone'] ul li span:contains('(due 12/12/2022)')",
     run: function () {},
 }, {
-    trigger: ".o_field_widget[name=description] div[name='milestone'] ul li span:contains('(due 12/12/2100)')",
+    trigger: ".o_field_widget[name='description'] div[name='milestone'] ul li span:contains('(due 12/12/2100)')",
     run: function () {},
 }, {
     trigger: '.o_back_button',

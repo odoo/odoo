@@ -144,12 +144,22 @@ class ThemeMenu(models.Model):
     new_window = fields.Boolean('New Window')
     sequence = fields.Integer()
     parent_id = fields.Many2one('theme.website.menu', index=True, ondelete="cascade")
+    mega_menu_content = fields.Html()
+    mega_menu_classes = fields.Char()
+
+    use_main_menu_as_parent = fields.Boolean(default=True)
     copy_ids = fields.One2many('website.menu', 'theme_template_id', 'Menu using a copy of me', copy=False, readonly=True)
 
     def _convert_to_base_model(self, website, **kwargs):
         self.ensure_one()
         page_id = self.page_id.copy_ids.filtered(lambda x: x.website_id == website)
-        parent_id = self.copy_ids.filtered(lambda x: x.website_id == website)
+
+        parent_id = False
+        if self.parent_id:
+            parent_id = self.parent_id.copy_ids.filtered(lambda x: x.website_id == website)
+        elif self.use_main_menu_as_parent:
+            parent_id = website.menu_id
+
         new_menu = {
             'name': self.name,
             'url': self.url,
@@ -157,6 +167,9 @@ class ThemeMenu(models.Model):
             'new_window': self.new_window,
             'sequence': self.sequence,
             'parent_id': parent_id and parent_id.id or False,
+            'website_id': website.id,
+            'mega_menu_content': self.mega_menu_content,
+            'mega_menu_classes': self.mega_menu_classes,
             'theme_template_id': self.id,
         }
         return new_menu
@@ -169,6 +182,14 @@ class ThemePage(models.Model):
     url = fields.Char()
     view_id = fields.Many2one('theme.ir.ui.view', required=True, ondelete="cascade")
     website_indexed = fields.Boolean('Page Indexed', default=True)
+    is_published = fields.Boolean()
+
+    # Page options
+    header_overlay = fields.Boolean()
+    header_color = fields.Char()
+    header_visible = fields.Boolean(default=True)
+    footer_visible = fields.Boolean(default=True)
+
     copy_ids = fields.One2many('website.page', 'theme_template_id', 'Page using a copy of me', copy=False, readonly=True)
 
     def _convert_to_base_model(self, website, **kwargs):
@@ -182,6 +203,11 @@ class ThemePage(models.Model):
             'url': self.url,
             'view_id': view_id.id,
             'website_indexed': self.website_indexed,
+            'is_published': self.is_published,
+            'header_overlay': self.header_overlay,
+            'header_color': self.header_color,
+            'header_visible': self.header_visible,
+            'footer_visible': self.footer_visible,
             'theme_template_id': self.id,
         }
         return new_page
@@ -362,10 +388,12 @@ class IrUiView(models.Model):
             res &= super(IrUiView, no_arch_updated_views).write(vals)
         return res
 
+
 class IrAsset(models.Model):
     _inherit = 'ir.asset'
 
     theme_template_id = fields.Many2one('theme.ir.asset', copy=False)
+
 
 class IrAttachment(models.Model):
     _inherit = 'ir.attachment'

@@ -18,16 +18,16 @@ class PaymentTransaction(models.Model):
     _inherit = 'payment.transaction'
 
     def _get_specific_processing_values(self, processing_values):
-        """ Override of payment to return an access token as acquirer-specific processing values.
+        """ Override of payment to return an access token as provider-specific processing values.
 
         Note: self.ensure_one() from `_get_processing_values`
 
         :param dict processing_values: The generic processing values of the transaction
-        :return: The dict of acquirer-specific processing values
+        :return: The dict of provider-specific processing values
         :rtype: dict
         """
         res = super()._get_specific_processing_values(processing_values)
-        if self.provider != 'authorize':
+        if self.provider_code != 'authorize':
             return res
 
         return {
@@ -46,8 +46,8 @@ class PaymentTransaction(models.Model):
         """
         self.ensure_one()
 
-        authorize_API = AuthorizeAPI(self.acquirer_id)
-        if self.acquirer_id.capture_manually or self.operation == 'validation':
+        authorize_API = AuthorizeAPI(self.provider_id)
+        if self.provider_id.capture_manually or self.operation == 'validation':
             return authorize_API.authorize(self, opaque_data=opaque_data)
         else:
             return authorize_API.auth_and_capture(self, opaque_data=opaque_data)
@@ -61,14 +61,14 @@ class PaymentTransaction(models.Model):
         :raise: UserError if the transaction is not linked to a token
         """
         super()._send_payment_request()
-        if self.provider != 'authorize':
+        if self.provider_code != 'authorize':
             return
 
         if not self.token_id.authorize_profile:
             raise UserError("Authorize.Net: " + _("The transaction is not linked to a token."))
 
-        authorize_API = AuthorizeAPI(self.acquirer_id)
-        if self.acquirer_id.capture_manually:
+        authorize_API = AuthorizeAPI(self.provider_id)
+        if self.provider_id.capture_manually:
             res_content = authorize_API.authorize(self, token=self.token_id)
             _logger.info(
                 "authorize request response for transaction with reference %s:\n%s",
@@ -82,26 +82,22 @@ class PaymentTransaction(models.Model):
             )
         self._handle_notification_data('authorize', {'response': res_content})
 
-    def _send_refund_request(self, amount_to_refund=None, create_refund_transaction=True):
+    def _send_refund_request(self, amount_to_refund=None):
         """ Override of payment to send a refund request to Authorize.
 
         Note: self.ensure_one()
 
         :param float amount_to_refund: The amount to refund
-        :param bool create_refund_transaction: Whether a refund transaction should be created or not
-        :return: The refund transaction if any
+        :return: The refund transaction created to process the refund request.
         :rtype: recordset of `payment.transaction`
         """
         self.ensure_one()
 
-        if self.provider != 'authorize':
-            return super()._send_refund_request(
-                amount_to_refund=amount_to_refund,
-                create_refund_transaction=create_refund_transaction,
-            )
+        if self.provider_code != 'authorize':
+            return super()._send_refund_request(amount_to_refund=amount_to_refund)
 
-        authorize_api = AuthorizeAPI(self.acquirer_id)
-        tx_details = authorize_api.get_transaction_details(self.acquirer_reference)
+        authorize_api = AuthorizeAPI(self.provider_id)
+        tx_details = authorize_api.get_transaction_details(self.provider_reference)
         if 'err_code' in tx_details:  # Could not retrieve the transaction details.
             raise ValidationError("Authorize.Net: " + _(
                 "Could not retrieve the transaction details. (error code: %s; error_details: %s)",
@@ -116,10 +112,7 @@ class PaymentTransaction(models.Model):
         elif tx_status in TRANSACTION_STATUS_MAPPING['refunded']:
             # The payment has been refunded from Authorize.net side before we could refund it. We
             # create a refund tx on Odoo to reflect the move of the funds.
-            refund_tx = super()._send_refund_request(
-                amount_to_refund=amount_to_refund,
-                create_refund_transaction=True,
-            )
+            refund_tx = super()._send_refund_request(amount_to_refund=amount_to_refund)
             refund_tx._set_done()
             # Immediately post-process the transaction as the post-processing will not be
             # triggered by a customer browsing the transaction from the portal.
@@ -128,17 +121,14 @@ class PaymentTransaction(models.Model):
             if tx_status in TRANSACTION_STATUS_MAPPING['authorized']:
                 # The payment has not been settle on Authorize.net yet. It must be voided rather
                 # than refunded. Since the funds have not moved yet, we don't create a refund tx.
-                res_content = authorize_api.void(self.acquirer_reference)
+                res_content = authorize_api.void(self.provider_reference)
                 tx_to_process = self
             else:
                 # The payment has been settled on Authorize.net side. We can refund it.
-                refund_tx = super()._send_refund_request(
-                    amount_to_refund=amount_to_refund,
-                    create_refund_transaction=True,
-                )
+                refund_tx = super()._send_refund_request(amount_to_refund=amount_to_refund)
                 rounded_amount = round(amount_to_refund, self.currency_id.decimal_places)
                 res_content = authorize_api.refund(
-                    self.acquirer_reference, rounded_amount, tx_details
+                    self.provider_reference, rounded_amount, tx_details
                 )
                 tx_to_process = refund_tx
             _logger.info(
@@ -162,12 +152,12 @@ class PaymentTransaction(models.Model):
         :return: None
         """
         super()._send_capture_request()
-        if self.provider != 'authorize':
+        if self.provider_code != 'authorize':
             return
 
-        authorize_API = AuthorizeAPI(self.acquirer_id)
+        authorize_API = AuthorizeAPI(self.provider_id)
         rounded_amount = round(self.amount, self.currency_id.decimal_places)
-        res_content = authorize_API.capture(self.acquirer_reference, rounded_amount)
+        res_content = authorize_API.capture(self.provider_reference, rounded_amount)
         _logger.info(
             "capture request response for transaction with reference %s:\n%s",
             self.reference, pprint.pformat(res_content)
@@ -182,31 +172,31 @@ class PaymentTransaction(models.Model):
         :return: None
         """
         super()._send_void_request()
-        if self.provider != 'authorize':
+        if self.provider_code != 'authorize':
             return
 
-        authorize_API = AuthorizeAPI(self.acquirer_id)
-        res_content = authorize_API.void(self.acquirer_reference)
+        authorize_API = AuthorizeAPI(self.provider_id)
+        res_content = authorize_API.void(self.provider_reference)
         _logger.info(
             "void request response for transaction with reference %s:\n%s",
             self.reference, pprint.pformat(res_content)
         )
         self._handle_notification_data('authorize', {'response': res_content})
 
-    def _get_tx_from_notification_data(self, provider, notification_data):
+    def _get_tx_from_notification_data(self, provider_code, notification_data):
         """ Find the transaction based on Authorize.net data.
 
-        :param str provider: The provider of the acquirer that handled the transaction
+        :param str provider_code: The code of the provider that handled the transaction
         :param dict notification_data: The notification data sent by the provider
         :return: The transaction if found
         :rtype: recordset of `payment.transaction`
         """
-        tx = super()._get_tx_from_notification_data(provider, notification_data)
-        if provider != 'authorize' or len(tx) == 1:
+        tx = super()._get_tx_from_notification_data(provider_code, notification_data)
+        if provider_code != 'authorize' or len(tx) == 1:
             return tx
 
         reference = notification_data.get('reference')
-        tx = self.search([('reference', '=', reference), ('provider', '=', 'authorize')])
+        tx = self.search([('reference', '=', reference), ('provider_code', '=', 'authorize')])
         if not tx:
             raise ValidationError(
                 "Authorize.Net: " + _("No transaction found matching reference %s.", reference)
@@ -222,12 +212,12 @@ class PaymentTransaction(models.Model):
         :return: None
         """
         super()._process_notification_data(notification_data)
-        if self.provider != 'authorize':
+        if self.provider_code != 'authorize':
             return
 
         response_content = notification_data.get('response')
 
-        self.acquirer_reference = response_content.get('x_trans_id')
+        self.provider_reference = response_content.get('x_trans_id')
         status_code = response_content.get('x_response_code', '3')
         if status_code == '1':  # Approved
             status_type = response_content.get('x_type').lower()
@@ -282,9 +272,9 @@ class PaymentTransaction(models.Model):
         """
         self.ensure_one()
 
-        authorize_API = AuthorizeAPI(self.acquirer_id)
+        authorize_API = AuthorizeAPI(self.provider_id)
         cust_profile = authorize_API.create_customer_profile(
-            self.partner_id, self.acquirer_reference
+            self.partner_id, self.provider_reference
         )
         _logger.info(
             "create_customer_profile request response for transaction with reference %s:\n%s",
@@ -292,12 +282,12 @@ class PaymentTransaction(models.Model):
         )
         if cust_profile:
             token = self.env['payment.token'].create({
-                'acquirer_id': self.acquirer_id.id,
+                'provider_id': self.provider_id.id,
                 'payment_details': cust_profile.get('payment_details'),
                 'partner_id': self.partner_id.id,
-                'acquirer_ref': cust_profile.get('payment_profile_id'),
+                'provider_ref': cust_profile.get('payment_profile_id'),
                 'authorize_profile': cust_profile.get('profile_id'),
-                'authorize_payment_method_type': self.acquirer_id.authorize_payment_method_type,
+                'authorize_payment_method_type': self.provider_id.authorize_payment_method_type,
                 'verified': True,
             })
             self.write({

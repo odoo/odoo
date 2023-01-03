@@ -10,8 +10,6 @@ var _t = core._t;
 var qweb = core.qweb;
 
 options.registry.gallery = options.Class.extend({
-    xmlDependencies: ['/website/static/src/snippets/s_image_gallery/000.xml'],
-
     /**
      * @override
      */
@@ -19,7 +17,7 @@ options.registry.gallery = options.Class.extend({
         var self = this;
 
         // Make sure image previews are updated if images are changed
-        this.$target.on('image_changed', 'img', function (ev) {
+        this.$target.on('image_changed.gallery', 'img', function (ev) {
             var $img = $(ev.currentTarget);
             var index = self.$target.find('.carousel-item.active').index();
             self.$('.carousel:first li[data-bs-target]:eq(' + index + ')')
@@ -28,12 +26,12 @@ options.registry.gallery = options.Class.extend({
 
         // When the snippet is empty, an edition button is the default content
         // TODO find a nicer way to do that to have editor style
-        this.$target.on('click', '.o_add_images', function (e) {
+        this.$target.on('click.gallery', '.o_add_images', function (e) {
             e.stopImmediatePropagation();
             self.addImages(false);
         });
 
-        this.$target.on('dropped', 'img', function (ev) {
+        this.$target.on('dropped.gallery', 'img', function (ev) {
             self.mode(null, self.getMode());
             if (!ev.target.height) {
                 $(ev.target).one('load', function () {
@@ -74,6 +72,13 @@ options.registry.gallery = options.Class.extend({
         if (this.$target.hasClass('slideshow')) {
             this.$target.removeAttr('style');
         }
+    },
+    /**
+     * @override
+     */
+    destroy() {
+        this._super(...arguments);
+        this.$target.off('.gallery');
     },
 
     //--------------------------------------------------------------------------

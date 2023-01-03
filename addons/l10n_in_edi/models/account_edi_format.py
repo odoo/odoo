@@ -27,28 +27,31 @@ class AccountEdiFormat(models.Model):
             return journal.company_id.country_id.code == 'IN'
         return super()._is_enabled_by_default_on_journal(journal)
 
-    def _is_required_for_invoice(self, invoice):
+    def _get_move_applicability(self, move):
+        # EXTENDS account_edi
         self.ensure_one()
-        if self.code == "in_einvoice_1_03":
-            return invoice.is_sale_document() and invoice.country_code == 'IN' and invoice.l10n_in_gst_treatment in (
-                "regular",
-                "composition",
-                "overseas",
-                "special_economic_zone",
-                "deemed_export",
-                "uin_holders",
-            )
-        return super()._is_required_for_invoice(invoice)
+        if self.code != 'in_einvoice_1_03':
+            return super()._get_move_applicability(move)
+
+        if move.is_sale_document() and move.country_code == 'IN' and move.l10n_in_gst_treatment in (
+            "regular",
+            "composition",
+            "overseas",
+            "special_economic_zone",
+            "deemed_export",
+        ):
+            return {
+                'post': self._l10n_in_edi_post_invoice,
+                'cancel': self._l10n_in_edi_cancel_invoice,
+                'edi_content': self._l10n_in_edi_xml_invoice_content,
+            }
 
     def _needs_web_services(self):
         self.ensure_one()
         return self.code == "in_einvoice_1_03" or super()._needs_web_services()
 
-    def _get_invoice_edi_content(self, move):
-        if self.code != "in_einvoice_1_03":
-            return super()._get_invoice_edi_content(move)
-        json_dump = json.dumps(self._l10n_in_edi_generate_invoice_json(move))
-        return json_dump.encode()
+    def _l10n_in_edi_xml_invoice_content(self, invoice):
+        return json.dumps(self._l10n_in_edi_generate_invoice_json(invoice)).encode()
 
     def _l10n_in_edi_extract_digits(self, string):
         if not string:
@@ -88,128 +91,118 @@ class AccountEdiFormat(models.Model):
             _("Buy Credits")
         )
 
-    def _post_invoice_edi(self, invoices):
-        if self.code != "in_einvoice_1_03":
-            return super()._post_invoice_edi(invoices)
-        response = {}
-        res = {}
-        generate_json = self._l10n_in_edi_generate_invoice_json(invoices)
-        response = self._l10n_in_edi_generate(invoices.company_id, generate_json)
+    def _l10n_in_edi_post_invoice(self, invoice):
+        generate_json = self._l10n_in_edi_generate_invoice_json(invoice)
+        response = self._l10n_in_edi_generate(invoice.company_id, generate_json)
         if response.get("error"):
             error = response["error"]
             error_codes = [e.get("code") for e in error]
             if "1005" in error_codes:
                 # Invalid token eror then create new token and send generate request again.
                 # This happen when authenticate called from another odoo instance with same credentials (like. Demo/Test)
-                authenticate_response = self._l10n_in_edi_authenticate(invoices.company_id)
+                authenticate_response = self._l10n_in_edi_authenticate(invoice.company_id)
                 if not authenticate_response.get("error"):
                     error = []
-                    response = self._l10n_in_edi_generate(invoices.company_id, generate_json)
+                    response = self._l10n_in_edi_generate(invoice.company_id, generate_json)
                     if response.get("error"):
                         error = response["error"]
                         error_codes = [e.get("code") for e in error]
             if "2150" in error_codes:
                 # Get IRN by details in case of IRN is already generated
                 # this happens when timeout from the Government portal but IRN is generated
-                response = self._l10n_in_edi_get_irn_by_details(invoices.company_id, {
-                    "doc_type": invoices.move_type == "out_refund" and "CRN" or "INV",
-                    "doc_num": invoices.name,
-                    "doc_date": invoices.invoice_date and invoices.invoice_date.strftime("%d/%m/%Y") or False,
+                response = self._l10n_in_edi_get_irn_by_details(invoice.company_id, {
+                    "doc_type": invoice.move_type == "out_refund" and "CRN" or "INV",
+                    "doc_num": invoice.name,
+                    "doc_date": invoice.invoice_date and invoice.invoice_date.strftime("%d/%m/%Y") or False,
                 })
                 if not response.get("error"):
                     error = []
                     odoobot = self.env.ref("base.partner_root")
-                    invoices.message_post(author_id=odoobot.id, body=_(
+                    invoice.message_post(author_id=odoobot.id, body=_(
                         "Somehow this invoice had been submited to government before." \
                         "<br/>Normally, this should not happen too often" \
                         "<br/>Just verify value of invoice by uploade json to government website " \
                         "<a href='https://einvoice1.gst.gov.in/Others/VSignedInvoice'>here<a>."
                     ))
             if "no-credit" in error_codes:
-                res[invoices] = {
+                return {invoice: {
                     "success": False,
-                    "error": self._l10n_in_edi_get_iap_buy_credits_message(invoices.company_id),
+                    "error": self._l10n_in_edi_get_iap_buy_credits_message(invoice.company_id),
                     "blocking_level": "error",
-                }
+                }}
             elif error:
                 error_message = "<br/>".join(["[%s] %s" % (e.get("code"), html_escape(e.get("message"))) for e in error])
-                res[invoices] = {
+                return {invoice: {
                     "success": False,
                     "error": error_message,
                     "blocking_level": ("404" in error_codes) and "warning" or "error",
-                }
+                }}
         if not response.get("error"):
             json_dump = json.dumps(response.get("data"))
-            json_name = "%s_einvoice.json" % (invoices.name.replace("/", "_"))
+            json_name = "%s_einvoice.json" % (invoice.name.replace("/", "_"))
             attachment = self.env["ir.attachment"].create({
                 "name": json_name,
                 "raw": json_dump.encode(),
                 "res_model": "account.move",
-                "res_id": invoices.id,
+                "res_id": invoice.id,
                 "mimetype": "application/json",
             })
-            res[invoices] = {"success": True, "attachment": attachment}
-        return res
+            return {invoice: {"success": True, "attachment": attachment}}
 
-    def _cancel_invoice_edi(self, invoices):
-        if self.code != "in_einvoice_1_03":
-            return super()._cancel_invoice_edi(invoices)
-        res = {}
-        for invoice in invoices:
-            l10n_in_edi_response_json = invoice._get_l10n_in_edi_response_json()
-            cancel_json = {
-                "Irn": l10n_in_edi_response_json.get("Irn"),
-                "CnlRsn": invoice.l10n_in_edi_cancel_reason,
-                "CnlRem": invoice.l10n_in_edi_cancel_remarks,
-            }
-            response = self._l10n_in_edi_cancel(invoice.company_id, cancel_json)
-            if response.get("error"):
-                error = response["error"]
-                error_codes = [e.get("code") for e in error]
-                if "1005" in error_codes:
-                    # Invalid token eror then create new token and send generate request again.
-                    # This happen when authenticate called from another odoo instance with same credentials (like. Demo/Test)
-                    authenticate_response = self._l10n_in_edi_authenticate(invoice.company_id)
-                    if not authenticate_response.get("error"):
-                        error = []
-                        response = self._l10n_in_edi_cancel(invoice.company_id, cancel_json)
-                        if response.get("error"):
-                            error = response["error"]
-                            error_codes = [e.get("code") for e in error]
-                if "9999" in error_codes:
-                    response = {}
-                    odoobot = self.env.ref("base.partner_root")
-                    invoices.message_post(author_id=odoobot.id, body=_(
-                        "Somehow this invoice had been cancelled to government before." \
-                        "<br/>Normally, this should not happen too often" \
-                        "<br/>Just verify by logging into government website " \
-                        "<a href='https://einvoice1.gst.gov.in'>here<a>."
-                    ))
-                if "no-credit" in error_codes:
-                    res[invoice] = {
-                        "success": False,
-                        "error": self._l10n_in_edi_get_iap_buy_credits_message(invoice.company_id),
-                        "blocking_level": "error",
-                    }
-                else:
-                    error_message = "<br/>".join(["[%s] %s" % (e.get("code"), html_escape(e.get("message"))) for e in error])
-                    res[invoice] = {
-                        "success": False,
-                        "error": error_message,
-                        "blocking_level": ("404" in error_codes) and "warning" or "error",
-                    }
-            if not response.get("error"):
-                json_dump = json.dumps(response.get("data", {}))
-                json_name = "%s_cancel_einvoice.json" % (invoice.name.replace("/", "_"))
-                attachment = self.env["ir.attachment"].create({
-                    "name": json_name,
-                    "raw": json_dump.encode(),
-                    "res_model": "account.move",
-                    "res_id": invoice.id,
-                    "mimetype": "application/json",
-                })
-                res[invoice] = {"success": True, "attachment": attachment}
-        return res
+    def _l10n_in_edi_cancel_invoice(self, invoice):
+        l10n_in_edi_response_json = invoice._get_l10n_in_edi_response_json()
+        cancel_json = {
+            "Irn": l10n_in_edi_response_json.get("Irn"),
+            "CnlRsn": invoice.l10n_in_edi_cancel_reason,
+            "CnlRem": invoice.l10n_in_edi_cancel_remarks,
+        }
+        response = self._l10n_in_edi_cancel(invoice.company_id, cancel_json)
+        if response.get("error"):
+            error = response["error"]
+            error_codes = [e.get("code") for e in error]
+            if "1005" in error_codes:
+                # Invalid token eror then create new token and send generate request again.
+                # This happen when authenticate called from another odoo instance with same credentials (like. Demo/Test)
+                authenticate_response = self._l10n_in_edi_authenticate(invoice.company_id)
+                if not authenticate_response.get("error"):
+                    error = []
+                    response = self._l10n_in_edi_cancel(invoice.company_id, cancel_json)
+                    if response.get("error"):
+                        error = response["error"]
+                        error_codes = [e.get("code") for e in error]
+            if "9999" in error_codes:
+                response = {}
+                odoobot = self.env.ref("base.partner_root")
+                invoice.message_post(author_id=odoobot.id, body=_(
+                    "Somehow this invoice had been cancelled to government before." \
+                    "<br/>Normally, this should not happen too often" \
+                    "<br/>Just verify by logging into government website " \
+                    "<a href='https://einvoice1.gst.gov.in'>here<a>."
+                ))
+            if "no-credit" in error_codes:
+                return {invoice: {
+                    "success": False,
+                    "error": self._l10n_in_edi_get_iap_buy_credits_message(invoice.company_id),
+                    "blocking_level": "error",
+                }}
+            else:
+                error_message = "<br/>".join(["[%s] %s" % (e.get("code"), html_escape(e.get("message"))) for e in error])
+                return {invoice: {
+                    "success": False,
+                    "error": error_message,
+                    "blocking_level": ("404" in error_codes) and "warning" or "error",
+                }}
+        if not response.get("error"):
+            json_dump = json.dumps(response.get("data", {}))
+            json_name = "%s_cancel_einvoice.json" % (invoice.name.replace("/", "_"))
+            attachment = self.env["ir.attachment"].create({
+                "name": json_name,
+                "raw": json_dump.encode(),
+                "res_model": "account.move",
+                "res_id": invoice.id,
+                "mimetype": "application/json",
+            })
+            return {invoice: {"success": True, "attachment": attachment}}
 
     def _l10n_in_validate_partner(self, partner, is_company=False):
         self.ensure_one()
@@ -295,7 +288,7 @@ class AccountEdiFormat(models.Model):
         # avoid -0.0
         return value if value else 0.0
 
-    def _get_l10n_in_edi_line_details(self, index, line, line_tax_details, sign):
+    def _get_l10n_in_edi_line_details(self, index, line, line_tax_details):
         """
         Create the dictionary with line details
         return {
@@ -304,6 +297,7 @@ class AccountEdiFormat(models.Model):
             ....
         }
         """
+        sign = line.move_id.is_inbound() and -1 or 1
         tax_details_by_code = self._get_l10n_in_tax_details_by_line_code(line_tax_details.get("tax_details", {}))
         full_discount_or_zero_quantity = line.discount == 100.00 or float_is_zero(line.quantity, 3)
         if full_discount_or_zero_quantity:
@@ -314,7 +308,7 @@ class AccountEdiFormat(models.Model):
                 line.date or fields.Date.context_today(self)
                 )
         else:
-            unit_price_in_inr = ((line.balance / (1 - (line.discount / 100))) / line.quantity) * sign
+            unit_price_in_inr = ((sign * line.balance) / (1 - (line.discount / 100))) / line.quantity
         return {
             "SlNo": str(index),
             "PrdDesc": line.name.replace("\n", ""),
@@ -327,34 +321,32 @@ class AccountEdiFormat(models.Model):
             # total amount is before discount
             "TotAmt": self._l10n_in_round_value(unit_price_in_inr * line.quantity),
             "Discount": self._l10n_in_round_value((unit_price_in_inr * line.quantity) * (line.discount / 100)),
-            "AssAmt": self._l10n_in_round_value(line.balance * sign),
+            "AssAmt": self._l10n_in_round_value((sign * line.balance)),
             "GstRt": self._l10n_in_round_value(tax_details_by_code.get("igst_rate", 0.00) or (
                 tax_details_by_code.get("cgst_rate", 0.00) + tax_details_by_code.get("sgst_rate", 0.00)), 3),
-            "IgstAmt": self._l10n_in_round_value(tax_details_by_code.get("igst_amount", 0.00) * sign),
-            "CgstAmt": self._l10n_in_round_value(tax_details_by_code.get("cgst_amount", 0.00) * sign),
-            "SgstAmt": self._l10n_in_round_value(tax_details_by_code.get("sgst_amount", 0.00) * sign),
+            "IgstAmt": self._l10n_in_round_value(tax_details_by_code.get("igst_amount", 0.00)),
+            "CgstAmt": self._l10n_in_round_value(tax_details_by_code.get("cgst_amount", 0.00)),
+            "SgstAmt": self._l10n_in_round_value(tax_details_by_code.get("sgst_amount", 0.00)),
             "CesRt": self._l10n_in_round_value(tax_details_by_code.get("cess_rate", 0.00), 3),
-            "CesAmt": self._l10n_in_round_value(tax_details_by_code.get("cess_amount", 0.00) * sign),
+            "CesAmt": self._l10n_in_round_value(tax_details_by_code.get("cess_amount", 0.00)),
             "CesNonAdvlAmt": self._l10n_in_round_value(
-                tax_details_by_code.get("cess_non_advol_amount", 0.00) * sign),
+                tax_details_by_code.get("cess_non_advol_amount", 0.00)),
             "StateCesRt": self._l10n_in_round_value(tax_details_by_code.get("state_cess_rate_amount", 0.00), 3),
-            "StateCesAmt": self._l10n_in_round_value(tax_details_by_code.get("state_cess_amount", 0.00) * sign),
+            "StateCesAmt": self._l10n_in_round_value(tax_details_by_code.get("state_cess_amount", 0.00)),
             "StateCesNonAdvlAmt": self._l10n_in_round_value(
-                tax_details_by_code.get("state_cess_non_advol_amount", 0.00) * sign),
-            "OthChrg": self._l10n_in_round_value(tax_details_by_code.get("other_amount", 0.00) * sign),
-            "TotItemVal": self._l10n_in_round_value(
-                (line.balance + line_tax_details.get("tax_amount", 0.00)) * sign),
+                tax_details_by_code.get("state_cess_non_advol_amount", 0.00)),
+            "OthChrg": self._l10n_in_round_value(tax_details_by_code.get("other_amount", 0.00)),
+            "TotItemVal": self._l10n_in_round_value(((sign * line.balance) + line_tax_details.get("tax_amount", 0.00))),
         }
 
     def _l10n_in_edi_generate_invoice_json(self, invoice):
         tax_details = self._l10n_in_prepare_edi_tax_details(invoice)
         saler_buyer = self._get_l10n_in_edi_saler_buyer_party(invoice)
         tax_details_by_code = self._get_l10n_in_tax_details_by_line_code(tax_details.get("tax_details", {}))
-        sign = invoice.is_inbound() and -1 or 1
         is_intra_state = invoice.l10n_in_state_id == invoice.company_id.state_id
         is_overseas = invoice.l10n_in_gst_treatment == "overseas"
         lines = invoice.invoice_line_ids.filtered(lambda line: line.display_type not in ('line_note', 'line_section', 'rounding'))
-        invoice_line_tax_details = tax_details.get("invoice_line_tax_details")
+        tax_details_per_record = tax_details.get("tax_details_per_record")
         json_payload = {
             "Version": "1.1",
             "TranDtls": {
@@ -370,32 +362,32 @@ class AccountEdiFormat(models.Model):
             "BuyerDtls": self._get_l10n_in_edi_partner_details(
                 saler_buyer.get("buyer_details"), pos_state_id=invoice.l10n_in_state_id, is_overseas=is_overseas),
             "ItemList": [
-                self._get_l10n_in_edi_line_details(index, line, invoice_line_tax_details.get(line, {}), sign)
+                self._get_l10n_in_edi_line_details(index, line, tax_details_per_record.get(line, {}))
                 for index, line in enumerate(lines, start=1)
             ],
             "ValDtls": {
-                "AssVal": self._l10n_in_round_value(tax_details.get("base_amount") * sign),
-                "CgstVal": self._l10n_in_round_value(tax_details_by_code.get("cgst_amount", 0.00) * sign),
-                "SgstVal": self._l10n_in_round_value(tax_details_by_code.get("sgst_amount", 0.00) * sign),
-                "IgstVal": self._l10n_in_round_value(tax_details_by_code.get("igst_amount", 0.00) * sign),
+                "AssVal": self._l10n_in_round_value(tax_details.get("base_amount")),
+                "CgstVal": self._l10n_in_round_value(tax_details_by_code.get("cgst_amount", 0.00)),
+                "SgstVal": self._l10n_in_round_value(tax_details_by_code.get("sgst_amount", 0.00)),
+                "IgstVal": self._l10n_in_round_value(tax_details_by_code.get("igst_amount", 0.00)),
                 "CesVal": self._l10n_in_round_value((
                     tax_details_by_code.get("cess_amount", 0.00)
-                    + tax_details_by_code.get("cess_non_advol_amount", 0.00)) * sign,
+                    + tax_details_by_code.get("cess_non_advol_amount", 0.00)),
                 ),
                 "StCesVal": self._l10n_in_round_value((
                     tax_details_by_code.get("state_cess_amount", 0.00)
-                    + tax_details_by_code.get("state_cess_non_advol_amount", 0.00)) * sign,
+                    + tax_details_by_code.get("state_cess_non_advol_amount", 0.00)),
                 ),
                 "RndOffAmt": self._l10n_in_round_value(
                     sum(line.balance for line in invoice.invoice_line_ids if line.display_type == 'rounding')),
                 "TotInvVal": self._l10n_in_round_value(
-                    (tax_details.get("base_amount") + tax_details.get("tax_amount")) * sign),
+                    (tax_details.get("base_amount") + tax_details.get("tax_amount"))),
             },
         }
         if invoice.company_currency_id != invoice.currency_id:
             json_payload["ValDtls"].update({
                 "TotInvValFc": self._l10n_in_round_value(
-                    (tax_details.get("base_amount_currency") + tax_details.get("tax_amount_currency")) * sign)
+                    (tax_details.get("base_amount_currency") + tax_details.get("tax_amount_currency")))
             })
         if saler_buyer.get("seller_details") != saler_buyer.get("dispatch_details"):
             json_payload.update({
@@ -430,35 +422,37 @@ class AccountEdiFormat(models.Model):
 
     @api.model
     def _l10n_in_prepare_edi_tax_details(self, move, in_foreign=False):
-        def l10n_in_grouping_key_generator(tax_values):
-            base_line = tax_values["base_line_id"]
-            tax_line = tax_values["tax_line_id"]
+        def l10n_in_grouping_key_generator(base_line, tax_values):
+            invl = base_line['record']
+            tax = tax_values['tax_repartition_line'].tax_id
+            tags = tax_values['tax_repartition_line'].tag_ids
             line_code = "other"
-            if self.env.ref("l10n_in.tax_tag_cess") in tax_line.tax_tag_ids:
-                if tax_line.tax_line_id.amount_type != "percent":
-                    line_code = "cess_non_advol"
+            if not invl.currency_id.is_zero(tax_values['tax_amount_currency']):
+                if any(tag in tags for tag in self.env.ref("l10n_in.tax_tag_cess")):
+                    if tax.amount_type != "percent":
+                        line_code = "cess_non_advol"
+                    else:
+                        line_code = "cess"
+                elif any(tag in tags for tag in self.env.ref("l10n_in.tax_tag_state_cess")):
+                    if tax.amount_type != "percent":
+                        line_code = "state_cess_non_advol"
+                    else:
+                        line_code = "state_cess"
                 else:
-                    line_code = "cess"
-            elif self.env.ref("l10n_in.tax_tag_state_cess") in tax_line.tax_tag_ids:
-                if tax_line.tax_line_id.amount_type != "percent":
-                    line_code = "state_cess_non_advol"
-                else:
-                    line_code = "state_cess"
-            else:
-                for gst in ["cgst", "sgst", "igst"]:
-                    if self.env.ref(f"l10n_in.tax_tag_{gst}") in tax_line.tax_tag_ids:
-                        line_code = gst
+                    for gst in ["cgst", "sgst", "igst"]:
+                        if any(tag in tags for tag in self.env.ref("l10n_in.tax_tag_%s"%(gst))):
+                            line_code = gst
             return {
-                "tax": tax_values["tax_id"],
-                "base_product_id": base_line.product_id,
-                "tax_product_id": tax_line.product_id,
-                "base_product_uom_id": base_line.product_uom_id,
-                "tax_product_uom_id": tax_line.product_uom_id,
+                "tax": tax,
+                "base_product_id": invl.product_id,
+                "tax_product_id": invl.product_id,
+                "base_product_uom_id": invl.product_uom_id,
+                "tax_product_uom_id": invl.product_uom_id,
                 "line_code": line_code,
             }
 
-        def l10n_in_filter_to_apply(tax_values):
-            if tax_values["base_line_id"].display_type == 'rounding':
+        def l10n_in_filter_to_apply(base_line, tax_values):
+            if base_line['record'].display_type == 'rounding':
                 return False
             return True
 

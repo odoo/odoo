@@ -6,14 +6,24 @@ import odoo.tests
 from datetime import timedelta
 
 from odoo.addons.base.tests.common import HttpCaseWithUserDemo
+from odoo.addons.website_event_sale.tests.common import TestWebsiteEventSaleCommon
 from odoo.fields import Datetime
 
 
 @odoo.tests.common.tagged('post_install', '-at_install')
-class TestUi(HttpCaseWithUserDemo):
+class TestUi(HttpCaseWithUserDemo, TestWebsiteEventSaleCommon):
 
     def setUp(self):
         super().setUp()
+
+        if self.env['ir.module.module']._get('payment_custom').state != 'installed':
+            self.skipTest("Transfer provider is not installed")
+
+        self.env.ref('payment.payment_provider_transfer').write({
+            'state': 'enabled',
+            'is_published': True,
+        })
+
         self.event_2 = self.env['event.event'].create({
             'name': 'Conference for Architects TEST',
             'user_id': self.env.ref('base.user_admin').id,
@@ -54,7 +64,6 @@ class TestUi(HttpCaseWithUserDemo):
             'seats_max': 2,
         }])
 
-
         # flush event to ensure having tickets available in the tests
         self.env.flush_all()
 
@@ -71,6 +80,9 @@ class TestUi(HttpCaseWithUserDemo):
         self.env['account.journal'].create({'name': 'Cash - Test', 'type': 'cash', 'code': 'CASH - Test'})
 
     def test_admin(self):
+        if self.env['ir.module.module']._get('payment_custom').state != 'installed':
+            self.skipTest("Transfer provider is not installed")
+
         # Seen that:
         # - this test relies on demo data that are entirely in USD (pricelists)
         # - that main demo company is gelocated in US
@@ -78,12 +90,41 @@ class TestUi(HttpCaseWithUserDemo):
         # we have to force company currency as USDs only for this test
         self.cr.execute("UPDATE res_company SET currency_id = %s WHERE id = %s", [self.env.ref('base.USD').id, self.env.ref('base.main_company').id])
 
+        transfer_provider = self.env.ref('payment.payment_provider_transfer')
+        transfer_provider.write({
+            'state': 'enabled',
+            'is_published': True,
+        })
+        transfer_provider._transfer_ensure_pending_msg_is_set()
+
         self.start_tour("/", 'event_buy_tickets', login="admin")
 
     def test_demo(self):
+        if self.env['ir.module.module']._get('payment_custom').state != 'installed':
+            self.skipTest("Transfer provider is not installed")
+
+        transfer_provider = self.env.ref('payment.payment_provider_transfer')
+        transfer_provider.write({
+            'state': 'enabled',
+            'is_published': True,
+        })
+        transfer_provider._transfer_ensure_pending_msg_is_set()
+
         self.start_tour("/", 'event_buy_tickets', login="demo")
 
     def test_buy_last_ticket(self):
+        if self.env['ir.module.module']._get('payment_custom').state != 'installed':
+            self.skipTest("Transfer provider is not installed")
+
+        transfer_provider = self.env.ref('payment.payment_provider_transfer')
+        transfer_provider.write({
+            'state': 'enabled',
+            'is_published': True,
+        })
+        transfer_provider._transfer_ensure_pending_msg_is_set()
+
         self.start_tour("/", 'event_buy_last_ticket')
 
+    def test_pricelists_different_currencies(self):
+        self.start_tour("/", 'event_sale_pricelists_different_currencies', login='admin')
     # TO DO - add public test with new address when convert to web.tour format.

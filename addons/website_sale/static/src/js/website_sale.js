@@ -65,11 +65,12 @@ publicWidget.registry.websiteSaleCartLink = publicWidget.Widget.extend({
      * @param {Event} ev
      */
     _onMouseEnter: function (ev) {
-        var self = this;
+        let self = this;
+        self.hovered = true;
         clearTimeout(timeout);
         $(this.selector).not(ev.currentTarget).popover('hide');
         timeout = setTimeout(function () {
-            if (!self.$el.is(':hover') || $('.mycart-popover:visible').length) {
+            if (!self.hovered || $('.mycart-popover:visible').length) {
                 return;
             }
             self._popoverRPC = $.get("/shop/cart", {
@@ -93,7 +94,8 @@ publicWidget.registry.websiteSaleCartLink = publicWidget.Widget.extend({
      * @param {Event} ev
      */
     _onMouseLeave: function (ev) {
-        var self = this;
+        let self = this;
+        self.hovered = false;
         setTimeout(function () {
             if ($('.popover:hover').length) {
                 return;
@@ -156,16 +158,16 @@ publicWidget.registry.websiteSaleCartLink = publicWidget.Widget.extend({
 });
 });
 
-odoo.define('website_sale.website_sale_category', function (require) {
+odoo.define('website_sale.website_sale_offcanvas', function (require) {
 'use strict';
 
 var publicWidget = require('web.public.widget');
 
-publicWidget.registry.websiteSaleCategory = publicWidget.Widget.extend({
-    selector: '#o_shop_collapse_category',
+publicWidget.registry.websiteSaleOffcanvas = publicWidget.Widget.extend({
+    selector: '#o_wsale_offcanvas',
     events: {
-        'click .fa-angle-right': '_onOpenClick',
-        'click .fa-angle-down': '_onCloseClick',
+        'show.bs.offcanvas': '_toggleFilters',
+        'hidden.bs.offcanvas': '_toggleFilters',
     },
 
     //--------------------------------------------------------------------------
@@ -173,23 +175,17 @@ publicWidget.registry.websiteSaleCategory = publicWidget.Widget.extend({
     //--------------------------------------------------------------------------
 
     /**
+     * Unfold active filters, fold inactive ones
+     *
      * @private
      * @param {Event} ev
      */
-    _onOpenClick: function (ev) {
-        var $fa = $(ev.currentTarget);
-        $fa.parent().siblings().find('.fa-angle-down:first').click();
-        $fa.parents('li').find('ul:first').show('normal');
-        $fa.toggleClass('fa-angle-down fa-angle-right');
-    },
-    /**
-     * @private
-     * @param {Event} ev
-     */
-    _onCloseClick: function (ev) {
-        var $fa = $(ev.currentTarget);
-        $fa.parent().find('ul:first').hide('normal');
-        $fa.toggleClass('fa-angle-down fa-angle-right');
+    _toggleFilters: function (ev) {
+        for (const btn of this.el.querySelectorAll('button[data-status]')) {
+            if(btn.classList.contains('collapsed') && btn.dataset.status == "active" || ! btn.classList.contains('collapsed') && btn.dataset.status == "inactive" ) {
+                btn.click();
+            }
+        }
     },
 });
 });
@@ -207,6 +203,8 @@ require("web.zoomodoo");
 const {extraMenuUpdateCallbacks} = require('website.content.menu');
 const dom = require('web.dom');
 const { cartesian } = require('@web/core/utils/arrays');
+const { ComponentWrapper } = require('web.OwlCompatibility');
+const { ProductImageViewerWrapper } = require("@website_sale/js/components/website_sale_image_viewer");
 
 publicWidget.registry.WebsiteSale = publicWidget.Widget.extend(VariantMixin, cartHandlerMixin, {
     selector: '.oe_website_sale',
@@ -231,6 +229,11 @@ publicWidget.registry.WebsiteSale = publicWidget.Widget.extend(VariantMixin, car
         'change .js_main_product [data-attribute_exclusions]': 'onChangeVariant',
         'change oe_advanced_configurator_modal [data-attribute_exclusions]': 'onChangeVariant',
         'click .o_product_page_reviews_link': '_onClickReviewsLink',
+        'mousedown .o_wsale_filmstip_wrapper': '_onMouseDown',
+        'mouseleave .o_wsale_filmstip_wrapper': '_onMouseLeave',
+        'mouseup .o_wsale_filmstip_wrapper': '_onMouseUp',
+        'mousemove .o_wsale_filmstip_wrapper': '_onMouseMove',
+        'click .o_wsale_filmstip_wrapper' : '_onClickHandler',
     }),
 
     /**
@@ -243,6 +246,10 @@ publicWidget.registry.WebsiteSale = publicWidget.Widget.extend(VariantMixin, car
         this._changeCountry = _.debounce(this._changeCountry.bind(this), 500);
 
         this.isWebsite = true;
+        this.filmStripStartX = 0;
+        this.filmStripIsDown = false;
+        this.filmStripScrollLeft = 0;
+        this.filmStripMoved = false;
 
         delete this.events['change .main_product:not(.in_cart) input.js_quantity'];
         delete this.events['change [data-attribute_exclusions]'];
@@ -280,6 +287,10 @@ publicWidget.registry.WebsiteSale = publicWidget.Widget.extend(VariantMixin, car
         this.getRedirectOption();
         return def;
     },
+    destroy() {
+        this._super.apply(this, arguments);
+        this._cleanupZoom();
+    },
     /**
      * The selector is different when using list view of variants.
      *
@@ -299,6 +310,41 @@ publicWidget.registry.WebsiteSale = publicWidget.Widget.extend(VariantMixin, car
     // Private
     //--------------------------------------------------------------------------
 
+    _onMouseDown: function (ev) {
+        this.filmStripIsDown = true;
+        this.filmStripStartX = ev.pageX - ev.currentTarget.offsetLeft;
+        this.filmStripScrollLeft = ev.currentTarget.scrollLeft;
+        this.formerTarget = ev.target;
+        this.filmStripMoved = false;
+    },
+    _onMouseLeave: function (ev) {
+        if (!this.filmStripIsDown) {
+            return;
+        }
+        ev.currentTarget.classList.remove('activeDrag');
+        this.filmStripIsDown = false
+    },
+    _onMouseUp: function (ev) {
+        this.filmStripIsDown = false;
+        ev.currentTarget.classList.remove('activeDrag');
+    },
+    _onMouseMove: function (ev) {
+        if (!this.filmStripIsDown) {
+            return;
+        }
+        ev.preventDefault();
+        ev.currentTarget.classList.add('activeDrag');
+        this.filmStripMoved = true;
+        const x = ev.pageX - ev.currentTarget.offsetLeft;
+        const walk = (x - this.filmStripStartX) * 2;
+        ev.currentTarget.scrollLeft = this.filmStripScrollLeft - walk;
+    },
+    _onClickHandler: function(ev) {
+        if(this.filmStripMoved) {
+            ev.stopPropagation();
+            ev.preventDefault();
+        }
+    },
     _applyHash: function () {
         var hash = window.location.hash.substring(1);
         if (hash) {
@@ -329,7 +375,7 @@ publicWidget.registry.WebsiteSale = publicWidget.Widget.extend(VariantMixin, car
         var attributeIds = _.map($attributes, function (elem) {
             return $(elem).data('value_id');
         });
-        window.location.hash = 'attr=' + attributeIds.join(',');
+        window.location.replace('#attr=' + attributeIds.join(','));
     },
     /**
      * Set the checked values active.
@@ -380,6 +426,8 @@ publicWidget.registry.WebsiteSale = publicWidget.Widget.extend(VariantMixin, car
 
             wSaleUtils.updateCartNavBar(data);
             wSaleUtils.showWarning(data.warning);
+            // Propagating the change to the express checkout forms
+            core.bus.trigger('cart_amount_changed', data.amount, data.minor_amount);
         });
     },
     /**
@@ -460,38 +508,97 @@ publicWidget.registry.WebsiteSale = publicWidget.Widget.extend(VariantMixin, car
             return VariantMixin._getProductId.apply(this, arguments);
         }
     },
+    _getProductImageLayout: function () {
+        return document.querySelector("#product_detail_main").dataset.image_layout;
+    },
+    _getProductImageWidth: function () {
+        return document.querySelector("#product_detail_main").dataset.image_width;
+    },
+    _getProductImageContainerSelector: function () {
+        return {
+            'carousel': "#o-carousel-product",
+            'grid': "#o-grid-product",
+        }[this._getProductImageLayout()];
+    },
+    _getProductImageContainer: function () {
+        return document.querySelector(this._getProductImageContainerSelector());
+    },
+    _isEditorEnabled() {
+        return document.body.classList.contains("editor_enable");
+    },
     /**
      * @private
      */
     _startZoom: function () {
-        // Do not activate image zoom for mobile devices, since it might prevent users from scrolling the page
-        if (!config.device.isMobile) {
-            var autoZoom = $('.ecom-zoomable').data('ecom-zoom-auto') || false,
-            attach = '#o-carousel-product';
-            _.each($('.ecom-zoomable img[data-zoom]'), function (el) {
-                onImageLoaded(el, function () {
-                    var $img = $(el);
-                    $img.zoomOdoo({event: autoZoom ? 'mouseenter' : 'click', attach: attach});
-                    $img.attr('data-zoom', 1);
-                });
-            });
+        // Do not activate image zoom on hover for mobile devices
+        const salePage = document.querySelector(".o_wsale_product_page");
+        if (!salePage || config.device.mobile || this._getProductImageWidth() === "none") {
+            return;
         }
-
-        function onImageLoaded(img, callback) {
-            // On Chrome the load event already happened at this point so we
-            // have to rely on complete. On Firefox it seems that the event is
-            // always triggered after this so we can rely on it.
-            //
-            // However on the "complete" case we still want to keep listening to
-            // the event because if the image is changed later (eg. product
-            // configurator) a new load event will be triggered (both browsers).
-            $(img).on('load', function () {
-                callback();
-            });
-            if (img.complete) {
-                callback();
+        this._cleanupZoom();
+        this.zoomCleanup = [];
+        // Zoom on hover
+        if (salePage.dataset.ecomZoomAuto) {
+            const images = salePage.querySelectorAll("img[data-zoom]");
+            for (const image of images) {
+                const $image = $(image);
+                const callback = () => {
+                    $image.zoomOdoo({
+                        event: "mouseenter",
+                        attach: this._getProductImageContainerSelector(),
+                        preventClicks: salePage.dataset.ecomZoomClick,
+                        attachToTarget: this._getProductImageLayout() === "grid",
+                    });
+                    image.dataset.zoom = 1;
+                };
+                image.addEventListener('load', callback);
+                this.zoomCleanup.push(() => {
+                    image.removeEventListener('load', callback);
+                    const zoomOdoo = $image.data("zoomOdoo");
+                    if (zoomOdoo) {
+                        zoomOdoo.hide();
+                        $image.unbind();
+                    }
+                });
+                if (image.complete) {
+                    callback();
+                }
             }
         }
+        // Zoom on click
+        if (salePage.dataset.ecomZoomClick) {
+            // In this case we want all the images not just the ones that are "zoomables"
+            const images = salePage.querySelectorAll(".product_detail_img");
+            for (const image of images ) {
+                const handler = () => {
+                    if (salePage.dataset.ecomZoomAuto) {
+                        // Remove any flyout
+                        const flyouts = document.querySelectorAll(".zoomodoo-flyout");
+                        for (const flyout of flyouts) {
+                            flyout.remove();
+                        }
+                    }
+                    const dialog = new ComponentWrapper(this, ProductImageViewerWrapper, {
+                        selectedImageIdx: [...images].indexOf(image),
+                        images,
+                    });
+                    dialog.mount(document.body);
+                };
+                image.addEventListener("click", handler);
+                this.zoomCleanup.push(() => {
+                    image.removeEventListener("click", handler);
+                });
+            }
+        }
+    },
+    _cleanupZoom() {
+        if (!this.zoomCleanup || !this.zoomCleanup.length) {
+            return;
+        }
+        for (const cleanup of this.zoomCleanup) {
+            cleanup();
+        }
+        this.zoomCleanup = undefined;
     },
     /**
      * On website, we display a carousel instead of only one image
@@ -500,14 +607,11 @@ publicWidget.registry.WebsiteSale = publicWidget.Widget.extend(VariantMixin, car
      * @private
      */
     _updateProductImage: function ($productContainer, displayImage, productId, productTemplateId, newImages, isCombinationPossible) {
-        let $images = $productContainer.find('#o-carousel-product');
-        if (!$images.length) {
-            $images = $productContainer.find("#o-grid-product");
-        }
+        let $images = $productContainer.find(this._getProductImageContainerSelector());
         // When using the web editor, don't reload this or the images won't
         // be able to be edited depending on if this is done loading before
         // or after the editor is ready.
-        if ($images.length && window.location.search.indexOf('enable_editor') === -1) {
+        if ($images.length && !this._isEditorEnabled()) {
             const $newImages = $(newImages);
             $images.after($newImages);
             $images.remove();
@@ -677,6 +781,10 @@ publicWidget.registry.WebsiteSale = publicWidget.Widget.extend(VariantMixin, car
     _onChangeAttribute: function (ev) {
         if (!ev.isDefaultPrevented()) {
             ev.preventDefault();
+            const productGrid = this.el.querySelector(".o_wsale_products_grid_table_wrapper");
+            if (productGrid) {
+                productGrid.classList.add("opacity-50");
+            }
             $(ev.currentTarget).closest("form").submit();
         }
     },
@@ -700,7 +808,7 @@ publicWidget.registry.WebsiteSale = publicWidget.Widget.extend(VariantMixin, car
      * @param {Event} ev
      */
     _onClickShowCoupon: function (ev) {
-        $(ev.currentTarget).hide();
+        $(".show_coupon").hide();
         $('.coupon_form').removeClass('d-none');
     },
     /**
@@ -716,6 +824,9 @@ publicWidget.registry.WebsiteSale = publicWidget.Widget.extend(VariantMixin, car
             ev.preventDefault();
             var oldurl = $this.attr('action');
             oldurl += (oldurl.indexOf("?")===-1) ? "?" : "";
+            if ($this.find('[name=noFuzzy]').val() === "true") {
+                oldurl += '&noFuzzy=true';
+            }
             var search = $this.find('input.search-query');
             window.location = oldurl + '&' + search.attr('name') + '=' + encodeURIComponent(search.val());
         }
@@ -829,7 +940,7 @@ publicWidget.registry.WebsiteSale = publicWidget.Widget.extend(VariantMixin, car
                 const selectedCombination = allCombinations.find(c => this._isValidCombination(c, attributeExclusions));
 
                 if (selectedCombination && selectedCombination.length) {
-                    window.location.hash = `attr=${selectedCombination.join(',')}`;
+                    window.location.replace('#attr=' + selectedCombination.join(','));
                 }
             }
         }
@@ -893,6 +1004,12 @@ publicWidget.registry.WebsiteSaleLayout = publicWidget.Widget.extend({
                 },
             });
         }
+
+        const activeClasses = ev.target.parentElement.dataset.activeClasses.split(' ');
+        ev.target.parentElement.querySelectorAll('.btn').forEach((btn) => {
+            activeClasses.map(c => btn.classList.toggle(c));
+        });
+
         var $grid = this.$('#products_grid');
         // Disable transition on all list elements, then switch to the new
         // layout then reenable all transitions after having forced a redraw
@@ -970,8 +1087,8 @@ publicWidget.registry.websiteSaleCarouselProduct = publicWidget.Widget.extend({
         await this._super(...arguments);
         this._updateCarouselPosition();
         extraMenuUpdateCallbacks.push(this._updateCarouselPosition.bind(this));
-        if (this.$target.find('.carousel-indicators').length > 0) {
-            this.$target.on('slide.bs.carousel.carousel_product_slider', this._onSlideCarouselProduct.bind(this));
+        if (this.$el.find('.carousel-indicators').length > 0) {
+            this.$el.on('slide.bs.carousel.carousel_product_slider', this._onSlideCarouselProduct.bind(this));
             $(window).on('resize.carousel_product_slider', _.throttle(this._onSlideCarouselProduct.bind(this), 150));
             this._updateJustifyContent();
         }
@@ -980,8 +1097,8 @@ publicWidget.registry.websiteSaleCarouselProduct = publicWidget.Widget.extend({
      * @override
      */
     destroy() {
-        this.$target.css('top', '');
-        this.$target.off('.carousel_product_slider');
+        this.$el.css('top', '');
+        this.$el.off('.carousel_product_slider');
         this._super(...arguments);
     },
 
@@ -993,7 +1110,7 @@ publicWidget.registry.websiteSaleCarouselProduct = publicWidget.Widget.extend({
      * @private
      */
     _updateCarouselPosition() {
-        this.$target.css('top', dom.scrollFixedOffset() + 5);
+        this.$el.css('top', dom.scrollFixedOffset() + 5);
     },
 
     //--------------------------------------------------------------------------
@@ -1008,11 +1125,11 @@ publicWidget.registry.websiteSaleCarouselProduct = publicWidget.Widget.extend({
      * @param {Event} ev
      */
     _onSlideCarouselProduct: function (ev) {
-        const isReversed = this.$target.css('flex-direction') === "column-reverse";
-        const isLeftIndicators = this.$target.hasClass('o_carousel_product_left_indicators');
-        const $indicatorsDiv = isLeftIndicators ? this.$target.find('.o_carousel_product_indicators') : this.$target.find('.carousel-indicators');
+        const isReversed = this.$el.css('flex-direction') === "column-reverse";
+        const isLeftIndicators = this.$el.hasClass('o_carousel_product_left_indicators');
+        const $indicatorsDiv = isLeftIndicators ? this.$el.find('.o_carousel_product_indicators') : this.$el.find('.carousel-indicators');
         let indicatorIndex = $(ev.relatedTarget).index();
-        indicatorIndex = indicatorIndex > -1 ? indicatorIndex : this.$target.find('li.active').index();
+        indicatorIndex = indicatorIndex > -1 ? indicatorIndex : this.$el.find('li.active').index();
         const $indicator = $indicatorsDiv.find('[data-bs-slide-to=' + indicatorIndex + ']');
         const indicatorsDivSize = isLeftIndicators && !isReversed ? $indicatorsDiv.outerHeight() : $indicatorsDiv.outerWidth();
         const indicatorSize = isLeftIndicators && !isReversed ? $indicator.outerHeight() : $indicator.outerWidth();
@@ -1030,10 +1147,10 @@ publicWidget.registry.websiteSaleCarouselProduct = publicWidget.Widget.extend({
      * @private
      */
      _updateJustifyContent: function () {
-        const $indicatorsDiv = this.$target.find('.carousel-indicators');
+        const $indicatorsDiv = this.$el.find('.carousel-indicators');
         $indicatorsDiv.css('justify-content', 'start');
         if (config.device.size_class <= config.device.SIZES.MD) {
-            if (($indicatorsDiv.children().last().position().left + this.$target.find('li').outerWidth()) < $indicatorsDiv.outerWidth()) {
+            if (($indicatorsDiv.children().last().position().left + this.$el.find('li').outerWidth()) < $indicatorsDiv.outerWidth()) {
                 $indicatorsDiv.css('justify-content', 'center');
             }
         }
@@ -1045,9 +1162,9 @@ publicWidget.registry.websiteSaleCarouselProduct = publicWidget.Widget.extend({
     _onMouseWheel: function (ev) {
         ev.preventDefault();
         if (ev.originalEvent.deltaY > 0) {
-            this.$target.carousel('next');
+            this.$el.carousel('next');
         } else {
-            this.$target.carousel('prev');
+            this.$el.carousel('prev');
         }
     },
 });
@@ -1068,7 +1185,7 @@ publicWidget.registry.websiteSaleProductPageReviews = publicWidget.Widget.extend
      * @override
      */
     destroy() {
-        this.$target.find('.o_portal_chatter_composer').css('top', '');
+        this.$el.find('.o_portal_chatter_composer').css('top', '');
         this._super(...arguments);
     },
 
@@ -1080,7 +1197,7 @@ publicWidget.registry.websiteSaleProductPageReviews = publicWidget.Widget.extend
      * @private
      */
     _updateChatterComposerPosition() {
-        this.$target.find('.o_portal_chatter_composer').css('top', dom.scrollFixedOffset() + 20);
+        this.$el.find('.o_portal_chatter_composer').css('top', dom.scrollFixedOffset() + 20);
     },
 });
 
@@ -1100,9 +1217,9 @@ odoo.define('website_sale.price_range_option', function (require) {
 const publicWidget = require('web.public.widget');
 
 publicWidget.registry.multirangePriceSelector = publicWidget.Widget.extend({
-    selector: '#o_wsale_price_range_option',
+    selector: '.o_wsale_products_page',
     events: {
-        'newRangeValue input[type="range"]': '_onPriceRangeSelected',
+        'newRangeValue #o_wsale_price_range_option input[type="range"]': '_onPriceRangeSelected',
     },
 
     //----------------------------------------------------------------------
@@ -1124,6 +1241,7 @@ publicWidget.registry.multirangePriceSelector = publicWidget.Widget.extend({
         if (parseFloat(range.max) !== range.valueHigh) {
             search['max_price'] = range.valueHigh;
         }
+        this.el.querySelector('.o_wsale_products_grid_table_wrapper').classList.add('opacity-50');
         window.location.search = $.param(search);
     },
 });

@@ -3,7 +3,6 @@
 import { registry } from "@web/core/registry";
 import { makeEnv, startServices } from "@web/env";
 import FormController from "web.FormController";
-import { patch } from "../../src/core/utils/patch";
 import { SERVICES_METADATA } from "../../src/env";
 import { registerCleanup } from "./cleanup";
 import { makeMockServer } from "./mock_server";
@@ -41,7 +40,12 @@ export function clearServicesMetadataWithCleanup() {
     for (const key of Object.keys(SERVICES_METADATA)) {
         delete SERVICES_METADATA[key];
     }
-    registerCleanup(() => patch(SERVICES_METADATA, servicesMetadata));
+    registerCleanup(() => {
+        for (const key of Object.keys(SERVICES_METADATA)) {
+            delete SERVICES_METADATA[key];
+        }
+        Object.assign(SERVICES_METADATA, servicesMetadata);
+    });
 }
 
 function prepareRegistriesWithCleanup() {
@@ -73,7 +77,6 @@ function prepareRegistriesWithCleanup() {
     clearRegistryWithCleanup(registry.category("user_menuitems"));
     clearRegistryWithCleanup(registry.category("kanban_examples"));
     clearRegistryWithCleanup(registry.category("__processed_archs__"));
-    clearRegistryWithCleanup(registry.category("action_menus"));
     // fun fact: at least one registry is missing... this shows that we need a
     // better design for the way we clear these registries...
 }
@@ -100,7 +103,7 @@ export async function makeTestEnv(config = {}) {
     while (servicesToProcess.length) {
         const service = servicesToProcess.pop();
         if (service.dependencies) {
-            for (let depName of service.dependencies) {
+            for (const depName of service.dependencies) {
                 if (depName in mocks && !serviceRegistry.contains(depName)) {
                     const dep = mocks[depName]();
                     serviceRegistry.add(depName, dep);

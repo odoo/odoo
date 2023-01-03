@@ -67,8 +67,8 @@ class AccountEdiFormat(models.Model):
 
     def _l10n_es_edi_get_invoices_tax_details_info(self, invoice, filter_invl_to_apply=None):
 
-        def grouping_key_generator(tax_values):
-            tax = tax_values['tax_id']
+        def grouping_key_generator(base_line, tax_values):
+            tax = tax_values['tax_repartition_line'].tax_id
             return {
                 'applied_tax_amount': tax.amount,
                 'l10n_es_type': tax.l10n_es_type,
@@ -76,9 +76,9 @@ class AccountEdiFormat(models.Model):
                 'l10n_es_bien_inversion': tax.l10n_es_bien_inversion,
             }
 
-        def filter_to_apply(tax_values):
+        def filter_to_apply(base_line, tax_values):
             # For intra-community, we do not take into account the negative repartition line
-            return tax_values['tax_repartition_line_id'].factor_percent > 0.0
+            return tax_values['tax_repartition_line'].factor_percent > 0.0
 
         def full_filter_invl_to_apply(invoice_line):
             if 'ignore' in invoice_line.tax_ids.flatten_taxes_hierarchy().mapped('l10n_es_type'):
@@ -90,7 +90,7 @@ class AccountEdiFormat(models.Model):
             filter_invl_to_apply=full_filter_invl_to_apply,
             filter_to_apply=filter_to_apply,
         )
-        sign = -1 if invoice.is_sale_document() else 1
+        sign = -1 if invoice.move_type in ('out_refund', 'in_refund') else 1
 
         tax_details_info = defaultdict(dict)
 
@@ -109,7 +109,7 @@ class AccountEdiFormat(models.Model):
                 if not recargo_tax_details.get(recargo_main_tax):
                     recargo_tax_details[recargo_main_tax] = [
                         x for x in tax_details['tax_details'].values()
-                        if x['group_tax_details'][0]['tax_id'] == recargo_tax[0]
+                        if x['group_tax_details'][0]['tax_repartition_line'].tax_id == recargo_tax[0]
                     ][0]
 
         tax_amount_deductible = 0.0
@@ -133,7 +133,7 @@ class AccountEdiFormat(models.Model):
                         'CuotaRepercutida': round(math.copysign(tax_values['tax_amount'], base_amount), 2),
                     }
 
-                    recargo = recargo_tax_details.get(tax_values['group_tax_details'][0]['tax_id'])
+                    recargo = recargo_tax_details.get(tax_values['group_tax_details'][0]['tax_repartition_line'].tax_id)
                     if recargo:
                         tax_info['CuotaRecargoEquivalencia'] = round(sign * recargo['tax_amount'], 2)
                         tax_info['TipoRecargoEquivalencia'] = recargo['applied_tax_amount']
@@ -200,7 +200,7 @@ class AccountEdiFormat(models.Model):
                         })
                     if tax_values['l10n_es_bien_inversion']:
                         tax_info['BienInversion'] = 'S'
-                    recargo = recargo_tax_details.get(tax_values['group_tax_details'][0]['tax_id'])
+                    recargo = recargo_tax_details.get(tax_values['group_tax_details'][0]['tax_repartition_line'].tax_id)
                     if recargo:
                         tax_info['CuotaRecargoEquivalencia'] = round(sign * recargo['tax_amount'], 2)
                         tax_info['TipoRecargoEquivalencia'] = recargo['applied_tax_amount']
@@ -228,6 +228,9 @@ class AccountEdiFormat(models.Model):
         if (not partner.country_id or partner.country_id.code == 'ES') and partner.vat:
             # ES partner with VAT.
             partner_info['NIF'] = partner.vat[2:] if partner.vat.startswith('ES') else partner.vat
+            if self.env.context.get('error_1117'):
+                partner_info['IDOtro'] = {'IDType': '07', 'ID': IDOtro_ID}
+
         elif partner.country_id.code in eu_country_codes and partner.vat:
             # European partner.
             partner_info['IDOtro'] = {'IDType': '02', 'ID': IDOtro_ID}
@@ -319,7 +322,7 @@ class AccountEdiFormat(models.Model):
 
             # === Taxes ===
 
-            sign = -1 if invoice.is_sale_document() else 1
+            sign = -1 if invoice.move_type in ('out_refund', 'in_refund') else 1
 
             if invoice.is_sale_document():
                 # Customer invoices
@@ -440,7 +443,7 @@ class AccountEdiFormat(models.Model):
     def _l10n_es_edi_call_web_service_sign(self, invoices, info_list):
         company = invoices.company_id
 
-        # All are sharing the same value, see '_get_batch_key'.
+        # All are sharing the same value.
         csv_number = invoices.mapped('l10n_es_edi_csv')[0]
 
         # Set registration date
@@ -561,6 +564,11 @@ class AccountEdiFormat(models.Model):
                 results[inv] = {'success': True}
                 inv.message_post(body=_("We saw that this invoice was sent correctly before, but we did not treat "
                                         "the response.  Make sure it is not because of a wrong configuration."))
+
+            elif respl.CodigoErrorRegistro == 1117 and not self.env.context.get('error_1117'):
+                return self.with_context(error_1117=True)._post_invoice_edi(invoices)
+
+
             else:
                 results[inv] = {
                     'error': _("[%s] %s", respl.CodigoErrorRegistro, respl.DescripcionErrorRegistro),
@@ -573,35 +581,25 @@ class AccountEdiFormat(models.Model):
     # EDI OVERRIDDEN METHODS
     # -------------------------------------------------------------------------
 
-    def _get_invoice_edi_content(self, move):
-        if self.code != 'es_sii':
-            return super()._get_invoice_edi_content(move)
-        return json.dumps(self._l10n_es_edi_get_invoices_info(move)).encode()
+    def _l10n_es_edi_sii_xml_invoice_content(self, invoice):
+        return json.dumps(self._l10n_es_edi_get_invoices_info(invoice)).encode()
 
-    def _is_required_for_invoice(self, invoice):
-        # OVERRIDE
+    def _get_move_applicability(self, move):
+        # EXTENDS account_edi
+        self.ensure_one()
         if self.code != 'es_sii':
-            return super()._is_required_for_invoice(invoice)
+            return super()._get_move_applicability(move)
 
-        return invoice.l10n_es_edi_is_required
+        if move.l10n_es_edi_is_required:
+            return {
+                'post': self._l10n_es_edi_sii_post_invoices,
+                'post_batching': lambda invoice: (invoice.move_type, invoice.l10n_es_edi_csv),
+                'edi_content': self._l10n_es_edi_sii_xml_invoice_content,
+            }
 
     def _needs_web_services(self):
         # OVERRIDE
         return self.code == 'es_sii' or super()._needs_web_services()
-
-    def _support_batching(self, move=None, state=None, company=None):
-        # OVERRIDE
-        if self.code != 'es_sii':
-            return super()._support_batching(move=move, state=state, company=company)
-
-        return state == 'to_send' and move.is_invoice()
-
-    def _get_batch_key(self, move, state):
-        # OVERRIDE
-        if self.code != 'es_sii':
-            return super()._get_batch_key(move, state)
-
-        return move.move_type, move.l10n_es_edi_csv
 
     def _check_move_configuration(self, move):
         # OVERRIDE
@@ -642,11 +640,7 @@ class AccountEdiFormat(models.Model):
 
         return journal.country_code == 'ES'
 
-    def _post_invoice_edi(self, invoices):
-        # OVERRIDE
-        if self.code != 'es_sii':
-            return super()._post_invoice_edi(invoices)
-
+    def _l10n_es_edi_sii_post_invoices(self, invoices):
         # Ensure a certificate is available.
         certificate = invoices.company_id.l10n_es_edi_certificate_id
         if not certificate:

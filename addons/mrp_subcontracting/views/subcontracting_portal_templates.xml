@@ -70,11 +70,10 @@
             <t t-set="head_subcontracting_portal">
                 <script type="text/javascript">
                     odoo.__session_info__ = <t t-out="json.dumps(session_info)"/>;
-                    odoo.loadTemplatesPromise = fetch(`/web/webclient/qweb/${odoo.__session_info__.cache_hashes.qweb}?bundle=mrp_subcontracting.assets_qweb`).then(doc => doc.text());
                 </script>
                 <base target="_parent"/>
                 <t t-call-assets="web.assets_common" t-js="false"/>
-                <t t-call-assets="mrp_subcontracting.webclient" t-js="false"/>
+                <t t-call-assets="web.assets_backend" t-js="false"/>
                 <t t-call-assets="web.assets_common" t-css="false"/>
                 <t t-call-assets="mrp_subcontracting.webclient" t-css="false"/>
                 <t t-call="web.conditional_assets_tests"/>

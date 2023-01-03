@@ -26,7 +26,6 @@ The module adds following features:
     'installable': True,
     'auto_install': True,
     'data': [
-        'views/account_views.xml',
         'views/pos_views.xml',
         'views/account_sale_closure.xml',
         'views/pos_inalterability_menuitem.xml',
@@ -40,8 +39,6 @@ The module adds following features:
         'point_of_sale.assets': [
             'l10n_fr_pos_cert/static/src/js/**/*',
             'l10n_fr_pos_cert/static/src/css/pos.css',
-        ],
-        'web.assets_qweb': [
             'l10n_fr_pos_cert/static/src/xml/**/*',
         ],
     },

@@ -37,7 +37,7 @@ insertRecords('res.users', [
     { active: false, display_name: "Public user", id: TEST_USER_IDS.publicUserId, name: "Public user", partner_id: TEST_USER_IDS.publicPartnerId, },
 ]);
 insertRecords('res.partner', [
-    { active: false, display_name: "Public user", id: TEST_USER_IDS.publicPartnerId, },
+    { active: false, display_name: "Public user", id: TEST_USER_IDS.publicPartnerId, is_public: true },
     { display_name: "Your Company, Mitchell Admin", id: TEST_USER_IDS.currentPartnerId, name: "Mitchell Admin", },
-    { active: false, display_name: "OdooBot", id: TEST_USER_IDS.partnerRootId, },
+    { active: false, display_name: "OdooBot", id: TEST_USER_IDS.partnerRootId, name: "OdooBot" },
 ]);

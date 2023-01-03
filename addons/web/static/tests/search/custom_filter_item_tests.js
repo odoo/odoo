@@ -3,6 +3,7 @@
 import {
     click,
     getFixture,
+    nextTick,
     patchDate,
     patchTimeZone,
     patchWithCleanup,
@@ -335,7 +336,7 @@ QUnit.module("Search", (hooks) => {
     });
 
     QUnit.test("selection field: default and updated value", async function (assert) {
-        assert.expect(10);
+        assert.expect(11);
 
         const controlPanel = await makeWithSearch({
             serverData,
@@ -369,6 +370,11 @@ QUnit.module("Search", (hooks) => {
         await toggleAddCustomFilter(target);
         await editConditionField(target, 0, "color");
         await editConditionValue(target, 0, "white");
+        assert.strictEqual(
+            target.querySelector(".o_generator_menu_value input,.o_generator_menu_value select")
+                .value,
+            "white"
+        );
         await applyFilter(target);
 
         assert.deepEqual(getFacetTexts(target), ['Color is "white"']);
@@ -445,6 +451,30 @@ QUnit.module("Search", (hooks) => {
             }
         }
     );
+
+    QUnit.test("custom filter date with equal operator", async function (assert) {
+        patchTimeZone(-240);
+        patchDate(2017, 1, 22, 12, 30, 0);
+
+        const controlPanel = await makeWithSearch({
+            serverData,
+            resModel: "foo",
+            Component: ControlPanel,
+            searchViewId: false,
+            searchMenuTypes: ["filter"],
+        });
+
+        await toggleFilterMenu(target);
+        await toggleAddCustomFilter(target);
+
+        await editConditionField(target, 0, "date_field");
+        await editConditionOperator(target, 0, "=");
+        await editConditionValue(target, 0, "01/01/2017");
+        await applyFilter(target);
+
+        assert.deepEqual(getFacetTexts(target), ['A date is equal to "01/01/2017"']);
+        assert.deepEqual(getDomain(controlPanel), [["date_field", "=", "2017-01-01"]]);
+    });
 
     QUnit.test("custom filter datetime with equal operator", async function (assert) {
         assert.expect(5);
@@ -718,5 +748,30 @@ QUnit.module("Search", (hooks) => {
             2,
             "The delete button is shown as a trash icon"
         );
+    });
+
+    QUnit.test("condition value is not lost on deep render", async function (assert) {
+        const component = await makeWithSearch({
+            serverData,
+            resModel: "foo",
+            Component: ControlPanel,
+            searchViewId: false,
+            searchMenuTypes: ["filter"],
+        });
+
+        await toggleFilterMenu(target);
+        await toggleAddCustomFilter(target);
+
+        await editConditionField(target, 0, "char_field");
+        await editConditionValue(target, 0, "Coucou", 0, false);
+
+        let charInput = target.querySelector(".o_generator_menu_value .o_input");
+        assert.strictEqual(charInput.value, "Coucou");
+
+        component.render(true);
+        await nextTick();
+
+        charInput = target.querySelector(".o_generator_menu_value .o_input");
+        assert.strictEqual(charInput.value, "Coucou");
     });
 });

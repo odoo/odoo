@@ -1,14 +1,14 @@
 /** @odoo-module **/
 
-import { registerMessagingComponent } from '@mail/utils/messaging_component';
+import { registerMessagingComponent } from "@mail/utils/messaging_component";
 
-const { Component } = owl;
+import { Component } from "@odoo/owl";
 
 export class CallInviteRequestPopupList extends Component {}
 
 Object.assign(CallInviteRequestPopupList, {
     props: {},
-    template: 'mail.CallInviteRequestPopupList',
+    template: "mail.CallInviteRequestPopupList",
 });
 
 registerMessagingComponent(CallInviteRequestPopupList);

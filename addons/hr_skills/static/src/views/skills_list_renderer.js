@@ -53,12 +53,5 @@ export class CommonSkillsListRenderer extends ListRenderer {
 
         return await super.onCellClicked(record, column, ev);
     }
-
-    get RowsTemplate() {
-        return 'hr_skills.SkillsListRenderer.Rows';
-    }
-
-    get RecordRowTemplate() {
-        return 'web.ListRenderer.RecordRow';
-    }
 }
+CommonSkillsListRenderer.rowsTemplate = "hr_skills.SkillsListRenderer.Rows";

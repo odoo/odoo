@@ -224,7 +224,10 @@ class Meeting(models.Model):
         if self.user_id and self.user_id != self.env.user and bool(self.user_id.sudo().google_calendar_token):
             # We avoid updating the other attendee status if we are not the organizer
             attendees = self.attendee_ids.filtered(lambda att: att.partner_id == self.env.user.partner_id)
-        attendee_values = [{'email': attendee.partner_id.email_normalized, 'responseStatus': attendee.state} for attendee in attendees if attendee.partner_id.email_normalized]
+        attendee_values = [{
+            'email': attendee.partner_id.email_normalized,
+            'responseStatus': attendee.state or 'needsAction',
+        } for attendee in attendees if attendee.partner_id.email_normalized]
         # We sort the attendees to avoid undeterministic test fails. It's not mandatory for Google.
         attendee_values.sort(key=lambda k: k['email'])
         values = {

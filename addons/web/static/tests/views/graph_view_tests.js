@@ -26,9 +26,10 @@ import { makeView, setupViewRegistries } from "@web/../tests/views/helpers";
 import { createWebClient, doAction } from "@web/../tests/webclient/helpers";
 import { browser } from "@web/core/browser/browser";
 import { registry } from "@web/core/registry";
-import { BORDER_WHITE, DEFAULT_BG, COLORS, hexToRGBA } from "@web/views/graph/colors";
+import { getBorderWhite, DEFAULT_BG, getColors, hexToRGBA } from "@web/core/colors/colors";
 import { GraphArchParser } from "@web/views/graph/graph_arch_parser";
 import { patchWithCleanup } from "../helpers/utils";
+import { fakeCookieService } from "@web/../tests/helpers/mock_services";
 
 const serviceRegistry = registry.category("services");
 
@@ -143,7 +144,7 @@ function getYAxeLabel(graph) {
     return getChart(graph).config.options.scales.yAxes[0].scaleLabel.labelString;
 }
 
-async function clickOnDataset(graph) {
+export async function clickOnDataset(graph) {
     const chart = getChart(graph);
     const meta = chart.getDatasetMeta(0);
     const rectangle = chart.canvas.getBoundingClientRect();
@@ -312,6 +313,7 @@ QUnit.module("Views", (hooks) => {
         patchWithCleanup(browser, { setTimeout: (fn) => fn() });
 
         target = getFixture();
+        registry.category("services").add("cookie", fakeCookieService);
     });
 
     QUnit.module("GraphView");
@@ -1148,9 +1150,9 @@ QUnit.module("Views", (hooks) => {
             "pointBackgroundColor",
         ];
         const datasets = getChart(graph).data.datasets;
-
+        const colors = getColors();
         for (let i = 0; i < datasets.length; i++) {
-            const expectedColor = COLORS[i];
+            const expectedColor = colors[i];
             expectedDatasets.push({
                 backgroundColor: hexToRGBA(expectedColor, 0.4),
                 borderColor: expectedColor,
@@ -1610,7 +1612,7 @@ QUnit.module("Views", (hooks) => {
         checkLabels(assert, graph, ["Total"]);
         checkDatasets(assert, graph, ["backgroundColor", "borderColor", "data", "label", "stack"], {
             backgroundColor: ["#1f77b4"],
-            borderColor: BORDER_WHITE,
+            borderColor: getBorderWhite(),
             data: [8],
             label: "",
             stack: undefined,
@@ -1635,7 +1637,7 @@ QUnit.module("Views", (hooks) => {
         checkLabels(assert, graph, ["false", "true"]);
         checkDatasets(assert, graph, ["backgroundColor", "borderColor", "data"], {
             backgroundColor: ["#1f77b4", "#ff7f0e"],
-            borderColor: BORDER_WHITE,
+            borderColor: getBorderWhite(),
             data: [5, 3],
         });
         checkLegend(assert, graph, ["false", "true"]);
@@ -1660,7 +1662,7 @@ QUnit.module("Views", (hooks) => {
         checkLabels(assert, graph, ["Undefined", "black", "red"]);
         checkDatasets(assert, graph, ["backgroundColor", "borderColor", "data"], {
             backgroundColor: ["#1f77b4", "#ff7f0e", "#aec7e8"],
-            borderColor: BORDER_WHITE,
+            borderColor: getBorderWhite(),
             data: [8, 10, 13],
         });
         checkLegend(assert, graph, ["Undefined", "black", "red"]);
@@ -1701,7 +1703,7 @@ QUnit.module("Views", (hooks) => {
         checkLabels(assert, graph, ["false / xphone", "false / xpad", "true / xphone"]);
         checkDatasets(assert, graph, ["backgroundColor", "borderColor", "data", "label"], {
             backgroundColor: ["#1f77b4", "#ff7f0e", "#aec7e8"],
-            borderColor: BORDER_WHITE,
+            borderColor: getBorderWhite(),
             data: [1, 4, 3],
             label: "",
         });
@@ -1747,13 +1749,13 @@ QUnit.module("Views", (hooks) => {
             [
                 {
                     backgroundColor: ["#1f77b4"],
-                    borderColor: BORDER_WHITE,
+                    borderColor: getBorderWhite(),
                     data: [6],
                     label: "True group",
                 },
                 {
                     backgroundColor: ["#1f77b4"],
-                    borderColor: BORDER_WHITE,
+                    borderColor: getBorderWhite(),
                     data: [17],
                     label: "False group",
                 },
@@ -1817,13 +1819,13 @@ QUnit.module("Views", (hooks) => {
             [
                 {
                     backgroundColor: ["#1f77b4", "#ff7f0e", "#aec7e8"],
-                    borderColor: BORDER_WHITE,
+                    borderColor: getBorderWhite(),
                     data: [14, 0, 0],
                     label: "True group",
                 },
                 {
                     backgroundColor: ["#1f77b4", "#ff7f0e", "#aec7e8"],
-                    borderColor: BORDER_WHITE,
+                    borderColor: getBorderWhite(),
                     data: [12, 5, 2],
                     label: "False group",
                 },
@@ -1927,13 +1929,13 @@ QUnit.module("Views", (hooks) => {
                 [
                     {
                         backgroundColor: ["#1f77b4", "#ff7f0e", "#aec7e8", "#ffbb78"],
-                        borderColor: BORDER_WHITE,
+                        borderColor: getBorderWhite(),
                         data: [1, 1, 0, 0],
                         label: "February 2021",
                     },
                     {
                         backgroundColor: ["#1f77b4", "#ff7f0e", "#aec7e8", "#ffbb78"],
-                        borderColor: BORDER_WHITE,
+                        borderColor: getBorderWhite(),
                         data: [1, 1, 1, 1],
                         label: "January 2021",
                     },
@@ -2052,13 +2054,13 @@ QUnit.module("Views", (hooks) => {
                 [
                     {
                         backgroundColor: ["#1f77b4", "#ff7f0e", "#aec7e8"],
-                        borderColor: BORDER_WHITE,
+                        borderColor: getBorderWhite(),
                         data: [14, 0, 0],
                         label: "February 2021",
                     },
                     {
                         backgroundColor: ["#1f77b4", "#ff7f0e", "#aec7e8"],
-                        borderColor: BORDER_WHITE,
+                        borderColor: getBorderWhite(),
                         data: [0, 12, 5],
                         label: "January 2021",
                     },
@@ -2115,7 +2117,7 @@ QUnit.module("Views", (hooks) => {
             [
                 {
                     backgroundColor: [DEFAULT_BG],
-                    borderColor: BORDER_WHITE,
+                    borderColor: getBorderWhite(),
                     data: [1],
                     label: null,
                 },
@@ -2152,13 +2154,13 @@ QUnit.module("Views", (hooks) => {
             [
                 {
                     backgroundColor: ["#1f77b4"],
-                    borderColor: BORDER_WHITE,
+                    borderColor: getBorderWhite(),
                     data: [1],
                     label: "True group",
                 },
                 {
                     backgroundColor: ["#1f77b4", DEFAULT_BG],
-                    borderColor: BORDER_WHITE,
+                    borderColor: getBorderWhite(),
                     data: [undefined, 1],
                     label: "False group",
                 },
@@ -2350,8 +2352,8 @@ QUnit.module("Views", (hooks) => {
             <graph type="pie">
                 <field name="revenue" type="measure"/>
                 <field name="date" interval="day"/>
-                <field name="foo" invisible="0"/>
-                <field name="bar" invisible="1" string="My invisible field"/>
+                <field name="foo" modifiers='{"invisible": false}'/>
+                <field name="bar" modifiers='{"invisible": true}' string="My invisible field"/>
                 <field name="id"/>
                 <field name="fighters" string="FooFighters"/>
             </graph>
@@ -2947,25 +2949,6 @@ QUnit.module("Views", (hooks) => {
         assert.strictEqual(getYAxeLabel(graph), "Product");
     });
 
-    QUnit.test(
-        "a many2one field can be added as measure in additionalMeasures",
-        async function (assert) {
-            assert.expect(2);
-
-            const graph = await makeView({
-                serverData,
-                type: "graph",
-                resModel: "foo",
-                arch: `<graph/>`,
-                additionalMeasures: ["product_id"],
-            });
-            await toggleMenu(target, "Measures");
-            await toggleMenuItem(target, "Product");
-            checkLegend(assert, graph, "Product");
-            assert.strictEqual(getYAxeLabel(graph), "Product");
-        }
-    );
-
     QUnit.test('graph view "graph_measure" field in context', async function (assert) {
         assert.expect(6);
         const graph = await makeView({
@@ -3041,34 +3024,7 @@ QUnit.module("Views", (hooks) => {
     );
 
     QUnit.test(
-        "an invisible field in additional measure can be found in the 'Measures' menu",
-        async function (assert) {
-            assert.expect(8);
-            const graph = await makeView({
-                serverData,
-                type: "graph",
-                resModel: "foo",
-                arch: `
-                    <graph>
-                        <field name="revenue" invisible="1"/>
-                    </graph>
-                `,
-                additionalMeasures: ["revenue"],
-            });
-            checkTooltip(assert, graph, { lines: [{ label: "Total", value: "8" }] }, 0);
-            await toggleMenu(target, "Measures");
-            await toggleMenuItem(target, "Revenue");
-            checkTooltip(
-                assert,
-                graph,
-                { title: "Revenue", lines: [{ label: "Total", value: "23" }] },
-                0
-            );
-        }
-    );
-
-    QUnit.test(
-        "an invisible field not in additional measure can not be found in the 'Measures' menu",
+        "an invisible field can not be found in the 'Measures' menu",
         async function (assert) {
             assert.expect(5);
             const graph = await makeView({
@@ -3586,7 +3542,6 @@ QUnit.module("Views", (hooks) => {
     });
 
     QUnit.test("empty graph view with sample data", async function (assert) {
-        assert.expect(8);
         await makeView({
             serverData,
             type: "graph",
@@ -3609,24 +3564,19 @@ QUnit.module("Views", (hooks) => {
         assert.hasClass(target.querySelector(".o_graph_view .o_content"), "o_view_sample_data");
         assert.containsOnce(target, ".o_view_nocontent");
         assert.containsOnce(target, ".o_graph_canvas_container canvas");
-        assert.hasClass(target.querySelector(".o_graph_renderer"), "o_sample_data_disabled");
 
         await toggleFilterMenu(target);
         await toggleMenuItem(target, "False Domain");
+
         assert.doesNotHaveClass(
             target.querySelector(".o_graph_view .o_content"),
             "o_view_sample_data"
         );
         assert.containsNone(target, ".o_view_nocontent");
         assert.containsOnce(target, ".o_graph_canvas_container canvas");
-        assert.doesNotHaveClass(
-            target.querySelector(".o_graph_renderer"),
-            "o_sample_data_disabled"
-        );
     });
 
     QUnit.test("non empty graph view with sample data", async function (assert) {
-        assert.expect(8);
         await makeView({
             serverData,
             type: "graph",
@@ -3647,18 +3597,12 @@ QUnit.module("Views", (hooks) => {
         assert.doesNotHaveClass(target, "o_view_sample_data");
         assert.containsNone(target, ".o_view_nocontent");
         assert.containsOnce(target, ".o_graph_canvas_container canvas");
-        assert.doesNotHaveClass(
-            target.querySelector(".o_graph_canvas_container"),
-            "o_sample_data_disabled"
-        );
+
         await toggleFilterMenu(target);
         await toggleMenuItem(target, "False Domain");
+
         assert.doesNotHaveClass(target, "o_view_sample_data");
         assert.containsOnce(target, ".o_graph_canvas_container canvas");
-        assert.doesNotHaveClass(
-            target.querySelector(".o_graph_canvas_container"),
-            "o_sample_data_disabled"
-        );
         assert.containsNone(target, ".o_view_nocontent");
     });
 
@@ -4083,5 +4027,60 @@ QUnit.module("Views", (hooks) => {
         checkModeIs(assert, graph, "bar");
         checkLabels(assert, graph, ["Undefined", "red"]);
         checkLegend(assert, graph, "Revenue");
+    });
+
+    QUnit.test("order='desc' on arch", async function (assert) {
+        const graph = await makeView({
+            serverData,
+            type: "graph",
+            resModel: "foo",
+            arch: `
+                <graph order="desc">
+                    <field name="date"/>
+                </graph>
+            `,
+        });
+        checkDatasets(assert, graph, ["data", "label"], {
+            data: [2, 2, 2, 1, 1],
+            label: "Count",
+        });
+    });
+
+    QUnit.test("order='asc' on arch", async function (assert) {
+        const graph = await makeView({
+            serverData,
+            type: "graph",
+            resModel: "foo",
+            arch: `
+                <graph order="asc">
+                    <field name="date"/>
+                </graph>
+            `,
+        });
+        checkDatasets(assert, graph, ["data", "label"], {
+            data: [1, 1, 2, 2, 2],
+            label: "Count",
+        });
+    });
+
+    QUnit.test("renders banner_route", async (assert) => {
+        await makeView({
+            type: "graph",
+            resModel: "foo",
+            serverData,
+            arch: `
+                <graph banner_route="/mybody/isacage">
+                    <field name="foo"/>
+                </graph>`,
+            async mockRPC(route) {
+                if (route === "/mybody/isacage") {
+                    assert.step(route);
+                    return { html: `<div class="setmybodyfree">myBanner</div>` };
+                }
+            },
+        });
+
+        assert.verifySteps(["/mybody/isacage"]);
+        assert.containsOnce(target, ".setmybodyfree");
     });
 });

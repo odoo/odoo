@@ -12,7 +12,7 @@
                 <field name="pricelist_id"/>
                 <field name="company_id" groups="base.group_multi_company"/>
                 <field name="currency_id" groups="base.group_multi_currency"/>
-                <filter string="Archived" name="inactive" domain="[('active','=',False)]"/>
+                <filter string="Active" name="visible" domain="[('pricelist_id.active', '=', True)]"/>
                 <group expand="0" string="Group By">
                     <filter string="Product" name="groupby_product" domain="[]" context="{'group_by': 'product_tmpl_id'}"/>
                     <filter string="Variant"

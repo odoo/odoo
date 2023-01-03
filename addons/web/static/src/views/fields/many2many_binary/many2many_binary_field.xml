@@ -46,7 +46,7 @@
             </div>
 
             <div class="o_attachment_uploaded"><i class="text-success fa fa-check" role="img" aria-label="Uploaded" title="Uploaded"/></div>
-            <div t-if="!props.readonly" class="o_attachment_delete" t-on-click.stop="() => this.onFileRemove(file.id)"><span class="text-white" role="img" aria-label="Delete" title="Delete">×</span></div>
+            <div t-if="editable" class="o_attachment_delete" t-on-click.stop="() => this.onFileRemove(file.id)"><span class="text-white" role="img" aria-label="Delete" title="Delete">×</span></div>
         </div>
     </div>
 </t>

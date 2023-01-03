@@ -3,7 +3,7 @@
 import { browser } from "../browser/browser";
 import { _lt } from "../l10n/translation";
 import { registry } from "../registry";
-import { annotateTraceback, formatTraceback, getErrorTechnicalName } from "./error_utils";
+import { completeUncaughtError, getErrorTechnicalName } from "./error_utils";
 
 /**
  * Uncaught Errors have 4 properties:
@@ -40,42 +40,13 @@ export class UncaughtCorsError extends UncaughtError {
     }
 }
 
-/**
- * @param {UncaughtError} uncaughtError
- * @param {Error} originalError
- * @returns {string}
- */
-function combineErrorNames(uncaughtError, originalError) {
-    const originalErrorName = getErrorTechnicalName(originalError);
-    const uncaughtErrorName = getErrorTechnicalName(uncaughtError);
-    if (originalErrorName === Error.name) {
-        return uncaughtErrorName;
-    } else {
-        return `${uncaughtErrorName} > ${originalErrorName}`;
-    }
-}
-
-/**
- * @param {import("../../env").OdooEnv} env
- * @param {UncaughtError} uncaughtError
- * @param {Error} originalError
- * @returns {Promise<void>}
- */
-async function completeUncaughtError(env, uncaughtError, originalError) {
-    uncaughtError.name = combineErrorNames(uncaughtError, originalError);
-    if (env.debug && env.debug.includes("assets")) {
-        uncaughtError.traceback = await annotateTraceback(originalError);
-    } else {
-        uncaughtError.traceback = formatTraceback(originalError);
-    }
-    if (originalError.message) {
-        uncaughtError.message = `${uncaughtError.message} > ${originalError.message}`;
-    }
-}
-
 export const errorService = {
     start(env) {
-        function handleError(error, originalError, retry = true) {
+        function handleError(uncaughtError, retry = true) {
+            let originalError = uncaughtError;
+            while (originalError && "cause" in originalError) {
+                originalError = originalError.cause;
+            }
             const services = env.services;
             if (!services.dialog || !services.notification || !services.rpc) {
                 // here, the environment is not ready to provide feedback to the user.
@@ -83,27 +54,32 @@ export const errorService = {
                 // recover.
                 if (retry) {
                     browser.setTimeout(() => {
-                        handleError(error, originalError, false);
+                        handleError(uncaughtError, false);
                     }, 1000);
                 }
                 return;
             }
-            for (let handler of registry.category("error_handlers").getAll()) {
-                if (handler(env, error, originalError)) {
+            for (const handler of registry.category("error_handlers").getAll()) {
+                if (handler(env, uncaughtError, originalError)) {
                     break;
                 }
+            }
+            if (uncaughtError.event && !uncaughtError.event.defaultPrevented) {
+                // Log the full traceback instead of letting the browser log the incomplete one
+                uncaughtError.event.preventDefault();
+                console.error(uncaughtError.traceback);
             }
         }
 
         browser.addEventListener("error", async (ev) => {
-            const { colno, error: originalError, filename, lineno, message } = ev;
+            const { colno, error, filename, lineno, message } = ev;
             const errorsToIgnore = [
                 // Ignore some unnecessary "ResizeObserver loop limit exceeded" error in Firefox.
                 "ResizeObserver loop completed with undelivered notifications.",
                 // ignore Chrome video internal error: https://crbug.com/809574
                 "ResizeObserver loop limit exceeded",
             ];
-            if (!originalError && errorsToIgnore.includes(message)) {
+            if (!error && errorsToIgnore.includes(message)) {
                 return;
             }
             let uncaughtError;
@@ -117,29 +93,29 @@ export const errorService = {
                 );
             } else {
                 uncaughtError = new UncaughtClientError();
-                await completeUncaughtError(env, uncaughtError, originalError);
+                uncaughtError.event = ev;
+                if (error instanceof Error) {
+                    error.errorEvent = ev;
+                    const annotated = env.debug && env.debug.includes("assets");
+                    await completeUncaughtError(uncaughtError, error, annotated);
+                }
             }
-            handleError(uncaughtError, originalError);
+            uncaughtError.cause = error;
+            handleError(uncaughtError);
         });
 
         browser.addEventListener("unhandledrejection", async (ev) => {
-            let originalError = ev.reason;
-            // note: unwrapping error like this means that the error handlers will
-            // only be aware of the cause, not of the current error (which may
-            // show more interesting information, such as the owl lifecycle
-            // method that caused the error.  But doing it in the best way (traceback
-            // from error, and handled by correct error handler requires a small
-            // scale refactoring of the error handling code.
-            originalError =
-                originalError instanceof Error && "cause" in originalError
-                    ? originalError.cause
-                    : originalError;
+            const error = ev.reason;
             const uncaughtError = new UncaughtPromiseError();
             uncaughtError.unhandledRejectionEvent = ev;
-            if (originalError instanceof Error) {
-                await completeUncaughtError(env, uncaughtError, originalError);
+            uncaughtError.event = ev;
+            if (error instanceof Error) {
+                error.errorEvent = ev;
+                const annotated = env.debug && env.debug.includes("assets");
+                await completeUncaughtError(uncaughtError, error, annotated);
             }
-            handleError(uncaughtError, originalError);
+            uncaughtError.cause = error;
+            handleError(uncaughtError);
         });
     },
 };

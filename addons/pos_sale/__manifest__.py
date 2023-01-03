@@ -3,7 +3,7 @@
 
 
 {
-    'name': 'pos_sale',
+    'name': 'POS - Sales',
     'version': '1.1',
     'category': 'Hidden',
     'sequence': 6,
@@ -37,8 +37,6 @@ This module adds a custom Sales Team for the Point of Sale. This enables you to 
             'pos_sale/static/src/js/OrderManagementScreen/SaleOrderManagementControlPanel.js',
             'pos_sale/static/src/js/OrderManagementScreen/SaleOrderManagementScreen.js',
             'pos_sale/static/src/js/OrderManagementScreen/SaleOrderRow.js',
-        ],
-        'web.assets_qweb': [
             'pos_sale/static/src/xml/**/*',
         ],
     },

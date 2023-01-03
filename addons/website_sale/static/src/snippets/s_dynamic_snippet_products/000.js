@@ -7,10 +7,6 @@ var wSaleUtils = require('website_sale.utils');
 
 const DynamicSnippetProducts = DynamicSnippetCarousel.extend({
     selector: '.s_dynamic_snippet_products',
-    read_events: {
-        'click .js_add_cart': '_onAddToCart',
-        'click .js_remove': '_onRemoveFromRecentlyViewed',
-    },
 
     //--------------------------------------------------------------------------
     // Private
@@ -108,59 +104,72 @@ const DynamicSnippetProducts = DynamicSnippetCarousel.extend({
             productTemplateId: productTemplateId && productTemplateId.length ? productTemplateId[0].value : undefined,
         });
     },
+});
+
+const DynamicSnippetProductsCard = publicWidget.Widget.extend({
+    selector: '.o_carousel_product_card',
+    read_events: {
+        'click .js_add_cart': '_onClickAddToCart',
+        'click .js_remove': '_onRemoveFromRecentlyViewed',
+    },
+
+    init(root, options) {
+        const parent = options.parent || root;
+        this._super(parent, options);
+    },
+
+    start() {
+        this.add2cartRerender = this.el.dataset.add2cartRerender === 'True';
+    },
+
+    //--------------------------------------------------------------------------
+    // Handlers
+    //--------------------------------------------------------------------------
+
     /**
-     * Add product to cart and reload the carousel.
-     * @private
-     * @param {Event} ev
+     * Event triggered by a click on the Add to cart button
+     * 
+     * @param {OdooEvent} ev 
      */
-    _onAddToCart: function (ev) {
-        var self = this;
-        var $card = $(ev.currentTarget).closest('.card');
-        this._rpc({
+    async _onClickAddToCart(ev) {
+        const $card = $(ev.currentTarget).closest('.card');
+        const data = await this._rpc({
             route: "/shop/cart/update_json",
             params: {
                 product_id: $card.find('input[data-product-id]').data('product-id'),
                 add_qty: 1
             },
-        }).then(function (data) {
-            var $navButton = $('header .o_wsale_my_cart').first();
-            var fetch = self._fetchData();
-            var animation = wSaleUtils.animateClone($navButton, $(ev.currentTarget).parents('.card'), 25, 40);
-            Promise.all([fetch, animation]).then(function (values) {
-                wSaleUtils.updateCartNavBar(data);
-                if (self.add2cartRerender) {
-                     self._render();
-                }
-            });
         });
+        const $navButton = $('header .o_wsale_my_cart').first();
+        await wSaleUtils.animateClone($navButton, $(ev.currentTarget).parents('.card'), 25, 40);
+        wSaleUtils.updateCartNavBar(data);
+        if (this.add2cartRerender) {
+            this.trigger_up('widgets_start_request', {
+                $target: this.$el.closest('.s_dynamic'),
+            });
+        }
     },
     /**
-     * @override 
-     * @private
+     * Event triggered by a click on the remove button on a "recently viewed"
+     * template.
+     *
+     * @param {OdooEvent} ev
      */
-    _renderContent() {
-        this._super(...arguments);
-        this.add2cartRerender = !!this.el.querySelector('[data-add2cart-rerender="True"]');
-    },
-    /**
-     * Remove product from recently viewed products.
-     * @private
-     * @param {Event} ev
-     */
-    _onRemoveFromRecentlyViewed: function (ev) {
-        var self = this;
-        var $card = $(ev.currentTarget).closest('.card');
-        this._rpc({
+    async _onRemoveFromRecentlyViewed(ev) {
+        const $card = $(ev.currentTarget).closest('.card');
+        await this._rpc({
             route: "/shop/products/recently_viewed_delete",
             params: {
                 product_id: $card.find('input[data-product-id]').data('product-id'),
             },
-        }).then(function (data) {
-            self._fetchData().then(() => self._render());
+        });
+        this.trigger_up('widgets_start_request', {
+            $target: this.$el.closest('.s_dynamic'),
         });
     },
-
 });
+
+publicWidget.registry.dynamic_snippet_products_cta = DynamicSnippetProductsCard;
 publicWidget.registry.dynamic_snippet_products = DynamicSnippetProducts;
 
 return DynamicSnippetProducts;

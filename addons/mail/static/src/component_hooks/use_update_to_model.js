@@ -1,8 +1,8 @@
 /** @odoo-module **/
 
-import { useUpdate } from '@mail/component_hooks/use_update';
+import { useUpdate } from "@mail/component_hooks/use_update";
 
-const { useComponent } = owl;
+import { useComponent } from "@odoo/owl";
 
 /**
  * This hook provides support for binding the onMounted/onPatched hooks to the
@@ -13,7 +13,9 @@ const { useComponent } = owl;
  */
 export function useUpdateToModel({ methodName }) {
     const component = useComponent();
-    useUpdate({ func: () => {
-        component.props.record[methodName]();
-    } });
+    useUpdate({
+        func: () => {
+            component.props.record[methodName]();
+        },
+    });
 }

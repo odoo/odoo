@@ -4,7 +4,7 @@ import tour from 'web_tour.tour';
 
 let EXPECTED = [
     "Matrix", "PAV11", "PAV12 + $ 50.00",
-]
+];
 for (let no of ['PAV41', 'PAV42']) {
     for (let dyn of ['PAV31', 'PAV32']) {
         for (let al of ['PAV21', 'PAV22']) {
@@ -39,13 +39,13 @@ tour.register('sale_matrix_tour', {
 }, {
     trigger: 'ul.ui-autocomplete a:contains("Matrix")',
 }, {
-    trigger: '.o_product_variant_matrix',
+    trigger: '.o_matrix_input_table',
     run: function () {
         // fill the whole matrix with 1's
         $('.o_matrix_input').val(1);
     }
 }, {
-    trigger: 'span:contains("Confirm")',
+    trigger: 'button:contains("Confirm")',
 }, {
     trigger: '.o_sale_order',
     // wait for qty to be 1 => check the total to be sure all qties are set to 1
@@ -54,9 +54,9 @@ tour.register('sale_matrix_tour', {
     trigger: 'span:contains("Matrix (PAV11, PAV22, PAV31)\n\nPA4: PAV41")',
     extra_trigger: '.o_form_editable',
 }, {
-    trigger: '.o_edit_product_configuration',  // edit the matrix
+    trigger: '[name=product_template_id] button.fa-pencil',  // edit the matrix
 }, {
-    trigger: '.o_product_variant_matrix',
+    trigger: '.o_matrix_input_table',
     run: function () {
         // whitespace normalization: removes newlines around text from markup
         // content, then collapse & convert internal whitespace to regular
@@ -74,7 +74,7 @@ tour.register('sale_matrix_tour', {
         $('.o_matrix_input').val(3);
     }
 }, {
-    trigger: 'span:contains("Confirm")',  // apply the matrix
+    trigger: 'button:contains("Confirm")',  // apply the matrix
 }, {
     trigger: '.o_sale_order',
     // wait for qty to be 3 => check the total to be sure all qties are set to 3
@@ -83,49 +83,45 @@ tour.register('sale_matrix_tour', {
     trigger: 'span:contains("Matrix (PAV11, PAV22, PAV31)\n\nPA4: PAV41")',
     extra_trigger: '.o_form_editable',
 }, {
-    trigger: '.o_edit_product_configuration',  // edit the matrix
+    trigger: '[name=product_template_id] button.fa-pencil',  // edit the matrix
 }, {
-    trigger: '.o_product_variant_matrix',
+    trigger: '.o_matrix_input_table',
     run: function () {
         // reset all qties to 1
         $('.o_matrix_input').val(1);
     }
 }, {
-    trigger: 'span:contains("Confirm")',  // apply the matrix
+    trigger: 'button:contains("Confirm")',  // apply the matrix
 }, {
     trigger: '.o_sale_order',
     // wait for qty to be 1 => check the total to be sure all qties are set to 1
     extra_trigger: '.oe_subtotal_footer_separator:contains("248.40")',
 }, {
-    trigger: '.o_form_button_save:contains("Save")',  // SAVE Sales Order.
+    trigger: '.o_form_button_save',  // SAVE Sales Order.
 },
 // Open the matrix through the pencil button next to the product in line edit mode.
 {
-    trigger: '.o_form_button_edit:contains("Edit")',  // Edit Sales Order.
-}, {
     trigger: 'span:contains("Matrix (PAV11, PAV22, PAV31)\n\nPA4: PAV41")',
-    extra_trigger: '.o_form_editable',
+    extra_trigger: '.o_form_status_indicator_buttons.invisible', // wait for save to be finished
 }, {
-    trigger: '.o_edit_product_configuration',  // edit the matrix
+    trigger: '[name=product_template_id] button.fa-pencil',  // edit the matrix
 }, {
-    trigger: '.o_product_variant_matrix',
+    trigger: '.o_matrix_input_table',
     run: function () {
         // update some of the matrix values.
         $('.o_matrix_input').slice(8, 16).val(4);
     } // set the qty to 4 for half of the matrix products.
 }, {
-    trigger: 'span:contains("Confirm")',  // apply the matrix
+    trigger: 'button:contains("Confirm")',  // apply the matrix
 }, {
-    trigger: '.o_form_button_save:contains("Save")',
+    trigger: '.o_form_button_save',
     extra_trigger: '.o_field_cell.o_data_cell.o_list_number:contains("4.00")',
     run: 'click', // SAVE Sales Order, after matrix has been applied (extra_trigger).
-}, {
-    trigger: '.o_form_button_edit:contains("Edit")',  // Edit Sales Order.
 },
 // Ensures the matrix is opened with the values, when adding the same product.
 {
     trigger: 'a:contains("Add a product")',
-    extra_trigger: '.o_form_editable',
+    extra_trigger: '.o_form_status_indicator_buttons.invisible',
 }, {
     trigger: 'div[name="product_template_id"] input',
     run: 'text Matrix',
@@ -138,6 +134,6 @@ tour.register('sale_matrix_tour', {
         $("input[value='4']").slice(0, 4).val(8.2);
     }
 }, {
-    trigger: 'span:contains("Confirm")',  // apply the matrix
+    trigger: 'button:contains("Confirm")',  // apply the matrix
 }, ...tour.stepUtils.saveForm('.o_field_cell.o_data_cell.o_list_number:contains("8.20")'),
 ]);

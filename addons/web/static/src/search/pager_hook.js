@@ -1,6 +1,6 @@
 /** @odoo-module **/
 
-const { useEnv, useChildSubEnv, useState, onWillRender } = owl;
+import { useEnv, useChildSubEnv, useState, onWillRender } from "@odoo/owl";
 
 /**
  * @typedef PagerUpdateParams

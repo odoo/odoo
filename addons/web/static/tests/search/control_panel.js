@@ -109,7 +109,7 @@ QUnit.module("Search", (hooks) => {
     });
 
     QUnit.test("pager", async (assert) => {
-        let pagerProps = {
+        const pagerProps = {
             offset: 0,
             limit: 10,
             total: 50,

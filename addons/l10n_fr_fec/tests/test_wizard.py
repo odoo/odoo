@@ -7,7 +7,7 @@ from freezegun import freeze_time
 
 from odoo.addons.account.tests.common import AccountTestInvoicingCommon
 from odoo.tests import tagged
-from odoo import fields
+from odoo import fields, Command
 
 
 @freeze_time('2021-05-02')
@@ -23,6 +23,24 @@ class TestAccountFrFec(AccountTestInvoicingCommon):
 
         lines_data = [(1437.12, 'Hello\tDarkness'), (1676.64, 'my\rold\nfriend'), (3353.28, '\t\t\r')]
         today = fields.Date.today().strftime('%Y-%m-%d')
+
+        cls.tax_sale_a = cls.env['account.tax'].create({
+            'name': "TVA 20,0%",
+            'amount_type': 'percent',
+            'type_tax_use': 'sale',
+            'amount': 20,
+            'invoice_repartition_line_ids': [
+                Command.create({
+                    'repartition_type': 'base',
+                }),
+                Command.create({
+                    'repartition_type': 'tax',
+                    'factor': 100,
+                    'account_id': cls.env['account.account'].search([('code', '=', "445710")], limit=1).id,
+                })
+            ]
+        })
+
         cls.invoice_a = cls.env['account.move'].create({
             'move_type': 'out_invoice',
             'partner_id': cls.partner_a.id,
@@ -53,7 +71,7 @@ class TestAccountFrFec(AccountTestInvoicingCommon):
             "INV|Customer Invoices|INV/2021/00001|20210502|701100|Ventes de produits finis (ou groupe) A|||-|20210502|Hello Darkness|0,00| 000000000001437,12|||20210502|-000000000001437,12|EUR\r\n"
             "INV|Customer Invoices|INV/2021/00001|20210502|701100|Ventes de produits finis (ou groupe) A|||-|20210502|my old friend|0,00| 000000000001676,64|||20210502|-000000000001676,64|EUR\r\n"
             "INV|Customer Invoices|INV/2021/00001|20210502|701100|Ventes de produits finis (ou groupe) A|||-|20210502|/|0,00| 000000000003353,28|||20210502|-000000000003353,28|EUR\r\n"
-            "INV|Customer Invoices|INV/2021/00001|20210502|445710|TVA collectée|||-|20210502|TVA collectée (vente) 20,0%|0,00| 000000000001293,41|||20210502|-000000000001293,41|EUR\r\n"
+            "INV|Customer Invoices|INV/2021/00001|20210502|445710|TVA collectée|||-|20210502|TVA 20,0%|0,00| 000000000001293,41|||20210502|-000000000001293,41|EUR\r\n"
             f"INV|Customer Invoices|INV/2021/00001|20210502|411100|Clients - Ventes de biens ou de prestations de services|{self.partner_a.id}|partner_a|-|20210502|INV/2021/00001| 000000000007760,45|0,00|||20210502| 000000000007760,45|EUR"
         )
         content = base64.b64decode(self.wizard.fec_data).decode()

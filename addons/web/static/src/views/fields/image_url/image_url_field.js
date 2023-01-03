@@ -5,7 +5,7 @@ import { useService } from "@web/core/utils/hooks";
 import { _lt } from "@web/core/l10n/translation";
 import { standardFieldProps } from "../standard_field_props";
 
-const { Component, onWillUpdateProps, useState } = owl;
+import { Component, onWillUpdateProps, useState } from "@odoo/owl";
 
 export class ImageUrlField extends Component {
     setup() {

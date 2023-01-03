@@ -71,7 +71,7 @@ odoo.define('mass_mailing.unsubscribe', function (require) {
           unchecked_ids[i] = parseInt($(this).val());
         });
 
-        ajax.jsonRpc('/mail/mailing/unsubscribe', 'call', {'opt_in_ids': checked_ids, 'opt_out_ids': unchecked_ids, 'email': email, 'mailing_id': mailing_id, 'res_id': res_id, 'token': token})
+        ajax.jsonRpc('/mailing/list/update', 'call', {'opt_in_ids': checked_ids, 'opt_out_ids': unchecked_ids, 'email': email, 'mailing_id': mailing_id, 'res_id': res_id, 'token': token})
             .then(function (result) {
                 if (result == 'unauthorized'){
                     $('#subscription_info').text(_t('You are not authorized to do this!'));

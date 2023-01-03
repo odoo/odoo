@@ -10,8 +10,8 @@
                     <group>
                         <label for="mode" string="Add to"/>
                         <field name="mode" widget="radio" nolabel="1"/>
-                        <field name="wave_id" options="{'no_create_edit': True, 'no_open': True}" attrs="{'invisible': [('mode', '=', 'new')], 'required': [('mode', '=', 'existing')]}"/>
-                        <field name="user_id" options="{'no_create_edit': True}" attrs="{'invisible': [('mode', '=', 'existing')]}"/>
+                        <field name="wave_id" options="{'no_create': True, 'no_open': True}" attrs="{'invisible': [('mode', '=', 'new')], 'required': [('mode', '=', 'existing')]}"/>
+                        <field name="user_id" options="{'no_create': True}" attrs="{'invisible': [('mode', '=', 'existing')]}"/>
                     </group>
                 </group>
 

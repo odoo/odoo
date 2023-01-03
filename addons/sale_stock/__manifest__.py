@@ -46,11 +46,12 @@ Preferences
     'auto_install': True,
     'assets': {
         'web.assets_backend': [
-            'sale_stock/static/src/js/**/*',
+            'sale_stock/static/src/**/*',
+            ('remove', 'sale_stock/static/src/legacy/**/*'),
         ],
-        'web.assets_qweb': [
-            'sale_stock/static/src/xml/**/*',
-        ],
+        "web.assets_backend_legacy_lazy": [
+            'sale_stock/static/src/legacy/**/*',
+        ]
     },
     'license': 'LGPL-3',
 }

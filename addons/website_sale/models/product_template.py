@@ -53,9 +53,9 @@ class ProductTemplate(models.Model):
     base_unit_price = fields.Monetary("Price Per Unit", currency_field="currency_id", compute="_compute_base_unit_price")
     base_unit_name = fields.Char(compute='_compute_base_unit_name', help='Displays the custom unit for the products if defined or the selected unit of measure otherwise.')
 
-    compare_list_price = fields.Float(
+    compare_list_price = fields.Monetary(
         'Compare to Price',
-        digits='Product Price',
+        currency_field="currency_id",
         help="The amount will be displayed strikethroughed on the eCommerce product page")
 
     @api.depends('product_variant_ids', 'product_variant_ids.base_unit_count')
@@ -80,10 +80,14 @@ class ProductTemplate(models.Model):
             if len(template.product_variant_ids) == 1:
                 template.product_variant_ids.base_unit_id = template.base_unit_id
 
+    def _get_base_unit_price(self, price):
+        self.ensure_one()
+        return self.base_unit_count and price / self.base_unit_count
+
     @api.depends('list_price', 'base_unit_count')
     def _compute_base_unit_price(self):
         for template in self:
-            template.base_unit_price = template.base_unit_count and template.list_price / template.base_unit_count
+            template.base_unit_price = template._get_base_unit_price(template.list_price)
 
     @api.depends('uom_name', 'base_unit_id.name')
     def _compute_base_unit_name(self):
@@ -207,6 +211,22 @@ class ProductTemplate(models.Model):
                 base_price = taxes.compute_all(base_price, pricelist.currency_id, 1, template, partner_sudo)[
                     tax_display]
                 template_price_vals['base_price'] = base_price
+                if base_price > price_reduce:
+                    base_price = self.env['account.tax']._fix_tax_included_price_company(
+                        base_price, product_taxes, taxes, self.env.company)
+                    base_price = taxes.compute_all(base_price, pricelist.currency_id, 1, template, partner_sudo)[tax_display]
+                    template_price_vals['base_price'] = base_price
+
+            if template.compare_list_price:
+                template_price_vals['base_price'] = template.compare_list_price
+                if template.currency_id != pricelist.currency_id:
+                    template_price_vals['base_price'] = template.currency_id._convert(
+                        template.compare_list_price,
+                        pricelist.currency_id,
+                        self.env.company,
+                        fields.Datetime.now(),
+                        round=False
+                    )
 
             res[template.id] = template_price_vals
 
@@ -257,16 +277,30 @@ class ProductTemplate(models.Model):
                 combination_info['price_extra'], product_taxes, taxes, company_id, pricelist,
                 product, partner
             )
+            base_unit_price = product._get_base_unit_price(list_price)
+            if pricelist.currency_id != product.currency_id:
+                base_unit_price = pricelist.currency_id._convert(
+                    base_unit_price,
+                    pricelist.currency_id,
+                    company_id,
+                    fields.Date.today())
             has_discounted_price = pricelist.currency_id.compare_amounts(list_price, price) == 1
             prevent_zero_price_sale = not price and current_website.prevent_zero_price_sale
+
+            compare_list_price = self.compare_list_price
+            if self.currency_id != pricelist.currency_id:
+                compare_list_price = self.currency_id._convert(self.compare_list_price, pricelist.currency_id, self.env.company,
+                                                  fields.Datetime.now(), round=False)
+
             combination_info.update(
                 base_unit_name=product.base_unit_name,
-                base_unit_price=product.base_unit_price,
+                base_unit_price=product.base_unit_count and list_price / product.base_unit_count,
                 price=price,
                 list_price=list_price,
                 price_extra=price_extra,
                 has_discounted_price=has_discounted_price,
                 prevent_zero_price_sale=prevent_zero_price_sale,
+                compare_list_price=compare_list_price,
             )
 
         return combination_info
@@ -474,6 +508,7 @@ class ProductTemplate(models.Model):
                 )
                 if list_price:
                     data['list_price'] = list_price
+
             if with_image:
                 data['image_url'] = '/web/image/product.template/%s/image_128' % data['id']
             if with_category and categ_ids:
@@ -495,6 +530,10 @@ class ProductTemplate(models.Model):
         if combination_info['has_discounted_price']:
             list_price = self.env['ir.qweb.field.monetary'].value_to_html(
                 combination_info['list_price'], monetary_options
+            )
+        if combination_info['compare_list_price']:
+            list_price = self.env['ir.qweb.field.monetary'].value_to_html(
+                combination_info['compare_list_price'], monetary_options
             )
 
         return price, list_price if combination_info['has_discounted_price'] else None

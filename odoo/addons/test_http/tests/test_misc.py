@@ -8,10 +8,11 @@ from urllib.parse import urlparse
 import odoo
 from odoo.http import root
 from odoo.tests import tagged
-from odoo.tests.common import HOST
+from odoo.tests.common import HOST, new_test_user, get_db_name
 from odoo.tools import config, file_path
 from odoo.addons.test_http.controllers import CT_JSON
 
+from odoo.addons.test_http.utils import TEST_IP
 from .test_common import TestHttpBase
 
 
@@ -19,8 +20,7 @@ from .test_common import TestHttpBase
 class TestHttpMisc(TestHttpBase):
     def test_misc0_redirect(self):
         res = self.nodb_url_open('/test_http//greeting')
-        self.assertEqual(res.status_code, 301)
-        self.assertEqual(urlparse(res.headers.get('Location', '')).path, '/test_http/greeting')
+        self.assertEqual(res.status_code, 404)
 
     def test_misc1_reverse_proxy(self):
         # client <-> reverse-proxy <-> odoo
@@ -74,6 +74,58 @@ class TestHttpMisc(TestHttpBase):
         self.assertIsNone(root.get_static_file('/test_http/__manifest__.py'), "File is not static")
         self.assertIsNone(root.get_static_file(f'odoo.com/{uri}'), "No host allowed")
         self.assertIsNone(root.get_static_file(f'http://odoo.com/{uri}'), "No host allowed")
+
+    def test_misc4_rpc_qweb(self):
+        jack = new_test_user(self.env, 'jackoneill', context={'lang': 'en_US'})
+        milky_way = self.env.ref('test_http.milky_way')
+
+        payload = json.dumps({'jsonrpc': '2.0', 'method': 'call', 'id': None, 'params': {
+            'service': 'object', 'method': 'execute', 'args': [
+                get_db_name(), jack.id, 'jackoneill', 'test_http.galaxy', 'render', milky_way.id
+            ]
+        }})
+
+        for method in (self.db_url_open, self.nodb_url_open):
+            with self.subTest(method=method.__name__):
+                res = method('/jsonrpc', data=payload, headers=CT_JSON)
+                res.raise_for_status()
+
+                res_rpc = res.json()
+                self.assertNotIn('error', res_rpc.keys(), res_rpc.get('error', {}).get('data', {}).get('message'))
+                self.assertIn(milky_way.name, res_rpc['result'], "QWeb template was correctly rendered")
+
+    def test_misc5_geoip(self):
+        res = self.nodb_url_open('/test_http/geoip')
+        res.raise_for_status()
+        self.assertEqual(res.json(), {
+            'city': None,
+            'country_code': None,
+            'country_name': None,
+            'latitude': None,
+            'longitude': None,
+            'region': None,
+            'time_zone': None,
+        })
+
+        # Fake client IP using proxy_mode and a forged X-Forwarded-For http header
+        headers = {
+            'Host': '',
+            'X-Forwarded-For': TEST_IP,
+            'X-Forwarded-Host': 'odoo.com',
+            'X-Forwarded-Proto': 'https'
+        }
+        with patch.dict('odoo.tools.config.options', {'proxy_mode': True}):
+            res = self.nodb_url_open('/test_http/geoip', headers=headers)
+            res.raise_for_status()
+            self.assertEqual(res.json(), {
+                'city': None,
+                'country_code': 'FR',
+                'country_name': 'France',
+                'latitude': 48.8582,
+                'longitude': 2.3387,
+                'region': None,
+                'time_zone': 'Europe/Paris',
+            })
 
 
 @tagged('post_install', '-at_install')

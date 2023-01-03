@@ -9,6 +9,7 @@ from odoo import api, fields, models, _
 from odoo.exceptions import UserError
 from odoo.http import request
 from odoo.osv import expression
+from odoo.tools import float_is_zero
 
 
 class SaleOrder(models.Model):
@@ -115,7 +116,7 @@ class SaleOrder(models.Model):
             self._compute_pricelist_id()
 
         if update_pricelist or previous_pricelist_id != self.pricelist_id.id:
-            self.update_prices()
+            self._recompute_prices()
 
     def _cart_update(self, product_id, line_id=None, add_qty=0, set_qty=0, **kwargs):
         """ Add or set product quantity, add_qty can be negative """
@@ -344,7 +345,7 @@ class SaleOrder(models.Model):
             'target': 'new',
             'context': {
                 'default_composition_mode': 'mass_mail' if len(self.ids) > 1 else 'comment',
-                'default_email_layout_xmlid': 'mail.mail_notification_paynow',
+                'default_email_layout_xmlid': 'mail.mail_notification_layout_with_responsible_signature',
                 'default_res_id': self.ids[0],
                 'default_model': 'sale.order',
                 'default_use_template': bool(template_id),
@@ -380,6 +381,23 @@ class SaleOrder(models.Model):
                 sent_orders |= order
         sent_orders.write({'cart_recovery_email_sent': True})
 
+    def _message_mail_after_hook(self, mails):
+        """ After sending recovery cart emails, update orders to avoid sending
+        it again. """
+        if self.env.context.get('website_sale_send_recovery_email'):
+            self.filtered([
+                ('cart_recovery_email_sent', '=', False),
+                ('is_abandoned_cart', '=', True)
+            ]).cart_recovery_email_sent = True
+        return super()._message_mail_after_hook(mails)
+
+    def _message_post_after_hook(self, message, msg_vals):
+        """ After sending recovery cart emails, update orders to avoid sending
+        it again. """
+        if self.env.context.get('website_sale_send_recovery_email'):
+            self.cart_recovery_email_sent = True
+        return super(SaleOrder, self)._message_post_after_hook(message, msg_vals)
+
     def _notify_get_recipients_groups(self, msg_vals=None):
         """ In case of cart recovery email, update link to redirect directly
         to the cart (like ``mail_template_sale_cart_recovery`` template). """
@@ -409,3 +427,56 @@ class SaleOrder(models.Model):
         if clear:
             self.shop_warning = ''
         return warn
+
+    def _is_reorder_allowed(self):
+        self.ensure_one()
+        return self.state == 'sale' and any(line._is_reorder_allowed() for line in self.order_line)
+
+    def _filter_can_send_abandoned_cart_mail(self):
+        self.website_id.ensure_one()
+        abandoned_datetime = datetime.utcnow() - relativedelta(hours=self.website_id.cart_abandoned_delay)
+
+        sales_after_abandoned_date = self.env['sale.order'].search([
+            ('state', '=', 'sale'),
+            ('partner_id', 'in', self.partner_id.ids),
+            ('create_date', '>=', abandoned_datetime),
+            ('website_id', '=', self.website_id.id),
+        ])
+        latest_create_date_per_partner = dict()
+        for sale in self:
+            if sale.partner_id not in latest_create_date_per_partner:
+                latest_create_date_per_partner[sale.partner_id] = sale.create_date
+            else:
+                latest_create_date_per_partner[sale.partner_id] = max(latest_create_date_per_partner[sale.partner_id], sale.create_date)
+        has_later_sale_order = dict()
+        for sale in sales_after_abandoned_date:
+            if has_later_sale_order.get(sale.partner_id, False):
+                continue
+            has_later_sale_order[sale.partner_id] = latest_create_date_per_partner[sale.partner_id] <= sale.date_order
+
+        # Customer needs to be signed in otherwise the mail address is not known.
+        # We therefore consider only sales with a known mail address.
+
+        # If a payment processing error occurred when the customer tried to complete their checkout,
+        # then the email won't be sent.
+
+        # If all the products in the checkout are free, and the customer does not visit the shipping page to add a
+        # shipping fee or the shipping fee is also free, then the email won't be sent.
+
+        # If a potential customer creates one or more abandoned sale order and then completes a sale order before
+        # the recovery email gets sent, then the email won't be sent.
+
+        return self.filtered(
+            lambda abandoned_sale_order:
+            abandoned_sale_order.partner_id.email
+            and not any(transaction.state == 'error' for transaction in abandoned_sale_order.transaction_ids)
+            and any(not float_is_zero(line.price_unit, precision_rounding=line.currency_id.rounding) for line in abandoned_sale_order.order_line)
+            and not has_later_sale_order.get(abandoned_sale_order.partner_id, False)
+        )
+
+    def action_preview_sale_order(self):
+        action = super().action_preview_sale_order()
+        if action['url'].startswith('/'):
+            # URL should always be relative, safety check
+            action['url'] = f'/@{action["url"]}'
+        return action

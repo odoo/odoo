@@ -85,7 +85,7 @@ class SipsController(http.Controller):
             raise Forbidden()
 
         # Compare the received signature with the expected signature computed from the data
-        expected_signature = tx_sudo.acquirer_id._sips_generate_shasign(notification_data['Data'])
+        expected_signature = tx_sudo.provider_id._sips_generate_shasign(notification_data['Data'])
         if not hmac.compare_digest(received_signature, expected_signature):
             _logger.warning("received notification with invalid signature")
             raise Forbidden()

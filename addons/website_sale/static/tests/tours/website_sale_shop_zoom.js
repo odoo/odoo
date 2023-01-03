@@ -10,7 +10,7 @@ var nameGreen = "Forest Green";
 // This tour relies on a data created from the python test.
 tour.register('shop_zoom', {
     test: true,
-    url: '/shop?search=' + imageName,
+    url: '/shop?debug=1&search=' + imageName,
 },
 [
     {
@@ -23,8 +23,13 @@ tour.register('shop_zoom', {
         run: 'clicknoleave',
     },
     {
-        content: "check there is no zoom on that small image",
-        trigger: 'body:not(:has(.zoomodoo-flyout img))',
+        content: "check that the image viewer opened",
+        trigger: '.o_wsale_image_viewer',
+        run: () => {},
+    },
+    {
+        content: "close the image viewer",
+        trigger: '.o_wsale_image_viewer_header span.fa-times',
     },
     {
         content: "change variant",
@@ -42,7 +47,8 @@ tour.register('shop_zoom', {
     },
     {
         content: "check there is a zoom on that big image",
-        trigger: '.zoomodoo-flyout img',
+        trigger: '.o_wsale_image_viewer',
+        run: () => {},
     },
 ]);
 });

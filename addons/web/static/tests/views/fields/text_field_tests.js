@@ -2,7 +2,14 @@
 
 import { registry } from "@web/core/registry";
 import { makeFakeLocalizationService } from "@web/../tests/helpers/mock_services";
-import { click, editInput, getFixture, triggerEvent } from "@web/../tests/helpers/utils";
+import {
+    click,
+    clickCreate,
+    clickSave,
+    editInput,
+    getFixture,
+    triggerEvent,
+} from "@web/../tests/helpers/utils";
 import { makeView, setupViewRegistries } from "@web/../tests/views/helpers";
 
 const serviceRegistry = registry.category("services");
@@ -49,21 +56,6 @@ QUnit.module("Fields", (hooks) => {
                         },
                     ],
                 },
-                "ir.translation": {
-                    fields: {
-                        lang: { type: "char" },
-                        value: { type: "char" },
-                        res_id: { type: "integer" },
-                    },
-                    records: [
-                        {
-                            id: 99,
-                            res_id: 37,
-                            value: "",
-                            lang: "en_US",
-                        },
-                    ],
-                },
             },
         };
 
@@ -82,14 +74,6 @@ QUnit.module("Fields", (hooks) => {
             arch: '<form><field name="foo"/></form>',
         });
 
-        assert.containsOnce(target, ".o_field_text", "should have a text area");
-        assert.strictEqual(
-            target.querySelector(".o_field_text").textContent,
-            "yop",
-            "should be 'yop' in readonly"
-        );
-
-        await click(target, ".o_form_button_edit");
         const textarea = target.querySelector(".o_field_text textarea");
         assert.ok(textarea, "should have a text area");
         assert.strictEqual(textarea.value, "yop", "should still be 'yop' in edit");
@@ -104,10 +88,10 @@ QUnit.module("Fields", (hooks) => {
             "should be 'hello world' after second edition"
         );
 
-        await click(target, ".o_form_button_save");
+        await clickSave(target);
 
         assert.strictEqual(
-            target.querySelector(".o_field_text").textContent,
+            target.querySelector(".o_field_text textarea").value,
             "hello world",
             "should be 'hello world' after save"
         );
@@ -123,15 +107,6 @@ QUnit.module("Fields", (hooks) => {
             serverData,
             arch: '<form><field name="foo"/></form>',
         });
-
-        const field = target.querySelector(".o_field_text");
-        assert.strictEqual(
-            field.offsetHeight,
-            field.scrollHeight,
-            "text field should not have a scroll bar"
-        );
-
-        await click(target, ".o_form_button_edit");
 
         const textarea = target.querySelector(".o_field_text textarea");
         assert.strictEqual(
@@ -149,8 +124,6 @@ QUnit.module("Fields", (hooks) => {
             serverData,
             arch: '<form><field name="txt"/></form>',
         });
-
-        await click(target, ".o_form_button_edit");
 
         assert.strictEqual(
             window.getComputedStyle(target.querySelector("textarea")).resize,
@@ -189,8 +162,6 @@ QUnit.module("Fields", (hooks) => {
                     <field name="txt" attrs="{'invisible': [('bar', '=', True)]}" />
                 </form>`,
         });
-
-        await click(target, ".o_form_button_edit");
 
         let textarea = target.querySelector(".o_field_widget[name='txt'] textarea");
         const initialHeight = textarea.offsetHeight;
@@ -257,10 +228,8 @@ QUnit.module("Fields", (hooks) => {
                 </form>`,
         });
 
-        // edit the form
         // trigger a textarea reset (through onchange) by clicking the box
         // then check there is no scroll bar
-        await click(target, ".o_form_button_edit");
         await click(target, "div[name='bar'] input");
 
         const textarea = target.querySelector("textarea");
@@ -268,6 +237,28 @@ QUnit.module("Fields", (hooks) => {
             textarea.clientHeight,
             textarea.scrollHeight,
             "textarea should not have a scroll bar"
+        );
+    });
+
+    QUnit.test("set row on text fields", async function (assert) {
+        serverData.models.partner.fields.foo.type = "text";
+
+        await makeView({
+            type: "form",
+            resModel: "partner",
+            resId: 1,
+            serverData,
+            arch: `
+                <form>
+                    <field name="foo" rows="4"/>
+                </form>`,
+        });
+
+        const textarea = target.querySelector("textarea");
+        assert.strictEqual(
+            textarea.rows,
+            4,
+            "rowCount should be the one set on the field",
         );
     });
 
@@ -290,8 +281,7 @@ QUnit.module("Fields", (hooks) => {
                 resId: 1,
             });
 
-            // switch to edit mode to ensure that autoresize is correctly done
-            await click(target.querySelector(".o_form_button_edit"));
+            // ensure that autoresize is correctly done
             let height = target.querySelector(".o_field_widget[name=text_field] textarea")
                 .offsetHeight;
             // focus the field to manually trigger autoresize
@@ -305,9 +295,8 @@ QUnit.module("Fields", (hooks) => {
             // its minimal size, even after being focused
             assert.ok(height > 80, "textarea should have an height of at least 80px");
 
-            // save and create a new record to ensure that autoresize is correctly done
-            await click(target.querySelector(".o_form_button_save"));
-            await click(target.querySelector(".o_form_button_create"));
+            // create a new record to ensure that autoresize is correctly done
+            await clickCreate(target);
             height = target.querySelector(".o_field_widget[name=text_field] textarea").offsetHeight;
             // focus the field to manually trigger autoresize
             await triggerEvent(target, ".o_field_widget[name=text_field] textarea", "focus");
@@ -352,7 +341,6 @@ QUnit.module("Fields", (hooks) => {
             resId: 1,
         });
 
-        await click(target.querySelector(".o_form_button_edit"));
         assert.hasClass(target.querySelectorAll(".o_notebook .nav .nav-link")[0], "active");
 
         await click(target.querySelectorAll(".o_notebook .nav .nav-link")[1]);
@@ -364,12 +352,13 @@ QUnit.module("Fields", (hooks) => {
         await click(target.querySelectorAll(".o_notebook .nav .nav-link")[2]);
         assert.hasClass(target.querySelectorAll(".o_notebook .nav .nav-link")[2], "active");
 
-        height = target.querySelector(".o_field_widget[name=text_field_empty] textarea").offsetHeight;
+        height = target.querySelector(".o_field_widget[name=text_field_empty] textarea")
+            .offsetHeight;
         assert.strictEqual(height, 50, "empty textarea should have height of 50px");
     });
 
     QUnit.test("text field translatable", async function (assert) {
-        assert.expect(4);
+        assert.expect(3);
 
         serverData.models.partner.fields.txt.translate = true;
         serviceRegistry.add("localization", makeFakeLocalizationService({ multiLang: true }), {
@@ -390,24 +379,23 @@ QUnit.module("Fields", (hooks) => {
                     </sheet>
                 </form>`,
             mockRPC(route, { args, method }) {
-                if (route === "/web/dataset/call_button" && method === "translate_fields") {
-                    assert.deepEqual(
-                        args,
-                        ["partner", 1, "txt"],
-                        `should call "call_button" route`
-                    );
-                    return Promise.resolve({
-                        domain: [],
-                        context: { search_default_name: "partnes,foo" },
-                    });
-                }
                 if (route === "/web/dataset/call_kw/res.lang/get_installed") {
-                    return Promise.resolve([["en_US"], ["fr_BE"]]);
+                    return Promise.resolve([
+                        ["en_US", "English"],
+                        ["fr_BE", "French (Belgium)"],
+                    ]);
+                }
+                if (route === "/web/dataset/call_kw/partner/get_field_translations") {
+                    return Promise.resolve([
+                        [
+                            { lang: "en_US", source: "yop", value: "yop" },
+                            { lang: "fr_BE", source: "yop", value: "valeur français" },
+                        ],
+                        { translation_type: "text", translation_show_source: false },
+                    ]);
                 }
             },
         });
-
-        await click(target, ".o_form_button_edit");
 
         assert.hasClass(target.querySelector("[name=txt] textarea"), "o_field_translate");
 
@@ -498,7 +486,7 @@ QUnit.module("Fields", (hooks) => {
                 resModel: "partner",
                 serverData,
                 arch: `
-                    <form>
+                    <form edit="0">
                         <sheet>
                             <group>
                                 <field name="txt"/>

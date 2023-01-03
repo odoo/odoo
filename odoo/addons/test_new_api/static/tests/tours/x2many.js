@@ -69,14 +69,10 @@ odoo.define('web.test.x2many', function (require) {
         content: "save selected participants",
         trigger: '.o_select_button',
         extra_trigger: 'tr:has(td:containsExact(Mitchell Admin)) .o_list_record_selector input[type="checkbox"]:propChecked',
-    }, { // save
+    }, ...tour.stepUtils.saveForm({
         content: "save discussion",
-        trigger: 'button.o_form_button_save',
         extra_trigger: '.o_field_widget[name=participants] .o_data_cell:containsExact(Mitchell Admin)',
-    }, { // edit
-        content: "edit discussion",
-        trigger: 'button.o_form_button_edit',
-    }, { // add message a
+    }), { // add message a
         content: "Select First Tab",
         trigger: '.o_notebook_headers .nav-item a:contains(Messages)',
     }, {
@@ -168,9 +164,6 @@ odoo.define('web.test.x2many', function (require) {
         trigger: '.o_content:has(.o_field_widget[name=participants] tbody .o_data_row:eq(2))',
         extra_trigger: 'body:not(:has(.o_field_widget[name=participants] tbody .o_data_row:eq(3)))',
         run: function () {}, // it's a check
-    }, { // edit
-        content: "edit discussion",
-        trigger: 'button.o_form_button_edit',
     }, {
         content: "change tab to Messages",
         trigger: '.o_notebook_headers .nav-item a:contains(Messages)',
@@ -269,9 +262,6 @@ odoo.define('web.test.x2many', function (require) {
         trigger: '.o_content:has(.o_field_widget[name=participants] tbody .o_data_row:eq(2))',
         extra_trigger: '.o_content:not(:has(.o_field_widget[name=participants] tbody .o_data_row:eq(3)))',
         run: function () {}, // it's a check
-    }, { // edit
-        content: "edit discussion",
-        trigger: 'button.o_form_button_edit',
     }, {
         content: "go to Messages",
         trigger: '.o_notebook_headers .nav-item a:contains(Messages)',
@@ -306,12 +296,10 @@ odoo.define('web.test.x2many', function (require) {
         trigger: '.o_content:has(.o_field_widget[name=messages] .o_data_row:eq(3))',
         extra_trigger: 'body:not(:has(.o_field_widget[name=messages] .o_data_row:eq(4)))',
         run: function () {}, // it's a check
-    }, { // cancel
+    }, ...tour.stepUtils.discardForm({ // cancel
         content: "cancel change",
-        trigger: '.o_cp_buttons .o_form_button_cancel',
         extra_trigger: '.o_field_widget[name=messages]:has(tr td:containsExact(ddd))',
-        run: 'click',
-    },
+    }),
 
     /////////////////////////////////////////////////////////////////////////////////////////////
     // Discussions 2
@@ -327,9 +315,6 @@ odoo.define('web.test.x2many', function (require) {
         content: "select previous created record",
         trigger: 'td:contains(test_trigger):last',
         extra_trigger: '.breadcrumb-item:contains(Discussions 2)',
-    }, {
-        content: "click on edit",
-        trigger: '.o_cp_buttons .o_form_button_edit',
     }, {
         content: "edit content",
         trigger: '.o_field_widget[name=name] input',
@@ -390,22 +375,18 @@ odoo.define('web.test.x2many', function (require) {
         content: "test one2many onchange after delete",
         trigger: '.o_content:not(:has(.o_field_widget[name="message_concat"] textarea:propValueContains(Mitchell Admin:d)))',
         run: function () {},
-    }, { // save
+    }, ...tour.stepUtils.saveForm({ // save
         content: "save discussion",
-        trigger: 'button.o_form_button_save',
         extra_trigger: 'body:not(:has(tr:has(td:containsExact(d))))',
-    }, { // check saved data
+    }), { // check saved data
         content: "check data 10",
-        trigger: '.o_field_widget[name=message_concat] span:containsExact([test_trigger2] Mitchell Admin:aaa\n[test_trigger2] Marc Demo:ccccc)',
+        trigger: '.o_field_widget[name=message_concat] textarea:propValueContains([test_trigger2] Mitchell Admin:aaa\n[test_trigger2] Marc Demo:ccccc)',
         run: function () {}, // don't change texarea content
     }, {
         content: "check data 11",
         trigger: '.o_field_widget[name=messages] tbody .o_data_row:eq(1)',
         extra_trigger: 'body:not(:has(.o_field_widget[name=messages] tbody .o_data_row:eq(2)))',
         run: function () {},
-    }, { // edit
-        content: "edit discussion",
-        trigger: 'button.o_form_button_edit'
     }, { // add message eee
         content: "create new message eee",
         trigger: '.o_field_widget[name=messages] .o_field_x2many_list_row_add a',
@@ -414,13 +395,12 @@ odoo.define('web.test.x2many', function (require) {
         content: "change text value",
         trigger: '.o_field_widget[name="body"] textarea',
         run: 'text eee'
-    }, { // save
+    }, ...tour.stepUtils.saveForm({ // save
         content: "save discussion",
-        trigger: 'button.o_form_button_save',
         extra_trigger: '.o_field_widget[name="body"] textarea:propValueContains(eee)',
-    }, { // check saved data
+    }), { // check saved data
         content: "check data 12",
-        trigger: '.o_field_widget[name="message_concat"] span:containsExact([test_trigger2] Mitchell Admin:aaa\n[test_trigger2] Marc Demo:ccccc\n[test_trigger2] Mitchell Admin:eee)',
+        trigger: '.o_field_widget[name="message_concat"] textarea:propValueContains([test_trigger2] Mitchell Admin:aaa\n[test_trigger2] Marc Demo:ccccc\n[test_trigger2] Mitchell Admin:eee)',
         run: function () {}, // it's a check
     }, {
         content: "check data 13",

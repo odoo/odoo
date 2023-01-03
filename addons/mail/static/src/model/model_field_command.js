@@ -40,7 +40,7 @@ class FieldCommand {
  * @returns {FieldCommand}
  */
 function clear() {
-    return new FieldCommand('clear');
+    return new FieldCommand("clear");
 }
 
 /**
@@ -52,7 +52,7 @@ function clear() {
  * @returns {FieldCommand}
  */
 function create(data) {
-    return new FieldCommand('create', data);
+    return new FieldCommand("create", data);
 }
 
 /**
@@ -64,7 +64,7 @@ function create(data) {
  * @returns {FieldCommand}
  */
 function decrement(amount = 1) {
-    return new FieldCommand('decrement', amount);
+    return new FieldCommand("decrement", amount);
 }
 
 /**
@@ -76,7 +76,7 @@ function decrement(amount = 1) {
  * @returns {FieldCommand}
  */
 function increment(amount = 1) {
-    return new FieldCommand('increment', amount);
+    return new FieldCommand("increment", amount);
 }
 
 /**
@@ -90,7 +90,7 @@ function increment(amount = 1) {
  * @returns {FieldCommand}
  */
 function insert(data) {
-    return new FieldCommand('insert', data);
+    return new FieldCommand("insert", data);
 }
 
 /**
@@ -104,7 +104,7 @@ function insert(data) {
  * @returns {FieldCommand}
  */
 export function insertAndUnlink(data = {}) {
-    return new FieldCommand('insert-and-unlink', data);
+    return new FieldCommand("insert-and-unlink", data);
 }
 
 /**
@@ -118,7 +118,7 @@ export function insertAndUnlink(data = {}) {
  * @returns {FieldCommand}
  */
 function link(newValue) {
-    return new FieldCommand('link', newValue);
+    return new FieldCommand("link", newValue);
 }
 
 /**
@@ -129,7 +129,7 @@ function link(newValue) {
  * @param {any} newValue - value to be written on the field value.
  */
 function set(newValue) {
-    return new FieldCommand('set', newValue);
+    return new FieldCommand("set", newValue);
 }
 
 /**
@@ -144,7 +144,7 @@ function set(newValue) {
  * @returns {FieldCommand}
  */
 function unlink(data) {
-    return new FieldCommand('unlink', data);
+    return new FieldCommand("unlink", data);
 }
 
 /**
@@ -155,18 +155,7 @@ function unlink(data) {
  * @returns {FieldCommand}
  */
 function unlinkAll() {
-    return new FieldCommand('unlink-all');
+    return new FieldCommand("unlink-all");
 }
 
-export {
-    FieldCommand,
-    clear,
-    create,
-    decrement,
-    increment,
-    insert,
-    link,
-    set,
-    unlink,
-    unlinkAll,
-};
+export { FieldCommand, clear, create, decrement, increment, insert, link, set, unlink, unlinkAll };

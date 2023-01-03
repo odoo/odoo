@@ -12,9 +12,6 @@
                 <field name="l10n_in_gst_treatment"
                     attrs="{'invisible':[('country_code','!=','IN')],'required':[('country_code','=','IN')]}"/>
             </xpath>
-            <xpath expr="//group[@name='sale_info']//field[@name='invoice_status']" position="after">
-                <field name="l10n_in_journal_id" domain="[('company_id', '=', company_id), ('type','=','sale')]" options="{'no_create': True}" attrs="{'invisible': [('country_code','!=', 'IN')]}"/>
-            </xpath>
         </field>
     </record>
 </odoo>

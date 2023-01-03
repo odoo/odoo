@@ -26,7 +26,6 @@ class WebsiteLivechatChatbotScriptController(http.Controller):
             'anonymous_name': False,
             'channel_type': 'livechat',
             'name': chatbot_script.title,
-            'public': 'private',
         }
 
         visitor_sudo = request.env['website.visitor']._get_visitor_from_request()

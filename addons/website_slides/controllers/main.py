@@ -17,6 +17,7 @@ from odoo.addons.website_profile.controllers.main import WebsiteProfile
 from odoo.exceptions import AccessError, ValidationError, UserError, MissingError
 from odoo.http import request
 from odoo.osv import expression
+from odoo.tools import email_split
 
 _logger = logging.getLogger(__name__)
 
@@ -65,7 +66,9 @@ class WebsiteSlides(WebsiteProfile):
 
     def _set_viewed_slide(self, slide, quiz_attempts_inc=False):
         if not slide.channel_id.is_member:
-            viewed_slides = request.session.setdefault('viewed_slides', set())
+            # set(...) ensures backward compatibility for sessions created earlier using a list.
+            # TODO: remove for v16.1.
+            viewed_slides = set(request.session.setdefault('viewed_slides', set()))
             if slide.id not in viewed_slides:
                 if tools.sql.increment_fields_skiplock(slide, 'public_views', 'total_views'):
                     viewed_slides.add(slide.id)
@@ -133,6 +136,7 @@ class WebsiteSlides(WebsiteProfile):
         return slide._compute_quiz_info(request.env.user.partner_id, quiz_done=quiz_done)[slide.id]
 
     def _get_slide_quiz_data(self, slide):
+        is_designer = request.env.user.has_group('website.group_website_designer')
         values = {
             'slide_questions': [{
                 'id': question.id,
@@ -140,8 +144,8 @@ class WebsiteSlides(WebsiteProfile):
                 'answer_ids': [{
                     'id': answer.id,
                     'text_value': answer.text_value,
-                    'is_correct': answer.is_correct if slide.user_has_completed or request.website.is_publisher() else None,
-                    'comment': answer.comment if request.website.is_publisher() else None
+                    'is_correct': answer.is_correct if slide.user_has_completed or is_designer else None,
+                    'comment': answer.comment if is_designer else None
                 } for answer in question.sudo().answer_ids],
             } for question in slide.question_ids]
         }
@@ -217,11 +221,11 @@ class WebsiteSlides(WebsiteProfile):
         slides_domain = [('channel_id', '=', channel.id)]
         if slide:
             slides_domain = expression.AND([slides_domain, [('id', '=', slide.id)]])
-        slides = request.env['slide.slide'].search_read(slides_domain, ['id'])
+        slides = request.env['slide.slide'].search(slides_domain)
 
         session_slide_answer_quiz = json.loads(request.session['slide_answer_quiz'])
-        for slide in slides:
-            session_slide_answer_quiz.pop(str(slide['id']), None)
+        for slide_id in slides.ids:
+            session_slide_answer_quiz.pop(str(slide_id), None)
         request.session['slide_answer_quiz'] = json.dumps(session_slide_answer_quiz)
 
     # TAG UTILITIES
@@ -341,8 +345,35 @@ class WebsiteSlides(WebsiteProfile):
 
         return request.render('website_slides.courses_home', render_values)
 
+    def _get_slide_channel_search_options(self, my=None, slug_tags=None, slide_category=None, **post):
+        return {
+            'displayDescription': True,
+            'displayDetail': False,
+            'displayExtraDetail': False,
+            'displayExtraLink': False,
+            'displayImage': False,
+            'allowFuzzy': not post.get('noFuzzy'),
+            'my': my,
+            'tag': slug_tags or post.get('tag'),
+            'slide_category': slide_category,
+        }
+
     @http.route(['/slides/all', '/slides/all/tag/<string:slug_tags>'], type='http', auth="public", website=True, sitemap=True)
     def slides_channel_all(self, slide_category=None, slug_tags=None, my=False, **post):
+        if slug_tags and request.httprequest.method == 'GET':
+            # Redirect `tag-1,tag-2` to `tag-1` to disallow multi tags
+            # in GET request for proper bot indexation;
+            # if the search term is available, do not remove any existing
+            # tags because it is user who provided search term with GET
+            # request and so clearly it's not SEO bot.
+            tag_list = slug_tags.split(',')
+            if len(tag_list) > 1 and not post.get('search'):
+                url = QueryURL('/slides/all', ['tag'], tag=tag_list[0], my=my, slide_category=slide_category)()
+                return request.redirect(url, code=302)
+        render_values = self.slides_channel_all_values(slide_category=slide_category, slug_tags=slug_tags, my=my, **post)
+        return request.render('website_slides.courses_all', render_values)
+
+    def slides_channel_all_values(self, slide_category=None, slug_tags=None, my=False, **post):
         """ Home page displaying a list of courses displayed according to some
         criterion and search terms.
 
@@ -357,33 +388,12 @@ class WebsiteSlides(WebsiteProfile):
 
            * ``search``: filter on course description / name;
         """
-
-        # retro-compatibility for older links, 'slide_category' field was previously named 'slide_type'
-        # can be safely removed after 15.3 (I swear though, don't be afraid, remove it!)
-        slide_category = slide_category or post.get('slide_type')
-
-        if slug_tags and request.httprequest.method == 'GET':
-            # Redirect `tag-1,tag-2` to `tag-1` to disallow multi tags
-            # in GET request for proper bot indexation;
-            # if the search term is available, do not remove any existing
-            # tags because it is user who provided search term with GET
-            # request and so clearly it's not SEO bot.
-            tag_list = slug_tags.split(',')
-            if len(tag_list) > 1 and not post.get('search'):
-                url = QueryURL('/slides/all', ['tag'], tag=tag_list[0], my=my, slide_category=slide_category)()
-                return request.redirect(url, code=302)
-
-        options = {
-            'displayDescription': True,
-            'displayDetail': False,
-            'displayExtraDetail': False,
-            'displayExtraLink': False,
-            'displayImage': False,
-            'allowFuzzy': not post.get('noFuzzy'),
-            'my': my,
-            'tag': slug_tags or post.get('tag'),
-            'slide_category': slide_category,
-        }
+        options = self._get_slide_channel_search_options(
+            my=my,
+            slug_tags=slug_tags,
+            slide_category=slide_category,
+            **post
+        )
         search = post.get('search')
         order = self._channel_order_by_criterion.get(post.get('sorting'))
         _, details, fuzzy_search_term = request.website._search_with_fuzzy("slide_channels_only", search,
@@ -414,7 +424,7 @@ class WebsiteSlides(WebsiteProfile):
             'slide_query_url': QueryURL('/slides/all', ['tag']),
         })
 
-        return request.render('website_slides.courses_all', render_values)
+        return render_values
 
     def _prepare_additional_channel_values(self, values, **kwargs):
         return values
@@ -589,27 +599,6 @@ class WebsiteSlides(WebsiteProfile):
     # SLIDE.CHANNEL UTILS
     # --------------------------------------------------
 
-    @http.route('/slides/channel/add', type='http', auth='user', methods=['POST'], website=True)
-    def slide_channel_create(self, *args, **kw):
-        channel = request.env['slide.channel'].create(self._slide_channel_prepare_values(**kw))
-        return request.redirect("/slides/%s" % (slug(channel)))
-
-    def _slide_channel_prepare_values(self, **kw):
-        # `tag_ids` is a string representing a list of int with coma. i.e.: '2,5,7'
-        # We don't want to allow user to create tags and tag groups on the fly.
-        tag_ids = []
-        if kw.get('tag_ids'):
-            tag_ids = [int(item) for item in kw['tag_ids'].split(',')]
-
-        return {
-            'name': kw['name'],
-            'description': kw.get('description'),
-            'channel_type': kw.get('channel_type', 'documentation'),
-            'user_id': request.env.user.id,
-            'tag_ids': [(6, 0, tag_ids)],
-            'allow_comment': bool(kw.get('allow_comment')),
-        }
-
     def _slide_channel_prepare_review_values(self, channel):
         values = {
             'rating_avg': channel.rating_avg,
@@ -728,6 +717,14 @@ class WebsiteSlides(WebsiteProfile):
         tag.write({'channel_ids': [(4, channel.id, 0)]})
 
         return {'url': "/slides/%s" % (slug(channel))}
+
+    @http.route(['/slides/channel/send_share_email'], type='json', auth='user', website=True)
+    def slide_channel_send_share_email(self, channel_id, emails):
+        if not email_split(emails):
+            return False
+        channel = request.env['slide.channel'].browse(int(channel_id))
+        channel._send_share_email(emails)
+        return True
 
     @http.route(['/slides/channel/subscribe'], type='json', auth='user', website=True)
     def slide_channel_subscribe(self, channel_id):
@@ -904,7 +901,7 @@ class WebsiteSlides(WebsiteProfile):
     @http.route('/slides/slide/archive', type='json', auth='user', website=True)
     def slide_archive(self, slide_id):
         """ This route allows channel publishers to archive slides.
-        It has to be done in sudo mode since only website_publishers can write on slides in ACLs """
+        It has to be done in sudo mode since only restricted_editors can write on slides in ACLs """
         slide = request.env['slide.slide'].browse(int(slide_id))
         if slide.channel_id.can_publish:
             slide.sudo().active = False
@@ -920,10 +917,12 @@ class WebsiteSlides(WebsiteProfile):
         return slide.is_preview
 
     @http.route(['/slides/slide/send_share_email'], type='json', auth='user', website=True)
-    def slide_send_share_email(self, slide_id, email, fullscreen=False):
+    def slide_send_share_email(self, slide_id, emails, fullscreen=False):
+        if not email_split(emails):
+            return False
         slide = request.env['slide.slide'].browse(int(slide_id))
-        result = slide._send_share_email(email, fullscreen)
-        return result
+        slide._send_share_email(emails, fullscreen)
+        return True
 
     # --------------------------------------------------
     # TAGS SECTION

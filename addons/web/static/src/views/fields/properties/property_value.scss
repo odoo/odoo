@@ -1,0 +1,91 @@
+.o_field_property_dropdown_menu {
+    .o-autocomplete--dropdown-menu {
+        max-height: 200px!important;
+    }
+}
+
+// remove the down / up arrow for number input
+input.o_field_property_input::-webkit-outer-spin-button,
+input.o_field_property_input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+input.o_field_property_input[type=number] {
+    -moz-appearance: textfield;
+}
+
+.o_field_property_dropdown_empty {
+    height: 25px;
+}
+
+.o_field_property_many2one_value {
+    img {
+        height: 1.4em;
+        width: 1.4em;
+        object-fit: cover;
+    }
+
+    &.avatar .o_input_dropdown{
+        // counter the avatar size to keep things aligned
+        margin-left: -1.6em;
+        padding-left: 1.6em;
+    }
+
+    a.disabled {
+        pointer-events: none;
+        color: $gray-400;
+        font-style: italic;
+    }
+}
+
+.o_field_property_many2many_value {
+    .o_tag {
+        color: nth($o-colors, 1) !important;
+        box-shadow: inset 0 0 0 1px !important;
+    }
+    .o_delete {
+        line-height: 1;
+    }
+    .o_input_dropdown {
+        width: 100px !important;
+        min-width: 100px !important;
+        input {
+            border: 0px !important;
+        }
+    }
+}
+
+.o_field_property_many2many_value:not(.readonly):hover,
+.o_field_property_many2many_value:not(.readonly):focus-within {
+    border-bottom: 1px solid var(--o-input-border-color);
+}
+
+.o_field_property_many2many_value.avatar .o_tag{
+    img {
+        margin: -0.3em;
+        margin-right: 0.3em;
+    }
+
+    .o_tag_badge_text {
+        padding: 0px !important;
+    }
+}
+
+.o_property_field_value {
+    .o_properties_external_button,
+    .o_dropdown_button {
+        display: none;
+    }
+
+    &:hover,
+    &:focus-within {
+        .o_properties_external_button,
+        .o_dropdown_button {
+            display: block;
+        }
+    }
+
+    select:not(:hover) {
+        background: none !important;
+    }
+}

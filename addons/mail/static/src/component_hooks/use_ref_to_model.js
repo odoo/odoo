@@ -1,8 +1,8 @@
 /** @odoo-module **/
 
-import { clear } from '@mail/model/model_field_command';
+import { clear } from "@mail/model";
 
-const { onWillUpdateProps, useComponent, useRef } = owl;
+import { onWillUpdateProps, useComponent, useRef } from "@odoo/owl";
 
 /**
  * This hook provides support for saving the result of useRef directly into the
@@ -17,7 +17,7 @@ export function useRefToModel({ fieldName, refName }) {
     const component = useComponent();
     const ref = useRef(refName);
     component.props.record.update({ [fieldName]: ref });
-    onWillUpdateProps(nextProps => {
+    onWillUpdateProps((nextProps) => {
         const currentRecord = component.props.record;
         const nextRecord = nextProps.record;
         if (currentRecord.exists() && currentRecord !== nextRecord) {

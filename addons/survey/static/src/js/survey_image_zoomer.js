@@ -4,7 +4,6 @@ import publicWidget from 'web.public.widget';
 
 export const SurveyImageZoomer = publicWidget.Widget.extend({
     template: 'survey.survey_image_zoomer',
-    xmlDependencies: ['/survey/static/src/xml/survey_image_zoomer_templates.xml'],
     events: {
         'wheel .o_survey_img_zoom_image': '_onImgScroll',
         'click': '_onZoomerClick',

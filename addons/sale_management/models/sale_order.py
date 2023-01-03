@@ -28,16 +28,10 @@ class SaleOrder(models.Model):
 
     #=== COMPUTE METHODS ===#
 
-    @api.depends('company_id')
+    # Do not make it depend on `company_id` field
+    # It is triggered manually by the _onchange_company_id below iff the SO has not been saved.
     def _compute_sale_order_template_id(self):
         for order in self:
-            if order._origin.id:  # If record has already been saved
-                # 1) Do NOT update existing SO's template and dependent fields
-                # Especially when installing sale_management in a db
-                # already containing SO records
-                # 2) Only apply the company default if the company is modified before the record is saved
-                # to make sure the lines are not magically reset when the company is modified (internal odoo issue)
-                continue
             company_template = order.company_id.sale_order_template_id
             if company_template and order.sale_order_template_id != company_template:
                 order.sale_order_template_id = order.company_id.sale_order_template_id.id
@@ -86,6 +80,13 @@ class SaleOrder(models.Model):
 
     #=== ONCHANGE METHODS ===#
 
+    @api.onchange('company_id')
+    def _onchange_company_id(self):
+        """Trigger quotation template recomputation on unsaved records company change"""
+        if self._origin.id:
+            return
+        self._compute_sale_order_template_id()
+
     @api.onchange('sale_order_template_id')
     def _onchange_sale_order_template_id(self):
         sale_order_template = self.sale_order_template_id.with_context(lang=self.partner_id.lang)
@@ -118,9 +119,9 @@ class SaleOrder(models.Model):
                 order.sale_order_template_id.mail_template_id.send_mail(order.id)
         return res
 
-    def update_prices(self):
-        super().update_prices()
-        # Special case: we want to overwrite the existing discount on update_prices call
+    def _recompute_prices(self):
+        super()._recompute_prices()
+        # Special case: we want to overwrite the existing discount on _recompute_prices call
         # i.e. to make sure the discount is correctly reset
         # if pricelist discount_policy is different than when the price was first computed.
         self.sale_order_option_ids.discount = 0.0

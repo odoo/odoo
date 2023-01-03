@@ -9,7 +9,6 @@ var qweb = core.qweb;
 const GalleryWidget = publicWidget.Widget.extend({
 
     selector: '.s_image_gallery:not(.o_slideshow)',
-    xmlDependencies: ['/website/static/src/snippets/s_image_gallery/000.xml'],
     events: {
         'click img': '_onClickImg',
     },
@@ -73,7 +72,6 @@ const GalleryWidget = publicWidget.Widget.extend({
 
 const GallerySliderWidget = publicWidget.Widget.extend({
     selector: '.o_slideshow',
-    xmlDependencies: ['/website/static/src/snippets/s_image_gallery/000.xml'],
     disabledInEditableMode: false,
 
     /**
@@ -81,7 +79,7 @@ const GallerySliderWidget = publicWidget.Widget.extend({
      */
     start: function () {
         var self = this;
-        this.$carousel = this.$target.is('.carousel') ? this.$target : this.$target.find('.carousel');
+        this.$carousel = this.$el.is('.carousel') ? this.$el : this.$('.carousel');
         this.$indicator = this.$carousel.find('.carousel-indicators');
         this.$prev = this.$indicator.find('li.o_indicators_left').css('visibility', ''); // force visibility as some databases have it hidden
         this.$next = this.$indicator.find('li.o_indicators_right').css('visibility', '');

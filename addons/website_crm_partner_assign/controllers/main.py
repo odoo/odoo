@@ -214,7 +214,7 @@ class WebsiteCrmPartnerAssign(WebsitePartnerPage):
         search = post.get('search', '')
 
         base_partner_domain = [('is_company', '=', True), ('grade_id', '!=', False), ('website_published', '=', True)]
-        if not request.env['res.users'].has_group('website.group_website_publisher'):
+        if not request.env['res.users'].has_group('website.group_website_restricted_editor'):
             base_partner_domain += [('grade_id.website_published', '=', True)]
         if search:
             base_partner_domain += ['|', ('name', 'ilike', search), ('website_description', 'ilike', search)]
@@ -222,9 +222,8 @@ class WebsiteCrmPartnerAssign(WebsitePartnerPage):
         # group by grade
         grade_domain = list(base_partner_domain)
         if not country and not country_all:
-            country_code = request.geoip.get('country_code')
-            if country_code:
-                country = country_obj.search([('code', '=', country_code)], limit=1)
+            if request.geoip.country_code:
+                country = country_obj.search([('code', '=', request.geoip.country_code)], limit=1)
         if country:
             grade_domain += [('country_id', '=', country.id)]
         grades = partner_obj.sudo().read_group(
@@ -321,8 +320,8 @@ class WebsiteCrmPartnerAssign(WebsitePartnerPage):
             current_country = request.env['res.country'].browse(int(country_id)).exists()
         if partner_id:
             partner = request.env['res.partner'].sudo().browse(partner_id)
-            is_website_publisher = request.env['res.users'].has_group('website.group_website_publisher')
-            if partner.exists() and (partner.website_published or is_website_publisher):
+            is_website_restricted_editor = request.env['res.users'].has_group('website.group_website_restricted_editor')
+            if partner.exists() and (partner.website_published or is_website_restricted_editor):
                 values = {
                     'main_object': partner,
                     'partner': partner,

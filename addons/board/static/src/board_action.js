@@ -50,7 +50,7 @@ export class BoardAction extends Component {
                 this.viewProps.domain = action.domain;
             }
             if (viewMode === "list") {
-                this.viewProps.hasSelectors = false;
+                this.viewProps.allowSelectors = false;
             }
         });
     }

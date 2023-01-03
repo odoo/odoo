@@ -11,15 +11,15 @@ odoo.define('mass_mailing.mass_mailing_editor_tour', function (require) {
     }, {
         trigger: 'button.o_list_button_add',
     }, {
-        trigger: 'div[name="contact_list_ids"] .o_input_dropdown > input[type="text"]',
+        trigger: 'div[name="contact_list_ids"] .o_input_dropdown input[type="text"]',
     }, {
-        trigger: 'li.ui-menu-item',
+        trigger: 'div[name="contact_list_ids"] .ui-state-active'
     }, {
         content: 'choose the theme "empty" to edit the mailing with snippets',
         trigger: '[name="body_arch"] iframe #empty',
     }, {
         content: 'wait for the editor to be rendered',
-        trigger: '[name="body_arch"] iframe .o_editable',
+        trigger: '[name="body_arch"] iframe .o_editable[data-editor-message="DRAG BUILDING BLOCKS HERE"]',
         run: () => {},
     }, {
         content: 'drag the "Title" snippet from the design panel and drop it in the editor',
@@ -42,12 +42,14 @@ odoo.define('mass_mailing.mass_mailing_editor_tour', function (require) {
         trigger: '[name="body_arch"] iframe .o_editable h1',
         run: () => {},
     }, {
-        trigger: 'input[name="subject"]',
+        trigger: 'input#subject',
         run: 'text Test',
     }, {
-        trigger: 'button.o_form_button_save',
-    }, {
-        trigger: 'iframe.o_readonly',
+        trigger: '.o_form_view', // blur previous input
+    },
+    ...tour.stepUtils.saveForm(),
+    {
+        trigger: 'iframe .o_editable',
         run: () => {},
     }]);
 });

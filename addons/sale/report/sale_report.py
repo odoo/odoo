@@ -47,6 +47,13 @@ class SaleReport(models.Model):
         ('done', 'Sales Done'),
         ('cancel', 'Cancelled'),
         ], string='Status', readonly=True)
+    invoice_status = fields.Selection(
+        selection=[
+            ('upselling', "Upselling Opportunity"),
+            ('invoiced', "Fully Invoiced"),
+            ('to invoice', "To Invoice"),
+            ('no', "Nothing to Invoice"),
+        ], string="Invoice Status", readonly=True)
     weight = fields.Float('Gross Weight', readonly=True)
     volume = fields.Float('Volume', readonly=True)
 
@@ -63,7 +70,7 @@ class SaleReport(models.Model):
 
     def _select_sale(self):
         select_ = f"""
-            COALESCE(min(l.id), -s.id) AS id,
+            MIN(l.id) AS id,
             l.product_id AS product_id,
             t.uom_id AS product_uom,
             CASE WHEN l.product_id IS NOT NULL THEN SUM(l.product_uom_qty / u.factor * u2.factor) ELSE 0 END AS product_uom_qty,
@@ -95,6 +102,7 @@ class SaleReport(models.Model):
             s.name AS name,
             s.date_order AS date,
             s.state AS state,
+            s.invoice_status as invoice_status,
             s.partner_id AS partner_id,
             s.user_id AS user_id,
             s.company_id AS company_id,
@@ -141,7 +149,7 @@ class SaleReport(models.Model):
     def _from_sale(self):
         return """
             sale_order_line l
-            RIGHT OUTER JOIN sale_order s ON s.id=l.order_id
+            LEFT JOIN sale_order s ON s.id=l.order_id
             JOIN res_partner partner ON s.partner_id = partner.id
             LEFT JOIN product_product p ON l.product_id=p.id
             LEFT JOIN product_template t ON p.product_tmpl_id=t.id
@@ -171,6 +179,7 @@ class SaleReport(models.Model):
             s.partner_id,
             s.user_id,
             s.state,
+            s.invoice_status,
             s.company_id,
             s.campaign_id,
             s.medium_id,

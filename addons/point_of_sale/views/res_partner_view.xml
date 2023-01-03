@@ -5,10 +5,10 @@
             <field name="model">res.partner</field>
             <field name="inherit_id" ref="base.view_partner_form"/>
             <field name="priority" eval="4"/>
-            <field name="groups_id" eval="[(4, ref('group_pos_user'))]"/>
             <field name="arch" type="xml">
                 <div name="button_box" position="inside">
                     <button class="oe_stat_button" type="object" name="action_view_pos_order"
+                        groups="point_of_sale.group_pos_user"
                         context="{'default_partner_id': active_id}"
                         attrs="{'invisible': [('pos_order_count', '=', 0)]}"
                         icon="fa-shopping-bag">
@@ -16,7 +16,7 @@
                     </button>
                 </div>
                 <xpath expr="//group[@name='purchase']" position="after">
-                    <group string="Point Of Sale" name="point_of_sale">
+                    <group string="Point Of Sale" name="point_of_sale" groups="point_of_sale.group_pos_user">
                         <field name="barcode"/>
                     </group>
                 </xpath>
@@ -27,13 +27,13 @@
             <field name="name">res.partner.pos.kanban.inherit</field>
             <field name="model">res.partner</field>
             <field name="inherit_id" ref="base.res_partner_kanban_view"/>
-            <field name="groups_id" eval="[(4, ref('group_pos_user'))]"/>
             <field name="arch" type="xml">
                 <field name="state_id" position="before">
-                    <field name="pos_order_count"/>
+                    <field name="pos_order_count" groups="point_of_sale.group_pos_user"/>
                 </field>
                 <xpath expr="//div[hasclass('oe_kanban_bottom_left')]" position="inside">
                     <a t-if="record.pos_order_count.value>0" data-type="object" data-name="action_view_pos_order"
+                       groups="point_of_sale.group_pos_user"
                        href="#" class="oe_kanban_action oe_kanban_action_a me-1">
                         <span class="badge rounded-pill">
                             <i class="fa fa-fw fa-shopping-bag" role="img" aria-label="Shopping cart" title="Shopping cart"/>

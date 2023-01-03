@@ -45,22 +45,19 @@ class TestConfiguratorCommon(odoo.tests.HttpCase):
             iap_jsonrpc_mocked()
 
         iap_patch = patch('odoo.addons.iap.tools.iap_tools.iap_jsonrpc', iap_jsonrpc_mocked_configurator)
-        iap_patch.start()
-        self.addCleanup(iap_patch.stop)
+        self.startPatcher(iap_patch)
 
         patcher = patch('odoo.addons.website.models.ir_module_module.IrModuleModule._theme_upgrade_upstream', wraps=self._theme_upgrade_upstream)
-        patcher.start()
-        self.addCleanup(patcher.stop)
+        self.startPatcher(patcher)
 
 @odoo.tests.common.tagged('post_install', '-at_install')
 class TestConfiguratorTranslation(TestConfiguratorCommon):
 
     def test_01_configurator_translation(self):
-        with mute_logger('odoo.addons.base.models.ir_translation'):
-            self.env["base.language.install"].create({
-                'overwrite': True,
-                'lang_ids': [(6, 0, [self.env.ref('base.lang_fr').id])],
-            }).lang_install()
+        self.env["base.language.install"].create({
+            'overwrite': True,
+            'lang_ids': [(6, 0, [self.env.ref('base.lang_fr').id])],
+        }).lang_install()
         feature = self.env['website.configurator.feature'].search([('name', '=', 'Privacy Policy')])
         feature.with_context(lang='fr_FR').write({'name': 'Politique de confidentialité'})
         self.env.ref('base.user_admin').write({'lang': self.env.ref('base.lang_fr').code})

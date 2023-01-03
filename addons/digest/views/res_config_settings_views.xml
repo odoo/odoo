@@ -7,32 +7,20 @@
         <field name="arch" type="xml">
             <xpath expr="//div[@id='contacts_settings']" position="before">
                 <div id="statistics" >
-                    <h2>Statistics</h2>
-                    <div class='row mt16 o_settings_container' id='statistics_div'>
-                        <div class="col-12 col-lg-6 o_setting_box"
-                            title="New users are automatically added as recipient of the following digest email."
-                            name="digest_email_setting_container">
-                            <div class="o_setting_left_pane">
-                                <field name="digest_emails"/>
-                            </div>
-                            <div class="o_setting_right_pane">
-                                <label string="Digest Email" for="digest_emails"/>
-                                <a href="https://www.odoo.com/documentation/master/applications/general/digest_emails.html" title="Documentation" class="ms-1 o_doc_link" target="_blank"></a>
-                                <div class="text-muted" id="msg_module_digest">
-                                    Add new users as recipient of a periodic email with key metrics
+                    <block title="Statistics" id='statistics_div'>
+                        <setting string="Digest Email" help="Add new users as recipient of a periodic email with key metrics" documentation="/applications/general/digest_emails.html" title="New users are automatically added as recipient of the following digest email." name="digest_email_setting_container">
+                            <field name="digest_emails"/>
+                            <div class="content-group" attrs="{'invisible': [('digest_emails','=',False)]}">
+                                <div class="mt16">
+                                    <label for="digest_id" class="o_light_label"/>
+                                    <field name="digest_id" class="oe_inline"/>
                                 </div>
-                                <div class="content-group" attrs="{'invisible': [('digest_emails','=',False)]}">
-                                    <div class="mt16">
-                                        <label for="digest_id" class="o_light_label"/>
-                                        <field name="digest_id" class="oe_inline"/>
-                                    </div>
-                                    <div class="mt8">
-                                        <button type="action" name="%(digest.digest_digest_action)d" string="Configure Digest Emails" icon="fa-arrow-right" class="btn-link"/>
-                                    </div>
+                                <div class="mt8">
+                                    <button type="action" name="%(digest.digest_digest_action)d" string="Configure Digest Emails" icon="fa-arrow-right" class="btn-link"/>
                                 </div>
                             </div>
-                        </div>
-                    </div>
+                        </setting>
+                    </block>
                 </div>
             </xpath>
         </field>

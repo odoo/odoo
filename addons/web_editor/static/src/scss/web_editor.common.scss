@@ -53,6 +53,9 @@
         $-btn-primary: map-get($colors, 'o-cc#{$index}-btn-primary');
         @if not $-btn-primary {
             @include print-variable('o-cc#{$index}-btn-primary', map-get($theme-colors, 'primary'));
+            @include print-variable('o-cc#{$index}-btn-primary-text', color-contrast(map-get($theme-colors, 'primary')));
+        } @else {
+            @include print-variable('o-cc#{$index}-btn-primary-text', color-contrast($-btn-primary));
         }
         @if not map-get($colors, 'o-cc#{$index}-btn-primary-border') {
             @include print-variable('o-cc#{$index}-btn-primary-border', $-btn-primary or map-get($theme-colors, 'primary'));
@@ -61,6 +64,9 @@
         $-btn-secondary: map-get($colors, 'o-cc#{$index}-btn-secondary');
         @if not $-btn-secondary {
             @include print-variable('o-cc#{$index}-btn-secondary', map-get($theme-colors, 'secondary'));
+            @include print-variable('o-cc#{$index}-btn-secondary-text', color-contrast(map-get($theme-colors, 'secondary')));
+        } @else {
+            @include print-variable('o-cc#{$index}-btn-secondary-text', color-contrast($-btn-secondary));
         }
         @if not map-get($colors, 'o-cc#{$index}-btn-secondary-border') {
             @include print-variable('o-cc#{$index}-btn-secondary-border', $-btn-secondary or map-get($theme-colors, 'secondary'));
@@ -71,6 +77,7 @@
     @include print-variable('o-md-container-max-width', map-get($container-max-widths, md));
     @include print-variable('o-we-content-to-translate-color', $o-we-content-to-translate-color);
     @include print-variable('o-we-translated-content-color', $o-we-translated-content-color);
+    @include print-variable('o-system-fonts', $o-system-fonts);
 }
 
 html, body {
@@ -81,6 +88,9 @@ html, body {
 
 *[contenteditable=true] {
     outline: none;
+}
+[contenteditable] {
+    overflow-wrap: unset !important;
 }
 
 .css_non_editable_mode_hidden {
@@ -399,7 +409,7 @@ a.o_underline {
                 align-items: center;
                 font-size: 11px;
 
-                >.custom-control {
+                >.form-check {
                     margin-right: $grid-gutter-width/4;
                 }
             }
@@ -539,6 +549,7 @@ a.o_underline {
         width: 100px;
         height: 150px;
         opacity: .5;
+        filter: var(--WebEditor__SearchPromptArrow-filter, invert(0));
         background-image: url('/web_editor/static/src/img/curved_arrow.svg');
         background-size: 100%;
         background-repeat: no-repeat;
@@ -599,17 +610,6 @@ a.o_underline {
                         > .o_existing_attachment_remove {
                             opacity: inherit;
                             top: 10px;
-                        }
-                    }
-                }
-
-                // select media dialog unsplash error
-                #editor-media-image .unsplash_img_container .unsplash_error .mx-auto {
-                    width: 100%;
-
-                    .form-group {
-                        input.w-100 {
-                            min-width: 100px;
                         }
                     }
                 }
@@ -954,7 +954,9 @@ section, .oe_img_bg, [data-oe-shape-data] {
 
 .oe-qweb-select {
     position: absolute;
-    z-index: 1051;
+    // Bootstrap sets .modal z-index at 1055.
+    // Ensure qweb-select is visible in modals.
+    z-index: 1056;
     background-color: white;
 }
 
@@ -1011,5 +1013,27 @@ section, .oe_img_bg, [data-oe-shape-data] {
                 }
             }
         }
+    }
+}
+
+// Autocomplete dropdowns
+.ui-autocomplete {
+    max-height: 50vh;
+    overflow-y: auto;
+    overflow-x: hidden;
+
+    .ui-menu-item {
+        padding: 0;
+        > .ui-state-active {
+            border: none;
+            font-weight: normal;
+            margin: 0;
+        }
+    }
+    .fw-bold {
+        // Needed because the font-family is not "system fonts everywhere" as
+        // elements around it. TODO: use "system fonts everywhere" for
+        // the 'ui-autocomplete' and remove this line.
+        font-weight: 700 !important;
     }
 }

@@ -7,8 +7,9 @@ import { Deferred } from "@web/core/utils/concurrency";
 import { patch, unpatch } from "@web/core/utils/patch";
 import { isVisible } from "@web/core/utils/ui";
 import { registerCleanup } from "./cleanup";
+import { templates } from "@web/core/assets";
 
-const { App, onMounted, onPatched, useComponent } = owl;
+import { App, onMounted, onPatched, useComponent } from "@odoo/owl";
 
 /**
  * Patch the native Date object
@@ -156,7 +157,7 @@ export function makeDeferred() {
     return new Deferred();
 }
 
-function findElement(el, selector) {
+export function findElement(el, selector) {
     let target = el;
     if (selector) {
         const els = el.querySelectorAll(selector);
@@ -297,12 +298,12 @@ export function triggerEvent(el, selector, eventType, eventAttrs = {}, options =
     return event;
 }
 
-export async function triggerEvents(el, querySelector, events) {
+export async function triggerEvents(el, querySelector, events, options) {
     for (let e = 0; e < events.length; e++) {
         if (Array.isArray(events[e])) {
-            triggerEvent(el, querySelector, events[e][0], events[e][1]);
+            triggerEvent(el, querySelector, events[e][0], events[e][1], options);
         } else {
-            triggerEvent(el, querySelector, events[e]);
+            triggerEvent(el, querySelector, events[e], {}, options);
         }
     }
     await nextTick();
@@ -329,7 +330,9 @@ export async function triggerScroll(
     const isScrollable =
         (target.scrollHeight > target.clientHeight && target.clientHeight > 0) ||
         (target.scrollWidth > target.clientWidth && target.clientWidth > 0);
-    if (!isScrollable && !canPropagate) return;
+    if (!isScrollable && !canPropagate) {
+        return;
+    }
     if (isScrollable) {
         const canScrollFrom = {
             left:
@@ -351,7 +354,9 @@ export async function triggerScroll(
         target.scrollTo(scrollCoordinates);
         target.dispatchEvent(new UIEvent("scroll"));
         await nextTick();
-        if (!canPropagate || !Object.entries(coordinates).length) return;
+        if (!canPropagate || !Object.entries(coordinates).length) {
+            return;
+        }
     }
     target.parentElement
         ? triggerScroll(target.parentElement, coordinates)
@@ -380,16 +385,17 @@ export function clickCreate(htmlElement) {
 }
 
 export function clickEdit(htmlElement) {
-    if (htmlElement.querySelectorAll(".o_form_button_edit").length) {
-        return click(htmlElement, ".o_form_button_edit");
-    } else if (htmlElement.querySelectorAll(".o_list_button_edit").length) {
+    if (htmlElement.querySelectorAll(".o_list_button_edit").length) {
         return click(htmlElement, ".o_list_button_edit");
     } else {
         throw new Error("No edit button found to be clicked.");
     }
 }
 
-export function clickSave(htmlElement) {
+export async function clickSave(htmlElement) {
+    if (htmlElement.querySelectorAll(".o_form_status_indicator").length) {
+        await mouseEnter(htmlElement, ".o_form_status_indicator");
+    }
     if (htmlElement.querySelectorAll(".o_form_button_save").length) {
         return click(htmlElement, ".o_form_button_save");
     } else if (htmlElement.querySelectorAll(".o_list_button_save").length) {
@@ -399,7 +405,10 @@ export function clickSave(htmlElement) {
     }
 }
 
-export function clickDiscard(htmlElement) {
+export async function clickDiscard(htmlElement) {
+    if (htmlElement.querySelectorAll(".o_form_status_indicator").length) {
+        await mouseEnter(htmlElement, ".o_form_status_indicator");
+    }
     if (htmlElement.querySelectorAll(".o_form_button_cancel").length) {
         return click(htmlElement, ".o_form_button_cancel");
     } else if (htmlElement.querySelectorAll(".o_list_button_discard").length) {
@@ -429,15 +438,40 @@ export async function mouseEnter(el, selector, coordinates) {
 
 export async function editInput(el, selector, value) {
     const input = findElement(el, selector);
-    if (
-        !["INPUT", "TEXTAREA"].includes(input.tagName) ||
-        !["text", "textarea", "email", "number", "search", "color"].includes(input.type)
-    ) {
-        throw new Error("Only inputs tag and textarea tag can be edited with editInput.");
+    if (!(input instanceof HTMLInputElement || input instanceof HTMLTextAreaElement)) {
+        throw new Error("Only 'input' and 'textarea' elements can be edited with 'editInput'.");
     }
-    input.value = value;
-    await triggerEvent(input, null, "input");
-    return triggerEvent(input, null, "change");
+    if (
+        !["text", "textarea", "email", "search", "color", "number", "file", "tel"].includes(
+            input.type
+        )
+    ) {
+        throw new Error(`Type "${input.type}" not supported by 'editInput'.`);
+    }
+
+    const eventOpts = {};
+    if (input.type === "file") {
+        const files = Array.isArray(value) ? value : [value];
+        const dataTransfer = new DataTransfer();
+        for (const file of files) {
+            if (!(file instanceof File)) {
+                throw new Error(`File input value should be one or several File objects.`);
+            }
+            dataTransfer.items.add(file);
+        }
+        input.files = dataTransfer.files;
+        eventOpts.skipVisibilityCheck = true;
+    } else {
+        input.value = value;
+    }
+
+    await triggerEvents(input, null, ["input", "change"], eventOpts);
+
+    if (input.type === "file") {
+        // Need to wait for the file to be loaded by the input
+        await nextTick();
+        await nextTick();
+    }
 }
 
 export function editSelect(el, selector, value) {
@@ -449,12 +483,23 @@ export function editSelect(el, selector, value) {
     return triggerEvent(select, null, "change");
 }
 
+export async function editSelectMenu(el, selector, value) {
+    const dropdown = el.querySelector(selector);
+    await click(dropdown.querySelector(".dropdown-toggle"));
+    for (const item of Array.from(dropdown.querySelectorAll(".dropdown-item"))) {
+        if (item.textContent === value) {
+            return click(item);
+        }
+    }
+}
+
 /**
  * Triggers an hotkey properly disregarding the operating system.
  *
  * @param {string} hotkey
  * @param {boolean} addOverlayModParts
  * @param {KeyboardEventInit} eventAttrs
+ * @returns {{ keydownEvent: KeyboardEvent, keyupEvent: KeyboardEvent }}
  */
 export function triggerHotkey(hotkey, addOverlayModParts = false, eventAttrs = {}) {
     eventAttrs.key = hotkey.split("+").pop();
@@ -483,8 +528,11 @@ export function triggerHotkey(hotkey, addOverlayModParts = false, eventAttrs = {
         eventAttrs.bubbles = true;
     }
 
-    document.activeElement.dispatchEvent(new KeyboardEvent("keydown", eventAttrs));
-    document.activeElement.dispatchEvent(new KeyboardEvent("keyup", eventAttrs));
+    const keydownEvent = new KeyboardEvent("keydown", eventAttrs);
+    const keyupEvent = new KeyboardEvent("keyup", eventAttrs);
+    document.activeElement.dispatchEvent(keydownEvent);
+    document.activeElement.dispatchEvent(keyupEvent);
+    return { keydownEvent, keyupEvent };
 }
 
 export async function legacyExtraNextTick() {
@@ -562,7 +610,7 @@ export async function mount(Comp, target, config = {}) {
     env = env || {};
     const configuration = {
         env,
-        templates: window.__OWL_TEMPLATES__,
+        templates,
         test: true,
         props,
     };
@@ -672,6 +720,25 @@ function getDifferentParents(n1, n2) {
  * @returns {Promise<void>}
  */
 export async function dragAndDrop(from, to, position) {
+    const dropFunction = drag(from, to, position);
+    await dropFunction();
+}
+
+/**
+ * Helper performing a drag.
+ *
+ * - the 'from' selector is used to determine the element on which the drag will
+ *  start;
+ * - the 'to' selector will determine the element on which the dragged element will be
+ * moved.
+ *
+ * Returns a drop function
+ * @param {Element|string} from
+ * @param {Element|string} to
+ * @param {string} [position] "top" | "bottom" | "left" | "right"
+ * @returns {function: Promise<void>}
+ */
+export function drag(from, to, position) {
     const fixture = getFixture();
     from = from instanceof Element ? from : fixture.querySelector(from);
     to = to instanceof Element ? to : fixture.querySelector(to);
@@ -715,7 +782,14 @@ export async function dragAndDrop(from, to, position) {
     for (const target of getDifferentParents(from, to)) {
         triggerEvent(target, null, "mouseenter", toPos);
     }
-    await triggerEvent(from, null, "mouseup", toPos);
+
+    return function () {
+        return drop(from, toPos);
+    };
+}
+
+function drop(from, toPos) {
+    return triggerEvent(from, null, "mouseup", toPos);
 }
 
 export async function clickDropdown(target, fieldName) {

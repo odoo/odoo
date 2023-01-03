@@ -208,6 +208,7 @@ class CustomerPortal(Controller):
             'countries': countries,
             'states': states,
             'has_check_vat': hasattr(request.env['res.partner'], 'check_vat'),
+            'partner_can_edit_vat': partner.can_edit_vat(),
             'redirect': redirect,
             'page_name': 'my_details',
         })
@@ -366,7 +367,7 @@ class CustomerPortal(Controller):
 
         return attachment_sudo.unlink()
 
-    def details_form_validate(self, data):
+    def details_form_validate(self, data, partner_creation=False):
         error = dict()
         error_message = []
 
@@ -383,7 +384,8 @@ class CustomerPortal(Controller):
         # vat validation
         partner = request.env.user.partner_id
         if data.get("vat") and partner and partner.vat != data.get("vat"):
-            if partner.can_edit_vat():
+            # Check the VAT if it is the public user too.
+            if partner_creation or partner.can_edit_vat():
                 if hasattr(partner, "check_vat"):
                     if data.get("country_id"):
                         data["vat"] = request.env["res.partner"].fix_eu_vat_number(int(data.get("country_id")), data.get("vat"))
@@ -394,8 +396,9 @@ class CustomerPortal(Controller):
                     })
                     try:
                         partner_dummy.check_vat()
-                    except ValidationError:
+                    except ValidationError as e:
                         error["vat"] = 'error'
+                        error_message.append(e.args[0])
             else:
                 error_message.append(_('Changing VAT number is not allowed once document(s) have been issued for your account. Please contact us directly for this operation.'))
 

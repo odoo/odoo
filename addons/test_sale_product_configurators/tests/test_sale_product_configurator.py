@@ -133,6 +133,11 @@ class TestProductConfiguratorUi(HttpCase, TestProductConfiguratorCommon):
         Also testing B2C setting: no impact on the backend configurator.
         """
 
+        # Required to see `pricelist_id` in the view
+        self.salesman.write({
+            'groups_id': [(4, self.env.ref('product.group_product_pricelist').id)],
+        })
+
         # Add a 15% tax on desk
         tax = self.env['account.tax'].create({'name': "Test tax", 'amount': 15})
         self.product_product_custo_desk.taxes_id = tax

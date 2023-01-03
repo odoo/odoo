@@ -203,7 +203,10 @@ QUnit.test(
         serviceRegistry.add("b", serviceB);
         const prom = startServices(env);
         await Promise.resolve();
-        await assert.rejects(prom, "Some services could not be started: b. Missing dependencies: a");
+        await assert.rejects(
+            prom,
+            "Some services could not be started: b. Missing dependencies: a"
+        );
         assert.deepEqual(env.services, {});
 
         serviceRegistry.add("a", serviceA);

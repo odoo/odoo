@@ -127,11 +127,12 @@ class PortalAccount(CustomerPortal):
     # My Home
     # ------------------------------------------------------------
 
-    def details_form_validate(self, data):
+    def details_form_validate(self, data, partner_creation=False):
         error, error_message = super(PortalAccount, self).details_form_validate(data)
         # prevent VAT/name change if invoices exist
         partner = request.env['res.users'].browse(request.uid).partner_id
-        if not partner.can_edit_vat():
+        # Skip this test if we're creating a new partner as we won't ever block him from filling values.
+        if not partner_creation and not partner.can_edit_vat():
             if 'vat' in data and (data['vat'] or False) != (partner.vat or False):
                 error['vat'] = 'error'
                 error_message.append(_('Changing VAT number is not allowed once invoices have been issued for your account. Please contact us directly for this operation.'))
@@ -141,4 +142,12 @@ class PortalAccount(CustomerPortal):
             if 'company_name' in data and (data['company_name'] or False) != (partner.company_name or False):
                 error['company_name'] = 'error'
                 error_message.append(_('Changing your company name is not allowed once invoices have been issued for your account. Please contact us directly for this operation.'))
+        return error, error_message
+
+    def extra_details_form_validate(self, data, additional_required_fields, error, error_message):
+        """ Ensure that all additional required fields have a value in the data """
+        for field in additional_required_fields:
+            if field.name not in data or not data[field.name]:
+                error[field.name] = 'error'
+                error_message.append(_('The field %s must be filled.', field.field_description.lower()))
         return error, error_message

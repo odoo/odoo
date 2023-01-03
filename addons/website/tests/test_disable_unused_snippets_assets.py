@@ -63,9 +63,11 @@ class TestDisableSnippetsAssets(TransactionCase):
         self.homepage.write({
             'arch_db': HOMEPAGE_UP_TO_DATE,
         })
+        self.homepage.flush_recordset()
         self.mega_menu.write({
             'mega_menu_content': MEGA_MENU_OUTDATED,
         })
+        self.mega_menu.flush_recordset()
         self.Website._disable_unused_snippets_assets()
 
         s_website_form_000_scss = self._get_snippet_asset('s_website_form', '000', 'scss')

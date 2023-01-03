@@ -15,7 +15,6 @@
                         csrf_token: "<t t-out="request.csrf_token(None)"/>",
                         debug: "<t t-out="debug"/>",
                     };
-                    odoo.loadTemplatesPromise = fetch(`/web/webclient/qweb/${odoo.__session_info__.cache_hashes.assets_discuss_public}?bundle=mail.assets_discuss_public`).then(doc => doc.text());
                     {
                         const { user_context,  cache_hashes } = odoo.__session_info__;
                         fetch(`/web/webclient/translations/${cache_hashes.translations}?lang=${user_context.lang}`);

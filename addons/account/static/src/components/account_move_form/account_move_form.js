@@ -52,7 +52,7 @@ export class AccountMoveFormCompiler extends FormCompiler {
     }
 }
 
-const AccountMoveFormView = {
+export const AccountMoveFormView = {
     ...formView,
     Renderer: AccountMoveFormRenderer,
     Compiler: AccountMoveFormCompiler,

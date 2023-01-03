@@ -3,7 +3,7 @@
 import { getActiveHotkey } from "@web/core/hotkeys/hotkey_service";
 import { useBus } from "@web/core/utils/hooks";
 
-const { useComponent, useEffect, useRef, useEnv } = owl;
+import { useComponent, useEffect, useRef, useEnv } from "@odoo/owl";
 
 /**
  * This hook is meant to be used by field components that use an input or
@@ -17,7 +17,7 @@ const { useComponent, useEffect, useRef, useEnv } = owl;
  */
 export function useInputField(params) {
     const env = useEnv();
-    const inputRef = useRef(params.refName || "input");
+    const inputRef = params.ref || useRef(params.refName || "input");
     const component = useComponent();
 
     /*
@@ -26,11 +26,6 @@ export function useInputField(params) {
      * An invalid value will thefore not be dirty even if the model will not actually store the invalid value.
      */
     let isDirty = false;
-
-    /**
-     * A field is invalid if the parsing of its value failed.
-     */
-    let isInvalid = false;
 
     /**
      * The last value that has been commited to the model.
@@ -55,13 +50,15 @@ export function useInputField(params) {
     function onChange(ev) {
         if (isDirty) {
             isDirty = false;
-            isInvalid = false;
+            let isInvalid = false;
             let val = ev.target.value;
             if (params.parse) {
                 try {
                     val = params.parse(val);
-                } catch (_e) {
-                    component.props.record.setInvalidField(component.props.name);
+                } catch {
+                    if (component.props.record) {
+                        component.props.record.setInvalidField(component.props.name);
+                    }
                     isInvalid = true;
                 }
             }
@@ -101,11 +98,14 @@ export function useInputField(params) {
 
     /**
      * Sometimes, a patch can happen with possible a new value for the field
-     * If the user was typing a new value (isDirty) or had enter an invalid value (isInvalid),
+     * If the user was typing a new value (isDirty) or the field is still invalid,
      * we need to do nothing.
      * If it is not such a case, we update the field with the new value.
      */
     useEffect(() => {
+        const isInvalid = component.props.record
+            ? component.props.record.isInvalid(component.props.name)
+            : false;
         if (inputRef.el && !isDirty && !isInvalid) {
             inputRef.el.value = params.getValue();
             lastSetValue = inputRef.el.value;
@@ -125,23 +125,19 @@ export function useInputField(params) {
             return;
         }
 
-        if (isInvalid && !isDirty) {
-            return;
-        }
-
         isDirty = inputRef.el.value !== lastSetValue;
         if (isDirty || urgent) {
-            isInvalid = false;
+            let isInvalid = false;
             isDirty = false;
             let val = inputRef.el.value;
             if (params.parse) {
                 try {
                     val = params.parse(val);
-                } catch (_e) {
+                } catch {
                     isInvalid = true;
                     if (urgent) {
                         return;
-                    } else {
+                    } else if (component.props.record) {
                         component.props.record.setInvalidField(component.props.name);
                     }
                 }
@@ -151,7 +147,7 @@ export function useInputField(params) {
                 return;
             }
 
-            if (val !== component.props.value) {
+            if ((val || false) !== (component.props.value || false)) {
                 await component.props.update(val);
                 lastSetValue = inputRef.el.value;
                 if (component.props.setDirty) {
@@ -160,4 +156,6 @@ export function useInputField(params) {
             }
         }
     }
+
+    return inputRef;
 }

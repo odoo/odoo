@@ -7,7 +7,7 @@ import { serializeDate, serializeDateTime } from "@web/core/l10n/dates";
 import { _lt } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
 
-const { Component, useState } = owl;
+import { Component, useState } from "@odoo/owl";
 
 const { DateTime } = luxon;
 
@@ -86,22 +86,22 @@ const FIELD_OPERATORS = {
     ],
 };
 
-function parseField(field, value, opts = {}) {
+function parseField(field, value) {
     if (FIELD_TYPES[field.type] === "char") {
         return value;
     }
     const type = field.type === "id" ? "integer" : field.type;
     const parse = parsers.contains(type) ? parsers.get(type) : (v) => v;
-    return parse(value, { field, ...opts });
+    return parse(value);
 }
 
-function formatField(field, value, opts = {}) {
+function formatField(field, value) {
     if (FIELD_TYPES[field.type] === "char") {
         return value;
     }
     const type = field.type === "id" ? "integer" : field.type;
     const format = formatters.contains(type) ? formatters.get(type) : (v) => v;
-    return format(value, { digits: field.digits, ...opts });
+    return format(value, { digits: field.digits });
 }
 
 export class CustomFilterItem extends Component {
@@ -224,7 +224,7 @@ export class CustomFilterItem extends Component {
                 domainValue = condition.value.map(serialize);
                 descriptionArray.push(
                     `"${condition.value
-                        .map((val) => formatField(field, val, { timezone: true }))
+                        .map((val) => formatField(field, val))
                         .join(" " + this.env._t("and") + " ")}"`
                 );
             } else {
@@ -310,12 +310,16 @@ export class CustomFilterItem extends Component {
             // Only updates values if it can be correctly parsed and formatted.
             condition.value = parsed;
             condition.displayedValue = formatted;
-        } catch (_err) {
+        } catch {
             // Parsing error: nothing is done
         }
-        ev.target.value = condition.displayedValue;
+        // Only reset the target's value if it is not a selection field.
+        if (field.type !== "selection") {
+            ev.target.value = condition.displayedValue;
+        }
     }
 }
 
+CustomFilterItem.props = {};
 CustomFilterItem.components = { DatePicker, DateTimePicker, Dropdown };
 CustomFilterItem.template = "web.CustomFilterItem";

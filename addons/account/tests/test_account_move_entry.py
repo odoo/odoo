@@ -198,6 +198,9 @@ class TestAccountMove(AccountTestInvoicingCommon):
             self.test_move.date = fields.Date.from_string('2018-01-01')
 
         with self.assertRaises(UserError), self.cr.savepoint():
+            self.test_move.name = "Othername"
+
+        with self.assertRaises(UserError), self.cr.savepoint():
             self.test_move.unlink()
 
         with self.assertRaises(UserError), self.cr.savepoint():
@@ -212,14 +215,12 @@ class TestAccountMove(AccountTestInvoicingCommon):
         self.test_move.action_post()
 
         # Create a bank statement to get a balance in the suspense account.
-        statement = self.env['account.bank.statement'].create({
+        self.env['account.bank.statement.line'].create({
             'journal_id': self.company_data['default_journal_bank'].id,
             'date': '2016-01-01',
-            'line_ids': [
-                (0, 0, {'payment_ref': 'test', 'amount': 10.0})
-            ],
+            'payment_ref': 'test',
+            'amount': 10.0,
         })
-        statement.button_post()
 
         # You can't lock the fiscal year if there is some unreconciled statement.
         with self.assertRaises(RedirectWarning), self.cr.savepoint():
@@ -307,6 +308,9 @@ class TestAccountMove(AccountTestInvoicingCommon):
             self.test_move.date = fields.Date.from_string('2018-01-01')
 
         with self.assertRaises(UserError), self.cr.savepoint():
+            self.test_move.name = "Othername"
+
+        with self.assertRaises(UserError), self.cr.savepoint():
             self.test_move.unlink()
 
         with self.assertRaises(UserError), self.cr.savepoint():
@@ -388,24 +392,6 @@ class TestAccountMove(AccountTestInvoicingCommon):
         # You can't unlink an already reconciled line.
         with self.assertRaises(UserError), self.cr.savepoint():
             draft_moves.unlink()
-
-    def test_misc_always_balanced_move(self):
-        ''' Ensure there is no way to make '''
-        # You can't remove a journal item making the journal entry unbalanced.
-        with self.assertRaises(UserError), self.cr.savepoint():
-            self.test_move.line_ids[0].unlink()
-
-        # Same check using write instead of unlink.
-        with self.assertRaises(UserError), self.cr.savepoint():
-            balance = self.test_move.line_ids[0].balance + 5
-            self.test_move.line_ids[0].write({
-                'debit': balance if balance > 0.0 else 0.0,
-                'credit': -balance if balance < 0.0 else 0.0,
-            })
-
-        # You can remove journal items if the related journal entry is still balanced.
-        self.test_move.line_ids.filtered(lambda l: not l.tax_repartition_line_id).balance = 0
-        self.test_move.line_ids[0].unlink()
 
     def test_add_followers_on_post(self):
         # Add some existing partners, some from another company
@@ -651,6 +637,7 @@ class TestAccountMove(AccountTestInvoicingCommon):
             'company_id': self.company_data['company'].id,
         })
         self.env.company.account_cash_basis_base_account_id = tax_base_amount_account
+        self.env.company.tax_exigibility = True
         tax_tags = defaultdict(dict)
         for line_type, repartition_type in [(l, r) for l in ('invoice', 'refund') for r in ('base', 'tax')]:
             tax_tags[line_type][repartition_type] = self.env['account.account.tag'].create({

@@ -10,7 +10,7 @@ function removeSelectedBlock() {
     };
 }
 
-wTourUtils.registerEditionTour('snippet_empty_parent_autoremove', {
+wTourUtils.registerWebsitePreviewTour('snippet_empty_parent_autoremove', {
     test: true,
     url: '/',
     edition: true,

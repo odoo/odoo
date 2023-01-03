@@ -18,12 +18,14 @@
     'post_init_hook': 'init_initiating_microsoft_uuid',
     'assets': {
         'web.assets_backend': [
-            'microsoft_calendar/static/src/js/microsoft_calendar_popover.js',
-            'microsoft_calendar/static/src/js/microsoft_calendar.js',
             'microsoft_calendar/static/src/scss/microsoft_calendar.scss',
+            'microsoft_calendar/static/src/views/**/*',
         ],
-        'web.assets_qweb': [
-            'microsoft_calendar/static/src/xml/*.xml',
+        'web.qunit_suite_tests': [
+            'microsoft_calendar/static/tests/microsoft_calendar_mock_server.js',
+        ],
+        'web.qunit_mobile_suite_tests': [
+            'microsoft_calendar/static/tests/microsoft_calendar_mock_server.js',
         ],
     },
     'license': 'LGPL-3',

@@ -10,9 +10,7 @@
                 <head>
                     <title><t t-esc="slide.name"/></title>
                     <t t-call-assets="web.assets_common" t-js="false"/>
-                    <t t-call-assets="website_slides.slide_embed_assets" t-js="false"/>
-                    <t t-call-assets="web.assets_common" t-css="false"/>
-                    <t t-call-assets="website_slides.slide_embed_assets" t-css="false"/>
+                    <t t-call-assets="website_slides.slide_embed_assets"/>
                 </head>
                 <body>
                     <div id="PDFViewer" class="o_wslides_fs_pdf_viewer d-flex flex-column h-100">
@@ -28,7 +26,7 @@
                                         </div>
                                     </div>
                                     <div class="col flex-grow-0 d-flex text-nowrap small">
-                                        <a class="oe_slide_js_embed_option_link" href="#" data-bs-toggle="modal" t-attf-data-bs-target="#slideChannelShareModal_{{slide.id}}">
+                                        <a class="oe_slide_js_embed_option_link" href="#" data-bs-toggle="modal" t-attf-data-bs-target="#slideShareModal_{{slide.id}}">
                                             <i class="fa fa-share-alt" aria-label="Share" title="Share"/>
                                             Share
                                         </a>

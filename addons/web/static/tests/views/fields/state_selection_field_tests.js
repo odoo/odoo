@@ -1,14 +1,10 @@
 /** @odoo-module **/
 
-import { registry } from "@web/core/registry";
-import { commandService } from "@web/core/commands/command_service";
 import { click, getFixture, nextTick, triggerHotkey } from "@web/../tests/helpers/utils";
 import { makeView, setupViewRegistries } from "@web/../tests/views/helpers";
 
 let serverData;
 let target;
-
-const serviceRegistry = registry.category("services");
 
 QUnit.module("Fields", (hooks) => {
     hooks.beforeEach(() => {
@@ -87,6 +83,11 @@ QUnit.module("Fields", (hooks) => {
             "should not have one green status since selection is the second, blocked state"
         );
         assert.containsNone(target, ".dropdown-menu", "there should not be a dropdown");
+        assert.strictEqual(
+            target.querySelector(".o_field_state_selection .dropdown-toggle").dataset.tooltip,
+            "Blocked",
+            "tooltip attribute has the right text"
+        );
 
         // Click on the status button to make the dropdown appear
         await click(target, ".o_field_widget.o_field_state_selection .o_status");
@@ -117,8 +118,6 @@ QUnit.module("Fields", (hooks) => {
             "should have one grey status since selection is the first, normal state"
         );
 
-        // switch to edit mode and check the result
-        await click(target.querySelector(".o_form_button_edit"));
         assert.containsNone(target, ".dropdown-menu", "there should still not be a dropdown");
         assert.containsNone(
             target,
@@ -189,7 +188,6 @@ QUnit.module("Fields", (hooks) => {
         });
 
         assert.hasClass(target.querySelector(".o_field_state_selection"), "o_readonly_modifier");
-        assert.hasClass(target.querySelector(".o_field_state_selection button"), "disabled");
         assert.isNotVisible(target.querySelector(".dropdown-menu"));
         await click(target, ".o_field_state_selection span.o_status");
         assert.isNotVisible(target.querySelector(".dropdown-menu"));
@@ -433,10 +431,8 @@ QUnit.module("Fields", (hooks) => {
     });
 
     QUnit.test(
-        'StateSelectionField edited by the smart action "Set kanban state..."',
+        'StateSelectionField edited by the smart actions "Set kanban state as <state name>"',
         async function (assert) {
-            serviceRegistry.add("command", commandService);
-
             await makeView({
                 type: "form",
                 resModel: "partner",
@@ -452,20 +448,23 @@ QUnit.module("Fields", (hooks) => {
 
             triggerHotkey("control+k");
             await nextTick();
-            const idx = [...target.querySelectorAll(".o_command")]
-                .map((el) => el.textContent)
-                .indexOf("Set kanban state...ALT + SHIFT + R");
+            var commandTexts = [...target.querySelectorAll(".o_command")].map(
+                (el) => el.textContent
+            );
+            assert.ok(commandTexts.includes("Set kanban state as NormalALT + D"));
+            const idx = commandTexts.indexOf("Set kanban state as DoneALT + G");
             assert.ok(idx >= 0);
 
             await click([...target.querySelectorAll(".o_command")][idx]);
             await nextTick();
-            assert.deepEqual(
-                [...target.querySelectorAll(".o_command")].map((el) => el.textContent),
-                ["Normal", "Blocked", "Done"]
-            );
-            await click(target, "#o_command_2");
-            await nextTick();
             assert.containsOnce(target, ".o_status_green");
+
+            triggerHotkey("control+k");
+            await nextTick();
+            commandTexts = [...target.querySelectorAll(".o_command")].map((el) => el.textContent);
+            assert.ok(commandTexts.includes("Set kanban state as NormalALT + D"));
+            assert.ok(commandTexts.includes("Set kanban state as BlockedALT + F"));
+            assert.notOk(commandTexts.includes("Set kanban state as DoneALT + G"));
         }
     );
 
@@ -507,5 +506,38 @@ QUnit.module("Fields", (hooks) => {
             (el) => el.textContent
         );
         assert.deepEqual(dropdownItemTexts, ["Custom blocked", "Custom done"]);
+    });
+
+    QUnit.test("works when required in a readonly view ", async function (assert) {
+        serverData.models.partner.records[0].selection = "normal";
+        serverData.models.partner.records = [serverData.models.partner.records[0]];
+        await makeView({
+            type: "kanban",
+            resModel: "partner",
+            serverData,
+            arch: `
+                <kanban>
+                    <templates>
+                        <t t-name="kanban-box">
+                            <div>
+                                <field name="selection" widget="state_selection" required="1"/>
+                            </div>
+                        </t>
+                    </templates>
+                </kanban>`,
+            mockRPC: (route, args, performRPC) => {
+                if (route === "/web/dataset/call_kw/partner/write") {
+                    assert.step("write");
+                }
+                return performRPC(route, args);
+            },
+        });
+
+        await click(target, ".o_field_state_selection button");
+        const doneItem = target.querySelectorAll(".dropdown-item")[1]; // item "done";
+        await click(doneItem);
+
+        assert.verifySteps(["write"]);
+        assert.hasClass(target.querySelector(".o_field_state_selection span"), "o_status_green");
     });
 });

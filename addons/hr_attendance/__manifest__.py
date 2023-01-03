@@ -35,12 +35,10 @@ actions(Check in/Check out) performed by them.
     'assets': {
         'web.assets_backend': [
             'hr_attendance/static/src/**/*',
+            'hr_attendance/static/src/xml/**/*',
         ],
         'web.qunit_suite_tests': [
             ('after', 'web/static/tests/legacy/views/kanban_tests.js', 'hr_attendance/static/tests/hr_attendance_tests.js'),
-        ],
-        'web.assets_qweb': [
-            'hr_attendance/static/src/xml/**/*',
         ],
     },
     'license': 'LGPL-3',

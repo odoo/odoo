@@ -104,7 +104,11 @@ class ProviderGrid(models.Model):
         total = (order.amount_total or 0.0) - total_delivery
 
         total = self._compute_currency(order, total, 'pricelist_to_company')
-
+        # weight is either,
+        # 1- weight chosen by user in choose.delivery.carrier wizard passed by context
+        # 2- saved weight to use on sale order
+        # 3- total order line weight as fallback
+        weight = self.env.context.get('order_weight') or order.shipping_weight or weight
         return self._get_price_from_picking(total, weight, volume, quantity)
 
     def _get_price_dict(self, total, weight, volume, quantity):

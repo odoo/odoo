@@ -16,7 +16,7 @@ PopupWidget.include({
     _canShowPopup() {
         if (
             this.$el.is('.o_newsletter_popup') &&
-            this.$el.find('input.js_subscribe_email').prop('disabled')
+            this.$el.find('input.js_subscribe_value').prop('disabled')
         ) {
             return false;
         }

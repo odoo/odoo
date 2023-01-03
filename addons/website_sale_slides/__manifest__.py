@@ -26,7 +26,8 @@
     'assets': {
         'web.assets_frontend': [
             'website_sale_slides/static/src/js/**/*',
-        ],
+            'website_sale_slides/static/src/xml/**/*',
+        ]
     },
     'license': 'LGPL-3',
 }

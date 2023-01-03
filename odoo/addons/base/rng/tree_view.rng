@@ -46,6 +46,8 @@
             <rng:optional><rng:attribute name="decoration-warning"/></rng:optional>
             <rng:optional><rng:attribute name="banner_route"/></rng:optional>
             <rng:optional><rng:attribute name="sample"/></rng:optional>
+            <rng:optional><rng:attribute name="action"/></rng:optional>
+            <rng:optional><rng:attribute name="type"/></rng:optional>
             <rng:optional>
                 <rng:attribute name="limit">
                     <rng:data type="int"/>
@@ -74,6 +76,7 @@
                     </rng:element>
                     <rng:ref name="control"/>
                     <rng:ref name="field"/>
+                    <rng:ref name="widget"/>
                     <rng:ref name="separator"/>
                     <rng:ref name="tree"/>
                     <rng:ref name="groupby"/>

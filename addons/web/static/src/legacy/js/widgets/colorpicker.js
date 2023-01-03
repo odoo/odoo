@@ -9,7 +9,6 @@ var Widget = require('web.Widget');
 var _t = core._t;
 
 var ColorpickerWidget = Widget.extend({
-    xmlDependencies: ['/web/static/src/legacy/xml/colorpicker.xml'],
     template: 'Colorpicker',
     events: {
         'click': '_onClick',

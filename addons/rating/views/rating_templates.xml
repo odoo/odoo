@@ -36,7 +36,8 @@
                                            t-att-for="'rate_%s' % (rate_name)">
                                         <img t-attf-src='/rating/static/src/img/rating_#{rate_name}.svg'
                                              t-att-alt="rate_name_value"
-                                             t-att-title="rate_name_value"/>
+                                             t-att-title="rate_name_value"
+                                             t-attf-class="o_{{rate_name_value.lower()}}"/>
                                     </label>
                                 </t>
                             </div>

@@ -20,7 +20,7 @@ import {
 } from "../helpers/utils";
 import { Dialog } from "../../src/core/dialog/dialog";
 
-const { Component, onMounted, xml } = owl;
+import { Component, onMounted, xml } from "@odoo/owl";
 
 let env;
 let target;

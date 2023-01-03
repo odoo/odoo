@@ -39,10 +39,10 @@ class ContractHistory(models.Model):
     wage = fields.Monetary('Wage', help="Employee's monthly gross wage.", readonly=True, group_operator="avg")
     company_id = fields.Many2one('res.company', string='Company', readonly=True)
     company_country_id = fields.Many2one('res.country', string="Company country", related='company_id.country_id', readonly=True)
-    country_code = fields.Char(related='company_country_id.code', readonly=True)
+    country_code = fields.Char(related='company_country_id.code', depends=['company_country_id'], readonly=True)
     currency_id = fields.Many2one(string='Currency', related='company_id.currency_id', readonly=True)
     contract_type_id = fields.Many2one('hr.contract.type', 'Contract Type', readonly=True)
-    contract_ids = fields.One2many('hr.contract', string='Contracts', compute='_compute_contract_ids', readonly=True)
+    contract_ids = fields.One2many('hr.contract', string='Contracts', compute='_compute_contract_ids', readonly=True, compute_sudo=True)
     contract_count = fields.Integer(compute='_compute_contract_count', string="# Contracts")
     under_contract_state = fields.Selection([
         ('done', 'Under Contract'),
@@ -85,27 +85,27 @@ class ContractHistory(models.Model):
                                     WHEN state='draft' AND kanban_state='done' THEN 1
                                     ELSE 0 END) OVER w_partition AS is_under_contract
                 FROM   hr_contract AS contract
-                WHERE  contract.state <> 'cancel'
-                AND contract.active = true
+                WHERE  contract.active = true
                 WINDOW w_partition AS (
-                    PARTITION BY contract.employee_id
+                    PARTITION BY contract.employee_id, contract.company_id
                     ORDER BY
                         CASE
                             WHEN contract.state = 'open' THEN 0
                             WHEN contract.state = 'draft' THEN 1
                             WHEN contract.state = 'close' THEN 2
-                            ELSE 3 END,
+                            WHEN contract.state = 'cancel' THEN 3
+                            ELSE 4 END,
                         contract.date_start DESC
                     RANGE BETWEEN UNBOUNDED PRECEDING AND UNBOUNDED FOLLOWING
                 )
             )
-            SELECT     employee.id AS id,
-                       employee.id AS employee_id,
-                       employee.active AS active_employee,
-                       contract.id AS contract_id,
-                       contract_information.is_under_contract::bool AS is_under_contract,
-                       employee.first_contract_date AS date_hired,
-                       %s
+            SELECT DISTINCT employee.id AS id,
+                            employee.id AS employee_id,
+                            employee.active AS active_employee,
+                            contract.id AS contract_id,
+                            contract_information.is_under_contract::bool AS is_under_contract,
+                            employee.first_contract_date AS date_hired,
+                            %s
             FROM       hr_contract AS contract
             INNER JOIN contract_information ON contract.id = contract_information.id
             RIGHT JOIN hr_employee AS employee
@@ -120,8 +120,7 @@ class ContractHistory(models.Model):
 
         mapped_employee_contracts = defaultdict(lambda: self.env['hr.contract'])
         for contract in sorted_contracts:
-            if contract.state != 'cancel':
-                mapped_employee_contracts[contract.employee_id] |= contract
+            mapped_employee_contracts[contract.employee_id] |= contract
 
         for history in self:
             history.contract_ids = mapped_employee_contracts[history.employee_id]

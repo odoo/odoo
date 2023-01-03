@@ -2,6 +2,7 @@
 
 import { registry } from "@web/core/registry";
 import { useService } from "@web/core/utils/hooks";
+import { standardWidgetProps } from "@web/views/widgets/standard_widget_props";
 
 const { Component } = owl;
 
@@ -28,6 +29,11 @@ class IAPActionButtonsWidget extends Component {
     }
 }
 IAPActionButtonsWidget.template = "iap.ActionButtonsWidget";
+IAPActionButtonsWidget.props = {
+    ...standardWidgetProps,
+    serviceName: String,
+    showServiceButtons: Boolean,
+};
 IAPActionButtonsWidget.extractProps = ({ attrs }) => {
     return {
         serviceName: attrs.service_name,

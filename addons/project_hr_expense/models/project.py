@@ -16,14 +16,19 @@ class Project(models.Model):
         if not self.analytic_account_id:
             self.expenses_count = 0
             return
-        expenses_data = self.env['hr.expense']._read_group([
-            ('analytic_account_id', '!=', False),
-            ('analytic_account_id', 'in', self.analytic_account_id.ids)
-        ],
-        ['analytic_account_id'], ['analytic_account_id'])
-        mapped_data = {data['analytic_account_id'][0]: data['analytic_account_id_count'] for data in expenses_data}
+        query = self.env['hr.expense']._search([])
+        query.add_where('hr_expense.analytic_distribution ?| array[%s]', [str(account_id) for account_id in self.analytic_account_id.ids])
+
+        query.order = None
+        query_string, query_param = query.select(
+            'jsonb_object_keys(analytic_distribution) as account_id',
+            'COUNT(DISTINCT(id)) as expense_count',
+        )
+        query_string = f'{query_string} GROUP BY jsonb_object_keys(analytic_distribution)'
+        self._cr.execute(query_string, query_param)
+        data = {int(record.get('account_id')): record.get('expense_count') for record in self._cr.dictfetchall()}
         for project in self:
-            project.expenses_count = mapped_data.get(project.analytic_account_id.id, 0)
+            project.expenses_count = data.get(self.analytic_account_id.id, 0)
 
     # ----------------------------
     #  Actions
@@ -36,21 +41,13 @@ class Project(models.Model):
         action.update({
             'display_name': _('Expenses'),
             'views': [[False, 'tree'], [False, 'form'], [False, 'kanban'], [False, 'graph'], [False, 'pivot']],
-            'context': {'default_analytic_account_id': self.analytic_account_id.id},
+            'context': {'default_analytic_distribution': {self.analytic_account_id.id: 100}},
             'domain': domain or [('id', 'in', expense_ids)],
         })
         if len(expense_ids) == 1:
             action["views"] = [[False, 'form']]
             action["res_id"] = expense_ids[0]
         return action
-
-    def action_open_project_expenses(self):
-        if not self.analytic_account_id:
-            return {'type': 'ir.actions.act_window_close'}
-        expense_ids = self.env['hr.expense']._search([
-            ('analytic_account_id', 'in', self.analytic_account_id.ids)
-        ])
-        return self._get_expense_action(expense_ids=expense_ids)
 
     def action_profitability_items(self, section_name, domain=None, res_id=False):
         if section_name == 'expenses':
@@ -75,14 +72,13 @@ class Project(models.Model):
         if not self.analytic_account_id:
             return {}
         can_see_expense = with_action and self.user_has_groups('hr_expense.group_hr_expense_team_approver')
-        expenses_read_group = self.env['hr.expense'].sudo()._read_group(
-            [('analytic_account_id', 'in', self.analytic_account_id.ids),
-             ('is_refused', '=', False),
-             ('state', 'in', ['approved', 'done'])],
-            ['untaxed_amount', 'ids:array_agg(id)'],
-            [],
-        )
-        if not expenses_read_group or not expenses_read_group[0]['__count']:
+        query = self.env['hr.expense']._search([('is_refused', '=', False), ('state', 'in', ['approved', 'done'])])
+        query.order = None
+        query.add_where('hr_expense.analytic_distribution ? %s', [str(self.analytic_account_id.id)])
+        query_string, query_param = query.select('array_agg(id) as ids', 'SUM(untaxed_amount) as untaxed_amount')
+        self._cr.execute(query_string, query_param)
+        expenses_read_group = [expense for expense in self._cr.dictfetchall()]
+        if not expenses_read_group or not expenses_read_group[0].get('ids'):
             return {}
         expense_data = expenses_read_group[0]
         section_id = 'expenses'
@@ -90,16 +86,17 @@ class Project(models.Model):
             'costs': {'id': section_id, 'sequence': self._get_profitability_sequence_per_invoice_type()[section_id], 'billed': -expense_data['untaxed_amount'], 'to_bill': 0.0},
         }
         if can_see_expense:
-            action = {'name': 'action_profitability_items', 'type': 'object', 'section': section_id, 'domain': json.dumps([('id', 'in', expense_data['ids'])])}
+            args = [section_id, [('id', 'in', expense_data['ids'])]]
             if expense_data['ids']:
-                action['res_id'] = expense_data['ids']
+                args.append(expense_data['ids'])
+            action = {'name': 'action_profitability_items', 'type': 'object', 'args': json.dumps(args)}
             expense_profitability_items['action'] = action
         return expense_profitability_items
 
     def _get_profitability_aal_domain(self):
         return expression.AND([
             super()._get_profitability_aal_domain(),
-            ['|', ('move_id', '=', False), ('move_id.expense_id', '=', False)],
+            ['|', ('move_line_id', '=', False), ('move_line_id.expense_id', '=', False)],
         ])
 
     def _get_profitability_items(self, with_action=True):

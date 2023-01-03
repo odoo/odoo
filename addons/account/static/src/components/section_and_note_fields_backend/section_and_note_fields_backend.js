@@ -3,7 +3,7 @@
 import { registry } from "@web/core/registry";
 import { ListRenderer } from "@web/views/list/list_renderer";
 import { X2ManyField } from "@web/views/fields/x2many/x2many_field";
-import { TextField } from "@web/views/fields/text/text_field";
+import { TextField, ListTextField } from "@web/views/fields/text/text_field";
 import { CharField } from "@web/views/fields/char/char_field";
 
 const { Component, useEffect } = owl;
@@ -17,6 +17,7 @@ export class SectionAndNoteListRenderer extends ListRenderer {
      */
     setup() {
         super.setup();
+        this.titleField = "name";
         useEffect(
             () => this.focusToName(this.props.list.editedRecord),
             () => [this.props.list.editedRecord]
@@ -25,7 +26,7 @@ export class SectionAndNoteListRenderer extends ListRenderer {
 
     focusToName(editRec) {
         if (editRec && editRec.isVirtual && this.isSectionOrNote(editRec)) {
-            const col = this.state.columns.find((c) => c.name === "name");
+            const col = this.state.columns.find((c) => c.name === this.titleField);
             this.focusCell(col, null);
         }
     }
@@ -42,31 +43,38 @@ export class SectionAndNoteListRenderer extends ListRenderer {
 
     getCellClass(column, record) {
         const classNames = super.getCellClass(column, record);
-        if (this.isSectionOrNote(record) && column.widget !== "handle" && column.name !== "name") {
+        if (this.isSectionOrNote(record) && column.widget !== "handle" && column.name !== this.titleField) {
             return `${classNames} o_hidden`;
         }
         return classNames;
     }
 
-    getCellColspan(column) {
-        if (!this.isSectionOrNote() || column.widget === "handle") {
-            return 1;
+    getColumns(record) {
+        const columns = super.getColumns(record);
+        if (this.isSectionOrNote(record)) {
+            return this.getSectionColumns(columns);
         }
-        let nbrColumns = this.withHandleColumn ? this.state.columns.length + 1 : this.state.columns.length;
-        let withTrashColumn = this.props.activeActions && (this.props.activeActions.canDelete || this.props.activeActions.canUnlink || 0);
-        return nbrColumns - this.withHandleColumn - withTrashColumn;
+        return columns;
+    }
+
+    getSectionColumns(columns) {
+        const sectionCols = columns.filter((col) => col.widget === "handle" || col.type === "field" && col.name === this.titleField);
+        return sectionCols.map((col) => {
+            if (col.name === this.titleField) {
+                return { ...col, colspan: columns.length - sectionCols.length + 1 };
+            } else {
+                return { ...col };
+            }
+        });
     }
 }
 SectionAndNoteListRenderer.template = "account.sectionAndNoteListRenderer";
 
-export class SectionAndNoteFieldOne2Many extends X2ManyField {
-    setup() {
-        super.setup();
-        if (this.viewMode === 'list') {
-            this.Renderer = SectionAndNoteListRenderer;
-        }
-    }
-}
+export class SectionAndNoteFieldOne2Many extends X2ManyField {}
+SectionAndNoteFieldOne2Many.components = {
+    ...X2ManyField.components,
+    ListRenderer: SectionAndNoteListRenderer,
+};
 
 export class SectionAndNoteText extends Component {
     get componentToUse() {
@@ -74,6 +82,16 @@ export class SectionAndNoteText extends Component {
     }
 }
 SectionAndNoteText.template = "account.SectionAndNoteText";
+SectionAndNoteText.additionalClasses = ["o_field_text"];
+
+export class ListSectionAndNoteText extends SectionAndNoteText {
+    get componentToUse() {
+        return this.props.record.data.display_type !== "line_section"
+            ? ListTextField
+            : super.componentToUse;
+    }
+}
 
 registry.category("fields").add("section_and_note_one2many", SectionAndNoteFieldOne2Many);
 registry.category("fields").add("section_and_note_text", SectionAndNoteText);
+registry.category("fields").add("list.section_and_note_text", ListSectionAndNoteText);

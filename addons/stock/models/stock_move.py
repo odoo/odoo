@@ -80,10 +80,13 @@ class StockMove(models.Model):
         auto_join=True, index=True, required=True,
         check_company=True,
         help="Location where the system will stock the finished products.")
+    location_usage = fields.Selection(string="Source Location Type", related='location_id.usage')
+    location_dest_usage = fields.Selection(string="Destination Location Type", related='location_dest_id.usage')
     partner_id = fields.Many2one(
         'res.partner', 'Destination Address ',
         states={'done': [('readonly', True)]},
-        help="Optional address where goods are to be delivered, specifically used for allotment")
+        help="Optional address where goods are to be delivered, specifically used for allotment",
+        compute='_compute_partner_id', store=True, readonly=False)
     move_dest_ids = fields.Many2many(
         'stock.move', 'stock_move_move_rel', 'move_orig_id', 'move_dest_id', 'Destination Moves',
         copy=False,
@@ -154,7 +157,9 @@ class StockMove(models.Model):
         check_company=True)
     warehouse_id = fields.Many2one('stock.warehouse', 'Warehouse', help="the warehouse to consider for the route selection on the next procurement (if any).")
     has_tracking = fields.Selection(related='product_id.tracking', string='Product with Tracking')
-    quantity_done = fields.Float('Quantity Done', compute='_quantity_done_compute', digits='Product Unit of Measure', inverse='_quantity_done_set')
+    quantity_done = fields.Float(
+        'Quantity Done', compute='_quantity_done_compute', digits='Product Unit of Measure',
+        inverse='_quantity_done_set', store=True)
     show_operations = fields.Boolean(related='picking_id.picking_type_id.show_operations')
     picking_code = fields.Selection(related='picking_id.picking_type_id.code', readonly=True)
     show_details_visible = fields.Boolean('Details Visible', compute='_compute_show_details_visible')
@@ -295,6 +300,11 @@ class StockMove(models.Model):
             move.product_qty = move.product_uom._compute_quantity(
                 move.product_uom_qty, move.product_id.uom_id, rounding_method='HALF-UP')
 
+    @api.depends('picking_id.partner_id')
+    def _compute_partner_id(self):
+        for move in self.filtered(lambda m: m.picking_id):
+            move.partner_id = move.picking_id.partner_id
+
     def _get_move_lines(self):
         """ This will return the move lines to consider when applying _quantity_done_compute on a stock.move.
         In some context, such as MRP, it is necessary to compute quantity_done on filtered sock.move.line."""
@@ -316,7 +326,14 @@ class StockMove(models.Model):
             else:
                 move.delay_alert_date = False
 
-    @api.depends('move_line_ids.qty_done', 'move_line_ids.product_uom_id', 'move_line_nosuggest_ids.qty_done', 'picking_type_id.show_reserved')
+    def _quantity_done_sml(self):
+        self.ensure_one()
+        quantity = 0
+        for move_line in self._get_move_lines():
+            quantity += move_line.product_uom_id._compute_quantity(move_line.qty_done, self.product_uom, round=False)
+        return quantity
+
+    @api.depends('move_line_ids.qty_done', 'move_line_ids.product_uom_id', 'move_line_nosuggest_ids.qty_done')
     def _quantity_done_compute(self):
         """ This field represents the sum of the move lines `qty_done`. It allows the user to know
         if there is still work to do.
@@ -329,11 +346,7 @@ class StockMove(models.Model):
         if not any(self._ids):
             # onchange
             for move in self:
-                quantity_done = 0
-                for move_line in move._get_move_lines():
-                    quantity_done += move_line.product_uom_id._compute_quantity(
-                        move_line.qty_done, move.product_uom, round=False)
-                move.quantity_done = quantity_done
+                move.quantity_done = move._quantity_done_sml()
         else:
             # compute
             move_lines_ids = set()
@@ -358,19 +371,59 @@ class StockMove(models.Model):
                 )
 
     def _quantity_done_set(self):
-        quantity_done = self[0].quantity_done  # any call to create will invalidate `move.quantity_done`
+        def _process_decrease(move, quantity):
+            """Prioritize decrease the ml without reserved qty"""
+            res_mls = move._get_move_lines().sorted(lambda ml: float_is_zero(ml.reserved_uom_qty, precision_rounding=ml.product_uom_id.rounding), reverse=True)
+            qty_to_unreserve = move.reserved_availability - move.product_uom_qty
+            for ml in res_mls:
+                if float_is_zero(quantity, precision_rounding=move.product_uom.rounding):
+                    break
+                qty_ml_dec = min(ml.qty_done, ml.product_uom_id._compute_quantity(quantity, ml.product_uom_id, round=False))
+                if float_is_zero(qty_ml_dec, precision_rounding=ml.product_uom_id.rounding):
+                    continue
+                ml.qty_done -= qty_ml_dec
+                quantity -= move.product_uom._compute_quantity(qty_ml_dec, move.product_uom, round=False)
+                # Unreserve
+                if (not move.picking_id.immediate_transfer and move.reserved_availability < move.product_uom_qty):
+                    continue
+                if float_compare(ml.reserved_uom_qty, ml.qty_done, precision_rounding=ml.product_uom_id.rounding) <= 0:
+                    continue
+                if move.picking_id.immediate_transfer:
+                    ml.reserved_uom_qty = ml.qty_done
+                elif float_compare(qty_to_unreserve, 0, precision_rounding=move.product_uom.rounding) > 0:
+                    qty_unreserved = min(qty_to_unreserve, ml.reserved_qty - ml.qty_done)
+                    ml.reserved_uom_qty = ml.reserved_qty - qty_unreserved
+                    qty_to_unreserve -= qty_unreserved
+
+        def _process_increase(move, quantity):
+            moves = move
+            if move.picking_id.immediate_transfer:
+                moves = move._action_confirm(merge=False)
+            # Kits, already handle in action_explode, should be clean in master
+            if len(moves) > 1:
+                return
+            if move.reserved_availability < move.quantity_done and move.state not in ['done', 'cancel']:
+                move._action_assign(force_qty=move.quantity_done)
+            move._set_quantity_done(quantity)
+
+        err = []
         for move in self:
-            move_lines = move._get_move_lines()
-            if not move_lines:
-                if quantity_done:
-                    # do not impact reservation here
-                    move_line = self.env['stock.move.line'].create(dict(move._prepare_move_line_vals(), qty_done=quantity_done))
-                    move.write({'move_line_ids': [(4, move_line.id)]})
-                    move_line._apply_putaway_strategy()
-            elif len(move_lines) == 1:
-                move_lines[0].qty_done = quantity_done
-            else:
-                move._multi_line_quantity_done_set(quantity_done)
+            uom_qty = float_round(move.quantity_done, precision_rounding=move.product_uom.rounding, rounding_method='HALF-UP')
+            precision_digits = self.env['decimal.precision'].precision_get('Product Unit of Measure')
+            qty = float_round(move.quantity_done, precision_digits=precision_digits, rounding_method='HALF-UP')
+            if float_compare(uom_qty, qty, precision_digits=precision_digits) != 0:
+                err.append(_("""
+The quantity done for the product %s doesn't respect the rounding precision defined on the unit of measure %s.
+Please change the quantity done or the rounding precision of your unit of measure.""",
+                             move.product_id.display_name, move.product_uom.display_name))
+                continue
+            delta_qty = move.quantity_done - move._quantity_done_sml()
+            if float_compare(delta_qty, 0, precision_rounding=move.product_uom.rounding) > 0:
+                _process_increase(move, delta_qty)
+            elif float_compare(delta_qty, 0, precision_rounding=move.product_uom.rounding) < 0:
+                _process_decrease(move, abs(delta_qty))
+        if err:
+            raise UserError('\n'.join(err))
 
     def _multi_line_quantity_done_set(self, quantity_done):
         move_lines = self._get_move_lines()
@@ -515,6 +568,8 @@ class StockMove(models.Model):
 
     def _set_lot_ids(self):
         for move in self:
+            if move.product_id.tracking != 'serial':
+                continue
             move_lines_commands = []
             if move.picking_type_id.show_reserved is False:
                 mls = move.move_line_nosuggest_ids
@@ -590,6 +645,13 @@ class StockMove(models.Model):
                 move.product_id.code and '%s: ' % move.product_id.code or '',
                 move.location_id.name, move.location_dest_id.name)))
         return res
+
+    @api.model_create_multi
+    def create(self, vals_list):
+        for vals in vals_list:
+            if vals.get('quantity_done') and 'lot_ids' in vals:
+                vals.pop('lot_ids')
+        return super().create(vals_list)
 
     def write(self, vals):
         # Handle the write on the initial demand by updating the reserved quantity and logging
@@ -811,7 +873,7 @@ class StockMove(models.Model):
         origin = '/'.join(set(self.filtered(lambda m: m.origin).mapped('origin')))
         return {
             'product_uom_qty': sum(self.mapped('product_uom_qty')),
-            'date': min(self.mapped('date')) if self.mapped('picking_id').move_type == 'direct' else max(self.mapped('date')),
+            'date': min(self.mapped('date')) if all(p.move_type == 'direct' for p in self.picking_id) else max(self.mapped('date')),
             'move_dest_ids': [(4, m.id) for m in self.mapped('move_dest_ids')],
             'move_orig_ids': [(4, m.id) for m in self.mapped('move_orig_ids')],
             'state': state,
@@ -889,7 +951,7 @@ class StockMove(models.Model):
                 moves_by_neg_key[neg_key(moves[0])] |= moves[0]
 
         for neg_move in neg_qty_moves:
-            # Check all the candidates that matches the same limited key, and adjust their quantites to absorb negative moves
+            # Check all the candidates that matches the same limited key, and adjust their quantities to absorb negative moves
             for pos_move in moves_by_neg_key.get(neg_key(neg_move), []):
                 # If quantity can be fully absorbed by a single move, update its quantity and remove the negative move
                 if float_compare(pos_move.product_uom_qty, abs(neg_move.product_uom_qty), precision_rounding=pos_move.product_uom.rounding) >= 0:
@@ -1037,7 +1099,7 @@ class StockMove(models.Model):
         if self.product_uom.factor > self.product_id.uom_id.factor:
             return {
                 'warning': {
-                    'title': "Unsafe unit of measure",
+                    'title': _("Unsafe unit of measure"),
                     'message': _("You are using a unit of measure smaller than the one you are using in "
                                  "order to stock your product. This can lead to rounding problem on reserved quantity. "
                                  "You should use the smaller unit of measure possible in order to valuate your stock or "
@@ -1429,7 +1491,7 @@ class StockMove(models.Model):
             return self.product_qty
         return self.env['stock.quant']._get_available_quantity(self.product_id, location_id, lot_id=lot_id, package_id=package_id, owner_id=owner_id, strict=strict, allow_negative=allow_negative)
 
-    def _action_assign(self):
+    def _action_assign(self, force_qty=False):
         """ Reserve stock moves by creating their stock move lines. A stock move is
         considered reserved once the sum of `reserved_qty` for all its move lines is
         equal to its `product_qty`. If it is less, the stock move is considered
@@ -1485,9 +1547,16 @@ class StockMove(models.Model):
         # Once the quantities are assigned, we want to find a better destination location thanks
         # to the putaway rules. This redirection will be applied on moves of `moves_to_redirect`.
         moves_to_redirect = OrderedSet()
-        for move in self.filtered(lambda m: m.state in ['confirmed', 'waiting', 'partially_available']):
+        moves_to_assign = self
+        if not force_qty:
+            moves_to_assign = self.filtered(lambda m: m.state in ['confirmed', 'waiting', 'partially_available'])
+        for move in moves_to_assign:
             rounding = roundings[move]
-            missing_reserved_uom_quantity = move.product_uom_qty - reserved_availability[move]
+            if not force_qty:
+                missing_reserved_uom_quantity = move.product_uom_qty
+            else:
+                missing_reserved_uom_quantity = force_qty
+            missing_reserved_uom_quantity -= reserved_availability[move]
             missing_reserved_quantity = move.product_uom._compute_quantity(missing_reserved_uom_quantity, move.product_id.uom_id, rounding_method='HALF-UP')
             if move._should_bypass_reservation():
                 # create the move line(s) but do not impact quants
@@ -1799,7 +1868,7 @@ class StockMove(models.Model):
             rounding = move.product_uom.rounding
             if move.state in ('cancel', 'done', 'draft'):
                 continue
-            elif float_compare(move.reserved_availability, move.product_uom_qty, precision_rounding=rounding) == 0:
+            elif float_compare(move.reserved_availability, move.product_uom_qty, precision_rounding=rounding) >= 0:
                 moves_state_to_write['assigned'].add(move.id)
             elif move.reserved_availability and float_compare(move.reserved_availability, move.product_uom_qty, precision_rounding=rounding) <= 0:
                 moves_state_to_write['partially_available'].add(move.id)
@@ -2064,13 +2133,9 @@ class StockMove(models.Model):
 
         currents = product_ids.with_context(warehouse=warehouse.id)._get_only_qty_available()
 
-        outs_per_product = defaultdict(list)
-        reserved_outs_per_product = defaultdict(list)
+        outs_per_product = outs.grouped('product_id')
+        reserved_outs_per_product = reserved_outs.grouped('product_id')
         ins_per_product = defaultdict(list)
-        for out in outs:
-            outs_per_product[out.product_id.id].append(out)
-        for out in reserved_outs:
-            reserved_outs_per_product[out.product_id.id].append(out)
         for in_ in ins:
             ins_per_product[in_.product_id.id].append({
                 'qty': in_.product_qty,
@@ -2081,16 +2146,15 @@ class StockMove(models.Model):
         result = defaultdict(lambda: (0.0, False))
         for product in product_ids:
             product_rounding = product.uom_id.rounding
-            for out in reserved_outs_per_product[product.id]:
+            for out in reserved_outs_per_product.get(product, []):
                 # Reconcile with reserved stock.
-                current = currents[product.id]
                 reserved = out.product_uom._compute_quantity(out.reserved_availability, product.uom_id)
                 currents[product.id] -= reserved
                 if out.id in ids_in_self:
                     result[out] = (result[out][0] + reserved, False)
 
             unreconciled_outs = []
-            for out in outs_per_product[product.id]:
+            for out in outs_per_product.get(product, []):
                 # Reconcile with the current stock.
                 reserved = 0.0
                 if out.state in ('partially_available', 'assigned'):
@@ -2120,3 +2184,22 @@ class StockMove(models.Model):
                     result[out] = (-remaining, False)
 
         return result
+
+    def action_open_reference(self):
+        """ Open the form view of the move's reference document, if one exists, otherwise open form view of self
+        """
+        self.ensure_one()
+        source = self.picking_id
+        if source and source.check_access_rights('read', raise_exception=False):
+            return {
+                'res_model': source._name,
+                'type': 'ir.actions.act_window',
+                'views': [[False, "form"]],
+                'res_id': source.id,
+            }
+        return {
+            'res_model': self._name,
+            'type': 'ir.actions.act_window',
+            'views': [[False, "form"]],
+            'res_id': self.id,
+        }

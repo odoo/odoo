@@ -21,9 +21,9 @@
             <field name="arch" type="xml">
                 <form create="0" delete="0">
                     <sheet>
-                        <div class="oe_button_box">
+                        <div class="oe_button_box" name="button_box">
                         </div>
-                        <field name="image_url" widget="image_url" class="oe_avatar"/>
+                        <field name="image_url" widget="image_url" class="oe_avatar" options="{'size': [128,128]}"/>
                         <group name="main_group">
                             <group name="country_details">
                                 <field name="name"/>
@@ -36,13 +36,19 @@
                                 <field name="zip_required"/>
                                 <field name="state_required"/>
                             </group>
-                            <group name="advanced_address_formatting" string="Advanced Address Formatting" groups="base.group_no_one" col="4" colspan="4">
+                        </group>
+                        <group name="advanced_address_formatting" string="Advanced Address Formatting" groups="base.group_no_one">
+                            <label for="address_view_id"/>
+                            <div class="o_row">
                                 <field name="address_view_id"/>
-                                <div colspan="2" class="text-muted">Choose a subview of partners that includes only address fields, to change the way users can input addresses.</div>
+                                <div class="text-muted ms-2">Choose a subview of partners that includes only address fields, to change the way users can input addresses.</div>
+                            </div>
+                            <label for="address_format"/>
+                            <div class="o_row">
                                 <field name="address_format" placeholder="Address format..."/>
-                                <div colspan="2" name="div_address_format" class="text-muted">Change the way addresses are displayed in reports</div>
-                                <field name="name_position"/>
-                            </group>
+                                <div name="div_address_format ms-2" class="text-muted">Change the way addresses are displayed in reports</div>
+                            </div>
+                            <field name="name_position" class="oe_inline"/>
                         </group>
                         <label for="state_ids"/>
                         <field name="state_ids">
@@ -53,6 +59,17 @@
                         </field>
                     </sheet>
                 </form>
+            </field>
+        </record>
+
+        <record id="view_country_search" model="ir.ui.view">
+            <field name="name">res.country.search</field>
+            <field name="model">res.country</field>
+            <field name="arch" type="xml">
+                <search string="Countries">
+                    <field name="name" filter_domain="['|', ('name', 'ilike', self), ('code', 'ilike', self)]"/>
+                    <field name="phone_code"/>
+                </search>
             </field>
         </record>
 

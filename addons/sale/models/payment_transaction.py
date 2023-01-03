@@ -5,7 +5,7 @@ from datetime import datetime
 from dateutil import relativedelta
 
 from odoo import _, api, Command, fields, models, SUPERUSER_ID
-from odoo.tools import format_amount
+from odoo.tools import format_amount, str2bool
 
 _logger = logging.getLogger(__name__)
 
@@ -19,10 +19,10 @@ class PaymentTransaction(models.Model):
 
     def _compute_sale_order_reference(self, order):
         self.ensure_one()
-        if self.acquirer_id.so_reference_type == 'so_name':
+        if self.provider_id.so_reference_type == 'so_name':
             return order.name
         else:
-            # self.acquirer_id.so_reference_type == 'partner'
+            # self.provider_id.so_reference_type == 'partner'
             identification_number = order.partner_id.id
             return '%s/%s' % ('CUST', str(identification_number % 97).rjust(2, '0'))
 
@@ -32,18 +32,27 @@ class PaymentTransaction(models.Model):
             trans.sale_order_ids_nbr = len(trans.sale_order_ids)
 
     def _set_pending(self, state_message=None):
-        """ Override of payment to send the quotations automatically. """
-        super(PaymentTransaction, self)._set_pending(state_message=state_message)
+        """ Override of `payment` to send the quotations automatically.
 
-        for record in self:
-            sales_orders = record.sale_order_ids.filtered(lambda so: so.state in ['draft', 'sent'])
-            sales_orders.filtered(lambda so: so.state == 'draft').with_context(tracking_disable=True).write({'state': 'sent'})
+        :param str state_message: The reason for which the transaction is set in 'pending' state.
+        :return: updated transactions.
+        :rtype: `payment.transaction` recordset.
+        """
+        txs_to_process = super()._set_pending(state_message=state_message)
 
-            if record.acquirer_id.provider == 'transfer':
-                for so in record.sale_order_ids:
-                    so.reference = record._compute_sale_order_reference(so)
-            # send order confirmation mail
+        for tx in txs_to_process:  # Consider only transactions that are indeed set pending.
+            sales_orders = tx.sale_order_ids.filtered(lambda so: so.state in ['draft', 'sent'])
+            sales_orders.filtered(
+                lambda so: so.state == 'draft'
+            ).with_context(tracking_disable=True).action_quotation_sent()
+
+            if tx.provider_id.code == 'custom':
+                for so in tx.sale_order_ids:
+                    so.reference = tx._compute_sale_order_reference(so)
+            # send order confirmation mail.
             sales_orders._send_order_confirmation_mail()
+
+        return txs_to_process
 
     def _check_amount_and_confirm_order(self):
         """ Confirm the sales order based on the amount of a transaction.
@@ -72,7 +81,7 @@ class PaymentTransaction(models.Model):
                         _logger.warning(
                             '<%(provider)s> transaction AMOUNT MISMATCH for order %(so_name)s '
                             '(ID %(so_id)s): expected %(so_amount)s, got %(tx_amount)s', {
-                                'provider': tx.provider,
+                                'provider': tx.provider_code,
                                 'so_name': quotation.name,
                                 'so_id': quotation.id,
                                 'so_amount': format_amount(
@@ -98,6 +107,7 @@ class PaymentTransaction(models.Model):
         :return: None
         """
         super()._log_message_on_linked_documents(message)
+        self = self.with_user(SUPERUSER_ID)  # Log messages as 'OdooBot'
         for order in self.sale_order_ids:
             order.message_post(body=message)
 
@@ -107,7 +117,7 @@ class PaymentTransaction(models.Model):
         confirmed_orders._send_order_confirmation_mail()
 
         # invoice the sale orders if needed and send it
-        if self.env['ir.config_parameter'].sudo().get_param('sale.automatic_invoice'):
+        if str2bool(self.env['ir.config_parameter'].sudo().get_param('sale.automatic_invoice')):
             # Invoice the sale orders in self instead of in confirmed_orders to create the invoice
             # even if only a partial payment was made.
             self._invoice_sale_orders()
@@ -132,7 +142,7 @@ class PaymentTransaction(models.Model):
             for invoice in invoice_to_send.with_user(SUPERUSER_ID):
                 invoice.message_post_with_template(
                     int(template_id),
-                    email_layout_xmlid='mail.mail_notification_paynow',
+                    email_layout_xmlid='mail.mail_notification_layout_with_responsible_signature',
                 )
 
     def _cron_send_invoice(self):
@@ -165,7 +175,7 @@ class PaymentTransaction(models.Model):
                 confirmed_orders._force_lines_to_invoice_policy_order()
                 invoices = confirmed_orders.with_context(
                     raise_if_nothing_to_invoice=False
-                )._create_invoices()
+                )._create_invoices(final=True)
                 # Setup access token in advance to avoid serialization failure between
                 # edi postprocessing of invoice and displaying the sale order on the portal
                 for invoice in invoices:
@@ -173,14 +183,14 @@ class PaymentTransaction(models.Model):
                 tx.invoice_ids = [Command.set(invoices.ids)]
 
     @api.model
-    def _compute_reference_prefix(self, provider, separator, **values):
+    def _compute_reference_prefix(self, provider_code, separator, **values):
         """ Override of payment to compute the reference prefix based on Sales-specific values.
 
         If the `values` parameter has an entry with 'sale_order_ids' as key and a list of (4, id, O)
         or (6, 0, ids) X2M command as value, the prefix is computed based on the sales order name(s)
         Otherwise, the computation is delegated to the super method.
 
-        :param str provider: The provider of the acquirer handling the transaction
+        :param str provider_code: The code of the provider handling the transaction
         :param str separator: The custom separator used to separate data references
         :param dict values: The transaction values used to compute the reference prefix. It should
                             have the structure {'sale_order_ids': [(X2M command), ...], ...}.
@@ -194,7 +204,7 @@ class PaymentTransaction(models.Model):
             orders = self.env['sale.order'].browse(order_ids).exists()
             if len(orders) == len(order_ids):  # All ids are valid
                 return separator.join(orders.mapped('name'))
-        return super()._compute_reference_prefix(provider, separator, **values)
+        return super()._compute_reference_prefix(provider_code, separator, **values)
 
     def action_view_sales_orders(self):
         action = {

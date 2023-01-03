@@ -16,4 +16,4 @@ def _install_hr_localization(cr, registry):
             ('state', 'not in', ['installed', 'to install', 'to upgrade']),
         ])
         if l10n_mx:
-            l10n_mx.button_immediate_install()
+            l10n_mx.button_install()

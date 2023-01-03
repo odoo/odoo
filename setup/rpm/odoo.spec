@@ -15,6 +15,7 @@ BuildArch: noarch
 Vendor: Odoo S.A. <info@odoo.com>
 Requires: sassc
 BuildRequires: python3-devel
+BuildRequires: pyproject-rpm-macros
 Url: https://www.odoo.com
 
 %description
@@ -23,6 +24,9 @@ and financial), stock management, sales and purchases management, tasks
 automation, marketing campaigns, help desk, POS, etc. Technical features include
 a distributed server, an object database, a dynamic GUI,
 customizable reports, and XML-RPC interfaces.
+
+%generate_buildrequires
+%pyproject_buildrequires
 
 %prep
 %autosetup
@@ -65,6 +69,7 @@ db_port = False
 db_user = $ODOO_USER
 db_password = False
 addons_path = %{python3_sitelib}/odoo/addons
+default_productivity_apps = True
 " > $ODOO_CONFIGURATION_FILE
     chown $ODOO_USER:$ODOO_GROUP $ODOO_CONFIGURATION_FILE
     chmod 0640 $ODOO_CONFIGURATION_FILE

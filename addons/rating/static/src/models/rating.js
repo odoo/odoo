@@ -1,9 +1,8 @@
 /** @odoo-module **/
 
-import { registerModel } from '@mail/model/model_core';
-import { attr } from '@mail/model/model_field';
+import { attr, Model } from '@mail/model';
 
-registerModel({
+Model({
     name: 'Rating',
     fields: {
         id: attr({

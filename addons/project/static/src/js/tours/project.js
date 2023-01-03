@@ -65,7 +65,7 @@ tour.register('project_tour', {
     position: 'bottom',
     width: 200,
 }, {
-    trigger: '.o_kanban_quick_create input.o_field_char[name=name]',
+    trigger: '.o_kanban_quick_create div.o_field_char[name=name] input',
     extra_trigger: '.o_kanban_project_tasks',
     content: Markup(_t('Choose a task <b>name</b> <i>(e.g. Website Design, Purchase Goods...)</i>')),
     position: 'right',
@@ -79,7 +79,7 @@ tour.register('project_tour', {
     extra_trigger: '.o_kanban_project_tasks',
     content: Markup(_t("<b>Drag &amp; drop</b> the card to change your task from stage.")),
     position: "bottom",
-    run: "drag_and_drop .o_kanban_group:eq(1) ",
+    run: "drag_and_drop_native .o_kanban_group:eq(1) ",
 }, {
     trigger: ".o_kanban_record:first",
     extra_trigger: '.o_kanban_project_tasks',
@@ -103,15 +103,33 @@ tour.register('project_tour', {
     content: Markup(_t("Create <b>activities</b> to set yourself to-dos or to schedule meetings.")),
 }, {
     trigger: ".modal-dialog .btn-primary",
-    content: "Schedule your activity once it is ready.",
+    content: _t("Schedule your activity once it is ready."),
     position: "bottom",
     run: "click",
 }, {
+    trigger: ".o_field_widget[name='user_ids'] input",
+    extra_trigger: '.o_form_project_tasks',
+    content: _t("Assign a responsible to your task"),
+    position: "right",
+    run: "text a"
+}, {
+    trigger: ".ui-autocomplete > li > a:not(:has(i.fa))",
+    auto: true,
+}, {
+    trigger: ".o_form_button_save",
+    extra_trigger: '.o_form_project_tasks.o_form_dirty',
+    content: Markup(_t("You have unsaved changes - no worries! Odoo will automatically save it as you navigate.<br/> You can discard these changes from here or manually save your task.<br/>Let's save it manually.")),
+    position: "bottom",
+}, {
     trigger: ".breadcrumb-item:not(.active):last",
-    extra_trigger: '.o_form_project_tasks.o_form_readonly',
+    extra_trigger: '.o_form_project_tasks',
     content: Markup(_t("Let's go back to the <b>kanban view</b> to have an overview of your next tasks.")),
     position: "right",
     run: 'click',
+}, {
+    trigger: '.o_kanban_renderer',
+    // last step to confirm we've come back before considering the tour successful
+    auto: true
 }]);
 
 });

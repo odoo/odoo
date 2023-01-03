@@ -1,22 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates xml:space="preserve">
 
-<t t-name="web.ProfilingQwebView">
+<t t-name="web.ProfilingQwebView" owl="1">
     <div class="oe_form_field o_ace_view_editor oe_ace_open o_profiling_qweb_view">
-        <div class="o_select_view_profiling">
-            <a role="button" class="dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false" href="#"></a>
+        <div class="o_select_view_profiling" t-ref="selector">
+            <a role="button" class="dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false" href="#"><MenuItem view="state.view" t-if="state.view"/></a>
             <div class="dropdown-menu" role="menu">
-                <t t-foreach="widget.views" t-as="view">
-                    <a role="menuitem" href="#" t-att-data-id="view.id">
-                        <div class="o_delay"><t t-if="view.delay" t-esc="view.delay"/> ms</div>
-                        <div class="o_query"><t t-if="view.delay" t-esc="view.query"/> query</div>
-                        <t t-esc="view.display_name"/>
-                        <div class="o_key text-muted">(<t t-esc="view.id"/>, <t t-esc="view.key"/>)</div>
+                <t t-foreach="viewObjects" t-as="view" t-key="view_index">
+                    <a role="menuitem" href="#" t-att-data-id="view.id" t-on-click.prevent="_onSelectView">
+                        <MenuItem view="view"/>
                     </a>
                 </t>
             </div>
         </div>
-        <div class="ace-view-editor"/>
+        <div class="ace-view-editor" t-ref="ace"/>
         <small class="text-muted">
             It is possible that the "t-call" time does not correspond to the overall time of the
             template. Because the global time (in the drop down) does not take into account the
@@ -26,22 +23,28 @@
         </small>
     </div>
 </t>
-<t t-name="web.ProfilingQwebView.hover">
+<t t-name="web.ProfilingQwebView.menuitem" owl="1">
+    <div class="o_delay"><t t-if="props.view.delay" t-esc="props.view.delay"/> ms</div>
+    <div class="o_query"><t t-if="props.view.delay" t-esc="props.view.query"/> query</div>
+    <t t-esc="props.view.display_name"/>
+    <div class="o_key text-muted">(<t t-esc="props.view.id"/>, <t t-esc="props.view.key"/>)</div>
+</t>
+<t t-name="web.ProfilingQwebView.hover" owl="1">
     <div class="o_info o_detail">
         <div class="o_delay"><t t-esc="delay"/> <span>ms</span></div>
         <div class="o_query"><t t-esc="query"/> <span>query</span></div>
     </div>
 </t>
-<t t-name="web.ProfilingQwebView.info">
+<t t-name="web.ProfilingQwebView.info" owl="1">
     <div class="o_info">
-        <div t-if="detail" class="o_more">
+        <div t-if="displayDetail" class="o_more">
             <span>*</span>
             <table class="o_detail">
                 <thead>
                     <tr><th></th><th>ms</th><th>query</th></tr>
                 </thead>
                 <tbody>
-                    <tr t-foreach="groups" t-as="directive">
+                    <tr t-foreach="groups" t-as="directive" t-key="directive_index">
                         <td><t t-esc="directive"/></td>
                         <td><t t-esc="groups[directive].delays.join(' ')"/></td>
                         <td><t t-esc="groups[directive].querys.join(' ')"/></td>

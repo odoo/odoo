@@ -2,29 +2,46 @@
 
 import { browser } from "@web/core/browser/browser";
 
-import { registerModel } from '@mail/model/model_core';
-import { clear } from '@mail/model/model_field_command';
-import { one } from '@mail/model/model_field';
+import { attr, clear, one, Model } from "@mail/model";
 
-registerModel({
-    name: 'CallSettingsMenu',
-    identifyingMode: 'xor',
+Model({
+    name: "CallSettingsMenu",
+    template: "mail.CallSettingsMenu",
+    identifyingMode: "xor",
     lifecycleHooks: {
-        _created() {
-            browser.addEventListener('keydown', this._onKeyDown);
-            browser.addEventListener('keyup', this._onKeyUp);
+        async _created() {
+            browser.addEventListener("keydown", this._onKeyDown);
+            browser.addEventListener("keyup", this._onKeyUp);
+            this.update({
+                userDevices: await this.messaging.browser.navigator.mediaDevices.enumerateDevices(),
+            });
         },
         _willDelete() {
-            browser.removeEventListener('keydown', this._onKeyDown);
-            browser.removeEventListener('keyup', this._onKeyUp);
+            browser.removeEventListener("keydown", this._onKeyDown);
+            browser.removeEventListener("keyup", this._onKeyUp);
         },
     },
     recordMethods: {
+        onChangeBackgroundBlurAmount(ev) {
+            this.userSetting.update({
+                backgroundBlurAmount: Number(ev.target.value),
+            });
+        },
+        onChangeBlur(ev) {
+            this.userSetting.update({
+                useBlur: !this.userSetting.useBlur,
+            });
+        },
         /**
          * @param {Event} ev
          */
         onChangeDelay(ev) {
             this.userSetting.setDelayValue(ev.target.value);
+        },
+        onChangeEdgeBlurAmount(ev) {
+            this.userSetting.update({
+                edgeBlurAmount: Number(ev.target.value),
+            });
         },
         onChangePushToTalk() {
             if (this.userSetting.usePushToTalk) {
@@ -57,31 +74,13 @@ registerModel({
             }
             const activeRtcSession = this.callView.activeRtcSession;
             if (showOnlyVideo && activeRtcSession && !activeRtcSession.videoStream) {
-                this.callView.update({ activeRtcSession: clear() });
+                this.callView.channel.update({ activeRtcSession: clear() });
             }
         },
         onClickRegisterKeyButton() {
             this.userSetting.update({
                 isRegisteringKey: !this.isRegisteringKey,
             });
-        },
-        _computeCallView() {
-            if (this.threadViewOwner) {
-                return this.threadViewOwner.callView;
-            }
-            if (this.chatWindowOwner && this.chatWindowOwner.threadView) {
-                return this.chatWindowOwner.threadView.callView;
-            }
-            return clear();
-        },
-        _computeThread() {
-            if (this.threadViewOwner) {
-                return this.threadViewOwner.thread;
-            }
-            if (this.chatWindowOwner) {
-                return this.chatWindowOwner.thread;
-            }
-            return clear();
         },
         _onKeyDown(ev) {
             if (!this.userSetting.isRegisteringKey) {
@@ -103,22 +102,31 @@ registerModel({
         },
     },
     fields: {
-        callView: one('CallView', {
-            compute: '_computeCallView',
+        callView: one("CallView", {
+            compute() {
+                if (this.threadViewOwner) {
+                    return this.threadViewOwner.callView;
+                }
+                if (this.chatWindowOwner && this.chatWindowOwner.threadView) {
+                    return this.chatWindowOwner.threadView.callView;
+                }
+                return clear();
+            },
         }),
-        chatWindowOwner: one('ChatWindow', {
-            identifying: true,
-            inverse: 'callSettingsMenu',
+        chatWindowOwner: one("ChatWindow", { identifying: true, inverse: "callSettingsMenu" }),
+        thread: one("Thread", {
+            compute() {
+                if (this.threadViewOwner) {
+                    return this.threadViewOwner.thread;
+                }
+                if (this.chatWindowOwner) {
+                    return this.chatWindowOwner.thread;
+                }
+                return clear();
+            },
         }),
-        thread: one('Thread', {
-            compute: '_computeThread',
-        }),
-        threadViewOwner: one('ThreadView', {
-            identifying: true,
-            inverse: 'callSettingsMenu',
-        }),
-        userSetting: one('UserSetting', {
-            related: 'messaging.userSetting',
-        }),
+        threadViewOwner: one("ThreadView", { identifying: true, inverse: "callSettingsMenu" }),
+        userDevices: attr({ default: [] }),
+        userSetting: one("UserSetting", { related: "messaging.userSetting" }),
     },
 });

@@ -22,7 +22,7 @@ const wTourUtils = require('website.tour_utils');
  * -> ensure it was deleted
  */
 
-wTourUtils.registerEditionTour('test_custom_snippet', {
+wTourUtils.registerWebsitePreviewTour('test_custom_snippet', {
     url: '/',
     edition: true,
     test: true,

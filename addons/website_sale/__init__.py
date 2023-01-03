@@ -3,7 +3,6 @@
 from odoo import api, SUPERUSER_ID, _
 from . import controllers
 from . import models
-from . import wizard
 from . import report
 
 def _post_init_hook(cr, registry):

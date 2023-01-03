@@ -1,19 +1,19 @@
 /** @odoo-module **/
 
-import { ModelManager } from '@mail/model/model_manager';
+import { ModelManager } from "@mail/model/model_manager";
 
 export const messagingService = {
     dependencies: [
-        'effect',
-        'bus_service',
-        'localization',
-        'messagingValues',
-        'orm',
-        'presence',
-        'router',
-        'rpc',
-        'ui',
-        'user',
+        "effect",
+        "bus_service",
+        "localization",
+        "messagingValues",
+        "orm",
+        "presence",
+        "router",
+        "rpc",
+        "ui",
+        "user",
     ],
 
     start(env, { messagingValues }) {

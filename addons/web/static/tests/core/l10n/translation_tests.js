@@ -11,7 +11,7 @@ import { registry } from "@web/core/registry";
 import { patch, unpatch } from "@web/core/utils/patch";
 import { session } from "@web/session";
 
-const { Component, xml } = owl;
+import { Component, xml } from "@odoo/owl";
 const { DateTime, Settings } = luxon;
 
 const terms = { Hello: "Bonjour" };

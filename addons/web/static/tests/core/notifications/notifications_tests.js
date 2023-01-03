@@ -6,7 +6,7 @@ import { registry } from "@web/core/registry";
 import { makeTestEnv } from "../../helpers/mock_env";
 import { click, getFixture, mount, nextTick, patchWithCleanup } from "../../helpers/utils";
 
-const { markup } = owl;
+import { markup } from "@odoo/owl";
 
 let target;
 const serviceRegistry = registry.category("services");
@@ -270,7 +270,7 @@ QUnit.skip("can close sticky notification with wait", async (assert) => {
     const notifService = env.services.notification;
     await mount(NotificationContainer, target, { env, props });
 
-    let id = notifService.create("I'm a sticky notification", { sticky: true });
+    const id = notifService.create("I'm a sticky notification", { sticky: true });
     await nextTick();
     assert.containsOnce(target, ".o_notification");
 

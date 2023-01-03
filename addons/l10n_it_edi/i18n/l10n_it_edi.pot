@@ -17,16 +17,9 @@ msgstr ""
 
 #. module: l10n_it_edi
 #: code:addons/l10n_it_edi/models/account_edi_format.py:0
+#: code:addons/l10n_it_edi/models/account_edi_format.py:0
 #, python-format
 msgid "%s has an amount of 0.0, you must indicate the kind of exoneration."
-msgstr ""
-
-#. module: l10n_it_edi
-#: code:addons/l10n_it_edi/models/account_invoice.py:0
-#, python-format
-msgid ""
-"%s isn't in a right state. It must be in a 'Not yet send' or 'Invalid' "
-"state."
 msgstr ""
 
 #. module: l10n_it_edi
@@ -90,10 +83,55 @@ msgid ""
 msgstr ""
 
 #. module: l10n_it_edi
+#: model_terms:ir.ui.view,arch_db:l10n_it_edi.res_config_settings_view_form
+msgid ""
+"<span class=\"o_form_label\">\n"
+"                                        Fattura Elettronica mode\n"
+"                                    </span>"
+msgstr ""
+
+#. module: l10n_it_edi
+#: model_terms:ir.ui.view,arch_db:l10n_it_edi.res_config_settings_view_form
+msgid "<span class=\"o_form_label\">Allow Odoo to process invoices</span>"
+msgstr ""
+
+#. module: l10n_it_edi
+#: model_terms:ir.ui.view,arch_db:l10n_it_edi.res_config_settings_view_form
+msgid "A Demo service is in use."
+msgstr ""
+
+#. module: l10n_it_edi
+#: code:addons/l10n_it_edi/models/account_invoice.py:0
+#, python-format
+msgid ""
+"A simplified invoice was created instead of an ordinary one. This is because"
+" the invoice                                     is a domestic invoice with "
+"a total amount of less than or equal to 400€ and the customer's address is "
+"incomplete."
+msgstr ""
+
+#. module: l10n_it_edi
 #: code:addons/l10n_it_edi/models/res_company.py:0
 #, python-format
 msgid ""
 "All fields about the Economic and Administrative Index must be completed."
+msgstr ""
+
+#. module: l10n_it_edi
+#: code:addons/l10n_it_edi/models/account_edi_format.py:0
+#, python-format
+msgid "All quantities should be positive."
+msgstr ""
+
+#. module: l10n_it_edi
+#: model_terms:ir.ui.view,arch_db:l10n_it_edi.res_config_settings_view_form
+msgid "An Official or Test service has been registered."
+msgstr ""
+
+#. module: l10n_it_edi
+#: code:addons/l10n_it_edi/models/account_edi_format.py:0
+#, python-format
+msgid "Attached file is empty"
 msgstr ""
 
 #. module: l10n_it_edi
@@ -107,6 +145,19 @@ msgstr ""
 #: code:addons/l10n_it_edi/models/account_edi_format.py:0
 #, python-format
 msgid "Bank account not found, useful informations from XML file:"
+msgstr ""
+
+#. module: l10n_it_edi
+#: model_terms:ir.ui.view,arch_db:l10n_it_edi.res_config_settings_view_form
+msgid "By checking this box, I accept that Odoo may process my invoices."
+msgstr ""
+
+#. module: l10n_it_edi
+#: code:addons/l10n_it_edi/models/account_edi_format.py:0
+#, python-format
+msgid ""
+"Cannot apply Reverse Charge to a bill which contains both services and "
+"goods."
 msgstr ""
 
 #. module: l10n_it_edi
@@ -127,11 +178,6 @@ msgid "Companies"
 msgstr ""
 
 #. module: l10n_it_edi
-#: model:ir.model.fields,field_description:l10n_it_edi.field_res_company__l10n_it_address_send_fatturapa
-msgid "Company PEC-mail"
-msgstr ""
-
-#. module: l10n_it_edi
 #: model_terms:ir.ui.view,arch_db:l10n_it_edi.res_company_form_l10n_it
 msgid "Company have a tax representative"
 msgstr ""
@@ -142,8 +188,8 @@ msgid "Company listed on the register of companies"
 msgstr ""
 
 #. module: l10n_it_edi
-#: model:ir.model.fields,help:l10n_it_edi.field_res_company__l10n_it_mail_pec_server_id
-msgid "Configure your PEC-mail server to send electronic invoices."
+#: model:ir.model,name:l10n_it_edi.model_res_config_settings
+msgid "Config Settings"
 msgstr ""
 
 #. module: l10n_it_edi
@@ -182,28 +228,18 @@ msgid "Dati Bollo"
 msgstr ""
 
 #. module: l10n_it_edi
-#: model:ir.model.fields.selection,name:l10n_it_edi.selection__account_move__l10n_it_send_state__failed_delivery
-msgid ""
-"Delivery impossible, ES certify that it has received the invoice and that "
-"the file                         could not be delivered to the addressee"
+#: model:ir.model.fields.selection,name:l10n_it_edi.selection__res_config_settings__l10n_it_edi_sdicoop_demo_mode__demo
+msgid "Demo"
 msgstr ""
 
 #. module: l10n_it_edi
 #: model:ir.model.fields,field_description:l10n_it_edi.field_account_edi_format__display_name
 #: model:ir.model.fields,field_description:l10n_it_edi.field_account_move__display_name
 #: model:ir.model.fields,field_description:l10n_it_edi.field_account_tax__display_name
-#: model:ir.model.fields,field_description:l10n_it_edi.field_fetchmail_server__display_name
-#: model:ir.model.fields,field_description:l10n_it_edi.field_ir_mail_server__display_name
 #: model:ir.model.fields,field_description:l10n_it_edi.field_l10n_it_ddt__display_name
 #: model:ir.model.fields,field_description:l10n_it_edi.field_res_company__display_name
 #: model:ir.model.fields,field_description:l10n_it_edi.field_res_partner__display_name
 msgid "Display Name"
-msgstr ""
-
-#. module: l10n_it_edi
-#: code:addons/l10n_it_edi/models/ir_mail_server.py:0
-#, python-format
-msgid "E-Invoice is delivery to the destinatory:<br/>%s"
 msgstr ""
 
 #. module: l10n_it_edi
@@ -223,16 +259,13 @@ msgid "EDI format"
 msgstr ""
 
 #. module: l10n_it_edi
-#: code:addons/l10n_it_edi/models/ir_mail_server.py:0
-#, python-format
-msgid ""
-"ES certify that it has received the invoice and that the file"
-"                         could not be delivered to the addressee. <br/>%s"
+#: model_terms:ir.ui.view,arch_db:l10n_it_edi.res_company_form_l10n_it
+msgid "Economic and Administrative Index"
 msgstr ""
 
 #. module: l10n_it_edi
-#: model_terms:ir.ui.view,arch_db:l10n_it_edi.res_company_form_l10n_it
-msgid "Economic and Administrative Index"
+#: model_terms:ir.ui.view,arch_db:l10n_it_edi.res_config_settings_view_form
+msgid "Electronic Document Invoicing"
 msgstr ""
 
 #. module: l10n_it_edi
@@ -249,36 +282,6 @@ msgid "Electronic invoice"
 msgstr ""
 
 #. module: l10n_it_edi
-#: model:ir.model.fields,help:l10n_it_edi.field_res_company__l10n_it_address_recipient_fatturapa
-msgid "Enter Government PEC-mail address. Ex: sdi01@pec.fatturapa.it"
-msgstr ""
-
-#. module: l10n_it_edi
-#: model:ir.model.fields,help:l10n_it_edi.field_res_company__l10n_it_address_send_fatturapa
-msgid "Enter your company PEC-mail address. Ex: yourcompany@pec.mail.it"
-msgstr ""
-
-#. module: l10n_it_edi
-#: code:addons/l10n_it_edi/models/account_invoice.py:0
-#, python-format
-msgid "Error when sending mail with E-Invoice: %s"
-msgstr ""
-
-#. module: l10n_it_edi
-#: code:addons/l10n_it_edi/models/account_invoice.py:0
-#, python-format
-msgid ""
-"Error when sending mail with E-Invoice: Your company must have a mail PEC "
-"server and must indicate the mail PEC that will send electronic invoice."
-msgstr ""
-
-#. module: l10n_it_edi
-#: code:addons/l10n_it_edi/models/ir_mail_server.py:0
-#, python-format
-msgid "Errors in the E-Invoice :<br/>%s"
-msgstr ""
-
-#. module: l10n_it_edi
 #: model:ir.model.fields,field_description:l10n_it_edi.field_account_tax__l10n_it_kind_exoneration
 msgid "Exoneration"
 msgstr ""
@@ -289,28 +292,29 @@ msgid "Exoneration type"
 msgstr ""
 
 #. module: l10n_it_edi
-#: code:addons/l10n_it_edi/models/ir_mail_server.py:0
-#, python-format
-msgid ""
-"Expiration of the maximum term for communication of acceptance/refusal:"
-"                 %s<br/>%s"
+#: model:ir.model.fields,field_description:l10n_it_edi.field_account_bank_statement_line__l10n_it_edi_attachment_id
+#: model:ir.model.fields,field_description:l10n_it_edi.field_account_move__l10n_it_edi_attachment_id
+#: model:ir.model.fields,field_description:l10n_it_edi.field_account_payment__l10n_it_edi_attachment_id
+msgid "FatturaPA Attachment"
 msgstr ""
 
 #. module: l10n_it_edi
-#: model:ir.model.fields,field_description:l10n_it_edi.field_account_bank_statement_line__l10n_it_send_state
-#: model:ir.model.fields,field_description:l10n_it_edi.field_account_move__l10n_it_send_state
-#: model:ir.model.fields,field_description:l10n_it_edi.field_account_payment__l10n_it_send_state
-msgid "FatturaPA Send State"
+#: model:ir.model.fields,field_description:l10n_it_edi.field_account_bank_statement_line__l10n_it_edi_transaction
+#: model:ir.model.fields,field_description:l10n_it_edi.field_account_move__l10n_it_edi_transaction
+#: model:ir.model.fields,field_description:l10n_it_edi.field_account_payment__l10n_it_edi_transaction
+msgid "FatturaPA Transaction"
+msgstr ""
+
+#. module: l10n_it_edi
+#: model:ir.actions.server,name:l10n_it_edi.ir_cron_receive_fattura_pa_invoice_ir_actions_server
+#: model:ir.cron,cron_name:l10n_it_edi.ir_cron_receive_fattura_pa_invoice
+#: model:ir.cron,name:l10n_it_edi.ir_cron_receive_fattura_pa_invoice
+msgid "FatturaPA: Receive invoices from the exchange system"
 msgstr ""
 
 #. module: l10n_it_edi
 #: model:ir.model.fields,help:l10n_it_edi.field_res_company__l10n_it_codice_fiscale
 msgid "Fiscal code of your company"
-msgstr ""
-
-#. module: l10n_it_edi
-#: model:ir.model.fields,field_description:l10n_it_edi.field_res_company__l10n_it_address_recipient_fatturapa
-msgid "Government PEC-mail"
 msgstr ""
 
 #. module: l10n_it_edi
@@ -336,12 +340,6 @@ msgid "INTERNAL"
 msgstr ""
 
 #. module: l10n_it_edi
-#: model:ir.model.fields,help:l10n_it_edi.field_fetchmail_server__l10n_it_is_pec
-msgid ""
-"If PEC Server, only mail from '...@pec.fatturapa.it' will be processed."
-msgstr ""
-
-#. module: l10n_it_edi
 #: code:addons/l10n_it_edi/models/account_invoice.py:0
 #, python-format
 msgid ""
@@ -350,8 +348,18 @@ msgid ""
 msgstr ""
 
 #. module: l10n_it_edi
-#: model:ir.model,name:l10n_it_edi.model_fetchmail_server
-msgid "Incoming Mail Server"
+#: model_terms:ir.ui.view,arch_db:l10n_it_edi.res_config_settings_view_form
+msgid ""
+"In demo mode Odoo will just simulate the sending of invoices to the government.<br/>\n"
+"                                        In test mode (experimental) Odoo will send the invoices to a non-production service.\n"
+"                                        Saving this change will direct all companies on this database to this use this configuration.\n"
+"                                        Once registered for testing or official, the mode cannot be changed."
+msgstr ""
+
+#. module: l10n_it_edi
+#: code:addons/l10n_it_edi/models/account_edi_format.py:0
+#, python-format
+msgid "In line %s, you must select one and only one tax by line."
 msgstr ""
 
 #. module: l10n_it_edi
@@ -360,12 +368,6 @@ msgstr ""
 msgid ""
 "Invalid Codice Fiscale '%s': should be like 'MRTMTT91D08F205J' for physical "
 "person and '12345678901' or 'IT12345678901' for businesses."
-msgstr ""
-
-#. module: l10n_it_edi
-#: code:addons/l10n_it_edi/models/account_invoice.py:0
-#, python-format
-msgid "Invalid configuration:"
 msgstr ""
 
 #. module: l10n_it_edi
@@ -382,6 +384,12 @@ msgid ""
 msgstr ""
 
 #. module: l10n_it_edi
+#: model:ir.model.fields,field_description:l10n_it_edi.field_res_config_settings__is_edi_proxy_active
+msgid "Is Edi Proxy Active"
+msgstr ""
+
+#. module: l10n_it_edi
+#: code:addons/l10n_it_edi/models/account_edi_format.py:0
 #: code:addons/l10n_it_edi/models/account_invoice.py:0
 #, python-format
 msgid "Italian invoice: %s"
@@ -390,6 +398,21 @@ msgstr ""
 #. module: l10n_it_edi
 #: model:ir.model,name:l10n_it_edi.model_account_move
 msgid "Journal Entry"
+msgstr ""
+
+#. module: l10n_it_edi
+#: model:ir.model.fields,field_description:l10n_it_edi.field_res_config_settings__l10n_it_edi_proxy_current_state
+msgid "L10N It Edi Proxy Current State"
+msgstr ""
+
+#. module: l10n_it_edi
+#: model:ir.model.fields,field_description:l10n_it_edi.field_res_config_settings__l10n_it_edi_sdicoop_demo_mode
+msgid "L10N It Edi Sdicoop Demo Mode"
+msgstr ""
+
+#. module: l10n_it_edi
+#: model:ir.model.fields,field_description:l10n_it_edi.field_res_config_settings__l10n_it_edi_sdicoop_register
+msgid "L10N It Edi Sdicoop Register"
 msgstr ""
 
 #. module: l10n_it_edi
@@ -413,8 +436,6 @@ msgstr ""
 #: model:ir.model.fields,field_description:l10n_it_edi.field_account_edi_format____last_update
 #: model:ir.model.fields,field_description:l10n_it_edi.field_account_move____last_update
 #: model:ir.model.fields,field_description:l10n_it_edi.field_account_tax____last_update
-#: model:ir.model.fields,field_description:l10n_it_edi.field_fetchmail_server____last_update
-#: model:ir.model.fields,field_description:l10n_it_edi.field_ir_mail_server____last_update
 #: model:ir.model.fields,field_description:l10n_it_edi.field_l10n_it_ddt____last_update
 #: model:ir.model.fields,field_description:l10n_it_edi.field_res_company____last_update
 #: model:ir.model.fields,field_description:l10n_it_edi.field_res_partner____last_update
@@ -432,11 +453,6 @@ msgid "Last Updated on"
 msgstr ""
 
 #. module: l10n_it_edi
-#: model:ir.model.fields,field_description:l10n_it_edi.field_fetchmail_server__l10n_it_last_uid
-msgid "Last message UID"
-msgstr ""
-
-#. module: l10n_it_edi
 #: model:ir.model.fields,field_description:l10n_it_edi.field_account_tax__l10n_it_law_reference
 msgid "Law Reference"
 msgstr ""
@@ -449,17 +465,6 @@ msgstr ""
 #. module: l10n_it_edi
 #: model_terms:ir.ui.view,arch_db:l10n_it_edi.account_invoice_it_FatturaPA_export
 msgid "MP05"
-msgstr ""
-
-#. module: l10n_it_edi
-#: model:ir.model,name:l10n_it_edi.model_ir_mail_server
-msgid "Mail Server"
-msgstr ""
-
-#. module: l10n_it_edi
-#: code:addons/l10n_it_edi/models/account_invoice.py:0
-#, python-format
-msgid "Mail sent on %s by %s"
 msgstr ""
 
 #. module: l10n_it_edi
@@ -482,18 +487,8 @@ msgid ""
 msgstr ""
 
 #. module: l10n_it_edi
-#: model:ir.model.fields.selection,name:l10n_it_edi.selection__account_move__l10n_it_send_state__new
-msgid "New"
-msgstr ""
-
-#. module: l10n_it_edi
 #: model:ir.model.fields.selection,name:l10n_it_edi.selection__res_company__l10n_it_eco_index_sole_shareholder__no
 msgid "Not a limited liability company"
-msgstr ""
-
-#. module: l10n_it_edi
-#: model:ir.model.fields.selection,name:l10n_it_edi.selection__account_move__l10n_it_send_state__to_send
-msgid "Not yet send"
 msgstr ""
 
 #. module: l10n_it_edi
@@ -507,20 +502,8 @@ msgid "Numero DDT"
 msgstr ""
 
 #. module: l10n_it_edi
-#: code:addons/l10n_it_edi/models/ir_mail_server.py:0
-#, python-format
-msgid "Original E-invoice XML file"
-msgstr ""
-
-#. module: l10n_it_edi
-#: model:ir.model.fields.selection,name:l10n_it_edi.selection__account_move__l10n_it_send_state__other
-msgid "Other"
-msgstr ""
-
-#. module: l10n_it_edi
-#: code:addons/l10n_it_edi/models/ir_mail_server.py:0
-#, python-format
-msgid "Outcome notice: %s<br/>%s"
+#: model:ir.model.fields.selection,name:l10n_it_edi.selection__res_config_settings__l10n_it_edi_sdicoop_demo_mode__prod
+msgid "Official"
 msgstr ""
 
 #. module: l10n_it_edi
@@ -536,6 +519,7 @@ msgstr ""
 
 #. module: l10n_it_edi
 #: model_terms:ir.ui.view,arch_db:l10n_it_edi.account_invoice_it_FatturaPA_export
+#: model_terms:ir.ui.view,arch_db:l10n_it_edi.account_invoice_it_simplified_FatturaPA_export
 msgid "PDF"
 msgstr ""
 
@@ -546,31 +530,16 @@ msgid "PEC e-mail"
 msgstr ""
 
 #. module: l10n_it_edi
-#: code:addons/l10n_it_edi/models/ir_mail_server.py:0
-#, python-format
-msgid "PEC mail server must be of type IMAP."
-msgstr ""
-
-#. module: l10n_it_edi
-#: model:ir.model.fields,field_description:l10n_it_edi.field_fetchmail_server__l10n_it_is_pec
-msgid "PEC server"
-msgstr ""
-
-#. module: l10n_it_edi
 #: model:ir.model.fields.selection,name:l10n_it_edi.selection__res_company__l10n_it_eco_index_sole_shareholder__sm
 msgid "Più soci"
 msgstr ""
 
 #. module: l10n_it_edi
-#: code:addons/l10n_it_edi/models/ir_mail_server.py:0
+#: code:addons/l10n_it_edi/models/account_edi_format.py:0
 #, python-format
-msgid "Please configure Government PEC-mail\tin company settings"
-msgstr ""
-
-#. module: l10n_it_edi
-#: code:addons/l10n_it_edi/models/ir_mail_server.py:0
-#, python-format
-msgid "Please configure Username for this Server PEC"
+msgid ""
+"Please fill your codice fiscale to be able to receive invoices from "
+"FatturaPA"
 msgstr ""
 
 #. module: l10n_it_edi
@@ -589,30 +558,9 @@ msgid "SI"
 msgstr ""
 
 #. module: l10n_it_edi
-#: code:addons/l10n_it_edi/models/account_invoice.py:0
+#: code:addons/l10n_it_edi/models/account_edi_format.py:0
 #, python-format
-msgid "Sending file: %s"
-msgstr ""
-
-#. module: l10n_it_edi
-#: code:addons/l10n_it_edi/models/account_invoice.py:0
-#, python-format
-msgid "Sending file: %s to ES: %s"
-msgstr ""
-
-#. module: l10n_it_edi
-#: model:ir.model.fields.selection,name:l10n_it_edi.selection__account_move__l10n_it_send_state__invalid
-msgid "Sent, but invalid"
-msgstr ""
-
-#. module: l10n_it_edi
-#: model:ir.model.fields.selection,name:l10n_it_edi.selection__account_move__l10n_it_send_state__sent
-msgid "Sent, waiting for response"
-msgstr ""
-
-#. module: l10n_it_edi
-#: model:ir.model.fields,field_description:l10n_it_edi.field_res_company__l10n_it_mail_pec_server_id
-msgid "Server PEC"
+msgid "Service momentarily unavailable"
 msgstr ""
 
 #. module: l10n_it_edi
@@ -685,24 +633,24 @@ msgid "Tax representative partner %s of %s must have a tax number."
 msgstr ""
 
 #. module: l10n_it_edi
-#: code:addons/l10n_it_edi/models/ir_mail_server.py:0
-#, python-format
-msgid ""
-"The E-invoice is not delivered to the addressee. The Exchange System is"
-"                unable to deliver the file to the Public Administration. The"
-" Exchange System will                contact the PA to report the problem "
-"and request that they provide a solution.                 During the "
-"following 15 days, the Exchange System will try to forward the FatturaPA"
-"                file to the Administration in question again. More "
-"information:<br/>%s"
+#: model:ir.model.fields.selection,name:l10n_it_edi.selection__res_config_settings__l10n_it_edi_sdicoop_demo_mode__test
+msgid "Test (experimental)"
 msgstr ""
 
 #. module: l10n_it_edi
 #: code:addons/l10n_it_edi/models/account_edi_format.py:0
 #, python-format
 msgid ""
-"The buyer, %s, or his company must have either a VAT number either a tax "
-"code (Codice Fiscale)."
+"The buyer, %s, or his company must have a VAT number and/or a tax code "
+"(Codice Fiscale)."
+msgstr ""
+
+#. module: l10n_it_edi
+#: code:addons/l10n_it_edi/models/res_config_settings.py:0
+#, python-format
+msgid ""
+"The company has already registered with the service as 'Test' or 'Official',"
+" it cannot change."
 msgstr ""
 
 #. module: l10n_it_edi
@@ -719,13 +667,69 @@ msgstr ""
 #: code:addons/l10n_it_edi/models/account_edi_format.py:0
 #, python-format
 msgid ""
-"The maximum length for VAT number is 30. %s have a VAT number too long: %s."
+"The filename is duplicated. Try again (or adjust the FatturaPA Filename "
+"sequence). Original message from the SDI: %s"
 msgstr ""
 
 #. module: l10n_it_edi
 #: code:addons/l10n_it_edi/models/account_edi_format.py:0
 #, python-format
-msgid "The seller must have a bank account."
+msgid ""
+"The invoice has been issued, but the delivery to the Addressee has failed. "
+"You will be required to send a courtesy copy of the invoice to your customer"
+" through another channel, outside of the Exchange System, and promptly "
+"notify him that the original is deposited in his personal area on the portal"
+" \"Invoices and Fees\" of the Revenue Agency."
+msgstr ""
+
+#. module: l10n_it_edi
+#: code:addons/l10n_it_edi/models/account_edi_format.py:0
+#, python-format
+msgid ""
+"The invoice has been issued, but the delivery to the Public Administration "
+"has failed. The Exchange System will contact them to report the problem and "
+"request that they provide a solution. During the following 10 days, the "
+"Exchange System will try to forward the FatturaPA file to the Public "
+"Administration in question again. Should this also fail, the System will "
+"notify Odoo of the failed delivery, and you will be required to send the "
+"invoice to the Administration through another channel, outside of the "
+"Exchange System."
+msgstr ""
+
+#. module: l10n_it_edi
+#: code:addons/l10n_it_edi/models/account_edi_format.py:0
+#, python-format
+msgid "The invoice has been refused by the Exchange System"
+msgstr ""
+
+#. module: l10n_it_edi
+#: code:addons/l10n_it_edi/models/account_edi_format.py:0
+#, python-format
+msgid ""
+"The invoice has been succesfully transmitted. The addressee has 15 days to "
+"accept or reject it."
+msgstr ""
+
+#. module: l10n_it_edi
+#: code:addons/l10n_it_edi/models/account_edi_format.py:0
+#, python-format
+msgid "The invoice was refused by the addressee."
+msgstr ""
+
+#. module: l10n_it_edi
+#: code:addons/l10n_it_edi/models/account_edi_format.py:0
+#: code:addons/l10n_it_edi/models/account_edi_format.py:0
+#, python-format
+msgid ""
+"The invoice was sent to FatturaPA, but we are still awaiting a response. "
+"Click the link above to check for an update."
+msgstr ""
+
+#. module: l10n_it_edi
+#: code:addons/l10n_it_edi/models/account_edi_format.py:0
+#, python-format
+msgid ""
+"The maximum length for VAT number is 30. %s have a VAT number too long: %s."
 msgstr ""
 
 #. module: l10n_it_edi
@@ -773,25 +777,11 @@ msgid ""
 msgstr ""
 
 #. module: l10n_it_edi
-#: model:ir.model.fields.selection,name:l10n_it_edi.selection__account_move__l10n_it_send_state__delivered
-msgid "This invoice is delivered"
-msgstr ""
-
-#. module: l10n_it_edi
-#: model:ir.model.fields.selection,name:l10n_it_edi.selection__account_move__l10n_it_send_state__delivered_accepted
-msgid "This invoice is delivered and accepted by destinatory"
-msgstr ""
-
-#. module: l10n_it_edi
-#: model:ir.model.fields.selection,name:l10n_it_edi.selection__account_move__l10n_it_send_state__delivered_expired
+#: code:addons/l10n_it_edi/models/account_edi_format.py:0
+#, python-format
 msgid ""
-"This invoice is delivered and expired (expiry of the maximum term for "
-"communication of acceptance/refusal)"
-msgstr ""
-
-#. module: l10n_it_edi
-#: model:ir.model.fields.selection,name:l10n_it_edi.selection__account_move__l10n_it_send_state__delivered_refused
-msgid "This invoice is delivered and refused by destinatory"
+"This invoice number had already been submitted to the SdI, so it is set as Sent. Please verify that the system is correctly configured, because the correct flow does not need to send the same invoice twice for any reason.\n"
+" Original message from the SDI: %s"
 msgstr ""
 
 #. module: l10n_it_edi
@@ -823,8 +813,22 @@ msgid "Transport informations from XML file:"
 msgstr ""
 
 #. module: l10n_it_edi
+#: code:addons/l10n_it_edi/models/account_edi_format.py:0
+#, python-format
+msgid "Unauthorized user"
+msgstr ""
+
+#. module: l10n_it_edi
 #: model:ir.model.fields,field_description:l10n_it_edi.field_account_tax__l10n_it_vat_due_date
 msgid "VAT due date"
+msgstr ""
+
+#. module: l10n_it_edi
+#: code:addons/l10n_it_edi/models/account_edi_format.py:0
+#, python-format
+msgid ""
+"Vendor bills sent as self-invoices to the SdI require a valid PA Index "
+"(Codice Destinatario) on the company's contact."
 msgstr ""
 
 #. module: l10n_it_edi
@@ -836,21 +840,22 @@ msgstr ""
 #. module: l10n_it_edi
 #: code:addons/l10n_it_edi/models/account_edi_format.py:0
 #, python-format
+msgid "You are not allowed to check the status of this invoice."
+msgstr ""
+
+#. module: l10n_it_edi
+#: code:addons/l10n_it_edi/models/account_edi_format.py:0
+#: code:addons/l10n_it_edi/models/account_edi_format.py:0
+#: code:addons/l10n_it_edi/models/account_edi_format.py:0
+#, python-format
 msgid ""
-"You can't regenerate an E-Invoice when the first one is sent and there are "
-"no errors"
+"You must accept the terms and conditions in the settings to use FatturaPA."
 msgstr ""
 
 #. module: l10n_it_edi
 #: code:addons/l10n_it_edi/models/res_company.py:0
 #, python-format
 msgid "You must select a tax representative."
-msgstr ""
-
-#. module: l10n_it_edi
-#: code:addons/l10n_it_edi/models/account_edi_format.py:0
-#, python-format
-msgid "You must select one and only one tax by line."
 msgstr ""
 
 #. module: l10n_it_edi

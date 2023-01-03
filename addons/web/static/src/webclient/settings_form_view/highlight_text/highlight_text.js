@@ -1,7 +1,7 @@
 /** @odoo-module **/
 import { escapeRegExp } from "@web/core/utils/strings";
 
-const { Component, useState, onWillRender } = owl;
+import { Component, useState, onWillRender } from "@odoo/owl";
 
 export class HighlightText extends Component {
     setup() {

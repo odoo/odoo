@@ -466,7 +466,6 @@ class TestPointOfSaleHttpCommon(AccountTestInvoicingHttpCommon):
             'use_pricelist': True,
             'pricelist_id': public_pricelist.id,
             'available_pricelist_ids': [(4, pricelist.id) for pricelist in all_pricelists],
-            'module_pos_loyalty': False,
         })
 
         # Change the default sale pricelist of customers,
@@ -578,3 +577,16 @@ class TestUi(TestPointOfSaleHttpCommon):
         self.assertAlmostEqual(lines[1].balance, 0)
         self.assertEqual(lines[2].account_id, tax_received_account)
         self.assertAlmostEqual(lines[2].balance, 1)
+
+    def test_change_without_cash_method(self):
+        #create bank payment method
+        bank_pm = self.env['pos.payment.method'].create({
+            'name': 'Bank',
+            'receivable_account_id': self.env.company.account_default_pos_receivable_account_id.id,
+            'is_cash_count': False,
+            'split_transactions': False,
+            'company_id': self.env.company.id,
+        })
+        self.main_pos_config.write({'payment_method_ids': [(6, 0, bank_pm.ids)]})
+        self.main_pos_config.open_ui()
+        self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, 'PaymentScreenTour2', login="accountman")

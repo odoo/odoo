@@ -16,32 +16,39 @@ tour.register('account_tour', {
         trigger: "a.o_onboarding_step_action[data-method=action_open_base_onboarding_company]",
         content: _t("Start by checking your company's data."),
         position: "bottom",
+        skip_trigger: 'a[data-method=action_open_base_onboarding_company].o_onboarding_step_action__done',
     }, {
         trigger: "button[name=action_save_onboarding_company_step]",
         extra_trigger: "a.o_onboarding_step_action[data-method=action_open_base_onboarding_company]",
         content: _t("Looks good. Let's continue."),
         position: "bottom",
+        skip_trigger: 'a[data-method=action_open_base_onboarding_company].o_onboarding_step_action__done',
     }, {
         trigger: "a.o_onboarding_step_action[data-method=action_open_base_document_layout]",
         content: _t("Customize your layout."),
         position: "bottom",
+        skip_trigger: 'a[data-method=action_open_base_document_layout].o_onboarding_step_action__done',
     }, {
         trigger: "button[name=document_layout_save]",
         extra_trigger: "a.o_onboarding_step_action[data-method=action_open_base_document_layout]",
         content: _t("Once everything is as you want it, validate."),
         position: "top",
+        skip_trigger: 'a[data-method=action_open_base_document_layout].o_onboarding_step_action__done',
     }, {
         trigger: "a.o_onboarding_step_action[data-method=action_open_account_onboarding_create_invoice]",
         content: _t("Now, we'll create your first invoice."),
         position: "bottom",
     }, {
-        trigger: "div[name=partner_id] input",
+        trigger: "div[name=partner_id] .o_input_dropdown",
         // FIXME WOWL: this selector needs to work in both legacy and non-legacy views
         // because account_invoice_extracts *adds* a js_class on the base view which forces
         // the use of a legacy view in enterprise only
         extra_trigger: "[name=move_type] [raw-value=out_invoice], [name=move_type][raw-value=out_invoice]",
         content: Markup(_t("Write a company name to <b>create one</b> or <b>see suggestions</b>.")),
         position: "right",
+    }, {
+        trigger: "div[name=partner_id] input",
+        auto: true,
     }, {
         trigger: ".o_m2o_dropdown_option a:contains('Create')",
         // FIXME WOWL: this selector needs to work in both legacy and non-legacy views
@@ -86,7 +93,7 @@ tour.register('account_tour', {
     ...tour.stepUtils.saveForm(),
     {
         trigger: "button[name=action_post]",
-        extra_trigger: "button.o_form_button_edit",
+        extra_trigger: "button.o_form_button_create",
         content: _t("Once your invoice is ready, press CONFIRM."),
     }, {
         trigger: "button[name=action_invoice_sent]",
@@ -96,7 +103,7 @@ tour.register('account_tour', {
         extra_trigger: "[name=move_type] [raw-value=out_invoice], [name=move_type][raw-value=out_invoice]",
         content: _t("Send the invoice and check what the customer will receive."),
     }, {
-        trigger: "input[name=email]",
+        trigger: ".o_field_widget[name=email] input, input[name=email]",
         // FIXME WOWL: this selector needs to work in both legacy and non-legacy views
         // because account_invoice_extracts *adds* a js_class on the base view which forces
         // the use of a legacy view in enterprise only

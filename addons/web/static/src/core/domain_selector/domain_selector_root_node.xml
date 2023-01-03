@@ -27,7 +27,7 @@
                 </t>
                 <t t-else="">
                     <span>Match records with </span>
-                    <DomainSelectorBranchOperator node="node" readonly="props.readonly" />
+                    <DomainSelectorBranchOperator node="node" readonly="props.readonly" showCaret="true" />
                     <span> of the following rules:</span>
                     <div class="o_domain_node_children_container">
                         <t t-foreach="node.operands" t-as="subNode" t-key="subNode.id">
@@ -44,7 +44,7 @@
             <t t-if="props.isDebugMode and !props.readonly">
                 <label class="o_domain_debug_container">
                     <span class="small"># Code editor</span>
-                    <textarea type="text" class="o_domain_debug_input" t-att-value="props.value" t-on-change="onChange" />
+                    <textarea type="text" class="o_domain_debug_input" t-att-value="props.debugValue or props.value" t-on-change="onChange" />
                 </label>
             </t>
         </div>

@@ -16,13 +16,12 @@ class Users(models.Model):
     """
     _name = 'res.users'
     _inherit = ['res.users']
-    _description = 'Users'
 
     notification_type = fields.Selection([
         ('email', 'Handle by Emails'),
         ('inbox', 'Handle in Odoo')],
         'Notification', required=True, default='email',
-        compute='_compute_notification_type', store=True, readonly=False,
+        compute='_compute_notification_type', inverse='_inverse_notification_type', store=True,
         help="Policy on how to handle Chatter notifications:\n"
              "- Handle by Emails: notifications are sent to your email address\n"
              "- Handle in Odoo: notifications appear in your Odoo Inbox")
@@ -36,12 +35,33 @@ class Users(models.Model):
         "Only internal user can receive notifications in Odoo",
     )]
 
-    @api.depends('share')
+    @api.depends('share', 'groups_id')
     def _compute_notification_type(self):
+        # Because of the `groups_id` in the `api.depends`,
+        # this code will be called for any change of group on a user,
+        # even unrelated to the group_mail_notification_type_inbox or share flag.
+        # e.g. if you add HR > Manager to a user, this method will be called.
+        # It should therefore be written to be as performant as possible, and make the less change/write as possible
+        # when it's not `mail.group_mail_notification_type_inbox` or `share` that are being changed.
+        inbox_group_id = self.env['ir.model.data']._xmlid_to_res_id('mail.group_mail_notification_type_inbox')
+
+        self.filtered_domain([
+            ('groups_id', 'in', inbox_group_id), ('notification_type', '!=', 'inbox')
+        ]).notification_type = 'inbox'
+        self.filtered_domain([
+            ('groups_id', 'not in', inbox_group_id), ('notification_type', '=', 'inbox')
+        ]).notification_type = 'email'
+
+        # Special case: internal users with inbox notifications converted to portal must be converted to email users
+        self.filtered_domain([('share', '=', True), ('notification_type', '=', 'inbox')]).notification_type = 'email'
+
+    def _inverse_notification_type(self):
+        inbox_group = self.env.ref('mail.group_mail_notification_type_inbox')
         for user in self:
-            # Only the internal users can receive notifications in Odoo
-            if user.share or not user.notification_type:
-                user.notification_type = 'email'
+            if user.notification_type == 'inbox':
+                user.groups_id += inbox_group
+            else:
+                user.groups_id -= inbox_group
 
     @api.depends('res_users_settings_ids')
     def _compute_res_users_settings_id(self):
@@ -129,8 +149,8 @@ class Users(models.Model):
         return super().unlink()
 
     def _unsubscribe_from_non_public_channels(self):
-        """ This method un-subscribes users from private mail channels. Main purpose of this
-            method is to prevent sending internal communication to archived / deleted users.
+        """ This method un-subscribes users from group restricted channels. Main purpose
+            of this method is to prevent sending internal communication to archived / deleted users.
             We do not un-subscribes users from public channels because in most common cases,
             public channels are mailing list (e-mail based) and so users should always receive
             updates from public channels until they manually un-subscribe themselves.
@@ -139,7 +159,7 @@ class Users(models.Model):
             ('partner_id', 'in', self.partner_id.ids),
         ])
         current_cm.filtered(
-            lambda cm: cm.channel_id.public != 'public' and cm.channel_id.channel_type == 'channel'
+            lambda cm: (cm.channel_id.channel_type == 'channel' and cm.channel_id.group_public_id)
         ).unlink()
 
     def _get_portal_access_update_body(self, access_granted):
@@ -169,11 +189,11 @@ class Users(models.Model):
         super(Users, self)._deactivate_portal_user(**post)
 
         for user in users_to_blacklist:
-            blacklist = self.env['mail.blacklist']._add(user.email)
-            blacklist._message_log(
-                body=_('Blocked by deletion of portal account %(portal_user_name)s by %(user_name)s (#%(user_id)s)',
-                       user_name=current_user.name, user_id=current_user.id,
-                       portal_user_name=user.name),
+            self.env['mail.blacklist']._add(
+                user.email,
+                message=_('Blocked by deletion of portal account %(portal_user_name)s by %(user_name)s (#%(user_id)s)',
+                          user_name=current_user.name, user_id=current_user.id,
+                          portal_user_name=user.name)
             )
 
     # ------------------------------------------------------------
@@ -190,10 +210,11 @@ class Users(models.Model):
             'current_partner': self.partner_id.mail_partner_format().get(self.partner_id),
             'current_user_id': self.id,
             'current_user_settings': self.env['res.users.settings']._find_or_create_for_user(self)._res_users_settings_format(),
+            'hasLinkPreviewFeature': self.env['mail.link.preview']._is_link_preview_enabled(),
+            'internalUserGroupId': self.env.ref('base.group_user').id,
             'menu_id': self.env['ir.model.data']._xmlid_to_res_id('mail.menu_root_discuss'),
             'needaction_inbox_counter': self.partner_id._get_needaction_count(),
             'partner_root': partner_root.sudo().mail_partner_format().get(partner_root),
-            'publicPartners': [('insert', [{'id': p.id} for p in self.env.ref('base.group_public').sudo().with_context(active_test=False).users.partner_id])],
             'shortcodes': self.env['mail.shortcode'].sudo().search_read([], ['source', 'substitution']),
             'starred_counter': self.env['mail.message'].search_count([('starred_partner_ids', 'in', self.partner_id.ids)]),
         }

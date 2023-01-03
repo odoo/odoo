@@ -57,7 +57,7 @@ QUnit.module("website_livechat", {}, function () {
                 "chat window of livechat should be focused on open"
             );
             assert.strictEqual(
-                document.querySelector(".o_ChatWindowHeader_name").textContent,
+                document.querySelector(".o_ChatWindowHeaderView_name").textContent,
                 "Visitor #11",
                 "chat window of livechat should have name of visitor in the name"
             );

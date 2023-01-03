@@ -32,16 +32,14 @@ This module adds several features to the Point of Sale that are specific to rest
         'point_of_sale.assets': [
             'pos_restaurant/static/lib/**/*.js',
             'pos_restaurant/static/src/js/**/*.js',
-            ('after', 'point_of_sale/static/src/css/pos.css', 'pos_restaurant/static/src/css/restaurant.css'),
+            ('after', 'point_of_sale/static/src/scss/pos.scss', 'pos_restaurant/static/src/scss/restaurant.scss'),
+            'pos_restaurant/static/src/xml/**/*',
         ],
         'web.assets_backend': [
             'point_of_sale/static/src/scss/pos_dashboard.scss',
         ],
         'web.assets_tests': [
             'pos_restaurant/static/tests/tours/**/*',
-        ],
-        'web.assets_qweb': [
-            'pos_restaurant/static/src/xml/**/*',
         ],
     },
     'license': 'LGPL-3',

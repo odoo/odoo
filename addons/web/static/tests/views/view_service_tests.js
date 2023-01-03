@@ -53,7 +53,7 @@ QUnit.module("View service", (hooks) => {
             {
                 resModel: "take.five",
                 views: [[99, "list"]],
-                context: {default_field_value: 1},
+                context: { default_field_value: 1 },
             },
             {}
         );
@@ -61,7 +61,7 @@ QUnit.module("View service", (hooks) => {
             {
                 resModel: "take.five",
                 views: [[99, "list"]],
-                context: {default_field_value: 2},
+                context: { default_field_value: 2 },
             },
             {}
         );
@@ -128,7 +128,7 @@ QUnit.module("View service", (hooks) => {
             {
                 resModel: "take.five",
                 views: [[99, "list"]],
-                context: {default_field_value: 1},
+                context: { default_field_value: 1 },
             },
             {}
         );

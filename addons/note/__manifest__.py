@@ -29,14 +29,11 @@
             'note/static/src/models/*.js',
         ],
         'web.assets_backend': [
-            'note/static/src/components/*/*.js',
+            'note/static/src/components/**/*',
             'note/static/src/scss/note.scss',
         ],
         'web.qunit_suite_tests': [
             'note/static/tests/**/*',
-        ],
-        'web.assets_qweb': [
-            'note/static/src/components/*/*.xml',
         ],
     },
     'license': 'LGPL-3',

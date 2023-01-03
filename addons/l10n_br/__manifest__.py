@@ -54,7 +54,6 @@ come with any additional paid permission for online use of 'private modules'.
         'data/account_tax_template_data.xml',
         'data/fiscal_templates_data.xml',
         'data/account_fiscal_position_tax_template_data.xml',
-        'data/menuitem_data.xml',
         'views/account_view.xml',
         'views/account_fiscal_position_views.xml',
         'views/res_company_views.xml',

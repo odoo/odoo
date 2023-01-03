@@ -37,7 +37,7 @@ class HrEmployeePrivate(models.Model):
     active = fields.Boolean('Active', related='resource_id.active', default=True, store=True, readonly=False)
     company_id = fields.Many2one('res.company', required=True)
     company_country_id = fields.Many2one('res.country', 'Company Country', related='company_id.country_id', readonly=True)
-    company_country_code = fields.Char(related='company_country_id.code', readonly=True)
+    company_country_code = fields.Char(related='company_country_id.code', depends=['company_country_id'], readonly=True)
     # private partner
     address_home_id = fields.Many2one(
         'res.partner', 'Address', help='Enter here the private address of the employee, not the one linked to your company.',
@@ -120,6 +120,7 @@ class HrEmployeePrivate(models.Model):
     message_main_attachment_id = fields.Many2one(groups="hr.group_hr_user")
     id_card = fields.Binary(string="ID Card Copy", groups="hr.group_hr_user")
     driving_license = fields.Binary(string="Driving License", groups="hr.group_hr_user")
+    private_car_plate = fields.Char(groups="hr.group_hr_user", help="If you have more than one car, just separate the plates by a space.")
 
     _sql_constraints = [
         ('barcode_uniq', 'unique (barcode)', "The Badge ID must be unique, this one is already assigned to another employee."),
@@ -167,13 +168,13 @@ class HrEmployeePrivate(models.Model):
             'view_mode': 'form',
             'view_id': self.env.ref('hr.view_users_simple_form').id,
             'target': 'new',
-            'context': {
+            'context': dict(self._context, **{
                 'default_create_employee_id': self.id,
                 'default_name': self.name,
                 'default_phone': self.work_phone,
                 'default_mobile': self.mobile_phone,
                 'default_login': self.work_email,
-            }
+            })
         }
 
     def name_get(self):
@@ -193,7 +194,9 @@ class HrEmployeePrivate(models.Model):
         public.read(fields)
         for fname in fields:
             values = self.env.cache.get_values(public, public._fields[fname])
-            self.env.cache.update(self, self._fields[fname], values)
+            if self._fields[fname].translate:
+                values = [(value.copy() if value else None) for value in values]
+            self.env.cache.update_raw(self, self._fields[fname], values)
 
     @api.model
     def _cron_check_work_permit_validity(self):
@@ -216,10 +219,10 @@ class HrEmployeePrivate(models.Model):
                     user_id=responsible_user_id)
         employees_scheduled.write({'work_permit_scheduled_activity': True})
 
-    def read(self, fields, load='_classic_read'):
+    def read(self, fields=None, load='_classic_read'):
         if self.check_access_rights('read', raise_exception=False):
             return super(HrEmployeePrivate, self).read(fields, load=load)
-        private_fields = set(fields).difference(self.env['hr.employee.public']._fields.keys())
+        private_fields = set(fields or self._fields).difference(self.env['hr.employee.public']._fields)
         if private_fields:
             raise AccessError(_('The fields "%s" you try to read is not available on the public employee profile.') % (','.join(private_fields)))
         return self.env['hr.employee.public'].browse(self.ids).read(fields, load=load)
@@ -296,7 +299,7 @@ class HrEmployeePrivate(models.Model):
 
     def _sync_user(self, user, employee_has_image=False):
         vals = dict(
-            work_email=user.email,
+            work_contact_id=user.partner_id.id,
             user_id=user.id,
         )
         if not employee_has_image:
@@ -431,6 +434,12 @@ class HrEmployeePrivate(models.Model):
     def generate_random_barcode(self):
         for employee in self:
             employee.barcode = '041'+"".join(choice(digits) for i in range(9))
+
+    @api.depends('address_home_id', 'user_partner_id')
+    def _compute_related_contacts(self):
+        super()._compute_related_contacts()
+        for employee in self:
+            employee.related_contact_ids |= employee.address_home_id | employee.user_partner_id
 
     @api.depends('address_home_id.parent_id')
     def _compute_is_address_home_a_company(self):

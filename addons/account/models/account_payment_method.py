@@ -67,7 +67,7 @@ class AccountPaymentMethod(models.Model):
         """
         Contains details about how to initialize a payment method with the code x.
         The contained info are:
-            mode: Either unique if we only want one of them at a single time (payment acquirers for example)
+            mode: Either unique if we only want one of them at a single time (payment providers for example)
                    or multi if we want the method on each journal fitting the domain.
             domain: The domain defining the eligible journals.
             currency_id: The id of the currency necessary on the journal (or company) for it to be eligible.
@@ -78,6 +78,14 @@ class AccountPaymentMethod(models.Model):
         return {
             'manual': {'mode': 'multi', 'domain': [('type', 'in', ('bank', 'cash'))]},
         }
+
+    @api.model
+    def _get_sdd_payment_method_code(self):
+        """
+        TO OVERRIDE
+        This hook will be used to return the list of sdd payment method codes
+        """
+        return []
 
 
 class AccountPaymentMethodLine(models.Model):

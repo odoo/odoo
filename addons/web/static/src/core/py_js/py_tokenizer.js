@@ -60,7 +60,7 @@ const directMap = {
  * @returns {string}
  */
 function decodeStringLiteral(str, unicode) {
-    let out = [];
+    const out = [];
     let code;
     for (var i = 0; i < str.length; ++i) {
         if (str[i] !== "\\") {
@@ -239,7 +239,7 @@ const strip = new RegExp("^" + Whitespace);
  */
 export function tokenize(str) {
     const tokens = [];
-    let max = str.length;
+    const max = str.length;
     let start = 0;
     let end = 0;
     // /g flag makes repeated exec() have memory

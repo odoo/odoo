@@ -28,6 +28,10 @@ class AccountMove(models.Model):
     def is_purchase_document(self, include_receipts=False):
         return bool(self.expense_sheet_id and include_receipts) or super().is_purchase_document(include_receipts)
 
+    # Expenses can be written on journal other than purchase, hence don't include them in the constraint check
+    def _check_journal_move_type(self):
+        return super(AccountMove, self.filtered(lambda x: not x.expense_sheet_id))._check_journal_move_type()
+
     def _creation_message(self):
         if self.line_ids.expense_id:
             return _("Expense entry Created")

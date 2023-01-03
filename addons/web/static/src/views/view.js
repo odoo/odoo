@@ -5,14 +5,20 @@ import { registry } from "@web/core/registry";
 import { KeepLast } from "@web/core/utils/concurrency";
 import { useService } from "@web/core/utils/hooks";
 import { deepCopy, pick } from "@web/core/utils/objects";
-import { ControlPanel } from "@web/search/control_panel/control_panel";
 import { extractLayoutComponents } from "@web/search/layout";
-import { SearchPanel } from "@web/search/search_panel/search_panel";
 import { WithSearch } from "@web/search/with_search/with_search";
 import { OnboardingBanner } from "@web/views/onboarding_banner";
 import { useActionLinks } from "@web/views/view_hook";
 
-const { Component, markRaw, onWillUpdateProps, onWillStart, toRaw, useSubEnv } = owl;
+import {
+    Component,
+    markRaw,
+    onWillUpdateProps,
+    onWillStart,
+    toRaw,
+    useSubEnv,
+    reactive,
+} from "@odoo/owl";
 const viewRegistry = registry.category("views");
 
 /** @typedef {Object} Config
@@ -25,8 +31,6 @@ const viewRegistry = registry.category("views");
  *  @property {() => Object} getPagerProps
  *  @property {Object[]} viewSwitcherEntry
  *  @property {Object[]} viewSwitcherEntry
- *  @property {Component} ControlPanel
- *  @property {Component} SearchPanel
  *  @property {Component} Banner
  */
 
@@ -41,23 +45,25 @@ export function getDefaultConfig() {
         actionId: false,
         actionType: false,
         actionFlags: {},
-        breadcrumbs: [
+        breadcrumbs: reactive([
             {
                 get name() {
                     return displayName;
                 },
             },
-        ],
+        ]),
+        disableSearchBarAutofocus: false,
         getDisplayName: () => displayName,
         historyBack: () => {},
         pagerProps: {},
         setDisplayName: (newDisplayName) => {
             displayName = newDisplayName;
+            // This is a hack to force the reactivity when a new displayName is set
+            config.breadcrumbs.push(undefined);
+            config.breadcrumbs.pop();
         },
         viewSwitcherEntries: [],
         views: [],
-        ControlPanel: ControlPanel,
-        SearchPanel: SearchPanel,
         Banner: OnboardingBanner,
     };
     return config;
@@ -100,7 +106,6 @@ export function getDefaultConfig() {
  */
 
 export class ViewNotFoundError extends Error {}
-export class LegacyFormViewInDialogError extends Error {}
 
 const STANDARD_PROPS = [
     "resModel",
@@ -214,8 +219,8 @@ export class View extends Component {
             actionMenus,
         } = props;
 
-        let loadView = !arch || (!actionMenus && loadActionMenus);
-        let loadSearchView =
+        const loadView = !arch || (!actionMenus && loadActionMenus);
+        const loadSearchView =
             (searchViewId !== undefined && !searchViewArch) || (!irFilters && loadIrFilters);
 
         let viewDescription = { viewId, resModel, type };
@@ -271,11 +276,8 @@ export class View extends Component {
             }
         }
 
-        if (descr.type === "form" && descr.isLegacy && this.env.inDialog) {
-            throw new LegacyFormViewInDialogError();
-        }
-
         Object.assign(this.env.config, {
+            viewArch: rootNode,
             viewId: viewDescription.id,
             viewType: type,
             viewSubType: subType,
@@ -322,7 +324,7 @@ export class View extends Component {
             }
         }
 
-        let { noContentHelp } = props;
+        const { noContentHelp } = props;
         if (noContentHelp) {
             viewProps.info.noContentHelp = noContentHelp;
         }
@@ -400,5 +402,7 @@ View.defaultProps = {
     loadIrFilters: false,
     className: "",
 };
-
+View.props = {
+    "*": true,
+};
 View.searchMenuTypes = ["filter", "groupBy", "favorite"];

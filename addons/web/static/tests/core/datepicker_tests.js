@@ -14,7 +14,7 @@ import { makeTestEnv } from "../helpers/mock_env";
 import { makeFakeLocalizationService } from "../helpers/mock_services";
 import { click, getFixture, mount, triggerEvent } from "../helpers/utils";
 
-const { Component, useState, xml } = owl;
+import { Component, useState, xml } from "@odoo/owl";
 const { DateTime } = luxon;
 
 const serviceRegistry = registry.category("services");

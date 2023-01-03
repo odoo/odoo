@@ -3,13 +3,7 @@
 import tour from 'web_tour.tour';
 
 const projectSharingSteps = [...tour.stepUtils.goToAppSteps("project.menu_main_pm", 'Go to the Project App.'), {
-    // an invisible element cannot be used as a trigger so this small hack is mandatory for the next step
-    trigger: '.o_kanban_record:contains("Project Sharing")',
-    run: function () {
-        this.$anchor.find('.o_dropdown_kanban').css('visibility', 'visible');
-    },
-}, {
-    trigger: '.oe_kanban_global_click :contains("Project Sharing") .o_dropdown_kanban',
+    trigger: '.oe_kanban_global_click :contains("Project Sharing") button.o_dropdown_kanban',
     content: 'Open the project dropdown.'
 }, {
     trigger: '.o_kanban_record:contains("Project Sharing") .dropdown-menu a:contains("Share")',
@@ -18,13 +12,13 @@ const projectSharingSteps = [...tour.stepUtils.goToAppSteps("project.menu_main_p
     trigger: 'div.o_field_radio[name="access_mode"] div.o_radio_item > input[data-value="edit"]',
     content: 'Select "Edit" as Access mode in the "Share Project" wizard.',
 }, {
-    trigger: '.o_field_many2one[name="partner_ids"]',
+    trigger: '.o_field_many2many_tags_email[name=partner_ids]',
     content: 'Select the user portal as collaborator to the "Project Sharing" project.',
     run: function (actions) {
         actions.text('Georges', this.$anchor.find('input'));
     },
 }, {
-    trigger: '.ui-autocomplete a:contains("Georges")',
+    trigger: '.ui-autocomplete a.dropdown-item:contains("Georges")',
     in_modal: false,
 }, {
     trigger: 'footer > button[name="action_send_mail"]',
@@ -55,14 +49,14 @@ const projectSharingSteps = [...tour.stepUtils.goToAppSteps("project.menu_main_p
     trigger: '.o_kanban_quick_create .o_kanban_edit',
     content: 'Go to the form view of this new task',
 }, {
-    trigger: 'div.o_statusbar_status[name="stage_id"] button[aria-checked="false"]:contains(Done)',
+    trigger: 'div[name="stage_id"] div.o_statusbar_status button[aria-checked="false"]:contains(Done)',
     content: 'Change the stage of the task.',
 }, {
-    trigger: '.o_portal_chatter_composer_input .o_portal_chatter_composer_body textarea[name="message"]',
+    trigger: '.o_portal_chatter_composer_input .o_portal_chatter_composer_body textarea',
     content: 'Write a message in the chatter of the task',
     run: 'text I create a new task for testing purpose.',
 }, {
-    trigger: '.o_portal_chatter_composer_input .o_portal_chatter_composer_body button[data-action="/mail/chatter_post"]',
+    trigger: '.o_portal_chatter_composer_input .o_portal_chatter_composer_body button[name="send_message"]',
     content: 'Send the message',
 }, {
     trigger: 'ol.breadcrumb > li.o_back_button > a:contains(Project Sharing)',

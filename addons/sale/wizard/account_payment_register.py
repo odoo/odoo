@@ -6,8 +6,8 @@ from odoo import models
 class AccountPaymentRegister(models.TransientModel):
     _inherit = 'account.payment.register'
 
-    def _create_payment_vals_from_wizard(self):
-        vals = super()._create_payment_vals_from_wizard()
+    def _create_payment_vals_from_wizard(self, batch_result):
+        vals = super()._create_payment_vals_from_wizard(batch_result)
         # Make sure the account move linked to generated payment
         # belongs to the expected sales team
         # team_id field on account.payment comes from the `_inherits` on account.move model

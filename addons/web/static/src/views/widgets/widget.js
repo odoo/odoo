@@ -4,7 +4,7 @@ import { evaluateExpr } from "@web/core/py_js/py";
 import { registry } from "@web/core/registry";
 import { decodeObjectForTemplate } from "@web/views/view_compiler";
 
-const { Component, xml } = owl;
+import { Component, xml } from "@odoo/owl";
 const viewWidgetRegistry = registry.category("view_widgets");
 
 function findWidgetComponent(name) {
@@ -32,7 +32,7 @@ export class Widget extends Component {
         };
     }
     get widgetProps() {
-        const { record, node: rawNode, readonly } = this.props;
+        const { node: rawNode } = this.props;
         const node = rawNode ? decodeObjectForTemplate(rawNode) : {};
         let propsFromAttrs = {};
         if (node.attrs) {
@@ -44,8 +44,12 @@ export class Widget extends Component {
                 },
             });
         }
-        // TODO WOWL remove "node" once there are no more legacy widgets.
-        return { readonly, node, ...propsFromAttrs, record };
+        const props = { ...this.props };
+        delete props.class;
+        delete props.name;
+        delete props.node;
+
+        return { ...propsFromAttrs, ...props };
     }
 }
 Widget.template = xml/*xml*/ `
@@ -56,5 +60,18 @@ Widget.template = xml/*xml*/ `
 Widget.parseWidgetNode = function (node) {
     const name = node.getAttribute("name");
     const WidgetComponent = findWidgetComponent(name);
-    return { WidgetComponent };
+    const attrs = Object.fromEntries(
+        [...node.attributes].map(({ name, value }) => {
+            return [name, name === "modifiers" ? JSON.parse(value || "{}") : value];
+        })
+    );
+    return {
+        options: evaluateExpr(node.getAttribute("options") || "{}"),
+        name,
+        rawAttrs: attrs,
+        WidgetComponent,
+    };
+};
+Widget.props = {
+    "*": true,
 };

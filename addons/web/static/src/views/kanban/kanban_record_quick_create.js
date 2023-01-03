@@ -3,7 +3,7 @@ import { useService } from "@web/core/utils/hooks";
 import { useHotkey } from "@web/core/hotkeys/hotkey_hook";
 import { FormRenderer } from "@web/views/form/form_renderer";
 
-const { Component, onMounted, useExternalListener, useState, useRef } = owl;
+import { Component, onMounted, useExternalListener, useState, useRef } from "@odoo/owl";
 
 const ACTION_SELECTORS = [
     ".o_kanban_quick_add",
@@ -34,8 +34,12 @@ export class KanbanRecordQuickCreate extends Component {
                     return;
                 }
                 const target = this.mousedownTarget || ev.target;
-                const gotClickedOutside = !this.rootRef.el.contains(target);
-                if (gotClickedOutside) {
+                // accounts for clicking on legacy daterangepicker and legacy autocomplete
+                const gotClickedInside =
+                    target.closest(".daterangepicker") ||
+                    target.closest(".ui-autocomplete") ||
+                    this.rootRef.el.contains(target);
+                if (!gotClickedInside) {
                     let force = false;
                     for (const selector of ACTION_SELECTORS) {
                         const closestEl = target.closest(selector);
@@ -75,5 +79,12 @@ export class KanbanRecordQuickCreate extends Component {
         this.state.disabled = false;
     }
 }
+KanbanRecordQuickCreate.props = {
+    onCancel: Function,
+    onValidate: Function,
+    listIsGrouped: Boolean,
+    record: Object,
+    archInfo: Object,
+};
 KanbanRecordQuickCreate.template = "web.KanbanRecordQuickCreate";
 KanbanRecordQuickCreate.components = { FormRenderer };

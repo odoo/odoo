@@ -340,7 +340,7 @@
             </div>
         </a>
         <div class="card-body d-flex flex-column p-3">
-            <a class="card-title h5 mb-2 o_wslides_desc_truncate_2" t-attf-href="/slides/#{slug(channel)}" t-esc="channel.name"/>
+            <a class="card-title h5 mb-2 o_wslides_desc_truncate_2" t-attf-href="/slides/#{slug(channel)}" t-field="channel.name"/>
             <span t-if="not channel.is_published" class="badge text-bg-danger p-1">Unpublished</span>
             <div class="card-text d-flex flex-column flex-grow-1 mt-1">
                 <div class="fw-light o_wslides_desc_truncate_3" t-field="channel.description_short"/>
@@ -495,11 +495,9 @@
         <t t-foreach="challenges" t-as="challenge">
             <t t-set="challenge_done" t-value="challenge in challenges_done if challenges_done else False"/>
             <div t-attf-class="d-flex mb-3 align-items-center #{'o_wslides_entry_muted' if not challenge_done else ''}">
-                <img class="me-2"
-                    style="max-height: 36px;"
-                    t-att-src="website.image_url(challenge.reward_id, 'image_128') if challenge.reward_id.image_1920 else
-                               '/website_profile/static/src/img/badge_%s.svg' % (challenge.reward_id.level)"
-                    t-att-alt="challenge.reward_id.name"/>
+                <div t-if="challenge.reward_id.image_1920" t-field="challenge.reward_id.image_1920"
+                    t-options="{'widget': 'image', 'preview_image': 'image_128', 'class': 'me-2', 'style': 'max-height: 36px'}"/>
+                <img t-else="" t-attf-src="'/website_profile/static/src/img/badge_%s.svg' % (challenge.reward_id.level)" t-att-alt="challenge.reward_id.name" style="max-height: 36px" class="me-2"/>
                 <div class="flex-grow-1">
                     <b class="text_small_caps" t-esc="challenge.reward_id.name"/><br/>
                     <span class="text-muted" t-esc="challenge.reward_id.description"/>

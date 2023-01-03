@@ -40,7 +40,7 @@
 </t>
 
 <t t-name="website.NewContentSystray" owl="1">
-    <div class="o_menu_systray_item o_new_content_container" t-on-click="onClick">
+    <div class="o_menu_systray_item o_new_content_container d-none d-md-block" t-on-click="onClick">
         <a href="#" accesskey="c"><span class="fa fa-plus me-2"/>New</a>
         <NewContentModal t-if="websiteContext.showNewContentModal"/>
     </div>

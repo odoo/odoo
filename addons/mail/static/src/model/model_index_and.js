@@ -1,7 +1,6 @@
 /** @odoo-module **/
 
 export class ModelIndexAnd {
-
     constructor(model) {
         this.model = model;
         this.recordsByValuesTree = new Map();
@@ -20,7 +19,9 @@ export class ModelIndexAnd {
         for (const fieldName of this.model.__identifyingFieldNames) {
             const fieldValue = data[fieldName];
             if (fieldValue === undefined) {
-                throw new Error(`Identifying field "${fieldName}" is lacking a value on ${this.model} with 'and' identifying mode`);
+                throw new Error(
+                    `Identifying field "${fieldName}" is lacking a value on ${this.model} with 'and' identifying mode`
+                );
             }
             valuesOfRecord.push(fieldValue);
             if (!res.has(fieldValue)) {
@@ -39,7 +40,9 @@ export class ModelIndexAnd {
         for (const fieldName of this.model.__identifyingFieldNames) {
             const fieldValue = data[fieldName];
             if (fieldValue === undefined) {
-                throw new Error(`Identifying field "${fieldName}" is lacking a value on ${this.model} with 'and' identifying mode`);
+                throw new Error(
+                    `Identifying field "${fieldName}" is lacking a value on ${this.model} with 'and' identifying mode`
+                );
             }
             res = res.get(fieldValue);
             if (!res) {
@@ -66,5 +69,4 @@ export class ModelIndexAnd {
         }
         this.valuesByRecords.delete(record);
     }
-
 }

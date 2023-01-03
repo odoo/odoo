@@ -28,8 +28,8 @@ class BaseModel(models.AbstractModel):
         if self._name == 'website':
             # Note that website_1.company_id.website_id might not be website_1
             return self.domain or super().get_base_url()
-        if 'website_id' in self and self.website_id.domain:
-            return self.website_id.domain
+        if 'website_id' in self and self.sudo().website_id.domain:
+            return self.sudo().website_id.domain
         if 'company_id' in self and self.company_id.website_id.domain:
             return self.company_id.website_id.domain
         return super().get_base_url()

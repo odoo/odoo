@@ -36,7 +36,6 @@ registry
     .add('html', basic_fields.FieldText)
     .add('float', basic_fields.FieldFloat)
     .add('char', basic_fields.FieldChar)
-    .add('link_button', basic_fields.LinkButton)
     .add('handle', basic_fields.HandleWidget)
     .add('email', basic_fields.FieldEmail)
     .add('phone', basic_fields.FieldPhone)
@@ -56,10 +55,8 @@ registry
     .add('priority', basic_fields.PriorityWidget)
     .add('attachment_image', basic_fields.AttachmentImage)
     .add('label_selection', basic_fields.LabelSelection)
-    .add('kanban_label_selection', basic_fields.LabelSelection) // deprecated, use label_selection
     .add('state_selection', basic_fields.StateSelectionWidget)
     .add('list.state_selection', basic_fields.ListStateSelectionWidget)
-    .add('kanban_state_selection', basic_fields.StateSelectionWidget) // deprecated, use state_selection
     .add('boolean_favorite', basic_fields.FavoriteWidget)
     .add('boolean_toggle', basic_fields.BooleanToggle)
     .add('statinfo', basic_fields.StatInfo)
@@ -68,7 +65,6 @@ registry
     .add('float_factor', basic_fields.FieldFloatFactor)
     .add('float_toggle', basic_fields.FieldFloatToggle)
     .add('progressbar', basic_fields.FieldProgressBar)
-    .add('toggle_button', basic_fields.FieldToggleBoolean)
     .add('dashboard_graph', basic_fields.JournalDashboardGraph)
     .add('ace', basic_fields.AceEditor)
     .add('color', basic_fields.FieldColor)
@@ -102,6 +98,5 @@ registry
 // Special fields
 registry
     .add('timezone_mismatch', special_fields.FieldTimezoneMismatch)
-    .add('report_layout', special_fields.FieldReportLayout)
     .add('iframe_wrapper', special_fields.IframeWrapper)
 });

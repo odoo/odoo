@@ -35,7 +35,7 @@
                     <field name="kanban_state" widget="state_selection" class="ms-auto float-end"/>
                     <div class="oe_title">
                         <label for="name" string="Event Name"/>
-                        <h1><field class="text-break" name="name" placeholder="e.g. &quot;Conference for Architects&quot;"/></h1>
+                        <h1><field class="text-break" name="name" placeholder="e.g. Conference for Architects"/></h1>
                     </div>
                     <group>
                         <group>
@@ -47,20 +47,20 @@
                                 <field name="date_end" widget="daterange" nolabel="1" class="oe_inline" options="{'related_start_date': 'date_begin'}"/>
                             </div>
                             <field name="date_tz"/>
-                            <field name="event_type_id" string="Template" options="{'no_create':True}"/>
+                            <field name="event_type_id" string="Template"/>
                             <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color', 'no_quick_create': True}"/>
                         </group>
-                        <group>
+                        <group name="right_event_details">
                             <field name="organizer_id"/>
-                            <field name="user_id" domain="[('share', '=', False)]"/>
+                            <field name="user_id" widget="many2one_avatar_user" domain="[('share', '=', False)]"/>
                             <field name="company_id" groups="base.group_multi_company"/>
                             <field name="address_id"
                                 context="{'show_address': 1}"
                                 options='{"always_reload": True}'/>
-                            <div colspan="2" class="o_checkbox_optional_field">
-                                <label for="seats_limited" string="Limit Registrations"/>
+                            <label for="seats_limited" string="Limit Registrations"/>
+                            <div>
                                 <field name="seats_limited"/>
-                                <span attrs="{'invisible': [('seats_limited', '=', False)], 'required': [('seats_limited', '=', False)]}">to <field name="seats_max" class="oe_inline"/> Confirmed Attendees</span>
+                                <span attrs="{'invisible': [('seats_limited', '=', False)], 'required': [('seats_limited', '=', False)]}">to <field name="seats_max" class="oe_inline o_input_9ch"/> Confirmed Attendees</span>
                             </div>
                             <field name="auto_confirm"/>
                         </group>
@@ -128,13 +128,13 @@
                 <field name="company_id" groups="base.group_multi_company" readonly="1" optional="show"/>
                 <field name="date_begin" readonly="1" widget="date"/>
                 <field name="date_end" readonly="1" widget="date"/>
-                <field name="stage_id" readonly="1"/>
                 <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color'}" optional="hide"/>
                 <field name="seats_expected" string="Expected Attendees" sum="Total" readonly="1"/>
                 <field name="seats_used" sum="Total" readonly="1"/>
                 <field name="seats_max" string="Maximum Seats" sum="Total" readonly="1" optional="hide"/>
                 <field name="seats_reserved" sum="Total" readonly="1" optional="hide"/>
                 <field name="seats_unconfirmed" string="Unconfirmed Seats" sum="Total" readonly="1" optional="hide"/>
+                <field name="stage_id" readonly="1"/>
                 <field name="message_needaction" invisible="1" readonly="1"/>
                 <field name="activity_exception_decoration" widget="activity_exception" readonly="1"/>
             </tree>
@@ -148,7 +148,7 @@
         <field name="arch" type="xml">
             <form>
                 <group>
-                    <field name="name" placeholder="e.g. &quot;Conference for Architects&quot;"/>
+                    <field name="name" placeholder="e.g. Conference for Architects"/>
                     <label for="date_begin" string="Date"/>
                     <div class="o_row">
                         <field name="date_begin" widget="daterange" options="{'related_end_date': 'date_end'}"/>
@@ -186,14 +186,14 @@
                         <div t-attf-class="d-flex flex-column p-0 oe_kanban_card oe_kanban_global_click">
                             <div class="o_kanban_content p-0 m-0 position-relative row d-flex flex-fill">
                                 <div class="col-3 text-bg-primary p-2 text-center d-flex flex-column justify-content-center">
-                                    <div t-esc="record.date_begin.raw_value.getDate()" class="o_event_fontsize_20"/>
+                                    <div t-esc="luxon.DateTime.fromISO(record.date_begin.raw_value).toFormat('d')" class="o_event_fontsize_20"/>
                                     <div>
-                                        <t t-esc="luxon.DateTime.fromJSDate(record.date_begin.raw_value).toFormat('MMM yyyy')"/>
+                                        <t t-esc="luxon.DateTime.fromISO(record.date_begin.raw_value).toFormat('MMM yyyy')"/>
                                     </div>
-                                    <div><t t-esc="luxon.DateTime.fromJSDate(record.date_begin.raw_value).toFormat('t')"/></div>
-                                        <div t-if="luxon.DateTime.fromJSDate(record.date_begin.raw_value).toFormat('DDMMYYYY') !== luxon.DateTime.fromJSDate(record.date_end.raw_value).toFormat('DDMMYYYY')">
+                                    <div><t t-esc="luxon.DateTime.fromISO(record.date_begin.raw_value).toFormat('t')"/></div>
+                                        <div t-if="record.date_begin.raw_value !== record.date_end.raw_value">
                                             <i class="fa fa-arrow-right me-2 o_event_fontsize_09" title="End date"/>
-                                            <t t-esc="luxon.DateTime.fromJSDate(record.date_end.raw_value).toFormat('d MMM')"/>
+                                            <t t-esc="luxon.DateTime.fromISO(record.date_end.raw_value).toFormat('d MMM')"/>
                                         </div>
                                 </div>
                                 <div class="col-9 py-2 px-3 d-flex flex-column justify-content-between pt-3">
@@ -201,7 +201,10 @@
                                         <div class="o_kanban_record_title o_text_overflow" t-att-title="record.name.value">
                                             <field name="name"/>
                                         </div>
-                                        <div t-if="record.address_id.value"><i class="fa fa-map-marker" title="Location"/> <span class="o_text_overflow o_event_kanban_location" t-esc="record.address_id.value"/></div>
+                                        <div t-if="record.address_id.value" class="d-flex">
+                                            <i class="fa fa-map-marker mt-1 me-1" title="Location"/>
+                                            <span t-esc="record.address_id.value"/>
+                                        </div>
                                     </div>
                                     <h5 class="o_event_fontsize_11 p-0">
                                         <a name="%(event_registration_action_stats_from_event)d"

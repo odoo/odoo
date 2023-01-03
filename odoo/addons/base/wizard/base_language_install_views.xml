@@ -8,12 +8,13 @@
             <field name="priority">100</field>
             <field name="arch" type="xml">
                 <form string="Switch to language">
-                    <group>
-                        <span class="o_form_label">
-                            <strong><field name="first_lang_id" readonly="True" options="{'no_open': True}"/></strong> has been successfully installed.
+                    <div>
+                        <strong>
+                            <field name="first_lang_id" readonly="True" options="{'no_open': True}" />
+                        </strong>
+                        has been successfully installed.
                             Users can choose their favorite language in their preferences.
-                        </span>
-                    </group>
+                    </div>
                     <footer>
                         <button name="reload" string="Close" type="object" class="btn-primary" data-hotkey="q"/>
                         <button name="switch_lang" type="object" class="btn-primary ms-1" data-hotkey="w">

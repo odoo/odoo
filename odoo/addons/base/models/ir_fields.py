@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+import json
 import functools
 import itertools
 
@@ -8,7 +9,8 @@ import psycopg2
 import pytz
 
 from odoo import api, Command, fields, models, _
-from odoo.tools import ustr
+from odoo.tools import ustr, OrderedSet
+from odoo.tools.translate import code_translations, _lt
 
 REFERENCING_FIELDS = {None, 'id', '.id'}
 def only_ref_fields(record):
@@ -16,6 +18,13 @@ def only_ref_fields(record):
 def exclude_ref_fields(record):
     return {k: v for k, v in record.items() if k not in REFERENCING_FIELDS}
 
+# these lazy translations promise translations for ['yes', 'no', 'true', 'false']
+BOOLEAN_TRANSLATIONS = (
+    _lt('yes'),
+    _lt('no'),
+    _lt('true'),
+    _lt('false')
+)
 
 class ImportWarning(Warning):
     """ Used to send warnings upwards the stack during the import process """
@@ -184,14 +193,21 @@ class IrFieldsConverter(models.AbstractModel):
             return None
         return functools.partial(converter, model, field)
 
+    def _str_to_json(self, model, field, value):
+        try:
+            return json.loads(value), []
+        except ValueError:
+            msg = _("'%s' does not seem to be a valid JSON for field '%%(field)s'")
+            raise self._format_import_error(ValueError, msg, value)
+
     @api.model
     def _str_to_boolean(self, model, field, value):
         # all translatables used for booleans
         # potentially broken casefolding? What about locales?
         trues = set(word.lower() for word in itertools.chain(
             [u'1', u"true", u"yes"], # don't use potentially translated values
-            self._get_translations(['code'], u"true"),
-            self._get_translations(['code'], u"yes"),
+            self._get_boolean_translations(u"true"),
+            self._get_boolean_translations(u"yes"),
         ))
         if value.lower() in trues:
             return True, []
@@ -199,8 +215,8 @@ class IrFieldsConverter(models.AbstractModel):
         # potentially broken casefolding? What about locales?
         falses = set(word.lower() for word in itertools.chain(
             [u'', u"0", u"false", u"no"],
-            self._get_translations(['code'], u"false"),
-            self._get_translations(['code'], u"no"),
+            self._get_boolean_translations(u"false"),
+            self._get_boolean_translations(u"no"),
         ))
         if value.lower() in falses:
             return False, []
@@ -296,17 +312,46 @@ class IrFieldsConverter(models.AbstractModel):
         return fields.Datetime.to_string(dt.astimezone(pytz.UTC)), []
 
     @api.model
-    def _get_translations(self, types, src):
-        types = tuple(types)
+    def _get_boolean_translations(self, src):
         # Cache translations so they don't have to be reloaded from scratch on
         # every row of the file
         tnx_cache = self._cr.cache.setdefault(self._name, {})
-        if tnx_cache.setdefault(types, {}) and src in tnx_cache[types]:
-            return tnx_cache[types][src]
+        if src in tnx_cache:
+            return tnx_cache[src]
 
-        Translations = self.env['ir.translation']
-        tnx = Translations.search([('type', 'in', types), ('src', '=', src)])
-        result = tnx_cache[types][src] = [t.value for t in tnx if t.value is not False]
+        values = OrderedSet()
+        for lang, __ in self.env['res.lang'].get_installed():
+            translations = code_translations.get_python_translations('base', lang)
+            if src in translations:
+                values.add(translations[src])
+
+        result = tnx_cache[src] = list(values)
+        return result
+
+    @api.model
+    def _get_selection_translations(self, field, src):
+        if not src:
+            return []
+        # Cache translations so they don't have to be reloaded from scratch on
+        # every row of the file
+        tnx_cache = self._cr.cache.setdefault(self._name, {})
+        if src in tnx_cache:
+            return tnx_cache[src]
+
+        values = OrderedSet()
+        self.env['ir.model.fields.selection'].flush_model()
+        query = """
+            SELECT s.name
+            FROM ir_model_fields_selection s
+            JOIN ir_model_fields f ON s.field_id = f.id
+            WHERE f.model = %s AND f.name = %s AND s.name->>'en_US' = %s
+        """
+        self.env.cr.execute(query, [field.model_name, field.name, src])
+        for (name,) in self.env.cr.fetchall():
+            name.pop('en_US')
+            values.update(name.values())
+
+        result = tnx_cache[src] = list(values)
         return result
 
     @api.model
@@ -317,7 +362,14 @@ class IrFieldsConverter(models.AbstractModel):
 
         for item, label in selection:
             label = ustr(label)
-            labels = [label] + self._get_translations(('selection', 'model', 'code'), label)
+            if callable(field.selection):
+                labels = [label]
+                for item2, label2 in field._description_selection(self.env):
+                    if item2 == item:
+                        labels.append(label2)
+                        break
+            else:
+                labels = [label] + self._get_selection_translations(field, label)
             # case insensitive comparaison of string to allow to set the value even if the given 'value' param is not
             # exactly (case sensitive) the same as one of the selection item.
             if value.lower() == str(item).lower() or any(value.lower() == label.lower() for label in labels):
@@ -560,7 +612,7 @@ class IrFieldsConverter(models.AbstractModel):
         def log(f, exception):
             if not isinstance(exception, Warning):
                 current_field_name = self.env[field.comodel_name]._fields[f].string
-                arg0 = exception.args[0] % {'field': '%(field)s/' + current_field_name}
+                arg0 = exception.args[0].replace('%(field)s', '%(field)s/' + current_field_name)
                 exception.args = (arg0, *exception.args[1:])
                 raise exception
             warnings.append(exception)
@@ -596,37 +648,3 @@ class IrFieldsConverter(models.AbstractModel):
                 commands.append(Command.create(writable))
 
         return commands, warnings
-
-class O2MIdMapper(models.AbstractModel):
-    """
-    Updates the base class to support setting xids directly in create by
-    providing an "id" key (otherwise stripped by create) during an import
-    (which should strip 'id' from the input data anyway)
-    """
-    _inherit = 'base'
-
-    # sadly _load_records_create is only called for the toplevel record so we
-    # can't hook into that
-    @api.model_create_multi
-    @api.returns('self', lambda value: value.id)
-    def create(self, vals_list):
-        recs = super().create(vals_list)
-
-        import_module = self.env.context.get('_import_current_module')
-        if not import_module: # not an import -> bail
-            return recs
-        noupdate = self.env.context.get('noupdate', False)
-
-        xids = (v.get('id') for v in vals_list)
-        self.env['ir.model.data']._update_xmlids([
-            {
-                'xml_id': xid if '.' in xid else ('%s.%s' % (import_module, xid)),
-                'record': rec,
-                # note: this is not used when updating o2ms above...
-                'noupdate': noupdate,
-            }
-            for rec, xid in zip(recs, xids)
-            if xid and isinstance(xid, str)
-        ])
-
-        return recs

@@ -24,7 +24,15 @@
                         <field name="partner_id"/>
                         <field name="guest_id"/>
                         <field name="channel_id"/>
+                        <field name="custom_channel_name"/>
+                        <field name="fetched_message_id"/>
                         <field name="seen_message_id"/>
+                        <field name="message_unread_counter"/>
+                        <field name="fold_state"/>
+                        <field name="is_minimized"/>
+                        <field name="is_pinned"/>
+                        <field name="last_interest_dt"/>
+                        <field name="last_seen_dt"/>
                         <field name="rtc_inviting_session_id"/>
                     </group>
                 </sheet>
@@ -33,7 +41,7 @@
     </record>
 
     <record id="mail_channel_member_action" model="ir.actions.act_window">
-        <field name="name">Channels/Partner</field>
+        <field name="name">Channels/Member</field>
         <field name="res_model">mail.channel.member</field>
         <field name="view_mode">tree,form</field>
     </record>

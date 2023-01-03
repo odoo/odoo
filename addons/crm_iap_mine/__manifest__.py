@@ -27,9 +27,8 @@
     'assets': {
         'web.assets_backend': [
             'crm_iap_mine/static/src/js/**/*',
-        ],
-        'web.assets_qweb': [
-            'crm_iap_mine/static/src/xml/**/*',
+            'crm_iap_mine/static/src/views/*.js',
+            'crm_iap_mine/static/src/views/*.xml',
         ],
     },
     'license': 'LGPL-3',

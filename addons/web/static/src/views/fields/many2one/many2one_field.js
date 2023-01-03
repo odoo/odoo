@@ -1,5 +1,6 @@
 /** @odoo-module **/
 
+import { browser } from "@web/core/browser/browser";
 import { Dialog } from "@web/core/dialog/dialog";
 import { registry } from "@web/core/registry";
 import { _lt } from "@web/core/l10n/translation";
@@ -7,8 +8,10 @@ import { useChildRef, useOwnedDialogs, useService } from "@web/core/utils/hooks"
 import { sprintf } from "@web/core/utils/strings";
 import { standardFieldProps } from "../standard_field_props";
 import { Many2XAutocomplete, useOpenMany2XRecord } from "@web/views/fields/relational_utils";
+import { isMobileOS } from "@web/core/browser/feature_detection";
+import * as BarcodeScanner from "@web/webclient/barcode/barcode_scanner";
 
-const { Component, onWillUpdateProps, useState } = owl;
+import { Component, onWillUpdateProps, useState } from "@odoo/owl";
 
 class CreateConfirmationDialog extends Component {
     get title() {
@@ -23,13 +26,13 @@ class CreateConfirmationDialog extends Component {
 CreateConfirmationDialog.components = { Dialog };
 CreateConfirmationDialog.template = "web.Many2OneField.CreateConfirmationDialog";
 
-function m2oTupleFromData(data) {
+export function m2oTupleFromData(data) {
     const id = data.id;
     let name;
     if ("display_name" in data) {
         name = data.display_name;
     } else {
-        let _name = data.name;
+        const _name = data.name;
         name = Array.isArray(_name) ? _name[1] : _name;
     }
     return [id, name];
@@ -40,6 +43,7 @@ export class Many2OneField extends Component {
         this.orm = useService("orm");
         this.action = useService("action");
         this.dialog = useService("dialog");
+        this.notification = useService("notification");
         this.autocompleteContainerRef = useChildRef();
         this.addDialog = useOwnedDialogs();
 
@@ -47,18 +51,10 @@ export class Many2OneField extends Component {
             this.autocompleteContainerRef.el.querySelector("input").focus();
         };
 
-        const computeActiveActions = (props) => {
-            this.state.activeActions = {
-                canCreate: props.canCreate,
-                canCreateEdit: props.canCreateEdit,
-                canWrite: props.canWrite,
-            };
-        };
-
         this.state = useState({
             isFloating: !this.props.value,
         });
-        computeActiveActions(this.props);
+        this.computeActiveActions(this.props);
 
         this.openMany2X = useOpenMany2XRecord({
             resModel: this.relation,
@@ -79,9 +75,6 @@ export class Many2OneField extends Component {
             if (value) {
                 value = m2oTupleFromData(value[0]);
             }
-            if (!value && !this.updateOnEmpty) {
-                return;
-            }
             this.state.isFloating = false;
             return this.props.update(value);
         };
@@ -101,7 +94,7 @@ export class Many2OneField extends Component {
 
         onWillUpdateProps(async (nextProps) => {
             this.state.isFloating = !nextProps.value;
-            computeActiveActions(nextProps);
+            this.computeActiveActions(nextProps);
         });
     }
 
@@ -132,10 +125,31 @@ export class Many2OneField extends Component {
     get resId() {
         return this.props.value && this.props.value[0];
     }
-    get updateOnEmpty() {
-        return true;
+    get Many2XAutocompleteProps() {
+        return {
+            value: this.displayName,
+            id: this.props.id,
+            placeholder: this.props.placeholder,
+            resModel: this.relation,
+            autoSelect: true,
+            fieldString: this.props.string,
+            activeActions: this.state.activeActions,
+            update: this.update,
+            quickCreate: this.quickCreate,
+            context: this.context,
+            getDomain: this.getDomain.bind(this),
+            nameCreateField: this.props.nameCreateField,
+            setInputFloats: this.setFloating,
+            autocomplete_container: this.autocompleteContainerRef,
+        };
     }
-
+    computeActiveActions(props) {
+        this.state.activeActions = {
+            create: props.canCreate,
+            createEdit: props.canCreateEdit,
+            write: props.canWrite,
+        };
+    }
     getDomain() {
         return this.domain.toList(this.context);
     }
@@ -173,7 +187,59 @@ export class Many2OneField extends Component {
         }
     }
     onExternalBtnClick() {
-        this.openDialog(this.resId);
+        if (this.props.openTarget === "current") {
+            this.openAction();
+        } else {
+            this.openDialog(this.resId);
+        }
+    }
+    async onBarcodeBtnClick() {
+        const barcode = await BarcodeScanner.scanBarcode();
+        if (barcode) {
+            await this.onBarcodeScanned(barcode);
+            if ("vibrate" in browser.navigator) {
+                browser.navigator.vibrate(100);
+            }
+        } else {
+            this.notification.add(this.env._t("Please, scan again !"), {
+                type: "warning",
+            });
+        }
+    }
+    async search(barcode) {
+        const results = await this.orm.call(this.relation, "name_search", [], {
+            name: barcode,
+            args: this.getDomain(),
+            operator: "ilike",
+            limit: 2, // If one result we set directly and if more than one we use normal flow so no need to search more
+            context: this.context,
+        });
+        return results.map((result) => {
+            const [id, displayName] = result;
+            return {
+                id,
+                name: displayName,
+            };
+        });
+    }
+    async onBarcodeScanned(barcode) {
+        const results = await this.search(barcode);
+        const records = results.filter((r) => !!r.id);
+        if (records.length === 1) {
+            this.update([{ id: records[0].id, name: records[0].name }]);
+        } else {
+            const searchInput = this.autocompleteContainerRef.el.querySelector("input");
+            searchInput.value = barcode;
+            searchInput.dispatchEvent(new Event("input"));
+            if (this.env.isSmall) {
+                searchInput.dispatchEvent(new Event("barcode-search"));
+            }
+        }
+    }
+    get hasBarcodeButton() {
+        const canScanBarcode = this.props.canScanBarcode;
+        const supported = BarcodeScanner.isBarcodeScannerSupported();
+        return canScanBarcode && isMobileOS() && supported && !this.hasExternalButton;
     }
 }
 
@@ -195,6 +261,8 @@ Many2OneField.props = {
     searchLimit: { type: Number, optional: true },
     relation: { type: String, optional: true },
     string: { type: String, optional: true },
+    canScanBarcode: { type: Boolean, optional: true },
+    openTarget: { type: String, validate: (v) => ["current", "new"].includes(v), optional: true },
 };
 Many2OneField.defaultProps = {
     canOpen: true,
@@ -205,6 +273,8 @@ Many2OneField.defaultProps = {
     createNameField: "name",
     searchLimit: 7,
     string: "",
+    canScanBarcode: false,
+    openTarget: "current",
 };
 
 Many2OneField.displayName = _lt("Many2one");
@@ -217,6 +287,7 @@ Many2OneField.extractProps = ({ attrs, field }) => {
     const canWrite = attrs.can_write && Boolean(JSON.parse(attrs.can_write));
     const noQuickCreate = Boolean(attrs.options.no_quick_create);
     const noCreateEdit = Boolean(attrs.options.no_create_edit);
+    const canScanBarcode = Boolean(attrs.options.can_scan_barcode);
 
     return {
         placeholder: attrs.placeholder,
@@ -228,15 +299,12 @@ Many2OneField.extractProps = ({ attrs, field }) => {
         relation: field.relation,
         string: attrs.string || field.string,
         createNameField: attrs.options.create_name_field,
+        canScanBarcode: canScanBarcode,
+        openTarget: attrs.open_target,
     };
 };
 
 registry.category("fields").add("many2one", Many2OneField);
-
-export class ListMany2OneField extends Many2OneField {
-    get updateOnEmpty() {
-        return false;
-    }
-}
-
-registry.category("fields").add("list.many2one", ListMany2OneField); // TODO WOWL: link isn't clickable in lists
+// the two following lines are there to prevent the fallback on legacy widgets
+registry.category("fields").add("list.many2one", Many2OneField);
+registry.category("fields").add("kanban.many2one", Many2OneField);

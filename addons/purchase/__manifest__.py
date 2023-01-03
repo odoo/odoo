@@ -39,17 +39,15 @@
     'assets': {
         'web.assets_backend': [
             'purchase/static/src/toaster_button/*',
-            'purchase/static/src/js/purchase_dashboard.js',
+            'purchase/static/src/views/*.js',
+            'purchase/static/src/views/*.scss',
             'purchase/static/src/js/purchase_toaster_button.js',
             'purchase/static/src/js/tours/purchase.js',
+            'purchase/static/src/**/*.xml',
         ],
         'web.assets_frontend': [
             'purchase/static/src/js/purchase_datetimepicker.js',
             'purchase/static/src/js/purchase_portal_sidebar.js',
-        ],
-        'web.assets_qweb': [
-            'purchase/static/src/toaster_button/*.xml',
-            'purchase/static/src/xml/**/*',
         ],
     },
     'license': 'LGPL-3',

@@ -3,6 +3,7 @@
 
 import logging
 
+from ast import literal_eval
 from psycopg2 import Error
 
 from odoo import _, api, fields, models
@@ -67,6 +68,7 @@ class StockQuant(models.Model):
         'stock.location', 'Location',
         domain=lambda self: self._domain_location_id(),
         auto_join=True, ondelete='restrict', required=True, index=True, check_company=True)
+    warehouse_id = fields.Many2one('stock.warehouse', related='location_id.warehouse_id')
     storage_category_id = fields.Many2one(related='location_id.storage_category_id', store=True)
     cyclic_inventory_frequency = fields.Integer(related='location_id.cyclic_inventory_frequency')
     lot_id = fields.Many2one(
@@ -77,7 +79,7 @@ class StockQuant(models.Model):
     package_id = fields.Many2one(
         'stock.quant.package', 'Package',
         domain="[('location_id', '=', location_id)]",
-        help='The package containing this quant', ondelete='restrict', check_company=True)
+        help='The package containing this quant', ondelete='restrict', check_company=True, index=True)
     owner_id = fields.Many2one(
         'res.partner', 'Owner',
         help='This is the owner of the quant', check_company=True)
@@ -247,8 +249,9 @@ class StockQuant(models.Model):
             if is_inventory_mode and any(f in vals for f in ['inventory_quantity', 'inventory_quantity_auto_apply']):
                 if any(field for field in vals.keys() if field not in allowed_fields):
                     raise UserError(_("Quant's creation is restricted, you can't do this operation."))
-                inventory_quantity = vals.pop('inventory_quantity', False) or vals.pop(
-                    'inventory_quantity_auto_apply', False) or 0
+                auto_apply = 'inventory_quantity_auto_apply' in vals
+                inventory_quantity = vals.pop('inventory_quantity_auto_apply', False) or vals.pop(
+                    'inventory_quantity', False) or 0
                 # Create an empty quant or write on a similar one.
                 product = self.env['product.product'].browse(vals['product_id'])
                 location = self.env['stock.location'].browse(vals['location_id'])
@@ -258,15 +261,17 @@ class StockQuant(models.Model):
                 quant = self._gather(product, location, lot_id=lot_id, package_id=package_id, owner_id=owner_id, strict=True)
                 if lot_id:
                     quant = quant.filtered(lambda q: q.lot_id)
-
                 if quant:
                     quant = quant[0].sudo()
                 else:
                     quant = self.sudo().create(vals)
-                # Set the `inventory_quantity` field to create the necessary move.
-                quant.inventory_quantity = inventory_quantity
-                quant.user_id = vals.get('user_id', self.env.user.id)
-                quant.inventory_date = fields.Date.today()
+                if auto_apply:
+                    quant.write({'inventory_quantity_auto_apply': inventory_quantity})
+                else:
+                    # Set the `inventory_quantity` field to create the necessary move.
+                    quant.inventory_quantity = inventory_quantity
+                    quant.user_id = vals.get('user_id', self.env.user.id)
+                    quant.inventory_date = fields.Date.today()
                 quants |= quant
             else:
                 quant = super().create(vals)
@@ -282,7 +287,11 @@ class StockQuant(models.Model):
         for value in values:
             if 'location_id' not in value:
                 value['location_id'] = warehouse.lot_stock_id.id
-        return super()._load_records_create(values)
+        return super(StockQuant, self.with_context(inventory_mode=True))._load_records_create(values)
+
+    def _load_records_write(self, values):
+        """ Only allowed fields should be modified """
+        return super(StockQuant, self.with_context(inventory_mode=True))._load_records_write(values)
 
     @api.model
     def read_group(self, domain, fields, groupby, offset=0, limit=None, orderby=False, lazy=True):
@@ -329,7 +338,6 @@ class StockQuant(models.Model):
         self.ensure_one()
         action = self.env["ir.actions.actions"]._for_xml_id("stock.stock_move_line_action")
         action['domain'] = [
-            ('product_id', '=', self.product_id.id),
             '|',
                 ('location_id', '=', self.location_id.id),
                 ('location_dest_id', '=', self.location_id.id),
@@ -338,6 +346,13 @@ class StockQuant(models.Model):
                 ('package_id', '=', self.package_id.id),
                 ('result_package_id', '=', self.package_id.id),
         ]
+        action['context'] = literal_eval(action.get('context'))
+        action['context']['search_default_product_id'] = self.product_id.id
+        return action
+
+    def action_view_orderpoints(self):
+        action = self.env['product.product'].action_view_orderpoints()
+        action['domain'] = [('product_id', '=', self.product_id.id)]
         return action
 
     @api.model
@@ -415,6 +430,24 @@ class StockQuant(models.Model):
         self._apply_inventory()
         self.inventory_quantity_set = False
 
+    def action_inventory_at_date(self):
+        #  Handler called when the user clicked on the 'Inventory at Date' button.
+        #  Opens wizard to display, at choice, the products inventory or a computed
+        #  inventory at a given date.
+        context = {}
+        if ("default_product_id" in self.env.context):
+            context.product_id = self.env.context.default_product_id
+        elif ("product_tmpl_id" in self.env.context):
+            context.product_tmpl_id = self.env.context.product_tmpl_id
+
+        return {
+            "res_model": "stock.quantity.history",
+            "views": [[False, "form"]],
+            "target": "new",
+            "type": "ir.actions.act_window",
+            "context": context,
+        }
+
     def action_inventory_history(self):
         self.ensure_one()
         action = {
@@ -426,9 +459,9 @@ class StockQuant(models.Model):
             'context': {
                 'search_default_inventory': 1,
                 'search_default_done': 1,
+                'search_default_product_id': self.product_id.id,
             },
             'domain': [
-                ('product_id', '=', self.product_id.id),
                 ('company_id', '=', self.company_id.id),
                 '|',
                     ('location_id', '=', self.location_id.id),
@@ -890,9 +923,6 @@ class StockQuant(models.Model):
         else:
             name = _('Product Quantity Updated')
 
-        if self.inventory_date:
-            name += _(' [Scheduled on %s]', self.inventory_date)
-
         return {
             'name': self.env.context.get('inventory_name') or name,
             'product_id': self.product_id.id,
@@ -923,7 +953,7 @@ class StockQuant(models.Model):
             company_user = self.env.company
             warehouse = self.env['stock.warehouse'].search([('company_id', '=', company_user.id)], limit=1)
             if warehouse:
-                self = self.with_context(default_location_id=warehouse.lot_stock_id.id, hide_location=True)
+                self = self.with_context(default_location_id=warehouse.lot_stock_id.id, hide_location=not self.env.context.get('always_show_loc', False))
 
         # If user have rights to write on quant, we set quants in inventory mode.
         if self.user_has_groups('stock.group_stock_user'):
@@ -945,7 +975,7 @@ class StockQuant(models.Model):
         ctx['inventory_report_mode'] = True
         ctx.pop('group_by', None)
         action = {
-            'name': _('Stock On Hand'),
+            'name': _('Locations'),
             'view_type': 'tree',
             'view_mode': 'list,form',
             'res_model': 'stock.quant',

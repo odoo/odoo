@@ -14,17 +14,3 @@ class ResCompany(models.Model):
     l10n_eg_invoicing_threshold = fields.Float('Invoicing Threshold', default=0.0,
                                                help="Threshold at which you are required to give the VAT number "
                                                     "of the customer. ")
-
-    # ------------------------------------------------------------
-    # neutralize
-    # ------------------------------------------------------------
-
-    def _neutralize(self):
-        super()._neutralize()
-        self.flush_model()
-        self.invalidate_model()
-        self.env.cr.execute("""
-            UPDATE res_company
-            SET l10n_eg_production_env = False,
-                l10n_eg_client_secret = 'dummy'
-            """)

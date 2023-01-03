@@ -15,6 +15,7 @@ import {
     serializeDate,
     serializeDateTime,
 } from "@web/core/l10n/dates";
+import { assets } from "@web/core/assets";
 
 const serviceRegistry = registry.category("services");
 
@@ -65,7 +66,7 @@ export class MockServer {
                 id: { string: "ID", type: "integer" },
                 display_name: { string: "Display Name", type: "char" },
                 name: { string: "Name", type: "char", default: "name" },
-                __last_update: { string: "Last Modified on", type: "datetime" },
+                write_date: { string: "Last Modified on", type: "datetime" },
                 ...model.fields,
             };
             for (const fieldName in model.fields) {
@@ -111,9 +112,9 @@ export class MockServer {
             console.log("%c[rpc] request " + route, "color: #66e; font-weight: bold;", args);
             args = JSON.parse(JSON.stringify(args));
         }
-        let result;
+        const result = await this._performRPC(route, args);
         // try {
-        result = await this._performRPC(route, args);
+        //   const result = await this._performRPC(route, args);
         // } catch {
         //   const message = result && result.message;
         //   const event = result && result.event;
@@ -144,6 +145,40 @@ export class MockServer {
         //     };
         // }
         // def.abort = abort;
+    }
+
+    _getViewFields(modelName, viewType, models) {
+        if (["kanban", "list", "form"].includes(viewType)) {
+            for (const fieldNames of Object.values(models)) {
+                fieldNames.add("id");
+                fieldNames.add("write_date");
+            }
+        } else if (viewType === "search") {
+            models[modelName] = Object.keys(this.models[modelName].fields);
+        } else if (viewType === "graph") {
+            for (const [fieldName, field] of Object.entries(this.models[modelName].fields)) {
+                if (["integer", "float"].includes(field.type)) {
+                    models[modelName].add(fieldName);
+                }
+            }
+        } else if (viewType === "pivot") {
+            for (const [fieldName, field] of Object.entries(this.models[modelName].fields)) {
+                if (
+                    [
+                        "many2one",
+                        "many2many",
+                        "char",
+                        "boolean",
+                        "selection",
+                        "date",
+                        "datetime",
+                    ].includes(field.type)
+                ) {
+                    models[modelName].add(fieldName);
+                }
+            }
+        }
+        return models;
     }
 
     getView(modelName, args, kwargs) {
@@ -196,9 +231,10 @@ export class MockServer {
     }
 
     _getView(params) {
-        let processedNodes = params.processedNodes || [];
+        const processedNodes = params.processedNodes || [];
         const { arch, context, modelName } = params;
         const level = params.level || 0;
+        const editable = params.editable || true;
         const fields = deepCopy(params.fields);
         function isNodeProcessed(node) {
             return processedNodes.findIndex((n) => n.isSameNode(node)) > -1;
@@ -207,14 +243,17 @@ export class MockServer {
         const onchanges = params.models[modelName].onchanges || {};
         const fieldNodes = {};
         const groupbyNodes = {};
-        const relatedModels = new Set([modelName]);
+        const relatedModels = { [modelName]: new Set() };
         let doc;
         if (typeof arch === "string") {
             doc = domParser.parseFromString(arch, "text/xml").documentElement;
         } else {
             doc = arch;
         }
-        const inTreeView = doc.tagName === "tree";
+        const editableView = editable && this._editableNode(doc, modelName);
+        const onchangeAbleView = this._onchangeAbleView(doc);
+        const modifiersFromModel = this._modifiersFromModel(doc);
+        const inTreeView = ["tree", "list"].includes(doc.tagName);
         const inFormView = doc.tagName === "form";
         // mock _postprocess_access_rights
         const isBaseModel = !context.base_model_name || modelName === context.base_model_name;
@@ -236,7 +275,11 @@ export class MockServer {
             const isGroupby = node.tagName === "groupby";
             if (isField) {
                 const fieldName = node.getAttribute("name");
-                fieldNodes[fieldName] = node;
+                fieldNodes[fieldName] = {
+                    node,
+                    isInvisible: node.getAttribute("invisible"),
+                    isEditable: editableView && this._editableNode(node, modelName),
+                };
                 // 'transfer_field_to_modifiers' simulation
                 const field = fields[fieldName];
                 if (!field) {
@@ -244,7 +287,8 @@ export class MockServer {
                 }
                 const defaultValues = {};
                 const stateExceptions = {}; // what is this ?
-                modifiersNames.forEach((attr) => {
+
+                modifiersFromModel.forEach((attr) => {
                     stateExceptions[attr] = [];
                     defaultValues[attr] = !!field[attr];
                 });
@@ -267,16 +311,18 @@ export class MockServer {
                 });
             } else if (isGroupby && !isNodeProcessed(node)) {
                 const groupbyName = node.getAttribute("name");
-                fieldNodes[groupbyName] = node;
+                fieldNodes[groupbyName] = { node };
                 groupbyNodes[groupbyName] = node;
             }
             // 'transfer_node_to_modifiers' simulation
             let attrs = node.getAttribute("attrs");
+            node.removeAttribute("attrs");
             if (attrs) {
                 attrs = evaluateExpr(attrs);
                 Object.assign(modifiers, attrs);
             }
             const states = node.getAttribute("states");
+            node.removeAttribute("states");
             if (states) {
                 if (!modifiers.invisible) {
                     modifiers.invisible = [];
@@ -286,12 +332,12 @@ export class MockServer {
             const inListHeader = inTreeView && node.closest("header");
             modifiersNames.forEach((attr) => {
                 const mod = node.getAttribute(attr);
+                node.removeAttribute(attr);
                 if (mod) {
                     const v = evaluateExpr(mod, context) ? true : false;
                     if (inTreeView && !inListHeader && attr === "invisible") {
                         modifiers.column_invisible = v;
-                    }
-                    if (v || !(attr in modifiers) || !Array.isArray(modifiers[attr])) {
+                    } else if (v || !(attr in modifiers) || !Array.isArray(modifiers[attr])) {
                         modifiers[attr] = v;
                     }
                 }
@@ -313,10 +359,11 @@ export class MockServer {
             }
             return !isField;
         });
+        Object.keys(fieldNodes).forEach((field) => relatedModels[modelName].add(field));
         let relModel, relFields;
-        Object.entries(fieldNodes).forEach(([name, node]) => {
+        Object.entries(fieldNodes).forEach(([name, { node, isInvisible, isEditable }]) => {
             const field = fields[name];
-            if (field.type === "many2one" || field.type === "many2many") {
+            if (isEditable && (field.type === "many2one" || field.type === "many2many")) {
                 const canCreate = node.getAttribute("can_create");
                 node.setAttribute("can_create", canCreate || "true");
                 const canWrite = node.getAttribute("can_write");
@@ -324,14 +371,8 @@ export class MockServer {
             }
             if (field.type === "one2many" || field.type === "many2many") {
                 relModel = field.relation;
-                relatedModels.add(relModel);
                 // inline subviews: in forms if field is visible and has no widget (1st level only)
-                if (
-                    inFormView &&
-                    level === 0 &&
-                    !node.getAttribute("widget") &&
-                    !node.getAttribute("invisible")
-                ) {
+                if (inFormView && level === 0 && !node.getAttribute("widget") && !isInvisible) {
                     const inlineViewTypes = Array.from(node.children).map((c) => c.tagName);
                     const missingViewtypes = [];
                     const mode = node.getAttribute("mode") || "kanban,tree";
@@ -369,13 +410,17 @@ export class MockServer {
                             context,
                             processedNodes,
                             level: level + 1,
+                            editable: editableView,
                         });
-                        [...models].forEach((modelName) => relatedModels.add(modelName));
+                        Object.entries(models).forEach(([modelName, fields]) => {
+                            relatedModels[modelName] = relatedModels[modelName] || new Set();
+                            fields.forEach((field) => relatedModels[modelName].add(field));
+                        });
                     }
                 });
             }
             // add onchanges
-            if (name in onchanges) {
+            if (onchangeAbleView && name in onchanges) {
                 node.setAttribute("on_change", "1");
             }
         });
@@ -386,7 +431,6 @@ export class MockServer {
             }
             field.views = {};
             relModel = field.relation;
-            relatedModels.add(relModel);
             relFields = Object.assign({}, params.models[relModel].fields);
             processedNodes.push(node);
             // postprocess simulation
@@ -397,8 +441,12 @@ export class MockServer {
                 fields: relFields,
                 context,
                 processedNodes,
+                editable: false,
             });
-            [...models].forEach((modelName) => relatedModels.add(modelName));
+            Object.entries(models).forEach(([modelName, fields]) => {
+                relatedModels[modelName] = relatedModels[modelName] || new Set();
+                fields.forEach((field) => relatedModels[modelName].add(field));
+            });
         });
         const processedArch = xmlSerializer.serializeToString(doc);
         const fieldsInView = {};
@@ -407,12 +455,55 @@ export class MockServer {
                 fieldsInView[fname] = field;
             }
         });
+        const viewType = doc.tagName === "tree" ? "list" : doc.tagName;
         return {
             arch: processedArch,
             model: modelName,
-            type: doc.tagName === "tree" ? "list" : doc.tagName,
-            models: relatedModels,
+            type: viewType,
+            models: this._getViewFields(modelName, viewType, relatedModels),
         };
+    }
+
+    _editableNode(node, modelName) {
+        switch (node.tagName) {
+            case "form":
+                return true;
+            case "tree":
+                return node.getAttribute("editable") || node.getAttribute("multi_edit");
+            case "field": {
+                const fname = node.getAttribute("name");
+                const field = this.models[modelName].fields[fname];
+                return (
+                    (!field.readonly ||
+                        (field.states &&
+                            Object.values(field.states).some((item) =>
+                                item.includes("readonly")
+                            ))) &&
+                    (!["1", "True"].includes(node.getAttribute("readonly")) ||
+                        !_.isEmpty(evaluateExpr(node.getAttribute("attrs") || "{}")))
+                );
+            }
+            default:
+                return false;
+        }
+    }
+
+    _onchangeAbleView(node) {
+        if (node.tagName === "form") {
+            return true;
+        } else if (node.tagName === "tree") {
+            return true;
+        } else if (node.tagName === "kanban") {
+            return true;
+        }
+    }
+
+    _modifiersFromModel(node) {
+        const modifiersNames = ["invisible"];
+        if (["kanban", "tree", "form"].includes(node.tagName)) {
+            modifiersNames.push(...["readonly", "required"]);
+        }
+        return modifiersNames;
     }
 
     /**
@@ -494,11 +585,11 @@ export class MockServer {
             case "create":
                 return this.mockCreate(args.model, args.args[0], args.kwargs);
             case "fields_get":
-                return this.mockFieldsGet(args.model);
+                return this.mockFieldsGet(args.model, args.fields);
             case "get_views":
                 return this.mockGetViews(args.model, args.kwargs);
             case "name_create":
-                return this.mockNameCreate(args.model, args.args[0]);
+                return this.mockNameCreate(args.model, args.args[0], args.kwargs);
             case "name_get":
                 return this.mockNameGet(args.model, args.args);
             case "name_search":
@@ -609,8 +700,12 @@ export class MockServer {
         return result;
     }
 
-    mockFieldsGet(modelName) {
-        return this.models[modelName].fields;
+    mockFieldsGet(modelName, fieldNames) {
+        let fields = this.models[modelName].fields;
+        if (fieldNames) {
+            fields = _.pick(this.models[modelName].fields, fieldNames);
+        }
+        return fields;
     }
 
     mockLoadAction(kwargs) {
@@ -639,16 +734,26 @@ export class MockServer {
     mockGetViews(modelName, kwargs) {
         const views = {};
         const models = {};
-        models[modelName] = this.mockFieldsGet(modelName);
+
+        // Determine all the models/fields used in the views
+        // modelFields = {modelName: Set([...fieldNames])}
+        const modelFields = {};
         kwargs.views.forEach(([viewId, viewType]) => {
             views[viewType] = this.getView(modelName, [viewId, viewType], kwargs);
-            if (kwargs.options.load_filters && viewType === "search") {
-                views[viewType].filters = this.models[modelName].filters || [];
-            }
-            for (const modelName of views[viewType].models) {
-                models[modelName] = models[modelName] || this.mockFieldsGet(modelName);
-            }
+            Object.entries(views[viewType].models).forEach(([modelName, fields]) => {
+                modelFields[modelName] = modelFields[modelName] || new Set();
+                fields.forEach((field) => modelFields[modelName].add(field));
+            });
         });
+
+        // For each model, fetch the information of the fields used in the views only
+        Object.entries(modelFields).forEach(([modelName, fields]) => {
+            models[modelName] = this.mockFieldsGet(modelName, [...fields]);
+        });
+
+        if (kwargs.options.load_filters && "search" in views) {
+            views["search"].filters = this.models[modelName].filters || [];
+        }
         return { models, views };
     }
 
@@ -658,14 +763,16 @@ export class MockServer {
      * @private
      * @param {string} modelName
      * @param {string} name
+     * @param {object} kwargs
+     * @param {object} [kwargs.context]
      * @returns {Array} a couple [id, name]
      */
-    mockNameCreate(modelName, name) {
+    mockNameCreate(modelName, name, kwargs) {
         const values = {
             name: name,
             display_name: name,
         };
-        const id = this.mockCreate(modelName, values);
+        const id = this.mockCreate(modelName, values, kwargs);
         return [id, name];
     }
 
@@ -709,7 +816,7 @@ export class MockServer {
         const str = args && typeof args[0] === "string" ? args[0] : kwargs.name;
         const limit = kwargs.limit || 100;
         const domain = (args && args[1]) || kwargs.args || [];
-        let { records } = this.models[model];
+        const { records } = this.models[model];
         const result = [];
         for (const r of records) {
             const isInDomain = this.evaluateDomain(domain, r);
@@ -879,7 +986,7 @@ export class MockServer {
             const [fieldName, aggregateFunction = "month"] = groupByField.split(":");
             const { type } = fields[fieldName];
             if (type === "date") {
-                const date = deserializeDate(val).setZone("default");
+                const date = deserializeDate(val);
                 if (aggregateFunction === "day") {
                     return date.toFormat("yyyy-MM-dd");
                 } else if (aggregateFunction === "week") {
@@ -892,9 +999,11 @@ export class MockServer {
                     return date.toFormat("MMMM yyyy");
                 }
             } else if (type === "datetime") {
-                const date = deserializeDateTime(val).setZone("default");
+                const date = deserializeDateTime(val);
                 if (aggregateFunction === "hour") {
-                    return date.toFormat("HH:00 dd MMM");
+                    // The year is added to the format because is needed to correctly compute the
+                    // domain and the range (startDate and endDate).
+                    return date.toFormat("HH:00 dd MMM yyyy");
                 } else if (aggregateFunction === "day") {
                     return date.toFormat("yyyy-MM-dd");
                 } else if (aggregateFunction === "week") {
@@ -986,58 +1095,36 @@ export class MockServer {
                         let startDate, endDate;
                         switch (dateRange) {
                             case "hour": {
-                                try {
-                                    startDate = parseDateTime(value, {
-                                        format: "HH dd MMM",
-                                        timezone: type !== "date",
-                                    });
-                                } catch {
-                                    startDate = parseDateTime(value, {
-                                        format: "HH:00 dd MMM",
-                                        timezone: type !== "date",
-                                    });
-                                }
+                                startDate = parseDateTime(value, { format: "HH:00 dd MMM yyyy" });
                                 endDate = startDate.plus({ hours: 1 });
+                                // Remove the year from the result value of the group. It was needed
+                                // to compute the startDate and endDate.
+                                group[gbField] = startDate.toFormat("HH:00 dd MMM");
                                 break;
                             }
                             case "day": {
-                                startDate = parseDateTime(value, {
-                                    format: "yyyy-MM-dd",
-                                    timezone: type !== "date",
-                                });
+                                startDate = parseDateTime(value, { format: "yyyy-MM-dd" });
                                 endDate = startDate.plus({ days: 1 });
                                 break;
                             }
                             case "week": {
-                                startDate = parseDateTime(value, {
-                                    format: "WW kkkk",
-                                    timezone: type !== "date",
-                                });
+                                startDate = parseDateTime(value, { format: "WW kkkk" });
                                 endDate = startDate.plus({ weeks: 1 });
                                 break;
                             }
                             case "quarter": {
-                                startDate = parseDateTime(value, {
-                                    format: "q yyyy",
-                                    timezone: type !== "date",
-                                });
+                                startDate = parseDateTime(value, { format: "q yyyy" });
                                 endDate = startDate.plus({ quarters: 1 });
                                 break;
                             }
                             case "year": {
-                                startDate = parseDateTime(value, {
-                                    format: "y",
-                                    timezone: type !== "date",
-                                });
+                                startDate = parseDateTime(value, { format: "y" });
                                 endDate = startDate.plus({ years: 1 });
                                 break;
                             }
                             case "month":
                             default: {
-                                startDate = parseDateTime(value, {
-                                    format: "MMMM yyyy",
-                                    timezone: type !== "date",
-                                });
+                                startDate = parseDateTime(value, { format: "MMMM yyyy" });
                                 endDate = startDate.plus({ months: 1 });
                                 break;
                             }
@@ -1062,7 +1149,13 @@ export class MockServer {
                 delete group.__range;
             }
             // compute count key to match dumb server logic...
-            const countKey = kwargs.lazy ? groupBy[0].split(":")[0] + "_count" : "__count";
+            const groupByNoLeaf = kwargs.context ? "group_by_no_leaf" in kwargs.context : false;
+            let countKey;
+            if (kwargs.lazy && (groupBy.length >= 2 || !groupByNoLeaf)) {
+                countKey = groupBy[0].split(":")[0] + "_count";
+            } else {
+                countKey = "__count";
+            }
             group[countKey] = groupRecords.length;
             aggregateFields(group, groupRecords);
             readGroupResult.push(group);
@@ -1136,21 +1229,24 @@ export class MockServer {
 
     mockReadProgressBar(modelName, kwargs) {
         const { domain, group_by: groupBy, progress_bar: progressBar } = kwargs;
-        const records = this.getRecords(modelName, domain || []);
+        const groups = this.mockReadGroup(modelName, { domain, fields: [], groupby: [groupBy] });
 
+        // Find group by field
         const data = {};
-        for (const record of records) {
-            const groupByValue = record[groupBy]; // always technical value here
+        for (const group of groups) {
+            const records = this.getRecords(modelName, group.__domain || []);
+            const groupByValue = group[groupBy]; // always technical value here
             if (!(groupByValue in data)) {
                 data[groupByValue] = {};
                 for (const key in progressBar.colors) {
                     data[groupByValue][key] = 0;
                 }
             }
-
-            const fieldValue = record[progressBar.field];
-            if (fieldValue in data[groupByValue]) {
-                data[groupByValue][fieldValue]++;
+            for (const record of records) {
+                const fieldValue = record[progressBar.field];
+                if (fieldValue in data[groupByValue]) {
+                    data[groupByValue][fieldValue]++;
+                }
             }
         }
 
@@ -2011,7 +2107,7 @@ export class MockServer {
         switch (field.type) {
             case "many2many":
             case "many2one": {
-                let coRecords = this.models[field.relation].records;
+                const coRecords = this.models[field.relation].records;
                 const coField = this.getOrderByField(field.relation);
                 if (field.type === "many2many") {
                     // M2m use the joined list of comodel field values
@@ -2207,7 +2303,7 @@ export class MockServer {
 
 // instance of `MockServer` linked to the current test.
 let mockServer;
-QUnit.testStart(() => mockServer = undefined);
+QUnit.testStart(() => (mockServer = undefined));
 export async function makeMockServer(serverData, mockRPC) {
     serverData = serverData || {};
     if (!mockServer) {
@@ -2224,12 +2320,11 @@ export async function makeMockServer(serverData, mockRPC) {
             // simulates that we serialized the call to be passed in a real request
             args = JSON.parse(JSON.stringify(args));
         }
-        const performRPC = (route, args) => mockServer.performRPC(route, args);
         if (mockRPC) {
-            res = await mockRPC(route, args, performRPC);
+            res = await mockRPC(route, args, mockServer.performRPC.bind(mockServer));
         }
         if (res === undefined) {
-            res = await performRPC(route, args);
+            res = await mockServer.performRPC(route, args);
         }
         return res;
     };
@@ -2237,6 +2332,35 @@ export async function makeMockServer(serverData, mockRPC) {
     patchWithCleanup(browser, {
         fetch: makeMockFetch(_mockRPC),
     });
+    if (mockRPC) {
+        const { loadJS, loadCSS } = assets;
+        patchWithCleanup(assets, {
+            loadJS: async function (ressource) {
+                let res = await mockRPC(ressource, {});
+                if (res === undefined) {
+                    res = await loadJS(ressource);
+                } else {
+                    console.log(
+                        "%c[assets] fetch (mock) JS ressource " + ressource,
+                        "color: #66e; font-weight: bold;"
+                    );
+                }
+                return res;
+            },
+            loadCSS: async function (ressource) {
+                let res = await mockRPC(ressource, {});
+                if (res === undefined) {
+                    res = await loadCSS(ressource);
+                } else {
+                    console.log(
+                        "%c[assets] fetch (mock) CSS ressource " + ressource,
+                        "color: #66e; font-weight: bold;"
+                    );
+                }
+                return res;
+            },
+        });
+    }
     // Replace RPC service
     serviceRegistry.add("rpc", rpcService, { force: true });
     return mockServer;

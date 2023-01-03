@@ -52,8 +52,9 @@ class WebsiteSaleVisitorTests(TransactionCase):
         self.assertEqual(len(new_visitors), 1, "No visitor should be created after visiting another tracked product")
         self.assertEqual(len(new_tracks), 2, "A track should be created after visiting another tracked product")
 
-    def test_recently_viewed_company_changed(self):
-        # Test that, by changing the company of a tracked product, the recently viewed product do not crash
+    def test_dynamic_filter_newest_products(self):
+        """Test that a product is not displayed anymore after
+        changing it company."""
         new_company = self.env['res.company'].create({
             'name': 'Test Company',
         })
@@ -66,11 +67,53 @@ class WebsiteSaleVisitorTests(TransactionCase):
         })
 
         self.website = self.website.with_user(public_user).with_context(website_id=self.website.id)
+        snippet_filter = self.env.ref('website_sale.dynamic_filter_newest_products')
+
+        res = snippet_filter._prepare_values(16, [])
+        res_products = [res_product['_record'] for res_product in res]
+        self.assertIn(product, res_products)
+
+        product.product_tmpl_id.company_id = new_company
+        product.product_tmpl_id.flush_recordset(['company_id'])
+
+        res = snippet_filter._prepare_values(16, [])
+        res_products = [res_product['_record'] for res_product in res]
+        self.assertNotIn(product, res_products)
+
+    def test_recently_viewed_company_changed(self):
+        """Test that a product is :
+        - displayed after visiting it
+        - not displayed after changing it company."""
+        new_company = self.env['res.company'].create({
+            'name': 'Test Company',
+        })
+        public_user = self.env.ref('base.public_user')
+
+        product = self.env['product.product'].create({
+            'name': 'Test Product',
+            'website_published': True,
+            'sale_ok': True,
+        })
+
+        self.website = self.website.with_user(public_user).with_context(website_id=self.website.id)
+
+        snippet_filter = self.env.ref('website_sale.dynamic_filter_latest_viewed_products')
+
+        # BEFORE VISITING THE PRODUCT
+        res = snippet_filter._prepare_values(16, [])
+        self.assertFalse(res)
+
+        # AFTER VISITING THE PRODUCT
         with MockRequest(self.website.env, website=self.website):
             self.cookies = self.WebsiteSaleController.products_recently_viewed_update(product.id)
+        with MockRequest(self.website.env, website=self.website, cookies=self.cookies):
+            res = snippet_filter._prepare_values(16, [])
+        res_products = [res_product['_record'] for res_product in res]
+        self.assertIn(product, res_products)
+
+        # AFTER CHANGING PRODUCT COMPANY
         product.product_tmpl_id.company_id = new_company
         product.product_tmpl_id.flush_recordset(['company_id'])
         with MockRequest(self.website.env, website=self.website, cookies=self.cookies):
-            # Should not raise an error
-            res = self.website.env['website.snippet.filter']._get_products_latest_viewed(self.website, 16, [], {})
-            self.assertFalse(res)
+            res = snippet_filter._prepare_values(16, [])
+        self.assertFalse(res)

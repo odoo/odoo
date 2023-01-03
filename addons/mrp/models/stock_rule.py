@@ -83,6 +83,10 @@ class StockRule(models.Model):
             if not warehouse_id:
                 warehouse_id = rule.location_dest_id.warehouse_id
             if rule.picking_type_id == warehouse_id.sam_type_id:
+                if float_compare(procurement.product_qty, 0, precision_rounding=procurement.product_uom.rounding) < 0:
+                    procurement.values['group_id'] = procurement.values['group_id'].stock_move_ids.filtered(
+                        lambda m: m.state not in ['done', 'cancel']).move_orig_ids.group_id[:1]
+                    continue
                 manu_type_id = warehouse_id.manu_type_id
                 if manu_type_id:
                     name = manu_type_id.sequence_id.next_by_id()
@@ -115,8 +119,8 @@ class StockRule(models.Model):
             'origin': origin,
             'product_id': product_id.id,
             'product_description_variants': values.get('product_description_variants'),
-            'product_qty': product_qty,
-            'product_uom_id': product_uom.id,
+            'product_qty': product_uom._compute_quantity(product_qty, bom.product_uom_id) if bom else product_qty,
+            'product_uom_id': bom.product_uom_id.id if bom else product_uom.id,
             'location_src_id': self.location_src_id.id or self.picking_type_id.default_location_src_id.id or location_dest_id.id,
             'location_dest_id': location_dest_id.id,
             'bom_id': bom.id,

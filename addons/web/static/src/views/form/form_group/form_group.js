@@ -2,9 +2,13 @@
 import { sortBy } from "@web/core/utils/arrays";
 
 class Group extends owl.Component {
-    getItems() {
-        const items = Object.entries(this.props.slots).filter(([k, v]) => v.type === "item");
+    _getItems() {
+        const items = Object.entries(this.props.slots || {}).filter(([k, v]) => v.type === "item");
         return sortBy(items, (i) => i[1].sequence);
+    }
+
+    getItems() {
+        return this._getItems();
     }
 
     get allClasses() {
@@ -26,7 +30,12 @@ export class OuterGroup extends Group {
         return items.map((item) => {
             const [slotName, slot] = item;
             const itemSpan = slot.itemSpan || 1;
-            return { name: slotName, size: itemSpan * colSize, newline: slot.newline };
+            return {
+                name: slotName,
+                size: itemSpan * colSize,
+                newline: slot.newline,
+                colspan: itemSpan,
+            };
         });
     }
 }
@@ -34,9 +43,13 @@ OuterGroup.template = "web.Form.OuterGroup";
 OuterGroup.defaultProps = {
     ...Group.defaultProps,
     slots: [],
+    hasOuterTemplate: true,
 };
 
 export class InnerGroup extends Group {
+    getTemplate(subType) {
+        return this.constructor.templates[subType] || this.constructor.templates.default;
+    }
     getRows() {
         const maxCols = this.props.maxCols;
 
@@ -48,7 +61,11 @@ export class InnerGroup extends Group {
         const items = this.getItems();
         while (items.length) {
             const [slotName, slot] = items.shift();
-            const { newline, itemSpan, subType, Component, props } = slot;
+            if (!slot.isVisible) {
+                continue;
+            }
+
+            const { newline, itemSpan } = slot;
             if (newline) {
                 rows.push(currentRow);
                 currentRow = [];
@@ -64,8 +81,11 @@ export class InnerGroup extends Group {
             }
 
             const isVisible = !("isVisible" in slot) || slot.isVisible;
-            currentRow.push({ name: slotName, subType, itemSpan, props, isVisible, Component });
+            currentRow.push({ ...slot, name: slotName, itemSpan, isVisible });
             reservedSpace += itemSpan || 1;
+
+            // Allows to remove the line if the content is not visible instead of leaving an empty line.
+            currentRow.isVisible = currentRow.isVisible || isVisible;
         }
         rows.push(currentRow);
 

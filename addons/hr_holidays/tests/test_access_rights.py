@@ -119,7 +119,7 @@ class TestAcessRightsStates(TestHrHolidaysAccessRightsCommon):
         """
         for i, status in enumerate(self.draft_status):
             values = {
-                'name': 'Random Leave',
+                'name': 'Random Time Off',
                 'employee_id': self.employee_emp.id,
                 'holiday_status_id': status.id,
             }
@@ -133,7 +133,7 @@ class TestAcessRightsStates(TestHrHolidaysAccessRightsCommon):
         """
         for i, status in enumerate(self.draft_status):
             values = {
-                'name': 'Random Leave',
+                'name': 'Random Time Off',
                 'employee_id': self.employee_hruser.id,
                 'holiday_status_id': status.id,
             }
@@ -150,7 +150,7 @@ class TestAcessRightsStates(TestHrHolidaysAccessRightsCommon):
         self.employee_hruser.write({'leave_manager_id': self.user_employee.id})
         for i, status in enumerate(self.draft_status):
             values = {
-                'name': 'Random Leave',
+                'name': 'Random Time Off',
                 'employee_id': self.employee_hruser.id,
                 'holiday_status_id': status.id,
             }
@@ -167,7 +167,7 @@ class TestAcessRightsStates(TestHrHolidaysAccessRightsCommon):
         self.employee_emp.write({'leave_manager_id': self.user_employee.id})
         for i, status in enumerate(self.draft_status):
             values = {
-                'name': 'Random Leave',
+                'name': 'Random Time Off',
                 'employee_id': self.employee_emp.id,
                 'holiday_status_id': status.id,
             }
@@ -180,7 +180,7 @@ class TestAcessRightsStates(TestHrHolidaysAccessRightsCommon):
         """
         for i, status in enumerate(self.draft_status):
             values = {
-                'name': 'Random Leave',
+                'name': 'Random Time Off',
                 'employee_id': self.employee_emp.id,
                 'holiday_status_id': status.id,
             }
@@ -195,7 +195,7 @@ class TestAcessRightsStates(TestHrHolidaysAccessRightsCommon):
         """
         for i, status in enumerate(self.draft_status):
             values = {
-                'name': 'Random Leave',
+                'name': 'Random Time Off',
                 'employee_id': self.employee_emp.id,
                 'holiday_status_id': status.id,
             }
@@ -210,7 +210,7 @@ class TestAcessRightsStates(TestHrHolidaysAccessRightsCommon):
         """
         for i, status in enumerate(self.draft_status):
             values = {
-                'name': 'Random Leave',
+                'name': 'Random Time Off',
                 'employee_id': self.employee_hruser.id,
                 'holiday_status_id': status.id,
             }
@@ -224,7 +224,7 @@ class TestAcessRightsStates(TestHrHolidaysAccessRightsCommon):
         """
         for i, status in enumerate(self.draft_status):
             values = {
-                'name': 'Random Leave',
+                'name': 'Random Time Off',
                 'employee_id': self.employee_emp.id,
                 'holiday_status_id': status.id,
             }
@@ -241,7 +241,7 @@ class TestAcessRightsStates(TestHrHolidaysAccessRightsCommon):
         self.employee_emp.write({'leave_manager_id': self.user_hruser.id})
         for i, status in enumerate(self.draft_status):
             values = {
-                'name': 'Random Leave',
+                'name': 'Random Time Off',
                 'employee_id': self.employee_emp.id,
                 'holiday_status_id': status.id,
             }
@@ -258,7 +258,7 @@ class TestAcessRightsStates(TestHrHolidaysAccessRightsCommon):
         self.employee_hruser.write({'leave_manager_id': self.user_hruser.id})
         for i, status in enumerate(self.draft_status):
             values = {
-                'name': 'Random Leave',
+                'name': 'Random Time Off',
                 'employee_id': self.employee_hruser.id,
                 'holiday_status_id': status.id,
             }
@@ -271,7 +271,7 @@ class TestAcessRightsStates(TestHrHolidaysAccessRightsCommon):
         """
         for i, status in enumerate(self.draft_status):
             values = {
-                'name': 'Random Leave',
+                'name': 'Random Time Off',
                 'employee_id': self.employee_hruser.id,
                 'holiday_status_id': status.id,
             }
@@ -286,7 +286,7 @@ class TestAcessRightsStates(TestHrHolidaysAccessRightsCommon):
         """
         for i, status in enumerate(self.draft_status):
             values = {
-                'name': 'Random Leave',
+                'name': 'Random Time Off',
                 'employee_id': self.employee_hruser.id,
                 'holiday_status_id': status.id,
             }
@@ -300,7 +300,7 @@ class TestAcessRightsStates(TestHrHolidaysAccessRightsCommon):
         """
         for i, status in enumerate(self.draft_status):
             values = {
-                'name': 'Random Leave',
+                'name': 'Random Time Off',
                 'employee_id': self.employee_hrmanager.id,
                 'holiday_status_id': status.id,
             }
@@ -313,7 +313,7 @@ class TestAcessRightsStates(TestHrHolidaysAccessRightsCommon):
         """
         for i, status in enumerate(self.draft_status):
             values = {
-                'name': 'Random Leave',
+                'name': 'Random Time Off',
                 'employee_id': self.employee_hruser.id,
                 'holiday_status_id': status.id,
             }
@@ -327,7 +327,7 @@ class TestAcessRightsStates(TestHrHolidaysAccessRightsCommon):
         self.employee_hruser.write({'leave_manager_id': self.user_hrmanager.id})
         for i, status in enumerate(self.draft_status):
             values = {
-                'name': 'Random Leave',
+                'name': 'Random Time Off',
                 'employee_id': self.employee_hruser.id,
                 'holiday_status_id': status.id,
             }
@@ -341,7 +341,7 @@ class TestAcessRightsStates(TestHrHolidaysAccessRightsCommon):
         self.employee_hrmanager.write({'leave_manager_id': self.user_hrmanager.id})
         for i, status in enumerate(self.draft_status):
             values = {
-                'name': 'Random Leave',
+                'name': 'Random Time Off',
                 'employee_id': self.employee_hrmanager.id,
                 'holiday_status_id': status.id,
             }
@@ -354,7 +354,7 @@ class TestAcessRightsStates(TestHrHolidaysAccessRightsCommon):
         """
         for i, status in enumerate(self.draft_status):
             values = {
-                'name': 'Random Leave',
+                'name': 'Random Time Off',
                 'employee_id': self.employee_hruser.id,
                 'holiday_status_id': status.id,
             }
@@ -368,7 +368,7 @@ class TestAcessRightsStates(TestHrHolidaysAccessRightsCommon):
         """
         for i, status in enumerate(self.draft_status):
             values = {
-                'name': 'Random Leave',
+                'name': 'Random Time Off',
                 'employee_id': self.employee_hruser.id,
                 'holiday_status_id': status.id,
             }
@@ -721,7 +721,7 @@ class TestAccessRightsUnlink(TestHrHolidaysAccessRightsCommon):
     def test_leave_unlink_draft_by_user(self):
         """ A simple user may delete its leave in draft state in the future"""
         values = {
-            'name': 'Random Leave',
+            'name': 'Random Time Off',
             'employee_id': self.employee_emp.id,
             'holiday_status_id': self.leave_type.id,
             'state': 'draft',
@@ -732,7 +732,7 @@ class TestAccessRightsUnlink(TestHrHolidaysAccessRightsCommon):
     def test_leave_unlink_confirm_by_user(self):
         """ A simple user may delete its leave in confirm state in the future"""
         values = {
-            'name': 'Random Leave',
+            'name': 'Random Time Off',
             'employee_id': self.employee_emp.id,
             'holiday_status_id': self.leave_type.id,
             'state': 'confirm',
@@ -743,7 +743,7 @@ class TestAccessRightsUnlink(TestHrHolidaysAccessRightsCommon):
     def test_leave_unlink_confirm_in_past_by_user(self):
         """ A simple user cannot delete its leave in the past"""
         values = {
-            'name': 'Random Leave',
+            'name': 'Random Time Off',
             'employee_id': self.employee_emp.id,
             'holiday_status_id': self.leave_type.id,
             'state': 'confirm',
@@ -755,7 +755,7 @@ class TestAccessRightsUnlink(TestHrHolidaysAccessRightsCommon):
     def test_leave_unlink_validate_by_user(self):
         """ A simple user cannot delete its leave in validate state"""
         values = {
-            'name': 'Random Leave',
+            'name': 'Random Time Off',
             'employee_id': self.employee_emp.id,
             'holiday_status_id': self.leave_type.id,
         }

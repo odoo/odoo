@@ -23,6 +23,7 @@
 
 import collections
 import contextlib
+import copy
 import datetime
 import dateutil
 import fnmatch
@@ -46,8 +47,7 @@ import babel.dates
 import dateutil.relativedelta
 import psycopg2
 import psycopg2.extensions
-from lxml import etree
-from lxml.builder import E
+from psycopg2.extras import Json
 
 import odoo
 from . import SUPERUSER_ID
@@ -132,15 +132,33 @@ def fix_import_export_id_paths(fieldname):
     fixed_external_id = re.sub(r'([^/]):id', r'\1/id', fixed_db_id)
     return fixed_external_id.split('/')
 
-def trigger_tree_merge(node1, node2):
-    """ Merge two trigger trees. """
-    for key, val in node2.items():
-        if key is None:
-            node1.setdefault(None, OrderedSet())
-            node1[None].update(val)
-        else:
-            node1.setdefault(key, {})
-            trigger_tree_merge(node1[key], node2[key])
+def merge_trigger_trees(trees: list, select=bool) -> dict:
+    """ Merge trigger trees list into a final tree. The function ``select`` is
+    called on every field to determine which fields should be kept in the tree
+    nodes. This enables to discard some fields from the tree nodes.
+    """
+    result_tree = {}                        # the resulting tree
+    root_fields = OrderedSet()              # the fields in the root node
+    subtrees_to_merge = defaultdict(list)   # the subtrees to merge grouped by key
+
+    for tree in trees:
+        for key, val in tree.items():
+            if key is None:
+                root_fields.update(val)
+            else:
+                subtrees_to_merge[key].append(val)
+
+    # the root node contains the collected fields for which select is true
+    root_node = [field for field in root_fields if select(field)]
+    if root_node:
+        result_tree[None] = root_node
+
+    for key, subtrees in subtrees_to_merge.items():
+        subtree = merge_trigger_trees(subtrees, select)
+        if subtree:
+            result_tree[key] = subtree
+
+    return result_tree
 
 
 class MetaModel(api.Meta):
@@ -197,9 +215,6 @@ class MetaModel(api.Meta):
                     field.__set_name__(self, name)
 
             add('id', fields.Id(automatic=True))
-            add(self.CONCURRENCY_CHECK_FIELD, fields.Datetime(
-                string='Last Modified on', automatic=True,
-                compute='_compute_concurrency_field', compute_sudo=False))
             add_default('display_name', fields.Char(
                 string='Display Name', automatic=True, compute='_compute_display_name'))
 
@@ -525,7 +540,6 @@ class BaseModel(metaclass=MetaModel):
     """field to use for active records, automatically set to either ``"active"``
     or ``"x_active"``.
     """
-    _date_name = 'date'         #: field to use for default calendar view
     _fold_name = 'fold'         #: field to determine folded groups in kanban views
 
     _translate = True           # False disables translations export for this model (Old API)
@@ -548,8 +562,6 @@ class BaseModel(metaclass=MetaModel):
     "maximum number of transient records, unlimited if ``0``"
     _transient_max_hours = lazy_classproperty(lambda _: config.get('transient_age_limit'))
     "maximum idle lifetime (in hours), unlimited if ``0``"
-
-    CONCURRENCY_CHECK_FIELD = '__last_update'
 
     def _valid_field_parameter(self, field, name):
         """ Return whether the given parameter name is valid for the field. """
@@ -584,15 +596,6 @@ class BaseModel(metaclass=MetaModel):
                 )
         return field
 
-    @api.depends(lambda model: ('create_date', 'write_date') if model._log_access else ())
-    def _compute_concurrency_field(self):
-        fname = self.CONCURRENCY_CHECK_FIELD
-        if self._log_access:
-            for record in self:
-                record[fname] = record.write_date or record.create_date or Datetime.now()
-        else:
-            self[fname] = odoo.fields.Datetime.now()
-
     #
     # Goal: try to apply inheritance at the instantiation level and
     #       put objects in the pool var
@@ -605,7 +608,6 @@ class BaseModel(metaclass=MetaModel):
         This "registry" class carries inferred model metadata, and inherits (in
         the Python sense) from all classes that define the model, and possibly
         other registry classes.
-
         """
         if getattr(cls, '_constraints', None):
             _logger.warning("Model attribute '_constraints' is no longer supported, "
@@ -917,10 +919,10 @@ class BaseModel(metaclass=MetaModel):
     def _export_rows(self, fields, *, _is_toplevel_call=True):
         """ Export fields of the records in ``self``.
 
-            :param fields: list of lists of fields to traverse
-            :param bool _is_toplevel_call:
-                used when recursing, avoid using when calling from outside
-            :return: list of lists of corresponding values
+        :param list fields: list of lists of fields to traverse
+        :param bool _is_toplevel_call:
+            used when recursing, avoid using when calling from outside
+        :return: list of lists of corresponding values
         """
         import_compatible = self.env.context.get('import_compat', True)
         lines = []
@@ -1032,10 +1034,11 @@ class BaseModel(metaclass=MetaModel):
     def export_data(self, fields_to_export):
         """ Export fields for selected objects
 
-            :param fields_to_export: list of fields
-            :rtype: dictionary with a *datas* matrix
+        This method is used when exporting data via client menu
 
-            This method is used when exporting data via client menu
+        :param list fields_to_export: list of fields
+        :returns: dictionary with a *datas* matrix
+        :rtype: dict
         """
         if not (self.env.is_admin() or self.env.user.has_group('base.group_allow_export')):
             raise UserError(_("You don't have the rights to export data. Please contact an Administrator."))
@@ -1301,7 +1304,7 @@ class BaseModel(metaclass=MetaModel):
         """
         field_names = {name: field.string for name, field in self._fields.items()}
         if self.env.lang:
-            field_names.update(self.env['ir.translation'].get_field_string(self._name))
+            field_names.update(self.env['ir.model.fields'].get_field_string(self._name))
 
         convert = self.env['ir.fields.converter'].for_model(self)
 
@@ -1437,13 +1440,6 @@ class BaseModel(metaclass=MetaModel):
         # if self._rec_name is set, it belongs to self._fields
         return self._rec_name or 'id'
 
-    #
-    # Override this method if you need a window title that depends on the context
-    #
-    @api.model
-    def view_header_get(self, view_id=None, view_type='form'):
-        return False
-
     @api.model
     def user_has_groups(self, groups):
         """Return true if the user is member of at least one of the groups in
@@ -1489,382 +1485,6 @@ class BaseModel(metaclass=MetaModel):
                     return True
 
         return not has_groups
-
-    @api.model
-    def _get_default_form_view(self):
-        """ Generates a default single-line form view using all fields
-        of the current model.
-
-        :returns: a form view as an lxml document
-        :rtype: etree._Element
-        """
-        group = E.group(col="4")
-        for fname, field in self._fields.items():
-            if field.automatic:
-                continue
-            elif field.type in ('one2many', 'many2many', 'text', 'html'):
-                group.append(E.newline())
-                group.append(E.field(name=fname, colspan="4"))
-                group.append(E.newline())
-            else:
-                group.append(E.field(name=fname))
-        group.append(E.separator())
-        return E.form(E.sheet(group, string=self._description))
-
-    @api.model
-    def _get_default_search_view(self):
-        """ Generates a single-field search view, based on _rec_name.
-
-        :returns: a tree view as an lxml document
-        :rtype: etree._Element
-        """
-        element = E.field(name=self._rec_name_fallback())
-        return E.search(element, string=self._description)
-
-    @api.model
-    def _get_default_tree_view(self):
-        """ Generates a single-field tree view, based on _rec_name.
-
-        :returns: a tree view as an lxml document
-        :rtype: etree._Element
-        """
-        element = E.field(name=self._rec_name_fallback())
-        return E.tree(element, string=self._description)
-
-    @api.model
-    def _get_default_pivot_view(self):
-        """ Generates an empty pivot view.
-
-        :returns: a pivot view as an lxml document
-        :rtype: etree._Element
-        """
-        return E.pivot(string=self._description)
-
-    @api.model
-    def _get_default_kanban_view(self):
-        """ Generates a single-field kanban view, based on _rec_name.
-
-        :returns: a kanban view as an lxml document
-        :rtype: etree._Element
-        """
-
-        field = E.field(name=self._rec_name_fallback())
-        content_div = E.div(field, {'class': "o_kanban_card_content"})
-        card_div = E.div(content_div, {'t-attf-class': "oe_kanban_card oe_kanban_global_click"})
-        kanban_box = E.t(card_div, {'t-name': "kanban-box"})
-        templates = E.templates(kanban_box)
-        return E.kanban(templates, string=self._description)
-
-    @api.model
-    def _get_default_graph_view(self):
-        """ Generates a single-field graph view, based on _rec_name.
-
-        :returns: a graph view as an lxml document
-        :rtype: etree._Element
-        """
-        element = E.field(name=self._rec_name_fallback())
-        return E.graph(element, string=self._description)
-
-    @api.model
-    def _get_default_calendar_view(self):
-        """ Generates a default calendar view by trying to infer
-        calendar fields from a number of pre-set attribute names
-
-        :returns: a calendar view
-        :rtype: etree._Element
-        """
-        def set_first_of(seq, in_, to):
-            """Sets the first value of ``seq`` also found in ``in_`` to
-            the ``to`` attribute of the ``view`` being closed over.
-
-            Returns whether it's found a suitable value (and set it on
-            the attribute) or not
-            """
-            for item in seq:
-                if item in in_:
-                    view.set(to, item)
-                    return True
-            return False
-
-        view = E.calendar(string=self._description)
-        view.append(E.field(name=self._rec_name_fallback()))
-
-        if not set_first_of([self._date_name, 'date', 'date_start', 'x_date', 'x_date_start'],
-                            self._fields, 'date_start'):
-            raise UserError(_("Insufficient fields for Calendar View!"))
-
-        set_first_of(["user_id", "partner_id", "x_user_id", "x_partner_id"],
-                     self._fields, 'color')
-
-        if not set_first_of(["date_stop", "date_end", "x_date_stop", "x_date_end"],
-                            self._fields, 'date_stop'):
-            if not set_first_of(["date_delay", "planned_hours", "x_date_delay", "x_planned_hours"],
-                                self._fields, 'date_delay'):
-                raise UserError(_(
-                    "Insufficient fields to generate a Calendar View for %s, missing a date_stop or a date_delay",
-                    self._name
-                ))
-
-        return view
-
-    @api.model
-    def get_views(self, views, options=None):
-        """ Returns the fields_views of given views, along with the fields of
-        the current model, and optionally its filters for the given action.
-
-        :param views: list of [view_id, view_type]
-        :param dict options: a dict optional boolean flags, set to enable:
-
-            ``toolbar``
-                includes contextual actions when loading fields_views
-            ``load_filters``
-                returns the model's filters
-            ``action_id``
-                id of the action to get the filters, otherwise loads the global
-                filters or the model
-
-        :return: dictionary with fields_views, fields and optionally filters
-        """
-        options = options or {}
-        result = {}
-
-        result['views'] = {
-            v_type: self.get_view(
-                v_id, v_type if v_type != 'list' else 'tree',
-                **options
-            )
-            for [v_id, v_type] in views
-        }
-        models = set(model for info in result['views'].values() for model in info.pop('models'))
-
-        result['models'] = {model: self.env[model].fields_get() for model in models}
-
-        return result
-
-    @api.model
-    def _get_view(self, view_id=None, view_type='form', **options):
-        """_get_view([view_id | view_type='form'])
-
-        Get the model view combined architecture (the view along all its inheriting views).
-
-        :param int view_id: id of the view or None
-        :param str view_type: type of the view to return if view_id is None ('form', 'tree', ...)
-        :param dict options: bool options to return additional features:
-            - bool load_filters: returns the model's filters (for search views)
-            - bool mobile: true if the web client is currently using the responsive mobile view
-              (to use kanban views instead of list views for x2many fields)
-            - bool toolbar: true to include contextual actions
-        :return: architecture of the view as an etree node, and the browse record of the view used
-        :rtype: tuple
-        :raise AttributeError:
-
-            * if no view exists for that model, and no method `_get_default_[view_type]_view` exists for the view type
-
-        """
-        View = self.env['ir.ui.view'].sudo()
-
-        # try to find a view_id if none provided
-        if not view_id:
-            # <view_type>_view_ref in context can be used to override the default view
-            view_ref_key = view_type + '_view_ref'
-            view_ref = self._context.get(view_ref_key)
-            if view_ref:
-                if '.' in view_ref:
-                    module, view_ref = view_ref.split('.', 1)
-                    query = "SELECT res_id FROM ir_model_data WHERE model='ir.ui.view' AND module=%s AND name=%s"
-                    self._cr.execute(query, (module, view_ref))
-                    view_ref_res = self._cr.fetchone()
-                    if view_ref_res:
-                        view_id = view_ref_res[0]
-                else:
-                    _logger.warning('%r requires a fully-qualified external id (got: %r for model %s). '
-                        'Please use the complete `module.view_id` form instead.', view_ref_key, view_ref,
-                        self._name)
-
-            if not view_id:
-                # otherwise try to find the lowest priority matching ir.ui.view
-                view_id = View.default_view(self._name, view_type)
-
-        if view_id:
-            # read the view with inherited views applied
-            view = View.browse(view_id)
-            arch = view._get_combined_arch()
-        else:
-            # fallback on default views methods if no ir.ui.view could be found
-            view = View.browse()
-            try:
-                arch = getattr(self, '_get_default_%s_view' % view_type)()
-            except AttributeError:
-                raise UserError(_("No default view of type '%s' could be found !", view_type))
-        return arch, view
-
-    @api.model
-    def get_view(self, view_id=None, view_type='form', **options):
-        """ get_view([view_id | view_type='form'])
-
-        Get the detailed composition of the requested view like model, view architecture
-
-        :param int view_id: id of the view or None
-        :param str view_type: type of the view to return if view_id is None ('form', 'tree', ...)
-        :param dict options: boolean options to return additional features:
-
-            - load_filters: returns the model's filters (for search views)
-            - mobile: true if the web client is currently using the responsive mobile view
-              (to use kanban views instead of list views for x2many fields)
-            - toolbar: true to include contextual actions
-        :return: composition of the requested view (including inherited views and extensions)
-        :rtype: dict
-        :raise AttributeError:
-
-            * if the inherited view has unknown position to work with other than 'before', 'after', 'inside', 'replace'
-            * if some tag other than 'position' is found in parent view
-
-        :raise Invalid ArchitectureError: if there is view type other than form, tree, calendar, search etc... defined on the structure
-        """
-        self.check_access_rights('read')
-
-        # Get the view arch and all other attributes describing the composition of the view
-        arch, view = self._get_view(view_id, view_type, **options)
-
-        # Override context for postprocessing
-        if view and (view.model or self._name) != self._name:
-            view = view.with_context(base_model_name=view.model)
-
-        # Apply post processing, groups and modifiers etc...
-        arch, models = view.postprocess_and_fields(arch, model=self._name, **options)
-        result = {
-            'arch': arch,
-            # TODO: only `web_studio` seems to require this. I guess this is acceptable to keep it.
-            'id': view.id,
-            # TODO: only `web_studio` seems to require this. But this one on the other hand should be eliminated:
-            # you just called `get_views` for that model, so obviously the web client already knows the model.
-            'model': self._name,
-            'models': models,
-        }
-
-        # Add related action information if asked
-        if options.get('toolbar') and view_type != 'search':
-            vt = 'list' if view_type == 'tree' else view_type
-            bindings = self.env['ir.actions.actions'].get_bindings(self._name)
-            resreport = [action
-                         for action in bindings['report']
-                         if vt in (action.get('binding_view_types') or vt).split(',')]
-            resaction = [action
-                         for action in bindings['action']
-                         if vt in (action.get('binding_view_types') or vt).split(',')]
-
-            result['toolbar'] = {
-                'print': resreport,
-                'action': resaction,
-            }
-
-        if options.get('load_filters') and view_type == 'search':
-            result['filters'] = self.env['ir.filters'].get_filters(self._name, options.get('action_id'))
-
-        return result
-
-    @api.model
-    def load_views(self, views, options=None):
-        warnings.warn(
-            '`load_views` method is deprecated, use `get_views` instead',
-            DeprecationWarning, stacklevel=2,
-        )
-        return self.get_views(views, options=options)
-
-    @api.model
-    def _fields_view_get(self, view_id=None, view_type='form', toolbar=False, submenu=False):
-        warnings.warn(
-            'Method `_fields_view_get` is deprecated, use `_get_view` instead',
-            DeprecationWarning, stacklevel=2,
-        )
-        arch, view = self._get_view(view_id, view_type, toolbar=toolbar, submenu=submenu)
-        result = {
-            'arch': etree.tostring(arch, encoding='unicode'),
-            'model': self._name,
-            'field_parent': False,
-        }
-        if view:
-            result['name'] = view.name
-            result['type'] = view.type
-            result['view_id'] = view.id
-            result['field_parent'] = view.field_parent
-            result['base_model'] = view.model
-        else:
-            result['type'] = view_type
-            result['name'] = 'default'
-        return result
-
-    @api.model
-    def fields_view_get(self, view_id=None, view_type='form', toolbar=False, submenu=False):
-        """
-        .. deprecated:: saas-15.4
-
-            Use :meth:`~odoo.models.Model.get_view()` instead.
-        """
-        warnings.warn(
-            'Method `fields_view_get` is deprecated, use `get_view` instead',
-            DeprecationWarning, stacklevel=2,
-        )
-        result = self.get_view(view_id, view_type, toolbar=toolbar, submenu=submenu)
-        node = etree.fromstring(result['arch'])
-        view_fields = set(el.get('name') for el in node.xpath('.//field[not(ancestor::field)]'))
-        result['fields'] = self.fields_get(view_fields)
-        result.pop('models', None)
-        if 'id' in result:
-            view = self.env['ir.ui.view'].sudo().browse(result.pop('id'))
-            result['name'] = view.name
-            result['type'] = view.type
-            result['view_id'] = view.id
-            result['field_parent'] = view.field_parent
-            result['base_model'] = view.model
-        else:
-            result['type'] = view_type
-            result['name'] = 'default'
-            result['field_parent'] = False
-        return result
-
-    def get_formview_id(self, access_uid=None):
-        """ Return a view id to open the document ``self`` with. This method is
-            meant to be overridden in addons that want to give specific view ids
-            for example.
-
-            Optional access_uid holds the user that would access the form view
-            id different from the current environment user.
-        """
-        return False
-
-    def get_formview_action(self, access_uid=None):
-        """ Return an action to open the document ``self``. This method is meant
-            to be overridden in addons that want to give specific view ids for
-            example.
-
-        An optional access_uid holds the user that will access the document
-        that could be different from the current user. """
-        view_id = self.sudo().get_formview_id(access_uid=access_uid)
-        return {
-            'type': 'ir.actions.act_window',
-            'res_model': self._name,
-            'view_type': 'form',
-            'view_mode': 'form',
-            'views': [(view_id, 'form')],
-            'target': 'current',
-            'res_id': self.id,
-            'context': dict(self._context),
-        }
-
-    def _get_access_action(self, access_uid=None, force_website=False):
-        """ Return an action to open the document. This method is meant to be
-        overridden in addons that want to give specific access to the document.
-        By default, it opens the formview of the document.
-
-        :param integer access_uid: optional access_uid being the user that
-          accesses the document. May be different from the current user as we
-          may compute an access for someone else.
-        :param integer force_website: force frontend redirection if available
-          on self. Used in overrides, notably with portal / website addons.
-        """
-        self.ensure_one()
-        return self.get_formview_action(access_uid=access_uid)
 
     @api.model
     def search_count(self, domain, limit=None):
@@ -2049,19 +1669,26 @@ class BaseModel(metaclass=MetaModel):
             if not avoid(field)
         }
 
-        if not missing_defaults:
-            return values
+        if missing_defaults:
+            # override defaults with the provided values, never allow the other way around
+            defaults = self.default_get(list(missing_defaults))
+            for name, value in defaults.items():
+                if self._fields[name].type == 'many2many' and value and isinstance(value[0], int):
+                    # convert a list of ids into a list of commands
+                    defaults[name] = [Command.set(value)]
+                elif self._fields[name].type == 'one2many' and value and isinstance(value[0], dict):
+                    # convert a list of dicts into a list of commands
+                    defaults[name] = [Command.create(x) for x in value]
+            defaults.update(values)
 
-        # override defaults with the provided values, never allow the other way around
-        defaults = self.default_get(list(missing_defaults))
-        for name, value in defaults.items():
-            if self._fields[name].type == 'many2many' and value and isinstance(value[0], int):
-                # convert a list of ids into a list of commands
-                defaults[name] = [Command.set(value)]
-            elif self._fields[name].type == 'one2many' and value and isinstance(value[0], dict):
-                # convert a list of dicts into a list of commands
-                defaults[name] = [Command.create(x) for x in value]
-        defaults.update(values)
+        else:
+            defaults = values
+
+        # delegate the default properties to the properties field
+        for field in self._fields.values():
+            if field.type == 'properties':
+                defaults[field.name] = field._add_default_values(self.env, defaults)
+
         return defaults
 
     @classmethod
@@ -2802,11 +2429,11 @@ class BaseModel(metaclass=MetaModel):
                 extra=extra, extra_params=extra_params,
             )
             return '"%s"."%s"' % (rel_alias, field.column2)
-
-        elif field.translate is True:
-            # handle the case where the field is translated
-            return model._generate_translated_field(alias, fname, query)
-
+        elif field.translate:
+            lang = self.env.lang or 'en_US'
+            if lang == 'en_US':
+                return f'"{alias}"."{fname}"->>\'en_US\''
+            return f'COALESCE("{alias}"."{fname}"->>\'{lang}\', "{alias}"."{fname}"->>\'en_US\')'
         else:
             return '"%s"."%s"' % (alias, fname)
 
@@ -3011,7 +2638,10 @@ class BaseModel(metaclass=MetaModel):
                 # constraint exists but its definition may have changed
                 tools.drop_constraint(cr, self._table, conname)
 
-            if foreign_key_re.match(definition):
+            if not definition:
+                # virtual constraint (e.g. implemented by a custom index)
+                self.pool.post_init(tools.check_index_exist, cr, conname)
+            elif foreign_key_re.match(definition):
                 self.pool.post_init(tools.add_constraint, cr, self._table, conname, definition)
             else:
                 self.pool.post_constraint(tools.add_constraint, cr, self._table, conname, definition)
@@ -3221,19 +2851,6 @@ class BaseModel(metaclass=MetaModel):
         return res
 
     @api.model
-    def get_empty_list_help(self, help):
-        """ Hook method to customize the help message in empty list/kanban views.
-
-        By default, it returns the help received as parameter.
-
-        :param str help: ir.actions.act_window help content
-        :return: help message displayed when there is no result to display
-          in a list/kanban view (by default, it returns the action help)
-        :rtype: str
-        """
-        return help
-
-    @api.model
     def check_field_access_rights(self, operation, fields):
         """Check the user access rights on the given fields.
 
@@ -3362,6 +2979,124 @@ class BaseModel(metaclass=MetaModel):
 
         return self._read_format(fnames=fields, load=load)
 
+    def update_field_translations(self, field_name, translations):
+        """ Update the values of a translated field.
+
+        :param str field_name: field name
+        :param dict translations: if the field has ``translate=True``, it should be a dictionary
+            like ``{lang: new_value}``; if ``translate`` is a callable, it should be like
+            ``{lang: {old_term: new_term}}``
+        """
+        return self._update_field_translations(field_name, translations)
+
+    def _update_field_translations(self, field_name, translations, digest=None):
+        """ Private implementation of :meth:`~update_field_translations`.
+        The main difference comes from the extra function ``digest``, which may
+        be used to make identifiers for old terms.
+
+        :param dict translations: if the field has ``translate=True``, it should be a dictionary
+            like ``{lang: new_value}``; if ``translate`` is a callable, it should be like
+            ``{lang: {old_term: new_term}}``, or ``{lang: {digest(old_term): new_term}}`` when
+            ``digest`` is a callable
+        :param digest: an optional digest function for the old_term
+        """
+        self.ensure_one()
+
+        field = self._fields[field_name]
+
+        if not field.translate:
+            return False  # or raise error
+
+        if not field.store and not field.related and field.compute:
+            # a non-related non-stored computed field cannot be translated, even if it has inverse function
+            return False
+
+        if field.translate is True:
+            for lang, translation in translations.items():
+                if translation is not None:
+                    self.with_context(lang=lang)[field_name] = translation
+        else:
+            # Strictly speaking, a translated related/computed field cannot be stored
+            # because the compute function only support one language
+            # `not field.store` is a redundant logic.
+            # But some developers store translated related fields.
+            # In these cases, only all translations of the first stored translation field will be updated
+            # For other stored related translated field, the translation for the flush language will be updated
+            if field.related and not field.store:
+                related_path, field_name = field.related.rsplit(".", 1)
+                return self.mapped(related_path)._update_field_translations(field_name, translations, digest)
+
+            self.check_access_rights('write')
+            self.check_field_access_rights('write', [field_name])
+            self.check_access_rule('write')
+
+            # Note:
+            # update terms in 'en_US' will not change its value other translated values
+            # record_en = Model_en.create({'html': '<div>English 1</div><div>English 2<div/>'
+            # record_en.update_field_translations('html', {'fr_FR': {'English 2': 'French 2'}}
+            # record_en.update_field_translations('html', {'en_US': {'English 1': 'English 3'}}
+            # assert record_en                            == '<div>English 3</div><div>English 2<div/>'
+            # assert record_fr.with_context(lang='fr_FR') == '<div>English 1</div><div>French 2<div/>'
+            # assert record_nl.with_context(lang='nl_NL') == '<div>English 3</div><div>English 2<div/>'
+
+            old_translations = field._get_stored_translations(self)
+            if not old_translations:
+                return False
+            new_translations = old_translations
+            for lang, translation in translations.items():
+                old_value = new_translations.get(lang) or new_translations.get('en_US')
+                if digest:
+                    old_terms = field.get_trans_terms(old_value)
+                    old_terms_digested2value = {digest(old_term): old_term for old_term in old_terms}
+                    translation = {
+                        old_terms_digested2value[key]: value
+                        for key, value in translation.items()
+                        if key in old_terms_digested2value
+                    }
+                new_translations[lang] = field.translate(translation.get, old_value)
+            self.env.cache.update_raw(self, field, [new_translations], dirty=True)
+            self.modified([field_name])
+        return True
+
+    def get_field_translations(self, field_name, langs=None):
+        """ get model/model_term translations for records
+        :param str field_name: field name
+        :param list langs: languages
+
+        :return: list of dicts like [{"lang": lang, "source": source_term, "value": value_term}]
+        In the UI, translation_dialog.js
+        for model: val_en will be shown as the translation
+        for model term: val_en will be shown as the src
+        """
+        self.ensure_one()
+        field = self._fields[field_name]
+        # We don't forbid reading inactive/non-existing languages,
+        langs = set(langs or [l[0] for l in self.env['res.lang'].get_installed()])
+        val_en = self.with_context(lang='en_US')[field_name]
+        if not callable(field.translate):
+            translations = [{
+                'lang': lang,
+                'source': val_en,
+                'value': self.with_context(lang=lang)[field_name]
+            } for lang in langs]
+        else:
+            translation_dictionary = field.get_translation_dictionary(
+                val_en, {lang: self.with_context(lang=lang)[field_name] for lang in langs}
+            )
+            translations = [{
+                'lang': lang,
+                'source': term_en,
+                'value': term_lang if term_lang != term_en else ''
+            } for term_en, translations in translation_dictionary.items()
+                for lang, term_lang in translations.items()]
+        context = {}
+        context['translation_type'] = 'text' if field.type in ['text', 'html'] else 'char'
+        context['translation_show_source'] = False
+        if callable(field.translate):
+            context['translation_show_source'] = True
+
+        return translations, context
+
     def _read_format(self, fnames, load='_classic_read'):
         """Returns a list of dictionaries mapping field names to their values,
         with one dictionary per record that exists.
@@ -3421,6 +3156,7 @@ class BaseModel(metaclass=MetaModel):
         # determine columns fields and those with their own read() method
         column_fields = []
         other_fields = []
+        translated_field_names = []
         for name in field_names:
             if name == 'id':
                 continue
@@ -3429,10 +3165,17 @@ class BaseModel(metaclass=MetaModel):
                 _logger.warning("%s._read() with unknown field %r", self._name, name)
                 continue
             if field.base_field.store and field.base_field.column_type:
-                if not (field.inherited and callable(field.base_field.translate)):
-                    column_fields.append(field)
+                column_fields.append(field)
             elif field.store and not field.column_type:
                 # non-column fields: for the sake of simplicity, we ignore inherited fields
+                other_fields.append(field)
+            if field.store and field.translate:
+                translated_field_names.append(field.name)
+
+            if field.type == 'properties':
+                # force calling fields.read for properties field because
+                # we want to read all relational properties in batch
+                # (and check their existence in batch as well)
                 other_fields.append(field)
 
         if column_fields:
@@ -3442,6 +3185,15 @@ class BaseModel(metaclass=MetaModel):
             # an impact on checking security rules, as they are injected into
             # the query.  However, we don't need to flush the fields to fetch,
             # as explained below when putting values in cache.
+
+            # Since only one language translation is fetched from database,
+            # we must flush these translated fields before read
+            # E.g. in database, the {'en_US': 'English'},
+            # write record.with_context(lang='en_US').name = 'English2'
+            # then record.with_context(lang='fr_FR').name => cache miss => _read
+            # 'English2'should is flushed before query as it is the fallback of empty 'fr_FR'
+            if translated_field_names:
+                self.flush_recordset(translated_field_names)
             self._flush_search([], order='id')
 
             # make a query object for selecting ids, and apply security rules to it
@@ -3469,7 +3221,16 @@ class BaseModel(metaclass=MetaModel):
                 cr.execute(query_str, params + [sub_ids])
                 result += cr.fetchall()
         else:
-            self.check_access_rule('read')
+            try:
+                self.check_access_rule('read')
+            except MissingError:
+                # Method _read() should never raise a MissingError, but method
+                # check_access_rule() can, because it must read fields on self.
+                # So we restrict 'self' to existing records (to avoid an extra
+                # exists() at the end of the method).
+                self = self.exists()
+                self.check_access_rule('read')
+
             result = [(id_,) for id_ in self.ids]
 
         fetched = self.browse()
@@ -3485,11 +3246,6 @@ class BaseModel(metaclass=MetaModel):
             # overwrite values in cache.
             for field in column_fields:
                 values = next(column_values)
-                # post-process translations
-                if context.get('lang') and not field.inherited and callable(field.translate):
-                    if any(values):
-                        translate = field.get_trans_func(fetched)
-                        values = [translate(id_, value) for id_, value in zip(ids, values)]
                 # store values in cache, but without overwriting
                 self.env.cache.insert_missing(fetched, field, values)
 
@@ -3567,31 +3323,6 @@ class BaseModel(metaclass=MetaModel):
         if len(self) > 1:
             raise ValueError("Expected singleton or no record: %s" % self)
         return self.env['ir.config_parameter'].sudo().get_param('web.base.url')
-
-    def _check_concurrency(self):
-        if not (self._log_access and self._context.get(self.CONCURRENCY_CHECK_FIELD)):
-            return
-        check_clause = "(id = %s AND %s < COALESCE(write_date, create_date, (now() at time zone 'UTC'))::timestamp)"
-        for sub_ids in self._cr.split_for_in_conditions(self.ids):
-            nclauses = 0
-            params = []
-            for id in sub_ids:
-                id_ref = "%s,%s" % (self._name, id)
-                update_date = self._context[self.CONCURRENCY_CHECK_FIELD].pop(id_ref, None)
-                if update_date:
-                    nclauses += 1
-                    params.extend([id, update_date])
-            if not nclauses:
-                continue
-            query = "SELECT id FROM %s WHERE %s" % (self._table, " OR ".join([check_clause] * nclauses))
-            self._cr.execute(query, tuple(params))
-            res = self._cr.fetchone()
-            if res:
-                # mention the first one only to keep the error message readable
-                raise ValidationError(_(
-                    "A document was modified since you last viewed it (%s:%d)",
-                    self._description, res[0],
-                ))
 
     def _check_company(self, fnames=None):
         """ Check the companies of the values of the given field names.
@@ -3764,7 +3495,6 @@ class BaseModel(metaclass=MetaModel):
 
         self.check_access_rights('unlink')
         self.check_access_rule('unlink')
-        self._check_concurrency()
 
         from odoo.addons.base.models.ir_model import MODULE_UNINSTALL_FLAG
         for func in self._ondelete_methods:
@@ -3804,7 +3534,7 @@ class BaseModel(metaclass=MetaModel):
             # mark fields that depend on 'self' to recompute them after 'self' has
             # been deleted (like updating a sum of lines after deleting one line)
             with self.env.protecting(self._fields.values(), records):
-                self.modified(self._fields, before=True)
+                records.modified(self._fields, before=True)
 
             query = f'DELETE FROM "{self._table}" WHERE id IN %s'
             cr.execute(query, (sub_ids,))
@@ -3914,8 +3644,7 @@ class BaseModel(metaclass=MetaModel):
 
         field_values = []                           # [(field, value)]
         determine_inverses = defaultdict(list)      # {inverse: fields}
-        records_to_inverse = {}                     # {field: records}
-        relational_names = []
+        fnames_modifying_relations = []
         protected = set()
         check_company = False
         for fname, value in vals.items():
@@ -3933,11 +3662,8 @@ class BaseModel(metaclass=MetaModel):
                     # order to avoid an inconsistent update.
                     self[fname]
                 determine_inverses[field.inverse].append(field)
-                # DLE P150: `test_cancel_propagation`, `test_manufacturing_3_steps`, `test_manufacturing_flow`
-                # TODO: check whether still necessary
-                records_to_inverse[field] = self.filtered('id')
-            if field.relational or self.pool.field_inverses[field]:
-                relational_names.append(fname)
+            if field in self.pool.fields_modifying_relations:
+                fnames_modifying_relations.append(fname)
             if field.inverse or (field.compute and not field.readonly):
                 if field.store or field.type not in ('one2many', 'many2many'):
                     # Protect the field from being recomputed while being
@@ -3981,7 +3707,7 @@ class BaseModel(metaclass=MetaModel):
             # In this situation, the total amount must be recomputed on *both*
             # sales order: the line's order before the modification, and the
             # line's order after the modification.
-            self.modified(relational_names, before=True)
+            self.modified(fnames_modifying_relations, before=True)
 
             real_recs = self.filtered('id')
 
@@ -4050,7 +3776,6 @@ class BaseModel(metaclass=MetaModel):
         if not self:
             return
 
-        self._check_concurrency()
         cr = self._cr
 
         # determine records that require updating parent_path
@@ -4063,7 +3788,8 @@ class BaseModel(metaclass=MetaModel):
             vals.setdefault('write_date', self.env.cr.now())
 
         # determine SQL values
-        columns = {}                    # {column_name: value}
+        columns = []
+        params = []
 
         for name, val in sorted(vals.items()):
             if self._log_access and name in LOG_ACCESS_COLUMNS and not val:
@@ -4071,13 +3797,21 @@ class BaseModel(metaclass=MetaModel):
             field = self._fields[name]
             assert field.store
             assert field.column_type
-            columns[name] = val
+            if field.translate is True and val:
+                # The first param is for the fallback value {'en_US': 'first_written_value'}
+                # which fills the 'en_US' key of jsonb only when the old column value is NULL.
+                # The second param is for the real value {'fr_FR': 'French', 'nl_NL': 'Dutch'}
+                columns.append(f'''"{name}" = %s || COALESCE("{name}", '{{}}'::jsonb) || %s''')
+                params.append(Json({} if 'en_US' in val.adapted else {'en_US': next(iter(val.adapted.values()))}))
+                params.append(val)
+            else:
+                columns.append(f'"{name}" = %s')
+                params.append(val)
 
         # update columns
         if columns:
-            template = ', '.join(f'"{name}" = %s' for name in columns)
+            template = ', '.join(columns)
             query = f'UPDATE "{self._table}" SET {template} WHERE id IN %s'
-            params = list(columns.values())
             for sub_ids in cr.split_for_in_conditions(self._ids):
                 cr.execute(query, params + [sub_ids])
 
@@ -4119,13 +3853,13 @@ class BaseModel(metaclass=MetaModel):
         self = self.browse()
         self.check_access_rights('create')
 
-        vals_list = self._prepare_create_values(vals_list)
+        new_vals_list = self._prepare_create_values(vals_list)
 
         # classify fields for each record
         data_list = []
         determine_inverses = defaultdict(set)       # {inverse: fields}
 
-        for vals in vals_list:
+        for vals in new_vals_list:
             precomputed = vals.pop('__precomputed__', ())
 
             # distribute fields into sets for various purposes
@@ -4220,6 +3954,28 @@ class BaseModel(metaclass=MetaModel):
 
         if self._check_company_auto:
             records._check_company()
+
+        import_module = self.env.context.get('_import_current_module')
+        if not import_module: # not an import -> bail
+            return records
+
+        # It is to support setting xids directly in create by
+        # providing an "id" key (otherwise stripped by create) during an import
+        # (which should strip 'id' from the input data anyway)
+        noupdate = self.env.context.get('noupdate', False)
+
+        xids = (v.get('id') for v in vals_list)
+        self.env['ir.model.data']._update_xmlids([
+            {
+                'xml_id': xid if '.' in xid else ('%s.%s' % (import_module, xid)),
+                'record': rec,
+                # note: this is not used when updating o2ms above...
+                'noupdate': noupdate,
+            }
+            for rec, xid in zip(records, xids)
+            if xid and isinstance(xid, str)
+        ])
+
         return records
 
     def _prepare_create_values(self, vals_list):
@@ -4326,7 +4082,6 @@ class BaseModel(metaclass=MetaModel):
         # insert rows in batches of maximum INSERT_BATCH_SIZE
         ids = []                                # ids of created records
         other_fields = OrderedSet()             # non-column fields
-        translated_fields = OrderedSet()        # translated fields
 
         for data_sublist in split_every(INSERT_BATCH_SIZE, data_list):
             stored_list = [data['stored'] for data in data_sublist]
@@ -4337,15 +4092,22 @@ class BaseModel(metaclass=MetaModel):
             for fname in fnames:
                 field = self._fields[fname]
                 if field.column_type:
-                    if field.translate is True:
-                        translated_fields.add(field)
                     columns.append(fname)
                     for stored, row in zip(stored_list, rows):
                         if fname in stored:
-                            row.append(field.convert_to_column(stored[fname], self, stored))
+                            colval = field.convert_to_column(stored[fname], self, stored)
+                            if field.translate is True and colval:
+                                if 'en_US' not in colval.adapted:
+                                    colval.adapted['en_US'] = next(iter(colval.adapted.values()))
+                            row.append(colval)
                         else:
                             row.append(SQL_DEFAULT)
                 else:
+                    other_fields.add(field)
+
+                if field.type == 'properties':
+                    # force calling fields.create for properties field because
+                    # we might want to update the parent definition
                     other_fields.add(field)
 
             if not columns:
@@ -4368,7 +4130,7 @@ class BaseModel(metaclass=MetaModel):
         cachetoclear = []
         records = self.browse(ids)
         inverses_update = defaultdict(list)     # {(field, value): ids}
-        common_set_vals = set(LOG_ACCESS_COLUMNS + [self.CONCURRENCY_CHECK_FIELD, 'id', 'parent_path'])
+        common_set_vals = set(LOG_ACCESS_COLUMNS + ['id', 'parent_path'])
         for data, record in zip(data_list, records):
             data['record'] = record
             # DLE P104: test_inherit.py, test_50_search_one2many
@@ -4429,18 +4191,6 @@ class BaseModel(metaclass=MetaModel):
         # check Python constraints for stored fields
         records._validate_fields(name for data in data_list for name in data['stored'])
         records.check_access_rule('create')
-
-        # add translations
-        if self.env.lang and self.env.lang != 'en_US':
-            Translations = self.env['ir.translation']
-            for field in translated_fields:
-                tname = "%s,%s" % (field.model_name, field.name)
-                for data in data_list:
-                    if field.name in data['stored']:
-                        record = data['record']
-                        val = data['stored'][field.name]
-                        Translations._set_ids(tname, 'model', self.env.lang, record.ids, val, val)
-
         return records
 
     def _compute_field_value(self, field):
@@ -4684,26 +4434,6 @@ class BaseModel(metaclass=MetaModel):
                 parent_model = self.env[parent_model_name]
                 parent_alias = self._inherits_join_add(self, parent_model_name, query)
                 expression.expression(domain, parent_model.sudo(), parent_alias, query)
-
-    @api.model
-    def _generate_translated_field(self, table_alias, field, query):
-        """
-        Add possibly missing JOIN with translations table to ``query`` and
-        generate the expression for the translated field.
-
-        :return: the qualified field name (or expression) to use for ``field``
-        """
-        if self.env.lang:
-            # for the COALESCE to work properly, the column must be flushed
-            self.flush_model([field])
-            alias = query.left_join(
-                table_alias, 'id', 'ir_translation', 'res_id', field,
-                extra='"{rhs}"."type" = \'model\' AND "{rhs}"."name" = %s AND "{rhs}"."lang" = %s AND "{rhs}"."value" != %s',
-                extra_params=["%s,%s" % (self._name, field), self.env.lang, ""],
-            )
-            return 'COALESCE("%s"."%s", "%s"."%s")' % (alias, 'value', table_alias, field)
-        else:
-            return '"%s"."%s"' % (table_alias, field)
 
     @api.model
     def _generate_m2o_order_by(self, alias, order_field, query, reverse_direction, seen):
@@ -4996,19 +4726,6 @@ class BaseModel(metaclass=MetaModel):
             return
         seen_map[old._name].add(old.id)
 
-        def get_trans(field, old, new):
-            """ Return the 'name' of the translations to search for, together
-                with the record ids corresponding to ``old`` and ``new``.
-            """
-            if field.inherited:
-                pname = field.related.split('.')[0]
-                return get_trans(field.related_field, old[pname], new[pname])
-            return "%s,%s" % (field.model_name, field.name), old.id, new.id
-
-        # removing the lang to compare untranslated values
-        old_wo_lang, new_wo_lang = (old + new).with_context(lang=None)
-        Translation = old.env['ir.translation']
-
         for name, field in old._fields.items():
             if not field.copy:
                 continue
@@ -5029,30 +4746,26 @@ class BaseModel(metaclass=MetaModel):
                     # don't pass excluded as it is not about those lines
                     old_line.copy_translations(new_line)
 
-            elif field.translate:
+            elif field.translate and field.store and name not in excluded and old[name]:
                 # for translatable fields we copy their translations
-                trans_name, source_id, target_id = get_trans(field, old, new)
-                domain = [('name', '=', trans_name), ('res_id', '=', source_id)]
-                new_val = new_wo_lang[name]
-                if old.env.lang and callable(field.translate):
-                    # the new value *without lang* must be the old value without lang
-                    new_wo_lang[name] = old_wo_lang[name]
-                vals_list = []
-                for vals in Translation.search_read(domain):
-                    del vals['id']
-                    del vals['module']      # duplicated vals is not linked to any module
-                    vals['res_id'] = target_id
-                    if not callable(field.translate):
-                        vals['src'] = new_wo_lang[name]
-                    if vals['lang'] == old.env.lang and field.translate is True:
-                        # update master record if the new_val was not changed by copy override
-                        if new_val == old[name]:
-                            new_wo_lang[name] = old_wo_lang[name]
-                            vals['src'] = old_wo_lang[name]
-                        # the value should be the new value (given by copy())
-                        vals['value'] = new_val
-                    vals_list.append(vals)
-                Translation._upsert_translations(vals_list)
+                old_translations = field._get_stored_translations(old)
+                if not old_translations:
+                    continue
+                lang = self.env.lang or 'en_US'
+                old_value_lang = old_translations.pop(lang, old_translations['en_US'])
+                if not old_translations:
+                    continue
+                if not callable(field.translate):
+                    new.update_field_translations(name, old_translations)
+                else:
+                    # {lang: {old_term: new_term}}
+                    translations = defaultdict(dict)
+                    # {from_lang_term: {lang: to_lang_term}
+                    translation_dictionary = field.get_translation_dictionary(old_value_lang, old_translations)
+                    for from_lang_term, to_lang_terms in translation_dictionary.items():
+                        for lang, to_lang_term in to_lang_terms.items():
+                            translations[lang][from_lang_term] = to_lang_term
+                    new.update_field_translations(name, translations)
 
     @api.returns('self', lambda value: value.id)
     def copy(self, default=None):
@@ -5067,10 +4780,10 @@ class BaseModel(metaclass=MetaModel):
         """
         self.ensure_one()
         vals = self.with_context(active_test=False).copy_data(default)[0]
-        # To avoid to create a translation in the lang of the user, copy_translation will do it
-        new = self.with_context(lang=None).create(vals)
-        self.with_context(from_copy_translation=True).copy_translations(new, excluded=default or ())
-        return new
+        record_copy = self.create(vals)
+        self.with_context(from_copy_translation=True).copy_translations(record_copy, excluded=default or ())
+
+        return record_copy
 
     @api.returns('self')
     def exists(self):
@@ -5666,9 +5379,34 @@ class BaseModel(metaclass=MetaModel):
         if isinstance(func, str):
             name = func
             func = lambda rec: any(rec.mapped(name))
-            # populate cache
-            self.mapped(name)
         return self.browse([rec.id for rec in self if func(rec)])
+
+    def grouped(self, key):
+        """Eagerly groups the records of ``self`` by the ``key``, returning a
+        dict from the ``key``'s result to recordsets. All the resulting
+        recordsets are guaranteed to be part of the same prefetch-set.
+
+        Provides a convenience method to partition existing recordsets without
+        the overhead of a :meth:`~.read_group`, but performs no aggregation.
+
+        .. note:: unlike :func:`itertools.groupby`, does not care about input
+                  ordering, however the tradeoff is that it can not be lazy
+
+        :param key: either a callable from a :class:`Model` to a (hashable)
+                    value, or a field name. In the latter case, it is equivalent
+                    to ``itemgetter(key)`` (aka the named field's value)
+        :type key: callable | str
+        :rtype: dict
+        """
+        if isinstance(key, str):
+            key = itemgetter(key)
+
+        collator = defaultdict(list)
+        for record in self:
+            collator[key(record)].extend(record._ids)
+
+        browse = functools.partial(type(self), self.env, prefetch_ids=self._prefetch_ids)
+        return {key: browse(tuple(ids)) for key, ids in collator.items()}
 
     def filtered_domain(self, domain):
         """Return the records in ``self`` satisfying the domain and keeping the same order.
@@ -5907,8 +5645,11 @@ class BaseModel(metaclass=MetaModel):
                         f"    Context: {self.env.context}\n" \
                         f"    Cache: {self.env.cache!r}"
                     for record, value in zip(records, values):
-                        value = field.convert_to_write(value, record)
-                        value = field.convert_to_column(value, record)
+                        if not field.translate:
+                            value = field.convert_to_write(value, record)
+                            value = field.convert_to_column(value, record)
+                        else:
+                            value = field._convert_from_cache_to_column(value)
                         id_vals[record.id][field.name] = value
                 process(model, id_vals)
 
@@ -6275,15 +6016,26 @@ class BaseModel(metaclass=MetaModel):
         #  - mark H to recompute on inverse(X, records),
         #  - mark I to recompute on inverse(W, inverse(X, records)),
         #  - mark J to recompute on inverse(Y, records).
-        if len(fnames) == 1:
-            tree = self.pool.field_triggers.get(self._fields[next(iter(fnames))])
-        else:
-            # merge dependency trees to evaluate all triggers at once
-            tree = {}
-            for fname in fnames:
-                node = self.pool.field_triggers.get(self._fields[fname])
-                if node:
-                    trigger_tree_merge(tree, node)
+        fields = [self._fields[fname] for fname in fnames]
+        field_triggers = self.pool.field_triggers
+        trees = [field_triggers[field] for field in fields if field in field_triggers]
+
+        if not trees:
+            return
+
+        cache = self.env.cache
+
+        # Merge dependency trees to evaluate all triggers at once.
+        # For non-stored computed fields, `_modified_triggers` might traverse
+        # the tree (at the cost of extra queries) only to know which records to
+        # invalidate in cache. But in many cases, most of these fields have no
+        # data in cache, so they can be ignored from the start. This allows us
+        # to discard subtrees from the merged tree when they only contain such
+        # fields.
+        tree = merge_trigger_trees(
+            trees,
+            select=lambda field: (field.compute and field.store) or cache.contains_field(field),
+        )
 
         if tree:
             # determine what to compute (through an iterator)
@@ -6346,7 +6098,7 @@ class BaseModel(metaclass=MetaModel):
                     # use an inverse of field without domain
                     if not (invf.type in ('one2many', 'many2many') and invf.domain):
                         if invf.type == 'many2one_reference':
-                            rec_ids = set()
+                            rec_ids = OrderedSet()
                             for rec in self:
                                 try:
                                     if rec[invf.model_field] == key.model_name:
@@ -6388,7 +6140,7 @@ class BaseModel(metaclass=MetaModel):
             DeprecationWarning, stacklevel=2,
         )
         if fnames is None:
-            self.env._recompute()
+            self.env._recompute_all()
         elif records is None:
             self._recompute_model(fnames)
         else:
@@ -6454,7 +6206,8 @@ class BaseModel(metaclass=MetaModel):
     # Generic onchange method
     #
 
-    def _dependent_fields(self, field):
+    @classmethod
+    def _dependent_fields(cls, field):
         """ Return an iterator on the fields that depend on ``field``. """
         def traverse(node):
             for key, val in node.items():
@@ -6462,7 +6215,7 @@ class BaseModel(metaclass=MetaModel):
                     yield from val
                 else:
                     yield from traverse(val)
-        return traverse(self.pool.field_triggers.get(field, {}))
+        return traverse(cls.pool.field_triggers.get(field, {}))
 
     def _has_onchange(self, field, other_fields):
         """ Return whether ``field`` should trigger an onchange event in the
@@ -6471,32 +6224,6 @@ class BaseModel(metaclass=MetaModel):
         return (field.name in self._onchange_methods) or any(
             dep in other_fields for dep in self._dependent_fields(field.base_field)
         )
-
-    @api.model
-    def _onchange_spec(self, view_info=None):
-        """ Return the onchange spec from a view description; if not given, the
-            result of ``self.get_view()`` is used.
-        """
-        result = {}
-
-        # for traversing the XML arch and populating result
-        def process(node, info, prefix):
-            if node.tag == 'field':
-                name = node.attrib['name']
-                names = "%s.%s" % (prefix, name) if prefix else name
-                if not result.get(names):
-                    result[names] = node.attrib.get('on_change')
-                # traverse the subviews included in relational fields
-                for child_view in node.xpath("./*[descendant::field]"):
-                    process(child_view, None, names)
-            else:
-                for child in node:
-                    process(child, info, prefix)
-
-        if view_info is None:
-            view_info = self.get_view()
-        process(etree.fromstring(view_info['arch']), view_info, '')
-        return result
 
     def _onchange_eval(self, field_name, onchange, result):
         """ Apply onchange method(s) for field ``field_name`` with spec ``onchange``
@@ -6631,9 +6358,26 @@ class BaseModel(metaclass=MetaModel):
                 for name, subnames in self['<tree>'].items():
                     if name == 'id':
                         continue
+                    field = record._fields[name]
+                    if (field.type == 'properties' and field.definition_record in field_name
+                       and other.get(name) == self[name] == []):
+                        # TODO: The parent field on "record" can be False, if it was changed,
+                        # (even if if was changed to a not Falsy value) because of
+                        # >>> initial_values = dict(values, **dict.fromkeys(names, False))
+                        # If it's the case when we will read the properties field on this record,
+                        # it will return False as well (no parent == no definition)
+                        # So record at the following line, will always return a empty properties
+                        # because the definition record is always False if it triggered the onchange
+                        # >>> snapshot0 = Snapshot(record, nametree, fetch=(not first_call))
+                        # but we need "snapshot0" to have the old value to be able
+                        # to compare it with the new one and trigger the onchange if necessary.
+                        # In that particular case, "other.get(name)" must contains the
+                        # non empty properties value.
+                        result[name] = []
+                        continue
+
                     if not force and other.get(name) == self[name]:
                         continue
-                    field = record._fields[name]
                     if field.type not in ('one2many', 'many2many'):
                         result[name] = field.convert_to_onchange(self[name], record, {})
                     else:
@@ -6704,10 +6448,15 @@ class BaseModel(metaclass=MetaModel):
                 cache = self.env.cache
                 for fname in fnames:
                     field = lines._fields[fname]
-                    cache.update(new_lines, field, [
-                        field.convert_to_cache(value, new_line, validate=False)
-                        for value, new_line in zip(cache.get_values(lines, field), new_lines)
-                    ])
+                    if not field.translate:
+                        cache.update(new_lines, field, [
+                            field.convert_to_cache(value, new_line, validate=False)
+                            for value, new_line in zip(cache.get_values(lines, field), new_lines)
+                        ])
+                    else:
+                        cache.update_raw(
+                            new_lines, field, map(copy.copy, cache.get_values(lines, field)),
+                        )
 
         # Isolate changed values, to handle inconsistent data sent from the
         # client side: when a form view contains two one2many fields that
@@ -6918,12 +6667,6 @@ class BaseModel(metaclass=MetaModel):
         if create_values:
             records_batches.append(self.create(create_values))
         return self.concat(*records_batches)
-
-    def _neutralize(self):
-        """ Neutralize this model's records.
-        This should prevent the database from connecting to external services.
-        """
-        return
 
 
 collections.abc.Set.register(BaseModel)

@@ -29,3 +29,6 @@ class LoyaltyCard(models.Model):
         count_per_coupon = {r['coupon_id'][0]: r['coupon_id_count'] for r in read_group_res}
         for card in self:
             card.use_count += count_per_coupon.get(card.id, 0)
+
+    def _has_source_order(self):
+        return super()._has_source_order() or bool(self.order_id)

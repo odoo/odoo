@@ -12,18 +12,22 @@
                             <field name="model_id"/>
                             <field name="active" widget="boolean_toggle"/>
                         </group>
-                        <group col="4" string="Access Rights">
-                            <field name="perm_read"/>
-                            <field name="perm_write"/>
-                            <field name="perm_create"/>
-                            <field name="perm_unlink"/>
+                        <group string="Access Rights">
+                            <group>
+                                <field name="perm_read"/>
+                                <field name="perm_create"/>
+                            </group>
+                            <group>
+                                <field name="perm_write"/>
+                                <field name="perm_unlink"/>
+                            </group>
                         </group>
                     </group>
                     <separator string="Rule Definition (Domain Filter)"/>
                     <field name="domain_force" colspan="2" nolabel="1"/>
                     <group string="Groups (no group = global)">
                         <field name="global"/>
-                        <field name="groups" nolabel="1" colspan="4"/>
+                        <field name="groups" nolabel="1" colspan="2"/>
                     </group>
                     <i class="fa fa-info fa-3x text-info float-start" role="img" aria-label="Info" title="Info"/>
                     <h3>Interaction between rules</h3>

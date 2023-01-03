@@ -53,7 +53,6 @@ tour.register('shop_sale_gift_card', {
         },
         {
             content: 'check gift card amount',
-            trigger: '.oe_currency_value:contains("-45.00")',
             trigger: '.oe_website_sale .oe_cart',
             run: function () {}, // it's a check
         },
@@ -82,7 +81,6 @@ tour.register('shop_sale_gift_card', {
             tourUtils.goToCart({quantity: 2}),
         {
             content: 'check gift card amount',
-            trigger: '.oe_currency_value:contains("-45.00")',
             trigger: '.oe_website_sale .oe_cart',
             run: function () {}, // it's a check
         },

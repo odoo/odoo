@@ -258,57 +258,6 @@ QUnit.module('special_fields', {
         form.destroy();
     });
 
-    QUnit.module('FieldReportLayout');
-
-    QUnit.test('report_layout widget in form view', async function (assert) {
-        assert.expect(3);
-
-        this.data['report.layout'] = {
-            fields: {
-                view_id: {string: "Document Template", type: "many2one", relation: "product"},
-                image: {string: "Preview image src", type: "char"},
-                pdf: {string: "Preview pdf src", type: "char"}
-            },
-            records: [{
-                id: 1,
-                view_id: 37,
-                image: "/web/static/toto.png",
-                pdf: "/web/static/toto.pdf",
-            }, {
-                id: 2,
-                view_id: 41,
-                image: "/web/static/tata.png",
-                pdf: "/web/static/tata.pdf",
-            }],
-        };
-        this.data.partner.records[1].product_id = false;
-
-        var form = await createView({
-            View: FormView,
-            model: 'partner',
-            data: this.data,
-            arch: '<form>' +
-                    '<field name="product_id" widget="report_layout"/> '+
-                  '</form>',
-            res_id: 2,
-            viewOptions: {
-                mode: 'edit',
-            },
-        });
-
-        assert.strictEqual(form.$('.img.img-fluid').length, 2,
-            "Two images should be rendered");
-        assert.strictEqual(form.$('.img.btn-info').length, 0,
-            "No image should be selected");
-
-        // select first image
-        await testUtils.dom.click(form.$(".img.img-fluid:first"));
-        assert.ok(form.$(".img.img-fluid:first").hasClass('btn-info'),
-            "First image should be selected");
-
-        form.destroy();
-    });
-
     QUnit.module('IframeWrapper');
 
     QUnit.test('iframe_wrapper widget in form view', async function (assert) {

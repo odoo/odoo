@@ -22,7 +22,7 @@ class Applicant(models.Model):
         # if an applicant does not already has associated partner_id create it
         if not self.partner_id:
             if not self.partner_name:
-                raise UserError(_('You must define a Contact Name for this applicant.'))
+                raise UserError(_('Please provide an applicant name.'))
             self.partner_id = self.env['res.partner'].create({
                 'is_company': False,
                 'type': 'private',

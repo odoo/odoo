@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<templates>
+    <t t-name="hr_work_entry_contract.calendar.controlButtons" t-inherit="web.CalendarController.controlButtons" t-inherit-mode="primary" owl="1">
+        <xpath expr="//span[hasclass('o_calendar_scale_buttons')]" position="after">
+            <span class="btn-regenerate-work-entries">
+                <button class="btn btn-secondary" t-on-click="onRegenerateWorkEntries">
+                    Regenerate Work Entries
+                </button>
+            </span>
+        </xpath>
+    </t>
+</templates>

@@ -50,6 +50,14 @@
     <record id="action_event_registration_report" model="ir.actions.act_window">
         <field name="name">Answer Breakdown</field>
         <field name="res_model">event.registration.answer</field>
-        <field name="view_mode">search,tree,graph,pivot</field>
+        <field name="view_mode">tree,graph,pivot</field>
+        <field name="search_view_id" ref="event_registration_answer_view_search"/>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                No Answers yet!
+            </p><p>
+                Come back once you have registrations to overview answers.
+            </p>
+        </field>
     </record>
 </odoo>

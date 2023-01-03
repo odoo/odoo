@@ -6,8 +6,12 @@
         <field name="inherit_id" ref="base.view_partner_form" />
         <field name="arch" type="xml">
             <xpath expr="//page[@name='sales_purchases']//field[@name='user_id']" position="after">
+                <field name="team_id" invisible="1"/>
                 <field name="team_id" groups="base.group_no_one" />
             </xpath>
+            <field name="parent_id" position="attributes">
+                <attribute name="context">{'default_is_company': True, 'show_vat': True, 'default_user_id': user_id, 'default_team_id': team_id}</attribute>
+            </field>
         </field>
     </record>
 </odoo>

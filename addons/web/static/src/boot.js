@@ -32,6 +32,7 @@
     var factories = Object.create(null);
     var jobDeps = [];
     var jobPromises = [];
+    const failed = [];
 
     var services = Object.create({});
 
@@ -74,42 +75,111 @@
                     return dep.to;
                 });
         },
-        getWaitedJobs: function () {
-            return jobs
-                .map(function (job) {
-                    return job.name;
-                })
-                .filter(function (item, index, self) {
-                    // uniq
-                    return self.indexOf(item) === index;
-                });
+        getMissingJobs() {
+            const waited = new Set(
+                jobs.filter((job) => !job.ignoreMissingDeps).map((job) => job.name)
+            );
+            const missing = new Set();
+            for (const job of waited) {
+                for (const dep of this.getDependencies(job)) {
+                    if (
+                        !(dep in this.services) &&
+                        !waited.has(dep) &&
+                        !failed.find((job) => job.name === dep)
+                    ) {
+                        missing.add(dep);
+                    }
+                }
+            }
+            return [...missing];
         },
-        getMissingJobs: function () {
-            var self = this;
-            var waited = this.getWaitedJobs();
-            var missing = [];
-            waited.forEach(function (job) {
-                self.getDependencies(job).forEach(function (job) {
-                    if (!(job in self.services)) {
-                        missing.push(job);
+        processJobs: function () {
+            var job;
+
+            function processJob(job) {
+                var require = makeRequire(job);
+
+                var jobExec;
+                function onError(e) {
+                    job.error = e;
+                    failed.push(job);
+                    console.error(`Error while loading ${job.name}: ${e.message}`, e);
+                }
+                var def = new Promise(function (resolve) {
+                    try {
+                        jobExec = job.factory.call(null, require);
+                        jobs.splice(jobs.indexOf(job), 1);
+                    } catch (e) {
+                        onError(e);
+                    }
+                    if (!job.error) {
+                        Promise.resolve(jobExec)
+                            .then(function (data) {
+                                services[job.name] = data;
+                                resolve();
+                                odoo.__DEBUG__.processJobs();
+                            })
+                            .guardedCatch(function (e) {
+                                job.rejected = e || true;
+                                jobs.push(job);
+                            })
+                            .catch(function (e) {
+                                if (e instanceof Error) {
+                                    onError(e);
+                                }
+                                resolve();
+                            });
+                    } else {
+                        resolve();
                     }
                 });
-            });
-            return missing
-                .filter(function (item, index, self) {
-                    return self.indexOf(item) === index;
-                })
-                .filter(function (item) {
-                    return waited.indexOf(item) < 0;
-                })
-                .filter(function (job) {
-                    return !job.error;
-                });
-        },
-        getFailedJobs: function () {
-            return jobs.filter(function (job) {
-                return !!job.error;
-            });
+                jobPromises.push(def);
+                def.then(job.resolve);
+            }
+
+            function isReady(job) {
+                return (
+                    !job.error &&
+                    !job.rejected &&
+                    job.factory.deps.every(function (name) {
+                        return name in services;
+                    })
+                );
+            }
+
+            function makeRequire(job) {
+                var deps = {};
+                Object.keys(services)
+                    .filter(function (item) {
+                        return job.deps.indexOf(item) >= 0;
+                    })
+                    .forEach(function (key) {
+                        deps[key] = services[key];
+                    });
+
+                return function require(name) {
+                    if (!(name in deps)) {
+                        console.error("Undefined dependency: ", name);
+                    }
+                    return deps[name];
+                };
+            }
+
+            while (jobs.length) {
+                job = undefined;
+                for (var i = 0; i < jobs.length; i++) {
+                    if (isReady(jobs[i])) {
+                        job = jobs[i];
+                        break;
+                    }
+                }
+                if (!job) {
+                    break;
+                }
+                processJob(job);
+            }
+
+            return services;
         },
         factories: factories,
         services: services,
@@ -147,21 +217,27 @@
         factory.deps = deps;
         factories[name] = factory;
 
+        let promiseResolve;
+        const promise = new Promise((resolve) => {
+            promiseResolve = resolve;
+        });
         jobs.push({
             name: name,
             factory: factory,
             deps: deps,
+            resolve: promiseResolve,
+            promise: promise,
+            ignoreMissingDeps: globalThis.__odooIgnoreMissingDependencies,
         });
 
         deps.forEach(function (dep) {
             jobDeps.push({ from: dep, to: name });
         });
 
-        this.processJobs(jobs, services);
+        odoo.__DEBUG__.processJobs();
     };
     odoo.log = function () {
         var missing = [];
-        var failed = [];
         var cycle = null;
 
         if (jobs.length) {
@@ -172,6 +248,9 @@
             var jobdep;
 
             for (var k = 0; k < jobs.length; k++) {
+                if (jobs[k].ignoreMissingDeps) {
+                    continue;
+                }
                 debugJobs[jobs[k].name] = job = {
                     dependencies: jobs[k].deps,
                     dependents: odoo.__DEBUG__.getDependents(jobs[k].name),
@@ -212,7 +291,6 @@
                 }
             }
             missing = odoo.__DEBUG__.getMissingJobs();
-            failed = odoo.__DEBUG__.getFailedJobs();
             var unloaded = Object.keys(debugJobs) // Object.values is not supported
                 .map(function (key) {
                     return debugJobs[key];
@@ -263,99 +341,39 @@
                 }
             }
         }
-        odoo.__DEBUG__.jsModules = {
+        const moduleInfo = {
             missing: missing,
             failed: failed.map((mod) => mod.name),
             unloaded: unloaded ? unloaded.map((mod) => mod.name) : [],
             cycle,
         };
+        odoo.__DEBUG__.jsModules = moduleInfo;
+        displayModuleErrors(moduleInfo);
+
         didLogInfoResolve(true);
     };
-    odoo.processJobs = function (jobs, services) {
-        var job;
-
-        function processJob(job) {
-            var require = makeRequire(job);
-
-            var jobExec;
-            function onError(e) {
-                job.error = e;
-                console.error(`Error while loading ${job.name}: ${e.message}`, e);
-            }
-            var def = new Promise(function (resolve) {
-                try {
-                    jobExec = job.factory.call(null, require);
-                    jobs.splice(jobs.indexOf(job), 1);
-                } catch (e) {
-                    onError(e);
-                }
-                if (!job.error) {
-                    Promise.resolve(jobExec)
-                        .then(function (data) {
-                            services[job.name] = data;
-                            resolve();
-                            odoo.processJobs(jobs, services);
-                        })
-                        .guardedCatch(function (e) {
-                            job.rejected = e || true;
-                            jobs.push(job);
-                        })
-                        .catch(function (e) {
-                            if (e instanceof Error) {
-                                onError(e);
-                            }
-                            resolve();
-                        });
-                } else {
-                    resolve();
-                }
-            });
-            jobPromises.push(def);
+    /**
+     * Returns a resolved promise when the targeted services are loaded.
+     * If no service is found the promise is used directly.
+     *
+     * @param {string|RegExp} serviceName name of the service to expect
+     *      or regular expression matching the service.
+     * @returns {Promise<number>} resolved when the services ares
+     *      loaded. The value is equal to the number of services found.
+     */
+    odoo.ready = async function (serviceName) {
+        function match(name) {
+            return typeof serviceName === "string" ? name === serviceName : serviceName.test(name);
         }
+        await Promise.all(jobs.filter((job) => match(job.name)).map((job) => job.promise));
+        return Object.keys(factories).filter(match).length;
+    };
 
-        function isReady(job) {
-            return (
-                !job.error &&
-                !job.rejected &&
-                job.factory.deps.every(function (name) {
-                    return name in services;
-                })
-            );
+    odoo.runtimeImport = function (moduleName) {
+        if (!(moduleName in services)) {
+            throw new Error(`Service "${moduleName} is not defined or isn't finished loading."`);
         }
-
-        function makeRequire(job) {
-            var deps = {};
-            Object.keys(services)
-                .filter(function (item) {
-                    return job.deps.indexOf(item) >= 0;
-                })
-                .forEach(function (key) {
-                    deps[key] = services[key];
-                });
-
-            return function require(name) {
-                if (!(name in deps)) {
-                    console.error("Undefined dependency: ", name);
-                }
-                return deps[name];
-            };
-        }
-
-        while (jobs.length) {
-            job = undefined;
-            for (var i = 0; i < jobs.length; i++) {
-                if (isReady(jobs[i])) {
-                    job = jobs[i];
-                    break;
-                }
-            }
-            if (!job) {
-                break;
-            }
-            processJob(job);
-        }
-
-        return services;
+        return services[moduleName];
     };
 
     // Automatically log errors detected when loading modules
@@ -379,13 +397,13 @@
     function findCycle(jobs) {
         // build dependency graph
         const dependencyGraph = new Map();
-        for (let job of jobs) {
+        for (const job of jobs) {
             dependencyGraph.set(job.name, job.dependencies);
         }
 
         // helpers
         function visitJobs(jobs, visited = new Set()) {
-            for (let job of jobs) {
+            for (const job of jobs) {
                 const result = visitJob(job, visited);
                 if (result) {
                     return result;
@@ -409,5 +427,61 @@
 
         // visit each root to find cycles
         return visitJobs(jobs.map((j) => j.name));
+    }
+
+    function displayModuleErrors({ failed, missing, unloaded, cycle }) {
+        const list = (heading, arr) => {
+            const frag = document.createDocumentFragment();
+            if (!arr || !arr.length) {
+                return frag;
+            }
+            frag.textContent = heading;
+            const ul = document.createElement("ul");
+            for (const el of arr) {
+                const li = document.createElement("li");
+                li.textContent = el;
+                ul.append(li);
+            }
+            frag.appendChild(ul);
+            return frag;
+        };
+        if ([failed, missing, unloaded].some((arr) => arr.length) || cycle) {
+            // Empty body
+            while (document.body.childNodes.length) {
+                document.body.childNodes[0].remove();
+            }
+            const container = document.createElement("div");
+            container.className =
+                "position-fixed w-100 h-100 d-flex align-items-center flex-column bg-white overflow-auto modal";
+            container.style.zIndex = "10000";
+            const alert = document.createElement("div");
+            alert.className = "alert alert-danger o_error_detail fw-bold m-auto";
+            container.appendChild(alert);
+            alert.appendChild(
+                list(
+                    "The following modules failed to load because of an error, you may find more information in the devtools console:",
+                    failed
+                )
+            );
+            alert.appendChild(
+                list(
+                    "The following modules could not be loaded because they form a dependency cycle:",
+                    cycle && [cycle]
+                )
+            );
+            alert.appendChild(
+                list(
+                    "The following modules are needed by other modules but have not been defined, they may not be present in the correct asset bundle:",
+                    missing
+                )
+            );
+            alert.appendChild(
+                list(
+                    "The following modules could not be loaded because they have unmet dependencies, this is a secondary error which is likely caused by one of the above problems:",
+                    unloaded
+                )
+            );
+            document.body.appendChild(container);
+        }
     }
 })();

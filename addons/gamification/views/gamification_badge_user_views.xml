@@ -25,7 +25,7 @@
                                     <t t-if="record.comment.raw_value">
                                         <p class="o_kanban_record_subtitle"><em><field name="comment"/></em></p>
                                     </t>
-                                    <p>Granted by <a type="open"><field name="create_uid" /></a> the <t t-esc="moment(record.create_date.raw_value).format('L')" /></p>
+                                    <p>Granted by <a type="open"><field name="create_uid" /></a> the <t t-esc="luxon.DateTime.fromISO(record.create_date.raw_value).toFormat('D')" /></p>
                                 </div>
                             </div>
                         </div>

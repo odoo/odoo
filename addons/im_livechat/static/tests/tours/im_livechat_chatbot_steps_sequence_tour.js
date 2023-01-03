@@ -11,12 +11,12 @@ const commonSteps = [tour.stepUtils.showAppsMenuItem(), {
 }, {
     trigger: '.o_list_button_add',
 }, {
-    trigger: 'input[name="title"]',
+    trigger: 'input[id="title"]',
     run: 'text Test Chatbot Sequence'
 }, {
     trigger: 'div[name="script_step_ids"] .o_field_x2many_list_row_add a'
 }, {
-    trigger: 'textarea[name="message"]',
+    trigger: 'textarea#message',
     run: 'text Step 1'
 }, {
     trigger: 'button:contains("Save & New")'
@@ -25,7 +25,7 @@ const commonSteps = [tour.stepUtils.showAppsMenuItem(), {
     in_modal: false,
     run: () => {}
 }, {
-    trigger: 'textarea[name="message"]',
+    trigger: 'textarea#message',
     run: 'text Step 2'
 }, {
     trigger: 'button:contains("Save & New")'
@@ -34,7 +34,7 @@ const commonSteps = [tour.stepUtils.showAppsMenuItem(), {
     in_modal: false,
     run: () => {}
 }, {
-    trigger: 'textarea[name="message"]',
+    trigger: 'textarea#message',
     run: 'text Step 3'
 }];
 
@@ -68,7 +68,7 @@ tour.register('im_livechat_chatbot_steps_sequence_with_move_tour', {
     in_modal: false,
     run: () => {}
 }, {
-    trigger: 'textarea[name="message"]',
+    trigger: 'textarea#message',
     run: 'text Step 4'
 }, {
     trigger: 'button:contains("Save & New")'
@@ -77,7 +77,7 @@ tour.register('im_livechat_chatbot_steps_sequence_with_move_tour', {
     in_modal: false,
     run: () => {}
 }, {
-    trigger: 'textarea[name="message"]',
+    trigger: 'textarea#message',
     run: 'text Step 5'
 }, {
     trigger: 'button:contains("Save & Close")'
@@ -88,46 +88,27 @@ tour.register('im_livechat_chatbot_steps_sequence_with_move_tour', {
     trigger: 'tr:contains("Step 5") .o_row_handle',
     run: () => {
         // move 'step 5' between 'step 1' and 'step 2'
-        // tried to use to built-in 'drag_and_drop' action but it doesn't work here
-        // somehow it only registers the move if 2 separate 'mousemove' events are triggered
-        const $element = $('tr:contains("Step 5") .o_row_handle');
-        const elementCenter = $element.offset();
-        elementCenter.left += $element.outerWidth() / 2;
-        elementCenter.top += $element.outerHeight() / 2;
-        const $to = $('tr:eq(1)');
-        const toCenter = $to.offset();
-        toCenter.left += $to.outerWidth() / 2;
-        toCenter.top += $to.outerHeight() / 2;
+        const from = document.querySelector('div[name="script_step_ids"] tr:nth-child(5) .o_row_handle');
+        const fromPosition = from.getBoundingClientRect();
+        fromPosition.x += from.offsetWidth / 2;
+        fromPosition.y += from.offsetHeight / 2;
 
-        $element.trigger($.Event("mouseenter"));
-        $element.trigger($.Event("mousedown", {
+        const to = document.querySelector('div[name="script_step_ids"] tr:nth-child(2) .o_row_handle');
+        from.dispatchEvent(new Event("mouseenter", { bubbles: true }));
+        from.dispatchEvent(new MouseEvent("mousedown", {
+            bubbles: true,
             which: 1,
-            pageX: elementCenter.left,
-            pageY: elementCenter.top
-        }));
-
-        $element.trigger($.Event("mousemove", {
-            which: 1,
-            pageX: toCenter.left - 1,
-            pageY: toCenter.top - 1
-        }));
-
-        $element.trigger($.Event("mousemove", {
-            which: 1,
-            pageX: toCenter.left,
-            pageY: toCenter.top
-        }));
-
-        $element.trigger($.Event("mouseup", {
-            which: 1,
-            pageX: toCenter.left,
-            pageY: toCenter.top
-        }));
+            button: 0,
+            clientX: fromPosition.x,
+            clientY: fromPosition.y}));
+        from.dispatchEvent(new Event("mousemove", { bubbles: true }));
+        to.dispatchEvent(new Event("mouseenter", { bubbles: true }));
+        from.dispatchEvent(new Event("mouseup", { bubbles: true }));
     }
 }, {
     trigger: 'div[name="script_step_ids"] .o_field_x2many_list_row_add a'
 }, {
-    trigger: 'textarea[name="message"]',
+    trigger: 'textarea#message',
     run: 'text Step 6'
 }, {
     trigger: 'button:contains("Save & Close")'

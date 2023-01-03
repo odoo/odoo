@@ -133,7 +133,6 @@ class PosConfig(models.Model):
     limit_categories = fields.Boolean("Restrict Categories")
     module_pos_restaurant = fields.Boolean("Is a Bar/Restaurant")
     module_pos_discount = fields.Boolean("Global Discounts")
-    module_pos_loyalty = fields.Boolean("Loyalty Program")
     module_pos_mercury = fields.Boolean(string="Integrated Card Payments")
     is_posbox = fields.Boolean("PosBox")
     is_header_or_footer = fields.Boolean("Custom Header & Footer")
@@ -174,6 +173,7 @@ class PosConfig(models.Model):
                                                    "In the meantime, you can use the 'Load Customers' button to load partners from database.")
     limited_partners_amount = fields.Integer(default=100)
     partner_load_background = fields.Boolean(default=True)
+    auto_validate_terminal_payment = fields.Boolean(default=True, help="Automatically validates orders paid with a payment terminal.")
 
     @api.depends('payment_method_ids')
     def _compute_cash_control(self):
@@ -220,15 +220,12 @@ class PosConfig(models.Model):
         for pos_config in self:
             session = PosSession.search_read(
                 [('config_id', '=', pos_config.id), ('state', '=', 'closed')],
-                ['cash_register_balance_end_real', 'stop_at', 'cash_register_id'],
+                ['cash_register_balance_end_real', 'stop_at'],
                 order="stop_at desc", limit=1)
             if session:
                 timezone = pytz.timezone(self._context.get('tz') or self.env.user.tz or 'UTC')
                 pos_config.last_session_closing_date = session[0]['stop_at'].astimezone(timezone).date()
-                if session[0]['cash_register_id']:
-                    pos_config.last_session_closing_cash = session[0]['cash_register_balance_end_real']
-                else:
-                    pos_config.last_session_closing_cash = 0
+                pos_config.last_session_closing_cash = session[0]['cash_register_balance_end_real']
             else:
                 pos_config.last_session_closing_cash = 0
                 pos_config.last_session_closing_date = False
@@ -339,6 +336,12 @@ class PosConfig(models.Model):
         for config in self:
             if any(pricelist.company_id.id not in [False, config.company_id.id] for pricelist in config.available_pricelist_ids):
                 raise ValidationError(_("The selected pricelists must belong to no company or the company of the point of sale."))
+
+    def _check_company_has_template(self):
+        self.ensure_one()
+        if not self.company_has_template:
+            raise ValidationError(_("No chart of account configured, go to the \"configuration / settings\" menu, and "
+                                    "install one from the Invoicing tab."))
 
     def name_get(self):
         result = []
@@ -475,6 +478,7 @@ class PosConfig(models.Model):
         }
 
     def _check_before_creating_new_session(self):
+        self._check_company_has_template()
         self._check_pricelists()
         self._check_company_journal()
         self._check_company_invoice_journal()
@@ -499,10 +503,10 @@ class PosConfig(models.Model):
         # check if there's any product for this PoS
         domain = [('available_in_pos', '=', True)]
         if self.limit_categories and self.iface_available_categ_ids:
-            domain.append(('pos_categ_id', 'in', self.iface_available_categ_ids))
+            domain.append(('pos_categ_id', 'in', self.iface_available_categ_ids.ids))
         if not self.env['product.product'].search(domain):
             return {
-                'name': _("There is no products linked to your PoS"),
+                'name': _("There is no product linked to your PoS"),
                 'type': 'ir.actions.act_window',
                 'view_type': 'form',
                 'view_mode': 'form',

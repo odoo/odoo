@@ -6,16 +6,16 @@ from odoo.addons.payment.tests.common import PaymentCommon
 class FlutterwaveCommon(PaymentCommon):
 
     @classmethod
-    def setUpClass(cls, chart_template_ref=None):
-        super().setUpClass(chart_template_ref=chart_template_ref)
+    def setUpClass(cls):
+        super().setUpClass()
 
-        cls.flutterwave = cls._prepare_acquirer('flutterwave', update_values={
+        cls.flutterwave = cls._prepare_provider('flutterwave', update_values={
             'flutterwave_public_key': 'FLWPUBK_TEST-abcdef-X',
             'flutterwave_secret_key': 'FLWSECK_TEST-123456-X',
             'flutterwave_webhook_secret': 'coincoin_motherducker',
         })
 
-        cls.acquirer = cls.flutterwave
+        cls.provider = cls.flutterwave
 
         cls.redirect_notification_data = {
             'status': 'successful',

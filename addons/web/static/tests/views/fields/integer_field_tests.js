@@ -4,6 +4,7 @@ import { localization } from "@web/core/l10n/localization";
 import { defaultLocalization } from "@web/../tests/helpers/mock_services";
 import {
     click,
+    clickSave,
     editInput,
     getFixture,
     patchWithCleanup,
@@ -56,7 +57,7 @@ QUnit.module("Fields", (hooks) => {
         );
 
         assert.strictEqual(
-            target.querySelector(".o_field_widget").textContent,
+            target.querySelector(".o_field_widget input").value,
             "0",
             "Non-set integer field should be recognized as 0."
         );
@@ -70,8 +71,6 @@ QUnit.module("Fields", (hooks) => {
             resId: 1,
             arch: '<form><field name="int_field"/></form>',
         });
-
-        await click(target, ".o_form_button_edit");
 
         assert.strictEqual(
             target.querySelector(".o_field_widget[name=int_field] input").value,
@@ -87,10 +86,9 @@ QUnit.module("Fields", (hooks) => {
             "The value should be correctly displayed in the input."
         );
 
-        await click(target, ".o_form_button_save");
-
+        await clickSave(target);
         assert.strictEqual(
-            target.querySelector(".o_field_widget").textContent,
+            target.querySelector(".o_field_widget input").value,
             "30",
             "The new value should be saved and displayed properly."
         );
@@ -105,12 +103,11 @@ QUnit.module("Fields", (hooks) => {
             arch: '<form><field name="int_field"/></form>',
         });
 
-        await click(target, ".o_form_button_edit");
         await editInput(target, ".o_field_widget[name=int_field] input", "=100/3");
-        await click(target, ".o_form_button_save");
+        await clickSave(target);
 
         assert.strictEqual(
-            target.querySelector(".o_field_widget").textContent,
+            target.querySelector(".o_field_widget input").value,
             "33",
             "The new value should be calculated properly."
         );
@@ -127,8 +124,6 @@ QUnit.module("Fields", (hooks) => {
             arch: `<form><field name="int_field" options="{'type': 'number'}"/></form>`,
         });
 
-        await click(target, ".o_form_button_edit");
-
         assert.ok(
             target.querySelector(".o_field_widget input").hasAttribute("type"),
             "Integer field with option type must have a type attribute."
@@ -142,21 +137,12 @@ QUnit.module("Fields", (hooks) => {
         );
 
         await editInput(target, ".o_field_widget[name=int_field] input", "1234567890");
-        await click(target, ".o_form_button_save");
-        await click(target, ".o_form_button_edit");
+        await clickSave(target);
 
         assert.strictEqual(
             target.querySelector(".o_field_widget input").value,
             "1234567890",
             "Integer value must be not formatted if input type is number."
-        );
-
-        await click(target, ".o_form_button_save");
-
-        assert.strictEqual(
-            target.querySelector(".o_field_widget").textContent,
-            "1,234,567,890",
-            "Integer value must be formatted in readonly view even if the input type is number."
         );
     });
 
@@ -169,13 +155,10 @@ QUnit.module("Fields", (hooks) => {
             arch: `<form><field name="int_field" options="{'type': 'number', 'step': 3}"/></form>`,
         });
 
-        await click(target, ".o_form_button_edit");
-
         assert.ok(
             target.querySelector(".o_field_widget input").hasAttribute("step"),
             "Integer field with option type must have a step attribute."
         );
-
         assert.hasAttrValue(
             target.querySelector(".o_field_widget input"),
             "step",
@@ -195,8 +178,6 @@ QUnit.module("Fields", (hooks) => {
             arch: '<form><field name="int_field"/></form>',
         });
 
-        await click(target, ".o_form_button_edit");
-
         assert.hasAttrValue(
             target.querySelector(".o_field_widget input"),
             "type",
@@ -205,8 +186,7 @@ QUnit.module("Fields", (hooks) => {
         );
 
         await editInput(target, ".o_field_widget[name=int_field] input", "1234567890");
-        await click(target, ".o_form_button_save");
-        await click(target, ".o_form_button_edit");
+        await clickSave(target);
 
         assert.strictEqual(
             target.querySelector(".o_field_widget input").value,
@@ -225,14 +205,6 @@ QUnit.module("Fields", (hooks) => {
         });
 
         assert.strictEqual(
-            target.querySelector(".o_field_widget[name=int_field]").textContent,
-            "8069",
-            "Integer value must not be formatted"
-        );
-
-        await click(target, ".o_form_button_edit");
-
-        assert.strictEqual(
             target.querySelector(".o_field_widget input").value,
             "8069",
             "Integer value must not be formatted"
@@ -249,14 +221,6 @@ QUnit.module("Fields", (hooks) => {
             resId: 3,
             arch: '<form><field name="int_field"/></form>',
         });
-
-        assert.strictEqual(
-            target.querySelector(".o_field_widget[name=int_field]").textContent,
-            "8,069",
-            "Integer value must be formatted by default"
-        );
-
-        await click(target, ".o_form_button_edit");
 
         assert.strictEqual(
             target.querySelector(".o_field_widget input").value,

@@ -9,7 +9,7 @@ var BasicRenderer = require("web.BasicRenderer");
 const AbstractRenderer = require('web.AbstractRendererOwl');
 const RendererWrapper = require('web.RendererWrapper');
 
-const { xml, onMounted, onWillUnmount, onWillDestroy } = owl;
+const { xml, onMounted, onWillUnmount, onWillDestroy } = require("@odoo/owl");
 
 function getHtmlRenderer(html) {
     return BasicRenderer.extend({

@@ -17,6 +17,12 @@
             'google_recaptcha/static/src/scss/recaptcha.scss',
             'google_recaptcha/static/src/js/recaptcha.js',
         ],
+        'web.assets_backend': [
+            # TODO we may want to consider moving that file in website instead
+            # of here and/or adding it in the "website.assets_wysiwyg" bundle,
+            # which is lazy loaded.
+            'google_recaptcha/static/src/xml/recaptcha.xml',
+        ],
     },
     'license': 'LGPL-3',
 }

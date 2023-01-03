@@ -5,7 +5,6 @@ var Widget = require('web.Widget');
 
 var WebsiteEventTrackSuggestion = Widget.extend({
     template: 'website_event_track_live.website_event_track_suggestion',
-    xmlDependencies: ['/website_event_track_live/static/src/xml/website_event_track_live_templates.xml'],
     events: {
         'click .owevent_track_suggestion_next': '_onNextTrackClick',
         'click .owevent_track_suggestion_close': '_onCloseClick',

@@ -265,7 +265,7 @@ odoo.define('web.CustomFilterItem', function (require) {
                     condition.value = field_utils.parse[type](ev.target.value);
                     // Write displayed value in the input and 'displayedValue' property
                     condition.displayedValue = ev.target.value;
-                } catch (_err) {
+                } catch {
                     // Parsing error: reverts to previous value
                     ev.target.value = condition.displayedValue;
                 }

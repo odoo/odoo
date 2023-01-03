@@ -1,6 +1,6 @@
 /** @odoo-module **/
 
-import { click, getFixture, nextTick } from "@web/../tests/helpers/utils";
+import { click, clickSave, getFixture, nextTick } from "@web/../tests/helpers/utils";
 import { makeView, setupViewRegistries } from "@web/../tests/views/helpers";
 import { registry } from "@web/core/registry";
 
@@ -111,19 +111,17 @@ QUnit.module("Fields", (hooks) => {
             "div.o_field_widget .oe_fileupload .o_attachments",
             "there should be one attachment"
         );
-        assert.containsNone(
+        assert.containsOnce(
             target,
             "div.o_field_widget .oe_fileupload .o_attach",
-            "there should not be an Add button (readonly)"
+            "there should be an Add button (edit)"
         );
-        assert.containsNone(
+        assert.containsOnce(
             target,
             "div.o_field_widget .oe_fileupload .o_attachment .o_attachment_delete",
-            "there should not be a Delete button (readonly)"
+            "there should be a Delete button (edit)"
         );
 
-        // to edit mode
-        await click(target, ".o_form_button_edit");
         assert.containsOnce(
             target,
             "div.o_field_widget .oe_fileupload .o_attach",
@@ -176,7 +174,7 @@ QUnit.module("Fields", (hooks) => {
             )
         );
 
-        await click(target, ".o_form_button_save");
+        await clickSave(target);
         assert.containsOnce(
             target,
             "div.o_field_widget .oe_fileupload .o_attachments",
@@ -251,19 +249,16 @@ QUnit.module("Fields", (hooks) => {
             "div.o_field_widget .oe_fileupload .o_attachments",
             "there should be one attachment"
         );
-        assert.containsNone(
+        assert.containsOnce(
             target,
             "div.o_field_widget .oe_fileupload .o_attach",
-            "there should not be an Add button (readonly)"
+            "there should be an Add button (edit)"
         );
-        assert.containsNone(
+        assert.containsOnce(
             target,
             "div.o_field_widget .oe_fileupload .o_attachment .o_attachment_delete",
-            "there should not be a Delete button (readonly)"
+            "there should be a Delete button (edit)"
         );
-
-        // to edit mode
-        await click(target, ".o_form_button_edit");
 
         // Set and trigger the import of 2 files in the input
         const fileInput = target.querySelector('input[type="file"]');

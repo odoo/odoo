@@ -1,17 +1,17 @@
 /** @odoo-module */
 
 import { ComponentAdapter } from 'web.OwlCompatibility';
-import { _t } from '@web/core/l10n/translation';
 
 import { useWowlService } from '@web/legacy/utils';
 import { useHotkey } from '@web/core/hotkeys/hotkey_hook';
 import { setEditableWindow } from 'web_editor.utils';
+import { useBus } from "@web/core/utils/hooks";
 
 import { EditMenuDialog, MenuDialog } from "../dialog/edit_menu";
 import { WebsiteDialog } from '../dialog/dialog';
 import { PageOption } from "./page_options";
 
-const { onWillStart, useEffect } = owl;
+const { onWillStart, useEffect, onWillUnmount } = owl;
 
 /**
  * This component adapts the Wysiwyg widget from @web_editor/wysiwyg.js.
@@ -31,6 +31,8 @@ export class WysiwygAdapterComponent extends ComponentAdapter {
         this.orm = useWowlService('orm');
         this.dialogs = useWowlService('dialog');
         this.action = useWowlService('action');
+
+        useBus(this.websiteService.bus, 'LEAVE-EDIT-MODE', (ev) => this.leaveEditMode(ev.detail));
 
         this.oeStructureSelector = '#wrapwrap .oe_structure[data-oe-xpath][data-oe-id]';
         this.oeFieldSelector = '#wrapwrap [data-oe-field]:not([data-oe-sanitize-prevent-edition])';
@@ -57,6 +59,10 @@ export class WysiwygAdapterComponent extends ComponentAdapter {
             if (this.websiteService.isDesigner && viewKey) {
                 switchableRelatedViews = this.rpc('/website/get_switchable_related_views', {key: viewKey});
             }
+            // Set utils functions' editable window to the current iframe's window.
+            // This allows those function to access the correct styles definitions,
+            // document element, etc.
+            setEditableWindow(this.websiteService.contentWindow);
             this.switchableRelatedViews = Promise.resolve(switchableRelatedViews);
         });
 
@@ -71,6 +77,13 @@ export class WysiwygAdapterComponent extends ComponentAdapter {
                 }
                 this._setObserver();
 
+                // The jquery instance inside the iframe needs to be aware of the wysiwyg.
+                this.websiteService.contentWindow.$('#wrapwrap').data('wysiwyg', this.widget);
+                await new Promise((resolve, reject) => this._websiteRootEvent('widgets_start_request', {
+                    editableMode: true,
+                    onSuccess: resolve,
+                    onFailure: reject,
+                }));
                 if (this.props.snippetSelector) {
                     const $snippetEl = $(this.websiteService.pageDocument).find(this.props.snippetSelector);
                     await this.widget.snippetsMenu.activateSnippet($snippetEl);
@@ -78,26 +91,49 @@ export class WysiwygAdapterComponent extends ComponentAdapter {
                         $snippetEl[0].scrollIntoView();
                     }
                 }
-                // The jquery instance inside the iframe needs to be aware of the wysiwyg.
-                this.websiteService.contentWindow.$('#wrapwrap').data('wysiwyg', this.widget);
-                this._websiteRootEvent('widgets_start_request', {editableMode: true, onSuccess: () => {
-                    this.widget.odooEditor.observerActive();
-                }});
                 this.props.wysiwygReady();
-                // Set utils functions' editable window to the current iframe's window.
-                // This allows those function to access the correct styles definitions,
-                // document element, etc.
-                setEditableWindow(this.websiteService.contentWindow);
+                this.widget.odooEditor.observerActive();
             };
 
             initWysiwyg();
 
             return () => {
                 this.$editable.off('click.odoo-website-editor', '*');
-                setEditableWindow(window);
             };
         }, () => []);
 
+        useEffect(() => {
+            // Back navigation is handled with an additional state in the
+            // history, used to capture the popstate event.
+            history.pushState(null, '');
+            let hasFakeState = true;
+            const leaveOnBackNavigation = () => {
+                hasFakeState = false;
+                this.leaveEditMode({
+                    onStay: () => {
+                        history.pushState(null, '');
+                        hasFakeState = true;
+                    },
+                    onLeave: () => history.back(),
+                    reloadIframe: false
+                });
+            };
+            window.addEventListener('popstate', leaveOnBackNavigation);
+            return () => {
+                window.removeEventListener('popstate', leaveOnBackNavigation);
+                if (hasFakeState) {
+                    history.back();
+                }
+            };
+        }, () => []);
+
+        onWillUnmount(() => {
+            if (this.dummyWidgetEl) {
+                this.dummyWidgetEl.remove();
+                document.body.classList.remove('editor_has_dummy_snippets');
+                setEditableWindow(window);
+            }
+        });
     }
     /**
      * @override
@@ -174,9 +210,42 @@ export class WysiwygAdapterComponent extends ComponentAdapter {
             this.userService.context,
             {
                 website_id: this.websiteService.currentWebsite.id,
-                lang: (this.websiteService.pageDocument.documentElement.getAttribute('lang') || 'en_US').replace('-', '_'),
+                lang: this.websiteService.currentWebsite.metadata.lang,
+                user_lang: this.userService.context.lang,
             },
         );
+    }
+    leaveEditMode({ onLeave, forceLeave, onStay, reloadIframe = true } = {}) {
+        const leave = () => {
+            this.dummyWidgetEl = this._getDummmySnippetsEl();
+            this.widget.el.parentElement.appendChild(this.dummyWidgetEl);
+            document.body.classList.add('editor_has_dummy_snippets');
+            // The wysiwyg is destroyed to avoid listeners from the OdooEditor
+            // and the SnippetsMenu to be triggered when reloading the iframe.
+            this.widget.destroy();
+            this.props.quitCallback({ onLeave, reloadIframe });
+        };
+
+        if (!forceLeave && this._isDirty()) {
+            let leaving = false;
+            // The onStay/leave callbacks are not passed directly as
+            // primaryClick/secondaryClick props, so that closing the dialog
+            // with "esc" or the top right cross icon also executes onStay.
+            this.dialogs.add(WebsiteDialog, {
+                body: this.env._t("If you discard the current edits, all unsaved changes will be lost. You can cancel to return to edit mode."),
+                primaryClick: () => leaving = true,
+            }, {
+                onClose: () => {
+                    if (leaving) {
+                        leave();
+                    } else if (onStay) {
+                        onStay();
+                    }
+                }
+            });
+        } else {
+            leave();
+        }
     }
 
     //--------------------------------------------------------------------------
@@ -213,6 +282,8 @@ export class WysiwygAdapterComponent extends ComponentAdapter {
             bindLinkTool: true,
             showEmptyElementHint: false,
             getReadOnlyAreas: this._getReadOnlyAreas.bind(this),
+            getUnremovableElements: this._getUnremovableElements.bind(this),
+            direction: this.websiteService.currentWebsite.metadata.direction,
             ...this.props.wysiwygOptions,
         };
     }
@@ -277,7 +348,7 @@ export class WysiwygAdapterComponent extends ComponentAdapter {
     _addEditorMessages() {
         const $wrap = this.$editable.find('.oe_structure.oe_empty, [data-oe-type="html"]');
         this.$editorMessageElement = $wrap.not('[data-editor-message]')
-                .attr('data-editor-message', _t('DRAG BUILDING BLOCKS HERE'));
+                .attr('data-editor-message', this.env._t('DRAG BUILDING BLOCKS HERE'));
         $wrap.filter(':empty').attr('contenteditable', false);
     }
     /**
@@ -286,12 +357,28 @@ export class WysiwygAdapterComponent extends ComponentAdapter {
      * @returns {Node[]} list of nodes that can be edited.
      */
     _getContentEditableAreas() {
-        const savableElements = $(this.websiteService.pageDocument).find(this.savableSelector)
-                                .not('input, [data-oe-readonly],[data-oe-type="monetary"],[data-oe-many2one-id], [data-oe-field="arch"]:empty');
-        return Array.from(savableElements).filter(element => !element.closest('.o_not_editable'));
+        const $savableZones = $(this.websiteService.pageDocument).find(this.savableSelector);
+        const $editableSavableZones = $savableZones
+            .not('input, [data-oe-readonly], ' +
+                 '[data-oe-type="monetary"], [data-oe-many2one-id], [data-oe-field="arch"]:empty')
+            .filter((_, el) => {
+                return !$(el).closest('.o_not_editable').length;
+            });
+
+        // TODO review in master. This stable fix restores the possibility to
+        // edit the company team snippet images on subsequent editions. Indeed
+        // this badly relies on the contenteditable="true" attribute being on
+        // those images but it is rightfully lost after the first save.
+        // grep: COMPANY_TEAM_CONTENTEDITABLE
+        const $extraEditableZones = $editableSavableZones.find('.s_company_team .o_not_editable img');
+
+        return $editableSavableZones.add($extraEditableZones).toArray();
     }
     _getReadOnlyAreas() {
         return [];
+    }
+    _getUnremovableElements () {
+        return this.$editable[0].querySelectorAll("#top_menu a:not(.oe_unremovable)");
     }
     /**
      * This method provides support for the legacy event system.
@@ -358,6 +445,16 @@ export class WysiwygAdapterComponent extends ComponentAdapter {
      */
     _websiteRootEvent(type, eventData = {}) {
         const websiteRootInstance = this.websiteService.websiteRootInstance;
+        // If the websiteRootInstance is gone but an event still tries to reach it
+        // prevent a traceback by denying the event.
+        // TODO we should investigate if this is normal the websiteRootInstance
+        // is being accessed while being dead following a wysiwyg adapter event.
+        if (!websiteRootInstance) {
+            if (eventData.onFailure) {
+                return eventData.onFailure();
+            }
+            return false;
+        }
         return websiteRootInstance.trigger_up(type, {...eventData});
     }
     _preventDefault(e) {
@@ -422,101 +519,111 @@ export class WysiwygAdapterComponent extends ComponentAdapter {
         };
         const commands = [
             {
-                category: 'Website',
-                name: 'Alert',
+                category: this.env._t('Website'),
+                name: this.env._t('Alert'),
                 priority: 100,
-                description: 'Insert an alert snippet.',
+                description: this.env._t('Insert an alert snippet'),
                 fontawesome: 'fa-info',
+                isDisabled: () => !this.widget.odooEditor.isSelectionInBlockRoot(),
                 callback: () => {
                     snippetCommandCallback('.oe_snippet_body[data-snippet="s_alert"]');
                 },
             },
             {
-                category: 'Website',
-                name: 'Rating',
+                category: this.env._t('Website'),
+                name: this.env._t('Rating'),
                 priority: 90,
-                description: 'Insert a rating snippet.',
+                description: this.env._t('Insert a rating snippet'),
                 fontawesome: 'fa-star-half-o',
+                isDisabled: () => !this.widget.odooEditor.isSelectionInBlockRoot(),
                 callback: () => {
                     snippetCommandCallback('.oe_snippet_body[data-snippet="s_rating"]');
                 },
             },
             {
-                category: 'Website',
-                name: 'Card',
+                category: this.env._t('Website'),
+                name: this.env._t('Card'),
                 priority: 80,
-                description: 'Insert a card snippet.',
+                description: this.env._t('Insert a card snippet'),
                 fontawesome: 'fa-sticky-note',
+                isDisabled: () => !this.widget.odooEditor.isSelectionInBlockRoot(),
                 callback: () => {
                     snippetCommandCallback('.oe_snippet_body[data-snippet="s_card"]');
                 },
             },
             {
-                category: 'Website',
-                name: 'Share',
+                category: this.env._t('Website'),
+                name: this.env._t('Share'),
                 priority: 70,
-                description: 'Insert a share snippet.',
+                description: this.env._t('Insert a share snippet'),
                 fontawesome: 'fa-share-square-o',
+                isDisabled: () => !this.widget.odooEditor.isSelectionInBlockRoot(),
                 callback: () => {
                     snippetCommandCallback('.oe_snippet_body[data-snippet="s_share"]');
                 },
             },
             {
-                category: 'Website',
-                name: 'Text Highlight',
+                category: this.env._t('Website'),
+                name: this.env._t('Text Highlight'),
                 priority: 60,
-                description: 'Insert a text Highlight snippet.',
+                description: this.env._t('Insert a text Highlight snippet'),
                 fontawesome: 'fa-sticky-note',
+                isDisabled: () => !this.widget.odooEditor.isSelectionInBlockRoot(),
                 callback: () => {
                     snippetCommandCallback('.oe_snippet_body[data-snippet="s_text_highlight"]');
                 },
             },
             {
-                category: 'Website',
-                name: 'Chart',
+                category: this.env._t('Website'),
+                name: this.env._t('Chart'),
                 priority: 50,
-                description: 'Insert a chart snippet.',
+                description: this.env._t('Insert a chart snippet'),
                 fontawesome: 'fa-bar-chart',
+                isDisabled: () => !this.widget.odooEditor.isSelectionInBlockRoot(),
                 callback: () => {
                     snippetCommandCallback('.oe_snippet_body[data-snippet="s_chart"]');
                 },
             },
             {
-                category: 'Website',
-                name: 'Progress Bar',
+                category: this.env._t('Website'),
+                name: this.env._t('Progress Bar'),
                 priority: 40,
-                description: 'Insert a progress bar snippet.',
+                description: this.env._t('Insert a progress bar snippet'),
                 fontawesome: 'fa-spinner',
+                isDisabled: () => !this.widget.odooEditor.isSelectionInBlockRoot(),
                 callback: () => {
                     snippetCommandCallback('.oe_snippet_body[data-snippet="s_progress_bar"]');
                 },
             },
             {
-                category: 'Website',
-                name: 'Badge',
+                category: this.env._t('Website'),
+                name: this.env._t('Badge'),
                 priority: 30,
-                description: 'Insert a badge snippet.',
+                description: this.env._t('Insert a badge snippet'),
                 fontawesome: 'fa-tags',
+                isDisabled: () => !this.widget.odooEditor.isSelectionInBlockRoot(),
                 callback: () => {
                     snippetCommandCallback('.oe_snippet_body[data-snippet="s_badge"]');
                 },
             },
             {
-                category: 'Website',
-                name: 'Blockquote',
+                category: this.env._t('Website'),
+                name: this.env._t('Blockquote'),
                 priority: 20,
-                description: 'Insert a blockquote snippet.',
+                description: this.env._t('Insert a blockquote snippet'),
                 fontawesome: 'fa-quote-left',
+                isDisabled: () => !this.widget.odooEditor.isSelectionInBlockRoot(),
                 callback: () => {
                     snippetCommandCallback('.oe_snippet_body[data-snippet="s_blockquote"]');
                 },
             },
             {
-                category: 'Website',
-                name: 'Separator',
+                category: this.env._t('Website'),
+                name: this.env._t('Separator'),
                 priority: 10,
-                description: 'Insert an horizontal separator sippet.',
+                description: this.env._t('Insert an horizontal separator snippet'),
                 fontawesome: 'fa-minus',
+                isDisabled: () => !this.widget.odooEditor.isSelectionInBlockRoot(),
                 callback: () => {
                     snippetCommandCallback('.oe_snippet_body[data-snippet="s_hr"]');
                 },
@@ -559,10 +666,10 @@ export class WysiwygAdapterComponent extends ComponentAdapter {
      * @private
      */
     async _onSaveRequest(event) {
-        let callback = () => this.props.quitCallback();
+        let callback = () => this.leaveEditMode({ forceLeave: true });
         if (event.data.reload || event.data.reloadEditor) {
             this.widget.trigger_up('disable_loading_effects');
-            this.props.willReload(this.widget.el);
+            this.props.willReload(this._getDummmySnippetsEl());
             callback = async () => {
                 if (event.data.onSuccess) {
                     await event.data.onSuccess();
@@ -581,12 +688,15 @@ export class WysiwygAdapterComponent extends ComponentAdapter {
             callback = () => window.location = `/web#action=website.website_preview&website_id=${websiteId}&path=${currentPath}&enable_editor=1`;
         } else if (event.data.action) {
             callback = () => {
-                this.websiteService.leaveEditMode();
-                this.action.doAction(event.data.action);
+                this.leaveEditMode({
+                    onLeave: () => this.action.doAction(event.data.action),
+                    forceLeave: true,
+                    reloadIframe: false,
+                });
             };
         }
         if (this._isDirty()) {
-            return this.save().then(callback);
+            return this.save().then(callback, event.data.onFailure);
         } else {
             return callback();
         }
@@ -603,6 +713,17 @@ export class WysiwygAdapterComponent extends ComponentAdapter {
         return event.data.callback(this._context);
     }
     /**
+     * Retrieves the website service context.
+     *
+     * @private
+     * @param {OdooEvent} ev
+     */
+    _onServiceContextGet(ev) {
+        ev.data.callback({
+            isMobile: this.websiteService.context.isMobile,
+        });
+    }
+    /**
      * Discards changes and reload the iframe.
      *
      * @param event
@@ -610,24 +731,7 @@ export class WysiwygAdapterComponent extends ComponentAdapter {
      * @private
      */
     _onCancelRequest(event) {
-        if (this._isDirty()) {
-            let discarding = false;
-            this.dialogs.add(WebsiteDialog, {
-                body: _t("If you discard the current edits, all unsaved changes will be lost. You can cancel to return to edit mode."),
-                primaryClick: () => {
-                    discarding = true;
-                },
-            }, {
-                onClose: () => {
-                    if (discarding) {
-                        return this.props.quitCallback();
-                    }
-                    return event.data.onReject();
-                }
-            });
-        } else {
-            return this.props.quitCallback();
-        }
+        this.leaveEditMode({ onStay: event.data.onReject });
     }
     /**
      * Called when a snippet is about to be cloned in the page. Notifies the
@@ -706,41 +810,14 @@ export class WysiwygAdapterComponent extends ComponentAdapter {
             },
         });
     }
-    /***
-     * Updates the Color Preview elements to reflect
-     * the colors that are inside the iframe.
-     * See the web_editor.color.combination.preview QWeb template.
+    /**
+     * Updates the panel so that color previews reflects the ones used by the
+     * edited content.
      *
-     * @param event
-     * @param event.data.ccPreviewEls {HTMLElement} The color combination preview element.
      * @private
      */
-    _onColorPreviewsUpdate(event) {
+    _onColorPreviewsUpdate() {
         this.widget.setCSSVariables(this.widget.snippetsMenu.el);
-        const stylesToCopy = [
-            'background-color',
-            'border',
-            'color',
-        ];
-        const copyStyles = (from, to) => {
-            const cloneStyle = this.websiteService.contentWindow.getComputedStyle(from);
-            for (const style of stylesToCopy) {
-                to.style.setProperty(style, cloneStyle.getPropertyValue(style));
-            }
-        };
-
-        for (const ccPreviewEl of event.data.ccPreviewEls) {
-            ccPreviewEl.setAttribute('style', '');
-            Object.values(ccPreviewEl.children).forEach(child => child.setAttribute('style', ''));
-            const iframeClone = ccPreviewEl.cloneNode(true);
-            this.websiteService.pageDocument.body.appendChild(iframeClone);
-            copyStyles(iframeClone, ccPreviewEl);
-            copyStyles(iframeClone.querySelector('h1'), ccPreviewEl.querySelector('h1'));
-            copyStyles(iframeClone.querySelector('.btn-primary'), ccPreviewEl.querySelector('.btn-primary'));
-            copyStyles(iframeClone.querySelector('.btn-secondary'), ccPreviewEl.querySelector('.btn-secondary'));
-            copyStyles(iframeClone.querySelector('p'), ccPreviewEl.querySelector('p'));
-            iframeClone.remove();
-        }
     }
     /**
      * Update the context to trigger a mobile view.
@@ -761,6 +838,21 @@ export class WysiwygAdapterComponent extends ComponentAdapter {
         const views = await this.switchableRelatedViews;
         event.data.onSuccess(views);
     }
+    /**
+     * This method returns a visual skeleton of the snippets menu, by making a
+     * copy of the Wysiwyg element. This is used when reloading the iframe or
+     * leaving the edit mode, so that the widget can be destroyed under the
+     * hood (ideally, the Wysiwyg would remove its listeners on the document,
+     * so that they are not triggered during a reload).
+     */
+    _getDummmySnippetsEl() {
+        const dummySnippetsEl = this.widget.el.cloneNode(true);
+        dummySnippetsEl.querySelectorAll('#oe_manipulators, .d-none, .oe_snippet_body').forEach(el => el.remove());
+        dummySnippetsEl.querySelectorAll('we-input input').forEach(input => {
+            input.setAttribute('value', input.closest('we-input').dataset.selectStyle || '');
+        });
+        return dummySnippetsEl;
+    }
 }
 WysiwygAdapterComponent.prototype.events = {
     'widgets_start_request': '_onRootEventRequest',
@@ -771,6 +863,7 @@ WysiwygAdapterComponent.prototype.events = {
     'gmap_api_key_request': '_onRootEventRequest',
     'request_save': '_onSaveRequest',
     'context_get': '_onContextGet',
+    'service_context_get': '_onServiceContextGet',
     'action_demand': '_handleAction',
     'request_cancel': '_onCancelRequest',
     'snippet_will_be_cloned': '_onSnippetWillBeCloned',

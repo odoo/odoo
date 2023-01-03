@@ -4,26 +4,46 @@
         <field name="name">loyalty.generate.wizard.view.form</field>
         <field name="model">loyalty.generate.wizard</field>
         <field name="arch" type="xml">
-            <form string="Generate Coupons">
+            <form string="Generate">
                 <sheet>
                     <group>
-                        <field name="program_id" invisible="1"/>
-                        <field name="program_type" invisible="1"/>
-                        <field name="mode" widget="radio" attrs="{'invisible': [('program_type', '=', 'ewallet')]}"/>
-                        <field name="customer_ids" widget="many2many_tags_avatar" attrs="{'invisible': [('mode', '=', 'anonymous')]}"/>
-                        <field name="customer_tag_ids" widget="many2many_tags" attrs="{'invisible': [('mode', '=', 'anonymous')]}" options="{'color_field': 'color'}"/>
-                        <separator/>
-                        <field name="coupon_qty" attrs="{'readonly': [('mode', '=', 'selected')], 'required': [('mode', '=', 'anonymous')]}"/>
-                        <label for="points_granted"/>
-                        <span>
-                            <field name="points_granted" class="oe_inline"/>
-                            <field name="points_name" class="oe_inline"/>
-                        </span>
-                        <field name="valid_until"/>
+                        <group>
+                            <field name="program_id" invisible="1"/>
+                            <field name="will_send_mail" invisible="1"/>
+                            <field name="program_type" invisible="1"/>
+                            <field name="mode" widget="radio" attrs="{'invisible': [('program_type', '=', 'ewallet')]}"/>
+                            <field name="customer_ids" widget="many2many_tags" attrs="{'invisible': [('mode', '=', 'anonymous')]}"/>
+                            <field name="customer_tag_ids" widget="many2many_tags" attrs="{'invisible': [('mode', '=', 'anonymous')]}" options="{'color_field': 'color'}"/>
+                            <field name="coupon_qty" string="Quantity to generate" attrs="{'readonly': [('mode', '=', 'selected')], 'required': [('mode', '=', 'anonymous')]}"/>
+                            <label string="Coupon value" for="points_granted" groups="base.group_no_one" attrs="{'invisible': [('program_type', '!=', 'coupons')]}"/>
+                            <span class="d-inline-block" groups="base.group_no_one" attrs="{'invisible': [('program_type', '!=', 'coupons')]}">
+                                <field name="points_granted" class="oe_inline"/>
+                                <field name="points_name" class="oe_inline"/>
+                            </span>
+                            <label string="Gift Card value" for="points_granted" attrs="{'invisible': [('program_type', '!=', 'gift_card')]}"/>
+                            <span class="d-inline-block" attrs="{'invisible': [('program_type', '!=', 'gift_card')]}">
+                                <field name="points_granted" class="w-auto oe_inline me-1"/>
+                                <field name="points_name" class="d-inline" no_label="1"/>
+                            </span>
+                            <label string="eWallet value" for="points_granted" attrs="{'invisible': [('program_type', '!=', 'ewallet')]}"/>
+                            <span class="d-inline-block" attrs="{'invisible': [('program_type', '!=', 'ewallet')]}">
+                                <field name="points_granted" class="w-auto oe_inline me-1"/>
+                                <field name="points_name" class="d-inline" no_label="1"/>
+                            </span>
+                            <field name="valid_until"/>
+                        </group>
                     </group>
                 </sheet>
                 <footer>
-                    <button name="generate_coupons" type="object" string="Generate Coupons" class="btn-primary" data-hotkey="q"/>
+                    <button name="generate_coupons" type="object" class="btn-primary" data-hotkey="q">
+                        <span attrs="{'invisible': [('will_send_mail', '=', False)]}">
+                            Generate and Send 
+                        </span>
+                        <span attrs="{'invisible': [('will_send_mail', '=', True)]}">
+                            Generate 
+                        </span>
+                        <field name="program_type" nolabel="1"/>
+                    </button>
                     <button special="cancel" data-hotkey="z" string="Cancel"/>
                 </footer>
             </form>
@@ -31,7 +51,7 @@
     </record>
 
     <record id="loyalty_generate_wizard_action" model="ir.actions.act_window">
-        <field name="name">Generate Coupons</field>
+        <field name="name">Generate</field>
         <field name="res_model">loyalty.generate.wizard</field>
         <field name="view_mode">form</field>
         <field name="target">new</field>

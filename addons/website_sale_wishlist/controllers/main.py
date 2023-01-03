@@ -10,7 +10,7 @@ class WebsiteSaleWishlist(WebsiteSale):
 
     @route(['/shop/wishlist/add'], type='json', auth="public", website=True)
     def add_to_wishlist(self, product_id, **kw):
-        website = request.env['website'].get_current_website()
+        website = request.website
         pricelist = website.pricelist_id
         product = request.env['product.product'].browse(product_id)
 

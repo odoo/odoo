@@ -204,7 +204,7 @@ class TestJavascriptAssetsBundle(FileTouchable):
         """
         bundle0 = self._get_asset(self.jsbundle_name)
         bundle0.js()
-        last_modified0 = bundle0.last_modified
+        last_modified0 = bundle0.last_modified_combined
         version0 = bundle0.version
 
         path = get_resource_path('test_assetsbundle', 'static', 'src', 'js', 'test_jsfile1.js')
@@ -212,7 +212,7 @@ class TestJavascriptAssetsBundle(FileTouchable):
 
         with self._touch(path):
             bundle1.js()
-            last_modified1 = bundle1.last_modified
+            last_modified1 = bundle1.last_modified_combined
             version1 = bundle1.version
             self.assertNotEqual(last_modified0, last_modified1,
                                 "the creation date of the ir.attachment should change because the bundle has changed.")
@@ -486,13 +486,13 @@ class TestJavascriptAssetsBundle(FileTouchable):
         # Assets access for en_US language
         ltr_bundle0 = self._get_asset(self.cssbundle_name)
         ltr_bundle0.css()
-        ltr_last_modified0 = ltr_bundle0.last_modified
+        ltr_last_modified0 = ltr_bundle0.last_modified_combined
         ltr_version0 = ltr_bundle0.version
 
         # Assets access for ar_SY language
         rtl_bundle0 = self._get_asset(self.cssbundle_name, env=self.env(context={'lang': 'ar_SY'}))
         rtl_bundle0.css()
-        rtl_last_modified0 = rtl_bundle0.last_modified
+        rtl_last_modified0 = rtl_bundle0.last_modified_combined
         rtl_version0 = rtl_bundle0.version
 
         # Touch test_cssfile1.css
@@ -502,7 +502,7 @@ class TestJavascriptAssetsBundle(FileTouchable):
 
         with self._touch(path):
             ltr_bundle1.css()
-            ltr_last_modified1 = ltr_bundle1.last_modified
+            ltr_last_modified1 = ltr_bundle1.last_modified_combined
             ltr_version1 = ltr_bundle1.version
             ltr_ira1 = self._any_ira_for_bundle('min.css')
             self.assertNotEqual(ltr_last_modified0, ltr_last_modified1)
@@ -511,7 +511,7 @@ class TestJavascriptAssetsBundle(FileTouchable):
             rtl_bundle1 = self._get_asset(self.cssbundle_name, env=self.env(context={'lang': 'ar_SY'}))
 
             rtl_bundle1.css()
-            rtl_last_modified1 = rtl_bundle1.last_modified
+            rtl_last_modified1 = rtl_bundle1.last_modified_combined
             rtl_version1 = rtl_bundle1.version
             rtl_ira1 = self._any_ira_for_bundle('min.css', lang='ar_SY')
             self.assertNotEqual(rtl_last_modified0, rtl_last_modified1)
@@ -831,16 +831,16 @@ class TestAssetsManifest(AddonManifestPatched):
         self.assertStringEqual(
             content,
             '''
-            /* /test_assetsbundle/static/src/js/test_jsfile1.js defined in bundle 'test_assetsbundle.manifest1' */
+            /* /test_assetsbundle/static/src/js/test_jsfile1.js */
             var a=1;;
 
-            /* /test_assetsbundle/static/src/js/test_jsfile2.js defined in bundle 'test_assetsbundle.manifest1' */
+            /* /test_assetsbundle/static/src/js/test_jsfile2.js */
             var b=2;;
 
-            /* /test_assetsbundle/static/src/js/test_jsfile3.js defined in bundle 'test_assetsbundle.manifest1' */
+            /* /test_assetsbundle/static/src/js/test_jsfile3.js */
             var c=3;;
 
-            /* /test_assetsbundle/static/src/js/test_jsfile4.js defined in bundle 'test_assetsbundle.manifest1' */
+            /* /test_assetsbundle/static/src/js/test_jsfile4.js */
             var d=4;
             '''
         )
@@ -853,16 +853,16 @@ class TestAssetsManifest(AddonManifestPatched):
         self.assertStringEqual(
             content,
             '''
-            /* /test_assetsbundle/static/src/js/test_jsfile1.js defined in bundle 'test_assetsbundle.manifest2' */
+            /* /test_assetsbundle/static/src/js/test_jsfile1.js */
             var a=1;;
 
-            /* /test_assetsbundle/static/src/js/test_jsfile2.js defined in bundle 'test_assetsbundle.manifest2' */
+            /* /test_assetsbundle/static/src/js/test_jsfile2.js */
             var b=2;;
 
-            /* /test_assetsbundle/static/src/js/test_jsfile3.js defined in bundle 'test_assetsbundle.manifest2' */
+            /* /test_assetsbundle/static/src/js/test_jsfile3.js */
             var c=3;;
 
-            /* /test_assetsbundle/static/src/js/test_jsfile4.js defined in bundle 'test_assetsbundle.manifest2' */
+            /* /test_assetsbundle/static/src/js/test_jsfile4.js */
             var d=4;
             '''
         )
@@ -875,16 +875,16 @@ class TestAssetsManifest(AddonManifestPatched):
         self.assertStringEqual(
             content,
             '''
-            /* /test_assetsbundle/static/src/js/test_jsfile3.js defined in bundle 'test_assetsbundle.manifest3' */
+            /* /test_assetsbundle/static/src/js/test_jsfile3.js */
             var c=3;;
 
-            /* /test_assetsbundle/static/src/js/test_jsfile1.js defined in bundle 'test_assetsbundle.manifest3' */
+            /* /test_assetsbundle/static/src/js/test_jsfile1.js */
             var a=1;;
 
-            /* /test_assetsbundle/static/src/js/test_jsfile2.js defined in bundle 'test_assetsbundle.manifest3' */
+            /* /test_assetsbundle/static/src/js/test_jsfile2.js */
             var b=2;;
 
-            /* /test_assetsbundle/static/src/js/test_jsfile4.js defined in bundle 'test_assetsbundle.manifest3' */
+            /* /test_assetsbundle/static/src/js/test_jsfile4.js */
             var d=4;
             '''
         )
@@ -902,10 +902,10 @@ class TestAssetsManifest(AddonManifestPatched):
         self.assertStringEqual(
             content,
             '''
-            /* /test_assetsbundle/static/src/js/test_jsfile3.js defined in bundle 'test_assetsbundle.manifest4' */
+            /* /test_assetsbundle/static/src/js/test_jsfile3.js */
             var c=3;;
 
-            /* /test_assetsbundle/static/src/js/test_jsfile1.js defined in bundle 'test_assetsbundle.manifest4' */
+            /* /test_assetsbundle/static/src/js/test_jsfile1.js */
             var a=1;
             '''
         )
@@ -923,7 +923,7 @@ class TestAssetsManifest(AddonManifestPatched):
         self.assertStringEqual(
             content,
             '''
-            /* /test_assetsbundle/static/src/js/test_jsfile1.js defined in bundle 'test_assetsbundle.irasset1' */
+            /* /test_assetsbundle/static/src/js/test_jsfile1.js */
             var a=1;
             '''
         )
@@ -948,13 +948,13 @@ class TestAssetsManifest(AddonManifestPatched):
         self.assertStringEqual(
             content,
             '''
-            /* /test_assetsbundle/static/src/js/test_jsfile2.js defined in bundle 'test_assetsbundle.manifest1' */
+            /* /test_assetsbundle/static/src/js/test_jsfile2.js */
             var b=2;;
 
-            /* /test_assetsbundle/static/src/js/test_jsfile3.js defined in bundle 'test_assetsbundle.manifest1' */
+            /* /test_assetsbundle/static/src/js/test_jsfile3.js */
             var c=3;;
 
-            /* /test_assetsbundle/static/src/js/test_jsfile4.js defined in bundle 'test_assetsbundle.manifest1' */
+            /* /test_assetsbundle/static/src/js/test_jsfile4.js */
             var d=4;
             '''
         )
@@ -974,7 +974,7 @@ class TestAssetsManifest(AddonManifestPatched):
         self.assertStringEqual(
             content,
             '''
-            /* /test_assetsbundle/static/src/js/test_jsfile1.js defined in bundle 'test_assetsbundle.manifest4' */
+            /* /test_assetsbundle/static/src/js/test_jsfile1.js */
             var a=1;
             '''
         )
@@ -1003,13 +1003,13 @@ class TestAssetsManifest(AddonManifestPatched):
         self.assertStringEqual(
             content,
             '''
-            /* /test_assetsbundle/static/src/js/test_jsfile1.js defined in bundle 'test_assetsbundle.manifest4' */
+            /* /test_assetsbundle/static/src/js/test_jsfile1.js */
             var a=1;;
 
-            /* /test_assetsbundle/static/src/js/test_jsfile2.js defined in bundle 'test_assetsbundle.manifest4' */
+            /* /test_assetsbundle/static/src/js/test_jsfile2.js */
             var b=2;;
 
-            /* /test_assetsbundle/static/src/js/test_jsfile3.js defined in bundle 'test_assetsbundle.manifest4' */
+            /* /test_assetsbundle/static/src/js/test_jsfile3.js */
             var c=3;
             '''
         )
@@ -1028,13 +1028,13 @@ class TestAssetsManifest(AddonManifestPatched):
         self.assertStringEqual(
             content,
             '''
-            /* /test_assetsbundle/static/src/js/test_jsfile1.js defined in bundle 'test_assetsbundle.manifest5' */
+            /* /test_assetsbundle/static/src/js/test_jsfile1.js */
             var a=1;;
 
-            /* /test_assetsbundle/static/src/js/test_jsfile3.js defined in bundle 'test_assetsbundle.manifest5' */
+            /* /test_assetsbundle/static/src/js/test_jsfile3.js */
             var c=3;;
 
-            /* /test_assetsbundle/static/src/js/test_jsfile4.js defined in bundle 'test_assetsbundle.manifest5' */
+            /* /test_assetsbundle/static/src/js/test_jsfile4.js */
             var d=4;
             '''
         )
@@ -1086,10 +1086,10 @@ class TestAssetsManifest(AddonManifestPatched):
         self.assertStringEqual(
             content,
             '''
-            /* /test_assetsbundle/static/src/js/test_jsfile1.js defined in bundle 'test_assetsbundle.manifest4' */
+            /* /test_assetsbundle/static/src/js/test_jsfile1.js */
             var a=1;;
 
-            /* /test_assetsbundle/static/src/js/test_jsfile3.js defined in bundle 'test_assetsbundle.manifest4' */
+            /* /test_assetsbundle/static/src/js/test_jsfile3.js */
             var c=3;
             '''
         )
@@ -1108,7 +1108,7 @@ class TestAssetsManifest(AddonManifestPatched):
         self.assertStringEqual(
             content,
             '''
-            /* /test_assetsbundle/static/src/js/test_jsfile3.js defined in bundle 'test_assetsbundle.irasset_include1' */
+            /* /test_assetsbundle/static/src/js/test_jsfile3.js */
             var c=3;
             '''
         )
@@ -1121,7 +1121,7 @@ class TestAssetsManifest(AddonManifestPatched):
         self.assertStringEqual(
             content,
             '''
-            /* /test_assetsbundle/static/src/js/test_jsfile3.js defined in bundle 'test_assetsbundle.manifest6' */
+            /* /test_assetsbundle/static/src/js/test_jsfile3.js */
             var c=3;
             '''
         )
@@ -1187,7 +1187,7 @@ class TestAssetsManifest(AddonManifestPatched):
         self.assertStringEqual(
             content,
             '''
-            /* /test_assetsbundle/static/src/js/test_jsfile1.js defined in bundle 'test_assetsbundle.irasset_include1' */
+            /* /test_assetsbundle/static/src/js/test_jsfile1.js */
             var a=1;
             '''
         )
@@ -1211,7 +1211,7 @@ class TestAssetsManifest(AddonManifestPatched):
         self.assertStringEqual(
             content,
             '''
-            /* /test_assetsbundle/static/src/js/test_jsfile3.js defined in bundle 'test_other.mockmanifest1' */
+            /* /test_assetsbundle/static/src/js/test_jsfile3.js */
             var c=3;
             '''
         )
@@ -1235,10 +1235,10 @@ class TestAssetsManifest(AddonManifestPatched):
         self.assertStringEqual(
             content,
             '''
-            /* /test_assetsbundle/static/src/js/test_jsfile3.js defined in bundle 'test_assetsbundle.manifest4' */
+            /* /test_assetsbundle/static/src/js/test_jsfile3.js */
             var c=3;;
 
-            /* /test_assetsbundle/static/src/js/test_jsfile1.js defined in bundle 'test_assetsbundle.manifest4' */
+            /* /test_assetsbundle/static/src/js/test_jsfile1.js */
             var a=1;
             '''
         )
@@ -1262,10 +1262,10 @@ class TestAssetsManifest(AddonManifestPatched):
         self.assertStringEqual(
             content,
             '''
-            /* /test_assetsbundle/static/src/js/test_jsfile1.js defined in bundle 'test_assetsbundle.manifest4' */
+            /* /test_assetsbundle/static/src/js/test_jsfile1.js */
             var a=1;;
 
-            /* /test_assetsbundle/static/src/js/test_jsfile3.js defined in bundle 'test_assetsbundle.manifest4' */
+            /* /test_assetsbundle/static/src/js/test_jsfile3.js */
             var c=3;
             '''
         )
@@ -1289,7 +1289,7 @@ class TestAssetsManifest(AddonManifestPatched):
         self.assertStringEqual(
             content,
             '''
-            /* /test_assetsbundle/static/src/js/test_jsfile1.js defined in bundle 'test_assetsbundle.manifest4' */
+            /* /test_assetsbundle/static/src/js/test_jsfile1.js */
             var a=1;
             '''
         )
@@ -1314,7 +1314,7 @@ class TestAssetsManifest(AddonManifestPatched):
         self.assertStringEqual(
             content,
             '''
-            /* /test_assetsbundle/static/src/js/test_jsfile1.js defined in bundle 'test_assetsbundle.manifest4' */
+            /* /test_assetsbundle/static/src/js/test_jsfile1.js */
             var a=1;
             '''
         )
@@ -1342,7 +1342,7 @@ class TestAssetsManifest(AddonManifestPatched):
         self.assertStringEqual(
             content,
             '''
-            /* /test_assetsbundle/static/src/js/test_jsfile3.js defined in bundle 'test_assetsbundle.manifest4' */
+            /* /test_assetsbundle/static/src/js/test_jsfile3.js */
             var c=3;
             '''
         )
@@ -1412,7 +1412,7 @@ class TestAssetsManifest(AddonManifestPatched):
         self.assertStringEqual(
             content,
             '''
-            /* /test_assetsbundle/static/src/scss/test_file1.scss defined in bundle 'test_assetsbundle.irasset2' */
+            /* /test_assetsbundle/static/src/scss/test_file1.scss */
              .rule1{color: black;}
             '''
         )
@@ -1437,13 +1437,13 @@ class TestAssetsManifest(AddonManifestPatched):
         self.assertStringEqual(
             content,
             '''
-            /* /test_assetsbundle/static/src/js/test_jsfile1.js defined in bundle 'test_assetsbundle.bundle4' */
+            /* /test_assetsbundle/static/src/js/test_jsfile1.js */
             var a=1;;
 
-            /* /test_assetsbundle/static/src/js/test_jsfile2.js defined in bundle 'test_assetsbundle.bundle4' */
+            /* /test_assetsbundle/static/src/js/test_jsfile2.js */
             var b=2;;
 
-            /* /test_assetsbundle/static/src/js/test_jsfile3.js defined in bundle 'test_assetsbundle.bundle4' */
+            /* /test_assetsbundle/static/src/js/test_jsfile3.js */
             var c=3;
             '''
         )
@@ -1467,16 +1467,16 @@ class TestAssetsManifest(AddonManifestPatched):
         self.assertStringEqual(
             content,
             '''
-            /* /test_assetsbundle/static/src/js/test_jsfile1.js defined in bundle 'test_assetsbundle.bundle4' */
+            /* /test_assetsbundle/static/src/js/test_jsfile1.js */
             var a=1;;
 
-            /* /test_assetsbundle/static/src/js/test_jsfile2.js defined in bundle 'test_assetsbundle.bundle4' */
+            /* /test_assetsbundle/static/src/js/test_jsfile2.js */
             var b=2;;
 
-            /* /test_assetsbundle/static/src/js/test_jsfile4.js defined in bundle 'test_assetsbundle.bundle4' */
+            /* /test_assetsbundle/static/src/js/test_jsfile4.js */
             var d=4;;
 
-            /* /test_assetsbundle/static/src/js/test_jsfile3.js defined in bundle 'test_assetsbundle.bundle4' */
+            /* /test_assetsbundle/static/src/js/test_jsfile3.js */
             var c=3;
             '''
         )
@@ -1501,13 +1501,13 @@ class TestAssetsManifest(AddonManifestPatched):
         self.assertStringEqual(
             content,
             '''
-            /* /test_assetsbundle/static/src/js/test_jsfile1.js defined in bundle 'test_assetsbundle.bundle4' */
+            /* /test_assetsbundle/static/src/js/test_jsfile1.js */
             var a=1;;
 
-            /* /test_assetsbundle/static/src/js/test_jsfile2.js defined in bundle 'test_assetsbundle.bundle4' */
+            /* /test_assetsbundle/static/src/js/test_jsfile2.js */
             var b=2;;
 
-            /* /test_assetsbundle/static/src/js/test_jsfile3.js defined in bundle 'test_assetsbundle.bundle4' */
+            /* /test_assetsbundle/static/src/js/test_jsfile3.js */
             var c=3;
             '''
         )
@@ -1531,16 +1531,16 @@ class TestAssetsManifest(AddonManifestPatched):
         self.assertStringEqual(
             content,
             '''
-            /* /test_assetsbundle/static/src/js/test_jsfile1.js defined in bundle 'test_assetsbundle.bundle4' */
+            /* /test_assetsbundle/static/src/js/test_jsfile1.js */
             var a=1;;
 
-            /* /test_assetsbundle/static/src/js/test_jsfile2.js defined in bundle 'test_assetsbundle.bundle4' */
+            /* /test_assetsbundle/static/src/js/test_jsfile2.js */
             var b=2;;
 
-            /* /test_assetsbundle/static/src/js/test_jsfile4.js defined in bundle 'test_assetsbundle.bundle4' */
+            /* /test_assetsbundle/static/src/js/test_jsfile4.js */
             var d=4;;
 
-            /* /test_assetsbundle/static/src/js/test_jsfile3.js defined in bundle 'test_assetsbundle.bundle4' */
+            /* /test_assetsbundle/static/src/js/test_jsfile3.js */
             var c=3;
             '''
         )
@@ -1560,16 +1560,16 @@ class TestAssetsManifest(AddonManifestPatched):
         self.assertStringEqual(
             content,
             '''
-            /* /test_assetsbundle/static/src/js/test_jsfile1.js defined in bundle 'test_assetsbundle.bundle4' */
+            /* /test_assetsbundle/static/src/js/test_jsfile1.js */
             var a=1;;
 
-            /* /test_assetsbundle/static/src/js/test_jsfile2.js defined in bundle 'test_assetsbundle.bundle4' */
+            /* /test_assetsbundle/static/src/js/test_jsfile2.js */
             var b=2;;
 
-            /* /test_assetsbundle/static/src/js/test_jsfile4.js defined in bundle 'test_assetsbundle.bundle4' */
+            /* /test_assetsbundle/static/src/js/test_jsfile4.js */
             var d=4;;
 
-            /* /test_assetsbundle/static/src/js/test_jsfile3.js defined in bundle 'test_assetsbundle.bundle4' */
+            /* /test_assetsbundle/static/src/js/test_jsfile3.js */
             var c=3;
             '''
         )
@@ -1589,16 +1589,16 @@ class TestAssetsManifest(AddonManifestPatched):
         self.assertStringEqual(
             content,
             '''
-            /* /test_assetsbundle/static/src/js/test_jsfile1.js defined in bundle 'test_assetsbundle.bundle4' */
+            /* /test_assetsbundle/static/src/js/test_jsfile1.js */
             var a=1;;
 
-            /* /test_assetsbundle/static/src/js/test_jsfile2.js defined in bundle 'test_assetsbundle.bundle4' */
+            /* /test_assetsbundle/static/src/js/test_jsfile2.js */
             var b=2;;
 
-            /* /test_assetsbundle/static/src/js/test_jsfile4.js defined in bundle 'test_assetsbundle.bundle4' */
+            /* /test_assetsbundle/static/src/js/test_jsfile4.js */
             var d=4;;
 
-            /* /test_assetsbundle/static/src/js/test_jsfile3.js defined in bundle 'test_assetsbundle.bundle4' */
+            /* /test_assetsbundle/static/src/js/test_jsfile3.js */
             var c=3;
             '''
         )
@@ -1636,16 +1636,16 @@ class TestAssetsManifest(AddonManifestPatched):
         self.assertStringEqual(
             js_content,
             '''
-            /* /test_assetsbundle/static/src/js/test_jsfile1.js defined in bundle 'test_assetsbundle.bundle4' */
+            /* /test_assetsbundle/static/src/js/test_jsfile1.js */
             var a=1;;
 
-            /* /test_assetsbundle/static/src/js/test_jsfile2.js defined in bundle 'test_assetsbundle.bundle4' */
+            /* /test_assetsbundle/static/src/js/test_jsfile2.js */
             var b=2;;
 
-            /* /test_assetsbundle/static/src/js/test_jsfile4.js defined in bundle 'test_assetsbundle.bundle4' */
+            /* /test_assetsbundle/static/src/js/test_jsfile4.js */
             var d=4;;
 
-            /* /test_assetsbundle/static/src/js/test_jsfile3.js defined in bundle 'test_assetsbundle.bundle4' */
+            /* /test_assetsbundle/static/src/js/test_jsfile3.js */
             var c=3;
             '''
         )
@@ -1654,13 +1654,13 @@ class TestAssetsManifest(AddonManifestPatched):
         self.assertStringEqual(
             css_content,
             '''
-            /* /test_assetsbundle/static/src/css/test_cssfile3.css defined in bundle 'test_assetsbundle.bundle4' */
+            /* /test_assetsbundle/static/src/css/test_cssfile3.css */
             .rule4{color: green;}
 
-            /* /test_assetsbundle/static/src/css/test_cssfile1.css defined in bundle 'test_assetsbundle.bundle4' */
+            /* /test_assetsbundle/static/src/css/test_cssfile1.css */
             .rule1{color: black;}.rule2{color: yellow;}.rule3{color: red;}
 
-            /* /test_assetsbundle/static/src/css/test_cssfile2.css defined in bundle 'test_assetsbundle.bundle4' */
+            /* /test_assetsbundle/static/src/css/test_cssfile2.css */
             .rule4{color: blue;}
             '''
         )
@@ -1700,16 +1700,16 @@ class TestAssetsManifest(AddonManifestPatched):
         self.assertStringEqual(
             content,
             '''
-            /* /test_assetsbundle/static/src/js/test_jsfile3.js defined in bundle 'test_assetsbundle.manifest4' */
+            /* /test_assetsbundle/static/src/js/test_jsfile3.js */
             var c=3;;
 
-            /* /test_assetsbundle/static/src/js/test_jsfile1.js defined in bundle 'test_assetsbundle.manifest4' */
+            /* /test_assetsbundle/static/src/js/test_jsfile1.js */
             var a=1;;
 
-            /* /test_assetsbundle/static/src/js/test_jsfile2.js defined in bundle 'test_assetsbundle.manifest4' */
+            /* /test_assetsbundle/static/src/js/test_jsfile2.js */
             var b=2;;
 
-            /* /test_assetsbundle/static/src/js/test_jsfile4.js defined in bundle 'test_assetsbundle.manifest4' */
+            /* /test_assetsbundle/static/src/js/test_jsfile4.js */
             var d=4;
             '''
         )
@@ -1729,16 +1729,16 @@ class TestAssetsManifest(AddonManifestPatched):
         self.assertStringEqual(
             content,
             '''
-            /* /test_assetsbundle/static/src/js/test_jsfile1.js defined in bundle 'test_assetsbundle.manifest4' */
+            /* /test_assetsbundle/static/src/js/test_jsfile1.js */
             var a=1;;
 
-            /* /test_assetsbundle/static/src/js/test_jsfile2.js defined in bundle 'test_assetsbundle.manifest4' */
+            /* /test_assetsbundle/static/src/js/test_jsfile2.js */
             var b=2;;
 
-            /* /test_assetsbundle/static/src/js/test_jsfile4.js defined in bundle 'test_assetsbundle.manifest4' */
+            /* /test_assetsbundle/static/src/js/test_jsfile4.js */
             var d=4;;
 
-            /* /test_assetsbundle/static/src/js/test_jsfile3.js defined in bundle 'test_assetsbundle.manifest4' */
+            /* /test_assetsbundle/static/src/js/test_jsfile3.js */
             var c=3;
             '''
         )
@@ -1773,7 +1773,7 @@ class TestAssetsManifest(AddonManifestPatched):
             'path': '/test_assetsbundle/%s' % path_to_dummy,
         })
 
-        files = self.env['ir.asset']._get_asset_paths('test_assetsbundle.irassetsec', addons=list(self.installed_modules), xml=False)
+        files = self.env['ir.asset']._get_asset_paths('test_assetsbundle.irassetsec', addons=list(self.installed_modules))
         self.assertFalse(files)
 
     def test_33(self):
@@ -1822,7 +1822,7 @@ class TestAssetsManifest(AddonManifestPatched):
             'bundle': 'test_assetsbundle.irassetsec',
             'path': '/test_assetsbundle/data/ir_asset.xml',
         })
-        files = self.env['ir.asset']._get_asset_paths('test_assetsbundle.irassetsec', addons=list(self.installed_modules), xml=False)
+        files = self.env['ir.asset']._get_asset_paths('test_assetsbundle.irassetsec', addons=list(self.installed_modules))
         self.assertFalse(files)
 
     def test_36(self):
@@ -1831,7 +1831,7 @@ class TestAssetsManifest(AddonManifestPatched):
             'bundle': 'test_assetsbundle.irassetsec',
             'path': '/test_assetsbundle/static/accessible.xml',
         })
-        files = self.env['ir.asset']._get_asset_paths('test_assetsbundle.irassetsec', addons=list(self.installed_modules), xml=False)
+        files = self.env['ir.asset']._get_asset_paths('test_assetsbundle.irassetsec', addons=list(self.installed_modules))
         self.assertEqual(len(files), 1)
         self.assertTrue('test_assetsbundle/static/accessible.xml' in files[0][0])
 
@@ -1864,7 +1864,7 @@ class TestAssetsManifest(AddonManifestPatched):
         self.assertStringEqual(
             content,
             """
-            /* test_assetsbundle/my_style_attach.scss defined in bundle 'test_assetsbundle.irasset_custom_attach' */
+            /* test_assetsbundle/my_style_attach.scss */
              .my_div.subdiv{color: blue;}
             """
         )

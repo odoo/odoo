@@ -4,7 +4,7 @@ import { browser } from "@web/core/browser/browser";
 import { useHotkey } from "@web/core/hotkeys/hotkey_hook";
 import { registry } from "@web/core/registry";
 import { uiService, useActiveElement } from "@web/core/ui/ui_service";
-import { hotkeyService } from "@web/core/hotkeys/hotkey_service";
+import { getActiveHotkey, hotkeyService } from "@web/core/hotkeys/hotkey_service";
 import { makeTestEnv } from "../../helpers/mock_env";
 import {
     destroy,
@@ -15,8 +15,9 @@ import {
     patchWithCleanup,
     triggerHotkey,
 } from "../../helpers/utils";
+import { registerCleanup } from "../../helpers/cleanup";
 
-const { Component, useRef, useState, xml } = owl;
+import { Component, useRef, useState, xml } from "@odoo/owl";
 const serviceRegistry = registry.category("services");
 
 let env;
@@ -51,6 +52,61 @@ QUnit.test("register / unregister", async (assert) => {
     await nextTick();
 
     assert.verifySteps([key]);
+});
+
+QUnit.test("hotkey handles wrongly formed KeyboardEvent", async (assert) => {
+    // This test's aim is to assert that Chrome's autofill bug is handled.
+    // When filling a form with the autofill feature of Chrome, a keyboard event without any
+    // key set on it is triggered. This seems to be a bug on Chrome's side, since the spec
+    //doesn't mention that field may be unset. (https://developer.mozilla.org/en-US/docs/Web/API/KeyboardEvent/key).
+    assert.expect(5);
+
+    const hotkey = env.services.hotkey;
+
+    class FakeKeyboardEvent extends Event {
+        constructor(evName, params) {
+            super(...arguments);
+            this.key = params.key;
+            this.code = params.code;
+        }
+    }
+
+    const handler = (ev) => {
+        ev.stopPropagation();
+        ev.preventDefault();
+        assert.step("error");
+    };
+
+    // fake error service so that the odoo qunit handlers don't think that they need to handle the error
+    registry.category("services").add("error", { start: () => {} });
+    window.addEventListener("error", handler);
+    const _onError = window.onerror;
+    window.onerror = () => {};
+    registerCleanup(() => {
+        window.removeEventListener("error", handler);
+        window.onerror = _onError;
+    });
+
+    const key = "q";
+    let removeHotkey = hotkey.add(key, () => assert.step(key), { global: true });
+    target.dispatchEvent(new FakeKeyboardEvent("keydown", { bubbles: true, key, code: key }));
+    assert.verifySteps([key]);
+    removeHotkey();
+
+    removeHotkey = hotkey.add(
+        key,
+        () => {
+            throw new Error("error");
+        },
+        { global: true }
+    );
+    target.dispatchEvent(new FakeKeyboardEvent("keydown", { bubbles: true, key, code: key }));
+    assert.verifySteps(["error"]);
+
+    // Trigger an event that doesn't honor KeyboardEvent API: that's the point
+    // in particular, it has no `key`
+    target.dispatchEvent(new FakeKeyboardEvent("keydown", { bubbles: true }));
+    assert.verifySteps([]);
 });
 
 QUnit.test("[accesskey] attrs replaced by [data-hotkey]", async (assert) => {
@@ -1111,4 +1167,19 @@ QUnit.test("mixing hotkeys with and without operation area", async (assert) => {
     triggerHotkey("Space");
     await nextTick();
     assert.verifySteps(["withArea"]);
+});
+
+QUnit.test("native browser space key ' ' is correctly translated to 'space' ", async (assert) => {
+    class A extends Component {
+        setup() {
+            useHotkey("space", () => assert.step("space"));
+        }
+    }
+    A.template = xml``;
+
+    assert.strictEqual(getActiveHotkey({ key: " " }), "space");
+
+    await mount(A, target, { env });
+    await triggerHotkey(" "); // event key triggered by the browser
+    assert.verifySteps(["space"]);
 });

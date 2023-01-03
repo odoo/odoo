@@ -118,12 +118,12 @@
                                     </group>
                                 </group>
                                 <group name="general" attrs="{'invisible':[('delivery_type', '!=', 'base_on_rule')]}">
-                                    <field name="price_rule_ids" nolabel="1"/>
+                                    <field name="price_rule_ids" nolabel="1" colspan="2"/>
                                 </group>
                             </page>
                             <page string="Destination Availability" name="destination">
                                 <group>
-                                    <p>
+                                    <p colspan="2">
                                         Filling this form allows you to filter delivery carriers according to the delivery address of your customer.
                                     </p>
                                 </group>
@@ -236,7 +236,7 @@
                         <label for="carrier_tracking_ref"/>
                         <div name="tracking">
                             <field name="carrier_tracking_ref" class="oe_inline" attrs="{'readonly': [('state', 'in', ('done', 'cancel'))]}"/>
-                            <button type='object' class="fa fa-arrow-right oe_link" name="cancel_shipment" string="Cancel" attrs="{'invisible':['|','|','|',('carrier_tracking_ref','=',False),('delivery_type','in', ['fixed', 'base_on_rule']),('delivery_type','=',False),('state','not in',('done'))]}"/>
+                            <button type='object' class="fa fa-arrow-right oe_link" confirm="Cancelling a delivery may not be undoable. Are you sure you want to continue?" name="cancel_shipment" string="Cancel" attrs="{'invisible':['|','|','|',('carrier_tracking_ref','=',False),('delivery_type','in', ['fixed', 'base_on_rule']),('delivery_type','=',False),('state','not in',('done'))]}"/>
                         </div>
                         <label for="weight" string="Weight"/>
                         <div>
@@ -298,9 +298,9 @@
                 <field name="company_id" position="before">
                     <label for="shipping_weight"/>
                     <div class="o_row" name="Shipping Weight">
-                        <field name="shipping_weight"/>
+                        <field name="shipping_weight" class="oe_inline"/>
                         <span><field name="weight_uom_name"/></span>
-                        <span class="text-muted">(computed: <field name="weight" nolabel="1"/></span><span class="text-muted"><field name="weight_uom_name" nolabel="1"/>)</span>
+                        <span class="text-muted">(computed: <field name="weight" class="oe_inline" nolabel="1"/></span><span class="text-muted"><field name="weight_uom_name" nolabel="1" class="oe_inline"/>)</span>
                     </div>
                 </field>
             </field>
@@ -353,7 +353,11 @@
                     <xpath expr="//field[@name='order_line']/tree" position="attributes">
                         <attribute name="decoration-warning">recompute_delivery_price and is_delivery</attribute>
                     </xpath>
+                    <field name="picking_policy" position="after">
+                        <field name="shipping_weight" readonly="True"/>
+                    </field>
                 </data>
+                
             </field>
         </record>
 

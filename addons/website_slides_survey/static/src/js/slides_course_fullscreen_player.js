@@ -6,10 +6,6 @@ var QWeb = core.qweb;
 var Fullscreen = require('@website_slides/js/slides_course_fullscreen_player')[Symbol.for("default")];
 
 Fullscreen.include({
-    xmlDependencies: (Fullscreen.prototype.xmlDependencies || []).concat(
-        ["/website_slides_survey/static/src/xml/website_slides_fullscreen.xml"]
-    ),
-
     /**
      * Extend the _renderSlide method so that slides of category "certification"
      * are also taken into account and rendered correctly

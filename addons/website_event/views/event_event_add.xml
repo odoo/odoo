@@ -5,7 +5,7 @@
     <field name="name">event.event.view.form.add</field>
     <field name="model">event.event</field>
     <field name="arch" type="xml">
-        <form js_class="event_event_add_form">
+        <form js_class="website_new_content_form">
             <group>
                 <field name="website_url" invisible="1"/>
                 <field name="company_id" invisible="1"/>
@@ -13,9 +13,9 @@
                 <field name="address_id" context="{'show_address': 1}" options='{"always_reload": True}'/>
                 <label for="date_begin" string="Start &#8594; End"/>
                 <div class="o_row w-100">
-                    <field name="date_begin" widget="daterange" nolabel="1" class="oe_inline" options="{'related_end_date': 'date_end'}"/>
+                    <field name="date_begin" widget="daterange" nolabel="1" options="{'related_end_date': 'date_end'}"/>
                     <i class="fa fa-long-arrow-right mx-2" aria-label="Arrow icon" title="Arrow"/>
-                    <field name="date_end" widget="daterange" nolabel="1" class="oe_inline" options="{'related_start_date': 'date_begin'}"/>
+                    <field name="date_end" widget="daterange" nolabel="1" options="{'related_start_date': 'date_begin'}"/>
                 </div>
             </group>
         </form>

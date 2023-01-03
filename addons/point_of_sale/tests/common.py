@@ -11,7 +11,6 @@ import logging
 
 _logger = logging.getLogger(__name__)
 
-@tagged('post_install', '-at_install')
 class TestPointOfSaleCommon(ValuationReconciliationTestCommon):
 
     @classmethod
@@ -132,7 +131,6 @@ class TestPointOfSaleCommon(ValuationReconciliationTestCommon):
         (invoice_rep_lines | refund_rep_lines).write({'account_id': cls.company_data['default_account_tax_sale'].id})
 
 
-@tagged('post_install', '-at_install')
 class TestPoSCommon(ValuationReconciliationTestCommon):
     """ Set common values for different special test cases.
 
@@ -167,7 +165,7 @@ class TestPoSCommon(ValuationReconciliationTestCommon):
         cls.receivable_account = cls.company_data['default_account_receivable']
         cls.tax_received_account = cls.company_data['default_account_tax_sale']
         cls.company.account_default_pos_receivable_account_id = cls.env['account.account'].create({
-            'code': 'X1012 - POS',
+            'code': 'X1012.POS',
             'name': 'Debtors - (POS)',
             'reconcile': True,
             'account_type': 'asset_receivable',
@@ -179,7 +177,7 @@ class TestPoSCommon(ValuationReconciliationTestCommon):
         cls.c1_receivable = cls.copy_account(cls.receivable_account, {'name': 'Customer 1 Receivable'})
         cls.other_receivable_account = cls.env['account.account'].create({
             'name': 'Other Receivable',
-            'code': 'RCV00' ,
+            'code': 'RCV00',
             'account_type': 'asset_receivable',
             'internal_group': 'asset',
             'reconcile': True,
@@ -623,7 +621,8 @@ class TestPoSCommon(ValuationReconciliationTestCommon):
             _logger.info('DONE: Call of before_closing_cb.')
         self._check_invoice_journal_entries(pos_session, orders_map, expected_values=args['journal_entries_before_closing'])
         _logger.info('DONE: Checks for journal entries before closing the session.')
-        total_cash_payment = sum(pos_session.mapped('order_ids.payment_ids').filtered(lambda payment: payment.payment_method_id.type == 'cash').mapped('amount'))
+        cash_payment_method = pos_session.payment_method_ids.filtered('is_cash_count')[:1]
+        total_cash_payment = sum(pos_session.mapped('order_ids.payment_ids').filtered(lambda payment: payment.payment_method_id.id == cash_payment_method.id).mapped('amount'))
         pos_session.post_closing_cash_details(total_cash_payment)
         pos_session.close_session_from_ui()
         after_closing_cb = args.get('after_closing_cb')
@@ -688,7 +687,7 @@ class TestPoSCommon(ValuationReconciliationTestCommon):
         _logger.info("DONE: Check of the session's account move.")
 
         # check expected cash journal entries
-        for statement_line in pos_session.cash_register_id.line_ids:
+        for statement_line in pos_session.statement_line_ids:
             def statement_line_predicate(args):
                 return tools.float_is_zero(statement_line.amount - args[0], precision_rounding=currency_rounding)
             self._find_then_assert_values(statement_line.move_id, expected_values['cash_statement'], statement_line_predicate)

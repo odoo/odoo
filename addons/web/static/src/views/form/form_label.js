@@ -4,11 +4,11 @@ import { fieldVisualFeedback } from "@web/views/fields/field";
 import { session } from "@web/session";
 import { getTooltipInfo } from "@web/views/fields/field_tooltip";
 
-const { Component, xml } = owl;
+import { Component } from "@odoo/owl";
 
 export class FormLabel extends Component {
     get className() {
-        const { invalid, empty } = fieldVisualFeedback(
+        const { invalid, empty, readonly } = fieldVisualFeedback(
             this.props.fieldInfo.FieldComponent,
             this.props.record,
             this.props.fieldName,
@@ -20,6 +20,9 @@ export class FormLabel extends Component {
         }
         if (empty) {
             classes.push("o_form_label_empty");
+        }
+        if (readonly && !this.props.notMuttedLabel) {
+            classes.push("o_form_label_readonly");
         }
         return classes.join(" ");
     }
@@ -53,8 +56,13 @@ export class FormLabel extends Component {
         });
     }
 }
-FormLabel.template = xml`
-  <label class="o_form_label" t-att-for="props.id" t-att-class="className" >
-    <t t-esc="props.string"/><sup class="btn-link p-1" t-if="hasTooltip" t-att="{'data-tooltip-template': 'web.FieldTooltip', 'data-tooltip-info': tooltipInfo, 'data-tooltip-touch-tap-to-show': 'true'}">?</sup>
-  </label>
-`;
+FormLabel.template = "web.FormLabel";
+FormLabel.props = {
+    fieldInfo: { type: Object },
+    record: { type: Object },
+    fieldName: { type: String },
+    className: { type: String, optional: true },
+    string: { type: String },
+    id: { type: String },
+    notMuttedLabel: { type: Boolean, optional: true },
+};

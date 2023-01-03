@@ -1,7 +1,6 @@
 odoo.define('web.basic_fields_tests', function (require) {
 "use strict";
 
-var ajax = require('web.ajax');
 var basicFields = require('web.basic_fields');
 var concurrency = require('web.concurrency');
 var config = require('web.config');
@@ -17,8 +16,9 @@ const legacyViewRegistry = require('web.view_registry');
 const  makeTestEnvironment = require("web.test_env");
 const { makeLegacyCommandService } = require("@web/legacy/utils");
 const { registry } = require("@web/core/registry");
-const { getFixture, legacyExtraNextTick, triggerHotkey, nextTick, click } = require("@web/../tests/helpers/utils");
+const { getFixture, legacyExtraNextTick, triggerHotkey, nextTick, click, patchWithCleanup } = require("@web/../tests/helpers/utils");
 const { createWebClient, doAction } = require('@web/../tests/webclient/helpers');
+const { registerCleanup } = require("@web/../tests/helpers/cleanup");
 
 var createView = testUtils.createView;
 var patchDate = testUtils.mock.patchDate;
@@ -159,19 +159,6 @@ QUnit.module('Legacy basic_fields', {
                     display_name: "€",
                     symbol: "€",
                     position: "after",
-                }]
-            },
-            "ir.translation": {
-                fields: {
-                    lang: {type: "char"},
-                    value: {type: "char"},
-                    res_id: {type: "integer"}
-                },
-                records: [{
-                    id: 99,
-                    res_id: 37,
-                    value: '',
-                    lang: 'en_US'
                 }]
             },
         };
@@ -575,6 +562,9 @@ QUnit.module('Legacy basic_fields', {
     QUnit.test('use toggle_button in list view', async function (assert) {
         assert.expect(6);
 
+        field_registry.add("toggle_button", basicFields.FieldToggleBoolean);
+        registerCleanup(() => delete field_registry.map.toggle_button);
+
         var list = await createView({
             View: ListView,
             model: 'partner',
@@ -608,6 +598,9 @@ QUnit.module('Legacy basic_fields', {
 
     QUnit.test('toggle_button in form view (edit mode)', async function (assert) {
         assert.expect(6);
+
+        field_registry.add("toggle_button", basicFields.FieldToggleBoolean);
+        registerCleanup(() => delete field_registry.map.toggle_button);
 
         var form = await createView({
             View: FormView,
@@ -652,6 +645,9 @@ QUnit.module('Legacy basic_fields', {
     QUnit.test('toggle_button in form view (readonly mode)', async function (assert) {
         assert.expect(4);
 
+        field_registry.add("toggle_button", basicFields.FieldToggleBoolean);
+        registerCleanup(() => delete field_registry.map.toggle_button);
+
         var form = await createView({
             View: FormView,
             model: 'partner',
@@ -684,6 +680,9 @@ QUnit.module('Legacy basic_fields', {
 
     QUnit.test('toggle_button in form view with readonly modifiers', async function (assert) {
         assert.expect(3);
+
+        field_registry.add("toggle_button", basicFields.FieldToggleBoolean);
+        registerCleanup(() => delete field_registry.map.toggle_button);
 
         const form = await createView({
             View: FormView,
@@ -786,6 +785,44 @@ QUnit.module('Legacy basic_fields', {
         percentageInput.dispatchEvent(new KeyboardEvent('keydown', { code: 'NumpadDecimal', key: ',' }));
         await testUtils.nextTick();
         assert.ok(percentageInput.querySelector('input.o_input').value.endsWith('🇧🇪🇧🇪'));
+
+        form.destroy();
+    });
+
+    QUnit.test('numeric field: field with type `number` and with keydown on numpad decimal key', async function (assert) {
+        assert.expect(2);
+
+        patchWithCleanup(basicFields.NumericField.constructor.prototype, {
+           _onKeydown(ev) {
+                const res = this._super(...arguments);
+
+                // This _onKeydown handler must not prevent default
+                // a keydown event for NumericField with type=number
+                assert.ok(!ev.defaultPrevented);
+                return res;
+            },
+        });
+
+        this.data.partner.fields.float_field = { string: "Float", type: 'float' };
+        this.data.partner.records[0].float_field = 123;
+
+        const form = await createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: `
+                <form string="Partners">
+                    <field name="float_field" options="{'type': 'number'}"/>
+                </form>
+            `,
+            res_id: 1,
+        });
+
+        await testUtilsDom.click(form.el.querySelector('.o_form_button_edit'));
+        const floatField = form.el.querySelector('.o_input[name="float_field"]');
+        assert.strictEqual(floatField.type, 'number')
+
+        floatField.dispatchEvent(new KeyboardEvent('keydown', { code: 'NumpadDecimal', key: '.' }));
 
         form.destroy();
     });
@@ -1654,25 +1691,18 @@ QUnit.module('Legacy basic_fields', {
                 user_context: {lang: 'en_US'},
             },
             mockRPC: function (route, args) {
-                if (route === "/web/dataset/call_button" && args.method === 'translate_fields') {
-                    assert.deepEqual(args.args, ["partner",1,"foo"], 'should call "call_button" route');
-                    return Promise.resolve({
-                        domain: [],
-                        context: {search_default_name: 'partnes,foo'},
-                    });
+                if (route === "/web/dataset/call_kw/partner/get_field_translations") {
+                    assert.deepEqual(args.args, [[1],"foo"], "should translate the foo field of the record");
+                    return Promise.resolve([
+                        [{lang: "en_US", source: "yop", value: "yop"}, {lang: "fr_BE", source: "yop", value: "valeur français"}],
+                        {translation_type: "char", translation_show_source: false},
+                    ]);
                 }
                 if (route === "/web/dataset/call_kw/res.lang/get_installed") {
                     return Promise.resolve([["en_US", "English"], ["fr_BE", "French (Belgium)"]]);
                 }
-                if (args.method === "search_read" && args.model == "ir.translation") {
-                    return Promise.resolve([
-                        {lang: 'en_US', src: 'yop', value: 'yop', id: 42},
-                        {lang: 'fr_BE', src: 'yop', value: 'valeur français', id: 43}
-                    ]);
-                }
-                if (args.method === "write" && args.model == "ir.translation") {
-                    assert.deepEqual(args.args[1], {value: "english value"},
-                        "the new translation value should be written");
+                if (route === "/web/dataset/call_kw/partner/update_field_translations") {
+                    assert.deepEqual(args.args, [[1], "foo", {"en_US": "english value"}], "the new translation value should be written");
                     return Promise.resolve();
                 }
                 return this._super.apply(this, arguments);
@@ -1719,7 +1749,7 @@ QUnit.module('Legacy basic_fields', {
     });
 
     QUnit.test('html field translatable', async function (assert) {
-        assert.expect(6);
+        assert.expect(8);
 
         this.data.partner.fields.foo.translate = true;
 
@@ -1742,31 +1772,27 @@ QUnit.module('Legacy basic_fields', {
                 user_context: {lang: 'en_US'},
             },
             mockRPC: function (route, args) {
-                if (route === "/web/dataset/call_button" && args.method === 'translate_fields') {
-                    assert.deepEqual(args.args, ["partner",1,"foo"], 'should call "call_button" route');
-                    return Promise.resolve({
-                        domain: [],
-                        context: {
-                            search_default_name: 'partner,foo',
-                            translation_type: 'char',
-                            translation_show_src: true,
-                        },
-                    });
+                if (route === "/web/dataset/call_kw/partner/get_field_translations") {
+                    assert.deepEqual(args.args, [[1],"foo"], "should translate the foo field of the record");
+                    return Promise.resolve([
+                        [{lang: "en_US", source: "first paragraph", value: "first paragraph"},
+                            {lang: "en_US", source: "second paragraph", value: "second paragraph"},
+                            {lang: "fr_BE", source: "first paragraph", value: ""},
+                            {lang: "fr_BE", source: "second paragraph", value: "deuxième paragraphe"}],
+                        {translation_type: "char", translation_show_source: true},
+                    ]);
                 }
                 if (route === "/web/dataset/call_kw/res.lang/get_installed") {
                     return Promise.resolve([["en_US", "English"], ["fr_BE", "French (Belgium)"]]);
                 }
-                if (args.method === "search_read" && args.model == "ir.translation") {
-                    return Promise.resolve([
-                        {lang: 'en_US', src: 'first paragraph', value: 'first paragraph', id: 42},
-                        {lang: 'en_US', src: 'second paragraph', value: 'second paragraph', id: 43},
-                        {lang: 'fr_BE', src: 'first paragraph', value: 'premier paragraphe', id: 44},
-                        {lang: 'fr_BE', src: 'second paragraph', value: 'deuxième paragraphe', id: 45},
-                    ]);
-                }
-                if (args.method === "write" && args.model == "ir.translation") {
-                    assert.deepEqual(args.args[1], {value: "first paragraph modified"},
-                        "Wrong update on translation");
+                if (route === "/web/dataset/call_kw/partner/update_field_translations") {
+                    assert.deepEqual(args.args, [[1], "foo", {
+                        "en_US": {"first paragraph": "first paragraph modified"},
+                        "fr_BE": {
+                            "first paragraph": "premier paragraphe modifié",
+                            "deuxième paragraphe": "deuxième paragraphe modifié",
+                        },
+                    }], "the new translation value should be written");
                     return Promise.resolve();
                 }
                 return this._super.apply(this, arguments);
@@ -1787,11 +1813,24 @@ QUnit.module('Legacy basic_fields', {
         assert.containsN($('.modal .o_translation_dialog'), '.translation', 4,
             'four rows should be visible');
 
-        var $enField = $('.modal .o_translation_dialog .translation:first() input');
-        assert.strictEqual($enField.val(), 'first paragraph',
+        const $translations = $('.modal .o_translation_dialog .translation input');
+        const enField1 = $translations[0];
+        assert.strictEqual(enField1.value, 'first paragraph',
             'first part of english translation should be filled');
 
-        await testUtils.fields.editInput($enField, "first paragraph modified");
+        await testUtils.fields.editInput(enField1, "first paragraph modified");
+
+        const frField1 = $translations[2];
+        assert.strictEqual(frField1.value, '',
+            'first part of french translation should not be filled');
+
+        await testUtils.fields.editInput(frField1, "premier paragraphe modifié");
+
+        const frField2 = $translations[3];
+        assert.strictEqual(frField2.value, 'deuxième paragraphe',
+            'second part of french translation should be filled');
+
+        await testUtils.fields.editInput(frField2, "deuxième paragraphe modifié");
         await testUtils.dom.click($('.modal button.btn-primary'));  // save
         await testUtils.nextTick();
 
@@ -2695,15 +2734,15 @@ QUnit.module('Legacy basic_fields', {
                 '</form>',
             res_id: 1,
             mockRPC: function (route, args) {
-                if (route === "/web/dataset/call_button" && args.method === 'translate_fields') {
-                    assert.deepEqual(args.args, ["partner",1,"txt"], 'should call "call_button" route');
-                    return Promise.resolve({
-                        domain: [],
-                        context: {search_default_name: 'partnes,foo'},
-                    });
+                if (route === "/web/dataset/call_kw/partner/get_field_translations") {
+                    assert.deepEqual(args.args, [[1],"txt"], "should translate the txt field of the record");
+                    return Promise.resolve([
+                        [{lang: "en_US", source: "yop", value: "yop"}, {lang: "fr_BE", source: "yop", value: "valeur français"}],
+                        {translation_type: "text", translation_show_source: false},
+                    ]);
                 }
                 if (route === "/web/dataset/call_kw/res.lang/get_installed") {
-                    return Promise.resolve([["en_US"], ["fr_BE"]]);
+                    return Promise.resolve([["en_US", "English"], ["fr_BE", "French (Belgium)"]]);
                 }
                 return this._super.apply(this, arguments);
             },
@@ -3123,7 +3162,7 @@ QUnit.module('Legacy basic_fields', {
     QUnit.test('image fields are correctly rendered', async function (assert) {
         assert.expect(7);
 
-        this.data.partner.records[0].__last_update = '2017-02-08 10:00:00';
+        this.data.partner.records[0].write_date = '2017-02-08 10:00:00';
         this.data.partner.records[0].document = MY_IMAGE;
 
         var form = await createView({
@@ -3136,7 +3175,7 @@ QUnit.module('Legacy basic_fields', {
             res_id: 1,
             async mockRPC(route, args) {
                 if (route === '/web/dataset/call_kw/partner/read') {
-                    assert.deepEqual(args.args[1], ['document', '__last_update', 'display_name'], "The fields document, display_name and __last_update should be present when reading an image");
+                    assert.deepEqual(args.args[1], ['document', 'write_date', 'display_name'], "The fields document, display_name and write_date should be present when reading an image");
                 }
                 return this._super.apply(this, arguments);
             },
@@ -3161,7 +3200,7 @@ QUnit.module('Legacy basic_fields', {
         assert.expect(6);
 
         this.data.partner.fields.picture = { string: 'Picture', type: 'binary' };
-        this.data.partner.records[0].__last_update = '2017-02-08 10:00:00';
+        this.data.partner.records[0].write_date = '2017-02-08 10:00:00';
         this.data.partner.records[0].document = 'myimage1';
         this.data.partner.records[0].picture = 'myimage2';
 
@@ -3202,7 +3241,7 @@ QUnit.module('Legacy basic_fields', {
     QUnit.test('image fields are correctly replaced when given an incorrect value', async function (assert) {
         assert.expect(6);
 
-        this.data.partner.records[0].__last_update = '2017-02-08 10:00:00';
+        this.data.partner.records[0].write_date = '2017-02-08 10:00:00';
         this.data.partner.records[0].document = 'incorrect_base64_value';
 
         testUtils.mock.patch(basicFields.FieldBinaryImage, {
@@ -3277,7 +3316,7 @@ QUnit.module('Legacy basic_fields', {
     QUnit.test('image fields in subviews are loaded correctly', async function (assert) {
         assert.expect(4);
 
-        this.data.partner.records[0].__last_update = '2017-02-08 10:00:00';
+        this.data.partner.records[0].write_date = '2017-02-08 10:00:00';
         this.data.partner.records[0].document = MY_IMAGE;
         this.data.partner_type.fields.image = {name: 'image', type: 'binary'};
         this.data.partner_type.records[0].image = PRODUCT_IMAGE;
@@ -8669,7 +8708,7 @@ QUnit.module('Legacy basic_fields', {
         var left = $progressBarEl.offset().left + 5;
         try {
             testUtils.dom.triggerPositionalMouseEvent(left, top, "click");
-        } catch (_e) {
+        } catch {
             form.destroy();
             $view.remove();
             throw new Error('The test fails to simulate a click in the screen. Your screen is probably too small or your dev tools is open.');
@@ -8716,7 +8755,7 @@ QUnit.module('Legacy basic_fields', {
         var left = $progressBarEl.offset().left + 5;
         try {
             testUtils.dom.triggerPositionalMouseEvent(left, top, "click");
-        } catch (_e) {
+        } catch {
             form.destroy();
             $view.remove();
             throw new Error('The test fails to simulate a click in the screen. Your screen is probably too small or your dev tools is open.');
@@ -9071,12 +9110,6 @@ QUnit.module('Legacy basic_fields', {
         form.destroy();
     });
 
-    QUnit.module('FieldColor', {
-        before: function () {
-            return ajax.loadXML('/web/static/src/legacy/xml/colorpicker.xml', core.qweb);
-        },
-    });
-
     QUnit.test('Field Color: default widget state', async function (assert) {
         assert.expect(4);
 
@@ -9275,14 +9308,14 @@ QUnit.module('Legacy basic_fields', {
         });
 
         assert.containsN(list, '.o_field_badge[name="foo"]', 5);
-        assert.containsOnce(list, '.o_field_badge[name="foo"].bg-danger.bg-opacity-50');
-        assert.containsOnce(list, '.o_field_badge[name="foo"].bg-warning.bg-opacity-50');
+        assert.containsOnce(list, '.o_field_badge[name="foo"].text-bg-danger.bg-opacity-50');
+        assert.containsOnce(list, '.o_field_badge[name="foo"].text-bg-warning.bg-opacity-50');
 
         await list.reload();
 
         assert.containsN(list, '.o_field_badge[name="foo"]', 5);
-        assert.containsOnce(list, '.o_field_badge[name="foo"].bg-danger.bg-opacity-50');
-        assert.containsOnce(list, '.o_field_badge[name="foo"].bg-warning.bg-opacity-50');
+        assert.containsOnce(list, '.o_field_badge[name="foo"].text-bg-danger.bg-opacity-50');
+        assert.containsOnce(list, '.o_field_badge[name="foo"].text-bg-warning.bg-opacity-50');
 
         list.destroy();
     });

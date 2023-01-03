@@ -13,7 +13,7 @@ var BROKEN_STEP = {
     trigger: 'body',
     run: function () {}
 };
-wTourUtils.registerEditionTour('test_reset_page_view_complete_flow_part1', {
+wTourUtils.registerWebsitePreviewTour('test_reset_page_view_complete_flow_part1', {
     test: true,
     url: '/test_page_view',
     // 1. Edit the page through Edit Mode, it will COW the view
@@ -57,7 +57,7 @@ wTourUtils.registerEditionTour('test_reset_page_view_complete_flow_part1', {
     ]
 );
 
-wTourUtils.registerEditionTour('test_reset_page_view_complete_flow_part2', {
+wTourUtils.registerWebsitePreviewTour('test_reset_page_view_complete_flow_part2', {
     test: true,
     url: '/test_page_view',
 },

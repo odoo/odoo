@@ -27,7 +27,7 @@ odoo.define('web.name_and_signature_tests', function (require) {
         return mockedNameAndSignature;
     }
 
-    QUnit.module('widgets', {}, function () {
+    QUnit.module('widgets legacy', {}, function () {
         QUnit.module('name_and_signature', {
             beforeEach: function () {
                 this.defaultName = 'Don Toliver'

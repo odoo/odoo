@@ -94,7 +94,7 @@ var ShowPaymentLineWidget = AbstractField.extend({
             var self = this;
             this._rpc({
                 model: 'account.move',
-                method: 'open_move',
+                method: 'action_open_business_doc',
                 args: [moveId],
             }).then(function (actionData) {
                 return self.do_action(actionData);

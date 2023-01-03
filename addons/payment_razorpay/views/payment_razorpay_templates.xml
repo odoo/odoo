@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <template id="redirect_form">
+        <form action="https://api.razorpay.com/v1/checkout/embedded" method="post">
+            <input type="hidden" name="key_id" t-att-value="key_id"/>
+            <input type="hidden" name="name" t-att-value="name"/>
+            <input type="hidden" name="description" t-att-value="description"/>
+            <input type="hidden" name="image" t-att-value="company_logo"/>
+            <input type="hidden" name="order_id" t-att-value="order_id"/>
+            <input type="hidden" name="amount" t-att-value="amount"/>
+            <input type="hidden" name="currency" t-att-value="currency"/>
+            <input type="hidden" name="prefill[name]" t-att-value="partner_name"/>
+            <input type="hidden" name="prefill[email]" t-att-value="partner_email"/>
+            <input type="hidden" name="prefill[contact]" t-att-value="partner_phone"/>
+            <input type="hidden" name="callback_url" t-att-value="return_url"/>
+            <input type="hidden" name="cancel_url" t-att-value="return_url"/>
+        </form>
+    </template>
+
+</odoo>

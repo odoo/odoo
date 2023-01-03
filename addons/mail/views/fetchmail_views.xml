@@ -49,7 +49,7 @@
                         <page string="Server &amp; Login" name="server_login_details">
                             <group>
                                 <group attrs="{'invisible' : [('server_type', '=', 'local')]}" string="Server Information">
-                                    <field name="server" colspan="2" attrs="{'required' : [('server_type', '!=', 'local')]}" />
+                                    <field name="server" attrs="{'required' : [('server_type', '!=', 'local')]}" />
                                     <field name="port"
                                         required="1"
                                         attrs="{'required' : [('server_type', '!=', 'local')]}"
@@ -71,10 +71,12 @@
                             </group>
                         </page>
                         <page string="Advanced" name="advanced_options" groups="base.group_no_one">
-                            <group string="Advanced Options" col="4">
-                                <field name="priority"/>
-                                <field name="attach"/>
-                                <field name="original"/>
+                            <group>
+                                <group string="Advanced Options">
+                                    <field name="priority"/>
+                                    <field name="attach"/>
+                                    <field name="original"/>
+                                </group>
                             </group>
                         </page>
                     </notebook>

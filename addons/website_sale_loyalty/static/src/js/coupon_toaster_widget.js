@@ -20,6 +20,8 @@ const CouponToasterWidget = publicWidget.Widget.extend({
             this.displayNotification(Object.assign({type: 'success'}, options));
         } else if (this.$el.hasClass('coupon-error-message')) {
             this.displayNotification(Object.assign({type: 'danger'}, options));
+        } else if (this.$el.hasClass('coupon-warning-message')) {
+            this.displayNotification(Object.assign({type: 'warning'}, options));
         }
 
         return this._super(...arguments);

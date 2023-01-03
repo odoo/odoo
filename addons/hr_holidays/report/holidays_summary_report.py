@@ -8,6 +8,21 @@ from dateutil.relativedelta import relativedelta
 from odoo import api, fields, models, _
 from odoo.exceptions import UserError
 
+COLORS_MAP = {
+    0: 'lightgrey',
+    1: 'tomato',
+    2: 'sandybrown',
+    3: 'khaki',
+    4: 'skyblue',
+    5: 'dimgrey',
+    6: 'lightcoral',
+    7: 'steelblue',
+    8: 'darkslateblue',
+    9: 'crimson',
+    10: 'mediumseagreen',
+    11: 'mediumpurple',
+}
+
 
 class HrHolidaySummaryReport(models.AbstractModel):
     _name = 'report.hr_holidays.report_holidayssummary'
@@ -57,13 +72,9 @@ class HrHolidaySummaryReport(models.AbstractModel):
             res.append({'day': current.day, 'color': ''})
             if self._date_is_day_off(current) :
                 res[index]['color'] = '#ababab'
-        # count and get leave summary details.
-        holiday_type = ['confirm','validate'] if holiday_type == 'both' else ['confirm'] if holiday_type == 'Confirmed' else ['validate']
-        holidays = self.env['hr.leave'].search([
-            ('employee_id', '=', empid), ('state', 'in', holiday_type),
-            ('date_from', '<=', str(end_date)),
-            ('date_to', '>=', str(start_date))
-        ])
+
+        holidays = self._get_leaves(start_date, self.env['hr.employee'].browse(empid), holiday_type)
+
         for holiday in holidays:
             # Convert date to user timezone, otherwise the report will not be consistent with the
             # value displayed in the interface.
@@ -73,36 +84,64 @@ class HrHolidaySummaryReport(models.AbstractModel):
             date_to = fields.Datetime.context_timestamp(holiday, date_to).date()
             for index in range(0, ((date_to - date_from).days + 1)):
                 if date_from >= start_date and date_from <= end_date:
-                    res[(date_from-start_date).days]['color'] = holiday.holiday_status_id.color_name
+                    res[(date_from-start_date).days]['color'] = COLORS_MAP[holiday.holiday_status_id.color]
                 date_from += timedelta(1)
             count += holiday.number_of_days
         employee = self.env['hr.employee'].browse(empid)
         return {'emp': employee.name, 'display': res, 'sum': count}
 
+    def _get_employees(self, data):
+        if 'depts' in data:
+            return self.env['hr.employee'].search([('department_id', 'in', data['depts'])])
+        elif 'emp' in data:
+            return self.env['hr.employee'].browse(data['emp'])
+        return self.env['hr.employee'].search([])
+
     def _get_data_from_report(self, data):
         res = []
-        Employee = self.env['hr.employee']
         if 'depts' in data:
-            for department in self.env['hr.department'].browse(data['depts']):
+            employees = self._get_employees(data)
+            departments = self.env['hr.department'].browse(data['depts'])
+            for department in departments:
                 res.append({
                     'dept': department.name,
                     'data': [
                         self._get_leaves_summary(data['date_from'], emp.id, data['holiday_type'])
-                        for emp in Employee.search([('department_id', '=', department.id)])
+                        for emp in employees.filtered(lambda emp: emp.department_id.id == department.id)
                     ],
                     'color': self._get_day(data['date_from']),
                 })
         elif 'emp' in data:
             res.append({'data': [
                 self._get_leaves_summary(data['date_from'], emp.id, data['holiday_type'])
-                for emp in Employee.browse(data['emp'])
+                for emp in self._get_employees(data)
             ]})
         return res
 
-    def _get_holidays_status(self):
+    def _get_leaves(self, date_from, employees, holiday_type, date_to=None):
+        state = ['confirm', 'validate'] if holiday_type == 'both' else ['confirm'] if holiday_type == 'Confirmed' else ['validate']
+
+        if not date_to:
+            date_to = date_from + relativedelta(days=59)
+
+        return self.env['hr.leave'].search([
+            ('employee_id', 'in', employees.ids),
+            ('state', 'in', state),
+            ('date_from', '<=', str(date_to)),
+            ('date_to', '>=', str(date_from))
+        ])
+
+    def _get_holidays_status(self, data):
         res = []
-        for holiday in self.env['hr.leave.type'].search([]):
-            res.append({'color': holiday.color_name, 'name': holiday.name})
+        employees = self.env['hr.employee']
+        if {'depts', 'emp'} & data.keys():
+            employees = self._get_employees(data)
+
+        holidays = self._get_leaves(fields.Date.from_string(data['date_from']), employees, data['holiday_type'])
+
+        for leave_type in holidays.holiday_status_id:
+            res.append({'color': COLORS_MAP[leave_type.color], 'name': leave_type.name})
+
         return res
 
     @api.model
@@ -120,5 +159,5 @@ class HrHolidaySummaryReport(models.AbstractModel):
             'get_day': self._get_day(data['form']['date_from']),
             'get_months': self._get_months(data['form']['date_from']),
             'get_data_from_report': self._get_data_from_report(data['form']),
-            'get_holidays_status': self._get_holidays_status(),
+            'get_holidays_status': self._get_holidays_status(data['form']),
         }

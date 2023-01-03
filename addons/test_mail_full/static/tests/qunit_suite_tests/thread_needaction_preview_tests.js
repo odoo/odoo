@@ -40,22 +40,22 @@ QUnit.test('rating value displayed on the thread needaction preview', async func
         },
     }));
     assert.strictEqual(
-        document.querySelector('.o_ThreadNeedactionPreview_ratingText').textContent,
+        document.querySelector('.o_ThreadNeedactionPreviewView_ratingText').textContent,
         "Rating:",
         "should display the correct content (Rating:)"
     );
     assert.containsOnce(
         document.body,
-        '.o_ThreadNeedactionPreview_ratingImage',
+        '.o_ThreadNeedactionPreviewView_ratingImage',
         "should have a rating image in the body"
     );
     assert.strictEqual(
-        $('.o_ThreadNeedactionPreview_ratingImage').attr('data-src'),
+        $('.o_ThreadNeedactionPreviewView_ratingImage').attr('data-src'),
         "/rating/static/src/img/rating_5.png",
         "should contain the correct rating image"
     );
     assert.strictEqual(
-        $('.o_ThreadNeedactionPreview_ratingImage').attr('data-alt'),
+        $('.o_ThreadNeedactionPreviewView_ratingImage').attr('data-alt'),
         "top",
         "should contain the correct rating text"
     );

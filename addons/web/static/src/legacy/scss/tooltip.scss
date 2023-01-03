@@ -11,7 +11,7 @@
         background-color: $o-tooltip-background-color;
         color: $o-tooltip-color;
         border-radius: $border-radius;
-        box-shadow: 0px 0px 1px 1px $o-brand-secondary;
+        box-shadow: 0px 0px 1px 1px $popover-border-color;
         margin: 5px;
         border-color: $o-tooltip-color;
 
@@ -57,11 +57,11 @@
         .tooltip-arrow {
             top: $tooltip-arrow-height;
             &::before {
-                border-bottom-color: $o-tooltip-color;
+                border-bottom-color: $popover-border-color;
                 bottom: 0;
             }
             &::after {
-                border-bottom-color: $o-tooltip-title-background-color;
+                border-bottom-color: $o-tooltip-background-color;
                 bottom: -1px;
             }
         }
@@ -70,11 +70,11 @@
         .tooltip-arrow {
             bottom: $tooltip-arrow-height;
             &::before {
-                border-top-color: $o-tooltip-color;
+                border-top-color: $popover-border-color;
                 top: 0;
             }
             &::after {
-                border-top-color: $o-tooltip-arrow-color;
+                border-top-color: $o-tooltip-background-color;
                 top: -1px;
             }
         }
@@ -83,11 +83,11 @@
         .tooltip-arrow {
             right: $tooltip-arrow-height;
             &::before {
-                border-left-color: $o-tooltip-color;
+                border-left-color: $popover-border-color;
                 left: 0;
             }
             &::after {
-                border-left-color: $o-tooltip-arrow-color;
+                border-left-color: $o-tooltip-background-color;
                 left: -1px;
             }
         }
@@ -96,11 +96,11 @@
         .tooltip-arrow {
             left: $tooltip-arrow-height;
             &::before {
-                border-right-color: $o-tooltip-color;
+                border-right-color: $popover-border-color;
                 right: 0;
             }
             &::after {
-                border-right-color: $o-tooltip-arrow-color;
+                border-right-color: $o-tooltip-background-color;
                 right: -1px;
             }
         }

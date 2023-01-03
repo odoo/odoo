@@ -61,8 +61,12 @@ class AccountMove(models.Model):
     def action_post(self):
         #inherit of the function from account.move to validate a new tax and the priceunit of a downpayment
         res = super(AccountMove, self).action_post()
-        line_ids = self.mapped('line_ids').filtered(lambda line: line.sale_line_ids.is_downpayment)
-        for line in line_ids:
+        down_payment_lines = self.line_ids.filtered(lambda line: line.sale_line_ids.is_downpayment)
+        for line in down_payment_lines:
+
+            if not line.sale_line_ids.display_type:
+                line.sale_line_ids._compute_name()
+
             try:
                 line.sale_line_ids.tax_id = line.tax_ids
                 if all(line.tax_ids.mapped('price_include')):
@@ -75,6 +79,24 @@ class AccountMove(models.Model):
                 # a UserError here means the SO was locked, which prevents changing the taxes
                 # just ignore the error - this is a nice to have feature and should not be blocking
                 pass
+        return res
+
+    def button_draft(self):
+        res = super().button_draft()
+
+        self.line_ids.filtered(
+            lambda line: line.sale_line_ids.is_downpayment and not line.sale_line_ids.display_type
+        ).sale_line_ids._compute_name()
+
+        return res
+
+    def button_cancel(self):
+        res = super().button_cancel()
+
+        self.line_ids.filtered(
+            lambda line: line.sale_line_ids.is_downpayment and not line.sale_line_ids.display_type
+        ).sale_line_ids._compute_name()
+
         return res
 
     def _post(self, soft=True):

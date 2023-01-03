@@ -1,5 +1,28 @@
+@keyframes legacy-kanban-counter-grow {
+    0% {
+        transform: scale3d(1, 1, 1);
+    }
+    30% {
+        transform: scale3d(1.1, 1.1, 1.1);
+    }
+    100% {
+        transform: scale3d(1, 1, 1);
+    }
+}
 
-@mixin o-kanban-css-filter($class, $accent-color) {
+@keyframes legacy-kanban-counter-grow-huge {
+    0% {
+        transform: scale3d(1, 1, 1);
+    }
+    30% {
+        transform: scale3d(1.3, 1.3, 1.3);
+    }
+    100% {
+        transform: scale3d(1, 1, 1);
+    }
+}
+
+@mixin o-legacy-kanban-css-filter($class, $accent-color) {
     // Provide CSS reordering and highlight
     &.o_kanban_group_show_#{$class} {
         $mix-soft: mix($accent-color, $o-webclient-background-color, 5%);
@@ -40,104 +63,83 @@
     }
 }
 
-// If columns has the progressbar, adapt the layout
-.o_legacy_kanban_view .o_kanban_group.o_kanban_has_progressbar {
-    > .o_kanban_header .o_kanban_header_title {
-        height: $o-kanban-header-title-height*0.6;
-        margin-top: 5px;
-    }
-
-    &.o_kanban_no_records {
-        .o_legacy_kanban_counter {
-            opacity: 0.3;
+.o_legacy_kanban_view {
+    // If columns has the progressbar, adapt the layout
+    .o_kanban_group.o_kanban_has_progressbar {
+        > .o_kanban_header .o_kanban_header_title {
+            height: $o-kanban-header-title-height*0.6;
+            margin-top: 5px;
         }
-    }
-}
 
-.o_legacy_kanban_counter {
-    position: relative;
-    display: flex;
-    align-items: center;
-    transition: opacity 0.3s ease 0s;
-    margin-bottom: $o-kanban-record-margin*2;
-
-    > .o_kanban_counter_progress {
-        width: 76%;
-        height: $font-size-sm;
-        margin-bottom: 0;
-        background-color: map-get($grays, '300');
-        box-shadow: none;
-
-        .progress-bar {
-            margin-bottom: 0;
-            box-shadow: none;
-            cursor: pointer;
+        &.o_kanban_no_records {
+            .o_legacy_kanban_counter {
+                opacity: 0.3;
+            }
         }
     }
 
-    > .o_kanban_counter_side {
-        width: 21%;
-        margin-left: 3%;
-        color: $headings-color;
-        text-align: right;
-        white-space: nowrap;
-        transform-origin: right center;
-
-        &.o_kanban_grow {
-            animation: grow 1s ease 0s 1 normal none running;
-        }
-
-        &.o_kanban_grow_huge {
-            animation: grow_huge 1s ease 0s 1 normal none running;
-        }
-
-        // Target currency icon
-        > span {
-            margin-left: 2px;
-        }
-    }
-}
-.o_column_folded .o_legacy_kanban_counter {
-    display: none;
-}
-
-.o_legacy_kanban_view .o_kanban_group {
-    @include o-kanban-css-filter(success, map-get($theme-colors, 'success'));
-    @include o-kanban-css-filter(warning, map-get($theme-colors, 'warning'));
-    @include o-kanban-css-filter(danger, map-get($theme-colors, 'danger'));
-    @include o-kanban-css-filter(info, map-get($theme-colors, 'info'));
-    @include o-kanban-css-filter(muted, map-get($theme-colors, 'dark'));
-
-    &.o_kanban_group_show {
+    .o_legacy_kanban_counter {
+        position: relative;
         display: flex;
-        flex-flow: column nowrap;
+        align-items: center;
+        transition: opacity 0.3s ease 0s;
+        margin-bottom: $o-kanban-record-margin*2;
 
-        > * {
-            flex: 0 0 auto;
+        > .o_kanban_counter_progress {
+            width: 76%;
+            height: $font-size-sm;
+            margin-bottom: 0;
+            background-color: map-get($grays, '300');
+            box-shadow: none;
+
+            .progress-bar {
+                margin-bottom: 0;
+                box-shadow: none;
+                cursor: pointer;
+            }
+        }
+
+        > .o_kanban_counter_side {
+            width: 21%;
+            margin-left: 3%;
+            color: $headings-color;
+            text-align: right;
+            white-space: nowrap;
+            transform-origin: right center;
+
+            &.o_kanban_grow {
+                animation: legacy-kanban-counter-grow 1s ease 0s 1 normal none running;
+            }
+
+            &.o_kanban_grow_huge {
+                animation: legacy-kanban-counter-grow-huge 1s ease 0s 1 normal none running;
+            }
+
+            // Target currency icon
+            > span {
+                margin-left: 2px;
+            }
         }
     }
-}
 
-@keyframes grow {
-    0% {
-        transform: scale3d(1, 1, 1);
+    .o_column_folded .o_legacy_kanban_counter {
+        display: none;
     }
-    30% {
-        transform: scale3d(1.1, 1.1, 1.1);
-    }
-    100% {
-        transform: scale3d(1, 1, 1);
-    }
-}
 
-@keyframes grow_huge {
-    0% {
-        transform: scale3d(1, 1, 1);
-    }
-    30% {
-        transform: scale3d(1.3, 1.3, 1.3);
-    }
-    100% {
-        transform: scale3d(1, 1, 1);
+    .o_kanban_group {
+        @include o-legacy-kanban-css-filter(success, map-get($theme-colors, 'success'));
+        @include o-legacy-kanban-css-filter(warning, map-get($theme-colors, 'warning'));
+        @include o-legacy-kanban-css-filter(danger, map-get($theme-colors, 'danger'));
+        @include o-legacy-kanban-css-filter(info, map-get($theme-colors, 'info'));
+        @include o-legacy-kanban-css-filter(muted, map-get($theme-colors, 'dark'));
+
+        &.o_kanban_group_show {
+            display: flex;
+            flex-flow: column nowrap;
+
+            > * {
+                flex: 0 0 auto;
+            }
+        }
     }
 }

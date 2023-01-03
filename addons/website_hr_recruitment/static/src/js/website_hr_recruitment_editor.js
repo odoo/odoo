@@ -23,8 +23,12 @@ FormEditorRegistry.add('apply_job', {
         type: 'char',
         required: true,
         fillWith: 'phone',
-        name: 'partner_phone',
+        name: 'partner_mobile',
         string: 'Phone Number',
+    }, {
+        type: 'char',
+        name: 'linkedin_profile',
+        string: 'LinkedIn Profile',
     }, {
         type: 'text',
         name: 'description',

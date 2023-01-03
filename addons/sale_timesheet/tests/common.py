@@ -34,30 +34,35 @@ class TestCommonSaleTimesheet(TestSaleProjectCommon):
 
         cls.employee_user = cls.env['hr.employee'].create({
             'name': 'Employee User',
-            'timesheet_cost': 15,
+            'hourly_cost': 15,
         })
         cls.employee_manager = cls.env['hr.employee'].create({
             'name': 'Employee Manager',
-            'timesheet_cost': 45,
+            'hourly_cost': 45,
         })
 
         cls.employee_company_B = cls.env['hr.employee'].create({
             'name': 'Gregor Clegane',
             'user_id': cls.user_employee_company_B.id,
-            'timesheet_cost': 15,
+            'hourly_cost': 15,
         })
 
         cls.manager_company_B = cls.env['hr.employee'].create({
             'name': 'Cersei Lannister',
             'user_id': cls.user_manager_company_B.id,
-            'timesheet_cost': 45,
+            'hourly_cost': 45,
         })
 
         # Account and project
         cls.analytic_account_sale.name = 'Project for selling timesheet - AA'
+        cls.analytic_plan = cls.env['account.analytic.plan'].create({
+            'name': 'Plan Test',
+            'company_id': cls.company_data_2['company'].id,
+        })
         cls.analytic_account_sale_company_B = cls.env['account.analytic.account'].create({
             'name': 'Project for selling timesheet Company B - AA',
             'code': 'AA-2030',
+            'plan_id': cls.analytic_plan.id,
             'company_id': cls.company_data_2['company'].id,
         })
 

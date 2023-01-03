@@ -3,8 +3,8 @@
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
 import { registry } from "@web/core/registry";
 import { useService } from "@web/core/utils/hooks";
+import { Component } from "@odoo/owl";
 
-const { Component } = owl;
 const favoriteMenuRegistry = registry.category("favoriteMenu");
 
 /**
@@ -14,6 +14,9 @@ const favoriteMenuRegistry = registry.category("favoriteMenu");
  * @extends Component
  */
 export class ImportRecords extends Component {
+    static template = "base_import.ImportRecords";
+    static components = { DropdownItem };
+
     setup() {
         this.action = useService("action");
     }
@@ -27,24 +30,20 @@ export class ImportRecords extends Component {
         this.action.doAction({
             type: "ir.actions.client",
             tag: "import",
-            params: { model: resModel, context }
+            params: { model: resModel, context },
         });
     }
 }
 
-ImportRecords.template = "base_import.ImportRecords";
-ImportRecords.components = { DropdownItem };
-
-const importRecordsItem = {
+export const importRecordsItem = {
     Component: ImportRecords,
     groupNumber: 4,
     isDisplayed: ({ config, isSmall }) =>
         !isSmall &&
         config.actionType === "ir.actions.act_window" &&
-        ["kanban", "list"].includes(config.viewType)
-        // TODO: add arch info to searchModel?
-        // !!JSON.parse(env.view.arch.attrs.import || "1") &&
-        // !!JSON.parse(env.view.arch.attrs.create || "1"),
+        ["kanban", "list"].includes(config.viewType) &&
+        !!JSON.parse(config.viewArch.getAttribute("import") || "1") &&
+        !!JSON.parse(config.viewArch.getAttribute("create") || "1"),
 };
 
 favoriteMenuRegistry.add("import-menu", importRecordsItem, { sequence: 1 });

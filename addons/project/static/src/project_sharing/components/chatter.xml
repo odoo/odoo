@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<templates id="template" xml:space="preserve">
-    <t t-extend="portal.chatter_messages">
-        <t t-jquery="t[t-as='message']" t-operation="attributes">
-            <attribute name="t-foreach">!!widget.options.res_id &amp;&amp; widget.get('messages') || []</attribute>
-        </t>
-    </t>
-</templates>

@@ -7,7 +7,9 @@
         <field eval="20" name="priority"/>
         <field name="arch" type="xml">
             <xpath expr="//field[@name='line_type_id']" position="after">
-                <field name="channel_id" attrs="{'invisible': [('display_type', '!=', 'course')]}"/>
+                <field name="channel_id" readonly="0"
+                    attrs="{'invisible': [('display_type', '!=', 'course')]}"/>
+                <field name="course_url" invisible="1"/>
             </xpath>
         </field>
     </record>

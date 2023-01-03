@@ -26,6 +26,10 @@
                         </div>
                     </group>
                 </group>
+                <div>
+                    <span class="text-muted">Attention: Regenerating these work entries will result in all the manual
+                        configurations (work entry type, homeworking location, ...) to be lost.</span>
+                </div>
                 <field name="search_criteria_completed" invisible="1"/>
                 <field name="valid" invisible="1"/>
                 <div attrs="{'invisible': ['|', ('search_criteria_completed', '=', False), ('valid', '=', True)]}">
@@ -47,12 +51,15 @@
                 <footer>
                     <button name="regenerate_work_entries"
                             string="Regenerate Work Entries" data-hotkey="q"
-                            type="object" class="oe_highlight"
+                            class="btn btn-primary oe_highlight"
+                            type="object"
                             attrs="{'invisible': ['|', ('search_criteria_completed', '=', False), ('valid', '=', False)]}"/>
                     <button name="regenerate_work_entries_disabled"
                             string="Regenerate Work Entries"
+                            class="btn btn-primary"
                             disabled="1"
                             attrs="{'invisible': [('search_criteria_completed', '=', True), ('valid', '=', True)]}"/>
+                    <button string="Discard" class="btn-secondary" special="cancel" data-hotkey="z"/>
                 </footer>
             </form>
         </field>

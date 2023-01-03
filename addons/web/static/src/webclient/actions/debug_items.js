@@ -101,25 +101,6 @@ function manageFilters({ action, env }) {
     };
 }
 
-function technicalTranslation({ action, env }) {
-    if (!action.res_model) {
-        return null;
-    }
-    return {
-        type: "item",
-        description: env._t("Technical Translation"),
-        callback: async () => {
-            const result = await env.services.orm.call(
-                "ir.translation",
-                "get_technical_translations",
-                [action.res_model]
-            );
-            env.services.action.doAction(result);
-        },
-        sequence: 140,
-    };
-}
-
 function viewAccessRights({ accessRights, action, env }) {
     if (!action.res_model || !accessRights.canSeeModelAccess) {
         return null;
@@ -190,7 +171,6 @@ debugRegistry
     .add("editAction", editAction)
     .add("viewFields", viewFields)
     .add("manageFilters", manageFilters)
-    .add("technicalTranslation", technicalTranslation)
     .add("accessSeparator", accessSeparator)
     .add("viewAccessRights", viewAccessRights)
     .add("viewRecordRules", viewRecordRules);

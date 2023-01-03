@@ -1,6 +1,5 @@
 /** @odoo-module **/
 
-import { evaluateExpr } from "@web/core/py_js/py";
 import { XMLParser } from "@web/core/utils/xml";
 import { archParseBoolean } from "@web/views/utils";
 
@@ -43,12 +42,10 @@ export class PivotArchParser extends XMLParser {
                     if (node.hasAttribute("string")) {
                         archInfo.fieldAttrs[fieldName].string = node.getAttribute("string");
                     }
-                    if (node.hasAttribute("invisible")) {
-                        const isInvisible = Boolean(evaluateExpr(node.getAttribute("invisible")));
-                        if (isInvisible) {
-                            archInfo.fieldAttrs[fieldName].isInvisible = true;
-                            break;
-                        }
+                    const modifiers = JSON.parse(node.getAttribute("modifiers") || "{}");
+                    if (modifiers.invisible === true) {
+                        archInfo.fieldAttrs[fieldName].isInvisible = true;
+                        break;
                     }
 
                     if (node.hasAttribute("interval")) {

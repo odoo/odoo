@@ -713,9 +713,19 @@ $o-form-label-margin-right: 0px;
             padding-right: 25px;
         }
     }
-    iframe.wysiwyg_iframe + .o_field_translate {
-        right: 30px !important;
-        top: 7px !important;
+    .oe_no_translation_content {
+        &:not(.btn) {
+            display: none;
+        }
+        &.btn {
+            width: 100% !important;
+            margin-left: 0px;
+            visibility: hidden;
+        }
+        &.btn:after {
+            content: 'EN';
+            visibility: visible;
+        }
     }
 
     // Text field with oe_inline class
@@ -983,7 +993,7 @@ $o-form-label-margin-right: 0px;
             width: 100%;
         }
     }
-    .o_onboarding_payment_acquirer_wizard {
+    .o_onboarding_payment_provider_wizard {
         a[type="action"] {
             color: $link-color;
             cursor: pointer;

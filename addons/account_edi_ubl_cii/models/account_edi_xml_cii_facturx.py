@@ -75,20 +75,21 @@ class AccountEdiXmlCII(models.AbstractModel):
             # invoiced item VAT rate (BT-152) shall be greater than 0 (zero).
             'igic_tax_rate': self._check_non_0_rate_tax(vals)
                 if vals['record']['commercial_partner_id']['country_id']['code'] == 'ES'
-                   and vals['record']['commercial_partner_id']['zip'][:2] in ['35', '38'] else None,
+                    and vals['record']['commercial_partner_id']['zip']
+                    and vals['record']['commercial_partner_id']['zip'][:2] in ['35', '38'] else None,
         })
         return constraints
 
     def _check_required_tax(self, vals):
         for line_vals in vals['invoice_line_vals_list']:
             line = line_vals['line']
-            if not vals['tax_details']['invoice_line_tax_details'][line]['tax_details']:
+            if not vals['tax_details']['tax_details_per_record'][line]['tax_details']:
                 return _("You should include at least one tax per invoice line. [BR-CO-04]-Each Invoice line (BG-25) "
                          "shall be categorized with an Invoiced item VAT category code (BT-151).")
 
     def _check_non_0_rate_tax(self, vals):
-        for line_vals in vals['invoice_line_vals_list']:
-            tax_rate_list = line_vals['line'].tax_ids.flatten_taxes_hierarchy().mapped("amount")
+        for line_vals in vals['tax_details']['tax_details_per_record']:
+            tax_rate_list = line_vals.tax_ids.flatten_taxes_hierarchy().mapped("amount")
             if not any([rate > 0 for rate in tax_rate_list]):
                 return _("When the Canary Island General Indirect Tax (IGIC) applies, the tax rate on "
                          "each invoice line should be greater than 0.")
@@ -122,14 +123,16 @@ class AccountEdiXmlCII(models.AbstractModel):
             # Facturx requires the monetary values to be rounded to 2 decimal values
             return float_repr(number, decimal_places)
 
-        # Create file content.
-        tax_details = invoice._prepare_edi_tax_details(
-            grouping_key_generator=lambda tax_values: {
-                **self._get_tax_unece_codes(invoice, tax_values['tax_id']),
-                'amount': tax_values['tax_id'].amount,
-                'amount_type': tax_values['tax_id'].amount_type,
+        def grouping_key_generator(base_line, tax_values):
+            tax = tax_values['tax_repartition_line'].tax_id
+            return {
+                **self._get_tax_unece_codes(invoice, tax),
+                'amount': tax.amount,
+                'amount_type': tax.amount_type,
             }
-        )
+
+        # Create file content.
+        tax_details = invoice._prepare_edi_tax_details(grouping_key_generator=grouping_key_generator)
 
         if 'siret' in invoice.company_id._fields and invoice.company_id.siret:
             seller_siret = invoice.company_id.siret
@@ -169,8 +172,7 @@ class AccountEdiXmlCII(models.AbstractModel):
             # /!\ -0.0 == 0.0 in python but not in XSLT, so it can raise a fatal error when validating the XML
             # if 0.0 is expected and -0.0 is given.
             amount_currency = tax_detail_vals['tax_amount_currency']
-            tax_detail_vals['calculated_amount'] = template_values['balance_multiplicator'] * amount_currency \
-                if not invoice.currency_id.is_zero(amount_currency) else 0
+            tax_detail_vals['calculated_amount'] = amount_currency if not invoice.currency_id.is_zero(amount_currency) else 0
 
             if tax_detail_vals.get('tax_category_code') == 'K':
                 template_values['intracom_delivery'] = True
@@ -187,7 +189,7 @@ class AccountEdiXmlCII(models.AbstractModel):
         if supplier.country_id.code == 'DE':
             template_values['document_context_id'] = "urn:cen.eu:en16931:2017#compliant#urn:xoev-de:kosit:standard:xrechnung_2.2"
         else:
-            template_values['document_context_id'] = "urn:cen.eu:en16931:2017"
+            template_values['document_context_id'] = "urn:cen.eu:en16931:2017#conformant#urn:factur-x.eu:1p0:extended"
 
         return template_values
 
@@ -195,7 +197,8 @@ class AccountEdiXmlCII(models.AbstractModel):
         vals = self._export_invoice_vals(invoice)
         errors = [constraint for constraint in self._export_invoice_constraints(invoice, vals).values() if constraint]
         xml_content = self.env['ir.qweb']._render('account_edi_ubl_cii.account_invoice_facturx_export_22', vals)
-        return etree.tostring(cleanup_xml_node(xml_content)), set(errors)
+        xml_content = b"<?xml version='1.0' encoding='UTF-8'?>\n" + etree.tostring(cleanup_xml_node(xml_content))
+        return xml_content, set(errors)
 
     # -------------------------------------------------------------------------
     # IMPORT
@@ -220,7 +223,7 @@ class AccountEdiXmlCII(models.AbstractModel):
             vat=_find_value(f"//ram:{partner_type}/ram:SpecifiedTaxRegistration/ram:ID"),
         )
         if not invoice.partner_id:
-            logs.append(_("Could not retrieve the vendor."))
+            logs.append(_("Could not retrieve the %s.", _("customer") if invoice.is_sale_document() else _("vendor")))
 
         # ==== currency_id ====
 
@@ -330,30 +333,10 @@ class AccountEdiXmlCII(models.AbstractModel):
             'allowance_charge_amount': './{*}ActualAmount',  # below allowance_charge node
             'line_total_amount': './{*}SpecifiedLineTradeSettlement/{*}SpecifiedTradeSettlementLineMonetarySummation/{*}LineTotalAmount',
         }
-        self._import_fill_invoice_line_values(tree, xpath_dict, invoice_line, qty_factor)
-
-        if not invoice_line.product_uom_id:
-            logs.append(
-                _("Could not retrieve the unit of measure for line with label '%s'. Did you install the inventory "
-                  "app and enabled the 'Units of Measure' option ?", invoice_line.name))
-
-        # Taxes
-        taxes = self.env['account.tax']
+        inv_line_vals = self._import_fill_invoice_line_values(tree, xpath_dict, invoice_line, qty_factor)
+        # retrieve tax nodes
         tax_nodes = tree.findall('.//{*}ApplicableTradeTax/{*}RateApplicablePercent')
-        for tax_node in tax_nodes:
-            tax = self.env['account.tax'].search([
-                ('company_id', '=', journal.company_id.id),
-                ('amount', '=', float(tax_node.text)),
-                ('amount_type', '=', 'percent'),
-                ('type_tax_use', '=', 'purchase'),
-            ], limit=1)
-            if tax:
-                taxes += tax
-            else:
-                logs.append(_("Could not retrieve the tax: %s %% for line '%s'.", float(tax_node.text), invoice_line.name))
-
-        invoice_line.tax_ids = taxes
-        return logs
+        return self._import_fill_invoice_line_taxes(journal, tax_nodes, invoice_line, inv_line_vals, logs)
 
     # -------------------------------------------------------------------------
     # IMPORT : helpers
@@ -369,9 +352,9 @@ class AccountEdiXmlCII(models.AbstractModel):
         if move_type_code is None:
             return None, None
         if move_type_code.text == '381':
-            return 'in_refund', 1
+            return 'refund', 1
         if move_type_code.text == '380':
             amount_node = tree.find('.//{*}SpecifiedTradeSettlementHeaderMonetarySummation/{*}TaxBasisTotalAmount')
             if amount_node is not None and float(amount_node.text) < 0:
-                return 'in_refund', -1
-            return 'in_invoice', 1
+                return 'refund', -1
+            return 'invoice', 1

@@ -5,7 +5,7 @@ import { ConfirmationDialog } from '@web/core/confirmation_dialog/confirmation_d
 import { Dialog } from '@web/core/dialog/dialog';
 import { SearchMedia } from './search_media';
 
-const { Component, xml, useState, useRef, onWillStart } = owl;
+import { Component, xml, useState, useRef, onWillStart } from "@odoo/owl";
 
 export const IMAGE_MIMETYPES = ['image/jpg', 'image/jpeg', 'image/jpe', 'image/png', 'image/svg+xml', 'image/gif'];
 export const IMAGE_EXTENSIONS = ['.jpg', '.jpeg', '.jpe', '.png', '.svg', '.gif'];
@@ -23,7 +23,7 @@ class RemoveButton extends Component {
         this.props.remove();
     }
 }
-RemoveButton.template = xml`<i class="fa fa-trash o_existing_attachment_remove p-2" t-att-title="removeTitle" role="img" t-att-aria-label="removeTitle" t-on-click="this.remove"/>`;
+RemoveButton.template = xml`<i class="fa fa-trash o_existing_attachment_remove position-absolute top-0 end-0 p-2 bg-white-25 cursor-pointer opacity-0 opacity-100-hover z-index-1 transition-base" t-att-title="removeTitle" role="img" t-att-aria-label="removeTitle" t-on-click="this.remove"/>`;
 
 export class AttachmentError extends Component {
     setup() {
@@ -238,6 +238,9 @@ export class FileSelector extends Component {
         this.selectAttachment(attachment);
         if (!this.props.multiSelect) {
             await this.props.save();
+        }
+        if (this.props.onAttachmentChange) {
+            this.props.onAttachmentChange(attachment);
         }
     }
 

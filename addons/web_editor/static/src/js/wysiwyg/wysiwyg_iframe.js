@@ -7,7 +7,7 @@ var core = require('web.core');
 var config = require('web.config');
 
 var qweb = core.qweb;
-var promiseWysiwyg;
+var promiseJsAssets;
 
 
 /**
@@ -36,22 +36,14 @@ Wysiwyg.include({
             return this._super();
         }
 
-        var defAsset;
+        promiseJsAssets = promiseJsAssets || ajax.loadAsset('web_editor.wysiwyg_iframe_editor_assets');
+        const assetsPromises = [promiseJsAssets];
         if (this.options.iframeCssAssets) {
-            defAsset = ajax.loadAsset(this.options.iframeCssAssets);
-        } else {
-            defAsset = Promise.resolve({
-                cssLibs: [],
-                cssContents: []
-            });
+            assetsPromises.push(ajax.loadAsset(this.options.iframeCssAssets));
         }
+        this.defAsset = Promise.all(assetsPromises);
 
-        promiseWysiwyg = promiseWysiwyg || ajax.loadAsset('web_editor.wysiwyg_iframe_editor_assets');
-        this.defAsset = Promise.all([promiseWysiwyg, defAsset]);
-
-        this.$target = this.$el;
         const _super = this._super.bind(this);
-
         await this.defAsset;
         await _super();
     },
@@ -59,7 +51,7 @@ Wysiwyg.include({
     /**
      * @override
      **/
-    start: async function () {
+    startEdition: async function () {
         const _super = this._super.bind(this);
         if (!this.options.inIframe) {
             return _super();
@@ -76,8 +68,8 @@ Wysiwyg.include({
     /**
      * @override
      **/
-    _editorOptions: function () {
-        let options = this._super.apply(this, arguments);
+    _getEditorOptions: function () {
+        const options = this._super.apply(this, arguments);
         options.getContextFromParentRect = () => {
             return this.$iframe && this.$iframe.length ? this.$iframe[0].getBoundingClientRect() : { top: 0, left: 0 };
         };
@@ -92,6 +84,12 @@ Wysiwyg.include({
      */
     _loadIframe: function () {
         var self = this;
+        const isEditableRoot = this.$editable === this.$root;
+        this.$editable = $('<div class="note-editable oe_structure odoo-editor-editable"></div>');
+        this.$el.removeClass('note-editable oe_structure odoo-editor-editable');
+        if (isEditableRoot) {
+            this.$root = this.$editable;
+        }
         this.$iframe = $('<iframe class="wysiwyg_iframe o_iframe">').css({
             'min-height': '55vh',
             width: '100%'
@@ -155,14 +153,18 @@ Wysiwyg.include({
                 });
                 self.$iframe[0].contentWindow.document
                     .open("text/html", "replace")
-                    .write(`<!DOCTYPE html><html>${iframeContent}</html>`);
+                    .write(`<!DOCTYPE html><html${
+                        self.options.iframeHtmlClass ? ` class="${self.options.iframeHtmlClass}"` : ''
+                    }>${iframeContent}</html>`);
             });
             self.options.document = self.$iframe[0].contentWindow.document;
         });
 
-        this.$iframe.insertAfter(this.$editable);
+        this.$el.append(this.$iframe);
 
-        return def;
+        return def.then(() => {
+            this.options.onIframeUpdated();
+        });
     },
 
     _insertSnippetMenu: function () {

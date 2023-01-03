@@ -42,24 +42,23 @@ tour.register('event_configurator_tour', {
 }, {
     trigger: '.o_event_sale_js_event_configurator_ok'
 }, {
-    trigger: 'textarea[name="name"]',
-    run: function () {
-        var $textarea = $('textarea[name="name"]');
-        if ($textarea.val().includes('Design Fair Los Angeles') && $textarea.val().includes('VIP')) {
-            $textarea.addClass('tour_success');
-        }
-    }
-}, {
-    trigger: 'textarea[name="name"].tour_success',
+    trigger: "td[name='name'][data-tooltip*='VIP']",
     run: function () {} // check
 }, {
     trigger: 'ul.nav a:contains("Order Lines")',
     run: 'click'
 }, {
+    content: "search the partner",
+    trigger: 'div[name="partner_id"] input',
+    run: 'text Azure'
+}, {
+    content: "select the partner",
+    trigger: 'ul.ui-autocomplete > li > a:contains(Azure)',
+}, {
     trigger: 'td:contains("Event")',
     run: 'click'
 }, {
-    trigger: '.o_edit_product_configuration'
+    trigger: 'button.fa-pencil'
 }, {
     trigger: 'div[name="event_ticket_id"] input',
     run: 'click'
@@ -70,17 +69,9 @@ tour.register('event_configurator_tour', {
 }, {
     trigger: '.o_event_sale_js_event_configurator_ok'
 }, {
-    trigger: 'textarea[name="name"]',
-    run: function () {
-        var $textarea = $('textarea[name="name"]');
-        if ($textarea.val().includes('Standard')) {
-            $textarea.addClass('tour_success_2');
-        }
-    }
-}, {
-    trigger: 'textarea[name="name"].tour_success_2',
+    trigger: "td[name='name'][data-tooltip*='Standard']",
     run: function () {} // check
-}, ...tour.stepUtils.discardForm()
+}, ...tour.stepUtils.saveForm()
 ]);
 
 });

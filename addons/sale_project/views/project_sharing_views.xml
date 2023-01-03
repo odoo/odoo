@@ -29,7 +29,7 @@
         <field name="model">project.task</field>
         <field name="inherit_id" ref="project.project_sharing_project_task_view_search"/>
         <field name="arch" type="xml">
-            <xpath expr="//field[@name='partner_id']" position="before">
+            <xpath expr="//field[@name='partner_id']" position="after">
                 <field name="sale_order_id" string="Sale Order" filter_domain="['|', ('sale_order_id', 'ilike', self), ('sale_line_id', 'ilike', self)]"/>
             </xpath>
             <xpath expr="//group/filter[@name='customer']" position="after">

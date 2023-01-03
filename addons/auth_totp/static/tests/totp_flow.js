@@ -95,7 +95,7 @@ tour.register('totp_tour_setup', {
     content: "Get secret from collapsed div",
     trigger: 'a:contains("Cannot scan it?")',
     async run(helpers) {
-        const $secret = this.$anchor.closest('div').find('[name=secret] > span');
+        const $secret = this.$anchor.closest('div').find('[name=secret] span:first-child');
         const $copyBtn = $secret.find('button');
         $copyBtn.remove();
         const token = await ajax.jsonRpc('/totphook', 'call', {
@@ -150,7 +150,7 @@ tour.register('totp_login_enabled', {
         //       procedurally clicking the button after we've set the input.
         const token = await ajax.jsonRpc('/totphook', 'call', {});
         helpers.text(token);
-        helpers.click('button:contains("Login")');
+        helpers.click('button:contains("Log in")');
     }
 }, {
     content: "check we're logged in",
@@ -187,7 +187,7 @@ tour.register('totp_login_device', {
     async run(helpers) {
         const token = await ajax.jsonRpc('/totphook', 'call', {})
         helpers.text(token);
-        helpers.click('button:contains("Login")');
+        helpers.click('button:contains("Log in")');
     }
 }, {
     content: "check we're logged in",

@@ -4,7 +4,6 @@ from odoo.addons.stock_account.tests.test_anglo_saxon_valuation_reconciliation_c
 from odoo.tests import Form, tagged
 
 
-@tagged('post_install', '-at_install')
 class TestValuationReconciliationCommon(ValuationReconciliationTestCommon):
 
     @classmethod

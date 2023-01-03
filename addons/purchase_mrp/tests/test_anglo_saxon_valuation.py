@@ -34,14 +34,6 @@ class TestAngloSaxonValuationPurchaseMRP(TransactionCase):
         the product category. When buying a kit of that category at a higher price than its
         cost, the difference should be published on the Price Difference Account
         """
-        price_diff_account = self.env['account.account'].create({
-            'name': 'Super Price Difference Account',
-            'code': 'SPDA',
-            'account_type': 'asset_current',
-            'reconcile': True,
-        })
-        self.avco_category.property_account_creditor_price_difference_categ = price_diff_account
-
         kit, compo01, compo02 = self.env['product.product'].create([{
             'name': name,
             'standard_price': price,
@@ -75,5 +67,10 @@ class TestAngloSaxonValuationPurchaseMRP(TransactionCase):
         invoice = self.env['account.move'].browse(action['res_id'])
         invoice.invoice_date = Date.today()
         invoice.action_post()
-        price_diff_aml = invoice.line_ids.filtered(lambda l: l.account_id == price_diff_account)
-        self.assertEqual(price_diff_aml.balance, 70, "Should be the purchase price minus the kit cost (i.e. 100 - 30)")
+
+        svls = po.order_line.move_ids.stock_valuation_layer_ids
+        self.assertEqual(len(svls), 2, "The invoice should have created two SVL (one by kit's component) for the price diff")
+        self.assertEqual(sum(svls.mapped('value')), 100, "Should be the standard price of both components")
+
+        input_amls = self.env['account.move.line'].search([('account_id', '=', self.stock_input_account.id)])
+        self.assertEqual(sum(input_amls.mapped('balance')), 0)

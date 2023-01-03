@@ -10,18 +10,15 @@ import {QWebPlugin} from '@web_editor/js/backend/QWebPlugin';
 import {
     getAdjacentPreviousSiblings,
     getAdjacentNextSiblings,
-    setSelection,
-    rightPos,
     getRangePosition
 } from '../editor/odoo-editor/src/utils/utils';
 // must wait for web/ to add the default html widget, otherwise it would override the web_editor one
 import 'web._field_registry';
 import "@web/views/fields/html/html_field"; // make sure the html field file has first been executed.
-import { registry } from '@web/core/registry';
 
 var _lt = core._lt;
+var _t = core._t;
 var TranslatableFieldMixin = basic_fields.TranslatableFieldMixin;
-var DynamicPlaceholderFieldMixin = basic_fields.DynamicPlaceholderFieldMixin;
 var QWeb = core.qweb;
 
 /**
@@ -39,7 +36,7 @@ var QWeb = core.qweb;
  *  - resizable
  *  - codeview
  */
-var FieldHtml = basic_fields.DebouncedField.extend(DynamicPlaceholderFieldMixin).extend(TranslatableFieldMixin, {
+var FieldHtml = basic_fields.DebouncedField.extend(TranslatableFieldMixin, {
     description: _lt("Html"),
     className: 'oe_form_field oe_form_field_html',
     supportedFieldTypes: ['html'],
@@ -85,47 +82,6 @@ var FieldHtml = basic_fields.DebouncedField.extend(DynamicPlaceholderFieldMixin)
         modelSelector.el.style.top = topPosition + 'px';
         modelSelector.el.style.left = leftPosition + 'px';
     },
-    /**
-     * Open a Model Field Selector which can select fields
-     * to create a dynamic placeholder <t-out> Element in the field HTML
-     * with or without a default text value.
-     *
-     * @override
-     * @public
-     * @param {String} baseModel
-     * @param {Array} chain
-     *
-     */
-    openDynamicPlaceholder: async function (baseModel, chain = []) {
-        let modelSelector;
-        const onFieldChanged = (ev) => {
-            this.wysiwyg.odooEditor.editable.focus();
-            if (ev.data.chain.length) {
-                let dynamicPlaceholder = "object." + ev.data.chain.join('.');
-                const defaultValue = ev.data.defaultValue;
-                dynamicPlaceholder += defaultValue && defaultValue !== '' ? ` or '''${defaultValue}'''` : '';
-
-                const t = document.createElement('T');
-                t.setAttribute('t-out', dynamicPlaceholder);
-                const fragment = new DocumentFragment();
-                fragment.appendChild(t);
-                this.wysiwyg.odooEditor.execCommand('insertFragment', fragment);
-                setSelection(...rightPos(t));
-                this.wysiwyg.odooEditor.editable.focus();
-            }
-            modelSelector.destroy();
-        };
-
-        const onFieldCancel = () => {
-            this.wysiwyg.odooEditor.editable.focus();
-            modelSelector.destroy();
-        };
-
-        modelSelector = await this._openNewModelSelector(
-            baseModel, chain, onFieldChanged, onFieldCancel
-        );
-    },
-
     /**
      * @override
      */
@@ -189,7 +145,7 @@ var FieldHtml = basic_fields.DebouncedField.extend(DynamicPlaceholderFieldMixin)
         this._setValue(this._getValue());
         this._isDirty = this.wysiwyg.isDirty();
         await fullClean;
-        await this.wysiwyg.saveModifiedImages(this.$content);
+        await this.wysiwyg.savePendingImages(this.$content);
         // Update the value to the fully cleaned version.
         this._setValue(this._getValue());
         _super();
@@ -258,7 +214,8 @@ var FieldHtml = basic_fields.DebouncedField.extend(DynamicPlaceholderFieldMixin)
      * @returns {$.Promise}
      */
     _createWysiwygInstance: async function () {
-        this.wysiwyg = await wysiwygLoader.createWysiwyg(this, this._getWysiwygOptions());
+        const Wysiwyg = await wysiwygLoader.getWysiwygClass();
+        this.wysiwyg = new Wysiwyg(this, this._getWysiwygOptions());
         return this.wysiwyg.appendTo(this.$el).then(() => {
             this.$content = this.wysiwyg.$editable;
             this._onLoadWysiwyg();
@@ -332,12 +289,14 @@ var FieldHtml = basic_fields.DebouncedField.extend(DynamicPlaceholderFieldMixin)
      * when closing the wizard.
      *
      * @private
-     * @param {Object} attachments
+     * @param {Object} event the event containing attachment data
      */
-    _onAttachmentChange: function (attachments) {
-        if (!this.fieldNameAttachment) {
+    _onAttachmentChange: function (event) {
+        // This only needs to happen for the composer for now
+        if (!this.fieldNameAttachment || this.model !== 'mail.compose.message') {
             return;
         }
+        const attachments = event.data;
         this.trigger_up('field_changed', {
             dataPointID: this.dataPointID,
             changes: _.object([this.fieldNameAttachment], [{
@@ -416,7 +375,7 @@ var FieldHtml = basic_fields.DebouncedField.extend(DynamicPlaceholderFieldMixin)
                     var cwindow = self.$iframe[0].contentWindow;
                     try {
                         cwindow.document;
-                    } catch (_e) {
+                    } catch {
                         return;
                     }
                     cwindow.document
@@ -493,7 +452,7 @@ var FieldHtml = basic_fields.DebouncedField.extend(DynamicPlaceholderFieldMixin)
         var value = text || "";
         try {
             $(text)[0].innerHTML; // crashes if text isn't html
-        } catch (_e) {
+        } catch {
             if (value.match(/^\s*$/)) {
                 value = '<p><br/></p>';
             } else {
@@ -632,13 +591,19 @@ var FieldHtml = basic_fields.DebouncedField.extend(DynamicPlaceholderFieldMixin)
      */
     _onLoadWysiwyg: function () {
         var $button = this._renderTranslateButton();
-        $button.css({
-            'font-size': '15px',
-            position: 'absolute',
-            right: odoo.debug && this.nodeOptions.codeview ? '40px' : '5px',
-            top: '5px',
-        });
-        this.$el.append($button);
+        var $container;
+        if (this.nodeOptions.cssEdit && this.wysiwyg) {
+            $container = this.wysiwyg.$iframeBody.find('.email_designer_top_actions');
+        } else {
+            $container = this.$el;
+            $button.css({
+                'font-size': '15px',
+                position: 'absolute',
+                top: '5px',
+                [_t.database.parameters.direction === 'rtl' ? 'left' : 'right']: odoo.debug && this.nodeOptions.codeview ? '40px' : '5px',
+            });
+        }
+        $container.append($button);
         if (odoo.debug && this.nodeOptions.codeview) {
             const $codeviewButtonToolbar = $(`
                 <div id="codeview-btn-group" class="btn-group">
@@ -675,9 +640,6 @@ var FieldHtml = basic_fields.DebouncedField.extend(DynamicPlaceholderFieldMixin)
      */
     _onWysiwygFocus: function (ev) {},
 });
-
-// Road to WOWL trick needed not to shadow the legacy html field in web editor.
-registry.category("fields").remove("html");
 
 field_registry.add('html', FieldHtml);
 

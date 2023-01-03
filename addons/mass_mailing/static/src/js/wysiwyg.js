@@ -10,7 +10,7 @@ const MassMailingWysiwyg = Wysiwyg.extend({
     // Public
     //--------------------------------------------------------------------------
 
-    start: async function () {
+    startEdition: async function () {
         const res = await this._super(...arguments);
         // Prevent selection change outside of snippets.
         this.$editable.on('mousedown', e => {

@@ -1,5 +1,6 @@
 /** @odoo-module **/
 import { UNBREAKABLE_ROLLBACK_CODE, UNREMOVABLE_ROLLBACK_CODE, REGEX_BOOTSTRAP_COLUMN } from '../utils/constants.js';
+import {deleteText} from './deleteForward.js';
 import {
     boundariesOut,
     childNodeIndex,
@@ -11,18 +12,15 @@ import {
     getState,
     isBlock,
     isEmptyBlock,
-    isInPre,
     isUnbreakable,
     isUnremovable,
     isVisible,
-    isVisibleStr,
     leftPos,
     rightPos,
     moveNodes,
     nodeSize,
     prepareUpdate,
     setSelection,
-    splitTextNode,
     isMediaElement,
     isVisibleEmpty,
     isNotEditableNode,
@@ -30,44 +28,17 @@ import {
 } from '../utils/utils.js';
 
 Text.prototype.oDeleteBackward = function (offset, alreadyMoved = false) {
-    const parentNode = this.parentNode;
+    const parentElement = this.parentElement;
 
     if (!offset) {
         // Backspace at the beginning of a text node is not a specific case to
         // handle, let the element implementation handle it.
-        HTMLElement.prototype.oDeleteBackward.call(this, offset, alreadyMoved);
+        parentElement.oDeleteBackward([...parentElement.childNodes].indexOf(this), alreadyMoved);
         return;
     }
-
     // Get the size of the unicode character to remove.
     const charSize = [...this.nodeValue.slice(0, offset)].pop().length;
-    // Split around the character where the backspace occurs.
-    const firstSplitOffset = splitTextNode(this, offset - charSize);
-    const secondSplitOffset = splitTextNode(parentNode.childNodes[firstSplitOffset], charSize);
-    const middleNode = parentNode.childNodes[firstSplitOffset];
-
-    // Do remove the character, then restore the state of the surrounding parts.
-    const restore = prepareUpdate(parentNode, firstSplitOffset, parentNode, secondSplitOffset);
-    const isSpace = !isVisibleStr(middleNode) && !isInPre(middleNode);
-    const isZWS = middleNode.nodeValue === '\u200B';
-    middleNode.remove();
-    restore();
-
-    // If the removed element was not visible content, propagate the backspace.
-    if (
-        isZWS ||
-        isSpace &&
-        getState(parentNode, firstSplitOffset, DIRECTIONS.LEFT).cType !== CTYPES.CONTENT
-    ) {
-        parentNode.oDeleteBackward(firstSplitOffset, alreadyMoved);
-        if (isZWS) {
-            fillEmpty(parentNode);
-        }
-        return;
-    }
-
-    fillEmpty(parentNode);
-    setSelection(parentNode, firstSplitOffset);
+    deleteText.call(this, charSize, offset - charSize, DIRECTIONS.LEFT, alreadyMoved);
 };
 
 const isDeletable = (node) => {
@@ -183,11 +154,12 @@ HTMLElement.prototype.oDeleteBackward = function (offset, alreadyMoved = false, 
     const nextSibling = this.nextSibling;
     let currentNodeIndex = offset;
 
-    // `offsetLimit` will ensure we never move nodes that were not initialy in the element
-    //  => when Deleting and merging an element the containing node will temporary be hosted
-    //  in the common parent beside possible other nodes. We don't want to touch those others node when merging
-    //  two html elements
-    //  ex : <div>12<p>ab[]</p><p>cd</p>34</div> should never touch the 12 and 34 text node.
+    // `offsetLimit` will ensure we never move nodes that were not initialy in
+    // the element => when Deleting and merging an element the containing node
+    // will temporarily be hosted in the common parent beside possible other
+    // nodes. We don't want to touch those other nodes when merging two html
+    // elements ex : <div>12<p>ab[]</p><p>cd</p>34</div> should never touch the
+    // 12 and 34 text node.
     if (offsetLimit === undefined) {
         while (node && !isBlock(node)) {
             node = node.nextSibling;
@@ -213,12 +185,12 @@ HTMLElement.prototype.oDeleteBackward = function (offset, alreadyMoved = false, 
         if (cType & CTGROUPS.BLOCK && (!alreadyMoved || cType === CTYPES.BLOCK_OUTSIDE)) {
             cursorNode.oDeleteBackward(cursorOffset, alreadyMoved, cursorOffset + currentNodeIndex - offset);
         } else if (!alreadyMoved) {
-            // When removing a block node adjacent to a inline node,
-            // we need to ensure the block node induced line break are kept with a <br>.
-            // ex : <div>a<span>b</span><p>[]c</p>d</div> => deleteBakward
-            // =>   <div>a<span>b</span>[]c<br>d</div>
-            // In this case we cannot simply merge the <p> content into the div parent
-            // or we would loose the line break located after the <p>.
+            // When removing a block node adjacent to an inline node, we need to
+            // ensure the block node induced line break are kept with a <br>.
+            // ex : <div>a<span>b</span><p>[]c</p>d</div> => deleteBakward =>
+            // <div>a<span>b</span>[]c<br>d</div> In this case we cannot simply
+            // merge the <p> content into the div parent, or we would lose the
+            // line break located after the <p>.
             const cursorNodeNode = cursorNode.childNodes[cursorOffset];
             const cursorNodeRightNode = cursorNodeNode ? cursorNodeNode.nextSibling : undefined;
             if (cursorNodeRightNode &&

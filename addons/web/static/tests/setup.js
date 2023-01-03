@@ -1,9 +1,12 @@
 /** @odoo-module **/
 
-import core, { _t } from "web.core";
+import { _t } from "web.core";
+import LegacyBus from "web.Bus";
 import session from "web.session";
+import { assets, templates } from "@web/core/assets";
 import { browser, makeRAMLocalStorage } from "@web/core/browser/browser";
-import { patchTimeZone, patchWithCleanup } from "@web/../tests/helpers/utils";
+import { nextTick, patchTimeZone, patchWithCleanup } from "@web/../tests/helpers/utils";
+import { memoize } from "@web/core/utils/functions";
 import { legacyProm } from "web.test_legacy";
 import { registerCleanup } from "./helpers/cleanup";
 import { utils } from "./helpers/mock_env";
@@ -15,25 +18,9 @@ import { loadLanguages } from "@web/core/l10n/translation";
 transitionConfig.disabled = true;
 
 import { patch } from "@web/core/utils/patch";
-import { processTemplates } from "@web/core/assets";
-const { App, whenReady, loadFile } = owl;
+import { App, whenReady } from "@odoo/owl";
 
 const { prepareRegistriesWithCleanup } = utils;
-
-patch(App.prototype, "TestOwlApp", {
-    destroy() {
-        if (!this.destroyed) {
-            this._super(...arguments);
-            this.destroyed = true;
-        }
-    },
-    addTemplate(name) {
-        registerCleanup(() => {
-            delete this.constructor.sharedTemplates[name];
-        });
-        return this._super(...arguments);
-    },
-});
 
 function stringifyObjectValues(obj, properties) {
     let res = "";
@@ -111,6 +98,23 @@ function makeMockLocation(hasListeners = () => true) {
     });
 }
 
+function patchOwlApp() {
+    patchWithCleanup(App.prototype, {
+        destroy() {
+            if (!this.destroyed) {
+                this._super(...arguments);
+                this.destroyed = true;
+            }
+        },
+        addTemplate(name) {
+            registerCleanup(() => {
+                delete this.constructor.sharedTemplates[name];
+            });
+            return this._super(...arguments);
+        },
+    });
+}
+
 function patchBrowserWithCleanup() {
     const originalAddEventListener = browser.addEventListener;
     const originalRemoveEventListener = browser.removeEventListener;
@@ -120,6 +124,8 @@ function patchBrowserWithCleanup() {
     const originalClearInterval = browser.clearInterval;
 
     let hasHashChangeListeners = false;
+    let nextAnimationFrameHandle = 1;
+    const animationFrameHandles = new Set();
     const mockLocation = makeMockLocation(() => hasHashChangeListeners);
     patchWithCleanup(
         browser,
@@ -170,8 +176,21 @@ function patchBrowserWithCleanup() {
             localStorage: makeRAMLocalStorage(),
             sessionStorage: makeRAMLocalStorage(),
             // Don't want original animation frames in tests
-            requestAnimationFrame: (fn) => fn(),
-            cancelAnimationFrame: () => {},
+            requestAnimationFrame: (fn) => {
+                const handle = nextAnimationFrameHandle++;
+                animationFrameHandles.add(handle);
+
+                Promise.resolve().then(() => {
+                    if (animationFrameHandles.has(handle)) {
+                        fn(16);
+                    }
+                });
+
+                return handle;
+            },
+            cancelAnimationFrame: (handle) => {
+                animationFrameHandles.delete(handle);
+            },
         },
         { pure: true }
     );
@@ -194,16 +213,14 @@ function patchBodyAddEventListener() {
     });
 }
 
-function patchLegacyCoreBus() {
+function patchLegacyBus() {
     // patch core.bus.on to automatically remove listners bound on the legacy bus
     // during a test (e.g. during the deployment of a service)
-    const originalOn = core.bus.on.bind(core.bus);
-    const originalOff = core.bus.off.bind(core.bus);
-    patchWithCleanup(core.bus, {
+    patchWithCleanup(LegacyBus.prototype, {
         on() {
-            originalOn(...arguments);
+            this._super(...arguments);
             registerCleanup(() => {
-                originalOff(...arguments);
+                this.off(...arguments);
             });
         },
     });
@@ -263,7 +280,7 @@ function patchSessionInfo() {
  * @param {Document} templates Document containing the templates to
  * process.
  */
-function removeUnwantedAttrsFromTemplates(templates, attrs) {
+function removeUnwantedAttrsFromTemplates(attrs) {
     function replaceAttr(attrName, prefix, element) {
         const attrKey = `${prefix}${attrName}`;
         const attrValue = element.getAttribute(attrKey);
@@ -280,7 +297,82 @@ function removeUnwantedAttrsFromTemplates(templates, attrs) {
     }
 }
 
+// alt attribute causes issues with scroll tests. Indeed, alt is
+// displayed between the time we scroll programatically and the time
+// we assert for the scroll position. The src attribute is removed
+// as well to make sure images won't trigger a GET request on the
+// server.
+
+// Clean up templates that have already been added.
+removeUnwantedAttrsFromTemplates(["alt", "src"]);
+
+const { loadXML, getBundle, loadJS, loadCSS } = assets;
+patch(assets, "TestAssetsLoadXML", {
+    loadXML: function (templates) {
+        console.log("%c[assets] fetch XML ressource", "color: #66e; font-weight: bold;");
+        // Clean up new templates that might be added later.
+        loadXML(templates);
+        removeUnwantedAttrsFromTemplates(["alt", "src"]);
+    },
+    getBundle: memoize(async function (xmlID) {
+        console.log(
+            "%c[assets] fetch libs from xmlID: " + xmlID,
+            "color: #66e; font-weight: bold;"
+        );
+        return getBundle(xmlID);
+    }),
+    loadJS: memoize(async function (ressource) {
+        if (ressource.match(/\/static(\/\S+\/|\/)libs?/)) {
+            console.log(
+                "%c[assets] fetch (mock) JS ressource: " + ressource,
+                "color: #66e; font-weight: bold;"
+            );
+            return nextTick();
+        }
+        console.log(
+            "%c[assets] fetch JS ressource: " + ressource,
+            "color: #66e; font-weight: bold;"
+        );
+        return loadJS(ressource);
+    }),
+    loadCSS: memoize(async function (ressource) {
+        if (ressource.match(/\/static(\/\S+\/|\/)libs?/)) {
+            console.log(
+                "%c[assets] fetch (mock) CSS ressource: " + ressource,
+                "color: #66e; font-weight: bold;"
+            );
+            return nextTick();
+        }
+        console.log(
+            "%c[assets] fetch CSS ressource: " + ressource,
+            "color: #66e; font-weight: bold;"
+        );
+        return loadCSS(ressource);
+    }),
+});
+
 export async function setupTests() {
+    // uncomment to debug memory leaks in qunit suite
+    // let memoryBeforeModule;
+    // QUnit.moduleStart(({ tests }) => {
+    //     if (tests.length) {
+    //         window.gc();
+    //         memoryBeforeModule = window.performance.memory.usedJSHeapSize;
+    //     }
+    // });
+    // QUnit.moduleDone(({ name }) => {
+    //     if (memoryBeforeModule) {
+    //         window.gc();
+    //         const afterGc = window.performance.memory.usedJSHeapSize;
+    //         console.log(
+    //             `MEMINFO - After suite "${name}" - after gc: ${afterGc} delta: ${
+    //                 afterGc - memoryBeforeModule
+    //             }`
+    //         );
+    //         memoryBeforeModule = null;
+    //     }
+    // });
+
     QUnit.testStart(() => {
         checkGlobalObjectsIntegrity();
         prepareRegistriesWithCleanup();
@@ -289,21 +381,12 @@ export async function setupTests() {
         cleanLoadedLanguages();
         patchBrowserWithCleanup();
         patchBodyAddEventListener();
-        patchLegacyCoreBus();
+        patchLegacyBus();
         patchOdoo();
         patchSessionInfo();
+        patchOwlApp();
     });
 
-    const templatesUrl = `/web/webclient/qweb/${new Date().getTime()}?bundle=web.assets_qweb`;
-    const templates = await loadFile(templatesUrl);
-    window.__OWL_TEMPLATES__ = processTemplates(templates);
-    // alt attribute causes issues with scroll tests. Indeed, alt is
-    // displayed between the time we scroll programatically and the time
-    // we assert for the scroll position. The src attribute is removed
-    // as well to make sure images won't trigger a GET request on the
-    // server.
-    removeUnwantedAttrsFromTemplates(window.__OWL_TEMPLATES__, ["alt", "src"]);
-    session.owlTemplates = window.__OWL_TEMPLATES__;
     await Promise.all([whenReady(), legacyProm]);
 
     // make sure images do not trigger a GET on the server

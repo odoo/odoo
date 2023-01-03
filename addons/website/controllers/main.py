@@ -14,12 +14,14 @@ import werkzeug.wrappers
 from itertools import islice
 from lxml import etree
 from textwrap import shorten
+from werkzeug.exceptions import NotFound
 from xml.etree import ElementTree as ET
 
 import odoo
 
 from odoo import http, models, fields, _
-from odoo.http import request
+from odoo.exceptions import AccessError
+from odoo.http import request, SessionExpiredException
 from odoo.osv import expression
 from odoo.tools import OrderedSet, escape_psql, html_escape as escape
 from odoo.addons.http_routing.models.ir_http import slug, slugify, _guess_mimetype
@@ -41,7 +43,8 @@ class QueryURL(object):
         self.path_args = OrderedSet(path_args or [])
 
     def __call__(self, path=None, path_args=None, **kw):
-        path = path or self.path
+        path_prefix = path or self.path
+        path = ''
         for key, value in self.args.items():
             kw.setdefault(key, value)
         path_args = OrderedSet(path_args or []) | self.path_args
@@ -63,6 +66,8 @@ class QueryURL(object):
                 path += '/' + key + '/' + value
         if fragments:
             path += '?' + '&'.join(fragments)
+        if not path.startswith(path_prefix):
+            path = path_prefix + path
         return path
 
 
@@ -70,21 +75,47 @@ class Website(Home):
 
     @http.route('/', type='http', auth="public", website=True, sitemap=True)
     def index(self, **kw):
+        """ The goal of this controller is to make sure we don't serve a 404 as
+        the website homepage. As this is the website entry point, serving a 404
+        is terrible.
+        There is multiple fallback mechanism to prevent that:
+        - If homepage URL is set (empty by default), serve the website.page
+        matching it
+        - If homepage URL is set (empty by default), serve the controller
+        matching it
+        - If homepage URL is not set, serve the `/` website.page
+        - Serve the first accessible menu as last resort. It should be relevant
+        content, at least better than a 404
+        - Serve 404
+        Most DBs will just have a website.page with '/' as URL and keep the
+        homepage_url setting empty.
+        """
         # prefetch all menus (it will prefetch website.page too)
         top_menu = request.website.menu_id
 
-        homepage_id = request.website._get_cached('homepage_id')
-        homepage = homepage_id and request.env['website.page'].browse(homepage_id)
-        if homepage and (homepage.sudo().is_visible or request.env.user._is_internal()) and homepage.url != '/':
-            request.env['ir.http'].reroute(homepage.url)
+        homepage_url = request.website._get_cached('homepage_url')
+        if homepage_url and homepage_url != '/':
+            request.env['ir.http'].reroute(homepage_url)
 
+        # Check for page
         website_page = request.env['ir.http']._serve_page()
         if website_page:
             return website_page
-        else:
-            first_menu = top_menu and top_menu.child_id and top_menu.child_id.filtered(lambda menu: menu.is_visible)
-            if first_menu and first_menu[0].url not in ('/', '', '#') and (not (first_menu[0].url.startswith(('/?', '/#', ' ')))):
-                return request.redirect(first_menu[0].url)
+
+        # Check for controller
+        if homepage_url and homepage_url != '/':
+            try:
+                return request._serve_ir_http()
+            except (AccessError, NotFound, SessionExpiredException):
+                pass
+
+        # Fallback on first accessible menu
+        def is_reachable(menu):
+            return menu.is_visible and menu.url not in ('/', '', '#') and not menu.url.startswith(('/?', '/#', ' '))
+
+        reachable_menus = top_menu.child_id.filtered(is_reachable)
+        if reachable_menus:
+            return request.redirect(reachable_menus[0].url)
 
         raise request.not_found()
 
@@ -95,7 +126,7 @@ class Website(Home):
         different session.
         """
         if not (request.env.user.has_group('website.group_multi_website')
-           and request.env.user.has_group('website.group_website_publisher')):
+           and request.env.user.has_group('website.group_website_restricted_editor')):
             # The user might not be logged in on the forced website, so he won't
             # have rights. We just redirect to the path as the user is already
             # on the domain (basically a no-op as it won't change domain or
@@ -270,11 +301,10 @@ class Website(Home):
     def website_configurator(self, step=1, **kwargs):
         if not request.env.user.has_group('website.group_website_designer'):
             raise werkzeug.exceptions.NotFound()
-        website_id = request.env['website'].get_current_website()
-        if website_id.configurator_done:
+        if request.website.configurator_done:
             return request.redirect('/')
-        if request.env.lang != website_id.default_lang_id.code:
-            return request.redirect('/%s%s' % (website_id.default_lang_id.url_code, request.httprequest.path))
+        if request.env.lang != request.website.default_lang_id.code:
+            return request.redirect('/%s%s' % (request.website.default_lang_id.url_code, request.httprequest.path))
         action_url = '/web#action=website.website_configurator&menu_id=%s' % request.env.ref('website.menu_website_configuration').id
         if step > 1:
             action_url += '&step=' + str(step)
@@ -312,7 +342,7 @@ class Website(Home):
         for name, url, mod in current_website.get_suggested_controllers():
             if needle.lower() in name.lower() or needle.lower() in url.lower():
                 module_sudo = mod and request.env.ref('base.module_%s' % mod, False).sudo()
-                icon = mod and "<img src='%s' width='24px' class='mr-2 rounded' /> " % (module_sudo and module_sudo.icon or mod) or ''
+                icon = mod and "<img src='%s' width='24px' height='24px' class='mr-2 rounded' /> " % (module_sudo and module_sudo.icon or mod) or ''
                 suggested_controllers.append({
                     'value': url,
                     'label': '%s%s (%s)' % (icon, url, name),
@@ -325,16 +355,6 @@ class Website(Home):
                 dict(title=_('Apps url'), values=suggested_controllers),
             ]
         }
-
-    @http.route('/website/get_modules_info', type='json', auth="user")
-    def get_modules_info(self, xml_ids):
-        def get_module_info(xml_id):
-            module_info = request.env.ref(xml_id)
-            return {'id': module_info.id, 'name': module_info.shortdesc}
-        modules_info = {}
-        for xml_id in xml_ids:
-            modules_info[xml_id] = get_module_info(xml_id)
-        return modules_info
 
     @http.route('/website/snippet/filters', type='json', auth='public', website=True)
     def get_dynamic_filter(self, filter_id, template_key, limit=None, search_domain=None, with_sample=False):
@@ -371,6 +391,10 @@ class Website(Home):
             t['numOfEl'] = attribs.get('data-number-of-elements')
             t['numOfElSm'] = attribs.get('data-number-of-elements-sm')
             t['numOfElFetch'] = attribs.get('data-number-of-elements-fetch')
+            t['rowPerSlide'] = attribs.get('data-row-per-slide')
+            t['arrowPosition'] = attribs.get('data-arrow-position')
+            t['extraClasses'] = attribs.get('data-extra-classes')
+            t['thumb'] = attribs.get('data-thumb')
         return templates
 
     @http.route('/website/get_current_currency', type='json', auth="public", website=True)
@@ -476,16 +500,19 @@ class Website(Home):
             'fuzzy_search': fuzzy_term,
         }
 
-    @http.route(['/pages', '/pages/page/<int:page>'], type='http', auth="public", website=True, sitemap=False)
-    def pages_list(self, page=1, search='', **kw):
-        options = {
+    def _get_page_search_options(self, **post):
+        return {
             'displayDescription': False,
             'displayDetail': False,
             'displayExtraDetail': False,
             'displayExtraLink': False,
             'displayImage': False,
-            'allowFuzzy': not kw.get('noFuzzy'),
+            'allowFuzzy': not post.get('noFuzzy'),
         }
+
+    @http.route(['/pages', '/pages/page/<int:page>'], type='http', auth="public", website=True, sitemap=False)
+    def pages_list(self, page=1, search='', **kw):
+        options = self._get_page_search_options(**kw)
         step = 50
         pages_count, details, fuzzy_search_term = request.website._search_with_fuzzy(
             "pages", search, limit=page * step, order='name asc, website_id desc, id',
@@ -511,6 +538,16 @@ class Website(Home):
         }
         return request.render("website.list_website_public_pages", values)
 
+    def _get_hybrid_search_options(self, **post):
+        return {
+            'displayDescription': True,
+            'displayDetail': True,
+            'displayExtraDetail': True,
+            'displayExtraLink': True,
+            'displayImage': True,
+            'allowFuzzy': not post.get('noFuzzy'),
+        }
+
     @http.route([
         '/website/search',
         '/website/search/page/<int:page>',
@@ -521,14 +558,7 @@ class Website(Home):
         if not search:
             return request.render("website.list_hybrid")
 
-        options = {
-            'displayDescription': True,
-            'displayDetail': True,
-            'displayExtraDetail': True,
-            'displayExtraLink': True,
-            'displayImage': True,
-            'allowFuzzy': not kw.get('noFuzzy'),
-        }
+        options = self._get_hybrid_search_options(**kw)
         data = self.autocomplete(search_type=search_type, term=search, order='name asc', limit=500, max_nb_chars=200, options=options)
 
         results = data.get('results', [])
@@ -561,7 +591,7 @@ class Website(Home):
     # ------------------------------------------------------
 
     @http.route(['/website/add', '/website/add/<path:path>'], type='http', auth="user", website=True, methods=['POST'])
-    def pagenew(self, path="", add_menu=False, template=False, **kwargs):
+    def pagenew(self, path="", add_menu=False, template=False, redirect=False, **kwargs):
         # for supported mimetype, get correct default template
         _, ext = os.path.splitext(path)
         ext_special_case = ext and ext in _guess_mimetype() and ext != '.html'
@@ -572,12 +602,21 @@ class Website(Home):
                 template = default_templ
 
         template = template and dict(template=template) or {}
+        website_id = kwargs.get('website_id')
+        if website_id:
+            website = request.env['website'].browse(website_id)
+            website._force()
         page = request.env['website'].new_page(path, add_menu=add_menu, **template)
         url = page['url']
 
-        if ext_special_case:  # redirect non html pages to backend to edit
-            return request.redirect('/web#id=' + str(page.get('view_id')) + '&view_type=form&model=ir.ui.view')
-        return request.redirect(request.env['website'].get_client_action_url(url, True))
+        if redirect:
+            if ext_special_case:  # redirect non html pages to backend to edit
+                return request.redirect('/web#id=' + str(page.get('view_id')) + '&view_type=form&model=ir.ui.view')
+            return request.redirect(request.env['website'].get_client_action_url(url, True))
+
+        if ext_special_case:
+            return json.dumps({'view_id': page.get('view_id')})
+        return json.dumps({'url': url})
 
     @http.route("/website/get_switchable_related_views", type="json", auth="user", website=True)
     def get_switchable_related_views(self, key):
@@ -626,7 +665,7 @@ class Website(Home):
 
     @http.route(['/website/get_seo_data'], type='json', auth="user", website=True)
     def get_seo_data(self, res_id, res_model):
-        if not request.env.user.has_group('website.group_website_publisher'):
+        if not request.env.user.has_group('website.group_website_restricted_editor'):
             raise werkzeug.exceptions.Forbidden()
 
         fields = ['website_meta_title', 'website_meta_description', 'website_meta_keywords', 'website_meta_og_img']
@@ -647,8 +686,9 @@ class Website(Home):
         if not request.website.google_search_console:
             logger.warning('Google Search Console not enable')
             raise werkzeug.exceptions.NotFound()
+        gsc = request.website.google_search_console
+        trusted = gsc[gsc.startswith('google') and len('google'):gsc.endswith('.html') and -len('.html') or None]
 
-        trusted = request.website.google_search_console.lstrip('google').rstrip('.html')
         if key != trusted:
             if key.startswith(trusted):
                 request.website.sudo().google_search_console = "google%s.html" % key
@@ -705,7 +745,6 @@ class Website(Home):
         Reloads asset bundles and returns their unique URLs.
         """
         return {
-            'web.assets_common': request.env['ir.qweb']._get_asset_link_urls('web.assets_common', request.session.debug),
             'web.assets_frontend': request.env['ir.qweb']._get_asset_link_urls('web.assets_frontend', request.session.debug),
         }
 

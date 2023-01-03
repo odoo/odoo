@@ -5,7 +5,7 @@ import { SEARCH_KEYS } from "@web/search/with_search/with_search";
 import { buildSampleORM } from "@web/views/sample_server";
 import { useSetupView } from "@web/views/view_hook";
 
-const { EventBus, onWillStart, onWillUpdateProps, useComponent } = owl;
+import { EventBus, onWillStart, onWillUpdateProps, useComponent } from "@odoo/owl";
 
 /**
  * @typedef {import("@web/search/search_model").SearchParams} SearchParams
@@ -77,12 +77,13 @@ function getSearchParams(props) {
 }
 
 /**
- * @template {Model} T
- * @param {new (env: Object, params: Object, services: Object) => T} ModelClass
+ * @template {typeof Model} T
+ * @param {T} ModelClass
  * @param {Object} params
  * @param {Object} [options]
  * @param {Function} [options.onUpdate]
- * @returns {T}
+ * @param {boolean} [options.ignoreUseSampleModel]
+ * @returns {InstanceType<T>}
  */
 export function useModel(ModelClass, params, options = {}) {
     const component = useComponent();
@@ -111,7 +112,7 @@ export function useModel(ModelClass, params, options = {}) {
             ? globalState.useSampleModel
             : component.props.useSampleModel
     );
-    model.useSampleModel = useSampleModel;
+    model.useSampleModel = !options.ignoreUseSampleModel ? useSampleModel : false;
     const orm = model.orm;
     let sampleORM = globalState.sampleORM;
     const user = useService("user");
@@ -119,18 +120,21 @@ export function useModel(ModelClass, params, options = {}) {
     async function load(props) {
         const searchParams = getSearchParams(props);
         await model.load(searchParams);
-        if (useSampleModel && !model.hasData()) {
-            sampleORM =
-                sampleORM || buildSampleORM(component.props.resModel, component.props.fields, user);
-            sampleORM.setGroups(model.getGroups());
-            // Load data with sampleORM then restore real ORM.
-            model.orm = sampleORM;
-            await model.load(searchParams);
-            model.orm = orm;
-        } else {
-            useSampleModel = false;
+        if (!options.ignoreUseSampleModel) {
+            if (useSampleModel && !model.hasData()) {
+                sampleORM =
+                    sampleORM ||
+                    buildSampleORM(component.props.resModel, component.props.fields, user);
+                sampleORM.setGroups(model.getGroups());
+                // Load data with sampleORM then restore real ORM.
+                model.orm = sampleORM;
+                await model.load(searchParams);
+                model.orm = orm;
+            } else {
+                useSampleModel = false;
+                model.useSampleModel = useSampleModel;
+            }
         }
-        model.useSampleModel = useSampleModel;
         if (started) {
             model.notify();
         }
@@ -150,16 +154,15 @@ export function useModel(ModelClass, params, options = {}) {
         started = true;
     });
     onWillUpdateProps((nextProps) => {
-        useSampleModel = false;
+        if (!options.ignoreUseSampleModel) {
+            useSampleModel = false;
+        }
         load(nextProps);
     });
 
     useSetupView({
         getGlobalState() {
-            return {
-                sampleORM,
-                useSampleModel: model.useSampleModel,
-            };
+            return { sampleORM, useSampleModel };
         },
     });
 

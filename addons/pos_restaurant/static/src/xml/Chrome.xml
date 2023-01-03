@@ -2,7 +2,7 @@
 <templates id="template" xml:space="preserve">
 
     <t t-name="Chrome" t-inherit="point_of_sale.Chrome" t-inherit-mode="extension" owl="1">
-        <xpath expr="//div[hasclass('search-bar-container')]" position="before">
+        <xpath expr="//div[hasclass('status-buttons')]" position="before">
             <div class="back-to-floor-portal"/>
         </xpath>
     </t>

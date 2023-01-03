@@ -26,11 +26,13 @@ var KioskMode = AbstractAction.extend({
         var def = this._rpc({
                 model: 'res.company',
                 method: 'search_read',
-                args: [[['id', '=', company_id]], ['name']],
+                args: [[['id', '=', company_id]], ['name', 'attendance_kiosk_mode', 'attendance_barcode_source']],
             })
             .then(function (companies){
                 self.company_name = companies[0].name;
                 self.company_image_url = self.session.url('/web/image', {model: 'res.company', id: company_id, field: 'logo',});
+                self.kiosk_mode = companies[0].attendance_kiosk_mode;
+                self.barcode_source = companies[0].attendance_barcode_source;
                 self.$el.html(QWeb.render("HrAttendanceKioskMode", {widget: self}));
                 self.start_clock();
             });
@@ -42,7 +44,7 @@ var KioskMode = AbstractAction.extend({
     on_attach_callback: function () {
         // Stop the bus_service to avoid notifications in kiosk mode
         this.call('bus_service', 'stop');
-        $('body').find('.o_ChatWindowHeader_commandClose').click();
+        $('body').find('.o_ChatWindowHeaderView_commandClose').click();
     },
 
     _onBarcodeScanned: function(barcode) {

@@ -12,7 +12,6 @@
                     <field name="description"/>
                     <field name="is_member"/>
                     <field name="group_ids"/>
-                    <field name="public"/>
                     <templates>
                         <t t-name="kanban-description">
                             <div class="oe_group_description" t-if="record.description.raw_value">
@@ -60,9 +59,8 @@
                         <notebook>
                             <page string="Privacy" name="privacy">
                                 <group class="o_label_nowrap">
-                                    <field name="public" widget="radio" string="Who can follow the group's activities?"/>
                                     <field name="group_public_id"
-                                        attrs="{'invisible': ['|', ('channel_type', '!=', 'channel'), ('public','!=','groups')], 'required': [('public','=','groups')]}"
+                                        attrs="{'invisible': [('channel_type', '!=', 'channel')]}"
                                         />
                                     <field name="group_ids" widget="many2many_tags"
                                         attrs="{'invisible': [('channel_type', '!=', 'channel')]}"

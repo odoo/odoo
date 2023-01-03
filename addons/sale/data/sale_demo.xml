@@ -1,15 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo noupdate="1">
 
-    <!-- Enable EUR currency since it's the currency on the company, pricelist and Sale Orders
-
-        If the currency is not enabled, you cannot pay the demo SO's with a payment link bc the currency
-        is disabled.
-    -->
-    <function model="res.currency" name="action_unarchive">
-        <value model="res.currency" search="[('id', '=', obj().env.ref('product.list0').currency_id.id), ('active', '=', False)]"/>
-    </function>
-
     <!-- We want to activate pay and sign by default for easier demoing. -->
     <record id="base.main_company" model="res.company">
         <field name="portal_confirmation_pay" eval="True"/>

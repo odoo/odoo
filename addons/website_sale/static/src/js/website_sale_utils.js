@@ -50,7 +50,7 @@ function animateClone($cart, $elem, offsetTop, offsetLeft) {
     if (!$cart.length) {
         return Promise.resolve();
     }
-    $cart.find('.o_animate_blink').addClass('o_red_highlight o_shadow_animation').delay(500).queue(function () {
+    $cart.removeClass('d-none').find('.o_animate_blink').addClass('o_red_highlight o_shadow_animation').delay(500).queue(function () {
         $(this).removeClass("o_shadow_animation").dequeue();
     }).delay(2000).queue(function () {
         $(this).removeClass("o_red_highlight").dequeue();
@@ -64,6 +64,7 @@ function animateClone($cart, $elem, offsetTop, offsetLeft) {
                     top: $imgtodrag.offset().top,
                     left: $imgtodrag.offset().left
                 })
+                .removeClass()
                 .addClass('o_website_sale_animate')
                 .appendTo(document.body)
                 .css({
@@ -109,7 +110,7 @@ function updateCartNavBar(data) {
         });
 
     $(".js_cart_lines").first().before(data['website_sale.cart_lines']).end().remove();
-    $(".js_cart_summary").first().before(data['website_sale.short_cart_summary']).end().remove();
+    $(".js_cart_summary").replaceWith(data['website_sale.short_cart_summary']);
 }
 
 /**

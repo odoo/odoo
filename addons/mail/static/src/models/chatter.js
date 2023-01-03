@@ -1,8 +1,7 @@
 /** @odoo-module **/
 
-import { registerModel } from '@mail/model/model_core';
-import { attr, one } from '@mail/model/model_field';
-import { clear, insert, link } from '@mail/model/model_field_command';
+import { useComponentToModel } from "@mail/component_hooks/use_component_to_model";
+import { attr, clear, insert, link, many, one, Model } from "@mail/model";
 
 const getThreadNextTemporaryId = (function () {
     let tmpId = 0;
@@ -20,8 +19,13 @@ const getMessageNextTemporaryId = (function () {
     };
 })();
 
-registerModel({
-    name: 'Chatter',
+Model({
+    name: "Chatter",
+    template: "mail.Chatter",
+    isLegacyComponent: true,
+    componentSetup() {
+        useComponentToModel({ fieldName: "component" });
+    },
     recordMethods: {
         focus() {
             if (this.composerView) {
@@ -35,6 +39,13 @@ registerModel({
             });
         },
         /**
+         * Handles click on activity box title.
+         */
+        onClickActivityBoxTitle(ev) {
+            ev.preventDefault();
+            this.update({ isActivityListVisible: !this.isActivityListVisible });
+        },
+        /**
          * Handles click on the attach button.
          */
         onClickButtonAddAttachments() {
@@ -44,7 +55,7 @@ registerModel({
          * Handles click on the attachments button.
          */
         onClickButtonToggleAttachments() {
-            this.update({ attachmentBoxView: this.attachmentBoxView ? clear() : {} });
+            this.update({ hasAttachmentBox: this.hasAttachmentBox ? clear() : true });
         },
         /**
          * Handles click on top bar close button.
@@ -52,7 +63,16 @@ registerModel({
          * @param {MouseEvent} ev
          */
         onClickChatterTopbarClose(ev) {
-            this.component.trigger('o-close-chatter');
+            this.component.trigger("o-close-chatter");
+        },
+        /**
+         * @param {MouseEvent} ev
+         */
+        onClickFollow(ev) {
+            if (!this.exists() || !this.thread) {
+                return;
+            }
+            this.thread.follow();
         },
         /**
          * Handles click on "log note" button.
@@ -71,26 +91,11 @@ registerModel({
          *
          * @param {MouseEvent} ev
          */
-        onClickScheduleActivity(ev) {
-            const action = {
-                type: 'ir.actions.act_window',
-                name: this.env._t("Schedule Activity"),
-                res_model: 'mail.activity',
-                view_mode: 'form',
-                views: [[false, 'form']],
-                target: 'new',
-                context: {
-                    default_res_id: this.thread.id,
-                    default_res_model: this.thread.model,
-                },
-                res_id: false,
-            };
-            return this.env.services.action.doAction(
-                action,
-                {
-                    onClose: () => this.reloadParentView(),
-                }
-            );
+        async onClickScheduleActivity(ev) {
+            await this.messaging.openActivityForm({ thread: this.thread });
+            if (this.exists()) {
+                this.reloadParentView();
+            }
         },
         /**
          * Handles click on "send message" button.
@@ -105,54 +110,83 @@ registerModel({
             }
         },
         /**
+         * @param {MouseEvent} ev
+         */
+        onClickUnfollow(ev) {
+            if (!this.exists() || !this.thread) {
+                return;
+            }
+            this.thread.unfollow();
+            this.reloadParentView({ fieldNames: ["message_follower_ids"] });
+        },
+        /**
+         * @param {MouseEvent} ev
+         */
+        onMouseEnterUnfollow(ev) {
+            if (!this.exists()) {
+                return;
+            }
+            this.update({ isUnfollowButtonHighlighted: true });
+        },
+        /**
+         * @param {MouseEvent} ev
+         */
+        onMouseleaveUnfollow(ev) {
+            if (!this.exists()) {
+                return;
+            }
+            this.update({ isUnfollowButtonHighlighted: false });
+        },
+        /**
          * Handles scroll on this scroll panel.
          *
          * @param {Event} ev
          */
         onScrollScrollPanel(ev) {
-            if (!this.threadView || !this.threadView.messageListView || !this.threadView.messageListView.component) {
+            if (
+                !this.threadView ||
+                !this.threadView.messageListView ||
+                !this.threadView.messageListView.component
+            ) {
                 return;
             }
-            this.threadView.messageListView.component.onScroll(ev);
+            this.threadView.messageListView.onScroll();
         },
-        openAttachmentBoxView() {
-            this.update({ attachmentBoxView: {} });
+        openAttachmentBox() {
+            this.update({ hasAttachmentBox: true });
         },
         /**
          * Open a dialog to add partners as followers.
          */
         promptAddPartnerFollower() {
             const action = {
-                type: 'ir.actions.act_window',
-                res_model: 'mail.wizard.invite',
-                view_mode: 'form',
-                views: [[false, 'form']],
+                type: "ir.actions.act_window",
+                res_model: "mail.wizard.invite",
+                view_mode: "form",
+                views: [[false, "form"]],
                 name: this.env._t("Invite Follower"),
-                target: 'new',
+                target: "new",
                 context: {
                     default_res_model: this.thread.model,
                     default_res_id: this.thread.id,
                 },
             };
-            this.env.services.action.doAction(
-                action,
-                {
-                    onClose: async () => {
-                        if (!this.exists() && !this.thread) {
-                            return;
-                        }
-                        await this.thread.fetchData(['followers']);
-                        if (this.exists() && this.hasParentReloadOnFollowersUpdate) {
-                            this.reloadParentView();
-                        }
-                    },
-                }
-            );
+            this.env.services.action.doAction(action, {
+                onClose: async () => {
+                    if (!this.exists() && !this.thread) {
+                        return;
+                    }
+                    await this.thread.fetchData(["followers"]);
+                    if (this.exists() && this.hasParentReloadOnFollowersUpdate) {
+                        this.reloadParentView();
+                    }
+                },
+            });
         },
         async refresh() {
-            const requestData = ['activities', 'followers', 'suggestedRecipients'];
+            const requestData = ["activities", "followers", "suggestedRecipients"];
             if (this.hasMessageList) {
-                requestData.push('attachments', 'messages');
+                requestData.push("attachments", "messages");
             }
             this.thread.fetchData(requestData);
         },
@@ -170,7 +204,7 @@ registerModel({
                 if (fieldNames) {
                     options.fieldNames = fieldNames;
                 }
-                this.component.trigger('reload', options);
+                this.component.trigger("reload", options);
             }
         },
         showLogNote() {
@@ -185,100 +219,17 @@ registerModel({
         },
         /**
          * @private
-         * @returns {FieldCommand}
-         */
-        _computeActivityBoxView() {
-            if (this.thread && this.thread.hasActivities && this.thread.activities.length > 0) {
-                return {};
-            }
-            return clear();
-        },
-        /**
-         * @private
-         * @returns {FieldCommand}
-         */
-        _computeDropZoneView() {
-            if (this.useDragVisibleDropZone.isVisible) {
-                return {};
-            }
-            return clear();
-        },
-        /**
-         * @private
-         * @returns {FieldCommand}
-         */
-        _computeFileUploader() {
-            return this.thread ? {} : clear();
-        },
-        /**
-         * @private
-         * @returns {FieldCommand}
-         */
-        _computeFollowButtonView() {
-            if (this.hasFollowers && this.thread && (!this.thread.channel || this.thread.channel.channel_type !== 'chat')) {
-                return {};
-            }
-            return clear();
-        },
-        /**
-         * @private
-         * @returns {FieldCommand}
-         */
-        _computeFollowerListMenuView() {
-            if (this.hasFollowers && this.thread) {
-                return {};
-            }
-            return clear();
-        },
-        /**
-         * @private
-         * @returns {boolean}
-         */
-        _computeHasReadAccess() {
-            return Boolean(this.thread && !this.thread.isTemporary && this.thread.hasReadAccess);
-        },
-        /**
-         * @private
-         * @returns {boolean}
-         */
-        _computeHasThreadView() {
-            return Boolean(this.thread && this.hasMessageList);
-        },
-        /**
-         * @private
-         * @returns {boolean}
-         */
-        _computeHasWriteAccess() {
-            return Boolean(this.thread && !this.thread.isTemporary && this.thread.hasWriteAccess);
-        },
-        /**
-         * @private
-         * @returns {boolean}
-         */
-        _computeIsPreparingAttachmentsLoading() {
-            return Boolean(this.attachmentsLoaderTimer);
-        },
-        /**
-         * @private
-         * @returns {ThreadViewer}
-         */
-        _computeThreadViewer() {
-            return {
-                hasThreadView: this.hasThreadView,
-                order: 'desc',
-                thread: this.thread ? this.thread : clear(),
-            };
-        },
-        /**
-         * @private
          */
         _onThreadIdOrThreadModelChanged() {
+            if (!this.threadModel) {
+                return;
+            }
             if (this.threadId) {
                 if (this.thread && this.thread.isTemporary) {
                     this.thread.delete();
                 }
                 this.update({
-                    attachmentBoxView: this.isAttachmentBoxVisibleInitially ? {} : clear(),
+                    hasAttachmentBox: this.isAttachmentBoxVisibleInitially ? true : clear(),
                     thread: insert({
                         // If the thread was considered to have the activity
                         // mixin once, it will have it forever.
@@ -289,7 +240,7 @@ registerModel({
                 });
             } else if (!this.thread || !this.thread.isTemporary) {
                 const currentPartner = this.messaging.currentPartner;
-                const message = this.messaging.models['Message'].insert({
+                const message = this.messaging.models["Message"].insert({
                     author: currentPartner,
                     body: this.env._t("Creating a new record..."),
                     id: getMessageNextTemporaryId(),
@@ -297,7 +248,7 @@ registerModel({
                 });
                 const nextId = getThreadNextTemporaryId();
                 this.update({
-                    attachmentBoxView: clear(),
+                    hasAttachmentBox: clear(),
                     thread: insert({
                         areAttachmentsLoaded: true,
                         id: nextId,
@@ -332,19 +283,43 @@ registerModel({
         },
     },
     fields: {
-        activityBoxView: one('ActivityBoxView', {
-            compute: '_computeActivityBoxView',
-            inverse: 'chatter',
-            isCausal: true,
+        activityViews: many("ActivityView", {
+            inverse: "chatterOwner",
+            compute() {
+                if (!this.thread) {
+                    return clear();
+                }
+                return this.thread.activities.map((activity) => {
+                    return { activity };
+                });
+            },
         }),
-        attachmentBoxView: one('AttachmentBoxView', {
-            inverse: 'chatter',
-            isCausal: true,
+        /**
+         * Determines the attachment list that will be used to display the attachments.
+         */
+        attachmentList: one("AttachmentList", {
+            inverse: "chatterOwner",
+            compute() {
+                return this.thread && this.thread.allAttachments.length > 0 ? {} : clear();
+            },
         }),
-        attachmentsLoaderTimer: one('Timer', {
-            inverse: 'chatterOwnerAsAttachmentsLoader',
-            isCausal: true,
+        /**
+         * Determines the label on the attachment button of the topbar.
+         */
+        attachmentButtonText: attr({
+            default: "",
+            compute() {
+                if (!this.thread) {
+                    return clear();
+                }
+                const attachments = this.thread.allAttachments;
+                if (attachments.length === 0) {
+                    return clear();
+                }
+                return attachments.length;
+            },
         }),
+        attachmentsLoaderTimer: one("Timer", { inverse: "chatterOwnerAsAttachmentsLoader" }),
         /**
          * States the OWL Chatter component of this chatter.
          */
@@ -352,54 +327,79 @@ registerModel({
         /**
          * Determines the composer view used to post in this chatter (if any).
          */
-        composerView: one('ComposerView', {
-            inverse: 'chatter',
-            isCausal: true,
+        composerView: one("ComposerView", { inverse: "chatter" }),
+        context: attr({ default: {} }),
+        dropZoneView: one("DropZoneView", {
+            inverse: "chatterOwner",
+            compute() {
+                if (!this.thread) {
+                    return clear();
+                }
+                if (this.useDragVisibleDropZone.isVisible) {
+                    return {};
+                }
+                return clear();
+            },
         }),
-        context: attr({
-            default: {},
+        fileUploader: one("FileUploader", {
+            inverse: "chatterOwner",
+            compute() {
+                return this.thread ? {} : clear();
+            },
         }),
-        dropZoneView: one('DropZoneView', {
-            compute: '_computeDropZoneView',
-            inverse: 'chatterOwner',
-            isCausal: true,
+        followerListMenuView: one("FollowerListMenuView", {
+            inverse: "chatterOwner",
+            compute() {
+                if (this.hasFollowers && this.thread) {
+                    return {};
+                }
+                return clear();
+            },
         }),
-        fileUploader: one('FileUploader', {
-            compute: '_computeFileUploader',
-            inverse: 'chatterOwner',
-            isCausal: true,
-        }),
-        followButtonView: one('FollowButtonView', {
-            compute: '_computeFollowButtonView',
-            inverse: 'chatterOwner',
-            isCausal: true,
-        }),
-        followerListMenuView: one('FollowerListMenuView', {
-            compute: '_computeFollowerListMenuView',
-            inverse: 'chatterOwner',
-            isCausal: true,
+        /**
+         * Text displayed by the follow button when not already followed.
+         */
+        followingText: attr({
+            compute() {
+                return this.env._t("Following");
+            },
         }),
         /**
          * Determines whether `this` should display an activity box.
          */
-        hasActivities: attr({
-            default: true,
+        hasActivities: attr({ default: true }),
+        hasActivityBox: attr({
+            default: false,
+            compute() {
+                if (this.thread && this.thread.hasActivities && this.thread.activities.length > 0) {
+                    return true;
+                }
+                return clear();
+            },
         }),
-        hasExternalBorder: attr({
-            default: true,
+        hasAttachmentBox: attr({ default: false }),
+        hasExternalBorder: attr({ default: true }),
+        hasFollowButton: attr({
+            default: false,
+            compute() {
+                if (
+                    this.hasFollowers &&
+                    this.thread &&
+                    (!this.thread.channel || this.thread.channel.channel_type !== "chat")
+                ) {
+                    return true;
+                }
+                return clear();
+            },
         }),
         /**
          * Determines whether `this` should display followers menu.
          */
-        hasFollowers: attr({
-            default: true,
-        }),
+        hasFollowers: attr({ default: true }),
         /**
          * Determines whether `this` should display a message list.
          */
-        hasMessageList: attr({
-            default: true,
-        }),
+        hasMessageList: attr({ default: true }),
         /**
          * Whether the message list should manage its scroll.
          * In particular, when the chatter is on the form view's side,
@@ -407,62 +407,78 @@ registerModel({
          * Also, the message list shoud not manage the scroll if it shares it
          * with the rest of the page.
          */
-        hasMessageListScrollAdjust: attr({
-            default: false,
-        }),
-        hasParentReloadOnAttachmentsChanged: attr({
-            default: false,
-        }),
-        hasParentReloadOnFollowersUpdate: attr({
-            default: false,
-        }),
-        hasParentReloadOnMessagePosted: attr({
-            default: false,
-        }),
+        hasMessageListScrollAdjust: attr({ default: false }),
+        hasParentReloadOnAttachmentsChanged: attr({ default: false }),
+        hasParentReloadOnFollowersUpdate: attr({ default: false }),
+        hasParentReloadOnMessagePosted: attr({ default: false }),
         hasReadAccess: attr({
-            compute: '_computeHasReadAccess',
+            compute() {
+                return Boolean(
+                    this.thread && !this.thread.isTemporary && this.thread.hasReadAccess
+                );
+            },
         }),
         /**
          * Determines whether `this.thread` should be displayed.
          */
         hasThreadView: attr({
-            compute: '_computeHasThreadView',
+            compute() {
+                return Boolean(this.thread && this.hasMessageList);
+            },
+        }),
+        hasTopBar: attr({
+            default: false,
+            compute() {
+                return this.thread ? true : clear();
+            },
         }),
         hasWriteAccess: attr({
-            compute: '_computeHasWriteAccess',
+            compute() {
+                return Boolean(
+                    this.thread && !this.thread.isTemporary && this.thread.hasWriteAccess
+                );
+            },
         }),
-        hasTopbarCloseButton: attr({
-            default: false,
-        }),
+        hasTopbarCloseButton: attr({ default: false }),
         /**
          * States the id of this chatter. This id does not correspond to any
          * specific value, it is just a unique identifier given by the creator
          * of this record.
          */
-        id: attr({
-            identifying: true,
-        }),
+        id: attr({ identifying: true }),
+        isActivityListVisible: attr({ default: true }),
         /**
          * Determiners whether the attachment box is visible initially.
          */
-        isAttachmentBoxVisibleInitially: attr({
-            default: false,
+        isAttachmentBoxVisibleInitially: attr({ default: false }),
+        isFollowButtonDisabled: attr({
+            compute() {
+                return !this.hasReadAccess;
+            },
         }),
-        isInFormSheetBg: attr({
-            default: false,
-        }),
+        isInFormSheetBg: attr({ default: false }),
         isPreparingAttachmentsLoading: attr({
-            compute: '_computeIsPreparingAttachmentsLoading',
             default: false,
+            compute() {
+                return Boolean(this.attachmentsLoaderTimer);
+            },
         }),
-        isShowingAttachmentsLoading: attr({
-            default: false,
+        isShowingAttachmentsLoading: attr({ default: false }),
+        isUnfollowButtonHighlighted: attr({ default: false }),
+        scrollPanelRef: attr({ ref: "scrollPanel" }),
+        /**
+         * Determines whether the view should reload after file changed in this chatter,
+         * such as from a file upload.
+         */
+        shouldReloadParentFromFileChanged: attr({
+            compute() {
+                return this.hasParentReloadOnAttachmentsChanged;
+            },
         }),
-        scrollPanelRef: attr(),
         /**
          * Determines the `Thread` that should be displayed by `this`.
          */
-        thread: one('Thread'),
+        thread: one("Thread"),
         /**
          * Determines the id of the thread that will be displayed by `this`.
          */
@@ -474,27 +490,34 @@ registerModel({
         /**
          * States the `ThreadView` displaying `this.thread`.
          */
-        threadView: one('ThreadView', {
-            related: 'threadViewer.threadView',
-        }),
+        threadView: one("ThreadView", { related: "threadViewer.threadView" }),
         /**
          * Determines the `ThreadViewer` managing the display of `this.thread`.
          */
-        threadViewer: one('ThreadViewer', {
-            compute: '_computeThreadViewer',
-            inverse: 'chatter',
-            isCausal: true,
-            required: true,
+        threadViewer: one("ThreadViewer", {
+            inverse: "chatter",
+            compute() {
+                if (!this.thread) {
+                    return clear();
+                }
+                return {
+                    hasThreadView: this.hasThreadView,
+                    order: "desc",
+                    thread: this.thread ? this.thread : clear(),
+                };
+            },
         }),
-        topbar: one('ChatterTopbar', {
-            default: {},
-            inverse: 'chatter',
-            isCausal: true,
+        /**
+         * Text displayed by the follow button when already followed.
+         */
+        unfollowingText: attr({
+            compute() {
+                return this.env._t("Unfollow");
+            },
         }),
-        useDragVisibleDropZone: one('UseDragVisibleDropZone', {
+        useDragVisibleDropZone: one("UseDragVisibleDropZone", {
             default: {},
-            inverse: 'chatterOwner',
-            isCausal: true,
+            inverse: "chatterOwner",
             readonly: true,
             required: true,
         }),
@@ -502,12 +525,12 @@ registerModel({
     },
     onChanges: [
         {
-            dependencies: ['threadId', 'threadModel'],
-            methodName: '_onThreadIdOrThreadModelChanged',
+            dependencies: ["threadId", "threadModel"],
+            methodName: "_onThreadIdOrThreadModelChanged",
         },
         {
-            dependencies: ['thread.isLoadingAttachments'],
-            methodName: '_onThreadIsLoadingAttachmentsChanged',
+            dependencies: ["thread.isLoadingAttachments"],
+            methodName: "_onThreadIsLoadingAttachmentsChanged",
         },
     ],
 });

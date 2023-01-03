@@ -99,7 +99,7 @@ class TestProjectrecurrence(TransactionCase):
         tasks = self.env['project.task'].search(domain)
         self.assertEqual(len(tasks), 3)
 
-        self.assertTrue(bool(tasks[2].date_deadline))
+        self.assertTrue(bool(tasks[0].date_deadline))
         self.assertFalse(tasks[1].date_deadline, "Deadline should not be copied")
 
         for f in self.env['project.task.recurrence']._get_recurring_fields():
@@ -143,7 +143,7 @@ class TestProjectrecurrence(TransactionCase):
         tasks = self.env['project.task'].search(domain)
         self.assertEqual(len(tasks), 3)
 
-        self.assertTrue(bool(tasks[2].date_deadline))
+        self.assertTrue(bool(tasks[0].date_deadline))
         self.assertFalse(tasks[1].date_deadline, "Deadline should not be copied")
 
         for f in self.env['project.task.recurrence']._get_recurring_fields():
@@ -200,7 +200,7 @@ class TestProjectrecurrence(TransactionCase):
         tasks = self.env['project.task'].search(domain)
         self.assertEqual(len(tasks), 4)
 
-        self.assertTrue(bool(tasks[3].date_deadline))
+        self.assertTrue(bool(tasks[0].date_deadline))
         self.assertFalse(tasks[1].date_deadline, "Deadline should not be copied")
 
         for f in self.env['project.task.recurrence']._get_recurring_fields():
@@ -437,6 +437,87 @@ class TestProjectrecurrence(TransactionCase):
         self.assertEqual(dates[3], datetime(2020, 4, 25))
         self.assertEqual(dates[4], datetime(2020, 5, 23))
 
+        dates = self.env['project.task.recurrence']._get_next_recurring_dates(
+            date_start=datetime(2020, 1, 10),
+            repeat_interval=6, # twice a year
+            repeat_unit='month',
+            repeat_type='until',
+            repeat_until=datetime(2021, 1, 11),
+            repeat_on_month='date',
+            repeat_on_year=False,
+            weekdays=[TH(+1)],
+            repeat_day='3', # the 3rd of the month
+            repeat_week=False,
+            repeat_month=False,
+            count=1)
+
+        self.assertEqual(len(dates), 2)
+        self.assertEqual(dates[0], datetime(2020, 7, 3))
+        self.assertEqual(dates[1], datetime(2021, 1, 3))
+
+        # Should generate a date at the last day of the current month
+        dates = self.env['project.task.recurrence']._get_next_recurring_dates(
+            date_start=date(2022, 2, 26),
+            repeat_interval=1,
+            repeat_unit='month',
+            repeat_type='until',
+            repeat_until=date(2022, 2, 28),
+            repeat_on_month='date',
+            repeat_on_year=False,
+            weekdays=False,
+            repeat_day=31,
+            repeat_week=False,
+            repeat_month=False,
+            count=5)
+
+        self.assertEqual(len(dates), 1)
+        self.assertEqual(dates[0], date(2022, 2, 28))
+
+        dates = self.env['project.task.recurrence']._get_next_recurring_dates(
+            date_start=date(2022, 11, 26),
+            repeat_interval=3,
+            repeat_unit='month',
+            repeat_type='until',
+            repeat_until=date(2024, 2, 29),
+            repeat_on_month='date',
+            repeat_on_year=False,
+            weekdays=False,
+            repeat_day=25,
+            repeat_week=False,
+            repeat_month=False,
+            count=5)
+
+        self.assertEqual(len(dates), 5)
+        self.assertEqual(dates[0], date(2023, 2, 25))
+        self.assertEqual(dates[1], date(2023, 5, 25))
+        self.assertEqual(dates[2], date(2023, 8, 25))
+        self.assertEqual(dates[3], date(2023, 11, 25))
+        self.assertEqual(dates[4], date(2024, 2, 25))
+
+        # Use the exact same parameters than the previous test but with a repeat_day that is not passed yet
+        # So we generate an additional date in the current month
+        dates = self.env['project.task.recurrence']._get_next_recurring_dates(
+            date_start=date(2022, 11, 26),
+            repeat_interval=3,
+            repeat_unit='month',
+            repeat_type='until',
+            repeat_until=date(2024, 2, 29),
+            repeat_on_month='date',
+            repeat_on_year=False,
+            weekdays=False,
+            repeat_day=31,
+            repeat_week=False,
+            repeat_month=False,
+            count=5)
+
+        self.assertEqual(len(dates), 6)
+        self.assertEqual(dates[0], date(2022, 11, 30))
+        self.assertEqual(dates[1], date(2023, 2, 28))
+        self.assertEqual(dates[2], date(2023, 5, 31))
+        self.assertEqual(dates[3], date(2023, 8, 31))
+        self.assertEqual(dates[4], date(2023, 11, 30))
+        self.assertEqual(dates[5], date(2024, 2, 29))
+
     def test_recurrence_next_dates_year(self):
         dates = self.env['project.task.recurrence']._get_next_recurring_dates(
             date_start=date(2020, 12, 1),
@@ -472,12 +553,13 @@ class TestProjectrecurrence(TransactionCase):
             'name': 'Parent Task',
             'project_id': self.project_recurring.id
         })
+        child_task = self.env['project.task'].create({
+            'name': 'Child Task',
+            'parent_id': parent_task.id,
+        })
         domain = [('project_id', '=', self.project_recurring.id)]
-        with Form(parent_task.with_context({'tracking_disable': True})) as task_form:
-            with task_form.child_ids.new() as subtask_form:
-                subtask_form.name = 'Test Subtask 1'
         with freeze_time("2020-01-01"):
-            with Form(parent_task.child_ids.with_context({'tracking_disable': True})) as form:
+            with Form(child_task.with_context({'tracking_disable': True})) as form:
                 form.description = 'my super recurring task bla bla bla'
                 form.date_deadline = datetime(2020, 2, 1)
                 form.display_project_id = parent_task.project_id
@@ -530,8 +612,7 @@ class TestProjectrecurrence(TransactionCase):
 
         tasks = self.env['project.task'].search(domain)
         self.assertEqual(len(tasks), 4)
-
-        self.assertTrue(bool(tasks[2].date_deadline))
+        self.assertTrue(bool(tasks[0].date_deadline))
         self.assertFalse(tasks[1].date_deadline, "Deadline should not be copied")
 
         for f in self.env['project.task.recurrence']._get_recurring_fields():
@@ -569,12 +650,20 @@ class TestProjectrecurrence(TransactionCase):
             'project_id': self.project_recurring.id
         })
         domain = [('project_id', '=', self.project_recurring.id)]
+        child_task_1, child_task_2_recurrence = self.env['project.task'].create([
+            {'name': 'Child task 1'},
+            {'name': 'Child task 2 that have recurrence'},
+        ])
         with Form(parent_task.with_context({'tracking_disable': True})) as task_form:
-            with task_form.child_ids.new() as subtask_form:
-                subtask_form.name = 'Child task 1'
-        with Form(parent_task.with_context({'tracking_disable': True})) as task_form:
-            with task_form.child_ids.new() as subtask_form:
-                subtask_form.name = 'Child task 2 that have recurrence'
+            task_form.child_ids.add(child_task_1)
+            task_form.child_ids.add(child_task_2_recurrence)
+
+        grand_child_task_1 = self.env['project.task'].create({
+            'name': 'Grandchild task 1 (recurrent)',
+        })
+        grand_child_task_2_recurrence = self.env['project.task'].create({
+            'name': 'Grandchild task 2',
+        })
         with freeze_time("2020-01-01"):
             recurrent_subtask = parent_task.child_ids[0]
             with Form(recurrent_subtask.with_context(tracking_disable=True)) as task_form:
@@ -586,11 +675,8 @@ class TestProjectrecurrence(TransactionCase):
                 task_form.repeat_on_month = 'date'
                 task_form.repeat_day = '15'
                 task_form.date_deadline = datetime(2020, 2, 1)
-                with task_form.child_ids.new() as subtask_form:
-                    subtask_form.name = 'Grandchild task 1 (recurrent)'
-                with task_form.child_ids.new() as subtask_form:
-                    subtask_form.name = 'Grandchild task 2'
-
+                task_form.child_ids.add(grand_child_task_1)
+                task_form.child_ids.add(grand_child_task_2_recurrence)
             # configure recurring subtask
             recurrent_subsubtask = recurrent_subtask.child_ids.filtered(lambda t: t.name == 'Grandchild task 1 (recurrent)')
             non_recurrent_subsubtask = recurrent_subtask.child_ids.filtered(lambda t: t.name == 'Grandchild task 2')
@@ -602,18 +688,20 @@ class TestProjectrecurrence(TransactionCase):
                 subtask_form.repeat_number = 4
                 subtask_form.date_deadline = datetime(2020, 2, 3)
 
+            grand_child_task_3, grand_child_task_4, grand_child_task_5 = self.env['project.task'].create([
+                {'name': 'Grandchild task 3'},
+                {'name': 'Grandchild task 4'},
+                {'name': 'Grandchild task 5'},
+            ])
             # create non-recurring grandchild subtasks
             with Form(non_recurrent_subsubtask.with_context(tracking_disable=True)) as subtask_form:
-                with subtask_form.child_ids.new() as subsubtask_form:
-                    subsubtask_form.name = 'Grandchild task 3'
+                subtask_form.child_ids.add(grand_child_task_3)
             non_recurrent_subsubtask = non_recurrent_subsubtask.child_ids
             with Form(non_recurrent_subsubtask.with_context(tracking_disable=True)) as subtask_form:
-                with subtask_form.child_ids.new() as subsubtask_form:
-                    subsubtask_form.name = 'Grandchild task 4'
+                subtask_form.child_ids.add(grand_child_task_4)
             non_recurrent_subsubtask = non_recurrent_subsubtask.child_ids
             with Form(non_recurrent_subsubtask.with_context(tracking_disable=True)) as subtask_form:
-                with subtask_form.child_ids.new() as subsubtask_form:
-                    subsubtask_form.name = 'Grandchild task 5'
+                subtask_form.child_ids.add(grand_child_task_5)
 
             self.assertTrue(recurrent_subtask.recurrence_id)
             self.assertEqual(recurrent_subtask.recurrence_id.next_recurrence_date, date(2020, 1, 15))
@@ -689,10 +777,10 @@ class TestProjectrecurrence(TransactionCase):
         all_tasks = self.env['project.task'].search(domain)
         self.assertEqual(len(all_tasks), 21)
         deadlines = all_tasks.sorted('create_date').mapped('date_deadline')
-        self.assertTrue(bool(deadlines[-4]))
-        self.assertTrue(bool(deadlines[-3]))
-        del deadlines[-4]
-        del deadlines[-3]
+        self.assertTrue(bool(deadlines[0]))
+        self.assertTrue(bool(deadlines[1]))
+        del deadlines[1]
+        del deadlines[0]
         self.assertTrue(not any(deadlines), "Deadline should not be copied")
 
         bottom_genealogy = all_tasks.filtered(lambda t: not t.child_ids.exists())
@@ -700,6 +788,5 @@ class TestProjectrecurrence(TransactionCase):
         self.assertEqual(bottom_genealogy_name.count('Child task 1'), 1)
         self.assertEqual(bottom_genealogy_name.count('Grandchild task 1 (recurrent)'), 10)
         self.assertEqual(bottom_genealogy_name.count('Grandchild task 5'), 1)
-
         for f in self.env['project.task.recurrence']._get_recurring_fields():
-            self.assertTrue(all_tasks[0][f] == all_tasks[1][f] == all_tasks[2][f], "Field %s should have been copied" % f)
+            self.assertTrue(all_tasks[2][f] == all_tasks[3][f] == all_tasks[4][f], "Field %s should have been copied" % f)

@@ -28,17 +28,18 @@ export class KanbanCompiler extends ViewCompiler {
         this.compilers.push(
             { selector: ".oe_kanban_colorpicker", fn: this.compileColorPicker },
             {
-                selector: ".dropdown,.o_kanban_manage_button_section",
+                selector: ".dropdown:not(.kanban_ignore_dropdown),.o_kanban_manage_button_section",
                 fn: this.compileDropdown,
                 doNotCopyAttributes: true,
             },
             {
-                selector: ".dropdown-menu",
+                selector: ".dropdown-menu:not(.kanban_ignore_dropdown)",
                 fn: this.compileDropdownMenu,
                 doNotCopyAttributes: true,
             },
             {
-                selector: ".dropdown-toggle,.o_kanban_manage_toggle_button",
+                selector:
+                    ".dropdown-toggle:not(.kanban_ignore_dropdown),.o_kanban_manage_toggle_button",
                 fn: this.compileDropdownToggler,
                 doNotCopyAttributes: true,
             },
@@ -87,7 +88,7 @@ export class KanbanCompiler extends ViewCompiler {
             return this.renderDropdown(part);
         }
         dropdown.parts.push(part);
-        if (part !== "menu") {
+        if (part !== "menu" || dropdown.parts.includes("dropdown")) {
             dropdown.shouldInsert = !dropdown.inserted;
             dropdown.inserted = true;
         }
@@ -231,14 +232,16 @@ export class KanbanCompiler extends ViewCompiler {
      */
     compileField(el, params) {
         let compiled;
+        let isSpan = false;
         if (!el.hasAttribute("widget")) {
+            isSpan = true;
             // fields without a specified widget are rendered as simple spans in kanban records
             const fieldName = el.getAttribute("name");
-            compiled = createElement("span", { "t-esc": `record["${fieldName}"].value` });
+            compiled = createElement("span", { "t-out": `record["${fieldName}"].value` });
         } else {
             compiled = super.compileField(el, params);
             const fieldId = el.getAttribute("field_id") || el.getAttribute("name");
-            compiled.setAttribute("id", `'${fieldId}_' + props.record.id`);
+            compiled.setAttribute("id", `'${fieldId}_' + this.props.record.id`);
         }
 
         const { bold, display } = extractAttributes(el, ["bold", "display"]);
@@ -252,7 +255,10 @@ export class KanbanCompiler extends ViewCompiler {
             classNames.push("o_text_bold");
         }
         if (classNames.length > 0) {
-            compiled.setAttribute("class", toStringExpression(classNames.join(" ")));
+            const clsFormatted = isSpan
+                ? classNames.join(" ")
+                : toStringExpression(classNames.join(" "));
+            compiled.setAttribute("class", clsFormatted);
         }
         const attrs = {};
         for (const attr of el.attributes) {
@@ -295,8 +301,25 @@ export class KanbanCompiler extends ViewCompiler {
         const compiled = this.compileGenericNode(el, params);
         const tname = el.getAttribute("t-call");
         if (tname in this.templates) {
-            compiled.setAttribute("t-call", `{{templates[${toStringExpression(tname)}]}}`);
+            compiled.setAttribute("t-call", `{{this.templates[${toStringExpression(tname)}]}}`);
         }
         return compiled;
     }
 }
+KanbanCompiler.OWL_DIRECTIVE_WHITELIST = [
+    ...ViewCompiler.OWL_DIRECTIVE_WHITELIST,
+    "t-name",
+    "t-esc",
+    "t-out",
+    "t-set",
+    "t-value",
+    "t-if",
+    "t-else",
+    "t-elif",
+    "t-foreach",
+    "t-as",
+    "t-key",
+    "t-att.*",
+    "t-call",
+    "t-translation",
+];

@@ -1,4 +1,6 @@
 .oe_seo_configuration {
+    --seo__preview-title-color: #1a0dab; // Google Search color
+
     #language-box {
         padding-right: 25px;
         background-color: white;
@@ -82,7 +84,7 @@
 
         .r {
             cursor: pointer;
-            color:#1a0dab;
+            color:var(--seo__preview-title-color);
             font-size: 18px;
             overflow: hidden;
             text-overflow: ellipsis;
@@ -95,7 +97,6 @@
             line-height: 18px;
             color: #545454;
             .kv {
-                color: #006621;
                 font-size: 14px;
                 line-height: 18px;
             }

@@ -79,20 +79,19 @@ class AccountJournal(models.Model):
         "Select 'General' for miscellaneous operations journals.")
     account_control_ids = fields.Many2many('account.account', 'journal_account_control_rel', 'journal_id', 'account_id', string='Allowed accounts',
         check_company=True,
-        domain="[('deprecated', '=', False), ('company_id', '=', company_id), ('is_off_balance', '=', False)]")
+        domain="[('deprecated', '=', False), ('company_id', '=', company_id), ('account_type', '!=', 'off_balance')]")
     default_account_type = fields.Char(string='Default Account Type', compute="_compute_default_account_type")
     default_account_id = fields.Many2one(
         comodel_name='account.account', check_company=True, copy=False, ondelete='restrict',
         string='Default Account',
         domain="[('deprecated', '=', False), ('company_id', '=', company_id),"
-               "'|', ('account_type', '=', default_account_type), ('account_type', 'not in', ('asset_receivable', 'liability_payable'))]")
+               "('account_type', '=', default_account_type), ('account_type', 'not in', ('asset_receivable', 'liability_payable'))]")
     suspense_account_id = fields.Many2one(
         comodel_name='account.account', check_company=True, ondelete='restrict', readonly=False, store=True,
         compute='_compute_suspense_account_id',
         help="Bank statements transactions will be posted on the suspense account until the final reconciliation "
              "allowing finding the right account.", string='Suspense Account',
         domain="[('deprecated', '=', False), ('company_id', '=', company_id), \
-                ('account_type', 'not in', ('asset_receivable', 'liability_payable')), \
                 ('account_type', '=', 'asset_current')]")
     restrict_mode_hash_table = fields.Boolean(string="Lock Posted Entries with Hash",
         help="If ticked, the accounting entry or invoice receives a hash as soon as it is posted and cannot be modified anymore.")
@@ -108,6 +107,7 @@ class AccountJournal(models.Model):
     country_code = fields.Char(related='company_id.account_fiscal_country_id.code', readonly=True)
 
     refund_sequence = fields.Boolean(string='Dedicated Credit Note Sequence', help="Check this box if you don't want to share the same sequence for invoices and credit notes made from this journal", default=False)
+    payment_sequence = fields.Boolean(string='Dedicated Payment Sequence', help="Check this box if you don't want to share the same sequence on payments and bank transactions posted on this journal", default='_compute_payment_sequence')
     sequence_override_regex = fields.Text(help="Technical field used to enforce complex sequence composition that the system would normally misunderstand.\n"\
                                           "This is a regex that can include all the following capture groups: prefix1, year, prefix2, month, prefix3, seq, suffix.\n"\
                                           "The prefix* groups are the separators between the year, month and the actual increasing sequence number (seq).\n"\
@@ -125,7 +125,7 @@ class AccountJournal(models.Model):
         copy=False,
         check_company=True,
         help="Manual: Get paid by any method outside of Odoo.\n"
-        "Payment Acquirers: Each payment acquirer has its own Payment Method. Request a transaction on/to a card thanks to a payment token saved by the partner when buying or subscribing online.\n"
+        "Payment Providers: Each payment provider has its own Payment Method. Request a transaction on/to a card thanks to a payment token saved by the partner when buying or subscribing online.\n"
         "Batch Deposit: Collect several customer checks at once generating and submitting a batch deposit to your bank. Module account_batch_payment is necessary.\n"
         "SEPA Direct Debit: Get paid in the SEPA zone thanks to a mandate your partner will have granted to you. Module account_sepa is necessary.\n"
     )
@@ -148,14 +148,12 @@ class AccountJournal(models.Model):
         help="Used to register a profit when the ending balance of a cash register differs from what the system computes",
         string='Profit Account',
         domain="[('deprecated', '=', False), ('company_id', '=', company_id), \
-                ('account_type', 'not in', ('asset_receivable', 'liability_payable')), \
                 ('account_type', 'in', ('income', 'income_other'))]")
     loss_account_id = fields.Many2one(
         comodel_name='account.account', check_company=True,
         help="Used to register a loss when the ending balance of a cash register differs from what the system computes",
         string='Loss Account',
         domain="[('deprecated', '=', False), ('company_id', '=', company_id), \
-                ('account_type', 'not in', ('asset_receivable', 'liability_payable')), \
                 ('account_type', '=', 'expense')]")
 
     # Bank journals fields
@@ -483,6 +481,11 @@ class AccountJournal(models.Model):
     def _onchange_type(self):
         self.refund_sequence = self.type in ('sale', 'purchase')
 
+    @api.depends('type')
+    def _compute_payment_sequence(self):
+        for journal in self:
+            journal.payment_sequence = journal.type in ('bank', 'cash')
+
     def unlink(self):
         bank_accounts = self.env['res.partner.bank'].browse()
         for bank_account in self.mapped('bank_account_id'):
@@ -685,10 +688,19 @@ class AccountJournal(models.Model):
         # We simply call the setup bar function.
         return self.env['res.company'].setting_init_bank_account_action()
 
-    def create_document_from_attachment(self, attachment_ids=None):
-        ''' Create the invoices from files.
-         :return: A action redirecting to account.move tree/form view.
-        '''
+    def _create_document_from_attachment(self, attachment_ids=None):
+        """ Create the invoices from files."""
+        context_move_type = self._context.get("default_move_type", "entry")
+        if not self:
+            if context_move_type in self.env['account.move'].get_sale_types():
+                journal_type = "sale"
+            elif context_move_type in self.env['account.move'].get_purchase_types():
+                journal_type = "purchase"
+            else:
+                raise UserError(_("The journal in which to upload the invoice is not specified. "))
+            self = self.env['account.journal'].search([
+                ('company_id', '=', self.env.company.id), ('type', '=', journal_type)
+            ], limit=1)
         attachments = self.env['ir.attachment'].browse(attachment_ids)
         if not attachments:
             raise UserError(_("No attachment was provided"))
@@ -700,14 +712,20 @@ class AccountJournal(models.Model):
                 decoders = self.env['account.move']._get_create_document_from_attachment_decoders()
                 invoice = False
                 for decoder in sorted(decoders, key=lambda d: d[0]):
-                    invoice = decoder[1](attachment)
+                    invoice = decoder[1](attachment, journal=self)
                     if invoice:
                         break
                 if not invoice:
                     invoice = self.env['account.move'].create({})
                 invoice.with_context(no_new_invoice=True).message_post(attachment_ids=[attachment.id])
                 invoices += invoice
+        return invoices
 
+    def create_document_from_attachment(self, attachment_ids=None):
+        """ Create the invoices from files.
+         :return: A action redirecting to account.move tree/form view.
+        """
+        invoices = self._create_document_from_attachment(attachment_ids=attachment_ids)
         action_vals = {
             'name': _('Generated Documents'),
             'domain': [('id', 'in', invoices.ids)],
@@ -886,7 +904,7 @@ class AccountJournal(models.Model):
         :return:        An account.bank.statement record or an empty recordset.
         '''
         self.ensure_one()
-        last_statement_domain = (domain or []) + [('journal_id', '=', self.id)]
+        last_statement_domain = (domain or []) + [('journal_id', '=', self.id), ('statement_id', '!=', False)]
         last_st_line = self.env['account.bank.statement.line'].search(last_statement_domain, order='date desc, id desc', limit=1)
         return last_st_line.statement_id
 
@@ -895,7 +913,7 @@ class AccountJournal(models.Model):
         This getter is here to allow filtering the payment method lines if needed in other modules.
         It does NOT serve as a general getter to get the lines.
 
-        For example, it'll be extended to filter out lines from inactive payment acquirers in the payment module.
+        For example, it'll be extended to filter out lines from inactive payment providers in the payment module.
         :param payment_type: either inbound or outbound, used to know which lines to return
         :return: Either the inbound or outbound payment method lines
         """

@@ -17,8 +17,10 @@
                         <field name="first_name"/>
                     </group>
                 </group>
-                <label for="preview_moves" string="Preview Modifications"/>
-                <field name="preview_moves" widget="account_resequence_widget"/>
+                <group>
+                    <label for="preview_moves" string="Preview Modifications" colspan="2"/>
+                    <field name="preview_moves" widget="account_resequence_widget" nolabel="1" colspan="2"/>
+                </group>
                 <footer>
                     <button string="Confirm" name="resequence" type="object" default_focus="1" class="btn-primary" data-hotkey="q"/>
                     <button string="Cancel" class="btn-secondary" special="cancel" data-hotkey="z"/>

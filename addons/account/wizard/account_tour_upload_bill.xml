@@ -9,17 +9,11 @@
                     <sheet>
                         <h2>With Odoo, you won't have to record bills manually</h2>
                         <p>We process bills automatically so that you only have to validate them. Choose how you want to test our artificial intelligence engine:</p>
-                        <group  class="col-md-12" >
-                            <group class="col-md-4">
-                                <field name="selection" widget="radio" nolabel="1"/>
-                            </group>
-                            <group class="col-md-8" style="width:100%;" attrs="{'invisible': [('selection', '!=', 'sample')]}">
-                                <field name="preview_invoice" widget="html" nolabel = "1"/>
-                            </group>
-                            <group class="col-md-8" style="width:100%;" attrs="{'invisible': [('selection', '!=', 'upload')]}">
-                                <field name="attachment_ids" widget="many2many_binary" string="Attach a file" nolabel="1" colspan="2"/>
-                            </group>
-                        </group>
+                        <div class="grid">
+                            <field name="selection" widget="radio" class="g-col-4"/>
+                            <field name="preview_invoice" widget="html" attrs="{'invisible': [('selection', '!=', 'sample')]}" class="g-col-8"/>
+                            <field name="attachment_ids" widget="many2many_binary" string="Attach a file" attrs="{'invisible': [('selection', '!=', 'upload')]}" class="g-col-8"/>
+                        </div>
                     </sheet>
                     <footer>
                         <button string="Continue" type="object" name="apply" class="btn-primary" data-hotkey="q"/>

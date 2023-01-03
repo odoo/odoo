@@ -28,12 +28,14 @@ class AccountReport(models.Model):
     name = fields.Char(string="Name", required=True, translate=True)
     line_ids = fields.One2many(string="Lines", comodel_name='account.report.line', inverse_name='report_id')
     column_ids = fields.One2many(string="Columns", comodel_name='account.report.column', inverse_name='report_id')
-    root_report_id = fields.Many2one(string="Root Report", comodel_name='account.report')
+    root_report_id = fields.Many2one(string="Root Report", comodel_name='account.report', help="The report this report is a variant of.")
     variant_report_ids = fields.One2many(string="Variants", comodel_name='account.report', inverse_name='root_report_id')
     chart_template_id = fields.Many2one(string="Chart of Accounts", comodel_name='account.chart.template')
     country_id = fields.Many2one(string="Country", comodel_name='res.country')
-    only_tax_exigible = fields.Boolean(string="Only Tax Exigible Lines")
-    caret_options_initializer = fields.Char(string="Caret Options Initializer", required=True, default='_caret_options_initializer_default')
+    only_tax_exigible = fields.Boolean(
+        string="Only Tax Exigible Lines",
+        compute=lambda x: x._compute_report_option_filter('only_tax_exigible'), readonly=False, store=True, depends=['root_report_id'],
+    )
     availability_condition = fields.Selection(
         string="Availability",
         selection=[('country', "Country Matches"), ('coa', "Chart of Accounts Matches"), ('always', "Always")],
@@ -94,13 +96,13 @@ class AccountReport(models.Model):
         compute=lambda x: x._compute_report_option_filter('filter_journals'), readonly=False, store=True, depends=['root_report_id'],
     )
     filter_analytic = fields.Boolean(
-        string="Filter Analytic",
+        string="Analytic Filter",
         compute=lambda x: x._compute_report_option_filter('filter_analytic'), readonly=False, store=True, depends=['root_report_id'],
     )
     filter_hierarchy = fields.Selection(
         string="Account Groups",
         selection=[('by_default', "Enabled by Default"), ('optional', "Optional"), ('never', "Never")],
-        compute=lambda x: x._compute_report_option_filter('filter_hierarchy', 'never'), readonly=False, store=True, depends=['root_report_id'],
+        compute=lambda x: x._compute_report_option_filter('filter_hierarchy', 'optional'), readonly=False, store=True, depends=['root_report_id'],
     )
     filter_account_type = fields.Boolean(
         string="Account Types",
@@ -114,18 +116,6 @@ class AccountReport(models.Model):
         string="Filter Multivat",
         compute=lambda x: x._compute_report_option_filter('filter_fiscal_position'), readonly=False, store=True, depends=['root_report_id'],
     )
-
-    #  CUSTOM REPORTS ================================================================================================================================
-    # Those fields allow case-by-case fine-tuning or the engine, for custom reports
-
-    dynamic_lines_generator = fields.Char(string="Dynamic Lines Generator")
-    custom_options_initializer = fields.Char(
-        string="Custom Options Initializer",
-        compute=lambda x: x._compute_report_option_filter('custom_options_initializer'), readonly=False, store=True, depends=['root_report_id'],
-    )
-    custom_line_postprocessor = fields.Char(string="Custom Line Postprocessor")
-    custom_groupby_line_completer = fields.Char(string="Custom Groupby Line Completer")
-    custom_unfold_all_batch_data_generator = fields.Char(string="Custom Unfold All Batch Data Generator")
 
     def _compute_report_option_filter(self, field_name, default_value=False):
         # We don't depend on the different filter fields on the root report, as we don't want a manual change on it to be reflected on all the reports
@@ -187,8 +177,15 @@ class AccountReport(models.Model):
         copied_report = super().copy(default=default)
         code_mapping = {}
         for line in self.line_ids.filtered(lambda x: not x.parent_id):
-            line._copy_hierarchy(code_mapping, report=self, copied_report=copied_report)
+            line._copy_hierarchy(copied_report, code_mapping=code_mapping)
+        for column in self.column_ids:
+            column.copy({'report_id': copied_report.id})
         return copied_report
+
+    @api.ondelete(at_uninstall=False)
+    def _unlink_if_no_variant(self):
+        if self.variant_report_ids:
+            raise UserError(_("You can't delete a report that has variants."))
 
     def _get_copied_name(self):
         '''Return a copied name of the account.report record by adding the suffix (copy) at the end
@@ -239,13 +236,13 @@ class AccountReportLine(models.Model):
     )
     parent_id = fields.Many2one(string="Parent Line", comodel_name='account.report.line', ondelete='set null')
     children_ids = fields.One2many(string="Child Lines", comodel_name='account.report.line', inverse_name='parent_id')
-    groupby = fields.Char(string="Group By")
+    groupby = fields.Char(string="Group By", help="Comma-separated list of fields from account.move.line (Journal Item). When set, this line will generate sublines grouped by those keys.")
     sequence = fields.Integer(string="Sequence")
-    code = fields.Char(string="Code")
-    foldable = fields.Boolean(string="Foldable", help="By default, we always unfold the lines that can be. If this is checked; the line won't be unfolded by default, and a folding button will be displayed")
+    code = fields.Char(string="Code", help="Unique identifier for this line.")
+    foldable = fields.Boolean(string="Foldable", help="By default, we always unfold the lines that can be. If this is checked, the line won't be unfolded by default, and a folding button will be displayed.")
     print_on_new_page = fields.Boolean('Print On New Page', help='When checked this line and everything after it will be printed on a new page.')
-    action_id = fields.Many2one(string="Action", comodel_name='ir.actions.actions')
-    hide_if_zero = fields.Boolean(string="Hide if Zero", help="This line and its children will be hidden when all of their columns are at 0.")
+    action_id = fields.Many2one(string="Action", comodel_name='ir.actions.actions', help="Setting this field will turn the line into a link, executing the action when clicked.")
+    hide_if_zero = fields.Boolean(string="Hide if Zero", help="This line and its children will be hidden when all of their columns are 0.")
     domain_formula = fields.Char(string="Domain Formula Shortcut", help="Internal field to shorten expression_ids creation for the domain engine", inverse='_inverse_domain_formula', store=False)
     account_codes_formula = fields.Char(string="Account Codes Formula Shortcut", help="Internal field to shorten expression_ids creation for the account_codes engine", inverse='_inverse_account_codes_formula', store=False)
     aggregation_formula = fields.Char(string="Aggregation Formula Shortcut", help="Internal field to shorten expression_ids creation for the aggregation engine", inverse='_inverse_aggregation_formula', store=False)
@@ -283,36 +280,31 @@ class AccountReportLine(models.Model):
                     expression.report_line_id.display_name,
                 ))
 
-    def _copy_hierarchy(self, code_mapping, report=None, copied_report=None, parent=None):
+    def _copy_hierarchy(self, copied_report, parent=None, code_mapping=None):
         ''' Copy the whole hierarchy from this line by copying each line children recursively and adapting the
         formulas with the new copied codes.
 
-        :param report: The financial report that triggered the duplicate.
         :param copied_report: The copy of the report.
         :param parent: The parent line in the hierarchy (a copy of the original parent line).
         :param code_mapping: A dictionary keeping track of mapping old_code -> new_code
         '''
         self.ensure_one()
 
-        # If the line points to the old report, replace with the new one.
-        # Otherwise, cut the link to another financial report.
-        report_id = None
-        if report and copied_report and self.report_id.id == report.id:
-            report_id = copied_report.id
-
         copied_line = self.copy({
-            'report_id': report_id,
+            'report_id': copied_report.id,
             'parent_id': parent and parent.id,
             'code': self.code and self._get_copied_code(),
         })
 
         # Keep track of old_code -> new_code in a mutable dict
+        if code_mapping is None:
+            code_mapping = {}
         if self.code:
             code_mapping[self.code] = copied_line.code
 
         # Copy children
         for line in self.children_ids:
-            line._copy_hierarchy(parent=copied_line, code_mapping=code_mapping)
+            line._copy_hierarchy(copied_report, parent=copied_line, code_mapping=code_mapping)
 
         # Update aggregation expressions, so that they use the copied lines
         for expression in self.expression_ids:
@@ -351,11 +343,10 @@ class AccountReportLine(models.Model):
         # engine-related field. This makes xmls a bit shorter
         vals_list = []
         for report_line in self:
-            if report_line.expression_ids:
-                continue
-
             if engine == 'domain' and report_line.domain_formula:
                 subformula, formula = DOMAIN_REGEX.match(report_line.domain_formula or '').groups()
+                # Resolve the calls to ref(), to mimic the fact those formulas are normally given with an eval="..." in XML
+                formula = re.sub(r'''\bref\((?P<quote>['"])(?P<xmlid>.+?)(?P=quote)\)''', lambda m: str(self.env.ref(m['xmlid']).id), formula)
             elif engine == 'account_codes' and report_line.account_codes_formula:
                 subformula, formula = None, report_line.account_codes_formula
             elif engine == 'aggregation' and report_line.aggregation_formula:
@@ -367,10 +358,19 @@ class AccountReportLine(models.Model):
                 'report_line_id': report_line.id,
                 'label': 'balance',
                 'engine': engine,
-                'formula': formula,
+                'formula': formula.lstrip(' \t\n'),  # Avoid IndentationError in evals
                 'subformula': subformula
             }
-            vals_list.append(vals)
+            if report_line.expression_ids:
+                # expressions already exists, update the first expression with the right engine
+                # since syntactic sugar aren't meant to be used with multiple expressions
+                for expression in report_line.expression_ids:
+                    if expression.engine == engine:
+                        expression.write(vals)
+                        break
+            else:
+                # else prepare batch creation
+                vals_list.append(vals)
 
         if vals_list:
             self.env['account.report.expression'].create(vals_list)
@@ -414,7 +414,7 @@ class AccountReportExpression(models.Model):
     )
     figure_type = fields.Selection(string="Figure Type", selection=FIGURE_TYPE_SELECTION_VALUES)
     green_on_positive = fields.Boolean(string="Is Growth Good when Positive", default=True)
-    blank_if_zero = fields.Boolean(string="Blank if Zero")
+    blank_if_zero = fields.Boolean(string="Blank if Zero", help="When checked, 0 values will not show when displaying this expression's value.")
     auditable = fields.Boolean(string="Auditable", store=True, readonly=False, compute='_compute_auditable')
 
     # Carryover fields
@@ -434,10 +434,17 @@ class AccountReportExpression(models.Model):
     def _get_auditable_engines(self):
         return {'tax_tags', 'domain', 'account_codes', 'external', 'aggregation'}
 
+    def _strip_formula(self, vals):
+        if 'formula' in vals and isinstance(vals['formula'], str):
+            vals['formula'] = re.sub(r'\s+', ' ', vals['formula'].strip())
+
     @api.model_create_multi
     def create(self, vals_list):
         # Overridden so that we create the corresponding account.account.tag objects when instantiating an expression
         # with engine 'tax_tags'.
+        for vals in vals_list:
+            self._strip_formula(vals)
+
         result = super().create(vals_list)
 
         for expression in result:
@@ -455,6 +462,8 @@ class AccountReportExpression(models.Model):
     def write(self, vals):
         if 'formula' not in vals:
             return super().write(vals)
+
+        self._strip_formula(vals)
 
         tax_tags_expressions = self.filtered(lambda x: x.engine == 'tax_tags')
         former_formulas_by_country = defaultdict(lambda: [])
@@ -524,7 +533,7 @@ class AccountReportExpression(models.Model):
 
             expression_terms = re.split('[-+/*]', re.sub(r'[\s()]', '', expression.formula))
             for term in expression_terms:
-                if term: # term might be empty if the formula contains a negative term
+                if term and not re.match(r'^([0-9]*[.])?[0-9]*$', term): # term might be empty if the formula contains a negative term
                     line_code, total_name = term.split('.')
                     totals_by_code[line_code].add(total_name)
 
@@ -607,7 +616,7 @@ class AccountReportColumn(models.Model):
     report_id = fields.Many2one(string="Report", comodel_name='account.report')
     sortable = fields.Boolean(string="Sortable")
     figure_type = fields.Selection(string="Figure Type", selection=FIGURE_TYPE_SELECTION_VALUES, default="monetary", required=True)
-    blank_if_zero = fields.Boolean(string="Blank if Zero", default=True)
+    blank_if_zero = fields.Boolean(string="Blank if Zero", default=True, help="When checked, 0 values will not show in this column.")
     custom_audit_action_id = fields.Many2one(string="Custom Audit Action", comodel_name="ir.actions.act_window")
 
 
@@ -644,4 +653,4 @@ class AccountReportExternalValue(models.Model):
     def _check_fiscal_position(self):
         for record in self:
             if record.foreign_vat_fiscal_position_id and record.foreign_vat_fiscal_position_id.country_id != record.report_country_id:
-                raise ValidationError(_("The country set on the the foreign VAT fiscal position must match the one set on the report."))
+                raise ValidationError(_("The country set on the foreign VAT fiscal position must match the one set on the report."))

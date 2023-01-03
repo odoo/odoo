@@ -613,3 +613,43 @@ class TestMultistepManufacturingWarehouse(TestMrpCommon):
         self.assertEqual(mo.mrp_production_child_count, 0, "Children MOs counted as existing where there should be none")
         self.assertEqual(mo.mrp_production_source_count, 0, "Source MOs counted as existing where there should be none")
         self.assertEqual(mo.mrp_production_backorder_count, 2)
+
+    def test_source_location_on_merge_mo_3_steps(self):
+        """Check that default values are correct after merging mos when 3-step manufacturing"""
+
+        with Form(self.warehouse) as warehouse:
+            warehouse.manufacture_steps = 'pbm_sam'
+
+        # picking with non default location
+        picking_type = self.env['stock.picking.type'].create({
+            'name': 'Manufacturing',
+            'code': 'mrp_operation',
+            'warehouse_id': warehouse.id,
+            'default_location_src_id': self.warehouse.pbm_loc_id.copy().id,
+            'default_location_dest_id': self.warehouse.sam_loc_id.copy().id,
+            'sequence_code': 'TMP',
+            'sequence_id': self.env['ir.sequence'].create({
+                'code': 'mrp.production',
+                'name': 'tmp_production_sequence',
+            }).id,
+        })
+
+        mo1_form = Form(self.env['mrp.production'])
+        mo1_form.product_id = self.finished_product
+        mo1_form.picking_type_id = picking_type
+        mo1 = mo1_form.save()
+        mo1.action_confirm()
+
+        mo2_form = Form(self.env['mrp.production'])
+        mo2_form.product_id = self.finished_product
+        mo2_form.picking_type_id = picking_type
+        mo2 = mo2_form.save()
+        mo2.action_confirm()
+
+        action = (mo1 + mo2).action_merge()
+        mo = self.env[action['res_model']].browse(action['res_id'])
+
+        self.assertEqual(picking_type.default_location_src_id, mo.move_raw_ids.location_id,
+            "The default source location of the merged mo should be the same as the 1st of the original MOs")
+        self.assertEqual(picking_type, mo.picking_type_id,
+            "The operation type of the merged mo should be the same as the 1st of the original MOs")

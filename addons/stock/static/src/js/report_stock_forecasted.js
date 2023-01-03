@@ -50,7 +50,7 @@ const ReplenishReport = clientAction.extend({
         return Promise.all([
             this._super.apply(this, arguments),
             loadWarehouses,
-            loadLegacyViews({ rpc: this._rpc.bind(this) }),
+            loadLegacyViews(),
         ]);
     },
 
@@ -125,7 +125,10 @@ const ReplenishReport = clientAction.extend({
             withControlPanel: false,
             context: {fill_temporal: false},
         };
-        const GraphView = viewRegistry.get("graph");
+        const viewArch = new DOMParser().parseFromString(viewInfo.arch, "text/xml");
+        const viewArchJSClass = viewArch.documentElement.getAttribute("js_class");
+        const viewRegistryKey = viewArchJSClass && viewRegistry.contains(viewArchJSClass) ? viewArchJSClass : "graph";
+        const GraphView = viewRegistry.get(viewRegistryKey);
         const graphView = new GraphView(viewInfo, params);
         const graphController = await graphView.getController(this);
         await graphController.appendTo(document.createDocumentFragment());
@@ -237,12 +240,17 @@ const ReplenishReport = clientAction.extend({
      * @returns {Promise}
      */
     _bindAdditionalActionHandlers: function () {
+        // table actions
         let rr = this.$el.find('iframe').contents().find('.o_report_replenishment');
         rr.on('click', '.o_report_replenish_change_priority', this._onClickChangePriority.bind(this));
         rr.on('mouseenter', '.o_report_replenish_change_priority', this._onMouseEnterPriority.bind(this));
         rr.on('mouseleave', '.o_report_replenish_change_priority', this._onMouseLeavePriority.bind(this));
         rr.on('click', '.o_report_replenish_unreserve', this._onClickUnreserve.bind(this));
         rr.on('click', '.o_report_replenish_reserve', this._onClickReserve.bind(this));
+
+        // header actions
+        rr = this.$el.find('iframe').contents().find('.o_report_replenishment_header');
+        rr.on('click', '.o_report_open_inventory_report', this._onClickInventory.bind(this));
     },
 
     //--------------------------------------------------------------------------
@@ -352,6 +360,30 @@ const ReplenishReport = clientAction.extend({
             args: [[modelId]],
             method: 'action_assign'
         }).then(() => this._reloadReport());
+    },
+
+    /**
+     * Open the inventory (quant) report filtered to the products/product variants currently open
+     * in forecast report
+     *
+     * @returns {Promise}
+     */
+     _onClickInventory: function (ev) {
+        const templates = JSON.parse(ev.target.getAttribute('product-templates-ids'));
+        const variants = JSON.parse(ev.target.getAttribute('product-variants-ids'));
+        const context = Object.assign({}, this.context);
+        if (templates) {
+            context.search_default_product_tmpl_id = templates;
+        } else {
+            context.search_default_product_id = variants;
+        }
+        return this._rpc({
+            model: 'stock.quant',
+            method: 'action_view_quants',
+            context: context,
+        }).then(action => {
+            this.do_action(action)
+        });
     }
 
 });

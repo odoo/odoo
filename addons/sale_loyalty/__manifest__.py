@@ -7,6 +7,7 @@
     'category': 'Sales/Sales',
     'version': '1.0',
     'depends': ['sale', 'loyalty'],
+    'auto_install': True,
     'data': [
         'security/ir.model.access.csv',
         'data/sale_loyalty_data.xml',

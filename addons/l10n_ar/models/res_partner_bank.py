@@ -19,13 +19,13 @@ except ImportError:
             return str((10 - check) % 10)
         number = stdnum.util.clean(number, ' -').strip()
         if len(number) != 22:
-            raise ValidationError('Invalid Length')
+            raise ValidationError(_('Invalid Length'))
         if not number.isdigit():
-            raise ValidationError('Invalid Format')
+            raise ValidationError(_('Invalid Format'))
         if _check_digit(number[:7]) != number[7]:
-            raise ValidationError('Invalid Checksum')
+            raise ValidationError(_('Invalid Checksum'))
         if _check_digit(number[8:-1]) != number[-1]:
-            raise ValidationError('Invalid Checksum')
+            raise ValidationError(_('Invalid Checksum'))
         return number
 
 

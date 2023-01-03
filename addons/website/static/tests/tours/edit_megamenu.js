@@ -15,7 +15,7 @@ const toggleMegaMenu = (stepOptions) => Object.assign({}, {
     },
 }, stepOptions);
 
-wTourUtils.registerEditionTour('edit_megamenu', {
+wTourUtils.registerWebsitePreviewTour('edit_megamenu', {
     test: true,
     url: '/',
     edition: true,
@@ -28,7 +28,7 @@ wTourUtils.registerEditionTour('edit_megamenu', {
     },
     {
         content: "Click on 'Link' to open Link Dialog",
-        trigger: '.o_edit_menu_popover a.js_edit_menu',
+        trigger: 'iframe .o_edit_menu_popover a.js_edit_menu',
     },
     {
         content: "Trigger the link dialog (click 'Add Mega Menu Item')",

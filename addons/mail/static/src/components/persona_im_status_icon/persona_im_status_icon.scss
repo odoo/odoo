@@ -2,27 +2,19 @@
 // Layout
 // ------------------------------------------------------------------
 
-.o_PersonaImStatusIcon {
+.o_PersonaImStatusIconView {
     width: $o-mail-partner-status-icon-size;
     height: $o-mail-partner-status-icon-size;
     line-height: 1.3em;
 }
 
-.o_PersonaImStatusIcon_outerBackground {
+.o_PersonaImStatusIconView_outerBackground {
     transform: scale(1.5);
 }
 
 // ------------------------------------------------------------------
 // Style
 // ------------------------------------------------------------------
-
-.o_PersonaImStatusIcon_icon {
-
-    &.o-bot {
-        color: $o-enterprise-primary-color;
-    }
-
-    &.o-online {
-        color: $o-enterprise-primary-color;
-    }
+.o_PersonaImStatusIconView_outerBackground, .o_PersonaImStatusIconView_innerBackground {
+    color: $o-view-background-color;
 }

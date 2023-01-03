@@ -79,7 +79,7 @@ class TestKarmaTrackingCommon(common.TransactionCase):
 
     def test_consolidation_cron(self):
         self.patcher = patch('odoo.addons.gamification.models.gamification_karma_tracking.fields.Date', wraps=fields.Date)
-        self.mock_datetime = self.patcher.start()
+        self.mock_datetime = self.startPatcher(self.patcher)
         self.mock_datetime.today.return_value = date(self.test_date.year, self.test_date.month + 1, self.test_date.day)
 
         self._create_trackings(self.test_user, 20, 2, self.test_date, days_delta=30)
@@ -96,8 +96,6 @@ class TestKarmaTrackingCommon(common.TransactionCase):
             ('consolidated', '=', False),
         ])
         self.assertEqual(len(unconsolidated), 6)  # 5 for test user 2, 1 for test user
-
-        self.patcher.stop()
 
     def test_consolidation_monthly(self):
         Tracking = self.env['gamification.karma.tracking']
@@ -204,7 +202,7 @@ class TestComputeRankCommon(common.TransactionCase):
             pass
 
         patch_email = patch('odoo.addons.mail.models.mail_template.MailTemplate.send_mail', _patched_send_mail)
-        patch_email.start()
+        cls.startClassPatcher(patch_email)
 
         cls.users = cls.env['res.users']
         for k in range(-5, 1030, 30):
@@ -235,8 +233,6 @@ class TestComputeRankCommon(common.TransactionCase):
             'name': 'rank 4',
             'karma_min': 1000,
         })
-
-        patch_email.stop()
 
     def test_00_initial_compute(self):
 
@@ -291,10 +287,9 @@ class TestComputeRankCommon(common.TransactionCase):
             number_of_users = len(_self & self.users)
 
         patch_bulk = patch('odoo.addons.gamification.models.res_users.Users._recompute_rank', _patched_recompute_rank)
-        patch_bulk.start()
+        self.startPatcher(patch_bulk)
         self.rank_3.karma_min = 700
         self.assertEqual(number_of_users, 7, "Should just recompute for the 7 users between 500 and 700")
-        patch_bulk.stop()
 
     def test_03_test_bulk_call(self):
         self.assertEqual(len(self.users), 35)
@@ -303,7 +298,7 @@ class TestComputeRankCommon(common.TransactionCase):
             raise
 
         patch_bulk = patch('odoo.addons.gamification.models.res_users.Users._recompute_rank_bulk', _patched_check_in_bulk)
-        patch_bulk.start()
+        self.startPatcher(patch_bulk)
 
         # call on 5 users should not trigger the bulk function
         self.users[0:5]._recompute_rank()
@@ -312,4 +307,3 @@ class TestComputeRankCommon(common.TransactionCase):
         with self.assertRaises(Exception):
             self.users[0:50]._recompute_rank()
 
-        patch_bulk.stop()

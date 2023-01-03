@@ -16,6 +16,7 @@
         'views/website_hr_recruitment_templates.xml',
         'views/hr_recruitment_views.xml',
         'views/hr_job_views.xml',
+        'views/website_pages_views.xml',
         'views/snippets.xml',
     ],
     'demo': [

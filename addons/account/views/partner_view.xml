@@ -43,6 +43,7 @@
                             <field name="company_id" invisible="1"/>
                             <field name="states_count" invisible="1"/>
                             <field name="company_country_id" invisible="1"/>
+                            <field name="fiscal_country_codes" invisible="1"/>
                             <field name="foreign_vat_header_mode" invisible="1"/>
                             <field name="name"/>
                             <field name="company_id" options="{'no_create': True}" groups="base.group_multi_company"/>
@@ -142,10 +143,10 @@
             <field name="model">res.partner</field>
             <field name="inherit_id" ref="base.view_partner_form" />
             <field name="priority" eval="11"/>
-            <field name="groups_id" eval="[(4, ref('account.group_account_invoice')), (4, ref('account.group_account_readonly'))]"/>
             <field name="arch" type="xml">
                 <div name="button_box" position="inside">
                     <button type="object" class="oe_stat_button" icon="fa-pencil-square-o" name="action_view_partner_invoices"
+                        groups="account.group_account_invoice,account.group_account_readonly"
                         context="{'default_partner_id': active_id}">
                         <div class="o_form_field o_stat_info">
                             <span class="o_stat_value">
@@ -158,11 +159,13 @@
                 </div>
 
                 <page name="internal_notes" position="inside">
-                    <group colspan="2" col="2" groups="account.group_warning_account">
-                        <separator string="Warning on the Invoice" colspan="4"/>
-                        <field name="invoice_warn" nolabel="1" />
-                        <field name="invoice_warn_msg" colspan="3" nolabel="1"
-                            attrs="{'required':[('invoice_warn','!=', False), ('invoice_warn','!=','no-message')], 'invisible':[('invoice_warn','in',(False,'no-message'))]}"/>
+                    <group groups="account.group_account_invoice,account.group_account_readonly">
+                        <group groups="account.group_warning_account" col="2">
+                            <separator string="Warning on the Invoice" colspan="2"/>
+                            <field name="invoice_warn" nolabel="1" colspan="2" required="1"/>
+                            <field name="invoice_warn_msg" placeholder="Type a message..." colspan="2" nolabel="1"
+                                attrs="{'required':[('invoice_warn','!=', False), ('invoice_warn','!=','no-message')], 'invisible':[('invoice_warn','in',(False,'no-message'))]}"/>
+                        </group>
                     </group>
                 </page>
             </field>
@@ -189,8 +192,10 @@
             <field name="model">res.partner</field>
             <field name="priority">2</field>
             <field name="inherit_id" ref="base.view_partner_form"/>
-            <field name="groups_id" eval="[(5,)]"/>
             <field name="arch" type="xml">
+                <xpath expr="//field[@name='company_id']" position="after">
+                    <field name="fiscal_country_codes" invisible="1"/>
+                </xpath>
                 <xpath expr="//sheet" position="before">
                     <div groups="account.group_account_invoice,account.group_account_readonly" class="alert alert-warning" role="alert" style="margin-bottom:0px;"
                          attrs="{'invisible': [('duplicated_bank_account_partners_count', '=', 0)]}">
@@ -203,17 +208,18 @@
                         <field name="show_credit_limit" invisible="1"/>
                         <group>
                             <group string="Bank Accounts" name="banks" groups="account.group_account_invoice,account.group_account_readonly">
-                                <field name="bank_ids" nolabel="1" colspan="2">
+                                <field name="bank_ids" nolabel="1" colspan="2" context="{'default_allow_out_payment': True}">
                                     <tree editable="bottom">
                                         <field name="sequence" widget="handle"/>
                                         <field name="bank_id"/>
                                         <field name="acc_number"/>
+                                        <field name="allow_out_payment" widget="boolean_toggle"/>
                                         <field name="acc_holder_name" invisible="1"/>
                                     </tree>
                                 </field>
                                 <button type="action" class="btn-link"
                                     name="%(base.action_res_partner_bank_account_form)d"
-                                    context="{'search_default_partner_id': active_id, 'default_partner_id': active_id, 'form_view_ref': 'account.view_company_partner_bank_form'}"
+                                    context="{'search_default_partner_id': active_id, 'default_partner_id': active_id}"
                                     string="View accounts detail"
                                     colspan="2"
                                 />
@@ -228,8 +234,8 @@
                                    groups="account.group_account_invoice,account.group_account_readonly"
                                    attrs="{'invisible': [('show_credit_limit', '=', False)]}">
                                 <field name="credit"/>
-                                <div name="partner_credit_limit" colspan="2" class="o_checkbox_optional_field">
-                                    <label for="use_partner_credit_limit"/>
+                                <label for="use_partner_credit_limit"/>
+                                <div class="o_row">
                                     <field name="use_partner_credit_limit"/>
                                     <field name="credit_limit" class="oe_inline" attrs="{'invisible': [('use_partner_credit_limit', '=', False)]}"/>
                                 </div>
@@ -262,6 +268,7 @@
             <field name="inherit_id" ref="base.view_res_partner_filter"/>
             <field name="arch" type="xml">
                 <xpath expr="//filter[@name='inactive']" position="before">
+                   <field name="fiscal_country_codes" invisible="1"/>
                    <filter string="Customer Invoices" name="customer" domain="[('customer_rank','>', 0)]"/>
                    <filter string="Vendor Bills" name="supplier" domain="[('supplier_rank','>', 0)]"/>
                    <separator/>

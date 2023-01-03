@@ -134,7 +134,7 @@ class HolidaysAllocation(models.Model):
     is_officer = fields.Boolean(compute='_compute_is_officer')
     accrual_plan_id = fields.Many2one('hr.leave.accrual.plan', compute="_compute_from_holiday_status_id", store=True, readonly=False, domain="['|', ('time_off_type_id', '=', False), ('time_off_type_id', '=', holiday_status_id)]", tracking=True)
     max_leaves = fields.Float(compute='_compute_leaves')
-    leaves_taken = fields.Float(compute='_compute_leaves')
+    leaves_taken = fields.Float(compute='_compute_leaves', string='Time off Taken')
     taken_leave_ids = fields.One2many('hr.leave', 'holiday_allocation_id', domain="[('state', 'in', ['confirm', 'validate1', 'validate'])]")
 
     _sql_constraints = [
@@ -146,6 +146,11 @@ class HolidaysAllocation(models.Model):
          "The employee, department, company or employee category of this request is missing. Please make sure that your user login is linked to an employee."),
         ('duration_check', "CHECK( ( number_of_days > 0 AND allocation_type='regular') or (allocation_type != 'regular'))", "The duration must be greater than 0."),
     ]
+
+    @api.constrains('date_from', 'date_to')
+    def _check_date_from_date_to(self):
+        if any(allocation.date_to and allocation.date_from > allocation.date_to for allocation in self):
+            raise UserError(_("The Start Date of the Validity Period must be anterior to the End Date."))
 
     # The compute does not get triggered without a depends on record creation
     # aka keep the 'useless' depends
@@ -330,17 +335,21 @@ class HolidaysAllocation(models.Model):
             current_level = allocation._get_current_accrual_plan_level_id(first_day_this_year)[0]
             if not current_level:
                 continue
+            lastcall = current_level._get_previous_date(first_day_this_year)
             nextcall = current_level._get_next_date(first_day_this_year)
             if current_level.action_with_unused_accruals == 'lost':
+                if lastcall == first_day_this_year:
+                    lastcall = current_level._get_previous_date(first_day_this_year - relativedelta(days=1))
+                    nextcall = first_day_this_year
                 # Allocations are lost but number_of_days should not be lower than leaves_taken
-                allocation.write({'number_of_days': allocation.leaves_taken, 'lastcall': first_day_this_year, 'nextcall': nextcall})
+                allocation.write({'number_of_days': allocation.leaves_taken, 'lastcall': lastcall, 'nextcall': nextcall})
             elif current_level.action_with_unused_accruals == 'postponed' and current_level.postpone_max_days:
                 # Make sure the period was ran until the last day of last year
                 if allocation.nextcall:
                     allocation.nextcall = last_day_last_year
                 allocation._process_accrual_plans(last_day_last_year, True)
                 number_of_days = min(allocation.number_of_days - allocation.leaves_taken, current_level.postpone_max_days) + allocation.leaves_taken
-                allocation.write({'number_of_days': number_of_days, 'lastcall': first_day_this_year, 'nextcall': nextcall})
+                allocation.write({'number_of_days': number_of_days, 'lastcall': lastcall, 'nextcall': nextcall})
 
     def _get_current_accrual_plan_level_id(self, date, level_ids=False):
         """
@@ -379,12 +388,19 @@ class HolidaysAllocation(models.Model):
         self.ensure_one()
         if level.is_based_on_worked_time:
             start_dt = datetime.combine(start_date, datetime.min.time())
-            end_dt = datetime.combine(end_date, datetime.max.time())
+            end_dt = datetime.combine(end_date, datetime.min.time())
             worked = self.employee_id._get_work_days_data_batch(start_dt, end_dt, calendar=self.employee_id.resource_calendar_id)\
                 [self.employee_id.id]['hours']
+            if start_period != start_date or end_period != end_date:
+                start_dt = datetime.combine(start_period, datetime.min.time())
+                end_dt = datetime.combine(end_period, datetime.min.time())
+                planned_worked = self.employee_id._get_work_days_data_batch(start_dt, end_dt, calendar=self.employee_id.resource_calendar_id)\
+                    [self.employee_id.id]['hours']
+            else:
+                planned_worked = worked
             left = self.employee_id.sudo()._get_leave_days_data_batch(start_dt, end_dt,
                 domain=[('time_type', '=', 'leave')])[self.employee_id.id]['hours']
-            work_entry_prorata = worked / (left + worked) if worked else 0
+            work_entry_prorata = worked / (left + planned_worked) if (left + planned_worked) else 0
             added_value = work_entry_prorata * level.added_value
         else:
             added_value = level.added_value
@@ -392,7 +408,7 @@ class HolidaysAllocation(models.Model):
         if level.added_value_type == 'hours':
             added_value = added_value / (self.employee_id.sudo().resource_id.calendar_id.hours_per_day or HOURS_PER_DAY)
         period_prorata = 1
-        if start_period != start_date or end_period != end_date:
+        if (start_period != start_date or end_period != end_date) and not level.is_based_on_worked_time:
             period_days = (end_period - start_period)
             call_days = (end_date - start_date)
             period_prorata = min(1, call_days / period_days) if period_days else 1
@@ -437,33 +453,24 @@ class HolidaysAllocation(models.Model):
                     current_level_last_date = allocation.date_from + get_timedelta(next_level.start_count, next_level.start_type)
                     if allocation.nextcall != current_level_last_date:
                         nextcall = min(nextcall, current_level_last_date)
-
+                # We have to check for end of year actions if it is within our period
+                #  since we can create retroactive allocations.
+                if allocation.lastcall.year < allocation.nextcall.year and\
+                    current_level.action_with_unused_accruals == 'postponed' and\
+                    current_level.postpone_max_days > 0:
+                    # Compute number of days kept
+                    allocation_days = allocation.number_of_days - allocation.leaves_taken
+                    allowed_to_keep = max(0, current_level.postpone_max_days - allocation_days)
+                    number_of_days = min(allocation_days, current_level.postpone_max_days)
+                    allocation.number_of_days = number_of_days + allocation.leaves_taken
+                    total_gained_days = sum(days_added_per_level.values())
+                    days_added_per_level.clear()
+                    days_added_per_level[current_level] = min(total_gained_days, allowed_to_keep)
                 gained_days = allocation._process_accrual_plan_level(
                     current_level, period_start, allocation.lastcall, period_end, allocation.nextcall)
                 days_added_per_level[current_level] += gained_days
                 if current_level.maximum_leave > 0 and sum(days_added_per_level.values()) > current_level.maximum_leave:
                     days_added_per_level[current_level] -= sum(days_added_per_level.values()) - current_level.maximum_leave
-                # We have to check for end of year actions if it is within our period
-                #  since we can create retroactive allocations.
-                if allocation.lastcall.year < allocation.nextcall.year and\
-                    (current_level.action_with_unused_accruals == 'lost' or\
-                    current_level.postpone_max_days > 0):
-                    after_period_gains = allocation._process_accrual_plan_level(
-                        current_level, period_start, allocation.nextcall + relativedelta(day=1, month=1),
-                        period_end, allocation.nextcall)
-                    if current_level.action_with_unused_accruals == 'postponed':
-                        # Compute number of days kept
-                        allocation_days = allocation.number_of_days - allocation.leaves_taken
-                        allowed_to_keep = max(0, current_level.postpone_max_days - allocation_days)
-                        number_of_days = min(allocation_days, current_level.postpone_max_days)
-                        allocation.number_of_days = number_of_days + allocation.leaves_taken
-                        total_gained_days = sum(days_added_per_level.values())
-                        days_added_per_level.clear()
-                        days_added_per_level[current_level] = min(total_gained_days - after_period_gains, allowed_to_keep)
-                    else:
-                        allocation.number_of_days = allocation.leaves_taken
-                        days_added_per_level.clear()
-                    days_added_per_level[current_level] += after_period_gains
 
                 allocation.lastcall = allocation.nextcall
                 allocation.nextcall = nextcall
@@ -625,15 +632,16 @@ class HolidaysAllocation(models.Model):
         return True
 
     def action_confirm(self):
-        if self.filtered(lambda holiday: holiday.state != 'draft'):
+        if self.filtered(lambda holiday: holiday.state != 'draft' and holiday.validation_type != 'no'):
             raise UserError(_('Allocation request must be in Draft state ("To Submit") in order to confirm it.'))
         res = self.write({'state': 'confirm'})
         self.activity_update()
+        self.filtered(lambda holiday: holiday.validation_type == 'no').action_validate()
         return res
 
     def action_validate(self):
         current_employee = self.env.user.employee_id
-        if any(holiday.state != 'confirm' for holiday in self):
+        if any(holiday.state != 'confirm' and holiday.validation_type != 'no' for holiday in self):
             raise UserError(_('Allocation request must be confirmed in order to approve it.'))
 
         self.write({

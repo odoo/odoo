@@ -84,6 +84,6 @@ class PosPaymentMethod(models.Model):
 
     def write(self, vals):
         if self._is_write_forbidden(set(vals.keys())):
-            raise UserError('Please close and validate the following open PoS Sessions before modifying this payment method.\n'
-                            'Open sessions: %s' % (' '.join(self.open_session_ids.mapped('name')),))
+            raise UserError(_('Please close and validate the following open PoS Sessions before modifying this payment method.\n'
+                            'Open sessions: %s', (' '.join(self.open_session_ids.mapped('name')),)))
         return super(PosPaymentMethod, self).write(vals)

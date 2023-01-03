@@ -3,7 +3,7 @@ odoo.define('website.tour.automatic_editor', function (require) {
 
 const wTourUtils = require("website.tour_utils");
 
-wTourUtils.registerEditionTour('automatic_editor_on_new_website', {
+wTourUtils.registerWebsitePreviewTour('automatic_editor_on_new_website', {
     test: true,
     url: '/',
 },
@@ -78,7 +78,7 @@ wTourUtils.registerEditionTour('automatic_editor_on_new_website', {
     },
     {
         content: "Install a theme",
-        trigger: 'button[data-name="button_choose_theme"]'
+        trigger: 'button[name="button_choose_theme"]'
     },
     {
         content: "Check that the editor is loaded",

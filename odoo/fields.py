@@ -8,21 +8,28 @@ from datetime import date, datetime, time
 from lxml import etree, html
 from operator import attrgetter
 from xmlrpc.client import MAXINT
+import ast
 import base64
+import copy
 import binascii
 import enum
 import itertools
+import json
 import logging
+import uuid
 import warnings
 
 from markupsafe import Markup
 import psycopg2
+from psycopg2.extras import Json as PsycopgJson
 import pytz
+from difflib import get_close_matches
+from hashlib import sha256
 
 from .tools import (
     float_repr, float_round, float_compare, float_is_zero, html_sanitize, human_size,
     pg_varchar, ustr, OrderedSet, pycompat, sql, date_utils, unique,
-    image_process, merge_sequences, SQL_ORDER_BY_TYPE,
+    image_process, merge_sequences, SQL_ORDER_BY_TYPE, is_list_of, has_list_types,
 )
 from .tools import DEFAULT_SERVER_DATE_FORMAT as DATE_FORMAT
 from .tools import DEFAULT_SERVER_DATETIME_FORMAT as DATETIME_FORMAT
@@ -30,6 +37,7 @@ from .tools.translate import html_translate, _
 from .tools.mimetypes import guess_mimetype
 
 from odoo.exceptions import CacheMiss
+from odoo.osv import expression
 
 DATE_LENGTH = len(date.today().strftime(DATE_FORMAT))
 DATETIME_LENGTH = len(datetime.now().strftime(DATETIME_FORMAT))
@@ -45,6 +53,7 @@ IR_MODELS = (
 _logger = logging.getLogger(__name__)
 _schema = logging.getLogger(__name__[:-7] + '.schema')
 
+NoneType = type(None)
 Default = object()                      # default value for __init__() methods
 
 
@@ -226,6 +235,10 @@ class Field(MetaField('DummyField', (object,), {})):
         to bypass access rights (by default ``True`` for stored fields, ``False``
         for non stored fields)
 
+    :param bool recursive: whether the field has recursive dependencies (the field
+        ``X`` has a dependency like ``parent_id.X``); declaring a field recursive
+        must be explicit to guarantee that recomputation is correct
+
     :param str inverse: name of a method that inverses the field (optional)
 
     :param str search: name of a method that implement search on the field (optional)
@@ -242,7 +255,6 @@ class Field(MetaField('DummyField', (object,), {})):
     translate = False                   # whether the field is translated
 
     column_type = None                  # database column type (ident, spec)
-    column_cast_from = ()               # column types that may be cast to this
     write_sequence = 0                  # field ordering for write()
 
     args = None                         # the parameters given to __init__()
@@ -294,6 +306,7 @@ class Field(MetaField('DummyField', (object,), {})):
     prefetch = True                     # the prefetch group (False means no group)
 
     default_export_compatible = False   # whether the field must be exported by default in an import-compatible export
+    exportable = True
 
     def __init__(self, string=Default, **kwargs):
         kwargs['string'] = string
@@ -441,9 +454,6 @@ class Field(MetaField('DummyField', (object,), {})):
                 attrs['inverse'] = self._inverse_company_dependent
             attrs['search'] = self._search_company_dependent
             attrs['depends_context'] = attrs.get('depends_context', ()) + ('company',)
-        if attrs.get('translate'):
-            # by default, translatable fields are context-dependent
-            attrs['depends_context'] = attrs.get('depends_context', ()) + ('lang',)
 
         # parameters 'depends' and 'depends_context' are stored in attributes
         # '_depends' and '_depends_context', respectively
@@ -618,6 +628,9 @@ class Field(MetaField('DummyField', (object,), {})):
             delegate_field = model._fields[self.related.split('.')[0]]
             self._modules = tuple({*self._modules, *delegate_field._modules, *field._modules})
 
+        if self.store and self.translate:
+            _logger.warning("Translated stored related field (%s) will not be computed correctly in all languages", self)
+
     def traverse_related(self, record):
         """ Traverse the fields of the related field `self` except for the last
         one, and return it as a pair `(last_record, last_field)`. """
@@ -772,6 +785,15 @@ class Field(MetaField('DummyField', (object,), {})):
                     warnings.warn(f"Field {self} cannot be precomputed as it depends on non-precomputed field {field}")
                     self.precompute = False
 
+                if field_seq and not field_seq[-1]._description_searchable:
+                    # the field before this one is not searchable, so there is
+                    # no way to know which on records to recompute self
+                    warnings.warn(
+                        f"Field {field_seq[-1]!r} in dependency of {self} should be searchable. "
+                        f"This is necessary to determine which records to recompute when {field} is modified. "
+                        f"You should either make the field searchable, or simplify the field dependency."
+                    )
+
                 field_seq.append(field)
 
                 # do not make self trigger itself: for instance, a one2many
@@ -822,6 +844,7 @@ class Field(MetaField('DummyField', (object,), {})):
     _description_change_default = property(attrgetter('change_default'))
     _description_group_operator = property(attrgetter('group_operator'))
     _description_default_export_compatible = property(attrgetter('default_export_compatible'))
+    _description_exportable = property(attrgetter('exportable'))
 
     def _description_depends(self, env):
         return env.registry.field_depends[self]
@@ -837,14 +860,14 @@ class Field(MetaField('DummyField', (object,), {})):
     def _description_string(self, env):
         if self.string and env.lang:
             model_name = self.base_field.model_name
-            field_string = env['ir.translation'].get_field_string(model_name)
+            field_string = env['ir.model.fields'].get_field_string(model_name)
             return field_string.get(self.name) or self.string
         return self.string
 
     def _description_help(self, env):
         if self.help and env.lang:
             model_name = self.base_field.model_name
-            field_help = env['ir.translation'].get_field_help(model_name)
+            field_help = env['ir.model.fields'].get_field_help(model_name)
             return field_help.get(self.name) or self.help
         return self.help
 
@@ -896,7 +919,7 @@ class Field(MetaField('DummyField', (object,), {})):
         """
         # spare the method lookup overhead
         convert = self.convert_to_record
-        return [convert(value, records) for value in values]
+        return [convert(value, record) for value, record in zip(values, records)]
 
     def convert_to_read(self, value, record, use_name_get=True):
         """ Convert ``value`` from the record format to the format returned by
@@ -995,17 +1018,13 @@ class Field(MetaField('DummyField', (object,), {})):
             return
         if column['udt_name'] == self.column_type[0]:
             return
-        if column['udt_name'] in self.column_cast_from:
-            sql.convert_column(model._cr, model._table, self.name, self.column_type[1])
-        else:
-            newname = (self.name + '_moved{}').format
-            i = 0
-            while sql.column_exists(model._cr, model._table, newname(i)):
-                i += 1
-            if column['is_nullable'] == 'NO':
-                sql.drop_not_null(model._cr, model._table, self.name)
-            sql.rename_column(model._cr, model._table, self.name, newname(i))
-            sql.create_column(model._cr, model._table, self.name, self.column_type[1], self.string)
+        if column['is_nullable'] == 'NO':
+            sql.drop_not_null(model._cr, model._table, self.name)
+        self._convert_db_column(model, column)
+
+    def _convert_db_column(self, model, column):
+        """ Convert the given database column to the type of the field. """
+        sql.convert_column(model._cr, model._table, self.name, self.column_type[1])
 
     def update_db_notnull(self, model, column):
         """ Add or remove the NOT NULL constraint on ``self``.
@@ -1057,7 +1076,8 @@ class Field(MetaField('DummyField', (object,), {})):
 
     def read(self, records):
         """ Read the value of ``self`` on ``records``, and store it in cache. """
-        raise NotImplementedError("Method read() undefined on %s" % self)
+        if not self.column_type:
+            raise NotImplementedError("Method read() undefined on %s" % self)
 
     def create(self, record_values):
         """ Write the value of ``self`` on the given records, which have just
@@ -1147,7 +1167,7 @@ class Field(MetaField('DummyField', (object,), {})):
                     recs._fetch_field(self)
                 except AccessError:
                     record._fetch_field(self)
-                if not env.cache.contains(record, self) and not record.exists():
+                if not env.cache.contains(record, self):
                     raise MissingError("\n".join([
                         _("Record does not exist or has been deleted."),
                         _("(Record: %s, User: %s)") % (record, env.uid),
@@ -1447,8 +1467,6 @@ class Float(Field):
     """
 
     type = 'float'
-    column_cast_from = ('int4', 'numeric', 'float8')
-
     _digits = None                      # digits argument passed to class initializer
     group_operator = 'sum'
 
@@ -1518,9 +1536,7 @@ class Monetary(Field):
     """
     type = 'monetary'
     write_sequence = 10
-
     column_type = ('numeric', 'numeric')
-    column_cast_from = ('float8',)
 
     currency_field = None
     group_operator = 'sum'
@@ -1553,17 +1569,21 @@ class Monetary(Field):
 
     def convert_to_column(self, value, record, values=None, validate=True):
         # retrieve currency from values or record
-        currency_field = self.get_currency_field(record)
-        if values and currency_field in values:
-            field = record._fields[currency_field]
-            currency = field.convert_to_cache(values[currency_field], record, validate)
-            currency = field.convert_to_record(currency, record)
+        currency_field_name = self.get_currency_field(record)
+        currency_field = record._fields[currency_field_name]
+        if values and currency_field_name in values:
+            dummy = record.new({currency_field_name: values[currency_field_name]})
+            currency = dummy[currency_field_name]
+        elif values and currency_field.related and currency_field.related.split('.')[0] in values:
+            related_field_name = currency_field.related.split('.')[0]
+            dummy = record.new({related_field_name: values[related_field_name]})
+            currency = dummy[currency_field_name]
         else:
             # Note: this is wrong if 'record' is several records with different
             # currencies, which is functional nonsense and should not happen
             # BEWARE: do not prefetch other fields, because 'value' may be in
             # cache, and would be overridden by the value read from database!
-            currency = record[:1].with_context(prefetch_fields=False)[currency_field]
+            currency = record[:1].with_context(prefetch_fields=False)[currency_field_name]
             currency = currency.with_env(record.env)
 
         value = float(value or 0.0)
@@ -1600,7 +1620,6 @@ class Monetary(Field):
 class _String(Field):
     """ Abstract class for string fields. """
     translate = False                   # whether the field is translated
-    prefetch = None
     unaccent = True
 
     def __init__(self, string=Default, **kwargs):
@@ -1609,22 +1628,17 @@ class _String(Field):
             kwargs['translate'] = bool(kwargs['translate'])
         super(_String, self).__init__(string=string, **kwargs)
 
-    def setup_nonrelated(self, model):
-        super().setup_nonrelated(model)
-        if self.prefetch is None:
-            # translated fields are not prefetched by default except for _rec_name
-            self.prefetch = not self.translate or model._rec_name == self.name
-
-    def setup_related(self, model):
-        super().setup_related(model)
-        if self.prefetch is None:
-            # translated fields are not prefetched by default except for _rec_name
-            self.prefetch = not self.translate or model._rec_name == self.name
-
     _related_translate = property(attrgetter('translate'))
 
     def _description_translate(self, env):
         return bool(self.translate)
+
+    def _convert_db_column(self, model, column):
+        # specialized implementation for converting from/to translated fields
+        if self.translate or column['udt_name'] == 'jsonb':
+            sql.convert_column_translatable(model._cr, model._table, self.name, self.column_type[1])
+        else:
+            sql.convert_column(model._cr, model._table, self.name, self.column_type[1])
 
     def get_trans_terms(self, value):
         """ Return the sequence of terms to translate found in `value`. """
@@ -1639,99 +1653,172 @@ class _String(Field):
         func = getattr(self.translate, 'get_text_content', lambda term: term)
         return func(term)
 
+    def convert_to_column(self, value, record, values=None, validate=True):
+        cache_value = self.convert_to_cache(value, record)
+        if cache_value is None:
+            return None
+        if callable(self.translate):
+            # pylint: disable=not-callable
+            cache_value = self.translate(lambda t: None, cache_value)
+        if self.translate:
+            cache_value = {'en_US': cache_value, record.env.lang or 'en_US': cache_value}
+        return self._convert_from_cache_to_column(cache_value)
+
+    def _convert_from_cache_to_column(self, value):
+        """ Convert from cache_raw value to column value """
+        if value is None:
+            return None
+        return PsycopgJson(value) if self.translate else value
+
+    def convert_to_cache(self, value, record, validate=True):
+        if value is None or value is False:
+            return None
+        return value
+
+    def convert_to_record(self, value, record):
+        if value is None:
+            return False
+        if callable(self.translate) and record.env.context.get('edit_translations'):
+            value_en = record.with_context(edit_translations=None, lang='en_US')[self.name]
+            terms_en = self.get_trans_terms(value_en)
+            terms = self.get_trans_terms(value)
+            term_to_state = {term: "translated" if term_en != term else "to_translate" for term, term_en in zip(terms, terms_en)}
+            # use a wrapper to let the frontend js code identify each term and its metadata in the 'edit_translations' context
+            # pylint: disable=not-callable
+            value = self.translate(
+                lambda term: f'''<span data-oe-model="{record._name}" data-oe-id="{record.id}" data-oe-field="{self.name}" data-oe-translation-state="{term_to_state[term]}" data-oe-translation-initial-sha="{sha256(term.encode()).hexdigest()}">{term}</span>''',
+                value
+            )
+        return value
+
+    def convert_to_write(self, value, record):
+        return value
+
     def get_trans_func(self, records):
         """ Return a translation function `translate` for `self` on the given
         records; the function call `translate(record_id, value)` translates the
-        field value to the language given by the environment of `records`.
+        field English value to the language given by the environment of `records`.
         """
+        lang = records.env.lang or 'en_US'
+        if lang == 'en_US' or not self.translate:
+            return lambda record_id, value: value
+        # TODO: CWG: optimize it to one query
+        vals_en2lang = zip(records.with_context(lang='en_US').mapped(self.name),
+                           records.with_context(lang=lang).mapped(self.name))
+        translation_dictionaries = dict(
+            zip(records.ids, [self.get_translation_dictionary(val_en, {lang: val_lang}) for val_en, val_lang in vals_en2lang]))
         if callable(self.translate):
-            rec_src_trans = records.env['ir.translation']._get_terms_translations(self, records)
-
             def translate(record_id, value):
-                src_trans = rec_src_trans[record_id]
-                return self.translate(src_trans.get, value)
-
-        else:
-            rec_trans = records.env['ir.translation']._get_ids(
-                '%s,%s' % (self.model_name, self.name), 'model', records.env.lang, records.ids)
-
+                translation_dictionary = translation_dictionaries[record_id]
+                # pylint: disable=not-callable
+                return self.translate(lambda term: translation_dictionary[term][lang], value)
+        else:  # TODO CWG: TBD never used, useless?
             def translate(record_id, value):
-                return rec_trans.get(record_id) or value
-
+                return translation_dictionaries.get(record_id).get(value, value)
         return translate
 
+    def get_translation_dictionary(self, from_lang_value, to_lang_values):
+        """ Build a dictionary from terms in from_lang_value to terms in to_lang_values
+
+        :param str from_lang_value: from xml/html
+        :param dict to_lang_values: {lang: lang_value}
+
+        :return: {from_lang_term: {lang: lang_term}}
+        :rtype: dict
+        """
+
+        from_lang_terms = self.get_trans_terms(from_lang_value)
+        dictionary = defaultdict(lambda: defaultdict(dict))
+
+        for lang, to_lang_value in to_lang_values.items():
+            to_lang_terms = self.get_trans_terms(to_lang_value)
+            if len(from_lang_terms) != len(to_lang_terms):
+                for from_lang_term in from_lang_terms:
+                    dictionary[from_lang_term][lang] = from_lang_term
+            else:
+                for from_lang_term, to_lang_term in zip(from_lang_terms, to_lang_terms):
+                    dictionary[from_lang_term][lang] = to_lang_term
+        return dictionary
+
+    def _get_stored_translations(self, record):
+        """
+        : return: {'en_US': 'value_en_US', 'fr_FR': 'French'}
+        """
+        # assert (self.translate and self.store and record)
+        record.flush_recordset([self.name])
+        cr = record.env.cr
+        cr.execute(f'SELECT "{self.name}" FROM "{record._table}" WHERE id = %s', (record.id,))
+        return cr.fetchone()[0]
+
     def write(self, records, value):
-        if not (self.translate and self.store and any(records._ids)):
+        if not self.translate or value is False or value is None:
             return super().write(records, value)
-
-        # discard recomputation of self on records
-        records.env.remove_to_compute(self, records)
-
-        # discard the records that are not modified
         cache = records.env.cache
         cache_value = self.convert_to_cache(value, records)
         records = cache.get_records_different_from(records, self, cache_value)
         if not records:
             return records
 
-        lang = records.env.lang
-        installed = records.env['res.lang'].get_installed()
-        single_lang = installed[0][0] if len(installed) <= 1 else None
+        # flush dirty None values
+        dirty_records = records & cache.get_dirty_records(records, self)
+        if any(v is None for v in cache.get_values(dirty_records, self)):
+            dirty_records.flush_recordset([self.name])
 
-        # modify the column (source)
-        if single_lang or lang in (None, 'en_US') or callable(self.translate) or not cache_value:
-            if self.translate is True and cache_value:
-                tname = f"{self.model_name},{self.name}"
-                records.env['ir.translation']._set_source(tname, records._ids, value)
-            # invalidate the field in all languages because the fallback value
-            # for translations is modified
-            cache.invalidate([(self, records.ids)])
+        dirty = self.store and any(records._ids)
+        lang = records.env.lang or 'en_US'
+
+        # not dirty fields
+        if not dirty:
+            cache.update_raw(records, self, [{lang: cache_value} for _id in records._ids], dirty=False)
+            return records
+
+        # model translation
+        if not callable(self.translate):
+            # invalidate clean fields because them may contain fallback value
+            clean_records = records - cache.get_dirty_records(records, self)
+            clean_records.invalidate_recordset([self.name])
             cache.update(records, self, itertools.repeat(cache_value), dirty=True)
-            if single_lang and not lang:
-                # modifying with lang=None also updates the installed language
-                others = records.with_context(lang=single_lang)
-                cache.update(others, self, itertools.repeat(cache_value), dirty=True)
-        else:
-            # Ignore the dirty flag when updating the value in cache.  This is
-            # necessary for translated fields, when you have to update the
-            # field's value in a language without making it dirty while the
-            # field's column value is already dirty.
-            cache.update(records, self, itertools.repeat(cache_value), check_dirty=False)
+            if lang != 'en_US' and not records.env['res.lang']._lang_get_id('en_US'):
+                # if 'en_US' is not active, we always write en_US to make sure value_en is meaningful
+                cache.update(records.with_context(lang='en_US'), self, itertools.repeat(cache_value), dirty=True)
+            return records
 
-        if callable(self.translate):
-            # the source value of self has been updated, synchronize translated
-            # terms when possible
-            records.env['ir.translation']._sync_terms_translations(self, records)
+        # model term translation
+        new_translations_list = []
+        # pylint: disable=not-callable
+        cache_value = self.translate(lambda t: None, cache_value)
+        new_terms = set(self.get_trans_terms(cache_value))
+        for record in records:
+            # shortcut when no term needs to be translated
+            if not new_terms:
+                new_translations_list.append({'en_US': cache_value, lang: cache_value})
+                continue
+            # _get_stored_translations can be refactored and prefetches translations for multi records,
+            # but it is really rare to write the same non-False/None/no-term value to multi records
+            old_translations = self._get_stored_translations(record)
+            if not old_translations:
+                new_translations_list.append({'en_US': cache_value, lang: cache_value})
+                continue
+            from_lang_value = old_translations.get(lang, old_translations.get('en_US'))
+            translation_dictionary = self.get_translation_dictionary(from_lang_value, old_translations)
+            text2term = {self.get_text_content(term): term for term in new_terms}
 
-        elif lang:
-            # update translations
-            value = self.convert_to_column(value, records)
-            source_recs = records.with_context(lang=None)
-            source_value = first(source_recs)[self.name]
-            if not source_value:
-                source_recs[self.name] = value
-                source_value = value
-            tname = "%s,%s" % (self.model_name, self.name)
-            if not value:
-                records.env['ir.translation'].search([
-                    ('name', '=', tname),
-                    ('type', '=', 'model'),
-                    ('res_id', 'in', records._ids)
-                ]).unlink()
-            elif single_lang:
-                records.env['ir.translation']._update_translations([dict(
-                    src=source_value,
-                    value=value,
-                    name=tname,
-                    lang=lang,
-                    type='model',
-                    state='translated',
-                    res_id=res_id) for res_id in records._ids])
-            else:
-                records.env['ir.translation']._set_ids(
-                    tname, 'model', lang, records._ids, value, source_value,
-                )
-
+            for old_term in list(translation_dictionary.keys()):
+                if old_term not in new_terms:
+                    old_term_text = self.get_text_content(old_term)
+                    matches = get_close_matches(old_term_text, text2term, 1, 0.9)
+                    if matches:
+                        translation_dictionary[text2term[matches[0]]] = translation_dictionary.pop(old_term)
+            # pylint: disable=not-callable
+            new_translations = {
+                l: self.translate(lambda term: translation_dictionary.get(term, {l: None})[l], cache_value)
+                for l in old_translations.keys()
+            }
+            new_translations[lang] = cache_value
+            new_translations.setdefault('en_US', cache_value)
+            new_translations_list.append(new_translations)
+        # Maybe we can use Cache.update(records.with_context(cache_update_raw=True), self, new_translations_list, dirty=True)
+        cache.update_raw(records, self, new_translations_list, dirty=True)
         return records
 
 
@@ -1752,8 +1839,6 @@ class Char(_String):
     :type translate: bool or callable
     """
     type = 'char'
-    column_cast_from = ('text',)
-
     size = None                         # maximum size of values (deprecated)
     trim = True                         # whether value is trimmed (only by web client)
 
@@ -1761,19 +1846,22 @@ class Char(_String):
         super()._setup_attrs(model_class, name)
         assert self.size is None or isinstance(self.size, int), \
             "Char field %s with non-integer size %r" % (self, self.size)
+        assert not(self.translate and self.size), \
+            "Translated field %s cannot have size %r" % (self, self.size)
 
     @property
     def column_type(self):
-        return ('varchar', pg_varchar(self.size))
+        return ('jsonb', 'jsonb') if self.translate else ('varchar', pg_varchar(self.size))
 
     def update_db_column(self, model, column):
         if (
-            column and column['udt_name'] == 'varchar' and column['character_maximum_length'] and
+            column and self.column_type[0] == 'varchar' and
+            column['udt_name'] == 'varchar' and column['character_maximum_length'] and
             (self.size is None or column['character_maximum_length'] < self.size)
         ):
             # the column's varchar size does not match self.size; convert it
             sql.convert_column(model._cr, model._table, self.name, self.column_type[1])
-        super(Char, self).update_db_column(model, column)
+        super().update_db_column(model, column)
 
     _related_size = property(attrgetter('size'))
     _related_trim = property(attrgetter('trim'))
@@ -1785,7 +1873,7 @@ class Char(_String):
             return None
         # we need to convert the string to a unicode object to be able
         # to evaluate its length (and possibly truncate it) reliably
-        return pycompat.to_text(value)[:self.size]
+        return super().convert_to_column(pycompat.to_text(value)[:self.size], record, values, validate)
 
     def convert_to_cache(self, value, record, validate=True):
         if value is None or value is False:
@@ -1805,8 +1893,10 @@ class Text(_String):
     :type translate: bool or callable
     """
     type = 'text'
-    column_type = ('text', 'text')
-    column_cast_from = ('varchar',)
+
+    @property
+    def column_type(self):
+        return ('jsonb', 'jsonb') if self.translate else ('text', 'text')
 
     def convert_to_cache(self, value, record, validate=True):
         if value is None or value is False:
@@ -1830,8 +1920,6 @@ class Html(_String):
     :param bool strip_classes: whether to strip classes attributes (default: ``False``)
     """
     type = 'html'
-    column_type = ('text', 'text')
-    column_cast_from = ('varchar',)
 
     sanitize = True                     # whether value must be sanitized
     sanitize_overridable = False        # whether the sanitation can be bypassed by the users part of the `base.group_sanitize_override` group
@@ -1850,6 +1938,10 @@ class Html(_String):
             attrs['translate'] = html_translate
         return attrs
 
+    @property
+    def column_type(self):
+        return ('jsonb', 'jsonb') if self.translate else ('text', 'text')
+
     _related_sanitize = property(attrgetter('sanitize'))
     _related_sanitize_tags = property(attrgetter('sanitize_tags'))
     _related_sanitize_attributes = property(attrgetter('sanitize_attributes'))
@@ -1865,7 +1957,7 @@ class Html(_String):
     _description_strip_classes = property(attrgetter('strip_classes'))
 
     def convert_to_column(self, value, record, values=None, validate=True):
-        return self._convert(value, record, True)
+        return super().convert_to_column(self._convert(value, record, True), record, values, validate)
 
     def convert_to_cache(self, value, record, validate=True):
         return self._convert(value, record, validate)
@@ -1932,7 +2024,6 @@ class Date(Field):
     """ Encapsulates a python :class:`date <datetime.date>` object. """
     type = 'date'
     column_type = ('date', 'date')
-    column_cast_from = ('timestamp',)
 
     start_of = staticmethod(date_utils.start_of)
     end_of = staticmethod(date_utils.end_of)
@@ -2031,7 +2122,6 @@ class Datetime(Field):
     """ Encapsulates a python :class:`datetime <datetime.datetime>` object. """
     type = 'datetime'
     column_type = ('timestamp', 'timestamp')
-    column_cast_from = ('date',)
 
     start_of = staticmethod(date_utils.start_of)
     end_of = staticmethod(date_utils.end_of)
@@ -2265,20 +2355,19 @@ class Binary(Field):
             return
         # create the attachments that store the values
         env = record_values[0][0].env
-        with env.norecompute():
-            env['ir.attachment'].sudo().with_context(
-                binary_field_real_user=env.user,
-            ).create([{
-                    'name': self.name,
-                    'res_model': self.model_name,
-                    'res_field': self.name,
-                    'res_id': record.id,
-                    'type': 'binary',
-                    'datas': value,
-                }
-                for record, value in record_values
-                if value
-            ])
+        env['ir.attachment'].sudo().with_context(
+            binary_field_real_user=env.user,
+        ).create([{
+                'name': self.name,
+                'res_model': self.model_name,
+                'res_field': self.name,
+                'res_id': record.id,
+                'type': 'binary',
+                'datas': value,
+            }
+            for record, value in record_values
+            if value
+        ])
 
     def write(self, records, value):
         if not self.attachment:
@@ -2342,7 +2431,7 @@ class Image(Binary):
     :param int max_height: the maximum height of the image (default: ``0``, no limit)
     :param bool verify_resolution: whether the image resolution should be verified
         to ensure it doesn't go over the maximum image resolution (default: ``True``).
-        See :class:`odoo.tools.image.ImageProcess` for maximum image resolution (default: ``45e6``).
+        See :class:`odoo.tools.image.ImageProcess` for maximum image resolution (default: ``50e6``).
 
     .. note::
 
@@ -2352,6 +2441,11 @@ class Image(Binary):
     max_width = 0
     max_height = 0
     verify_resolution = True
+
+    def setup(self, model):
+        super().setup(model)
+        if not model._abstract and not model._log_access:
+            warnings.warn(f"Image field {self} requires the model to have _log_access = True")
 
     def create(self, record_values):
         new_record_values = []
@@ -2592,7 +2686,7 @@ class Selection(Field):
 
         # translate selection labels
         if env.lang:
-            return env['ir.translation'].get_field_selection(self.model_name, self.name)
+            return env['ir.model.fields'].get_field_selection(self.model_name, self.name)
         else:
             return selection
 
@@ -3070,6 +3164,769 @@ class Many2oneReference(Integer):
         return model_ids
 
 
+class Json(Field):
+    """ JSON Field that contain unstructured information in jsonb PostgreSQL column.
+    This field is still in beta
+    Some features have not been implemented and won't be implemented in stable versions, including:
+    * searching
+    * indexing
+    * mutating the values.
+    """
+
+    type = 'json'
+    column_type = ('jsonb', 'jsonb')
+
+    def convert_to_record(self, value, record):
+        """ Return a copy of the value """
+        return False if value is None else copy.deepcopy(value)
+
+    def convert_to_cache(self, value, record, validate=True):
+        if not value:
+            return None
+        return json.loads(json.dumps(value))
+
+    def convert_to_column(self, value, record, values=None, validate=True):
+        if not value:
+            return None
+        return PsycopgJson(value)
+
+    def convert_to_export(self, value, record):
+        if not value:
+            return ''
+        return json.dumps(value)
+
+
+class Properties(Field):
+    """ Field that contains a list of properties (aka "sub-field") based on
+    a definition defined on a container. Properties are pseudo-fields, acting
+    like Odoo fields but without being independently stored in database.
+
+    This field allows a light customization based on a container record. Used
+    for relationships such as <project.project> / <project.task>,... New
+    properties can be created on the fly without changing the structure of the
+    database.
+
+    The "definition_record" define the field used to find the container of the
+    current record. The container must have a :class:`~odoo.fields.PropertiesDefinition`
+    field "definition_record_field" that contains the properties definition
+    (type of each property, default value)...
+
+    Only the value of each property is stored on the child. When we read the
+    properties field, we read the definition on the container and merge it with
+    the value of the child. That way the web client has access to the full
+    field definition (property type, ...).
+    """
+    type = 'properties'
+    column_type = ('jsonb', 'jsonb')
+    copy = False
+    prefetch = False
+    write_sequence = 10              # because it must be written after the definition field
+
+    # the field is computed editable by design (see the compute method below)
+    store = True
+    readonly = False
+    precompute = True
+
+    definition = None
+    definition_record = None         # field on the current model that point to the definition record
+    definition_record_field = None   # field on the definition record which defined the Properties field definition
+
+    _description_definition_record = property(attrgetter('definition_record'))
+    _description_definition_record_field = property(attrgetter('definition_record_field'))
+
+    ALLOWED_TYPES = (
+        'boolean', 'integer', 'float', 'char', 'date',
+        'datetime', 'many2one', 'many2many', 'selection', 'tags',
+    )
+
+    def _setup_attrs(self, model_class, name):
+        super()._setup_attrs(model_class, name)
+        if self.definition:
+            # determine definition_record and definition_record_field
+            assert self.definition.count(".") == 1
+            self.definition_record, self.definition_record_field = self.definition.rsplit('.', 1)
+
+            # make the field computed, and set its dependencies
+            self._depends = (self.definition_record, )
+            self.compute = self._compute
+
+    # Database/cache format: a value is either None, or a dict mapping property
+    # names to their corresponding value, like
+    #
+    #       {
+    #           '3adf37f3258cfe40': 'red',
+    #           'aa34746a6851ee4e': 1337,
+    #       }
+    #
+    def convert_to_column(self, value, record, values=None, validate=True):
+        if not value:
+            return None
+
+        value = self.convert_to_cache(value, record, validate=validate)
+        return json.dumps(value)
+
+    def convert_to_cache(self, value, record, validate=True):
+        # any format -> cache format {name: value} or None
+        if not value:
+            return None
+
+        if isinstance(value, dict):
+            # avoid accidental side effects from shared mutable data
+            return copy.deepcopy(value)
+
+        if isinstance(value, str):
+            value = json.loads(value)
+            if not isinstance(value, dict):
+                raise ValueError(f"Wrong property value {value!r}")
+            return value
+
+        if isinstance(value, list):
+            # Convert the list with all definitions into a simple dict
+            # {name: value} to store the strict minimum on the child
+            self._remove_display_name(value)
+            return self._list_to_dict(value)
+
+        raise ValueError(f"Wrong property type {type(value)!r}")
+
+    # Record format: the value is a list, where each element is a dict
+    # containing the definition of a property, together with the property's
+    # corresponding value, like
+    #
+    #       [{
+    #           'name': '3adf37f3258cfe40',
+    #           'string': 'Color Code',
+    #           'type': 'char',
+    #           'default': 'blue',
+    #           'value': 'red',
+    #       }, {
+    #           'name': 'aa34746a6851ee4e',
+    #           'string': 'Partner',
+    #           'type': 'many2one',
+    #           'comodel': 'test_new_api.partner',
+    #           'value': 1337,
+    #       }]
+    #
+    def convert_to_record(self, value, record):
+        # value is in cache format
+        definition = self._get_properties_definition(record)
+        if not value or not definition:
+            return definition or []
+
+        assert isinstance(value, dict), f"Wrong type {value!r}"
+        value = self._dict_to_list(value, definition)
+        self._parse_json_types(value, record.env)
+
+        return value
+
+    # Read format: almost identical to the record format, except that relational
+    # field values have a display name.
+    #
+    #       [{
+    #           'name': '3adf37f3258cfe40',
+    #           'string': 'Color Code',
+    #           'type': 'char',
+    #           'default': 'blue',
+    #           'value': 'red',
+    #       }, {
+    #           'name': 'aa34746a6851ee4e',
+    #           'string': 'Partner',
+    #           'type': 'many2one',
+    #           'comodel': 'test_new_api.partner',
+    #           'value': [1337, 'Bob'],
+    #       }]
+    #
+    def convert_to_read(self, value, record, use_name_get=True):
+        # value is in record format
+        if use_name_get:
+            self._add_display_name(value, record.env)
+        return value
+
+    def convert_to_write(self, value, record):
+        """If we write a list on the child, update the definition record."""
+        if isinstance(value, list):
+            # will update the definition record
+            self._remove_display_name(value)
+            return value
+
+        return super().convert_to_write(value, record)
+
+    def convert_to_onchange(self, value, record, names):
+        self._add_display_name(value, record.env)
+        return value
+
+    def read(self, records):
+        """Read everything needed in batch for the given records.
+
+        To retrieve relational properties names, or to check their existence,
+        we need to do some SQL queries. To reduce the number of queries when we read
+        in batch, we put in cache everything needed before calling
+        convert_to_record / convert_to_read.
+        """
+        definition_records_map = {
+            record: record[self.definition_record][self.definition_record_field]
+            for record in records
+        }
+
+        # ids per model we need to fetch in batch to put in cache
+        ids_per_model = defaultdict(OrderedSet)
+
+        records_cached_values = list(records.env.cache.get_values(records, self))
+
+        for record, record_values in zip(records, records_cached_values):
+            definition = definition_records_map.get(record)
+            if not record_values or not definition:
+                continue
+            for property_definition in definition:
+                comodel = property_definition.get('comodel')
+                type_ = property_definition.get('type')
+                name = property_definition.get('name')
+                if not comodel or type_ not in ('many2one', 'many2many') or name not in record_values:
+                    continue
+
+                default = property_definition.get('default') or []
+                property_value = record_values[name] or []
+
+                if type_ == 'many2one':
+                    default = [default] if default else []
+                    property_value = [property_value] if property_value else []
+
+                ids_per_model[comodel].update(default)
+                ids_per_model[comodel].update(property_value)
+
+        # check existence and pre-fetch in batch
+        existing_ids_per_model = {}
+        for model, ids in ids_per_model.items():
+            recs = records.env[model].browse(ids).exists()
+            existing_ids_per_model[model] = set(recs.ids)
+            for record in recs:
+                # read a field to pre-fetch the recordset
+                try:
+                    record.display_name
+                except AccessError:
+                    pass
+
+        # update the cache and remove non-existing ids
+        for record, record_values in zip(records, records_cached_values):
+            definition = definition_records_map.get(record)
+            if not record_values or not definition:
+                continue
+
+            for property_definition in definition:
+                comodel = property_definition.get('comodel')
+                type_ = property_definition.get('type')
+                name = property_definition.get('name')
+                if not comodel or type_ not in ('many2one', 'many2many') or not record_values.get(name):
+                    continue
+
+                property_value = record_values[name]
+
+                if type_ == 'many2one':
+                    record_values[name] = property_value if property_value in existing_ids_per_model[comodel] else False
+                else:
+                    record_values[name] = [id_ for id_ in property_value if id_ in existing_ids_per_model[comodel]]
+
+            records.env.cache.update(record, self, [record_values], check_dirty=False)
+
+    def write(self, records, value):
+        """Check if the properties definition has been changed.
+
+        To avoid extra SQL queries used to detect definition change, we add a
+        flag in the properties list. Parent update is done only when this flag
+        is present, delegating the check to the caller (generally web client).
+
+        For deletion, we need to keep the removed property definition in the
+        list to be able to put the delete flag in it. Otherwise we have no way
+        to know that a property has been removed.
+        """
+        if isinstance(value, str):
+            value = json.loads(value)
+
+        if isinstance(value, dict):
+            # don't need to write on the container definition
+            return super().write(records, value)
+
+        definition_changed = any(
+            definition.get('definition_changed')
+            or definition.get('definition_deleted')
+            for definition in value
+        )
+        if definition_changed:
+            value = [
+                definition for definition in value
+                if not definition.get('definition_deleted')
+            ]
+            for definition in value:
+                definition.pop('definition_changed', None)
+
+            # update the properties definition on the container
+            container = records[self.definition_record]
+            if container:
+                properties_definition = copy.deepcopy(value)
+                for property_definition in properties_definition:
+                    property_definition.pop('value', None)
+                container[self.definition_record_field] = properties_definition
+
+                _logger.info('Properties field: User #%i changed definition of %r', records.env.user.id, container)
+
+        return super().write(records, value)
+
+    def _compute(self, records):
+        """Add the default properties value when the container is changed."""
+        for record in records:
+            record[self.name] = self._add_default_values(
+                record.env,
+                {self.name: record[self.name], self.definition_record: record[self.definition_record]},
+            )
+
+    def _add_default_values(self, env, values):
+        """Read the properties definition to add default values.
+
+        Default values are defined on the container in the 'default' key of
+        the definition.
+
+        :param env: environment
+        :param values: All values that will be written on the record
+        :return: Return the default values in the "dict" format
+        """
+        properties_values = values.get(self.name) or {}
+
+        if not values.get(self.definition_record):
+            # container is not given in the value, can not find properties definition
+            return properties_values
+
+        container_id = values[self.definition_record]
+        if not isinstance(container_id, (int, BaseModel)):
+            raise ValueError(f"Wrong container value {container_id!r}")
+
+        if isinstance(container_id, int):
+            # retrieve the container record
+            current_model = env[self.model_name]
+            definition_record_field = current_model._fields[self.definition_record]
+            container_model_name = definition_record_field.comodel_name
+            container_id = env[container_model_name].browse(container_id)
+
+        properties_definition = container_id[self.definition_record_field]
+        if not properties_definition:
+            return properties_values
+
+        assert isinstance(properties_values, (list, dict))
+        if isinstance(properties_values, list):
+            self._remove_display_name(properties_values)
+            properties_list_values = properties_values
+        else:
+            properties_list_values = self._dict_to_list(properties_values, properties_definition)
+
+        for properties_value in properties_list_values:
+            if properties_value.get('value') is None:
+                default = properties_value.get('default') or False
+                properties_value['value'] = default
+
+        return properties_list_values
+
+    def _get_properties_definition(self, record):
+        """Return the properties definition of the given record."""
+        container = record[self.definition_record]
+        if container:
+            return container.sudo()[self.definition_record_field]
+
+    @classmethod
+    def _add_display_name(cls, values_list, env, value_keys=('value', 'default')):
+        """Add the "name_get" for each many2one / many2many properties.
+
+        Modify in place "values_list".
+
+        :param values_list: List of properties definition and values
+        :param env: environment
+        """
+        for property_definition in values_list:
+            property_type = property_definition.get('type')
+            property_model = property_definition.get('comodel')
+            if not property_model:
+                continue
+
+            for value_key in value_keys:
+                property_value = property_definition.get(value_key)
+
+                if property_type == 'many2one' and property_value and isinstance(property_value, int):
+                    try:
+                        display_name = env[property_model].browse(property_value).display_name
+                        property_definition[value_key] = (property_value, display_name)
+                    except AccessError:
+                        # protect from access error message, show an empty name
+                        property_definition[value_key] = (property_value, None)
+                    except MissingError:
+                        property_definition[value_key] = False
+
+                elif property_type == 'many2many' and property_value and is_list_of(property_value, int):
+                    property_definition[value_key] = []
+                    records = env[property_model].browse(property_value)
+                    for record in records:
+                        try:
+                            property_definition[value_key].append((record.id, record.display_name))
+                        except AccessError:
+                            property_definition[value_key].append((record.id, None))
+                        except MissingError:
+                            continue
+
+    @classmethod
+    def _remove_display_name(cls, values_list, value_key='value'):
+        """Remove the display name received by the web client for the relational properties.
+
+        Modify in place "values_list".
+
+        - many2one: (35, 'Bob') -> 35
+        - many2many: [(35, 'Bob'), (36, 'Alice')] -> [35, 36]
+
+        :param values_list: List of properties definition with properties value
+        :param value_key: In which dict key we need to remove the display name
+        """
+        for property_definition in values_list:
+            if not isinstance(property_definition, dict) or not property_definition.get('name'):
+                continue
+
+            property_value = property_definition.get(value_key)
+            if not property_value:
+                continue
+
+            property_type = property_definition.get('type')
+
+            if property_type == 'many2one' and has_list_types(property_value, [int, (str, NoneType)]):
+                property_definition[value_key] = property_value[0]
+
+            elif property_type == 'many2many':
+                if is_list_of(property_value, (list, tuple)):
+                    # [(35, 'Admin'), (36, 'Demo')] -> [35, 36]
+                    property_definition[value_key] = [
+                        many2many_value[0]
+                        for many2many_value in property_value
+                    ]
+
+    @classmethod
+    def _add_missing_names(cls, values_list):
+        """Generate new properties name if needed.
+
+        Modify in place "values_list".
+
+        :param values_list: List of properties definition with properties value
+        """
+        for definition in values_list:
+            if definition.get('definition_changed') and not definition.get('name'):
+                # keep only the first 64 bits
+                definition['name'] = str(uuid.uuid4()).replace('-', '')[:16]
+
+    @classmethod
+    def _parse_json_types(cls, values_list, env):
+        """Parse the value stored in the JSON.
+
+        Check for records existence, if we removed a selection option, ...
+        Modify in place "values_list".
+
+        :param values_list: List of properties definition and values
+        :param env: environment
+        """
+        for property_definition in values_list:
+            property_value = property_definition.get('value')
+            property_type = property_definition.get('type')
+            res_model = property_definition.get('comodel')
+
+            if property_type not in cls.ALLOWED_TYPES:
+                raise ValueError(f'Wrong property type {property_type!r}')
+
+            if property_type == 'boolean':
+                # E.G. convert zero to False
+                property_value = bool(property_value)
+
+            elif property_type == 'char' and not isinstance(property_value, str) \
+                    and property_value is not None:
+                property_value = False
+
+            elif property_value and property_type == 'selection':
+                # check if the selection option still exists
+                options = property_definition.get('selection') or []
+                options = {option[0] for option in options if option or ()}  # always length 2
+                if property_value not in options:
+                    # maybe the option has been removed on the container
+                    property_value = False
+
+            elif property_value and property_type == 'tags':
+                # remove all tags that are not defined on the container
+                all_tags = {tag[0] for tag in property_definition.get('tags') or ()}
+                property_value = [tag for tag in property_value if tag in all_tags]
+
+            elif property_type == 'many2one' and property_value and res_model in env:
+                if not isinstance(property_value, int):
+                    raise ValueError(f'Wrong many2one value: {property_value!r}.')
+
+            elif property_type == 'many2many' and property_value and res_model in env:
+                if not is_list_of(property_value, int):
+                    raise ValueError(f'Wrong many2many value: {property_value!r}.')
+
+                if len(property_value) != len(set(property_value)):
+                    # remove duplicated value and preserve order
+                    property_value = list(dict.fromkeys(property_value))
+
+            property_definition['value'] = property_value
+
+    @classmethod
+    def _list_to_dict(cls, values_list):
+        """Convert a list of properties with definition into a dict {name: value}.
+
+        To not repeat data in database, we only store the value of each property on
+        the child. The properties definition is stored on the container.
+
+        E.G.
+            Input list:
+            [{
+                'name': '3adf37f3258cfe40',
+                'string': 'Color Code',
+                'type': 'char',
+                'default': 'blue',
+                'value': 'red',
+            }, {
+                'name': 'aa34746a6851ee4e',
+                'string': 'Partner',
+                'type': 'many2one',
+                'comodel': 'test_new_api.partner',
+                'value': [1337, 'Bob'],
+            }]
+
+            Output dict:
+            {
+                '3adf37f3258cfe40': 'red',
+                'aa34746a6851ee4e': 1337,
+            }
+
+        :param values_list: List of properties definition and value
+        :return: Generate a dict {name: value} from this definitions / values list
+        """
+        if not is_list_of(values_list, dict):
+            raise ValueError(f'Wrong properties value {values_list!r}')
+
+        cls._add_missing_names(values_list)
+
+        dict_value = {}
+        for property_definition in values_list:
+            property_value = property_definition.get('value') or False
+            property_type = property_definition.get('type')
+            property_model = property_definition.get('comodel')
+
+            if property_type in ('many2one', 'many2many') and property_model and property_value:
+                # check that value are correct before storing them in database
+                if property_type == 'many2many' and property_value and not is_list_of(property_value, int):
+                    raise ValueError(f"Wrong many2many value {property_value!r}")
+
+                if property_type == 'many2one' and not isinstance(property_value, int):
+                    raise ValueError(f"Wrong many2one value {property_value!r}")
+
+            dict_value[property_definition['name']] = property_value
+
+        return dict_value
+
+    @classmethod
+    def _dict_to_list(cls, values_dict, properties_definition):
+        """Convert a dict of {property: value} into a list of property definition with values.
+
+        :param values_dict: JSON value coming from the child table
+        :param properties_definition: Properties definition coming from the container table
+        :return: Merge both value into a list of properties with value
+            Ignore every values in the child that is not defined on the container.
+        """
+        if not is_list_of(properties_definition, dict):
+            raise ValueError(f'Wrong properties value {properties_definition!r}')
+
+        values_list = copy.deepcopy(properties_definition)
+        for property_definition in values_list:
+            property_definition['value'] = values_dict.get(property_definition['name'])
+        return values_list
+
+
+class PropertiesDefinition(Field):
+    """ Field used to define the properties definition (see :class:`~odoo.fields.Properties`
+    field). This field is used on the container record to define the structure
+    of expected properties on subrecords. It is used to check the properties
+    definition. """
+    type = 'properties_definition'
+    column_type = ('jsonb', 'jsonb')
+    copy = True                         # containers may act like templates, keep definitions to ease usage
+    readonly = False
+    prefetch = True
+
+    REQUIRED_KEYS = ('name', 'type')
+    ALLOWED_KEYS = (
+        'name', 'string', 'type', 'comodel', 'default',
+        'selection', 'tags', 'domain', 'view_in_kanban',
+    )
+
+    def convert_to_column(self, value, record, values=None, validate=True):
+        """Convert the value before inserting it in database.
+
+        This method accepts a list properties definition.
+
+        The relational properties (many2one / many2many) default value
+        might contain the name_get of those records (and will be removed).
+
+        [{
+            'name': '3adf37f3258cfe40',
+            'string': 'Color Code',
+            'type': 'char',
+            'default': 'blue',
+            'default': 'red',
+        }, {
+            'name': 'aa34746a6851ee4e',
+            'string': 'Partner',
+            'type': 'many2one',
+            'comodel': 'test_new_api.partner',
+            'default': [1337, 'Bob'],
+        }]
+        """
+        if not value:
+            return None
+
+        if isinstance(value, str):
+            value = json.loads(value)
+
+        if not isinstance(value, list):
+            raise ValueError(f'Wrong properties definition type {type(value)!r}')
+
+        Properties._remove_display_name(value, value_key='default')
+
+        self._validate_properties_definition(value, record.env)
+
+        return json.dumps(value)
+
+    def convert_to_cache(self, value, record, validate=True):
+        # any format -> cache format (list of dicts or None)
+        if not value:
+            return None
+
+        if isinstance(value, list):
+            # avoid accidental side effects from shared mutable data, and make
+            # the value strict with respect to JSON (tuple -> list, etc)
+            value = json.dumps(value)
+
+        if isinstance(value, str):
+            value = json.loads(value)
+
+        if not isinstance(value, list):
+            raise ValueError(f'Wrong properties definition type {type(value)!r}')
+
+        Properties._remove_display_name(value, value_key='default')
+
+        self._validate_properties_definition(value, record.env)
+
+        return value
+
+    def convert_to_record(self, value, record):
+        # cache format -> record format (list of dicts)
+        if not value:
+            return []
+
+        # return a copy of the definition in cache where all property
+        # definitions have been cleaned up
+        result = []
+
+        for property_definition in value:
+            if not all(property_definition.get(key) for key in self.REQUIRED_KEYS):
+                # some required keys are missing, ignore this property definition
+                continue
+
+            # don't modify the value in cache
+            property_definition = dict(property_definition)
+
+            # check if the model still exists in the environment, the module of the
+            # model might have been uninstalled so the model might not exist anymore
+            property_model = property_definition.get('comodel')
+            if property_model and property_model not in record.env:
+                property_definition['comodel'] = property_model = False
+
+            if not property_model and 'domain' in property_definition:
+                del property_definition['domain']
+
+            property_domain = property_definition.get('domain')
+            if property_domain:
+                # some fields in the domain might have been removed
+                # (e.g. if the module has been uninstalled)
+                # check if the domain is still valid
+                try:
+                    expression.expression(
+                        ast.literal_eval(property_domain),
+                        record.env[property_model],
+                    )
+                except ValueError:
+                    del property_definition['domain']
+
+            result.append(property_definition)
+
+        return result
+
+    def convert_to_read(self, value, record, use_name_get=True):
+        # record format -> read format (list of dicts with display names)
+        if not value:
+            return value
+
+        if use_name_get:
+            Properties._add_display_name(value, record.env, value_keys=('default',))
+
+        return value
+
+    @classmethod
+    def _validate_properties_definition(cls, properties_definition, env):
+        """Raise an error if the property definition is not valid."""
+        properties_names = set()
+
+        for property_definition in properties_definition:
+            property_definition_keys = set(property_definition.keys())
+
+            invalid_keys = property_definition_keys - set(cls.ALLOWED_KEYS)
+            if invalid_keys:
+                raise ValueError(
+                    'Some key are not allowed for a properties definition [%s].' %
+                    ', '.join(invalid_keys),
+                )
+
+            required_keys = set(cls.REQUIRED_KEYS) - property_definition_keys
+            if required_keys:
+                raise ValueError(
+                    'Some key are missing for a properties definition [%s].' %
+                    ', '.join(required_keys),
+                )
+
+            property_name = property_definition.get('name')
+            if not property_name or property_name in properties_names:
+                raise ValueError(f'The property name {property_name!r} is not set or duplicated.')
+            properties_names.add(property_name)
+
+            property_type = property_definition.get('type')
+            if property_type and property_type not in Properties.ALLOWED_TYPES:
+                raise ValueError(f'Wrong property type {property_type!r}.')
+
+            model = property_definition.get('comodel')
+            if model and model not in env:
+                raise ValueError(f'Invalid model name {model!r}')
+
+            property_selection = property_definition.get('selection')
+            if property_selection:
+                if (not is_list_of(property_selection, (list, tuple))
+                   or not all(len(selection) == 2 for selection in property_selection)):
+                    raise ValueError(f'Wrong options {property_selection!r}.')
+
+                all_options = [option[0] for option in property_selection]
+                if len(all_options) != len(set(all_options)):
+                    duplicated = set(filter(lambda x: all_options.count(x) > 1, all_options))
+                    raise ValueError(f'Some options are duplicated: {", ".join(duplicated)}.')
+
+            property_tags = property_definition.get('tags')
+            if property_tags:
+                if (not is_list_of(property_tags, (list, tuple))
+                   or not all(len(tag) == 3 and isinstance(tag[2], int) for tag in property_tags)):
+                    raise ValueError(f'Wrong tags definition {property_tags!r}.')
+
+                all_tags = [tag[0] for tag in property_tags]
+                if len(all_tags) != len(set(all_tags)):
+                    duplicated = set(filter(lambda x: all_tags.count(x) > 1, all_tags))
+                    raise ValueError(f'Some tags are duplicated: {", ".join(duplicated)}.')
+
+
 class Command(enum.IntEnum):
     """
     :class:`~odoo.fields.One2many` and :class:`~odoo.fields.Many2many` fields
@@ -3479,11 +4336,18 @@ class One2many(_RelationalMulti):
         comodel = records.env[self.comodel_name].with_context(**context)
         inverse = self.inverse_name
         inverse_field = comodel._fields[inverse]
-        get_id = (lambda rec: rec.id) if inverse_field.type == 'many2one' else int
         domain = self.get_domain_list(records) + [(inverse, 'in', records.ids)]
         lines = comodel.search(domain)
 
+        if len(records) == 1:
+            # optimization: all lines have the same value for 'inverse_field',
+            # so we don't need to fetch it from database
+            records.env.cache.insert_missing(records, self, [lines._ids])
+            records.env.cache.insert_missing(lines, inverse_field, itertools.repeat(records.id))
+            return
+
         # group lines by inverse field (without prefetching other fields)
+        get_id = (lambda rec: rec.id) if inverse_field.type == 'many2one' else int
         group = defaultdict(list)
         for line in lines.with_context(prefetch_fields=False):
             # line[inverse] may be a record or an integer

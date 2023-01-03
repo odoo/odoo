@@ -54,6 +54,8 @@ class Team(models.Model):
     alias_user_id = fields.Many2one(
         'res.users', related='alias_id.alias_user_id', readonly=False, inherited=True,
         domain=lambda self: [('groups_id', 'in', self.env.ref('sales_team.group_sale_salesman_all_leads').id)])
+    # properties
+    lead_properties_definition = fields.PropertiesDefinition('Lead Properties')
 
     @api.depends('crm_team_member_ids.assignment_max')
     def _compute_assignment_max(self):

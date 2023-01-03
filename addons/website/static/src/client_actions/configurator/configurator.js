@@ -9,7 +9,7 @@ import {svgToPNG} from 'website.utils';
 import { useService } from "@web/core/utils/hooks";
 import { registry } from "@web/core/registry";
 
-const { Component, onMounted, reactive, useEnv, useRef, useState, useSubEnv, onWillStart } = owl;
+const { Component, onMounted, reactive, useEnv, useRef, useState, useSubEnv, onWillStart, useExternalListener } = owl;
 
 const ROUTES = {
     descriptionScreen: 2,
@@ -104,7 +104,7 @@ class DescriptionScreen extends Component {
             open: this._customizeNoResultMenuStyle.bind(this),
             focus: this._disableKeyboardNav.bind(this),
             classes: {
-                'ui-autocomplete': 'custom-ui-autocomplete shadow-lg border-0 o_configurator_show_fast',
+                'ui-autocomplete': 'custom-ui-autocomplete shadow-lg border-0 o_configurator_show_fast o_configurator_industry_dropdown',
             },
         });
         if (this.state.selectedIndustry) {
@@ -411,7 +411,7 @@ class ApplyConfiguratorScreen extends Component {
     }
 }
 
-class FeaturesSelectionScreen extends ApplyConfiguratorScreen {
+export class FeaturesSelectionScreen extends ApplyConfiguratorScreen {
     setup() {
         super.setup();
 
@@ -601,20 +601,20 @@ function useStore() {
     return useState(env.store);
 }
 
-class Configurator extends Component {
+export class Configurator extends Component {
     setup() {
         this.orm = useService('orm');
         this.action = useService('action');
         this.router = useService('router');
 
         // Using the back button must update the router state.
-        window.addEventListener("popstate", () => {
+        useExternalListener(window, "popstate", () => {
             const match = window.location.pathname.match(/\/website\/configurator\/(.*)$/);
             const step = parseInt(match && match[1], 10) || 1;
             // Do not use navigate because URL is already updated.
             this.state.currentStep = step;
         });
-        
+
         const initialStep = this.props.action.context.params && this.props.action.context.params.step;
         const store = reactive(new Store(), () => this.updateStorage(store));
 

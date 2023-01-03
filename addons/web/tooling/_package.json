@@ -1,25 +1,30 @@
 {
     "name": "odoo-js-config",
-    "version": "0.0.1",
+    "version": "1.0.0",
     "description": "JS Config for better DX in javascript",
     "scripts": {
-        "format-web": "prettier-eslint --write 'addons/web/static/src/**/*.js'  'addons/web/static/tests/**/*.js' 'addons/web/doc/**/*.md'",
+        "format-all": "eslint --fix '**/*.js'",
+        "lint-all": "eslint '**/*.js'",
+        "lint-web": "eslint '**/web/**/*.js'",
         "format-staged": "lint-staged",
-        "lint-web": "prettier-eslint --list-different 'addons/web/static/src/**/*.js'  'addons/web/static/tests/**/*.js' 'addons/web/doc/**/*.md'",
-        "format-all": "prettier-eslint --write '**/*.js'  '**/*.md'"
+        "lint-diff": "echo '{\"extends\": [\"plugin:diff/diff\"]}' | eslint --resolve-plugins-relative-to . -c /dev/stdin '**/*.js'",
+        "format-diff": "echo '{\"extends\": [\"plugin:diff/diff\"]}' | eslint --fix --resolve-plugins-relative-to . -c /dev/stdin '**/*.js'"
     },
     "devDependencies": {
-        "eslint": "^7.25.0",
-        "eslint-config-prettier": "^8.3.0",
-        "eslint-plugin-prettier": "^3.4.0",
-        "lint-staged": "^10.5.4",
-        "prettier": "2.2.1",
-        "prettier-eslint-cli": "^5.0.1"
+        "eslint": "^8.27.0",
+        "eslint-config-prettier": "^8.5.0",
+        "eslint-plugin-diff": "^2.0.1",
+        "eslint-plugin-prettier": "^4.2.1",
+        "lint-staged": "^13.0.3",
+        "prettier": "^2.7.1",
+        "@types/jquery": "^3.5.14",
+        "@types/luxon": "^3.1.0",
+        "@types/qunit": "^2.19.3",
+        "@odoo/owl": "^2.0.1"
     },
     "lint-staged": {
-        "*.{js,md}": [
-            "prettier-eslint --write",
-            "eslint"
+        "*.js": [
+            "eslint --fix"
         ]
     }
 }

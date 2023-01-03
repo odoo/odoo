@@ -5,12 +5,12 @@ import slidesTourTools from '@website_slides/../tests/tours/slides_tour_tools';
 
 /**
  * Global use case:
- * a user (website publisher) creates a course;
+ * a user (website restricted editor) creates a course;
  * they update it;
  * they create some lessons in it;
  * they publishe it;
  */
-wTourUtils.registerEditionTour('course_publisher', {
+wTourUtils.registerWebsitePreviewTour('course_publisher', {
     // TODO: replace by wTourUtils.getClientActionURL when it's added
     url: '/slides',
     test: true
@@ -34,7 +34,7 @@ wTourUtils.registerEditionTour('course_publisher', {
     in_modal: false,
 }, {
     content: 'eLearning: set description',
-    trigger: '.oe_form_field_html[name="description"]',
+    trigger: '.o_field_html[name="description"]',
     run: 'text Déboulonnate is very common at Fleurus',
 }, {
     content: 'eLearning: we want reviews',
@@ -60,6 +60,7 @@ wTourUtils.registerEditionTour('course_publisher', {
 }, {
     content: 'eLearning: click "Add URL" really adding image',
     trigger: '.o_upload_media_url_button',
+    extra_trigger: '.o_we_url_success',
 }, {
     content: 'eLearning: is the Corgi set ?',
     trigger: 'iframe img.o_wslides_course_pict',

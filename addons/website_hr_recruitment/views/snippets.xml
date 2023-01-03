@@ -3,7 +3,7 @@
 
 <template id="snippet_options" inherit_id="website.snippet_options" name="Hr Recruitment Snippet Options">
     <xpath expr="." position="inside">
-        <div data-selector="main:has(.o_website_hr_recruitment_jobs_list)" data-page-options="true" data-no-check="true" string="Jobs Page">
+        <div data-selector="main:has(.o_website_hr_recruitment_jobs_list)" data-page-options="true" groups="website.group_website_designer" data-no-check="true" string="Jobs Page">
             <we-checkbox string="Countries Filter"
                          data-customize-website-views="website_hr_recruitment.job_filter_by_countries"
                          data-no-preview="true"
@@ -14,6 +14,10 @@
                          data-reload="/"/>
             <we-checkbox string="Offices Filter"
                          data-customize-website-views="website_hr_recruitment.job_filter_by_offices"
+                         data-no-preview="true"
+                         data-reload="/"/>
+            <we-checkbox string="Employment Types Filter"
+                         data-customize-website-views="website_hr_recruitment.job_filter_by_employment_type"
                          data-no-preview="true"
                          data-reload="/"/>
             <we-checkbox string="Sidebar"

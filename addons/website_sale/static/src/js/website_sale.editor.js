@@ -305,7 +305,6 @@ options.registry.WebsiteSaleGridLayout = options.Class.extend({
 });
 
 options.registry.WebsiteSaleProductsItem = options.Class.extend({
-    xmlDependencies: (options.Class.prototype.xmlDependencies || []).concat(['/website_sale/static/src/xml/website_sale_utils.xml']),
     events: _.extend({}, options.Class.prototype.events || {}, {
         'mouseenter .o_wsale_soptions_menu_sizes table': '_onTableMouseEnter',
         'mouseleave .o_wsale_soptions_menu_sizes table': '_onTableMouseLeave',
@@ -654,9 +653,10 @@ class AttachmentMediaDialog extends MediaDialog {
      * @override
      */
     async save() {
+        await super.save();
         const selectedMedia = this.selectedMedia[this.state.activeTab];
         if (selectedMedia.length) {
-            this.props.save(selectedMedia);
+            await this.props.extraImageSave(selectedMedia);
         }
         this.props.close();
     }
@@ -701,22 +701,44 @@ options.registry.WebsiteSaleProductPage = options.Class.extend({
         }).then(() => this.trigger_up('request_save', {reload: true, optionSelector: this.data.selector}));
     },
 
-    /**
-     * @override
-     */
-    setImageWidth(previewMode, widgetValue, params) {
-        this._updateWebsiteConfig({
-            product_page_image_width: widgetValue,
+    _getZoomOptionData() {
+        return this._userValueWidgets.find(widget => {
+            return widget.options && widget.options.dataAttributes && widget.options.dataAttributes.name === "o_wsale_zoom_mode";
         });
     },
 
     /**
      * @override
      */
-    setImageLayout(previewMode, widgetValue, params) {
-        this._updateWebsiteConfig({
-            product_page_image_layout: widgetValue,
-        });
+    async setImageWidth(previewMode, widgetValue, params) {
+        const zoomOption = this._getZoomOptionData();
+        const updateWidth = this._updateWebsiteConfig.bind(this, { product_page_image_width: widgetValue });
+        if (!zoomOption || widgetValue !== "100_pc") {
+            updateWidth();
+        } else {
+            const defaultZoomOption = "website_sale.product_picture_magnify_click";
+            await this._customizeWebsiteData(defaultZoomOption, { possibleValues: zoomOption._methodsParams.optionsPossibleValues["customizeWebsiteViews"] }, true);
+            updateWidth();
+        }
+    },
+
+    /**
+     * @override
+     */
+    async setImageLayout(previewMode, widgetValue, params) {
+        const zoomOption = this._getZoomOptionData();
+        const updateLayout = this._updateWebsiteConfig.bind(this, { product_page_image_layout: widgetValue });
+        if (!zoomOption) {
+            updateLayout();
+        } else {
+            const imageWidthOption = this.productDetailMain.dataset.image_width;
+            let defaultZoomOption = widgetValue === "grid" ? "website_sale.product_picture_magnify_click" : "website_sale.product_picture_magnify_hover";
+            if (imageWidthOption === "100_pc" && defaultZoomOption === "website_sale.product_picture_magnify_hover") {
+                defaultZoomOption = "website_sale.product_picture_magnify_click";
+            }
+            await this._customizeWebsiteData(defaultZoomOption, { possibleValues: zoomOption._methodsParams.optionsPossibleValues["customizeWebsiteViews"] }, true);
+            updateLayout();
+        }
     },
 
     /**
@@ -759,7 +781,9 @@ options.registry.WebsiteSaleProductPage = options.Class.extend({
         const dialog = new ComponentWrapper(this, AttachmentMediaDialogWrapper, {
             multiImages: true,
             onlyImages: true,
-            save: attachments => {
+            // Kinda hack-ish but the regular save does not get the information we need
+            save: async () => {},
+            extraImageSave: async (attachments) => {
                 this._rpc({
                     route: `/shop/product/extra-images`,
                     params: {
@@ -846,12 +870,25 @@ options.registry.WebsiteSaleProductPage = options.Class.extend({
     },
 
     async _computeWidgetVisibility(widgetName, params) {
+        const hasImages = this.productDetailMain.dataset.image_width != 'none';
+        const isFullImage = this.productDetailMain.dataset.image_width == '100_pc';
         switch (widgetName) {
             case 'o_wsale_thumbnail_pos':
-                return Boolean(this.productPageCarousel);
+                return Boolean(this.productPageCarousel) && hasImages;
             case 'o_wsale_grid_spacing':
             case 'o_wsale_grid_columns':
-                return Boolean(this.productPageGrid);
+                return Boolean(this.productPageGrid) && hasImages;
+            case 'o_wsale_image_layout':
+            case 'o_wsale_zoom_click':
+            case 'o_wsale_zoom_none':
+            case 'o_wsale_replace_main_image':
+            case 'o_wsale_add_extra_images':
+            case 'o_wsale_clear_extra_images':
+            case 'o_wsale_zoom_mode':
+                return hasImages;
+            case 'o_wsale_zoom_hover':
+            case 'o_wsale_zoom_both':
+                return hasImages && !isFullImage;
         }
         return this._super(widgetName, params);
     }
@@ -891,22 +928,6 @@ options.registry.WebsiteSaleProductAttribute = options.Class.extend({
     },
 });
 
-// Disable "Shown on Mobile" option if for dynamic product snippets
-options.registry.MobileVisibility.include({
-
-    //--------------------------------------------------------------------------
-    // Private
-    //--------------------------------------------------------------------------
-
-    /**
-     * @override
-     */
-    async _computeVisibility() {
-        return await this._super(...arguments)
-            && !this.$target.hasClass('s_dynamic_snippet_products');
-    },
-});
-
 // Disable save for alternative products snippet
 options.registry.SnippetSave.include({
     /**
@@ -924,7 +945,7 @@ options.registry.ReplaceMedia.include({
      */
     async willStart() {
         const parent = this.$target.parent();
-        this.isProductPageImage = this.$target.closest('#product_detail').length > 0;
+        this.isProductPageImage = this.$target.closest('.o_wsale_product_images').length > 0;
         // Product Page images may be the product's image or a record of `product.image`
         this.recordModel = parent.data('oe-model');
         this.recordId = parent.data('oe-id');

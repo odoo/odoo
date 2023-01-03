@@ -113,7 +113,7 @@
 <!-- Slide: sidebar training mode -->
 <template id="slide_aside_training" name="Slide: Sidebar in Training">
     <div class="o_wslides_lesson_aside_list position-relative bg-white border-bottom mt-4">
-        <div class="bg-100 text-600 h6 my-0 text-decoration-none border-bottom d-flex align-items-center justify-content-between">
+        <div class="bg-100 text-1000 h6 my-0 text-decoration-none border-bottom d-flex align-items-center justify-content-between">
             <span class="p-2">Course content</span>
             <a href="#collapse_slide_aside" data-bs-toggle="collapse" class="d-lg-none p-2 text-decoration-none o_wslides_lesson_aside_collapse">
                 <i class="fa fa-chevron-down d-lg-none"/>
@@ -150,7 +150,7 @@
                 <t t-set="slide_completed" t-value="channel_progress[aside_slide.id].get('completed')"/>
                 <t t-set="can_access" t-value="aside_slide.is_preview or can_access_channel"/>
                 <li class="p-0 pb-1">
-                    <div t-att-class="'o_wslides_lesson_aside_list_link d-flex align-items-center p-1 %s%s' % (('bg-100 active' if aside_slide == slide else ''), 'text-muted' if not can_access else '')"
+                    <div t-att-class="'o_wslides_lesson_aside_list_link d-flex p-1 %s%s' % (('bg-100 active' if aside_slide == slide else ''), 'text-muted' if not can_access else '')"
                         t-att-data-id="slide.id"
                         t-att-data-completed="slide_completed">
                         <t t-call="website_slides.slide_sidebar_done_button">
@@ -158,21 +158,21 @@
                             <t t-set="slide_completed" t-value="channel_progress[aside_slide.id].get('completed')"/>
                         </t>
                         <a t-att-href="'/slides/slide/%s' % (slug(aside_slide)) if can_access else '#'"
-                            t-attf-class="d-flex align-items-center text-decoration-none mw-100 overflow-hidden ms-2 #{'text-muted' if not can_access else ''}">
+                            t-attf-class="d-flex text-decoration-none mw-100 overflow-hidden ms-2 #{'text-muted' if not can_access else ''}">
                             <t t-call="website_slides.slide_icon">
                                 <t t-set="slide" t-value="aside_slide"/>
                             </t>
-                            <div class="o_wslides_lesson_link_name text-truncate" t-att-title="aside_slide.name">
-                                <span t-esc="aside_slide.name" class="me-2 text-truncate"/>
-                            </div>
-                            <div class="ms-auto" t-if="aside_slide.question_ids">
-                                <span t-att-class="'badge rounded-pill %s' % ('text-bg-success' if channel_progress[aside_slide.id].get('completed') else 'text-bg-light text-600')">
-                                    <t t-esc="channel_progress[aside_slide.id].get('quiz_karma_won') if channel_progress[aside_slide.id].get('completed') else channel_progress[aside_slide.id].get('quiz_karma_gain')"/> xp
+                            <div class="o_wslides_lesson_link_name" t-att-title="aside_slide.name">
+                                <span t-esc="aside_slide.name"/>
+                                <span class="align-items-end" t-if="aside_slide.question_ids">
+                                    <span t-att-class="'badge rounded-pill %s' % ('text-bg-success' if channel_progress[aside_slide.id].get('completed') else 'text-bg-light text-600')">
+                                        <t t-esc="channel_progress[aside_slide.id].get('quiz_karma_won') if channel_progress[aside_slide.id].get('completed') else channel_progress[aside_slide.id].get('quiz_karma_gain')"/> xp
+                                    </span>
                                 </span>
                             </div>
                         </a>
                     </div>
-                    <ul t-if="aside_slide._has_additional_resources() or aside_slide.question_ids" class="list-group px-2 mb-1 list-unstyled">
+                    <ul t-if="aside_slide._has_additional_resources() or aside_slide.question_ids" class="list-group ps-5 mb-1 list-unstyled">
                         <t t-if="can_access_channel">
                             <t t-foreach="aside_slide.slide_resource_ids" t-as="resource" t-if="resource.resource_type == 'url'">
                                 <li class="ps-4">
@@ -215,7 +215,7 @@
 
 <!-- Slide: all its content, not fullscreen mode -->
 <template id="slide_content_detailed" name="Slide: Detailed Content">
-    <div class="row align-items-start my-3 w-100">
+    <div class="d-flex align-items-start my-3 w-100">
         <t t-set="slide_completed" t-value="channel_progress[slide.id].get('completed')"/>
         <div class="col-12 col-md order-2 order-md-1 d-flex">
             <div class="d-flex align-items-start">
@@ -283,6 +283,11 @@
                 <i class="fa fa-desktop me-2"/>
                 <span class="d-none d-sm-inline-block">Fullscreen</span>
             </a>
+             <a class="btn btn-light border ms-2" role="button" data-bs-toggle="modal"
+                t-att-data-bs-target="'#slideShareModal_%s' % slide.id">
+                <i class="fa fa-share-alt me-2"/>
+                <span class="d-none d-sm-inline-block">Share</span>
+            </a>
         </div>
     </div>
     <div t-if="slide.tag_ids" class="pb-2">
@@ -324,11 +329,6 @@
             <li class="nav-item" groups="base.group_user">
                 <a href="#statistic" aria-controls="statistic" class="nav-link" role="tab" data-bs-toggle="tab">
                     <i class="fa fa-bar-chart"></i> Statistics
-                </a>
-            </li>
-            <li class="nav-item">
-                <a href="#share" aria-controls="share" class="nav-link" role="tab" data-bs-toggle="tab">
-                    <i class="fa fa-share-alt"></i> Share
                 </a>
             </li>
         </ul>
@@ -406,40 +406,6 @@
                     </div>
                 </div>
             </div>
-            <div role="tabpanel" class="tab-pane fade" t-if="slide.website_published" id="share">
-                <h4 t-if="not slide.website_published"><i class="fa fa-info-circle"></i>
-                    The social sharing module will be unlocked when a moderator will allow your publication.
-                </h4>
-                <t t-if="slide.website_published">
-                    <div class="row">
-                        <div class="col-12 col-lg-6">
-                            <h5 class="mt16">Share on Social Networks</h5>
-                            <t t-call="website_slides.slide_share_social">
-                                <t t-set="record" t-value="slide"/>
-                                <t t-set="website_share_url" t-value="slide.website_share_url"/>
-                            </t>
-                        </div>
-                        <div class="col-12 col-lg-6">
-                            <t t-call="website_slides.slide_share_link">
-                                <t t-set="record" t-value="slide"/>
-                                <t t-set="website_share_url" t-value="slide.website_share_url"/>
-                            </t>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div t-attf-class="col-12 #{'col-lg-6' if slide.embed_code else ''}">
-                            <t t-call="website_slides.slide_social_email">
-                                <t t-set="slide" t-value="slide"/>
-                            </t>
-                        </div>
-                        <div class="col-12 col-lg-6" t-if="slide.embed_code">
-                            <t t-call="website_slides.slide_social_embed">
-                                <t t-set="slide" t-value="slide"/>
-                            </t>
-                        </div>
-                    </div>
-                </t>
-            </div>
         </div>
     </div>
     <div class="o_wslides_js_quiz_container" t-att-data-slide-id="slide.id" id="quiz_container">
@@ -496,6 +462,11 @@
             </t>
         </t>
     </div>
+    <t t-call="website_slides.slide_share_modal">
+        <t t-set="record" t-value="slide"/>
+        <t t-set="include_embed" t-value="bool(slide.embed_code)"/>
+        <t t-set="website_share_url" t-value="slide.website_share_url"/>
+    </t>
 </template>
 
 <!-- Slide sub-tempalte: render a quiz serverside. Should be sync with JS qweb template "slide.slide.quiz" -->
@@ -582,47 +553,6 @@
             <i class="fa fa-plus me-2"/>
             <span>Add Question</span>
         </a>
-    </div>
-</template>
-
-<!-- Slide sub-template: share: send by email -->
-<template id='slide_social_email' name="Share by Email">
-    <h5 class="mt-4">Share by mail</h5>
-    <div t-if="not is_public_user" class="d-flex">
-        <form class="form-group oe_slide_js_share_email" role="form">
-            <div class="input-group">
-                <input type="email" class="form-control" placeholder="your-friend@domain.com"/>
-                <button class="btn btn-primary" type="button"
-                    data-loading-text="Sending..."
-                    t-attf-data-slide-id="#{slide.id}"
-                    style="border-top-end-radius: 4px;border-bottom-end-radius: 4px;">
-                    <i class="fa fa-envelope"/> Send Email
-                </button>
-            </div>
-            <span class="form-text text-muted d-block w-100">Send presentation through email</span>
-        </form>
-    </div>
-    <div t-if="is_public_user" class="alert alert-info d-inline-block">
-        <p class="mb-0">Please <a t-attf-href="/web?redirect=#{request.httprequest.url}" class="fw-bold"> login </a> to share this <t t-esc="slide.slide_category"/> by email.</p>
-    </div>
-</template>
-
-<!-- Slide sub-template: share: embed in your website -->
-<template id="slide_social_embed" name="Share on Your Website">
-    <div class="oe_slide_js_embed_code_widget mt-4">
-        <h5 class="mt0">Embed in your website</h5>
-        <div class="form-group">
-            <textarea class="form-control slide_embed_code" readonly="readonly" onClick="this.select();">
-                <!-- Use the external embedding URL here, see python controller '_slide_embed' method for more details. -->
-                <t t-esc="slide.embed_code_external"/>
-            </textarea>
-        </div>
-        <div t-if="slide.slide_category == 'document' and not embed_hide_starting_page" class="form-group d-flex">
-            <div class="form-text p-0 col-xs-5 col-sm-5 col-md-5 col-lg-5">Select page to start with</div>
-            <div class="input-group col-xs-3 col-sm-2 col-md-2 col-lg-3">
-                <input type="number" value="1" class="form-control"/>
-            </div>
-        </div>
     </div>
 </template>
 

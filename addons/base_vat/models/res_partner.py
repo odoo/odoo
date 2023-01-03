@@ -62,6 +62,7 @@ _ref_vat = {
     'nl': 'NL123456782B90',
     'no': 'NO123456785',
     'pe': '10XXXXXXXXY or 20XXXXXXXXY or 15XXXXXXXXY or 16XXXXXXXXY or 17XXXXXXXXY',
+    'ph': '123-456-789-01234',
     'pl': 'PL1234567883',
     'pt': 'PT123456789',
     'ro': 'RO1234567897',
@@ -222,19 +223,34 @@ class ResPartner(models.Model):
         expected_format = _ref_vat.get(country_code, "'CC##' (CC=Country Code, ##=VAT Number)")
 
         if company.vat_check_vies:
+            if 'False' not in record_label:
+                return '\n' + _(
+                    "The VAT number [%(wrong_vat)s] for %(record_label)s either failed the VIES VAT validation check or did not respect the expected format %(expected_format)s.",
+                    wrong_vat=wrong_vat,
+                    record_label=record_label,
+                    expected_format=expected_format,
+                )
+            else:
+                return '\n' + _(
+                    "The VAT number [%(wrong_vat)s] either failed the VIES VAT validation check or did not respect the expected format %(expected_format)s.",
+                    wrong_vat=wrong_vat,
+                    expected_format=expected_format,
+                )
+
+        # Catch use case where the record label is about the public user (name: False)
+        if 'False' not in record_label:
             return '\n' + _(
-                "The VAT number [%(wrong_vat)s] for %(record_label)s either failed the VIES VAT validation check or did not respect the expected format %(expected_format)s.",
+                'The VAT number [%(wrong_vat)s] for %(record_label)s does not seem to be valid. \nNote: the expected format is %(expected_format)s',
                 wrong_vat=wrong_vat,
                 record_label=record_label,
                 expected_format=expected_format,
             )
-
-        return '\n' + _(
-            'The VAT number [%(wrong_vat)s] for %(record_label)s does not seem to be valid. \nNote: the expected format is %(expected_format)s',
-            wrong_vat=wrong_vat,
-            record_label=record_label,
-            expected_format=expected_format,
-        )
+        else:
+            return '\n' + _(
+                'The VAT number [%(wrong_vat)s] does not seem to be valid. \nNote: the expected format is %(expected_format)s',
+                wrong_vat=wrong_vat,
+                expected_format=expected_format,
+            )
 
     __check_vat_ch_re = re.compile(r'E([0-9]{9}|-[0-9]{3}\.[0-9]{3}\.[0-9]{3})(MWST|TVA|IVA)$')
 
@@ -585,6 +601,10 @@ class ResPartner(models.Model):
     def format_vat_ch(self, vat):
         stdnum_vat_format = getattr(stdnum.util.get_cc_module('ch', 'vat'), 'format', None)
         return stdnum_vat_format('CH' + vat)[2:] if stdnum_vat_format else vat
+
+    def format_vat_sm(self, vat):
+        stdnum_vat_format = stdnum.util.get_cc_module('sm', 'vat').compact
+        return stdnum_vat_format('SM' + vat)[2:]
 
     def _fix_vat_number(self, vat, country_id):
         code = self.env['res.country'].browse(country_id).code if country_id else False

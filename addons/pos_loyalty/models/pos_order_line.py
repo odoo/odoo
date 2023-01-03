@@ -28,3 +28,9 @@ class PosOrderLine(models.Model):
 
     def _is_not_sellable_line(self):
         return super().is_not_sellable_line() or self.reward_id
+
+    def _export_for_ui(self, orderline):
+        result = super()._export_for_ui(orderline)
+        result['is_reward_line'] = orderline.is_reward_line
+        result['reward_id'] = orderline.reward_id.id
+        return result

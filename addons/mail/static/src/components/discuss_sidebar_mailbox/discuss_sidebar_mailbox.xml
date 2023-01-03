@@ -1,24 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates xml:space="preserve">
-    <t t-name="mail.DiscussSidebarMailbox" owl="1">
-        <button class="o_DiscussSidebarMailbox btn d-flex align-items-center py-1 px-0 border-0 rounded-0 fw-normal text-dark"
+    <t t-name="mail.DiscussSidebarMailboxView" owl="1">
+        <button class="o_DiscussSidebarMailboxView btn d-flex align-items-center py-1 px-0 border-0 rounded-0 fw-normal text-dark"
             t-att-class="{
-                'bg-100': discussSidebarMailboxView.mailbox.thread !== messaging.discuss.activeThread,
-                'o-active bg-200': discussSidebarMailboxView.mailbox.thread === messaging.discuss.activeThread,
-                'o-starred-box': discussSidebarMailboxView.mailbox === messaging.starred,
-            }" t-attf-class="{{ className }}" t-on-click="discussSidebarMailboxView.mailbox.thread.onClick" t-att-data-mailbox-local-id="discussSidebarMailboxView.mailbox.localId" t-att-data-mailbox-name="discussSidebarMailboxView.mailbox.name"
+                'bg-100': mailbox.thread !== messaging.discuss.activeThread,
+                'o-active bg-200': mailbox.thread === messaging.discuss.activeThread,
+                'o-starred-box': mailbox === messaging.starred,
+            }" t-attf-class="{{ className }}" t-on-click="mailbox.thread.onClick" t-att-data-mailbox-local-id="mailbox.localId" t-att-data-mailbox-name="mailbox.name"
             t-ref="root"
         >
-            <ThreadIcon className="'o_DiscussSidebarMailbox_item ms-4 me-2'" thread="discussSidebarMailboxView.mailbox.thread"/>
-            <div class="o_DiscussSidebarMailbox_item o_DiscussSidebarMailbox_name me-2 text-truncate">
-                <t t-esc="discussSidebarMailboxView.mailbox.name"/>
-            </div>
-            <div t-attf-class="o_DiscussSidebarMailbox_item flex-grow-1 {{ discussSidebarMailboxView.mailbox.counter === 0 ? 'me-3': '' }}"/>
-            <t t-if="discussSidebarMailboxView.mailbox.counter > 0">
-                <div t-attf-class="o_DiscussSidebarMailbox_counter o_DiscussSidebarMailbox_item badge rounded-pill {{ discussSidebarMailboxView.mailbox === messaging.starred ? 'bg-400 text-light' : 'text-bg-primary' }} ms-1 me-3 border-0">
-                    <t t-esc="discussSidebarMailboxView.mailbox.counter"/>
-                </div>
-            </t>
+            <ThreadIconView className="'o_DiscussSidebarMailboxView_item ms-4 me-2'" record="threadIconView"/>
+            <div class="o_DiscussSidebarMailboxView_item o_DiscussSidebarMailboxView_name me-2 text-truncate" t-esc="mailbox.name"/>
+            <div t-attf-class="o_DiscussSidebarMailboxView_item flex-grow-1 {{ mailbox.counter === 0 ? 'me-3': '' }}"/>
+            <div t-if="mailbox.counter > 0" t-attf-class="o_DiscussSidebarMailboxView_counter o_DiscussSidebarMailboxView_item badge rounded-pill {{ mailbox === messaging.starred ? 'bg-400 text-light' : 'text-bg-primary' }} ms-1 me-3" t-esc="mailbox.counter"/>
         </button>
     </t>
 </templates>

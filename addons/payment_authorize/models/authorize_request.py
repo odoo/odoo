@@ -24,20 +24,20 @@ class AuthorizeAPI:
 
     AUTH_ERROR_STATUS = '3'
 
-    def __init__(self, acquirer):
-        """Initiate the environment with the acquirer data.
+    def __init__(self, provider):
+        """Initiate the environment with the provider data.
 
-        :param recordset acquirer: payment.acquirer account that will be contacted
+        :param recordset provider: payment.provider account that will be contacted
         """
-        if acquirer.state == 'enabled':
+        if provider.state == 'enabled':
             self.url = 'https://api.authorize.net/xml/v1/request.api'
         else:
             self.url = 'https://apitest.authorize.net/xml/v1/request.api'
 
-        self.state = acquirer.state
-        self.name = acquirer.authorize_login
-        self.transaction_key = acquirer.authorize_transaction_key
-        self.payment_method_type = acquirer.authorize_payment_method_type
+        self.state = provider.state
+        self.name = provider.authorize_login
+        self.transaction_key = provider.authorize_transaction_key
+        self.payment_method_type = provider.authorize_payment_method_type
 
     def _make_request(self, operation, data=None):
         request = {
@@ -162,12 +162,12 @@ class AuthorizeAPI:
         bill_to = {}
         if 'profile' not in tx_data:
             split_name = payment_utils.split_partner_name(tx.partner_name)
-            partner_name = (tx.partner_name or "")[:50]  # max length defined by the Authorize API
+            # max lengths are defined by the Authorize API
             bill_to = {
                 'billTo': {
-                    'firstName': '' if tx.partner_id.is_company else split_name[0],
-                    'lastName': split_name[1],  # lastName is always required
-                    'company': partner_name if tx.partner_id.is_company else '',
+                    'firstName': '' if tx.partner_id.is_company else split_name[0][:50],
+                    'lastName': split_name[1][:50],  # lastName is always required
+                    'company': tx.partner_name[:50] if tx.partner_id.is_company else '',
                     'address': tx.partner_address,
                     'city': tx.partner_city,
                     'state': tx.partner_state_id.name or '',
@@ -249,7 +249,7 @@ class AuthorizeAPI:
                 'profile': {
                     'customerProfileId': token.authorize_profile,
                     'paymentProfile': {
-                        'paymentProfileId': token.acquirer_ref,
+                        'paymentProfileId': token.provider_ref,
                     }
                 },
             }
@@ -334,7 +334,7 @@ class AuthorizeAPI:
         })
         return self._format_response(response, 'refund')
 
-    # Acquirer configuration: fetch authorize_client_key & currencies
+    # Provider configuration: fetch authorize_client_key & currencies
     def merchant_details(self):
         """ Retrieves the merchant details and generate a new public client key if none exists.
 

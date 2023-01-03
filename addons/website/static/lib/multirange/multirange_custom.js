@@ -76,62 +76,43 @@ class Multirange {
         this.input.step = this.step = options.step || this.input.step || 1;
         this.currency = options.currency || this.input.dataset.currency || '';
         this.currencyPosition = options.currencyPosition || this.input.dataset.currencyPosition || 'after';
+        const inputClasses = ["multirange", "d-inline-block", "p-0", "align-top"];
 
         /* Wrap the input and add its ghost */
         this.rangeDiv = document.createElement("div");
-        this.rangeDiv.classList.add("multirange-wrapper");
+        this.rangeDiv.classList.add("multirange-wrapper", "position-relative", "mb-5");
+        this.countersWrapper = document.createElement("small");
+        this.countersWrapper.classList.add("d-flex", "justify-content-between", "mt-2");
+        this.rangeDiv.appendChild(this.countersWrapper);
         this.input.parentNode.insertBefore(this.rangeDiv, this.input.nextSibling);
         this.rangeDiv.appendChild(this.input);
         this.ghost = this.input.cloneNode();
         this.rangeDiv.appendChild(this.ghost);
 
-        this.input.classList.add("multirange", "original");
-        this.ghost.classList.add("multirange", "ghost");
+        this.input.classList.add("original", "position-absolute", "w-100", "m-0", ...inputClasses);
+        this.ghost.classList.add("ghost", "position-relative", ...inputClasses);
         this.input.value = values[0] || this.min;
         this.ghost.value = values[1] || this.max;
 
-        this.inputTipLocator = document.createElement("div");
-        this.inputTipLocator.classList.add("tip-locator");
-        this.ghostTipLocator = document.createElement("div");
-        this.ghostTipLocator.classList.add("tip-locator");
-        this.rangeDiv.insertBefore(this.ghostTipLocator, this.input.nextSibling);
-        this.rangeDiv.insertBefore(this.inputTipLocator, this.ghost.nextSibling);
         this.leftCounter = document.createElement("span");
-        this.leftCounter.classList.add("multirange-min");
+        this.leftCounter.classList.add("multirange-min", "position-absolute", "opacity-75", "opacity-100-hover", "mt-1");
         this.rightCounter = document.createElement("span");
-        this.rightCounter.classList.add("multirange-max");
-        this.tipLocatorOptions = {
-            container: this.rangeDiv,
-            html: true,
-        };
-        $(this.inputTipLocator).popover(Object.assign(
-            this.tipLocatorOptions,
-            {
-                placement: 'top',
-                content: this.leftCounter
-            })
-        );
-        $(this.ghostTipLocator).popover(Object.assign(
-            this.tipLocatorOptions,
-            {
-                placement: 'bottom',
-                content: this.rightCounter
-            })
-        );
+        this.rightCounter.classList.add("multirange-max", "position-absolute", "opacity-75", "opacity-100-hover", "mt-1");
+        this.rightCounter.style.right = 0;
+        this.countersWrapper.append(this.leftCounter, this.rightCounter);
 
-        $(this.inputTipLocator).add($(this.ghostTipLocator)).popover('show');
         /* Add the counterInput */
         if (this.rangeWithInput) {
             this.leftInput = document.createElement("input");
             this.leftInput.type = "number";
-            this.leftInput.style.display = "none";
+            this.leftInput.classList.add("invisible", "form-control", "form-control-sm", "mb-2", "mb-lg-1");
             this.leftInput.min = this.min;
             this.leftInput.max = this.max;
             this.leftInput.step = this.step;
             this.rightInput = this.leftInput.cloneNode();
 
-            this.leftInput.classList.add("multirange-min");
-            this.rightInput.classList.add("multirange-max");
+            this.leftInput.classList.add("multirange-min", "invisible");
+            this.rightInput.classList.add("multirange-max", "invisible");
 
             this.leftCounter.parentNode.appendChild(this.leftInput);
             this.rightCounter.parentNode.appendChild(this.rightInput);
@@ -221,19 +202,9 @@ class Multirange {
     update() {
         const low = 100 * (this.input.valueLow - this.min) / (this.max - this.min);
         const high = 100 * (this.input.valueHigh - this.min) / (this.max - this.min);
-        const tipOffsetLow = 8 - (low * 0.15);
-        const tipOffsetHigh = 8 - (high * 0.15);
+
         this.rangeDiv.style.setProperty("--low", low + '%');
         this.rangeDiv.style.setProperty("--high", high + '%');
-        $(this.inputTipLocator).css({
-            'left': `calc(${low}% + (${tipOffsetLow}px))`,
-            'top': '3px'
-        });
-        $(this.ghostTipLocator).css({
-            'left': `calc(${high}% + (${tipOffsetHigh}px))`,
-            'top': '18px'
-        });
-        $(this.inputTipLocator).add($(this.ghostTipLocator)).popover('update');
         this.counterInputUpdate();
     }
 
@@ -253,16 +224,17 @@ class Multirange {
             counter = this.leftCounter;
             input = this.leftInput;
         }
-        if (counter.style.display === "none") {
+
+        if (counter.classList.contains("invisible")) {
             this.input.valueLow = this.leftInput.value;
             this.input.valueHigh = this.rightInput.value;
             this.dispatchNewValueEvent();
             this.update();
-            counter.style.display = "";
-            input.style.display = "none";
+            counter.classList.remove("invisible");
+            input.classList.add("invisible");
         } else {
-            counter.style.display = "none";
-            input.style.display = "";
+            counter.classList.add("invisible");
+            input.classList.remove("invisible");
             this.saveOldValues();
             // Hack because firefox: https://bugzilla.mozilla.org/show_bug.cgi?id=1057858
             window.setTimeout(function () {

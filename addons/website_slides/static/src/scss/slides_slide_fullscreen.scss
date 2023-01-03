@@ -80,7 +80,6 @@
 
         .o_wslides_fs_sidebar_section_slides li {
             color: rgba(white, 0.8);
-            line-height: 1.3;
 
             &.active {
                 box-shadow: inset 2px 0 0 map-get($theme-colors, 'primary');
@@ -91,8 +90,20 @@
                 }
             }
 
-            .o_wslides_fs_slide_name {
-                line-height: 1;
+            .o_wslides_sidebar_content {
+                line-height: unset;
+                i {
+                    line-height: unset;
+                }
+            }
+
+            .o_wslides_sidebar_done_button {
+                line-height: unset;
+
+                button {
+                    padding-top: 0;
+                    border-top: 0;
+                }
             }
         }
     }

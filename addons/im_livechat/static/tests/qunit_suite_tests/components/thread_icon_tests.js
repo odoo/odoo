@@ -31,32 +31,34 @@ QUnit.test('livechat: public website visitor is typing', async function (assert)
     await openDiscuss();
     assert.containsOnce(
         document.body,
-        '.o_ThreadViewTopbar .o_ThreadIcon',
+        '.o_ThreadViewTopbar .o_ThreadIconView',
         "should have thread icon"
     );
     assert.containsOnce(
         document.body,
-        '.o_ThreadIcon .fa.fa-comments',
+        '.o_ThreadIconView .fa.fa-comments',
         "should have default livechat icon"
     );
 
     const mailChannel1 = pyEnv['mail.channel'].searchRead([['id', '=', mailChannelId1]])[0];
     // simulate receive typing notification from livechat visitor "is typing"
-    await afterNextRender(() => {
-        pyEnv['bus.bus']._sendone(mailChannel1, 'mail.channel.member/typing_status', {
-            'channel_id': mailChannelId1,
-            'is_typing': true,
-            'partner_id': messaging.publicPartners[0].id,
-            'partner_name': messaging.publicPartners[0].name,
-        });
-    });
+    await afterNextRender(() => messaging.rpc({
+        route: '/im_livechat/notify_typing',
+        params: {
+            context: {
+                mockedPartnerId: pyEnv.publicPartnerId,
+            },
+            is_typing: true,
+            uuid: mailChannel1.uuid,
+        },
+    }));
     assert.containsOnce(
         document.body,
-        '.o_ThreadIcon_typing',
+        '.o_ThreadIconView_typing',
         "should have thread icon with visitor currently typing"
     );
     assert.strictEqual(
-        document.querySelector('.o_ThreadIcon_typing').title,
+        document.querySelector('.o_ThreadIconView_typing').title,
         "Visitor 20 is typing...",
         "title of icon should tell visitor is currently typing"
     );

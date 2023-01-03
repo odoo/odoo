@@ -22,17 +22,17 @@ class PaymentTransaction(models.Model):
         Note: self.ensure_one() from `_get_processing_values`
 
         :param dict processing_values: The generic and specific processing values of the transaction
-        :return: The dict of acquirer-specific processing values
+        :return: The dict of provider-specific processing values
         :rtype: dict
         """
         res = super()._get_specific_rendering_values(processing_values)
-        if self.provider != 'buckaroo':
+        if self.provider_code != 'buckaroo':
             return res
 
-        return_url = urls.url_join(self.acquirer_id.get_base_url(), BuckarooController._return_url)
+        return_url = urls.url_join(self.provider_id.get_base_url(), BuckarooController._return_url)
         rendering_values = {
-            'api_url': self.acquirer_id._buckaroo_get_api_url(),
-            'Brq_websitekey': self.acquirer_id.buckaroo_website_key,
+            'api_url': self.provider_id._buckaroo_get_api_url(),
+            'Brq_websitekey': self.provider_id.buckaroo_website_key,
             'Brq_amount': self.amount,
             'Brq_currency': self.currency_id.name,
             'Brq_invoicenumber': self.reference,
@@ -44,26 +44,26 @@ class PaymentTransaction(models.Model):
         }
         if self.partner_lang:
             rendering_values['Brq_culture'] = self.partner_lang.replace('_', '-')
-        rendering_values['Brq_signature'] = self.acquirer_id._buckaroo_generate_digital_sign(
+        rendering_values['Brq_signature'] = self.provider_id._buckaroo_generate_digital_sign(
             rendering_values, incoming=False
         )
         return rendering_values
 
-    def _get_tx_from_notification_data(self, provider, notification_data):
+    def _get_tx_from_notification_data(self, provider_code, notification_data):
         """ Override of payment to find the transaction based on Buckaroo data.
 
-        :param str provider: The provider of the acquirer that handled the transaction
+        :param str provider_code: The code of the provider that handled the transaction
         :param dict notification_data: The normalized notification data sent by the provider
         :return: The transaction if found
         :rtype: recordset of `payment.transaction`
         :raise: ValidationError if the data match no transaction
         """
-        tx = super()._get_tx_from_notification_data(provider, notification_data)
-        if provider != 'buckaroo' or len(tx) == 1:
+        tx = super()._get_tx_from_notification_data(provider_code, notification_data)
+        if provider_code != 'buckaroo' or len(tx) == 1:
             return tx
 
         reference = notification_data.get('brq_invoicenumber')
-        tx = self.search([('reference', '=', reference), ('provider', '=', 'buckaroo')])
+        tx = self.search([('reference', '=', reference), ('provider_code', '=', 'buckaroo')])
         if not tx:
             raise ValidationError(
                 "Buckaroo: " + _("No transaction found matching reference %s.", reference)
@@ -81,7 +81,7 @@ class PaymentTransaction(models.Model):
         :raise: ValidationError if inconsistent data were received
         """
         super()._process_notification_data(notification_data)
-        if self.provider != 'buckaroo':
+        if self.provider_code != 'buckaroo':
             return
 
         transaction_keys = notification_data.get('brq_transactions')
@@ -89,7 +89,7 @@ class PaymentTransaction(models.Model):
             raise ValidationError("Buckaroo: " + _("Received data with missing transaction keys"))
         # BRQ_TRANSACTIONS can hold multiple, comma-separated, tx keys. In practice, it holds only
         # one reference. So we split for semantic correctness and keep the first transaction key.
-        self.acquirer_reference = transaction_keys.split(',')[0]
+        self.provider_reference = transaction_keys.split(',')[0]
 
         status_code = int(notification_data.get('brq_statuscode') or 0)
         if status_code in STATUS_CODES_MAPPING['pending']:

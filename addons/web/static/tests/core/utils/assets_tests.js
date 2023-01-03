@@ -1,8 +1,6 @@
 /** @odoo-module **/
 
-import { loadJS, loadCSS, fetchAndProcessTemplates } from "@web/core/assets";
-import { patchWithCleanup } from "@web/../tests/helpers/utils";
-import { browser } from "@web/core/browser/browser";
+import { loadJS, loadCSS } from "@web/core/assets";
 
 QUnit.module("utils", () => {
     QUnit.module("Assets");
@@ -28,24 +26,6 @@ QUnit.module("utils", () => {
         assert.ok(
             document.querySelector("link[href='/some/invalid/file.css']"),
             "Document contains a link with the href we asked to load"
-        );
-    });
-
-    QUnit.test("fetchAndProcessTemplates: load invalid bundle", function (assert) {
-        let lastFetchedURL;
-        patchWithCleanup(browser, {
-            fetch: function (url) {
-                lastFetchedURL = url;
-                return Promise.reject(`Failed to load ressource at "${url}"`);
-            },
-        });
-        assert.rejects(
-            fetchAndProcessTemplates("web.some_invalid_bundle"),
-            "Trying to load an invalid bundle rejects the promise"
-        );
-        assert.ok(
-            /\/web\/webclient\/qweb\/.*\?bundle=web\.some_invalid_bundle$/.test(lastFetchedURL),
-            "Loading a bundle calls the /web/webclient/qweb route with the corresponding bundle query parameter"
         );
     });
 });

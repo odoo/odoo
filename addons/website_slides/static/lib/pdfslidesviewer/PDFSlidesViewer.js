@@ -8,10 +8,10 @@
 // !!!!!!!!! use window.pdfjsLib and not pdfjsLib
 
 var PDFSlidesViewer = (function(){
-    function PDFSlidesViewer(pdf_url, $canvas, disableWorker){
+    function PDFSlidesViewer(pdf_url, $canvas) {
         // pdf variables
         this.pdf = null;
-        this.pdf_url = pdf_url || false;
+        this.pdf_url = pdf_url;
         this.pdf_page_total = 0;
         this.pdf_page_current = 1; // default is the first page
         this.pdf_zoom = 1; // 1 = scale to fit to available space
@@ -21,32 +21,16 @@ var PDFSlidesViewer = (function(){
         //canvas
         this.canvas = $canvas;
         this.canvas_context = $canvas.getContext('2d');
-        // PDF JS business
-        /**
-         * Disable the web worker and run all code on the main thread. This will happen
-         * automatically if the browser doesn't support workers or sending typed arrays
-         * to workers.
-         * @var {boolean}
-         *
-         * disableWorker should be 'true' if the document came from another origin than the
-         * page (typically the 'embed case').
-         * @see http://en.wikipedia.org/wiki/Cross-origin_resource_sharing.
-         * this is equivalent to the use_cors option in openerpframework.js
-         */
-    };
+    }
 
     /**
      * Load the PDF document
-     * @param (optional) url : the url of the document to load
      */
-    PDFSlidesViewer.prototype.loadDocument = function(url) {
-        var self = this;
-        var pdf_url = url || this.pdf_url;
-        return window.pdfjsLib.getDocument(pdf_url).then(function (file_content) {
-            self.pdf = file_content;
-            self.pdf_page_total = file_content.numPages;
-            return file_content;
-        });
+    PDFSlidesViewer.prototype.loadDocument = async function() {
+        const file_content = await window.pdfjsLib.getDocument(this.pdf_url).promise;
+        this.pdf = file_content;
+        this.pdf_page_total = file_content.numPages;
+        return file_content;
     };
 
     /**

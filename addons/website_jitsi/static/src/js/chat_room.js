@@ -8,7 +8,6 @@ const QWeb = core.qweb;
 
 publicWidget.registry.ChatRoom = publicWidget.Widget.extend({
     selector: '.o_wjitsi_room_widget',
-    xmlDependencies: ['/website_jitsi/static/src/xml/chat_room_modal.xml'],
     events: {
         'click .o_wjitsi_room_link': '_onChatRoomClick',
     },

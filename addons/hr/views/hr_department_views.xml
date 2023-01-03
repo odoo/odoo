@@ -18,11 +18,16 @@
                         </div>
                         <widget name="web_ribbon" title="Archived" bg_color="bg-danger" attrs="{'invisible': [('active', '=', True)]}"/>
                         <field name="active" invisible="1"/>
-                        <group col="4">
-                            <field name="name"/>
-                            <field name="manager_id"/>
-                            <field name="parent_id"/>
-                            <field name="company_id" options="{'no_create': True}" groups="base.group_multi_company"/>
+                        <group>
+                            <group>
+                                <field name="name"/>
+                                <field name="manager_id"/>
+                                <field name="parent_id"/>
+                                <field name="company_id" options="{'no_create': True}" groups="base.group_multi_company"/>
+                            </group>
+                            <div>
+                                <widget name="hr_department_chart"/>
+                            </div>
                         </group>
                     </sheet>
                     <div class="oe_chatter">
@@ -54,7 +59,7 @@
                 <search string="Departments">
                     <field name="name" string="Department"/>
                     <field name="manager_id" />
-                    <filter string="Unread Messages" name="message_needaction" domain="[('message_needaction','=',True)]"/>
+                    <filter string="Unread Messages" name="message_needaction" domain="[('message_needaction','=',True)]" groups="mail.group_mail_notification_type_inbox"/>
                     <separator/>
                     <filter string="Archived" name="inactive" domain="[('active','=',False)]"/>
                 </search>
@@ -65,7 +70,7 @@
             <field name="name">hr.department.kanban</field>
             <field name="model">hr.department</field>
             <field name="arch" type="xml">
-                <kanban class="oe_background_grey o_kanban_dashboard o_hr_department_kanban" sample="1">
+                <kanban class="oe_background_grey o_kanban_dashboard o_hr_department_kanban o_kanban_small_column" sample="1">
                     <field name="name"/>
                     <field name="company_id"/>
                     <field name="manager_id"/>
@@ -97,12 +102,16 @@
                                         <div class="col-6 o_kanban_primary_right">
                                         </div>
                                     </div>
+                                    <div class="o_kanban_card_lower_content"
+                                         style="justify-content: end">
+                                        <!-- placeholder for bottom content -->
+                                    </div>
                                 </div>
                                 <div class="o_kanban_card_manage_pane dropdown-menu" role="menu">
                                     <div class="o_kanban_card_manage_section">
-                                        <div role="menuitem" class="o_kanban_card_manage_section o_kanban_manage_reports">
-                                            <div class="o_kanban_card_manage_title">
-                                                <strong><span>Reporting</span></strong>
+                                        <div role="menuitem" class="o_kanban_manage_reports">
+                                            <div class="o_kanban_card_manage_title ps-4 pb-1">
+                                                <span class="fw-bolder">Reporting</span>
                                             </div>
                                         </div>
                                     </div>

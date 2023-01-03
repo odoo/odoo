@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~14.4\n"
+"Project-Id-Version: Odoo Server 15.5alpha1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-07-12 07:50+0000\n"
-"PO-Revision-Date: 2021-07-12 07:50+0000\n"
+"POT-Creation-Date: 2022-09-20 09:01+0000\n"
+"PO-Revision-Date: 2022-09-20 09:01+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -104,6 +104,13 @@ msgid "Barcode Scanned"
 msgstr ""
 
 #. module: barcodes
+#. openerp-web
+#: code:addons/barcodes/static/src/barcode_handlers.js:0
+#, python-format
+msgid "Barcode: "
+msgstr ""
+
+#. module: barcodes
 #: model:ir.model,name:barcodes.model_res_company
 msgid "Companies"
 msgstr ""
@@ -118,13 +125,6 @@ msgstr ""
 #: model:ir.model.fields,field_description:barcodes.field_barcode_nomenclature__create_date
 #: model:ir.model.fields,field_description:barcodes.field_barcode_rule__create_date
 msgid "Created on"
-msgstr ""
-
-#. module: barcodes
-#. openerp-web
-#: code:addons/barcodes/static/src/js/barcode_form_view.js:0
-#, python-format
-msgid "Discard"
 msgstr ""
 
 #. module: barcodes
@@ -146,13 +146,6 @@ msgstr ""
 #. module: barcodes
 #: model:ir.model.fields.selection,name:barcodes.selection__barcode_rule__encoding__ean8
 msgid "EAN-8"
-msgstr ""
-
-#. module: barcodes
-#. openerp-web
-#: code:addons/barcodes/static/src/js/barcode_form_view.js:0
-#, python-format
-msgid "Enable edit mode to modify this document"
 msgstr ""
 
 #. module: barcodes
@@ -200,13 +193,6 @@ msgid "Nomenclature"
 msgstr ""
 
 #. module: barcodes
-#. openerp-web
-#: code:addons/barcodes/static/src/js/barcode_form_view.js:0
-#, python-format
-msgid "Pager unavailable"
-msgstr ""
-
-#. module: barcodes
 #: model_terms:ir.ui.view,arch_db:barcodes.view_barcode_nomenclature_form
 msgid ""
 "Patterns can also define how numerical values, such as weight or price, can be\n"
@@ -228,29 +214,8 @@ msgid "Rules"
 msgstr ""
 
 #. module: barcodes
-#. openerp-web
-#: code:addons/barcodes/static/src/js/barcode_form_view.js:0
-#, python-format
-msgid "Scan a barcode to set the quantity"
-msgstr ""
-
-#. module: barcodes
-#. openerp-web
-#: code:addons/barcodes/static/src/js/barcode_form_view.js:0
-#, python-format
-msgid "Select"
-msgstr ""
-
-#. module: barcodes
 #: model:ir.model.fields,field_description:barcodes.field_barcode_rule__sequence
 msgid "Sequence"
-msgstr ""
-
-#. module: barcodes
-#. openerp-web
-#: code:addons/barcodes/static/src/js/barcode_form_view.js:0
-#, python-format
-msgid "Set quantity"
 msgstr ""
 
 #. module: barcodes
@@ -332,15 +297,15 @@ msgid "UPC/EAN Conversion"
 msgstr ""
 
 #. module: barcodes
-#. openerp-web
-#: code:addons/barcodes/static/src/js/barcode_form_view.js:0
-#, python-format
-msgid "Undefined barcode command"
+#: model:ir.model.fields.selection,name:barcodes.selection__barcode_rule__type__product
+msgid "Unit Product"
 msgstr ""
 
 #. module: barcodes
-#: model:ir.model.fields.selection,name:barcodes.selection__barcode_rule__type__product
-msgid "Unit Product"
+#. openerp-web
+#: code:addons/barcodes/static/src/barcode_handlers.js:0
+#, python-format
+msgid "Unknown barcode command"
 msgstr ""
 
 #. module: barcodes

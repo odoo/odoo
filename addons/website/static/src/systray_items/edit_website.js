@@ -47,7 +47,8 @@ class EditWebsiteSystray extends Component {
             const languagePrefix = `${pathname}/`.indexOf('/', 1);
             const defaultLanguagePathname = pathname.substring(languagePrefix);
             this.websiteService.goToWebsite({
-                path: `/website/lang/default?r=${encodeURIComponent(defaultLanguagePathname + search + hash)}`,
+                path: defaultLanguagePathname + search + hash,
+                lang: 'default',
                 edition: true
             });
         } else {
@@ -62,4 +63,4 @@ export const systrayItem = {
     isDisplayed: (env) => env.services.website.currentWebsite.metadata.editable,
 };
 
-registry.category("website_systray").add("EditWebsite", systrayItem, { sequence: 8 });
+registry.category("website_systray").add("EditWebsite", systrayItem, { sequence: 7 });

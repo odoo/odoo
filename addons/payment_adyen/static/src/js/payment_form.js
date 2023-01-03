@@ -26,7 +26,7 @@ odoo.define('payment_adyen.payment_form', require => {
             return this._rpc({
                 route: '/payment/adyen/payment_details',
                 params: {
-                    'acquirer_id': dropin.acquirerId,
+                    'provider_id': dropin.providerId,
                     'reference': this.adyenDropin.reference,
                     'payment_details': state.data,
                 },
@@ -72,14 +72,14 @@ odoo.define('payment_adyen.payment_form', require => {
             // Create the transaction and retrieve the processing values
             return this._rpc({
                 route: this.txContext.transactionRoute,
-                params: this._prepareTransactionRouteParams('adyen', dropin.acquirerId, 'direct'),
+                params: this._prepareTransactionRouteParams('adyen', dropin.providerId, 'direct'),
             }).then(processingValues => {
                 this.adyenDropin.reference = processingValues.reference; // Store final reference
                 // Initiate the payment
                 return this._rpc({
                     route: '/payment/adyen/payments',
                     params: {
-                        'acquirer_id': dropin.acquirerId,
+                        'provider_id': dropin.providerId,
                         'reference': processingValues.reference,
                         'converted_amount': processingValues.converted_amount,
                         'currency_id': processingValues.currency_id,
@@ -112,39 +112,39 @@ odoo.define('payment_adyen.payment_form', require => {
          *
          * @override method from payment.payment_form_mixin
          * @private
-         * @param {string} provider - The provider of the selected payment option's acquirer
+         * @param {string} code - The code of the selected payment option's provider
          * @param {number} paymentOptionId - The id of the selected payment option
          * @param {string} flow - The online payment flow of the selected payment option
          * @return {Promise}
          */
-        _prepareInlineForm: function (provider, paymentOptionId, flow) {
-            if (provider !== 'adyen') {
+        _prepareInlineForm: function (code, paymentOptionId, flow) {
+            if (code !== 'adyen') {
                 return this._super(...arguments);
             }
 
             // Check if instantiation of the drop-in is needed
             if (flow === 'token') {
                 return Promise.resolve(); // No drop-in for tokens
-            } else if (this.adyenDropin && this.adyenDropin.acquirerId === paymentOptionId) {
+            } else if (this.adyenDropin && this.adyenDropin.providerId === paymentOptionId) {
                 this._setPaymentFlow('direct'); // Overwrite the flow even if no re-instantiation
-                return Promise.resolve(); // Don't re-instantiate if already done for this acquirer
+                return Promise.resolve(); // Don't re-instantiate if already done for this provider
             }
 
             // Overwrite the flow of the select payment option
             this._setPaymentFlow('direct');
 
-            // Get public information on the acquirer (state, client_key)
+            // Get public information on the provider (state, client_key)
             return this._rpc({
-                route: '/payment/adyen/acquirer_info',
+                route: '/payment/adyen/provider_info',
                 params: {
-                    'acquirer_id': paymentOptionId,
+                    'provider_id': paymentOptionId,
                 },
-            }).then(acquirerInfo => {
+            }).then(providerInfo => {
                 // Get the available payment methods
                 return this._rpc({
                     route: '/payment/adyen/payment_methods',
                     params: {
-                        'acquirer_id': paymentOptionId,
+                        'provider_id': paymentOptionId,
                         'partner_id': parseInt(this.txContext.partnerId),
                         'amount': this.txContext.amount
                             ? parseFloat(this.txContext.amount)
@@ -157,9 +157,9 @@ odoo.define('payment_adyen.payment_form', require => {
                     // Instantiate the drop-in
                     const configuration = {
                         paymentMethodsResponse: paymentMethodsResult,
-                        clientKey: acquirerInfo.client_key,
+                        clientKey: providerInfo.client_key,
                         locale: (this._getContext().lang || 'en-US').replace('_', '-'),
-                        environment: acquirerInfo.state === 'enabled' ? 'live' : 'test',
+                        environment: providerInfo.state === 'enabled' ? 'live' : 'test',
                         onAdditionalDetails: this._dropinOnAdditionalDetails.bind(this),
                         onError: this._dropinOnError.bind(this),
                         onSubmit: this._dropinOnSubmit.bind(this),
@@ -175,7 +175,7 @@ odoo.define('payment_adyen.payment_form', require => {
                             setStatusAutomatically: true,
                         },
                     ).mount(`#o_adyen_dropin_container_${paymentOptionId}`);
-                    this.adyenDropin.acquirerId = paymentOptionId;
+                    this.adyenDropin.providerId = paymentOptionId;
                 });
             }).guardedCatch((error) => {
                 error.event.preventDefault();
@@ -192,7 +192,7 @@ odoo.define('payment_adyen.payment_form', require => {
          *
          * @override method from payment.payment_form_mixin
          * @private
-         * @param {string} provider - The provider of the payment option's acquirer
+         * @param {string} provider - The provider of the payment option's provider
          * @param {number} paymentOptionId - The id of the payment option handling the transaction
          * @param {string} flow - The online payment flow of the transaction
          * @return {Promise}

@@ -22,9 +22,15 @@ var discoverTalkSteps = function (talkName, fromList, reminderOn, toggleReminder
             run: 'click',
         }];
     }
+    steps = steps.concat([{
+        content: `Check we are on the "${talkName}" talk page`,
+        trigger: 'div.o_wesession_track_main',
+        run: function () {}, // it's a check
+    }]);
+
     if (reminderOn) {
         steps = steps.concat([{
-            content: "Check Favorite is on",
+            content: `Check Favorite for ${talkName} was already on`,
             trigger: 'div.o_wetrack_js_reminder i.fa-bell',
             extra_trigger: 'span.o_wetrack_js_reminder_text:contains("Favorite On")',
             run: function () {}, // it's a check
@@ -32,7 +38,7 @@ var discoverTalkSteps = function (talkName, fromList, reminderOn, toggleReminder
     }
     else {
         steps = steps.concat([{
-            content: "Check Favorite is Off",
+            content: `Check Favorite for ${talkName} was off`,
             trigger: 'span.o_wetrack_js_reminder_text:contains("Set Favorite")',
             run: function () {}, // it's a check
         }]);
@@ -42,7 +48,7 @@ var discoverTalkSteps = function (talkName, fromList, reminderOn, toggleReminder
                 trigger: 'span.o_wetrack_js_reminder_text',
                 run: 'click',
             }, {
-                content: "Check Favorite is On",
+                content: `Check Favorite for ${talkName} is now on`,
                 trigger: 'div.o_wetrack_js_reminder i.fa-bell',
                 extra_trigger: 'span.o_wetrack_js_reminder_text:contains("Favorite On")',
                 run: function () {}, // it's a check
@@ -132,11 +138,19 @@ var initTourSteps = function (eventName) {
 var browseTalksSteps = [{
     content: 'Browse Talks',
     trigger: 'a:contains("Talks")',
+}, {
+    content: 'Check we are on the talk list page',
+    trigger: 'h1:contains("Book your talks")',
+    run: function () {} // check
 }];
 
 var browseMeetSteps = [{
     content: 'Browse Meet',
     trigger: 'a:contains("Community")',
+}, {
+    content: 'Check we are on the community page',
+    trigger: 'span:contains("Join a room")',
+    run: function () {} // check
 }];
 
 

@@ -8,7 +8,6 @@
     'description': """
 This provides a base chart of accounts and taxes template for use in Odoo.
     """,
-    'author': 'Odoo S.A.',
     'depends': [
         'account',
     ],
@@ -17,10 +16,10 @@ This provides a base chart of accounts and taxes template for use in Odoo.
         'data/account.account.template.csv',
         'data/l10n_ke_chart_data.xml',
         'data/account_tax_group_data.xml',
+        'data/account_tax_report_data.xml',
         'data/account_tax_template_data.xml',
         'data/account_fiscal_position_template.xml',
         'data/account_chart_template_configure_data.xml',
-        'data/menu_item_data.xml',
     ],
     'demo': [
         'demo/demo_company.xml'

@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 {
-    'name': "snailmail_account",
+    'name': "Snail Mail - Account",
     'description': """
 Allows users to send invoices by post
 =====================================================

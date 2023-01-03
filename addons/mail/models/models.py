@@ -5,6 +5,7 @@ from lxml.builder import E
 from markupsafe import Markup
 
 from odoo import api, models, tools, _
+from odoo.addons.mail.tools.alias_error import AliasError
 
 
 class BaseModel(models.AbstractModel):
@@ -55,7 +56,7 @@ class BaseModel(models.AbstractModel):
                 tracking = self.env['mail.tracking.value'].create_tracking_values(initial_value, new_value, col_name, col_info, tracking_sequence, self._name)
                 if tracking:
                     if tracking['field_type'] == 'monetary':
-                        tracking['currency_id'] = getattr(self, col_info.get('currency_field', ''), self.company_id.currency_id).id
+                        tracking['currency_id'] = self[col_info['currency_field']].id
                     tracking_value_ids.append([0, 0, tracking])
                 changes.add(col_name)
 
@@ -183,19 +184,24 @@ class BaseModel(models.AbstractModel):
     # ALIAS MANAGEMENT
     # ------------------------------------------------------------
 
-    def _alias_get_error_message(self, message, message_dict, alias):
+    def _alias_get_error(self, message, message_dict, alias):
         """ Generic method that takes a record not necessarily inheriting from
-        mail.alias.mixin. """
+        mail.alias.mixin.
+
+        :return AliasError: error if any, False otherwise
+        """
         author = self.env['res.partner'].browse(message_dict.get('author_id', False))
         if alias.alias_contact == 'followers':
             if not self.ids:
-                return _('incorrectly configured alias (unknown reference record)')
+                return AliasError('config_follower_no_record',
+                                  _('incorrectly configured alias (unknown reference record)'),
+                                  is_config_error=True)
             if not hasattr(self, "message_partner_ids"):
-                return _('incorrectly configured alias')
+                return AliasError('config_follower_no_partners', _('incorrectly configured alias'), True)
             if not author or author not in self.message_partner_ids:
-                return _('restricted to followers')
+                return AliasError('error_follower_not_following', _('restricted to followers'))
         elif alias.alias_contact == 'partners' and not author:
-            return _('restricted to known authors')
+            return AliasError('error_partners_no_partner', _('restricted to known authors'))
         return False
 
     # ------------------------------------------------------------

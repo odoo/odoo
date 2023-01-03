@@ -6,14 +6,16 @@ import { patchWebsocketWorkerWithCleanup } from '@bus/../tests/helpers/mock_webs
 import { nextTick, patchWithCleanup } from "@web/../tests/helpers/utils";
 
 QUnit.module('Websocket Worker');
-QUnit.test('connect event is broadcasted', async function (assert) {
+
+QUnit.test('connect event is broadcasted after calling start', async function (assert) {
     assert.expect(2);
 
-    patchWebsocketWorkerWithCleanup({
+    const worker = patchWebsocketWorkerWithCleanup({
         broadcast(type) {
             assert.step(`broadcast ${type}`);
         },
     });
+    worker._start();
     // Wait for the websocket to connect.
     await nextTick();
     assert.verifySteps(['broadcast connect']);
@@ -27,6 +29,7 @@ QUnit.test('disconnect event is broadcasted', async function (assert) {
             assert.step(`broadcast ${type}`);
         },
     });
+    worker._start()
     // Wait for the websocket to connect.
     await nextTick();
     worker.websocket.close(WEBSOCKET_CLOSE_CODES.CLEAN);
@@ -51,6 +54,7 @@ QUnit.test('reconnecting/reconnect event is broadcasted', async function (assert
             assert.step(`broadcast ${type}`);
         },
     });
+    worker._start()
     // Wait for the websocket to connect.
     await nextTick();
     worker.websocket.close(WEBSOCKET_CLOSE_CODES.ABNORMAL_CLOSURE);
@@ -81,10 +85,11 @@ QUnit.test('notification event is broadcasted', async function (assert) {
         broadcast(type, message) {
             if (type === 'notification') {
                 assert.step(`broadcast ${type}`);
-                assert.deepEqual(message, notifications.map(notif => notif.message));
+                assert.deepEqual(message, notifications);
             }
         },
     });
+    worker._start()
     // Wait for the websocket to connect.
     await nextTick();
 

@@ -68,8 +68,10 @@
                         </thead>
                         <tbody>
                             <tr t-foreach="get_holidays_status" t-as="status">
-                                &lt;td style=background-color:<t t-esc="status['color']"/>!important &gt;&lt;/td&gt;
-                                <td><t t-esc="status['name']"/></td>
+                                <span t-if="status['color']">
+                                    &lt;td style=background-color:<t t-esc="status['color']"/>!important &gt;&lt;/td&gt;
+                                    <td><t t-esc="status['name']"/></td>
+                                </span>
                             </tr>
                         </tbody>
                     </table>

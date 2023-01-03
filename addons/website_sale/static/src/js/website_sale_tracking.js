@@ -112,7 +112,7 @@ publicWidget.registry.websiteSaleTracking = publicWidget.Widget.extend({
      * @private
      */
     _onOrderPayment: function () {
-        var method = $('#payment_method input[name=acquirer]:checked').nextAll('span:first').text();
+        var method = $('#payment_method input[name=provider]:checked').nextAll('span:first').text();
         this._vpv('/stats/ecom/order_payment/' + method);
     },
 });

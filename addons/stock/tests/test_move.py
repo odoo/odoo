@@ -3470,6 +3470,32 @@ class StockMove(TransactionCase):
         self.assertEqual(len(self.gather_relevant(self.product_lot, self.stock_location, lot_id=lot1, strict=True)), 0.0)
         self.assertEqual(len(self.gather_relevant(self.product_lot, self.stock_location, lot_id=lot2, strict=True)), 0.0)
 
+    def test_edit_reserved_move_line_9(self):
+        """
+        When writing on the reserved quantity on the SML, a process tries to
+        reserve the quants with that new quantity. If it fails (for instance
+        because the written quantity is more than actually available), this
+        quantity should be reset to 0.
+        """
+        self.env['stock.quant']._update_available_quantity(self.product, self.stock_location, 1.0)
+
+        out_move = self.env['stock.move'].create({
+            'name': self.product.name,
+            'location_id': self.stock_location.id,
+            'location_dest_id': self.customer_location.id,
+            'product_id': self.product.id,
+            'product_uom_qty': 1,
+            'product_uom': self.product.uom_id.id,
+        })
+        out_move._action_confirm()
+        out_move._action_assign()
+
+        # try to manually assign more than available
+        out_move.move_line_ids.reserved_uom_qty = 2
+
+        self.assertTrue(out_move.move_line_ids)
+        self.assertEqual(out_move.move_line_ids.reserved_uom_qty, 0, "The reserved quantity should be cancelled")
+
     def test_edit_done_move_line_1(self):
         """ Test that editing a done stock move line linked to an untracked product correctly and
         directly adapts the transfer. In this case, we edit the sublocation where we take the
@@ -4465,11 +4491,10 @@ class StockMove(TransactionCase):
         storable product.
         """
         self.env['stock.quant']._update_available_quantity(self.product, self.stock_location, 1)
-        scrap = self.env['stock.scrap'].create({
-            'product_id': self.product.id,
-            'product_uom_id':self.product.uom_id.id,
-            'scrap_qty': 1,
-        })
+        scrap_form = Form(self.env['stock.scrap'])
+        scrap_form.product_id = self.product
+        scrap_form.scrap_qty = 1
+        scrap = scrap_form.save()
         scrap.do_scrap()
         self.assertEqual(scrap.state, 'done')
         move = scrap.move_id
@@ -5078,6 +5103,7 @@ class StockMove(TransactionCase):
         """ Changing type of an existing product will raise a user error if
             - some move are reserved
             - switching from a stockable product when qty_available is not zero
+            - switching the product type when there are already done moves
         """
         move_in = self.env['stock.move'].create({
             'name': 'test_customer',
@@ -5115,7 +5141,10 @@ class StockMove(TransactionCase):
         move_out._action_assign()
         move_out.quantity_done = self.product.qty_available
         move_out._action_done()
-        self.product.detailed_type = 'consu'
+
+        # Check raise UserError(_("You can not change the type of a product that was already used."))
+        with self.assertRaises(UserError):
+            self.product.detailed_type = 'consu'
 
         move2 = self.env['stock.move'].create({
             'name': 'test_customer',
@@ -5131,9 +5160,10 @@ class StockMove(TransactionCase):
         move2._action_assign()
 
         with self.assertRaises(UserError):
-            self.product.detailed_type = 'product'
+            self.product.detailed_type = 'consu'
         move2._action_cancel()
-        self.product.detailed_type = 'product'
+        with self.assertRaises(UserError):
+            self.product.detailed_type = 'consu'
 
     def test_edit_done_picking_1(self):
         """ Add a new move line in a done picking should generate an

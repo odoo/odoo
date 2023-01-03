@@ -30,23 +30,20 @@ Allows users to send documents by post
         ],
         'snailmail.report_assets_snailmail': [
             ('include', 'web._assets_helpers'),
-            'web/static/src/libs/bootstrap/pre_variables.scss',
+            'web/static/src/scss/pre_variables.scss',
             'web/static/lib/bootstrap/scss/_variables.scss',
             'snailmail/static/src/scss/snailmail_external_layout_asset.scss',
             'snailmail/static/src/js/snailmail_external_layout.js',
         ],
         'web.assets_backend': [
-            'snailmail/static/src/components/*/*.js',
             'snailmail/static/src/components/*/*.scss',
+            'snailmail/static/src/components/*/*.xml',
         ],
         'web.tests_assets': [
-            'snailmail/static/tests/helpers/*.js',
+            'snailmail/static/tests/helpers/**/*.js',
         ],
         'web.qunit_suite_tests': [
             'snailmail/static/tests/qunit_suite_tests/**/*.js',
-        ],
-        'web.assets_qweb': [
-            'snailmail/static/src/components/*/*.xml',
         ],
     },
     'license': 'LGPL-3',

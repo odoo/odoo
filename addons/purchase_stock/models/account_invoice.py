@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import api, fields, models, _
-from odoo.tools.float_utils import float_compare
+from odoo import fields, models
+from odoo.tools import float_compare
 
 
 class AccountMove(models.Model):
@@ -10,28 +10,22 @@ class AccountMove(models.Model):
 
     def _stock_account_prepare_anglo_saxon_in_lines_vals(self):
         ''' Prepare values used to create the journal items (account.move.line) corresponding to the price difference
-         lines for vendor bills.
-
+         lines for vendor bills. It only concerns the quantities that have been delivered before the bill
         Example:
-
         Buy a product having a cost of 9 and a supplier price of 10 and being a storable product and having a perpetual
-        valuation in FIFO. The vendor bill's journal entries looks like:
-
+        valuation in FIFO. Deliver the product and then post the bill. The vendor bill's journal entries looks like:
         Account                                     | Debit | Credit
         ---------------------------------------------------------------
         101120 Stock Interim Account (Received)     | 10.0  |
         ---------------------------------------------------------------
         101100 Account Payable                      |       | 10.0
         ---------------------------------------------------------------
-
         This method computes values used to make two additional journal items:
-
         ---------------------------------------------------------------
         101120 Stock Interim Account (Received)     |       | 1.0
         ---------------------------------------------------------------
-        xxxxxx Price Difference Account             | 1.0   |
+        xxxxxx Expenses                             | 1.0   |
         ---------------------------------------------------------------
-
         :return: A list of Python dictionary to be passed to env['account.move.line'].create.
         '''
         lines_vals_list = []
@@ -48,72 +42,43 @@ class AccountMove(models.Model):
                     continue
 
                 # Retrieve accounts needed to generate the price difference.
-                debit_pdiff_account = line.product_id.property_account_creditor_price_difference \
-                                or line.product_id.categ_id.property_account_creditor_price_difference_categ
-                debit_pdiff_account = move.fiscal_position_id.map_account(debit_pdiff_account)
-                if not debit_pdiff_account:
+                accounts = line.product_id.product_tmpl_id.get_product_accounts(fiscal_pos=move.fiscal_position_id)
+                debit_expense_account = accounts['expense']
+                if not debit_expense_account:
                     continue
 
                 if line.product_id.cost_method != 'standard' and line.purchase_line_id:
-                    po_currency = line.purchase_line_id.currency_id
-                    po_company = line.purchase_line_id.company_id
 
                     # Retrieve stock valuation moves.
                     valuation_stock_moves = self.env['stock.move'].search([
                         ('purchase_line_id', '=', line.purchase_line_id.id),
                         ('state', '=', 'done'),
                         ('product_qty', '!=', 0.0),
+                        ('product_id', '=', line.product_id.id),    # kits must be handled manually
                     ])
+
                     if move.move_type == 'in_refund':
                         valuation_stock_moves = valuation_stock_moves.filtered(lambda stock_move: stock_move._is_out())
                     else:
                         valuation_stock_moves = valuation_stock_moves.filtered(lambda stock_move: stock_move._is_in())
 
-                    if valuation_stock_moves:
-                        valuation_price_unit_total, valuation_total_qty = valuation_stock_moves._get_valuation_price_and_qty(line, move.currency_id)
-                        valuation_price_unit = valuation_price_unit_total / valuation_total_qty
-                        valuation_price_unit = line.product_id.uom_id._compute_price(valuation_price_unit, line.product_uom_id)
+                    if not valuation_stock_moves:
+                        continue
 
-                    elif line.product_id.cost_method == 'fifo':
-                        # In this condition, we have a real price-valuated product which has not yet been received
-                        valuation_price_unit = po_currency._convert(
-                            line.purchase_line_id.price_unit, move.currency_id,
-                            po_company, move.date, round=False,
-                        )
-                    else:
-                        # For average/fifo/lifo costing method, fetch real cost price from incoming moves.
-                        price_unit = line.purchase_line_id.product_uom._compute_price(line.purchase_line_id.price_unit, line.product_uom_id)
-                        valuation_price_unit = po_currency._convert(
-                            price_unit, move.currency_id,
-                            po_company, move.date, round=False
-                        )
+                    valuation_price_unit_total, valuation_total_qty = valuation_stock_moves._get_valuation_price_and_qty(line, move.currency_id)
+                    valuation_price_unit = valuation_price_unit_total / valuation_total_qty
+                    valuation_price_unit = line.product_id.uom_id._compute_price(valuation_price_unit, line.product_uom_id)
 
                 else:
-                    # Valuation_price unit is always expressed in invoice currency, so that it can always be computed with the good rate
-                    price_unit = line.product_id.uom_id._compute_price(line.product_id.standard_price, line.product_uom_id)
-                    valuation_price_unit = line.company_currency_id._convert(
-                        price_unit, move.currency_id,
-                        move.company_id, fields.Date.today(), round=False
-                    )
+                    continue
 
 
-                price_unit = line.price_unit * (1 - (line.discount or 0.0) / 100.0)
-                if line.tax_ids:
-                    # We do not want to round the price unit since :
-                    # - It does not follow the currency precision
-                    # - It may include a discount
-                    # Since compute_all still rounds the total, we use an ugly workaround:
-                    # shift the decimal part using a fixed quantity to avoid rounding issues
-                    prec = 1e+6
-                    price_unit *= prec
-                    price_unit = line.tax_ids.with_context(round=False).compute_all(
-                        price_unit, currency=move.currency_id, quantity=1.0, is_refund=move.move_type == 'in_refund',
-                        fixed_multiplicator=move.direction_sign,
-                    )['total_excluded']
-                    price_unit /= prec
+                price_unit = line._get_gross_unit_price()
 
                 price_unit_val_dif = price_unit - valuation_price_unit
-                price_subtotal = line.quantity * price_unit_val_dif
+                # If there are some valued moves, we only consider their quantity already used
+                relevant_qty = line._get_out_and_not_invoiced_qty(valuation_stock_moves)
+                price_subtotal = relevant_qty * price_unit_val_dif
 
                 # We consider there is a price difference if the subtotal is not zero. In case a
                 # discount has been applied, we can't round the price unit anymore, and hence we
@@ -131,18 +96,17 @@ class AccountMove(models.Model):
                         'currency_id': line.currency_id.id,
                         'product_id': line.product_id.id,
                         'product_uom_id': line.product_uom_id.id,
-                        'quantity': line.quantity,
+                        'quantity': relevant_qty,
                         'price_unit': price_unit_val_dif,
-                        'price_subtotal': line.quantity * price_unit_val_dif,
-                        'amount_currency': line.quantity * price_unit_val_dif * line.move_id.direction_sign,
+                        'price_subtotal': relevant_qty * price_unit_val_dif,
+                        'amount_currency': relevant_qty * price_unit_val_dif * line.move_id.direction_sign,
                         'balance': line.currency_id._convert(
-                            line.quantity * price_unit_val_dif * line.move_id.direction_sign,
+                            relevant_qty * price_unit_val_dif * line.move_id.direction_sign,
                             line.company_currency_id,
                             line.company_id, fields.Date.today(),
                         ),
-                        'account_id': debit_pdiff_account.id,
-                        'analytic_account_id': line.analytic_account_id.id,
-                        'analytic_tag_ids': [(6, 0, line.analytic_tag_ids.ids)],
+                        'account_id': debit_expense_account.id,
+                        'analytic_distribution': line.analytic_distribution,
                         'display_type': 'cogs',
                     }
                     lines_vals_list.append(vals)
@@ -155,26 +119,23 @@ class AccountMove(models.Model):
                         'currency_id': line.currency_id.id,
                         'product_id': line.product_id.id,
                         'product_uom_id': line.product_uom_id.id,
-                        'quantity': line.quantity,
+                        'quantity': relevant_qty,
                         'price_unit': -price_unit_val_dif,
-                        'price_subtotal': line.quantity * -price_unit_val_dif,
-                        'amount_currency': line.quantity * -price_unit_val_dif * line.move_id.direction_sign,
+                        'price_subtotal': relevant_qty * -price_unit_val_dif,
+                        'amount_currency': relevant_qty * -price_unit_val_dif * line.move_id.direction_sign,
                         'balance': line.currency_id._convert(
-                            line.quantity * -price_unit_val_dif * line.move_id.direction_sign,
+                            relevant_qty * -price_unit_val_dif * line.move_id.direction_sign,
                             line.company_currency_id,
                             line.company_id, fields.Date.today(),
                         ),
                         'account_id': line.account_id.id,
-                        'analytic_account_id': line.analytic_account_id.id,
-                        'analytic_tag_ids': [(6, 0, line.analytic_tag_ids.ids)],
+                        'analytic_distribution': line.analytic_distribution,
                         'display_type': 'cogs',
                     }
                     lines_vals_list.append(vals)
         return lines_vals_list
 
     def _post(self, soft=True):
-        # OVERRIDE
-        # Create additional price difference lines for vendor bills.
         if self._context.get('move_reverse_cancel'):
             return super()._post(soft)
         self.env['account.move.line'].create(self._stock_account_prepare_anglo_saxon_in_lines_vals())

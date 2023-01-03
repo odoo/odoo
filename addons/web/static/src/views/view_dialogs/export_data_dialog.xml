@@ -65,7 +65,7 @@
                     <div class="o_export_format">
                         <strong>Export Format:</strong>
                         <t t-foreach="availableFormats" t-as="format" t-key="format.tag">
-                            <div class="radio form-check form-check-inline ps-5">
+                            <div class="radio form-check-inline ps-5">
                                 <input t-att-id="'o_radio' + format.tag" type="radio" t-att-checked="format.tag === availableFormats[state.selectedFormat].tag" name="o_export_format_name" t-att-value="format.tag" class="form-check-input" t-on-change="setFormat" />
                                 <label class="form-check-label" t-att-for="'o_radio' + format.tag" t-esc="format.label" />
                             </div>

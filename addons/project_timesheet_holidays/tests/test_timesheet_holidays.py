@@ -18,7 +18,7 @@ class TestTimesheetHolidaysCreate(common.TransactionCase):
     def test_status_create(self):
         """Ensure that when a status is created, it fullfills the project and task constrains"""
         status = self.env['hr.leave.type'].create({
-            'name': 'A nice Leave Type',
+            'name': 'A nice Time Off Type',
             'requires_allocation': 'no'
         })
 
@@ -55,14 +55,14 @@ class TestTimesheetHolidays(TestCommonTimesheet):
         self.internal_task_leaves = self.env.company.leave_timesheet_task_id
 
         self.hr_leave_type_with_ts = self.env['hr.leave.type'].create({
-            'name': 'Leave Type with timesheet generation',
+            'name': 'Time Off Type with timesheet generation',
             'requires_allocation': 'no',
             'timesheet_generate': True,
             'timesheet_project_id': self.internal_project.id,
             'timesheet_task_id': self.internal_task_leaves.id,
         })
         self.hr_leave_type_no_ts = self.env['hr.leave.type'].create({
-            'name': 'Leave Type without timesheet generation',
+            'name': 'Time Off Type without timesheet generation',
             'requires_allocation': 'no',
             'timesheet_generate': False,
             'timesheet_project_id': False,
@@ -97,7 +97,7 @@ class TestTimesheetHolidays(TestCommonTimesheet):
         # employee creates a leave request
         number_of_days = (self.leave_end_datetime - self.leave_start_datetime).days
         holiday = self.Requests.with_user(self.user_employee).create({
-            'name': 'Leave 1',
+            'name': 'Time Off 1',
             'employee_id': self.empl_employee.id,
             'holiday_status_id': self.hr_leave_type_with_ts.id,
             'date_from': self.leave_start_datetime,
@@ -120,7 +120,7 @@ class TestTimesheetHolidays(TestCommonTimesheet):
         # employee creates a leave request
         number_of_days = (self.leave_end_datetime - self.leave_start_datetime).days
         holiday = self.Requests.with_user(self.user_employee).create({
-            'name': 'Leave 1',
+            'name': 'Time Off 1',
             'employee_id': self.empl_employee.id,
             'holiday_status_id': self.hr_leave_type_no_ts.id,
             'date_from': self.leave_start_datetime,
@@ -134,7 +134,7 @@ class TestTimesheetHolidays(TestCommonTimesheet):
     def test_cancel_validate_holidays(self):
         number_of_days = (self.leave_end_datetime - self.leave_start_datetime).days
         holiday = self.Requests.with_user(self.user_employee).create({
-            'name': 'Leave 1',
+            'name': 'Time Off 1',
             'employee_id': self.empl_employee.id,
             'holiday_status_id': self.hr_leave_type_with_ts.id,
             'date_from': self.leave_start_datetime,
@@ -173,7 +173,7 @@ class TestTimesheetHolidays(TestCommonTimesheet):
         })
 
         holiday = self.Requests.with_user(self.user_employee).create({
-            'name': 'Leave 1',
+            'name': 'Time Off 1',
             'employee_id': self.empl_employee.id,
             'holiday_status_id': self.hr_leave_type_with_ts.id,
             'date_from': leave_start_datetime,

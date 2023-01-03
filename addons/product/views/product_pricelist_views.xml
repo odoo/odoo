@@ -20,7 +20,7 @@
             <tree string="Products Price List" sample="1">
                 <field name="sequence" widget="handle"/>
                 <field name="name"/>
-                <field name="discount_policy" groups="product.group_discount_per_so_line"/>
+                <field name="discount_policy"/>
                 <field name="currency_id" groups="base.group_multi_currency"/>
                 <field name="company_id" groups="base.group_multi_company"/>
             </tree>
@@ -45,7 +45,7 @@
                                     <i class="fa fa-money" role="img" aria-label="Currency" title="Currency"></i> <field name="currency_id"/>
                                 </strong>
                             </div>
-                            <field name="discount_policy" groups="product.group_discount_per_so_line"/>
+                            <field name="discount_policy"/>
                         </div>
                     </t>
                 </templates>
@@ -73,7 +73,7 @@
                     <notebook>
                         <page name="pricelist_rules" string="Price Rules">
                             <field name="item_ids" nolabel="1" context="{'default_base':'list_price'}">
-                                <tree string="Pricelist Rules" editable="bottom">
+                                <tree groups="!product.group_sale_pricelist" string="Pricelist Rules" editable="bottom">
                                     <field name="product_tmpl_id" string="Products" required="1"/>
                                     <field name="product_id" string="Variants"
                                     groups="product.group_product_variant"
@@ -90,6 +90,21 @@
                                     <field name="applied_on" invisible="1"/>
                                     <field name="company_id" invisible="1"/>
                                 </tree>
+                                <!-- When in advanced pricelist mode : pricelist rules
+                                    Should open in a form view and not be editable inline anymore.
+                                -->
+                                <tree groups="product.group_sale_pricelist" string="Pricelist Rules">
+                                    <field name="product_tmpl_id" invisible="1"/>
+                                    <field name="name" string="Applicable On"/>
+                                    <field name="min_quantity"/>
+                                    <field name="price" string="Price"/>
+                                    <field name="date_start"/>
+                                    <field name="date_end"/>
+                                    <field name="base" invisible="1"/>
+                                    <field name="price_discount" invisible="1"/>
+                                    <field name="applied_on" invisible="1"/>
+                                    <field name="compute_price" invisible="1"/>
+                                </tree>
                             </field>
                         </page>
                         <page name="pricelist_config" string="Configuration">
@@ -97,7 +112,7 @@
                                 <group name="pricelist_availability" string="Availability">
                                     <field name="country_group_ids" widget="many2many_tags"/>
                                 </group>
-                                <group name="pricelist_discounts" groups="product.group_discount_per_so_line" string="Discounts">
+                                <group name="pricelist_discounts" string="Discounts">
                                     <field name="discount_policy" widget="radio"/>
                                 </group>
                             </group>
@@ -105,34 +120,6 @@
                     </notebook>
                 </sheet>
             </form>
-        </field>
-    </record>
-
-    <record id="product_pricelist_view_inherit" model="ir.ui.view">
-        <field name="name">product.pricelist.form.inherit</field>
-        <field name="model">product.pricelist</field>
-        <field name="inherit_id" ref="product.product_pricelist_view"/>
-        <field name="groups_id" eval="[(4, ref('product.group_sale_pricelist'))]"/>
-        <field name="arch" type="xml">
-            <!-- When in advanced pricelist mode : pricelist rules
-                Should open in a form view and not be editable inline anymore.
-            -->
-            <field name="item_ids" position="replace">
-                <field name="item_ids" nolabel="1" context="{'default_base':'list_price'}" groups="product.group_product_pricelist">
-                    <tree string="Pricelist Rules">
-                        <field name="product_tmpl_id" invisible="1"/>
-                        <field name="name" string="Applicable On"/>
-                        <field name="min_quantity"/>
-                        <field name="price" string="Price"/>
-                        <field name="date_start"/>
-                        <field name="date_end"/>
-                        <field name="base" invisible="1"/>
-                        <field name="price_discount" invisible="1"/>
-                        <field name="applied_on" invisible="1"/>
-                        <field name="compute_price" invisible="1"/>
-                    </tree>
-                </field>
-            </field>
         </field>
     </record>
 

@@ -17,7 +17,7 @@ class TestChannelInternals(MailCommon):
     @mute_logger('odoo.models.unlink')
     def test_01_join_call(self):
         """Join call should remove existing sessions, remove invitation, create a new session, and return data."""
-        channel = self.env['mail.channel'].browse(self.env['mail.channel'].channel_create(name='Test Channel')['id'])
+        channel = self.env['mail.channel'].browse(self.env['mail.channel'].channel_create(name='Test Channel', group_id=self.env.ref('base.group_user').id)['id'])
         channel_member = channel.sudo().channel_member_ids.filtered(lambda channel_member: channel_member.partner_id == self.user_employee.partner_id)
         channel_member._rtc_join_call()
         self.env['bus.bus'].sudo().search([]).unlink()
@@ -141,20 +141,23 @@ class TestChannelInternals(MailCommon):
                     },
                 },
                 {
-                    'type': 'mail.channel/insert',
+                    'type': 'mail.record/insert',
                     'payload': {
-                        'id': channel.id,
-                        'invitedMembers': [('insert', [{
-                            'id': channel_member_test_user.id,
-                            'channel': {'id': channel_member_test_user.channel_id.id},
-                            'persona': {
-                                'partner': {
-                                    'id': channel_member_test_user.partner_id.id,
-                                    'name': channel_member_test_user.partner_id.name,
-                                    'im_status': channel_member_test_user.partner_id.im_status,
+                        'Thread': {
+                            'id': channel.id,
+                            'model': 'mail.channel',
+                            'invitedMembers': [('insert', [{
+                                'id': channel_member_test_user.id,
+                                'channel': {'id': channel_member_test_user.channel_id.id},
+                                'persona': {
+                                    'partner': {
+                                        'id': channel_member_test_user.partner_id.id,
+                                        'name': channel_member_test_user.partner_id.name,
+                                        'im_status': channel_member_test_user.partner_id.im_status,
+                                    },
                                 },
-                            },
-                        }])],
+                            }])],
+                        }
                     },
                 },
             ]
@@ -248,33 +251,36 @@ class TestChannelInternals(MailCommon):
                     },
                 },
                 {
-                    'type': 'mail.channel/insert',
+                    'type': 'mail.record/insert',
                     'payload': {
-                        'id': channel.id,
-                        'invitedMembers': [('insert', [
-                            {
-                                'id': channel_member_test_user.id,
-                                'channel': {'id': channel_member_test_user.channel_id.id},
-                                'persona': {
-                                    'partner': {
-                                        'id': channel_member_test_user.partner_id.id,
-                                        'name': channel_member_test_user.partner_id.name,
-                                        'im_status': channel_member_test_user.partner_id.im_status,
+                        'Thread': {
+                            'id': channel.id,
+                            'model': 'mail.channel',
+                            'invitedMembers': [('insert', [
+                                {
+                                    'id': channel_member_test_user.id,
+                                    'channel': {'id': channel_member_test_user.channel_id.id},
+                                    'persona': {
+                                        'partner': {
+                                            'id': channel_member_test_user.partner_id.id,
+                                            'name': channel_member_test_user.partner_id.name,
+                                            'im_status': channel_member_test_user.partner_id.im_status,
+                                        },
                                     },
                                 },
-                            },
-                            {
-                                'id': channel_member_test_guest.id,
-                                'channel': {'id': channel_member_test_guest.channel_id.id},
-                                'persona': {
-                                    'guest': {
-                                        'id': channel_member_test_guest.guest_id.id,
-                                        'name': channel_member_test_guest.guest_id.name,
-                                        'im_status': channel_member_test_guest.guest_id.im_status,
+                                {
+                                    'id': channel_member_test_guest.id,
+                                    'channel': {'id': channel_member_test_guest.channel_id.id},
+                                    'persona': {
+                                        'guest': {
+                                            'id': channel_member_test_guest.guest_id.id,
+                                            'name': channel_member_test_guest.guest_id.name,
+                                            'im_status': channel_member_test_guest.guest_id.im_status,
+                                        },
                                     },
                                 },
-                            },
-                        ])],
+                            ])],
+                        }
                     },
                 },
             ]
@@ -326,27 +332,33 @@ class TestChannelInternals(MailCommon):
             ],
             [
                 {
-                    'type': 'mail.channel/insert',
+                    'type': 'mail.record/insert',
                     'payload': {
-                        'id': channel.id,
-                        'rtcInvitingSession': [('unlink',)],
+                        'Thread': {
+                            'id': channel.id,
+                            'model': 'mail.channel',
+                            'rtcInvitingSession': [('unlink',)],
+                        }
                     },
                 },
                 {
-                    'type': 'mail.channel/insert',
+                    'type': 'mail.record/insert',
                     'payload': {
-                        'id': channel.id,
-                        'invitedMembers': [('insert-and-unlink', [{
-                            'id': channel_member_test_user.id,
-                            'channel': {'id': channel_member_test_user.channel_id.id},
-                            'persona': {
-                                'partner': {
-                                    'id': channel_member_test_user.partner_id.id,
-                                    'name': channel_member_test_user.partner_id.name,
-                                    'im_status': channel_member_test_user.partner_id.im_status,
+                        'Thread': {
+                            'id': channel.id,
+                            'model': 'mail.channel',
+                            'invitedMembers': [('insert-and-unlink', [{
+                                'id': channel_member_test_user.id,
+                                'channel': {'id': channel_member_test_user.channel_id.id},
+                                'persona': {
+                                    'partner': {
+                                        'id': channel_member_test_user.partner_id.id,
+                                        'name': channel_member_test_user.partner_id.name,
+                                        'im_status': channel_member_test_user.partner_id.im_status,
+                                    },
                                 },
-                            },
-                        }])],
+                            }])],
+                        }
                     },
                 },
                 {
@@ -389,27 +401,33 @@ class TestChannelInternals(MailCommon):
             ],
             [
                 {
-                    'type': 'mail.channel/insert',
+                    'type': 'mail.record/insert',
                     'payload': {
-                        'id': channel.id,
-                        'rtcInvitingSession': [('unlink',)],
+                        'Thread': {
+                            'id': channel.id,
+                            'model': 'mail.channel',
+                            'rtcInvitingSession': [('unlink',)],
+                        }
                     },
                 },
                 {
-                    'type': 'mail.channel/insert',
+                    'type': 'mail.record/insert',
                     'payload': {
-                        'id': channel.id,
-                        'invitedMembers': [('insert-and-unlink', [{
-                            'id': channel_member_test_guest.id,
-                            'channel': {'id': channel_member_test_guest.channel_id.id},
-                            'persona': {
-                                'guest': {
-                                    'id': channel_member_test_guest.guest_id.id,
-                                    'name': channel_member_test_guest.guest_id.name,
-                                    'im_status': channel_member_test_guest.guest_id.im_status,
+                        'Thread': {
+                            'id': channel.id,
+                            'model': 'mail.channel',
+                            'invitedMembers': [('insert-and-unlink', [{
+                                'id': channel_member_test_guest.id,
+                                'channel': {'id': channel_member_test_guest.channel_id.id},
+                                'persona': {
+                                    'guest': {
+                                        'id': channel_member_test_guest.guest_id.id,
+                                        'name': channel_member_test_guest.guest_id.name,
+                                        'im_status': channel_member_test_guest.guest_id.im_status,
+                                    },
                                 },
-                            },
-                        }])],
+                            }])],
+                        }
                     },
                 },
                 {
@@ -461,27 +479,33 @@ class TestChannelInternals(MailCommon):
             ],
             [
                 {
-                    'type': 'mail.channel/insert',
+                    'type': 'mail.record/insert',
                     'payload': {
-                        'id': channel.id,
-                        'rtcInvitingSession': [('unlink',)],
+                        'Thread': {
+                            'id': channel.id,
+                            'model': 'mail.channel',
+                            'rtcInvitingSession': [('unlink',)],
+                        }
                     },
                 },
                 {
-                    'type': 'mail.channel/insert',
+                    'type': 'mail.record/insert',
                     'payload': {
-                        'id': channel.id,
-                        'invitedMembers': [('insert-and-unlink', [{
-                            'id': channel_member_test_user.id,
-                            'channel': {'id': channel_member_test_user.channel_id.id},
-                            'persona': {
-                                'partner': {
-                                    'id': channel_member_test_user.partner_id.id,
-                                    'name': channel_member_test_user.partner_id.name,
-                                    'im_status': channel_member_test_user.partner_id.im_status,
+                        'Thread': {
+                            'id': channel.id,
+                            'model': 'mail.channel',
+                            'invitedMembers': [('insert-and-unlink', [{
+                                'id': channel_member_test_user.id,
+                                'channel': {'id': channel_member_test_user.channel_id.id},
+                                'persona': {
+                                    'partner': {
+                                        'id': channel_member_test_user.partner_id.id,
+                                        'name': channel_member_test_user.partner_id.name,
+                                        'im_status': channel_member_test_user.partner_id.im_status,
+                                    },
                                 },
-                            },
-                        }])],
+                            }])],
+                        }
                     },
                 },
             ]
@@ -497,27 +521,33 @@ class TestChannelInternals(MailCommon):
             ],
             [
                 {
-                    'type': 'mail.channel/insert',
+                    'type': 'mail.record/insert',
                     'payload': {
-                        'id': channel.id,
-                        'rtcInvitingSession': [('unlink',)],
+                        'Thread': {
+                            'id': channel.id,
+                            'model': 'mail.channel',
+                            'rtcInvitingSession': [('unlink',)],
+                        }
                     },
                 },
                 {
-                    'type': 'mail.channel/insert',
+                    'type': 'mail.record/insert',
                     'payload': {
-                        'id': channel.id,
-                        'invitedMembers': [('insert-and-unlink', [{
-                            'id': channel_member_test_guest.id,
-                            'channel': {'id': channel_member_test_guest.channel_id.id},
-                            'persona': {
-                                'guest': {
-                                    'id': channel_member_test_guest.guest_id.id,
-                                    'name': channel_member_test_guest.guest_id.name,
-                                    'im_status': channel_member_test_guest.guest_id.im_status,
+                        'Thread': {
+                            'id': channel.id,
+                            'model': 'mail.channel',
+                            'invitedMembers': [('insert-and-unlink', [{
+                                'id': channel_member_test_guest.id,
+                                'channel': {'id': channel_member_test_guest.channel_id.id},
+                                'persona': {
+                                    'guest': {
+                                        'id': channel_member_test_guest.guest_id.id,
+                                        'name': channel_member_test_guest.guest_id.name,
+                                        'im_status': channel_member_test_guest.guest_id.im_status,
+                                    },
                                 },
-                            },
-                        }])],
+                            }])],
+                        }
                     },
                 },
             ]
@@ -553,47 +583,56 @@ class TestChannelInternals(MailCommon):
                     },
                 },
                 {
-                    'type': 'mail.channel/insert',
+                    'type': 'mail.record/insert',
                     'payload': {
-                        'id': channel.id,
-                        'rtcInvitingSession': [('unlink',)],
+                        'Thread': {
+                            'id': channel.id,
+                            'model': 'mail.channel',
+                            'rtcInvitingSession': [('unlink',)],
+                        }
                     },
                 },
                 {
-                    'type': 'mail.channel/insert',
+                    'type': 'mail.record/insert',
                     'payload': {
-                        'id': channel.id,
-                        'rtcInvitingSession': [('unlink',)],
+                        'Thread': {
+                            'id': channel.id,
+                            'model': 'mail.channel',
+                            'rtcInvitingSession': [('unlink',)],
+                        }
                     },
                 },
                 {
-                    'type': 'mail.channel/insert',
+                    'type': 'mail.record/insert',
                     'payload': {
-                        'id': channel.id,
-                        'invitedMembers': [('insert-and-unlink', [
-                            {
-                                'id': channel_member_test_user.id,
-                                'channel': {'id': channel_member_test_user.channel_id.id},
-                                'persona': {
-                                    'partner': {
-                                        'id': channel_member_test_user.partner_id.id,
-                                        'name': channel_member_test_user.partner_id.name,
-                                        'im_status': channel_member_test_user.partner_id.im_status,
+                        'Thread': {
+                            'id': channel.id,
+                            'model': 'mail.channel',
+                            'invitedMembers': [('insert-and-unlink', [
+                                {
+                                    'id': channel_member_test_user.id,
+                                    'channel': {'id': channel_member_test_user.channel_id.id},
+                                    'persona': {
+                                        'partner': {
+                                            'id': channel_member_test_user.partner_id.id,
+                                            'name': channel_member_test_user.partner_id.name,
+                                            'im_status': channel_member_test_user.partner_id.im_status,
+                                        },
                                     },
                                 },
-                            },
-                            {
-                                'id': channel_member_test_guest.id,
-                                'channel': {'id': channel_member_test_guest.channel_id.id},
-                                'persona': {
-                                    'guest': {
-                                        'id': channel_member_test_guest.guest_id.id,
-                                        'name': channel_member_test_guest.guest_id.name,
-                                        'im_status': channel_member_test_guest.guest_id.im_status,
+                                {
+                                    'id': channel_member_test_guest.id,
+                                    'channel': {'id': channel_member_test_guest.channel_id.id},
+                                    'persona': {
+                                        'guest': {
+                                            'id': channel_member_test_guest.guest_id.id,
+                                            'name': channel_member_test_guest.guest_id.name,
+                                            'im_status': channel_member_test_guest.guest_id.im_status,
+                                        },
                                     },
                                 },
-                            },
-                        ])],
+                            ])],
+                        }
                     },
                 },
                 {
@@ -639,81 +678,90 @@ class TestChannelInternals(MailCommon):
             ],
             message_items=[
                 {
-                    'type': 'mail.channel/insert',
+                    'type': 'mail.record/insert',
                     'payload': {
-                        'id': channel.id,
-                        'rtcInvitingSession': [('insert', {
-                            'id': channel_member.rtc_session_ids.id,
-                            'channelMember': {
-                                "id": channel_member.id,
-                                "channel": {"id": channel_member.channel_id.id},
-                                "persona": {
-                                    "partner": {
-                                        "id": channel_member.partner_id.id,
-                                        "name": channel_member.partner_id.name,
-                                        "im_status": channel_member.partner_id.im_status,
+                        'Thread': {
+                            'id': channel.id,
+                            'model': 'mail.channel',
+                            'rtcInvitingSession': {
+                                'id': channel_member.rtc_session_ids.id,
+                                'channelMember': {
+                                    "id": channel_member.id,
+                                    "channel": {"id": channel_member.channel_id.id},
+                                    "persona": {
+                                        "partner": {
+                                            "id": channel_member.partner_id.id,
+                                            "name": channel_member.partner_id.name,
+                                            "im_status": channel_member.partner_id.im_status,
+                                        },
                                     },
                                 },
+                                'isCameraOn': False,
+                                'isDeaf': False,
+                                'isSelfMuted': False,
+                                'isScreenSharingOn': False,
                             },
-                            'isCameraOn': False,
-                            'isDeaf': False,
-                            'isSelfMuted': False,
-                            'isScreenSharingOn': False,
-                        })],
+                        }
                     },
                 },
                 {
-                    'type': 'mail.channel/insert',
+                    'type': 'mail.record/insert',
                     'payload': {
-                        'id': channel.id,
-                        'rtcInvitingSession': [('insert', {
-                            'id': channel_member.rtc_session_ids.id,
-                            'channelMember': {
-                                "id": channel_member.id,
-                                "channel": {"id": channel_member.channel_id.id},
-                                "persona": {
-                                    "partner": {
-                                        "id": channel_member.partner_id.id,
-                                        "name": channel_member.partner_id.name,
-                                        "im_status": channel_member.partner_id.im_status,
+                        'Thread': {
+                            'id': channel.id,
+                            'model': 'mail.channel',
+                            'rtcInvitingSession': {
+                                'id': channel_member.rtc_session_ids.id,
+                                'channelMember': {
+                                    "id": channel_member.id,
+                                    "channel": {"id": channel_member.channel_id.id},
+                                    "persona": {
+                                        "partner": {
+                                            "id": channel_member.partner_id.id,
+                                            "name": channel_member.partner_id.name,
+                                            "im_status": channel_member.partner_id.im_status,
+                                        },
                                     },
                                 },
+                                'isCameraOn': False,
+                                'isDeaf': False,
+                                'isSelfMuted': False,
+                                'isScreenSharingOn': False,
                             },
-                            'isCameraOn': False,
-                            'isDeaf': False,
-                            'isSelfMuted': False,
-                            'isScreenSharingOn': False,
-                        })],
+                        }
                     },
                 },
                 {
-                    'type': 'mail.channel/insert',
+                    'type': 'mail.record/insert',
                     'payload': {
-                        'id': channel.id,
-                        'invitedMembers': [('insert', [
-                            {
-                                'id': channel_member_test_user.id,
-                                'channel': {'id': channel_member_test_user.channel_id.id},
-                                'persona': {
-                                    'partner': {
-                                        'id': channel_member_test_user.partner_id.id,
-                                        'name': channel_member_test_user.partner_id.name,
-                                        'im_status': channel_member_test_user.partner_id.im_status,
+                        'Thread': {
+                            'id': channel.id,
+                            'model': 'mail.channel',
+                            'invitedMembers': [('insert', [
+                                {
+                                    'id': channel_member_test_user.id,
+                                    'channel': {'id': channel_member_test_user.channel_id.id},
+                                    'persona': {
+                                        'partner': {
+                                            'id': channel_member_test_user.partner_id.id,
+                                            'name': channel_member_test_user.partner_id.name,
+                                            'im_status': channel_member_test_user.partner_id.im_status,
+                                        },
                                     },
                                 },
-                            },
-                            {
-                                'id': channel_member_test_guest.id,
-                                'channel': {'id': channel_member_test_guest.channel_id.id},
-                                'persona': {
-                                    'guest': {
-                                        'id': channel_member_test_guest.guest_id.id,
-                                        'name': channel_member_test_guest.guest_id.name,
-                                        'im_status': channel_member_test_guest.guest_id.im_status,
+                                {
+                                    'id': channel_member_test_guest.id,
+                                    'channel': {'id': channel_member_test_guest.channel_id.id},
+                                    'persona': {
+                                        'guest': {
+                                            'id': channel_member_test_guest.guest_id.id,
+                                            'name': channel_member_test_guest.guest_id.name,
+                                            'im_status': channel_member_test_guest.guest_id.im_status,
+                                        },
                                     },
                                 },
-                            },
-                        ])],
+                            ])],
+                        }
                     },
                 },
             ],

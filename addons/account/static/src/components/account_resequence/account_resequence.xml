@@ -18,10 +18,10 @@
 
     <t t-name="account.ResequenceChangeLine" owl="1">
         <tr>
-            <td t-esc="props.changeLine.date"/>
-            <td t-esc="props.changeLine.current_name"/>
-            <td t-if="props.ordering == 'keep'" t-esc="props.changeLine.new_by_name" t-attf-class="{{ props.changeLine.new_by_name != props.changeLine.new_by_date ? 'animate' : ''}}"/>
-            <td t-else="" t-esc="props.changeLine.new_by_date" t-attf-class="{{ props.changeLine.new_by_name != props.changeLine.new_by_date ? 'animate' : ''}}"/>
+            <td t-out="props.changeLine.date"/>
+            <td t-out="props.changeLine.current_name"/>
+            <td t-if="props.ordering == 'keep'" t-out="props.changeLine.new_by_name" t-attf-class="{{ props.changeLine.new_by_name != props.changeLine.new_by_date ? 'animate' : ''}}"/>
+            <td t-else="" t-out="props.changeLine.new_by_date" t-attf-class="{{ props.changeLine.new_by_name != props.changeLine.new_by_date ? 'animate' : ''}}"/>
         </tr>
     </t>
 </templates>

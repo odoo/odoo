@@ -3,15 +3,10 @@
     <data>
         <!-- Discuss utility templates for notifications -->
         <template id="message_user_assigned">
-<p style="margin: 0px;">
-    <span>Dear <t t-esc="object.user_id.sudo().name"/>,</span><br />
+    <span>Dear <t t-esc="object.user_id.sudo().name"/>,</span>
+    <br/><br/>
     <span style="margin-top: 8px;">You have been assigned to the <t t-esc="model_description or 'document'"/> <t t-esc="object.display_name"/>.</span>
-</p>
-<p style="padding-top: 24px; padding-bottom: 16px;">
-    <a t-att-href="access_link" t-att-data-oe-model="object._name" t-att-data-oe-id="object.id" style="background-color:#875A7B; padding: 10px; text-decoration: none; color: #fff; border-radius: 5px;">
-            View <t t-esc="model_description or 'document'"/>
-    </a>
-</p>
+    <br/>
         </template>
 
         <template id="message_activity_done">
@@ -36,17 +31,18 @@
 
         <template id="message_activity_assigned">
 <div style="margin: 0px; padding: 0px; font-size: 13px;">
-    <span t-field="activity.create_uid.name"/> assigned you an activity <span t-field="activity.activity_type_id.name"/>
-    <t t-if="activity.summary">(<span t-field="activity.summary"/>)</t>
-    on <span t-field="activity.res_name"/>
-    to close for <span t-field="activity.date_deadline"/>.<br />
-    <p style="padding: 16px 0px 16px 0px;">
-        <a t-att-href="access_link" t-att-data-oe-model="activity.res_model" t-att-data-oe-id="activity.res_id"
-            style="background-color:#875A7B; padding: 8px 16px 8px 16px; text-decoration: none; color: #fff; border-radius: 5px;">
-            View <t t-esc="model_description or 'document'"/>
-        </a>
+    Dear <span t-field="activity.user_id.name"/>,
+    <br/><br/>
+    <p>
+        <span t-field="activity.create_uid.name"/> has just assigned you the following activity:
+        <ul>
+            <li>Document: "<t t-esc="activity.res_name"/>"
+                <t t-if="model_description"> (<t t-esc="model_description"/>)</t>
+            </li>
+            <li t-if="activity.summary">Summary: <span t-field="activity.summary"/></li>
+            <li>Deadline: <span t-field="activity.date_deadline"/></li>
+        </ul>
     </p>
-    <div t-if="activity.note" style="margin-top: 8px;" t-field="activity.note"/>
 </div>
         </template>
 

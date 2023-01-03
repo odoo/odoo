@@ -50,7 +50,7 @@ class ir_cron(models.Model):
     ir_actions_server_id = fields.Many2one(
         'ir.actions.server', 'Server action',
         delegate=True, ondelete='restrict', required=True)
-    cron_name = fields.Char('Name', related='ir_actions_server_id.name', store=True, readonly=False)
+    cron_name = fields.Char('Name', compute='_compute_cron_name', store=True)
     user_id = fields.Many2one('res.users', string='Scheduler User', default=lambda self: self.env.user, required=True)
     active = fields.Boolean(default=True)
     interval_number = fields.Integer(default=1, help="Repeat every x.")
@@ -64,6 +64,11 @@ class ir_cron(models.Model):
     nextcall = fields.Datetime(string='Next Execution Date', required=True, default=fields.Datetime.now, help="Next planned execution date for this job.")
     lastcall = fields.Datetime(string='Last Execution Date', help="Previous time the cron ran successfully, provided to the job through the context on the `lastcall` key")
     priority = fields.Integer(default=5, help='The priority of the job, as an integer: 0 means higher priority, 10 means lower priority.')
+
+    @api.depends('ir_actions_server_id.name')
+    def _compute_cron_name(self):
+        for cron in self.with_context(lang='en_US'):
+            cron.cron_name = cron.ir_actions_server_id.name
 
     @api.model_create_multi
     def create(self, vals_list):
@@ -260,7 +265,7 @@ class ir_cron(models.Model):
         try:
             cr.execute(query, [job_ids], log_exceptions=False)
         except psycopg2.extensions.TransactionRollbackError:
-            # A serialization error can occurs when anoter cron worker
+            # A serialization error can occur when another cron worker
             # commits the new `nextcall` value of a cron it just ran and
             # that commit occured just before this query. The error is
             # genuine and the job should be skipped in this cron worker.
@@ -502,23 +507,11 @@ class ir_cron(models.Model):
             cr.execute('NOTIFY cron_trigger, %s', [self.env.cr.dbname])
         _logger.debug("cron workers notified")
 
-    def _neutralize(self):
-        super()._neutralize()
-        self.env.flush_all()
-        self.env.invalidate_all()
-        self.env.cr.execute("""
-            UPDATE ir_cron
-            SET active = false
-            WHERE id NOT IN (
-                SELECT res_id FROM ir_model_data
-                WHERE model='ir.cron' AND name = 'autovacuum_job'
-            )
-        """)
-
 
 class ir_cron_trigger(models.Model):
     _name = 'ir.cron.trigger'
     _description = 'Triggered actions'
+    _rec_name = 'cron_id'
 
     cron_id = fields.Many2one("ir.cron", index=True)
     call_at = fields.Datetime()

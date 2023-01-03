@@ -5,9 +5,9 @@
         <field name="model">res.config.settings</field>
         <field name="inherit_id" ref="base_setup.res_config_settings_view_form"/>
         <field name="arch" type="xml">
-            <div id="partner_autocomplete_settings" position="inside">
+            <setting id="partner_autocomplete" position="inside">
                 <widget name="iap_buy_more_credits" service_name="partner_autocomplete" hide_service="1"/>
-            </div>
+            </setting>
         </field>
     </record>
 </odoo>

@@ -15,6 +15,7 @@ import { evaluateExpr } from "@web/core/py_js/py";
 import { registry } from "@web/core/registry";
 import { unique } from "@web/core/utils/arrays";
 import { Deferred, KeepLast, Mutex } from "@web/core/utils/concurrency";
+import { memoize } from "@web/core/utils/functions";
 import { escape } from "@web/core/utils/strings";
 import { session } from "@web/session";
 import { FormArchParser } from "@web/views/form/form_arch_parser";
@@ -23,12 +24,14 @@ import { Model } from "@web/views/model";
 import { archParseBoolean, evalDomain, isNumeric, isRelational, isX2Many } from "@web/views/utils";
 
 const { DateTime } = luxon;
-const { markRaw, markup, toRaw } = owl;
+import { markRaw, markup, toRaw } from "@odoo/owl";
 
+const formatters = registry.category("formatters");
 const preloadedDataRegistry = registry.category("preloadedData");
 
 const { CREATE, UPDATE, DELETE, FORGET, LINK_TO, DELETE_ALL, REPLACE_WITH } = x2ManyCommands;
-const QUICK_CREATE_FIELD_TYPES = ["char", "boolean", "many2one", "selection"];
+const QUICK_CREATE_FIELD_TYPES = ["char", "boolean", "many2one", "selection", "many2many"];
+const AGGREGATABLE_FIELD_TYPES = ["float", "integer", "monetary"]; // types that can be aggregated in grouped views
 const DEFAULT_HANDLE_FIELD = "sequence";
 const DEFAULT_QUICK_CREATE_FIELDS = {
     display_name: { string: "Display name", type: "char" },
@@ -79,6 +82,31 @@ function orderByToString(orderBy) {
 }
 
 /**
+ * @param {RawContext} rawContext
+ * @param {Context} defaultContext
+ * @returns {Context}
+ */
+function processRawContext(rawContext, defaultContext) {
+    const contexts = [];
+    if (!rawContext) {
+        return Object.assign({}, defaultContext);
+    }
+    contexts.push({ ...defaultContext, ...rawContext.make() });
+    while (rawContext.parent) {
+        rawContext = rawContext.parent;
+        const context = rawContext.make();
+        for (const key in context) {
+            if (key.startsWith("default_")) {
+                delete context[key];
+            }
+        }
+        contexts.push(context);
+    }
+
+    return Object.assign({}, ...contexts.reverse());
+}
+
+/**
  * FIXME: don't know where this function should be:
  *   - on a dataPoint: don't want to make it accessible everywhere (e.g. in Fields)
  *   - on the model: would still be accessible by views + I like the current light API of the model
@@ -101,12 +129,12 @@ async function toggleArchive(model, resModel, resIds, doArchive, context) {
 
 async function unselectRecord(editedRecord, abandonRecord) {
     if (editedRecord) {
-        const isValid = await editedRecord.checkValidity();
+        await editedRecord.askChanges();
         const canBeAbandoned = editedRecord.canBeAbandoned;
-        if (isValid && !canBeAbandoned) {
-            return editedRecord.switchMode("readonly");
-        } else if (canBeAbandoned) {
+        if (canBeAbandoned) {
             return abandonRecord(editedRecord.id);
+        } else {
+            return editedRecord.switchMode("readonly");
         }
     }
 }
@@ -142,7 +170,12 @@ class RequestBatcherORM extends ORM {
             batch.scheduled = true;
             Promise.resolve().then(async () => {
                 delete this.batches[key];
-                const result = await callback(batch.ids);
+                let result;
+                try {
+                    result = await callback(batch.ids);
+                } catch (e) {
+                    return batch.deferred.reject(e);
+                }
                 batch.deferred.resolve(result);
             });
         }
@@ -160,9 +193,9 @@ class RequestBatcherORM extends ORM {
      * @param {object} context
      * @returns {Promise<[number, string][]>}
      */
-    async nameGet(resModel, resIds, context) {
-        const pairs = await this.batch(resIds, ["name_get", resModel, context], (resIds) =>
-            super.nameGet(resModel, resIds, context)
+    async nameGet(resModel, resIds, kwargs) {
+        const pairs = await this.batch(resIds, ["name_get", resModel, kwargs], (resIds) =>
+            super.nameGet(resModel, resIds, kwargs)
         );
         return pairs.filter(([id]) => resIds.includes(id));
     }
@@ -179,9 +212,9 @@ class RequestBatcherORM extends ORM {
      * @param {string[]} fields
      * @returns {Promise<Object[]>}
      */
-    async read(resModel, resIds, fields, context) {
-        const records = await this.batch(resIds, ["read", resModel, fields, context], (resIds) =>
-            super.read(resModel, resIds, fields, context)
+    async read(resModel, resIds, fields, kwargs) {
+        const records = await this.batch(resIds, ["read", resModel, fields, kwargs], (resIds) =>
+            super.read(resModel, resIds, fields, kwargs)
         );
         return records.filter((r) => resIds.includes(r.id));
     }
@@ -195,9 +228,9 @@ class RequestBatcherORM extends ORM {
      * @param {number[]} resIds
      * @returns {Promise<boolean>}
      */
-    async unlink(resModel, resIds, context) {
-        return this.batch(resIds, ["unlink", resModel, context], (resIds) =>
-            super.unlink(resModel, resIds, context)
+    async unlink(resModel, resIds, kwargs) {
+        return this.batch(resIds, ["unlink", resModel, kwargs], (resIds) =>
+            super.unlink(resModel, resIds, kwargs)
         );
     }
 
@@ -241,7 +274,10 @@ class DataPoint {
         this.model = model;
         this.resModel = params.resModel;
         this.fields = params.fields;
-        this.activeFields = params.activeFields || {};
+        this.setActiveFields(params.activeFields);
+
+        this.onWillSaveRecord = params.onWillSaveRecord || (() => {});
+        this.onRecordSaved = params.onRecordSaved || (() => {});
 
         this.rawContext = params.rawContext;
         this.defaultContext = params.defaultContext;
@@ -253,25 +289,7 @@ class DataPoint {
     // -------------------------------------------------------------------------
 
     get context() {
-        const contexts = [];
-        let rawContext = this.rawContext;
-        if (!rawContext) {
-            return Object.assign({}, this.defaultContext);
-        }
-        contexts.push({ ...this.defaultContext, ...rawContext.make() });
-
-        while (rawContext.parent) {
-            rawContext = rawContext.parent;
-            const context = rawContext.make();
-            for (const key in context) {
-                if (key.startsWith("default_")) {
-                    delete context[key];
-                }
-            }
-            contexts.push(context);
-        }
-
-        return Object.assign({}, ...contexts.reverse());
+        return processRawContext(this.rawContext, this.defaultContext);
     }
 
     get fieldNames() {
@@ -323,6 +341,13 @@ class DataPoint {
         }
     }
 
+    /**
+     * @param {Object} [activeFields={}]
+     */
+    setActiveFields(activeFields) {
+        this.activeFields = activeFields || {};
+    }
+
     // -------------------------------------------------------------------------
     // Protected
     // -------------------------------------------------------------------------
@@ -372,6 +397,48 @@ function clearObject(obj) {
     }
 }
 
+/**
+ * Returns a "raw" version of the field value on a given record.
+ *
+ * @param {Record} record
+ * @param {string} fieldName
+ * @returns {any}
+ */
+export function getRawValue(record, fieldName) {
+    const field = record.fields[fieldName];
+    const value = record.data[fieldName];
+    switch (field.type) {
+        case "one2many":
+        case "many2many": {
+            return value.count ? value.currentIds : [];
+        }
+        case "many2one": {
+            return (value && value[0]) || false;
+        }
+        case "date":
+        case "datetime": {
+            return value && value.toISO();
+        }
+        default: {
+            return value;
+        }
+    }
+}
+
+/**
+ * Returns a formatted version of the field value on a given record.
+ *
+ * @param {Record} record
+ * @param {string} fieldName
+ * @returns {string}
+ */
+export function getValue(record, fieldName) {
+    const field = record.fields[fieldName];
+    const value = record.data[fieldName];
+    const formatter = formatters.get(field.type, String);
+    return formatter(value, { field, data: record.data });
+}
+
 export class Record extends DataPoint {
     setup(params, state) {
         if ("resId" in params) {
@@ -396,8 +463,6 @@ export class Record extends DataPoint {
         this.onChanges = params.onChanges || (() => {});
 
         this._invalidFields = new Set();
-        this._requiredFields = {};
-        this._setRequiredFields();
         this.preloadedData = {};
         this.preloadedDataCaches = {};
         this.isInQuickCreation = params.isInQuickCreation || false;
@@ -432,12 +497,12 @@ export class Record extends DataPoint {
                 evalContext[fieldName] = false;
             } else if (isX2Many(this.fields[fieldName])) {
                 const list = this._cache[fieldName];
-                evalContext[fieldName] = list.getContext();
+                evalContext[fieldName] = list.currentIds;
                 // ---> implied to initialize (resIds, commands) currentIds before loading static list
             } else if (value && this.fields[fieldName].type === "date") {
-                evalContext[fieldName] = value.toFormat("yyyy-LL-dd");
+                evalContext[fieldName] = serializeDate(value);
             } else if (value && this.fields[fieldName].type === "datetime") {
-                evalContext[fieldName] = value.toFormat("yyyy-LL-dd HH:mm:ss");
+                evalContext[fieldName] = serializeDateTime(value);
             } else if (value && this.fields[fieldName].type === "many2one") {
                 evalContext[fieldName] = value[0];
             } else if (value && this.fields[fieldName].type === "reference") {
@@ -457,6 +522,7 @@ export class Record extends DataPoint {
         return {
             // ...
             ...this.dataContext,
+            ...this.context,
             active_id: this.resId || false,
             active_ids: this.resId ? [this.resId] : [],
             active_model: this.resModel,
@@ -509,6 +575,17 @@ export class Record extends DataPoint {
         return this._changes.map((change) => this.activeFields[change]);
     }
 
+    get formattedRecord() {
+        const record = Object.create(this, Object.getOwnPropertyDescriptors(this));
+        for (const fieldName in this.activeFields) {
+            record[fieldName] = {
+                value: getValue(this, fieldName),
+                raw_value: getRawValue(this, fieldName),
+            };
+        }
+        return record;
+    }
+
     get isInEdition() {
         return this.mode === "edit";
     }
@@ -549,7 +626,7 @@ export class Record extends DataPoint {
     async urgentSave() {
         this._urgentSave = true;
         this.model.env.bus.trigger("RELATIONAL_MODEL:WILL_SAVE_URGENTLY");
-        this._save();
+        return this._save({ stayInEdition: true, noReload: true });
     }
 
     async archive() {
@@ -559,11 +636,15 @@ export class Record extends DataPoint {
         this.invalidateCache();
     }
 
+    async askChanges() {
+        const proms = [];
+        this.model.env.bus.trigger("RELATIONAL_MODEL:NEED_LOCAL_CHANGES", { proms });
+        await Promise.all([...proms, this.model.mutex.getUnlockedDef()]);
+    }
+
     async checkValidity() {
         if (!this._urgentSave) {
-            const proms = [];
-            this.model.env.bus.trigger("RELATIONAL_MODEL:NEED_LOCAL_CHANGES", { proms });
-            await Promise.all([...proms, this.model.mutex.getUnlockedDef()]);
+            await this.askChanges();
         }
         return this._checkValidity();
     }
@@ -579,6 +660,15 @@ export class Record extends DataPoint {
                 this._removeInvalidFields([fieldName]);
                 continue;
             }
+
+            const isSet =
+                activeField && activeField.FieldComponent && activeField.FieldComponent.isSet;
+
+            if (this.isRequired(fieldName) && isSet && !isSet(this.data[fieldName])) {
+                this.setInvalidField(fieldName);
+                continue;
+            }
+
             switch (fieldType) {
                 case "boolean":
                 case "float":
@@ -592,7 +682,7 @@ export class Record extends DataPoint {
                     }
                     break;
                 default:
-                    if (this.isRequired(fieldName) && !this.data[fieldName]) {
+                    if (!isSet && this.isRequired(fieldName) && !this.data[fieldName]) {
                         this.setInvalidField(fieldName);
                     }
             }
@@ -601,7 +691,9 @@ export class Record extends DataPoint {
     }
 
     async delete() {
-        const unlinked = await this.model.orm.unlink(this.resModel, [this.resId], this.context);
+        const unlinked = await this.model.orm.unlink(this.resModel, [this.resId], {
+            context: this.context,
+        });
         if (!unlinked) {
             return false;
         }
@@ -632,6 +724,8 @@ export class Record extends DataPoint {
                 this.data[fieldName] = this._values[fieldName];
             }
         }
+        this._invalidFields.clear();
+
         if (!this.isVirtual) {
             this.switchMode("readonly");
         }
@@ -714,8 +808,7 @@ export class Record extends DataPoint {
     getFieldDomain(fieldName) {
         const rawDomains = [
             this._domains[fieldName] || [],
-            this.fields[fieldName].domain || [],
-            this.activeFields[fieldName].domain,
+            this.activeFields[fieldName].domain || this.fields[fieldName].domain || [],
         ];
 
         const evalContext = this.evalContext;
@@ -765,6 +858,11 @@ export class Record extends DataPoint {
         return value.records.every(async (r) => await r.checkValidity());
     }
 
+    /**
+     * @param {Object} [params={}]
+     * @param {Object} [params.values]
+     * @param {Object} [params.changes]
+     */
     async load(params = {}) {
         this._cache = {};
         for (const fieldName in this.activeFields) {
@@ -774,12 +872,17 @@ export class Record extends DataPoint {
                 this._cache[fieldName] = staticList;
             }
         }
+        for (const fieldName in this.data) {
+            if (!(fieldName in this.activeFields)) {
+                delete this.data[fieldName];
+            }
+        }
 
         if (!(params.values || !this.isVirtual)) {
             const changes = params.changes || (await this._onChange());
             await this._load({ changes });
         } else {
-            let values = params.values || {};
+            let values = this._parseServerValues(params.values);
             const missingFields = this.fieldNames.filter((fieldName) => !(fieldName in values));
             if (missingFields.length) {
                 values = Object.assign({}, values, await this._read(missingFields));
@@ -849,6 +952,23 @@ export class Record extends DataPoint {
      */
     async save(options = { stayInEdition: false, noReload: false }) {
         return this.model.mutex.exec(() => this._save(options));
+    }
+
+    /**
+     * Overridden to set required fields based on the new active fields.
+     *
+     * @override
+     */
+    setActiveFields(activeFields) {
+        super.setActiveFields(activeFields);
+
+        this._requiredFields = {};
+        for (const [fieldName, activeField] of Object.entries(this.activeFields)) {
+            const { modifiers } = activeField;
+            if (modifiers && modifiers.required) {
+                this._requiredFields[fieldName] = modifiers.required;
+            }
+        }
     }
 
     async setInvalidField(fieldName) {
@@ -951,10 +1071,18 @@ export class Record extends DataPoint {
             return [false, ""];
         }
         const relation = this.fields[fieldName].relation;
-        if (!id && label) {
+        const activeField = this.activeFields[fieldName];
+        const getContext = () =>
+            processRawContext({
+                parent: this.rawContext,
+                make: () => {
+                    return makeContext([activeField.context], this.evalContext);
+                },
+            });
+        if (!id && label && activeField) {
             // only display_name given -> do a name_create
             const res = await this.model.orm.call(relation, "name_create", [label], {
-                context: this.context,
+                context: getContext(),
             });
             // Check if a record is really created. Models without defined
             // _rec_name cannot create record based on name_create.
@@ -963,6 +1091,11 @@ export class Record extends DataPoint {
             }
             id = res[0];
             label = res[1];
+        } else if (id && label === undefined && activeField) {
+            const result = await this.model.orm.nameGet(relation, [id], {
+                context: getContext(),
+            });
+            label = result[0][1];
         }
         return [id, label];
     }
@@ -1127,7 +1260,7 @@ export class Record extends DataPoint {
             (!value[1] || activeField.options.always_reload)
         ) {
             const context = this.getFieldContext(fieldName);
-            const result = await this.model.orm.nameGet(relation, [value[0]], context);
+            const result = await this.model.orm.nameGet(relation, [value[0]], { context });
             return result[0];
         }
         return value;
@@ -1144,7 +1277,7 @@ export class Record extends DataPoint {
             }
             const { resModel, resId } = value;
             const context = this.getFieldContext(fieldName);
-            const nameGet = await this.model.orm.nameGet(resModel, [resId], context);
+            const nameGet = await this.model.orm.nameGet(resModel, [resId], { context });
             return {
                 resModel,
                 resId,
@@ -1166,7 +1299,11 @@ export class Record extends DataPoint {
             return;
         }
 
-        const { domain, value: changes, warning } = await this.model.orm.call(
+        const {
+            domain,
+            value: changes,
+            warning,
+        } = await this.model.orm.call(
             this.resModel,
             "onchange",
             [
@@ -1203,8 +1340,10 @@ export class Record extends DataPoint {
             return {};
         }
         const [serverValues] = await this.model.orm.read(this.resModel, [this.resId], fieldNames, {
-            bin_size: true,
-            ...this.context,
+            context: {
+                bin_size: true,
+                ...this.context,
+            },
         });
         return this._parseServerValues(serverValues);
     }
@@ -1239,7 +1378,7 @@ export class Record extends DataPoint {
      * @returns {Promise<boolean>}
      */
     async _save(options = { stayInEdition: false, noReload: false }) {
-        if (!(await this._checkValidity())) {
+        if (!this._checkValidity()) {
             const invalidFields = [...this._invalidFields].map((fieldName) => {
                 return `<li>${escape(this.fields[fieldName].string || fieldName)}</li>`;
             }, this);
@@ -1249,10 +1388,14 @@ export class Record extends DataPoint {
             });
             return false;
         }
+        if ((await this.onWillSaveRecord(this)) === false) {
+            return false;
+        }
         const changes = this.getChanges();
         const keys = Object.keys(changes);
         const hasChanges = this.isVirtual || keys.length;
         const shouldReload = hasChanges ? !options.noReload : false;
+        const context = this.context;
 
         if (this.isVirtual) {
             if (keys.length === 1 && keys[0] === "display_name") {
@@ -1264,7 +1407,7 @@ export class Record extends DataPoint {
                 );
                 this.resId = resId;
             } else {
-                this.resId = await this.model.orm.create(this.resModel, changes, this.context);
+                this.resId = await this.model.orm.create(this.resModel, [changes], { context });
             }
             delete this.virtualId;
             this.data.id = this.resId;
@@ -1272,11 +1415,10 @@ export class Record extends DataPoint {
             this.invalidateCache();
         } else if (keys.length > 0) {
             try {
-                await this.model.orm.write(this.resModel, [this.resId], changes, this.context);
+                await this.model.orm.write(this.resModel, [this.resId], changes, { context });
             } catch (e) {
                 if (!this.isInEdition) {
-                    await Promise.all([this.model.reloadRecords(this.resId), this.load()]);
-                    this.model.notify();
+                    await this.model.reloadRecords(this);
                 }
                 throw e;
             }
@@ -1285,28 +1427,18 @@ export class Record extends DataPoint {
 
         // Switch to the parent active fields
         if (this.parentActiveFields) {
-            this.activeFields = this.parentActiveFields;
+            this.setActiveFields(this.parentActiveFields);
             this.parentActiveFields = false;
         }
         this.isInQuickCreation = false;
         if (shouldReload) {
-            await Promise.all([this.model.reloadRecords(this.resId), this.load()]);
-            this.model.trigger("record-updated", { record: this });
-            this.model.notify();
+            await this.model.reloadRecords(this);
         }
         if (!options.stayInEdition) {
             this.switchMode("readonly");
         }
+        await this.onRecordSaved(this);
         return true;
-    }
-
-    _setRequiredFields() {
-        for (const [fieldName, activeField] of Object.entries(this.activeFields)) {
-            const { modifiers } = activeField;
-            if (modifiers && modifiers.required) {
-                this._requiredFields[fieldName] = modifiers.required;
-            }
-        }
     }
 
     async _update(changes) {
@@ -1327,6 +1459,7 @@ export class Record extends DataPoint {
                 )
             ) {
                 const changes = await this._onChange(fieldNames);
+                this._removeInvalidFields(Object.keys(changes));
                 for (const [fieldName, value] of Object.entries(changes)) {
                     const field = this.fields[fieldName];
                     // for x2many fields, the onchange returns commands, not ids, so we need to process them
@@ -1360,11 +1493,10 @@ class DynamicList extends DataPoint {
         this.limit = params.limit || state.limit || this.constructor.DEFAULT_LIMIT;
         this.isDomainSelected = false;
         this.loadedCount = state.loadedCount || 0;
-        this.previousParams = state.previousParams || "[]";
 
         this.editedRecord = null;
         this.onCreateRecord = params.onCreateRecord || (() => {});
-        this.onRecordWillSwitchMode = async (record, mode) => {
+        this.onRecordWillSwitchMode = async (record, mode, options) => {
             const editedRecord = this.editedRecord;
             this.editedRecord = null;
             if (!params.onRecordWillSwitchMode && editedRecord) {
@@ -1372,9 +1504,17 @@ class DynamicList extends DataPoint {
                 if (editedRecord !== record && editedRecord.canBeAbandoned) {
                     this.abandonRecord(editedRecord.id);
                 } else {
-                    const isSaved = await editedRecord.save();
+                    let isSaved;
+                    try {
+                        isSaved = await editedRecord.save();
+                    } catch (e) {
+                        this.editedRecord = editedRecord;
+                        this.model.notify();
+                        throw e;
+                    }
                     if (!isSaved) {
                         this.editedRecord = editedRecord;
+                        this.model.notify();
                         return false;
                     }
                 }
@@ -1383,7 +1523,7 @@ class DynamicList extends DataPoint {
                 this.editedRecord = record;
             }
             if (params.onRecordWillSwitchMode) {
-                params.onRecordWillSwitchMode(record, mode);
+                return await params.onRecordWillSwitchMode(record, mode, options);
             }
         };
     }
@@ -1391,14 +1531,6 @@ class DynamicList extends DataPoint {
     // -------------------------------------------------------------------------
     // Getters
     // -------------------------------------------------------------------------
-
-    get isInEdition() {
-        return !!this.editedRecord;
-    }
-
-    get currentParams() {
-        return JSON.stringify([this.domain, this.groupBy]);
-    }
 
     get firstGroupBy() {
         return this.groupBy[0] || false;
@@ -1418,7 +1550,10 @@ class DynamicList extends DataPoint {
     }
 
     get isM2MGrouped() {
-        return this.groupBy.some((fieldName) => this.fields[fieldName].type === "many2many");
+        return this.groupBy.some((groupBy) => {
+            const fieldName = groupBy.split(":")[0];
+            return this.fields[fieldName].type === "many2many";
+        });
     }
 
     get selection() {
@@ -1463,7 +1598,6 @@ class DynamicList extends DataPoint {
             limit: this.limit,
             loadedCount: this.records.length,
             orderBy: this.orderBy,
-            previousParams: this.currentParams,
         };
     }
 
@@ -1475,14 +1609,10 @@ class DynamicList extends DataPoint {
         let resIds;
         if (isSelected) {
             if (this.isDomainSelected) {
-                resIds = await this.model.orm.search(
-                    this.resModel,
-                    this.domain,
-                    {
-                        limit: session.active_ids_limit,
-                    },
-                    this.context
-                );
+                resIds = await this.model.orm.search(this.resModel, this.domain, {
+                    limit: session.active_ids_limit,
+                    context: this.context,
+                });
             } else {
                 resIds = this.selection.map((r) => r.resId);
             }
@@ -1568,7 +1698,8 @@ class DynamicList extends DataPoint {
                 confirm: async () => {
                     const resIds = validSelection.map((r) => r.resId);
                     try {
-                        await this.model.orm.write(this.resModel, resIds, changes, this.context);
+                        const context = this.context;
+                        await this.model.orm.write(this.resModel, resIds, changes, { context });
                         this.invalidateCache();
                         validSelection.forEach((record) => {
                             record.selected = false;
@@ -1576,7 +1707,7 @@ class DynamicList extends DataPoint {
                         await Promise.all(validSelection.map((record) => record.load()));
                         record.switchMode("readonly");
                         this.model.notify();
-                    } catch (_) {
+                    } catch {
                         record.discard();
                     }
                     validSelection.forEach((record) => {
@@ -1645,18 +1776,21 @@ class DynamicList extends DataPoint {
         // Determine what records need to be modified
         const firstIndex = Math.min(fromIndex, toIndex);
         const lastIndex = Math.max(fromIndex, toIndex) + 1;
-        let reorderAll = false;
-        let lastSequence = (asc ? -1 : 1) * Infinity;
-        for (let index = 0; index < records.length; index++) {
-            const sequence = getSequence(records[index]);
-            if (
-                ((index < firstIndex || index >= lastIndex) &&
-                    ((asc && lastSequence >= sequence) || (!asc && lastSequence <= sequence))) ||
-                (index >= firstIndex && index < lastIndex && lastSequence === sequence)
-            ) {
-                reorderAll = true;
+        let reorderAll = records.some((record) => record.data[handleField] === undefined);
+        if (!reorderAll) {
+            let lastSequence = (asc ? -1 : 1) * Infinity;
+            for (let index = 0; index < records.length; index++) {
+                const sequence = getSequence(records[index]);
+                if (
+                    ((index < firstIndex || index >= lastIndex) &&
+                        ((asc && lastSequence >= sequence) ||
+                            (!asc && lastSequence <= sequence))) ||
+                    (index >= firstIndex && index < lastIndex && lastSequence === sequence)
+                ) {
+                    reorderAll = true;
+                }
+                lastSequence = sequence;
             }
-            lastSequence = sequence;
         }
 
         // Perform the resequence in the list of records
@@ -1700,7 +1834,7 @@ class DynamicList extends DataPoint {
 
         // Read the actual values set by the server and update the records
         const result = await this.model.keepLast.add(
-            this.model.orm.read(resModel, ids, [handleField], this.context)
+            this.model.orm.read(resModel, ids, [handleField], { context: this.context })
         );
         for (const recordData of result) {
             const record = records.find((r) => r.resId === recordData.id);
@@ -1712,7 +1846,6 @@ class DynamicList extends DataPoint {
             }
         }
 
-        this.model.notify();
         return records;
     }
 
@@ -1730,13 +1863,29 @@ export class DynamicRecordList extends DynamicList {
         /** @type {Record[]} */
         this.records = [];
         this.data = params.data;
-        this.countLimit = this.constructor.WEB_SEARCH_READ_COUNT_LIMIT;
+        this.countLimit = params.countLimit || this.constructor.WEB_SEARCH_READ_COUNT_LIMIT;
         this.hasLimitedCount = false;
     }
 
     // -------------------------------------------------------------------------
     // Getters
     // -------------------------------------------------------------------------
+
+    get commonRecordParams() {
+        return {
+            resModel: this.resModel,
+            fields: this.fields,
+            activeFields: this.activeFields,
+            onRecordSaved: this.onRecordSaved,
+            onRecordWillSwitchMode: this.onRecordWillSwitchMode,
+            onWillSaveRecord: this.onWillSaveRecord,
+            defaultContext: this.defaultContext,
+            rawContext: {
+                parent: this.rawContext,
+                make: () => this.context,
+            },
+        };
+    }
 
     get quickCreateRecord() {
         return this.records.find((r) => r.isInQuickCreation);
@@ -1745,6 +1894,24 @@ export class DynamicRecordList extends DynamicList {
     // -------------------------------------------------------------------------
     // Public
     // -------------------------------------------------------------------------
+
+    /**
+     * @param {number} resId
+     * @param {boolean} [atFirstPosition]
+     * @returns {Promise<Record>} the newly created record
+     */
+    async addExistingRecord(resId, atFirstPosition) {
+        const newRecord = this.model.createDataPoint("record", {
+            ...this.commonRecordParams,
+            resId,
+        });
+        if (this.model.useSampleModel) {
+            this.model.useSampleModel = false;
+            await this.load();
+        }
+        await this.model.keepLast.add(this.model.mutex.exec(() => newRecord.load()));
+        return this.addRecord(newRecord, atFirstPosition ? 0 : this.count);
+    }
 
     /**
      * @param {Record} record
@@ -1772,16 +1939,8 @@ export class DynamicRecordList extends DynamicList {
      */
     async createRecord(params = {}, atFirstPosition = false) {
         const newRecord = this.model.createDataPoint("record", {
-            resModel: this.resModel,
-            fields: this.fields,
-            activeFields: this.activeFields,
+            ...this.commonRecordParams,
             parentActiveFields: this.activeFields,
-            onRecordWillSwitchMode: this.onRecordWillSwitchMode,
-            defaultContext: this.defaultContext,
-            rawContext: {
-                parent: this.rawContext,
-                make: () => this.context,
-            },
             ...params,
         });
         if (this.model.useSampleModel) {
@@ -1790,7 +1949,8 @@ export class DynamicRecordList extends DynamicList {
         }
         await this.model.keepLast.add(this.model.mutex.exec(() => newRecord.load()));
         this.editedRecord = newRecord;
-        this.onCreateRecord(newRecord);
+        this.onRemoveNewRecord = await this.onCreateRecord(newRecord);
+
         return this.addRecord(newRecord, atFirstPosition ? 0 : this.count);
     }
 
@@ -1807,7 +1967,9 @@ export class DynamicRecordList extends DynamicList {
             resIds = await this.getResIds(true);
             records = this.records.filter((r) => resIds.includes(r.resId));
             if (this.isDomainSelected) {
-                await this.model.orm.unlink(this.resModel, resIds, this.context);
+                await this.model.orm.unlink(this.resModel, resIds, {
+                    context: this.context,
+                });
                 deleted = true;
             }
         }
@@ -1817,7 +1979,15 @@ export class DynamicRecordList extends DynamicList {
         for (const record of records) {
             this.removeRecord(record);
         }
-        await this._adjustOffset();
+        const hasReloaded = await this._adjustOffset();
+        if (resIds.length > 0 && !hasReloaded) {
+            // If the list hasn't been reloaded, force a reload if there are
+            // deleted records.
+            // NOTE that we don't rely on the reload logic of the _adjustOffset
+            // because we don't want the offset to be adjusted. Offset adjustment
+            // should only be done when at the last page.
+            await this.load();
+        }
         return resIds;
     }
 
@@ -1889,13 +2059,19 @@ export class DynamicRecordList extends DynamicList {
         this.count--;
         if (this.editedRecord === record) {
             this.editedRecord = null;
+            if (this.onRemoveNewRecord) {
+                this.onRemoveNewRecord(record);
+                this.onRemoveNewRecord = null;
+            }
         }
+
         this.model.notify();
         return record;
     }
 
     async resequence() {
         this.records = await this._resequence(this.records, this.resModel, ...arguments);
+        this.model.notify();
     }
 
     // -------------------------------------------------------------------------
@@ -1905,31 +2081,37 @@ export class DynamicRecordList extends DynamicList {
     /**
      * Reload the model if more records should appear on the current page.
      *
-     * @returns {Promise<void>}
+     * @returns {Promise<boolean>} Resolves to true if the model reloaded.
      */
     async _adjustOffset() {
         if (this.offset && !this.records.length) {
             this.offset = Math.max(this.offset - this.limit, 0);
             await this.load();
+            return true;
         }
+        return false;
     }
 
     /**
      * @returns {Promise<Record[]>}
      */
     async _loadRecords() {
-        const options = {
+        const kwargs = {
             limit: this.limit,
             offset: this.offset,
             order: orderByToString(this.orderBy),
             count_limit: this.countLimit + 1,
+            context: {
+                bin_size: true,
+                ...this.context,
+            },
         };
         if (this.loadedCount > this.limit) {
             // This condition means that we are reloading a list of records
             // that has been manually extended: we need to load exactly the
             // same amount of records.
-            options.limit = this.loadedCount;
-            options.offset = 0;
+            kwargs.limit = this.loadedCount;
+            kwargs.offset = 0;
         }
         const { records: rawRecords, length } =
             this.data ||
@@ -1937,23 +2119,16 @@ export class DynamicRecordList extends DynamicList {
                 this.resModel,
                 this.domain,
                 this.fieldNames,
-                options,
-                {
-                    bin_size: true,
-                    ...this.context,
-                }
+                kwargs
             ));
 
         const records = await Promise.all(
             rawRecords.map(async (data) => {
-                data = this._parseServerValues(data);
                 const record = this.model.createDataPoint("record", {
-                    resModel: this.resModel,
+                    ...this.commonRecordParams,
                     resId: data.id,
-                    fields: this.fields,
-                    activeFields: this.activeFields,
                     rawContext: this.rawContext,
-                    onRecordWillSwitchMode: this.onRecordWillSwitchMode,
+                    defaultContext: undefined,
                 });
                 await record.load({ values: data });
                 return record;
@@ -1981,7 +2156,6 @@ export class DynamicGroupList extends DynamicList {
         this.openGroupsByDefault = params.openGroupsByDefault || false;
         /** @type {Group[]} */
         this.groups = state.groups || [];
-        this.activeFields = params.activeFields;
         this.isGrouped = true;
         this.quickCreateInfo = null; // Lazy loaded;
         this.expand = params.expand;
@@ -2001,7 +2175,15 @@ export class DynamicGroupList extends DynamicList {
                     }
                 }
                 this.editedRecord = record;
+                const onRemoveRecord = (record) => {
+                    if (this.editedRecord === record) {
+                        this.editedRecord = null;
+                    }
+                };
+                return onRemoveRecord;
             });
+
+        this._loadQuickCreateView = memoize(this._loadQuickCreateView.bind(this));
     }
 
     // -------------------------------------------------------------------------
@@ -2020,7 +2202,9 @@ export class DynamicGroupList extends DynamicList {
             groupByInfo: this.groupByInfo,
             rawContext: this.rawContext,
             onCreateRecord: this.onCreateRecord,
+            onRecordSaved: this.onRecordSaved,
             onRecordWillSwitchMode: this.onRecordWillSwitchMode,
+            onWillSaveRecord: this.onWillSaveRecord,
         };
     }
 
@@ -2030,7 +2214,7 @@ export class DynamicGroupList extends DynamicList {
     get records() {
         return this.groups
             .filter((group) => !group.isFolded)
-            .map((group) => group.list.records)
+            .map((group) => group.records)
             .flat();
     }
 
@@ -2055,28 +2239,10 @@ export class DynamicGroupList extends DynamicList {
     }
 
     /**
-     * @param {any} value
-     * @returns {Promise<Group>}
+     * @see {_createGroup}
      */
-    async createGroup(value) {
-        const [id, displayName] = await this.model.mutex.exec(() =>
-            this.model.orm.call(this.groupByField.relation, "name_create", [value], {
-                context: this.context,
-            })
-        );
-        const group = this.model.createDataPoint("group", {
-            ...this.commonGroupParams,
-            count: 0,
-            value: id,
-            displayName,
-            aggregates: {},
-            groupByField: this.groupByField,
-            rawContext: this.rawContext,
-            // FIXME
-            // groupDomain: this.groupDomain,
-        });
-        group.isFolded = false;
-        return this.addGroup(group);
+    async createGroup(groupName) {
+        await this.model.mutex.exec(() => this._createGroup(groupName));
     }
 
     /**
@@ -2103,9 +2269,15 @@ export class DynamicGroupList extends DynamicList {
     }
 
     async deleteRecords() {
+        const allResIds = [];
         for (const group of this.groups) {
-            group.list.deleteRecords();
+            const resIds = await group.list.deleteRecords();
+            group.count = group.count - resIds.length;
+            allResIds.push(...resIds);
         }
+        // Return the list of all deleted resIds.
+        // Will be used by the calling group to update its count.
+        return allResIds;
     }
 
     exportState() {
@@ -2146,22 +2318,17 @@ export class DynamicGroupList extends DynamicList {
         return false;
     }
 
+    hasAggregate(fieldName) {
+        const group = this.groups[0];
+        return group && fieldName in group.aggregates;
+    }
+
     async load(params = {}) {
-        this.limit = params.limit || this.limit;
-        this.offset = params.offset || this.offset;
+        this.limit = params.limit === undefined ? this.limit : params.limit;
+        this.offset = params.offset === undefined ? this.offset : params.offset;
         /** @type {[Group, number][]} */
-        const previousGroups = this.groups.map((g, i) => [g, i]);
         this.groups = await this._loadGroups();
         await Promise.all(this.groups.map((group) => group.load()));
-        if (this.previousParams === this.currentParams) {
-            for (const [group, index] of previousGroups) {
-                const newGroup = this.groups.find((g) => group.valueEquals(g.value));
-                if (!group.deleted && !newGroup) {
-                    group.empty();
-                    this.groups.splice(index, 0, group);
-                }
-            }
-        }
     }
 
     get nbTotalRecords() {
@@ -2169,16 +2336,19 @@ export class DynamicGroupList extends DynamicList {
     }
 
     async quickCreate(group) {
+        group = group || this.groups[0];
         if (this.model.useSampleModel) {
             // Empty the groups because they contain sample data
-            this.groups.map((group) => group.empty());
+            this.groups.forEach((g) => g.empty());
         }
         this.model.useSampleModel = false;
-        if (!this.quickCreateInfo) {
-            this.quickCreateInfo = await this._loadQuickCreateView();
+        const { isFolded } = group;
+        this.quickCreateInfo = await this._loadQuickCreateView();
+        if (isFolded !== group.isFolded) {
+            // Group has been manually (un)folded => drop the quickCreate action
+            return;
         }
-        group = group || this.groups[0];
-        if (group.isFolded) {
+        if (isFolded) {
             await group.toggle();
         }
         await group.quickCreate(this.quickCreateInfo.activeFields, this.context);
@@ -2214,11 +2384,78 @@ export class DynamicGroupList extends DynamicList {
             ? this.groupByField.relation
             : this.resModel;
         this.groups = await this._resequence(this.groups, resModel, ...arguments);
+        this.model.notify();
+    }
+
+    async sortBy(fieldName) {
+        if (!this.groups.length) {
+            return;
+        }
+        const everyGroupIsClosed = this.groups.every((group) => group.isFolded);
+        if (
+            everyGroupIsClosed &&
+            !(this.groupBy.includes(fieldName) || this.hasAggregate(fieldName))
+        ) {
+            return;
+        }
+        super.sortBy(fieldName);
     }
 
     // ------------------------------------------------------------------------
     // Protected
     // ------------------------------------------------------------------------
+
+    /**
+     * @param {string} groupName
+     * @returns {Promise<Group>}
+     */
+    async _createGroup(groupName) {
+        const [id, displayName] = await this.model.orm.call(
+            this.groupByField.relation,
+            "name_create",
+            [groupName],
+            { context: this.context }
+        );
+        const [lastGroup] = this.groups.slice(-1);
+        const group = this.model.createDataPoint("group", {
+            ...this.commonGroupParams,
+            count: 0,
+            value: id,
+            displayName,
+            aggregates: {},
+            groupByField: this.groupByField,
+            groupDomain: Domain.and([this.domain, [[this.groupByField.name, "=", id]]]).toList(),
+            rawContext: this.rawContext,
+        });
+        group.isFolded = false;
+        this.addGroup(group);
+
+        if (lastGroup) {
+            await this.resequence(group.id, lastGroup.id);
+        }
+
+        return group;
+    }
+
+    /**
+     * @param {Object} groupData
+     * @param {string} fieldName
+     * @returns {any}
+     */
+    _getValueFromGroupData(groupData, fieldName) {
+        const field = this.fields[fieldName.split(":")[0]];
+        if (["date", "datetime"].includes(field.type)) {
+            const range = groupData.__range[fieldName];
+            if (!range) {
+                return false;
+            }
+            const dateValue = this._parseServerValue(field, range.to);
+            return dateValue.minus({ [field.type === "date" ? "day" : "second"]: 1 });
+        } else {
+            const value = this._parseServerValue(field, groupData[fieldName]);
+            return Array.isArray(value) ? value[0] : value;
+        }
+    }
 
     async _loadGroups() {
         const firstGroupByName = this.firstGroupBy.split(":")[0];
@@ -2235,10 +2472,12 @@ export class DynamicGroupList extends DynamicList {
                 orderby,
                 lazy: true,
                 expand: this.expand,
+                expand_orderby: this.expand ? orderByToString(this.orderBy) : null,
+                expand_limit: this.expand ? this.limitByGroup : null,
                 offset: this.offset,
                 limit: this.limit,
-            },
-            this.context
+                context: this.context,
+            }
         );
         this.count = length;
 
@@ -2255,14 +2494,7 @@ export class DynamicGroupList extends DynamicList {
                 const value = data[key];
                 switch (key) {
                     case this.firstGroupBy: {
-                        if (value && ["date", "datetime"].includes(groupByField.type)) {
-                            const dateString = data.__range[this.firstGroupBy].to;
-                            const dateValue = this._parseServerValue(groupByField, dateString);
-                            const granularity = groupByField.type === "date" ? "day" : "second";
-                            groupParams.value = dateValue.minus({ [granularity]: 1 });
-                        } else {
-                            groupParams.value = Array.isArray(value) ? value[0] : value;
-                        }
+                        groupParams.value = this._getValueFromGroupData(data, key);
                         if (groupByField.type === "selection") {
                             groupParams.displayName = Object.fromEntries(groupByField.selection)[
                                 groupParams.value
@@ -2275,6 +2507,10 @@ export class DynamicGroupList extends DynamicList {
                         }
                         break;
                     }
+                    // When group_by_no_leaf key is present FIELD_ID_count doesn't exist
+                    // we have to get the count from `__count` instead
+                    // see _read_group_raw in models.py
+                    case `__count`:
                     case `${groupByField.name}_count`: {
                         groupParams.count = value;
                         break;
@@ -2302,7 +2538,9 @@ export class DynamicGroupList extends DynamicList {
                     default: {
                         // other optional aggregated fields
                         if (key in this.fields) {
-                            groupParams.aggregates[key] = value;
+                            if (AGGREGATABLE_FIELD_TYPES.includes(this.fields[key].type)) {
+                                groupParams.aggregates[key] = value;
+                            }
                         }
                     }
                 }
@@ -2335,27 +2573,20 @@ export class DynamicGroupList extends DynamicList {
     }
 
     async _loadQuickCreateView() {
-        if (this.isLoadingQuickCreate) {
-            return;
-        }
-        this.isLoadingQuickCreate = true;
         const { quickCreateView: viewRef } = this.model;
         let quickCreateFields = DEFAULT_QUICK_CREATE_FIELDS;
         let quickCreateForm = DEFAULT_QUICK_CREATE_VIEW;
         let quickCreateRelatedModels = {};
         if (viewRef) {
-            const { fields, relatedModels, views } = await this.model.keepLast.add(
-                this.model.viewService.loadViews({
-                    context: { ...this.context, form_view_ref: viewRef },
-                    resModel: this.resModel,
-                    views: [[false, "form"]],
-                })
-            );
+            const { fields, relatedModels, views } = await this.model.viewService.loadViews({
+                context: { ...this.context, form_view_ref: viewRef },
+                resModel: this.resModel,
+                views: [[false, "form"]],
+            });
             quickCreateFields = fields;
             quickCreateForm = views.form;
             quickCreateRelatedModels = relatedModels;
         }
-        this.isLoadingQuickCreate = false;
         const models = {
             ...quickCreateRelatedModels,
             [this.modelName]: quickCreateFields,
@@ -2403,15 +2634,22 @@ export class Group extends DataPoint {
             activeFields: params.activeFields,
             fields: params.fields,
             limit: params.limit,
+            countLimit: params.count,
             groupByInfo: params.groupByInfo,
             onCreateRecord: params.onCreateRecord,
+            onRecordSaved: this.onRecordSaved,
             onRecordWillSwitchMode: params.onRecordWillSwitchMode,
+            onWillSaveRecord: this.onWillSaveRecord,
             defaultContext: {
                 ...params.defaultContext,
                 [`default_${this.groupByField.name}`]: this.getServerValue(),
             },
         };
         this.list = this.model.createDataPoint("list", listParams, state.listState);
+    }
+
+    get records() {
+        return this.list.records;
     }
 
     // ------------------------------------------------------------------------
@@ -2423,8 +2661,12 @@ export class Group extends DataPoint {
      */
     addRecord(record, index) {
         this.count++;
-        this.isFolded = false;
         return this.list.addRecord(record, index);
+    }
+
+    addExistingRecord(resId, atFirstPosition = false) {
+        this.count++;
+        return this.list.addExistingRecord(resId, atFirstPosition);
     }
 
     createRecord(params = {}, atFirstPosition = false) {
@@ -2437,15 +2679,18 @@ export class Group extends DataPoint {
         if (this.record) {
             return this.record.delete();
         } else {
-            return this.model.orm.unlink(this.resModel, [this.value], this.context);
+            return this.model.orm.unlink(this.resModel, [this.value], {
+                context: this.context,
+            });
         }
     }
 
     /**
      * @see DynamicRecordList.deleteRecords
      */
-    async deleteRecords() {
-        return this.list.deleteRecords(...arguments);
+    async deleteRecords(records) {
+        this.count = this.count - records.length;
+        return this.list.deleteRecords(records);
     }
 
     empty() {
@@ -2471,11 +2716,15 @@ export class Group extends DataPoint {
 
     getServerValue() {
         const { name, selection, type, granularity } = this.groupByField;
+
         switch (type) {
             case "many2one":
             case "char":
             case "boolean": {
                 return this.value || false;
+            }
+            case "many2many": {
+                return this.value ? [this.value] : false;
             }
             case "selection": {
                 const descriptor = selection.find((opt) => opt[0] === this.value);
@@ -2516,6 +2765,8 @@ export class Group extends DataPoint {
             resModel: this.resModel,
             resId: this.value,
             rawContext: this.rawContext,
+            onRecordSaved: this.onRecordSaved,
+            onWillSaveRecord: this.onWillSaveRecord,
             ...params,
         });
     }
@@ -2591,17 +2842,25 @@ export class StaticList extends DataPoint {
         this.getParentRecordContext = params.getParentRecordContext;
 
         this.editedRecord = null;
-        this.onRecordWillSwitchMode = async (record, mode) => {
+        this.onRecordWillSwitchMode = async (record, mode, options) => {
             const editedRecord = this.editedRecord;
-            if (editedRecord && editedRecord.id === record.id && mode === "readonly") {
-                const valid = await record.checkValidity();
-                if (valid) {
-                    this.editedRecord = null;
-                }
-                return valid;
-            }
+            this.editedRecord = null;
             if (editedRecord) {
-                await editedRecord.switchMode("readonly");
+                // Validity is checked if one of the following is true:
+                // - "switchMode" has been called with explicit "checkValidity"
+                // - the record is dirty
+                // - the record is new and can be abandonned
+                const shouldCheckValidity =
+                    options.checkValidity || editedRecord.isDirty || editedRecord.canBeAbandoned;
+                const isValid = !shouldCheckValidity || (await editedRecord.checkValidity());
+                if (isValid) {
+                    await editedRecord.switchMode("readonly");
+                } else if (editedRecord.id !== record.id && editedRecord.canBeAbandoned) {
+                    this.abandonRecord(editedRecord.id);
+                } else {
+                    this.editedRecord = editedRecord;
+                    return false;
+                }
             }
             if (mode === "edit") {
                 this.editedRecord = record;
@@ -2697,13 +2956,25 @@ export class StaticList extends DataPoint {
     /**
      * @param {RecordId} recordId
      */
-    async delete(recordId) {
-        const record = this._cache[recordId];
-        if (record.isVirtual) {
-            delete this._cache[recordId];
+    async delete(recordIds) {
+        if (!Array.isArray(recordIds)) {
+            recordIds = [recordIds];
         }
-        const id = record.resId || record.virtualId;
-        this.applyCommand(x2ManyCommands.delete(id));
+        const ids = [];
+        for (const recordId of recordIds) {
+            const record = this._cache[recordId];
+            if (record.isVirtual) {
+                delete this._cache[recordId];
+            }
+            const id = record.resId || record.virtualId;
+            ids.push(id);
+        }
+        if (this.field.type === "many2many") {
+            const nextIds = this.records.filter((rec) => !ids.includes(rec.resId || rec.virtualId));
+            return this.replaceWith(nextIds);
+        }
+        const commands = ids.map((id) => x2ManyCommands.delete(id));
+        this.applyCommands(commands);
         await this._loadRecords();
         this.records = this._getRecords();
         this.onChanges();
@@ -2783,12 +3054,9 @@ export class StaticList extends DataPoint {
             }
             // 2) fetch values for non loaded records
             if (resIds.length) {
-                const result = await this.model.orm.read(
-                    this.resModel,
-                    resIds,
-                    orderFieldNames,
-                    this.context
-                );
+                const result = await this.model.orm.read(this.resModel, resIds, orderFieldNames, {
+                    context: this.context,
+                });
                 for (const values of result) {
                     const resId = values.id;
                     recordValues[resId] = {};
@@ -3082,7 +3350,7 @@ export class StaticList extends DataPoint {
                     if (!this._initialValues) {
                         this._initialValues = {};
                     }
-                    this._initialValues[id] = this._parseServerValues(command[2]);
+                    this._initialValues[id] = command[2];
                 }
                 command[2] = symbolValues;
             }
@@ -3222,6 +3490,8 @@ export class RelationalModel extends Model {
             viewMode: params.viewMode || null,
             resModel: params.resModel,
             groupByInfo: params.groupByInfo,
+            onRecordSaved: params.onRecordSaved,
+            onWillSaveRecord: params.onWillSaveRecord,
         };
         this.fieldNodes = params.fieldNodes; // used by the ListConfirmationDialog
         if (this.rootType === "record") {
@@ -3274,7 +3544,10 @@ export class RelationalModel extends Model {
                 return makeContext([rootParams.context], {});
             },
         };
-        const state = this.root ? this.root.exportState() : this.initialRootState;
+        const state = this.root
+            ? Object.assign(this.root.exportState(), { offset: 0 })
+            : this.initialRootState;
+
         const newRoot = this.createDataPoint(this.rootType, rootParams, state);
         await this.keepLast.add(newRoot.load({ values: this.initialValues }));
         this.root = newRoot;
@@ -3330,13 +3603,23 @@ export class RelationalModel extends Model {
         return this.root.groups && this.root.groups.length ? this.root.groups : null;
     }
 
-    async reloadRecords(resId) {
-        if (this.rootType !== "form") {
-            const records = this.root.records.filter((r) => r.resId === resId);
-            if (records.length) {
-                await Promise.all(records.map((r) => r.load()));
-            }
-        }
+    /**
+     * Reloads a given record and all related records (those sharing the same resId).
+     * A "record-updated" event containing the given and related records is then
+     * triggered on the model.
+     *
+     * @param {Record} record
+     */
+    async reloadRecords(record) {
+        const records = this.rootType === "record" ? [this.root] : this.root.records;
+        const relatedRecords = records.filter(
+            (r) => r.id !== record.id && r.resId === record.resId
+        );
+
+        await Promise.all([record, ...relatedRecords].map((r) => r.load()));
+
+        this.trigger("record-updated", { record, relatedRecords });
+        this.notify();
     }
 }
 

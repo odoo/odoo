@@ -39,15 +39,13 @@ export class KanbanArchParser extends XMLParser {
         const groupsDraggable = archParseBoolean(xmlDoc.getAttribute("groups_draggable"), true);
         const activeActions = {
             ...getActiveActions(xmlDoc),
-            groupArchive: archParseBoolean(xmlDoc.getAttribute("archivable"), true),
-            groupCreate: archParseBoolean(xmlDoc.getAttribute("group_create"), true),
-            groupDelete: archParseBoolean(xmlDoc.getAttribute("group_delete"), true),
-            groupEdit: archParseBoolean(xmlDoc.getAttribute("group_edit"), true),
+            archiveGroup: archParseBoolean(xmlDoc.getAttribute("archivable"), true),
+            createGroup: archParseBoolean(xmlDoc.getAttribute("group_create"), true),
+            deleteGroup: archParseBoolean(xmlDoc.getAttribute("group_delete"), true),
+            editGroup: archParseBoolean(xmlDoc.getAttribute("group_edit"), true),
+            quickCreate: archParseBoolean(xmlDoc.getAttribute("quick_create"), true),
         };
-        const onCreate =
-            activeActions.create &&
-            archParseBoolean(xmlDoc.getAttribute("quick_create"), true) &&
-            xmlDoc.getAttribute("on_create");
+        const onCreate = xmlDoc.getAttribute("on_create");
         const quickCreateView = xmlDoc.getAttribute("quick_create_view");
         const tooltipInfo = {};
         let handleField = null;
@@ -86,18 +84,26 @@ export class KanbanArchParser extends XMLParser {
                 if (fieldInfo.widget === "handle") {
                     handleField = name;
                 }
-                addFieldDependencies(activeFields, fieldInfo.FieldComponent.fieldDependencies);
+                addFieldDependencies(
+                    activeFields,
+                    models[modelName],
+                    fieldInfo.FieldComponent.fieldDependencies
+                );
             }
             if (node.tagName === "widget") {
                 const { WidgetComponent } = Widget.parseWidgetNode(node);
-                addFieldDependencies(activeFields, WidgetComponent.fieldDependencies);
+                addFieldDependencies(
+                    activeFields,
+                    models[modelName],
+                    WidgetComponent.fieldDependencies
+                );
             }
 
             // Keep track of last update so images can be reloaded when they may have changed.
             if (node.tagName === "img") {
                 const attSrc = node.getAttribute("t-att-src");
-                if (attSrc && /\bkanban_image\b/.test(attSrc) && !fieldNodes.__last_update) {
-                    fieldNodes.__last_update = { type: "datetime" };
+                if (attSrc && /\bkanban_image\b/.test(attSrc) && !fieldNodes.write_date) {
+                    fieldNodes.write_date = { type: "datetime" };
                 }
             }
         });
@@ -106,13 +112,7 @@ export class KanbanArchParser extends XMLParser {
         let progressAttributes = false;
         const progressBar = xmlDoc.querySelector("progressbar");
         if (progressBar) {
-            const attrs = extractAttributes(progressBar, ["field", "colors", "sum_field", "help"]);
-            progressAttributes = {
-                fieldName: attrs.field,
-                colors: JSON.parse(attrs.colors),
-                sumField: fields[attrs.sum_field] || false,
-                help: attrs.help,
-            };
+            progressAttributes = this.parseProgressBar(progressBar, fields);
         }
 
         // Concrete kanban box elements in the template
@@ -158,6 +158,16 @@ export class KanbanArchParser extends XMLParser {
             tooltipInfo,
             examples: xmlDoc.getAttribute("examples"),
             __rawArch: arch,
+        };
+    }
+
+    parseProgressBar(progressBar, fields) {
+        const attrs = extractAttributes(progressBar, ["field", "colors", "sum_field", "help"]);
+        return {
+            fieldName: attrs.field,
+            colors: JSON.parse(attrs.colors),
+            sumField: fields[attrs.sum_field] || false,
+            help: attrs.help,
         };
     }
 }

@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_move_form_inherit" model="ir.ui.view">
+        <field name="name">account.move.form.inherit</field>
+        <field name="model">account.move</field>
+        <field name="inherit_id" ref="account.view_move_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='invoice_payment_term_id']/parent::div" position="after">
+                <field name="l10n_rs_turnover_date" attrs="{'invisible': [('country_code', '!=', 'RS')]}"/>
+            </xpath>
+        </field>
+    </record>
+
+    <template id="report_invoice_document_inherit" inherit_id="account.report_invoice_document">
+        <xpath expr="//address" position="after">
+            <div t-if="o.company_id.account_fiscal_country_id.code == 'RS' and o.partner_id.company_registry" class="mt16">
+                <p>Company ID: <span t-field="o.partner_id.company_registry"/></p>
+            </div>
+        </xpath>
+    </template>
+
+</odoo>

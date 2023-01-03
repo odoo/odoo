@@ -6,18 +6,18 @@ from psycopg2 import OperationalError
 
 from odoo import api, fields, models
 from odoo import tools
-from odoo.addons.bus.models.bus import TIMEOUT
 from odoo.service.model import PG_CONCURRENCY_ERRORS_TO_RETRY
 from odoo.tools.misc import DEFAULT_SERVER_DATETIME_FORMAT
 
-DISCONNECTION_TIMER = TIMEOUT + 5
+UPDATE_PRESENCE_DELAY = 60
+DISCONNECTION_TIMER = UPDATE_PRESENCE_DELAY + 5
 AWAY_TIMER = 1800  # 30 minutes
 
 
 class BusPresence(models.Model):
     """ User Presence
         Its status is 'online', 'away' or 'offline'. This model should be a one2one, but is not
-        attached to res_users to avoid database concurrence errors. Since the 'update' method is executed
+        attached to res_users to avoid database concurrence errors. Since the 'update_presence' method is executed
         at each poll, if the user have multiple opened tabs, concurrence errors can happend, but are 'muted-logged'.
     """
 
@@ -34,7 +34,7 @@ class BusPresence(models.Model):
         self.env.cr.execute("CREATE UNIQUE INDEX IF NOT EXISTS bus_presence_user_unique ON %s (user_id) WHERE user_id IS NOT NULL" % self._table)
 
     @api.model
-    def update(self, inactivity_period, identity_field, identity_value):
+    def update_presence(self, inactivity_period, identity_field, identity_value):
         """ Updates the last_poll and last_presence of the current user
             :param inactivity_period: duration in milliseconds
         """
@@ -44,7 +44,7 @@ class BusPresence(models.Model):
             # Hide transaction serialization errors, which can be ignored, the presence update is not essential
             # The errors are supposed from presence.write(...) call only
             with tools.mute_logger('odoo.sql_db'):
-                self._update(inactivity_period=inactivity_period, identity_field=identity_field, identity_value=identity_value)
+                self._update_presence(inactivity_period=inactivity_period, identity_field=identity_field, identity_value=identity_value)
                 # commit on success
                 self.env.cr.commit()
         except OperationalError as e:
@@ -54,7 +54,7 @@ class BusPresence(models.Model):
             raise
 
     @api.model
-    def _update(self, inactivity_period, identity_field, identity_value):
+    def _update_presence(self, inactivity_period, identity_field, identity_value):
         presence = self.search([(identity_field, '=', identity_value)], limit=1)
         # compute last_presence timestamp
         last_presence = datetime.datetime.now() - datetime.timedelta(milliseconds=inactivity_period)

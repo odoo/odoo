@@ -39,7 +39,7 @@
                                 <label for="first_month_day_display" string="on the"/><field name="first_month_day_display" required="1"/> of <field name="first_month"/> and on the <field name="second_month_day_display" required="1"/> of <field name="second_month"/>
                             </div>
                             <div class="o_row" attrs="{'invisible': [('frequency', '!=', 'yearly')]}">
-                                <label for="yearly_day_display" string="on the"/><field name="yearly_day_display" required="1"/> of <field name="yearly_month"/>
+                                <label for="yearly_day_display" string="on the"/><field name="yearly_day_display" required="1"/> of <field name="yearly_month" class="w-25"/>
                             </div>
                         </div>
                         <label for="maximum_leave"/>
@@ -51,7 +51,7 @@
                                 <field name="added_value_type" nolabel="1" readonly="1" force_save="1"/>
                             </div>
                         </div>
-                        <field name="action_with_unused_accruals"/>
+                        <field name="action_with_unused_accruals" style="width: 40%"/>
                         <field name="postpone_max_days" attrs="{'invisible': [('action_with_unused_accruals', '!=', 'postponed')]}"/>
                     </group>
                 </sheet>
@@ -98,10 +98,9 @@
                     </span>
                     <div class="o_hr_holidays_hierarchy">
                         <div class="o_hr_holidays_title">Rules</div>
-                        <div class="o_hr_holidays_hierarchy_readonly oe_read_only" attrs="{'invisible': [('level_ids', '!=', [])]}">
-                            <h3>No rules added</h3>
+                        <div class="o_hr_holidays_hierarchy_readonly" attrs="{'invisible': [('level_ids', '!=', [])]}">
                             <p>
-                                Click on the 'Edit' button to add new rules.
+                                No rule has been set up for this accrual plan.
                             </p>
                         </div>
                         <field name="level_ids" mode="kanban" nolabel="1"
@@ -128,7 +127,7 @@
                                 <field name="action_with_unused_accruals"/>
                                 <field name="is_based_on_worked_time"/>
                                 <templates>
-                                    <div t-name="kanban-box">
+                                    <div t-name="kanban-box" class="border-0 bg-transparent">
                                         <div class="o_hr_holidays_body oe_kanban_global_click">
                                             <div class="o_hr_holidays_timeline text-center">
                                                 Level <span class="o_hr_holidays_plan_level_level"/>

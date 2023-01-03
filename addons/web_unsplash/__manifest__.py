@@ -15,11 +15,9 @@
         'web.assets_frontend': [
             'web_unsplash/static/src/js/unsplash_beacon.js',
         ],
-        'web_editor.assets_media_dialog_templates': [
-            'web_unsplash/static/src/components/media_dialog/*.xml',
-        ],
         'web_editor.assets_media_dialog': [
             'web_unsplash/static/src/components/media_dialog/*.js',
+            'web_unsplash/static/src/components/media_dialog/*.xml',
             'web_unsplash/static/src/services/unsplash_service.js',
         ],
     },

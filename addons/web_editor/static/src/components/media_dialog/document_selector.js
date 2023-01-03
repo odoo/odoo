@@ -49,7 +49,7 @@ export class DocumentSelector extends FileSelector {
     static async createElements(selectedMedia, { orm }) {
         return Promise.all(selectedMedia.map(async attachment => {
             const linkEl = document.createElement('a');
-            let href = `/web/content/${attachment.id}?unique=${attachment.checksum}&dowload=true`;
+            let href = `/web/content/${attachment.id}?unique=${attachment.checksum}&download=true`;
             if (!attachment.public) {
                 let accessToken = attachment.access_token;
                 if (!accessToken) {

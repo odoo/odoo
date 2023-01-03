@@ -2,8 +2,11 @@
 
 import { registry } from "@web/core/registry";
 import { useService } from "@web/core/utils/hooks";
+import { SettingsBlock } from "../settings/settings_block";
+import { Setting } from "../settings/setting";
 
-const { Component, onWillStart } = owl;
+import { Component, onWillStart } from "@odoo/owl";
+import { standardWidgetProps } from "@web/views/widgets/standard_widget_props";
 
 /**
  * Widget in the settings that handles the "Developer Tools" section.
@@ -33,5 +36,12 @@ class ResConfigDevTool extends Component {
 }
 
 ResConfigDevTool.template = "res_config_dev_tool";
+ResConfigDevTool.components = {
+    SettingsBlock,
+    Setting,
+};
+ResConfigDevTool.props = {
+    ...standardWidgetProps,
+};
 
 registry.category("view_widgets").add("res_config_dev_tool", ResConfigDevTool);

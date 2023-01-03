@@ -9,7 +9,7 @@ import { useSetupView } from "@web/views/view_hook";
 import { useViewButtons } from "@web/views/view_button/view_button_hook";
 import { KanbanRenderer } from "./kanban_renderer";
 
-const { Component, useRef } = owl;
+import { Component, useRef } from "@odoo/owl";
 
 // -----------------------------------------------------------------------------
 
@@ -28,6 +28,7 @@ export class KanbanController extends Component {
             onCreate: archInfo.onCreate,
             quickCreateView: archInfo.quickCreateView,
             defaultGroupBy,
+            defaultOrder: archInfo.defaultOrder,
             viewMode: "kanban",
             openGroupsByDefault: true,
             tooltipInfo: archInfo.tooltipInfo,
@@ -35,7 +36,10 @@ export class KanbanController extends Component {
         });
 
         const rootRef = useRef("root");
-        useViewButtons(this.model, rootRef);
+        useViewButtons(this.model, rootRef, {
+            beforeExecuteAction: this.beforeExecuteActionButton.bind(this),
+            afterExecuteAction: this.afterExecuteActionButton.bind(this),
+        });
         useSetupView({
             rootRef,
             getGlobalState: () => {
@@ -61,6 +65,7 @@ export class KanbanController extends Component {
                         this.model.root.offset = offset;
                         this.model.root.limit = limit;
                         await this.model.root.load();
+                        await this.onUpdatedPager();
                         this.render(true); // FIXME WOWL reactivity
                     },
                     updateTotal: hasLimitedCount ? () => root.fetchCount() : undefined,
@@ -84,25 +89,38 @@ export class KanbanController extends Component {
     }
 
     async createRecord(group) {
-        const { onCreate } = this.props.archInfo;
+        const { activeActions, onCreate } = this.props.archInfo;
         const { root } = this.model;
-        if (onCreate === "quick_create" && root.canQuickCreate()) {
+        if (activeActions.quickCreate && onCreate === "quick_create" && root.canQuickCreate()) {
             await root.quickCreate(group);
         } else if (onCreate && onCreate !== "quick_create") {
-            await this.actionService.doAction(onCreate, { additionalContext: root.context });
+            const options = {
+                additionalContext: root.context,
+                onClose: async () => {
+                    await this.model.root.load();
+                    this.render(true); // FIXME WOWL reactivity
+                },
+            };
+            await this.actionService.doAction(onCreate, options);
         } else {
             await this.props.createRecord();
         }
     }
 
     get canCreate() {
-        const { create, groupCreate } = this.props.archInfo.activeActions;
+        const { create, createGroup } = this.props.archInfo.activeActions;
         const list = this.model.root;
         if (!create) {
             return false;
         }
-        return list.isGrouped ? list.groups.length > 0 || !groupCreate : true;
+        return list.isGrouped ? list.groups.length > 0 || !createGroup : true;
     }
+
+    async beforeExecuteActionButton(clickParams) {}
+
+    async afterExecuteActionButton(clickParams) {}
+
+    async onUpdatedPager() {}
 }
 
 KanbanController.template = `web.KanbanView`;
@@ -112,9 +130,9 @@ KanbanController.props = {
     defaultGroupBy: { validate: (dgb) => !dgb || typeof dgb === "string", optional: true },
     editable: { type: Boolean, optional: true },
     forceGlobalClick: { type: Boolean, optional: true },
-    hasSelectors: { type: Boolean, optional: true },
     onSelectionChanged: { type: Function, optional: true },
     showButtons: { type: Boolean, optional: true },
+    Compiler: { type: Function, optional: true }, // optional in stable for backward compatibility
     Model: Function,
     Renderer: Function,
     buttonTemplate: String,

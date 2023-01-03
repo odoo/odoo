@@ -1,41 +1,87 @@
 /** @odoo-module **/
 
-import { registerModel } from '@mail/model/model_core';
-import { attr, many, one } from '@mail/model/model_field';
+import { attr, clear, many, one, Model } from "@mail/model";
 
-registerModel({
-    name: 'Emoji',
+Model({
+    name: "Emoji",
     recordMethods: {
         /**
+         * Compares two strings
+         *
          * @private
-         * @returns {FieldCommand}
+         * @returns {boolean}
          */
-        _computeEmojiRegistry() {
-            return this.messaging.emojiRegistry;
+        _fuzzySearch(string, search) {
+            let i = 0;
+            let j = 0;
+            while (i < string.length) {
+                if (string[i] === search[j]) {
+                    j += 1;
+                }
+                if (j === search.length) {
+                    return true;
+                }
+                i += 1;
+            }
+            return false;
+        },
+        /**
+         * @private
+         * @returns {boolean}
+         */
+        _isStringInEmojiKeywords(string) {
+            for (const index in this.searchData) {
+                if (this._fuzzySearch(this.searchData[index], string)) {
+                    //If at least one correspondence is found, return true.
+                    return true;
+                }
+            }
+            return false;
         },
     },
     fields: {
-        description: attr({
-            readonly: true,
+        allEmojiInCategoryOfCurrent: many("EmojiInCategory", {
+            inverse: "emoji",
+            compute() {
+                return this.emojiCategories.map((category) => ({ category }));
+            },
         }),
-        emojiCategories: many('EmojiCategory', {
-            inverse: 'allEmojis',
+        codepoints: attr({ identifying: true }),
+        emojiCategories: many("EmojiCategory", {
+            inverse: "allEmojis",
+            compute() {
+                if (!this.emojiRegistry) {
+                    return clear();
+                }
+                return [this.emojiDataCategory];
+            },
         }),
-        emojiRegistry: one('EmojiRegistry', {
-            compute: '_computeEmojiRegistry',
-            inverse: 'allEmojis',
+        emojiDataCategory: one("EmojiCategory"),
+        emojiOrEmojiInCategory: many("EmojiOrEmojiInCategory", { inverse: "emoji" }),
+        emojiRegistry: one("EmojiRegistry", {
+            inverse: "allEmojis",
             required: true,
+            compute() {
+                if (!this.messaging) {
+                    return clear();
+                }
+                return this.messaging.emojiRegistry;
+            },
         }),
-        emojiViews: many('EmojiView', {
-            inverse: 'emoji',
-            readonly: true,
-            isCausal: true,
+        emojiViews: many("EmojiView", { inverse: "emoji", readonly: true }),
+        emoticons: attr(),
+        keywords: attr(),
+        name: attr({ readonly: true }),
+        searchData: attr({
+            compute() {
+                return [...this.shortcodes, ...this.emoticons, ...this.name, ...this.keywords];
+            },
         }),
+        shortcodes: attr(),
         sources: attr({
-            readonly: true,
-        }),
-        unicode: attr({
-            identifying: true,
+            compute() {
+                return [...this.shortcodes, ...this.emoticons];
+            },
         }),
     },
 });

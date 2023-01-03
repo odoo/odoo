@@ -103,11 +103,11 @@ var TagCourseDialog = Dialog.extend({
             formatNoMatches: false,
             selection_data: false,
             fetch_rpc_fnc: fetchFNC,
-            formatSelection: function (data) {
+            formatSelection: function (data, container, fmt) {
                 if (data.tag) {
                     data.text = data.tag;
                 }
-                return data.text;
+                return fmt(data.text);
             },
             createSearchChoice: function (term, data) {
                 var addedTags = $(this.opts.element).select2('data');
@@ -201,7 +201,7 @@ var TagCourseDialog = Dialog.extend({
         var $tagInput = this.$('#tag_id');
         if ($tagInput.length !== 0){
             var $tagSelect2Container = $tagInput
-                .closest('.form-group')
+                .parent()
                 .find('.select2-container');
             $tagSelect2Container.removeClass('is-invalid is-valid');
             if ($tagInput.is(':invalid')) {
@@ -211,7 +211,7 @@ var TagCourseDialog = Dialog.extend({
                 var $tagGroupInput = this.$('#tag_group_id');
                 if ($tagGroupInput.length !== 0){
                     var $tagGroupSelect2Container = $tagGroupInput
-                        .closest('.form-group')
+                        .parent()
                         .find('.select2-container');
                     if ($tagGroupInput.is(':invalid')) {
                         $tagGroupSelect2Container.addClass('is-invalid');
@@ -244,7 +244,7 @@ var TagCourseDialog = Dialog.extend({
      */
     _hideTagGroup: function () {
         var $tag_group_id = this.$('#tag_group_id');
-        var $tagGroupSelect2Container = $tag_group_id.closest('.form-group');
+        var $tagGroupSelect2Container = $tag_group_id.parent();
         $tagGroupSelect2Container.hide();
         $tag_group_id.removeAttr("required");
         $tag_group_id.select2("val", "");
@@ -259,7 +259,7 @@ var TagCourseDialog = Dialog.extend({
      */
     _showTagGroup: function () {
         var $tag_group_id = this.$('#tag_group_id');
-        var $tagGroupSelect2Container = $tag_group_id.closest('.form-group');
+        var $tagGroupSelect2Container = $tag_group_id.parent();
         $tagGroupSelect2Container.show();
         $tag_group_id.attr("required", "required");
     },
@@ -337,7 +337,6 @@ var TagCourseDialog = Dialog.extend({
 
 publicWidget.registry.websiteSlidesTag = publicWidget.Widget.extend({
     selector: '.o_wslides_js_channel_tag_add',
-    xmlDependencies: ['/website_slides/static/src/xml/website_slides_channel_tag.xml'],
     events: {
         'click': '_onAddTagClick',
     },

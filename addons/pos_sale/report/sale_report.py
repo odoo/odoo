@@ -52,6 +52,7 @@ class SaleReport(models.Model):
             pos.name AS name,
             pos.date_order AS date,
             CASE WHEN pos.state = 'draft' THEN 'pos_draft' WHEN pos.state = 'done' THEN 'pos_done' else pos.state END AS state,
+            NULL as invoice_status,
             pos.partner_id AS partner_id,
             pos.user_id AS user_id,
             pos.company_id AS company_id,
@@ -66,8 +67,8 @@ class SaleReport(models.Model):
             partner.country_id AS country_id,
             partner.industry_id AS industry_id,
             partner.commercial_partner_id AS commercial_partner_id,
-            (SUM(t.weight) * l.qty / u.factor) AS weight,
-            (SUM(t.volume) * l.qty / u.factor) AS volume,
+            (SUM(p.weight) * l.qty / u.factor) AS weight,
+            (SUM(p.volume) * l.qty / u.factor) AS volume,
             l.discount AS discount,
             SUM((l.price_unit * l.discount * l.qty / 100.0
                 * {self._case_value_or_one('pos.currency_rate')}
@@ -75,12 +76,21 @@ class SaleReport(models.Model):
             AS discount_amount,
             NULL AS order_id"""
 
-        additional_fields_info = self._select_additional_fields()
+        additional_fields = self._select_additional_fields()
+        additional_fields_info = self._fill_pos_fields(additional_fields)
         template = """,
-            NULL AS %s"""
-        for fname in additional_fields_info.keys():
-            select_ += template % fname
+            %s AS %s"""
+        for fname, value in additional_fields_info.items():
+            select_ += template % (value, fname)
         return select_
+
+    def _fill_pos_fields(self, additional_fields):
+        """Hook to fill additional fields for the pos_sale.
+
+        :param values: dictionary of values to fill
+        :type values: dict
+        """
+        return {x: 'NULL' for x in additional_fields}
 
     def _from_pos(self):
         return """

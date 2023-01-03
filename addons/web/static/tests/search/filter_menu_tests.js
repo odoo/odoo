@@ -73,8 +73,6 @@ QUnit.module("Search", (hooks) => {
     });
 
     QUnit.test("simple rendering with a single filter", async function (assert) {
-        assert.expect(3);
-
         await makeWithSearch({
             serverData,
             resModel: "foo",
@@ -90,13 +88,13 @@ QUnit.module("Search", (hooks) => {
 
         await toggleFilterMenu(target);
         assert.containsOnce(target, ".o_menu_item");
+        assert.containsOnce(target, ".o_menu_item[role=menuitemcheckbox]");
+        assert.deepEqual(target.querySelector(".o_menu_item").ariaChecked, "false");
         assert.containsOnce(target, ".dropdown-divider");
         assert.containsOnce(target, ".o_add_custom_filter_menu");
     });
 
     QUnit.test('toggle a "simple" filter in filter menu works', async function (assert) {
-        assert.expect(10);
-
         const controlPanel = await makeWithSearch({
             serverData,
             resModel: "foo",
@@ -114,8 +112,11 @@ QUnit.module("Search", (hooks) => {
         assert.deepEqual(getFacetTexts(target), []);
         assert.notOk(isItemSelected(target, "Foo"));
         assert.deepEqual(getDomain(controlPanel), []);
+        assert.containsOnce(target, ".o_menu_item[role=menuitemcheckbox]");
+        assert.deepEqual(target.querySelector(".o_menu_item").ariaChecked, "false");
 
         await toggleMenuItem(target, "Foo");
+        assert.deepEqual(target.querySelector(".o_menu_item").ariaChecked, "true");
 
         assert.deepEqual(getFacetTexts(target), ["Foo"]);
         assert.containsOnce(
@@ -471,33 +472,35 @@ QUnit.module("Search", (hooks) => {
         assert.deepEqual(getFacetTexts(target), ["Date: June 2019"]);
     });
 
-    QUnit.test("filter with multiple values in default_period date attribute set as search_default", async function (assert) {
-        assert.expect(3);
+    QUnit.test(
+        "filter with multiple values in default_period date attribute set as search_default",
+        async function (assert) {
+            assert.expect(3);
 
-        patchDate(2019, 6, 31, 13, 43, 0);
+            patchDate(2019, 6, 31, 13, 43, 0);
 
-        await makeWithSearch({
-            serverData,
-            resModel: "foo",
-            Component: ControlPanel,
-            searchViewId: false,
-            searchMenuTypes: ["filter"],
-            searchViewArch: `
+            await makeWithSearch({
+                serverData,
+                resModel: "foo",
+                Component: ControlPanel,
+                searchViewId: false,
+                searchMenuTypes: ["filter"],
+                searchViewArch: `
                     <search>
                         <filter string="Date" name="date_field" date="date_field" default_period="this_year,last_year"/>
                     </search>
                 `,
-            context: { search_default_date_field: true },
-        });
+                context: { search_default_date_field: true },
+            });
 
-        await toggleFilterMenu(target);
-        await toggleMenuItem(target, "Date");
+            await toggleFilterMenu(target);
+            await toggleMenuItem(target, "Date");
 
-        assert.ok(isItemSelected(target, "Date"));
-        assert.ok(isOptionSelected(target, "Date", "2019"));
-        assert.ok(isOptionSelected(target, "Date", "2018"));
-
-    });
+            assert.ok(isItemSelected(target, "Date"));
+            assert.ok(isOptionSelected(target, "Date", "2019"));
+            assert.ok(isOptionSelected(target, "Date", "2018"));
+        }
+    );
 
     QUnit.test("filter domains are correcly combined by OR and AND", async function (assert) {
         assert.expect(2);

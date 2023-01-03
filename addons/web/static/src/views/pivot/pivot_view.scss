@@ -1,3 +1,4 @@
+// ------- Pivot renderer -------
 .o_pivot table {
     width: var(--PivotView-width, auto);
 
@@ -7,26 +8,25 @@
         @include o-hover-text-color($body-color, $o-main-link-color);
     }
 
-    // This can be removed after the migration to BS5.
-    th, td {
-        border-width: $border-width;
-    }
-
     .o_pivot_measure_row,
     .o_pivot_origin_row,
     .o_pivot_header_cell_closed,
     .o_pivot_header_cell_opened {
-        // "user-select-none" class doesn't exist in BS 4.3.1, the user-select property
-        // could be replaced by a class after the migration to BS5
-        user-select: none;
         @include o-hover-text-color($body-color, $headings-color);
 
         &:hover {
-            background-color: map-get($grays, '200') !important;
+            background-color: map-get($grays, "200") !important;
         }
     }
 
     .o_pivot_cell_value.o_cell_hover {
         background-color: $table-hover-bg;
+    }
+}
+
+// ------- Sample mode -------
+.o_pivot_view .o_view_sample_data {
+    table {
+        @include o-sample-data-disabled;
     }
 }

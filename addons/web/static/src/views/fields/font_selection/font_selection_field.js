@@ -5,7 +5,7 @@ import { _lt } from "@web/core/l10n/translation";
 import { standardFieldProps } from "../standard_field_props";
 import { formatSelection } from "../formatters";
 
-const { Component } = owl;
+import { Component } from "@odoo/owl";
 
 export class FontSelectionField extends Component {
     get options() {
@@ -41,6 +41,7 @@ FontSelectionField.props = {
 
 FontSelectionField.displayName = _lt("Font Selection");
 FontSelectionField.supportedTypes = ["selection"];
+FontSelectionField.legacySpecialData = "_fetchSpecialRelation";
 
 FontSelectionField.extractProps = ({ attrs }) => {
     return {

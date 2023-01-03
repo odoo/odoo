@@ -47,7 +47,6 @@ var SlideEnrollDialog = Dialog.extend({
 
 publicWidget.registry.websiteSlidesEnroll = publicWidget.Widget.extend({
     selector: '.o_wslides_js_channel_enroll',
-    xmlDependencies: ['/website_slides/static/src/xml/slide_course_join.xml'],
     events: {
         'click': '_onSendRequestClick',
     },

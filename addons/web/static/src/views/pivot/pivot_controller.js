@@ -9,7 +9,7 @@ import { useModel } from "@web/views/model";
 import { standardViewProps } from "@web/views/standard_view_props";
 import { useSetupView } from "@web/views/view_hook";
 
-const { Component, useRef } = owl;
+import { Component, useRef } from "@odoo/owl";
 
 export class PivotController extends Component {
     setup() {
@@ -135,12 +135,8 @@ PivotController.components = { Dropdown, DropdownItem, Layout };
 
 PivotController.props = {
     ...standardViewProps,
-    additionalMeasures: { type: Array, elements: String, optional: 1 },
     Model: Function,
     modelParams: Object,
     Renderer: Function,
     buttonTemplate: String,
-};
-PivotController.defaultProps = {
-    additionalMeasures: [],
 };

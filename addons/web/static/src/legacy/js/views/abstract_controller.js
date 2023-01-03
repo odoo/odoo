@@ -12,7 +12,7 @@
  */
 
 import ActionMixin from 'web.ActionMixin';
-import ajax from 'web.ajax';
+import { loadCSS, loadJS } from "@web/core/assets";
 import concurrency from 'web.concurrency';
 import { ComponentWrapper } from 'web.OwlCompatibility';
 import mvc from 'web.mvc';
@@ -99,7 +99,7 @@ var AbstractController = mvc.Controller.extend(ActionMixin, {
         await Promise.all(promises);
         await this._update(this.initialState, { shouldUpdateSearchComponents: false });
         this.updateButtons();
-        this.el.classList.toggle('o_view_sample_data', this.model.isInSampleMode());
+        this.el.classList.toggle('o_legacy_view_sample_data', this.model.isInSampleMode());
     },
     /**
      * @override
@@ -244,7 +244,7 @@ var AbstractController = mvc.Controller.extend(ActionMixin, {
         ];
         await this.dp.add(Promise.all(promises));
         this.updateButtons();
-        this.el.classList.toggle('o_view_sample_data', this.model.isInSampleMode());
+        this.el.classList.toggle('o_legacy_view_sample_data', this.model.isInSampleMode());
     },
 
     //--------------------------------------------------------------------------
@@ -308,7 +308,7 @@ var AbstractController = mvc.Controller.extend(ActionMixin, {
     /**
      * @private
      * @param {function} callback function to execute before removing classname
-     *   'o_view_sample_data' (may be async). This allows to reload and/or
+     *   'o_legacy_view_sample_data' (may be async). This allows to reload and/or
      *   rerender before removing the className, thus preventing the view from
      *   flickering.
      */
@@ -317,7 +317,7 @@ var AbstractController = mvc.Controller.extend(ActionMixin, {
         if (callback) {
             await callback();
         }
-        this.el.classList.remove('o_view_sample_data');
+        this.el.classList.remove('o_legacy_view_sample_data');
     },
     /**
      * Renders the html provided by the route specified by the
@@ -355,11 +355,11 @@ var AbstractController = mvc.Controller.extend(ActionMixin, {
             // Css and js are moved to <head>
             var defs = [];
             $('link[rel="stylesheet"]', $banner).each(function (i, link) {
-                defs.push(ajax.loadCSS(link.href));
+                defs.push(loadCSS(link.href));
                 link.remove();
             });
             $('script[type="text/javascript"]', $banner).each(function (i, js) {
-                defs.push(ajax.loadJS(js.src));
+                defs.push(loadJS(js.src));
                 js.remove();
             });
             await Promise.all(defs);

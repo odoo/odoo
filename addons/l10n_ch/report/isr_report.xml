@@ -42,7 +42,7 @@
                 <!-- since the body content take the whole page we need a way to add margin
                      back on content outside the ISR so it does not overlap with the header -->
                 <div id="content_outside_isr">
-                    <h1>ISR for invoice <t t-esc="invoice.name"/></h1>
+                    <h1>ISR for invoice <t t-out="invoice.name"/></h1>
                 </div>
 
                 <div id="isr" t-att-class="'isr-print-bank' if print_bank else None">
@@ -56,9 +56,9 @@
                         <t t-if="print_bank">
                             <div id="voucher-for-bank">
                                 <p t-if="not invoice.company_id.l10n_ch_isr_preprinted_bank">
-                                    <t t-esc="invoice.partner_bank_id.bank_id.name"/><br />
-                                    <t t-esc="invoice.partner_bank_id.bank_id.zip"/>
-                                    <t t-esc="invoice.partner_bank_id.bank_id.city"/>
+                                    <t t-out="invoice.partner_bank_id.bank_id.name"/><br />
+                                    <t t-out="invoice.partner_bank_id.bank_id.zip"/>
+                                    <t t-out="invoice.partner_bank_id.bank_id.city"/>
                                 </p>
                             </div>
                             <!--Zugunsten von/En faveur de/A favore di-->
@@ -68,8 +68,8 @@
                             <p id="voucher-for_address1" t-field="invoice.company_id.street"/>
                             <p id="voucher-for_address2" t-field="invoice.company_id.street2"/>
                             <p id="voucher-for_address3">
-                                <t t-esc="invoice.company_id.zip"/>
-                                <t t-esc="invoice.company_id.city"/>
+                                <t t-out="invoice.company_id.zip"/>
+                                <t t-out="invoice.company_id.city"/>
                             </p>
                         </div>
 
@@ -78,8 +78,8 @@
                             <p id="voucher-bank_ref" t-field="invoice.l10n_ch_isr_subscription_formatted"/>
                         </div>
 
-                        <p id="voucher-amount_units" t-esc="split_total_amount[0]"/>
-                        <p id="voucher-amount_cents" t-esc="split_total_amount[1]"/>
+                        <p id="voucher-amount_units" t-out="split_total_amount[0]"/>
+                        <p id="voucher-amount_cents" t-out="split_total_amount[1]"/>
 
                         <div id="voucher-by">
                             <!--Einbezahlt von/Versé par/Versato da-->
@@ -97,9 +97,9 @@
                         <t t-if="print_bank">
                             <div id="slip-for-bank">
                                 <p t-if="not invoice.company_id.l10n_ch_isr_preprinted_bank">
-                                    <t t-esc="invoice.partner_bank_id.bank_id.name"/><br />
-                                    <t t-esc="invoice.partner_bank_id.bank_id.zip"/>
-                                    <t t-esc="invoice.partner_bank_id.bank_id.city"/>
+                                    <t t-out="invoice.partner_bank_id.bank_id.name"/><br />
+                                    <t t-out="invoice.partner_bank_id.bank_id.zip"/>
+                                    <t t-out="invoice.partner_bank_id.bank_id.city"/>
                                 </p>
                             </div>
                             <!--Zugunsten von/En faveur de/A favore di-->
@@ -110,8 +110,8 @@
                             <p id="slip-for_address1" t-field="invoice.company_id.street"/>
                             <p id="slip-for_address2" t-field="invoice.company_id.street2"/>
                             <p id="slip-for_address3">
-                                <t t-esc="invoice.company_id.zip"/>
-                                <t t-esc="invoice.company_id.city"/>
+                                <t t-out="invoice.company_id.zip"/>
+                                <t t-out="invoice.company_id.city"/>
                             </p>
                         </div>
 
@@ -121,8 +121,8 @@
                             <p id="slip-bank_ref" t-field="invoice.l10n_ch_isr_subscription_formatted"/>
                         </div>
 
-                        <p id="slip-amount_units" t-esc="split_total_amount[0]"/>
-                        <p id="slip-amount_cents" t-esc="split_total_amount[1]"/>
+                        <p id="slip-amount_units" t-out="split_total_amount[0]"/>
+                        <p id="slip-amount_cents" t-out="split_total_amount[1]"/>
 
                         <div id="slip-reference">
                             <!--Referenz-Nr./N°de référence/N°di riferimento-->
@@ -137,7 +137,7 @@
                         <div id="slip-optical-line">
                             <!--Optical reference-->
                             <div t-attf-style="top: {{ invoice.company_id.l10n_ch_isr_scan_line_top }}mm; left: {{ invoice.company_id.l10n_ch_isr_scan_line_left }}mm;">
-                                <div t-foreach="invoice.l10n_ch_isr_optical_line" t-as="char" t-esc="char" t-attf-style="right: {{ round((char_size - char_index - 1) * 0.1, 1) }}in"/>
+                                <div t-foreach="invoice.l10n_ch_isr_optical_line" t-as="char" t-out="char" t-attf-style="right: {{ round((char_size - char_index - 1) * 0.1, 1) }}in"/>
                             </div>
                         </div>
                     </div>

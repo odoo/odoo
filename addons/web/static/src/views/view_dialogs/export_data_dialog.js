@@ -8,7 +8,7 @@ import { fuzzyLookup } from "@web/core/utils/search";
 import { useSortable } from "@web/core/utils/sortable";
 import { useDebounced } from "@web/core/utils/timing";
 
-const { Component, useRef, useState, onMounted, onWillStart, onWillUnmount } = owl;
+import { Component, useRef, useState, onMounted, onWillStart, onWillUnmount } from "@odoo/owl";
 
 class DeleteExportListDialog extends Component {
     async onDelete() {
@@ -266,18 +266,20 @@ export class ExportDataDialog extends Component {
         }
         const id = await this.orm.create(
             "ir.exports",
-            {
-                name,
-                export_fields: this.state.exportList.map((field) => [
-                    0,
-                    0,
-                    {
-                        name: field.name,
-                    },
-                ]),
-                resource: this.props.root.resModel,
-            },
-            this.props.context
+            [
+                {
+                    name,
+                    export_fields: this.state.exportList.map((field) => [
+                        0,
+                        0,
+                        {
+                            name: field.name,
+                        },
+                    ]),
+                    resource: this.props.root.resModel,
+                },
+            ],
+            { context: this.props.context }
         );
         this.state.isEditingTemplate = false;
         this.state.templateId = id;
@@ -314,7 +316,7 @@ export class ExportDataDialog extends Component {
             text: this.env._t("Do you really want to delete this export template?"),
             delete: async () => {
                 const id = Number(this.state.templateId);
-                await this.orm.unlink("ir.exports", [id], this.props.context);
+                await this.orm.unlink("ir.exports", [id], { context: this.props.context });
                 this.templates.splice(
                     this.templates.findIndex((i) => i.id === id),
                     1

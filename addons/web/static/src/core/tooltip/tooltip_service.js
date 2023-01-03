@@ -5,7 +5,7 @@ import { registry } from "@web/core/registry";
 import { Tooltip } from "./tooltip";
 import { hasTouch } from "@web/core/browser/feature_detection";
 
-const { whenReady } = owl;
+import { whenReady } from "@odoo/owl";
 
 /**
  * The tooltip service allows to display custom tooltips on every elements with

@@ -40,7 +40,7 @@ const SoLineMany2one = FieldMany2One.extend({
 
 
 fieldRegistry.add('so_line_one2many', SoLineOne2Many);
-fieldRegistry.add('so_line_many2one', SoLineMany2one);
+fieldRegistry.add('so_line_field', SoLineMany2one);
 
 return SoLineOne2Many;
 

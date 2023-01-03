@@ -20,8 +20,6 @@
     'assets': {
         'web.assets_frontend': [
             'website_event_track_live_quiz/static/src/js/**/*',
-        ],
-        'web.assets_qweb': [
             'website_event_track_live_quiz/static/src/xml/**/*',
         ],
     },

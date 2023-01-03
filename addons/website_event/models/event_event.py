@@ -363,9 +363,9 @@ class Event(models.Model):
             # add_menu=False, ispage=False -> simply create a new ir.ui.view with name
             # and template
             page_result = self.env['website'].sudo().new_page(
-                name=name + ' ' + self.name, template=xml_id,
+                name=f'{name} {self.name}', template=xml_id,
                 add_menu=False, ispage=False)
-            url = "/event/" + slug(self) + "/page" + page_result['url']  # url contains starting "/"
+            url = f"/event/{slug(self)}/page{page_result['url']}"  # url contains starting "/"
             view_id = page_result['view_id']
 
         website_menu = self.env['website.menu'].sudo().create({
@@ -411,7 +411,7 @@ class Event(models.Model):
         params = {
             'action': 'TEMPLATE',
             'text': self.name,
-            'dates': url_date_start + '/' + url_date_stop,
+            'dates': f'{url_date_start}/{url_date_stop}',
             'ctz': self.date_tz,
             'details': self.name,
         }
@@ -419,7 +419,7 @@ class Event(models.Model):
             params.update(location=self.address_inline)
         encoded_params = werkzeug.urls.url_encode(params)
         google_url = GOOGLE_CALENDAR_URL + encoded_params
-        iCal_url = '/event/%d/ics?%s' % (self.id, encoded_params)
+        iCal_url = f'/event/{self.id:d}/ics?{encoded_params}'
         return {'google_url': google_url, 'iCal_url': iCal_url}
 
     def _default_website_meta(self):
@@ -495,11 +495,8 @@ class Event(models.Model):
             # Doing it this way allows to only get events who are tagged "age: 10-12" AND "activity: football".
             # Add another tag "age: 12-15" to the search and it would fetch the ones who are tagged:
             # ("age: 10-12" OR "age: 12-15") AND "activity: football
-            grouped_tags = defaultdict(list)
-            for tag in search_tags:
-                grouped_tags[tag.category_id].append(tag)
-            for group in grouped_tags:
-                domain.append([('tag_ids', 'in', [tag.id for tag in grouped_tags[group]])])
+            for tags in search_tags.grouped('category_id').values():
+                domain.append([('tag_ids', 'in', tags.ids)])
 
         no_country_domain = domain.copy()
         if country:

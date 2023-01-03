@@ -2,7 +2,7 @@
 <templates id="template" xml:space="preserve">
 
 <t t-name="web.Legacy.SearchPanel" owl="1">
-    <div class="o_search_panel flex-grow-0 flex-shrink-0 border-end pe-2 pb-5 ps-4 h-100 bg-white overflow-auto" t-att-class="props.className" t-ref="legacySearchPanel">
+    <div class="o_search_panel flex-grow-0 flex-shrink-0 border-end pe-2 pb-5 ps-4 h-100 bg-view overflow-auto" t-att-class="props.className" t-ref="legacySearchPanel">
         <section t-foreach="model.get('sections', s => !s.empty)" t-as="section" t-key="section.id"
             t-attf-class="o_search_panel_section o_search_panel_{{ section.type }}"
             >
@@ -132,7 +132,7 @@
         t-att-class="{ 'ps-2' : isChildList }"
         >
         <t t-set="value" t-value="values.get(valueId)"/>
-        <div class="custom-control form-check w-100">
+        <div class="form-check w-100">
             <input type="checkbox"
                 t-attf-id="{{ section.id }}_input_{{ valueId }}"
                 t-att-checked="state.active[section.id][valueId]"

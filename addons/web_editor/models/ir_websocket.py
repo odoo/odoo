@@ -27,6 +27,8 @@ class IrWebsocket(models.AbstractModel):
                             raise AccessDenied()
 
                         document = self.env[model_name].browse([res_id])
+                        if not document.exists():
+                            continue
 
                         document.check_access_rights('read')
                         document.check_field_access_rights('read', [field_name])

@@ -1,7 +1,9 @@
 # -*- coding:utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import api, models, fields, _
+from odoo import api, models, fields, _, _lt
+from odoo.exceptions import UserError
+from odoo.addons.account_edi_proxy_client.models.account_edi_proxy_user import AccountEdiProxyError
 from odoo.addons.l10n_it_edi.tools.remove_signature import remove_signature
 from odoo.osv.expression import OR, AND
 
@@ -9,6 +11,7 @@ from lxml import etree
 from datetime import datetime
 import re
 import logging
+import base64
 
 
 _logger = logging.getLogger(__name__)
@@ -93,9 +96,9 @@ class AccountEdiFormat(models.Model):
             errors.append(_("%s must have a country", seller.display_name))
 
         # <1.1.1.2>
-        if not seller.vat:
+        if not invoice.company_id.vat:
             errors.append(_("%s must have a VAT number", seller.display_name))
-        elif len(seller.vat) > 30:
+        if seller.vat and len(seller.vat) > 30:
             errors.append(_("The maximum length for VAT number is 30. %s have a VAT number too long: %s.", seller.display_name, seller.vat))
 
         # <1.2.1.2>
@@ -204,9 +207,6 @@ class AccountEdiFormat(models.Model):
         if not buyer.city:
             errors.append(_("%s must have a city.", buyer.display_name))
 
-        if any(line.quantity < 0 for line in invoice.invoice_line_ids):
-            errors.append(_("All quantities should be positive."))
-
         for tax_line in invoice.line_ids.filtered(lambda line: line.tax_line_id):
             if not tax_line.tax_line_id.l10n_it_kind_exoneration and tax_line.tax_line_id.amount == 0:
                 errors.append(_("%s has an amount of 0.0, you must indicate the kind of exoneration.", tax_line.name))
@@ -228,112 +228,123 @@ class AccountEdiFormat(models.Model):
         return bool(invoice_lines_tags & vj3_lines_tags)
 
     def _l10n_it_document_type_mapping(self):
+        """ Returns a dictionary with the required features for every TDxx FatturaPA document type """
         return {
-            'TD01': dict(move_types=['out_invoice'], import_type='in_invoice'),
-            'TD02': dict(move_types=['out_invoice'], import_type='in_invoice', downpayment=True),
-            'TD04': dict(move_types=['out_refund'], import_type='in_refund'),
-            'TD07': dict(move_types=['out_invoice'], import_type='in_invoice', simplified=True),
-            'TD08': dict(move_types=['out_refund'], import_type='in_refund', simplified=True),
-            'TD09': dict(move_types=['out_invoice'], import_type='in_invoice', simplified=True),
-            'TD17': dict(move_types=['in_invoice', 'in_refund'], import_type='out_invoice', self_invoice=True, services_or_goods="service"),
-            'TD18': dict(move_types=['in_invoice', 'in_refund'], import_type='out_invoice', self_invoice=True, services_or_goods="consu", partner_in_eu=True),
-            'TD19': dict(move_types=['in_invoice', 'in_refund'], import_type='out_invoice', self_invoice=True, services_or_goods="consu", goods_in_italy=True),
+            'TD01': dict(move_types=['out_invoice'], import_type='in_invoice', self_invoice=False, simplified=False, downpayment=False),
+            'TD02': dict(move_types=['out_invoice'], import_type='in_invoice', self_invoice=False, simplified=False, downpayment=True),
+            'TD04': dict(move_types=['out_refund'], import_type='in_refund', self_invoice=False, simplified=False),
+            'TD07': dict(move_types=['out_invoice'], import_type='in_invoice', self_invoice=False, simplified=True),
+            'TD08': dict(move_types=['out_refund'], import_type='in_refund', self_invoice=False, simplified=True),
+            'TD09': dict(move_types=['out_invoice'], import_type='in_invoice', self_invoice=False, simplified=True),
+            'TD28': dict(move_types=['in_invoice', 'in_refund'], import_type='in_invoice', simplified=False, self_invoice=True, partner_country_code="SM"),
+            'TD17': dict(move_types=['in_invoice', 'in_refund'], import_type='in_invoice', simplified=False, self_invoice=True, services_or_goods="service"),
+            'TD18': dict(move_types=['in_invoice', 'in_refund'], import_type='in_invoice', simplified=False, self_invoice=True, services_or_goods="consu", goods_in_italy=False, partner_in_eu=True),
+            'TD19': dict(move_types=['in_invoice', 'in_refund'], import_type='in_invoice', simplified=False, self_invoice=True, services_or_goods="consu", goods_in_italy=True),
+        }
+
+    def _l10n_it_get_invoice_features_for_document_type_selection(self, invoice):
+        """ Returns a dictionary of features to be compared with the TDxx FatturaPA
+            document type requirements. """
+        services_or_goods = self._l10n_it_edi_services_or_goods(invoice)
+        return {
+            'move_types': invoice.move_type,
+            'partner_in_eu': self._l10n_it_edi_partner_in_eu(invoice.commercial_partner_id),
+            'partner_country_code': invoice.commercial_partner_id.country_id.code,
+            'simplified': self._l10n_it_edi_is_simplified(invoice),
+            'self_invoice': self._l10n_it_edi_is_self_invoice(invoice),
+            'downpayment': invoice._is_downpayment(),
+            'services_or_goods': services_or_goods,
+            'goods_in_italy': services_or_goods == 'consu' and self._l10n_it_goods_in_italy(invoice),
         }
 
     def _l10n_it_get_document_type(self, invoice):
-        is_simplified = self._l10n_it_edi_is_simplified(invoice)
-        is_self_invoice = self._l10n_it_edi_is_self_invoice(invoice)
-        services_or_goods = self._l10n_it_edi_services_or_goods(invoice)
-        goods_in_italy = services_or_goods == 'consu' and self._l10n_it_goods_in_italy(invoice)
-        partner_in_eu = self._l10n_it_edi_partner_in_eu(invoice.commercial_partner_id)
-        for code, infos in self._l10n_it_document_type_mapping().items():
-            info_services_or_goods = infos.get('services_or_goods', "both")
-            info_partner_in_eu = infos.get('partner_in_eu', False)
-            if all([
-                invoice.move_type in infos.get('move_types', False),
-                invoice._is_downpayment() == infos.get('downpayment', False),
-                is_self_invoice == infos.get('self_invoice', False),
-                is_simplified == infos.get('simplified', False),
-                info_services_or_goods in ("both", services_or_goods),
-                info_partner_in_eu in (False, partner_in_eu),
-                goods_in_italy == infos.get('goods_in_italy', False),
-            ]):
+        """ Compare the features of the invoice to the requirements of each TDxx FatturaPA
+            document type until you find a valid one. """
+        invoice_features = self._l10n_it_get_invoice_features_for_document_type_selection(invoice)
+        for code, document_type_features in self._l10n_it_document_type_mapping().items():
+            comparisons = []
+            for key, invoice_feature in invoice_features.items():
+                if key not in document_type_features:
+                    continue
+                document_type_feature = document_type_features.get(key)
+                if isinstance(document_type_feature, (tuple, list)):
+                    comparisons.append(invoice_feature in document_type_feature)
+                else:
+                    comparisons.append(invoice_feature == document_type_feature)
+            if all(comparisons):
                 return code
-        return None
+        return False
 
     def _l10n_it_is_simplified_document_type(self, document_type):
         return self._l10n_it_document_type_mapping().get(document_type, {}).get('simplified', False)
 
     # -------------------------------------------------------------------------
-    # Export
-    # -------------------------------------------------------------------------
-
-    def _prepare_invoice_report(self, pdf_writer, edi_document):
-        self.ensure_one()
-        if self.code != 'fattura_pa':
-            return super()._prepare_invoice_report(pdf_writer, edi_document)
-        if edi_document.attachment_id:
-            pdf_writer.embed_odoo_attachment(edi_document.attachment_id)
-
-    def _is_compatible_with_journal(self, journal):
-        # OVERRIDE
-        self.ensure_one()
-        if self.code != 'fattura_pa':
-            return super()._is_compatible_with_journal(journal)
-        return journal.type in ('sale', 'purchase') and journal.country_code == 'IT'
-
-    def _l10n_it_edi_is_required_for_invoice(self, invoice):
-        """ Is the edi required for this invoice based on the method (here: PEC mail)
-            Deprecated: in future release PEC mail will be removed.
-            TO OVERRIDE
-        """
-        return ((invoice.is_sale_document() or self._l10n_it_get_document_type(invoice))
-                and invoice.country_code == 'IT'
-                and invoice.l10n_it_send_state not in ('sent', 'delivered', 'delivered_accepted'))
-
-    def _is_required_for_invoice(self, invoice):
-        # OVERRIDE
-        self.ensure_one()
-        if self.code != 'fattura_pa':
-            return super()._is_required_for_invoice(invoice)
-
-        return self._l10n_it_edi_is_required_for_invoice(invoice)
-
-    def _post_fattura_pa(self, invoices):
-        # TO OVERRIDE
-        invoice = invoices  # no batching ensure that we only have one invoice
-        invoice.l10n_it_send_state = 'other'
-        invoice._check_before_xml_exporting()
-        if invoice.l10n_it_einvoice_id and invoice.l10n_it_send_state not in ['invalid', 'to_send']:
-            return {'error': _("You can't regenerate an E-Invoice when the first one is sent and there are no errors")}
-        if invoice.l10n_it_einvoice_id:
-            invoice.l10n_it_einvoice_id.unlink()
-        res = invoice.invoice_generate_xml()
-        if invoice._is_commercial_partner_pa():
-            invoice.message_post(
-                body=(_("Invoices for PA are not managed by Odoo, you can download the document and send it on your own."))
-            )
-        else:
-            invoice.l10n_it_send_state = 'to_send'
-        if 'attachment' in res:
-            res['success'] = True
-        return {invoice: res}
-
-    def _post_invoice_edi(self, invoices, test_mode=False):
-        # OVERRIDE
-        self.ensure_one()
-        edi_result = super()._post_invoice_edi(invoices)
-        if self.code != 'fattura_pa':
-            return edi_result
-
-        return self._post_fattura_pa(invoices)
-
-    # -------------------------------------------------------------------------
     # Import
     # -------------------------------------------------------------------------
 
+    def _cron_receive_fattura_pa(self):
+        ''' Check the proxy for incoming invoices.
+        '''
+        proxy_users = self.env['account_edi_proxy_client.user'].search([('edi_format_id', '=', self.env.ref('l10n_it_edi.edi_fatturaPA').id)])
+
+        if proxy_users._get_demo_state() == 'demo':
+            return
+
+        for proxy_user in proxy_users:
+            company = proxy_user.company_id
+            try:
+                res = proxy_user._make_request(proxy_user._get_server_url() + '/api/l10n_it_edi/1/in/RicezioneInvoice',
+                                               params={'recipient_codice_fiscale': company.l10n_it_codice_fiscale})
+            except AccountEdiProxyError as e:
+                _logger.error('Error while receiving file from SdiCoop: %s', e)
+
+            proxy_acks = []
+            for id_transaction, fattura in res.items():
+                if self.env['ir.attachment'].search([('name', '=', fattura['filename']), ('res_model', '=', 'account.move')], limit=1):
+                    # name should be unique, the invoice already exists
+                    _logger.info('E-invoice already exists: %s', fattura['filename'])
+                    proxy_acks.append(id_transaction)
+                    continue
+
+                file = proxy_user._decrypt_data(fattura['file'], fattura['key'])
+
+                try:
+                    tree = etree.fromstring(file)
+                except Exception:
+                    # should not happen as the file has been checked by SdiCoop
+                    _logger.info('Received file badly formatted, skipping: \n %s', file)
+                    continue
+                invoice = self.env['account.move'].with_company(company).create({'move_type': 'in_invoice'})
+                attachment = self.env['ir.attachment'].create({
+                    'name': fattura['filename'],
+                    'raw': file,
+                    'type': 'binary',
+                    'res_model': 'account.move',
+                    'res_id': invoice.id
+                })
+                if not self.env.context.get('test_skip_commit'):
+                    self.env.cr.commit() # In case something fails after, we still have the attachment
+                # So that we don't delete the attachment when deleting the invoice
+                attachment.res_id = False
+                attachment.res_model = False
+                invoice.unlink()
+                invoice = self.env.ref('l10n_it_edi.edi_fatturaPA')._create_invoice_from_xml_tree(fattura['filename'], tree)
+                attachment.write({'res_model': 'account.move',
+                                  'res_id': invoice.id})
+                proxy_acks.append(id_transaction)
+                if not self.env.context.get('test_skip_commit'):
+                    self.env.cr.commit()
+
+
+            if proxy_acks:
+                try:
+                    proxy_user._make_request(proxy_user._get_server_url() + '/api/l10n_it_edi/1/ack',
+                                            params={'transaction_ids': proxy_acks})
+                except AccountEdiProxyError as e:
+                    _logger.error('Error while receiving file from SdiCoop: %s', e)
+
     def _check_filename_is_fattura_pa(self, filename):
-        return re.search("([A-Z]{2}[A-Za-z0-9]{2,28}_[A-Za-z0-9]{0,5}.(xml.p7m|xml))", filename)
+        return re.search("[A-Z]{2}[A-Za-z0-9]{2,28}_[A-Za-z0-9]{0,5}.((?i:xml.p7m|xml))", filename)
 
     def _is_fattura_pa(self, filename, tree):
         return self.code == 'fattura_pa' and self._check_filename_is_fattura_pa(filename)
@@ -747,7 +758,6 @@ class AccountEdiFormat(models.Model):
                         invoice_line_global_discount.price_unit = general_discount
 
             new_invoice = invoice_form
-            new_invoice.l10n_it_send_state = "other"
 
             elements = body_tree.xpath('.//Allegati')
             if elements:
@@ -775,3 +785,296 @@ class AccountEdiFormat(models.Model):
             invoices += new_invoice
 
         return invoices
+
+    # -------------------------------------------------------------------------
+    # Export
+    # -------------------------------------------------------------------------
+
+    def _prepare_invoice_report(self, pdf_writer, edi_document):
+        self.ensure_one()
+        if self.code != 'fattura_pa':
+            return super()._prepare_invoice_report(pdf_writer, edi_document)
+        if edi_document.attachment_id:
+            pdf_writer.embed_odoo_attachment(edi_document.attachment_id)
+
+    def _is_compatible_with_journal(self, journal):
+        # OVERRIDE
+        self.ensure_one()
+        if self.code != 'fattura_pa':
+            return super()._is_compatible_with_journal(journal)
+        return journal.type in ('sale', 'purchase') and journal.country_code == 'IT'
+
+    def _get_move_applicability(self, move):
+        # OVERRIDE
+        self.ensure_one()
+        if self.code != 'fattura_pa':
+            return super()._get_move_applicability(move)
+
+        is_it_purchase_document = self._l10n_it_edi_is_self_invoice(move) and move.is_purchase_document()
+        if move.country_code == 'IT' and (move.is_sale_document() or is_it_purchase_document):
+            return {
+                'post': self._post_fattura_pa,
+                'post_batching': lambda move: (move.move_type, bool(move.l10n_it_edi_transaction)),
+            }
+
+    def _l10n_it_edi_export_invoice_as_xml(self, invoice):
+        ''' Create the xml file content.
+        :return: The XML content as str.
+        '''
+        template_values = invoice._prepare_fatturapa_export_values()
+        if not self._l10n_it_is_simplified_document_type(template_values['document_type']):
+            content = self.env['ir.qweb']._render('l10n_it_edi.account_invoice_it_FatturaPA_export', template_values)
+        else:
+            content = self.env['ir.qweb']._render('l10n_it_edi.account_invoice_it_simplified_FatturaPA_export', template_values)
+            invoice.message_post(body=_(
+                "A simplified invoice was created instead of an ordinary one. This is because the invoice \
+                is a domestic invoice with a total amount of less than or equal to 400€ and the customer's address is incomplete."
+            ))
+        return content
+
+    def _check_move_configuration(self, move):
+        # OVERRIDE
+        res = super()._check_move_configuration(move)
+        if self.code != 'fattura_pa':
+            return res
+
+        res.extend(self._l10n_it_edi_check_invoice_configuration(move))
+
+        if not self._get_proxy_user(move.company_id):
+            res.append(_("You must accept the terms and conditions in the settings to use FatturaPA."))
+
+        return res
+
+    def _needs_web_services(self):
+        self.ensure_one()
+        return self.code == 'fattura_pa' or super()._needs_web_services()
+
+    def _l10n_it_post_invoices_step_1(self, invoices):
+        ''' Send the invoices to the proxy.
+        '''
+        to_return = {}
+
+        to_send = {}
+        for invoice in invoices:
+            xml = "<?xml version='1.0' encoding='UTF-8'?>" + str(self._l10n_it_edi_export_invoice_as_xml(invoice))
+            filename = self._l10n_it_edi_generate_electronic_invoice_filename(invoice)
+            attachment = self.env['ir.attachment'].create({
+                'name': filename,
+                'res_id': invoice.id,
+                'res_model': invoice._name,
+                'raw': xml.encode(),
+                'description': _('Italian invoice: %s', invoice.move_type),
+                'type': 'binary',
+            })
+            invoice.l10n_it_edi_attachment_id = attachment
+
+            if invoice._is_commercial_partner_pa():
+                invoice.message_post(
+                    body=(_("Invoices for PA are not managed by Odoo, you can download the document and send it on your own."))
+                )
+                to_return[invoice] = {'attachment': attachment, 'success': True}
+            else:
+                to_send[filename] = {
+                    'invoice': invoice,
+                    'data': {'filename': filename, 'xml': base64.b64encode(xml.encode()).decode()}}
+
+        company = invoices.company_id
+        proxy_user = self._get_proxy_user(company)
+        if not proxy_user:  # proxy user should exist, because there is a check in _check_move_configuration
+            return {invoice: {
+                'error': _("You must accept the terms and conditions in the settings to use FatturaPA."),
+                'blocking_level': 'error'} for invoice in invoices}
+
+        responses = {}
+        if proxy_user._get_demo_state() == 'demo':
+            responses = {i['data']['filename']: {'id_transaction': 'demo'} for i in to_send.values()}
+        else:
+            try:
+                responses = self._l10n_it_edi_upload([i['data'] for i in to_send.values()], proxy_user)
+            except AccountEdiProxyError as e:
+                return {invoice: {'error': e.message, 'blocking_level': 'error'} for invoice in invoices}
+
+        for filename, response in responses.items():
+            invoice = to_send[filename]['invoice']
+            to_return[invoice] = response
+            if 'id_transaction' in response:
+                invoice.l10n_it_edi_transaction = response['id_transaction']
+                to_return[invoice].update({
+                    'error': _('The invoice was sent to FatturaPA, but we are still awaiting a response. Click the link above to check for an update.'),
+                    'blocking_level': 'info',
+                })
+        return to_return
+
+    def _l10n_it_post_invoices_step_2(self, invoices):
+        ''' Check if the sent invoices have been processed by FatturaPA.
+        '''
+        to_check = {i.l10n_it_edi_transaction: i for i in invoices}
+        to_return = {}
+        company = invoices.company_id
+        proxy_user = self._get_proxy_user(company)
+        if not proxy_user:  # proxy user should exist, because there is a check in _check_move_configuration
+            return {invoice: {
+                'error': _("You must accept the terms and conditions in the settings to use FatturaPA."),
+                'blocking_level': 'error'} for invoice in invoices}
+
+        if proxy_user._get_demo_state() == 'demo':
+            # simulate success and bypass ack
+            return {invoice: {'attachment': invoice.l10n_it_edi_attachment_id} for invoice in invoices}
+        else:
+            try:
+                responses = proxy_user._make_request(proxy_user._get_server_url() + '/api/l10n_it_edi/1/in/TrasmissioneFatture',
+                                                    params={'ids_transaction': list(to_check.keys())})
+            except AccountEdiProxyError as e:
+                return {invoice: {'error': e.message, 'blocking_level': 'error'} for invoice in invoices}
+
+        proxy_acks = []
+        for id_transaction, response in responses.items():
+            invoice = to_check[id_transaction]
+            if 'error' in response:
+                to_return[invoice] = response
+                continue
+
+            state = response['state']
+            if state == 'awaiting_outcome':
+                to_return[invoice] = {
+                    'error': _('The invoice was sent to FatturaPA, but we are still awaiting a response. Click the link above to check for an update.'),
+                    'blocking_level': 'info',
+                }
+                continue
+            elif state == 'not_found':
+                # Invoice does not exist on proxy. Either it does not belong to this proxy_user or it was not created correctly when
+                # it was sent to the proxy.
+                to_return[invoice] = {'error': _('You are not allowed to check the status of this invoice.'), 'blocking_level': 'error'}
+                continue
+
+            if not response.get('file'): # It means there is no status update, so we can skip it
+                document = invoice.edi_document_ids.filtered(lambda d: d.edi_format_id.code == 'fattura_pa')
+                to_return[invoice] = {'error': document.error, 'blocking_level': document.blocking_level}
+                continue
+            xml = proxy_user._decrypt_data(response['file'], response['key'])
+            response_tree = etree.fromstring(xml)
+            if state == 'ricevutaConsegna':
+                if invoice._is_commercial_partner_pa():
+                    to_return[invoice] = {'error': _('The invoice has been succesfully transmitted. The addressee has 15 days to accept or reject it.')}
+                else:
+                    to_return[invoice] = {'attachment': invoice.l10n_it_edi_attachment_id, 'success': True}
+            elif state == 'notificaScarto':
+                elements = response_tree.xpath('//Errore')
+                error_codes = [element.find('Codice').text for element in elements]
+                errors = [element.find('Descrizione').text for element in elements]
+                # Duplicated invoice
+                if '00404' in error_codes:
+                    idx = error_codes.index('00404')
+                    invoice.message_post(body=_(
+                        'This invoice number had already been submitted to the SdI, so it is'
+                        ' set as Sent. Please verify that the system is correctly configured,'
+                        ' because the correct flow does not need to send the same invoice'
+                        ' twice for any reason.\n'
+                        ' Original message from the SDI: %s', errors[idx]))
+                    to_return[invoice] = {'attachment': invoice.l10n_it_edi_attachment_id, 'success': True}
+                else:
+                    # Add helpful text if duplicated filename error
+                    if '00002' in error_codes:
+                        idx = error_codes.index('00002')
+                        errors[idx] = _(
+                            'The filename is duplicated. Try again (or adjust the FatturaPA Filename sequence).'
+                            ' Original message from the SDI: %s', [errors[idx]]
+                        )
+                    to_return[invoice] = {'error': self._format_error_message(_('The invoice has been refused by the Exchange System'), errors), 'blocking_level': 'error'}
+                    invoice.l10n_it_edi_transaction = False
+            elif state == 'notificaMancataConsegna':
+                if invoice._is_commercial_partner_pa():
+                    to_return[invoice] = {'error': _(
+                        'The invoice has been issued, but the delivery to the Public Administration'
+                        ' has failed. The Exchange System will contact them to report the problem'
+                        ' and request that they provide a solution.'
+                        ' During the following 10 days, the Exchange System will try to forward the'
+                        ' FatturaPA file to the Public Administration in question again.'
+                        ' Should this also fail, the System will notify Odoo of the failed delivery,'
+                        ' and you will be required to send the invoice to the Administration'
+                        ' through another channel, outside of the Exchange System.')}
+                else:
+                    to_return[invoice] = {'success': True, 'attachment': invoice.l10n_it_edi_attachment_id}
+                    invoice._message_log(body=_(
+                        'The invoice has been issued, but the delivery to the Addressee has'
+                        ' failed. You will be required to send a courtesy copy of the invoice'
+                        ' to your customer through another channel, outside of the Exchange'
+                        ' System, and promptly notify him that the original is deposited'
+                        ' in his personal area on the portal "Invoices and Fees" of the'
+                        ' Revenue Agency.'))
+            elif state == 'notificaEsito':
+                outcome = response_tree.find('Esito').text
+                if outcome == 'EC01':
+                    to_return[invoice] = {'attachment': invoice.l10n_it_edi_attachment_id, 'success': True}
+                else:  # ECO2
+                    to_return[invoice] = {'error': _('The invoice was refused by the addressee.'), 'blocking_level': 'error'}
+            elif state == 'NotificaDecorrenzaTermini':
+                to_return[invoice] = {'attachment': invoice.l10n_it_edi_attachment_id, 'success': True}
+            proxy_acks.append(id_transaction)
+
+        if proxy_acks:
+            try:
+                proxy_user._make_request(proxy_user._get_server_url() + '/api/l10n_it_edi/1/ack',
+                                        params={'transaction_ids': proxy_acks})
+            except AccountEdiProxyError as e:
+                # Will be ignored and acked again next time.
+                _logger.error('Error while acking file to SdiCoop: %s', e)
+
+        return to_return
+
+    def _post_fattura_pa(self, invoice):
+        # OVERRIDE
+        if not invoice.l10n_it_edi_transaction:
+            return self._l10n_it_post_invoices_step_1(invoice)
+        else:
+            return self._l10n_it_post_invoices_step_2(invoice)
+
+    def _post_invoice_edi(self, invoices):
+        # OVERRIDE
+        self.ensure_one()
+        edi_result = super()._post_invoice_edi(invoices)
+        if self.code != 'fattura_pa':
+            return edi_result
+
+        return self._post_fattura_pa(invoices)
+
+    # -------------------------------------------------------------------------
+    # Proxy methods
+    # -------------------------------------------------------------------------
+
+    def _get_proxy_identification(self, company):
+        if self.code != 'fattura_pa':
+            return super()._get_proxy_identification()
+
+        if not company.l10n_it_codice_fiscale:
+            raise UserError(_('Please fill your codice fiscale to be able to receive invoices from FatturaPA'))
+
+        return self.env['res.partner']._l10n_it_normalize_codice_fiscale(company.l10n_it_codice_fiscale)
+
+    def _l10n_it_edi_upload(self, files, proxy_user):
+        '''Upload files to fatturapa.
+
+        :param files:    A list of dictionary {filename, base64_xml}.
+        :returns:        A dictionary.
+        * message:       Message from fatturapa.
+        * transactionId: The fatturapa ID of this request.
+        * error:         An eventual error.
+        * error_level:   Info, warning, error.
+        '''
+        ERRORS = {
+            'EI01': {'error': _lt('Attached file is empty'), 'blocking_level': 'error'},
+            'EI02': {'error': _lt('Service momentarily unavailable'), 'blocking_level': 'warning'},
+            'EI03': {'error': _lt('Unauthorized user'), 'blocking_level': 'error'},
+        }
+
+        if not files:
+            return {}
+
+        result = proxy_user._make_request(proxy_user._get_server_url() + '/api/l10n_it_edi/1/out/SdiRiceviFile', params={'files': files})
+
+        # Translate the errors.
+        for filename in result.keys():
+            if 'error' in result[filename]:
+                result[filename] = ERRORS.get(result[filename]['error'], {'error': result[filename]['error'], 'blocking_level': 'error'})
+
+        return result

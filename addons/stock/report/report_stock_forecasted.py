@@ -79,10 +79,9 @@ class ReplenishmentReport(models.AbstractModel):
         else:
             warehouse = self.env['stock.warehouse'].browse(self.get_warehouses()[0]['id'])
 
-        wh_location_ids = [loc['id'] for loc in self.env['stock.location'].search_read(
+        wh_location_ids = self.env['stock.location'].search(
             [('id', 'child_of', warehouse.view_location_id.id)],
-            ['id'],
-        )]
+        ).ids
 
         # Get the products we're working, fill the rendering context with some of their attributes.
         if product_template_ids:
@@ -93,6 +92,8 @@ class ReplenishmentReport(models.AbstractModel):
             res['uom'] = product_templates[:1].uom_id.display_name
             res['quantity_on_hand'] = sum(product_templates.mapped('qty_available'))
             res['virtual_available'] = sum(product_templates.mapped('virtual_available'))
+            res['incoming_qty'] = sum(product_templates.mapped('incoming_qty'))
+            res['outgoing_qty'] = sum(product_templates.mapped('outgoing_qty'))
         elif product_variant_ids:
             product_variants = self.env['product.product'].browse(product_variant_ids)
             res['product_templates'] = False
@@ -101,6 +102,8 @@ class ReplenishmentReport(models.AbstractModel):
             res['uom'] = product_variants[:1].uom_id.display_name
             res['quantity_on_hand'] = sum(product_variants.mapped('qty_available'))
             res['virtual_available'] = sum(product_variants.mapped('virtual_available'))
+            res['incoming_qty'] = sum(product_variants.mapped('incoming_qty'))
+            res['outgoing_qty'] = sum(product_variants.mapped('outgoing_qty'))
         res.update(self._compute_draft_quantity_count(product_template_ids, product_variant_ids, wh_location_ids))
 
         res['lines'] = self._get_report_lines(product_template_ids, product_variant_ids, wh_location_ids)
@@ -162,12 +165,8 @@ class ReplenishmentReport(models.AbstractModel):
         reserved_outs = self.env['stock.move'].search(
             out_domain + [('state', 'in', ('partially_available', 'assigned'))],
             order='priority desc, date, id')
-        outs_per_product = defaultdict(list)
-        reserved_outs_per_product = defaultdict(list)
-        for out in outs:
-            outs_per_product[out.product_id.id].append(out)
-        for out in reserved_outs:
-            reserved_outs_per_product[out.product_id.id].append(out)
+        outs_per_product = outs.grouped('product_id')
+        reserved_outs_per_product = reserved_outs.grouped('product_id')
         ins = self.env['stock.move'].search(in_domain, order='priority desc, date, id')
         ins_per_product = defaultdict(list)
         for in_ in ins:
@@ -181,15 +180,14 @@ class ReplenishmentReport(models.AbstractModel):
         lines = []
         for product in (ins | outs).product_id:
             product_rounding = product.uom_id.rounding
-            for out in reserved_outs_per_product[product.id]:
+            for out in reserved_outs_per_product.get(product, []):
                 # Reconcile with reserved stock.
-                current = currents[product.id]
                 reserved = out.product_uom._compute_quantity(out.reserved_availability, product.uom_id)
                 currents[product.id] -= reserved
                 lines.append(self._prepare_report_line(reserved, move_out=out, reservation=True))
 
             unreconciled_outs = []
-            for out in outs_per_product[product.id]:
+            for out in outs_per_product.get(product, []):
                 # Reconcile with the current stock.
                 reserved = 0.0
                 if out.state in ('partially_available', 'assigned'):

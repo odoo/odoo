@@ -13,3 +13,6 @@ class FleetVehicleAssignationLog(models.Model):
     driver_id = fields.Many2one('res.partner', string="Driver", required=True)
     date_start = fields.Date(string="Start Date")
     date_end = fields.Date(string="End Date")
+
+    def name_get(self):
+        return [(rec.id, f'{rec.vehicle_id.name} - {rec.driver_id.name}') for rec in self]

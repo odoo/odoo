@@ -5,7 +5,10 @@ import { localization as l10n } from "@web/core/l10n/localization";
 import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
 import { escape, intersperse, nbsp, sprintf } from "@web/core/utils/strings";
+import { isBinarySize } from "@web/core/utils/binary";
 import { session } from "@web/session";
+
+import { markup } from "@odoo/owl";
 
 // -----------------------------------------------------------------------------
 // Helpers
@@ -85,16 +88,48 @@ function humanNumber(number, options = { decimals: 0, minDigits: 1 }) {
     return int + decimalPoint + decimalPart + symbol;
 }
 
+function humanSize(value) {
+    if (!value) {
+        return "";
+    }
+    const suffix = value < 1024 ? " " + _t("Bytes") : "b";
+    return (
+        humanNumber(value, {
+            decimals: 2,
+        }) + suffix
+    );
+}
+
 // -----------------------------------------------------------------------------
 // Exports
 // -----------------------------------------------------------------------------
+
+/**
+ * @param {string} [value] base64 representation of the binary
+ * @returns {string}
+ */
+export function formatBinary(value) {
+    if (!isBinarySize(value)) {
+        // Computing approximate size out of base64 encoded string
+        // http://en.wikipedia.org/wiki/Base64#MIME
+        return humanSize(value.length / 1.37);
+    }
+    // already bin_size
+    return value;
+}
 
 /**
  * @param {boolean} value
  * @returns {string}
  */
 export function formatBoolean(value) {
-    return value ? _t("True") : _t("False");
+    return markup(`
+        <div class="o-checkbox d-inline-block me-2">
+            <input id="boolean_checkbox" type="checkbox" class="form-check-input" disabled ${
+                value ? "checked" : ""
+            }/>
+            <label for="boolean_checkbox" class="form-check-label"/>
+        </div>`);
 }
 
 /**
@@ -185,8 +220,8 @@ export function formatFloatFactor(value, options = {}) {
  *
  * @param {number | false} value
  * @param {Object} [options]
- * @param {boolean} [options.noLeadingZeroHour] if true, format like 1:30
- *   otherwise, format like 01:30
+ * @param {boolean} [options.noLeadingZeroHour] if true, format like 1:30 otherwise, format like 01:30
+ * @param {boolean} [options.displaySeconds] if true, format like ?1:30:00 otherwise, format like ?1:30
  * @returns {string}
  */
 export function formatFloatTime(value, options = {}) {
@@ -194,20 +229,26 @@ export function formatFloatTime(value, options = {}) {
         return "";
     }
     const isNegative = value < 0;
-    if (isNegative) {
-        value = Math.abs(value);
-    }
+    value = Math.abs(value);
+
     let hour = Math.floor(value);
-    let min = Math.round((value % 1) * 60);
+    const milliSecLeft = Math.round(value * 3600000) - hour * 3600000;
+    // Although looking quite overkill, the following line ensures that we do
+    // not have float issues while still considering that 59s is 00:00.
+    let min = Math.floor(milliSecLeft / 60000);
     if (min === 60) {
         min = 0;
         hour = hour + 1;
     }
-    min = `${min}`.padStart(2, "0");
+    min = String(min).padStart(2, "0");
     if (!options.noLeadingZeroHour) {
-        hour = `${hour}`.padStart(2, "0");
+        hour = String(hour).padStart(2, "0");
     }
-    return `${isNegative ? "-" : ""}${hour}:${min}`;
+    let sec = "";
+    if (options.displaySeconds) {
+        sec = ":" + String(Math.floor((milliSecLeft % 60000) / 1000)).padStart(2, "0");
+    }
+    return `${isNegative ? "-" : ""}${hour}:${min}${sec}`;
 }
 
 /**
@@ -254,7 +295,7 @@ export function formatMany2one(value, options) {
     if (!value) {
         value = "";
     } else {
-        value = value[1];
+        value = value[1] || "";
     }
     if (options && options.escape) {
         value = encodeURIComponent(value);
@@ -313,7 +354,10 @@ export function formatMonetary(value, options = {}) {
 
     let currencyId = options.currencyId;
     if (!currencyId && options.data) {
-        const currencyField = options.currencyField || "currency_id";
+        const currencyField =
+            options.currencyField ||
+            (options.field && options.field.currency_field) ||
+            "currency_id";
         const dataValue = options.data[currencyField];
         currencyId = Array.isArray(dataValue) ? dataValue[0] : dataValue;
     }
@@ -354,6 +398,21 @@ export function formatPercentage(value, options = {}) {
 }
 
 /**
+ * Returns a string representing the value of the python properties field
+ * or a properties definition field (see fields.py@Properties).
+ *
+ * @param {array|false} value
+ * @param {Object} [field]
+ *        a description of the field (note: this parameter is ignored)
+ */
+function formatProperties(value, field) {
+    if (!value || !value.length) {
+        return "";
+    }
+    return value.map((property) => property["string"]).join(", ");
+}
+
+/**
  * Returns a string representing the value of the reference field.
  *
  * @param {Object|false} value Object with keys "resId" and "displayName"
@@ -390,6 +449,7 @@ export function formatText(value) {
 
 registry
     .category("formatters")
+    .add("binary", formatBinary)
     .add("boolean", formatBoolean)
     .add("char", formatChar)
     .add("date", formatDate)
@@ -400,10 +460,13 @@ registry
     .add("html", (value) => value)
     .add("integer", formatInteger)
     .add("many2one", formatMany2one)
+    .add("many2one_reference", formatInteger)
     .add("one2many", formatX2many)
     .add("many2many", formatX2many)
     .add("monetary", formatMonetary)
     .add("percentage", formatPercentage)
+    .add("properties", formatProperties)
+    .add("properties_definition", formatProperties)
     .add("reference", formatReference)
     .add("selection", formatSelection)
     .add("text", formatText);

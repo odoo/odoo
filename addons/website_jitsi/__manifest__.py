@@ -21,6 +21,7 @@
         'web.assets_frontend': [
             'website_jitsi/static/src/css/chat_room.css',
             'website_jitsi/static/src/js/chat_room.js',
+            'website_jitsi/static/src/xml/chat_room_modal.xml',
         ],
     },
     'license': 'LGPL-3',

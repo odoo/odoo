@@ -1,4 +1,6 @@
 # -*- coding: utf-8 -*-
+from itertools import combinations
+
 from odoo.tests import common
 
 
@@ -39,3 +41,69 @@ class test_domain(common.TransactionCase):
 
             self.assertEqual(eq_1+eq_2, all_bool, 'True + False != all')
             self.assertEqual(neq_1+neq_2, all_bool, 'not True + not False != all')
+
+    def test_empty_char(self):
+        EmptyChar = self.env['test_new_api.empty_char']
+        EmptyChar.create([
+            {'name': 'name'},
+            {'name': ''},
+            {'name': False},
+        ])
+
+        self.assertListEqual(EmptyChar.search([('name', '=', 'name')]).mapped('name'), ['name'])
+        self.assertListEqual(EmptyChar.search([('name', '!=', 'name')]).mapped('name'), ['', False])
+        self.assertListEqual(EmptyChar.search([('name', 'ilike', 'name')]).mapped('name'), ['name'])
+        self.assertListEqual(EmptyChar.search([('name', 'not ilike', 'name')]).mapped('name'), ['', False])
+
+        self.assertListEqual(EmptyChar.search([('name', '=', '')]).mapped('name'), [''])
+        self.assertListEqual(EmptyChar.search([('name', '!=', '')]).mapped('name'), ['name'])
+        self.assertListEqual(EmptyChar.search([('name', 'ilike', '')]).mapped('name'), ['name', '', False])
+        self.assertListEqual(EmptyChar.search([('name', 'not ilike', '')]).mapped('name'), [False])
+
+        self.assertListEqual(EmptyChar.search([('name', '=', False)]).mapped('name'), [False])
+        self.assertListEqual(EmptyChar.search([('name', '!=', False)]).mapped('name'), ['name', ''])
+        self.assertListEqual(EmptyChar.search([('name', 'ilike', False)]).mapped('name'), ['name', '', False])
+        self.assertListEqual(EmptyChar.search([('name', 'not ilike', False)]).mapped('name'), [False])
+
+        values = ['name', '', False]
+        for length in range(len(values) + 1):
+            for subset in combinations(values, length):
+                sublist = list(subset)
+                self.assertListEqual(EmptyChar.search([('name', 'in', sublist)]).mapped('name'), sublist)
+                sublist_remained = [v for v in values if v not in subset]
+                self.assertListEqual(EmptyChar.search([('name', 'not in', sublist)]).mapped('name'), sublist_remained)
+
+    def test_empty_translation(self):
+        records_en = self.env['test_new_api.indexed_translation'].with_context(lang='en_US').create([
+            {'name': 'English'},
+            {'name': 'English'},
+            {'name': 'English'},
+        ])
+        self.env['res.lang']._activate_lang('fr_FR')
+        records_fr = records_en.with_context(lang='fr_FR')
+        records_fr[0].name = 'name'
+        records_fr[1].name = ''
+        records_fr[2].name = False
+
+        self.assertListEqual(records_fr.search([('name', '=', 'name')]).mapped('name'), ['name'])
+        self.assertListEqual(records_fr.search([('name', '!=', 'name')]).mapped('name'), ['', False])
+        self.assertListEqual(records_fr.search([('name', 'ilike', 'name')]).mapped('name'), ['name'])
+        self.assertListEqual(records_fr.search([('name', 'not ilike', 'name')]).mapped('name'), ['', False])
+
+        self.assertListEqual(records_fr.search([('name', '=', '')]).mapped('name'), [''])
+        self.assertListEqual(records_fr.search([('name', '!=', '')]).mapped('name'), ['name'])
+        self.assertListEqual(records_fr.search([('name', 'ilike', '')]).mapped('name'), ['name', '', False])
+        self.assertListEqual(records_fr.search([('name', 'not ilike', '')]).mapped('name'), [False])
+
+        self.assertListEqual(records_fr.search([('name', '=', False)]).mapped('name'), [False])
+        self.assertListEqual(records_fr.search([('name', '!=', False)]).mapped('name'), ['name', ''])
+        self.assertListEqual(records_fr.search([('name', 'ilike', False)]).mapped('name'), ['name', '', False])
+        self.assertListEqual(records_fr.search([('name', 'not ilike', False)]).mapped('name'), [False])
+
+        values = ['name', '', False]
+        for length in range(len(values) + 1):
+            for subset in combinations(values, length):
+                sublist = list(subset)
+                self.assertListEqual(records_fr.search([('name', 'in', sublist)]).mapped('name'), sublist)
+                sublist_remained = [v for v in values if v not in subset]
+                self.assertListEqual(records_fr.search([('name', 'not in', sublist)]).mapped('name'), sublist_remained)

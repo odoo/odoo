@@ -26,14 +26,13 @@ function cycle(num, max) {
 export class Powerbox {
     constructor({
         categories, commands, commandFilters, editable, getContextFromParentRect,
-        onOpen, onShow, onStop, beforeCommand, afterCommand
+        onShow, onStop, beforeCommand, afterCommand
     } = {}) {
         this.categories = categories;
         this.commands = commands;
         this.commandFilters = commandFilters || [];
         this.editable = editable;
         this.getContextFromParentRect = getContextFromParentRect;
-        this.onOpen = onOpen;
         this.onShow = onShow;
         this.onStop = onStop;
         this.beforeCommand = beforeCommand;
@@ -102,9 +101,6 @@ export class Powerbox {
             priority: category.priority || 0,
         }));
         const order = (a, b) => b.priority - a.priority || a.name.localeCompare(b.name);
-        if (this.onOpen) {
-            this.onOpen();
-        }
         // Remove duplicate category names, keeping only last declared version,
         // and order them.
         categories = [...categories].reverse().filter((category, index, cats) => (
@@ -276,14 +272,13 @@ export class Powerbox {
      * @private
      */
     _resetPosition() {
-        const position = getRangePosition(this.el, this.document);
+        let options = {};
+        if (this.getContextFromParentRect) {
+            options['parentContextRect'] = this.getContextFromParentRect();
+        }
+        const position = getRangePosition(this.el, this.document, options);
         if (position) {
             let { left, top } = position;
-            if (this.getContextFromParentRect) {
-                const parentContextRect = this.getContextFromParentRect();
-                left += parentContextRect.left;
-                top += parentContextRect.top;
-            }
             this.el.style.left = `${left}px`;
             this.el.style.top = `${top}px`;
         } else {
@@ -337,7 +332,7 @@ export class Powerbox {
             } else {
                 const term = this._context.lastText.toLowerCase().replaceAll(/\s/g, '\\s').replaceAll('\u200B', '');
                 if (term.length) {
-                    const regex = new RegExp(term.split('').map(char => char.replace(REGEX_RESERVED_CHARS, '\\$&')).join('.*'));
+                    const regex = new RegExp(term.split('').map(char => char.replace(REGEX_RESERVED_CHARS, '\\$&')).join('.*'), 'i');
                     this._context.filteredCommands = this._context.commands.filter(command => (
                         `${command.category} ${command.name}`.toLowerCase().match(regex)
                     ));

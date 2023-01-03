@@ -10,11 +10,13 @@
                 <t t-component="props.Renderer"
                     list="model.root"
                     archInfo="props.archInfo"
+                    Compiler="props.Compiler"
                     readonly="true"
                     forceGlobalClick="props.forceGlobalClick"
                     openRecord.bind="openRecord"
                     noContentHelp="props.info.noContentHelp"
                 />
+
             </Layout>
         </div>
     </t>
@@ -22,8 +24,8 @@
     <t t-name="web.KanbanView.Buttons" owl="1">
         <div t-if="props.showButtons" class="o_cp_buttons d-flex align-items-baseline" role="toolbar" aria-label="Main actions">
             <t t-if="canCreate">
-                <button type="button" class="btn btn-primary o-kanban-button-new" data-tooltip="Create record" aria-label="Create record" accesskey="c" t-on-click="() => this.createRecord(null)" data-bounce-button="">
-                    Create
+                <button type="button" class="btn btn-primary o-kanban-button-new" accesskey="c" t-on-click="() => this.createRecord(null)" data-bounce-button="">
+                    New
                 </button>
             </t>
         </div>

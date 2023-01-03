@@ -16,6 +16,7 @@
         'data/mail_template_data.xml',
         'data/product_snippet_template_data.xml',
         'data/digest_data.xml',
+        'data/ir_cron_data.xml',
         'views/product_attribute_views.xml',
         'views/product_tag_views.xml',
         'views/product_views.xml',
@@ -33,6 +34,7 @@
         'views/base_unit_view.xml',
         'views/product_product_add.xml',
         'views/website_views.xml',
+        'views/website_pages_views.xml',
     ],
     'demo': [
         'data/demo.xml',
@@ -43,6 +45,7 @@
     'uninstall_hook': 'uninstall_hook',
     'assets': {
         'web.assets_frontend': [
+            'website_sale/static/src/js/tours/tour_utils.js',
             'website_sale/static/src/scss/website_sale.scss',
             'website_sale/static/src/scss/website_mail.scss',
             'website_sale/static/src/scss/website_sale_frontend.scss',
@@ -52,13 +55,19 @@
             'sale/static/src/js/variant_mixin.js',
             'website_sale/static/src/js/variant_mixin.js',
             'website_sale/static/src/js/website_sale.js',
+            'website_sale/static/src/xml/website_sale.xml',
             'website_sale/static/src/js/website_sale_utils.js',
+            'website_sale/static/src/xml/website_sale_utils.xml',
             'website_sale/static/src/js/website_sale_payment.js',
             'website_sale/static/src/js/website_sale_validate.js',
             'website_sale/static/src/js/website_sale_recently_viewed.js',
             'website_sale/static/src/js/website_sale_tracking.js',
             'website/static/lib/multirange/multirange_custom.js',
             'website_sale/static/src/js/website_sale_category_link.js',
+            'website_sale/static/src/xml/website_sale_image_viewer.xml',
+            'website_sale/static/src/js/components/website_sale_image_viewer.js',
+            'website_sale/static/src/xml/website_sale_reorder_modal.xml',
+            'website_sale/static/src/js/website_sale_reorder.js',
         ],
         'web._assets_primary_variables': [
             'website_sale/static/src/scss/primary_variables.scss',
@@ -68,7 +77,9 @@
             'website_sale/static/src/js/website_sale_backend.js',
             'website_sale/static/src/scss/website_sale_dashboard.scss',
             'website_sale/static/src/scss/website_sale_backend.scss',
+            'website_sale/static/src/xml/website_sale_dashboard.xml',
             'website_sale/static/src/js/tours/website_sale_shop.js',
+            'website_sale/static/src/xml/website_sale.xml',
         ],
         'website.assets_wysiwyg': [
             'website_sale/static/src/scss/website_sale.editor.scss',
@@ -80,15 +91,13 @@
             'website_sale/static/src/js/systray_items/*.js',
             'website_sale/static/src/js/components/wysiwyg_adapter/wysiwyg_adapter.js',
             'website_sale/static/src/js/website_sale_form_editor.js',
+            'website_sale/static/src/xml/website_sale_utils.xml',
         ],
         'web.assets_common': [
             'website_sale/static/src/js/tours/tour_utils.js',
         ],
         'web.assets_tests': [
             'website_sale/static/tests/**/*',
-        ],
-        'web.assets_qweb': [
-            'website_sale/static/src/xml/*.xml',
         ],
     },
     'license': 'LGPL-3',

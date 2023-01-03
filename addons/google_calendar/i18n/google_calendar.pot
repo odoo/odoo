@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~14.5\n"
+"Project-Id-Version: Odoo Server 15.5alpha1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-09-14 10:28+0000\n"
-"PO-Revision-Date: 2021-09-14 10:28+0000\n"
+"POT-Creation-Date: 2022-09-20 09:02+0000\n"
+"PO-Revision-Date: 2022-09-20 09:02+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -210,13 +210,13 @@ msgid "Google"
 msgstr ""
 
 #. module: google_calendar
-#: model:ir.model.fields,field_description:google_calendar.field_res_users__google_cal_account_id
-msgid "Google Cal Account"
+#: model_terms:ir.ui.view,arch_db:google_calendar.view_users_form
+msgid "Google Calendar"
 msgstr ""
 
 #. module: google_calendar
-#: model_terms:ir.ui.view,arch_db:google_calendar.view_users_form
-msgid "Google Calendar"
+#: model:ir.model.fields,field_description:google_calendar.field_res_users__google_calendar_account_id
+msgid "Google Calendar Account"
 msgstr ""
 
 #. module: google_calendar
@@ -329,13 +329,6 @@ msgid "Notification"
 msgstr ""
 
 #. module: google_calendar
-#. openerp-web
-#: code:addons/google_calendar/static/src/js/google_calendar.js:0
-#, python-format
-msgid "Redirection"
-msgstr ""
-
-#. module: google_calendar
 #: model:ir.model.fields,field_description:google_calendar.field_google_calendar_credentials__calendar_rtoken
 #: model:ir.model.fields,field_description:google_calendar.field_res_users__google_calendar_rtoken
 msgid "Refresh Token"
@@ -420,6 +413,7 @@ msgid "Token Validity"
 msgstr ""
 
 #. module: google_calendar
+#: model:ir.model,name:google_calendar.model_res_users
 #: model:ir.model.fields,field_description:google_calendar.field_google_calendar_account_reset__user_id
 #: model:ir.model.fields,field_description:google_calendar.field_google_calendar_credentials__user_ids
 msgid "User"
@@ -437,24 +431,12 @@ msgid "User's Existing Events"
 msgstr ""
 
 #. module: google_calendar
-#: model:ir.model,name:google_calendar.model_res_users
-msgid "Users"
-msgstr ""
-
-#. module: google_calendar
 #. openerp-web
 #: code:addons/google_calendar/static/src/js/google_calendar.js:0
 #, python-format
 msgid ""
 "You are about to stop the synchronization of your calendar with Google. Are "
 "you sure you want to continue?"
-msgstr ""
-
-#. module: google_calendar
-#. openerp-web
-#: code:addons/google_calendar/static/src/js/google_calendar.js:0
-#, python-format
-msgid "You will be redirected to Google to authorize access to your calendar!"
 msgstr ""
 
 #. module: google_calendar

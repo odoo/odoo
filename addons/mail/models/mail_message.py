@@ -104,6 +104,7 @@ class Message(models.Model):
     model = fields.Char('Related Document Model')
     res_id = fields.Many2oneReference('Related Document ID', model_field='model')
     record_name = fields.Char('Message Record Name') # name_get() of the related document
+    link_preview_ids = fields.One2many('mail.link.preview', 'message_id', string='Link Previews', groups="base.group_erp_manager")
     # characteristics
     message_type = fields.Selection([
         ('email', 'Email'),
@@ -134,7 +135,7 @@ class Message(models.Model):
     # mainly usefull for testing
     notified_partner_ids = fields.Many2many(
         'res.partner', 'mail_notification', string='Partners with Need Action',
-        context={'active_test': False}, depends=['notification_ids'])
+        context={'active_test': False}, depends=['notification_ids'], copy=False)
     needaction = fields.Boolean(
         'Need Action', compute='_compute_needaction', search='_search_needaction')
     has_error = fields.Boolean(
@@ -294,7 +295,7 @@ class Message(models.Model):
         # check read access rights before checking the actual rules on the given ids
         super(Message, self.with_user(access_rights_uid or self._uid)).check_access_rights('read')
 
-        self.flush_recordset(['model', 'res_id', 'author_id', 'message_type', 'partner_ids'])
+        self.flush_model(['model', 'res_id', 'author_id', 'message_type', 'partner_ids'])
         self.env['mail.notification'].flush_model(['mail_message_id', 'res_partner_id'])
         for sub_ids in self._cr.split_for_in_conditions(ids):
             self._cr.execute("""
@@ -658,9 +659,21 @@ class Message(models.Model):
         self.mapped('attachment_ids').filtered(
             lambda attach: attach.res_model == self._name and (attach.res_id in self.ids or attach.res_id == 0)
         ).unlink()
+        messages_by_partner = defaultdict(lambda: self.env['mail.message'])
+        partners_with_user = self.partner_ids.filtered('user_ids')
         for elem in self:
+            for partner in elem.partner_ids & partners_with_user:
+                messages_by_partner[partner] |= elem
             if elem.is_thread_message():
                 elem._invalidate_documents()
+
+        # Notify front-end of messages deletion for partners having a user
+        if messages_by_partner:
+            self.env['bus.bus']._sendmany([
+                (partner, 'mail.message/delete', {'message_ids': messages.ids})
+                for partner, messages in messages_by_partner.items()
+            ])
+
         return super(Message, self).unlink()
 
     @api.model
@@ -824,13 +837,14 @@ class Message(models.Model):
 
         for vals in vals_list:
             message_sudo = self.browse(vals['id']).sudo().with_prefetch(self.ids)
-
-            # Author
-            if message_sudo.author_id:
-                author = (message_sudo.author_id.id, message_sudo.author_id.display_name)
-            else:
-                author = (0, message_sudo.email_from)
-
+            author = {
+                'id': message_sudo.author_id.id,
+                'name': message_sudo.author_id.name,
+            } if message_sudo.author_id else [('clear',)]
+            guestAuthor = {
+                'id': message_sudo.author_guest_id.id,
+                'name': message_sudo.author_guest_id.name,
+            } if message_sudo.author_guest_id else [('clear',)]
             if message_sudo.model and message_sudo.res_id:
                 record_name = self.env[message_sudo.model] \
                     .browse(message_sudo.res_id) \
@@ -839,14 +853,6 @@ class Message(models.Model):
                     .display_name
             else:
                 record_name = False
-
-            if message_sudo.author_guest_id:
-                vals['guestAuthor'] = [('insert', {
-                    'id': message_sudo.author_guest_id.id,
-                    'name': message_sudo.author_guest_id.name,
-                })]
-            else:
-                vals['author_id'] = author
             reactions_per_content = defaultdict(lambda: self.env['mail.message.reaction'])
             for reaction in message_sudo.reaction_ids:
                 reactions_per_content[reaction.content] |= reaction
@@ -861,9 +867,12 @@ class Message(models.Model):
                 vals['parentMessage'] = message_sudo.parent_id.message_format(format_reply=False)[0]
             allowed_tracking_ids = message_sudo.tracking_value_ids.filtered(lambda tracking: not tracking.field_groups or self.env.is_superuser() or self.user_has_groups(tracking.field_groups))
             vals.update({
+                'author': author,
+                'guestAuthor': guestAuthor,
                 'notifications': message_sudo.notification_ids._filtered_for_web_client()._notification_format(),
                 'attachment_ids': message_sudo.attachment_ids._attachment_format() if not legacy else message_sudo.attachment_ids._attachment_format(legacy=True),
                 'trackingValues': allowed_tracking_ids._tracking_value_format(),
+                'linkPreviews': message_sudo.link_preview_ids._link_preview_format(),
                 'messageReactionGroups': reaction_groups,
                 'record_name': record_name,
             })
@@ -957,7 +966,7 @@ class Message(models.Model):
 
     def _get_message_format_fields(self):
         return [
-            'id', 'body', 'date', 'author_id', 'email_from',  # base message fields
+            'id', 'body', 'date', 'email_from',  # base message fields
             'message_type', 'subtype_id', 'subject',  # message specific
             'model', 'res_id', 'record_name',  # document related
             'starred_partner_ids',  # list of partner ids for whom the message is starred

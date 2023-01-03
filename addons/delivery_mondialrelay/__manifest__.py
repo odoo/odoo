@@ -19,7 +19,7 @@
     ],
     'assets': {
         'web.assets_backend': [
-            'delivery_mondialrelay/static/src/js/mondialrelay.js',
+            'delivery_mondialrelay/static/src/components/**/*.js',
             'delivery_mondialrelay/static/src/scss/mondialrelay.scss',
         ],
     },

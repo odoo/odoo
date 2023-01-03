@@ -5,18 +5,10 @@
         <field name="model">res.config.settings</field>
         <field name="inherit_id" ref="account.res_config_settings_view_form"/>
         <field name="arch" type="xml">
-            <xpath expr=".//div[@id='invoicing_settings']" position="inside">
-                <div class="col-12 col-lg-6 o_setting_box" id="electronic_invoices_mx" attrs="{'invisible': [('country_code', '!=', 'MX')]}">
-                    <div class="o_setting_left_pane">
-                        <field name="module_l10n_mx_edi" class="oe_inline" widget="upgrade_boolean"/>
-                    </div>
-                    <div class="o_setting_right_pane">
-                        <label for="module_l10n_mx_edi"/>
-                        <div class="text-muted">
-                            Create your electronic invoices automatically (CFDI format)
-                        </div>
-                    </div>
-                </div>
+            <xpath expr=".//block[@id='invoicing_settings']" position="inside">
+                <setting id="electronic_invoices_mx" help="Create your electronic invoices automatically (CFDI format)" attrs="{'invisible': [('country_code', '!=', 'MX')]}">
+                    <field name="module_l10n_mx_edi" class="oe_inline" widget="upgrade_boolean"/>
+                </setting>
             </xpath>
         </field>
     </record>

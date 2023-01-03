@@ -7,7 +7,7 @@ const wTourUtils = require('website.tour_utils');
 const adminCssModif = '#wrap {display: none;}';
 const demoCssModif = '// demo_edition';
 
-wTourUtils.registerEditionTour('html_editor_multiple_templates', {
+wTourUtils.registerWebsitePreviewTour('html_editor_multiple_templates', {
     url: '/generic',
     edition: true,
     test: true,
@@ -68,7 +68,7 @@ wTourUtils.registerEditionTour('html_editor_multiple_templates', {
     ]
 );
 
-wTourUtils.registerEditionTour('test_html_editor_scss', {
+wTourUtils.registerWebsitePreviewTour('test_html_editor_scss', {
     url: '/contactus',
     test: true,
 },
@@ -154,7 +154,7 @@ wTourUtils.registerEditionTour('test_html_editor_scss', {
     ]
 );
 
-wTourUtils.registerEditionTour('test_html_editor_scss_2', {
+wTourUtils.registerWebsitePreviewTour('test_html_editor_scss_2', {
     url: '/',
     test: true,
 },

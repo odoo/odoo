@@ -18,7 +18,7 @@
             <field name="inherit_id" ref="account.view_tax_tree" />
             <field name="arch" type="xml">
                 <field name="name" position="before">
-                    <field name="l10n_cl_sii_code" options="{'format': false}"/>
+                    <field name="l10n_cl_sii_code" options="{'format': false}" optional="hide"/>
                 </field>
             </field>
         </record>
@@ -29,7 +29,7 @@
             <field name="inherit_id" ref="account.view_account_tax_template_form"/>
             <field name="arch" type="xml">
                 <field name="name" position="after">
-                    <field name="l10n_cl_sii_code" options="{'format': false}"/>
+                    <field name="l10n_cl_sii_code" options="{'format': false}" optional="hide"/>
                 </field>
             </field>
         </record>
@@ -40,7 +40,7 @@
             <field name="inherit_id" ref="account.view_account_tax_template_tree" />
             <field name="arch" type="xml">
                 <field name="name" position="before">
-                    <field name="l10n_cl_sii_code" options="{'format': false}"/>
+                    <field name="l10n_cl_sii_code" options="{'format': false}" optional="hide"/>
                 </field>
             </field>
         </record>

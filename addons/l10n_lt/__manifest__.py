@@ -33,7 +33,6 @@
         'data/account_fiscal_position_template_data.xml',
         # Try Loading COA for Current Company
         'data/account_chart_template_load.xml',
-        'data/menuitem_data.xml',
     ],
     'demo': [
         'demo/demo_company.xml',

@@ -8,17 +8,7 @@ patch(NewContentModal.prototype, 'website_forum_new_content', {
         this._super();
 
         const newForumElement = this.state.newContentElements.find(element => element.moduleXmlId === 'base.module_website_forum');
-        newForumElement.createNewContent = () => this.createNewForum();
+        newForumElement.createNewContent = () => this.onAddContent('website_forum.forum_forum_action_add');
         newForumElement.status = MODULE_STATUS.INSTALLED;
     },
-
-    createNewForum() {
-        this.action.doAction('website_forum.forum_forum_action_add', {
-            onClose: (data) => {
-                if (data) {
-                    this.website.goToWebsite({path: data.path});
-                }
-            },
-        });
-    }
 });

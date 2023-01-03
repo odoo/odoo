@@ -1,6 +1,6 @@
 /** @odoo-module **/
 
-const { Component, xml, useState } = owl;
+const { EventBus, Component, xml, useState } = owl;
 
 export class FullscreenIndication extends Component {
     setup() {
@@ -21,6 +21,9 @@ export class FullscreenIndication extends Component {
         }
     }
 }
+FullscreenIndication.props = {
+    bus: EventBus,
+};
 FullscreenIndication.template = xml`
 <div class="o_fullscreen_indication" t-att-class="{ o_visible: state.isVisible }">
     <p>Press <span>esc</span> to exit full screen</p>

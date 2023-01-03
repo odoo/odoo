@@ -3,6 +3,8 @@
 import { makeFakeDialogService } from "@web/../tests/helpers/mock_services";
 import {
     click,
+    clickSave,
+    drag,
     dragAndDrop,
     editInput,
     getFixture,
@@ -10,6 +12,7 @@ import {
     makeDeferred,
     nextTick,
     patchWithCleanup,
+    selectDropdownItem,
     triggerEvent,
     triggerHotkey,
 } from "@web/../tests/helpers/utils";
@@ -25,25 +28,23 @@ import { makeView, setupViewRegistries } from "@web/../tests/views/helpers";
 import { createWebClient, doAction } from "@web/../tests/webclient/helpers";
 import { browser } from "@web/core/browser/browser";
 import { dialogService } from "@web/core/dialog/dialog_service";
-import { tooltipService } from "@web/core/tooltip/tooltip_service";
-import { makeErrorFromResponse } from "@web/core/network/rpc_service";
+import { makeErrorFromResponse, RPCError } from "@web/core/network/rpc_service";
 import { registry } from "@web/core/registry";
+import { tooltipService } from "@web/core/tooltip/tooltip_service";
 import { nbsp } from "@web/core/utils/strings";
 import { getNextTabableElement } from "@web/core/utils/ui";
 import { session } from "@web/session";
-import { KanbanAnimatedNumber } from "@web/views/kanban/kanban_animated_number";
+import { AnimatedNumber } from "@web/views/view_components/animated_number";
+import { KanbanController } from "@web/views/kanban/kanban_controller";
 import { kanbanView } from "@web/views/kanban/kanban_view";
-import { ViewButton } from "@web/views/view_button/view_button";
 import { DynamicRecordList } from "@web/views/relational_model";
-import AbstractField from "web.AbstractField";
-import legacyFieldRegistry from "web.field_registry";
-import Widget from "web.Widget";
-import widgetRegistry from "web.widget_registry";
+import { ViewButton } from "@web/views/view_button/view_button";
 
-const { Component, xml } = owl;
+import { Component, onWillRender, xml } from "@odoo/owl";
 
 const serviceRegistry = registry.category("services");
 const viewWidgetRegistry = registry.category("view_widgets");
+const viewRegistry = registry.category("views");
 
 // ----------------------------------------------------------------------------
 // Helpers
@@ -81,14 +82,17 @@ function getCardTexts(groupIndex) {
 }
 
 function getCounters() {
-    return [...target.querySelectorAll(".o_kanban_counter_side")].map(
-        (counter) => counter.innerText
-    );
+    return [...target.querySelectorAll(".o_animated_number")].map((counter) => counter.innerText);
+}
+
+function getProgressBars(columnIndex) {
+    const column = getColumn(columnIndex);
+    return [...column.querySelectorAll(".o_column_progress .progress-bar")];
 }
 
 function getTooltips(groupIndex) {
     const root = groupIndex >= 0 ? getColumn(groupIndex) : target;
-    return [...root.querySelectorAll(".o_kanban_counter_progress .progress-bar")]
+    return [...root.querySelectorAll(".o_column_progress .progress-bar")]
         .map((card) => card.dataset.tooltip)
         .filter(Boolean);
 }
@@ -156,7 +160,7 @@ let target;
 
 QUnit.module("Views", (hooks) => {
     hooks.beforeEach(() => {
-        patchWithCleanup(KanbanAnimatedNumber, { enableAnimations: false });
+        patchWithCleanup(AnimatedNumber, { enableAnimations: false });
         serverData = {
             models: {
                 partner: {
@@ -357,8 +361,71 @@ QUnit.module("Views", (hooks) => {
         assert.containsOnce(target, ".o_kanban_record:contains(gnap)");
     });
 
+    QUnit.test("generic tags are case insensitive", async function (assert) {
+        await makeView({
+            type: "kanban",
+            resModel: "partner",
+            serverData,
+            arch: `
+                <kanban>
+                    <templates><t t-name="kanban-box">
+                        <Div class="test">Hello</Div>
+                    </t></templates>
+                </kanban>`,
+        });
+
+        assert.containsN(target, "div.test", 4);
+    });
+
+    QUnit.test("display full is supported on fields", async (assert) => {
+        await makeView({
+            type: "kanban",
+            resModel: "partner",
+            serverData,
+            arch: `
+                <kanban class="o_kanban_test">
+                    <templates><t t-name="kanban-box">
+                        <div>
+                            <field name="foo" display="full"/>
+                        </div>
+                    </t></templates>
+                </kanban>`,
+        });
+
+        assert.containsOnce(target.querySelector(".o_kanban_record"), "span.o_text_block");
+        assert.strictEqual(target.querySelector("span.o_text_block").textContent, "yop");
+    });
+
+    QUnit.test("dropdown without toggler are correctly rendered", async (assert) => {
+        serverData.models.partner.records = [serverData.models.partner.records[0]];
+        await makeView({
+            type: "kanban",
+            resModel: "partner",
+            serverData,
+            arch: `
+                <kanban class="o_kanban_test">
+                    <templates><t t-name="kanban-box">
+                        <div>
+                            <div class="dropdown">
+                                <div class="dropdown-menu">
+                                    <a class="someItem" />
+                                </div>
+                            </div>
+                        </div>
+                    </t></templates>
+                </kanban>`,
+        });
+
+        assert.containsOnce(target, ".o-dropdown.dropdown.o_dropdown_kanban");
+        await click(target, ".o_kanban_record .o-dropdown button.dropdown-toggle");
+        assert.containsOnce(
+            target,
+            ".o_kanban_record .o-dropdown .o-dropdown--menu > div > a.someItem"
+        );
+    });
+
     QUnit.test("basic grouped rendering", async (assert) => {
-        assert.expect(13);
+        assert.expect(14);
 
         await makeView({
             type: "kanban",
@@ -385,6 +452,11 @@ QUnit.module("Views", (hooks) => {
             },
         });
 
+        assert.hasClass(
+            target.querySelector(".o_kanban_group"),
+            "bg-100",
+            "o_kanban_group should have a background"
+        );
         assert.hasClass(target.querySelector(".o_kanban_renderer"), "o_kanban_grouped");
         assert.hasClass(target.querySelector(".o_kanban_renderer"), "o_kanban_test");
         assert.containsN(target, ".o_kanban_group", 2);
@@ -626,6 +698,29 @@ QUnit.module("Views", (hooks) => {
         }
     );
 
+    QUnit.test("kanban grouped by date field", async (assert) => {
+        serverData.models.partner.records[0].date = "2007-06-10";
+        await makeView({
+            type: "kanban",
+            resModel: "partner",
+            serverData,
+            arch: `
+                <kanban>
+                    <field name="date"/>
+                    <templates>
+                        <t t-name="kanban-box">
+                            <div><field name="foo"/></div>
+                        </t>
+                    </templates>
+                </kanban>`,
+            groupBy: ["date"],
+        });
+
+        assert.deepEqual(getNodesTextContent(target.querySelectorAll(".o_column_title")), [
+            "None",
+            "June 2007",
+        ]);
+    });
     QUnit.test("context can be used in kanban template", async (assert) => {
         await makeView({
             type: "kanban",
@@ -1149,6 +1244,151 @@ QUnit.module("Views", (hooks) => {
         }
     );
 
+    QUnit.test("pager, update calls onUpdatedPager before the render", async (assert) => {
+        assert.expect(8);
+
+        class TestKanbanController extends KanbanController {
+            setup() {
+                super.setup();
+                onWillRender(() => {
+                    assert.step("render");
+                });
+            }
+
+            async onUpdatedPager() {
+                assert.step("onUpdatedPager");
+            }
+        }
+
+        viewRegistry.add("test_kanban_view", {
+            ...kanbanView,
+            Controller: TestKanbanController,
+        });
+
+        await makeView({
+            type: "kanban",
+            resModel: "partner",
+            serverData,
+            arch: `
+                <kanban js_class="test_kanban_view">
+                    <templates>
+                        <t t-name="kanban-box">
+                            <div><field name="foo"/></div>
+                        </t>
+                    </templates>
+                </kanban>`,
+            limit: 3,
+        });
+
+        assert.deepEqual(getPagerValue(target), [1, 3]);
+        assert.strictEqual(getPagerLimit(target), 4);
+        assert.step("next page");
+        await click(target.querySelector(".o_pager_next"));
+        assert.deepEqual(getPagerValue(target), [4, 4]);
+        assert.verifySteps(["render", "next page", "onUpdatedPager", "render"]);
+    });
+
+    QUnit.test("click on a button type='delete' to delete a record in a column", async (assert) => {
+        await makeView({
+            type: "kanban",
+            resModel: "partner",
+            serverData,
+            arch: `<kanban limit="3">
+                    <templates>
+                        <t t-name="kanban-box">
+                            <div>
+                                <div><a role="menuitem" type="delete" class="dropdown-item o_delete">Delete</a></div>
+                                <field name="foo"/>
+                            </div>
+                        </t>
+                    </templates>
+                </kanban>`,
+            groupBy: ["product_id"],
+        });
+        let column = getColumn();
+        assert.containsN(column, ".o_kanban_record", 2);
+        assert.containsNone(column, ".o_kanban_load_more");
+
+        await click(column.querySelector(".o_kanban_record .o_delete"));
+        assert.containsOnce(target, ".modal");
+
+        await click(target, ".modal .btn-primary");
+        column = getColumn();
+        assert.containsOnce(column, ".o_kanban_record");
+        assert.containsNone(column, ".o_kanban_load_more");
+    });
+
+    QUnit.test("kanban with an action id as on_create attrs", async (assert) => {
+        const actionService = {
+            start() {
+                return {
+                    doAction: (action, options) => {
+                        // simplified flow in this test: simulate a target new action which
+                        // creates a record and closes itself
+                        assert.step(`doAction ${action}`);
+                        serverData.models.partner.records.push({ id: 299, foo: "new" });
+                        options.onClose();
+                    },
+                };
+            },
+        };
+        registry.category("services").add("action", actionService, { force: true });
+
+        await makeView({
+            type: "kanban",
+            resModel: "partner",
+            serverData,
+            arch: `
+                <kanban on_create="some.action">
+                    <templates>
+                        <t t-name="kanban-box">
+                            <div><field name="foo"/></div>
+                        </t>
+                    </templates>
+                </kanban>`,
+            mockRPC(route, args) {
+                assert.step(args.method);
+            },
+        });
+
+        assert.containsN(target, ".o_kanban_record:not(.o_kanban_ghost)", 4);
+        await createRecord();
+        assert.containsN(target, ".o_kanban_record:not(.o_kanban_ghost)", 5);
+        assert.verifySteps([
+            "get_views",
+            "web_search_read",
+            "doAction some.action",
+            "web_search_read",
+        ]);
+    });
+
+    QUnit.test("grouped kanban with quick_create attrs set to false", async (assert) => {
+        await makeView({
+            type: "kanban",
+            resModel: "partner",
+            serverData,
+            arch: `
+                <kanban quick_create="false" on_create="quick_create">
+                    <field name="product_id"/>
+                    <templates>
+                        <t t-name="kanban-box">
+                            <div><field name="foo"/></div>
+                        </t>
+                    </templates>
+                </kanban>`,
+            groupBy: ["product_id"],
+            createRecord: () => assert.step("create record"),
+        });
+
+        assert.containsN(target, ".o_kanban_group", 2);
+        assert.containsNone(target, ".o_kanban_quick_add");
+
+        await click(target.querySelector(".o-kanban-button-new"));
+
+        assert.containsNone(target, ".o_kanban_quick_create");
+        assert.verifySteps(["create record"]);
+    });
+
     QUnit.test("create in grouped on m2o", async (assert) => {
         await makeView({
             type: "kanban",
@@ -1398,6 +1638,68 @@ QUnit.module("Views", (hooks) => {
         ]);
     });
 
+    QUnit.test(
+        "quick create record should focus default field [REQUIRE FOCUS]",
+        async function (assert) {
+            serverData.views["partner,some_view_ref,form"] =
+                "<form>" +
+                '<field name="foo"/>' +
+                '<field name="int_field" default_focus="1"/>' +
+                '<field name="state" widget="priority"/>' +
+                "</form>";
+
+            await makeView({
+                type: "kanban",
+                resModel: "partner",
+                serverData,
+                arch:
+                    '<kanban on_create="quick_create" quick_create_view="some_view_ref">' +
+                    '<field name="bar"/>' +
+                    '<templates><t t-name="kanban-box">' +
+                    '<div><field name="foo"/></div>' +
+                    "</t></templates></kanban>",
+                groupBy: ["bar"],
+            });
+
+            await click(target, ".o-kanban-button-new");
+            assert.strictEqual(
+                document.activeElement,
+                target.querySelector(".o_field_widget[name=int_field] input")
+            );
+        }
+    );
+
+    QUnit.test(
+        "quick create record should focus first field input [REQUIRE FOCUS]",
+        async function (assert) {
+            serverData.views["partner,some_view_ref,form"] =
+                "<form>" +
+                '<field name="foo"/>' +
+                '<field name="int_field"/>' +
+                '<field name="state" widget="priority"/>' +
+                "</form>";
+
+            await makeView({
+                type: "kanban",
+                resModel: "partner",
+                serverData,
+                arch:
+                    '<kanban on_create="quick_create" quick_create_view="some_view_ref">' +
+                    '<field name="bar"/>' +
+                    '<templates><t t-name="kanban-box">' +
+                    '<div><field name="foo"/></div>' +
+                    "</t></templates></kanban>",
+                groupBy: ["bar"],
+            });
+
+            await click(target, ".o-kanban-button-new");
+            assert.strictEqual(
+                document.activeElement,
+                target.querySelector(".o_field_widget[name=foo] input")
+            );
+        }
+    );
+
     QUnit.test("quick_create_view without quick_create option", async (assert) => {
         serverData.views["partner,some_view_ref,form"] = `
             <form>
@@ -1562,6 +1864,258 @@ QUnit.module("Views", (hooks) => {
         ]);
     });
 
+    QUnit.test("quick create record in grouped on m2m (no quick_create_view)", async (assert) => {
+        await makeView({
+            type: "kanban",
+            resModel: "partner",
+            serverData,
+            arch: `
+                <kanban on_create="quick_create">
+                    <field name="category_ids"/>
+                    <templates>
+                        <t t-name="kanban-box">
+                            <div><field name="foo"/></div>
+                        </t>
+                    </templates>
+                </kanban>`,
+            groupBy: ["category_ids"],
+            async mockRPC(route, { method, args, kwargs }) {
+                assert.step(method || route);
+                if (method === "name_create") {
+                    assert.strictEqual(args[0], "new partner");
+                    const { default_category_ids } = kwargs.context;
+                    assert.deepEqual(default_category_ids, [6]);
+                }
+            },
+        });
+
+        assert.containsOnce(
+            target,
+            ".o_kanban_group:nth-child(2) .o_kanban_record",
+            "gold column should contain one records"
+        );
+
+        // click on 'Create', fill the quick create and validate
+        await quickCreateRecord(1);
+        await editQuickCreateInput("display_name", "new partner");
+        await validateRecord();
+
+        assert.containsN(
+            target,
+            ".o_kanban_group:nth-child(2) .o_kanban_record",
+            2,
+            "gold column should contain two records"
+        );
+
+        assert.verifySteps([
+            "get_views",
+            "web_read_group", // initial read_group
+            "web_search_read", // initial search_read (first column)
+            "web_search_read", // initial search_read (second column)
+            "read", // read display_name of categories
+            "onchange", // quick create
+            "name_create", // should perform a name_create to create the record
+            "read",
+            "read", // read the created record
+            "onchange", // reopen the quick create automatically
+        ]);
+    });
+
+    QUnit.test("quick create record in grouped on m2m in the None column", async (assert) => {
+        await makeView({
+            type: "kanban",
+            resModel: "partner",
+            serverData,
+            arch: `
+                <kanban on_create="quick_create">
+                    <field name="category_ids"/>
+                    <templates>
+                        <t t-name="kanban-box">
+                            <div><field name="foo"/></div>
+                        </t>
+                    </templates>
+                </kanban>`,
+            groupBy: ["category_ids"],
+            async mockRPC(route, { method, args, kwargs }) {
+                assert.step(method || route);
+                if (method === "name_create") {
+                    assert.strictEqual(args[0], "new partner");
+                    const { default_category_ids } = kwargs.context;
+                    assert.deepEqual(default_category_ids, false);
+                }
+            },
+        });
+
+        await click(target, ".o_kanban_group:nth-child(1)");
+        assert.containsN(
+            target,
+            ".o_kanban_group:nth-child(1) .o_kanban_record",
+            2,
+            "'None' column should contain two records"
+        );
+
+        // click on 'Create', fill the quick create and validate
+        await quickCreateRecord(0);
+        await editQuickCreateInput("display_name", "new partner");
+        await validateRecord();
+
+        assert.containsN(
+            target,
+            ".o_kanban_group:nth-child(1) .o_kanban_record",
+            3,
+            "'None' column should contain three records"
+        );
+
+        assert.verifySteps([
+            "get_views",
+            "web_read_group", // initial read_group
+            "web_search_read", // initial search_read (first column)
+            "web_search_read", // initial search_read (second column)
+            "read", // read display_name of categories
+            "web_search_read", // read records when unfolding 'None'
+            "onchange", // quick create
+            "name_create", // should perform a name_create to create the record
+            "read", // read the created record
+            "onchange", // reopen the quick create automatically
+        ]);
+    });
+
+    QUnit.test("quick create record in grouped on m2m (field not in template)", async (assert) => {
+        serverData.views["partner,some_view_ref,form"] = `
+            <form>
+                <field name="foo"/>
+            </form>`;
+
+        await makeView({
+            type: "kanban",
+            resModel: "partner",
+            serverData,
+            arch: `
+                <kanban on_create="quick_create" quick_create_view="some_view_ref">
+                    <templates>
+                        <t t-name="kanban-box">
+                            <div><field name="foo"/></div>
+                        </t>
+                    </templates>
+                </kanban>`,
+            groupBy: ["category_ids"],
+            async mockRPC(route, { method, args, kwargs }) {
+                assert.step(method || route);
+                if (method === "create") {
+                    assert.deepEqual(args[0], {
+                        foo: "new partner",
+                    });
+                    const { default_category_ids } = kwargs.context;
+                    assert.deepEqual(default_category_ids, [6]);
+                }
+            },
+        });
+
+        assert.containsOnce(
+            target,
+            ".o_kanban_group:nth-child(2) .o_kanban_record",
+            "gold column should contain one records"
+        );
+
+        // click on 'Create', fill the quick create and validate
+        await quickCreateRecord(1);
+        await editQuickCreateInput("foo", "new partner");
+        await validateRecord();
+
+        assert.containsN(
+            target,
+            ".o_kanban_group:nth-child(2) .o_kanban_record",
+            2,
+            "gold column should contain two records"
+        );
+
+        assert.verifySteps([
+            "get_views",
+            "web_read_group", // initial read_group
+            "web_search_read", // initial search_read (first column)
+            "web_search_read", // initial search_read (second column)
+            "get_views", // get form view
+            "onchange", // quick create
+            "create", // should perform a name_create to create the record
+            "read", // read the created record
+            "onchange", // reopen the quick create automatically
+        ]);
+    });
+
+    QUnit.test("quick create record in grouped on m2m (field in the form view)", async (assert) => {
+        serverData.views["partner,some_view_ref,form"] = `
+            <form>
+                <field name="foo"/>
+                <field name="category_ids" widget="many2many_tags"/>
+            </form>`;
+
+        await makeView({
+            type: "kanban",
+            resModel: "partner",
+            serverData,
+            arch: `
+                <kanban on_create="quick_create" quick_create_view="some_view_ref">
+                    <templates>
+                        <t t-name="kanban-box">
+                            <div><field name="foo"/></div>
+                        </t>
+                    </templates>
+                </kanban>`,
+            groupBy: ["category_ids"],
+            async mockRPC(route, { method, args, kwargs }) {
+                assert.step(method || route);
+                if (method === "create") {
+                    assert.deepEqual(args[0], {
+                        category_ids: [[6, false, [6]]],
+                        foo: "new partner",
+                    });
+                    const { default_category_ids } = kwargs.context;
+                    assert.deepEqual(default_category_ids, [6]);
+                }
+            },
+        });
+
+        assert.containsOnce(
+            target,
+            ".o_kanban_group:nth-child(2) .o_kanban_record",
+            "gold column should contain one records"
+        );
+        // click on 'Create', fill the quick create and validate
+        await quickCreateRecord(1);
+
+        // verify that the quick create m2m field contains the column value
+        assert.containsOnce(
+            target,
+            ".o_tag_badge_text",
+            "quick create form should contain one tag in the m2m field"
+        );
+        assert.strictEqual(target.querySelector(".o_tag_badge_text").textContent, "gold");
+
+        await editQuickCreateInput("foo", "new partner");
+        await validateRecord();
+
+        assert.containsN(
+            target,
+            ".o_kanban_group:nth-child(2) .o_kanban_record",
+            2,
+            "gold column should contain two records"
+        );
+
+        assert.verifySteps([
+            "get_views",
+            "web_read_group", // initial read_group
+            "web_search_read", // initial search_read (first column)
+            "web_search_read", // initial search_read (second column)
+            "get_views", // get form view
+            "onchange", // quick create
+            "read",
+            "create", // should perform a create to create the record
+            "read",
+            "onchange",
+            "read",
+        ]);
+    });
+
     QUnit.test("quick create record validation: stays open when invalid", async (assert) => {
         await makeView({
             type: "kanban",
@@ -1677,10 +2231,8 @@ QUnit.module("Views", (hooks) => {
                 "</t></templates></kanban>",
             groupBy: ["bar"],
         });
-
         // create a new record
         await quickCreateRecord();
-
         assert.hasClass(
             target.querySelector(".o_kanban_quick_create .o_field_widget[name=foo]"),
             "o_required_modifier",
@@ -1869,7 +2421,7 @@ QUnit.module("Views", (hooks) => {
 
             // click to add and element and click outside, should cancel the quick creation
             await quickCreateRecord();
-            await click(target, ".o_kanban_group:first-child .o_kanban_record:last-child");
+            await click(target, ".o_kanban_group:first-child .o_kanban_record:last-of-type");
             assert.containsNone(
                 target,
                 ".o_kanban_quick_create",
@@ -1879,7 +2431,7 @@ QUnit.module("Views", (hooks) => {
             // click to input and drag the mouse outside, should not cancel the quick creation
             await quickCreateRecord();
             await triggerEvent(target, ".o_kanban_quick_create input", "mousedown");
-            await click(target, ".o_kanban_group:first-child .o_kanban_record:last-child");
+            await click(target, ".o_kanban_group:first-child .o_kanban_record:last-of-type");
             assert.containsOnce(
                 target,
                 ".o_kanban_quick_create",
@@ -1891,7 +2443,7 @@ QUnit.module("Views", (hooks) => {
             await editQuickCreateInput("foo", "new partner");
 
             // clicking outside should no longer destroy the quick create as it is dirty
-            await click(target, ".o_kanban_group:first-child .o_kanban_record:last-child");
+            await click(target, ".o_kanban_group:first-child .o_kanban_record:last-of-type");
             assert.containsOnce(
                 target,
                 ".o_kanban_quick_create",
@@ -2471,7 +3023,7 @@ QUnit.module("Views", (hooks) => {
         );
 
         // click outside: should remove the quick create
-        await click(target, ".o_kanban_group:first-child .o_kanban_record:last-child");
+        await click(target, ".o_kanban_group:first-child .o_kanban_record:last-of-type");
         assert.containsNone(
             target,
             ".o_kanban_quick_create",
@@ -3571,8 +4123,7 @@ QUnit.module("Views", (hooks) => {
     QUnit.test("close a column while quick creating a record", async (assert) => {
         serverData.views["partner,some_view_ref,form"] = '<form><field name="int_field"/></form>';
 
-        const prom = makeDeferred();
-        let blockGetViews = false;
+        let prom;
         await makeView({
             type: "kanban",
             resModel: "partner",
@@ -3584,20 +4135,24 @@ QUnit.module("Views", (hooks) => {
                     </t></templates>
                 </kanban>`,
             groupBy: ["product_id"],
-            async mockRPC(route, { method }) {
-                if (method === "get_views" && blockGetViews) {
+            async mockRPC(_route, { method }) {
+                if (prom && method === "get_views") {
+                    assert.step(method);
                     await prom;
                 }
             },
         });
 
+        prom = makeDeferred();
+
+        assert.verifySteps([]);
         assert.containsN(target, ".o_kanban_group", 2);
         assert.containsNone(target, ".o_column_folded");
 
         // click to quick create a new record in the first column (this operation is delayed)
-        blockGetViews = true;
         await quickCreateRecord();
 
+        assert.verifySteps(["get_views"]);
         assert.containsNone(target, ".o_form_view");
 
         // click to fold the first column
@@ -3609,8 +4164,15 @@ QUnit.module("Views", (hooks) => {
         prom.resolve();
         await nextTick();
 
+        assert.verifySteps([]);
         assert.containsNone(target, ".o_form_view");
         assert.containsOnce(target, ".o_column_folded");
+
+        await createRecord();
+
+        assert.verifySteps([]); // "get_views" should have already be done
+        assert.containsOnce(target, ".o_form_view");
+        assert.containsNone(target, ".o_column_folded");
     });
 
     QUnit.test(
@@ -4041,6 +4603,57 @@ QUnit.module("Views", (hooks) => {
         assert.verifySteps(["resequence"]);
     });
 
+    QUnit.test("drag and drop highlight on hover", async (assert) => {
+        await makeView({
+            type: "kanban",
+            resModel: "partner",
+            serverData,
+            arch: `
+                <kanban on_create="quick_create">
+                <field name="product_id"/>
+                <templates><t t-name="kanban-box">
+                <div class="oe_kanban_global_click"><field name="foo"/>
+                </div>
+                </t></templates>
+                </kanban>`,
+            groupBy: ["product_id"],
+        });
+        assert.containsN(target, ".o_kanban_group:first-child .o_kanban_record", 2);
+        assert.containsN(target, ".o_kanban_group:nth-child(2) .o_kanban_record", 2);
+
+        // first record of first column moved to the bottom of second column
+        const drop = drag(
+            ".o_kanban_group:first-child .o_kanban_record",
+            ".o_kanban_group:nth-child(2)"
+        );
+        assert.hasClass(target.querySelector(".o_kanban_group:nth-child(2)"), "o_kanban_hover");
+        await drop();
+        assert.containsNone(target, ".o_kanban_group:nth-child(2).o_kanban_hover");
+    });
+
+    QUnit.test("drag and drop outside of a column", async (assert) => {
+        await makeView({
+            type: "kanban",
+            resModel: "partner",
+            serverData,
+            arch: `
+                <kanban on_create="quick_create">
+                <field name="product_id"/>
+                <templates><t t-name="kanban-box">
+                <div class="oe_kanban_global_click"><field name="foo"/>
+                </div>
+                </t></templates>
+                </kanban>`,
+            groupBy: ["product_id"],
+        });
+        assert.containsN(target, ".o_kanban_group:first-child .o_kanban_record", 2);
+        assert.containsN(target, ".o_kanban_group:nth-child(2) .o_kanban_record", 2);
+
+        // first record of first column moved to the right of a column
+        await dragAndDrop(".o_kanban_group:first-child .o_kanban_record", ".o_column_quick_create");
+        assert.containsN(target, ".o_kanban_group:first-child .o_kanban_record", 2);
+    });
+
     QUnit.test("drag and drop a record, grouped by selection", async (assert) => {
         assert.expect(7);
 
@@ -4082,7 +4695,21 @@ QUnit.module("Views", (hooks) => {
     });
 
     QUnit.test("prevent drag and drop of record if grouped by readonly", async (assert) => {
+        // Whether the kanban is grouped by state, foo, bar or product_id
+        // the user must not be able to drag and drop from one group to another,
+        // as state, foo bar, product_id are made readonly one way or another.
+        // state must not be draggable:
+        // state is not readonly in the model. state is passed in the arch specifying readonly="1".
+        // foo must not be draggable:
+        // foo is readonly in the model fields. foo is passed in the arch but without specifying readonly.
+        // bar must not be draggable:
+        // bar is readonly in the model fields. bar is not passed in the arch.
+        // product_id must not be draggable:
+        // product_id is readonly in the model fields. product_id is passed in the arch specifying readonly="0",
+        // but the readonly in the model takes over.
         serverData.models.partner.fields.foo.readonly = true;
+        serverData.models.partner.fields.bar.readonly = true;
+        serverData.models.partner.fields.product_id.readonly = true;
         const kanban = await makeView({
             type: "kanban",
             resModel: "partner",
@@ -4092,6 +4719,7 @@ QUnit.module("Views", (hooks) => {
                 "<templates>" +
                 '<t t-name="kanban-box"><div>' +
                 '<field name="foo"/>' +
+                '<field name="product_id" readonly="0" invisible="1"/>' +
                 '<field name="state" readonly="1"/>' +
                 "</div></t>" +
                 "</templates>" +
@@ -4143,12 +4771,54 @@ QUnit.module("Views", (hooks) => {
 
         // second record of first column moved at first place
         await dragAndDrop(
-            ".o_kanban_group:first-child .o_kanban_record:last-child",
+            ".o_kanban_group:first-child .o_kanban_record:last-of-type",
             ".o_kanban_group:first-child .o_kanban_record"
         );
 
         // should still be able to resequence
         assert.deepEqual(getCardTexts(0), ["blipGHI", "blipDEF"]);
+
+        await reload(kanban, { groupBy: ["bar"] });
+
+        assert.containsN(target, ".o_kanban_group:first-child .o_kanban_record", 1);
+        assert.containsN(target, ".o_kanban_group:nth-child(2) .o_kanban_record", 3);
+        assert.containsN(target, ".o_kanban_group:nth-child(3) .o_kanban_record", 0);
+
+        assert.deepEqual(getCardTexts(0), ["blipGHI"]);
+
+        // first record of first column moved to the bottom of second column
+        await dragAndDrop(
+            ".o_kanban_group:first-child .o_kanban_record",
+            ".o_kanban_group:nth-child(2)"
+        );
+
+        // should not be draggable
+        assert.containsN(target, ".o_kanban_group:first-child .o_kanban_record", 1);
+        assert.containsN(target, ".o_kanban_group:nth-child(2) .o_kanban_record", 3);
+        assert.containsN(target, ".o_kanban_group:nth-child(3) .o_kanban_record", 0);
+
+        assert.deepEqual(getCardTexts(0), ["blipGHI"]);
+
+        await reload(kanban, { groupBy: ["product_id"] });
+
+        assert.containsN(target, ".o_kanban_group:first-child .o_kanban_record", 2);
+        assert.containsN(target, ".o_kanban_group:nth-child(2) .o_kanban_record", 2);
+        assert.containsN(target, ".o_kanban_group:nth-child(3) .o_kanban_record", 0);
+
+        assert.deepEqual(getCardTexts(0), ["yopABC", "gnapGHI"]);
+
+        // first record of first column moved to the bottom of second column
+        await dragAndDrop(
+            ".o_kanban_group:first-child .o_kanban_record",
+            ".o_kanban_group:nth-child(2)"
+        );
+
+        // should not be draggable
+        assert.containsN(target, ".o_kanban_group:first-child .o_kanban_record", 2);
+        assert.containsN(target, ".o_kanban_group:nth-child(2) .o_kanban_record", 2);
+        assert.containsN(target, ".o_kanban_group:nth-child(3) .o_kanban_record", 0);
+
+        assert.deepEqual(getCardTexts(0), ["yopABC", "gnapGHI"]);
     });
 
     QUnit.test("prevent drag and drop if grouped by date/datetime field", async (assert) => {
@@ -4442,6 +5112,82 @@ QUnit.module("Views", (hooks) => {
         }
     );
 
+    QUnit.test("Move record in grouped by date, progress bars and sum field", async (assert) => {
+        serverData.models.partner.records[0].date = "2017-01-08";
+        serverData.models.partner.records[1].date = "2017-01-09";
+        serverData.models.partner.records[2].date = "2017-02-08";
+        serverData.models.partner.records[3].date = "2017-02-10";
+
+        await makeView({
+            type: "kanban",
+            resModel: "partner",
+            serverData,
+            arch: /* xml */ `
+                <kanban>
+                    <field name="date" allow_group_range_value="true" />
+                    <progressbar field="foo" colors='{"yop": "success", "gnap": "warning", "blip": "danger"}' sum_field="int_field" />
+                    <templates>
+                        <div t-name="kanban-box">
+                            <field name="id" />
+                        </div>
+                    </templates>
+                </kanban>
+            `,
+            groupBy: ["date:month"],
+        });
+
+        assert.containsN(target, ".o_kanban_group", 2);
+        assert.containsN(
+            target,
+            ".o_kanban_group:first-child .o_kanban_record",
+            2,
+            "1st column should contain 2 records of January month"
+        );
+        assert.containsN(
+            target,
+            ".o_kanban_group:nth-child(2) .o_kanban_record",
+            2,
+            "2nd column should contain 2 records of February month"
+        );
+
+        assert.deepEqual(
+            getProgressBars(0).map((pb) => pb.style.width),
+            ["50%", "50%"]
+        );
+        assert.deepEqual(
+            getProgressBars(1).map((pb) => pb.style.width),
+            ["50%", "50%"]
+        );
+        assert.deepEqual(getCounters(), ["19", "13"]);
+
+        await dragAndDrop(
+            ".o_kanban_group:first-child .o_kanban_record",
+            ".o_kanban_group:nth-child(2)"
+        );
+
+        assert.containsOnce(
+            target,
+            ".o_kanban_group:first-child .o_kanban_record",
+            "Should only have one record remaining"
+        );
+        assert.containsN(
+            target,
+            ".o_kanban_group:nth-child(2) .o_kanban_record",
+            3,
+            "Should now have 3 records"
+        );
+
+        assert.deepEqual(
+            getProgressBars(0).map((pb) => pb.style.width),
+            ["100%"]
+        );
+        assert.deepEqual(
+            getProgressBars(1).map((pb) => pb.style.width),
+            ["33.3333%", "33.3333%", "33.3333%"] // abridged to e-4
+        );
+        assert.deepEqual(getCounters(), ["9", "23"]);
+    });
+
     QUnit.test(
         "completely prevent drag and drop if records_draggable set to false",
         async (assert) => {
@@ -4492,7 +5238,7 @@ QUnit.module("Views", (hooks) => {
             // attempt to drag&drop a record in the same column
             await dragAndDrop(
                 ".o_kanban_group:first-child .o_kanban_record",
-                ".o_kanban_group:first-child .o_kanban_record:last-child"
+                ".o_kanban_group:first-child .o_kanban_record:last-of-type"
             );
 
             assert.deepEqual(
@@ -4772,7 +5518,7 @@ QUnit.module("Views", (hooks) => {
             "o_column_folded",
             "the created column should not be folded"
         );
-        assert.verifySteps(["name_create"]);
+        assert.verifySteps(["name_create", "/web/dataset/resequence"]);
 
         // fold and unfold the created column, and check that no RPCs are done (as there are no records)
         const clickColumnAction = await toggleColumnActions(2);
@@ -4880,7 +5626,7 @@ QUnit.module("Views", (hooks) => {
     );
 
     QUnit.test("delete a column in grouped on m2o", async (assert) => {
-        assert.expect(36);
+        assert.expect(38);
 
         let resequencedIDs = [];
         let dialogProps;
@@ -5051,6 +5797,8 @@ QUnit.module("Views", (hooks) => {
         await editColumnName("once third column");
         await validateColumn();
 
+        assert.deepEqual(resequencedIDs, [3, 4], "creating a column should trigger a resequence");
+
         await dragAndDrop(
             ".o_kanban_group:first-child .o_column_title",
             ".o_kanban_group:nth-child(3)"
@@ -5058,7 +5806,7 @@ QUnit.module("Views", (hooks) => {
 
         assert.deepEqual(
             resequencedIDs,
-            [],
+            [3, 4],
             "moving the Undefined column should not affect order of other columns"
         );
 
@@ -6088,7 +6836,7 @@ QUnit.module("Views", (hooks) => {
     );
 
     QUnit.test(
-        "nocontent helper for grouped kanban with no records with no group_create",
+        "nocontent helper for grouped kanban (on m2o field) with no records with no group_create",
         async (assert) => {
             serverData.models.partner.records = [];
 
@@ -6121,6 +6869,35 @@ QUnit.module("Views", (hooks) => {
         }
     );
 
+    QUnit.test(
+        "nocontent helper for grouped kanban (on date field) with no records with no group_create",
+        async (assert) => {
+            serverData.models.partner.records = [];
+
+            await makeView({
+                type: "kanban",
+                resModel: "partner",
+                serverData,
+                arch: `
+                    <kanban group_create="false">
+                        <templates>
+                            <t t-name="kanban-box">
+                                <div><field name="foo"/></div>
+                            </t>
+                        </templates>
+                    </kanban>`,
+                groupBy: ["date"],
+                noContentHelp: "No content helper",
+            });
+
+            assert.containsNone(target, ".o_kanban_group");
+            assert.containsNone(target, ".o_kanban_record");
+            assert.containsOnce(target, ".o_view_nocontent");
+            assert.containsNone(target, ".o_column_quick_create");
+            assert.containsNone(target, ".o_kanban_example_background");
+        }
+    );
+
     QUnit.test("empty grouped kanban with sample data and no columns", async (assert) => {
         serverData.models.partner.records = [];
 
@@ -6145,6 +6922,67 @@ QUnit.module("Views", (hooks) => {
         assert.containsOnce(target, ".o_quick_create_unfolded");
         assert.containsOnce(target, ".o_kanban_example_background_container");
     });
+
+    QUnit.test(
+        "empty kanban with sample data grouped by date range (fill temporal)",
+        async (assert) => {
+            serverData.models.partner.records = [];
+
+            await makeView({
+                arch: `
+                <kanban sample="1">
+                    <field name="date" allow_group_range_value="true"/>
+                    <field name="state"/>
+                    <field name="int_field"/>
+                    <progressbar field="state" sum_field="int_field" help="progress" colors="{}"/>
+                    <templates>
+                        <div t-name="kanban-box">
+                            <field name="foo"/>
+                            <field name="int_field"/>
+                        </div>
+                    </templates>
+                </kanban>`,
+                serverData,
+                groupBy: ["date:month"],
+                resModel: "partner",
+                type: "kanban",
+                noContentHelp: "No content helper",
+                mockRPC(route, args) {
+                    if (args.method === "web_read_group") {
+                        // Simulate fill temporal
+                        return {
+                            groups: [
+                                {
+                                    date_count: 0,
+                                    state: false,
+                                    "date:month": "December 2022",
+                                    __range: {
+                                        "date:month": {
+                                            from: "2022-12-01",
+                                            to: "2023-01-01",
+                                        },
+                                    },
+                                    __domain: [
+                                        ["date", ">=", "2022-12-01"],
+                                        ["date", "<", "2023-01-01"],
+                                    ],
+                                },
+                            ],
+                            length: 1,
+                        };
+                    }
+                },
+            });
+
+            assert.containsOnce(target, ".o_view_nocontent");
+            assert.strictEqual(
+                target.querySelector(".o_kanban_group .o_column_title").textContent,
+                "December 2022"
+            );
+            assert.containsOnce(target, ".o_kanban_group");
+            assert.containsN(target, ".o_kanban_group .o_kanban_record", 16);
+        }
+    );
 
     QUnit.test("empty grouped kanban with sample data and click quick create", async (assert) => {
         await makeView({
@@ -6286,14 +7124,9 @@ QUnit.module("Views", (hooks) => {
             },
         });
 
-        // Check keynav is disabled
-        assert.hasClass(getCard(0), "o_sample_data_disabled");
-
         await toggleColumnActions(0);
 
-        assert.hasClass(target.querySelector(".o_kanban_toggle_fold"), "o_sample_data_disabled");
-        assert.containsNone(target, '[tabindex]:not([tabindex="-1"])');
-
+        assert.containsN(target, ".o_kanban_record", 16);
         assert.hasClass(document.activeElement, "o_searchview_input");
 
         await triggerEvent(document.activeElement, null, "keydown", { key: "ArrowDown" });
@@ -6556,10 +7389,6 @@ QUnit.module("Views", (hooks) => {
 
         await toggleColumnActions(0);
 
-        assert.hasClass(
-            target.querySelector(".o_kanban_config .o_kanban_toggle_fold"),
-            "o_sample_data_disabled"
-        );
         assert.hasClass(target.querySelector(".o_kanban_config .o_kanban_toggle_fold"), "disabled");
     });
 
@@ -6800,7 +7629,7 @@ QUnit.module("Views", (hooks) => {
         registry.category("services").add("action", actionService, { force: true });
 
         await makeView({
-            type: "form",
+            type: "kanban",
             resModel: "partner",
             serverData,
             arch: `
@@ -6812,7 +7641,6 @@ QUnit.module("Views", (hooks) => {
                         </div>
                     </templates>
                 </kanban>`,
-            resId: 1,
         });
 
         await click(target.querySelector("a[type='action']"));
@@ -7026,8 +7854,11 @@ QUnit.module("Views", (hooks) => {
                 "</kanban>",
         });
 
-        assert.ok(getCard(0).querySelector(".date").innerText.startsWith("Wed Jan 25 2017"));
-        assert.ok(getCard(1).querySelector(".datetime").innerText.startsWith("Mon Dec 12 2016"));
+        assert.equal(getCard(0).querySelector(".date").innerText, "2017-01-25T00:00:00.000+01:00");
+        assert.equal(
+            getCard(1).querySelector(".datetime").innerText,
+            "2016-12-12T11:55:05.000+01:00"
+        );
     });
 
     QUnit.test("rendering many2one (value)", async (assert) => {
@@ -7146,6 +7977,70 @@ QUnit.module("Views", (hooks) => {
         assert.strictEqual(getColumn(0).querySelector(".o_column_title").innerText, "xmo");
         assert.deepEqual(getCardTexts(), ["2", "4", "1", "3"]);
     });
+
+    QUnit.test(
+        "resequence all when create(ing) a new record + partial resequencing",
+        async (assert) => {
+            let resequenceOffset;
+            await makeView({
+                type: "kanban",
+                resModel: "partner",
+                serverData,
+                arch: /* xml */ `
+                <kanban>
+                    <field name="product_id"/>
+                    <templates>
+                        <t t-name="kanban-box">
+                            <div><field name="id"/></div>
+                        </t>
+                    </templates>
+                </kanban>
+            `,
+                groupBy: ["product_id"],
+                mockRPC(route, params) {
+                    if (route === "/web/dataset/resequence") {
+                        assert.step(JSON.stringify({ ids: params.ids, offset: params.offset }));
+                        resequenceOffset = params.offset || 0;
+                        return true;
+                    }
+                    if (params.method === "read") {
+                        // Important to simulate the server returning the new sequence.
+                        const [ids, fields] = params.args;
+                        return ids.map((id, index) => ({
+                            id,
+                            [fields[0]]: resequenceOffset + index,
+                        }));
+                    }
+                },
+            });
+
+            await createColumn();
+            await editColumnName("foo");
+            await validateColumn();
+            assert.verifySteps([JSON.stringify({ ids: [3, 5, 6] })]);
+
+            await editColumnName("bar");
+            await validateColumn();
+            assert.verifySteps([JSON.stringify({ ids: [3, 5, 6, 7] })]);
+
+            await editColumnName("baz");
+            await validateColumn();
+            assert.verifySteps([JSON.stringify({ ids: [3, 5, 6, 7, 8] })]);
+
+            await editColumnName("boo");
+            await validateColumn();
+            assert.verifySteps([JSON.stringify({ ids: [3, 5, 6, 7, 8, 9] })]);
+
+            // When rearranging, only resequence the affected records. In this example,
+            // dragging column 2 to column 4 should only resequence [5, 6, 7] to [6, 7, 5]
+            // with offset 1.
+            await dragAndDrop(
+                ".o_kanban_group:nth-child(2) .o_column_title",
+                ".o_kanban_group:nth-child(4)"
+            );
+            assert.verifySteps([JSON.stringify({ ids: [6, 7, 5], offset: 1 })]);
+        }
+    );
 
     QUnit.test("prevent resequence columns if groups_draggable=false", async (assert) => {
         serverData.models.product.fields.sequence = { type: "integer" };
@@ -7486,6 +8381,141 @@ QUnit.module("Views", (hooks) => {
         );
     });
 
+    QUnit.test("asynchronous tooltips when grouped", async (assert) => {
+        assert.expect(10);
+        serviceRegistry.add("tooltip", tooltipService);
+        const prom = makeDeferred();
+        await makeView({
+            type: "kanban",
+            resModel: "partner",
+            serverData,
+            arch: `
+                <kanban default_group_by="product_id">
+                    <field name="bar"/>
+                    <field name="product_id"  options='{"group_by_tooltip": {"name": "Name"}}'/>
+                    <templates>
+                        <t t-name="kanban-box">
+                            <div><field name="foo"/></div>
+                        </t>
+                    </templates>
+                </kanban>`,
+            async mockRPC(route, args) {
+                if (route === "/web/dataset/call_kw/product/read") {
+                    await prom;
+                }
+            },
+        });
+
+        assert.hasClass(target.querySelector(".o_kanban_renderer"), "o_kanban_grouped");
+        assert.containsN(target, ".o_column_title", 2);
+        assert.strictEqual(
+            target
+                .querySelectorAll(".o_kanban_header_title")[0]
+                .getAttribute("data-tooltip-template"),
+            null
+        );
+        assert.strictEqual(
+            target.querySelectorAll(".o_kanban_header_title")[0].getAttribute("data-tooltip-info"),
+            null
+        );
+        assert.strictEqual(
+            target
+                .querySelectorAll(".o_kanban_header_title")[1]
+                .getAttribute("data-tooltip-template"),
+            null
+        );
+        assert.strictEqual(
+            target.querySelectorAll(".o_kanban_header_title")[1].getAttribute("data-tooltip-info"),
+            null
+        );
+        prom.resolve();
+        await nextTick();
+
+        assert.strictEqual(
+            target
+                .querySelectorAll(".o_kanban_header_title")[0]
+                .getAttribute("data-tooltip-template"),
+            "web.KanbanGroupTooltip"
+        );
+        assert.strictEqual(
+            target
+                .querySelectorAll(".o_kanban_header_title")[1]
+                .getAttribute("data-tooltip-template"),
+            "web.KanbanGroupTooltip"
+        );
+        assert.strictEqual(
+            target.querySelectorAll(".o_kanban_header_title")[0].getAttribute("data-tooltip-info"),
+            '{"entries":[{"title":"Name","value":"hello"}]}'
+        );
+        assert.strictEqual(
+            target.querySelectorAll(".o_kanban_header_title")[1].getAttribute("data-tooltip-info"),
+            '{"entries":[{"title":"Name","value":"xmo"}]}'
+        );
+    });
+
+    QUnit.test("concurrency asynchronous tooltips when grouped", async (assert) => {
+        assert.expect(2);
+        serviceRegistry.add("tooltip", tooltipService);
+        const prom = makeDeferred();
+        let rpcCount = 0;
+        await makeView({
+            type: "kanban",
+            resModel: "partner",
+            serverData,
+            arch: `
+                <kanban default_group_by="product_id">
+                    <field name="bar"/>
+                    <field name="product_id"  options='{"group_by_tooltip": {"name": "Name"}}'/>
+                    <templates>
+                        <t t-name="kanban-box">
+                            <div><field name="foo"/></div>
+                        </t>
+                    </templates>
+                </kanban>`,
+            searchViewArch: `
+            <search>
+                <filter name="product_id" string="product" context="{'group_by': 'product_id', 'group_by_tooltip': {'name': 'Name'}}}"/>
+            </search>
+            `,
+            async mockRPC(route, args) {
+                if (route === "/web/dataset/call_kw/product/read") {
+                    if (rpcCount++ == 0) {
+                        await prom;
+                    } else {
+                        return [
+                            {
+                                id: 3,
+                                display_name: "hello",
+                                name: "hello",
+                            },
+                            {
+                                id: 5,
+                                display_name: "xmo",
+                                name: "xm",
+                            },
+                        ];
+                    }
+                }
+            },
+        });
+
+        // The first tooltip rpc request is blocked and user changes the group by
+        await click(target, ".o_group_by_menu > .dropdown-toggle");
+        await click(target, ".o_group_by_menu > div > span");
+        // The first tooltip request arrives after the second request
+        prom.resolve();
+        await nextTick();
+
+        assert.strictEqual(
+            target.querySelectorAll(".o_kanban_header_title")[0].getAttribute("data-tooltip-info"),
+            '{"entries":[{"title":"Name","value":"hello"}]}'
+        );
+        assert.strictEqual(
+            target.querySelectorAll(".o_kanban_header_title")[1].getAttribute("data-tooltip-info"),
+            '{"entries":[{"title":"Name","value":"xm"}]}'
+        );
+    });
+
     QUnit.test("move a record then put it again in the same column", async (assert) => {
         serverData.models.partner.records = [];
 
@@ -7592,42 +8622,6 @@ QUnit.module("Views", (hooks) => {
         assert.verifySteps(["resequence", "resequence"], "should have resequenced twice");
     });
 
-    QUnit.test("basic support for widgets", async (assert) => {
-        // This test could be removed as soon as we drop the support of legacy widgets (see test
-        // below, which is a duplicate of this one, but with an Owl Component instead).
-        widgetRegistry.add(
-            "test",
-            Widget.extend({
-                init(_parent, dataPoint) {
-                    this._super(...arguments);
-                    this.data = dataPoint.data;
-                },
-                start() {
-                    this.el.innerText = JSON.stringify(this.data);
-                },
-            })
-        );
-
-        await makeView({
-            type: "kanban",
-            resModel: "partner",
-            serverData,
-            arch:
-                '<kanban><templates><t t-name="kanban-box">' +
-                "<div>" +
-                '<t t-esc="record.foo.value"/>' +
-                '<field name="foo" blip="1"/>' +
-                '<widget name="test"/>' +
-                "</div>" +
-                "</t></templates></kanban>",
-        });
-
-        assert.strictEqual(
-            getCard(2).querySelector(".o_legacy_widget").innerText,
-            '{"foo":"gnap","id":3}'
-        );
-    });
-
     QUnit.test("basic support for widgets (being Owl Components)", async (assert) => {
         class MyComponent extends Component {
             get value() {
@@ -7656,62 +8650,6 @@ QUnit.module("Views", (hooks) => {
         });
 
         assert.strictEqual(getCard(2).querySelector(".o_widget").innerText, '{"foo":"gnap"}');
-    });
-
-    QUnit.test("subwidgets with on_attach_callback when changing record color", async (assert) => {
-        // Note: since the OWL refactor the 'on_attach_callback' is only called
-        // once since the card is not entirely re-rendered. Instead we check that
-        // the data displayed in the widget field is correctly updated.
-        let counter = 0;
-        legacyFieldRegistry.add(
-            "test_widget",
-            AbstractField.extend({
-                on_attach_callback: () => counter++,
-                _renderReadonly() {
-                    this.el.innerText = this.record.data.color;
-                },
-            })
-        );
-
-        await makeView({
-            type: "kanban",
-            resModel: "category",
-            serverData,
-            arch:
-                "<kanban>" +
-                '<field name="color"/>' +
-                "<templates>" +
-                '<t t-name="kanban-box">' +
-                '<div color="color">' +
-                '<div class="o_dropdown_kanban dropdown">' +
-                '<a class="dropdown-toggle o-no-caret btn" data-bs-toggle="dropdown" href="#">' +
-                '<span class="fa fa-bars fa-lg"/>' +
-                "</a>" +
-                '<ul class="dropdown-menu" role="menu">' +
-                "<li>" +
-                '<ul class="oe_kanban_colorpicker"/>' +
-                "</li>" +
-                "</ul>" +
-                "</div>" +
-                '<field name="name" widget="test_widget"/>' +
-                "</div>" +
-                "</t>" +
-                "</templates>" +
-                "</kanban>",
-        });
-
-        // counter should be 2 as there are 2 records
-        assert.strictEqual(counter, 2, "on_attach_callback should have been called twice");
-        assert.deepEqual(getCardTexts(), ["2", "5"]);
-
-        // set a color to kanban record
-        await toggleRecordDropdown(0);
-        await click(getCard(0), ".oe_kanban_colorpicker a.oe_kanban_color_9");
-
-        // first record has replaced its $el with a new one
-        assert.hasClass(getCard(0), "oe_kanban_color_9");
-        assert.deepEqual(getCardTexts(), ["9", "5"]);
-        assert.strictEqual(counter, 2, "on_attach_callback should have been called twice");
     });
 
     QUnit.test("column progressbars properly work", async (assert) => {
@@ -7775,31 +8713,24 @@ QUnit.module("Views", (hooks) => {
 
         assert.containsN(target, ".o_kanban_group", 2);
         assert.deepEqual(getCounters(), ["1", "4"]);
-        assert.containsN(
-            target,
-            ".o_kanban_group:last-child .o_kanban_counter_progress .progress-bar",
-            4
-        );
+        assert.containsN(target, ".o_kanban_group:last-child .o_column_progress .progress-bar", 4);
         assert.containsOnce(
             target,
-            ".o_kanban_group:last-child .o_kanban_counter_progress .progress-bar.bg-200",
+            ".o_kanban_group:last-child .o_column_progress .progress-bar.bg-200",
             "should have false kanban color"
         );
         assert.hasClass(
             target.querySelector(
-                ".o_kanban_group:last-child .o_kanban_counter_progress .progress-bar.bg-200"
+                ".o_kanban_group:last-child .o_column_progress .progress-bar.bg-200"
             ),
             "bg-200"
         );
 
-        await click(
-            target,
-            ".o_kanban_group:last-child .o_kanban_counter_progress .progress-bar.bg-200"
-        );
+        await click(target, ".o_kanban_group:last-child .o_column_progress .progress-bar.bg-200");
 
         assert.hasClass(
             target.querySelector(
-                ".o_kanban_group:last-child .o_kanban_counter_progress .progress-bar.bg-200"
+                ".o_kanban_group:last-child .o_column_progress .progress-bar.bg-200"
             ),
             "progress-bar-animated"
         );
@@ -7841,14 +8772,11 @@ QUnit.module("Views", (hooks) => {
         assert.containsN(target, ".o_kanban_group", 2);
         assert.deepEqual(getCounters(), ["-4", "51"]);
 
-        await click(
-            target,
-            ".o_kanban_group:last-child .o_kanban_counter_progress .progress-bar.bg-200"
-        );
+        await click(target, ".o_kanban_group:last-child .o_column_progress .progress-bar.bg-200");
 
         assert.hasClass(
             target.querySelector(
-                ".o_kanban_group:last-child .o_kanban_counter_progress .progress-bar.bg-200"
+                ".o_kanban_group:last-child .o_column_progress .progress-bar.bg-200"
             ),
             "progress-bar-animated"
         );
@@ -8002,7 +8930,7 @@ QUnit.module("Views", (hooks) => {
                 groupBy: ["bar"],
             });
 
-            await click(target, ".o_kanban_counter_progress .progress-bar.bg-success");
+            await click(target, ".o_column_progress .progress-bar.bg-success");
 
             assert.deepEqual(getCardTexts(), ["5"], "we should have 1 record shown");
 
@@ -8288,7 +9216,6 @@ QUnit.module("Views", (hooks) => {
     QUnit.test("load more should load correct records after drag&drop event", async (assert) => {
         // Add a sequence number and initialize
         serverData.models.partner.records.forEach((el, i) => (el.sequence = i));
-
         await makeView({
             type: "kanban",
             resModel: "partner",
@@ -8312,7 +9239,7 @@ QUnit.module("Views", (hooks) => {
         // Drag the first kanban record on top of the last
         await dragAndDrop(
             ".o_kanban_group:first-child .o_kanban_record",
-            ".o_kanban_group:last-child"
+            ".o_kanban_group:last-child .o_kanban_record"
         );
 
         // load more twice to load all records of second column
@@ -8479,12 +9406,12 @@ QUnit.module("Views", (hooks) => {
         assert.strictEqual(imageOnRecord.length, 1, "partner with image display image by url");
     });
 
-    QUnit.test("test displaying image (__last_update field)", async (assert) => {
-        // the presence of __last_update field ensures that the image is reloaded when necessary
+    QUnit.test("test displaying image (write_date field)", async (assert) => {
+        // the presence of write_date field ensures that the image is reloaded when necessary
         assert.expect(2);
 
         const rec = serverData.models.partner.records.find((r) => r.id === 1);
-        rec.__last_update = "2022-08-05 08:37:00";
+        rec.write_date = "2022-08-05 08:37:00";
 
         await makeView({
             type: "kanban",
@@ -8499,7 +9426,7 @@ QUnit.module("Views", (hooks) => {
                 </kanban>`,
             mockRPC(route, { method, kwargs }) {
                 if (method === "web_search_read") {
-                    assert.deepEqual(kwargs.fields, ["id", "__last_update"]);
+                    assert.deepEqual(kwargs.fields, ["id", "write_date"]);
                 }
             },
             domain: [["id", "in", [1]]],
@@ -8901,204 +9828,6 @@ QUnit.module("Views", (hooks) => {
         }
     );
 
-    QUnit.test("asynchronous rendering of a field widget (ungrouped)", async (assert) => {
-        let fooFieldDef = makeDeferred();
-        legacyFieldRegistry.add(
-            "asyncwidget",
-            AbstractField.extend({
-                async willStart() {
-                    await Promise.all([this._super(...arguments), fooFieldDef]);
-                },
-                async start() {
-                    this.el.innerText = "LOADED";
-                    return this._super(...arguments);
-                },
-            })
-        );
-
-        const makeViewProm = makeView({
-            type: "kanban",
-            resModel: "partner",
-            serverData,
-            arch:
-                '<kanban><templates><t t-name="kanban-box">' +
-                '<div><field name="foo" widget="asyncwidget"/></div>' +
-                "</t></templates></kanban>",
-        });
-        await nextTick();
-
-        assert.containsNone(target, ".o_kanban_record", "kanban view is not ready yet");
-
-        fooFieldDef.resolve();
-        const kanban = await makeViewProm;
-
-        assert.deepEqual(getCardTexts(), ["LOADED", "LOADED", "LOADED", "LOADED"]);
-
-        // reload with a domain
-        fooFieldDef = makeDeferred();
-        await reload(kanban, { domain: [["id", "=", 1]] });
-
-        assert.deepEqual(getCardTexts(), ["LOADED", "LOADED", "LOADED", "LOADED"]);
-
-        fooFieldDef.resolve();
-        await nextTick();
-
-        assert.deepEqual(getCardTexts(), ["LOADED"]);
-    });
-
-    QUnit.test("asynchronous rendering of a field widget (grouped)", async (assert) => {
-        let fooFieldDef = makeDeferred();
-        legacyFieldRegistry.add(
-            "asyncwidget",
-            AbstractField.extend({
-                async willStart() {
-                    await Promise.all([this._super(...arguments), fooFieldDef]);
-                },
-                async start() {
-                    this.el.innerText = "LOADED";
-                    return this._super(...arguments);
-                },
-            })
-        );
-
-        const makeViewProm = makeView({
-            type: "kanban",
-            resModel: "partner",
-            serverData,
-            arch:
-                '<kanban><templates><t t-name="kanban-box">' +
-                '<div><field name="foo" widget="asyncwidget"/></div>' +
-                "</t></templates></kanban>",
-            groupBy: ["foo"],
-        });
-        await nextTick();
-
-        assert.containsNone(target, ".o_kanban_record", "kanban view is not ready yet");
-
-        fooFieldDef.resolve();
-        const kanban = await makeViewProm;
-
-        assert.deepEqual(getCardTexts(), ["LOADED", "LOADED", "LOADED", "LOADED"]);
-
-        // reload with a domain
-        fooFieldDef = makeDeferred();
-        await reload(kanban, { domain: [["id", "=", 1]] });
-
-        assert.deepEqual(getCardTexts(), ["LOADED", "LOADED", "LOADED", "LOADED"]);
-
-        fooFieldDef.resolve();
-        await nextTick();
-
-        assert.deepEqual(getCardTexts(), ["LOADED"]);
-    });
-
-    QUnit.test("asynchronous rendering of a field widget with display attr", async (assert) => {
-        const fooFieldDef = makeDeferred();
-        const CharField = legacyFieldRegistry.get("char");
-        legacyFieldRegistry.add(
-            "asyncwidget",
-            CharField.extend({
-                async willStart() {
-                    await Promise.all([this._super(...arguments), fooFieldDef]);
-                },
-                async start() {
-                    this.el.innerText = "LOADED";
-                },
-            })
-        );
-
-        const makeViewProm = makeView({
-            type: "kanban",
-            resModel: "partner",
-            serverData,
-            arch:
-                '<kanban><templates><t t-name="kanban-box">' +
-                '<div><field name="foo" display="right" widget="asyncwidget"/></div>' +
-                "</t></templates></kanban>",
-        });
-        await nextTick();
-
-        assert.containsNone(target, ".o_kanban_record", "kanban view is not ready yet");
-
-        fooFieldDef.resolve();
-        await makeViewProm;
-
-        assert.deepEqual(getCardTexts(), ["LOADED", "LOADED", "LOADED", "LOADED"]);
-        assert.hasClass(getCard(0).querySelector(".o_field_asyncwidget"), "float-end");
-    });
-
-    QUnit.test("asynchronous rendering of a widget", async (assert) => {
-        const widgetDef = makeDeferred();
-        widgetRegistry.add(
-            "asyncwidget",
-            Widget.extend({
-                async willStart() {
-                    await Promise.all([this._super(...arguments), widgetDef]);
-                },
-                async start() {
-                    this.el.innerText = "LOADED";
-                    return this._super(...arguments);
-                },
-            })
-        );
-
-        const makeViewProm = makeView({
-            type: "kanban",
-            resModel: "partner",
-            serverData,
-            arch:
-                '<kanban><templates><t t-name="kanban-box">' +
-                '<div><widget name="asyncwidget"/></div>' +
-                "</t></templates></kanban>",
-        });
-        await nextTick();
-
-        assert.containsNone(target, ".o_kanban_record", "kanban view is not ready yet");
-
-        widgetDef.resolve();
-        await makeViewProm;
-
-        assert.deepEqual(getCardTexts(), ["LOADED", "LOADED", "LOADED", "LOADED"]);
-    });
-
-    QUnit.test("update kanban with asynchronous field widget", async (assert) => {
-        const fooFieldDef = makeDeferred();
-        legacyFieldRegistry.add(
-            "asyncwidget",
-            AbstractField.extend({
-                async willStart() {
-                    await Promise.all([this._super(...arguments), fooFieldDef]);
-                },
-                async start() {
-                    this.el.innerText = "LOADED";
-                    return this._super(...arguments);
-                },
-            })
-        );
-
-        const kanban = await makeView({
-            type: "kanban",
-            resModel: "partner",
-            serverData,
-            arch:
-                '<kanban><templates><t t-name="kanban-box">' +
-                '<div><field name="foo" widget="asyncwidget"/></div>' +
-                "</t></templates></kanban>",
-            domain: [["id", "=", "0"]], // no record matches this domain
-        });
-
-        assert.containsNone(target, ".o_kanban_record:not(.o_kanban_ghost)");
-
-        reload(kanban, { domain: [] }); // this rendering will be async
-
-        assert.containsNone(target, ".o_kanban_record:not(.o_kanban_ghost)");
-
-        fooFieldDef.resolve();
-        await nextTick();
-
-        assert.deepEqual(getCardTexts(), ["LOADED", "LOADED", "LOADED", "LOADED"]);
-    });
-
     QUnit.test("set cover image", async (assert) => {
         assert.expect(10);
 
@@ -9206,18 +9935,18 @@ QUnit.module("Views", (hooks) => {
                 if (route === "/web/dataset/resequence") {
                     assert.deepEqual(
                         args.ids,
-                        [2, 3, 4, 1],
+                        [2, 1, 3, 4],
                         "should write the sequence in correct order"
                     );
                 }
             },
         });
 
-        assert.deepEqual(getCardTexts(), ["yop", "blip", "gnap", "blip"]);
+        assert.deepEqual(getCardTexts(), ["blip", "blip", "yop", "gnap"]);
 
         await dragAndDrop(".o_kanban_record", ".o_kanban_record:nth-child(4)");
 
-        assert.deepEqual(getCardTexts(), ["blip", "gnap", "blip", "yop"]);
+        assert.deepEqual(getCardTexts(), ["blip", "yop", "gnap", "blip"]);
     });
 
     QUnit.test("ungrouped kanban without handle field", async (assert) => {
@@ -9290,8 +10019,9 @@ QUnit.module("Views", (hooks) => {
                 </kanban>`,
         });
 
-        assert.containsN(target, ".o_kanban_record:contains(True)", 3);
-        assert.containsOnce(target, ".o_kanban_record:contains(False)");
+        assert.containsN(target, ".o_kanban_record input:disabled", 4);
+        assert.containsN(target, ".o_kanban_record input:checked", 3);
+        assert.containsOnce(target, ".o_kanban_record input:not(:checked)");
     });
 
     QUnit.test("kanban view with boolean widget", async (assert) => {
@@ -9757,22 +10487,15 @@ QUnit.module("Views", (hooks) => {
         ]);
     });
 
-    QUnit.test("kanban widget supports options parameters", async (assert) => {
-        widgetRegistry.add(
-            "widget_test_option",
-            Widget.extend({
-                init(_parent, _state, options) {
-                    this._super(...arguments);
-                    this.title = options.attrs.title;
-                },
-                async start() {
-                    this.$el.append(
-                        $("<div>", { text: this.title, class: "o-test-widget-option" })
-                    );
-                    return this._super(...arguments);
-                },
-            })
-        );
+    QUnit.test("kanban widget can extract props from attrs", async (assert) => {
+        class TestWidget extends Component {}
+        TestWidget.template = xml`<div class="o-test-widget-option" t-esc="props.title"/>`;
+        TestWidget.extractProps = ({ attrs }) => {
+            return {
+                title: attrs.title,
+            };
+        };
+        viewWidgetRegistry.add("widget_test_option", TestWidget);
 
         await makeView({
             arch: `
@@ -10604,6 +11327,128 @@ QUnit.module("Views", (hooks) => {
         }
     );
 
+    QUnit.test("update field on which progress bars are computed", async (assert) => {
+        serverData.models.partner.records.push({ id: 5, state: "abc", bar: true });
+
+        await makeView({
+            type: "kanban",
+            resModel: "partner",
+            serverData,
+            arch: /* xml */ `
+                <kanban>
+                    <progressbar field="state" colors='{"abc": "success", "def": "warning", "ghi": "danger"}' />
+                    <templates>
+                        <div t-name="kanban-box">
+                            <field name="state" widget="state_selection" />
+                            <field name="id" />
+                        </div>
+                    </templates>
+                </kanban>
+            `,
+            groupBy: ["bar"],
+        });
+
+        // Initial state: 2 columns, the "Yes" column contains 2 records "abc", 1 "def" and 1 "ghi"
+        assert.deepEqual(getCounters(), ["1", "4"]);
+        assert.containsN(getColumn(1), ".o_kanban_record", 4);
+        assert.containsN(getColumn(1), ".o_column_progress .progress-bar", 3);
+        assert.strictEqual(getProgressBars(1)[0].style.width, "50%"); // abc: 2
+        assert.strictEqual(getProgressBars(1)[1].style.width, "25%"); // def: 1
+        assert.strictEqual(getProgressBars(1)[2].style.width, "25%"); // ghi: 1
+
+        // Filter on state "abc" => matches 2 records
+        await click(getProgressBars(1)[0]);
+
+        assert.deepEqual(getCounters(), ["1", "2"]);
+        assert.containsN(getColumn(1), ".o_kanban_record", 2);
+        assert.containsN(getColumn(1), ".o_column_progress .progress-bar", 3);
+        assert.strictEqual(getProgressBars(1)[0].style.width, "50%"); // abc: 2
+        assert.strictEqual(getProgressBars(1)[1].style.width, "25%"); // def: 1
+        assert.strictEqual(getProgressBars(1)[2].style.width, "25%"); // ghi: 1
+
+        // Changes the state of the first record of the "Yes" column to "def"
+        // The updated record should remain visible
+        await click(getCard(2), ".o_status");
+        await click(getCard(2), ".o_field_state_selection .dropdown-item:first-child");
+
+        assert.deepEqual(getCounters(), ["1", "1"]);
+        assert.containsN(getColumn(1), ".o_kanban_record", 2);
+        assert.containsN(getColumn(1), ".o_column_progress .progress-bar", 3);
+        assert.strictEqual(getProgressBars(1)[0].style.width, "25%"); // abc: 1
+        assert.strictEqual(getProgressBars(1)[1].style.width, "50%"); // def: 2
+        assert.strictEqual(getProgressBars(1)[2].style.width, "25%"); // ghi: 1
+
+        // Filter on state "def" => matches 2 records (including the one we just changed)
+        await click(getProgressBars(1)[1]);
+
+        assert.deepEqual(getCounters(), ["1", "2"]);
+        assert.containsN(getColumn(1), ".o_kanban_record", 2);
+        assert.strictEqual(getProgressBars(1)[0].style.width, "25%"); // abc: 1
+        assert.strictEqual(getProgressBars(1)[1].style.width, "50%"); // def: 2
+        assert.strictEqual(getProgressBars(1)[2].style.width, "25%"); // ghi: 1
+
+        // Filter back on state "abc" => matches only 1 record
+        await click(getProgressBars(1)[0]);
+
+        assert.deepEqual(getCounters(), ["1", "1"]);
+        assert.containsN(getColumn(1), ".o_kanban_record", 1);
+        assert.strictEqual(getProgressBars(1)[0].style.width, "25%"); // abc: 1
+        assert.strictEqual(getProgressBars(1)[1].style.width, "50%"); // def: 2
+        assert.strictEqual(getProgressBars(1)[2].style.width, "25%"); // ghi: 1
+    });
+
+    QUnit.test("click on the progressBar of a new column", async (assert) => {
+        serverData.models.partner.records = [];
+        await makeView({
+            type: "kanban",
+            resModel: "partner",
+            serverData,
+            arch: `
+                <kanban on_create="quick_create">
+                    <progressbar field="state" colors='{"abc": "success", "def": "warning", "ghi": "danger"}' />
+                    <templates>
+                        <div t-name="kanban-box">
+                            <field name="state" widget="state_selection" />
+                            <field name="id" />
+                        </div>
+                    </templates>
+                </kanban>
+            `,
+            groupBy: ["product_id"],
+            domain: [["id", ">", 0]],
+            mockRPC: (route, args) => {
+                const { method, kwargs } = args;
+                if (args.method === "web_search_read") {
+                    assert.step(method);
+                    assert.deepEqual(kwargs.domain, [
+                        "&",
+                        "&",
+                        ["id", ">", 0],
+                        ["product_id", "=", 6],
+                        "!",
+                        ["state", "in", ["abc", "def", "ghi"]],
+                    ]);
+                }
+            },
+        });
+
+        // Create a new column
+        await editColumnName("new column");
+        await validateColumn();
+
+        // Crete a record in the new column
+        await quickCreateRecord();
+        await editQuickCreateInput("display_name", "new product");
+        await validateRecord();
+        assert.containsOnce(target, ".o_kanban_record");
+
+        // Togggle the progressBar
+        await click(getProgressBars(0)[0]);
+        assert.containsOnce(target, ".o_kanban_record");
+
+        assert.verifySteps(["web_search_read"]);
+    });
+
     QUnit.test(
         "keep focus inside control panel when pressing arrowdown and no kanban card",
         async (assert) => {
@@ -10794,26 +11639,25 @@ QUnit.module("Views", (hooks) => {
             [...target.querySelectorAll(".o_kanban_record:not(.o_kanban_ghost)")].map(
                 (el) => el.innerText
             ),
-            ["yop", "blip", "gnap", "blip"]
+            ["blip", "blip", "yop", "gnap"]
         );
 
         assert.verifySteps([]);
 
-        // move "yop" to second place
-        await dragAndDrop(".o_kanban_record", ".o_kanban_record:nth-child(2)");
+        // move second "blip" to third place
+        await dragAndDrop(".o_kanban_record:nth-child(2)", ".o_kanban_record:nth-child(3)");
 
         assert.deepEqual(
             [...target.querySelectorAll(".o_kanban_record:not(.o_kanban_ghost)")].map(
                 (el) => el.innerText
             ),
-            ["yop", "blip", "gnap", "blip"]
+            ["blip", "blip", "yop", "gnap"]
         );
         assert.verifySteps(["resequence"]);
 
         // try again
-        await dragAndDrop(".o_kanban_record", ".o_kanban_record:nth-child(2)");
-
-        assert.verifySteps([]);
+        await dragAndDrop(".o_kanban_record:nth-child(2)", ".o_kanban_record:nth-child(3)");
+        -assert.verifySteps([]);
 
         def.resolve();
         await nextTick();
@@ -10822,16 +11666,16 @@ QUnit.module("Views", (hooks) => {
             [...target.querySelectorAll(".o_kanban_record:not(.o_kanban_ghost)")].map(
                 (el) => el.innerText
             ),
-            ["blip", "yop", "gnap", "blip"]
+            ["blip", "yop", "blip", "gnap"]
         );
 
-        await dragAndDrop(".o_kanban_record:nth-child(2)", ".o_kanban_record:nth-child(3)");
+        await dragAndDrop(".o_kanban_record:nth-child(3)", ".o_kanban_record:nth-child(4)");
 
         assert.deepEqual(
             [...target.querySelectorAll(".o_kanban_record:not(.o_kanban_ghost)")].map(
                 (el) => el.innerText
             ),
-            ["blip", "gnap", "yop", "blip"]
+            ["blip", "yop", "gnap", "blip"]
         );
         assert.verifySteps(["resequence"]);
     });
@@ -11052,5 +11896,612 @@ QUnit.module("Views", (hooks) => {
                 .getAttribute("placeholder"),
             productFieldName + "..."
         );
+    });
+
+    QUnit.test("fold a column and drag record on it should unfold it", async (assert) => {
+        let searchReadProm;
+        await makeView({
+            type: "kanban",
+            resModel: "partner",
+            serverData,
+            arch: /* xml */ `
+                <kanban>
+                    <templates>
+                        <div t-name="kanban-box">
+                            <field name="id"/>
+                        </div>
+                    </templates>
+                </kanban>`,
+            groupBy: ["product_id"],
+            async mockRPC(_route, { method }) {
+                if (method === "web_search_read") {
+                    await searchReadProm;
+                }
+            },
+        });
+
+        assert.containsN(target, ".o_kanban_group", 2);
+        assert.containsN(getColumn(0), ".o_kanban_record", 2);
+        assert.containsN(getColumn(1), ".o_kanban_record", 2);
+
+        const clickColumnAction = await toggleColumnActions(1);
+        await clickColumnAction("Fold");
+
+        assert.containsN(getColumn(0), ".o_kanban_record", 2);
+        assert.hasClass(getColumn(1), "o_column_folded");
+        assert.strictEqual(getColumn(1).innerText, "xmo (2)");
+
+        searchReadProm = makeDeferred();
+
+        await dragAndDrop(".o_kanban_group:first-child .o_kanban_record", ".o_column_folded");
+
+        assert.containsN(getColumn(0), ".o_kanban_record", 1);
+        assert.hasClass(getColumn(1), "o_column_folded");
+        assert.strictEqual(getColumn(1).innerText, "xmo (3)");
+
+        searchReadProm.resolve();
+        await nextTick();
+
+        assert.containsN(getColumn(0), ".o_kanban_record", 1);
+        assert.doesNotHaveClass(getColumn(1), "o_column_folded");
+        assert.containsN(getColumn(1), ".o_kanban_record", 3);
+    });
+
+    QUnit.test("drag record on initially folded column should load it", async (assert) => {
+        let searchReadProm;
+        await makeView({
+            type: "kanban",
+            resModel: "partner",
+            serverData,
+            arch: /* xml */ `
+                <kanban>
+                    <templates>
+                        <div t-name="kanban-box">
+                            <field name="id"/>
+                        </div>
+                    </templates>
+                </kanban>`,
+            groupBy: ["product_id"],
+            async mockRPC(route, args, performRPC) {
+                if (args.method === "web_read_group") {
+                    const result = await performRPC(route, args);
+                    result.groups[1].__fold = true;
+                    return result;
+                } else if (args.method === "web_search_read") {
+                    await searchReadProm;
+                }
+            },
+        });
+
+        assert.containsN(getColumn(0), ".o_kanban_record", 2);
+        assert.hasClass(getColumn(1), "o_column_folded");
+        assert.strictEqual(getColumn(1).innerText, "xmo (2)");
+
+        searchReadProm = makeDeferred();
+
+        await dragAndDrop(".o_kanban_group:first-child .o_kanban_record", ".o_column_folded");
+
+        assert.containsN(getColumn(0), ".o_kanban_record", 1);
+        assert.hasClass(getColumn(1), "o_column_folded");
+        assert.strictEqual(getColumn(1).innerText, "xmo (3)");
+
+        searchReadProm.resolve();
+        await nextTick();
+
+        assert.containsN(getColumn(0), ".o_kanban_record", 1);
+        assert.doesNotHaveClass(getColumn(1), "o_column_folded");
+        assert.containsN(getColumn(1), ".o_kanban_record", 3);
+    });
+
+    QUnit.test("quick create record in grouped kanban in a form view dialog", async (assert) => {
+        serverData.models.partner.fields.foo.default = "ABC";
+        serverData.views = {
+            "partner,false,form": `
+                <form>
+                    <field name="bar"/>
+                </form>
+            `,
+        };
+
+        await makeView({
+            type: "kanban",
+            resModel: "partner",
+            serverData,
+            arch: `
+                <kanban on_create="quick_create">
+                    <field name="product_id"/>
+                    <templates>
+                        <t t-name="kanban-box">
+                            <t t-if="record.foo.raw_value" t-set="foo"/>
+                            <div>
+                                <field name="foo"/>
+                            </div>
+                        </t>
+                    </templates>
+                </kanban>
+            `,
+            groupBy: ["product_id"],
+            async mockRPC(route, { method }) {
+                assert.step(method || route);
+                if (method === "name_create") {
+                    throw new RPCError();
+                }
+            },
+        });
+
+        assert.containsN(
+            target,
+            ".o_kanban_group:first-child .o_kanban_record",
+            2,
+            "first column should contain two records"
+        );
+
+        assert.deepEqual(
+            [...target.querySelectorAll(".o_kanban_group:first-child .o_kanban_record")].map(
+                (el) => el.innerText
+            ),
+            ["yop", "gnap"]
+        );
+
+        assert.containsNone(target, ".modal");
+
+        // click on 'Create', fill the quick create and validate
+        await createRecord();
+        await editQuickCreateInput("display_name", "new partner");
+        await validateRecord();
+
+        assert.containsOnce(target, ".modal");
+        await clickSave(target.querySelector(".modal"));
+
+        assert.containsN(
+            target,
+            ".o_kanban_group:first-child .o_kanban_record",
+            3,
+            "first column should contain three records"
+        );
+
+        assert.deepEqual(
+            [...target.querySelectorAll(".o_kanban_group:first-child .o_kanban_record")].map(
+                (el) => el.innerText
+            ),
+            ["ABC", "yop", "gnap"]
+        );
+
+        assert.verifySteps([
+            "get_views",
+            "web_read_group", // initial read_group
+            "web_search_read", // initial search_read (first column)
+            "web_search_read", // initial search_read (second column)
+            "onchange", // quick create
+            "name_create", // should perform a name_create to create the record
+            "get_views", // load views for form view dialog
+            "onchange", // load of a virtual record in form view dialog
+            "create", // save virtual record
+            "read", // read the created record to get foo value
+            "onchange", // reopen the quick create automatically
+        ]);
+    });
+
+    QUnit.test("Move new record with onchanges and different active fields", async (assert) => {
+        serverData.models.partner.fields.foo.default = "abc";
+        serverData.models.partner.onchanges = {
+            bar(obj) {
+                obj.foo = [...obj.foo].reverse().join("");
+            },
+        };
+        serverData.views["partner,some_view_ref,form"] = /* xml */ `
+            <form>
+                <field name="int_field" />
+                <field name="category_ids" widget="many2many_tags" />
+            </form>`;
+
+        await makeView({
+            type: "kanban",
+            resModel: "partner",
+            serverData,
+            arch: /* xml */ `
+                <kanban on_create="quick_create" quick_create_view="some_view_ref">
+                    <field name="foo" />
+                    <field name="bar" />
+                    <templates>
+                        <div t-name="kanban-box">
+                            <t t-esc="record.foo.raw_value" />
+                            <field name="int_field" />
+                        </div>
+                    </templates>
+                </kanban>
+            `,
+            groupBy: ["bar"],
+        });
+
+        assert.deepEqual(getCardTexts(0), ["blip-4"]);
+        assert.deepEqual(getCardTexts(1), ["yop10", "blip9", "gnap17"]);
+
+        await quickCreateRecord(0);
+        await editQuickCreateInput("int_field", "13");
+        await selectDropdownItem(target, "category_ids", "gold");
+        await validateRecord();
+
+        assert.deepEqual(getCardTexts(0), ["abc13", "blip-4"]);
+        assert.deepEqual(getCardTexts(1), ["yop10", "blip9", "gnap17"]);
+
+        await dragAndDrop(".o_kanban_record", ".o_kanban_group:nth-child(2)");
+
+        assert.deepEqual(getCardTexts(0), ["blip-4"]);
+        assert.deepEqual(getCardTexts(1), ["yop10", "blip9", "gnap17", "cba13"]);
+    });
+
+    QUnit.test("no sample data when all groups are folded then one is unfolded", async (assert) => {
+        await makeView({
+            type: "kanban",
+            resModel: "partner",
+            serverData,
+            arch: /* xml */ `
+                <kanban sample="1">
+                    <templates>
+                        <div t-name="kanban-box">
+                            <field name="id"/>
+                        </div>
+                    </templates>
+                </kanban>`,
+            groupBy: ["product_id"],
+            async mockRPC(route, args, performRPC) {
+                if (args.method === "web_read_group") {
+                    const result = await performRPC(route, args);
+                    for (const group of result.groups) {
+                        group.__fold = true;
+                    }
+                    return result;
+                }
+            },
+        });
+
+        assert.containsN(target, ".o_column_folded", 2);
+
+        const groupHandle = target.querySelector(".o_kanban_group");
+        await click(groupHandle);
+
+        assert.containsOnce(target, ".o_column_folded");
+        assert.containsN(target, ".o_kanban_record", 2);
+        assert.containsNone(target, "o_view_sample_data");
+    });
+
+    QUnit.test(
+        "no content helper when all groups are folded but there are (unloaded) records",
+        async (assert) => {
+            await makeView({
+                type: "kanban",
+                resModel: "partner",
+                serverData,
+                arch: /* xml */ `
+                <kanban>
+                    <templates>
+                        <div t-name="kanban-box">
+                            <field name="id"/>
+                        </div>
+                    </templates>
+                </kanban>`,
+                groupBy: ["product_id"],
+                async mockRPC(route, args, performRPC) {
+                    if (args.method === "web_read_group") {
+                        const result = await performRPC(route, args);
+                        for (const group of result.groups) {
+                            group.__fold = true;
+                        }
+                        return result;
+                    }
+                },
+            });
+
+            assert.containsN(target, ".o_column_folded", 2);
+
+            assert.strictEqual(
+                getNodesTextContent(target.querySelectorAll("span.o_column_title")).join(" "),
+                "hello (2) xmo (2)"
+            );
+
+            assert.containsNone(target, ".o_nocontent_help");
+        }
+    );
+
+    QUnit.test("Move multiple records in different columns simultaneously", async (assert) => {
+        let def;
+        await makeView({
+            type: "kanban",
+            resModel: "partner",
+            serverData,
+            arch: /* xml */ `
+                <kanban>
+                    <templates>
+                        <div t-name="kanban-box">
+                            <field name="id" />
+                        </div>
+                    </templates>
+                </kanban>
+            `,
+            groupBy: ["state"],
+            async mockRPC(_route, { method }) {
+                if (method === "read") {
+                    await def;
+                }
+            },
+        });
+
+        def = makeDeferred();
+
+        assert.deepEqual(getCardTexts(), ["1", "2", "3", "4"]);
+
+        // Move 3 at end of 1st column
+        await dragAndDrop(".o_kanban_group:last-of-type .o_kanban_record", ".o_kanban_group");
+
+        assert.deepEqual(getCardTexts(), ["1", "3", "2", "4"]);
+
+        // Move 4 at end of 1st column
+        await dragAndDrop(".o_kanban_group:last-of-type .o_kanban_record", ".o_kanban_group");
+
+        assert.deepEqual(getCardTexts(), ["1", "3", "4", "2"]);
+
+        def.resolve();
+        await nextTick();
+
+        assert.deepEqual(getCardTexts(), ["1", "3", "4", "2"]);
+    });
+
+    QUnit.test("group key in foreach cannot be a duplicate", async function (assert) {
+        serverData.models.product.records = [
+            {
+                id: 1,
+                name: "Product with id 1",
+            },
+        ];
+
+        serverData.models.partner.records = [
+            {
+                id: 1,
+                name: "Partner 1",
+                product_id: 1,
+            },
+        ];
+
+        await makeView({
+            type: "kanban",
+            resModel: "partner",
+            serverData,
+            arch: /* xml */ `
+                <kanban>
+                    <templates>
+                        <div t-name="kanban-box">
+                            <field name="name" />
+                        </div>
+                    </templates>
+                </kanban>
+            `,
+            groupBy: ["product_id"],
+            async mockRPC(route, args, performRPC) {
+                if (args.method === "web_read_group") {
+                    const result = await performRPC(route, args);
+                    result.groups = [
+                        ...result.groups,
+                        {
+                            // Add an empty and valueless group, will result in foreach key group_key_0
+                            __domain: [["product_id", "=", null]],
+                            __fold: false,
+                        },
+                        {
+                            // Add an empty and valueless group, will result in foreach key group_key_1
+                            __domain: [["product_id", "=", null]],
+                            __fold: false,
+                        },
+                    ];
+                    result.length = 2;
+                    return result;
+                }
+            },
+        });
+        assert.strictEqual(target.querySelectorAll(".o_kanban_group").length, 3);
+        assert.strictEqual(target.querySelectorAll(".o_kanban_record").length, 1);
+    });
+
+    QUnit.test("drag & drop: content scrolls when reaching the edges", async (assert) => {
+        const nextAnimationFrame = async (timeDelta) => {
+            timeStamp += timeDelta;
+            animationFrameDef.resolve();
+            animationFrameDef = makeDeferred();
+            await Promise.resolve();
+        };
+
+        let animationFrameDef = makeDeferred();
+        let timeStamp = 0;
+
+        patchWithCleanup(browser, {
+            async requestAnimationFrame(handler) {
+                await animationFrameDef;
+                handler(timeStamp);
+            },
+            performance: { now: () => timeStamp },
+        });
+
+        await makeView({
+            type: "kanban",
+            resModel: "partner",
+            serverData,
+            arch: /* xml */ `
+                <kanban>
+                    <templates>
+                        <div t-name="kanban-box">
+                            <field name="id" />
+                        </div>
+                    </templates>
+                </kanban>
+            `,
+            groupBy: ["state"],
+        });
+
+        const content = target.querySelector(".o_content");
+        content.setAttribute("style", "max-width:600px;overflow:auto;");
+
+        assert.strictEqual(content.scrollLeft, 0);
+        assert.strictEqual(content.getBoundingClientRect().width, 600);
+        assert.containsNone(target, ".o_kanban_record.o_dragged");
+
+        // Drag first record of first group to the right
+        await drag(".o_kanban_record", ".o_kanban_group:nth-child(3) .o_kanban_record");
+
+        assert.strictEqual(content.scrollLeft, 0);
+
+        // next frame (normal time delta)
+        await nextAnimationFrame(16);
+
+        // Default kanban speed is 20px per tick
+        assert.strictEqual(content.scrollLeft, 20);
+        assert.containsOnce(target, ".o_kanban_record.o_dragged");
+
+        // next frame (time delta x20)
+        await nextAnimationFrame(16 * 20);
+
+        // Should be at the end of the content
+        assert.strictEqual(content.clientWidth + content.scrollLeft, content.scrollWidth);
+
+        // Cancel drag: press "Escape"
+        triggerHotkey("Escape");
+        await nextTick();
+
+        assert.containsNone(target, ".o_kanban_record.o_dragged");
+
+        // Drag first record of last group to the left
+        await drag(".o_kanban_group:nth-child(3) .o_kanban_record", ".o_kanban_record");
+
+        // next frame (normal time delta)
+        await nextAnimationFrame(16);
+
+        assert.containsOnce(target, ".o_kanban_record.o_dragged");
+
+        // next frame (time delta x20)
+        await nextAnimationFrame(16 * 20);
+
+        assert.strictEqual(content.scrollLeft, 0);
+
+        // Cancel drag: click outside
+        await triggerEvent(content, ".o_kanban_renderer", "mousedown");
+
+        assert.containsNone(target, ".o_kanban_record.o_dragged");
+    });
+
+    QUnit.test("attribute default_order", async function (assert) {
+        serverData.models.custom_model = {
+            fields: {
+                int: { type: "integer", string: "Int" },
+            },
+            records: [
+                { id: 1, int: 1 },
+                { id: 2, int: 3 },
+                { id: 3, int: 2 },
+            ],
+        };
+
+        await makeView({
+            type: "kanban",
+            resModel: "custom_model",
+            serverData,
+            arch: `
+                <kanban default_order="int">
+                    <templates>
+                        <div t-name="kanban-box">
+                            <field name="int" />
+                        </div>
+                    </templates>
+                </kanban>
+            `,
+        });
+        assert.deepEqual(
+            [...target.querySelectorAll(".o_kanban_record:not(.o_kanban_ghost)")].map(
+                (el) => el.innerText
+            ),
+            ["1", "2", "3"]
+        );
+    });
+
+    QUnit.test(
+        "drag & drop records grouped by m2o with m2o displayed in records",
+        async (assert) => {
+            const prom = makeDeferred();
+            const readIds = [[2], [1, 3, 2]];
+
+            await makeView({
+                type: "kanban",
+                resModel: "partner",
+                serverData,
+                arch: `
+                    <kanban>
+                        <templates>
+                            <t t-name="kanban-box">
+                                <div>
+                                    <field name="product_id" widget="many2one"/>
+                                </div>
+                            </t>
+                        </templates>
+                    </kanban>
+                `,
+                groupBy: ["product_id"],
+                mockRPC: async (route, args) => {
+                    assert.step(args.method || route);
+                    if (args.method === "read") {
+                        assert.deepEqual(args.args[0], readIds.shift());
+                        await prom;
+                    }
+                },
+            });
+
+            assert.verifySteps([
+                "get_views",
+                "web_read_group",
+                "web_search_read",
+                "web_search_read",
+            ]);
+            assert.deepEqual(
+                [...target.querySelectorAll(".o_kanban_record")].map((el) => el.innerText),
+                ["hello", "hello", "xmo", "xmo"]
+            );
+
+            await dragAndDrop(
+                ".o_kanban_group:nth-child(2) .o_kanban_record",
+                ".o_kanban_group:first-child"
+            );
+            assert.deepEqual(
+                [...target.querySelectorAll(".o_kanban_record")].map((el) => el.innerText),
+                ["hello", "hello", "hello", "xmo"]
+            );
+
+            prom.resolve();
+            await nextTick();
+
+            assert.verifySteps(["write", "read", "/web/dataset/resequence", "read"]);
+            assert.deepEqual(
+                [...target.querySelectorAll(".o_kanban_record")].map((el) => el.innerText),
+                ["hello", "hello", "hello", "xmo"]
+            );
+        }
+    );
+
+    QUnit.test("Can't use KanbanRecord implementation details in arch", async (assert) => {
+        await makeView({
+            type: "kanban",
+            resModel: "partner",
+            serverData,
+            arch: `
+                <kanban>
+                    <templates>
+                        <t t-name="kanban-box">
+                            <div>
+                                <t t-esc="__owl__"/>
+                                <t t-esc="props"/>
+                                <t t-esc="env"/>
+                                <t t-esc="render"/>
+                            </div>
+                        </t>
+                    </templates>
+                </kanban>`,
+        });
+        assert.strictEqual(target.querySelector(".o_kanban_record").innerHTML, "<div></div>");
     });
 });

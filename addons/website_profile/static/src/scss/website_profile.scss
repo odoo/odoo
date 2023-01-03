@@ -125,6 +125,17 @@ $owprofile-color-bg: mix($body-bg, #efeff4);
 
     .o_pc_overlay {
         @include o-position-absolute(0,0,0,0);
+        // Allow hover effect on svg paths in order to display bootstrap tooltip,
+        // by pushing the absolute div behind it
+        z-index: -1;
+
+        h4 {
+            width: 60%;
+            // only apply ellipsis when in non-edit mode, that way the editor can see the full value
+            &:not(.o_editable) {
+                @include o-text-overflow();
+            }
+        }
     }
 
     @keyframes progress {
@@ -254,4 +265,12 @@ $owprofile-color-bg: mix($body-bg, #efeff4);
 // Own profile border
 .o_wprofile_border_focus {
     border-left: 4px solid map-get($theme-colors, 'secondary');
+}
+
+// Edition mode
+.editor_enable {
+    // Allow to edit rank picture in edit mode
+    .o_wprofile_progress_circle .o_pc_overlay {
+        z-index: initial;
+    }
 }

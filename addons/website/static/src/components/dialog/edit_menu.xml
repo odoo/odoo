@@ -2,7 +2,7 @@
 <templates xml:space="preserve">
 <t t-name="website.MenuDialog" owl="1">
     <WebsiteDialog title="title" closeOnClick="false" primaryClick.bind="this.onClickOk" secondaryClick="props.close">
-        <div class="o_menu_dialog_form form-group row">
+        <div class="o_menu_dialog_form mb-3 row">
             <label class="col-form-label col-md-3">
                 Name
             </label>
@@ -10,7 +10,7 @@
                 <input type="text" t-model="name.input.value" class="form-control" t-att-class="{ 'is-invalid': name.input.hasError }" t-ref="autofocus"/>
             </div>
         </div>
-        <div t-if="!props.isMegaMenu" class="form-group row">
+        <div t-if="!props.isMegaMenu" class="mb-3 row">
             <label class="col-form-label col-md-3">
                 Url or Email
             </label>

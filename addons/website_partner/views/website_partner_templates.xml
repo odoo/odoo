@@ -29,7 +29,7 @@
     <div class="col-lg-8 mt32">
         <t t-if="partner">
             <div t-field="partner.website_description"/>
-            <t groups="website.group_website_publisher">
+            <t groups="website.group_website_restricted_editor">
                 <h2 class="css_non_editable_mode_hidden o_not_editable">Short Description for List View</h2>
                 <div class="css_non_editable_mode_hidden" t-field="partner.website_short_description"/>
             </t>

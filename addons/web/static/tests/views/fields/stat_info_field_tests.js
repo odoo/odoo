@@ -1,6 +1,6 @@
 /** @odoo-module **/
 
-import { click, getFixture } from "@web/../tests/helpers/utils";
+import { getFixture } from "@web/../tests/helpers/utils";
 import { makeView, setupViewRegistries } from "@web/../tests/views/helpers";
 
 let serverData;
@@ -111,42 +111,6 @@ QUnit.module("Fields", (hooks) => {
             "int_field",
             "should have 'int_field' as text"
         );
-
-        // switch to edit mode and check the result
-        await click(target, ".o_form_button_edit");
-        assert.containsOnce(
-            target,
-            ".oe_stat_button .o_field_widget .o_stat_info",
-            "should still have one stat button"
-        );
-        assert.strictEqual(
-            target.querySelector(".oe_stat_button .o_field_widget .o_stat_value").textContent,
-            "10",
-            "should still have 10 as value"
-        );
-        assert.strictEqual(
-            target.querySelector(".oe_stat_button .o_field_widget .o_stat_text").textContent,
-            "int_field",
-            "should have 'int_field' as text"
-        );
-
-        // save
-        await click(target, ".o_form_button_save");
-        assert.containsOnce(
-            target,
-            ".oe_stat_button .o_field_widget .o_stat_info",
-            "should have one stat button"
-        );
-        assert.strictEqual(
-            target.querySelector(".oe_stat_button .o_field_widget .o_stat_value").textContent,
-            "10",
-            "should have 10 as value"
-        );
-        assert.strictEqual(
-            target.querySelector(".oe_stat_button .o_field_widget .o_stat_text").textContent,
-            "int_field",
-            "should have 'int_field' as text"
-        );
     });
 
     QUnit.test("StatInfoField in form view with specific label_field", async function (assert) {
@@ -185,42 +149,6 @@ QUnit.module("Fields", (hooks) => {
             "yop",
             "should have 'yop' as text, since it is the value of field foo"
         );
-
-        // switch to edit mode and check the result
-        await click(target, ".o_form_button_edit");
-        assert.containsOnce(
-            target,
-            ".oe_stat_button .o_field_widget .o_stat_info",
-            "should still have one stat button"
-        );
-        assert.strictEqual(
-            target.querySelector(".oe_stat_button .o_field_widget .o_stat_value").textContent,
-            "10",
-            "should still have 10 as value"
-        );
-        assert.strictEqual(
-            target.querySelector(".oe_stat_button .o_field_widget .o_stat_text").textContent,
-            "yop",
-            "should have 'yop' as text, since it is the value of field foo"
-        );
-
-        // save
-        await click(target, ".o_form_button_save");
-        assert.containsOnce(
-            target,
-            ".oe_stat_button .o_field_widget .o_stat_info",
-            "should have one stat button"
-        );
-        assert.strictEqual(
-            target.querySelector(".oe_stat_button .o_field_widget .o_stat_value").textContent,
-            "10",
-            "should have 10 as value"
-        );
-        assert.strictEqual(
-            target.querySelector(".oe_stat_button .o_field_widget .o_stat_text").textContent,
-            "yop",
-            "should have 'yop' as text, since it is the value of field foo"
-        );
     });
 
     QUnit.test("StatInfoField in form view with no label", async function (assert) {
@@ -240,42 +168,6 @@ QUnit.module("Fields", (hooks) => {
                     </sheet>
                 </form>`,
         });
-        assert.containsOnce(
-            target,
-            ".oe_stat_button .o_field_widget .o_stat_info",
-            "should have one stat button"
-        );
-        assert.strictEqual(
-            target.querySelector(".oe_stat_button .o_field_widget .o_stat_value").textContent,
-            "10",
-            "should have 10 as value"
-        );
-        assert.containsNone(
-            target,
-            ".oe_stat_button .o_field_widget .o_stat_text",
-            "should not have any label"
-        );
-
-        // switch to edit mode and check the result
-        await click(target, ".o_form_button_edit");
-        assert.containsOnce(
-            target,
-            ".oe_stat_button .o_field_widget .o_stat_info",
-            "should still have one stat button"
-        );
-        assert.strictEqual(
-            target.querySelector(".oe_stat_button .o_field_widget .o_stat_value").textContent,
-            "10",
-            "should still have 10 as value"
-        );
-        assert.containsNone(
-            target,
-            ".oe_stat_button .o_field_widget .o_stat_text",
-            "should not have any label"
-        );
-
-        // save
-        await click(target, ".o_form_button_save");
         assert.containsOnce(
             target,
             ".oe_stat_button .o_field_widget .o_stat_info",

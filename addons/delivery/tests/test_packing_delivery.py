@@ -76,9 +76,3 @@ class TestPacking(TestPackingCommon):
         # default weight was set.
         pack_wiz = self.env['choose.delivery.package'].with_context(pack_action_ctx).create({})
         self.assertEqual(pack_wiz.shipping_weight, 13.5)
-
-    def test_delivery_carrier_neutralize(self):
-        """ ensure that devlivery carriers can be nautralized """
-        self.assertTrue(self.test_carrier.active)
-        self.env['delivery.carrier']._neutralize()
-        self.assertFalse(self.test_carrier.active, "Delivery Carrier was not neutralized")

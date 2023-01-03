@@ -29,10 +29,6 @@ from odoo.tools import config, ustr, pycompat
 
 _logger = logging.getLogger(__name__)
 
-# global resolver (GeoIP API is thread-safe, for multithreaded workers)
-# This avoids blowing up open files limit
-odoo._geoip_resolver = None
-
 # ------------------------------------------------------------
 # Slug API
 # ------------------------------------------------------------
@@ -297,7 +293,7 @@ class IrHttp(models.AbstractModel):
         modules = IrHttpModel.get_translation_frontend_modules()
         user_context = request.session.context if request.session.uid else {}
         lang = user_context.get('lang')
-        translation_hash = request.env['ir.translation'].get_web_translations_hash(modules, lang)
+        translation_hash = request.env['ir.http'].get_web_translations_hash(modules, lang)
 
         session_info.update({
             'translationURL': '/website/translations',
@@ -369,13 +365,13 @@ class IrHttp(models.AbstractModel):
         3/ Use the URL as-is saving the requested lang when the user is
            a bot and that the lang is missing from the URL.
 
-        4/ Redirect the browser when the lang is missing from the URL
-           but another lang than the default one has been requested. The
-           requested lang is injected before the original path.
-
-        5) Use the url as-is when the lang is missing from the URL, that
+        4) Use the url as-is when the lang is missing from the URL, that
            another lang than the default one has been requested but that
            it is forbidden to redirect (e.g. POST)
+
+        5/ Redirect the browser when the lang is missing from the URL
+           but another lang than the default one has been requested. The
+           requested lang is injected before the original path.
 
         6/ Redirect the browser when the lang is present in the URL but
            it is the default lang. The lang is removed from the original
@@ -402,17 +398,31 @@ class IrHttp(models.AbstractModel):
             return super()._match(path)
 
         # See /1, match a non website endpoint
-        with contextlib.suppress(NotFound):
+        try:
             rule, args = super()._match(path)
             routing = rule.endpoint.routing
             request.is_frontend = routing.get('website', False)
             request.is_frontend_multilang = request.is_frontend and routing.get('multilang', routing['type'] == 'http')
             if not request.is_frontend:
                 return rule, args
+        except NotFound:
+            _, url_lang_str, *rest = path.split('/', 2)
+            path_no_lang = '/' + (rest[0] if rest else '')
+        else:
+            url_lang_str = ''
+            path_no_lang = path
 
-        _, url_lang_str, *rest = path.split('/', 2)
-        path_no_lang = '/' + (rest[0] if rest else '')
-        allow_redirect = request.httprequest.method != 'POST'
+        allow_redirect = (
+            request.httprequest.method != 'POST'
+            and getattr(request, 'is_frontend_multilang', True)
+        )
+
+        # Some URLs in website are concatenated, first url ends with /,
+        # second url starts with /, resulting url contains two following
+        # slashes that must be merged.
+        if allow_redirect and '//' in path:
+            new_url = path.replace('//', '/')
+            werkzeug.exceptions.abort(request.redirect(new_url, code=301, local=True))
 
         # There is no user on the environment yet but the following code
         # requires one to set the lang on the request. Temporary grant
@@ -627,10 +637,14 @@ class IrHttp(models.AbstractModel):
 
         request.cr.rollback()
         if code == 403:
-            response = cls._serve_fallback()
-            if response:
-                cls._post_dispatch(response)
-                return response
+            try:
+                response = cls._serve_fallback()
+                if response:
+                    cls._post_dispatch(response)
+                    return response
+            except werkzeug.exceptions.Forbidden:
+                # Rendering does raise a Forbidden if target is not visible.
+                pass # Use default error page handling.
         elif code == 500:
             values = cls._get_values_500_error(request.env, values, exception)
         try:

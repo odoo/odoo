@@ -6,12 +6,14 @@ import logging
 import re
 import time
 import requests
+import uuid
 import werkzeug.exceptions
 import werkzeug.urls
 import werkzeug.wrappers
 from PIL import Image, ImageFont, ImageDraw
 from lxml import etree
 from base64 import b64decode, b64encode
+from datetime import datetime
 
 from odoo.http import request
 from odoo import http, tools, _, SUPERUSER_ID
@@ -24,7 +26,7 @@ from odoo.tools.mimetypes import guess_mimetype
 from odoo.tools.image import image_data_uri, binary_to_image
 from odoo.addons.base.models.assetsbundle import AssetsBundle
 
-from ..models.ir_attachment import SUPPORTED_IMAGE_EXTENSIONS, SUPPORTED_IMAGE_MIMETYPES
+from ..models.ir_attachment import SUPPORTED_IMAGE_MIMETYPES
 
 logger = logging.getLogger(__name__)
 DEFAULT_LIBRARY_ENDPOINT = 'https://media-api.odoo.com'
@@ -202,12 +204,18 @@ class Web_Editor(http.Controller):
     def add_data(self, name, data, is_image, quality=0, width=0, height=0, res_id=False, res_model='ir.ui.view', **kwargs):
         data = b64decode(data)
         if is_image:
-            format_error_msg = _("Uploaded image's format is not supported. Try with: %s", ', '.join(SUPPORTED_IMAGE_EXTENSIONS))
+            format_error_msg = _("Uploaded image's format is not supported. Try with: %s", ', '.join(SUPPORTED_IMAGE_MIMETYPES.values()))
             try:
                 data = tools.image_process(data, size=(width, height), quality=quality, verify_resolution=True)
                 mimetype = guess_mimetype(data)
                 if mimetype not in SUPPORTED_IMAGE_MIMETYPES:
                     return {'error': format_error_msg}
+                if not name:
+                    name = '%s-%s%s' % (
+                        datetime.now().strftime('%Y%m%d%H%M%S'),
+                        str(uuid.uuid4())[:6],
+                        SUPPORTED_IMAGE_MIMETYPES[mimetype],
+                    )
             except UserError:
                 # considered as an image by the browser file input, but not
                 # recognized as such by PIL, eg .webp
@@ -278,7 +286,7 @@ class Web_Editor(http.Controller):
             # snippet images referencing the same image in /static/, so we limit to 1
             attachment = request.env['ir.attachment'].search([
                 '|', ('url', '=like', src), ('url', '=like', '%s?%%' % src),
-                ('mimetype', 'in', SUPPORTED_IMAGE_MIMETYPES),
+                ('mimetype', 'in', list(SUPPORTED_IMAGE_MIMETYPES.keys())),
             ], limit=1)
         if not attachment:
             return {
@@ -292,6 +300,8 @@ class Web_Editor(http.Controller):
 
     def _attachment_create(self, name='', data=False, url=False, res_id=False, res_model='ir.ui.view'):
         """Create and return a new attachment."""
+        IrAttachment = request.env['ir.attachment']
+
         if name.lower().endswith('.bmp'):
             # Avoid mismatch between content type and mimetype, see commit msg
             name = name[:-4]
@@ -323,15 +333,13 @@ class Web_Editor(http.Controller):
         else:
             raise UserError(_("You need to specify either data or url to create an attachment."))
 
-        # If the user is a portal and has access rights on the res_model (and
-        # on the res_id if it exists), we can create the attachment. Otherwise,
-        # one of the check will raise an error and the attachment will not be
-        # created
-        if request.env.user.has_group('base.group_portal'):
-            request.env[res_model].check_access_rights('write')
-            if res_id:
-                request.env[res_model].browse(res_id).check_access_rule('write')
-            attachment = request.env['ir.attachment'].sudo().create(attachment_data)
+        # Despite the user having no right to create an attachment, he can still
+        # create an image attachment through some flows
+        if (
+            not request.env.is_admin()
+            and IrAttachment._can_bypass_rights_on_media_dialog(**attachment_data)
+        ):
+            attachment = IrAttachment.sudo().create(attachment_data)
             # When portal users upload an attachment with the wysiwyg widget,
             # the access token is needed to use the image in the editor. If
             # the attachment is not public, the user won't be able to generate
@@ -339,7 +347,7 @@ class Web_Editor(http.Controller):
             if not attachment_data['public']:
                 attachment.sudo().generate_access_token()
         else:
-            attachment = request.env['ir.attachment'].create(attachment_data)
+            attachment = IrAttachment.create(attachment_data)
 
         return attachment
 
@@ -380,7 +388,7 @@ class Web_Editor(http.Controller):
             dict: views, scss, js
         """
         # Related views must be fetched if the user wants the views and/or the style
-        views = request.env["ir.ui.view"].get_related_views(key, bundles=bundles)
+        views = request.env["ir.ui.view"].with_context(no_primary_children=True, __views_get_original_hierarchy=[]).get_related_views(key, bundles=bundles)
         views = views.read(['name', 'id', 'key', 'xml_id', 'arch', 'active', 'inherit_id'])
 
         scss_files_data_by_bundle = []
@@ -493,21 +501,6 @@ class Web_Editor(http.Controller):
                 }
 
         return files_data_by_bundle
-
-    @http.route("/web_editor/public_render_template", type="json", auth="public", website=True)
-    def public_render_template(self, args, kwargs):  # pylint: disable=unused-argument
-        # args[0]: xml id of the template to render
-        # args[1]: optional dict of rendering values, only trusted keys are supported
-        len_args = len(args)
-        assert len_args >= 1 and len_args <= 2, 'Need a xmlID and potential rendering values to render a template'
-
-        trusted_value_keys = ('debug',)
-
-        xmlid = args[0]
-        values = len_args > 1 and args[1] or {}
-
-        View = request.env['ir.ui.view']
-        return View.render_public_asset(xmlid, {k: values[k] for k in values if k in trusted_value_keys})
 
     @http.route('/web_editor/modify_image/<model("ir.attachment"):attachment>', type="json", auth="user", website=True)
     def modify_image(self, attachment, res_model=None, res_id=None, name=None, data=None, original_id=None, mimetype=None):
@@ -645,12 +638,7 @@ class Web_Editor(http.Controller):
         if stream.type == 'url':
             return stream.get_response()
 
-        if stream.type == 'path':
-            with file_open(stream.path, 'rb') as file:
-                image = file.read()
-        else:
-            image = stream.data
-
+        image = stream.read()
         img = binary_to_image(image)
         width, height = tuple(str(size) for size in img.size)
         root = etree.fromstring(svg)

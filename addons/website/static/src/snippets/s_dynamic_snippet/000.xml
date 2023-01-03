@@ -6,7 +6,7 @@
         <t t-set="rowIndexGenerator" t-value="Array.from(Array(Math.ceil(data.length/chunkSize)).keys())"/>
         <t t-set="colIndexGenerator" t-value="Array.from(Array(chunkSize).keys())"/>
         <t t-foreach="rowIndexGenerator" t-as="rowIndex">
-            <div class="row my-4">
+            <div t-attf-class="row my-4 #{extraClasses}">
                 <t t-foreach="colIndexGenerator" t-as="colIndex">
                     <t t-if="(rowIndex * chunkSize + colIndex) &lt; data.length">
                         <div t-attf-class="#{colClass}">

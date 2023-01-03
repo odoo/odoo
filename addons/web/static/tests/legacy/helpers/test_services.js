@@ -23,7 +23,6 @@ function makeTestEnvServices(env) {
             rpc() {
                 return env.session.rpc(...arguments); // Compatibility Legacy Widgets
             },
-            loadLibs() {}
         },
         rpc(params, options) {
             const query = buildQuery(params);

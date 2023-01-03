@@ -38,7 +38,7 @@ export const companyService = {
         } else if ("cids" in cookie.current) {
             cids = parseCompanyIds(cookie.current.cids);
         }
-        let allowedCompanyIds = computeAllowedCompanyIds(cids);
+        const allowedCompanyIds = computeAllowedCompanyIds(cids);
 
         const stringCIds = allowedCompanyIds.join(",");
         router.replaceState({ cids: stringCIds }, { lock: true });

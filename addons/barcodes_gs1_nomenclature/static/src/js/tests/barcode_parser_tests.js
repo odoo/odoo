@@ -2,187 +2,167 @@ odoo.define('barcodes_gs1_nomenclature/static/src/js/tests/barcode_parser_tests.
 "use strict";
 
 const BarcodeParser = require('barcodes.BarcodeParser');
+const { barcodeService } = require('@barcodes/barcode_service');
 
 
 QUnit.module('Barcodes', {}, function () {
 QUnit.module('Barcode GS1 Parser', {
     beforeEach: function () {
-        this.data = {
-            'barcode.nomenclature': {
-                fields: {
-                    name: {type: 'char', string: 'Barcode Nomenclature'},
-                    rule_ids: {type: 'one2many', relation: 'barcode.rule'},
-                    upc_ean_conv: {type: 'selection', string: 'UPC/EAN Conversion'},
-                    is_gs1_nomenclature: {type: 'boolean', string: 'Is GS1 Nomenclature'},
-                    gs1_separator_fnc1: {type: 'char', string: 'FNC1 Seperator Alternative'}
-                },
-                records: [
-                    {id: 1, name: "normal", upc_ean_conv: "always", is_gs1_nomenclature: false, gs1_separator_fnc1: ''},
-                    {id: 2, name: "GS1", upc_ean_conv: "always", is_gs1_nomenclature: true, gs1_separator_fnc1: ''},
-                ],
-            },
-            'barcode.rule': {
-                fields: {
-                    name: {type: 'char', string: 'Barcode Nomenclature'},
-                    barcode_nomenclature_id: {type: 'many2one', relation: 'barcode.nomenclature'},
-                    sequence: {type: 'integer', string: 'Sequence'},
-                    encoding: {type: 'selection', string: 'Encoding'},
-                    type: {type: 'selection', string: 'Type'},
-                    pattern: {type: 'Char', string: 'Pattern'},
-                    alias: {type: 'Char', string: 'Alias'},
-                },
-                records: [
-                    {id: 1, name: "Product Barcodes", barcode_nomenclature_id: 1, sequence: 90, type: 'product', encoding: 'any', pattern: ".*"},
-                    {
-                        id: 2,
-                        name: "Global Trade Item Number (GTIN)",
-                        barcode_nomenclature_id: 2,
-                        sequence: 100,
-                        encoding: "gs1-128",
-                        pattern: "(01)(\\d{14})",
-                        type: "product",
-                        gs1_content_type: "identifier",
-                        gs1_decimal_usage: false
-                    }, {
-                        id: 3,
-                        name: "GTIN of contained trade items",
-                        barcode_nomenclature_id: 2,
-                        sequence: 101,
-                        encoding: "gs1-128",
-                        pattern: "(02)(\\d{14})",
-                        type: "product",
-                        gs1_content_type: "identifier",
-                        gs1_decimal_usage: false
-                    }, {
-                        id: 4,
-                        name: "Batch or lot number",
-                        barcode_nomenclature_id: 2,
-                        sequence: 102,
-                        encoding: "gs1-128",
-                        pattern: "(10)([!\"%/0-9:?A-Za-z]{0,20})",
-                        type: "product",
-                        gs1_content_type: "alpha",
-                        gs1_decimal_usage: false
-                    }, {
-                        id: 5,
-                        name: "Serial number",
-                        barcode_nomenclature_id: 2,
-                        sequence: 105,
-                        encoding: "gs1-128",
-                        pattern: "(21)([!\"%/0-9:?A-Za-z]{0,20})",
-                        type: "product",
-                        gs1_content_type: "alpha",
-                        gs1_decimal_usage: false
-                    }, {
-                        id: 6,
-                        name: "Pack date (YYMMDD)",
-                        barcode_nomenclature_id: 2,
-                        sequence: 103,
-                        encoding: "gs1-128",
-                        pattern: "(13)(\\d{6})",
-                        type: "pack_date",
-                        gs1_content_type: "date",
-                        gs1_decimal_usage: false
-                    }, {
-                        id: 7,
-                        name: "Best before date (YYMMDD)",
-                        barcode_nomenclature_id: 2,
-                        sequence: 104,
-                        encoding: "gs1-128",
-                        pattern: "(15)(\\d{6})",
-                        type: "use_date",
-                        gs1_content_type: "date",
-                        gs1_decimal_usage: false
-                    }, {
-                        id: 8,
-                        name: "Expiration date (YYMMDD)",
-                        barcode_nomenclature_id: 2,
-                        sequence: 105,
-                        encoding: "gs1-128",
-                        pattern: "(16)(\\d{6})",
-                        type: "expiration_date",
-                        gs1_content_type: "date",
-                        gs1_decimal_usage: false
-                    }, {
-                        id: 9,
-                        name: "Variable count of items (variabl",
-                        barcode_nomenclature_id: 2,
-                        sequence: 105,
-                        encoding: "gs1-128",
-                        pattern: "(30)(\\d{0,8})",
-                        type: "product",
-                        gs1_content_type: "measure",
-                        gs1_decimal_usage: false
-                    }, {
-                        id: 10,
-                        name: "Count of trade items or trade it",
-                        barcode_nomenclature_id: 2,
-                        sequence: 105,
-                        encoding: "gs1-128",
-                        pattern: "(37)(\\d{0,8})",
-                        type: "product",
-                        gs1_content_type: "measure",
-                        gs1_decimal_usage: false
-                    }, {
-                        id: 11,
-                        name: "Net weight, kilograms (variable",
-                        barcode_nomenclature_id: 2,
-                        sequence: 105,
-                        encoding: "gs1-128",
-                        pattern: "(310[0-5])(\\d{6})",
-                        type: "product",
-                        gs1_content_type: "measure",
-                        gs1_decimal_usage: true
-                    }, {
-                        id: 12,
-                        name: "Length or first dimension, metre",
-                        barcode_nomenclature_id: 2,
-                        sequence: 105,
-                        encoding: "gs1-128",
-                        pattern: "(311[0-5])(\\d{6})",
-                        type: "product",
-                        gs1_content_type: "measure",
-                        gs1_decimal_usage: true
-                    }, {
-                        id: 13,
-                        name: "Net volume, litres (variable mea",
-                        barcode_nomenclature_id: 2,
-                        sequence: 105,
-                        encoding: "gs1-128",
-                        pattern: "(315[0-5])(\\d{6})",
-                        type: "product",
-                        gs1_content_type: "measure",
-                        gs1_decimal_usage: true
-                    }, {
-                        id: 14,
-                        name: "Length or first dimension, inche",
-                        barcode_nomenclature_id: 2,
-                        sequence: 105,
-                        encoding: "gs1-128",
-                        pattern: "(321[0-5])(\\d{6})",
-                        type: "product",
-                        gs1_content_type: "measure",
-                        gs1_decimal_usage: true
-                    }, {
-                        id: 15,
-                        name: "Net weight (or volume), ounces (",
-                        barcode_nomenclature_id: 2,
-                        sequence: 105,
-                        encoding: "gs1-128",
-                        pattern: "(357[0-5])(\\d{6})",
-                        type: "product",
-                        gs1_content_type: "measure",
-                        gs1_decimal_usage: true
-                    }
-                ],
-            }
-        };
+        this.nomenclature = {
+            id: 2,
+            name: "GS1",
+            upc_ean_conv: "always",
+            is_gs1_nomenclature: true,
+            gs1_separator_fnc1: '',
+            rules: [
+                {
+                    id: 2,
+                    name: "Global Trade Item Number (GTIN)",
+                    barcode_nomenclature_id: 2,
+                    sequence: 100,
+                    encoding: "gs1-128",
+                    pattern: "(01)(\\d{14})",
+                    type: "product",
+                    gs1_content_type: "identifier",
+                    gs1_decimal_usage: false
+                }, {
+                    id: 3,
+                    name: "GTIN of contained trade items",
+                    barcode_nomenclature_id: 2,
+                    sequence: 101,
+                    encoding: "gs1-128",
+                    pattern: "(02)(\\d{14})",
+                    type: "product",
+                    gs1_content_type: "identifier",
+                    gs1_decimal_usage: false
+                }, {
+                    id: 4,
+                    name: "Batch or lot number",
+                    barcode_nomenclature_id: 2,
+                    sequence: 102,
+                    encoding: "gs1-128",
+                    pattern: "(10)([!\"%/0-9:?A-Za-z]{0,20})",
+                    type: "product",
+                    gs1_content_type: "alpha",
+                    gs1_decimal_usage: false
+                }, {
+                    id: 5,
+                    name: "Serial number",
+                    barcode_nomenclature_id: 2,
+                    sequence: 105,
+                    encoding: "gs1-128",
+                    pattern: "(21)([!\"%/0-9:?A-Za-z]{0,20})",
+                    type: "product",
+                    gs1_content_type: "alpha",
+                    gs1_decimal_usage: false
+                }, {
+                    id: 6,
+                    name: "Pack date (YYMMDD)",
+                    barcode_nomenclature_id: 2,
+                    sequence: 103,
+                    encoding: "gs1-128",
+                    pattern: "(13)(\\d{6})",
+                    type: "pack_date",
+                    gs1_content_type: "date",
+                    gs1_decimal_usage: false
+                }, {
+                    id: 7,
+                    name: "Best before date (YYMMDD)",
+                    barcode_nomenclature_id: 2,
+                    sequence: 104,
+                    encoding: "gs1-128",
+                    pattern: "(15)(\\d{6})",
+                    type: "use_date",
+                    gs1_content_type: "date",
+                    gs1_decimal_usage: false
+                }, {
+                    id: 8,
+                    name: "Expiration date (YYMMDD)",
+                    barcode_nomenclature_id: 2,
+                    sequence: 105,
+                    encoding: "gs1-128",
+                    pattern: "(16)(\\d{6})",
+                    type: "expiration_date",
+                    gs1_content_type: "date",
+                    gs1_decimal_usage: false
+                }, {
+                    id: 9,
+                    name: "Variable count of items (variabl",
+                    barcode_nomenclature_id: 2,
+                    sequence: 105,
+                    encoding: "gs1-128",
+                    pattern: "(30)(\\d{0,8})",
+                    type: "product",
+                    gs1_content_type: "measure",
+                    gs1_decimal_usage: false
+                }, {
+                    id: 10,
+                    name: "Count of trade items or trade it",
+                    barcode_nomenclature_id: 2,
+                    sequence: 105,
+                    encoding: "gs1-128",
+                    pattern: "(37)(\\d{0,8})",
+                    type: "product",
+                    gs1_content_type: "measure",
+                    gs1_decimal_usage: false
+                }, {
+                    id: 11,
+                    name: "Net weight, kilograms (variable",
+                    barcode_nomenclature_id: 2,
+                    sequence: 105,
+                    encoding: "gs1-128",
+                    pattern: "(310[0-5])(\\d{6})",
+                    type: "product",
+                    gs1_content_type: "measure",
+                    gs1_decimal_usage: true
+                }, {
+                    id: 12,
+                    name: "Length or first dimension, metre",
+                    barcode_nomenclature_id: 2,
+                    sequence: 105,
+                    encoding: "gs1-128",
+                    pattern: "(311[0-5])(\\d{6})",
+                    type: "product",
+                    gs1_content_type: "measure",
+                    gs1_decimal_usage: true
+                }, {
+                    id: 13,
+                    name: "Net volume, litres (variable mea",
+                    barcode_nomenclature_id: 2,
+                    sequence: 105,
+                    encoding: "gs1-128",
+                    pattern: "(315[0-5])(\\d{6})",
+                    type: "product",
+                    gs1_content_type: "measure",
+                    gs1_decimal_usage: true
+                }, {
+                    id: 14,
+                    name: "Length or first dimension, inche",
+                    barcode_nomenclature_id: 2,
+                    sequence: 105,
+                    encoding: "gs1-128",
+                    pattern: "(321[0-5])(\\d{6})",
+                    type: "product",
+                    gs1_content_type: "measure",
+                    gs1_decimal_usage: true
+                }, {
+                    id: 15,
+                    name: "Net weight (or volume), ounces (",
+                    barcode_nomenclature_id: 2,
+                    sequence: 105,
+                    encoding: "gs1-128",
+                    pattern: "(357[0-5])(\\d{6})",
+                    type: "product",
+                    gs1_content_type: "measure",
+                    gs1_decimal_usage: true
+                }
+            ]
+        }
     }
 }, function () {
     QUnit.test('Test gs1 date barcode', async function (assert) {
         assert.expect(9);
-        const barcodeNomenclature = new BarcodeParser({'nomenclature_id': 2});
-        await barcodeNomenclature.loaded;
+        const barcodeNomenclature = new BarcodeParser({nomenclature: this.nomenclature});
 
         // 20/10/2015 -> 151020
         let dateGS1 = "151020";
@@ -206,13 +186,9 @@ QUnit.module('Barcode GS1 Parser', {
         assert.equal(date.getFullYear(), 2020);
     });
 
-    QUnit.test('Test gs1 decompose extanded', async function (assert) {
+    QUnit.test('Test gs1 decompose extended', async function (assert) {
         assert.expect(19);
-        const barcodeNomenclature = new BarcodeParser({'nomenclature_id': 2});
-        await barcodeNomenclature.loaded;
-
-        barcodeNomenclature.nomenclature = this.data['barcode.nomenclature'].records[0];
-        barcodeNomenclature.nomenclature.rules = this.data['barcode.rule'].records;
+        const barcodeNomenclature = new BarcodeParser({nomenclature: this.nomenclature});
 
         // (01)94019097685457(10)33650100138(3102)002004(15)131018
         let code128 = "01940190976854571033650100138\x1D310200200415131018";
@@ -245,32 +221,26 @@ QUnit.module('Barcode GS1 Parser', {
 
         assert.equal(res[2].ai, "30");
         assert.equal(res[2].value, 17);
-
     });
 
     QUnit.test('Test Alternative GS1 Separator (fnc1)', async function (assert) {
         assert.expect(6);
-        let barcodeNomenclature = new BarcodeParser({'nomenclature_id': 2});
-        await barcodeNomenclature.loaded;
-
-        barcodeNomenclature.nomenclature = this.data['barcode.nomenclature'].records[0];
-        barcodeNomenclature.nomenclature.gs1_separator_fnc1 = "#";
-        barcodeNomenclature.nomenclature.rules = this.data['barcode.rule'].records;
+        const barcodeNomenclature = new BarcodeParser({nomenclature: this.nomenclature});
 
         // (21)12345(15)090101(16)100101
-        let code128 = "2112345\x1D1509010116100101";
+        const code128 = "2112345#1509010116100101";
         let res;
         try {
-            res = barcodeNomenclature.gs1_decompose_extanded(code128);
+            res = barcodeNomenclature.gs1_decompose_extanded(barcodeService.cleanBarcode(code128));
         } catch (error) {
             assert.ok(
                 error instanceof Error,
-                "Default separator shouldn't work"
+                "Still using the default separator, so using a custom separator shouldn't work"
             );
         }
 
-        code128 = "2112345#1509010116100101";
-        res = barcodeNomenclature.gs1_decompose_extanded(code128);
+        barcodeService.gs1SeparatorRegex = '#';
+        res = barcodeNomenclature.gs1_decompose_extanded(barcodeService.cleanBarcode(code128));
         assert.equal(res.length, 3);
         assert.equal(res[0].ai, "21");
         assert.equal(res[0].value, "12345");
@@ -279,4 +249,5 @@ QUnit.module('Barcode GS1 Parser', {
     });
 });
 });
+
 });

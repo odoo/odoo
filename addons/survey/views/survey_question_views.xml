@@ -31,7 +31,7 @@
                             <field name="question_type" widget="radio" attrs="{'required': [('is_page', '=', False)]}" />
                         </group>
                         <group>
-                            <div class="col-lg-6 offset-lg-3 d-none d-sm-block o_preview_questions">
+                            <div class="mx-lg-auto w-lg-50 d-none d-sm-block o_preview_questions" colspan="2">
                                 <!-- Multiple choice: only one answer -->
                                 <div attrs="{'invisible': [('question_type', '!=', 'simple_choice')]}" role="img" aria-label="Multiple choice with one answer"
                                     title="Multiple choice with one answer">
@@ -81,28 +81,28 @@
                                 <!-- Matrix -->
                                 <div attrs="{'invisible': [('question_type', '!=', 'matrix')]}">
                                     <div class="row o_matrix_head">
-                                        <div class="col-lg-3"></div>
-                                        <div class="col-lg-3">ans</div>
-                                        <div class="col-lg-3">ans</div>
-                                        <div class="col-lg-3">ans</div>
+                                        <div class="col-3"></div>
+                                        <div class="col-3">ans</div>
+                                        <div class="col-3">ans</div>
+                                        <div class="col-3">ans</div>
                                     </div>
                                     <div class="row o_matrix_row">
-                                        <div class="col-lg-3">Row1</div>
-                                        <div class="col-lg-3"><i class="fa fa-circle-o fa-lg" role="img" aria-label="Not checked" title="Not checked"/></div>
-                                        <div class="col-lg-3"><i class="fa fa-dot-circle-o fa-lg" role="img" aria-label="Checked" title="Checked"/></div>
-                                        <div class="col-lg-3"><i class="fa fa-circle-o fa-lg" role="img" aria-label="Not checked" title="Not checked"/></div>
+                                        <div class="col-3">Row1</div>
+                                        <div class="col-3"><i class="fa fa-circle-o fa-lg" role="img" aria-label="Not checked" title="Not checked"/></div>
+                                        <div class="col-3"><i class="fa fa-dot-circle-o fa-lg" role="img" aria-label="Checked" title="Checked"/></div>
+                                        <div class="col-3"><i class="fa fa-circle-o fa-lg" role="img" aria-label="Not checked" title="Not checked"/></div>
                                     </div>
                                     <div class="row o_matrix_row">
-                                        <div class="col-lg-3">Row2</div>
-                                        <div class="col-lg-3"><i class="fa fa-circle-o fa-lg" role="img" aria-label="Not checked" title="Not checked"/></div>
-                                        <div class="col-lg-3"><i class="fa fa-circle-o fa-lg" role="img" aria-label="Not checked" title="Not checked"/></div>
-                                        <div class="col-lg-3"><i class="fa fa-dot-circle-o fa-lg" role="img" aria-label="Checked" title="Checked"/></div>
+                                        <div class="col-3">Row2</div>
+                                        <div class="col-3"><i class="fa fa-circle-o fa-lg" role="img" aria-label="Not checked" title="Not checked"/></div>
+                                        <div class="col-3"><i class="fa fa-circle-o fa-lg" role="img" aria-label="Not checked" title="Not checked"/></div>
+                                        <div class="col-3"><i class="fa fa-dot-circle-o fa-lg" role="img" aria-label="Checked" title="Checked"/></div>
                                     </div>
                                     <div class="row o_matrix_row">
-                                        <div class="col-lg-3">Row3</div>
-                                        <div class="col-lg-3"><i class="fa fa-dot-circle-o fa-lg" role="img" aria-label="Checked" title="Checked"/></div>
-                                        <div class="col-lg-3"><i class="fa fa-circle-o fa-lg" role="img" aria-label="Not checked" title="Not checked"/></div>
-                                        <div class="col-lg-3"><i class="fa fa-circle-o fa-lg" role="img" aria-label="Not checked" title="Not checked"/></div>
+                                        <div class="col-3">Row3</div>
+                                        <div class="col-3"><i class="fa fa-dot-circle-o fa-lg" role="img" aria-label="Checked" title="Checked"/></div>
+                                        <div class="col-3"><i class="fa fa-circle-o fa-lg" role="img" aria-label="Not checked" title="Not checked"/></div>
+                                        <div class="col-3"><i class="fa fa-circle-o fa-lg" role="img" aria-label="Not checked" title="Not checked"/></div>
                                     </div>
                                 </div>
                             </div>
@@ -137,7 +137,7 @@
                                 </group>
                             </group>
                             <group attrs="{'invisible': [('question_type', 'not in', ['simple_choice', 'multiple_choice', 'matrix'])]}">
-                                <field name="suggested_answer_ids" context="{'default_question_id': active_id}" nolabel="1">
+                                <field name="suggested_answer_ids" context="{'default_question_id': active_id}" nolabel="1" colspan="2">
                                     <tree editable="bottom">
                                         <field name="sequence" widget="handle"/>
                                         <field name="value" string="Choices"/>
@@ -154,7 +154,7 @@
 
                             <group attrs="{'invisible': [('question_type', '!=', 'matrix')]}">
                                 <field name="matrix_row_ids" context="{'default_matrix_question_id': active_id}"
-                                    attrs="{'invisible': [('question_type', '!=', 'matrix')]}" nolabel="1">
+                                    attrs="{'invisible': [('question_type', '!=', 'matrix')]}" nolabel="1" colspan="2">
                                     <tree editable="bottom">
                                         <field name="sequence" widget="handle"/>
                                         <field name="value" string="Rows"/>
@@ -189,8 +189,8 @@
                                         attrs="{'invisible': ['|', ('question_type', '!=', 'datetime'), ('validation_required', '=', False)]}"/>
 
                                     <field name="validation_error_msg" attrs="{
-                                        'required': [('validation_required', '=', True)],
-                                        'invisible': [('validation_required', '=', False)]}"/>
+                                        'invisible': [('validation_required', '=', False)]}"
+                                        placeholder="The answer you entered is not valid."/>
 
                                     <field name="matrix_subtype" attrs="{'invisible':[('question_type','not in',['matrix'])],'required':[('question_type','=','matrix')]}"/>
                                     <field name="question_placeholder"
@@ -198,6 +198,9 @@
                                         placeholder="Help Participants know what to write"/>
                                     <field name='comments_allowed' attrs="{'invisible':[('question_type','not in',['simple_choice','multiple_choice', 'matrix'])]}"/>
                                     <field name='comments_message'
+                                        attrs="{'invisible': ['|', ('question_type', 'not in', ['simple_choice','multiple_choice', 'matrix']), ('comments_allowed', '=', False)]}"
+                                        placeholder="If other, please specify:"/>
+                                    <field name='comment_count_as_answer'
                                         attrs="{'invisible': ['|', ('question_type', 'not in', ['simple_choice','multiple_choice', 'matrix']), ('comments_allowed', '=', False)]}"/>
                                 </group>
                                 <group string="Layout">
@@ -212,7 +215,9 @@
                             <group>
                                 <group string="Constraints">
                                     <field name="constr_mandatory" string="Mandatory Answer"/>
-                                    <field name="constr_error_msg" attrs="{'invisible': [('constr_mandatory', '=', False)]}"/>
+                                    <field name="constr_error_msg"
+                                        attrs="{'invisible': [('constr_mandatory', '=', False)]}"
+                                        placeholder="This question requires an answer."/>
                                 </group>
                                 <group string="Live Sessions">
                                     <label for="is_time_limited" string="Question Time Limit"/>

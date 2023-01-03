@@ -103,8 +103,8 @@
             <t t-if="props.isIndexed">
                 <div class="r"><t t-esc="props.title"/></div>
                 <div class="s">
-                    <div class="kv"><t t-esc="props.url"/></div>
-                    <div class="st"><t t-esc="description"/></div>
+                    <div class="kv mb-1 text-muted"><t t-esc="props.url"/></div>
+                    <div class="st text-black"><t t-esc="description"/></div>
                 </div>
             </t>
             <t t-else="">
@@ -120,13 +120,13 @@
     <section>
         <div class="row">
             <div class="col-lg-6">
-                <div class="form-group">
+                <div class="mb-3">
                     <label for="website_meta_title">
                         Title <i class="fa fa-question-circle-o" title="The title will take a default value unless you specify one."/>
                     </label>
                     <input type="text" t-model="seoContext.title" t-att-disabled="!props.canEditTitle" class="form-control" placeholder="Keep empty to use default value" maxlength="70" size="70" t-ref="autofocus"/>
                 </div>
-                <div class="form-group">
+                <div class="mb-3">
                     <label for="website_meta_description">
                         Description <i class="fa fa-question-circle-o" t-att-title="props.previewDescription"/>
                     </label>
@@ -135,7 +135,7 @@
                         <span t-esc="descriptionWarning"/>
                     </div>
                 </div>
-                <div class="form-group" t-if='props.canEditUrl'>
+                <div class="mb-3" t-if='props.canEditUrl'>
                     <label for="website_seo_name">
                         Custom Url <i class="fa fa-question-circle-o" t-att-title="props.seoNameHelp" />
                     </label>
@@ -143,7 +143,8 @@
                         <div class="input-group-prepend">
                             <span class="input-group-text seo_name_pre" t-esc="seoNamePre"/>
                         </div>
-                        <input type="text" t-model="seoContext.seoName" class="form-control" t-att-placeholder="props.seoNameDefault" />
+                        <input type="text" class="form-control" t-att-placeholder="props.seoNameDefault"
+                               t-on-input="_updateInputValue" t-att-value="seoContext.seoName"/>
                         <div class="input-group-append" title="Unalterable unique identifier">
                             <span class="input-group-text seo_name_post" t-esc="seoNamePost"/>
                         </div>

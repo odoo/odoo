@@ -4,7 +4,7 @@
 {
     'name': 'Customer Portal',
     'summary': 'Customer Portal',
-    'sequence': '9000',
+    'sequence': 9000,
     'category': 'Hidden',
     'description': """
 This module adds required base code for a fully integrated customer portal.
@@ -32,21 +32,22 @@ a dependency towards website editing and customization capabilities.""",
         'web._assets_frontend_helpers': [
             ('prepend', 'portal/static/src/scss/bootstrap_overridden.scss'),
         ],
+        'web.assets_backend': [
+            'portal/static/src/views/**/*',
+        ],
         'web.assets_frontend': [
-            'portal/static/src/scss/bootstrap.extend.scss',
             'portal/static/src/scss/portal.scss',
             'portal/static/src/js/portal.js',
             'portal/static/src/js/portal_chatter.js',
+            'portal/static/src/xml/portal_chatter.xml',
             'portal/static/src/js/portal_composer.js',
             'portal/static/src/js/portal_signature.js',
+            'portal/static/src/xml/portal_signature.xml',
             'portal/static/src/js/portal_sidebar.js',
+            'portal/static/src/xml/portal_security.xml',
         ],
         'web.assets_tests': [
             'portal/static/tests/**/*',
-        ],
-        'web.assets_qweb': [
-            'portal/static/src/xml/portal_chatter.xml',
-            'portal/static/src/xml/portal_signature.xml',
         ],
     },
     'license': 'LGPL-3',

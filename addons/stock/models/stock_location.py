@@ -90,7 +90,7 @@ class Location(models.Model):
     last_inventory_date = fields.Date("Last Effective Inventory", readonly=True, help="Date of the last inventory at this location.")
     next_inventory_date = fields.Date("Next Expected Inventory", compute="_compute_next_inventory_date", store=True, help="Date for next planned inventory based on cyclic schedule.")
     warehouse_view_ids = fields.One2many('stock.warehouse', 'view_location_id', readonly=True)
-    warehouse_id = fields.Many2one('stock.warehouse', compute='_compute_warehouse_id')
+    warehouse_id = fields.Many2one('stock.warehouse', compute='_compute_warehouse_id', store=True)
     storage_category_id = fields.Many2one('stock.storage.category', string='Storage Category', check_company=True)
     outgoing_move_line_ids = fields.One2many('stock.move.line', 'location_id') # used to compute weight
     incoming_move_line_ids = fields.One2many('stock.move.line', 'location_dest_id') # used to compute weight
@@ -146,7 +146,7 @@ class Location(models.Model):
             else:
                 location.next_inventory_date = False
 
-    @api.depends('warehouse_view_ids')
+    @api.depends('warehouse_view_ids', 'location_id')
     def _compute_warehouse_id(self):
         warehouses = self.env['stock.warehouse'].search([('view_location_id', 'parent_of', self.ids)])
         view_by_wh = OrderedDict((wh.view_location_id.id, wh.id) for wh in warehouses)
@@ -241,6 +241,13 @@ class Location(models.Model):
         res = super().create(vals_list)
         self.invalidate_model(['warehouse_id'])
         return res
+
+    @api.returns('self', lambda value: value.id)
+    def copy(self, default=None):
+        default = dict(default or {})
+        if 'name' not in default:
+            default['name'] = _("%s (copy)") % self.name
+        return super().copy(default=default)
 
     def _get_putaway_strategy(self, product, quantity=0, package=None, packaging=None, additional_qty=None):
         """Returns the location where the product has to be put, if any compliant

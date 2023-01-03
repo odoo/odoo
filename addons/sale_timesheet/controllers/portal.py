@@ -115,8 +115,10 @@ class SaleTimesheetCustomerPortal(TimesheetCustomerPortal):
         except (AccessError, MissingError):
             pass
 
-        if task.sale_order_id.invoice_ids:
-            moves = request.env['account.move'].search([('id', 'in', task.sale_order_id.invoice_ids.ids)])
+        moves = request.env['account.move']
+        invoice_ids = task.sale_order_id.invoice_ids
+        if invoice_ids and request.env['account.move'].check_access_rights('read', raise_exception=False):
+            moves = request.env['account.move'].search([('id', 'in', invoice_ids.ids)])
             values['invoices_accessible'] = moves.ids
             if moves:
                 if len(moves) == 1:

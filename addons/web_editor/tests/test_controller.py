@@ -147,6 +147,6 @@ class TestController(HttpCase):
         self.assertTrue(attachment)
 
         domain = [('name', '=', 'pixel')]
-        result = attachment.search_read(domain)
+        result = attachment.search(domain)
         self.assertTrue(len(result), "No attachment fetched")
-        self.assertEqual(result[0]['id'], attachment.id)
+        self.assertEqual(result, attachment)

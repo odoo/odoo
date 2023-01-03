@@ -39,6 +39,9 @@ class ReSequenceWizard(models.TransientModel):
             and len(move_types) > 1
         ):
             raise UserError(_('The sequences of this journal are different for Invoices and Refunds but you selected some of both types.'))
+        is_payment = set(active_move_ids.mapped(lambda x: bool(x.payment_id)))
+        if len(is_payment) > 1:
+            raise UserError(_('The sequences of this journal are different for Payments and non-Payments but you selected some of both types.'))
         values['move_ids'] = [(6, 0, active_move_ids.ids)]
         return values
 
@@ -52,7 +55,7 @@ class ReSequenceWizard(models.TransientModel):
         self.first_name = ""
         for record in self:
             if record.move_ids:
-                record.first_name = min(record.move_ids._origin.mapped('name'))
+                record.first_name = min(record.move_ids._origin.mapped(lambda move: move.name or ""))
 
     @api.depends('new_values', 'ordering')
     def _compute_preview_moves(self):
@@ -125,7 +128,7 @@ class ReSequenceWizard(models.TransientModel):
                 for move, new_name in zip(period_recs.sorted(lambda m: (m.sequence_prefix, m.sequence_number)), new_name_list):
                     new_values[move.id]['new_by_name'] = new_name
                 # For all the moves of this period, assign the name by increasing date
-                for move, new_name in zip(period_recs.sorted(lambda m: (m.date, m.name, m.id)), new_name_list):
+                for move, new_name in zip(period_recs.sorted(lambda m: (m.date, m.name or "", m.id)), new_name_list):
                     new_values[move.id]['new_by_date'] = new_name
 
             record.new_values = json.dumps(new_values)

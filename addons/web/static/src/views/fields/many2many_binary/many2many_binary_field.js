@@ -6,7 +6,7 @@ import { standardFieldProps } from "../standard_field_props";
 import { FileInput } from "@web/core/file_input/file_input";
 import { useX2ManyCrud } from "@web/views/fields/relational_utils";
 
-const { Component } = owl;
+import { Component } from "@odoo/owl";
 
 export class Many2ManyBinaryField extends Component {
     setup() {
@@ -55,8 +55,11 @@ Many2ManyBinaryField.props = {
     className: { type: String, optional: true },
     uploadText: { type: String, optional: true },
 };
-
 Many2ManyBinaryField.supportedTypes = ["many2many"];
+Many2ManyBinaryField.fieldsToFetch = {
+    name: { type: "char" },
+    mimetype: { type: "char" },
+};
 
 Many2ManyBinaryField.isEmpty = () => false;
 Many2ManyBinaryField.extractProps = ({ attrs, field }) => {

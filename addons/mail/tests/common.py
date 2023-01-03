@@ -19,7 +19,8 @@ from odoo.addons.mail.models.mail_mail import MailMail
 from odoo.addons.mail.models.mail_message import Message
 from odoo.addons.mail.models.mail_notification import MailNotification
 from odoo.tests import common, new_test_user
-from odoo.tools import formataddr, pycompat
+from odoo.tools import formataddr, mute_logger, pycompat
+from odoo.tools.translate import code_translations
 
 mail_new_test_user = partial(new_test_user, context={'mail_create_nolog': True,
                                                      'mail_create_nosubscribe': True,
@@ -141,7 +142,8 @@ class MockEmail(common.BaseCase, MockSmtplibCase):
                            return_path=return_path, extra=extra,
                            email_from=email_from, msg_id=msg_id,
                            **kwargs)
-        self.env['mail.thread'].message_process(model, mail)
+        # In real use case, fetched mail processing is executed with administrative right.
+        self.env['mail.thread'].sudo().message_process(model, mail)
         return self.env[target_model].search([(target_field, '=', subject)])
 
     def gateway_reply_wrecord(self, template, record, use_in_reply_to=True):
@@ -501,12 +503,22 @@ class MockEmail(common.BaseCase, MockSmtplibCase):
         expected['email_to'] = email_to_list
 
         # fetch mail
-        sent_mail = next(
-            (mail for mail in self._mails
-             if set(mail['email_to']) == set(expected['email_to']) and mail['email_from'] == expected['email_from']
-             ), False)
-        debug_info = '-'.join('From: %s-To: %s' % (mail['email_from'], mail['email_to']) for mail in self._mails) if not bool(sent_mail) else ''
-        self.assertTrue(bool(sent_mail), 'Expected mail from %s to %s not found in %s' % (expected['email_from'], expected['email_to'], debug_info))
+        sent_mails = [
+            mail for mail in self._mails
+            if set(mail['email_to']) == set(expected['email_to']) and mail['email_from'] == expected['email_from']
+        ]
+        if len(sent_mails) > 1 and values.get('subject'):
+            # try to better filter
+            sent_mail = next((mail for mail in sent_mails if mail['subject'] == values['subject']), False)
+        else:
+            sent_mail = sent_mails[0] if sent_mails else False
+        debug_info = ''
+        if not sent_mail:
+            debug_info = '-'.join('From: %s-To: %s' % (mail['email_from'], mail['email_to']) for mail in self._mails)
+        self.assertTrue(
+            bool(sent_mail),
+            'Expected mail from %s to %s not found in %s' % (expected['email_from'], expected['email_to'], debug_info)
+        )
 
         # assert values
         for val in direct_check:
@@ -1091,9 +1103,9 @@ class MailCommon(common.TransactionCase, MailCase):
             * 'English Layout for' -> Spanish Layout para
           * model
             * description: English:    Lang Chatter Model (depends on test_record._name)
-                           translated: Spanish description
+                           translated: Spanish Model Description
           * module
-            * _('TestStuff') -> TestSpanishStuff (used as link button name in layout)
+            * _('NotificationButtonTitle') -> SpanishNotificationButtonTitle (used as link button name in layout)
             * _('View %s') -> SpanishView %s
           * template
             * body: English:    <p>EnglishBody for <t t-out="object.name"/></p> (depends on test_template.body)
@@ -1103,88 +1115,27 @@ class MailCommon(common.TransactionCase, MailCase):
         """
         # activate translations
         cls.env['res.lang']._activate_lang(lang_code)
-        cls.env.ref('base.module_base')._update_translations([lang_code])
+        with mute_logger("odoo.addons.base.models.ir_module", "odoo.tools.translate"):
+            cls.env.ref('base.module_base')._update_translations([lang_code])
+            cls.env.ref('base.module_mail')._update_translations([lang_code])
+            cls.env.ref('base.module_test_mail')._update_translations([lang_code])
+            code_translations.get_python_translations('mail', lang_code)
+            code_translations.get_python_translations('test_mail', lang_code)
 
         # Make sure Spanish translations have not been altered
         if test_record:
-            description_translations = cls.env['ir.translation'].search([
-                ('module', '=', 'test_mail'),
-                ('src', '=', test_record._description),
-                ('lang', '=', lang_code)
-            ])
-            if description_translations:
-                description_translations.update({'value': 'Spanish description'})
-            else:
-                description_translations.create({
-                    'lang': lang_code,
-                    'module': 'test_mail',
-                    'name': 'ir.model,name',
-                    'res_id': cls.env['ir.model']._get_id(test_record._name),
-                    'src': test_record._description,
-                    'state': 'translated',
-                    'type': 'model',
-                    'value': 'Spanish description',
-                })
+            cls.env['ir.model']._get(test_record._name).with_context(lang=lang_code).name = 'Spanish Model Description'
 
-        translations_tocreate = []
-        # Have a TestStuff always available
-        test_stuff_translations = cls.env['ir.translation'].search([
-            ('module', '=', 'test_mail'),
-            ('src', '=', 'TestStuff'),
-            ('lang', '=', lang_code)
-        ])
-        if test_stuff_translations:
-            test_stuff_translations.update({'value': 'TestSpanishStuff'})
-        else:
-            translations_tocreate.append({
-                'lang': lang_code,
-                'name': 'idontknow',
-                'module': 'test_mail',
-                'res_id': False,
-                'src': 'TestStuff',
-                'state': 'translated',
-                'type': 'code',
-                'value': 'TestSpanishStuff',
-            })
-
-        view_translations = cls.env['ir.translation'].search([
-            ('module', '=', 'mail'),
-            ('src', '=', 'View %s'),
-            ('lang', '=', lang_code)
-        ])
-        if view_translations:
-            view_translations.update({'value': 'SpanishView'})
-        else:
-            translations_tocreate.append({
-                'lang': lang_code,
-                'name': 'idontknow',
-                'module': 'mail',
-                'res_id': False,
-                'src': 'View %s',
-                'state': 'translated',
-                'type': 'code',
-                'value': 'SpanishView %s',
-            })
+        # Translate some code strings used in mailing
+        code_translations.python_translations[('test_mail', 'es_ES')]['NotificationButtonTitle'] = 'SpanishButtonTitle'
+        cls.addClassCleanup(code_translations.python_translations[('test_mail', 'es_ES')].pop, 'NotificationButtonTitle')
+        code_translations.python_translations[('mail', 'es_ES')]['View %s'] = 'SpanishView %s'
+        cls.addClassCleanup(code_translations.python_translations[('mail', 'es_ES')].pop, 'View %s')
 
         # Prepare some translated value for template if given
         if test_template:
-            translations_tocreate += [{
-                'lang': lang_code,
-                'module': 'mail',
-                'name': 'mail.template,subject',
-                'res_id': test_template.id,
-                'state': 'translated',
-                'type': 'model',
-                'value': 'SpanishSubject for {{ object.name }}',
-            }, {
-                'lang': lang_code,
-                'module': 'mail',
-                'name': 'mail.template,body_html',
-                'res_id': test_template.id,
-                'state': 'translated',
-                'type': 'model',
-                'value': '<p>SpanishBody for <t t-out="object.name" /></p>',
-            }]
+            test_template.with_context(lang=lang_code).subject = 'SpanishSubject for {{ object.name }}'
+            test_template.with_context(lang=lang_code).body_html = '<p>SpanishBody for <t t-out="object.name" /></p>'
 
         # create a custom layout for email notification
         if not layout_arch_db:
@@ -1223,25 +1174,16 @@ class MailCommon(common.TransactionCase, MailCase):
             'name': 'test_layout',
             'res_id': view.id
         })
-        translations_tocreate.append({
-            'lang': lang_code,
-            'module': 'mail',
-            'name': 'ir.ui.view,arch_db',
-            'res_id': view.id,
-            'src': 'English Layout for',
-            'state': 'translated',
-            'type': 'model_terms',
-            'value': 'Spanish Layout para',
+        view.update_field_translations('arch_db', {
+            lang_code: {
+                'English Layout for': 'Spanish Layout para'
+            }
         })
-        cls.env['ir.translation'].create(translations_tocreate)
 
-    def _generate_attachments_data(self, count, res_model=None, res_id=None, attach_values=None):
+    @staticmethod
+    def _generate_attachments_data(count, res_model, res_id, attach_values=None):
         # attachment visibility depends on what they are attached to
         attach_values = attach_values or {}
-        if res_model is None:
-            res_model = self.template._name
-        if res_id is None:
-            res_id = self.template.id
         return [{
             'datas': base64.b64encode(b'AttContent_%02d' % x),
             'name': 'AttFileName_%02d.txt' % x,

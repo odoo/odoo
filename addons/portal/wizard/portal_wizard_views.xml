@@ -31,19 +31,26 @@
                     <field name="welcome_message"
                         placeholder="This text is included at the end of the email sent to new portal users."
                         class="mb-3"/>
-                    <field name="user_ids">
+                    <field name="user_ids" class="o_portal_wizard_user_one2many" widget="portal_wizard_user_one2many">
                         <tree string="Contacts" editable="bottom" create="false" delete="false">
                             <field name="partner_id" force_save="1"/>
                             <field name="email" attrs="{'readonly': [('is_internal', '=', True)]}"/>
+                            <field name="email_state" invisible="1"/>
+                            <button name="action_refresh_modal" type="object" icon="fa-check text-success"
+                                attrs="{'invisible': [('email_state', '!=', 'ok')]}" title="Valid Email Address"/>
+                            <button name="action_refresh_modal" type="object" icon="fa-times text-danger"
+                                attrs="{'invisible': [('email_state', '!=', 'ko')]}" title="Invalid Email Address"/>
+                            <button name="action_refresh_modal" type="object" icon="fa-user-times text-danger"
+                                attrs="{'invisible': [('email_state', '!=', 'exist')]}" title="Email Address already taken by another user"/>
                             <field name="login_date"/>
                             <field name="is_portal" invisible="1"/>
                             <field name="is_internal" invisible="1"/>
                             <button string="Grant Access" name="action_grant_access" type="object" class="btn-secondary"
-                                attrs="{'invisible': ['|', ('is_portal', '=', True), ('is_internal', '=', True)]}"/>
+                                attrs="{'invisible': ['|', '|', ('is_portal', '=', True), ('is_internal', '=', True), ('email_state', '!=', 'ok')]}"/>
                             <button string="Revoke Access" name="action_revoke_access" type="object" class="btn-secondary"
                                 attrs="{'invisible': ['|', ('is_portal', '=', False), ('is_internal', '=', True)]}"/>
                             <button string="Re-Invite" name="action_invite_again" type="object" class="btn-secondary"
-                                attrs="{'invisible': ['|', ('is_portal', '=', False), ('is_internal', '=', True)]}"/>
+                                attrs="{'invisible': ['|', '|', ('is_portal', '=', False), ('is_internal', '=', True), ('email_state', '!=', 'ok')]}"/>
                             <button string="Internal User" attrs="{'invisible': [('is_internal', '=', False)]}"
                                 disabled="True" title="This partner is linked to an internal User and already has access to the Portal."/>
                         </tree>

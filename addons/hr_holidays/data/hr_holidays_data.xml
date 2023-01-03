@@ -269,7 +269,6 @@
         <record id="holiday_status_sl" model="hr.leave.type">
             <field name="name">Sick Time Off</field>
             <field name="requires_allocation">no</field>
-            <field name="color_name">red</field>
             <field name="leave_notif_subtype_id" ref="mt_leave_sick"/>
             <field name="responsible_id" ref="base.user_admin"/>
             <field name="support_document">True</field>
@@ -291,7 +290,7 @@
             <field name="color">4</field>
         </record>
 
-        <!--Unpaid Leave -->
+        <!--Unpaid Time Off -->
         <record id="holiday_status_unpaid" model="hr.leave.type">
             <field name="name">Unpaid</field>
             <field name="requires_allocation">no</field>

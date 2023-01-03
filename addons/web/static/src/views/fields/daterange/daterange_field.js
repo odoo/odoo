@@ -1,13 +1,12 @@
 /** @odoo-module **/
 
-import { localization } from "@web/core/l10n/localization";
 import { registry } from "@web/core/registry";
 import { loadJS } from "@web/core/assets";
-import { luxonToMomentFormat } from "@web/core/l10n/dates";
+import { luxonToMoment, momentToLuxon } from "@web/core/l10n/dates";
 import { useService } from "@web/core/utils/hooks";
 import { standardFieldProps } from "../standard_field_props";
 
-const { Component, onWillStart, useExternalListener, useRef, useEffect } = owl;
+import { Component, onWillStart, useExternalListener, useRef, useEffect } from "@odoo/owl";
 const formatters = registry.category("formatters");
 const parsers = registry.category("parsers");
 
@@ -17,17 +16,12 @@ export class DateRangeField extends Component {
         this.root = useRef("root");
         this.isPickerShown = false;
         this.pickerContainer;
-        this.momentFormat = luxonToMomentFormat(
-            this.isDateTime ? localization.dateTimeFormat : localization.dateFormat
-        );
 
         useExternalListener(window, "scroll", this.onWindowScroll, { capture: true });
         onWillStart(() => loadJS("/web/static/lib/daterangepicker/daterangepicker.js"));
         useEffect(
             (el) => {
                 if (el) {
-                    const start = this.formattedStartDate;
-                    const end = this.formattedEndDate;
                     window.$(el).daterangepicker({
                         timePicker: this.isDateTime,
                         timePicker24Hour: true,
@@ -37,8 +31,9 @@ export class DateRangeField extends Component {
                             applyLabel: this.env._t("Apply"),
                             cancelLabel: this.env._t("Cancel"),
                         },
-                        startDate: start ? window.moment(start) : window.moment(),
-                        endDate: end ? window.moment(end) : window.moment(),
+                        startDate: this.startDate ? luxonToMoment(this.startDate) : window.moment(),
+                        endDate: this.endDate ? luxonToMoment(this.endDate) : window.moment(),
+                        drops: "auto",
                     });
                     this.pickerContainer = window.$(el).data("daterangepicker").container[0];
 
@@ -87,7 +82,7 @@ export class DateRangeField extends Component {
         const formatter = formatters.get(format);
         let formattedValue;
         try {
-            formattedValue = formatter(value, { timezone: this.isDateTime });
+            formattedValue = formatter(value);
         } catch {
             this.props.record.setInvalidField(this.props.name);
         }
@@ -105,7 +100,7 @@ export class DateRangeField extends Component {
         const parse = parsers.get(this.props.formatType);
         let value;
         try {
-            value = parse(ev.target.value, { timezone: this.isDateTime });
+            value = parse(ev.target.value);
         } catch {
             this.props.record.setInvalidField(this.props.name);
             return;
@@ -127,12 +122,7 @@ export class DateRangeField extends Component {
     async onPickerApply(ev, picker) {
         const start = this.isDateTime ? picker.startDate : picker.startDate.startOf("day");
         const end = this.isDateTime ? picker.endDate : picker.endDate.startOf("day");
-        const parser = parsers.get(this.props.formatType);
-        const dates = [start, end].map((date) => {
-            return parser(date.format(this.momentFormat), {
-                timezone: this.isDateTime,
-            });
-        });
+        const dates = [start, end].map(momentToLuxon);
         await this.updateRange(dates[0], dates[1]);
         const input = document.querySelector(
             `.o_field_daterange[name='${this.relatedDateRangeField}'] input`

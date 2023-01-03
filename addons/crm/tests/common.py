@@ -574,12 +574,7 @@ class TestLeadConvertCommon(TestCrmCommon):
         cls.lead_1.write({'date_open': Datetime.from_string('2020-01-15 11:30:00')})
 
         cls.crm_lead_dt_patcher = patch('odoo.addons.crm.models.crm_lead.fields.Datetime', wraps=Datetime)
-        cls.crm_lead_dt_mock = cls.crm_lead_dt_patcher.start()
-
-    @classmethod
-    def tearDownClass(cls):
-        cls.crm_lead_dt_patcher.stop()
-        super(TestLeadConvertCommon, cls).tearDownClass()
+        cls.crm_lead_dt_mock = cls.startClassPatcher(cls.crm_lead_dt_patcher)
 
     @classmethod
     def _switch_to_multi_membership(cls):

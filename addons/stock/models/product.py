@@ -516,7 +516,6 @@ class Product(models.Model):
 
     # Be aware that the exact same function exists in product.template
     def action_open_quants(self):
-        domain = [('product_id', 'in', self.ids)]
         hide_location = not self.user_has_groups('stock.group_stock_multi_locations')
         hide_lot = all(product.tracking == 'none' for product in self)
         self = self.with_context(
@@ -544,8 +543,10 @@ class Product(models.Model):
         else:
             self = self.with_context(product_tmpl_ids=self.product_tmpl_id.ids)
         action = self.env['stock.quant'].action_view_inventory()
-        action['domain'] = domain
-        action["name"] = _('Update Quantity')
+        # note that this action is used by different views w/varying customizations
+        if not self.env.context.get('is_stock_report'):
+            action['domain'] = [('product_id', 'in', self.ids)]
+            action["name"] = _('Update Quantity')
         return action
 
     def action_update_quantity_on_hand(self):
@@ -701,7 +702,7 @@ class ProductTemplate(models.Model):
 
     def _compute_quantities_dict(self):
         variants_available = {
-            p['id']: p for p in self.product_variant_ids.read(['qty_available', 'virtual_available', 'incoming_qty', 'outgoing_qty'])
+            p['id']: p for p in self.product_variant_ids._origin.read(['qty_available', 'virtual_available', 'incoming_qty', 'outgoing_qty'])
         }
         prod_available = {}
         for template in self:
@@ -709,7 +710,7 @@ class ProductTemplate(models.Model):
             virtual_available = 0
             incoming_qty = 0
             outgoing_qty = 0
-            for p in template.product_variant_ids:
+            for p in template.product_variant_ids._origin:
                 qty_available += variants_available[p.id]["qty_available"]
                 virtual_available += variants_available[p.id]["virtual_available"]
                 incoming_qty += variants_available[p.id]["incoming_qty"]
@@ -843,11 +844,17 @@ class ProductTemplate(models.Model):
         if 'type' in vals and vals['type'] != 'product' and sum(self.mapped('nbr_reordering_rules')) != 0:
             raise UserError(_('You still have some active reordering rules on this product. Please archive or delete them first.'))
         if any('type' in vals and vals['type'] != prod_tmpl.type for prod_tmpl in self):
-            existing_move_lines = self.env['stock.move.line'].search([
+            existing_done_move_lines = self.env['stock.move.line'].sudo().search([
+                ('product_id', 'in', self.mapped('product_variant_ids').ids),
+                ('state', '=', 'done'),
+            ], limit=1)
+            if existing_done_move_lines:
+                raise UserError(_("You can not change the type of a product that was already used."))
+            existing_reserved_move_lines = self.env['stock.move.line'].search([
                 ('product_id', 'in', self.mapped('product_variant_ids').ids),
                 ('state', 'in', ['partially_available', 'assigned']),
             ])
-            if existing_move_lines:
+            if existing_reserved_move_lines:
                 raise UserError(_("You can not change the type of a product that is currently reserved on a stock move. If you need to change the type, you should first unreserve the stock move."))
         if 'type' in vals and vals['type'] != 'product' and any(p.type == 'product' and not float_is_zero(p.qty_available, precision_rounding=p.uom_id.rounding) for p in self):
             raise UserError(_("Available quantity should be set to zero before changing type"))

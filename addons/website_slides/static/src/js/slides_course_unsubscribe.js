@@ -131,7 +131,6 @@ var SlideUnsubscribeDialog = Dialog.extend({
 
 publicWidget.registry.websiteSlidesUnsubscribe = publicWidget.Widget.extend({
     selector: '.o_wslides_js_channel_unsubscribe',
-    xmlDependencies: ['/website_slides/static/src/xml/website_slides_unsubscribe.xml'],
     events: {
         'click': '_onUnsubscribeClick',
     },

@@ -23,14 +23,10 @@ This module extend the employee form with a organizational chart.
             'hr_org_chart/static/src/scss/variables.scss',
         ],
         'web.assets_backend': [
-            'hr_org_chart/static/src/fields/*.scss',
-            'hr_org_chart/static/src/fields/*.js',
+            'hr_org_chart/static/src/fields/*',
         ],
         'web.qunit_suite_tests': [
             'hr_org_chart/static/tests/**/*',
-        ],
-        'web.assets_qweb': [
-            'hr_org_chart/static/src/fields/*.xml',
         ],
     },
     'license': 'LGPL-3',

@@ -1,10 +1,8 @@
 /** @odoo-module **/
 
-import { registerModel } from '@mail/model/model_core';
-import { attr, one } from '@mail/model/model_field';
-import { clear, insert } from '@mail/model/model_field_command';
+import { attr, clear, insert, one, Model } from '@mail/model';
 
-registerModel({
+Model({
     name: 'Employee',
     modelMethods: {
         /**
@@ -49,10 +47,9 @@ registerModel({
             const employeesData = await this.messaging.rpc({
                 model: 'hr.employee.public',
                 method: 'read',
-                args: [ids],
+                args: [ids, fields],
                 kwargs: {
                     context,
-                    fields,
                 },
             });
             this.messaging.models['Employee'].insert(employeesData.map(employeeData =>
@@ -99,7 +96,7 @@ registerModel({
          *
          * If a chat is not appropriate, a notification is displayed instead.
          *
-         * @returns {Thread|undefined}
+         * @returns {Channel|undefined}
          */
         async getChat() {
             if (!this.user && !this.hasCheckedUser) {
@@ -125,7 +122,6 @@ registerModel({
          * If a chat is not appropriate, a notification is displayed instead.
          *
          * @param {Object} [options] forwarded to @see `Thread:open()`
-         * @returns {Thread|undefined}
          */
         async openChat(options) {
             const chat = await this.getChat();
@@ -135,19 +131,18 @@ registerModel({
             if (!chat) {
                 return;
             }
-            await chat.open(options);
+            await chat.thread.open(options);
             if (!this.exists()) {
                 return;
             }
-            return chat;
         },
         /**
          * Opens the most appropriate view that is a profile for this employee.
          */
-        async openProfile() {
+        async openProfile(model = 'hr.employee.public') {
             return this.messaging.openDocument({
                 id: this.id,
-                model: 'hr.employee.public',
+                model: model,
             });
         },
     },

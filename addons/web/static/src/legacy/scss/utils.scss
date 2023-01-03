@@ -106,7 +106,7 @@
 // ------------------------------------------------------------------
 // Caret
 // ------------------------------------------------------------------
-@mixin o-caret-down($caret-width: $caret-width, $caret-color: var(--o-input-border-color, currentColor)) {
+@mixin o-caret-down($caret-width: $caret-width, $caret-color: var(--o-caret-color, currentColor)) {
     @include utils-caret-boilerplate;
     border-bottom: 0;
     border-left: $caret-width solid transparent;
@@ -143,6 +143,19 @@
     // Use a custom cursor for the open hand icon as "grab" is not properly
     // working on Chrome Linux (at least)
     cursor: url(/web/static/img/openhand.cur), grab;
+}
+
+@mixin o-field-pointer() {
+    // Force `pointer`cursor on  inputs and labels
+    &:not(:disabled):not(.disabled) {
+        &, input, label {
+            cursor: pointer;
+        }
+
+        &:hover, &:hover .form-check-input {
+            border-color: $form-check-input-checked-border-color;
+        }
+    }
 }
 
 // ------------------------------------------------------------------
@@ -187,16 +200,13 @@
 // @param {integer} [$index] - the position where to add the support font, if
 //        not given, it will be placed before the generic one.
 @function o-add-unicode-support-font($font, $index: false) {
-    @if $index == false {
-        $index: length($font);
-    }
-
     $-with-support-font: ();
     @for $i from 1 through length($font) {
-        @if $i == $index {
+        $-part: nth($font, $i);
+        @if $i == $index or $-part == serif or $-part == sans-serif {
             $-with-support-font: append($-with-support-font, 'Odoo Unicode Support Noto', $separator: comma);
         }
-        $-with-support-font: append($-with-support-font, nth($font, $i), $separator: comma);
+        $-with-support-font: append($-with-support-font, $-part, $separator: comma);
     }
 
     @return $-with-support-font;
@@ -237,14 +247,6 @@
 }
 
 // ------- Kanban grouped mixins -------
-@mixin o-kanban-icon($base-opacity: 0.5) {
-    display: block;
-    text-align: center;
-    color: $o-main-text-color;
-    font-size: $font-size-sm;
-    cursor: pointer;
-    @include o-hover-opacity($base-opacity);
-}
 @mixin o-kanban-tag-color {
     @for $size from 1 through length($o-colors) {
         // Note: the first color is supposed to be invisible if there is a color
@@ -285,8 +287,6 @@
     transform-origin: left bottom 0;
     transform: rotate(90deg);
     overflow: visible;
-    white-space: nowrap;
-    font-size: 15px;
 }
 
 // ------- Kanban records mixins -------
@@ -299,7 +299,7 @@
 }
 @mixin o-kanban-dropdown($padding-base: $o-kanban-inside-vgutter) {
     margin: -1px -1px 1px;
-    padding: $padding-base/2 $padding-base;
+    padding: if(type-of($padding-base) == 'string', calc(#{$padding-base}/2) $padding-base, $padding-base/2 $padding-base);
     border: 1px solid transparent;
     border-bottom: none;
     vertical-align: top;
@@ -312,7 +312,7 @@
 }
 @mixin o-kanban-dropdown-open {
     position: relative;
-    background: white;
+    background: $dropdown-bg;
     border-color: $border-color;
     z-index: $zindex-dropdown + 1;
 }
@@ -414,6 +414,13 @@
     margin-top: 30px;
     margin-bottom: 30px;
     background: transparent url(/web/static/img/empty_folder.svg) no-repeat center;
+}
+
+// Sample data
+@mixin o-sample-data-disabled {
+    opacity: 0.33;
+    pointer-events: none;
+    user-select: none;
 }
 
 // ----------------------------------------------------------------------------

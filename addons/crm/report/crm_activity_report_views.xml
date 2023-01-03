@@ -29,10 +29,11 @@
             <field name="arch" type="xml">
                 <tree default_order="date desc">
                     <field name="date"/>
-                    <field name="author_id"/>
+                    <field name="author_id" widget="many2one_avatar"/>
                     <field name="mail_activity_type_id"/>
-                    <field name="body"/>
+                    <field name="body" optional="hide"/>
                     <field name="company_id" groups="base.group_multi_company"/>
+                    <field name="tag_ids" string="Lead Tags" optional="show" widget="many2many_tags" options="{'color_field': 'color'}"/>
                 </tree>
             </field>
         </record>
@@ -47,6 +48,7 @@
                     <field name="user_id" string="Salesperson"/>
                     <field name="team_id" context="{'invisible_team': False}"/>
                     <field name="author_id" string="Assigned To"/>
+                    <field name="tag_ids" string="Lead Tags"/>
                     <separator groups="crm.group_use_lead"/>
                     <filter string="Leads" name="lead" domain="[('lead_type', '=', 'lead')]" help="Show only lead" groups="crm.group_use_lead"/>
                     <filter string="Opportunities" name="opportunity" domain="[('lead_type', '=', 'opportunity')]" help="Show only opportunity" groups="crm.group_use_lead"/>

@@ -64,6 +64,7 @@ class TestSurveyInvite(common.TestSurveyCommon):
         self.survey.write({'access_mode': 'public', 'users_login_required': False})
         action = self.survey.action_send_survey()
         invite_form = Form(self.env[action['res_model']].with_context(action['context']))
+        invite_form.send_email = True
 
         # some lowlevel checks that action is correctly configured
         self.assertEqual(Answer.search([('survey_id', '=', self.survey.id)]), self.env['survey.user_input'])
@@ -90,6 +91,7 @@ class TestSurveyInvite(common.TestSurveyCommon):
         self.survey.write({'access_mode': 'public', 'users_login_required': True})
         action = self.survey.action_send_survey()
         invite_form = Form(self.env[action['res_model']].with_context(action['context']))
+        invite_form.send_email = True
 
         with self.assertRaises(UserError):  # do not allow to add customer (partner without user)
             invite_form.partner_ids.add(self.customer)
@@ -119,6 +121,7 @@ class TestSurveyInvite(common.TestSurveyCommon):
         self.survey.write({'access_mode': 'public', 'users_login_required': True})
         action = self.survey.action_send_survey()
         invite_form = Form(self.env[action['res_model']].with_context(action['context']))
+        invite_form.send_email = True
 
         invite_form.partner_ids.add(self.customer)
         invite_form.partner_ids.add(self.user_portal.partner_id)
@@ -143,6 +146,7 @@ class TestSurveyInvite(common.TestSurveyCommon):
         self.survey.write({'access_mode': 'public', 'users_login_required': False})
         action = self.survey.action_send_survey()
         invite_form = Form(self.env[action['res_model']].with_context(action['context']))
+        invite_form.send_email = True
 
         invite_form.partner_ids.add(self.customer)
         invite_form.emails = 'test1@example.com, Raoulette Vignolette <test2@example.com>'

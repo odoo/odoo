@@ -21,8 +21,16 @@ class WebsiteHrRecruitment(http.Controller):
         '/jobs/country/<model("res.country"):country>/office/<int:office_id>',
         '/jobs/department/<model("hr.department"):department>/office/<int:office_id>',
         '/jobs/country/<model("res.country"):country>/department/<model("hr.department"):department>/office/<int:office_id>',
+        '/jobs/employment_type/<int:contract_type_id>',
+        '/jobs/country/<model("res.country"):country>/employment_type/<int:contract_type_id>',
+        '/jobs/department/<model("hr.department"):department>/employment_type/<int:contract_type_id>',
+        '/jobs/office/<int:office_id>/employment_type/<int:contract_type_id>',
+        '/jobs/country/<model("res.country"):country>/department/<model("hr.department"):department>/employment_type/<int:contract_type_id>',
+        '/jobs/country/<model("res.country"):country>/office/<int:office_id>/employment_type/<int:contract_type_id>',
+        '/jobs/department/<model("hr.department"):department>/office/<int:office_id>/employment_type/<int:contract_type_id>',
+        '/jobs/country/<model("res.country"):country>/department/<model("hr.department"):department>/office/<int:office_id>/employment_type/<int:contract_type_id>',
     ], type='http', auth="public", website=True, sitemap=sitemap_jobs)
-    def jobs(self, country=None, department=None, office_id=None, **kwargs):
+    def jobs(self, country=None, department=None, office_id=None, contract_type_id=None, **kwargs):
         env = request.env(context=dict(request.env.context, show_address=True, no_tag_br=True))
 
         Country = env['res.country']
@@ -35,10 +43,9 @@ class WebsiteHrRecruitment(http.Controller):
         jobs = Jobs.sudo().browse(job_ids)
 
         # Default search by user country
-        if not (country or department or office_id or kwargs.get('all_countries')):
-            country_code = request.geoip.get('country_code')
-            if country_code:
-                countries_ = Country.search([('code', '=', country_code)])
+        if not (country or department or office_id or contract_type_id or kwargs.get('all_countries')):
+            if request.geoip.country_code:
+                countries_ = Country.search([('code', '=', request.geoip.country_code)])
                 country = countries_[0] if countries_ else None
                 if not any(j for j in jobs if j.address_id and j.address_id.country_id == country):
                     country = False
@@ -53,6 +60,7 @@ class WebsiteHrRecruitment(http.Controller):
         # Deduce departments and countries offices of those jobs
         departments = set(j.department_id for j in jobs if j.department_id)
         countries = set(o.country_id for o in offices if o.country_id)
+        employment_types = set(j.contract_type_id for j in jobs if j.contract_type_id)
 
         if department:
             jobs = [j for j in jobs if j.department_id and j.department_id.id == department.id]
@@ -60,6 +68,8 @@ class WebsiteHrRecruitment(http.Controller):
             jobs = [j for j in jobs if j.address_id and j.address_id.id == office_id]
         else:
             office_id = False
+        if contract_type_id:
+            jobs = [j for j in jobs if j.contract_type_id and j.contract_type_id.id == contract_type_id]
 
         # Render page
         return request.render("website_hr_recruitment.index", {
@@ -67,18 +77,20 @@ class WebsiteHrRecruitment(http.Controller):
             'countries': countries,
             'departments': departments,
             'offices': offices,
+            'employment_types': employment_types,
             'country_id': country,
             'department_id': department,
             'office_id': office_id,
+            'contract_type_id': contract_type_id,
         })
 
-    @http.route('/jobs/add', type='http', auth="user", website=True)
+    @http.route('/jobs/add', type='json', auth="user", website=True)
     def jobs_add(self, **kwargs):
         # avoid branding of website_description by setting rendering_bundle in context
         job = request.env['hr.job'].with_context(rendering_bundle=True).create({
             'name': _('Job Title'),
         })
-        return request.redirect(request.env["website"].get_client_action_url(f"/jobs/detail/{slug(job)}", True))
+        return f"/jobs/detail/{slug(job)}"
 
     @http.route('''/jobs/detail/<model("hr.job"):job>''', type='http', auth="public", website=True, sitemap=True)
     def jobs_detail(self, job, **kwargs):

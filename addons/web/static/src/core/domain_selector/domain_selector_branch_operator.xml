@@ -3,23 +3,23 @@
 
     <t t-name="web.DomainSelectorBranchOperator" owl="1">
         <t t-if="!props.readonly">
-            <div class="btn-group o_domain_tree_operator_selector" aria-atomic="true">
-                <Dropdown togglerClass="'btn btn-sm btn-primary o_domain_tree_operator_caret'">
+            <div class="d-inline-flex o_domain_tree_operator_selector" aria-atomic="true">
+                <Dropdown togglerClass="'btn btn-link btn-sm btn-primary py-0 px-1 o_domain_tree_operator_caret'" showCaret="props.showCaret">
                     <t t-set-slot="toggler">
-                            <t t-if="props.node.operator === '&amp;'">All</t>
-                            <t t-elif="props.node.operator === '|'">Any</t>
-                            <t t-elif="props.node.operator === '!'">None</t>
+                            <t t-if="props.node.operator === '&amp;'">all</t>
+                            <t t-elif="props.node.operator === '|'">any</t>
+                            <t t-elif="props.node.operator === '!'">none</t>
                     </t>
-                    <DropdownItem onSelected="() => this.onOperatorSelected('&amp;')">All</DropdownItem>
-                    <DropdownItem onSelected="() => this.onOperatorSelected('|')">Any</DropdownItem>
+                    <DropdownItem onSelected="() => this.onOperatorSelected('&amp;')">all</DropdownItem>
+                    <DropdownItem onSelected="() => this.onOperatorSelected('|')">any</DropdownItem>
                 </Dropdown>
             </div>
         </t>
         <t t-else="">
             <strong>
-                <t t-if="props.node.operator === '&amp;'">ALL</t>
-                <t t-elif="props.node.operator === '|'">ANY</t>
-                <t t-elif="props.node.operator === '!'">NONE</t>
+                <t t-if="props.node.operator === '&amp;'">all</t>
+                <t t-elif="props.node.operator === '|'">any</t>
+                <t t-elif="props.node.operator === '!'">none</t>
             </strong>
         </t>
     </t>

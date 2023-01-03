@@ -16,15 +16,12 @@
         'views/data_recycle_templates.xml',
         'security/ir.model.access.csv',
     ],
-    'auto_install': False,
     'installable': True,
     'application': True,
     'assets': {
         'web.assets_backend': [
-            'data_recycle/static/src/js/**/*',
-        ],
-        'web.assets_qweb': [
-            'data_recycle/static/src/xml/**/*',
+            'data_recycle/static/src/views/*.js',
+            'data_recycle/static/src/views/*.xml',
         ],
     },
     'license': 'LGPL-3',

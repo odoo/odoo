@@ -6,3 +6,4 @@ from . import test_channel
 from . import test_self_user_access
 from . import test_multi_company
 from . import test_resource
+from . import test_ui

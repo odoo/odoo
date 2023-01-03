@@ -1,5 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from werkzeug.exceptions import NotFound
+
 from odoo import http, tools, _
 from odoo.http import request
 from odoo.addons.base.models.assetsbundle import AssetsBundle
@@ -26,13 +28,16 @@ class LivechatController(http.Controller):
 
     @http.route('/im_livechat/load_templates', type='json', auth='none', cors="*")
     def load_templates(self, **kwargs):
-        templates = [
+        templates = self._livechat_templates_get()
+        return [tools.file_open(tmpl, 'rb').read() for tmpl in templates]
+
+    def _livechat_templates_get(self):
+        return [
             'im_livechat/static/src/legacy/widgets/feedback/feedback.xml',
             'im_livechat/static/src/legacy/widgets/public_livechat_window/public_livechat_window.xml',
             'im_livechat/static/src/legacy/widgets/public_livechat_view/public_livechat_view.xml',
             'im_livechat/static/src/legacy/public_livechat_chatbot.xml',
         ]
-        return [tools.file_open(tmpl, 'rb').read() for tmpl in templates]
 
     @http.route('/im_livechat/support/<int:channel_id>', type='http', auth='public')
     def support_page(self, channel_id, **kwargs):
@@ -52,9 +57,8 @@ class LivechatController(http.Controller):
         rule = {}
         # find the country from the request
         country_id = False
-        country_code = request.geoip.get('country_code')
-        if country_code:
-            country_id = request.env['res.country'].sudo().search([('code', '=', country_code)], limit=1).id
+        if request.geoip.country_code:
+            country_id = request.env['res.country'].sudo().search([('code', '=', request.geoip.country_code)], limit=1).id
         # extract url
         url = request.httprequest.headers.get('Referer')
         # find the first matching rule for the given country and url
@@ -102,13 +106,13 @@ class LivechatController(http.Controller):
             ]))
 
         return request.env['ir.binary']._get_image_stream_from(
-            operator if is_livechat_member else None,
+            operator if is_livechat_member else request.env['res.partner'],
             field_name='avatar_128',
             placeholder='mail/static/src/img/smiley/avatar.jpg',
         ).get_response()
 
     @http.route('/im_livechat/get_session', type="json", auth='public', cors="*")
-    def get_session(self, channel_id, anonymous_name, previous_operator_id=None, chatbot_script_id=None, **kwargs):
+    def get_session(self, channel_id, anonymous_name, previous_operator_id=None, chatbot_script_id=None, persisted=True, **kwargs):
         user_id = None
         country_id = None
         # if the user is identifiy (eg: portal user on the frontend), don't use the anonymous name. The user will be added to session.
@@ -117,10 +121,9 @@ class LivechatController(http.Controller):
             country_id = request.env.user.country_id.id
         else:
             # if geoip, add the country name to the anonymous name
-            if request.geoip:
+            if request.geoip.country_code:
                 # get the country of the anonymous person, if any
-                country_code = request.geoip.get('country_code', "")
-                country = request.env['res.country'].sudo().search([('code', '=', country_code)], limit=1) if country_code else None
+                country = request.env['res.country'].sudo().search([('code', '=', request.geoip.country_code)], limit=1)
                 if country:
                     country_id = country.id
 
@@ -136,7 +139,9 @@ class LivechatController(http.Controller):
             previous_operator_id=previous_operator_id,
             chatbot_script=chatbot_script,
             user_id=user_id,
-            country_id=country_id)
+            country_id=country_id,
+            persisted=persisted
+        )
 
     @http.route('/im_livechat/feedback', type='json', auth='public', cors="*")
     def feedback(self, uuid, rate, reason=None, **kwargs):
@@ -181,8 +186,13 @@ class LivechatController(http.Controller):
             :param uuid: (string) the UUID of the livechat channel
             :param is_typing: (boolean) tells whether the website user is typing or not.
         """
-        channel = request.env['mail.channel'].sudo().search([('uuid', '=', uuid)], limit=1)
-        channel.notify_typing(is_typing=is_typing)
+        channel = request.env['mail.channel'].sudo().search([('uuid', '=', uuid)])
+        if not channel:
+            raise NotFound()
+        channel_member = channel.env['mail.channel.member'].search([('channel_id', '=', channel.id), ('partner_id', '=', request.env.user.partner_id.id)])
+        if not channel_member:
+            raise NotFound()
+        channel_member._notify_typing(is_typing=is_typing)
 
     @http.route('/im_livechat/email_livechat_transcript', type='json', auth='public', cors="*")
     def email_livechat_transcript(self, uuid, email):

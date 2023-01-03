@@ -3,7 +3,7 @@
 import { registry } from "@web/core/registry";
 import { DomainSelectorFieldInput } from "./domain_selector_field_input";
 
-const { Component } = owl;
+import { Component } from "@odoo/owl";
 
 const dso = registry.category("domain_selector/operator");
 

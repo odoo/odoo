@@ -229,8 +229,8 @@ class TestMassMailing(TestMassMailCommon):
         self.env['mail.blacklist'].create({'email': recipients[4].email_normalized})
 
         # unblacklist record 2
-        self.env['mail.blacklist'].action_remove_with_reason(
-            recipients[2].email_normalized, "human error"
+        self.env['mail.blacklist']._remove(
+            recipients[2].email_normalized, message="human error"
         )
         self.env['mail.blacklist'].flush_model(['active'])
 

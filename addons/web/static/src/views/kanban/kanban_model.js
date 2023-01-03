@@ -8,6 +8,7 @@ import {
     Group,
     RelationalModel,
 } from "@web/views/relational_model";
+import { KeepLast } from "@web/core/utils/concurrency";
 
 /**
  * @typedef ProgressBar
@@ -17,7 +18,7 @@ import {
  * @property {string} string
  */
 
-const { EventBus, markRaw } = owl;
+import { EventBus, markRaw } from "@odoo/owl";
 
 const FALSE = Symbol("false");
 
@@ -68,6 +69,7 @@ class KanbanGroup extends Group {
         /** @type {ProgressBar[]} */
         this.progressBars = this._generateProgressBars();
         this.progressValue = markRaw(state.progressValue || { active: null });
+        this.tooltip = [];
 
         this.model.transaction.register({
             onStart: () => ({
@@ -83,7 +85,10 @@ class KanbanGroup extends Group {
         });
 
         this.model.addEventListener("record-updated", ({ detail }) => {
-            if (this.list.records.some((r) => r.id === detail.record.id)) {
+            const { record, relatedRecords } = detail;
+            const localIds = this.records.map((r) => r.id);
+            const updatedIds = [record, ...relatedRecords].map((r) => r.id);
+            if (localIds.some((id) => updatedIds.includes(id))) {
                 this.model.trigger("group-updated", {
                     group: this,
                     withProgressBars: true,
@@ -140,27 +145,6 @@ class KanbanGroup extends Group {
     /**
      * @override
      */
-    getAggregableRecords() {
-        const records = super.getAggregableRecords();
-        if (!this.hasActiveProgressValue) {
-            return records;
-        }
-        const { fieldName } = this.model.progressAttributes;
-        let recordsFilter;
-        if (this.progressValue.active === FALSE) {
-            const values = this.progressBars
-                .map((pv) => pv.value)
-                .filter((val) => val !== this.progressValue.active);
-            recordsFilter = (r) => !values.includes(r.data[fieldName]);
-        } else {
-            recordsFilter = (r) => r.data[fieldName] === this.progressValue.active;
-        }
-        return records.filter(recordsFilter);
-    }
-
-    /**
-     * @override
-     */
     quickCreate(activeFields, context) {
         const ctx = { ...context };
         if (this.hasActiveProgressValue && this.progressValue.active !== FALSE) {
@@ -171,37 +155,35 @@ class KanbanGroup extends Group {
     }
 
     async load() {
-        const proms = [];
-        proms.push(super.load());
+        this.loadTooltip();
+        await super.load();
+    }
+
+    /**
+     * Requests the groups tooltips to the server and store them in this.tooltip
+     *
+     * @returns {Promise<void>}
+     */
+    async loadTooltip() {
         const groupName = this.groupByField.name;
         if (
             this.groupByField.type === "many2one" &&
             this.value &&
             groupName in this.model.tooltipInfo
         ) {
+            this.tooltipKeepLast = this.tooltipKeepLast || new KeepLast();
             const resModel = this.groupByField.relation;
             const tooltipInfo = this.model.tooltipInfo[groupName];
             const fieldNames = Object.keys(tooltipInfo);
             // This read will be batched for all groups
-            const readProm = this.model.orm.read(
-                resModel,
-                [this.value],
-                ["display_name", ...fieldNames]
+            const [values] = await this.tooltipKeepLast.add(
+                this.model.orm.silent.read(resModel, [this.value], ["display_name", ...fieldNames])
             );
-            proms.push(readProm);
-            const [values] = await readProm;
-            this.tooltip = null;
-            for (const fieldName of fieldNames) {
-                if (values[fieldName]) {
-                    this.tooltip = this.tooltip || [];
-                    this.tooltip.push({
-                        title: tooltipInfo[fieldName],
-                        value: values[fieldName],
-                    });
-                }
-            }
+            this.tooltip = fieldNames
+                .filter((fieldName) => values[fieldName])
+                .map((fieldName) => ({ title: tooltipInfo[fieldName], value: values[fieldName] }));
+            this.model.notify();
         }
-        await Promise.all(proms);
     }
 
     /**
@@ -295,18 +277,22 @@ class KanbanGroup extends Group {
         await this.checkActiveValue();
     }
 
+    /**
+     * @param {number} index
+     * @returns {Promise<Record | false>}
+     */
     async validateQuickCreate() {
         const record = this.list.quickCreateRecord;
-        if (!record) {
-            return false;
+        if (record) {
+            const saved = await record.save();
+            if (saved) {
+                this.addRecord(this.removeRecord(record), 0);
+                this.count++;
+                this.list.count++;
+                return record;
+            }
         }
-        const saved = await record.save();
-        if (saved) {
-            this.addRecord(this.removeRecord(record), 0);
-            this.count++;
-            this.list.count++;
-            return record;
-        }
+        return false;
     }
 
     // ------------------------------------------------------------------------
@@ -341,16 +327,41 @@ class KanbanGroup extends Group {
 }
 
 export class KanbanDynamicGroupList extends DynamicGroupList {
-    setup() {
+    setup(params, state) {
         super.setup(...arguments);
+        this.previousParams = state.previousParams || "[]";
 
         this.groupBy = this.groupBy.slice(0, 1);
 
-        this.model.addEventListener("group-updated", ({ detail }) => {
+        this.model.addEventListener("group-updated", async ({ detail }) => {
             if (this.groups.some((g) => g.id === detail.group.id)) {
-                this.updateGroupProgressData([detail.group], detail.withProgressBars);
+                await this.updateGroupProgressData([detail.group], detail.withProgressBars);
+                this.model.notify();
             }
         });
+    }
+
+    get sumFields() {
+        const { sumField } = this.model.progressAttributes;
+        return sumField ? [sumField.name] : [];
+    }
+
+    /**
+     * @override
+     */
+    get fieldNames() {
+        return [...super.fieldNames, ...this.sumFields];
+    }
+
+    get currentParams() {
+        return JSON.stringify([this.domain, this.groupBy]);
+    }
+
+    exportState() {
+        return {
+            ...super.exportState(),
+            previousParams: this.currentParams,
+        };
     }
 
     /**
@@ -361,7 +372,20 @@ export class KanbanDynamicGroupList extends DynamicGroupList {
      * @override
      */
     async load() {
-        await this._loadWithProgressData(super.load());
+        const load = async () => {
+            const previousGroups = this.groups.map((g, i) => [g, i]);
+            await super.load();
+            if (this.previousParams === this.currentParams) {
+                for (const [group, index] of previousGroups) {
+                    const newGroup = this.groups.find((g) => group.valueEquals(g.value));
+                    if (!group.deleted && !newGroup) {
+                        group.empty();
+                        this.groups.splice(index, 0, group);
+                    }
+                }
+            }
+        };
+        await this._loadWithProgressData(load());
     }
 
     /**
@@ -374,24 +398,20 @@ export class KanbanDynamicGroupList extends DynamicGroupList {
             return;
         }
 
-        const { fieldName, sumField } = this.model.progressAttributes;
-        const fieldNames = [];
         const gbFieldName = this.groupByField.name;
         const promises = {};
 
         if (withProgressBars) {
             const domain = Domain.or(groups.map((g) => g.groupDomain)).toList();
-            fieldNames.push(fieldName);
             promises.readProgressBar = this._fetchProgressData(domain);
         }
         // If we have a sumField, the aggregates must be re-fetched
-        if (sumField) {
+        if (this.sumFields.length) {
             const domain = Domain.or(groups.map((g) => g.getProgressBarDomain())).toList();
-            fieldNames.push(sumField.name);
             promises.webReadGroup = this.model.orm.webReadGroup(
                 this.resModel,
                 domain,
-                fieldNames,
+                this.sumFields,
                 this.groupBy,
                 { lazy: true }
             );
@@ -404,9 +424,7 @@ export class KanbanDynamicGroupList extends DynamicGroupList {
             const result = await promises.webReadGroup;
             const groupData = result.groups.map((group) => ({
                 ...group,
-                [gbFieldName]: Array.isArray(group[gbFieldName])
-                    ? group[gbFieldName][0]
-                    : group[gbFieldName],
+                [gbFieldName]: this._getValueFromGroupData(group, this.firstGroupBy),
             }));
             for (const group of groups) {
                 group.updateAggregates(groupData);
@@ -417,8 +435,6 @@ export class KanbanDynamicGroupList extends DynamicGroupList {
             const result = await promises.readProgressBar;
             await Promise.all(groups.map((group) => group.updateProgressData(result)));
         }
-
-        this.model.notify();
     }
 
     /**
@@ -447,11 +463,14 @@ export class KanbanDynamicGroupList extends DynamicGroupList {
         }
 
         // Move from one group to another
+        const fullyLoadGroup = targetGroup.isFolded;
         if (dataGroupId !== targetGroupId) {
             const refIndex = targetGroup.list.records.findIndex((r) => r.id === refId);
             // Quick update: moves the record at the right position and notifies components
             targetGroup.addRecord(sourceGroup.removeRecord(record), refIndex + 1);
-            const value = isRelational(this.groupByField) ? [targetGroup.value] : targetGroup.value;
+            const value = isRelational(this.groupByField)
+                ? [targetGroup.value, targetGroup.displayName]
+                : targetGroup.value;
 
             const abort = () => {
                 this.model.transaction.abort(dataRecordId);
@@ -470,14 +489,26 @@ export class KanbanDynamicGroupList extends DynamicGroupList {
                 throw err;
             }
 
-            // Record can be loaded along with the group metadata
-            await Promise.all([
-                this.updateGroupProgressData([sourceGroup, targetGroup], true),
-                record.load(),
-            ]);
+            const promises = [this.updateGroupProgressData([sourceGroup, targetGroup], true)];
+            if (fullyLoadGroup) {
+                // The group is folded: we need to load it
+                // In this case since we load after saving the record there is no
+                // need to reload the record nor to resequence the list.
+                promises.push(targetGroup.toggle());
+            } else {
+                // Record can be loaded along with the group metadata
+                promises.push(record.load());
+            }
+
+            await Promise.all(promises);
         }
 
-        await targetGroup.list.resequence(dataRecordId, refId);
+        if (fullyLoadGroup) {
+            this.model.notify();
+        } else {
+            // Only trigger resequence if the group hasn't been fully loaded
+            await targetGroup.list.resequence(dataRecordId, refId);
+        }
 
         this.model.transaction.commit(dataRecordId);
     }
@@ -491,16 +522,11 @@ export class KanbanDynamicGroupList extends DynamicGroupList {
      * @returns {Promise<Object>}
      */
     async _fetchProgressData(domain) {
-        const { colors, fieldName, help, sumField } = this.model.progressAttributes;
+        const { colors, fieldName, help } = this.model.progressAttributes;
         return this.model.orm.call(this.resModel, "read_progress_bar", [], {
             domain,
             group_by: this.firstGroupBy,
-            progress_bar: {
-                colors,
-                field: fieldName,
-                help,
-                sum_field: sumField && sumField.name,
-            },
+            progress_bar: { colors, field: fieldName, help },
             context: this.context,
         });
     }
@@ -563,7 +589,9 @@ export class KanbanModel extends RelationalModel {
                 // example background. Return true so that we don't get sample data instead
                 return true;
             }
-            return this.root.groups.some((group) => group.list.records.length > 0);
+            return this.root.groups.some(
+                (group) => group.count > 0 || group.list.quickCreateRecord
+            );
         }
         return this.root.records.length > 0;
     }

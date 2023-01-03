@@ -117,6 +117,8 @@ export class SampleServer {
                 return this._mockReadProgressBar(params);
             case "read":
                 return this._mockRead(params);
+            case "name_get":
+                return this._mockNameGet(params);
         }
         // this rpc can't be mocked by the SampleServer itself, so check if there is an handler
         // in the registry: either specific for this model (with key 'model/method'), or
@@ -340,6 +342,31 @@ export class SampleServer {
     _getRandomSubRecordId() {
         return Math.floor(Math.random() * SampleServer.SUB_RECORDSET_SIZE) + 1;
     }
+
+    /**
+     * Simulate a 'name_get' operation
+     *
+     * @private
+     * @param {Object} params
+     * @param {string} params.model
+     * @param {Array[]} params.args
+     * @returns {Array[]} a list of [id, display_name]
+     */
+    _mockNameGet(params) {
+        const { model, args } = params;
+        let ids = args[0];
+        if (!args.length) {
+            throw new Error("name_get: expected one argument");
+        } else if (!ids) {
+            return [];
+        }
+        if (!Array.isArray(ids)) {
+            ids = [ids];
+        }
+        const { records } = this.data[model];
+        return ids.map((id) => [id, records.find((r) => r.id === id).display_name]);
+    }
+
     /**
      * Mocks calls to the read method.
      * @private
@@ -409,14 +436,7 @@ export class SampleServer {
         const groups = arrayGroupBy(records, (record) => {
             const vals = {};
             for (const gb of normalizedGroupBys) {
-                const { fieldName, type } = gb;
-                let value;
-                if (["date", "datetime"].includes(type)) {
-                    value = this._formatValue(record[fieldName], gb);
-                } else {
-                    value = record[fieldName];
-                }
-                vals[fieldName] = value;
+                vals[gb.fieldName] = record[gb.fieldName];
             }
             return JSON.stringify(vals);
         });
@@ -478,7 +498,7 @@ export class SampleServer {
      * @return {Object}
      */
     _mockReadProgressBar(params) {
-        const groupBy = params.group_by;
+        const groupBy = params.group_by.split(":")[0];
         const progress_bar = params.progress_bar;
         const groupByField = this.data[params.model].fields[groupBy];
         const data = {};
@@ -572,7 +592,7 @@ export class SampleServer {
     _populateExistingGroups(params) {
         if (!this.existingGroupsPopulated) {
             const groups = this.existingGroups;
-            const groupBy = params.groupBy[0];
+            const groupBy = params.groupBy[0].split(":")[0];
             const groupByField = this.data[params.model].fields[groupBy];
             const groupedByM2O = groupByField.type === "many2one";
             if (groupedByM2O) {
@@ -644,12 +664,13 @@ export class SampleServer {
         this._populateExistingGroups(params);
 
         // update count and aggregates for each group
-        const groupBy = params.groupBy[0].split(":")[0];
+        const fullGroupBy = params.groupBy[0];
+        const groupBy = fullGroupBy.split(":")[0];
         const records = this.data[params.model].records;
         for (const g of groups) {
             const recordsInGroup = records.filter((r) => r[groupBy] === g.value);
             g[`${groupBy}_count`] = recordsInGroup.length;
-            g[groupBy] = [g.value, g.displayName];
+            g[fullGroupBy] = [g.value, g.displayName];
             for (const field of params.fields) {
                 const fieldType = this.data[params.model].fields[field].type;
                 if (["integer, float", "monetary"].includes(fieldType)) {
@@ -663,6 +684,7 @@ export class SampleServer {
                 }),
                 length: recordsInGroup.length,
             };
+            g.__range = { ...g.range };
         }
     }
 }

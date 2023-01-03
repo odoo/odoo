@@ -29,6 +29,26 @@ QUnit.module("redirect_field", (hooks) => {
                         },
                     ],
                 },
+                blog_post: {
+                    fields: {
+                        is_published: {
+                            string: "Is published",
+                            type: "boolean",
+                            searchable: true,
+                            trim: true,
+                        }
+                    },
+                    records: [
+                        {
+                            id: 1,
+                            is_published: true,
+                        },
+                        {
+                            id: 2,
+                            is_published: false,
+                        }
+                    ]
+                }
             },
         };
 
@@ -86,5 +106,39 @@ QUnit.module("redirect_field", (hooks) => {
         await click(target, ".oe_stat_button");
 
         assert.verifySteps(['object', 'open_website_url']);
+    });
+    QUnit.test("redirect field in form view is green if value=true", async function (assert) {
+        await makeView({
+            type: "form",
+            resModel: "blog_post",
+            resId: 1,
+            serverData,
+            arch: `
+                <form>
+                    <sheet>
+                        <div class="oe_button_box" name="button_box">
+                            <field name="is_published" widget="website_redirect_button" />
+                        </div>
+                    </sheet>
+                </form>`,
+        });
+        assert.containsOnce(target, ".oe_stat_button .o_button_icon.text-success", "redirect field is green");
+    });
+    QUnit.test("redirect field in form view is red if value=false", async function (assert) {
+        await makeView({
+            type: "form",
+            resModel: "blog_post",
+            resId: 2,
+            serverData,
+            arch: `
+                <form>
+                    <sheet>
+                        <div class="oe_button_box" name="button_box">
+                            <field name="is_published" widget="website_redirect_button" />
+                        </div>
+                    </sheet>
+                </form>`,
+        });
+        assert.containsOnce(target, ".oe_stat_button .o_button_icon.text-danger", "redirect field is red");
     });
 });

@@ -1093,7 +1093,7 @@ QUnit.module("utils", () => {
                 }
             }
             let descriptor = Object.getOwnPropertyDescriptor(BaseClass.prototype, "getter");
-            let getterFn = descriptor.get;
+            const getterFn = descriptor.get;
             assert.strictEqual(descriptor.configurable, true);
             assert.strictEqual(descriptor.enumerable, false);
 

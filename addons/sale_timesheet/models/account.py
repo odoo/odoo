@@ -14,8 +14,8 @@ TIMESHEET_INVOICE_TYPES = [
     ('non_billable', 'Non Billable Tasks'),
     ('timesheet_revenues', 'Timesheet Revenues'),
     ('service_revenues', 'Service Revenues'),
-    ('other_revenues', 'Other Revenues'),
-    ('other_costs', 'Other Costs'),
+    ('other_revenues', 'Materials'),
+    ('other_costs', 'Materials'),
 ]
 
 class AccountAnalyticLine(models.Model):
@@ -29,10 +29,13 @@ class AccountAnalyticLine(models.Model):
             compute='_compute_timesheet_invoice_type', compute_sudo=True, store=True, readonly=True)
     commercial_partner_id = fields.Many2one('res.partner', compute="_compute_commercial_partner")
     timesheet_invoice_id = fields.Many2one('account.move', string="Invoice", readonly=True, copy=False, help="Invoice created from the timesheet")
-    so_line = fields.Many2one(compute="_compute_so_line", store=True, readonly=False, domain="[('is_service', '=', True), ('is_expense', '=', False), ('state', 'in', ['sale', 'done']), ('order_partner_id', 'child_of', commercial_partner_id)]")
+    so_line = fields.Many2one(compute="_compute_so_line", store=True, readonly=False,
+        domain="[('is_service', '=', True), ('is_expense', '=', False), ('state', 'in', ['sale', 'done']), ('order_partner_id', 'child_of', commercial_partner_id)]",
+        help="Sales order item to which the time spent will be added in order to be invoiced to your customer. Remove the sales order item for the timesheet entry to be non-billable.")
     # we needed to store it only in order to be able to groupby in the portal
     order_id = fields.Many2one(related='so_line.order_id', store=True, readonly=True, index=True)
     is_so_line_edited = fields.Boolean("Is Sales Order Item Manually Edited")
+    allow_billable = fields.Boolean(related="project_id.allow_billable")
 
     @api.depends('project_id.commercial_partner_id', 'task_id.commercial_partner_id')
     def _compute_commercial_partner(self):
@@ -156,9 +159,9 @@ class AccountAnalyticLine(models.Model):
         self.ensure_one()
         return self.env['project.sale.line.employee.map'].search([('project_id', '=', self.project_id.id), ('employee_id', '=', self.employee_id.id)])
 
-    def _employee_timesheet_cost(self):
+    def _hourly_cost(self):
         if self.project_id.pricing_type == 'employee_rate':
             mapping_entry = self._get_employee_mapping_entry()
             if mapping_entry:
                 return mapping_entry.cost
-        return super()._employee_timesheet_cost()
+        return super()._hourly_cost()

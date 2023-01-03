@@ -13,7 +13,7 @@ class LeaveReport(models.Model):
 
     active = fields.Boolean(readonly=True)
     employee_id = fields.Many2one('hr.employee', string="Employee", readonly=True)
-    leave_id = fields.Many2one('hr.leave', string="Leave Request", readonly=True)
+    leave_id = fields.Many2one('hr.leave', string="Time Off Request", readonly=True)
     allocation_id = fields.Many2one('hr.leave.allocation', string="Allocation Request", readonly=True)
     active_employee = fields.Boolean(readonly=True)
     name = fields.Char('Description', readonly=True)
@@ -24,7 +24,7 @@ class LeaveReport(models.Model):
         ], string='Request Type', readonly=True)
     department_id = fields.Many2one('hr.department', string='Department', readonly=True)
     category_id = fields.Many2one('hr.employee.category', string='Employee Tag', readonly=True)
-    holiday_status_id = fields.Many2one("hr.leave.type", string="Leave Type", readonly=True)
+    holiday_status_id = fields.Many2one("hr.leave.type", string="Time Off Type", readonly=True)
     state = fields.Selection([
         ('draft', 'To Submit'),
         ('cancel', 'Cancelled'),
@@ -68,8 +68,8 @@ class LeaveReport(models.Model):
                     allocation.holiday_status_id as holiday_status_id,
                     allocation.state as state,
                     allocation.holiday_type,
-                    null as date_from,
-                    null as date_to,
+                    allocation.date_from as date_from,
+                    allocation.date_to as date_to,
                     'allocation' as leave_type,
                     allocation.employee_company_id as company_id
                 from hr_leave_allocation as allocation

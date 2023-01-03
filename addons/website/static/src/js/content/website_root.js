@@ -1,6 +1,6 @@
 /** @odoo-module alias=website.root */
 
-import ajax from 'web.ajax';
+import { loadJS } from "@web/core/assets";
 import { _t } from 'web.core';
 import KeyboardNavigationMixin from 'web.KeyboardNavigationMixin';
 import {Markup} from 'web.utils';
@@ -39,19 +39,6 @@ export const WebsiteRoot = publicRootData.PublicRoot.extend(KeyboardNavigationMi
      */
     start: function () {
         KeyboardNavigationMixin.start.call(this);
-        // Compatibility lang change ?
-        if (!this.$('.js_change_lang').length) {
-            var $links = this.$('.js_language_selector a:not([data-oe-id])');
-            var m = $(_.min($links, function (l) {
-                return $(l).attr('href').length;
-            })).attr('href');
-            $links.each(function () {
-                var $link = $(this);
-                var t = $link.attr('href');
-                var l = (t === m) ? "default" : t.split('/')[1];
-                $link.data('lang', l).addClass('js_change_lang');
-            });
-        }
 
         // Enable magnify on zommable img
         this.$('.zoomable img[data-zoom]').zoomOdoo();
@@ -154,7 +141,7 @@ export const WebsiteRoot = publicRootData.PublicRoot.extend(KeyboardNavigationMi
                     this._gmapAPILoading = false;
                     return;
                 }
-                await ajax.loadJS(`https://maps.googleapis.com/maps/api/js?v=3.exp&libraries=places&callback=odoo_gmap_api_post_load&key=${key}`);
+                await loadJS(`https://maps.googleapis.com/maps/api/js?v=3.exp&libraries=places&callback=odoo_gmap_api_post_load&key=${key}`);
             });
         }
         return this._gmapAPILoading;
@@ -178,7 +165,11 @@ export const WebsiteRoot = publicRootData.PublicRoot.extend(KeyboardNavigationMi
      */
     _onLangChangeClick: function (ev) {
         ev.preventDefault();
-
+        // In edit mode, the client action redirects the iframe to the correct
+        // location with the chosen language.
+        if (document.body.classList.contains('editor_enable')) {
+            return;
+        }
         var $target = $(ev.currentTarget);
         // retrieve the hash before the redirect
         var redirect = {

@@ -5,7 +5,7 @@ import { clearRegistryWithCleanup, makeTestEnv } from "../helpers/mock_env";
 import { patch, unpatch } from "@web/core/utils/patch";
 import { getFixture, mount, nextTick } from "../helpers/utils";
 
-const { Component, useState, xml } = owl;
+import { Component, useState, xml } from "@odoo/owl";
 const mainComponentsRegistry = registry.category("main_components");
 
 let target;
@@ -71,6 +71,8 @@ QUnit.module("Components", (hooks) => {
             ev.preventDefault();
         };
         window.addEventListener("unhandledrejection", handler);
+        // fake error service so that the odoo qunit handlers don't think that they need to handle the error
+        registry.category("services").add("error", { start: () => {} });
         patch(QUnit, "MainComponentsContainer QUnit patch", {
             onUnhandledRejection: () => {},
         });
@@ -80,8 +82,8 @@ QUnit.module("Components", (hooks) => {
         // unpatch QUnit asap so any other errors can be caught by it
         unpatch(QUnit, "MainComponentsContainer QUnit patch");
         assert.verifySteps([
-            "An error occured in the owl lifecycle (see this Error's \"cause\" property)",
-            "BOOM"
+            'An error occured in the owl lifecycle (see this Error\'s "cause" property)',
+            "BOOM",
         ]);
 
         assert.equal(
@@ -124,6 +126,8 @@ QUnit.module("Components", (hooks) => {
             ev.preventDefault();
         };
         window.addEventListener("unhandledrejection", handler);
+        // fake error service so that the odoo qunit handlers don't think that they need to handle the error
+        registry.category("services").add("error", { start: () => {} });
         patch(QUnit, "MainComponentsContainer QUnit patch", {
             onUnhandledRejection: () => {},
         });
@@ -133,8 +137,8 @@ QUnit.module("Components", (hooks) => {
         // unpatch QUnit asap so any other errors can be caught by it
         unpatch(QUnit, "MainComponentsContainer QUnit patch");
         assert.verifySteps([
-            "An error occured in the owl lifecycle (see this Error's \"cause\" property)",
-            "BOOM"
+            'An error occured in the owl lifecycle (see this Error\'s "cause" property)',
+            "BOOM",
         ]);
         assert.equal(
             target.querySelector(".o-main-components-container").innerHTML,

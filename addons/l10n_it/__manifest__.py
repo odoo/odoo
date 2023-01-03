@@ -8,6 +8,7 @@
         'account',
         'base_iban',
         'base_vat',
+        'l10n_multilang',
     ],
     'author': 'OpenERP Italian Community',
     'description': """

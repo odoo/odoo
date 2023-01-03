@@ -7,14 +7,16 @@
             <td class="o_data_cell container" colspan="2">
                 <div class="o_resume_line row" t-att-data-id="id">
                     <div class="o_resume_line_dates col-lg-3">
-                        <span><t t-esc="data.date_start"/></span>
+                        <span><t t-esc="data.date_end"/></span>
                     </div>
                     <div class="o_resume_line_desc col-lg-8">
-                        <h3><t t-esc="data.name"/></h3>
+                        <h3>
+                            <t t-esc="data.name"/>
+                            <a t-attf-href="#{data.course_url}" t-if="data.course_url"
+                                style="font-size: 1rem;"
+                                class="ms-2 fa fa-external-link btn-secondary"/>
+                        </h3>
                         <t t-if="data.description" t-esc="data.description"/>
-                    </div>
-                    <div class="o_resume_line_icon icon_circle col-lg-1">
-                        <i class="fa fa-check-circle fa-2x"></i>
                     </div>
                 </div>
             </td>

@@ -10,6 +10,7 @@ from odoo.addons.base.models.res_partner import _tz_get
 from odoo.exceptions import UserError
 from odoo.addons.bus.models.bus_presence import AWAY_TIMER, DISCONNECTION_TIMER
 
+
 class MailGuest(models.Model):
     _name = 'mail.guest'
     _description = "Guest"
@@ -84,8 +85,8 @@ class MailGuest(models.Model):
             'id': self.id,
             'name': self.name
         }
-        bus_notifs = [(channel, 'mail.guest/insert', guest_data) for channel in self.channel_ids]
-        bus_notifs.append((self, 'mail.guest/insert', guest_data))
+        bus_notifs = [(channel, 'mail.record/insert', {'Guest': guest_data}) for channel in self.channel_ids]
+        bus_notifs.append((self, 'mail.record/insert', {'Guest': guest_data}))
         self.env['bus.bus']._sendmany(bus_notifs)
 
     def _update_timezone(self, timezone):
@@ -112,13 +113,28 @@ class MailGuest(models.Model):
             'current_partner': False,
             'current_user_id': False,
             'current_user_settings': False,
+            'hasLinkPreviewFeature': self.env['mail.link.preview']._is_link_preview_enabled(),
             'menu_id': False,
             'needaction_inbox_counter': False,
             'partner_root': {
                 'id': partner_root.id,
                 'name': partner_root.name,
             },
-            'publicPartners': [],
             'shortcodes': [],
             'starred_counter': False,
         }
+
+    def _guest_format(self, fields=None):
+        if not fields:
+            fields = {'id': True, 'name': True, 'im_status': True}
+        guests_formatted_data = {}
+        for guest in self:
+            data = {}
+            if 'id' in fields:
+                data['id'] = guest.id
+            if 'name' in fields:
+                data['name'] = guest.name
+            if 'im_status' in fields:
+                data['im_status'] = guest.im_status
+            guests_formatted_data[guest] = data
+        return guests_formatted_data

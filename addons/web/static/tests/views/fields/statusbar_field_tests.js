@@ -1,7 +1,6 @@
 /** @odoo-module **/
 
 import { browser } from "@web/core/browser/browser";
-import { commandService } from "@web/core/commands/command_service";
 import { registry } from "@web/core/registry";
 import { session } from "@web/session";
 import { makeFakeNotificationService } from "@web/../tests/helpers/mock_services";
@@ -15,12 +14,10 @@ import {
 } from "@web/../tests/helpers/utils";
 import { makeView, setupViewRegistries } from "@web/../tests/views/helpers";
 
-const { EventBus } = owl;
+import { EventBus } from "@odoo/owl";
 
 let serverData;
 let target;
-
-const serviceRegistry = registry.category("services");
 
 QUnit.module("Fields", (hooks) => {
     hooks.beforeEach(() => {
@@ -168,7 +165,7 @@ QUnit.module("Fields", (hooks) => {
         assert.containsN(target, ".o_statusbar_status button:disabled", 2);
         assert.hasClass(
             target.querySelector('.o_statusbar_status button[data-value="4"]'),
-            "btn-primary"
+            "o_arrow_button_current"
         );
     });
 
@@ -248,7 +245,7 @@ QUnit.module("Fields", (hooks) => {
 
         assert.hasClass(
             target.querySelector(".o_statusbar_status button[data-value='4']"),
-            "btn-primary"
+            "o_arrow_button_current"
         );
         assert.hasClass(
             target.querySelector(".o_statusbar_status button[data-value='4']"),
@@ -256,7 +253,7 @@ QUnit.module("Fields", (hooks) => {
         );
 
         const clickableButtons = target.querySelectorAll(
-            ".o_statusbar_status button.btn-secondary:not(.dropdown-toggle):not(:disabled)"
+            ".o_statusbar_status button.btn:not(.dropdown-toggle):not(:disabled):not(.o_arrow_button_current)"
         );
         assert.strictEqual(clickableButtons.length, 2);
 
@@ -264,7 +261,7 @@ QUnit.module("Fields", (hooks) => {
 
         assert.hasClass(
             target.querySelector(".o_statusbar_status button[data-value='1']"),
-            "btn-primary"
+            "o_arrow_button_current"
         );
         assert.hasClass(
             target.querySelector(".o_statusbar_status button[data-value='1']"),
@@ -405,7 +402,6 @@ QUnit.module("Fields", (hooks) => {
                     </form>`,
             });
 
-            await click(target, ".o_form_button_edit");
             assert.containsN(target, ".o_statusbar_status button:not(.dropdown-toggle)", 3);
             const buttons = target.querySelectorAll(
                 ".o_statusbar_status button:not(.dropdown-toggle)"
@@ -438,7 +434,6 @@ QUnit.module("Fields", (hooks) => {
                     </form>`,
             });
 
-            await click(target, ".o_form_button_edit");
             await click(target, ".o_statusbar_status .dropdown-toggle");
 
             const status = target.querySelectorAll(".o_statusbar_status");
@@ -467,7 +462,6 @@ QUnit.module("Fields", (hooks) => {
                 </form>`,
         });
 
-        await click(target, ".o_form_button_edit");
         assert.strictEqual(
             target.querySelector("[aria-label='Current state']").textContent,
             "aaa",
@@ -515,8 +509,6 @@ QUnit.module("Fields", (hooks) => {
             },
         });
 
-        await click(target, ".o_form_button_edit");
-
         assert.containsN(target, ".o_statusbar_status button.disabled", 3);
         assert.strictEqual(rpcCount, 1, "should have done 1 search_read rpc");
         await editInput(target, ".o_field_widget[name='qux'] input", 9.5);
@@ -527,8 +519,6 @@ QUnit.module("Fields", (hooks) => {
     });
 
     QUnit.test('statusbar edited by the smart action "Move to stage..."', async function (assert) {
-        serviceRegistry.add("command", commandService);
-
         await makeView({
             serverData,
             type: "form",

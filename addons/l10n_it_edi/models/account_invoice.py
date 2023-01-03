@@ -10,7 +10,9 @@ from datetime import datetime
 from odoo import api, fields, models, _
 from odoo.tools import float_repr, float_compare
 from odoo.exceptions import UserError, ValidationError
-from odoo.addons.base.models.ir_mail_server import MailDeliveryException
+
+
+_logger = logging.getLogger(__name__)
 
 DEFAULT_FACTUR_ITALIAN_DATE_FORMAT = '%Y-%m-%d'
 
@@ -18,19 +20,8 @@ DEFAULT_FACTUR_ITALIAN_DATE_FORMAT = '%Y-%m-%d'
 class AccountMove(models.Model):
     _inherit = 'account.move'
 
-    l10n_it_send_state = fields.Selection([
-        ('new', 'New'),
-        ('other', 'Other'),
-        ('to_send', 'Not yet send'),
-        ('sent', 'Sent, waiting for response'),
-        ('invalid', 'Sent, but invalid'),
-        ('delivered', 'This invoice is delivered'),
-        ('delivered_accepted', 'This invoice is delivered and accepted by destinatory'),
-        ('delivered_refused', 'This invoice is delivered and refused by destinatory'),
-        ('delivered_expired', 'This invoice is delivered and expired (expiry of the maximum term for communication of acceptance/refusal)'),
-        ('failed_delivery', 'Delivery impossible, ES certify that it has received the invoice and that the file \
-                        could not be delivered to the addressee') # ok we must do nothing
-    ], default='to_send', copy=False, string="FatturaPA Send State")
+    l10n_it_edi_transaction = fields.Char(copy=False, string="FatturaPA Transaction")
+    l10n_it_edi_attachment_id = fields.Many2one('ir.attachment', copy=False, string="FatturaPA Attachment")
 
     l10n_it_stamp_duty = fields.Float(default=0, string="Dati Bollo", readonly=True, states={'draft': [('readonly', False)]})
 
@@ -48,17 +39,11 @@ class AccountMove(models.Model):
             invoice.l10n_it_einvoice_id = einvoice.attachment_id
             invoice.l10n_it_einvoice_name = einvoice.attachment_id.name
 
-    def _check_before_xml_exporting(self):
-        # DEPRECATED use AccountEdiFormat._l10n_it_edi_check_invoice_configuration instead
-        errors = self.env['account.edi.format']._l10n_it_edi_check_invoice_configuration(self)
-        if errors:
-            raise UserError(self.env['account.edi.format']._format_error_message(_("Invalid configuration:"), errors))
-
     def invoice_generate_xml(self):
         self.ensure_one()
         report_name = self.env['account.edi.format']._l10n_it_edi_generate_electronic_invoice_filename(self)
 
-        data = "<?xml version='1.0' encoding='UTF-8'?>" + str(self._export_as_xml())
+        data = "<?xml version='1.0' encoding='UTF-8'?>" + str(self._l10n_it_edi_export_invoice_as_xml())
         description = _('Italian invoice: %s', self.move_type)
         attachment = self.env['ir.attachment'].create({
             'name': report_name,
@@ -86,14 +71,11 @@ class AccountMove(models.Model):
         invoice_lines = []
         lines = self.invoice_line_ids.filtered(lambda l: not l.display_type in ('line_note', 'line_section'))
         for num, line in enumerate(lines):
-            price_subtotal = line.balance if convert_to_euros else line.price_subtotal
-            # The price_subtotal should be negative when:
-            # The line has downpayment lines, but is not a downpayment (i.e. the final invoice, from which downpayment lines are subtracted) or,
-            # the line is a reverse charge refund.
-            if (line._get_downpayment_lines() and not is_downpayment) or reverse_charge_refund:
-                price_subtotal = -abs(price_subtotal)
-            else:
-                price_subtotal = abs(price_subtotal)
+            sign = -1 if line.move_id.is_inbound() else 1
+            price_subtotal = (line.balance * sign) if convert_to_euros else line.price_subtotal
+            # The price_subtotal should be inverted when the line is a reverse charge refund.
+            if reverse_charge_refund:
+                price_subtotal = -price_subtotal
 
             # Unit price
             price_unit = 0
@@ -224,7 +206,7 @@ class AccountMove(models.Model):
         pdf_name = re.sub(r'\W+', '', self.name) + '.pdf'
 
         tax_details = self._prepare_edi_tax_details(
-            filter_to_apply=lambda l: l['tax_repartition_line_id'].factor_percent >= 0
+            filter_to_apply=lambda base_line, tax_values: tax_values['tax_repartition_line'].factor_percent >= 0
         )
 
         company = self.company_id
@@ -257,6 +239,7 @@ class AccountMove(models.Model):
         # Create file content.
         template_values = {
             'record': self,
+            'balance_multiplicator': -1 if self.is_inbound() else 1,
             'company': company,
             'sender': company,
             'sender_partner': company.partner_id,
@@ -270,7 +253,7 @@ class AccountMove(models.Model):
             'document_total': document_total,
             'representative': company.l10n_it_tax_representative_partner_id,
             'codice_destinatario': codice_destinatario,
-            'regime_fiscale': company.l10n_it_tax_system if not is_self_invoice else 'RF01',
+            'regime_fiscale': company.l10n_it_tax_system if not is_self_invoice else 'RF18',
             'is_self_invoice': is_self_invoice,
             'partner_bank': self.partner_bank_id,
             'format_date': format_date,
@@ -297,72 +280,10 @@ class AccountMove(models.Model):
         }
         return template_values
 
-    def _export_as_xml(self):
-        '''DEPRECATED : this will be moved to AccountEdiFormat in a future version.
-        Create the xml file content.
-        :return: The XML content as str.
-        '''
-        template_values = self._prepare_fatturapa_export_values()
-        if not self.env['account.edi.format']._l10n_it_is_simplified_document_type(template_values['document_type']):
-            content = self.env['ir.qweb']._render('l10n_it_edi.account_invoice_it_FatturaPA_export', template_values)
-        else:
-            content = self.env['ir.qweb']._render('l10n_it_edi.account_invoice_it_simplified_FatturaPA_export', template_values)
-            self.message_post(body=_("A simplified invoice was created instead of an ordinary one. This is because the invoice \
-                                    is a domestic invoice with a total amount of less than or equal to 400€ and the customer's address is incomplete."))
-        return content
-
     def _post(self, soft=True):
         # OVERRIDE
         posted = super()._post(soft=soft)
-
-        for move in posted.filtered(lambda m: m.l10n_it_send_state == 'to_send' and m.move_type in ['out_invoice', 'out_refund'] and m.company_id.country_id.code == 'IT'):
-            move.send_pec_mail()
-
         return posted
-
-    def send_pec_mail(self):
-        self.ensure_one()
-        allowed_state = ['to_send', 'invalid']
-
-        if (
-            not self.company_id.l10n_it_mail_pec_server_id
-            or not self.company_id.l10n_it_mail_pec_server_id.active
-            or not self.company_id.l10n_it_address_send_fatturapa
-        ):
-            self.message_post(
-                body=(_("Error when sending mail with E-Invoice: Your company must have a mail PEC server and must indicate the mail PEC that will send electronic invoice."))
-                )
-            self.l10n_it_send_state = 'invalid'
-            return
-
-        if self.l10n_it_send_state not in allowed_state:
-            raise UserError(_("%s isn't in a right state. It must be in a 'Not yet send' or 'Invalid' state.") % (self.display_name))
-
-        message = self.env['mail.message'].create({
-            'subject': _('Sending file: %s') % (self.l10n_it_einvoice_name),
-            'body': _('Sending file: %s to ES: %s') % (self.l10n_it_einvoice_name, self.env.company.l10n_it_address_recipient_fatturapa),
-            'author_id': self.env.user.partner_id.id,
-            'email_from': self.env.company.l10n_it_address_send_fatturapa,
-            'reply_to': self.env.company.l10n_it_address_send_fatturapa,
-            'mail_server_id': self.env.company.l10n_it_mail_pec_server_id.id,
-            'attachment_ids': [(6, 0, self.l10n_it_einvoice_id.ids)],
-        })
-
-        mail_fattura = self.env['mail.mail'].sudo().with_context(wo_bounce_return_path=True).create({
-            'mail_message_id': message.id,
-            'email_to': self.env.company.l10n_it_address_recipient_fatturapa,
-        })
-        try:
-            mail_fattura.send(raise_exception=True)
-            self.message_post(
-                body=(_("Mail sent on %s by %s") % (fields.Datetime.now(), self.env.user.display_name))
-                )
-            self.l10n_it_send_state = 'sent'
-        except MailDeliveryException as error:
-            self.message_post(
-                body=(_("Error when sending mail with E-Invoice: %s") % (error.args[0]))
-                )
-            self.l10n_it_send_state = 'invalid'
 
     def _compose_info_message(self, tree, element_tags):
         output_str = ""
@@ -424,7 +345,7 @@ class AccountTax(models.Model):
             ("N6.7", "[N6.7] Inversione contabile – prestazioni comparto edile esettori connessi"),
             ("N6.8", "[N6.8] Inversione contabile – operazioni settore energetico"),
             ("N6.9", "[N6.9] Inversione contabile – altri casi"),
-            ("N7", "[N7] IVA assolta in altro stato UE (vendite a distanza ex art. 40 c. 3 e 4 e art. 41 c. 1 lett. b,  DL 331/93; prestazione di servizi di telecomunicazioni, tele-radiodiffusione ed elettronici ex art. 7-sexies lett. f, g, art. 74-sexies DPR 633/72)")],
+            ("N7", "[N7] IVA assolta in altro stato UE (prestazione di servizi di telecomunicazioni, tele-radiodiffusione ed elettronici ex art. 7-octies, comma 1 lett. a, b, art. 74-sexies DPR 633/72)")],
         string="Exoneration",
         help="Exoneration type",
         default="N1")

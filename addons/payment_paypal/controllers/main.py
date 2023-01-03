@@ -89,15 +89,15 @@ class PaypalController(http.Controller):
             # verify them but we can process them as is.
             notification_data = pdt_data
         else:
-            if not tx_sudo.acquirer_id.paypal_pdt_token:  # We received PDT but can't verify them
+            if not tx_sudo.provider_id.paypal_pdt_token:  # We received PDT but can't verify them
                 raise Forbidden("PayPal: The PDT token is not set; cannot verify data origin")
             else:  # The PayPal account is configured to receive PDTs, and the PDT token is set
                 # Request a PDT authenticity check and the notification data to PayPal
-                url = tx_sudo.acquirer_id._paypal_get_api_url()
+                url = tx_sudo.provider_id._paypal_get_api_url()
                 payload = {
                     'cmd': '_notify-synch',
                     'tx': pdt_data['tx'],
-                    'at': tx_sudo.acquirer_id.paypal_pdt_token,
+                    'at': tx_sudo.provider_id.paypal_pdt_token,
                 }
                 try:
                     response = requests.post(url, data=payload, timeout=10)
@@ -174,7 +174,7 @@ class PaypalController(http.Controller):
         :raise: :class:`werkzeug.exceptions.Forbidden` if the notification origin can't be verified
         """
         # Request PayPal for an authenticity check
-        url = tx_sudo.acquirer_id._paypal_get_api_url()
+        url = tx_sudo.provider_id._paypal_get_api_url()
         payload = dict(notification_data, cmd='_notify-validate')
         try:
             response = requests.post(url, payload, timeout=60)

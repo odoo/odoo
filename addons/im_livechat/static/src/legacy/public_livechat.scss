@@ -11,7 +11,7 @@ $o-mail-thread-window-zindex: $zindex-modal + 1 !default;
     position: fixed;
     width: $o-mail-thread-window-width;
     max-width: 100%;
-    height: 400px;
+    height: 460px;
     max-height: 100%;
     font-size: 12px;
     background-color: $o-mail-thread-window-bg;
@@ -42,6 +42,7 @@ $o-mail-thread-window-zindex: $zindex-modal + 1 !default;
         border-bottom: 1px solid map-get($grays, '300');
         background-color: $o-brand-odoo;
         padding: 8px;
+        cursor: pointer;
 
         @include media-breakpoint-down(md) {
             align-items: center;
@@ -81,7 +82,6 @@ $o-mail-thread-window-zindex: $zindex-modal + 1 !default;
         }
 
         .o_thread_window_title {
-            cursor: pointer;
             flex: 1 1 auto;
             @include o-text-overflow;
 
@@ -221,11 +221,6 @@ $o-mail-thread-window-zindex: $zindex-modal + 1 !default;
 
     .o_thread_bottom_free_space {
         height: 15px;
-    }
-
-    .o_thread_tooltip_container {
-        display: inline;
-        position: relative;
     }
 
     .o_thread_date_separator {
@@ -419,21 +414,12 @@ $o-mail-thread-window-zindex: $zindex-modal + 1 !default;
                     margin-bottom: $grid-gutter-width;
                 }
             }
-
-            .o_thread_tooltip_container {
-                display: inline;
-                position: relative;
-            }
         }
     }
 
     .o_thread_message .o_thread_message_core .o_mail_read_more {
         display: block;
     }
-}
-
-.o_web_client .popover .o_thread_tooltip_icon {
-    min-width: 1rem;
 }
 
 .o_web_client.o_touch_device {

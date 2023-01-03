@@ -6,6 +6,7 @@ import uuid
 from collections import defaultdict
 
 from dateutil.relativedelta import relativedelta
+import ast
 
 from odoo import api, fields, models, tools, _
 from odoo.addons.http_routing.models.ir_http import slug, unslug
@@ -133,7 +134,16 @@ class ChannelUsersRelation(models.Model):
 
         record_email_values = dict()
         for template, records in template_to_records.items():
-            record_email_values.update(template.generate_email(records.ids, ['subject', 'body_html', 'email_from', 'partner_to']))
+            record_email_values.update(
+                template.generate_email(
+                    records.ids,
+                    ['body_html',
+                     'email_from',
+                     'partner_to',
+                     'subject',
+                    ]
+                )
+            )
 
         mail_mail_values = []
         for record in self:
@@ -200,8 +210,8 @@ class Channel(models.Model):
     # description
     name = fields.Char('Name', translate=True, required=True)
     active = fields.Boolean(default=True, tracking=100)
-    description = fields.Html('Description', translate=True, help="The description that is displayed on top of the course page, just below the title")
-    description_short = fields.Html('Short Description', translate=True, help="The description that is displayed on the course card")
+    description = fields.Html('Description', translate=True, sanitize_attributes=False, sanitize_form=False, help="The description that is displayed on top of the course page, just below the title")
+    description_short = fields.Html('Short Description', translate=True, sanitize_attributes=False, sanitize_form=False, help="The description that is displayed on the course card")
     description_html = fields.Html('Detailed Description', translate=tools.html_translate, sanitize_attributes=False, sanitize_form=False)
     channel_type = fields.Selection([
         ('training', 'Training'), ('documentation', 'Documentation')],
@@ -251,7 +261,11 @@ class Channel(models.Model):
         help="Defines the email your Attendees will receive each time you upload new content.",
         default=lambda self: self.env['ir.model.data']._xmlid_to_res_id('website_slides.slide_template_published'),
         domain=[('model', '=', 'slide.slide')])
-    share_template_id = fields.Many2one(
+    share_channel_template_id = fields.Many2one(
+        'mail.template', string='Channel Share Template',
+        help='Email template used when sharing a channel',
+        default=lambda self: self.env['ir.model.data']._xmlid_to_res_id('website_slides.mail_template_channel_shared'))
+    share_slide_template_id = fields.Many2one(
         'mail.template', string='Share Template',
         help="Email template used when sharing a slide",
         default=lambda self: self.env['ir.model.data']._xmlid_to_res_id('website_slides.slide_template_shared'))
@@ -433,6 +447,12 @@ class Channel(models.Model):
                 record.can_publish = True
             else:
                 record.can_publish = self.env.user.has_group('website_slides.group_website_slides_manager')
+
+    def _get_placeholder_filename(self, field):
+        image_fields = ['image_%s' % size for size in [1920, 1024, 512, 256, 128]]
+        if field in image_fields:
+            return 'website_slides/static/src/img/channel-%s-default.jpg' % ('training' if self.channel_type == 'training' else 'documentation')
+        return super()._get_placeholder_filename(field)
 
     @api.model
     def _get_can_publish_error_message(self):
@@ -752,6 +772,23 @@ class Channel(models.Model):
         if removed_channel_partner_domain:
             self.env['slide.channel.partner'].sudo().search(removed_channel_partner_domain).unlink()
 
+    def _send_share_email(self, emails):
+        """ Share channel through emails."""
+        mail_ids = []
+        for record in self:
+            template = record.share_channel_template_id.with_context(
+                user=self.env.user,
+                email=emails,
+                base_url=record.get_base_url(),
+            )
+            email_values = {'email_to': emails}
+            if self.env.user.has_group('base.group_portal'):
+                template = template.sudo()
+                email_values['email_from'] = self.env.company.catchall_formatted or self.env.company.email_formatted
+
+            mail_ids.append(template.send_mail(record.id, email_layout_xmlid='mail.mail_notification_light', email_values=email_values))
+        return mail_ids
+
     def action_view_slides(self):
         action = self.env["ir.actions.actions"]._for_xml_id("website_slides.slide_slide_action")
         action['context'] = {
@@ -764,7 +801,7 @@ class Channel(models.Model):
     def action_view_ratings(self):
         action = self.env["ir.actions.actions"]._for_xml_id("website_slides.rating_rating_action_slide_channel")
         action['name'] = _('Rating of %s') % (self.name)
-        action['domain'] = [('res_id', 'in', self.ids)]
+        action['domain'] = expression.AND([ast.literal_eval(action.get('domain', '[]')), [('res_id', 'in', self.ids)]])
         return action
 
     def action_request_access(self):
@@ -930,12 +967,9 @@ class Channel(models.Model):
             except Exception:
                 tags = ChannelTag
             # Group by group_id
-            grouped_tags = defaultdict(list)
-            for tag in tags:
-                grouped_tags[tag.group_id].append(tag)
             # OR inside a group, AND between groups.
-            for group in grouped_tags:
-                domain.append([('tag_ids', 'in', [tag.id for tag in grouped_tags[group]])])
+            for tags in tags.grouped('group_id').values():
+                domain.append([('tag_ids', 'in', tags.ids)])
         if slide_category and 'nbr_%s' % slide_category in self:
             domain.append([('nbr_%s' % slide_category, '>', 0)])
         search_fields = ['name']

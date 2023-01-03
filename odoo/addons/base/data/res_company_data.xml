@@ -4,7 +4,7 @@
         <record id="main_company" model="res.company">
             <field name="name">My Company</field>
             <field name="partner_id" ref="main_partner"/>
-            <field name="currency_id" ref="base.EUR"/>
+            <field name="currency_id" ref="base.USD"/>
             <field name="favicon" model="res.company" eval="obj()._get_default_favicon(original=True)"/>
         </record>
     </data> 

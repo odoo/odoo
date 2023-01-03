@@ -14,6 +14,7 @@ class SaleOrder(models.Model):
     delivery_set = fields.Boolean(compute='_compute_delivery_state')
     recompute_delivery_price = fields.Boolean('Delivery cost should be recomputed')
     is_all_service = fields.Boolean("Service Product", compute="_compute_is_service_products")
+    shipping_weight = fields.Float("Shipping Weight", compute="_compute_shipping_weight", store=True, readonly=False)
 
     @api.depends('order_line')
     def _compute_is_service_products(self):
@@ -23,7 +24,7 @@ class SaleOrder(models.Model):
     def _compute_amount_total_without_delivery(self):
         self.ensure_one()
         delivery_cost = sum([l.price_total for l in self.order_line if l.is_delivery])
-        return self.amount_total - delivery_cost
+        return self.env['delivery.carrier']._compute_currency(self, self.amount_total - delivery_cost, 'pricelist_to_company')
 
     @api.depends('order_line')
     def _compute_delivery_state(self):
@@ -79,6 +80,7 @@ class SaleOrder(models.Model):
             'context': {
                 'default_order_id': self.id,
                 'default_carrier_id': carrier.id,
+                'default_total_weight': self._get_estimated_weight()
             }
         }
 
@@ -134,8 +136,8 @@ class SaleOrder(models.Model):
         return u' {pre}{0}{post}'.format(amount, pre=pre, post=post)
 
     @api.depends('order_line.is_delivery', 'order_line.is_downpayment')
-    def _get_invoice_status(self):
-        super()._get_invoice_status()
+    def _compute_invoice_status(self):
+        super()._compute_invoice_status()
         for order in self:
             if order.invoice_status in ['no', 'invoiced']:
                 continue
@@ -143,8 +145,15 @@ class SaleOrder(models.Model):
             if all(line.product_id.invoice_policy == 'delivery' and line.invoice_status == 'no' for line in order_lines):
                 order.invoice_status = 'no'
 
+    @api.depends('order_line.product_uom_qty', 'order_line.product_uom')
+    def _compute_shipping_weight(self):
+        for order in self:
+            order.shipping_weight = order._get_estimated_weight()
+
     def _get_estimated_weight(self):
         self.ensure_one()
+        if self.delivery_set:
+            return self.shipping_weight
         weight = 0.0
         for order_line in self.order_line.filtered(lambda l: l.product_id.type in ['product', 'consu'] and not l.is_delivery and not l.display_type):
             weight += order_line.product_qty * order_line.product_id.weight

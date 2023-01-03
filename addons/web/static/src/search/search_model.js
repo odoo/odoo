@@ -17,7 +17,7 @@ import {
 } from "./utils/dates";
 import { FACET_ICONS } from "./utils/misc";
 
-const { EventBus, toRaw } = owl;
+import { EventBus, toRaw } from "@odoo/owl";
 const { DateTime } = luxon;
 
 /**
@@ -408,7 +408,7 @@ export class SearchModel extends EventBus {
      */
     get context() {
         if (!this._context) {
-            this._context = makeContext([this._getContext(), this.globalContext]);
+            this._context = makeContext([this.globalContext, this._getContext()]);
         }
         return deepCopy(this._context);
     }
@@ -683,7 +683,7 @@ export class SearchModel extends EventBus {
     }
 
     getDomainPart(partName) {
-        let part = this.domainParts[partName] || null;
+        const part = this.domainParts[partName] || null;
         if (part) {
             return deepCopy(part);
         }
@@ -908,7 +908,9 @@ export class SearchModel extends EventBus {
                 if (!yearSelected(this._getSelectedGeneratorIds(searchItemId))) {
                     // Here we add 'this_year' as options if no option of type
                     // year is already selected.
-                    const { defaultYearId } = this.optionGenerators.find((o) => o.id === generatorId);
+                    const { defaultYearId } = this.optionGenerators.find(
+                        (o) => o.id === generatorId
+                    );
                     this.query.push({ searchItemId, generatorId: defaultYearId });
                 }
             }
@@ -1702,7 +1704,7 @@ export class SearchModel extends EventBus {
         const groups = [];
         for (const preGroup of preGroups) {
             const { queryElements, id } = preGroup;
-            let activeItems = [];
+            const activeItems = [];
             for (const queryElem of queryElements) {
                 const { searchItemId } = queryElem;
                 let activeItem = activeItems.find(({ searchItemId: id }) => id === searchItemId);

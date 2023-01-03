@@ -34,6 +34,8 @@ class APSController(http.Controller):
 
         :param dict data: The notification data.
         """
+        _logger.info("Handling redirection from APS with data:\n%s", pprint.pformat(data))
+
         # Check the integrity of the notification.
         tx_sudo = request.env['payment.transaction'].sudo()._get_tx_from_notification_data(
             'aps', data
@@ -85,7 +87,7 @@ class APSController(http.Controller):
             raise Forbidden()
 
         # Compare the received signature with the expected signature computed from the data.
-        expected_signature = tx_sudo.acquirer_id._aps_calculate_signature(
+        expected_signature = tx_sudo.provider_id._aps_calculate_signature(
             notification_data, incoming=True
         )
         if not hmac.compare_digest(received_signature, expected_signature):

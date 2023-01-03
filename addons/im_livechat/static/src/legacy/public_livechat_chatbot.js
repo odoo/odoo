@@ -1,13 +1,10 @@
 /** @odoo-module **/
 
-import core from 'web.core';
 import session from 'web.session';
 import time from 'web.time';
 import utils from 'web.utils';
 
 import LivechatButton from '@im_livechat/legacy/widgets/livechat_button';
-
-const _t = core._t;
 
 /**
  * Override of the LivechatButton to include chatbot capabilities.
@@ -18,42 +15,6 @@ const _t = core._t;
  *   message for a couple seconds and then trigger the next step of the script
  */
  LivechatButton.include({
-
-    //--------------------------------------------------------------------------
-    // Private - Chatbot specifics
-    //--------------------------------------------------------------------------
-
-    /**
-     * A special case is handled for email steps, where we first validate the email (server side)
-     * and we allow the user to try again in case the format is incorrect.
-     *
-     * The validation is made server-side to have the same test when we validate here and when we
-     * register the answer, but also to easily post a message as the bot ("Sorry, try again...").
-     *
-     * Returns a boolean stating whether the email was valid or not.
-     *
-     * @private
-     */
-    async _chatbotValidateEmail() {
-        let emailValidResult = await session.rpc('/chatbot/step/validate_email', {
-            channel_uuid: this.messaging.publicLivechatGlobal.publicLivechat.uuid,
-        });
-
-        if (emailValidResult.success) {
-            this.messaging.publicLivechatGlobal.chatbot.currentStep.data.is_email_valid = true;
-            this.messaging.publicLivechatGlobal.chatbot.saveSession();
-
-            return true;
-        } else {
-            // email is not valid, let the user try again
-            this.messaging.publicLivechatGlobal.chatWindow.enableInput();
-            if (emailValidResult.posted_message) {
-                this.messaging.publicLivechatGlobal.chatbot.addMessage(emailValidResult.posted_message);
-            }
-
-            return false;
-        }
-    },
 
      //--------------------------------------------------------------------------
      // Private - LiveChat Overrides
@@ -66,42 +27,23 @@ const _t = core._t;
     _prepareGetSessionParameters() {
         const parameters = this._super(...arguments);
 
-        if (this.messaging.publicLivechatGlobal.livechatButtonView.isChatbot) {
+        const { publicLivechat } = this.messaging.publicLivechatGlobal;
+        if (publicLivechat && publicLivechat.isTemporary && !publicLivechat.data.chatbot_script_id) {
+            return parameters;
+        } else if (publicLivechat && publicLivechat.data.chatbot_script_id) {
+            parameters.chatbot_script_id = publicLivechat.data.chatbot_script_id;
+        } else if (this.messaging.publicLivechatGlobal.chatbot.isActive) {
             parameters.chatbot_script_id = this.messaging.publicLivechatGlobal.chatbot.scriptId;
         }
 
         return parameters;
     },
     /**
-     * @private
-     */
-    _renderMessages() {
-        this._super(...arguments);
-
-        const self = this;
-
-        this.messaging.publicLivechatGlobal.chatWindow.widget.$('.o_thread_message:last .o_livechat_chatbot_options li').each(function () {
-            $(this).on('click', self._onChatbotOptionClicked.bind(self));
-        });
-
-        this.messaging.publicLivechatGlobal.chatWindow.widget.$('.o_livechat_chatbot_main_restart').on('click',
-            this.messaging.publicLivechatGlobal.livechatButtonView.onChatbotRestartScript
-        );
-
-        if (this.messaging.publicLivechatGlobal.messages.length !== 0) {
-            const lastMessage = this.messaging.publicLivechatGlobal.lastMessage;
-            const stepAnswers = lastMessage.widget.getChatbotStepAnswers();
-            if (stepAnswers && stepAnswers.length !== 0 && !lastMessage.widget.getChatbotStepAnswerId()) {
-                this.messaging.publicLivechatGlobal.chatWindow.disableInput(_t('Select an option above'));
-            }
-        }
-    },
-    /**
      * Small override to handle chatbot welcome message(s).
      * @private
      */
     _sendWelcomeMessage() {
-        if (this.messaging.publicLivechatGlobal.livechatButtonView.isChatbot) {
+        if (this.messaging.publicLivechatGlobal.chatbot.isActive) {
             this._sendWelcomeChatbotMessage(
                 0,
                 this.messaging.publicLivechatGlobal.chatbot.state === 'welcome' ? 0 : this.messaging.publicLivechatGlobal.chatbot.messageDelay,
@@ -139,13 +81,13 @@ const _t = core._t;
             this.messaging.publicLivechatGlobal.livechatButtonView.addMessage({
                 id: '_welcome_' + stepIndex,
                 is_discussion: true, // important for css style -> we only want white background for chatbot
-                author_id: (
+                author: (
                     this.messaging.publicLivechatGlobal.publicLivechat.operator
-                    ? [
-                        this.messaging.publicLivechatGlobal.publicLivechat.operator.id,
-                        this.messaging.publicLivechatGlobal.publicLivechat.operator.name,
-                    ]
-                    : []
+                    ? {
+                        id: this.messaging.publicLivechatGlobal.publicLivechat.operator.id,
+                        name: this.messaging.publicLivechatGlobal.publicLivechat.operator.name,
+                    }
+                    : [['clear']]
                 ),
                 body: utils.Markup(chatbotStep.chatbot_step_message),
                 chatbot_script_step_id: chatbotStep.chatbot_script_step_id,
@@ -164,8 +106,11 @@ const _t = core._t;
 
             this.messaging.publicLivechatGlobal.chatbot.update({
                 welcomeMessageTimeout: setTimeout(() => {
+                    if (!this.messaging.publicLivechatGlobal.chatWindow || !this.messaging.publicLivechatGlobal.chatWindow.exists()) {
+                        return;
+                    }
                     this._sendWelcomeChatbotMessage(stepIndex + 1, welcomeMessageDelay);
-                    this._renderMessages();
+                    this.messaging.publicLivechatGlobal.chatWindow.renderMessages();
                 }, welcomeMessageDelay),
             });
         } else {
@@ -227,7 +172,7 @@ const _t = core._t;
         const messageId = stepMessage.id;
         stepMessage.widget.setChatbotStepAnswerId(selectedAnswer);
         this.messaging.publicLivechatGlobal.chatbot.currentStep.data.chatbot_selected_answer_id = selectedAnswer;
-        this._renderMessages();
+        this.messaging.publicLivechatGlobal.chatWindow.renderMessages();
         this.messaging.publicLivechatGlobal.chatbot.saveSession();
 
         const saveAnswerPromise = session.rpc('/chatbot/answer/save', {

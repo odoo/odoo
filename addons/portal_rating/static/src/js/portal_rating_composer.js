@@ -19,12 +19,6 @@ const RatingPopupComposer = publicWidget.Widget.extend({
     custom_events: {
         reload_rating_popup_composer: '_onReloadRatingPopupComposer',
     },
-    xmlDependencies: [
-        '/portal/static/src/xml/portal_chatter.xml',
-        '/portal_rating/static/src/xml/portal_chatter.xml',
-        '/portal_rating/static/src/xml/portal_tools.xml',
-        '/portal_rating/static/src/xml/portal_rating_composer.xml',
-    ],
 
     willStart: function (parent) {
         const def = this._super.apply(this, arguments);
@@ -93,8 +87,9 @@ const RatingPopupComposer = publicWidget.Widget.extend({
         return this._composer.appendTo(this.$('.o_rating_popup_composer_modal .o_portal_chatter_composer')).then(() => {
             // Change the text of the button
             this.$('.o_rating_popup_composer_text').text(
-                this.options.default_message_id ?
-                _t('Modify your review') : _t('Add a review')
+                this.options.is_fullscreen ?
+                _t('Review') : this.options.default_message_id ?
+                _t('Edit Review') : _t('Add Review')
             );
         });
     },

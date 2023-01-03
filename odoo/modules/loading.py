@@ -483,14 +483,16 @@ def load_modules(registry, force_demo=False, status=None, update_module=False):
                     ['to install'], force, status, report,
                     loaded_modules, update_module, models_to_check)
 
-        # check that all installed modules have been loaded by the registry after a migration/upgrade
-        cr.execute("SELECT name from ir_module_module WHERE state = 'installed' and name != 'studio_customization'")
-        module_list = [name for (name,) in cr.fetchall() if name not in graph]
-        if module_list:
-            _logger.error("Some modules are not loaded, some dependencies or manifest may be missing: %s", sorted(module_list))
-
         registry.loaded = True
         registry.setup_models(cr)
+
+        # check that all installed modules have been loaded by the registry
+        env = api.Environment(cr, SUPERUSER_ID, {})
+        Module = env['ir.module.module']
+        modules = Module.search(Module._get_modules_to_load_domain(), order='name')
+        missing = [name for name in modules.mapped('name') if name not in graph]
+        if missing:
+            _logger.error("Some modules are not loaded, some dependencies or manifest may be missing: %s", missing)
 
         # STEP 3.5: execute migration end-scripts
         migrations = odoo.modules.migration.MigrationManager(cr, graph)
@@ -579,7 +581,11 @@ def load_modules(registry, force_demo=False, status=None, update_module=False):
         else:
             _logger.error('At least one test failed when loading the modules.')
 
-        # STEP 8: call _register_hook on every model
+
+        # STEP 8: save installed/updated modules for post-install tests and _register_hook
+        registry.updated_modules += processed_modules
+
+        # STEP 9: call _register_hook on every model
         # This is done *exactly once* when the registry is being loaded. See the
         # management of those hooks in `Registry.setup_models`: all the calls to
         # setup_models() done here do not mess up with hooks, as registry.ready
@@ -589,8 +595,6 @@ def load_modules(registry, force_demo=False, status=None, update_module=False):
             model._register_hook()
         env.flush_all()
 
-        # STEP 9: save installed/updated modules for post-install tests
-        registry.updated_modules += processed_modules
 
 def reset_modules_state(db_name):
     """

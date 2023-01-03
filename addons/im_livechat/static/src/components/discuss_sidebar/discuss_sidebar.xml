@@ -1,14 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates xml:space="preserve">
-    <t t-inherit="mail.DiscussSidebar" t-inherit-mode="extension">
+    <t t-inherit="mail.DiscussSidebarView" t-inherit-mode="extension">
         <xpath expr="//*[@name='beforeCategoryChat']" position="before">
-            <t t-set="categoryLivechat" t-value="discussView.discuss.categoryLivechat"/>
-            <t t-if="categoryLivechat and categoryLivechat.categoryItems.length">
-                <DiscussSidebarCategory
-                    className="'o_DiscussSidebar_category o_DiscussSidebar_categoryLivechat'"
-                    record="categoryLivechat"
-                />
-            </t>
+            <t t-set="categoryLivechat" t-value="owner.discuss.categoryLivechat"/>
+            <DiscussSidebarCategory t-if="categoryLivechat and categoryLivechat.categoryItems.length"
+                className="'o_DiscussSidebarView_category o_DiscussSidebarView_categoryLivechat'"
+                record="categoryLivechat"
+            />
         </xpath>
     </t>
 </templates>

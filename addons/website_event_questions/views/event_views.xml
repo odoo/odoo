@@ -10,8 +10,8 @@
                      <field name="question_ids" class="w-100">
                          <tree sample="1">
                              <field name="title"/>
-                             <field name="is_mandatory_answer"/>
-                             <field name="once_per_order"/>
+                             <field name="is_mandatory_answer" string="Mandatory"/>
+                             <field name="once_per_order" string="Once per Order"/>
                              <field name="question_type" />
                              <field name="answer_ids" widget = "many2many_tags"/>
                          </tree>
@@ -33,19 +33,19 @@
                             <tree>
                                 <field name="sequence" widget="handle" />
                                 <field name="title"/>
-                                <field name="is_mandatory_answer"/>
-                                <field name="once_per_order"/>
+                                <field name="is_mandatory_answer" string="Mandatory"/>
+                                <field name="once_per_order" string="Once per Order"/>
                                 <field name="question_type" string="Type" />
                                 <field name="answer_ids" widget="many2many_tags"
                                     attrs="{'invisible': [('question_type', '!=', 'simple_choice')]}" />
-                                <button name="action_view_question_answers" type="object" class="fa fa-bar-chart p-0" title="Answer Breakdown" />
+                                <button name="action_view_question_answers" type="object" class="p-0" icon="fa-bar-chart pe-1" string="Stats" title="Answer Breakdown"/>
                             </tree>
                             <!-- Need to repeat the whole tree form here to be able to create answers properly
                                 Without this, the sub-fields of answer_ids are unknown to the web framework.
                                 We need this because we create questions and answers when the event type changes. -->
                             <form string="Question">
                                 <sheet>
-                                    <h1><field name="title" placeholder='e.g. "Do you have any diet restrictions?"' /></h1>
+                                    <h1 class="d-flex"><field name="title" placeholder='e.g. "Do you have any diet restrictions?"' class="flex-grow-1"/></h1>
                                     <group>
                                         <group>
                                             <field name="is_mandatory_answer"/>

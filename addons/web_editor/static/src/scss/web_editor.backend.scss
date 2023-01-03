@@ -1,7 +1,6 @@
-.oe_form_field_html {
+.o_field_html {
     position: relative;
     word-wrap: break-word;
-    overflow: hidden;
 
     #codeview-btn-group {
         position: absolute;
@@ -9,14 +8,7 @@
         right: 0;
     }
 
-    .note-editable {
-        font: inherit !important;
-        font-family: inherit !important;
-        line-height: inherit !important;
-        color: inherit !important;
-    }
-
-    > iframe {
+    iframe {
         display: block;
         width: 100%;
         margin: 0;
@@ -41,12 +33,26 @@
     a {
         // Ensure the link is visible enough in the editor.
         $oe-link-color: o-color('o-cc3-link');
-        color: if($oe-link-color, $oe-link-color, #008f8c);
+        @if ($oe-link-color) {
+            color: $oe-link-color;
+        }
+    }
+}
+
+.o_form_view:not(.o_field_highlight) {
+    .o_field_html .note-editable {
+        border: $input-border-width solid transparent;
+        border-width: 0 0 $input-border-width 0;
+        border-radius: 0;
+
+        &:hover, &:focus {
+            border-color: var(--o-input-border-color);
+        }
     }
 }
 
 .o_field_widgetTextHtml_fullscreen {
-    .oe_form_field_html.o_form_fullscreen_ancestor iframe {
+    .o_field_mass_mailing_html.o_form_fullscreen_ancestor iframe {
         position: absolute !important;
         left: 0 !important;
         right: 0 !important;

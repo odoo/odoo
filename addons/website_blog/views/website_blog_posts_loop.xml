@@ -165,7 +165,7 @@ according to the enabled options.
 <template id="post_info">
     <div class="d-flex small flex-wrap mb-1 w-100">
         <div t-attf-class="d-flex flex-wrap align-items-center justify-content-between mx-n2 #{opt_blog_list_view and 'flex-grow-0 w-auto mw-100' or 'flex-grow-1' }">
-            <time t-field="blog_post.post_date" class="text-nowrap fw-bold px-2" t-options='{"format": "MMM d, yyyy"}'/>
+            <time t-field="blog_post.post_date" class="text-nowrap fw-bold px-2" t-options="{'widget': 'datetime', 'date_only': 'true', 'format': 'medium'}"/>
             <div t-if="is_view_active('website_blog.opt_posts_loop_show_stats')" class="px-2">
                 <b class="text-nowrap" title="Comments"><i class="fa fa-comment text-muted me-1"/><t t-esc="len(blog_post.message_ids)"/></b>
                 <b class="text-nowrap ps-2" title="Views"><i class="fa fa-binoculars text-muted me-1"/><t t-esc="blog_post.visits"/></b>

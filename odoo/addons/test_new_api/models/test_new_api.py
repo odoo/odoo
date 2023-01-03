@@ -5,6 +5,7 @@ import logging
 
 from odoo import models, fields, api, _, Command
 from odoo.exceptions import AccessError, ValidationError
+from odoo.tools.translate import html_translate
 
 
 class Category(models.Model):
@@ -96,6 +97,9 @@ class Discussion(models.Model):
     important_emails = fields.One2many('test_new_api.emailmessage', 'discussion',
                                        domain=[('important', '=', True)])
 
+    history = fields.Json('History', default={'delete_messages': []})
+    attributes_definition = fields.PropertiesDefinition('Message Properties')  # see message@attributes
+
     def _domain_very_important(self):
         """Ensure computed O2M domains work as expected."""
         return [("important", "=", True)]
@@ -128,7 +132,7 @@ class Message(models.Model):
     _description = 'Test New API Message'
 
     discussion = fields.Many2one('test_new_api.discussion', ondelete='cascade')
-    body = fields.Text()
+    body = fields.Text(index='trigram')
     author = fields.Many2one('res.users', default=lambda self: self.env.user)
     name = fields.Char(string='Title', compute='_compute_name', store=True)
     display_name = fields.Char(string='Abstract', compute='_compute_display_name')
@@ -141,6 +145,11 @@ class Message(models.Model):
     important = fields.Boolean()
     label = fields.Char(translate=True)
     priority = fields.Integer()
+
+    attributes = fields.Properties(
+        string='Properties',
+        definition='discussion.attributes_definition',
+    )
 
     @api.constrains('author', 'discussion')
     def _check_author(self):
@@ -220,6 +229,18 @@ class EmailMessage(models.Model):
     message = fields.Many2one('test_new_api.message', 'Message',
                               required=True, ondelete='cascade')
     email_to = fields.Char('To')
+
+
+class DiscussionPartner(models.Model):
+    """
+    Simplified model for partners. Having a specific model avoids all the
+    overrides from other modules that may change which fields are being read,
+    how many queries it takes to use that model, etc.
+    """
+    _name = 'test_new_api.partner'
+    _description = 'Discussion Partner'
+
+    name = fields.Char(string='Name')
 
 
 class Multi(models.Model):
@@ -509,6 +530,7 @@ class Order(models.Model):
     _name = _description = 'test_new_api.order'
 
     line_ids = fields.One2many('test_new_api.order.line', 'order_id')
+    line_short_field_name = fields.Integer(index=True)
 
 
 class OrderLine(models.Model):
@@ -517,6 +539,9 @@ class OrderLine(models.Model):
     order_id = fields.Many2one('test_new_api.order', required=True, ondelete='cascade')
     product = fields.Char()
     reward = fields.Boolean()
+    short_field_name = fields.Integer(index=True)
+    very_very_very_very_very_long_field_name_1 = fields.Integer(index=True)
+    very_very_very_very_very_long_field_name_2 = fields.Integer(index=True)
 
     def unlink(self):
         # also delete associated reward lines
@@ -843,6 +868,7 @@ class MonetaryRelated(models.Model):
     monetary_id = fields.Many2one('test_new_api.monetary_base')
     currency_id = fields.Many2one('res.currency', related='monetary_id.base_currency_id')
     amount = fields.Monetary(related='monetary_id.amount')
+    total = fields.Monetary()
 
 
 class MonetaryCustom(models.Model):
@@ -1331,6 +1357,12 @@ class ComputeContainer(models.Model):
 
     name = fields.Char()
     member_ids = fields.One2many('test_new_api.compute.member', 'container_id')
+    member_count = fields.Integer(compute='_compute_member_count', store=True)
+
+    @api.depends('member_ids')
+    def _compute_member_count(self):
+        for record in self:
+            record.member_count = len(record.member_ids)
 
 
 class ComputeMember(models.Model):
@@ -1630,12 +1662,90 @@ class Prefetch(models.Model):
     _description = 'A model to check the prefetching of fields (translated and group)'
 
     name = fields.Char('Name', translate=True)
-    description = fields.Char('Description', translate=True, prefetch=True)
-    html_description = fields.Html('Styled description', translate=True, prefetch=True)
-    rare_description = fields.Char('Rare Description', translate=True)
-    rare_html_description = fields.Html('Rare Styled description', translate=True)
+    description = fields.Char('Description', translate=True)
+    html_description = fields.Html('Styled description', translate=True)
+    rare_description = fields.Char('Rare Description', translate=True, prefetch=False)
+    rare_html_description = fields.Html('Rare Styled description', translate=True, prefetch=False)
     harry = fields.Integer('Harry Potter', prefetch='Harry Potter')
     hermione = fields.Char('Hermione Granger', prefetch='Harry Potter')
     ron = fields.Float('Ron Weasley', prefetch='Harry Potter')
     hansel = fields.Integer('Hansel', prefetch="Hansel and Gretel")
     gretel = fields.Char('Gretel', prefetch="Hansel and Gretel")
+
+
+class Modified(models.Model):
+    _name = 'test_new_api.modified'
+    _description = 'A model to check modified trigger'
+
+    name = fields.Char('Name')
+    line_ids = fields.One2many('test_new_api.modified.line', 'modified_id')
+    total_quantity = fields.Integer(compute='_compute_total_quantity')
+
+    @api.depends('line_ids.quantity')
+    def _compute_total_quantity(self):
+        for rec in self:
+            rec.total_quantity = sum(rec.line_ids.mapped('quantity'))
+
+
+class ModifiedLine(models.Model):
+    _name = 'test_new_api.modified.line'
+    _description = 'A model to check modified trigger'
+
+    modified_id = fields.Many2one('test_new_api.modified')
+    modified_name = fields.Char(related="modified_id.name")
+    quantity = fields.Integer()
+    price = fields.Float()
+    total_price = fields.Float(compute='_compute_total_quantity', recursive=True)
+    total_price_quantity = fields.Float(compute='_compute_total_price_quantity')
+
+    parent_id = fields.Many2one('test_new_api.modified.line')
+    child_ids = fields.One2many('test_new_api.modified.line', 'parent_id')
+
+    @api.depends('price', 'child_ids.total_price', 'child_ids.price')
+    def _compute_total_quantity(self):
+        for rec in self:
+            rec.total_price = sum(rec.child_ids.mapped('total_price')) + rec.price
+
+    @api.depends('total_price', 'quantity')
+    def _compute_total_price_quantity(self):
+        for rec in self:
+            rec.total_price_quantity = rec.total_price * rec.quantity
+
+
+class RelatedTranslation(models.Model):
+    _name = 'test_new_api.related_translation_1'
+    _description = 'A model to test translation for related fields'
+
+    name = fields.Char('Name', translate=True)
+    html = fields.Html('HTML', translate=html_translate)
+
+
+class RelatedTranslation2(models.Model):
+    _name = 'test_new_api.related_translation_2'
+    _description = 'A model to test translation for related fields'
+
+    parent_id = fields.Many2one('test_new_api.related_translation_1', string='Parent Model')
+    name = fields.Char('Name Related', related='parent_id.name', readonly=False)
+    html = fields.Html('HTML Related', related='parent_id.html', readonly=False)
+
+
+class RelatedTranslation3(models.Model):
+    _name = 'test_new_api.related_translation_3'
+    _description = 'A model to test translation for related fields'
+
+    parent_id = fields.Many2one('test_new_api.related_translation_2', string='Parent Model')
+    name = fields.Char('Name Related', related='parent_id.name', readonly=False)
+    html = fields.Html('HTML Related', related='parent_id.html', readonly=False)
+
+
+class IndexedTranslation(models.Model):
+    _name = 'test_new_api.indexed_translation'
+    _description = 'A model to indexed translated fields'
+
+    name = fields.Text('Name trigram', translate=True, index='trigram')
+
+class EmptyChar(models.Model):
+    _name = 'test_new_api.empty_char'
+    _description = 'A model to test emtpy char'
+
+    name = fields.Char('Name')

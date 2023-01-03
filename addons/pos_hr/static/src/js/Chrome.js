@@ -1,30 +1,37 @@
-odoo.define('pos_hr.chrome', function (require) {
-    'use strict';
+/** @odoo-module */
 
-    const Chrome = require('point_of_sale.Chrome');
-    const Registries = require('point_of_sale.Registries');
+import Chrome from "@point_of_sale/js/Chrome";
+import Registries from "@point_of_sale/js/Registries";
 
-    const PosHrChrome = (Chrome) =>
-        class extends Chrome {
-            async start() {
-                await super.start();
-                if (this.env.pos.config.module_pos_hr) this.showTempScreen('LoginScreen');
+const PosHrChrome = (Chrome) =>
+    class extends Chrome {
+        async start() {
+            await super.start();
+            if (this.env.pos.config.module_pos_hr) {
+                this.showTempScreen("LoginScreen");
             }
-            get headerButtonIsShown() {
-                return !this.env.pos.config.module_pos_hr || this.env.pos.get_cashier().role == 'manager' || this.env.pos.get_cashier_user_id() === this.env.pos.user.id;
+        }
+        get headerButtonIsShown() {
+            return (
+                !this.env.pos.config.module_pos_hr ||
+                this.env.pos.get_cashier().role == "manager" ||
+                this.env.pos.get_cashier_user_id() === this.env.pos.user.id
+            );
+        }
+        showCashMoveButton() {
+            return (
+                super.showCashMoveButton() &&
+                (!this.env.pos.cashier || this.env.pos.cashier.role == "manager")
+            );
+        }
+        shouldShowCashControl() {
+            if (this.env.pos.config.module_pos_hr) {
+                return super.shouldShowCashControl() && this.env.pos.hasLoggedIn;
             }
-            showCashMoveButton() {
-                return super.showCashMoveButton() && (!this.env.pos.cashier || this.env.pos.cashier.role == 'manager');
-            }
-            shouldShowCashControl() {
-                if (this.env.pos.config.module_pos_hr){
-                    return super.shouldShowCashControl() && this.env.pos.hasLoggedIn;
-                }
-                return super.shouldShowCashControl();
-            }
-        };
+            return super.shouldShowCashControl();
+        }
+    };
 
-    Registries.Component.extend(Chrome, PosHrChrome);
+Registries.Component.extend(Chrome, PosHrChrome);
 
-    return Chrome;
-});
+export default Chrome;

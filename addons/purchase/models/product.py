@@ -11,10 +11,6 @@ class ProductTemplate(models.Model):
     _name = 'product.template'
     _inherit = 'product.template'
 
-    property_account_creditor_price_difference = fields.Many2one(
-        'account.account', string="Price Difference Account", company_dependent=True,
-        help="This account is used in automated inventory valuation to "\
-             "record the price difference between a purchase order and its related vendor bill when validating this vendor bill.")
     purchased_product_qty = fields.Float(compute='_compute_purchased_product_qty', string='Purchased', digits='Product Unit of Measure')
     purchase_method = fields.Selection([
         ('purchase', 'On ordered quantities'),
@@ -39,12 +35,9 @@ class ProductTemplate(models.Model):
         return res
 
     def action_view_po(self):
-        action = self.env["ir.actions.actions"]._for_xml_id("purchase.action_purchase_order_report_all")
-        action['domain'] = ['&', ('state', 'in', ['purchase', 'done']), ('product_tmpl_id', 'in', self.ids)]
-        action['context'] = {
-            'graph_measure': 'qty_ordered',
-            'search_default_later_than_a_year_ago': True
-        }
+        action = self.env["ir.actions.actions"]._for_xml_id("purchase.action_purchase_history")
+        action['domain'] = ['&', ('state', 'in', ['purchase', 'done']), ('product_id', 'in', self.product_variant_ids.ids)]
+        action['display_name'] = _("Purchase History for %s", self.display_name)
         return action
 
 
@@ -71,22 +64,10 @@ class ProductProduct(models.Model):
             product.purchased_product_qty = float_round(purchased_data.get(product.id, 0), precision_rounding=product.uom_id.rounding)
 
     def action_view_po(self):
-        action = self.env["ir.actions.actions"]._for_xml_id("purchase.action_purchase_order_report_all")
+        action = self.env["ir.actions.actions"]._for_xml_id("purchase.action_purchase_history")
         action['domain'] = ['&', ('state', 'in', ['purchase', 'done']), ('product_id', 'in', self.ids)]
-        action['context'] = {
-            'graph_measure': 'qty_ordered',
-            'search_default_later_than_a_year_ago': True
-        }
+        action['display_name'] = _("Purchase History for %s", self.display_name)
         return action
-
-
-class ProductCategory(models.Model):
-    _inherit = "product.category"
-
-    property_account_creditor_price_difference_categ = fields.Many2one(
-        'account.account', string="Price Difference Account",
-        company_dependent=True,
-        help="This account will be used to value price difference between purchase price and accounting cost.")
 
 
 class ProductSupplierinfo(models.Model):

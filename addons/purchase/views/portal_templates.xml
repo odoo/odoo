@@ -298,7 +298,7 @@
                                     <form t-attf-action="/my/purchase/#{order.id}/update?access_token=#{order.access_token}" method="post">
                                       <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
                                       <div class="container">
-                                        <div class="form-group">
+                                        <div class="mb-3">
                                           <div class="input-group date">
                                               <input type="text" class="form-control datetimepicker-input o-purchase-datetimepicker" t-attf-id="datetimepicker_#{line.id}" t-att-name="line.id"
                                                 data-toggle="datetimepicker" data-date-format="YYYY-MM-DD" t-attf-data-target="#datetimepicker_#{line.id}"/>

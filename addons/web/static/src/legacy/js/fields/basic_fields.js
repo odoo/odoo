@@ -17,7 +17,6 @@ var dom = require('web.dom');
 var Domain = require('web.Domain');
 var DomainSelector = require('web.DomainSelector');
 var DomainSelectorDialog = require('web.DomainSelectorDialog');
-var ModelFieldSelectorPopover = require("web.ModelFieldSelectorPopover");
 var framework = require('web.framework');
 var py_utils = require('web.py_utils');
 var session = require('web.session');
@@ -71,100 +70,6 @@ var TranslatableFieldMixin = {
             id: this.dataPointID,
             isComingFromTranslationAlert: false,
         });
-    },
-};
-
-var DynamicPlaceholderFieldMixin = {
-    DYNAMIC_PLACEHOLDER_TRIGGER_KEY: '#',
-    /**
-     * Overridable method that ensure the modelSelectorPopover is
-     * positioned properly.
-     *
-     * @public
-     * @param {ModelFieldSelectorPopover} modelSelector
-     */
-    positionModelSelector: function (modelSelector) {
-        let relativeParent = this.el.closest('div.modal-content');
-        if (!relativeParent) {
-            relativeParent = this.el;
-            while(!relativeParent || !['absolute', 'relative'].includes(getComputedStyle(relativeParent).position)) {
-                relativeParent = relativeParent.offsetParent;
-            }
-        }
-
-        const relatedElementPosition = this.el.getBoundingClientRect();
-        const relativeParentPosition = relativeParent.getBoundingClientRect();
-
-        let topPosition = relatedElementPosition.top + relatedElementPosition.height - relativeParentPosition.top
-        let leftPosition = relatedElementPosition.left - relativeParentPosition.left;
-
-        modelSelector.el.style.top = topPosition + 'px';
-        modelSelector.el.style.left = leftPosition + 'px';
-    },
-    /**
-     * Open and return new Model Field Selector with the provided options
-     *
-     * @private
-     * @param {String} baseModel
-     * @param {Array} chain
-     * @param {Function} onFieldChanged
-     * @param {Function} onFieldCancel
-     *
-     * @returns {ModelFieldSelectorPopover}
-     */
-    _openNewModelSelector: async function (baseModel, chain, onFieldChanged = null, onFieldCancel = null) {
-        const triggerKeyReplaceRegex = new RegExp(`${this.DYNAMIC_PLACEHOLDER_TRIGGER_KEY}$`);
-
-        const modelSelector = new ModelFieldSelectorPopover(
-            this,
-            baseModel,
-            [],
-            {
-                readonly: false,
-                needDefaultValue: true,
-                cancelOnEscape: true,
-                chainedTitle: true,
-                filter: (model) => !["one2many", "boolean", "many2many"].includes(model.type)
-            }
-        );
-        if (!onFieldChanged) {
-            onFieldChanged = (ev) => {
-                this.$el.focus();
-                if (ev.data.chain.length) {
-                    let dynamicPlaceholder = "{{object." + ev.data.chain.join('.');
-                    const defaultValue = ev.data.defaultValue;
-                    dynamicPlaceholder += defaultValue && defaultValue !== '' ? ` or '''${defaultValue}'''}}` : '}}';
-                    this.el.value =
-                        this.el.value.replace(triggerKeyReplaceRegex, '') + dynamicPlaceholder;
-                }
-                modelSelector.destroy();
-            };
-        }
-
-        if (onFieldCancel === null) {
-            onFieldCancel = () => {
-                this.$el.focus();
-                modelSelector.destroy();
-            };
-
-        }
-
-        modelSelector.on("field_chain_changed", undefined, onFieldChanged);
-        modelSelector.on("field_chain_cancel", undefined, onFieldCancel);
-
-        // If we are inside a modal environment,
-        // we need to append the ModelFieldSelectorPopover outside the
-        // modal body, to be sure the overflow will be visible.
-        const modalParent = this.el.closest('div.modal-content');
-        if (modalParent) {
-            await modelSelector.appendTo(modalParent);
-        } else {
-            await modelSelector.insertAfter(this.el);
-        }
-        this.positionModelSelector(modelSelector);
-
-        modelSelector.open(chain, true);
-        return modelSelector;
     },
 };
 
@@ -612,7 +517,7 @@ var NumericField = InputField.extend({
                 value = this._formatValue(value);
                 // Set the computed value in the input
                 this.$input.val(value);
-            } catch (_err) {
+            } catch {
                 // in case of exception, set value as the original value
                 // that way the Webclient will show an error as
                 // it is expecting a numeric value.
@@ -637,6 +542,9 @@ var NumericField = InputField.extend({
         const kbdEvt = ev.originalEvent;
         if (kbdEvt && utils.isNumpadDecimalSeparatorKey(kbdEvt)) {
             const inputField = this.$input[0];
+            if (inputField.type === 'number') {
+                return this._super(...arguments);
+            }
             const curVal = inputField.value;
             const from = inputField.selectionStart;
             const to = inputField.selectionEnd;
@@ -660,7 +568,7 @@ var NumericField = InputField.extend({
     },
 });
 
-var FieldChar = InputField.extend(TranslatableFieldMixin, DynamicPlaceholderFieldMixin, {
+var FieldChar = InputField.extend(TranslatableFieldMixin, {
     description: _lt("Text"),
     className: 'o_field_char',
     tagName: 'span',
@@ -671,38 +579,6 @@ var FieldChar = InputField.extend(TranslatableFieldMixin, DynamicPlaceholderFiel
     // Private
     //--------------------------------------------------------------------------
 
-
-    /**
-     * @override
-     */
-    init: function () {
-        this._super(...arguments);
-        if (this.nodeOptions && this.nodeOptions.dynamic_placeholder) {
-            // When the dynamic placeholder is active, the recordData
-            // need to be updated when `mailing_model_real` change
-            this.resetOnAnyFieldChange = true;
-        }
-    },
-    /**
-     * Open the dynamic placeholder if trigger key match
-     *
-     * @private
-     * @override
-     * @param {KeyboardEvent} ev
-     */
-    async _onKeydown(ev) {
-        this._super(...arguments);
-        if (this.nodeOptions &&
-            this.nodeOptions.dynamic_placeholder &&
-            ev.key === this.DYNAMIC_PLACEHOLDER_TRIGGER_KEY) {
-            ev.preventDefault();
-            const baseModel = this.recordData && this.recordData.mailing_model_real ? this.recordData.mailing_model_real : undefined;
-            if (baseModel) {
-                await this._openNewModelSelector(baseModel);
-            }
-            this.el.value += ev.key;
-        }
-    },
     /**
      * Add translation button
      *
@@ -733,46 +609,6 @@ var FieldChar = InputField.extend(TranslatableFieldMixin, DynamicPlaceholderFiel
             value = value.trim();
         }
         return this._super(value, options);
-    },
-});
-
-var LinkButton = AbstractField.extend({
-    events: _.extend({}, AbstractField.prototype.events, {
-        'click': '_onClick'
-    }),
-    //--------------------------------------------------------------------------
-    // Private
-    //--------------------------------------------------------------------------
-
-    /**
-     * Display button
-     * @override
-     * @private
-     */
-    _render: function () {
-        if (this.value) {
-            var className = this.attrs.icon || 'fa-globe';
-
-            this.$el.html("<span role='img'/>");
-            this.$el.addClass("fa "+ className);
-            this.$el.attr('title', this.value);
-            this.$el.attr('aria-label', this.value);
-        }
-    },
-
-    //--------------------------------------------------------------------------
-    // Handlers
-    //--------------------------------------------------------------------------
-
-    /**
-     * Open link button
-     *
-     * @private
-     * @param {MouseEvent} event
-     */
-    _onClick: function (event) {
-        event.stopPropagation();
-        window.open(this.value, '_blank');
     },
 });
 
@@ -838,7 +674,7 @@ var FieldDateRange = InputField.extend({
         const value = this.mode === "readonly" ? this.value : this.$input.val();
         try {
             return field_utils.parse[this.formatType](value, this.field, { timezone: true }) || true;
-        } catch (_error) {
+        } catch {
             return false;
         }
     },
@@ -858,7 +694,7 @@ var FieldDateRange = InputField.extend({
             // user may enter manual value in input and it may not be parsed as date/datetime value
             this.removeInvalidClass();
             return field_utils.parse[this.formatType](this.$input.val(), this.field, { timezone: true });
-        } catch (_error) {
+        } catch {
             this.setInvalidClass();
             return false;
         }
@@ -1131,7 +967,7 @@ var FieldDate = InputField.extend({
                 if (this.datewidget.type_of_date === "datetime") {
                     value.add(-this.getSession().getTZOffset(value), "minutes");
                 }
-            } catch (_err) {}
+            } catch {}
             await this._setValue(value);
             this._render();
         }
@@ -2242,7 +2078,7 @@ var AbstractFieldBinary = AbstractField.extend({
 var FieldBinaryImage = AbstractFieldBinary.extend({
     description: _lt("Image"),
     fieldDependencies: _.extend({}, AbstractFieldBinary.prototype.fieldDependencies, {
-        __last_update: {type: 'datetime'},
+        write_date: {type: 'datetime'},
     }),
 
     template: 'FieldBinaryImage',
@@ -2265,7 +2101,7 @@ var FieldBinaryImage = AbstractFieldBinary.extend({
      * @param {string} model    model from which to retrieve the image
      * @param {string} res_id   id of the record
      * @param {string} field    name of the image field
-     * @param {string} unique   an unique integer for the record, usually __last_update
+     * @param {string} unique   an unique integer for the record, usually write_date
      * @returns {string} URL of the image
      */
     _getImageUrl: function (model, res_id, field, unique) {
@@ -2286,7 +2122,7 @@ var FieldBinaryImage = AbstractFieldBinary.extend({
                 url = 'data:image/' + (this.file_type_magic_word[this.value[0]] || 'png') + ';base64,' + this.value;
             } else {
                 var field = this.nodeOptions.preview_image || this.name;
-                var unique = this.recordData.__last_update;
+                var unique = this.recordData.write_date;
                 url = this._getImageUrl(this.model, this.res_id, field, unique);
             }
         }
@@ -2330,7 +2166,7 @@ var FieldBinaryImage = AbstractFieldBinary.extend({
     _renderReadonly: function () {
         this._super.apply(this, arguments);
 
-        var unique = this.recordData.__last_update;
+        var unique = this.recordData.write_date;
         var url = this._getImageUrl(this.model, this.res_id, 'image_1920', unique);
         var $img;
         var imageField = _.find(Object.keys(this.recordData), function(o) {
@@ -3377,7 +3213,7 @@ var FieldProgressBar = AbstractField.extend({
         try {
             // Cover all numbers with parseFloat
             parsedValue = field_utils.parse.float($input.val());
-        } catch (_error) {
+        } catch {
             this.displayNotification({ message: _t("Please enter a numerical value"), type: 'danger' });
         }
 
@@ -4321,7 +4157,7 @@ var FieldColorPicker = FieldInteger.extend({
     _highlightSelectedColor: function(){
         try{
             $(this.$('li')[parseInt(this.value)]).css('border', '2px solid teal');
-        } catch(_err) {
+        } catch {
 
         }
     },
@@ -4332,7 +4168,6 @@ var FieldColorPicker = FieldInteger.extend({
 
 return {
     TranslatableFieldMixin: TranslatableFieldMixin,
-    DynamicPlaceholderFieldMixin: DynamicPlaceholderFieldMixin,
     DebouncedField: DebouncedField,
     FieldEmail: FieldEmail,
     FieldBinaryFile: FieldBinaryFile,
@@ -4345,7 +4180,6 @@ return {
     FieldBoolean: FieldBoolean,
     BooleanToggle: BooleanToggle,
     FieldChar: FieldChar,
-    LinkButton: LinkButton,
     FieldDate: FieldDate,
     FieldDateTime: FieldDateTime,
     FieldDateRange: FieldDateRange,

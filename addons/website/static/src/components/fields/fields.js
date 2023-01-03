@@ -5,12 +5,9 @@ import {standardFieldProps} from '@web/views/fields/standard_field_props';
 import {useInputField} from '@web/views/fields/input_field_hook';
 import {useService} from '@web/core/utils/hooks';
 import {Switch} from '@website/components/switch/switch';
-import AbstractFieldOwl from 'web.AbstractFieldOwl';
-import fieldRegistry from 'web.field_registry_owl';
 import {registry} from '@web/core/registry';
-import {formatChar} from '@web/views/fields/formatters';
 
-const {Component, useState, onWillStart} = owl;
+const {Component, useState} = owl;
 
 /**
  * Displays website page dependencies and URL redirect options when the page URL
@@ -18,15 +15,17 @@ const {Component, useState, onWillStart} = owl;
  */
 class PageUrlField extends Component {
     setup() {
+        this.orm = useService('orm');
+        this.serverUrl = `${window.location.origin}/`;
+        this.pageUrl = this.fieldURL;
+
         this.state = useState({
             redirect_old_url: false,
-            url: this.props.value,
+            url: this.pageUrl,
             redirect_type: '301',
         });
-        useInputField({getValue: () => this.props.value.url || this.props.value});
 
-        this.serverUrl = window.location.origin;
-        this.pageUrl = this.props.value;
+        useInputField({getValue: () => this.fieldURL});
     }
 
     get enableRedirect() {
@@ -36,6 +35,11 @@ class PageUrlField extends Component {
     onChangeRedirectOldUrl(value) {
         this.state.redirect_old_url = value;
         this.updateValues();
+    }
+
+    get fieldURL() {
+        const value = this.props.value;
+        return (value.url !== undefined ? value.url : value).replace(/^\//g, '');
     }
 
     updateValues() {
@@ -60,78 +64,38 @@ PageUrlField.supportedTypes = ['char'];
 registry.category("fields").add("page_url", PageUrlField);
 
 /**
- * Used to display key dependencies and warn user about changing a special file
- * (website.page & supported mimetype) name, since the key will be updated too.
+ * Displays 'Selection' field's values as images to select.
+ * Image src for each value can be added using the option 'images' on field XML.
  */
-class PageNameField extends Component {
+export class ImageRadioField extends Component {
     setup() {
-        this.orm = useService('orm');
-
-        useInputField({getValue: () => this.props.value || ''});
-        this.state = useState({
-            name: this.props.value,
+        const selection = this.props.record.fields[this.props.name].selection;
+        // Check if value / label exists for each selection item and add the
+        // corresponding image from field options.
+        this.values = selection.filter(item => {
+            return item[0] || item[1];
+        }).map((value, index) => {
+            return [...value, this.props.images && this.props.images[index] || ''];
         });
-
-        this.pageName = this.props.value;
-        this.supportedMimetypes = {};
-
-        onWillStart(() => this.onWillStart());
     }
 
-    get formattedPageName() {
-        return formatChar(this.props.value);
-    }
-
-    async onWillStart() {
-        this.supportedMimetypes = await this.orm.call('website', 'guess_mimetype', []);
-    }
-
-    get warnAboutCall() {
-        return this.nameChanged && this.isSupportedMimetype;
-    }
-
-    get nameChanged() {
-        return this.state.name !== this.pageName;
-    }
-
-    get isSupportedMimetype() {
-        const ext = '.' + this.pageName.split('.').pop();
-        return ext in this.supportedMimetypes && ext !== '.html';
+    /**
+     * @param {String} value
+     */
+    onSelectValue(value) {
+        this.props.update(value);
     }
 }
-PageNameField.components = {PageDependencies};
-PageNameField.template = 'website.PageNameField';
-PageNameField.props = {
+ImageRadioField.supportedTypes = ['selection'];
+ImageRadioField.template = 'website.FieldImageRadio';
+ImageRadioField.props = {
     ...standardFieldProps,
-    placeholder: {type: String, optional: true},
+    images: {type: Array, element: String},
 };
-PageNameField.extractProps = ({attrs}) => {
+ImageRadioField.extractProps = ({attrs}) => {
     return {
-        placeholder: attrs.placeholder,
+        images: attrs.options.images,
     };
 };
-PageNameField.supportedTypes = ['char'];
 
-registry.category("fields").add("page_name", PageNameField);
-
-/**
- * Displays 'char' field's value prefixed by a FA icon.
- * The prefix is shown by default, but the visibility can be updated depending on
- * other field value.
- * e.g. `<field name="name" widget="fa_prefix" options="{'icon': 'fa-lock',
- * 'visibility': 'is_locked'}"/>` renders the icon only when 'is_locked' is True.
- */
-class FieldFaPrefix extends AbstractFieldOwl {
-    get prefix() {
-        const {icon, visibility, title} = this.nodeOptions;
-        return {
-            class: icon.split(' ').filter(str => str.indexOf('fa-') === 0).join(' '),
-            visible: !visibility || !!this.recordData[visibility],
-            help: title || '',
-        };
-    }
-}
-FieldFaPrefix.supportedFieldTypes = ['char'];
-FieldFaPrefix.template = 'website.FieldFaPrefix';
-
-fieldRegistry.add('fa_prefix', FieldFaPrefix);
+registry.category("fields").add("image_radio", ImageRadioField);

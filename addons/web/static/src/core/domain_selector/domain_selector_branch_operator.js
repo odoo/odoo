@@ -2,7 +2,7 @@
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
 
-const { Component } = owl;
+import { Component } from "@odoo/owl";
 
 export class DomainSelectorBranchOperator extends Component {
     onOperatorSelected(operator) {
@@ -17,4 +17,8 @@ DomainSelectorBranchOperator.template = "web.DomainSelectorBranchOperator";
 DomainSelectorBranchOperator.props = {
     node: Object,
     readonly: Boolean,
+    showCaret: {
+        type: Boolean,
+        optional: true,
+    },
 };

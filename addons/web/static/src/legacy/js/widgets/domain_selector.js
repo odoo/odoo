@@ -176,7 +176,7 @@ var DomainTree = DomainNode.extend({
      * @constructor
      * @see DomainNode.init
      * The initialization of a DomainTree creates a "children" array attribute
-     * which will contain the the DomainNode children. It also deduces the
+     * which will contain the DomainNode children. It also deduces the
      * operator from the domain.
      * @see DomainTree._addFlattenedChildren
      */
@@ -396,7 +396,7 @@ var DomainTree = DomainNode.extend({
         try {
             parsedDomain = Domain.prototype.stringToArray(domain);
             this.invalidDomain = false;
-        } catch (_err) {
+        } catch {
             // TODO: domain could contain `parent` for example, which is
             // currently not handled by the DomainSelector
             this.invalidDomain = true;
@@ -603,7 +603,7 @@ var DomainSelector = DomainTree.extend({
         const rawDomain = e.currentTarget.value;
         try {
             Domain.prototype.stringToArray(rawDomain);
-        } catch (_err) { // If there is a syntax error, just ignore the change
+        } catch { // If there is a syntax error, just ignore the change
             this.displayNotification({ title: _t("Syntax error"), message: _t("Domain not properly formed"), type: 'danger' });
             return;
         }
@@ -712,7 +712,7 @@ var DomainLeaf = DomainNode.extend({
                     if (selectedField && !selectedField.relation && !_.isArray(this.value)) {
                         this.displayValue = field_utils.format[selectedField.type](this.value, selectedField);
                     }
-                } catch (_err) {/**/}
+                } catch {/**/}
                 this.displayOperator = this.operator;
                 if (selectedField.type === "boolean") {
                     this.displayValue = this.value ? "1" : "0";
@@ -846,7 +846,7 @@ var DomainLeaf = DomainNode.extend({
         var selectedField = this.fieldSelector.getSelectedField() || {};
         try {
             this.value = field_utils.parse[selectedField.type](value, selectedField);
-        } catch (_err) {
+        } catch {
             this.value = value;
             couldNotParse = true;
         }

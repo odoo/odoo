@@ -1,18 +1,19 @@
 /** @odoo-module **/
 
 import { Dialog } from "@web/core/dialog/dialog";
-import { FormViewDialog } from "web.view_dialogs";
+import { FormViewDialog } from "@web/views/view_dialogs/form_view_dialog";
 import { formatDateTime, parseDateTime } from "@web/core/l10n/dates";
 import { formatMany2one } from "@web/views/fields/formatters";
 import { registry } from "@web/core/registry";
-import { standaloneAdapter } from "web.OwlCompatibility";
+import { useService } from "@web/core/utils/hooks";
 
-const { Component, onWillStart, useState } = owl;
+import { Component, onWillStart, useState } from "@odoo/owl";
 
 const debugRegistry = registry.category("debug");
 
 class GetMetadataDialog extends Component {
     setup() {
+        this.dialogService = useService("dialog");
         this.title = this.env._t("View Metadata");
         this.state = useState({});
         onWillStart(this.onWillStart);
@@ -28,17 +29,11 @@ class GetMetadataDialog extends Component {
             default_res_id: this.state.id,
             default_model: this.props.res_model,
         });
-        const adapterParent = standaloneAdapter({ Component });
-        const dialog = new FormViewDialog(adapterParent, {
-            context: context,
-            on_saved: () => this.getMetadata(),
-            disable_multiple_selection: true,
-            res_model: "ir.model.data",
+        this.dialogService.add(FormViewDialog, {
+            context,
+            onRecordSaved: () => this.getMetadata(),
+            resModel: "ir.model.data",
         });
-        dialog.on("dialog_form_loaded", this, () => {
-            dialog.$el.find('[name="name"]').focus();
-        });
-        await dialog.open();
     }
 
     async toggleNoupdate() {
@@ -138,9 +133,7 @@ class SetDefaultDialog extends Component {
                     fieldInfo.type === "one2many" ||
                     fieldInfo.type === "many2many" ||
                     fieldInfo.type === "binary" ||
-                    fieldsInfo[fieldName].options.isPassword ||
-                    fieldInfo.depends === undefined ||
-                    fieldInfo.depends.length !== 0
+                    fieldsInfo[fieldName].options.isPassword
                 ) {
                     return false;
                 }

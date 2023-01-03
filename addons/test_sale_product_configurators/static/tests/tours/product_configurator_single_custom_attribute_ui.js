@@ -35,30 +35,29 @@ tour.register('sale_product_configurator_single_custom_attribute_tour', {
     run: 'text great single custom value'
 }, {
     trigger: 'button span:contains(Confirm)',
-    extra_trigger: '.oe_advanced_configurator_modal',
 }, {
     trigger: 'td.o_data_cell:contains("single product attribute value: great single custom value")',
     extra_trigger: 'div[name="order_line"]',
     run: function (){} // check custom value
 }, {
-    trigger: 'td.o_product_configurator_cell',
+    trigger: 'div[name="product_template_id"]',
 }, {
-    trigger: '.o_edit_product_configuration',
+    trigger: '.fa-pencil',
 }, {
-    trigger: '.configurator_container .variant_custom_value',
+    trigger: '.main_product .variant_custom_value',
     run: function () {
         // check custom value initialized
-        if ($('.configurator_container .variant_custom_value').val() === "great single custom value") {
-            $('.configurator_container').addClass('tour_success_2');
+        if ($('.main_product .variant_custom_value').val() === "great single custom value") {
+            $('.main_product').addClass('tour_success_2');
         }
     }
 }, {
-    trigger: '.configurator_container.tour_success_2',
+    trigger: '.main_product.tour_success_2',
     run: function () {
         //check
     }
 }, {
-    trigger: '.configurator_container',
+    trigger: '.main_product',
     run: function () {
         window.location.href = window.location.origin + '/web';
     }

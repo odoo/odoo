@@ -13,10 +13,13 @@ import logging
 import os
 import threading
 import time
+import warnings
 
 import psycopg2
 
 import odoo
+from odoo.modules.db import FunctionStatus
+from odoo.osv.expression import get_unaccent_wrapper
 from .. import SUPERUSER_ID
 from odoo.sql_db import TestCursor
 from odoo.tools import (config, existing_tables, ignore,
@@ -364,6 +367,30 @@ class Registry(Mapping):
 
         return triggers
 
+    @lazy_property
+    def fields_modifying_relations(self):
+        '''
+        Return the union of the set of relational fields that are dependencies
+        of other fields, with the set of non-relational fields that are
+        dependencies of relational fields.
+        '''
+        result = set()
+
+        for field in self.field_triggers:
+            # If the field is itself a relational field, it is also considered
+            # as triggering relational fields.
+            if field.relational or self.field_inverses[field]:
+                result.add(field)
+                continue
+
+            Model = self.models[field.model_name]
+            for dep in Model._dependent_fields(field):
+                if dep.relational or self.field_inverses[dep]:
+                    result.add(field)
+                    break
+
+        return result
+
     def post_init(self, func, *args, **kwargs):
         """ Register a function to call at the end of :meth:`~.init_models`. """
         self._post_init_queue.append(partial(func, *args, **kwargs))
@@ -452,8 +479,9 @@ class Registry(Mapping):
 
     def check_indexes(self, cr, model_names):
         """ Create or drop column indexes for the given models. """
+
         expected = [
-            (f"{Model._table}_{field.name}_index", Model._table, field.name, field.index)
+            (sql.make_index_name(Model._table, field.name), Model._table, field, getattr(field, 'unaccent', False))
             for model_name in model_names
             for Model in [self.models[model_name]]
             if Model._auto and not Model._abstract
@@ -463,31 +491,45 @@ class Registry(Mapping):
         if not expected:
             return
 
-        cr.execute("SELECT indexname FROM pg_indexes WHERE indexname IN %s",
+        # retrieve existing indexes with their corresponding table
+        cr.execute("SELECT indexname, tablename FROM pg_indexes WHERE indexname IN %s",
                    [tuple(row[0] for row in expected)])
-        existing = {row[0] for row in cr.fetchall()}
+        existing = dict(cr.fetchall())
 
-        if not self.has_trigram and any(row[3] == 'trigram' for row in expected):
-            self.has_trigram = sql.install_pg_trgm(cr)
-
-        for indexname, tablename, columnname, index in expected:
+        for indexname, tablename, field, unaccent in expected:
+            index = field.index
             assert index in ('btree', 'btree_not_null', 'trigram', True, False, None)
-            if index and indexname not in existing:
-                method = 'btree'
-                operator = ''
-                where = ''
-                if index == 'btree_not_null':
-                    where = f'"{columnname}" IS NOT NULL'
-                elif index == 'trigram' and self.has_trigram:
+            if index and indexname not in existing and \
+                    ((not field.translate and index != 'trigram') or (index == 'trigram' and self.has_trigram)):
+                column_expression = f'"{field.name}"'
+                if index == 'trigram':
+                    if field.translate:
+                        column_expression = f'''(jsonb_path_query_array({column_expression}, '$.*')::text)'''
+                    # add `unaccent` to the trigram index only because the
+                    # trigram indexes are mainly used for (i/=)like search and
+                    # unaccent is added only in these cases when searching
+                    if unaccent and self.has_unaccent:
+                        if self.has_unaccent == FunctionStatus.INDEXABLE:
+                            column_expression = get_unaccent_wrapper(cr)(column_expression)
+                        else:
+                            warnings.warn(
+                                "PostgreSQL function 'unaccent' is present but not immutable, "
+                                "therefore trigram indexes may not be effective.",
+                            )
+                    expression = f'{column_expression} gin_trgm_ops'
                     method = 'gin'
-                    operator = 'gin_trgm_ops'
+                    where = ''
+                else:  # index in ['btree', 'btree_not_null'， True]
+                    expression = f'{column_expression}'
+                    method = 'btree'
+                    where = f'{column_expression} IS NOT NULL' if index == 'btree_not_null' else ''
                 try:
                     with cr.savepoint(flush=False):
-                        expression = f'"{columnname}" {operator}'
                         sql.create_index(cr, indexname, tablename, [expression], method, where)
                 except psycopg2.OperationalError:
                     _schema.error("Unable to add index for %s", self)
-            elif not index and indexname in existing:
+
+            elif not index and tablename == existing.get(indexname):
                 _schema.info("Keep unexpected index %s on table %s", indexname, tablename)
 
     def add_foreign_key(self, table1, column1, table2, column2, ondelete,

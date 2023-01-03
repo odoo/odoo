@@ -155,46 +155,8 @@ class CustomerPortal(portal.CustomerPortal):
         }
 
         # Payment values
-        if order_sudo.has_to_be_paid():
-            logged_in = not request.env.user._is_public()
-
-            # Make sure that the partner's company matches the sales order's company.
-            payment_portal.PaymentPortal._ensure_matching_companies(
-                order_sudo.partner_id, order_sudo.company_id
-            )
-
-            acquirers_sudo = request.env['payment.acquirer'].sudo()._get_compatible_acquirers(
-                order_sudo.company_id.id,
-                order_sudo.partner_id.id,
-                order_sudo.amount_total,
-                currency_id=order_sudo.currency_id.id,
-                sale_order_id=order_sudo.id,
-            )  # In sudo mode to read the fields of acquirers and partner (if not logged in)
-            tokens = request.env['payment.token'].search([
-                ('acquirer_id', 'in', acquirers_sudo.ids),
-                ('partner_id', '=', order_sudo.partner_id.id)
-            ]) if logged_in else request.env['payment.token']
-            fees_by_acquirer = {
-                acquirer: acquirer._compute_fees(
-                    order_sudo.amount_total,
-                    order_sudo.currency_id,
-                    order_sudo.partner_id.country_id,
-                ) for acquirer in acquirers_sudo.filtered('fees_active')
-            }
-            values.update({
-                'acquirers': acquirers_sudo,
-                'tokens': tokens,
-                'fees_by_acquirer': fees_by_acquirer,
-                'show_tokenize_input': PaymentPortal._compute_show_tokenize_input_mapping(
-                    acquirers_sudo, logged_in=logged_in, sale_order_id=order_sudo.id
-                ),
-                'amount': order_sudo.amount_total,
-                'currency': order_sudo.pricelist_id.currency_id,
-                'partner_id': order_sudo.partner_id.id,
-                'access_token': order_sudo.access_token,
-                'transaction_route': order_sudo.get_portal_url(suffix='/transaction'),
-                'landing_route': order_sudo.get_portal_url(),
-            })
+        if order_sudo._has_to_be_paid():
+            values.update(self._get_payment_values(order_sudo))
 
         if order_sudo.state in ('draft', 'sent', 'cancel'):
             history_session_key = 'my_quotations_history'
@@ -206,6 +168,56 @@ class CustomerPortal(portal.CustomerPortal):
 
         return request.render('sale.sale_order_portal_template', values)
 
+    def _get_payment_values(self, order_sudo):
+        """ Return the payment-specific QWeb context values.
+
+        :param recordset order_sudo: The sales order being paid, as a `sale.order` record.
+        :return: The payment-specific values.
+        :rtype: dict
+        """
+        logged_in = not request.env.user._is_public()
+        providers_sudo = request.env['payment.provider'].sudo()._get_compatible_providers(
+            order_sudo.company_id.id,
+            order_sudo.partner_id.id,
+            order_sudo.amount_total,
+            currency_id=order_sudo.currency_id.id,
+            sale_order_id=order_sudo.id,
+        )  # In sudo mode to read the fields of providers and partner (if not logged in)
+        tokens = request.env['payment.token'].search([
+            ('provider_id', 'in', providers_sudo.ids),
+            ('partner_id', '=', order_sudo.partner_id.id)
+        ]) if logged_in else request.env['payment.token']
+        # Make sure that the partner's company matches the order's company.
+        company_mismatch = not payment_portal.PaymentPortal._can_partner_pay_in_company(
+            order_sudo.partner_id, order_sudo.company_id
+        )
+        fees_by_provider = {
+            provider: provider._compute_fees(
+                order_sudo.amount_total,
+                order_sudo.currency_id,
+                order_sudo.partner_id.country_id,
+            ) for provider in providers_sudo.filtered('fees_active')
+        }
+        portal_page_values = {
+            'company_mismatch': company_mismatch,
+            'expected_company': order_sudo.company_id,
+        }
+        payment_form_values = {
+            'providers': providers_sudo,
+            'tokens': tokens,
+            'fees_by_provider': fees_by_provider,
+            'show_tokenize_input': PaymentPortal._compute_show_tokenize_input_mapping(
+                providers_sudo, logged_in=logged_in, sale_order_id=order_sudo.id
+            ),
+            'amount': order_sudo.amount_total,
+            'currency': order_sudo.pricelist_id.currency_id,
+            'partner_id': order_sudo.partner_id.id,
+            'access_token': order_sudo.access_token,
+            'transaction_route': order_sudo.get_portal_url(suffix='/transaction'),
+            'landing_route': order_sudo.get_portal_url(),
+        }
+        return {**portal_page_values, **payment_form_values}
+
     @http.route(['/my/orders/<int:order_id>/accept'], type='json', auth="public", website=True)
     def portal_quote_accept(self, order_id, access_token=None, name=None, signature=None):
         # get from query string if not on json param
@@ -215,7 +227,7 @@ class CustomerPortal(portal.CustomerPortal):
         except (AccessError, MissingError):
             return {'error': _('Invalid order.')}
 
-        if not order_sudo.has_to_be_signed():
+        if not order_sudo._has_to_be_signed():
             return {'error': _('The order is not in a state requiring customer signature.')}
         if not signature:
             return {'error': _('Signature is missing.')}
@@ -230,7 +242,7 @@ class CustomerPortal(portal.CustomerPortal):
         except (TypeError, binascii.Error) as e:
             return {'error': _('Invalid signature data.')}
 
-        if not order_sudo.has_to_be_paid():
+        if not order_sudo._has_to_be_paid():
             order_sudo.action_confirm()
             order_sudo._send_order_confirmation_mail()
 
@@ -245,7 +257,7 @@ class CustomerPortal(portal.CustomerPortal):
         )
 
         query_string = '&message=sign_ok'
-        if order_sudo.has_to_be_paid(True):
+        if order_sudo._has_to_be_paid(True):
             query_string += '#allow_payment=yes'
         return {
             'force_refresh': True,
@@ -259,8 +271,8 @@ class CustomerPortal(portal.CustomerPortal):
         except (AccessError, MissingError):
             return request.redirect('/my')
 
-        if order_sudo.has_to_be_signed() and decline_message:
-            order_sudo.action_cancel()
+        if order_sudo._has_to_be_signed() and decline_message:
+            order_sudo._action_cancel()
             _message_post_helper(
                 'sale.order',
                 order_sudo.id,
@@ -293,7 +305,7 @@ class PaymentPortal(payment_portal.PaymentPortal):
         except MissingError as error:
             raise error
         except AccessError:
-            raise ValidationError("The access token is invalid.")
+            raise ValidationError(_("The access token is invalid."))
 
         kwargs.update({
             'reference_prefix': None,  # Allow the reference to be computed based on the order

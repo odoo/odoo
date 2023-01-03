@@ -163,11 +163,15 @@ class PurchaseRequisition(models.Model):
 
 class PurchaseRequisitionLine(models.Model):
     _name = "purchase.requisition.line"
+    _inherit = 'analytic.mixin'
     _description = "Purchase Requisition Line"
     _rec_name = 'product_id'
 
     product_id = fields.Many2one('product.product', string='Product', domain=[('purchase_ok', '=', True)], required=True)
-    product_uom_id = fields.Many2one('uom.uom', string='Product Unit of Measure', domain="[('category_id', '=', product_uom_category_id)]")
+    product_uom_id = fields.Many2one(
+        'uom.uom', 'Product Unit of Measure',
+        compute='_compute_product_uom_id', store=True, readonly=False, precompute=True,
+        domain="[('category_id', '=', product_uom_category_id)]")
     product_uom_category_id = fields.Many2one(related='product_id.uom_id.category_id')
     product_qty = fields.Float(string='Quantity', digits='Product Unit of Measure')
     product_description_variants = fields.Char('Custom Description')
@@ -175,8 +179,6 @@ class PurchaseRequisitionLine(models.Model):
     qty_ordered = fields.Float(compute='_compute_ordered_qty', string='Ordered Quantities')
     requisition_id = fields.Many2one('purchase.requisition', required=True, string='Purchase Agreement', ondelete='cascade')
     company_id = fields.Many2one('res.company', related='requisition_id.company_id', string='Company', store=True, readonly=True)
-    account_analytic_id = fields.Many2one('account.analytic.account', string='Analytic Account')
-    analytic_tag_ids = fields.Many2many('account.analytic.tag', string='Analytic Tags')
     schedule_date = fields.Date(string='Scheduled Date')
     supplier_info_ids = fields.One2many('product.supplierinfo', 'purchase_requisition_line_id')
 
@@ -241,6 +243,11 @@ class PurchaseRequisitionLine(models.Model):
             else:
                 line.qty_ordered = 0
 
+    @api.depends('product_id')
+    def _compute_product_uom_id(self):
+        for line in self:
+            line.product_uom_id = line.product_id.uom_id
+
     @api.onchange('product_id')
     def _onchange_product_id(self):
         if self.product_id:
@@ -266,6 +273,5 @@ class PurchaseRequisitionLine(models.Model):
             'price_unit': price_unit,
             'taxes_id': [(6, 0, taxes_ids)],
             'date_planned': date_planned,
-            'account_analytic_id': self.account_analytic_id.id,
-            'analytic_tag_ids': self.analytic_tag_ids.ids,
+            'analytic_distribution': self.analytic_distribution,
         }

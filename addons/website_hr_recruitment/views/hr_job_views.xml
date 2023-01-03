@@ -26,7 +26,19 @@
         </field>
     </record>
 
-    <record id="view_hr_job_kanban_referal_extends" model="ir.ui.view"> 
+    <record id="hr_job_form_inherit" model="ir.ui.view">
+        <field name="name">hr.job.form.inherit</field>
+        <field name="model">hr.job</field>
+        <field name="inherit_id" ref="hr.view_hr_job_form"/>
+        <field name="arch" type="xml">
+            <page name="recruitment_page" position="inside">
+                <label for="job_details" class="mb-2"/>
+                <field name="job_details"/>
+            </page>
+        </field>
+    </record>
+
+    <record id="view_hr_job_kanban_referal_extends" model="ir.ui.view">
         <field name="model">hr.job</field>
         <field name="name">hr.job.view.kanban</field>
         <field name="inherit_id" ref="hr_recruitment.view_hr_job_kanban"/>
@@ -34,7 +46,7 @@
             <xpath expr="//div[@name='bottom_right']" position="replace">
                 <field name="website_url" invisible="1"/>
                 <div class="o_link_trackers col-6 text-end">
-                    <a t-att-href="record.website_url.raw_value" target="_blank">
+                    <a type="object" name="open_website_url">
                         <i class="fa fa-fw fa-external-link" role="img"></i>
                         Job Page
                     </a>

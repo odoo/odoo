@@ -6,13 +6,13 @@
     'category': 'Human Resources/Employees',
     'sequence': 270,
     'version': '1.0',
-    'summary': 'Manage skills, knowledge and resumé of your employees',
+    'summary': 'Manage skills, knowledge and resume of your employees',
     'description':
         """
-Skills and Resumé for HR
+Skills and Resume for HR
 ========================
 
-This module introduces skills and resumé management for employees.
+This module introduces skills and resume management for employees.
         """,
     'depends': ['hr'],
     'data': [
@@ -34,13 +34,10 @@ This module introduces skills and resumé management for employees.
     'application': True,
     'assets': {
         'web.assets_backend': [
-            'hr_skills/static/src/fields/*.js',
-            'hr_skills/static/src/fields/*.scss',
-            'hr_skills/static/src/views/*.js',
-        ],
-        'web.assets_qweb': [
             'hr_skills/static/src/fields/skills_one2many.xml',
-            'hr_skills/static/src/fields/*.xml',
+            'hr_skills/static/src/fields/*',
+            'hr_skills/static/src/scss/*.scss',
+            'hr_skills/static/src/views/*.js',
             'hr_skills/static/src/xml/**/*',
         ],
         'web.assets_tests': [

@@ -69,29 +69,36 @@ class MailBlackList(models.Model):
             new_args = args
         return super(MailBlackList, self)._search(new_args, offset=offset, limit=limit, order=order, count=count, access_rights_uid=access_rights_uid)
 
-    def _add(self, email):
+    def _add(self, email, message=None):
         normalized = tools.email_normalize(email)
         record = self.env["mail.blacklist"].with_context(active_test=False).search([('email', '=', normalized)])
         if len(record) > 0:
+            if message:
+                record._track_set_log_message(message)
             record.action_unarchive()
         else:
             record = self.create({'email': email})
+            if message:
+                record.with_context(mail_create_nosubscribe=True).message_post(
+                    body=message,
+                    subtype_id=self.env.ref('mail.mt_note').id,
+                )
         return record
 
-    def action_remove_with_reason(self, email, reason=None):
-        record = self._remove(email)
-        if reason:
-            record.message_post(body=_("Unblacklisting Reason: %s", reason))
-        
-        return record
-
-    def _remove(self, email):
+    def _remove(self, email, message=None):
         normalized = tools.email_normalize(email)
         record = self.env["mail.blacklist"].with_context(active_test=False).search([('email', '=', normalized)])
         if len(record) > 0:
+            if message:
+                record._track_set_log_message(message)
             record.action_archive()
         else:
             record = record.create({'email': email, 'active': False})
+            if message:
+                record.with_context(mail_create_nosubscribe=True).message_post(
+                    body=message,
+                    subtype_id=self.env.ref('mail.mt_note').id,
+                )
         return record
 
     def mail_action_blacklist_remove(self):

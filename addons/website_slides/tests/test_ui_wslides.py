@@ -134,11 +134,11 @@ class TestUi(TestUICommon):
             'odoo.__DEBUG__.services["web_tour.tour"].tours.course_member.ready',
             login=user_portal.login)
 
-    def test_full_screen_edition_website_publisher(self):
+    def test_full_screen_edition_website_restricted_editor(self):
         # group_website_designer
         user_demo = self.env.ref('base.user_demo')
         user_demo.write({
-            'groups_id': [(5, 0), (4, self.env.ref('base.group_user').id), (4, self.env.ref('website.group_website_publisher').id)]
+            'groups_id': [(5, 0), (4, self.env.ref('base.group_user').id), (4, self.env.ref('website.group_website_restricted_editor').id)]
         })
 
         self.browser_js(

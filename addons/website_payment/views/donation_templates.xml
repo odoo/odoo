@@ -3,27 +3,27 @@
 
     <template id="payment_checkout" inherit_id="payment.checkout">
         <!-- Make available anchor to inject donation form content -->
-        <xpath expr="//form/t[@t-set='acquirer_count']" position="before">
+        <xpath expr="//form/t[@t-set='provider_count']" position="before">
             <t t-if="is_donation">
                 <t t-set="donation_confirm_button_icon_class" t-valuef="fa-gift"/>
                 <t t-set="donation_confirm_button_label">Donate Now</t>
                 <h3 class="o_page_header mt16 mb4">Donation</h3>
                 <div class="row">
-                    <div t-attf-class="form-group #{error.get('name') and 'o_has_error' or ''} col-lg-12 div_name">
+                    <div t-attf-class="mb-3 #{error.get('name') and 'o_has_error' or ''} col-lg-12 div_name">
                         <label class="col-form-label fw-bold" for="name">Name
                             <span class="s_website_form_mark"> *</span>
                         </label>
                         <input t-att-readonly="'1' if 'name' in partner_details and partner_id else None" type="text" name="name" t-attf-class="form-control #{error.get('name') and 'is-invalid' or ''}" t-att-value="partner_details.get('name')" />
                     </div>
                     <div class="w-100"/>
-                    <div t-attf-class="form-group #{error.get('email') and 'o_has_error' or ''} col-lg-6" id="div_email">
+                    <div t-attf-class="mb-3 #{error.get('email') and 'o_has_error' or ''} col-lg-6" id="div_email">
                         <label class="col-form-label fw-bold" for="email">Email
                             <span class="s_website_form_mark"> *</span>
                         </label>
                         <input t-att-readonly="'1' if 'email' in partner_details and partner_id else None" type="email" name="email" t-attf-class="form-control #{error.get('email') and 'is-invalid' or ''}" t-att-value="partner_details.get('email')" />
                     </div>
                     <t t-set="country_id" t-value="partner_details.get('country_id')"/>
-                    <div t-attf-class="form-group #{error.get('country_id') and 'o_has_error' or ''} col-lg-6 div_country">
+                    <div t-attf-class="mb-3 #{error.get('country_id') and 'o_has_error' or ''} col-lg-6 div_country">
                         <label class="col-form-label fw-bold" for="country_id">Country
                             <span class="s_website_form_mark"> *</span>
                         </label>
@@ -37,14 +37,14 @@
                         </select>
                     </div>
                     <div class="w-100"/>
-                    <div class="form-group col-lg-12 o_donation_payment_form">
+                    <div class="mb-3 col-lg-12 o_donation_payment_form">
                         <div class="col-lg-6 px-0">
                             <label class="col-form-label fw-bold">Amount (<t t-out="currency.symbol"/>)</label>
                             <t t-set="donation_layout" t-value="donation_options.get('customAmount')"/>
                             <t t-set="prefilled_options" t-value="donation_options.get('prefilledOptions')"/>
                             <t t-if="prefilled_options">
                                 <t t-foreach="donation_amounts" t-as="donation_amount">
-                                    <div class="custom-control form-check my-2">
+                                    <div class="form-check my-2">
                                         <t t-set="is_checked" t-value="float(amount) == float(donation_amount)"/>
                                         <t t-set="has_checked" t-value="has_checked or is_checked"/>
                                         <input class="o_wpayment_fee_impact form-check-input" type="radio" name="amount"
@@ -58,7 +58,7 @@
                                         </label>
                                     </div>
                                 </t>
-                                <div t-attf-class="custom-control form-check my-2 #{not donation_layout and 'd-none' or ''}">
+                                <div t-attf-class="form-check my-2 #{not donation_layout and 'd-none' or ''}">
                                     <input class="o_wpayment_fee_impact form-check-input" type="radio" id="other_amount" name="amount"
                                         t-att-value="amount" t-att-checked="not has_checked or None"/>
                                     <label class="form-check-label mt-0 d-block" for="other_amount">
@@ -73,7 +73,7 @@
                             </t>
                         </div>
                         <div class="col-lg-12 px-0">
-                            <div class="custom-control form-check mt-3">
+                            <div class="form-check mt-3">
                                 <input class="form-check-input" type="checkbox" value="" id="donation_comment_checkbox"/>
                                 <label class="form-check-label" for="donation_comment_checkbox">Write us a comment</label>
                             </div>
@@ -87,8 +87,15 @@
             </t>
         </xpath>
         <!-- Make fee badges recognizable so that they can be updated upon amount changes -->
-        <xpath expr="//t[@t-if='fees_by_acquirer.get(acquirer)']/span" position="attributes">
+        <xpath expr="//t[@t-if='fees_by_provider.get(provider)']/span" position="attributes">
             <attribute name="class" add="o_payment_fee" separator=" "/>
+        </xpath>
+        <xpath expr="//span[@t-if='fees_by_provider.get(token.provider_id)']" position="attributes">
+            <attribute name="class" add="o_payment_fee" separator=" "/>
+        </xpath>
+        <!-- Allow to find the provider id from the radio of tokens -->
+        <xpath expr="//t[@t-foreach='tokens']//input[@name='o_payment_radio']" position="attributes">
+            <attribute name="t-att-data-payment-provider-id">token.provider_id.id</attribute>
         </xpath>
         <!-- Adapt Pay confirm button -->
         <xpath expr="//t[@t-set='label']" position="after">
@@ -118,7 +125,7 @@
                             <div t-elif="not currency" class="alert alert-warning">
                                 <strong>Warning</strong> The currency is missing or incorrect.
                             </div>
-                            <div t-elif="not acquirers and not tokens" class="alert alert-warning">
+                            <div t-elif="not providers and not tokens" class="alert alert-warning">
                                 <strong>No suitable payment option could be found.</strong><br/>
                                 If you believe that it is an error, please contact the website administrator.
                             </div>

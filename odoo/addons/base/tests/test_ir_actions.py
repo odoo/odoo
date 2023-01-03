@@ -59,8 +59,40 @@ class TestServerActionsBase(common.TransactionCase):
             'code': 'record.write({"comment": "%s"})' % self.comment_html,
         })
 
+        server_action_model = Model.search([('model', '=', 'ir.actions.server')])
+        self.test_server_action = self.env['ir.actions.server'].create({
+            'name': 'TestDummyServerAction',
+            'model_id': server_action_model.id,
+            'state': 'code',
+            'code':
+"""
+_logger.log(10, "This is a %s debug %s", "test", "log")
+_logger.info("This is a %s info %s", "test", "log")
+_logger.warning("This is a %s warning %s", "test", "log")
+_logger.error("This is a %s error %s", "test", "log")
+try:
+    0/0
+except:
+    _logger.exception("This is a %s exception %s", "test", "log")
+""",
+        })
+
 
 class TestServerActions(TestServerActionsBase):
+    def test_00_server_action(self):
+        with self.assertLogs('odoo.addons.base.models.ir_actions.server_action_safe_eval',
+                             level='DEBUG') as log_catcher:
+            self.test_server_action.run()
+            self.assertEqual(log_catcher.output, [
+                'DEBUG:odoo.addons.base.models.ir_actions.server_action_safe_eval:This is a test debug log',
+                'INFO:odoo.addons.base.models.ir_actions.server_action_safe_eval:This is a test info log',
+                'WARNING:odoo.addons.base.models.ir_actions.server_action_safe_eval:This is a test warning log',
+                'ERROR:odoo.addons.base.models.ir_actions.server_action_safe_eval:This is a test error log',
+"""ERROR:odoo.addons.base.models.ir_actions.server_action_safe_eval:This is a test exception log
+Traceback (most recent call last):
+  File "ir.actions.server(%d,)", line 6, in <module>
+ZeroDivisionError: division by zero""" % self.test_server_action.id
+            ])
 
     def test_00_action(self):
         self.action.with_context(self.context).run()

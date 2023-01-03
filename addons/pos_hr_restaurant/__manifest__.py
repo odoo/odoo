@@ -3,7 +3,7 @@
 
 
 {
-    'name': 'PoS HR Restaurant',
+    'name': 'POS HR Restaurant',
     'version': '1.0',
     'category': 'Hidden',
     'summary': 'Link module between pos_hr and pos_restaurant',

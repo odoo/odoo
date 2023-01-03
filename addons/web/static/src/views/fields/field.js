@@ -2,10 +2,15 @@
 
 import { evaluateExpr } from "@web/core/py_js/py";
 import { registry } from "@web/core/registry";
-import { archParseBoolean, evalDomain, X2M_TYPES } from "@web/views/utils";
+import {
+    archParseBoolean,
+    evalDomain,
+    getClassNameFromDecoration,
+    X2M_TYPES,
+} from "@web/views/utils";
 import { getTooltipInfo } from "./field_tooltip";
 
-const { Component, xml } = owl;
+import { Component, xml } from "@odoo/owl";
 
 const viewRegistry = registry.category("views");
 const fieldRegistry = registry.category("fields");
@@ -51,7 +56,7 @@ function getFieldClassFromRegistry(fieldType, widget, viewType, jsClass) {
 export function fieldVisualFeedback(FieldComponent, record, fieldName, fieldInfo) {
     const modifiers = fieldInfo.modifiers || {};
     const readonly = evalDomain(modifiers.readonly, record.evalContext);
-    const inEdit = record.mode !== "readonly";
+    const inEdit = record.isInEdition;
 
     let empty = !record.isVirtual;
     if ("isEmpty" in FieldComponent) {
@@ -94,6 +99,11 @@ export class Field extends Component {
             [`o_field_${this.type}`]: true,
             [_class]: Boolean(_class),
         };
+        if (this.FieldComponent.additionalClasses) {
+            for (const cls of this.FieldComponent.additionalClasses) {
+                classNames[cls] = true;
+            }
+        }
 
         // generate field decorations classNames (only if field-specific decorations
         // have been defined in an attribute, e.g. decoration-danger="other_field = 5")
@@ -102,7 +112,7 @@ export class Field extends Component {
         const evalContext = record.evalContext;
         for (const decoName in decorations) {
             const value = evaluateExpr(decorations[decoName], evalContext);
-            classNames[`text-${decoName}`] = value;
+            classNames[getClassNameFromDecoration(decoName)] = value;
         }
 
         return classNames;
@@ -119,13 +129,7 @@ export class Field extends Component {
         const fieldInfo = this.props.fieldInfo;
 
         const modifiers = fieldInfo.modifiers || {};
-        const required = evalDomain(modifiers.required, evalContext);
         const readonlyFromModifiers = evalDomain(modifiers.readonly, evalContext);
-        const readonlyFromRecord = !record.isInEdition;
-        const readonlyFromViewMode = record.model.root
-            ? !record.model.root.isInEdition
-            : readonlyFromRecord;
-        const emptyRequiredValue = required && !this.props.value;
 
         // Decoration props
         const decorationMap = {};
@@ -161,15 +165,18 @@ export class Field extends Component {
                 if (record.selected && record.model.multiEdit) {
                     return;
                 }
+                const rootRecord =
+                    record.model.root instanceof record.constructor && record.model.root;
+                const isInEdition = rootRecord ? rootRecord.isInEdition : record.isInEdition;
                 // We save only if we're on view mode readonly and no readonly field modifier
-                if (readonlyFromViewMode && !readonlyFromModifiers && !emptyRequiredValue) {
+                if (!isInEdition && !readonlyFromModifiers) {
                     // TODO: maybe move this in the model
                     return record.save();
                 }
             },
             value: this.props.record.data[this.props.name],
             decorations: decorationMap,
-            readonly: readonlyFromRecord || readonlyFromModifiers || false,
+            readonly: !record.isInEdition || readonlyFromModifiers || false,
             ...propsFromAttrs,
             ...props,
             type: field.type,
@@ -189,10 +196,7 @@ export class Field extends Component {
         return false;
     }
 }
-Field.template = xml/* xml */ `
-    <div t-att-name="props.name" t-att-class="classNames" t-att-style="props.style" t-att-data-tooltip-template="tooltip and 'web.FieldTooltip'" t-att-data-tooltip-info="tooltip">
-        <t t-component="FieldComponent" t-props="fieldComponentProps"/>
-    </div>`;
+Field.template = "web.Field";
 
 Field.parseFieldNode = function (node, models, modelName, viewType, jsClass) {
     const name = node.getAttribute("name");
@@ -268,7 +272,7 @@ Field.parseFieldNode = function (node, models, modelName, viewType, jsClass) {
                 viewMode = "list";
             } else if (!views.list && views.kanban) {
                 viewMode = "kanban";
-            } else {
+            } else if (views.list && views.kanban) {
                 viewMode = "list,kanban";
             }
         } else {
@@ -294,4 +298,5 @@ Field.parseFieldNode = function (node, models, modelName, viewType, jsClass) {
 Field.forbiddenAttributeNames = {
     decorations: `You cannot use the "decorations" attribute name as it is used as generated prop name for the composite decoration-<something> attributes.`,
 };
+Field.props = ["fieldInfo?", "*"];
 Field.defaultProps = { fieldInfo: {} };

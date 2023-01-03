@@ -20,7 +20,7 @@ class PaymentTransaction(models.Model):
     _inherit = 'payment.transaction'
 
     @api.model
-    def _compute_reference(self, provider, prefix=None, separator='-', **kwargs):
+    def _compute_reference(self, provider_code, prefix=None, separator='-', **kwargs):
         """ Override of payment to ensure that Ogone requirements for references are satisfied.
 
         Ogone requirements for references are as follows:
@@ -29,14 +29,14 @@ class PaymentTransaction(models.Model):
           transactions are created simultaneously, `_compute_reference` ensures the uniqueness of
           references by suffixing a sequence number.
 
-        :param str provider: The provider of the acquirer handling the transaction
+        :param str provider_code: The code of the provider handling the transaction
         :param str prefix: The custom prefix used to compute the full reference
         :param str separator: The custom separator used to separate the prefix from the suffix
         :return: The unique reference for the transaction
         :rtype: str
         """
-        if provider != 'ogone':
-            return super()._compute_reference(provider, prefix=prefix, **kwargs)
+        if provider_code != 'ogone':
+            return super()._compute_reference(provider_code, prefix=prefix, **kwargs)
 
         if not prefix:
             # If no prefix is provided, it could mean that a module has passed a kwarg intended for
@@ -44,9 +44,9 @@ class PaymentTransaction(models.Model):
             # We call it manually here because singularizing the prefix would generate a default
             # value if it was empty, hence preventing the method from ever being called and the
             # transaction from received a reference named after the related document.
-            prefix = self.sudo()._compute_reference_prefix(provider, separator, **kwargs) or None
+            prefix = self.sudo()._compute_reference_prefix(provider_code, separator, **kwargs) or None
         prefix = payment_utils.singularize_reference_prefix(prefix=prefix, max_length=40)
-        return super()._compute_reference(provider, prefix=prefix, **kwargs)
+        return super()._compute_reference(provider_code, prefix=prefix, **kwargs)
 
     def _get_specific_rendering_values(self, processing_values):
         """ Override of payment to return Ogone-specific rendering values.
@@ -54,16 +54,16 @@ class PaymentTransaction(models.Model):
         Note: self.ensure_one() from `_get_processing_values`
 
         :param dict processing_values: The generic and specific processing values of the transaction
-        :return: The dict of acquirer-specific processing values
+        :return: The dict of provider-specific processing values
         :rtype: dict
         """
         res = super()._get_specific_rendering_values(processing_values)
-        if self.acquirer_id.provider != 'ogone':
+        if self.provider_code != 'ogone':
             return res
 
-        return_url = urls.url_join(self.acquirer_id.get_base_url(), OgoneController._return_url)
+        return_url = urls.url_join(self.provider_id.get_base_url(), OgoneController._return_url)
         rendering_values = {
-            'PSPID': self.acquirer_id.ogone_pspid,
+            'PSPID': self.provider_id.ogone_pspid,
             'ORDERID': self.reference,
             'AMOUNT': payment_utils.to_minor_currency_units(self.amount, None, 2),
             'CURRENCY': self.currency_id.name,
@@ -75,7 +75,7 @@ class PaymentTransaction(models.Model):
             'OWNERCTY': self.partner_country_id.code or '',
             'OWNERTELNO': self.partner_phone or '',
             'OPERATION': 'SAL',  # direct sale
-            'USERID': self.acquirer_id.ogone_userid,
+            'USERID': self.provider_id.ogone_userid,
             'ACCEPTURL': return_url,
             'DECLINEURL': return_url,
             'EXCEPTIONURL': return_url,
@@ -87,10 +87,10 @@ class PaymentTransaction(models.Model):
                 'ALIASUSAGE': _("Storing your payment details is necessary for future use."),
             })
         rendering_values.update({
-            'SHASIGN': self.acquirer_id._ogone_generate_signature(
+            'SHASIGN': self.provider_id._ogone_generate_signature(
                 rendering_values, incoming=False
             ).upper(),
-            'api_url': self.acquirer_id._ogone_get_api_url('hosted_payment_page'),
+            'api_url': self.provider_id._ogone_get_api_url('hosted_payment_page'),
         })
         return rendering_values
 
@@ -103,7 +103,7 @@ class PaymentTransaction(models.Model):
         :raise: UserError if the transaction is not linked to a token
         """
         super()._send_payment_request()
-        if self.provider != 'ogone':
+        if self.provider_code != 'ogone':
             return
 
         if not self.token_id:
@@ -112,10 +112,10 @@ class PaymentTransaction(models.Model):
         # Make the payment request
         data = {
             # DirectLink parameters
-            'PSPID': self.acquirer_id.ogone_pspid,
+            'PSPID': self.provider_id.ogone_pspid,
             'ORDERID': self.reference,
-            'USERID': self.acquirer_id.ogone_userid,
-            'PSWD': self.acquirer_id.ogone_password,
+            'USERID': self.provider_id.ogone_userid,
+            'PSWD': self.provider_id.ogone_password,
             'AMOUNT': payment_utils.to_minor_currency_units(self.amount, None, 2),
             'CURRENCY': self.currency_id.name,
             'CN': self.partner_name or '',  # Cardholder Name
@@ -127,17 +127,17 @@ class PaymentTransaction(models.Model):
             'OWNERTELNO': self.partner_phone or '',
             'OPERATION': 'SAL',  # direct sale
             # Alias Manager parameters
-            'ALIAS': self.token_id.acquirer_ref,
+            'ALIAS': self.token_id.provider_ref,
             'ALIASPERSISTEDAFTERUSE': 'Y',
             'ECI': 9,  # Recurring (from eCommerce)
         }
-        data['SHASIGN'] = self.acquirer_id._ogone_generate_signature(data, incoming=False)
+        data['SHASIGN'] = self.provider_id._ogone_generate_signature(data, incoming=False)
 
         _logger.info(
             "payment request response for transaction with reference %s:\n%s",
             self.reference, pprint.pformat({k: v for k, v in data.items() if k != 'PSWD'})
         )  # Log the payment request data without the password
-        response_content = self.acquirer_id._ogone_make_request(data)
+        response_content = self.provider_id._ogone_make_request(data)
         try:
             tree = objectify.fromstring(response_content)
         except etree.XMLSyntaxError:
@@ -155,21 +155,21 @@ class PaymentTransaction(models.Model):
         )
         self._handle_notification_data('ogone', feedback_data)
 
-    def _get_tx_from_notification_data(self, provider, notification_data):
+    def _get_tx_from_notification_data(self, provider_code, notification_data):
         """ Override of payment to find the transaction based on Ogone data.
 
-        :param str provider: The provider of the acquirer that handled the transaction
+        :param str provider_code: The code of the provider that handled the transaction
         :param dict notification_data: The notification data sent by the provider
         :return: The transaction if found
         :rtype: recordset of `payment.transaction`
         :raise: ValidationError if the data match no transaction
         """
-        tx = super()._get_tx_from_notification_data(provider, notification_data)
-        if provider != 'ogone' or len(tx) == 1:
+        tx = super()._get_tx_from_notification_data(provider_code, notification_data)
+        if provider_code != 'ogone' or len(tx) == 1:
             return tx
 
         reference = notification_data.get('ORDERID')
-        tx = self.search([('reference', '=', reference), ('provider', '=', 'ogone')])
+        tx = self.search([('reference', '=', reference), ('provider_code', '=', 'ogone')])
         if not tx:
             raise ValidationError(
                 "Ogone: " + _("No transaction found matching reference %s.", reference)
@@ -185,13 +185,13 @@ class PaymentTransaction(models.Model):
         :return: None
         """
         super()._process_notification_data(notification_data)
-        if self.provider != 'ogone':
+        if self.provider_code != 'ogone':
             return
 
         if 'tree' in notification_data:
             notification_data = notification_data['tree']
 
-        self.acquirer_reference = notification_data.get('PAYID')
+        self.provider_reference = notification_data.get('PAYID')
         payment_status = int(notification_data.get('STATUS', '0'))
         if payment_status in const.PAYMENT_STATUS_MAPPING['pending']:
             self._set_pending()
@@ -229,10 +229,10 @@ class PaymentTransaction(models.Model):
         :return: None
         """
         token = self.env['payment.token'].create({
-            'acquirer_id': self.acquirer_id.id,
+            'provider_id': self.provider_id.id,
             'payment_details': notification_data.get('CARDNO')[-4:],  # Ogone pads details with X's.
             'partner_id': self.partner_id.id,
-            'acquirer_ref': notification_data['ALIAS'],
+            'provider_ref': notification_data['ALIAS'],
             'verified': True,  # The payment is authorized, so the payment method is valid
         })
         self.write({

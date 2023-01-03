@@ -8,6 +8,7 @@
         'security/ir.model.access.csv',
     ],
     'installable': True,
+    'auto_install': True,
     'assets': {
         'web.assets_common': [
             'bus/static/src/*.js',
@@ -15,11 +16,18 @@
             'bus/static/src/workers/websocket_worker.js',
             'bus/static/src/workers/websocket_worker_utils.js',
         ],
+        'web.assets_frontend': [
+            'bus/static/src/*.js',
+            'bus/static/src/services/**/*.js',
+            ('remove', 'bus/static/src/services/assets_watchdog_service.js'),
+            'bus/static/src/workers/websocket_worker.js',
+            'bus/static/src/workers/websocket_worker_utils.js',
+        ],
         'web.qunit_suite_tests': [
             'bus/static/tests/**/*.js',
         ],
         'web.qunit_mobile_suite_tests': [
-            'bus/static/tests/helpers/*.js',
+            'bus/static/tests/helpers/**/*.js',
         ],
         'bus.websocket_worker_assets': [
             'web/static/src/legacy/js/promise_extension.js',

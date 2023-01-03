@@ -10,6 +10,8 @@ import {
     serializeDateTime,
     deserializeDate,
     deserializeDateTime,
+    momentToLuxon,
+    luxonToMoment,
 } from "@web/core/l10n/dates";
 import { localization } from "@web/core/l10n/localization";
 import { patch, unpatch } from "@web/core/utils/patch";
@@ -19,7 +21,7 @@ import session from "web.session";
 import test_utils from "web.test_utils";
 import { registerCleanup } from "../../helpers/cleanup";
 import { defaultLocalization } from "../../helpers/mock_services";
-import { patchDate, patchWithCleanup } from "../../helpers/utils";
+import { patchDate, patchTimeZone, patchWithCleanup } from "../../helpers/utils";
 
 const { DateTime, Settings } = luxon;
 
@@ -42,13 +44,13 @@ function runTestSet(assert, testSet, options) {
         let res2;
         try {
             res1 = options.newFn(input);
-        } catch (_e) {
+        } catch {
             // continue
         }
 
         try {
             res2 = options.legacyFn(input);
-        } catch (_e) {
+        } catch {
             // continue
         }
 
@@ -81,89 +83,75 @@ QUnit.module(
     () => {
         QUnit.module("dates");
 
-        QUnit.test("formatDate", async (assert) => {
-            patch(localization, "dateformat", { dateFormat: "MM/dd/yyyy" });
+        QUnit.test("formatDate/formatDateTime specs", async (assert) => {
+            patchWithCleanup(localization, {
+                dateFormat: "MM/dd/yyyy",
+                dateTimeFormat: "MM/dd/yyyy HH:mm:ss",
+            });
+            patchTimeZone(60);
+            patchDate(2009, 4, 4, 12, 34, 56);
 
-            let formatted = formatDate(DateTime.utc(2009, 5, 4, 12, 34, 23));
-            let expected = "05/04/2009";
-            assert.strictEqual(formatted, expected);
+            const utc = DateTime.utc(); // 2009-05-04T11:34:56.000Z
+            const local = DateTime.local(); // 2009-05-04T12:34:56.000+01:00
+            const minus13FromLocalTZ = local.setZone("UTC-12"); // 2009-05-03T23:34:56.000-12:00
 
-            formatted = formatDate(DateTime.utc(2009, 5, 4, 12, 34, 23), { timezone: false });
-            assert.strictEqual(formatted, expected);
+            // For dates, regardless of the input timezone, outputs only the date
+            assert.strictEqual(formatDate(utc), "05/04/2009");
+            assert.strictEqual(formatDate(local), "05/04/2009");
+            assert.strictEqual(formatDate(minus13FromLocalTZ), "05/03/2009");
 
-            formatted = formatDate(DateTime.utc(2009, 5, 4, 12, 34, 23), { timezone: true });
-            expected = "05/04/2009";
-            assert.strictEqual(formatted, expected);
-
-            unpatch(localization, "dateformat");
+            // For datetimes, input timezone is taken into account, outputs in local timezone
+            assert.strictEqual(formatDateTime(utc), "05/04/2009 12:34:56");
+            assert.strictEqual(formatDateTime(local), "05/04/2009 12:34:56");
+            assert.strictEqual(formatDateTime(minus13FromLocalTZ), "05/04/2009 12:34:56");
         });
 
-        QUnit.test("formatDate (with different timezone offset)", async (assert) => {
-            patch(localization, "dateformat", { dateFormat: "MM/dd/yyyy" });
+        QUnit.test("formatDate/formatDateTime specs, at midnight", async (assert) => {
+            patchWithCleanup(localization, {
+                dateFormat: "MM/dd/yyyy",
+                dateTimeFormat: "MM/dd/yyyy HH:mm:ss",
+            });
+            patchTimeZone(60);
+            patchDate(2009, 4, 4, 0, 0, 0);
 
-            let str = formatDate(DateTime.utc(2017, 1, 1, 10, 0, 0, 0));
-            assert.strictEqual(str, "01/01/2017");
-            str = formatDate(DateTime.utc(2017, 6, 1, 10, 0, 0, 0));
-            assert.strictEqual(str, "06/01/2017");
+            const utc = DateTime.utc(); // 2009-05-03T23:00:00.000Z
+            const local = DateTime.local(); // 2009-05-04T00:00:00.000+01:00
+            const minus13FromLocalTZ = local.setZone("UTC-12"); // 2009-05-03T11:00:00.000-12:00
 
-            str = formatDate(DateTime.utc(2017, 1, 1, 10, 0, 0, 0), { timezone: false });
-            assert.strictEqual(str, "01/01/2017");
-            str = formatDate(DateTime.utc(2017, 6, 1, 10, 0, 0, 0), { timezone: false });
-            assert.strictEqual(str, "06/01/2017");
+            // For dates, regardless of the input timezone, outputs only the date
+            assert.strictEqual(formatDate(utc), "05/03/2009");
+            assert.strictEqual(formatDate(local), "05/04/2009");
+            assert.strictEqual(formatDate(minus13FromLocalTZ), "05/03/2009");
 
-            str = formatDate(DateTime.utc(2017, 1, 1, 10, 0, 0, 0), { timezone: true });
-            assert.strictEqual(str, "01/01/2017");
-            str = formatDate(DateTime.utc(2017, 6, 1, 10, 0, 0, 0), { timezone: true });
-            assert.strictEqual(str, "06/01/2017");
-
-            unpatch(localization, "dateformat");
+            // For datetimes, input timezone is taken into account, outputs in local timezone
+            assert.strictEqual(formatDateTime(utc), "05/04/2009 00:00:00");
+            assert.strictEqual(formatDateTime(local), "05/04/2009 00:00:00");
+            assert.strictEqual(formatDateTime(minus13FromLocalTZ), "05/04/2009 00:00:00");
         });
 
-        QUnit.test("formatDate (with DateTime.fromISO)", async (assert) => {
-            patchWithCleanup(localization, { dateFormat: "MM/dd/yyyy" });
+        QUnit.test("parseDate(Time) outputs DateTime objects in local TZ", async (assert) => {
+            patchWithCleanup(localization, defaultLocalization);
 
-            // NB: the local timezone in test env is UTC+1
-            let date = DateTime.fromISO("2022-07-21T22:00:00Z");
-            assert.strictEqual(formatDate(date), "07/21/2022");
-            assert.strictEqual(formatDate(date, { timezone: true }), "07/21/2022");
+            patchTimeZone(60);
+            assert.equal(parseDate("01/13/2019").toISO(), "2019-01-13T00:00:00.000+01:00");
+            assert.equal(
+                parseDateTime("01/13/2019 10:05:45").toISO(),
+                "2019-01-13T10:05:45.000+01:00"
+            );
 
-            date = DateTime.fromISO("2022-07-21T23:00:00Z");
-            assert.strictEqual(formatDate(date), "07/21/2022");
-            assert.strictEqual(formatDate(date, { timezone: true }), "07/22/2022");
+            patchTimeZone(330);
+            assert.equal(parseDate("01/13/2019").toISO(), "2019-01-13T00:00:00.000+05:30");
+            assert.equal(
+                parseDateTime("01/13/2019 10:05:45").toISO(),
+                "2019-01-13T10:05:45.000+05:30"
+            );
 
-            date = DateTime.fromISO("2022-07-22T00:00:00Z");
-            assert.strictEqual(formatDate(date), "07/22/2022");
-            assert.strictEqual(formatDate(date, { timezone: true }), "07/22/2022");
-
-            // Here are the 3 same instants as above, but expressed from a different ISO string
-            date = DateTime.fromISO("2022-07-22T00:00:00+02:00");
-            assert.strictEqual(formatDate(date), "07/21/2022");
-            assert.strictEqual(formatDate(date, { timezone: true }), "07/21/2022");
-
-            date = DateTime.fromISO("2022-07-22T01:00:00+02:00");
-            assert.strictEqual(formatDate(date), "07/21/2022");
-            assert.strictEqual(formatDate(date, { timezone: true }), "07/22/2022");
-
-            date = DateTime.fromISO("2022-07-22T02:00:00+02:00");
-            assert.strictEqual(formatDate(date), "07/22/2022");
-            assert.strictEqual(formatDate(date, { timezone: true }), "07/22/2022");
-        });
-
-        QUnit.test("formatDateTime", async (assert) => {
-            patchWithCleanup(localization, { dateTimeFormat: "MM/dd/yyyy HH:mm:ss" });
-            const date = DateTime.utc(2009, 5, 4, 12, 34, 23);
-            assert.strictEqual(formatDateTime(date), "05/04/2009 13:34:23");
-            assert.strictEqual(formatDateTime(date, { timezone: false }), "05/04/2009 12:34:23");
-        });
-
-        QUnit.test("formatDateTime (with different timezone offset)", async (assert) => {
-            patchWithCleanup(localization, { dateTimeFormat: "MM/dd/yyyy HH:mm:ss" });
-            let date = DateTime.fromISO("2017-01-01T11:00:00+01:00");
-            assert.strictEqual(formatDateTime(date), "01/01/2017 11:00:00");
-            assert.strictEqual(formatDateTime(date, { timezone: false }), "01/01/2017 10:00:00");
-            date = DateTime.fromISO("2017-06-01T11:00:00+02:00");
-            assert.strictEqual(formatDateTime(date), "06/01/2017 10:00:00");
-            assert.strictEqual(formatDateTime(date, { timezone: false }), "06/01/2017 09:00:00");
+            patchTimeZone(-660);
+            assert.equal(parseDate("01/13/2019").toISO(), "2019-01-13T00:00:00.000-11:00");
+            assert.equal(
+                parseDateTime("01/13/2019 10:05:45").toISO(),
+                "2019-01-13T10:05:45.000-11:00"
+            );
         });
 
         QUnit.test("parseDateTime", async (assert) => {
@@ -194,7 +182,7 @@ QUnit.module(
                 parseDateTime("invalid value");
             }, /is not a correct/);
 
-            const expected = "2019-01-13T10:05:45.000Z";
+            const expected = "2019-01-13T10:05:45.000+01:00";
             let dateStr = "01/13/2019 10:05:45";
             assert.equal(parseDateTime(dateStr).toISO(), expected, "Date with leading 0");
             dateStr = "1/13/2019 10:5:45";
@@ -221,7 +209,7 @@ QUnit.module(
             Settings.defaultLocale = "no"; // Norwegian
 
             const dateStr = "16. des 2019 10:05:45";
-            const expected = "2019-12-16T10:05:45.000Z";
+            const expected = "2019-12-16T10:05:45.000+01:00";
             assert.equal(
                 parseDateTime(dateStr).toISO(),
                 expected,
@@ -236,18 +224,10 @@ QUnit.module(
             patchWithCleanup(localization, defaultLocalization);
 
             let str = "07/21/2022";
-            assert.strictEqual(parseDate(str).toISO(), "2022-07-21T00:00:00.000Z");
-            assert.strictEqual(
-                parseDate(str, { timezone: true }).toISO(),
-                "2022-07-21T00:00:00.000+01:00"
-            );
+            assert.strictEqual(parseDate(str).toISO(), "2022-07-21T00:00:00.000+01:00");
 
             str = "07/22/2022";
-            assert.strictEqual(parseDate(str).toISO(), "2022-07-22T00:00:00.000Z");
-            assert.strictEqual(
-                parseDate(str, { timezone: true }).toISO(),
-                "2022-07-22T00:00:00.000+01:00"
-            );
+            assert.strictEqual(parseDate(str).toISO(), "2022-07-22T00:00:00.000+01:00");
         });
 
         QUnit.test("parseDate without separator", async (assert) => {
@@ -333,46 +313,48 @@ QUnit.module(
         });
 
         QUnit.test("parse smart date input", async (assert) => {
-            const format = "dd MM yyyy";
-            assert.strictEqual(
-                parseDate("+1d").toFormat(format),
-                DateTime.utc().plus({ days: 1 }).toFormat(format)
+            patchDate(2020, 0, 1, 0, 0, 0); // 2020-01-01 00:00:00
+
+            const format = "yyyy-MM-dd HH:mm";
+            // with parseDate
+            assert.strictEqual(parseDate("+0").toFormat(format), "2020-01-01 00:00");
+            assert.strictEqual(parseDate("-0").toFormat(format), "2020-01-01 00:00");
+            assert.strictEqual(parseDate("+1d").toFormat(format), "2020-01-02 00:00");
+            assert.strictEqual(parseDate("+2w").toFormat(format), "2020-01-15 00:00");
+            assert.strictEqual(parseDate("+3m").toFormat(format), "2020-04-01 00:00");
+            assert.strictEqual(parseDate("+4y").toFormat(format), "2024-01-01 00:00");
+            assert.strictEqual(parseDate("+5").toFormat(format), "2020-01-06 00:00");
+            assert.strictEqual(parseDate("-5").toFormat(format), "2019-12-27 00:00");
+            assert.strictEqual(parseDate("-4y").toFormat(format), "2016-01-01 00:00");
+            assert.strictEqual(parseDate("-3m").toFormat(format), "2019-10-01 00:00");
+            assert.strictEqual(parseDate("-2w").toFormat(format), "2019-12-18 00:00");
+            assert.strictEqual(parseDate("-1d").toFormat(format), "2019-12-31 00:00");
+            // with parseDateTime
+            assert.strictEqual(parseDateTime("+0").toFormat(format), "2020-01-01 00:00");
+            assert.strictEqual(parseDateTime("-0").toFormat(format), "2020-01-01 00:00");
+            assert.strictEqual(parseDateTime("+1d").toFormat(format), "2020-01-02 00:00");
+            assert.strictEqual(parseDateTime("+2w").toFormat(format), "2020-01-15 00:00");
+            assert.strictEqual(parseDateTime("+3m").toFormat(format), "2020-04-01 00:00");
+            assert.strictEqual(parseDateTime("+4y").toFormat(format), "2024-01-01 00:00");
+            assert.strictEqual(parseDateTime("+5").toFormat(format), "2020-01-06 00:00");
+            assert.strictEqual(parseDateTime("-5").toFormat(format), "2019-12-27 00:00");
+            assert.strictEqual(parseDateTime("-4y").toFormat(format), "2016-01-01 00:00");
+            assert.strictEqual(parseDateTime("-3m").toFormat(format), "2019-10-01 00:00");
+            assert.strictEqual(parseDateTime("-2w").toFormat(format), "2019-12-18 00:00");
+            assert.strictEqual(parseDateTime("-1d").toFormat(format), "2019-12-31 00:00");
+        });
+
+        QUnit.test("parseDateTime ISO8601 Format", async (assert) => {
+            patchWithCleanup(localization, defaultLocalization);
+            patchTimeZone(60);
+            assert.equal(
+                parseDateTime("2017-05-15T12:00:00.000+06:00").toISO(),
+                "2017-05-15T07:00:00.000+01:00"
             );
-            assert.strictEqual(
-                parseDateTime("+2w").toFormat(format),
-                DateTime.utc().plus({ weeks: 2 }).toFormat(format)
-            );
-            assert.strictEqual(
-                parseDate("+3m").toFormat(format),
-                DateTime.utc().plus({ months: 3 }).toFormat(format)
-            );
-            assert.strictEqual(
-                parseDateTime("+4y").toFormat(format),
-                DateTime.utc().plus({ years: 4 }).toFormat(format)
-            );
-            assert.strictEqual(
-                parseDate("+5").toFormat(format),
-                DateTime.utc().plus({ days: 5 }).toFormat(format)
-            );
-            assert.strictEqual(
-                parseDateTime("-5").toFormat(format),
-                DateTime.utc().minus({ days: 5 }).toFormat(format)
-            );
-            assert.strictEqual(
-                parseDate("-4y").toFormat(format),
-                DateTime.utc().minus({ years: 4 }).toFormat(format)
-            );
-            assert.strictEqual(
-                parseDateTime("-3m").toFormat(format),
-                DateTime.utc().minus({ months: 3 }).toFormat(format)
-            );
-            assert.strictEqual(
-                parseDate("-2w").toFormat(format),
-                DateTime.utc().minus({ weeks: 2 }).toFormat(format)
-            );
-            assert.strictEqual(
-                parseDateTime("-1d").toFormat(format),
-                DateTime.utc().minus({ days: 1 }).toFormat(format)
+            // without the 'T' separator is not really ISO8601 compliant, but we still support it
+            assert.equal(
+                parseDateTime("2017-05-15 12:00:00.000+06:00").toISO(),
+                "2017-05-15T07:00:00.000+01:00"
             );
         });
 
@@ -380,11 +362,11 @@ QUnit.module(
             patch(localization, "default loc", defaultLocalization);
 
             let dateStr = "2017-05-15 09:12:34";
-            let expected = "2017-05-15T09:12:34.000Z";
+            let expected = "2017-05-15T09:12:34.000+01:00";
             assert.equal(parseDateTime(dateStr).toISO(), expected, "Date with SQL format");
 
             dateStr = "2017-05-08 09:12:34";
-            expected = "2017-05-08T09:12:34.000Z";
+            expected = "2017-05-08T09:12:34.000+01:00";
             assert.equal(
                 parseDateTime(dateStr).toISO(),
                 expected,
@@ -457,9 +439,9 @@ QUnit.module(
         });
 
         QUnit.test("deserializeDate", async (assert) => {
-            const date = DateTime.utc(2022, 2, 21);
+            const date = DateTime.local(2022, 2, 21);
             assert.strictEqual(
-                DateTime.fromFormat("2022-02-21", "yyyy-MM-dd", { zone: "utc" }).toMillis(),
+                DateTime.fromFormat("2022-02-21", "yyyy-MM-dd").toMillis(),
                 date.toMillis()
             );
             assert.strictEqual(deserializeDate("2022-02-21").toMillis(), date.toMillis());
@@ -467,9 +449,9 @@ QUnit.module(
 
         QUnit.test("deserializeDate with different numbering system", async (assert) => {
             patchWithCleanup(Settings, { defaultNumberingSystem: "arab" });
-            const date = DateTime.utc(2022, 2, 21);
+            const date = DateTime.local(2022, 2, 21);
             assert.strictEqual(
-                DateTime.fromFormat("٢٠٢٢-٠٢-٢١", "yyyy-MM-dd", { zone: "utc" }).toMillis(),
+                DateTime.fromFormat("٢٠٢٢-٠٢-٢١", "yyyy-MM-dd").toMillis(),
                 date.toMillis()
             );
             assert.strictEqual(deserializeDate("2022-02-21").toMillis(), date.toMillis());
@@ -504,6 +486,107 @@ QUnit.module(
             );
         });
 
+        QUnit.test("parseDate with short notations", async (assert) => {
+            assert.strictEqual(
+                parseDate("20-10-20", { format: "yyyy-MM-dd" }).toISO(),
+                "2020-10-20T00:00:00.000+01:00"
+            );
+            assert.strictEqual(
+                parseDate("20/10/20", { format: "yyyy/MM/dd" }).toISO(),
+                "2020-10-20T00:00:00.000+01:00"
+            );
+            assert.strictEqual(
+                parseDate("10-20-20", { format: "MM-dd-yyyy" }).toISO(),
+                "2020-10-20T00:00:00.000+01:00"
+            );
+            assert.strictEqual(
+                parseDate("10-20-20", { format: "MM-yyyy-dd" }).toISO(),
+                "2020-10-20T00:00:00.000+01:00"
+            );
+            assert.strictEqual(
+                parseDate("1-20-2", { format: "MM-yyyy-dd" }).toISO(),
+                "2020-01-02T00:00:00.000+01:00"
+            );
+            assert.strictEqual(
+                parseDate("20/1/2", { format: "yyyy/MM/dd" }).toISO(),
+                "2020-01-02T00:00:00.000+01:00"
+            );
+        });
+
+        QUnit.test("parseDateTime with short notations", async (assert) => {
+            assert.strictEqual(
+                parseDateTime("20-10-20 8:5:3", { format: "yyyy-MM-dd hh:mm:ss" }).toISO(),
+                "2020-10-20T08:05:03.000+01:00"
+            );
+        });
+
+        QUnit.test("luxonToMoment", async (assert) => {
+            // Timezone is only patched for luxon, as we do not use the lib moment-timezone anyway.
+            patchTimeZone(330);
+            patchDate(2022, 1, 21, 15, 30, 0);
+
+            const luxonDate = DateTime.local().set({
+                millisecond: 0, // force 0ms due to test execution time
+            });
+            assert.strictEqual(luxonDate.toISO(), "2022-02-21T15:30:00.000+05:30");
+
+            const momentDate = luxonToMoment(luxonDate);
+            // Here we only assert the values of the moment object, as it may be
+            // in another timezone than the user's timezone (the patched one) anyway.
+            assert.deepEqual(momentDate.toObject(), {
+                years: 2022,
+                months: 1, // 0-based
+                date: 21,
+                hours: 15,
+                minutes: 30,
+                seconds: 0,
+                milliseconds: 0,
+            });
+        });
+
+        QUnit.test("momentToLuxon", async (assert) => {
+            // Timezone is only patched for luxon, as we do not use the lib moment-timezone anyway.
+            patchTimeZone(330);
+
+            // Patching the date after the having patched the timezone is important,
+            // as it will allow the native Date object to apply the correct timezone offset.
+            // BUT the native dates will still be in the browser's timezone...
+            patchDate(2022, 1, 21, 15, 30, 0);
+
+            // ...thus the created moment object will be in the browser's timezone.
+            const momentDate = moment().millisecond(0); // force 0ms due to test execution time
+            const momentHourOffset = momentDate.utcOffset() / 60;
+            // NB: asserting the moment offset is not relevant as it comes from the browser's TZ.
+            assert.deepEqual(momentDate.toObject(), {
+                years: 2022,
+                months: 1, // 0-based
+                date: 21,
+                hours: 10 + momentHourOffset,
+                minutes: 0,
+                seconds: 0,
+                milliseconds: 0,
+            });
+
+            // momentToluxon uses the moment object as is and outputs the same values in a luxon's
+            // DateTime object in the user's timezone...
+            const luxonDate = momentToLuxon(momentDate);
+            // ...so the below assert is correct even if we would have naturally
+            // expected something like "2022-02-21T15:30:00.000+05:30"
+            assert.deepEqual(luxonDate.toObject(), {
+                year: 2022,
+                month: 2, // 1-based
+                day: 21,
+                hour: 10 + momentHourOffset,
+                minute: 0,
+                second: 0,
+                millisecond: 0,
+            });
+            assert.strictEqual(luxonDate.offset, 330, "should be in user's timezone");
+        });
+
+        // -----------------------------------------------------------------------------------------
+        // -- Date utils legacy comparison -> TESTS in the below module will get removed someday! --
+        // -----------------------------------------------------------------------------------------
         QUnit.module("dates utils compatibility with legacy", {
             beforeEach() {
                 patchWithCleanup(localization, {
@@ -544,6 +627,9 @@ QUnit.module(
         });
 
         QUnit.test("parseDate", async (assert) => {
+            // Patch the timezone to no offset, as the legacy parsing always outputs
+            // a local date/datetime but as UTC (keeping the local time, which is wrong...)
+            patchTimeZone(0);
             /**
              * Type of testSet key: string
              * Type of testSet value: [newExpected: string, legacyExpected: string]
@@ -674,6 +760,9 @@ QUnit.module(
         });
 
         QUnit.test("parseDate (with legacy options.isUTC = true)", async (assert) => {
+            // Patch the timezone to no offset, as the legacy parsing always outputs
+            // a local date/datetime but as UTC (keeping the local time, which is wrong...)
+            patchTimeZone(0);
             /**
              * Type of testSet key: string
              * Type of testSet value: [newExpected: string, legacyExpected: string]
@@ -721,40 +810,16 @@ QUnit.module(
             ]);
 
             runTestSet(assert, testSet, {
-                newFn: (input) => parseDate(input, { format: "YYYY-MM-DD" }).toISO(),
+                newFn: (input) => parseDate(input).setZone("utc", { keepLocalTime: true }).toISO(),
                 legacyFn: (input) =>
                     legacy.field_utils.parse.date(input, null, { isUTC: true }).toISOString(),
             });
         });
 
-        QUnit.test("parseDate with short notations", async (assert) => {
-            assert.strictEqual(
-                parseDate("20-10-20", { format: "yyyy-MM-dd" }).toISO(),
-                "2020-10-20T00:00:00.000Z"
-            );
-            assert.strictEqual(
-                parseDate("20/10/20", { format: "yyyy/MM/dd" }).toISO(),
-                "2020-10-20T00:00:00.000Z"
-            );
-            assert.strictEqual(
-                parseDate("10-20-20", { format: "MM-dd-yyyy" }).toISO(),
-                "2020-10-20T00:00:00.000Z"
-            );
-            assert.strictEqual(
-                parseDate("10-20-20", { format: "MM-yyyy-dd" }).toISO(),
-                "2020-10-20T00:00:00.000Z"
-            );
-            assert.strictEqual(
-                parseDate("1-20-2", { format: "MM-yyyy-dd" }).toISO(),
-                "2020-01-02T00:00:00.000Z"
-            );
-            assert.strictEqual(
-                parseDate("20/1/2", { format: "yyyy/MM/dd" }).toISO(),
-                "2020-01-02T00:00:00.000Z"
-            );
-        });
-
         QUnit.test("parseDateTime", async (assert) => {
+            // Patch the timezone to no offset, as the legacy parsing always outputs
+            // a local date/datetime but as UTC (keeping the local time, which is wrong...)
+            patchTimeZone(0);
             /**
              * Type of testSet key: string
              * Type of testSet value: [newExpected: string, legacyExpected: string]
@@ -846,14 +911,10 @@ QUnit.module(
             });
         });
 
-        QUnit.test("parseDateTime with short notations", async (assert) => {
-            assert.strictEqual(
-                parseDateTime("20-10-20 8:5:3", { format: "yyyy-MM-dd hh:mm:ss" }).toISO(),
-                "2020-10-20T08:05:03.000Z"
-            );
-        });
-
         QUnit.test("parseDateTime (with legacy options.isUTC = true)", async (assert) => {
+            // Patch the timezone to no offset, as the legacy parsing always outputs
+            // a local date/datetime but as UTC (keeping the local time, which is wrong...)
+            patchTimeZone(0);
             /**
              * Type of testSet key: string
              * Type of testSet value: [newExpected: string, legacyExpected: string]
@@ -902,7 +963,8 @@ QUnit.module(
             }
 
             runTestSet(assert, testSet, {
-                newFn: (input) => parseDateTime(input, { format: "YYYY-MM-DD HH:mm:ss" }).toISO(),
+                newFn: (input) =>
+                    parseDateTime(input).setZone("utc", { keepLocalTime: true }).toISO(),
                 legacyFn: (input) =>
                     legacy.field_utils.parse.datetime(input, null, { isUTC: true }).toISOString(),
             });
@@ -1019,7 +1081,7 @@ QUnit.module(
             ]);
 
             runTestSet(assert, testSet, {
-                newFn: (input) => parseDateTime(input, { timezone: true }).toUTC().toISO(),
+                newFn: (input) => parseDateTime(input).toUTC().toISO(),
                 legacyFn: (input) =>
                     legacy.field_utils.parse
                         .datetime(input, null, { timezone: true })

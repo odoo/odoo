@@ -3,7 +3,9 @@
 export const standardWidgetProps = {
     readonly: { type: Boolean, optional: true },
     record: { type: Object },
-    // TODO WOWL remove "node" once there are no more legacy widgets.
-    // DO NOT USE THIS PROP IN NEW WIDGETS. USE extractProps() INSTEAD.
-    node: { type: Object },
+    // TODO TO REMOVE - ListView - FGE
+    options: { type: Object, optional: true },
+    rawAttrs: { type: Object, optional: true },
+    WidgetComponent: { type: Function, optional: true },
+    className: { type: String, optional: true },
 };

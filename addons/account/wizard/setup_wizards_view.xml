@@ -15,9 +15,8 @@
 
                                 <label for="fiscalyear_last_month" string="Fiscal Year End"/>
                                 <div>
-                                    <field name="fiscalyear_last_day" class="oe_inline text-center" style="width: 20% !important;"/>
-                                    <span style="width: 5%; display: inline-block"/>
-                                    <field name="fiscalyear_last_month" class="oe_inline" style="width: 75% !important;"/>
+                                    <field name="fiscalyear_last_day" class="text-center me-2" style="width: 20% !important;"/>
+                                    <field name="fiscalyear_last_month" class="w-75"/>
                                 </div>
                             </group>
                         </group>
@@ -49,12 +48,14 @@
                             </group>
                         </group>
                         <group attrs="{'invisible': [('num_journals_without_account', '=', 0)]}">
-                           <group>
-                            <field name="linked_journal_id" options="{'no_create': True}"/>
-                          </group>
-                          <group>
-                               <span class="text-muted">Leave empty to create a new journal for this bank account, or select a journal to link it with the bank account.</span>
-                           </group>
+                            <group>
+                                <field name="linked_journal_id" options="{'no_create': True}"/>
+                            </group>
+                            <group>
+                                <span class="text-muted" colspan="2">
+                                    Leave empty to create a new journal for this bank account, or select a journal to link it with the bank account.
+                                </span>
+                            </group>
                         </group>
                     </sheet>
                     <footer>

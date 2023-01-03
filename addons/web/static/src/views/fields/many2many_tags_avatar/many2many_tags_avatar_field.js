@@ -23,17 +23,16 @@ Many2ManyTagsAvatarField.components = {
 
 registry.category("fields").add("many2many_tags_avatar", Many2ManyTagsAvatarField);
 
-class ListKanbanMany2ManyTagsAvatarField extends Many2ManyTagsAvatarField {
+export class ListKanbanMany2ManyTagsAvatarField extends Many2ManyTagsAvatarField {
     get itemsVisible() {
         return this.props.record.activeFields[this.props.name].viewType === "list" ? 5 : 3;
     }
 
-    get tags() {
-        return this.props.value.records.map((record) => ({
-            id: record.id, // datapoint_X
-            text: record.data.display_name,
+    getTagProps(record) {
+        return {
+            ...super.getTagProps(record),
             img: `/web/image/${this.props.relation}/${record.resId}/avatar_128`,
-        }));
+        };
     }
 }
 

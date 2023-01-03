@@ -4,7 +4,7 @@ import { useHotkey } from "@web/core/hotkeys/hotkey_hook";
 import { useAutofocus, useService } from "@web/core/utils/hooks";
 import { KanbanColumnExamplesDialog } from "./kanban_column_examples_dialog";
 
-const { Component, useExternalListener, useState, useRef } = owl;
+import { Component, useExternalListener, useState, useRef } from "@odoo/owl";
 
 export class KanbanColumnQuickCreate extends Component {
     setup() {
@@ -73,4 +73,11 @@ export class KanbanColumnQuickCreate extends Component {
         });
     }
 }
+KanbanColumnQuickCreate.props = {
+    exampleData: [Object, { value: null }],
+    onFoldChange: Function,
+    onValidate: Function,
+    folded: Boolean,
+    groupByFieldString: String,
+};
 KanbanColumnQuickCreate.template = "web.KanbanColumnQuickCreate";

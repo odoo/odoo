@@ -5,11 +5,11 @@
         <field name="name">res.partner.view.form.inherit.slides</field>
         <field name="model">res.partner</field>
         <field name="inherit_id" ref="base.view_partner_form"/>
-        <field name="groups_id" eval="[(4, ref('website_slides.group_website_slides_officer'))]"/>
         <field name="arch" type="xml">
             <xpath expr="//div[@name='button_box']" position="inside">
                 <button class="oe_stat_button" type="object"
                     icon="fa-graduation-cap" name="action_view_courses"
+                    groups="website_slides.group_website_slides_officer"
                     attrs="{'invisible': ['|', ('slide_channel_count', '=', 0), ('is_company', '=', True)]}">
                     <div class="o_field_widget o_stat_info">
                         <span class="o_stat_value"><field name="slide_channel_count"/></span>
@@ -18,6 +18,7 @@
                 </button>
                 <button class="oe_stat_button" type="object"
                     icon="fa-graduation-cap" name="action_view_courses"
+                    groups="website_slides.group_website_slides_officer"
                     attrs="{'invisible': ['|', ('slide_channel_company_count', '=', 0), ('is_company', '=', False)]}">
                     <div class="o_field_widget o_stat_info">
                         <span class="o_stat_value"><field name="slide_channel_company_count" /></span>

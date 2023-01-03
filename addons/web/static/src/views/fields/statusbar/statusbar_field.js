@@ -1,29 +1,79 @@
 /** @odoo-module **/
 
 import { registry } from "@web/core/registry";
+import { useCommand } from "@web/core/commands/command_hook";
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
-import { useService } from "@web/core/utils/hooks";
 import { groupBy } from "@web/core/utils/arrays";
 import { escape, sprintf } from "@web/core/utils/strings";
 import { Domain } from "@web/core/domain";
 import { _lt } from "@web/core/l10n/translation";
 import { standardFieldProps } from "../standard_field_props";
-
-const { Component } = owl;
+import { Component } from "@odoo/owl";
 
 export class StatusBarField extends Component {
     setup() {
         if (this.props.record.activeFields[this.props.name].viewType === "form") {
-            this.initiateCommand();
+            const commandName = sprintf(
+                this.env._t(`Move to %s...`),
+                escape(this.props.displayName)
+            );
+            useCommand(
+                commandName,
+                () => {
+                    return {
+                        placeholder: commandName,
+                        providers: [
+                            {
+                                provide: () =>
+                                    this.computeItems(false).map((value) => ({
+                                        name: value.name,
+                                        action: () => {
+                                            this.selectItem(value);
+                                        },
+                                    })),
+                            },
+                        ],
+                    };
+                },
+                { category: "smart_action", hotkey: "alt+shift+x" }
+            );
+            useCommand(
+                sprintf(this.env._t(`Move to next %s`), this.props.displayName),
+                () => {
+                    const options = this.computeItems(false);
+                    const nextOption =
+                        options[
+                            options.findIndex(
+                                (option) =>
+                                    option.id ===
+                                    (this.type === "many2one"
+                                        ? this.props.value[0]
+                                        : this.props.value)
+                            ) + 1
+                        ];
+                    this.selectItem(nextOption);
+                },
+                {
+                    category: "smart_action",
+                    hotkey: "alt+x",
+                    isAvailable: () => {
+                        const options = this.computeItems(false);
+                        return (
+                            options[options.length - 1].id !==
+                            (this.type === "many2one" ? this.props.value[0] : this.props.value)
+                        );
+                    },
+                }
+            );
         }
     }
 
     get currentName() {
-        switch (this.props.record.fields[this.props.name].type) {
+        switch (this.type) {
             case "many2one": {
-                const item = this.options.find((item) => item.isSelected);
-                return item ? item.name : "";
+                const item = this.options.find((item) => this.props.value && item.id === this.props.value[0]);
+                return item ? item.display_name : "";
             }
             case "selection": {
                 const item = this.options.find((item) => item[0] === this.props.value);
@@ -33,7 +83,7 @@ export class StatusBarField extends Component {
         throw new Error("Unsupported field type for StatusBarField");
     }
     get options() {
-        switch (this.props.record.fields[this.props.name].type) {
+        switch (this.type) {
             case "many2one":
                 return this.props.record.preloadedData[this.props.name];
             case "selection":
@@ -41,6 +91,10 @@ export class StatusBarField extends Component {
             default:
                 return [];
         }
+    }
+
+    get type() {
+        return this.props.record.fields[this.props.name].type;
     }
 
     getDropdownItemClassNames(item) {
@@ -87,12 +141,15 @@ export class StatusBarField extends Component {
         }));
     }
 
-    computeItems() {
+    computeItems(grouped = true) {
         let items = null;
         if (this.props.type === "many2one") {
             items = this.getVisibleMany2Ones();
         } else {
             items = this.getVisibleSelection();
+        }
+        if (!grouped) {
+            return items;
         }
 
         if (this.env.isSmall) {
@@ -123,34 +180,6 @@ export class StatusBarField extends Component {
     onDropdownItemSelected(ev) {
         this.selectItem(ev.detail.payload);
     }
-
-    initiateCommand() {
-        try {
-            const commandService = useService("command");
-            const provide = () => {
-                return this.computeItems().unfolded.map((value) => ({
-                    name: value.name,
-                    action: () => {
-                        this.selectItem(value);
-                    },
-                }));
-            };
-            const name = sprintf(this.env._t(`Move to %s...`), escape(this.props.displayName));
-            const action = () => {
-                return {
-                    placeholder: name,
-                    providers: [{ provide }],
-                };
-            };
-            const options = {
-                category: "smart_action",
-                hotkey: "alt+shift+x",
-            };
-            commandService.add(name, action, options);
-        } catch {
-            console.log("Could not add command to service");
-        }
-    }
 }
 
 StatusBarField.template = "web.StatusBarField";
@@ -172,6 +201,7 @@ StatusBarField.components = {
 
 StatusBarField.displayName = _lt("Status");
 StatusBarField.supportedTypes = ["many2one", "selection"];
+StatusBarField.legacySpecialData = "_fetchSpecialStatus";
 
 StatusBarField.isEmpty = (record, fieldName) => {
     return record.model.env.isSmall ? !record.data[fieldName] : false;

@@ -25,20 +25,20 @@ export class SkillsListRenderer extends CommonSkillsListRenderer {
 SkillsListRenderer.template = 'hr_skills.SkillsListRenderer';
 
 export class SkillsX2ManyField extends X2ManyField {
-    setup() {
-        super.setup();
-        this.Renderer = SkillsListRenderer;
-    }
-
-    async onAdd({ context } = {}) {
+    async onAdd({ context, editable } = {}) {
         const employeeId = this.props.record.resId;
         return super.onAdd({
+            editable,
             context: {
                 ...context,
                 default_employee_id: employeeId,
             }
         });
     }
+}
+SkillsX2ManyField.components = {
+    ...X2ManyField.components,
+    ListRenderer: SkillsListRenderer,
 };
 
 registry.category("fields").add("skills_one2many", SkillsX2ManyField);

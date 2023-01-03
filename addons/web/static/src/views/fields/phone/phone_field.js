@@ -5,7 +5,7 @@ import { _lt } from "@web/core/l10n/translation";
 import { useInputField } from "../input_field_hook";
 import { standardFieldProps } from "../standard_field_props";
 
-const { Component } = owl;
+import { Component } from "@odoo/owl";
 
 export class PhoneField extends Component {
     setup() {
@@ -28,4 +28,8 @@ PhoneField.extractProps = ({ attrs }) => {
     };
 };
 
+class FormPhoneField extends PhoneField {}
+FormPhoneField.template = "web.FormPhoneField";
+
 registry.category("fields").add("phone", PhoneField);
+registry.category("fields").add("form.phone", FormPhoneField);

@@ -7,7 +7,6 @@ from odoo.exceptions import AccessError, UserError
 import time
 
 
-@tests.tagged('access_rights', 'post_install', '-at_install')
 class TestAllocationRights(TestHrHolidaysCommon):
 
     @classmethod

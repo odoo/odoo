@@ -20,6 +20,7 @@
         'views/website_blog_templates.xml',
         'views/snippets/snippets.xml',
         'views/snippets/s_blog_posts.xml',
+        'views/website_pages_views.xml',
         'views/blog_post_add.xml',
         'security/ir.model.access.csv',
         'security/website_blog_security.xml',
@@ -28,7 +29,6 @@
         'data/website_blog_demo.xml'
     ],
     'installable': True,
-    'application': True,
     'assets': {
         'website.assets_wysiwyg': [
             'website_blog/static/src/js/options.js',

@@ -60,7 +60,7 @@
                                                     </td>
                                                     <td class="p-0">
                                                         <strong>
-                                                            <span t-esc="o.line_ids and o.line_ids.sorted(lambda line: line.date)[0].date" t-options='{"widget": "date"}'/>
+                                                            <span t-out="o.line_ids and o.line_ids.sorted(lambda line: line.date)[0].date" t-options='{"widget": "date"}'/>
                                                         </strong>
                                                     </td>
                                                     <td class="text-end p-0">
@@ -75,7 +75,7 @@
                                                     </td>
                                                     <td class="p-0">
                                                         <strong>
-                                                            <span t-esc="o.line_ids and o.line_ids.sorted(lambda line: line.date)[-1].date" t-options='{"widget": "date"}'/>
+                                                            <span t-out="o.line_ids and o.line_ids.sorted(lambda line: line.date)[-1].date" t-options='{"widget": "date"}'/>
                                                         </strong>
                                                     </td>
                                                     <td class="text-end p-0">

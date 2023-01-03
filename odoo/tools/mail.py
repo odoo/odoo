@@ -31,10 +31,12 @@ _logger = logging.getLogger(__name__)
 safe_attrs = clean.defs.safe_attrs | frozenset(
     ['style',
      'data-o-mail-quote',  # quote detection
-     'data-oe-model', 'data-oe-id', 'data-oe-field', 'data-oe-type', 'data-oe-expression', 'data-oe-translation-id', 'data-oe-nodeid',
+     'data-oe-model', 'data-oe-id', 'data-oe-field', 'data-oe-type', 'data-oe-expression', 'data-oe-translation-initial-sha', 'data-oe-nodeid',
      'data-publish', 'data-id', 'data-res_id', 'data-interval', 'data-member_id', 'data-scroll-background-ratio', 'data-view-id',
      'data-class', 'data-mimetype', 'data-original-src', 'data-original-id', 'data-gl-filter', 'data-quality', 'data-resize-width',
      'data-shape', 'data-shape-colors', 'data-file-name', 'data-original-mimetype',
+     'data-oe-protected',  # editor
+     'data-behavior-props', 'data-prop-name',  # knowledge commands
      ])
 SANITIZE_TAGS = {
     # allow new semantic HTML5 tags
@@ -50,8 +52,8 @@ class _Cleaner(clean.Cleaner):
     _style_re = re.compile(r'''([\w-]+)\s*:\s*((?:[^;"']|"[^";]*"|'[^';]*')+)''')
 
     _style_whitelist = [
-        'font-size', 'font-family', 'font-weight', 'background-color', 'color', 'text-align',
-        'line-height', 'letter-spacing', 'text-transform', 'text-decoration', 'opacity',
+        'font-size', 'font-family', 'font-weight', 'font-style', 'background-color', 'color', 'text-align',
+        'line-height', 'letter-spacing', 'text-transform', 'text-decoration', 'text-decoration', 'opacity',
         'float', 'vertical-align', 'display',
         'padding', 'padding-top', 'padding-left', 'padding-bottom', 'padding-right',
         'margin', 'margin-top', 'margin-left', 'margin-bottom', 'margin-right',

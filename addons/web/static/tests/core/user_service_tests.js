@@ -16,11 +16,11 @@ QUnit.test("successive calls to hasGroup", async (assert) => {
         return groups.includes(args.args[0]);
     };
     const env = await makeTestEnv({ mockRPC });
-    let hasGroupX = await env.services.user.hasGroup("x");
-    let hasGroupY = await env.services.user.hasGroup("y");
+    const hasGroupX = await env.services.user.hasGroup("x");
+    const hasGroupY = await env.services.user.hasGroup("y");
     assert.strictEqual(hasGroupX, true);
     assert.strictEqual(hasGroupY, false);
-    let hasGroupXAgain = await env.services.user.hasGroup("x");
+    const hasGroupXAgain = await env.services.user.hasGroup("x");
     assert.strictEqual(hasGroupXAgain, true);
 
     assert.verifySteps(["res.users/has_group/x", "res.users/has_group/y"]);

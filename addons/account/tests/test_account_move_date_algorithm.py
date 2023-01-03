@@ -182,6 +182,8 @@ class TestAccountMoveDateAlgorithm(AccountTestInvoicingCommon):
         }])
 
     def test_caba_with_lock_date(self):
+        self.env.company.tax_exigibility = True
+
         tax_waiting_account = self.env['account.account'].create({
             'name': 'TAX_WAIT',
             'code': 'TWAIT',

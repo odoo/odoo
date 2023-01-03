@@ -20,6 +20,7 @@ class TestControllers(tests.HttpCase):
         base_url = self.env['ir.config_parameter'].sudo().get_param('web.base.url')
         suggested_links_url = base_url + '/website/get_suggested_links'
 
+        old_pages = Page
         for i in range(0, 10):
             new_page = Page.create({
                 'name': 'Generic',
@@ -32,10 +33,13 @@ class TestControllers(tests.HttpCase):
                 'is_published': True,
             })
             if i % 2 == 0:
-                # mark as old
-                new_page._write({'write_date': '2020-01-01'})
+                old_pages += new_page
             else:
                 last_5_url_edited.append(new_page.url)
+
+        self.opener.post(url=suggested_links_url, json={'params': {'needle': '/'}})
+        # mark as old
+        old_pages._write({'write_date': '2020-01-01'})
 
         res = self.opener.post(url=suggested_links_url, json={'params': {'needle': '/'}})
         resp = json.loads(res.content)

@@ -21,7 +21,7 @@ import {
     triggerHotkey,
 } from "../../helpers/utils";
 
-const { Component, xml } = owl;
+import { Component, xml } from "@odoo/owl";
 
 let env;
 let target;
@@ -167,6 +167,33 @@ QUnit.test("useCommand hook when the activeElement change", async (assert) => {
         [...target.querySelectorAll(".o_command")].map((e) => e.textContent),
         ["Lose the throne", "I'm taking the throne"]
     );
+});
+
+QUnit.test("useCommand hook with isAvailable", async (assert) => {
+    let available = false;
+    class MyComponent extends TestComponent {
+        setup() {
+            useCommand("Take the throne", () => {}, {
+                isAvailable: () => {
+                    return available;
+                },
+            });
+        }
+    }
+    await mount(MyComponent, target, { env });
+
+    triggerHotkey("control+k");
+    await nextTick();
+    assert.containsOnce(target, ".o_command_palette");
+    assert.containsNone(target, ".o_command");
+
+    triggerHotkey("escape");
+    await nextTick();
+    available = true;
+    triggerHotkey("control+k");
+    await nextTick();
+    assert.containsOnce(target, ".o_command_palette");
+    assert.containsOnce(target, ".o_command");
 });
 
 QUnit.test("command with hotkey", async (assert) => {

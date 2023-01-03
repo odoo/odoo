@@ -54,3 +54,10 @@ class WebsiteSale(website_sale_controller.WebsiteSale):
         # We need the user mail to prefill the back of stock notification, so we put it in the value that will be sent
         values['user_email'] = request.env.user.email or request.session.get('stock_notification_email', '')
         return values
+
+class CustomerPortal(website_sale_controller.CustomerPortal):
+    def _sale_reorder_get_line_context(self):
+        return {
+            **super()._sale_reorder_get_line_context(),
+            'website_sale_stock_get_quantity': True,
+        }

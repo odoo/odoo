@@ -3,7 +3,7 @@
 
 <template id="event_leaderboard" name="Leaderboard">
     <t t-call="website_event.layout">
-        <div t-if="visitors" class="bg-light pt32 pb32 o_wevent_quiz_leaderboard">
+        <div t-if="visitors" class="o_wevent_theme_bg_light pt32 pb32 o_wevent_quiz_leaderboard">
             <t t-call="website_event_track_quiz.leaderboard_search_bar"/>
             <div class="container mt32">
                 <div t-if="not search" class="row mb-3">
@@ -13,7 +13,7 @@
                 </div>
                 <table class="table table-sm">
                     <tr t-foreach="visitors" t-as="visitor"
-                        t-attf-class="#{'alert-info' if visitor['visitor'] == current_visitor else 'bg-white'} #{'o_wevent_quiz_scroll_to' if scroll_to_position and visitor['visitor'] == current_visitor else ''}">
+                        t-attf-class="#{'alert-info' if visitor['visitor'] == current_visitor else 'o_wevent_theme_bg_base'} #{'o_wevent_quiz_scroll_to' if scroll_to_position and visitor['visitor'] == current_visitor else ''}">
                         <t t-call="website_event_track_quiz.all_visitor_card"/>
                     </tr>
                 </table>
@@ -26,7 +26,7 @@
             <t t-call="website_event_track_quiz.leaderboard_search_bar"/>
             <div class='alert alert-warning mt32'>No user found for <strong><t t-out="search"/></strong>. Try another search.</div>
         </div>
-        <div t-if="not visitors and not search" class="vh-100 bg-light d-flex justify-content-center align-items-center">
+        <div t-if="not visitors and not search" class="vh-100 o_wevent_theme_bg_light d-flex justify-content-center align-items-center">
             <h4 class="text-muted fw-bold">There is currently no leaderboard available</h4>
         </div>
     </t>

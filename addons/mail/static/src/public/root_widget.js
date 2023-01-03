@@ -7,6 +7,6 @@ odoo.define("root.widget", function (require) {
     // we spawn the component adapter
     require("@mail/public/discuss_public_boot");
     const { standaloneAdapter } = require("web.OwlCompatibility");
-    const { Component } = owl;
+    const { Component } = require("@odoo/owl");
     return standaloneAdapter({ Component });
 });

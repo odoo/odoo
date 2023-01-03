@@ -9,7 +9,9 @@
             <field name="product_selectable" eval="True"/>
         </record>
 
-        <function model="res.company" name="create_missing_subcontracting_dropshipping_rules"/>
+        <function model="res.company" name="_create_missing_subcontracting_dropshipping_sequence"/>
+        <function model="res.company" name="_create_missing_subcontracting_dropshipping_picking_type"/>
+        <function model="res.company" name="_create_missing_subcontracting_dropshipping_rules"/>
 
         <function model="stock.warehouse" name="write">
             <value model="stock.warehouse" eval="obj().env['stock.warehouse'].search([]).ids"/>

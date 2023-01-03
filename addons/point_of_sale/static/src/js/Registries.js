@@ -1,27 +1,27 @@
-odoo.define('point_of_sale.Registries', function(require) {
-    'use strict';
+/** @odoo-module */
+/**
+ * This definition contains all the instances of ClassRegistry.
+ */
 
-    /**
-     * This definition contains all the instances of ClassRegistry.
-     */
+import ComponentRegistry from "@point_of_sale/js/ComponentRegistry";
+import ClassRegistry from "@point_of_sale/js/ClassRegistry";
 
-    const ComponentRegistry = require('point_of_sale.ComponentRegistry');
-    const ClassRegistry = require('point_of_sale.ClassRegistry');
-
-    class ModelRegistry extends ClassRegistry {
-        add(baseClass) {
-            super.add(baseClass);
-            /**
-             * Introduce a static method (`create`) to each base class that can be
-             * conveniently use to create an instance of the extended version
-             * of the class.
-             */
-            baseClass.create = (...args) => {
-                const ExtendedClass = this.get(baseClass);
-                return new ExtendedClass(...args);
-            }
-        }
+class ModelRegistry extends ClassRegistry {
+    add(baseClass) {
+        super.add(baseClass);
+        /**
+         * Introduce a static method (`create`) to each base class that can be
+         * conveniently use to create an instance of the extended version
+         * of the class.
+         */
+        baseClass.create = (...args) => {
+            const ExtendedClass = this.get(baseClass);
+            return new ExtendedClass(...args);
+        };
     }
+}
 
-    return { Component: new ComponentRegistry(), Model: new ModelRegistry() };
-});
+export const Component = new ComponentRegistry();
+export const Model = new ModelRegistry();
+
+export default { Component, Model };

@@ -10,6 +10,7 @@
                 <sheet>
                     <group>
                         <field name="name"/>
+                        <field name="sequence"/>
                     </group>
                 </sheet>
             </form>
@@ -21,6 +22,7 @@
         <field name="model">event.track.location</field>
         <field name="arch" type="xml">
             <tree string="Event Location" editable="bottom">
+                <field name="sequence" widget="handle"/>
                 <field name="name"/>
             </tree>
         </field>

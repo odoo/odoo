@@ -10,7 +10,11 @@
     'description': """
 This module contains all the common features of Sales Management and eCommerce.
     """,
-    'depends': ['sales_team', 'payment', 'portal', 'utm'],
+    'depends': [
+        'sales_team',
+        'account_payment',  # -> account, payment, portal
+        'utm',
+    ],
     'data': [
         'security/ir.model.access.csv',
         'security/res_groups.xml',
@@ -28,7 +32,9 @@ This module contains all the common features of Sales Management and eCommerce.
         'data/sale_data.xml',
 
         'wizard/account_accrued_orders_wizard_views.xml',
+        'wizard/mass_cancel_orders_views.xml',
         'wizard/payment_link_wizard_views.xml',
+        'wizard/res_config_settings_views.xml',
         'wizard/sale_make_invoice_advance_views.xml',
         'wizard/sale_order_cancel_views.xml',
 
@@ -42,7 +48,6 @@ This module contains all the common features of Sales Management and eCommerce.
         'views/payment_views.xml',
         'views/product_packaging_views.xml',
         'views/product_views.xml',
-        'views/res_config_settings_views.xml',
         'views/res_partner_views.xml',
         'views/variant_templates.xml',
         'views/sale_onboarding_views.xml',
@@ -63,29 +68,24 @@ This module contains all the common features of Sales Management and eCommerce.
             'sale/static/src/scss/product_configurator.scss',
             'sale/static/src/js/sale_progressbar_field.js',
             'sale/static/src/js/tours/sale.js',
-            'sale/static/src/js/sale_order_line_mixin.js',
-            'sale/static/src/js/product_configurator_widget.js',
-            'sale/static/src/js/sale_order_controller.js',
-            'sale/static/src/js/sale_order_view.js',
-            'sale/static/src/js/product_discount_widget.js',
+            'sale/static/src/js/product_discount_field.js',
+            'sale/static/src/js/sale_product_field.js',
+            'sale/static/src/xml/**/*',
         ],
         'web.assets_frontend': [
             'sale/static/src/scss/sale_portal.scss',
             'sale/static/src/js/sale_portal_sidebar.js',
+            'sale/static/src/js/sale_portal.js',
             'sale/static/src/js/payment_form.js',
         ],
         'web.assets_tests': [
             'sale/static/tests/tours/**/*',
         ],
         'web.qunit_suite_tests': [
-            'sale/static/tests/product_configurator_tests.js',
             'sale/static/tests/sales_team_dashboard_tests.js',
         ],
         'web.report_assets_common': [
             'sale/static/src/scss/sale_report.scss',
-        ],
-        'web.assets_qweb': [
-            'sale/static/src/xml/**/*',
         ],
     },
     'post_init_hook': '_synchronize_cron',

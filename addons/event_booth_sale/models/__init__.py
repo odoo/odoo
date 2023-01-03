@@ -9,3 +9,4 @@ from . import event_booth_category
 from . import event_type_booth
 from . import sale_order
 from . import sale_order_line
+from . import sale_order_template_line

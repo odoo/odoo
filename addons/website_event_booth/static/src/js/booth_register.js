@@ -9,9 +9,6 @@ var _t = core._t;
 
 publicWidget.registry.boothRegistration = publicWidget.Widget.extend({
     selector: '.o_wbooth_registration',
-    xmlDependencies: [
-        '/website_event_booth/static/src/xml/event_booth_registration_templates.xml',
-    ],
     events: {
         'change input[name="booth_category_id"]': '_onChangeBoothType',
         'change .form-check > input[type="checkbox"]': '_onChangeBooth',
@@ -82,10 +79,8 @@ publicWidget.registry.boothRegistration = publicWidget.Widget.extend({
     _isConfirmationFormValid($form) {
         const formErrors = [];
 
-        $form.find('.form-group').each(function (index, field) {
-            let $field = $(field);
-            let input = $field.find('.form-control');
-
+        $form.find('.form-control').each(function () {
+            let input = $(this);
             input.removeClass('is-invalid');
             if (input.length && !input[0].checkValidity()) {
                 input.addClass('is-invalid');

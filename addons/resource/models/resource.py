@@ -225,7 +225,7 @@ class ResourceCalendar(models.Model):
     def _compute_attendance_ids(self):
         for calendar in self.filtered(lambda c: not c._origin or c._origin.company_id != c.company_id):
             company_calendar = calendar.company_id.resource_calendar_id
-            calendar.write({
+            calendar.update({
                 'two_weeks_calendar': company_calendar.two_weeks_calendar,
                 'hours_per_day': company_calendar.hours_per_day,
                 'tz': company_calendar.tz,
@@ -236,7 +236,7 @@ class ResourceCalendar(models.Model):
     @api.depends('company_id')
     def _compute_global_leave_ids(self):
         for calendar in self.filtered(lambda c: not c._origin or c._origin.company_id != c.company_id):
-            calendar.write({
+            calendar.update({
                 'global_leave_ids': [(5, 0, 0)] + [
                     (0, 0, leave._copy_leave_vals()) for leave in calendar.company_id.resource_calendar_id.global_leave_ids]
             })
@@ -941,12 +941,10 @@ class ResourceResource(models.Model):
     calendar_id = fields.Many2one(
         "resource.calendar", string='Working Time',
         default=lambda self: self.env.company.resource_calendar_id,
-        required=True, domain="[('company_id', '=', company_id)]",
-        help="Define the schedule of resource")
+        required=True, domain="[('company_id', '=', company_id)]")
     tz = fields.Selection(
         _tz_get, string='Timezone', required=True,
-        default=lambda self: self._context.get('tz') or self.env.user.tz or 'UTC',
-        help="This field is used in order to define in which timezone the resources will work.")
+        default=lambda self: self._context.get('tz') or self.env.user.tz or 'UTC')
 
     _sql_constraints = [
         ('check_time_efficiency', 'CHECK(time_efficiency>0)', 'Time efficiency must be strictly positive'),
@@ -1046,7 +1044,7 @@ class ResourceResource(models.Model):
             calendar_mapping[resource.calendar_id] |= resource
 
         for calendar, resources in calendar_mapping.items():
-            resources_unavailable_intervals = calendar._unavailable_intervals_batch(start_datetime, end_datetime, resources)
+            resources_unavailable_intervals = calendar._unavailable_intervals_batch(start_datetime, end_datetime, resources, tz=timezone(calendar.tz))
             resource_mapping.update(resources_unavailable_intervals)
         return resource_mapping
 
@@ -1080,7 +1078,7 @@ class ResourceResource(models.Model):
         resource_work_intervals = defaultdict(Intervals)
         calendar_work_intervals = dict()
 
-        resource_calendar_validity_intervals = self._get_calendars_validity_within_period(start, end)
+        resource_calendar_validity_intervals = self.sudo()._get_calendars_validity_within_period(start, end)
         for resource in self:
             # For each resource, retrieve its calendar and their validity intervals
             for calendar in resource_calendar_validity_intervals[resource.id]:
@@ -1125,7 +1123,7 @@ class ResourceCalendarLeaves(models.Model):
     company_id = fields.Many2one(
         'res.company', string="Company", readonly=True, store=True,
         default=lambda self: self.env.company, compute='_compute_company_id')
-    calendar_id = fields.Many2one('resource.calendar', 'Working Hours', domain="[('company_id', '=', company_id)]", index=True)
+    calendar_id = fields.Many2one('resource.calendar', 'Working Hours', domain="[('company_id', 'in', [company_id, False])]", check_company=True, index=True)
     date_from = fields.Datetime('Start Date', required=True)
     date_to = fields.Datetime('End Date', required=True)
     resource_id = fields.Many2one(

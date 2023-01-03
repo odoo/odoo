@@ -30,7 +30,7 @@ class Page(models.Model):
     # This is needed to be able to control if page is a menu in page properties.
     # TODO this should be reviewed entirely so that we use a transient model.
     is_in_menu = fields.Boolean(compute='_compute_website_menu', inverse='_inverse_website_menu')
-    is_homepage = fields.Boolean(compute='_compute_homepage', inverse='_set_homepage', string='Homepage')
+    is_homepage = fields.Boolean(compute='_compute_is_homepage', inverse='_set_is_homepage', string='Homepage')
     is_visible = fields.Boolean(compute='_compute_visible', string='Is Visible')
 
     # Page options
@@ -43,19 +43,20 @@ class Page(models.Model):
     website_id = fields.Many2one(related='view_id.website_id', store=True, readonly=False, ondelete='cascade')
     arch = fields.Text(related='view_id.arch', readonly=False, depends_context=('website_id',))
 
-    def _compute_homepage(self):
+    def _compute_is_homepage(self):
+        website = self.env['website'].get_current_website()
         for page in self:
-            page.is_homepage = page == self.env['website'].get_current_website().homepage_id
+            page.is_homepage = page.url == (website.homepage_url or page.website_id == website and '/')
 
-    def _set_homepage(self):
+    def _set_is_homepage(self):
+        website = self.env['website'].get_current_website()
         for page in self:
-            website = self.env['website'].get_current_website()
             if page.is_homepage:
-                if website.homepage_id != page:
-                    website.write({'homepage_id': page.id})
+                if website.homepage_url != page.url:
+                    website.homepage_url = page.url
             else:
-                if website.homepage_id == page:
-                    website.write({'homepage_id': None})
+                if website.homepage_url == page.url:
+                    website.homepage_url = ''
 
     def _compute_visible(self):
         for page in self:
@@ -82,6 +83,13 @@ class Page(models.Model):
             elif page.menu_ids:
                 # If the page is no longer in menu, we should remove its website_menu
                 page.menu_ids.unlink()
+
+    # This update was added to make sure the mixin calculations are correct
+    # (page.website_url > page.url).
+    @api.depends('url')
+    def _compute_website_url(self):
+        for page in self:
+            page.website_url = page.url
 
     def _get_most_specific_pages(self):
         ''' Returns the most specific pages in self. '''
@@ -113,7 +121,8 @@ class Page(models.Model):
         page = self.browse(int(page_id))
         copy_param = dict(name=page_name or page.name, website_id=self.env['website'].get_current_website().id)
         if page_name:
-            copy_param['url'] = self.get_valid_page_url(page_name)
+            url = '/' + slugify(page_name, max_length=1024, path=True)
+            copy_param['url'] = self.env['website'].get_unique_path(url)
 
         new_page = page.copy(copy_param)
         # Should not clone menu if the page was cloned from one website to another
@@ -150,17 +159,16 @@ class Page(models.Model):
 
             # If URL has been edited, slug it
             if 'url' in vals:
-                url = vals['url']
+                url = vals['url'] or ''
                 redirect_old_url = redirect_type = None
                 # TODO This should be done another way after the backend/frontend merge
                 if isinstance(url, dict):
                     redirect_old_url = url.get('redirect_old_url')
                     redirect_type = url.get('redirect_type')
                     url = url.get('url')
-                if not url.startswith('/'):
-                    url = '/' + url
+                url = '/' + slugify(url, max_length=1024, path=True)
                 if page.url != url:
-                    url = self.get_valid_page_url(url, website_id)
+                    url = self.env['website'].with_context(website_id=website_id).get_unique_path(url)
                     page.menu_ids.write({'url': url})
                     if redirect_old_url:
                         self.env['website.rewrite'].create({
@@ -223,28 +231,19 @@ class Page(models.Model):
             # Perform search in translations
             # TODO Remove when domains will support xml_translate fields
             query = sql.SQL("""
-                SELECT {table}.{id}
+                SELECT {table}.id
                 FROM {table}
-                LEFT JOIN ir_ui_view v ON {table}.{view_id} = v.{id}
-                LEFT JOIN ir_translation t ON v.{id} = t.{res_id}
-                WHERE t.lang = {lang}
-                AND t.name = ANY({names})
-                AND t.type = 'model_terms'
-                AND t.value ilike {search}
+                LEFT JOIN ir_ui_view v ON {table}.view_id = v.id
+                WHERE v.name ILIKE {search}
+                OR COALESCE(v.arch_db->>{lang}, v.arch_db->>'en_US') ILIKE {search}
                 LIMIT {limit}
             """).format(
                 table=sql.Identifier(self._table),
-                id=sql.Identifier('id'),
-                view_id=sql.Identifier('view_id'),
-                res_id=sql.Identifier('res_id'),
-                lang=sql.Placeholder('lang'),
-                names=sql.Placeholder('names'),
                 search=sql.Placeholder('search'),
+                lang=sql.Literal(self.env.lang or 'en_US'),
                 limit=sql.Placeholder('limit'),
             )
             self.env.cr.execute(query, {
-                'lang': self.env.lang,
-                'names': ['ir.ui.view,arch_db', 'ir.ui.view,name'],
                 'search': '%%%s%%' % escape_psql(search),
                 'limit': limit,
             })
@@ -273,18 +272,15 @@ class Page(models.Model):
             results = results.filtered(lambda result: filter_page(search, result, results))
         return results, count
 
-    def get_valid_page_url(self, page_url, website_id=False):
-        url = '/' + slugify(page_url, max_length=1024, path=True)
-        return self.env['website'].with_context(website_id=website_id).get_unique_path(url)
-
-    def action_manage_website_pages(self):
+    def action_page_debug_view(self):
         return {
-            'name': _('Website Pages'),
             'type': 'ir.actions.act_window',
-            'res_model': 'website.page',
-            'view_mode': 'tree',
-            'view_id': self.env.ref('website.website_pages_tree_view').id,
+            'res_model': 'ir.ui.view',
+            'res_id': self.view_id.id,
+            'view_mode': 'form',
+            'view_id': self.env.ref('website.view_view_form_extend').id,
         }
+
 
 # this is just a dummy function to be used as ormcache key
 def _cached_response():

@@ -1,19 +1,25 @@
 /** @odoo-module **/
 
-import { registerModel } from '@mail/model/model_core';
-import { attr, many, one } from '@mail/model/model_field';
-import { clear } from '@mail/model/model_field_command';
+import { attr, clear, many, one, Model } from "@mail/model";
 
-registerModel({
-    name: 'DiscussView',
+Model({
+    name: "DiscussView",
+    template: "mail.DiscussView",
     recordMethods: {
+        clearIsAddingItem() {
+            this.update({
+                addingChannelValue: clear(),
+                isAddingChannel: clear(),
+                isAddingChat: clear(),
+            });
+        },
         /**
          * Handles click on the mobile "new channel" button.
          *
          * @param {MouseEvent} ev
          */
         onClickMobileNewChannelButton(ev) {
-            this.discuss.update({ isAddingChannel: true });
+            this.update({ isAddingChannel: true });
         },
         /**
          * Handles click on the mobile "new chat" button.
@@ -21,7 +27,7 @@ registerModel({
          * @param {MouseEvent} ev
          */
         onClickMobileNewChatButton(ev) {
-            this.discuss.update({ isAddingChat: true });
+            this.update({ isAddingChat: true });
         },
         /**
          * Handles click on the "Start a meeting" button.
@@ -29,8 +35,8 @@ registerModel({
          * @param {MouseEvent} ev
          */
         async onClickStartAMeetingButton(ev) {
-            const meetingChannel = await this.messaging.models['Thread'].createGroupChat({
-                default_display_mode: 'video_full_screen',
+            const meetingChannel = await this.messaging.models["Thread"].createGroupChat({
+                default_display_mode: "video_full_screen",
                 partners_to: [this.messaging.currentPartner.id],
             });
             meetingChannel.toggleCall({ startWithVideo: true });
@@ -44,25 +50,14 @@ registerModel({
             if (!this.exists()) {
                 return;
             }
-            this.discuss.clearIsAddingItem();
+            this.clearIsAddingItem();
         },
         /**
          * @param {KeyboardEvent} ev
          */
         onInputQuickSearch(ev) {
             ev.stopPropagation();
-            this.discuss.onInputQuickSearch(this.quickSearchInputRef.el.value);
-        },
-        /**
-         * Called when clicking on a mailbox selection item.
-         *
-         * @param {Mailbox} mailbox
-         */
-        onClickMobileMailboxSelectionItem(mailbox) {
-            if (!mailbox.exists()) {
-                return;
-            }
-            mailbox.thread.open();
+            this.discuss.onInputQuickSearch(this.sidebar.quickSearchInputRef.el.value);
         },
         /**
          * @param {Event} ev
@@ -74,7 +69,7 @@ registerModel({
             if (!this.exists()) {
                 return;
             }
-            if (this.discuss.isAddingChannel) {
+            if (this.isAddingChannel) {
                 this.discuss.handleAddChannelAutocompleteSelect(ev, ui);
             } else {
                 this.discuss.handleAddChatAutocompleteSelect(ev, ui);
@@ -89,24 +84,11 @@ registerModel({
             if (!this.exists()) {
                 return;
             }
-            if (this.discuss.isAddingChannel) {
+            if (this.isAddingChannel) {
                 this.discuss.handleAddChannelAutocompleteSource(req, res);
             } else {
                 this.discuss.handleAddChatAutocompleteSource(req, res);
             }
-        },
-        /**
-         * @private
-         * @returns {FieldCommand}
-         */
-        _computeMobileAddItemHeaderAutocompleteInputView() {
-            if (
-                this.messaging.device.isSmall &&
-                (this.discuss.isAddingChannel || this.discuss.isAddingChat)
-            ) {
-                return {};
-            }
-            return clear();
         },
         /**
          * @private
@@ -117,15 +99,6 @@ registerModel({
                 active_id: this.discuss.activeId,
             });
         },
-        /**
-         * @private
-         * @returns {Array[]}
-         */
-        _sortMailboxes() {
-            return [
-                ['smaller-first', 'sequence'],
-            ];
-        },
     },
     fields: {
         /**
@@ -133,44 +106,70 @@ registerModel({
          * The id of the action which opened discuss.
          */
         actionId: attr(),
-        discuss: one('Discuss', {
-            identifying: true,
-            inverse: 'discussView',
-        }),
-        historyView: one('DiscussSidebarMailboxView', {
+        /**
+         * Value that is used to create a channel from the sidebar.
+         */
+        addingChannelValue: attr({ default: "" }),
+        discuss: one("Discuss", { identifying: true, inverse: "discussView" }),
+        historyView: one("DiscussSidebarMailboxView", {
             default: {},
-            inverse: 'discussViewOwnerAsHistory',
-            isCausal: true,
+            inverse: "discussViewOwnerAsHistory",
         }),
-        inboxView: one('DiscussSidebarMailboxView', {
+        inboxView: one("DiscussSidebarMailboxView", {
             default: {},
-            inverse: 'discussViewOwnerAsInbox',
-            isCausal: true,
-        }),
-        mobileAddItemHeaderAutocompleteInputView: one('AutocompleteInputView', {
-            compute: '_computeMobileAddItemHeaderAutocompleteInputView',
-            inverse: 'discussViewOwnerAsMobileAddItemHeader',
-            isCausal: true,
-        }),
-        orderedMailboxes: many('Mailbox', {
-            related: 'messaging.allMailboxes',
-            sort: '_sortMailboxes',
+            inverse: "discussViewOwnerAsInbox",
         }),
         /**
-         * Reference of the quick search input. Useful to filter channels and
-         * chats based on this input content.
+         * Determines whether current user is adding a channel from the sidebar.
          */
-        quickSearchInputRef: attr(),
-        starredView: one('DiscussSidebarMailboxView', {
+        isAddingChannel: attr({ default: false }),
+        /**
+         * Determines whether current user is adding a chat from the sidebar.
+         */
+        isAddingChat: attr({ default: false }),
+        mobileAddItemHeaderAutocompleteInputView: one("AutocompleteInputView", {
+            inverse: "discussViewOwnerAsMobileAddItemHeader",
+            compute() {
+                if (this.messaging.device.isSmall && (this.isAddingChannel || this.isAddingChat)) {
+                    return {};
+                }
+                return clear();
+            },
+        }),
+        mobileMailboxSelectionView: one("DiscussMobileMailboxSelectionView", {
+            inverse: "owner",
+            compute() {
+                if (
+                    this.messaging.device.isSmall &&
+                    this.discuss.activeMobileNavbarTabId === "mailbox"
+                ) {
+                    return {};
+                }
+                return clear();
+            },
+        }),
+        orderedMailboxes: many("Mailbox", {
+            related: "messaging.allMailboxes",
+            sort: [["smaller-first", "sequence"]],
+        }),
+        sidebar: one("DiscussSidebarView", {
+            inverse: "owner",
+            compute() {
+                if (!this.messaging.device.isSmall) {
+                    return {};
+                }
+                return clear();
+            },
+        }),
+        starredView: one("DiscussSidebarMailboxView", {
             default: {},
-            inverse: 'discussViewOwnerAsStarred',
-            isCausal: true,
+            inverse: "discussViewOwnerAsStarred",
         }),
     },
     onChanges: [
         {
-            dependencies: ['discuss.activeThread'],
-            methodName: '_onDiscussActiveThreadChanged',
+            dependencies: ["discuss.activeThread"],
+            methodName: "_onDiscussActiveThreadChanged",
         },
     ],
 });

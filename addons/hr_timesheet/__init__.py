@@ -4,6 +4,8 @@
 from . import controllers
 from . import models
 from . import report
+from . import wizard
+from . import populate
 
 from odoo import api, fields, SUPERUSER_ID, _
 
@@ -42,3 +44,5 @@ def _uninstall_hook(cr, registry):
     project_ids = env['res.company'].search([('internal_project_id', '!=', False)]).mapped('internal_project_id')
     if project_ids:
         project_ids.write({'active': False})
+
+    env['ir.model.data'].search([('name', 'ilike', 'internal_project_default_stage')]).unlink()

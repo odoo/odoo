@@ -16,7 +16,7 @@ import { TagsList } from "./tags_list";
 import { usePopover } from "@web/core/popover/popover_hook";
 import { useService } from "@web/core/utils/hooks";
 
-const { Component, useRef } = owl;
+import { Component, useRef } from "@odoo/owl";
 
 class Many2ManyTagsFieldColorListPopover extends Component {}
 Many2ManyTagsFieldColorListPopover.template = "web.Many2ManyTagsFieldColorListPopover";
@@ -40,7 +40,8 @@ export class Many2ManyTagsField extends Component {
         this.activeActions = useActiveActions({
             fieldType: "many2many",
             crudOptions: {
-                create: this.props.canQuickCreate && this.props.createDomain,
+                create: this.props.canCreate && this.props.createDomain,
+                createEdit: this.props.canCreateEdit,
                 onDelete: removeRecord,
             },
             getEvalParams: (props) => {
@@ -78,27 +79,23 @@ export class Many2ManyTagsField extends Component {
     get evalContext() {
         return this.props.record.evalContext;
     }
-    get canEditColor() {
-        return this.props.canEditColor && this.props.record.viewType !== "list";
-    }
     get string() {
         return this.props.record.activeFields[this.props.name].string;
     }
 
-    get tags() {
-        return this.props.value.records.map((record) => ({
+    getTagProps(record) {
+        return {
             id: record.id, // datapoint_X
             resId: record.resId,
             text: record.data.display_name,
             colorIndex: record.data[this.props.colorField],
-            onClick: (ev) => this.onBadgeClick(ev, record),
             onDelete: !this.props.readonly ? () => this.deleteTag(record.id) : undefined,
             onKeydown: this.onTagKeydown.bind(this),
-        }));
+        };
     }
 
-    get canOpenColorDropdown() {
-        return this.handlesColor() && this.canEditColor;
+    get tags() {
+        return this.props.value.records.map((record) => this.getTagProps(record));
     }
 
     get showM2OSelectionField() {
@@ -111,68 +108,11 @@ export class Many2ManyTagsField extends Component {
         this.props.value.replaceWith(ids);
     }
 
-    handlesColor() {
-        return this.props.colorField !== undefined && this.props.colorField !== null;
-    }
-
-    switchTagColor(colorIndex, tag) {
-        const tagRecord = this.props.value.records.find((record) => record.id === tag.id);
-        tagRecord.update({ [this.props.colorField]: colorIndex });
-        tagRecord.save();
-        this.closePopover();
-    }
-
-    onTagVisibilityChange(isHidden, tag) {
-        const tagRecord = this.props.value.records.find((record) => record.id === tag.id);
-        if (tagRecord.data[this.props.colorField] != 0) {
-            this.previousColorsMap[tagRecord.resId] = tagRecord.data[this.props.colorField];
-        }
-        tagRecord.update({
-            [this.props.colorField]: isHidden ? 0 : this.previousColorsMap[tagRecord.resId] || 1,
-        });
-        tagRecord.save();
-        this.closePopover();
-    }
-
-    closePopover() {
-        this.popoverCloseFn();
-        this.popoverCloseFn = null;
-    }
-
     getDomain() {
         return Domain.and([
             this.domain,
             Domain.not([["id", "in", this.props.value.currentIds]]),
         ]).toList(this.context);
-    }
-
-    onBadgeClick(ev, record) {
-        if (!this.canOpenColorDropdown) {
-            return;
-        }
-        const isClosed = !document.querySelector(".o_tag_popover");
-        if (isClosed) {
-            this.currentPopoverEl = null;
-        }
-        if (this.popoverCloseFn) {
-            this.closePopover();
-        }
-        if (isClosed || this.currentPopoverEl !== ev.currentTarget) {
-            this.currentPopoverEl = ev.currentTarget;
-            this.popoverCloseFn = this.popover.add(
-                ev.currentTarget,
-                this.constructor.components.Popover,
-                {
-                    colors: this.constructor.RECORD_COLORS,
-                    tag: {
-                        id: record.id,
-                        colorIndex: record.data[this.props.colorField],
-                    },
-                    switchTagColor: this.switchTagColor.bind(this),
-                    onTagVisibilityChange: this.onTagVisibilityChange.bind(this),
-                }
-            );
-        }
     }
 
     focusTag(index) {
@@ -278,15 +218,15 @@ Many2ManyTagsField.SEARCH_MORE_LIMIT = 320;
 
 Many2ManyTagsField.template = "web.Many2ManyTagsField";
 Many2ManyTagsField.components = {
-    Popover: Many2ManyTagsFieldColorListPopover,
     TagsList,
     Many2XAutocomplete,
 };
 
 Many2ManyTagsField.props = {
     ...standardFieldProps,
-    canEditColor: { type: Boolean, optional: true },
+    canCreate: { type: Boolean, optional: true },
     canQuickCreate: { type: Boolean, optional: true },
+    canCreateEdit: { type: Boolean, optional: true },
     colorField: { type: String, optional: true },
     createDomain: { type: [Array, Boolean], optional: true },
     placeholder: { type: String, optional: true },
@@ -294,8 +234,9 @@ Many2ManyTagsField.props = {
     nameCreateField: { type: String, optional: true },
 };
 Many2ManyTagsField.defaultProps = {
-    canEditColor: true,
+    canCreate: true,
     canQuickCreate: true,
+    canCreateEdit: true,
     nameCreateField: "name",
 };
 
@@ -304,19 +245,117 @@ Many2ManyTagsField.supportedTypes = ["many2many"];
 Many2ManyTagsField.fieldsToFetch = {
     display_name: { name: "display_name", type: "char" },
 };
+Many2ManyTagsField.isSet = (value) => value.count > 0;
 
 Many2ManyTagsField.extractProps = ({ attrs, field }) => {
+    const noCreate = Boolean(attrs.options.no_create);
+    const canCreate = attrs.can_create && Boolean(JSON.parse(attrs.can_create)) && !noCreate;
+    const noQuickCreate = Boolean(attrs.options.no_quick_create);
+    const noCreateEdit = Boolean(attrs.options.no_create_edit);
+
     return {
         colorField: attrs.options.color_field,
         nameCreateField: attrs.options.create_name_field,
-        canEditColor: !attrs.options.no_edit_color,
         relation: field.relation,
-        canQuickCreate: !attrs.options.no_quick_create,
+        canCreate,
+        canQuickCreate: canCreate && !noQuickCreate,
+        canCreateEdit: canCreate && !noCreateEdit,
         createDomain: attrs.options.create,
         placeholder: attrs.placeholder,
     };
 };
 
 registry.category("fields").add("many2many_tags", Many2ManyTagsField);
-registry.category("fields").add("form.many2many_tags", Many2ManyTagsField);
-registry.category("fields").add("list.many2many_tags", Many2ManyTagsField);
+
+/**
+ * A specialization that allows to edit the color with the colorpicker.
+ * Used in form view.
+ */
+export class Many2ManyTagsFieldColorEditable extends Many2ManyTagsField {
+    getTagProps(record) {
+        const props = super.getTagProps(record);
+        props.onClick = (ev) => this.onBadgeClick(ev, record);
+        return props;
+    }
+
+    closePopover() {
+        this.popoverCloseFn();
+        this.popoverCloseFn = null;
+    }
+
+    onBadgeClick(ev, record) {
+        if (!this.props.canEditColor) {
+            return;
+        }
+        const isClosed = !document.querySelector(".o_tag_popover");
+        if (isClosed) {
+            this.currentPopoverEl = null;
+        }
+        if (this.popoverCloseFn) {
+            this.closePopover();
+        }
+        if (isClosed || this.currentPopoverEl !== ev.currentTarget) {
+            this.currentPopoverEl = ev.currentTarget;
+            this.popoverCloseFn = this.popover.add(
+                ev.currentTarget,
+                this.constructor.components.Popover,
+                {
+                    colors: this.constructor.RECORD_COLORS,
+                    tag: {
+                        id: record.id,
+                        colorIndex: record.data[this.props.colorField],
+                    },
+                    switchTagColor: this.switchTagColor.bind(this),
+                    onTagVisibilityChange: this.onTagVisibilityChange.bind(this),
+                }
+            );
+        }
+    }
+
+    onTagVisibilityChange(isHidden, tag) {
+        const tagRecord = this.props.value.records.find((record) => record.id === tag.id);
+        if (tagRecord.data[this.props.colorField] != 0) {
+            this.previousColorsMap[tagRecord.resId] = tagRecord.data[this.props.colorField];
+        }
+        tagRecord.update({
+            [this.props.colorField]: isHidden ? 0 : this.previousColorsMap[tagRecord.resId] || 1,
+        });
+        tagRecord.save();
+        this.closePopover();
+    }
+
+    switchTagColor(colorIndex, tag) {
+        const tagRecord = this.props.value.records.find((record) => record.id === tag.id);
+        tagRecord.update({ [this.props.colorField]: colorIndex });
+        tagRecord.save();
+        this.closePopover();
+    }
+}
+
+Many2ManyTagsFieldColorEditable.components = {
+    ...Many2ManyTagsField.components,
+    Popover: Many2ManyTagsFieldColorListPopover,
+};
+Many2ManyTagsFieldColorEditable.props = {
+    ...Many2ManyTagsField.props,
+    canEditColor: { type: Boolean, optional: true },
+};
+Many2ManyTagsFieldColorEditable.defaultProps = {
+    ...Many2ManyTagsField.defaultProps,
+    canEditColor: true,
+};
+Many2ManyTagsFieldColorEditable.extractProps = (params) => {
+    const props = Many2ManyTagsField.extractProps(params);
+    const attrs = params.attrs;
+    const noEditColor = Boolean(attrs.options.no_edit_color);
+    const hasColorField = Boolean(attrs.options.color_field);
+    return {
+        ...props,
+        canEditColor: !noEditColor && hasColorField,
+    };
+};
+
+registry.category("fields").add("form.many2many_tags", Many2ManyTagsFieldColorEditable);
+
+registry.category("fields").add("calendar.one2many", Many2ManyTagsField);
+registry.category("fields").add("calendar.many2many", Many2ManyTagsField);

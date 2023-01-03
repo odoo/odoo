@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import fields, models
+from odoo import fields, models, _
 
 
 class Lead(models.Model):
@@ -11,3 +11,13 @@ class Lead(models.Model):
 
     def _merge_get_fields(self):
         return super(Lead, self)._merge_get_fields() + ['lead_mining_request_id']
+
+    def action_generate_leads(self):
+        return {
+            "name": _("Generate Leads"),
+            "type": "ir.actions.act_window",
+            "res_model": "crm.iap.lead.mining.request",
+            "target": "new",
+            "views": [[False, "form"]],
+            "context": {"is_modal": True},
+        }

@@ -29,6 +29,15 @@ class MailTemplate(models.Model):
 
     # description
     name = fields.Char('Name', translate=True)
+    description = fields.Text(
+        'Template description', translate=True,
+        help="This field is used for internal description of the template's usage.")
+    active = fields.Boolean(default=True)
+    template_category = fields.Selection(
+        [('base_template', 'Base Template'),
+         ('hidden_template', 'Hidden Template'),
+         ('custom_template', 'Custom Template')],
+         compute="_compute_template_category", search="_search_template_category")
     model_id = fields.Many2one('ir.model', 'Applies to')
     model = fields.Char('Related Document Model', related='model_id.model', index=True, store=True, readonly=True)
     subject = fields.Char('Subject', translate=True, prefetch=True, help="Subject (placeholders may be used here)")
@@ -47,7 +56,9 @@ class MailTemplate(models.Model):
     email_cc = fields.Char('Cc', help="Carbon copy recipients (placeholders may be used here)")
     reply_to = fields.Char('Reply To', help="Email address to which replies will be redirected when sending emails in mass; only used when the reply is not logged in the original discussion thread.")
     # content
-    body_html = fields.Html('Body', render_engine='qweb', translate=True, prefetch=True, sanitize=False)
+    body_html = fields.Html(
+        'Body', render_engine='qweb', render_options={'post_process': True},
+        prefetch=True, translate=True, sanitize=False)
     attachment_ids = fields.Many2many('ir.attachment', 'email_template_attachment_rel', 'email_template_id',
                                       'attachment_id', 'Attachments',
                                       help="You may attach files to this template, to be added to all "
@@ -69,11 +80,57 @@ class MailTemplate(models.Model):
                                         help="Sidebar action to make this template available on records "
                                              "of the related document model")
 
+    # access
+    can_write = fields.Boolean(compute='_compute_can_write',
+                               help='The current user can edit the template.')
+
     # Overrides of mail.render.mixin
     @api.depends('model')
     def _compute_render_model(self):
         for template in self:
             template.render_model = template.model
+
+    @api.depends_context('uid')
+    def _compute_can_write(self):
+        writable_templates = self._filter_access_rules('write')
+        for template in self:
+            template.can_write = template in writable_templates
+
+    @api.depends('active', 'description')
+    def _compute_template_category(self):
+        """ Base templates (or master templates) are active templates having
+        a description and an XML ID. User defined templates (no xml id),
+        templates without description or archived templates are not
+        base templates anymore. """
+        deactivated = self.filtered(lambda template: not template.active)
+        if deactivated:
+            deactivated.template_category = 'hidden_template'
+        remaining = self - deactivated
+        if remaining:
+            template_external_ids = remaining.get_external_id()
+            for template in remaining:
+                if bool(template_external_ids[template.id]) and template.description:
+                    template.template_category = 'base_template'
+                elif bool(template_external_ids[template.id]):
+                    template.template_category = 'hidden_template'
+                else:
+                    template.template_category = 'custom_template'
+
+    @api.model
+    def _search_template_category(self, operator, value):
+        if operator in ['in', 'not in'] and isinstance(value, list):
+            value_templates = self.env['mail.template'].search([]).filtered(
+                lambda t: t.template_category in value
+            )
+            return [('id', operator, value_templates.ids)]
+
+        if operator in ['=', '!='] and isinstance(value, str):
+            value_templates = self.env['mail.template'].search([]).filtered(
+                lambda t: t.template_category == value
+            )
+            return [('id', 'in' if operator == "=" else 'not in', value_templates.ids)]
+
+        raise NotImplementedError(_('Operation not supported'))
 
     # ------------------------------------------------------------
     # CRUD
@@ -171,7 +228,7 @@ class MailTemplate(models.Model):
             results[res_id]['partner_ids'] = partner_ids
         return results
 
-    def generate_email(self, res_ids, fields):
+    def generate_email(self, res_ids, render_fields):
         """Generates an email from the template for given the given model based on
         records given by res_ids.
 
@@ -189,15 +246,14 @@ class MailTemplate(models.Model):
 
         results = dict()
         for lang, (template, template_res_ids) in self._classify_per_lang(res_ids).items():
-            for field in fields:
+            for field in render_fields:
                 generated_field_values = template._render_field(
-                    field, template_res_ids,
-                    post_process=(field == 'body_html')
+                    field, template_res_ids
                 )
                 for res_id, field_value in generated_field_values.items():
                     results.setdefault(res_id, dict())[field] = field_value
             # compute recipients
-            if any(field in fields for field in ['email_to', 'partner_to', 'email_cc']):
+            if any(field in render_fields for field in ['email_to', 'partner_to', 'email_cc']):
                 results = template.generate_recipients(results, template_res_ids)
             # update values for all res_ids
             for res_id in template_res_ids:
@@ -206,7 +262,7 @@ class MailTemplate(models.Model):
                     values['body'] = tools.html_sanitize(values['body_html'])
                 # if asked in fields to return, parse generated date into tz agnostic UTC as expected by ORM
                 scheduled_date = values.pop('scheduled_date', None)
-                if 'scheduled_date' in fields and scheduled_date:
+                if 'scheduled_date' in render_fields and scheduled_date:
                     parsed_datetime = self.env['mail.mail']._parse_scheduled_datetime(scheduled_date)
                     values['scheduled_date'] = parsed_datetime.replace(tzinfo=None) if parsed_datetime else False
 
@@ -245,6 +301,15 @@ class MailTemplate(models.Model):
                     attachments.append((report_name, result))
                     results[res_id]['attachments'] = attachments
 
+            # hook for attachments-specific computation, used currently only for accounting
+            if 'attachments' in render_fields or 'attachment_ids' in render_fields and hasattr(self.env[self.model], '_process_attachments_for_template_post'):
+                records_attachments = self.env[self.model].browse(template_res_ids)._process_attachments_for_template_post(template)
+                for res_id, additional_attachments in records_attachments.items():
+                    if not additional_attachments:
+                        continue
+                    results[res_id]['attachment_ids'] += additional_attachments.get('attachment_ids', [])
+                    results[res_id]['attachments'] += additional_attachments.get('attachments', [])
+
         return multi_mode and results or results[res_ids[0]]
 
     # ------------------------------------------------------------
@@ -279,10 +344,16 @@ class MailTemplate(models.Model):
         # create a mail_mail based on values, without attachments
         values = self.generate_email(
             res_id,
-            ['subject', 'body_html',
+            ('auto_delete',
+             'body_html',
+             'email_cc',
              'email_from',
-             'email_cc', 'email_to', 'partner_to', 'reply_to',
-             'auto_delete', 'scheduled_date']
+             'email_to',
+             'partner_to',
+             'reply_to',
+             'scheduled_date',
+             'subject',
+            )
         )
         values['recipient_ids'] = [Command.link(pid) for pid in values.get('partner_ids', list())]
         values['attachment_ids'] = [Command.link(aid) for aid in values.get('attachment_ids', list())]
@@ -309,7 +380,7 @@ class MailTemplate(models.Model):
                 'model_description': model.display_name,
                 'record': record,
                 'record_name': False,
-                'subtitle': False,
+                'subtitles': False,
                 # user / environment
                 'company': 'company_id' in record and record['company_id'] or self.env.company,
                 'email_add_signature': False,
@@ -346,13 +417,3 @@ class MailTemplate(models.Model):
         if force_send:
             mail.send(raise_exception=raise_exception)
         return mail.id  # TDE CLEANME: return mail + api.returns ?
-
-    # ------------------------------------------------------------
-    # neutralize
-    # ------------------------------------------------------------
-
-    def _neutralize(self):
-        super()._neutralize()
-        self.flush_model()
-        self.invalidate_model()
-        self.env.cr.execute("UPDATE mail_template SET mail_server_id=NULL")

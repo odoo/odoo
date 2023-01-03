@@ -3,7 +3,7 @@
 {
     "name": "Sweden - Accounting",
     "version": "1.0",
-    "author": "XCLUDE, Odoo SA",
+    "author": "XCLUDE, Odoo S.A.",
     "category": "Accounting/Localizations/Account Charts",
     'description': """
 Swedish Accounting
@@ -29,7 +29,6 @@ It also includes the invoice OCR payment reference handling.
         "data/account_chart_template_configuration.xml",
         "views/partner_view.xml",
         "views/account_journal_view.xml",
-        'data/menuitem_data.xml',
     ],
     'demo': [
         'demo/demo_company.xml',

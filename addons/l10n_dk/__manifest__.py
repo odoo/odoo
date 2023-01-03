@@ -100,7 +100,6 @@ Produkt setup:
         'data/account_fiscal_position_tax_template.xml',
         'data/account_fiscal_position_account_template.xml',
         'data/account_chart_template_configuration_data.xml',
-        'data/menuitem_data.xml'
     ],
     'demo': [
         'demo/demo_company.xml',

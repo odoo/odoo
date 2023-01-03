@@ -9,13 +9,10 @@
     'summary': 'Project expenses',
     'description': 'Bridge created to add the number of expenses linked to an AA to a project form',
     'depends': ['project', 'hr_expense'],
-    'data': [
-        'views/project_project_views.xml',
-    ],
     'demo': [
         'data/project_hr_expense_demo.xml',
     ],
     'installable': True,
     'auto_install': True,
-    'license': 'OEEL-1',
+    'license': 'LGPL-3',
 }

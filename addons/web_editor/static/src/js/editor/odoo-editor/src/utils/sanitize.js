@@ -1,6 +1,7 @@
 /** @odoo-module **/
 import {
     closestBlock,
+    closestElement,
     endPos,
     fillEmpty,
     getListMode,
@@ -13,7 +14,8 @@ import {
     isMediaElement,
     getDeepRange,
     isUnbreakable,
-    closestElement,
+    isEditorTab,
+    isZWS,
     getUrlsInfosInString,
     URL_REGEX,
 } from './utils.js';
@@ -107,10 +109,15 @@ class Sanitize {
 
     _parse(node) {
         while (node) {
-            // Merge identical elements together
+            const closestProtected = closestElement(node, '[data-oe-protected="true"]');
+            if (closestProtected && node !== closestProtected) {
+                return;
+            }
+            // Merge identical elements together.
             while (
                 areSimilarElements(node, node.previousSibling) &&
-                !isUnbreakable(node)
+                !isUnbreakable(node) &&
+                !isEditorTab(node)
             ) {
                 getDeepRange(this.root, { select: true });
                 const restoreCursor = node.isConnected &&
@@ -131,6 +138,7 @@ class Sanitize {
             if (
                 node.nodeType === Node.TEXT_NODE &&
                 node.textContent.includes('\u200B') &&
+                node.parentElement.hasAttribute('data-oe-zws-empty-inline') &&
                 (
                     node.textContent.length > 1 ||
                     // There can be multiple ajacent text nodes, in which case
@@ -184,6 +192,30 @@ class Sanitize {
                 node.textContent = '\u200B';
             }
 
+            // Ensure the editor tabs align on a 40px grid.
+            if (isEditorTab(node)) {
+                let tabPreviousSibling = node.previousSibling;
+                while (isZWS(tabPreviousSibling)) {
+                    tabPreviousSibling = tabPreviousSibling.previousSibling;
+                }
+                if (isEditorTab(tabPreviousSibling)) {
+                    node.style.width = '40px';
+                } else {
+                    const editable = closestElement(node, '.odoo-editor-editable');
+                    if (editable && editable.firstElementChild) {
+                        const nodeRect = node.getBoundingClientRect();
+                        const referenceRect = editable.firstElementChild.getBoundingClientRect();
+                        // Values from getBoundingClientRect() are all zeros
+                        // during Editor startup or saving. We cannot
+                        // recalculate the tabs width in thoses cases.
+                        if (nodeRect.width && referenceRect.width) {
+                            const width = (nodeRect.left - referenceRect.left) % 40;
+                            node.style.width = (40 - width) + 'px';
+                        }
+                    }
+                }
+            }
+
             // Ensure elements which should not contain any content are tagged
             // contenteditable=false to avoid any hiccup.
             if (
@@ -192,17 +224,17 @@ class Sanitize {
             ) {
                 node.setAttribute('contenteditable', 'false');
             }
-            // update link URL if label is a new valid link
+            if (node.firstChild) {
+                this._parse(node.firstChild);
+            }
+            // Update link URL if label is a new valid link.
             if (node.nodeName === 'A' && anchorEl === node) {
                 const linkLabel = node.textContent;
                 const match = linkLabel.match(URL_REGEX);
-                if (match && match[0] === node.textContent) {
+                if (match && match[0] === node.textContent && !node.href.startsWith('mailto:')) {
                     const urlInfo = getUrlsInfosInString(linkLabel)[0];
                     node.setAttribute('href', urlInfo.url);
                 }
-            }
-            if (node.firstChild) {
-                this._parse(node.firstChild);
             }
             node = node.nextSibling;
         }

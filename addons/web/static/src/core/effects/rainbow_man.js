@@ -2,7 +2,7 @@
 
 import { browser } from "@web/core/browser/browser";
 
-const { Component, useEffect, useExternalListener, useState } = owl;
+import { Component, useEffect, useExternalListener, useState } from "@odoo/owl";
 
 /**
  * @typedef Common
@@ -17,7 +17,7 @@ const { Component, useEffect, useExternalListener, useState } = owl;
  * @property {string} message Message to be displayed on rainbowman card
  *
  * @typedef Custom
- * @property {Component} Component
+ * @property {typeof import("@odoo/owl").Component} Component
  * @property {any} [props]
  *
  * @typedef {Common & (Simple | Custom)} RainbowManProps
@@ -63,4 +63,12 @@ export class RainbowMan extends Component {
     }
 }
 RainbowMan.template = "web.RainbowMan";
+RainbowMan.props = {
+    fadeout: String,
+    close: Function,
+    message: String,
+    imgUrl: String,
+    Component: { type: Function, optional: true },
+    props: { type: Object, optional: true },
+};
 RainbowMan.rainbowFadeouts = { slow: 4500, medium: 3500, fast: 2000, no: false };

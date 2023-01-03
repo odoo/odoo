@@ -7,7 +7,7 @@
 
 {
     'name': 'Luxembourg - Accounting',
-    'version': '2.0',
+    'version': '2.1',
     'category': 'Accounting/Localizations/Account Charts',
     'description': """
 This is the base module to manage the accounting chart for Luxembourg.
@@ -23,7 +23,7 @@ Notes:
       see the first sheet of tax.xls for details of coverage
     * to update the chart of tax template, update tax.xls and run tax2csv.py
 """,
-    'author': 'OpenERP SA, ADN, ACSONE SA/NV',
+    'author': 'Odoo S.A., ADN, ACSONE SA/NV',
     'depends': [
         'account',
         'base_iban',
@@ -44,6 +44,7 @@ Notes:
         # configuration wizard, views, reports...
         'data/account.chart.template.csv',
         'data/account_chart_template_data.xml',
+        'data/l10n_lu_chart_template_data.xml',
     ],
     'demo': [
         'demo/demo_company.xml',

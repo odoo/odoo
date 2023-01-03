@@ -204,7 +204,7 @@ class TestStockValuationLayerRevaluation(TestStockValuationCommon):
         self._make_in_move(self.product1, 10, unit_cost=2)
         self._make_in_move(self.product1, 10, unit_cost=4)
 
-        self.assertEqual(self.product1.standard_price, 2)
+        self.assertEqual(self.product1.standard_price, 3)
         self.assertEqual(self.product1.quantity_svl, 20)
 
         old_layers = self.env['stock.valuation.layer'].search([('product_id', '=', self.product1.id)], order="create_date desc, id desc")
@@ -217,7 +217,7 @@ class TestStockValuationLayerRevaluation(TestStockValuationCommon):
         revaluation_wizard.account_id = self.stock_valuation_account
         revaluation_wizard.save().action_validate_revaluation()
 
-        self.assertEqual(self.product1.standard_price, 2)
+        self.assertEqual(self.product1.standard_price, 4)
 
         # Check the creation of stock.valuation.layer
         new_layer = self.env['stock.valuation.layer'].search([('product_id', '=', self.product1.id)], order="create_date desc, id desc", limit=1)

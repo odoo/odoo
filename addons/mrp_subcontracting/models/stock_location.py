@@ -13,6 +13,8 @@ class StockLocation(models.Model):
         help="Check this box to create a new dedicated subcontracting location for this company. Note that standard subcontracting routes will be adapted so as to take these into account automatically."
     )
 
+    subcontractor_ids = fields.One2many('res.partner', 'property_stock_subcontractor')
+
     @api.constrains('is_subcontracting_location', 'usage', 'location_id')
     def _check_subcontracting_location(self):
         for location in self:
@@ -24,7 +26,7 @@ class StockLocation(models.Model):
     @api.constrains('is_subcontracting_location')
     def _check_is_subcontracting_location(self):
         for location in self:
-            if not location.is_subcontracting_location and self.env['res.partner'].search([('property_stock_subcontractor', '=', location.id)]):
+            if not location.is_subcontracting_location and location.subcontractor_ids:
                 raise ValidationError(_("You cannot change the subcontracting location as it is still linked to a subcontractor partner"))
 
     @api.model_create_multi

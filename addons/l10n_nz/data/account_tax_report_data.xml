@@ -47,7 +47,7 @@
                     <record id="tax_report_box8" model="account.report.line">
                         <field name="name">[BOX 8] Multiply the amount in Box 7 by 3 and then divide by 23</field>
                         <field name="code">NZBOX8</field>
-                        <field name="aggregation_formula">(NZBOX7.balance * 3).balance/23.balance</field>
+                        <field name="aggregation_formula">(NZBOX7.balance * 3)/23</field>
                     </record>
                     <record id="tax_report_box9" model="account.report.line">
                         <field name="name">[BOX 9] Enter any adjustments from your calculation sheet</field>
@@ -85,7 +85,7 @@
                     <record id="tax_report_box12" model="account.report.line">
                         <field name="name">[BOX 12] Multiply BOX11 by 3 and then divide by 23</field>
                         <field name="code">NZBOX12</field>
-                        <field name="aggregation_formula">(NZBOX11.balance * 3).balance/23.balance</field>
+                        <field name="aggregation_formula">(NZBOX11.balance * 3)/23</field>
                     </record>
                     <record id="tax_report_box13" model="account.report.line">
                         <field name="name">[BOX 13] Credit adjustments from your calculation sheet</field>

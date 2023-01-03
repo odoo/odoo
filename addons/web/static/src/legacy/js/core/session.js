@@ -2,11 +2,12 @@ odoo.define('web.Session', function (require) {
 "use strict";
 
 var ajax = require('web.ajax');
-var concurrency = require('web.concurrency');
 var core = require('web.core');
 var mixins = require('web.mixins');
-var utils = require('web.utils');
+const {setCookie} = require('web.utils.cookies');
 const { session } = require('@web/session');
+const { loadJS } = require('@web/core/assets');
+
 
 var _t = core._t;
 var qweb = core.qweb;
@@ -39,7 +40,6 @@ var Session = core.Class.extend(mixins.EventDispatcherMixin, {
         // remove it totally (but need to make sure the cookies are properly set)
         this.name = "instance0";
         // TODO: session store in cookie should be optional
-        this.qweb_mutex = new concurrency.Mutex();
         this.currencies = {};
         this._groups_def = {};
         core.bus.on('invalidate_session', this, this._onInvalidateSession);
@@ -157,7 +157,7 @@ var Session = core.Class.extend(mixins.EventDispatcherMixin, {
             if(cookie.indexOf(nameEQ) === 0) {
                 try {
                     return JSON.parse(decodeURIComponent(cookie.substring(nameEQ.length)));
-                } catch(_err) {
+                } catch {
                     // wrong cookie, delete it
                     this.set_cookie(name, '', -1);
                 }
@@ -172,11 +172,12 @@ var Session = core.Class.extend(mixins.EventDispatcherMixin, {
      * @param name the cookie's name
      * @param value the cookie's value
      * @param ttl the cookie's time to live, 1 year by default, set to -1 to delete
+     * @param type the type of the cookies ('required' as default value)
      */
-    set_cookie: function (name, value, ttl) {
+    set_cookie(name, value, ttl, type = 'required') {
         if (!this.name) { return; }
         ttl = ttl || 24*60*60*365;
-        utils.set_cookie(this.name + '|' + name, value, ttl);
+        setCookie(this.name + '|' + name, value, ttl, type);
     },
     /**
      * Load additional web addons of that instance and init them
@@ -205,35 +206,14 @@ var Session = core.Class.extend(mixins.EventDispatcherMixin, {
             if (files.length !== 0) {
                 var file = files.shift();
                 var url = self.url(file, null);
-                ajax.loadJS(url).then(resolve);
+                loadJS(url).then(resolve);
             } else {
                 resolve();
             }
         });
     },
-    load_qweb: function () {
-        return this.qweb_mutex.exec(async () => {
-            let templates;
-            if (odoo.loadTemplatesPromise) {
-                templates = await odoo.loadTemplatesPromise;
-            } else {
-                var cacheId = this.cache_hashes && this.cache_hashes.qweb;
-                const route = `/web/webclient/qweb/${(cacheId ? cacheId : Date.now())}?bundle=web.assets_qweb`;
-                templates = await (await fetch(route)).text();
-            }
-            const doc = new DOMParser().parseFromString(templates, "text/xml");
-            if (!doc) {
-                return;
-            }
-            const owlTemplates = [];
-            for (let child of doc.querySelectorAll("templates > [owl]")) {
-                child.removeAttribute('owl');
-                owlTemplates.push(child.outerHTML);
-                child.remove();
-            }
-            qweb.add_template(doc);
-            this.owlTemplates = `<templates> ${owlTemplates.join('\n')} </templates>`;
-        });
+    load_qweb: async function () {
+        await odoo.ready(/\.bundle\.xml$/);
     },
     get_currency: function (currency_id) {
         return this.currencies[currency_id];
@@ -349,7 +329,7 @@ var Session = core.Class.extend(mixins.EventDispatcherMixin, {
                 return a - b;
             }
         }).join(',');
-        utils.set_cookie('cids', hash.cids || String(main_company_id));
+        setCookie('cids', hash.cids || String(main_company_id), 24 * 60 * 60 * 365, 'required');
         $.bbq.pushState({'cids': hash.cids}, 0);
         location.reload();
     },

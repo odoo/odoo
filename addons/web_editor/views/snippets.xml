@@ -454,6 +454,7 @@
             title="'Title tag' is shown as a tooltip when you hover the picture."/>
     </div>
 
+    <t t-set="no_animations" t-value="False"/>
     <div data-js="ImageTools"
          data-selector="img">
         <div class="o_we_image_shape">
@@ -579,7 +580,7 @@
             <we-button class="ms-0 border-start-0" data-reset-crop="" data-no-preview="true" title="Reset crop">
                 Reset
             </we-button>
-            <we-button class="fa fa-fw fa-object-ungroup" data-name="image_transform_opt" data-transform="true" data-no-preview="true" title="Transform the picture" t-att-data-dependencies="image_transform_dependencies"/>
+            <we-button class="fa fa-fw fa-object-ungroup" data-name="image_transform_opt" data-transform="true" data-no-preview="true" title="Transform the picture"/>
             <we-button class="ms-0 border-start-0" data-reset-transform="" data-no-preview="true" title="Reset transformation">
                 Reset
             </we-button>

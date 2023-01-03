@@ -89,13 +89,7 @@ def locate_node(arch, spec):
         return None
 
     for node in arch.iter(spec.tag):
-        if isinstance(node, SKIPPED_ELEMENT_TYPES):
-            continue
-        if all(node.get(attr) == spec.get(attr) for attr in spec.attrib
-               if attr not in ('position', 'version')):
-            # Version spec should match parent's root element's version
-            if spec.get('version') and spec.get('version') != arch.get('version'):
-                return None
+        if all(node.get(attr) == spec.get(attr) for attr in spec.attrib if attr != 'position'):
             return node
     return None
 

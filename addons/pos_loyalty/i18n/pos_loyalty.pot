@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~15.4\n"
+"Project-Id-Version: Odoo Server 16.0beta\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-06-09 14:05+0000\n"
-"PO-Revision-Date: 2022-06-09 14:05+0000\n"
+"POT-Creation-Date: 2022-10-04 09:24+0000\n"
+"PO-Revision-Date: 2022-10-04 09:24+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -21,6 +21,23 @@ msgid ""
 "\n"
 "        Technical field used to link multiple reward lines from the same reward together.\n"
 "    "
+msgstr ""
+
+#. module: pos_loyalty
+#. openerp-web
+#: code:addons/pos_loyalty/static/src/js/PartnerLine.js:0
+#, python-format
+msgid "%s Points"
+msgstr ""
+
+#. module: pos_loyalty
+#: model:loyalty.program,name:pos_loyalty.15_pc_on_next_order
+msgid "15% on next order"
+msgstr ""
+
+#. module: pos_loyalty
+#: model:loyalty.reward,description:pos_loyalty.15_pc_on_next_order_reward
+msgid "15% on your order"
 msgstr ""
 
 #. module: pos_loyalty
@@ -59,16 +76,8 @@ msgid "Active Rewards"
 msgstr ""
 
 #. module: pos_loyalty
-#: model:ir.model.fields,field_description:pos_loyalty.field_pos_config__all_program_ids
-msgid "All Program"
-msgstr ""
-
-#. module: pos_loyalty
-#. openerp-web
-#: code:addons/pos_loyalty/static/src/xml/Popups/GiftCardPopup.xml:0
-#: code:addons/pos_loyalty/static/src/xml/Popups/GiftCardPopup.xml:0
-#, python-format
-msgid "Amount of the gift card:"
+#: model_terms:ir.ui.view,arch_db:pos_loyalty.loyalty_program_view_form_inherit_pos_loyalty
+msgid "All PoS"
 msgstr ""
 
 #. module: pos_loyalty
@@ -87,9 +96,9 @@ msgstr ""
 
 #. module: pos_loyalty
 #. openerp-web
-#: code:addons/pos_loyalty/static/src/xml/Popups/GiftCardPopup.xml:0
+#: code:addons/pos_loyalty/static/src/xml/OrderReceipt.xml:0
 #, python-format
-msgid "Back"
+msgid "Balance"
 msgstr ""
 
 #. module: pos_loyalty
@@ -106,29 +115,8 @@ msgid "Barcode Rule"
 msgstr ""
 
 #. module: pos_loyalty
-#. openerp-web
-#: code:addons/pos_loyalty/static/src/xml/Popups/GiftCardPopup.xml:0
-#, python-format
-msgid "Check a gift card"
-msgstr ""
-
-#. module: pos_loyalty
-#. openerp-web
-#: code:addons/pos_loyalty/static/src/xml/Popups/GiftCardPopup.xml:0
-#, python-format
-msgid "Close"
-msgstr ""
-
-#. module: pos_loyalty
 #: model:ir.model,name:pos_loyalty.model_res_config_settings
 msgid "Config Settings"
-msgstr ""
-
-#. module: pos_loyalty
-#. openerp-web
-#: code:addons/pos_loyalty/static/src/xml/Popups/GiftCardPopup.xml:0
-#, python-format
-msgid "Confirm"
 msgstr ""
 
 #. module: pos_loyalty
@@ -145,20 +133,24 @@ msgid "Coupon Codes"
 msgstr ""
 
 #. module: pos_loyalty
-#: model:ir.model.fields,field_description:pos_loyalty.field_pos_config__coupon_program_ids
-#: model:ir.model.fields,field_description:pos_loyalty.field_res_config_settings__pos_coupon_program_ids
-msgid "Coupon Programs"
+#: model:loyalty.program,portal_point_name:pos_loyalty.15_pc_on_next_order
+#: model:loyalty.reward,point_name:pos_loyalty.15_pc_on_next_order_reward
+#: model:loyalty.rule,reward_point_name:pos_loyalty.15_pc_on_next_order_rule
+msgid "Coupon point(s)"
 msgstr ""
 
 #. module: pos_loyalty
-#: model:ir.ui.menu,name:pos_loyalty.menu_coupon_type_config
-msgid "Coupons & Loyalty"
+#. openerp-web
+#: code:addons/pos_loyalty/static/src/xml/Orderline.xml:0
+#, python-format
+msgid "Current Balance:"
 msgstr ""
 
 #. module: pos_loyalty
-#: model:ir.model.fields,field_description:pos_loyalty.field_pos_config__use_coupon_programs
-#: model:ir.model.fields,field_description:pos_loyalty.field_res_config_settings__pos_use_coupon_programs
-msgid "Coupons & Promotions"
+#. openerp-web
+#: code:addons/pos_loyalty/static/src/js/ProductScreen.js:0
+#, python-format
+msgid "Customer needed"
 msgstr ""
 
 #. module: pos_loyalty
@@ -169,18 +161,20 @@ msgid "Deactivating reward"
 msgstr ""
 
 #. module: pos_loyalty
-#: model_terms:ir.ui.view,arch_db:pos_loyalty.res_config_view_form_inherit_pos_loyalty
-msgid "Define the coupon and promotion programs you can use in this PoS."
-msgstr ""
-
-#. module: pos_loyalty
 #: model:ir.model.fields,help:pos_loyalty.field_pos_config__gift_card_settings
 #: model:ir.model.fields,help:pos_loyalty.field_res_config_settings__pos_gift_card_settings
 msgid "Defines the way you want to set your gift cards."
 msgstr ""
 
 #. module: pos_loyalty
+#: model:ir.ui.menu,name:pos_loyalty.menu_discount_loyalty_type_config
+#: model_terms:ir.ui.view,arch_db:pos_loyalty.res_config_view_form_inherit_pos_loyalty
+msgid "Discount & Loyalty"
+msgstr ""
+
+#. module: pos_loyalty
 #. openerp-web
+#: code:addons/pos_loyalty/static/src/js/ControlButtons/PromoCodeButton.js:0
 #: code:addons/pos_loyalty/static/src/xml/ControlButtons/PromoCodeButton.xml:0
 #, python-format
 msgid "Enter Code"
@@ -188,9 +182,16 @@ msgstr ""
 
 #. module: pos_loyalty
 #. openerp-web
-#: code:addons/pos_loyalty/static/src/js/ControlButtons/PromoCodeButton.js:0
+#: code:addons/pos_loyalty/static/src/js/ProductScreen.js:0
 #, python-format
-msgid "Enter Promotion or Coupon Code"
+msgid "Enter the gift card code"
+msgstr ""
+
+#. module: pos_loyalty
+#. openerp-web
+#: code:addons/pos_loyalty/static/src/js/ControlButtons/eWalletButton.js:0
+#, python-format
+msgid "Error"
 msgstr ""
 
 #. module: pos_loyalty
@@ -201,55 +202,39 @@ msgid "Error validating rewards"
 msgstr ""
 
 #. module: pos_loyalty
+#: model:loyalty.reward,description:pos_loyalty.loyalty_program_reward
+msgid "Free Product - Simple Pen"
+msgstr ""
+
+#. module: pos_loyalty
 #: model:ir.model.fields.selection,name:pos_loyalty.selection__pos_config__gift_card_settings__create_set
-msgid "Generate a new barcode and set a price"
+msgid "Generate PDF cards"
 msgstr ""
 
 #. module: pos_loyalty
 #. openerp-web
-#: code:addons/pos_loyalty/static/src/xml/Popups/GiftCardPopup.xml:0
+#: code:addons/pos_loyalty/static/src/js/ProductScreen.js:0
 #, python-format
-msgid "Generate barcode"
-msgstr ""
-
-#. module: pos_loyalty
-#. openerp-web
-#: code:addons/pos_loyalty/static/src/xml/ControlButtons/GiftCardButton.xml:0
-#: code:addons/pos_loyalty/static/src/xml/Popups/GiftCardPopup.xml:0
-#: model_terms:ir.ui.view,arch_db:pos_loyalty.res_config_view_form_inherit_pos_loyalty
-#, python-format
-msgid "Gift Card"
-msgstr ""
-
-#. module: pos_loyalty
-#. openerp-web
-#: code:addons/pos_loyalty/static/src/xml/Popups/GiftCardPopup.xml:0
-#: code:addons/pos_loyalty/static/src/xml/Popups/GiftCardPopup.xml:0
-#: code:addons/pos_loyalty/static/src/xml/Popups/GiftCardPopup.xml:0
-#: code:addons/pos_loyalty/static/src/xml/Popups/GiftCardPopup.xml:0
-#, python-format
-msgid "Gift Card Barcode:"
-msgstr ""
-
-#. module: pos_loyalty
-#: model_terms:ir.ui.view,arch_db:pos_loyalty.res_config_view_form_inherit_pos_loyalty
-msgid "Gift Card Settings"
-msgstr ""
-
-#. module: pos_loyalty
-#: model:ir.model.fields,field_description:pos_loyalty.field_pos_config__use_gift_card
-msgid "Gift Cards"
-msgstr ""
-
-#. module: pos_loyalty
-#: model:ir.model.fields,field_description:pos_loyalty.field_res_config_settings__pos_use_gift_card
-msgid "Gift Cards (PoS)"
+msgid "Generate a Gift Card"
 msgstr ""
 
 #. module: pos_loyalty
 #: model:ir.model.fields,field_description:pos_loyalty.field_pos_config__gift_card_settings
 #: model:ir.model.fields,field_description:pos_loyalty.field_res_config_settings__pos_gift_card_settings
 msgid "Gift Cards settings"
+msgstr ""
+
+#. module: pos_loyalty
+#. openerp-web
+#: code:addons/pos_loyalty/static/src/js/ControlButtons/PromoCodeButton.js:0
+#, python-format
+msgid "Gift card or Discount code"
+msgstr ""
+
+#. module: pos_loyalty
+#: model:ir.ui.menu,name:pos_loyalty.menu_gift_ewallet_type_config
+#: model_terms:ir.ui.view,arch_db:pos_loyalty.res_config_view_form_inherit_pos_loyalty
+msgid "Gift cards & eWallet"
 msgstr ""
 
 #. module: pos_loyalty
@@ -297,9 +282,21 @@ msgid "Loyalty Coupon"
 msgstr ""
 
 #. module: pos_loyalty
+#: model:loyalty.program,portal_point_name:pos_loyalty.loyalty_program
+#: model:loyalty.reward,point_name:pos_loyalty.loyalty_program_reward
+#: model:loyalty.rule,reward_point_name:pos_loyalty.loyalty_program_rule
+msgid "Loyalty Points"
+msgstr ""
+
+#. module: pos_loyalty
 #: model:ir.model,name:pos_loyalty.model_loyalty_program
-#: model_terms:ir.ui.view,arch_db:pos_loyalty.res_config_view_form_inherit_pos_loyalty
+#: model:loyalty.program,name:pos_loyalty.loyalty_program
 msgid "Loyalty Program"
+msgstr ""
+
+#. module: pos_loyalty
+#: model:ir.model,name:pos_loyalty.model_loyalty_reward
+msgid "Loyalty Reward"
 msgstr ""
 
 #. module: pos_loyalty
@@ -308,35 +305,10 @@ msgid "Loyalty Rule"
 msgstr ""
 
 #. module: pos_loyalty
-#: model_terms:ir.ui.view,arch_db:pos_loyalty.res_config_view_form_inherit_pos_loyalty
-msgid "Manage gift card"
-msgstr ""
-
-#. module: pos_loyalty
-#: model_terms:ir.ui.view,arch_db:pos_loyalty.res_config_view_form_inherit_pos_loyalty
-msgid "Manage gift card."
-msgstr ""
-
-#. module: pos_loyalty
 #. openerp-web
 #: code:addons/pos_loyalty/static/src/js/ProductScreen.js:0
 #, python-format
 msgid "No"
-msgstr ""
-
-#. module: pos_loyalty
-#. openerp-web
-#: code:addons/pos_loyalty/static/src/js/Popups/GiftCardPopup.js:0
-#: code:addons/pos_loyalty/static/src/js/Popups/GiftCardPopup.js:0
-#, python-format
-msgid "No gift card code set"
-msgstr ""
-
-#. module: pos_loyalty
-#. openerp-web
-#: code:addons/pos_loyalty/static/src/js/Popups/GiftCardPopup.js:0
-#, python-format
-msgid "No gift card found"
 msgstr ""
 
 #. module: pos_loyalty
@@ -367,17 +339,6 @@ msgid "Please select a reward"
 msgstr ""
 
 #. module: pos_loyalty
-#: model:ir.model.fields,field_description:pos_loyalty.field_pos_config__gift_card_program_id
-#: model:ir.model.fields,field_description:pos_loyalty.field_res_config_settings__pos_gift_card_program_id
-msgid "PoS Gift Card Program"
-msgstr ""
-
-#. module: pos_loyalty
-#: model:ir.model.fields,field_description:pos_loyalty.field_pos_config__loyalty_program_id
-msgid "PoS Loyalty Programs"
-msgstr ""
-
-#. module: pos_loyalty
 #: model:ir.model.fields,field_description:pos_loyalty.field_loyalty_program__pos_order_count
 msgid "PoS Order Count"
 msgstr ""
@@ -396,6 +357,12 @@ msgstr ""
 #. module: pos_loyalty
 #: model:ir.model.fields,help:pos_loyalty.field_loyalty_card__source_pos_order_id
 msgid "PoS order where this coupon was generated."
+msgstr ""
+
+#. module: pos_loyalty
+#: model:ir.model.fields,field_description:pos_loyalty.field_loyalty_program__pos_ok
+#: model_terms:ir.ui.view,arch_db:pos_loyalty.loyalty_program_view_form_inherit_pos_loyalty
+msgid "Point of Sale"
 msgstr ""
 
 #. module: pos_loyalty
@@ -419,11 +386,6 @@ msgid "Point of Sale Session"
 msgstr ""
 
 #. module: pos_loyalty
-#: model:ir.model.fields,field_description:pos_loyalty.field_loyalty_program__pos_config_ids
-msgid "Point of Sales"
-msgstr ""
-
-#. module: pos_loyalty
 #. openerp-web
 #: code:addons/pos_loyalty/static/src/js/Loyalty.js:0
 #, python-format
@@ -436,12 +398,13 @@ msgid "Points Cost"
 msgstr ""
 
 #. module: pos_loyalty
-#: model:ir.model.fields,field_description:pos_loyalty.field_res_config_settings__pos_loyalty_program_id
-msgid "Pos Loyalty Program"
+#: model:ir.model.fields,field_description:pos_loyalty.field_loyalty_program__pos_config_ids
+msgid "Pos Config"
 msgstr ""
 
 #. module: pos_loyalty
 #: model:ir.model.fields,field_description:pos_loyalty.field_loyalty_mail__pos_report_print_id
+#: model:ir.model.fields,field_description:pos_loyalty.field_loyalty_program__pos_report_print_id
 msgid "Print Report"
 msgstr ""
 
@@ -458,21 +421,19 @@ msgid "Program: %(name)s, Rule Product: `%(rule_product)s`"
 msgstr ""
 
 #. module: pos_loyalty
-#: model_terms:ir.ui.view,arch_db:pos_loyalty.res_config_view_form_inherit_pos_loyalty
-msgid "Promotion & coupon programs to use."
-msgstr ""
-
-#. module: pos_loyalty
-#: model:ir.model.fields,field_description:pos_loyalty.field_pos_config__promo_program_ids
-#: model:ir.model.fields,field_description:pos_loyalty.field_res_config_settings__pos_promo_program_ids
-msgid "Promotion Programs"
+#. openerp-web
+#: code:addons/pos_loyalty/static/src/js/ControlButtons/eWalletButton.js:0
+#, python-format
+msgid "Refund with eWallet"
 msgstr ""
 
 #. module: pos_loyalty
 #. openerp-web
-#: code:addons/pos_loyalty/static/src/xml/Popups/GiftCardPopup.xml:0
+#: code:addons/pos_loyalty/static/src/js/TicketScreen.js:0
 #, python-format
-msgid "Remaining amount of the gift card:"
+msgid ""
+"Refunding a top up or reward product for an eWallet or gift card program is "
+"not allowed."
 msgstr ""
 
 #. module: pos_loyalty
@@ -480,6 +441,11 @@ msgstr ""
 #: code:addons/pos_loyalty/static/src/xml/ControlButtons/ResetProgramsButton.xml:0
 #, python-format
 msgid "Reset Programs"
+msgstr ""
+
+#. module: pos_loyalty
+#: model:ir.model.fields,help:pos_loyalty.field_loyalty_program__pos_config_ids
+msgid "Restrict publishing to those shops."
 msgstr ""
 
 #. module: pos_loyalty
@@ -496,27 +462,21 @@ msgid "Reward Identifier Code"
 msgstr ""
 
 #. module: pos_loyalty
-#: model:ir.model.fields.selection,name:pos_loyalty.selection__pos_config__gift_card_settings__scan_set
-msgid "Scan an existing barcode and set a price"
-msgstr ""
-
-#. module: pos_loyalty
 #: model:ir.model.fields.selection,name:pos_loyalty.selection__pos_config__gift_card_settings__scan_use
-msgid "Scan an existing barcode with an existing price"
+msgid "Scan existing cards"
 msgstr ""
 
 #. module: pos_loyalty
 #. openerp-web
-#: code:addons/pos_loyalty/static/src/xml/Popups/GiftCardPopup.xml:0
+#: code:addons/pos_loyalty/static/src/js/ProductScreen.js:0
 #, python-format
-msgid "Scan and set price on gift card"
+msgid "Select program"
 msgstr ""
 
 #. module: pos_loyalty
-#. openerp-web
-#: code:addons/pos_loyalty/static/src/xml/Popups/GiftCardPopup.xml:0
-#, python-format
-msgid "Scan gift card"
+#: model:product.product,name:pos_loyalty.simple_pen
+#: model:product.template,name:pos_loyalty.simple_pen_product_template
+msgid "Simple Pen"
 msgstr ""
 
 #. module: pos_loyalty
@@ -630,6 +590,27 @@ msgid "This coupon is invalid (%s)."
 msgstr ""
 
 #. module: pos_loyalty
+#. openerp-web
+#: code:addons/pos_loyalty/static/src/js/ProductScreen.js:0
+#, python-format
+msgid "This gift card has already been sold"
+msgstr ""
+
+#. module: pos_loyalty
+#. openerp-web
+#: code:addons/pos_loyalty/static/src/js/Loyalty.js:0
+#, python-format
+msgid ""
+"This gift card is not linked to any order. Do you really want to apply its "
+"reward?"
+msgstr ""
+
+#. module: pos_loyalty
+#: model:ir.model.fields,help:pos_loyalty.field_loyalty_program__pos_report_print_id
+msgid "This is used to print the generated gift cards from PoS."
+msgstr ""
+
+#. module: pos_loyalty
 #: code:addons/pos_loyalty/models/pos_config.py:0
 #, python-format
 msgid ""
@@ -637,15 +618,14 @@ msgid ""
 msgstr ""
 
 #. module: pos_loyalty
-#. openerp-web
-#: code:addons/pos_loyalty/static/src/xml/OrderReceipt.xml:0
-#, python-format
-msgid "Total"
+#: model:ir.model.fields,field_description:pos_loyalty.field_barcode_rule__type
+msgid "Type"
 msgstr ""
 
 #. module: pos_loyalty
-#: model:ir.model.fields,field_description:pos_loyalty.field_barcode_rule__type
-msgid "Type"
+#: model:product.product,uom_name:pos_loyalty.simple_pen
+#: model:product.template,uom_name:pos_loyalty.simple_pen_product_template
+msgid "Units"
 msgstr ""
 
 #. module: pos_loyalty
@@ -657,15 +637,23 @@ msgstr ""
 
 #. module: pos_loyalty
 #. openerp-web
-#: code:addons/pos_loyalty/static/src/xml/Popups/GiftCardPopup.xml:0
+#: code:addons/pos_loyalty/static/src/js/Loyalty.js:0
 #, python-format
-msgid "Use a gift card"
+msgid "Unpaid gift card"
 msgstr ""
 
 #. module: pos_loyalty
-#: model:ir.model.fields,help:pos_loyalty.field_pos_config__use_coupon_programs
-#: model:ir.model.fields,help:pos_loyalty.field_res_config_settings__pos_use_coupon_programs
-msgid "Use coupon and promotion programs in this PoS configuration."
+#. openerp-web
+#: code:addons/pos_loyalty/static/src/js/Loyalty.js:0
+#, python-format
+msgid "Unpaid gift card rejected."
+msgstr ""
+
+#. module: pos_loyalty
+#. openerp-web
+#: code:addons/pos_loyalty/static/src/js/ControlButtons/eWalletButton.js:0
+#, python-format
+msgid "Use eWallet to pay"
 msgstr ""
 
 #. module: pos_loyalty
@@ -697,6 +685,54 @@ msgstr ""
 #: code:addons/pos_loyalty/static/src/js/ProductScreen.js:0
 #, python-format
 msgid "Yes"
+msgstr ""
+
+#. module: pos_loyalty
+#. openerp-web
+#: code:addons/pos_loyalty/static/src/js/ProductScreen.js:0
+#, python-format
+msgid "You cannot sell a gift card that has already been sold."
+msgstr ""
+
+#. module: pos_loyalty
+#. openerp-web
+#: code:addons/pos_loyalty/static/src/js/ProductScreen.js:0
+#, python-format
+msgid "You cannot set negative quantity or price to gift card or ewallet."
+msgstr ""
+
+#. module: pos_loyalty
+#: code:addons/pos_loyalty/models/loyalty_program.py:0
+#, python-format
+msgid "You must set '%s' before setting '%s'."
+msgstr ""
+
+#. module: pos_loyalty
+#. openerp-web
+#: code:addons/pos_loyalty/static/src/js/ControlButtons/eWalletButton.js:0
+#, python-format
+msgid "eWallet"
+msgstr ""
+
+#. module: pos_loyalty
+#. openerp-web
+#: code:addons/pos_loyalty/static/src/js/ControlButtons/eWalletButton.js:0
+#, python-format
+msgid "eWallet Pay"
+msgstr ""
+
+#. module: pos_loyalty
+#. openerp-web
+#: code:addons/pos_loyalty/static/src/js/ControlButtons/eWalletButton.js:0
+#, python-format
+msgid "eWallet Refund"
+msgstr ""
+
+#. module: pos_loyalty
+#. openerp-web
+#: code:addons/pos_loyalty/static/src/js/ProductScreen.js:0
+#, python-format
+msgid "eWallet requires a customer to be selected"
 msgstr ""
 
 #. module: pos_loyalty

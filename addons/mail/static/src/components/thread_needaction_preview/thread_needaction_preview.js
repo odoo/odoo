@@ -1,18 +1,17 @@
 /** @odoo-module **/
 
-import { useRefToModel } from '@mail/component_hooks/use_ref_to_model';
-import { registerMessagingComponent } from '@mail/utils/messaging_component';
+import { useRefToModel } from "@mail/component_hooks/use_ref_to_model";
+import { registerMessagingComponent } from "@mail/utils/messaging_component";
 
-const { Component } = owl;
+import { Component } from "@odoo/owl";
 
-export class ThreadNeedactionPreview extends Component {
-
+export class ThreadNeedactionPreviewView extends Component {
     /**
      * @override
      */
     setup() {
         super.setup();
-        useRefToModel({ fieldName: 'markAsReadRef', refName: 'markAsRead' });
+        useRefToModel({ fieldName: "markAsReadRef", refName: "markAsRead" });
     }
 
     //--------------------------------------------------------------------------
@@ -28,13 +27,13 @@ export class ThreadNeedactionPreview extends Component {
         if (this.threadNeedactionPreviewView.thread.moduleIcon) {
             return this.threadNeedactionPreviewView.thread.moduleIcon;
         }
-        if (this.threadNeedactionPreviewView.thread.correspondent) {
-            return this.threadNeedactionPreviewView.thread.correspondent.avatarUrl;
+        if (!this.threadNeedactionPreviewView.thread.channel) {
+            return "/mail/static/src/img/smiley/avatar.jpg";
         }
-        if (this.threadNeedactionPreviewView.thread.model === 'mail.channel') {
-            return `/web/image/mail.channel/${this.threadNeedactionPreviewView.thread.id}/avatar_128?unique=${this.threadNeedactionPreviewView.thread.avatarCacheKey}`;
+        if (this.threadNeedactionPreviewView.thread.channel.correspondent) {
+            return this.threadNeedactionPreviewView.thread.channel.correspondent.avatarUrl;
         }
-        return '/mail/static/src/img/smiley/avatar.jpg';
+        return `/web/image/mail.channel/${this.threadNeedactionPreviewView.thread.id}/avatar_128?unique=${this.threadNeedactionPreviewView.thread.channel.avatarCacheKey}`;
     }
 
     /**
@@ -43,12 +42,11 @@ export class ThreadNeedactionPreview extends Component {
     get threadNeedactionPreviewView() {
         return this.props.record;
     }
-
 }
 
-Object.assign(ThreadNeedactionPreview, {
+Object.assign(ThreadNeedactionPreviewView, {
     props: { record: Object },
-    template: 'mail.ThreadNeedactionPreview',
+    template: "mail.ThreadNeedactionPreviewView",
 });
 
-registerMessagingComponent(ThreadNeedactionPreview);
+registerMessagingComponent(ThreadNeedactionPreviewView);

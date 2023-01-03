@@ -12,8 +12,10 @@
 
     <template id="slide_fullscreen" inherit_id="website_slides.slide_fullscreen">
         <xpath expr="//a[hasclass('o_wslides_fs_review')]" position="after">
-            <a t-if="slide.channel_id.forum_id" id="fullscreen_forum_button" class="d-flex align-items-center px-3" t-attf-href="/forum/#{slug(slide.channel_id.forum_id)}" target="new">
-                <i class="fa fa-comments"/><span class="ms-1 d-none d-md-inline-block">New Post</span>
+            <a t-if="slide.channel_id.forum_id" id="fullscreen_forum_button"
+                class="d-flex align-items-center px-3" t-attf-href="/forum/#{slug(slide.channel_id.forum_id)}"
+                target="new" title="Forum">
+                <i class="fa fa-comments"/><span class="ms-1 d-none d-md-inline-block">Forum</span>
             </a>
         </xpath>
     </template>

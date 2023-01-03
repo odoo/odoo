@@ -97,7 +97,7 @@
         <table id="table_search" class="table table-sm border-0 h-100">
             <!--Header-->
             <tr>
-                <th class="border-0 bg-white position-sticky"/>
+                <th class="border-0 position-sticky"/>
                 <t t-foreach="locations" t-as="location">
                     <th t-if="location" class="active text-center">
                         <span t-out="location and location.name or 'Unknown'"/>
@@ -122,7 +122,7 @@
                             <t t-foreach="tracks" t-as="track">
                                 <t t-set="_classes"
                                     t-value="'text-center %s %s %s' % (
-                                        'event_color_%s' % (track.color) if track.color else 'bg-100',
+                                        'event_color_%s' % (track.color or 0),
                                         'event_track h-100' if track else '',
                                         'o_location_size_%d' % len(locations),
                                     )"/>

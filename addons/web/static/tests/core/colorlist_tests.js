@@ -6,7 +6,7 @@ import { uiService } from "@web/core/ui/ui_service";
 import { makeTestEnv } from "../helpers/mock_env";
 import { click, getFixture, mount } from "../helpers/utils";
 
-const { Component, xml } = owl;
+import { Component, xml } from "@odoo/owl";
 const serviceRegistry = registry.category("services");
 
 let target;
@@ -58,29 +58,28 @@ QUnit.module("Components", () => {
         );
     });
 
-    QUnit.test("color click does not open the list if canToggle props is not given", async function (assert) {
-        const selectedColorId = 0;
-        await mountComponent(ColorList, {
-            colors: [4, 5, 6],
-            selectedColor: selectedColorId,
-            onColorSelected: (colorId) => assert.step("color #" + colorId + " is selected"),
-        });
+    QUnit.test(
+        "color click does not open the list if canToggle props is not given",
+        async function (assert) {
+            const selectedColorId = 0;
+            await mountComponent(ColorList, {
+                colors: [4, 5, 6],
+                selectedColor: selectedColorId,
+                onColorSelected: (colorId) => assert.step("color #" + colorId + " is selected"),
+            });
 
-        assert.containsOnce(target, ".o_colorlist");
-        assert.containsOnce(
-            target,
-            "button.o_colorlist_toggler",
-            "only the toggler button is available"
-        );
+            assert.containsOnce(target, ".o_colorlist");
+            assert.containsOnce(
+                target,
+                "button.o_colorlist_toggler",
+                "only the toggler button is available"
+            );
 
-        await click(target.querySelector(".o_colorlist button"));
+            await click(target.querySelector(".o_colorlist button"));
 
-        assert.containsOnce(
-            target,
-            "button.o_colorlist_toggler",
-            "button is still visible"
-        );
-    });
+            assert.containsOnce(target, "button.o_colorlist_toggler", "button is still visible");
+        }
+    );
 
     QUnit.test("open the list of colors if canToggle props is given", async function (assert) {
         const selectedColorId = 0;

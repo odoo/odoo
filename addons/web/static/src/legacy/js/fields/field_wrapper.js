@@ -2,6 +2,7 @@ odoo.define('web.FieldWrapper', function (require) {
     "use strict";
 
     const { ComponentWrapper } = require('web.OwlCompatibility');
+    const { templates } = require("@web/core/assets");
     const field_utils = require('web.field_utils');
 
     const { App, reactive } = owl;
@@ -127,7 +128,7 @@ odoo.define('web.FieldWrapper', function (require) {
             // (only the wrapper is instantiated), so we instantiate one
             // with the same props, get its 'isSet' status, and destroy it.
             const app = new App(null, {
-                templates: window.__OWL_TEMPLATES__,
+                templates,
                 env: this.env,
                 dev: this.env.isDebug(),
                 translateFn: owl.Component.env._t,
@@ -147,7 +148,7 @@ odoo.define('web.FieldWrapper', function (require) {
             // (only the wrapper is instantiated), so we instantiate one
             // with the same props, get its 'isValid' status, and destroy it.
             const app = new App(null, {
-                templates: window.__OWL_TEMPLATES__,
+                templates,
                 env: this.env,
                 dev: this.env.isDebug(),
                 translateFn: owl.Component.env._t,

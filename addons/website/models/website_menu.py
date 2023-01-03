@@ -2,8 +2,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import werkzeug.exceptions
+import werkzeug.urls
 
 from odoo import api, fields, models
+from odoo.http import request
 from odoo.tools.translate import html_translate
 
 
@@ -139,26 +141,28 @@ class Menu(models.Model):
     # would be better to take a menu_id as argument
     @api.model
     def get_tree(self, website_id, menu_id=None):
+        website = self.env['website'].browse(website_id)
+
         def make_tree(node):
-            is_homepage = bool(node.page_id and self.env['website'].browse(website_id).homepage_id.id == node.page_id.id)
+            menu_url = node.page_id.url if node.page_id else node.url
             menu_node = {
                 'fields': {
                     'id': node.id,
                     'name': node.name,
-                    'url': node.page_id.url if node.page_id else node.url,
+                    'url': menu_url,
                     'new_window': node.new_window,
                     'is_mega_menu': node.is_mega_menu,
                     'sequence': node.sequence,
                     'parent_id': node.parent_id.id,
                 },
                 'children': [],
-                'is_homepage': is_homepage,
+                'is_homepage': menu_url == (website.homepage_url or '/'),
             }
             for child in node.child_id:
                 menu_node['children'].append(make_tree(child))
             return menu_node
 
-        menu = menu_id and self.browse(menu_id) or self.env['website'].browse(website_id).menu_id
+        menu = menu_id and self.browse(menu_id) or website.menu_id
         return make_tree(menu)
 
     @api.model
@@ -180,11 +184,20 @@ class Menu(models.Model):
                 replace_id(mid, new_menu.id)
         for menu in data['data']:
             menu_id = self.browse(menu['id'])
-            # if the url match a website.page, set the m2o relation
-            # except if the menu url is '#', meaning it will be used as a menu container, most likely for a dropdown
-            if not menu['url'] or menu['url'] == '#':
+            # Check if the url match a website.page (to set the m2o relation),
+            # except if the menu url contains '#', we then unset the page_id
+            if not menu['url'] or '#' in menu['url']:
+                # Multiple case possible
+                # 1. `#` => menu container (dropdown, ..)
+                # 2. `#anchor` => anchor on current page
+                # 3. `/url#something` => valid internal URL
+                # 4. https://google.com#smth => valid external URL
                 if menu_id.page_id:
                     menu_id.page_id = None
+                if request and menu['url'] and menu['url'].startswith('#') and len(menu['url']) > 1:
+                    # Working on case 2.: prefix anchor with referer URL
+                    referer_url = werkzeug.urls.url_parse(request.httprequest.headers.get('Referer', '')).path
+                    menu['url'] = referer_url + menu['url']
             else:
                 domain = self.env["website"].website_domain(website_id) + [
                     "|",

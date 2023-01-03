@@ -11,10 +11,9 @@ class ProductTemplate(models.Model):
 
     @api.model
     def _get_buy_route(self):
-        buy_route_id = self.env.ref('purchase_stock.route_warehouse0_buy', raise_if_not_found=False).id
-        buy_route = self.env['stock.route'].search([('id', '=', buy_route_id)])
+        buy_route = self.env.ref('purchase_stock.route_warehouse0_buy', raise_if_not_found=False)
         if buy_route:
-            return buy_route.ids
+            return self.env['stock.route'].search([('id', '=', buy_route.id)]).ids
         return []
 
     route_ids = fields.Many2many(default=lambda self: self._get_buy_route())
@@ -34,7 +33,7 @@ class ProductProduct(models.Model):
 
         qty_by_product_location, qty_by_product_wh = super()._get_quantity_in_progress(location_ids, warehouse_ids)
         domain = self._get_lines_domain(location_ids, warehouse_ids)
-        groups = self.env['purchase.order.line'].read_group(domain,
+        groups = self.env['purchase.order.line']._read_group(domain,
             ['product_id', 'product_qty', 'order_id', 'product_uom', 'orderpoint_id'],
             ['order_id', 'product_id', 'product_uom', 'orderpoint_id'], lazy=False)
         for group in groups:

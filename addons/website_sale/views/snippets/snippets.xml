@@ -13,7 +13,7 @@
 <template id="snippet_options" inherit_id="website.snippet_options" name="e-commerce snippet options">
     <xpath expr="." position="inside">
         <!-- All products page -->
-        <div data-js="WebsiteSaleGridLayout" data-page-options="true" data-selector="main:has(.o_wsale_products_page)" data-no-check="true"
+        <div data-js="WebsiteSaleGridLayout" data-page-options="true" groups="website.group_website_designer" data-selector="main:has(.o_wsale_products_page)" data-no-check="true"
             string="Products Page" data-target="#products_grid .o_wsale_products_grid_table_wrapper > table">
             <we-select string="Layout" data-no-preview="true" data-reload="/">
                 <we-button data-customize-website-views="" data-name="grid_view_opt">Grid</we-button>
@@ -80,28 +80,40 @@
                          data-customize-website-views="website_sale.products_description"
                          data-no-preview="true"
                          data-reload="/"/>
-            <we-row string="Left Panel" class="o_we_full_row">
-                <we-button string="Categories"
-                           data-name="categories_opt"
+            <we-row id="o_wsale_grid_left_panel" string="Categories" data-variable="filmstrip">
+                <we-button string="Left"
                            data-customize-website-views="website_sale.products_categories"
+                           data-name="categories_opt"
                            data-no-preview="true"
                            data-reload="/"/>
-                <we-button string="Attributes"
-                           data-name="attributes_opt"
-                           data-customize-website-views="website_sale.products_attributes"
+                <we-button string="Top"
+                           data-customize-website-views="website_sale.products_categories_top"
+                           data-name="categories_opt_top"
                            data-no-preview="true"
                            data-reload="/"/>
             </we-row>
-            <we-checkbox string="Collapse Category Recursive"
+            <we-checkbox id="collapse_category_recursive" string="Collapse Category Recursive"
                          class="o_we_sublevel_1"
                          data-customize-website-views="website_sale.option_collapse_products_categories"
                          data-dependencies="categories_opt"
                          data-no-preview="true"
                          data-reload="/"/>
+            <we-row string="Attributes" class="o_we_full_row">
+                <we-button string="Left"
+                           data-customize-website-views="website_sale.products_attributes"
+                           data-name="attributes_opt"
+                           data-no-preview="true"
+                           data-reload="/"/>
+                <we-button string="Top"
+                           data-customize-website-views="website_sale.products_attributes_top"
+                           data-name="attributes_opt_top"
+                           data-no-preview="true"
+                           data-reload="/"/>
+            </we-row>
             <we-checkbox string="Price Filter"
                          class="o_we_sublevel_1"
                          data-customize-website-views="website_sale.filter_products_price"
-                         data-dependencies="categories_opt, attributes_opt"
+                         data-dependencies="attributes_opt, attributes_opt_top"
                          data-no-preview="true"
                          data-reload="/"/>
             <we-row string="Top Bar" class="o_we_full_row">
@@ -202,7 +214,7 @@
             </we-select>
         </div>
         <!-- Product page -->
-        <div data-js="WebsiteSaleProductPage" data-selector="main:has(.o_wsale_product_page)" data-page-options="true" data-no-check="true" string="Product Page">
+        <div data-js="WebsiteSaleProductPage" data-selector="main:has(.o_wsale_product_page)" data-page-options="true" groups="website.group_website_designer" data-no-check="true" string="Product Page">
             <we-row string="Customers" class="o_we_full_row">
                 <we-button string="Rating"
                            data-customize-website-views="website_sale.product_comment"
@@ -218,15 +230,22 @@
                          data-customize-website-views="website_sale.product_quantity"
                          data-no-preview="true"
                          data-reload="/"/>
+            <we-checkbox string="Tax Indication"
+                         data-customize-website-views="website_sale.tax_indication"
+                         data-no-preview="true"
+                         data-reload="/"/>
             <we-select data-name="variants_opt" groups="product.group_product_variant" string="Variants" data-no-preview="true" data-reload="/">
                 <we-button data-name="variants_options_opt" data-customize-website-views="">Options</we-button>
                 <we-button data-name="variants_products_list_opt" data-customize-website-views="website_sale.product_variants">Products List</we-button>
             </we-select>
             <we-row string="Cart" class="o_we_full_row" data-name="o_wsale_buy_now_opt">
-                <we-button title="Buy Now" class="fa fa-fw fa-bolt o_we_buy_now_btn"
+                <we-button title="Buy Now" class="o_we_buy_now_btn"
                            data-customize-website-views="website_sale.product_buy_now"
                            data-no-preview="true"
-                           data-reload="/"/>
+                           data-reload="/">
+                    <i class="fa fa-fw fa-bolt"/>
+                    Buy Now
+                </we-button>
             </we-row>
             <!-- Image config -->
             <we-button-group string="Images Width" data-no-preview="true" data-reload="/">
@@ -235,9 +254,15 @@
                 <we-button data-set-image-width="66_pc" data-img="/website_sale/static/src/img/snippet_options/image-width-66.svg" title="66 percent"/>
                 <we-button data-set-image-width="100_pc" data-img="/website_sale/static/src/img/snippet_options/image-width-100.svg" title="100 percent"/>
             </we-button-group>
-            <we-select string="Layout" data-no-preview="true" data-reload="/">
+            <we-select string="Layout" data-name="o_wsale_image_layout" data-no-preview="true" data-reload="/">
                 <we-button data-set-image-layout="carousel">Carousel</we-button>
                 <we-button data-set-image-layout="grid">Grid</we-button>
+            </we-select>
+            <we-select string="Image Zoom" class="o_we_sublevel_1" data-name="o_wsale_zoom_mode" data-no-preview="true" data-reload="/">
+                <we-button data-name="o_wsale_zoom_hover" data-customize-website-views="website_sale.product_picture_magnify_hover">Magnifier on hover</we-button>
+                <we-button data-name="o_wsale_zoom_click" data-customize-website-views="website_sale.product_picture_magnify_click">Pop-up on Click</we-button>
+                <we-button data-name="o_wsale_zoom_both" data-customize-website-views="website_sale.product_picture_magnify_both">Both</we-button>
+                <we-button data-name="o_wsale_zoom_none" data-customize-website-views="">None</we-button>
             </we-select>
             <!-- Carousel config -->
             <we-button-group string="Thumbnails" class="o_we_sublevel_1" data-name="o_wsale_thumbnail_pos" data-no-preview="true" data-reload="/">
@@ -252,20 +277,15 @@
                 <we-button data-set-columns="3">3</we-button>
             </we-select>
             <we-row string="Main image">
-                <we-button class="o_we_bg_brand_primary" data-replace-main-image="true" data-no-preview="true">Replace</we-button>
+                <we-button class="o_we_bg_brand_primary" data-name="o_wsale_replace_main_image" data-replace-main-image="true" data-no-preview="true">Replace</we-button>
             </we-row>
             <we-row string="Extra Images">
-                <we-button class="o_we_bg_success" data-add-images="true" data-no-preview="true">Add</we-button>
-                <we-button class="o_we_bg_danger" data-clear-images="true" data-no-preview="true">Remove all</we-button>
+                <we-button class="o_we_bg_success" data-name="o_wsale_add_extra_images" data-add-images="true" data-no-preview="true">Add</we-button>
+                <we-button class="o_we_bg_danger" data-name="o_wsale_clear_extra_images" data-clear-images="true" data-no-preview="true">Remove all</we-button>
             </we-row>
-            <we-select string="Image Zoom" data-no-preview="true" data-reload="/">
-                <we-button data-customize-website-views="">None</we-button>
-                <we-button data-customize-website-views="website_sale.product_picture_magnify">On click</we-button>
-                <we-button data-customize-website-views="website_sale.product_picture_magnify_auto">On hover</we-button>
-            </we-select>
         </div>
         <!-- Checkout page  -->
-        <div data-selector="main:has(.oe_website_sale .wizard)" data-page-options="true" data-no-check="true" string="Checkout Pages">
+        <div data-selector="main:has(.oe_website_sale .wizard)" data-page-options="true" groups="website.group_website_designer" data-no-check="true" string="Checkout Pages">
             <we-checkbox string="Extra Step Option"
                          data-customize-website-views="website_sale.extra_info_option"
                          data-no-preview="true"

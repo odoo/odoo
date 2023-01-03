@@ -156,6 +156,24 @@
                       </li>
                     </ul>
                 </div>
+                <t t-set="properties" t-value="lead._format_properties()"/>
+                <div t-if="properties" class="mt-3 mb-3">
+                    <div class="fw-bold">
+                        Properties
+                    </div>
+                    <ul class="p-0">
+                        <li t-foreach="properties" t-as="property"
+                            class="d-flex flex-row align-items-center">
+                            <t t-esc="property['label']"/>:
+                            <div t-if="'values' in property"
+                                class="ms-2 d-flex flex-row"> <!-- Tags -->
+                                <div t-foreach="property['values']" t-as="tag" t-esc="tag['name']"
+                                    t-attf-class="badge rounded-pill o_tag_color_#{tag.get('color', 0)} d-inline-block me-2"/>
+                            </div>
+                            <div t-else="" class="ms-2" t-esc="property['value']"/>
+                        </li>
+                    </ul>
+                </div>
             </blockquote>
         </t>
     </div>

@@ -205,6 +205,47 @@ class TestSaleOrder(SaleCommon):
         so_form.save()
         self.assertEqual(so.order_line.product_uom_qty, 12)
 
+        packaging_pack_of_10 = self.env['product.packaging'].create({
+            'name': "PackOf10",
+            'product_id': self.product.id,
+            'qty': 10.0,
+        })
+        packaging_pack_of_20 = self.env['product.packaging'].create({
+            'name': "PackOf20",
+            'product_id': self.product.id,
+            'qty': 20.0,
+        })
+
+        so2 = self.env['sale.order'].create({
+            'partner_id': self.partner.id,
+        })
+        so2_form = Form(so2)
+        with so2_form.order_line.new() as line:
+            line.product_id = self.product
+            line.product_uom_qty = 10
+        so2_form.save()
+        self.assertEqual(so2.order_line.product_packaging_id.id, packaging_pack_of_10.id)
+        self.assertEqual(so2.order_line.product_packaging_qty, 1.0)
+
+        with so2_form.order_line.edit(0) as line:
+            line.product_packaging_qty = 2
+        so2_form.save()
+        self.assertEqual(so2.order_line.product_uom_qty, 20)
+        # we should have 2 pack of 10, as we've set the package_qty manually,
+        # we shouldn't recompute the packaging_id, since the package_qty is protected,
+        # therefor cannot be recomputed during the same transaction, which could lead
+        # to an incorrect line like (qty=20,pack_qty=2,pack_id=PackOf20)
+        self.assertEqual(so2.order_line.product_packaging_qty, 2)
+        self.assertEqual(so2.order_line.product_packaging_id.id, packaging_pack_of_10.id)
+
+        with so2_form.order_line.edit(0) as line:
+            line.product_packaging_id = packaging_pack_of_20
+        so2_form.save()
+        self.assertEqual(so2.order_line.product_uom_qty, 20)
+        # we should have 1 pack of 20, as we've set the package type manually
+        self.assertEqual(so2.order_line.product_packaging_qty, 1)
+        self.assertEqual(so2.order_line.product_packaging_id.id, packaging_pack_of_20.id)
+
     def _create_sale_order(self):
         """Create dummy sale order (without lines)"""
         return self.env['sale.order'].with_context(
@@ -373,3 +414,47 @@ class TestSalesTeam(SaleCommon):
         })
         sale_order.user_id = self.user_not_in_team
         self.assertEqual(sale_order.team_id.id, self.sale_team_2.id, 'Should not reset the team to default')
+
+    def test_sale_order_analytic_distribution_change(self):
+        self.env.user.groups_id += self.env.ref('analytic.group_analytic_accounting')
+
+        analytic_plan = self.env['account.analytic.plan'].create({'name': 'Plan Test', 'company_id': False})
+        analytic_account_super = self.env['account.analytic.account'].create({'name': 'Super Account', 'plan_id': analytic_plan.id})
+        analytic_account_great = self.env['account.analytic.account'].create({'name': 'Great Account', 'plan_id': analytic_plan.id})
+        super_product = self.env['product.product'].create({'name': 'Super Product'})
+        great_product = self.env['product.product'].create({'name': 'Great Product'})
+        product_no_account = self.env['product.product'].create({'name': 'Product No Account'})
+        self.env['account.analytic.distribution.model'].create([
+            {
+                'analytic_distribution': {analytic_account_super.id: 100},
+                'product_id': super_product.id,
+            },
+            {
+                'analytic_distribution': {analytic_account_great.id: 100},
+                'product_id': great_product.id,
+            },
+        ])
+        sale_order = self.env['sale.order'].create({
+            'partner_id': self.env.ref('base.res_partner_1').id,
+        })
+        sol = self.env['sale.order.line'].create({
+            'name': super_product.name,
+            'product_id': super_product.id,
+            'order_id': sale_order.id,
+        })
+
+        self.assertEqual(sol.analytic_distribution, {str(analytic_account_super.id): 100}, "The analytic distribution should be set to Super Account")
+        sol.write({'product_id': great_product.id})
+        self.assertEqual(sol.analytic_distribution, {str(analytic_account_great.id): 100}, "The analytic distribution should be set to Great Account")
+
+        so_no_analytic_account = self.env['sale.order'].create({
+            'partner_id': self.env.ref('base.res_partner_1').id,
+        })
+        sol_no_analytic_account = self.env['sale.order.line'].create({
+            'name': super_product.name,
+            'product_id': super_product.id,
+            'order_id': so_no_analytic_account.id,
+            'analytic_distribution': False,
+        })
+        so_no_analytic_account.action_confirm()
+        self.assertFalse(sol_no_analytic_account.analytic_distribution, "The compute should not overwrite what the user has set.")

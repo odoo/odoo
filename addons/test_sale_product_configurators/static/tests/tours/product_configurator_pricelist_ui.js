@@ -24,11 +24,17 @@ tour.stepUtils.showAppsMenuItem(),
     trigger: 'ul.ui-autocomplete > li > a:contains(Azure)',
 }, {
     content: "search the pricelist",
-    trigger: 'div[name="pricelist_id"] input',
-    run: 'text Custom pricelist (TEST)'
+    trigger: 'input[id="pricelist_id"]',
+    // Wait for onchange to come back
+    extra_trigger: "[name=partner_id]:contains(Fremont)",
+}, {
+    content: "search the pricelist",
+    trigger: 'input[id="pricelist_id"]',
+    run: 'text Custo'
 }, {
     content: "select the pricelist",
     trigger: 'ul.ui-autocomplete > li > a:contains(Custom pricelist (TEST))',
+    in_modal: false,
 }, {
     trigger: 'a:contains("Add a product")',
 }, {
@@ -65,7 +71,6 @@ tour.stepUtils.showAppsMenuItem(),
 }, {
     content: "add to SO",
     trigger: 'button span:contains(Confirm)',
-    extra_trigger: '.oe_advanced_configurator_modal',
 }, {
     content: "verify SO final price excluded",
     trigger: 'span[name="Untaxed Amount"]:contains("1,257.00")',

@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="spreadsheet_dashboard_tasks" model="spreadsheet.dashboard">
+        <field name="name">Tasks</field>
+        <field name="data" type="base64" file="spreadsheet_dashboard_hr_timesheet/data/files/tasks_dashboard.json"/>
+        <field name="dashboard_group_id" ref="spreadsheet_dashboard.spreadsheet_dashboard_group_project"/>
+        <field name="group_ids" eval="[Command.link(ref('hr_timesheet.group_hr_timesheet_approver'))]"/>
+        <field name="sequence">100</field>
+    </record>
+
+</odoo>

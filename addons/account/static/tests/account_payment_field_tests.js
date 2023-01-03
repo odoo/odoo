@@ -46,8 +46,8 @@ QUnit.module('account', {
                     assert.deepEqual(args.args, [4, 20], "should call js_assign_outstanding_line {warning: required focus}");
                     return Promise.resolve();
                 }
-                if (args.method === 'open_move') {
-                    assert.deepEqual(args.args, [10], "should call open_move {warning: required focus}");
+                if (args.method === 'action_open_business_doc') {
+                    assert.deepEqual(args.args, [10], "should call action_open_business_doc {warning: required focus}");
                     return Promise.resolve();
                 }
                 return this._super.apply(this, arguments);

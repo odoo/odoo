@@ -12,7 +12,12 @@ class HrPlanWizard(models.TransientModel):
     def _default_plan_id(self):
         # We know that all employees belong to the same company
         employee = self.env['hr.employee'].browse(self.env.context.get('active_ids')[0] if self.env.context.get('active_ids') else [])
-        return self.env['hr.plan'].search([('company_id', '=', employee.company_id.id)], limit=1)
+        return self.env['hr.plan'].search([
+            ('company_id', '=', employee.company_id.id),
+            '|',
+            ('department_id', '=', employee.department_id.id),
+            ('department_id', '=', False)
+            ], limit=1)
 
     plan_id = fields.Many2one('hr.plan', default=lambda self: self._default_plan_id(),
         domain="[('company_id', '=', company_id), '|', ('department_id', '=', department_id), ('department_id', '=', False)]")

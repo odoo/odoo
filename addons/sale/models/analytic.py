@@ -14,3 +14,15 @@ class AccountAnalyticLine(models.Model):
         return [('qty_delivered_method', '=', 'analytic')]
 
     so_line = fields.Many2one('sale.order.line', string='Sales Order Item', domain=lambda self: self._default_sale_line_domain())
+
+
+class AccountAnalyticApplicability(models.Model):
+    _inherit = 'account.analytic.applicability'
+    _description = "Analytic Plan's Applicabilities"
+
+    business_domain = fields.Selection(
+        selection_add=[
+            ('sale_order', 'Sale Order'),
+        ],
+        ondelete={'sale_order': 'cascade'},
+    )

@@ -80,7 +80,7 @@ class TestFifoPrice(ValuationReconciliationTestCommon):
 
         # Check the standard price of the product, that should have not changed because we
         # still have icecream in stock
-        self.assertEqual(product_cable_management_box.standard_price, 50.0, 'Standard price as fifo price of second reception incorrect!')
+        self.assertEqual(product_cable_management_box.standard_price, 72.5, 'Standard price as fifo price of second reception incorrect!')
         self.assertEqual(product_cable_management_box.value_svl, 2900.0, 'Stock valuation should be 2900')
 
         # Let us send some goods

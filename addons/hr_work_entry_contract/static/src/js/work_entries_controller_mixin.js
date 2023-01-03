@@ -41,7 +41,7 @@ odoo.define('hr_work_entry_contract.WorkEntryControllerMixin', function(require)
                 self.firstDay = self._fetchFirstDay().toDate();
                 self.lastDay = self._fetchLastDay().toDate();
                 var now = moment();
-                if (self.firstDay > now) return Promise.resolve();
+                if (self.firstDay > now.add(1, 'months')) return Promise.resolve();
                 return self._generateWorkEntries();
             });
         },

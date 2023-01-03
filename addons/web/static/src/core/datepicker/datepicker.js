@@ -4,6 +4,7 @@ import {
     areDateEquals,
     formatDate,
     formatDateTime,
+    luxonToMoment,
     luxonToMomentFormat,
     parseDate,
     parseDateTime,
@@ -13,7 +14,7 @@ import { localization } from "@web/core/l10n/localization";
 import { useAutofocus } from "@web/core/utils/hooks";
 import { isIOS } from "@web/core/browser/feature_detection";
 
-const {
+import {
     Component,
     onMounted,
     onWillUpdateProps,
@@ -21,18 +22,10 @@ const {
     useExternalListener,
     useRef,
     useState,
-} = owl;
+} from "@odoo/owl";
 const { DateTime } = luxon;
 
 let datePickerId = 0;
-
-/**
- * @param {DateTime} date
- * @returns {moment}
- */
-function luxonDateToMomentDate(date) {
-    return window.moment(String(date));
-}
 
 /**
  * @param {string} format
@@ -86,7 +79,7 @@ export class DatePicker extends Component {
         this.setDateAndFormat(this.props);
 
         useAutofocus();
-        useExternalListener(window, "scroll", this.onWindowScroll);
+        useExternalListener(window, "scroll", this.onWindowScroll, { capture: true });
 
         onMounted(this.onMounted);
         onWillUpdateProps(this.onWillUpdateProps);
@@ -136,7 +129,6 @@ export class DatePicker extends Component {
             format:
                 !useStatic || isValidStaticFormat(this.format) ? this.format : this.staticFormat,
             locale: this.props.locale || (this.date && this.date.locale),
-            timezone: this.isLocal,
         };
     }
 
@@ -172,7 +164,7 @@ export class DatePicker extends Component {
      */
     updateInput({ useStatic } = {}) {
         const [formattedDate] = this.formatValue(this.date, this.getOptions(useStatic));
-        if (formattedDate) {
+        if (formattedDate !== null) {
             this.inputRef.el.value = formattedDate;
         }
     }
@@ -196,7 +188,7 @@ export class DatePicker extends Component {
             };
             for (const prop in params) {
                 if (params[prop] instanceof DateTime) {
-                    params[prop] = luxonDateToMomentDate(params[prop]);
+                    params[prop] = params[prop].isValid ? luxonToMoment(params[prop]) : null;
                 }
             }
             commandOrParams = params;
@@ -231,7 +223,7 @@ export class DatePicker extends Component {
             // Reset to default (= given) date.
             this.updateInput();
         }
-        if (!areDateEquals(this.date, parsedDate)) {
+        if (parsedDate !== null && !areDateEquals(this.date, parsedDate)) {
             this.props.onDateTimeChanged(parsedDate);
         }
     }
@@ -269,6 +261,7 @@ DatePicker.defaultProps = {
         today: "fa fa-calendar-check-o",
         up: "fa fa-chevron-up",
     },
+    inputId: "",
     maxDate: DateTime.fromObject({ year: 9999, month: 12, day: 31 }),
     minDate: DateTime.fromObject({ year: 1000 }),
     useCurrent: false,
@@ -306,6 +299,7 @@ DatePicker.props = {
         },
         optional: true,
     },
+    inputId: { type: String, optional: true },
     keyBinds: { validate: (kb) => typeof kb === "object" || kb === null, optional: true },
     locale: { type: String, optional: true },
     maxDate: { type: DateTime, optional: true },

@@ -21,12 +21,15 @@ class ProductConfiguratorController(http.Controller):
         if pricelist:
             product_template = product_template.with_context(pricelist=pricelist.id, partner=request.env.user.partner_id)
 
-        return request.env['ir.ui.view']._render_template("sale_product_configurator.configure", {
-            'product': product_template,
-            'pricelist': pricelist,
-            'add_qty': add_qty,
-            'product_combination': product_combination
-        })
+        return request.env['ir.ui.view']._render_template(
+            "sale_product_configurator.configure",
+            {
+                'product': product_template,
+                'pricelist': pricelist,
+                'add_qty': add_qty,
+                'product_combination': product_combination
+            },
+        )
 
     @http.route(['/sale_product_configurator/show_advanced_configurator'], type='json', auth="user", methods=['POST'])
     def show_advanced_configurator(self, product_id, variant_values, pricelist_id, **kw):
@@ -75,7 +78,9 @@ class ProductConfiguratorController(http.Controller):
             'variant_values': variant_values,
             'pricelist': pricelist,
             'handle_stock': handle_stock,
-            'already_configured': kw.get("already_configured", False)
+            'already_configured': kw.get("already_configured", False),
+            'mode': kw.get('mode', 'add'),
+            'product_custom_attribute_values': kw.get('product_custom_attribute_values', None)
         })
 
     def _get_pricelist(self, pricelist_id, pricelist_fallback=False):

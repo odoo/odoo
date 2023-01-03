@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="spreadsheet_dashboard_elearning" model="spreadsheet.dashboard">
+        <field name="name">eLearning</field>
+        <field name="data" type="base64" file="spreadsheet_dashboard_website_sale_slides/data/files/elearning_dashboard.json"/>
+        <field name="dashboard_group_id" ref="spreadsheet_dashboard.spreadsheet_dashboard_group_website"/>
+        <field name="group_ids" eval="[Command.link(ref('website_slides.group_website_slides_manager'))]"/>
+        <field name="sequence">200</field>
+    </record>
+
+</odoo>

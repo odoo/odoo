@@ -3,12 +3,13 @@
 import { makeEnv, startServices } from "./env";
 import { legacySetupProm } from "./legacy/legacy_setup";
 import { mapLegacyEnvToWowlEnv } from "./legacy/utils";
-import { processTemplates, loadBundle } from "./core/assets";
 import { localization } from "@web/core/l10n/localization";
 import { session } from "@web/session";
 import { renderToString } from "./core/utils/render";
+import { setLoadXmlDefaultApp, templates } from "@web/core/assets";
+import { hasTouch } from "@web/core/browser/feature_detection";
 
-const { App, whenReady } = owl;
+import { App, whenReady } from "@odoo/owl";
 
 /**
  * Function to start a webclient.
@@ -29,25 +30,22 @@ export async function startWebClient(Webclient) {
 
     // setup environment
     const env = makeEnv();
-    const [, templates] = await Promise.all([
-        startServices(env),
-        odoo.loadTemplatesPromise.then(processTemplates),
-    ]);
+    await startServices(env);
 
     // start web client
     await whenReady();
-    window.__OWL_TEMPLATES__ = templates;
     const legacyEnv = await legacySetupProm;
     mapLegacyEnvToWowlEnv(legacyEnv, env);
     const app = new App(Webclient, {
         env,
+        templates,
         dev: env.debug,
-        templates: window.__OWL_TEMPLATES__,
+        warnIfNoStaticProps: true,
         translatableAttributes: ["data-tooltip"],
         translateFn: env._t,
     });
     renderToString.app = app;
-    loadBundle.app = app;
+    setLoadXmlDefaultApp(app);
     const root = await app.mount(document.body);
     const classList = document.body.classList;
     if (localization.direction === "rtl") {
@@ -58,6 +56,9 @@ export async function startWebClient(Webclient) {
     }
     if (env.debug) {
         classList.add("o_debug");
+    }
+    if (hasTouch()) {
+        classList.add("o_touch_device");
     }
     // delete odoo.debug; // FIXME: some legacy code rely on this
     odoo.__WOWL_DEBUG__ = { root };

@@ -7,15 +7,17 @@ import { useNumpadDecimal } from "../numpad_decimal_hook";
 import { parseFloat } from "../parsers";
 import { standardFieldProps } from "../standard_field_props";
 
-const { Component, onWillUpdateProps, useState } = owl;
+import { Component, onWillUpdateProps, useRef, useState, useExternalListener } from "@odoo/owl";
 const formatters = registry.category("formatters");
 const parsers = registry.category("parsers");
 
 export class ProgressBarField extends Component {
     setup() {
         useNumpadDecimal();
-        useAutofocus({ refName: "max-value", selectAll: true });
-        useAutofocus({ refName: "current-value", selectAll: true });
+        useAutofocus({ refName: "maxValue", selectAll: true });
+        useAutofocus({ refName: "currentValue", selectAll: true });
+        useExternalListener(document.body, "click", this.onClickAway, { capture: true });
+        this.root = useRef("numpadDecimal");
         this.state = useState({
             currentValue: this.getCurrentValue(this.props),
             maxValue: this.getMaxValue(this.props),
@@ -37,6 +39,9 @@ export class ProgressBarField extends Component {
     }
     get isMaxValueInteger() {
         return this.state.maxValue % 1 === 0;
+    }
+    get isPercentage() {
+        return !this.props.maxValueField || !isNaN(this.props.maxValueField);
     }
 
     getCurrentValueField(p) {
@@ -80,7 +85,6 @@ export class ProgressBarField extends Component {
         this.state.currentValue = parsedValue;
         this.props.record.update({ [this.getCurrentValueField(this.props)]: parsedValue });
         if (this.props.readonly) {
-            this.state.isEditing = false;
             this.props.record.save();
         }
     }
@@ -99,7 +103,6 @@ export class ProgressBarField extends Component {
         this.state.maxValue = parsedValue;
         this.props.record.update({ [this.getMaxValueField(this.props)]: parsedValue });
         if (this.props.readonly) {
-            this.state.isEditing = false;
             this.props.record.save();
         }
     }
@@ -109,8 +112,11 @@ export class ProgressBarField extends Component {
             this.state.isEditing = true;
         }
     }
-    onBlur() {
-        if (this.props.readonly) {
+    /**
+     * @param {MouseEvent} ev
+     */
+    onClickAway(ev) {
+        if (this.root.el && !this.root.el.contains(ev.target)) {
             this.state.isEditing = false;
         }
     }
@@ -138,7 +144,6 @@ ProgressBarField.props = {
     ...standardFieldProps,
     maxValueField: { type: [String, Number], optional: true },
     currentValueField: { type: String, optional: true },
-    isPercentage: { type: Boolean, optional: true },
     isEditable: { type: Boolean, optional: true },
     isEditableInReadonly: { type: Boolean, optional: true },
     isCurrentValueEditable: { type: Boolean, optional: true },
@@ -153,7 +158,6 @@ ProgressBarField.extractProps = ({ attrs }) => {
     return {
         maxValueField: attrs.options.max_value,
         currentValueField: attrs.options.current_value,
-        isPercentage: !attrs.options.max_value,
         isEditable: !attrs.options.readonly && attrs.options.editable,
         isEditableInReadonly: attrs.options.editable_readonly,
         isCurrentValueEditable:

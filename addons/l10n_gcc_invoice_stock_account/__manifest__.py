@@ -6,7 +6,6 @@
     'description': """
         Arabic/English for GCC + lot/SN numbers
     """,
-    'author': "Odoo S.A.",
     'website': "https://www.odoo.com",
     'category': 'Accounting/Localizations',
 

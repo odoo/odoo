@@ -19,7 +19,7 @@
         <field name="arch" type="xml">
 
             <xpath expr="//page[@name='accounting']/group" position="inside">
-                <group string="Accounting Documents" name="accounting_documents">
+                <group string="Accounting Documents" name="accounting_documents" attrs="{'invisible': [('fiscal_country_codes', 'not ilike', 'AR')]}">
                     <field name="l10n_ar_special_purchase_document_type_ids" widget="many2many_tags"/>
                 </group>
             </xpath>

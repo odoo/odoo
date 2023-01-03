@@ -1,0 +1,76 @@
+.o_spreadsheet_dashboard_search_panel {
+    width: fit-content;
+    max-width: 200px;
+    align-items: center;
+
+    ul {
+        padding-inline-start: 0px
+    }
+
+    li {
+        padding: 4px 8px 4px 12px;
+        list-style-type: none;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+
+        &:hover:not(.active) {
+            background-color: $o-gray-100;
+        }
+    }
+
+}
+
+.o_spreadsheet_dashboard_action {
+    background-color: white;
+
+    .o_renderer {
+        height: 100%;
+
+        .o-spreadsheet {
+            height: 100%;
+
+            .o-grid {
+                background-color: white;
+            }
+
+            canvas {
+                border-top: 0px;
+            }
+        }
+    }
+
+    .o_side_panel_filter_icon {
+        padding: 0;
+    }
+
+    .dashboard-loading-status {
+        margin: auto;
+    }
+
+    .o_cp_top_left {
+        flex: 1;
+        min-width: 0;
+    }
+
+    .o_cp_top_right {
+        display: flex;
+        justify-content: flex-end;
+        align-items: flex-start;
+        flex: 4;
+        min-width: 0;
+
+        .o-filter-value {
+            min-height: 25px;
+            margin-left: 8px;
+            min-width: 100px;
+
+            .o_field_many2manytags,
+            .date_filter_values {
+                display: flex;
+                gap: 3px;
+                align-items: baseline;
+            }
+        }
+    }
+}

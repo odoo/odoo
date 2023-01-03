@@ -9,7 +9,8 @@
         <field name="context">{
             'search_default_month':1,
             'search_default_employee_id': [active_id],
-            'default_employee_id': active_id
+            'default_employee_id': active_id,
+            "is_timesheet": 1,
         }</field>
     </record>
 
@@ -30,19 +31,12 @@
     <record id="hr_employee_view_form_inherit_timesheet" model="ir.ui.view">
         <field name="name">hr.employee.form.timesheet</field>
         <field name="model">hr.employee</field>
-        <field name="inherit_id" ref="hr.view_employee_form"/>
+        <field name="inherit_id" ref="hr_hourly_cost.view_employee_form"/>
         <field name="priority" eval="40"/>
         <field name="arch" type="xml">
-            <group name="application_group" position="attributes">
-                <attribute name="string">Application Settings</attribute>
-            </group>
-            <group name="application_group" position="inside">
-                <label for="timesheet_cost" groups="hr_timesheet.group_timesheet_manager"/>
-                <div name="timesheet" groups="hr_timesheet.group_timesheet_manager">
-                    <field name="timesheet_cost" class="oe_inline"/> per hour
-                    <field name="currency_id" invisible="1"/>
-                </div>
-            </group>
+            <xpath expr="/form" position="attributes">
+                <attribute name="delete">0</attribute>
+            </xpath>
             <xpath expr="//div[@name='button_box']" position="inside">
                 <button class="oe_stat_button" type="action" name="%(timesheet_action_from_employee)d" icon="fa-calendar" groups="hr_timesheet.group_hr_timesheet_user">
                     <div class="o_stat_info">
@@ -53,19 +47,40 @@
         </field>
     </record>
 
+     <record id="view_employee_tree_inherit_timesheet" model="ir.ui.view">
+        <field name="name">hr.employee.tree.timesheet</field>
+        <field name="model">hr.employee</field>
+        <field name="inherit_id" ref="hr.view_employee_tree"/>
+        <field name="arch" type="xml">
+            <xpath expr="/tree" position="attributes">
+                <attribute name="delete">0</attribute>
+            </xpath>
+        </field>
+    </record>
+
     <record id="hr_department_view_kanban" model="ir.ui.view">
         <field name="name">hr.department.kanban.inherit</field>
         <field name="model">hr.department</field>
         <field name="inherit_id" ref="hr.hr_department_view_kanban"/>
-        <field name="groups_id" eval="[(4,ref('hr_timesheet.group_timesheet_manager'))]"/>
         <field name="arch" type="xml">
             <data>
                 <xpath expr="//div[hasclass('o_kanban_manage_reports')]" position="inside">
-                    <a name="%(act_hr_timesheet_report)d" type="action" context="{ 'search_default_department_id': [active_id], 'default_department_id': active_id}">
+                    <a name="%(act_hr_timesheet_report)d" type="action"
+                        groups="hr_timesheet.group_timesheet_manager" class="dropdown-item"
+                        context="{ 'search_default_department_id': [active_id], 'default_department_id': active_id}">
                         Timesheets
                     </a>
                 </xpath>
             </data>
         </field>
+    </record>
+
+    <record id="unlink_employee_action" model="ir.actions.server">
+        <field name="name">Delete</field>
+        <field name="model_id" ref="hr.model_hr_employee"/>
+        <field name="binding_model_id" ref="hr.model_hr_employee"/>
+        <field name="binding_view_types">form,list</field>
+        <field name="state">code</field>
+        <field name="code">action = records.action_unlink_wizard()</field>
     </record>
 </odoo>

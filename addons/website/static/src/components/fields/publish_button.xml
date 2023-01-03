@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+
+<t t-name="website.PublishField" owl="1">
+    <div class="o_stat_info">
+        <span class="o_stat_text o_hover"
+              t-att-class="props.value ? 'text-danger' : 'text-success'"
+              t-esc="props.value ? env._t('Unpublish') : env._t('Publish')"/>
+        <span class="o_stat_text o_not_hover"
+              t-att-class="props.value ? 'text-success' : 'text-danger'"
+              t-esc="props.value ? env._t('Published') : env._t('Unpublished')"/>
+    </div>
+</t>
+
+</templates>

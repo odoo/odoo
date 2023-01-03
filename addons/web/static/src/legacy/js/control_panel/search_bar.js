@@ -163,14 +163,14 @@ odoo.define('web.SearchBar', function (require) {
                 if (typeof args === 'string') {
                     try {
                         args = Domain.prototype.stringToArray(args);
-                    } catch (_err) {
+                    } catch {
                         args = [];
                     }
                 }
                 const results = await this.rpc({
                     kwargs: {
                         args,
-                        context: source.context,
+                        context: { ...this.model.config.context, ...source.context },
                         limit: 8,
                         name: this.state.inputValue.trim(),
                     },
@@ -295,7 +295,7 @@ odoo.define('web.SearchBar', function (require) {
         _validateSource(query, source) {
             try {
                 this._parseWithSource(query, source);
-            } catch (_err) {
+            } catch {
                 return false;
             }
             return true;

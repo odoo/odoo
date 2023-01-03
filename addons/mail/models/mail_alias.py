@@ -73,6 +73,13 @@ class Alias(models.Model):
     alias_bounced_content = fields.Html(
         "Custom Bounced Message", translate=True,
         help="If set, this content will automatically be sent out to unauthorized users instead of the default message.")
+    alias_status = fields.Selection([
+        ('not_tested', 'Not Tested'),
+        ('valid', 'Valid'),
+        ('invalid', 'Invalid'),
+    ],
+        compute='_compute_alias_status', store=True,
+        help='Alias status assessed on the last message received.')
 
     _sql_constraints = [
         ('alias_unique', 'UNIQUE(alias_name)', 'Unfortunately this email alias is already used, please choose a unique one')
@@ -92,6 +99,11 @@ class Alias(models.Model):
                     "You cannot use anything else than unaccented latin characters in the alias address (%s).",
                     alias.alias_name,
                 ))
+
+    @api.depends('alias_contact', 'alias_defaults', 'alias_model_id')
+    def _compute_alias_status(self):
+        """Reset alias_status to "not_tested" when fields, that can be the source of an error, are modified."""
+        self.alias_status = 'not_tested'
 
     @api.depends('alias_name')
     def _compute_alias_domain(self):
@@ -227,22 +239,48 @@ class Alias(models.Model):
     def _get_alias_bounced_body_fallback(self, message_dict):
         contact_description = self._get_alias_contact_description()
         default_email = self.env.company.partner_id.email_formatted if self.env.company.partner_id.email else self.env.company.name
-        return Markup(
-            _("""<p>Dear Sender,<br /><br />
-The message below could not be accepted by the address %(alias_display_name)s.
-Only %(contact_description)s are allowed to contact it.<br /><br />
-Please make sure you are using the correct address or contact us at %(default_email)s instead.<br /><br />
-Kind Regards,</p>"""
-             )) % {
-                 'alias_display_name': self.display_name,
-                 'contact_description': contact_description,
-                 'default_email': default_email,
-             }
+        content = Markup(
+            _("""The message below could not be accepted by the address %(alias_display_name)s.
+                 Only %(contact_description)s are allowed to contact it.<br /><br />
+                 Please make sure you are using the correct address or contact us at %(default_email)s instead."""
+              )
+        ) % {
+            'alias_display_name': self.display_name,
+            'contact_description': contact_description,
+            'default_email': default_email,
+        }
+        return Markup('<p>%(header)s,<br /><br />%(content)s<br /><br />%(regards)s</p>') % {
+            'content': content,
+            'header': _('Dear Sender'),
+            'regards': _('Kind Regards'),
+        }
 
     def _get_alias_contact_description(self):
         if self.alias_contact == 'partners':
             return _('addresses linked to registered partners')
         return _('some specific addresses')
+
+    def _get_alias_invalid_body(self, message_dict):
+        """Get the body of the bounced email returned when the alias is misconfigured (ex.: error in alias_defaults).
+
+        :param message_dict: dictionary of mail values
+        """
+        content = Markup(
+            _("""The message below could not be accepted by the address %(alias_display_name)s.
+Please try again later or contact %(company_name)s instead."""
+              )
+        ) % {
+            'alias_display_name': self.display_name,
+            'company_name': self.env.company.name,
+        }
+        return self.env['ir.qweb']._render('mail.mail_bounce_alias_security', {
+            'body': Markup('<p>%(header)s,<br /><br />%(content)s<br /><br />%(regards)s</p>') % {
+                'content': content,
+                'header': _('Dear Sender'),
+                'regards': _('Kind Regards'),
+            },
+            'message': message_dict
+        }, minimal_qcontext=True)
 
     def _get_alias_bounced_body(self, message_dict):
         """Get the body of the email return in case of bounced email.
@@ -267,3 +305,21 @@ Kind Regards,</p>"""
             'body': body,
             'message': message_dict
         }, minimal_qcontext=True)
+
+    def _set_alias_invalid(self, message, message_dict):
+        """Set alias status to invalid and create bounce message to the sender
+        and the alias responsible.
+
+        This method must be called when a message received on the alias has
+        caused an error due to the mis-configuration of the alias.
+
+        :param EmailMessage message: email message that has caused the error
+        :param dict message_dict: dictionary of mail values
+        """
+        self.ensure_one()
+        self.alias_status = 'invalid'
+        body = self._get_alias_invalid_body(message_dict)
+        self.env['mail.thread']._routing_create_bounce_email(message_dict['email_from'], body, message,
+                                                             references=message_dict['message_id'],
+                                                             # add the alias responsible as recipient if set
+                                                             recipient_ids=self.alias_user_id.partner_id.ids)

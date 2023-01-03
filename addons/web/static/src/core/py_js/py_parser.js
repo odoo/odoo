@@ -153,7 +153,7 @@ function parsePrefix(current, tokens) {
                         op: current.value,
                         right: _parse(tokens, 50),
                     };
-                case "(":
+                case "(": {
                     const content = [];
                     let isTuple = false;
                     while (tokens[0] && !isSymbol(tokens[0], ")")) {
@@ -175,7 +175,8 @@ function parsePrefix(current, tokens) {
                     tokens.shift();
                     isTuple = isTuple || content.length === 0;
                     return isTuple ? { type: 10 /* Tuple */, value: content } : content[0];
-                case "[":
+                }
+                case "[": {
                     const value = [];
                     while (tokens[0] && !isSymbol(tokens[0], "]")) {
                         value.push(_parse(tokens, 0));
@@ -192,6 +193,7 @@ function parsePrefix(current, tokens) {
                     }
                     tokens.shift();
                     return { type: 4 /* List */, value };
+                }
                 case "{": {
                     const dict = {};
                     while (tokens[0] && !isSymbol(tokens[0], "}")) {
@@ -279,7 +281,7 @@ function parseInfix(left, current, tokens) {
                 return op;
             }
             switch (current.value) {
-                case "(":
+                case "(": {
                     // function call
                     const args = [];
                     const kwargs = {};
@@ -299,6 +301,7 @@ function parseInfix(left, current, tokens) {
                     }
                     tokens.shift();
                     return { type: 8 /* FunctionCall */, fn: left, args, kwargs };
+                }
                 case "=":
                     if (left.type === 5 /* Name */) {
                         return {
@@ -307,6 +310,7 @@ function parseInfix(left, current, tokens) {
                             value: _parse(tokens, 10),
                         };
                     }
+                    break;
                 case "[": {
                     // lookup in dictionary
                     const key = _parse(tokens);
@@ -379,7 +383,7 @@ export function parseArgs(args, spec) {
     const last = args[args.length - 1];
     const unnamedArgs = typeof last === "object" ? args.slice(0, -1) : args;
     const kwargs = typeof last === "object" ? last : {};
-    for (let [index, val] of unnamedArgs.entries()) {
+    for (const [index, val] of unnamedArgs.entries()) {
         kwargs[spec[index]] = val;
     }
     return kwargs;

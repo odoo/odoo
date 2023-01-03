@@ -1,19 +1,17 @@
-odoo.define('point_of_sale.NotificationSound', function (require) {
-    'use strict';
+/** @odoo-module */
 
-    const { useListener } = require("@web/core/utils/hooks");
-    const PosComponent = require('point_of_sale.PosComponent');
-    const Registries = require('point_of_sale.Registries');
+import { useListener } from "@web/core/utils/hooks";
+import PosComponent from "@point_of_sale/js/PosComponent";
+import Registries from "@point_of_sale/js/Registries";
 
-    class NotificationSound extends PosComponent {
-        setup() {
-            super.setup();
-            useListener('ended', () => (this.props.sound.src = null));
-        }
+class NotificationSound extends PosComponent {
+    setup() {
+        super.setup();
+        useListener("ended", () => (this.props.sound.src = null));
     }
-    NotificationSound.template = 'NotificationSound';
+}
+NotificationSound.template = "NotificationSound";
 
-    Registries.Component.add(NotificationSound);
+Registries.Component.add(NotificationSound);
 
-    return NotificationSound;
-});
+export default NotificationSound;

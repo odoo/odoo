@@ -31,7 +31,7 @@ import SearchPanel from "web.searchPanel";
 import mvc from 'web.mvc';
 import viewUtils from 'web.viewUtils';
 
-const { Component } = owl;
+import { Component } from "@odoo/owl";
 
 var Factory = mvc.Factory;
 

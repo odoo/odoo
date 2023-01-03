@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
-from odoo import fields, models
+from markupsafe import Markup
+from odoo import fields, models, _
 
 
 class PhoneBlacklistRemove(models.TransientModel):
@@ -11,4 +12,11 @@ class PhoneBlacklistRemove(models.TransientModel):
     reason = fields.Char(name="Reason")
 
     def action_unblacklist_apply(self):
-        return self.env['phone.blacklist'].action_remove_with_reason(self.phone, self.reason)
+        if self.reason:
+            message = Markup('<p>%s</p>') % _("Unblock Reason: %(reason)s", reason=self.reason)
+        else:
+            message = None
+        return self.env['phone.blacklist']._remove(
+            self.phone,
+            message=message,
+        )

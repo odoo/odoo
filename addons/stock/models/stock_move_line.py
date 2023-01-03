@@ -62,6 +62,8 @@ class StockMoveLine(models.Model):
         compute="_compute_location_id", store=True, readonly=False, precompute=True,
     )
     location_dest_id = fields.Many2one('stock.location', 'To', domain="[('usage', '!=', 'view')]", check_company=True, required=True, compute="_compute_location_id", store=True, readonly=False, precompute=True)
+    location_usage = fields.Selection(string="Source Location Type", related='location_id.usage')
+    location_dest_usage = fields.Selection(string="Destination Location Type", related='location_dest_id.usage')
     lots_visible = fields.Boolean(compute='_compute_lots_visible')
     picking_partner_id = fields.Many2one(related='picking_id.partner_id', readonly=True)
     picking_code = fields.Selection(related='picking_id.picking_type_id.code', readonly=True)
@@ -366,7 +368,9 @@ class StockMoveLine(models.Model):
                     # TODO: make package levels less of a pain and fix this
                     package_level = ml.package_level_id
                     ml.package_level_id = False
-                    package_level.unlink()
+                    # Only need to unlink the package level if it's empty. Otherwise will unlink it to still valid move lines.
+                    if not package_level.move_line_ids:
+                        package_level.unlink()
 
         # When we try to write on a reserved move line any fields from `triggers` or directly
         # `reserved_uom_qty` (the actual reserved quantity), we need to make sure the associated
@@ -403,6 +407,8 @@ class StockMoveLine(models.Model):
                         new_reserved_uom_qty = ml.product_id.uom_id._compute_quantity(reserved_qty, ml.product_uom_id, rounding_method='HALF-UP')
                         moves_to_recompute_state |= ml.move_id
                         ml.with_context(bypass_reservation_update=True).reserved_uom_qty = new_reserved_uom_qty
+                        # we don't want to override the new reserved quantity
+                        vals.pop('reserved_uom_qty', None)
 
         # When editing a done move line, the reserved availability of a potential chained move is impacted. Take care of running again `_action_assign` on the concerned moves.
         if updates or 'qty_done' in vals:
@@ -453,18 +459,12 @@ class StockMoveLine(models.Model):
 
         res = super(StockMoveLine, self).write(vals)
 
-        # Update scrap object linked to move_lines to the new quantity.
-        if 'qty_done' in vals:
-            for move in self.mapped('move_id'):
-                if move.scrapped:
-                    move.scrap_ids.write({'scrap_qty': move.quantity_done})
-
         # As stock_account values according to a move's `product_uom_qty`, we consider that any
         # done stock move should have its `quantity_done` equals to its `product_uom_qty`, and
         # this is what move's `action_done` will do. So, we replicate the behavior here.
         if updates or 'qty_done' in vals:
             moves = self.filtered(lambda ml: ml.move_id.state == 'done').mapped('move_id')
-            moves |= self.filtered(lambda ml: ml.move_id.state not in ('done', 'cancel') and ml.move_id.picking_id.immediate_transfer and not ml.reserved_uom_qty).mapped('move_id')
+            moves |= self.filtered(lambda ml: ml.move_id.state not in ('done', 'cancel') and ml.move_id.picking_id.immediate_transfer).mapped('move_id')
             for move in moves:
                 move.product_uom_qty = move.quantity_done
             next_moves._do_unreserve()
@@ -844,4 +844,70 @@ class StockMoveLine(models.Model):
             'picking_type_id': self.picking_id.picking_type_id.id,
             'restrict_partner_id': self.picking_id.owner_id.id,
             'company_id': self.picking_id.company_id.id,
+        }
+
+    def action_open_reference(self):
+        self.ensure_one()
+        if self.move_id:
+            action = self.move_id.action_open_reference()
+            if action['res_model'] != 'stock.move':
+                return action
+        return {
+            'res_model': self._name,
+            'type': 'ir.actions.act_window',
+            'views': [[False, "form"]],
+            'res_id': self.id,
+        }
+
+    def _get_revert_inventory_move_values(self):
+        self.ensure_one()
+        return {
+            'name':_('%s [reverted]', self.reference),
+            'product_id': self.product_id.id,
+            'product_uom': self.product_uom_id.id,
+            'product_uom_qty': self.qty_done,
+            'company_id': self.company_id.id or self.env.company.id,
+            'state': 'confirmed',
+            'location_id': self.location_dest_id.id,
+            'location_dest_id': self.location_id.id,
+            'is_inventory': True,
+            'move_line_ids': [(0, 0, {
+                'product_id': self.product_id.id,
+                'product_uom_id': self.product_uom_id.id,
+                'qty_done': self.qty_done,
+                'location_id': self.location_dest_id.id,
+                'location_dest_id': self.location_id.id,
+                'company_id': self.company_id.id or self.env.company.id,
+                'lot_id': self.lot_id.id,
+                'package_id': self.package_id.id,
+                'result_package_id': self.package_id.id,
+                'owner_id': self.owner_id.id,
+            })]
+        }
+
+    def action_revert_inventory(self):
+        move_vals = []
+        processed_move_line = self.env['stock.move.line']
+        for move_line in self:
+            if move_line.is_inventory and not float_is_zero(move_line.qty_done, precision_digits=move_line.product_uom_id.rounding):
+                processed_move_line += move_line
+                move_vals.append(move_line._get_revert_inventory_move_values())
+        if not processed_move_line:
+            return {
+                'type': 'ir.actions.client',
+                'tag': 'display_notification',
+                'params': {
+                    'type': 'danger',
+                    'message': _("There are no inventory adjustments to revert."),
+                }
+            }
+        moves = self.env['stock.move'].create(move_vals)
+        moves._action_done()
+        return {
+            'type': 'ir.actions.client',
+            'tag': 'display_notification',
+            'params': {
+                'type': 'success',
+                'message': _("The inventory adjustments have been reverted."),
+            }
         }

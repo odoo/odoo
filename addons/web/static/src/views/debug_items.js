@@ -10,7 +10,7 @@ import { formatMany2one } from "@web/views/fields/formatters";
 import { evalDomain } from "@web/views/utils";
 import { FormViewDialog } from "@web/views/view_dialogs/form_view_dialog";
 
-const { Component, onWillStart, useState, xml } = owl;
+import { Component, onWillStart, useState, xml } from "@odoo/owl";
 
 const debugRegistry = registry.category("debug");
 
@@ -21,22 +21,22 @@ function viewSeparator() {
 debugRegistry.category("view").add("viewSeparator", viewSeparator);
 
 //------------------------------------------------------------------------------
-// Fields View Get
+// Get view
 //------------------------------------------------------------------------------
 
-class FieldViewGetDialog extends Component {}
-FieldViewGetDialog.template = xml`
+class GetViewDialog extends Component {}
+GetViewDialog.template = xml`
 <Dialog title="this.constructor.title">
     <pre t-esc="props.arch"/>
 </Dialog>`;
-FieldViewGetDialog.components = { Dialog };
-FieldViewGetDialog.props = {
+GetViewDialog.components = { Dialog };
+GetViewDialog.props = {
     arch: { type: String },
     close: { type: Function },
 };
-FieldViewGetDialog.title = _lt("Fields View Get");
+GetViewDialog.title = _lt("Get View");
 
-export function fieldsViewGet({ component, env }) {
+export function getView({ component, env }) {
     let { arch } = component.props;
     if ("viewInfo" in component.props) {
         //legacy
@@ -44,15 +44,15 @@ export function fieldsViewGet({ component, env }) {
     }
     return {
         type: "item",
-        description: env._t("Fields View Get"),
+        description: env._t("Get View"),
         callback: () => {
-            env.services.dialog.add(FieldViewGetDialog, { arch });
+            env.services.dialog.add(GetViewDialog, { arch });
         },
         sequence: 340,
     };
 }
 
-debugRegistry.category("view").add("fieldsViewGet", fieldsViewGet);
+debugRegistry.category("view").add("getView", getView);
 
 //------------------------------------------------------------------------------
 // Edit View
@@ -236,9 +236,7 @@ class SetDefaultDialog extends Component {
                     fieldInfo.type === "one2many" ||
                     fieldInfo.type === "many2many" ||
                     fieldInfo.type === "binary" ||
-                    this.fieldsInfo[fieldName].options.isPassword ||
-                    fieldInfo.depends === undefined ||
-                    fieldInfo.depends.length !== 0
+                    this.fieldsInfo[fieldName].options.isPassword
                 ) {
                     return false;
                 }
@@ -306,6 +304,11 @@ class SetDefaultDialog extends Component {
 }
 SetDefaultDialog.template = "web.DebugMenu.SetDefaultDialog";
 SetDefaultDialog.components = { Dialog };
+SetDefaultDialog.props = {
+    resModel: { type: String },
+    component: { type: Component },
+    close: { type: Function },
+};
 
 export function setDefaults({ component, env }) {
     return {

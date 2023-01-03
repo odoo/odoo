@@ -1,7 +1,7 @@
 .o_applicant_interviewer_form {
     .o_ChatterTopbar_buttonSendMessage,
     .o_ChatterTopbar_buttonLogNote,
-    .o_MessageList_empty {
+    .o_MessageListView_empty {
         display: none;
     }
 }
@@ -12,12 +12,10 @@
             min-height: unset;
         }
     }
-}
 
-.o_hr_applicant_widget {
-    color: $link-color;
-
-    &:hover {
-        color: $link-hover-color;
+    &.o_form_editable {
+        .oe_title {
+            max-width: unset;
+        }
     }
 }

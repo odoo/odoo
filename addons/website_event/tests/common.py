@@ -51,7 +51,7 @@ class OnlineEventCase(EventCase):
 
         for page_specific in ['Introduction', 'Location']:
             view = self.env['ir.ui.view'].search(
-                [('name', '=', page_specific + ' ' + event.name)]
+                [('name', '=', f'{page_specific} {event.name}')]
             )
             if page_specific in menus_in:
                 self.assertTrue(bool(view))

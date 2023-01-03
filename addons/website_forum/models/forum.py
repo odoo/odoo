@@ -252,11 +252,7 @@ class Forum(models.Model):
 
     def go_to_website(self):
         self.ensure_one()
-        return {
-            'type': 'ir.actions.act_url',
-            'target': 'self',
-            'url': self._compute_website_url(),
-        }
+        return self.env['website'].get_client_action(self._compute_website_url())
 
     @api.model
     def _update_website_count(self):
@@ -313,6 +309,7 @@ class Post(models.Model):
     views = fields.Integer('Views', default=0, readonly=True, copy=False)
     active = fields.Boolean('Active', default=True)
     website_message_ids = fields.One2many(domain=lambda self: [('model', '=', self._name), ('message_type', 'in', ['email', 'comment'])])
+    website_url = fields.Char('Website URL', compute='_compute_website_url')
     website_id = fields.Many2one(related='forum_id.website_id', readonly=True)
 
     # history
@@ -377,6 +374,9 @@ class Post(models.Model):
     can_post = fields.Boolean('Can Automatically be Validated', compute='_get_post_karma_rights', compute_sudo=False)
     can_flag = fields.Boolean('Can Flag', compute='_get_post_karma_rights', compute_sudo=False)
     can_moderate = fields.Boolean('Can Moderate', compute='_get_post_karma_rights', compute_sudo=False)
+    can_use_full_editor = fields.Boolean(
+        compute='_get_post_karma_rights', compute_sudo=False,
+        help="Editor Features: image and links")
 
     def _search_can_view(self, operator, value):
         if operator not in ('=', '!=', '<>'):
@@ -498,6 +498,7 @@ class Post(models.Model):
             post.can_post = is_admin or user.karma >= post.forum_id.karma_post
             post.can_flag = is_admin or user.karma >= post.forum_id.karma_flag
             post.can_moderate = is_admin or user.karma >= post.forum_id.karma_moderate
+            post.can_use_full_editor = is_admin or user.karma >= post.forum_id.karma_editor
 
     def _update_content(self, content, forum_id):
         forum = self.env['forum.forum'].browse(forum_id)
@@ -965,26 +966,22 @@ class Post(models.Model):
         return super(Post, self)._notify_thread_by_inbox(message, recipients_data, msg_vals=msg_vals, **kwargs)
 
     def _compute_website_url(self):
-        return '/forum/{forum}/{post}{anchor}'.format(
-            forum=slug(self.forum_id),
-            post=slug(self),
-            anchor=self.parent_id and '#answer_%d' % self.id or ''
-        )
+        for post in self:
+            forum_slug = slug(post.forum_id)
+            post_slug = slug(post)
+            anchor = post.parent_id and '#answer_%d' % post.id or ''
+            post.website_url = f'/forum/{forum_slug}/{post_slug}{anchor}'
 
     def go_to_website(self):
         self.ensure_one()
-        return {
-            'type': 'ir.actions.act_url',
-            'target': 'self',
-            'url': self._compute_website_url(),
-        }
+        return self.env['website'].get_client_action(self.website_url)
 
     @api.model
     def _search_get_detail(self, website, order, options):
         with_description = options['displayDescription']
         with_date = options['displayDetail']
         search_fields = ['name']
-        fetch_fields = ['id', 'name']
+        fetch_fields = ['id', 'name', 'website_url']
         mapping = {
             'name': {'name': 'name', 'type': 'text', 'match': True},
             'website_url': {'name': 'website_url', 'type': 'text', 'truncate': False},
@@ -1043,7 +1040,6 @@ class Post(models.Model):
         with_date = 'detail' in mapping
         results_data = super()._search_render_results(fetch_fields, mapping, icon, limit)
         for post, data in zip(self, results_data):
-            data['website_url'] = post._compute_website_url()
             if with_date:
                 data['date'] = self.env['ir.qweb.field.date'].record_to_html(post, 'write_date', {})
         return results_data

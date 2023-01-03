@@ -9,8 +9,9 @@ import { clearRegistryWithCleanup, makeTestEnv } from "../../helpers/mock_env";
 import { getFixture, nextTick, patchWithCleanup, triggerEvent } from "../../helpers/utils";
 import { registerCleanup } from "../../helpers/cleanup";
 import { makeFakeLocalizationService } from "../../helpers/mock_services";
+import { templates } from "@web/core/assets";
 
-const { App, Component, useState, xml } = owl;
+import { App, Component, useState, xml } from "@odoo/owl";
 
 const mainComponents = registry.category("main_components");
 
@@ -82,7 +83,7 @@ export async function makeParent(Child, options = {}) {
     const app = new App(Parent, {
         env,
         target,
-        templates: window.__OWL_TEMPLATES__,
+        templates,
         test: true,
     });
     registerCleanup(() => app.destroy());

@@ -43,6 +43,7 @@
         <field name="arch" type="xml">
             <tree string="Mailing List Contacts" sample="1" multi_edit="1" js_class="mailing_contact_list">
                 <header>
+                    <button name="action_import" string="Import" type="object" display="always"/>
                     <button name="action_add_to_mailing_list" string="Add to List" type="object"/>
                 </header>
                 <field name="create_date" optional="show"/>

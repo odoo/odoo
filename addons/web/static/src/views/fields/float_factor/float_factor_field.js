@@ -3,13 +3,17 @@
 import { registry } from "@web/core/registry";
 import { FloatField } from "../float/float_field";
 
-const { Component } = owl;
+import { Component } from "@odoo/owl";
 export class FloatFactorField extends Component {
+    get factor() {
+        return this.props.factor;
+    }
+
     get floatFieldProps() {
         const result = {
             ...this.props,
-            value: this.props.value * this.props.factor,
-            update: (value) => this.props.update(value / this.props.factor),
+            value: this.props.value * this.factor,
+            update: (value) => this.props.update(value / this.factor),
         };
         delete result.factor;
         return result;

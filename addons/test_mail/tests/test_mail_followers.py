@@ -2,6 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo.addons.test_mail.tests.common import TestMailCommon
+from odoo.exceptions import AccessError
 from odoo.tests import tagged
 from odoo.tests import users
 
@@ -142,6 +143,65 @@ class BaseFollowersTest(TestMailCommon):
         document._message_subscribe(partner_ids=(self.partner_portal | customer).ids)
         self.assertEqual(document.message_partner_ids, self.partner_portal, 'No active test: customer not visible')
         self.assertEqual(document.message_follower_ids.partner_id, self.partner_portal | customer)
+
+    @users('employee')
+    def test_followers_inverse_message_partner(self):
+        test_record = self.test_record.with_env(self.env)
+        partner0, partner1, partner2, partner3 = self.env['res.partner'].create(
+            [{'email': f'partner.{n}@test.lan', 'name': f'partner{n}'} for n in range(4)]
+        )
+        self.assertFalse(test_record.message_follower_ids)
+        self.assertFalse(test_record.message_partner_ids)
+
+        # fillup with API
+        test_record.message_subscribe(partner_ids=partner3.ids)
+        self.assertEqual(test_record.message_follower_ids.partner_id, partner3)
+        # set empty
+        test_record.message_partner_ids = None
+        self.assertFalse(test_record.message_follower_ids.partner_id)
+        # set 1
+        test_record.message_partner_ids = partner0
+        self.assertEqual(test_record.message_follower_ids.partner_id, partner0)
+        # set multiple when non-empty
+        test_record.message_partner_ids = partner1 + partner2
+        self.assertEqual(test_record.message_follower_ids.partner_id, partner1 + partner2)
+        # remove 1
+        test_record.message_partner_ids -= partner1
+        self.assertEqual(test_record.message_follower_ids.partner_id, partner2)
+        # add multiple with one already set
+        test_record.message_partner_ids += partner1 + partner2
+        self.assertEqual(test_record.message_follower_ids.partner_id, partner1 + partner2)
+        # remove outside of existing
+        test_record.message_partner_ids -= partner3
+        self.assertEqual(test_record.message_follower_ids.partner_id, partner1 + partner2)
+        # reset
+        test_record.message_partner_ids = False
+        self.assertFalse(test_record.message_follower_ids.partner_id)
+
+        # test with inactive and commands
+        partner0.write({'active': False})
+        test_record.write({'message_partner_ids': [(4, partner0.id), (4, partner1.id)]})
+        self.assertEqual(test_record.message_follower_ids.partner_id, partner1)
+
+    def test_followers_inverse_message_partner_access_rights(self):
+        """ Make sure we're not bypassing security checks by setting a partner
+        instead of a follower """
+        test_record = self.test_record.with_user(self.user_portal)
+        partner0 = self.env['res.partner'].create({
+            'email': 'partner1@test.lan',
+            'name': 'partner1',
+        })
+        _name = test_record.name  # check portal user can read
+
+        # set empty
+        with self.assertRaises(AccessError):
+            test_record.message_partner_ids = None
+        # set 1
+        with self.assertRaises(AccessError):
+            test_record.message_partner_ids = partner0
+        # remove 1
+        with self.assertRaises(AccessError):
+            test_record.message_partner_ids -= partner0
 
     @users('employee')
     def test_followers_private_address(self):

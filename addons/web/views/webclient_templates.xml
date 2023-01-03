@@ -3,7 +3,10 @@
 
     <!-- Call this template instead of "web.assets_tests" to have the proper conditional check -->
     <template id="conditional_assets_tests" name="Tests Assets Bundle">
-        <t t-call-assets="web.assets_tests" t-if="'tests' in debug or test_mode_enabled" defer_load="True" />
+        <t t-if="'tests' in debug or test_mode_enabled">
+            <!-- To allow all tests assets and tours to be in the same bundle, the assets_tests bundle ignores missing dependencies -->
+            <t t-call-assets="web.__assets_tests_call__" defer_load="True" />
+        </t>
     </template>
 
     <template id="web.layout" name="Web layout">&lt;!DOCTYPE html&gt;
@@ -33,7 +36,6 @@
       </xpath>
       <xpath expr="//head/link[last()]" position="after">
         <link rel="preload" href="/web/static/src/libs/fontawesome/fonts/fontawesome-webfont.woff2?v=4.7.0" as="font" crossorigin=""/>
-        <t t-call-assets="web.assets_common" t-js="false"/>
         <t t-call-assets="web.assets_frontend" t-js="false"/>
       </xpath>
       <xpath expr="//head/script[@id='web.layout.odooscript']" position="after">
@@ -44,10 +46,8 @@
                 document.cookie = `tz=${userTZ}; path=/`;
             }
         </script>
-        <t t-call-assets="web.assets_common_minimal" t-css="false" defer_load="True"/>
         <t t-call-assets="web.assets_frontend_minimal" t-css="false" defer_load="True"/>
         <t t-call="web.conditional_assets_tests"/>
-        <t t-call-assets="web.assets_common_lazy" t-css="false" lazy_load="True"/>
         <t t-call-assets="web.assets_frontend_lazy" t-css="false" lazy_load="True"/>
       </xpath>
         <xpath expr="//t[@t-out='0']" position="replace">
@@ -85,8 +85,9 @@
                 t-attf-href="http://www.odoo.com?utm_source=db&amp;utm_medium=#{_utm_medium}"
                 class="badge text-bg-light">
                 <img alt="Odoo"
-                        src="/web/static/img/odoo_logo_tiny.png"
-                        style="height: 1em; vertical-align: baseline;"/>
+                    src="/web/static/img/odoo_logo_tiny.png"
+                    width="62" height="20"
+                    style="width: auto; height: 1em; vertical-align: baseline;"/>
             </a>
         </t>
         <t t-set="final_message">Powered by %s%s</t>
@@ -132,7 +133,7 @@
             <form class="oe_login_form" role="form" t-attf-action="/web/login" method="post" onsubmit="this.action = '/web/login' + location.hash">
                 <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
 
-                <div class="form-group field-db" t-if="databases and len(databases) &gt; 1">
+                <div class="mb-3" t-if="databases and len(databases) &gt; 1">
                     <label for="db" class="col-form-label">Database</label>
                     <div t-attf-class="input-group {{'input-group-sm' if form_small else ''}}">
                         <input type="text" name="db" t-att-value="request.db" id="db" t-attf-class="form-control #{'form-control-sm' if form_small else ''}" required="required" readonly="readonly"/>
@@ -145,7 +146,7 @@
                     <input type="text" placeholder="Email" name="login" t-att-value="login" id="login" t-attf-class="form-control #{'form-control-sm' if form_small else ''}" required="required" autofocus="autofocus" autocapitalize="off"/>
                 </div>
 
-                <div class="mb-3 form-group">
+                <div class="mb-3">
                     <label for="password" class="form-label">Password</label>
                     <input type="password" placeholder="Password" name="password" id="password" t-attf-class="form-control #{'form-control-sm' if form_small else ''}" required="required" autocomplete="current-password" t-att-autofocus="'autofocus' if login else None" maxlength="4096"/>
                 </div>
@@ -293,11 +294,25 @@
     <template id="web.webclient_bootstrap">
         <t t-call="web.layout">
             <t t-set="head_web">
+                <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no"/>
+                <!-- Chrome, Firefox OS and Opera -->
+                <meta name="theme-color" content="#875A7B"/>
+                <link rel="icon" sizes="192x192" href="/web/static/img/mobile-icons/android-192x192.png"/>
+
+                <!-- iOS Safari -->
+                <meta name="apple-mobile-web-app-capable" content="yes"/>
+                <meta name="apple-mobile-web-app-status-bar-style" content="black"/>
+                <link rel="apple-touch-icon" href="/web/static/img/mobile-icons/apple-152x152.png"/>
+
+                <!-- Windows Phone -->
+                <meta name="msapplication-navbutton-color" content="#875A7B"/>
+                <meta name="msapplication-TileColor" content="#875A7B"/>
+                <meta name="msapplication-TileImage" content="/web/static/img/mobile-icons/windows-144x144.png"/>
+
                 <script type="text/javascript">
                     odoo.__session_info__ = <t t-out="json.dumps(session_info)"/>;
                     odoo.reloadMenus = () => fetch(`/web/webclient/load_menus/${odoo.__session_info__.cache_hashes.load_menus}`).then(res => res.json());
                     odoo.loadMenusPromise = odoo.reloadMenus();
-                    odoo.loadTemplatesPromise = fetch(`/web/webclient/qweb/${odoo.__session_info__.cache_hashes.qweb}?bundle=web.assets_qweb`).then(doc => doc.text());
                     // Block to avoid leaking variables in the script scope
                     {
                         const { user_context,  cache_hashes } = odoo.__session_info__;
@@ -306,8 +321,14 @@
                         fetch(`/web/webclient/translations/${cache_hashes.translations}?lang=${user_context.lang}`);
                     }
                 </script>
-                <t t-call-assets="web.assets_common" t-js="false"/>
-                <t t-call-assets="web.assets_backend" t-js="false"/>
+                <t t-if="request.httprequest.cookies.get('color_scheme') == 'dark'">
+                    <t t-call-assets="web.dark_mode_assets_common" t-js="false"/>
+                    <t t-call-assets="web.dark_mode_assets_backend" t-js="false"/>
+                </t>
+                <t t-else="">
+                    <t t-call-assets="web.assets_common" t-js="false"/>
+                    <t t-call-assets="web.assets_backend" t-js="false"/>
+                </t>
                 <t t-call-assets="web.assets_common" t-css="false"/>
                 <t t-call-assets="web.assets_backend" t-css="false"/>
                 <t t-call-assets="web.assets_backend_prod_only" t-css="false"/>

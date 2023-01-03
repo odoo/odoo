@@ -3,7 +3,7 @@ odoo.define("website.tour.snippet_version", function (require) {
 
 const wTourUtils = require('website.tour_utils');
 
-wTourUtils.registerEditionTour("snippet_version", {
+wTourUtils.registerWebsitePreviewTour("snippet_version", {
     edition: true,
     url: "/",
     test: true,

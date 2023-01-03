@@ -4,10 +4,9 @@
         <field name="name">hr.employee.view.search</field>
         <field name="model">hr.employee</field>
         <field name="inherit_id" ref="hr.view_employee_filter"/>
-        <field name="groups_id" eval="[(4, ref('hr.group_hr_manager'))]"/>
         <field name="arch" type="xml">
             <filter name="group_manager" position="after">
-                <filter name="group_hr_presence_state" string="Presence" domain="[]" context="{'group_by':'hr_presence_state_display'}"/>
+                <filter name="group_hr_presence_state" string="Presence" domain="[]" context="{'group_by':'hr_presence_state_display'}" groups="hr.group_hr_manager"/>
             </filter>
         </field>
     </record>

@@ -2,7 +2,28 @@
 
 import { useBus } from "@web/core/utils/hooks";
 
-const { Component, onMounted, onWillStart, useRef, useState } = owl;
+import { Component, onMounted, onWillUpdateProps, onWillStart, useRef, useState } from "@odoo/owl";
+
+//-------------------------------------------------------------------------
+// Helpers
+//-------------------------------------------------------------------------
+
+const isFilter = (s) => s.type === "filter";
+const isActiveCategory = (s) => s.type === "category" && s.activeValueId;
+
+/**
+ * @param {Map<string | false, Object>} values
+ * @returns {Object[]}
+ */
+const nameOfCheckedValues = (values) => {
+    const names = [];
+    for (const [, value] of values) {
+        if (value.checked) {
+            names.push(value.display_name);
+        }
+    }
+    return names;
+};
 
 /**
  * Search panel
@@ -18,6 +39,7 @@ export class SearchPanel extends Component {
         this.state = useState({
             active: {},
             expanded: {},
+            showMobileSearch: false,
         });
         this.root = useRef("root");
         this.scrollTop = 0;
@@ -34,6 +56,11 @@ export class SearchPanel extends Component {
         onWillStart(async () => {
             await this.env.searchModel.sectionsPromise;
             this.expandDefaultValue();
+            this.updateActiveValues();
+        });
+
+        onWillUpdateProps(async () => {
+            await this.env.searchModel.sectionsPromise;
             this.updateActiveValues();
         });
 
@@ -106,6 +133,52 @@ export class SearchPanel extends Component {
     getAncestorValueIds(category, categoryValueId) {
         const { parentId } = category.values.get(categoryValueId);
         return parentId ? [...this.getAncestorValueIds(category, parentId), parentId] : [];
+    }
+
+    /**
+     * Returns a formatted version of the active categories to populate
+     * the selection banner of the control panel summary.
+     * @returns {Object[]}
+     */
+    getCategorySelection() {
+        const activeCategories = this.env.searchModel.getSections(isActiveCategory);
+        const selection = [];
+        for (const category of activeCategories) {
+            const parentIds = this.getAncestorValueIds(category, category.activeValueId);
+            const orderedCategoryNames = [...parentIds, category.activeValueId].map(
+                (valueId) => category.values.get(valueId).display_name
+            );
+            selection.push({
+                values: orderedCategoryNames,
+                icon: category.icon,
+                color: category.color,
+            });
+        }
+        return selection;
+    }
+
+    /**
+     * Returns a formatted version of the active filters to populate
+     * the selection banner of the control panel summary.
+     * @returns {Object[]}
+     */
+    getFilterSelection() {
+        const filters = this.env.searchModel.getSections(isFilter);
+        const selection = [];
+        for (const { groups, values, icon, color } of filters) {
+            let filterValues;
+            if (groups) {
+                filterValues = Object.keys(groups)
+                    .map((groupId) => nameOfCheckedValues(groups[groupId].values))
+                    .flat();
+            } else if (values) {
+                filterValues = nameOfCheckedValues(values);
+            }
+            if (filterValues.length) {
+                selection.push({ values: filterValues, icon, color });
+            }
+        }
+        return selection;
     }
 
     /**

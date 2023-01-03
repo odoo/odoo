@@ -17,7 +17,7 @@ from odoo import http
 from odoo.exceptions import UserError
 from odoo.http import content_disposition, request
 from odoo.tools import lazy_property, osutil, pycompat
-from odoo.tools.misc import xlsxwriter, get_lang
+from odoo.tools.misc import xlsxwriter
 from odoo.tools.translate import _
 
 
@@ -183,11 +183,10 @@ class ExportXlsxWriter:
         self.datetime_style = self.workbook.add_format({'text_wrap': True, 'num_format': 'yyyy-mm-dd hh:mm:ss'})
         self.worksheet = self.workbook.add_worksheet()
         self.value = False
-        decimal_separator = get_lang(request.env).decimal_point
-        self.float_format = f'0{decimal_separator}00'
+        self.float_format = '#,##0.00'
         decimal_places = [res['decimal_places'] for res in
                           request.env['res.currency'].search_read([], ['decimal_places'])]
-        self.monetary_format = f'0{decimal_separator}{max(decimal_places or [2]) * "0"}'
+        self.monetary_format = f'#,##0.{max(decimal_places or [2]) * "0"}'
 
         if row_count > self.worksheet.xls_rowmax:
             raise UserError(_('There are too many rows (%s rows, limit: %s) to export as Excel 2007-2013 (.xlsx) format. Consider splitting the export.') % (row_count, self.worksheet.xls_rowmax))

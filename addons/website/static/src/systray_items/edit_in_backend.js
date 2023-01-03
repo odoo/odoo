@@ -1,32 +1,24 @@
 /** @odoo-module **/
 
 import { registry } from "@web/core/registry";
-import { useService } from "@web/core/utils/hooks";
-import { Dropdown } from "@web/core/dropdown/dropdown";
-import { DropdownItem } from "@web/core/dropdown/dropdown_item";
+import { useService, useBus } from "@web/core/utils/hooks";
 
-const { Component, onMounted } = owl;
+const { Component, onWillStart, useState } = owl;
+
+const websiteSystrayRegistry = registry.category('website_systray');
 
 export class EditInBackendSystray extends Component {
     setup() {
         this.websiteService = useService('website');
         this.actionService = useService('action');
+        this.state = useState({mainObjectName: ''});
 
-        onMounted(() => {
-            this.websiteService.editedObjectPath = null;
-        });
-    }
-
-    getElements() {
-        return [{
-            title: this.env._t("Settings"),
-            callback: () => this.editInBackend(),
-        }];
+        onWillStart(this._updateMainObjectName);
+        useBus(websiteSystrayRegistry, 'CONTENT-UPDATED', this._updateMainObjectName);
     }
 
     editInBackend() {
         const { metadata: { mainObject } } = this.websiteService.currentWebsite;
-        this.websiteService.editedObjectPath = this.websiteService.contentWindow.location.pathname;
         this.actionService.doAction({
             res_model: mainObject.model,
             res_id: mainObject.id,
@@ -35,16 +27,16 @@ export class EditInBackendSystray extends Component {
             view_mode: "form",
         });
     }
+
+    async _updateMainObjectName() {
+        this.state.mainObjectName = await this.websiteService.getUserModelName();
+    }
 }
 EditInBackendSystray.template = "website.EditInBackendSystray";
-EditInBackendSystray.components = {
-    Dropdown,
-    DropdownItem
-};
 
 export const systrayItem = {
     Component: EditInBackendSystray,
     isDisplayed: env => env.services.website.currentWebsite && env.services.website.currentWebsite.metadata.editableInBackend,
 };
 
-registry.category("website_systray").add("EditInBackend", systrayItem, { sequence: 7 });
+registry.category("website_systray").add("EditInBackend", systrayItem, { sequence: 9 });

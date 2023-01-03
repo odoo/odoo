@@ -8,7 +8,7 @@ import { capitalize } from "@web/core/utils/strings";
 import { getVisibleElements } from "@web/core/utils/ui";
 import { DefaultCommandItem } from "./command_palette";
 
-const { Component } = owl;
+import { Component } from "@odoo/owl";
 
 const commandSetupRegistry = registry.category("command_setup");
 commandSetupRegistry.add("default", {
@@ -38,12 +38,15 @@ const commandCategoryRegistry = registry.category("command_categories");
 const commandProviderRegistry = registry.category("command_provider");
 commandProviderRegistry.add("command", {
     provide: (env, options = {}) => {
-        const commands = env.services.command.getCommands(options.activeElement).map((cmd) => {
-            cmd.category = commandCategoryRegistry.contains(cmd.category)
-                ? cmd.category
-                : "default";
-            return cmd;
-        });
+        const commands = env.services.command
+            .getCommands(options.activeElement)
+            .map((cmd) => {
+                cmd.category = commandCategoryRegistry.contains(cmd.category)
+                    ? cmd.category
+                    : "default";
+                return cmd;
+            })
+            .filter((command) => command.isAvailable === undefined || command.isAvailable());
 
         return commands.map((command) => ({
             Component: command.hotkey ? HotkeyCommandItem : DefaultCommandItem,

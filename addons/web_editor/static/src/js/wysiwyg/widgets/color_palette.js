@@ -1,20 +1,15 @@
 odoo.define('web_editor.ColorPalette', function (require) {
 'use strict';
 
-const ajax = require('web.ajax');
-const core = require('web.core');
 const session = require('web.session');
 const {ColorpickerWidget} = require('web.Colorpicker');
 const Widget = require('web.Widget');
 const customColors = require('web_editor.custom_colors');
 const weUtils = require('web_editor.utils');
 
-const qweb = core.qweb;
-
 let colorpickerArch;
 
 const ColorPaletteWidget = Widget.extend({
-    // ! for xmlDependencies, see loadDependencies function
     template: 'web_editor.snippet.option.colorpicker',
     events: {
         'click .o_we_color_btn': '_onColorButtonClick',
@@ -302,15 +297,6 @@ const ColorPaletteWidget = Widget.extend({
                 noTransparency: !!this.options.noTransparency,
             });
             await this.colorPicker.appendTo(this.sections['custom-colors']);
-        }
-        // When the color palette is created outside its editing
-        // element, the theme preview might not reflect the styles
-        // of the editable. The parent widgets will update the styles
-        // accordingly.
-        if (!this.options.excluded.includes('theme')) {
-            this.trigger_up('update_color_previews', {
-                ccPreviewEls: this.el.querySelectorAll('.o_we_cc_preview_wrapper'),
-            });
         }
         return res;
     },
@@ -1008,8 +994,6 @@ const ColorPaletteWidget = Widget.extend({
  */
 let colorpickerTemplateProm;
 ColorPaletteWidget.loadDependencies = async function (rpcCapableObj) {
-    const proms = [ajax.loadXML('/web_editor/static/src/xml/snippets.xml', qweb)];
-
     // Public user using the editor may have a colorpalette but with
     // the default wysiwyg ones.
     if (!session.is_website_user) {
@@ -1021,10 +1005,8 @@ ColorPaletteWidget.loadDependencies = async function (rpcCapableObj) {
                 args: ['web_editor.colorpicker', {}],
             }).then(arch => colorpickerArch = arch);
         }
-        proms.push(colorpickerTemplateProm);
+        return colorpickerTemplateProm;
     }
-
-    return Promise.all(proms);
 };
 
 return {

@@ -129,7 +129,7 @@ class TestDeliveryCost(common.TransactionCase):
                 'name': 'On Site Assistance',
                 'product_id': self.product_2.id,
                 'product_uom_qty': 30,
-                'product_uom': self.product_uom_hour.id,
+                'product_uom': self.product_uom_unit.id,
                 'price_unit': 38.25,
             })],
         })
@@ -272,6 +272,8 @@ class TestDeliveryCost(common.TransactionCase):
         self.normal_delivery.product_id.taxes_id = tax_price_include
 
         # Create sales order
+        # Required to see `pricelist_id` in the view
+        self.env.user.groups_id += self.env.ref('product.group_product_pricelist')
         order_form = Form(self.env['sale.order'].with_context(tracking_disable=True))
         order_form.partner_id = self.partner_18
         order_form.pricelist_id = self.pricelist

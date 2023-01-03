@@ -4,6 +4,7 @@
 import odoo
 from odoo import api, fields, models, tools, _, Command
 from odoo.exceptions import MissingError, ValidationError, AccessError
+from odoo.tools import frozendict
 from odoo.tools.safe_eval import safe_eval, test_python_expr
 from odoo.tools.float_utils import float_compare
 from odoo.http import request
@@ -16,6 +17,32 @@ import logging
 from pytz import timezone
 
 _logger = logging.getLogger(__name__)
+_server_action_logger = _logger.getChild("server_action_safe_eval")
+
+
+class LoggerProxy:
+    """ Proxy of the `_logger` element in order to be used in server actions.
+    We purposefully restrict its method as it will be executed in `safe_eval`.
+    """
+    @staticmethod
+    def log(level, message, *args, stack_info=False, exc_info=False):
+        _server_action_logger.log(level, message, *args, stack_info=stack_info, exc_info=exc_info)
+
+    @staticmethod
+    def info(message, *args, stack_info=False, exc_info=False):
+        _server_action_logger.info(message, *args, stack_info=stack_info, exc_info=exc_info)
+
+    @staticmethod
+    def warning(message, *args, stack_info=False, exc_info=False):
+        _server_action_logger.warning(message, *args, stack_info=stack_info, exc_info=exc_info)
+
+    @staticmethod
+    def error(message, *args, stack_info=False, exc_info=False):
+        _server_action_logger.error(message, *args, stack_info=stack_info, exc_info=exc_info)
+
+    @staticmethod
+    def exception(message, *args, stack_info=False, exc_info=True):
+        _server_action_logger.exception(message, *args, stack_info=stack_info, exc_info=exc_info)
 
 
 class IrActions(models.Model):
@@ -24,7 +51,7 @@ class IrActions(models.Model):
     _table = 'ir_actions'
     _order = 'name'
 
-    name = fields.Char(required=True)
+    name = fields.Char(string='Action Name', required=True, translate=True)
     type = fields.Char(string='Action Type', required=True)
     xml_id = fields.Char(compute='_compute_xml_id', string="External ID")
     help = fields.Html(string='Action Description',
@@ -87,24 +114,40 @@ class IrActions(models.Model):
 
     @api.model
     def get_bindings(self, model_name):
-        return self._get_bindings(model_name, bool(request) and request.session.debug)
-
-    @tools.ormcache('frozenset(self.env.user.groups_id.ids)', 'model_name', 'debug')
-    def _get_bindings(self, model_name, debug=False):
         """ Retrieve the list of actions bound to the given model.
 
            :return: a dict mapping binding types to a list of dict describing
                     actions, where the latter is given by calling the method
                     ``read`` on the action record.
         """
+        result = {}
+        for action_type, all_actions in self._get_bindings(model_name).items():
+            actions = []
+            for action in all_actions:
+                action = dict(action)
+                groups = action.pop('groups_id', None)
+                if groups and not self.user_has_groups(groups):
+                    # the user may not perform this action
+                    continue
+                res_model = action.pop('res_model', None)
+                if res_model and not self.env['ir.model.access'].check(
+                    res_model,
+                    mode='read',
+                    raise_exception=False
+                ):
+                    # the user won't be able to read records
+                    continue
+                actions.append(action)
+            if actions:
+                result[action_type] = actions
+        return result
+
+    @tools.ormcache('model_name', 'self.env.lang')
+    def _get_bindings(self, model_name):
         cr = self.env.cr
-        IrModelAccess = self.env['ir.model.access']
 
         # discard unauthorized actions, and read action definitions
         result = defaultdict(list)
-        user_groups = self.env.user.groups_id
-        if not debug:
-            user_groups -= self.env.ref('base.group_no_one')
 
         self.env.flush_all()
         cr.execute("""
@@ -117,25 +160,22 @@ class IrActions(models.Model):
         for action_id, action_model, binding_type in cr.fetchall():
             try:
                 action = self.env[action_model].sudo().browse(action_id)
-                action_groups = getattr(action, 'groups_id', ())
-                action_model = getattr(action, 'res_model', False)
-                if action_groups and not action_groups & user_groups:
-                    # the user may not perform this action
-                    continue
-                if action_model and not IrModelAccess.check(action_model, mode='read', raise_exception=False):
-                    # the user won't be able to read records
-                    continue
                 fields = ['name', 'binding_view_types']
-                if 'sequence' in action._fields:
-                    fields.append('sequence')
-                result[binding_type].append(action.read(fields)[0])
-            except (AccessError, MissingError):
+                for field in ('groups_id', 'res_model', 'sequence'):
+                    if field in action._fields:
+                        fields.append(field)
+                action = action.read(fields)[0]
+                if action.get('groups_id'):
+                    groups = self.env['res.groups'].browse(action['groups_id'])
+                    action['groups_id'] = ','.join(ext_id for ext_id in groups._ensure_xml_id().values())
+                result[binding_type].append(frozendict(action))
+            except (MissingError):
                 continue
 
         # sort actions by their sequence if sequence available
         if result.get('action'):
-            result['action'] = sorted(result['action'], key=lambda vals: vals.get('sequence', 0))
-        return result
+            result['action'] = tuple(sorted(result['action'], key=lambda vals: vals.get('sequence', 0)))
+        return frozendict(result)
 
     @api.model
     def _for_xml_id(self, full_xml_id):
@@ -226,7 +266,6 @@ class IrActionsActWindow(models.Model):
             fvg = self.env[act.res_model].get_view(act.search_view_id.id, 'search')
             act.search_view = str(fvg)
 
-    name = fields.Char(string='Action Name', translate=True)
     type = fields.Char(default="ir.actions.act_window")
     view_id = fields.Many2one('ir.ui.view', string='View Ref.', ondelete='set null')
     domain = fields.Char(string='Domain Value',
@@ -358,7 +397,6 @@ class IrActionsActUrl(models.Model):
     _inherit = 'ir.actions.actions'
     _order = 'name'
 
-    name = fields.Char(string='Action Name', translate=True)
     type = fields.Char(default='ir.actions.act_url')
     url = fields.Text(string='Action URL', required=True)
     target = fields.Selection([('new', 'New Window'), ('self', 'This Window')],
@@ -396,18 +434,18 @@ class IrActionsServer(models.Model):
     _order = 'sequence,name'
 
     DEFAULT_PYTHON_CODE = """# Available variables:
-#  - env: Odoo Environment on which the action is triggered
-#  - model: Odoo Model of the record on which the action is triggered; is a void recordset
+#  - env: environment on which the action is triggered
+#  - model: model of the record on which the action is triggered; is a void recordset
 #  - record: record on which the action is triggered; may be void
 #  - records: recordset of all records on which the action is triggered in multi-mode; may be void
 #  - time, datetime, dateutil, timezone: useful Python libraries
-#  - float_compare: Odoo function to compare floats based on specific precisions
+#  - float_compare: utility function to compare floats based on specific precision
 #  - log: log(message, level='info'): logging function to record debug information in ir.logging table
-#  - UserError: Warning Exception to use with raise
-#  - Command: x2Many commands namespace
+#  - _logger: _logger.info(message): logger to emit messages in server logs
+#  - UserError: exception class for raising user-facing warning messages
+#  - Command: x2many commands namespace
 # To return an action, assign: action = {...}\n\n\n\n"""
 
-    name = fields.Char(string='Action Name', translate=True)
     type = fields.Char(default='ir.actions.server')
     usage = fields.Selection([
         ('ir_actions_server', 'Server Action'),
@@ -592,13 +630,13 @@ class IrActionsServer(models.Model):
             'env': self.env,
             'model': model,
             # Exceptions
-            'Warning': odoo.exceptions.Warning,
             'UserError': odoo.exceptions.UserError,
             # record
             'record': record,
             'records': records,
             # helpers
             'log': log,
+            '_logger': LoggerProxy,
         })
         return eval_context
 
@@ -828,7 +866,6 @@ class IrActionsActClient(models.Model):
     _table = 'ir_act_client'
     _order = 'name'
 
-    name = fields.Char(string='Action Name', translate=True)
     type = fields.Char(default='ir.actions.client')
 
     tag = fields.Char(string='Client action tag', required=True,

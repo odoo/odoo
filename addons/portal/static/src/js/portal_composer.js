@@ -16,7 +16,6 @@ var _t = core._t;
  */
 var PortalComposer = publicWidget.Widget.extend({
     template: 'portal.Composer',
-    xmlDependencies: ['/portal/static/src/xml/portal_chatter.xml'],
     events: {
         'change .o_portal_chatter_file_input': '_onFileInputChange',
         'click .o_portal_chatter_attachment_btn': '_onAttachmentButtonClick',

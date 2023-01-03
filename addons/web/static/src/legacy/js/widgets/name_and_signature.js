@@ -14,7 +14,6 @@ var Widget = require('web.Widget');
  */
 var NameAndSignature = Widget.extend({
     template: 'web.sign_name_and_signature',
-    xmlDependencies: ['/web/static/src/legacy/xml/name_and_signature.xml'],
     events: {
         // name
         'input .o_web_sign_name_input': '_onInputSignName',
@@ -378,7 +377,7 @@ var NameAndSignature = Widget.extend({
      * @returns {string} image = mimetype + image data
      */
     _getSVGText: function (font, text, width, height) {
-        var $svg = $(core.qweb.render('web.sign_svg_text', {
+        var $svg = $(core.qweb.render('web.legacy.sign_svg_text', {
             width: width,
             height: height,
             font: font,

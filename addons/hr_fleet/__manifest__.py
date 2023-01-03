@@ -19,10 +19,7 @@
     ],
     'assets': {
         'web.assets_backend': [
-            'hr_fleet/static/src/js/attachment_kanban.js',
-        ],
-        'web.assets_qweb': [
-            'hr_fleet/static/src/xml/attachment_kanban.xml',
+            'hr_fleet/static/src/views/**/*',
         ],
     },
     'auto_install': True,

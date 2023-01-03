@@ -28,10 +28,16 @@ class TestReInvoice(TestCommonSaleTimesheet):
         cls.company_data['product_order_no'].write(service_values)
 
         # create AA, SO and invoices
+        cls.analytic_plan = cls.env['account.analytic.plan'].create({
+            'name': 'Plan',
+            'company_id': cls.company_data['company'].id,
+        })
+
         cls.analytic_account = cls.env['account.analytic.account'].create({
             'name': 'Test AA',
             'code': 'TESTSALE_TIMESHEET_REINVOICE',
             'company_id': cls.company_data['company'].id,
+            'plan_id': cls.analytic_plan.id,
             'partner_id': cls.partner_a.id
         })
 
@@ -87,11 +93,11 @@ class TestReInvoice(TestCommonSaleTimesheet):
         with move_form.invoice_line_ids.new() as line_form:
             line_form.product_id = self.company_data['product_order_cost']
             line_form.quantity = 3.0
-            line_form.analytic_account_id = self.analytic_account
+            line_form.analytic_distribution = {self.analytic_account.id: 100}
         with move_form.invoice_line_ids.new() as line_form:
             line_form.product_id = self.company_data['product_delivery_cost']
             line_form.quantity = 3.0
-            line_form.analytic_account_id = self.analytic_account
+            line_form.analytic_distribution = {self.analytic_account.id: 100}
         invoice_a = move_form.save()
         invoice_a.action_post()
 
@@ -122,11 +128,11 @@ class TestReInvoice(TestCommonSaleTimesheet):
         with move_form.invoice_line_ids.new() as line_form:
             line_form.product_id = self.company_data['product_order_cost']
             line_form.quantity = 2.0
-            line_form.analytic_account_id = self.analytic_account
+            line_form.analytic_distribution = {self.analytic_account.id: 100}
         with move_form.invoice_line_ids.new() as line_form:
             line_form.product_id = self.company_data['product_delivery_cost']
             line_form.quantity = 2.0
-            line_form.analytic_account_id = self.analytic_account
+            line_form.analytic_distribution = {self.analytic_account.id: 100}
         invoice_b = move_form.save()
         invoice_b.action_post()
 
@@ -179,11 +185,11 @@ class TestReInvoice(TestCommonSaleTimesheet):
         with move_form.invoice_line_ids.new() as line_form:
             line_form.product_id = self.company_data['product_delivery_sales_price']
             line_form.quantity = 3.0
-            line_form.analytic_account_id = self.analytic_account
+            line_form.analytic_distribution = {self.analytic_account.id: 100}
         with move_form.invoice_line_ids.new() as line_form:
             line_form.product_id = self.company_data['product_order_sales_price']
             line_form.quantity = 3.0
-            line_form.analytic_account_id = self.analytic_account
+            line_form.analytic_distribution = {self.analytic_account.id: 100}
         invoice_a = move_form.save()
         invoice_a.action_post()
 
@@ -214,11 +220,11 @@ class TestReInvoice(TestCommonSaleTimesheet):
         with move_form.invoice_line_ids.new() as line_form:
             line_form.product_id = self.company_data['product_delivery_sales_price']
             line_form.quantity = 2.0
-            line_form.analytic_account_id = self.analytic_account
+            line_form.analytic_distribution = {self.analytic_account.id: 100}
         with move_form.invoice_line_ids.new() as line_form:
             line_form.product_id = self.company_data['product_order_sales_price']
             line_form.quantity = 2.0
-            line_form.analytic_account_id = self.analytic_account
+            line_form.analytic_distribution = {self.analytic_account.id: 100}
         invoice_b = move_form.save()
         invoice_b.action_post()
 
@@ -252,7 +258,7 @@ class TestReInvoice(TestCommonSaleTimesheet):
         with move_form.invoice_line_ids.new() as line_form:
             line_form.product_id = self.company_data['product_order_no']
             line_form.quantity = 3.0
-            line_form.analytic_account_id = self.analytic_account
+            line_form.analytic_distribution = {self.analytic_account.id: 100}
         invoice_a = move_form.save()
         invoice_a.action_post()
 

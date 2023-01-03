@@ -17,7 +17,7 @@
     <!-- Generic questions -->
     <xpath expr="//*[hasclass('modal-footer')]" position="before">
         <t t-if="event.general_question_ids">
-            <div class="modal-body bg-light border-bottom o_wevent_registration_question_global">
+            <div class="modal-body border-bottom o_wevent_registration_question_global">
                 <div t-foreach="event.general_question_ids" t-as="question" class="row" t-att-name="question.title">
                     <div class="col-lg-6 mt-2">
                         <t t-call="website_event_questions.registration_event_question">

@@ -1,7 +1,7 @@
 /** @odoo-module */
 import { useService } from '@web/core/utils/hooks';
 
-const { Component, useState } = owl;
+import { Component, useState } from "@odoo/owl";
 
 export class ProgressBar extends Component {
     get progress() {
@@ -9,6 +9,14 @@ export class ProgressBar extends Component {
     }
 }
 ProgressBar.template = 'web_editor.ProgressBar';
+ProgressBar.props = {
+    progress: Number,
+    hasError: Boolean,
+    uploaded: Boolean,
+    name: String,
+    size: String,
+    errorMessage: String,
+};
 
 export class UploadProgressToast extends Component {
     setup() {
@@ -20,4 +28,7 @@ export class UploadProgressToast extends Component {
 UploadProgressToast.template = 'web_editor.UploadProgressToast';
 UploadProgressToast.components = {
     ProgressBar
+};
+UploadProgressToast.props = {
+    close: Function,
 };

@@ -1,7 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-    <menuitem id="account_reports_uy_statements_menu" name="Uruguay" parent="account.menu_finance_reports" sequence="0" groups="account.group_account_readonly"/>
-
     <data>
         <record id="uy_chart_template" model="account.chart.template">
             <field name="name">Plan de Cuentas Uruguay - Template</field>
@@ -12,6 +10,5 @@
             <field name="currency_id" ref="base.UYU"/>
             <field name="country_id" ref="base.uy"/>
         </record>
-
     </data>
 </odoo>

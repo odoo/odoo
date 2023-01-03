@@ -4,13 +4,13 @@
         <record id="br_partner_tax_fields_form" model="ir.ui.view">
             <field name="name">res.partner.form</field>
             <field name="model">res.partner</field>
-            <field name="inherit_id" ref="base.view_partner_form"/>
+            <field name="inherit_id" ref="account.view_partner_property_form"/>
             <field name="arch" type="xml">
                 <xpath expr="//field[@name='vat']" position="after">
-                    <field name="l10n_br_cpf_code" attrs="{'invisible': [('country_id', '!=', %(base.br)d)]}"/>
-                    <field name="l10n_br_ie_code" attrs="{'invisible': [('country_id', '!=', %(base.br)d)]}"/>
-                    <field name="l10n_br_im_code" attrs="{'invisible': [('country_id', '!=', %(base.br)d)]}"/>
-                    <field name="l10n_br_isuf_code" attrs="{'invisible': [('country_id', '!=', %(base.br)d)]}"/>
+                    <field name="l10n_br_cpf_code" attrs="{'invisible': [('fiscal_country_codes', 'not ilike', 'BR')]}"/>
+                    <field name="l10n_br_ie_code" attrs="{'invisible': [('fiscal_country_codes', 'not ilike', 'BR')]}"/>
+                    <field name="l10n_br_im_code" attrs="{'invisible': [('fiscal_country_codes', 'not ilike', 'BR')]}"/>
+                    <field name="l10n_br_isuf_code" attrs="{'invisible': [('fiscal_country_codes', 'not ilike', 'BR')]}"/>
                 </xpath>
             </field>
         </record>

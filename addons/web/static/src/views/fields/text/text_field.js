@@ -2,29 +2,74 @@
 
 import { registry } from "@web/core/registry";
 import { _lt } from "@web/core/l10n/translation";
+import { useSpellCheck } from "@web/core/utils/hooks";
 import { useInputField } from "../input_field_hook";
 import { standardFieldProps } from "../standard_field_props";
 import { TranslationButton } from "../translation_button";
+import { useDynamicPlaceholder } from "../dynamicplaceholder_hook";
+import { parseInteger } from "../parsers";
 
-const { Component, useEffect, useRef } = owl;
+import { Component, useEffect, onMounted, onWillUnmount, useRef } from "@odoo/owl";
 
 export class TextField extends Component {
     setup() {
+        if (this.props.dynamicPlaceholder) {
+            this.dynamicPlaceholder = useDynamicPlaceholder();
+        }
         this.textareaRef = useRef("textarea");
         useInputField({ getValue: () => this.props.value || "", refName: "textarea" });
+        useSpellCheck({ refName: "textarea" });
 
         useEffect(() => {
             if (!this.props.readonly) {
                 this.resize();
             }
         });
+        onMounted(this.onMounted);
+        onWillUnmount(this.onWillUnmount);
+    }
+    async onKeydownListener(ev) {
+        if (ev.key === this.dynamicPlaceholder.TRIGGER_KEY && ev.target === this.textareaRef.el) {
+            const baseModel = this.props.record.data.mailing_model_real;
+            if (baseModel) {
+                await this.dynamicPlaceholder.open(this.textareaRef.el, baseModel, {
+                    validateCallback: this.onDynamicPlaceholderValidate.bind(this),
+                    closeCallback: this.onDynamicPlaceholderClose.bind(this),
+                });
+            }
+        }
+    }
+    onMounted() {
+        if (this.props.dynamicPlaceholder) {
+            this.keydownListenerCallback = this.onKeydownListener.bind(this);
+            document.addEventListener("keydown", this.keydownListenerCallback);
+        }
+    }
+    onWillUnmount() {
+        if (this.props.dynamicPlaceholder) {
+            document.removeEventListener("keydown", this.keydownListenerCallback);
+        }
+    }
+    onDynamicPlaceholderValidate(chain, defaultValue) {
+        if (chain) {
+            const triggerKeyReplaceRegex = new RegExp(`${this.dynamicPlaceholder.TRIGGER_KEY}$`);
+            let dynamicPlaceholder = "{{object." + chain.join(".");
+            dynamicPlaceholder +=
+                defaultValue && defaultValue !== "" ? ` or '''${defaultValue}'''}}` : "}}";
+            this.props.update(
+                this.textareaRef.el.value.replace(triggerKeyReplaceRegex, "") + dynamicPlaceholder
+            );
+        }
+    }
+    onDynamicPlaceholderClose() {
+        this.textareaRef.el.focus();
     }
 
     get minimumHeight() {
         return 50;
     }
     get rowCount() {
-        return 2;
+        return this.props.rowCount;
     }
 
     resize() {
@@ -62,31 +107,46 @@ TextField.template = "web.TextField";
 TextField.components = {
     TranslationButton,
 };
+TextField.defaultProps = {
+    dynamicPlaceholder: false,
+    rowCount: 2,
+};
 TextField.props = {
     ...standardFieldProps,
     isTranslatable: { type: Boolean, optional: true },
     placeholder: { type: String, optional: true },
+    dynamicPlaceholder: { type: Boolean, optional: true },
+    rowCount: { type: Number, optional: true },
 };
 
 TextField.displayName = _lt("Multiline Text");
 TextField.supportedTypes = ["html", "text"];
 
 TextField.extractProps = ({ attrs, field }) => {
-    return {
+    const props = {
         isTranslatable: field.translate,
         placeholder: attrs.placeholder,
+        dynamicPlaceholder: attrs.options.dynamic_placeholder,
     };
+    if (attrs.rows) {
+        props.rowCount = parseInteger(attrs.rows);
+    }
+    return props;
 };
 
 registry.category("fields").add("text", TextField);
 
-class ListTextField extends TextField {
+export class ListTextField extends TextField {
     get minimumHeight() {
         return 0;
     }
     get rowCount() {
-        return 1;
+        return this.props.rowCount;
     }
 }
+ListTextField.defaultProps = {
+    ...TextField.defaultProps,
+    rowCount: 1,
+};
 
 registry.category("fields").add("list.text", ListTextField);

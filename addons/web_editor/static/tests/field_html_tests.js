@@ -11,9 +11,10 @@ var Wysiwyg = require('web_editor.wysiwyg');
 const { MediaDialogWrapper } = require('@web_editor/components/media_dialog/media_dialog');
 var LinkDialog = require('wysiwyg.widgets.LinkDialog');
 
-const { legacyExtraNextTick, patchWithCleanup } = require("@web/../tests/helpers/utils");
+const { getFixture, legacyExtraNextTick, patchWithCleanup } = require("@web/../tests/helpers/utils");
+const { makeView, setupViewRegistries } = require("@web/../tests/views/helpers");
 
-const { useEffect } = owl;
+const { useEffect } = require("@odoo/owl");
 
 var _t = core._t;
 
@@ -130,19 +131,6 @@ QUnit.module('web_editor', {}, function () {
                         body_arch: "<div class='field_body'>yep</div>",
                     }],
                 },
-                "ir.translation": {
-                    fields: {
-                        lang_code: {type: "char"},
-                        value: {type: "char"},
-                        res_id: {type: "integer"}
-                    },
-                    records: [{
-                        id: 99,
-                        res_id: 12,
-                        value: '',
-                        lang_code: 'en_US'
-                    }]
-                },
             });
 
             testUtils.mock.patch(ajax, {
@@ -164,6 +152,7 @@ QUnit.module('web_editor', {}, function () {
                     throw 'Wrong template';
                 },
             });
+            setupViewRegistries();
         },
         afterEach: function () {
             testUtils.mock.unpatch(ajax);
@@ -326,6 +315,7 @@ QUnit.module('web_editor', {}, function () {
 
             form.destroy();
         });
+
 
         QUnit.test('media dialog: image', async function (assert) {
             assert.expect(1);
@@ -825,6 +815,29 @@ QUnit.module('web_editor', {}, function () {
             form.destroy();
         });
 
+        QUnit.test("editor spellcheck is disabled on blur", async function (assert) {
+            const target = getFixture();
+
+            await makeView({
+                type: "form",
+                resModel: "note.note",
+                resId: 1,
+                serverData: { models: this.data },
+                arch: /* xml */ `<form><field name="body" widget="html" /></form>`,
+            });
+
+            const textarea = target.querySelector(".odoo-editor-editable");
+            textarea.focus();
+            assert.strictEqual(textarea.spellcheck, true, "spellcheck is enabled");
+            textarea.blur();
+            assert.strictEqual(
+                textarea.spellcheck,
+                false,
+                "spellcheck is disabled once the field has lost its focus"
+            );
+            textarea.focus();
+            assert.strictEqual(textarea.spellcheck, true, "spellcheck is re-enabled once the field is focused");
+        });
 
         QUnit.module('cssReadonly');
 
@@ -880,15 +893,18 @@ QUnit.module('web_editor', {}, function () {
                     '</form>',
                 res_id: 1,
                 mockRPC: function (route, args) {
-                    if (route === '/web/dataset/call_button' && args.method === 'translate_fields') {
-                        assert.deepEqual(args.args, ['note.note', 1, 'body'], "should call 'call_button' route");
-                        return Promise.resolve({
-                            domain: [],
-                            context: {search_default_name: 'partnes,foo'},
-                        });
+                    if (route === "/web/dataset/call_kw/note.note/get_field_translations") {
+                        assert.deepEqual(args.args, [[1],"body"], "should translate the body field of the record");
+                        return Promise.resolve([
+                            [{lang: "en_US", source: "first paragraph", value: "first paragraph"},
+                                {lang: "en_US", source: "second paragraph", value: "second paragraph"},
+                                {lang: "fr_BE", source: "first paragraph", value: "premier paragraphe"},
+                                {lang: "fr_BE", source: "second paragraph", value: "deuxième paragraphe"}],
+                            {translation_type: "text", translation_show_source: true},
+                        ]);
                     }
                     if (route === "/web/dataset/call_kw/res.lang/get_installed") {
-                        return Promise.resolve([["en_US"], ["fr_BE"]]);
+                        return Promise.resolve([["en_US", "English"], ["fr_BE", "French (Belgium)"]]);
                     }
                     return this._super.apply(this, arguments);
                 },

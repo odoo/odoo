@@ -13,7 +13,7 @@ const OpenMoveWidget = FieldChar.extend({
         var self = this;
         this._rpc({
             model: 'account.move.line',
-            method: 'open_move',
+            method: 'action_open_business_doc',
             args: [this.res_id],
         }).then(function (actionData){
             return self.do_action(actionData);

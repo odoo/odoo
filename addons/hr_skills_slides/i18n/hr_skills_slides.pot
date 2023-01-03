@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~14.4\n"
+"Project-Id-Version: Odoo Server 15.5alpha1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-07-12 07:50+0000\n"
-"PO-Revision-Date: 2021-07-12 07:50+0000\n"
+"POT-Creation-Date: 2022-09-20 09:02+0000\n"
+"PO-Revision-Date: 2022-09-20 09:02+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -16,14 +16,36 @@ msgstr ""
 "Plural-Forms: \n"
 
 #. module: hr_skills_slides
+#: code:addons/hr_skills_slides/models/hr_employee.py:0
+#, python-format
+msgid "%(completed)s / %(total)s"
+msgstr ""
+
+#. module: hr_skills_slides
 #: model:ir.model,name:hr_skills_slides.model_slide_channel_partner
 msgid "Channel / Partners (Members)"
 msgstr ""
 
 #. module: hr_skills_slides
+#: model:ir.model,name:hr_skills_slides.model_slide_channel
 #: model:ir.model.fields,field_description:hr_skills_slides.field_hr_resume_line__channel_id
 #: model:ir.model.fields.selection,name:hr_skills_slides.selection__hr_resume_line__display_type__course
 msgid "Course"
+msgstr ""
+
+#. module: hr_skills_slides
+#: model:ir.model.fields,field_description:hr_skills_slides.field_hr_resume_line__course_url
+msgid "Course Url"
+msgstr ""
+
+#. module: hr_skills_slides
+#: model_terms:ir.ui.view,arch_db:hr_skills_slides.hr_employee_view_form
+msgid "Courses"
+msgstr ""
+
+#. module: hr_skills_slides
+#: model:ir.model.fields,field_description:hr_skills_slides.field_hr_employee__courses_completion_text
+msgid "Courses Completion Text"
 msgstr ""
 
 #. module: hr_skills_slides
@@ -32,6 +54,34 @@ msgid "Display Type"
 msgstr ""
 
 #. module: hr_skills_slides
+#: model:ir.model,name:hr_skills_slides.model_hr_employee
+msgid "Employee"
+msgstr ""
+
+#. module: hr_skills_slides
 #: model:ir.model,name:hr_skills_slides.model_hr_resume_line
 msgid "Resumé line of an employee"
+msgstr ""
+
+#. module: hr_skills_slides
+#: code:addons/hr_skills_slides/models/slide_channel.py:0
+#, python-format
+msgid "The employee has completed the course <a href=\"%(link)s\">%(course)s</a>"
+msgstr ""
+
+#. module: hr_skills_slides
+#: code:addons/hr_skills_slides/models/slide_channel.py:0
+#, python-format
+msgid "The employee left the course <a href=\"%(link)s\">%(course)s</a>"
+msgstr ""
+
+#. module: hr_skills_slides
+#: code:addons/hr_skills_slides/models/slide_channel.py:0
+#, python-format
+msgid "The employee subscribed to the course <a href=\"%(link)s\">%(course)s</a>"
+msgstr ""
+
+#. module: hr_skills_slides
+#: model:ir.model.fields,field_description:hr_skills_slides.field_hr_employee__subscribed_courses
+msgid "eLearning Courses"
 msgstr ""

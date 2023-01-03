@@ -6,7 +6,7 @@ import { setupControlPanelServiceRegistry, toggleGroupByMenu, toggleMenuItem, to
 import { dialogService } from "@web/core/dialog/dialog_service";
 import { makeView } from "@web/../tests/views/helpers";
 import { registry } from "@web/core/registry";
-import { makeFakeNotificationService } from "@web/../tests/helpers/mock_services";
+import { makeFakeNotificationService, fakeCookieService } from "@web/../tests/helpers/mock_services";
 import { getFirstElementForXpath } from './project_test_utils';
 
 const serviceRegistry = registry.category("services");
@@ -75,6 +75,7 @@ QUnit.module("Project", {}, () => {
                 force: true,
             });
             serviceRegistry.add("dialog", dialogService);
+            serviceRegistry.add("cookie", fakeCookieService);
         });
 
         QUnit.module("BurndownChart");

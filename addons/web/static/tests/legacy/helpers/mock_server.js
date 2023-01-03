@@ -28,8 +28,8 @@ var MockServer = Class.extend({
             if (!('display_name' in model.fields)) {
                 model.fields.display_name = {string: "Display Name", type: "char"};
             }
-            if (!('__last_update' in model.fields)) {
-                model.fields.__last_update = {string: "Last Modified on", type: "datetime"};
+            if (!('write_date' in model.fields)) {
+                model.fields.write_date = {string: "Last Updated on", type: "datetime"};
             }
             if (!('name' in model.fields)) {
                 model.fields.name = {string: "Name", type: "char", default: "name"};
@@ -163,9 +163,11 @@ var MockServer = Class.extend({
         if (abort) {
             abort = abort.bind(def);
         } else {
-            abort = function () {
-                throw new Error("Can't abort this request");
-            };
+            abort = function (rejectError = true) {
+                if (rejectError) {
+                    throw new Error("XmlHttpRequestError abort");
+                }
+            }
         }
 
         def = def.then(function (result) {
@@ -1955,6 +1957,14 @@ var MockServer = Class.extend({
      * @returns {any}
      */
     _performFetch(resource, init) {
+        if (resource.match(/\/static(\/\S+\/|\/)libs?/)) {
+            // every lib must be includes into the test bundle.
+            return true;
+        }
+        if (resource.match(/\/web\/bundle\/[^.]+\.[^.]+/)) {
+            // every asset must be includes into the test bundle.
+            return true;
+        }
         throw new Error("Unimplemented resource: " + resource);
     },
     /**

@@ -4,7 +4,7 @@ odoo.define('website_crm.tour', function(require) {
     const tour = require('web_tour.tour');
     const wTourUtils = require('website.tour_utils');
 
-    wTourUtils.registerEditionTour('website_crm_pre_tour', {
+    wTourUtils.registerWebsitePreviewTour('website_crm_pre_tour', {
         test: true,
         url: '/contactus',
         edition: true,

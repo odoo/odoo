@@ -9,7 +9,6 @@ from odoo import api, http, models
 from odoo.http import request
 from odoo.tools import file_open, image_process, ustr
 from odoo.tools.misc import str2bool
-from odoo.addons.web.controllers.utils import HomeStaticTemplateHelpers
 
 
 _logger = logging.getLogger(__name__)
@@ -66,7 +65,7 @@ class Http(models.AbstractModel):
         }
 
     def session_info(self):
-        user = request.env.user
+        user = self.env.user
         session_uid = request.session.uid
         version_info = odoo.service.common.exp_version()
 
@@ -83,12 +82,14 @@ class Http(models.AbstractModel):
             default=128 * 1024 * 1024,  # 128MiB
         ))
         mods = odoo.conf.server_wide_modules or []
+        if request.db:
+            mods = list(request.registry._init_modules) + mods
         session_info = {
             "uid": session_uid,
             "is_system": user._is_system() if session_uid else False,
             "is_admin": user._is_admin() if session_uid else False,
             "user_context": user_context,
-            "db": request.db,
+            "db": self.env.cr.dbname,
             "server_version": version_info.get('server_version'),
             "server_version_info": version_info.get('server_version_info'),
             "support_url": "https://www.odoo.com/buy",
@@ -105,26 +106,27 @@ class Http(models.AbstractModel):
             "max_file_upload_size": max_file_upload_size,
             "home_action_id": user.action_id.id,
             "cache_hashes": {
-                "translations": request.env['ir.translation'].sudo().get_web_translations_hash(
+                "translations": self.env['ir.http'].sudo().get_web_translations_hash(
                     mods, request.session.context['lang']
                 ) if session_uid else None,
             },
             "currencies": self.sudo().get_currencies(),
+            'bundle_params': {
+                'lang': request.session.context['lang'],
+            },
         }
+        if request.session.debug:
+            session_info['bundle_params']['debug'] = request.session.debug
         if self.env.user.has_group('base.group_user'):
             # the following is only useful in the context of a webclient bootstrapping
             # but is still included in some other calls (e.g. '/web/session/authenticate')
             # to avoid access errors and unnecessary information, it is only included for users
             # with access to the backend ('internal'-type users)
-            if request.db:
-                mods = list(request.registry._init_modules) + mods
-            qweb_checksum = HomeStaticTemplateHelpers.get_qweb_templates_checksum(debug=request.session.debug, bundle="web.assets_qweb")
-            menus = request.env['ir.ui.menu'].load_menus(request.session.debug)
+            menus = self.env['ir.ui.menu'].load_menus(request.session.debug)
             ordered_menus = {str(k): v for k, v in menus.items()}
             menu_json_utf8 = json.dumps(ordered_menus, default=ustr, sort_keys=True).encode()
             session_info['cache_hashes'].update({
                 "load_menus": hashlib.sha512(menu_json_utf8).hexdigest()[:64], # sha512/256
-                "qweb": qweb_checksum,
             })
             session_info.update({
                 # current_company should be default_company
@@ -157,7 +159,12 @@ class Http(models.AbstractModel):
             'profile_collectors': request.session.profile_collectors,
             'profile_params': request.session.profile_params,
             'show_effect': bool(request.env['ir.config_parameter'].sudo().get_param('base_setup.show_effect')),
+            'bundle_params': {
+                'lang': request.session.context['lang'],
+            },
         }
+        if request.session.debug:
+            session_info['bundle_params']['debug'] = request.session.debug
         if session_uid:
             version_info = odoo.service.common.exp_version()
             session_info.update({
@@ -167,6 +174,6 @@ class Http(models.AbstractModel):
         return session_info
 
     def get_currencies(self):
-        Currency = request.env['res.currency']
+        Currency = self.env['res.currency']
         currencies = Currency.search([]).read(['symbol', 'position', 'decimal_places'])
         return {c['id']: {'symbol': c['symbol'], 'position': c['position'], 'digits': [69,c['decimal_places']]} for c in currencies}

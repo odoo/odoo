@@ -66,9 +66,11 @@ class ProductTemplate(models.Model):
         having been sold in another one in the past, as this could cause issues."""
         target_company = self.company_id
         if target_company:  # don't prevent writing `False`, should always work
-            product_data = self.env['product.product'].sudo().with_context(active_test=False).search_read([('product_tmpl_id', 'in', self.ids)], fields=['id'])
-            product_ids = list(map(lambda p: p['id'], product_data))
-            so_lines = self.env['sale.order.line'].sudo().search_read([('product_id', 'in', product_ids), ('company_id', '!=', target_company.id)], fields=['id', 'product_id'])
+            subquery_products = self.env['product.product'].sudo().with_context(active_test=False)._search([('product_tmpl_id', 'in', self.ids)])
+            so_lines = self.env['sale.order.line'].sudo().search_read(
+                [('product_id', 'in', subquery_products), ('company_id', '!=', target_company.id)],
+                fields=['id', 'product_id'],
+            )
             used_products = list(map(lambda sol: sol['product_id'][1], so_lines))
             if so_lines:
                 raise ValidationError(_('The following products cannot be restricted to the company'
@@ -86,7 +88,7 @@ class ProductTemplate(models.Model):
             'active_id': self._context.get('active_id'),
             'active_model': 'sale.report',
             'search_default_Sales': 1,
-            'time_ranges': {'field': 'date', 'range': 'last_365_days'}
+            'search_default_filter_order_date': 1,
         }
         return action
 

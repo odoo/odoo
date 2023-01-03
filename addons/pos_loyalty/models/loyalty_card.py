@@ -9,6 +9,9 @@ class LoyaltyCard(models.Model):
     source_pos_order_id = fields.Many2one('pos.order', "PoS Order Reference",
         help="PoS order where this coupon was generated.")
 
+    def _has_source_order(self):
+        return super()._has_source_order() or bool(self.source_pos_order_id)
+
     def _get_default_template(self):
         self.ensure_one()
         if self.source_pos_order_id:

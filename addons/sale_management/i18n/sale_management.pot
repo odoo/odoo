@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~15.4\n"
+"Project-Id-Version: Odoo Server 16.0beta\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-06-09 14:04+0000\n"
-"PO-Revision-Date: 2022-06-09 14:04+0000\n"
+"POT-Creation-Date: 2022-10-04 09:23+0000\n"
+"PO-Revision-Date: 2022-10-04 09:23+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -16,8 +16,23 @@ msgstr ""
 "Plural-Forms: \n"
 
 #. module: sale_management
+#: model:sale.order.template.line,name:sale_management.sale_order_template_line_1
+msgid "4 Person Desk"
+msgstr ""
+
+#. module: sale_management
 #: model_terms:ir.ui.view,arch_db:sale_management.report_saleorder_document_inherit_sale_management
 msgid "<span>Options</span>"
+msgstr ""
+
+#. module: sale_management
+#: model_terms:ir.ui.view,arch_db:sale_management.sale_order_template_view_form
+msgid "<span>Payment</span>"
+msgstr ""
+
+#. module: sale_management
+#: model_terms:ir.ui.view,arch_db:sale_management.sale_order_template_view_form
+msgid "<span>Signature</span>"
 msgstr ""
 
 #. module: sale_management
@@ -90,11 +105,6 @@ msgstr ""
 #. module: sale_management
 #: model:ir.model,name:sale_management.model_res_config_settings
 msgid "Config Settings"
-msgstr ""
-
-#. module: sale_management
-#: model_terms:ir.ui.view,arch_db:sale_management.sale_order_template_view_form
-msgid "Confirmation"
 msgstr ""
 
 #. module: sale_management
@@ -206,9 +216,7 @@ msgstr ""
 
 #. module: sale_management
 #: model:ir.model.constraint,message:sale_management.constraint_sale_order_template_line_non_accountable_fields_null
-msgid ""
-"Forbidden product, unit price, quantity, and UoM on non-accountable sale "
-"quote line"
+msgid "Forbidden product, quantity and UoM on non-accountable sale quote line"
 msgstr ""
 
 #. module: sale_management
@@ -298,6 +306,11 @@ msgid "Number of days for the validity date computation of the quotation"
 msgstr ""
 
 #. module: sale_management
+#: model:sale.order.template.option,name:sale_management.sale_order_template_option_1
+msgid "Office Chair"
+msgstr ""
+
+#. module: sale_management
 #: model:ir.model.fields,field_description:sale_management.field_sale_order_template__require_payment
 msgid "Online Payment"
 msgstr ""
@@ -305,6 +318,11 @@ msgstr ""
 #. module: sale_management
 #: model:ir.model.fields,field_description:sale_management.field_sale_order_template__require_signature
 msgid "Online Signature"
+msgstr ""
+
+#. module: sale_management
+#: model_terms:ir.ui.view,arch_db:sale_management.sale_order_template_view_form
+msgid "Online confirmation"
 msgstr ""
 
 #. module: sale_management
@@ -401,7 +419,7 @@ msgstr ""
 
 #. module: sale_management
 #: model_terms:ir.ui.view,arch_db:sale_management.sale_order_template_view_form
-msgid "Quotation Validity"
+msgid "Quotation expires after"
 msgstr ""
 
 #. module: sale_management
@@ -489,11 +507,6 @@ msgid ""
 "Struggling with a complex product catalog? Try out the Product Configurator "
 "to help sales configure a product with different options: colors, size, "
 "capacity, etc. Make sale orders encoding easier and error-proof."
-msgstr ""
-
-#. module: sale_management
-#: model:ir.model.fields,help:sale_management.field_sale_order_template_line__display_type
-msgid "Technical field for UX purpose."
 msgstr ""
 
 #. module: sale_management

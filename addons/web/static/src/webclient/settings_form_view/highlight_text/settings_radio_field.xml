@@ -3,7 +3,9 @@
 
     <t t-name="web.SettingsRadioField" t-inherit="web.RadioField" t-inherit-mode="primary" owl="1">
         <xpath expr="//label" position="replace">
-            <FormLabelHighlightText className="'form-check-label'" id="`${id}_${item[0]}`" string="item[1]"/>
+            <label class="form-check-label o_form_label" t-att-for="`${id}_${item[0]}`">
+                <HighlightText originalText="item[1]"/>
+            </label>
         </xpath>
     </t>
 

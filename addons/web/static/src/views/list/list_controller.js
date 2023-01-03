@@ -2,21 +2,22 @@
 
 import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 import { download } from "@web/core/network/download";
-import { DynamicRecordList } from "@web/views/relational_model";
 import { useService } from "@web/core/utils/hooks";
+import { omit } from "@web/core/utils/objects";
 import { sprintf } from "@web/core/utils/strings";
 import { ActionMenus } from "@web/search/action_menus/action_menus";
 import { Layout } from "@web/search/layout";
 import { usePager } from "@web/search/pager_hook";
 import { session } from "@web/session";
 import { useModel } from "@web/views/model";
+import { DynamicRecordList } from "@web/views/relational_model";
 import { standardViewProps } from "@web/views/standard_view_props";
-import { useSetupView } from "@web/views/view_hook";
 import { ViewButton } from "@web/views/view_button/view_button";
 import { useViewButtons } from "@web/views/view_button/view_button_hook";
 import { ExportDataDialog } from "@web/views/view_dialogs/export_data_dialog";
+import { useSetupView } from "@web/views/view_hook";
 
-const { Component, onWillStart, useSubEnv, useEffect, useRef } = owl;
+import { Component, onMounted, onWillStart, useEffect, useRef, useSubEnv } from "@odoo/owl";
 
 export class ListViewHeaderButton extends ViewButton {
     async onClick() {
@@ -73,10 +74,21 @@ export class ListController extends Component {
             groupsLimit: this.archInfo.groupsLimit,
             multiEdit: this.multiEdit,
             rootState,
+            onRecordSaved: this.onRecordSaved.bind(this),
+            onWillSaveRecord: this.onWillSaveRecord.bind(this),
         });
 
         onWillStart(async () => {
             this.isExportEnable = await this.userService.hasGroup("base.group_allow_export");
+        });
+
+        onMounted(() => {
+            const { rendererScrollPositions } = this.props.state || {};
+            if (rendererScrollPositions) {
+                const renderer = this.rootRef.el.querySelector(".o_list_renderer");
+                renderer.scrollLeft = rendererScrollPositions.left;
+                renderer.scrollTop = rendererScrollPositions.top;
+            }
         });
 
         this.archiveEnabled =
@@ -86,7 +98,10 @@ export class ListController extends Component {
                 ? !fields.x_active.readonly
                 : false;
         useSubEnv({ model: this.model }); // do this in useModel?
-        useViewButtons(this.model, this.rootRef);
+        useViewButtons(this.model, this.rootRef, {
+            beforeExecuteAction: this.beforeExecuteActionButton.bind(this),
+            afterExecuteAction: this.afterExecuteActionButton.bind(this),
+        });
         useSetupView({
             rootRef: this.rootRef,
             beforeLeave: async () => {
@@ -94,19 +109,25 @@ export class ListController extends Component {
                 const editedRecord = list.editedRecord;
                 if (editedRecord) {
                     if (!(await list.unselectRecord(true))) {
-                        throw new Error("View can't be saved");
+                        return false;
                     }
                 }
             },
-            beforeUnload: () => {
+            beforeUnload: async (ev) => {
                 const editedRecord = this.model.root.editedRecord;
                 if (editedRecord) {
-                    return editedRecord.urgentSave();
+                    const isValid = await editedRecord.urgentSave();
+                    if (!isValid) {
+                        ev.preventDefault();
+                        ev.returnValue = "Unsaved changes";
+                    }
                 }
             },
             getLocalState: () => {
+                const renderer = this.rootRef.el.querySelector(".o_list_renderer");
                 return {
                     rootState: this.model.root.exportState(),
+                    rendererScrollPositions: { left: renderer.scrollLeft, top: renderer.scrollTop },
                 };
             },
             getOrderBy: () => {
@@ -148,6 +169,22 @@ export class ListController extends Component {
         );
     }
 
+    /**
+     * onRecordSaved is a callBack that will be executed after the save
+     * if it was done. It will therefore not be executed if the record
+     * is invalid or if a server error is thrown.
+     * @param {Record} record
+     */
+    async onRecordSaved(record) {}
+
+    /**
+     * onWillSaveRecord is a callBack that will be executed before the
+     * record save if the record is valid if the record is valid.
+     * If it returns false, it will prevent the save.
+     * @param {Record} record
+     */
+    async onWillSaveRecord(record) {}
+
     async createRecord({ group } = {}) {
         const list = (group && group.list) || this.model.root;
         if (this.editable) {
@@ -167,8 +204,23 @@ export class ListController extends Component {
     }
 
     async openRecord(record) {
-        const activeIds = this.model.root.records.map((datapoint) => datapoint.resId);
-        this.props.selectRecord(record.resId, { activeIds });
+        if (this.archInfo.openAction) {
+            this.actionService.doActionButton({
+                name: this.archInfo.openAction.action,
+                type: this.archInfo.openAction.type,
+                resModel: record.resModel,
+                resId: record.resId,
+                resIds: record.resIds,
+                context: record.context,
+                onClose: async () => {
+                    await record.model.root.load();
+                    record.model.notify();
+                },
+            });
+        } else {
+            const activeIds = this.model.root.records.map((datapoint) => datapoint.resId);
+            this.props.selectRecord(record.resId, { activeIds });
+        }
     }
 
     onClickCreate() {
@@ -213,19 +265,18 @@ export class ListController extends Component {
         return this.model.root.getResIds(true);
     }
 
-    getActionMenuItems() {
+    getStaticActionMenuItems() {
         const isM2MGrouped = this.model.root.isM2MGrouped;
-        const otherActionItems = [];
-        if (this.isExportEnable) {
-            otherActionItems.push({
-                key: "export",
+        return {
+            export: {
+                isAvailable: () => this.isExportEnable,
+                sequence: 10,
                 description: this.env._t("Export"),
                 callback: () => this.onExportData(),
-            });
-        }
-        if (this.archiveEnabled && !isM2MGrouped) {
-            otherActionItems.push({
-                key: "archive",
+            },
+            archive: {
+                isAvailable: () => this.archiveEnabled && !isM2MGrouped,
+                sequence: 20,
                 description: this.env._t("Archive"),
                 callback: () => {
                     const dialogProps = {
@@ -239,21 +290,33 @@ export class ListController extends Component {
                     };
                     this.dialogService.add(ConfirmationDialog, dialogProps);
                 },
-            });
-            otherActionItems.push({
-                key: "unarchive",
+            },
+            unarchive: {
+                isAvailable: () => this.archiveEnabled && !isM2MGrouped,
+                sequence: 30,
                 description: this.env._t("Unarchive"),
                 callback: () => this.toggleArchiveState(false),
-            });
-        }
-        if (this.activeActions.delete && !isM2MGrouped) {
-            otherActionItems.push({
-                key: "delete",
+            },
+            delete: {
+                isAvailable: () => this.activeActions.delete && !isM2MGrouped,
+                sequence: 40,
                 description: this.env._t("Delete"),
                 callback: () => this.onDeleteSelectedRecords(),
-            });
-        }
-        return Object.assign({}, this.props.info.actionMenus, { other: otherActionItems });
+            },
+        };
+    }
+
+    get actionMenuItems() {
+        const { actionMenus } = this.props.info;
+        const staticActionItems = Object.entries(this.getStaticActionMenuItems())
+            .filter(([key, item]) => item.isAvailable === undefined || item.isAvailable())
+            .sort(([k1, item1], [k2, item2]) => (item1.sequence || 0) - (item2.sequence || 0))
+            .map(([key, item]) => Object.assign({ key }, omit(item, "isAvailable", "sequence")));
+
+        return {
+            action: [...staticActionItems, ...(actionMenus.action || [])],
+            print: actionMenus.print,
+        };
     }
 
     async onSelectDomain() {
@@ -262,6 +325,17 @@ export class ListController extends Component {
             const resIds = await this.model.root.getResIds(true);
             this.props.onSelectionChanged(resIds);
         }
+    }
+
+    onUnselectAll() {
+        this.model.root.selection.forEach((record) => {
+            record.toggleSelection(false);
+        });
+        this.model.root.selectDomain(false);
+    }
+
+    get className() {
+        return this.props.className;
     }
 
     get nbSelected() {
@@ -282,13 +356,27 @@ export class ListController extends Component {
         return list.isGrouped ? list.nbTotalRecords : list.count;
     }
 
+    get display() {
+        if (!this.env.isSmall) {
+            return this.props.display;
+        }
+        const { controlPanel } = this.props.display;
+        return {
+            ...this.props.display,
+            controlPanel: {
+                ...controlPanel,
+                "bottom-right": !this.nbSelected,
+            },
+        };
+    }
+
     async downloadExport(fields, import_compat, format) {
         const resIds = await this.getSelectedResIds();
         const exportedFields = fields.map((field) => ({
             name: field.name || field.id,
             label: field.label || field.string,
             store: field.store,
-            type: field.field_type,
+            type: field.field_type || field.type,
         }));
         if (import_compat) {
             exportedFields.unshift({ name: "id", label: this.env._t("External ID") });
@@ -339,12 +427,11 @@ export class ListController extends Component {
      * @private
      */
     async onDirectExportData() {
-        const fields = await this.getExportedFields(this.model.root.resModel, true);
-        await this.downloadExport(
-            fields.filter((field) => this.model.root.activeFields[field.id]),
-            false,
-            "xlsx"
-        );
+        const fields = this.props.archInfo.columns
+            .filter((col) => col.type === "field")
+            .map((col) => this.props.fields[col.name])
+            .filter((field) => field.exportable !== false);
+        await this.downloadExport(fields, false, "xlsx");
     }
     /**
      * Called when clicking on 'Archive' or 'Unarchive' in the sidebar.
@@ -391,6 +478,7 @@ export class ListController extends Component {
             confirm: async () => {
                 const total = root.count;
                 const resIds = await this.model.root.deleteRecords();
+                this.model.notify();
                 if (
                     root.isDomainSelected &&
                     resIds.length === session.active_ids_limit &&
@@ -418,14 +506,18 @@ export class ListController extends Component {
             record.toggleSelection(false);
         });
     }
+
+    async beforeExecuteActionButton(clickParams) {}
+
+    async afterExecuteActionButton(clickParams) {}
 }
 
 ListController.template = `web.ListView`;
 ListController.components = { ActionMenus, ListViewHeaderButton, Layout, ViewButton };
 ListController.props = {
     ...standardViewProps,
+    allowSelectors: { type: Boolean, optional: true },
     editable: { type: Boolean, optional: true },
-    hasSelectors: { type: Boolean, optional: true },
     onSelectionChanged: { type: Function, optional: true },
     showButtons: { type: Boolean, optional: true },
     Model: Function,
@@ -434,9 +526,9 @@ ListController.props = {
     archInfo: Object,
 };
 ListController.defaultProps = {
+    allowSelectors: true,
     createRecord: () => {},
     editable: true,
-    hasSelectors: true,
     selectRecord: () => {},
     showButtons: true,
 };

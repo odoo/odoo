@@ -5,7 +5,7 @@ import { useService } from "@web/core/utils/hooks";
 import { sprintf } from "@web/core/utils/strings";
 import { loadLanguages } from "@web/core/l10n/translation";
 
-const { Component, onWillStart } = owl;
+import { Component, onWillStart } from "@odoo/owl";
 
 export class TranslationDialog extends Component {
     setup() {
@@ -20,18 +20,19 @@ export class TranslationDialog extends Component {
 
         onWillStart(async () => {
             const languages = await loadLanguages(this.orm);
-            const translations = await this.loadTranslations(languages);
+            const [translations, context] = await this.loadTranslations(languages);
+            let id = 1;
+            translations.forEach((t) => (t.id = id++));
+            this.props.isText = context.translation_type === "text";
+            this.props.showSource = context.translation_show_source;
 
             this.terms = translations.map((term) => {
                 const relatedLanguage = languages.find((l) => l[0] === term.lang);
-                if (!term.value && !this.props.showSource) {
-                    term.value = term.src;
-                }
                 return {
                     id: term.id,
                     lang: term.lang,
                     langName: relatedLanguage[1],
-                    source: term.src,
+                    source: term.source,
                     // we set the translation value coming from the database, except for the language
                     // the user is currently utilizing. Then we set the translation value coming
                     // from the value of the field in the form
@@ -43,11 +44,7 @@ export class TranslationDialog extends Component {
                             : term.value || "",
                 };
             });
-            this.terms.sort((a, b) =>
-                a.langName < b.langName || (a.langName === b.langName && a.source < b.source)
-                    ? -1
-                    : 1
-            );
+            this.terms.sort((a, b) => a.langName.localeCompare(b.langName));
         });
     }
 
@@ -63,23 +60,38 @@ export class TranslationDialog extends Component {
      * Load the translation terms for the installed language, for the current model and res_id
      */
     async loadTranslations(languages) {
-        const domain = [...this.domain, ["lang", "in", languages.map((l) => l[0])]];
-        return this.orm.searchRead("ir.translation", domain, ["lang", "src", "value"]);
+        return this.orm.call(this.props.resModel, "get_field_translations", [
+            [this.props.resId],
+            this.props.fieldName,
+        ]);
     }
 
     /**
      * Save all the terms that have been updated
      */
     async onSave() {
-        await Promise.all(
-            this.terms.map(async (term) => {
-                if (term.id in this.updatedTerms && term.value !== this.updatedTerms[term.id]) {
-                    await this.orm.write("ir.translation", [term.id], {
-                        value: this.updatedTerms[term.id],
-                    });
+        const translations = {};
+
+        this.terms.map((term) => {
+            const updatedTermValue = this.updatedTerms[term.id];
+            if (term.id in this.updatedTerms && term.value !== updatedTermValue) {
+                if (this.props.showSource) {
+                    if (!translations[term.lang]) {
+                        translations[term.lang] = {};
+                    }
+                    const source = term.value ? term.value : term.source;
+                    translations[term.lang][source] = updatedTermValue;
+                } else {
+                    translations[term.lang] = updatedTermValue;
                 }
-            })
-        );
+            }
+        });
+
+        await this.orm.call(this.props.resModel, "update_field_translations", [
+            [this.props.resId],
+            this.props.fieldName,
+            translations,
+        ]);
 
         // we might have to update the value of the field on the form
         // view that opened the translation dialog

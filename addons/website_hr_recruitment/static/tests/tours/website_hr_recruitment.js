@@ -21,7 +21,7 @@ odoo.define('website_hr_recruitment.tour', function(require) {
             run: `text ${application.email}`,
         }, {
             content: "Complete phone number",
-            trigger: "input[name=partner_phone]",
+            trigger: "input[name=partner_mobile]",
             run: `text ${application.phone}`,
         }, {
             content: "Complete Subject",
@@ -61,7 +61,7 @@ odoo.define('website_hr_recruitment.tour', function(require) {
         }),
     ]);
 
-    wTourUtils.registerEditionTour('website_hr_recruitment_tour_edit_form', {
+    wTourUtils.registerWebsitePreviewTour('website_hr_recruitment_tour_edit_form', {
         test: true,
         url: '/jobs',
     }, [{

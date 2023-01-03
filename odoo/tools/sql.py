@@ -3,13 +3,14 @@
 
 # pylint: disable=sql-injection
 
+from binascii import crc32
 import logging
+import json
+import re
 import psycopg2
 from psycopg2.sql import SQL, Identifier
 
-import odoo.sql_db
 from collections import defaultdict
-from contextlib import closing
 
 _schema = logging.getLogger('odoo.schema')
 
@@ -56,15 +57,16 @@ def table_kind(cr, tablename):
 # prescribed column order by type: columns aligned on 4 bytes, columns aligned
 # on 1 byte, columns aligned on 8 bytes(values have been chosen to minimize
 # padding in rows; unknown column types are put last)
-SQL_ORDER_BY_TYPE = defaultdict(lambda: 9, {
+SQL_ORDER_BY_TYPE = defaultdict(lambda: 16, {
     'int4': 1,          # 4 bytes aligned on 4 bytes
     'varchar': 2,       # variable aligned on 4 bytes
     'date': 3,          # 4 bytes aligned on 4 bytes
-    'text': 4,          # variable aligned on 4 bytes
-    'numeric': 5,       # variable aligned on 4 bytes
-    'bool': 6,          # 1 byte aligned on 1 byte
-    'timestamp': 7,     # 8 bytes aligned on 8 bytes
-    'float8': 8,        # 8 bytes aligned on 8 bytes
+    'jsonb': 4,         # jsonb
+    'text': 5,          # variable aligned on 4 bytes
+    'numeric': 6,       # variable aligned on 4 bytes
+    'bool': 7,          # 1 byte aligned on 1 byte
+    'timestamp': 8,     # 8 bytes aligned on 8 bytes
+    'float8': 9,        # 8 bytes aligned on 8 bytes
 })
 
 def create_model_table(cr, tablename, comment=None, columns=()):
@@ -121,20 +123,55 @@ def rename_column(cr, tablename, columnname1, columnname2):
 
 def convert_column(cr, tablename, columnname, columntype):
     """ Convert the column to the given type. """
+    using = f'"{columnname}"::{columntype}'
+    _convert_column(cr, tablename, columnname, columntype, using)
+
+def convert_column_translatable(cr, tablename, columnname, columntype):
+    """ Convert the column from/to a 'jsonb' translated field column. """
+    drop_index(cr, make_index_name(tablename, columnname), tablename)
+    if columntype == "jsonb":
+        using = f"""CASE WHEN "{columnname}" IS NOT NULL THEN jsonb_build_object('en_US', "{columnname}"::varchar) END"""
+    else:
+        using = f""""{columnname}"->>'en_US'"""
+    _convert_column(cr, tablename, columnname, columntype, using)
+
+def _convert_column(cr, tablename, columnname, columntype, using):
+    query = f'''
+        ALTER TABLE "{tablename}"
+        ALTER COLUMN "{columnname}" DROP DEFAULT,
+        ALTER COLUMN "{columnname}" TYPE {columntype} USING {using}
+    '''
     try:
         with cr.savepoint(flush=False):
-            cr.execute('ALTER TABLE "{}" ALTER COLUMN "{}" TYPE {}'.format(tablename, columnname, columntype),
-                       log_exceptions=False)
+            cr.execute(query, log_exceptions=False)
     except psycopg2.NotSupportedError:
-        # can't do inplace change -> use a casted temp column
-        query = '''
-            ALTER TABLE "{0}" RENAME COLUMN "{1}" TO __temp_type_cast;
-            ALTER TABLE "{0}" ADD COLUMN "{1}" {2};
-            UPDATE "{0}" SET "{1}"= __temp_type_cast::{2};
-            ALTER TABLE "{0}" DROP COLUMN  __temp_type_cast CASCADE;
-        '''
-        cr.execute(query.format(tablename, columnname, columntype))
+        drop_depending_views(cr, tablename, columnname)
+        cr.execute(query)
     _schema.debug("Table %r: column %r changed to type %s", tablename, columnname, columntype)
+
+def drop_depending_views(cr, table, column):
+    """drop views depending on a field to allow the ORM to resize it in-place"""
+    for v, k in get_depending_views(cr, table, column):
+        cr.execute("DROP {0} VIEW IF EXISTS {1} CASCADE".format("MATERIALIZED" if k == "m" else "", v))
+        _schema.debug("Drop view %r", v)
+
+def get_depending_views(cr, table, column):
+    # http://stackoverflow.com/a/11773226/75349
+    q = """
+        SELECT distinct quote_ident(dependee.relname), dependee.relkind
+        FROM pg_depend
+        JOIN pg_rewrite ON pg_depend.objid = pg_rewrite.oid
+        JOIN pg_class as dependee ON pg_rewrite.ev_class = dependee.oid
+        JOIN pg_class as dependent ON pg_depend.refobjid = dependent.oid
+        JOIN pg_attribute ON pg_depend.refobjid = pg_attribute.attrelid
+            AND pg_depend.refobjsubid = pg_attribute.attnum
+        WHERE dependent.relname = %s
+        AND pg_attribute.attnum > 0
+        AND pg_attribute.attname = %s
+        AND dependee.relkind in ('v', 'm')
+    """
+    cr.execute(q, [table, column])
+    return cr.fetchall()
 
 def set_not_null(cr, tablename, columnname):
     """ Add a NOT NULL constraint on the given column. """
@@ -234,30 +271,13 @@ def fix_foreign_key(cr, tablename1, columnname1, tablename2, columnname2, ondele
     if not found:
         return add_foreign_key(cr, tablename1, columnname1, tablename2, columnname2, ondelete)
 
-def install_pg_trgm(cr):
-    cr.execute("SELECT installed_version FROM pg_available_extensions WHERE name='pg_trgm'")
-    version = cr.fetchone()
-    if version is None:
-        return False
-    if version[0]:
-        return True
-    cr.execute('SELECT usesuper FROM pg_user WHERE usename = CURRENT_USER')
-    if not cr.fetchone()[0]:
-        return False
-    try:
-        db = odoo.sql_db.db_connect(cr.dbname)
-        with closing(db.cursor()) as cr:
-            cr.execute("CREATE EXTENSION IF NOT EXISTS pg_trgm")
-            cr.commit()
-        return True
-    except psycopg2.Error:
-        return False
-
-
 def index_exists(cr, indexname):
     """ Return whether the given index exists. """
     cr.execute("SELECT 1 FROM pg_indexes WHERE indexname=%s", (indexname,))
     return cr.rowcount
+
+def check_index_exist(cr, indexname):
+    assert index_exists(cr, indexname), f"{indexname} does not exist"
 
 def create_index(cr, indexname, tablename, expressions, method='btree', where=''):
     """ Create the given index unless it exists. """
@@ -347,3 +367,79 @@ def increment_fields_skiplock(records, *fields):
     cr = records._cr
     cr.execute(query, {'ids': records.ids})
     return bool(cr.rowcount)
+
+
+def value_to_translated_trigram_pattern(value):
+    """ Escape value to match a translated field's trigram index content
+
+    The trigram index function jsonb_path_query_array("column_name", '$.*')::text
+    uses all translations' representations to build the indexed text. So the
+    original text needs to be JSON-escaped correctly to match it.
+
+    :param str value: value provided in domain
+    :return: a pattern to match the indexed text
+    """
+    if len(value) < 3:
+        # matching less than 3 characters will not take advantage of the index
+        return '%'
+
+    # apply JSON escaping to value; the argument ensure_ascii=False prevents
+    # json.dumps from escaping unicode to ascii, which is consistent with the
+    # index function jsonb_path_query_array("column_name", '$.*')::text
+    json_escaped = json.dumps(value, ensure_ascii=False)[1:-1]
+
+    # apply PG wildcard escaping to JSON-escaped text
+    wildcard_escaped = re.sub(r'(_|%|\\)', r'\\\1', json_escaped)
+
+    # add wildcards around it to get the pattern
+    return f"%{wildcard_escaped}%"
+
+
+def pattern_to_translated_trigram_pattern(pattern):
+    """ Escape pattern to match a translated field's trigram index content
+
+    The trigram index function jsonb_path_query_array("column_name", '$.*')::text
+    uses all translations' representations to build the indexed text. So the
+    original pattern needs to be JSON-escaped correctly to match it.
+
+    :param str pattern: value provided in domain
+    :return: a pattern to match the indexed text
+    """
+    # find the parts around (non-escaped) wildcard characters (_, %)
+    sub_patterns = re.findall(r'''
+        (
+            (?:.)*?           # 0 or more charaters including the newline character
+            (?<!\\)(?:\\\\)*  # 0 or even number of backslashes to promise the next wildcard character is not escaped
+        )
+        (?:_|%|$)             # a non-escaped wildcard charater or end of the string
+        ''', pattern, flags=re.VERBOSE | re.DOTALL)
+
+    # unescape PG wildcards from each sub pattern (\% becomes %)
+    sub_texts = [re.sub(r'\\(.|$)', r'\1', t, flags=re.DOTALL) for t in sub_patterns]
+
+    # apply JSON escaping to sub texts having at least 3 characters (" becomes \");
+    # the argument ensure_ascii=False prevents from escaping unicode to ascii
+    json_escaped = [json.dumps(t, ensure_ascii=False)[1:-1] for t in sub_texts if len(t) >= 3]
+
+    # apply PG wildcard escaping to JSON-escaped texts (% becomes \%)
+    wildcard_escaped = [re.sub(r'(_|%|\\)', r'\\\1', t) for t in json_escaped]
+
+    # replace the original wildcard characters by %
+    return f"%{'%'.join(wildcard_escaped)}%" if wildcard_escaped else "%"
+
+
+def make_identifier(identifier: str) -> str:
+    """ Return ``identifier``, possibly modified to fit PostgreSQL's identifier size limitation.
+    If too long, ``identifier`` is truncated and padded with a hash to make it mostly unique.
+    """
+    # if length exceeds the PostgreSQL limit of 63 characters.
+    if len(identifier) > 63:
+        # We have to fit a crc32 hash and one underscore into a 63 character
+        # alias. The remaining space we can use to add a human readable prefix.
+        return f"{identifier[:54]}_{crc32(identifier.encode()):08x}"
+    return identifier
+
+
+def make_index_name(table_name: str, column_name: str) -> str:
+    """ Return an index name according to conventions for the given table and column. """
+    return make_identifier(f"{table_name}__{column_name}_index")

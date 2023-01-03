@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from odoo import fields
 from odoo.fields import Command
 from odoo.tests import Form, tagged
 from odoo.tools import float_is_zero
@@ -107,7 +108,7 @@ class TestSaleToInvoice(TestSaleCommon):
         self._check_order_search(self.sale_order, [('invoice_ids', '=', False)], self.env['sale.order'])
 
         self.assertEqual(len(self.sale_order.invoice_ids), 2, 'Invoice should be created for the SO')
-        downpayment_line = self.sale_order.order_line.filtered(lambda l: l.is_downpayment)
+        downpayment_line = self.sale_order.order_line.filtered(lambda l: l.is_downpayment and not l.display_type)
         self.assertEqual(len(downpayment_line), 2, 'SO line downpayment should be created on SO')
 
         # Update delivered quantity of SO lines
@@ -123,7 +124,8 @@ class TestSaleToInvoice(TestSaleCommon):
         self.assertEqual(len(self.sale_order.invoice_ids), 3, 'Invoice should be created for the SO')
 
         invoice = max(self.sale_order.invoice_ids)
-        self.assertEqual(len(invoice.invoice_line_ids.filtered(lambda l: not (l.display_type == 'line_section' and l.name == "Down Payments"))), len(self.sale_order.order_line), 'All lines should be invoiced')
+        self.assertEqual(len(invoice.invoice_line_ids.filtered(lambda l: not (l.display_type == 'line_section' and l.name == "Down Payments"))),
+                         len(self.sale_order.order_line.filtered(lambda l: not (l.display_type == 'line_section' and l.name == "Down Payments"))), 'All lines should be invoiced')
         self.assertEqual(len(invoice.invoice_line_ids.filtered(lambda l: l.display_type == 'line_section' and l.name == "Down Payments")), 1, 'A single section for downpayments should be present')
         self.assertEqual(invoice.amount_total, self.sale_order.amount_total - sum(downpayment_line.mapped('price_unit')), 'Downpayment should be applied')
 
@@ -146,7 +148,7 @@ class TestSaleToInvoice(TestSaleCommon):
         payment.create_invoices()
 
         self.assertEqual(len(self.sale_order.invoice_ids), 1, 'Invoice should be created for the SO')
-        downpayment_line = self.sale_order.order_line.filtered(lambda l: l.is_downpayment)
+        downpayment_line = self.sale_order.order_line.filtered(lambda l: l.is_downpayment and not l.display_type)
         self.assertEqual(len(downpayment_line), 1, 'SO line downpayment should be created on SO')
         self.assertEqual(downpayment_line.price_unit, self.sale_order.amount_total/2, 'downpayment should have the correct amount')
 
@@ -179,8 +181,14 @@ class TestSaleToInvoice(TestSaleCommon):
         for line in self.sale_order.order_line:
             self.assertTrue(float_is_zero(line.untaxed_amount_invoiced, precision_digits=2), "The invoiced amount should be zero, as the line is in draft state")
 
-        self.assertEqual(self.sol_serv_order.untaxed_amount_to_invoice, 297, "The untaxed amount to invoice is wrong")
-        self.assertEqual(self.sol_serv_deliver.untaxed_amount_to_invoice, self.sol_serv_deliver.qty_delivered * self.sol_serv_deliver.price_reduce, "The untaxed amount to invoice should be qty deli * price reduce, so 4 * (180 - 36)")
+        self.assertEqual(
+            self.sol_serv_order.untaxed_amount_to_invoice,
+            297,
+            "The untaxed amount to invoice is wrong")
+        self.assertEqual(
+            self.sol_serv_deliver.untaxed_amount_to_invoice,
+            576,
+            "The untaxed amount to invoice should be qty deli * price reduce, so 4 * (180 - 36)")
         # 'untaxed_amount_to_invoice' is invalid when 'sale_stock' is installed.
         # self.assertEqual(self.sol_prod_deliver.untaxed_amount_to_invoice, 140, "The untaxed amount to invoice should be qty deli * price reduce, so 4 * (180 - 36)")
 
@@ -412,14 +420,15 @@ class TestSaleToInvoice(TestSaleCommon):
         downpayment.create_invoices()
         self.assertEqual(so_for_downpayment.invoice_ids[0].company_id.id, so_company_id, "The company of the downpayment invoice should be the same as the one from the SO")
 
-    def test_invoice_analytic_account_default(self):
+    def test_invoice_analytic_distribution_model(self):
         """ Tests whether, when an analytic account rule is set and the so has no analytic account,
-        the default analytic acount is correctly computed in the invoice.
+        the default analytic account is correctly computed in the invoice.
         """
-        analytic_account_default = self.env['account.analytic.account'].create({'name': 'default'})
+        analytic_plan_default = self.env['account.analytic.plan'].create({'name': 'default'})
+        analytic_account_default = self.env['account.analytic.account'].create({'name': 'default', 'plan_id': analytic_plan_default.id})
 
-        self.env['account.analytic.default'].create({
-            'analytic_id': analytic_account_default.id,
+        self.env['account.analytic.distribution.model'].create({
+            'analytic_distribution': {analytic_account_default.id: 100},
             'product_id': self.product_a.id,
         })
 
@@ -444,7 +453,7 @@ class TestSaleToInvoice(TestSaleCommon):
         down_payment.create_invoices()
 
         aml = self.env['account.move.line'].search([('move_id', 'in', so.invoice_ids.ids)])[0]
-        self.assertRecordValues(aml, [{'analytic_account_id': analytic_account_default.id}])
+        self.assertRecordValues(aml, [{'analytic_distribution': {str(analytic_account_default.id): 100}}])
 
     def test_invoice_analytic_account_so_not_default(self):
         """ Tests whether, when an analytic account rule is set and the so has an analytic account,
@@ -452,11 +461,12 @@ class TestSaleToInvoice(TestSaleCommon):
         """
         # Required for `analytic_account_id` to be visible in the view
         self.env.user.groups_id += self.env.ref('analytic.group_analytic_accounting')
-        analytic_account_default = self.env['account.analytic.account'].create({'name': 'default'})
-        analytic_account_so = self.env['account.analytic.account'].create({'name': 'so'})
+        analytic_plan_default = self.env['account.analytic.plan'].create({'name': 'default'})
+        analytic_account_default = self.env['account.analytic.account'].create({'name': 'default', 'plan_id': analytic_plan_default.id})
+        analytic_account_so = self.env['account.analytic.account'].create({'name': 'so', 'plan_id': analytic_plan_default.id})
 
-        self.env['account.analytic.default'].create({
-            'analytic_id': analytic_account_default.id,
+        self.env['account.analytic.distribution.model'].create({
+            'analytic_distribution': {analytic_account_default.id: 100},
             'product_id': self.product_a.id,
         })
 
@@ -482,7 +492,7 @@ class TestSaleToInvoice(TestSaleCommon):
         down_payment.create_invoices()
 
         aml = self.env['account.move.line'].search([('move_id', 'in', so.invoice_ids.ids)])[0]
-        self.assertRecordValues(aml, [{'analytic_account_id': analytic_account_so.id}])
+        self.assertRecordValues(aml, [{'analytic_distribution': {str(analytic_account_default.id): 100, str(analytic_account_so.id): 100}}])
 
     def test_invoice_after_product_return_price_not_default(self):
         so = self.env['sale.order'].create({
@@ -596,7 +606,7 @@ class TestSaleToInvoice(TestSaleCommon):
                     'product_uom_id': serv_cost.uom_id.id,
                     'quantity': 2,
                     'price_unit': serv_cost.standard_price,
-                    'analytic_account_id': so.analytic_account_id.id,
+                    'analytic_distribution': {so.analytic_account_id.id: 100},
                 }),
             ],
         })
@@ -706,3 +716,41 @@ class TestSaleToInvoice(TestSaleCommon):
             inv.company_id,
             self.company_data['company'],
             'invoices should be created in the company of the SO, not the main company of the context')
+
+    def test_partial_invoicing_interaction_with_invoicing_switch_threshold(self):
+        """ Let's say you partially invoice a SO, let's call the resuling invoice 'A'. Now if you change the
+            'Invoicing Switch Threshold' such that the invoice date of 'A' is before the new threshold,
+            the SO should still take invoice 'A' into account.
+        """
+        if not self.env['ir.module.module'].search([('name', '=', 'account_accountant'), ('state', '=', 'installed')]):
+            self.skipTest("This test requires the installation of the account_account module")
+
+        sale_order = self.env['sale.order'].create({
+            'partner_id': self.partner_a.id,
+            'order_line': [
+                Command.create({
+                    'product_id': self.company_data['product_delivery_no'].id,
+                    'product_uom_qty': 20,
+                }),
+            ],
+        })
+        line = sale_order.order_line[0]
+
+        sale_order.action_confirm()
+
+        line.qty_delivered = 10
+
+        invoice = sale_order._create_invoices()
+        invoice.action_post()
+
+        self.assertEqual(line.qty_invoiced, 10)
+
+        self.env['res.config.settings'].create({
+            'invoicing_switch_threshold': fields.Date.add(invoice.invoice_date, days=30),
+        }).execute()
+
+        invoice.invalidate_model(fnames=['payment_state'])
+
+        self.assertEqual(line.qty_invoiced, 10)
+        line.qty_delivered = 15
+        self.assertEqual(line.qty_invoiced, 10)

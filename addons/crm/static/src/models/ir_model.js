@@ -1,24 +1,25 @@
 /** @odoo-module **/
 
-import { patchRecordMethods } from "@mail/model/model_core";
-import "@mail/models/ir_model"; // ensure the model definition is loaded before the patch
+import { Patch } from "@mail/model";
 
-patchRecordMethods("ir.model", {
-    /**
-     * @override
-     */
-    _computeAvailableWebViews() {
-        if (this.model === "crm.lead") {
-            return [
-                'list',
-                'kanban',
-                'form',
-                'calendar',
-                'pivot',
-                'graph',
-                'activity',
-            ];
-        }
-        return this._super();
+Patch({
+    name: "ir.model",
+    fields: {
+        availableWebViews: {
+            compute() {
+                if (this.model === "crm.lead") {
+                    return [
+                        'list',
+                        'kanban',
+                        'form',
+                        'calendar',
+                        'pivot',
+                        'graph',
+                        'activity',
+                    ];
+                }
+                return this._super();
+            },
+        },
     },
 });

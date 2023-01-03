@@ -18,9 +18,9 @@ Note that E-FFF, NLCIUS and XRechnung (UBL) are only available for Belgian, Dutc
 respectively. UBL Bis 3 is only available for companies which country is present in the `EAS list 
 <https://docs.peppol.eu/poacc/billing/3.0/codelist/eas/>`_.
 
-Note also that you need to activate PDF A in order to be able to submit a Factur-X pdf on Chorus Pro: 
-go to Settings > Technical (debug mode) > System Parameters > select/create one with Key: edi.use_pdfa, Value: true.
-With this setting, Chorus Pro will automatically detect the "PDF/A-3 (Factur-X)" format.
+Note also that in order for Chorus Pro to automatically detect the "PDF/A-3 (Factur-X)" format, you need to activate 
+the "Factur-X PDF/A-3" option on the journal. This option will also validate the xml against the Factur-X and Chorus
+Pro rules and show the errors.
     """,
     'depends': ['account_edi'],
     'data': [
@@ -30,7 +30,6 @@ With this setting, Chorus Pro will automatically detect the "PDF/A-3 (Factur-X)"
         'data/ubl_21_templates.xml',
     ],
     'installable': True,
-    'application': False,
     'auto_install': True,
     'license': 'LGPL-3',
 }

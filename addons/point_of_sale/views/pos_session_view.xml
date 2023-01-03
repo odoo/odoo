@@ -15,7 +15,6 @@
                     <field name="state" widget="statusbar" statusbar_visible="opened,closing_control,closed" nolabel="1" />
                 </header>
                 <sheet>
-                    <field name="cash_register_id" invisible="1"/>
                     <field name="failed_pickings" invisible="1"/>
                     <field name="rescue" invisible="1"/>
                     <div class="oe_button_box" name="button_box">
@@ -67,6 +66,8 @@
                         <field name="move_id" readonly="1" groups="account.group_account_readonly" />
                         <field name="start_at" attrs="{'invisible' : [('state', '=', 'opening_control')]}"/>
                         <field name="stop_at" attrs="{'invisible' : [('state', '!=', 'closed')]}"/>
+                        <field name="cash_register_balance_start"/>
+                        <field name="cash_register_balance_end_real" attrs="{'invisible': [('state', '!=', 'closed')]}"/>
                     </group>
                 </sheet>
                 <div class="oe_chatter">

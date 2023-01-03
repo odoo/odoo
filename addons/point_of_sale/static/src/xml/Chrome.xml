@@ -6,17 +6,14 @@
             <div class="pos-receipt-print"></div>
             <div class="pos-topheader" t-att-class="{ oe_hidden: state.uiState !== 'READY' }">
                 <div t-if="tempScreen.isShown" class="block-top-header" />
-                <div class="pos-branding" t-if= "!env.isMobile">
-                    <img class="pos-logo" t-on-click="() => this.trigger('toggle-debug-widget')"
+                <div class="pos-branding">
+                    <img t-if="!env.isMobile" class="pos-logo" t-on-click="() => this.trigger('toggle-debug-widget')"
                          src="/point_of_sale/static/src/img/logo.png" alt="Logo" />
                     <CashMoveButton t-if="showCashMoveButton()" />
                     <TicketButton isTicketScreenShown="isTicketScreenShown" />
                 </div>
                 <div class="pos-rightheader">
-                    <CashMoveButton t-if="showCashMoveButton() and env.isMobile and !state.mobileSearchBarIsShown" />
-                    <TicketButton isTicketScreenShown="isTicketScreenShown" t-if="env.isMobile and !state.mobileSearchBarIsShown" />
-                    <div class="search-bar-portal search-bar-container sb-product" />
-                    <div class="status-buttons" t-if="state.uiState === 'READY'" t-att-class="{ oe_hidden: state.mobileSearchBarIsShown }">
+                    <div class="status-buttons" t-if="state.uiState === 'READY'">
                         <CashierName />
                         <SaleDetailsButton t-if="env.proxy.printer" isHeaderButton="true"/>
                         <ProxyStatus t-if="env.pos.config.use_proxy" />

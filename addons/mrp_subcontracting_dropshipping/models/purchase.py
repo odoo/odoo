@@ -1,12 +1,22 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import models, _
+from odoo import api, fields, models, _
 from odoo.exceptions import UserError
 
 
 class PurchaseOrder(models.Model):
     _inherit = 'purchase.order'
+
+    default_location_dest_id_is_subcontracting_loc = fields.Boolean(related='picking_type_id.default_location_dest_id.is_subcontracting_location')
+
+    @api.depends('default_location_dest_id_is_subcontracting_loc')
+    def _compute_dest_address_id(self):
+        dropship_subcontract_pos = self.filtered(lambda po: po.default_location_dest_id_is_subcontracting_loc)
+        for order in dropship_subcontract_pos:
+            subcontractor_ids = order.picking_type_id.default_location_dest_id.subcontractor_ids
+            order.dest_address_id = subcontractor_ids if len(subcontractor_ids) == 1 else False
+        super(PurchaseOrder, self - dropship_subcontract_pos)._compute_dest_address_id()
 
     def _get_destination_location(self):
         self.ensure_one()

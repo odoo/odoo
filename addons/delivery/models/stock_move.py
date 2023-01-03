@@ -20,7 +20,7 @@ class StockMove(models.Model):
     def _get_new_picking_values(self):
         vals = super(StockMove, self)._get_new_picking_values()
         carrier_id = self.group_id.sale_id.carrier_id.id
-        vals['carrier_id'] = any(propagate_carrier for propagate_carrier in self.rule_id) and carrier_id
+        vals['carrier_id'] = any(rule.propagate_carrier for rule in self.rule_id) and carrier_id
         return vals
 
     def _key_assign_picking(self):
@@ -32,8 +32,7 @@ class StockMoveLine(models.Model):
 
     sale_price = fields.Float(compute='_compute_sale_price')
     destination_country_code = fields.Char(related='picking_id.destination_country_code')
-    carrier_id = fields.Many2one(related='picking_id.carrier_id')
-    carrier_name = fields.Char(related='picking_id.carrier_id.name', readonly=True, store=True, string="Carrier Name")
+    carrier_id = fields.Many2one(related='picking_id.carrier_id', store=True)  # need to be stored for the groupby in `stock_move_line_view_search_delivery`
 
     @api.depends('qty_done', 'product_uom_id', 'product_id', 'move_id.sale_line_id', 'move_id.sale_line_id.price_reduce_taxinc', 'move_id.sale_line_id.product_uom')
     def _compute_sale_price(self):

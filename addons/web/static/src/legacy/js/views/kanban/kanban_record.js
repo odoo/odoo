@@ -24,7 +24,26 @@ var QWeb = core.qweb;
 var KANBAN_RECORD_COLORS = require('web.basic_fields').FieldColorPicker.prototype.RECORD_COLORS;
 var NB_KANBAN_RECORD_COLORS = KANBAN_RECORD_COLORS.length;
 
-const { Component } = owl;
+const { Component } = require("@odoo/owl");
+
+const { DateTime } = luxon;
+// As the name suggests, this is a hack that allows archs that work in the new
+// WOWL kanban views to be instanciated with legacy code. This is one of some
+// hacks to make this work, until the legacy code base is deleted.
+// It only exposes `fromISO` and `local` of DateTime, to limit the damage and complexity.
+const hackishLuxon = {
+    DateTime: {
+        fromISO(text, opt) {
+            // In legacy text should be a Date (native JS) object (see @_transformRecord)
+            const res = DateTime.fromJSDate(text, "UTC");
+            if (!res.isValid) {
+                throw new Error("Invalid Hackish luxon instance in legacy KanbanRecord")
+            }
+            return res;
+        },
+        local: DateTime.local,
+    }
+};
 
 var KanbanRecord = Widget.extend(WidgetAdapterMixin, {
     events: {
@@ -220,7 +239,7 @@ var KanbanRecord = Widget.extend(WidgetAdapterMixin, {
                 id: id
             };
             if (isCurrentRecord) {
-                params.unique = this.record.__last_update && this.record.__last_update.value.replace(/[^0-9]/g, '');
+                params.unique = this.record.write_date && this.record.write_date.value.replace(/[^0-9]/g, '');
             }
             url = session.url('/web/image', params);
         }
@@ -238,11 +257,6 @@ var KanbanRecord = Widget.extend(WidgetAdapterMixin, {
                 record: this.state,
                 attrs: { type, name: action }
             });
-            return;
-        }
-        if (this.$el.hasClass('o_currently_dragged')) {
-            // this record is currently being dragged and dropped, so we do not
-            // want to open it.
             return;
         }
         var editMode = this.$el.hasClass('oe_kanban_global_click_edit');
@@ -598,6 +612,7 @@ var KanbanRecord = Widget.extend(WidgetAdapterMixin, {
             record: this.record,
             user_context: this.getSession().user_context,
             widget: this,
+            luxon: hackishLuxon,
         };
     },
     /**
@@ -693,6 +708,11 @@ var KanbanRecord = Widget.extend(WidgetAdapterMixin, {
      */
     _onGlobalClick: function (event) {
         if ($(event.target).parents('.o_dropdown_kanban').length) {
+            return;
+        }
+        if (this.$el.hasClass('o_currently_dragged')) {
+            // this record is currently being dragged and dropped, so we do not
+            // want to open it.
             return;
         }
         var trigger = true;

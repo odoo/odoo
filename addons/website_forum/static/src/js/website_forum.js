@@ -3,6 +3,7 @@ odoo.define('website_forum.website_forum', function (require) {
 
 const dom = require('web.dom');
 var core = require('web.core');
+const {setCookie} = require('web.utils.cookies');
 var Dialog = require('web.Dialog');
 var wysiwygLoader = require('web_editor.loader');
 var publicWidget = require('web.public.widget');
@@ -14,10 +15,6 @@ var _t = core._t;
 
 publicWidget.registry.websiteForum = publicWidget.Widget.extend({
     selector: '.website_forum',
-    xmlDependencies: [
-        '/web_editor/static/src/xml/editor.xml',
-        '/website_forum/static/src/xml/public_templates.xml',
-    ],
     events: {
         'click .karma_required': '_onKarmaRequiredClick',
         'mouseenter .o_js_forum_tag_follow': '_onTagFollowBoxMouseEnter',
@@ -132,7 +129,11 @@ publicWidget.registry.websiteForum = publicWidget.Widget.extend({
                 recordInfo: {
                     context: self._getContext(),
                     res_model: 'forum.post',
-                    res_id: +window.location.pathname.split('-').pop(),
+                    // Id is retrieved from URL, which is either:
+                    // - /forum/name-1/post/something-5
+                    // - /forum/name-1/post/something-5/edit
+                    // TODO: Make this more robust.
+                    res_id: +window.location.pathname.split('-').slice(-1)[0].split('/')[0],
                 },
                 resizable: true,
                 userGeneratedContent: true,
@@ -501,7 +502,7 @@ publicWidget.registry.websiteForum = publicWidget.Widget.extend({
      */
     _onCloseIntroClick: function (ev) {
         ev.preventDefault();
-        document.cookie = 'forum_welcome_message = false';
+        setCookie('forum_welcome_message', false, 24 * 60 * 60 * 365, 'optional');
         $('.forum_intro').slideUp();
         return true;
     },
@@ -556,7 +557,6 @@ publicWidget.registry.websiteForum = publicWidget.Widget.extend({
 
 publicWidget.registry.websiteForumSpam = publicWidget.Widget.extend({
     selector: '.o_wforum_moderation_queue',
-    xmlDependencies: ['/website_forum/static/src/xml/public_templates.xml'],
     events: {
         'click .o_wforum_select_all_spam': '_onSelectallSpamClick',
         'click .o_wforum_mark_spam': 'async _onMarkSpamClick',

@@ -1,0 +1,65 @@
+.o_mailing_mobile_preview {
+    text-align: center;
+    user-select: none;
+
+    .modal-dialog {
+        display: inline-block;
+        width: auto;
+
+        .modal-content {
+            background-color: black!important;
+            border: 3px outset gray;
+            border-radius: 20px;
+
+            .modal-header {
+                border: none;
+                color: white;
+                cursor: pointer;
+                font-family: $o-we-font-family;
+
+                .btn-close {
+                    filter: invert(1) grayscale(100%) brightness(200%);
+                }
+
+                h4 {
+                    font-family: inherit;
+                    font-weight: normal;
+                    color: inherit;
+
+                    .fa {
+                        margin-left: $grid-gutter-width/2;
+                    }
+                }
+            }
+
+            .modal-body {
+                background-color: inherit!important;
+                border-radius: 20px;
+                padding: 15px;
+
+                $mobile-preview-width: 30vh;
+                $mobile-preview-height: 70vh;
+
+                display: flex;
+                width: $mobile-preview-width + 15;
+                height: $mobile-preview-height;
+                transition: all 400ms ease 0s;
+
+                &.o_invert_orientation {
+                    width: $mobile-preview-height;
+                    height: $mobile-preview-width + 15;
+                }
+
+                > iframe {
+                    display: block;
+                    width: 100%;
+                    border: none;
+                }
+            }
+
+            .modal-footer {
+                display: none;
+            }
+        }
+    }
+}

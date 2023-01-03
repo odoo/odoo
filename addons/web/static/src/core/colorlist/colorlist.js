@@ -2,7 +2,7 @@
 
 import { _lt } from "@web/core/l10n/translation";
 
-const { Component, useRef, useState, useExternalListener } = owl;
+import { Component, useRef, useState, useExternalListener } from "@odoo/owl";
 
 export class ColorList extends Component {
     setup() {
@@ -53,7 +53,7 @@ ColorList.template = "web.ColorList";
 ColorList.defaultProps = {
     forceExpanded: false,
     isExpanded: false,
-}
+};
 ColorList.props = {
     canToggle: { type: Boolean, optional: true },
     colors: Array,

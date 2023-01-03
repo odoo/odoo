@@ -23,7 +23,7 @@ const { FieldOne2Many } = relationalFields;
 const AbstractFieldOwl = require('web.AbstractFieldOwl');
 const fieldRegistryOwl = require('web.field_registry_owl');
 
-const { onMounted, onWillUnmount, xml } = owl;
+const { onMounted, onWillUnmount, xml } = require("@odoo/owl");
 
 QUnit.module('Legacy fields', {}, function () {
 
@@ -9908,14 +9908,14 @@ QUnit.module('Legacy fields', {}, function () {
             });
 
             assert.containsN(form, '.o_data_row', 2);
-            assert.hasClass(form.$('.o_data_row:nth(1) .o_field_badge'), 'bg-warning');
+            assert.hasClass(form.$('.o_data_row:nth(1) .o_field_badge'), 'text-bg-warning');
 
             await testUtils.dom.click(form.$('.o_data_row .o_data_cell:first'));
             await testUtils.owlCompatibilityExtraNextTick();
             await testUtils.fields.editInput(form.$('.o_selected_row .o_field_integer'), '44');
             await testUtils.owlCompatibilityExtraNextTick();
 
-            assert.hasClass(form.$('.o_data_row:nth(1) .o_field_badge'), 'bg-warning');
+            assert.hasClass(form.$('.o_data_row:nth(1) .o_field_badge'), 'text-bg-warning');
 
             form.destroy();
         });
@@ -10132,6 +10132,59 @@ QUnit.module('Legacy fields', {}, function () {
             });
 
             await testUtils.dom.click(form.$('.o_field_x2many_list_row_add a:eq(0)'));
+
+            form.destroy();
+        });
+
+        QUnit.test('nested one2manys, multi page, onchange', async function (assert) {
+            assert.expect(5);
+
+            this.data.partner.records[2].int_field = 5;
+            this.data.partner.records[0].p = [2, 4]; // limit 1 -> record 4 will be on second page
+            this.data.partner.records[1].turtles = [1];
+            this.data.partner.records[2].turtles = [2];
+            this.data.turtle.records[0].turtle_int = 1;
+            this.data.turtle.records[1].turtle_int = 2;
+
+            this.data.partner.onchanges.int_field = function (obj) {
+               assert.step('onchange')
+               obj.p = [[5]]
+               obj.p.push([1, 2, { turtles: [[5], [1, 1, { turtle_int: obj.int_field }]] }]);
+               obj.p.push([1, 4, { turtles: [[5], [1, 2, { turtle_int: obj.int_field }]] }]);
+            };
+
+            var form = await createView({
+                View: FormView,
+                model: 'partner',
+                data: this.data,
+                arch: '<form string="Partner">' +
+                    '<field name="int_field"/>' +
+                    '<field name="p">' +
+                    '<tree editable="bottom" limit="1" default_order="display_name">' +
+                        '<field name="display_name" />' +
+                        '<field name="int_field" />' +
+                        '<field name="turtles">' +
+                        '<tree editable="bottom">' +
+                            '<field name="turtle_int"/>' +
+                        '</tree>' +
+                        '</field>' +
+                    '</tree>' +
+                    '</field>' +
+                    '</form>',
+                res_id: 1,
+                viewOptions: {
+                    mode: 'edit',
+                },
+            });
+
+            await testUtils.fields.editInput(form.$('.o_field_widget[name="int_field"]'), '5');
+            assert.verifySteps(['onchange'])
+
+            await testUtils.form.clickSave(form);
+
+            assert.strictEqual(this.data.partner.records[0].int_field, 5, 'Value should have been updated')
+            assert.strictEqual(this.data.turtle.records[1].turtle_int, 5, 'Shown data should have been updated');
+            assert.strictEqual(this.data.turtle.records[0].turtle_int, 5, 'Hidden data should have been updated');
 
             form.destroy();
         });

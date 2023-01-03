@@ -1,17 +1,18 @@
 /** @odoo-module **/
 
-import { getPyEnv, startServer } from '@bus/../tests/helpers/mock_python_environment';
+import { getPyEnv, startServer } from "@bus/../tests/helpers/mock_python_environment";
 
-import { nextTick } from '@mail/utils/utils';
-import { getAdvanceTime } from '@mail/../tests/helpers/time_control';
-import { getWebClientReady } from '@mail/../tests/helpers/webclient_setup';
+import { nextTick } from "@mail/utils/utils";
+import { getAdvanceTime } from "@mail/../tests/helpers/time_control";
+import { getWebClientReady } from "@mail/../tests/helpers/webclient_setup";
 
 import { wowlServicesSymbol } from "@web/legacy/utils";
 import { registerCleanup } from "@web/../tests/helpers/cleanup";
+import { session as sessionInfo } from "@web/session";
 import { getFixture, makeDeferred, patchWithCleanup } from "@web/../tests/helpers/utils";
 import { doAction, getActionManagerServerData } from "@web/../tests/webclient/helpers";
 
-const { App, EventBus } = owl;
+import { App, EventBus } from "@odoo/owl";
 const { afterNextRender } = App;
 
 //------------------------------------------------------------------------------
@@ -27,11 +28,11 @@ const { afterNextRender } = App;
  */
 function _createFakeDataTransfer(files) {
     return {
-        dropEffect: 'all',
-        effectAllowed: 'all',
+        dropEffect: "all",
+        effectAllowed: "all",
         files,
         items: [],
-        types: ['Files'],
+        types: ["Files"],
     };
 }
 
@@ -69,20 +70,18 @@ function getAfterEvent({ messagingBus }) {
      * @returns {Promise}
      */
     return async function afterEvent({ eventName, func, message, predicate, timeoutDelay = 5000 }) {
+        const error = new Error(message || `Timeout: the event ${eventName} was not triggered.`);
         // Set up the timeout to reject if the event is not triggered.
         let timeoutNoEvent;
         const timeoutProm = new Promise((resolve, reject) => {
             timeoutNoEvent = setTimeout(() => {
-                let error = message
-                    ? new Error(message)
-                    : new Error(`Timeout: the event ${eventName} was not triggered.`);
-                console.error(error);
+                console.warn(error);
                 reject(error);
             }, timeoutDelay);
         });
         // Set up the promise to resolve if the event is triggered.
         const eventProm = makeDeferred();
-        const eventHandler = ev => {
+        const eventHandler = (ev) => {
             if (!predicate || predicate(ev.detail)) {
                 eventProm.resolve();
             }
@@ -92,9 +91,12 @@ function getAfterEvent({ messagingBus }) {
         // promise has been registered to not miss any potential event.
         const funcRes = func();
         // Make them race (first to resolve/reject wins).
-        await Promise.race([eventProm, timeoutProm]);
-        clearTimeout(timeoutNoEvent);
-        messagingBus.removeEventListener(eventName, eventHandler);
+        await Promise.race([eventProm, timeoutProm]).finally(() => {
+            // Execute clean up regardless of whether the promise is
+            // rejected or not.
+            clearTimeout(timeoutNoEvent);
+            messagingBus.removeEventListener(eventName, eventHandler);
+        });
         // If the event is triggered before the end of the async function,
         // ensure the function finishes its job before returning.
         return await funcRes;
@@ -107,6 +109,14 @@ function getClick({ afterNextRender }) {
     };
 }
 
+function getMouseenter({ afterNextRender }) {
+    return async function mouseenter(selector) {
+        await afterNextRender(() =>
+            document.querySelector(selector).dispatchEvent(new window.MouseEvent("mouseenter"))
+        );
+    };
+}
+
 function getOpenDiscuss(afterEvent, webClient, { context = {}, params, ...props } = {}) {
     return async function openDiscuss({ waitUntilMessagesLoaded = true } = {}) {
         const actionOpenDiscuss = {
@@ -114,56 +124,61 @@ function getOpenDiscuss(afterEvent, webClient, { context = {}, params, ...props 
             id: 104,
             context,
             params,
-            tag: 'mail.action_discuss',
-            type: 'ir.actions.client',
+            tag: "mail.action_discuss",
+            type: "ir.actions.client",
         };
         if (waitUntilMessagesLoaded) {
             let threadId = context.active_id;
-            if (typeof threadId === 'string') {
-                threadId = parseInt(threadId.split('_')[1]);
+            if (typeof threadId === "string") {
+                threadId = parseInt(threadId.split("_")[1]);
             }
-            return afterNextRender(() => afterEvent({
-                eventName: 'o-thread-view-hint-processed',
-                func: () => doAction(webClient, actionOpenDiscuss, { props }),
-                message: "should wait until discuss loaded its messages",
-                predicate: ({ hint, threadViewer }) => {
-                    return (
-                        hint.type === 'messages-loaded' &&
-                        (!threadId || threadViewer.thread.id === threadId)
-                    );
-                },
-            }));
+            return afterNextRender(() =>
+                afterEvent({
+                    eventName: "o-thread-view-hint-processed",
+                    func: () => doAction(webClient, actionOpenDiscuss, { props }),
+                    message: "should wait until discuss loaded its messages",
+                    predicate: ({ hint, threadViewer }) => {
+                        return (
+                            hint.type === "messages-loaded" &&
+                            (!threadId || threadViewer.thread.id === threadId)
+                        );
+                    },
+                })
+            );
         }
         return afterNextRender(() => doAction(webClient, actionOpenDiscuss, { props }));
     };
 }
 
 function getOpenFormView(afterEvent, openView) {
-    return async function openFormView(action, { props, waitUntilDataLoaded = true, waitUntilMessagesLoaded = true } = {}) {
-        action['views'] = [[false, 'form']];
+    return async function openFormView(
+        action,
+        { props, waitUntilDataLoaded = true, waitUntilMessagesLoaded = true } = {}
+    ) {
+        action["views"] = [[false, "form"]];
         const func = () => openView(action, props);
-        const waitData = func => afterNextRender(() => afterEvent({
-            eventName: 'o-thread-loaded-data',
-            func,
-            message: "should wait until chatter loaded its data",
-            predicate: ({ thread }) => {
-                return (
-                    thread.model === action.res_model &&
-                    thread.id === action.res_id
-                );
-            },
-        }));
-        const waitMessages = func => afterNextRender(() => afterEvent({
-            eventName: 'o-thread-loaded-messages',
-            func,
-            message: "should wait until chatter loaded its messages",
-            predicate: ({ thread }) => {
-                return (
-                    thread.model === action.res_model &&
-                    thread.id === action.res_id
-                );
-            },
-        }));
+        const waitData = (func) =>
+            afterNextRender(() =>
+                afterEvent({
+                    eventName: "o-thread-loaded-data",
+                    func,
+                    message: "should wait until chatter loaded its data",
+                    predicate: ({ thread }) => {
+                        return thread.model === action.res_model && thread.id === action.res_id;
+                    },
+                })
+            );
+        const waitMessages = (func) =>
+            afterNextRender(() =>
+                afterEvent({
+                    eventName: "o-thread-loaded-messages",
+                    func,
+                    message: "should wait until chatter loaded its messages",
+                    predicate: ({ thread }) => {
+                        return thread.model === action.res_model && thread.id === action.res_id;
+                    },
+                })
+            );
         if (waitUntilDataLoaded && waitUntilMessagesLoaded) {
             return waitData(() => waitMessages(func));
         }
@@ -196,11 +211,6 @@ function getOpenFormView(afterEvent, openView) {
  * @param {Deferred|Promise} [param0.messagingBeforeCreationDeferred=Promise.resolve()]
  *   Deferred that let tests block messaging creation and simulate resolution.
  *   Useful for testing working components when messaging is not yet created.
- * @param {Object} [param0.waitUntilEvent]
- * @param {String} [param0.waitUntilEvent.eventName]
- * @param {String} [param0.waitUntilEvent.message]
- * @param {function} [param0.waitUntilEvent.predicate]
- * @param {integer} [param0.waitUntilEvent.timeoutDelay]
  * @param {string} [param0.waitUntilMessagingCondition='initialized'] Determines
  *   the condition of messaging when this function is resolved.
  *   Supported values: ['none', 'created', 'initialized'].
@@ -220,39 +230,45 @@ function getOpenFormView(afterEvent, openView) {
 async function start(param0 = {}) {
     // patch _.debounce and _.throttle to be fast and synchronous.
     patchWithCleanup(_, {
-        debounce: func => func,
-        throttle: func => func,
+        debounce: (func) => func,
+        throttle: (func) => func,
     });
-    const {
-        discuss = {},
-        hasTimeControl,
-        waitUntilEvent,
-        waitUntilMessagingCondition = 'initialized',
-    } = param0;
+    const { discuss = {}, hasTimeControl, waitUntilMessagingCondition = "initialized" } = param0;
     const advanceTime = hasTimeControl ? getAdvanceTime() : undefined;
-    const target = param0['target'] || getFixture();
-    param0['target'] = target;
-    if (!['none', 'created', 'initialized'].includes(waitUntilMessagingCondition)) {
-        throw Error(`Unknown parameter value ${waitUntilMessagingCondition} for 'waitUntilMessaging'.`);
+    const target = param0["target"] || getFixture();
+    param0["target"] = target;
+    if (!["none", "created", "initialized"].includes(waitUntilMessagingCondition)) {
+        throw Error(
+            `Unknown parameter value ${waitUntilMessagingCondition} for 'waitUntilMessaging'.`
+        );
     }
     const messagingBus = new EventBus();
-    const testSetupDoneDeferred = makeDeferred();
     const afterEvent = getAfterEvent({ messagingBus });
-    let waitUntilEventPromise;
-    if (waitUntilEvent) {
-        waitUntilEventPromise = afterEvent({ func: () => testSetupDoneDeferred.resolve(), ...waitUntilEvent, });
-    } else {
-        testSetupDoneDeferred.resolve();
-        waitUntilEventPromise = Promise.resolve();
-    }
 
     const pyEnv = await getPyEnv();
+    patchWithCleanup(sessionInfo, {
+        user_context: {
+            ...sessionInfo.user_context,
+            uid: pyEnv.currentUserId,
+        },
+        uid: pyEnv.currentUserId,
+        partner_id: pyEnv.currentPartnerId,
+    });
     param0.serverData = param0.serverData || getActionManagerServerData();
     param0.serverData.models = { ...pyEnv.getData(), ...param0.serverData.models };
     param0.serverData.views = { ...pyEnv.getViews(), ...param0.serverData.views };
-    const webClient = await getWebClientReady({ ...param0, messagingBus, testSetupDoneDeferred });
+    let webClient;
+    await afterNextRender(async () => {
+        webClient = await getWebClientReady({ ...param0, messagingBus });
+        if (waitUntilMessagingCondition === "created") {
+            await webClient.env.services.messaging.modelManager.messagingCreatedPromise;
+        }
+        if (waitUntilMessagingCondition === "initialized") {
+            await webClient.env.services.messaging.modelManager.messagingCreatedPromise;
+            await webClient.env.services.messaging.modelManager.messagingInitializedPromise;
+        }
+    });
 
-    webClient.env.services.messaging.modelManager;
     registerCleanup(async () => {
         await webClient.env.services.messaging.modelManager.messagingInitializedPromise;
         webClient.env.services.messaging.modelManager.destroy();
@@ -261,18 +277,10 @@ async function start(param0 = {}) {
         delete owl.Component.env[wowlServicesSymbol].messaging;
         delete owl.Component.env;
     });
-    if (waitUntilMessagingCondition === 'created') {
-        await webClient.env.services.messaging.modelManager.messagingCreatedPromise;
-    }
-    if (waitUntilMessagingCondition === 'initialized') {
-        await webClient.env.services.messaging.modelManager.messagingCreatedPromise;
-        await webClient.env.services.messaging.modelManager.messagingInitializedPromise;
-    }
     const openView = async (action, options) => {
-        action['type'] = action['type'] || 'ir.actions.act_window';
+        action["type"] = action["type"] || "ir.actions.act_window";
         await afterNextRender(() => doAction(webClient, action, { props: options }));
     };
-    await waitUntilEventPromise;
     return {
         advanceTime,
         afterEvent,
@@ -281,6 +289,7 @@ async function start(param0 = {}) {
         env: webClient.env,
         insertText,
         messaging: webClient.env.services.messaging.modelManager.messaging,
+        mouseenter: getMouseenter({ afterNextRender }),
         openDiscuss: getOpenDiscuss(afterEvent, webClient, discuss),
         openView,
         openFormView: getOpenFormView(afterEvent, openView),
@@ -301,8 +310,8 @@ async function start(param0 = {}) {
  *   @see testUtils.file.createFile
  */
 function dragenterFiles(el, files) {
-    const ev = new Event('dragenter', { bubbles: true });
-    Object.defineProperty(ev, 'dataTransfer', {
+    const ev = new Event("dragenter", { bubbles: true });
+    Object.defineProperty(ev, "dataTransfer", {
         value: _createFakeDataTransfer(files),
     });
     el.dispatchEvent(ev);
@@ -316,8 +325,8 @@ function dragenterFiles(el, files) {
  *   @see testUtils.file.createFile
  */
 function dropFiles(el, files) {
-    const ev = new Event('drop', { bubbles: true });
-    Object.defineProperty(ev, 'dataTransfer', {
+    const ev = new Event("drop", { bubbles: true });
+    Object.defineProperty(ev, "dataTransfer", {
         value: _createFakeDataTransfer(files),
     });
     el.dispatchEvent(ev);
@@ -331,8 +340,8 @@ function dropFiles(el, files) {
  *   @see testUtils.file.createFile
  */
 function pasteFiles(el, files) {
-    const ev = new Event('paste', { bubbles: true });
-    Object.defineProperty(ev, 'clipboardData', {
+    const ev = new Event("paste", { bubbles: true });
+    Object.defineProperty(ev, "clipboardData", {
         value: _createFakeDataTransfer(files),
     });
     el.dispatchEvent(ev);
@@ -346,13 +355,17 @@ function pasteFiles(el, files) {
  * @param {string} selector
  * @param {string} content
  */
- async function insertText(selector, content) {
+async function insertText(selector, content) {
     await afterNextRender(() => {
         document.querySelector(selector).focus();
         for (const char of content) {
-            document.execCommand('insertText', false, char);
-            document.querySelector(selector).dispatchEvent(new window.KeyboardEvent('keydown', { key: char }));
-            document.querySelector(selector).dispatchEvent(new window.KeyboardEvent('keyup', { key: char }));
+            document.execCommand("insertText", false, char);
+            document
+                .querySelector(selector)
+                .dispatchEvent(new window.KeyboardEvent("keydown", { key: char }));
+            document
+                .querySelector(selector)
+                .dispatchEvent(new window.KeyboardEvent("keyup", { key: char }));
         }
     });
 }

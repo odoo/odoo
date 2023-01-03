@@ -4,7 +4,6 @@ import datetime
 from freezegun import freeze_time
 from dateutil.relativedelta import relativedelta
 
-from odoo import fields
 from odoo.tests import tagged
 
 from odoo.addons.hr_holidays.tests.common import TestHrHolidaysCommon
@@ -19,6 +18,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
             'name': 'Paid Time Off',
             'time_type': 'leave',
             'requires_allocation': 'yes',
+            'allocation_validation_type': 'officer',
         })
 
     def setAllocationCreateDate(self, allocation_id, date):
@@ -285,24 +285,26 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
         # 2 accruals, one based on worked time, one not
         # check gain
         with freeze_time('2021-08-30'):
+            attendances = []
+            for index in range(5):
+                attendances.append((0, 0, {
+                    'name': '%s_%d' % ('40 Hours', index),
+                    'hour_from': 8,
+                    'hour_to': 12,
+                    'dayofweek': str(index),
+                    'day_period': 'morning'
+                }))
+                attendances.append((0, 0, {
+                    'name': '%s_%d' % ('40 Hours', index),
+                    'hour_from': 13,
+                    'hour_to': 17,
+                    'dayofweek': str(index),
+                    'day_period': 'afternoon'
+                }))
             calendar_emp = self.env['resource.calendar'].create({
                 'name': '40 Hours',
                 'tz': self.employee_emp.tz,
-                'attendance_ids': [
-                    (0, 0, {
-                        'name': '%s_%d' % ('40 Hours', index),
-                        'hour_from': 8,
-                        'hour_to': 12,
-                        'dayofweek': str(index),
-                        'day_period': 'morning'
-                    }, {
-                        'name': '%s_%d' % ('40 Hours', index),
-                        'hour_from': 13,
-                        'hour_to': 18,
-                        'dayofweek': str(index),
-                        'day_period': 'afternoon'
-                    }) for index in range(5)
-                ],
+                'attendance_ids': attendances,
             })
             self.employee_emp.resource_calendar_id = calendar_emp.id
 
@@ -377,7 +379,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
             # 3.75 -> starts 1 day after allocation date -> 31/08-3/09 => 4 days - 1 days time off => (3 / 4) * 5 days
             # ^ result without prorata
             # Prorated
-            self.assertAlmostEqual(allocation_worked_time.number_of_days, 3.42857, 4, 'There should be 3.42857 days allocated.')
+            self.assertAlmostEqual(allocation_worked_time.number_of_days, 3, 4, 'There should be 3 days allocated.')
             self.assertEqual(allocation_not_worked_time.nextcall, datetime.date(2021, 9, 13), 'The next call date of the cron should be the September 13th')
             self.assertEqual(allocation_worked_time.nextcall, datetime.date(2021, 9, 13), 'The next call date of the cron should be the September 13th')
 
@@ -386,7 +388,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
             self.env['hr.leave.allocation']._update_accrual()
             self.assertAlmostEqual(allocation_not_worked_time.number_of_days, 9.2857, 4, 'There should be 9.2857 days allocated.')
             self.assertEqual(allocation_not_worked_time.nextcall, next_date, 'The next call date of the cron should be September 20th')
-            self.assertAlmostEqual(allocation_worked_time.number_of_days, 8.42857, 4, 'There should be 8.42857 days allocated.')
+            self.assertAlmostEqual(allocation_worked_time.number_of_days, 8, 4, 'There should be 8 days allocated.')
             self.assertEqual(allocation_worked_time.nextcall, next_date, 'The next call date of the cron should be September 20th')
 
     def test_check_max_value(self):
@@ -532,7 +534,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
         accrual_cron.lastcall = datetime.date(2021, 9, 1)
         with freeze_time('2022-01-01'):
             allocation._update_accrual()
-            self.assertEqual(allocation.number_of_days, 0, 'There number of days should be reset')
+            self.assertEqual(allocation.number_of_days, 1, 'The number of days should be reset')
 
     def test_unused_accrual_postponed(self):
         # 1 accrual with 2 levels and level transition after
@@ -730,6 +732,36 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
         allocation.action_confirm()
         allocation.action_validate()
         with freeze_time('2022-4-4'):
+            allocation._update_accrual()
+        self.assertEqual(allocation.number_of_days, 4, "Invalid number of days")
+
+    def test_accrual_lost_first_january(self):
+        accrual_plan = self.env['hr.leave.accrual.plan'].with_context(tracking_disable=True).create({
+            'name': 'Accrual Plan For Test',
+            'level_ids': [
+                (0, 0, {
+                    'start_count': 0,
+                    'start_type': 'day',
+                    'added_value': 3,
+                    'added_value_type': 'days',
+                    'frequency': 'yearly',
+                    'maximum_leave': 12,
+                    'action_with_unused_accruals': 'lost',
+                })
+            ],
+        })
+        allocation = self.env['hr.leave.allocation'].with_user(self.user_hrmanager_id).with_context(tracking_disable=True).create({
+            'name': 'Accrual Allocation - Test',
+            'accrual_plan_id': accrual_plan.id,
+            'employee_id': self.employee_emp.id,
+            'holiday_status_id': self.leave_type.id,
+            'number_of_days': 0,
+            'allocation_type': 'accrual',
+            'date_from': datetime.date(2019, 1, 1),
+        })
+        allocation.action_confirm()
+        allocation.action_validate()
+        with freeze_time('2022-4-1'):
             allocation._update_accrual()
         self.assertEqual(allocation.number_of_days, 3, "Invalid number of days")
 

@@ -9,7 +9,7 @@ import { useModel } from "@web/views/model";
 import { standardViewProps } from "@web/views/standard_view_props";
 import { useSetupView } from "@web/views/view_hook";
 
-const { Component, useRef } = owl;
+import { Component, useRef } from "@odoo/owl";
 
 export class GraphController extends Component {
     setup() {
@@ -122,17 +122,8 @@ export class GraphController extends Component {
 GraphController.template = "web.GraphView";
 GraphController.components = { Dropdown, DropdownItem, GroupByMenu, Layout };
 
-GraphController.defaultProps = {
-    additionalMeasures: [],
-    displayGroupByMenu: false,
-    displayScaleLabels: true,
-};
-
 GraphController.props = {
     ...standardViewProps,
-    additionalMeasures: { type: Array, elements: String, optional: true },
-    displayGroupByMenu: { type: Boolean, optional: true },
-    displayScaleLabels: { type: Boolean, optional: true },
     Model: Function,
     modelParams: Object,
     Renderer: Function,

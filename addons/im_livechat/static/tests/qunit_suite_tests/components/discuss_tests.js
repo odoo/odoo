@@ -29,10 +29,10 @@ QUnit.test('livechat in the sidebar: basic rendering', async function (assert) {
     const { openDiscuss } = await start();
     await openDiscuss();
 
-    assert.containsOnce(document.body, '.o_Discuss_sidebar',
+    assert.containsOnce(document.body, '.o_DiscussView_sidebar',
         "should have a sidebar section"
     );
-    const groupLivechat = document.querySelector('.o_DiscussSidebar_categoryLivechat');
+    const groupLivechat = document.querySelector('.o_DiscussSidebarView_categoryLivechat');
     assert.ok(groupLivechat,
         "should have a channel group livechat"
     );
@@ -43,7 +43,7 @@ QUnit.test('livechat in the sidebar: basic rendering', async function (assert) {
         "should have a channel group named 'Livechat'"
     );
     const livechat = groupLivechat.querySelector(`
-        .o_DiscussSidebarCategoryItem[data-thread-id="${mailChannelId1}"][data-thread-model="mail.channel"]
+        .o_DiscussSidebarCategoryItem[data-channel-id="${mailChannelId1}"]
     `);
     assert.ok(
         livechat,
@@ -81,10 +81,10 @@ QUnit.test('livechat in the sidebar: existing user with country', async function
 
     assert.containsOnce(
         document.body,
-        '.o_DiscussSidebar_categoryLivechat',
+        '.o_DiscussSidebarView_categoryLivechat',
         "should have a channel group livechat in the side bar"
     );
-    const livechat = document.querySelector('.o_DiscussSidebar_categoryLivechat .o_DiscussSidebarCategoryItem');
+    const livechat = document.querySelector('.o_DiscussSidebarView_categoryLivechat .o_DiscussSidebarCategoryItem');
     assert.ok(
         livechat,
         "should have a livechat in sidebar"
@@ -109,7 +109,7 @@ QUnit.test('do not add livechat in the sidebar on visitor opening his chat', asy
 
     assert.containsNone(
         document.body,
-        '.o_DiscussSidebar_categoryLivechat',
+        '.o_DiscussSidebarView_categoryLivechat',
         "should not have any livechat in the sidebar initially"
     );
 
@@ -126,7 +126,7 @@ QUnit.test('do not add livechat in the sidebar on visitor opening his chat', asy
     await nextAnimationFrame();
     assert.containsNone(
         document.body,
-        '.o_DiscussSidebar_categoryLivechat',
+        '.o_DiscussSidebarView_categoryLivechat',
         "should still not have any livechat in the sidebar after visitor opened his chat"
     );
 });
@@ -156,7 +156,7 @@ QUnit.test('do not add livechat in the sidebar on visitor typing', async functio
 
     assert.containsNone(
         document.body,
-        '.o_DiscussSidebar_categoryLivechat',
+        '.o_DiscussSidebarView_categoryLivechat',
         "should not have any livechat in the sidebar initially"
     );
 
@@ -175,7 +175,7 @@ QUnit.test('do not add livechat in the sidebar on visitor typing', async functio
     await nextAnimationFrame();
     assert.containsNone(
         document.body,
-        '.o_DiscussSidebar_categoryLivechat',
+        '.o_DiscussSidebarView_categoryLivechat',
         "should still not have any livechat in the sidebar after visitor started typing"
     );
 });
@@ -210,7 +210,7 @@ QUnit.test('add livechat in the sidebar on visitor sending first message', async
     await openDiscuss();
     assert.containsNone(
         document.body,
-        '.o_DiscussSidebar_categoryLivechat',
+        '.o_DiscussSidebarView_categoryLivechat',
         "should not have any livechat in the sidebar initially"
     );
 
@@ -228,16 +228,16 @@ QUnit.test('add livechat in the sidebar on visitor sending first message', async
     }));
     assert.containsOnce(
         document.body,
-        '.o_DiscussSidebar_categoryLivechat',
+        '.o_DiscussSidebarView_categoryLivechat',
         "should have a channel group livechat in the side bar after receiving first message"
     );
     assert.containsOnce(
         document.body,
-        '.o_DiscussSidebar_categoryLivechat .o_DiscussSidebarCategoryItem',
+        '.o_DiscussSidebarView_categoryLivechat .o_DiscussSidebarCategoryItem',
         "should have a livechat in the sidebar after receiving first message"
     );
     assert.strictEqual(
-        document.querySelector('.o_DiscussSidebar_categoryLivechat .o_DiscussSidebarCategoryItem .o_DiscussSidebarCategoryItem_name').textContent,
+        document.querySelector('.o_DiscussSidebarView_categoryLivechat .o_DiscussSidebarCategoryItem .o_DiscussSidebarCategoryItem_name').textContent,
         "Visitor (Belgium)",
         "should have visitor name and country as livechat name"
     );
@@ -273,52 +273,44 @@ QUnit.test('livechats are sorted by last activity time in the sidebar: most rece
             livechat_operator_id: pyEnv.currentPartnerId,
         },
     ]);
-    const { messaging, openDiscuss } = await start();
+    const { openDiscuss } = await start();
     await openDiscuss();
-    const livechat11 = messaging.models['Thread'].findFromIdentifyingData({
-        id: mailChannelId1,
-        model: 'mail.channel',
-    });
-    const livechat12 = messaging.models['Thread'].findFromIdentifyingData({
-        id: mailChannelId2,
-        model: 'mail.channel',
-    });
-    const initialLivechats = document.querySelectorAll('.o_DiscussSidebar_categoryLivechat .o_DiscussSidebarCategoryItem');
+    const initialLivechats = document.querySelectorAll('.o_DiscussSidebarView_categoryLivechat .o_DiscussSidebarCategory_item');
     assert.strictEqual(
         initialLivechats.length,
         2,
         "should have 2 livechat items"
     );
     assert.strictEqual(
-        parseInt(initialLivechats[0].dataset.threadId),
-        livechat12.id,
+        Number(initialLivechats[0].dataset.channelId),
+        mailChannelId2,
         "first livechat should be the one with the more recent last activity time"
     );
     assert.strictEqual(
-        parseInt(initialLivechats[1].dataset.threadId),
-        livechat11.id,
+        Number(initialLivechats[1].dataset.channelId),
+        mailChannelId1,
         "second livechat should be the one with the less recent last activity time"
     );
 
     // post a new message on the last channel
     await afterNextRender(() => initialLivechats[1].click());
     await afterNextRender(() => document.execCommand('insertText', false, "Blabla"));
-    await afterNextRender(() => document.querySelector('.o_Composer_buttonSend').click());
+    await afterNextRender(() => document.querySelector('.o_ComposerView_buttonSend').click());
 
-    const newLivechats = document.querySelectorAll('.o_DiscussSidebar_categoryLivechat .o_DiscussSidebarCategoryItem');
+    const newLivechats = document.querySelectorAll('.o_DiscussSidebarView_categoryLivechat .o_DiscussSidebarCategory_item');
     assert.strictEqual(
         newLivechats.length,
         2,
         "should have 2 livechat items"
     );
     assert.strictEqual(
-        parseInt(newLivechats[0].dataset.threadId),
-        livechat11.id,
+        Number(newLivechats[0].dataset.channelId),
+        mailChannelId1,
         "first livechat should be the one with the more recent last activity time"
     );
     assert.strictEqual(
-        parseInt(newLivechats[1].dataset.threadId),
-        livechat12.id,
+        Number(newLivechats[1].dataset.channelId),
+        mailChannelId2,
         "second livechat should be the one with the less recent last activity time"
     );
 });
@@ -401,9 +393,9 @@ QUnit.test('reaction button should not be present on livechat', async function (
         },
     });
     await openDiscuss();
-    await insertText('.o_ComposerTextInput_textarea', "Test");
-    await click('.o_Composer_buttonSend');
-    await click('.o_Message');
+    await insertText('.o_ComposerTextInputView_textarea', "Test");
+    await click('.o_ComposerView_buttonSend');
+    await click('.o_MessageView');
     assert.containsNone(
         document.body,
         '.o_MessageActionView_actionReaction',
@@ -429,9 +421,9 @@ QUnit.test('reply button should not be present on livechat', async function (ass
         },
     });
     await openDiscuss();
-    await insertText('.o_ComposerTextInput_textarea', "Test");
-    await click('.o_Composer_buttonSend');
-    await click('.o_Message');
+    await insertText('.o_ComposerTextInputView_textarea', "Test");
+    await click('.o_ComposerView_buttonSend');
+    await click('.o_MessageView');
     assert.containsNone(
         document.body,
         '.o_MessageActionView_actionReplyTo',

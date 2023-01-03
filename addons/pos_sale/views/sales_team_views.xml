@@ -34,11 +34,10 @@
         <field name="name">crm.team.view.kanban.dashboard.inherit.pos</field>
         <field name="model">crm.team</field>
         <field name="inherit_id" ref="sales_team.crm_team_view_kanban_dashboard"/>
-        <field name="groups_id" eval="[(4, ref('point_of_sale.group_pos_user'))]"/>
         <field name="arch" type="xml">
         <data>
             <xpath expr="//t[@name='first_options']" position="before">
-                <div class="row" t-if="record.pos_sessions_open_count.raw_value">
+                <div class="row" t-if="record.pos_sessions_open_count.raw_value" groups="point_of_sale.group_pos_user">
                     <div class="col-8">
                         <a name="%(pos_session_action_from_crm_team)d" type="action">
                             <field name="pos_sessions_open_count"/>

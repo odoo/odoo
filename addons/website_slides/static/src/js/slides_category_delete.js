@@ -51,7 +51,6 @@ const categoryDeleteDialog = Dialog.extend({
 
 publicWidget.registry.websiteSlidesCategoryDelete = publicWidget.Widget.extend({
     selector: '.o_wslides_js_category_delete',
-    xmlDependencies: ['/website_slides/static/src/xml/slide_management.xml'],
     events: {
         'click': '_onClickDeleteCateogry',
     },

@@ -921,16 +921,29 @@ def dumpstacks(sig=None, frame=None, thread_idents=None):
     threads_info = {th.ident: {'repr': repr(th),
                                'uid': getattr(th, 'uid', 'n/a'),
                                'dbname': getattr(th, 'dbname', 'n/a'),
-                               'url': getattr(th, 'url', 'n/a')}
+                               'url': getattr(th, 'url', 'n/a'),
+                               'query_count': getattr(th, 'query_count', 'n/a'),
+                               'query_time': getattr(th, 'query_time', None),
+                               'perf_t0': getattr(th, 'perf_t0', None)}
                     for th in threading.enumerate()}
     for threadId, stack in sys._current_frames().items():
         if not thread_idents or threadId in thread_idents:
             thread_info = threads_info.get(threadId, {})
-            code.append("\n# Thread: %s (db:%s) (uid:%s) (url:%s)" %
+            query_time = thread_info.get('query_time')
+            perf_t0 = thread_info.get('perf_t0')
+            remaining_time = None
+            if query_time and perf_t0:
+                remaining_time = '%.3f' % (time.time() - perf_t0 - query_time)
+                query_time = '%.3f' % query_time
+            # qc:query_count qt:query_time pt:python_time (aka remaining time)
+            code.append("\n# Thread: %s (db:%s) (uid:%s) (url:%s) (qc:%s qt:%s pt:%s)" %
                         (thread_info.get('repr', threadId),
                          thread_info.get('dbname', 'n/a'),
                          thread_info.get('uid', 'n/a'),
-                         thread_info.get('url', 'n/a')))
+                         thread_info.get('url', 'n/a'),
+                         thread_info.get('query_count', 'n/a'),
+                         query_time or 'n/a',
+                         remaining_time or 'n/a'))
             for line in extract_stack(stack):
                 code.append(line)
 
@@ -1677,3 +1690,25 @@ def street_split(street):
         'street_number': results[1].strip(),
         'street_number2': results[2],
     }
+
+
+def is_list_of(values, type_):
+    """Return True if the given values is a list / tuple of the given type.
+
+    :param values: The values to check
+    :param type_: The type of the elements in the list / tuple
+    """
+    return isinstance(values, (list, tuple)) and all(isinstance(item, type_) for item in values)
+
+
+def has_list_types(values, types):
+    """Return True if the given values have the same types as
+    the one given in argument, in the same order.
+
+    :param values: The values to check
+    :param types: The types of the elements in the list / tuple
+    """
+    return (
+        isinstance(values, (list, tuple)) and len(values) == len(types)
+        and all(isinstance(item, type_) for item, type_ in zip(values, types))
+    )

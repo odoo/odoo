@@ -3,7 +3,7 @@ odoo.define('website_sale_wishlist_admin.tour', function (require) {
 
 const wTourUtils = require("website.tour_utils");
 
-wTourUtils.registerEditionTour('shop_wishlist_admin', {
+wTourUtils.registerWebsitePreviewTour('shop_wishlist_admin', {
     url: '/shop?search=Rock',
     test: true,
 },

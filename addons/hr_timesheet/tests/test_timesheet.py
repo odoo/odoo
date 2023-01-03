@@ -1,9 +1,11 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from lxml import etree
+
 from odoo.fields import Command
 from odoo.tests.common import TransactionCase
-from odoo.exceptions import AccessError, UserError
+from odoo.exceptions import AccessError, UserError, ValidationError
 
 
 class TestCommonTimesheet(TransactionCase):
@@ -26,9 +28,14 @@ class TestCommonTimesheet(TransactionCase):
             'phone': '42',
         })
 
+        cls.analytic_plan = cls.env['account.analytic.plan'].create({
+            'name': 'Plan Test',
+            'company_id': False,
+        })
         cls.analytic_account = cls.env['account.analytic.account'].create({
             'name': 'Analytic Account for Test Customer',
             'partner_id': cls.partner.id,
+            'plan_id': cls.analytic_plan.id,
             'code': 'TEST'
         })
 
@@ -75,15 +82,32 @@ class TestCommonTimesheet(TransactionCase):
         cls.empl_employee = cls.env['hr.employee'].create({
             'name': 'User Empl Employee',
             'user_id': cls.user_employee.id,
+            'employee_type': 'freelance',  # Avoid searching the contract if hr_contract module is installed before this module.
         })
         cls.empl_employee2 = cls.env['hr.employee'].create({
             'name': 'User Empl Employee 2',
             'user_id': cls.user_employee2.id,
+            'employee_type': 'freelance',
         })
         cls.empl_manager = cls.env['hr.employee'].create({
             'name': 'User Empl Officer',
             'user_id': cls.user_manager.id,
+            'employee_type': 'freelance',
         })
+
+    def assert_get_view_timesheet_encode_uom(self, expected):
+        companies = self.env['res.company'].create([
+            {'name': 'foo', 'timesheet_encode_uom_id': self.env.ref('uom.product_uom_hour').id},
+            {'name': 'bar', 'timesheet_encode_uom_id': self.env.ref('uom.product_uom_day').id},
+        ])
+        for view_xml_id, xpath_expr, expected_labels in expected:
+            for company, expected_label in zip(companies, expected_labels):
+                view = self.env.ref(view_xml_id)
+                view = self.env[view.model].with_company(company).get_view(view.id, view.type)
+                tree = etree.fromstring(view['arch'])
+                field_node = tree.xpath(xpath_expr)[0]
+                self.assertEqual(field_node.get('string'), expected_label)
+
 
 class TestTimesheet(TestCommonTimesheet):
 
@@ -225,6 +249,7 @@ class TestTimesheet(TestCommonTimesheet):
             'task_id': self.task1.id,
             'name': 'my first timesheet',
             'unit_amount': 4,
+            'user_id': self.user_employee.id,
         })
 
         timesheet_count1 = Timesheet.search_count([('project_id', '=', self.project_customer.id)])
@@ -253,8 +278,8 @@ class TestTimesheet(TestCommonTimesheet):
     def test_recompute_amount_for_multiple_timesheets(self):
         """ Check that amount is recomputed correctly when setting unit_amount for multiple timesheets at once. """
         Timesheet = self.env['account.analytic.line']
-        self.empl_employee.timesheet_cost = 5.0
-        self.empl_employee2.timesheet_cost = 6.0
+        self.empl_employee.hourly_cost = 5.0
+        self.empl_employee2.hourly_cost = 6.0
         # create a timesheet for each employee
         timesheet_1 = Timesheet.with_user(self.user_employee).create({
             'project_id': self.project_customer.id,
@@ -299,6 +324,7 @@ class TestTimesheet(TestCommonTimesheet):
             'task_id': self.task1.id,
             'name': 'my only timesheet',
             'unit_amount': 4,
+            'user_id': self.user_employee.id,
         })
 
         self.assertEqual(timesheet_entry.partner_id, self.partner, "The timesheet entry's partner should be equal to the task's partner/customer")
@@ -357,8 +383,13 @@ class TestTimesheet(TestCommonTimesheet):
         company_2 = self.env['res.company'].create({'name': 'Company 2'})
         company_3 = self.env['res.company'].create({'name': 'Company 3'})
 
+        analytic_plan = self.env['account.analytic.plan'].create({
+            'name': 'Plan Test',
+            'company_id': company_3.id
+        })
         analytic_account = self.env['account.analytic.account'].create({
             'name': 'Aa Aa',
+            'plan_id': analytic_plan.id,
             'company_id': company_3.id,
         })
         project = self.env['project.project'].create({
@@ -386,15 +417,16 @@ class TestTimesheet(TestCommonTimesheet):
             'name': 'Employee 2',
             'user_id': self.user_manager.id,
         })
-        timesheet = Timesheet.create({
-            'name': 'Timesheet',
-            'project_id': project.id,
-            'task_id': task.id,
-            'unit_amount': 2,
-            'user_id': self.user_manager.id,
-            'company_id': company_3.id,
-        })
-        self.assertFalse(timesheet.employee_id, 'As there are several employees for this user, but none of them in this company, none must be found')
+        with self.assertRaises(ValidationError):
+            # As there are several employees for this user, but none of them in this company, none must be found
+            Timesheet.create({
+                'name': 'Timesheet',
+                'project_id': project.id,
+                'task_id': task.id,
+                'unit_amount': 2,
+                'user_id': self.user_manager.id,
+                'company_id': company_3.id,
+            })
 
     def test_create_timesheet_with_multi_company(self):
         """ Always set the current company in the timesheet, not the employee company """
@@ -435,49 +467,11 @@ class TestTimesheet(TestCommonTimesheet):
         self.assertEqual(self.task1.subtask_effective_hours, 8, 'Hours Spent on Sub-tasks should be 8 hours in Parent Task')
         self.task1.child_ids = [Command.clear()]
 
-    def test_log_timesheet_with_analytic_tags(self):
-        """ Test whether the analytic tag of the project or task is set on the timesheet.
-
-            Test Case:
-            ----------
-                1) Create analytic tags
-                2) Add analytic tag in project
-                3) Create timesheet
-                4) Check the default analytic tag of the project and timesheet
-                5) Add analytic tag in task
-                6) Check the analytic tag of the timesheet and task
-        """
-        Timesheet = self.env['account.analytic.line']
-
-        share_capital_tag, office_furn_tag = self.env['account.analytic.tag'].create([
-            {'name': 'Share capital'},
-            {'name': 'Office Furniture'},
-        ])
-
-        self.project_customer.analytic_tag_ids = [Command.set((share_capital_tag + office_furn_tag).ids)]
-
-        timesheet = Timesheet.create({
-            'project_id': self.project_customer.id,
-            'name': 'my first timesheet',
-            'unit_amount': 4,
-        })
-        self.assertEqual(timesheet.tag_ids, self.project_customer.analytic_tag_ids)
-
-        self.task2.analytic_tag_ids = [Command.set((share_capital_tag + office_furn_tag).ids)]
-
-        timesheet1 = Timesheet.create({
-            'project_id': self.project_customer.id,
-            'task_id': self.task2.id,
-            'name': 'my first timesheet',
-            'unit_amount': 4,
-        })
-        self.assertEqual(timesheet1.tag_ids, self.task2.analytic_tag_ids)
-
     def test_ensure_product_uom_set_in_timesheet(self):
         self.assertFalse(self.project_customer.timesheet_ids, 'No timesheet should be recorded in this project')
         self.assertFalse(self.project_customer.total_timesheet_time, 'The total time recorded should be equal to 0 since no timesheet is recorded.')
 
-        timesheet1, timesheet2 = self.env['account.analytic.line'].create([
+        timesheet1, timesheet2 = self.env['account.analytic.line'].with_user(self.user_employee).create([
             {'unit_amount': 1.0, 'project_id': self.project_customer.id},
             {'unit_amount': 3.0, 'project_id': self.project_customer.id, 'product_uom_id': False},
         ])
@@ -517,3 +511,14 @@ class TestTimesheet(TestCommonTimesheet):
 
         with self.assertRaises(UserError):
             timesheet.employee_id = self.empl_employee2
+
+    def test_get_view_timesheet_encode_uom(self):
+        """ Test the label of timesheet time spent fields according to the company encoding timesheet uom """
+        self.assert_get_view_timesheet_encode_uom([
+            ('hr_timesheet.hr_timesheet_line_form', '//field[@name="unit_amount"]', ['Hours Spent', 'Days Spent']),
+            ('hr_timesheet.project_invoice_form', '//field[@name="allocated_hours"]', [None, 'Allocated Days']),
+            ('hr_timesheet.view_task_form2_inherited', '//field[@name="unit_amount"]', ['Hours Spent', 'Days Spent']),
+            ('hr_timesheet.view_task_tree2_inherited', '//field[@name="planned_hours"]', [None, 'Initially Planned Days']),
+            ('hr_timesheet.view_task_project_user_graph_inherited', '//field[@name="hours_planned"]', [None, 'Planned Days']),
+            ('hr_timesheet.timesheets_analysis_report_pivot_employee', '//field[@name="unit_amount"]', [None, 'Days Spent']),
+        ])

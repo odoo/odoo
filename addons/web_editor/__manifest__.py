@@ -22,10 +22,6 @@ Odoo Web Editor widget.
         # MAIN BUNDLES
         #----------------------------------------------------------------------
 
-        'web.assets_qweb': [
-            ('include', 'web_editor.assets_media_dialog_templates'),
-            'web_editor/static/src/xml/*.xml',
-        ],
         'web_editor.assets_wysiwyg': [
             # lib
             'web_editor/static/lib/cropperjs/cropper.css',
@@ -34,7 +30,6 @@ Odoo Web Editor widget.
             'web_editor/static/lib/jQuery.transfo.js',
             'web/static/lib/nearest/jquery.nearest.js',
             'web_editor/static/lib/webgl-image-filter/webgl-image-filter.js',
-            'web_editor/static/lib/html2canvas.js', # needed for convert_inline.js
             'web_editor/static/lib/DOMPurify.js',
 
             # odoo-editor
@@ -63,7 +58,7 @@ Odoo Web Editor widget.
             ('include', 'web._assets_helpers'),
 
             'web_editor/static/src/scss/bootstrap_overridden.scss',
-            'web/static/src/libs/bootstrap/pre_variables.scss',
+            'web/static/src/scss/pre_variables.scss',
             'web/static/lib/bootstrap/scss/_variables.scss',
             'web_editor/static/src/js/editor/odoo-editor/src/style.scss',
 
@@ -85,20 +80,18 @@ Odoo Web Editor widget.
             # Launcher
             'web_editor/static/src/js/wysiwyg/wysiwyg.js',
             'web_editor/static/src/js/wysiwyg/wysiwyg_iframe.js',
-        ],
-        # TODO: Move those dialog assets in assets_common and make the public
-        # root fetch templates from the common assets
-        'web_editor.assets_media_dialog_templates': [
-            'web_editor/static/src/components/media_dialog/*.xml',
-            'web_editor/static/src/components/upload_progress_toast/*.xml',
+
+            'web_editor/static/src/xml/editor.xml',
+            'web_editor/static/src/xml/grid_layout.xml',
+            'web_editor/static/src/xml/snippets.xml',
+            'web_editor/static/src/xml/wysiwyg.xml',
+            'web_editor/static/src/xml/wysiwyg_colorpicker.xml',
         ],
         'web_editor.assets_media_dialog': [
-            'web_editor/static/src/components/media_dialog/*.js',
-            'web_editor/static/src/components/media_dialog/*.scss',
-            'web_editor/static/src/components/upload_progress_toast/*.js',
-            'web_editor/static/src/components/upload_progress_toast/*.scss',
+            'web_editor/static/src/components/**/*',
         ],
         'web_editor.assets_tests_styles': [
+            ('include', 'web._assets_helpers'),
             'web_editor/static/src/js/editor/odoo-editor/src/base_style.scss',
             'web_editor/static/src/js/editor/odoo-editor/src/checklist.scss',
         ],
@@ -108,6 +101,7 @@ Odoo Web Editor widget.
             'web_editor/static/src/js/common/**/*',
             'web_editor/static/src/js/editor/odoo-editor/src/utils/utils.js',
             'web_editor/static/src/js/wysiwyg/fonts.js',
+            'web_editor/static/src/xml/ace.xml',
         ],
         'web.assets_backend': [
             ('include', 'web_editor.assets_media_dialog'),
@@ -118,13 +112,27 @@ Odoo Web Editor widget.
             'web_editor/static/src/js/wysiwyg/dialog.js',
             'web_editor/static/src/js/frontend/loader.js',
             'web_editor/static/src/js/backend/**/*',
+            'web_editor/static/src/xml/backend.xml',
+        ],
+        "web.dark_mode_assets_backend": [
+            'web_editor/static/src/scss/odoo-editor/powerbox.dark.scss',
+            'web_editor/static/src/scss/odoo-editor/tablepicker.dark.scss',
+            'web_editor/static/src/scss/odoo-editor/tableui.dark.scss',
+            'web_editor/static/src/scss/wysiwyg.dark.scss',
+            'web_editor/static/src/scss/web_editor.common.dark.scss',
         ],
         'web.assets_frontend_minimal': [
             'web_editor/static/src/js/frontend/loader_loading.js',
         ],
         'web.assets_frontend': [
-            ('include', 'web_editor.assets_media_dialog_templates'),
             ('include', 'web_editor.assets_media_dialog'),
+
+            'web_editor/static/src/js/editor/odoo-editor/src/base_style.scss',
+            'web_editor/static/lib/vkbeautify/**/*',
+            'web_editor/static/src/js/common/**/*',
+            'web_editor/static/src/js/editor/odoo-editor/src/utils/utils.js',
+            'web_editor/static/src/js/wysiwyg/fonts.js',
+            'web_editor/static/src/xml/ace.xml',
 
             'web_editor/static/src/scss/web_editor.common.scss',
             'web_editor/static/src/scss/web_editor.frontend.scss',
@@ -139,6 +147,7 @@ Odoo Web Editor widget.
 
         'web._assets_primary_variables': [
             'web_editor/static/src/scss/web_editor.variables.scss',
+            'web_editor/static/src/scss/wysiwyg.variables.scss',
         ],
         'web._assets_secondary_variables': [
             'web_editor/static/src/scss/secondary_variables.scss',

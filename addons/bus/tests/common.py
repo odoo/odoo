@@ -43,8 +43,7 @@ class WebsocketCase(common.HttpCase):
             '_serve_forever',
             wraps=_mocked_serve_forever
         )
-        self._serve_forever_patch.start()
-        self.addCleanup(self._serve_forever_patch.stop)
+        self.startPatcher(self._serve_forever_patch)
 
     def tearDown(self):
         self._close_websockets()

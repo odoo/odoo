@@ -14,7 +14,6 @@ from . import ir_binary
 from . import ir_cron
 from . import ir_filters
 from . import ir_default
-from . import ir_translation
 from . import ir_exports
 from . import ir_rule
 from . import ir_config_parameter

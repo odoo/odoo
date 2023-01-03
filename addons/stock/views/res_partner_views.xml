@@ -27,11 +27,13 @@
         <field name="inherit_id" ref="base.view_partner_form"/>
         <field name="arch" type="xml">
             <page name="internal_notes" position="inside">
-                <group colspan="2" col="2" groups="stock.group_warning_stock">
-                    <separator string="Warning on the Picking" colspan="4"/>
-                    <field name="picking_warn" nolabel="1" />
-                    <field name="picking_warn_msg" colspan="3" nolabel="1" 
-                        attrs="{'required':[('picking_warn','!=', False), ('picking_warn','!=','no-message')], 'invisible':[('picking_warn','in',(False,'no-message'))]}"/>
+                <group groups="stock.group_warning_stock">
+                    <group col="2">
+                        <separator string="Warning on the Picking" colspan="2"/>
+                        <field name="picking_warn" nolabel="1" colspan="2" required="1"/>
+                        <field name="picking_warn_msg" placeholder="Type a message..." colspan="2" nolabel="1"
+                            attrs="{'required':[('picking_warn','!=', False), ('picking_warn','!=','no-message')], 'invisible':[('picking_warn','in',(False,'no-message'))]}"/>
+                    </group>
                 </group>
             </page>
         </field>

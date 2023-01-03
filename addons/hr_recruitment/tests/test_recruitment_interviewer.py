@@ -46,30 +46,30 @@ class TestRecruitmentInterviewer(MailCommon):
             'name': 'toto',
             'partner_name': 'toto',
             'job_id': self.job.id,
-            'interviewer_id': self.simple_user.id,
+            'interviewer_ids': self.simple_user.ids,
         })
         self.assertTrue(interviewer_group.id in self.simple_user.groups_id.ids, "Simple User should be added as interviewer")
 
-        applicant.interviewer_id = False
+        applicant.interviewer_ids = False
         self.assertFalse(interviewer_group.id in self.simple_user.groups_id.ids, "Simple User should be removed from interviewer")
 
         self.job.interviewer_ids = self.simple_user.ids
-        applicant.interviewer_id = self.simple_user.id
+        applicant.interviewer_ids = self.simple_user.ids
         self.assertTrue(interviewer_group.id in self.simple_user.groups_id.ids, "Simple User should be added as interviewer")
 
-        applicant.interviewer_id = False
+        applicant.interviewer_ids = False
         self.assertTrue(interviewer_group.id in self.simple_user.groups_id.ids, "Simple User should stay interviewer")
 
         self.job.write({'interviewer_ids': [(5, 0, 0)]})
-        applicant.interviewer_id = self.simple_user.id
+        applicant.interviewer_ids = self.simple_user.ids
         self.assertTrue(interviewer_group.id in self.simple_user.groups_id.ids, "Simple User should stay interviewer")
 
-        applicant.interviewer_id = False
+        applicant.interviewer_ids = False
         self.assertFalse(interviewer_group.id in self.simple_user.groups_id.ids, "Simple User should be removed from interviewer")
 
         # A Manager should not be added to the Interviewer group
         self.assertFalse(interviewer_group.id in self.manager_user.groups_id.ids, "Manager User should not be interviewer")
-        applicant.interviewer_id = self.manager_user.id
+        applicant.interviewer_ids = self.manager_user.ids
         self.assertFalse(interviewer_group.id in self.manager_user.groups_id.ids, "Manager User should not be added in Interviewer group")
 
     def test_interviewer_access_rights(self):
@@ -85,7 +85,7 @@ class TestRecruitmentInterviewer(MailCommon):
             'name': 'toto',
             'partner_name': 'toto',
             'job_id': self.job.id,
-            'interviewer_id': self.interviewer_user.id,
+            'interviewer_ids': self.interviewer_user.ids,
         })
         applicant.with_user(self.interviewer_user).read()
 
@@ -98,8 +98,8 @@ class TestRecruitmentInterviewer(MailCommon):
         applicant.with_user(self.interviewer_user).read()
 
         # An interviewer can change the interviewers
-        applicant.with_user(self.interviewer_user).interviewer_id = self.simple_user.id
-        self.assertEqual(self.simple_user, applicant.interviewer_id)
+        applicant.with_user(self.interviewer_user).interviewer_ids = self.simple_user.ids
+        self.assertEqual(self.simple_user, applicant.interviewer_ids)
 
         with self.assertRaises(AccessError):
             applicant.with_user(self.interviewer_user).create_employee_from_applicant()
@@ -111,7 +111,7 @@ class TestRecruitmentInterviewer(MailCommon):
             'name': 'toto',
             'partner_name': 'toto',
             'job_id': self.job.id,
-            'interviewer_id': self.interviewer_user.id,
+            'interviewer_ids': self.interviewer_user.ids,
         })
 
         applicant.message_subscribe(partner_ids=[self.interviewer_user.partner_id.id])

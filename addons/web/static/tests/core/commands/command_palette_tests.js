@@ -19,7 +19,7 @@ import {
 } from "../../helpers/utils";
 import { backspaceSearchBar, editSearchBar } from "./command_service_tests";
 
-const { Component, xml } = owl;
+import { Component, xml } from "@odoo/owl";
 
 let env;
 let target;
@@ -1518,7 +1518,7 @@ QUnit.test("generate new session id when opened", async (assert) => {
     mount(TestComponent, target, { env });
     const providers = [
         {
-            provide: (env, {sessionId}) => {
+            provide: (env, { sessionId }) => {
                 lastSessionId = sessionId;
                 return [];
             },
@@ -1568,14 +1568,14 @@ QUnit.test("checks that href is correctly used", async (assert) => {
             ],
         },
     ];
-    const config = {providers};
+    const config = { providers };
     env.services.dialog.add(CommandPalette, {
         config,
     });
     patchWithCleanup(window, {
         open: (href) => {
             assert.step(href.toString());
-        }
+        },
     });
     await nextTick();
     await editSearchBar("@");

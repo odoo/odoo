@@ -17,8 +17,7 @@
                 <separator/>
                 <filter string="Active Employee" name="active_employee" domain="[('active_employee','=',True)]"/>
                 <separator/>
-                <filter name="year" string="Current Year"
-                    domain="[('holiday_status_id.active', '=', True)]" help="Active Time Off"/>
+                <filter name="year" date="date_from" default_period="this_year" string="Current Year"/>
                 <separator/>
                 <filter string="My Requests" name="my_leaves" domain="[('employee_id.user_id', '=', uid)]"/>
                 <filter string="Archived" name="archived" domain="[('active', '=', False)]"/>

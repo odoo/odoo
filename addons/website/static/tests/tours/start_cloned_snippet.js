@@ -9,7 +9,7 @@ const countdownSnippet = {
 const dragNDropOutOfFooter = wTourUtils.dragNDrop(countdownSnippet);
 dragNDropOutOfFooter.run = 'drag_and_drop iframe #wrapwrap #wrap';
 
-wTourUtils.registerEditionTour('website_start_cloned_snippet', {
+wTourUtils.registerWebsitePreviewTour('website_start_cloned_snippet', {
     edition: true,
     test: true,
     url: '/',

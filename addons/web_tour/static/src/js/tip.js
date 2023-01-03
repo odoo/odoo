@@ -8,7 +8,6 @@ var _t = core._t;
 
 var Tip = Widget.extend({
     template: "Tip",
-    xmlDependencies: ['/web_tour/static/src/xml/tip.xml'],
     events: {
         click: '_onTipClicked',
         mouseenter: '_onMouseEnter',
@@ -100,6 +99,9 @@ var Tip = Widget.extend({
         this.el.style.removeProperty('transition');
         this.$tooltip_content.html(this.info.content);
         this.$window = $(window);
+        // Fix the content font size as it was used to compute the height and
+        // width of the container.
+        this.$tooltip_content[0].style.fontSize = getComputedStyle(this.$tooltip_content[0])['font-size'];
 
         this.$tooltip_content.css({
             width: "100%",
@@ -659,6 +661,9 @@ Tip.getConsumeEventType = function ($element, run) {
         // ui-sortable parent, and if so, we conclude that its event type is 'sort'
         if ($element.closest('.ui-sortable').length) {
             return 'sort';
+        }
+        if (run.indexOf("drag_and_drop_native") === 0 && $element.hasClass('o_record_draggable') || $element.closest('.o_record_draggable').length) {
+            return 'mousedown';
         }
     }
     return "click";

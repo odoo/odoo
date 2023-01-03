@@ -83,7 +83,7 @@ tour.register('hr_recruitment_tour',{
     content: Markup(_t("<div><b>Try to send an email</b> to the applicant.</div><div><i>Tips: All emails sent or received are saved in the history here</i>")),
     position: "bottom"
 }, {
-    trigger: ".o_Chatter .o_Composer_buttonSend",
+    trigger: ".o_Chatter .o_ComposerView_buttonSend",
     extra_trigger: '.o_applicant_form',
     content: _t("Send your email. Followers will get a copy of the communication."),
     position: "bottom"

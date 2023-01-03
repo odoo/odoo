@@ -4,8 +4,16 @@ import {
     makeFakeLocalizationService,
     makeFakeNotificationService,
 } from "@web/../tests/helpers/mock_services";
-import { click, editInput, getFixture } from "@web/../tests/helpers/utils";
+import {
+    click,
+    clickSave,
+    editInput,
+    getFixture,
+    nextTick,
+    patchWithCleanup,
+} from "@web/../tests/helpers/utils";
 import { makeView, setupViewRegistries } from "@web/../tests/views/helpers";
+import { browser } from "@web/core/browser/browser";
 import { registry } from "@web/core/registry";
 
 let serverData;
@@ -47,6 +55,10 @@ QUnit.module("Fields", (hooks) => {
         };
 
         setupViewRegistries();
+
+        patchWithCleanup(browser, {
+            setTimeout: (fn) => fn(),
+        });
     });
 
     QUnit.module("ProgressBarField");
@@ -54,7 +66,6 @@ QUnit.module("Fields", (hooks) => {
     QUnit.test("ProgressBarField: max_value should update", async function (assert) {
         assert.expect(3);
 
-        serverData.models.partner.records = serverData.models.partner.records.slice(0, 1);
         serverData.models.partner.records[0].float_field = 2;
 
         serverData.models.partner.onchanges = {
@@ -91,11 +102,9 @@ QUnit.module("Fields", (hooks) => {
             "10 / 2",
             "The initial value of the progress bar should be correct"
         );
-        // The view should be in edit mode
-        await click(target.querySelector(".o_form_button_edit"));
 
         await editInput(target, ".o_field_widget[name=display_name] input", "new name");
-        await click(target.querySelector(".o_form_button_save"));
+        await clickSave(target);
 
         assert.strictEqual(
             target.querySelector(".o_progressbar_value").textContent,
@@ -107,7 +116,7 @@ QUnit.module("Fields", (hooks) => {
     QUnit.test(
         "ProgressBarField: value should update in edit mode when typing in input",
         async function (assert) {
-            assert.expect(5);
+            assert.expect(6);
             serverData.models.partner.records[0].int_field = 99;
 
             await makeView({
@@ -130,9 +139,6 @@ QUnit.module("Fields", (hooks) => {
                 },
             });
 
-            // The view should be in edit mode by default
-            await click(target.querySelector(".o_form_button_edit"));
-
             assert.ok(target.querySelector(".o_form_view .o_form_editable"), "Form in edit mode");
 
             assert.strictEqual(
@@ -151,13 +157,21 @@ QUnit.module("Fields", (hooks) => {
             );
 
             await editInput(target, ".o_progressbar_value.o_input", "69");
+            await click(target, ".o_form_view");
 
-            await click(target.querySelector(".o_form_button_save"));
+            await nextTick();
+            assert.strictEqual(
+                target.querySelector(".o_progressbar_value").textContent,
+                "69%",
+                "New value should be different after focusing out of the field"
+            );
+
+            await clickSave(target);
 
             assert.strictEqual(
                 target.querySelector(".o_progressbar_value").textContent,
                 "69%",
-                "New value should be different than initial after click"
+                "New value is still displayed after save"
             );
         }
     );
@@ -188,8 +202,6 @@ QUnit.module("Fields", (hooks) => {
                     }
                 },
             });
-            // The view should be in edit mode by default
-            await click(target.querySelector(".o_form_button_edit"));
 
             assert.ok(target.querySelector(".o_form_view .o_form_editable"), "Form in edit mode");
             assert.ok(
@@ -204,7 +216,7 @@ QUnit.module("Fields", (hooks) => {
 
             await editInput(target, ".o_progressbar_value.o_input", "69");
 
-            await click(target.querySelector(".o_form_button_save"));
+            await clickSave(target);
 
             assert.strictEqual(
                 target.querySelector(".o_progressbar_value").textContent,
@@ -246,19 +258,15 @@ QUnit.module("Fields", (hooks) => {
                 "99 / 0",
                 "Initial value should be correct"
             );
-            // The view should be in edit mode by default
-            await click(target.querySelector(".o_form_button_edit"));
 
             assert.ok(target.querySelector(".o_form_view .o_form_editable"), "Form in edit mode");
-
             await click(target.querySelector(".o_progress"));
-
             const input = target.querySelector(".o_progressbar_value.o_input");
             assert.strictEqual(input.value, "0.44", "Initial value in input is correct");
 
             await editInput(target, ".o_progressbar_value.o_input", "69");
 
-            await click(target.querySelector(".o_form_button_save"));
+            await clickSave(target);
 
             assert.strictEqual(
                 target.querySelector(".o_progressbar_value").textContent,
@@ -271,7 +279,7 @@ QUnit.module("Fields", (hooks) => {
     QUnit.test(
         "ProgressBarField: update both max value and current value in edit mode when both options are given",
         async function (assert) {
-            assert.expect(7);
+            assert.expect(10);
             serverData.models.partner.records[0].int_field = 99;
 
             await makeView({
@@ -301,8 +309,6 @@ QUnit.module("Fields", (hooks) => {
                 "99 / 0",
                 "Initial value should be correct"
             );
-            // The view should be in edit mode by default
-            await click(target.querySelector(".o_form_button_edit"));
 
             assert.ok(target.querySelector(".o_form_view .o_form_editable"), "Form in edit mode");
 
@@ -310,13 +316,27 @@ QUnit.module("Fields", (hooks) => {
 
             const currentVal = target.querySelectorAll(".o_progressbar_value.o_input")[0];
             const maxVal = target.querySelectorAll(".o_progressbar_value.o_input")[1];
+            assert.strictEqual(document.activeElement, currentVal, "First input is focused");
             assert.strictEqual(currentVal.value, "99", "Initial value in input is correct");
             assert.strictEqual(maxVal.value, "0.44", "Initial value in input is correct");
 
+            maxVal.focus();
+            await nextTick();
+            assert.strictEqual(document.activeElement, maxVal, "Second input is focused");
+
+            await click(target, ".o_form_view");
+            await nextTick();
+            assert.containsNone(
+                target,
+                ".o_progressbar input",
+                "Inputs are no longer visible when focusing out"
+            );
+
+            await click(target.querySelector(".o_progress"));
             await editInput(target, ".o_progressbar input:nth-of-type(1)", "2000");
             await editInput(target, ".o_progressbar input:nth-of-type(2)", "69");
 
-            await click(target.querySelector(".o_form_button_save"));
+            await clickSave(target);
 
             assert.strictEqual(
                 target.querySelector(".o_progressbar_value").textContent,
@@ -334,7 +354,7 @@ QUnit.module("Fields", (hooks) => {
             type: "form",
             resModel: "partner",
             arch: `
-                <form>
+                <form edit="0">
                     <field name="float_field" invisible="1"/>
                     <field name="int_field" widget="progressbar" options="{'editable': true, 'max_value': 'float_field', 'edit_max_value': true}"/>
                 </form>`,
@@ -343,8 +363,6 @@ QUnit.module("Fields", (hooks) => {
                 assert.step(route);
             },
         });
-
-        assert.ok(target.querySelector(".o_form_view .o_form_readonly"), "Form in readonly mode");
 
         assert.strictEqual(
             target.querySelector(".o_progressbar_value").textContent,
@@ -530,68 +548,6 @@ QUnit.module("Fields", (hooks) => {
     );
 
     QUnit.test(
-        "ProgressBar: value should update in readonly mode with right parameter when typing in input with field value",
-        async function (assert) {
-            assert.expect(7);
-            serverData.models.partner.records[0].int_field = 99;
-
-            await makeView({
-                serverData,
-                type: "form",
-                resModel: "partner",
-                arch: `
-                    <form>
-                        <field name="int_field" widget="progressbar" title="ProgressBarTitle" options="{'editable': true, 'editable_readonly': true}" />
-                    </form>`,
-                resId: 1,
-                mockRPC(route, args) {
-                    if (args.method === "write") {
-                        assert.strictEqual(
-                            args.args[1].int_field,
-                            69,
-                            "New value of progress bar saved"
-                        );
-                    }
-                },
-            });
-
-            assert.strictEqual(
-                target.querySelector(".o_progressbar_value").textContent,
-                "99%",
-                "Initial value should be correct"
-            );
-            assert.strictEqual(
-                target.querySelector(".o_progressbar_title").textContent,
-                "ProgressBarTitle"
-            );
-
-            await click(target.querySelector(".o_progress"));
-
-            assert.strictEqual(
-                target.querySelector(".o_progressbar_value.o_input").value,
-                "99",
-                "Initial value in input is correct"
-            );
-            assert.strictEqual(
-                target.querySelector(".o_progressbar_title").textContent,
-                "ProgressBarTitle"
-            );
-
-            await editInput(target, ".o_field_widget input", "69.6");
-
-            assert.strictEqual(
-                target.querySelector(".o_progressbar_value").textContent,
-                "69%",
-                "New value should be different than initial after changing it"
-            );
-            assert.strictEqual(
-                target.querySelector(".o_progressbar_title").textContent,
-                "ProgressBarTitle"
-            );
-        }
-    );
-
-    QUnit.test(
         "ProgressBarField: write float instead of int works, in locale",
         async function (assert) {
             assert.expect(5);
@@ -631,7 +587,6 @@ QUnit.module("Fields", (hooks) => {
                 "Initial value should be correct"
             );
 
-            await click(target.querySelector(".o_form_button_edit"));
             assert.ok(target.querySelector(".o_form_view .o_form_editable"), "Form in edit mode");
 
             await click(target.querySelector(".o_progress"));
@@ -641,7 +596,7 @@ QUnit.module("Fields", (hooks) => {
 
             await editInput(target, ".o_field_widget input", "1#037:9");
 
-            await click(target.querySelector(".o_form_button_save"));
+            await clickSave(target);
 
             assert.strictEqual(
                 target.querySelector(".o_progressbar_value").textContent,
@@ -673,8 +628,6 @@ QUnit.module("Fields", (hooks) => {
                     </form>`,
                 resId: 1,
             });
-            // The view should be in edit mode by default
-            await click(target.querySelector(".o_form_button_edit"));
 
             assert.ok(target.querySelector(".o_form_view .o_form_editable"), "Form in edit mode");
 
@@ -692,8 +645,8 @@ QUnit.module("Fields", (hooks) => {
             );
 
             await editInput(target, ".o_progressbar_value.o_input", "trente sept virgule neuf");
-            await click(target.querySelector(".o_form_button_save"));
-            assert.containsOnce(target, ".o_form_button_save", "The form has not been saved");
+            await clickSave(target);
+            assert.containsOnce(target, ".o_form_dirty", "The form has not been saved");
             assert.verifySteps(["Show error message"], "The error message was shown correctly");
         }
     );

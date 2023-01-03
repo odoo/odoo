@@ -64,7 +64,7 @@
             <t t-if="not additional_title and main_object and 'name' in main_object">
                 <t t-set="additional_title" t-value="main_object.name"/>
             </t>
-            <t t-set="default_title"> <t t-if="additional_title"><t t-out="additional_title"/> | </t><t t-out="(website or res_company).name"/> </t>
+            <t t-set="default_title" t-translation="off"> <t t-if="additional_title"><t t-out="additional_title"/> | </t><t t-out="(website or res_company).name"/> </t>
             <t t-set="seo_object" t-value="seo_object or main_object"/>
             <t t-if="seo_object and 'website_meta_title' in seo_object and seo_object.website_meta_title">
                 <t t-set="title" t-value="seo_object.website_meta_title"/>
@@ -120,6 +120,9 @@
             </t>
         </t>
         <link t-if="request and website and website.is_public_user()" rel="canonical" t-att-href="website._get_canonical_url(canonical_params=canonical_params)"/>
+        <!-- TODO: Once we have style in DB, add this preconnect only if a
+        google font is actually used. Note that if no font is used, the
+        preconnect is actually not connecting to the google servers. -->
         <link rel="preconnect" href="https://fonts.gstatic.com/" crossorigin=""/>
     </xpath>
 
@@ -140,7 +143,10 @@
         <attribute name="data-name">Footer</attribute>
         <!-- Background now controlled by css configuration, using color combinations -->
         <attribute name="t-attf-class" add="o_colored_level o_cc" remove="bg-light" separator=" "/>
-        <attribute name="t-cache">no_footer,no_copyright,website</attribute>
+        <!-- Add the main object as a cache key so that the footer_visible page
+        option is properly reflected across pages. Controllers and other objects
+        do not have any page option (yet) so they can share the same cache -->
+        <attribute name="t-cache" add="website,main_object._name == 'website.page' and main_object"/>
     </xpath>
     <xpath expr="//div[hasclass('o_footer_copyright')]" position="attributes">
         <attribute name="data-name">Copyright</attribute>
@@ -153,7 +159,7 @@
     </xpath>
 
     <xpath expr="//div[@id='wrapwrap']" position="after">
-        <t t-if="website and website.google_analytics_key and not editable">
+        <t t-if="website and website.google_analytics_key and request.env['ir.http']._is_allowed_cookie('optional') and not editable">
             <script id="tracking_code" async="1" t-attf-src="https://www.googletagmanager.com/gtag/js?id={{ website.google_analytics_key }}"></script>
             <script>
                 window.dataLayer = window.dataLayer || [];
@@ -169,7 +175,7 @@
 
     <!-- Page options -->
     <xpath expr="//div[@id='wrapwrap']" position="before">
-        <t groups="website.group_website_publisher">
+        <t groups="website.group_website_restricted_editor">
             <t t-foreach="['header_overlay', 'header_color', 'header_visible', 'footer_visible']" t-as="optionName">
                 <!-- Firefox autocomplete is too aggressive and works on hidden inputs,
                 so we need to disable it (https://bugzilla.mozilla.org/show_bug.cgi?id=520561) -->
@@ -188,8 +194,8 @@
                        t-as="menu" t-foreach="env['ir.ui.menu'].load_menus_root()['children']"
                        t-attf-href="/web#menu_id=#{menu['id']}&amp;action=#{menu['action'] and menu['action'].split(',')[1] or ''}"/>
                 </div>
-                <a groups="website.group_website_publisher" href="#" title="Edit this content" class="o_frontend_to_backend_edit_btn px-3 d-flex align-items-center justify-content-center text-decoration-none">
-                    <i class="fa fa-pencil me-1"/>Edit
+                <a groups="website.group_website_restricted_editor" href="#" title="Edit this content" class="o_frontend_to_backend_edit_btn px-3 d-flex align-items-center justify-content-center text-decoration-none">
+                    <img src="/website/static/description/icon.png"/>Editor
                 </a>
             </div>
         </div>
@@ -292,11 +298,10 @@
                             <t t-set="_item_class" t-valuef="nav-item dropdown ms-lg-auto"/>
                             <t t-set="_link_class" t-valuef="nav-link fw-bold"/>
                         </t>
-                    </t>
-
-                    <!-- Language Selector -->
-                    <t t-call="website.placeholder_header_language_selector">
-                        <t t-set="_div_classes" t-valuef="my-auto ms-lg-2"/>
+                        <!-- Language Selector -->
+                        <t t-call="website.placeholder_header_language_selector">
+                            <t t-set="_div_classes" t-valuef="nav-item my-auto ms-lg-2"/>
+                        </t>
                     </t>
                 </div>
                 <!-- Call To Action -->
@@ -383,10 +388,10 @@
                             <t t-set="_link_class" t-valuef="nav-link"/>
                             <t t-set="_dropdown_menu_class" t-valuef="dropdown-menu-start"/>
                         </t>
-                    </t>
-                    <!-- Language Selector -->
-                    <t t-call="website.placeholder_header_language_selector">
-                        <t t-set="_div_classes" t-valuef="d-block d-sm-none"/>
+                        <!-- Language Selector -->
+                        <t t-call="website.placeholder_header_language_selector">
+                            <t t-set="_div_classes" t-valuef="nav-item d-block d-sm-none"/>
+                        </t>
                     </t>
                     <div class="oe_structure oe_structure_solo" id="oe_structure_header_hamburger_3"/>
                 </div>
@@ -523,11 +528,11 @@
                                 <t t-set="_item_class" t-valuef="nav-item dropdown ms-lg-3"/>
                                 <t t-set="_link_class" t-valuef="nav-link fw-bold"/>
                             </t>
-                        </t>
-                        <!-- Language Selector -->
-                        <t t-call="website.placeholder_header_language_selector">
-                            <t t-set="_div_classes" t-valuef="d-block d-lg-none mb-2"/>
-                            <t t-set="_dropdown_menu_class" t-valuef="dropdown-menu-end position-static float-none"/>
+                            <!-- Language Selector -->
+                            <t t-call="website.placeholder_header_language_selector">
+                                <t t-set="_div_classes" t-valuef="nav-item d-block d-lg-none mb-2"/>
+                                <t t-set="_dropdown_menu_class" t-valuef="dropdown-menu-end position-static float-none"/>
+                            </t>
                         </t>
                         <!-- Call To Action -->
                         <t t-call="website.placeholder_header_call_to_action">
@@ -754,11 +759,11 @@
                                 <t t-set="link_class" t-valuef="nav-link"/>
                             </t>
                         </t>
-                    </t>
-                    <!-- Language Selector -->
-                    <t t-call="website.placeholder_header_language_selector">
-                        <t t-set="_div_classes" t-valuef="mb-4 mb-lg-0 align-self-lg-center ms-lg-auto"/>
-                        <t t-set="_dropdown_menu_class" t-valuef="float-lg-end"/>
+                        <!-- Language Selector -->
+                        <t t-call="website.placeholder_header_language_selector">
+                            <t t-set="_div_classes" t-valuef="nav-item mb-4 mb-lg-0 align-self-lg-center ms-lg-auto"/>
+                            <t t-set="_dropdown_menu_class" t-valuef="float-lg-end"/>
+                        </t>
                     </t>
                 </div>
             </div>
@@ -838,10 +843,10 @@
                             <t t-set="_item_class" t-valuef="nav-item dropdown ms-lg-auto"/>
                             <t t-set="_link_class" t-valuef="nav-link"/>
                         </t>
-                    </t>
-                    <!-- Language Selector -->
-                    <t t-call="website.placeholder_header_language_selector">
-                        <t t-set="_div_classes" t-valuef="my-auto ms-lg-2 align-self-lg-center"/>
+                        <!-- Language Selector -->
+                        <t t-call="website.placeholder_header_language_selector">
+                            <t t-set="_div_classes" t-valuef="nav-item my-auto ms-lg-2 align-self-lg-center"/>
+                        </t>
                     </t>
                     <!-- Call To Action -->
                     <t t-call="website.placeholder_header_call_to_action">
@@ -938,15 +943,19 @@
                                 <t t-set="link_class" t-valuef="nav-link"/>
                             </t>
                         </t>
+                        <!-- Language Selector -->
+                        <t t-call="website.placeholder_header_language_selector">
+                            <t t-set="_div_classes" t-valuef="nav-item d-block d-sm-none mb-2"/>
+                            <t t-set="_dropdown_menu_class" t-valuef="dropdown-menu-end position-static float-none"/>
+                        </t>
+                        <!-- Call To Action (mobile) -->
+                        <t t-call="website.placeholder_header_call_to_action">
+                            <t t-set="_div_classes" t-valuef="nav-item d-block d-lg-none"/>
+                        </t>
                     </t>
-                    <!-- Language Selector -->
-                    <t t-call="website.placeholder_header_language_selector">
-                        <t t-set="_div_classes" t-valuef="d-block d-sm-none mb-2"/>
-                        <t t-set="_dropdown_menu_class" t-valuef="dropdown-menu-end position-static float-none"/>
-                    </t>
-                    <!-- Call To Action -->
+                    <!-- Call To Action (desktop) -->
                     <t t-call="website.placeholder_header_call_to_action">
-                        <t t-set="_div_classes" t-valuef="ms-lg-3"/>
+                        <t t-set="_div_classes" t-valuef="ms-3 d-none d-lg-block"/>
                     </t>
                 </div>
             </t>
@@ -1017,10 +1026,10 @@
                                 <t t-set="link_class" t-valuef="nav-link"/>
                             </t>
                         </t>
-                    </t>
-                    <!-- Language Selector -->
-                    <t t-call="website.placeholder_header_language_selector">
-                        <t t-set="_div_classes" t-valuef="ms-lg-1 mb-2 mb-lg-0 align-self-lg-center"/>
+                        <!-- Language Selector -->
+                        <t t-call="website.placeholder_header_language_selector">
+                            <t t-set="_div_classes" t-valuef="nav-item ms-lg-1 mb-2 mb-lg-0 align-self-lg-center"/>
+                        </t>
                     </t>
                 </div>
             </div>
@@ -1065,10 +1074,10 @@
                             <t t-set="_item_class" t-valuef="nav-item dropdown ms-lg-auto"/>
                             <t t-set="_link_class" t-valuef="nav-link"/>
                         </t>
-                    </t>
-                    <!-- Language Selector -->
-                    <t t-call="website.placeholder_header_language_selector">
-                        <t t-set="_div_classes" t-valuef="ms-lg-2"/>
+                        <!-- Language Selector -->
+                        <t t-call="website.placeholder_header_language_selector">
+                            <t t-set="_div_classes" t-valuef="nav-item ms-lg-2 align-self-lg-center"/>
+                        </t>
                     </t>
                     <!-- Call To Action -->
                     <t t-call="website.placeholder_header_call_to_action">
@@ -1134,10 +1143,10 @@
                             <t t-set="_item_class" t-valuef="nav-item dropdown"/>
                             <t t-set="_link_class" t-valuef="nav-link fw-bold ms-lg-3"/>
                         </t>
-                    </t>
-                    <!-- Call To Action -->
-                    <t t-call="website.placeholder_header_call_to_action">
-                        <t t-set="_div_classes" t-valuef="mx-auto mt-4"/>
+                        <!-- Call To Action -->
+                        <t t-call="website.placeholder_header_call_to_action">
+                            <t t-set="_div_classes" t-valuef="nav-item mt-3 mt-lg-0 ms-lg-3"/>
+                        </t>
                     </t>
                     <!-- Social Icons -->
                     <div class="oe_structure oe_structure_solo w-100" id="oe_structure_header_hamburger_full_1"/>
@@ -1344,7 +1353,27 @@
 <template id="option_header_brand_logo" inherit_id="website.placeholder_header_brand" name="Header Brand Logo" active="True">
     <xpath expr="//*[@id='o_fake_navbar_brand']" position="replace">
         <a href="/" t-attf-class="navbar-brand logo #{_link_class}">
-            <span t-field="website.logo" t-options="{'widget': 'image'}" role="img" t-att-aria-label="'Logo of %s' % website.name" t-att-title="website.name"/>
+            <!--
+            Note: setting width *and* height attributes allows to reserve some
+            space to avoid layout shift during page loading. Of course, CSS
+            rules set the height the user chose, while the width is set to
+            'auto'. But while the image is loading, it is best to already
+            reserve some width to reduce layout shift (like making the menu move
+            or even re-render itself into a "+" menu).
+
+            The chosen values for the space reservation are the ones of the
+            default logo and theme, but it does not really matter as long as
+            they are coherent. While the image is being loaded, the chosen user
+            height is still applied and the 'auto' width rule induces a width
+            that respects the aspect ratio set by the width and height
+            attributes. That could be a problem if the real logo has a larger
+            height than width, in which case the layout shift would be increased
+            because of the arbitrary values set as width and height, but in most
+            cases, this should reduce it.
+
+            This also allows to gain some page speed scoring.
+            -->
+            <span t-field="website.logo" t-options="{'widget': 'image', 'width': 95, 'height': 40}" role="img" t-att-aria-label="'Logo of %s' % website.name" t-att-title="website.name"/>
         </a>
     </xpath>
 </template>
@@ -1856,27 +1885,33 @@
 <!-- Cookie Bar -->
 <template id="cookies_bar" inherit_id="website.layout" name="Cookies Bar">
     <xpath expr="//footer" position="after">
-        <div id="website_cookies_bar" t-if="website.cookies_bar" class="s_popup o_snippet_invisible o_no_save" data-name="Cookies Bar" data-vcss="001" data-invisible="1">
+        <div id="website_cookies_bar" t-if="website.cookies_bar" class="s_popup o_snippet_invisible d-none o_no_save" data-name="Cookies Bar" data-vcss="001" data-invisible="1">
             <div class="modal s_popup_bottom s_popup_no_backdrop o_cookies_discrete"
                  data-show-after="500"
                  data-display="afterDelay"
                  data-consents-duration="999"
-                 data-focus="false"
+                 data-bs-focus="false"
                  data-bs-backdrop="false"
-                 data-keyboard="false"
+                 data-bs-keyboard="false"
                  tabindex="-1"
                  role="dialog">
                 <div class="modal-dialog d-flex s_popup_size_full">
                     <div class="modal-content oe_structure">
+                        <!-- Keep this section equivalent to the rendering of the `website.cookies_bar.discrete` client template -->
                         <section class="o_colored_level o_cc o_cc1">
                             <div class="container">
                                 <div class="row">
                                     <div class="col-lg-8 pt16">
-                                        <p>We use cookies to provide you a better user experience.</p>
+                                        <p>
+                                            <span class="pe-1">We use cookies to provide you a better user experience on this website.</span>
+                                            <a href="/cookie-policy" class="o_cookies_bar_text_policy btn btn-link btn-sm px-0">Cookie Policy</a>
+                                        </p>
                                     </div>
-                                    <div class="col-lg-4 pt16 text-end">
-                                        <a href="/cookie-policy" class="o_cookies_bar_text_policy btn btn-link btn-sm">Cookie Policy</a>
-                                        <a href="#" role="button" class="js_close_popup o_cookies_bar_text_button btn btn-primary btn-sm">I agree</a>
+                                    <div class="col-lg-4 text-end pt16 pb16">
+                                        <a href="#" id="cookies-consent-essential" role="button"
+                                           class="js_close_popup btn btn-outline-primary rounded-circle btn-sm px-2">Only essentials</a>
+                                        <a href="#" id="cookies-consent-all" role="button"
+                                           class="js_close_popup btn btn-outline-primary rounded-circle btn-sm">I agree</a>
                                     </div>
                                 </div>
                             </div>
@@ -1895,7 +1930,7 @@
 
 <template id="language_selector_add_language">
     <a t-attf-class="o_add_language d-none #{dropdown and 'd-sm-block dropdown-item' or 'd-sm-inline-block list-inline-item'}"
-       groups="website.group_website_publisher"
+       groups="website.group_website_restricted_editor"
        t-attf-href="/web#action=base.action_view_base_language_install&amp;website_id=#{website.id if website else ''}&amp;url_return=#{quote_plus(url_for('', '[lang]') + '?' + keep_query())}">
         <i class="fa fa-plus-circle"/>
         <span>Add a language...</span>
@@ -1958,7 +1993,7 @@
     </xpath>
     <xpath expr="//t[@t-call='website.language_selector_add_language']" position="replace">
         <span class="o_add_language list-inline-item"
-            groups="website.group_website_publisher">|</span>
+            groups="website.group_website_restricted_editor">|</span>
         <t t-call="website.language_selector_add_language">
             <t t-set="dropdown" t-value="False"/>
         </t>
@@ -2046,7 +2081,7 @@
 
 <!-- Util template -->
 <template id="publish_management">
-    <div groups="website.group_website_publisher" t-ignore="true" class="float-end css_editable_mode_hidden" t-att-style="style or None">
+    <div groups="website.group_website_restricted_editor" t-ignore="true" class="float-end css_editable_mode_hidden" t-att-style="style or None">
         <div t-attf-class="btn-group #{btn_class} js_publish_management #{object.website_published and 'css_published' or 'css_unpublished'}" t-att-data-id="object.id" t-att-data-object="object._name" t-att-data-description="env['ir.model']._get(object._name).display_name" t-att-data-controller="publish_controller">
             <button class="btn btn-danger js_publish_btn">Unpublished</button>
             <button class="btn btn-success js_publish_btn">Published</button>
@@ -2098,7 +2133,7 @@
                     Information about the <t t-esc="res_company.name"/> instance of Odoo, the <a target="_blank" href="https://www.odoo.com">Open Source ERP</a>.
                 </p>
 
-                <div class="alert alert-warning alert-dismissable mt16" groups="website.group_website_publisher" role="status">
+                <div class="alert alert-warning alert-dismissable mt16" groups="website.group_website_restricted_editor" role="status">
                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                    <p>
                      Note: To hide this page, uncheck it from the Customize tab in edit mode.
@@ -2187,7 +2222,7 @@
             <div class="container">
                 <div class="alert alert-info text-center d-lg-flex justify-content-between align-items-center">
                     <p class="m-lg-0 text-info">This page does not exist, but you can create it as you are editor of this site.</p>
-                    <a role="button" class="btn btn-info js_disable_on_click post_link" t-attf-href="/website/add/#{ path }#{ from_template and '?template=%s' % from_template }">Create Page</a>
+                    <a role="button" class="btn btn-info js_disable_on_click post_link" t-attf-href="/website/add/#{path}?redirect=1#{from_template and '&amp;template=%s' % from_template}">Create Page</a>
                 </div>
                 <div class="text-center text-muted p-3"><i class="fa fa-info-circle"></i> Edit the content below this line to adapt the default <strong>Page not found</strong> page.</div>
             </div>
@@ -2219,7 +2254,7 @@
                             <span class="mt-1">Wrong password</span>
                         </div>
                     </div>
-                    <div class="form-group">
+                    <div class="mb-3">
                         <div class="input-group">
                             <input type="hidden" name="url" t-att-value="path" />
                             <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()" />
@@ -2282,12 +2317,12 @@
                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                         </header>
                         <main class="modal-body">
-                            <div class="form-group row mb0">
+                            <div class="row mb0">
                                 <label for="page-name" class="col-md-12 col-form-label">
                                     <p>The selected templates will be reset to their factory settings.</p>
                                 </label>
                             </div>
-                            <div class="form-group row mb0">
+                            <div class="row mb0">
                                 <label for="page-name" class="col-md-9 col-form-label">
                                     <p>Type '<i class="confirm_word">yes</i>' in the box below if you want to confirm.</p>
                                 </label>
@@ -2378,7 +2413,7 @@ Sitemap: <t t-esc="url_root"/>sitemap.xml
         <t t-set="search_placeholder">Search...</t>
         <input type="search" name="search" t-att-class="'search-query form-control oe_search_box %s' % _input_classes" t-att-placeholder="placeholder if placeholder else search_placeholder" t-att-value="search"/>
         <button type="submit" t-att-class="'btn oe_search_button %s' % (_submit_classes or 'btn-primary')" aria-label="Search" title="Search">
-            <i class="fa fa-search"/>
+            <i class="oi oi-search"/>
             <span t-if="search" class="oe_search_found">
                 <small>(<t t-out="search_count or 0"/> found)</small>
             </span>
@@ -2525,7 +2560,6 @@ Sitemap: <t t-esc="url_root"/>sitemap.xml
 
 <template id="iframefallback" inherit_id="web.layout" primary="True">
     <xpath expr="//head/link[last()]" position="after">
-        <t t-call-assets="web.assets_common" t-js="false"/>
         <t t-call-assets="web.assets_frontend" t-js="false"/>
         <t t-call-assets="website.assets_wysiwyg" t-js="false"/>
     </xpath>

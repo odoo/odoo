@@ -10,6 +10,7 @@ _logger = logging.getLogger(__name__)
 
 class EventTemplateTicket(models.Model):
     _inherit = 'event.type.ticket'
+    _order = "sequence, price, name, id"
 
     def _default_product_id(self):
         return self.env.ref('event_sale.product_product_event', raise_if_not_found=False)
@@ -53,10 +54,14 @@ class EventTemplateTicket(models.Model):
     def _compute_price_reduce(self):
         for ticket in self:
             product = ticket.product_id
-            # seems strange to not apply pricelist logic but still use pricelist discount...
-            discount = (
-                product.lst_price - product._get_contextual_price()
-            ) / product.lst_price if product.lst_price else 0.0
+            pricelist = product.product_tmpl_id._get_contextual_pricelist()
+            lst_price = product.currency_id._convert(
+                product.lst_price,
+                pricelist.currency_id,
+                self.env.company,
+                fields.Datetime.now()
+            )
+            discount = (lst_price - product._get_contextual_price()) / lst_price if lst_price else 0.0
             ticket.price_reduce = (1.0 - discount) * ticket.price
 
     def _init_column(self, column_name):
@@ -101,7 +106,7 @@ class EventTemplateTicket(models.Model):
 
 class EventTicket(models.Model):
     _inherit = 'event.event.ticket'
-    _order = "event_id, price"
+    _order = "event_id, sequence, price, name, id"
 
     # product
     price_reduce_taxinc = fields.Float(

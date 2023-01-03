@@ -7,11 +7,19 @@
         cursor: pointer;
         font-size: 0.9em;
     }
-    .o_microsoft_sync_button_pending {
-        color: $o-enterprise-primary-color;
-    }
     .o_microsoft_sync_button_configured {
         color: white;
         height: 2em;
+
+        &:hover {
+            #microsoft_check {
+                display: none;
+            }
+        }
+        &:not(:hover) {
+            #microsoft_stop {
+                display: none;
+            }
+        }
     }
 }

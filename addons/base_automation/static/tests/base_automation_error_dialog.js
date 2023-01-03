@@ -87,11 +87,16 @@ QUnit.module("base_automation", {}, function () {
         const { Component: Container, props } = registry.category("main_components").get("DialogContainer");
         await mount(Container, target, { env, props });
 
-        const errorEvent = new PromiseRejectionEvent("error", { reason: {
-            message: error,
-            legacy: true,
-            event: $.Event(),
-        }, promise: null });
+        const errorEvent = new PromiseRejectionEvent("error", {
+            reason: {
+                message: error,
+                legacy: true,
+                event: $.Event(),
+            },
+            promise: null,
+            cancelable: true,
+            bubbles: true,
+        });
         await unhandledRejectionCb(errorEvent);
         await nextTick();
         assert.containsOnce(target, '.modal .fa-clipboard');
@@ -115,11 +120,16 @@ QUnit.module("base_automation", {}, function () {
         const { Component: Container, props } = registry.category("main_components").get("DialogContainer");
         await mount(Container, target, { env, props });
 
-        const errorEvent = new PromiseRejectionEvent("error", { reason: {
-            message: error,
-            legacy: true,
-            event: $.Event(),
-        }, promise: null });
+        const errorEvent = new PromiseRejectionEvent("error", {
+            reason: {
+                message: error,
+                legacy: true,
+                event: $.Event(),
+            },
+            promise: null,
+            cancelable: true,
+            bubbles: true,
+        });
         await unhandledRejectionCb(errorEvent);
         await nextTick();
         assert.containsOnce(target, '.modal .fa-clipboard');

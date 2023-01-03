@@ -36,6 +36,11 @@ class TimesheetsAnalysisReport(models.Model):
             A.so_line AS so_line,
             A.timesheet_invoice_type AS timesheet_invoice_type,
             A.timesheet_invoice_id AS timesheet_invoice_id,
-            (-1 * A.unit_amount * A.amount) AS timesheet_revenues,
-            CASE WHEN order_id IS NULL THEN 0 ELSE unit_amount END AS billable_time
+            CASE WHEN A.order_id IS NULL THEN 0 ELSE A.unit_amount * SOL.price_unit END AS timesheet_revenues,
+            CASE WHEN A.order_id IS NULL THEN 0 ELSE A.unit_amount END AS billable_time
         """
+
+    @api.model
+    def _from(self):
+        return super()._from() + """
+        LEFT JOIN sale_order_line SOL ON A.so_line = SOL.id"""

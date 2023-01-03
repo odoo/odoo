@@ -10,10 +10,6 @@
                             <t t-esc="orderAmountPlusTip" />
                         </h1>
                     </div>
-                    <div class="button next" t-att-class="{ highlight: !locked }"
-                        t-on-click="orderDone">
-                        New Order <i class="fa fa-angle-double-right"></i>
-                    </div>
                 </div>
                 <div class="default-view">
                     <div class="actions">
@@ -43,6 +39,13 @@
                     <div class="pos-receipt-container" t-ref="order-receipt">
                         <OrderReceipt order="currentOrder"/>
                     </div>
+                </div>
+                <div class="button next validation" t-att-class="{ highlight: !locked }"
+                    t-on-click="orderDone">
+                    <div class="pay-circle">
+                        <i class="fa fa-chevron-right" role="img" aria-label="Pay" title="Pay" />
+                    </div>
+                    New Order
                 </div>
             </div>
         </div>

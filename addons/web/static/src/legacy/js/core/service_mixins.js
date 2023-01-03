@@ -126,16 +126,6 @@ var ServicesMixin = {
         return result;
     },
     /**
-     * @private
-     * @param {Object} libs - @see ajax.loadLibs
-     * @param {Object} [context] - @see ajax.loadLibs
-     * @param {Object} [tplRoute=this._loadLibsTplRoute] - @see ajax.loadLibs
-     * @returns {Promise}
-     */
-    _loadLibs: function (libs, context, tplRoute) {
-        return this.call('ajax', 'loadLibs', libs, context, tplRoute || this._loadLibsTplRoute);
-    },
-    /**
      * Builds and executes RPC query. Returns a promise resolved with
      * the RPC result.
      *
@@ -151,10 +141,9 @@ var ServicesMixin = {
             prom.abort = function () {};
         }
         var abort = prom.abort ? prom.abort : prom.reject;
-        if (!abort) {
-            throw new Error("a rpc promise should always have a reject function");
+        if (abort) {
+            prom.abort = abort.bind(prom);
         }
-        prom.abort = abort.bind(prom);
         return prom;
     },
     loadFieldView: function (modelName, context, view_id, view_type, options) {

@@ -58,19 +58,19 @@
         Slide Category common form part template
     -->
     <t t-name="website.slide.upload.modal.common">
-        <div class="form-group">
+        <div class="mb-3">
             <label for="name" class="col-form-label">Title</label>
             <input id="name" name="name" placeholder="Title" class="form-control" required="required" autocomplete="off"/>
         </div>
-        <div t-if="!widget.defaultCategoryID" class="form-group">
+        <div t-if="!widget.defaultCategoryID" class="mb-3">
             <label for="category_id" class="col-form-label">Section</label>
             <input class="form-control" id="category_id"/>
         </div>
-        <div class="form-group">
+        <div class="mb-3">
             <label for="tag_ids" class="col-form-label">Tags</label>
             <input id="tag_ids" name="tag_ids" type="hidden"/>
         </div>
-        <div class="form-group">
+        <div class="mb-3">
             <label for="duration" class="col-form-label">Estimated Completion Time</label>
             <div class="input-group">
                 <input type="number" id="duration" min="0" name="duration" placeholder='e.g. "15"' class="form-control" autocomplete="off"/>
@@ -87,7 +87,7 @@
             <form class="clearfix">
                 <div class="row">
                     <div id="o_wslides_js_slide_upload_left_column" class="col-md-6">
-                        <div class="form-group">
+                        <div class="mb-3">
                             <label for="source_type" class="col-form-label">Document Source</label><br/>
                             <div class="form-check ms-2">
                                 <input class="form-check-input" type="radio" name="source_type" id="source_type_local_file" data-value="local_file" checked="checked"/>
@@ -102,11 +102,11 @@
                                 </label>
                             </div>
                         </div>
-                        <div class="form-group o_wslides_js_slide_upload_local_file">
+                        <div class="mb-3 o_wslides_js_slide_upload_local_file">
                             <label for="upload" class="col-form-label">Choose a PDF</label>
                             <input id="upload" name="file" class="form-control h-100" accept="application/pdf" type="file" required="required"/>
                         </div>
-                        <div class="form-group o_wslides_js_slide_upload_external d-none">
+                        <div class="mb-3 o_wslides_js_slide_upload_external d-none">
                             <label for="document_google_url" class="col-form-label">Document Link</label>
                             <input id="document_google_url" name="document_google_url" class="form-control h-100" autocomplete="off"
                                 placeholder='e.g "https://drive.google.com/file/..."'/>
@@ -163,7 +163,7 @@
             <form class="clearfix">
                 <div class="row">
                     <div id="o_wslides_js_slide_upload_left_column" class="col-md-6">
-                        <div class="form-group">
+                        <div class="mb-3">
                             <label for="source_type" class="col-form-label">Image Source</label><br/>
                             <div class="form-check ms-2">
                                 <input class="form-check-input" type="radio" name="source_type" id="source_type_local_file" data-value="local_file" checked="checked"/>
@@ -178,11 +178,11 @@
                                 </label>
                             </div>
                         </div>
-                        <div class="form-group o_wslides_js_slide_upload_local_file">
+                        <div class="mb-3 o_wslides_js_slide_upload_local_file">
                             <label for="upload" class="col-form-label">Choose an Image</label>
                             <input id="upload" name="file" class="form-control h-100" accept="image/*" type="file" required="required"/>
                         </div>
-                        <div class="form-group o_wslides_js_slide_upload_external d-none">
+                        <div class="mb-3 o_wslides_js_slide_upload_external d-none">
                             <label for="image_google_url" class="col-form-label">Image Link</label>
                             <input id="image_google_url" name="image_google_url" class="form-control h-100" autocomplete="off"
                                 placeholder='e.g "https://drive.google.com/file/..."'/>
@@ -237,7 +237,7 @@
             <form class="clearfix">
                 <div class="row">
                     <div id="o_wslides_js_slide_upload_left_column" class="col-md-6">
-                        <div class="form-group">
+                        <div class="mb-3">
                             <label for="video_url" class="col-form-label">Video Link</label>
                             <input id="video_url" name="video_url" class="form-control" autocomplete="off"
                                 placeholder='e.g "https://www.youtube.com/watch?v=ebBez6bcSEc"' required="required"/>

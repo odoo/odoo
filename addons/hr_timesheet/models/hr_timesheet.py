@@ -5,8 +5,8 @@ from collections import defaultdict
 from lxml import etree
 import re
 
-from odoo import api, Command, fields, models, _
-from odoo.exceptions import UserError, AccessError
+from odoo import api, Command, fields, models, _, _lt
+from odoo.exceptions import UserError, AccessError, ValidationError
 from odoo.osv import expression
 
 class AccountAnalyticLine(models.Model):
@@ -26,11 +26,9 @@ class AccountAnalyticLine(models.Model):
     @api.model
     def default_get(self, field_list):
         result = super(AccountAnalyticLine, self).default_get(field_list)
-        if 'encoding_uom_id' in field_list:
-            result['encoding_uom_id'] = self.env.company.timesheet_encode_uom_id.id
         if not self.env.context.get('default_employee_id') and 'employee_id' in field_list and result.get('user_id'):
             result['employee_id'] = self.env['hr.employee'].search([('user_id', '=', result['user_id']), ('company_id', '=', result.get('company_id', self.env.company.id))], limit=1).id
-        if not self._context.get('default_project_id') and 'project_id' in field_list:
+        if not self._context.get('default_project_id') and self._context.get('is_timesheet'):
             employee_id = result.get('employee_id', self.env.context.get('default_employee_id', False))
             favorite_project_id = self._get_favorite_project_id(employee_id)
             if favorite_project_id:
@@ -59,7 +57,8 @@ class AccountAnalyticLine(models.Model):
         'project.project', 'Project', domain=_domain_project_id, index=True,
         compute='_compute_project_id', store=True, readonly=False)
     user_id = fields.Many2one(compute='_compute_user_id', store=True, readonly=False)
-    employee_id = fields.Many2one('hr.employee', "Employee", domain=_domain_employee_id, context={'active_test': False})
+    employee_id = fields.Many2one('hr.employee', "Employee", domain=_domain_employee_id, context={'active_test': False},
+        help="Define an 'hourly cost' on the employee to track the cost of their time.")
     job_title = fields.Char(related='employee_id.job_title')
     department_id = fields.Many2one('hr.department', "Department", compute='_compute_department_id', store=True, compute_sudo=True)
     manager_id = fields.Many2one('hr.employee', "Manager", related='employee_id.parent_id', store=True)
@@ -115,7 +114,7 @@ class AccountAnalyticLine(models.Model):
     @api.depends('employee_id')
     def _compute_user_id(self):
         for line in self:
-            line.user_id = line.employee_id.user_id if line.employee_id else line._default_user()
+            line.user_id = line.employee_id.user_id if line.employee_id else self._default_user()
 
     @api.depends('employee_id')
     def _compute_department_id(self):
@@ -124,35 +123,73 @@ class AccountAnalyticLine(models.Model):
 
     @api.model_create_multi
     def create(self, vals_list):
+        # Before creating a timesheet, we need to put a valid employee_id in the vals
         default_user_id = self._default_user()
-        user_ids = list(map(lambda x: x.get('user_id', default_user_id), filter(lambda x: not x.get('employee_id') and x.get('project_id'), vals_list)))
-
+        user_ids = []
+        employee_ids = []
+        # 1/ Collect the user_ids and employee_ids from each timesheet vals
         for vals in vals_list:
-            # when the name is not provide by the 'Add a line', we set a default one
-            if vals.get('project_id') and not vals.get('name'):
-                vals['name'] = '/'
             vals.update(self._timesheet_preprocess(vals))
+            if not vals.get('project_id'):
+                continue
+            if not vals.get('name'):
+                vals['name'] = '/'
+            employee_id = vals.get('employee_id')
+            user_id = vals.get('user_id', default_user_id)
+            if employee_id and employee_id not in employee_ids:
+                employee_ids.append(employee_id)
+            elif user_id not in user_ids:
+                user_ids.append(user_id)
 
-        # Although this make a second loop on the vals, we need to wait the preprocess as it could change the company_id in the vals
-        # TODO To be refactored in master
-        employees = self.env['hr.employee'].sudo().search([('user_id', 'in', user_ids)])
-        employee_for_user_company = defaultdict(dict)
+        # 2/ Search all employees related to user_ids and employee_ids, in the selected companies
+        employees = self.env['hr.employee'].sudo().search([
+            '&', '|', ('user_id', 'in', user_ids), ('id', 'in', employee_ids), ('company_id', 'in', self.env.companies.ids)
+        ])
+
+        #                 ┌───── in search results = active/in companies ────────> was found with... ─── employee_id ───> (A) There is nothing to do, we will use this employee_id
+        # 3/ Each employee                                                                          └──── user_id ──────> (B)** We'll need to select the right employee for this user
+        #                 └─ not in search results = archived/not in companies ──> (C) We raise an error as we can't create a timesheet for an archived employee
+        # ** We can rely on the user to get the employee_id if
+        #    he has an active employee in the company of the timesheet
+        #    or he has only one active employee for all selected companies
+        valid_employee_per_id = {}
+        employee_id_per_company_per_user = defaultdict(dict)
         for employee in employees:
-            employee_for_user_company[employee.user_id.id][employee.company_id.id] = employee.id
+            if employee.id in employee_ids:
+                valid_employee_per_id[employee.id] = employee
+            else:
+                employee_id_per_company_per_user[employee.user_id.id][employee.company_id.id] = employee.id
 
-        employee_ids = set()
+        # 4/ Put valid employee_id in each vals
+        error_msg = _lt('Timesheets must be created with an active employee in the selected companies.')
         for vals in vals_list:
-            # compute employee only for timesheet lines, makes no sense for other lines
-            if not vals.get('employee_id') and vals.get('project_id'):
-                employee_for_company = employee_for_user_company.get(vals.get('user_id', default_user_id), False)
-                if not employee_for_company:
+            if not vals.get('project_id'):
+                continue
+            employee_in_id = vals.get('employee_id')
+            if employee_in_id:
+                if employee_in_id in valid_employee_per_id:
+                    vals['user_id'] = valid_employee_per_id[employee_in_id].sudo().user_id.id   # (A) OK
                     continue
-                company_id = list(employee_for_company)[0] if len(employee_for_company) == 1 else vals.get('company_id', self.env.company.id)
-                vals['employee_id'] = employee_for_company.get(company_id, False)
-            elif vals.get('employee_id'):
-                employee_ids.add(vals['employee_id'])
-        if any(not emp.active for emp in self.env['hr.employee'].browse(list(employee_ids))):
-            raise UserError(_('Timesheets must be created with an active employee.'))
+                else:
+                    raise ValidationError(error_msg)                                      # (C) KO
+            else:
+                user_id = vals.get('user_id', default_user_id)                                  # (B)...
+
+            # ...Look for an employee, with ** conditions
+            employee_per_company = employee_id_per_company_per_user.get(user_id)
+            employee_out_id = False
+            if employee_per_company:
+                company_id = list(employee_per_company)[0] if len(employee_per_company) == 1\
+                        else vals.get('company_id', self.env.company.id)
+                employee_out_id = employee_per_company.get(company_id, False)
+
+            if employee_out_id:
+                vals['employee_id'] = employee_out_id
+                vals['user_id'] = user_id
+            else:  # ...and raise an error if they fail
+                raise ValidationError(error_msg)
+
+        # 5/ Finally, create the timesheets
         lines = super(AccountAnalyticLine, self).create(vals_list)
         for line, values in zip(lines, vals_list):
             if line.project_id:  # applied only for timesheet
@@ -175,6 +212,13 @@ class AccountAnalyticLine(models.Model):
         # applied only for timesheet
         self.filtered(lambda t: t.project_id)._timesheet_postprocess(values)
         return result
+
+    @api.model
+    def _get_view_cache_key(self, view_id=None, view_type='form', **options):
+        """The override of _get_view changing the time field labels according to the company timesheet encoding UOM
+        makes the view cache dependent on the company timesheet encoding uom"""
+        key = super()._get_view_cache_key(view_id, view_type, **options)
+        return key + (self.env.company.timesheet_encode_uom_id,)
 
     @api.model
     def _get_view(self, view_id=None, view_type='form', **options):
@@ -221,40 +265,30 @@ class AccountAnalyticLine(models.Model):
             Overrride this to compute on the fly some field that can not be computed fields.
             :param values: dict values for `create`or `write`.
         """
+        project = self.env['project.project'].browse(vals.get('project_id', False))
+        task = self.env['project.task'].browse(vals.get('task_id', False))
+        # task implies project
+        if task and not project:
+            project = task.project_id
+            if not project:
+                raise ValidationError(_('You cannot create a timesheet on a private task.'))
+            vals['project_id'] = project.id
         # task implies analytic account and tags
-        if vals.get('task_id') and not vals.get('account_id'):
-            task = self.env['project.task'].browse(vals.get('task_id'))
+        if task and not vals.get('account_id'):
             task_analytic_account_id = task._get_task_analytic_account_id()
             vals['account_id'] = task_analytic_account_id.id
             vals['company_id'] = task_analytic_account_id.company_id.id or task.company_id.id
-            if vals.get('tag_ids'):
-                vals['tag_ids'] += [Command.link(tag_id.id) for tag_id in task.analytic_tag_ids]
-            else:
-                vals['tag_ids'] = [Command.set(task.analytic_tag_ids.ids)]
             if not task_analytic_account_id.active:
                 raise UserError(_('You cannot add timesheets to a project or a task linked to an inactive analytic account.'))
         # project implies analytic account
-        if vals.get('project_id') and not vals.get('account_id'):
-            project = self.env['project.project'].browse(vals.get('project_id'))
+        elif project and not vals.get('account_id'):
             vals['account_id'] = project.analytic_account_id.id
             vals['company_id'] = project.analytic_account_id.company_id.id or project.company_id.id
-            if vals.get('tag_ids'):
-                vals['tag_ids'] += [Command.link(tag_id.id) for tag_id in project.analytic_tag_ids]
-            else:
-                vals['tag_ids'] = [Command.set(project.analytic_tag_ids.ids)]
             if not project.analytic_account_id.active:
                 raise UserError(_('You cannot add timesheets to a project linked to an inactive analytic account.'))
-        # employee implies user
-        if vals.get('employee_id') and not vals.get('user_id'):
-            employee = self.env['hr.employee'].browse(vals['employee_id'])
-            vals['user_id'] = employee.user_id.id
         # force customer partner, from the task or the project
-        if (vals.get('project_id') or vals.get('task_id')) and not vals.get('partner_id'):
-            partner_id = False
-            if vals.get('task_id'):
-                partner_id = self.env['project.task'].browse(vals['task_id']).partner_id.id
-            else:
-                partner_id = self.env['project.project'].browse(vals['project_id']).partner_id.id
+        if project and not vals.get('partner_id'):
+            partner_id = task.partner_id.id if task else project.partner_id.id
             if partner_id:
                 vals['partner_id'] = partner_id
         # set timesheet UoM from the AA company (AA implies uom)
@@ -284,7 +318,7 @@ class AccountAnalyticLine(models.Model):
         # (re)compute the amount (depending on unit_amount, employee_id for the cost, and account_id for currency)
         if any(field_name in values for field_name in ['unit_amount', 'employee_id', 'account_id']):
             for timesheet in sudo_self:
-                cost = timesheet._employee_timesheet_cost()
+                cost = timesheet._hourly_cost()
                 amount = -timesheet.unit_amount * cost
                 amount_converted = timesheet.employee_id.currency_id._convert(
                     amount, timesheet.account_id.currency_id or timesheet.currency_id, self.env.company, timesheet.date)
@@ -306,12 +340,15 @@ class AccountAnalyticLine(models.Model):
     def _get_timesheet_time_day(self):
         return self._convert_hours_to_days(self.unit_amount)
 
-    def _employee_timesheet_cost(self):
+    def _hourly_cost(self):
         self.ensure_one()
-        return self.employee_id.timesheet_cost or 0.0
+        return self.employee_id.hourly_cost or 0.0
 
     def _get_report_base_filename(self):
         task_ids = self.task_id
         if len(task_ids) == 1:
             return _('Timesheets - %s', task_ids.name)
         return _('Timesheets')
+
+    def _default_user(self):
+        return self.env.context.get('user_id', self.env.user.id)

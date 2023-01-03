@@ -2,6 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import time
+from freezegun import freeze_time
 
 import odoo
 from odoo import fields, tools
@@ -547,52 +548,6 @@ class TestPointOfSaleFlow(TestPointOfSaleCommon):
 
         # I close the session to generate the journal entries
         current_session.action_pos_session_closing_control()
-
-        """In order to test the reports on Bank Statement defined in point_of_sale module, I create a bank statement line, confirm it and print the reports"""
-
-        # I select the period and journal for the bank statement
-
-        context_journal = {'journal_type': 'bank'}
-        self.assertTrue(self.AccountBankStatement.with_context(
-            context_journal)._default_journal(), 'Journal has not been selected')
-        journal = self.env['account.journal'].create({
-            'name': 'Bank Test',
-            'code': 'BNKT',
-            'type': 'bank',
-            'company_id': self.env.company.id,
-        })
-        # I create a bank statement with Opening and Closing balance 0.
-        account_statement = self.AccountBankStatement.create({
-            'balance_start': 0.0,
-            'balance_end_real': 0.0,
-            'date': time.strftime('%Y-%m-%d'),
-            'journal_id': journal.id,
-            'company_id': self.env.company.id,
-            'name': 'pos session test',
-        })
-        # I create bank statement line
-        account_statement_line = self.AccountBankStatementLine.create({
-            'amount': 1000,
-            'partner_id': self.partner4.id,
-            'statement_id': account_statement.id,
-            'payment_ref': 'EXT001'
-        })
-        # I modify the bank statement and set the Closing Balance.
-        account_statement.write({
-            'balance_end_real': 1000.0,
-        })
-
-        # I reconcile the bank statement.
-        new_aml_dicts = [{
-            'account_id': self.partner4.property_account_receivable_id.id,
-            'name': "EXT001",
-            'credit': 1000.0,
-            'debit': 0.0,
-        }]
-
-        # I confirm the bank statement using Confirm button
-
-        self.AccountBankStatement.button_validate()
 
     def test_create_from_ui(self):
         """
@@ -1213,3 +1168,145 @@ class TestPointOfSaleFlow(TestPointOfSaleCommon):
         pos_order = self.PosOrder.search([('id', '=', pos_order_id)])
         #assert account_move amount_residual is 300
         self.assertEqual(pos_order.account_move.amount_residual, 300)
+
+    def test_sale_order_postponed_invoicing(self):
+        """ Test the flow of creating an invoice later, after the POS session has been closed and everything has been processed.
+        The process should:
+           - Create a new misc entry, that will revert part of the POS closing entry.
+           - Create the move and associating payment(s) entry, as it would do when closing with invoice.
+           - Reconcile the receivable lines from the created misc entry with the ones from the created payment(s)
+        """
+        # Create the order on the first of january.
+        with freeze_time('2020-01-01'):
+            product = self.env['product.product'].create({
+                'name': 'Dummy product',
+                'type': 'product',
+                'categ_id': self.env.ref('product.product_category_all').id,
+                'taxes_id': self.tax_sale_a.ids,
+            })
+            self.pos_config.open_ui()
+            pos_session = self.pos_config.current_session_id
+            untax, atax = self.compute_tax(product, 500, 1)
+            pos_order_data = {
+                'data': {
+                    'amount_paid': untax + atax,
+                    'amount_return': 0,
+                    'amount_tax': atax,
+                    'amount_total': untax + atax,
+                    'creation_date': fields.Datetime.to_string(fields.Datetime.now()),
+                    'fiscal_position_id': False,
+                    'pricelist_id': self.pos_config.available_pricelist_ids[0].id,
+                    'lines': [(0, 0, {
+                        'discount': 0,
+                        'id': 42,
+                        'pack_lot_ids': [],
+                        'price_unit': 500.0,
+                        'product_id': product.id,
+                        'price_subtotal': 500.0,
+                        'price_subtotal_incl': 575.0,
+                        'qty': 1,
+                        'tax_ids': [(6, 0, product.taxes_id.ids)]
+                    })],
+                    'name': 'Order 12345-123-1234',
+                    'partner_id': False,
+                    'pos_session_id': pos_session.id,
+                    'sequence_number': 2,
+                    'statement_ids': [(0, 0, {
+                        'amount': untax + atax,
+                        'name': fields.Datetime.now(),
+                        'payment_method_id': self.cash_payment_method.id
+                    })],
+                    'uid': '12345-123-1234',
+                    'user_id': self.env.uid
+                },
+                'id': '12345-123-1234',
+                'to_invoice': False
+            }
+            pos_order_id = self.PosOrder.create_from_ui([pos_order_data])[0]['id']
+            pos_order = self.env['pos.order'].browse(pos_order_id)
+            # End the session. The order has been created without any invoice.
+            self.pos_config.current_session_id.action_pos_session_closing_control()
+            self.assertFalse(pos_order.account_move.exists())
+        # Client is back on the 3rd, asks for an invoice.
+        with freeze_time('2020-01-03'):
+            # We set the partner on the order
+            pos_order.partner_id = self.partner1.id
+            pos_order.action_pos_order_invoice()
+            # We should now have: an invoice, a payment, and a misc entry reconciled with the payment that reverse the original POS closing entry.
+            invoice = pos_order.account_move
+            closing_entry = pos_order.session_move_id
+            # This search isn't the best, but we don't have any references to this move stored on other models.
+            misc_reversal_entry = self.env['account.move'].search([('ref', '=', f'Reversal of POS closing entry {closing_entry.name} for order {pos_order.name} from session {pos_order.session_id.name}')])
+            # In this case we will have only one, for cash payment
+            payment = self.env['account.move'].search([('ref', '=like', f'Invoice payment for {pos_order.name} ({pos_order.account_move.name}) using {self.cash_payment_method.name}')])
+            # And thus only one bank statement for it
+            statement = self.env['account.move'].search([('journal_id', '=', self.company_data['default_journal_cash'].id)])
+            self.assertTrue(invoice.exists() and closing_entry.exists() and misc_reversal_entry.exists() and payment.exists())
+            # Check 1: Check that we have reversed every credit line on the closing entry.
+            for closing_entry_line, misc_reversal_entry_line in zip(closing_entry.line_ids, misc_reversal_entry.line_ids):
+                if closing_entry_line.balance < 0:
+                    self.assertEqual(closing_entry_line.balance, -misc_reversal_entry_line.balance)
+                    self.assertEqual(closing_entry_line.account_id, misc_reversal_entry_line.account_id)
+
+            # Check 2: Reconciliation
+            # The invoice receivable should be reconciled with the payment receivable of the same account.
+            invoice_receivable_line = invoice.line_ids.filtered(lambda line: line.account_id == self.company_data['default_account_receivable'])
+            payment_receivable_line = payment.line_ids.filtered(lambda line: line.account_id == self.company_data['default_account_receivable'])
+            self.assertEqual(invoice_receivable_line.matching_number, payment_receivable_line.matching_number)
+            # The payment receivable (POS) is reconciled with the closing entry receivable (POS)
+            payment_receivable_pos_line = payment.line_ids.filtered(lambda line: line.account_id == self.company_data['company'].account_default_pos_receivable_account_id)
+            misc_receivable_pos_line = misc_reversal_entry.line_ids.filtered(lambda line: line.account_id == self.company_data['company'].account_default_pos_receivable_account_id)
+            self.assertEqual(misc_receivable_pos_line.matching_number, payment_receivable_pos_line.matching_number)
+            # The closing entry receivable is reconciled with the bank statement
+            closing_entry_receivable_line = closing_entry.line_ids.filtered(lambda line: line.account_id == self.company_data['default_account_receivable'])  # Because the payment method use the default receivable
+            statement_receivable_line = statement.line_ids.filtered(lambda line: line.account_id == self.company_data['default_account_receivable'] and line.name == pos_order.session_id.name)  # Because the payment method use the default receivable
+            self.assertEqual(closing_entry_receivable_line.matching_number, statement_receivable_line.matching_number)
+
+    def test_order_pos_tax_same_as_company(self):
+        """Test that when the default_pos_receivable_account and the partner account_receivable are the same,
+            payment are correctly reconciled and the invoice is correctly marked as paid.
+        """
+        self.pos_config.open_ui()
+        current_session = self.pos_config.current_session_id
+        current_session.company_id.account_default_pos_receivable_account_id = self.partner1.property_account_receivable_id
+
+        product5_order = {'data':
+          {'amount_paid': 750,
+           'amount_tax': 0,
+           'amount_return':0,
+           'amount_total': 750,
+           'creation_date': fields.Datetime.to_string(fields.Datetime.now()),
+           'fiscal_position_id': False,
+           'pricelist_id': self.pos_config.available_pricelist_ids[0].id,
+           'lines': [[0, 0, {
+                'discount': 0,
+                'id': 42,
+                'pack_lot_ids': [],
+                'price_unit': 750.0,
+                'product_id': self.product3.id,
+                'price_subtotal': 750.0,
+                'price_subtotal_incl': 750.0,
+                'tax_ids': [[6, False, []]],
+                'qty': 1,
+            }]],
+           'name': 'Order 12345-123-1234',
+           'partner_id': self.partner1.id,
+           'pos_session_id': current_session.id,
+           'sequence_number': 2,
+           'statement_ids': [[0, 0, {
+                'amount': 450,
+                'name': fields.Datetime.now(),
+                'payment_method_id': self.cash_payment_method.id
+            }], [0, 0, {
+                'amount': 300,
+                'name': fields.Datetime.now(),
+                'payment_method_id': self.bank_payment_method.id
+            }]],
+           'uid': '12345-123-1234',
+           'user_id': self.env.uid,
+           'to_invoice': True, }
+        }
+
+        pos_order_id = self.PosOrder.create_from_ui([product5_order])[0]['id']
+        pos_order = self.PosOrder.search([('id', '=', pos_order_id)])
+        self.assertEqual(pos_order.account_move.amount_residual, 0)

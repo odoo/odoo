@@ -4,7 +4,7 @@ import { Dialog } from "@web/core/dialog/dialog";
 import { Notebook } from "@web/core/notebook/notebook";
 import { _lt } from "@web/core/l10n/translation";
 
-const { Component, useRef } = owl;
+import { Component, useRef } from "@odoo/owl";
 
 const random = (min, max) => Math.floor(Math.random() * (max - min) + min);
 
@@ -12,7 +12,7 @@ class KanbanExamplesNotebookTemplate extends Component {
     setup() {
         this.columns = [];
         const hasBullet = this.props.bullets && this.props.bullets.length;
-        for (let title of this.props.columns) {
+        for (const title of this.props.columns) {
             const col = { title, records: [] };
             this.columns.push(col);
             for (let i = 0; i < random(1, 5); i++) {

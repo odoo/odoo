@@ -131,3 +131,32 @@ class Department(models.Model):
         action = self.env['ir.actions.actions']._for_xml_id('hr.hr_plan_action')
         action['context'] = {'default_department_id': self.id, 'search_default_department_id': self.id}
         return action
+
+    def get_children_department_ids(self):
+        return self.env['hr.department'].search([('id', 'child_of', self.ids)])
+
+    def get_department_hierarchy(self):
+        if not self:
+            return {}
+
+        hierarchy = {
+            'parent': {
+                'id': self.parent_id.id,
+                'name': self.parent_id.name,
+                'employees': self.parent_id.total_employee,
+            } if self.parent_id else False,
+            'self': {
+                'id': self.id,
+                'name': self.name,
+                'employees': self.total_employee,
+            },
+            'children': [
+                {
+                    'id': child.id,
+                    'name': child.name,
+                    'employees': child.total_employee
+                } for child in self.child_ids
+            ]
+        }
+
+        return hierarchy

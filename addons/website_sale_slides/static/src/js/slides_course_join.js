@@ -5,9 +5,6 @@ var CourseJoinWidget = require('@website_slides/js/slides_course_join')[Symbol.f
 const wUtils = require('website.utils');
 
 CourseJoinWidget.include({
-    xmlDependencies: (CourseJoinWidget.prototype.xmlDependencies || []).concat(
-        ["/website_sale_slides/static/src/xml/slide_course_join.xml"]
-    ),
     init: function (parent, options) {
         this._super.apply(this, arguments);
         this.productId = options.channel.productId || false;

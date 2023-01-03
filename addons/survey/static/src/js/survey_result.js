@@ -2,7 +2,7 @@ odoo.define('survey.result', function (require) {
 'use strict';
 
 var _t = require('web.core')._t;
-var ajax = require('web.ajax');
+const { loadJS } = require('@web/core/assets');
 var publicWidget = require('web.public.widget');
 
 // The given colors are the same as those used by D3
@@ -427,7 +427,7 @@ publicWidget.registry.SurveyResultWidget = publicWidget.Widget.extend({
     */
     willStart: function () {
         var url = '/web/webclient/locale/' + (document.documentElement.getAttribute('lang') || 'en_US').replace('-', '_');
-        var localeReady = ajax.loadJS(url);
+        var localeReady = loadJS(url);
         return Promise.all([this._super.apply(this, arguments), localeReady]);
     },
 

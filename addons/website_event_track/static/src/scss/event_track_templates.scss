@@ -15,6 +15,8 @@
     i {
         &.fa-bell {
             color: gold;
+            -webkit-text-stroke-width: 0.5px;
+            -webkit-text-stroke-color: black;
         }
         &.fa-bell-o {
             color: black;
@@ -22,13 +24,18 @@
     }
 }
 
-
 /*
  * AGENDA
  */
+
+ .o_weagenda_index {
+    hr {
+        border-color: lighten($o-wevent-bg-color-base-contrast, 50%);
+    }
+}
+
 .o_we_online_agenda {
     overflow-x: auto;
-
     table {
         border-collapse: separate;
         border-spacing: 0em 0em;
@@ -39,14 +46,13 @@
                 td.active {
                     padding: 0em 0.5em;
                     font-size: smaller;
-                    border-top: 1px solid lightgrey;
+                    border-top: 1px solid lighten($o-wevent-bg-color-base-contrast, 50%);
                 }
             }
         }
         th.active, td:not(.active) {
-            background-color: rgba(211, 211, 211, 0.1);
             border: 0px;
-            border-right: 1em solid white;
+            border-right: 1em solid $body-bg;
             vertical-align: middle;
             span {
                 word-break: break-word;
@@ -77,7 +83,6 @@
                 position: sticky;
                 left: 0;
                 min-width: 100px;
-                background-color: white;
             }
             div.o_we_agenda_card_content {
                 height: 100%;
@@ -114,11 +119,11 @@
             }
             &.o_we_agenda_time_slot_main > div {
                 padding: 0.3em;
-                border-top: 1px solid lightgrey;
+                border-top: 1px solid lighten($o-wevent-bg-color-base-contrast, 50%);
             }
             &.o_we_agenda_time_slot_half > div {
                 padding: 0.3em;
-                border-top: 1px dashed lightgrey;
+                border-top: 1px dashed lighten($o-wevent-bg-color-base-contrast, 50%);
             }
             &.event_track {
                 position: relative;
@@ -129,7 +134,17 @@
                     width: 100%;
                     position: absolute;
                     top: 0;
-                    border-top: 1px solid lightgrey;
+                    border-top: 1px solid lighten($o-wevent-bg-color-base-contrast, 50%);
+                }
+                &::after {
+                    content: "";
+                    display: block;
+                    width: 100%;
+                    position: absolute;
+                    bottom: 0;
+                    border-bottom: 1px solid lighten($o-wevent-bg-color-base-contrast, 50%);
+                    margin-bottom: -1px;
+                    z-index: 1;
                 }
                 > div {
                     padding: 0.3em;
@@ -140,43 +155,6 @@
                 }
 
 
-            }
-            // Remove me in master
-            &.event_color_0 {
-                background-color: rgba(211, 211, 211, 0.5);
-            }
-            &.event_color_1 {
-                background-color: rgba(240, 96, 80, 0.2);
-            }
-            &.event_color_2 {
-                background-color: rgba(244, 164, 96, 0.2);
-            }
-            &.event_color_3 {
-                background-color: rgba(247, 205, 31, 0.2);
-            }
-            &.event_color_4 {
-                background-color: rgba(108,193,237,0.2);
-            }
-            &.event_color_5 {
-                background-color: rgba(129,73,104,0.2);
-            }
-            &.event_color_6 {
-                background-color: rgba(235,126,127,0.2);
-            }
-            &.event_color_7 {
-                background-color: rgba(44,131,151,0.2);
-            }
-            &.event_color_8 {
-                background-color: rgba(71,85,119,0.2);
-            }
-            &.event_color_9 {
-                background-color: rgba(214,20,95,0.2);
-            }
-            &.event_color_10 {
-                background-color: rgba(48,195,129,0.2);
-            }
-            &.event_color_11 {
-                background-color: rgba(147,101,184,0.2);
             }
         }
     }

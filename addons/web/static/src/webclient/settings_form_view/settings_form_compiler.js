@@ -1,263 +1,177 @@
 /** @odoo-module **/
 
-import { append, createElement } from "@web/core/utils/xml";
+import { append, createElement, getTag } from "@web/core/utils/xml";
 import { FormCompiler } from "@web/views/form/form_compiler";
-import { getModifier } from "@web/views/view_compiler";
-
-function compileSettingsPage(el, params) {
-    const settings = createElement("SettingsPage");
-    settings.setAttribute("slots", "props.slots");
-    settings.setAttribute("initialTab", "props.initialApp");
-    settings.setAttribute("t-slot-scope", "settings");
-
-    //props
-    const modules = [];
-
-    for (const child of el.children) {
-        if (child.nodeName === "div" && child.classList.value.includes("app_settings_block")) {
-            params.module = {
-                key: child.getAttribute("data-key"),
-                string: child.getAttribute("string"),
-                imgurl: getAppIconUrl(child.getAttribute("data-key")),
-                isVisible: getModifier(child, "invisible"),
-            };
-            params.config = {};
-            if (!child.classList.value.includes("o_not_app")) {
-                modules.push(params.module);
-                append(settings, this.compileNode(child, params));
-            }
-        }
-    }
-
-    settings.setAttribute("modules", JSON.stringify(modules));
-    return settings;
-}
-
-function getAppIconUrl(module) {
-    return module === "general_settings"
-        ? "/base/static/description/settings.png"
-        : "/" + module + "/static/description/icon.png";
-}
-
-function compileSettingsApp(el, params) {
-    const settingsBlock = createElement("SettingsApp");
-    settingsBlock.setAttribute("t-props", JSON.stringify(params.module));
-    settingsBlock.setAttribute("selectedTab", "settings.selectedTab");
-
-    params.config.app = el.getAttribute("data-key");
-    params.config.groupTitleId = undefined;
-    params.config.groupTitle = "";
-    params.config.groupTipId = undefined;
-    params.config.groupTip = "";
-    params.config.container = undefined;
-    params.config.settingBox = undefined;
-
-    for (const child of el.children) {
-        append(settingsBlock, this.compileNode(child, params));
-    }
-
-    settingsBlock.setAttribute(
-        "t-if",
-        `!searchState.value or search("app", "${el.getAttribute("data-key")}")`
-    );
-
-    return settingsBlock;
-}
-
-function compileSettingsHeader(el, params) {
-    const header = el.cloneNode();
-    for (const child of el.children) {
-        append(header, this.compileNode(child, { ...params, config: null }));
-    }
-    return header;
-}
-
-let groupTitleId = 0;
-
-function compileSettingsGroupTitle(el, params) {
-    const res = this.compileGenericNode(el, params);
-    const groupTitle = res.textContent;
-
-    //HighlightText
-    const highlight = createElement("HighlightText");
-    highlight.setAttribute("originalText", `\`${groupTitle}\``);
-    append(res, highlight);
-    res.firstChild.remove();
-
-    if (params.config) {
-        params.config.groupTitleId = ++groupTitleId;
-        params.config.groupTitle = groupTitle;
-        params.config.groupTipId = undefined;
-        params.config.groupTip = undefined;
-        params.config.container = undefined;
-        params.config.settingBox = undefined;
-        params.labels.push({
-            label: groupTitle.trim(),
-            ...params.config,
-        });
-        res.setAttribute("t-if", `!searchState.value or search("groupTitleId", ${groupTitleId})`);
-    }
-
-    return res;
-}
-
-let groupTipId = 0;
-
-function compileSettingsGroupTip(el, params) {
-    const res = this.compileGenericNode(el, params);
-    const tip = res.textContent;
-
-    //HighlightText
-    const highlight = createElement("HighlightText");
-    highlight.setAttribute("originalText", `\`${tip}\``);
-    append(res, highlight);
-    res.firstChild.remove();
-
-    if (params.config) {
-        params.config.groupTipId = ++groupTipId;
-        params.config.groupTip = tip;
-        params.config.container = undefined;
-        params.config.settingBox = undefined;
-        params.labels.push({
-            label: tip.trim(),
-            ...params.config,
-        });
-        res.setAttribute("t-if", `!searchState.value or search("groupTipId", ${groupTipId})`);
-    }
-
-    return res;
-}
-
-let containerId = 0;
-
-function compileSettingsContainer(el, params) {
-    if (params.config) {
-        params.config.container = ++containerId;
-        params.config.settingBox = undefined;
-        params.containerLabels = [];
-    }
-    const res = this.compileGenericNode(el, params);
-    if (params.config) {
-        res.setAttribute("t-if", `!searchState.value or search("container", ${containerId})`);
-    }
-    return res;
-}
-
-let settingBoxId = 0;
-
-function compileSettingBox(el, params) {
-    if (params.config) {
-        settingBoxId++;
-        params.config.settingBox = settingBoxId;
-    }
-    const res = this.compileGenericNode(el, params);
-    if (params.config) {
-        res.setAttribute("t-if", `!searchState.value or search("settingBox", ${settingBoxId})`);
-    }
-    return res;
-}
-
-function compileField(el, params) {
-    const res = this.compileField(el, params);
-    if (params.config) {
-        let widgetName;
-        if (el.hasAttribute("widget")) {
-            widgetName = el.getAttribute("widget");
-            const label = params.getFieldExpr(el.getAttribute("name"), widgetName);
-            if (label) {
-                params.labels.push({
-                    label,
-                    ...params.config,
-                });
-            }
-        }
-    }
-    return res;
-}
-
-const labelsWeak = new WeakMap();
-function compileLabel(el, params) {
-    const res = this.compileLabel(el, params);
-    // It the node is a FormLabel component node, the label is
-    // localized *after* the field.
-    // We don't know yet if the label refers to a field or not.
-    if (res.textContent && res.tagName !== "FormLabel" && params.config) {
-        params.labels.push({
-            label: res.textContent.trim(),
-            ...params.config,
-        });
-        //HighlightText
-        const highlight = createElement("HighlightText");
-        highlight.setAttribute("originalText", `\`${res.textContent}\``);
-        append(res, highlight);
-        labelsWeak.set(res, { textContent: res.textContent });
-        res.firstChild.remove();
-    }
-    return res;
-}
-
-function compileGenericLabel(el, params) {
-    const res = this.compileGenericNode(el, params);
-    if (res.textContent && params.config) {
-        params.labels.push({
-            label: res.textContent.trim(),
-            ...params.config,
-        });
-        //HighlightText
-        const highlight = createElement("HighlightText");
-        highlight.setAttribute("originalText", `\`${res.textContent}\``);
-        append(res, highlight);
-        res.firstChild.remove();
-    }
-    return res;
-}
-
-function compileForm() {
-    const res = this.compileForm(...arguments);
-    res.classList.remove("o_form_nosheet");
-    return res;
-}
+import { toStringExpression } from "@web/views/utils";
+import { isTextNode } from "@web/views/view_compiler";
 
 export class SettingsFormCompiler extends FormCompiler {
     setup() {
         super.setup();
-        this.compilers.unshift(
-            { selector: "form", fn: compileForm },
-            { selector: "div.settings", fn: compileSettingsPage },
-            { selector: "div.app_settings_block", fn: compileSettingsApp },
-            { selector: "div.app_settings_header", fn: compileSettingsHeader },
-            // objects to show/hide in the search
-            { selector: "div.o_setting_box", fn: compileSettingBox },
-            { selector: "div.o_settings_container", fn: compileSettingsContainer },
-            // h2
-            { selector: "h2", fn: compileSettingsGroupTitle },
-            { selector: "h3.o_setting_tip", fn: compileSettingsGroupTip },
-            // search terms and highlight :
-            { selector: "label", fn: compileLabel },
-            { selector: "span.o_form_label", fn: compileGenericLabel },
-            { selector: "div.text-muted", fn: compileGenericLabel },
-            { selector: "field", fn: compileField }
+        this.compilers.push(
+            { selector: "app", fn: this.compileApp },
+            { selector: "block", fn: this.compileBlock },
+            { selector: "setting", fn: this.compileSetting }
         );
     }
-    createLabelFromField(fieldId, fieldName, fieldString, label, params) {
-        const labelweak = labelsWeak.get(label);
-        if (labelweak) {
-            // Undo what we've done when we where not sure whether this label was attached to a field
-            // Now, we now it is.
-            label.textContent = labelweak.textContent;
-        }
-        const res = super.createLabelFromField(fieldId, fieldName, fieldString, label, params);
-        if (labelweak || label.hasAttribute("data-no-label")) {
-            // the work of pushing the label in the search structure is already done
-            return res;
-        }
-        let labelText = label.textContent || fieldString;
-        labelText = labelText ? labelText : params.record.fields[fieldName].string;
 
-        params.labels.push({
-            label: labelText,
-            ...params.config,
+    compileForm(el, params) {
+        const settingsPage = createElement("SettingsPage");
+        settingsPage.setAttribute("slots", "{NoContentHelper:this.props.slots.NoContentHelper}");
+        settingsPage.setAttribute("initialTab", "this.props.initialApp");
+        settingsPage.setAttribute("t-slot-scope", "settings");
+
+        //props
+        params.modules = [];
+
+        const res = super.compileForm(...arguments);
+        res.classList.remove("o_form_nosheet");
+
+        settingsPage.setAttribute("modules", JSON.stringify(params.modules));
+
+        // Move the compiled content of the form inside the settingsPage
+        while (res.firstChild) {
+            append(settingsPage, res.firstChild);
+        }
+        append(res, settingsPage);
+
+        return res;
+    }
+
+    compileApp(el, params) {
+        if (el.getAttribute("notApp") === "1") {
+            //An app noted with notApp="1" is not rendered.
+
+            //This hack is used when a technical module defines settings, and we don't want to render
+            //the settings until the corresponding app is not installed.
+
+            // For example, when installing the module website_sale, the module sale is also installed,
+            // but we don't want to render its settings (notApp="1").
+            // On the contrary, when sale_management is installed, the module sale is also installed
+            // but in this case we want to see its settings (notApp="0").
+            return;
+        }
+        const module = {
+            key: el.getAttribute("name"),
+            string: el.getAttribute("string"),
+            imgurl:
+                el.getAttribute("logo") ||
+                "/" + el.getAttribute("name") + "/static/description/icon.png",
+        };
+        params.modules.push(module);
+        const settingsApp = createElement("SettingsApp", {
+            key: toStringExpression(module.key),
+            string: toStringExpression(module.string || ""),
+            imgurl: toStringExpression(module.imgurl),
+            selectedTab: "settings.selectedTab",
         });
+
+        for (const child of el.children) {
+            append(settingsApp, this.compileNode(child, params));
+        }
+
+        return settingsApp;
+    }
+
+    compileBlock(el, params) {
+        const settingsContainer = createElement("SettingsBlock", {
+            title: toStringExpression(el.getAttribute("title") || ""),
+            tip: toStringExpression(el.getAttribute("help") || ""),
+        });
+        for (const child of el.children) {
+            append(settingsContainer, this.compileNode(child, params));
+        }
+        return settingsContainer;
+    }
+
+    compileSetting(el, params) {
+        const componentName = el.getAttribute("type") === "header" ? "SettingHeader" : "Setting";
+        const setting = createElement(componentName, {
+            title: toStringExpression(el.getAttribute("title") || ""),
+            help: toStringExpression(el.getAttribute("help") || ""),
+            companyDependent: el.getAttribute("company_dependent") === "1" || "false",
+            documentation: toStringExpression(el.getAttribute("documentation") || ""),
+            record: `this.props.record`,
+        });
+        let string = toStringExpression(el.getAttribute("string") || "");
+        let addLabel = true;
+        params.labels = [];
+        Array.from(el.children).forEach((child, index) => {
+            if (getTag(child, true) === "field" && index === 0) {
+                const fieldSlot = createElement("t", { "t-set-slot": "fieldSlot" });
+                const field = this.compileNode(child, params);
+                if (field) {
+                    append(fieldSlot, field);
+                    setting.setAttribute("fieldInfo", field.getAttribute("fieldInfo"));
+
+                    addLabel = child.hasAttribute("nolabel")
+                        ? child.getAttribute("nolabel") !== "1"
+                        : true;
+                    const fieldName = child.getAttribute("name");
+                    string = child.hasAttribute("string")
+                        ? toStringExpression(child.getAttribute("string"))
+                        : string;
+                    setting.setAttribute("fieldName", toStringExpression(fieldName));
+                    setting.setAttribute(
+                        "fieldId",
+                        toStringExpression(child.getAttribute("field_id") || fieldName)
+                    );
+                }
+                append(setting, fieldSlot);
+            } else {
+                append(setting, this.compileNode(child, params));
+            }
+        });
+        setting.setAttribute("string", string);
+        setting.setAttribute("addLabel", addLabel);
+        setting.setAttribute("labels", JSON.stringify(params.labels));
+        delete params.labels;
+        return setting;
+    }
+
+    compileField(el, params) {
+        const res = super.compileField(el, params);
+        if (params.labels && el.hasAttribute("widget")) {
+            const label = params.getFieldExpr(el.getAttribute("name"), el.getAttribute("widget"));
+            if (label) {
+                params.labels.push(label);
+            }
+        }
+        return res;
+    }
+
+    compileNode(node, params, evalInvisible) {
+        if (isTextNode(node)) {
+            if (params.labels && node.textContent.trim()) {
+                params.labels.push(node.textContent.trim());
+                return createElement("HighlightText", {
+                    originalText: toStringExpression(node.textContent),
+                });
+            }
+        }
+        return super.compileNode(node, params, evalInvisible);
+    }
+
+    createLabelFromField(fieldId, fieldName, fieldString, label, params) {
+        const res = super.createLabelFromField(fieldId, fieldName, fieldString, label, params);
+        if (res.hasAttribute("string") && params.labels) {
+            params.labels.push(res.getAttribute("string"));
+        }
+        return res;
+    }
+
+    compileButton(el, params) {
+        const res = super.compileButton(el, params);
+        if (res.hasAttribute("string") && params.labels && res.children.length === 0) {
+            params.labels.push(res.getAttribute("string"));
+            const contentSlot = createElement("t");
+            contentSlot.setAttribute("t-set-slot", "contents");
+            const content = createElement("HighlightText", {
+                originalText: res.getAttribute("string"),
+            });
+            append(contentSlot, content);
+            append(res, contentSlot);
+        }
         return res;
     }
 }

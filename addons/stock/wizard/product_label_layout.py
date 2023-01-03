@@ -3,12 +3,12 @@
 
 from collections import defaultdict
 from odoo import fields, models
-
+from odoo.tools import float_compare, float_is_zero
 
 class ProductLabelLayout(models.TransientModel):
     _inherit = 'product.label.layout'
 
-    move_line_ids = fields.Many2many('stock.move.line')
+    move_ids = fields.Many2many('stock.move')
     picking_quantity = fields.Selection([
         ('picking', 'Transfer Quantities'),
         ('custom', 'Custom')], string="Quantity to print", required=True, default='custom')
@@ -23,17 +23,25 @@ class ProductLabelLayout(models.TransientModel):
         if 'zpl' in self.print_format:
             xml_id = 'stock.label_product_product'
 
-        if self.picking_quantity == 'picking' and self.move_line_ids:
-            qties = defaultdict(int)
+        quantities = defaultdict(int)
+        uom_unit = self.env.ref('uom.product_uom_categ_unit', raise_if_not_found=False)
+        if self.picking_quantity == 'picking' and self.move_ids and all(float_is_zero(ml.qty_done, precision_rounding=ml.product_uom_id.rounding) for ml in self.move_ids.move_line_ids):
+            for move in self.move_ids:
+                if move.product_uom.category_id == uom_unit:
+                    use_reserved = float_compare(move.reserved_availability, 0, precision_rounding=move.product_uom.rounding) > 0
+                    useable_qty = move.reserved_availability if use_reserved else move.product_uom_qty
+                    if not float_is_zero(useable_qty, precision_rounding=move.product_uom.rounding):
+                        quantities[move.product_id.id] += useable_qty
+            data['quantity_by_product'] = {p: int(q) for p, q in quantities.items()}
+        elif self.picking_quantity == 'picking' and self.move_ids.move_line_ids:
             custom_barcodes = defaultdict(list)
-            uom_unit = self.env.ref('uom.product_uom_categ_unit', raise_if_not_found=False)
-            for line in self.move_line_ids:
+            for line in self.move_ids.move_line_ids:
                 if line.product_uom_id.category_id == uom_unit:
                     if (line.lot_id or line.lot_name) and int(line.qty_done):
                         custom_barcodes[line.product_id.id].append((line.lot_id.name or line.lot_name, int(line.qty_done)))
                         continue
-                    qties[line.product_id.id] += line.qty_done
+                    quantities[line.product_id.id] += line.qty_done
             # Pass only products with some quantity done to the report
-            data['quantity_by_product'] = {p: int(q) for p, q in qties.items() if q}
+            data['quantity_by_product'] = {p: int(q) for p, q in quantities.items() if q}
             data['custom_barcodes'] = custom_barcodes
         return xml_id, data

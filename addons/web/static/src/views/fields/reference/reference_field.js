@@ -4,7 +4,7 @@ import { _lt } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
 import { Many2OneField } from "../many2one/many2one_field";
 
-const { Component, onWillUpdateProps, useState } = owl;
+import { Component, onWillUpdateProps, useState } from "@odoo/owl";
 
 function valuesEqual(a, b) {
     return a.resId === b.resId && a.resModel === b.resModel;
@@ -19,6 +19,7 @@ export class ReferenceField extends Component {
         onWillUpdateProps((nextProps) => {
             if (
                 valuesEqual(this.getValue(this.props) || {}, this.getValue(nextProps) || {}) &&
+                this.state.resModel &&
                 this.getRelation(nextProps) !== this.state.resModel
             ) {
                 nextProps.update(false);
@@ -31,10 +32,14 @@ export class ReferenceField extends Component {
     }
     getValue(p) {
         if (p.type === "char") {
+            const pdata = this.getPreloadedData(p);
+            if (!pdata) {
+                return null;
+            }
             return {
-                resModel: this.getPreloadedData(p).model,
-                resId: this.getPreloadedData(p).data.id,
-                displayName: this.getPreloadedData(p).data.display_name,
+                resModel: pdata.model,
+                resId: pdata.data.id,
+                displayName: pdata.data.display_name,
             };
         } else {
             return p.value;
@@ -116,11 +121,21 @@ ReferenceField.defaultProps = {
 
 ReferenceField.displayName = _lt("Reference");
 ReferenceField.supportedTypes = ["reference", "char"];
+ReferenceField.legacySpecialData = "_fetchSpecialReference";
 
 ReferenceField.extractProps = ({ attrs, field }) => {
+    /*
+    1 - <field name="ref" options="{'model_field': 'model_id'}" />
+    2 - <field name="ref" options="{'hide_model': True}" />
+    3 - <field name="ref" options="{'model_field': 'model_id' 'hide_model': True}" />
+    4 - <field name="ref"/>
+
+    We want to display the model selector only in the 4th case.
+    */
+    const displayModelSelector = !attrs.options["hide_model"] && !attrs.options["model_field"];
     return {
         ...Many2OneField.extractProps({ attrs, field }),
-        hideModelSelector: !!attrs.options["model_field"],
+        hideModelSelector: !displayModelSelector,
     };
 };
 

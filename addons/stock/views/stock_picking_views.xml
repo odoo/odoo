@@ -1,128 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-        <record id="view_pickingtype_filter" model="ir.ui.view">
-            <field name="name">stock.picking.type.filter</field>
-            <field name="model">stock.picking.type</field>
-            <field name="arch" type="xml">
-                <search string="Operation Type">
-                    <field name="name"/>
-                    <field name="warehouse_id"/>
-                    <filter string="Archived" name="inactive" domain="[('active','=',False)]"/>
-                    <group expand="0" string="Group By">
-                        <filter string="Type of Operation" name="groupby_code" domain="[]" context="{'group_by': 'code'}"/>
-                        <filter string="Warehouse" name="groupby_warehouse_id" domain="[]" context="{'group_by': 'warehouse_id'}"/>
-                    </group>
-                </search>
-            </field>
-        </record>
-        <record model="ir.ui.view" id="view_picking_type_tree">
-            <field name="name">Operation types</field>
-            <field name="model">stock.picking.type</field>
-            <field name="arch" type="xml">
-                <tree string="Operation Types">
-                    <field name="sequence" widget="handle"/>
-                    <field name="name"/>
-                    <field name="active" invisible="1"/>
-                    <field name="warehouse_id" groups="stock.group_stock_multi_warehouses"/>
-                    <field name="sequence_id" groups="base.group_no_one"/>
-                    <field name="company_id" groups="base.group_multi_company"/>
-                </tree>
-            </field>
-        </record>
-        <record model="ir.ui.view" id="view_picking_type_form">
-            <field name="name">Operation Types</field>
-            <field name="model">stock.picking.type</field>
-            <field name="arch" type="xml">
-                <form string="Operation Types">
-                    <sheet>
-                        <widget name="web_ribbon" title="Archived" bg_color="bg-danger" attrs="{'invisible': [('active', '=', True)]}"/>
-                        <group>
-                            <group>
-                                <field name="active" invisible="1"/>
-                                <field name="company_id" invisible="1"/>
-                                <field name="hide_reservation_method" invisible="1"/>
-                                <field name="name"/>
-                                <field name="sequence_id" groups="base.group_no_one"/>
-                                <field name="sequence_code"/>
-                                <field name="warehouse_id" groups="stock.group_stock_multi_warehouses" force_save="1"/>
-                                <field name="reservation_method" attrs="{'invisible': [('hide_reservation_method', '=', True)]}" widget="radio"/>
-                                <field name="auto_show_reception_report" attrs="{'invisible': [('code', 'not in', ['incoming', 'internal'])]}" groups="stock.group_reception_report"/>
-                                <label for="reservation_days_before" string="Reserve before scheduled date" attrs="{'invisible': ['|', ('code', '=', 'incoming'), ('reservation_method', '!=', 'by_date')]}"/>
-                                <div class="o_row" attrs="{'invisible': ['|', ('code', '=', 'incoming'), ('reservation_method', '!=', 'by_date')]}">
-                                    <span><field name="reservation_days_before" style="width: 23px;"/> days before/</span>
-                                    <span><field name="reservation_days_before_priority" style="width: 23px;"/> days before when starred</span>
-                                </div>
-                            </group>
-                            <group>
-                                <field name="code"/>
-                                <field name="company_id" groups="base.group_multi_company" options="{'no_create': True}"/>
-                                <field attrs='{"invisible": [("code", "not in", ["incoming", "outgoing", "internal"])]}' name="return_picking_type_id"/>
-                                <field name="create_backorder" />
-                                <field name="show_operations"/>
-                                <field name="show_reserved" attrs="{'invisible': [('code', '!=', 'incoming')]}"/>
-                            </group>
-                        </group>
-                        <group>
-                            <group attrs='{"invisible": [("code", "not in", ["incoming", "outgoing", "internal"])]}' string="Traceability" groups="stock.group_production_lot" name="stock_picking_type_lot">
-                                <field name="use_create_lots"/>
-                                <field name="use_existing_lots"/>
-                            </group>
-                            <group attrs='{"invisible": [("code", "not in", ["incoming", "outgoing", "internal"])]}' string="Packages" groups="stock.group_tracking_lot">
-                                <field name="show_entire_packs"/>
-                            </group>
-                            <!-- As this group will be hidden without multi_loccation, you will not be able to create a
-                             picking type with the code 'Internal', which make sense, but as the field 'code' on picking
-                             types can't be partially hidden, you can still select the code internal in the form view -->
-                            <group string="Locations" groups="stock.group_stock_multi_locations" name="locations">
-                                <field name="default_location_src_id" options="{'no_create': True}" attrs="{'required': [('code', 'in', ('internal', 'outgoing'))]}"/>
-                                <field name="default_location_dest_id" options="{'no_create': True}" attrs="{'required': [('code', 'in', ('internal', 'incoming'))]}"/>
-                            </group>
-                        </group>
-                    </sheet>
-                </form>
-            </field>
-        </record>
-
-        <record id="stock_picking_type_action" model="ir.actions.act_window">
-            <field name="name">Inventory Overview</field>
-            <field name="res_model">stock.picking.type</field>
-            <field name="type">ir.actions.act_window</field>
-            <field name="view_mode">kanban,form</field>
-            <field name="help" type="html">
-              <p class="o_view_nocontent_smiling_face">
-                Create a new operation type
-              </p><p>
-                The operation type system allows you to assign each stock
-                operation a specific type which will alter its views accordingly.
-                On the operation type you could e.g. specify if packing is needed by default,
-                if it should show the customer.
-              </p>
-            </field>
-        </record>
-
-        <record id="action_picking_type_list" model="ir.actions.act_window">
-            <field name="name">Operations Types</field>
-            <field name="res_model">stock.picking.type</field>
-            <field name="type">ir.actions.act_window</field>
-            <field name="view_mode">tree,form</field>
-            <field name="help" type="html">
-                <p class="o_view_nocontent_smiling_face">
-                    No transfer found. Let's create one!
-                </p><p>
-                    Transfers allow you to move products from one location to another.
-                </p>
-            </field>
-
-        </record>
-
-        <menuitem
-            action="stock_picking_type_action"
-            id="stock_picking_type_menu"
-            parent="menu_stock_root" sequence="0"
-            name="Overview"/>
-
-        <menuitem id="menu_pickingtype" name="Operations Types" parent="stock.menu_warehouse_config" action="action_picking_type_list" sequence="5"/>
-
         <record model="ir.ui.view" id="stock_picking_calendar">
             <field name="name">stock.picking.calendar</field>
             <field name="model">stock.picking</field>
@@ -169,6 +46,7 @@
                                     </div>
                                     <div class="oe_kanban_bottom_right">
                                         <t t-esc="record.scheduled_date.value and record.scheduled_date.value.split(' ')[0] or False"/>
+                                        <field name="user_id" widget="many2one_avatar_user" attrs="{'invisible': [('user_id', '=', False)]}"/>
                                     </div>
                                 </div>
                             </div>
@@ -182,11 +60,12 @@
             <field name="name">stock.picking.tree</field>
             <field name="model">stock.picking</field>
             <field name="arch" type="xml">
-                <tree string="Picking list" js_class="lazy_column_list" multi_edit="1" sample="1">
+                <tree string="Picking list" multi_edit="1" sample="1">
                     <header>
                         <button name="do_unreserve" type="object" string="Unreserve"/>
                         <button name="action_assign" type="object" string="Check Availability"/>
                     </header>
+                    <field name="company_id" invisible="1"/>
                     <field name="priority" optional="show" widget="priority" nolabel="1"/>
                     <field name="name" decoration-bf="1"/>
                     <field name="location_id" options="{'no_create': True}" string="From" groups="stock.group_stock_multi_locations" optional="show"/>
@@ -216,7 +95,7 @@
                            decoration-success="state == 'done'"
                            decoration-warning="state not in ('draft','cancel','done','assigned')"/>
                     <field name="activity_exception_decoration" widget="activity_exception"/>
-                    <field name="json_popover" nolabel="1" widget="stock_rescheduling_popover" attrs="{'invisible': [('json_popover', '=', False)]}"/>
+                    <field name="json_popover" widget="stock_rescheduling_popover" nolabel="1" attrs="{'invisible': [('json_popover', '=', False)]}"/>
                 </tree>
             </field>
         </record>
@@ -226,7 +105,7 @@
             <field name="model">stock.picking</field>
             <field eval="12" name="priority"/>
             <field name="arch" type="xml">
-                <form string="Transfer">
+                <form string="Transfer" js_class="picking_form">
 
                 <field name="is_locked" invisible="1"/>
                 <field name="show_mark_as_todo" invisible="1"/>
@@ -302,7 +181,7 @@
                         </button>
                     </div>
                     <div class="oe_title">
-                        <h1>
+                        <h1 class="d-flex">
                             <field name="priority" widget="priority" class="me-3" attrs="{'invisible': [('name','=','/')]}"/>
                             <field name="name" attrs="{'invisible': [('name','=','/')]}"/>
                         </h1>
@@ -368,6 +247,7 @@
 
                         <page string="Operations" name="operations">
                             <field name="move_ids_without_package" mode="tree,kanban"
+                                widget="stock_move_one2many"
                                 attrs="{'readonly': ['&amp;', ('state', '=', 'done'), ('is_locked', '=', True)]}"
                                 context="{'default_company_id': company_id, 'default_date': scheduled_date, 'default_date_deadline': date_deadline, 'picking_type_code': picking_type_code, 'default_picking_id': id, 'form_view_ref':'stock.view_move_form', 'address_in_id': partner_id, 'default_picking_type_id': picking_type_id, 'default_location_id': location_id, 'default_location_dest_id': location_dest_id, 'default_partner_id': partner_id}"
                                 add-label="Add a Product">
@@ -409,7 +289,7 @@
                                     <field name="reserved_availability" string="Reserved"
                                         attrs="{'column_invisible': ['|', '|', ('parent.state', 'in', ['draft', 'done']), ('parent.picking_type_code', 'in', ['incoming', 'outgoing']), ('parent.immediate_transfer', '=', True)]}"/>
                                     <field name="product_qty" invisible="1" readonly="1"/>
-                                    <field name="quantity_done" string="Done" attrs="{'readonly': [('is_quantity_done_editable', '=', False)], 'column_invisible':[('parent.state', '=', 'draft'), ('parent.immediate_transfer', '=', False)]}"/>
+                                    <field name="quantity_done" string="Done" attrs="{'readonly': [('product_id', '=', False)], 'column_invisible':[('parent.state', '=', 'draft'), ('parent.immediate_transfer', '=', False)]}"/>
                                     <field name="product_uom" attrs="{'readonly': [('state', '!=', 'draft'), ('additional', '=', False)]}" options="{'no_open': True, 'no_create': True}" string="Unit of Measure" groups="uom.group_uom"/>
                                     <field name="lot_ids" widget="many2many_tags"
                                         groups="stock.group_production_lot"
@@ -493,6 +373,7 @@
                         string="Package"
                         filter_domain="['|', ('move_line_ids.package_id.name', 'ilike', self), ('move_line_ids.result_package_id.name', 'ilike', self)]"
                         groups="stock.group_tracking_lot"/>
+                    <filter name="to_do_transfers" string="To Do" domain="[('user_id', 'in', [uid, False])]"/>
                     <filter name="my_transfers" string="My Transfers" domain="[('user_id', '=', uid)]"/>
                     <filter string="Starred" name="starred" domain="[('priority', '=', '1')]"/>
                     <separator/>
@@ -585,7 +466,7 @@
             <field name="binding_view_types">list</field>
         </record>
 
-        <menuitem id="all_picking" name="Transfers" parent="menu_stock_warehouse_mgmt" sequence="5" action="action_picking_tree_all" groups="stock.group_stock_manager,stock.group_stock_user"/>
+        <menuitem id="all_picking" name="Transfers" parent="menu_stock_warehouse_mgmt" sequence="20" action="action_picking_tree_all" groups="stock.group_stock_manager,stock.group_stock_user"/>
 
         <record id="stock_picking_action_picking_type" model="ir.actions.act_window">
             <field name="name">All Transfers</field>
@@ -721,129 +602,5 @@
             <field name="res_model">stock.picking</field>
             <field name="view_mode">tree,form</field>
             <field name="domain">[('group_id','=',active_id)]</field>
-        </record>
-
-        <record id="stock_picking_type_kanban" model="ir.ui.view">
-            <field name="name">stock.picking.type.kanban</field>
-            <field name="model">stock.picking.type</field>
-            <field name="arch" type="xml">
-                <kanban class="oe_background_grey o_kanban_dashboard o_emphasize_colors o_stock_kanban" create="0" group_create="false">
-                    <field name="color"/>
-                    <field name="code" readonly="1"/>
-                    <field name="count_picking_ready"/>
-                    <field name="count_picking_draft"/>
-                    <field name="count_picking_waiting"/>
-                    <field name="count_picking_late"/>
-                    <field name="count_picking_backorders"/>
-                    <templates>
-                        <t t-name="kanban-box">
-                            <div t-if="['incoming', 'outgoing', 'internal'].indexOf(record.code.raw_value) > -1" t-attf-class="#{!selection_mode ? kanban_color(record.color.raw_value) : ''}" name="stock_picking">
-                                <div>
-                                    <div t-attf-class="o_kanban_card_header">
-                                        <div class="o_kanban_card_header_title">
-                                            <div class="o_primary" t-if="!selection_mode">
-                                                <a type="object" name="get_stock_picking_action_picking_type">
-                                                    <field name="name"/>
-                                                </a>
-                                            </div>
-                                            <div class="o_primary" t-if="selection_mode">
-                                                <field name="name"/>
-                                            </div>
-                                            <div class="o_secondary"><field class="o_secondary"  name="warehouse_id" readonly="1" groups="stock.group_stock_multi_warehouses"/></div>
-                                        </div>
-                                        <div class="o_kanban_manage_button_section" t-if="!selection_mode">
-                                            <a class="o_kanban_manage_toggle_button" href="#"><i class="fa fa-ellipsis-v" role="img" aria-label="Manage" title="Manage"/></a>
-                                        </div>
-                                    </div>
-                                    <div class="container o_kanban_card_content" t-if="!selection_mode">
-                                        <div class="row">
-                                            <div class="col-6 o_kanban_primary_left">
-                                                <button class="btn btn-primary" name="get_action_picking_tree_ready" type="object">
-                                                    <span t-if="record.code.raw_value =='incoming'"><t t-esc="record.count_picking_ready.value"/> To Process</span>
-                                                    <span t-if="record.code.raw_value =='outgoing'"><t t-esc="record.count_picking_ready.value"/> To Process</span>
-                                                    <span t-if="record.code.raw_value =='internal'"><t t-esc="record.count_picking_ready.value"/> To Process</span>
-                                                </button>
-                                            </div>
-                                            <div class="col-6 o_kanban_primary_right">
-                                                <div t-if="record.count_picking_ready.raw_value > 0" class="row">
-                                                </div>
-
-                                                <div t-if="record.count_picking_waiting.raw_value > 0" class="row">
-                                                    <div class="col-12">
-                                                        <a name="get_action_picking_tree_waiting" type="object">
-                                                            <field name="count_picking_waiting"/>
-                                                            Waiting
-                                                        </a>
-                                                    </div>
-                                                </div>
-
-                                                <div t-if="record.count_picking_late.raw_value > 0" class="row">
-                                                    <div class="col-12">
-                                                        <a class="oe_kanban_stock_picking_type_list" name="get_action_picking_tree_late" type="object">
-                                                            <field name="count_picking_late"/>
-                                                            Late
-                                                        </a>
-                                                    </div>
-                                                </div>
-
-                                                <div t-if="record.count_picking_backorders.raw_value > 0" class="row" name="picking_type_backorder_count">
-                                                    <div class="col-12">
-                                                        <a class="oe_kanban_stock_picking_type_list" name="get_action_picking_tree_backorder" type="object">
-                                                            <field name="count_picking_backorders"/>
-                                                            Back Orders
-                                                        </a>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div><div class="container o_kanban_card_manage_pane dropdown-menu" role="menu">
-                                        <div class="row">
-                                            <div class="col-6 o_kanban_card_manage_section o_kanban_manage_view">
-                                                <div role="menuitem" class="o_kanban_card_manage_title">
-                                                    <span t-if="record.code.raw_value == 'internal'">Transfers</span>
-                                                    <span t-else="">View</span>
-                                                </div>
-                                                <div role="menuitem">
-                                                    <a name="get_stock_picking_action_picking_type" type="object">All</a>
-                                                </div>
-                                                <div role="menuitem">
-                                                    <a name="get_action_picking_tree_ready" type="object">Ready</a>
-                                                </div>
-                                                <div role="menuitem">
-                                                    <a name="get_action_picking_tree_waiting" type="object">Waiting</a>
-                                                </div>
-                                                <div role="menuitem">
-                                                    <a name="get_action_picking_type_operations" type="object">Operations</a>
-                                                </div>
-                                            </div>
-                                            <div class="col-6 o_kanban_card_manage_section o_kanban_manage_new">
-                                                <div role="menuitem" class="o_kanban_card_manage_title">
-                                                    <span>New</span>
-                                                </div>
-                                                <div role="menuitem">
-                                                    <a name="%(action_picking_form)d" type="action" context="{'default_immediate_transfer': True}">Immediate Transfer</a>
-                                                </div>
-                                                <div role="menuitem">
-                                                    <a name="%(action_picking_form)d" type="action">Planned Transfer</a>
-                                                </div>
-                                            </div>
-                                        </div>
-
-                                        <div t-if="widget.editable" class="o_kanban_card_manage_settings row">
-                                            <div class="col-8" role="menuitem" aria-haspopup="true">
-                                                <ul class="oe_kanban_colorpicker" data-field="color" role="menu"/>
-                                            </div>
-                                            <div role="menuitem" class="col-4">
-                                                <a class="dropdown-item" role="menuitem" type="edit">Configuration</a>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </t>
-
-                    </templates>
-                </kanban>
-            </field>
         </record>
 </odoo>

@@ -6,9 +6,12 @@
         <field name="model">hr.leave.type</field>
         <field name="inherit_id" ref="hr_holidays.edit_holiday_status_form"/>
         <field name="arch" type="xml">
-            <xpath expr="//group[@id='payroll']" position="inside">
-                <h2>Payroll</h2>
-                <field name="work_entry_type_id"/>
+            <xpath expr="//group[@name='visual']" position="before">
+                <group>
+                    <group name="payroll" string="Payroll">
+                        <field name="work_entry_type_id"/>
+                    </group>
+                </group>
             </xpath>
         </field>
     </record>

@@ -1,19 +1,63 @@
 // Match DateTimePicker styling
 
-.daterangepicker {
+.daterangepicker.show-calendar {
+    --daterangepicker-border: #{$dropdown-border-width} solid #{$dropdown-border-color};
+    --daterangepicker-border-radius: #{$dropdown-border-radius};
+    --daterangepicker-bg: #{$dropdown-bg};
+    --daterangepicker-color: #{map-get($grays, '900')};
+
+    @if $enable-shadows {
+        --daterangepicker-box-shadow: #{$dropdown-box-shadow};
+    }
+
+    --daterangepicker__table-bg: #{$table-bg};
+    --daterangepicker__thead-bg: #{map-get($grays, '100')};
+
+    --daterangepicker__cell-border-color: #{$table-border-color};
+    --daterangepicker__cell-bg--hover: #{map-get($grays, '100')};
+
+    --daterangepicker__select-bg: #{$form-select-bg};
+    --daterangepicker__select-border-color: #{$input-border-color};
+    --daterangepicker__select-color: #{$form-select-color};
+
+
+    border: var(--daterangepicker-border);
+    border-radius: var(--daterangepicker-border-radius);
+    background-color: var(--daterangepicker-bg);
+    box-shadow: var(--daterangepicker-box-shadow);
     font-family: inherit;
 
+    &:before {
+        border-bottom-color: var(--daterangerpicker__arrow-border-color, #{$dropdown-border-color});
+    }
+    
+    &:after {
+        border-bottom-color: var(--daterangerpicker__arrow-background-color, #{$dropdown-bg});
+    }
+
     .calendar-table {
+        border: 0;
+        background-color: var(--daterangepicker__table-bg);
+
+        .next span, .prev span {
+            border-color: var(--daterangepicker-color);
+        }
+
         td, th {
-            border-bottom-color: $table-border-color;
+            border-bottom-color: var(--daterangepicker__cell-border-color);
 
             &, &.start-date.end-date {
                 border-radius: 0;
             }
 
             &:not(.active) {
-                color: map-get($grays, '900');
+                color: var(--daterangepicker-color);
+
             }
+            &.available:hover {
+                background-color: var(--daterangepicker__cell-bg--hover);
+            }
+
 
             &.prev, &.next, &.off.ends {
                 @include o-hover-opacity(.5);
@@ -46,11 +90,17 @@
             }
 
             &.active,
-            &.active:hover {
+            &.active:hover,
+            &.in-range:hover {
                 background-color: $o-brand-odoo;
                 color: $white;
                 text-shadow: 0 1px 0 rgba(0, 0, 0, 0.25);
             }
+
+            &.off {
+                background-color: var(--daterangepicker__cell-bg--off, #{rgba($secondary, .1)});
+            }
+
         }
 
         thead tr {
@@ -63,7 +113,7 @@
                 }
             }
             &:nth-child(2) th {
-                background-color: map-get($grays, '100');
+                background-color: var(--daterangepicker__thead-bg);
                 font-size: $font-size-sm;
                 font-weight: $font-weight-bold;
                 color: $o-main-text-color;
@@ -71,17 +121,33 @@
         }
     }
 
-    .calendar-time select {
-        &.hourselect, &.minuteselect, &.secondselect, &.ampmselect {
-            display: initial;
-            -webkit-appearance: menulist-button;
-            -moz-appearance: menulist-button;
-            appearance: menulist-button;
+    .calendar-time {
+        /*rtl:ignore*/
+        direction:ltr;
+        select {
+            &.hourselect, &.minuteselect, &.secondselect, &.ampmselect {
+                display: initial;
+                border-color: var(--daterangepicker__select-border-color);
+                background-color: var(--daterangepicker__select-bg);
+                color: var(--daterangepicker__select-color);
+                -webkit-appearance: menulist-button;
+                -moz-appearance: menulist-button;
+                appearance: menulist-button;
+            }
         }
     }
 
-    .drp-buttons .drp-selected {
-        display: none;
+    .drp-buttons {
+        border-top: 0;
+
+        .btn {
+            text-transform: uppercase;
+            font-weight: $btn-font-weight;
+        }
+
+        .drp-selected {
+            display: none;
+        }
     }
 
     @include media-breakpoint-down(sm) {

@@ -5,7 +5,7 @@ odoo.define("website_blog.tour", function (require) {
     const {Markup} = require('web.utils');
     const wTourUtils = require('website.tour_utils');
 
-    wTourUtils.registerEditionTour("blog", {
+    wTourUtils.registerWebsitePreviewTour("blog", {
         url: "/",
     }, [{
         trigger: "body:not(:has(#o_new_content_menu_choices)) .o_new_content_container > a",
@@ -17,7 +17,7 @@ odoo.define("website_blog.tour", function (require) {
         content: _t("Select this menu item to create a new blog post."),
         position: "bottom",
     }, {
-        trigger: 'input[name="name"]',
+        trigger: 'div[name="name"] input',
         content: _t("Enter your post's title"),
         position: "bottom",
     }, {
@@ -81,7 +81,7 @@ odoo.define("website_blog.tour", function (require) {
         position: "bottom",
     }, {
         trigger: ".o_menu_systray_item.o_mobile_preview",
-        extra_trigger: '.o_website_preview .o_is_mobile',
+        extra_trigger: '.o_website_preview.o_is_mobile',
         content: _t("Once you have reviewed the content on mobile, you can switch back to the normal view by clicking here again"),
         position: "right",
     }, {

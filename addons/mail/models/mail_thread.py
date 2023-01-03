@@ -28,7 +28,7 @@ from markupsafe import Markup
 from odoo import _, api, exceptions, fields, models, tools, registry, SUPERUSER_ID, Command
 from odoo.exceptions import MissingError, AccessError
 from odoo.osv import expression
-from odoo.tools import is_html_empty
+from odoo.tools import is_html_empty, html_escape
 from odoo.tools.misc import clean_context, split_every
 
 _logger = logging.getLogger(__name__)
@@ -85,6 +85,7 @@ class MailThread(models.AbstractModel):
     message_partner_ids = fields.Many2many(
         comodel_name='res.partner', string='Followers (Partners)',
         compute='_compute_message_partner_ids',
+        inverse='_inverse_message_partner_ids',
         search='_search_message_partner_ids',
         groups='base.group_user')
     message_ids = fields.One2many(
@@ -112,6 +113,17 @@ class MailThread(models.AbstractModel):
     def _compute_message_partner_ids(self):
         for thread in self:
             thread.message_partner_ids = thread.message_follower_ids.mapped('partner_id')
+
+    def _inverse_message_partner_ids(self):
+        for thread in self:
+            new_partners_ids = thread.message_partner_ids
+            previous_partners_ids = thread.message_follower_ids.partner_id
+            removed_partners_ids = previous_partners_ids - new_partners_ids
+            added_patners_ids = new_partners_ids - previous_partners_ids
+            if added_patners_ids:
+                thread.message_subscribe(added_patners_ids.ids)
+            if removed_partners_ids:
+                thread.message_unsubscribe(removed_partners_ids.ids)
 
     @api.model
     def _search_message_partner_ids(self, operator, operand):
@@ -326,14 +338,14 @@ class MailThread(models.AbstractModel):
         return super(MailThread, self.with_context(mail_notrack=True)).copy_data(default=default)
 
     @api.model
-    def get_empty_list_help(self, help):
+    def get_empty_list_help(self, help_message):
         """ Override of BaseModel.get_empty_list_help() to generate an help message
         that adds alias information. """
         model = self._context.get('empty_list_help_model')
         res_id = self._context.get('empty_list_help_id')
         catchall_domain = self.env['ir.config_parameter'].sudo().get_param("mail.catchall.domain")
         document_name = self._context.get('empty_list_help_document_name', _('document'))
-        nothing_here = not help
+        nothing_here = is_html_empty(help_message)
         alias = None
 
         if catchall_domain and model and res_id:  # specific res_id -> find its alias (i.e. section_id specified)
@@ -355,30 +367,26 @@ class MailThread(models.AbstractModel):
                 alias = aliases[0]
 
         if alias:
-            email_link = "<a href='mailto:%(email)s'>%(email)s</a>" % {'email': alias.display_name}
+            email_link = Markup("<a href='mailto:%s'>%s</a>") % (alias.display_name, alias.display_name)
             if nothing_here:
-                return "<p class='o_view_nocontent_smiling_face'>%(dyn_help)s</p>" % {
-                    'dyn_help': _("Add a new %(document)s or send an email to %(email_link)s",
-                        document=document_name,
-                        email_link=email_link,
-                    )
-                }
+                dyn_help = _("Add a new %(document)s or send an email to %(email_link)s",
+                             document=html_escape(document_name),
+                             email_link=email_link,
+                            )
+                return super().get_empty_list_help(f"<p class='o_view_nocontent_smiling_face'>{dyn_help}</p>")
             # do not add alias two times if it was added previously
-            if "oe_view_nocontent_alias" not in help:
-                return "%(static_help)s<p class='oe_view_nocontent_alias'>%(dyn_help)s</p>" % {
-                    'static_help': help,
-                    'dyn_help': _("Create new %(document)s by sending an email to %(email_link)s",
-                        document=document_name,
-                        email_link=email_link,
-                    )
-                }
+            if "oe_view_nocontent_alias" not in help_message:
+                dyn_help = _("Create new %(document)s by sending an email to %(email_link)s",
+                             document=html_escape(document_name),
+                             email_link=email_link,
+                            )
+                return super().get_empty_list_help(f"{help_message}<p class='oe_view_nocontent_alias'>{dyn_help}</p>")
 
         if nothing_here:
-            return "<p class='o_view_nocontent_smiling_face'>%(dyn_help)s</p>" % {
-                'dyn_help': _("Create new %(document)s", document=document_name),
-            }
+            dyn_help = _("Create new %(document)s", document=html_escape(document_name))
+            return super().get_empty_list_help(f"<p class='o_view_nocontent_smiling_face'>{dyn_help}</p>")
 
-        return help
+        return super().get_empty_list_help(help_message)
 
     # ------------------------------------------------------
     # MODELS / CRUD HELPERS
@@ -819,16 +827,19 @@ class MailThread(models.AbstractModel):
                 obj = self.env[alias.alias_parent_model_id.model].browse(alias.alias_parent_thread_id)
             else:
                 obj = self.env[model]
-            error_message = obj._alias_get_error_message(message, message_dict, alias)
-            if error_message:
+            error = obj._alias_get_error(message, message_dict, alias)
+            if error:
                 self._routing_warn(
-                    _('alias %(name)s: %(error)s', name=alias.alias_name, error=error_message or _('unknown error')),
+                    _('alias %(name)s: %(error)s', name=alias.alias_name, error=error.message or _('unknown error')),
                     message_id,
                     route,
                     False
                 )
-                body = alias._get_alias_bounced_body(message_dict)
-                self._routing_create_bounce_email(email_from, body, message, references=message_id)
+                if error.is_config_error:
+                    alias._set_alias_invalid(message, message_dict)
+                else:
+                    body = alias._get_alias_bounced_body(message_dict)
+                    self._routing_create_bounce_email(email_from, body, message, references=message_id)
                 return False
 
         return (model, thread_id, route[2], route[3], route[4])
@@ -1134,7 +1145,18 @@ class MailThread(models.AbstractModel):
             else:
                 # if a new thread is created, parent is irrelevant
                 message_dict.pop('parent_id', None)
-                thread = ModelCtx.message_new(message_dict, custom_values)
+                # Report failure/record success of message creation except if alias is not defined (fallback model case)
+                try:
+                    thread = ModelCtx.message_new(message_dict, custom_values)
+                except Exception:
+                    if alias:
+                        with self.pool.cursor() as new_cr:
+                            self.with_env(self.env(cr=new_cr)).env['mail.alias'].browse(alias.id) \
+                                ._set_alias_invalid(message, message_dict)
+                    raise
+                else:
+                    if alias and alias.alias_status != 'valid':
+                        alias.alias_status = 'valid'
                 thread_id = thread.id
                 subtype_id = thread._creation_subtype().id
 
@@ -1367,6 +1389,9 @@ class MailThread(models.AbstractModel):
             mixed = False
             html = u''
             for part in message.walk():
+                if part.get_content_type() == 'binary/octet-stream':
+                    _logger.warning("Message containing an unexpected Content-Type 'binary/octet-stream', assuming 'application/octet-stream'")
+                    part.replace_header('Content-Type', 'application/octet-stream')
                 if part.get_content_type() == 'multipart/alternative':
                     alternative = True
                 if part.get_content_type() == 'multipart/mixed':
@@ -1769,121 +1794,6 @@ class MailThread(models.AbstractModel):
     # MESSAGE POST MAIN
     # ------------------------------------------------------------
 
-    def _message_post_process_attachments(self, attachments, attachment_ids, message_values):
-        """ Preprocess attachments for mail_thread.message_post() or mail_mail.create().
-        Purpose is to
-
-          * transfer attachments given by ``attachment_ids`` from the composer to
-            the record (if any);
-          * limit attachments manipulation when being a shared user;
-          * create attachments from ``attachments``. If those are linked to the
-            content (body) through CIDs body is updated accordingly;
-
-        :param list(tuple(str,str), tuple(str,str, dict)) attachments : list of attachment
-            tuples in the form ``(name,content)`` or ``(name,content, info)`` where content
-            is NOT base64 encoded;
-        :param list attachment_ids: list of existing attachments to link to this message;
-        :param message_values: dictionary of values that will be used to create the
-          message. It is used to find back record- or content- context;
-
-        :return dict: new values for message: 'attachment_ids' and optionally 'body'
-        """
-        return_values = {}
-        body = message_values.get('body')
-        model = message_values['model']
-        res_id = message_values['res_id']
-
-        m2m_attachment_ids = []
-        if attachment_ids:
-            # taking advantage of cache looks better in this case, to check
-            filtered_attachment_ids = self.env['ir.attachment'].sudo().browse(attachment_ids).filtered(
-                lambda a: a.res_model == 'mail.compose.message' and a.create_uid.id == self._uid)
-            # update filtered (pending) attachments to link them to the proper record
-            if filtered_attachment_ids:
-                filtered_attachment_ids.write({'res_model': model, 'res_id': res_id})
-            # prevent public and portal users from using attachments that are not theirs
-            if not self.env.user._is_internal():
-                attachment_ids = filtered_attachment_ids.ids
-
-            m2m_attachment_ids += [Command.link(id) for id in attachment_ids]
-        # Handle attachments parameter, that is a dictionary of attachments
-
-        if attachments: # generate
-            cids_in_body = set()
-            names_in_body = set()
-            cid_list = []
-            name_list = []
-
-            if body:
-                root = lxml.html.fromstring(tools.ustr(body))
-                # first list all attachments that will be needed in body
-                for node in root.iter('img'):
-                    if node.get('src', '').startswith('cid:'):
-                        cids_in_body.add(node.get('src').split('cid:')[1])
-                    elif node.get('data-filename'):
-                        names_in_body.add(node.get('data-filename'))
-            attachement_values_list = []
-
-            # generate values
-            for attachment in attachments:
-                cid = False
-                if len(attachment) == 2:
-                    name, content = attachment
-                elif len(attachment) == 3:
-                    name, content, info = attachment
-                    cid = info and info.get('cid')
-                else:
-                    continue
-                if isinstance(content, str):
-                    content = content.encode('utf-8')
-                elif isinstance(content, EmailMessage):
-                    content = content.as_bytes()
-                elif content is None:
-                    continue
-                attachement_values = {
-                    'name': name,
-                    'datas': base64.b64encode(content),
-                    'type': 'binary',
-                    'description': name,
-                    'res_model': model,
-                    'res_id': res_id,
-                }
-                if body and (cid and cid in cids_in_body or name in names_in_body):
-                    attachement_values['access_token'] = self.env['ir.attachment']._generate_access_token()
-                attachement_values_list.append(attachement_values)
-                # keep cid and name list synced with attachement_values_list length to match ids latter
-                cid_list.append(cid)
-                name_list.append(name)
-            new_attachments = self.env['ir.attachment'].create(attachement_values_list)
-            cid_mapping = {}
-            name_mapping = {}
-            for counter, new_attachment in enumerate(new_attachments):
-                cid = cid_list[counter]
-                if 'access_token' in attachement_values_list[counter]:
-                    if cid:
-                        cid_mapping[cid] = (new_attachment.id, attachement_values_list[counter]['access_token'])
-                    name = name_list[counter]
-                    name_mapping[name] = (new_attachment.id, attachement_values_list[counter]['access_token'])
-                m2m_attachment_ids.append((4, new_attachment.id))
-
-            # note: right know we are only taking attachments and ignoring attachment_ids.
-            if (cid_mapping or name_mapping) and body:
-                postprocessed = False
-                for node in root.iter('img'):
-                    attachment_data = False
-                    if node.get('src', '').startswith('cid:'):
-                        cid = node.get('src').split('cid:')[1]
-                        attachment_data = cid_mapping.get(cid)
-                    if not attachment_data and node.get('data-filename'):
-                        attachment_data = name_mapping.get(node.get('data-filename'), False)
-                    if attachment_data:
-                        node.set('src', '/web/image/%s?access_token=%s' % attachment_data)
-                        postprocessed = True
-                if postprocessed:
-                    return_values['body'] = lxml.html.tostring(root, pretty_print=False, encoding='UTF-8')
-        return_values['attachment_ids'] = m2m_attachment_ids
-        return return_values
-
     @api.returns('mail.message', lambda value: value.id)
     def message_post(self, *,
                      body='', subject=None, message_type='notification',
@@ -1942,10 +1852,6 @@ class MailThread(models.AbstractModel):
 
         self = self._fallback_lang() # add lang to context immediately since it will be useful in various flows latter.
 
-        # Explicit access rights check, because display_name is computed as sudo.
-        self.check_access_rights('read')
-        self.check_access_rule('read')
-
         # Find the message's author
         if self.env.user._is_public() and 'guest' in self.env.context:
             author_guest_id = self.env.context['guest'].id
@@ -1969,9 +1875,11 @@ class MailThread(models.AbstractModel):
         if not msg_values.get('record_name'):
             msg_values['record_name'] = self.display_name
         msg_values.update({
+            # author
             'author_id': author_id,
             'author_guest_id': author_guest_id,
             'email_from': email_from,
+            # document
             'model': self._name,
             'res_id': self.id,
             # content
@@ -1986,7 +1894,7 @@ class MailThread(models.AbstractModel):
 
         attachments = attachments or []
         attachment_ids = attachment_ids or []
-        attachement_values = self._message_post_process_attachments(attachments, attachment_ids, msg_values)
+        attachement_values = self._process_attachments_for_post(attachments, attachment_ids, msg_values)
         msg_values.update(attachement_values)  # attachement_ids, [body]
 
         new_message = self._message_create(msg_values)
@@ -2014,6 +1922,150 @@ class MailThread(models.AbstractModel):
         """ Hook to add custom behavior after having posted the message. Both
         message and computed value are given, to try to lessen query count by
         using already-computed values instead of having to rebrowse things. """
+        return
+
+    def _message_mail_after_hook(self, mails):
+        """ Hook to add custom behavior after having sent an mass mailing.
+
+        :param mail.mail mails: mail.mail records about to be sent"""
+        return
+
+    def _process_attachments_for_post(self, attachments, attachment_ids, message_values):
+        """ Preprocess attachments for MailTread.message_post() or MailMail.create().
+        Purpose is to
+
+          * transfer attachments given by ``attachment_ids`` from the composer
+            to the record (if any);
+          * limit attachments manipulation when being a shared user: only those
+            created by the user and linked to the composer are considered;
+          * create attachments from ``attachments``. If those are linked to the
+            content (body) through CIDs body is updated. CIDs are found and
+            replaced by links to web/image as CIDs are not supported as it.
+
+        :param list(tuple(str,str)) or list(tuple(str,str, dict)) attachments:
+          list of attachment tuples in the form ``(name,content)`` or
+          `(name,content, info)`` where content is NOT base64 encoded;
+        :param list attachment_ids: list of existing attachments to link to this
+          message;
+        :param message_values: dictionary of values that will be used to create the
+          message. It is used to find back record- or content- context;
+
+        :return dict: new values for message: 'attachment_ids' and optionally
+          'body' if CIDs have been transformed;
+        """
+        # allow calling as a model method using model/res_id
+        if 'res_id' in message_values:
+            model, res_id = message_values['model'], message_values['res_id']
+        else:
+            self.ensure_one()
+            model, res_id = self._name, self.id
+        body = ''
+        if message_values.get('body'):
+            body = message_values['body'] if not is_html_empty(message_values['body']) else ''
+
+        m2m_attachment_ids = []
+        if attachment_ids:
+            # taking advantage of cache looks better in this case, to check
+            filtered_attachment_ids = self.env['ir.attachment'].sudo().browse(attachment_ids).filtered(
+                lambda a: a.res_model == 'mail.compose.message' and a.create_uid.id == self._uid)
+            # update filtered (pending) attachments to link them to the proper record
+            if filtered_attachment_ids:
+                filtered_attachment_ids.write({'res_model': model, 'res_id': res_id})
+            # prevent public and portal users from using attachments that are not theirs
+            if not self.env.user._is_internal():
+                attachment_ids = filtered_attachment_ids.ids
+
+            m2m_attachment_ids += [Command.link(id) for id in attachment_ids]
+
+        # Handle attachments parameter, that is a dictionary of attachments
+        return_values = {}
+        if attachments: # generate
+            body_cids, body_filenames = set(), set()
+            if body:
+                root = lxml.html.fromstring(tools.ustr(body))
+                # first list all attachments that will be needed in body
+                for node in root.iter('img'):
+                    if node.get('src', '').startswith('cid:'):
+                        body_cids.add(node.get('src').split('cid:')[1])
+                    elif node.get('data-filename'):
+                        body_filenames.add(node.get('data-filename'))
+
+            attachement_values_list = []
+            attachement_extra_list = []
+            # generate values
+            for attachment in attachments:
+                if len(attachment) == 2:
+                    name, content = attachment
+                    cid = False
+                elif len(attachment) == 3:
+                    name, content, info = attachment
+                    cid = info and info.get('cid')
+                else:
+                    continue
+
+                if isinstance(content, str):
+                    content = content.encode('utf-8')
+                elif isinstance(content, EmailMessage):
+                    content = content.as_bytes()
+                elif content is None:
+                    continue
+                attachement_values = {
+                    'name': name,
+                    'datas': base64.b64encode(content),
+                    'type': 'binary',
+                    'description': name,
+                    'res_model': model,
+                    'res_id': res_id,
+                }
+                token = False
+                if (cid and cid in body_cids) or (name and name in body_filenames):
+                    token = self.env['ir.attachment']._generate_access_token()
+                    attachement_values['access_token'] = token
+                attachement_values_list.append(attachement_values)
+
+                # keep cid, name list and token synced with attachement_values_list length to match ids latter
+                attachement_extra_list.append((cid, name, token))
+
+            new_attachments = self.env['ir.attachment'].create(attachement_values_list)
+            attach_cid_mapping, attach_name_mapping = {}, {}
+            for attachment, (cid, name, token) in zip(new_attachments, attachement_extra_list):
+                if cid:
+                    attach_cid_mapping[cid] = (attachment.id, token)
+                if name:
+                    attach_name_mapping[name] = (attachment.id, token)
+                m2m_attachment_ids.append((4, attachment.id))
+
+            # note: right know we are only taking attachments and ignoring attachment_ids.
+            if (body_cids or body_filenames) and body:
+                postprocessed = False
+                for node in root.iter('img'):
+                    att_id, token = False, False
+                    if node.get('src', '').startswith('cid:'):
+                        cid = node.get('src').split('cid:')[1]
+                        att_id, token = attach_cid_mapping.get(cid, (False, False))
+                    if (not att_id or not token) and node.get('data-filename'):
+                        att_id, token = attach_name_mapping.get(node.get('data-filename'), (False, False))
+                    if att_id and token:
+                        node.set('src', f'/web/image/{att_id}?access_token={token}')
+                        postprocessed = True
+                if postprocessed:
+                    return_values['body'] = lxml.html.tostring(root, pretty_print=False, encoding='UTF-8')
+        return_values['attachment_ids'] = m2m_attachment_ids
+        return return_values
+
+    def _process_attachments_for_template_post(self, mail_template):
+        """ Model specific management of attachments used with template attachments
+        generation in addition to reports. Only usage currently is for EDI in
+        accounting.
+
+        :param mail.template mail_template: a mail.template record used to generate
+          message or emails on self;
+
+        :return dict: a dictionary based on self.ids (optional). For each given
+          key, value should be a dict holding 'attachments' and 'attachment_ids'
+          keys;
+        """
+        return {}
 
     # ------------------------------------------------------------
     # MESSAGE POST API / WRAPPERS
@@ -2032,16 +2084,23 @@ class MailThread(models.AbstractModel):
         except ImportError:
             values['slug'] = lambda self: self.id
         view_ref = views_or_xmlid.id if isinstance(views_or_xmlid, models.BaseModel) else views_or_xmlid
+
+        messages_as_sudo = self.env['mail.message']
         for record in self:
             values['object'] = record
             rendered_template = self.env['ir.qweb']._render(view_ref, values, minimal_qcontext=True, raise_if_not_found=False)
             if not rendered_template:
                 continue
             if message_log:
-                return record._message_log(body=rendered_template, **kwargs)
+                messages_as_sudo += record._message_log(body=rendered_template, **kwargs)
             else:
                 kwargs['body'] = rendered_template
-                return record.message_post_with_template(False, **kwargs)
+                # a bit complicated to handle, to be improved soon in master
+                _mails_as_sudo, _messages_as_sudo = record.message_post_with_template(False, **kwargs)
+                if _messages_as_sudo:
+                    messages_as_sudo += _messages_as_sudo
+
+        return messages_as_sudo
 
     def message_post_with_view(self, views_or_xmlid, **kwargs):
         """ Helper method to send a mail / post a message using a view_id """
@@ -2103,18 +2162,22 @@ class MailThread(models.AbstractModel):
             res_id = False
 
         msg_values = {
-            'parent_id': parent_id,
-            'model': self._name if self else model,
-            'res_id': self.id if self else res_id,
-            'message_type': 'user_notification',
-            'subject': subject,
-            'body': body,
+            # author
             'author_id': author_id,
             'email_from': email_from,
-            'partner_ids': partner_ids,
-            'is_internal': True,
+            # document
+            'model': self._name if self else model,
             'record_name': False,
+            'res_id': self.id if self else res_id,
+            # content
+            'body': body,
+            'is_internal': True,
+            'message_type': 'user_notification',
+            'parent_id': parent_id,
+            'subject': subject,
+            # recipients
             'message_id': tools.generate_tracking_message_id('message-notify'),
+            'partner_ids': partner_ids,
         }
         msg_values.update(msg_kwargs)
         # add default-like values afterwards, to avoid useless queries
@@ -2144,19 +2207,23 @@ class MailThread(models.AbstractModel):
         author_id, email_from = self._message_compute_author(author_id, email_from, raise_on_email=False)
 
         msg_values = {
-            'subject': subject,
-            'body': body,
+            # author
             'author_id': author_id,
             'email_from': email_from,
-            'message_type': message_type,
+            # document
             'model': kwargs.get('model', self._name),
-            'res_id': self.ids[0] if self.ids else False,
-            'subtype_id': self.env['ir.model.data']._xmlid_to_res_id('mail.mt_note'),
-            'is_internal': True,
             'record_name': False,
-            'reply_to': self.env['mail.thread']._notify_get_reply_to(default=email_from)[False],
-            'message_id': tools.generate_tracking_message_id('message-notify'),  # why? this is all but a notify
+            'res_id': self.ids[0] if self.ids else False,
+            # content
+            'body': body,
+            'is_internal': True,
+            'message_type': message_type,
+            'subject': subject,
+            'subtype_id': self.env['ir.model.data']._xmlid_to_res_id('mail.mt_note'),
+            # recipients
             'email_add_signature': False,  # False as no notification -> no need to compute signature
+            'message_id': tools.generate_tracking_message_id('message-notify'),  # why? this is all but a notify
+            'reply_to': self.env['mail.thread']._notify_get_reply_to(default=email_from)[False],
         }
         msg_values.update(kwargs)
 
@@ -2171,17 +2238,21 @@ class MailThread(models.AbstractModel):
         author_id, email_from = self._message_compute_author(author_id, email_from, raise_on_email=False)
 
         base_message_values = {
-            'subject': subject,
+            # author
             'author_id': author_id,
             'email_from': email_from,
-            'message_type': message_type,
+            # document
             'model': self._name,
-            'subtype_id': self.env['ir.model.data']._xmlid_to_res_id('mail.mt_note'),
-            'is_internal': True,
             'record_name': False,
-            'reply_to': self.env['mail.thread']._notify_get_reply_to(default=email_from)[False],
-            'message_id': tools.generate_tracking_message_id('message-notify'),  # why? this is all but a notify
+            # content
+            'message_type': message_type,
+            'is_internal': True,
+            'subject': subject,
+            'subtype_id': self.env['ir.model.data']._xmlid_to_res_id('mail.mt_note'),
+            # recipients
             'email_add_signature': False,
+            'message_id': tools.generate_tracking_message_id('message-notify'),  # why? this is all but a notify
+            'reply_to': self.env['mail.thread']._notify_get_reply_to(default=email_from)[False],
         }
         values_list = [dict(base_message_values,
                             res_id=record.id,
@@ -2260,10 +2331,12 @@ class MailThread(models.AbstractModel):
                 create_values.pop(x, None)
             create_values['partner_ids'] = [Command.link(pid) for pid in create_values.get('partner_ids', [])]
             create_values_list.append(create_values)
-        if 'default_child_ids' in self._context:
-            ctx = {key: val for key, val in self._context.items() if key != 'default_child_ids'}
-            self = self.with_context(ctx)
-        return self.env['mail.message'].create(create_values_list)
+
+        # remove context, notably for default keys, as this thread method is not
+        # meant to propagate default values for messages, only for master records
+        return self.env['mail.message'].with_context(
+            clean_context(self.env.context)
+        ).create(create_values_list)
 
     # ------------------------------------------------------
     # NOTIFICATION API
@@ -2391,9 +2464,9 @@ class MailThread(models.AbstractModel):
             notif_create_values = [{
                 'author_id': message.author_id.id,
                 'mail_message_id': message.id,
-                'res_partner_id': pid,
-                'notification_type': 'inbox',
                 'notification_status': 'sent',
+                'notification_type': 'inbox',
+                'res_partner_id': pid,
             } for pid in inbox_pids]
             self.env['mail.notification'].sudo().create(notif_create_values)
 
@@ -2406,7 +2479,7 @@ class MailThread(models.AbstractModel):
                                 mail_auto_delete=True,  # mail.mail
                                 model_description=False, force_email_company=False, force_email_lang=False,  # rendering
                                 resend_existing=False, force_send=True, send_after_commit=True,  # email send
-                                **kwargs):
+                                subtitles=None, **kwargs):
         """ Method to send email linked to notified messages.
 
         :param message: ``mail.message`` record to notify;
@@ -2437,6 +2510,7 @@ class MailThread(models.AbstractModel):
         :param force_send: send emails directly instead of using queue;
         :param send_after_commit: if force_send, tells whether to send emails after
           the transaction has been committed using a post-commit hook;
+        :param subtitles: optional list that will be set as template value "subtitles"
         """
         partners_data = [r for r in recipients_data if r['notif'] == 'email']
         if not partners_data:
@@ -2455,9 +2529,11 @@ class MailThread(models.AbstractModel):
             force_email_company=force_email_company,
             force_email_lang=force_email_lang,
         ) # 10 queries
+        if subtitles:
+            template_values['subtitles'] = subtitles
 
         email_layout_xmlid = msg_vals.get('email_layout_xmlid') if msg_vals else message.email_layout_xmlid
-        template_xmlid = email_layout_xmlid if email_layout_xmlid else 'mail.message_notification_email'
+        template_xmlid = email_layout_xmlid if email_layout_xmlid else 'mail.mail_notification_layout'
         base_mail_values = self._notify_by_email_get_base_mail_values(message, additional_values={'auto_delete': mail_auto_delete})
 
         # Clean the context to get rid of residual default_* keys that could cause issues during
@@ -2511,12 +2587,12 @@ class MailThread(models.AbstractModel):
                             })
                     notif_create_values += [{
                         'author_id': message.author_id.id,
-                        'mail_message_id': message.id,
-                        'res_partner_id': recipient_id,
-                        'notification_type': 'email',
-                        'mail_mail_id': new_email.id,
                         'is_read': True,  # discard Inbox notification
+                        'mail_mail_id': new_email.id,
+                        'mail_message_id': message.id,
                         'notification_status': 'ready',
+                        'notification_type': 'email',
+                        'res_partner_id': recipient_id,
                     } for recipient_id in tocreate_recipient_ids]
                 emails += new_email
 
@@ -2644,7 +2720,7 @@ class MailThread(models.AbstractModel):
             'model_description': model_description,
             'record': self,
             'record_name': record_name,
-            'subtitle': False,
+            'subtitles': [record_name],
             # user / environment
             'company': company,
             'email_add_signature': email_add_signature,
@@ -2920,7 +2996,7 @@ class MailThread(models.AbstractModel):
             token = self._notify_encode_link(base_link, params)
             params['token'] = token
 
-        link = '%s?%s' % (base_link, urls.url_encode(params))
+        link = '%s?%s' % (base_link, urls.url_encode(params, sort=True))
         if self:
             link = self[0].get_base_url() + link
 
@@ -3053,10 +3129,12 @@ class MailThread(models.AbstractModel):
 
         for record in self:
             model_description = self.env['ir.model']._get(record._name).display_name
+            company = record.company_id.sudo() if 'company_id' in record else self.env.company
             values = {
-                'object': record,
-                'model_description': model_description,
                 'access_link': record._notify_get_action_link('view'),
+                'company': company,
+                'model_description': model_description,
+                'object': record,
             }
             assignation_msg = self.env['ir.qweb']._render(template, values, minimal_qcontext=True)
             assignation_msg = self.env['mail.render.mixin']._replace_local_links(assignation_msg)
@@ -3065,7 +3143,7 @@ class MailThread(models.AbstractModel):
                 body=assignation_msg,
                 partner_ids=partner_ids,
                 record_name=record.display_name,
-                email_layout_xmlid='mail.mail_notification_light',
+                email_layout_xmlid='mail.mail_notification_layout',
                 model_description=model_description,
             )
 
@@ -3195,7 +3273,7 @@ class MailThread(models.AbstractModel):
     def _message_update_content(self, message, body, attachment_ids=None,
                                 strict=True, **kwargs):
         """ Update message content. Currently does not support attachments
-        specific code (see ``_message_post_process_attachments``), to be added
+        specific code (see ``_process_attachments_for_post``), to be added
         when necessary.
 
         Private method to use for tooling, do not expose to interface as editing
@@ -3222,7 +3300,7 @@ class MailThread(models.AbstractModel):
         msg_values = {'body': body} if body is not None else {}
         if attachment_ids:
             msg_values.update(
-                self._message_post_process_attachments([], attachment_ids, {
+                self._process_attachments_for_post([], attachment_ids, {
                     'body': body,
                     'model': self._name,
                     'res_id': self.id,

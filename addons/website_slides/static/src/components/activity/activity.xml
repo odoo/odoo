@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <templates xml:space="preserve">
-    <t t-inherit="mail.Activity" t-inherit-mode="extension">
+    <t t-inherit="mail.ActivityView" t-inherit-mode="extension">
         <xpath expr="//*[@name='tools']" position="replace">
-            <t t-if="activityView.activity.requestingPartner and activityView.activity.thread.model === 'slide.channel'">
-                <div class="o_Activity_tools">
-                    <button class="o_Activity_toolButton o_Activity_grantAccessButton btn btn-link" t-on-click="activityView.onGrantAccess">
+            <t t-if="activity.requestingPartner and activity.thread.model === 'slide.channel'">
+                <div class="o_ActivityView_tools">
+                    <button class="o_ActivityView_toolButton o_ActivityView_grantAccessButton btn btn-link" t-on-click="onGrantAccess">
                         <i class="fa fa-check"/> Grant Access
                     </button>
-                    <button class="o_Activity_toolButton o_Activity_refuseAccessButton btn btn-link" t-on-click="activityView.onRefuseAccess">
+                    <button class="o_ActivityView_toolButton o_ActivityView_refuseAccessButton btn btn-link" t-on-click="onRefuseAccess">
                         <i class="fa fa-times"/> Refuse Access
                     </button>
                 </div>

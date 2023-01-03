@@ -1,0 +1,27 @@
+<templates id="template" xml:space="preserve">
+
+    <t t-name="project.ChatterContainer" owl="1">
+        <div t-attf-class="o_portal_chatter p-0 container {{props.twoColumns ? 'row' : ''}}">
+            <div t-attf-class="{{props.twoColumns ? 'col-lg-5' : props.resId ? 'border-bottom' : ''}}">
+                <div class="o_portal_chatter_header">
+                    <ChatterMessageCounter count="state.options.message_count"/>
+                </div>
+                <hr/>
+                <ChatterComposer t-props="composerProps"/>
+            </div>
+            <div t-attf-class="{{props.twoColumns ? 'offset-lg-1 col-lg-6' : 'pt-4'}}">
+                <ChatterMessages messages="props.resId ? state.messages : []" isUserEmployee="state.options.is_user_employee" update.bind="updateMessage" />
+                <div class="o_portal_chatter_footer">
+                    <ChatterPager
+                        page="this.state.currentPage || 1"
+                        messageCount="this.state.options.message_count"
+                        pagerScope="this.state.options.pager_scope"
+                        pagerStep="this.state.options.pager_step"
+                        changePage.bind="onChangePage"
+                    />
+                </div>
+            </div>
+        </div>
+    </t>
+
+</templates>

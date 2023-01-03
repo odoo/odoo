@@ -22,6 +22,6 @@ Switch.template = xml`
 <label t-att-class="'o_switch' + extraClasses">
     <input type="checkbox" t-att-checked="props.value" t-on-change="(ev) => props.onChange(ev.target.checked)"/>
     <span/>
-    <div t-if="props.label"><t t-esc="props.label"/></div>
+    <span t-if="props.label" t-esc="props.label" class="ms-2"/>
 </label>
 `;

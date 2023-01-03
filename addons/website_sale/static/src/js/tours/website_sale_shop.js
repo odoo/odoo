@@ -5,7 +5,7 @@ odoo.define("website_sale.tour_shop", function (require) {
     const {Markup} = require('web.utils');
     const wTourUtils = require("website.tour_utils");
 
-    wTourUtils.registerEditionTour("shop", {
+    wTourUtils.registerWebsitePreviewTour("shop", {
         url: '/shop',
         sequence: 130,
     }, [{

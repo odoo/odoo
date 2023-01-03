@@ -12,11 +12,11 @@ class ProductTemplate(models.Model):
     def _selection_service_policy(self):
         service_policies = [
             # (service_policy, string)
-            ('ordered_prepaid', 'Prepaid/Fixed Price'),
-            ('delivered_manual', 'Based on Delivered Quantity (Manual)'),
+            ('ordered_prepaid', _('Prepaid/Fixed Price')),
+            ('delivered_manual', _('Based on Delivered Quantity (Manual)')),
         ]
         if self.user_has_groups('project.group_project_milestone'):
-            service_policies.insert(1, ('delivered_milestones', 'Based on Milestones'))
+            service_policies.insert(1, ('delivered_milestones', _('Based on Milestones')))
         return service_policies
 
     service_tracking = fields.Selection(
@@ -33,12 +33,10 @@ class ProductTemplate(models.Model):
         creating a new project based on the selected template.")
     project_id = fields.Many2one(
         'project.project', 'Project', company_dependent=True,
-        domain="[('company_id', '=', current_company_id)]",
-        help='Select a billable project on which tasks can be created. This setting must be set for each company.')
+        domain="[('company_id', '=', current_company_id)]")
     project_template_id = fields.Many2one(
         'project.project', 'Project Template', company_dependent=True, copy=True,
-        domain="[('company_id', '=', current_company_id)]",
-        help='Select a billable project to be the skeleton of the new created project when selling the current product. Its stages and tasks will be duplicated.')
+        domain="[('company_id', '=', current_company_id)]")
     service_policy = fields.Selection('_selection_service_policy', string="Service Invoicing Policy", compute='_compute_service_policy', inverse='_inverse_service_policy')
     service_type = fields.Selection(selection_add=[
         ('milestones', 'Project Milestones'),
@@ -65,16 +63,16 @@ class ProductTemplate(models.Model):
                         "Invoice ordered quantities as soon as this service is sold. "
                         "Create a task in an existing project to track the time spent."
                     )
-                elif record.service_tracking == 'task_in_project':
-                    record.product_tooltip = _(
-                        "Invoice ordered quantities as soon as this service is sold. "
-                        "Create an empty project for the order to track the time spent."
-                    )
                 elif record.service_tracking == 'project_only':
                     record.product_tooltip = _(
                         "Invoice ordered quantities as soon as this service is sold. "
                         "Create a project for the order with a task for each sales order line "
                         "to track the time spent."
+                    )
+                elif record.service_tracking == 'task_in_project':
+                    record.product_tooltip = _(
+                        "Invoice ordered quantities as soon as this service is sold. "
+                        "Create an empty project for the order to track the time spent."
                     )
             elif record.service_policy == 'delivered_milestones':
                 if record.service_tracking == 'no':
@@ -86,16 +84,16 @@ class ProductTemplate(models.Model):
                         "Invoice your milestones when they are reached. "
                         "Create a task in an existing project to track the time spent."
                     )
-                elif record.service_tracking == 'task_in_project':
-                    record.product_tooltip = _(
-                        "Invoice your milestones when they are reached. "
-                        "Create an empty project for the order to track the time spent."
-                    )
                 elif record.service_tracking == 'project_only':
                     record.product_tooltip = _(
                         "Invoice your milestones when they are reached. "
                         "Create a project for the order with a task for each sales order line "
                         "to track the time spent."
+                    )
+                elif record.service_tracking == 'task_in_project':
+                    record.product_tooltip = _(
+                        "Invoice your milestones when they are reached. "
+                        "Create an empty project for the order to track the time spent."
                     )
             elif record.service_policy == 'delivered_manual':
                 if record.service_tracking == 'no':
@@ -107,15 +105,16 @@ class ProductTemplate(models.Model):
                         "Invoice this service when it is delivered (set the quantity by hand on your sales order lines). "
                         "Create a task in an existing project to track the time spent."
                     )
+                elif record.service_tracking == 'project_only':
+                    record.product_tooltip = _(
+                        "Invoice this service when it is delivered (set the quantity by hand on your sales order lines). "
+                        "Create a project for the order with a task for each sales order line "
+                        "to track the time spent."
+                    )
                 elif record.service_tracking == 'task_in_project':
                     record.product_tooltip = _(
                         "Invoice this service when it is delivered (set the quantity by hand on your sales order lines). "
                         "Create an empty project for the order to track the time spent."
-                    )
-                elif record.service_tracking == 'project_only':
-                    record.product_tooltip = _(
-                        "Invoice this service when it is delivered (set the quantity by hand on your sales order lines). "
-                        "Create a project for the order with a task for each sales order line to track the time spent."
                     )
 
     def _get_service_to_general_map(self):

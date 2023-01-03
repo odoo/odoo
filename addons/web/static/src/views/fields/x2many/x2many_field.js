@@ -3,6 +3,7 @@
 import { makeContext } from "@web/core/context";
 import { registry } from "@web/core/registry";
 import { Pager } from "@web/core/pager/pager";
+import { sprintf } from "@web/core/utils/strings";
 import {
     useActiveActions,
     useAddInlineRecord,
@@ -14,13 +15,9 @@ import { standardFieldProps } from "@web/views/fields/standard_field_props";
 import { KanbanRenderer } from "@web/views/kanban/kanban_renderer";
 import { ListRenderer } from "@web/views/list/list_renderer";
 import { evalDomain } from "@web/views/utils";
+import { _lt } from "@web/core/l10n/translation";
 
-const { Component } = owl;
-
-const X2M_RENDERERS = {
-    kanban: KanbanRenderer,
-    list: ListRenderer,
-};
+import { Component } from "@odoo/owl";
 
 export class X2ManyField extends Component {
     setup() {
@@ -33,15 +30,19 @@ export class X2ManyField extends Component {
         this.addButtonText = this.props.addLabel || this.env._t("Add");
 
         this.viewMode = this.activeField.viewMode;
-        this.Renderer = X2M_RENDERERS[this.viewMode];
 
         const { saveRecord, updateRecord, removeRecord } = useX2ManyCrud(
             () => this.list,
             this.isMany2Many
         );
 
-        const subView = this.activeField.views[this.viewMode];
-        const subViewActiveActions = subView.activeActions;
+        let archInfo;
+        if (this.viewMode) {
+            archInfo = this.activeField.views[this.viewMode];
+        } else {
+            archInfo = {};
+        }
+        const subViewActiveActions = archInfo.activeActions;
         this.activeActions = useActiveActions({
             crudOptions: Object.assign({}, this.activeField.options, {
                 onDelete: removeRecord,
@@ -56,12 +57,9 @@ export class X2ManyField extends Component {
             },
         });
 
-        if (subView.editable) {
-            this.addInLine = useAddInlineRecord({
-                position: subView.editable,
-                addNew: (...args) => this.list.addNew(...args),
-            });
-        }
+        this.addInLine = useAddInlineRecord({
+            addNew: (...args) => this.list.addNew(...args),
+        });
 
         const openRecord = useOpenX2ManyRecord({
             resModel: this.list.resModel,
@@ -70,6 +68,7 @@ export class X2ManyField extends Component {
             getList: () => this.list,
             saveRecord,
             updateRecord,
+            withParentId: this.activeField.widget !== "many2many",
         });
         this._openRecord = (params) => {
             const activeElement = document.activeElement;
@@ -97,10 +96,9 @@ export class X2ManyField extends Component {
     }
 
     get displayAddButton() {
-        const { canCreate, canLink } = this.activeActions;
         return (
             this.viewMode === "kanban" &&
-            (canLink !== undefined ? canLink : canCreate) &&
+            ("link" in this.activeActions ? this.activeActions.link : this.activeActions.create) &&
             !this.props.readonly
         );
     }
@@ -159,7 +157,6 @@ export class X2ManyField extends Component {
             return props;
         }
 
-        const mode = this.props.record.mode;
         // handle column_invisible modifiers
         const columns = archInfo.columns
             .map((col) => {
@@ -180,33 +177,19 @@ export class X2ManyField extends Component {
                     return col.buttons.length > 0;
                 }
                 return true;
-            })
-            .filter((col) => {
-                // filter out oe_read_only/oe_edit_only columns
-                // note: remove this oe_read/edit_only logic when form view
-                // will always be in edit mode
-                if (col.type === "field") {
-                    if (mode === "readonly") {
-                        return !/\boe_edit_only\b/.test(col.className);
-                    } else {
-                        return !/\boe_read_only\b/.test(col.className);
-                    }
-                } else if (col.type === "button_group") {
-                    if (mode === "readonly") {
-                        return col.buttons.some((btn) => !/\boe_edit_only\b/.test(btn.className));
-                    } else {
-                        return col.buttons.some((btn) => !/\boe_read_only\b/.test(btn.className));
-                    }
-                }
             });
 
+        const editable = archInfo.editable || this.props.editable;
         props.activeActions = this.activeActions;
         props.archInfo = { ...archInfo, columns };
         props.cycleOnTab = false;
-        props.editable = !this.props.readonly && archInfo.editable;
+        props.editable = !this.props.readonly && editable;
         props.nestedKeyOptionalFieldsData = this.nestedKeyOptionalFieldsData;
-        props.onAdd = this.onAdd.bind(this);
-
+        props.onAdd = (params) => {
+            params.editable =
+                !this.props.readonly && ("editable" in params ? params.editable : editable);
+            this.onAdd(params);
+        };
         return props;
     }
 
@@ -217,24 +200,24 @@ export class X2ManyField extends Component {
         return false;
     }
 
-    async onAdd({ context } = {}) {
+    async onAdd({ context, editable } = {}) {
         const record = this.props.record;
         const domain = record.getFieldDomain(this.props.name).toList();
-        if (context) {
-            context = makeContext([record.getFieldContext(this.props.name), context]);
-        }
+        context = makeContext([record.getFieldContext(this.props.name), context]);
         if (this.isMany2Many) {
-            return this.selectCreate({ domain, context });
+            const { string } = this.props.record.activeFields[this.props.name];
+            const title = sprintf(this.env._t("Add: %s"), string);
+            return this.selectCreate({ domain, context, title });
         }
-        if (this.addInLine) {
+        if (editable) {
             if (this.list.editedRecord) {
                 const proms = [];
                 this.list.model.env.bus.trigger("RELATIONAL_MODEL:NEED_LOCAL_CHANGES", { proms });
                 await Promise.all([...proms, this.list.editedRecord._updatePromise]);
-                await this.list.editedRecord.switchMode("readonly");
+                await this.list.editedRecord.switchMode("readonly", { checkValidity: true });
             }
             if (!this.list.editedRecord) {
-                return this.addInLine({ context });
+                return this.addInLine({ context, editable });
             }
             return;
         }
@@ -245,13 +228,14 @@ export class X2ManyField extends Component {
         return this._openRecord({ record, mode: this.props.readonly ? "readonly" : "edit" });
     }
 }
-
-X2ManyField.components = { Pager };
+X2ManyField.components = { Pager, KanbanRenderer, ListRenderer };
 X2ManyField.props = {
     ...standardFieldProps,
     addLabel: { type: "string", optional: true },
+    editable: { type: "string", optional: true },
 };
-X2ManyField.supportedTypes = ["one2many"];
+X2ManyField.supportedTypes = ["one2many", "many2many"];
+X2ManyField.displayName = _lt("Relational table");
 X2ManyField.template = "web.X2ManyField";
 X2ManyField.useSubView = true;
 X2ManyField.extractProps = ({ attrs }) => {

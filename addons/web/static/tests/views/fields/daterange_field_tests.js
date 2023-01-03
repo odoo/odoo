@@ -2,14 +2,18 @@
 
 import {
     click,
+    clickSave,
     editInput,
     getFixture,
     patchDate,
     patchTimeZone,
+    patchWithCleanup,
     triggerEvent,
     triggerScroll,
 } from "@web/../tests/helpers/utils";
+import { localization } from "@web/core/l10n/localization";
 import { makeView, setupViewRegistries } from "@web/../tests/views/helpers";
+import { registerCleanup } from "@web/../tests/helpers/cleanup";
 
 let serverData;
 let target;
@@ -69,22 +73,6 @@ QUnit.module("Fields", (hooks) => {
                     </form>`,
             });
 
-            let fields = target.querySelectorAll(".o_field_daterange");
-            // Check date display correctly in readonly
-            assert.strictEqual(
-                fields[0].textContent,
-                "02/08/2017 15:30:00",
-                "the start date should be correctly displayed in readonly"
-            );
-            assert.strictEqual(
-                fields[fields.length - 1].textContent,
-                "03/13/2017 05:30:00",
-                "the end date should be correctly displayed in readonly"
-            );
-
-            // Edit
-            await click(target, ".o_form_button_edit");
-
             // Check date range picker initialization
             assert.containsN(
                 document.body,
@@ -103,7 +91,7 @@ QUnit.module("Fields", (hooks) => {
             );
 
             // open the first one
-            fields = target.querySelectorAll(".o_field_daterange");
+            let fields = target.querySelectorAll(".o_field_daterange");
             await click(fields[0].querySelector("input"));
 
             let datepicker = document.querySelector(
@@ -206,12 +194,12 @@ QUnit.module("Fields", (hooks) => {
             );
 
             // Save
-            await click(target, ".o_form_button_save");
-            fields = target.querySelectorAll(".o_field_daterange");
+            await clickSave(target);
+            fields = target.querySelectorAll(".o_field_daterange input");
 
             // Check date after save
-            assert.strictEqual(fields[0].textContent, "02/08/2017 15:30:00");
-            assert.strictEqual(fields[fields.length - 1].textContent, "02/09/2017 05:30:00");
+            assert.strictEqual(fields[0].value, "02/08/2017 15:30:00");
+            assert.strictEqual(fields[fields.length - 1].value, "02/09/2017 05:30:00");
         }
     );
 
@@ -234,23 +222,6 @@ QUnit.module("Fields", (hooks) => {
             });
 
             let fields = target.querySelectorAll(".o_field_daterange");
-
-            // Check date display correctly in readonly
-            assert.strictEqual(
-                fields[0].textContent,
-                "02/03/2017",
-                "the start date should be correctly displayed in readonly"
-            );
-            assert.strictEqual(
-                fields[fields.length - 1].textContent,
-                "02/08/2017",
-                "the end date should be correctly displayed in readonly"
-            );
-
-            // Edit
-            await click(target, ".o_form_button_edit");
-
-            fields = target.querySelectorAll(".o_field_daterange");
             const datepickers = document.querySelectorAll(`.daterangepicker`);
 
             // Check date range picker initialization
@@ -361,17 +332,17 @@ QUnit.module("Fields", (hooks) => {
             );
 
             // Save
-            await click(target, ".o_form_button_save");
+            await clickSave(target);
             fields = target.querySelectorAll(".o_field_daterange");
 
             // Check date after save
             assert.strictEqual(
-                fields[0].textContent,
+                fields[0].querySelector("input").value,
                 "02/13/2017",
                 "the start date should be '02/13/2017' after save"
             );
             assert.strictEqual(
-                fields[fields.length - 1].textContent,
+                fields[1].querySelector("input").value,
                 "03/18/2017",
                 "the end date should be '03/18/2017' after save"
             );
@@ -399,9 +370,7 @@ QUnit.module("Fields", (hooks) => {
                     </form>`,
             });
 
-            await click(target, ".o_form_button_edit");
             await click(target.querySelector(".o_field_daterange[name='datetime'] input"));
-
             assert.isVisible(
                 document.querySelector(".daterangepicker[data-name='datetime']"),
                 "date range picker should be opened"
@@ -414,6 +383,30 @@ QUnit.module("Fields", (hooks) => {
             );
         }
     );
+
+    QUnit.test("DateRangeField with label opens datepicker on click", async function (assert) {
+        serverData.models.partner.fields.date_end = { string: "Date End", type: "date" };
+        serverData.models.partner.records[0].date_end = "2017-02-08";
+
+        await makeView({
+            type: "form",
+            resModel: "partner",
+            resId: 1,
+            serverData,
+            arch: `
+                <form>
+                    <label for="date" string="Daterange" />
+                    <field name="date" widget="daterange" options="{'related_end_date': 'date_end'}"/>
+                    <field name="date_end" widget="daterange" options="{'related_start_date': 'date'}"/>
+                </form>`,
+        });
+
+        await click(target.querySelector("label.o_form_label"));
+        assert.isVisible(
+            document.querySelector(".daterangepicker[data-name='date']"),
+            "date range picker should be opened"
+        );
+    });
 
     QUnit.test(
         "Datetime field manually input value should send utc value to server",
@@ -445,18 +438,16 @@ QUnit.module("Fields", (hooks) => {
 
             // check date display correctly in readonly
             assert.strictEqual(
-                target.querySelector(".o_field_daterange").textContent,
+                target.querySelector(".o_field_daterange input").value,
                 "02/08/2017 15:30:00",
                 "the start date should be correctly displayed in readonly"
             );
             assert.strictEqual(
-                target.querySelectorAll(".o_field_daterange")[1].textContent,
+                target.querySelectorAll(".o_field_daterange input")[1].value,
                 "03/13/2017 05:30:00",
                 "the end date should be correctly displayed in readonly"
             );
 
-            // edit form
-            await click(target.querySelector(".o_form_button_edit"));
             // update input for Datetime
             await editInput(
                 target,
@@ -464,12 +455,12 @@ QUnit.module("Fields", (hooks) => {
                 "02/08/2017 11:30:00"
             );
             // save form
-            await click(target.querySelector(".o_form_button_save"));
+            await clickSave(target);
 
             assert.strictEqual(
-                target.querySelector(".o_field_daterange").textContent,
+                target.querySelector(".o_field_daterange input").value,
                 "02/08/2017 11:30:00",
-                "the start date should be correctly displayed in readonly after manual update"
+                "the start date should be correctly displayed after manual update"
             );
         }
     );
@@ -492,7 +483,6 @@ QUnit.module("Fields", (hooks) => {
                 resId: 1,
             });
 
-            await click(target, ".o_form_button_edit");
             await editInput(target, ".o_field_daterange[name='date'] input", "blabla");
             // click outside daterange field
             await click(target);
@@ -511,7 +501,7 @@ QUnit.module("Fields", (hooks) => {
 
             // again enter wrong value and try to save should raise invalid fields value
             await editInput(target, ".o_field_daterange[name='date'] input", "blabla");
-            await click(target.querySelector(".o_form_button_save"));
+            await clickSave(target);
             assert.strictEqual(
                 target.querySelector(".o_notification_title").textContent,
                 "Invalid fields: "
@@ -591,20 +581,52 @@ QUnit.module("Fields", (hooks) => {
         });
 
         assert.strictEqual(
-            target.querySelector(".o_field_daterange[name='datetime']").textContent,
+            target.querySelector(".o_field_daterange[name='datetime'] input").value,
             "02/08/2017",
             "the start date should only show date when option formatType is Date"
         );
         assert.strictEqual(
-            target.querySelector(".o_field_daterange[name='datetime_end']").textContent,
+            target.querySelector(".o_field_daterange[name='datetime_end'] input").value,
             "03/13/2017",
             "the end date should only show date when option formatType is Date"
         );
     });
 
-    QUnit.test("Date field with option format type is 'datetime'", async function (assert) {
-        serverData.models.partner.fields.date_end = { string: "Date End", type: "date" };
-        serverData.models.partner.records[0].date_end = "2017-03-13";
+    QUnit.test("when same locales have differences (moment vs luxon)", async function (assert) {
+        patchWithCleanup(localization, { dateTimeFormat: "dd MMM, yyyy HH:mm:ss" });
+
+        // Create a new pseudo locale that will get different from the luxon one
+        const originalLocal = moment.locale();
+        // Moment automatically assigns newly defined locales.
+        moment.defineLocale("nonsenseForTest", {
+            monthsShort: [
+                "JaBon",
+                "FeBob",
+                "MaBor",
+                "ApBor",
+                "MaBoy",
+                "JuBon",
+                "JuBol",
+                "AuBog",
+                "SeBop",
+                "OcBot",
+                "NoBov",
+                "DeBoc",
+            ],
+        });
+
+        registerCleanup(() => {
+            //Delete the previously created local
+            moment.updateLocale("nonsenseForTest", null);
+            // Restore the original locale
+            moment.locale(originalLocal);
+        });
+
+        serverData.models.partner.fields.datetime_end = {
+            string: "Datetime End",
+            type: "datetime",
+        };
+        serverData.models.partner.records[0].datetime_end = "2017-03-13 00:00:00";
 
         await makeView({
             type: "form",
@@ -613,20 +635,29 @@ QUnit.module("Fields", (hooks) => {
             serverData,
             arch: `
                 <form>
-                    <field name="date" widget="daterange" options="{'related_end_date': 'date_end', 'format_type': 'datetime'}"/>
-                    <field name="date_end" widget="daterange" options="{'related_start_date': 'date', 'format_type': 'datetime'}"/>
+                    <field name="datetime" widget="daterange" options="{'related_end_date': 'datetime_end'}"/>
+                    <field name="datetime_end" widget="daterange" options="{'related_start_date': 'datetime'}"/>
                 </form>`,
         });
 
-        assert.strictEqual(
-            target.querySelector(".o_field_daterange[name='date']").textContent,
-            "02/03/2017 05:30:00",
-            "the start date should show date with time when option format_type is datatime"
+        // open a datepicker field
+        await click(target, ".o_field_daterange[name=datetime] input");
+
+        const datepicker = document.querySelector(".daterangepicker[data-name=datetime]");
+        assert.isVisible(datepicker, "date range picker should be opened");
+        assert.deepEqual(
+            [...datepicker.querySelectorAll(".month")].map((el) => el.textContent),
+            ["FeBob 2017", "MaBor 2017"]
         );
-        assert.strictEqual(
-            target.querySelector(".o_field_daterange[name='date_end']").textContent,
-            "03/13/2017 05:30:00",
-            "the end date should show date with time when option format_type is datatime"
+
+        // Select a new range and check that inputs are updated
+        await triggerEvent(datepicker, ".start-date", "mousedown"); // 02/08/2017
+        await triggerEvent(datepicker, ".start-date + .available", "mousedown"); // 02/09/2017
+        await click(datepicker, ".applyBtn");
+        assert.equal(target.querySelector("[name=datetime] input").value, "08 Feb, 2017 15:30:00");
+        assert.equal(
+            target.querySelector("[name=datetime_end] input").value,
+            "09 Feb, 2017 05:30:00"
         );
     });
 });

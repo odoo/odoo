@@ -708,8 +708,7 @@ export class PivotModel extends Model {
         metaData.measures = computeReportMeasures(
             metaData.fields,
             metaData.fieldAttrs,
-            metaData.activeMeasures,
-            metaData.additionalMeasures
+            metaData.activeMeasures
         );
         const config = { metaData, data: this.data };
         return this._loadData(config);
@@ -752,7 +751,7 @@ export class PivotModel extends Model {
             this.metaData = metaData;
         } else {
             metaData.activeMeasures.push(fieldName);
-            let config = { metaData, data: this.data };
+            const config = { metaData, data: this.data };
             await this._loadData(config);
         }
         this.nextActiveMeasures = null;
@@ -955,14 +954,13 @@ export class PivotModel extends Model {
         const groupDomain = this._getGroupDomain(group, config);
         const measureSpecs = this._getMeasureSpecs(config);
         const groupBy = rowGroupBy.concat(colGroupBy);
-        const options = { lazy: false };
+        const kwargs = { lazy: false, context: this.searchParams.context };
         const subGroups = await this.orm.readGroup(
             config.metaData.resModel,
             groupDomain,
             measureSpecs,
             groupBy,
-            options,
-            this.searchParams.context
+            kwargs
         );
         return {
             group: group,

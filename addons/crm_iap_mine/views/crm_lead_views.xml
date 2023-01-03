@@ -6,19 +6,9 @@
         <field name="model">crm.lead</field>
         <field name="inherit_id" ref="crm.crm_case_tree_view_oppor" />
         <field name="arch" type="xml">
-            <xpath expr="//tree" position="attributes">
-                <attribute name="js_class">crm_iap_lead_mining_request_tree</attribute>
-            </xpath>
-        </field>
-    </record>
-
-    <record id="crm_lead_view_kanban_opportunity" model="ir.ui.view">
-        <field name="name">crm.lead.view.kanban.inherit.iap.mine</field>
-        <field name="model">crm.lead</field>
-        <field name="inherit_id" ref="crm.crm_case_kanban_view_leads" />
-        <field name="arch" type="xml">
-            <xpath expr="//kanban" position="attributes">
-                <attribute name="js_class">crm_iap_lead_mining_request_kanban</attribute>
+            <xpath expr="//header" position="inside">
+                <button name="action_generate_leads" type="object" class="o_button_generate_leads"
+                        string="Generate Leads" groups="sales_team.group_sale_manager" display="always"/>
             </xpath>
         </field>
     </record>
@@ -28,19 +18,11 @@
         <field name="model">crm.lead</field>
         <field name="inherit_id" ref="crm.crm_case_tree_view_leads" />
         <field name="arch" type="xml">
-            <xpath expr="//tree" position="attributes">
-                <attribute name="js_class">crm_iap_lead_mining_request_tree</attribute>
-            </xpath>
-        </field>
-    </record>
-
-    <record id="crm_lead_view_kanban_lead" model="ir.ui.view">
-        <field name="name">crm.lead.view.kanban.lead.inherit.iap.mine</field>
-        <field name="model">crm.lead</field>
-        <field name="inherit_id" ref="crm.view_crm_lead_kanban" />
-        <field name="arch" type="xml">
-            <xpath expr="//kanban" position="attributes">
-                <attribute name="js_class">crm_iap_lead_mining_request_kanban</attribute>
+            <xpath expr="//tree" position="inside">
+                <header>
+                    <button name="action_generate_leads" type="object" class="o_button_generate_leads"
+                            string="Generate Leads" groups="sales_team.group_sale_manager" display="always"/>
+                </header>
             </xpath>
         </field>
     </record>

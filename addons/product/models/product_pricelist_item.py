@@ -24,7 +24,6 @@ class PricelistItem(models.Model):
         required=True,
         default=_default_pricelist_id)
 
-    active = fields.Boolean(related='pricelist_id.active', store=True)
     company_id = fields.Many2one(related='pricelist_id.company_id', store=True)
     currency_id = fields.Many2one(related='pricelist_id.currency_id', store=True)
 
@@ -294,9 +293,6 @@ class PricelistItem(models.Model):
             elif applied_on == '0_product_variant':
                 values.update(dict(categ_id=None))
         return super().write(values)
-
-    def toggle_active(self):
-        raise ValidationError(_("You cannot disable a pricelist rule, please delete it or archive its pricelist instead."))
 
     #=== BUSINESS METHODS ===#
 

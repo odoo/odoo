@@ -17,6 +17,9 @@ class ResConfigSettings(models.TransientModel):
         string="Tolerance Time In Favor Of Company", readonly=False)
     overtime_employee_threshold = fields.Integer(
         string="Tolerance Time In Favor Of Employee", readonly=False)
+    attendance_kiosk_mode = fields.Selection(related='company_id.attendance_kiosk_mode', readonly=False)
+    attendance_barcode_source = fields.Selection(related='company_id.attendance_barcode_source', readonly=False)
+    attendance_kiosk_delay = fields.Integer(related='company_id.attendance_kiosk_delay', readonly=False)
 
     @api.model
     def get_values(self):

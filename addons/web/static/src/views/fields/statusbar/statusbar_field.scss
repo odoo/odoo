@@ -20,10 +20,7 @@
             }
             &:last-child {
                 padding-left: $o-horizontal-padding - 1;
-
-                &:not(.disabled) {
-                    border-left: 1px solid $border-color;
-                }
+                border-left: $border-width solid $border-color;
             }
 
             &:not(:first-child):before, &:not(:first-child):after {
@@ -40,30 +37,26 @@
 
             &:not(:first-child):before {
                 right: -$o-statusbar-arrow-width;
-                border-left-color: map-get($grays, '300');
+                border-left-color: $border-color!important;
             }
 
             &.disabled {
                 opacity: 1;
                 pointer-events: none;
 
-                &:not(.btn-primary) {
+                &:not(.o_arrow_button_current) {
                     &, &:hover, &:focus {
                         color: $text-muted;
                     }
                 }
             }
 
-            &.btn-primary.disabled {
+            &.o_arrow_button_current.disabled {
                 background-color: $o-brand-odoo;
                 color: color-contrast($o-brand-odoo);
 
                 &:after, &:before {
                     border-left-color: $o-brand-odoo;
-                }
-
-                + .o_arrow_button:before {
-                    display: none;
                 }
             }
         }

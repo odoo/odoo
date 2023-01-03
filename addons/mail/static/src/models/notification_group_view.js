@@ -1,11 +1,10 @@
 /** @odoo-module **/
 
-import { registerModel } from '@mail/model/model_core';
-import { attr, one } from '@mail/model/model_field';
-import { clear } from '@mail/model/model_field_command';
+import { attr, clear, one, Model } from "@mail/model";
 
-registerModel({
-    name: 'NotificationGroupView',
+Model({
+    name: "NotificationGroupView",
+    template: "mail.NotificationGroupView",
     recordMethods: {
         /**
          * @param {MouseEvent} ev
@@ -19,9 +18,10 @@ registerModel({
                 // handled in `_onClickMarkAsRead`
                 return;
             }
+            const messaging = this.messaging;
             this.notificationGroup.openDocuments();
-            if (!this.messaging.device.isSmall) {
-                this.messaging.messagingMenu.close();
+            if (!messaging.device.isSmall) {
+                messaging.messagingMenu.close();
             }
         },
         /**
@@ -30,33 +30,28 @@ registerModel({
         onClickMarkAsRead(ev) {
             this.notificationGroup.notifyCancel();
         },
-        /**
-         * @private
-         * @returns {string|undefined}
-         */
-        _computeImageSrc() {
-            if (this.notificationGroup.notification_type === 'email') {
-                return '/mail/static/src/img/smiley/mailfailure.jpg';
-            }
-            return clear();
-        },
     },
     fields: {
         imageSrc: attr({
-            compute: '_computeImageSrc',
+            compute() {
+                if (this.notificationGroup.notification_type === "email") {
+                    return "/mail/static/src/img/smiley/mailfailure.jpg";
+                }
+                return clear();
+            },
         }),
         /**
          * Reference of the "mark as read" button. Useful to disable the
          * top-level click handler when clicking on this specific button.
          */
-        markAsReadRef: attr(),
-        notificationGroup: one('NotificationGroup', {
+        markAsReadRef: attr({ ref: "markAsRead" }),
+        notificationGroup: one("NotificationGroup", {
             identifying: true,
-            inverse: 'notificationGroupViews',
+            inverse: "notificationGroupViews",
         }),
-        notificationListViewOwner: one('NotificationListView', {
+        notificationListViewOwner: one("NotificationListView", {
             identifying: true,
-            inverse: 'notificationGroupViews',
+            inverse: "notificationGroupViews",
         }),
     },
 });

@@ -45,7 +45,7 @@ publicWidget.registry.follow = publicWidget.Widget.extend({
         // not if editable mode to allow designer to edit
         if (!this.editableMode) {
             $('.js_follow > .d-none').removeClass('d-none');
-            this.$target.find('.js_follow_btn, .js_unfollow_btn').on('click', function (event) {
+            this.$el.find('.js_follow_btn, .js_unfollow_btn').on('click', function (event) {
                 event.preventDefault();
                 self._onClick(event);
             });

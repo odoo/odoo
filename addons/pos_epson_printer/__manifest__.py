@@ -3,7 +3,7 @@
 
 
 {
-    'name': 'pos_epson_printer',
+    'name': 'POS Epson Printer',
     'version': '1.0',
     'category': 'Sales/Point of Sale',
     'sequence': 6,
@@ -22,8 +22,6 @@ Use Epson ePOS Printers without the IoT Box in the Point of Sale
     'assets': {
         'point_of_sale.assets': [
             'pos_epson_printer/static/src/js/**/*',
-        ],
-        'web.assets_qweb': [
             'pos_epson_printer/static/src/xml/**/*',
         ],
     },

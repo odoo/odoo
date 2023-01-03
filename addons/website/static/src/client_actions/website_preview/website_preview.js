@@ -1,51 +1,21 @@
 /** @odoo-module **/
 
 import { registry } from '@web/core/registry';
-import { useService } from '@web/core/utils/hooks';
+import { useService, useBus } from '@web/core/utils/hooks';
 import core from 'web.core';
 import { AceEditorAdapterComponent } from '../../components/ace_editor/ace_editor';
 import { WebsiteEditorComponent } from '../../components/editor/editor';
 import { WebsiteTranslator } from '../../components/translator/translator';
+import { unslugHtmlDataObject } from '../../services/website_service';
 import {OptimizeSEODialog} from '@website/components/dialog/seo';
+import { routeToUrl } from "@web/core/browser/router_service";
+import { getActiveHotkey } from "@web/core/hotkeys/hotkey_service";
+import wUtils from 'website.utils';
 
-const { Component, onWillStart, useRef, useEffect, useState } = owl;
+const { Component, onWillStart, onMounted, onWillUnmount, useRef, useEffect, useState } = owl;
 
-class BlockIframe extends Component {
-    setup() {
-        this.websiteService = useService('website');
-        this.state = useState({
-            blockIframe: false,
-            showLoader: false,
-        });
-        this.processes = [];
-        this.ANONYMOUS_PROCESS_ID = 'ANONYMOUS_PROCESS_ID';
-        this.websiteService.bus.addEventListener("BLOCK", this.block.bind(this));
-        this.websiteService.bus.addEventListener("UNBLOCK", this.unblock.bind(this));
-    }
-    block(event) {
-        if (event.detail.showLoader && !this.state.showLoader) {
-            setTimeout(() => {
-                this.state.showLoader = true;
-            }, event.detail.loaderDelay);
-        }
-        if (!this.processes.length) {
-            this.state.blockIframe = true;
-        }
-        this.processes.push(event.detail.processId || this.ANONYMOUS_PROCESS_ID);
-    }
-    unblock(event) {
-        const processId = event.detail.processId || this.ANONYMOUS_PROCESS_ID;
-        const processIndex = this.processes.indexOf(processId);
-        if (processIndex > -1) {
-            this.processes.splice(processIndex, 1);
-        }
-        if (this.processes.length === 0) {
-            this.state.blockIframe = false;
-            this.state.showLoader = false;
-        }
-    }
-}
-BlockIframe.template = 'website.BlockIframe';
+class BlockPreview extends Component {}
+BlockPreview.template = 'website.BlockPreview';
 
 export class WebsitePreview extends Component {
     setup() {
@@ -55,6 +25,7 @@ export class WebsitePreview extends Component {
         this.user = useService('user');
         this.router = useService('router');
         this.action = useService('action');
+        this.orm = useService('orm');
 
         this.iframeFallbackUrl = '/website/iframefallback';
 
@@ -62,11 +33,37 @@ export class WebsitePreview extends Component {
         this.iframefallback = useRef('iframefallback');
         this.container = useRef('container');
         this.websiteContext = useState(this.websiteService.context);
+        this.blockedState = useState({
+            isBlocked: false,
+            showLoader: false,
+        });
+        // The params used to configure the context should be ignored when the
+        // action is restored (example: click on the breadcrumb).
+        this.isRestored = this.props.action.jsId === this.websiteService.actionJsId;
+        this.websiteService.actionJsId = this.props.action.jsId;
+
+        useBus(this.websiteService.bus, 'BLOCK', (event) => this.block(event.detail));
+        useBus(this.websiteService.bus, 'UNBLOCK', () => this.unblock());
 
         onWillStart(async () => {
-            await this.websiteService.fetchWebsites();
+            const [backendWebsiteRepr] = await Promise.all([
+                this.orm.call('website', 'get_current_website'),
+                this.websiteService.fetchWebsites(),
+                this.websiteService.fetchUserGroups(),
+            ]);
+            this.backendWebsiteId = unslugHtmlDataObject(backendWebsiteRepr).id;
+
             const encodedPath = encodeURIComponent(this.path);
-            if (this.websiteDomain && this.websiteDomain !== window.location.origin) {
+            if (this.websiteDomain && !wUtils.isHTTPSorNakedDomainRedirection(this.websiteDomain, window.location.origin)) {
+                // The website domain might be the naked one while the naked one
+                // is actually redirecting to `www` (or the other way around).
+                // In such a case, we need to consider those 2 from the same
+                // domain and let the iframe load that "different" domain. The
+                // iframe will actually redirect to the correct one (naked/www),
+                // which will ends up with the same domain as the parent window
+                // URL (event if it wasn't, it wouldn't be an issue as those are
+                // really considered as the same domain, the user will share the
+                // same session and CORS errors won't be a thing in such a case)
                 window.location.href = `${this.websiteDomain}/web#action=website.website_preview&path=${encodedPath}&website_id=${this.websiteId}`;
             } else {
                 this.initialUrl = `/website/force/${this.websiteId}?path=${encodedPath}`;
@@ -75,12 +72,7 @@ export class WebsitePreview extends Component {
 
         useEffect(() => {
             this.websiteService.currentWebsiteId = this.websiteId;
-
-            // The params used to configure the context should be ignored when
-            // the action is restored (example: click on the breadcrumb).
-            const isRestored = this.props.action.jsId === this.websiteService.actionJsId;
-            this.websiteService.actionJsId = this.props.action.jsId;
-            if (isRestored) {
+            if (this.isRestored) {
                 return;
             }
             this.websiteService.context.showNewContentModal = this.props.action.context.params && this.props.action.context.params.display_new_content;
@@ -95,31 +87,108 @@ export class WebsitePreview extends Component {
             if (this.props.action.context.params && this.props.action.context.params.with_loader) {
                 this.websiteService.showLoader({ showTips: true });
             }
-
-            return () => {
-                this.websiteService.currentWebsiteId = null;
-                this.websiteService.websiteRootInstance = undefined;
-                this.websiteService.pageDocument = null;
-            };
         }, () => [this.props.action.context.params]);
 
-        useEffect(() => {
-            this.websiteService.blockIframe(true, 0, 'load-iframe');
-            this.iframe.el.addEventListener('load', () => this.websiteService.unblockIframe('load-iframe'), { once: true });
+        onMounted(() => {
+            this.websiteService.blockPreview(true, 'load-iframe');
+            this.iframe.el.addEventListener('load', () => this.websiteService.unblockPreview('load-iframe'), { once: true });
             // For a frontend page, it is better to use the
             // OdooFrameContentLoaded event to unblock the iframe, as it is
             // triggered faster than the load event.
-            this.iframe.el.addEventListener('OdooFrameContentLoaded', () => this.websiteService.unblockIframe('load-iframe'), { once: true });
+            this.iframe.el.addEventListener('OdooFrameContentLoaded', () => this.websiteService.unblockPreview('load-iframe'), { once: true });
+            this.env.services.messaging.modelManager.messagingCreatedPromise.then(() => {
+                this.env.services.messaging.modelManager.messaging.update({ isWebsitePreviewOpen: true });
+            });
+        });
+
+        onWillUnmount(() => {
+            this.env.services.messaging.modelManager.messagingCreatedPromise.then(() => {
+                this.env.services.messaging.modelManager.messaging.update({ isWebsitePreviewOpen: false });
+            });
+            const { pathname, search, hash } = this.iframe.el.contentWindow.location;
+            this.websiteService.lastUrl = `${pathname}${search}${hash}`;
+            this.websiteService.currentWebsiteId = null;
+            this.websiteService.websiteRootInstance = undefined;
+            this.websiteService.pageDocument = null;
+        });
+
+        /**
+         * This removes the 'Odoo' prefix of the title service to display
+         * cleanly the frontend's document title (see _replaceBrowserUrl), and
+         * replaces the backend favicon with the frontend's one.
+         * These changes are reverted when the component is unmounted.
+         */
+        useEffect(() => {
+            const backendIconEl = document.querySelector("link[rel~='icon']");
+            // Save initial backend values.
+            const backendIconHref = backendIconEl.href;
+            const { zopenerp } = this.title.getParts();
+            this.iframe.el.addEventListener('load', () => {
+                // Replace backend values with frontend's ones.
+                this.title.setParts({ zopenerp: null });
+                const frontendIconEl = this.iframe.el.contentDocument.querySelector("link[rel~='icon']");
+                if (frontendIconEl) {
+                    backendIconEl.href = frontendIconEl.href;
+                }
+            }, { once: true });
+            return () => {
+                // Restore backend initial values when leaving.
+                this.title.setParts({ zopenerp, action: null });
+                backendIconEl.href = backendIconHref;
+            };
+        }, () => []);
+
+        useEffect(() => {
+            let leftOnBackNavigation = false;
+            // When reaching a "regular" url of the webclient's router, an
+            // hashchange event should be dispatched to properly display the
+            // content of the previous URL before reaching the client action,
+            // which was lost after being replaced for the frontend's URL.
+            const handleBackNavigation = () => {
+                if (!window.location.pathname.startsWith('/@')) {
+                    window.dispatchEvent(new HashChangeEvent('hashchange', {
+                        newURL: window.location.href.toString()
+                    }));
+                    leftOnBackNavigation = true;
+                }
+            };
+            window.addEventListener('popstate', handleBackNavigation);
+            return () => {
+                window.removeEventListener('popstate', handleBackNavigation);
+                // When leaving the client action, its original url is pushed
+                // so that the router can replay the action on back navigation
+                // from other screens.
+                if (!leftOnBackNavigation) {
+                    history.pushState({}, null, this.backendUrl);
+                }
+            };
+        }, () => []);
+
+        const toggleIsMobile = () => {
+            const wrapwrapEl = this.iframe.el.contentDocument.querySelector('#wrapwrap');
+            if (wrapwrapEl) {
+                wrapwrapEl.classList.toggle('o_is_mobile', this.websiteContext.isMobile);
+            }
+        };
+        // Toggle the 'o_is_mobile' class on the wrapwrap when 'isMobile'
+        // changes in the context. (e.g. Click on mobile preview buttons)
+        useEffect(toggleIsMobile, () => [this.websiteContext.isMobile]);
+
+        // Toggle the 'o_is_mobile' class on the wrapwrap according to
+        // 'isMobile' on iframe load.
+        useEffect(() => {
+            this.iframe.el.addEventListener('OdooFrameContentLoaded', toggleIsMobile);
+            return () => this.iframe.el.removeEventListener('OdooFrameContentLoaded', toggleIsMobile);
         }, () => []);
     }
 
     get websiteId() {
         let websiteId = this.props.action.context.params && this.props.action.context.params.website_id;
         // When no parameter is passed to the client action, the current
-        // website from the website service is taken. By default, it will be
-        // the one from the session.
+        // website from the backend (which is the last viewed/edited) will be
+        // taken.
         if (!websiteId) {
-            websiteId = this.websiteService.currentWebsite && this.websiteService.currentWebsite.id;
+            websiteId = this.backendWebsiteId;
         }
         if (!websiteId) {
             websiteId = this.websiteService.websites[0].id;
@@ -132,28 +201,27 @@ export class WebsitePreview extends Component {
     }
 
     get path() {
-        let path = this.websiteService.editedObjectPath;
-        if (!path) {
-            path = this.props.action.context.params && this.props.action.context.params.path;
-            if (path) {
-                const url = new URL(path, window.location.origin);
-                if (this._isTopWindowURL(url)) {
-                    // If the client action is initialized with a path that
-                    // should not be opened inside the iframe (= something we
-                    // would want to open on the top window), we consider that
-                    // this is not a valid flow. Instead of trying to open it on
-                    // the top window, we initialize the iframe with the
-                    // website homepage...
-                    path = '/';
-                } else {
-                    // ... otherwise, the path still needs to be normalized (as
-                    // it would be if the given path was used as an href of a
-                    // <a/> element).
-                    path = url.pathname + url.search + url.hash;
-                }
-            } else {
+        let path = this.isRestored
+            ? this.websiteService.lastUrl
+            : this.props.action.context.params && this.props.action.context.params.path;
+
+        if (path) {
+            const url = new URL(path, window.location.origin);
+            if (this._isTopWindowURL(url)) {
+                // If the client action is initialized with a path that should
+                // not be opened inside the iframe (= something we would want to
+                // open on the top window), we consider that this is not a valid
+                // flow. Instead of trying to open it on the top window, we
+                // initialize the iframe with the website homepage...
                 path = '/';
+            } else {
+                // ... otherwise, the path still needs to be normalized (as it
+                // would be if the given path was used as an href of a  <a/>
+                // element).
+                path = url.pathname + url.search + url.hash;
             }
+        } else {
+            path = '/';
         }
         return path;
     }
@@ -173,8 +241,18 @@ export class WebsitePreview extends Component {
         });
     }
 
+    block({ showLoader = true } = {}) {
+        this.blockedState.isBlocked = true;
+        this.blockedState.showLoader = showLoader;
+    }
+
+    unblock() {
+        this.blockedState.isBlocked = false;
+        this.blockedState.showLoader = false;
+    }
+
     addWelcomeMessage() {
-        if (this.websiteService.isPublisher) {
+        if (this.websiteService.isRestrictedEditor) {
             const $wrap = $(this.iframe.el.contentDocument.querySelector('#wrapwrap.homepage')).find('#wrap');
             if ($wrap.length && $wrap.html().trim() === '') {
                 this.$welcomeMessage = $(core.qweb.render('website.homepage_editor_welcome_message'));
@@ -201,7 +279,14 @@ export class WebsitePreview extends Component {
      */
     _isTopWindowURL({ host, pathname }) {
         const backendRoutes = ['/web', '/web/session/logout'];
-        return host !== window.location.host || (pathname && (backendRoutes.includes(pathname) || pathname.startsWith('/@/')));
+        return host !== window.location.host
+            || (pathname
+                && (backendRoutes.includes(pathname)
+                    || pathname.startsWith('/@/')
+                    || pathname.startsWith('/web/content/')
+                    // This is defined here to avoid creating a
+                    // website_documents module for just one patch.
+                    || pathname.startsWith('/document/share/')));
     }
 
     /**
@@ -209,6 +294,12 @@ export class WebsitePreview extends Component {
      * the iframe's url (it is clearer for the user).
      */
     _replaceBrowserUrl() {
+        // The original /web#action=... url is saved to be pushed on top of the
+        // history when leaving the component, so that the webclient can
+        // correctly find back and replay the client action.
+        if (!this.backendUrl) {
+            this.backendUrl = routeToUrl(this.router.current);
+        }
         const currentUrl = new URL(this.iframe.el.contentDocument.location.href);
         currentUrl.pathname = `/@${currentUrl.pathname}`;
         this.currentTitle = this.iframe.el.contentDocument.title;
@@ -268,15 +359,29 @@ export class WebsitePreview extends Component {
                 });
             } else if (classList.contains('js_change_lang') && isEditing) {
                 ev.preventDefault();
-                // The switch to the right language is handled by the
-                // Website Root, inside the iframe.
-                this.websiteService.leaveEditMode();
+                const lang = linkEl.dataset['url_code'];
+                // The "edit_translations" search param coming from keep_query
+                // is removed, and the hash is added.
+                const destinationUrl = new URL(href, window.location);
+                destinationUrl.searchParams.delete('edit_translations');
+                destinationUrl.hash = this.websiteService.contentWindow.location.hash;
+                this.websiteService.bus.trigger('LEAVE-EDIT-MODE', {
+                    onLeave: () => {
+                        this.websiteService.goToWebsite({ path: destinationUrl.toString(), lang });
+                    },
+                    reloadIframe: false,
+                });
             } else if (href && target !== '_blank' && !isEditing && this._isTopWindowURL(linkEl)) {
                 ev.preventDefault();
                 this.router.redirect(href);
             }
         });
         this.iframe.el.contentDocument.addEventListener('keydown', ev => {
+            if (getActiveHotkey(ev) === 'control+k' && !this.websiteContext.edition) {
+                // Avoid for browsers to focus on the URL bar when pressing
+                // CTRL-K from within the iframe.
+                ev.preventDefault();
+            }
             this.iframe.el.dispatchEvent(new KeyboardEvent('keydown', ev));
         });
         this.iframe.el.contentDocument.addEventListener('keyup', ev => {
@@ -303,7 +408,7 @@ export class WebsitePreview extends Component {
 WebsitePreview.template = 'website.WebsitePreview';
 WebsitePreview.components = {
     WebsiteEditorComponent,
-    BlockIframe,
+    BlockPreview,
     WebsiteTranslator,
     AceEditorAdapterComponent,
 };

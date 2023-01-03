@@ -1,29 +1,28 @@
 /** @odoo-module **/
 
-import { useUpdate } from '@mail/component_hooks/use_update';
-import { registerMessagingComponent } from '@mail/utils/messaging_component';
+import { useUpdate } from "@mail/component_hooks/use_update";
+import { registerMessagingComponent } from "@mail/utils/messaging_component";
 
-import { FormViewDialog } from 'web.view_dialogs';
-import { standaloneAdapter } from 'web.OwlCompatibility';
-import session from 'web.session';
+import { useService } from "@web/core/utils/hooks";
+import { FormViewDialog } from "@web/views/view_dialogs/form_view_dialog";
 
-const { Component, useRef } = owl;
+import { Component, useRef } from "@odoo/owl";
 
-export class ComposerSuggestedRecipient extends Component {
-
+export class ComposerSuggestedRecipientView extends Component {
     /**
      * @override
      */
     setup() {
         super.setup();
-        this.id = _.uniqueId('o_ComposerSuggestedRecipient_');
+        this.id = _.uniqueId("o_ComposerSuggestedRecipientView_");
         useUpdate({ func: () => this._update() });
         /**
          * Reference of the checkbox. Useful to know whether it was checked or
          * not, to properly update the corresponding state in the record or to
          * prompt the user with the partner creation dialog.
          */
-        this._checkboxRef = useRef('checkbox');
+        this._checkboxRef = useRef("checkbox");
+        this.dialogService = useService("dialog");
     }
 
     //--------------------------------------------------------------------------
@@ -62,31 +61,30 @@ export class ComposerSuggestedRecipient extends Component {
             return;
         }
         const isChecked = this._checkboxRef.el.checked;
-        this.composerSuggestedRecipientView.suggestedRecipientInfo.update({ isSelected: isChecked });
+        this.composerSuggestedRecipientView.suggestedRecipientInfo.update({ isChecked });
         if (!this.composerSuggestedRecipientView.suggestedRecipientInfo.partner) {
             // Recipients must always be partners. On selecting a suggested
             // recipient that does not have a partner, the partner creation form
             // should be opened.
             if (isChecked) {
-                const adapterParent = standaloneAdapter({ Component });
-                const selectCreateDialog = new FormViewDialog(adapterParent, {
+                this.dialogService.add(FormViewDialog, {
                     context: {
-                        ...session.user_context,
-                        active_id: this.composerSuggestedRecipientView.suggestedRecipientInfo.thread.id,
-                        active_model: 'mail.compose.message',
-                        default_email: this.composerSuggestedRecipientView.suggestedRecipientInfo.email,
-                        default_name: this.composerSuggestedRecipientView.suggestedRecipientInfo.name,
-                        default_lang: this.composerSuggestedRecipientView.suggestedRecipientInfo.lang,
+                        active_id: this.composerSuggestedRecipientView.suggestedRecipientInfo.thread
+                            .id,
+                        active_model: "mail.compose.message",
+                        default_email: this.composerSuggestedRecipientView.suggestedRecipientInfo
+                            .email,
+                        default_name: this.composerSuggestedRecipientView.suggestedRecipientInfo
+                            .name,
+                        default_lang: this.composerSuggestedRecipientView.suggestedRecipientInfo
+                            .lang,
                         force_email: true,
-                        ref: 'compound_context',
+                        ref: "compound_context",
                     },
-                    disable_multiple_selection: true,
-                    on_saved: this._onDialogSaved.bind(this),
-                    res_id: false,
-                    res_model: 'res.partner',
+                    onRecordSaved: () => this._onDialogSaved(),
+                    resModel: "res.partner",
                     title: this.composerSuggestedRecipientView.suggestedRecipientInfo.dialogText,
                 });
-                selectCreateDialog.open();
             }
         }
     }
@@ -98,20 +96,19 @@ export class ComposerSuggestedRecipient extends Component {
         if (!this.composerSuggestedRecipientView.exists()) {
             return;
         }
-        const thread = (
+        const thread =
             this.composerSuggestedRecipientView.suggestedRecipientInfo &&
-            this.composerSuggestedRecipientView.suggestedRecipientInfo.thread
-        );
+            this.composerSuggestedRecipientView.suggestedRecipientInfo.thread;
         if (!thread) {
             return;
         }
-        thread.fetchData(['suggestedRecipients']);
+        thread.fetchData(["suggestedRecipients"]);
     }
 }
 
-Object.assign(ComposerSuggestedRecipient, {
+Object.assign(ComposerSuggestedRecipientView, {
     props: { record: Object },
-    template: 'mail.ComposerSuggestedRecipient',
+    template: "mail.ComposerSuggestedRecipientView",
 });
 
-registerMessagingComponent(ComposerSuggestedRecipient);
+registerMessagingComponent(ComposerSuggestedRecipientView);

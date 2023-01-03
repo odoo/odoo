@@ -1,16 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <data>
-
-        <record id="view_company_partner_bank_form" model="ir.ui.view">
-            <field name="name">company.res.partner.bank.form</field>
+        <record id="view_partner_bank_form_inherit_account" model="ir.ui.view">
+            <field name="name">res.partner.bank.form.inherit.account</field>
             <field name="model">res.partner.bank</field>
             <field name="inherit_id" ref="base.view_partner_bank_form"/>
             <field name="mode">primary</field>
-            <field name="priority">20</field>
+            <field name="priority">14</field>
             <field name="arch" type="xml">
-                <xpath expr="//field[@name='partner_id']" position="attributes">
-                    <attribute name="invisible">1</attribute>
+                <xpath expr="//form[@name='bank_account_form']/sheet[1]" position="after">
+                    <div class="oe_chatter">
+                        <field name="message_follower_ids" widget="mail_followers"/>
+                        <field name="message_ids" widget="mail_thread"/>
+                        <field name="activity_ids" widget="mail_activity"/>
+                    </div>
                 </xpath>
             </field>
         </record>

@@ -34,31 +34,26 @@
                             </page>
                             <page string="Expression" name="expression">
                                 <group string="Python Code">
-                                    <field colspan="4" name="code_exec" nolabel="1"/>
+                                    <field colspan="2" name="code_exec" nolabel="1"/>
                                 </group>
                                 <group string="Code Help">
-                                    <pre>
-Code should always set a variable named `result` with the result of your test, that can be a list or
-a dictionary. If `result` is an empty list, it means that the test was successful. Otherwise it will
-try to translate and print what is inside `result`.
-
-If the result of your test is a dictionary, you can set a variable named `column_order` to choose in
+                                    <div colspan="2">
+                                        <pre style="white-space: pre-wrap;">
+Code should always set a variable named `result` with the result of your test, that can be a list or a dictionary. If `result` is an empty list, it means that the test was successful. Otherwise it will try to translate and print what is inside `result`. If the result of your test is a dictionary, you can set a variable named `column_order` to choose in
 what order you want to print `result`'s content.
-
 Should you need them, you can also use the following variables into your code:
     * cr: cursor to the database
     * uid: ID of the current user
-
 In any ways, the code must be legal python statements with correct indentation (if needed).
-
-Example: 
+Example:
     sql = '''SELECT id, name, ref, date
-             FROM account_move_line 
+             FROM account_move_line
              WHERE account_id IN (SELECT id FROM account_account WHERE type = 'view')
           '''
     cr.execute(sql)
     result = cr.dictfetchall()
-                                    </pre>
+                                        </pre>
+                                    </div>
                                 </group>
                             </page>
                         </notebook>

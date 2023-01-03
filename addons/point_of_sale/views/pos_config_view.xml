@@ -1,28 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
 
-    <!--Account cashbox line-->
-
-    <record id="account_cashbox_line_view_tree" model="ir.ui.view">
-        <field name="name">account.cashbox.line.tree</field>
-        <field name="model">account.cashbox.line</field>
-        <field name="arch" type="xml">
-            <tree string="Cashbox balance" editable="top">
-                <field name="coin_value"/>
-                <field name="number"/>
-                <field name="subtotal"/>
-            </tree>
-        </field>
-    </record>
-
-    <record id="account_cashbox_line_action" model="ir.actions.act_window">
-        <field name="name">Opening/Closing Values</field>
-        <field name="type">ir.actions.act_window</field>
-        <field name="res_model">account.cashbox.line</field>
-        <field name="view_mode">tree,form</field>
-        <field name="view_id" ref="account_cashbox_line_view_tree"/>
-    </record>
-
     <record id="pos_config_view_form" model="ir.ui.view">
         <field name="name">pos.config.form.view</field>
         <field name="model">pos.config</field>
@@ -187,6 +165,22 @@
         </field>
     </record>
 
+    <record id="action_pos_config_tree" model="ir.actions.act_window">
+        <field name="name">Point of Sale List</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">pos.config</field>
+        <field name="view_mode">tree,form</field>
+        <field name="domain"></field>
+        <field name="search_view_id" ref="view_pos_config_search" />
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create a new PoS
+            </p><p>
+                Configure at least one Point of Sale.
+            </p>
+        </field>
+    </record>
+
     <!-- Products sub Category -->
     <menuitem id="menu_products_pos_category"
         action="point_of_sale.product_pos_category_action"
@@ -197,4 +191,7 @@
         parent="point_of_sale.pos_menu_products_configuration"  groups="product.group_product_variant" sequence="2"/>
 
     <menuitem id="menu_pos_dashboard" action="action_pos_config_kanban" parent="menu_point_root" name="Dashboard" sequence="1"/>
+    <menuitem id="menu_point_of_sale_list" name="Point of Sales" parent="menu_point_config_product"
+              action="action_pos_config_tree" sequence="10"/>
+
 </odoo>

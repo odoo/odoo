@@ -9,21 +9,19 @@ options.registry.WebsiteEvent = options.Class.extend({
      */
     async start() {
         const res = await this._super(...arguments);
-        const eventObject = this._getEventObject();
-        this.modelName = eventObject.model;
-        this.eventId = eventObject.id;
+        this.currentWebsiteUrl = this.ownerDocument.location.pathname;
+        this.eventId = this._getEventObjectId();
         // Only need for one RPC request as the option will be destroyed if a
         // change is made.
         const rpcData = await this._rpc({
-            model: this.modelName,
+            model: 'event.event',
             method: 'read',
             args: [
                 [this.eventId],
-                ['website_menu', 'website_url'],
+                ['website_menu'],
             ],
         });
-        this.eventUrl = rpcData[0]['website_url'];
-        this.data.reload = this.eventUrl;
+        this.data.reload = this.currentWebsiteUrl;
         this.websiteMenu = rpcData[0]['website_menu'];
         return res;
     },
@@ -37,7 +35,7 @@ options.registry.WebsiteEvent = options.Class.extend({
      */
     displaySubmenu(previewMode, widgetValue, params) {
         return this._rpc({
-            model: this.modelName,
+            model: 'event.event',
             method: 'toggle_website_menu',
             args: [[this.eventId], widgetValue],
         });
@@ -59,14 +57,12 @@ options.registry.WebsiteEvent = options.Class.extend({
         return this._super(...arguments);
     },
     /**
+     * Ensure that we get the event object id as we could be inside a sub-object of the event
+     * like an event.track
      * @private
      */
-    _getEventObject() {
-        const repr = this.ownerDocument.documentElement.dataset.mainObject;
-        const m = repr.match(/(.+)\((\d+),(.*)\)/);
-        return {
-            model: m[1],
-            id: m[2] | 0,
-        };
+    _getEventObjectId() {
+        const objectIds = this.currentWebsiteUrl.match(/-\d+(?![-\w\d])/);
+        return parseInt(objectIds[0].replace('-', '')) | 0;
     },
 });

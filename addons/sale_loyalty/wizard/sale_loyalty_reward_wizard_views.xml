@@ -33,7 +33,7 @@
                     <!-- No rewards -->
                     <button special="cancel" string="Discard" class="btn btn-primary"
                         attrs="{'invisible': [('reward_ids', '!=', [])]}" data-hotkey="z"/>
-                    <button type="action" name="%(loyalty.loyalty_program_action)d" string="Coupons &amp; Loyalty" class="btn btn-secondary float-end"
+                    <button type="action" name="%(loyalty.loyalty_program_discount_loyalty_action)d" string="Coupons &amp; Loyalty" class="btn btn-secondary float-end"
                         attrs="{'invisible': [('reward_ids', '!=', [])]}" groups="sales_team.group_sale_manager" data-hotkey="q"/>
                 </footer>
             </form>

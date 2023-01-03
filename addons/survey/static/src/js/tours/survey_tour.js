@@ -11,9 +11,9 @@ tour.register('survey_tour', {
 }, [
     ...tour.stepUtils.goToAppSteps('survey.menu_surveys', Markup(_t("Ready to change the way you <b>gather data</b>?"))),
 {
-    trigger: 'body:has(.o_survey_load_sample) .o_survey_sample_container',
+    trigger: '.btn-outline-primary.o_survey_load_sample',
     content: Markup(_t("Load a <b>sample Survey</b> to get started quickly.")),
-    position: 'bottom',
+    position: 'left',
 }, {
     trigger: 'button[name=action_test_survey]',
     content: _t("Let's give it a spin!"),

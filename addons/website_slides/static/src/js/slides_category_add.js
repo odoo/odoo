@@ -47,7 +47,6 @@ var CategoryAddDialog = Dialog.extend({
 
 publicWidget.registry.websiteSlidesCategoryAdd = publicWidget.Widget.extend({
     selector: '.o_wslides_js_slide_section_add',
-    xmlDependencies: ['/website_slides/static/src/xml/slide_management.xml'],
     events: {
         'click': '_onAddSectionClick',
     },

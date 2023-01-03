@@ -1,16 +1,15 @@
 odoo.define('website.tour.rte', function (require) {
 'use strict';
 
-var ajax = require('web.ajax');
 var session = require('web.session');
 const wTourUtils = require('website.tour_utils');
 
 var domReady = new Promise(function (resolve) {
     $(resolve);
 });
-var ready = Promise.all([domReady, session.is_bound, ajax.loadXML()]);
+var ready = Promise.all([domReady, session.is_bound]);
 
-wTourUtils.registerEditionTour('rte_translator', {
+wTourUtils.registerWebsitePreviewTour('rte_translator', {
     test: true,
     url: '/',
     wait_for: ready,
@@ -43,6 +42,27 @@ wTourUtils.registerEditionTour('rte_translator', {
     content: "Open new page menu",
     trigger: ".o_menu_systray .o_new_content_container > a",
     extra_trigger: 'iframe html[lang*="en-US"]',
+    consumeVisibleOnly: true,
+}, {
+    content: "click on new page",
+    trigger: '.o_new_content_element a',
+}, {
+    content: "insert file name",
+    trigger: '.modal-dialog input[type="text"]',
+    run: 'text rte_translator.xml',
+}, {
+    content: "create file",
+    trigger: '.modal-dialog button.btn-primary',
+    extra_trigger: 'input[type="text"]:propValue(rte_translator.xml)',
+}, {
+    content: "click on the 'page manager' button",
+    trigger: 'button[name="website.action_website_pages_list"]',
+}, {
+    content: "click on the record to display the xml file in the iframe",
+    trigger: 'td:contains("rte_translator.xml")',
+}, {
+    content: "Open new page menu",
+    trigger: ".o_menu_systray .o_new_content_container > a",
     consumeVisibleOnly: true,
 }, {
     content: "click on new page",
@@ -90,7 +110,7 @@ wTourUtils.registerEditionTour('rte_translator', {
     trigger: '.modal-footer .btn-secondary',
 }, {
     content: "check if translation is activate",
-    trigger: 'iframe [data-oe-translation-id]',
+    trigger: 'iframe [data-oe-translation-initial-sha]',
 }, {
     content: "translate text",
     extra_trigger: '#oe_snippets.o_loaded',

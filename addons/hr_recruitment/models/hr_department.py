@@ -7,19 +7,22 @@ class HrDepartment(models.Model):
     _inherit = 'hr.department'
 
     new_applicant_count = fields.Integer(
-        compute='_compute_new_applicant_count', string='New Applicant')
+        compute='_compute_new_applicant_count', string='New Applicant', compute_sudo=True)
     new_hired_employee = fields.Integer(
         compute='_compute_recruitment_stats', string='New Hired Employee')
     expected_employee = fields.Integer(
         compute='_compute_recruitment_stats', string='Expected Employee')
 
     def _compute_new_applicant_count(self):
-        applicant_data = self.env['hr.applicant']._read_group(
-            [('department_id', 'in', self.ids), ('stage_id.sequence', '<=', '1')],
-            ['department_id'], ['department_id'])
-        result = dict((data['department_id'][0], data['department_id_count']) for data in applicant_data)
-        for department in self:
-            department.new_applicant_count = result.get(department.id, 0)
+        if self.env.user.has_group('hr_recruitment.group_hr_recruitment_interviewer'):
+            applicant_data = self.env['hr.applicant']._read_group(
+                [('department_id', 'in', self.ids), ('stage_id.sequence', '<=', '1')],
+                ['department_id'], ['department_id'])
+            result = dict((data['department_id'][0], data['department_id_count']) for data in applicant_data)
+            for department in self:
+                department.new_applicant_count = result.get(department.id, 0)
+        else:
+            self.new_applicant_count = 0
 
     def _compute_recruitment_stats(self):
         job_data = self.env['hr.job']._read_group(

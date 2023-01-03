@@ -87,7 +87,7 @@ class IrAsset(models.Model):
     active = fields.Boolean(string='active', default=True)
     sequence = fields.Integer(string="Sequence", default=DEFAULT_SEQUENCE, required=True)
 
-    def _get_asset_paths(self, bundle, addons=None, css=False, js=False, xml=False):
+    def _get_asset_paths(self, bundle, addons=None, css=False, js=False):
         """
         Fetches all asset file paths from a given list of addons matching a
         certain bundle. The returned list is composed of tuples containing the
@@ -108,8 +108,8 @@ class IrAsset(models.Model):
         :param addons: list of addon names as strings. The files returned will
             only be contained in the given addons.
         :param css: boolean: whether or not to include style files
-        :param js: boolean: whether or not to include script files
-        :param xml: boolean: whether or not to include template files
+        :param js: boolean: whether or not to include script files and template
+            files
         :returns: the list of tuples (path, addon, bundle)
         """
         installed = self._get_installed_addons_list()
@@ -117,10 +117,10 @@ class IrAsset(models.Model):
             addons = self._get_active_addons_list()
 
         asset_paths = AssetPaths()
-        self._fill_asset_paths(bundle, addons, installed, css, js, xml, asset_paths, [])
+        self._fill_asset_paths(bundle, addons, installed, css, js, asset_paths, [])
         return asset_paths.list
 
-    def _fill_asset_paths(self, bundle, addons, installed, css, js, xml, asset_paths, seen):
+    def _fill_asset_paths(self, bundle, addons, installed, css, js, asset_paths, seen):
         """
         Fills the given AssetPaths instance by applying the operations found in
         the matching bundle of the given addons manifests.
@@ -140,10 +140,9 @@ class IrAsset(models.Model):
         exts = []
         if js:
             exts += SCRIPT_EXTENSIONS
+            exts += TEMPLATE_EXTENSIONS
         if css:
             exts += STYLE_EXTENSIONS
-        if xml:
-            exts += TEMPLATE_EXTENSIONS
 
         # this index is used for prepending: files are inserted at the beginning
         # of the CURRENT bundle.
@@ -164,7 +163,7 @@ class IrAsset(models.Model):
             """
             if directive == INCLUDE_DIRECTIVE:
                 # recursively call this function for each INCLUDE_DIRECTIVE directive.
-                self._fill_asset_paths(path_def, addons, installed, css, js, xml, asset_paths, seen + [bundle])
+                self._fill_asset_paths(path_def, addons, installed, css, js, asset_paths, seen + [bundle])
                 return
 
             addon, paths = self._get_paths(path_def, installed, exts)
@@ -235,10 +234,9 @@ class IrAsset(models.Model):
         target_path = self._get_paths(target_path_def, installed)[1][0]
 
         css = ext in STYLE_EXTENSIONS
-        js = ext in SCRIPT_EXTENSIONS
-        xml = ext in TEMPLATE_EXTENSIONS
+        js = ext in SCRIPT_EXTENSIONS or ext in TEMPLATE_EXTENSIONS
 
-        asset_paths = self._get_asset_paths(root_bundle, css=css, js=js, xml=xml)
+        asset_paths = self._get_asset_paths(root_bundle, css=css, js=js)
 
         for path, _, bundle in asset_paths:
             if path == target_path:
@@ -344,12 +342,8 @@ class IrAsset(models.Model):
             paths = list(filter(is_safe_path, paths))
             safe_path = safe_path and len_paths == len(paths)
 
-            # When fetching template file paths, we need the full paths since xml
-            # files are read from the file system. But web assets (scripts and
-            # stylesheets) must be loaded using relative paths, hence the trimming
-            # for non-xml file paths.
-            paths = [path if path.split('.')[-1] in TEMPLATE_EXTENSIONS else fs2web(path[len(addons_path):]) for path in paths]
-
+            # Web assets must be loaded using relative paths.
+            paths = [fs2web(path[len(addons_path):]) for path in paths]
         else:
             addon = None
 

@@ -20,5 +20,5 @@ class SaleOrderTemplate(models.Model):
         return {
             'type': 'ir.actions.act_url',
             'target': 'self',
-            'url': '/sale_quotation_builder/template/%d' % self.id
+            'url': '/@/sale_quotation_builder/template/%d' % self.id
         }

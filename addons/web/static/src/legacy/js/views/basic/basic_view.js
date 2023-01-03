@@ -21,7 +21,7 @@ var utils = require('web.utils');
 const widgetRegistry = require('web.widget_registry');
 const widgetRegistryOwl = require('web.widgetRegistry');
 
-const { Component } = owl;
+const { Component } = require("@odoo/owl");
 
 var BasicView = AbstractView.extend({
     config: _.extend({}, AbstractView.prototype.config, {

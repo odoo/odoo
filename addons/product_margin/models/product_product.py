@@ -120,7 +120,7 @@ class ProductProduct(models.Model):
         self.env['account.move'].flush_model(['state', 'payment_state', 'move_type', 'invoice_date', 'company_id'])
         self.env['product.template'].flush_model(['list_price'])
         sqlstr = """
-                WITH currency_rate AS ({})
+                WITH currency_rate AS MATERIALIZED ({})
                 SELECT
                     l.product_id as product_id,
                     SUM(
@@ -176,5 +176,5 @@ class ProductProduct(models.Model):
             res[product.id]['purchase_gap'] = res[product.id]['normal_cost'] - res[product.id]['total_cost']
             res[product.id]['expected_margin'] = res[product.id].get('sale_expected', 0.0) - res[product.id]['normal_cost']
             res[product.id]['expected_margin_rate'] = res[product.id].get('sale_expected', 0.0) and res[product.id]['expected_margin'] * 100 / res[product.id].get('sale_expected', 0.0) or 0.0
-            product.write(res[product.id])
+            product.update(res[product.id])
         return res

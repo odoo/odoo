@@ -12,6 +12,7 @@ from werkzeug.exceptions import Forbidden
 from odoo import http
 from odoo.exceptions import ValidationError
 from odoo.http import request
+from odoo.tools.misc import file_open
 
 from odoo.addons.payment import utils as payment_utils
 from odoo.addons.payment_stripe import utils as stripe_utils
@@ -25,6 +26,7 @@ class StripeController(http.Controller):
     _checkout_return_url = '/payment/stripe/checkout_return'
     _validation_return_url = '/payment/stripe/validation_return'
     _webhook_url = '/payment/stripe/webhook'
+    _apple_pay_domain_association_url = '/.well-known/apple-developer-merchantid-domain-association'
     WEBHOOK_AGE_TOLERANCE = 10*60  # seconds
 
     @http.route(_checkout_return_url, type='http', auth='public', csrf=False)
@@ -39,7 +41,7 @@ class StripeController(http.Controller):
         )
 
         # Fetch the PaymentIntent, Charge and PaymentMethod objects from Stripe
-        payment_intent = tx_sudo.acquirer_id._stripe_make_request(
+        payment_intent = tx_sudo.provider_id._stripe_make_request(
             f'payment_intents/{tx_sudo.stripe_payment_intent}', method='GET'
         )
         _logger.info("received payment_intents response:\n%s", pprint.pformat(payment_intent))
@@ -63,7 +65,7 @@ class StripeController(http.Controller):
         )
 
         # Fetch the Session, SetupIntent and PaymentMethod objects from Stripe
-        checkout_session = tx_sudo.acquirer_id._stripe_make_request(
+        checkout_session = tx_sudo.provider_id._stripe_make_request(
             f'checkout/sessions/{data.get("checkout_session_id")}',
             payload={'expand[]': 'setup_intent.payment_method'},  # Expand all required objects
             method='GET'
@@ -108,7 +110,7 @@ class StripeController(http.Controller):
                     self._include_payment_intent_in_notification_data(stripe_object, data)
                 elif event['type'].startswith('setup_intent'):  # Validation operation.
                     # Fetch the missing PaymentMethod object.
-                    payment_method = tx_sudo.acquirer_id._stripe_make_request(
+                    payment_method = tx_sudo.provider_id._stripe_make_request(
                         f'payment_methods/{stripe_object["payment_method"]}', method='GET'
                     )
                     _logger.info(
@@ -127,7 +129,7 @@ class StripeController(http.Controller):
                             'starting_after': refunds[-1]['id'],
                             'limit': 100,
                         }
-                        additional_refunds = tx_sudo.acquirer_id._stripe_make_request(
+                        additional_refunds = tx_sudo.provider_id._stripe_make_request(
                             'refunds', payload=payload, method='GET'
                         )
                         refunds += additional_refunds['data']
@@ -136,7 +138,7 @@ class StripeController(http.Controller):
                     # Process the refunds for which a refund transaction has not been created yet.
                     processed_refund_ids = tx_sudo.child_transaction_ids.filtered(
                         lambda tx: tx.operation == 'refund'
-                    ).mapped('acquirer_reference')
+                    ).mapped('provider_reference')
                     for refund in filter(lambda r: r['id'] not in processed_refund_ids, refunds):
                         refund_tx_sudo = self._create_refund_tx_from_refund(tx_sudo, refund)
                         self._include_refund_in_notification_data(refund, data)
@@ -203,7 +205,7 @@ class StripeController(http.Controller):
         :raise: :class:`werkzeug.exceptions.Forbidden` if the timestamp is too old or if the
                 signatures don't match
         """
-        webhook_secret = stripe_utils.get_webhook_secret(tx_sudo.acquirer_id)
+        webhook_secret = stripe_utils.get_webhook_secret(tx_sudo.provider_id)
         if not webhook_secret:
             _logger.warning("ignored webhook event due to undefined webhook secret")
             return
@@ -237,3 +239,20 @@ class StripeController(http.Controller):
         if not hmac.compare_digest(received_signature, expected_signature):
             _logger.warning("received notification with invalid signature")
             raise Forbidden()
+
+    @http.route(_apple_pay_domain_association_url, type='http', auth='public', csrf=False)
+    def stripe_apple_pay_get_domain_association_file(self):
+        """ Get the domain association file for Stripe's Apple Pay.
+
+        Stripe handles the process of "merchant validation" described in Apple's documentation for
+        Apple Pay on the Web. Stripe and Apple will access this route to check the content of the
+        file and verify that the web domain is registered.
+
+        See https://stripe.com/docs/stripe-js/elements/payment-request-button#verifying-your-domain-with-apple-pay.
+
+        :return: The content of the domain association file.
+        :rtype: str
+        """
+        return file_open(
+            'payment_stripe/static/files/apple-developer-merchantid-domain-association'
+        ).read()

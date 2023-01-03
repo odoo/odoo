@@ -110,7 +110,7 @@ class IrAttachment(models.Model):
             os.makedirs(dirname)
         # prevent sha-1 collision
         if os.path.isfile(full_path) and not self._same_content(bin_data, full_path):
-            raise UserError("The attachment is colliding with an existing file.")
+            raise UserError(_("The attachment collides with an existing file."))
         return fname, full_path
 
     @api.model
@@ -251,10 +251,15 @@ class IrAttachment(models.Model):
                 self._file_delete(fname)
 
     def _get_datas_related_values(self, data, mimetype):
+        checksum = self._compute_checksum(data)
+        try:
+            index_content = self._index(data, mimetype, checksum=checksum)
+        except TypeError:
+            index_content = self._index(data, mimetype)
         values = {
             'file_size': len(data),
-            'checksum': self._compute_checksum(data),
-            'index_content': self._index(data, mimetype),
+            'checksum': checksum,
+            'index_content': index_content,
             'store_fname': False,
             'db_datas': data,
         }
@@ -360,7 +365,7 @@ class IrAttachment(models.Model):
         return values
 
     @api.model
-    def _index(self, bin_data, file_type):
+    def _index(self, bin_data, file_type, checksum=None):
         """ compute the index content of the given binary data.
             This is a python implementation of the unix command 'strings'.
             :param bin_data : datas in binary form
@@ -407,7 +412,7 @@ class IrAttachment(models.Model):
     db_datas = fields.Binary('Database Data', attachment=False)
     store_fname = fields.Char('Stored Filename', index=True, unaccent=False)
     file_size = fields.Integer('File Size', readonly=True)
-    checksum = fields.Char("Checksum/SHA1", size=40, index=True, readonly=True)
+    checksum = fields.Char("Checksum/SHA1", size=40, readonly=True)
     mimetype = fields.Char('Mime Type', readonly=True)
     index_content = fields.Text('Indexed Content', readonly=True, prefetch=False)
 
@@ -429,7 +434,7 @@ class IrAttachment(models.Model):
             if attachment.type == 'binary' and attachment.url:
                 has_group = self.env.user.has_group
                 if not any(has_group(g) for g in attachment.get_serving_groups()):
-                    raise ValidationError("Sorry, you are not allowed to write on this document")
+                    raise ValidationError(_("Sorry, you are not allowed to write on this document"))
 
     @api.model
     def check(self, mode, values=None):
@@ -587,7 +592,7 @@ class IrAttachment(models.Model):
         if len(orig_ids) == limit and len(result) < self._context.get('need', limit):
             need = self._context.get('need', limit) - len(result)
             result.extend(self.with_context(need=need)._search(args, offset=offset + len(orig_ids),
-                                       limit=limit, order=order, count=count,
+                                       limit=limit, order=order, count=False,
                                        access_rights_uid=access_rights_uid)[:limit - len(result)])
 
         return len(result) if count else list(result)
@@ -652,7 +657,7 @@ class IrAttachment(models.Model):
                 ))
 
             # 'check()' only uses res_model and res_id from values, and make an exists.
-            # We can group the values by model, res_id to make only one query when 
+            # We can group the values by model, res_id to make only one query when
             # creating multiple attachments on a single record.
             record_tuple = (values.get('res_model'), values.get('res_id'))
             record_tuple_set.add(record_tuple)

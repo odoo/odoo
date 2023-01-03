@@ -18,7 +18,7 @@ class WebsiteSaleVariantController(VariantController):
         if request.website.google_analytics_key:
             combination['product_tracking_info'] = request.env['product.template'].get_google_analytics_data(combination)
 
-        if request.website.product_page_image_width != 'none':
+        if request.website.product_page_image_width != 'none' and not request.env.context.get('website_sale_no_images', False):
             carousel_view = request.env['ir.ui.view']._render_template('website_sale.shop_product_images', values={
                 'product': request.env['product.template'].browse(combination['product_template_id']),
                 'product_variant': request.env['product.product'].browse(combination['product_id']),

@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<templates id="template" xml:space="preserve">
+
+    <t t-name="stock.StockOrderpoint.Buttons" t-inherit="web.ListView.Buttons" owl="1">
+        <xpath expr="//button[hasclass('o_list_button_add')]" position="attributes">
+            <attribute name="class">btn btn-secondary o_list_button_add</attribute>
+        </xpath>
+        <xpath expr="//button[hasclass('o_list_button_add')]" position="before">
+            <button t-if="nbSelected" type="button" t-on-click="onClickOrder"
+                    class="o_button_order btn btn-primary me-1">
+                Order
+            </button>
+            <button t-if="nbSelected" type="button" t-on-click="onClickSnooze"
+                    class="o_button_snooze btn btn-primary me-1">
+                Snooze
+            </button>
+        </xpath>
+    </t>
+
+</templates>

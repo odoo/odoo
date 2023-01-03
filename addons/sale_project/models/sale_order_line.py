@@ -24,7 +24,7 @@ class SaleOrderLine(models.Model):
 
     def name_get(self):
         res = super().name_get()
-        with_price_unit = self.env.context.get('with_price_unit')
+        with_price_unit = self._context.get('with_price_unit', self._context.get('is_timesheet'))
         if with_price_unit:
             names = dict(res)
             result = []
@@ -106,9 +106,10 @@ class SaleOrderLine(models.Model):
         # generate task with hours=0.
         for line in lines:
             if line.state == 'sale' and not line.is_expense:
+                has_task = bool(line.task_id)
                 line.sudo()._timesheet_service_generation()
                 # if the SO line created a task, post a message on the order
-                if line.task_id:
+                if line.task_id and not has_task:
                     msg_body = _("Task Created (%s): %s", line.product_id.name, line.task_id._get_html_link())
                     line.order_id.message_post(body=msg_body)
         return lines
@@ -145,11 +146,11 @@ class SaleOrderLine(models.Model):
         return {
             'name': '%s - %s' % (self.order_id.client_order_ref, self.order_id.name) if self.order_id.client_order_ref else self.order_id.name,
             'analytic_account_id': account.id,
-            'analytic_tag_ids': [Command.set(self.analytic_tag_ids.ids)],
             'partner_id': self.order_id.partner_id.id,
             'sale_line_id': self.id,
             'active': True,
             'company_id': self.company_id.id,
+            'allow_billable': True,
         }
 
     def _timesheet_create_project(self):
@@ -161,7 +162,8 @@ class SaleOrderLine(models.Model):
         values = self._timesheet_create_project_prepare_values()
         if self.product_id.project_template_id:
             values['name'] = "%s - %s" % (values['name'], self.product_id.project_template_id.name)
-            project = self.product_id.project_template_id.copy(values)
+            # The no_create_folder context key is used in documents_project
+            project = self.product_id.project_template_id.with_context(no_create_folder=True).copy(values)
             project.tasks.write({
                 'sale_line_id': self.id,
                 'partner_id': self.order_id.partner_id.id,
@@ -179,7 +181,8 @@ class SaleOrderLine(models.Model):
             ])
             if project_only_sol_count == 1:
                 values['name'] = "%s - [%s] %s" % (values['name'], self.product_id.default_code, self.product_id.name) if self.product_id.default_code else "%s - %s" % (values['name'], self.product_id.name)
-            project = self.env['project.project'].create(values)
+            # The no_create_folder context key is used in documents_project
+            project = self.env['project.project'].with_context(no_create_folder=True).create(values)
 
         # Avoid new tasks to go to 'Undefined Stage'
         if not project.type_ids:
@@ -191,14 +194,15 @@ class SaleOrderLine(models.Model):
 
     def _timesheet_create_task_prepare_values(self, project):
         self.ensure_one()
-        planned_hours = self._convert_qty_company_hours(self.company_id)
+        planned_hours = 0.0
+        if self.product_id.service_type not in ['milestones', 'manual']:
+            planned_hours = self._convert_qty_company_hours(self.company_id)
         sale_line_name_parts = self.name.split('\n')
         title = sale_line_name_parts[0] or self.product_id.name
         description = '<br/>'.join(sale_line_name_parts[1:])
         return {
             'name': title if project.sale_line_id else '%s - %s' % (self.order_id.name or '', title),
             'analytic_account_id': project.analytic_account_id.id,
-            'analytic_tag_ids': [Command.set(project.analytic_tag_ids.ids)],
             'planned_hours': planned_hours,
             'partner_id': self.order_id.partner_id.id,
             'email_from': self.order_id.partner_id.email,
@@ -301,6 +305,18 @@ class SaleOrderLine(models.Model):
                         project = map_so_project[so_line.order_id.id]
                 if not so_line.task_id:
                     so_line._timesheet_create_task(project=project)
+            so_line._generate_milestone()
+
+    def _generate_milestone(self):
+        if self.product_id.service_policy == 'delivered_milestones':
+            milestone = self.env['project.milestone'].create({
+                'name': self.name,
+                'project_id': self.project_id.id,
+                'sale_line_id': self.id,
+                'quantity_percentage': 1,
+            })
+            if self.product_id.service_tracking == 'task_in_project':
+                self.task_id.milestone_id = milestone.id
 
     def _prepare_invoice_line(self, **optional_values):
         """
@@ -309,12 +325,12 @@ class SaleOrderLine(models.Model):
             to this sale order line, or the analytic account of the project which uses this sale order line, if it exists.
         """
         values = super(SaleOrderLine, self)._prepare_invoice_line(**optional_values)
-        if not values.get('analytic_account_id'):
+        if not values.get('analytic_distribution'):
             task_analytic_account = self.task_id._get_task_analytic_account_id() if self.task_id else False
             if task_analytic_account:
-                values['analytic_account_id'] = task_analytic_account.id
+                values['analytic_distribution'] = {task_analytic_account.id: 100}
             elif self.project_id.analytic_account_id:
-                values['analytic_account_id'] = self.project_id.analytic_account_id.id
+                values['analytic_distribution'] = {self.project_id.analytic_account_id.id: 100}
             elif self.is_service and not self.is_expense:
                 task_analytic_account_id = self.env['project.task'].read_group([
                     ('sale_line_id', '=', self.id),
@@ -330,16 +346,7 @@ class SaleOrderLine(models.Model):
                 ], ['analytic_account_id'], ['analytic_account_id'])
                 analytic_account_ids = {rec['analytic_account_id'][0] for rec in (task_analytic_account_id + project_analytic_account_id)}
                 if len(analytic_account_ids) == 1:
-                    values['analytic_account_id'] = analytic_account_ids.pop()
-        if self.task_id.analytic_tag_ids:
-            values['analytic_tag_ids'] += [Command.link(tag_id.id) for tag_id in self.task_id.analytic_tag_ids]
-        if self.task_id.analytic_tag_ids or self.task_id.project_id.analytic_tag_ids:
-            values['analytic_tag_ids'] += [Command.link(tag_id.id) for tag_id in self.task_id.analytic_tag_ids | self.task_id.project_id.analytic_tag_ids]
-        elif self.is_service and not self.is_expense:
-            tag_ids = self.env['account.analytic.tag'].search([
-                '|', ('task_ids.sale_line_id', '=', self.id), ('project_ids.sale_line_id', '=', self.id)
-            ])
-            values['analytic_tag_ids'] += [Command.link(tag_id.id) for tag_id in tag_ids]
+                    values['analytic_distribution'] = {analytic_account_ids.pop(): 100}
         return values
 
     def _get_action_per_item(self):

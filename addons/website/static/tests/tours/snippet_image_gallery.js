@@ -2,7 +2,7 @@
 
 import wTourUtils from 'website.tour_utils';
 
-wTourUtils.registerEditionTour('snippet_image_gallery', {
+wTourUtils.registerWebsitePreviewTour('snippet_image_gallery', {
     test: true,
     url: '/',
     edition: true,

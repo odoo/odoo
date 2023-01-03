@@ -4,7 +4,7 @@ import tour from 'web_tour.tour';
 
 /**
  * Global use case:
- * an user (either employee, website publisher or portal) joins a public
+ * an user (either employee, website restricted editor or portal) joins a public
     course;
  * they have access to the full course content when they are a member of the
     course;

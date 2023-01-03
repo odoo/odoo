@@ -67,7 +67,7 @@
                                         <strong><span><field name="name"/></span></strong>
                                     </div>
                                     <div class="col-6 text-end">
-                                        <strong><i class="fa fa-clock-o" role="img" aria-label="Date" title="Date"/> <t t-esc="record.date.value"/></strong>
+                                        <strong><i class="fa fa-clock-o" role="img" aria-label="Date" title="Date"/> <t t-out="record.date.value"/></strong>
                                     </div>
                                 </div>
                                 <div class="row">
@@ -99,7 +99,7 @@
             <field name="arch" type="xml">
                 <search string="Payments">
                     <field name="name" string="Payment"
-                        filter_domain="['|', '|', ('name', 'ilike', self), ('partner_id', 'ilike', self), ('ref', 'ilike', self)]"/>
+                        filter_domain="['|', '|', '|', '|', ('name', 'ilike', self), ('partner_id', 'ilike', self), ('ref', 'ilike', self), ('amount_company_currency_signed' , 'ilike', self), ('amount', 'ilike', self)]"/>
                     <field name="partner_id" string="Customer/Vendor"/>
                     <field name="journal_id"/>
                     <field name="is_internal_transfer"/>
@@ -110,7 +110,7 @@
                     <filter string="Vendor Payments"
                             name="outbound_filter"
                             domain="[('partner_type', '=', 'supplier'), ('is_internal_transfer', '=', False)]"/>
-                    <filter string="Transfers" name="transfers_filter" domain="[('is_internal_transfer', '=', True)]"/>
+                    <filter string="Internal Transfers" name="transfers_filter" domain="[('is_internal_transfer', '=', True)]"/>
                     <separator/>
                     <filter string="Draft" name="state_draft" domain="[('state', '=', 'draft')]"/>
                     <filter string="Posted" name="state_posted" domain="[('state', '=', 'posted')]"/>
@@ -187,35 +187,42 @@
                         <field name="company_id" invisible="1"/>
                         <field name="paired_internal_transfer_payment_id" invisible="1"/>
                         <field name="available_journal_ids" invisible="1"/>
+                        <field name="currency_id" invisible="1"/>
 
                         <div class="oe_button_box" name="button_box">
                             <!-- Invoice stat button -->
                             <button name="button_open_invoices" type="object"
                                     class="oe_stat_button" icon="fa-bars"
                                     attrs="{'invisible': [('reconciled_invoices_count','=', 0)]}">
-                                <field name="reconciled_invoices_count"/>
-                                <span attrs="{'invisible': ['|',('reconciled_invoices_type','!=','invoice'),('reconciled_invoices_count','&gt;', 1)]}">Invoice</span>
-                                <span attrs="{'invisible': ['|',('reconciled_invoices_type','!=','invoice'),('reconciled_invoices_count','&lt;=', 1)]}">Invoices</span>
-                                <span attrs="{'invisible': ['|',('reconciled_invoices_type','=','invoice'),('reconciled_invoices_count','&gt;', 1)]}">Credit Note</span>
-                                <span attrs="{'invisible': ['|',('reconciled_invoices_type','=','invoice'),('reconciled_invoices_count','&lt;=', 1)]}">Credit Notes</span>
+                                <div class="o_form_field o_stat_info">
+                                    <span class="o_stat_text">
+                                        <field name="reconciled_invoices_count"/>
+                                        <span attrs="{'invisible': [('reconciled_invoices_type', '!=', 'invoice')]}"> Invoice</span>
+                                        <span attrs="{'invisible': [('reconciled_invoices_type', '=', 'invoice')]}"> Credit Note</span>
+                                    </span>
+                                </div>
                             </button>
 
                             <!-- Bill stat button -->
                             <button name="button_open_bills" type="object"
                                     class="oe_stat_button" icon="fa-bars"
                                     attrs="{'invisible': [('reconciled_bills_count','=', 0)]}">
-                                <field name="reconciled_bills_count"/>
-                                <span attrs="{'invisible': [('reconciled_bills_count','&gt;', 1)]}">Bill</span>
-                                <span attrs="{'invisible': [('reconciled_bills_count','&lt;=', 1)]}">Bills</span>
+                                <div class="o_form_field o_stat_info">
+                                    <span class="o_stat_text">
+                                        <field name="reconciled_bills_count"/>
+                                        <span> Bill</span>
+                                    </span>
+                                </div>
                             </button>
 
                             <!-- Statement stat button -->
-                            <button name="button_open_statements" type="object"
+                            <button name="button_open_statement_lines" type="object"
                                     class="oe_stat_button" icon="fa-bars"
-                                    attrs="{'invisible': [('reconciled_statements_count','=', 0)]}">
-                                <field name="reconciled_statements_count"/>
-                                <span attrs="{'invisible': [('reconciled_statements_count','&gt;', 1)]}">Statement</span>
-                                <span attrs="{'invisible': [('reconciled_statements_count','&lt;=', 1)]}">Statements</span>
+                                    attrs="{'invisible': [('reconciled_statement_lines_count','=', 0)]}">
+                                <div class="o_form_field o_stat_info">
+                                    <field name="reconciled_statement_lines_count"/>
+                                    <span> Transaction</span>
+                                </div>
                             </button>
 
                             <!-- Journal Entry  button -->
@@ -243,9 +250,11 @@
                                 <field name="payment_type" widget="radio" options="{'horizontal': True}"
                                         attrs="{'readonly': [('state', '!=', 'draft')]}"/>
                                 <field name="partner_id" context="{'default_is_company': True}" string="Customer"
+                                       options="{'no_quick_create': True}"
                                        attrs="{'readonly':[('state', '!=', 'draft')],
                                              'invisible':['|', ('partner_type','!=','customer'), ('is_internal_transfer', '=', True)]}"/>
                                 <field name="partner_id" context="{'default_is_company': True}" string="Vendor"
+                                       options="{'no_quick_create': True}"
                                        attrs="{'readonly':[('state', '!=', 'draft')],
                                                'invisible':['|', ('partner_type','!=','supplier'), ('is_internal_transfer', '=', True)]}"/>
                                 <label for="amount"/>
@@ -269,27 +278,27 @@
                                 <field name="payment_method_line_id" required="1" options="{'no_create': True, 'no_open': True}"
                                        attrs="{'readonly': [('state', '!=', 'draft')]}"/>
 
-                                <field name="partner_bank_id" context="{'default_partner_id': partner_id}" string="Customer Bank Account"
+                                <field name="partner_bank_id" string="Customer Bank Account"
+                                      context="{'default_partner_id': partner_id, 'default_allow_out_payment': True}"
                                         attrs="{
                                             'invisible': ['|', '|', '|', ('show_partner_bank_account', '=', False), ('partner_type','!=','customer'), ('is_internal_transfer', '=', True), ('payment_type', '=', 'inbound')],
                                             'required': [('require_partner_bank_account', '=', True), ('is_internal_transfer', '=', False)],
-                                            'readonly': [('state', '!=', 'draft')],
                                         }"/>
 
-                                <field name="partner_bank_id" context="{'default_partner_id': partner_id}" string="Vendor Bank Account"
+                                <field name="partner_bank_id" string="Vendor Bank Account"
+                                        context="{'default_partner_id': partner_id, 'default_allow_out_payment': True}"
                                         attrs="{
                                             'invisible': ['|', '|', '|', ('show_partner_bank_account', '=', False), ('partner_type','!=','supplier'), ('is_internal_transfer', '=', True), ('payment_type', '=', 'inbound')],
                                             'required': [('require_partner_bank_account', '=', True), ('is_internal_transfer', '=', False)],
-                                            'readonly': [('state', '!=', 'draft')],
                                         }"/>
 
                                 <!-- This field should always be readonly but using readonly="1" overrides the other partner_bank_id
                                 fields readonly condition in the framework, preventing the modification of these fields -->
-                                <field name="partner_bank_id" context="{'default_partner_id': partner_id}" string="Company Bank Account"
+                                <field name="partner_bank_id" string="Company Bank Account"
+                                        context="{'default_partner_id': partner_id, 'default_allow_out_payment': True}"
                                         attrs="{
                                             'invisible': ['|', '|', ('show_partner_bank_account', '=', False), ('is_internal_transfer', '=', True), ('payment_type', '=', 'outbound')],
                                             'required': [('require_partner_bank_account', '=', True), ('is_internal_transfer', '=', False)],
-                                            'readonly': [('payment_type', '!=', 'outbound')],
                                         }"/>
 
                                 <field name="destination_journal_id" context="{'default_partner_id': partner_id}"

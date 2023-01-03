@@ -106,8 +106,8 @@ class StockValuationLayerRevaluation(models.TransientModel):
 
         revaluation_svl = self.env['stock.valuation.layer'].create(revaluation_svl_vals)
 
-        # Update the stardard price in case of AVCO
-        if product_id.categ_id.property_cost_method == 'average':
+        # Update the stardard price in case of AVCO/FIFO
+        if product_id.categ_id.property_cost_method in ['average', 'fifo']:
             product_id.with_context(disable_auto_svl=True).standard_price += self.added_value / self.current_quantity_svl
 
         # If the Inventory Valuation of the product category is automated, create related account move.

@@ -9,7 +9,6 @@ class SaleOrder(models.Model):
 
     l10n_in_reseller_partner_id = fields.Many2one('res.partner',
         string='Reseller', domain="[('vat', '!=', False), '|', ('company_id', '=', False), ('company_id', '=', company_id)]", readonly=True, states={'draft': [('readonly', False)], 'sent': [('readonly', False)]})
-    l10n_in_journal_id = fields.Many2one('account.journal', string="Journal", compute="_compute_l10n_in_journal_id", store=True, readonly=True, states={'draft': [('readonly', False)], 'sent': [('readonly', False)]})
     l10n_in_gst_treatment = fields.Selection([
             ('regular', 'Registered Business - Regular'),
             ('composition', 'Registered Business - Composition'),
@@ -34,23 +33,9 @@ class SaleOrder(models.Model):
                     l10n_in_gst_treatment = order.partner_id.vat and 'regular' or 'consumer'
                 order.l10n_in_gst_treatment = l10n_in_gst_treatment
 
-    @api.depends('company_id')
-    def _compute_l10n_in_journal_id(self):
-        for order in self:
-            # set default value as False so CacheMiss error never occurs for this field.
-            order.l10n_in_journal_id = False
-            if order.country_code == 'IN':
-                domain = [('company_id', '=', order.company_id.id), ('type', '=', 'sale')]
-                journal = self.env['account.journal'].search(domain, limit=1)
-                if journal:
-                    order.l10n_in_journal_id = journal.id
-
-
     def _prepare_invoice(self):
         invoice_vals = super(SaleOrder, self)._prepare_invoice()
         if self.country_code == 'IN':
             invoice_vals['l10n_in_reseller_partner_id'] = self.l10n_in_reseller_partner_id.id
-            if self.l10n_in_journal_id:
-                invoice_vals['journal_id'] = self.l10n_in_journal_id.id
             invoice_vals['l10n_in_gst_treatment'] = self.l10n_in_gst_treatment
         return invoice_vals

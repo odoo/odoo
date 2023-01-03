@@ -18,7 +18,7 @@ import {
 } from "../../helpers/utils";
 import { registerCleanup } from "../../helpers/cleanup";
 
-const { Component, xml } = owl;
+import { Component, xml } from "@odoo/owl";
 
 let isXHRMocked = false;
 const serviceRegistry = registry.category("services");
@@ -27,7 +27,7 @@ let isDeployed = false;
 async function testRPC(route, params) {
     let url = "";
     let request;
-    let MockXHR = makeMockXHR({ test: true }, function (data) {
+    const MockXHR = makeMockXHR({ test: true }, function (data) {
         request = data;
         url = this.url;
     });
@@ -76,7 +76,7 @@ QUnit.module("RPC", {
 
 QUnit.test("can perform a simple rpc", async (assert) => {
     assert.expect(4);
-    let MockXHR = makeMockXHR({ result: { action_id: 123 } }, (request) => {
+    const MockXHR = makeMockXHR({ result: { action_id: 123 } }, (request) => {
         assert.strictEqual(request.jsonrpc, "2.0");
         assert.strictEqual(request.method, "call");
         assert.ok(typeof request.id === "number");
@@ -100,7 +100,7 @@ QUnit.test("trigger an error when response has 'error' key", async (assert) => {
             message: "data_message",
         },
     };
-    let MockXHR = makeMockXHR({ error });
+    const MockXHR = makeMockXHR({ error });
     patch(browser, "mock.xhr", { XMLHttpRequest: MockXHR }, { pure: true });
 
     const env = await makeTestEnv({
@@ -108,7 +108,7 @@ QUnit.test("trigger an error when response has 'error' key", async (assert) => {
     });
     try {
         await env.services.rpc("/test/");
-    } catch (_error) {
+    } catch {
         assert.ok(true);
     }
     unpatch(browser, "mock.xhr");
@@ -132,7 +132,7 @@ QUnit.test("rpc coming from destroyed components are left pending", async (asser
     }
     MyComponent.template = xml`<div/>`;
     const def = makeDeferred();
-    let MockXHR = makeMockXHR({ result: "1" }, () => {}, def);
+    const MockXHR = makeMockXHR({ result: "1" }, () => {}, def);
     patch(browser, "mock.xhr", { XMLHttpRequest: MockXHR }, { pure: true });
 
     const env = await makeTestEnv({
@@ -182,14 +182,14 @@ QUnit.test("rpc initiated from destroyed components throw exception", async (ass
 });
 
 QUnit.test("check trigger RPC:REQUEST and RPC:RESPONSE for a simple rpc", async (assert) => {
-    let MockXHR = makeMockXHR({ test: true }, () => 1);
+    const MockXHR = makeMockXHR({ test: true }, () => 1);
     patch(browser, "mock.xhr", { XMLHttpRequest: MockXHR }, { pure: true });
 
     const env = await makeTestEnv({
         serviceRegistry,
     });
-    let rpcIdsRequest = [];
-    let rpcIdsResponse = [];
+    const rpcIdsRequest = [];
+    const rpcIdsResponse = [];
     env.bus.addEventListener("RPC:REQUEST", (rpcId) => {
         rpcIdsRequest.push(rpcId);
         assert.step("RPC:REQUEST");
@@ -217,13 +217,13 @@ QUnit.test("check trigger RPC:REQUEST and RPC:RESPONSE for a rpc with an error",
             message: "data_message",
         },
     };
-    let MockXHR = makeMockXHR({ error });
+    const MockXHR = makeMockXHR({ error });
     patch(browser, "mock.xhr", { XMLHttpRequest: MockXHR }, { pure: true });
     const env = await makeTestEnv({
         serviceRegistry,
     });
-    let rpcIdsRequest = [];
-    let rpcIdsResponse = [];
+    const rpcIdsRequest = [];
+    const rpcIdsResponse = [];
     env.bus.addEventListener("RPC:REQUEST", (rpcId) => {
         rpcIdsRequest.push(rpcId);
         assert.step("RPC:REQUEST");
@@ -234,7 +234,7 @@ QUnit.test("check trigger RPC:REQUEST and RPC:RESPONSE for a rpc with an error",
     });
     try {
         await env.services.rpc("/test/");
-    } catch (_e) {
+    } catch {
         assert.ok(true);
     }
     assert.strictEqual(rpcIdsRequest.toString(), rpcIdsResponse.toString());
@@ -244,11 +244,39 @@ QUnit.test("check trigger RPC:REQUEST and RPC:RESPONSE for a rpc with an error",
 
 QUnit.test("check connection aborted", async (assert) => {
     const def = makeDeferred();
-    let MockXHR = makeMockXHR({}, () => {}, def);
+    const MockXHR = makeMockXHR({}, () => {}, def);
     patchWithCleanup(browser, { XMLHttpRequest: MockXHR }, { pure: true });
     const env = await makeTestEnv({ serviceRegistry });
+    env.bus.addEventListener("RPC:REQUEST", () => {
+        assert.step("RPC:REQUEST");
+    });
+    env.bus.addEventListener("RPC:RESPONSE", () => {
+        assert.step("RPC:RESPONSE");
+    });
 
     const connection = env.services.rpc();
     connection.abort();
     assert.rejects(connection, ConnectionAbortedError);
+    assert.verifySteps(["RPC:REQUEST", "RPC:RESPONSE"]);
 });
+
+QUnit.test(
+    "Response with status 404 and invalid JSON response result in a rerror with a readable message",
+    async (assert) => {
+        const env = await makeTestEnv({ serviceRegistry });
+
+        const MockXHR = makeMockXHR({}, () => {});
+        const request = new MockXHR();
+        request.response = "<h...";
+        request.status = "404";
+
+        try {
+            await env.services.rpc("/test/", null, { xhr: request });
+        } catch (_e) {
+            assert.strictEqual(
+                _e.message,
+                "server responded with invalid JSON response (HTTP404): <h..."
+            );
+        }
+    }
+);

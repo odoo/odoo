@@ -162,5 +162,5 @@ class ResourceCalendarLeaves(models.Model):
         result = super(ResourceCalendarLeaves, self).write(vals)
         if global_time_off_updated:
             global_time_offs_with_leave_timesheet = global_time_off_updated.filtered(lambda r: not r.resource_id and r.calendar_id.company_id.internal_project_id and r.calendar_id.company_id.leave_timesheet_task_id)
-            global_time_offs_with_leave_timesheet._timesheet_create_lines()
+            global_time_offs_with_leave_timesheet.sudo()._timesheet_create_lines()
         return result

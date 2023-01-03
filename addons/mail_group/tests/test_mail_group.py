@@ -108,7 +108,7 @@ class TestMailGroup(TestMailListCommon):
             'email_from': user2.email,
         }
         self.test_group.alias_id.alias_contact = 'followers'
-        self.assertFalse(self.test_group._alias_get_error_message({}, msg_dict, self.test_group.alias_id))
+        self.assertFalse(self.test_group._alias_get_error({}, msg_dict, self.test_group.alias_id))
 
     @users('employee')
     def test_join_group(self):

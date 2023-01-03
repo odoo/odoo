@@ -500,6 +500,36 @@ QUnit.module('core', function () {
         assert.strictEqual(result.getSeconds(), 31);
     });
 
+
+    QUnit.test('to_utc in october with winter/summer change', function (assert) {
+        assert.expect(7);
+
+        const originalGetTimezoneOffset = Date.prototype.getTimezoneOffset;
+        Date.prototype.getTimezoneOffset = function () {
+            const month = this.getMonth() // starts at 0;
+            if (10 <= month || month <= 2) {
+                //rough approximation
+                return -60;
+            } else {
+                return -120;
+            }
+        }
+
+        var result = py.eval(
+            "datetime.datetime(2022, 10, 17).to_utc()",
+            pyUtils.context());
+
+        assert.ok(result instanceof Date);
+        assert.strictEqual(result.getFullYear(), 2022);
+        assert.strictEqual(result.getMonth(), 9);
+        assert.strictEqual(result.getDate(), 16);
+        assert.strictEqual(result.getHours(), 22);
+        assert.strictEqual(result.getMinutes(), 0);
+        assert.strictEqual(result.getSeconds(), 0);
+
+        Date.prototype.getTimezoneOffset = originalGetTimezoneOffset;
+    });
+
     QUnit.test('datetime.combine', function (assert) {
         assert.expect(2);
 
@@ -941,7 +971,7 @@ QUnit.module('core', function () {
                     "price_unit": 100,
                     "account_id": 853,
                     "discount": 0,
-                    "account_analytic_id": false,
+                    "analytic_distribution": false,
                     "company_id": false,
                     "note": false,
                     "invoice_line_tax_ids": [[6, false, [1]]],
@@ -998,7 +1028,7 @@ QUnit.module('core', function () {
                         [0, false, {
                             account_id: 55,
                             amount_currency: 0,
-                            analytic_account_id: false,
+                            analytic_distribution: false,
                             credit: 0,
                             currency_id: false,
                             date_maturity: false,
@@ -1025,7 +1055,7 @@ QUnit.module('core', function () {
             line_id: [[0, false, {
                 account_id: 55,
                 amount_currency: 0,
-                analytic_account_id: false,
+                analytic_distribution: false,
                 credit: 0,
                 currency_id: false,
                 date_maturity: false,

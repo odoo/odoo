@@ -5,53 +5,40 @@
         <field name="model">res.config.settings</field>
         <field name="inherit_id" ref="account.res_config_settings_view_form"/>
         <field name="arch" type="xml">
-            <xpath expr="//div[@data-key='account']/div" position="after">
-                <h2 attrs="{'invisible': [('country_code', '!=', 'ES')]}">Spain Localization</h2>
-                <div class="row mt16 o_settings_container"
-                     name="spain_localization"
-                     attrs="{'invisible': [('country_code', '!=', 'ES')]}">
-                    <div class="col-xs-12 col-md-6 o_setting_box">
-
-                        <!-- Invisible fields -->
-                        <field name="l10n_es_edi_certificate_ids" invisible="1"/>
-
-                        <div class="o_setting_left_pane"/>
-
-                        <div class="o_setting_right_pane">
-                            <span class="o_form_label">Registro de Libros connection SII</span>
-                            <span class="fa fa-lg fa-building-o"
-                                  title="Values set here are company-specific."
-                                  groups="base.group_multi_company"/>
-                            <div class="content-group">
-                                <div class="mt16">
-                                    <label for="l10n_es_edi_tax_agency" class="o_light_label"/>
-                                    <field name="l10n_es_edi_tax_agency"/>
-                                    <div class="text-muted" attrs="{'invisible': [('l10n_es_edi_tax_agency', '!=', False)]}">
-                                        No tax agency selected: SII not activated.
-                                    </div>
-                                    <div class="text-muted" attrs="{'invisible': [('l10n_es_edi_tax_agency', '=', False)]}">
-                                        Tax agency selected: invoices will be sent by SII for journals where it is activated.
-                                    </div>
-                                    <br/>
-                                    <div class="o_row">
-                                        <label for="l10n_es_edi_test_env" class="o_light_label"/>
-                                        <field name="l10n_es_edi_test_env"/>
-                                    </div>
-                                    <div class="text-muted" attrs="{'invisible': [('l10n_es_edi_test_env', '=', False)]}">
-                                        Test mode: EDI data is sent to separate test servers and is not considered official.
-                                    </div>
-                                    <div class="text-muted" attrs="{'invisible': [('l10n_es_edi_test_env', '!=', False)]}">
-                                        Production mode: EDI data is sent to the official agency servers.
-                                    </div>
-                                    <br/>
-                                    <div>
-                                        <button name="%(l10n_es_edi_certificate_action)d" type="action" class="oe_link">Manage certificates (SII/TicketBAI)</button>
-                                    </div>
+            <xpath expr="//app[@name='account']/block" position="after">
+                <block title="Spain Localization" name="spain_localization" attrs="{'invisible': [('country_code', '!=', 'ES')]}">
+                    <!-- Invisible fields -->
+                    <field name="l10n_es_edi_certificate_ids" invisible="1"/>
+                    <setting string="Registro de Libros connection SII" company_dependent="1">
+                        <div class="content-group">
+                            <div class="mt16">
+                                <label for="l10n_es_edi_tax_agency" class="o_light_label"/>
+                                <field name="l10n_es_edi_tax_agency"/>
+                                <div class="text-muted" attrs="{'invisible': [('l10n_es_edi_tax_agency', '!=', False)]}">
+                                    No tax agency selected: SII not activated.
+                                </div>
+                                <div class="text-muted" attrs="{'invisible': [('l10n_es_edi_tax_agency', '=', False)]}">
+                                    Tax agency selected: invoices will be sent by SII for journals where it is activated.
+                                </div>
+                                <br/>
+                                <div class="o_row">
+                                    <label for="l10n_es_edi_test_env" class="o_light_label"/>
+                                    <field name="l10n_es_edi_test_env"/>
+                                </div>
+                                <div class="text-muted" attrs="{'invisible': [('l10n_es_edi_test_env', '=', False)]}">
+                                    Test mode: EDI data is sent to separate test servers and is not considered official.
+                                </div>
+                                <div class="text-muted" attrs="{'invisible': [('l10n_es_edi_test_env', '!=', False)]}">
+                                    Production mode: EDI data is sent to the official agency servers.
+                                </div>
+                                <br/>
+                                <div>
+                                    <button name="%(l10n_es_edi_certificate_action)d" type="action" class="oe_link">Manage certificates (SII/TicketBAI)</button>
                                 </div>
                             </div>
                         </div>
-                    </div>
-                </div>
+                    </setting>
+                </block>
             </xpath>
 
         </field>

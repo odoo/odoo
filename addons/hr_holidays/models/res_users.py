@@ -70,11 +70,11 @@ class User(models.Model):
             ['leave_manager_id'],
             ['leave_manager_id'])
         responsibles_to_remove_ids = set(self.ids) - {x['leave_manager_id'][0] for x in res}
-        approver_group.sudo().write({
+        approver_group.write({
             'users': [(3, manager_id) for manager_id in responsibles_to_remove_ids]})
 
     @api.model_create_multi
     def create(self, vals_list):
         users = super().create(vals_list)
-        users._clean_leave_responsible_users()
+        users.sudo()._clean_leave_responsible_users()
         return users

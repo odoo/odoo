@@ -13,11 +13,6 @@ const qweb = core.qweb;
 const _t = core._t;
 
 const FormEditor = options.Class.extend({
-    xmlDependencies: [
-        '/website/static/src/xml/website_form_editor.xml',
-        '/google_recaptcha/static/src/xml/recaptcha.xml',
-    ],
-
     //----------------------------------------------------------------------
     // Private
     //----------------------------------------------------------------------
@@ -1242,7 +1237,7 @@ options.registry.WebsiteFieldEditor = FieldEditor.extend({
                 if (dependencyEl.nodeName === 'SELECT') {
                     for (const option of dependencyEl.querySelectorAll('option')) {
                         const button = document.createElement('we-button');
-                        button.textContent = option.value;
+                        button.textContent = option.value || `<${_t("no value")}>`;
                         button.dataset.selectDataAttribute = option.value;
                         selectOptEl.append(button);
                     }
@@ -1308,8 +1303,7 @@ options.registry.WebsiteFieldEditor = FieldEditor.extend({
 
         list.dataset.hasDefault = ['one2many', 'many2many'].includes(type) ? 'multiple' : 'unique';
         const defaults = [...this.$target[0].querySelectorAll('[checked], [selected]')].map(el => {
-            const idInt = parseInt(el.value);
-            return isNaN(idInt) ? el.value : idInt;
+            return /^-?[0-9]{1,15}$/.test(el.value) ? parseInt(el.value) : el.value;
         });
         list.dataset.defaults = JSON.stringify(defaults);
 
@@ -1396,10 +1390,9 @@ options.registry.WebsiteFieldEditor = FieldEditor.extend({
             options = [...multipleInputs.querySelectorAll('.checkbox input, .radio input')];
         }
         return options.map(opt => {
-            const id = parseInt(opt.value);
             const name = select ? opt : opt.nextElementSibling;
             return {
-                id: isNaN(id) ? opt.value : id,
+                id: /^-?[0-9]{1,15}$/.test(opt.value) ? parseInt(opt.value) : opt.value,
                 display_name: name.textContent.trim(),
                 selected: select ? opt.selected : opt.checked,
             };
@@ -1470,9 +1463,18 @@ const DisableOverlayButtonOption = options.Class.extend({
         // TODO refactor in master
         const className = 'oe_snippet_' + buttonName;
         this.$overlay.add(this.$overlay.data('$optionsSection')).on('click', '.' + className, this.preventButton);
-        const $button = this.$overlay.add(this.$overlay.data('$optionsSection')).find('.' + className);
-        $button.attr('title', message).tooltip({delay: 0});
-        $button.removeClass(className); // Disable the functionnality
+        const $buttons = this.$overlay.add(this.$overlay.data('$optionsSection')).find('.' + className);
+        for (const buttonEl of $buttons) {
+            // For a disabled element to display a tooltip, it must be wrapped
+            // into a non-disabled element which holds the tooltip.
+            buttonEl.classList.add('o_disabled');
+            const spanEl = buttonEl.ownerDocument.createElement('span');
+            spanEl.setAttribute('tabindex', 0);
+            spanEl.setAttribute('title', message);
+            buttonEl.replaceWith(spanEl);
+            spanEl.appendChild(buttonEl);
+            Tooltip.getOrCreateInstance(spanEl, {delay: 0});
+        }
     },
 
     preventButton: function (event) {
@@ -1486,7 +1488,7 @@ const DisableOverlayButtonOption = options.Class.extend({
 // Disable duplicate button for model fields
 options.registry.WebsiteFormFieldModel = DisableOverlayButtonOption.extend({
     start: function () {
-        this.disableButton('clone', _t('You can\'t duplicate a model field.'));
+        this.disableButton('clone', _t('You cannot duplicate this field.'));
         return this._super.apply(this, arguments);
     }
 });
@@ -1494,7 +1496,7 @@ options.registry.WebsiteFormFieldModel = DisableOverlayButtonOption.extend({
 // Disable delete button for model required fields
 options.registry.WebsiteFormFieldRequired = DisableOverlayButtonOption.extend({
     start: function () {
-        this.disableButton('remove', _t('You can\'t remove a field that is required by the model itself.'));
+        this.disableButton('remove', _t('This field is mandatory for this Action. You cannot remove it.'));
         return this._super.apply(this, arguments);
     }
 });
@@ -1508,8 +1510,8 @@ options.registry.WebsiteFormSubmitRequired = DisableOverlayButtonOption.extend({
     }
 });
 
-// Disable "Shown on Mobile" option if for an hidden field
-options.registry.MobileVisibility.include({
+// Disable "Shown on Mobile/Desktop" option if for an hidden field
+options.registry.DeviceVisibility.include({
 
     //--------------------------------------------------------------------------
     // Private
