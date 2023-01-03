@@ -210,6 +210,13 @@ const Link = Widget.extend({
             this.$link.css('border-width', data.customBorderWidth);
             this.$link.css('border-style', data.customBorderStyle);
             this.$link.css('border-color', data.customBorder);
+        } else {
+            this.$link.css('color', '');
+            this.$link.css('background-color', '');
+            this.$link.css('background-image', '');
+            this.$link.css('border-width', '');
+            this.$link.css('border-style', '');
+            this.$link.css('border-color', '');
         }
         const attrs = Object.assign({}, this.data.oldAttributes, {
             href: data.url,
