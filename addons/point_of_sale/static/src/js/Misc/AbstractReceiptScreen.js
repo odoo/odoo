@@ -1,6 +1,5 @@
 /** @odoo-module */
 
-import { nextFrame } from "@point_of_sale/js/utils";
 import PosComponent from "@point_of_sale/js/PosComponent";
 import Registries from "@point_of_sale/js/Registries";
 
@@ -32,7 +31,7 @@ class AbstractReceiptScreen extends PosComponent {
                 if (confirmed) {
                     // We want to call the _printWeb when the popup is fully gone
                     // from the screen which happens after the next animation frame.
-                    await nextFrame();
+                    await new Promise(requestAnimationFrame);
                     return await this._printWeb();
                 }
                 return false;

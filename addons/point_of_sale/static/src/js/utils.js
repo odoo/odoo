@@ -1,37 +1,4 @@
 /** @odoo-module */
-export function getFileAsText(file) {
-    return new Promise((resolve, reject) => {
-        if (!file) {
-            reject();
-        } else {
-            const reader = new FileReader();
-            reader.addEventListener("load", function () {
-                resolve(reader.result);
-            });
-            reader.addEventListener("abort", reject);
-            reader.addEventListener("error", reject);
-            reader.readAsText(file);
-        }
-    });
-}
-
-/**
- * This global variable is used by nextFrame to store the timer and
- * be able to cancel it before another request for animation frame.
- */
-let timer = null;
-
-/**
- * Wait for the next animation frame to finish.
- */
-export const nextFrame = () => {
-    return new Promise((resolve) => {
-        cancelAnimationFrame(timer);
-        timer = requestAnimationFrame(() => {
-            resolve();
-        });
-    });
-};
 
 /**
  * Creates a batched version of a callback so that all calls to it in the same
