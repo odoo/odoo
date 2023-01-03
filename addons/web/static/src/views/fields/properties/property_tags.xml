@@ -28,4 +28,7 @@
                 onColorSelected.bind="(id) => props.switchTagColor(id, props.tag)"/>
         </div>
     </t>
+    <t t-name="web.ListPropertyTags" owl="1">
+        <PropertyTags t-props="propertyTagsProps"/>
+    </t>
 </templates>

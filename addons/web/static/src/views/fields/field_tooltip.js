@@ -2,7 +2,7 @@
 
 export function getTooltipInfo(params) {
     let widgetDescription = undefined;
-    if (params.fieldInfo.widget) {
+    if (params.fieldInfo.widget && params.fieldInfo.FieldComponent) {
         widgetDescription = params.fieldInfo.FieldComponent.displayName;
     }
 

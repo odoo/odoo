@@ -7,6 +7,7 @@ import { ColorList } from "@web/core/colorlist/colorlist";
 import { usePopover } from "@web/core/popover/popover_hook";
 import { AutoComplete } from "@web/core/autocomplete/autocomplete";
 import { sprintf } from "@web/core/utils/strings";
+import { standardFieldProps } from "../standard_field_props";
 
 import { Component } from "@odoo/owl";
 
@@ -17,7 +18,7 @@ PropertyTagsColorListPopover.components = {
 };
 
 // property tags does not really need timeout because it does not make RPC calls
-export class PropertyTagAutoComplete extends AutoComplete { };
+export class PropertyTagAutoComplete extends AutoComplete {}
 Object.assign(PropertyTagAutoComplete, { timeout: 0 });
 
 export class PropertyTags extends Component {
@@ -55,10 +56,12 @@ export class PropertyTags extends Component {
 
         if (!this.displayBadge) {
             // in kanban view e.g. to not show tag without color
-            value = value.filter(tag => tag[2]);
+            value = value.filter((tag) => tag[2]);
         }
 
-        const canDeleteTag = !this.props.readonly && this.props.canChangeTags;
+        const canDeleteTag =
+            !this.props.readonly &&
+            (this.props.canChangeTags || this.props.deleteAction === "value");
 
         return value.map((tag) => {
             const [tagId, tagLabel, tagColorIndex] = tag;
@@ -302,3 +305,25 @@ PropertyTags.props = {
     // argument to update the current selected value)
     onTagsChange: { type: Function, optional: true },
 };
+
+export class ListPropertyTags extends Component {
+    get propertyTagsProps() {
+        return {
+            selectedTags: this.props.value || [],
+            tags: this.props.record.fields[this.props.name].tags || [],
+            deleteAction: "value",
+            readonly: this.props.readonly,
+            canChangeTags: false,
+            onValueChange: (value) => {
+                this.props.update(value);
+            },
+        };
+    }
+}
+
+ListPropertyTags.props = {
+    ...standardFieldProps,
+};
+
+ListPropertyTags.template = "web.ListPropertyTags";
+ListPropertyTags.components = { PropertyTags };

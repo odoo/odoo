@@ -21,11 +21,14 @@ async function closePopover(target) {
 }
 
 async function changeType(target, propertyType) {
-    const TYPES_INDEX = {"datetime": 6, "selection": 7, "tags": 8, "many2one": 9, "many2many": 10};
+    const TYPES_INDEX = { datetime: 6, selection: 7, tags: 8, many2one: 9, many2many: 10 };
     const propertyTypeIndex = TYPES_INDEX[propertyType];
     await click(target, ".o_field_property_definition_type input");
     await nextTick();
-    await click(target, `.o_field_property_definition_type .dropdown-item:nth-child(${propertyTypeIndex})`);
+    await click(
+        target,
+        `.o_field_property_definition_type .dropdown-item:nth-child(${propertyTypeIndex})`
+    );
 }
 
 QUnit.module("Fields", (hooks) => {
@@ -40,6 +43,7 @@ QUnit.module("Fields", (hooks) => {
                             type: "properties",
                             searchable: false,
                             definition_record: "company_id",
+                            definition_record_field: "definitions",
                         },
                         company_id: {
                             string: "Company",
@@ -119,19 +123,48 @@ QUnit.module("Fields", (hooks) => {
                 },
                 company: {
                     fields: {
-                        name: {
-                            string: "Name",
-                            type: "char",
-                        },
+                        name: { string: "Name", type: "char" },
+                        definitions: { type: "properties_definitions" },
                     },
                     records: [
                         {
                             id: 37,
                             display_name: "Company 1",
+                            definitions: [
+                                {
+                                    name: "property_1",
+                                    string: "My Char",
+                                    type: "char",
+                                    view_in_kanban: true,
+                                },
+                                {
+                                    name: "property_2",
+                                    string: "My Selection",
+                                    type: "selection",
+                                    selection: [
+                                        ["a", "A"],
+                                        ["b", "B"],
+                                        ["c", "C"],
+                                    ],
+                                    default: "c",
+                                    view_in_kanban: true,
+                                },
+                                {
+                                    name: "property_3",
+                                    string: "My Char 3",
+                                    type: "char",
+                                },
+                                {
+                                    name: "property_4",
+                                    string: "My Char 4",
+                                    type: "char",
+                                    view_in_kanban: true,
+                                },
+                            ],
                         },
                     ],
                 },
-                'res.users': {
+                "res.users": {
                     fields: {
                         name: {
                             string: "Name",
@@ -142,10 +175,12 @@ QUnit.module("Fields", (hooks) => {
                         {
                             id: 1,
                             display_name: "Alice",
-                        }, {
+                        },
+                        {
                             id: 2,
                             display_name: "Bob",
-                        }, {
+                        },
+                        {
                             id: 3,
                             display_name: "Eve",
                         },
@@ -794,8 +829,12 @@ QUnit.module("Fields", (hooks) => {
                     { model: "res.partner", display_name: "Partner" },
                     { model: "res.users", display_name: "User" },
                 ];
-            } else if (method === "display_name_for" && model === "ir.model" && args[0][0] === "res.users") {
-                return [{"display_name": "User", "model": "res.users"}];
+            } else if (
+                method === "display_name_for" &&
+                model === "ir.model" &&
+                args[0][0] === "res.users"
+            ) {
+                return [{ display_name: "User", model: "res.users" }];
             } else if (method === "name_create" && model === "res.users") {
                 // Add a prefix to check that "name_create"
                 // has been called with the right parameters
@@ -984,8 +1023,8 @@ QUnit.module("Fields", (hooks) => {
                 ];
             } else if (method === "display_name_for" && model === "ir.model") {
                 return [
-                    {"display_name": "User", "model": "res.users"},
-                    {"display_name": "Partner", "model": "res.partner"},
+                    { display_name: "User", model: "res.users" },
+                    { display_name: "Partner", model: "res.partner" },
                 ];
             } else if (method === "search_count") {
                 return 5;
@@ -1058,7 +1097,6 @@ QUnit.module("Fields", (hooks) => {
         assert.strictEqual(propertyName4, propertyName6);
     });
 
-
     /**
      * Check the behavior of the properties field in the kanban view.
      */
@@ -1082,17 +1120,28 @@ QUnit.module("Fields", (hooks) => {
         });
 
         // check second card
-        const property3 = target.querySelector(".o_kanban_record:nth-child(2) .o_kanban_property_field:nth-child(3) span");
-        assert.notEqual(property3.innerText, "char value 3",
-            "The third property should not be visible in the kanban view");
+        const property3 = target.querySelector(
+            ".o_kanban_record:nth-child(2) .o_kanban_property_field:nth-child(3) span"
+        );
+        assert.notEqual(
+            property3.innerText,
+            "char value 3",
+            "The third property should not be visible in the kanban view"
+        );
         assert.equal(property3.innerText, "char value 4");
-        const property1 = target.querySelector(".o_kanban_record:nth-child(2) .o_kanban_property_field:nth-child(1) span");
+        const property1 = target.querySelector(
+            ".o_kanban_record:nth-child(2) .o_kanban_property_field:nth-child(1) span"
+        );
         assert.equal(property1.innerText, "char value");
-        const property2 = target.querySelector(".o_kanban_record:nth-child(2) .o_kanban_property_field:nth-child(2) span");
+        const property2 = target.querySelector(
+            ".o_kanban_record:nth-child(2) .o_kanban_property_field:nth-child(2) span"
+        );
         assert.equal(property2.innerText, "C");
 
         // check first card
-        const items = target.querySelectorAll(".o_kanban_record:nth-child(1) .o_kanban_property_field");
+        const items = target.querySelectorAll(
+            ".o_kanban_record:nth-child(1) .o_kanban_property_field"
+        );
         assert.equal(items.length, 2);
     });
 });
