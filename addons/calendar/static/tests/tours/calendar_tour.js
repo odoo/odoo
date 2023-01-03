@@ -58,7 +58,7 @@ registry.category("web_tour.tours").add("calendar_appointments_hour_tour", {
             run: "click",
         },
         {
-            trigger: '.fc-day-header:contains("Mon")',
+            trigger: ".fc-col-header-cell.fc-day.fc-day-mon",
             content: "Check the day is properly displayed",
         },
         {
@@ -82,11 +82,11 @@ registry.category("web_tour.tours").add("test_calendar_delete_tour", {
         },
         {
             content: "Click on the event (focus + waiting)",
-            trigger: 'a .fc-content:contains("Test Event")',
+            trigger: 'a .fc-event-main:contains("Test Event")',
             async run() {
-                $('a .fc-content:contains("Test Event")').click();
+                $('a .fc-event-main:contains("Test Event")').click();
                 await new Promise((r) => setTimeout(r, 1000));
-                $('a .fc-content:contains("Test Event")').click();
+                $('a .fc-event-main:contains("Test Event")').click();
             },
         },
         {
@@ -109,11 +109,11 @@ registry.category("web_tour.tours").add("test_calendar_decline_tour", {
     steps: () => [
         {
             content: "Click on the event (focus + waiting)",
-            trigger: 'a .fc-content:contains("Test Event")',
+            trigger: 'a .fc-event-main:contains("Test Event")',
             async run() {
-                $('a .fc-content:contains("Test Event")').click();
+                $('a .fc-event-main:contains("Test Event")').click();
                 await new Promise((r) => setTimeout(r, 1000));
-                $('a .fc-content:contains("Test Event")').click();
+                $('a .fc-event-main:contains("Test Event")').click();
             },
         },
         {
@@ -137,11 +137,11 @@ registry.category("web_tour.tours").add("test_calendar_decline_with_everybody_fi
         },
         {
             content: "Click on the event (focus + waiting)",
-            trigger: 'a .fc-content:contains("Test Event")',
+            trigger: 'a .fc-event-main:contains("Test Event")',
             async run() {
-                $('a .fc-content:contains("Test Event")').click();
+                $('a .fc-event-main:contains("Test Event")').click();
                 await new Promise((r) => setTimeout(r, 1000));
-                $('a .fc-content:contains("Test Event")').click();
+                $('a .fc-event-main:contains("Test Event")').click();
             },
         },
         {

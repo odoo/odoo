@@ -13,6 +13,7 @@ import { patchUserWithCleanup } from "@web/../tests/helpers/mock_services";
 import {
     changeScale,
     clickEvent,
+    expandCalendarView,
     findDateCol,
     findTimeRow,
     triggerEventForCalendar,
@@ -244,7 +245,7 @@ QUnit.module("CalendarView", ({ beforeEach }) => {
         });
         assert.containsOnce(
             target,
-            ".o_calendar_renderer .fc-view-container",
+            ".o_calendar_renderer .fc-view",
             "should instance of fullcalendar"
         );
         await changeScale(target, "week");
@@ -290,6 +291,7 @@ QUnit.module("CalendarView", ({ beforeEach }) => {
                 }
             },
         });
+        expandCalendarView(target);
         await changeScale(target, "week");
         await selectTimeStart(target, "2016-12-15 15:00:00");
         await editInput(target, ".o-calendar-quick-create--input", "Event with new duration");

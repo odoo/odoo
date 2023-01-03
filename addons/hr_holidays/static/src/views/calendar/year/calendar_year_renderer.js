@@ -1,6 +1,5 @@
 /** @odoo-module **/
 
-import { _t } from "@web/core/l10n/translation";
 import { CalendarYearRenderer } from "@web/views/calendar/calendar_year/calendar_year_renderer";
 
 import { useService } from "@web/core/utils/hooks";
@@ -19,22 +18,17 @@ export class TimeOffCalendarYearRenderer extends CalendarYearRenderer {
 
         useEffect(
             (el) => {
-                for (const week of el) {
-                    const row = week.parentElement;
-
-                    // Remove the week number if the week is empty.
+                for (const lastWeek of el) {
+                    // Remove the week if the week is empty.
                     // FullCalendar always displays 6 weeks even when empty.
-                    if (
-                        !row.children[1].classList.length &&
-                        !row.children[row.children.length - 1].classList.length
-                    ) {
-                        row.remove();
+                    if (!lastWeek.querySelector("[data-date]")) {
+                        lastWeek.remove();
                     }
                 }
             },
             () => [
                 this.rootRef.el &&
-                    this.rootRef.el.querySelectorAll(".fc-content-skeleton td.fc-week-number"),
+                    this.rootRef.el.querySelectorAll(".fc-scrollgrid-sync-table tr:nth-child(6)"),
             ]
         );
     }
@@ -42,10 +36,15 @@ export class TimeOffCalendarYearRenderer extends CalendarYearRenderer {
     get options() {
         return Object.assign(super.options, {
             weekNumbers: true,
-            weekNumbersWithinDays: false,
-            weekLabel: _t("Week"),
             firstDay: 0,
         });
+    }
+
+    get customOptions() {
+        return {
+            ...super.customOptions,
+            weekNumbersWithinDays: false,
+        };
     }
 
     /** @override **/
@@ -80,8 +79,7 @@ export class TimeOffCalendarYearRenderer extends CalendarYearRenderer {
         }
     }
 
-    onDayRender(info) {
-        super.onDayRender(info);
-        this.mandatoryDaysList = this.mandatoryDays(info);
+    getDayCellClassNames(info) {
+        return [...super.getDayCellClassNames(info), ...this.mandatoryDays(info)];
     }
 }

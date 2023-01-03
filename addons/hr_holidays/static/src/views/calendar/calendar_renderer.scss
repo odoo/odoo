@@ -6,16 +6,16 @@
     .o_calendar_renderer {
         @for $size from 1 through length($o-colors) {
             .o_calendar_widget {
-                .hr_mandatory_day_top_#{$size - 1}:not(.fc-disabled-day) {
-                    .fc-day-number {
-                        color: nth($o-colors, $size) !important;
+                .hr_mandatory_day_#{$size - 1}:not(.fc-disabled-day) {
+                    .fc-daygrid-day-number {
+                        --o-cw-color: #{nth($o-colors, $size)};
                         font-weight: 600;
                     }
                 }
             }
         }
 
-        .fc-bgevent {
+        .fc-bg-event {
             border-radius: 25px;
         }
     }

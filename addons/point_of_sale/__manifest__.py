@@ -186,16 +186,12 @@
             'web/static/tests/legacy/legacy_tests/helpers/**/*',
             ('remove', 'web/static/tests/legacy/legacy_tests/helpers/test_utils_tests.js'),
 
-            'web/static/lib/fullcalendar/core/main.css',
-            'web/static/lib/fullcalendar/daygrid/main.css',
-            'web/static/lib/fullcalendar/timegrid/main.css',
-            'web/static/lib/fullcalendar/list/main.css',
-            'web/static/lib/fullcalendar/core/main.js',
-            'web/static/lib/fullcalendar/interaction/main.js',
-            'web/static/lib/fullcalendar/daygrid/main.js',
-            'web/static/lib/fullcalendar/timegrid/main.js',
-            'web/static/lib/fullcalendar/list/main.js',
-            'web/static/lib/fullcalendar/luxon/main.js',
+            'web/static/lib/fullcalendar/core/index.global.js',
+            'web/static/lib/fullcalendar/interaction/index.global.js',
+            'web/static/lib/fullcalendar/daygrid/index.global.js',
+            'web/static/lib/fullcalendar/timegrid/index.global.js',
+            'web/static/lib/fullcalendar/list/index.global.js',
+            'web/static/lib/fullcalendar/luxon3/index.global.js',
 
             'web/static/lib/zxing-library/zxing-library.js',
 

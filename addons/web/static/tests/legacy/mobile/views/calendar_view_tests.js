@@ -4,7 +4,12 @@ import { browser } from "@web/core/browser/browser";
 import { CalendarCommonRenderer } from "@web/views/calendar/calendar_common/calendar_common_renderer";
 import { CalendarYearRenderer } from "@web/views/calendar/calendar_year/calendar_year_renderer";
 import { click, getFixture, nextTick, patchDate, patchWithCleanup } from "../../helpers/utils";
-import { changeScale, clickEvent, toggleSectionFilter } from "../../views/calendar/helpers";
+import {
+    changeScale,
+    clickEvent,
+    expandCalendarView,
+    toggleSectionFilter,
+} from "../../views/calendar/helpers";
 import { makeView, setupViewRegistries } from "../../views/helpers";
 import { tap, swipeRight, tapAndMove } from "../helpers";
 
@@ -172,16 +177,26 @@ QUnit.module("Views", ({ beforeEach }) => {
             serverData,
             arch: `<calendar mode="day" date_start="start" date_stop="stop"></calendar>`,
         });
-        assert.equal(target.querySelector(".fc-day-header[data-date]").dataset.date, "2016-12-12");
+        expandCalendarView(target);
+        assert.equal(
+            target.querySelector(".fc-col-header-cell[data-date]").dataset.date,
+            "2016-12-12"
+        );
 
         // Swipe right
         await swipeRight(target, ".o_calendar_widget");
-        assert.equal(target.querySelector(".fc-day-header[data-date]").dataset.date, "2016-12-11");
+        assert.equal(
+            target.querySelector(".fc-col-header-cell[data-date]").dataset.date,
+            "2016-12-11"
+        );
 
         await click(target, ".o_other_calendar_panel");
         await click(target, ".o_calendar_button_today");
         await click(target, ".o_other_calendar_panel");
-        assert.equal(target.querySelector(".fc-day-header[data-date]").dataset.date, "2016-12-12");
+        assert.equal(
+            target.querySelector(".fc-col-header-cell[data-date]").dataset.date,
+            "2016-12-12"
+        );
     });
 
     QUnit.test("calendar: show and change other calendar", async function (assert) {
@@ -249,12 +264,10 @@ QUnit.module("Views", ({ beforeEach }) => {
             serverData,
             arch: `<calendar mode="day" date_start="start" date_stop="stop"/>`,
         });
+        expandCalendarView(target);
 
         // Simulate a "TAP" (touch)
-        await tap(
-            target,
-            ".fc-time-grid .fc-minor[data-time='00:30:00'] .fc-widget-content:last-child"
-        );
+        await tap(target, ".fc-timegrid-slot-lane.fc-timegrid-slot-minor[data-time='08:30:00']");
         await nextTick();
 
         // should open a Quick create modal view in mobile on short tap
@@ -276,8 +289,8 @@ QUnit.module("Views", ({ beforeEach }) => {
             onSelect(info) {
                 assert.step("select");
                 const { startStr, endStr } = info;
-                assert.equal(startStr, "2016-12-12T01:00:00+01:00");
-                assert.equal(endStr, "2016-12-12T02:00:00+01:00");
+                assert.equal(startStr, "2016-12-12T08:00:00+01:00");
+                assert.equal(endStr, "2016-12-12T09:00:00+01:00");
                 return super.onSelect(info);
             },
         });
@@ -288,12 +301,13 @@ QUnit.module("Views", ({ beforeEach }) => {
             serverData,
             arch: `<calendar mode="day" date_start="start" date_stop="stop"/>`,
         });
+        expandCalendarView(target);
 
         // Simulate a "TAP" (touch)
         await tapAndMove(
             target,
-            ".fc-time-grid [data-time='01:00:00'] .fc-widget-content:last-child",
-            ".fc-time-grid [data-time='02:00:00'] .fc-widget-content:last-child",
+            ".fc-timegrid-slot-lane[data-time='08:00:00']",
+            ".fc-timegrid-slot-lane[data-time='09:00:00']",
             { start: "top", end: "bottom" }
         );
         await nextTick();
@@ -330,12 +344,13 @@ QUnit.module("Views", ({ beforeEach }) => {
             serverData,
             arch: `<calendar mode="year" date_start="start" date_stop="stop"/>`,
         });
+        expandCalendarView(target);
 
         // Tap on a date
         await tapAndMove(
             target,
-            ".fc-day-top[data-date='2016-02-02']",
-            ".fc-day-top[data-date='2016-02-05']"
+            ".fc-daygrid-day[data-date='2016-02-02']",
+            ".fc-daygrid-day[data-date='2016-02-05']"
         );
         await nextTick();
 
@@ -351,13 +366,14 @@ QUnit.module("Views", ({ beforeEach }) => {
             serverData,
             arch: `<calendar mode="year" date_start="start" date_stop="stop"/>`,
         });
+        expandCalendarView(target);
 
         // Should display year view
         assert.containsOnce(target, ".fc-dayGridYear-view");
         assert.containsN(target, ".fc-month-container", 12);
 
         // Tap on a date
-        await tap(target, ".fc-day-top[data-date='2016-02-05']");
+        await tap(target, ".fc-daygrid-day[data-date='2016-02-05']");
         await nextTick(); // switch renderer
         await nextTick(); // await breadcrumb update
         assert.strictEqual(
@@ -368,7 +384,10 @@ QUnit.module("Views", ({ beforeEach }) => {
         // Should display day view
         assert.containsNone(target, ".fc-dayGridYear-view");
         assert.containsOnce(target, ".fc-timeGridDay-view");
-        assert.equal(target.querySelector(".fc-day-header[data-date]").dataset.date, "2016-02-05");
+        assert.equal(
+            target.querySelector(".fc-col-header-cell[data-date]").dataset.date,
+            "2016-02-05"
+        );
 
         // Change scale to month
         await changeScale(target, "month");
@@ -381,7 +400,7 @@ QUnit.module("Views", ({ beforeEach }) => {
         assert.containsOnce(target, ".fc-dayGridMonth-view");
 
         // Tap on a date
-        await tap(target, ".fc-day-top[data-date='2016-02-10']");
+        await tap(target, ".fc-daygrid-day[data-date='2016-02-10']");
         await nextTick(); // await reload & render
         await nextTick(); // await breadcrumb update
         assert.strictEqual(

@@ -60,14 +60,16 @@ QUnit.module("CalendarView - CommonRenderer", ({ beforeEach }) => {
 
     QUnit.test("Day: check week number", async (assert) => {
         await start({ model: { scale: "day" } });
-        assert.containsOnce(target, ".fc-week-number");
-        assert.strictEqual(target.querySelector(".fc-week-number").textContent, "Week 28");
+        const weekSelector = '[aria-label^="Week "]';
+        assert.containsOnce(target, weekSelector);
+        assert.strictEqual(target.querySelector(weekSelector).textContent, "Week 28");
     });
 
     QUnit.test("Day: check date", async (assert) => {
         await start({ model: { scale: "day" } });
-        assert.containsOnce(target, ".fc-day-header");
-        const dayHeader = target.querySelector(".fc-day-header");
+        const headerSelector = ".fc-col-header-cell.fc-day";
+        assert.containsOnce(target, headerSelector);
+        const dayHeader = target.querySelector(headerSelector);
         assert.strictEqual(dayHeader.querySelector(".o_cw_day_name").textContent, "Friday");
         assert.strictEqual(dayHeader.querySelector(".o_cw_day_number").textContent, "16");
     });
@@ -146,13 +148,14 @@ QUnit.module("CalendarView - CommonRenderer", ({ beforeEach }) => {
 
     QUnit.test("Week: check week number", async (assert) => {
         await start({ model: { scale: "week" } });
-        assert.containsOnce(target, ".fc-week-number");
-        assert.strictEqual(target.querySelector(".fc-week-number").textContent, "Week 28");
+        const weekSelector = ".fc-scrollgrid-section-header .fc-timegrid-axis-cushion";
+        assert.containsOnce(target, weekSelector);
+        assert.strictEqual(target.querySelector(weekSelector).textContent, "Week 28");
     });
 
     QUnit.test("Week: check dates", async (assert) => {
         await start({ model: { scale: "week" } });
-        assert.containsN(target, ".fc-day-header", 7);
+        assert.containsN(target, ".fc-col-header-cell.fc-day", 7);
 
         const dateNames = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
         const dates = ["11", "12", "13", "14", "15", "16", "17"];
@@ -168,9 +171,11 @@ QUnit.module("CalendarView - CommonRenderer", ({ beforeEach }) => {
         // Make calendar scrollable
         target.style.height = "500px";
         await start({ model: { scale: "day" } });
-        const containerDimensions = target.querySelector(".fc-scroller").getBoundingClientRect();
+        const containerDimensions = target
+            .querySelector(".fc-scrollgrid-section-liquid .fc-scroller")
+            .getBoundingClientRect();
         const dayStartDimensions = target
-            .querySelector('tr[data-time="06:00:00"')
+            .querySelector('td[data-time="06:00:00"]')
             .getBoundingClientRect();
         assert.ok(Math.abs(dayStartDimensions.y - containerDimensions.y) <= 2);
     });
@@ -179,9 +184,11 @@ QUnit.module("CalendarView - CommonRenderer", ({ beforeEach }) => {
         // Make calendar scrollable
         target.style.height = "500px";
         await start({ model: { scale: "week" } });
-        const containerDimensions = target.querySelector(".fc-scroller").getBoundingClientRect();
+        const containerDimensions = target
+            .querySelector(".fc-scrollgrid-section-liquid .fc-scroller")
+            .getBoundingClientRect();
         const dayStartDimensions = target
-            .querySelector('tr[data-time="06:00:00"')
+            .querySelector('td[data-time="06:00:00"]')
             .getBoundingClientRect();
         assert.ok(Math.abs(dayStartDimensions.y - containerDimensions.y) <= 2);
     });

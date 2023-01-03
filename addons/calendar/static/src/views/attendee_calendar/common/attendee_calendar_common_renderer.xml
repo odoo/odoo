@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates>
     <t t-name="calendar.AttendeeCalendarCommonRenderer.event">
-        <div class="fc-content" t-att-class="isMonth ? 'd-flex gap-1 text-truncate' : ''">
             <span t-if="!isTimeHidden and isMonth" class="d-none d-lg-inline fc-time fw-normal" t-esc="startTime" />
             <div t-attf-class="o_event_title text-truncate">
                 <i t-if="isAlone" class="fa fa-exclamation-circle align-self-top me-1" data-tooltip="You're alone in this meeting"/>
@@ -16,6 +15,5 @@
                     </t>
             </div>
             <span t-if="!isTimeHidden and !isMonth" class="fc-time" t-esc="startTime" />
-        </div>
     </t>
 </templates>

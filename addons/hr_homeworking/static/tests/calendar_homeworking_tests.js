@@ -270,6 +270,9 @@ QUnit.module("homeworking", ({ beforeEach }) => {
     });
 
     QUnit.test(`homeworking: basic rendering`, async (assert) => {
+        // Avoid `.o_worklocation_line` to have a width of `Opx`
+        target.style.width = "1200px";
+
         assert.expect(7);
         const previousMock = mockRegistry.get("get_worklocation");
         const actionService = {
@@ -289,7 +292,7 @@ QUnit.module("homeworking", ({ beforeEach }) => {
         const saturdayDate = DateTime.fromISO("2020-12-12");
         const intervals = Interval.fromDateTimes(sundayDate.startOf("day"), saturdayDate.endOf("day")).splitBy({day: 1});
         const workLocations = intervals.map(({s}) => {
-            return target.querySelector(`.fc-day-header[data-date="${s.toISODate()}"] .o_worklocation_btn`);
+            return target.querySelector(`.fc-col-header-cell[data-date="${s.toISODate()}"] .o_worklocation_btn`);
         });
         const worklocationNames = workLocations.map(el => el?.textContent);
         assert.deepEqual(worklocationNames, ["Office", "", "", "Home", "Set Location", "Set Location", "Office"]);
@@ -317,14 +320,14 @@ QUnit.module("homeworking", ({ beforeEach }) => {
         const intervals = Interval.fromDateTimes(sundayDate.startOf("day"), saturdayDate.endOf("day")).splitBy({day: 1});
         intervals.forEach(({s}) => {
             const date = s.toISODate()
-            const records = target.querySelectorAll(`.fc-day-header[data-date="${date}"] .o_worklocation_btn .o_homeworking_content`);
+            const records = target.querySelectorAll(`.fc-col-header-cell[data-date="${date}"] .o_worklocation_btn .o_homeworking_content`);
             records.forEach(record => {
                 const { employee, location } = record.dataset;
                 assert.equal(multiCalendarData[employee][`${s.weekdayLong.toLowerCase()}_location_id`].location_type, location);
             });
         });
 
-        await click(target, '.fc-day-header[data-date="2020-12-10"] .o_homework_content');
+        await click(target, '.fc-col-header-cell[data-date="2020-12-10"] .o_homework_content');
         assert.equal(target.querySelector(".o_cw_popover div[name='employee_name']").textContent, "Brian");
         assert.containsNone(target, ".o_cw_popover .o_cw_popover_edit", "should show edit button");
         assert.containsNone(target, ".o_cw_popover .o_cw_popover_delete", "should show delete button");
@@ -358,8 +361,8 @@ QUnit.module("homeworking", ({ beforeEach }) => {
                 }
             },
         });
-        assert.equal(target.querySelector(".fc-day-header[data-date='2020-12-11'] .o_worklocation_btn").textContent, "Home");
-        await click(target, ".fc-day-header[data-date='2020-12-10'] .o_worklocation_text");
+        assert.equal(target.querySelector(".fc-col-header-cell[data-date='2020-12-11'] .o_worklocation_btn").textContent, "Home");
+        await click(target, ".fc-col-header-cell[data-date='2020-12-10'] .o_worklocation_text");
         assert.verifySteps(["hr_homeworking.set_location_wizard_action", "2020-12-10"]);
         mockRegistry.add("get_worklocation", previousMock, { force: true });
     });
@@ -398,13 +401,13 @@ QUnit.module("homeworking", ({ beforeEach }) => {
                 }
             }
         });
-        assert.containsOnce(target, ".fc-day-header[data-date='2020-12-11'] .o_homework_content");
-        assert.equal(target.querySelector(".fc-day-header[data-date='2020-12-11'] .o_worklocation_btn").textContent, "Office");
-        assert.containsN(target, ".fc-day-header[data-date='2020-12-10'] .o_homework_content", 2);
-        assert.equal(target.querySelector(".fc-day-header[data-date='2020-12-10'] .o_worklocation_btn").textContent, "Home");
-        assert.containsOnce(target, ".fc-day-header[data-date='2020-12-11'] .add_wl");
+        assert.containsOnce(target, ".fc-col-header-cell[data-date='2020-12-11'] .o_homework_content");
+        assert.equal(target.querySelector(".fc-col-header-cell[data-date='2020-12-11'] .o_worklocation_btn").textContent, "Office");
+        assert.containsN(target, ".fc-col-header-cell[data-date='2020-12-10'] .o_homework_content", 2);
+        assert.equal(target.querySelector(".fc-col-header-cell[data-date='2020-12-10'] .o_worklocation_btn").textContent, "Home");
+        assert.containsOnce(target, ".fc-col-header-cell[data-date='2020-12-11'] .add_wl");
 
-        await click(target, ".fc-day-header[data-date='2020-12-11'] .add_wl");
+        await click(target, ".fc-col-header-cell[data-date='2020-12-11'] .add_wl");
         assert.verifySteps(["hr_homeworking.set_location_wizard_action", "2020-12-11"]);
         mockRegistry.add("get_worklocation", previousMock, { force: true });
     });
