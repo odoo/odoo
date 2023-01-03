@@ -10,7 +10,7 @@ import { format } from 'web.field_utils';
 import { getLangDatetimeFormat } from 'web.time';
 
 const { Component, useState } = owl;
-const { useRef } = owl.hooks;
+const { onMounted, useRef } = owl.hooks;
 
 const READ_MORE = _lt("read more");
 const READ_LESS = _lt("read less");
@@ -45,6 +45,10 @@ export class Message extends Component {
          * replace prettyBody with new value in JS (which is faster than t-raw).
          */
         this._prettyBodyRef = useRef('prettyBody');
+        /**
+         * Used as Shadow Dom Host to render email templates inside messages.
+         */
+        this._shadowBodyRef = useRef('shadowBody');
         /**
          * Reference to the content of the message.
          */
@@ -87,6 +91,12 @@ export class Message extends Component {
     setup() {
         super.setup();
         useComponentToModel({ fieldName: 'component', modelName: 'mail.message_view', propNameAsRecordLocalId: 'messageViewLocalId' });
+        onMounted(() => {
+            if (this._shadowBodyRef.el && !this._shadowBodyRef.el.shadowRoot) {
+                const shadowRoot = this._shadowBodyRef.el.attachShadow({ mode: 'open' });
+                shadowRoot.innerHTML = this.messageView.message.prettyBody;
+            }
+        })
     }
 
     willUnmount() {

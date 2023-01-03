@@ -617,6 +617,7 @@ QUnit.test('read more/less links are not duplicated when switching from read to 
         id: 1000,
         model: 'res.partner',
         res_id: 2,
+        message_type: 'comment',
     });
     this.data['res.partner'].records.push({
         display_name: "Someone",
@@ -706,6 +707,7 @@ QUnit.test('read more links becomes read less after being clicked', async functi
         id: 1000,
         model: 'res.partner',
         res_id: 2,
+        message_type: 'comment',
     }];
     this.data['res.partner'].records.push({
         display_name: "Someone",
@@ -1002,6 +1004,7 @@ QUnit.test('[TECHNICAL] unfolded read more/less links should not fold on message
         id: 1000,
         model: 'res.partner',
         res_id: 2,
+        message_type: 'comment',
     });
     this.data['res.partner'].records.push({
         display_name: "Someone",

@@ -1279,7 +1279,7 @@ QUnit.test('basic rendering of message', async function (assert) {
         "should have content in core part of message"
     );
     assert.strictEqual(
-        message.querySelector(`:scope .o_Message_content`).textContent.trim(),
+        message.querySelector(`:scope .o_Message_content .o_Message_shadowBody`).shadowRoot.textContent.trim(),
         "body",
         "should have body of message in content part of message"
     );

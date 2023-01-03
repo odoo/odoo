@@ -537,6 +537,41 @@ QUnit.test('do not post message with "Enter" keyboard shortcut', async function 
     );
 });
 
+QUnit.test('email templates should be rendered inside shadow-dom', async function (assert) {
+    assert.expect(2);
+
+    this.data['res.partner'].records.push({ id: 100 });
+    this.data['mail.message'].records.push({
+        body: "not empty",
+        model: 'res.partner',
+        res_id: 100,
+        subject: "Email Template",
+        message_type: 'email',
+    });
+    await this.start();
+    this.messaging.models['mail.thread'].create({
+        id: 100,
+        model: 'res.partner',
+        name: "Email Template",
+    });
+    const chatter = this.messaging.models['mail.chatter'].create({
+        id: 11,
+        threadId: 100,
+        threadModel: 'res.partner',
+    });
+    await this.createChatterComponent({ chatter });
+    assert.strictEqual(
+        !!document.querySelector('.o_Message .o_Message_shadowBody').shadowRoot,
+        true,
+        "email template should be rendered inside shadow dom"
+    );
+    assert.strictEqual(
+        document.querySelector('.o_Message .o_Message_shadowBody').shadowRoot.textContent,
+        'not empty',
+        "shadow dom should have message"
+    )
+});
+
 });
 });
 });
