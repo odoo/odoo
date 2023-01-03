@@ -45,25 +45,24 @@ class Draggable extends PosComponent {
         useListener("touchstart", ".drag-handle", this.startDrag);
 
         onMounted(() => {
+            const offsetParent = this.el.offsetParent || document.body;
             this.limitArea = this.props.limitArea
                 ? document.querySelector(this.props.limitArea)
-                : this.el.offsetParent;
+                : offsetParent;
             if (!this.limitArea) {
                 return;
             }
             this.limitAreaBoundingRect = this.limitArea.getBoundingClientRect();
-            if (this.limitArea === this.el.offsetParent) {
+            if (this.limitArea === offsetParent) {
                 this.limitLeft = 0;
                 this.limitTop = 0;
                 this.limitRight = this.limitAreaBoundingRect.width;
                 this.limitBottom = this.limitAreaBoundingRect.height;
             } else {
-                this.limitLeft = -this.el.offsetParent.offsetLeft;
-                this.limitTop = -this.el.offsetParent.offsetTop;
-                this.limitRight =
-                    this.limitAreaBoundingRect.width - this.el.offsetParent.offsetLeft;
-                this.limitBottom =
-                    this.limitAreaBoundingRect.height - this.el.offsetParent.offsetTop;
+                this.limitLeft = -offsetParent.offsetLeft;
+                this.limitTop = -offsetParent.offsetTop;
+                this.limitRight = this.limitAreaBoundingRect.width - offsetParent.offsetLeft;
+                this.limitBottom = this.limitAreaBoundingRect.height - offsetParent.offsetTop;
             }
             this.limitAreaWidth = this.limitAreaBoundingRect.width;
             this.limitAreaHeight = this.limitAreaBoundingRect.height;

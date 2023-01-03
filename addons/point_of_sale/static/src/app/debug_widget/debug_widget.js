@@ -3,12 +3,16 @@
 import { parse } from "web.field_utils";
 import NumberBuffer from "@point_of_sale/js/Misc/NumberBuffer";
 import PosComponent from "@point_of_sale/js/PosComponent";
-import Registries from "@point_of_sale/js/Registries";
 import { usePos } from "@point_of_sale/app/pos_store";
+import { registry } from "@web/core/registry";
+import { Transition } from "@web/core/transition";
+import Draggable from "@point_of_sale/js/Misc/Draggable";
 
 const { onMounted, onWillUnmount, useRef, useState } = owl;
 
-class DebugWidget extends PosComponent {
+export class DebugWidget extends PosComponent {
+    static components = { Transition, Draggable };
+    static template = "point_of_sale.DebugWidget";
     setup() {
         super.setup();
         this.pos = usePos();
@@ -156,8 +160,5 @@ class DebugWidget extends PosComponent {
         return `"${this.state.buffer}"`;
     }
 }
-DebugWidget.template = "DebugWidget";
 
-Registries.Component.add(DebugWidget);
-
-export default DebugWidget;
+registry.category("main_components").add("DebugWidget", { Component: DebugWidget });
