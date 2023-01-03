@@ -606,6 +606,8 @@ export class MockServer {
                 return this.mockSearchPanelSelectRange(args.model, args.args, args.kwargs);
             case "search_panel_select_multi_range":
                 return this.mockSearchPanelSelectMultiRange(args.model, args.args, args.kwargs);
+            case "search_properties_definitions":
+                return this.mockSearchPropertiesDefinitions(args.model, args.args, args.kwargs);
             case "search_read":
                 return this.mockSearchRead(args.model, args.args, args.kwargs);
             case "unlink":
@@ -911,6 +913,16 @@ export class MockServer {
                     }
                 } else if (field.type === "one2many" || field.type === "many2many") {
                     result[fieldName] = record[fieldName] || [];
+                } else if (field.type === "properties") {
+                    result[fieldName] = (record[fieldName] || []).map((property) => {
+                        if (property.type === "many2one" && typeof property.value === "number") {
+                            return {
+                                ...property,
+                                value: this.mockNameGet(property.comodel, [[property.value]])[0],
+                            };
+                        }
+                        return property;
+                    });
                 } else {
                     result[fieldName] = record[fieldName] || false;
                 }
@@ -1790,6 +1802,28 @@ export class MockServer {
             }
             return { values: fieldRange };
         }
+    }
+
+    mockSearchPropertiesDefinitions(modelName, [domain, fieldNames]) {
+        const fields = this.models[modelName].fields;
+        const properties = fieldNames.filter((f) => fields[f].type === "properties");
+        const records = this.getRecords(modelName, domain);
+
+        const result = {};
+        for (const fieldName of properties) {
+            const field = fields[fieldName];
+            const coModelName = fields[field.definition_record].relation;
+            const parentRecords = this.getRecords(coModelName, [
+                ["id", "in", records.map((record) => record[field.definition_record])],
+            ]);
+            result[fieldName] = parentRecords.map((record) => ({
+                id: record.id,
+                display_name: record.display_name,
+                definitions: record[field.definition_record_field],
+            }));
+        }
+
+        return result;
     }
 
     mockSearch(modelName, args, kwargs) {

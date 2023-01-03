@@ -44,6 +44,12 @@ QUnit.module("MockServer", (hooks) => {
                             relation: "foo",
                             inverse_fname_by_model_name: { foo: "many2many_field" },
                         },
+                        properties: {
+                            type: "properties",
+                            definition_record: "definition_id",
+                            definition_record_field: "definitions",
+                        },
+                        definition_id: { type: "many2one", relation: "bar_properties_definitions" },
                     },
                     records: [
                         {
@@ -54,6 +60,7 @@ QUnit.module("MockServer", (hooks) => {
                             name: "zzz",
                             partner_ids: [1, 2],
                             select: "dev",
+                            definition_id: 1,
                         },
                         {
                             foo: 1,
@@ -64,6 +71,7 @@ QUnit.module("MockServer", (hooks) => {
                             partner_id: 2,
                             partner_ids: [1],
                             select: "new",
+                            definition_id: 1,
                         },
                         {
                             foo: 17,
@@ -73,6 +81,7 @@ QUnit.module("MockServer", (hooks) => {
                             name: "xxx",
                             partner_ids: [2],
                             select: "done",
+                            definition_id: 2,
                         },
                         {
                             foo: 2,
@@ -82,6 +91,7 @@ QUnit.module("MockServer", (hooks) => {
                             name: "zzz",
                             partner_id: 1,
                             select: "new",
+                            definition_id: 2,
                         },
                         {
                             foo: 0,
@@ -90,6 +100,7 @@ QUnit.module("MockServer", (hooks) => {
                             datetime: "2016-12-15 12:34:56",
                             name: "aaa",
                             select: "done",
+                            definition_id: 1,
                         },
                         {
                             foo: 42,
@@ -99,6 +110,7 @@ QUnit.module("MockServer", (hooks) => {
                             name: "mmm",
                             partner_id: 1,
                             select: "new",
+                            definition_id: 2,
                         },
                     ],
                 },
@@ -127,6 +139,43 @@ QUnit.module("MockServer", (hooks) => {
                         res_model: { type: "char" },
                     },
                     records: [],
+                },
+                bar_properties_definitions: {
+                    fields: {
+                        definitions: { type: "properties_definitions" },
+                    },
+                    records: [
+                        {
+                            id: 1,
+                            display_name: "Def 1",
+                            definitions: [
+                                {
+                                    type: "char",
+                                    name: "prop1_1",
+                                    string: "CharProp",
+                                    default: false,
+                                },
+                                {
+                                    type: "boolean",
+                                    name: "prop1_2",
+                                    string: "BooleanProp",
+                                    default: false,
+                                },
+                            ],
+                        },
+                        {
+                            id: 2,
+                            display_name: "Def 2",
+                            definitions: [
+                                {
+                                    type: "integer",
+                                    name: "prop2_1",
+                                    string: "IntegerProp",
+                                    default: 10,
+                                },
+                            ],
+                        },
+                    ],
                 },
             },
         };
@@ -1164,6 +1213,61 @@ QUnit.module("MockServer", (hooks) => {
             "W15 2016": { dev: 0, done: 0, new: 1 },
             "W43 2016": { dev: 0, done: 0, new: 1 },
             "W50 2016": { dev: 1, done: 2, new: 0 },
+        });
+    });
+
+    QUnit.test("performRPC: search_properties_definitions", async (assert) => {
+        const server = new MockServer(data, {});
+        const result = await server.performRPC("", {
+            model: "bar",
+            method: "search_properties_definitions",
+            args: [
+                [], // search all
+                ["id", "bool", "foo", "properties"], // active fields
+            ],
+            kwargs: {},
+        });
+
+        assert.deepEqual(result, {
+            properties: [
+                {
+                    id: 1,
+                    display_name: "Def 1",
+                    definitions: [
+                        { type: "char", name: "prop1_1", string: "CharProp", default: false },
+                        { type: "boolean", name: "prop1_2", string: "BooleanProp", default: false },
+                    ],
+                },
+                {
+                    id: 2,
+                    display_name: "Def 2",
+                    definitions: [
+                        { type: "integer", name: "prop2_1", string: "IntegerProp", default: 10 },
+                    ],
+                },
+            ],
+        });
+    });
+
+    QUnit.test("performRPC: search_properties_definitions with domain", async (assert) => {
+        const server = new MockServer(data, {});
+        const result = await server.performRPC("", {
+            model: "bar",
+            method: "search_properties_definitions",
+            args: [[["name", "=", "xxx"]], ["properties"]],
+            kwargs: {},
+        });
+
+        assert.deepEqual(result, {
+            properties: [
+                {
+                    id: 2,
+                    display_name: "Def 2",
+                    definitions: [
+                        { type: "integer", name: "prop2_1", string: "IntegerProp", default: 10 },
+                    ],
+                },
+            ],
         });
     });
 

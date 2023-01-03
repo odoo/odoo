@@ -12,6 +12,8 @@ from odoo.tools.misc import get_lang
 from odoo.exceptions import UserError
 from collections import defaultdict
 
+from odoo.tools.query import Query
+
 SEARCH_PANEL_ERROR_MESSAGE = _lt("Too many items to display.")
 
 def is_true_domain(domain):
@@ -737,6 +739,45 @@ class Base(models.AbstractModel):
                 field_range.append(values)
 
             return { 'values': field_range, }
+
+    @api.model
+    def search_properties_definitions(self, domain, field_names: 'list[str]') -> 'dict[str, list[dict]]':
+        """ Return all properties definitions for records matching the domain
+
+        :return: {
+            <properties_field_name>: [
+                {
+                    "id": <id definition record>
+                    "display_name": <display of definition record>
+                    "definitions": <definitions of properties>
+                }, ...
+            ], ...
+        }
+        """
+        res: 'dict[str, list[dict]]' = {}  # {<property_field_name>: {"definition_record_id": <id definition record>}, ...}
+
+        for field_name in field_names:
+            field = self._fields[field_name]
+            if field.type != 'properties':
+                continue
+            query = self._search(domain, order='id')  # Force the order to avoid any useless LEFT JOIN
+            if isinstance(query, Query):
+                from_clause, where_clause, params = query.get_sql()
+                # TODO: maybe we should add a limit to avoid performance bottleneck
+                query_str = f'SELECT DISTINCT "{self._table}"."{field.definition_record}" FROM {from_clause} WHERE {where_clause} ORDER BY "{self._table}"."{field.definition_record}"'
+                self.env.cr.execute(query_str, params)
+                definition_record_ids = [def_rec for [def_rec] in self.env.cr.fetchall()]
+            else:  # query is ids
+                definition_record_ids = self.browse(query).with_context(prefetch_fields=False).mapped(field.definition_record)
+
+            model_name_definition = self._fields[field.definition_record].comodel_name
+            definition_records = self.env[model_name_definition].browse(definition_record_ids)
+            res[field.name] = [
+                {"id": rec.id, "display_name": rec.display_name, "definitions": rec[field.definition_record_field]}
+                for rec in definition_records
+            ]
+
+        return res
 
 
 class ResCompany(models.Model):

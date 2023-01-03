@@ -1312,6 +1312,45 @@ class PropertiesCase(TransactionCase):
             values = self.message_1.read(['attributes'])[0]['attributes'][0]
         self.assertEqual(values['value'], (tag.id, None))
 
+    def test_search_properties_definitions(self):
+        self.assertEqual(
+            self.env['test_new_api.message'].search_properties_definitions(
+                [('id', '=', self.message_1.id)],
+                ['attributes']
+            ),
+            {
+                'attributes': [
+                    {
+                        'id': self.discussion_1.id,
+                        'display_name': self.discussion_1.display_name,
+                        'definitions': self.discussion_1.attributes_definition
+                    }
+                ]
+            }
+        )
+
+        self.assertEqual(
+            self.env['test_new_api.message'].search_properties_definitions(
+                [('discussion', 'in', [self.discussion_1.id, self.discussion_2.id])],
+                ['attributes'],
+            ),
+            {
+                'attributes': [
+                    {
+                        'id': self.discussion_1.id,
+                        'display_name': self.discussion_1.display_name,
+                        'definitions': self.discussion_1.attributes_definition
+                    },
+                    {
+                        'id': self.discussion_2.id,
+                        'display_name': self.discussion_2.display_name,
+                        'definitions': self.discussion_2.attributes_definition
+                    }
+                ]
+            }
+        )
+
+
     def _get_sql_properties(self, message):
         self.env.flush_all()
 
