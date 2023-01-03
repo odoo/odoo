@@ -4,3 +4,6 @@
 # Copyright (C) 2009  Renato Lima - Akretion
 
 from . import models
+
+def load_translations(env):
+    env.ref("l10n_br.l10n_br_account_chart_template").process_coa_translations()
