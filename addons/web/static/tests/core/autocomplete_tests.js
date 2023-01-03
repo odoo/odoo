@@ -142,6 +142,19 @@ QUnit.module("Components", (hooks) => {
         assert.containsNone(target, ".o-autocomplete--dropdown-menu");
     });
 
+    QUnit.test("select input text on first focus", async (assert) => {
+        class Parent extends Component {}
+        Parent.components = { AutoComplete };
+        Parent.template = xml`
+            <AutoComplete value="'Bar'" sources="[{ options: [{ label: 'Bar' }] }]" onSelect="() => {}"/>
+        `;
+
+        await mount(Parent, target, { env });
+        await triggerEvents(target, ".o-autocomplete--input", ["focus", "click"]);
+        const el = target.querySelector(".o-autocomplete--input");
+        assert.strictEqual(el.value.substring(el.selectionStart, el.selectionEnd), "Bar");
+    });
+
     QUnit.test("scroll outside should close dropdown", async (assert) => {
         class Parent extends Component {}
         Parent.components = { AutoComplete };
