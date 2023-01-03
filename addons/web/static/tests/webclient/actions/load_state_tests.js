@@ -15,6 +15,7 @@ import {
     patchWithCleanup,
     mount,
     nextTick,
+    makeDeferred,
 } from "../../helpers/utils";
 import { toggleFilterMenu, toggleMenuItem } from "@web/../tests/search/helpers";
 import { session } from "@web/session";
@@ -1010,12 +1011,14 @@ QUnit.module("ActionManager", (hooks) => {
     });
 
     QUnit.test("concurrent hashchange during action mounting -- 1", async (assert) => {
-        assert.expect(5);
-
+        const hashchangeDef = makeDeferred();
         class MyAction extends Component {
             setup() {
                 owl.onMounted(() => {
                     assert.step("myAction mounted");
+                    browser.addEventListener("hashchange", () => {
+                        hashchangeDef.resolve();
+                    });
                     browser.location.hash = "#action=__test__client__action__&menu_id=1";
                 });
             }
@@ -1027,7 +1030,10 @@ QUnit.module("ActionManager", (hooks) => {
 
         const webClient = await createWebClient({ serverData });
         assert.verifySteps(["myAction mounted"]);
+        assert.containsOnce(target, ".not-here");
 
+        // hashchange event isn't trigerred synchronously, so we have to wait for it
+        await hashchangeDef;
         await nextTick();
         assert.containsNone(target, ".not-here");
         assert.containsOnce(target, ".test_client_action");
