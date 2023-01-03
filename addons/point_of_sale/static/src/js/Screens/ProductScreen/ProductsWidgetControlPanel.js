@@ -1,7 +1,5 @@
 /** @odoo-module */
 
-import { identifyError } from "@point_of_sale/js/utils";
-import { ConnectionLostError, ConnectionAbortedError } from "@web/core/network/rpc_service";
 import PosComponent from "@point_of_sale/js/PosComponent";
 import Registries from "@point_of_sale/js/Registries";
 import { debounce } from "@web/core/utils/timing";
@@ -75,47 +73,30 @@ class ProductsWidgetControlPanel extends PosComponent {
             return;
         }
 
-        try {
-            const ProductIds = await this.rpc({
-                model: "product.product",
-                method: "search",
-                args: [
-                    [
-                        "&",
-                        ["available_in_pos", "=", true],
-                        "|",
-                        "|",
-                        ["name", "ilike", this.state.searchInput],
-                        ["default_code", "ilike", this.state.searchInput],
-                        ["barcode", "ilike", this.state.searchInput],
-                    ],
+        const ProductIds = await this.rpc({
+            model: "product.product",
+            method: "search",
+            args: [
+                [
+                    "&",
+                    ["available_in_pos", "=", true],
+                    "|",
+                    "|",
+                    ["name", "ilike", this.state.searchInput],
+                    ["default_code", "ilike", this.state.searchInput],
+                    ["barcode", "ilike", this.state.searchInput],
                 ],
-                context: this.env.session.user_context,
-            });
-            if (ProductIds.length) {
-                if (!this.env.pos.isEveryProductLoaded) {
-                    await this.env.pos.updateIsEveryProductLoaded();
-                }
-                await this.env.pos._addProducts(ProductIds, false);
+            ],
+            context: this.env.session.user_context,
+        });
+        if (ProductIds.length) {
+            if (!this.env.pos.isEveryProductLoaded) {
+                await this.env.pos.updateIsEveryProductLoaded();
             }
-            this.trigger("update-product-list");
-            return ProductIds;
-        } catch (error) {
-            const identifiedError = identifyError(error);
-            if (
-                identifiedError instanceof ConnectionLostError ||
-                identifiedError instanceof ConnectionAbortedError
-            ) {
-                return this.showPopup("OfflineErrorPopup", {
-                    title: this.env._t("Network Error"),
-                    body: this.env._t(
-                        "Product is not loaded. Tried loading the product from the server but there is a network error."
-                    ),
-                });
-            } else {
-                throw error;
-            }
+            await this.env.pos._addProducts(ProductIds, false);
         }
+        this.trigger("update-product-list");
+        return ProductIds;
     }
 }
 ProductsWidgetControlPanel.template = "ProductsWidgetControlPanel";

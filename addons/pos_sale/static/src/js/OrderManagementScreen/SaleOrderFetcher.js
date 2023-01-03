@@ -1,7 +1,6 @@
 /** @odoo-module */
 
 import { Gui } from "@point_of_sale/js/Gui";
-import { isConnectionError } from "@point_of_sale/js/utils";
 
 const { EventBus } = owl;
 
@@ -38,24 +37,12 @@ class SaleOrderFetcher extends EventBus {
      * to the active orders that fits the current page.
      */
     async fetch() {
-        try {
-            // Show orders from the backend.
-            const offset = this.nPerPage + (this.currentPage - 1 - 1) * this.nPerPage;
-            const limit = this.nPerPage;
-            this.ordersToShow = await this._fetch(limit, offset);
+        // Show orders from the backend.
+        const offset = this.nPerPage + (this.currentPage - 1 - 1) * this.nPerPage;
+        const limit = this.nPerPage;
+        this.ordersToShow = await this._fetch(limit, offset);
 
-            this.trigger("update");
-        } catch (error) {
-            if (isConnectionError(error)) {
-                Gui.showPopup("ErrorPopup", {
-                    title: this.comp.env._t("Network Error"),
-                    body: this.comp.env._t("Unable to fetch orders if offline."),
-                });
-                Gui.setSyncStatus("error");
-            } else {
-                throw error;
-            }
-        }
+        this.trigger("update");
     }
     /**
      * This returns the orders from the backend that needs to be shown.

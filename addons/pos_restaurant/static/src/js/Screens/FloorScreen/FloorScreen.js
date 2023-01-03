@@ -3,7 +3,6 @@
 import PosComponent from "@point_of_sale/js/PosComponent";
 import Registries from "@point_of_sale/js/Registries";
 import { debounce } from "@web/core/utils/timing";
-import { isConnectionError } from "@point_of_sale/js/utils";
 
 const { onPatched, onMounted, onWillUnmount, useRef, useState } = owl;
 
@@ -87,21 +86,9 @@ class FloorScreen extends PosComponent {
         delete newTable.id;
         newTable.floor_id = [this.activeFloor.id, ""];
         newTable.floor = this.activeFloor;
-        try {
-            await this._save(newTable);
-            this.activeTables.push(newTable);
-            return newTable;
-        } catch (error) {
-            if (isConnectionError(error)) {
-                await this.showPopup("ErrorPopup", {
-                    title: this.env._t("Offline"),
-                    body: this.env._t("Unable to create table because you are offline."),
-                });
-                return;
-            } else {
-                throw error;
-            }
-        }
+        await this._save(newTable);
+        this.activeTables.push(newTable);
+        return newTable;
     }
     _getNewTableName(name) {
         if (name) {
@@ -132,33 +119,22 @@ class FloorScreen extends PosComponent {
         if (this.state.isEditMode) {
             return;
         }
-        try {
-            const result = await this.rpc({
-                model: "pos.config",
-                method: "get_tables_order_count",
-                args: [this.env.pos.config.id],
-            });
-            result.forEach((table) => {
-                const table_obj = this.env.pos.tables_by_id[table.id];
-                const unsynced_orders = this.env.pos.getTableOrders(table_obj.id).filter(
-                    (o) =>
-                        o.server_id === undefined &&
-                        (o.orderlines.length !== 0 || o.paymentlines.length !== 0) &&
-                        // do not count the orders that are already finalized
-                        !o.finalized
-                ).length;
-                table_obj.order_count = table.orders + unsynced_orders;
-            });
-        } catch (error) {
-            if (isConnectionError(error)) {
-                await this.showPopup("OfflineErrorPopup", {
-                    title: this.env._t("Offline"),
-                    body: this.env._t("Unable to get orders count"),
-                });
-            } else {
-                throw error;
-            }
-        }
+        const result = await this.rpc({
+            model: "pos.config",
+            method: "get_tables_order_count",
+            args: [this.env.pos.config.id],
+        });
+        result.forEach((table) => {
+            const table_obj = this.env.pos.tables_by_id[table.id];
+            const unsynced_orders = this.env.pos.getTableOrders(table_obj.id).filter(
+                (o) =>
+                    o.server_id === undefined &&
+                    (o.orderlines.length !== 0 || o.paymentlines.length !== 0) &&
+                    // do not count the orders that are already finalized
+                    !o.finalized
+            ).length;
+            table_obj.order_count = table.orders + unsynced_orders;
+        });
     }
     get activeFloor() {
         return this.env.pos.floors_by_id[this.state.selectedFloorId];
@@ -211,21 +187,10 @@ class FloorScreen extends PosComponent {
         if (this.state.isEditMode) {
             this.state.selectedTableId = table.id;
         } else {
-            try {
-                if (this.env.pos.orderToTransfer) {
-                    await this.env.pos.transferTable(table);
-                } else {
-                    await this.env.pos.setTable(table);
-                }
-            } catch (error) {
-                if (isConnectionError(error)) {
-                    await this.showPopup("OfflineErrorPopup", {
-                        title: this.env._t("Offline"),
-                        body: this.env._t("Unable to fetch orders"),
-                    });
-                } else {
-                    throw error;
-                }
+            if (this.env.pos.orderToTransfer) {
+                await this.env.pos.transferTable(table);
+            } else {
+                await this.env.pos.setTable(table);
             }
             const order = this.env.pos.get_order();
             this.showScreen(order.get_screen_data().name);
@@ -302,22 +267,11 @@ class FloorScreen extends PosComponent {
     async setFloorColor(color) {
         this.state.floorBackground = color;
         this.activeFloor.background_color = color;
-        try {
-            await this.rpc({
-                model: "restaurant.floor",
-                method: "write",
-                args: [[this.activeFloor.id], { background_color: color }],
-            });
-        } catch (error) {
-            if (isConnectionError(error)) {
-                await this.showPopup("OfflineErrorPopup", {
-                    title: this.env._t("Offline"),
-                    body: this.env._t("Unable to change background color"),
-                });
-            } else {
-                throw error;
-            }
-        }
+        await this.rpc({
+            model: "restaurant.floor",
+            method: "write",
+            args: [[this.activeFloor.id], { background_color: color }],
+        });
     }
     async deleteTable() {
         if (!this.selectedTable) {
@@ -330,37 +284,26 @@ class FloorScreen extends PosComponent {
         if (!confirmed) {
             return;
         }
-        try {
-            const originalSelectedTableId = this.state.selectedTableId;
-            await this.rpc({
-                model: "restaurant.table",
-                method: "create_from_ui",
-                args: [{ active: false, id: originalSelectedTableId }],
-            });
-            this.activeFloor.tables = this.activeTables.filter(
-                (table) => table.id !== originalSelectedTableId
-            );
-            // Value of an object can change inside async function call.
-            //   Which means that in this code block, the value of `state.selectedTableId`
-            //   before the await call can be different after the finishing the await call.
-            // Since we wanted to disable the selected table after deletion, we should be
-            //   setting the selectedTableId to null. However, we only do this if nothing
-            //   else is selected during the rpc call.
-            if (this.state.selectedTableId === originalSelectedTableId) {
-                this.state.selectedTableId = null;
-            }
-            delete this.env.pos.tables_by_id[originalSelectedTableId];
-            this.env.pos.TICKET_SCREEN_STATE.syncedOrders.cache = {};
-        } catch (error) {
-            if (isConnectionError(error)) {
-                await this.showPopup("OfflineErrorPopup", {
-                    title: this.env._t("Offline"),
-                    body: this.env._t("Unable to delete table"),
-                });
-            } else {
-                throw error;
-            }
+        const originalSelectedTableId = this.state.selectedTableId;
+        await this.rpc({
+            model: "restaurant.table",
+            method: "create_from_ui",
+            args: [{ active: false, id: originalSelectedTableId }],
+        });
+        this.activeFloor.tables = this.activeTables.filter(
+            (table) => table.id !== originalSelectedTableId
+        );
+        // Value of an object can change inside async function call.
+        //   Which means that in this code block, the value of `state.selectedTableId`
+        //   before the await call can be different after the finishing the await call.
+        // Since we wanted to disable the selected table after deletion, we should be
+        //   setting the selectedTableId to null. However, we only do this if nothing
+        //   else is selected during the rpc call.
+        if (this.state.selectedTableId === originalSelectedTableId) {
+            this.state.selectedTableId = null;
         }
+        delete this.env.pos.tables_by_id[originalSelectedTableId];
+        this.env.pos.TICKET_SCREEN_STATE.syncedOrders.cache = {};
     }
 }
 FloorScreen.template = "FloorScreen";
