@@ -3,6 +3,7 @@
 import { globalFiltersFieldMatchers } from "../../src/global_filters/plugins/global_filters_core_plugin";
 import { createSpreadsheetWithChart } from "../utils/chart";
 import { addGlobalFilter, setGlobalFilterValue } from "../utils/commands";
+import { patchDate } from "@web/../tests/helpers/utils";
 
 async function addChartGlobalFilter(model) {
     const chartId = model.getters.getChartIds(model.getters.getActiveSheetId())[0];
@@ -98,6 +99,7 @@ QUnit.module("spreadsheet > Global filters chart", {}, () => {
     });
 
     QUnit.test("field matching is removed when filter is deleted", async function (assert) {
+        patchDate(2022, 6, 10, 0, 0, 0);
         const { model } = await createSpreadsheetWithChart();
         await addChartGlobalFilter(model);
         const [filter] = model.getters.getGlobalFilters();

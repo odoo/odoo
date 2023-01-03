@@ -5,17 +5,17 @@
 # Translators:
 # Fekete Mihai <mihai.fekete@forestandbiomass.ro>, 2022
 # Hongu Cosmin <cosmin513@gmail.com>, 2022
-# Dorin Hongu <dhongu@gmail.com>, 2022
 # Foldi Robert <foldirobert@nexterp.ro>, 2022
 # Martin Trigaux, 2022
+# Dorin Hongu <dhongu@gmail.com>, 2022
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 16.0beta\n"
+"Project-Id-Version: Odoo Server 16.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-10-10 10:22+0000\n"
+"POT-Creation-Date: 2022-12-15 12:49+0000\n"
 "PO-Revision-Date: 2022-09-22 05:53+0000\n"
-"Last-Translator: Martin Trigaux, 2022\n"
+"Last-Translator: Dorin Hongu <dhongu@gmail.com>, 2022\n"
 "Language-Team: Romanian (https://www.transifex.com/odoo/teams/41243/ro/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -24,12 +24,14 @@ msgstr ""
 "Plural-Forms: nplurals=3; plural=(n==1?0:(((n%100>19)||((n%100==0)&&(n!=0)))?2:1));\n"
 
 #. module: im_livechat
+#. odoo-python
 #: code:addons/im_livechat/models/chatbot_script.py:0
 #, python-format
 msgid " (copy)"
 msgstr " (copie)"
 
 #. module: im_livechat
+#. odoo-python
 #: code:addons/im_livechat/models/chatbot_script_step.py:0
 #, python-format
 msgid "\"%s\" is not a valid email."
@@ -66,33 +68,35 @@ msgid "% of Happiness"
 msgstr "% din Fericire"
 
 #. module: im_livechat
-#. openerp-web
+#. odoo-javascript
 #: code:addons/im_livechat/static/src/legacy/models/public_livechat.js:0
 #, python-format
 msgid "%s and %s are typing..."
 msgstr "%sși %s tastând ..."
 
 #. module: im_livechat
+#. odoo-python
 #: code:addons/im_livechat/models/chatbot_script_step.py:0
 #, python-format
 msgid "%s has joined"
 msgstr ""
 
 #. module: im_livechat
-#. openerp-web
+#. odoo-javascript
 #: code:addons/im_livechat/static/src/legacy/models/public_livechat.js:0
 #, python-format
 msgid "%s is typing..."
 msgstr "%sscrie... "
 
 #. module: im_livechat
-#. openerp-web
+#. odoo-javascript
 #: code:addons/im_livechat/static/src/legacy/models/public_livechat.js:0
 #, python-format
 msgid "%s, %s and more are typing..."
 msgstr "%s, %s și alții sunt tastând ..."
 
 #. module: im_livechat
+#. odoo-python
 #: code:addons/im_livechat/models/chatbot_script.py:0
 #: code:addons/im_livechat/models/mail_channel.py:0
 #, python-format
@@ -104,9 +108,10 @@ msgstr ""
 #. module: im_livechat
 #: model:ir.model.fields,help:im_livechat.field_im_livechat_channel_rule__action
 msgid ""
-"* 'Display the button' displays the chat button on the pages.\n"
-"* 'Auto popup' displays the button and automatically open the conversation pane.\n"
-"* 'Hide the button' hides the chat button on the pages.\n"
+"* 'Show' displays the chat button on the pages.\n"
+"* 'Show with notification' is 'Show' in addition to a floating text just next to the button.\n"
+"* 'Open automatically' displays the button and automatically opens the conversation pane.\n"
+"* 'Hide' hides the chat button on the pages.\n"
 msgstr ""
 
 #. module: im_livechat
@@ -115,7 +120,7 @@ msgid ", on the"
 msgstr ", În ziua de "
 
 #. module: im_livechat
-#. openerp-web
+#. odoo-javascript
 #: code:addons/im_livechat/static/src/legacy/widgets/public_livechat_view/public_livechat_view.xml:0
 #, python-format
 msgid "-------- Show older messages --------"
@@ -207,11 +212,6 @@ msgstr ""
 "                                      Dacă vizitatorul cât și operatorul există, sesiunea va primi întotdeauna răspuns."
 
 #. module: im_livechat
-#: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel_rule__action
-msgid "Action"
-msgstr "Acțiune"
-
-#. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_chatbot_script__active
 msgid "Active"
 msgstr "Activ"
@@ -258,7 +258,7 @@ msgid "Are you inside the matrix?"
 msgstr "Te afli în interiorul matricei?"
 
 #. module: im_livechat
-#. openerp-web
+#. odoo-javascript
 #: code:addons/im_livechat/static/src/public_models/livechat_button_view.js:0
 #, python-format
 msgid "Ask something ..."
@@ -269,16 +269,6 @@ msgstr "Întreabă ceva..."
 #: model_terms:ir.ui.view,arch_db:im_livechat.mail_channel_view_tree
 msgid "Attendees"
 msgstr "Participanți"
-
-#. module: im_livechat
-#: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel_rule__auto_popup_timer
-msgid "Auto popup timer"
-msgstr "Cronometru pop-up automat"
-
-#. module: im_livechat
-#: model:ir.model.fields.selection,name:im_livechat.selection__im_livechat_channel_rule__action__auto_popup
-msgid "Autopop LiveChat"
-msgstr ""
 
 #. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.mail_channel_view_form
@@ -318,7 +308,7 @@ msgid "Average time to give the first answer to the visitor"
 msgstr "Timp mediu pentru a da primul răspuns vizitatorului"
 
 #. module: im_livechat
-#. openerp-web
+#. odoo-javascript
 #: code:addons/im_livechat/static/src/legacy/widgets/feedback/feedback.xml:0
 #, python-format
 msgid "Bad"
@@ -412,7 +402,7 @@ msgid ""
 msgstr ""
 
 #. module: im_livechat
-#. openerp-web
+#. odoo-javascript
 #: code:addons/im_livechat/static/src/public_models/livechat_button_view.js:0
 #, python-format
 msgid "Chat with one of our collaborators"
@@ -479,7 +469,7 @@ msgid "Close"
 msgstr "Închide"
 
 #. module: im_livechat
-#. openerp-web
+#. odoo-javascript
 #: code:addons/im_livechat/static/src/legacy/widgets/public_livechat_window/public_livechat_window.xml:0
 #: code:addons/im_livechat/static/src/legacy/widgets/public_livechat_window/public_livechat_window.xml:0
 #, python-format
@@ -487,7 +477,7 @@ msgid "Close chat window"
 msgstr "Închidere Fereastră Chat"
 
 #. module: im_livechat
-#. openerp-web
+#. odoo-javascript
 #: code:addons/im_livechat/static/src/legacy/widgets/feedback/feedback.xml:0
 #, python-format
 msgid "Close conversation"
@@ -517,20 +507,21 @@ msgid "Conversation"
 msgstr "Conversație"
 
 #. module: im_livechat
-#. openerp-web
+#. odoo-javascript
 #: code:addons/im_livechat/static/src/legacy/widgets/feedback/feedback.xml:0
 #, python-format
 msgid "Conversation Sent"
 msgstr "Conversația Trimisă"
 
 #. module: im_livechat
-#. openerp-web
+#. odoo-javascript
 #: code:addons/im_livechat/static/src/legacy/public_livechat_chatbot.xml:0
 #, python-format
 msgid "Conversation ended..."
 msgstr ""
 
 #. module: im_livechat
+#. odoo-python
 #: code:addons/im_livechat/models/mail_channel.py:0
 #, python-format
 msgid "Conversation with %s"
@@ -676,15 +667,12 @@ msgstr ""
 #: model:ir.model.fields,help:im_livechat.field_im_livechat_channel_rule__auto_popup_timer
 msgid ""
 "Delay (in seconds) to automatically open the conversation window. Note: the "
-"selected action must be 'Auto popup' otherwise this parameter will not be "
-"taken into account."
+"selected action must be 'Open automatically' otherwise this parameter will "
+"not be taken into account."
 msgstr ""
-"Întârzierea (în secunde) pentru a deschide automat fereastra conversației. "
-"Notă: acțiunea selectată trebuie să fie „pop-up automat”, altfel acest "
-"parametru nu va fi luat în considerare."
 
 #. module: im_livechat
-#. openerp-web
+#. odoo-javascript
 #: code:addons/im_livechat/static/src/legacy/widgets/feedback/feedback.xml:0
 #, python-format
 msgid "Did we correctly answer your question ?"
@@ -714,11 +702,6 @@ msgid "Display Name"
 msgstr "Nume afișat"
 
 #. module: im_livechat
-#: model:ir.model.fields.selection,name:im_livechat.selection__im_livechat_channel_rule__action__display_button
-msgid "Display the LiveChat Button"
-msgstr ""
-
-#. module: im_livechat
 #: model:ir.model.fields,help:im_livechat.field_im_livechat_report_channel__duration
 #: model:ir.model.fields,help:im_livechat.field_im_livechat_report_operator__duration
 msgid "Duration of the conversation (in seconds)"
@@ -741,7 +724,7 @@ msgid "Enabled only if no operator"
 msgstr ""
 
 #. module: im_livechat
-#. openerp-web
+#. odoo-javascript
 #: code:addons/im_livechat/static/src/legacy/widgets/feedback/feedback.xml:0
 #, python-format
 msgid "Explain your note"
@@ -796,7 +779,7 @@ msgstr ""
 "mică."
 
 #. module: im_livechat
-#. openerp-web
+#. odoo-javascript
 #: code:addons/im_livechat/static/src/legacy/widgets/feedback/feedback.xml:0
 #, python-format
 msgid "Good"
@@ -810,6 +793,7 @@ msgid "Group By..."
 msgstr "Grupează după..."
 
 #. module: im_livechat
+#. odoo-python
 #: code:addons/im_livechat/models/im_livechat_channel.py:0
 #, python-format
 msgid "Have a Question? Chat with us."
@@ -822,7 +806,7 @@ msgstr "Culoare Fundal Antet"
 
 #. module: im_livechat
 #: model:ir.model.fields.selection,name:im_livechat.selection__im_livechat_channel_rule__action__hide_button
-msgid "Hide all buttons"
+msgid "Hide"
 msgstr ""
 
 #. module: im_livechat
@@ -844,7 +828,7 @@ msgid "Hour of start Date of session"
 msgstr "Ora de începere a sesiunii"
 
 #. module: im_livechat
-#. openerp-web
+#. odoo-javascript
 #: code:addons/im_livechat/static/src/public_models/livechat_button_view.js:0
 #, python-format
 msgid "How may I help you?"
@@ -919,7 +903,7 @@ msgid "Image 512"
 msgstr "Imagine 512"
 
 #. module: im_livechat
-#. openerp-web
+#. odoo-javascript
 #: code:addons/im_livechat/static/src/legacy/widgets/feedback/feedback.js:0
 #, python-format
 msgid "Invalid email address"
@@ -1031,12 +1015,17 @@ msgid "Live Chat"
 msgstr "Live Chat"
 
 #. module: im_livechat
+#: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel_rule__action
+msgid "Live Chat Button"
+msgstr ""
+
+#. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_search
 msgid "LiveChat Channel Search"
 msgstr "Căutare Canal LiveChat"
 
 #. module: im_livechat
-#. openerp-web
+#. odoo-javascript
 #: code:addons/im_livechat/static/src/components/thread_icon/thread_icon.xml:0
 #: code:addons/im_livechat/static/src/models/discuss_sidebar_category.js:0
 #: code:addons/im_livechat/static/src/models/mobile_messaging_navbar_view.js:0
@@ -1124,7 +1113,7 @@ msgid "Livechat session is active until visitor leaves the conversation."
 msgstr ""
 
 #. module: im_livechat
-#. openerp-web
+#. odoo-javascript
 #: code:addons/im_livechat/static/src/legacy/widgets/public_livechat_view/public_livechat_view.xml:0
 #, python-format
 msgid "Loading older messages..."
@@ -1153,14 +1142,14 @@ msgid "Name"
 msgstr "Nume"
 
 #. module: im_livechat
-#. openerp-web
+#. odoo-javascript
 #: code:addons/im_livechat/static/src/legacy/widgets/public_livechat_view/public_livechat_view.xml:0
 #, python-format
 msgid "New messages"
 msgstr "Mesaje noi"
 
 #. module: im_livechat
-#. openerp-web
+#. odoo-javascript
 #: code:addons/im_livechat/static/src/public_models/livechat_button_view.js:0
 #: code:addons/im_livechat/static/src/public_models/livechat_button_view.js:0
 #, python-format
@@ -1178,13 +1167,21 @@ msgid "No data yet!"
 msgstr "Nu există date încă!"
 
 #. module: im_livechat
+#. odoo-python
 #: code:addons/im_livechat/models/mail_channel.py:0
 #, python-format
 msgid "No history found"
 msgstr "Nu a fost găsit istoric"
 
 #. module: im_livechat
-#. openerp-web
+#. odoo-javascript
+#: code:addons/im_livechat/static/src/legacy/widgets/public_livechat_window/public_livechat_window.xml:0
+#, python-format
+msgid "No operator available"
+msgstr ""
+
+#. module: im_livechat
+#. odoo-javascript
 #: code:addons/im_livechat/static/src/legacy/widgets/public_livechat_view/public_livechat_view.xml:0
 #, python-format
 msgid "Note by"
@@ -1216,7 +1213,7 @@ msgid "Number of message in the conversation"
 msgstr "Numărul de mesaje din conversație"
 
 #. module: im_livechat
-#. openerp-web
+#. odoo-javascript
 #: code:addons/im_livechat/static/src/legacy/widgets/feedback/feedback.xml:0
 #, python-format
 msgid "OK"
@@ -1238,11 +1235,21 @@ msgid "Only If"
 msgstr ""
 
 #. module: im_livechat
-#. openerp-web
+#. odoo-javascript
 #: code:addons/im_livechat/static/src/legacy/widgets/feedback/feedback.xml:0
 #, python-format
 msgid "Oops! Something went wrong."
 msgstr "Hopa! Ceva n-a mers bine !"
+
+#. module: im_livechat
+#: model:ir.model.fields.selection,name:im_livechat.selection__im_livechat_channel_rule__action__auto_popup
+msgid "Open automatically"
+msgstr ""
+
+#. module: im_livechat
+#: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel_rule__auto_popup_timer
+msgid "Open automatically timer"
+msgstr ""
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_report_channel__partner_id
@@ -1307,19 +1314,21 @@ msgid "Phone"
 msgstr "Telefon"
 
 #. module: im_livechat
+#. odoo-python
 #: code:addons/im_livechat/models/chatbot_script_step.py:0
 #, python-format
 msgid "Please call me on: "
 msgstr ""
 
 #. module: im_livechat
-#. openerp-web
+#. odoo-javascript
 #: code:addons/im_livechat/static/src/legacy/widgets/feedback/feedback.xml:0
 #, python-format
 msgid "Please check your internet connection."
 msgstr "Please check your internet connection."
 
 #. module: im_livechat
+#. odoo-python
 #: code:addons/im_livechat/models/chatbot_script_step.py:0
 #, python-format
 msgid "Please contact me on: "
@@ -1331,7 +1340,7 @@ msgid "Please do! If there is anything we can help with, let us know"
 msgstr ""
 
 #. module: im_livechat
-#. openerp-web
+#. odoo-javascript
 #: code:addons/im_livechat/static/src/legacy/widgets/public_livechat_view/public_livechat_view.xml:0
 #: code:addons/im_livechat/static/src/legacy/widgets/public_livechat_view/public_livechat_view.xml:0
 #, python-format
@@ -1339,7 +1348,7 @@ msgid "Please wait"
 msgstr "Te rog așteaptă"
 
 #. module: im_livechat
-#. openerp-web
+#. odoo-javascript
 #: code:addons/im_livechat/static/src/legacy/widgets/public_livechat_view/public_livechat_view.xml:0
 #, python-format
 msgid "Please wait..."
@@ -1400,7 +1409,7 @@ msgid "Rating count"
 msgstr "Numărul de evaluări"
 
 #. module: im_livechat
-#. openerp-web
+#. odoo-javascript
 #: code:addons/im_livechat/static/src/legacy/widgets/feedback/feedback.js:0
 #, python-format
 msgid "Rating: %s"
@@ -1417,7 +1426,7 @@ msgid "Ratings for livechat channel"
 msgstr "Evaluări pentru canalul livechat"
 
 #. module: im_livechat
-#. openerp-web
+#. odoo-javascript
 #: code:addons/im_livechat/static/src/legacy/widgets/feedback/feedback.xml:0
 #, python-format
 msgid "Receive a copy of this conversation"
@@ -1446,7 +1455,7 @@ msgid "Report"
 msgstr "Raport"
 
 #. module: im_livechat
-#. openerp-web
+#. odoo-javascript
 #: code:addons/im_livechat/static/src/js/colors_reset_button/colors_reset_button.xml:0
 #: code:addons/im_livechat/static/src/js/colors_reset_button/colors_reset_button.xml:0
 #, python-format
@@ -1454,14 +1463,14 @@ msgid "Reset to default colors"
 msgstr "Resetare la culori implicite"
 
 #. module: im_livechat
-#. openerp-web
+#. odoo-javascript
 #: code:addons/im_livechat/static/src/legacy/public_livechat_chatbot.xml:0
 #, python-format
 msgid "Restart"
 msgstr ""
 
 #. module: im_livechat
-#. openerp-web
+#. odoo-javascript
 #: code:addons/im_livechat/static/src/legacy/public_livechat_chatbot.xml:0
 #: code:addons/im_livechat/static/src/legacy/public_livechat_chatbot.xml:0
 #, python-format
@@ -1469,6 +1478,7 @@ msgid "Restart Conversation"
 msgstr ""
 
 #. module: im_livechat
+#. odoo-python
 #: code:addons/im_livechat/models/mail_channel.py:0
 #, python-format
 msgid "Restarting conversation..."
@@ -1491,7 +1501,7 @@ msgid "Save your Channel to get your configuration widget."
 msgstr "Salvați-vă canalul pentru a obține widgetul de configurare."
 
 #. module: im_livechat
-#. openerp-web
+#. odoo-javascript
 #: code:addons/im_livechat/static/src/public_models/public_livechat_window.js:0
 #, python-format
 msgid "Say something"
@@ -1529,14 +1539,14 @@ msgid "Search report"
 msgstr "Caută raport"
 
 #. module: im_livechat
-#. openerp-web
+#. odoo-javascript
 #: code:addons/im_livechat/static/src/models/messaging_initializer.js:0
 #, python-format
 msgid "See 15 last visited pages"
 msgstr "Vizualizare Ultimele 15 paginini Vizitate"
 
 #. module: im_livechat
-#. openerp-web
+#. odoo-javascript
 #: code:addons/im_livechat/static/src/public_models/public_livechat_window.js:0
 #, python-format
 msgid "Select an option above"
@@ -1567,7 +1577,7 @@ msgid "Session Statistics"
 msgstr "Statistici Sesiune"
 
 #. module: im_livechat
-#. openerp-web
+#. odoo-javascript
 #: code:addons/im_livechat/static/src/public_models/livechat_button_view.js:0
 #: code:addons/im_livechat/static/src/public_models/livechat_button_view.js:0
 #, python-format
@@ -1598,8 +1608,18 @@ msgid "Sessions History"
 msgstr "Istoric sesiune"
 
 #. module: im_livechat
+#: model:ir.model.fields.selection,name:im_livechat.selection__im_livechat_channel_rule__action__display_button
+msgid "Show"
+msgstr "Afișează"
+
+#. module: im_livechat
 #: model:ir.model.fields,help:im_livechat.field_chatbot_script_step__triggering_answer_ids
 msgid "Show this step only if all of these answers have been selected."
+msgstr ""
+
+#. module: im_livechat
+#: model:ir.model.fields.selection,name:im_livechat.selection__im_livechat_channel_rule__action__display_button_and_text
+msgid "Show with notification"
 msgstr ""
 
 #. module: im_livechat
@@ -1639,7 +1659,7 @@ msgid "Text that prompts the user to initiate the chat."
 msgstr "Text care solicită utilizatorului să inițieze chat-ul."
 
 #. module: im_livechat
-#. openerp-web
+#. odoo-javascript
 #: code:addons/im_livechat/static/src/legacy/widgets/feedback/feedback.js:0
 #, python-format
 msgid "Thank you for your feedback"
@@ -1654,15 +1674,10 @@ msgstr "Canalul regulii"
 #: model:ir.model.fields,help:im_livechat.field_im_livechat_channel_rule__country_ids
 msgid ""
 "The rule will only be applied for these countries. Example: if you select "
-"'Belgium' and 'United States' and that you set the action to 'Hide Button', "
-"the chat button will be hidden on the specified URL from the visitors "
-"located in these 2 countries. This feature requires GeoIP installed on your "
-"server."
+"'Belgium' and 'United States' and that you set the action to 'Hide', the "
+"chat button will be hidden on the specified URL from the visitors located in"
+" these 2 countries. This feature requires GeoIP installed on your server."
 msgstr ""
-"Regula va fi aplicată numai pentru aceste țări. Exemplu: dacă selectați "
-"„Belgia” și „Statele Unite” și dacă setați acțiunea pe „Ascundere Buton”, "
-"butonul de chat va fi ascuns pe URL-ul specificat de vizitatorii din aceste "
-"2 țări. Această caracteristică necesită GeoIP instalat pe serverul dvs."
 
 #. module: im_livechat
 #: model:res.groups,comment:im_livechat.im_livechat_group_manager
@@ -1735,7 +1750,7 @@ msgid "Title Color"
 msgstr "Culoare Titlu"
 
 #. module: im_livechat
-#. openerp-web
+#. odoo-javascript
 #: code:addons/im_livechat/static/src/legacy/models/public_livechat_message.js:0
 #, python-format
 msgid "Today"
@@ -1747,13 +1762,14 @@ msgid "Treated sessions"
 msgstr "Sesiuni tratate"
 
 #. module: im_livechat
-#. openerp-web
+#. odoo-javascript
 #: code:addons/im_livechat/static/src/legacy/widgets/feedback/feedback.xml:0
 #, python-format
 msgid "Try again"
 msgstr "Încearcă din nou"
 
 #. module: im_livechat
+#. odoo-python
 #: code:addons/im_livechat/models/mail_channel.py:0
 #, python-format
 msgid "Type <b>:shortcut</b> to insert a canned response in your message.<br>"
@@ -1815,7 +1831,8 @@ msgid "User's raw answer"
 msgstr ""
 
 #. module: im_livechat
-#. openerp-web
+#. odoo-javascript
+#. odoo-python
 #: code:addons/im_livechat/controllers/main.py:0
 #: code:addons/im_livechat/models/im_livechat_channel.py:0
 #: code:addons/im_livechat/static/src/public_models/livechat_button_view.js:0
@@ -1824,6 +1841,7 @@ msgid "Visitor"
 msgstr "Vizitator"
 
 #. module: im_livechat
+#. odoo-python
 #: code:addons/im_livechat/models/mail_channel.py:0
 #, python-format
 msgid "Visitor has left the conversation."
@@ -1876,7 +1894,7 @@ msgid ""
 msgstr ""
 
 #. module: im_livechat
-#. openerp-web
+#. odoo-javascript
 #: code:addons/im_livechat/static/src/legacy/models/public_livechat_message.js:0
 #, python-format
 msgid "Yesterday"
@@ -1906,7 +1924,7 @@ msgid "Your chatter history is empty"
 msgstr "Istoricul dvs. de chat este gol"
 
 #. module: im_livechat
-#. openerp-web
+#. odoo-javascript
 #: code:addons/im_livechat/static/src/legacy/public_livechat_chatbot.xml:0
 #, python-format
 msgid "chatbot_image"
@@ -1938,14 +1956,14 @@ msgid "e.g. YourWebsite.com"
 msgstr "e.g. YourWebsite.com"
 
 #. module: im_livechat
-#. openerp-web
+#. odoo-javascript
 #: code:addons/im_livechat/static/src/legacy/public_livechat_chatbot.xml:0
 #, python-format
 msgid "is typing"
 msgstr ""
 
 #. module: im_livechat
-#. openerp-web
+#. odoo-javascript
 #: code:addons/im_livechat/static/src/legacy/widgets/feedback/feedback.xml:0
 #, python-format
 msgid "mail@example.com"
@@ -1958,14 +1976,14 @@ msgstr ""
 "sau copiați acest URL și trimite-l prin e-mail către clienți sau furnizori:"
 
 #. module: im_livechat
-#. openerp-web
+#. odoo-javascript
 #: code:addons/im_livechat/static/src/legacy/widgets/public_livechat_view/public_livechat_view.js:0
 #, python-format
 msgid "read less"
 msgstr "mai puțin"
 
 #. module: im_livechat
-#. openerp-web
+#. odoo-javascript
 #: code:addons/im_livechat/static/src/legacy/widgets/public_livechat_view/public_livechat_view.js:0
 #, python-format
 msgid "read more"

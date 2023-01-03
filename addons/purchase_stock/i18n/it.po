@@ -4,14 +4,15 @@
 # 
 # Translators:
 # Martin Trigaux, 2022
+# Sergio Zanchetta <primes2h@gmail.com>, 2022
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 16.0beta\n"
+"Project-Id-Version: Odoo Server 16.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-10-10 10:22+0000\n"
+"POT-Creation-Date: 2022-12-15 12:49+0000\n"
 "PO-Revision-Date: 2022-09-22 05:54+0000\n"
-"Last-Translator: Martin Trigaux, 2022\n"
+"Last-Translator: Sergio Zanchetta <primes2h@gmail.com>, 2022\n"
 "Language-Team: Italian (https://www.transifex.com/odoo/teams/41243/it/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -25,6 +26,7 @@ msgid "% On-Time Delivery"
 msgstr "% di consegne puntuali"
 
 #. module: purchase_stock
+#. odoo-python
 #: code:addons/purchase_stock/models/stock_rule.py:0
 #: code:addons/purchase_stock/models/stock_rule.py:0
 #: code:addons/purchase_stock/models/stock_rule.py:0
@@ -127,6 +129,7 @@ msgid "Average Receipt Delay"
 msgstr "Ritardo medio di ricezione"
 
 #. module: purchase_stock
+#. odoo-python
 #: code:addons/purchase_stock/models/stock.py:0
 #: model:ir.model.fields.selection,name:purchase_stock.selection__stock_rule__action__buy
 #: model:stock.route,name:purchase_stock.route_warehouse0_buy
@@ -166,6 +169,7 @@ msgid "Contact"
 msgstr "Contatto"
 
 #. module: purchase_stock
+#. odoo-python
 #: code:addons/purchase_stock/models/purchase.py:0
 #, python-format
 msgid "Corresponding receipt not found."
@@ -177,6 +181,7 @@ msgid "Created Purchase Order Line"
 msgstr "Riga ordine di acquisto creata"
 
 #. module: purchase_stock
+#. odoo-python
 #: code:addons/purchase_stock/models/stock_move.py:0
 #: code:addons/purchase_stock/models/stock_move.py:0
 #, python-format
@@ -189,13 +194,18 @@ msgid "Custom Description"
 msgstr "Descrizione personalizzata"
 
 #. module: purchase_stock
+#: model_terms:ir.ui.view,arch_db:purchase_stock.res_config_settings_view_form_stock
+msgid "Days needed to confirm a PO"
+msgstr ""
+
+#. module: purchase_stock
 #: model:ir.model.fields,help:purchase_stock.field_res_company__days_to_purchase
 #: model:ir.model.fields,help:purchase_stock.field_res_config_settings__days_to_purchase
-#: model_terms:ir.ui.view,arch_db:purchase_stock.res_config_settings_view_form_stock
 msgid "Days needed to confirm a PO, define when a PO should be validated"
 msgstr "Indica dopo quanti giorni deve essere confermato un OdA"
 
 #. module: purchase_stock
+#. odoo-python
 #: code:addons/purchase_stock/models/stock_rule.py:0
 #: model:ir.model.fields,field_description:purchase_stock.field_res_company__days_to_purchase
 #: model:ir.model.fields,field_description:purchase_stock.field_res_config_settings__days_to_purchase
@@ -272,6 +282,7 @@ msgid "Exception(s):"
 msgstr "Eccezioni:"
 
 #. module: purchase_stock
+#. odoo-python
 #: code:addons/purchase_stock/models/purchase.py:0
 #, python-format
 msgid ""
@@ -299,14 +310,14 @@ msgid "Fully Received"
 msgstr ""
 
 #. module: purchase_stock
-#. openerp-web
+#. odoo-javascript
 #: code:addons/purchase_stock/static/src/js/tours/purchase_stock.js:0
 #, python-format
 msgid "Generate the draft vendor bill."
 msgstr "Genera la fattura fornitore in bozza."
 
 #. module: purchase_stock
-#. openerp-web
+#. odoo-javascript
 #: code:addons/purchase_stock/static/src/js/tours/purchase_stock.js:0
 #, python-format
 msgid "Go back to the purchase order to generate the vendor bill."
@@ -428,6 +439,7 @@ msgid "Not Received"
 msgstr "Non ricevuto"
 
 #. module: purchase_stock
+#. odoo-python
 #: code:addons/purchase_stock/models/stock_move.py:0
 #, python-format
 msgid ""
@@ -493,7 +505,7 @@ msgid "Partially Received"
 msgstr ""
 
 #. module: purchase_stock
-#. openerp-web
+#. odoo-javascript
 #: code:addons/purchase_stock/static/src/js/tours/purchase_stock.js:0
 #, python-format
 msgid "Process all the receipt quantities."
@@ -561,6 +573,7 @@ msgid "Purchase Report"
 msgstr "Resoconto di acquisto"
 
 #. module: purchase_stock
+#. odoo-python
 #: code:addons/purchase_stock/models/stock_rule.py:0
 #, python-format
 msgid "Purchase Security Lead Time"
@@ -601,7 +614,7 @@ msgid "Receive Products"
 msgstr "Ricevi prodotti"
 
 #. module: purchase_stock
-#. openerp-web
+#. odoo-javascript
 #: code:addons/purchase_stock/static/src/js/tours/purchase_stock.js:0
 #, python-format
 msgid "Receive the ordered products."
@@ -623,7 +636,7 @@ msgid "Request your vendors to deliver to your customers"
 msgstr "Richiede ai fornitori di effettuare la consegna ai clienti"
 
 #. module: purchase_stock
-#. openerp-web
+#. odoo-javascript
 #: code:addons/purchase_stock/static/src/purchase_stock_forecasted/forecasted_details.xml:0
 #, python-format
 msgid "Requests for quotation"
@@ -647,12 +660,8 @@ msgstr "Percorsi"
 
 #. module: purchase_stock
 #: model_terms:ir.ui.view,arch_db:purchase_stock.res_config_settings_view_form_stock
-msgid ""
-"Schedule automatically generated request for quotations earlier to avoid "
-"delays"
+msgid "Schedule request for quotations earlier to avoid delays"
 msgstr ""
-"Programma in anticipo le richieste di preventivo generate automaticamente "
-"per evitare ritardi"
 
 #. module: purchase_stock
 #: model_terms:ir.ui.view,arch_db:purchase_stock.product_supplierinfo_replenishment_tree_view
@@ -717,12 +726,14 @@ msgstr ""
 "Campo tecnico utilizzato per visualizzare l'indirizzo di Spedizione diretta"
 
 #. module: purchase_stock
+#. odoo-python
 #: code:addons/purchase_stock/models/stock.py:0
 #, python-format
 msgid "The following replenishment order has been generated"
 msgstr "È stato generato il seguente ordine di rifornimento"
 
 #. module: purchase_stock
+#. odoo-python
 #: code:addons/purchase_stock/models/purchase.py:0
 #, python-format
 msgid ""
@@ -733,6 +744,7 @@ msgstr ""
 "richiedere un rimborso."
 
 #. module: purchase_stock
+#. odoo-python
 #: code:addons/purchase_stock/models/stock_rule.py:0
 #, python-format
 msgid ""
@@ -766,6 +778,7 @@ msgid "This will determine operation type of incoming shipment"
 msgstr "Determina il tipo di operazione per le spedizioni in entrata"
 
 #. module: purchase_stock
+#. odoo-python
 #: code:addons/purchase_stock/models/purchase.py:0
 #, python-format
 msgid ""
@@ -776,6 +789,7 @@ msgstr ""
 "che era già stata convalidata."
 
 #. module: purchase_stock
+#. odoo-python
 #: code:addons/purchase_stock/models/purchase.py:0
 #, python-format
 msgid "Those dates have been updated accordingly on the receipt %s."
@@ -792,6 +806,7 @@ msgid "Transfer"
 msgstr "Trasferimento"
 
 #. module: purchase_stock
+#. odoo-python
 #: code:addons/purchase_stock/models/purchase.py:0
 #, python-format
 msgid ""
@@ -802,7 +817,7 @@ msgstr ""
 "state completate."
 
 #. module: purchase_stock
-#. openerp-web
+#. odoo-javascript
 #: code:addons/purchase_stock/static/src/js/tours/purchase_stock.js:0
 #, python-format
 msgid "Validate the receipt of all ordered products."
@@ -821,6 +836,7 @@ msgid "Vendor Delay Report"
 msgstr "Resoconto ritardo venditore"
 
 #. module: purchase_stock
+#. odoo-python
 #: code:addons/purchase_stock/models/stock_rule.py:0
 #, python-format
 msgid "Vendor Lead Time"
@@ -855,6 +871,7 @@ msgstr ""
 "magazzino"
 
 #. module: purchase_stock
+#. odoo-python
 #: code:addons/purchase_stock/models/stock_rule.py:0
 #, python-format
 msgid ""
@@ -865,6 +882,7 @@ msgstr ""
 "richiesta di preventivo per soddisfare l'esigenza."
 
 #. module: purchase_stock
+#. odoo-python
 #: code:addons/purchase_stock/models/purchase.py:0
 #, python-format
 msgid ""
@@ -875,6 +893,7 @@ msgstr ""
 "Creare prima un reso."
 
 #. module: purchase_stock
+#. odoo-python
 #: code:addons/purchase_stock/models/purchase.py:0
 #, python-format
 msgid "You must set a Vendor Location for this partner %s"

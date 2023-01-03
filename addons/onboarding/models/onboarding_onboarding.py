@@ -94,12 +94,12 @@ class Onboarding(models.Model):
         self.ensure_one()
         values = {
             'bg_image': f'/web/image/onboarding.onboarding/{self.id}/panel_background_image',
+            'classes': f'o_onboarding_{self.panel_background_color}'
+                       if self.panel_background_color not in {False, 'none'} else '',
             'close_method': self.panel_close_action_name,
             'close_model': 'onboarding.onboarding',
             'steps': self.step_ids,
             'state': self.current_progress_id._get_and_update_onboarding_state(),
         }
-        if self.panel_background_color != 'none':
-            values.update(classes=f'o_onboarding_{self.panel_background_color}')
 
         return values

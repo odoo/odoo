@@ -7,16 +7,16 @@
 # Adriana Ierfino <adriana.ierfino@savoirfairelinux.com>, 2022
 # Geoffrey_GMF <gmf@odoo.com>, 2022
 # Martin Trigaux, 2022
-# Jolien De Paepe, 2022
 # Cécile Collart <cco@odoo.com>, 2022
+# Jolien De Paepe, 2022
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 16.0beta\n"
+"Project-Id-Version: Odoo Server 16.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-10-10 10:22+0000\n"
+"POT-Creation-Date: 2022-12-15 12:49+0000\n"
 "PO-Revision-Date: 2022-09-22 05:46+0000\n"
-"Last-Translator: Cécile Collart <cco@odoo.com>, 2022\n"
+"Last-Translator: Jolien De Paepe, 2022\n"
 "Language-Team: French (https://www.transifex.com/odoo/teams/41243/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -31,12 +31,14 @@ msgid "# emails to send"
 msgstr "# emails à envoyer"
 
 #. module: hr
+#. odoo-python
 #: code:addons/hr/wizard/hr_plan_wizard.py:0
 #, python-format
 msgid "%(activity)s, assigned to %(name)s, due on the %(deadline)s"
 msgstr "%(activity)s, assignée à %(name)s, pour le %(deadline)s"
 
 #. module: hr
+#. odoo-python
 #: code:addons/hr/models/hr_job.py:0
 #, python-format
 msgid "%s (copy)"
@@ -108,6 +110,7 @@ msgid "4 Days after Interview"
 msgstr "4 jours après l'entretien"
 
 #. module: hr
+#. odoo-python
 #: code:addons/hr/models/hr_employee.py:0
 #, python-format
 msgid ""
@@ -156,12 +159,12 @@ msgstr ""
 msgid ""
 "<small role=\"img\" class=\"fa fa-fw fa-circle-o text-muted o_button_icon "
 "hr_presence align-middle\" attrs=\"{'invisible': [('hr_icon_display', '!=', "
-"'present_absent')]}\" aria-label=\"Absent\" title=\"Absent\" "
+"'presence_absent')]}\" aria-label=\"Absent\" title=\"Absent\" "
 "name=\"presence_absent\"/>"
 msgstr ""
 "<small role=\"img\" class=\"fa fa-fw fa-circle-o text-muted o_button_icon "
 "hr_presence align-middle\" attrs=\"{'invisible': [('hr_icon_display', '!=', "
-"'present_absent')]}\" aria-label=\"Absent\" title=\"Absent\" "
+"'presence_absent')]}\" aria-label=\"Absent\" title=\"Absent\" "
 "name=\"presence_absent\"/>"
 
 #. module: hr
@@ -778,10 +781,10 @@ msgid "Change my Preferences"
 msgstr "Changer mes préférences"
 
 #. module: hr
-#: model_terms:ir.ui.view,arch_db:hr.hr_employee_public_view_form
-#: model_terms:ir.ui.view,arch_db:hr.hr_employee_public_view_kanban
-#: model_terms:ir.ui.view,arch_db:hr.hr_kanban_view_employees
-#: model_terms:ir.ui.view,arch_db:hr.view_employee_form
+#. odoo-javascript
+#: code:addons/hr/static/src/components/employee_chat/employee_chat.xml:0
+#: code:addons/hr/static/src/components/employee_chat/employee_chat.xml:0
+#, python-format
 msgid "Chat"
 msgstr "Messagerie instantanée"
 
@@ -821,6 +824,7 @@ msgid "Coach"
 msgstr "Mentor"
 
 #. module: hr
+#. odoo-python
 #: code:addons/hr/models/hr_plan_activity_type.py:0
 #, python-format
 msgid "Coach of employee %s is not set."
@@ -963,6 +967,7 @@ msgid "Create Employee"
 msgstr "Créer un employé"
 
 #. module: hr
+#. odoo-python
 #: code:addons/hr/models/hr_employee.py:0
 #: model:ir.actions.server,name:hr.action_hr_employee_create_user
 #, python-format
@@ -1046,6 +1051,7 @@ msgid "Date of Birth"
 msgstr "Date de naissance"
 
 #. module: hr
+#. odoo-python
 #: code:addons/hr/models/hr_departure_reason.py:0
 #, python-format
 msgid "Default departure reasons cannot be deleted."
@@ -1289,7 +1295,7 @@ msgid "Employee Tags"
 msgstr "Étiquettes d'employé"
 
 #. module: hr
-#. openerp-web
+#. odoo-javascript
 #: code:addons/hr/static/src/views/archive_employee_hook.js:0
 #, python-format
 msgid "Employee Termination"
@@ -1483,6 +1489,7 @@ msgid "Font awesome icon e.g. fa-tasks"
 msgstr "Icône Font Awesome ex. fa-tasks"
 
 #. module: hr
+#. odoo-python
 #: code:addons/hr/models/mail_channel.py:0
 #, python-format
 msgid ""
@@ -1570,7 +1577,6 @@ msgstr "Départements RH"
 #. module: hr
 #: model:ir.actions.server,name:hr.ir_cron_data_check_work_permit_validity_ir_actions_server
 #: model:ir.cron,cron_name:hr.ir_cron_data_check_work_permit_validity
-#: model:ir.cron,name:hr.ir_cron_data_check_work_permit_validity
 msgid "HR Employee: check work permit validity"
 msgstr "HR Employé: Vérification de la validité du permis de travail"
 
@@ -1739,6 +1745,7 @@ msgid "Image 512"
 msgstr "Image 512"
 
 #. module: hr
+#. odoo-python
 #: code:addons/hr/models/hr_employee.py:0
 #, python-format
 msgid "Import Template for Employees"
@@ -1901,6 +1908,7 @@ msgid "Launch Plan"
 msgstr "Plan de lancement"
 
 #. module: hr
+#. odoo-python
 #: code:addons/hr/wizard/hr_plan_wizard.py:0
 #, python-format
 msgid "Launch Plans"
@@ -1964,6 +1972,7 @@ msgid "Manager"
 msgstr "Responsable"
 
 #. module: hr
+#. odoo-python
 #: code:addons/hr/models/hr_plan_activity_type.py:0
 #, python-format
 msgid "Manager of employee %s is not set."
@@ -2061,7 +2070,7 @@ msgid "My Department"
 msgstr "Mon département"
 
 #. module: hr
-#. openerp-web
+#. odoo-javascript
 #: code:addons/hr/static/src/user_menu/my_profile.js:0
 #, python-format
 msgid "My Profile"
@@ -2142,6 +2151,7 @@ msgstr ""
 "rigides"
 
 #. module: hr
+#. odoo-python
 #: code:addons/hr/models/hr_plan_activity_type.py:0
 #, python-format
 msgid "No specific user given on activity %s."
@@ -2268,6 +2278,7 @@ msgid "On/Offboarding Plans"
 msgstr "Plans d'intégration/de gestion des départs"
 
 #. module: hr
+#. odoo-python
 #: code:addons/hr/models/hr_employee_base.py:0
 #, python-format
 msgid "Operation not supported"
@@ -2614,6 +2625,7 @@ msgid "Recruitment"
 msgstr "Recrutement"
 
 #. module: hr
+#. odoo-python
 #: code:addons/hr/models/hr_employee.py:0
 #: model:ir.actions.act_window,name:hr.hr_departure_wizard_action
 #, python-format
@@ -2628,13 +2640,14 @@ msgid "Related Contact"
 msgstr "Contact associé"
 
 #. module: hr
+#. odoo-python
 #: code:addons/hr/models/hr_employee_base.py:0
-#: model_terms:ir.ui.view,arch_db:hr.view_employee_form_smartbutton
 #, python-format
 msgid "Related Contacts"
 msgstr "Contacts associés"
 
 #. module: hr
+#. odoo-python
 #: code:addons/hr/models/res_partner.py:0
 #, python-format
 msgid "Related Employees"
@@ -2972,12 +2985,14 @@ msgstr ""
 "Vous pouvez utiliser ce champ pour une recherche rapide."
 
 #. module: hr
+#. odoo-python
 #: code:addons/hr/models/hr_employee.py:0
 #, python-format
 msgid "The PIN must be a sequence of digits."
 msgstr "Le code PIN doit être une séquence de chiffres."
 
 #. module: hr
+#. odoo-python
 #: code:addons/hr/models/hr_plan_activity_type.py:0
 #, python-format
 msgid "The employee %s should be linked to a user."
@@ -3006,6 +3021,7 @@ msgstr ""
 "historique de contrat. "
 
 #. module: hr
+#. odoo-python
 #: code:addons/hr/wizard/hr_plan_wizard.py:0
 #, python-format
 msgid "The employees should belong to the same company."
@@ -3017,6 +3033,7 @@ msgid "The expected number of new employees must be positive."
 msgstr "Le nombre de nouveaux employés attendus doit être positif"
 
 #. module: hr
+#. odoo-python
 #: code:addons/hr/models/hr_employee.py:0
 #, python-format
 msgid ""
@@ -3027,6 +3044,7 @@ msgstr ""
 "profil public de l'employé."
 
 #. module: hr
+#. odoo-python
 #: code:addons/hr/models/hr_plan_activity_type.py:0
 #, python-format
 msgid "The manager of %s should be linked to a user."
@@ -3038,12 +3056,14 @@ msgid "The name of the job position must be unique per department in company!"
 msgstr "Le nom du poste doit être unique par département de la société !"
 
 #. module: hr
+#. odoo-python
 #: code:addons/hr/wizard/hr_plan_wizard.py:0
 #, python-format
 msgid "The plan %s cannot be launched: <br><ul>"
 msgstr "Le plan %s ne peut pas être lancé : <br><ul>"
 
 #. module: hr
+#. odoo-python
 #: code:addons/hr/wizard/hr_plan_wizard.py:0
 #, python-format
 msgid "The plan %s has been started"
@@ -3065,12 +3085,14 @@ msgstr ""
 "qu'aux rapports de statistique."
 
 #. module: hr
+#. odoo-python
 #: code:addons/hr/models/hr_employee.py:0
 #, python-format
 msgid "The work permit of %(employee)s expires at %(date)s."
 msgstr "Le permis de travail de %(employee)s expire le %(date)s."
 
 #. module: hr
+#. odoo-python
 #: code:addons/hr/models/hr_employee.py:0
 #, python-format
 msgid "This employee already has an user."
@@ -3102,6 +3124,7 @@ msgid "To Define"
 msgstr "A définir"
 
 #. module: hr
+#. odoo-python
 #: code:addons/hr/models/hr_employee.py:0
 #, python-format
 msgid ""
@@ -3183,6 +3206,7 @@ msgid "User"
 msgstr "Utilisateur"
 
 #. module: hr
+#. odoo-python
 #: code:addons/hr/models/hr_plan_activity_type.py:0
 #, python-format
 msgid "User of coach of employee %s is not set."
@@ -3229,6 +3253,7 @@ msgid "Visa No"
 msgstr "Visa n°"
 
 #. module: hr
+#. odoo-python
 #: code:addons/hr/models/hr_employee.py:0
 #: model:ir.model.fields,field_description:hr.field_hr_plan_wizard__warning
 #, python-format
@@ -3409,6 +3434,7 @@ msgid "Working Hours"
 msgstr "Heures de travail"
 
 #. module: hr
+#. odoo-python
 #: code:addons/hr/models/res_users.py:0
 #, python-format
 msgid ""
@@ -3419,7 +3445,7 @@ msgstr ""
 "contacter un responsable RH pour mettre à jour les autres informations."
 
 #. module: hr
-#. openerp-web
+#. odoo-javascript
 #: code:addons/hr/static/src/models/employee.js:0
 #, python-format
 msgid "You can only chat with employees that have a dedicated user."
@@ -3428,18 +3454,21 @@ msgstr ""
 "désigné. "
 
 #. module: hr
+#. odoo-python
 #: code:addons/hr/models/hr_department.py:0
 #, python-format
 msgid "You cannot create recursive departments."
 msgstr "Vous ne pouvez pas créer des départements récursifs. "
 
 #. module: hr
+#. odoo-python
 #: code:addons/hr/models/hr_employee.py:0
 #, python-format
 msgid "You do not have access to this document."
 msgstr "Vous n'avez pas accès à ce document."
 
 #. module: hr
+#. odoo-python
 #: code:addons/hr/models/res_config_settings.py:0
 #, python-format
 msgid "You should select at least one Advanced Presence Control option."
@@ -3453,6 +3482,7 @@ msgid "ZIP"
 msgstr "Code postal"
 
 #. module: hr
+#. odoo-python
 #: code:addons/hr/models/mail_alias.py:0
 #, python-format
 msgid "addresses linked to registered employees"
@@ -3484,6 +3514,7 @@ msgid "plan"
 msgstr "plan"
 
 #. module: hr
+#. odoo-python
 #: code:addons/hr/models/models.py:0
 #, python-format
 msgid "restricted to employees"

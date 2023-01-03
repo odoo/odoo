@@ -11,9 +11,9 @@
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 16.0beta\n"
+"Project-Id-Version: Odoo Server 16.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-10-10 10:22+0000\n"
+"POT-Creation-Date: 2022-12-15 12:49+0000\n"
 "PO-Revision-Date: 2022-09-22 05:54+0000\n"
 "Last-Translator: Jeffery CHEN <jeffery9@gmail.com>, 2022\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/zh_CN/)\n"
@@ -29,6 +29,7 @@ msgid "% On-Time Delivery"
 msgstr "% 准时交货"
 
 #. module: purchase_stock
+#. odoo-python
 #: code:addons/purchase_stock/models/stock_rule.py:0
 #: code:addons/purchase_stock/models/stock_rule.py:0
 #: code:addons/purchase_stock/models/stock_rule.py:0
@@ -128,6 +129,7 @@ msgid "Average Receipt Delay"
 msgstr "平均收货延迟"
 
 #. module: purchase_stock
+#. odoo-python
 #: code:addons/purchase_stock/models/stock.py:0
 #: model:ir.model.fields.selection,name:purchase_stock.selection__stock_rule__action__buy
 #: model:stock.route,name:purchase_stock.route_warehouse0_buy
@@ -167,6 +169,7 @@ msgid "Contact"
 msgstr "联系人"
 
 #. module: purchase_stock
+#. odoo-python
 #: code:addons/purchase_stock/models/purchase.py:0
 #, python-format
 msgid "Corresponding receipt not found."
@@ -178,6 +181,7 @@ msgid "Created Purchase Order Line"
 msgstr "创建采购订单行"
 
 #. module: purchase_stock
+#. odoo-python
 #: code:addons/purchase_stock/models/stock_move.py:0
 #: code:addons/purchase_stock/models/stock_move.py:0
 #, python-format
@@ -190,13 +194,18 @@ msgid "Custom Description"
 msgstr "自定义说明"
 
 #. module: purchase_stock
+#: model_terms:ir.ui.view,arch_db:purchase_stock.res_config_settings_view_form_stock
+msgid "Days needed to confirm a PO"
+msgstr ""
+
+#. module: purchase_stock
 #: model:ir.model.fields,help:purchase_stock.field_res_company__days_to_purchase
 #: model:ir.model.fields,help:purchase_stock.field_res_config_settings__days_to_purchase
-#: model_terms:ir.ui.view,arch_db:purchase_stock.res_config_settings_view_form_stock
 msgid "Days needed to confirm a PO, define when a PO should be validated"
 msgstr "确认订单需要的时间，定义一个订单必须被验证。"
 
 #. module: purchase_stock
+#. odoo-python
 #: code:addons/purchase_stock/models/stock_rule.py:0
 #: model:ir.model.fields,field_description:purchase_stock.field_res_company__days_to_purchase
 #: model:ir.model.fields,field_description:purchase_stock.field_res_config_settings__days_to_purchase
@@ -271,6 +280,7 @@ msgid "Exception(s):"
 msgstr "异常:"
 
 #. module: purchase_stock
+#. odoo-python
 #: code:addons/purchase_stock/models/purchase.py:0
 #, python-format
 msgid ""
@@ -295,14 +305,14 @@ msgid "Fully Received"
 msgstr "完成接收"
 
 #. module: purchase_stock
-#. openerp-web
+#. odoo-javascript
 #: code:addons/purchase_stock/static/src/js/tours/purchase_stock.js:0
 #, python-format
 msgid "Generate the draft vendor bill."
 msgstr "生成供应商草稿账单。"
 
 #. module: purchase_stock
-#. openerp-web
+#. odoo-javascript
 #: code:addons/purchase_stock/static/src/js/tours/purchase_stock.js:0
 #, python-format
 msgid "Go back to the purchase order to generate the vendor bill."
@@ -419,6 +429,7 @@ msgid "Not Received"
 msgstr "未收到"
 
 #. module: purchase_stock
+#. odoo-python
 #: code:addons/purchase_stock/models/stock_move.py:0
 #, python-format
 msgid ""
@@ -480,7 +491,7 @@ msgid "Partially Received"
 msgstr "部分接受"
 
 #. module: purchase_stock
-#. openerp-web
+#. odoo-javascript
 #: code:addons/purchase_stock/static/src/js/tours/purchase_stock.js:0
 #, python-format
 msgid "Process all the receipt quantities."
@@ -548,6 +559,7 @@ msgid "Purchase Report"
 msgstr "采购报告"
 
 #. module: purchase_stock
+#. odoo-python
 #: code:addons/purchase_stock/models/stock_rule.py:0
 #, python-format
 msgid "Purchase Security Lead Time"
@@ -586,7 +598,7 @@ msgid "Receive Products"
 msgstr "接收产品"
 
 #. module: purchase_stock
-#. openerp-web
+#. odoo-javascript
 #: code:addons/purchase_stock/static/src/js/tours/purchase_stock.js:0
 #, python-format
 msgid "Receive the ordered products."
@@ -608,7 +620,7 @@ msgid "Request your vendors to deliver to your customers"
 msgstr "请求您的供应商交付给您的客户"
 
 #. module: purchase_stock
-#. openerp-web
+#. odoo-javascript
 #: code:addons/purchase_stock/static/src/purchase_stock_forecasted/forecasted_details.xml:0
 #, python-format
 msgid "Requests for quotation"
@@ -632,10 +644,8 @@ msgstr "路线"
 
 #. module: purchase_stock
 #: model_terms:ir.ui.view,arch_db:purchase_stock.res_config_settings_view_form_stock
-msgid ""
-"Schedule automatically generated request for quotations earlier to avoid "
-"delays"
-msgstr "提前安排自动生成的报价，以避免延误"
+msgid "Schedule request for quotations earlier to avoid delays"
+msgstr ""
 
 #. module: purchase_stock
 #: model_terms:ir.ui.view,arch_db:purchase_stock.product_supplierinfo_replenishment_tree_view
@@ -699,12 +709,14 @@ msgid "Technical field used to display the Drop Ship Address"
 msgstr "技术字段用于显示代发货地址"
 
 #. module: purchase_stock
+#. odoo-python
 #: code:addons/purchase_stock/models/stock.py:0
 #, python-format
 msgid "The following replenishment order has been generated"
 msgstr "已生成以下补货订单"
 
 #. module: purchase_stock
+#. odoo-python
 #: code:addons/purchase_stock/models/purchase.py:0
 #, python-format
 msgid ""
@@ -713,6 +725,7 @@ msgid ""
 msgstr "您的采购订单上的数量表明少于账单。您应该要求退款。"
 
 #. module: purchase_stock
+#. odoo-python
 #: code:addons/purchase_stock/models/stock_rule.py:0
 #, python-format
 msgid ""
@@ -739,6 +752,7 @@ msgid "This will determine operation type of incoming shipment"
 msgstr "这将决定进货的作业类型。"
 
 #. module: purchase_stock
+#. odoo-python
 #: code:addons/purchase_stock/models/purchase.py:0
 #, python-format
 msgid ""
@@ -747,6 +761,7 @@ msgid ""
 msgstr "这些日期无法在已经验证过的收货%s上进行相应的修改。"
 
 #. module: purchase_stock
+#. odoo-python
 #: code:addons/purchase_stock/models/purchase.py:0
 #, python-format
 msgid "Those dates have been updated accordingly on the receipt %s."
@@ -763,6 +778,7 @@ msgid "Transfer"
 msgstr "调拨"
 
 #. module: purchase_stock
+#. odoo-python
 #: code:addons/purchase_stock/models/purchase.py:0
 #, python-format
 msgid ""
@@ -771,7 +787,7 @@ msgid ""
 msgstr "不能取消采购订单 %s因为有些收货已经完成。"
 
 #. module: purchase_stock
-#. openerp-web
+#. odoo-javascript
 #: code:addons/purchase_stock/static/src/js/tours/purchase_stock.js:0
 #, python-format
 msgid "Validate the receipt of all ordered products."
@@ -790,6 +806,7 @@ msgid "Vendor Delay Report"
 msgstr "供应商延迟报告"
 
 #. module: purchase_stock
+#. odoo-python
 #: code:addons/purchase_stock/models/stock_rule.py:0
 #, python-format
 msgid "Vendor Lead Time"
@@ -822,6 +839,7 @@ msgid "When products are bought, they can be delivered to this warehouse"
 msgstr "已购买产品后能够发运到此仓库。"
 
 #. module: purchase_stock
+#. odoo-python
 #: code:addons/purchase_stock/models/stock_rule.py:0
 #, python-format
 msgid ""
@@ -830,6 +848,7 @@ msgid ""
 msgstr "当需要产品在<b>%s</b>时，<br/>为了满足需求而创建报价请求。"
 
 #. module: purchase_stock
+#. odoo-python
 #: code:addons/purchase_stock/models/purchase.py:0
 #, python-format
 msgid ""
@@ -840,6 +859,7 @@ msgstr ""
 "         首先创建一个退货。"
 
 #. module: purchase_stock
+#. odoo-python
 #: code:addons/purchase_stock/models/purchase.py:0
 #, python-format
 msgid "You must set a Vendor Location for this partner %s"

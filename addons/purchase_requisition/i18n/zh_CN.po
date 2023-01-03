@@ -10,9 +10,9 @@
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 16.0beta\n"
+"Project-Id-Version: Odoo Server 16.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-10-10 10:23+0000\n"
+"POT-Creation-Date: 2022-12-15 12:51+0000\n"
 "PO-Revision-Date: 2022-09-22 05:54+0000\n"
 "Last-Translator: Jeffery CHEN <jeffery9@gmail.com>, 2022\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/zh_CN/)\n"
@@ -146,6 +146,7 @@ msgid "Alternative Purchase Order"
 msgstr "替代采购订单"
 
 #. module: purchase_requisition
+#. odoo-python
 #: code:addons/purchase_requisition/models/purchase.py:0
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.purchase_requisition_alternative_warning_form
 #, python-format
@@ -168,9 +169,9 @@ msgid "Analytic"
 msgstr "分析会计"
 
 #. module: purchase_requisition
-#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_line__analytic_distribution_stored_char
-msgid "Analytic Distribution Stored Char"
-msgstr "分析分配存储字符"
+#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_line__analytic_precision
+msgid "Analytic Precision"
+msgstr "分析精度"
 
 #. module: purchase_requisition
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_type_form
@@ -219,6 +220,7 @@ msgid "Cancelled"
 msgstr "已取消"
 
 #. module: purchase_requisition
+#. odoo-python
 #: code:addons/purchase_requisition/models/purchase_requisition.py:0
 #, python-format
 msgid "Cancelled by the agreement associated to this quotation."
@@ -267,6 +269,7 @@ msgid "Company"
 msgstr "公司"
 
 #. module: purchase_requisition
+#. odoo-python
 #: code:addons/purchase_requisition/models/purchase.py:0
 #, python-format
 msgid "Compare Order Lines"
@@ -317,6 +320,7 @@ msgstr ""
 "通过向不同供应商添加备选询价请求来创建招标。通过选择交付周期、OTD和/或总金额的最佳组合进行选择。通过比较产品线，您还可以决定从一个供应商订购一些产品，从另一个供应商订货"
 
 #. module: purchase_requisition
+#. odoo-python
 #: code:addons/purchase_requisition/models/purchase.py:0
 #, python-format
 msgid "Create alternative"
@@ -615,6 +619,7 @@ msgid "Next Activity Type"
 msgstr "下一活动类型"
 
 #. module: purchase_requisition
+#. odoo-python
 #: code:addons/purchase_requisition/models/purchase.py:0
 #, python-format
 msgid "Nothing to clear"
@@ -905,12 +910,14 @@ msgid "Show all records which has next action date is before today"
 msgstr "显示所有的在今天之前的下一个行动日期的记录"
 
 #. module: purchase_requisition
+#. odoo-python
 #: code:addons/purchase_requisition/models/purchase.py:0
 #, python-format
 msgid "Some not cleared"
 msgstr "有些没有清理"
 
 #. module: purchase_requisition
+#. odoo-python
 #: code:addons/purchase_requisition/models/purchase.py:0
 #, python-format
 msgid ""
@@ -983,6 +990,7 @@ msgid "The original PO that this alternative PO is being created for."
 msgstr "正在为其创建此备选采购订单的原始采购订单。"
 
 #. module: purchase_requisition
+#. odoo-python
 #: code:addons/purchase_requisition/wizard/purchase_requisition_create_alternative.py:0
 #, python-format
 msgid ""
@@ -992,12 +1000,14 @@ msgid ""
 msgstr "您选择的供应商或您从原始订单复制的至少一个产品上有阻塞警告，无法选择创建替代产品"
 
 #. module: purchase_requisition
+#. odoo-python
 #: code:addons/purchase_requisition/models/purchase.py:0
 #, python-format
 msgid "There are no quantities to clear."
 msgstr "不存在需要清理的数量。"
 
 #. module: purchase_requisition
+#. odoo-python
 #: code:addons/purchase_requisition/models/purchase_requisition.py:0
 #, python-format
 msgid ""
@@ -1006,6 +1016,7 @@ msgid ""
 msgstr "对该供应商已经有一个开放的一揽子订单。我们建议您完成这个开放的一揽子订单，而不是创建一个新的订单。"
 
 #. module: purchase_requisition
+#. odoo-python
 #: code:addons/purchase_requisition/wizard/purchase_requisition_create_alternative.py:0
 #: code:addons/purchase_requisition/wizard/purchase_requisition_create_alternative.py:0
 #, python-format
@@ -1065,6 +1076,7 @@ msgid "Warning Messages"
 msgstr "警告消息"
 
 #. module: purchase_requisition
+#. odoo-python
 #: code:addons/purchase_requisition/wizard/purchase_requisition_create_alternative.py:0
 #, python-format
 msgid ""
@@ -1075,6 +1087,7 @@ msgstr ""
 "%(warning_message)s\n"
 
 #. module: purchase_requisition
+#. odoo-python
 #: code:addons/purchase_requisition/wizard/purchase_requisition_create_alternative.py:0
 #, python-format
 msgid ""
@@ -1085,6 +1098,7 @@ msgstr ""
 "%(warning_message)s\n"
 
 #. module: purchase_requisition
+#. odoo-python
 #: code:addons/purchase_requisition/models/purchase_requisition.py:0
 #, python-format
 msgid "Warning for %s"
@@ -1118,18 +1132,21 @@ msgid "Wizard to preset values for alternative PO"
 msgstr "替代PO的预设值向导"
 
 #. module: purchase_requisition
+#. odoo-python
 #: code:addons/purchase_requisition/models/purchase_requisition.py:0
 #, python-format
 msgid "You can only delete draft requisitions."
 msgstr "您只能删除草稿申请单。"
 
 #. module: purchase_requisition
+#. odoo-python
 #: code:addons/purchase_requisition/models/purchase_requisition.py:0
 #, python-format
 msgid "You cannot confirm agreement '%s' because there is no product line."
 msgstr "没有明细行，无法确认此申请单 '%s'"
 
 #. module: purchase_requisition
+#. odoo-python
 #: code:addons/purchase_requisition/models/purchase_requisition.py:0
 #: code:addons/purchase_requisition/models/purchase_requisition.py:0
 #: code:addons/purchase_requisition/models/purchase_requisition.py:0
@@ -1138,12 +1155,14 @@ msgid "You cannot confirm the blanket order without price."
 msgstr "您无法确认没有单价的一揽子订单。"
 
 #. module: purchase_requisition
+#. odoo-python
 #: code:addons/purchase_requisition/models/purchase_requisition.py:0
 #, python-format
 msgid "You cannot confirm the blanket order without quantity."
 msgstr "您无法确认没有数量的一揽子订单。"
 
 #. module: purchase_requisition
+#. odoo-python
 #: code:addons/purchase_requisition/models/purchase_requisition.py:0
 #, python-format
 msgid ""

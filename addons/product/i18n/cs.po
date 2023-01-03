@@ -8,19 +8,19 @@
 # milda dvorak <milda.dvorak@optimal4.cz>, 2022
 # Jaroslav Helemik Nemec <nemec@helemik.cz>, 2022
 # karolína schusterová <karolina.schusterova@vdp.sk>, 2022
-# Rastislav Brencic <rastislav.brencic@azet.sk>, 2022
 # Jan Horzinka <jan.horzinka@centrum.cz>, 2022
 # Martin Trigaux, 2022
 # Michal Veselý <michal@veselyberanek.net>, 2022
 # trendspotter <jirka.p@volny.cz>, 2022
+# Rastislav Brencic <rastislav.brencic@azet.sk>, 2022
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 16.0beta\n"
+"Project-Id-Version: Odoo Server 16.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-10-04 09:25+0000\n"
+"POT-Creation-Date: 2022-12-15 12:51+0000\n"
 "PO-Revision-Date: 2022-09-22 05:54+0000\n"
-"Last-Translator: trendspotter <jirka.p@volny.cz>, 2022\n"
+"Last-Translator: Rastislav Brencic <rastislav.brencic@azet.sk>, 2022\n"
 "Language-Team: Czech (https://www.transifex.com/odoo/teams/41243/cs/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -40,6 +40,7 @@ msgid "# Products"
 msgstr "Počet produktů"
 
 #. module: product
+#. odoo-python
 #: code:addons/product/models/product_pricelist_item.py:0
 #, python-format
 msgid ""
@@ -50,24 +51,28 @@ msgstr ""
 "Příklad: %(amount)s * %(discount_charge)s + %(price_surcharge)s → %(total_amount)s"
 
 #. module: product
+#. odoo-python
 #: code:addons/product/models/product_pricelist_item.py:0
 #, python-format
 msgid "%(percentage)s %% discount and %(price)s surcharge"
 msgstr "%(percentage)s %% sleva a %(price)s příplatek"
 
 #. module: product
+#. odoo-python
 #: code:addons/product/models/product_pricelist_item.py:0
 #, python-format
 msgid "%s %% discount"
 msgstr "%s %% sleva"
 
 #. module: product
+#. odoo-python
 #: code:addons/product/models/product_template.py:0
 #, python-format
 msgid "%s (copy)"
 msgstr "%s (kopie)"
 
 #. module: product
+#. odoo-python
 #: code:addons/product/models/product_pricelist_item.py:0
 #, python-format
 msgid "%s : end date (%s) should be greater than start date (%s)"
@@ -85,6 +90,7 @@ msgid "'Products packaging - %s' % (object.name)"
 msgstr ""
 
 #. module: product
+#. odoo-python
 #: code:addons/product/models/product_product.py:0
 #, python-format
 msgid "- Barcode \"%s\" already assigned to product(s): %s"
@@ -109,10 +115,6 @@ msgid "1 year"
 msgstr "1 rok"
 
 #. module: product
-#: model:product.product,description_sale:product.product_product_4
-#: model:product.product,description_sale:product.product_product_4b
-#: model:product.product,description_sale:product.product_product_4c
-#: model:product.product,description_sale:product.product_product_4d
 #: model:product.template,description_sale:product.product_product_4_product_template
 msgid "160x80cm, with large legs."
 msgstr "160x80cm, s velkými nohami."
@@ -234,6 +236,7 @@ msgstr ""
 "poznámky"
 
 #. module: product
+#. odoo-python
 #: code:addons/product/models/product_product.py:0
 #, python-format
 msgid "A packaging already uses the barcode"
@@ -247,6 +250,7 @@ msgid ""
 msgstr ""
 
 #. module: product
+#. odoo-python
 #: code:addons/product/models/product_packaging.py:0
 #, python-format
 msgid "A product already uses the barcode"
@@ -265,7 +269,6 @@ msgstr ""
 "Služba je nehmotný produkt, který poskytujete."
 
 #. module: product
-#: model:product.product,name:product.product_product_25
 #: model:product.template,name:product.product_product_25_product_template
 msgid "Acoustic Bloc Screens"
 msgstr "Akustické zástěny"
@@ -318,7 +321,7 @@ msgid "Activity Type Icon"
 msgstr "Ikona typu aktivity"
 
 #. module: product
-#. openerp-web
+#. odoo-javascript
 #: code:addons/product/static/src/xml/pricelist_report.xml:0
 #, python-format
 msgid "Add a quantity"
@@ -351,6 +354,7 @@ msgid "All Product Variants using this Tag"
 msgstr ""
 
 #. module: product
+#. odoo-python
 #: code:addons/product/models/product_pricelist_item.py:0
 #: model:ir.model.fields.selection,name:product.selection__product_pricelist_item__applied_on__3_global
 #, python-format
@@ -374,8 +378,6 @@ msgstr ""
 
 #. module: product
 #: model:product.attribute.value,name:product.product_attribute_value_2
-#: model:product.template.attribute.value,name:product.product_11_attribute_1_value_2
-#: model:product.template.attribute.value,name:product.product_4_attribute_1_value_2
 msgid "Aluminium"
 msgstr "Hliník"
 
@@ -412,7 +414,7 @@ msgid "Assigns the priority to the list of product vendor."
 msgstr "Přiřadí prioritu seznamu dodavatelů produktu."
 
 #. module: product
-#. openerp-web
+#. odoo-javascript
 #: code:addons/product/static/src/js/product_pricelist_report.js:0
 #, python-format
 msgid ""
@@ -496,6 +498,7 @@ msgstr ""
 " z přenosu v aplikaci čárový kód a přesuňte všechny obsažené jednotky"
 
 #. module: product
+#. odoo-python
 #: code:addons/product/models/product_product.py:0
 #, python-format
 msgid ""
@@ -529,12 +532,10 @@ msgstr "Základní ceníky"
 
 #. module: product
 #: model:product.attribute.value,name:product.product_attribute_value_4
-#: model:product.template.attribute.value,name:product.product_4_attribute_2_value_2
 msgid "Black"
 msgstr "Černá"
 
 #. module: product
-#: model:product.product,name:product.product_product_10
 #: model:product.template,name:product.product_product_10_product_template
 msgid "Cabinet with Doors"
 msgstr "Skříň s dveřmi"
@@ -570,6 +571,7 @@ msgid "Category"
 msgstr "Kategorie"
 
 #. module: product
+#. odoo-python
 #: code:addons/product/models/product_pricelist_item.py:0
 #, python-format
 msgid "Category: %s"
@@ -657,14 +659,11 @@ msgid "Conditions"
 msgstr "Podmínky"
 
 #. module: product
-#: model:product.product,name:product.product_product_11
-#: model:product.product,name:product.product_product_11b
 #: model:product.template,name:product.product_product_11_product_template
 msgid "Conference Chair"
 msgstr "Konferenční křeslo"
 
 #. module: product
-#: model:product.product,description_sale:product.consu_delivery_02
 #: model:product.template,description_sale:product.consu_delivery_02_product_template
 msgid "Conference room table"
 msgstr ""
@@ -696,6 +695,7 @@ msgid "Consumable"
 msgstr "Spotřebovatelé"
 
 #. module: product
+#. odoo-python
 #: code:addons/product/models/product_template.py:0
 #, python-format
 msgid ""
@@ -709,10 +709,6 @@ msgid "Contact"
 msgstr "Kontakt"
 
 #. module: product
-#: model_terms:product.product,website_description:product.product_product_4
-#: model_terms:product.product,website_description:product.product_product_4b
-#: model_terms:product.product,website_description:product.product_product_4c
-#: model_terms:product.product,website_description:product.product_product_4d
 #: model_terms:product.template,website_description:product.product_product_4_product_template
 msgid "Contact Us"
 msgstr "Kontaktujte nás"
@@ -733,13 +729,11 @@ msgid "Contained quantity"
 msgstr "Obsahuje množství"
 
 #. module: product
-#: model:product.product,name:product.product_product_13
 #: model:product.template,name:product.product_product_13_product_template
 msgid "Corner Desk Left Sit"
 msgstr ""
 
 #. module: product
-#: model:product.product,name:product.product_product_5
 #: model:product.template,name:product.product_product_5_product_template
 msgid "Corner Desk Right Sit"
 msgstr "Rohový stůl, pravý sed"
@@ -855,19 +849,9 @@ msgid "Customer Ref"
 msgstr "reference na zákazníka"
 
 #. module: product
-#: model:product.product,name:product.product_product_4
-#: model:product.product,name:product.product_product_4b
-#: model:product.product,name:product.product_product_4c
-#: model:product.product,name:product.product_product_4d
 #: model:product.template,name:product.product_product_4_product_template
 msgid "Customizable Desk"
 msgstr "Přizpůsobitelná pracovní plocha"
-
-#. module: product
-#: model:product.product,uom_name:product.expense_hotel
-#: model:product.template,uom_name:product.expense_hotel_product_template
-msgid "Days"
-msgstr "Dny"
 
 #. module: product
 #: model:ir.model,name:product.model_decimal_precision
@@ -875,6 +859,7 @@ msgid "Decimal Precision"
 msgstr "Desetinná přesnost"
 
 #. module: product
+#. odoo-python
 #: code:addons/product/models/res_company.py:0
 #: code:addons/product/models/res_company.py:0
 #, python-format
@@ -926,19 +911,16 @@ msgid "Description"
 msgstr "Popis"
 
 #. module: product
-#: model:product.product,name:product.product_product_3
 #: model:product.template,name:product.product_product_3_product_template
 msgid "Desk Combination"
 msgstr "Kombinace stolu"
 
 #. module: product
-#: model:product.product,name:product.product_product_22
 #: model:product.template,name:product.product_product_22_product_template
 msgid "Desk Stand with Screen"
 msgstr ""
 
 #. module: product
-#: model:product.product,description_sale:product.product_product_3
 #: model:product.template,description_sale:product.product_product_3_product_template
 msgid "Desk combination, black-brown: chair + desk + drawer."
 msgstr "Kombinace stolů, černohnědá: židle + psací stůl + zásuvky."
@@ -1001,7 +983,7 @@ msgid "Display Name"
 msgstr "Zobrazované jméno"
 
 #. module: product
-#. openerp-web
+#. odoo-javascript
 #: code:addons/product/static/src/xml/pricelist_report.xml:0
 #, python-format
 msgid "Display Pricelist"
@@ -1020,19 +1002,16 @@ msgid "Documentation"
 msgstr "Dokumentace"
 
 #. module: product
-#: model:product.product,name:product.product_product_27
 #: model:product.template,name:product.product_product_27_product_template
 msgid "Drawer"
 msgstr "Šuplík"
 
 #. module: product
-#: model:product.product,name:product.product_product_16
 #: model:product.template,name:product.product_product_16_product_template
 msgid "Drawer Black"
 msgstr "Zásuvka černá"
 
 #. module: product
-#: model_terms:product.product,description:product.product_product_27
 #: model_terms:product.template,description:product.product_product_27_product_template
 msgid "Drawer with two routing possiblities."
 msgstr "Zásuvka se dvěma možnostmi vysouvání."
@@ -1077,10 +1056,6 @@ msgid ""
 msgstr ""
 
 #. module: product
-#: model_terms:product.product,website_description:product.product_product_4
-#: model_terms:product.product,website_description:product.product_product_4b
-#: model_terms:product.product,website_description:product.product_product_4c
-#: model_terms:product.product,website_description:product.product_product_4d
 #: model_terms:product.template,website_description:product.product_product_4_product_template
 msgid "Ergonomic"
 msgstr ""
@@ -1134,7 +1109,6 @@ msgid "Fixed Price"
 msgstr "Pevná cena"
 
 #. module: product
-#: model:product.product,name:product.product_product_20
 #: model:product.template,name:product.product_product_20_product_template
 msgid "Flipover"
 msgstr "Převrátit"
@@ -1177,13 +1151,11 @@ msgid "Formula"
 msgstr "Vzorec"
 
 #. module: product
-#: model:product.product,name:product.consu_delivery_03
 #: model:product.template,name:product.consu_delivery_03_product_template
 msgid "Four Person Desk"
 msgstr ""
 
 #. module: product
-#: model:product.product,description_sale:product.consu_delivery_03
 #: model:product.template,description_sale:product.consu_delivery_03_product_template
 msgid "Four person modern office workstation"
 msgstr ""
@@ -1259,18 +1231,9 @@ msgstr ""
 "zobrazovat barvu, pokud je typ atributu 'Color'."
 
 #. module: product
-#: model:product.product,name:product.expense_hotel
 #: model:product.template,name:product.expense_hotel_product_template
 msgid "Hotel Accommodation"
 msgstr "Hotelové ubytování"
-
-#. module: product
-#: model:product.product,uom_name:product.product_product_1
-#: model:product.product,uom_name:product.product_product_2
-#: model:product.template,uom_name:product.product_product_1_product_template
-#: model:product.template,uom_name:product.product_product_2_product_template
-msgid "Hours"
-msgstr "Hodiny"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_attribute__id
@@ -1311,7 +1274,9 @@ msgstr "Pokud je zaškrtnuto, nové zprávy vyžadují vaši pozornost."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_product__message_has_error
+#: model:ir.model.fields,help:product.field_product_product__message_has_sms_error
 #: model:ir.model.fields,help:product.field_product_template__message_has_error
+#: model:ir.model.fields,help:product.field_product_template__message_has_sms_error
 msgid "If checked, some messages have a delivery error."
 msgstr "Pokud je zaškrtnuto, některé zprávy mají chybu při doručení."
 
@@ -1368,18 +1333,21 @@ msgid "Image 512"
 msgstr "Obrázek 512"
 
 #. module: product
+#. odoo-python
 #: code:addons/product/models/product_pricelist.py:0
 #, python-format
 msgid "Import Template for Pricelists"
 msgstr "Importovat šablonu pro ceníky"
 
 #. module: product
+#. odoo-python
 #: code:addons/product/models/product_template.py:0
 #, python-format
 msgid "Import Template for Products"
 msgstr "Importovat šablonu pro produkty"
 
 #. module: product
+#. odoo-python
 #: code:addons/product/models/product_supplierinfo.py:0
 #, python-format
 msgid "Import Template for Vendor Pricelists"
@@ -1401,7 +1369,6 @@ msgid "Inactive"
 msgstr "Neaktivní"
 
 #. module: product
-#: model:product.product,name:product.product_product_24
 #: model:product.template,name:product.product_product_24_product_template
 msgid "Individual Workplace"
 msgstr ""
@@ -1466,19 +1433,16 @@ msgid "Kilograms"
 msgstr "Kilogramy"
 
 #. module: product
-#: model:product.product,name:product.product_product_6
 #: model:product.template,name:product.product_product_6_product_template
 msgid "Large Cabinet"
 msgstr "Velká skříňka"
 
 #. module: product
-#: model:product.product,name:product.product_product_8
 #: model:product.template,name:product.product_product_8_product_template
 msgid "Large Desk"
 msgstr "Velký stůl"
 
 #. module: product
-#: model:product.product,name:product.consu_delivery_02
 #: model:product.template,name:product.consu_delivery_02_product_template
 msgid "Large Meeting Table"
 msgstr "Velký konferenční stůl"
@@ -1567,10 +1531,6 @@ msgid "Lines"
 msgstr "Řádky"
 
 #. module: product
-#: model_terms:product.product,website_description:product.product_product_4
-#: model_terms:product.product,website_description:product.product_product_4b
-#: model_terms:product.product,website_description:product.product_product_4c
-#: model_terms:product.product,website_description:product.product_product_4d
 #: model_terms:product.template,website_description:product.product_product_4_product_template
 msgid "Locally handmade"
 msgstr ""
@@ -1582,10 +1542,6 @@ msgid "Logistics"
 msgstr "Logistika"
 
 #. module: product
-#: model_terms:product.product,website_description:product.product_product_4
-#: model_terms:product.product,website_description:product.product_product_4b
-#: model_terms:product.product,website_description:product.product_product_4c
-#: model_terms:product.product,website_description:product.product_product_4d
 #: model_terms:product.template,website_description:product.product_product_4_product_template
 msgid ""
 "Looking for a custom bamboo stain to match existing furniture? Contact us "
@@ -1719,6 +1675,7 @@ msgid "Next Activity Type"
 msgstr "Další typ aktivity"
 
 #. module: product
+#. odoo-python
 #: code:addons/product/wizard/product_label_layout.py:0
 #, python-format
 msgid ""
@@ -1737,6 +1694,7 @@ msgid "Normal"
 msgstr "Normální"
 
 #. module: product
+#. odoo-python
 #: code:addons/product/models/product_product.py:0
 #: code:addons/product/models/product_template.py:0
 #, python-format
@@ -1779,30 +1737,27 @@ msgid "Number of price rules"
 msgstr "Počet cenových pravidel"
 
 #. module: product
-#: model:product.product,name:product.product_delivery_01
 #: model:product.template,name:product.product_delivery_01_product_template
 msgid "Office Chair"
 msgstr "Kancelářská židle"
 
 #. module: product
-#: model:product.product,name:product.product_product_12
 #: model:product.template,name:product.product_product_12_product_template
 msgid "Office Chair Black"
 msgstr "Kancelářská židle černá"
 
 #. module: product
-#: model:product.product,name:product.product_order_01
 #: model:product.template,name:product.product_order_01_product_template
 msgid "Office Design Software"
 msgstr "Kancelářský designový software"
 
 #. module: product
-#: model:product.product,name:product.product_delivery_02
 #: model:product.template,name:product.product_delivery_02_product_template
 msgid "Office Lamp"
 msgstr "Kancelářská lampa"
 
 #. module: product
+#. odoo-python
 #: code:addons/product/models/product_attribute.py:0
 #, python-format
 msgid ""
@@ -1811,6 +1766,7 @@ msgid ""
 msgstr ""
 
 #. module: product
+#. odoo-python
 #: code:addons/product/models/product_attribute.py:0
 #, python-format
 msgid ""
@@ -1843,7 +1799,6 @@ msgid "Parent Path"
 msgstr "Nadřazená cesta"
 
 #. module: product
-#: model:product.product,name:product.product_product_9
 #: model:product.template,name:product.product_product_9_product_template
 msgid "Pedal Bin"
 msgstr "Koš na pedál"
@@ -1859,25 +1814,28 @@ msgid "Pills"
 msgstr "Pilulky"
 
 #. module: product
-#. openerp-web
+#. odoo-javascript
 #: code:addons/product/static/src/js/product_pricelist_report.js:0
 #, python-format
 msgid "Please enter a positive whole number"
 msgstr "Zadejte kladné celé číslo"
 
 #. module: product
+#. odoo-python
 #: code:addons/product/models/product_pricelist_item.py:0
 #, python-format
 msgid "Please specify the category for which this rule should be applied"
 msgstr "Uveďte kategorii, pro kterou by se toto pravidlo mělo použít"
 
 #. module: product
+#. odoo-python
 #: code:addons/product/models/product_pricelist_item.py:0
 #, python-format
 msgid "Please specify the product for which this rule should be applied"
 msgstr "Uveďte produkt, na který by se toto pravidlo mělo vztahovat"
 
 #. module: product
+#. odoo-python
 #: code:addons/product/models/product_pricelist_item.py:0
 #, python-format
 msgid ""
@@ -1890,10 +1848,6 @@ msgid "Pounds"
 msgstr "Libry"
 
 #. module: product
-#: model_terms:product.product,website_description:product.product_product_4
-#: model_terms:product.product,website_description:product.product_product_4b
-#: model_terms:product.product,website_description:product.product_product_4c
-#: model_terms:product.product,website_description:product.product_product_4d
 #: model_terms:product.template,website_description:product.product_product_4_product_template
 msgid ""
 "Press a button and watch your desk glide effortlessly from sitting to "
@@ -1925,6 +1879,7 @@ msgid "Price Rounding"
 msgstr "Zaoukrouhlení ceny"
 
 #. module: product
+#. odoo-python
 #: code:addons/product/models/product_product.py:0
 #: code:addons/product/models/product_template.py:0
 #: model:ir.actions.act_window,name:product.product_pricelist_item_action
@@ -1974,7 +1929,7 @@ msgid "Pricelist Name"
 msgstr "Název ceníku"
 
 #. module: product
-#. openerp-web
+#. odoo-javascript
 #: code:addons/product/static/src/js/product_pricelist_report.js:0
 #: model:ir.model,name:product.model_report_product_report_pricelist
 #, python-format
@@ -1995,7 +1950,7 @@ msgid "Pricelist Rules"
 msgstr "Pravidla ceníku"
 
 #. module: product
-#. openerp-web
+#. odoo-javascript
 #: code:addons/product/static/src/xml/pricelist_report.xml:0
 #: model_terms:ir.ui.view,arch_db:product.report_pricelist_page
 #, python-format
@@ -2025,7 +1980,7 @@ msgid "Pricing"
 msgstr "Ceny"
 
 #. module: product
-#. openerp-web
+#. odoo-javascript
 #: code:addons/product/static/src/js/product_pricelist_report.js:0
 #, python-format
 msgid "Print"
@@ -2234,6 +2189,7 @@ msgid "Product Variant"
 msgstr "Varianta výrobku"
 
 #. module: product
+#. odoo-python
 #: code:addons/product/models/product_attribute.py:0
 #, python-format
 msgid "Product Variant Values"
@@ -2249,12 +2205,14 @@ msgid "Product Variants"
 msgstr "Varianty výrobku"
 
 #. module: product
+#. odoo-python
 #: code:addons/product/report/product_label_report.py:0
 #, python-format
 msgid "Product model not defined, Please contact your administrator."
 msgstr ""
 
 #. module: product
+#. odoo-python
 #: code:addons/product/models/product_pricelist_item.py:0
 #, python-format
 msgid "Product: %s"
@@ -2294,6 +2252,7 @@ msgid "Products Price Search"
 msgstr "Hledání ceny výrobku"
 
 #. module: product
+#. odoo-python
 #: code:addons/product/models/product_product.py:0
 #, python-format
 msgid "Products: %(category)s"
@@ -2327,7 +2286,7 @@ msgid "Purchase UoM"
 msgstr ""
 
 #. module: product
-#. openerp-web
+#. odoo-javascript
 #: code:addons/product/static/src/xml/pricelist_report.xml:0
 #, python-format
 msgid "Quantities:"
@@ -2340,7 +2299,7 @@ msgid "Quantity"
 msgstr "Množství"
 
 #. module: product
-#. openerp-web
+#. odoo-javascript
 #: code:addons/product/static/src/js/product_pricelist_report.js:0
 #, python-format
 msgid "Quantity already present (%d)."
@@ -2371,6 +2330,7 @@ msgstr ""
 " množství a období."
 
 #. module: product
+#. odoo-python
 #: code:addons/product/models/product_attribute.py:0
 #: model:ir.model.fields,field_description:product.field_product_attribute__product_tmpl_ids
 #, python-format
@@ -2383,7 +2343,7 @@ msgid "Related Variants"
 msgstr "Související varianty"
 
 #. module: product
-#. openerp-web
+#. odoo-javascript
 #: code:addons/product/static/src/xml/pricelist_report.xml:0
 #, python-format
 msgid "Remove quantity"
@@ -2396,7 +2356,6 @@ msgid "Responsible User"
 msgstr "Zodpovědný uživatel"
 
 #. module: product
-#: model:product.product,name:product.expense_product
 #: model:product.template,name:product.expense_product_product_template
 msgid "Restaurant Expenses"
 msgstr "Výdaje na restauraci"
@@ -2415,6 +2374,12 @@ msgstr "Ŕádky"
 #: model:ir.model.fields,field_description:product.field_product_pricelist_item__rule_tip
 msgid "Rule Tip"
 msgstr ""
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_product_product__message_has_sms_error
+#: model:ir.model.fields,field_description:product.field_product_template__message_has_sms_error
+msgid "SMS Delivery error"
+msgstr "Chyba doručení SMS"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_template_form_view
@@ -2579,13 +2544,10 @@ msgstr ""
 
 #. module: product
 #: model:product.attribute.value,name:product.product_attribute_value_1
-#: model:product.template.attribute.value,name:product.product_11_attribute_1_value_1
-#: model:product.template.attribute.value,name:product.product_4_attribute_1_value_1
 msgid "Steel"
 msgstr "Ocel"
 
 #. module: product
-#: model:product.product,name:product.product_product_7
 #: model:product.template,name:product.product_product_7_product_template
 msgid "Storage Box"
 msgstr "Úložný box"
@@ -2616,6 +2578,7 @@ msgid "Tags are used to search product for a given theme."
 msgstr ""
 
 #. module: product
+#. odoo-python
 #: code:addons/product/models/product_product.py:0
 #: code:addons/product/models/product_template.py:0
 #, python-format
@@ -2623,12 +2586,14 @@ msgid "The Internal Reference '%s' already exists."
 msgstr ""
 
 #. module: product
+#. odoo-python
 #: code:addons/product/models/product_template.py:0
 #, python-format
 msgid "The Type of this product doesn't match the Detailed Type"
 msgstr ""
 
 #. module: product
+#. odoo-python
 #: code:addons/product/models/product_attribute.py:0
 #, python-format
 msgid "The attribute %s must have at least one value for the product %s."
@@ -2650,6 +2615,7 @@ msgid ""
 msgstr "Vypočtená cena je vyjádřena ve výchozí měrné jednotce výrobku."
 
 #. module: product
+#. odoo-python
 #: code:addons/product/models/product_template.py:0
 #, python-format
 msgid ""
@@ -2671,10 +2637,6 @@ msgid "The first in the sequence is the default one."
 msgstr "První v pořadí je výchozí."
 
 #. module: product
-#: model_terms:product.product,website_description:product.product_product_4
-#: model_terms:product.product,website_description:product.product_product_4b
-#: model_terms:product.product,website_description:product.product_product_4c
-#: model_terms:product.product,website_description:product.product_product_4d
 #: model_terms:product.template,website_description:product.product_product_4_product_template
 msgid ""
 "The minimum height is 65 cm, and for standing work the maximum height "
@@ -2682,6 +2644,7 @@ msgid ""
 msgstr ""
 
 #. module: product
+#. odoo-python
 #: code:addons/product/models/product_pricelist_item.py:0
 #, python-format
 msgid "The minimum margin should be lower than the maximum margin."
@@ -2695,6 +2658,7 @@ msgid ""
 msgstr "Počet produktů v této kategorii (Nezohledňuje podřízené kategorie)"
 
 #. module: product
+#. odoo-python
 #: code:addons/product/models/product_template.py:0
 #, python-format
 msgid ""
@@ -2714,6 +2678,7 @@ msgid "The price to purchase a product"
 msgstr "Cena za nákup produktu"
 
 #. module: product
+#. odoo-python
 #: code:addons/product/models/product_template.py:0
 #, python-format
 msgid "The product template is archived so no combination is possible."
@@ -2740,30 +2705,35 @@ msgstr ""
 "\"Konfigurovat varianty\" nastavíte extra atributové ceny."
 
 #. module: product
+#. odoo-python
 #: code:addons/product/models/product_attribute.py:0
 #, python-format
 msgid "The value %s is not defined for the attribute %s on the product %s."
 msgstr "Hodnota %s není definována pro atribut %s na produktu %s."
 
 #. module: product
+#. odoo-python
 #: code:addons/product/models/product_template.py:0
 #, python-format
 msgid "There are no possible combination."
 msgstr "Neexistují žádné možné kombinace."
 
 #. module: product
+#. odoo-python
 #: code:addons/product/models/product_template.py:0
 #, python-format
 msgid "There are no remaining closest combination."
 msgstr "Nezbývají žádné nejbližší kombinace."
 
 #. module: product
+#. odoo-python
 #: code:addons/product/models/product_template.py:0
 #, python-format
 msgid "There are no remaining possible combination."
 msgstr "Nejsou žádné zbývající možné kombinace."
 
 #. module: product
+#. odoo-python
 #: code:addons/product/models/product_template.py:0
 #, python-format
 msgid ""
@@ -2798,6 +2768,7 @@ msgstr ""
 "partnerovi"
 
 #. module: product
+#. odoo-python
 #: code:addons/product/models/uom_uom.py:0
 #, python-format
 msgid ""
@@ -2825,13 +2796,11 @@ msgstr ""
 " Pokud chcete použít interní, ponechte prázdné."
 
 #. module: product
-#: model:product.product,description_sale:product.consu_delivery_01
 #: model:product.template,description_sale:product.consu_delivery_01_product_template
 msgid "Three Seater Sofa with Lounger in Steel Grey Colour"
 msgstr ""
 
 #. module: product
-#: model:product.product,name:product.consu_delivery_01
 #: model:product.template,name:product.consu_delivery_01_product_template
 msgid "Three-Seat Sofa"
 msgstr "Třímístná pohovka"
@@ -2854,6 +2823,7 @@ msgid "Type of the exception activity on record."
 msgstr "Typ zaznamenané výjimečné aktivity."
 
 #. module: product
+#. odoo-python
 #: code:addons/product/wizard/product_label_layout.py:0
 #, python-format
 msgid "Unable to find report template for %s format"
@@ -2877,62 +2847,6 @@ msgstr "Měrná jednotka"
 #: model:ir.model.fields,field_description:product.field_product_template__uom_name
 msgid "Unit of Measure Name"
 msgstr "Název měrné jednotky"
-
-#. module: product
-#: model:product.product,uom_name:product.consu_delivery_01
-#: model:product.product,uom_name:product.consu_delivery_02
-#: model:product.product,uom_name:product.consu_delivery_03
-#: model:product.product,uom_name:product.expense_product
-#: model:product.product,uom_name:product.product_delivery_01
-#: model:product.product,uom_name:product.product_delivery_02
-#: model:product.product,uom_name:product.product_order_01
-#: model:product.product,uom_name:product.product_product_10
-#: model:product.product,uom_name:product.product_product_11
-#: model:product.product,uom_name:product.product_product_11b
-#: model:product.product,uom_name:product.product_product_12
-#: model:product.product,uom_name:product.product_product_13
-#: model:product.product,uom_name:product.product_product_16
-#: model:product.product,uom_name:product.product_product_20
-#: model:product.product,uom_name:product.product_product_22
-#: model:product.product,uom_name:product.product_product_24
-#: model:product.product,uom_name:product.product_product_25
-#: model:product.product,uom_name:product.product_product_27
-#: model:product.product,uom_name:product.product_product_3
-#: model:product.product,uom_name:product.product_product_4
-#: model:product.product,uom_name:product.product_product_4b
-#: model:product.product,uom_name:product.product_product_4c
-#: model:product.product,uom_name:product.product_product_4d
-#: model:product.product,uom_name:product.product_product_5
-#: model:product.product,uom_name:product.product_product_6
-#: model:product.product,uom_name:product.product_product_7
-#: model:product.product,uom_name:product.product_product_8
-#: model:product.product,uom_name:product.product_product_9
-#: model:product.template,uom_name:product.consu_delivery_01_product_template
-#: model:product.template,uom_name:product.consu_delivery_02_product_template
-#: model:product.template,uom_name:product.consu_delivery_03_product_template
-#: model:product.template,uom_name:product.expense_product_product_template
-#: model:product.template,uom_name:product.product_delivery_01_product_template
-#: model:product.template,uom_name:product.product_delivery_02_product_template
-#: model:product.template,uom_name:product.product_order_01_product_template
-#: model:product.template,uom_name:product.product_product_10_product_template
-#: model:product.template,uom_name:product.product_product_11_product_template
-#: model:product.template,uom_name:product.product_product_12_product_template
-#: model:product.template,uom_name:product.product_product_13_product_template
-#: model:product.template,uom_name:product.product_product_16_product_template
-#: model:product.template,uom_name:product.product_product_20_product_template
-#: model:product.template,uom_name:product.product_product_22_product_template
-#: model:product.template,uom_name:product.product_product_24_product_template
-#: model:product.template,uom_name:product.product_product_25_product_template
-#: model:product.template,uom_name:product.product_product_27_product_template
-#: model:product.template,uom_name:product.product_product_3_product_template
-#: model:product.template,uom_name:product.product_product_4_product_template
-#: model:product.template,uom_name:product.product_product_5_product_template
-#: model:product.template,uom_name:product.product_product_6_product_template
-#: model:product.template,uom_name:product.product_product_7_product_template
-#: model:product.template,uom_name:product.product_product_8_product_template
-#: model:product.template,uom_name:product.product_product_9_product_template
-msgid "Units"
-msgstr "Jednotky"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_res_config_settings__group_uom
@@ -3049,6 +2963,7 @@ msgid "Variant Values"
 msgstr ""
 
 #. module: product
+#. odoo-python
 #: code:addons/product/models/product_pricelist_item.py:0
 #, python-format
 msgid "Variant: %s"
@@ -3107,13 +3022,11 @@ msgid "Vendors"
 msgstr "Dodavatelé"
 
 #. module: product
-#: model:product.product,name:product.product_product_2
 #: model:product.template,name:product.product_product_2_product_template
 msgid "Virtual Home Staging"
 msgstr ""
 
 #. module: product
-#: model:product.product,name:product.product_product_1
 #: model:product.template,name:product.product_product_1_product_template
 msgid "Virtual Interior Design"
 msgstr ""
@@ -3138,6 +3051,7 @@ msgid "Volume unit of measure label"
 msgstr ""
 
 #. module: product
+#. odoo-python
 #: code:addons/product/models/decimal_precision.py:0
 #: code:addons/product/models/uom_uom.py:0
 #, python-format
@@ -3150,15 +3064,23 @@ msgid "Warnings"
 msgstr "Varování"
 
 #. module: product
-#: model_terms:product.product,website_description:product.product_product_4
-#: model_terms:product.product,website_description:product.product_product_4b
-#: model_terms:product.product,website_description:product.product_product_4c
-#: model_terms:product.product,website_description:product.product_product_4d
 #: model_terms:product.template,website_description:product.product_product_4_product_template
 msgid ""
 "We pay special attention to detail, which is why our desks are of a superior"
 " quality."
 msgstr ""
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_product_product__website_message_ids
+#: model:ir.model.fields,field_description:product.field_product_template__website_message_ids
+msgid "Website Messages"
+msgstr "Zprávy webstránky"
+
+#. module: product
+#: model:ir.model.fields,help:product.field_product_product__website_message_ids
+#: model:ir.model.fields,help:product.field_product_template__website_message_ids
+msgid "Website communication history"
+msgstr "Historie komunikace webstránky"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__weight
@@ -3180,11 +3102,11 @@ msgstr "Štítek měrné jednotky hmotnosti"
 
 #. module: product
 #: model:product.attribute.value,name:product.product_attribute_value_3
-#: model:product.template.attribute.value,name:product.product_4_attribute_2_value_1
 msgid "White"
 msgstr ""
 
 #. module: product
+#. odoo-python
 #: code:addons/product/models/decimal_precision.py:0
 #, python-format
 msgid ""
@@ -3214,6 +3136,7 @@ msgstr ""
 "nové nabídky."
 
 #. module: product
+#. odoo-python
 #: code:addons/product/models/product_pricelist_item.py:0
 #, python-format
 msgid ""
@@ -3221,6 +3144,7 @@ msgid ""
 msgstr "V Ceníkové položce nemůžete hlavní ceník přiřadit jako jiný ceník"
 
 #. module: product
+#. odoo-python
 #: code:addons/product/models/product_attribute.py:0
 #, python-format
 msgid ""
@@ -3229,6 +3153,7 @@ msgid ""
 msgstr ""
 
 #. module: product
+#. odoo-python
 #: code:addons/product/models/product_attribute.py:0
 #, python-format
 msgid ""
@@ -3239,18 +3164,21 @@ msgstr ""
 "produktech: %s"
 
 #. module: product
+#. odoo-python
 #: code:addons/product/models/product_attribute.py:0
 #, python-format
 msgid "You cannot change the product of the value %s set on product %s."
 msgstr "Produkt nelze změnit na hodnotu %s nastavenou na produktu %s."
 
 #. module: product
+#. odoo-python
 #: code:addons/product/models/product_attribute.py:0
 #, python-format
 msgid "You cannot change the value of the value %s set on product %s."
 msgstr ""
 
 #. module: product
+#. odoo-python
 #: code:addons/product/models/product_category.py:0
 #, python-format
 msgid "You cannot create recursive categories."
@@ -3263,6 +3191,7 @@ msgid ""
 msgstr "Pro stejný atribut nemůžete vytvořit dvě hodnoty se stejným názvem."
 
 #. module: product
+#. odoo-python
 #: code:addons/product/models/decimal_precision.py:0
 #, python-format
 msgid ""
@@ -3273,12 +3202,14 @@ msgstr ""
 "hlavní měny společnosti"
 
 #. module: product
+#. odoo-python
 #: code:addons/product/models/product_category.py:0
 #, python-format
 msgid "You cannot delete the %s product category."
 msgstr ""
 
 #. module: product
+#. odoo-python
 #: code:addons/product/models/product_attribute.py:0
 #, python-format
 msgid ""
@@ -3287,6 +3218,7 @@ msgid ""
 msgstr ""
 
 #. module: product
+#. odoo-python
 #: code:addons/product/models/product_attribute.py:0
 #, python-format
 msgid ""
@@ -3295,6 +3227,7 @@ msgid ""
 msgstr ""
 
 #. module: product
+#. odoo-python
 #: code:addons/product/models/product_category.py:0
 #, python-format
 msgid ""
@@ -3303,6 +3236,7 @@ msgstr ""
 "Tuto kategorii produktu nemůžete odstranit, je to výchozí obecná kategorie."
 
 #. module: product
+#. odoo-python
 #: code:addons/product/models/product_pricelist.py:0
 #, python-format
 msgid ""
@@ -3313,6 +3247,7 @@ msgid ""
 msgstr ""
 
 #. module: product
+#. odoo-python
 #: code:addons/product/models/product_pricelist_item.py:0
 #, python-format
 msgid ""
@@ -3321,6 +3256,7 @@ msgid ""
 msgstr ""
 
 #. module: product
+#. odoo-python
 #: code:addons/product/models/product_attribute.py:0
 #, python-format
 msgid ""
@@ -3328,6 +3264,7 @@ msgid ""
 msgstr ""
 
 #. module: product
+#. odoo-python
 #: code:addons/product/models/product_attribute.py:0
 #: code:addons/product/models/product_attribute.py:0
 #, python-format
@@ -3367,6 +3304,7 @@ msgid ""
 msgstr ""
 
 #. module: product
+#. odoo-python
 #: code:addons/product/wizard/product_label_layout.py:0
 #, python-format
 msgid "You need to set a positive quantity."
@@ -3404,6 +3342,7 @@ msgid "per"
 msgstr "na"
 
 #. module: product
+#. odoo-python
 #: code:addons/product/models/product_product.py:0
 #: code:addons/product/models/product_template.py:0
 #, python-format

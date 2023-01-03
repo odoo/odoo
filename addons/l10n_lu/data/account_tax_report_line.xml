@@ -73,17 +73,6 @@
                         <field name="code">LUTAX_021</field>
                         <field name="aggregation_formula">LUTAX_014.balance + LUTAX_457.balance + LUTAX_015.balance + LUTAX_016.balance + LUTAX_017.balance + LUTAX_018.balance + LUTAX_423.balance + LUTAX_424.balance + LUTAX_226.balance + LUTAX_019.balance + LUTAX_419.balance</field>
                         <field name="children_ids">
-                            <record id="account_tax_report_line_1b_2_export" model="account.report.line">
-                                <field name="name">014 - Exports</field>
-                                <field name="code">LUTAX_014</field>
-                                <field name="expression_ids">
-                                    <record id="account_tax_report_line_1b_2_export_tag" model="account.report.expression">
-                                        <field name="label">balance</field>
-                                        <field name="engine">tax_tags</field>
-                                        <field name="formula">014</field>
-                                    </record>
-                                </field>
-                            </record>
                             <record id="account_tax_report_line_1b_1_intra_community_goods_pi_vat" model="account.report.line">
                                 <field name="name">457 - Intra-Community supply of goods to persons identified for VAT purposes in another Member State (MS)</field>
                                 <field name="code">LUTAX_457</field>
@@ -92,6 +81,17 @@
                                         <field name="label">balance</field>
                                         <field name="engine">tax_tags</field>
                                         <field name="formula">457</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="account_tax_report_line_1b_2_export" model="account.report.line">
+                                <field name="name">014 - Exports</field>
+                                <field name="code">LUTAX_014</field>
+                                <field name="expression_ids">
+                                    <record id="account_tax_report_line_1b_2_export_tag" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">014</field>
                                     </record>
                                 </field>
                             </record>
@@ -206,6 +206,185 @@
             <record id="account_tax_report_line_2_assesment_of_tax_due" model="account.report.line">
                 <field name="name">II. ASSESSMENT OF TAX DUE (output tax)</field>
                 <field name="children_ids">
+                    <record id="account_tax_report_line_2a_breakdown_taxable_turnover_base" model="account.report.line">
+                        <field name="name">037 - Breakdown of taxable turnover – base</field>
+                        <field name="code">LUTAX_037</field>
+                        <field name="aggregation_formula">LUTAX_031.balance + LUTAX_033.balance + LUTAX_701.balance + LUTAX_703.balance + LUTAX_705.balance + LUTAX_901.balance + LUTAX_903.balance + LUTAX_905.balance</field>
+                        <field name="children_ids">
+                            <record id="account_tax_report_line_2a_base_17" model="account.report.line">
+                                <field name="name">701 - base 17%</field>
+                                <field name="code">LUTAX_701</field>
+                                <field name="expression_ids">
+                                    <record id="account_tax_report_line_2a_base_17_tag" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">701</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="account_tax_report_line_2a_base_16" model="account.report.line">
+                                <field name="name">901 - base 16%</field>
+                                <field name="code">LUTAX_901</field>
+                                <field name="expression_ids">
+                                    <record id="account_tax_report_line_2a_base_16_tag" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">901</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="account_tax_report_line_2a_base_14" model="account.report.line">
+                                <field name="name">703 - base 14%</field>
+                                <field name="code">LUTAX_703</field>
+                                <field name="expression_ids">
+                                    <record id="account_tax_report_line_2a_base_14_tag" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">703</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="account_tax_report_line_2a_base_13" model="account.report.line">
+                                <field name="name">903 - base 13%</field>
+                                <field name="code">LUTAX_903</field>
+                                <field name="expression_ids">
+                                    <record id="account_tax_report_line_2a_base_13_tag" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">903</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="account_tax_report_line_2a_base_8" model="account.report.line">
+                                <field name="name">705 - base 8%</field>
+                                <field name="code">LUTAX_705</field>
+                                <field name="expression_ids">
+                                    <record id="account_tax_report_line_2a_base_8_tag" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">705</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="account_tax_report_line_2a_base_7" model="account.report.line">
+                                <field name="name">905 - base 7%</field>
+                                <field name="code">LUTAX_905</field>
+                                <field name="expression_ids">
+                                    <record id="account_tax_report_line_2a_base_7_tag" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">905</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="account_tax_report_line_2a_base_3" model="account.report.line">
+                                <field name="name">031 - base 3%</field>
+                                <field name="code">LUTAX_031</field>
+                                <field name="expression_ids">
+                                    <record id="account_tax_report_line_2a_base_3_tag" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">031</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="account_tax_report_line_2a_base_0" model="account.report.line">
+                                <field name="name">033 - base 0%</field>
+                                <field name="code">LUTAX_033</field>
+                                <field name="expression_ids">
+                                    <record id="account_tax_report_line_2a_base_0_tag" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">033</field>
+                                    </record>
+                                </field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_tax_report_line_2a_breakdown_taxable_turnover_tax" model="account.report.line">
+                        <field name="name">046 - Breakdown of taxable turnover – tax</field>
+                        <field name="code">LUTAX_046</field>
+                        <field name="aggregation_formula">LUTAX_040.balance + LUTAX_702.balance + LUTAX_704.balance + LUTAX_706.balance + LUTAX_902.balance + LUTAX_904.balance + LUTAX_906.balance</field>
+                        <field name="children_ids">
+                            <record id="account_tax_report_line_2a_tax_17" model="account.report.line">
+                                <field name="name">702 - tax 17%</field>
+                                <field name="code">LUTAX_702</field>
+                                <field name="expression_ids">
+                                    <record id="account_tax_report_line_2a_tax_17_tag" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">702</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="account_tax_report_line_2a_tax_16" model="account.report.line">
+                                <field name="name">902 - tax 16%</field>
+                                <field name="code">LUTAX_902</field>
+                                <field name="expression_ids">
+                                    <record id="account_tax_report_line_2a_tax_16_tag" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">902</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="account_tax_report_line_2a_tax_14" model="account.report.line">
+                                <field name="name">704 - tax 14%</field>
+                                <field name="code">LUTAX_704</field>
+                                <field name="expression_ids">
+                                    <record id="account_tax_report_line_2a_tax_14_tag" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">704</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="account_tax_report_line_2a_tax_13" model="account.report.line">
+                                <field name="name">904 - tax 13%</field>
+                                <field name="code">LUTAX_904</field>
+                                <field name="expression_ids">
+                                    <record id="account_tax_report_line_2a_tax_13_tag" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">904</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="account_tax_report_line_2a_tax_8" model="account.report.line">
+                                <field name="name">706 - tax 8%</field>
+                                <field name="code">LUTAX_706</field>
+                                <field name="expression_ids">
+                                    <record id="account_tax_report_line_2a_tax_8_tag" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">706</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="account_tax_report_line_2a_tax_7" model="account.report.line">
+                                <field name="name">906 - tax 7%</field>
+                                <field name="code">LUTAX_906</field>
+                                <field name="expression_ids">
+                                    <record id="account_tax_report_line_2a_tax_7_tag" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">906</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="account_tax_report_line_2a_tax_3" model="account.report.line">
+                                <field name="name">040 - tax 3%</field>
+                                <field name="code">LUTAX_040</field>
+                                <field name="expression_ids">
+                                    <record id="account_tax_report_line_2a_tax_3_tag" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">040</field>
+                                    </record>
+                                </field>
+                            </record>
+                        </field>
+                    </record>
                     <record id="account_tax_report_line_2b_intra_community_acqui_of_goods_base" model="account.report.line">
                         <field name="name">051 - Intra-Community acquisitions of goods – base</field>
                         <field name="code">LUTAX_051</field>
@@ -309,6 +488,101 @@
                                         <field name="formula">719</field>
                                     </record>
                                 </field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_tax_report_line_2b_intra_community_acquisitions_goods_tax" model="account.report.line">
+                        <field name="name">056 - Intra-Community acquisitions of goods – tax</field>
+                        <field name="code">LUTAX_056</field>
+                        <field name="aggregation_formula">LUTAX_054.balance + LUTAX_712.balance + LUTAX_714.balance + LUTAX_716.balance + LUTAX_912.balance + LUTAX_914.balance + LUTAX_916.balance</field>
+                        <field name="children_ids">
+                            <record id="account_tax_report_line_2b_tax_17" model="account.report.line">
+                                <field name="name">712 - tax 17%</field>
+                                <field name="code">LUTAX_712</field>
+                                <field name="expression_ids">
+                                    <record id="account_tax_report_line_2b_tax_17_tag" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">712</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="account_tax_report_line_2b_tax_16" model="account.report.line">
+                                <field name="name">912 - tax 16%</field>
+                                <field name="code">LUTAX_912</field>
+                                <field name="expression_ids">
+                                    <record id="account_tax_report_line_2b_tax_16_tag" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">912</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="account_tax_report_line_2b_tax_14" model="account.report.line">
+                                <field name="name">714 - tax 14%</field>
+                                <field name="code">LUTAX_714</field>
+                                <field name="expression_ids">
+                                    <record id="account_tax_report_line_2b_tax_14_tag" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">714</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="account_tax_report_line_2b_tax_13" model="account.report.line">
+                                <field name="name">914 - tax 13%</field>
+                                <field name="code">LUTAX_914</field>
+                                <field name="expression_ids">
+                                    <record id="account_tax_report_line_2b_tax_13_tag" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">914</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="account_tax_report_line_2b_tax_8" model="account.report.line">
+                                <field name="name">716 - tax 8%</field>
+                                <field name="code">LUTAX_716</field>
+                                <field name="expression_ids">
+                                    <record id="account_tax_report_line_2b_tax_8_tag" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">716</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="account_tax_report_line_2b_tax_7" model="account.report.line">
+                                <field name="name">916 - tax 7%</field>
+                                <field name="code">LUTAX_916</field>
+                                <field name="expression_ids">
+                                    <record id="account_tax_report_line_2b_tax_7_tag" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">916</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="account_tax_report_line_2b_tax_3" model="account.report.line">
+                                <field name="name">054 - tax 3%</field>
+                                <field name="code">LUTAX_054</field>
+                                <field name="expression_ids">
+                                    <record id="account_tax_report_line_2b_tax_3_tag" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">054</field>
+                                    </record>
+                                </field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_tax_report_line_2c_acquisitions_triangular_transactions_base" model="account.report.line">
+                        <field name="name">152 - Acquisitions, in the context of triangular transactions – base</field>
+                        <field name="code">LUTAX_152</field>
+                        <field name="expression_ids">
+                            <record id="account_tax_report_line_2c_acquisitions_triangular_transactions_base_tag" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">152</field>
                             </record>
                         </field>
                     </record>
@@ -506,14 +780,164 @@
                             </record>
                         </field>
                     </record>
-                    <record id="account_tax_report_line_2c_acquisitions_triangular_transactions_base" model="account.report.line">
-                        <field name="name">152 - Acquisitions, in the context of triangular transactions – base</field>
-                        <field name="code">LUTAX_152</field>
-                        <field name="expression_ids">
-                            <record id="account_tax_report_line_2c_acquisitions_triangular_transactions_base_tag" model="account.report.expression">
-                                <field name="label">balance</field>
-                                <field name="engine">tax_tags</field>
-                                <field name="formula">152</field>
+                    <record id="account_tax_report_line_2d_importation_of_goods_tax" model="account.report.line">
+                        <field name="name">407 - Importation of goods – tax</field>
+                        <field name="code">LUTAX_407</field>
+                        <field name="aggregation_formula">LUTAX_724.balance + LUTAX_726.balance + LUTAX_732.balance + LUTAX_734.balance + LUTAX_736.balance + LUTAX_068.balance + LUTAX_073.balance + LUTAX_722.balance + LUTAX_922.balance + LUTAX_924.balance + LUTAX_926.balance + LUTAX_932.balance + LUTAX_934.balance + LUTAX_936.balance</field>
+                        <field name="children_ids">
+                            <record id="account_tax_report_line_2d_1_tax_17" model="account.report.line">
+                                <field name="name">722 - for business purposes: tax 17%</field>
+                                <field name="code">LUTAX_722</field>
+                                <field name="expression_ids">
+                                    <record id="account_tax_report_line_2d_1_tax_17_tag" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">722</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="account_tax_report_line_2d_1_tax_16" model="account.report.line">
+                                <field name="name">922 - for business purposes: tax 16%</field>
+                                <field name="code">LUTAX_922</field>
+                                <field name="expression_ids">
+                                    <record id="account_tax_report_line_2d_1_tax_16_tag" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">922</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="account_tax_report_line_2d_1_tax_14" model="account.report.line">
+                                <field name="name">724 - for business purposes: tax 14%</field>
+                                <field name="code">LUTAX_724</field>
+                                <field name="expression_ids">
+                                    <record id="account_tax_report_line_2d_1_tax_14_tag" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">724</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="account_tax_report_line_2d_1_tax_13" model="account.report.line">
+                                <field name="name">924 - for business purposes: tax 13%</field>
+                                <field name="code">LUTAX_924</field>
+                                <field name="expression_ids">
+                                    <record id="account_tax_report_line_2d_1_tax_13_tag" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">924</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="account_tax_report_line_2d_1_tax_8" model="account.report.line">
+                                <field name="name">726 - for business purposes: tax 8%</field>
+                                <field name="code">LUTAX_726</field>
+                                <field name="expression_ids">
+                                    <record id="account_tax_report_line_2d_1_tax_8_tag" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">726</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="account_tax_report_line_2d_1_tax_7" model="account.report.line">
+                                <field name="name">926 - for business purposes: tax 7%</field>
+                                <field name="code">LUTAX_926</field>
+                                <field name="expression_ids">
+                                    <record id="account_tax_report_line_2d_1_tax_7_tag" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">926</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="account_tax_report_line_2d_1_tax_3" model="account.report.line">
+                                <field name="name">068 - for business purposes: tax 3%</field>
+                                <field name="code">LUTAX_068</field>
+                                <field name="expression_ids">
+                                    <record id="account_tax_report_line_2d_1_tax_3_tag" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">068</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="account_tax_report_line_2d_2_tax_17" model="account.report.line">
+                                <field name="name">732 - for non-business purposes: tax 17%</field>
+                                <field name="code">LUTAX_732</field>
+                                <field name="expression_ids">
+                                    <record id="account_tax_report_line_2d_2_tax_17_tag" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">732</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="account_tax_report_line_2d_2_tax_16" model="account.report.line">
+                                <field name="name">932 - for non-business purposes: tax 16%</field>
+                                <field name="code">LUTAX_932</field>
+                                <field name="expression_ids">
+                                    <record id="account_tax_report_line_2d_2_tax_16_tag" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">932</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="account_tax_report_line_2d_2_tax_14" model="account.report.line">
+                                <field name="name">734 - for non-business purposes: tax 14%</field>
+                                <field name="code">LUTAX_734</field>
+                                <field name="expression_ids">
+                                    <record id="account_tax_report_line_2d_2_tax_14_tag" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">734</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="account_tax_report_line_2d_2_tax_13" model="account.report.line">
+                                <field name="name">934 - for non-business purposes: tax 13%</field>
+                                <field name="code">LUTAX_934</field>
+                                <field name="expression_ids">
+                                    <record id="account_tax_report_line_2d_2_tax_13_tag" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">934</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="account_tax_report_line_2d_2_tax_8" model="account.report.line">
+                                <field name="name">736 - for non-business purposes: tax 8%</field>
+                                <field name="code">LUTAX_736</field>
+                                <field name="expression_ids">
+                                    <record id="account_tax_report_line_2d_2_tax_8_tag" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">736</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="account_tax_report_line_2d_2_tax_7" model="account.report.line">
+                                <field name="name">936 - for non-business purposes: tax 7%</field>
+                                <field name="code">LUTAX_936</field>
+                                <field name="expression_ids">
+                                    <record id="account_tax_report_line_2d_2_tax_7_tag" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">936</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="account_tax_report_line_2d_2_tax_3" model="account.report.line">
+                                <field name="name">073 - for non-business purposes: tax 3%</field>
+                                <field name="code">LUTAX_073</field>
+                                <field name="expression_ids">
+                                    <record id="account_tax_report_line_2d_2_tax_3_tag" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">073</field>
+                                    </record>
+                                </field>
                             </record>
                         </field>
                     </record>
@@ -743,504 +1167,6 @@
                             </record>
                         </field>
                     </record>
-                    <record id="account_tax_report_line_2a_breakdown_taxable_turnover_base" model="account.report.line">
-                        <field name="name">037 - Breakdown of taxable turnover – base</field>
-                        <field name="code">LUTAX_037</field>
-                        <field name="aggregation_formula">LUTAX_031.balance + LUTAX_033.balance + LUTAX_701.balance + LUTAX_703.balance + LUTAX_705.balance + LUTAX_901.balance + LUTAX_903.balance + LUTAX_905.balance</field>
-                        <field name="children_ids">
-                            <record id="account_tax_report_line_2a_base_17" model="account.report.line">
-                                <field name="name">701 - base 17%</field>
-                                <field name="code">LUTAX_701</field>
-                                <field name="expression_ids">
-                                    <record id="account_tax_report_line_2a_base_17_tag" model="account.report.expression">
-                                        <field name="label">balance</field>
-                                        <field name="engine">tax_tags</field>
-                                        <field name="formula">701</field>
-                                    </record>
-                                </field>
-                            </record>
-                            <record id="account_tax_report_line_2a_base_16" model="account.report.line">
-                                <field name="name">901 - base 16%</field>
-                                <field name="code">LUTAX_901</field>
-                                <field name="expression_ids">
-                                    <record id="account_tax_report_line_2a_base_16_tag" model="account.report.expression">
-                                        <field name="label">balance</field>
-                                        <field name="engine">tax_tags</field>
-                                        <field name="formula">901</field>
-                                    </record>
-                                </field>
-                            </record>
-                            <record id="account_tax_report_line_2a_base_14" model="account.report.line">
-                                <field name="name">703 - base 14%</field>
-                                <field name="code">LUTAX_703</field>
-                                <field name="expression_ids">
-                                    <record id="account_tax_report_line_2a_base_14_tag" model="account.report.expression">
-                                        <field name="label">balance</field>
-                                        <field name="engine">tax_tags</field>
-                                        <field name="formula">703</field>
-                                    </record>
-                                </field>
-                            </record>
-                            <record id="account_tax_report_line_2a_base_13" model="account.report.line">
-                                <field name="name">903 - base 13%</field>
-                                <field name="code">LUTAX_903</field>
-                                <field name="expression_ids">
-                                    <record id="account_tax_report_line_2a_base_13_tag" model="account.report.expression">
-                                        <field name="label">balance</field>
-                                        <field name="engine">tax_tags</field>
-                                        <field name="formula">903</field>
-                                    </record>
-                                </field>
-                            </record>
-                            <record id="account_tax_report_line_2a_base_8" model="account.report.line">
-                                <field name="name">705 - base 8%</field>
-                                <field name="code">LUTAX_705</field>
-                                <field name="expression_ids">
-                                    <record id="account_tax_report_line_2a_base_8_tag" model="account.report.expression">
-                                        <field name="label">balance</field>
-                                        <field name="engine">tax_tags</field>
-                                        <field name="formula">705</field>
-                                    </record>
-                                </field>
-                            </record>
-                            <record id="account_tax_report_line_2a_base_7" model="account.report.line">
-                                <field name="name">905 - base 7%</field>
-                                <field name="code">LUTAX_905</field>
-                                <field name="expression_ids">
-                                    <record id="account_tax_report_line_2a_base_7_tag" model="account.report.expression">
-                                        <field name="label">balance</field>
-                                        <field name="engine">tax_tags</field>
-                                        <field name="formula">905</field>
-                                    </record>
-                                </field>
-                            </record>
-                            <record id="account_tax_report_line_2a_base_3" model="account.report.line">
-                                <field name="name">031 - base 3%</field>
-                                <field name="code">LUTAX_031</field>
-                                <field name="expression_ids">
-                                    <record id="account_tax_report_line_2a_base_3_tag" model="account.report.expression">
-                                        <field name="label">balance</field>
-                                        <field name="engine">tax_tags</field>
-                                        <field name="formula">031</field>
-                                    </record>
-                                </field>
-                            </record>
-                            <record id="account_tax_report_line_2a_base_0" model="account.report.line">
-                                <field name="name">033 - base 0%</field>
-                                <field name="code">LUTAX_033</field>
-                                <field name="expression_ids">
-                                    <record id="account_tax_report_line_2a_base_0_tag" model="account.report.expression">
-                                        <field name="label">balance</field>
-                                        <field name="engine">tax_tags</field>
-                                        <field name="formula">033</field>
-                                    </record>
-                                </field>
-                            </record>
-                        </field>
-                    </record>
-                    <record id="account_tax_report_line_2f_supply_goods_base" model="account.report.line">
-                        <field name="name">767 - Supply of goods for which the purchaser is liable for the payment of VAT - base</field>
-                        <field name="code">LUTAX_767</field>
-                        <field name="aggregation_formula">LUTAX_763.balance + LUTAX_963.balance</field>
-                        <field name="children_ids">
-                            <record id="account_tax_report_line_2f_supply_goods_base_8" model="account.report.line">
-                                <field name="name">763 - base 8%</field>
-                                <field name="code">LUTAX_763</field>
-                                <field name="expression_ids">
-                                    <record id="account_tax_report_line_2f_supply_goods_base_8_tag" model="account.report.expression">
-                                        <field name="label">balance</field>
-                                        <field name="engine">tax_tags</field>
-                                        <field name="formula">763</field>
-                                    </record>
-                                </field>
-                            </record>
-                            <record id="account_tax_report_line_2f_supply_goods_base_7" model="account.report.line">
-                                <field name="name">963 - base 7%</field>
-                                <field name="code">LUTAX_963</field>
-                                <field name="expression_ids">
-                                    <record id="account_tax_report_line_2f_supply_goods_base_7_tag" model="account.report.expression">
-                                        <field name="label">balance</field>
-                                        <field name="engine">tax_tags</field>
-                                        <field name="formula">963</field>
-                                    </record>
-                                </field>
-                            </record>
-                        </field>
-                    </record>
-                    <record id="account_tax_report_line_2f_supply_goods_tax" model="account.report.line">
-                        <field name="name">768 - Supply of goods for which the purchaser is liable for the payment of VAT - tax</field>
-                        <field name="code">LUTAX_768</field>
-                        <field name="aggregation_formula">LUTAX_764.balance + LUTAX_964.balance</field>
-                        <field name="children_ids">
-                            <record id="account_tax_report_line_2f_supply_goods_tax_8" model="account.report.line">
-                                <field name="name">764 - tax 8%</field>
-                                <field name="code">LUTAX_764</field>
-                                <field name="expression_ids">
-                                    <record id="account_tax_report_line_2f_supply_goods_tax_8_tag" model="account.report.expression">
-                                        <field name="label">balance</field>
-                                        <field name="engine">tax_tags</field>
-                                        <field name="formula">764</field>
-                                    </record>
-                                </field>
-                            </record>
-                            <record id="account_tax_report_line_2f_supply_goods_tax_7" model="account.report.line">
-                                <field name="name">964 - tax 7%</field>
-                                <field name="code">LUTAX_964</field>
-                                <field name="expression_ids">
-                                    <record id="account_tax_report_line_2f_supply_goods_tax_7_tag" model="account.report.expression">
-                                        <field name="label">balance</field>
-                                        <field name="engine">tax_tags</field>
-                                        <field name="formula">964</field>
-                                    </record>
-                                </field>
-                            </record>
-                        </field>
-                    </record>
-                    <record id="account_tax_report_line_2g_special_arrangement" model="account.report.line">
-                        <field name="name">227 - Special arrangement for tax suspension: adjustment</field>
-                        <field name="code">LUTAX_227</field>
-                        <field name="expression_ids">
-                            <record id="account_tax_report_line_2g_special_arrangement_tag" model="account.report.expression">
-                                <field name="label">balance</field>
-                                <field name="engine">tax_tags</field>
-                                <field name="formula">227</field>
-                            </record>
-                        </field>
-                    </record>
-                    <record id="account_tax_report_line_2h_total_tax_due" model="account.report.line">
-                        <field name="name">076 - Total tax due</field>
-                        <field name="code">LUTAX_076</field>
-                        <field name="aggregation_formula">LUTAX_103.balance</field>
-                    </record>
-                    <record id="account_tax_report_line_2a_breakdown_taxable_turnover_tax" model="account.report.line">
-                        <field name="name">046 - Breakdown of taxable turnover – tax</field>
-                        <field name="code">LUTAX_046</field>
-                        <field name="aggregation_formula">LUTAX_040.balance + LUTAX_702.balance + LUTAX_704.balance + LUTAX_706.balance + LUTAX_902.balance + LUTAX_904.balance + LUTAX_906.balance</field>
-                        <field name="children_ids">
-                            <record id="account_tax_report_line_2a_tax_17" model="account.report.line">
-                                <field name="name">702 - tax 17%</field>
-                                <field name="code">LUTAX_702</field>
-                                <field name="expression_ids">
-                                    <record id="account_tax_report_line_2a_tax_17_tag" model="account.report.expression">
-                                        <field name="label">balance</field>
-                                        <field name="engine">tax_tags</field>
-                                        <field name="formula">702</field>
-                                    </record>
-                                </field>
-                            </record>
-                            <record id="account_tax_report_line_2a_tax_16" model="account.report.line">
-                                <field name="name">902 - tax 16%</field>
-                                <field name="code">LUTAX_902</field>
-                                <field name="expression_ids">
-                                    <record id="account_tax_report_line_2a_tax_16_tag" model="account.report.expression">
-                                        <field name="label">balance</field>
-                                        <field name="engine">tax_tags</field>
-                                        <field name="formula">902</field>
-                                    </record>
-                                </field>
-                            </record>
-                            <record id="account_tax_report_line_2a_tax_14" model="account.report.line">
-                                <field name="name">704 - tax 14%</field>
-                                <field name="code">LUTAX_704</field>
-                                <field name="expression_ids">
-                                    <record id="account_tax_report_line_2a_tax_14_tag" model="account.report.expression">
-                                        <field name="label">balance</field>
-                                        <field name="engine">tax_tags</field>
-                                        <field name="formula">704</field>
-                                    </record>
-                                </field>
-                            </record>
-                            <record id="account_tax_report_line_2a_tax_13" model="account.report.line">
-                                <field name="name">904 - tax 13%</field>
-                                <field name="code">LUTAX_904</field>
-                                <field name="expression_ids">
-                                    <record id="account_tax_report_line_2a_tax_13_tag" model="account.report.expression">
-                                        <field name="label">balance</field>
-                                        <field name="engine">tax_tags</field>
-                                        <field name="formula">904</field>
-                                    </record>
-                                </field>
-                            </record>
-                            <record id="account_tax_report_line_2a_tax_8" model="account.report.line">
-                                <field name="name">706 - tax 8%</field>
-                                <field name="code">LUTAX_706</field>
-                                <field name="expression_ids">
-                                    <record id="account_tax_report_line_2a_tax_8_tag" model="account.report.expression">
-                                        <field name="label">balance</field>
-                                        <field name="engine">tax_tags</field>
-                                        <field name="formula">706</field>
-                                    </record>
-                                </field>
-                            </record>
-                            <record id="account_tax_report_line_2a_tax_7" model="account.report.line">
-                                <field name="name">906 - tax 7%</field>
-                                <field name="code">LUTAX_906</field>
-                                <field name="expression_ids">
-                                    <record id="account_tax_report_line_2a_tax_7_tag" model="account.report.expression">
-                                        <field name="label">balance</field>
-                                        <field name="engine">tax_tags</field>
-                                        <field name="formula">906</field>
-                                    </record>
-                                </field>
-                            </record>
-                            <record id="account_tax_report_line_2a_tax_3" model="account.report.line">
-                                <field name="name">040 - tax 3%</field>
-                                <field name="code">LUTAX_040</field>
-                                <field name="expression_ids">
-                                    <record id="account_tax_report_line_2a_tax_3_tag" model="account.report.expression">
-                                        <field name="label">balance</field>
-                                        <field name="engine">tax_tags</field>
-                                        <field name="formula">040</field>
-                                    </record>
-                                </field>
-                            </record>
-                        </field>
-                    </record>
-                    <record id="account_tax_report_line_2b_intra_community_acquisitions_goods_tax" model="account.report.line">
-                        <field name="name">056 - Intra-Community acquisitions of goods – tax</field>
-                        <field name="code">LUTAX_056</field>
-                        <field name="aggregation_formula">LUTAX_054.balance + LUTAX_712.balance + LUTAX_714.balance + LUTAX_716.balance + LUTAX_912.balance + LUTAX_914.balance + LUTAX_916.balance</field>
-                        <field name="children_ids">
-                            <record id="account_tax_report_line_2b_tax_17" model="account.report.line">
-                                <field name="name">712 - tax 17%</field>
-                                <field name="code">LUTAX_712</field>
-                                <field name="expression_ids">
-                                    <record id="account_tax_report_line_2b_tax_17_tag" model="account.report.expression">
-                                        <field name="label">balance</field>
-                                        <field name="engine">tax_tags</field>
-                                        <field name="formula">712</field>
-                                    </record>
-                                </field>
-                            </record>
-                            <record id="account_tax_report_line_2b_tax_16" model="account.report.line">
-                                <field name="name">912 - tax 16%</field>
-                                <field name="code">LUTAX_912</field>
-                                <field name="expression_ids">
-                                    <record id="account_tax_report_line_2b_tax_16_tag" model="account.report.expression">
-                                        <field name="label">balance</field>
-                                        <field name="engine">tax_tags</field>
-                                        <field name="formula">912</field>
-                                    </record>
-                                </field>
-                            </record>
-                            <record id="account_tax_report_line_2b_tax_14" model="account.report.line">
-                                <field name="name">714 - tax 14%</field>
-                                <field name="code">LUTAX_714</field>
-                                <field name="expression_ids">
-                                    <record id="account_tax_report_line_2b_tax_14_tag" model="account.report.expression">
-                                        <field name="label">balance</field>
-                                        <field name="engine">tax_tags</field>
-                                        <field name="formula">714</field>
-                                    </record>
-                                </field>
-                            </record>
-                            <record id="account_tax_report_line_2b_tax_13" model="account.report.line">
-                                <field name="name">914 - tax 13%</field>
-                                <field name="code">LUTAX_914</field>
-                                <field name="expression_ids">
-                                    <record id="account_tax_report_line_2b_tax_13_tag" model="account.report.expression">
-                                        <field name="label">balance</field>
-                                        <field name="engine">tax_tags</field>
-                                        <field name="formula">914</field>
-                                    </record>
-                                </field>
-                            </record>
-                            <record id="account_tax_report_line_2b_tax_8" model="account.report.line">
-                                <field name="name">716 - tax 8%</field>
-                                <field name="code">LUTAX_716</field>
-                                <field name="expression_ids">
-                                    <record id="account_tax_report_line_2b_tax_8_tag" model="account.report.expression">
-                                        <field name="label">balance</field>
-                                        <field name="engine">tax_tags</field>
-                                        <field name="formula">716</field>
-                                    </record>
-                                </field>
-                            </record>
-                            <record id="account_tax_report_line_2b_tax_7" model="account.report.line">
-                                <field name="name">916 - tax 7%</field>
-                                <field name="code">LUTAX_916</field>
-                                <field name="expression_ids">
-                                    <record id="account_tax_report_line_2b_tax_7_tag" model="account.report.expression">
-                                        <field name="label">balance</field>
-                                        <field name="engine">tax_tags</field>
-                                        <field name="formula">916</field>
-                                    </record>
-                                </field>
-                            </record>
-                            <record id="account_tax_report_line_2b_tax_3" model="account.report.line">
-                                <field name="name">054 - tax 3%</field>
-                                <field name="code">LUTAX_054</field>
-                                <field name="expression_ids">
-                                    <record id="account_tax_report_line_2b_tax_3_tag" model="account.report.expression">
-                                        <field name="label">balance</field>
-                                        <field name="engine">tax_tags</field>
-                                        <field name="formula">054</field>
-                                    </record>
-                                </field>
-                            </record>
-                        </field>
-                    </record>
-                    <record id="account_tax_report_line_2d_importation_of_goods_tax" model="account.report.line">
-                        <field name="name">407 - Importation of goods – tax</field>
-                        <field name="code">LUTAX_407</field>
-                        <field name="aggregation_formula">LUTAX_724.balance + LUTAX_726.balance + LUTAX_732.balance + LUTAX_734.balance + LUTAX_736.balance + LUTAX_068.balance + LUTAX_073.balance + LUTAX_722.balance + LUTAX_922.balance + LUTAX_924.balance + LUTAX_926.balance + LUTAX_932.balance + LUTAX_934.balance + LUTAX_936.balance</field>
-                        <field name="children_ids">
-                            <record id="account_tax_report_line_2d_1_tax_17" model="account.report.line">
-                                <field name="name">722 - for business purposes: tax 17%</field>
-                                <field name="code">LUTAX_722</field>
-                                <field name="expression_ids">
-                                    <record id="account_tax_report_line_2d_1_tax_17_tag" model="account.report.expression">
-                                        <field name="label">balance</field>
-                                        <field name="engine">tax_tags</field>
-                                        <field name="formula">722</field>
-                                    </record>
-                                </field>
-                            </record>
-                            <record id="account_tax_report_line_2d_1_tax_16" model="account.report.line">
-                                <field name="name">922 - for business purposes: tax 16%</field>
-                                <field name="code">LUTAX_922</field>
-                                <field name="expression_ids">
-                                    <record id="account_tax_report_line_2d_1_tax_16_tag" model="account.report.expression">
-                                        <field name="label">balance</field>
-                                        <field name="engine">tax_tags</field>
-                                        <field name="formula">922</field>
-                                    </record>
-                                </field>
-                            </record>
-                            <record id="account_tax_report_line_2d_1_tax_14" model="account.report.line">
-                                <field name="name">724 - for business purposes: tax 14%</field>
-                                <field name="code">LUTAX_724</field>
-                                <field name="expression_ids">
-                                    <record id="account_tax_report_line_2d_1_tax_14_tag" model="account.report.expression">
-                                        <field name="label">balance</field>
-                                        <field name="engine">tax_tags</field>
-                                        <field name="formula">724</field>
-                                    </record>
-                                </field>
-                            </record>
-                            <record id="account_tax_report_line_2d_1_tax_13" model="account.report.line">
-                                <field name="name">924 - for business purposes: tax 13%</field>
-                                <field name="code">LUTAX_924</field>
-                                <field name="expression_ids">
-                                    <record id="account_tax_report_line_2d_1_tax_13_tag" model="account.report.expression">
-                                        <field name="label">balance</field>
-                                        <field name="engine">tax_tags</field>
-                                        <field name="formula">924</field>
-                                    </record>
-                                </field>
-                            </record>
-                            <record id="account_tax_report_line_2d_1_tax_8" model="account.report.line">
-                                <field name="name">726 - for business purposes: tax 8%</field>
-                                <field name="code">LUTAX_726</field>
-                                <field name="expression_ids">
-                                    <record id="account_tax_report_line_2d_1_tax_8_tag" model="account.report.expression">
-                                        <field name="label">balance</field>
-                                        <field name="engine">tax_tags</field>
-                                        <field name="formula">726</field>
-                                    </record>
-                                </field>
-                            </record>
-                            <record id="account_tax_report_line_2d_1_tax_7" model="account.report.line">
-                                <field name="name">926 - for business purposes: tax 7%</field>
-                                <field name="code">LUTAX_926</field>
-                                <field name="expression_ids">
-                                    <record id="account_tax_report_line_2d_1_tax_7_tag" model="account.report.expression">
-                                        <field name="label">balance</field>
-                                        <field name="engine">tax_tags</field>
-                                        <field name="formula">926</field>
-                                    </record>
-                                </field>
-                            </record>
-                            <record id="account_tax_report_line_2d_1_tax_3" model="account.report.line">
-                                <field name="name">068 - for business purposes: tax 3%</field>
-                                <field name="code">LUTAX_068</field>
-                                <field name="expression_ids">
-                                    <record id="account_tax_report_line_2d_1_tax_3_tag" model="account.report.expression">
-                                        <field name="label">balance</field>
-                                        <field name="engine">tax_tags</field>
-                                        <field name="formula">068</field>
-                                    </record>
-                                </field>
-                            </record>
-                            <record id="account_tax_report_line_2d_2_tax_17" model="account.report.line">
-                                <field name="name">732 - for non-business purposes: tax 17%</field>
-                                <field name="code">LUTAX_732</field>
-                                <field name="expression_ids">
-                                    <record id="account_tax_report_line_2d_2_tax_17_tag" model="account.report.expression">
-                                        <field name="label">balance</field>
-                                        <field name="engine">tax_tags</field>
-                                        <field name="formula">732</field>
-                                    </record>
-                                </field>
-                            </record>
-                            <record id="account_tax_report_line_2d_2_tax_16" model="account.report.line">
-                                <field name="name">932 - for non-business purposes: tax 16%</field>
-                                <field name="code">LUTAX_932</field>
-                                <field name="expression_ids">
-                                    <record id="account_tax_report_line_2d_2_tax_16_tag" model="account.report.expression">
-                                        <field name="label">balance</field>
-                                        <field name="engine">tax_tags</field>
-                                        <field name="formula">932</field>
-                                    </record>
-                                </field>
-                            </record>
-                            <record id="account_tax_report_line_2d_2_tax_14" model="account.report.line">
-                                <field name="name">734 - for non-business purposes: tax 14%</field>
-                                <field name="code">LUTAX_734</field>
-                                <field name="expression_ids">
-                                    <record id="account_tax_report_line_2d_2_tax_14_tag" model="account.report.expression">
-                                        <field name="label">balance</field>
-                                        <field name="engine">tax_tags</field>
-                                        <field name="formula">734</field>
-                                    </record>
-                                </field>
-                            </record>
-                            <record id="account_tax_report_line_2d_2_tax_13" model="account.report.line">
-                                <field name="name">934 - for non-business purposes: tax 13%</field>
-                                <field name="code">LUTAX_934</field>
-                                <field name="expression_ids">
-                                    <record id="account_tax_report_line_2d_2_tax_13_tag" model="account.report.expression">
-                                        <field name="label">balance</field>
-                                        <field name="engine">tax_tags</field>
-                                        <field name="formula">934</field>
-                                    </record>
-                                </field>
-                            </record>
-                            <record id="account_tax_report_line_2d_2_tax_8" model="account.report.line">
-                                <field name="name">736 - for non-business purposes: tax 8%</field>
-                                <field name="code">LUTAX_736</field>
-                                <field name="expression_ids">
-                                    <record id="account_tax_report_line_2d_2_tax_8_tag" model="account.report.expression">
-                                        <field name="label">balance</field>
-                                        <field name="engine">tax_tags</field>
-                                        <field name="formula">736</field>
-                                    </record>
-                                </field>
-                            </record>
-                            <record id="account_tax_report_line_2d_2_tax_7" model="account.report.line">
-                                <field name="name">936 - for non-business purposes: tax 7%</field>
-                                <field name="code">LUTAX_936</field>
-                                <field name="expression_ids">
-                                    <record id="account_tax_report_line_2d_2_tax_7_tag" model="account.report.expression">
-                                        <field name="label">balance</field>
-                                        <field name="engine">tax_tags</field>
-                                        <field name="formula">936</field>
-                                    </record>
-                                </field>
-                            </record>
-                            <record id="account_tax_report_line_2d_2_tax_3" model="account.report.line">
-                                <field name="name">073 - for non-business purposes: tax 3%</field>
-                                <field name="code">LUTAX_073</field>
-                                <field name="expression_ids">
-                                    <record id="account_tax_report_line_2d_2_tax_3_tag" model="account.report.expression">
-                                        <field name="label">balance</field>
-                                        <field name="engine">tax_tags</field>
-                                        <field name="formula">073</field>
-                                    </record>
-                                </field>
-                            </record>
-                        </field>
-                    </record>
                     <record id="account_tax_report_line_2e_supply_of_service_for_customer_liable_for_payment_tax" model="account.report.line">
                         <field name="name">410 - Supply of services for which the customer is liable for the payment of VAT – tax</field>
                         <field name="code">LUTAX_410</field>
@@ -1445,6 +1371,80 @@
                             </record>
                         </field>
                     </record>
+                    <record id="account_tax_report_line_2f_supply_goods_base" model="account.report.line">
+                        <field name="name">767 - Supply of goods for which the purchaser is liable for the payment of VAT - base</field>
+                        <field name="code">LUTAX_767</field>
+                        <field name="aggregation_formula">LUTAX_763.balance + LUTAX_963.balance</field>
+                        <field name="children_ids">
+                            <record id="account_tax_report_line_2f_supply_goods_base_8" model="account.report.line">
+                                <field name="name">763 - base 8%</field>
+                                <field name="code">LUTAX_763</field>
+                                <field name="expression_ids">
+                                    <record id="account_tax_report_line_2f_supply_goods_base_8_tag" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">763</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="account_tax_report_line_2f_supply_goods_base_7" model="account.report.line">
+                                <field name="name">963 - base 7%</field>
+                                <field name="code">LUTAX_963</field>
+                                <field name="expression_ids">
+                                    <record id="account_tax_report_line_2f_supply_goods_base_7_tag" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">963</field>
+                                    </record>
+                                </field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_tax_report_line_2f_supply_goods_tax" model="account.report.line">
+                        <field name="name">768 - Supply of goods for which the purchaser is liable for the payment of VAT - tax</field>
+                        <field name="code">LUTAX_768</field>
+                        <field name="aggregation_formula">LUTAX_764.balance + LUTAX_964.balance</field>
+                        <field name="children_ids">
+                            <record id="account_tax_report_line_2f_supply_goods_tax_8" model="account.report.line">
+                                <field name="name">764 - tax 8%</field>
+                                <field name="code">LUTAX_764</field>
+                                <field name="expression_ids">
+                                    <record id="account_tax_report_line_2f_supply_goods_tax_8_tag" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">764</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="account_tax_report_line_2f_supply_goods_tax_7" model="account.report.line">
+                                <field name="name">964 - tax 7%</field>
+                                <field name="code">LUTAX_964</field>
+                                <field name="expression_ids">
+                                    <record id="account_tax_report_line_2f_supply_goods_tax_7_tag" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">964</field>
+                                    </record>
+                                </field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_tax_report_line_2g_special_arrangement" model="account.report.line">
+                        <field name="name">227 - Special arrangement for tax suspension: adjustment</field>
+                        <field name="code">LUTAX_227</field>
+                        <field name="expression_ids">
+                            <record id="account_tax_report_line_2g_special_arrangement_tag" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">227</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_tax_report_line_2h_total_tax_due" model="account.report.line">
+                        <field name="name">076 - Total tax due</field>
+                        <field name="code">LUTAX_076</field>
+                        <field name="aggregation_formula">LUTAX_103.balance</field>
+                    </record>
                 </field>
             </record>
             <record id="account_tax_report_line_3_assessment_deducible_tax" model="account.report.line">
@@ -1455,39 +1455,6 @@
                         <field name="code">LUTAX_093</field>
                         <field name="aggregation_formula">LUTAX_090.balance + LUTAX_092.balance + LUTAX_228.balance + LUTAX_458.balance + LUTAX_459.balance + LUTAX_460.balance + LUTAX_461.balance</field>
                         <field name="children_ids">
-                            <record id="account_tax_report_line_3a_4_due_respect_application_goods" model="account.report.line">
-                                <field name="name">090 - Due in respect of the application of goods for business purposes</field>
-                                <field name="code">LUTAX_090</field>
-                                <field name="expression_ids">
-                                    <record id="account_tax_report_line_3a_4_due_respect_application_goods_tag" model="account.report.expression">
-                                        <field name="label">balance</field>
-                                        <field name="engine">tax_tags</field>
-                                        <field name="formula">090</field>
-                                    </record>
-                                </field>
-                            </record>
-                            <record id="account_tax_report_line_3a_6_paid_joint_several_guarantee" model="account.report.line">
-                                <field name="name">092 - Paid as joint and several guarantee</field>
-                                <field name="code">LUTAX_092</field>
-                                <field name="expression_ids">
-                                    <record id="account_tax_report_line_3a_6_paid_joint_several_guarantee_tag" model="account.report.expression">
-                                        <field name="label">balance</field>
-                                        <field name="engine">tax_tags</field>
-                                        <field name="formula">092</field>
-                                    </record>
-                                </field>
-                            </record>
-                            <record id="account_tax_report_line_3a_7_adjusted_tax_special_arrangement" model="account.report.line">
-                                <field name="name">228 - Adjusted tax - special arrangement for tax suspension</field>
-                                <field name="code">LUTAX_228</field>
-                                <field name="expression_ids">
-                                    <record id="account_tax_report_line_3a_7_adjusted_tax_special_arrangement_tag" model="account.report.expression">
-                                        <field name="label">balance</field>
-                                        <field name="engine">tax_tags</field>
-                                        <field name="formula">228</field>
-                                    </record>
-                                </field>
-                            </record>
                             <record id="account_tax_report_line_3a_1_invoiced_by_other_taxable_person" model="account.report.line">
                                 <field name="name">458 - Invoiced by other taxable persons for goods or services supplied</field>
                                 <field name="code">LUTAX_458</field>
@@ -1521,6 +1488,17 @@
                                     </record>
                                 </field>
                             </record>
+                            <record id="account_tax_report_line_3a_4_due_respect_application_goods" model="account.report.line">
+                                <field name="name">090 - Due in respect of the application of goods for business purposes</field>
+                                <field name="code">LUTAX_090</field>
+                                <field name="expression_ids">
+                                    <record id="account_tax_report_line_3a_4_due_respect_application_goods_tag" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">090</field>
+                                    </record>
+                                </field>
+                            </record>
                             <record id="account_tax_report_line_3a_5_due_under_reverse_charge" model="account.report.line">
                                 <field name="name">461 - Due under the reverse charge (see points II.E and F)</field>
                                 <field name="code">LUTAX_461</field>
@@ -1529,6 +1507,28 @@
                                         <field name="label">balance</field>
                                         <field name="engine">tax_tags</field>
                                         <field name="formula">461</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="account_tax_report_line_3a_6_paid_joint_several_guarantee" model="account.report.line">
+                                <field name="name">092 - Paid as joint and several guarantee</field>
+                                <field name="code">LUTAX_092</field>
+                                <field name="expression_ids">
+                                    <record id="account_tax_report_line_3a_6_paid_joint_several_guarantee_tag" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">092</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="account_tax_report_line_3a_7_adjusted_tax_special_arrangement" model="account.report.line">
+                                <field name="name">228 - Adjusted tax - special arrangement for tax suspension</field>
+                                <field name="code">LUTAX_228</field>
+                                <field name="expression_ids">
+                                    <record id="account_tax_report_line_3a_7_adjusted_tax_special_arrangement_tag" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">228</field>
                                     </record>
                                 </field>
                             </record>
@@ -1584,11 +1584,6 @@
             <record id="account_tax_report_line_4_tax_tobe_paid_or_reclaimed" model="account.report.line">
                 <field name="name">IV. TAX TO BE PAID OR TO BE RECLAIMED</field>
                 <field name="children_ids">
-                    <record id="account_tax_report_line_4c_exceeding_amount" model="account.report.line">
-                        <field name="name">105 - Exceeding amount</field>
-                        <field name="code">LUTAX_105</field>
-                        <field name="aggregation_formula">LUTAX_103.balance - LUTAX_102.balance</field>
-                    </record>
                     <record id="account_tax_report_line_4a_total_tax_due" model="account.report.line">
                         <field name="name">103 - Total tax due</field>
                         <field name="code">LUTAX_103</field>
@@ -1598,6 +1593,11 @@
                         <field name="name">104 - Total input tax deductible</field>
                         <field name="code">LUTAX_104</field>
                         <field name="aggregation_formula">LUTAX_102.balance</field>
+                    </record>
+                    <record id="account_tax_report_line_4c_exceeding_amount" model="account.report.line">
+                        <field name="name">105 - Exceeding amount</field>
+                        <field name="code">LUTAX_105</field>
+                        <field name="aggregation_formula">LUTAX_103.balance - LUTAX_102.balance</field>
                     </record>
                 </field>
             </record>

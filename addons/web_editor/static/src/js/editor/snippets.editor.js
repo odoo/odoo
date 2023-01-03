@@ -1056,6 +1056,7 @@ var SnippetEditor = Widget.extend({
             width: self.$target.width(),
             height: self.$target.height()
         };
+        const closestFormEl = this.$target[0].closest('form');
         self.$target.after('<div class="oe_drop_clone" style="display: none;"/>');
         self.$target.detach();
         self.$el.addClass('d-none');
@@ -1083,6 +1084,16 @@ var SnippetEditor = Widget.extend({
         if (this.$target[0].classList.contains('s_table_of_content')) {
             $selectorChildren = $selectorChildren.filter((i, el) => !el.closest('.s_table_of_content'));
         }
+        // Disallow dropping form fields outside of their form.
+        // TODO this can probably be implemented by reviewing data-drop-near
+        // definitions in master but we should find a better to define those and
+        // such cases.
+        if (this.$target[0].classList.contains('s_website_form_field')) {
+            $selectorSiblings = $selectorSiblings.filter(
+                (i, el) => closestFormEl === el.closest('form')
+            );
+        }
+
         const canBeSanitizedUnless = this._canBeSanitizedUnless(this.$target[0]);
 
         // Remove the siblings that belong to a snippet in grid mode
@@ -2130,6 +2141,14 @@ var SnippetsMenu = Widget.extend({
         // the invisible DOM list if needed.
         await this._updateInvisibleDOM();
     },
+    /**
+     * Public implementation of _execWithLoadingEffect.
+     *
+     * @see this._execWithLoadingEffect for parameters
+     */
+    execWithLoadingEffect(action, contentLoading = true, delay = 500) {
+        return this._execWithLoadingEffect(...arguments);
+    },
 
     //--------------------------------------------------------------------------
     // Private
@@ -2681,6 +2700,17 @@ var SnippetsMenu = Widget.extend({
             var selector = $style.data('selector');
             var exclude = $style.data('exclude') || '';
             const excludeParent = $style.attr('id') === "so_content_addition" ? snippetAdditionDropIn : '';
+
+            // TODO to remove in master: the Carousel snippet has a `content`
+            // class in its `.row` elements which makes dropzones appear when
+            // dragging inner content, allowing them to be dropped in the row,
+            // where it should not be the case.
+            if ($style[0].getAttribute('id') === 'so_content_addition') {
+                let dropInPatch = $style[0].dataset.dropIn.split(', ');
+                dropInPatch = dropInPatch.map(selector => selector === '.content' ? '.content:not(.row)' : selector);
+                $style[0].dataset.dropIn = dropInPatch.join(', ');
+            }
+
             var target = $style.data('target');
             var noCheck = $style.data('no-check');
             var optionID = $style.data('js') || $style.data('option-name'); // used in tour js as selector

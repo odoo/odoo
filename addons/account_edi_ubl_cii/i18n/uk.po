@@ -8,9 +8,9 @@
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 16.0beta\n"
+"Project-Id-Version: Odoo Server 16.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-10-10 10:22+0000\n"
+"POT-Creation-Date: 2022-12-15 12:49+0000\n"
 "PO-Revision-Date: 2022-09-22 05:44+0000\n"
 "Last-Translator: Alina Lisnenko <alina.lisnenko@erp.co.ua>, 2022\n"
 "Language-Team: Ukrainian (https://www.transifex.com/odoo/teams/41243/uk/)\n"
@@ -31,17 +31,14 @@ msgid "42"
 msgstr "42"
 
 #. module: account_edi_ubl_cii
-#: model_terms:ir.ui.view,arch_db:account_edi_ubl_cii.account_invoice_line_facturx_export_22
-msgid "95"
-msgstr "95"
-
-#. module: account_edi_ubl_cii
+#. odoo-python
 #: code:addons/account_edi_ubl_cii/models/account_edi_common.py:0
 #, python-format
 msgid "<strong>Format used to import the invoice: %s</strong>"
 msgstr "<strong>Формат, що використовується для імпорту рахунку: %s</strong>"
 
 #. module: account_edi_ubl_cii
+#. odoo-python
 #: code:addons/account_edi_ubl_cii/models/account_edi_common.py:0
 #, python-format
 msgid ""
@@ -51,6 +48,12 @@ msgstr ""
 " %s </li></p>"
 
 #. module: account_edi_ubl_cii
+#: model:ir.model,name:account_edi_ubl_cii.model_account_edi_xml_ubl_a_nz
+msgid "A-NZ BIS Billing 3.0"
+msgstr "A-NZ BIS Billing 3.0"
+
+#. module: account_edi_ubl_cii
+#. odoo-python
 #: code:addons/account_edi_ubl_cii/models/account_edi_common.py:0
 #: code:addons/account_edi_ubl_cii/models/account_edi_common.py:0
 #, python-format
@@ -58,6 +61,7 @@ msgid "Articles 226 items 11 to 15 Directive 2006/112/EN"
 msgstr "Стаття 226 пункти 11 - 15 Директиви 2006/112/EN"
 
 #. module: account_edi_ubl_cii
+#. odoo-python
 #: code:addons/account_edi_ubl_cii/models/account_edi_common.py:0
 #, python-format
 msgid "At least one of the following fields %s is required on %s."
@@ -75,11 +79,7 @@ msgid ""
 msgstr "Загальні функції для документів EDI: генерація даних, обмеження тощо"
 
 #. module: account_edi_ubl_cii
-#: model_terms:ir.ui.view,arch_db:account_edi_ubl_cii.account_invoice_pdfa_3_facturx_metadata
-msgid "ConformanceLevel"
-msgstr "ConformanceLevel"
-
-#. module: account_edi_ubl_cii
+#. odoo-python
 #: code:addons/account_edi_ubl_cii/models/account_edi_xml_cii_facturx.py:0
 #: code:addons/account_edi_ubl_cii/models/account_edi_xml_ubl_20.py:0
 #, python-format
@@ -91,6 +91,7 @@ msgstr ""
 "активували валюту?"
 
 #. module: account_edi_ubl_cii
+#. odoo-python
 #: code:addons/account_edi_ubl_cii/models/account_edi_xml_cii_facturx.py:0
 #: code:addons/account_edi_ubl_cii/models/account_edi_xml_ubl_20.py:0
 #, python-format
@@ -98,6 +99,7 @@ msgid "Could not retrieve the %s."
 msgstr "Не вдалося отримати %s."
 
 #. module: account_edi_ubl_cii
+#. odoo-python
 #: code:addons/account_edi_ubl_cii/models/account_edi_common.py:0
 #: code:addons/account_edi_ubl_cii/models/account_edi_common.py:0
 #, python-format
@@ -105,28 +107,21 @@ msgid "Could not retrieve the tax: %s %% for line '%s'."
 msgstr "Не вдалося отримати податок: %s %% для рядка '%s'."
 
 #. module: account_edi_ubl_cii
+#. odoo-python
 #: code:addons/account_edi_ubl_cii/models/account_edi_common.py:0
 #, python-format
 msgid "Could not retrieve the unit of measure for line with label '%s'."
 msgstr "Не вдалося отримати одиницю вимірювання для рядка з міткою '%s'."
 
 #. module: account_edi_ubl_cii
-#: model_terms:ir.ui.view,arch_db:account_edi_ubl_cii.account_invoice_pdfa_3_facturx_metadata
-msgid "DocumentFileName"
-msgstr "DocumentFileName"
-
-#. module: account_edi_ubl_cii
-#: model_terms:ir.ui.view,arch_db:account_edi_ubl_cii.account_invoice_pdfa_3_facturx_metadata
-msgid "DocumentType"
-msgstr "DocumentType"
-
-#. module: account_edi_ubl_cii
+#. odoo-python
 #: code:addons/account_edi_ubl_cii/models/account_edi_common.py:0
 #, python-format
 msgid "Down Payment"
 msgstr "Попередня оплата"
 
 #. module: account_edi_ubl_cii
+#. odoo-python
 #: code:addons/account_edi_ubl_cii/models/account_edi_common.py:0
 #, python-format
 msgid "Down Payments"
@@ -148,12 +143,14 @@ msgid "EN 16931"
 msgstr "EN 16931"
 
 #. module: account_edi_ubl_cii
+#. odoo-python
 #: code:addons/account_edi_ubl_cii/models/account_edi_xml_ubl_bis3.py:0
 #, python-format
 msgid "Each invoice line shall have one and only one tax."
 msgstr "Кожен рядок рахунка-фактури має мати лише один податок."
 
 #. module: account_edi_ubl_cii
+#. odoo-python
 #: code:addons/account_edi_ubl_cii/models/account_edi_common.py:0
 #, python-format
 msgid "Each invoice line should have at least one tax."
@@ -165,6 +162,7 @@ msgid "Email Templates"
 msgstr "Шаблони електронних листів"
 
 #. module: account_edi_ubl_cii
+#. odoo-python
 #: code:addons/account_edi_ubl_cii/models/account_edi_format.py:0
 #, python-format
 msgid ""
@@ -175,15 +173,11 @@ msgstr ""
 " відмовити."
 
 #. module: account_edi_ubl_cii
+#. odoo-python
 #: code:addons/account_edi_ubl_cii/models/account_edi_common.py:0
 #, python-format
 msgid "Export outside the EU"
 msgstr "Експорт за межі ЄС"
-
-#. module: account_edi_ubl_cii
-#: model_terms:ir.ui.view,arch_db:account_edi_ubl_cii.account_invoice_pdfa_3_facturx_metadata
-msgid "Factur-X PDFA Extension Schema"
-msgstr "Схема розширення Factur-X PDFA"
 
 #. module: account_edi_ubl_cii
 #: model:ir.model,name:account_edi_ubl_cii.model_account_edi_xml_cii
@@ -191,6 +185,7 @@ msgid "Factur-x/XRechnung CII 2.2.0"
 msgstr "Factur-x/XRechnung CII 2.2.0"
 
 #. module: account_edi_ubl_cii
+#. odoo-python
 #: code:addons/account_edi_ubl_cii/models/account_edi_xml_ubl_bis3.py:0
 #: code:addons/account_edi_ubl_cii/models/account_edi_xml_ubl_bis3.py:0
 #, python-format
@@ -202,17 +197,14 @@ msgstr ""
 "виставлення рахунка."
 
 #. module: account_edi_ubl_cii
+#. odoo-python
 #: code:addons/account_edi_ubl_cii/models/account_edi_xml_ubl_bis3.py:0
 #, python-format
 msgid "For intracommunity supply, the delivery address should be included."
 msgstr "Для внутрішнього постачання необхідно вказати адресу доставки."
 
 #. module: account_edi_ubl_cii
-#: model_terms:ir.ui.view,arch_db:account_edi_ubl_cii.account_invoice_pdfa_3_facturx_metadata
-msgid "INVOICE"
-msgstr "РАХУНОК"
-
-#. module: account_edi_ubl_cii
+#. odoo-python
 #: code:addons/account_edi_ubl_cii/models/account_edi_common.py:0
 #, python-format
 msgid "Intra-Community supply"
@@ -224,6 +216,7 @@ msgid "Invoice generated by Odoo"
 msgstr "Рахунок, створений Odoo"
 
 #. module: account_edi_ubl_cii
+#. odoo-python
 #: code:addons/account_edi_ubl_cii/models/account_edi_xml_ubl_bis3.py:0
 #: code:addons/account_edi_ubl_cii/models/account_edi_xml_ubl_bis3.py:0
 #, python-format
@@ -231,6 +224,7 @@ msgid "No Electronic Address Scheme (EAS) could be found for %s."
 msgstr "Не вдалося знайти Electronic Address Scheme (EAS). %s."
 
 #. module: account_edi_ubl_cii
+#. odoo-python
 #: code:addons/account_edi_ubl_cii/models/account_edi_common.py:0
 #, python-format
 msgid "No gross price nor net price found for line in xml"
@@ -242,24 +236,28 @@ msgid "Odoo"
 msgstr "Odoo"
 
 #. module: account_edi_ubl_cii
+#. odoo-python
 #: code:addons/account_edi_ubl_cii/models/account_edi_common.py:0
 #, python-format
 msgid "Output VAT, reduced rate, low"
 msgstr "Вихідний ПДВ, пільгова ставка, низький"
 
 #. module: account_edi_ubl_cii
+#. odoo-python
 #: code:addons/account_edi_ubl_cii/models/account_edi_common.py:0
 #, python-format
 msgid "Output VAT, reduced rate, middle"
 msgstr "Вихідний ПДВ, пільгова ставка, середній"
 
 #. module: account_edi_ubl_cii
+#. odoo-python
 #: code:addons/account_edi_ubl_cii/models/account_edi_common.py:0
 #, python-format
 msgid "Output VAT, reduced rate, raw fish"
 msgstr "Вихідний ПДВ, знижена ставка, сирий"
 
 #. module: account_edi_ubl_cii
+#. odoo-python
 #: code:addons/account_edi_ubl_cii/models/account_edi_common.py:0
 #, python-format
 msgid "Output VAT, regular rate"
@@ -276,11 +274,7 @@ msgid "SI-UBL 2.0 (NLCIUS)"
 msgstr "SI-UBL 2.0 (NLCIUS)"
 
 #. module: account_edi_ubl_cii
-#: model_terms:ir.ui.view,arch_db:account_edi_ubl_cii.account_invoice_pdfa_3_facturx_metadata
-msgid "Text"
-msgstr "Текст"
-
-#. module: account_edi_ubl_cii
+#. odoo-python
 #: code:addons/account_edi_ubl_cii/models/account_edi_xml_ubl_bis3.py:0
 #, python-format
 msgid ""
@@ -291,16 +285,7 @@ msgstr ""
 "NO179728982MVA."
 
 #. module: account_edi_ubl_cii
-#: model_terms:ir.ui.view,arch_db:account_edi_ubl_cii.account_invoice_pdfa_3_facturx_metadata
-msgid "The actual version of the Factur-X XML schema"
-msgstr "Фактична версія XML-схеми Factur-X"
-
-#. module: account_edi_ubl_cii
-#: model_terms:ir.ui.view,arch_db:account_edi_ubl_cii.account_invoice_pdfa_3_facturx_metadata
-msgid "The conformance level of the embedded Factur-X data"
-msgstr "Рівень відповідності вбудованих даних Factur-X"
-
-#. module: account_edi_ubl_cii
+#. odoo-python
 #: code:addons/account_edi_ubl_cii/models/account_edi_xml_cii_facturx.py:0
 #: code:addons/account_edi_ubl_cii/models/account_edi_xml_ubl_20.py:0
 #, python-format
@@ -308,12 +293,14 @@ msgid "The currency '%s' is not active."
 msgstr "Валюта '%s' не активна."
 
 #. module: account_edi_ubl_cii
+#. odoo-python
 #: code:addons/account_edi_ubl_cii/models/account_edi_xml_ubl_bis3.py:0
 #, python-format
 msgid "The customer %s must have a KVK or OIN number."
 msgstr "Клієнт %s повинен мати номер KVK або OIN."
 
 #. module: account_edi_ubl_cii
+#. odoo-python
 #: code:addons/account_edi_ubl_cii/models/account_edi_common.py:0
 #: code:addons/account_edi_ubl_cii/models/account_edi_common.py:0
 #, python-format
@@ -321,12 +308,14 @@ msgid "The element %s is required on %s."
 msgstr "Елемент %s вимагається на %s."
 
 #. module: account_edi_ubl_cii
+#. odoo-python
 #: code:addons/account_edi_ubl_cii/models/account_edi_common.py:0
 #, python-format
 msgid "The field %s is required on %s."
 msgstr "Поле %s вимагається на %s."
 
 #. module: account_edi_ubl_cii
+#. odoo-python
 #: code:addons/account_edi_ubl_cii/models/account_edi_xml_cii_facturx.py:0
 #, python-format
 msgid ""
@@ -334,6 +323,7 @@ msgid ""
 msgstr "Поле «Чистий Номер Р'ахунку» є обов’язковим для банку-одержувача."
 
 #. module: account_edi_ubl_cii
+#. odoo-python
 #: code:addons/account_edi_ubl_cii/models/account_edi_xml_cii_facturx.py:0
 #: code:addons/account_edi_ubl_cii/models/account_edi_xml_ubl_20.py:0
 #, python-format
@@ -343,6 +333,18 @@ msgid ""
 msgstr "Рахунок-фактуру перетворено на сторно, а кількість скасовано."
 
 #. module: account_edi_ubl_cii
+#. odoo-python
+#: code:addons/account_edi_ubl_cii/models/account_edi_format.py:0
+#, python-format
+msgid ""
+"The journal in which to upload should either be a sale or a purchase "
+"journal."
+msgstr ""
+"Журнал, у який потрібно завантажити, має бути або журналом продажів, або "
+"журналом купівель."
+
+#. module: account_edi_ubl_cii
+#. odoo-python
 #: code:addons/account_edi_ubl_cii/models/account_edi_xml_ubl_bis3.py:0
 #: code:addons/account_edi_ubl_cii/models/account_edi_xml_ubl_bis3.py:0
 #, python-format
@@ -350,6 +352,7 @@ msgid "The supplier %s must have a Bronnoysund company registry."
 msgstr "Постачальник %s повинен мати реєстрацію компанії Bronnoysund."
 
 #. module: account_edi_ubl_cii
+#. odoo-python
 #: code:addons/account_edi_ubl_cii/models/account_edi_xml_ubl_bis3.py:0
 #, python-format
 msgid "The supplier %s must have a KVK or OIN number."
@@ -371,18 +374,7 @@ msgid "UBL BIS Billing 3.0.12"
 msgstr "UBL BIS Billing 3.0.12"
 
 #. module: account_edi_ubl_cii
-#: model_terms:ir.ui.view,arch_db:account_edi_ubl_cii.account_invoice_facturx_export_22
-#: model_terms:ir.ui.view,arch_db:account_edi_ubl_cii.account_invoice_line_facturx_export_22
-#: model_terms:ir.ui.view,arch_db:account_edi_ubl_cii.ubl_20_TaxCategoryType
-msgid "VAT"
-msgstr "ПДВ"
-
-#. module: account_edi_ubl_cii
-#: model_terms:ir.ui.view,arch_db:account_edi_ubl_cii.account_invoice_pdfa_3_facturx_metadata
-msgid "Version"
-msgstr "Версія"
-
-#. module: account_edi_ubl_cii
+#. odoo-python
 #: code:addons/account_edi_ubl_cii/models/account_edi_xml_cii_facturx.py:0
 #, python-format
 msgid ""
@@ -393,6 +385,7 @@ msgstr ""
 "ставка податку в кожному рядку рахунку має бути більшою за 0."
 
 #. module: account_edi_ubl_cii
+#. odoo-python
 #: code:addons/account_edi_ubl_cii/models/account_edi_xml_cii_facturx.py:0
 #, python-format
 msgid ""
@@ -405,16 +398,12 @@ msgstr ""
 "категорії ПДВ позиції, на яку виставлено рахунок-фактуру (BT-151)."
 
 #. module: account_edi_ubl_cii
+#. odoo-python
 #: code:addons/account_edi_ubl_cii/models/account_edi_xml_cii_facturx.py:0
 #: code:addons/account_edi_ubl_cii/models/account_edi_xml_ubl_20.py:0
 #, python-format
 msgid "customer"
 msgstr "клієнт"
-
-#. module: account_edi_ubl_cii
-#: model_terms:ir.ui.view,arch_db:account_edi_ubl_cii.account_invoice_pdfa_3_facturx_metadata
-msgid "external"
-msgstr "зовнішній"
 
 #. module: account_edi_ubl_cii
 #: model_terms:ir.ui.view,arch_db:account_edi_ubl_cii.account_invoice_pdfa_3_facturx_metadata
@@ -433,15 +422,11 @@ msgstr "fx"
 
 #. module: account_edi_ubl_cii
 #: model_terms:ir.ui.view,arch_db:account_edi_ubl_cii.account_invoice_pdfa_3_facturx_metadata
-msgid "name of the embedded XML invoice file"
-msgstr "ім'я вбудованого файлу рахунка-фактури XML"
-
-#. module: account_edi_ubl_cii
-#: model_terms:ir.ui.view,arch_db:account_edi_ubl_cii.account_invoice_pdfa_3_facturx_metadata
 msgid "urn:factur-x:pdfa:CrossIndustryDocument:invoice:1p0#"
 msgstr "urn:factur-x:pdfa:CrossIndustryDocument:invoice:1p0#"
 
 #. module: account_edi_ubl_cii
+#. odoo-python
 #: code:addons/account_edi_ubl_cii/models/account_edi_xml_cii_facturx.py:0
 #: code:addons/account_edi_ubl_cii/models/account_edi_xml_ubl_20.py:0
 #, python-format

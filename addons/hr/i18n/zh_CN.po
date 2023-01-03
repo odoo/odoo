@@ -13,9 +13,9 @@
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 16.0beta\n"
+"Project-Id-Version: Odoo Server 16.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-10-10 10:22+0000\n"
+"POT-Creation-Date: 2022-12-15 12:49+0000\n"
 "PO-Revision-Date: 2022-09-22 05:46+0000\n"
 "Last-Translator: Jeffery CHEN <jeffery9@gmail.com>, 2022\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/zh_CN/)\n"
@@ -32,12 +32,14 @@ msgid "# emails to send"
 msgstr "# 要发送的电子邮件"
 
 #. module: hr
+#. odoo-python
 #: code:addons/hr/wizard/hr_plan_wizard.py:0
 #, python-format
 msgid "%(activity)s, assigned to %(name)s, due on the %(deadline)s"
 msgstr "%(activity)s 分配给 %(name)s，在 %(deadline)s 到期"
 
 #. module: hr
+#. odoo-python
 #: code:addons/hr/models/hr_job.py:0
 #, python-format
 msgid "%s (copy)"
@@ -109,6 +111,7 @@ msgid "4 Days after Interview"
 msgstr "4 面谈后天数"
 
 #. module: hr
+#. odoo-python
 #: code:addons/hr/models/hr_employee.py:0
 #, python-format
 msgid ""
@@ -155,13 +158,9 @@ msgstr ""
 msgid ""
 "<small role=\"img\" class=\"fa fa-fw fa-circle-o text-muted o_button_icon "
 "hr_presence align-middle\" attrs=\"{'invisible': [('hr_icon_display', '!=', "
-"'present_absent')]}\" aria-label=\"Absent\" title=\"Absent\" "
+"'presence_absent')]}\" aria-label=\"Absent\" title=\"Absent\" "
 "name=\"presence_absent\"/>"
 msgstr ""
-"<small role=\"img\" class=\"fa fa-fw fa-circle-o text-muted o_button_icon "
-"hr_presence align-middle\" attrs=\"{'invisible': [('hr_icon_display', '!=', "
-"'present_absent')]}\" aria-label=\"Absent\" title=\"Absent\" "
-"name=\"presence_absent\"/>"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
@@ -765,10 +764,10 @@ msgid "Change my Preferences"
 msgstr "更改我的个人资料"
 
 #. module: hr
-#: model_terms:ir.ui.view,arch_db:hr.hr_employee_public_view_form
-#: model_terms:ir.ui.view,arch_db:hr.hr_employee_public_view_kanban
-#: model_terms:ir.ui.view,arch_db:hr.hr_kanban_view_employees
-#: model_terms:ir.ui.view,arch_db:hr.view_employee_form
+#. odoo-javascript
+#: code:addons/hr/static/src/components/employee_chat/employee_chat.xml:0
+#: code:addons/hr/static/src/components/employee_chat/employee_chat.xml:0
+#, python-format
 msgid "Chat"
 msgstr "聊天"
 
@@ -808,6 +807,7 @@ msgid "Coach"
 msgstr "教练"
 
 #. module: hr
+#. odoo-python
 #: code:addons/hr/models/hr_plan_activity_type.py:0
 #, python-format
 msgid "Coach of employee %s is not set."
@@ -950,6 +950,7 @@ msgid "Create Employee"
 msgstr "新建员工"
 
 #. module: hr
+#. odoo-python
 #: code:addons/hr/models/hr_employee.py:0
 #: model:ir.actions.server,name:hr.action_hr_employee_create_user
 #, python-format
@@ -1032,6 +1033,7 @@ msgid "Date of Birth"
 msgstr "出生日期"
 
 #. module: hr
+#. odoo-python
 #: code:addons/hr/models/hr_departure_reason.py:0
 #, python-format
 msgid "Default departure reasons cannot be deleted."
@@ -1275,7 +1277,7 @@ msgid "Employee Tags"
 msgstr "员工标签"
 
 #. module: hr
-#. openerp-web
+#. odoo-javascript
 #: code:addons/hr/static/src/views/archive_employee_hook.js:0
 #, python-format
 msgid "Employee Termination"
@@ -1467,6 +1469,7 @@ msgid "Font awesome icon e.g. fa-tasks"
 msgstr "完美的图标，例如FA任务"
 
 #. module: hr
+#. odoo-python
 #: code:addons/hr/models/mail_channel.py:0
 #, python-format
 msgid ""
@@ -1550,7 +1553,6 @@ msgstr "人力资源部门"
 #. module: hr
 #: model:ir.actions.server,name:hr.ir_cron_data_check_work_permit_validity_ir_actions_server
 #: model:ir.cron,cron_name:hr.ir_cron_data_check_work_permit_validity
-#: model:ir.cron,name:hr.ir_cron_data_check_work_permit_validity
 msgid "HR Employee: check work permit validity"
 msgstr "HR员工：检查工作许可的有效性"
 
@@ -1717,6 +1719,7 @@ msgid "Image 512"
 msgstr "图像 512"
 
 #. module: hr
+#. odoo-python
 #: code:addons/hr/models/hr_employee.py:0
 #, python-format
 msgid "Import Template for Employees"
@@ -1879,6 +1882,7 @@ msgid "Launch Plan"
 msgstr "启动计划"
 
 #. module: hr
+#. odoo-python
 #: code:addons/hr/wizard/hr_plan_wizard.py:0
 #, python-format
 msgid "Launch Plans"
@@ -1942,6 +1946,7 @@ msgid "Manager"
 msgstr "管理员"
 
 #. module: hr
+#. odoo-python
 #: code:addons/hr/models/hr_plan_activity_type.py:0
 #, python-format
 msgid "Manager of employee %s is not set."
@@ -2039,7 +2044,7 @@ msgid "My Department"
 msgstr "我的部门"
 
 #. module: hr
-#. openerp-web
+#. odoo-javascript
 #: code:addons/hr/static/src/user_menu/my_profile.js:0
 #, python-format
 msgid "My Profile"
@@ -2118,6 +2123,7 @@ msgid "No dumb managers, no stupid tools to use, no rigid working hours"
 msgstr "没有呆板的管理者，没有槽糕的工具，没有硬性的工作时间"
 
 #. module: hr
+#. odoo-python
 #: code:addons/hr/models/hr_plan_activity_type.py:0
 #, python-format
 msgid "No specific user given on activity %s."
@@ -2241,6 +2247,7 @@ msgid "On/Offboarding Plans"
 msgstr "入职/离职计划"
 
 #. module: hr
+#. odoo-python
 #: code:addons/hr/models/hr_employee_base.py:0
 #, python-format
 msgid "Operation not supported"
@@ -2582,6 +2589,7 @@ msgid "Recruitment"
 msgstr "招聘"
 
 #. module: hr
+#. odoo-python
 #: code:addons/hr/models/hr_employee.py:0
 #: model:ir.actions.act_window,name:hr.hr_departure_wizard_action
 #, python-format
@@ -2596,13 +2604,14 @@ msgid "Related Contact"
 msgstr "相关联系人"
 
 #. module: hr
+#. odoo-python
 #: code:addons/hr/models/hr_employee_base.py:0
-#: model_terms:ir.ui.view,arch_db:hr.view_employee_form_smartbutton
 #, python-format
 msgid "Related Contacts"
 msgstr "相关联系人"
 
 #. module: hr
+#. odoo-python
 #: code:addons/hr/models/res_partner.py:0
 #, python-format
 msgid "Related Employees"
@@ -2936,12 +2945,14 @@ msgstr ""
 " 您可以使用此字段进行快速搜索。"
 
 #. module: hr
+#. odoo-python
 #: code:addons/hr/models/hr_employee.py:0
 #, python-format
 msgid "The PIN must be a sequence of digits."
 msgstr "PIN码必须是一串数字。"
 
 #. module: hr
+#. odoo-python
 #: code:addons/hr/models/hr_plan_activity_type.py:0
 #, python-format
 msgid "The employee %s should be linked to a user."
@@ -2966,6 +2977,7 @@ msgid ""
 msgstr "员工类型。虽然主要目的似乎是对员工进行分类，但这个字段在合同历史中也有影响。只有雇员类型应该是在合同下，并且会有一个合同历史。"
 
 #. module: hr
+#. odoo-python
 #: code:addons/hr/wizard/hr_plan_wizard.py:0
 #, python-format
 msgid "The employees should belong to the same company."
@@ -2977,6 +2989,7 @@ msgid "The expected number of new employees must be positive."
 msgstr "新员工的预期数量必须是正数。"
 
 #. module: hr
+#. odoo-python
 #: code:addons/hr/models/hr_employee.py:0
 #, python-format
 msgid ""
@@ -2985,6 +2998,7 @@ msgid ""
 msgstr "您尝试阅读的字段“%s”在公共员工个人资料中不可用。"
 
 #. module: hr
+#. odoo-python
 #: code:addons/hr/models/hr_plan_activity_type.py:0
 #, python-format
 msgid "The manager of %s should be linked to a user."
@@ -2996,12 +3010,14 @@ msgid "The name of the job position must be unique per department in company!"
 msgstr "公司内部门的工作岗位名称必须唯一！"
 
 #. module: hr
+#. odoo-python
 #: code:addons/hr/wizard/hr_plan_wizard.py:0
 #, python-format
 msgid "The plan %s cannot be launched: <br><ul>"
 msgstr "无法启动该计划 %s ： <br><ul>"
 
 #. module: hr
+#. odoo-python
 #: code:addons/hr/wizard/hr_plan_wizard.py:0
 #, python-format
 msgid "The plan %s has been started"
@@ -3020,12 +3036,14 @@ msgid ""
 msgstr "此用户将有权限访问人力资源配置以及统计报表。"
 
 #. module: hr
+#. odoo-python
 #: code:addons/hr/models/hr_employee.py:0
 #, python-format
 msgid "The work permit of %(employee)s expires at %(date)s."
 msgstr "%(employee)s的工作许可在%(date)s到期。"
 
 #. module: hr
+#. odoo-python
 #: code:addons/hr/models/hr_employee.py:0
 #, python-format
 msgid "This employee already has an user."
@@ -3055,6 +3073,7 @@ msgid "To Define"
 msgstr "界定"
 
 #. module: hr
+#. odoo-python
 #: code:addons/hr/models/hr_employee.py:0
 #, python-format
 msgid ""
@@ -3133,6 +3152,7 @@ msgid "User"
 msgstr "用户"
 
 #. module: hr
+#. odoo-python
 #: code:addons/hr/models/hr_plan_activity_type.py:0
 #, python-format
 msgid "User of coach of employee %s is not set."
@@ -3179,6 +3199,7 @@ msgid "Visa No"
 msgstr "签证号"
 
 #. module: hr
+#. odoo-python
 #: code:addons/hr/models/hr_employee.py:0
 #: model:ir.model.fields,field_description:hr.field_hr_plan_wizard__warning
 #, python-format
@@ -3356,6 +3377,7 @@ msgid "Working Hours"
 msgstr "工作时间"
 
 #. module: hr
+#. odoo-python
 #: code:addons/hr/models/res_users.py:0
 #, python-format
 msgid ""
@@ -3364,25 +3386,28 @@ msgid ""
 msgstr "仅允许您更新首选项。 请联系人力资源主管以更新其他信息。"
 
 #. module: hr
-#. openerp-web
+#. odoo-javascript
 #: code:addons/hr/static/src/models/employee.js:0
 #, python-format
 msgid "You can only chat with employees that have a dedicated user."
 msgstr "您只能与拥有专门用户的员工聊天。"
 
 #. module: hr
+#. odoo-python
 #: code:addons/hr/models/hr_department.py:0
 #, python-format
 msgid "You cannot create recursive departments."
 msgstr "您不能创建递归的部门。"
 
 #. module: hr
+#. odoo-python
 #: code:addons/hr/models/hr_employee.py:0
 #, python-format
 msgid "You do not have access to this document."
 msgstr "您无权访问此文档。"
 
 #. module: hr
+#. odoo-python
 #: code:addons/hr/models/res_config_settings.py:0
 #, python-format
 msgid "You should select at least one Advanced Presence Control option."
@@ -3394,6 +3419,7 @@ msgid "ZIP"
 msgstr "ZIP"
 
 #. module: hr
+#. odoo-python
 #: code:addons/hr/models/mail_alias.py:0
 #, python-format
 msgid "addresses linked to registered employees"
@@ -3425,6 +3451,7 @@ msgid "plan"
 msgstr "计划"
 
 #. module: hr
+#. odoo-python
 #: code:addons/hr/models/models.py:0
 #, python-format
 msgid "restricted to employees"

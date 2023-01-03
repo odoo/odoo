@@ -6,10 +6,6 @@ const {_t} = require('web.core');
 const options = require('web_editor.snippets.options');
 require('website.editor.snippets.options');
 
-if (!$('.website_blog').length) {
-    return;
-}
-
 const NEW_TAG_PREFIX = 'new-blog-tag-';
 
 options.registry.many2one.include({
@@ -45,6 +41,10 @@ options.registry.CoverProperties.include({
      */
     updateUI: async function () {
         await this._super(...arguments);
+        const isBlogCover = this.$target[0].classList.contains('o_wblog_post_page_cover');
+        if (!isBlogCover) {
+            return;
+        }
         var isRegularCover = this.$target.is('.o_wblog_post_page_cover_regular');
         var $coverFull = this.$el.find('[data-select-class*="o_full_screen_height"]');
         var $coverMid = this.$el.find('[data-select-class*="o_half_screen_height"]');

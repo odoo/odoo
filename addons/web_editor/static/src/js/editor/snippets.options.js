@@ -55,6 +55,9 @@ function _addTitleAndAllowedAttributes(el, title, options) {
         const titleEl = _buildTitleElement(title);
         tooltipEl = titleEl;
         el.appendChild(titleEl);
+        if (options && options.dataAttributes && options.dataAttributes.fontFamily) {
+            titleEl.style.fontFamily = options.dataAttributes.fontFamily;
+        }
     }
 
     if (options && options.classes) {
@@ -4909,17 +4912,6 @@ registry.Box = SnippetOptionWidget.extend({
 
 
 registry.layout_column = SnippetOptionWidget.extend({
-    /**
-     * @override
-     */
-    start: function () {
-        // Needs to be done manually for now because _computeWidgetVisibility
-        // doesn't go through this option for buttons inside of a select.
-        // TODO: improve this.
-        this.$el.find('we-button[data-name="zero_cols_opt"]')
-            .toggleClass('d-none', !this.$target.is('.s_allow_columns'));
-        return this._super(...arguments);
-    },
 
     //--------------------------------------------------------------------------
     // Options
@@ -5086,6 +5078,20 @@ registry.layout_column = SnippetOptionWidget.extend({
         return this._super(...arguments);
     },
     /**
+     * @override
+     */
+    _computeWidgetVisibility(widgetName, params) {
+        if (widgetName === 'zero_cols_opt') {
+            // Note: "s_allow_columns" indicates containers which may have
+            // bare content (without columns) and are allowed to have columns.
+            // By extension, we only show the "None" option on elements that
+            // were marked as such as they were allowed to have bare content in
+            // the first place.
+            return this.$target.is('.s_allow_columns');
+        }
+        return this._super(...arguments);
+    },
+    /**
      * Adds new columns which are clones of the last column or removes the
      * last x columns.
      *
@@ -5211,11 +5217,19 @@ registry.SnippetMove = SnippetOptionWidget.extend({
         }
         if (!this.$target.is(this.data.noScroll)
                 && (params.name === 'move_up_opt' || params.name === 'move_down_opt')) {
-            scrollTo(this.$target[0], {
-                extraOffset: 50,
-                easing: 'linear',
-                duration: 550,
-            });
+            const mainScrollingEl = $().getScrollingElement()[0];
+            const elTop = this.$target[0].getBoundingClientRect().top;
+            const heightDiff = mainScrollingEl.offsetHeight - this.$target[0].offsetHeight;
+            const bottomHidden = heightDiff < elTop;
+            const hidden = elTop < 0 || bottomHidden;
+            if (hidden) {
+                scrollTo(this.$target[0], {
+                    extraOffset: 50,
+                    forcedOffset: bottomHidden ? heightDiff - 50 : undefined,
+                    easing: 'linear',
+                    duration: 500,
+                });
+            }
         }
         this.trigger_up('option_update', {
             optionName: 'StepsConnector',
