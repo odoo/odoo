@@ -44,14 +44,23 @@ const LinkTools = Link.extend({
     /**
      * @override
      */
-    start: function () {
+    start: async function () {
         const titleEls = this.el.querySelectorAll('we-title');
         for (const titleEl of titleEls) {
             // See _buildTitleElement for explanation
             titleEl.textContent = titleEl.textContent.replace(/⌙/g, '└');
         }
         this._addHintClasses();
-        return this._super(...arguments);
+        const ret = await this._super(...arguments);
+        const link = this.$link[0];
+        const customStyleProps = ['color', 'background-color', 'background-image', 'border-width', 'border-style', 'border-color'];
+        if (customStyleProps.some(s => link.style[s])) {
+            // Force custom style if style exists on the link.
+            const customOption = this.el.querySelector('[name="link_style_color"] we-button[data-value="custom"]');
+            this._setSelectOption($(customOption), true);
+            await this._updateOptionsUI();
+        }
+        return ret;
     },
     destroy: function () {
         if (!this.el) {
@@ -374,15 +383,6 @@ const LinkTools = Link.extend({
         const $target = $(ev.target);
         if ($target.closest('[name="link_border_style"]').length) {
             return;
-        }
-        if ($target.closest('[name="link_style_color"]')) {
-            // Reset custom styles when changing link style.
-            this.$link.css('color', '');
-            this.$link.css('background-color', '');
-            this.$link.css('background-image', '');
-            this.$link.css('border-width', '');
-            this.$link.css('border-style', '');
-            this.$link.css('border-color', '');
         }
         const $select = $target.closest('we-select');
         $select.find('we-selection-items we-button').toggleClass('active', false);
