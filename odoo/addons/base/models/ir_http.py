@@ -151,6 +151,10 @@ class IrHttp(models.AbstractModel):
         request.dispatcher.post_dispatch(response)
 
     @classmethod
+    def _post_logout(cls):
+        pass
+
+    @classmethod
     def _handle_error(cls, exception):
         return request.dispatcher.handle_error(exception)
 
