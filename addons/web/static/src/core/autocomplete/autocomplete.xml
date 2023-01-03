@@ -15,6 +15,7 @@
                 t-on-change="onInputChange"
                 t-on-input="debouncedOnInput"
                 t-on-keydown="onInputKeydown"
+                t-on-focus="onInputFocus"
                 t-ref="input"
             />
             <t t-if="isOpened and hasOptions">

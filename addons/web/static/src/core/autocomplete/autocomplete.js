@@ -228,6 +228,11 @@ export class AutoComplete extends Component {
         this.open(true);
     }
 
+    onInputFocus(ev) {
+        this.inputRef.el.setSelectionRange(0, this.inputRef.el.value.length);
+        this.props.onFocus(ev);
+    }
+
     onInputKeydown(ev) {
         const hotkey = getActiveHotkey(ev);
         switch (hotkey) {
@@ -315,6 +320,7 @@ Object.assign(AutoComplete, {
         onInput: { type: Function, optional: true },
         onChange: { type: Function, optional: true },
         onBlur: { type: Function, optional: true },
+        onFocus: { type: Function, optional: true },
         input: { type: Function, optional: true },
     },
     defaultProps: {
@@ -323,6 +329,7 @@ Object.assign(AutoComplete, {
         onInput: () => {},
         onChange: () => {},
         onBlur: () => {},
+        onFocus: () => {},
     },
     timeout: 250,
 });
