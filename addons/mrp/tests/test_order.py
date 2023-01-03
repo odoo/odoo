@@ -1735,6 +1735,9 @@ class TestMrpOrder(TestMrpCommon):
         caused by decimal rounding conversions.
         """
 
+        picking_type = self.env['stock.picking.type'].search([('code', '=', 'mrp_operation')])[0]
+        picking_type.use_auto_consume_components_lots = True
+
         # the overall decimal accuracy is set to 3 digits
         precision = self.env.ref('product.decimal_product_uom')
         precision.digits = 3
