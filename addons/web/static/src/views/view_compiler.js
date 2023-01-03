@@ -25,6 +25,8 @@ const BUTTON_CLICK_PARAMS = [
     "context",
     "close",
     "confirm",
+    "confirm-title",
+    "confirm-label",
     "special",
     "effect",
     "help",

@@ -9534,6 +9534,44 @@ QUnit.module("Views", (hooks) => {
         }
     );
 
+    QUnit.test(
+        'buttons with "confirm-title" and "confirm-label" attributes',
+        async function (assert) {
+            await makeView({
+                type: "form",
+                resModel: "partner",
+                serverData,
+                arch: `
+                    <form>
+                        <header>
+                            <button name="post" class="p" string="Confirm" type="object" confirm="Very dangerous. U sure?"
+                                confirm-title="Confirm Title" confirm-label="Confirm Label"/>
+                        </header>
+                        <sheet>
+                            <field name="foo"/>
+                        </sheet>
+                    </form>`,
+                mockRPC(route, args) {
+                    assert.step(args.method);
+                },
+            });
+
+            await click(target.querySelector(".o_statusbar_buttons button"));
+            assert.strictEqual(
+                target.querySelector(".modal-title").textContent,
+                "Confirm Title",
+                "confirmation dialog should have correct title"
+            );
+            assert.strictEqual(
+                target.querySelector(".modal-footer button.btn-primary").textContent,
+                "Confirm Label",
+                "confirmation dialog should have correct confirmation label"
+            );
+
+            assert.verifySteps(["get_views", "onchange"]);
+        }
+    );
+
     QUnit.test('buttons with "confirm" attribute: click twice on "Ok"', async function (assert) {
         const actionService = {
             start() {
