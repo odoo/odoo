@@ -1,6 +1,5 @@
 /** @odoo-module */
 
-import { getFileAsText } from "@point_of_sale/js/utils";
 import { parse } from "web.field_utils";
 import NumberBuffer from "@point_of_sale/js/Misc/NumberBuffer";
 import PosComponent from "@point_of_sale/js/PosComponent";
@@ -124,6 +123,7 @@ class DebugWidget extends PosComponent {
         var URL = window.URL || window.webkitURL;
         return URL.createObjectURL(this.paidOrdersBlob);
     }
+    // FIXME POSREF why is this two steps?
     prepareUnpaidOrders() {
         try {
             this.unpaidOrdersBlob = this._createBlob(this.env.pos.export_unpaid_orders());
@@ -142,7 +142,7 @@ class DebugWidget extends PosComponent {
     async importOrders(event) {
         const file = event.target.files[0];
         if (file) {
-            const report = this.env.pos.import_orders(await getFileAsText(file));
+            const report = this.env.pos.import_orders(await file.text());
             await this.showPopup("OrderImportPopup", { report });
         }
     }
