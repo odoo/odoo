@@ -6,7 +6,7 @@ import { useErrorHandlers } from "@point_of_sale/js/custom_hooks";
 import Registries from "@point_of_sale/js/Registries";
 import AbstractReceiptScreen from "@point_of_sale/js/Misc/AbstractReceiptScreen";
 
-const { onMounted, useRef, status } = owl;
+import { onMounted, useRef, status } from "@odoo/owl";
 
 const ReceiptScreen = (AbstractReceiptScreen) => {
     class ReceiptScreen extends AbstractReceiptScreen {

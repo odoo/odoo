@@ -5,14 +5,16 @@ import { ConnectionLostError, ConnectionAbortedError } from "@web/core/network/r
 import PosComponent from "@point_of_sale/js/PosComponent";
 import Registries from "@point_of_sale/js/Registries";
 import { debounce } from "@web/core/utils/timing";
+import { usePos } from "@point_of_sale/app/pos_store";
 
-const { onMounted, onWillUnmount } = owl;
+import { onMounted, onWillUnmount, useState } from "@odoo/owl";
 
 class ProductsWidgetControlPanel extends PosComponent {
     setup() {
         super.setup();
+        this.pos = usePos();
         this.updateSearch = debounce(this.updateSearch, 100);
-        this.state = { searchInput: "" };
+        this.state = useState({ searchInput: "", mobileSearchBarIsShown: false });
 
         onMounted(() => {
             this.env.posbus.on("search-product-from-info-popup", this, this.searchProductFromInfo);
@@ -24,6 +26,9 @@ class ProductsWidgetControlPanel extends PosComponent {
         onWillUnmount(() => {
             this.env.posbus.off("search-product-from-info-popup", this);
         });
+    }
+    toggleMobileSearchBar() {
+        this.state.mobileSearchBarIsShown = !this.state.mobileSearchBarIsShown;
     }
     _clearSearch() {
         this.state.searchInput = "";
@@ -64,9 +69,6 @@ class ProductsWidgetControlPanel extends PosComponent {
         this.state.searchInput = productName;
         this.trigger("switch-category", 0);
         this.trigger("update-search", productName);
-    }
-    _toggleMobileSearchbar() {
-        this.trigger("toggle-mobile-searchbar");
     }
     async loadProductFromDB() {
         if (!this.state.searchInput) {

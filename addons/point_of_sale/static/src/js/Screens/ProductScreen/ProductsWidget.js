@@ -3,8 +3,9 @@
 import PosComponent from "@point_of_sale/js/PosComponent";
 import { useListener } from "@web/core/utils/hooks";
 import Registries from "@point_of_sale/js/Registries";
+import { usePos } from "@point_of_sale/app/pos_store";
 
-const { onWillUnmount, useState } = owl;
+const { useState } = owl;
 
 class ProductsWidget extends PosComponent {
     /**
@@ -18,10 +19,7 @@ class ProductsWidget extends PosComponent {
         useListener("clear-search", this._clearSearch);
         useListener("update-product-list", this._updateProductList);
         this.state = useState({ searchWord: "" });
-        onWillUnmount(this.onWillUnmount);
-    }
-    onWillUnmount() {
-        this.trigger("toggle-mobile-searchbar", false);
+        this.pos = usePos();
     }
     get selectedCategoryId() {
         return this.env.pos.selectedCategoryId;

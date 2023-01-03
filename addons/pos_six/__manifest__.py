@@ -20,6 +20,7 @@
             'pos_six/static/src/js/models.js',
             'pos_six/static/src/js/payment_six.js',
             'pos_six/static/src/xml/**/*',
+            'pos_six/static/src/app/**/*',
         ],
     }
 }

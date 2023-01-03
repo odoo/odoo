@@ -2,9 +2,22 @@
 
 import ReceiptScreen from "@point_of_sale/js/Screens/ReceiptScreen/ReceiptScreen";
 import Registries from "@point_of_sale/js/Registries";
+import { usePos } from "@point_of_sale/app/pos_store";
+import { onWillUnmount } from "@odoo/owl";
 
 const PosResReceiptScreen = (ReceiptScreen) =>
     class extends ReceiptScreen {
+        static showBackToFloorButton = true;
+        setup() {
+            super.setup();
+            this.pos = usePos();
+            onWillUnmount(() => {
+                // When leaving the receipt screen to the floor screen the order is paid and can be removed
+                if (this.pos.mainScreen.name === "FloorScreen") {
+                    this.env.pos.removeOrder(this.currentOrder);
+                }
+            });
+        }
         //@override
         _addNewOrder() {
             if (!this.env.pos.config.iface_floorplan) {
@@ -19,10 +32,6 @@ const PosResReceiptScreen = (ReceiptScreen) =>
             } else {
                 return super.nextScreen;
             }
-        }
-        onBackToFloorButtonClick() {
-            // If we're here and the order is paid, we can remove it from the orders
-            this.env.pos.removeOrder(this.currentOrder);
         }
     };
 
