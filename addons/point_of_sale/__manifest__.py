@@ -125,11 +125,11 @@
             'point_of_sale/static/src/js/**/*.js',
             'web/static/lib/zxing-library/zxing-library.js',
             'point_of_sale/static/src/xml/**/*.xml',
+            'point_of_sale/static/src/app/**/*',
         ],
         # This bundle contains the code responsible for starting the POS UI.
         # It is practically the entry point.
         'point_of_sale.assets_backend_prod_only': [
-            'point_of_sale/static/src/entry/chrome_adapter.js',
             'point_of_sale/static/src/entry/main.js',
             'web/static/src/start.js',
             'web/static/src/legacy/legacy_setup.js',

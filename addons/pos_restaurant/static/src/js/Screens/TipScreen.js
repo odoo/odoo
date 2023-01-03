@@ -8,6 +8,7 @@ import { renderToString } from "@web/core/utils/render";
 const { onMounted } = owl;
 
 class TipScreen extends PosComponent {
+    static showBackToFloorButton = true;
     setup() {
         super.setup();
         this.state = this.currentOrder.uiState.TipScreen;

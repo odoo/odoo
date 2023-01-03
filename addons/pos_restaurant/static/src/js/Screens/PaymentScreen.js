@@ -6,6 +6,7 @@ import Registries from "@point_of_sale/js/Registries";
 
 const PosResPaymentScreen = (PaymentScreen) =>
     class extends PaymentScreen {
+        static showBackToFloorButton = true;
         setup() {
             super.setup();
             useListener("send-payment-adjust", this._sendPaymentAdjust);

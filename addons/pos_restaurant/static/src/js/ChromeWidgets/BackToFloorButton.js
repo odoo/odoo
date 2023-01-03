@@ -1,14 +1,14 @@
 /** @odoo-module */
 
+import { usePos } from "@point_of_sale/app/pos_store";
 import PosComponent from "@point_of_sale/js/PosComponent";
 import Registries from "@point_of_sale/js/Registries";
 
-/**
- * Props: {
- *     onClick: callback
- * }
- */
 class BackToFloorButton extends PosComponent {
+    setup() {
+        super.setup();
+        this.pos = usePos();
+    }
     get table() {
         return this.env.pos.table;
     }
@@ -19,9 +19,6 @@ class BackToFloorButton extends PosComponent {
         return this.table != null;
     }
     backToFloorScreen() {
-        if (this.props.onClick) {
-            this.props.onClick();
-        }
         this.showScreen("FloorScreen", { floor: this.floor });
     }
 }

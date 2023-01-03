@@ -5,12 +5,14 @@ import { parse } from "web.field_utils";
 import NumberBuffer from "@point_of_sale/js/Misc/NumberBuffer";
 import PosComponent from "@point_of_sale/js/PosComponent";
 import Registries from "@point_of_sale/js/Registries";
+import { usePos } from "@point_of_sale/app/pos_store";
 
 const { onMounted, onWillUnmount, useRef, useState } = owl;
 
 class DebugWidget extends PosComponent {
     setup() {
         super.setup();
+        this.pos = usePos();
         this.state = useState({
             barcodeInput: "",
             weightInput: "",

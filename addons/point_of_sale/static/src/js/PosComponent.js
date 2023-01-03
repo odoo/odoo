@@ -1,18 +1,10 @@
 /** @odoo-module */
 
 import { LegacyComponent } from "@web/legacy/legacy_component";
-const { onRendered } = owl;
 
 let nextId = 0;
 
 class PosComponent extends LegacyComponent {
-    setup() {
-        onRendered(() => {
-            if (this.env.isDebug()) {
-                console.log("Rendered:", this.constructor.name);
-            }
-        });
-    }
     /**
      * This function is available to all Components that inherit this class.
      * The goal of this function is to show an awaitable dialog (popup) that
