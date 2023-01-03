@@ -10,7 +10,7 @@ class SpreadsheetDashboard(models.Model):
     _description = 'Spreadsheet Dashboard'
     _order = 'sequence'
 
-    name = fields.Char(required=True)
+    name = fields.Char(required=True, translate=True)
     dashboard_group_id = fields.Many2one('spreadsheet.dashboard.group', required=True)
     data = fields.Binary(required=True, default=lambda self: empty_spreadsheet_data_base64())
     raw = fields.Binary(compute='_compute_raw')
