@@ -36,22 +36,22 @@ class AccountEdiFormat(models.Model):
 
     """
         In order to clear/report an eInvoice through the ZATCA API, the following logic needs to be applied:
-        
-            STEP 1: 
+
+            STEP 1:
                 Make a call to the Compliance CSID API '/compliance'.
-                This will return three things: 
-                    -   X509 Compliance Cryptographic Stamp Identifier (CCSID/Certificate) 
+                This will return three things:
+                    -   X509 Compliance Cryptographic Stamp Identifier (CCSID/Certificate)
                     -   Password (Secret)
                     -   Compliance Request ID
             STEP 2:
                 Make a call to the Compliance Checks API '/compliance/invoices'.
-                This will check if the provided Standard/Simplified Invoices complies with UBL 2.1 standards in line 
+                This will check if the provided Standard/Simplified Invoices complies with UBL 2.1 standards in line
                 with ZATCA specifications
             STEP 3:
-                Make a call to the Production CSID API '/production/csids' including the Compliance Certificate, 
+                Make a call to the Production CSID API '/production/csids' including the Compliance Certificate,
                 Password and Request ID from STEP 1.
                 This will return three things:
-                    -   X509 Production Certificate 
+                    -   X509 Production Certificate
                     -   Password (Secret)
                     -   Production Request ID
             STEP 4:
@@ -504,7 +504,8 @@ class AccountEdiFormat(models.Model):
             'invoice_datetime': self._l10n_sa_get_zatca_datetime(invoice.l10n_sa_confirmation_datetime),
             'previous_invoice_hash': self._l10n_sa_generate_invoice_hash(invoice._l10n_sa_get_previous_invoice()),
             # Add Process control (ProfileID) in compliance with rule BR-KSA-EN16931-01
-            'profile_id': 'reporting:1.0'
+            'profile_id': 'reporting:1.0',
+            # 'customer_vals': {'partner': invoice.partner_id},
         })
         return values
 
