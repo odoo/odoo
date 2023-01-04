@@ -55,7 +55,8 @@
 // Since JSON grammar is way simpler than JavaScript's grammar, it is actually
 // faster to parse the data as a JSON object than as a JavaScript object.
 
-import { _lt } from "@web/core/l10n/translation";
+import { _lt as lazyTranslate } from "@web/core/l10n/translation";
+const _lt = str => JSON.stringify(lazyTranslate(str)).slice(1, -1);
 
 export const emojiCategoriesData = JSON.parse(`[
     {
