@@ -136,15 +136,7 @@ class TestHttp(http.Controller):
     # =====================================================
     @http.route('/test_http/geoip', type='http', auth='none')
     def geoip(self):
-        return json.dumps({
-            'city': request.geoip.city.name,
-            'country_code': request.geoip.country.iso_code or request.geoip.continent.code,
-            'country_name': request.geoip.country.name or request.geoip.continent.name,
-            'latitude': request.geoip.location.latitude,
-            'longitude': request.geoip.location.longitude,
-            'region': request.geoip.subdivisions[0].iso_code if request.geoip.subdivisions else None,
-            'time_zone': request.geoip.location.time_zone,
-        })
+        return str(request.geoip)
 
     @http.route('/test_http/save_session', type='http', auth='none')
     def touch(self):
