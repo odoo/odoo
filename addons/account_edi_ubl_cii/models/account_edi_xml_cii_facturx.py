@@ -246,6 +246,12 @@ class AccountEdiXmlCII(models.AbstractModel):
         if ref_node is not None:
             invoice.ref = ref_node.text
 
+        # ==== Invoice origin ====
+
+        invoice_origin_node = tree.find('./{*}OrderReference/{*}ID')
+        if invoice_origin_node is not None:
+            invoice.invoice_origin = invoice_origin_node.text
+
         # === Note/narration ====
 
         narration = ""
