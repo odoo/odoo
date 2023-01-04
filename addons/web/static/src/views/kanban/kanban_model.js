@@ -283,16 +283,24 @@ class KanbanGroup extends Group {
      */
     async validateQuickCreate() {
         const record = this.list.quickCreateRecord;
+        let saved = false;
         if (record) {
-            const saved = await record.save();
-            if (saved) {
-                this.addRecord(this.removeRecord(record), 0);
-                this.count++;
-                this.list.count++;
-                return record;
-            }
+            saved = await this.model.mutex.exec(async () => {
+                const saved = await record._save({ noReload: true, stayInEdition: true });
+                if (saved) {
+                    this.count++;
+                    if (record.parentActiveFields) {
+                        record.setActiveFields(record.parentActiveFields);
+                        record.parentActiveFields = false;
+                    }
+                    await this.model.reloadRecords(record);
+                    record.switchMode("readonly");
+                    this.addRecord(this.removeRecord(record), 0);
+                }
+                return saved;
+            });
         }
-        return false;
+        return saved ? record : false;
     }
 
     // ------------------------------------------------------------------------
