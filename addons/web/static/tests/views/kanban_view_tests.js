@@ -41,6 +41,7 @@ import { DynamicRecordList } from "@web/views/relational_model";
 import { ViewButton } from "@web/views/view_button/view_button";
 
 import { Component, onWillRender, xml } from "@odoo/owl";
+import { SampleServer } from "@web/views/sample_server";
 
 const serviceRegistry = registry.category("services");
 const viewWidgetRegistry = registry.category("view_widgets");
@@ -12242,4 +12243,65 @@ QUnit.module("Views", (hooks) => {
             );
         }
     );
+
+    QUnit.test("sample server: _mockWebReadGroup API", async (assert) => {
+        serverData.models.partner.records = [];
+
+        patchWithCleanup(SampleServer.prototype, {
+            async _mockWebReadGroup() {
+                const result = await this._super(...arguments);
+                const { "date:month": dateValue } = result.groups[0];
+                assert.strictEqual(dateValue, "December 2022");
+                return result;
+            },
+        });
+
+        await makeView({
+            arch: `
+                <kanban sample="1">
+                    <templates>
+                        <div t-name="kanban-box">
+                            <field name="display_name"/>
+                        </div>
+                    </templates>
+                </kanban>`,
+            serverData,
+            groupBy: ["date:month"],
+            resModel: "partner",
+            type: "kanban",
+            noContentHelp: "No content helper",
+            mockRPC(_, args) {
+                if (args.method === "web_read_group") {
+                    return {
+                        groups: [
+                            {
+                                date_count: 0,
+                                state: false,
+                                "date:month": "December 2022",
+                                __range: {
+                                    "date:month": {
+                                        from: "2022-12-01",
+                                        to: "2023-01-01",
+                                    },
+                                },
+                                __domain: [
+                                    ["date", ">=", "2022-12-01"],
+                                    ["date", "<", "2023-01-01"],
+                                ],
+                            },
+                        ],
+                        length: 1,
+                    };
+                }
+            },
+        });
+
+        assert.containsOnce(target, ".o_kanban_view .o_view_sample_data");
+        assert.containsOnce(target, ".o_kanban_group");
+        assert.strictEqual(
+            target.querySelector(".o_kanban_group .o_column_title").textContent,
+            "December 2022"
+        );
+        assert.containsN(target, ".o_kanban_group .o_kanban_record", 16);
+    });
 });

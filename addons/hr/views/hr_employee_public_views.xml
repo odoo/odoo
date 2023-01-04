@@ -48,9 +48,12 @@
                         <field name="avatar_1920" widget='image' class="oe_avatar" options='{"zoom": true, "preview_image":"avatar_128"}'/>
                             <div class="oe_title">
                                 <label for="name" string="Employee Name"/>
-                                <h1>
-                                    <field name="name" placeholder="e.g. John Doe" required="True"/>
-                                    <widget name="hr_employee_chat" invisible="not context.get('chat_icon')"/>
+                                <h1 class="d-flex flex-row">
+                                    <span class="me-2">
+                                        <widget name="hr_employee_chat" invisible="not context.get('chat_icon')"/>
+                                    </span>
+                                    <field name="name" placeholder="e.g. John Doe" required="True"
+                                        style="font-size: min(4vw, 2.6rem);"/>
                                 </h1>
                                 <h2>
                                     <field name="job_title" placeholder="Job Title" />
