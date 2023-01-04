@@ -745,6 +745,20 @@ describe('Format', () => {
                 contentAfter: '<p style="font-size: 10px">b[c]d</p>',
             });
         });
+        it('should change the font-size to default', async () => {
+            await testEditor(BasicEditor, {
+                contentBefore: '<p>[ab]</p>',
+                stepFunction: setFontSize(),
+                contentAfter: '<p>[ab]</p>',
+            });
+        });
+        it('should change the font-size to default removing the existing style with no empty span at the end', async () => {
+            await testEditor(BasicEditor, {
+                contentBefore: '<p><span style="font-size: 36px;">[abc]</span></p>',
+                stepFunction: setFontSize(),
+                contentAfter: '<p>[abc]</p>',
+            });
+        });
     });
 
     it('should add style to a span parent of an inline', async () => {
