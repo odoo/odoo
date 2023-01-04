@@ -595,10 +595,10 @@ class AccountEdiFormat(models.Model):
     @api.model
     def _l10n_in_edi_no_config_response(self):
         return {'error': [{
-            'code': '000',
+            'code': '0',
             'message': _(
-                "A username and password still needs to be set or it's wrong for the E-invoice(IN). "
-                "It needs to be added and verify in the Settings."
+                "Unable to send e-Invoice."
+                "Create an API user in NIC portal, and set it using the top menu: Configuration > Settings."
             )}
         ]}
 
