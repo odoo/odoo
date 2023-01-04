@@ -31,11 +31,19 @@ export class GraphController extends Component {
     getContext() {
         // expand context object? change keys?
         const { measure, groupBy, mode } = this.model.metaData;
-        return {
+        const context = {
             graph_measure: measure,
             graph_mode: mode,
             graph_groupbys: groupBy.map((gb) => gb.spec),
         };
+        if (mode !== "pie") {
+            context.graph_order = this.model.metaData.order;
+            context.graph_stacked = this.model.metaData.stacked;
+            if (mode === "line") {
+                context.graph_cumulated = this.model.metaData.cumulated;
+            }
+        }
+        return context;
     }
 
     /**
