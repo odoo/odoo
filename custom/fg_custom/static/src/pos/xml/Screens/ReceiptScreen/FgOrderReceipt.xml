@@ -128,6 +128,8 @@
                     <t t-set="total_product_z" t-value="0"/>
                     <t t-set="total_vat" t-value="0"/>
                     <t t-set="total_discount_percentage" t-value="0"/>
+                    <t t-set="total_amt2" t-value="0"/> <!-- total amount of vat e and vatable-->
+                    <t t-set="total_discount_percentage2" t-value="0"/> <!-- total % of global discount-->
                     <t t-set="total_discount_global_minus" t-value="0"/>
                     <t t-set="total_discount_coupon_minus" t-value="0"/>
                     <t t-foreach="receipt.orderlines" t-as="line" t-key="line.id">
@@ -184,13 +186,24 @@
                     <span class="pos-receipt-right-align"><b><t t-esc="env.pos.format_currency_no_symbol(total_amt)"/></b></span>
                 </div>
 
-                <t t-set="open_amt_total" t-value="total_discount_percentage + total_discount_global_minus"/>
+                <!--<t t-set="open_amt_total" t-value="total_discount_percentage + total_discount_global_minus"/>-->
+                <t t-set="open_amt_total" t-value="total_discount_global_minus"/>
+                <t t-set="total_amt2" t-value="total_product_e + total_product_v"/>
 
                 <div class="open_discount" style="margin-top: 8%;font-size: 75%;">
                     <t t-if="open_amt_total > 0">
+                        <t t-set="total_discount_percentage2" t-value="(open_amt_total/total_amt2)*100"/>
                         <div>
-                            <span class="pos-receipt-left-align"><b>Discount</b></span>
-                            <span class="pos-receipt-right-align"><t t-esc="env.pos.format_currency_no_symbol(open_amt_total)"/></span>
+                            <span class="pos-receipt-left-align"><b>Discount</b> (<t t-esc="Math.round(total_discount_percentage2)"/>%)</span>
+                            <span class="pos-receipt-right-align">
+                                <t t-esc="env.pos.format_currency_no_symbol(open_amt_total)"/>
+                            </span>
+                        </div>
+                    </t>
+                    <t t-if="total_discount_percentage > 0">
+                        <div>
+                            <span class="pos-receipt-left-align"><b>Total Discount Per Item</b></span>
+                            <span class="pos-receipt-right-align"><t t-esc="env.pos.format_currency_no_symbol(total_discount_percentage)"/></span>
                         </div>
                     </t>
                     <t t-foreach="receipt.program_reward_lines" t-as="line">
@@ -200,7 +213,6 @@
                         </div>
                     </t>
                 </div>
-
                 <t t-set="m_t_d" t-value="total_discount_percentage + total_discount_global_minus + total_discount_coupon_minus"/>
                 <div class="open_discount" style="margin-top: 8%;font-size: 75%;">
                     <span class="pos-receipt-left-align"><b>TOTAL DUE</b></span>
