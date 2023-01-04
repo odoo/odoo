@@ -203,6 +203,7 @@ export function isNull(value) {
 export function processButton(node) {
     return {
         className: node.getAttribute("class") || "",
+        disabled: !!node.getAttribute("disabled") || false,
         icon: node.getAttribute("icon") || false,
         title: node.getAttribute("title") || undefined,
         string: node.getAttribute("string") || undefined,
