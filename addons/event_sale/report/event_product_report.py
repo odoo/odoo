@@ -5,8 +5,6 @@ from odoo import fields, models
 
 
 class EventProductReport(models.Model):
-    """Event Registrations-based sales report, allowing to analyze sales and number of seats
-    by event (type), ticket, etc. Each opened record will also give access to all this information."""
     _inherit = 'event.product.report'
 
     sale_order_id = fields.Many2one('sale.order', readonly=True)

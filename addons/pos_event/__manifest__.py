@@ -21,6 +21,7 @@ this event.
     'data': [
         'data/pos_event_data.xml',
         'data/pos_event_demo.xml',
+        'report/event_product_report_views.xml',
         'views/event_registration_views.xml',
         'views/event_views.xml',
         'views/pos_order_views.xml',
