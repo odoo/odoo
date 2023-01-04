@@ -6,7 +6,7 @@ import { patch } from "@web/core/utils/patch";
 patch(Order.prototype, "l10n_sa_pos.Order", {
     export_for_printing() {
         const result = this._super(...arguments);
-        if (this.pos.company.country.code === "SA") {
+        if (this.pos.company.country && this.pos.company.country.code === "SA") {
             result.is_settlement = this.is_settlement();
             if (!result.is_settlement) {
                 const codeWriter = new window.ZXing.BrowserQRCodeSvgWriter();
