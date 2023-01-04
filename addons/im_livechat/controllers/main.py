@@ -57,8 +57,9 @@ class LivechatController(http.Controller):
         rule = {}
         # find the country from the request
         country_id = False
-        if request.geoip.country_code:
-            country_id = request.env['res.country'].sudo().search([('code', '=', request.geoip.country_code)], limit=1).id
+        country_code = request.geoip.get('country_code')
+        if country_code:
+            country_id = request.env['res.country'].sudo().search([('code', '=', country_code)], limit=1).id
         # extract url
         url = request.httprequest.headers.get('Referer')
         # find the first matching rule for the given country and url
@@ -121,9 +122,10 @@ class LivechatController(http.Controller):
             country_id = request.env.user.country_id.id
         else:
             # if geoip, add the country name to the anonymous name
-            if request.geoip.country_code:
+            if request.geoip:
                 # get the country of the anonymous person, if any
-                country = request.env['res.country'].sudo().search([('code', '=', request.geoip.country_code)], limit=1)
+                country_code = request.geoip.get('country_code', "")
+                country = request.env['res.country'].sudo().search([('code', '=', country_code)], limit=1) if country_code else None
                 if country:
                     country_id = country.id
 

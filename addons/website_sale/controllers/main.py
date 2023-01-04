@@ -1319,8 +1319,9 @@ class WebsiteSale(http.Controller):
         def_country_id = order.partner_id.country_id
         # IF PUBLIC ORDER
         if order.partner_id.id == request.website.user_id.sudo().partner_id.id:
-            if request.geoip.country_code:
-                def_country_id = request.env['res.country'].search([('code', '=', request.geoip.country_code)], limit=1)
+            country_code = request.geoip.get('country_code')
+            if country_code:
+                def_country_id = request.env['res.country'].search([('code', '=', country_code)], limit=1)
             else:
                 def_country_id = request.website.user_id.sudo().country_id
 
