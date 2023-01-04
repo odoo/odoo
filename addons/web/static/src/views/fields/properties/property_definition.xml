@@ -54,10 +54,10 @@
                             title="state.typeLabel" togglerClass="'btn btn-link d-flex p-0 w-100'">
                             <t t-set-slot="toggler">
                                 <div class="o_input_dropdown w-100 o_field_property_dropdown">
+                                    <img t-attf-src="/web/static/src/views/fields/properties/icons/{{state.propertyDefinition.type}}.png"/>
                                     <input type="text" class="dropdown text-start w-100 o_input py-1"
                                         t-att-id="getUniqueDomID('type')"
-                                        t-att-value="state.typeLabel" readonly=""
-                                        t-attf-style="background-image: url(/web/static/src/views/fields/properties/icons/{{state.propertyDefinition.type}}.png)"/>
+                                        t-att-value="state.typeLabel" readonly=""/>
                                     <a role="button" class="o_dropdown_button"/>
                                 </div>
                             </t>
