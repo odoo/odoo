@@ -60,7 +60,7 @@
 
         &:focus,
         &:focus-within {
-            z-index: 1; // show the shadow on top of the previous & next cards in grouped mode
+            margin-bottom: 0; // show the shadow on top of the previous & next cards in grouped mode
         }
 
         // ------- Kanban Record, v11 Layout -------
@@ -511,7 +511,33 @@
             background-color: var(--KanbanColumn__highlight-background) !important;
             box-shadow: -1px 0px 0px 0px var(--KanbanColumn__highlight-border) inset,
                 1px 0px 0px 0px var(--KanbanColumn__highlight-border) inset;
+
+            .o_kanban_header {
+                // hack to display correct background color
+                margin: 0 calc(-1 * var(--KanbanGroup-padding-h) + 1px);
+                padding: 0 calc(var(--KanbanGroup-padding-h) - 1px);
+            }
         }
+    }
+
+    .o_kanban_group .o_kanban_header,
+    .o_quick_create_folded {
+        position: sticky; // keep it visible
+        z-index: 1;
+    }
+
+    .o_kanban_group:not(.o_column_folded) .o_kanban_header {
+        background-color: $o-webclient-background-color;
+
+        .dropdown-item {
+            max-width: calc(var(--KanbanRecord-width) * 0.75);
+            text-overflow: ellipsis;
+            overflow: hidden;
+        }
+    }
+
+    .o_quick_create_folded {
+        top: 1rem;
     }
 
     .o_column_quick_create,
@@ -562,12 +588,6 @@
         .o_column_quick_create {
             scroll-snap-align: center;
             overflow-y: scroll;
-
-            .o_kanban_header {
-                position: sticky; // keep it visible
-                z-index: 1;
-                background-color: inherit;
-            }
         }
     }
 

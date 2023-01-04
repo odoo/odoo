@@ -35,13 +35,13 @@ export class KanbanController extends Component {
             rootState,
         });
 
-        const rootRef = useRef("root");
-        useViewButtons(this.model, rootRef, {
+        this.rootRef = useRef("root");
+        useViewButtons(this.model, this.rootRef, {
             beforeExecuteAction: this.beforeExecuteActionButton.bind(this),
             afterExecuteAction: this.afterExecuteActionButton.bind(this),
         });
         useSetupView({
-            rootRef,
+            rootRef: this.rootRef,
             getGlobalState: () => {
                 return {
                     resIds: this.model.root.records.map((rec) => rec.resId), // WOWL: ask LPE why?
@@ -121,6 +121,10 @@ export class KanbanController extends Component {
     async afterExecuteActionButton(clickParams) {}
 
     async onUpdatedPager() {}
+
+    scrollTop() {
+        this.rootRef.el.querySelector(".o_content").scrollTo({ top: 0 });
+    }
 }
 
 KanbanController.template = `web.KanbanView`;

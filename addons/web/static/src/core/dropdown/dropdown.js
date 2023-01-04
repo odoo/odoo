@@ -122,6 +122,12 @@ export class Dropdown extends Component {
                 }
             },
         };
+        if (this.props.container) {
+            positioningOptions.container = () =>
+                typeof this.props.container === "function"
+                    ? this.props.container()
+                    : this.props.container;
+        }
         this.state.directionCaretClass = DIRECTION_CARET_CLASS[direction];
         this.togglerRef = useRef("togglerRef");
         if (this.props.toggler === "parent") {
@@ -388,6 +394,10 @@ Dropdown.props = {
     },
     showCaret: {
         type: Boolean,
+        optional: true,
+    },
+    container: {
+        type: [Element, Function],
         optional: true,
     },
 };

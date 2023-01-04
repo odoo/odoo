@@ -11,7 +11,7 @@ import { onWillUnmount, useEffect, useExternalListener, useRef } from "@odoo/owl
 /**
  * @typedef {{
  *  popper?: string;
- *  container?: HTMLElement;
+ *  container?: HTMLElement | (() => HTMLElement);
  *  margin?: number;
  *  position?: Direction | Position;
  *  onPositioned?: PositionEventHandler;
@@ -91,6 +91,10 @@ function getBestPosition(reference, popper, { container, margin, position }) {
     const directions =
         variantKey === "fit" ? FIT_FLIP_ORDER[directionKey] : DIRECTION_FLIP_ORDER[directionKey];
     const variants = VARIANT_FLIP_ORDER[variantKey];
+
+    if (typeof container === "function") {
+        container = container();
+    }
 
     // Boxes
     const popBox = popper.getBoundingClientRect();

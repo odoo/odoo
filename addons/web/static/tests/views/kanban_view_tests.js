@@ -12322,4 +12322,46 @@ QUnit.module("Views", (hooks) => {
         );
         assert.containsN(target, ".o_kanban_group .o_kanban_record", 16);
     });
+
+    QUnit.test("scroll on group unfold and progressbar click", async (assert) => {
+        assert.expect(7);
+
+        await makeView({
+            type: "kanban",
+            resModel: "partner",
+            serverData,
+            arch: `
+                <kanban>
+                    <progressbar field="foo" colors='{"yop": "success", "gnap": "warning", "blip": "danger"}' sum_field="int_field" />
+                    <templates>
+                        <t t-name="kanban-box">Record</t>
+                    </templates>
+                </kanban>`,
+            groupBy: ["product_id"],
+            async mockRPC(route, args, performRPC) {
+                if (args.method === "web_read_group") {
+                    const result = await performRPC(route, args);
+                    if (result.groups.length) {
+                        result.groups[0].__fold = false;
+                        result.groups[1].__fold = true;
+                    }
+                    return result;
+                }
+            },
+        });
+
+        const content = target.querySelector(".o_content");
+        content.scrollTo = (params) => {
+            assert.step("scrolled");
+            assert.strictEqual(params.top, 0);
+        };
+
+        await click(getProgressBars(0)[0]);
+        assert.verifySteps(["scrolled"]);
+
+        const column1 = getColumn(1);
+        assert.hasClass(column1, "o_column_folded");
+        await click(column1);
+        assert.verifySteps(["scrolled"]);
+    });
 });
