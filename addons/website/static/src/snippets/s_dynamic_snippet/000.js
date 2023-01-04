@@ -179,7 +179,7 @@ const DynamicSnippet = publicWidget.Widget.extend({
             this.renderedContent = '';
         }
         // TODO Remove in master: adapt already existing snippet from former version.
-        if (this.$el[0].classList.contains('d-none') && !this.$el[0].classList.contains('d-md-block')) {
+        if (this.$el[0].classList.contains('d-none') && !this.$el[0].className.match(/(d-(md|lg)-block)/g)) {
             // Remove the 'd-none' of the old template if it is not related to
             // the visible on mobile option.
             this.$el[0].classList.remove('d-none');
