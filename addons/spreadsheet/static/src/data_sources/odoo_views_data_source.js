@@ -80,13 +80,6 @@ export class OdooViewsDataSource extends LoadableDataSource {
         await this.loadMetadata();
     }
 
-    /**
-     * @returns {boolean}
-     */
-    isReady() {
-        return this._isFullyLoaded;
-    }
-
     isMetaDataLoaded() {
         return this._metaData.fields !== undefined;
     }
