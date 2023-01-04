@@ -1059,7 +1059,7 @@ class MrpProduction(models.Model):
                     new_qty = min(new_qty, move.reserved_availability)
 
             move.move_line_ids.filtered(lambda ml: ml.state not in ('done', 'cancel')).qty_done = 0
-            move.move_line_ids = move._set_quantity_done_prepare_vals(new_qty)
+            move._set_quantity_done(new_qty)
 
     def _update_raw_moves(self, factor):
         self.ensure_one()
