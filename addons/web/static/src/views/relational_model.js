@@ -1348,6 +1348,7 @@ export class Record extends DataPoint {
             delete this.virtualId;
             this.data.id = this.resId;
             this.resIds.push(this.resId);
+            this._changes = {};
             this.invalidateCache();
         } else if (keys.length > 0) {
             try {
@@ -1358,14 +1359,10 @@ export class Record extends DataPoint {
                 }
                 throw e;
             }
+            this._changes = {};
             this.invalidateCache();
         }
 
-        // Switch to the parent active fields
-        if (this.parentActiveFields) {
-            this.setActiveFields(this.parentActiveFields);
-            this.parentActiveFields = false;
-        }
         this.isInQuickCreation = false;
         if (shouldReload) {
             await this.model.reloadRecords(this);
