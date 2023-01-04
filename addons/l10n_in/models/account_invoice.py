@@ -2,7 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, fields, models, _
-from odoo.exceptions import ValidationError
+from odoo.exceptions import ValidationError, RedirectWarning
 
 
 class AccountMove(models.Model):
@@ -56,11 +56,16 @@ class AccountMove(models.Model):
                              self._fields['l10n_in_gst_treatment']._description_selection(self.env)}
         for move in posted.filtered(lambda m: m.country_code == 'IN'):
             if not move.company_id.state_id:
-                raise ValidationError(_(
-                    "State is missing from your company %(company_name)s (%(company_id)s).\nFirst set state in your company.",
-                    company_name=move.company_id.name,
-                    company_id=move.company_id.id
-                ))
+                msg = _("Your company %s needs to have a correct address in order to validate this invoice.\n"
+                "Set the address of your company (Don't forget the State field)") % (move.company_id.name)
+                action = {
+                    "view_mode": "form",
+                    "res_model": "res.company",
+                    "type": "ir.actions.act_window",
+                    "res_id" : move.company_id.id,
+                    "views": [[self.env.ref("base.view_company_form").id, "form"]],
+                }
+                raise RedirectWarning(msg, action, _('Go to Company configuration'))
             elif move.journal_id.type == 'purchase':
                 move.l10n_in_state_id = move.company_id.state_id
 
