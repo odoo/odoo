@@ -2,7 +2,10 @@
 <odoo>
 
 <template id="website_sale_coupon_cart_hide_qty" inherit_id="website_sale.cart_lines">
-    <xpath expr="//del" position="attributes">
+    <xpath expr="//t[@groups='account.group_show_line_subtotals_tax_excluded']/del" position="attributes">
+        <attribute name="t-if">not line.is_reward_line</attribute>
+    </xpath>
+    <xpath expr="//t[@groups='account.group_show_line_subtotals_tax_included']/del" position="attributes">
         <attribute name="t-if">not line.is_reward_line</attribute>
     </xpath>
 </template>
