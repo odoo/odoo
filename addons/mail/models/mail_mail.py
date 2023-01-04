@@ -352,8 +352,18 @@ class MailMail(models.Model):
         if self.headers:
             try:
                 headers.update(ast.literal_eval(self.headers))
-            except Exception:
-                pass
+            except (ValueError, TypeError) as e:
+                _logger.warning(
+                    'Evaluation error when evaluating mail headers (received %r): %s',
+                    self.headers, e,
+                )
+            # global except as we don't want to crash the queue just due to a malformed
+            # headers value
+            except Exception as e:
+                _logger.warning(
+                    'Unknown error when evaluating mail headers (received %r): %s',
+                    self.headers, e,
+                )
 
         # prepare recipients: use email_to if defined then check recipient_ids
         # that receive a specific email, notably due to link shortening / redirect

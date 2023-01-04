@@ -11,7 +11,7 @@ from OpenSSL.SSL import Error as SSLError
 from socket import gaierror, timeout
 from unittest.mock import call, patch
 
-from odoo import api, Command, tools
+from odoo import api, Command
 from odoo.addons.base.models.ir_mail_server import MailDeliveryException
 from odoo.addons.test_mail.tests.common import TestMailCommon
 from odoo.exceptions import AccessError
@@ -125,6 +125,35 @@ class TestMailMail(TestMailCommon):
             mail.invalidate_recordset()
             self.assertEqual(mail.sudo().restricted_attachment_count, 2)
             self.assertEqual(len(mail.sudo().unrestricted_attachment_ids), 0)
+
+    @mute_logger('odoo.addons.mail.models.mail_mail')
+    def test_mail_mail_headers(self):
+        """ Test headers management when set on outgoing mail. """
+        # mail without thread-enabled record
+        base_values = {
+            'body_html': '<p>Test</p>',
+            'email_to': 'test@example.com',
+            'headers': {'foo': 'bar'},
+        }
+
+        for headers, expected in [
+            ({'foo': 'bar'}, {'foo': 'bar'}),
+            ("{'foo': 'bar'}", {'foo': 'bar'}),
+            ("{'foo': 'bar', 'baz': '3+2'}", {'foo': 'bar', 'baz': '3+2'}),
+            (['not_a_dict'], {}),
+            ('alsonotadict', {}),
+            ("['not_a_dict']", {}),
+            ("{'invaliddict'}", {}),
+        ]:
+            with self.subTest(headers=headers, expected=expected):
+                mail = self.env['mail.mail'].create([
+                    dict(base_values, headers=headers)
+                ])
+                with self.mock_mail_gateway():
+                    mail.send()
+                for key, value in expected.items():
+                    self.assertIn(key, self._mails[0]['headers'])
+                    self.assertEqual(self._mails[0]['headers'][key], value)
 
     @mute_logger('odoo.addons.mail.models.mail_mail')
     def test_mail_mail_recipients(self):
