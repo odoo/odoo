@@ -53,7 +53,7 @@ class AccountEdiProxyClientUser(models.Model):
 
     _sql_constraints = [
         ('unique_id_client', 'unique(id_client)', 'This id_client is already used on another user.'),
-        ('unique_edi_identification_per_format', 'unique(edi_identification, edi_format_id)', 'This edi identification is already assigned to a user'),
+        ('unique_edi_identification_per_for', 'unique(edi_identification, edi_format_id)', 'This edi identification is already assigned to a user'),
     ]
 
     def _get_demo_state(self):
