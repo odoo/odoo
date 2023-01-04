@@ -9,7 +9,7 @@ from psycopg2 import IntegrityError
 from werkzeug.exceptions import BadRequest
 
 from odoo import http, SUPERUSER_ID, _
-from odoo.addons.base.models.ir_qweb_fields import nl2br
+from odoo.addons.base.models.ir_qweb_fields import nl2br, nl2br_enclose
 from odoo.http import request
 from odoo.tools import plaintext2html
 from odoo.exceptions import ValidationError, UserError
@@ -237,7 +237,7 @@ class WebsiteForm(http.Controller):
                 record.update({default_field.name: custom_content})
             elif hasattr(record, '_message_log'):
                 record._message_log(
-                    body=custom_content,
+                    body=nl2br_enclose(custom_content, 'p'),
                     message_type='comment',
                 )
 
