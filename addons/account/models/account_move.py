@@ -164,6 +164,9 @@ class AccountMove(models.Model):
         copy=False,
         check_company=True,
     )
+    statement_id = fields.Many2one(
+        related="statement_line_id.statement_id"
+    )
 
     # === Cash basis feature fields === #
     # used to keep track of the tax cash basis reconciliation. This is needed
