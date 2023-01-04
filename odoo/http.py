@@ -1045,6 +1045,8 @@ class GeoIP(collections.abc.Mapping):
     def _city_record(self):
         try:
             return root.geoip_city_db.city(self.ip)
+        except (OSError, maxminddb.InvalidDatabaseError):
+            return GEOIP_EMPTY_CITY
         except geoip2.errors.AddressNotFoundError:
             return GEOIP_EMPTY_CITY
 
@@ -1056,6 +1058,8 @@ class GeoIP(collections.abc.Mapping):
             return self._city_record
         try:
             return root.geoip_country_db.country(self.ip)
+        except (OSError, maxminddb.InvalidDatabaseError):
+            return self._city_record
         except geoip2.errors.AddressNotFoundError:
             return GEOIP_EMPTY_COUNTRY
 
@@ -2020,10 +2024,7 @@ class Application:
                 "Couldn't load Geoip City file at %s. IP Resolver disabled.",
                 config['geoip_city_db'], exc_info=True
             )
-            return type('FakeReader', (), {
-                'city': lambda self, ip: GEOIP_EMPTY_CITY,
-                'country': lambda self, ip: GEOIP_EMPTY_COUNTRY
-            })()
+            raise
 
     @lazy_property
     def geoip_country_db(self):
@@ -2031,7 +2032,7 @@ class Application:
             return geoip2.database.Reader(config['geoip_country_db'])
         except (OSError, maxminddb.InvalidDatabaseError) as exc:
             _logger.debug("Couldn't load Geoip Country file (%s). Fallbacks on Geoip City.", exc,)
-            return self.geoip_city_db
+            raise
 
     def set_csp(self, response):
         headers = response.headers
