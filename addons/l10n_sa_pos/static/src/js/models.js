@@ -16,7 +16,7 @@ var _super_order = models.Order.prototype;
 models.Order = models.Order.extend({
     export_for_printing: function() {
       var result = _super_order.export_for_printing.apply(this,arguments);
-      if (this.pos.company.country.code === 'SA') {
+      if (this.pos.company.country && this.pos.company.country.code === 'SA') {
           result.is_settlement = this.is_settlement();
           if (!result.is_settlement) {
               const codeWriter = new window.ZXing.BrowserQRCodeSvgWriter()
