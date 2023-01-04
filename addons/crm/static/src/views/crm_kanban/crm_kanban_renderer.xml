@@ -2,7 +2,7 @@
 <templates>
     <t t-name="crm.CrmKanbanRenderer" t-inherit="web.KanbanRenderer" t-inherit-mode="primary" owl="1">
         <xpath expr="//ColumnProgress" position="replace">
-            <CrmColumnProgress group="group" aggregate="getGroupAggregate(group)" progressAttributes="props.list.model.progressAttributes"/>
+            <CrmColumnProgress group="group" aggregate="getGroupAggregate(group)" onBarClicked="props.scrollTop" progressAttributes="props.list.model.progressAttributes"/>
         </xpath>
     </t>
 </templates>
