@@ -16,7 +16,7 @@ var _super_order = models.Order.prototype;
 models.Order = models.Order.extend({
     export_for_printing: function() {
       var result = _super_order.export_for_printing.apply(this,arguments);
-      if (this.pos.company.country.code === 'SA') {
+      if (this.pos.company.country && this.pos.company.country.code === 'SA') {
           const codeWriter = new window.ZXing.BrowserQRCodeSvgWriter()
           let qr_values = this.compute_sa_qr_code(result.company.name, result.company.vat, result.date.isostring, result.total_with_tax, result.total_tax);
           let qr_code_svg = new XMLSerializer().serializeToString(codeWriter.write(qr_values, 150, 150));
