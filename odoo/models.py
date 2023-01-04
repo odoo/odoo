@@ -725,8 +725,15 @@ class BaseModel(metaclass=MetaModel):
             for mname, fnames in base._depends.items():
                 depends.setdefault(mname, []).extend(fnames)
 
-            for cons in base._sql_constraints:
-                cls._sql_constraints[cons[0]] = cons
+            for constraint in base._sql_constraints:
+                constraint_key = constraint[0]
+                if len(cls._table) + len(constraint_key) + 1 > 63:
+                    _logger.warning(
+                        'Constrains `%s` combined to model table will have more than 63 character '
+                        'and could be truncated leading to unexpected results',
+                        constraint_key
+                    )
+                cls._sql_constraints[constraint_key] = constraint
 
         cls._sql_constraints = list(cls._sql_constraints.values())
 
