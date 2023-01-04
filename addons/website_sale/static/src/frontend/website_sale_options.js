@@ -7,6 +7,7 @@ import { WebsiteSaleCartButtonParent } from "./website_sale_cart_button";
 import { KeepLast } from "@web/core/utils/concurrency";
 import { sprintf } from "@web/core/utils/strings";
 import { _t } from "web.core";
+import { priceToStr } from "./utils";
 
 /**
  * Patch actual VariantMixin as it is used by the product configurator.
@@ -142,7 +143,9 @@ export const WebsiteSaleOptions = Widget.extend({
         const throttledOnChangeOptions = _.throttle(this.onChangeOptions.bind(this), 500);
         this.throttledOnChangeOptions = () => {
             // We keep the last promise in order to be able to await the latest call.
-            return (this.combinationDataPromise = keepLast.add(throttledOnChangeOptions(this.getCurrentConfiguration())));
+            return (this.combinationDataPromise = keepLast.add(
+                throttledOnChangeOptions(this.getCurrentConfiguration())
+            ));
         };
 
         // The page when loaded does not apply exclusion data.
@@ -184,15 +187,50 @@ export const WebsiteSaleOptions = Widget.extend({
             route: "/sale/get_combination_info_website",
             params: {
                 ...params,
+                parent_combination: false,
                 pricelist_id: false,
             },
         });
+        // default `is_combination_possible` to true if the key is not available.
+        if (!combinationData.hasOwnProperty("is_combination_possible")) {
+            combinationData.is_combination_possible = true;
+        }
         this.trigger_up("combination_change", {
             combinationData,
         });
         console.log("params", params);
         console.log("combination info", combinationData);
         this.checkExclusions();
+        this.onChangeCombination(combinationData);
+    },
+
+    onChangeCombination(data) {
+        // Disable if not possible.
+        this.el.classList.toggle("css_not_available", !data.is_combination_possible);
+        this.el
+            .querySelectorAll("#add_to_cart, .o_we_buy_now")
+            .forEach((node) => node.classList.toggle("disabled", !data.is_combination_possible));
+
+        const priceEl = this.el.querySelector(".oe_price .oe_currency_value");
+        const defaultPriceEl = this.el.querySelector(".oe_default_price .oe_currency_value");
+        if (priceEl) {
+            priceEl.textContent = priceToStr(data.price);
+        }
+        if (defaultPriceEl) {
+            defaultPriceEl.textContent = priceToStr(data.list_price);
+        }
+
+        if (data.has_discounted_price) {
+            defaultPriceEl.closest(".oe_website_sale").classList.add("discount");
+            defaultPriceEl.parentElement.classList.remove("d-none");
+        } else {
+            defaultPriceEl.closest(".oe_website_sale").classList.remove("discount");
+            defaultPriceEl.parentElement.classList.add("d-none");
+        }
+
+        const productIdInput = this.getInput("product_id");
+        productIdInput.value = data.product_id || 0;
+        $(productIdInput).trigger("change");
     },
 
     /**
@@ -309,7 +347,7 @@ export const WebsiteSaleOptions = Widget.extend({
         // combination exclusions: array of array of ptav
         // for example a product with 3 variation and one specific variation is disabled (archived)
         // requires the first 2 to be selected for the third to be disabled.
-        for (const excludedCombination of (data.archived_combinations || [])) {
+        for (const excludedCombination of data.archived_combinations || []) {
             const commonPtavs = excludedCombination.filter((ptav) => combination.includes(ptav));
             if (ptavCommon.length === combination.length) {
                 // Selected combination is archived, all attributes must be disabled from each other.
@@ -321,7 +359,7 @@ export const WebsiteSaleOptions = Widget.extend({
                         this.disableInput(otherPtav, ptav, data.mapped_attribute_names);
                     }
                 }
-            } else if (ptavCommon.length === (combination.length - 1)) {
+            } else if (ptavCommon.length === combination.length - 1) {
                 const disabledPtav = excludedCombination.find((ptav) => !combination.includes(ptav));
                 for (const ptav of excludedCombination) {
                     if (ptav === disabledPtav) {
@@ -344,7 +382,7 @@ export const WebsiteSaleOptions = Widget.extend({
     disableInput(ptav, excludedBy, attributeNames) {
         const input = this.el.querySelector(`option[value='${ptav}'], input[value='${ptav}']`);
         input.classList.add("css_not_available");
-        let label,pill;
+        let label, pill;
         if ((label = input.closest("label"))) {
             label.classList.add("css_not_available");
         }
@@ -355,14 +393,14 @@ export const WebsiteSaleOptions = Widget.extend({
             return;
         }
         // We modify the title for both the input and the label.
-        const targets = input.matches("option") && [input] || [input, input.closest("label")];
+        const targets = (input.matches("option") && [input]) || [input, input.closest("label")];
         let excludedByData = [];
         if (Data.get(input, "excluded-by")) {
             excludedByData = JSON.parse(Data.get(input, "excluded-by"));
         }
         const excludedByName = attributeNames[excludedBy];
         excludedByData.push(excludedByName);
-        
+
         for (const target of targets) {
             target.title = sprintf(_t("Not available with %s"), excludedByData.join(", "));
         }
@@ -374,7 +412,10 @@ export const WebsiteSaleOptionsWithCartButton = WebsiteSaleOptions.extend(Websit
     addToCartButtonSelector: "a#add_to_cart",
 
     async getProductInfo(ev) {
-        // TODO: wait for current get_combination_info call before calling add.
+        if (this.combinationDataPromise) {
+            // Make sure our last load is done and applied to the page.
+            await this.combinationDataPromise;
+        }
         const configuration = this.getCurrentConfiguration();
         ev.data.resolve(configuration);
     },

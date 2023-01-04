@@ -16,7 +16,7 @@ export const WebsiteSaleProduct = Widget.extend({
 
     start() {
         const result = this._super(...arguments);
-        const optionsSelector = document.querySelector(this.websiteSaleVariantSelector);
+        const optionsSelector = this.el.querySelector(this.websiteSaleVariantSelector);
         if (optionsSelector) {
             const optionSelectorWidget = new WebsiteSaleOptionsWithCartButton(this);
             optionSelectorWidget.attachTo(optionsSelector);
@@ -29,13 +29,33 @@ export const WebsiteSaleProduct = Widget.extend({
      */
     onCombinationChange(ev) {
         console.log("product page detected combination info change", ev.data.info);
+        this.getProductImageContainer().classList.toggle(
+            "css_not_available",
+            !ev.data.combinationData.is_combination_possible
+        );
     },
 
     /**
      * Called by the option manager before fetching the combination info.
      */
     onRequestCombinationInfoParams(ev) {
-        //TODO: necessary?
+        //TODO: is this necessary?
+    },
+
+    getProductImageLayout: function () {
+        return this.el.querySelector("#product_detail_main").dataset.image_layout;
+    },
+    getProductImageWidth: function () {
+        return this.el.querySelector("#product_detail_main").dataset.image_width;
+    },
+    getProductImageContainerSelector: function () {
+        return {
+            carousel: "#o-carousel-product",
+            grid: "#o-grid-product",
+        }[this.getProductImageLayout()];
+    },
+    getProductImageContainer: function () {
+        return this.el.querySelector(this.getProductImageContainerSelector());
     },
 });
 registry.WebsiteSaleProduct = WebsiteSaleProduct;
