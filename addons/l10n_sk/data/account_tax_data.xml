@@ -3,7 +3,7 @@
     <!-- VAT domestic sale-->
     <record id="vy_tuz_20" model="account.tax.template">
         <field name="chart_template_id" ref="sk_chart_template"/>
-        <field name="name">DPH na výstupe 20%</field>
+        <field name="name">VAT sales 20%</field>
         <field name="description">20%</field>
         <field name="amount">20</field>
         <field name="amount_type">percent</field>
@@ -27,7 +27,7 @@
     </record>
     <record id="vy_tuz_10" model="account.tax.template">
         <field name="chart_template_id" ref="sk_chart_template"/>
-        <field name="name">DPH na výstupe 10%</field>
+        <field name="name">VAT sales 10%</field>
         <field name="description">10%</field>
         <field name="amount">10</field>
         <field name="amount_type">percent</field>
@@ -51,7 +51,7 @@
     </record>
     <record id="vy_tuz_0" model="account.tax.template">
         <field name="chart_template_id" ref="sk_chart_template"/>
-        <field name="name">DPH na výstupe 0%</field>
+        <field name="name">VAT sales 0%</field>
         <field name="description">0%</field>
         <field name="amount">0</field>
         <field name="amount_type">percent</field>
@@ -69,7 +69,7 @@
     <!-- VAT domestic purchase -->
     <record id="vs_tuz_20" model="account.tax.template">
         <field name="chart_template_id" ref="sk_chart_template"/>
-        <field name="name">DPH na vstupe 20%</field>
+        <field name="name">VAT purchases 20%</field>
         <field name="description">20%</field>
         <field name="amount">20</field>
         <field name="amount_type">percent</field>
@@ -93,7 +93,7 @@
     </record>
     <record id="vs_tuz_10" model="account.tax.template">
         <field name="chart_template_id" ref="sk_chart_template"/>
-        <field name="name">DPH na vstupe 10%</field>
+        <field name="name">VAT purchases 10%</field>
         <field name="description">10%</field>
         <field name="amount">10</field>
         <field name="amount_type">percent</field>
@@ -119,7 +119,7 @@
     <!-- =========================================================== -->
     <record id="vy_dod_eu" model="account.tax.template">
         <field name="chart_template_id" ref="sk_chart_template"/>
-        <field name="name">Dodanie do EU</field>
+        <field name="name">EU ex</field>
         <field name="description">0%</field>
         <field name="amount">0</field>
         <field name="amount_type">percent</field>
@@ -136,7 +136,7 @@
     </record>
     <record id="vs_nad_eu" model="account.tax.template">
         <field name="chart_template_id" ref="sk_chart_template"/>
-        <field name="name">Nadobudnutie z EU</field>
+        <field name="name">EU import</field>
         <field name="description">20%</field>
         <field name="amount">20.0</field>
         <field name="amount_type">percent</field>
