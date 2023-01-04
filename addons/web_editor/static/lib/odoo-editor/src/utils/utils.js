@@ -963,7 +963,7 @@ export const formatSelection = (editor, formatName, {applyStyle, formatProps} = 
                     tag.remove();
                     formatSpec.addStyle(getOrCreateSpan(selectedTextNode, inlineAncestors), formatProps);
                 }
-            } else {
+            } else if (formatName !== 'fontSize' || formatProps.size !== undefined) {
                 formatSpec.addStyle(getOrCreateSpan(selectedTextNode, inlineAncestors), formatProps);
             }
         }
