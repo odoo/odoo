@@ -1391,6 +1391,11 @@ function makeActionManager(env) {
         }
         // END LEGACY CODE COMPATIBILITY
 
+        const canProceed = await clearUncommittedChanges(env);
+        if (!canProceed) {
+            return;
+        }
+
         Object.assign(
             newController,
             _getViewInfo(view, controller.action, controller.views, props)
@@ -1408,10 +1413,7 @@ function makeActionManager(env) {
             );
             index = index > -1 ? index : controllerStack.length;
         }
-        const canProceed = await clearUncommittedChanges(env);
-        if (canProceed) {
-            return _updateUI(newController, { index });
-        }
+        return _updateUI(newController, { index });
     }
 
     /**
@@ -1433,6 +1435,10 @@ function makeActionManager(env) {
             const msg = jsId ? "Invalid controller to restore" : "No controller to restore";
             throw new ControllerNotFoundError(msg);
         }
+        const canProceed = await clearUncommittedChanges(env);
+        if (!canProceed) {
+            return;
+        }
         const controller = controllerStack[index];
         if (controller.action.type === "ir.actions.act_window") {
             const { action, exportedState, view, views } = controller;
@@ -1443,10 +1449,7 @@ function makeActionManager(env) {
             }
             Object.assign(controller, _getViewInfo(view, action, views, props));
         }
-        const canProceed = await clearUncommittedChanges(env);
-        if (canProceed) {
-            return _updateUI(controller, { index });
-        }
+        return _updateUI(controller, { index });
     }
 
     /**
