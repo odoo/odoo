@@ -9,6 +9,7 @@ from werkzeug import urls
 from odoo import _, api, fields, models
 from odoo.exceptions import ValidationError
 
+from odoo.addons.payment_adyen_paybylink import utils as adyen_utils
 from odoo.addons.payment_adyen_paybylink.const import API_ENDPOINT_VERSIONS
 
 
@@ -84,6 +85,14 @@ class PaymentAcquirer(models.Model):
             'shopperLocale': values.get('partner_lang', ''),
             'returnUrl': urls.url_join(base_url, '/payment/process'),
             'shopperEmail': values.get('partner_email') or values.get('billing_partner_email', ''),
+            'shopperReference': self._adyen_compute_shopper_reference(values.get('partner_id')),
+            'shopperName': {
+                'firstName': values.get('partner_first_name'),
+                'lastName': values.get('partner_last_name'),
+            },
+            'telephoneNumber': values.get('partner_phone'),
+            'billingAddress': adyen_utils.format_partner_address(values.get('billing_partner')),
+            'deliveryAddress': adyen_utils.format_partner_address(values.get('partner')),
         }
 
         return values
@@ -156,3 +165,15 @@ class PaymentAcquirer(models.Model):
             )
             raise ValidationError("Adyen: " + _("The communication with the API failed."))
         return response.json()
+
+    def _adyen_compute_shopper_reference(self, partner_id):
+        """ Compute a unique reference of the partner for Adyen.
+
+        This is used for the `shopperReference` field in communications with Adyen and stored in the
+        `adyen_shopper_reference` field on `payment.token` if the payment method is tokenized.
+
+        :param recordset partner_id: The partner making the transaction, as a `res.partner` id
+        :return: The unique reference for the partner
+        :rtype: str
+        """
+        return 'ODOO_PARTNER_{partner_id}'.format(partner_id=partner_id)
