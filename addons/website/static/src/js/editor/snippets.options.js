@@ -2470,16 +2470,16 @@ options.registry.DeviceVisibility = options.Class.extend({
      * @see this.selectClass for parameters
      */
     async toggleDeviceVisibility(previewMode, widgetValue, params) {
-        this.$target[0].classList.remove('d-none', 'd-md-none',
+        this.$target[0].classList.remove('d-none', 'd-md-none', 'd-lg-none',
             'o_snippet_mobile_invisible', 'o_snippet_desktop_invisible',
             'o_snippet_override_invisible',
         );
         const style = getComputedStyle(this.$target[0]);
-        this.$target[0].classList.remove(`d-md-${style['display']}`);
+        this.$target[0].classList.remove(`d-md-${style['display']}`, `d-lg-${style['display']}`);
         if (widgetValue === 'no_desktop') {
-            this.$target[0].classList.add('d-md-none', 'o_snippet_desktop_invisible');
+            this.$target[0].classList.add('d-lg-none', 'o_snippet_desktop_invisible');
         } else if (widgetValue === 'no_mobile') {
-            this.$target[0].classList.add(`d-md-${style['display']}`, 'd-none', 'o_snippet_mobile_invisible');
+            this.$target[0].classList.add(`d-lg-${style['display']}`, 'd-none', 'o_snippet_mobile_invisible');
         }
 
         // Update invisible elements.
@@ -2524,10 +2524,10 @@ options.registry.DeviceVisibility = options.Class.extend({
         if (methodName === 'toggleDeviceVisibility') {
             const classList = [...this.$target[0].classList];
             if (classList.includes('d-none') &&
-                    classList.some(className => className.startsWith('d-md-'))) {
+                    classList.some(className => className.match(/^d-(md|lg)-/))) {
                 return 'no_mobile';
             }
-            if (classList.includes('d-md-none')) {
+            if (classList.some(className => className.match(/d-(md|lg)-none/))) {
                 return 'no_desktop';
             }
             return '';
