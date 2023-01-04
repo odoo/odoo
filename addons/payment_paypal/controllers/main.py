@@ -39,6 +39,8 @@ class PaypalController(http.Controller):
         _logger.info("beginning DPN with post data:\n%s", pprint.pformat(data))
         if not data:  # The customer has cancelled the payment
             pass  # Redirect them to the status page to browse the draft transaction
+        elif len(data) == 1:  # TODO edm: WTF is this happening? Return from the POST method at the same time but without information? Is that normal? TODO investigate
+            pass
         else:
             try:
                 notification_data = self._validate_pdt_data_authenticity(**data)
