@@ -141,4 +141,5 @@ functionRegistry
             throw new Error(_t(`[[FUNCTION_NAME]] cannot be called from the spreadsheet.`));
         },
         returns: ["STRING"],
+        hidden: true,
     });

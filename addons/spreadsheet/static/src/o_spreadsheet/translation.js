@@ -15,4 +15,5 @@ functionRegistry.add("_t", {
         return _t(toString(value));
     },
     returns: ["STRING"],
+    hidden: true,
 });
