@@ -4,6 +4,9 @@ import { patch } from "@web/core/utils/patch";
 import { Widget } from "web.public.widget";
 import VariantMixin from "sale.VariantMixin";
 import { WebsiteSaleCartButtonParent } from "./website_sale_cart_button";
+import { KeepLast } from "@web/core/utils/concurrency";
+import { sprintf } from "@web/core/utils/strings";
+import { _t } from "web.core";
 
 /**
  * Patch actual VariantMixin as it is used by the product configurator.
@@ -118,30 +121,52 @@ patch(VariantMixin, "@website_sale/frontend/website_sale_variant", {
 export const WebsiteSaleOptions = Widget.extend({
     events: {
         "change .css_attribute_color input": "onChangeColorAttribute", // Visual
-        "change input#add_qty": "onChangeAddQuantity",
-        "click .css_quantity a.js_add_cart_json > i.fa-minus": 
+        // Quantity manager
+        "change input[name='add_qty']": "onChangeAddQuantity",
+        "click .css_quantity a.js_add_cart_json:has(> i.fa-minus)": "decreaseAddQuantity",
+        "click .css_quantity a.js_add_cart_json:has(> i.fa-plus)": "increaseAddQuantity",
+        // Variant manager
         "change [data-attribute_exclusions]": "onChangeVariant", // Change of attribute
     },
-
 
     /**
      * @override
      */
     start() {
         const result = this._super(...arguments);
-        this.quantityInput = this.el.querySelector("input[name='add_qty']");
+        this.quantityInput = this.getInput("add_qty");
+
+        // We only care about the last call to get_combination_info.
+        const keepLast = new KeepLast();
+        // Throttle, we do not need to spam our server.
+        const throttledOnChangeOptions = _.throttle(this.onChangeOptions.bind(this), 500);
+        this.throttledOnChangeOptions = () => {
+            // We keep the last promise in order to be able to await the latest call.
+            return (this.combinationDataPromise = keepLast.add(throttledOnChangeOptions(this.getCurrentConfiguration())));
+        };
+
+        // The page when loaded does not apply exclusion data.
+        // Load it ourselves if we have it.
+        const options = this.el.querySelector(".js_add_cart_variants[data-attribute_exclusions]");
+        if (options) {
+            this.checkExclusions();
+        }
         return result;
     },
 
     /**
-     * Query parent widget if more information needs to be loaded
-     * from the get_combination_info rpc request.
-     * //TODO: giving the params might be a bit confusing as it will NOT contain information from overrides
-     *
-     * @override
+     * Returns the input for the given name.
      */
-    getOptionalCombinationInfoParam($product) {
-        const params = this._super(...arguments);
+    getInput(name) {
+        return this.el.querySelector(`input[name=${name}]`);
+    },
+
+    /**
+     * Query parent widget for more parameters to be passed to the get_combination_info call.
+     * //TODO: maybe need async ?
+     */
+    getCombinationInfoParam(configuration) {
+        const params = { ...configuration };
         this.trigger_up("get_combination_info_params", {
             params,
         });
@@ -149,11 +174,45 @@ export const WebsiteSaleOptions = Widget.extend({
     },
 
     /**
+     * Called when the variant has changed or the quantity has changed.
      *
-     *
-     * @override
+     * Reloads the combination info.
      */
-    onChangeCombination(ev, $parent, combination) {},
+    async onChangeOptions(configuration) {
+        const params = this.getCombinationInfoParam(configuration);
+        const combinationData = await this._rpc({
+            route: "/sale/get_combination_info_website",
+            params: {
+                ...params,
+                pricelist_id: false,
+            },
+        });
+        this.trigger_up("combination_change", {
+            combinationData,
+        });
+        console.log("params", params);
+        console.log("combination info", combinationData);
+        this.checkExclusions();
+    },
+
+    /**
+     * Returns an object with the current configuration of the product.
+     * May contain more values.
+     *
+     * @returns {{combination: Array<Integer>, add_qty: Integer}}
+     */
+    getCurrentConfiguration() {
+        const combination = [];
+        this.el.querySelectorAll("input.js_variant_change:checked, select.js_variant_change").forEach((el) => {
+            combination.push(parseInt(el.value));
+        });
+        return {
+            product_template_id: parseInt(this.getInput("product_template_id").value),
+            product_id: parseInt(this.getInput("product_id").value),
+            combination,
+            add_qty: this.getCurrentQuantity(),
+        };
+    },
 
     /**
      * Highlight selected color.
@@ -171,6 +230,15 @@ export const WebsiteSaleOptions = Widget.extend({
      */
     onChangeVariant(ev) {
         console.log("Changed variant");
+        this.throttledOnChangeOptions();
+    },
+
+    /**
+     * Changing the to add quantity triggers a reload of product information.
+     */
+    onChangeAddQuantity(ev) {
+        console.log("Changed quantity to", this.getCurrentQuantity());
+        this.throttledOnChangeOptions();
     },
 
     /**
@@ -181,27 +249,124 @@ export const WebsiteSaleOptions = Widget.extend({
     },
 
     /**
-     * Changing the to add quantity triggers a reload of product information.
+     * Change the requested quantity
      */
-    onChangeAddQuantity(ev) {
-        console.log("Changed quantity to", this.getCurrentQuantity());
+    setAddQuantity(qty) {
+        if (this.getCurrentQuantity() === qty) {
+            return;
+        }
+        this.quantityInput.value = qty;
+        $(this.quantityInput).trigger("change");
+    },
+
+    increaseAddQuantity() {
+        this.setAddQuantity(this.getCurrentQuantity() + 1);
+    },
+
+    decreaseAddQuantity() {
+        this.setAddQuantity(Math.max(this.getCurrentQuantity() - 1, 1));
     },
 
     /**
-     * Returns an object with the current configuration of the product.
-     * May contain more values.
-     *
-     * @returns {{combination: Array<Integer>, add_qty: Integer}}
+     * Get exclusion data from DOM.
      */
-    getCurrentConfiguration() {
-        const combination = [];
-        this.el.querySelectorAll("input.js_variant_change:checked, select.js_variant_change").forEach((el) => {
-            combination.push(parseInt(el.value));
-        });
-        return {
-            combination,
-            add_qty: this.getCurrentQuantity(),
-        };
+    getExclusionData() {
+        const options = this.el.querySelector(".js_add_cart_variants[data-attribute_exclusions]");
+        if (options) {
+            return JSON.parse(options.dataset.attribute_exclusions);
+        }
+        return {};
+    },
+
+    /**
+     * Will disable attribute values' inputs based on cominbation exclusions
+     * and will disable the "add" button if the selected combination is not
+     * available.
+     *
+     * It will also check that the selected combination does not exactly
+     * match a manually archived product.
+     */
+    checkExclusions() {
+        const data = this.getExclusionData();
+        // Reset everything
+        for (const option of this.el.querySelectorAll("option, input, label, .o_variant_pills")) {
+            option.classList.remove("css_not_available");
+            option.title = option.dataset.value_name || "";
+            Data.set(option, "excluded-by", "");
+        }
+
+        const { combination } = this.getCurrentConfiguration();
+        // "exclusions": array of ptav
+        // for each of them, contains array of other ptav to exclude
+        for (const ptav of combination) {
+            if (!data.exclusions || !data.exclusions.hasOwnProperty(ptav)) {
+                continue;
+            }
+            for (const otherPtav of data.exclusions[ptav]) {
+                this.disableInput(otherPtav, ptav, data.mapped_attribute_names);
+            }
+        }
+        // combination exclusions: array of array of ptav
+        // for example a product with 3 variation and one specific variation is disabled (archived)
+        // requires the first 2 to be selected for the third to be disabled.
+        for (const excludedCombination of (data.archived_combinations || [])) {
+            const commonPtavs = excludedCombination.filter((ptav) => combination.includes(ptav));
+            if (ptavCommon.length === combination.length) {
+                // Selected combination is archived, all attributes must be disabled from each other.
+                for (const ptav of combination) {
+                    for (const otherPtav of combination) {
+                        if (ptav === otherPtav) {
+                            continue;
+                        }
+                        this.disableInput(otherPtav, ptav, data.mapped_attribute_names);
+                    }
+                }
+            } else if (ptavCommon.length === (combination.length - 1)) {
+                const disabledPtav = excludedCombination.find((ptav) => !combination.includes(ptav));
+                for (const ptav of excludedCombination) {
+                    if (ptav === disabledPtav) {
+                        continue;
+                    }
+                    this.disableInput(disabledPtav, ptav, data.mapped_attribute_names);
+                }
+            }
+        }
+    },
+
+    /**
+     * Will disable the input/option that refers to the passed ptav.
+     * This is used to show the user that some combinations are not available.
+     *
+     * It will also change the title of the input to explain why the input is disabled
+     * based on excludedBy.
+     * e.g: Not available with Color: Black
+     */
+    disableInput(ptav, excludedBy, attributeNames) {
+        const input = this.el.querySelector(`option[value='${ptav}'], input[value='${ptav}']`);
+        input.classList.add("css_not_available");
+        let label,pill;
+        if ((label = input.closest("label"))) {
+            label.classList.add("css_not_available");
+        }
+        if ((pill = input.closest(".o_variant_pills"))) {
+            pill.classList.add("css_not_available");
+        }
+        if (!excludedBy || !attributeNames) {
+            return;
+        }
+        // We modify the title for both the input and the label.
+        const targets = input.matches("option") && [input] || [input, input.closest("label")];
+        let excludedByData = [];
+        if (Data.get(input, "excluded-by")) {
+            excludedByData = JSON.parse(Data.get(input, "excluded-by"));
+        }
+        const excludedByName = attributeNames[excludedBy];
+        excludedByData.push(excludedByName);
+        
+        for (const target of targets) {
+            target.title = sprintf(_t("Not available with %s"), excludedByData.join(", "));
+        }
+        Data.set(input, "excluded-by", JSON.stringify(excludedByData));
     },
 });
 
@@ -209,11 +374,8 @@ export const WebsiteSaleOptionsWithCartButton = WebsiteSaleOptions.extend(Websit
     addToCartButtonSelector: "a#add_to_cart",
 
     async getProductInfo(ev) {
+        // TODO: wait for current get_combination_info call before calling add.
         const configuration = this.getCurrentConfiguration();
-        ev.data.resolve({
-            product_id: 1,
-            add_qty: configuration.add_qty,
-            combination: configuration.combination,
-        });
+        ev.data.resolve(configuration);
     },
 });

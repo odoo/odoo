@@ -111,6 +111,20 @@ export const OwnedWebsiteSaleCartButton = Widget.extend({
         // TODO: impl
         console.log(productInfo);
     },
+
+    /**
+     * Disable the button.
+     */
+    disable() {
+        this.el.classList.add("disabled");
+    },
+
+    /**
+     * (Re-)Enable the button.
+     */
+    enable() {
+        this.el.classList.remove("disabled");
+    }
 });
 
 /**

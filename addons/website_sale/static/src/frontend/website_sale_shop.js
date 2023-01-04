@@ -17,7 +17,7 @@ export const WebsiteSaleShop = Widget.extend(WebsiteSaleCartButtonParent).extend
         // Offcanvas
         "show.bs.offcanvas #o_wsale_offcanvas": "toggleFilters",
         "hidden.bs.offcanvas #o_wsale_offcanvas": "toggleFilters",
-        // Filters, search and options TODO: handler for order by? (debatable)
+        // Filters, search and options; TODO: handler for order by? (debatable)
         "submit .o_wsale_products_searchbar_form": "onSubmitSearch",
         'newRangeValue #o_wsale_price_range_option input[type="range"]': "onPriceRangeSelected",
         "change form.js_attributes input, form.js_attributes select": "onChangeAttribute",

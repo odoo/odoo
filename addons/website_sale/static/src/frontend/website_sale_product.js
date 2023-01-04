@@ -8,8 +8,11 @@ import { WebsiteSaleOptionsWithCartButton } from "./website_sale_options";
  */
 export const WebsiteSaleProduct = Widget.extend({
     selector: ".o_wsale_product_page",
-    // Selector for 
     websiteSaleVariantSelector: ".js_product",
+    custom_events: {
+        combination_change: "onCombinationChange",
+        get_combination_info_params: "onRequestCombinationInfoParams",
+    },
 
     start() {
         const result = this._super(...arguments);
@@ -19,6 +22,20 @@ export const WebsiteSaleProduct = Widget.extend({
             optionSelectorWidget.attachTo(optionsSelector);
         }
         return result;
-    }
+    },
+
+    /**
+     * Called by the option manager when the combination has to be reloaded.
+     */
+    onCombinationChange(ev) {
+        console.log("product page detected combination info change", ev.data.info);
+    },
+
+    /**
+     * Called by the option manager before fetching the combination info.
+     */
+    onRequestCombinationInfoParams(ev) {
+        //TODO: necessary?
+    },
 });
 registry.WebsiteSaleProduct = WebsiteSaleProduct;
