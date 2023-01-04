@@ -81,3 +81,12 @@ class AccountJournal(models.Model):
             protected_edi_formats = journal.edi_format_ids.filtered(lambda e: e.id in protected_edi_format_ids)
 
             journal.edi_format_ids = enabled_edi_formats + protected_edi_formats
+
+    def _create_document_from_attachment(self, attachment_ids=None):
+        # tries to match purchasing orders
+        moves = super()._create_document_from_attachment(attachment_ids)
+        for move in moves:
+            if move.move_type == 'in_invoice':
+                references = [move.invoice_origin] if move.invoice_origin else []
+                move._find_and_set_purchase_orders(references, move.partner_id.id, move.amount_total, timeout=4)
+        return moves
