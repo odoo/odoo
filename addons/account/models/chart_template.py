@@ -128,14 +128,15 @@ def update_taxes_from_templates(cr, chart_template_xmlid):
         for account_tax in taxes_to_check:
             message_body += f"<li>{html_escape(account_tax.name)}</li>"
         message_body += "</ul>"
-        partner_managers_ids.message_post(
-            subject=_('Your taxes have been updated !'),
-            author_id=odoobot.id,
-            body=message_body,
-            message_type='notification',
-            subtype_xmlid='mail.mt_comment',
-            partner_ids=[partner.id for partner in partner_managers_ids],
-        )
+        for partner_manager in partner_managers_ids:
+            partner_manager.message_post(
+                subject=_('Your taxes have been updated !'),
+                author_id=odoobot.id,
+                body=message_body,
+                message_type='notification',
+                subtype_xmlid='mail.mt_comment',
+                partner_ids=partner_manager.ids,
+            )
 
     env = api.Environment(cr, SUPERUSER_ID, {})
     chart_template_id = env['ir.model.data']._xmlid_to_res_id(chart_template_xmlid)
