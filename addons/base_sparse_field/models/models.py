@@ -84,22 +84,3 @@ class IrModelFields(models.Model):
             serialization_record = self.browse(field_data['serialization_field_id'])
             attrs['sparse'] = serialization_record.name
         return attrs
-
-
-class TestSparse(models.TransientModel):
-    _name = 'sparse_fields.test'
-    _description = 'Sparse fields Test'
-
-    data = fields.Serialized()
-    boolean = fields.Boolean(sparse='data')
-    char = fields.Char(sparse='data')
-    date = fields.Date(sparse='data')
-    datetime = fields.Datetime(sparse='data')
-    float = fields.Float(sparse='data')
-    integer = fields.Integer(sparse='data')
-    partner = fields.Many2one('res.partner', sparse='data')
-    reference = fields.Reference(
-        sparse='data',
-        selection=lambda self: [(model.model, model.name) for model in self.env['ir.model'].search([])],
-    )
-    selection = fields.Selection([('one', 'One'), ('two', 'Two')], sparse='data')
