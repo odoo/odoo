@@ -1159,7 +1159,7 @@ odoo.define('pos_coupon.pos', function (require) {
                 if (this.coupon_id && this.coupon_id[1]) {
                     this.order.bookedCouponCodes[this.coupon_id[1]] = new CouponCode(this.coupon_id[1], this.coupon_id[0], this.program_id);
                     this.coupon_id = json.coupon_id[0];
-                } else if (json.program_id && this.order.activePromoProgramIds.length === 0) {
+                } else if (json.program_id) {
                     this.order.activePromoProgramIds.push(json.program_id);
                 }
             }
