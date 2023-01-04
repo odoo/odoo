@@ -15,10 +15,10 @@
                         t-on-click="(ev) => this.onGroupClick(group, ev)"
                     >
                         <div class="o_kanban_header top-0" t-attf-class="{{ !env.isSmall and group.isFolded ? 'pt-3' : 'py-3' }}">
-                            <div class="o_kanban_header_title position-relative d-flex align-items-center lh-lg text-900" t-att="tooltipAttributes(group)">
+                            <div class="o_kanban_header_title position-relative d-flex align-items-baseline lh-lg text-900" t-att="tooltipAttributes(group)">
                                 <span class="o_column_title flex-grow-1 d-inline-block mw-100 text-truncate fs-4 fw-bold align-top" t-att-class="{ 'overflow-visible': !env.isSmall and group.isFolded }" t-esc="getGroupName(group)"/>
                                 <t t-if="env.isSmall or !group.isFolded">
-                                    <Dropdown class="'o_kanban_config'" togglerClass="'btn p-0 border-0'">
+                                    <Dropdown class="'o_kanban_config'" togglerClass="'btn p-0 border-0'" position="'bottom-end'" container="() => this.getGroupEl(group.id)">
                                         <t t-set-slot="toggler">
                                             <i class="fa fa-gear fa-stack d-block text-center text-700 small opacity-50 opacity-100-hover cursor-pointer" role="img" aria-label="Settings" title="Settings" />
                                         </t>
@@ -56,7 +56,7 @@
                                 </button>
                             </div>
                             <div t-if="(env.isSmall or !group.isFolded) and group.progressBars.length" class="o_kanban_counter position-relative d-flex align-items-center justify-content-between" t-att-class="{ 'opacity-25': !group.count }">
-                                <ColumnProgress group="group" aggregate="getGroupAggregate(group)" />
+                                <ColumnProgress group="group" aggregate="getGroupAggregate(group)" onBarClicked="props.scrollTop" />
                             </div>
                         </div>
                         <t t-if="!group.isFolded">

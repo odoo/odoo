@@ -15,7 +15,7 @@
                     t-att-aria-valuenow="progressBar.count"
                     t-attf-data-tooltip="{{ progressBar.count }} {{ progressBar.string }}"
                     data-tooltip-delay="0"
-                    t-on-click="() => props.group.filterProgressValue(progressBar.value)"
+                    t-on-click="() => this.onBarClick(progressBar)"
                 />
             </t>
         </div>
