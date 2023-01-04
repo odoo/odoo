@@ -12,7 +12,13 @@
     .o_dropdown_button,
     .o_datepicker_button {
         @include print-variable(o-input-border-color, $o-form-lightsecondary);
+    }
+    .o_dropdown_button,
+    .o_datepicker_button {
         color: initial !important;
+    }
+    .o_input_dropdown {
+        color: $o-main-text-color !important;
     }
 
     & {
