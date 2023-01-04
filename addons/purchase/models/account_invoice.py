@@ -1,7 +1,13 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+import logging
+import time
 
-from odoo import api, fields, models, _
+from odoo import api, fields, models, Command, _
+
+_logger = logging.getLogger(__name__)
+
+TOLERANCE = 0.02  # tolerance applied to the total when searching for a matching purchase order
 
 
 class AccountMove(models.Model):
@@ -141,6 +147,120 @@ class AccountMove(models.Model):
                 message = _("This vendor bill has been modified from: %s") % ','.join(refs)
                 move.message_post(body=message)
         return res
+
+    def find_matching_subset_invoice_lines(self, invoice_lines, goal_total, timeout):
+        """ The problem of finding the subset of `invoice_lines` which sums up to `goal_total` reduces to the 0-1 Knapsack problem.
+        The dynamic programming approach to solve this problem is most of the time slower than this because identical sub-problems don't arise often enough.
+        It returns the list of invoice lines which sums up to `goal_total` or an empty list if multiple or no solutions were found."""
+        def _find_matching_subset_invoice_lines(lines, goal):
+            if time.time() - start_time > timeout:
+                raise TimeoutError
+            solutions = []
+            for i, line in enumerate(lines):
+                if line['amount_to_invoice'] < goal - TOLERANCE:
+                    sub_solutions = _find_matching_subset_invoice_lines(lines[i + 1:], goal - line['amount_to_invoice'])
+                    solutions.extend((line, *solution) for solution in sub_solutions)
+                elif goal - TOLERANCE <= line['amount_to_invoice'] <= goal + TOLERANCE:
+                    solutions.append([line])
+                if len(solutions) > 1:
+                    # More than 1 solution found, we can't know for sure which is the correct one, so we don't return any solution
+                    return []
+            return solutions
+        start_time = time.time()
+        try:
+            subsets = _find_matching_subset_invoice_lines(sorted(invoice_lines, key=lambda line: line['amount_to_invoice'], reverse=True), goal_total)
+            return subsets[0] if subsets else []
+        except TimeoutError:
+            _logger.warning("Timed out during search of a matching subset of invoice lines")
+            return []
+
+    def _set_purchase_orders(self, purchase_orders, force_write=True):
+        with self.env.cr.savepoint():
+            with self._get_edi_creation() as move_form:
+                if force_write and move_form.line_ids:
+                    move_form.invoice_line_ids = [Command.clear()]
+                for purchase_order in purchase_orders:
+                    move_form.invoice_line_ids = [Command.create({
+                        'display_type': 'line_section',
+                        'name': _('From %s document', purchase_order.name)
+                    })]
+                    move_form.purchase_id = purchase_order
+                    move_form._onchange_purchase_auto_complete()
+
+    def _match_purchase_orders(self, po_references, partner_id, amount_total, timeout):
+        """ Tries to match a purchase order given some bill arguments/hints.
+
+        :param po_references: A list of potencial purchase order references/name.
+        :param partner_id: The vendor id.
+        :param amount_total: The vendor bill total.
+        :param timeout: The timeout for subline search
+        :return: A tuple containing:
+            * a str which is the match method:
+                'total_match': the invoice amount AND the partner or bill' reference match
+                'subset_total_match': the reference AND a subset of line that match the bill amount total
+                'po_match': only the reference match
+                'no_match': no result found
+            * recordset of matched 'purchase.order.line' (could come from more than one purchase.order)
+        """
+        common_domain = [('company_id', '=', self.company_id.id), ('state', '=', 'purchase'), ('invoice_status', 'in', ('to invoice', 'no'))]
+
+        matching_pos = self.env['purchase.order']
+        if po_references and amount_total:
+            matching_pos |= self.env['purchase.order'].search(common_domain + [('name', 'in', po_references)])
+
+            if not matching_pos:
+                matching_pos |= self.env['purchase.order'].search(common_domain + [('partner_ref', 'in', po_references)])
+
+            if matching_pos:
+                matching_pos_invoice_lines = [{
+                    'line': line,
+                    'amount_to_invoice': (1 - line.qty_invoiced / line.product_qty) * line.price_total,
+                } for line in matching_pos.order_line if line.product_qty]
+
+                if amount_total - TOLERANCE < sum(line['amount_to_invoice'] for line in matching_pos_invoice_lines) < amount_total + TOLERANCE:
+                    return 'total_match', matching_pos.order_line
+
+                else:
+                    il_subset = self.find_matching_subset_invoice_lines(matching_pos_invoice_lines, amount_total, timeout)
+                    if il_subset:
+                        return 'subset_total_match', self.env['purchase.order.line'].union(*[line['line'] for line in il_subset])
+                    else:
+                        return 'po_match', matching_pos.order_line
+
+        if partner_id and amount_total:
+            purchase_id_domain = common_domain + [('partner_id', 'child_of', [partner_id]), ('amount_total', '>=', amount_total - TOLERANCE), ('amount_total', '<=', amount_total + TOLERANCE)]
+            matching_pos |= self.env['purchase.order'].search(purchase_id_domain)
+            if len(matching_pos) == 1:
+                return 'total_match', matching_pos.order_line
+
+        return 'no_match', matching_pos.order_line
+
+    def _find_and_set_purchase_orders(self, po_references, partner_id, amount_total, prefer_purchase_line=False, timeout=10):
+        self.ensure_one()
+
+        method, matched_po_lines = self._match_purchase_orders(po_references, partner_id, amount_total, timeout)
+
+        if method == 'total_match': # erase all lines and autocomplete
+            self._set_purchase_orders(matched_po_lines.order_id, force_write=True)
+
+        elif method == 'subset_total_match': # don't erase and add autocomplete
+            self._set_purchase_orders(matched_po_lines.order_id, force_write=False)
+
+            with self._get_edi_creation() as move_form: # logic for unmatched lines
+                unmatched_lines = move_form.invoice_line_ids.filtered(
+                    lambda l: l.purchase_line_id and l.purchase_line_id not in matched_po_lines)
+                for line in unmatched_lines:
+                    if prefer_purchase_line:
+                        line.quantity = 0
+                    else:
+                        line.unlink()
+
+                if not prefer_purchase_line:
+                    move_form.invoice_line_ids.filtered('purchase_line_id').quantity = 0
+
+        elif method == 'po_match': # erase all lines and autocomplete
+            if prefer_purchase_line:
+                self._set_purchase_orders(matched_po_lines.order_id, force_write=True)
 
 
 class AccountMoveLine(models.Model):
