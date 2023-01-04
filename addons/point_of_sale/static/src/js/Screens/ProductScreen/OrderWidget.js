@@ -4,7 +4,7 @@ import { useListener } from "@web/core/utils/hooks";
 import PosComponent from "@point_of_sale/js/PosComponent";
 import Registries from "@point_of_sale/js/Registries";
 
-const { onPatched, useRef } = owl;
+const { useEffect, useRef } = owl;
 
 class OrderWidget extends PosComponent {
     setup() {
@@ -12,16 +12,15 @@ class OrderWidget extends PosComponent {
         useListener("select-line", this._selectLine);
         useListener("edit-pack-lot-lines", this._editPackLotLines);
         this.scrollableRef = useRef("scrollable");
-        this.scrollToBottom = false;
-        onPatched(() => {
-            // IMPROVEMENT
-            // This one just stays at the bottom of the orderlines list.
-            // Perhaps it is better to scroll to the added or modified orderline.
-            if (this.scrollToBottom) {
-                this.scrollableRef.el.scrollTop = this.scrollableRef.el.scrollHeight;
-                this.scrollToBottom = false;
-            }
-        });
+        useEffect(
+            () => {
+                const selectedLineEl = this.scrollableRef.el && this.scrollableRef.el.querySelector(".orderline.selected");
+                if(selectedLineEl) {
+                    selectedLineEl.scrollIntoView({ behavior: "smooth", block: "start" });
+                }
+            },
+            () => [this.order.selected_orderline]
+        );
     }
     get order() {
         return this.env.pos.get_order();
