@@ -6,13 +6,13 @@ import json
 import logging
 
 from datetime import datetime
-from markupsafe import Markup
 from werkzeug.exceptions import Forbidden, NotFound
 from werkzeug.urls import url_decode, url_encode, url_parse
 
 from odoo import fields, http, SUPERUSER_ID, tools, _
 from odoo.fields import Command
 from odoo.http import request
+from odoo.addons.base.models.ir_qweb_fields import nl2br_enclose
 from odoo.addons.http_routing.models.ir_http import slug
 from odoo.addons.payment import utils as payment_utils
 from odoo.addons.payment.controllers import portal as payment_portal
@@ -115,7 +115,7 @@ class WebsiteSaleForm(WebsiteForm):
 
         if data['custom']:
             order._message_log(
-                body=data['custom'],
+                body=nl2br_enclose(data['custom'], 'p'),
                 message_type='comment',
             )
 
