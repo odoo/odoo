@@ -274,6 +274,15 @@ class Picking(models.Model):
     _description = "Transfer"
     _order = "priority desc, scheduled_date asc, id desc"
 
+    def _default_picking_type_id(self):
+        picking_type_code = self.env.context.get('restricted_picking_type_code')
+        if picking_type_code:
+            picking_types = self.env['stock.picking.type'].search([
+                ('code', '=', picking_type_code),
+                ('company_id', '=', self.env.company.id),
+            ])
+            return picking_types[:1].id
+
     name = fields.Char(
         'Reference', default='/',
         copy=False, index='trigram', readonly=True)
@@ -352,6 +361,7 @@ class Picking(models.Model):
     picking_type_id = fields.Many2one(
         'stock.picking.type', 'Operation Type',
         required=True, readonly=True, index=True,
+        default=_default_picking_type_id,
         states={'draft': [('readonly', False)]})
     picking_type_code = fields.Selection(
         related='picking_type_id.code',

@@ -197,7 +197,9 @@
                                        attrs="{'invisible': [('picking_type_code', 'in', ['incoming', 'outgoing'])]}"/>
                             </div>
                             <field name="partner_id" nolabel="1"/>
-                            <field name="picking_type_id" options="{'no_open': True}" attrs="{'invisible': [('hide_picking_type', '=', True)], 'readonly': [('state', '!=', 'draft')]}"/>
+                            <field name="picking_type_id" options="{'no_open': True}"
+                                   attrs="{'invisible': [('hide_picking_type', '=', True)], 'readonly': [('state', '!=', 'draft')]}"
+                                   domain="context.get('restricted_picking_type_code', []) and [('code', '=', context.get('restricted_picking_type_code'))]"/>
                             <field name="location_id" groups="!stock.group_stock_multi_locations" invisible="1"/>
                             <field name="location_dest_id" groups="!stock.group_stock_multi_locations" invisible="1"/>
                             <field name="location_id" options="{'no_create': True}" groups="stock.group_stock_multi_locations" attrs="{'invisible': [('picking_type_code', '=', 'incoming')]}"/>
@@ -426,6 +428,57 @@
             </field>
         </record>
 
+        <record id="action_picking_tree_incoming" model="ir.actions.act_window">
+            <field name="name">Receipts</field>
+            <field name="res_model">stock.picking</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="view_mode">tree,kanban,form,calendar</field>
+            <field name="domain">[('picking_type_code', '=', 'incoming')]</field>
+            <field name="context">{'contact_display': 'partner_address', 'default_company_id': allowed_company_ids[0], 'restricted_picking_type_code': 'incoming'}</field>
+            <field name="search_view_id" ref="view_picking_internal_search"/>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">
+                    No receipt found. Let's create one!
+                </p><p>
+                    Receipts allow you to get products from a partner.
+                </p>
+            </field>
+        </record>
+
+        <record id="action_picking_tree_outgoing" model="ir.actions.act_window">
+            <field name="name">Deliveries</field>
+            <field name="res_model">stock.picking</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="view_mode">tree,kanban,form,calendar</field>
+            <field name="domain">[('picking_type_code', '=', 'outgoing')]</field>
+            <field name="context">{'contact_display': 'partner_address', 'default_company_id': allowed_company_ids[0], 'restricted_picking_type_code': 'outgoing'}</field>
+            <field name="search_view_id" ref="view_picking_internal_search"/>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">
+                    No delivery found. Let's create one!
+                </p><p>
+                    Deliveries allow you to send products from your stock to a partner.
+                </p>
+            </field>
+        </record>
+
+        <record id="action_picking_tree_internal" model="ir.actions.act_window">
+            <field name="name">Internal Transfers</field>
+            <field name="res_model">stock.picking</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="view_mode">tree,kanban,form,calendar</field>
+            <field name="domain">[('picking_type_code', '=', 'internal')]</field>
+            <field name="context">{'contact_display': 'partner_address', 'default_company_id': allowed_company_ids[0], 'restricted_picking_type_code': 'internal'}</field>
+            <field name="search_view_id" ref="view_picking_internal_search"/>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">
+                    No internal transfer found. Let's create one!
+                </p><p>
+                    Internal transfers allow you to move products from one location to another.
+                </p>
+            </field>
+        </record>
+
         <record id="action_validate_picking" model="ir.actions.server">
             <field name="name">Validate</field>
             <field name="model_id" ref="stock.model_stock_picking"/>
@@ -464,7 +517,15 @@
             <field name="binding_view_types">list</field>
         </record>
 
-        <menuitem id="all_picking" name="Transfers" parent="menu_stock_warehouse_mgmt" sequence="20" action="action_picking_tree_all" groups="stock.group_stock_manager,stock.group_stock_user"/>
+        <menuitem id="in_picking" name="Receipts" parent="menu_stock_transfers"
+                  action="action_picking_tree_incoming" sequence="20"
+                  groups="stock.group_stock_manager,stock.group_stock_user"/>
+        <menuitem id="out_picking" name="Deliveries" parent="menu_stock_transfers"
+                  action="action_picking_tree_outgoing" sequence="21"
+                  groups="stock.group_stock_manager,stock.group_stock_user"/>
+        <menuitem id="int_picking" name="Internal" parent="menu_stock_transfers"
+                  action="action_picking_tree_internal" sequence="22"
+                  groups="stock.group_stock_multi_locations"/>
 
         <record id="stock_picking_action_picking_type" model="ir.actions.act_window">
             <field name="name">All Transfers</field>
