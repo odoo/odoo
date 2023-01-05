@@ -102,7 +102,7 @@ class Employee(models.AbstractModel):
             "views": [[self.env.ref('hr_presence.hr_employee_view_kanban').id, "kanban"], [False, "tree"], [False, "form"]],
             'view_mode': 'kanban,tree,form',
             "domain": [],
-            "name": "Employee's Presence to Define",
+            "name": _("Employee's Presence to Define"),
             "context": {'search_default_group_hr_presence_state': 1},
         }
 
