@@ -875,7 +875,7 @@ class Task(models.Model):
 
     @api.depends('project_id.allowed_user_ids', 'project_id.privacy_visibility')
     def _compute_allowed_user_ids(self):
-        for task in self:
+        for task in self.with_context(prefetch_fields=False):
             portal_users = task.allowed_user_ids.filtered('share')
             internal_users = task.allowed_user_ids - portal_users
             if task.project_id.privacy_visibility == 'followers':
