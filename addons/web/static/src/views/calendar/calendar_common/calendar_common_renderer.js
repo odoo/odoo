@@ -115,6 +115,11 @@ export class CalendarCommonRenderer extends Component {
         return record.start.toFormat(timeFormat);
     }
 
+    getEndTime(record) {
+        const timeFormat = is24HourFormat() ? "HH:mm" : "hh:mm a";
+        return record.end.toFormat(timeFormat);
+    }
+
     computeEventSelector(event) {
         return `[data-event-id="${event.id}"]`;
     }
@@ -132,15 +137,17 @@ export class CalendarCommonRenderer extends Component {
         return Object.values(this.props.model.records).map((r) => this.convertRecordToEvent(r));
     }
     convertRecordToEvent(record) {
+        const allDay = record.isAllDay || record.end.diff(record.start, "hours").hours >= 24;
         return {
             id: record.id,
             title: record.title,
             start: record.start.toISO(),
             end:
-                ["week", "month"].includes(this.props.model.scale) && record.isAllDay
+                ["week", "month"].includes(this.props.model.scale) && (record.isAllDay || allDay &&
+                record.end.toMillis() !== record.end.startOf('day').toMillis())
                     ? record.end.plus({ days: 1 }).toISO()
                     : record.end.toISO(),
-            allDay: record.isAllDay,
+            allDay: allDay ,
         };
     }
     getPopoverProps(record) {
@@ -202,6 +209,7 @@ export class CalendarCommonRenderer extends Component {
             const injectedContentStr = renderToString(this.constructor.eventTemplate, {
                 ...record,
                 startTime: this.getStartTime(record),
+                endTime: this.getEndTime(record),
             });
             const domParser = new DOMParser();
             const { children } = domParser.parseFromString(injectedContentStr, "text/html").body;
@@ -221,6 +229,9 @@ export class CalendarCommonRenderer extends Component {
             }
             if (record.isStriked) {
                 el.classList.add("o_event_striked");
+            }
+            if (record.duration <= 0.25 ) {
+                el.classList.add("o_event_oneliner");
             }
         }
 
