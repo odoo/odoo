@@ -6,7 +6,7 @@ from functools import lru_cache
 
 from odoo import api, fields, models, Command, _
 from odoo.exceptions import ValidationError, UserError
-from odoo.tools import frozendict, formatLang, format_date, float_is_zero
+from odoo.tools import frozendict, formatLang, format_date, float_is_zero, Query
 from odoo.tools.sql import create_index
 from odoo.addons.web.controllers.utils import clean_action
 
@@ -1554,6 +1554,11 @@ class AccountMoveLine(models.Model):
 
         # Override in order to not read the complete move line table and use the index instead
         query = self._search(domain, limit=1)
+
+        # if domain is logically equivalent to false
+        if not isinstance(query, Query):
+            return {}
+
         query.order = None
         query.add_where('account.id = account_move_line.account_id')
         query_str, query_param = query.select()
