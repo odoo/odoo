@@ -61,6 +61,8 @@ class PaymentPortal(payment_portal.PaymentPortal):
                 raise ValidationError(_('Country is required.'))
             partner_id = request.website.user_id.partner_id.id
             del kwargs['partner_details']
+        else:
+            partner_id = request.env.user.partner_id.id
 
         kwargs.pop('custom_create_values', None)  # Don't allow passing arbitrary create values
         tx_sudo = self._create_transaction(
