@@ -741,12 +741,6 @@ class TestAccountBankStatementLine(TestAccountBankStatementCommon):
 
         # ==== Test constraints at creation ====
 
-        # Foreign currency must not be the same as the journal one.
-        assertStatementLineConstraint(statement_vals, {
-            **statement_line_vals,
-            'foreign_currency_id': self.currency_1.id,
-        })
-
         # Can't have a stand alone amount in foreign currency without foreign currency set.
         assertStatementLineConstraint(statement_vals, {
             **statement_line_vals,
@@ -1783,4 +1777,27 @@ class TestAccountBankStatementLine(TestAccountBankStatementCommon):
 
         self.assertRecordValues(statement.line_ids, [{
             'partner_id': False,
+        }])
+
+    def test_create_statement_line_with_inconsistent_currencies(self):
+        statement = self.env['account.bank.statement'].create({
+            'name': 'test_statement',
+            'date': '2019-01-01',
+            'journal_id': self.bank_journal_1.id,
+            'line_ids': [
+                (0, 0, {
+                    'date': '2019-01-01',
+                    'payment_ref': "Happy new year",
+                    'amount': 200.0,
+                    'amount_currency': 200.0,
+                    'foreign_currency_id': self.env.company.currency_id.id,
+                }),
+            ],
+        })
+
+        self.assertRecordValues(statement.line_ids, [{
+            'currency_id': self.env.company.currency_id.id,
+            'foreign_currency_id': False,
+            'amount': 200.0,
+            'amount_currency': 0.0,
         }])
