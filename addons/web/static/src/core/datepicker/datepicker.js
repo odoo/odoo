@@ -217,7 +217,7 @@ export class DatePicker extends Component {
     onDateChange({ useStatic } = {}) {
         const { value } = this.inputRef.el;
         const options = this.getOptions(useStatic);
-        const parsedDate = value && this.parseValue(value, options)[0];
+        const parsedDate = this.parseValue(value, options)[0];
         this.state.warning = parsedDate && parsedDate > DateTime.local();
         if (value && !parsedDate) {
             // Reset to default (= given) date.
