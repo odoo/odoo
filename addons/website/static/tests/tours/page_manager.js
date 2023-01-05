@@ -31,7 +31,7 @@ wTourUtils.registerWebsitePreviewTour('website_page_manager', {
 }, [
     {
         content: "Click on Site",
-        trigger: 'button.dropdown-toggle[title="Site"]',
+        trigger: 'button.dropdown-toggle[data-menu-xmlid="website.menu_site"]',
     },
     {
         content: "Click on Pages",
