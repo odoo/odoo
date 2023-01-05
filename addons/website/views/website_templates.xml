@@ -267,7 +267,7 @@
 <!-- Header templates -->
 
 <!-- "Default" template -->
-<template id="template_header_default" inherit_id="website.layout" name="Template Header Default" active="True">
+<template id="template_header_default" inherit_id="portal.frontend_layout" name="Template Header Default" active="True" primary="True">
     <xpath expr="//header//nav" position="replace">
         <t t-call="website.navbar">
             <t t-set="_navbar_classes" t-valuef="shadow-sm"/>
@@ -331,7 +331,7 @@
 </template>
 
 <!-- "Hamburger" template -->
-<template id="template_header_hamburger" inherit_id="website.layout" name="Template Header Hamburger" active="False">
+<template id="template_header_hamburger" inherit_id="portal.frontend_layout" name="Template Header Hamburger" active="False" primary="True">
     <xpath expr="//header//nav" position="replace">
         <t t-call="website.navbar">
             <t t-set="_navbar_expand_class" t-value="''"/>
@@ -472,7 +472,7 @@
 </template>
 
 <!-- "Vertical" template -->
-<template id="template_header_vertical" inherit_id="website.layout" name="Template Header Vertical" active="False">
+<template id="template_header_vertical" inherit_id="portal.frontend_layout" name="Template Header Vertical" active="False" primary="True">
     <xpath expr="//header//nav" position="replace">
         <t t-call="website.navbar">
             <t t-set="_navbar_classes" t-valuef="flex-lg-column shadow-sm py-0"/>
@@ -598,7 +598,7 @@
     </xpath>
 </template>
 
-<template id="template_header_sidebar" inherit_id="website.layout" name="Template Header Sidebar" active="False">
+<template id="template_header_sidebar" inherit_id="portal.frontend_layout" name="Template Header Sidebar" active="False" primary="True">
     <xpath expr="//header" position="attributes">
         <attribute name="t-attf-class" add="o_header_sidebar" separator=" "/>
     </xpath>
@@ -709,7 +709,7 @@
     </xpath>
 </template>
 
-<template id="template_header_slogan" inherit_id="website.layout" name="Template Header Slogan" active="False">
+<template id="template_header_slogan" inherit_id="portal.frontend_layout" name="Template Header Slogan" active="False" primary="True">
     <xpath expr="//header//nav" position="replace">
         <t t-call="website.navbar">
             <t t-set="_navbar_classes" t-valuef="shadow-sm"/>
@@ -807,7 +807,7 @@
     </xpath>
 </template>
 
-<template id="template_header_contact" inherit_id="website.layout" name="Template Header Contact" active="False">
+<template id="template_header_contact" inherit_id="portal.frontend_layout" name="Template Header Contact" active="False" primary="True">
     <xpath expr="//header//nav" position="replace">
         <div class="oe_structure oe_structure_solo" id="oe_structure_header_contact_1"/>
         <t t-call="website.navbar">
@@ -901,7 +901,7 @@
     </xpath>
 </template>
 
-<template id="template_header_boxed" inherit_id="website.layout" name="Template Header Boxed" active="False">
+<template id="template_header_boxed" inherit_id="portal.frontend_layout" name="Template Header Boxed" active="False" primary="True">
     <xpath expr="//header//nav" position="replace">
         <div class="o_header_boxed_background o_colored_level o_cc pt8 pb8">
             <div class="container d-flex align-items-center pb-4 flex-wrap">
@@ -983,7 +983,7 @@
     </xpath>
 </template>
 
-<template id="template_header_centered_logo" inherit_id="website.layout" name="Template Header Centered Logo" active="False">
+<template id="template_header_centered_logo" inherit_id="portal.frontend_layout" name="Template Header Centered Logo" active="False" primary="True">
     <xpath expr="//header//nav" position="replace">
         <t t-call="website.navbar">
             <div id="top_menu_container" class="container">
@@ -1034,7 +1034,7 @@
     </xpath>
 </template>
 
-<template id="template_header_image" inherit_id="website.layout" name="Template Header Image" active="False">
+<template id="template_header_image" inherit_id="portal.frontend_layout" name="Template Header Image" active="False" primary="True">
     <xpath expr="//header//nav" position="replace">
         <div class="oe_structure oe_structure_solo" id="oe_structure_header_image_1"/>
         <t t-call="website.navbar">
@@ -1099,7 +1099,7 @@
     </xpath>
 </template>
 
-<template id="template_header_hamburger_full" inherit_id="website.layout" name="Template Header Hambuger Full" active="False">
+<template id="template_header_hamburger_full" inherit_id="portal.frontend_layout" name="Template Header Hambuger Full" active="False" primary="True">
     <xpath expr="//header//nav" position="replace">
         <t t-call="website.navbar">
             <t t-set="_navbar_expand_class" t-value="''"/>
@@ -1184,7 +1184,7 @@
     </xpath>
 </template>
 
-<template id="template_header_magazine" inherit_id="website.layout" name="Template Header Magazine" active="False">
+<template id="template_header_magazine" inherit_id="portal.frontend_layout" name="Template Header Magazine" active="False" primary="True">
     <xpath expr="//header//nav" position="replace">
         <!-- Topbar -->
         <div class="oe_structure oe_structure_solo" id="oe_structure_header_magazine_1"/>
