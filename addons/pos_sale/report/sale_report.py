@@ -18,6 +18,7 @@ class SaleReport(models.Model):
                                             ('paid', 'Paid'),
                                             ('pos_done', 'Posted'),
                                             ('invoiced', 'Invoiced')], string='Status', readonly=True)
+    pos_order_id = fields.Many2one('pos.order', 'Pos order #', readonly=True)
 
     def _select_pos(self, fields=None):
         if not fields:
@@ -57,7 +58,8 @@ class SaleReport(models.Model):
             (sum(p.volume) * l.qty / u.factor) AS volume,
             l.discount as discount,
             sum((l.price_unit * l.discount * l.qty / 100.0 / CASE COALESCE(pos.currency_rate, 0) WHEN 0 THEN 1.0 ELSE pos.currency_rate END)) as discount_amount,
-            NULL as order_id
+            NULL as order_id,
+            pos.id as pos_order_id
         '''
 
         for field in fields.keys():
@@ -94,6 +96,7 @@ class SaleReport(models.Model):
             pos.state,
             pos.company_id,
             pos.pricelist_id,
+            pos.id,
             p.product_tmpl_id,
             partner.country_id,
             partner.industry_id,
@@ -106,8 +109,10 @@ class SaleReport(models.Model):
     def _query(self, with_clause='', fields=None, groupby='', from_clause=''):
         if not fields:
             fields = {}
+        sale_fields = fields.copy()
+        fields['pos_order_id'] = ', NULL as pos_order_id'
         res = super()._query(with_clause, fields, groupby, from_clause)
-        sale_fields = self._select_additional_fields(fields)
+        sale_fields = self._select_additional_fields(sale_fields)
         current = '(SELECT %s FROM %s GROUP BY %s)' % \
                   (self._select_pos(sale_fields), self._from_pos(), self._group_by_pos())
 
