@@ -5,6 +5,7 @@ import {
     click,
     clickCreate,
     clickSave,
+    editInput,
     getFixture,
     patchTimeZone,
     patchWithCleanup,
@@ -516,6 +517,43 @@ QUnit.module("Fields", (hooks) => {
             "the selected date should be displayed after saving"
         );
     });
+
+    QUnit.test(
+        "multi edition of DateField in list view: clear date in input",
+        async function (assert) {
+            serverData.models.partner.records[1].date = "2017-02-03";
+
+            await makeView({
+                serverData,
+                type: "list",
+                resModel: "partner",
+                arch: '<tree multi_edit="1"><field name="date"/></tree>',
+            });
+
+            const rows = target.querySelectorAll(".o_data_row");
+
+            // select two records and edit them
+            await click(rows[0], ".o_list_record_selector input");
+            await click(rows[1], ".o_list_record_selector input");
+
+            await click(rows[0], ".o_data_cell");
+
+            assert.containsOnce(target, "input.o_datepicker_input");
+            await editInput(target, ".o_datepicker_input", "");
+
+            assert.containsOnce(document.body, ".modal");
+            await click(target, ".modal .modal-footer .btn-primary");
+
+            assert.strictEqual(
+                target.querySelector(".o_data_row:first-child .o_data_cell").textContent,
+                ""
+            );
+            assert.strictEqual(
+                target.querySelector(".o_data_row:nth-child(2) .o_data_cell").textContent,
+                ""
+            );
+        }
+    );
 
     QUnit.test("DateField remove value", async function (assert) {
         await makeView({
