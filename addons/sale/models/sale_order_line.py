@@ -605,8 +605,6 @@ class SaleOrderLine(models.Model):
                 'price_tax': amount_tax,
                 'price_total': amount_untaxed + amount_tax,
             })
-            if self.env.context.get('import_file', False) and not self.env.user.user_has_groups('account.group_account_manager'):
-                line.tax_id.invalidate_recordset(['invoice_repartition_line_ids'])
 
     @api.depends('price_subtotal', 'product_uom_qty')
     def _compute_price_reduce_taxexcl(self):
