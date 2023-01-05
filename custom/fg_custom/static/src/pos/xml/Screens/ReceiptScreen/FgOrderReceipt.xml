@@ -103,13 +103,20 @@
                             <t t-esc="receipt.date.localestring or receipt.date.validation_date"/>
                         </span>
                         <span class="pos-receipt-right-align" style="width:20%">
-                            01
+                            TRNL 01
                         </span>
                         <span class="pos-receipt-right-align" style="width:20%">
-                            #01
+                            CSHR #01
                         </span>
                     </div>
                     <div style="margin-bottom: 2%;overflow: hidden;">========================================================</div>
+                </div>
+
+                <div t-if="receipt.name" class="transaction" style="margin-top: 8%;font-size: 75%;">
+                    <span class="pos-receipt-left-align"><b>Trans# </b> <t t-esc="receipt.pos_trans_reference"/></span>
+                </div>
+                <div t-if="!receipt.pos_refunded_id" class="sale_invoice" style="font-size: 75%;">
+                    <span  class="pos-receipt-left-align"><b>SI# </b> <t t-esc="receipt.pos_si_trans_reference"/></span>
                 </div>
 
                 <div class="orderlines" style="margin-top: 4%;font-size: 75%;">
@@ -252,19 +259,12 @@
                     </div>
                 </div>
 
-                <div t-if="receipt.name" class="transaction" style="margin-top: 8%;font-size: 75%;">
-                    <span class="pos-receipt-left-align"><b>Trans# </b> <t t-esc="receipt.pos_trans_reference"/></span>
-                </div>
                 <div t-if="receipt.pos_refunded_id" class="sale_invoice" style="font-size: 75%;">
                     <span  class="pos-receipt-left-align"><b>Reference SI# </b> <t t-esc="receipt.pos_refunded_id"/></span>
                 </div>
 
                 <div t-if="receipt.pos_refunded_id" class="sale_invoice" style="font-size: 75%;">
                     <span  class="pos-receipt-left-align"><b>Refund SI# </b> <t t-esc="receipt.pos_refund_si_reference"/></span>
-                </div>
-
-                <div t-if="!receipt.pos_refunded_id" class="sale_invoice" style="font-size: 75%;">
-                    <span  class="pos-receipt-left-align"><b>SI# </b> <t t-esc="receipt.pos_si_trans_reference"/></span>
                 </div>
 
                 <div t-if="m_t_d > 0" class="total_discount" style="margin-top: 8%;font-size: 75%;">
@@ -486,24 +486,28 @@
             <t t-foreach="receipt.orderlines" t-as="line" t-key="line.id">
                 <t t-if="line.price_display_one >= 0 and !line.is_program_reward">
                     <div class="responsive-price">
-                        <span t-esc="line.quantity" style="margin-right: 5%;" class="pos-receipt-left-align"/>
+
                         <span t-esc="line.product_name" class="pos-receipt-left-align"/>
-                        <t t-set="price_discount" t-value="line.price_with_tax_before_discount - line.price_with_tax"/>
-                        <span class="price_display pos-receipt-right-align"><t t-esc="env.pos.format_currency_no_symbol(line.price_with_tax + price_discount)"/>
-                            <t t-set="is_non_zero_vat" t-value="''"/>
-                            <t t-foreach="line.is_non_zero_vat_taxes_ids" t-as="taxes">
-                                <t t-set="is_non_zero_vat" t-value="taxes.is_non_zero_vat"/>
-                            </t>
-                            <t t-if="is_non_zero_vat == 'is_vat'">
-                                V
-                            </t>
-                            <t t-elif="is_non_zero_vat == 'is_zero_vat'">
-                                Z
-                            </t>
-                            <t t-else="">
-                                E
-                            </t>
-                        </span>
+                        <div class="responsive-price">
+                            <span t-esc="line.quantity" style="margin-right: 3%;margin-left: 15%;" class="pos-receipt-left-align"/> @
+                            <span t-esc="env.pos.format_currency_no_symbol(line.price)" style="margin-left: 3%;" class="price_display pos-receipt-left-align"/>
+                            <t t-set="price_discount" t-value="line.price_with_tax_before_discount - line.price_with_tax"/>
+                            <span class="price_display pos-receipt-right-align"><t t-esc="env.pos.format_currency_no_symbol(line.price_with_tax + price_discount)"/>
+                                <t t-set="is_non_zero_vat" t-value="''"/>
+                                <t t-foreach="line.is_non_zero_vat_taxes_ids" t-as="taxes">
+                                    <t t-set="is_non_zero_vat" t-value="taxes.is_non_zero_vat"/>
+                                </t>
+                                <t t-if="is_non_zero_vat == 'is_vat'">
+                                    V
+                                </t>
+                                <t t-elif="is_non_zero_vat == 'is_zero_vat'">
+                                    Z
+                                </t>
+                                <t t-else="">
+                                    E
+                                </t>
+                            </span>
+                        </div>
                     </div>
                      <t t-if="line.discount > 0">
                         <div>
