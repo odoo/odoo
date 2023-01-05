@@ -1880,7 +1880,11 @@ class Task(models.Model):
         if fields and (not check_group_user or self.env.user.has_group('base.group_portal')) and not self.env.su:
             unauthorized_fields = set(fields) - (self.SELF_READABLE_FIELDS if operation == 'read' else self.SELF_WRITABLE_FIELDS)
             if unauthorized_fields:
-                raise AccessError(_('You cannot %s %s fields in task.', operation if operation == 'read' else '%s on' % operation, ', '.join(unauthorized_fields)))
+                if operation == 'read':
+                    error_message = _('You cannot read %s fields in task.', ', '.join(unauthorized_fields))
+                else:
+                    error_message = _('You cannot write on %s fields in task.', ', '.join(unauthorized_fields))
+                raise AccessError(error_message)
 
     def read(self, fields=None, load='_classic_read'):
         self._ensure_fields_are_accessible(fields)
