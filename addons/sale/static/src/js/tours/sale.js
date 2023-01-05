@@ -82,7 +82,7 @@ tour.register("sale_quote_tour", {
             actions.text("Agrolait", this.$anchor.find("input"));
         },
     }, {
-        trigger: ".ui-menu-item > a",
+        trigger: ".ui-menu-item > a:contains('Agrolait')",
         auto: true,
         in_modal: false,
     }, {
@@ -120,9 +120,6 @@ tour.register("sale_quote_tour", {
     },
     ...tour.stepUtils.statusbarButtonsSteps("Send by Email", Markup(_t("<b>Send the quote</b> to yourself and check what the customer will receive.")), ".o_statusbar_buttons button[name='action_quotation_send']"),
     {
-        trigger: ".modal-footer button.btn-primary",
-        auto: true,
-    }, {
         trigger: ".modal-footer button[name='action_send_mail']",
         extra_trigger: ".modal-footer button[name='action_send_mail']",
         content: _t("Let's send the quote."),
