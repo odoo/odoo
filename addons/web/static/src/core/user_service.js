@@ -48,7 +48,7 @@ export const userService = {
                 return context.uid;
             },
             get lang() {
-                return context.lang;
+                return context.lang || "en_US";
             },
             get tz() {
                 return context.tz;
