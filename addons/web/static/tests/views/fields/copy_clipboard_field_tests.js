@@ -96,6 +96,11 @@ QUnit.module("Fields", (hooks) => {
             '.o_field_copy[name="char_field"] .o_clipboard_button',
             "char_field (unset) should not contain a button"
         );
+        assert.containsOnce(
+            target.querySelector(".o_field_widget[name=char_field]"),
+            "input",
+            "char_field (unset) should contain an input field"
+        );
     });
 
     QUnit.test(
