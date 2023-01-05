@@ -879,6 +879,7 @@
              Change accordingly to the derired visual result (eg. `primary`, `dark`...)-->
         <t t-set="navClass" t-valuef="light"/>
 
+    <!-- Product page -->
     <t t-cache="pricelist,product">
         <t t-set="combination" t-value="product._get_first_possible_combination()"/>
         <t t-set="combination_info" t-value="product._get_combination_info(combination, add_qty=add_qty or 1, pricelist=pricelist)"/>
