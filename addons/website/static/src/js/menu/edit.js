@@ -364,7 +364,8 @@ var EditPageMenu = websiteNavbarData.WebsiteNavbarActionWidget.extend({
         return [];
     },
     _getUnremovableElements () {
-        return this._targetForEdition()[0].querySelectorAll("#top_menu a:not(.oe_unremovable)");
+        return this._targetForEdition()[0].querySelectorAll("#top_menu a:not(.oe_unremovable)" +
+            ', .s_website_form_send, .s_donation_donate_btn, .o_submit, ul[role="tablist"] > li, a[role="tab"][data-toggle="collapse"]');
     },
     /**
      * Call preventDefault of an event.

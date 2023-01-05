@@ -2396,6 +2396,11 @@ var SnippetsMenu = Widget.extend({
             customTabPaneEl.removeAttribute('id');
         }
 
+        // TODO: remove this (?) or find a way to catch the unremovable parts of
+        // snippets using the new _getUnremovableElements method.
+        // Force oe_unremovable on non-removable parts of snippets
+        // $html.find(this.options.unremovableElementsSelector).addClass('oe_unremovable');
+
         // Add the computed template and make elements draggable
         this.$el.html($html);
         this.$el.append(this.customizePanel);
