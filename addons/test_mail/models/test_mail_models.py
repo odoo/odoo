@@ -14,6 +14,21 @@ class MailTestSimple(models.Model):
     name = fields.Char()
     email_from = fields.Char()
 
+    def _message_compute_subject(self):
+        """ To ease mocks """
+        _a = super()._message_compute_subject()
+        return _a
+
+    def _notify_by_email_get_final_mail_values(self, *args, **kwargs):
+        """ To ease mocks """
+        _a = super()._notify_by_email_get_final_mail_values(*args, **kwargs)
+        return _a
+
+    def _notify_by_email_get_headers(self):
+        headers = super()._notify_by_email_get_headers()
+        headers['X-Custom'] = 'Done'
+        return headers
+
 
 class MailTestGateway(models.Model):
     """ A very simple model only inheriting from mail.thread to test pure mass
