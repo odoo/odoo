@@ -24,13 +24,16 @@ class PaymentPortal(payment_portal.PaymentPortal):
         """
         # Check the invoice id and the access token
         try:
-            self._document_check_access('account.move', invoice_id, access_token)
+            invoice_sudo = self._document_check_access('account.move', invoice_id, access_token)
         except MissingError as error:
             raise error
         except AccessError:
             raise ValidationError(_("The access token is invalid."))
 
         kwargs['reference_prefix'] = None  # Allow the reference to be computed based on the invoice
+        logged_in = not request.env.user._is_public()
+        partner = request.env.user.partner_id if logged_in else invoice_sudo.partner_id
+        kwargs['partner_id'] = partner.id
         kwargs.pop('custom_create_values', None)  # Don't allow passing arbitrary create values
         tx_sudo = self._create_transaction(
             custom_create_values={'invoice_ids': [Command.set([invoice_id])]}, **kwargs,
