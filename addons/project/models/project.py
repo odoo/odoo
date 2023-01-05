@@ -1370,6 +1370,40 @@ class Task(models.Model):
             message_attachment_ids = task.mapped('message_ids.attachment_ids').ids  # from mail_thread
             task.attachment_ids = [(6, 0, list(set(attachment_ids) - set(message_attachment_ids)))]
 
+<<<<<<< HEAD
+||||||| parent of bdd9d1a3757 (temp)
+    @api.depends('project_id.allowed_user_ids', 'project_id.privacy_visibility')
+    def _compute_allowed_user_ids(self):
+        for task in self:
+            portal_users = task.allowed_user_ids.filtered('share')
+            internal_users = task.allowed_user_ids - portal_users
+            if task.project_id.privacy_visibility == 'followers':
+                task.allowed_user_ids |= task.project_id.allowed_internal_user_ids
+                task.allowed_user_ids -= portal_users
+            elif task.project_id.privacy_visibility == 'portal':
+                task.allowed_user_ids |= task.project_id.allowed_portal_user_ids
+            if task.project_id.privacy_visibility != 'portal':
+                task.allowed_user_ids -= portal_users
+            elif task.project_id.privacy_visibility != 'followers':
+                task.allowed_user_ids -= internal_users
+
+=======
+    @api.depends('project_id.allowed_user_ids', 'project_id.privacy_visibility')
+    def _compute_allowed_user_ids(self):
+        for task in self.with_context(prefetch_fields=False):
+            portal_users = task.allowed_user_ids.filtered('share')
+            internal_users = task.allowed_user_ids - portal_users
+            if task.project_id.privacy_visibility == 'followers':
+                task.allowed_user_ids |= task.project_id.allowed_internal_user_ids
+                task.allowed_user_ids -= portal_users
+            elif task.project_id.privacy_visibility == 'portal':
+                task.allowed_user_ids |= task.project_id.allowed_portal_user_ids
+            if task.project_id.privacy_visibility != 'portal':
+                task.allowed_user_ids -= portal_users
+            elif task.project_id.privacy_visibility != 'followers':
+                task.allowed_user_ids -= internal_users
+
+>>>>>>> bdd9d1a3757 (temp)
     @api.depends('create_date', 'date_end', 'date_assign')
     def _compute_elapsed(self):
         task_linked_to_calendar = self.filtered(
