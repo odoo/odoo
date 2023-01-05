@@ -6,12 +6,12 @@
         -->
         <record id="tax_vat_411" model="account.tax.template">
             <!-- IVA EN VENTAS LOCALES (EXCLUYE ACTIVOS FIJOS) -->
-            <field name="name">Iva 12%</field>
+            <field name="name">VAT 12%</field>
             <field name="type_tax_use">sale</field>
             <field name="amount_type">percent</field>
             <field name="sequence">9</field>
             <field name="amount">12.0</field>
-            <field name="description">IVA 12%</field>
+            <field name="description">VAT 12%</field>
             <field name="l10n_ec_code_base">411</field>
             <field name="l10n_ec_code_applied">421</field>
             <field name="chart_template_id" ref="l10n_ec.l10n_ec_ifrs"/>
@@ -39,12 +39,12 @@
         </record>
         <record id="tax_vat_412" model="account.tax.template">
             <!-- IVA EN VENTAS DE ACTIVOS FIJOS -->
-            <field name="name">Iva 12% (activos)</field>
+            <field name="name">VAT 12% (assets)</field>
             <field name="type_tax_use">sale</field>
             <field name="amount_type">percent</field>
             <field name="sequence">10</field>
             <field name="amount">12.0</field>
-            <field name="description">IVA 12%</field>
+            <field name="description">VAT 12%</field>
             <field name="l10n_ec_code_base">412</field>
             <field name="l10n_ec_code_applied">422</field>
             <field name="chart_template_id" ref="l10n_ec.l10n_ec_ifrs"/>
@@ -72,12 +72,12 @@
         </record>
         <record id="tax_vat_415" model="account.tax.template">
             <!-- IVA EN VENTAS LOCALES 0% (EXCLUYE ACTIVOS FIJOS) CON DERECHO A CREDITO TRIBUTARIO -->
-            <field name="name">Iva 0%</field>
+            <field name="name">VAT 0%</field>
             <field name="type_tax_use">sale</field>
             <field name="amount_type">percent</field>
             <field name="sequence">19</field>
             <field name="amount">0.0</field>
-            <field name="description">IVA 0%</field>
+            <field name="description">VAT 0%</field>
             <field name="l10n_ec_code_base">415</field>
             <field name="chart_template_id" ref="l10n_ec.l10n_ec_ifrs"/>
             <field name="tax_group_id" ref="tax_group_vat0"/>
@@ -102,12 +102,12 @@
         </record>
         <record id="tax_vat_416" model="account.tax.template">
             <!-- IVA VENTAS DE ACTIVOS FIJOS GRAVADAS TARIFA 0% CON DERECHO A CREDITO TRIBUTARIO -->
-            <field name="name">Iva 0% (activos)</field>
+            <field name="name">VAT 0% (assets)</field>
             <field name="type_tax_use">sale</field>
             <field name="amount_type">percent</field>
             <field name="sequence">20</field>
             <field name="amount">0.0</field>
-            <field name="description">IVA 0%</field>
+            <field name="description">VAT 0%</field>
             <field name="l10n_ec_code_base">416</field>
             <field name="chart_template_id" ref="l10n_ec.l10n_ec_ifrs"/>
             <field name="tax_group_id" ref="tax_group_vat0"/>
@@ -132,12 +132,12 @@
         </record>
         <record id="tax_vat_413" model="account.tax.template">
             <!-- IVA EN VENTAS LOCALES 0% (EXCLUYE ACTIVOS FIJOS) SIN DERECHO A CREDITO TRIBUTARIO -->
-            <field name="name">Iva 0% (sin crédito tributario)</field>
+            <field name="name">0% VAT (no tax credit)</field>
             <field name="type_tax_use">sale</field>
             <field name="amount_type">percent</field>
             <field name="sequence">20</field>
             <field name="amount">0.0</field>
-            <field name="description">IVA 0%</field>
+            <field name="description">VAT 0%</field>
             <field name="l10n_ec_code_base">413</field>
             <field name="chart_template_id" ref="l10n_ec.l10n_ec_ifrs"/>
             <field name="tax_group_id" ref="tax_group_vat0"/>
@@ -162,12 +162,12 @@
         </record>
         <record id="tax_vat_414" model="account.tax.template">
             <!-- IVA EN VENTAS DE ACTIVOS FIJOS GRAVADAS 0% SIN DERECHO A CREDITO TRIBUTARIO -->
-            <field name="name">Iva 0% (activos sin crédito tributario)</field>
+            <field name="name">0% VAT (assets without tax credit)</field>
             <field name="type_tax_use">sale</field>
             <field name="amount_type">percent</field>
             <field name="sequence">20</field>
             <field name="amount">0.0</field>
-            <field name="description">IVA 0%</field>
+            <field name="description">VAT 0%</field>
             <field name="l10n_ec_code_base">414</field>
             <field name="chart_template_id" ref="l10n_ec.l10n_ec_ifrs"/>
             <field name="tax_group_id" ref="tax_group_vat0"/>
@@ -192,12 +192,12 @@
         </record>
         <record id="tax_vat_417" model="account.tax.template">
             <!-- IVA 0% POR EXPORTACIONES DE BIENES -->
-            <field name="name">Iva 0% (exportación bienes)</field>
+            <field name="name">VAT 0% (export goods)</field>
             <field name="type_tax_use">sale</field>
             <field name="amount_type">percent</field>
             <field name="sequence">21</field>
             <field name="amount">0.0</field>
-            <field name="description">IVA 0%</field>
+            <field name="description">VAT 0%</field>
             <field name="l10n_ec_code_base">417</field>
             <field name="chart_template_id" ref="l10n_ec.l10n_ec_ifrs"/>
             <field name="tax_group_id" ref="tax_group_vat0"/>
@@ -222,12 +222,12 @@
         </record>
         <record id="tax_vat_418" model="account.tax.template">
             <!-- IVA POR EXPORTACIONES DE SERVICIOS -->
-            <field name="name">Iva 0% (exportación servicios)</field>
+            <field name="name">VAT 0% (export services)</field>
             <field name="type_tax_use">sale</field>
             <field name="amount_type">percent</field>
             <field name="sequence">21</field>
             <field name="amount">0.0</field>
-            <field name="description">IVA 0%</field>
+            <field name="description">VAT 0%</field>
             <field name="l10n_ec_code_base">418</field>
             <field name="chart_template_id" ref="l10n_ec.l10n_ec_ifrs"/>
             <field name="tax_group_id" ref="tax_group_vat0"/>
@@ -252,12 +252,12 @@
         </record>
         <record id="tax_vat_419" model="account.tax.template">
             <!-- TRANSFERENCIAS EN VENTAS NO OBJETO O EXENTAS DE IVA -->
-            <field name="name">Iva 0% (no objeto/exentas)</field>
+            <field name="name">VAT 0% (non-exempt/non-object)</field>
             <field name="type_tax_use">sale</field>
             <field name="amount_type">percent</field>
             <field name="sequence">40</field>
             <field name="amount">0.0</field>
-            <field name="description">IVA EXENTO</field>
+            <field name="description">VAT EXEMPT</field>
             <field name="l10n_ec_code_base">419</field>
             <field name="chart_template_id" ref="l10n_ec.l10n_ec_ifrs"/>
             <field name="tax_group_id" ref="tax_group_vat_excempt"/>
@@ -282,12 +282,12 @@
         </record>
         <record id="tax_vat_444" model="account.tax.template">
             <!-- IVA EN VENTAS POR REEMBOLSO COMO INTERMEDIARIO -->
-            <field name="name">Iva 12% (reembolso)</field>
+            <field name="name">VAT 12% (reimbursement)</field>
             <field name="type_tax_use">sale</field>
             <field name="amount_type">percent</field>
             <field name="sequence">10</field>
             <field name="amount">12.0</field>
-            <field name="description">IVA 12%</field>
+            <field name="description">VAT 12%</field>
             <field name="l10n_ec_code_base">444</field>
             <field name="l10n_ec_code_applied">454</field>
             <field name="chart_template_id" ref="l10n_ec.l10n_ec_ifrs"/>
@@ -315,12 +315,12 @@
         </record>
         <record id="tax_vat_510" model="account.tax.template">
             <!-- IVA EN COMPRAS LOCALES (EXCLUYE ACTIVOS FIJOS) CON DERECHO A CREDITO TRIBUTARIO -->
-            <field name="name">Iva 12%</field>
+            <field name="name">VAT 12%</field>
             <field name="type_tax_use">purchase</field>
             <field name="amount_type">percent</field>
             <field name="sequence">9</field>
             <field name="amount">12.0</field>
-            <field name="description">IVA 12%</field>
+            <field name="description">VAT 12%</field>
             <field name="l10n_ec_code_base">510</field>
             <field name="l10n_ec_code_applied">520</field>
             <field name="chart_template_id" ref="l10n_ec.l10n_ec_ifrs"/>
@@ -348,12 +348,12 @@
         </record>
         <record id="tax_vat_511" model="account.tax.template">
             <!-- IVA EN COMPRAS LOCALES DE ACTIVOS FIJOS CON DERECHO A CREDITO TRIBUTARIO -->
-            <field name="name">Iva 12% (activos)</field>
+            <field name="name">VAT 12% (assets)</field>
             <field name="type_tax_use">purchase</field>
             <field name="amount_type">percent</field>
             <field name="sequence">10</field>
             <field name="amount">12.0</field>
-            <field name="description">IVA 12%</field>
+            <field name="description">VAT 12%</field>
             <field name="l10n_ec_code_base">511</field>
             <field name="l10n_ec_code_applied">521</field>
             <field name="chart_template_id" ref="l10n_ec.l10n_ec_ifrs"/>
@@ -381,12 +381,12 @@
         </record>
         <record id="tax_vat_512" model="account.tax.template">
             <!-- IVA EN OTRAS ADQUISICIONES SIN DERECHO A CREDITO TRIBUTARIO -->
-            <field name="name">Iva 12% (sin crédito tributario)</field>
+            <field name="name">VAT 12% (no tax credit)</field>
             <field name="type_tax_use">purchase</field>
             <field name="amount_type">percent</field>
             <field name="sequence">10</field>
             <field name="amount">12.0</field>
-            <field name="description">IVA 12%</field>
+            <field name="description">VAT 12%</field>
             <field name="l10n_ec_code_base">512</field>
             <field name="l10n_ec_code_applied">522</field>
             <field name="chart_template_id" ref="l10n_ec.l10n_ec_ifrs"/>
@@ -412,12 +412,12 @@
         </record>
         <record id="tax_vat_513" model="account.tax.template">
             <!-- IVA EN IMPORTACIONES DE SERVICIOS -->
-            <field name="name">Iva 12% (importación servicios)</field>
+            <field name="name">VAT 12% (import of services)</field>
             <field name="type_tax_use">purchase</field>
             <field name="amount_type">percent</field>
             <field name="sequence">10</field>
             <field name="amount">12.0</field>
-            <field name="description">IVA 12%</field>
+            <field name="description">VAT 12%</field>
             <field name="l10n_ec_code_base">513</field>
             <field name="l10n_ec_code_applied">523</field>
             <field name="chart_template_id" ref="l10n_ec.l10n_ec_ifrs"/>
@@ -445,12 +445,12 @@
         </record>
         <record id="tax_vat_514" model="account.tax.template">
             <!-- IVA EN IMPORTACIONES DE BIENES (EXCLUYE ACTIVOS FIJOS) -->
-            <field name="name">Iva 12% (importación bienes)</field>
+            <field name="name">VAT 12% (import of goods)</field>
             <field name="type_tax_use">purchase</field>
             <field name="amount_type">percent</field>
             <field name="sequence">10</field>
             <field name="amount">12.0</field>
-            <field name="description">IVA 12%</field>
+            <field name="description">VAT 12%</field>
             <field name="l10n_ec_code_base">514</field>
             <field name="l10n_ec_code_applied">524</field>
             <field name="chart_template_id" ref="l10n_ec.l10n_ec_ifrs"/>
@@ -478,12 +478,12 @@
         </record>
         <record id="tax_vat_515" model="account.tax.template">
             <!-- IVA EN IMPORTACIONES DE ACTIVOS FIJOS -->
-            <field name="name">Iva 12% (importación activos)</field>
+            <field name="name">VAT 12% (import assets)</field>
             <field name="type_tax_use">purchase</field>
             <field name="amount_type">percent</field>
             <field name="sequence">10</field>
             <field name="amount">12.0</field>
-            <field name="description">IVA 12%</field>
+            <field name="description">VAT 12%</field>
             <field name="l10n_ec_code_base">515</field>
             <field name="l10n_ec_code_applied">525</field>
             <field name="chart_template_id" ref="l10n_ec.l10n_ec_ifrs"/>
@@ -511,12 +511,12 @@
         </record>
         <record id="tax_vat_517" model="account.tax.template">
             <!-- IVA EN COMPRAS 0% (INCLUYE ACTIVOS FIJOS) -->
-            <field name="name">Iva 0%</field>
+            <field name="name">VAT 0%</field>
             <field name="type_tax_use">purchase</field>
             <field name="amount_type">percent</field>
             <field name="sequence">20</field>
             <field name="amount">0.0</field>
-            <field name="description">IVA 0%</field>
+            <field name="description">VAT 0%</field>
             <field name="l10n_ec_code_base">517</field>
             <field name="chart_template_id" ref="l10n_ec.l10n_ec_ifrs"/>
             <field name="tax_group_id" ref="tax_group_vat0"/>
@@ -541,12 +541,12 @@
         </record>
         <record id="tax_vat_516" model="account.tax.template">
             <!-- IVA 0% EN IMPORTACIONES DE BIENES (INCLUYE ACTIVOS FIJOS) -->
-            <field name="name">Iva 0% (importación bienes)</field>
+            <field name="name">VAT 0% (import of goods)</field>
             <field name="type_tax_use">purchase</field>
             <field name="amount_type">percent</field>
             <field name="sequence">20</field>
             <field name="amount">0.0</field>
-            <field name="description">IVA 0%</field>
+            <field name="description">VAT 0%</field>
             <field name="l10n_ec_code_base">516</field>
             <field name="chart_template_id" ref="l10n_ec.l10n_ec_ifrs"/>
             <field name="tax_group_id" ref="tax_group_vat0"/>
@@ -571,12 +571,12 @@
         </record>
         <record id="tax_vat_518" model="account.tax.template">
             <!-- ADQUISICIONES REALIZADAS A CONTRIBUYENTES RISE -->
-            <field name="name">Iva 0% (rise)</field>
+            <field name="name">VAT 0% (rise)</field>
             <field name="type_tax_use">purchase</field>
             <field name="amount_type">percent</field>
             <field name="sequence">20</field>
             <field name="amount">0.0</field>
-            <field name="description">IVA 0%</field>
+            <field name="description">VAT 0%</field>
             <field name="l10n_ec_code_base">518</field>
             <field name="chart_template_id" ref="l10n_ec.l10n_ec_ifrs"/>
             <field name="tax_group_id" ref="tax_group_vat0"/>
@@ -601,12 +601,12 @@
         </record>
         <record id="tax_vat_541" model="account.tax.template">
             <!-- ADQUISICIONES NO OBJETO DE IVA -->
-            <field name="name">Iva 0% (no objeto de iva)</field>
+            <field name="name">VAT 0% (not subject to VAT)</field>
             <field name="type_tax_use">purchase</field>
             <field name="amount_type">percent</field>
             <field name="sequence">30</field>
             <field name="amount">0.0</field>
-            <field name="description">NO OBJETO DE IVA</field>
+            <field name="description">NOT SUBJECT TO VAT</field>
             <field name="l10n_ec_code_base">541</field>
             <field name="chart_template_id" ref="l10n_ec.l10n_ec_ifrs"/>
             <field name="tax_group_id" ref="tax_group_vat_not_charged"/>
@@ -631,12 +631,12 @@
         </record>
         <record id="tax_vat_542" model="account.tax.template">
             <!-- ADQUISICIONES EXENTAS DEL PAGO DE IVA -->
-            <field name="name">Iva 0% (excento de iva)</field>
+            <field name="name">VAT 0% (VAT exempt)</field>
             <field name="type_tax_use">purchase</field>
             <field name="amount_type">percent</field>
             <field name="sequence">40</field>
             <field name="amount">0.0</field>
-            <field name="description">IVA EXENTO</field>
+            <field name="description">VAT EXEMPT</field>
             <field name="l10n_ec_code_base">542</field>
             <field name="chart_template_id" ref="l10n_ec.l10n_ec_ifrs"/>
             <field name="tax_group_id" ref="tax_group_vat_excempt"/>
@@ -661,12 +661,12 @@
         </record>
         <record id="tax_vat_545" model="account.tax.template">
             <!-- IVA EN COMPRAS POR REEMBOLSO COMO INTERMEDIARIO -->
-            <field name="name">Iva 12% (reembolso intermediario)</field>
+            <field name="name">VAT 12% (intermediary reimbursement)</field>
             <field name="type_tax_use">purchase</field>
             <field name="amount_type">percent</field>
             <field name="sequence">10</field>
             <field name="amount">12.0</field>
-            <field name="description">IVA 12%</field>
+            <field name="description">VAT 12%</field>
             <field name="l10n_ec_code_base">545</field>
             <field name="l10n_ec_code_applied">555</field>
             <field name="chart_template_id" ref="l10n_ec.l10n_ec_ifrs"/>
