@@ -104,6 +104,7 @@ QUnit.module("Views", ({ beforeEach }) => {
                         start: { string: "start datetime", type: "datetime" },
                         stop: { string: "stop datetime", type: "datetime" },
                         delay: { string: "delay", type: "float" },
+                        duration: { string: "Duration",  type:"float", default: 1},
                         allday: { string: "allday", type: "boolean" },
                         partner_ids: {
                             string: "attendees",
@@ -306,7 +307,7 @@ QUnit.module("Views", ({ beforeEach }) => {
     QUnit.module("CalendarView");
 
     QUnit.test(`simple calendar rendering`, async (assert) => {
-        assert.expect(24);
+        assert.expect(25);
 
         serverData.models.event.records.push({
             id: 8,
@@ -318,6 +319,17 @@ QUnit.module("Views", ({ beforeEach }) => {
             allday: false,
             partner_ids: [2],
             type: 1,
+        }, {
+            id: 9,
+            user_id: uid,
+            partner_id: false,
+            name: "event 8",
+            start: "2016-12-11 05:15:00",
+            stop: "2016-12-11 05:30:00",
+            allday: false,
+            partner_ids: [1, 2, 3],
+            duration: 0.25,
+            type: 1,
         });
 
         await makeView({
@@ -325,10 +337,11 @@ QUnit.module("Views", ({ beforeEach }) => {
             resModel: "event",
             serverData,
             arch: `
-                <calendar event_open_popup="1" date_start="start" date_stop="stop" all_day="allday" mode="week" attendee="partner_ids" color="partner_id">
+                <calendar event_open_popup="1" date_start="start" date_stop="stop" all_day="allday" mode="week" attendee="partner_ids" color="partner_id" date_delay="duration">
                     <filter name="user_id" avatar_field="image" />
                     <field name="partner_ids" write_model="filter_partner" write_field="partner_id" />
                     <field name="partner_id" filters="1" invisible="1" />
+                    <field name="duration" invisible="1"/>
                 </calendar>
             `,
         });
@@ -350,8 +363,8 @@ QUnit.module("Views", ({ beforeEach }) => {
         assert.containsN(
             target,
             ".fc-event",
-            9,
-            "should display 9 events on the week (4 event + 5 days event)"
+            6,
+            "should display 6 events on the week (4 event + 1 allday + 1 >24h allday)"
         );
         assert.containsN(
             target,
@@ -359,6 +372,13 @@ QUnit.module("Views", ({ beforeEach }) => {
             7,
             "week scale should highlight 7 days in mini calendar"
         );
+
+        assert.containsOnce(
+            target,
+            ".o_event_oneliner",
+            "should contain 1 oneliner event (the one we add)"
+        );
+
         await click(target, ".scale_button_selection");
         await click(target, ".o_scale_button_day"); // display only one day
         assert.containsN(target, ".fc-event", 2, "should display 2 events on the day");
@@ -378,8 +398,8 @@ QUnit.module("Views", ({ beforeEach }) => {
         assert.containsN(
             target,
             ".fc-event",
-            7,
-            "should display 7 events on the month (5 events + 2 week event - 1 'event 6' is filtered + 1 'Undefined event')"
+            8,
+            "should display 7 events on the month (6 events + 2 week event - 1 'event 6' is filtered + 1 'Undefined event')"
         );
         assert.containsN(
             target,
@@ -439,11 +459,11 @@ QUnit.module("Views", ({ beforeEach }) => {
         assert.containsN(
             target,
             ".fc-event",
-            7,
+            8,
             "should display 7 events ('event 5' counts for 2 because it spans two weeks and thus generate two fc-event elements)"
         );
         await click(target.querySelectorAll(".o_calendar_filter input[type=checkbox]")[1]); // click on partner 2
-        assert.containsN(target, ".fc-event", 4, "should now only display 4 event");
+        assert.containsN(target, ".fc-event", 5, "should now only display 5 event");
         await click(target.querySelectorAll(".o_calendar_filter input[type=checkbox]")[2]);
         assert.containsNone(target, ".fc-event", "should not display any event anymore");
         // test search bar in filter
@@ -2131,8 +2151,8 @@ QUnit.module("Views", ({ beforeEach }) => {
         assert.containsN(
             target,
             ".fc-event",
-            9,
-            "should display 9 events on the week (4 event + 5 days event)"
+            5,
+            "should display 5 events on the week (4 event + 1 >24h event)"
         );
 
         await pickDate(target, "2016-12-19");
@@ -2141,8 +2161,8 @@ QUnit.module("Views", ({ beforeEach }) => {
         assert.containsN(
             target,
             ".fc-event",
-            4,
-            "should display 4 events on the week (1 event + 3 days event)"
+            2,
+            "should display 4 events on the week (1 event + 1 >24h event)"
         );
 
         // Clicking on a day in the same week should switch to that particular day view
@@ -2165,8 +2185,8 @@ QUnit.module("Views", ({ beforeEach }) => {
         assert.containsN(
             target,
             ".fc-event",
-            4,
-            "should display 4 events on the week (1 event + 3 days event)"
+            2,
+            "should display 4 events on the week (1 event + 1 >24h event)"
         );
 
         await pickDate(target, "2016-12-18");
@@ -2566,11 +2586,11 @@ QUnit.module("Views", ({ beforeEach }) => {
         assert.containsN(target, ".fc-event", 4, "should display 4 events on the week");
 
         await toggleFilter(target, "partner_ids", 2);
-        assert.containsN(target, ".fc-event", 9, "should display 9 events on the week");
+        assert.containsN(target, ".fc-event", 5, "should display 5 events on the week");
 
         // Click on the "all" filter to reload all events
         await toggleFilter(target, "partner_ids", "all");
-        assert.containsN(target, ".fc-event", 9, "should display 9 events on the week");
+        assert.containsN(target, ".fc-event", 5, "should display 5 events on the week");
     });
 
     QUnit.test(`Add filters and specific color`, async (assert) => {
@@ -2707,7 +2727,6 @@ QUnit.module("Views", ({ beforeEach }) => {
         assert.hasClass(findEvent(target, 2), "o_calendar_color_0");
         assert.hasClass(findEvent(target, 3), "o_calendar_color_0");
         assert.hasClass(findEvent(target, 4), "o_calendar_color_0");
-        assert.hasClass(findEvent(target, 5), "o_calendar_color_0");
         assert.containsOnce(target, ".o_calendar_filter[data-name=user_id]");
         assert.containsNone(
             findFilterPanelSection(target, "user_id"),
@@ -2806,7 +2825,6 @@ QUnit.module("Views", ({ beforeEach }) => {
         assert.hasClass(findEvent(target, 2), "o_calendar_color_-1"); // uid = -1 ...
         assert.hasClass(findEvent(target, 3), "o_calendar_color_4");
         assert.hasClass(findEvent(target, 4), "o_calendar_color_-1"); // uid = -1 ...
-        assert.hasClass(findEvent(target, 5), "o_calendar_color_4");
         assert.containsNone(
             findFilterPanelSection(target, "partner_id"),
             "[class*='o_cw_filter_color_']"
@@ -3059,7 +3077,7 @@ QUnit.module("Views", ({ beforeEach }) => {
 
         await toggleFilter(target, "partner_id", 4);
         await toggleFilter(target, "partner_ids", 2);
-        assert.containsN(target, ".fc-event", 11, "should display all records");
+        assert.containsN(target, ".fc-event", 7, "should display all records");
     });
 
     QUnit.test(`create event with filters (no quickCreate)`, async (assert) => {
@@ -4286,7 +4304,7 @@ QUnit.module("Views", ({ beforeEach }) => {
         await resizeEventToTime(target, 8, "2016-12-14 08:00:00");
         const event = findEvent(target, 8);
         assert.strictEqual(event.textContent, "foobar");
-        assert.notOk(event.closest(".fc-day-grid"), "event should not be in the all day slots");
+        assert.ok(event.closest(".fc-day-grid"), "event should be in the all day slots");
     });
 
     QUnit.test(`correctly display year view`, async (assert) => {
