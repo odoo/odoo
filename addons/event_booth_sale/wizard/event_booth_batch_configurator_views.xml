@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="event_booth_batch_configurator_view_form" model="ir.ui.view">
+        <field name="name">event.batch.configurator.view.tree</field>
+        <field name="model">event.event.booth.configurator.batch</field>
+        <field name="arch" type="xml">
+            <form string="Booth">
+                <sheet>
+                    <field name="configurable_booth_event_ids">
+                        <tree string="Booth" editable="top" create="false" delete="false">
+                            <field name="product_id"/>
+                            <field name="event_id" options="{'no_open': True, 'no_create': True}"
+                                domain="[
+                                        ('event_booth_ids.product_id', '=', product_id),
+                                        ('is_finished', '=', False) 
+                                        ]"/> 
+                            <field name="event_booth_category_available_ids" invisible="1"/>
+                            <field name="event_booth_category_id" options="{'no_open': True, 'no_create': True}"
+                                domain="[('id', 'in', event_booth_category_available_ids)]"/> 
+                            <field name="event_booth_ids" widget="many2many_tags"
+                                domain="[
+                                        ('event_id', '=', event_id),
+                                        ('booth_category_id', '=', event_booth_category_id),
+                                        ('product_id', '=', product_id),
+                                        ('state', '=', 'available')
+                                ]"/> 
+                            <field name="order_id" invisible="1"/>
+                            <field name="sale_order_line_id" invisible="1"/>
+                        </tree>
+                    </field>
+                </sheet>
+                <footer>
+                    <button string="Save Configuration" name="action_configure"
+                                type="object" class="btn-primary" data-hotkey="q"/>
+                    <button string="Skip" class="btn-secondary" special="cancel" data-hotkey="z"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="event_booth_batch_configurator_action" model="ir.actions.act_window">
+            <field name="name">Event Booth Configuration</field>
+            <field name="res_model">event.event.booth.configurator.batch</field>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="event_booth_batch_configurator_view_form"/>
+            <field name="target">new</field>
+            <field name="context">{}</field>
+    </record>
+</odoo>

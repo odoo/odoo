@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from collections import Counter, defaultdict
 
@@ -81,14 +82,13 @@ class RegistrationEditor(models.TransientModel):
                     'mobile': so_line.order_partner_id.mobile,
                 }])
         res['event_registration_ids'] = attendee_list
-        res = self._convert_to_write(res)
-        return res
+        return self._convert_to_write(res)
 
     def action_make_registration(self):
         self.ensure_one()
         registrations_to_create = []
         for registration_line in self.event_registration_ids:
-            values = registration_line.get_registration_data()
+            values = registration_line._get_registration_data()
             if registration_line.registration_id:
                 registration_line.registration_id.write(values)
             else:

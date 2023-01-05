@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="event_batch_configurator_view_form" model="ir.ui.view">
+        <field name="name">event.batch.configurator.view.tree</field>
+        <field name="model">event.event.configurator.batch</field>
+        <field name="arch" type="xml">
+            <form string="event">
+                <sheet>
+                    <field name="configurable_event_ids">
+                        <tree string="event" editable="top" create="false" delete="false">
+                            <field name="product_id" />
+                            <field
+                                name="event_id"
+                                domain="[
+                                    ('event_ticket_ids.product_id','=', product_id),
+                                    ('date_end','&gt;=',time.strftime('%Y-%m-%d 00:00:00'))
+                                ]"
+                                required="1"
+                                context="{'name_with_seats_availability': True}"
+                                options="{'no_open': True, 'no_create': True}"
+                            />
+                            <field
+                                name="event_ticket_id"
+                                domain="[('event_id', '=', event_id), ('product_id', '=', product_id)]"
+                                attrs="{
+                                    'required': [('event_id', '!=', False)],
+                                }"
+                                context="{'name_with_seats_availability': True}"
+                                options="{'no_open': True, 'no_create': True}"
+                            />
+                            <field name="order_id" invisible="1" />
+                            <field name="sale_order_line_id" invisible="1"/>
+                        </tree>
+                    </field>
+                </sheet>
+                <footer>
+                    <button string="Save Configuration" name="action_configure"
+                             type="object" class="btn-primary" data-hotkey="q"/>
+                    <button string="Skip" class="btn-secondary" special="cancel" data-hotkey="z"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="event_batch_configurator_action" model="ir.actions.act_window">
+            <field name="name">Event Configuration</field>
+            <field name="res_model">event.event.configurator.batch</field>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="event_batch_configurator_view_form"/>
+            <field name="target">new</field>
+            <field name="context">{}</field>
+    </record>
+</odoo>

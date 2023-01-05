@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import models, fields
 
@@ -18,7 +19,7 @@ class RegistrationEditorLine(models.TransientModel):
     mobile = fields.Char(string='Mobile')
     name = fields.Char(string='Name')
 
-    def get_registration_data(self):
+    def _get_registration_data(self):
         self.ensure_one()
         return {
             'event_id': self.event_id.id,

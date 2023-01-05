@@ -19,6 +19,11 @@ class SaleOrder(models.Model):
         return result
 
     def action_confirm(self):
+        for line in self.order_line:
+            if not line.event_id.id and line.product_type == 'event':
+                return self.env['ir.actions.act_window'].with_context(
+                    default_sale_order_id=self.id
+                )._for_xml_id('event_sale.event_batch_configurator_action')
         res = super(SaleOrder, self).action_confirm()
         for so in self:
             if not any(line.product_type == 'event' for line in so.order_line):
