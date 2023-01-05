@@ -146,29 +146,47 @@ class TestMrpByProduct(common.TransactionCase):
         self.assertFalse(mnf_product_a.move_byproduct_ids)
 
     def test_byproduct_putaway(self):
-        """ Test the byproducts are dispatched correctly with putaway rules"""
+        """
+        Test the byproducts are dispatched correctly with putaway rules. We have
+        a byproduct P and two sublocations L01, L02 with a capacity constraint:
+        max 2 x P by location. There is already 1 x P at L01. Process a MO with
+        2 x P as byproducts. They should be redirected to L02
+        """
 
         self.stock_location = self.env.ref('stock.stock_location_stock')
+        stor_category = self.env['stock.storage.category'].create({
+            'name': 'Super Storage Category',
+            'max_weight': 1000,
+            'product_capacity_ids': [(0, 0, {
+                'product_id': self.product_b.id,
+                'quantity': 2,
+            })]
+        })
         shelf1_location = self.env['stock.location'].create({
             'name': 'shelf1',
             'usage': 'internal',
             'location_id': self.stock_location.id,
+            'storage_category_id': stor_category.id,
         })
         shelf2_location = self.env['stock.location'].create({
             'name': 'shelf2',
             'usage': 'internal',
             'location_id': self.stock_location.id,
+            'storage_category_id': stor_category.id,
         })
         self.env['stock.putaway.rule'].create({
             'product_id': self.product_b.id,
             'location_in_id': self.stock_location.id,
-            'location_out_id': shelf1_location.id,
+            'location_out_id': self.stock_location.id,
+            'storage_category_id': stor_category.id,
         })
         self.env['stock.putaway.rule'].create({
             'product_id': self.product_a.id,
             'location_in_id': self.stock_location.id,
             'location_out_id': shelf2_location.id,
         })
+
+        self.env['stock.quant']._update_available_quantity(self.product_b, shelf1_location, 1)
 
         mo_form = Form(self.env['mrp.production'])
         mo_form.product_id = self.product_a
@@ -185,5 +203,5 @@ class TestMrpByProduct(common.TransactionCase):
         mo._post_inventory()
         byproduct_move_line = mo.move_byproduct_ids.move_line_ids
         finished_move_line = mo.move_finished_ids.filtered(lambda m: m.product_id == self.product_a).move_line_ids
-        self.assertEqual(byproduct_move_line.location_dest_id, shelf1_location)
+        self.assertEqual(byproduct_move_line.location_dest_id, shelf2_location)
         self.assertEqual(finished_move_line.location_dest_id, shelf2_location)
