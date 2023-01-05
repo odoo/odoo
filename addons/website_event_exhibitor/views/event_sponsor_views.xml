@@ -148,7 +148,7 @@
         <field name="name">event.sponsor.view.tree</field>
         <field name="model">event.sponsor</field>
         <field name="arch" type="xml">
-            <tree multi_edit="1" sample="1">
+            <tree multi_edit="1" sample="1" default_order="sequence, sponsor_type_id">
                 <field name="sequence" widget="handle"/>
                 <field name="partner_id" readonly="1"/>
                 <field name="name"/>

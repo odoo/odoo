@@ -4,7 +4,7 @@
         <field name="name">product.attribute.tree</field>
         <field name="model">product.attribute</field>
         <field name="arch" type="xml">
-            <tree string="Variant Values">
+            <tree string="Variant Values" default_order="sequence, id">
                 <field name="sequence" widget="handle"/>
                 <field name="name"/>
                 <field name="display_type"/>
