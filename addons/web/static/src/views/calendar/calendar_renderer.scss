@@ -201,7 +201,7 @@ $o-filter_colors: lighten(#000, 46.7%), #f06050, #f4a460, #f7cd1f, #6cc1ed, #814
                 // Prevent events with similar color to visually overlap each other
                 box-shadow: 0 0 0 1px white;
 
-                &.fc-event:not(.fc-h-event) {
+                &.fc-event:not(.fc-h-event):not(.o_event_oneliner) {
                     border-width: 3px 0 0;
 
                     &.fc-not-start {
@@ -210,6 +210,16 @@ $o-filter_colors: lighten(#000, 46.7%), #f06050, #f4a460, #f7cd1f, #6cc1ed, #814
                         &.fc-not-end {
                             border-width: 0;
                         }
+                    }
+                }
+
+                &.o_event_oneliner {
+                    padding-top: 0;
+                    padding-bottom: 0;
+                    .fc-content {
+                        margin-top: 0;
+                        font-size: 11px !important;
+                        line-height: 0.9;
                     }
                 }
             }

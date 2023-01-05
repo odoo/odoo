@@ -222,6 +222,9 @@ export class CalendarCommonRenderer extends Component {
             if (record.isStriked) {
                 el.classList.add("o_event_striked");
             }
+            if (record.duration <= 0.25 ) {
+                el.classList.add("o_event_oneliner");
+            }
         }
 
         if (!el.querySelector(".fc-bg")) {
