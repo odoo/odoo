@@ -59,7 +59,7 @@
         <field name="name">Operation types</field>
         <field name="model">stock.picking.type</field>
         <field name="arch" type="xml">
-            <tree string="Operation Types">
+            <tree string="Operation Types" default_order="sequence, id">
                 <field name="sequence" widget="handle"/>
                 <field name="name"/>
                 <field name="active" invisible="1"/>
