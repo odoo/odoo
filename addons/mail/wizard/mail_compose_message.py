@@ -290,25 +290,31 @@ class MailComposer(models.TransientModel):
         wizard when sending an email related a previous email (parent_id) or
         a document (model, res_id). This is based on previously computed default
         values. """
-        result, subject = {}, False
+        result, record_name, subject = {}, False, False
+        model, res_id = values.get('model'), values.get('res_id')
         if values.get('parent_id'):
             parent = self.env['mail.message'].browse(values.get('parent_id'))
-            result['record_name'] = parent.record_name
-            if not values.get('model'):
-                result['model'] = parent.model
-            if not values.get('res_id'):
-                result['res_id'] = parent.res_id
-            partner_ids = values.get('partner_ids', list()) + parent.partner_ids.ids
-            result['partner_ids'] = partner_ids
-            record = self.env[values.get('model') or result['model']].browse(values.get('res_id') or result['res_id'])
-            parent_subject = tools.ustr(parent.subject or '')
-            subject = parent_subject or record._message_compute_subject()
-        elif values.get('model') and values.get('res_id'):
-            record = self.env[values['model']].browse(values['res_id'])
-            doc_name = record.display_name
-            result['record_name'] = doc_name or ''
+            if not model:
+                model = parent.model
+                result['model'] = model
+            if not res_id:
+                res_id = parent.res_id
+                result['res_id'] = res_id
+            result['partner_ids'] = values.get('partner_ids', list()) + parent.partner_ids.ids
+            record_name = parent.record_name
+            subject = tools.ustr(parent.subject or '')
+            if (not subject or not record_name) and model and res_id:
+                record = self.env[model].browse(res_id)
+                if not record_name:
+                    record_name = record.display_name
+                if not subject:
+                    subject = record._message_compute_subject()
+        elif model and res_id:
+            record = self.env[model].browse(res_id)
+            record_name = record.display_name or ''
             subject = record._message_compute_subject()
 
+        result['record_name'] = record_name
         result['subject'] = subject
 
         return result

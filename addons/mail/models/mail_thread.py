@@ -2544,10 +2544,10 @@ class MailThread(models.AbstractModel):
         return parent_id
 
     def _message_compute_subject(self):
-        """Overridable method to get the default subject for a message related to this record.
+        """ Get the default subject for a message posted in this record's
+        discussion thread.
 
-        :return str:
-        """
+        :return str: default subject """
         self.ensure_one()
         return self.name_get()[0][1]
 
@@ -3107,17 +3107,14 @@ class MailThread(models.AbstractModel):
         to notify (mail_message_id and its fields), server, references, subject.
         """
         mail_subject = message.subject
-        if not message.subject:
-            thread = self
-            if not thread and message.model:
-                thread = self.env[message.model].browse(message.res_id)
-            if not thread:
-                mail_subject = message.record_name
-            else:
-                mail_subject = thread._message_compute_subject()
+        if not mail_subject and self:
+            mail_subject = self._message_compute_subject()
+        if not mail_subject:
+            mail_subject = message.record_name
+        if mail_subject:
+            # replace new lines by spaces to conform to email headers requirements
+            mail_subject = ' '.join(mail_subject.splitlines())
 
-        # Replace new lines by spaces to conform to email headers requirements
-        mail_subject = ' '.join((mail_subject or '').splitlines())
         # compute references: set references to the parent and add current message just to
         # have a fallback in case replies mess with Messsage-Id in the In-Reply-To (e.g. amazon
         # SES SMTP may replace Message-Id and In-Reply-To refers an internal ID not stored in Odoo)

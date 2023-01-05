@@ -326,20 +326,6 @@ class TestMessageNotify(TestMessagePostCommon):
             )
 
     @users('employee')
-    def test_notify_default_subject(self):
-        """ Test notify in batch. Currently not supported. """
-        test_partner = self.env['res.partner'].sudo().create([{'name': 'John', 'email': 'john@test.lan'}])
-        test_record = self.env['mail.test.ticket'].create({'name': 'Test'})
-        mt_comment = self.env['ir.model.data']._xmlid_to_res_id('mail.mt_comment')
-        test_record.message_subscribe([test_partner.id], subtype_ids=[mt_comment])
-
-        with self.mock_mail_gateway(), self.mock_mail_app():
-            test_record.message_post(body="Test Message", message_type="comment", subtype_id=mt_comment)
-
-        self.assertEqual(len(self._new_msgs), 1)
-        self.assertEqual(self._new_msgs.subject, test_record._message_compute_subject())
-
-    @users('employee')
     @mute_logger('odoo.addons.mail.models.mail_mail')
     def test_notify_from_user_id(self):
         """ Test notify coming from user_id assignment. """
@@ -630,20 +616,35 @@ class TestMessagePost(TestMessagePostCommon, CronMixinCase):
                 partner_ids=self.partner_portal.ids,
             )
 
-    @mute_logger('odoo.addons.mail.models.mail_mail', 'odoo.models.unlink')
+    @mute_logger('odoo.addons.mail.models.mail_mail', 'odoo.models.unlink', 'odoo.tests')
     @users('employee')
     def test_message_post_defaults(self):
         """ Test default values when posting a classic message. """
+        _original_compute_subject = MailTestSimple._message_compute_subject
+        _original_notify_headers = MailTestSimple._notify_by_email_get_headers
+        _original_notify_mailvals = MailTestSimple._notify_by_email_get_final_mail_values
         test_record = self.env['mail.test.simple'].create([{'name': 'Defaults'}])
         creation_msg = test_record.message_ids
         self.assertEqual(len(creation_msg), 1)
 
-        with self.mock_mail_app():
+        with patch.object(MailTestSimple, '_message_compute_subject',
+                          autospec=True, side_effect=_original_compute_subject) as mock_compute_subject, \
+             patch.object(MailTestSimple, '_notify_by_email_get_headers',
+                          autospec=True, side_effect=_original_notify_headers) as mock_notify_headers, \
+             patch.object(MailTestSimple, '_notify_by_email_get_final_mail_values',
+                          autospec=True, side_effect=_original_notify_mailvals) as mock_notify_mailvals, \
+             self.mock_mail_app():
             new_message = test_record.message_post(
                 body='Body',
                 partner_ids=[self.partner_employee_2.id],
             )
 
+        self.assertEqual(mock_compute_subject.call_count, 1,
+                         'Should call model-based subject computation for outgoing emails')
+        self.assertEqual(mock_notify_headers.call_count, 1,
+                         'Should call model-based headers computation for outgoing emails')
+        self.assertEqual(mock_notify_mailvals.call_count, 1,
+                         'Should call model-based headers computation for outgoing emails')
         self.assertMessageFields(
             new_message,
             {'author_id': self.partner_employee,
@@ -657,6 +658,7 @@ class TestMessagePost(TestMessagePostCommon, CronMixinCase):
              'record_name': test_record.name,
              'reply_to': formataddr((f'{self.company_admin.name} {test_record.name}', f'{self.alias_catchall}@{self.alias_domain}')),
              'res_id': test_record.id,
+             'subject': test_record.name,
              'subtype_id': self.env.ref('mail.mt_note'),
             }
         )
