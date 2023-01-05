@@ -375,9 +375,7 @@ QUnit.module("test_mail", {}, function () {
             },
         });
 
-        await click(
-            document.querySelector(".today .o_ActivityCellView_closestDeadline")
-        );
+        await click(document.querySelector(".today .o_ActivityCellView_closestDeadline"));
         assert.containsOnce(document.body, ".o_ActivityListView", "dropdown should be displayed");
         assert.ok(
             document.querySelector(".o_ActivityListView_todayTitle").textContent.includes("Today"),
@@ -397,13 +395,9 @@ QUnit.module("test_mail", {}, function () {
         );
 
         await click(document.querySelector(".o_MailTemplateView_preview"));
-        await click(
-            document.querySelector(".today .o_ActivityCellView_closestDeadline")
-        );
+        await click(document.querySelector(".today .o_ActivityCellView_closestDeadline"));
         await click(document.querySelector(".o_MailTemplateView_send"));
-        await click(
-            document.querySelector(".overdue .o_ActivityCellView_closestDeadline")
-        );
+        await click(document.querySelector(".overdue .o_ActivityCellView_closestDeadline"));
         assert.containsNone(
             document.body,
             ".o_MailTemplateView_name",
@@ -411,9 +405,7 @@ QUnit.module("test_mail", {}, function () {
         );
 
         await click(document.querySelector(".o_ActivityListView_addActivityButton"));
-        await click(
-            document.querySelector(".overdue .o_ActivityCellView_closestDeadline")
-        );
+        await click(document.querySelector(".overdue .o_ActivityCellView_closestDeadline"));
         await click(document.querySelector(".o_ActivityListViewItem_markAsDone"));
         document.querySelector(".o_ActivityMarkDonePopoverContentView_feedback").value =
             "feedback2";
@@ -760,11 +752,7 @@ QUnit.module("test_mail", {}, function () {
             "other records should be available"
         );
 
-        await click(
-            document.querySelector(
-                '.o_column_progress .progress-bar'
-            )
-        );
+        await click(document.querySelector(".o_column_progress .progress-bar"));
         assert.containsOnce(
             document.querySelector(".o_activity_view thead"),
             ".o_activity_filter_planned",
@@ -792,5 +780,66 @@ QUnit.module("test_mail", {}, function () {
             "planned",
             "other records should be hidden"
         );
+    });
+
+    QUnit.test("Activity view: hide/show columns", async function (assert) {
+        const { openView } = await start({
+            serverData,
+        });
+        await openView({
+            res_model: "mail.test.activity",
+            views: [[false, "activity"]],
+        });
+
+        let expectedColumns = ["Email", "Call", "Call for Demo", "To Do"];
+        for (const [index, column] of expectedColumns.entries()) {
+            assert.strictEqual(
+                document.querySelectorAll(".o_activity_view th div span:first-child")[index]
+                    .textContent,
+                column,
+                "The column names should match"
+            );
+        }
+
+        assert.containsOnce(
+            document.body,
+            "th:last-child button.dropdown-toggle",
+            "The last column is the column selector"
+        );
+
+        await click(document.querySelector("th:last-child button.dropdown-toggle"));
+
+        await click(document.body, "input[name='Email']");
+        expectedColumns = ["Call", "Call for Demo", "To Do"];
+        for (const [index, column] of expectedColumns.entries()) {
+            assert.strictEqual(
+                document.querySelectorAll(".o_activity_view th div span:first-child")[index]
+                    .textContent,
+                column,
+                "The column names should match"
+            );
+        }
+
+        await click(document.body, "input[name='Call for Demo']");
+        expectedColumns = ["Call", "To Do"];
+        for (const [index, column] of expectedColumns.entries()) {
+            assert.strictEqual(
+                document.querySelectorAll(".o_activity_view th div span:first-child")[index]
+                    .textContent,
+                column,
+                "The column names should match"
+            );
+        }
+
+        await click(document.body, "input[name='Email']");
+        expectedColumns = ["Email", "Call", "To Do"];
+        for (const [index, column] of expectedColumns.entries()) {
+            assert.strictEqual(
+                document.querySelectorAll(".o_activity_view th div span:first-child")[index]
+                    .textContent,
+                column,
+                "The column names should match"
+            );
+        }
     });
 });

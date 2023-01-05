@@ -103,6 +103,7 @@ export class ActivityController extends Component {
             activityResIds: this.model.activityData.activity_res_ids,
             fields: this.model.root.fields,
             records: this.model.root.records,
+            resModel: this.props.resModel,
             archInfo: this.props.archInfo,
             groupedActivities: this.model.activityData.grouped_activities,
             scheduleActivity: this.scheduleActivity.bind(this),

@@ -4,9 +4,9 @@
     <thead>
         <tr>
             <th></th>
-            <th t-foreach="props.activityTypes" t-as="type" t-key="type[0]"
+            <th t-foreach="activeColumns" t-as="type" t-key="type[0]"
                 class="o_activity_type_cell p-3" t-attf-class="{{ activeFilter.activityTypeId === type[0] ? 'o_activity_filter_' + activeFilter.progressValue.active : '' }}"
-                t-attf-width="{{100/props.activityTypes.length}}%">
+                t-attf-width="{{100/activeColumns.length}}%">
                 <div>
                     <span t-esc="type[1]"/>
                     <span t-if="type[2].length > 0" class="dropdown float-end">
@@ -27,6 +27,29 @@
                     <ColumnProgress t-if="group.data.count" group="group.data" aggregate="group.aggregate" />
                 </div>
             </th>
+            <th class="align-middle" style="width: 32px; min-width: 32px">
+                <Dropdown
+                    class="'o_optional_columns_dropdown text-center border-top-0'"
+                    togglerClass="'btn p-0'"
+                    skipTogglerTabbing="true"
+                    position="'bottom-end'">
+                    <t t-set-slot="toggler">
+                        <i class="o_optional_columns_dropdown_toggle oi oi-fw oi-settings-adjust"/>
+                    </t>
+
+                    <t t-foreach="props.activityTypes" t-as="type" t-key="type_index">
+                        <DropdownItem parentClosingMode="'none'" onSelected="() => this.toggleDisplayColumn(type[0])">
+                            <CheckBox
+                                onChange="() => this.toggleDisplayColumn(type[0])"
+                                value="storageActiveColumns[type[0]]"
+                                name="type[1]"
+                            >
+                                <t t-esc="type[1]"/>
+                            </CheckBox>
+                        </DropdownItem>
+                    </t>
+                </Dropdown>
+            </th>
         </tr>
     </thead>
 </t>
@@ -43,9 +66,10 @@
     <tr class="o_data_row h-100" t-attf-class="{{ activeFilter.resIds.includes(resId) ? 'o_activity_filter_' + activeFilter.progressValue.active : '' }}">
         <t t-set="record" t-value="getRecord(resId)"/>
         <ActivityRecord archInfo="props.archInfo" record="record" openRecord="props.openRecord" />
-        <t t-foreach="props.activityTypes" t-as="type" t-key="type[0]">
+        <t t-foreach="activeColumns" t-as="type" t-key="type[0]">
             <t t-call="mail.ActivityViewCell"/>
         </t>
+        <td/>
     </tr>
 </t>
 
