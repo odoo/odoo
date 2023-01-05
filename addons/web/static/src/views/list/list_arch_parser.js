@@ -68,7 +68,6 @@ export class ListArchParser extends XMLParser {
         const groupListArchParser = new GroupListArchParser();
         let buttonGroup;
         let handleField = null;
-        let defaultOrder = stringToOrderBy(xmlDoc.getAttribute("default_order") || null);
         const treeAttr = {};
         let nextId = 0;
         const activeFields = {};
@@ -207,6 +206,9 @@ export class ListArchParser extends XMLParser {
                 treeAttr.expand = archParseBoolean(xmlDoc.getAttribute("expand") || "");
                 treeAttr.decorations = getDecoration(xmlDoc);
 
+                treeAttr.defaultGroupBy = xmlDoc.getAttribute("default_group_by");
+                treeAttr.defaultOrder = stringToOrderBy(xmlDoc.getAttribute("default_order") || null);
+
                 // custom open action when clicking on record row
                 const action = xmlDoc.getAttribute("action");
                 const type = xmlDoc.getAttribute("type");
@@ -214,8 +216,8 @@ export class ListArchParser extends XMLParser {
             }
         });
 
-        if (!defaultOrder.length && handleField) {
-            defaultOrder = stringToOrderBy(handleField);
+        if (!treeAttr.defaultOrder.length && handleField) {
+            treeAttr.defaultOrder = stringToOrderBy(handleField);
         }
 
         for (const [key, field] of Object.entries(fieldNodes)) {
@@ -230,7 +232,6 @@ export class ListArchParser extends XMLParser {
             activeFields,
             columns,
             groupBy,
-            defaultOrder,
             __rawArch: arch,
             ...treeAttr,
         };

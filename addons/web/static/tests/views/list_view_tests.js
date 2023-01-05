@@ -16579,4 +16579,43 @@ QUnit.module("Views", (hooks) => {
         await click(target, ".o_field_many2one_selection .o-autocomplete--input");
         assert.verifySteps(["name_search"]);
     });
+
+    QUnit.test("list view with default_group_by", async (assert) => {
+        serverData.models.foo.fields.m2m.store = true;
+
+        let readGroupCount = 0;
+        await makeView({
+            type: "list",
+            resModel: "foo",
+            serverData,
+            arch: `
+                <tree default_group_by="bar">
+                    <field name="bar"/>
+                </tree>
+            `,
+            async mockRPC(route, { kwargs }) {
+                if (route === "/web/dataset/call_kw/partner/web_read_group") {
+                    readGroupCount++;
+                    switch (readGroupCount) {
+                        case 1:
+                            return assert.deepEqual(kwargs.groupby, ["bar"]);
+                        case 2:
+                            return assert.deepEqual(kwargs.groupby, ["m2m"]);
+                        case 3:
+                            return assert.deepEqual(kwargs.groupby, ["bar"]);
+                    }
+                }
+            },
+        });
+
+        assert.hasClass(target.querySelector(".o_list_renderer table"), "o_list_table_grouped");
+        assert.containsN(target, ".o_group_header", 2);
+
+        await groupByMenu(target, "m2m");
+        assert.containsN(target, ".o_group_header", 4);
+
+        await toggleMenuItem(target, "M2M field");
+        assert.containsN(target, ".o_group_header", 2);
+    });
+
 });
