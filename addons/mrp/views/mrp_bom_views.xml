@@ -157,7 +157,7 @@
             <field name="name">mrp.bom.tree</field>
             <field name="model">mrp.bom</field>
             <field name="arch" type="xml">
-                <tree string="Bill of Materials" sample="1">
+                <tree string="Bill of Materials" sample="1" default_order="sequence, id">
                     <field name="active" invisible="1"/>
                     <field name="sequence" widget="handle"/>
                     <field name="product_tmpl_id"/>
