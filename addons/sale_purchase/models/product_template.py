@@ -17,6 +17,17 @@ class ProductTemplate(models.Model):
         ('service_to_purchase', "CHECK((type != 'service' AND service_to_purchase != true) or (type = 'service'))", 'Product that is not a service can not create RFQ.'),
     ]
 
+    def copy(self, default=None):
+        self.ensure_one()
+
+        current_state = self.service_to_purchase
+
+        self.service_to_purchase = False
+        new = super().copy(default)
+        self.service_to_purchase = current_state
+
+        return new
+
     @api.constrains('service_to_purchase', 'seller_ids')
     def _check_service_to_purchase(self):
         for template in self:
