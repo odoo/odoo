@@ -1168,6 +1168,10 @@ class AccountMove(models.Model):
                             handle_price_include=False,
                         ))
                 move.tax_totals = self.env['account.tax']._prepare_tax_totals(**kwargs)
+                rounding_line = move.line_ids.filtered(lambda l: l.display_type == 'rounding')
+                if rounding_line:
+                    amount_total_rounded = move.tax_totals['amount_total'] - rounding_line.balance
+                    move.tax_totals['formatted_amount_total_rounded'] = formatLang(self.env, amount_total_rounded, currency_obj=move.currency_id) or ''
             else:
                 # Non-invoice moves don't support that field (because of multicurrency: all lines of the invoice share the same currency)
                 move.tax_totals = None
