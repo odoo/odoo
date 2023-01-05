@@ -2281,10 +2281,12 @@ class MailThread(models.AbstractModel):
                 )
         return messages
 
+    @api.returns('mail.message', lambda value: value.id)
     def message_notify(self, *,
-                       partner_ids=False, parent_id=False, model=False, res_id=False,
-                       author_id=None, email_from=None, body='', subject=False,
-                       subtype_xmlid=None,
+                       body='', subject=False,
+                       author_id=None, email_from=None,
+                       model=False, res_id=False,
+                       subtype_xmlid=None, subtype_id=False, partner_ids=False,
                        **kwargs):
         """ Shortcut allowing to notify partners of messages that should not be
         displayed on a document. It pushes notifications on inbox or by email
@@ -2293,6 +2295,29 @@ class MailThread(models.AbstractModel):
         Default values
           * subtype_id: if not given, fallback on ``note`` to be consistent
             with what message_post does;
+
+        :param str body: body of the message, usually raw HTML that will
+          be sanitized
+        :param str subject: subject of the message
+        :param int author_id: optional ID of partner record being the author. See
+          ``_message_compute_author`` that uses it to make email_from / author_id coherent;
+        :param str email_from: from address of the author. See ``_message_compute_author``
+          that uses it to make email_from / author_id coherent;
+        :param str model: when invoked on MailThread directly, this method
+          allows to push a notification on a given record (allows to notify
+          on not thread-enabled records);
+        :param int res_id: defines the record in combination with model;
+        :param str subtype_xmlid: optional xml id of a mail.message.subtype to
+          fetch, will force value of subtype_id;
+        :param int subtype_id: subtype_id of the message, used mainly for followers
+          notification mechanism;
+        :param list(int) partner_ids: partner_ids to notify in addition to partners
+          computed based on subtype / followers matching;
+
+        Extra keyword arguments will be used either
+          * as default column values for the new mail.message record if they match
+            mail.message fields;
+          * propagated to notification methods if not;
 
         :return: posted mail.message records
         """
@@ -2305,7 +2330,7 @@ class MailThread(models.AbstractModel):
         # preliminary value safety check
         self._raise_for_invalid_parameters(
             set(kwargs.keys()),
-            forbidden_names={'message_id', 'message_type'}
+            forbidden_names={'message_id', 'message_type', 'parent_id'}
         )
         if not tools.is_list_of(partner_ids, int):
             raise ValueError(
@@ -2325,6 +2350,11 @@ class MailThread(models.AbstractModel):
         if not model or not res_id:
             model, res_id = False, False
 
+        if subtype_xmlid:
+            subtype_id = self.env['ir.model.data']._xmlid_to_res_id(subtype_xmlid)
+        if not subtype_id:
+            subtype_id = self.env['ir.model.data']._xmlid_to_res_id('mail.mt_note')
+
         msg_values = {
             # author
             'author_id': author_id,
@@ -2337,25 +2367,21 @@ class MailThread(models.AbstractModel):
             'body': body,
             'is_internal': True,
             'message_type': 'user_notification',
-            'parent_id': parent_id,
             'subject': subject,
+            'subtype_id': subtype_id,
             # recipients
             'message_id': tools.generate_tracking_message_id('message-notify'),
             'partner_ids': partner_ids,
+            # notification
+            'email_add_signature': True,
         }
         msg_values.update(msg_kwargs)
         # add default-like values afterwards, to avoid useless queries
-        if subtype_xmlid:
-            msg_values['subtype_id'] = self.env['ir.model.data']._xmlid_to_res_id(subtype_xmlid)
-        elif 'subtype_id' not in msg_values:
-            msg_values['subtype_id'] = self.env['ir.model.data']._xmlid_to_res_id('mail.mt_note')
         if 'reply_to' not in msg_values:
             msg_values['reply_to'] = self._notify_get_reply_to(default=email_from)[self.id if self else False]
-        if 'email_add_signature' not in msg_values:
-            msg_values['email_add_signature'] = True
 
         new_message = self._message_create([msg_values])
-        self._notify_thread(new_message, msg_values, **notif_kwargs)
+        self._fallback_lang()._notify_thread(new_message, msg_values, **notif_kwargs)
         return new_message
 
     def _message_log_with_view(self, view_ref, render_values=None,
@@ -2391,7 +2417,9 @@ class MailThread(models.AbstractModel):
             **kwargs
         )
 
-    def _message_log(self, *, body='', author_id=None, email_from=None, subject=False,
+    def _message_log(self, *,
+                     body='', subject=False,
+                     author_id=None, email_from=None,
                      message_type='notification',
                      attachment_ids=False, tracking_value_ids=False):
         """ Shortcut allowing to post note on a document. See ``_message_log_batch``
@@ -2399,12 +2427,14 @@ class MailThread(models.AbstractModel):
         self.ensure_one()
 
         return self._message_log_batch(
-            {self.id: body}, author_id=author_id, email_from=email_from,
-            subject=subject, message_type=message_type,
+            {self.id: body}, subject=subject,
+            author_id=author_id, email_from=email_from,
+            message_type=message_type,
             attachment_ids=attachment_ids, tracking_value_ids=tracking_value_ids
         )
 
-    def _message_log_batch(self, bodies, author_id=None, email_from=None, subject=False,
+    def _message_log_batch(self, bodies, subject=False,
+                           author_id=None, email_from=None,
                            message_type='notification',
                            attachment_ids=False, tracking_value_ids=False):
         """ Shortcut allowing to post notes on a batch of documents. It does not
