@@ -24,6 +24,9 @@ models.PosModel = models.PosModel.extend({
             this.product_model = product_model;
         }
         return posmodel_super.load_server_data.apply(this, arguments).then(function () {
+          // After loading the server data we have to add the product model as it is needed
+          self.models.push(self.product_model)
+
           // Give both the fields and domain to pos_cache in the
           // backend. This way we don't have to hardcode these
           // values in the backend and they automatically stay in
