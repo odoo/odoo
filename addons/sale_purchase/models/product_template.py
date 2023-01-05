@@ -10,7 +10,7 @@ class ProductTemplate(models.Model):
 
     service_to_purchase = fields.Boolean(
         "Subcontract Service",
-        compute='_compute_service_to_purchase', store=True, readonly=False,
+        compute='_compute_service_to_purchase', store=True, readonly=False, copy=False,
         help="If ticked, each time you sell this product through a SO, a RfQ is automatically created to buy the product. Tip: don't forget to set a vendor on the product.")
 
     _sql_constraints = [
