@@ -193,6 +193,7 @@ class Partner(models.Model):
         readonly=False, store=True,
         help='The internal user in charge of this contact.')
     vat = fields.Char(string='Tax ID', index=True, help="The Tax Identification Number. Complete it if the contact is subjected to government taxes. Used in some legal statements.")
+    vat_label = fields.Char(compute="_compute_vat_label")
     same_vat_partner_id = fields.Many2one('res.partner', string='Partner with same Tax ID', compute='_compute_same_vat_partner_id', store=False)
     same_company_registry_partner_id = fields.Many2one('res.partner', string='Partner with same Company Registry', compute='_compute_same_vat_partner_id', store=False)
     company_registry = fields.Char(string="Company ID", compute='_compute_company_registry', store=True, readonly=False,
@@ -391,6 +392,17 @@ class Partner(models.Model):
         # exists to allow overrides
         for company in self:
             company.company_registry = company.company_registry
+
+    @api.depends('company_id', 'country_id')
+    def _compute_vat_label(self):
+        for record in self:
+            company = record.company_id or self.env.company
+            if record.country_id.vat_label:
+                record.vat_label = record.country_id.vat_label
+            elif company.country_id.vat_label:
+                record.vat_label = company.country_id.vat_label
+            else:
+                record.vat_label = _('Tax ID')
 
     @api.model
     def _get_view(self, view_id=None, view_type='form', **options):

@@ -6,7 +6,7 @@
             <field name="model">res.partner</field>
             <field name="inherit_id" ref="account.view_partner_property_form"/>
             <field name="arch" type="xml">
-                <xpath expr="//field[@name='vat']" position="before">
+                <xpath expr="//div[@name='vat']" position="before">
                     <field name="l10n_sg_unique_entity_number" attrs="{'invisible': [('fiscal_country_codes', 'not ilike', 'SG')]}"/>
                 </xpath>
             </field>

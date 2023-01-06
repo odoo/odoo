@@ -155,7 +155,7 @@
             <field name="arch" type="xml">
                 <form string="Partners">
                 <div class="alert alert-warning oe_edit_only" role="alert" attrs="{'invisible': [('same_vat_partner_id', '=', False)]}">
-                  A partner with the same <span><span class="o_vat_label">Tax ID</span></span> already exists (<field name="same_vat_partner_id"/>), are you sure to create a new one?
+                  A partner with the same <span><span class="o_vat_label"><field name="vat_label"/></span></span> already exists (<field name="same_vat_partner_id"/>), are you sure to create a new one?
                 </div>
                 <div class="alert alert-warning oe_edit_only" role="alert" attrs="{'invisible': [('same_company_registry_partner_id', '=', False)]}">
                   A partner with the same <span><span class="o_vat_label">Company Registry</span></span> already exists (<field name="same_company_registry_partner_id"/>), are you sure to create a new one?
@@ -211,7 +211,10 @@
                                         attrs="{'readonly': [('type', '=', 'contact'),('parent_id', '!=', False)]}"/>
                                 </div>
                             </div>
-                            <field name="vat" placeholder="e.g. BE0477472701" attrs="{'readonly': [('parent_id','!=',False)]}"/>
+                            <div class="o_form_label o_td_label" name="vat" title="The Tax Identification Number. Complete it if the contact is subjected to government taxes. Used in some legal statements.">
+                                <field name="vat_label"/>
+                            </div>
+                            <field name="vat" placeholder="e.g. BE0477472701" attrs="{'readonly': [('parent_id','!=',False)]}" nolabel="1"/>
                         </group>
                         <group>
                             <field name="function" placeholder="e.g. Sales Director"
