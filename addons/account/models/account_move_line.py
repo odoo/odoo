@@ -2495,7 +2495,7 @@ class AccountMoveLine(models.Model):
 
     def _reconciled_lines(self):
         ids = []
-        for aml in self.filtered('account_id.reconcile'):
+        for aml in self.filtered('reconciled'):
             ids.extend([r.debit_move_id.id for r in aml.matched_debit_ids] if aml.credit > 0 else [r.credit_move_id.id for r in aml.matched_credit_ids])
             ids.append(aml.id)
         return ids
