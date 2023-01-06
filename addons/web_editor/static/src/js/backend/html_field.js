@@ -8,7 +8,7 @@ import { standardFieldProps } from "@web/views/fields/standard_field_props";
 import { getWysiwygClass } from 'web_editor.loader';
 import { QWebPlugin } from '@web_editor/js/backend/QWebPlugin';
 import { TranslationButton } from "@web/views/fields/translation_button";
-import { useDynamicPlaceholder } from "@web/views/fields/dynamicplaceholder_hook";
+import { useDynamicPlaceholder } from "@web/views/fields/dynamic_placeholder_hook";
 import { QWeb } from 'web.core';
 import ajax from 'web.ajax';
 import {
@@ -157,6 +157,9 @@ export class HtmlField extends Component {
                 }
             })();
         });
+        onMounted(() => {
+            this.dynamicPlaceholder?.setElementRef(this.wysiwyg);
+        });
         onWillUnmount(() => {
             if (this._qwebPlugin) {
                 this._qwebPlugin.destroy();
@@ -191,22 +194,18 @@ export class HtmlField extends Component {
                         fontawesome: 'fa-magic',
                         callback: () => {
                             this.wysiwygRangePosition = getRangePosition(document.createElement('x'), this.wysiwyg.options.document || document);
-                            const baseModel = this.props.record.data.mailing_model_real || this.props.record.data.model;
-                            if (baseModel) {
-                                // The method openDynamicPlaceholder need to be triggered
-                                // after the focus from powerBox prevalidate.
-                                setTimeout(async () => {
-                                    await this.dynamicPlaceholder.open(
-                                        this.wysiwyg.$editable[0],
-                                        baseModel,
-                                        {
-                                            validateCallback: this.onDynamicPlaceholderValidate.bind(this),
-                                            closeCallback: this.onDynamicPlaceholderClose.bind(this),
-                                            positionCallback: this.positionDynamicPlaceholder.bind(this),
-                                        }
-                                    );
-                                });
-                            }
+                            this.dynamicPlaceholder.updateModel(this.props.dynamicPlaceholderModelReferenceField);
+                            // The method openDynamicPlaceholder need to be triggered
+                            // after the focus from powerBox prevalidate.
+                            setTimeout(async () => {
+                                await this.dynamicPlaceholder.open(
+                                    {
+                                        validateCallback: this.onDynamicPlaceholderValidate.bind(this),
+                                        closeCallback: this.onDynamicPlaceholderClose.bind(this),
+                                        positionCallback: this.positionDynamicPlaceholder.bind(this),
+                                    }
+                                );
+                            });
                         },
                     }
                 ],
@@ -619,6 +618,7 @@ HtmlField.props = {
     codeview: { type: Boolean, optional: true },
     isCollaborative: { type: Boolean, optional: true },
     dynamicPlaceholder: { type: Boolean, optional: true, default: false },
+    dynamicPlaceholderModelReferenceField: { type: String, optional: true },
     cssReadonlyAssetId: { type: String, optional: true },
     cssEditAssetId: { type: String, optional: true },
     isInlineStyle: { type: Boolean, optional: true },
@@ -669,7 +669,8 @@ export const htmlField = {
 
             isCollaborative: options.collaborative,
             cssReadonlyAssetId: options.cssReadonly,
-            dynamicPlaceholder: options.dynamic_placeholder,
+            dynamicPlaceholder: options?.dynamic_placeholder || false,
+            dynamicPlaceholderModelReferenceField: options?.dynamic_placeholder_model_reference_field || "",
             cssEditAssetId: options.cssEdit,
             isInlineStyle: options['style-inline'],
             wrapper: options.wrapper,

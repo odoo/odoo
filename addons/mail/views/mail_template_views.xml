@@ -45,7 +45,8 @@
                                 required="1" placeholder='e.g. "Welcome email"'/></h1>
                             <group>
                                 <field name="model_id" placeholder="e.g. Contact" required="1" options="{'no_create': True}"/>
-                                <field name="subject" placeholder='e.g. "Welcome to MyCompany" or "Nice to meet you, {{ object.name }}"'/>
+                                <field name="subject" options="{'dynamic_placeholder': true}"
+                                       placeholder='e.g. "Welcome to MyCompany" or "Nice to meet you, {{ object.name }}"'/>
                                 <field name="model" invisible="1"/>
                                 <field name="description"/>
                             </group>
