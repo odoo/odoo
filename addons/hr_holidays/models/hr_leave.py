@@ -1624,7 +1624,8 @@ class HolidaysRequest(models.Model):
             if recipient:
                 self.env['mail.thread'].sudo().message_notify(
                     body=message,
-                    partner_ids=[recipient]
+                    partner_ids=[recipient],
+                    subject=_('Your Time Off'),
                 )
 
     def _track_subtype(self, init_values):
