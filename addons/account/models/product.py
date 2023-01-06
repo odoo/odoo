@@ -56,13 +56,26 @@ class ProductTemplate(models.Model):
 
     @api.constrains('uom_id')
     def _check_uom_not_in_invoice(self):
-        for template in self:
-            aml_domain = [('product_id.product_tmpl_id.id', '=', template.id),
-                          ('product_uom_id.category_id.id', '!=', template.uom_id.category_id.id),
-                          ]
-            if self.env['account.move.line'].sudo().search(aml_domain, limit=1):
-                raise ValidationError(_("This product is already being used in posted Journal Entries.\n"
-                                        "If you want to change its Unit of Measure, please archive this product and create a new one."))
+        self.env['product.template'].flush(['uom_id'])
+        self._cr.execute("""
+            SELECT prod_template.id
+              FROM account_move_line line
+              JOIN product_product prod_variant ON line.product_id = prod_variant.id
+              JOIN product_template prod_template ON prod_variant.product_tmpl_id = prod_template.id
+              JOIN uom_uom template_uom ON prod_template.uom_id = template_uom.id
+              JOIN uom_category template_uom_cat ON template_uom.category_id = template_uom_cat.id
+              JOIN uom_uom line_uom ON line.product_uom_id = line_uom.id
+              JOIN uom_category line_uom_cat ON line_uom.category_id = line_uom_cat.id
+             WHERE prod_template.id IN %s
+               AND line.parent_state = 'posted'
+               AND template_uom_cat.id != line_uom_cat.id
+             LIMIT 1
+        """, [tuple(self.ids)])
+        if self._cr.fetchall():
+            raise ValidationError(_(
+                "This product is already being used in posted Journal Entries.\n"
+                "If you want to change its Unit of Measure, please archive this product and create a new one."
+            ))
 
 
 class ProductProduct(models.Model):
