@@ -97,17 +97,11 @@ function _genericJsonRpc (fct_name, params, settings, fct) {
     });
 
     // FIXME: jsonp?
-    /**
-     * @param {Boolean} rejectError Returns an error if true. Allows you to cancel
-     *                  ignored rpc's in order to unblock the ui and not display an error.
-     */
-    promise.abort = function (rejectError = true) {
-        if (rejectError) {
-            rejection({
-                message: "XmlHttpRequestError abort",
-                event: $.Event('abort')
-            });
-        }
+    promise.abort = function () {
+        rejection({
+            message: "XmlHttpRequestError abort",
+            event: $.Event('abort')
+        });
 
         if (!shadow) {
             core.bus.trigger('rpc_response');
