@@ -110,8 +110,9 @@ export class ExportDataDialog extends Component {
 
         onWillStart(async () => {
             this.availableFormats = await this.rpc("/web/export/formats");
+            const domain = [["resource", "=", this.props.root.resModel]];
             this.templates = await this.rpc("/web/dataset/call_kw", {
-                args: [],
+                args: [domain],
                 kwargs: {
                     context: this.props.context,
                 },
