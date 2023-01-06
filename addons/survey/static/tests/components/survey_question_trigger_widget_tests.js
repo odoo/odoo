@@ -1,11 +1,30 @@
 /** @odoo-module */
 
-import { dragAndDrop, getFixture, nextTick, removeRow } from "@web/../tests/helpers/utils";
+import { getFixture } from "@web/../tests/helpers/utils";
 import { makeView, setupViewRegistries } from "@web/../tests/views/helpers";
 
 QUnit.module("SurveyQuestionTriggerWidget", (hooks) => {
     let serverData;
     let target;
+    const surveyFormViewParams = {
+        type: "form",
+        resModel: "survey",
+        resId: 1,
+        arch: `
+            <form>
+                <field name="question_and_page_ids">
+                    <tree>
+                        <field name="sequence" widget="handle"/>
+                        <field name="name"/>
+                        <field name="triggering_answer_id" invisible="1"/>
+                        <field name="triggering_question_id" invisible="1"/> 
+                        <field name="is_placed_before_trigger" invisible="1"/>
+                        <widget name="survey_question_trigger" nolabel="1"/>
+                    </tree>
+                </field>
+            </form>
+        `,
+    };
 
     hooks.beforeEach(() => {
         target = getFixture();
@@ -41,6 +60,11 @@ QUnit.module("SurveyQuestionTriggerWidget", (hooks) => {
                             required: false,
                             searchable: true,
                         },
+                        is_placed_before_trigger: {
+                            type: "bool",
+                            string: "Is placed before trigger",
+                            searchable: true,
+                        }
                     },
                     records: [
                         {
@@ -49,12 +73,14 @@ QUnit.module("SurveyQuestionTriggerWidget", (hooks) => {
                             name: "Question 1",
                             triggering_question_id: null,
                             triggering_answer_id: null,
+                            is_placed_before_trigger: false,
                         }, {
                             id: 2,
                             sequence: 2,
                             name: "Question 2",
                             triggering_question_id: 1,
                             triggering_answer_id: 1,
+                            is_placed_before_trigger: false,
                         },
                     ],
                 },
@@ -87,25 +113,10 @@ QUnit.module("SurveyQuestionTriggerWidget", (hooks) => {
         setupViewRegistries();
     });
 
-    QUnit.test("dynamic rendering of surveyQuestionTriggerError rows", async (assert) => {
+    QUnit.test("Rows without error", async (assert) => {
         await makeView({
-            type: "form",
-            resModel: "survey",
-            resId: 1,
+            ...surveyFormViewParams,
             serverData,
-            arch: `
-                <form>
-                    <field name="question_and_page_ids">  
-                        <tree>
-                            <field name="sequence" widget="handle"/>
-                            <field name="name"/>
-                            <field name="triggering_answer_id" invisible="1"/>
-                            <field name="triggering_question_id" invisible="1"/> 
-                            <widget name="survey_question_trigger" options="{'isSurveyForm': True}"/>
-                        </tree>
-                    </field>
-                </form>
-            `,
         });
 
         assert.containsOnce(target, ".o_field_x2many .o_list_renderer table.o_list_table");
@@ -123,46 +134,36 @@ QUnit.module("SurveyQuestionTriggerWidget", (hooks) => {
         let triggerIcon = q2TriggerDiv.querySelector("button i");
         assert.doesNotHaveClass(triggerIcon, "text-warning");
         assert.hasAttrValue(triggerIcon, 'data-tooltip', 'Displayed if "Question 1: Answer 1"',
-                       'Trigger tooltip should be \'Displayed if "Question 1: Answer 1"\'.');
+            'Trigger tooltip should be \'Displayed if "Question 1: Answer 1"\'.');
+    });
 
-        // drag and drop Question 2 (triggered) before Question 1 (trigger)
-        await dragAndDrop("tbody tr:nth-child(2) .o_handle_cell", "tbody tr:nth-child(1)");
-        rows = target.querySelectorAll(".o_data_row");
+    QUnit.test("Question with misplacement", async (assert) => {
+        // Move question 2 (triggered) before Question 1 (trigger)
+        serverData.models.survey_question.records.forEach(record => {
+            if (record.id === 2) {
+                record.sequence = 1;
+                record.is_placed_before_trigger = true;
+            } else {
+                record.sequence = 2;
+            }
+        });
+
+        await makeView({
+            ...surveyFormViewParams,
+            serverData,
+        });
+
+        const rows = target.querySelectorAll(".o_data_row");
 
         assert.strictEqual(rows[0].textContent, "Question 2");
-        q2TriggerDiv = rows[0].querySelector("td.o_data_cell div.o_widget_survey_question_trigger");
+        const q2TriggerDiv = rows[0].querySelector("td.o_data_cell div.o_widget_survey_question_trigger");
         assert.containsOnce(q2TriggerDiv, "button");
-        triggerIcon = q2TriggerDiv.querySelector("button i");
+        const triggerIcon = q2TriggerDiv.querySelector("button i");
         assert.hasClass(triggerIcon, "text-warning");
-        await nextTick();
         assert.strictEqual(
             triggerIcon.getAttribute('data-tooltip'),
             '⚠️ This question is positioned before its trigger ("Question 1") and will be skipped.',
             'Trigger tooltip should have been changed to misplacement error message.'
-        );
-
-        // drag and drop Question 1 (trigger) back before Question 2 (triggered)
-        await dragAndDrop("tbody tr:nth-child(2) .o_handle_cell", "tbody tr:nth-child(1)");
-        rows = target.querySelectorAll(".o_data_row");
-
-        assert.strictEqual(rows[1].textContent, "Question 2");
-        assert.doesNotHaveClass(rows[1].querySelector("td.o_data_cell div.o_widget_survey_question_trigger button i"), "text-warning");
-        await nextTick();
-        assert.hasAttrValue(triggerIcon, 'data-tooltip', 'Displayed if "Question 1: Answer 1"',
-                       'Trigger tooltip should be back to \'Displayed if "Question 1: Answer 1"\'.');
-        // delete Question 1 (trigger)
-        await removeRow(target, 0);
-
-        rows = target.querySelectorAll(".o_data_row");
-        q2TriggerDiv = rows[0].querySelector("td.o_data_cell div.o_widget_survey_question_trigger");
-
-        triggerIcon = q2TriggerDiv.querySelector("button i");
-        assert.hasClass(triggerIcon, "text-warning");
-        await nextTick();
-        assert.strictEqual(
-            triggerIcon.getAttribute('data-tooltip'),
-            '⚠️ The trigger question configured ("Question 1") is missing. This trigger will be automatically removed.',
-            'Trigger tooltip should have been changed to missing trigger error message.'
         );
     });
 });

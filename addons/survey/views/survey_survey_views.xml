@@ -80,11 +80,8 @@
                                         attrs="{'column_invisible': [('parent.questions_selection', '=', 'all')], 'invisible': [('is_page', '=', False)]}"/>
                                     <field name="triggering_question_id" invisible="1"/>
                                     <field name="triggering_answer_id" invisible="1"/>
-                                    <widget name="survey_question_trigger" options="{'isSurveyForm': True}"/>
-                                    <!-- Ensure these fields are synced with db too when opening a question -->
-                                    <field name="is_conditional" invisible="1"/>
                                     <field name="is_placed_before_trigger" invisible="1"/>
-                                    <field name="allowed_triggering_question_ids" invisible="1"/>
+                                    <widget name="survey_question_trigger" options="{'isSurveyForm': True}"/>
                                     <control>
                                         <create name="add_question_control" string="Add a question"/>
                                         <create name="add_section_control" string="Add a section" context="{'default_is_page': True, 'default_questions_selection': 'all'}"/>

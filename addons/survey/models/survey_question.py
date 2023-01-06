@@ -280,7 +280,8 @@ class SurveyQuestion(models.Model):
             if not question.validation_required or question.question_type not in ['char_box', 'numerical_box', 'date', 'datetime']:
                 question.validation_required = False
 
-    @api.depends('is_conditional', 'survey_id', 'survey_id.question_ids', 'triggering_question_id')
+    @api.depends('is_conditional', 'survey_id', 'survey_id.question_ids', 'triggering_question_id',
+                 'sequence', 'survey_id.question_and_page_ids.sequence')
     def _compute_allowed_triggering_question_ids(self):
         """ This method is required to fetch the possible triggering questions when
         the question is being created. """
@@ -297,14 +298,6 @@ class SurveyQuestion(models.Model):
             ('suggested_answer_ids', '!=', False),
             ('survey_id', 'in', self.survey_id.ids)
         ])
-        # Using the sequence stored in db is necessary for existing questions that are passed as
-        # NewIds because the sequence provided by the JS client can be incorrect.
-        (conditional_questions | possible_trigger_questions).flush_recordset()
-        self.env.cr.execute(
-            "SELECT id, sequence FROM survey_question WHERE id =ANY(%s)",
-            [conditional_questions.ids]
-        )
-        conditional_questions_sequences = dict(self.env.cr.fetchall())  # id: sequence mapping
 
         for question in conditional_questions:
             question_id = question._origin.id
@@ -313,11 +306,9 @@ class SurveyQuestion(models.Model):
                 question.is_placed_before_trigger = False
                 continue
 
-            question_sequence = conditional_questions_sequences[question_id]
-
             question.allowed_triggering_question_ids = possible_trigger_questions.filtered(
                 lambda q: q.survey_id.id == question.survey_id._origin.id
-                and (q.sequence < question_sequence or q.sequence == question_sequence and q.id < question_id)
+                and (q.sequence < question.sequence or q.sequence == question.sequence and q.id < question_id)
             )
             question.is_placed_before_trigger = (
                 question.triggering_question_id

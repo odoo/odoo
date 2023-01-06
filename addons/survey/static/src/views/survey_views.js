@@ -60,7 +60,18 @@ export class SurveyListRenderer extends ListRenderer {
             useSurveyLoadSampleHook('.o_survey_load_sample');
         }
     }
-};
+    /**
+     * Save the survey after a question is moved. This is necessary to correctly
+     * recompute the questions `sequence` and update `is_placed_before_trigger`.
+     * (sortDrop is the last function called within useSortable)
+     *
+     * @override
+     */
+    async sortDrop(dataRowId, { element, previous }) {
+        await super.sortDrop(...arguments);
+        return this.props.list.model.root.save({stayInEdition: true});
+    }
+}
 
 registry.category('views').add('survey_view_tree', {
     ...listView,

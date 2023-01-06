@@ -13,98 +13,43 @@ export class SurveyQuestionTriggerWidget extends Component {
         this.button = useRef('survey_question_trigger');
         this.state = useState({
             triggeringQuestionTitle: this.props.record.data.triggering_question_id,
-            surveyQuestionTriggerTooltip: ""
+            surveyQuestionTriggerTooltip: "",
+            surveyQuestionTriggerError: false
         });
         useEffect(() => {
             if (this.button && this.button.el) {
                 this.state.triggeringQuestionTitle = this.props.record.data.triggering_question_id[1];
-                const triggerError = this.surveyQuestionTriggerError;
-                if (triggerError === "MISPLACED_TRIGGER_WARNING") {
+                if (this.props.record.data.is_placed_before_trigger) {
+                    this.state.surveyQuestionTriggerError = true;
                     this.state.surveyQuestionTriggerTooltip = sprintf(
                         _lt('⚠️ This question is positioned before its trigger ("%s") and will be skipped.'),
                         this.state.triggeringQuestionTitle);
-                } else if (triggerError === "WRONG_QUESTIONS_SELECTION_WARNING") {
+                } else if (this.props.record.data.question_selection === "random") {
+                    this.state.surveyQuestionTriggerError = true;
                     this.state.surveyQuestionTriggerTooltip = _lt(
                         '⚠️ Conditional display is not available when questions are randomly picked.');
-                } else if (triggerError === "MISSING_TRIGGER_ERROR") { //extra-precaution, see `surveyQuestionTriggerError`
+                } else if (!this.props.record.data.triggering_question_id) { //extra-precaution, see `surveyQuestionTriggerError`
+                    this.state.surveyQuestionTriggerError = true;
                     this.state.surveyQuestionTriggerTooltip = sprintf(
                         _lt('⚠️ The trigger question configured ("%s") is missing. This trigger will be automatically removed.'),
                         this.state.triggeringQuestionTitle);
                 } else {
+                    this.state.surveyQuestionTriggerError = false;
                     this.state.surveyQuestionTriggerTooltip = sprintf(_lt('Displayed if "%s: %s"'),
                         this.state.triggeringQuestionTitle, this.props.record.data.triggering_answer_id[1]);
                 }
             } else {
+                this.state.surveyQuestionTriggerError = false;
                 this.state.triggeringQuestionTitle = "";
                 this.state.surveyQuestionTriggerTooltip = "";
             }
         });
-    }
-
-    /**
-     * `surveyQuestionTriggerError` is computed here and does not rely on
-     * record data (is_placed_before_trigger) for two linked reasons:
-     * 1. Performance: we avoid saving the survey each time a line is moved.
-     * 2. Robustness, as sequences values do not always match between server
-     * provided values when the records are not saved.
-     *
-     * @returns { String | undefined }
-     *   * `undefined`: No trigger error (also if `triggering_question_id`
-     *     field is not set).
-     *   * `"MISSING_TRIGGER_ERROR"`: `triggering_question_id` field is set
-     *     and trigger record is not found. This can happen when a question
-     *     used as trigger is deleted, when the survey is not yet saved to DB.
-     *     This is a safety measure as usually the triggers are immediately
-     *     removed and this should never be shown. Also, useful for unit tests.
-     *   * `"MISPLACED_TRIGGER_WARNING"`: a `triggering_question_id` is set
-     *     but is positioned after the current record in the list. This can
-     *     happen if the triggering or the triggered question is moved.
-     *   * `"WRONG_QUESTIONS_SELECTION_WARNING"`: a `triggering_question_id`
-     *     is set but the survey is configured to randomize questions asked
-     *     mode which ignores the triggers. This can happen if the survey mode
-     *     is changed after triggers are set.
-     */
-    get surveyQuestionTriggerError() {
-        const record = this.props.record;
-        if (!record.data.triggering_question_id) {
-            return undefined;
-        }
-        const triggerId = record.data.triggering_question_id[0];
-        let triggerRecord;
-        if (this.props.isSurveyForm) { // embedded list
-            triggerRecord = record.model.root.data.question_and_page_ids.records.find(rec => rec.data.id === triggerId);
-        } else {
-            triggerRecord = record.model.root.records.find(rec => rec.resId === triggerId);
-        }
-
-        if (!triggerRecord) {
-            return "MISSING_TRIGGER_ERROR";
-        }
-        if (record.data.questions_selection === 'random') {
-            return "WRONG_QUESTIONS_SELECTION_WARNING";
-        }
-        if (record.data.sequence < triggerRecord.data.sequence ||
-            (record.data.sequence === triggerRecord.data.sequence && record.data.id < triggerId)) {
-            return "MISPLACED_TRIGGER_WARNING";
-        }
-        return "";
     }
 }
 
 SurveyQuestionTriggerWidget.template = "survey.surveyQuestionTrigger";
 SurveyQuestionTriggerWidget.props = {
     ...standardWidgetProps,
-    isSurveyForm: { type: Boolean, optional: true },
-};
-
-SurveyQuestionTriggerWidget.defaultProps = {
-    isSurveyForm: false
-};
-
-SurveyQuestionTriggerWidget.extractProps = ({ attrs }) => {
-    return {
-        isSurveyForm: attrs.options.isSurveyForm
-    };
 };
 
 SurveyQuestionTriggerWidget.displayName = 'Trigger';
