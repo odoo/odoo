@@ -287,15 +287,6 @@
             # Don't include dark mode files in light mode
             ('remove', 'website/static/src/components/dialog/*.dark.scss'),
         ],
-        'website.test_bundle': [
-            '/web/static/lib/qweb/qweb2.js',
-            'http://test.external.link/javascript1.js',
-            '/web/static/lib/jquery.ui/jquery-ui.css',
-            'http://test.external.link/style1.css',
-            '/web/static/src/boot.js',
-            'http://test.external.link/javascript2.js',
-            'http://test.external.link/style2.css',
-        ],
     },
     'license': 'LGPL-3',
 }
