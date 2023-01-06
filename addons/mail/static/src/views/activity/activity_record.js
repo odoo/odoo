@@ -44,6 +44,7 @@ export class ActivityRecord extends Component {
             activity_image: (...args) => getImageSrcFromRecordInfo(record, ...args),
             user_context: this.user.context,
             widget: this.widget,
+            luxon,
         };
     }
 }
