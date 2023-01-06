@@ -304,8 +304,8 @@ class AutomaticEntryWizard(models.TransientModel):
             preview_columns = [
                 {'field': 'account_id', 'label': _('Account')},
                 {'field': 'name', 'label': _('Label')},
-                {'field': 'debit', 'label': _('Debit'), 'class': 'text-right text-nowrap'},
-                {'field': 'credit', 'label': _('Credit'), 'class': 'text-right text-nowrap'},
+                {'field': 'debit', 'label': _('Debit'), 'class': 'text-end text-nowrap'},
+                {'field': 'credit', 'label': _('Credit'), 'class': 'text-end text-nowrap'},
             ]
             if record.action == 'change_account':
                 preview_columns[2:2] = [{'field': 'partner_id', 'label': _('Partner')}]
