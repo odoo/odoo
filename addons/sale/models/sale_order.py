@@ -32,6 +32,10 @@ class SaleOrder(models.Model):
     _order = 'date_order desc, id desc'
     _check_company_auto = True
 
+    def _compute_amount_total_without_delivery(self):
+        self.ensure_one()
+        return self.amount_total
+
     @api.depends('order_line.price_total')
     def _amount_all(self):
         """
