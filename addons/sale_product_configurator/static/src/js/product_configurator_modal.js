@@ -115,7 +115,6 @@ export const OptionalProductsModal = Dialog.extend(ServicesMixin, VariantMixin, 
             if (!self.preventOpening) {
                 self.$modal.find(".modal-body").replaceWith(self.$el);
                 self.$modal.attr('open', true);
-                self.$modal.removeAttr("aria-hidden");
                 self.$modal.appendTo(self.container);
                 const modal = new Modal(self.$modal[0], {
                     focus: true,
