@@ -11,9 +11,9 @@
 }
 
 // Set all the colors but the "no-color" one
-@for $size from 2 through length($o-colors) {
+@for $size from 2 through length($o-colors-original) {
     .o_colorlist_item_color_#{$size - 1} {
-        background-color: nth($o-colors, $size);
+        background-color: nth($o-colors-original, $size);
     }
 }
 
