@@ -483,19 +483,19 @@
                             <strong>Incoterm:
                             </strong>
                             <span
-                                    t-field="o.invoice_incoterm_id.code"/>
+                                    t-out="o.invoice_incoterm_id.code"/>
                             -
                             <span
-                                    t-field="o.invoice_incoterm_id.name"/>
+                                    t-out="o.invoice_incoterm_id.name"/>
                         </div>
                         <div class="col-6 text-end">
                             <strong>شرط تجاري:
                             </strong>
                             <span
-                                    t-field="o_sec.invoice_incoterm_id.code"/>
+                                    t-out="o_sec.invoice_incoterm_id.code"/>
                             -
                             <span
-                                    t-field="o_sec.invoice_incoterm_id.name"/>
+                                    t-out="o_sec.invoice_incoterm_id.name"/>
                         </div>
                     </div>
                 </p>
