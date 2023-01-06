@@ -2378,6 +2378,7 @@ class AccountMove(models.Model):
     # -------------------------------------------------------------------------
 
     def _get_last_sequence_domain(self, relaxed=False):
+        #pylint: disable=sql-injection
         # EXTENDS account sequence.mixin
         self.ensure_one()
         if not self.date or not self.journal_id:
