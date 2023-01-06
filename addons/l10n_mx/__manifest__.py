@@ -32,6 +32,7 @@ With this module you will have:
     """,
     "depends": [
         "account",
+        "base_iban", # TODO: discuss with OCO if we can bring more logic from account.report in standard instead of this hack that tweak dependancy graph so that account_reports if any is loaded before
     ],
     "data": [
         "data/account.account.tag.csv",
