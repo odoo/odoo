@@ -4,7 +4,6 @@ odoo.define('web.framework', function (require) {
 var core = require('web.core');
 var ajax = require('web.ajax');
 var Widget = require('web.Widget');
-const {sprintf} = require('web.utils')
 
 var _t = core._t;
 
@@ -123,92 +122,6 @@ function redirect (url, wait) {
     }
 }
 
-//  * Client action to reload the whole interface.
-//  * If params.menu_id, it opens the given menu entry.
-//  * If params.wait, reload will wait the openerp server to be reachable before reloading
-
-function Reload(parent, action) {
-    var params = action.params || {};
-    var menu_id = params.menu_id || false;
-    var action_id = params.action_id || false;
-    var l = window.location;
-
-    var sobj = $.deparam(l.search.substr(1));
-    if (params.url_search) {
-        sobj = _.extend(sobj, params.url_search);
-    }
-    var search = '?' + $.param(sobj);
-
-    var hash = l.hash;
-    if (menu_id) {
-        hash = "#menu_id=" + menu_id;
-        if (action_id) {
-            hash += "&action=" + action_id;
-        }
-    } else if (action_id) {
-        hash = "#action=" + action_id;
-    }
-    var url = l.protocol + "//" + l.host + l.pathname + search + hash;
-
-    // Clear cache
-    core.bus.trigger('clear_cache');
-
-    redirect(url, params.wait);
-}
-
-core.action_registry.add("reload", Reload);
-
-
-/**
- * Client action to go back home.
- */
-function Home (parent, action) {
-    var url = '/' + (window.location.search || '');
-    redirect(url, action && action.params && action.params.wait);
-}
-core.action_registry.add("home", Home);
-
-function login() {
-    redirect('/web/login');
-}
-core.action_registry.add("login", login);
-
-function logout() {
-    redirect('/web/session/logout');
-}
-core.action_registry.add("logout", logout);
-
-/**
- * @param {ActionManager} parent
- * @param {Object} action
- * @param {Object} action.params notification params
- * @see ServiceMixin.displayNotification
- */
-function displayNotification(parent, action) {
-    let {title='', message='', links=[], type='info', sticky=false, next} = action.params || {};
-    links = links.map(({url, label}) => `<a href="${_.escape(url)}" target="_blank">${_.escape(label)}</a>`)
-    parent.displayNotification({
-        title, // no escape for the title because it is done in the template
-        message: owl.markup(sprintf(_.escape(message), ...links)),
-        type,
-        sticky,
-    });
-    return next;
-}
-core.action_registry.add("display_notification", displayNotification);
-
-/**
- * Client action to refresh the session context (making sure
- * HTTP requests will have the right one) then reload the
- * whole interface.
- */
-function ReloadContext (parent, action) {
-    // side-effect of get_session_info is to refresh the session context
-    ajax.rpc("/web/session/get_session_info", {}).then(function() {
-        Reload(parent, action);
-    });
-}
-core.action_registry.add("reload_context", ReloadContext);
 
 // In Internet Explorer, document doesn't have the contains method, so we make a
 // polyfill for the method in order to be compatible.
