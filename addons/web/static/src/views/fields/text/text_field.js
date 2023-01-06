@@ -3,13 +3,13 @@
 import { _lt } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
 import { useSpellCheck } from "@web/core/utils/hooks";
-import { useDynamicPlaceholder } from "../dynamicplaceholder_hook";
+import { useDynamicPlaceholder } from "../dynamic_placeholder_hook";
 import { useInputField } from "../input_field_hook";
 import { parseInteger } from "../parsers";
 import { standardFieldProps } from "../standard_field_props";
 import { TranslationButton } from "../translation_button";
 
-import { Component, onMounted, onWillUnmount, useEffect, useRef } from "@odoo/owl";
+import { Component, useExternalListener, useEffect, useRef } from "@odoo/owl";
 
 export class TextField extends Component {
     static template = "web.TextField";
@@ -20,6 +20,7 @@ export class TextField extends Component {
         ...standardFieldProps,
         placeholder: { type: String, optional: true },
         dynamicPlaceholder: { type: Boolean, optional: true },
+        dynamicPlaceholderModelReferenceField: { type: String, optional: true },
         rowCount: { type: Number, optional: true },
     };
     static defaultProps = {
@@ -28,11 +29,15 @@ export class TextField extends Component {
     };
 
     setup() {
-        if (this.props.dynamicPlaceholder) {
-            this.dynamicPlaceholder = useDynamicPlaceholder();
-        }
         this.divRef = useRef("div");
         this.textareaRef = useRef("textarea");
+        if (this.props.dynamicPlaceholder) {
+            const dynamicPlaceholder = useDynamicPlaceholder(this.textareaRef);
+            useExternalListener(document, "keydown", dynamicPlaceholder.onKeydown);
+            useEffect(() =>
+                dynamicPlaceholder.updateModel(this.props.dynamicPlaceholderModelReferenceField)
+            );
+        }
         useInputField({ getValue: () => this.props.value || "", refName: "textarea" });
         useSpellCheck({ refName: "textarea" });
 
@@ -41,46 +46,6 @@ export class TextField extends Component {
                 this.resize();
             }
         });
-        onMounted(this.onMounted);
-        onWillUnmount(this.onWillUnmount);
-    }
-    async onKeydownListener(ev) {
-        if (ev.key === this.dynamicPlaceholder.TRIGGER_KEY && ev.target === this.textareaRef.el) {
-            const baseModel = this.props.record.data.mailing_model_real;
-            if (baseModel) {
-                await this.dynamicPlaceholder.open(this.textareaRef.el, baseModel, {
-                    validateCallback: this.onDynamicPlaceholderValidate.bind(this),
-                    closeCallback: this.onDynamicPlaceholderClose.bind(this),
-                });
-            }
-        }
-    }
-    onMounted() {
-        if (this.props.dynamicPlaceholder) {
-            this.keydownListenerCallback = this.onKeydownListener.bind(this);
-            document.addEventListener("keydown", this.keydownListenerCallback);
-        }
-    }
-    onWillUnmount() {
-        if (this.props.dynamicPlaceholder) {
-            document.removeEventListener("keydown", this.keydownListenerCallback);
-        }
-    }
-    onDynamicPlaceholderValidate(chain, defaultValue) {
-        if (chain) {
-            const triggerKeyReplaceRegex = new RegExp(`${this.dynamicPlaceholder.TRIGGER_KEY}$`);
-            let dynamicPlaceholder = "{{object." + chain.join(".");
-            dynamicPlaceholder +=
-                defaultValue && defaultValue !== "" ? ` or '''${defaultValue}'''}}` : "}}";
-            this.props.record.update({
-                [this.props.name]:
-                    this.textareaRef.el.value.replace(triggerKeyReplaceRegex, "") +
-                    dynamicPlaceholder,
-            });
-        }
-    }
-    onDynamicPlaceholderClose() {
-        this.textareaRef.el.focus();
     }
 
     get isTranslatable() {
@@ -131,7 +96,8 @@ export const textField = {
     supportedTypes: ["html", "text"],
     extractProps: ({ attrs, options }) => ({
         placeholder: attrs.placeholder,
-        dynamicPlaceholder: options.dynamic_placeholder,
+        dynamicPlaceholder: options?.dynamic_placeholder || false,
+        dynamicPlaceholderModelReferenceField: options?.dynamic_placeholder_model_reference_field || "",
         rowCount: attrs.rows && parseInteger(attrs.rows),
     }),
 };

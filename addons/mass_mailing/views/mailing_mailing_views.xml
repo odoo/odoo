@@ -174,7 +174,7 @@
                             <label for="subject">Subject</label>
                             <div class="o_mass_mailing_subject d-flex flex-row align-items-baseline">
                                 <field class="text-break" name="subject" string="Subject"
-                                    options="{'dynamic_placeholder': true}"
+                                    options="{'dynamic_placeholder': true, 'dynamic_placeholder_model_reference_field': 'mailing_model_real'}"
                                     attrs="{'readonly': [('state', 'in', ('sending', 'done'))]}"
                                     widget="char_emojis" placeholder="e.g. New Sale on all T-shirts"/>
                                 <field name="favorite" invisible="1"/>
@@ -245,6 +245,7 @@
                                                 'cssEdit': 'mass_mailing.iframe_css_assets_edit',
                                                 'inline-field': 'body_html',
                                                 'dynamic_placeholder': true,
+                                                'dynamic_placeholder_model_reference_field': 'mailing_model_real',
                                                 'cssReadonly': 'mass_mailing.iframe_css_assets_edit'
                                         }" attrs="{'readonly': [('state', 'in', ('sending', 'done'))]}"/>
                                     </div>
@@ -308,7 +309,7 @@
                                 <group>
                                     <group string="Email Content" name="email_content" attrs="{'invisible': [('mailing_type', '!=', 'mail')]}">
                                         <field class="o_text_overflow" name="preview" string="Preview Text"
-                                            options="{'dynamic_placeholder': true}"
+                                            options="{'dynamic_placeholder': true, 'dynamic_placeholder_model_reference_field': 'mailing_model_real'}"
                                             attrs="{'readonly': [('state', 'in', ('sending', 'done'))]}"
                                             widget="char_emojis" placeholder="e.g. Check it out before it's too late!"/>
                                         <field name="email_from" attrs="{'readonly': [('state', 'in', ('sending', 'done'))]}"/>
