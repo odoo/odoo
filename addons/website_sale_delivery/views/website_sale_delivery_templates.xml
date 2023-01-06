@@ -20,15 +20,24 @@
         <label class="label-optional" t-field="delivery.name"/>
         <t t-set='badge_class' t-value="'float-end ' + 'badge text-bg-secondary'" />
         <span t-attf-class="#{badge_class} o_wsale_delivery_badge_price" name="price">Select to compute delivery rate</span>
+        <t t-set='delivery_method' t-value="delivery.delivery_type+'_use_locations'" />
+        <div class="small">
+            <div class="d-none">
+                <span class="o_order_location">
+                    <b class="o_order_location_name"/>
+                    <br/>
+                    <i class="o_order_location_address"/>
+                </span>
+                <span class="fa fa-times ms-2 o_remove_order_location" aria-label="Remove this location" title="Remove this location"/>
+            </div>
+            <t t-if="delivery_method in delivery.fields_get() and delivery[delivery_method]">
+                <div class="o_show_pickup_locations"/>
+                <div class="o_list_pickup_locations"/>
+            </t>
+        </div>
         <t t-if="delivery.website_description">
             <div t-field="delivery.website_description" class="text-muted mt8"/>
         </t>
-    </template>
-
-    <template id="payment_delivery_shipping_method" name="Delivery Shipping method" inherit_id="website_sale.address_on_payment">
-        <xpath expr="//div[@id='shipping_and_billing']" position="inside">
-            <t t-set="delivery_nb" t-value="deliveries and len(deliveries) or 0"/>
-        </xpath>
     </template>
 
     <template id="payment_delivery" name="Delivery Costs" inherit_id="website_sale.payment">

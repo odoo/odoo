@@ -11,7 +11,7 @@ class SaleOrder(models.Model):
         compute='_compute_amount_delivery',
         string='Delivery Amount',
         help="The amount without tax.", store=True, tracking=True)
-    access_point_address = fields.Text('Delivery Point Address')
+    access_point_address = fields.Json('Delivery Point Address')
 
     @api.depends('order_line.price_unit', 'order_line.tax_id', 'order_line.discount', 'order_line.product_uom_qty')
     def _compute_amount_delivery(self):
@@ -20,6 +20,51 @@ class SaleOrder(models.Model):
                 order.amount_delivery = sum(order.order_line.filtered('is_delivery').mapped('price_subtotal'))
             else:
                 order.amount_delivery = sum(order.order_line.filtered('is_delivery').mapped('price_total'))
+
+    def _action_confirm(self):
+        for order in self:
+            order_location = order.access_point_address
+
+            if not order_location:
+                continue
+
+            # retreive all the data :
+            # name, street, city, state, zip, country
+            name = order.partner_shipping_id.name
+            street = order_location['pick_up_point_address']
+            city = order_location['pick_up_point_town']
+            zip_code = order_location['pick_up_point_postal_code']
+            country = order.env['res.country'].search([('code', '=', order_location['pick_up_point_country'])]).id
+            state = order.env['res.country.state'].search(['&', ('code', '=', order_location['pick_up_point_state']), ('country_id.id', '=', country)]).id if (order_location['pick_up_point_state'] and country) else None
+            parent_id = order.partner_shipping_id.id
+            email = order.partner_shipping_id.email
+            phone = order.partner_shipping_id.phone
+
+            # we can check if the current partner has a partner of type "delivery" that has the same address
+            existing_partner = order.env['res.partner'].search(['&', '&', '&', '&',
+                                                                ('street', '=', street),
+                                                                ('city', '=', city),
+                                                                ('state_id', '=', state),
+                                                                ('country_id', '=', country),
+                                                                ('type', '=', 'delivery')], limit=1)
+
+            if existing_partner:
+                order.partner_shipping_id = existing_partner
+            else:
+                # if not, we create that res.partner
+                order.partner_shipping_id = order.env['res.partner'].create({
+                    'parent_id': parent_id,
+                    'type': 'delivery',
+                    'name': name,
+                    'street': street,
+                    'city': city,
+                    'state_id': state,
+                    'zip': zip_code,
+                    'country_id': country,
+                    'email': email,
+                    'phone': phone
+                })
+        return super()._action_confirm()
 
     def _check_carrier_quotation(self, force_carrier_id=None, keep_carrier=False):
         self.ensure_one()

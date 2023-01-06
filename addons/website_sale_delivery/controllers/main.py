@@ -28,7 +28,7 @@ class WebsiteSaleDelivery(WebsiteSale):
 
         return super(WebsiteSaleDelivery, self).shop_payment(**post)
 
-    @http.route(['/shop/update_carrier'], type='json', auth='public', methods=['POST'], website=True, csrf=False)
+    @http.route(['/shop/update_carrier'], type='json', auth='public', methods=['POST'], website=True)
     def update_eshop_carrier(self, **post):
         order = request.website.sale_get_order()
         order.access_point_address = {}
@@ -203,39 +203,40 @@ class WebsiteSaleDelivery(WebsiteSale):
                 order_sudo.currency_id,
             ),
         } for carrier in order_sudo._get_delivery_methods()],
-            key=lambda carrier: carrier['minorAmount'])
+        key=lambda carrier: carrier['minorAmount'])
 
-    @http.route('/shop/access_point/set', type='json', auth='public', methods=['POST'], csrf=False, website=True, sitemap=False)
+    @http.route('/shop/access_point/set', type='json', auth='public', methods=['POST'], website=True, sitemap=False)
     def set_access_point(self, access_point_encoded):
         order = request.website.sale_get_order()
         if hasattr(order.carrier_id, order.carrier_id.delivery_type + '_use_locations'):
             use_location = getattr(order.carrier_id, order.carrier_id.delivery_type + '_use_locations')
-            access_point = use_location and access_point_encoded or None
+            access_point = use_location and (json.loads(access_point_encoded) if access_point_encoded else False) or False
             order.write({'access_point_address': access_point})
 
-    @http.route('/shop/access_point/get', type='json', auth='public', csrf=False, website=True, sitemap=False)
+    @http.route('/shop/access_point/get', type='json', auth='public', website=True, sitemap=False)
     def get_access_point(self):
         order = request.website.sale_get_order()
-        if not order.carrier_id.delivery_type:
+        if not order.carrier_id.delivery_type or not order.carrier_id.display_name:
             return {}
-        order_location = json.loads(order.access_point_address) if order.access_point_address else False
+        order_location = order.access_point_address
         if not order_location:
             return {}
         address = order_location['address']
-        return {order.carrier_id.delivery_type + '_access_point': address}
+        name = order_location['pick_up_point_name']
+        return {order.carrier_id.delivery_type + '_access_point': address, 'name': name, 'delivery_name': order.carrier_id.display_name}
 
-    @http.route('/shop/access_point/close_locations', type='json', auth='public', csrf=False, website=True, sitemap=False)
+    @http.route('/shop/access_point/close_locations', type='json', auth='public', website=True, sitemap=False)
     def get_close_locations(self):
         order = request.website.sale_get_order()
         try:
-            error = {'error': 'No pick-up point available for that shipping address'}
+            error = {'error': _('No pick-up point available for that shipping address')}
             if not hasattr(order.carrier_id, '_' + order.carrier_id.delivery_type + '_get_close_locations'):
                 return error
             close_locations = getattr(order.carrier_id, '_' + order.carrier_id.delivery_type + '_get_close_locations')(order.partner_shipping_id)
             partner_address = order.partner_shipping_id
             inline_partner_address = ' '.join((part or '') for part in [partner_address.street, partner_address.street2, partner_address.zip, partner_address.country_id.code])
             if len(close_locations) < 0:
-                return {'error': 'No pick-up point available for that shipping address'}
+                return error
             for location in close_locations:
                 location['address_stringified'] = json.dumps(location)
             return {'close_locations': close_locations, 'partner_address': inline_partner_address}
