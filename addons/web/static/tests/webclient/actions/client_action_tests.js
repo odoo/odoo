@@ -610,4 +610,49 @@ QUnit.module("ActionManager", (hooks) => {
         );
         assert.verifySteps(["onClose"]);
     });
+
+    QUnit.test("test reload client action", async function (assert) {
+        const webClient = await createWebClient({ serverData });
+        patchWithCleanup(webClient.env.services.router, {
+            redirect: (url) => {
+                assert.step(url);
+            },
+        });
+        patchWithCleanup(browser.location, {
+            origin: "",
+        });
+
+        await doAction(webClient, {
+            type: "ir.actions.client",
+            tag: "reload",
+        });
+        await doAction(webClient, {
+            type: "ir.actions.client",
+            tag: "reload",
+            params: {
+                action_id: 2,
+            },
+        });
+        await doAction(webClient, {
+            type: "ir.actions.client",
+            tag: "reload",
+            params: {
+                menu_id: 1,
+            },
+        });
+        await doAction(webClient, {
+            type: "ir.actions.client",
+            tag: "reload",
+            params: {
+                action_id: 1,
+                menu_id: 2,
+            },
+        });
+        assert.verifySteps([
+            "/web/tests",
+            "/web/tests#action=2",
+            "/web/tests#menu_id=1",
+            "/web/tests#menu_id=2&action=1",
+        ]);
+    });
 });
