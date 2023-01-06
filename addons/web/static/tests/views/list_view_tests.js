@@ -634,6 +634,26 @@ QUnit.module("Views", (hooks) => {
         assert.containsNone(target, "button.btn.btn-link.btn-danger");
     });
 
+    QUnit.test("list view with disabled button", async function (assert) {
+        await makeView({
+            type: "list",
+            resModel: "foo",
+            serverData,
+            arch: `
+                <tree>
+                    <button name="a" icon="fa-coffee"/>
+                    <button name="b" icon="fa-car" disabled="disabled"/>
+                </tree>`,
+        });
+
+        assert.ok(
+            Array.from(target.querySelectorAll("button[name='a']")).every((btn) => !btn.disabled)
+        );
+        assert.ok(
+            Array.from(target.querySelectorAll("button[name='b']")).every((btn) => btn.disabled)
+        );
+    });
+
     QUnit.test("list view: action button in controlPanel basic rendering", async function (assert) {
         await makeView({
             type: "list",

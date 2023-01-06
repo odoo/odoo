@@ -526,7 +526,7 @@ class Partner(models.Model):
         partners that aren't `commercial entities` themselves, and will be
         delegated to the parent `commercial entity`. The list is meant to be
         extended by inheriting classes. """
-        return ['vat', 'company_registry']
+        return ['vat', 'company_registry', 'industry_id']
 
     def _commercial_sync_from_company(self):
         """ Handle sync of commercial fields when a new parent commercial entity is set,
