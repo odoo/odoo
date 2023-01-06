@@ -213,3 +213,27 @@ class TestChartTemplate(TransactionCase):
 
         # if only the fiscal position mapping has been removed, it won't be recreated
         self.assertEqual(len(fiscal_position.tax_ids), 0)
+
+    def test_update_taxes_when_different_fiscal_country(self):
+        """
+        Test that even if the company's fiscal country is not set to the one of the chart_template
+        taxes will still be updated.
+        """
+        self.create_tax_template('Tax 3', 'account.test_tax_template', 16)
+        country_1 = self.env["res.country"].create(
+            {
+                "name": "Wakanda",
+                "code": "WA",
+            }
+        )
+        self.company_1.account_fiscal_country_id = country_1
+        self.assertNotEqual(self.company_1.account_fiscal_country_id.id, self.chart_template.country_id.id)
+
+        chart_template_xml_id = self.chart_template.get_external_id()[self.chart_template.id]
+        update_taxes_from_templates(self.env.cr, chart_template_xml_id)
+        taxes = self.env['account.tax'].search([('company_id', '=', self.company_1.id)])
+        self.assertRecordValues(taxes, [
+            {'name': 'Tax 1'},
+            {'name': 'Tax 2'},
+            {'name': 'Tax 3'},
+        ])

@@ -44,10 +44,19 @@ def update_taxes_from_templates(cr, chart_template_xmlid):
 
         template_vals = template._get_tax_vals_complete(company)
         chart_template = env["account.chart.template"].with_context(default_company_id=company.id)
+
+        # handle country in case of fiscal country is not the same as localization's one
+        chart_template_country_id = template.chart_template_id.country_id.id
+        if chart_template_country_id and chart_template_country_id != company.account_fiscal_country_id.id:
+            template_vals['country_id'] = chart_template_country_id
+            if template.tax_group_id and chart_template_country_id != template.tax_group_id.country_id.id:
+                template.tax_group_id.country_id = chart_template_country_id
+
         if old_tax:
             xml_id = old_tax.get_external_id().get(old_tax.id)
             if xml_id:
                 _remove_xml_id(xml_id)
+
         chart_template.create_record_with_xmlid(company, template, "account.tax", template_vals)
 
     def _update_tax_from_template(template, tax):
