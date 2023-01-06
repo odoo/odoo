@@ -42,6 +42,8 @@ class UtmCampaign(models.Model):
         for vals in vals_list:
             if not vals.get('title') and vals.get('name'):
                 vals['title'] = vals['name']
+            elif vals.get('title') and not vals.get('name'):
+                vals['name'] = vals['title']
         new_names = self.env['utm.mixin']._get_unique_names(self._name, [vals.get('name') for vals in vals_list])
         for vals, new_name in zip(vals_list, new_names):
             vals['name'] = new_name
