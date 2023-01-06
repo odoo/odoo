@@ -55,7 +55,8 @@
 // Since JSON grammar is way simpler than JavaScript's grammar, it is actually
 // faster to parse the data as a JSON object than as a JavaScript object.
 
-import { _lt } from "@web/core/l10n/translation";
+import { _lt as lazyTranslate } from "@web/core/l10n/translation";
+const _lt = str => JSON.stringify(lazyTranslate(str)).slice(1, -1);
 
 export const emojiCategoriesData = JSON.parse(`[
     {
@@ -125,7 +126,11 @@ const emojisData1 = `{
 {
     "category": "Smileys & Emotion",
     "codepoints": "😃",
-    "emoticons": [],
+    "emoticons": [
+        ":D",
+        ":-D",
+        "=D"
+    ],
     "keywords": [
         "` + _lt("face") + `",
         "` + _lt("grinning face with big eyes") + `",
@@ -174,7 +179,10 @@ const emojisData1 = `{
 {
     "category": "Smileys & Emotion",
     "codepoints": "😆",
-    "emoticons": [],
+    "emoticons": [
+        "xD",
+        "XD"
+    ],
     "keywords": [
         "` + _lt("face") + `",
         "` + _lt("grinning squinting face") + `",
@@ -226,7 +234,9 @@ const emojisData1 = `{
 {
     "category": "Smileys & Emotion",
     "codepoints": "😂",
-    "emoticons": [],
+    "emoticons": [
+        "x'D"
+    ],
     "keywords": [
         "` + _lt("face") + `",
         "` + _lt("face with tears of joy") + `",
@@ -272,7 +282,10 @@ const emojisData1 = `{
 {
     "category": "Smileys & Emotion",
     "codepoints": "😉",
-    "emoticons": [],
+    "emoticons": [
+        ";)",
+        ";-)"
+    ],
     "keywords": [
         "` + _lt("face") + `",
         "` + _lt("wink") + `",
@@ -286,7 +299,12 @@ const emojisData1 = `{
 {
     "category": "Smileys & Emotion",
     "codepoints": "😊",
-    "emoticons": [],
+    "emoticons": [
+        ":)",
+        ":-)",
+        "=)",
+        ":]"
+    ],
     "keywords": [
         "` + _lt("blush") + `",
         "` + _lt("eye") + `",
@@ -302,7 +320,9 @@ const emojisData1 = `{
 {
     "category": "Smileys & Emotion",
     "codepoints": "😇",
-    "emoticons": [],
+    "emoticons": [
+        "o:)"
+    ],
     "keywords": [
         "` + _lt("angel") + `",
         "` + _lt("face") + `",
@@ -336,7 +356,9 @@ const emojisData1 = `{
 {
     "category": "Smileys & Emotion",
     "codepoints": "😍",
-    "emoticons": [],
+    "emoticons": [
+        ":heart_eyes"
+    ],
     "keywords": [
         "` + _lt("eye") + `",
         "` + _lt("face") + `",
@@ -369,7 +391,10 @@ const emojisData1 = `{
 {
     "category": "Smileys & Emotion",
     "codepoints": "😘",
-    "emoticons": [],
+    "emoticons": [
+        ":*",
+        ":-*"
+    ],
     "keywords": [
         "` + _lt("face") + `",
         "` + _lt("face blowing a kiss") + `",
@@ -429,7 +454,13 @@ const emojisData1 = `{
 {
     "category": "Smileys & Emotion",
     "codepoints": "😋",
-    "emoticons": [],
+    "emoticons": [
+        ":p",
+        ":P",
+        ":-p",
+        ":-P",
+        "=P"
+    ],
     "keywords": [
         "` + _lt("delicious") + `",
         "` + _lt("face") + `",
@@ -464,7 +495,10 @@ const emojisData1 = `{
 {
     "category": "Smileys & Emotion",
     "codepoints": "😜",
-    "emoticons": [],
+    "emoticons": [
+        ";p",
+        ";P"
+    ],
     "keywords": [
         "` + _lt("eye") + `",
         "` + _lt("face") + `",
@@ -497,7 +531,10 @@ const emojisData1 = `{
 {
     "category": "Smileys & Emotion",
     "codepoints": "😝",
-    "emoticons": [],
+    "emoticons": [
+        "xp",
+        "xP"
+    ],
     "keywords": [
         "` + _lt("eye") + `",
         "` + _lt("face") + `",
@@ -1024,7 +1061,12 @@ const emojisData1 = `{
 {
     "category": "Smileys & Emotion",
     "codepoints": "😎",
-    "emoticons": [],
+    "emoticons": [
+        "B)",
+        "8)",
+        "B-)",
+        "8-)"
+    ],
     "keywords": [
         "` + _lt("bright") + `",
         "` + _lt("cool") + `",
@@ -1070,7 +1112,10 @@ const emojisData1 = `{
 {
     "category": "Smileys & Emotion",
     "codepoints": "😕",
-    "emoticons": [],
+    "emoticons": [
+        ":/",
+        ":-/"
+    ],
     "keywords": [
         "` + _lt("confused") + `",
         "` + _lt("face") + `",
@@ -1142,7 +1187,12 @@ const emojisData1 = `{
 {
     "category": "Smileys & Emotion",
     "codepoints": "😲",
-    "emoticons": [],
+    "emoticons": [
+        ":O",
+        ":-O",
+        ":o",
+        ":-o"
+    ],
     "keywords": [
         "` + _lt("astonished") + `",
         "` + _lt("face") + `",
@@ -1157,7 +1207,9 @@ const emojisData1 = `{
 {
     "category": "Smileys & Emotion",
     "codepoints": "😳",
-    "emoticons": [],
+    "emoticons": [
+        "o_o"
+    ],
     "keywords": [
         "` + _lt("dazed") + `",
         "` + _lt("face") + `",
@@ -1215,7 +1267,9 @@ const emojisData1 = `{
 {
     "category": "Smileys & Emotion",
     "codepoints": "😨",
-    "emoticons": [],
+    "emoticons": [
+        ":'o"
+    ],
     "keywords": [
         "` + _lt("face") + `",
         "` + _lt("fear") + `",
@@ -1263,7 +1317,9 @@ const emojisData1 = `{
 {
     "category": "Smileys & Emotion",
     "codepoints": "😢",
-    "emoticons": [],
+    "emoticons": [
+        ":'("
+    ],
     "keywords": [
         "` + _lt("cry") + `",
         "` + _lt("crying face") + `",
@@ -1279,7 +1335,10 @@ const emojisData1 = `{
 {
     "category": "Smileys & Emotion",
     "codepoints": "😭",
-    "emoticons": [],
+    "emoticons": [
+        ":'-(",
+        ":\\"("
+    ],
     "keywords": [
         "` + _lt("cry") + `",
         "` + _lt("face") + `",
@@ -1296,7 +1355,9 @@ const emojisData1 = `{
 {
     "category": "Smileys & Emotion",
     "codepoints": "😱",
-    "emoticons": [],
+    "emoticons": [
+        ":@"
+    ],
     "keywords": [
         "` + _lt("face") + `",
         "` + _lt("face screaming in fear") + `",
@@ -1341,7 +1402,9 @@ const emojisData1 = `{
 {
     "category": "Smileys & Emotion",
     "codepoints": "😞",
-    "emoticons": [],
+    "emoticons": [
+        ":("
+    ],
     "keywords": [
         "` + _lt("disappointed") + `",
         "` + _lt("face") + `"
@@ -1446,7 +1509,10 @@ const emojisData1 = `{
 {
     "category": "Smileys & Emotion",
     "codepoints": "😠",
-    "emoticons": [],
+    "emoticons": [
+        "3:(",
+        ">:("
+    ],
     "keywords": [
         "` + _lt("anger") + `",
         "` + _lt("angry") + `",
@@ -1474,7 +1540,10 @@ const emojisData1 = `{
 {
     "category": "Smileys & Emotion",
     "codepoints": "😈",
-    "emoticons": [],
+    "emoticons": [
+        "3:)",
+        ">:)"
+    ],
     "keywords": [
         "` + _lt("devil") + `",
         "` + _lt("face") + `",
@@ -1509,7 +1578,9 @@ const emojisData1 = `{
 {
     "category": "Smileys & Emotion",
     "codepoints": "💀",
-    "emoticons": [],
+    "emoticons": [
+        ":skull"
+    ],
     "keywords": [
         "` + _lt("death") + `",
         "` + _lt("face") + `",
@@ -1542,7 +1613,9 @@ const emojisData1 = `{
 {
     "category": "Smileys & Emotion",
     "codepoints": "💩",
-    "emoticons": [],
+    "emoticons": [
+        ":poop"
+    ],
     "keywords": [
         "` + _lt("dung") + `",
         "` + _lt("face") + `",
@@ -1606,7 +1679,9 @@ const emojisData1 = `{
 {
     "category": "Smileys & Emotion",
     "codepoints": "👻",
-    "emoticons": [],
+    "emoticons": [
+        ":ghost"
+    ],
     "keywords": [
         "` + _lt("creature") + `",
         "` + _lt("face") + `",
@@ -1623,7 +1698,10 @@ const emojisData1 = `{
 {
     "category": "Smileys & Emotion",
     "codepoints": "👽",
-    "emoticons": [],
+    "emoticons": [
+        ":et",
+        ":alien"
+    ],
     "keywords": [
         "` + _lt("alien") + `",
         "` + _lt("creature") + `",
@@ -1671,7 +1749,9 @@ const emojisData1 = `{
 {
     "category": "Smileys & Emotion",
     "codepoints": "😺",
-    "emoticons": [],
+    "emoticons": [
+        ":kitten"
+    ],
     "keywords": [
         "` + _lt("cat") + `",
         "` + _lt("face") + `",
@@ -1821,7 +1901,9 @@ const emojisData1 = `{
 {
     "category": "Smileys & Emotion",
     "codepoints": "🙈",
-    "emoticons": [],
+    "emoticons": [
+        ":no_see"
+    ],
     "keywords": [
         "` + _lt("evil") + `",
         "` + _lt("face") + `",
@@ -1838,7 +1920,9 @@ const emojisData1 = `{
 {
     "category": "Smileys & Emotion",
     "codepoints": "🙉",
-    "emoticons": [],
+    "emoticons": [
+        ":no_hear"
+    ],
     "keywords": [
         "` + _lt("evil") + `",
         "` + _lt("face") + `",
@@ -1855,7 +1939,9 @@ const emojisData1 = `{
 {
     "category": "Smileys & Emotion",
     "codepoints": "🙊",
-    "emoticons": [],
+    "emoticons": [
+        ":no_speak"
+    ],
     "keywords": [
         "` + _lt("evil") + `",
         "` + _lt("face") + `",
@@ -2028,7 +2114,10 @@ const emojisData1 = `{
 {
     "category": "Smileys & Emotion",
     "codepoints": "💔",
-    "emoticons": [],
+    "emoticons": [
+        "</3",
+        "&lt;/3"
+    ],
     "keywords": [
         "` + _lt("break") + `",
         "` + _lt("broken") + `",
@@ -2042,7 +2131,11 @@ const emojisData1 = `{
 {
     "category": "Smileys & Emotion",
     "codepoints": "❤️",
-    "emoticons": [],
+    "emoticons": [
+        "<3",
+        "&lt;3",
+        ":heart"
+    ],
     "keywords": [
         "` + _lt("heart") + `",
         "` + _lt("red heart") + `"
@@ -2440,7 +2533,9 @@ const emojisData2 = `{
 {
     "category": "People & Body",
     "codepoints": "👌",
-    "emoticons": [],
+    "emoticons": [
+        ":ok"
+    ],
     "keywords": [
         "` + _lt("hand") + `",
         "` + _lt("OK") + `",
@@ -2647,7 +2742,9 @@ const emojisData2 = `{
 {
     "category": "People & Body",
     "codepoints": "👍",
-    "emoticons": [],
+    "emoticons": [
+        ":+1"
+    ],
     "keywords": [
         "` + _lt("+1") + `",
         "` + _lt("hand") + `",
@@ -2663,7 +2760,9 @@ const emojisData2 = `{
 {
     "category": "People & Body",
     "codepoints": "👎",
-    "emoticons": [],
+    "emoticons": [
+        ":-1"
+    ],
     "keywords": [
         "` + _lt("-1") + `",
         "` + _lt("down") + `",
@@ -4566,7 +4665,9 @@ const emojisData2 = `{
 {
     "category": "People & Body",
     "codepoints": "👳",
-    "emoticons": [],
+    "emoticons": [
+        ":turban"
+    ],
     "keywords": [
         "` + _lt("person wearing turban") + `",
         "` + _lt("turban") + `"
@@ -5458,7 +5559,9 @@ const emojisData2 = `{
 {
     "category": "People & Body",
     "codepoints": "🏃",
-    "emoticons": [],
+    "emoticons": [
+        ":run"
+    ],
     "keywords": [
         "` + _lt("marathon") + `",
         "` + _lt("person running") + `",
@@ -7363,7 +7466,9 @@ const emojisData3 = `{
 {
     "category": "Animals & Nature",
     "codepoints": "🐗",
-    "emoticons": [],
+    "emoticons": [
+        ":boar"
+    ],
     "keywords": [
         "` + _lt("boar") + `",
         "` + _lt("pig") + `"
@@ -7655,7 +7760,9 @@ const emojisData3 = `{
 {
     "category": "Animals & Nature",
     "codepoints": "🐻",
-    "emoticons": [],
+    "emoticons": [
+        ":bear"
+    ],
     "keywords": [
         "` + _lt("bear") + `",
         "` + _lt("face") + `"
@@ -8250,7 +8357,9 @@ const emojisData3 = `{
 {
     "category": "Animals & Nature",
     "codepoints": "🐌",
-    "emoticons": [],
+    "emoticons": [
+        ":snail"
+    ],
     "keywords": [
         "` + _lt("mollusc") + `",
         "` + _lt("snail") + `"
@@ -8320,7 +8429,9 @@ const emojisData3 = `{
 {
     "category": "Animals & Nature",
     "codepoints": "🐞",
-    "emoticons": [],
+    "emoticons": [
+        ":bug"
+    ],
     "keywords": [
         "` + _lt("beetle") + `",
         "` + _lt("insect") + `",
@@ -8479,7 +8590,9 @@ const emojisData3 = `{
 {
     "category": "Animals & Nature",
     "codepoints": "🌹",
-    "emoticons": [],
+    "emoticons": [
+        ":sunflower"
+    ],
     "keywords": [
         "` + _lt("flower") + `",
         "` + _lt("rose") + `"
@@ -8666,7 +8779,9 @@ const emojisData3 = `{
 {
     "category": "Animals & Nature",
     "codepoints": "🍀",
-    "emoticons": [],
+    "emoticons": [
+        ":clover"
+    ],
     "keywords": [
         "` + _lt("4") + `",
         "` + _lt("clover") + `",
@@ -8796,7 +8911,9 @@ const emojisData4 = `{
 {
     "category": "Food & Drink",
     "codepoints": "🍌",
-    "emoticons": [],
+    "emoticons": [
+        ":banana"
+    ],
     "keywords": [
         "` + _lt("banana") + `",
         "` + _lt("fruit") + `"
@@ -9281,7 +9398,9 @@ const emojisData4 = `{
 {
     "category": "Food & Drink",
     "codepoints": "🧀",
-    "emoticons": [],
+    "emoticons": [
+        ":cheese"
+    ],
     "keywords": [
         "` + _lt("cheese") + `",
         "` + _lt("cheese wedge") + `"
@@ -9357,7 +9476,9 @@ const emojisData4 = `{
 {
     "category": "Food & Drink",
     "codepoints": "🍔",
-    "emoticons": [],
+    "emoticons": [
+        ":hamburger"
+    ],
     "keywords": [
         "` + _lt("beefburger") + `",
         "` + _lt("burger") + `",
@@ -9371,7 +9492,9 @@ const emojisData4 = `{
 {
     "category": "Food & Drink",
     "codepoints": "🍟",
-    "emoticons": [],
+    "emoticons": [
+        ":fries"
+    ],
     "keywords": [
         "` + _lt("chips") + `",
         "` + _lt("french fries") + `",
@@ -9387,7 +9510,9 @@ const emojisData4 = `{
 {
     "category": "Food & Drink",
     "codepoints": "🍕",
-    "emoticons": [],
+    "emoticons": [
+        ":pizza"
+    ],
     "keywords": [
         "` + _lt("cheese") + `",
         "` + _lt("pizza") + `",
@@ -9661,7 +9786,9 @@ const emojisData4 = `{
 {
     "category": "Food & Drink",
     "codepoints": "🍙",
-    "emoticons": [],
+    "emoticons": [
+        ":rice_ball"
+    ],
     "keywords": [
         "` + _lt("ball") + `",
         "` + _lt("Japanese") + `",
@@ -9759,7 +9886,9 @@ const emojisData4 = `{
 {
     "category": "Food & Drink",
     "codepoints": "🍣",
-    "emoticons": [],
+    "emoticons": [
+        ":sushi"
+    ],
     "keywords": [
         "` + _lt("sushi") + `"
     ],
@@ -10031,7 +10160,9 @@ const emojisData4 = `{
 {
     "category": "Food & Drink",
     "codepoints": "🍪",
-    "emoticons": [],
+    "emoticons": [
+        ":cookie"
+    ],
     "keywords": [
         "` + _lt("biscuit") + `",
         "` + _lt("cookie") + `",
@@ -10046,7 +10177,9 @@ const emojisData4 = `{
 {
     "category": "Food & Drink",
     "codepoints": "🎂",
-    "emoticons": [],
+    "emoticons": [
+        ":cake"
+    ],
     "keywords": [
         "` + _lt("birthday") + `",
         "` + _lt("cake") + `",
@@ -10063,7 +10196,9 @@ const emojisData4 = `{
 {
     "category": "Food & Drink",
     "codepoints": "🍰",
-    "emoticons": [],
+    "emoticons": [
+        ":cake_part"
+    ],
     "keywords": [
         "` + _lt("cake") + `",
         "` + _lt("dessert") + `",
@@ -10214,7 +10349,9 @@ const emojisData4 = `{
 {
     "category": "Food & Drink",
     "codepoints": "☕",
-    "emoticons": [],
+    "emoticons": [
+        ":coffee"
+    ],
     "keywords": [
         "` + _lt("beverage") + `",
         "` + _lt("coffee") + `",
@@ -10283,7 +10420,9 @@ const emojisData4 = `{
 {
     "category": "Food & Drink",
     "codepoints": "🍷",
-    "emoticons": [],
+    "emoticons": [
+        ":wine"
+    ],
     "keywords": [
         "` + _lt("bar") + `",
         "` + _lt("beverage") + `",
@@ -10299,7 +10438,9 @@ const emojisData4 = `{
 {
     "category": "Food & Drink",
     "codepoints": "🍸",
-    "emoticons": [],
+    "emoticons": [
+        ":cocktail"
+    ],
     "keywords": [
         "` + _lt("bar") + `",
         "` + _lt("cocktail") + `",
@@ -10314,7 +10455,9 @@ const emojisData4 = `{
 {
     "category": "Food & Drink",
     "codepoints": "🍹",
-    "emoticons": [],
+    "emoticons": [
+        ":tropical"
+    ],
     "keywords": [
         "` + _lt("bar") + `",
         "` + _lt("drink") + `",
@@ -10328,7 +10471,9 @@ const emojisData4 = `{
 {
     "category": "Food & Drink",
     "codepoints": "🍺",
-    "emoticons": [],
+    "emoticons": [
+        ":beer"
+    ],
     "keywords": [
         "` + _lt("bar") + `",
         "` + _lt("beer") + `",
@@ -10343,7 +10488,9 @@ const emojisData4 = `{
 {
     "category": "Food & Drink",
     "codepoints": "🍻",
-    "emoticons": [],
+    "emoticons": [
+        ":beers"
+    ],
     "keywords": [
         "` + _lt("bar") + `",
         "` + _lt("beer") + `",
@@ -11921,7 +12068,9 @@ const emojisData5 = `{
 {
     "category": "Travel & Places",
     "codepoints": "🚲",
-    "emoticons": [],
+    "emoticons": [
+        ":bike"
+    ],
     "keywords": [
         "` + _lt("bicycle") + `",
         "` + _lt("bike") + `"
@@ -13147,7 +13296,9 @@ const emojisData5 = `{
 {
     "category": "Travel & Places",
     "codepoints": "☀️",
-    "emoticons": [],
+    "emoticons": [
+        ":sun"
+    ],
     "keywords": [
         "` + _lt("bright") + `",
         "` + _lt("rays") + `",
@@ -13207,7 +13358,9 @@ const emojisData5 = `{
 {
     "category": "Travel & Places",
     "codepoints": "⭐",
-    "emoticons": [],
+    "emoticons": [
+        ":star"
+    ],
     "keywords": [
         "` + _lt("star") + `"
     ],
@@ -13266,7 +13419,9 @@ const emojisData5 = `{
 {
     "category": "Travel & Places",
     "codepoints": "☁️",
-    "emoticons": [],
+    "emoticons": [
+        ":cloud"
+    ],
     "keywords": [
         "` + _lt("cloud") + `",
         "` + _lt("weather") + `"
@@ -13279,7 +13434,9 @@ const emojisData5 = `{
 {
     "category": "Travel & Places",
     "codepoints": "⛅",
-    "emoticons": [],
+    "emoticons": [
+        ":partly_sunny:"
+    ],
     "keywords": [
         "` + _lt("cloud") + `",
         "` + _lt("sun") + `",
@@ -13452,7 +13609,9 @@ const emojisData5 = `{
 {
     "category": "Travel & Places",
     "codepoints": "🌈",
-    "emoticons": [],
+    "emoticons": [
+        ":rainbow"
+    ],
     "keywords": [
         "` + _lt("rain") + `",
         "` + _lt("rainbow") + `"
@@ -13527,7 +13686,9 @@ const emojisData5 = `{
 {
     "category": "Travel & Places",
     "codepoints": "⚡",
-    "emoticons": [],
+    "emoticons": [
+        ":zap"
+    ],
     "keywords": [
         "` + _lt("danger") + `",
         "` + _lt("electric") + `",
@@ -13600,7 +13761,9 @@ const emojisData5 = `{
 {
     "category": "Travel & Places",
     "codepoints": "🔥",
-    "emoticons": [],
+    "emoticons": [
+        ":fire"
+    ],
     "keywords": [
         "` + _lt("fire") + `",
         "` + _lt("flame") + `",
@@ -13748,7 +13911,9 @@ const emojisData6 = `{
 {
     "category": "Activities",
     "codepoints": "🎉",
-    "emoticons": [],
+    "emoticons": [
+        ":party"
+    ],
     "keywords": [
         "` + _lt("celebration") + `",
         "` + _lt("party") + `",
@@ -13978,7 +14143,9 @@ const emojisData6 = `{
 {
     "category": "Activities",
     "codepoints": "🏆",
-    "emoticons": [],
+    "emoticons": [
+        ":trophy"
+    ],
     "keywords": [
         "` + _lt("celebration") + `",
         "` + _lt("prize") + `",
@@ -14052,7 +14219,9 @@ const emojisData6 = `{
 {
     "category": "Activities",
     "codepoints": "⚽",
-    "emoticons": [],
+    "emoticons": [
+        ":soccer"
+    ],
     "keywords": [
         "` + _lt("ball") + `",
         "` + _lt("football") + `",
@@ -14122,7 +14291,9 @@ const emojisData6 = `{
 {
     "category": "Activities",
     "codepoints": "🏈",
-    "emoticons": [],
+    "emoticons": [
+        ":football"
+    ],
     "keywords": [
         "` + _lt("american") + `",
         "` + _lt("ball") + `",
@@ -14506,7 +14677,9 @@ const emojisData6 = `{
 {
     "category": "Activities",
     "codepoints": "🎱",
-    "emoticons": [],
+    "emoticons": [
+        ":8ball"
+    ],
     "keywords": [
         "` + _lt("8") + `",
         "` + _lt("ball") + `",
@@ -15599,7 +15772,9 @@ const emojisData7 = `{
 {
     "category": "Objects",
     "codepoints": "📯",
-    "emoticons": [],
+    "emoticons": [
+        ":postal_horn"
+    ],
     "keywords": [
         "` + _lt("horn") + `",
         "` + _lt("post") + `",
@@ -15656,7 +15831,9 @@ const emojisData7 = `{
 {
     "category": "Objects",
     "codepoints": "🎵",
-    "emoticons": [],
+    "emoticons": [
+        ":music"
+    ],
     "keywords": [
         "` + _lt("music") + `",
         "` + _lt("musical note") + `",
@@ -15728,7 +15905,9 @@ const emojisData7 = `{
 {
     "category": "Objects",
     "codepoints": "🎤",
-    "emoticons": [],
+    "emoticons": [
+        ":microphone"
+    ],
     "keywords": [
         "` + _lt("karaoke") + `",
         "` + _lt("mic") + `",
@@ -15786,7 +15965,9 @@ const emojisData7 = `{
 {
     "category": "Objects",
     "codepoints": "🎸",
-    "emoticons": [],
+    "emoticons": [
+        ":guitar"
+    ],
     "keywords": [
         "` + _lt("guitar") + `",
         "` + _lt("instrument") + `",
@@ -15817,7 +15998,9 @@ const emojisData7 = `{
 {
     "category": "Objects",
     "codepoints": "🎺",
-    "emoticons": [],
+    "emoticons": [
+        ":trumpet"
+    ],
     "keywords": [
         "` + _lt("instrument") + `",
         "` + _lt("music") + `",
@@ -16187,7 +16370,9 @@ const emojisData7 = `{
 {
     "category": "Objects",
     "codepoints": "🎬",
-    "emoticons": [],
+    "emoticons": [
+        ":clapper"
+    ],
     "keywords": [
         "` + _lt("clapper") + `",
         "` + _lt("clapper board") + `",
@@ -17264,7 +17449,9 @@ const emojisData7 = `{
 {
     "category": "Objects",
     "codepoints": "📌",
-    "emoticons": [],
+    "emoticons": [
+        ":pin"
+    ],
     "keywords": [
         "` + _lt("drawing-pin") + `",
         "` + _lt("pin") + `",
@@ -17466,7 +17653,9 @@ const emojisData7 = `{
 {
     "category": "Objects",
     "codepoints": "🔑",
-    "emoticons": [],
+    "emoticons": [
+        ":key"
+    ],
     "keywords": [
         "` + _lt("key") + `",
         "` + _lt("lock") + `",
