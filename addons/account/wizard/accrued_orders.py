@@ -95,8 +95,8 @@ class AccruedExpenseRevenue(models.TransientModel):
             preview_columns = [
                 {'field': 'account_id', 'label': _('Account')},
                 {'field': 'name', 'label': _('Label')},
-                {'field': 'debit', 'label': _('Debit'), 'class': 'text-right text-nowrap'},
-                {'field': 'credit', 'label': _('Credit'), 'class': 'text-right text-nowrap'},
+                {'field': 'debit', 'label': _('Debit'), 'class': 'text-end text-nowrap'},
+                {'field': 'credit', 'label': _('Credit'), 'class': 'text-end text-nowrap'},
             ]
             record.preview_data = json.dumps({
                 'groups_vals': preview_vals,
