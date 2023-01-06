@@ -27,6 +27,7 @@ from odoo.tools import OrderedSet, escape_psql, html_escape as escape
 from odoo.addons.http_routing.models.ir_http import slug, slugify, _guess_mimetype
 from odoo.addons.portal.controllers.portal import pager as portal_pager
 from odoo.addons.portal.controllers.web import Home
+from odoo.addons.web.controllers.binary import Binary
 
 logger = logging.getLogger(__name__)
 
@@ -284,6 +285,15 @@ class Website(Home):
                 create_sitemap('/sitemap-%d.xml' % current_website.id, content)
 
         return request.make_response(content, [('Content-Type', mimetype)])
+
+    # if not icon provided in DOM, browser tries to access /favicon.ico, eg when
+    # opening an order pdf
+    @http.route(['/favicon.ico'], type='http', auth='public', website=True, multilang=False, sitemap=False)
+    def favicon(self, **kw):
+        website = request.website
+        response = request.redirect(website.image_url(website, 'favicon'), code=301)
+        response.headers['Cache-Control'] = 'public, max-age=%s' % http.STATIC_CACHE_LONG
+        return response
 
     @http.route('/website/info', type='http', auth="public", website=True, sitemap=True)
     def website_info(self, **kwargs):
@@ -784,11 +794,27 @@ class Website(Home):
         return request.redirect('/')
 
 
-class WebsiteBinary(http.Controller):
-    # if not icon provided in DOM, browser tries to access /favicon.ico, eg when opening an order pdf
-    @http.route(['/favicon.ico'], type='http', auth='public', website=True, multilang=False, sitemap=False)
-    def favicon(self, **kw):
-        website = request.website
-        response = request.redirect(website.image_url(website, 'favicon'), code=301)
-        response.headers['Cache-Control'] = 'public, max-age=%s' % http.STATIC_CACHE_LONG
-        return response
+class WebsiteBinary(Binary):
+
+    # Retrocompatibility routes
+    @http.route([
+        '/website/image',
+        '/website/image/<xmlid>',
+        '/website/image/<xmlid>/<int:width>x<int:height>',
+        '/website/image/<xmlid>/<field>',
+        '/website/image/<xmlid>/<field>/<int:width>x<int:height>',
+        '/website/image/<model>/<id>/<field>',
+        '/website/image/<model>/<id>/<field>/<int:width>x<int:height>'
+    ], type='http', auth="public", website=False, multilang=False)
+    # pylint: disable=redefined-builtin,invalid-name
+    def website_content_image(self, id=None, max_width=0, max_height=0, **kw):
+        if max_width:
+            kw['width'] = max_width
+        if max_height:
+            kw['height'] = max_height
+        if id:
+            id, _, unique = id.partition('_')
+            kw['id'] = int(id)
+            if unique:
+                kw['unique'] = unique
+        return self.content_image(**kw)
