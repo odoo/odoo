@@ -78,9 +78,14 @@ class AccountMove(models.Model):
         # on expo invoice you can mix services and products
         expo_invoice = self.l10n_latam_document_type_id.code in ['19', '20', '21']
 
+        # WSFEX 1668 - If Expo invoice and we have a "IVA Liberado – Ley Nº 19.640" (Zona Franca) partner
+        # then AFIP concept to use should be type "Others (4)"
+        is_zona_franca = self.partner_id.l10n_ar_afip_responsibility_type_id == self.env.ref("l10n_ar.res_IVA_LIB")
         # Default value "product"
         afip_concept = '1'
-        if product_types == service:
+        if expo_invoice and is_zona_franca:
+            afip_concept = '4'
+        elif product_types == service:
             afip_concept = '2'
         elif product_types - consumable and product_types - service and not expo_invoice:
             afip_concept = '3'
