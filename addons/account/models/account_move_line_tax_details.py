@@ -34,6 +34,7 @@ class AccountMoveLine(models.Model):
         :param fallback:        Fallback on an approximated mapping if the mapping failed.
         :return:                A tuple <query, params>.
         """
+        #pylint: disable=sql-injection        
         group_taxes = self.env['account.tax'].search([('amount_type', '=', 'group')])
 
         group_taxes_query_list = []

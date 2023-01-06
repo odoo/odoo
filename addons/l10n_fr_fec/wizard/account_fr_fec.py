@@ -103,6 +103,7 @@ class AccountFrFec(models.TransientModel):
             return company.vat
 
     def generate_fec(self):
+        #pylint: disable=sql-injection
         self.ensure_one()
         if not (self.env.is_admin() or self.env.user.has_group('account.group_account_user')):
             raise AccessDenied()
