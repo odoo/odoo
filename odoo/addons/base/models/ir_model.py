@@ -11,7 +11,8 @@ from collections.abc import Mapping
 from operator import itemgetter
 
 from psycopg2 import sql
-from psycopg2.extras import Json
+from psycopg2.extras import Json, execute_values
+from psycopg2.sql import Identifier, SQL, Placeholder
 
 from odoo import api, fields, models, tools, _, _lt, Command
 from odoo.exceptions import AccessError, UserError, ValidationError
@@ -65,8 +66,8 @@ def selection_xmlid(module, model_name, field_name, value):
 
 
 # generic INSERT and UPDATE queries
-INSERT_QUERY = "INSERT INTO {table} ({cols}) VALUES {rows} RETURNING id"
-UPDATE_QUERY = "UPDATE {table} SET {assignment} WHERE {condition} RETURNING id"
+INSERT_QUERY = SQL("INSERT INTO {table} ({cols}) VALUES %s RETURNING id")
+UPDATE_QUERY = SQL("UPDATE {table} SET {assignment} WHERE {condition} RETURNING id")
 
 quote = '"{}"'.format
 
@@ -79,12 +80,11 @@ def query_insert(cr, table, rows):
         rows = [rows]
     cols = list(rows[0])
     query = INSERT_QUERY.format(
-        table='"{}"'.format(table),
-        cols=",".join(['"{}"'.format(col) for col in cols]),
-        rows=",".join("%s" for row in rows),
+        table=Identifier(table),
+        cols=SQL(",").join(map(Identifier, cols)),
     )
     params = [tuple(row[col] for col in cols) for row in rows]
-    cr.execute(query, params)
+    execute_values(cr._obj, query, params)
     return [row[0] for row in cr.fetchall()]
 
 
@@ -94,9 +94,15 @@ def query_update(cr, table, values, selectors):
     """
     setters = set(values) - set(selectors)
     query = UPDATE_QUERY.format(
-        table='"{}"'.format(table),
-        assignment=",".join('"{0}"=%({0})s'.format(s) for s in setters),
-        condition=" AND ".join('"{0}"=%({0})s'.format(s) for s in selectors),
+        table=Identifier(table),
+        assignment=SQL(",").join(
+            SQL("{} = {}").format(Identifier(s), Placeholder(s))
+            for s in setters
+        ),
+        condition=SQL(" AND ").join(
+            SQL("{} = {}").format(Identifier(s), Placeholder(s))
+            for s in selectors
+        ),
     )
     cr.execute(query, values)
     return [row[0] for row in cr.fetchall()]
