@@ -32,6 +32,10 @@ class SaleOrder(models.Model):
     def _get_default_require_payment(self):
         return self.env.company.portal_confirmation_pay
 
+    def _compute_amount_total_without_delivery(self):
+        self.ensure_one()
+        return self.amount_total
+
     @api.depends('order_line.price_total')
     def _amount_all(self):
         """
