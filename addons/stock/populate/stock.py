@@ -550,11 +550,11 @@ class StockMove(models.Model):
             picking_to_validate.with_context(skip_backorder=True, skip_sms=True).button_validate()
 
         # (Un)comment to test a DB with a lot of outgoing/incoming/internal confirmed moves, e.g. for testing of forecasted report
-        # pickings = confirm_pickings(0.8)
+        pickings = confirm_pickings(0.8)
 
         # (Un)comment to test a DB with a lot of outgoing/incoming/internal finished moves
-        # assign_picking(pickings)
-        # validate_pickings(pickings, 1)
+        assign_picking(pickings)
+        validate_pickings(pickings, 0.2)
 
         return moves.exists()  # Confirm picking can unlink some moves
 

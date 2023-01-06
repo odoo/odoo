@@ -57,3 +57,4 @@ from . import test_cloc
 from . import test_profiler
 from . import test_pdf
 from . import test_neutralize
+from . import test_compute_aggregate

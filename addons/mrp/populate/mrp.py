@@ -377,7 +377,7 @@ class StockMove(models.Model):
             mo_to_confirm.action_confirm()
 
         # (Un)comment this line to confirm a part of prototype MO, can be useful to check performance
-        # confirm_prototype_mo(0.8)
+        confirm_prototype_mo(0.6)
 
         return moves.exists()  # Confirm Mo can unlink moves
 
