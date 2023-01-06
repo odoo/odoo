@@ -402,6 +402,7 @@ class TestExpenses(TestExpenseCommon):
         sheet.action_sheet_move_create()
         action_data = sheet.action_register_payment()
         wizard = Form(self.env['account.payment.register'].with_context(action_data['context'])).save()
+        wizard.group_payment = False
         action = wizard.action_create_payments()
         self.assertEqual(sheet.state, 'done', 'all account.move.line linked to expenses must be reconciled after payment')
         move = self.env['account.payment'].search(action['domain']).move_id
@@ -611,6 +612,7 @@ class TestExpenses(TestExpenseCommon):
         payment_method_line = self.env.company.bank_journal_ids.outbound_payment_method_line_ids.filtered(lambda m: m.code == 'check_printing')
         with Form(self.env[action_data['res_model']].with_context(action_data['context'])) as wiz_form:
             wiz_form.payment_method_line_id = payment_method_line
+            wiz_form.group_payment = False
         wizard = wiz_form.save()
         action = wizard.action_create_payments()
         self.assertEqual(sheet.state, 'done', 'all account.move.line linked to expenses must be reconciled after payment')
