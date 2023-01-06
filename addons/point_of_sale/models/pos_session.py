@@ -367,7 +367,7 @@ class PosSession(models.Model):
             statement = self.cash_register_id
             if not self.config_id.cash_control:
                 statement.write({'balance_end_real': statement.balance_end})
-            statement.button_post()
+            statement.sudo().button_post()
             statement.button_validate()
         self.write({'state': 'closed'})
         return True
