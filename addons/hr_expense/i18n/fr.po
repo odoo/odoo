@@ -6,7 +6,8 @@
 # Damien Bouvy <dbo@odoo.com>, 2022
 # Martin Trigaux, 2022
 # Cécile Collart <cco@odoo.com>, 2022
-# Jolien De Paepe, 2022
+# Guillaume Schifflers, 2023
+# Jolien De Paepe, 2023
 # 
 msgid ""
 msgstr ""
@@ -14,7 +15,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-12-15 12:49+0000\n"
 "PO-Revision-Date: 2022-09-22 05:46+0000\n"
-"Last-Translator: Jolien De Paepe, 2022\n"
+"Last-Translator: Jolien De Paepe, 2023\n"
 "Language-Team: French (https://www.transifex.com/odoo/teams/41243/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -958,7 +959,7 @@ msgstr "Activités futures"
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.product_product_expense_form_view
 msgid "General Information"
-msgstr "Information Générale"
+msgstr "Informations générales"
 
 #. module: hr_expense
 #. odoo-python
@@ -1058,7 +1059,7 @@ msgstr "En paiement"
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__tax_ids
 msgid "Included taxes"
-msgstr "Taxes incluses"
+msgstr "Toutes taxes comprises"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.res_config_settings_view_form
@@ -1519,7 +1520,7 @@ msgstr "Prix :"
 #: model:ir.model,name:hr_expense.model_product_template
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_split__product_id
 msgid "Product"
-msgstr "Article"
+msgstr "Produit"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__product_description
@@ -1529,12 +1530,12 @@ msgstr "Description du produit"
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.product_product_expense_form_view
 msgid "Product Name"
-msgstr "Nom de l'article"
+msgstr "Nom du produit"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.product_product_expense_tree_view
 msgid "Product Variants"
-msgstr "Variantes d'article"
+msgstr "Variantes de produit"
 
 #. module: hr_expense
 #: model:ir.model,name:hr_expense.model_hr_employee_public
@@ -2273,6 +2274,14 @@ msgstr "Vous ne pouvez pas supprimer une note de frais postée ou approuvée."
 msgid "You cannot delete a posted or paid expense."
 msgstr ""
 "Vous ne pouvez pas supprimer une note de frais comptabilisée ou payée."
+
+#. module: hr_expense
+#. odoo-python
+#: code:addons/hr_expense/models/analytic.py:0
+#, python-format
+msgid "You cannot delete an analytic account that is used in an expense."
+msgstr ""
+"Vous ne pouvez pas supprimer un compte analytique utilisé dans une dépense."
 
 #. module: hr_expense
 #. odoo-python

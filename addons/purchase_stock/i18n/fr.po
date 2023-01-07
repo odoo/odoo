@@ -5,7 +5,7 @@
 # Translators:
 # Martin Trigaux, 2022
 # Cécile Collart <cco@odoo.com>, 2022
-# Jolien De Paepe, 2022
+# Jolien De Paepe, 2023
 # 
 msgid ""
 msgstr ""
@@ -13,7 +13,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-12-15 12:49+0000\n"
 "PO-Revision-Date: 2022-09-22 05:54+0000\n"
-"Last-Translator: Jolien De Paepe, 2022\n"
+"Last-Translator: Jolien De Paepe, 2023\n"
 "Language-Team: French (https://www.transifex.com/odoo/teams/41243/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -98,7 +98,7 @@ msgid ""
 "  - Manual: the quantity is set manually on the line\n"
 "  - Stock Moves: the quantity comes from confirmed pickings\n"
 msgstr ""
-"Selon la configuration de l'article, la quantité reçue peut être automatiquement calculée :\n"
+"Selon la configuration du produit, la quantité reçue peut être automatiquement calculée :\n"
 "  - Manuel: la quantité est indiquée manuellement sur la ligne\n"
 "  - Mouvements de stock: la quantité provient de transferts confirmés\n"
 
@@ -230,7 +230,7 @@ msgid ""
 "order, etc."
 msgstr ""
 "En fonction des modules installés, cela va vous permettre de définir les "
-"routes sur l'article: acheter, fabriquer, réapprovisionner sur commande, "
+"routes sur le produit: acheter, fabriquer, réapprovisionner sur commande, "
 "etc."
 
 #. module: purchase_stock
@@ -294,7 +294,7 @@ msgid ""
 " with the location (%s) of the reordering rule (%s). Change the operation "
 "type or cancel the request for quotation."
 msgstr ""
-"Pour l'article %s, l'entrepôt du type de transfert (%s) est inconsistant "
+"Pour le produit %s, l'entrepôt du type de transfert (%s) est inconsistant "
 "avec l'emplacement (%s) de la règle de réapprovisionnement (%s). Changez le "
 "type de transfert ou annulez la commande."
 
@@ -495,8 +495,8 @@ msgid ""
 "Over the past 12 months; the number of products received on time divided by "
 "the number of ordered products."
 msgstr ""
-"Au cours des 12 derniers mois; le nombre d'articles reçus à temps divisé par"
-" le nombre de produits commandés."
+"Au cours des 12 derniers mois; le nombre de produits reçus à temps divisé "
+"par le nombre de produits commandés."
 
 #. module: purchase_stock
 #: model:ir.model.fields,field_description:purchase_stock.field_product_product__purchase_order_line_ids
@@ -524,12 +524,12 @@ msgstr "Groupe d'approvisionnement"
 #: model:ir.model,name:purchase_stock.model_product_template
 #: model:ir.model.fields,field_description:purchase_stock.field_vendor_delay_report__product_id
 msgid "Product"
-msgstr "Article"
+msgstr "Produit"
 
 #. module: purchase_stock
 #: model:ir.model.fields,field_description:purchase_stock.field_vendor_delay_report__category_id
 msgid "Product Category"
-msgstr "Catégorie d'article"
+msgstr "Catégorie de produit"
 
 #. module: purchase_stock
 #: model:ir.model.fields,field_description:purchase_stock.field_stock_replenishment_info__supplierinfo_id
@@ -540,7 +540,7 @@ msgstr "Fournisseur"
 #. module: purchase_stock
 #: model:ir.model,name:purchase_stock.model_product_product
 msgid "Product Variant"
-msgstr "Variante d'article"
+msgstr "Variante de produit"
 
 #. module: purchase_stock
 #: model:ir.model.fields,field_description:purchase_stock.field_purchase_order_line__propagate_cancel
@@ -615,14 +615,14 @@ msgstr "Statut de la réception"
 #. module: purchase_stock
 #: model_terms:ir.ui.view,arch_db:purchase_stock.purchase_order_view_form_inherit
 msgid "Receive Products"
-msgstr "Réception par article"
+msgstr "Réception par produit"
 
 #. module: purchase_stock
 #. odoo-javascript
 #: code:addons/purchase_stock/static/src/js/tours/purchase_stock.js:0
 #, python-format
 msgid "Receive the ordered products."
-msgstr "Recevoir les articles commandés."
+msgstr "Recevoir les produits commandés."
 
 #. module: purchase_stock
 #: model:ir.model.fields,field_description:purchase_stock.field_purchase_order_line__qty_received_method
@@ -756,7 +756,7 @@ msgid ""
 " Go on the product form and complete the list of vendors."
 msgstr ""
 "Il n'y a pas de prix fournisseur correspondant pour générer un bon d'achat "
-"pour l'article  %s (pas de fournsiseur défini, quantité minimum non "
+"pour le produit  %s (pas de fournsiseur défini, quantité minimum non "
 "atteinte, dates invalides, ...). Aller sur la fiche produit et compléter la "
 "liste des prix fournisseurs."
 
@@ -769,8 +769,8 @@ msgid ""
 "on-demand flow. The requested delivery address will be the customer delivery"
 " address and not your warehouse."
 msgstr ""
-"Cela permet de demander une livraison directe des articles. Vos fournisseurs"
-" livrent ainsi vos clients directement. Un article en livraison directe "
+"Cela permet de demander une livraison directe des produits. Vos fournisseurs"
+" livrent ainsi vos clients directement. Un produit en livraison directe "
 "génère un appel d'offres d'achat une fois le bon de commande confirmé. Il "
 "s'agit d'un flux à la demande. L'adresse de livraison demandée est celle de "
 "votre client, et non de votre entrepôt."
@@ -869,7 +869,7 @@ msgstr "Entrepôt"
 #. module: purchase_stock
 #: model:ir.model.fields,help:purchase_stock.field_stock_warehouse__buy_to_resupply
 msgid "When products are bought, they can be delivered to this warehouse"
-msgstr "Quand on achète des articles, ils peuvent être livrés à cet entrepôt"
+msgstr "Quand on achète des produits, ils peuvent être livrés à cet entrepôt"
 
 #. module: purchase_stock
 #. odoo-python
@@ -877,10 +877,9 @@ msgstr "Quand on achète des articles, ils peuvent être livrés à cet entrepô
 #, python-format
 msgid ""
 "When products are needed in <b>%s</b>, <br/> a request for quotation is "
-"created to fulfill the need."
+"created to fulfill the need.<br/>Note: This rule will be used in combination"
+" with the rules<br/>of the reception route(s)"
 msgstr ""
-"Quand des produits sont nécessaires en <b>%s,<br/> une demande de prix est "
-"créée afin de pourvoir à ce besoin."
 
 #. module: purchase_stock
 #. odoo-python
