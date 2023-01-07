@@ -29,7 +29,7 @@ class AccountEdiFormat(models.Model):
         if move.move_type == "out_refund":
             return "direct"
         einvoice_in_edi_format = move.journal_id.edi_format_ids.filtered(lambda f: f.code == "in_einvoice_1_03")
-        return einvoice_in_edi_format and einvoice_in_edi_format._is_required_for_invoice(move) and "irn" or "direct"
+        return einvoice_in_edi_format and einvoice_in_edi_format._get_move_applicability(move) and "irn" or "direct"
 
     def _is_compatible_with_journal(self, journal):
         if self.code == "in_ewaybill_1_03":
@@ -45,31 +45,41 @@ class AccountEdiFormat(models.Model):
             return False
         return super()._is_enabled_by_default_on_journal(journal)
 
-    def _is_required_for_invoice(self, invoice):
+    def _get_move_applicability(self, invoice):
         self.ensure_one()
-        if self.code == "in_ewaybill_1_03":
-            return invoice.l10n_in_mode and invoice.is_invoice(include_receipts=True)
-        return super()._is_required_for_invoice(invoice)
+        if self.code != 'in_ewaybill_1_03':
+            return super()._get_move_applicability(invoice)
+
+        if invoice.is_invoice() and invoice.country_code == 'IN':
+            res = {
+                'post': self._l10n_in_edi_ewaybill_post_invoice_edi,
+                'cancel': self._l10n_in_edi_ewaybill_cancel_invoice,
+                'edi_content': self._l10n_in_edi_ewaybill_json_invoice_content,
+            }
+            base = self._l10n_in_edi_ewaybill_base_irn_or_direct(invoice)
+            if base == 'irn':
+                res.update({
+                    'post': self._l10n_in_edi_ewaybill_irn_post_invoice_edi,
+                    'edi_content': self._l10n_in_edi_ewaybill_irn_json_invoice_content,
+                    })
+            return res
 
     def _needs_web_services(self):
         self.ensure_one()
         return self.code == "in_ewaybill_1_03" or super()._needs_web_services()
 
-    def _get_invoice_edi_content(self, move):
-        if self.code != "in_ewaybill_1_03":
-            return super()._get_invoice_edi_content(move)
-        base = self._l10n_in_edi_ewaybill_base_irn_or_direct(move)
-        if base == "irn":
-            json_dump = json.dumps(self._l10n_in_edi_irn_ewaybill_generate_json(move))
-        else:
-            json_dump = json.dumps(self._l10n_in_edi_ewaybill_generate_json(move))
-        return json_dump.encode()
+    def _l10n_in_edi_ewaybill_irn_json_invoice_content(self, move):
+        return json.dumps(self._l10n_in_edi_irn_ewaybill_generate_json(move)).encode()
+
+    def _l10n_in_edi_ewaybill_json_invoice_content(self, move):
+        return json.dumps(self._l10n_in_edi_ewaybill_generate_json(move)).encode()
 
     def _check_move_configuration(self, move):
         if self.code != "in_ewaybill_1_03":
             return super()._check_move_configuration(move)
+        base = self._l10n_in_edi_ewaybill_base_irn_or_direct(move)
         error_message = []
-        if not move.l10n_in_type_id:
+        if not move.l10n_in_type_id and base == "direct":
             error_message.append(_("- Document Type"))
         if not move.l10n_in_mode:
             error_message.append(_("- Transportation Mode"))
@@ -83,7 +93,6 @@ class AccountEdiFormat(models.Model):
                 error_message.append(_("- Transport document number and date is required when Transportation Mode is Rail,Air or Ship"))
         if error_message:
             error_message.insert(0, _("The following information are missing on the invoice (see eWayBill tab):"))
-        base = self._l10n_in_edi_ewaybill_base_irn_or_direct(move)
         if base == "irn":
             # already checked by E-invoice (l10n_in_edi) so no need to check
             return error_message
@@ -94,7 +103,7 @@ class AccountEdiFormat(models.Model):
             error_message.append(_("%s number should be set and not more than 16 characters",
                 (is_purchase and "Bill Reference" or "Invoice")))
         goods_line_is_available = False
-        for line in move.invoice_line_ids.filtered(lambda line: not (line.display_type or line.is_rounding_line or line.product_id.type == "service")):
+        for line in move.invoice_line_ids.filtered(lambda line: not (line.display_type in ('line_section', 'line_note', 'rounding') or line.product_id.type == "service")):
             goods_line_is_available = True
             if line.product_id:
                 hsn_code = self._l10n_in_edi_extract_digits(line.product_id.l10n_in_hsn_code)
@@ -112,16 +121,7 @@ class AccountEdiFormat(models.Model):
             error_message.insert(0, _("Impossible to send the Ewaybill."))
         return error_message
 
-    def _post_invoice_edi(self, invoices):
-        if self.code != "in_ewaybill_1_03":
-            return super()._post_invoice_edi(invoices)
-        base = self._l10n_in_edi_ewaybill_base_irn_or_direct(invoices)
-        if base == "irn":
-            return self._l10n_in_edi_ewaybill_irn_post_invoice_edi(invoices)
-        else:
-            return self._l10n_in_edi_ewaybill_post_invoice_edi(invoices)
-
-    def _cancel_invoice_edi(self, invoices):
+    def _l10n_in_edi_ewaybill_cancel_invoice(self, invoices):
         if self.code != "in_ewaybill_1_03":
             return super()._cancel_invoice_edi(invoices)
         response = {}
@@ -375,7 +375,7 @@ class AccountEdiFormat(models.Model):
         extract_digits = self._l10n_in_edi_extract_digits
         tax_details = self._l10n_in_prepare_edi_tax_details(invoices, filter_invl_to_apply=filter_invl_to_apply)
         tax_details_by_code = self._get_l10n_in_tax_details_by_line_code(tax_details.get("tax_details", {}))
-        invoice_line_tax_details = tax_details.get("invoice_line_tax_details")
+        invoice_line_tax_details = tax_details.get("tax_details_per_record")
         json_payload = {
             "supplyType": invoices.is_purchase_document(include_receipts=True) and "I" or "O",
             "subSupplyType": invoices.l10n_in_type_id.sub_type_code,
@@ -406,14 +406,14 @@ class AccountEdiFormat(models.Model):
                 self._get_l10n_in_edi_ewaybill_line_details(line, line_tax_details, sign)
                 for line, line_tax_details in invoice_line_tax_details.items()
             ],
-            "totalValue": self._l10n_in_round_value(tax_details.get("base_amount") * sign),
-            "cgstValue": self._l10n_in_round_value(tax_details_by_code.get("cgst_amount", 0.00) * sign),
-            "sgstValue": self._l10n_in_round_value(tax_details_by_code.get("sgst_amount", 0.00) * sign),
-            "igstValue": self._l10n_in_round_value(tax_details_by_code.get("igst_amount", 0.00) * sign),
-            "cessValue": self._l10n_in_round_value(tax_details_by_code.get("cess_amount", 0.00) * sign),
-            "cessNonAdvolValue": self._l10n_in_round_value(tax_details_by_code.get("cess_non_advol_amount", 0.00) * sign),
-            "otherValue": self._l10n_in_round_value(tax_details_by_code.get("other_amount", 0.00) * sign),
-            "totInvValue": self._l10n_in_round_value((tax_details.get("base_amount") + tax_details.get("tax_amount")) * sign),
+            "totalValue": self._l10n_in_round_value(tax_details.get("base_amount")),
+            "cgstValue": self._l10n_in_round_value(tax_details_by_code.get("cgst_amount", 0.00)),
+            "sgstValue": self._l10n_in_round_value(tax_details_by_code.get("sgst_amount", 0.00)),
+            "igstValue": self._l10n_in_round_value(tax_details_by_code.get("igst_amount", 0.00)),
+            "cessValue": self._l10n_in_round_value(tax_details_by_code.get("cess_amount", 0.00)),
+            "cessNonAdvolValue": self._l10n_in_round_value(tax_details_by_code.get("cess_non_advol_amount", 0.00)),
+            "otherValue": self._l10n_in_round_value(tax_details_by_code.get("other_amount", 0.00)),
+            "totInvValue": self._l10n_in_round_value((tax_details.get("base_amount") + tax_details.get("tax_amount"))),
         }
         is_overseas = invoices.l10n_in_gst_treatment in ("overseas", "special_economic_zone")
         if invoices.is_purchase_document(include_receipts=True):
