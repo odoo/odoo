@@ -21,9 +21,9 @@
 # ericrolo, 2022
 # Jonatan Gk, 2022
 # Josep Anton Belchi, 2022
-# Óscar Fonseca <tecnico@extreme-micro.com>, 2022
 # Ivan Espinola, 2022
 # Farouk Jabiri, 2022
+# Óscar Fonseca <tecnico@extreme-micro.com>, 2023
 # 
 msgid ""
 msgstr ""
@@ -31,7 +31,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-12-15 12:48+0000\n"
 "PO-Revision-Date: 2022-09-22 05:55+0000\n"
-"Last-Translator: Farouk Jabiri, 2022\n"
+"Last-Translator: Óscar Fonseca <tecnico@extreme-micro.com>, 2023\n"
 "Language-Team: Catalan (https://www.transifex.com/odoo/teams/41243/ca/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -1884,7 +1884,10 @@ msgid "Count Picking Waiting"
 msgstr "Comptador de recollida esperant"
 
 #. module: stock
+#. odoo-javascript
+#: code:addons/stock/static/src/views/list/inventory_report_list_controller.js:0
 #: model:ir.actions.report,name:stock.action_report_inventory
+#, python-format
 msgid "Count Sheet"
 msgstr "Compte de full"
 
@@ -2326,8 +2329,8 @@ msgid ""
 "quotations or confirmed manufacturing orders to resupply your stock."
 msgstr ""
 "Definiu una regla d'estoc mínima de manera que l'Odoo creï automàticament "
-"peticions de citacions o comandes de fabricació confirmades per a reabastir "
-"l'estoc."
+"peticions de pressupost o comandes de fabricació confirmades per a "
+"reaprovisionar l'estoc."
 
 #. module: stock
 #: model_terms:ir.actions.act_window,help:stock.action_warehouse_form
@@ -6989,18 +6992,18 @@ msgstr "Usuari responsable"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_warehouse
 msgid "Resupply"
-msgstr "Abastiment"
+msgstr "Reaprovisionar"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse__resupply_wh_ids
 msgid "Resupply From"
-msgstr "Formulari d'abastiment"
+msgstr "Reaprovisionar des de"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_replenishment_info__warehouseinfo_ids
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse__resupply_route_ids
 msgid "Resupply Routes"
-msgstr "Rutes d'abastiment"
+msgstr "Rutes de reaprovisionament"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_form
@@ -7124,8 +7127,8 @@ msgid ""
 "Routes will be created automatically to resupply this warehouse from the "
 "warehouses ticked"
 msgstr ""
-"Les rutes es crearan automàticament per abastir aquest magatzem del magatzem"
-" marcat"
+"Les rutes es crearan automàticament per reaprovisionar aquest magatzem des "
+"dels magatzems seleccionats"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_replenishment_info__warehouseinfo_ids
@@ -7134,8 +7137,8 @@ msgid ""
 "Routes will be created for these resupply warehouses and you can select them"
 " on products and product categories"
 msgstr ""
-"Les rutes es crearan per aquest magatzem d'abastiment i és podrà seleccionar"
-" als productes i les categories de producte"
+"Es crearan rutes per a aquests magatzems de reaprovisionament i podreu "
+"activar-les en els productes i categories de productes"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_rule__rule_message
@@ -7488,8 +7491,11 @@ msgstr ""
 "La ubicació de la font d'aquest moviment es canviarà a %s"
 
 #. module: stock
+#. odoo-javascript
+#: code:addons/stock/static/src/views/list/inventory_report_list_controller.js:0
 #: model:ir.actions.server,name:stock.action_view_set_quants_tree
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_quant_tree_inventory_editable
+#, python-format
 msgid "Set"
 msgstr "Estableix"
 
@@ -8467,9 +8473,9 @@ msgid ""
 "different of the warehouse this rule is for (e.g for resupplying rules from "
 "another warehouse)"
 msgstr ""
-"El magatzem a propagar al moviment/proveïment creat, que pot ser diferent "
-"del magatzem per a què és aquesta regla (per exemple, per regles "
-"d'abastiment magatzem)"
+"El magatzem a propagar al moviment/aprovisionament creat, que pot ser "
+"diferent del magatzem per al qual es fa aquesta regla (p. ex.: per a les "
+"regles de reaprovisionament des d'un altre magatzem)"
 
 #. module: stock
 #. odoo-python

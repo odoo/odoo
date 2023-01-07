@@ -5,7 +5,7 @@
 # Translators:
 # Bohdan Lisnenko, 2022
 # Martin Trigaux, 2022
-# Alina Lisnenko <alina.lisnenko@erp.co.ua>, 2022
+# Alina Lisnenko <alina.lisnenko@erp.co.ua>, 2023
 # 
 msgid ""
 msgstr ""
@@ -13,7 +13,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-12-16 09:04+0000\n"
 "PO-Revision-Date: 2022-09-22 05:44+0000\n"
-"Last-Translator: Alina Lisnenko <alina.lisnenko@erp.co.ua>, 2022\n"
+"Last-Translator: Alina Lisnenko <alina.lisnenko@erp.co.ua>, 2023\n"
 "Language-Team: Ukrainian (https://www.transifex.com/odoo/teams/41243/uk/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -4495,7 +4495,7 @@ msgid ""
 "    "
 msgstr ""
 "\n"
-"Містить додаткові функції для CRM, такі як нові перегляди\n"
+"Містить додаткові функції для CRM, такі як нові вигляди\n"
 "    "
 
 #. module: base
@@ -4528,7 +4528,7 @@ msgid ""
 "    "
 msgstr ""
 "\n"
-"Містить перегляди ентерпрайзу для складського обліку\n"
+"Містить вигляди ентерпрайзу для складського обліку\n"
 "    "
 
 #. module: base
@@ -4539,7 +4539,7 @@ msgid ""
 "    "
 msgstr ""
 "\n"
-"Містить перегляд ентерпрайзу для управління складом\n"
+"Містить вигляди ентерпрайзу для управління складом\n"
 "    "
 
 #. module: base
@@ -10985,6 +10985,38 @@ msgid ""
 "\n"
 "https://developer.flutterwave.com/docs/integration-guides/testing-helpers"
 msgstr ""
+"# Flutterwave\n"
+"\n"
+"## Деталі інтеграції\n"
+"\n"
+"### Підтримувані функції\n"
+"\n"
+"- Платежі з процесом перенаправлення\n"
+"- [Tokenization](https://developer.flutterwave.com/reference/endpoints/tokenized-charge/)\n"
+"- Кілька способів оплати, такі як кредитна картка, M-Pesa та\n"
+"  [others](https://developer.flutterwave.com/docs/collecting-payments/payment-methods/).\n"
+"- [Webhook](https://developer.flutterwave.com/docs/integration-guides/webhooks/).\n"
+"\n"
+"Крім того, Flutterwave також дозволяє здійснювати відшкодування та попередню авторизацію.\n"
+"\n"
+"### API та шлюз\n"
+"\n"
+"Ми обрали інтеграцію з\n"
+"[Flutterwave standard](https://developer.flutterwave.com/docs/collecting-payments/standard/) оскільки\n"
+"це шлюз, який найкраще задовольняє наші потреби з трьох, які пропонує Flutterwave станом на\n"
+"травень 2022. Дивіться примітки розробника, щоб дізнатися більше про інші шлюзи.\n"
+"\n"
+"Версія API, реалізованого цим модулем, v3..\n"
+"\n"
+"## Деталі з'єднання\n"
+"\n"
+"У завданні була вказана перша версія модуля\n"
+"[2759117](https://www.odoo.com/web#id=2759117&model=project.task) та об'єднана з PR\n"
+"odoo/odoo#84820 in `saas-15.4`.\n"
+"\n"
+"## Інструкції тестування\n"
+"\n"
+"https://developer.flutterwave.com/docs/integration-guides/testing-helpers"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_users__groups_count
@@ -11036,6 +11068,47 @@ msgid ""
 "\n"
 "https://www.mercadopago.com.mx/developers/en/docs/checkout-api/integration-test/test-cards\n"
 msgstr ""
+"# Mercado Pago\n"
+"\n"
+"## Деталі інтеграції\n"
+"\n"
+"### Підтримувані функції\n"
+"\n"
+"- Процес платежу з перенаправленням\n"
+"- Кылька способів оплати, такі як кредитні картки, дебетові картки та\n"
+"  [інші](https://www.mercadopago.com.mx/developers/en/docs/checkout-api/payment-methods/other-payment-methods).\n"
+"- [Webhook](https://www.mercadopago.com.mx/developers/en/docs/notifications/webhooks/webhooks)\n"
+"  сповіщення.\n"
+"\n"
+"### Непідтримувані функції\n"
+"\n"
+"- [Ручне отримання](https://www.mercadopago.com.mx/developers/en/docs/checkout-api/payment-management/capture-authorized-payment).\n"
+"- [Часткове повернення](https://www.mercadopago.com.mx/developers/en/docs/checkout-api/payment-management/cancellations-and-refunds).\n"
+"\n"
+"### API та шлюз\n"
+"\n"
+"Ми обрали інтеграцію в комбінації рішень з\n"
+"[Checkout Pro](https://www.mercadopago.com.mx/developers/en/docs/checkout-pro/landing) та\n"
+"[Checkout API](https://www.mercadopago.com.mx/developers/en/docs/checkout-api/landing):\n"
+"Процес платежу з перенаправленням ініціюється надсиланням HTTP-запиту клієнта з корисним \n"
+"навантаженням, закодованим у формі, як це робить під капотом JavaScript SDK Checkout Pro. Решта викликів API здійснюється відповідно до документації Checkout API. \n"
+"Було неможливо інтегрувати лише з Checkout Pro, \n"
+"оскільки він дозволяє лише переспрямовувати клієнтів на сторінку платежу, а також лише з Checkout API, оскільки він вимагає створення спеціальної платіжної \n"
+"форми для прийому прямих платежів із веб-сайту продавця.\n"
+"\n"
+"Інші шлюзи були виключені. Дивіться примітки розробника завдання, щоб дізнатися більше про інші шлюзи.\n"
+"\n"
+"API, реалізований цим модулем, не має версій.\n"
+"\n"
+"## Деталі з'єднання\n"
+"\n"
+"У завданні була вказана перша версія модуля\n"
+"[2704764](https://www.odoo.com/web#id=2704764&model=project.task) та об'єднана з PR\n"
+"odoo/odoo#83957 в `saas-15.5`.\n"
+"\n"
+"## Інтсрукції тестування\n"
+"\n"
+"https://www.mercadopago.com.mx/developers/en/docs/checkout-api/integration-test/test-cards\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_payment_razorpay
@@ -11077,6 +11150,42 @@ msgid ""
 "See https://razorpay.com/docs/payments/payments/test-card-upi-details/ for the list of test\n"
 "payment details.\n"
 msgstr ""
+"# Razorpay\n"
+"\n"
+"## Деталі інтеграції\n"
+"\n"
+"### Підтримувані функції\n"
+"\n"
+"- Процес платежу з перенаправленням\n"
+"- Ручне отримання\n"
+"- Часткове повернення\n"
+"- Декілька методів оплати, як-от дебетові/кредитні картки, інтернет-банкінг, UPI тощо\n"
+"  [others](https://razorpay.com/docs/payments/payment-methods/).\n"
+"- [Webhook](https://razorpay.com/docs/webhooks).\n"
+"\n"
+"Крім того, Razorpay також дозволяє реалізувати токенізацію, але вимагає передачі секрету картки для\n"
+" кожної транзакції.\n"
+"\n"
+"### API та шлюз\n"
+"\n"
+"Ми обрали інтегрцію з\n"
+"[Razorpay Hosted Checkout](https://razorpay.com/docs/payments/payment-gateway/web-integration/hosted).\n"
+"Інші шлюзи були виключені. Дивіться примітки розробника завдання, щоб дізнатися більше про інші шлюзи.\n"
+"\n"
+"Версія API, реалізованого цим модулем, v1.\n"
+"\n"
+"## Деталі з'єднання\n"
+"\n"
+"У завданні була вказана перша версія модуля\n"
+"[2800823](https://www.odoo.com/web#id=2800823&model=project.task) і об'єднана з PR\n"
+"odoo/odoo#92848 в `saas-15.5`.\n"
+"\n"
+"## Інструкції тестування\n"
+"\n"
+"Номер телефону партнера має бути дійсним номером телефону Індії. Приклад: +91123456789\n"
+"\n"
+"Перегляньте https://razorpay.com/docs/payments/payments/test-card-upi-details/ для переліку реквізитів \n"
+"тестового платежу.\n"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_users__rules_count
@@ -11402,7 +11511,7 @@ msgstr "- Даний модуль не створює звіти."
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.module_form
 msgid "-This module does not create views."
-msgstr "- Даний модуль не створює перегляди."
+msgstr "- Даний модуль не створює вигляди."
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.module_form
@@ -11648,7 +11757,7 @@ msgid ""
 msgstr ""
 "<span attrs=\"{'invisible': [('reset_mode', '!=', 'soft')]}\">Перегляд немає попередньої версії.</span>\n"
 "                        <span attrs=\"{'invisible': [('reset_mode', '!=', 'hard')]}\">Цей перегляд не походить з файлу.</span>\n"
-"                        <span attrs=\"{'invisible': [('reset_mode', '!=', 'other_view')]}\">Для порівняння потрібні два перегляди.</span>"
+"                        <span attrs=\"{'invisible': [('reset_mode', '!=', 'other_view')]}\">Для порівняння потрібні два вигляди.</span>"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_currency_kanban
@@ -11974,7 +12083,7 @@ msgstr "<u><strong>Безпека</strong></u>"
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.report_irmodeloverview
 msgid "<u><strong>Views</strong></u>"
-msgstr "<u><strong>Перегляди</strong></u>"
+msgstr "<u><strong>Вигляди</strong></u>"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_mx_edi_landing
@@ -13140,7 +13249,7 @@ msgstr "Додайте варіанти у замовлення на прода�
 #. module: base
 #: model:ir.module.module,summary:base.module_event_enterprise
 msgid "Add views and tweaks on event"
-msgstr "Додайте перегляди та налаштування події"
+msgstr "Додайте вигляди та налаштування події"
 
 #. module: base
 #: model:res.partner,website_short_description:base.res_partner_address_31
@@ -15466,7 +15575,7 @@ msgstr "Можна перейменувати лише одне поле за р
 #: code:addons/base/models/ir_ui_view.py:0
 #, python-format
 msgid "Can't compare more than two views."
-msgstr "Не можна порівняти більше ніж два перегляди."
+msgstr "Не можна порівняти більше ніж два вигляди."
 
 #. module: base
 #: model:res.country,name:base.ca
@@ -16940,7 +17049,7 @@ msgstr "Створені Меню"
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.module_form
 msgid "Created Views"
-msgstr "Створені перегляди"
+msgstr "Створені вигляди"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_base_enable_profiling_wizard__create_uid
@@ -17315,7 +17424,7 @@ msgstr "Налаштування"
 #: model_terms:ir.ui.view,arch_db:base.view_view_custom_search
 #: model_terms:ir.ui.view,arch_db:base.view_view_custom_tree
 msgid "Customized Views"
-msgstr "Власні перегляди"
+msgstr "Власні вигляди"
 
 #. module: base
 #: model_terms:ir.actions.act_window,help:base.action_ui_view_custom
@@ -17323,8 +17432,8 @@ msgid ""
 "Customized views are used when users reorganize the content of their "
 "dashboard views (via web client)"
 msgstr ""
-"Індивідуальні перегляди використовуються, коли користувачі реорганізують "
-"вміст переглядів своєї панелі інструментів (через веб-клієнт)"
+"Індивідуальні вигляди використовуються, коли користувачі реорганізують вміст"
+" виглядів своєї панелі інструментів (через веб-клієнт)"
 
 #. module: base
 #: model:res.country,name:base.cy
@@ -33027,7 +33136,7 @@ msgstr "TaxCloud допомагає бізнесу дотримуватися п
 #: model:ir.ui.menu,name:base.menu_custom
 #: model_terms:ir.ui.view,arch_db:base.user_groups_view
 msgid "Technical"
-msgstr "Технічний"
+msgstr "Технічні налаштування"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.module_form
@@ -36045,7 +36154,7 @@ msgstr "Переглянути: %s"
 #: model_terms:ir.ui.view,arch_db:base.view_view_tree
 #: model_terms:ir.ui.view,arch_db:base.view_window_action_form
 msgid "Views"
-msgstr "Переглядів"
+msgstr "Вигляди"
 
 #. module: base
 #: model_terms:ir.actions.act_window,help:base.action_ui_view
@@ -36053,14 +36162,14 @@ msgid ""
 "Views allows you to personalize each view of Odoo. You can add new fields, "
 "move fields, rename them or delete the ones that you do not need."
 msgstr ""
-"Перегляди дозволяють персоналізувати кожен перегляд Odoo. Ви можете додати "
-"нові поля, переміщати поля, перейменовувати їх або видаляти ті, які вам не "
+"Вигляди дозволяють персоналізувати кожен вигляд Odoo. Ви можете додати нові "
+"поля, переміщати поля, перейменовувати їх або видаляти ті, які вам не "
 "потрібні."
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_ui_view__inherit_children_ids
 msgid "Views which inherit from this one"
-msgstr "Перегляди, які успадковують від цього"
+msgstr "Вигляди, які успадковують від цього"
 
 #. module: base
 #: model:res.country,name:base.vg
@@ -36831,7 +36940,7 @@ msgstr "Ви не можете створювати рекурсивні ком�
 #: code:addons/base/models/ir_ui_view.py:0
 #, python-format
 msgid "You cannot create recursive inherited views."
-msgstr "Ви не можете створювати рекурсивні успадковані перегляди."
+msgstr "Ви не можете створювати рекурсивні успадковані вигляди."
 
 #. module: base
 #. odoo-python
@@ -37472,7 +37581,7 @@ msgstr "хвилина"
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.demo_failures_dialog
 msgid "module(s) failed to install and were disabled"
-msgstr "Не вдалося встановити модуль(і) та вимкнено"
+msgstr "Не вдалося встановити модуль(і) та було вимкнено"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__ir_model_fields__ttype__monetary

@@ -7,7 +7,7 @@
 # arfa simoncelli, 2022
 # Wahyu Setiawan <wahyusetiaaa@gmail.com>, 2022
 # Martin Trigaux, 2022
-# Abe Manyo, 2022
+# Abe Manyo, 2023
 # 
 msgid ""
 msgstr ""
@@ -15,7 +15,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-12-15 12:48+0000\n"
 "PO-Revision-Date: 2022-09-22 05:54+0000\n"
-"Last-Translator: Abe Manyo, 2022\n"
+"Last-Translator: Abe Manyo, 2023\n"
 "Language-Team: Indonesian (https://www.transifex.com/odoo/teams/41243/id/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -5126,11 +5126,13 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:project.task_type_edit
 msgid "Task in progress. Click to block or set as done."
 msgstr ""
+"Tugas sedang dalam progres. Klik untuk blok atau tetapkan sebagai selesai."
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.task_type_edit
 msgid "Task is blocked. Click to unblock or set as done."
 msgstr ""
+"Tugas diblok. Klik untuk menghilangkan blokir atau tetapkan sebagai selesai."
 
 #. module: project
 #: model:mail.message.subtype,description:project.mt_task_ready
@@ -5419,7 +5421,7 @@ msgstr ""
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.task_type_edit
 msgid "This step is done. Click to block or set in progress."
-msgstr ""
+msgstr "Langkah ini sudah selesai. Klik untuk blok atau mulai progres."
 
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_task__recurrence_update__this
@@ -5949,13 +5951,6 @@ msgstr ""
 
 #. module: project
 #. odoo-python
-#: code:addons/project/models/project.py:0
-#, python-format
-msgid "You cannot %s %s fields in task."
-msgstr ""
-
-#. module: project
-#. odoo-python
 #: code:addons/project/models/analytic_account.py:0
 #, python-format
 msgid ""
@@ -5983,6 +5978,20 @@ msgstr ""
 msgid ""
 "You cannot delete stages containing tasks. You should first delete all of "
 "their tasks."
+msgstr ""
+
+#. module: project
+#. odoo-python
+#: code:addons/project/models/project.py:0
+#, python-format
+msgid "You cannot read %s fields in task."
+msgstr ""
+
+#. module: project
+#. odoo-python
+#: code:addons/project/models/project.py:0
+#, python-format
+msgid "You cannot write on %s fields in task."
 msgstr ""
 
 #. module: project
