@@ -1437,6 +1437,9 @@ class Website(models.Model):
             match = re.search('<([^>]*class="[^>]*)>', snippet_template_html)
             snippet_occurences.append(match.group())
 
+        if self._check_snippet_used(snippet_occurences, asset_type, asset_version):
+            return True
+
         # As well as every snippet dropped in html fields
         self.env.cr.execute(sql.SQL(" UNION ").join(
             sql.SQL("SELECT regexp_matches({}, {}, 'g') FROM {}").format(
@@ -1445,10 +1448,11 @@ class Website(models.Model):
                 sql.Identifier(table)
             ) for table, column in html_fields
         ), {'snippet_regex': f'<([^>]*data-snippet="{snippet_id}"[^>]*)>'})
-        results = self.env.cr.fetchall()
-        for r in results:
-            snippet_occurences.append(r[0][0])
 
+        snippet_occurences = [r[0][0] for r in self.env.cr.fetchall()]
+        return self._check_snippet_used(snippet_occurences, asset_type, asset_version)
+
+    def _check_snippet_used(self, snippet_occurences, asset_type, asset_version):
         for snippet in snippet_occurences:
             if asset_version == '000':
                 if f'data-v{asset_type}' not in snippet:
