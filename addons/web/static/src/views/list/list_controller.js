@@ -330,7 +330,11 @@ export class ListController extends Component {
     }
 
     async downloadExport(fields, import_compat, format) {
-        const resIds = await this.getSelectedResIds();
+        let ids = false;
+        if (!this.isDomainSelected) {
+            const resIds = await this.getSelectedResIds();
+            ids = resIds.length > 0 && resIds;
+        }
         const exportedFields = fields.map((field) => ({
             name: field.name || field.id,
             label: field.label || field.string,
@@ -348,7 +352,7 @@ export class ListController extends Component {
                     domain: this.model.root.domain,
                     fields: exportedFields,
                     groupby: this.model.root.groupBy,
-                    ids: resIds.length > 0 && resIds,
+                    ids,
                     model: this.model.root.resModel,
                 }),
             },
@@ -370,9 +374,7 @@ export class ListController extends Component {
      * @private
      */
     async onExportData() {
-        const resIds = await this.getSelectedResIds();
         const dialogProps = {
-            resIds,
             context: this.props.context,
             defaultExportList: this.defaultExportList,
             download: this.downloadExport.bind(this),
