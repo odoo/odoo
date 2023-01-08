@@ -36,7 +36,7 @@
 # 稀饭~~ <wangwhai@qq.com>, 2021
 # Martin Trigaux, 2022
 # 苏州远鼎 <tiexinliu@126.com>, 2022
-# Jeffery CHEN <jeffery9@gmail.com>, 2022
+# Jeffery CHEN Fan <jeffery9@gmail.com>, 2022
 # 山西清水欧度(QQ:54773801) <54773801@qq.com>, 2022
 # Raymond Yu <cl_yu@hotmail.com>, 2022
 # digitalliuzg8888, 2022
@@ -5363,12 +5363,6 @@ msgstr "您也可以添加一个描述来帮助同事理解这个阶段的意义
 #. module: project
 #: code:addons/project/models/project.py:0
 #, python-format
-msgid "You cannot %s %s fields in task."
-msgstr "你不能在任务中%s%s字段。"
-
-#. module: project
-#: code:addons/project/models/project.py:0
-#, python-format
 msgid ""
 "You cannot archive recurring tasks. Please disable the recurrence first."
 msgstr "你不能对重复出现的任务进行存档。请先停用重复任务。"
@@ -5409,6 +5403,20 @@ msgid ""
 "You cannot delete stages containing tasks. You should first delete all of "
 "their tasks."
 msgstr "您不能删除包含任务的阶段。 您可以存档它们，也可以先删除它们的所有任务。"
+
+#. module: project
+#. odoo-python
+#: code:addons/project/models/project.py:0
+#, python-format
+msgid "You cannot read %s fields in task."
+msgstr ""
+
+#. module: project
+#. odoo-python
+#: code:addons/project/models/project.py:0
+#, python-format
+msgid "You cannot write on %s fields in task."
+msgstr ""
 
 #. module: project
 #: code:addons/project/models/project.py:0
