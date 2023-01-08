@@ -3,11 +3,11 @@
 # 	* project
 # 
 # Translators:
-# Cozmin Candea <office@terrabit.ro>, 2021
 # Foldi Robert <foldirobert@nexterp.ro>, 2021
 # Hongu Cosmin <cosmin513@gmail.com>, 2021
 # Martin Trigaux, 2021
-# Dorin Hongu <dhongu@gmail.com>, 2021
+# Cozmin Candea <office@terrabit.ro>, 2023
+# Dorin Hongu <dhongu@gmail.com>, 2023
 # 
 msgid ""
 msgstr ""
@@ -15,7 +15,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-01-24 08:19+0000\n"
 "PO-Revision-Date: 2021-09-14 12:25+0000\n"
-"Last-Translator: Dorin Hongu <dhongu@gmail.com>, 2021\n"
+"Last-Translator: Dorin Hongu <dhongu@gmail.com>, 2023\n"
 "Language-Team: Romanian (https://www.transifex.com/odoo/teams/41243/ro/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -66,7 +66,7 @@ msgstr ""
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__rating_count
 msgid "# Ratings"
-msgstr ""
+msgstr "# Evaluări"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_res_partner__task_count
@@ -477,7 +477,7 @@ msgstr ""
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.edit_project
 msgid "<span class=\"o_stat_text\">Gross Margin</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">Marjă brută</span>"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_form2
@@ -583,6 +583,14 @@ msgid ""
 msgstr ""
 
 #. module: project
+#: code:addons/project/models/project.py:0
+#, python-format
+msgid ""
+"A personal stage cannot be linked to a project because it is only visible to"
+" its corresponding user."
+msgstr ""
+
+#. module: project
 #: model:ir.model.constraint,message:project.constraint_project_task_user_rel_project_personal_stage_unique
 msgid "A task can only have a single personal stage per user."
 msgstr ""
@@ -663,6 +671,7 @@ msgid "Add Milestone"
 msgstr ""
 
 #. module: project
+#: model_terms:ir.ui.view,arch_db:project.personal_task_type_edit
 #: model_terms:ir.ui.view,arch_db:project.task_type_edit
 msgid "Add a description..."
 msgstr "Adaugă o descriere..."
@@ -736,7 +745,7 @@ msgstr "Nume domeniu"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__alias_value
 msgid "Alias email"
-msgstr ""
+msgstr "Alias email"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__alias_model_id
@@ -836,6 +845,7 @@ msgstr "Proiect de arhivă"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.edit_project
+#: model_terms:ir.ui.view,arch_db:project.personal_task_type_edit
 #: model_terms:ir.ui.view,arch_db:project.project_project_stage_view_form
 #: model_terms:ir.ui.view,arch_db:project.project_project_stage_view_search
 #: model_terms:ir.ui.view,arch_db:project.project_sharing_project_task_view_form
@@ -922,7 +932,7 @@ msgstr "Atribuit lui"
 #: model_terms:ir.ui.view,arch_db:project.view_task_search_form
 #, python-format
 msgid "Assignees"
-msgstr ""
+msgstr "Alocați"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__date_assign
@@ -1176,7 +1186,7 @@ msgstr "Colaboratori"
 #. module: project
 #: model:ir.model,name:project.model_project_collaborator
 msgid "Collaborators in project shared"
-msgstr ""
+msgstr "Colaboratori în proiectul partajat"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_tags__color
@@ -1370,7 +1380,7 @@ msgstr "Stadiul curent al acestei sarcini"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__alias_bounced_content
 msgid "Custom Bounced Message"
-msgstr ""
+msgstr "Mesaj personalizat de respins"
 
 #. module: project
 #: code:addons/project/controllers/portal.py:0
@@ -1565,11 +1575,20 @@ msgstr ""
 #: model:ir.model.fields,help:project.field_project_project__privacy_visibility
 #: model:ir.model.fields,help:project.field_project_task__project_privacy_visibility
 msgid ""
-"Defines the visibility of the tasks of the project:\n"
-"- Invited employees: employees may only see the followed project and tasks.\n"
-"- All employees: employees may see all project and tasks.\n"
-"- Invited portal users and all employees: employees may see everything.   Invited portal users may see project and tasks followed by.\n"
-"   them or by someone of their company."
+"People to whom this project and its tasks will be visible.\n"
+"\n"
+"- Invited internal users: when following a project, internal users will get access to all of its tasks without distinction. Otherwise, they will only get access to the specific tasks they are following.\n"
+" A user with the project > administrator access right level can still access this project and its tasks, even if they are not explicitly part of the followers.\n"
+"\n"
+"- All internal users: all internal users can access the project and all of its tasks without distinction.\n"
+"\n"
+"- Invited portal users and all internal users: all internal users can access the project and all of its tasks without distinction.\n"
+"When following a project, portal users will get access to all of its tasks without distinction. Otherwise, they will only get access to the specific tasks they are following.\n"
+"\n"
+"When a project is shared in read-only, the portal user is redirected to their portal. They can view the tasks, but not edit them.\n"
+"When a project is shared in edit, the portal user is redirected to the kanban and list views of the tasks. They can modify a selected number of fields on the tasks.\n"
+"\n"
+"In any case, an internal user with no project access rights can still access a task, provided that they are given the corresponding URL (and that they are part of the followers if the project is private)."
 msgstr ""
 
 #. module: project
@@ -1761,6 +1780,13 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:project.view_task_kanban
 msgid "Edit"
 msgstr "Editare"
+
+#. module: project
+#. openerp-web
+#: code:addons/project/static/src/js/project_kanban.js:0
+#, python-format
+msgid "Edit Personal Stage"
+msgstr ""
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_form2
@@ -2007,7 +2033,7 @@ msgstr "Eticheta Kanban Gri"
 #: code:addons/project/models/project.py:0
 #, python-format
 msgid "Gross Margin"
-msgstr ""
+msgstr "Marjă brută"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_collaborator_view_search
@@ -2051,7 +2077,7 @@ msgstr "Față fericită"
 #: model:ir.model.fields,field_description:project.field_project_task__has_message
 #: model:ir.model.fields,field_description:project.field_project_update__has_message
 msgid "Has Message"
-msgstr ""
+msgstr "Are mesaj"
 
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__report_project_task_user__priority__2
@@ -2748,7 +2774,7 @@ msgstr "Luni"
 #: model:ir.model.fields,field_description:project.field_project_task__my_activity_date_deadline
 #: model:ir.model.fields,field_description:project.field_project_update__my_activity_date_deadline
 msgid "My Activity Deadline"
-msgstr ""
+msgstr "Data limită a activității mele"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_search_form_extended
@@ -2880,7 +2906,7 @@ msgstr "Următoarele activități"
 #: model:ir.model.fields,field_description:project.field_project_task__activity_calendar_event_id
 #: model:ir.model.fields,field_description:project.field_project_update__activity_calendar_event_id
 msgid "Next Activity Calendar Event"
-msgstr ""
+msgstr "Următoarea activitate din calendar"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__activity_date_deadline
@@ -3109,7 +3135,7 @@ msgstr ""
 #: model:ir.model.fields.selection,name:project.selection__project_project__last_update_status__on_hold
 #: model:ir.model.fields.selection,name:project.selection__project_update__status__on_hold
 msgid "On Hold"
-msgstr ""
+msgstr "În așteptare"
 
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_project__last_update_status__on_track
@@ -3204,7 +3230,7 @@ msgstr "Model părinte"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__alias_parent_thread_id
 msgid "Parent Record Thread ID"
-msgstr ""
+msgstr "ID-ul thread-ului înregistrării părinte"
 
 #. module: project
 #: code:addons/project/models/project.py:0
@@ -3509,7 +3535,7 @@ msgstr "Sarcini Proiect"
 #: model:ir.model,name:project.model_project_update
 #: model_terms:ir.ui.view,arch_db:project.project_update_view_form
 msgid "Project Update"
-msgstr ""
+msgstr "Actualizare proiect"
 
 #. module: project
 #: model:ir.actions.act_window,name:project.project_update_all_action
@@ -3609,7 +3635,7 @@ msgstr "Evaluare"
 #: model_terms:ir.ui.view,arch_db:project.view_project_task_graph
 #: model_terms:ir.ui.view,arch_db:project.view_project_task_pivot
 msgid "Rating (/5)"
-msgstr ""
+msgstr "Evaluare (/5)"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__rating_avg
@@ -3919,7 +3945,7 @@ msgstr "Cercetare "
 #. module: project
 #: model:project.project,name:project.project_project_2
 msgid "Research & Development"
-msgstr ""
+msgstr "Cercetare și dezvoltare"
 
 #. module: project
 #. openerp-web
@@ -4428,6 +4454,7 @@ msgstr "Repetarea sarcinilor"
 
 #. module: project
 #: model:ir.model,name:project.model_project_task_type
+#: model_terms:ir.ui.view,arch_db:project.personal_task_type_edit
 #: model_terms:ir.ui.view,arch_db:project.task_type_edit
 #: model_terms:ir.ui.view,arch_db:project.task_type_tree
 msgid "Task Stage"
@@ -5127,13 +5154,13 @@ msgstr ""
 #: model:ir.model.fields,field_description:project.field_project_task__working_hours_open
 #: model:ir.model.fields,field_description:project.field_report_project_task_user__working_hours_open
 msgid "Working Hours to Assign"
-msgstr ""
+msgstr "Ore de lucru pentru de atribuit"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__working_hours_close
 #: model:ir.model.fields,field_description:project.field_report_project_task_user__working_hours_close
 msgid "Working Hours to Close"
-msgstr ""
+msgstr "Ore de lucru de închis"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__resource_calendar_id
@@ -5177,12 +5204,6 @@ msgid ""
 msgstr ""
 "De asemenea, puteți adăuga o descriere pentru a ajuta colegii dvs. să "
 "înțeleagă sensul și scopul etapei."
-
-#. module: project
-#: code:addons/project/models/project.py:0
-#, python-format
-msgid "You cannot %s %s fields in task."
-msgstr ""
 
 #. module: project
 #: code:addons/project/models/project.py:0
@@ -5241,6 +5262,20 @@ msgstr ""
 "ștergeți toate sarcinile lor."
 
 #. module: project
+#. odoo-python
+#: code:addons/project/models/project.py:0
+#, python-format
+msgid "You cannot read %s fields in task."
+msgstr ""
+
+#. module: project
+#. odoo-python
+#: code:addons/project/models/project.py:0
+#, python-format
+msgid "You cannot write on %s fields in task."
+msgstr ""
+
+#. module: project
 #: code:addons/project/models/project.py:0
 #, python-format
 msgid "You have been assigned to %s"
@@ -5255,6 +5290,14 @@ msgstr "Ați fost asignat la "
 #: code:addons/project/models/project.py:0
 #, python-format
 msgid "You have not write access of %s field."
+msgstr ""
+
+#. module: project
+#: code:addons/project/models/project.py:0
+#, python-format
+msgid ""
+"You should at least have one personal stage. Create a new stage to which the"
+" tasks can be transferred after this one is deleted."
 msgstr ""
 
 #. module: project

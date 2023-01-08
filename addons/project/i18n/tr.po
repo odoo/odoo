@@ -703,6 +703,14 @@ msgstr ""
 "yinelenenleri kaldırın ve tekrar deneyin."
 
 #. module: project
+#: code:addons/project/models/project.py:0
+#, python-format
+msgid ""
+"A personal stage cannot be linked to a project because it is only visible to"
+" its corresponding user."
+msgstr ""
+
+#. module: project
 #: model:ir.model.constraint,message:project.constraint_project_task_user_rel_project_personal_stage_unique
 msgid "A task can only have a single personal stage per user."
 msgstr ""
@@ -5380,12 +5388,6 @@ msgstr ""
 #. module: project
 #: code:addons/project/models/project.py:0
 #, python-format
-msgid "You cannot %s %s fields in task."
-msgstr "Görevdeki %s %s alanlarını yapamazsınız."
-
-#. module: project
-#: code:addons/project/models/project.py:0
-#, python-format
 msgid ""
 "You cannot archive recurring tasks. Please disable the recurrence first."
 msgstr ""
@@ -5441,6 +5443,20 @@ msgid ""
 "their tasks."
 msgstr ""
 "Görevleri içeren aşamaları silemezsiniz. Önce tüm görevlerini silmelisiniz."
+
+#. module: project
+#. odoo-python
+#: code:addons/project/models/project.py:0
+#, python-format
+msgid "You cannot read %s fields in task."
+msgstr ""
+
+#. module: project
+#. odoo-python
+#: code:addons/project/models/project.py:0
+#, python-format
+msgid "You cannot write on %s fields in task."
+msgstr ""
 
 #. module: project
 #: code:addons/project/models/project.py:0

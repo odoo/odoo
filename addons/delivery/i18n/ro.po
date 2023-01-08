@@ -7,7 +7,7 @@
 # Cozmin Candea <office@terrabit.ro>, 2021
 # Foldi Robert <foldirobert@nexterp.ro>, 2021
 # Hongu Cosmin <cosmin513@gmail.com>, 2021
-# Dorin Hongu <dhongu@gmail.com>, 2022
+# Dorin Hongu <dhongu@gmail.com>, 2023
 # 
 msgid ""
 msgstr ""
@@ -15,7 +15,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-11-16 13:19+0000\n"
 "PO-Revision-Date: 2021-09-14 12:21+0000\n"
-"Last-Translator: Dorin Hongu <dhongu@gmail.com>, 2022\n"
+"Last-Translator: Dorin Hongu <dhongu@gmail.com>, 2023\n"
 "Language-Team: Romanian (https://www.transifex.com/odoo/teams/41243/ro/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -337,7 +337,7 @@ msgstr "Expert de selecție a pachetului de livrare"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_choose_delivery_package__delivery_package_type_id
 msgid "Delivery Package Type"
-msgstr ""
+msgstr "Tipul pachetului de livrare"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_choose_delivery_carrier__delivery_price
@@ -384,7 +384,7 @@ msgstr "Destinații Disponibile"
 #: model:ir.model.fields,field_description:delivery.field_stock_move_line__destination_country_code
 #: model:ir.model.fields,field_description:delivery.field_stock_picking__destination_country_code
 msgid "Destination Country"
-msgstr ""
+msgstr "Țara destinație"
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier__sequence
@@ -554,7 +554,7 @@ msgstr "Politică de facturare"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_stock_picking__is_return_picking
 msgid "Is Return Picking"
-msgstr ""
+msgstr "Este returnare"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_sale_order_line__is_delivery
@@ -810,6 +810,8 @@ msgid ""
 "Shipment sent to carrier %(carrier_name)s for shipping with tracking number "
 "%(ref)s<br/>Cost: %(price).2f %(currency)s"
 msgstr ""
+"Expediere trimisă către curierul %(carrier_name)s pentru expediere cu "
+"numărul de urmărire %(ref)s<br/>Cost: %(price).2f %(currency)s"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_stock_picking__carrier_price
@@ -865,7 +867,7 @@ msgstr "Mișcare stoc"
 #. module: delivery
 #: model:ir.model,name:delivery.model_stock_package_type
 msgid "Stock package type"
-msgstr ""
+msgstr "Tip pachet stoc"
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_stock_move_line__destination_country_code
@@ -971,7 +973,7 @@ msgstr "Greutatea totală a ambalajului."
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_stock_picking__weight
 msgid "Total weight of the products in the picking."
-msgstr ""
+msgstr "Greutatea totală a produselor din livrare."
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.delivery_tracking_url_warning_form
@@ -1083,6 +1085,10 @@ msgid ""
 "The following delivery lines (product, invoiced quantity and price) have already been processed:\n"
 "\n"
 msgstr ""
+"Nu puteți actualiza costurile de livrare pentru o comandă unde acestea au fost deja facturate!\n"
+"\n"
+"Următoarele linii de livrare (produs, cantitate și preț facturate) au fost deja procesate:\n"
+"\n"
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.delivery_tracking_url_warning_form

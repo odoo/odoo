@@ -4,6 +4,7 @@
 # 
 # Translators:
 # Martin Trigaux, 2022
+# Cozmin Candea <office@terrabit.ro>, 2023
 # 
 msgid ""
 msgstr ""
@@ -11,7 +12,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-03-30 10:59+0000\n"
 "PO-Revision-Date: 2022-05-17 12:41+0000\n"
-"Last-Translator: Martin Trigaux, 2022\n"
+"Last-Translator: Cozmin Candea <office@terrabit.ro>, 2023\n"
 "Language-Team: Romanian (https://www.transifex.com/odoo/teams/41243/ro/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -25,6 +26,8 @@ msgid ""
 "<i class=\"fa fa-arrow-right\"/>\n"
 "                        Connect your Outlook account"
 msgstr ""
+"<i class=\"fa fa-arrow-right\"/>\n"
+"                        Conectați-vă la contul dvs. Outlook"
 
 #. module: fetchmail_outlook
 #: model_terms:ir.ui.view,arch_db:fetchmail_outlook.fetchmail_server_view_form
@@ -32,6 +35,8 @@ msgid ""
 "<i class=\"fa fa-cog\"/>\n"
 "                        Edit Settings"
 msgstr ""
+"<i class=\"fa fa-cog\"/>\n"
+"                        Editează setările"
 
 #. module: fetchmail_outlook
 #: model_terms:ir.ui.view,arch_db:fetchmail_outlook.fetchmail_server_view_form
@@ -40,11 +45,14 @@ msgid ""
 "                        Outlook Token Valid\n"
 "                    </span>"
 msgstr ""
+"<span attrs=\"{'invisible': ['|', ('use_microsoft_outlook_service', '=', False), ('microsoft_outlook_refresh_token', '=', False)]}\" class=\"badge badge-success\">\n"
+"                        Token-ul Outlook este valid\n"
+"                    </span>"
 
 #. module: fetchmail_outlook
 #: model:ir.model.fields,field_description:fetchmail_outlook.field_fetchmail_server__microsoft_outlook_uri
 msgid "Authentication URI"
-msgstr ""
+msgstr "URI de autentificare"
 
 #. module: fetchmail_outlook
 #: model:ir.model,name:fetchmail_outlook.model_fetchmail_server
@@ -54,38 +62,38 @@ msgstr "Server Primire E-mail-uri"
 #. module: fetchmail_outlook
 #: model:ir.model.fields,field_description:fetchmail_outlook.field_fetchmail_server__is_microsoft_outlook_configured
 msgid "Is Outlook Credential Configured"
-msgstr ""
+msgstr "Sunt configurate credențialele Outlook"
 
 #. module: fetchmail_outlook
 #: model_terms:ir.ui.view,arch_db:fetchmail_outlook.fetchmail_server_view_form
 msgid "Outlook"
-msgstr ""
+msgstr "Outlook"
 
 #. module: fetchmail_outlook
 #: model:ir.model.fields,field_description:fetchmail_outlook.field_fetchmail_server__microsoft_outlook_access_token
 msgid "Outlook Access Token"
-msgstr ""
+msgstr "Token-ul de acces Outlook"
 
 #. module: fetchmail_outlook
 #: model:ir.model.fields,field_description:fetchmail_outlook.field_fetchmail_server__microsoft_outlook_access_token_expiration
 msgid "Outlook Access Token Expiration Timestamp"
-msgstr ""
+msgstr "Timestamp-ul expirării token-ului de acces Outlook"
 
 #. module: fetchmail_outlook
 #: model:ir.model.fields,field_description:fetchmail_outlook.field_fetchmail_server__use_microsoft_outlook_service
 msgid "Outlook Authentication"
-msgstr ""
+msgstr "Autentificare Outlook"
 
 #. module: fetchmail_outlook
 #: model:ir.model.fields,field_description:fetchmail_outlook.field_fetchmail_server__microsoft_outlook_refresh_token
 msgid "Outlook Refresh Token"
-msgstr ""
+msgstr "Token-ul de reîmprospătare Outlook"
 
 #. module: fetchmail_outlook
 #: code:addons/fetchmail_outlook/models/fetchmail_server.py:0
 #, python-format
 msgid "Outlook mail server %r only supports IMAP server type."
-msgstr ""
+msgstr "Serverul de e-mail Outlook %r acceptă doar tipul de server IMAP."
 
 #. module: fetchmail_outlook
 #: code:addons/fetchmail_outlook/models/fetchmail_server.py:0
@@ -94,12 +102,14 @@ msgid ""
 "Please leave the password field empty for Outlook mail server %r. The OAuth "
 "process does not require it"
 msgstr ""
+"Vă rugăm să lăsați câmpul parolă gol pentru serverul de e-mail Outlook %r. "
+"Procesul OAuth nu necesită acest lucru"
 
 #. module: fetchmail_outlook
 #: code:addons/fetchmail_outlook/models/fetchmail_server.py:0
 #, python-format
 msgid "SSL is required ."
-msgstr ""
+msgstr "SSL este necesar."
 
 #. module: fetchmail_outlook
 #: model_terms:ir.ui.view,arch_db:fetchmail_outlook.fetchmail_server_view_form
@@ -107,8 +117,10 @@ msgid ""
 "Setup your Outlook API credentials in the general settings to link a Outlook"
 " account."
 msgstr ""
+"Configurați credențialele API Outlook în setările generale pentru a asocia "
+"un cont Outlook."
 
 #. module: fetchmail_outlook
 #: model:ir.model.fields,help:fetchmail_outlook.field_fetchmail_server__microsoft_outlook_uri
 msgid "The URL to generate the authorization code from Outlook"
-msgstr ""
+msgstr "URL-ul pentru a genera codul de autorizare din Outlook"

@@ -16,7 +16,7 @@
 # Rivo Zängov <eraser@eraser.ee>, 2022
 # Patrick-Jordan Kiudorv, 2022
 # Leaanika Randmets, 2022
-# Jana Jaakson, 2022
+# Jana Jaakson, 2023
 # 
 msgid ""
 msgstr ""
@@ -24,7 +24,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-11-16 13:19+0000\n"
 "PO-Revision-Date: 2021-09-14 12:26+0000\n"
-"Last-Translator: Jana Jaakson, 2022\n"
+"Last-Translator: Jana Jaakson, 2023\n"
 "Language-Team: Estonian (https://www.transifex.com/odoo/teams/41243/et/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -35,7 +35,7 @@ msgstr ""
 #. module: stock_picking_batch
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.report_picking_batch
 msgid "<strong>FROM</strong>"
-msgstr ""
+msgstr "<strong>ALATES</strong>"
 
 #. module: stock_picking_batch
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.report_picking_batch
@@ -60,12 +60,12 @@ msgstr "<strong>Vastutav:</strong>"
 #. module: stock_picking_batch
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.report_picking_batch
 msgid "<strong>TO</strong>"
-msgstr ""
+msgstr "<strong>KUHU</strong>"
 
 #. module: stock_picking_batch
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.report_picking_batch
 msgid "<strong>→</strong>"
-msgstr ""
+msgstr "<strong>→</strong>"
 
 #. module: stock_picking_batch
 #: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__message_needaction
@@ -97,7 +97,7 @@ msgstr "Tegevuse liigi sümbol"
 #: code:addons/stock_picking_batch/wizard/stock_add_to_wave.py:0
 #, python-format
 msgid "Add Operations"
-msgstr ""
+msgstr "Lisa tegevused"
 
 #. module: stock_picking_batch
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_to_batch_form
@@ -220,7 +220,7 @@ msgstr "Kontrolli saadavust"
 #: code:addons/stock_picking_batch/models/stock_picking_batch.py:0
 #, python-format
 msgid "Choose Labels Layout"
-msgstr ""
+msgstr "Valige siltide paigutus"
 
 #. module: stock_picking_batch
 #: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__company_id
@@ -597,7 +597,7 @@ msgstr "Otsi koondsaatelehte"
 #. module: stock_picking_batch
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_batch_form
 msgid "Set quantities"
-msgstr ""
+msgstr "Määra kogused"
 
 #. module: stock_picking_batch
 #: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__show_allocation
@@ -692,6 +692,8 @@ msgid ""
 "Technical Field used to decide whether the button \"Allocation\" should be "
 "displayed."
 msgstr ""
+"Tehniline väli, mida kasutatakse selleks, et otsustada, kas nupp \"Toodete "
+"eraldamine\" tuleb kuvada."
 
 #. module: stock_picking_batch
 #: model:ir.model.fields,help:stock_picking_batch.field_stock_picking_batch__show_check_availability
@@ -746,7 +748,7 @@ msgstr ""
 #: code:addons/stock_picking_batch/wizard/stock_add_to_wave.py:0
 #, python-format
 msgid "The selected operations should belong to a unique company."
-msgstr ""
+msgstr "Valitud toimingud peaksid kuuluma unikaalsele ettevõttele."
 
 #. module: stock_picking_batch
 #: code:addons/stock_picking_batch/wizard/stock_picking_to_batch.py:0
@@ -758,13 +760,13 @@ msgstr "Valitud korjed peaksid kuuluma unikaalsele ettevõttele"
 #: code:addons/stock_picking_batch/wizard/stock_add_to_wave.py:0
 #, python-format
 msgid "The selected transfers should belong to a unique company."
-msgstr ""
+msgstr "Valitud siirded peaksid kuuluma unikaalsele ettevõttele."
 
 #. module: stock_picking_batch
 #: code:addons/stock_picking_batch/wizard/stock_add_to_wave.py:0
 #, python-format
 msgid "The selected transfers should belong to the same operation type"
-msgstr ""
+msgstr "Valitud siirded peaksid kuuluma samasse operatsioonitüüpi."
 
 #. module: stock_picking_batch
 #: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__is_wave
@@ -854,7 +856,7 @@ msgstr "Veebilehe suhtluse ajalugu"
 #: code:addons/stock_picking_batch/models/stock_picking_batch.py:0
 #, python-format
 msgid "You cannot delete Done batch transfers."
-msgstr ""
+msgstr "Te ei saa \"Tehtud\" statuses koondsaatelehti kustutada."
 
 #. module: stock_picking_batch
 #: code:addons/stock_picking_batch/models/stock_picking_batch.py:0

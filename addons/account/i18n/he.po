@@ -13874,14 +13874,6 @@ msgid "The payment's currency."
 msgstr "מטבע התשלום."
 
 #. module: account
-#: code:addons/account/models/product.py:0
-#, python-format
-msgid ""
-"The product \"%s\" is used in invoices. You cannot change its Unit of "
-"Measure."
-msgstr ""
-
-#. module: account
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid ""
@@ -14499,6 +14491,14 @@ msgid ""
 "This payment term will be used instead of the default one for sales orders "
 "and customer invoices"
 msgstr "תנאי תשלום זה ישמש במקום ברירת המחדל עבור הזמנות וחשבוניות לקוח"
+
+#. module: account
+#: code:addons/account/models/product.py:0
+#, python-format
+msgid ""
+"This product is already being used in posted Journal Entries.\n"
+"If you want to change its Unit of Measure, please archive this product and create a new one."
+msgstr ""
 
 #. module: account
 #: code:addons/account/models/account_reconcile_model.py:0

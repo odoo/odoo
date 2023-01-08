@@ -20,7 +20,7 @@
 # Yoshi Tashiro (Quartile) <tashiro@roomsfor.hk>, 2022
 # Martin Trigaux, 2022
 # Ryoko Tsuda <ryoko@quartile.co>, 2022
-# Andy Yiu, 2022
+# Andy Yiu, 2023
 # 
 msgid ""
 msgstr ""
@@ -28,7 +28,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-01-10 06:07+0000\n"
 "PO-Revision-Date: 2021-09-14 12:27+0000\n"
-"Last-Translator: Andy Yiu, 2022\n"
+"Last-Translator: Andy Yiu, 2023\n"
 "Language-Team: Japanese (https://www.transifex.com/odoo/teams/41243/ja/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -59,19 +59,19 @@ msgstr "\"URL to\" は空にすることはできません。"
 #: code:addons/website/models/website_rewrite.py:0
 #, python-format
 msgid "\"URL to\" cannot contain parameter %s which is not used in \"URL from\"."
-msgstr ""
+msgstr "「URL to」は「URL from」に使われてないパラメータ%sを含んではいけません。"
 
 #. module: website
 #: code:addons/website/models/website_rewrite.py:0
 #, python-format
 msgid "\"URL to\" is invalid: %s"
-msgstr ""
+msgstr "「URL to」は無効です: %s"
 
 #. module: website
 #: code:addons/website/models/website_rewrite.py:0
 #, python-format
 msgid "\"URL to\" must contain parameter %s used in \"URL from\"."
-msgstr ""
+msgstr "「URL to」は「URL from」に使われてるパラメータ%sを含める必要があります。"
 
 #. module: website
 #: code:addons/website/models/website_rewrite.py:0
@@ -88,7 +88,7 @@ msgstr "# 訪問したページ"
 #: model:ir.model.fields,field_description:website.field_website_visitor__visit_count
 #: model_terms:ir.ui.view,arch_db:website.website_visitor_view_search
 msgid "# Visits"
-msgstr ""
+msgstr "# 訪問数"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_product_catalog
@@ -135,7 +135,7 @@ msgstr "&amp;lt;head&amp;gt;"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
 msgid "&gt;"
-msgstr ""
+msgstr "&gt;"
 
 #. module: website
 #. openerp-web
@@ -153,7 +153,7 @@ msgstr "' はどのページとも一致しませんでした。"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.list_hybrid
 msgid "' did not match anything."
-msgstr ""
+msgstr "' は何もと一致してませんでした。"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.list_hybrid
@@ -161,13 +161,15 @@ msgid ""
 "' did not match anything.\n"
 "                        Results are displayed for '"
 msgstr ""
+"' は何もと一致してませんでした。\n"
+"                        次の検索結果は表示されました '"
 
 #. module: website
 #. openerp-web
 #: code:addons/website/static/src/xml/website.editor.xml:0
 #, python-format
 msgid "' to link to an anchor."
-msgstr ""
+msgstr "' をリンクと."
 
 #. module: website
 #. openerp-web
@@ -219,7 +221,7 @@ msgstr "(例：EU Art.29 WPによるクッキー同意の免除に関する意�
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_website_form_options
 msgid "+ Field"
-msgstr ""
+msgstr "+ フィールド"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.footer_custom
@@ -233,17 +235,17 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:website.template_header_sidebar_oe_structure_header_sidebar_1
 #: model_terms:ir.ui.view,arch_db:website.template_header_vertical_oe_structure_header_vertical_2
 msgid "+1 (650) 555-0111"
-msgstr ""
+msgstr "+1 (650) 555-0111"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.searchbar_input_snippet_options
 msgid ", .s_searchbar_input"
-msgstr ""
+msgstr ", .s_searchbar_input"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_website_form_options
 msgid ", .s_website_form"
-msgstr ""
+msgstr ", .s_website_form"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.show_website_info
@@ -279,12 +281,12 @@ msgstr "...そして必要に応じてタイムラインの内容を切り替え
 #: model_terms:ir.ui.view,arch_db:website.layout
 #: model_terms:ir.ui.view,arch_db:website.snippets
 msgid "/contactus"
-msgstr ""
+msgstr "/contactus"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_map_options
 msgid "1 km"
-msgstr ""
+msgstr "1 km"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_media_list_options
@@ -304,17 +306,17 @@ msgstr "1/4 - 3/4"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_map_options
 msgid "10 m"
-msgstr ""
+msgstr "10 m"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_map_options
 msgid "100 km"
-msgstr ""
+msgstr "100 km"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_map_options
 msgid "100 m"
-msgstr ""
+msgstr "100 m"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_hr_options
@@ -325,7 +327,7 @@ msgstr "100%"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_map_options
 msgid "1000 km"
-msgstr ""
+msgstr "1000 km"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_image_gallery_options
@@ -335,7 +337,7 @@ msgstr "12"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_map_options
 msgid "15 km"
-msgstr ""
+msgstr "15 km"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.bs_debug_view
@@ -346,32 +348,32 @@ msgstr "2 <span class=\"sr-only\">(現在)</span>"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_map_options
 msgid "2 km"
-msgstr ""
+msgstr "2 km"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_map_options
 msgid "2.5 m"
-msgstr ""
+msgstr "2.5 m"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_map_options
 msgid "20 m"
-msgstr ""
+msgstr "20 m"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_map_options
 msgid "200 km"
-msgstr ""
+msgstr "200 km"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_map_options
 msgid "200 m"
-msgstr ""
+msgstr "200 m"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_map_options
 msgid "2000 km"
-msgstr ""
+msgstr "2000 km"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_comparisons
@@ -405,7 +407,7 @@ msgstr ""
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_map_options
 msgid "30 km"
-msgstr ""
+msgstr "30 km"
 
 #. module: website
 #. openerp-web
@@ -431,7 +433,7 @@ msgstr "308 リダイレクト/再編集"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_map_options
 msgid "4 km"
-msgstr ""
+msgstr "4 km"
 
 #. module: website
 #. openerp-web
@@ -443,12 +445,12 @@ msgstr "たった４ステップで"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_map_options
 msgid "400 km"
-msgstr ""
+msgstr "400 km"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_map_options
 msgid "400 m"
-msgstr ""
+msgstr "400 m"
 
 #. module: website
 #: model:ir.model.fields.selection,name:website.selection__website_rewrite__redirect_type__404
@@ -458,17 +460,17 @@ msgstr "404 見つかりませんでした"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_map_options
 msgid "5 m"
-msgstr ""
+msgstr "5 m"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_map_options
 msgid "50 km"
-msgstr ""
+msgstr "50 km"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_map_options
 msgid "50 m"
-msgstr ""
+msgstr "50 m"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_hr_options
@@ -490,7 +492,7 @@ msgstr "75%"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_map_options
 msgid "8 km"
-msgstr ""
+msgstr "8 km"
 
 #. module: website
 #. openerp-web
@@ -664,6 +666,10 @@ msgid ""
 "<font style=\"font-size: 14px;\">Created in 2021, the company is young and "
 "dynamic. Discover the composition of the team and their skills.</font>"
 msgstr ""
+"<font style=\"font-size: "
+"14px;\">2021に創設され、この会社は若くて活力に溢れています。チーム構成やスキルについてもっと知っていきましょう。, the company "
+"is young and dynamic. Discover the composition of the team and their "
+"skills.</font>"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_carousel
@@ -826,6 +832,8 @@ msgid ""
 "<i class=\"fa fa-info-circle\"/> Edit the content below this line to adapt "
 "the default <strong>Page not found</strong> page."
 msgstr ""
+"<i class=\"fa fa-info-"
+"circle\"/>この行の下のコンテンツを編集してデフォルト<strong>未検出</strong>ページを適用します。"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.protected_403
@@ -871,6 +879,8 @@ msgid ""
 "<i class=\"fa fa-plus-circle\"/>\n"
 "        <span>Add a language...</span>"
 msgstr ""
+"<i class=\"fa fa-plus-circle\"/>\n"
+"        <span>言語を追加...Add a language...</span>"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.user_navbar
@@ -1097,6 +1107,9 @@ msgid ""
 "                            <b><font style=\"font-size:14px;\">Discover our new products</font></b>\n"
 "                        </span>"
 msgstr ""
+"<span class=\"d-block p-2\">\n"
+"                            <b><font style=\"font-size:14px;\">新商品について</font></b>\n"
+"                        </span>"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.contactus_thanks_ir_ui_view
@@ -1105,6 +1118,8 @@ msgid ""
 "<span class=\"fa fa-check-circle\"/>\n"
 "                                            <span>Your message has been sent <b>successfully</b></span>"
 msgstr ""
+"<span class=\"fa fa-check-circle\"/>\n"
+"                                            <span>メッセージは<b>無事に</b>送信されました</span>"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_image_gallery
@@ -1147,17 +1162,17 @@ msgstr "<span class=\"fa fa-sort fa-lg\" role=\"img\" aria-label=\"Sort\" title=
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.option_header_off_canvas
 msgid "<span class=\"fa-2x\">×</span>"
-msgstr ""
+msgstr "<span class=\"fa-2x\">×</span>"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.language_selector_inline
 msgid "<span class=\"list-inline-item\">|</span>"
-msgstr ""
+msgstr "<span class=\"list-inline-item\">|</span>"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_rating_options
 msgid "<span class=\"mx-2\">/</span>"
-msgstr ""
+msgstr "<span class=\"mx-2\">/</span>"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.language_selector_inline
@@ -1292,7 +1307,7 @@ msgstr "<span class=\"s_progress_bar_text\">80% 開発</span>"
 #: model_terms:ir.ui.view,arch_db:website.contactus
 #: model_terms:website.page,arch_db:website.contactus_page
 msgid "<span class=\"s_website_form_label_content\">Email To</span>"
-msgstr ""
+msgstr "<span class=\"s_website_form_label_content\">メールを送信: </span>"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.contactus
@@ -1370,7 +1385,7 @@ msgstr ""
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets
 msgid "<span>Theme</span>"
-msgstr ""
+msgstr "<span>テーマ</span>"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.res_config_settings_view_form
@@ -1391,7 +1406,7 @@ msgstr "チャートタイトル"
 msgid ""
 "A Google Map error occurred. Make sure to read the key configuration popup "
 "carefully."
-msgstr ""
+msgstr "Google Mapのエラーは発生しました。"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_text_image
@@ -1446,7 +1461,7 @@ msgstr "カンマ区切りのフィールド名のリスト"
 #. module: website
 #: model:website.configurator.feature,description:website.feature_module_stores_locator
 msgid "A map and a listing of your stores"
-msgstr ""
+msgstr "マップ及びあなたの店舗リスト"
 
 #. module: website
 #: model:ir.model.fields,help:website.field_website_visitor__visit_count
@@ -1494,7 +1509,7 @@ msgstr "APIキー"
 #. module: website
 #: model:website.configurator.feature,name:website.feature_page_about_us
 msgid "About Us"
-msgstr ""
+msgstr "会社概要"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.aboutus
@@ -1531,7 +1546,7 @@ msgstr "アクセストークンは一意である必要があります。"
 #: model_terms:ir.ui.view,arch_db:website.s_mega_menu_menus_logos
 #: model_terms:ir.ui.view,arch_db:website.s_mega_menu_odoo_menu
 msgid "Accessories"
-msgstr ""
+msgstr "アクセサリー"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_comparisons
@@ -1591,12 +1606,12 @@ msgstr "機能を追加"
 #: model_terms:ir.ui.view,arch_db:website.s_table_of_content_options
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
 msgid "Add Item"
-msgstr ""
+msgstr "アイテムを追加"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_media_list_options
 msgid "Add Media"
-msgstr ""
+msgstr "メディアー"
 
 #. module: website
 #. openerp-web
@@ -1615,7 +1630,7 @@ msgstr "メニューを追加"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_product_catalog_add_product_widget
 msgid "Add Product"
-msgstr ""
+msgstr "商品を追加"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_chart_options
@@ -1625,12 +1640,12 @@ msgstr "行を追加"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_chart_options
 msgid "Add Serie"
-msgstr ""
+msgstr "セリエを追加"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
 msgid "Add Slide"
-msgstr ""
+msgstr "スライドを追加"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_tabs_options
@@ -1640,7 +1655,7 @@ msgstr "タブを追加"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_timeline_options
 msgid "Add Year"
-msgstr ""
+msgstr "年を追加"
 
 #. module: website
 #. openerp-web
@@ -1682,12 +1697,12 @@ msgstr "メニューを追加"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_website_form_options
 msgid "Add a new field after this one"
-msgstr ""
+msgstr "この後で新規フィールドを追加"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_website_form_options
 msgid "Add a new field at the end"
-msgstr ""
+msgstr "最後に新規フィールドを追加"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.res_config_settings_view_form
@@ -1704,7 +1719,7 @@ msgstr "ウェブサイトにソーシャルメディアへのリンクを追加
 #: code:addons/website/static/src/snippets/s_website_form/options.js:0
 #, python-format
 msgid "Add new %s"
-msgstr ""
+msgstr "新規%sを追加"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_process_steps
@@ -1805,12 +1820,12 @@ msgstr "すべてのウェブサイトルート"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.view_view_qweb
 msgid "All Websites"
-msgstr ""
+msgstr "全てのWebサイト"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_mega_menu_big_icons_subtitles
 msgid "All informations you need"
-msgstr ""
+msgstr "全ての必要な情報"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_popup_options
@@ -1822,7 +1837,7 @@ msgstr "全てのページ"
 #: code:addons/website/static/src/snippets/s_searchbar/000.xml:0
 #, python-format
 msgid "All results"
-msgstr ""
+msgstr "全結果"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_features_grid
@@ -1845,27 +1860,27 @@ msgstr "フォームでの使用が許可されている"
 #: code:addons/website/static/src/components/configurator/configurator.xml:0
 #, python-format
 msgid "Already installed"
-msgstr ""
+msgstr "インストール済"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_masonry_block_options
 msgid "Alternate Image Text"
-msgstr ""
+msgstr "代替画像テキスト"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_masonry_block_options
 msgid "Alternate Text"
-msgstr ""
+msgstr "代替テキスト"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_masonry_block_options
 msgid "Alternate Text Image"
-msgstr ""
+msgstr "代替テキスト画像"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_masonry_block_options
 msgid "Alternate Text Image Text"
-msgstr ""
+msgstr "代替テキスト画像テキスト"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_faq_collapse
@@ -1884,7 +1899,7 @@ msgstr "常に下線"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_website_form_options
 msgid "Always Visible"
-msgstr ""
+msgstr "常に表示"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
@@ -1899,7 +1914,7 @@ msgstr "素晴らしいページ"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_map
 msgid "An address must be specified for a map to be embedded"
-msgstr ""
+msgstr "マップを埋め込むにはアドレスを特定する必要があります"
 
 #. module: website
 #. openerp-web
@@ -1911,7 +1926,7 @@ msgstr "エラーが発生したため、フォームは送信されませんで
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.qweb_500
 msgid "An error occurred while rendering the template"
-msgstr ""
+msgstr "テンプレートをレンダリング時にエラーが発生しました"
 
 #. module: website
 #: model:ir.actions.client,name:website.backend_dashboard
@@ -1962,7 +1977,7 @@ msgstr ""
 #: code:addons/website/static/src/xml/website.editor.xml:0
 #, python-format
 msgid "Animate text"
-msgstr ""
+msgstr "アニメーションテキスト"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_progress_bar_options
@@ -1997,7 +2012,7 @@ msgstr "他の機能"
 #. module: website
 #: model:ir.model.fields.selection,name:website.selection__theme_ir_asset__directive__append
 msgid "Append"
-msgstr ""
+msgstr "付加"
 
 #. module: website
 #: model:ir.actions.act_window,name:website.action_website_add_features
@@ -2074,12 +2089,12 @@ msgstr "Assets Utils"
 #. module: website
 #: model:ir.model.fields,field_description:website.field_theme_ir_asset__copy_ids
 msgid "Assets using a copy of me"
-msgstr ""
+msgstr "私のコピーを使用しているアセット"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_countdown_options
 msgid "At The End"
-msgstr ""
+msgstr "最後に"
 
 #. module: website
 #: model:ir.model,name:website.model_ir_attachment
@@ -2168,7 +2183,7 @@ msgstr "背景"
 #: code:addons/website/static/src/js/tours/configurator_tour.js:0
 #, python-format
 msgid "Background Shape"
-msgstr ""
+msgstr "背景形状"
 
 #. module: website
 #. openerp-web
@@ -2182,7 +2197,7 @@ msgstr "バッジ"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_mega_menu_menus_logos
 msgid "Bags"
-msgstr ""
+msgstr "バッグ"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_chart_options
@@ -2248,7 +2263,7 @@ msgstr "大きい"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
 msgid "Big Icons Subtitles"
-msgstr ""
+msgstr "大アイコンサブタイたる"
 
 #. module: website
 #: model:ir.model.fields,help:website.field_ir_model_fields__website_form_blacklisted
@@ -2263,7 +2278,7 @@ msgstr "ウェブフォームでブラックリストに載せます"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_mega_menu_menus_logos
 msgid "Blazers"
-msgstr ""
+msgstr "ブレザー"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
@@ -2275,7 +2290,7 @@ msgstr "ブロック"
 #: code:addons/website/static/src/js/menu/edit.js:0
 #, python-format
 msgid "Blockquote"
-msgstr ""
+msgstr "Blockquote"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_mega_menu_big_icons_subtitles
@@ -2293,12 +2308,12 @@ msgstr "ブログ投稿"
 #. module: website
 #: model:website.configurator.feature,description:website.feature_module_news
 msgid "Blogging and posting relevant content"
-msgstr ""
+msgstr "関連内容をブログ・投稿する"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_product_list
 msgid "Books"
-msgstr ""
+msgstr "書籍"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_table_of_content
@@ -2398,7 +2413,7 @@ msgstr "パンクズ"
 #: code:addons/website/static/src/components/configurator/configurator.xml:0
 #, python-format
 msgid "Build my website"
-msgstr ""
+msgstr "サイトを構築"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_table_of_content
@@ -2423,7 +2438,7 @@ msgstr "ウェブサイトを作る"
 #. module: website
 #: model:ir.model.fields,field_description:website.field_theme_ir_asset__bundle
 msgid "Bundle"
-msgstr ""
+msgstr "バンドル"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.bs_debug_view
@@ -2434,7 +2449,7 @@ msgstr "ボタン"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_website_form_options
 msgid "Button Position"
-msgstr ""
+msgstr "ボタン位置"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_tabs_options
@@ -2479,7 +2494,7 @@ msgstr "キャッシュ時間"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
 msgid "Call to Action"
-msgstr ""
+msgstr "行動喚起"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.template_footer_contact
@@ -2564,17 +2579,17 @@ msgstr "カードヘッダー"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_faq_collapse_options
 msgid "Card Style"
-msgstr ""
+msgstr "カードスタイル"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
 msgid "Cards"
-msgstr ""
+msgstr "カード"
 
 #. module: website
 #: model:website.configurator.feature,name:website.feature_module_career
 msgid "Career"
-msgstr ""
+msgstr "キャリア"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.template_footer_links
@@ -2738,7 +2753,7 @@ msgstr ""
 #: code:addons/website/static/src/components/configurator/configurator.xml:0
 #, python-format
 msgid "Choose your favorite"
-msgstr ""
+msgstr "お気に入りを選択"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_countdown_options
@@ -2803,7 +2818,7 @@ msgstr ""
 #: code:addons/website/static/src/components/configurator/configurator.xml:0
 #, python-format
 msgid "Click to select"
-msgstr ""
+msgstr "クリックして選択"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.res_config_settings_view_form
@@ -3650,7 +3665,7 @@ msgstr "詳細"
 #: code:addons/website/static/src/components/configurator/configurator.xml:0
 #, python-format
 msgid "Detect"
-msgstr ""
+msgstr "検知"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_tabs_options
@@ -3944,7 +3959,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
 #: model_terms:website.page,arch_db:website.bs_debug_page
 msgid "Dropdown"
-msgstr ""
+msgstr "ドロップダウン"
 
 #. module: website
 #. openerp-web
@@ -3991,7 +4006,7 @@ msgstr ""
 #: model:ir.model.fields,help:website.field_res_config_settings__website_domain
 #: model:ir.model.fields,help:website.field_website__domain
 msgid "E.g. https://www.mydomain.com"
-msgstr ""
+msgstr "例: https://www.mydomain.com"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_table_of_content
@@ -4106,7 +4121,7 @@ msgstr "Eメール"
 #: model_terms:ir.ui.view,arch_db:website.bs_debug_view
 #: model_terms:website.page,arch_db:website.bs_debug_page
 msgid "Email address"
-msgstr ""
+msgstr "メールアドレス"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_comparisons
@@ -4170,7 +4185,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:website.bs_debug_view
 #: model_terms:website.page,arch_db:website.bs_debug_page
 msgid "Enter email"
-msgstr ""
+msgstr "メールを入力"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_tabs_options
@@ -5055,37 +5070,37 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:website.bs_debug_view
 #: model_terms:website.page,arch_db:website.bs_debug_page
 msgid "Headings 1"
-msgstr ""
+msgstr "見出し 1"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.bs_debug_view
 #: model_terms:website.page,arch_db:website.bs_debug_page
 msgid "Headings 2"
-msgstr ""
+msgstr "見出し 2"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.bs_debug_view
 #: model_terms:website.page,arch_db:website.bs_debug_page
 msgid "Headings 3"
-msgstr ""
+msgstr "見出し 3"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.bs_debug_view
 #: model_terms:website.page,arch_db:website.bs_debug_page
 msgid "Headings 4"
-msgstr ""
+msgstr "見出し 4"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.bs_debug_view
 #: model_terms:website.page,arch_db:website.bs_debug_page
 msgid "Headings 5"
-msgstr ""
+msgstr "見出し 5"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.bs_debug_view
 #: model_terms:website.page,arch_db:website.bs_debug_page
 msgid "Headings 6"
-msgstr ""
+msgstr "見出し 6"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
@@ -5654,7 +5669,7 @@ msgstr ""
 #. module: website
 #: model:ir.model.fields,help:website.field_website__theme_id
 msgid "Installed theme"
-msgstr ""
+msgstr "インストール済テーマ"
 
 #. module: website
 #. openerp-web
@@ -5840,13 +5855,13 @@ msgstr "アイテム"
 #: model_terms:ir.ui.view,arch_db:website.bs_debug_view
 #: model_terms:website.page,arch_db:website.bs_debug_page
 msgid "Item 1"
-msgstr ""
+msgstr "アイテム 1"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.bs_debug_view
 #: model_terms:website.page,arch_db:website.bs_debug_page
 msgid "Item 2"
-msgstr ""
+msgstr "アイテム 2"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_dynamic_snippet_options
@@ -6193,7 +6208,7 @@ msgstr "やってみましょう"
 #: code:addons/website/static/src/components/configurator/configurator.xml:0
 #, python-format
 msgid "Let's go!"
-msgstr ""
+msgstr "いくよ!"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.bs_debug_view
@@ -6201,7 +6216,7 @@ msgstr ""
 #: model_terms:website.page,arch_db:website.bs_debug_page
 #: model_terms:website.page,arch_db:website.color_combinations_debug_page
 msgid "Library"
-msgstr ""
+msgstr "ライブラリー"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_faq_collapse_options
@@ -6252,7 +6267,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:website.bs_debug_view
 #: model_terms:website.page,arch_db:website.bs_debug_page
 msgid "Link button"
-msgstr ""
+msgstr "リンクボタン"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.color_combinations_debug_view
@@ -6850,7 +6865,7 @@ msgstr "ナロー"
 #: model_terms:ir.ui.view,arch_db:website.bs_debug_view
 #: model_terms:website.page,arch_db:website.bs_debug_page
 msgid "Navbar"
-msgstr ""
+msgstr "ナビーバー"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_mega_menu_cards
@@ -7101,7 +7116,7 @@ msgstr "言語数"
 #: code:addons/website/static/src/components/configurator/configurator.xml:0
 #, python-format
 msgid "OR"
-msgstr ""
+msgstr "又は"
 
 #. module: website
 #. openerp-web
@@ -7480,7 +7495,7 @@ msgstr "ページ"
 #: model_terms:ir.ui.view,arch_db:website.bs_debug_view
 #: model_terms:website.page,arch_db:website.bs_debug_page
 msgid "Pagination"
-msgstr ""
+msgstr "ページネーション"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_mega_menu_menus_logos
@@ -7501,7 +7516,7 @@ msgstr ""
 msgid ""
 "Paragraph with <strong>bold</strong>, <span class=\"text-"
 "muted\">muted</span> and <em>italic</em> texts"
-msgstr ""
+msgstr "<strong>太字</strong>、<span class=\"text-muted\"></span>"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.color_combinations_debug_view
@@ -7581,7 +7596,7 @@ msgstr "パイ"
 #: model_terms:ir.ui.view,arch_db:website.bs_debug_view
 #: model_terms:website.page,arch_db:website.bs_debug_page
 msgid "Pill"
-msgstr ""
+msgstr "ピル"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
@@ -8517,7 +8532,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:website.bs_debug_view
 #: model_terms:website.page,arch_db:website.bs_debug_page
 msgid "Separated link"
-msgstr ""
+msgstr "区切られたリンク"
 
 #. module: website
 #. openerp-web
@@ -8843,7 +8858,7 @@ msgstr "一部のユーザー"
 #: model_terms:ir.ui.view,arch_db:website.bs_debug_view
 #: model_terms:website.page,arch_db:website.bs_debug_page
 msgid "Something else here"
-msgstr ""
+msgstr "ここにある他のもの"
 
 #. module: website
 #. openerp-web
@@ -9577,7 +9592,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:website.bs_debug_view
 #: model_terms:website.page,arch_db:website.bs_debug_page
 msgid "This is a \""
-msgstr ""
+msgstr "「"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_banner
@@ -9755,14 +9770,14 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:website.bs_debug_view
 #: model_terms:website.page,arch_db:website.bs_debug_page
 msgid "Toggle"
-msgstr ""
+msgstr "切り替える"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.bs_debug_view
 #: model_terms:ir.ui.view,arch_db:website.option_header_off_canvas
 #: model_terms:website.page,arch_db:website.bs_debug_page
 msgid "Toggle navigation"
-msgstr ""
+msgstr "ナビゲーションを切り替える"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_company_team
@@ -10222,7 +10237,7 @@ msgstr "ユーザ"
 #: model_terms:ir.ui.view,arch_db:website.bs_debug_view
 #: model_terms:website.page,arch_db:website.bs_debug_page
 msgid "Utilities &amp; Typography"
-msgstr ""
+msgstr "ユーティリティー・タイポグラフィー"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_progress_bar_options
@@ -11057,7 +11072,7 @@ msgstr ""
 #: code:addons/website/static/src/components/configurator/configurator.xml:0
 #, python-format
 msgid "You'll be able to create your pages later on."
-msgstr ""
+msgstr "後ほどでページを作成できます。"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.res_config_settings_view_form
@@ -11517,7 +11532,7 @@ msgstr "ir.ui.view"
 #: model_terms:ir.ui.view,arch_db:website.bs_debug_view
 #: model_terms:website.page,arch_db:website.bs_debug_page
 msgid "link"
-msgstr ""
+msgstr "リンク"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets

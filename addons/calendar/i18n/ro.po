@@ -5,8 +5,10 @@
 # Translators:
 # sharkutz <sharkutz4life@yahoo.com>, 2021
 # Martin Trigaux, 2021
-# Dorin Hongu <dhongu@gmail.com>, 2021
 # Foldi Robert <foldirobert@nexterp.ro>, 2021
+# Cozmin Candea <office@terrabit.ro>, 2023
+# Dorin Hongu <dhongu@gmail.com>, 2023
+# Claudia Baisan, 2023
 # 
 msgid ""
 msgstr ""
@@ -14,7 +16,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-10-05 10:53+0000\n"
 "PO-Revision-Date: 2021-09-14 12:21+0000\n"
-"Last-Translator: Foldi Robert <foldirobert@nexterp.ro>, 2021\n"
+"Last-Translator: Claudia Baisan, 2023\n"
 "Language-Team: Romanian (https://www.transifex.com/odoo/teams/41243/ro/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -219,18 +221,9 @@ msgid ""
 "                        <strong>Details of the event</strong>\n"
 "                    </p>\n"
 "                    <ul>\n"
-"                        <t t-if=\"not is_online and object.display_description\">\n"
-"                            <li>Description: <t t-out=\"object.description or ''\"/></li>\n"
-"                        </t>\n"
-"                        <t t-elif=\"is_online and object.description\">\n"
-"                            <t t-set=\"splitted_description\" t-value=\"object.description_to_html_lines()\"/>\n"
+"                        <t t-if=\"not is_html_empty(object.description)\">\n"
 "                            <li>Description:\n"
-"                                <ul>\n"
-"                                    <t t-foreach=\"splitted_description\" t-as=\"description_line\">\n"
-"                                        <li t-out=\"description_line or ''\"/>\n"
-"                                    </t>\n"
-"                                </ul>\n"
-"                            </li>\n"
+"                            <t t-out=\"object.description\">Internal meeting for discussion for new pricing for product and services.</t></li>\n"
 "                        </t>\n"
 "                        <t t-if=\"object.videocall_location\">\n"
 "                            <li>Meeting URL:\n"
@@ -489,7 +482,7 @@ msgstr "<span> ore</span>"
 #. module: calendar
 #: model:ir.model.constraint,message:calendar.constraint_calendar_filters_user_id_partner_id_unique
 msgid "A user cannot have the same contact twice."
-msgstr ""
+msgstr "Un utilizator nu poate avea același contact de două ori."
 
 #. module: calendar
 #. openerp-web
@@ -563,13 +556,13 @@ msgstr "Adaugă"
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_alarm__body
 msgid "Additional Message"
-msgstr ""
+msgstr "Mesaj suplimentar"
 
 #. module: calendar
 #: model:ir.model.fields,help:calendar.field_calendar_alarm__body
 msgid ""
 "Additional message that would be sent with the notification for the reminder"
-msgstr ""
+msgstr "Mesaj suplimentar care ar fi trimis cu notificarea pentru memento "
 
 #. module: calendar
 #. openerp-web
@@ -583,7 +576,7 @@ msgstr "Toată ziua"
 #: code:addons/calendar/models/calendar_event.py:0
 #, python-format
 msgid "All Day, %(day)s"
-msgstr ""
+msgstr "Toată ziua, %(day)s"
 
 #. module: calendar
 #. openerp-web
@@ -634,7 +627,7 @@ msgstr "Disponibil"
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_attendee__availability
 msgid "Available/Busy"
-msgstr ""
+msgstr "Disponibil/Ocupat"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_recurrence__base_event_id
@@ -689,7 +682,7 @@ msgstr "Eveniment Calendar"
 #. module: calendar
 #: model:ir.model,name:calendar.model_calendar_filters
 msgid "Calendar Filters"
-msgstr ""
+msgstr "Filtre calendar"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.invitation_page_anonymous
@@ -716,17 +709,17 @@ msgstr "Calendar: memento eveniment"
 #. module: calendar
 #: model:mail.template,name:calendar.calendar_template_meeting_update
 msgid "Calendar: Event Update"
-msgstr ""
+msgstr "Calendar: Actualizare eveniment"
 
 #. module: calendar
 #: model:mail.template,name:calendar.calendar_template_meeting_invitation
 msgid "Calendar: Meeting Invitation"
-msgstr ""
+msgstr "Calendar: Invitație întâlnire"
 
 #. module: calendar
 #: model:mail.template,name:calendar.calendar_template_meeting_reminder
 msgid "Calendar: Reminder"
-msgstr ""
+msgstr "Calendar: Memento"
 
 #. module: calendar
 #: model:ir.model.fields,help:calendar.field_calendar_event__is_organizer_alone
@@ -734,11 +727,13 @@ msgid ""
 "Check if the organizer is alone in the event, i.e. if the organizer is the only one that hasn't declined\n"
 "        the event (only if the organizer is not the only attendee)"
 msgstr ""
+"Verificați dacă organizatorul este singurul în eveniment, adică dacă organizatorul este singurul care nu a refuzat\n"
+"        evenimentul (numai dacă organizatorul nu este singurul participant)"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_filters__partner_checked
 msgid "Checked"
-msgstr ""
+msgstr "Verificat"
 
 #. module: calendar
 #: model:ir.model.fields,help:calendar.field_calendar_event__recurrence_update
@@ -780,7 +775,7 @@ msgstr "Contact"
 #: code:addons/calendar/models/calendar_event.py:0
 #, python-format
 msgid "Contact Attendees"
-msgstr ""
+msgstr "Contactați participanții"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_recurrence__count
@@ -873,7 +868,7 @@ msgstr "Detalii"
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__display_description
 msgid "Display Description"
-msgstr ""
+msgstr "Afișează descrierea"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_alarm__display_name
@@ -925,7 +920,7 @@ msgstr "Durată în minute"
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
 msgid "EMAIL"
-msgstr ""
+msgstr "EMAIL"
 
 #. module: calendar
 #. openerp-web
@@ -990,7 +985,7 @@ msgstr "Dată sfârșit"
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
 msgid "Ending At"
-msgstr ""
+msgstr "Se termină la"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
@@ -1026,13 +1021,13 @@ msgstr "Ora eveniment"
 #: code:addons/calendar/models/calendar_recurrence.py:0
 #, python-format
 msgid "Every %(count)s %(period)s"
-msgstr ""
+msgstr "Fiecare %(count)s %(period)s"
 
 #. module: calendar
 #: code:addons/calendar/models/mail_activity.py:0
 #, python-format
 msgid "Feedback: %(feedback)s"
-msgstr ""
+msgstr "Feedback: %(feedback)s"
 
 #. module: calendar
 #: model:ir.model.fields.selection,name:calendar.selection__calendar_event__byday__1
@@ -1099,7 +1094,7 @@ msgstr "Grupează după"
 #: code:addons/calendar/models/calendar_event.py:0
 #, python-format
 msgid "Grouping by %s is not allowed on private events."
-msgstr ""
+msgstr "Gruparea după %s nu este permisă pentru evenimente private."
 
 #. module: calendar
 #: model:ir.model,name:calendar.model_ir_http
@@ -1109,7 +1104,7 @@ msgstr "Rutare HTTP"
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__has_message
 msgid "Has Message"
-msgstr ""
+msgstr "Are mesaj"
 
 #. module: calendar
 #: model:ir.model.fields.selection,name:calendar.selection__calendar_alarm__interval__hours
@@ -1152,6 +1147,8 @@ msgid ""
 "If the time is shown as 'busy', this event will be visible to other people with either the full         information or simply 'busy' written depending on its privacy. Use this option to let other people know         that you are unavailable during that period of time. \n"
 " If the time is shown as 'free', this event won't         be visible to other people at all. Use this option to let other people know that you are available during         that period of time."
 msgstr ""
+"Dacă timpul este afișat ca 'ocupat', acest eveniment va fi vizibil și altor persoane cu informații complete sau doar 'ocupat' scris în funcție de confidențialitate. Utilizați această opțiune pentru a informa alte persoane că nu sunteți disponibil în acea perioadă de timp. \n"
+"Dacă timpul este afișat ca 'liber', acest eveniment nu va fi vizibil altor persoane deloc. Utilizați această opțiune pentru a informa alte persoane că sunteți disponibil în acea perioadă de timp."
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_recurrence__interval
@@ -1181,7 +1178,7 @@ msgstr "Invitație pentru"
 #. module: calendar
 #: model:mail.template,subject:calendar.calendar_template_meeting_invitation
 msgid "Invitation to {{ object.event_id.name }}"
-msgstr ""
+msgstr "Invitație la {{ object.event_id.name }}"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
@@ -1201,7 +1198,7 @@ msgstr "Evenimentul este evidențiat"
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__is_organizer_alone
 msgid "Is the Organizer Alone"
-msgstr ""
+msgstr "Organizatorul este singur"
 
 #. module: calendar
 #: model:ir.model.fields.selection,name:calendar.selection__calendar_event__byday__-1
@@ -1269,7 +1266,7 @@ msgstr "Sigla"
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_attendee__mail_tz
 msgid "Mail Tz"
-msgstr ""
+msgstr "Mail TZ"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__message_main_attachment_id
@@ -1317,7 +1314,7 @@ msgstr "Tipuri de întâliniri"
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__videocall_location
 msgid "Meeting URL"
-msgstr ""
+msgstr "Întâlnire URL"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_attendee__event_id
@@ -1397,7 +1394,7 @@ msgstr "Necesită acțiune"
 #: model:ir.model.fields,field_description:calendar.field_res_partner__activity_calendar_event_id
 #: model:ir.model.fields,field_description:calendar.field_res_users__activity_calendar_event_id
 msgid "Next Activity Calendar Event"
-msgstr ""
+msgstr "Următoarea activitate din calendar"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.invitation_page_anonymous
@@ -1412,7 +1409,7 @@ msgstr "Niciun feedback încă"
 #. module: calendar
 #: model_terms:ir.actions.act_window,help:calendar.action_calendar_event
 msgid "No meetings found. Let's schedule one!"
-msgstr ""
+msgstr "Nu s-au găsit întâlniri. Hai să programăm una!"
 
 #. module: calendar
 #: model:ir.model.fields.selection,name:calendar.selection__calendar_alarm__alarm_type__notification
@@ -1448,6 +1445,7 @@ msgstr "Notificare - 30 de minute"
 #: model:ir.model.fields,help:calendar.field_calendar_event__alarm_ids
 msgid "Notifications sent to all attendees to remind of the meeting."
 msgstr ""
+"Notificări trimise tuturor participanților pentru a le aminti de întâlnire."
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__message_needaction_counter
@@ -1531,7 +1529,7 @@ msgstr "Datele utilizatorului legate de partener"
 #. module: calendar
 #: model:ir.model.fields,help:calendar.field_calendar_event__privacy
 msgid "People to whom this event will be visible."
-msgstr ""
+msgstr "Persoanele cărora acest eveniment va fi vizibil."
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_attendee__phone
@@ -1558,7 +1556,7 @@ msgstr "Personal"
 #: code:addons/calendar/models/calendar_event.py:0
 #, python-format
 msgid "Private Event Excluded"
-msgstr ""
+msgstr "Eveniment privat exclus"
 
 #. module: calendar
 #: model:ir.model.fields.selection,name:calendar.selection__calendar_event__privacy__public
@@ -1639,7 +1637,7 @@ msgstr "Repetă de x ori"
 #: code:addons/calendar/static/src/components/activity/activity.xml:0
 #, python-format
 msgid "Reschedule"
-msgstr ""
+msgstr "Reprogramare"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_search
@@ -1671,7 +1669,7 @@ msgstr "Sâmbătă"
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__partner_id
 msgid "Scheduled by"
-msgstr ""
+msgstr "Programat de"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_search
@@ -1692,12 +1690,12 @@ msgstr "Selectează participanți..."
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
 msgid "Send Email to attendees"
-msgstr ""
+msgstr "Trimite email participanților"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
 msgid "Send Invitations"
-msgstr ""
+msgstr "Trimite invitații"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_tree
@@ -1707,7 +1705,7 @@ msgstr "Trimite email"
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__show_as
 msgid "Show as"
-msgstr ""
+msgstr "Arată ca"
 
 #. module: calendar
 #. openerp-web
@@ -1796,7 +1794,7 @@ msgstr "Etichete"
 #. module: calendar
 #: model:ir.model.fields,help:calendar.field_calendar_alarm__mail_template_id
 msgid "Template used to render mail reminder content."
-msgstr ""
+msgstr "Șablon folosit pentru a genera conținutul email-ului de memento."
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.invitation_page_anonymous
@@ -1865,7 +1863,7 @@ msgstr "Numărul de repetări nu poate fi negativ."
 #: code:addons/calendar/models/calendar_event.py:0
 #, python-format
 msgid "There are no attendees on these events"
-msgstr ""
+msgstr "Nu există participanți la aceste evenimente"
 
 #. module: calendar
 #: model:ir.model.fields.selection,name:calendar.selection__calendar_event__byday__3
@@ -1917,7 +1915,7 @@ msgstr "Fus orar"
 #. module: calendar
 #: model:ir.model.fields,help:calendar.field_calendar_attendee__mail_tz
 msgid "Timezone used for displaying time in the mail template"
-msgstr ""
+msgstr "Fusul orar folosit pentru afișarea timpului în șablonul de email"
 
 #. module: calendar
 #: code:addons/calendar/models/res_users.py:0
@@ -2017,7 +2015,7 @@ msgstr "Da, Mă duc."
 #: code:addons/calendar/models/calendar_event.py:0
 #, python-format
 msgid "You can't update a recurrence without base event."
-msgstr ""
+msgstr "Nu puteți actualiza o recurență fără evenimentul de bază."
 
 #. module: calendar
 #: code:addons/calendar/models/calendar_attendee.py:0
@@ -2035,7 +2033,7 @@ msgstr "Trebuie să alegeți cel puțin o zi în săptămână"
 #: code:addons/calendar/models/calendar_recurrence.py:0
 #, python-format
 msgid "day %s"
-msgstr ""
+msgstr "zi %s"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
@@ -2052,13 +2050,13 @@ msgstr "pentru %s evenimente"
 #: code:addons/calendar/models/calendar_recurrence.py:0
 #, python-format
 msgid "on %s"
-msgstr ""
+msgstr "pe %s"
 
 #. module: calendar
 #: code:addons/calendar/models/calendar_recurrence.py:0
 #, python-format
 msgid "on the %(position)s %(weekday)s"
-msgstr ""
+msgstr "pe %(position)s %(weekday)s"
 
 #. module: calendar
 #: code:addons/calendar/models/calendar_recurrence.py:0
@@ -2069,14 +2067,14 @@ msgstr "Până %s"
 #. module: calendar
 #: model:mail.template,subject:calendar.calendar_template_meeting_reminder
 msgid "{{ object.event_id.name }} - Reminder"
-msgstr ""
+msgstr "{{ object.event_id.name }} - Memento"
 
 #. module: calendar
 #: model:mail.template,subject:calendar.calendar_template_meeting_changedate
 msgid "{{ object.event_id.name }}: Date updated"
-msgstr ""
+msgstr "{{ object.event_id.name }}: Data actualizată"
 
 #. module: calendar
 #: model:mail.template,subject:calendar.calendar_template_meeting_update
 msgid "{{object.name}}: Event update"
-msgstr ""
+msgstr "{{object.name}}: Actualizare eveniment"

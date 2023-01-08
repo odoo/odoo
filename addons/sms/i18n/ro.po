@@ -6,8 +6,10 @@
 # Fekete Mihai <mihai.fekete@forestandbiomass.ro>, 2021
 # Hongu Cosmin <cosmin513@gmail.com>, 2021
 # Martin Trigaux, 2021
-# Dorin Hongu <dhongu@gmail.com>, 2021
 # Foldi Robert <foldirobert@nexterp.ro>, 2021
+# Cozmin Candea <office@terrabit.ro>, 2023
+# Claudia Baisan, 2023
+# Dorin Hongu <dhongu@gmail.com>, 2023
 # 
 msgid ""
 msgstr ""
@@ -15,7 +17,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-10-05 10:54+0000\n"
 "PO-Revision-Date: 2021-09-14 12:26+0000\n"
-"Last-Translator: Foldi Robert <foldirobert@nexterp.ro>, 2021\n"
+"Last-Translator: Dorin Hongu <dhongu@gmail.com>, 2023\n"
 "Language-Team: Romanian (https://www.transifex.com/odoo/teams/41243/ro/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -58,7 +60,7 @@ msgstr "%s destinatari nevalizi"
 #, python-format
 msgid ""
 "%s out of the %s selected SMS Text Messages have successfully been resent."
-msgstr ""
+msgstr "%s din %s mesaje SMS selectate au fost trimise cu succes."
 
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.mail_resend_message_view_form
@@ -186,7 +188,7 @@ msgstr "Cumpărare credit"
 #: code:addons/sms/models/sms_api.py:0
 #, python-format
 msgid "Buy credits."
-msgstr ""
+msgstr "Cumpărați credite."
 
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.sms_cancel
@@ -275,7 +277,7 @@ msgstr "Client: SMS automat"
 #. module: sms
 #: model:sms.template,body:sms.sms_template_demo_0
 msgid "Dear {{ object.display_name }} this is an automated SMS."
-msgstr ""
+msgstr "Dragă {{ object.display_name }}, acesta este un SMS automat."
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_template__null_value
@@ -362,7 +364,7 @@ msgstr "Eroare"
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_sms__failure_type
 msgid "Failure Type"
-msgstr ""
+msgstr "Tip de eroare"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_mail_notification__failure_type
@@ -421,7 +423,7 @@ msgstr "Are Credit Insuficient"
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_res_partner__has_message
 msgid "Has Message"
-msgstr ""
+msgstr "Are mesaj"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_mail_mail__has_sms_error
@@ -535,6 +537,9 @@ msgid ""
 "distinguish which number is blacklisted             when there is both a "
 "mobile and phone field in a model."
 msgstr ""
+"Indică dacă un număr de telefon dezinfectat este un număr de mobil. Ajută la"
+" diferențierea numărului care este pe lista neagră             când există "
+"atât un câmp de mobil și telefon într-un model."
 
 #. module: sms
 #: model:ir.model.fields,help:sms.field_res_partner__phone_blacklisted
@@ -543,11 +548,14 @@ msgid ""
 "distinguish which number is blacklisted             when there is both a "
 "mobile and phone field in a model."
 msgstr ""
+"Indică dacă un număr de telefon dezinfectat este un număr de telefon. Ajută "
+"la diferențierea numărului care este pe lista neagră             când există"
+" atât un câmp de mobil și telefon într-un model."
 
 #. module: sms
 #: model:ir.model.fields,help:sms.field_sms_composer__comment_single_recipient
 msgid "Indicates if the SMS composer targets a single specific recipient"
-msgstr ""
+msgstr "Indică dacă SMS composer vizează un singur destinatar specific"
 
 #. module: sms
 #: model:ir.model.fields.selection,name:sms.selection__mail_notification__failure_type__sms_credit
@@ -747,6 +755,8 @@ msgid ""
 "Number of recipients that will receive the SMS if sent in mass mode, without"
 " applying the Active Domain value"
 msgstr ""
+"Numărul de destinatari care vor primi SMS-ul dacă este trimis în mod masiv, "
+"fără a aplica valoarea de domeniu activ"
 
 #. module: sms
 #: model:ir.model.fields,help:sms.field_sms_composer__active_domain_count
@@ -761,7 +771,7 @@ msgstr "Număr de mesaje necitite"
 #. module: sms
 #: model:ir.model.fields.selection,name:sms.selection__sms_sms__failure_type__sms_optout
 msgid "Opted Out"
-msgstr ""
+msgstr "Optat pentru a nu primi"
 
 #. module: sms
 #: model:ir.model.fields,help:sms.field_sms_template__lang
@@ -771,6 +781,10 @@ msgid ""
 "a placeholder expression that provides the appropriate language, e.g. {{ "
 "object.partner_id.lang }}."
 msgstr ""
+"Limba de traducere opțională (cod ISO) pentru a selecta când se trimite un "
+"e-mail. Dacă nu este setat, versiunea engleză va fi folosită. Aceasta ar "
+"trebui să fie de obicei o expresie rezervată care oferă limba potrivită, de "
+"exemplu {{ object.partner_id.lang }}."
 
 #. module: sms
 #: model:ir.model.fields,help:sms.field_sms_template__null_value
@@ -792,7 +806,7 @@ msgstr "Partener"
 #. module: sms
 #: model:ir.model,name:sms.model_mail_thread_phone
 msgid "Phone Blacklist Mixin"
-msgstr ""
+msgstr "Telefon Blacklist Mixin"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_res_partner__phone_sanitized_blacklisted
@@ -879,7 +893,7 @@ msgstr "Eliminați acțiunea contextuală a modelului asociat"
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_template__render_model
 msgid "Rendering Model"
-msgstr ""
+msgstr "Model de redare"
 
 #. module: sms
 #: model:ir.actions.server,name:sms.ir_actions_server_sms_sms_resend
@@ -957,7 +971,7 @@ msgstr "Eroare livrare SMS"
 #: code:addons/sms/static/src/models/notification_group/notification_group.js:0
 #, python-format
 msgid "SMS Failures"
-msgstr ""
+msgstr "Eșecuri SMS"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_mail_notification__sms_number
@@ -1197,13 +1211,13 @@ msgstr "Șabloane"
 #: code:addons/sms/models/sms_sms.py:0
 #, python-format
 msgid "The SMS Text Messages could not be resent."
-msgstr ""
+msgstr "Mesajele SMS nu au putut fi retrimise."
 
 #. module: sms
 #: code:addons/sms/models/sms_api.py:0
 #, python-format
 msgid "The number you're trying to reach is not correctly formatted."
-msgstr ""
+msgstr "Numărul la care încercați să ajungeți nu este formatat corect."
 
 #. module: sms
 #: model:ir.model.fields,help:sms.field_sms_template__model_id
@@ -1215,7 +1229,7 @@ msgstr "Cu tipul de document cu acest șablon se poate utiliza"
 #: code:addons/sms/models/sms_sms.py:0
 #, python-format
 msgid "There are no SMS Text Messages to resend."
-msgstr ""
+msgstr "Nu există mesaje SMS de retrimis."
 
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.res_partner_view_form
@@ -1297,7 +1311,7 @@ msgstr "Folosiți lista neagră"
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_composer__res_ids_count
 msgid "Visible records count"
-msgstr ""
+msgstr "Numărul de înregistrări vizibile"
 
 #. module: sms
 #: code:addons/sms/models/sms_sms.py:0
@@ -1355,13 +1369,13 @@ msgstr "Nu aveți acces la mesaj și / sau la documentul aferent."
 #: code:addons/sms/models/sms_api.py:0
 #, python-format
 msgid "You don't have an eligible IAP account."
-msgstr ""
+msgstr "Nu aveți un cont IAP eligibil."
 
 #. module: sms
 #: code:addons/sms/models/sms_api.py:0
 #, python-format
 msgid "You don't have enough credits on your IAP account."
-msgstr ""
+msgstr "Nu aveți suficiente credite pe contul dvs. IAP."
 
 #. module: sms
 #. openerp-web
@@ -1370,6 +1384,7 @@ msgstr ""
 msgid ""
 "Your SMS Text Message must include at least one non-whitespace character"
 msgstr ""
+"Mesajul dvs. text SMS trebuie să includă cel puțin un caracter fără spațiu"
 
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.sms_composer_view_form
@@ -1384,17 +1399,17 @@ msgstr "de exemplu. +1 415 555 0100"
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.sms_template_view_form
 msgid "e.g. Calendar Reminder"
-msgstr ""
+msgstr "de exemplu. Calendar Reminder"
 
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.sms_template_view_form
 msgid "e.g. Contact"
-msgstr ""
+msgstr "de exemplu. Contact"
 
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.sms_template_view_form
 msgid "e.g. en_US or {{ object.partner_id.lang }}"
-msgstr ""
+msgstr "de exemplu. en_US sau {{ object.partner_id.lang }}"
 
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.sms_composer_view_form
