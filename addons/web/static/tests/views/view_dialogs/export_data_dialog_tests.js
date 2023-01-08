@@ -612,37 +612,38 @@ QUnit.module("ViewDialogs", (hooks) => {
     });
 
     QUnit.test("Export dialog: export list with 'exportable: false'", async function (assert) {
-        (serverData.models.partner.fields.not_exportable = {
+        serverData.models.partner.fields.not_exportable = {
             string: "Not exportable",
             type: "char",
             exportable: false,
-        }),
-            (serverData.models.partner.fields.exportable = { string: "Exportable", type: "char" }),
-            await makeView({
-                serverData,
-                type: "list",
-                resModel: "partner",
-                arch: `<tree export_xlsx="1">
-                    <field name="foo"/>
-                    <field name="not_exportable"/>
-                    <field name="exportable"/>
-                </tree>`,
-                actionMenus: {},
-                mockRPC(route, args) {
-                    if (route === "/web/export/formats") {
-                        return Promise.resolve([{ tag: "csv", label: "CSV" }]);
+        };
+        serverData.models.partner.fields.exportable = { string: "Exportable", type: "char" };
+
+        await makeView({
+            serverData,
+            type: "list",
+            resModel: "partner",
+            arch: `<tree export_xlsx="1">
+                <field name="foo"/>
+                <field name="not_exportable"/>
+                <field name="exportable"/>
+            </tree>`,
+            actionMenus: {},
+            mockRPC(route, args) {
+                if (route === "/web/export/formats") {
+                    return Promise.resolve([{ tag: "csv", label: "CSV" }]);
+                }
+                if (route === "/web/export/get_fields") {
+                    if (!args.parent_field) {
+                        return Promise.resolve(fetchedFields.root);
                     }
-                    if (route === "/web/export/get_fields") {
-                        if (!args.parent_field) {
-                            return Promise.resolve(fetchedFields.root);
-                        }
-                        if (args.prefix === "partner_ids") {
-                            assert.step("fetch fields for 'partner_ids'");
-                        }
-                        return Promise.resolve(fetchedFields[args.prefix]);
+                    if (args.prefix === "partner_ids") {
+                        assert.step("fetch fields for 'partner_ids'");
                     }
-                },
-            });
+                    return Promise.resolve(fetchedFields[args.prefix]);
+                }
+            },
+        });
 
         await openExportDataDialog();
         assert.containsN(target, ".o_export_field", 2, "only two fields are selected in the list");
@@ -726,6 +727,101 @@ QUnit.module("ViewDialogs", (hooks) => {
             2,
             "exported fields can't be sorted by drag and drop"
         );
+    });
+
+    QUnit.test("ExportDialog: export all records of the domain", async function (assert) {
+        assert.expect(2);
+        let isDomainSelected = false;
+
+        mockDownload(({ data }) => {
+            if (isDomainSelected) {
+                assert.deepEqual(
+                    JSON.parse(data.data),
+                    {
+                        context: { lang: "en", uid: 7, tz: "taht" },
+                        model: "partner",
+                        domain: [["bar", "!=", "glou"]],
+                        groupby: [],
+                        ids: false,
+                        import_compat: false,
+                        fields: [
+                            {
+                                name: "foo",
+                                label: "Foo",
+                                type: "char",
+                            },
+                            {
+                                name: "bar",
+                                label: "Bar",
+                                type: "boolean",
+                            },
+                        ],
+                    },
+                    "should be called with correct params when all records are selected"
+                );
+            } else {
+                assert.deepEqual(
+                    JSON.parse(data.data),
+                    {
+                        context: { lang: "en", uid: 7, tz: "taht" },
+                        model: "partner",
+                        domain: [["bar", "!=", "glou"]],
+                        groupby: [],
+                        ids: [1],
+                        import_compat: false,
+                        fields: [
+                            {
+                                name: "foo",
+                                label: "Foo",
+                                type: "char",
+                            },
+                            {
+                                name: "bar",
+                                label: "Bar",
+                                type: "boolean",
+                            },
+                        ],
+                    },
+                    "should be called with correct params when only one record is selected"
+                );
+            }
+            return Promise.resolve();
+        });
+
+        await makeView({
+            serverData,
+            type: "list",
+            resModel: "partner",
+            arch: `
+                <tree export_xlsx="1" limit="1">
+                    <field name="foo"/>
+                    <field name="bar"/>
+                </tree>`,
+            actionMenus: {},
+            domain: [["bar", "!=", "glou"]],
+            mockRPC(route) {
+                if (route === "/web/export/formats") {
+                    return Promise.resolve([{ tag: "xls", label: "Excel" }]);
+                }
+                if (route === "/web/export/get_fields") {
+                    return Promise.resolve(fetchedFields.root);
+                }
+            },
+        });
+
+        await openExportDataDialog();
+        await click(target.querySelector(".o_select_button"));
+        await click(target.querySelector(".btn-close"));
+
+        isDomainSelected = true;
+        await click(target.querySelector(".o_list_select_domain"));
+        await click(target.querySelector(".o_control_panel .o_cp_action_menus .dropdown-toggle"));
+        await click(
+            target.querySelector(
+                ".o_control_panel .o_cp_action_menus .dropdown-menu span:first-child"
+            )
+        );
+        await click(target.querySelector(".o_select_button"));
     });
 
     QUnit.test("Direct export list", async function (assert) {
