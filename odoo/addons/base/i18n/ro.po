@@ -8,8 +8,9 @@
 # Fekete Mihai <mihai.fekete@forestandbiomass.ro>, 2020
 # Martin Trigaux, 2020
 # Hongu Cosmin <cosmin513@gmail.com>, 2020
-# Dorin Hongu <dhongu@gmail.com>, 2020
 # Foldi Robert <foldirobert@nexterp.ro>, 2021
+# Claudia Baisan, 2023
+# Dorin Hongu <dhongu@gmail.com>, 2023
 # 
 msgid ""
 msgstr ""
@@ -17,7 +18,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-07-23 15:12+0000\n"
 "PO-Revision-Date: 2019-08-26 09:06+0000\n"
-"Last-Translator: Foldi Robert <foldirobert@nexterp.ro>, 2021\n"
+"Last-Translator: Dorin Hongu <dhongu@gmail.com>, 2023\n"
 "Language-Team: Romanian (https://www.transifex.com/odoo/teams/41243/ro/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -485,6 +486,9 @@ msgid ""
 "\n"
 "Use Epson Printers as Order Printers in the Point of Sale without the IoT Box\n"
 msgstr ""
+"\n"
+"\n"
+"Utilizați imprimantele Epson ca imprimante de comandă în punctul de vânzare fără caseta IoT\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_pos_epson_printer
@@ -493,6 +497,9 @@ msgid ""
 "\n"
 "Use Epson ePOS Printers without the IoT Box in the Point of Sale\n"
 msgstr ""
+"\n"
+"\n"
+"Utilizați imprimantele Epson ePOS fără caseta IoT în punctul de vânzare\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_at
@@ -694,6 +701,8 @@ msgid ""
 "\n"
 "        Bridge between HR and Maintenance."
 msgstr ""
+"\n"
+"        Legătură între HR și Maintenance."
 
 #. module: base
 #: model:ir.module.module,description:base.module_sale_intrastat
@@ -702,6 +711,9 @@ msgid ""
 "        Bridge module between sale and intrastat.\n"
 "    "
 msgstr ""
+"\n"
+"        Modul de legătură între vânzări și intrastat.\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_be_sale_intrastat
@@ -717,6 +729,8 @@ msgid ""
 "\n"
 "        Bridge module for website_sale / sale_product_configurator"
 msgstr ""
+"\n"
+"        Modul de legătură pentru website_sale / sale_product_configurator"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_website_sale_stock_product_configurator
@@ -732,6 +746,9 @@ msgid ""
 "        Bridge module to make the website e-commerce compatible with the product configurator\n"
 "    "
 msgstr ""
+"\n"
+"        Modul de legătură pentru a face e-commerce-ul compatibil cu configuratorul de produse\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_website_sale_stock_product_configurator
@@ -740,6 +757,9 @@ msgid ""
 "        Bridge module to make the website e-commerce stock management compatible with the product configurator\n"
 "    "
 msgstr ""
+"\n"
+"        Modul de legătură pentru a face gestiunea stocului e-commerce-ului compatibilă cu configuratorul de produse\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_lt
@@ -946,6 +966,11 @@ msgid ""
 "        Manage user and manager notifications\n"
 "    "
 msgstr ""
+"\n"
+"        Specifica închirieri de produse (produse, oferte, facturi, ...)\n"
+"        Gestionarea stării produselor, închirieri, întârzieri\n"
+"        Gestionarea notificărilor utilizatorilor și managerilor\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_base_sparse_field
@@ -957,6 +982,12 @@ msgid ""
 "        fields are stored in a \"serialized\" field in the form of a JSON mapping.\n"
 "    "
 msgstr ""
+"\n"
+"        Scopul acestui modul este de a implementa câmpuri \"sparse\", adică câmpuri\n"
+"        care sunt de obicei nule. Această implementare împiedică limitarea PostgreSQL\n"
+"        a numărului de coloane într-o tabelă. Valorile tuturor câmpurilor sparse\n"
+"        sunt stocate într-un câmp \"serializat\" sub forma unei mapări JSON.\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_mrp_subcontracting_dropshipping
@@ -1001,6 +1032,10 @@ msgid ""
 "        by choosing product variants quantity through a Grid Entry.\n"
 "    "
 msgstr ""
+"\n"
+"        Acest modul permite completarea rapidă a comenzilor de achiziție\n"
+"        prin alegerea cantităților de produse variante prin intermediul unei intrări în grilă.\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_sale_product_matrix
@@ -1010,6 +1045,10 @@ msgid ""
 "        by choosing product variants quantity through a Grid Entry.\n"
 "    "
 msgstr ""
+"\n"
+"        Acest modul permite completarea rapidă a comenzilor de vânzare\n"
+"        prin alegerea cantităților de produse variante prin intermediul unei intrări în grilă.\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_account_ponto
@@ -1288,6 +1327,21 @@ msgid ""
 "    but rather the amount of these lines will be deduced from the lines they apply to during tax computation.\n"
 "    "
 msgstr ""
+"\n"
+"    Gestionați reducerile în calculările taxcloud.\n"
+"    Vedeți https://taxcloud.com/support/discounts sau\n"
+"    https://service.taxcloud.net/hc/en-us/articles/360015649791-How-can-discounts-be-applied-\n"
+"\n"
+"    Rezumat: toate reducerile furnizate de vânzător trebuie aplicate prețului de vânzare înainte de a calcula taxa de vânzare.\n"
+"    Vânzătorii ar trebui să comunice metodologia lor clienților într-o politică de aplicare a reducerilor.\n"
+"\n"
+"    Algoritmul este următorul:\n"
+"     - reducerile specifice liniei se aplică mai întâi, pe liniile pe care ar trebui să le aplice.\n"
+"       Acest lucru înseamnă reduceri specifice produsului sau reduceri pe linia cea mai ieftină.\n"
+"     - Apoi se aplică reducerile globale uniform pe liniile plătite, cât mai mult posibil.\n"
+"       Dacă există un rest, acesta se aplică secvențial, în ordinea liniilor,\n"
+"       până când nu mai rămâne nicio reducere sau nu mai rămâne nicio linie cu reducere.\n"
+"\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_sale_coupon_taxcloud_delivery
@@ -1309,6 +1363,9 @@ msgid ""
 "    Module linking the attendance module to the timesheet app.\n"
 "    "
 msgstr ""
+"\n"
+"    Modulul care leagă modulul de prezență de aplicația de program.\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_no_saft
@@ -1319,6 +1376,11 @@ msgid ""
 "    Necessary master data is also included.\n"
 "    "
 msgstr ""
+"\n"
+"    SAF-T norvegian este un format de fișier standard pentru exportul diverselor tipuri de date contabile transacționale utilizând formatul XML.\n"
+"    Prima versiune a SAF-T Financial este limitată la nivelul jurnalului general, inclusiv tranzacțiile clienților și furnizorilor.\n"
+"    Datele de bază necesare sunt incluse.\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_payment_payumoney
@@ -1393,6 +1455,11 @@ msgid ""
 "This module gives the details of the goods traded between the countries of\n"
 "European Union."
 msgstr ""
+"\n"
+"Un modul care adaugă gestiunea stocului în rapoartele intrastat.\n"
+"============================================================\n"
+"\n"
+"Acest modul oferă detalii despre bunurile comerciale între țările Uniunii Europene."
 
 #. module: base
 #: model:ir.module.module,description:base.module_account_tax_python
@@ -8742,7 +8809,7 @@ msgstr "Aplicații:"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_ui_view__arch_db
 msgid "Arch Blob"
-msgstr ""
+msgstr "Arhivare Blob"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_ui_view__arch_fs
@@ -10862,7 +10929,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,summary:base.module_crm_iap_lead_website
 msgid "Create Leads/Opportunities from your website's traffic"
-msgstr ""
+msgstr "Creează Lead-uri/Oportunități din traficul site-ului tău"
 
 #. module: base
 #: model:ir.actions.act_window,name:base.act_menu_create
@@ -14740,6 +14807,9 @@ msgid ""
 "* if False, the view currently does not extend its parent but can be enabled\n"
 "         "
 msgstr ""
+"Dacă această vizualizare este moștenită,\n"
+"* dacă este adevărat, vizualizarea extinde întotdeauna părintele său\n"
+"* dacă este fals, vizualizarea nu extinde în prezent părintele său, dar poate fi activată\n"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_rule_form
@@ -16131,7 +16201,7 @@ msgstr "Aspect în rapoarte"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_crm_iap_lead_enrich
 msgid "Lead Enrichment"
-msgstr ""
+msgstr "Îmbogățire pistă"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_crm_iap_lead
@@ -19356,6 +19426,13 @@ msgid ""
 "(<xpath/>) are applied, and the result is used as if it were this view's\n"
 "actual arch.\n"
 msgstr ""
+"Se aplică doar dacă această vizualizare moștenește dintr-o altă vizualizare (inherit_id nu este False/Null).\n"
+"\n"
+"* dacă extensie (implicit), dacă această vizualizare este solicitată cea mai apropiată vizualizare primară\n"
+"este căutată (prin intermediul inherit_id), apoi toate vizualizările care moștenește din ea cu acest\n"
+"modelul vizualizării sunt aplicate\n"
+"* dacă primar, cea mai apropiată vizualizare primară este rezolvată în totalitate (chiar dacă folosește un\n"
+"model diferit decât acesta), apoi speciile de moștenire ale acestei vizualizări (<xpath/>) sunt aplicate, și rezultatul este folosit ca și cum ar fi arhitectura vizualizării acesta.\n"
 
 #. module: base
 #: model:ir.model.constraint,message:base.constraint_res_currency_rate_unique_name_per_day
@@ -22063,6 +22140,10 @@ msgid ""
 "                            Odoo will propose you to merge only those having\n"
 "                            all these fields in common. (not one of the fields)."
 msgstr ""
+"Selectați lista de câmpuri utilizate pentru a căuta înregistrări duplicate.\n"
+"                            Dacă selectați mai multe câmpuri, Odoo vă va propune\n"
+"                            să le combinați doar pe acelea care au toate aceste\n"
+"                            câmpuri în comun. (nu unul dintre câmpuri)."
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_model_fields__selectable
@@ -22670,7 +22751,7 @@ msgstr "Termen sursă"
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.layout_preview
 msgid "Source:"
-msgstr ""
+msgstr "Sursa:"
 
 #. module: base
 #: model:res.country,name:base.za
@@ -23329,7 +23410,7 @@ msgstr "Test Performanță"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_test_rpc
 msgid "Test RPC"
-msgstr ""
+msgstr "Test RPC"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_test_marketing_automation
@@ -23518,6 +23599,9 @@ msgid ""
 "Odoo. They are launched during the installation of new modules, but you can "
 "choose to restart some wizards manually from this menu."
 msgstr ""
+"Configurarea wizard-urilor este folosita pentru a va ajuta sa configurati o "
+"instanta noua a Odoo. Acestea sunt lansate in timpul instalarii unor module "
+"noi, dar puteti alege sa reporniti manual unele wizard-uri din acest meniu."
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_model_fields__related
@@ -23525,6 +23609,8 @@ msgid ""
 "The corresponding related field, if any. This must be a dot-separated list "
 "of field names."
 msgstr ""
+"Câmpul corespunzător, dacă există. Acesta trebuie sa fie o lista de nume de "
+"câmpuri separate prin punct."
 
 #. module: base
 #: model:ir.model.constraint,message:base.constraint_res_currency_unique_name
@@ -23629,7 +23715,7 @@ msgstr "Utilizatorul intern responsabil de acest contact."
 #: code:addons/base/models/res_country.py:106
 #, python-format
 msgid "The layout contains an invalid format key"
-msgstr ""
+msgstr "Formatul conține o cheie invalidă"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_model__inherited_model_ids
@@ -23807,6 +23893,13 @@ msgid ""
 "Fields:\n"
 "%(fields_list)s"
 msgstr ""
+"Operația solicitată nu poate fi finalizată din cauza restricțiilor de securitate.\n"
+"\n"
+"Tip document: %(document_kind)s (%(document_model)s)\n"
+"Operație: %(operation)s\n"
+"Utilizator: %(user)s\n"
+"Câmpuri:\n"
+"%(fields_list)s"
 
 #. module: base
 #: code:addons/base/models/ir_rule.py:0
@@ -24079,6 +24172,9 @@ msgid ""
 "and keep track of application submissions easily. It comes as an add-on of "
 "*Recruitment* app."
 msgstr ""
+"Acest modul permite publicarea pozițiilor de muncă disponibile pe site-ul "
+"web și urmărirea ușoară a depunerilor de aplicații. Vine ca un add-on al "
+"aplicației *Recrutare*."
 
 #. module: base
 #: model:ir.module.module,description:base.module_test_mail
@@ -25092,7 +25188,7 @@ msgstr "Folosește formatul '%s'"
 #. module: base
 #: model:ir.model.fields,help:base.field_res_country__vat_label
 msgid "Use this field if you want to change vat label."
-msgstr ""
+msgstr "Utilizați acest câmp dacă doriți să modificați eticheta TVA."
 
 #. module: base
 #: model:ir.model.fields,help:base.field_res_country__address_view_id
@@ -25102,12 +25198,19 @@ msgid ""
 "display addresses (in reports for example), while this field is used to "
 "modify the input form for addresses."
 msgstr ""
+"Utilizați acest câmp dacă doriți să înlocuiți modul obișnuit de codificare a"
+" unei adrese complete. Rețineți că câmpul address_format este utilizat "
+"pentru a modifica modul de afișare a adreselor (în rapoarte, de exemplu), în"
+" timp ce acest câmp este utilizat pentru a modifica formularul de "
+"introducere a adreselor."
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_model_fields__relation_table
 msgid ""
 "Used for custom many2many fields to define a custom relation table name"
 msgstr ""
+"Utilizat pentru câmpurile many2many personalizate pentru a defini un nume de"
+" tabel de relație personalizat"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_actions_act_window__usage
@@ -26678,3 +26781,9 @@ msgstr "da"
 #: model:res.country,name:base.ax
 msgid "Åland Islands"
 msgstr "Insulele Aaland"
+
+#. module: base
+#: code:addons/base/models/res_currency.py:0
+#, python-format
+msgid "This currency is set on a company and therefore must be active."
+msgstr ""

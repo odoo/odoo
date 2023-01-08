@@ -18,7 +18,7 @@
 # Odoo Experts Consultants <consultants@odooexperts.nl>, 2021
 # Kasper Declercq <declercq.kasper@gmail.com>, 2021
 # Erwin van der Ploeg <erwin@odooexperts.nl>, 2022
-# Jolien De Paepe, 2022
+# Jolien De Paepe, 2023
 # 
 msgid ""
 msgstr ""
@@ -26,7 +26,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-07-23 15:12+0000\n"
 "PO-Revision-Date: 2019-08-26 09:06+0000\n"
-"Last-Translator: Jolien De Paepe, 2022\n"
+"Last-Translator: Jolien De Paepe, 2023\n"
 "Language-Team: Dutch (https://www.transifex.com/odoo/teams/41243/nl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -63,6 +63,10 @@ msgid ""
 "- Kitchen Order Printing: allows you to print orders updates to kitchen or bar printers\n"
 "\n"
 msgstr ""
+"\n"
+"\n"
+"- Afdrukken van keukenorders: hiermee kan je updates van bestellingen afdrukken naar keuken- of barprinters\n"
+"\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_at_reports
@@ -1018,6 +1022,29 @@ msgid ""
 "        you have not already sent to the government to reuse its number.\n"
 "    "
 msgstr ""
+"\n"
+"E-Faktur Menu (Indonesië)\n"
+"Formaat: 010.000-16.00000001\n"
+"* 2 (dua) cijferige pertama adalah Kode Transaksi\n"
+"* 1 (satu) cijfer berikutnya adalah Kode Status\n"
+"* 3 (tiga) cijferige berikutnya adalah Kode Cabang\n"
+"* 2 (dua) cijferige pertama adalah Tahun Penerbitan\n"
+"* 8 (delapan) cijferige berikutnya adalah Nomor Urut\n"
+"\n"
+"Om klantfacturen als e-Faktur te kunnen exporteren,\n"
+"moet je de nummersreeksen invoeren die je hebt gekregen\n"
+"door de overheid in Boekhouding> Klanten> e-Faktur\n"
+"\n"
+"Wanneer je een factuur bevestigt, waarbij de partner de ID PKP heeft\n"
+"aangevinkt, wordt er een fiscaal nummer aan die factuur toegewezen.\n"
+"Daarna kun je de nog te exporteren facturen filteren in de\n"
+"facturenlijst en op Actie> Download e-Faktur klikken om de csv te downloaden\n"
+"en deze te uploaden naar de site van de overheid.\n"
+"\n"
+"Je kunt een reeds verzonden factuur vervangen door een andere door de vervangen factuur \n"
+"en de nieuwe aan te geven\n"
+"en je kunt een factuur resetten\n"
+"die je nog niet naar de regering hebt gestuurd om haar nummer te hergebruiken."
 
 #. module: base
 #: model:ir.module.module,summary:base.module_l10n_mx_reports
@@ -1544,6 +1571,13 @@ msgid ""
 "    With Sale coupon delivery, the discount computation does not apply on delivery lines.\n"
 "    "
 msgstr ""
+"\n"
+"Beheer kortingen met leveringen in taxclouds-berekeningen.\n"
+"Deze module volgt dezelfde logica als \"Account Taxcloud - Verkoop (kortingsbon)\".\n"
+"    Daar vindt je meer informatie over hoe kortingsberekeningen worden gemaakt voor TaxCloud.\n"
+"\n"
+"Er is een extra optie voor korting (gratis verzending) op leveringen.\n"
+"Bij levering van verkoopcoupons is de kortingsberekening niet van toepassing op leveringsregels."
 
 #. module: base
 #: model:ir.module.module,description:base.module_hr_timesheet_attendance
@@ -2078,6 +2112,16 @@ msgid ""
 "For Vendor Bill support for Default Vendor Specific OCR is added and validation for OCR.\n"
 "    "
 msgstr ""
+"\n"
+"Voeg gestructureerde communicatie toe aan klantfacturen en leveranciersfacturen.\n"
+"-------------------------------------------------- ----------------\n"
+"\n"
+"Het gebruik van gestructureerde OCR-communicatie vereenvoudigt de afstemming tussen facturen en betalingen.\n"
+"\n"
+"Voor ondersteuning bij klantfacturering voor OCR-niveau 1 tot 4. Het OCR-nummer kan gebaseerd zijn op partner of\n"
+"de factuur.\n"
+"\n"
+"Voor ondersteuning van leveranciersfacturen zijn standaard leverancierspecifieke OCR en validatie voor OCR toegevoegd."
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_ar_reports
@@ -2089,6 +2133,12 @@ msgid ""
 "\n"
 "\n"
 msgstr ""
+"\n"
+"Voeg een BTW-boekverslag toe dat wettelijk verplicht is in Argentinië en dat de BTW-details bevat van verkopen of aankopen in een bepaalde periode.\n"
+"\n"
+"Voeg ook een BTW-overzichtsrapport toe dat wordt gebruikt om de facturering te analyseren\n"
+"\n"
+"\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_hr_contract_reports
@@ -7155,6 +7205,14 @@ msgid ""
 " - Israelian taxes\n"
 " "
 msgstr ""
+"\n"
+"Dit is de nieuwste Israëlische basislokalisatie die nodig is om Odoo in Israël uit te voeren:\n"
+"================================================== ==============================\n"
+"\n"
+"Deze module bestaat uit:\n"
+"- Generiek Israëlisch rekeningschema\n"
+"- Israëlische belastingen\n"
+" "
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_za
@@ -8025,6 +8083,13 @@ msgid ""
 "As we don't want existing users to keep adding their personal accounts to remove them later, we add a technical\n"
 "module in order to minimize impact and support.\n"
 msgstr ""
+"\n"
+"Deze module is bedoeld om ondersteuning voor bedrijfspagina's toe te voegen en de ondersteuning van persoonlijke accounts te verwijderen.\n"
+"Dit is gedaan om de volgende iteratie van de social_linkedin module voor te bereiden die een volledige \"Streams\" ondersteuning zal toestaan,\n"
+"wat betekent dat je je berichten zal kunnen lezen (en niet alleen posten), maar alleen voor bedrijfsaccounts.\n"
+"Omdat we niet willen dat bestaande gebruikers hun persoonlijke accounts blijven toevoegen om ze later te verwijderen, voegen we een technische\n"
+"module toe om de impact en de ondersteuning te minimaliseren.\n"
+"\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_association
@@ -10724,7 +10789,7 @@ msgstr "Sta klanten toe om een product wensenlijst te maken"
 #. module: base
 #: model:ir.module.module,summary:base.module_pos_cash_rounding
 msgid "Allow specific rounding in pos"
-msgstr ""
+msgstr "Specifieke afronding toestaan in Kassa"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_website_mail_channel
@@ -10740,6 +10805,8 @@ msgstr "Sta toe dat u uw vrienden naar Odoo verwijst en beloningen ontvangt"
 #: model:ir.module.module,summary:base.module_odoo_referral_portal
 msgid "Allow you to refer your friends to Odoo and get rewards - Deprecated"
 msgstr ""
+"Sta toe dat je je vrienden naar Odoo verwijst en beloningen ontvangt - "
+"Obsoleet"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_users_form
@@ -18039,7 +18106,7 @@ msgstr "IoT Box koppelen via odoo.com"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_iot_pairing
 msgid "IoT Pairing"
-msgstr ""
+msgstr "IoT-koppeling"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_mrp_workorder_iot
@@ -18869,7 +18936,7 @@ msgstr "Koppel uw kassa instellingen aan de IoT Box voor een restaurant"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_social_linkedin_company_support
 msgid "LinkedIn Company Support"
-msgstr ""
+msgstr "LinkedIn bedrijfsondersteuning"
 
 #. module: base
 #: code:addons/base/models/ir_qweb_fields.py:0
@@ -22835,7 +22902,7 @@ msgstr "Odoo verwijzingsprogramma"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_odoo_referral_portal
 msgid "Odoo referral program bridge with portal (Deprecated)"
-msgstr ""
+msgstr "Odoo verwijzingsprogramma koppelingsmodule met portaal (Obsoleet)"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_sequence__padding
@@ -24094,7 +24161,7 @@ msgstr "Kassa"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_pos_cash_rounding
 msgid "Point of Sale Cash Rounding"
-msgstr ""
+msgstr "Kassa Afronding contant geld"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_pos_discount
@@ -24153,12 +24220,13 @@ msgstr "Portugal - Boekhouding"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_pos_kitchen_printer
 msgid "Pos Kitchen Printer"
-msgstr ""
+msgstr "Kassa keukenprinter"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_social_linkedin_company_support
 msgid "Post on your LinkedIn company pages instead of you personnal accounts"
 msgstr ""
+"Post op je LinkedIn bedrijfspagina's in plaats van je persoonlijke accounts"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_model_constraint__definition
@@ -25362,7 +25430,7 @@ msgstr "Restaurant"
 #. module: base
 #: model:ir.module.module,summary:base.module_pos_kitchen_printer
 msgid "Restaurant Kitchen Printer extensions for the Point of Sale "
-msgstr ""
+msgstr "Restaurant keukenprinter extensies voor Kassa"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_pos_restaurant
@@ -28069,6 +28137,9 @@ msgid ""
 "contained in a separate module as it contains models used only to perform\n"
 "tests independently to functional aspects of other models. "
 msgstr ""
+"Deze module bevat tests met betrekking tot webcohort. Die zijn\n"
+"aanwezig in een aparte module omdat het modellen bevat die alleen worden gebruikt om te presteren\n"
+"test onafhankelijk van functionele aspecten van andere modellen."
 
 #. module: base
 #: model:ir.module.module,description:base.module_test_website
@@ -28164,7 +28235,7 @@ msgstr "Verlof"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_hr_holidays_calendar
 msgid "Time Off - Calendar"
-msgstr ""
+msgstr "Verlof - Kalender"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_hr_holidays_gantt
@@ -28174,7 +28245,7 @@ msgstr "Verlof Gantt"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_hr_holidays_gantt_calendar
 msgid "Time off Gantt - Calendar"
-msgstr ""
+msgstr "Verlof Gantt - Kalender"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_timesheet_grid

@@ -13,6 +13,7 @@
 # Gunther Clauwaert <gclauwae@hotmail.com>, 2020
 # Odoo Experts Consultants <consultants@odooexperts.nl>, 2020
 # Erwin van der Ploeg <erwin@odooexperts.nl>, 2020
+# Jolien De Paepe, 2023
 # 
 msgid ""
 msgstr ""
@@ -20,7 +21,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-04-27 09:22+0000\n"
 "PO-Revision-Date: 2019-08-26 09:10+0000\n"
-"Last-Translator: Erwin van der Ploeg <erwin@odooexperts.nl>, 2020\n"
+"Last-Translator: Jolien De Paepe, 2023\n"
 "Language-Team: Dutch (https://www.transifex.com/odoo/teams/41243/nl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -36,6 +37,11 @@ msgid ""
 "time off and allocations;\tAllocated by HR only: allocated by HR and cannot "
 "be bypassed; users can request time off;"
 msgstr ""
+"\tGeen toewijzing nodig: standaard geen toewijzing, gebruikers kunnen vrij "
+"verlof aanvragen;\tVrije toewijzing: toegewezen door Personeelszaken en "
+"gebruikers kunnen verlof en toewijzingen aanvragen;\tEnkel toegewezen door "
+"Personeelszaken: toegewezen door Personeelszaken en kan niet worden omzeild;"
+" gebruikers kunnen verlof aanvragen;"
 
 #. module: hr_holidays
 #: code:addons/hr_holidays/models/hr_leave_type.py:0
@@ -1923,7 +1929,7 @@ msgstr "Nieuwe verloftoewijzing"
 #: code:addons/hr_holidays/models/hr_leave_allocation.py:0
 #, python-format
 msgid "New Allocation Request created by %s: %s Days of %s"
-msgstr ""
+msgstr "Nieuwe toewijzingsaanvraag aangemaakt door %s: %s dagen van %s"
 
 #. module: hr_holidays
 #. openerp-web
@@ -2082,7 +2088,7 @@ msgstr "Online"
 #: code:addons/hr_holidays/models/hr_leave.py:0
 #, python-format
 msgid "Only a Leave Manager can approve/refuse its own requests."
-msgstr ""
+msgstr "Enkel een verlofmaanger kan zijn eigen aanvragen goedkeuren/weigeren."
 
 #. module: hr_holidays
 #: code:addons/hr_holidays/models/hr_leave.py:0
@@ -2109,6 +2115,8 @@ msgid ""
 "Only a Time off Manager can apply the second approval on allocation "
 "requests."
 msgstr ""
+"Enkel een verlofmanager kan de tweede goedkeuring op toewijzingsaanvragen "
+"toepassen."
 
 #. module: hr_holidays
 #: code:addons/hr_holidays/models/hr_leave_allocation.py:0
@@ -2445,7 +2453,7 @@ msgstr "Teamleider"
 #. module: hr_holidays
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave_type__validation_type__both
 msgid "Team Leader and Time Off Officer"
-msgstr ""
+msgstr "Teamleader en verlofbeheerder"
 
 #. module: hr_holidays
 #: model:ir.model.constraint,message:hr_holidays.constraint_hr_leave_allocation_type_value
@@ -2532,6 +2540,8 @@ msgstr ""
 msgid ""
 "This area is automatically filled by the user who validate the allocation"
 msgstr ""
+"Dit gedeelte wordt automatisch ingevuld door de gebruiker die het verlof "
+"toewijst"
 
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave_allocation__second_approver_id
@@ -2539,6 +2549,9 @@ msgid ""
 "This area is automatically filled by the user who validate the allocation "
 "with second level (If allocation type need second validation)"
 msgstr ""
+"Dit gedeelte wordt automatisch ingevuld door de gebruiker die het verlof met"
+" het tweede niveau toewijst (als het toewijzingstype een tweede validatie "
+"vereist)"
 
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave__first_approver_id
@@ -2586,6 +2599,8 @@ msgid ""
 "This user will be responsible for approving this type of times offThis is "
 "only used when validation is 'hr' or 'both'"
 msgstr ""
+"Deze gebruiker is verantwoordelijke voor het goedkeuren van het type verlof."
+" Dit wordt alleen gebruikt als de validatie 'hr' of 'beide' is"
 
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave_type__leaves_taken
@@ -3112,6 +3127,8 @@ msgstr ""
 #, python-format
 msgid "You don't have the rights to apply second approval on a leave request"
 msgstr ""
+"Je hebt niet het recht om een tweede goedkeuring aan te vragen op een "
+"verlofaanvraag"
 
 #. module: hr_holidays
 #: code:addons/hr_holidays/models/hr_leave.py:0
