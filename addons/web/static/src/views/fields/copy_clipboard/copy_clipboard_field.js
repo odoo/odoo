@@ -1,7 +1,10 @@
 /** @odoo-module **/
 
 import { _lt } from "@web/core/l10n/translation";
+import { evaluateExpr } from "@web/core/py_js/py";
+import { evalDomain } from "@web/views/utils";
 import { registry } from "@web/core/registry";
+import { omit } from "@web/core/utils/objects";
 
 import { CopyButton } from "./copy_button";
 import { UrlField } from "../url/url_field";
@@ -20,19 +23,27 @@ class CopyClipboardField extends Component {
         return `o_btn_${this.props.type}_copy btn-sm`;
     }
     get fieldProps() {
-        const fieldProps = {...this.props};
-        delete fieldProps.string;
-        return fieldProps;
+        return omit(this.props, "string", "disabledExpr");
+    }
+    get disabled() {
+        const context = this.props.record.evalContext;
+        const evaluated = this.props.disabledExpr ? evaluateExpr(this.props.disabledExpr) : false;
+        if (evaluated instanceof Array) {
+            return evalDomain(evaluated, context);
+        }
+        return Boolean(evaluated);
     }
 }
 CopyClipboardField.template = "web.CopyClipboardField";
 CopyClipboardField.props = {
     ...standardFieldProps,
     string: { type: String, optional: true },
+    disabledExpr: { type: String, optional: true },
 };
 CopyClipboardField.extractProps = ({ attrs }) => {
     return {
         string: attrs.string,
+        disabledExpr: attrs.disabled,
     };
 };
 
