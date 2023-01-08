@@ -42,6 +42,7 @@ CopyButton.template = "web.CopyButton";
 CopyButton.props = {
     className: { type: String, optional: true },
     copyText: { type: String, optional: true },
+    disabled: { type: Boolean, optional: true },
     successText: { type: String, optional: true },
     content: { type: [String, Object], optional: true },
 };
