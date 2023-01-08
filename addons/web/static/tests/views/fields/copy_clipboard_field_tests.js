@@ -2,7 +2,13 @@
 
 import { browser } from "@web/core/browser/browser";
 import { registry } from "@web/core/registry";
-import { click, getFixture, nextTick, patchWithCleanup } from "@web/../tests/helpers/utils";
+import {
+    click,
+    getFixture,
+    editInput,
+    nextTick,
+    patchWithCleanup,
+} from "@web/../tests/helpers/utils";
 import { makeView, setupViewRegistries } from "@web/../tests/views/helpers";
 
 const serviceRegistry = registry.category("services");
@@ -222,9 +228,9 @@ QUnit.module("Fields", (hooks) => {
         );
     });
 
-    QUnit.module("CopyToClipboardButtonField");
+    QUnit.module("CopyClipboardButtonField");
 
-    QUnit.test("CopyToClipboardButtonField in form view", async function (assert) {
+    QUnit.test("CopyClipboardButtonField in form view", async function (assert) {
         patchWithCleanup(browser, {
             navigator: {
                 clipboard: {
@@ -265,5 +271,53 @@ QUnit.module("Fields", (hooks) => {
 Ho-ho-hoooo Merry Christmas`,
             "yop",
         ]);
+    });
+
+    QUnit.test("CopyClipboardButtonField can be disabled", async function (assert) {
+        patchWithCleanup(browser, {
+            navigator: {
+                clipboard: {
+                    writeText: (text) => {
+                        assert.step(text);
+                        return Promise.resolve();
+                    },
+                },
+            },
+        });
+
+        await makeView({
+            serverData,
+            type: "form",
+            resModel: "partner",
+            arch: `
+                <form>
+                    <sheet>
+                        <div>
+                            <field name="text_field" disabled="1" widget="CopyClipboardButton"/>
+                            <field name="char_field" disabled="[('char_field', '=', 'yop')]" widget="CopyClipboardButton"/>
+                            <field name="char_field" widget="char"/>
+                        </div>
+                    </sheet>
+                </form>`,
+            resId: 1,
+        });
+
+        assert.containsOnce(
+            target,
+            ".o_clipboard_button.o_btn_text_copy[disabled]",
+            "The inner button should be disabled."
+        );
+        assert.containsOnce(
+            target,
+            ".o_clipboard_button.o_btn_char_copy[disabled]",
+            "The inner button should be disabled."
+        );
+
+        await editInput(target, ".o_input", "yip");
+        assert.containsNone(
+            target,
+            ".o_clipboard_button.o_btn_char_copy[disabled]",
+            "The inner button should not be disabled."
+        );
     });
 });

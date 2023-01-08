@@ -5,6 +5,7 @@
         <button
             class="text-nowrap"
             t-ref="button"
+            t-att-disabled="props.disabled"
             t-attf-class="btn btn-primary o_clipboard_button {{ props.className || '' }}"
             t-on-click.stop="onClick"
         >
