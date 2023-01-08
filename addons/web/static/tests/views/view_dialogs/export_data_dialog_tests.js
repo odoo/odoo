@@ -231,7 +231,7 @@ QUnit.module("ViewDialogs", (hooks) => {
     });
 
     QUnit.test("Export dialog: interacting with export templates", async function (assert) {
-        assert.expect(25);
+        assert.expect(26);
 
         await makeView({
             serverData,
@@ -250,7 +250,12 @@ QUnit.module("ViewDialogs", (hooks) => {
                     );
                     return 2;
                 }
-                if (route === "/web/dataset/call_kw") {
+                if (args.method === "search_read") {
+                    assert.deepEqual(
+                        args.kwargs.domain,
+                        [["resource", "=", "partner"]],
+                        "rpc contains the right domain filter to fetch templates"
+                    );
                     return Promise.resolve([{ id: 1, name: "Activities template" }]);
                 }
                 if (route === "/web/export/namelist") {
