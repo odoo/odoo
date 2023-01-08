@@ -5,8 +5,8 @@
 # Translators:
 # Cécile Collart <cco@odoo.com>, 2022
 # Martin Trigaux, 2022
-# Jolien De Paepe, 2022
 # Camille Dantinne <cmd@odoo.com>, 2022
+# Jolien De Paepe, 2023
 # 
 msgid ""
 msgstr ""
@@ -14,7 +14,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-12-15 12:51+0000\n"
 "PO-Revision-Date: 2022-09-22 05:54+0000\n"
-"Last-Translator: Camille Dantinne <cmd@odoo.com>, 2022\n"
+"Last-Translator: Jolien De Paepe, 2023\n"
 "Language-Team: French (https://www.transifex.com/odoo/teams/41243/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -71,7 +71,7 @@ msgstr "&amp;nbsp;"
 #. module: sale
 #: model:ir.actions.report,print_report_name:sale.action_report_pro_forma_invoice
 msgid "'PRO-FORMA - %s' % (object.name)"
-msgstr "'PRO-FORMA - %s' % (object.name)"
+msgstr "'PRO FORMA - %s' % (object.name)"
 
 #. module: sale
 #: model:ir.actions.report,print_report_name:sale.action_report_saleorder
@@ -1053,12 +1053,12 @@ msgstr "Ajouter plusieurs variantes à un ordre à partir d'une grille"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Allows you to send Pro-Forma Invoice to your customers"
-msgstr "Vous permet d'envoyer une facture pro-forma à vos clients"
+msgstr "Vous permet d'envoyer une facture pro forma à vos clients"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_res_config_settings__group_proforma_sales
 msgid "Allows you to send pro-forma invoice."
-msgstr "Vous permet d'envoyer une facture pro-forma."
+msgstr "Vous permet d'envoyer une facture pro forma."
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__module_sale_amazon
@@ -1151,7 +1151,7 @@ msgstr ""
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__product_template__expense_policy__cost
 msgid "At cost"
-msgstr "Au cout"
+msgstr "Au prix coûtant"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__message_attachment_count
@@ -1161,13 +1161,13 @@ msgstr "Compte des pièces jointes"
 #. module: sale
 #: model:ir.model,name:sale.model_product_attribute_value
 msgid "Attribute Value"
-msgstr "Valeur de la caractéristique"
+msgstr "Valeur de l'attribut"
 
 #. module: sale
 #: model:ir.ui.menu,name:sale.menu_product_attribute_action
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Attributes"
-msgstr "Caractéristiques"
+msgstr "Attributs"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_cancel__author_id
@@ -1449,7 +1449,7 @@ msgstr "Créer une facture client"
 #. module: sale
 #: model_terms:ir.actions.act_window,help:sale.product_template_action
 msgid "Create a new product"
-msgstr "Créer un nouvel article"
+msgstr "Créer un nouveau produit"
 
 #. module: sale
 #: model_terms:ir.actions.act_window,help:sale.act_res_partner_2_sale_order
@@ -1652,7 +1652,7 @@ msgstr "Validité par défaut du devis (jours)"
 #. module: sale
 #: model:ir.model.fields,help:sale.field_res_config_settings__deposit_default_product_id
 msgid "Default product used for payment advances"
-msgstr "Article par défaut utilisé pour les avances de paiements"
+msgstr "Produit par défaut utilisé pour les avances de paiements"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -1719,7 +1719,7 @@ msgstr "Dépôt"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__deposit_default_product_id
 msgid "Deposit Product"
-msgstr "Article de dépôt"
+msgstr "Produit de dépôt"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__name
@@ -1847,7 +1847,7 @@ msgstr "Acompte"
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__sale_advance_payment_inv__advance_payment_method__fixed
 msgid "Down payment (fixed amount)"
-msgstr "Montant de l'acompte (montant fixe)"
+msgstr "Acompte (montant fixe)"
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__sale_advance_payment_inv__advance_payment_method__percentage
@@ -1933,7 +1933,7 @@ msgid ""
 msgstr ""
 "Les dépenses et les factures des fournisseurs peuvent être refacturées à un "
 "client. Avec cette option, une dépense validée peut être refacturée au "
-"client à son coût ou à son prix de vente."
+"client au prix coûtant ou à son prix de vente."
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__validity_date
@@ -2162,7 +2162,7 @@ msgstr "Importer des commandes Amazon et synchroniser les livraisons"
 #: code:addons/sale/models/product_template.py:0
 #, python-format
 msgid "Import Template for Products"
-msgstr "Import du modèle pour les articles"
+msgstr "Import du modèle pour les produits"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
@@ -2172,7 +2172,7 @@ msgstr "Taxes inc.)"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_advance_payment_inv__deposit_account_id
 msgid "Income Account"
-msgstr "Compte de revenus"
+msgstr "Compte des revenus"
 
 #. module: sale
 #. odoo-python
@@ -2261,12 +2261,12 @@ msgstr ""
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__res_config_settings__default_invoice_policy__delivery
 msgid "Invoice what is delivered"
-msgstr "Facturer les articles livrés"
+msgstr "Facturer les produits livrés"
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__res_config_settings__default_invoice_policy__order
 msgid "Invoice what is ordered"
-msgstr "Facturer les articles commandés"
+msgstr "Facturer les produits commandés"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
@@ -2766,7 +2766,7 @@ msgid ""
 "products to the customer"
 msgstr ""
 "Nombre de jours entre la confirmation de la commande et l'expédition des "
-"articles au client"
+"produits au client"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__message_has_error_counter
@@ -3005,7 +3005,7 @@ msgstr "Jeton d'Identité PDT"
 #. module: sale
 #: model:ir.actions.report,name:sale.action_report_pro_forma_invoice
 msgid "PRO-FORMA Invoice"
-msgstr "Facture pro-forma"
+msgstr "Facture pro forma"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__product_packaging_id
@@ -3139,17 +3139,17 @@ msgstr "Imprimer"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__group_proforma_sales
 msgid "Pro-Forma Invoice"
-msgstr "Facture pro forma"
+msgstr "Facture pro forma"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
 msgid "Pro-Forma Invoice #"
-msgstr "Facture Pro-Format #"
+msgstr "Facture Pro forma #"
 
 #. module: sale
 #: model:res.groups,name:sale.group_proforma_sales
 msgid "Pro-forma Invoices"
-msgstr "Factures pro-forma"
+msgstr "Factures pro forma"
 
 #. module: sale
 #: model:ir.model,name:sale.model_product_template
@@ -3160,28 +3160,28 @@ msgstr "Factures pro-forma"
 #: model_terms:ir.ui.view,arch_db:sale.view_sales_order_filter
 #: model_terms:ir.ui.view,arch_db:sale.view_sales_order_line_filter
 msgid "Product"
-msgstr "Article"
+msgstr "Produit"
 
 #. module: sale
 #: model:ir.model,name:sale.model_product_attribute
 msgid "Product Attribute"
-msgstr "Caractéristique de l'article"
+msgstr "Attribut de produit"
 
 #. module: sale
 #: model:ir.model,name:sale.model_product_attribute_custom_value
 msgid "Product Attribute Custom Value"
-msgstr "Valeur caractéristique personnalisée du produit"
+msgstr "Valeur personnalisée attribut de produit"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Product Catalog"
-msgstr "Catalogue d'articles"
+msgstr "Catalogue de produits"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_report__categ_id
 #: model_terms:ir.ui.view,arch_db:sale.view_order_product_search
 msgid "Product Category"
-msgstr "Catégorie d'article"
+msgstr "Catégorie de produit"
 
 #. module: sale
 #: model:ir.model,name:sale.model_product_packaging
@@ -3191,28 +3191,28 @@ msgstr "Emballage des produits"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__product_template_id
 msgid "Product Template"
-msgstr "Modèle d'article"
+msgstr "Modèle de produit"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__product_type
 msgid "Product Type"
-msgstr "Type d'article"
+msgstr "Type de produit"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__product_uom_readonly
 msgid "Product Uom Readonly"
-msgstr "UdM de l'Article en Lecture seule"
+msgstr "UdM du produit en Lecture seule"
 
 #. module: sale
 #: model:ir.model,name:sale.model_product_product
 #: model:ir.model.fields,field_description:sale.field_sale_report__product_id
 msgid "Product Variant"
-msgstr "Variante d'article"
+msgstr "Variante de produit"
 
 #. module: sale
 #: model:ir.ui.menu,name:sale.menu_products
 msgid "Product Variants"
-msgstr "Variantes d'article"
+msgstr "Variantes de produit"
 
 #. module: sale
 #. odoo-python
@@ -3234,7 +3234,7 @@ msgstr ""
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Product used for down payments"
-msgstr "Article utilisé pour les acomptes"
+msgstr "Produit utilisé pour les acomptes"
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.product_template_action
@@ -3243,7 +3243,7 @@ msgstr "Article utilisé pour les acomptes"
 #: model:ir.ui.menu,name:sale.product_menu_catalog
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
 msgid "Products"
-msgstr "Articles"
+msgstr "Produits"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_line_tree
@@ -3777,7 +3777,7 @@ msgstr "Modèle de ligne de commande"
 #: code:addons/sale/models/res_company.py:0
 #, python-format
 msgid "Sample Product"
-msgstr "Modèle d'article"
+msgstr "Modèle de produit"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_onboarding_sample_quotation_step
@@ -3798,7 +3798,7 @@ msgstr "Section"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid "Section Name (eg. Products, Services)"
-msgstr "Nom de section (e.g. Articles, Services)"
+msgstr "Nom de section (e.g. Produits, Services)"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__access_token
@@ -3835,14 +3835,14 @@ msgstr "Acheter et vendre dans des unités de mesure différentes"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Sell products by multiple of unit # per package"
-msgstr "Vendre les articles par multiple d'unité # par paquet"
+msgstr "Vendre les produits par multiple d'unité # par paquet"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Sell variants of a product using attributes (size, color, etc.)"
 msgstr ""
-"Vendre les variantes d'un article en utilisant les caractéristiques (taille,"
-" couleur, ect.)"
+"Vendre les variantes d'un produit en utilisant les attributs (taille, "
+"couleur, ect.)"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
@@ -3887,9 +3887,9 @@ msgid ""
 "and set the email template from the product detail form (in Sales tab)."
 msgstr ""
 "L'envoi d'un email est utile lorsque vous avez besoin de partager du contenu"
-" ou des informations concrets concernant un article (instructions, règles, "
+" ou des informations concrets concernant un produit (instructions, règles, "
 "liens, supports, etc.). Créez et définissez le modèle d'email à partir du "
-"formulaire des détails de l'article (onglet Ventes)."
+"formulaire des détails du produit (onglet Ventes)."
 
 #. module: sale
 #: model:mail.template,description:sale.mail_template_sale_cancellation
@@ -3914,7 +3914,7 @@ msgstr "Définissez une validité par défaut pour vos devis"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Set multiple prices per product, automated discounts, etc."
-msgstr "Un article peut avoir plusieurs prix, réductions automatiques, etc."
+msgstr "Un produit peut avoir plusieurs prix, réductions automatiques, etc."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_onboarding_order_confirmation_step
@@ -4253,7 +4253,7 @@ msgstr ""
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_advance_payment_inv__fixed_amount
 msgid "The fixed amount to be invoiced in advance, taxes excluded."
-msgstr "Montant fixe à facturer taxes exclues"
+msgstr "Montant fixe à facturer à l'avance, hors taxes"
 
 #. module: sale
 #. odoo-python
@@ -4285,7 +4285,7 @@ msgid ""
 "The margin is computed as the sum of product sales prices minus the cost set"
 " in their detail form."
 msgstr ""
-"La marge est calculée comme la somme des prix de ventes des articles moins "
+"La marge est calculée comme la somme des prix de ventes des produits moins "
 "le coût défini dans leur fiche de détails."
 
 #. module: sale
@@ -4311,7 +4311,7 @@ msgstr "La communication de paiement de ce bon de commande."
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_advance_payment_inv__amount
 msgid "The percentage of amount to be invoiced in advance, taxes excluded."
-msgstr "Pourcentage du montant total à facturer taxes exclues."
+msgstr "Pourcentage du montant total à facturer à l'avance, hors taxes."
 
 #. module: sale
 #. odoo-python
@@ -4321,7 +4321,7 @@ msgid ""
 "The product used to invoice a down payment should be of type 'Service'. "
 "Please use another product or update this product."
 msgstr ""
-"Le produit utilisé pour facturer une avance doit être de type 'service'. "
+"Le produit utilisé pour facturer un acompte doit être de type 'service'. "
 "Veuillez utiliser un autre produit pour modifier ce produit."
 
 #. module: sale
@@ -4351,7 +4351,7 @@ msgstr "Les paramètres fournis ne sont pas valides."
 #: code:addons/sale/wizard/sale_make_invoice_advance.py:0
 #, python-format
 msgid "The value of the down payment amount must be positive."
-msgstr "La valeur du montant de l'avance doit être positif."
+msgstr "La valeur du montant de l'acompte doit être positif."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.portal_my_orders
@@ -4387,7 +4387,7 @@ msgid ""
 "changed in the product detail form."
 msgstr ""
 "Cette valeur par défaut s'applique à tout nouveau produit créé. Elle peut "
-"être modifiée dans la fiche de détails de l'article."
+"être modifiée dans la fiche de détails du produit."
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_account_bank_statement_line__campaign_id
@@ -4409,7 +4409,7 @@ msgid ""
 msgstr ""
 "C'est la date de livraison promise au client. Si elle est définie, le bon de"
 " livraison se basera sur cette date plutôt que celle définié grâce au délai "
-"indiqué sur l'article. "
+"indiqué sur le produit. "
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_account_bank_statement_line__medium_id
@@ -4454,7 +4454,7 @@ msgid ""
 msgstr ""
 "Ce rapport analyse vos devis et commandes clients. Il vérifie les revenus "
 "liés aux ventes et les classifie selon différents critères (vendeur, "
-"partenaire, article, etc.). Vous pouvez utiliser ce rapport pour analyser "
+"partenaire, produit, etc.). Vous pouvez utiliser ce rapport pour analyser "
 "vos ventes non encore facturées. Si vous souhaitez analyser votre chiffre "
 "d'affaires, vous devriez utiliser le rapport \"Analyse des factures "
 "clients\" dans l'application comptabilité."
@@ -4565,13 +4565,13 @@ msgstr "Total des taxes"
 #: model_terms:ir.ui.view,arch_db:sale.view_order_tree
 #: model_terms:ir.ui.view,arch_db:sale.view_quotation_tree
 msgid "Total Tax Excluded"
-msgstr "Total taxes exclues"
+msgstr "Total hors taxes"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_tree
 #: model_terms:ir.ui.view,arch_db:sale.view_quotation_tree
 msgid "Total Tax Included"
-msgstr "Total taxes incluses"
+msgstr "Total, toutes taxes comprises"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_product_product__service_type
@@ -4798,7 +4798,7 @@ msgstr "Avertissement sur les commandes de vente"
 #: model_terms:ir.ui.view,arch_db:sale.product_form_view_sale_order_button
 #: model_terms:ir.ui.view,arch_db:sale.product_template_form_view_sale_order_button
 msgid "Warning when Selling this Product"
-msgstr "Avertissement lorsque vous vendez cet article"
+msgstr "Avertissement lorsque vous vendez ce produit"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__website_message_ids
@@ -4895,8 +4895,8 @@ msgid ""
 "You must define a product for everything you sell or purchase,\n"
 "                whether it's a storable product, a consumable or a service."
 msgstr ""
-"Vous devez définir un article pour tout ce que vous vendez ou achetez,\n"
-"                que ce soit un article stockable, consommable ou un service."
+"Vous devez définir un produit pour tout ce que vous vendez ou achetez,\n"
+"                que ce soit un produit stockable, consommable ou un service."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
@@ -4933,7 +4933,7 @@ msgid ""
 "Your quotation contains products from company %(product_company)s whereas your quotation belongs to company %(quote_company)s. \n"
 " Please change the company of your quotation or remove the products from other companies (%(bad_products)s)."
 msgstr ""
-"Votre devis contient des articles de la société %(product_company)s malgré que votre devis est lié à la socité %(quote_company)s.\n"
+"Votre devis contient des produits de la société %(product_company)s malgré que votre devis est lié à la socité %(quote_company)s.\n"
 "Veuillez changer la société de votre devis ou retirer les produits d'autres sociétés (%(bad_products)s)."
 
 #. module: sale

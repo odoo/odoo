@@ -7,7 +7,7 @@
 # Hongu Cosmin <cosmin513@gmail.com>, 2022
 # Foldi Robert <foldirobert@nexterp.ro>, 2022
 # Martin Trigaux, 2022
-# Dorin Hongu <dhongu@gmail.com>, 2022
+# Dorin Hongu <dhongu@gmail.com>, 2023
 # 
 msgid ""
 msgstr ""
@@ -15,7 +15,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-12-15 12:50+0000\n"
 "PO-Revision-Date: 2022-09-22 05:45+0000\n"
-"Last-Translator: Dorin Hongu <dhongu@gmail.com>, 2022\n"
+"Last-Translator: Dorin Hongu <dhongu@gmail.com>, 2023\n"
 "Language-Team: Romanian (https://www.transifex.com/odoo/teams/41243/ro/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -28,7 +28,7 @@ msgstr ""
 #: code:addons/delivery/models/sale_order.py:0
 #, python-format
 msgid " (Estimated Cost: %s )"
-msgstr "(Cost estimat: %s)"
+msgstr " (Cost estimat: %s)"
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.view_quant_package_weight_form
@@ -38,7 +38,7 @@ msgstr "(calculat:"
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.choose_delivery_carrier_view_form
 msgid "<i class=\"fa fa-arrow-right me-1\"/>Get rate"
-msgstr ""
+msgstr "<i class=\"fa fa-arrow-right me-1\"/>Obțineți rata"
 
 #. module: delivery
 #. odoo-python
@@ -101,7 +101,7 @@ msgstr "<span>Transport Greutate: </span>"
 #: model_terms:ir.ui.view,arch_db:delivery.report_delivery_document2
 #: model_terms:ir.ui.view,arch_db:delivery.report_shipping2
 msgid "<strong>Carrier:</strong>"
-msgstr "<strong>Transportator:</strong>"
+msgstr "<strong>Curier:</strong>"
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.report_delivery_document2
@@ -111,12 +111,12 @@ msgstr "<strong>Cod HS</strong>"
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.delivery_report_saleorder_document
 msgid "<strong>Shipping Description:</strong>"
-msgstr ""
+msgstr "<strong>Descriere livrare:</strong>"
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.report_package_barcode_delivery
 msgid "<strong>Shipping Weight: </strong>"
-msgstr ""
+msgstr "<strong>Transport Greutate: </strong>"
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.report_package_barcode_delivery
@@ -124,6 +124,8 @@ msgid ""
 "<strong>Shipping Weight:</strong>\n"
 "                    <br/>"
 msgstr ""
+"<strong>Transport Greutate:</strong>\n"
+"                    <br/>"
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.report_delivery_document2
@@ -142,7 +144,7 @@ msgstr "<strong>Număr urmărire:</strong>"
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.report_package_barcode_delivery
 msgid "<strong>Weight: </strong>"
-msgstr ""
+msgstr "<strong>Greutate: </strong>"
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.report_shipping2
@@ -160,6 +162,9 @@ msgid ""
 "customers on the Sales Order and sales confirmation email.E.g. instructions "
 "for customers to follow."
 msgstr ""
+"O descriere a metodei de livrare pe care doriți să o comunicați clienților "
+"pe comanda de vânzare și pe e-mailul de confirmare a vânzărilor. De exemplu,"
+" instrucțiuni pentru clienți să urmeze."
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier__integration_level
@@ -240,6 +245,7 @@ msgid ""
 "Cancelling a delivery may not be undoable. Are you sure you want to "
 "continue?"
 msgstr ""
+"Anularea unei livrări poate nu poate fi anulată. Sigur doriți să continuați?"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_price_rule__carrier_id
@@ -261,17 +267,17 @@ msgstr "Cod transportator"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier__carrier_description
 msgid "Carrier Description"
-msgstr ""
+msgstr "Descriere curier"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_stock_move_line__carrier_name
 msgid "Carrier Name"
-msgstr ""
+msgstr "Nume curier"
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.stock_move_line_view_search_delivery
 msgid "Carrier name"
-msgstr ""
+msgstr "Nume curier"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_choose_delivery_carrier__company_id
@@ -381,7 +387,7 @@ msgstr "Expert de selecție a pachetului de livrare"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_choose_delivery_package__delivery_package_type_id
 msgid "Delivery Package Type"
-msgstr ""
+msgstr "Tipul pachetului de livrare"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_choose_delivery_carrier__delivery_price
@@ -411,7 +417,7 @@ msgstr "Set de livrare"
 #. module: delivery
 #: model:ir.model,name:delivery.model_delivery_zip_prefix
 msgid "Delivery Zip Prefix"
-msgstr ""
+msgstr "Prefixul codului poștal de livrare"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_sale_order__recompute_delivery_price
@@ -425,6 +431,8 @@ msgid ""
 "Delivery zip prefixes are assigned to delivery carriers to restrict\n"
 "                which zips it is available to."
 msgstr ""
+"Prefixele de cod poștal de livrare sunt atribuite transportatorilor de livrare pentru a restricționa\n"
+"care coduri poștale sunt disponibile."
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.view_delivery_carrier_form
@@ -445,7 +453,7 @@ msgstr "Destinații Disponibile"
 #: model:ir.model.fields,field_description:delivery.field_stock_move_line__destination_country_code
 #: model:ir.model.fields,field_description:delivery.field_stock_picking__destination_country_code
 msgid "Destination Country"
-msgstr ""
+msgstr "Țara destinație"
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier__sequence
@@ -624,7 +632,7 @@ msgstr "Politică de facturare"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_stock_picking__is_return_picking
 msgid "Is Return Picking"
-msgstr ""
+msgstr "Este returnare"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_sale_order_line__is_delivery
@@ -662,7 +670,7 @@ msgstr "Ultima actualizare pe"
 #: model:delivery.carrier,name:delivery.delivery_local_delivery
 #: model:product.template,name:delivery.product_product_local_delivery_product_template
 msgid "Local Delivery"
-msgstr ""
+msgstr "Livrare locală"
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier__debug_logging
@@ -672,7 +680,7 @@ msgstr "Înregistrați solicitările pentru a ușura depanarea"
 #. module: delivery
 #: model_terms:ir.actions.act_window,help:delivery.action_delivery_zip_prefix_list
 msgid "Manage delivery zip prefixes"
-msgstr ""
+msgstr "Gestionați prefixele de cod poștal pentru livrare"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier__margin
@@ -704,7 +712,7 @@ msgstr "Nume"
 #: code:addons/delivery/models/delivery_carrier.py:0
 #, python-format
 msgid "New Providers"
-msgstr ""
+msgstr "Furnizori noi"
 
 #. module: delivery
 #: model:ir.model.fields.selection,name:delivery.selection__stock_package_type__package_carrier_type__none
@@ -739,7 +747,7 @@ msgstr "Comandă"
 #: model:ir.model.fields,field_description:delivery.field_product_product__country_of_origin
 #: model:ir.model.fields,field_description:delivery.field_product_template__country_of_origin
 msgid "Origin of Goods"
-msgstr ""
+msgstr "Originea bunurilor"
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.choose_delivery_package_view_form
@@ -779,7 +787,7 @@ msgstr "Prefix"
 #. module: delivery
 #: model:ir.model.constraint,message:delivery.constraint_delivery_zip_prefix_name_uniq
 msgid "Prefix already exists!"
-msgstr ""
+msgstr "Prefixul există deja!"
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier__zip_prefix_ids
@@ -789,6 +797,11 @@ msgid ""
 "i.e. '$' can be added to end of prefix to match the exact zip (e.g. '100$' "
 "will only match '100' and not '1000')"
 msgstr ""
+"Prefixele de cod poștal pentru care acest operator de transport se aplică. "
+"Rețineți că expresii regulate pot fi utilizate pentru a suporta țări cu "
+"lungimi de cod poștal variabile, de exemplu '$' poate fi adăugat la "
+"sfârșitul prefixului pentru a se potrivi exact cu codul poștal (de exemplu "
+"'100$' se va potrivi doar cu '100' și nu cu '1000')"
 
 #. module: delivery
 #: model:ir.model.fields.selection,name:delivery.selection__delivery_price_rule__variable__price
@@ -874,6 +887,8 @@ msgid ""
 "Rules of origin determine where goods originate, i.e. not where they have been shipped from, but where they have been produced or manufactured.\n"
 "As such, the ‘origin’ is the 'economic nationality' of goods traded in commerce."
 msgstr ""
+"Regulile de origine determină unde provin bunurile, adică nu de unde au fost expediate, ci unde au fost produse sau fabricate.\n"
+"Ca atare, 'originea' este 'naționalitatea economică' a bunurilor comercializate."
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_price_rule__list_base_price
@@ -931,6 +946,8 @@ msgid ""
 "Shipment sent to carrier %(carrier_name)s for shipping with tracking number "
 "%(ref)s<br/>Cost: %(price).2f %(currency)s"
 msgstr ""
+"Expediere trimisă către curierul %(carrier_name)s pentru expediere cu "
+"numărul de urmărire %(ref)s<br/>Cost: %(price).2f %(currency)s"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_stock_picking__carrier_price
@@ -974,6 +991,9 @@ msgid ""
 "Shipping insurance is a service which may reimburse senders whose parcels "
 "are lost, stolen, and/or damaged in transit."
 msgstr ""
+"Asigurarea de transport este un serviciu care poate remunera expeditorilor "
+"al căror pachete sunt pierdute, furate și / sau deteriorate în cursul "
+"transportului."
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.view_delivery_carrier_form
@@ -981,6 +1001,9 @@ msgid ""
 "Shipping method details to be included at bottom sales orders and their "
 "confirmation emails. E.g. Instructions for customers to follow."
 msgstr ""
+"Detaliile metodei de expediere de inclus în partea de jos a comenzilor de "
+"vânzare și e-mailurile lor de confirmare. De exemplu, instrucțiuni de urmat"
+"  pentru clienți."
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_product_product__hs_code
@@ -1005,22 +1028,24 @@ msgstr "Mișcare stoc"
 #. module: delivery
 #: model:ir.model,name:delivery.model_stock_package_type
 msgid "Stock package type"
-msgstr ""
+msgstr "Tip pachet stoc"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier__supports_shipping_insurance
 msgid "Supports Shipping Insurance"
-msgstr ""
+msgstr "Suportă asigurarea de transport"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_stock_quant_package__weight_uom_rounding
 msgid "Technical field indicating weight's number of decimal places"
-msgstr ""
+msgstr "Câmp tehnic care indică numărul de zecimale al greutății"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_stock_quant_package__weight_is_kg
 msgid "Technical field indicating whether weight uom is kg or not (i.e. lb)"
 msgstr ""
+"Câmp tehnic care indică dacă unitatea de măsură a greutății este kg sau nu "
+"(adica lb)"
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_stock_move_line__destination_country_code
@@ -1047,6 +1072,8 @@ msgid ""
 "The package cannot be created because the total weight of the products in "
 "the picking is 0.0 %s"
 msgstr ""
+"Pachetul nu poate fi creat deoarece greutatea totală a produselor din "
+"picking este 0.0 %s"
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier__get_return_label_from_portal
@@ -1064,7 +1091,7 @@ msgstr "Eticheta de returnare este generată automat la livrare."
 #. module: delivery
 #: model:ir.model.constraint,message:delivery.constraint_delivery_carrier_shipping_insurance_is_percentage
 msgid "The shipping insurance must be a percentage between 0 and 100."
-msgstr ""
+msgstr "Asigurarea de transport trebuie să fie un procentaj între 0 și 100."
 
 #. module: delivery
 #. odoo-python
@@ -1144,7 +1171,7 @@ msgstr "Greutatea totală a ambalajului."
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_stock_picking__weight
 msgid "Total weight of the products in the picking."
-msgstr ""
+msgstr "Greutatea totală a produselor din livrare."
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.delivery_tracking_url_warning_form
@@ -1253,6 +1280,10 @@ msgid ""
 "The following delivery lines (product, invoiced quantity and price) have already been processed:\n"
 "\n"
 msgstr ""
+"Nu puteți actualiza costurile de livrare pentru o comandă unde acestea au fost deja facturate!\n"
+"\n"
+"Următoarele linii de livrare (produs, cantitate și preț facturate) au fost deja procesate:\n"
+"\n"
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.delivery_tracking_url_warning_form
@@ -1275,32 +1306,32 @@ msgstr ""
 #: model:ir.actions.act_window,name:delivery.action_delivery_zip_prefix_list
 #: model:ir.ui.menu,name:delivery.menu_delivery_zip_prefix
 msgid "Zip Prefix"
-msgstr ""
+msgstr "Prefixul codului poștal"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier__zip_prefix_ids
 msgid "Zip Prefixes"
-msgstr ""
+msgstr "Prefixe cod poștal"
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.label_package_template_view_delivery
 msgid "^A0N,44,33^FDShipping Weight:"
-msgstr ""
+msgstr "^A0N,44,33^FDGrutate de livrat:"
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.label_package_template_view_delivery
 msgid "^A0N,44,33^FDWeight:"
-msgstr ""
+msgstr "^A0N,44,33^FDMasa:"
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.label_package_template_view_delivery
 msgid "^FO310,200"
-msgstr ""
+msgstr "^FO310,200"
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.label_package_template_view_delivery
 msgid "^FS"
-msgstr ""
+msgstr "^FS"
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.view_delivery_carrier_form

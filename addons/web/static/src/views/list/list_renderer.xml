@@ -237,13 +237,13 @@
                     </td>
                 </t>
                 <t t-if="column.type === 'button_group'">
-                    <td t-on-keydown.synthetic="(ev) => this.onCellKeydown(ev, group, record)" class="o_data_cell" t-att-class="getCellClass(column, record)" t-on-click="(ev) => this.onButtonCellClicked(record, column, ev)" tabindex="-1">
+                    <td t-on-keydown.synthetic="(ev) => this.onCellKeydown(ev, group, record)" class="o_data_cell cursor-pointer" t-att-class="getCellClass(column, record)" t-on-click="(ev) => this.onButtonCellClicked(record, column, ev)" tabindex="-1">
                         <t t-foreach="column.buttons" t-as="button" t-key="button.id">
                             <ViewButton t-if="!evalModifier(button.modifiers.invisible, record)"
                                 className="button.className"
                                 clickParams="button.clickParams"
                                 defaultRank="button.defaultRank"
-                                disabled="record.isVirtual"
+                                disabled="record.isVirtual || button.disabled"
                                 icon="button.icon"
                                 record="record"
                                 string="button.string"

@@ -8,6 +8,7 @@
 # Leonardo J. Caballero G. <leonardocaballero@gmail.com>, 2022
 # María Florencia Frigieri Parma, 2022
 # Pedro M. Baeza <pedro.baeza@tecnativa.com>, 2022
+# Óscar Fonseca <tecnico@extreme-micro.com>, 2023
 # 
 msgid ""
 msgstr ""
@@ -15,7 +16,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-12-15 12:48+0000\n"
 "PO-Revision-Date: 2022-09-22 05:55+0000\n"
-"Last-Translator: Pedro M. Baeza <pedro.baeza@tecnativa.com>, 2022\n"
+"Last-Translator: Óscar Fonseca <tecnico@extreme-micro.com>, 2023\n"
 "Language-Team: Spanish (https://www.transifex.com/odoo/teams/41243/es/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -1862,7 +1863,10 @@ msgid "Count Picking Waiting"
 msgstr "Cuenta de operaciones pendientes"
 
 #. module: stock
+#. odoo-javascript
+#: code:addons/stock/static/src/views/list/inventory_report_list_controller.js:0
 #: model:ir.actions.report,name:stock.action_report_inventory
+#, python-format
 msgid "Count Sheet"
 msgstr "Hoja de recuento"
 
@@ -2296,6 +2300,9 @@ msgid ""
 "Define a minimum stock rule so that Odoo automatically creates requests for "
 "quotations or confirmed manufacturing orders to resupply your stock."
 msgstr ""
+"Definir una regla de stock mínimo de forma que el Odoo cree automáticamente "
+"peticiones de presupuesto o pedidos de fabricación confirmados para "
+"reabastecer sus existencias."
 
 #. module: stock
 #: model_terms:ir.actions.act_window,help:stock.action_warehouse_form
@@ -6977,7 +6984,7 @@ msgstr "Reabastecimiento"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse__resupply_wh_ids
 msgid "Resupply From"
-msgstr "Reabastecimiento de"
+msgstr "Reabastecer des de"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_replenishment_info__warehouseinfo_ids
@@ -7469,8 +7476,11 @@ msgstr ""
 "Se cambiará la ubicación de origen para este movimiento a %s"
 
 #. module: stock
+#. odoo-javascript
+#: code:addons/stock/static/src/views/list/inventory_report_list_controller.js:0
 #: model:ir.actions.server,name:stock.action_view_set_quants_tree
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_quant_tree_inventory_editable
+#, python-format
 msgid "Set"
 msgstr "Establecer"
 

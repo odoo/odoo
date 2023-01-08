@@ -10,7 +10,7 @@
 # arfa simoncelli, 2022
 # Danu S Pratomo, 2022
 # Edi Santoso <repopamor@gmail.com>, 2022
-# Abe Manyo, 2022
+# Abe Manyo, 2023
 # 
 msgid ""
 msgstr ""
@@ -18,7 +18,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-12-15 12:48+0000\n"
 "PO-Revision-Date: 2022-09-22 05:44+0000\n"
-"Last-Translator: Abe Manyo, 2022\n"
+"Last-Translator: Abe Manyo, 2023\n"
 "Language-Team: Indonesian (https://www.transifex.com/odoo/teams/41243/id/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -1389,7 +1389,7 @@ msgstr ""
 #: model:ir.model.constraint,message:account.constraint_account_fiscal_position_tax_tax_src_dest_uniq
 msgid "A tax fiscal position could be defined only one time on same taxes."
 msgstr ""
-"Posisi fiskal pajak hanya dapat didefinisikan satu kali pada pajak yang "
+"Fiscal Position pajak hanya dapat didefinisikan satu kali pada pajak yang "
 "sama."
 
 #. module: account
@@ -2701,7 +2701,7 @@ msgstr ""
 #: model:ir.model.fields,help:account.field_account_fiscal_position__auto_apply
 #: model:ir.model.fields,help:account.field_account_fiscal_position_template__auto_apply
 msgid "Apply automatically this fiscal position."
-msgstr "Terapkan otomatis posisi fiskal ini."
+msgstr "Terapkan otomatis fiscal position ini."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_fiscal_position__country_group_id
@@ -3373,8 +3373,8 @@ msgid ""
 "By unchecking the active field, you may hide a fiscal position without "
 "deleting it."
 msgstr ""
-"Dengan menghapus centang kolom aktif, Anda dapat menyembunyikan posisi "
-"fiskal tampa menghapusnya."
+"Dengan menghapus centang kolom aktif, Anda dapat menyembunyikan fiscal "
+"position tampa menghapusnya."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_incoterms__active
@@ -4506,8 +4506,8 @@ msgid ""
 "Create invoices, register payments and keep track of the discussions with "
 "your customers."
 msgstr ""
-"Create invoices, register payments and keep track of the discussions with "
-"your customers."
+"Buat faktur, daftarkan pembayaran dan terus lacak diskusi dengan pelanggan-"
+"pelanggan Anda."
 
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.action_move_in_invoice_type
@@ -4515,8 +4515,8 @@ msgid ""
 "Create invoices, register payments and keep track of the discussions with "
 "your vendors."
 msgstr ""
-"Create invoices, register payments and keep track of the discussions with "
-"your vendors."
+"Buat faktur, daftarkan pembayaran dan terus lacak diskusi dengan vendor-"
+"vendor Anda."
 
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.rounding_list_action
@@ -6466,20 +6466,20 @@ msgstr "Periode Fiskal"
 #: model_terms:ir.ui.view,arch_db:account.view_account_position_template_tree
 #: model_terms:ir.ui.view,arch_db:account.view_account_position_tree
 msgid "Fiscal Position"
-msgstr "Posisi Fiskal"
+msgstr "Fiscal Position"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_fiscal_position_template__name
 #: model_terms:ir.ui.view,arch_db:account.view_account_position_template_form
 #: model_terms:ir.ui.view,arch_db:account.view_account_position_template_search
 msgid "Fiscal Position Template"
-msgstr "Template Posisi Fiskal"
+msgstr "Template Fiscal Position"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_account_fiscal_position_form
 #: model:ir.ui.menu,name:account.menu_action_account_fiscal_position_form
 msgid "Fiscal Positions"
-msgstr "Posisi Fiskal"
+msgstr "Fiscal Position"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.setup_financial_year_opening_form
@@ -8977,6 +8977,10 @@ msgid ""
 "Batch Deposit: Collect several customer checks at once generating and submitting a batch deposit to your bank. Module account_batch_payment is necessary.\n"
 "SEPA Direct Debit: Get paid in the SEPA zone thanks to a mandate your partner will have granted to you. Module account_sepa is necessary.\n"
 msgstr ""
+"Manual: Dapatkan bayaran melalui metode apapun diluar Odoo.\n"
+"Penyedia Pembayaran: Setiap penyedia pembayaran memiliki Metode Pembayaran sendiri. Minta transaksi ke/atau kartu berkat token pembayaran yang disimpan oleh mitra saat membeli atau subscribe online.\n"
+"Batch Deposit: Pilih beberapa cek pelanggan secara sekaligus untuk membuat dan mengirimkan batch deposit ke bank Anda. Anda membutuhkan modul account_batch_payment.\n"
+"SEPA Direct Debit: Dapatkan bayaran di SEPA zone berkat mandat yang mitra Anda akan berikan ke Anda. Anda membutuhkan modul account_sepa.\n"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_journal__outbound_payment_method_line_ids
@@ -8997,6 +9001,12 @@ msgid ""
 "SEPA Credit Transfer: Pay in the SEPA zone by submitting a SEPA Credit Transfer file to your bank. Module account_sepa is necessary.\n"
 "SEPA Direct Debit: Get paid in the SEPA zone thanks to a mandate your partner will have granted to you. Module account_sepa is necessary.\n"
 msgstr ""
+"Manual: Dapatkan bayaran melalui metode apapun diluar Odoo.\n"
+"Penyedia Pembayaran: Setiap penyedia pembayaran memiliki Metode Pembayaran sendiri. Minta transaksi ke/atau kartu berkat token pembayaran yang disimpan oleh mitra saat membeli atau subscribe online.\n"
+"Cek: Bayar tagihan dengan cek dan cetak dari Odoo.\n"
+"Batch Deposit: Pilih beberapa cek pelanggan secara sekaligus untuk membuat dan mengirimkan batch deposit ke bank Anda. Anda membutuhkan modul account_batch_payment.\n"
+"SEPA Credit Transfer: Bayar di SEPA zone dengan mengirimkan file SEPA Credit Transfer ke bank Anda. Anda membutuhkan modul account_sepa.\n"
+"SEPA Direct Debit: Dapatkan bayaran di SEPA zone berkat mandat yang mitra Anda akan berikan ke Anda. Anda membutuhkan modul account_sepa.\n"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__res_company__fiscalyear_last_month__3
@@ -13337,7 +13347,8 @@ msgid ""
 "Taxes, fiscal positions, chart of accounts &amp; legal statements for your "
 "country"
 msgstr ""
-"Perpajakan, posisi fiskal, bagan akun &amp; laporan resmi untuk negara Anda"
+"Perpajakan, fiscal position, bagan akun &amp; laporan resmi untuk negara "
+"Anda"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_res_company__account_enabled_tax_country_ids
@@ -13376,7 +13387,7 @@ msgstr ""
 #. module: account
 #: model:ir.model,name:account.model_account_fiscal_position_template
 msgid "Template for Fiscal Position"
-msgstr "Template untuk Posisi Fiskal"
+msgstr "Template untuk Fiscal Position"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_fiscal_position__foreign_vat_header_mode__templates_found
@@ -14955,7 +14966,7 @@ msgstr ""
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Track costs &amp; revenues by project, department, etc"
-msgstr "Track costs &amp; revenues by project, department, etc"
+msgstr "Lacak biaya &amp; pendapatan berdasarkan project, departemen, dsb"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__transaction_type

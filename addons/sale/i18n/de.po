@@ -7,7 +7,7 @@
 # Felix Schubert <felix.schubert@go-erp.com>, 2022
 # Martin Trigaux, 2022
 # Michael Hofer, 2022
-# Thomas Drewermann, 2022
+# Thomas, 2023
 # 
 msgid ""
 msgstr ""
@@ -15,7 +15,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-12-15 12:51+0000\n"
 "PO-Revision-Date: 2022-09-22 05:54+0000\n"
-"Last-Translator: Thomas Drewermann, 2022\n"
+"Last-Translator: Thomas, 2023\n"
 "Language-Team: German (https://www.transifex.com/odoo/teams/41243/de/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -48,7 +48,7 @@ msgstr "Verkaufsaufträge"
 #: code:addons/sale/models/sale_order.py:0
 #, python-format
 msgid "%(amount)s due %(date)s"
-msgstr "%(amount)s fällig %(date)s"
+msgstr "%(amount)s gültig bis %(date)s"
 
 #. module: sale
 #. odoo-python
@@ -336,16 +336,16 @@ msgstr ""
 "        <t t-set=\"doc_name\" t-value=\"'Angebot' if object.state in ('draft', 'sent') else 'Auftrag'\"/>\n"
 "        Hallo,\n"
 "        <br/><br/>\n"
-"        Ihre\n"
+"       \n"
 "        <t t-if=\"ctx.get('proforma')\">\n"
-"            Proformarechnung für <t t-out=\"doc_name or ''\">Angebot</t> <span style=\"font-weight: bold;\" t-out=\"object.name or ''\">S00052</span>\n"
+"            Ihre Proformarechnung für <t t-out=\"doc_name or ''\">Angebot</t> <span style=\"font-weight: bold;\" t-out=\"object.name or ''\">S00052</span>\n"
 "            <t t-if=\"object.origin\">\n"
 "                (mit der Referenz: <t t-out=\"object.origin or ''\"/> )\n"
 "            </t>\n"
 "            über den Betrag von <span style=\"font-weight: bold;\" t-out=\"format_amount(object.amount_total, object.pricelist_id.currency_id) or ''\">$ 10.00</span> ist verfügbar.\n"
 "        </t>\n"
 "        <t t-else=\"\">\n"
-"            <t t-out=\"doc_name or ''\">Angebot</t> <span style=\"font-weight: bold;\" t-out=\"object.name or ''\"/>\n"
+"            <t t-out=\"doc_name or ''\">Ihr Angebot</t> <span style=\"font-weight: bold;\" t-out=\"object.name or ''\"/>\n"
 "            <t t-if=\"object.origin\">\n"
 "                (mit der Referenz: <t t-out=\"object.origin or ''\">S00052</t> )\n"
 "            </t>\n"
@@ -437,7 +437,7 @@ msgstr "<i class=\"fa fa-fw fa-clock-o\"/>Abgelaufen"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.portal_my_quotations
 msgid "<i class=\"fa fa-fw fa-remove\"/> Cancelled"
-msgstr "<i class=\"fa fa-fw fa-remove\"/>Abgebrochen"
+msgstr "<i class=\"fa fa-fw fa-remove\"/> Storniert"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.crm_lead_partner_kanban_view
@@ -523,7 +523,7 @@ msgid ""
 "                            <span class=\"o_stat_text\">Preview</span>"
 msgstr ""
 "<span class=\"o_stat_text\">Kunden-</span>\n"
-"                            <span class=\"o_stat_text\">ansicht</span>"
+"                            <span class=\"o_stat_text\">Vorschau</span>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.product_form_view_sale_order_button
@@ -562,6 +562,10 @@ msgid ""
 "                            Draft invoices for this order will be cancelled. <br/>\n"
 "                        </span>"
 msgstr ""
+"<span>Sind Sie sicher, dass Sie diesen Auftrag stornieren möchten? <br/></span>\n"
+"                        <span id=\"display_invoice_alert\" attrs=\"{'invisible': [('display_invoice_alert', '=', False)]}\">\n"
+"                            Rechnungs-Entwürfe für diesen Auftrag werden storniert. <br/>\n"
+"                        </span>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
@@ -2937,7 +2941,7 @@ msgstr "Proformarechnung"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
 msgid "Pro-Forma Invoice #"
-msgstr ""
+msgstr "Proformarechnung #"
 
 #. module: sale
 #: model:res.groups,name:sale.group_proforma_sales
@@ -3525,17 +3529,17 @@ msgstr "Verkaufspreis"
 #. module: sale
 #: model:mail.template,name:sale.mail_template_sale_cancellation
 msgid "Sales: Order Cancellation"
-msgstr ""
+msgstr "Verkauf: Auftragsstorno"
 
 #. module: sale
 #: model:mail.template,name:sale.mail_template_sale_confirmation
 msgid "Sales: Order Confirmation"
-msgstr ""
+msgstr "Verkauf: Auftragsbestätitgung"
 
 #. module: sale
 #: model:mail.template,name:sale.email_template_edi_sale
 msgid "Sales: Send Quotation"
-msgstr ""
+msgstr "Verkauf: Angebot senden"
 
 #. module: sale
 #. odoo-python
@@ -4377,7 +4381,7 @@ msgstr "Typ Name"
 #: model_terms:ir.ui.view,arch_db:sale.product_template_form_view_sale_order_button
 #: model_terms:ir.ui.view,arch_db:sale.res_partner_view_buttons
 msgid "Type a message..."
-msgstr ""
+msgstr "Nachricht eingeben..."
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order__activity_exception_decoration
@@ -4523,7 +4527,7 @@ msgstr "Varianten-Matrix"
 #: code:addons/sale/models/sale_order.py:0
 #, python-format
 msgid "View Order"
-msgstr ""
+msgstr "Auftrag ansehen"
 
 #. module: sale
 #. odoo-python
@@ -4649,6 +4653,8 @@ msgid ""
 "You cannot change the product's type because it is already used in sales "
 "orders."
 msgstr ""
+"Sie können den Typ des Produkts nicht ändern, weil er sich bereits in "
+"Aufträgen befindet."
 
 #. module: sale
 #. odoo-python
@@ -4774,3 +4780,5 @@ msgid ""
 "{{ object.company_id.name }} {{ object.type_name }} Cancelled (Ref {{ "
 "object.name or 'n/a' }})"
 msgstr ""
+"{{ object.company_id.name }} {{ object.type_name }} Storniert (Ref {{ "
+"object.name or 'n/a' }})"
