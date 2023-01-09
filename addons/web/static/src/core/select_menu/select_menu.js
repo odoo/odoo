@@ -75,8 +75,9 @@ export class SelectMenu extends Component {
             displayedOptions: [],
         });
         this.inputRef = useRef("inputRef");
+        this.inputContainerRef = useRef("inputContainerRef");
         this.debouncedOnInput = useDebounced(
-            () => this.filterOptions(this.inputRef.el ? this.inputRef.el.value.trim() : ""),
+            () => this.onInput(this.inputRef.el ? this.inputRef.el.value.trim() : ""),
             250
         );
     }
@@ -118,6 +119,16 @@ export class SelectMenu extends Component {
         return this.props.value != null;
     }
 
+    onInput(searchString) {
+        this.filterOptions(searchString);
+
+        // Get reference to dropdown container and scroll to the top.
+        const inputContainer = this.inputContainerRef.el;
+        if (inputContainer && inputContainer.parentNode) {
+            inputContainer.parentNode.scrollTo(0, 0);
+        }
+    }
+
     // ==========================================================================================
     // #                                         Search                                         #
     // ==========================================================================================
@@ -135,15 +146,24 @@ export class SelectMenu extends Component {
         this.state.choices = [];
 
         for (const group of groups) {
-            const filteredOptions = searchString
-                ? fuzzyLookup(searchString, group.choices, (choice) => choice.label)
-                : group.choices;
+            let filteredOptions = [];
+
+            if (searchString) {
+                filteredOptions = fuzzyLookup(
+                    searchString,
+                    group.choices,
+                    (choice) => choice.label
+                );
+            } else {
+                filteredOptions = group.choices;
+                filteredOptions.sort((optionA, optionB) =>
+                    optionA.label.localeCompare(optionB.label)
+                );
+            }
 
             if (filteredOptions.length === 0) {
                 continue;
             }
-
-            filteredOptions.sort((optionA, optionB) => optionA.label.localeCompare(optionB.label));
 
             if (group.label) {
                 this.state.choices.push({ ...group, isGroup: true });
