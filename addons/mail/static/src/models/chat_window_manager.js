@@ -133,6 +133,9 @@ registerModel({
                 const foldState = chatWindow.isFolded ? 'folded' : 'open';
                 thread.notifyFoldStateToServer(foldState);
             }
+            if (thread.composer && thread.orderedMessages.length > 0) {
+                thread.composer.update({ isLog: thread.orderedMessages[thread.orderedMessages.length - 1].is_note });
+            }
         },
         /**
          * @param {ChatWindow} chatWindow1
