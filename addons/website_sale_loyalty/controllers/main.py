@@ -1,10 +1,12 @@
-# -*- coding: utf-8 -*-
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
+
+from werkzeug.urls import url_encode, url_parse
+
 from odoo import http, _
-from odoo.addons.website_sale.controllers import main
 from odoo.exceptions import UserError
 from odoo.http import request
 
-from werkzeug.urls import url_encode, url_parse
+from odoo.addons.website_sale.controllers import main
 
 
 class WebsiteSale(main.WebsiteSale):
@@ -65,22 +67,38 @@ class WebsiteSale(main.WebsiteSale):
         redirect = url_parts.replace(query=url_encode(url_query))
         return request.redirect(redirect.to_url())
 
-    @http.route(['/shop/claimreward'], type='http', auth='public', website=True, sitemap=False)
-    def claim_reward(self, reward, **post):
-        order = request.website.sale_get_order()
-        coupon_id = False
-        try:
-            reward_id = request.env['loyalty.reward'].sudo().browse(int(reward))
-        except ValueError:
-            reward_id = request.env['loyalty.reward'].sudo()
-        claimable_rewards = order._get_claimable_rewards()
-        for coupon, rewards in claimable_rewards.items():
-            if reward_id in rewards:
-                coupon_id = coupon
+    @http.route('/shop/claimreward', type='http', auth='public', website=True, sitemap=False)
+    def claim_reward(self, reward_id, code=None, **post):
+        order_sudo = request.website.sale_get_order()
         redirect = post.get('r', '/shop/cart')
-        if not coupon_id or not reward_id.exists() or reward_id.multi_product:
+        if not order_sudo:
             return request.redirect(redirect)
-        self._apply_reward(order, reward_id, coupon_id)
+
+        try:
+            reward_id = int(reward_id)
+        except ValueError:
+            reward_id = None
+
+        reward_sudo = request.env['loyalty.reward'].sudo().browse(int(reward_id)).exists()
+        if not reward_sudo or reward_sudo.multi_product:
+            return request.redirect(redirect)
+
+        claimable_rewards = order_sudo._get_claimable_and_showable_rewards()
+        coupon = request.env['loyalty.card']
+        for coupon_, rewards in claimable_rewards.items():
+            if reward_sudo in rewards:
+                coupon = coupon_
+
+        if not coupon:
+            return request.redirect(redirect)
+        program_sudo = reward_sudo.program_id
+        if code == coupon.code and (
+            program_sudo.trigger == 'with_code'
+            or (program_sudo.trigger == 'auto' and program_sudo.applies_on == 'future')
+        ):
+            return self.pricelist(code)
+
+        self._apply_reward(order_sudo, reward_sudo, coupon)
         return request.redirect(redirect)
 
     def _apply_reward(self, order, reward, coupon):
