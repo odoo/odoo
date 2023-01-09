@@ -24,6 +24,9 @@ patch(WysiwygAdapterComponent.prototype, 'website_sale_wysiwyg_adapter', {
      * @override
      */
     _getReadOnlyAreas() {
-        return $(this.websiteService.pageDocument).find("#wrapwrap").find('.oe_website_sale .products_header, .oe_website_sale .products_header a').toArray();
+        const readOnlyEls = this._super(...arguments);
+        return [...readOnlyEls].concat(
+            $(this.websiteService.pageDocument).find("#wrapwrap").find('.oe_website_sale .products_header, .oe_website_sale .products_header a').toArray()
+        );
     },
 });
