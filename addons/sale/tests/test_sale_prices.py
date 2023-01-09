@@ -217,25 +217,26 @@ class TestSalePrices(SaleCommon):
             'name': 'Test Pricelist (EUR)',
             'currency_id': other_currency.id,
         })
-        self.env['res.currency.rate'].create({
-            'name': fields.Date.today(),
-            'rate': 2.0,
-            'currency_id': other_currency.id,
-            'company_id': self.env.company.id,
-        })
-        order_in_other_currency = self.env['sale.order'].create({
-            'partner_id': self.partner.id,
-            'pricelist_id': pricelist_in_other_curr.id,
-            'order_line': [
-                Command.create({
-                    'product_id': self.product.id,
-                    'product_uom': self.uom_dozen.id,
-                    'product_uom_qty': 2.0,
-                }),
-            ]
-        })
-        # 20.0 (product price) * 24.0 (2 dozens) * 2.0 (price rate USD -> EUR)
-        self.assertEqual(order_in_other_currency.amount_total, 960.0)
+        with freeze_time('2022-08-19'):
+            self.env['res.currency.rate'].create({
+                'name': fields.Date.today(),
+                'rate': 2.0,
+                'currency_id': other_currency.id,
+                'company_id': self.env.company.id,
+            })
+            order_in_other_currency = self.env['sale.order'].create({
+                'partner_id': self.partner.id,
+                'pricelist_id': pricelist_in_other_curr.id,
+                'order_line': [
+                    Command.create({
+                        'product_id': self.product.id,
+                        'product_uom': self.uom_dozen.id,
+                        'product_uom_qty': 2.0,
+                    }),
+                ]
+            })
+            # 20.0 (product price) * 24.0 (2 dozens) * 2.0 (price rate USD -> EUR)
+            self.assertEqual(order_in_other_currency.amount_total, 960.0)
 
     def test_negative_discounts(self):
         """aka surcharges"""
