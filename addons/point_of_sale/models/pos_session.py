@@ -1936,7 +1936,7 @@ class PosSession(models.Model):
         return {
             'search_params': {
                 'domain': ['|', ('active', '=', False), ('active', '=', True)],
-                'fields': ['name', 'is_cash_count', 'use_payment_terminal', 'split_transactions', 'type'],
+                'fields': ['name', 'is_cash_count', 'use_payment_terminal', 'split_transactions', 'type', 'image'],
                 'order': 'is_cash_count desc, id',
             },
         }

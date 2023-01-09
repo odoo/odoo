@@ -21,6 +21,7 @@
                             <field name="outstanding_account_id" groups="account.group_account_readonly" attrs="{'invisible': [('type', '!=', 'bank')]}" placeholder="Leave empty to use the default account from the company setting" />
                             <field name="receivable_account_id" groups="account.group_account_readonly" attrs="{'invisible': [('split_transactions', '=', True)]}" placeholder="Leave empty to use the default account from the company setting" />
                             <field name="company_id" readonly="1" groups="base.group_multi_company" />
+                            <field name="image"/>
                         </group>
                         <group attrs="{'invisible': ['|', ('hide_use_payment_terminal', '=', False), ('type', 'in', ['cash', 'pay_later'])]}">
                             <div colspan="2">

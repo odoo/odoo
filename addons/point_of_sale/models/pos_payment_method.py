@@ -44,6 +44,7 @@ class PosPaymentMethod(models.Model):
     hide_use_payment_terminal = fields.Boolean(compute='_compute_hide_use_payment_terminal')
     active = fields.Boolean(default=True)
     type = fields.Selection(selection=[('cash', 'Cash'), ('bank', 'Bank'), ('pay_later', 'Customer Account')], compute="_compute_type")
+    image = fields.Image("Image", max_width=50, max_height=50)
 
     @api.depends('type')
     def _compute_hide_use_payment_terminal(self):

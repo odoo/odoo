@@ -2375,9 +2375,21 @@ td {
     flex-grow: 1;
     flex-basis: 100%;
 }
-.paymentmethod .payment-name {
+.paymentmethod .payment-method-display {
     flex-grow: 1;
     padding: map-get($spacers, 3);
+    display: flex;
+    align-items: center;
+}
+.paymentmethods .payment-method-display .payment-method-icon {
+  max-width: 50px;
+  max-height: 50px;
+  vertical-align: middle;
+}
+
+.paymentmethods .payment-method-display .payment-name {
+    vertical-align: middle;
+    margin-left: 10px;
 }
 .paymentmethod .payment-amount {
     margin-left: 10px;

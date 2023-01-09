@@ -286,6 +286,16 @@ class PaymentScreen extends PosComponent {
     get nextScreen() {
         return !this.error ? "ReceiptScreen" : "ProductScreen";
     }
+    paymentMethodImage(id) {
+        if (this.paymentMethod.image)
+            return `/web/image/pos.payment.method/${id}/image`;
+        else if (this.paymentMethod.type === "cash")
+            return "/point_of_sale/static/src/img/money.png";
+        else if(this.paymentMethod.type === "pay_later")
+            return "/point_of_sale/static/src/img/pay-later.png";
+        else
+            return "/point_of_sale/static/src/img/card-bank.png";
+    }
     async _isOrderValid(isForceValidate) {
         if (this.currentOrder.get_orderlines().length === 0 && this.currentOrder.is_to_invoice()) {
             this.showPopup("ErrorPopup", {
