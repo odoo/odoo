@@ -633,7 +633,7 @@ class ProductProduct(models.Model):
 
         prices = dict.fromkeys(self.ids, 0.0)
         for product in self:
-            price = product[price_type] or 0.0
+            price = product[price_type] if price_type else 0.0
             price_currency = product.currency_id
             if price_type == 'standard_price':
                 price_currency = product.cost_currency_id
