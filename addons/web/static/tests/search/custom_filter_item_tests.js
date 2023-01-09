@@ -83,6 +83,12 @@ QUnit.module("Search", (hooks) => {
                             ],
                             searchable: true,
                         },
+                        image: {
+                            name: "image",
+                            string: "Binary field",
+                            type: "binary",
+                            searchable: true,
+                        },
                     },
                     records: {},
                 },
@@ -328,6 +334,51 @@ QUnit.module("Search", (hooks) => {
 
         assert.deepEqual(getFacetTexts(target), ["Boolean Field is Yes"]);
         assert.deepEqual(getDomain(controlPanel), [["boolean_field", "=", true]]);
+
+        assert.containsOnce(target, ".o_menu_item");
+        assert.containsOnce(target, ".o_add_custom_filter_menu button.dropdown-toggle");
+        // the 'Add Custom Filter' menu should still be opened;
+        assert.containsOnce(target, ".o_add_custom_filter_menu .dropdown-menu");
+    });
+
+    QUnit.test("binary field is available", async function (assert) {
+        assert.expect(11);
+
+        const controlPanel = await makeWithSearch({
+            serverData,
+            resModel: "foo",
+            Component: ControlPanel,
+            searchViewId: false,
+            searchMenuTypes: ["filter"],
+            searchViewFields: {
+                image: {
+                    name: "image",
+                    string: "Binary Field",
+                    type: "binary",
+                    default: true,
+                    searchable: true,
+                },
+            },
+        });
+
+        await toggleFilterMenu(target);
+
+        assert.deepEqual(getFacetTexts(target), []);
+        assert.deepEqual(getDomain(controlPanel), []);
+
+        assert.containsNone(target, ".o_menu_item");
+        assert.containsOnce(target, ".o_add_custom_filter_menu button.dropdown-toggle");
+        // the 'Add Custom Filter' menu should be closed;
+        assert.containsNone(target, ".o_add_custom_filter_menu .dropdown-menu");
+
+        await toggleAddCustomFilter(target);
+        // the 'Add Custom Filter' menu should be open;
+        assert.containsOnce(target, ".o_add_custom_filter_menu .dropdown-menu");
+
+        await applyFilter(target);
+
+        assert.deepEqual(getFacetTexts(target), ["Binary Field is set"]);
+        assert.deepEqual(getDomain(controlPanel), [["image", "!=", false]]);
 
         assert.containsOnce(target, ".o_menu_item");
         assert.containsOnce(target, ".o_add_custom_filter_menu button.dropdown-toggle");
