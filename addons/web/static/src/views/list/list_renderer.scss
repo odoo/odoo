@@ -417,6 +417,14 @@
         border-bottom-width: 1px;
     }
 
+    .o_data_row.o_dragged {
+        display: flex;
+
+        > td {
+            flex-grow: 0;
+            flex-shrink: 0;
+        }
+    }
 }
 
 @include media-breakpoint-down(md) {
