@@ -1,8 +1,10 @@
 odoo.define('point_of_sale.tour.PaymentScreen', function (require) {
     'use strict';
 
+    const { Chrome } = require('point_of_sale.tour.ChromeTourMethods');
     const { ProductScreen } = require('point_of_sale.tour.ProductScreenTourMethods');
     const { PaymentScreen } = require('point_of_sale.tour.PaymentScreenTourMethods');
+    const { TicketScreen } = require('point_of_sale.tour.TicketScreenTourMethods');
     const { getSteps, startSteps } = require('point_of_sale.tour.utils');
     var Tour = require('web_tour.tour');
 
@@ -81,4 +83,57 @@ odoo.define('point_of_sale.tour.PaymentScreen', function (require) {
     PaymentScreen.check.changeIs('0.0');
 
     Tour.register('PaymentScreenTour2', { test: true, url: '/pos/ui' }, getSteps());
+
+    startSteps();
+
+    ProductScreen.do.clickHomeCategory();
+    ProductScreen.exec.addOrderline('Product Test', '1');
+    ProductScreen.do.clickPayButton();
+
+    PaymentScreen.check.totalIs('2.00');
+    PaymentScreen.do.clickPaymentMethod('Cash');
+
+    PaymentScreen.check.remainingIs('0.0');
+    PaymentScreen.check.changeIs('0.0');
+
+    Chrome.do.clickTicketButton();
+    TicketScreen.do.clickNewTicket();
+
+    ProductScreen.exec.addOrderline('Product Test', '-1');
+    ProductScreen.do.clickPayButton();
+
+    PaymentScreen.check.totalIs('-2.00');
+    PaymentScreen.do.clickPaymentMethod('Cash');
+
+    PaymentScreen.check.remainingIs('0.0');
+    PaymentScreen.check.changeIs('0.0');
+
+    Tour.register('PaymentScreenRoundingUp', { test: true, url: '/pos/ui' }, getSteps());
+
+    startSteps();
+
+    ProductScreen.do.clickHomeCategory();
+    ProductScreen.exec.addOrderline('Product Test', '1');
+    ProductScreen.do.clickPayButton();
+
+    PaymentScreen.check.totalIs('1.95');
+    PaymentScreen.do.clickPaymentMethod('Cash');
+
+    PaymentScreen.check.remainingIs('0.0');
+    PaymentScreen.check.changeIs('0.0');
+
+    Chrome.do.clickTicketButton();
+    TicketScreen.do.clickNewTicket();
+
+    ProductScreen.exec.addOrderline('Product Test', '-1');
+    ProductScreen.do.clickPayButton();
+
+    PaymentScreen.check.totalIs('-1.95');
+    PaymentScreen.do.clickPaymentMethod('Cash');
+
+    PaymentScreen.check.remainingIs('0.0');
+    PaymentScreen.check.changeIs('0.0');
+
+    Tour.register('PaymentScreenRoundingDown', { test: true, url: '/pos/ui' }, getSteps());
+
 });
