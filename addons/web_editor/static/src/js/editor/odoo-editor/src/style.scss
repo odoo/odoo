@@ -1,0 +1,442 @@
+.odoo-editor-editable {
+    ::selection {
+        /* For color conversion over white background, use X = (Y-(1-P)*255)/P where
+            X = converted color component (R, G, B) (0 <= X <= 255)
+            Y = desired apparent color component (R, G, B) (0 <= Y <= 255)
+            P = opacity (0 <= P <=1)
+            (limitation: Y + 255P >= 255)
+        */
+        background-color: rgba(117, 167, 249, 0.5) !important; /* #bad3fc equivalent when over white*/
+    }
+    &.o_col_resize {
+        cursor: col-resize;
+
+        ::selection {
+            background-color: transparent;
+        }
+    }
+    &.o_row_resize {
+        cursor: row-resize;
+
+        ::selection {
+            background-color: transparent;
+        }
+    }
+}
+.o_selected_table {
+    caret-color: transparent;
+
+    ::selection {
+        background-color: transparent !important;
+    }
+    .o_selected_td {
+        background-color: rgba(117, 167, 249, 0.5) !important; /* #bad3fc equivalent when over white*/
+        cursor: pointer !important;
+    }
+}
+.o_table_ui {
+    background-color: transparent;
+    position: absolute;
+    z-index: 10;
+    padding: 0;
+
+    &:hover {
+        visibility: visible !important;
+    }
+    > div {
+        position: absolute;
+    }
+    .o_table_ui_menu_toggler {
+        cursor: pointer;
+        background-color: var(--o-table-ui-bg, #{$o-white});
+        color: var(--o-table-ui-color, #{$o-main-text-color});
+        border: $border-width solid var(--o-table-ui-border, #{$border-color});
+        border-radius: 5px;
+        padding: 2px 3px;
+    }
+    .o_table_ui_menu {
+        display: none;
+        cursor: pointer;
+        background-color: var(--o-table-ui-bg, #{$o-white});
+        width: fit-content;
+        border: $border-width solid var(--o-table-ui-border, #{$border-color});
+        padding: 5px 0;
+        white-space: nowrap;
+
+        > div:hover {
+            background-color: var(--o-table-ui-hover, #{$o-gray-200});
+        }
+        span {
+            margin-right: 8px;
+            color: var(--o-table-ui-color, #{$o-main-text-color});
+        }
+        div {
+            padding: 0 8px;
+        }
+    }
+    &.o_open {
+        visibility: visible !important;
+
+        .o_table_ui_menu {
+            display: block;
+
+            > div.o_hide {
+                display: none;
+            }
+        }
+    }
+}
+
+.oe-floating {
+    box-shadow: 0px 3px 18px rgba(0, 0, 0, .23);
+    border-radius: 4px;
+    position: absolute;
+}
+
+/* toolbar styling */
+
+.oe-toolbar {
+    box-sizing: border-box;
+    position: absolute;
+    visibility: hidden;
+    height: fit-content;
+    width: fit-content;
+    padding-left: 5px;
+    padding-right: 5px;
+    background: #222222;
+    color: white;
+    border-radius: 8px;
+
+    .toolbar-bottom::before {
+        content: '';
+        position: absolute;
+        width: 0;
+        height: 0;
+        left: var(--arrow-left-pos);
+        top: var(--arrow-top-pos);
+        border: transparent 10px solid;
+        border-bottom: #222222 10px solid;
+        z-index: 0;
+    }
+    &:not(.toolbar-bottom)::before {
+        content: '';
+        position: absolute;
+        width: 0;
+        height: 0;
+        left: var(--arrow-left-pos);
+        top: var(--arrow-top-pos);
+        border: transparent 10px solid;
+        border-top: #222222 10px solid;
+        z-index: 0;
+        pointer-events: none;
+    }
+    .button-group {
+        display: inline-block;
+        margin-right: 13px;
+    }
+    .button-group:last-of-type {
+        margin-right: 0;
+    }
+    .btn {
+        position: relative;
+        box-sizing: content-box;
+        display: inline-block;
+        padding: 7px;
+        color: white;
+    }
+    .btn:not(.disabled):hover {
+        background: #868686;
+    }
+    .oe-toolbar .dropdown-menu .btn {
+        background: #222222;
+    }
+    .btn.active {
+        background: #555555;
+    }
+    .dropdown-toggle {
+        background: transparent;
+        border: none;
+        padding: 7px;
+
+        &[aria-expanded="true"] {
+            background: #555555;
+        }
+    }
+    .dropdown-menu {
+        background: #222222;
+        min-width: max-content;
+        min-width: -webkit-max-content;
+        text-align: center;
+    }
+    .dropdown-item {
+        background: transparent;
+        color: white;
+
+        pre, h1, h2, h3, h4, h5, h6, blockquote {
+            margin: 0;
+            color: white;
+        }
+        &:hover, &:focus {
+            color: white;
+            background: #868686;
+        }
+        &.active, &:active {
+            color: white;
+            background: #555555;
+        }
+    }
+    li > a.dropdown-item {
+        color: white;
+    }
+    label, label span {
+        display: inline-block;
+    }
+    input[type="color"] {
+        width: 0;
+        height: 0;
+        padding: 0;
+        border: none;
+        box-sizing: border-box;
+        position: absolute;
+        opacity: 0;
+        top: 100%;
+        margin: 2px 0 0;
+    }
+    #colorInputButtonGroup label {
+        margin-bottom: 0;
+    }
+    .color-indicator {
+        background-color: transparent;
+        padding-bottom: 4px;
+
+        &.fore-color {
+            border-bottom: 2px solid var(--fore-color);
+            padding: 5px;
+        }
+        &.hilite-color {
+            border-bottom: 2px solid var(--hilite-color);
+            padding: 5px;
+        }
+    }
+    #style .dropdown-menu {
+        text-align: left;
+    }
+}
+
+.oe-tablepicker-dropdown .oe-tablepicker {
+    margin: -3px 2px -6px 2px;
+}
+.oe-tablepicker-wrapper.oe-floating {
+    padding: 3px;
+    // Bootstrap sets .modal z-index at 1055.
+    // Ensure tablepicker is visible in modals.
+    z-index: 1056;
+    background-color: var(--oeTablepicker__wrapper-bg, $o-white);
+}
+.oe-tablepicker-row {
+    line-height: 0;
+}
+.oe-tablepicker {
+    width: max-content;
+    width: -webkit-max-content;
+
+    .oe-tablepicker-row .oe-tablepicker-cell {
+        display: inline-block;
+        background-color: var(--oeTablepicker__cell-bg, $o-gray-200);
+        width: 19px;
+        height: 19px;
+        padding: 0;
+        margin-right: 3px;
+        margin-bottom: 3px;
+
+        &:last-of-type {
+            margin-right: 0;
+        }
+        &.active {
+            background-color: var(--oeTablepicker-color-accent, $o-brand-primary);
+        }
+    }
+}
+.oe-tablepicker-size {
+    text-align: center;
+    margin-top: 7px;
+}
+.oe-tablepicker-dropdown .oe-tablepicker-size {
+    color: white;
+}
+@media only screen and (max-width: 767px) {
+    .oe-toolbar {
+        position: relative;
+        visibility: visible;
+        width: 100%;
+        border-radius: 0;
+        background-color: white;
+
+        .btn {
+            color: black;
+        }
+    }
+}
+
+/* Content styling */
+
+.oe-powerbox-wrapper {
+    position: absolute;
+    z-index: $zindex-modal;
+    border: black;
+    background: var(--oePowerbox__wrapper-bg, $o-white);
+    color: $o-main-text-color;
+    max-height: 40vh;
+    box-sizing: border-box;
+    max-width: 100%;
+    box-shadow: 0px 3px 18px rgba(0, 0, 0, .23);
+    border-radius: 4px;
+    overflow: hidden;
+    display: flex;
+
+    ::-webkit-scrollbar {
+        background: transparent;
+    }
+    ::-webkit-scrollbar {
+        width: 10px;
+        height: 10px;
+    }
+    ::-webkit-scrollbar-thumb {
+        background: var(--oePowerbox__ScrollbarThumb-background-color, #D3D1CB);
+    }
+    ::-webkit-scrollbar-track {
+        background: var(--oePowerbox__ScrollbarTrack-background-color, #EDECE9);
+    }
+}
+.oe-powerbox-mainWrapper {
+    flex: 1 1 auto;
+    overflow: auto;
+    padding: 5px 0;
+    overscroll-behavior: contain;
+}
+
+.oe-powerbox-category, .oe-powerbox-noResult {
+    margin: 10px;
+    color: var(--oePowerbox__category-color, $o-gray-600);
+    font-size: 11px;
+}
+.oe-powerbox-category {
+    text-transform: uppercase;
+    margin: 5px 12px;
+}
+.oe-powerbox-noResult {
+    display: none;
+}
+.oe-powerbox-commandWrapper {
+    display: flex;
+    padding: 6px 12px;
+    cursor: pointer;
+
+    &.active {
+        background: var(--oePowerbox__commandName-bg, $o-gray-100); 
+    }
+}
+i.oe-powerbox-commandImg {
+    display: flex;
+    height: 30px;
+    width: 30px;
+    align-items: center;
+    justify-content: center;
+    background: var(--oePowerbox__commandImg-bg, $o-gray-100);
+    color: var(--oePowerbox__commandImg-color, $o-gray-800);
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    border-radius: 7px;
+    font-size: 15px;
+}
+.oe-powerbox-commandName {
+    font-size: 13px;
+    color: var(--oePowerbox__commandName-color, $o-main-text-color);
+}
+.oe-powerbox-commandDescription {
+    color: var(--oePowerbox__commandDescription-color, $o-main-color-muted);
+    font-size: 12px;
+}
+.oe-powerbox-commandRightCol {
+    margin: 0 10px;
+}
+
+/* Command hints */
+
+.oe-hint {
+    position: relative;
+    caret-color: rgb(55, 53, 47);
+
+    &:before {
+        content: attr(placeholder);
+        position: absolute;
+        top: 0;
+        left: 0;
+        display: block;
+        color: inherit;
+        opacity: 0.4;
+        pointer-events: none;
+        text-align: inherit;
+        width: 100%;
+    }
+}
+
+/* Collaboration cursor */
+.oe-collaboration-selections-container {
+    position: absolute;
+    isolation: isolate;
+    height: 0;
+    width: 0;
+    z-index: 1;
+}
+.oe-collaboration-caret-top-square {
+    min-height: 5px;
+    min-width: 5px;
+    color: #fff;
+    text-shadow: 0 0 5px #000;
+    position: absolute;
+    bottom: 100%;
+    left: -4px;
+    white-space: nowrap;
+
+    &:hover {
+        border-radius: 2px;
+        padding: 0.3em 0.6em;
+
+        &::before {
+            content: attr(data-client-name);
+        }
+    }
+}
+.oe-collaboration-caret-avatar {
+    position: absolute;
+    height: 1.5rem;
+    width: 1.5rem;
+    border-radius: 50%;
+    transition: top 0.5s, left 0.5s;
+
+    > img {
+        height: 100%;
+        width: 100%;
+        border-radius: 50%;
+    }
+
+    &[data-overlapping-avatars]::after {
+        content: attr(data-overlapping-avatars);
+        background-color: green;
+        color: white;
+        border-radius: 50%;
+        font-size: 9px;
+        padding: 0 4px;
+        position: absolute;
+        top: 11px;
+        right: -5px;
+        z-index: 1;
+    }
+}
+code.o_inline_code {
+    background-color: #c5c5c5;
+    padding: 2px;
+    margin: 2px;
+    color: black;
+    font-size: inherit;
+}

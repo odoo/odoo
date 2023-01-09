@@ -1,0 +1,207 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* product_expiry
+# 
+# Translators:
+# Baskhuu Lodoikhuu <baskhuujacara@gmail.com>, 2019
+# Martin Trigaux, 2019
+# Khishigbat Ganbold <khishigbat@asterisk-tech.mn>, 2019
+# Minj P <pminj322@gmail.com>, 2019
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server saas~12.5\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2019-09-09 12:17+0000\n"
+"PO-Revision-Date: 2019-08-26 09:13+0000\n"
+"Last-Translator: Minj P <pminj322@gmail.com>, 2019\n"
+"Language-Team: Mongolian (https://www.transifex.com/odoo/teams/41243/mn/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: mn\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#. module: product_expiry
+#: model_terms:ir.ui.view,arch_db:product_expiry.view_move_form_expiry
+msgid ""
+"<span class=\"badge badge-danger\" attrs=\"{'invisible': "
+"[('product_expiry_alert', '=', False)]}\">Expiration Alert</span>"
+msgstr ""
+"<span class=\"badge badge-danger\" attrs=\"{'invisible': "
+"[('product_expiry_alert', '=', False)]}\">Дуусах хугацааны "
+"анхааруулга</span>"
+
+#. module: product_expiry
+#: model_terms:ir.ui.view,arch_db:product_expiry.view_product_form_expiry
+msgid "<span> days</span>"
+msgstr ""
+
+#. module: product_expiry
+#: model:ir.model.fields,field_description:product_expiry.field_stock_production_lot__alert_date
+msgid "Alert Date"
+msgstr "Анхааруулах огноо"
+
+#. module: product_expiry
+#: model:mail.activity.type,name:product_expiry.mail_activity_type_alert_date_reached
+msgid "Alert Date Reached"
+msgstr "Барааны дуусах хугацааг анхаарна уу"
+
+#. module: product_expiry
+#: model:ir.model.fields,field_description:product_expiry.field_stock_production_lot__use_date
+msgid "Best before Date"
+msgstr "Өмнө нь зохимжтой байх огноо"
+
+#. module: product_expiry
+#: model:ir.model.fields,help:product_expiry.field_stock_production_lot__alert_date
+msgid ""
+"Date to determine the expired lots and serial numbers using the filter "
+"\"Expiration Alerts\"."
+msgstr ""
+"\"Дуусах хугацааны анхааруулга\" гэдэг шүүлтүүр ашиглан хугацаа нь дууссан "
+"цуврал болон сериал дугааруудыг харна."
+
+#. module: product_expiry
+#: model_terms:ir.ui.view,arch_db:product_expiry.view_move_form_expiry
+#: model_terms:ir.ui.view,arch_db:product_expiry.view_product_form_expiry
+msgid "Dates"
+msgstr "Огноо"
+
+#. module: product_expiry
+#: model:ir.model.fields,field_description:product_expiry.field_stock_production_lot__life_date
+msgid "End of Life Date"
+msgstr "Хориглох огноо"
+
+#. module: product_expiry
+#: model_terms:ir.ui.view,arch_db:product_expiry.search_product_lot_filter_inherit_product_expiry
+msgid "Expiration Alerts"
+msgstr "Дуусах хугацааны анхааруулга"
+
+#. module: product_expiry
+#: model:ir.model.fields,field_description:product_expiry.field_stock_production_lot__product_expiry_reminded
+msgid "Expiry has been reminded"
+msgstr ""
+
+#. module: product_expiry
+#: model:ir.model,name:product_expiry.model_stock_production_lot
+msgid "Lot/Serial"
+msgstr "Цуврал"
+
+#. module: product_expiry
+#: model:ir.model.fields,help:product_expiry.field_product_product__alert_time
+#: model:ir.model.fields,help:product_expiry.field_product_template__alert_time
+msgid ""
+"Number of days before an alert should be raised on the lot/serial number."
+msgstr ""
+"Цуврал/сериал дугаарын анхааруулгыг хэд хоногийн өмнөөс явуулахыг заана."
+
+#. module: product_expiry
+#: model:ir.model.fields,help:product_expiry.field_product_product__life_time
+#: model:ir.model.fields,help:product_expiry.field_product_template__life_time
+msgid ""
+"Number of days before the goods may become dangerous and must not be "
+"consumed. It will be computed on the lot/serial number."
+msgstr ""
+
+#. module: product_expiry
+#: model:ir.model.fields,help:product_expiry.field_product_product__removal_time
+#: model:ir.model.fields,help:product_expiry.field_product_template__removal_time
+msgid ""
+"Number of days before the goods should be removed from the stock. It will be"
+" computed on the lot/serial number."
+msgstr ""
+
+#. module: product_expiry
+#: model:ir.model.fields,help:product_expiry.field_product_product__use_time
+#: model:ir.model.fields,help:product_expiry.field_product_template__use_time
+msgid ""
+"Number of days before the goods starts deteriorating, without being "
+"dangerous yet. It will be computed using the lot/serial number."
+msgstr ""
+
+#. module: product_expiry
+#: model:ir.model,name:product_expiry.model_procurement_group
+msgid "Procurement Group"
+msgstr "Бэлтгэх баримтын бүлэг"
+
+#. module: product_expiry
+#: model:ir.model.fields,field_description:product_expiry.field_product_product__alert_time
+#: model:ir.model.fields,field_description:product_expiry.field_product_template__alert_time
+msgid "Product Alert Time"
+msgstr "Анхааруулах хугацаа"
+
+#. module: product_expiry
+#: model:ir.model.fields,field_description:product_expiry.field_stock_production_lot__product_expiry_alert
+msgid "Product Expiry Alert"
+msgstr "Барааны дуусах хугацааны анхааруулга"
+
+#. module: product_expiry
+#: model:ir.model.fields,field_description:product_expiry.field_product_product__life_time
+#: model:ir.model.fields,field_description:product_expiry.field_product_template__life_time
+msgid "Product Life Time"
+msgstr "Дуусах хугацаа"
+
+#. module: product_expiry
+#: model:ir.model.fields,field_description:product_expiry.field_product_product__removal_time
+#: model:ir.model.fields,field_description:product_expiry.field_product_template__removal_time
+msgid "Product Removal Time"
+msgstr "Устгах хугацаа"
+
+#. module: product_expiry
+#: model:ir.model,name:product_expiry.model_product_template
+msgid "Product Template"
+msgstr "Барааны загвар"
+
+#. module: product_expiry
+#: model:ir.model.fields,field_description:product_expiry.field_product_product__use_time
+#: model:ir.model.fields,field_description:product_expiry.field_product_template__use_time
+msgid "Product Use Time"
+msgstr "Барааг Хэрэглэх хугацаа"
+
+#. module: product_expiry
+#: model:ir.model,name:product_expiry.model_stock_quant
+msgid "Quants"
+msgstr "Тоо бүртгэл"
+
+#. module: product_expiry
+#: model:ir.model.fields,field_description:product_expiry.field_stock_production_lot__removal_date
+#: model:ir.model.fields,field_description:product_expiry.field_stock_quant__removal_date
+msgid "Removal Date"
+msgstr "Дуусах огноо"
+
+#. module: product_expiry
+#: model:ir.model.fields,help:product_expiry.field_stock_production_lot__product_expiry_alert
+msgid "The Alert Date has been reached."
+msgstr "Барааны анхааруулга огноо хэтэрсэн."
+
+#. module: product_expiry
+#: code:addons/product_expiry/models/production_lot.py:0
+#, python-format
+msgid "The alert date has been reached for this lot/serial number"
+msgstr "Энэ цуврал/сериал дугаарын анхааруулга огноо хэтэрсэн."
+
+#. module: product_expiry
+#: model:ir.model.fields,help:product_expiry.field_stock_production_lot__life_date
+msgid ""
+"This is the date on which the goods with this Serial Number may become "
+"dangerous and must not be consumed."
+msgstr ""
+"Энэ огноо нь энэ серийн дугаарын бараанууд аюултай болж хангалт хийж "
+"болохгүй болох огноо юм."
+
+#. module: product_expiry
+#: model:ir.model.fields,help:product_expiry.field_stock_production_lot__removal_date
+#: model:ir.model.fields,help:product_expiry.field_stock_quant__removal_date
+msgid ""
+"This is the date on which the goods with this Serial Number should be "
+"removed from the stock. This date will be used in FEFO removal strategy."
+msgstr ""
+
+#. module: product_expiry
+#: model:ir.model.fields,help:product_expiry.field_stock_production_lot__use_date
+msgid ""
+"This is the date on which the goods with this Serial Number start "
+"deteriorating, without being dangerous yet."
+msgstr ""
+"Энэ огноо нь энэ серийн дугаарын бараанууд аюултай биш боловч муудаж эхлэх "
+"огноо юм."

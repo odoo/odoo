@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_pos_session_check_product_wizard" model="ir.ui.view">
+        <field name="name">pos.session.check.product.wizard.form</field>
+        <field name="model">pos.session.check_product_wizard</field>
+        <field name="arch" type="xml">
+        <form string="Check products">
+                <p>
+                    You can add some from the Products menu, or linked any existing by flagging them as "Available in PoS".
+                    Or you can add demo data for testing purpose. Please mind that this is an irreversible action.
+                </p>
+            <footer>
+                <button name="load_demo_products" string="Add demo data" type="object" class="btn-primary" data-hotkey="q"/>
+                <button name="open_ui" string="Continue without Demo data" type="object" class="btn-secondary" data-hotkey="z" />
+            </footer>
+        </form>
+        </field>
+    </record>
+</odoo>

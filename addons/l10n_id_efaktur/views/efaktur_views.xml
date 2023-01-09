@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="efaktur_tree_view" model="ir.ui.view">
+            <field name="name">l10n_id_efaktur.efaktur.range.tree.view</field>
+            <field name="model">l10n_id_efaktur.efaktur.range</field>
+            <field name="arch" type="xml">
+                <tree string="Efaktur Number" editable="bottom">
+                    <field name="min"/>
+                    <field name="max"/>
+                    <field name="available" sum="Total Available"/>
+                    <field name="company_id" groups="base.group_multi_company"/>
+                    <field name="company_id" invisible="1" groups="!base.group_multi_company"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id='efaktur_invoice_action' model='ir.actions.act_window'>
+            <field name="name">e-Faktur</field>
+            <field name="res_model">l10n_id_efaktur.efaktur.range</field>
+            <field name="view_mode">tree</field>
+            <field name="context">{'search_default_upload': True, 'search_default_used': True}</field>
+            <field name="view_id" ref="efaktur_tree_view"/>
+            <field name="help" type="html">
+                <p class="oe_view_nocontent_create">
+                    In order to be able to export customer invoices as e-Faktur
+                    for the Indonesian government, you need to put here the ranges
+                    of numbers you were assigned by the government.
+                    When you validate an invoice, a number will be assigned based on these ranges.
+                    Afterwards, you can filter the invoices still to export in the
+                    invoices list and click on Action > Download e-Faktur
+                </p>
+            </field>
+        </record>
+
+        <menuitem id="menu_efaktur_action" name="e-Faktur"
+            parent="account.menu_finance_receivables"
+            groups="account.group_account_manager"
+            action="efaktur_invoice_action" sequence="111"/>
+
+    </data>
+</odoo>

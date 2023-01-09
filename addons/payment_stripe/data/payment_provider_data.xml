@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate="1">
+
+    <record id="payment.payment_provider_stripe" model="payment.provider">
+        <field name="code">stripe</field>
+        <field name="express_checkout_form_view_id" ref="express_checkout_form"/>
+        <field name="allow_tokenization">True</field>
+        <field name="allow_express_checkout">True</field>
+    </record>
+
+</odoo>

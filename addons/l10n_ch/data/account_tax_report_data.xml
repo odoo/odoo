@@ -1,0 +1,363 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="tax_report" model="account.report">
+        <field name="name">Tax Report</field>
+        <field name="root_report_id" ref="account.generic_tax_report"/>
+        <field name="country_id" ref="base.ch"/>
+        <field name="filter_fiscal_position" eval="True"/>
+        <field name="availability_condition">country</field>
+        <field name="column_ids">
+            <record id="tax_report_balance" model="account.report.column">
+                <field name="name">Balance</field>
+                <field name="expression_label">balance</field>
+            </record>
+        </field>
+        <field name="line_ids">
+            <record id="account_tax_report_line_chiffre_af" model="account.report.line">
+                <field name="name">I – TURNOVER</field>
+                <field name="children_ids">
+                    <record id="account_tax_report_line_chtax_200" model="account.report.line">
+                        <field name="name">200 Total amount of agreed or collected consideration incl. from supplies opted for taxation, transfer of supplies acc. to the notification procedure and supplies provided abroad (worldwide turnover)</field>
+                        <field name="aggregation_formula">tax_ch_302a.balance + tax_ch_312a.balance + tax_ch_342a.balance + tax_ch_289.balance</field>
+                    </record>
+                    <record id="account_tax_report_line_chtax_289" model="account.report.line">
+                        <field name="name">289 Consideration reported in Ref. 200 from supplies exempt from the tax without credit (art. 21) where the option for their taxation according to art. 22 has been exercised</field>
+                        <field name="code">tax_ch_289</field>
+                        <field name="aggregation_formula">tax_ch_220.balance + tax_ch_221.balance + tax_ch_225.balance + tax_ch_230.balance + tax_ch_235.balance + tax_ch_280.balance</field>
+                        <field name="children_ids">
+                            <record id="account_tax_report_line_chtax_220_289" model="account.report.line">
+                                <field name="name">220 Supplies exempt from the tax (e.g. export, art. 23) and supplies provided to institutional and individual beneficiaries that are exempt from liability for tax (art. 107 para. 1 lit. a)</field>
+                                <field name="code">tax_ch_220</field>
+                                <field name="expression_ids">
+                                    <record id="account_tax_report_line_chtax_220_289_tag" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">220</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="account_tax_report_line_chtax_221" model="account.report.line">
+                                <field name="name">221 Supplies provided abroad (place of supply is abroad)</field>
+                                <field name="code">tax_ch_221</field>
+                                <field name="expression_ids">
+                                    <record id="account_tax_report_line_chtax_221_tag" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">221</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="account_tax_report_line_chtax_225" model="account.report.line">
+                                <field name="name">225 Transfer of supplies according to the notification procedure (art. 38, please submit Form 764)</field>
+                                <field name="code">tax_ch_225</field>
+                                <field name="expression_ids">
+                                    <record id="account_tax_report_line_chtax_225_tag" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">225</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="account_tax_report_line_chtax_230" model="account.report.line">
+                                <field name="name">230 Supplies provided on Swiss territory exempt from the tax without credit (art. 21) and where the option for their taxation according to art. 22 has not been exercised</field>
+                                <field name="code">tax_ch_230</field>
+                                <field name="expression_ids">
+                                    <record id="account_tax_report_line_chtax_230_tag" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">230</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="account_tax_report_line_chtax_235" model="account.report.line">
+                                <field name="name">235 Reduction of consideration (discounts, rebates etc.)</field>
+                                <field name="code">tax_ch_235</field>
+                                <field name="expression_ids">
+                                    <record id="account_tax_report_line_chtax_235_tag" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">235</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="account_tax_report_line_chtax_280" model="account.report.line">
+                                <field name="name">280 Miscellaneous (e.g. land value, purchase prices in case of margin taxation)</field>
+                                <field name="code">tax_ch_280</field>
+                                <field name="expression_ids">
+                                    <record id="account_tax_report_line_chtax_280_tag" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">280</field>
+                                    </record>
+                                </field>
+                            </record>
+                        </field>
+                    </record>
+                </field>
+            </record>
+            <record id="account_tax_report_line_chtax_299" model="account.report.line">
+                <field name="name">299 Taxable turnover (Ref. 200 minus Ref. 289)</field>
+                <field name="aggregation_formula">tax_ch_302a.balance + tax_ch_312a.balance + tax_ch_342a.balance</field>
+            </record>
+            <record id="account_tax_report_line_calc_impot" model="account.report.line">
+                <field name="name">II - TAX CALCULATION</field>
+                <field name="children_ids">
+                    <record id="account_tax_report_line_calc_impot_chiffre" model="account.report.line">
+                        <field name="name">Taxable turnover</field>
+                        <field name="aggregation_formula">tax_ch_302a.balance + tax_ch_312a.balance + tax_ch_342a.balance</field>
+                        <field name="children_ids">
+                            <record id="account_tax_report_line_chtax_302a" model="account.report.line">
+                                <field name="name">302a Taxable turnover at 7.7% (TS)</field>
+                                <field name="code">tax_ch_302a</field>
+                                <field name="expression_ids">
+                                    <record id="account_tax_report_line_chtax_302a_tag" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">302a</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="account_tax_report_line_chtax_312a" model="account.report.line">
+                                <field name="name">312a Taxable turnover at 2.5% (TR)</field>
+                                <field name="code">tax_ch_312a</field>
+                                <field name="expression_ids">
+                                    <record id="account_tax_report_line_chtax_312a_tag" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">312a</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="account_tax_report_line_chtax_342a" model="account.report.line">
+                                <field name="name">342a Taxable turnover at 3.7% (TS)</field>
+                                <field name="code">tax_ch_342a</field>
+                                <field name="expression_ids">
+                                    <record id="account_tax_report_line_chtax_342a_tag" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">342a</field>
+                                    </record>
+                                </field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_tax_report_line_calc_impot_base" model="account.report.line">
+                        <field name="name">Tax base on service acquisitions</field>
+                        <field name="aggregation_formula">tax_ch_381A.balance + tax_ch_382A.balance</field>
+                        <field name="children_ids">
+                            <record id="account_tax_report_line_chtax_381a" model="account.report.line">
+                                <field name="name">381a Acquisition tax</field>
+                                <field name="code">tax_ch_381A</field>
+                                <field name="expression_ids">
+                                    <record id="account_tax_report_line_chtax_381a_tag" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">381a</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="account_tax_report_line_chtax_382a" model="account.report.line">
+                                <field name="name">382a Acquisition tax</field>
+                                <field name="code">tax_ch_382A</field>
+                                <field name="expression_ids">
+                                    <record id="account_tax_report_line_chtax_382a_tag" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">382a</field>
+                                    </record>
+                                </field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_tax_report_line_chtax_399" model="account.report.line">
+                        <field name="name">399 Total amount of tax due</field>
+                        <field name="code">tax_ch_399</field>
+                        <field name="aggregation_formula">tax_ch_302B.balance + tax_ch_312B.balance + tax_ch_342B.balance + tax_ch_381B.balance + tax_ch_382B.balance</field>
+                        <field name="children_ids">
+                            <record id="account_tax_report_line_chtax_302b" model="account.report.line">
+                                <field name="name">302b Tax due at 7.7% (TS)</field>
+                                <field name="code">tax_ch_302B</field>
+                                <field name="expression_ids">
+                                    <record id="account_tax_report_line_chtax_302b_tag" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">302b</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="account_tax_report_line_chtax_312b" model="account.report.line">
+                                <field name="name">312b Tax due at 2.5% (TR)</field>
+                                <field name="code">tax_ch_312B</field>
+                                <field name="expression_ids">
+                                    <record id="account_tax_report_line_chtax_312b_tag" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">312b</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="account_tax_report_line_chtax_342b" model="account.report.line">
+                                <field name="name">342b Tax due at 3.7% (TS)</field>
+                                <field name="code">tax_ch_342B</field>
+                                <field name="expression_ids">
+                                    <record id="account_tax_report_line_chtax_342b_tag" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">342b</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="account_tax_report_line_chtax_381b" model="account.report.line">
+                                <field name="name">381b Acquisition tax</field>
+                                <field name="code">tax_ch_381B</field>
+                                <field name="expression_ids">
+                                    <record id="account_tax_report_line_chtax_381b_tag" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">381b</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="account_tax_report_line_chtax_382b" model="account.report.line">
+                                <field name="name">382b Acquisition tax</field>
+                                <field name="code">tax_ch_382B</field>
+                                <field name="expression_ids">
+                                    <record id="account_tax_report_line_chtax_382b_tag" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">382b</field>
+                                    </record>
+                                </field>
+                            </record>
+                        </field>
+                    </record>
+                </field>
+            </record>
+            <record id="account_tax_report_line_chtax_479" model="account.report.line">
+                <field name="name">479 TVA préalable</field>
+                <field name="code">tax_ch_479</field>
+                <field name="aggregation_formula">tax_ch_400.balance + tax_ch_405.balance + tax_ch_410.balance + tax_ch_415.balance + tax_ch_420.balance</field>
+                <field name="children_ids">
+                    <record id="account_tax_report_line_chtax_400" model="account.report.line">
+                        <field name="name">400 Input tax on cost of materials and supplies of services</field>
+                        <field name="code">tax_ch_400</field>
+                        <field name="expression_ids">
+                            <record id="account_tax_report_line_chtax_400_tag" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">400</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_tax_report_line_chtax_405" model="account.report.line">
+                        <field name="name">405 Input tax on investments and other operating costs</field>
+                        <field name="code">tax_ch_405</field>
+                        <field name="expression_ids">
+                            <record id="account_tax_report_line_chtax_405_tag" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">405</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_tax_report_line_chtax_410" model="account.report.line">
+                        <field name="name">410 De-taxation (art. 32, please enclose a detailed list)</field>
+                        <field name="code">tax_ch_410</field>
+                        <field name="expression_ids">
+                            <record id="account_tax_report_line_chtax_410_tag" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">410</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_tax_report_line_chtax_415" model="account.report.line">
+                        <field name="name">415 Correction of the input tax deduction: mixed use (art. 30), own use (art. 31)</field>
+                        <field name="code">tax_ch_415</field>
+                        <field name="expression_ids">
+                            <record id="account_tax_report_line_chtax_415_tag" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">415</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_tax_report_line_chtax_420" model="account.report.line">
+                        <field name="name">420 Reduction of the input tax deduction: Flow of funds, which are not deemed to be consideration, such as subsidies, tourist charges (art. 33 para. 2)</field>
+                        <field name="code">tax_ch_420</field>
+                        <field name="expression_ids">
+                            <record id="account_tax_report_line_chtax_420_tag" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">420</field>
+                            </record>
+                        </field>
+                    </record>
+                </field>
+            </record>
+            <record id="account_tax_report_line_chtax_solde" model="account.report.line">
+                <field name="name">AMOUNT PAYABLE</field>
+                <field name="expression_ids">
+                    <record id="account_tax_report_line_chtax_solde_formula" model="account.report.expression">
+                        <field name="label">balance</field>
+                        <field name="engine">external</field>
+                        <field name="formula">sum</field>
+                        <field name="subformula">editable;rounding=2</field>
+                    </record>
+                </field>
+                <field name="children_ids">
+                    <record id="account_tax_report_line_chtax_500" model="account.report.line">
+                        <field name="name">500 Amount of VAT payable to AFC</field>
+                        <field name="expression_ids">
+                            <record id="account_tax_report_line_chtax_500_formula" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">tax_ch_399.balance - tax_ch_479.balance</field>
+                                <field name="subformula">if_above(CHF(0))</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_tax_report_line_chtax_510" model="account.report.line">
+                        <field name="name">510 Credit in favour of the taxable person</field>
+                        <field name="expression_ids">
+                            <record id="account_tax_report_line_chtax_510_formula" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">tax_ch_479.balance - tax_ch_399.balance</field>
+                                <field name="subformula">if_above(CHF(0))</field>
+                            </record>
+                        </field>
+                    </record>
+                </field>
+            </record>
+            <record id="account_tax_report_line_chtax_autres_mouv" model="account.report.line">
+                <field name="name">OTHER CASH FLOWS (art. 18 para. 2)</field>
+                <field name="aggregation_formula">tax_ch_900.balance + tax_ch_910.balance</field>
+                <field name="children_ids">
+                    <record id="account_tax_report_line_chtax_900" model="account.report.line">
+                        <field name="name">900 Subsidies, tourist funds collected by tourist offices, contributions from cantonal water, sewage or waste funds (art. 18 para. 2 lit. a to c)</field>
+                        <field name="code">tax_ch_900</field>
+                        <field name="expression_ids">
+                            <record id="account_tax_report_line_chtax_900_tag" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">900</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_tax_report_line_chtax_910" model="account.report.line">
+                        <field name="name">910 Donations, dividends, payments of damages etc. (art. 18 para. 2 lit. d to l)</field>
+                        <field name="code">tax_ch_910</field>
+                        <field name="expression_ids">
+                            <record id="account_tax_report_line_chtax_910_tag" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">910</field>
+                            </record>
+                        </field>
+                    </record>
+                </field>
+            </record>
+        </field>
+    </record>
+</odoo>

@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+    <!-- Template for 'mailing_filter' widget, specific for mailing form view -->
+    <t t-name="mass_mailing.MailingFilter" t-inherit="web.Many2OneField" primary="True" owl="1">
+        <xpath expr="//div[hasclass('o_field_many2one_selection')]" position="inside">
+            <div class="o_mass_mailing_filter_container">
+                <div t-attf-class="o_mass_mailing_save_filter_container pt-1 {{ !this.filter.canSaveFilter ? 'd-none': '' }}">
+                    <MailingFilterDropdown class="'o_mass_mailing_filter_dropdown'" togglerClass="'btn py-0'">
+                        <t t-set-slot="toggler">
+                            <span class="o_mass_mailing_add_filter">
+                                <span t-attf-class="o_mass_mailing_no_filter {{ this.props.record.data.mailing_filter_count ? 'd-none' : '' }}">Save as Favorite Filter</span>
+                                <i class="fa fa-floppy-o px-1 py-1"/>
+                            </span>
+                        </t>
+                        <div class="ms-2 fw-light">
+                            Add to favorite filters
+                        </div>
+                        <div class="d-inline-flex">
+                            <input t-ref="autofocus" type="text" class="o_mass_mailing_filter_name w-auto ms-2"
+                                placeholder='e.g. "VIP Customers"' t-on-keydown="onFilterNameInputKeydown"/>
+                            <button class="btn btn-sm btn-primary o_mass_mailing_btn_save_filter mx-2" t-on-click="onSaveFilter">
+                                Add
+                            </button>
+                        </div>
+                    </MailingFilterDropdown>
+                </div>
+                <a t-attf-class="o_mass_mailing_remove_filter btn px-1 pt-1 pb-0 {{ this.filter.canSaveFilter ? 'd-none': '' }}" t-on-click="onRemoveFilter">
+                    <i class="fa fa-trash px-3 py-1 align-bottom" title="Remove from Favorites"/>
+                </a>
+            </div>
+        </xpath>
+    </t>
+
+</templates>

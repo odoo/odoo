@@ -1,0 +1,708 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+        <!-- menu_create from model form -->
+        <record id="view_model_menu_create" model="ir.ui.view">
+            <field name="name">Create Menu</field>
+            <field name="model">wizard.ir.model.menu.create</field>
+            <field name="arch" type="xml">
+                <form string="Create Menu">
+                    <group>
+                        <field name="name"/>
+                        <field name="menu_id"/>
+                    </group>
+                    <footer>
+                        <button name="menu_create" string="Create Menu" type="object" class="btn-primary" data-hotkey="q"/>
+                        <button string="Cancel" class="btn-secondary" special="cancel" data-hotkey="z" />
+                    </footer>
+                </form>
+            </field>
+        </record>
+        <record id="act_menu_create" model="ir.actions.act_window">
+            <field name="name">Create Menu</field>
+            <field name="res_model">wizard.ir.model.menu.create</field>
+            <field name="view_mode">form</field>
+            <field name="target">new</field>
+            <field name="context">{'model_id': active_id}</field>
+        </record>
+
+        <!-- model -->
+        <record id="view_model_form" model="ir.ui.view">
+            <field name="model">ir.model</field>
+            <field name="arch" type="xml">
+                <form string="Model Description">
+                  <header><!-- used for override --></header>
+                  <sheet>
+                    <group>
+                        <group>
+                            <field name="id" invisible="1"/>
+                            <field name="name"/>
+                            <field name="model" attrs="{'readonly': [('id', '!=', False)]}"/>
+                            <field name="order"/>
+                            <field name="transient" attrs="{'readonly': [('id', '!=', False)]}" groups="base.group_no_one"/>
+                        </group>
+                        <group>
+                            <field name="state" readonly="1" groups="base.group_no_one"/>
+                            <field name="modules" groups="base.group_no_one"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Fields" name="fields">
+                            <field name="field_id">
+                                <tree string="Fields Description">
+                                    <field name="name"/>
+                                    <field name="field_description"/>
+                                    <field name="ttype"/>
+                                    <field name="required"/>
+                                    <field name="readonly"/>
+                                    <field name="index" groups="base.group_no_one"/>
+                                    <field name="state" groups="base.group_no_one"/>
+                                </tree>
+                                <form string="Fields Description">
+                                    <group>
+                                        <group>
+                                            <field name="name"/>
+                                            <field name="field_description"/>
+                                        </group>
+                                        <group>
+                                            <field name="ttype"/>
+                                            <field name="help"/>
+                                        </group>
+                                    </group>
+                                    <notebook>
+                                        <page name="base" string="Properties">
+                                            <group string="Base Properties">
+                                                <group>
+                                                    <field name="required"/>
+                                                    <field name="readonly"/>
+                                                    <field name="store" groups="base.group_no_one"/>
+                                                    <field name="index" groups="base.group_no_one"/>
+                                                    <field name="copied" groups="base.group_no_one"/>
+                                                </group>
+                                                <group>
+                                                    <field name="translate"
+                                                        attrs="{'readonly': [('ttype','not in',['char','text','html'])],
+                                                                'invisible': [('ttype','not in',['char','text','html'])]}"/>
+                                                    <field name="size" groups="base.group_no_one"
+                                                        attrs="{'readonly': [('ttype','not in',['char','reference'])],
+                                                                'invisible': [('ttype','not in',['char','reference'])]}"/>
+                                                    <field name="relation"
+                                                        attrs="{'required': [('ttype','in',['many2one','one2many','many2many'])],
+                                                                'readonly': [('ttype','not in',['many2one','one2many','many2many'])],
+                                                                'invisible': [('ttype','not in',['many2one','one2many','many2many'])]}"/>
+                                                    <field name="on_delete" groups="base.group_no_one"
+                                                        attrs="{'readonly': [('ttype','!=','many2one')],
+                                                                'invisible': [('ttype','!=','many2one')]}"/>
+                                                    <field name="relation_field"
+                                                        attrs="{'required': [('ttype','=','one2many')],
+                                                                'readonly': [('ttype','!=','one2many')],
+                                                                'invisible': [('ttype','!=','one2many')]}"/>
+                                                    <field name="relation_table" groups="base.group_no_one"
+                                                        attrs="{'readonly': ['|', ('ttype','!=','many2many'), ('state','!=','manual')],
+                                                                'invisible': ['|', ('ttype','!=','many2many'), ('state','!=','manual')]}"/>
+                                                    <field name="column1" groups="base.group_no_one"
+                                                        attrs="{'readonly': ['|', ('ttype','!=','many2many'), ('state','!=','manual')],
+                                                                'invisible': ['|', ('ttype','!=','many2many'), ('state','!=','manual')]}"/>
+                                                    <field name="column2" groups="base.group_no_one"
+                                                        attrs="{'readonly': ['|', ('ttype','!=','many2many'), ('state','!=','manual')],
+                                                                'invisible': ['|', ('ttype','!=','many2many'), ('state','!=','manual')]}"/>
+                                                    <field name="domain" groups="base.group_no_one"
+                                                        attrs="{'readonly': [('ttype','not in',['many2one','one2many','many2many'])],
+                                                                'invisible': [('ttype','not in',['many2one','one2many','many2many'])]}"/>
+                                                </group>
+                                            </group>
+                                            <group attrs="{'readonly': [('ttype','not in',['selection','reference'])],
+                                                           'invisible': [('ttype','not in',['selection','reference'])]}">
+                                                <field name="selection_ids">
+                                                    <tree editable="bottom">
+                                                        <field name="sequence" widget="handle"/>
+                                                        <field name="value"/>
+                                                        <field name="name"/>
+                                                    </tree>
+                                                </field>
+                                            </group>
+                                            <group string="Advanced Properties" groups="base.group_no_one">
+                                                <field name="related"/>
+                                                <field name="depends" attrs="{'required': [('compute', 'not in', [False, ''])]}"/>
+                                                <field name="compute" widget="ace" options="{'mode': 'python'}"/>
+                                            </group>
+                                            <div groups="base.group_no_one">
+                                                <h3>How to define a computed field</h3>
+                                                <p>Computed fields are defined with the fields
+                                                <strong>Dependencies</strong> and <strong>Compute</strong>.</p>
+                                                <p>The field <strong>Dependencies</strong> lists the fields that
+                                                the current field depends on. It is a comma-separated list of
+                                                field names, like <code>name, size</code>. You can also refer to
+                                                fields accessible through other relational fields, for instance
+                                                <code>partner_id.company_id.name</code>.</p>
+                                                <p>The field <strong>Compute</strong> is the Python code to
+                                                compute the value of the field on a set of records. The value of
+                                                the field must be assigned to each record with a dictionary-like
+                                                assignment.</p>
+                                                <pre>
+    for record in self:
+        record['size'] = len(record.name)
+</pre>
+                                                <p>The only predefined variables are</p>
+                                                <ul>
+                                                    <li><code>self</code> (the set of records to compute)</li>
+                                                    <li><code>datetime</code> (Python module)</li>
+                                                    <li><code>dateutil</code> (Python module)</li>
+                                                    <li><code>time</code> (Python module)</li>
+                                                </ul>
+                                                <p>Other features are accessible through <code>self</code>, like
+                                                <code>self.env</code>, etc.</p>
+                                            </div>
+                                        </page>
+                                        <page name="groups" string="Access Rights">
+                                            <field name="groups"/>
+                                        </page>
+                                        <page name="misc" string="Miscellaneous" groups="base.group_no_one">
+                                            <group>
+                                                <field name="state"/>
+                                                <field name="modules"/>
+                                            </group>
+                                        </page>
+                                    </notebook>
+                                </form>
+                            </field>
+                            <button groups="base.group_no_one"
+                                icon="fa-align-justify"
+                                name="%(act_menu_create)d"
+                                string="Create a Menu" type="action"
+                                target="new" />
+                        </page>
+                        <page string="Access Rights" name="access_rights">
+                            <field name="access_ids">
+                                <tree string="Access Rights" editable="top"
+                                      decoration-warning="not group_id and
+                                                         (perm_read or perm_write or
+                                                          perm_create or perm_unlink)">
+                                    <field name="name"/>
+                                    <field name="group_id"/>
+                                    <field name="perm_read"/>
+                                    <field name="perm_write"/>
+                                    <field name="perm_create"/>
+                                    <field name="perm_unlink"/>
+                                </tree>
+                            </field>
+                        </page>
+                        <page string="Record Rules" name="record_rules">
+                            <field name="rule_ids">
+                                <tree string="Record Rules" editable="top" decoration-info="not groups">
+                                    <field name="name"/>
+                                    <field name="groups" widget="many2many_tags" options="{'no_create':True}"/>
+                                    <field name="domain_force"/>
+                                    <field name="perm_read"/>
+                                    <field name="perm_write"/>
+                                    <field name="perm_create"/>
+                                    <field name="perm_unlink"/>
+                                </tree>
+                            </field>
+                        </page>
+                        <page string="Notes" name="notes" groups="base.group_no_one">
+                            <field name="info"/>
+                        </page>
+                        <page string="Views" name="views" groups="base.group_no_one">
+                            <field name="view_ids"/>
+                        </page>
+                    </notebook>
+                  </sheet>
+                </form>
+            </field>
+        </record>
+        <record id="view_model_tree" model="ir.ui.view">
+            <field name="model">ir.model</field>
+            <field name="arch" type="xml">
+                <tree string="Model Description">
+                    <field name="model"/>
+                    <field name="name"/>
+                    <field name="state"/>
+                    <field name="transient"/>
+                </tree>
+            </field>
+        </record>
+        <record id="view_model_search" model="ir.ui.view">
+            <field name="model">ir.model</field>
+            <field name="arch" type="xml">
+                <search string="Model Description">
+                    <field name="name" filter_domain="['|', ('name','ilike',self), ('model','ilike',self)]" string="Model"/>
+                    <field name="model" filter_domain="[('model','ilike',self)]" string="Technical Name"/>
+                    <filter string="Transient" name="transient" domain="[('transient', '=', True)]"/>
+                    <separator/>
+                    <filter string="Custom" name="custom" domain="[('state', '=', 'manual')]"/>
+                    <filter string="Base" name="base" domain="[('state', '=', 'base')]"/>
+                </search>
+            </field>
+        </record>
+        <record id="action_model_model" model="ir.actions.act_window">
+            <field name="name">Models</field>
+            <field name="res_model">ir.model</field>
+            <field name="context">{}</field>
+            <field name="view_id" ref="view_model_tree"/>
+        </record>
+        <menuitem action="action_model_model" id="ir_model_model_menu" parent="next_id_9"/>
+
+        <!-- ir model fields -->
+        <record id="view_model_fields_form" model="ir.ui.view">
+            <field name="model">ir.model.fields</field>
+            <field name="arch" type="xml">
+                <form string="Fields" duplicate="false">
+                    <field name="state" invisible="1"/>
+                    <sheet>
+                        <group>
+                            <group>
+                                <field name="name"/>
+                                <field name="field_description"/>
+                                <field name="model_id" attrs="{'readonly': [('state','!=', 'manual')]}"/>
+                            </group>
+                            <group>
+                                <field name="ttype"/>
+                                <field name="help"/>
+                            </group>
+                        </group>
+                        <notebook>
+                            <page name="base" string="Properties">
+                                <group string="Base Properties">
+                                    <group>
+                                        <field name="required"/>
+                                        <field name="readonly"/>
+                                        <field name="store" groups="base.group_no_one"/>
+                                        <field name="index" groups="base.group_no_one"/>
+                                        <field name="copied" groups="base.group_no_one"/>
+                                    </group>
+                                    <group>
+                                        <field name="translate"
+                                            attrs="{'readonly': [('ttype','not in',['char','text','html'])],
+                                                    'invisible': [('ttype','not in',['char','text','html'])]}"/>
+                                        <field name="size" groups="base.group_no_one"
+                                            attrs="{'readonly': [('ttype','not in',['char','reference'])],
+                                                    'invisible': [('ttype','not in',['char','reference'])]}"/>
+                                        <field name="relation"
+                                            attrs="{'required': [('ttype','in',['many2one','one2many','many2many'])],
+                                                    'readonly': [('ttype','not in',['many2one','one2many','many2many'])],
+                                                    'invisible': [('ttype','not in',['many2one','one2many','many2many'])]}"/>
+                                        <field name="group_expand" groups="base.group_no_one"
+                                            attrs="{'readonly': [('ttype','not in', ['many2one', 'selection'])],
+                                                    'invisible': [('ttype','not in', ['many2one', 'selection'])]}"/>
+                                        <field name="on_delete" groups="base.group_no_one"
+                                            attrs="{'readonly': [('ttype','!=','many2one')],
+                                                    'invisible': [('ttype','!=','many2one')]}"/>
+                                        <field name="relation_field"
+                                            attrs="{'required': [('ttype','=','one2many')],
+                                                    'readonly': [('ttype','!=','one2many')],
+                                                    'invisible': [('ttype','!=','one2many')]}"/>
+                                        <field name="relation_table" groups="base.group_no_one"
+                                            attrs="{'readonly': ['|', ('ttype','!=','many2many'), ('state','!=','manual')],
+                                                    'invisible': ['|', ('ttype','!=','many2many'), ('state','!=','manual')]}"/>
+                                        <field name="column1" groups="base.group_no_one"
+                                            attrs="{'readonly': ['|', ('ttype','!=','many2many'), ('state','!=','manual')],
+                                                    'invisible': ['|', ('ttype','!=','many2many'), ('state','!=','manual')]}"/>
+                                        <field name="column2" groups="base.group_no_one"
+                                            attrs="{'readonly': ['|', ('ttype','!=','many2many'), ('state','!=','manual')],
+                                                    'invisible': ['|', ('ttype','!=','many2many'), ('state','!=','manual')]}"/>
+                                        <field name="domain" groups="base.group_no_one"
+                                            attrs="{'readonly': [('ttype','not in',['many2one','one2many','many2many'])],
+                                                    'invisible': [('ttype','not in',['many2one','one2many','many2many'])]}"/>
+                                    </group>
+                                </group>
+                                <group attrs="{'readonly': [('ttype','not in',['selection','reference'])],
+                                               'invisible': [('ttype','not in',['selection','reference'])]}">
+                                    <field name="selection_ids">
+                                        <tree editable="bottom">
+                                            <field name="sequence" widget="handle"/>
+                                            <field name="value"/>
+                                            <field name="name"/>
+                                        </tree>
+                                    </field>
+                                </group>
+                                <group string="Advanced Properties" groups="base.group_no_one">
+                                    <field name="related"/>
+                                    <field name="depends" attrs="{'required': [('compute', 'not in', [False, ''])]}"/>
+                                    <field name="compute" widget="ace" options="{'mode': 'python'}"/>
+                                </group>
+                                <div groups="base.group_no_one">
+                                    <h3>How to define a computed field</h3>
+                                    <p>Computed fields are defined with the fields
+                                    <strong>Dependencies</strong> and <strong>Compute</strong>.</p>
+                                    <p>The field <strong>Dependencies</strong> lists the fields that
+                                    the current field depends on. It is a comma-separated list of
+                                    field names, like <code>name, size</code>. You can also refer to
+                                    fields accessible through other relational fields, for instance
+                                    <code>partner_id.company_id.name</code>.</p>
+                                    <p>The field <strong>Compute</strong> is the Python code to
+                                    compute the value of the field on a set of records. The value of
+                                    the field must be assigned to each record with a dictionary-like
+                                    assignment.</p>
+                                    <pre>
+    for record in self:
+        record['size'] = len(record.name)
+</pre>
+                                    <p>The only predefined variables are</p>
+                                    <ul>
+                                        <li><code>self</code> (the set of records to compute)</li>
+                                        <li><code>datetime</code> (Python module)</li>
+                                        <li><code>dateutil</code> (Python module)</li>
+                                        <li><code>time</code> (Python module)</li>
+                                    </ul>
+                                    <p>Other features are accessible through <code>self</code>, like
+                                    <code>self.env</code>, etc.</p>
+                                </div>
+                            </page>
+                            <page name="groups" string="Access Rights">
+                                <field name="groups"/>
+                            </page>
+                            <page name="misc" string="Miscellaneous" groups="base.group_no_one">
+                                <group>
+                                    <field name="state"/>
+                                    <field name="modules"/>
+                                </group>
+                            </page>
+                        </notebook>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+        <record id="view_model_fields_tree" model="ir.ui.view">
+            <field name="model">ir.model.fields</field>
+            <field name="arch" type="xml">
+                <tree string="Fields" duplicate="false">
+                    <field name="name"/>
+                    <field name="field_description"/>
+                    <field name="model_id"/>
+                    <field name="ttype"/>
+                    <field name="state"/>
+                    <field name="index"/>
+                    <field name="store"/>
+                    <field name="readonly"/>
+                    <field name="relation"/>
+                </tree>
+            </field>
+        </record>
+        <record id="view_model_fields_search" model="ir.ui.view">
+            <field name="model">ir.model.fields</field>
+            <field name="arch" type="xml">
+                <search string="Fields">
+                    <field name="name" filter_domain="['|', ('name','ilike',self), ('field_description','ilike',self)]" string="Field"/>
+                    <filter string="Required" name="required" domain="[('required', '=', True)]"/>
+                    <separator/>
+                    <filter string="Readonly" name="readonly" domain="[('readonly', '=', True)]"/>
+                    <separator/>
+                    <filter string="Custom" name="custom" domain="[('state', '=', 'manual')]"/>
+                    <filter string="Base" name="base" domain="[('state', '=', 'base')]"/>
+                    <separator/>
+                    <filter string="Translate" name="translate" domain="[('translate', '=', True)]"/>
+                    <field name="model_id"/>
+                    <field name="ttype"/>
+                    <field name="required"/>
+                    <field name="readonly"/>
+                    <field name="relation"/>
+                    <group expand="0" string="Group By">
+                        <filter string="Model" name="group_by_object" domain="[]" context="{'group_by':'model_id'}"/>
+                        <filter string="Field Type" name="group_by_ttype" domain="[]" context="{'group_by':'ttype'}"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+        <record id="action_model_fields" model="ir.actions.act_window">
+            <field name="name">Fields</field>
+            <field name="res_model">ir.model.fields</field>
+            <field name="context">{}</field>
+            <field name="view_id" ref="view_model_fields_tree"/>
+        </record>
+        <menuitem action="action_model_fields" id="ir_model_model_fields" parent="base.next_id_9"/>
+
+        <!-- ir model fields selection -->
+        <record id="view_model_fields_selection_form" model="ir.ui.view">
+            <field name="model">ir.model.fields.selection</field>
+            <field name="arch" type="xml">
+                <form string="Fields" duplicate="false">
+                    <sheet>
+                        <group>
+                            <field name="field_id"/>
+                            <field name="value" groups="base.group_no_one"/>
+                            <field name="name"/>
+                            <field name="sequence" groups="base.group_no_one"/>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+        <record id="view_model_fields_selection_tree" model="ir.ui.view">
+            <field name="model">ir.model.fields.selection</field>
+            <field name="arch" type="xml">
+                <tree>
+                    <field name="sequence" widget="handle"/>
+                    <field name="field_id"/>
+                    <field name="value"/>
+                    <field name="name"/>
+                </tree>
+            </field>
+        </record>
+        <record id="view_model_fields_selection_search" model="ir.ui.view">
+            <field name="model">ir.model.fields.selection</field>
+            <field name="arch" type="xml">
+                <search string="Fields">
+                    <field name="field_id" string="Field"/>
+                    <field name="name"
+                           filter_domain="['|', ('name','ilike',self), ('value','ilike',self)]"
+                           string="Selection" />
+                    <filter name="group_by_field"
+                            context="{'group_by':'field_id'}"
+                            string="Field"/>
+                </search>
+            </field>
+        </record>
+        <record id="action_model_fields_selection" model="ir.actions.act_window">
+            <field name="name">Fields Selection</field>
+            <field name="res_model">ir.model.fields.selection</field>
+            <field name="view_id" ref="view_model_fields_selection_tree"/>
+        </record>
+        <menuitem action="action_model_fields_selection" id="ir_model_model_fields_selection" parent="base.next_id_9"/>
+
+        <!-- ir model data -->
+        <record model="ir.ui.view" id="view_model_data_form">
+            <field name="model">ir.model.data</field>
+            <field name="arch" type="xml">
+                <form string="External Identifiers">
+                    <sheet>
+                        <h1>
+                            <field name="complete_name"/>
+                        </h1>
+                        <group>
+                            <group>
+                                <field name="module"/>
+                                <field name="name"/>
+                                <field name="noupdate"/>
+                                <field name="write_date" />
+                                <field name="create_date" />
+                            </group>
+                            <group>
+                                <field name="display_name"/>
+                                <field name="model"/>
+                                <field name="res_id"/>
+                                <field name="reference" widget="reference" string="Record"/>
+                            </group>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+        <record id="view_model_data_list" model="ir.ui.view">
+            <field name="model">ir.model.data</field>
+            <field name="arch" type="xml">
+                <tree string="External Identifiers">
+                    <field name="complete_name"/>
+                    <field name="display_name"/>
+                    <field name="model" groups="base.group_no_one"/>
+                    <field name="module" invisible="1"/>
+                    <field name="res_id"/>
+                </tree>
+            </field>
+        </record>
+        <record id="view_model_data_search" model="ir.ui.view">
+            <field name="model">ir.model.data</field>
+            <field name="arch" type="xml">
+                <search string="External Identifiers">
+                    <field name="name" filter_domain="[('name','ilike',self)]" string="External Identifier"/>
+                    <filter string="Updatable" name="updatable" domain="[('noupdate', '=', False)]"/>
+                    <field name="module"/>
+                    <field name="model"/>
+                    <field name="res_id"/>
+                    <field name="noupdate"/>
+                    <group expand="0" string="Group By">
+                        <filter string="Module" name="group_by_module" domain="[]" context="{'group_by':'module'}"/>
+                        <filter string="Model" name="group_by_object" domain="[]" context="{'group_by':'model'}"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+        <record id="action_model_data" model="ir.actions.act_window">
+            <field name="name">External Identifiers</field>
+            <field name="res_model">ir.model.data</field>
+            <field name="view_id" ref="view_model_data_list"/>
+        </record>
+        <menuitem id="next_id_5" name="Sequences &amp; Identifiers" parent="base.menu_custom" sequence="21" groups="base.group_no_one"/>
+        <menuitem action="action_model_data" id="ir_model_data_menu" parent="base.next_id_5"
+                  groups="base.group_no_one"/>
+
+        <!-- ir model contraints -->
+        <record model="ir.ui.view" id="view_model_constraint_form">
+            <field name="model">ir.model.constraint</field>
+            <field name="arch" type="xml">
+                <form string="Model Constraints">
+                <sheet>
+                    <group col="4">
+                        <field name="type"/>
+                        <field name="name"/>
+                        <field name="module" can_create="false"/>
+                        <field name="model"/>
+                    </group>
+                    <group>
+                        <field name="message"/>
+                    </group>
+                </sheet>
+                </form>
+            </field>
+        </record>
+        <record id="view_model_constraint_list" model="ir.ui.view">
+            <field name="model">ir.model.constraint</field>
+            <field name="arch" type="xml">
+                <tree string="Model Constraints">
+                    <field name="type"/>
+                    <field name="name"/>
+                    <field name="module"/>
+                    <field name="model"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="view_model_constraint_search" model="ir.ui.view">
+            <field name="model">ir.model.constraint</field>
+            <field name="arch" type="xml">
+                <search string="Constraints">
+                    <field name="model"/>
+                    <field name="name"/>
+                    <field name="message"/>
+                    <group expand="1" string="Group By">
+                        <filter name="module" string="Module" context="{'group_by' : 'module'}"/>
+                        <filter name="model" string="Model" context="{'group_by': 'model'}"/>
+                        <filter name="type" string="Constraint type" context="{'group_by' : 'type'}"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+
+        <record id="action_model_constraint" model="ir.actions.act_window">
+            <field name="name">Model Constraints</field>
+            <field name="res_model">ir.model.constraint</field>
+            <field name="view_id" ref="view_model_constraint_list"/>
+            <field name="search_view_id" ref="view_model_constraint_search"/>
+        </record>
+        <menuitem action="action_model_constraint" id="ir_model_constraint_menu" parent="base.next_id_9"
+                  groups="base.group_no_one"/>
+
+        <!-- ir model relations -->
+        <record model="ir.ui.view" id="view_model_relation_form">
+            <field name="model">ir.model.relation</field>
+            <field name="arch" type="xml">
+                <form string="ManyToMany Relations">
+                <sheet>
+                    <group col="4">
+                        <field name="name"/>
+                        <field name="module" can_create="false"/>
+                        <field name="model"/>
+                    </group>
+                </sheet>
+                </form>
+            </field>
+        </record>
+        <record id="view_model_relation_list" model="ir.ui.view">
+            <field name="model">ir.model.relation</field>
+            <field name="arch" type="xml">
+                <tree string="ManyToMany Relations">
+                    <field name="name"/>
+                    <field name="module"/>
+                    <field name="model"/>
+                </tree>
+            </field>
+        </record>
+        <record id="action_model_relation" model="ir.actions.act_window">
+            <field name="name">ManyToMany Relations</field>
+            <field name="res_model">ir.model.relation</field>
+            <field name="view_id" ref="view_model_relation_list"/>
+        </record>
+        <menuitem action="action_model_relation" id="ir_model_relation_menu" parent="base.next_id_9"
+                  groups="base.group_no_one"/>
+
+        <!-- ir.model.access -->
+        <record id="ir_access_view_tree" model="ir.ui.view">
+            <field name="name">ir.model.access.view.tree</field>
+            <field name="model">ir.model.access</field>
+            <field name="arch" type="xml">
+                <tree string="Access Rights"
+                      decoration-warning="not group_id and
+                                         (perm_read or perm_write or
+                                          perm_create or perm_unlink)">
+                    <field name="name"/>
+                    <field name="model_id"/>
+                    <field name="group_id"/>
+                    <field name="perm_read"/>
+                    <field name="perm_write"/>
+                    <field name="perm_create"/>
+                    <field name="perm_unlink"/>
+                </tree>
+            </field>
+        </record>
+        <record id="ir_access_view_tree_edition" model="ir.ui.view">
+            <field name="name">ir.model.access.view.tree.edition</field>
+            <field name="model">ir.model.access</field>
+            <field name="arch" type="xml">
+                <tree string="Access Rights" editable="top"
+                      decoration-warning="not group_id and
+                                         (perm_read or perm_write or
+                                          perm_create or perm_unlink)">
+                    <field name="name"/>
+                    <field name="model_id"/>
+                    <field name="group_id"/>
+                    <field name="perm_read"/>
+                    <field name="perm_write"/>
+                    <field name="perm_create"/>
+                    <field name="perm_unlink"/>
+                </tree>
+            </field>
+        </record>
+        <record id="ir_access_view_form" model="ir.ui.view">
+            <field name="model">ir.model.access</field>
+            <field name="arch" type="xml">
+                <form string="Access Rights">
+                   <sheet>
+                    <div class="alert alert-warning text-center" role="alert">
+                        Please note that modifications will be applied for all users of the specified group
+                    </div>
+                    <group col="4">
+                        <field name="name"/>
+                        <field name="model_id"/>
+                        <field name="group_id"/>
+                        <field name="active" widget='boolean_toggle'/>
+                    </group>
+                    <group string="Access" col="4">
+                        <field name="perm_read"/>
+                        <field name="perm_write"/>
+                        <field name="perm_create"/>
+                        <field name="perm_unlink"/>
+                    </group>
+                   </sheet> 
+                </form>
+            </field>
+        </record>
+        <record id="ir_access_view_search" model="ir.ui.view">
+            <field name="model">ir.model.access</field>
+            <field name="arch" type="xml">
+                <search string="Access Rights">
+                    <field name="name" string="Access Rights"/>
+                    <filter string="Global" name="global" domain="[('group_id', '=', False)]"/>
+                    <separator/>
+                    <filter string="Full Access" name="full_access" domain="[('perm_read', '=', True), ('perm_write', '=', True), ('perm_create', '=', True), ('perm_unlink', '=', True)]"/>
+                    <filter string="Read Access" name="read_access" domain="[('perm_read', '=', True)]"/>
+                    <filter string="Write Access" name="write_access" domain="[('perm_write', '=', True)]"/>
+                    <separator/>
+                    <filter string="Archived" name="inactive" domain="[('active', '=', False)]"/>
+                    <field name="model_id"/>
+                    <field name="group_id"/>
+                    <group expand="0" string="Group By" colspan="11" col="11" groups="base.group_no_one">
+                        <filter string="Group" name="group" domain="[]" context="{'group_by': 'group_id'}"/>
+                        <filter string="Model" name="group_by_object" domain="[]" context="{'group_by': 'model_id'}"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+        <record id="ir_access_act" model="ir.actions.act_window">
+            <field name="name">Access Rights</field>
+            <field name="res_model">ir.model.access</field>
+            <field name="view_id" ref="ir_access_view_tree_edition"/>
+            <field name="search_view_id" ref="ir_access_view_search"/>
+        </record>
+        <menuitem action="ir_access_act" id="menu_ir_access_act" parent="base.menu_security"/>
+
+</odoo>

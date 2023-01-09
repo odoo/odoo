@@ -1,0 +1,88 @@
+.o_clean_footer, .o_clean_header, .o_report_layout_bold {
+    color: #000;
+}
+.o_clean_header img {
+    max-height: 90px;
+    max-width: 300px;
+}
+.o_clean_footer {
+    margin: 0 3px;
+    margin-top: 200px;
+    border-top: 3px solid $o-default-report-secondary-color;
+    h4 {
+        color: $o-default-report-secondary-color;
+        font-weight: bolder;
+    }
+    .pagenumber {
+        border: 3px solid $o-default-report-primary-color;
+        background-color: $o-default-report-secondary-color;
+        color: white;
+        padding: 4px 8px;
+        text-align: center;
+    }
+}
+.o_report_layout_bold {
+    h1, h2, h3 {
+        color: $o-default-report-primary-color;
+        font-weight: bolder;
+    }
+    strong {
+        color: $o-default-report-secondary-color;
+    }
+    table {
+        &.o_main_table {
+            margin-bottom: 0;
+        }
+
+        thead {
+            color: $o-default-report-secondary-color;
+            tr th {
+                border-top: 3px solid $o-default-report-secondary-color !important;
+                text-transform: uppercase;
+            }
+            tr th:first-child {
+                width: 48%;
+            }
+        }
+        tbody {
+            color: #000;
+            tr:first-child td {
+                border-top: none;
+            }
+            tr:last-child td {
+                border-bottom: 3px solid $o-default-report-secondary-color;
+            }
+            tr {
+                td {
+                    padding: 15px 5px;
+                }
+                td:last-child {
+                }
+            }
+        }
+    }
+    #total {
+        strong {
+            color: $o-default-report-secondary-color;
+        }
+    }
+    /*Total table*/
+    /* compat 12.0 */
+    .row:not(#total) > div:has(table) {
+        top: -16px;
+    }
+    /* row col rule compat 12.0 */
+    .row > div > table,
+    div#total table {
+        tr {
+            &:first-child td,
+            &.o_subtotal {
+                border-top: none !important;
+            }
+            &:last-child td,
+            &.o_total {
+                border-top: 1px solid map-get($grays, '200') !important;
+            }
+        }
+    }
+}

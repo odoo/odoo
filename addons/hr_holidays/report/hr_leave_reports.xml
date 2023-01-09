@@ -1,0 +1,116 @@
+<?xml version="1.0"?>
+<odoo>
+
+    <record id="view_hr_holidays_filter_report" model="ir.ui.view">
+        <field name="name">hr.holidays.filter</field>
+        <field name="model">hr.leave.report</field>
+        <field name="arch" type="xml">
+            <search string="Search Time Off">
+                <field name="employee_id"/>
+                <field name="name"/>
+                <filter domain="[('state','in',('confirm','validate1'))]" string="To Approve" name="approve"/>
+                <filter string="Approved Requests" domain="[('state', '=', 'validate')]" name="validated"/>
+                <separator/>
+                <filter name="active_types" string="Active Types" domain="[('holiday_status_id.active', '=', True)]" help="Filters only on requests that belong to an time off type that is 'active' (active field is True)"/>
+                <separator/>
+                <filter string="My Department" name="department" domain="[('department_id.manager_id.user_id', '=', uid)]" help="My Department"/>
+                <separator/>
+                <filter string="Active Employee" name="active_employee" domain="[('active_employee','=',True)]"/>
+                <separator/>
+                <filter name="year" date="date_from" default_period="this_year" string="Current Year"/>
+                <separator/>
+                <filter string="My Requests" name="my_leaves" domain="[('employee_id.user_id', '=', uid)]"/>
+                <filter string="Archived" name="archived" domain="[('active', '=', False)]"/>
+                <separator/>
+                <field name="department_id" operator="child_of"/>
+                <field name="holiday_status_id"/>
+                <group expand="0" string="Group By">
+                    <filter name="group_employee" string="Employee" context="{'group_by':'employee_id'}"/>
+                    <filter name="group_type" string="Type" context="{'group_by':'holiday_status_id'}"/>
+                    <filter name="group_company" string="Company" context="{'group_by':'company_id'}" groups="base.group_multi_company"/>
+                    <separator/>
+                    <filter name="group_date_from" string="Start Date" context="{'group_by':'date_from'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="hr_leave_report_tree" model="ir.ui.view">
+        <field name="name">report.hr.holidays.report.leave_all.tree</field>
+        <field name="model">hr.leave.report</field>
+        <field name="arch" type="xml">
+            <tree create="0" edit="0" delete="0">
+                <button name="action_open_record" type="object" icon="fa-external-link" title="Open" />
+                <field name="employee_id" decoration-muted="not active_employee"/>
+                <field name="number_of_days" string="Number of Days" sum="Remaining Days"/>
+                <field name="leave_type"/>
+                <field name="date_from"/>
+                <field name="date_to"/>
+                <field name="state"/>
+                <field name="name"/>
+                <field name="active_employee" invisible="1"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="hr_leave_report_pivot" model="ir.ui.view">
+        <field name="name">report.hr.holidays.report.leave_all.pivot</field>
+        <field name="model">hr.leave.report</field>
+        <field name="arch" type="xml">
+            <pivot>
+                <field name="employee_id" decoration-muted="not active_employee"/>
+                <field name="number_of_days" type="measure"/>
+                <field name="leave_type"/>
+                <field name="date_from"/>
+                <field name="date_to"/>
+                <field name="state"/>
+                <field name="name"/>
+                <field name="active_employee" invisible="1"/>
+            </pivot>
+        </field>
+    </record>
+
+    <record id="hr_leave_report_view_form" model="ir.ui.view">
+        <field name="name">hr.leave.report.view.form</field>
+        <field name="model">hr.leave.report</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="employee_id"/>
+                            <field name="name"/>
+                            <field name="allocation_id" attrs="{'invisible': [('allocation_id', '=', False)]}"/>
+                            <field name="leave_id" attrs="{'invisible': [('leave_id', '=', False)]}"/>
+                            <field name="leave_type" />
+                            <field name="category_id"/>
+                            <field name="state"/>
+                            <field name="date_from"/>
+                            <field name="date_to"/>
+                            <field name="company_id" groups="base.group_multi_company"/>
+                        </group>
+                        <group>
+                            <field name="active_employee"/>
+                            <field name="number_of_days"/>
+                            <field name="department_id"/>
+                            <field name="holiday_status_id"/>
+                            <field name="holiday_type"/>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="act_hr_employee_holiday_request" model="ir.actions.server">
+        <field name="name">Time off Analysis</field>
+        <field name="model_id" ref="hr_holidays.model_hr_leave_report"/>
+        <field name="binding_model_id" ref="hr.model_hr_employee"/>
+        <field name="state">code</field>
+        <field name="groups_id" eval="[(4, ref('hr_holidays.group_hr_holidays_user'))]"/>
+        <field name="code">
+        action = model.action_time_off_analysis()
+        </field>
+    </record>
+
+</odoo>

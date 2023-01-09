@@ -1,0 +1,78 @@
+.o_label_sheet {
+    margin-left: -4mm;
+    margin-right: -4mm;
+    overflow: hidden;
+    width: 210mm;
+    height: 297mm;
+    page-break-before: always;
+    &.o_label_dymo {
+        font-size:90%;
+        width: 57mm;
+        height: 32mm;
+    }
+    div {
+        padding: 2px 4px;
+    }
+    div.o_label_small_text {
+        font-size: 60%;
+        line-height: 130%;
+    }
+    div.o_label_name {
+        background-color: ghostwhite;
+        height: 3em;
+        overflow: hidden;
+    }
+    div.o_label_full {
+        overflow: hidden;
+        padding: 0;
+        margin: auto;
+    }
+    div.o_label_left_column {
+        float: left;
+        font-size: .6em;
+        overflow:hidden;
+        width: 40%;
+        &.o_label_full_with {
+            width: 100%
+        }
+    }
+    div.o_label_right_column {
+        float: right;
+    }
+    div.o_label_small_barcode {
+        font-size: .6em;
+        padding: 0 4px;
+        line-height: normal;
+    }
+    strong.o_label_price {
+        font-size: 2em;
+    }
+    strong.o_label_price_medium {
+        font-size: 1.3em;
+        line-height: normal;
+        padding: 0;
+        padding-right: 2mm;
+    }
+    strong.o_label_price_small {
+        font-size: 0.9em;
+        padding: 0 4px;
+        padding-right: 2mm;
+    }
+    div.o_label_extra_data {
+        overflow: hidden;
+        height: 2.5em;
+        padding: 0;
+    }
+    div.o_label_clear {
+        clear: both;
+    }
+
+    // generic 4x12 label w/ all same size font
+    div.o_label_4x12 {
+        padding:0;
+        line-height:1;
+        font-size:55%;
+        overflow:hidden;
+        white-space:nowrap;
+    }
+}

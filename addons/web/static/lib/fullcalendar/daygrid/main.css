@@ -1,0 +1,78 @@
+/* DayGridView
+--------------------------------------------------------------------------------------------------*/
+/* day row structure */
+.fc-dayGridWeek-view .fc-content-skeleton,
+.fc-dayGridDay-view .fc-content-skeleton {
+  /* there may be week numbers in these views, so no padding-top */
+  padding-bottom: 1em;
+  /* ensure a space at bottom of cell for user selecting/clicking */
+}
+
+.fc-dayGrid-view .fc-body .fc-row {
+  min-height: 4em;
+  /* ensure that all rows are at least this tall */
+}
+
+/* a "rigid" row will take up a constant amount of height because content-skeleton is absolute */
+.fc-row.fc-rigid {
+  overflow: hidden;
+}
+
+.fc-row.fc-rigid .fc-content-skeleton {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+}
+
+/* week and day number styling */
+.fc-day-top.fc-other-month {
+  opacity: 0.3;
+}
+
+.fc-dayGrid-view .fc-week-number,
+.fc-dayGrid-view .fc-day-number {
+  padding: 2px;
+}
+
+.fc-dayGrid-view th.fc-week-number,
+.fc-dayGrid-view th.fc-day-number {
+  padding: 0 2px;
+  /* column headers can't have as much v space */
+}
+
+.fc-ltr .fc-dayGrid-view .fc-day-top .fc-day-number {
+  float: right;
+}
+
+.fc-rtl .fc-dayGrid-view .fc-day-top .fc-day-number {
+  float: left;
+}
+
+.fc-ltr .fc-dayGrid-view .fc-day-top .fc-week-number {
+  float: left;
+  border-radius: 0 0 3px 0;
+}
+
+.fc-rtl .fc-dayGrid-view .fc-day-top .fc-week-number {
+  float: right;
+  border-radius: 0 0 0 3px;
+}
+
+.fc-dayGrid-view .fc-day-top .fc-week-number {
+  min-width: 1.5em;
+  text-align: center;
+  background-color: #f2f2f2;
+  color: #808080;
+}
+
+/* when week/day number have own column */
+.fc-dayGrid-view td.fc-week-number {
+  text-align: center;
+}
+
+.fc-dayGrid-view td.fc-week-number > * {
+  /* work around the way we do column resizing and ensure a minimum width */
+  display: inline-block;
+  min-width: 1.25em;
+}

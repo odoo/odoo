@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<template id="s_social_media" name="Social Media">
+    <div class="s_social_media text-start o_not_editable" contenteditable="false">
+        <h4 class="s_social_media_title d-none" contenteditable="true">Social Media</h4>
+        <a href="/website/social/facebook" class="s_social_media_facebook" target="_blank">
+            <i class="fa fa-facebook rounded shadow-sm"/>
+        </a>
+        <a href="/website/social/twitter" class="s_social_media_twitter" target="_blank">
+            <i class="fa fa-twitter rounded shadow-sm"/>
+        </a>
+        <a href="/website/social/linkedin" class="s_social_media_linkedin" target="_blank">
+            <i class="fa fa-linkedin rounded shadow-sm"/>
+        </a>
+        <a href="/website/social/youtube" class="s_social_media_youtube" target="_blank">
+            <i class="fa fa-youtube rounded shadow-sm"/>
+        </a>
+        <a href="/website/social/instagram" class="s_social_media_instagram" target="_blank">
+            <i class="fa fa-instagram rounded shadow-sm"/>
+        </a>
+        <a href="/website/social/github" class="s_social_media_github" target="_blank">
+            <i class="fa fa-github rounded shadow-sm"/>
+        </a>
+    </div>
+</template>
+
+<template id="s_social_media_options" inherit_id="website.snippet_options">
+    <xpath expr="." position="inside">
+        <div data-js="SocialMedia" data-selector=".s_social_media">
+            <t t-set="add_item_title">Add New Social Network</t>
+            <we-list string="Social Networks" t-att-data-add-item-title="add_item_title"
+                data-render-list-items="" data-has-default="multiple" data-name="social_media_list"
+                data-default-value="https://www.example.com" data-id-mode="name"
+                data-new-elements-not-toggleable="true" data-no-preview="true"/>
+        </div>
+    </xpath>
+</template>
+
+<record id="website.s_social_media_000_scss" model="ir.asset">
+    <field name="name">SocialMedia 000 SCSS</field>
+    <field name="bundle">web.assets_frontend</field>
+    <field name="path">website/static/src/snippets/s_social_media/000.scss</field>
+</record>
+
+</odoo>

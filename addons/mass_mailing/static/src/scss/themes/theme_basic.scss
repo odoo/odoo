@@ -1,0 +1,54 @@
+
+// TODO remove in master
+// Themes scss have to use bg-variant and text-emphasis-variant mixins of BS4
+// to properly work. That use was introduced as a fix in 12.0... but the BS4
+// mixins are unavailable in the mailing assets. As a stable fix cannot
+// introduce static code which requires an XML update to not crash, the mixins
+// were duplicated here instead.
+@mixin bg-variant($parent, $color) {
+    #{$parent} {
+        background-color: $color !important;
+    }
+    a#{$parent},
+    button#{$parent} {
+        &:hover, &:focus {
+            background-color: darken($color, 10%) !important;
+        }
+    }
+}
+@mixin text-emphasis-variant($parent, $color) {
+    #{$parent} {
+        color: $color !important;
+    }
+    a#{$parent} {
+        &:hover, &:focus {
+            color: darken($color, 10%) !important;
+        }
+    }
+}
+
+// ============================
+// Mass Mailing "Theme Basic"
+// ============================
+
+// ===== Layout =====
+.o_basic_theme {
+    &.o_layout {
+        margin: 0;
+        padding: 24px 16px 10px;
+        background-color: white !important;
+
+        &, p, h1, h2, h3, h4, h5, h6, span, ul, ol {
+            color: black;
+        }
+
+        p {
+            font-size: 14px;
+            margin-bottom: 0px;
+        }
+
+        ul, ol {
+            margin: 0;
+        }
+    }
+}

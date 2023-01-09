@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="hr_job_website_inherit" model="ir.ui.view">
+        <field name="name">hr.job.kanban.inherit</field>
+        <field name="model">hr.job</field>
+        <field name="inherit_id" ref="hr_recruitment.view_hr_job_kanban"/>
+        <field name="arch" type="xml">
+            <xpath expr="//div[hasclass('o_kanban_card_header')]" position="before">
+                <field name="website_published" invisible="1"/>
+                <div class="ribbon ribbon-top-right" attrs="{'invisible': [('website_published', '=', False)]}">
+                    <span class="bg-odoo">Published</span>
+                </div>
+            </xpath>
+            <xpath expr="//div[@name='kanban_boxes']" position="attributes">
+                <attribute name="class" add="border-top pt-2" separator=" "/>
+            </xpath>
+            <xpath expr="//div[@name='kanban_boxes']" position="inside">
+                <field name="website_url" invisible="1"/>
+                <div class="col-6">
+                    <field name="is_published" widget='boolean_toggle'/>
+                    <t t-if="record.is_published.raw_value">Published</t>
+                    <t t-else="">Not published</t>
+                </div>
+                <div class="col-6" name="bottom_right"></div>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="hr_job_form_inherit" model="ir.ui.view">
+        <field name="name">hr.job.form.inherit</field>
+        <field name="model">hr.job</field>
+        <field name="inherit_id" ref="hr.view_hr_job_form"/>
+        <field name="arch" type="xml">
+            <page name="recruitment_page" position="inside">
+                <label for="job_details" class="mb-2"/>
+                <field name="job_details"/>
+            </page>
+        </field>
+    </record>
+
+    <record id="view_hr_job_kanban_referal_extends" model="ir.ui.view">
+        <field name="model">hr.job</field>
+        <field name="name">hr.job.view.kanban</field>
+        <field name="inherit_id" ref="hr_recruitment.view_hr_job_kanban"/>
+        <field name="arch" type="xml">
+            <xpath expr="//div[@name='bottom_right']" position="replace">
+                <field name="website_url" invisible="1"/>
+                <div class="o_link_trackers col-6 text-end">
+                    <a type="object" name="open_website_url">
+                        <i class="fa fa-fw fa-external-link" role="img"></i>
+                        Job Page
+                    </a>
+                </div>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="hr_job_search_view_inherit" model="ir.ui.view">
+        <field name="model">hr.job</field>
+        <field name="inherit_id" ref="hr.view_job_filter"/>
+        <field name="arch" type="xml">
+            <xpath expr="//filter[@name='message_needaction']" position="before">
+                <filter name="published" string="Published" domain="[('is_published', '=', True)]"/>
+                <separator/>
+            </xpath>
+            <xpath expr="//group" position="inside">
+                <filter string="Published" name="groupby_published" domain="[]" context="{'group_by': 'is_published'}"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>

@@ -1,0 +1,124 @@
+.modal.o_technical_modal {
+    .modal-content {
+
+        .modal-header .o_subtitle {
+            margin-left: 10px;
+        }
+
+        .modal-header .modal-title {
+            overflow: hidden;
+            white-space: nowrap;
+            text-overflow: ellipsis;
+        }
+
+        .modal-body {
+            &.o_act_window {
+                padding: 0;
+
+                @include media-breakpoint-down(md) {
+                    .o_action {
+                        display: flex;
+                        flex-direction: column;
+                        height: 100%;
+                    }
+                }
+            }
+
+            .o_modal_header {
+                @include o-webclient-padding($top: 10px, $bottom: 10px);
+                @include clearfix;
+
+                .o_search_options {
+                    display: inline-block;
+                }
+                .o_pager {
+                    float: right;
+                }
+            }
+
+            > :not(.o_legacy_view_sample_data) .o_view_nocontent {
+                position: unset;
+            }
+
+            .o_modal_changes td {
+                &:first-child {
+                    padding-right: 10px;
+                    vertical-align: top;
+                    white-space: nowrap;
+                }
+                &:not(:first-child) {
+                    width: 100%;
+                }
+            }
+        }
+
+        .modal-footer {
+            text-align: left;
+        }
+    }
+
+    @include media-breakpoint-up(sm) {
+        .modal-dialog .modal-content .modal-body.o_dialog_error {
+            overflow: visible;
+            display: flex;
+            flex-flow: column nowrap;
+
+            > .alert, > button {
+                flex: 0 0 auto;
+            }
+
+            > .o_error_detail {
+                flex: 1 1 auto;
+                min-height: 0;
+                overflow: auto;
+            }
+        }
+    }
+
+    @include media-breakpoint-down(sm) {
+        &.o_modal_full {
+            .modal-dialog {
+                margin: 0px;
+                height: 100%;
+
+                .modal-content {
+                    height: 100%;
+                    border: none;
+
+                    .modal-header {
+                        background: $o-navbar-background;
+
+                        .modal-title, .o_subtitle, button.close {
+                            color: $o-navbar-entry-color;
+                        }
+                    }
+
+                    .modal-body {
+                        height: 100%;
+                        overflow-y: auto;
+                    }
+                }
+            }
+        }
+    }
+}
+
+.modal.o_inactive_modal {
+    z-index: $zindex-modal-backdrop - 1;
+}
+
+.o_dialog {
+
+    > .modal {
+        display: block;
+    }
+}
+
+// Temporary fix for modals which are not instantiated thanks to the Dialog
+// JS classes (deprecated case) (see bootstrap_overridden.scss) + Frontend.
+//
+// TODO the following code was disabled because it is saas-incompatible
+//
+// :not(body) > .modal {
+//     z-index: $zindex-modal-background + 1;
+// }

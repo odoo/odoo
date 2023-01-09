@@ -1,0 +1,100 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* payment_adyen
+# 
+# Translators:
+# Mustafa Rawi <mustafa@cubexco.com>, 2019
+# hoxhe Aits <hoxhe0@gmail.com>, 2019
+# Osama Ahmaro <osamaahmaro@gmail.com>, 2019
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server saas~12.5\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2019-08-26 08:16+0000\n"
+"PO-Revision-Date: 2019-08-26 09:12+0000\n"
+"Last-Translator: Osama Ahmaro <osamaahmaro@gmail.com>, 2019\n"
+"Language-Team: Arabic (https://www.transifex.com/odoo/teams/41243/ar/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: ar\n"
+"Plural-Forms: nplurals=6; plural=n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n%100>=3 && n%100<=10 ? 3 : n%100>=11 && n%100<=99 ? 4 : 5;\n"
+
+#. module: payment_adyen
+#: code:addons/payment_adyen/models/payment.py:0
+#, python-format
+msgid "; multiple order found"
+msgstr "؛ تم العثور على طلبات متعددة"
+
+#. module: payment_adyen
+#: code:addons/payment_adyen/models/payment.py:0
+#, python-format
+msgid "; no order found"
+msgstr "; لم يُعثر على طلبات"
+
+#. module: payment_adyen
+#: model:ir.model.fields.selection,name:payment_adyen.selection__payment_acquirer__provider__adyen
+msgid "Adyen"
+msgstr "Adyen"
+
+#. module: payment_adyen
+#: code:addons/payment_adyen/models/payment.py:0
+#, python-format
+msgid "Adyen: feedback error"
+msgstr "Adyen: خطأ بالتغذية الرجعية"
+
+#. module: payment_adyen
+#: code:addons/payment_adyen/models/payment.py:0
+#, python-format
+msgid "Adyen: invalid merchantSig, received %s, computed %s"
+msgstr "Adyen: merchantSig غير صالح، المستلم %s, المحسوب %s"
+
+#. module: payment_adyen
+#: code:addons/payment_adyen/models/payment.py:0
+#, python-format
+msgid "Adyen: received data for reference %s"
+msgstr "Adyen: البيانات المستلمة لرقم الإشارة %s"
+
+#. module: payment_adyen
+#: code:addons/payment_adyen/models/payment.py:0
+#, python-format
+msgid ""
+"Adyen: received data with missing reference (%s) or missing pspReference "
+"(%s)"
+msgstr "Adyen: البيانات المستلمة ينقصها رقم إشارة (%s) أو pspReference (%s)"
+
+#. module: payment_adyen
+#: model_terms:ir.ui.view,arch_db:payment_adyen.acquirer_form_adyen
+msgid "How to configure your Adyen account?"
+msgstr "كيف تقوم بإعداد حسابك على Adyen؟"
+
+#. module: payment_adyen
+#: model:ir.model.fields,field_description:payment_adyen.field_payment_acquirer__adyen_merchant_account
+msgid "Merchant Account"
+msgstr "حساب التاجر"
+
+#. module: payment_adyen
+#: model:ir.model,name:payment_adyen.model_payment_acquirer
+msgid "Payment Acquirer"
+msgstr "معالج السداد"
+
+#. module: payment_adyen
+#: model:ir.model,name:payment_adyen.model_payment_transaction
+msgid "Payment Transaction"
+msgstr "معاملة السداد"
+
+#. module: payment_adyen
+#: model:ir.model.fields,field_description:payment_adyen.field_payment_acquirer__provider
+msgid "Provider"
+msgstr "المزود"
+
+#. module: payment_adyen
+#: model:ir.model.fields,field_description:payment_adyen.field_payment_acquirer__adyen_skin_code
+msgid "Skin Code"
+msgstr "Skin Code"
+
+#. module: payment_adyen
+#: model:ir.model.fields,field_description:payment_adyen.field_payment_acquirer__adyen_skin_hmac_key
+msgid "Skin HMAC Key"
+msgstr "Skin HMAC Key"

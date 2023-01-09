@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+        <!-- Attachment -->
+        <record id="view_attachment_form" model="ir.ui.view">
+            <field name="model">ir.attachment</field>
+            <field name="arch" type="xml">
+                <form string="Attachments">
+                   <sheet>
+                    <label for="name"/>
+                    <h1>
+                        <field name="name"/>
+                    </h1>
+                    <group>
+                        <group>
+                            <field name="type"/>
+                            <field name="datas" filename="name" attrs="{'invisible':[('type','=','url')]}"/>
+                            <field name="url" widget="url" attrs="{'invisible':[('type','=','binary')]}"/>
+                            <field name="mimetype" groups="base.group_no_one"/>
+                        </group>
+                        <group string="Attached To" groups="base.group_no_one">
+                            <field name="res_model"/>
+                            <field name="res_field"/>
+                            <field name="res_id"/>
+                            <field name="res_name"/>
+                            <field name="company_id" groups="base.group_multi_company" options="{'no_create': True}"/>
+                            <field name="public"/>
+                        </group>
+                        <group string="History" groups="base.group_no_one" attrs="{'invisible':[('create_date','=',False)]}">
+                            <label for="create_uid" string="Creation"/>
+                            <div name="creation_div">
+                                <field name="create_uid" readonly="1" class="oe_inline"/> on
+                                <field name="create_date" readonly="1" class="oe_inline"/>
+                            </div>
+                        </group>
+                        <group name="description_group" string="Description" groups="base.group_no_one" colspan="4">
+                            <field name="description" nolabel="1" colspan="2"/>
+                        </group>
+                        <group groups="base.group_no_one" string="Indexed Content" colspan="4">
+                            <field name="index_content" nolabel="1"/>
+                        </group>
+                    </group>
+                  </sheet>
+                </form>
+            </field>
+        </record>
+        <record id="view_attachment_tree" model="ir.ui.view">
+            <field name="model">ir.attachment</field>
+            <field name="arch" type="xml">
+                <tree string="Attachments">
+                    <field name="name"/>
+                    <field name="res_model"/>
+                    <field name="res_field"/>
+                    <field name="res_id"/>
+                    <field name="type"/>
+                    <field name="file_size"/>
+                    <field name="company_id" groups="base.group_multi_company"/>
+                    <field name="create_uid"/>
+                    <field name="create_date"/>
+                </tree>
+            </field>
+        </record>
+        <record id="view_attachment_search" model="ir.ui.view">
+            <field name="model">ir.attachment</field>
+            <field name="arch" type="xml">
+                <search string="Attachments">
+                    <field name="name" filter_domain="[('name','ilike',self)]" string="Attachment"/>
+                    <field name="create_date"/>
+                    <filter name="my_documents_filter"
+                        string="My Document(s)"
+                        domain="[('create_uid','=',uid)]"
+                        help="Filter on my documents"/>
+                    <filter name="url_filter" string="URL" domain="[('type', '=', 'url')]"/>
+                    <filter name="binary_filter" string="Stored" domain="[('type', '=', 'binary')]"/>
+                    <separator/>
+                    <field name="create_uid" string="Created by"/>
+                    <field name="type"/>
+                    <group expand="0" string="Group By">
+                        <filter name="owner" string="Owner" domain="[]" context="{'group_by':'create_uid'}"/>
+                        <filter string="Type" name="type" domain="[]" context="{'group_by':'type'}" groups="base.group_no_one"/>
+                        <filter string="Company" name="company" domain="[]" context="{'group_by':'company_id'}" groups="base.group_multi_company"/>
+                        <filter string="Creation Date" name="creation_month" domain="[]" context="{'group_by':'create_date'}"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+        <record id="action_attachment" model="ir.actions.act_window">
+            <field name="name">Attachments</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">ir.attachment</field>
+            <field name="view_id" eval="False"/>
+            <field name="search_view_id" ref="view_attachment_search"/>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">
+                    Create a new document
+                </p>
+                <p>
+                    Also you will find here all the related documents and download it by clicking on any individual document.
+                </p>
+            </field>
+        </record>
+        <menuitem action="action_attachment" id="menu_action_attachment" parent="base.next_id_9"/>
+
+</odoo>

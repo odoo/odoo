@@ -1,0 +1,113 @@
+/* Common */
+.o_mail_activity {
+    &.o_field_widget {
+        display: block;
+    }
+
+    .o_activity_color_default {
+        color: #dddddd;
+    }
+
+    .o_activity_color_planned {
+        @extend .text-success;
+    }
+    .o_activity_color_overdue {
+        @extend .text-danger;
+    }
+    .o_activity_color_today {
+        @extend .text-warning;
+    }
+}
+
+/* Feedback popover (form view) */
+.o_mail_activity_feedback {
+    max-width: 410px;
+    outline: none;
+
+    textarea {
+        min-width: 250px;
+    }
+}
+
+/* list_activity widget */
+.o_list_view, .o_legacy_list_view {
+    .o_list_table tbody > tr {
+        > td.o_data_cell.o_list_activity_cell {
+            .o_mail_activity {
+                display: flex;
+                max-width: 275px;
+                .o_activity_btn {
+                    margin-right: 3px;
+                }
+                .o_activity_summary {
+                    @include o-text-overflow;
+                }
+            }
+        }
+    }
+}
+
+/* Kanban View */
+.o_kanban_record{
+    .o_kanban_inline_block {
+        display: inline-block;
+    }
+}
+
+.o_kanban_record, .o_view_controller{
+    .o_mail_activity {
+        .o_activity_btn {
+            span.fa {
+                overflow: visible;
+                line-height: 1;
+                vertical-align: middle;
+            }
+        }
+
+        div.o_activity {
+            min-width: 290px;
+            padding: 0px 0px;
+
+            .o_activity_log_container {
+                max-height: 300px;
+                overflow-y: auto;
+            }
+
+            ul.o_activity_log {
+                color: $body-color;
+
+                li {
+                    .o_activity_title_entry {
+                        max-width: 275px;
+                        .o_activity_summary {
+                            @include o-text-overflow;
+                        }
+                    }
+
+                    .o_edit_button {
+                        opacity: 0.5;
+                    }
+
+                    &:hover .o_edit_button{
+                        opacity: 1;
+                    }
+
+                    .o_activity_link_kanban {
+                        font-size: 1.5em;
+                        @include o-hover-text-color($text-muted, map-get($theme-colors, 'success'));
+                        @include o-hover-opacity(0.5, 1);
+                    }
+
+                    &.o_activity_selected {
+                        border-bottom: 0;
+                    }
+
+                    &.o_activity_form > div {
+                        padding-top: 0.5em;
+                        padding-bottom: 0.7em;
+                    }
+                }
+            }
+        }
+    }
+}

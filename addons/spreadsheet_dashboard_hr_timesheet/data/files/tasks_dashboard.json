@@ -1,0 +1,1527 @@
+{
+    "version": 12,
+    "sheets": [
+        {
+            "id": "sheet1",
+            "name": "Dashboard",
+            "colNumber": 7,
+            "rowNumber": 44,
+            "rows": {
+                "6": {
+                    "size": 40
+                },
+                "18": {
+                    "size": 40
+                },
+                "19": {
+                    "size": 40
+                },
+                "31": {
+                    "size": 40
+                },
+                "32": {
+                    "size": 40
+                }
+            },
+            "cols": {
+                "0": {
+                    "size": 275
+                },
+                "1": {
+                    "size": 100
+                },
+                "2": {
+                    "size": 100
+                },
+                "3": {
+                    "size": 50
+                },
+                "4": {
+                    "size": 275
+                },
+                "5": {
+                    "size": 100
+                },
+                "6": {
+                    "size": 100
+                }
+            },
+            "merges": [],
+            "cells": {
+                "A7": {
+                    "style": 1,
+                    "content": "[Tasks by Stage](odoo://view/{\"viewType\":\"graph\",\"action\":{\"domain\":[],\"context\":{\"group_by\":[\"stage_id\",\"state\"],\"graph_measure\":\"__count\",\"graph_mode\":\"bar\",\"graph_groupbys\":[\"stage_id\",\"state\"]},\"modelName\":\"report.project.task.user\",\"views\":[[false,\"graph\"],[false,\"pivot\"],[false,\"list\"],[false,\"search\"]]},\"threshold\":0,\"name\":\"Tasks Analysis\"})",
+                    "border": 1
+                },
+                "A19": {
+                    "style": 1,
+                    "content": "[Top Assignees](odoo://view/{\"viewType\":\"pivot\",\"action\":{\"domain\":[[\"user_ids\",\"!=\",false]],\"context\":{\"group_by\":[],\"pivot_measures\":[\"hours_effective\",\"nbr\"],\"pivot_column_groupby\":[],\"pivot_row_groupby\":[\"user_ids\"]},\"modelName\":\"report.project.task.user\",\"views\":[[false,\"graph\"],[false,\"pivot\"],[false,\"list\"],[false,\"search\"]]},\"threshold\":0,\"name\":\"Tasks Analysis\"})",
+                    "border": 1
+                },
+                "A20": {
+                    "style": 2,
+                    "content": "=_t(\"Assignee\")",
+                    "border": 2
+                },
+                "A21": {
+                    "style": 3,
+                    "content": "=ODOO.PIVOT.HEADER(1,\"#user_ids\",1)"
+                },
+                "A22": {
+                    "style": 4,
+                    "content": "=ODOO.PIVOT.HEADER(1,\"#user_ids\",2)"
+                },
+                "A23": {
+                    "style": 3,
+                    "content": "=ODOO.PIVOT.HEADER(1,\"#user_ids\",3)"
+                },
+                "A24": {
+                    "style": 4,
+                    "content": "=ODOO.PIVOT.HEADER(1,\"#user_ids\",4)"
+                },
+                "A25": {
+                    "style": 3,
+                    "content": "=ODOO.PIVOT.HEADER(1,\"#user_ids\",5)"
+                },
+                "A26": {
+                    "style": 4,
+                    "content": "=ODOO.PIVOT.HEADER(1,\"#user_ids\",6)"
+                },
+                "A27": {
+                    "style": 3,
+                    "content": "=ODOO.PIVOT.HEADER(1,\"#user_ids\",7)"
+                },
+                "A28": {
+                    "style": 4,
+                    "content": "=ODOO.PIVOT.HEADER(1,\"#user_ids\",8)"
+                },
+                "A29": {
+                    "style": 3,
+                    "content": "=ODOO.PIVOT.HEADER(1,\"#user_ids\",9)"
+                },
+                "A30": {
+                    "style": 4,
+                    "content": "=ODOO.PIVOT.HEADER(1,\"#user_ids\",10)"
+                },
+                "A32": {
+                    "style": 1,
+                    "content": "[Top Tags](odoo://view/{\"viewType\":\"pivot\",\"action\":{\"domain\":[[\"tag_ids\",\"!=\",false]],\"context\":{\"group_by\":[\"tag_ids\"],\"pivot_measures\":[\"hours_effective\",\"nbr\"],\"pivot_column_groupby\":[],\"pivot_row_groupby\":[\"tag_ids\"]},\"modelName\":\"report.project.task.user\",\"views\":[[false,\"graph\"],[false,\"pivot\"],[false,\"list\"],[false,\"search\"]]},\"threshold\":0,\"name\":\"Tasks Analysis\"})",
+                    "border": 1
+                },
+                "A33": {
+                    "style": 2,
+                    "content": "=_t(\"Tag\")",
+                    "border": 2
+                },
+                "A34": {
+                    "style": 3,
+                    "content": "=ODOO.PIVOT.HEADER(3,\"#tag_ids\",1)"
+                },
+                "A35": {
+                    "style": 4,
+                    "content": "=ODOO.PIVOT.HEADER(3,\"#tag_ids\",2)"
+                },
+                "A36": {
+                    "style": 3,
+                    "content": "=ODOO.PIVOT.HEADER(3,\"#tag_ids\",3)"
+                },
+                "A37": {
+                    "style": 4,
+                    "content": "=ODOO.PIVOT.HEADER(3,\"#tag_ids\",4)"
+                },
+                "A38": {
+                    "style": 3,
+                    "content": "=ODOO.PIVOT.HEADER(3,\"#tag_ids\",5)"
+                },
+                "A39": {
+                    "style": 4,
+                    "content": "=ODOO.PIVOT.HEADER(3,\"#tag_ids\",6)"
+                },
+                "A40": {
+                    "style": 3,
+                    "content": "=ODOO.PIVOT.HEADER(3,\"#tag_ids\",7)"
+                },
+                "A41": {
+                    "style": 4,
+                    "content": "=ODOO.PIVOT.HEADER(3,\"#tag_ids\",8)"
+                },
+                "A42": {
+                    "style": 3,
+                    "content": "=ODOO.PIVOT.HEADER(3,\"#tag_ids\",9)"
+                },
+                "A43": {
+                    "style": 4,
+                    "content": "=ODOO.PIVOT.HEADER(3,\"#tag_ids\",10)"
+                },
+                "B7": {
+                    "style": 5,
+                    "border": 1
+                },
+                "B19": {
+                    "style": 5,
+                    "border": 1
+                },
+                "B20": {
+                    "style": 6,
+                    "content": "=_t(\"Hours Logged\")",
+                    "border": 2
+                },
+                "B21": {
+                    "style": 7,
+                    "format": 1,
+                    "content": "=ODOO.PIVOT(1,\"hours_effective\",\"#user_ids\",1)"
+                },
+                "B22": {
+                    "format": 1,
+                    "content": "=ODOO.PIVOT(1,\"hours_effective\",\"#user_ids\",2)"
+                },
+                "B23": {
+                    "style": 7,
+                    "format": 1,
+                    "content": "=ODOO.PIVOT(1,\"hours_effective\",\"#user_ids\",3)"
+                },
+                "B24": {
+                    "format": 1,
+                    "content": "=ODOO.PIVOT(1,\"hours_effective\",\"#user_ids\",4)"
+                },
+                "B25": {
+                    "style": 7,
+                    "format": 1,
+                    "content": "=ODOO.PIVOT(1,\"hours_effective\",\"#user_ids\",5)"
+                },
+                "B26": {
+                    "format": 1,
+                    "content": "=ODOO.PIVOT(1,\"hours_effective\",\"#user_ids\",6)"
+                },
+                "B27": {
+                    "style": 7,
+                    "format": 1,
+                    "content": "=ODOO.PIVOT(1,\"hours_effective\",\"#user_ids\",7)"
+                },
+                "B28": {
+                    "format": 1,
+                    "content": "=ODOO.PIVOT(1,\"hours_effective\",\"#user_ids\",8)"
+                },
+                "B29": {
+                    "style": 7,
+                    "format": 1,
+                    "content": "=ODOO.PIVOT(1,\"hours_effective\",\"#user_ids\",9)"
+                },
+                "B30": {
+                    "format": 1,
+                    "content": "=ODOO.PIVOT(1,\"hours_effective\",\"#user_ids\",10)"
+                },
+                "B32": {
+                    "style": 5,
+                    "border": 1
+                },
+                "B33": {
+                    "style": 6,
+                    "content": "=_t(\"Hours Logged\")",
+                    "border": 2
+                },
+                "B34": {
+                    "style": 7,
+                    "format": 1,
+                    "content": "=ODOO.PIVOT(3,\"hours_effective\",\"#tag_ids\",1)"
+                },
+                "B35": {
+                    "format": 1,
+                    "content": "=ODOO.PIVOT(3,\"hours_effective\",\"#tag_ids\",2)"
+                },
+                "B36": {
+                    "style": 7,
+                    "format": 1,
+                    "content": "=ODOO.PIVOT(3,\"hours_effective\",\"#tag_ids\",3)"
+                },
+                "B37": {
+                    "format": 1,
+                    "content": "=ODOO.PIVOT(3,\"hours_effective\",\"#tag_ids\",4)"
+                },
+                "B38": {
+                    "style": 7,
+                    "format": 1,
+                    "content": "=ODOO.PIVOT(3,\"hours_effective\",\"#tag_ids\",5)"
+                },
+                "B39": {
+                    "format": 1,
+                    "content": "=ODOO.PIVOT(3,\"hours_effective\",\"#tag_ids\",6)"
+                },
+                "B40": {
+                    "style": 7,
+                    "format": 1,
+                    "content": "=ODOO.PIVOT(3,\"hours_effective\",\"#tag_ids\",7)"
+                },
+                "B41": {
+                    "format": 1,
+                    "content": "=ODOO.PIVOT(3,\"hours_effective\",\"#tag_ids\",8)"
+                },
+                "B42": {
+                    "style": 7,
+                    "format": 1,
+                    "content": "=ODOO.PIVOT(3,\"hours_effective\",\"#tag_ids\",9)"
+                },
+                "B43": {
+                    "format": 1,
+                    "content": "=ODOO.PIVOT(3,\"hours_effective\",\"#tag_ids\",10)"
+                },
+                "C7": {
+                    "style": 5,
+                    "border": 1
+                },
+                "C19": {
+                    "style": 5,
+                    "border": 1
+                },
+                "C20": {
+                    "style": 6,
+                    "content": "=_t(\"Tasks\")",
+                    "border": 2
+                },
+                "C21": {
+                    "style": 7,
+                    "content": "=ODOO.PIVOT(1,\"nbr\",\"#user_ids\",1)"
+                },
+                "C22": {
+                    "content": "=ODOO.PIVOT(1,\"nbr\",\"#user_ids\",2)"
+                },
+                "C23": {
+                    "style": 7,
+                    "content": "=ODOO.PIVOT(1,\"nbr\",\"#user_ids\",3)"
+                },
+                "C24": {
+                    "content": "=ODOO.PIVOT(1,\"nbr\",\"#user_ids\",4)"
+                },
+                "C25": {
+                    "style": 7,
+                    "content": "=ODOO.PIVOT(1,\"nbr\",\"#user_ids\",5)"
+                },
+                "C26": {
+                    "content": "=ODOO.PIVOT(1,\"nbr\",\"#user_ids\",6)"
+                },
+                "C27": {
+                    "style": 7,
+                    "content": "=ODOO.PIVOT(1,\"nbr\",\"#user_ids\",7)"
+                },
+                "C28": {
+                    "content": "=ODOO.PIVOT(1,\"nbr\",\"#user_ids\",8)"
+                },
+                "C29": {
+                    "style": 7,
+                    "content": "=ODOO.PIVOT(1,\"nbr\",\"#user_ids\",9)"
+                },
+                "C30": {
+                    "content": "=ODOO.PIVOT(1,\"nbr\",\"#user_ids\",10)"
+                },
+                "C32": {
+                    "style": 5,
+                    "border": 1
+                },
+                "C33": {
+                    "style": 6,
+                    "content": "=_t(\"Tasks\")",
+                    "border": 2
+                },
+                "C34": {
+                    "style": 7,
+                    "format": 2,
+                    "content": "=ODOO.PIVOT(3,\"nbr\",\"#tag_ids\",1)"
+                },
+                "C35": {
+                    "format": 2,
+                    "content": "=ODOO.PIVOT(3,\"nbr\",\"#tag_ids\",2)"
+                },
+                "C36": {
+                    "style": 7,
+                    "format": 2,
+                    "content": "=ODOO.PIVOT(3,\"nbr\",\"#tag_ids\",3)"
+                },
+                "C37": {
+                    "format": 2,
+                    "content": "=ODOO.PIVOT(3,\"nbr\",\"#tag_ids\",4)"
+                },
+                "C38": {
+                    "style": 7,
+                    "format": 2,
+                    "content": "=ODOO.PIVOT(3,\"nbr\",\"#tag_ids\",5)"
+                },
+                "C39": {
+                    "format": 2,
+                    "content": "=ODOO.PIVOT(3,\"nbr\",\"#tag_ids\",6)"
+                },
+                "C40": {
+                    "style": 7,
+                    "format": 2,
+                    "content": "=ODOO.PIVOT(3,\"nbr\",\"#tag_ids\",7)"
+                },
+                "C41": {
+                    "format": 2,
+                    "content": "=ODOO.PIVOT(3,\"nbr\",\"#tag_ids\",8)"
+                },
+                "C42": {
+                    "style": 7,
+                    "format": 2,
+                    "content": "=ODOO.PIVOT(3,\"nbr\",\"#tag_ids\",9)"
+                },
+                "C43": {
+                    "format": 2,
+                    "content": "=ODOO.PIVOT(3,\"nbr\",\"#tag_ids\",10)"
+                },
+                "E7": {
+                    "style": 1,
+                    "content": "[Tasks by State](odoo://view/{\"viewType\":\"graph\",\"action\":{\"domain\":[],\"context\":{\"group_by\":[\"state\"],\"graph_measure\":\"__count\",\"graph_mode\":\"pie\",\"graph_groupbys\":[\"state\"]},\"modelName\":\"report.project.task.user\",\"views\":[[false,\"graph\"],[false,\"pivot\"],[false,\"list\"],[false,\"search\"]]},\"threshold\":0,\"name\":\"Tasks Analysis\"})",
+                    "border": 1
+                },
+                "E19": {
+                    "style": 1,
+                    "content": "[Top Projects](odoo://view/{\"viewType\":\"pivot\",\"action\":{\"domain\":[[\"project_id\",\"!=\",false]],\"context\":{\"group_by\":[\"project_id\"],\"pivot_measures\":[\"hours_effective\",\"nbr\"],\"pivot_column_groupby\":[],\"pivot_row_groupby\":[\"project_id\"]},\"modelName\":\"report.project.task.user\",\"views\":[[false,\"graph\"],[false,\"pivot\"],[false,\"list\"],[false,\"search\"]]},\"threshold\":0,\"name\":\"Tasks Analysis\"})",
+                    "border": 1
+                },
+                "E20": {
+                    "style": 2,
+                    "content": "=_t(\"Project\")",
+                    "border": 2
+                },
+                "E21": {
+                    "style": 3,
+                    "content": "=ODOO.PIVOT.HEADER(2,\"#project_id\",1)"
+                },
+                "E22": {
+                    "style": 4,
+                    "content": "=ODOO.PIVOT.HEADER(2,\"#project_id\",2)"
+                },
+                "E23": {
+                    "style": 3,
+                    "content": "=ODOO.PIVOT.HEADER(2,\"#project_id\",3)"
+                },
+                "E24": {
+                    "style": 4,
+                    "content": "=ODOO.PIVOT.HEADER(2,\"#project_id\",4)"
+                },
+                "E25": {
+                    "style": 3,
+                    "content": "=ODOO.PIVOT.HEADER(2,\"#project_id\",5)"
+                },
+                "E26": {
+                    "style": 4,
+                    "content": "=ODOO.PIVOT.HEADER(2,\"#project_id\",6)"
+                },
+                "E27": {
+                    "style": 3,
+                    "content": "=ODOO.PIVOT.HEADER(2,\"#project_id\",7)"
+                },
+                "E28": {
+                    "style": 4,
+                    "content": "=ODOO.PIVOT.HEADER(2,\"#project_id\",8)"
+                },
+                "E29": {
+                    "style": 3,
+                    "content": "=ODOO.PIVOT.HEADER(2,\"#project_id\",9)"
+                },
+                "E30": {
+                    "style": 4,
+                    "content": "=ODOO.PIVOT.HEADER(2,\"#project_id\",10)"
+                },
+                "E32": {
+                    "style": 1,
+                    "content": "[Top Customers](odoo://view/{\"viewType\":\"pivot\",\"action\":{\"domain\":[[\"partner_id\",\"!=\",false]],\"context\":{\"group_by\":[\"partner_id\"],\"pivot_measures\":[\"hours_effective\",\"nbr\"],\"pivot_column_groupby\":[],\"pivot_row_groupby\":[\"partner_id\"]},\"modelName\":\"report.project.task.user\",\"views\":[[false,\"graph\"],[false,\"pivot\"],[false,\"list\"],[false,\"search\"]]},\"threshold\":0,\"name\":\"Tasks Analysis\"})",
+                    "border": 1
+                },
+                "E33": {
+                    "style": 2,
+                    "content": "=_t(\"Customer\")",
+                    "border": 2
+                },
+                "E34": {
+                    "style": 3,
+                    "content": "=ODOO.PIVOT.HEADER(4,\"#partner_id\",1)"
+                },
+                "E35": {
+                    "style": 4,
+                    "content": "=ODOO.PIVOT.HEADER(4,\"#partner_id\",2)"
+                },
+                "E36": {
+                    "style": 3,
+                    "content": "=ODOO.PIVOT.HEADER(4,\"#partner_id\",3)"
+                },
+                "E37": {
+                    "style": 4,
+                    "content": "=ODOO.PIVOT.HEADER(4,\"#partner_id\",4)"
+                },
+                "E38": {
+                    "style": 3,
+                    "content": "=ODOO.PIVOT.HEADER(4,\"#partner_id\",5)"
+                },
+                "E39": {
+                    "style": 4,
+                    "content": "=ODOO.PIVOT.HEADER(4,\"#partner_id\",6)"
+                },
+                "E40": {
+                    "style": 3,
+                    "content": "=ODOO.PIVOT.HEADER(4,\"#partner_id\",7)"
+                },
+                "E41": {
+                    "style": 4,
+                    "content": "=ODOO.PIVOT.HEADER(4,\"#partner_id\",8)"
+                },
+                "E42": {
+                    "style": 3,
+                    "content": "=ODOO.PIVOT.HEADER(4,\"#partner_id\",9)"
+                },
+                "E43": {
+                    "style": 4,
+                    "content": "=ODOO.PIVOT.HEADER(4,\"#partner_id\",10)"
+                },
+                "F7": {
+                    "style": 5,
+                    "border": 1
+                },
+                "F19": {
+                    "style": 5,
+                    "border": 1
+                },
+                "F20": {
+                    "style": 6,
+                    "content": "=_t(\"Hours Logged\")",
+                    "border": 2
+                },
+                "F21": {
+                    "style": 7,
+                    "format": 1,
+                    "content": "=ODOO.PIVOT(2,\"hours_effective\",\"#project_id\",1)"
+                },
+                "F22": {
+                    "format": 1,
+                    "content": "=ODOO.PIVOT(2,\"hours_effective\",\"#project_id\",2)"
+                },
+                "F23": {
+                    "style": 7,
+                    "format": 1,
+                    "content": "=ODOO.PIVOT(2,\"hours_effective\",\"#project_id\",3)"
+                },
+                "F24": {
+                    "format": 1,
+                    "content": "=ODOO.PIVOT(2,\"hours_effective\",\"#project_id\",4)"
+                },
+                "F25": {
+                    "style": 7,
+                    "format": 1,
+                    "content": "=ODOO.PIVOT(2,\"hours_effective\",\"#project_id\",5)"
+                },
+                "F26": {
+                    "format": 1,
+                    "content": "=ODOO.PIVOT(2,\"hours_effective\",\"#project_id\",6)"
+                },
+                "F27": {
+                    "style": 7,
+                    "format": 1,
+                    "content": "=ODOO.PIVOT(2,\"hours_effective\",\"#project_id\",7)"
+                },
+                "F28": {
+                    "format": 1,
+                    "content": "=ODOO.PIVOT(2,\"hours_effective\",\"#project_id\",8)"
+                },
+                "F29": {
+                    "style": 7,
+                    "format": 1,
+                    "content": "=ODOO.PIVOT(2,\"hours_effective\",\"#project_id\",9)"
+                },
+                "F30": {
+                    "format": 1,
+                    "content": "=ODOO.PIVOT(2,\"hours_effective\",\"#project_id\",10)"
+                },
+                "F32": {
+                    "style": 5,
+                    "border": 1
+                },
+                "F33": {
+                    "style": 6,
+                    "content": "=_t(\"Hours Logged\")",
+                    "border": 2
+                },
+                "F34": {
+                    "style": 7,
+                    "format": 1,
+                    "content": "=ODOO.PIVOT(4,\"hours_effective\",\"#partner_id\",1)"
+                },
+                "F35": {
+                    "format": 1,
+                    "content": "=ODOO.PIVOT(4,\"hours_effective\",\"#partner_id\",2)"
+                },
+                "F36": {
+                    "style": 7,
+                    "format": 1,
+                    "content": "=ODOO.PIVOT(4,\"hours_effective\",\"#partner_id\",3)"
+                },
+                "F37": {
+                    "format": 1,
+                    "content": "=ODOO.PIVOT(4,\"hours_effective\",\"#partner_id\",4)"
+                },
+                "F38": {
+                    "style": 7,
+                    "format": 1,
+                    "content": "=ODOO.PIVOT(4,\"hours_effective\",\"#partner_id\",5)"
+                },
+                "F39": {
+                    "format": 1,
+                    "content": "=ODOO.PIVOT(4,\"hours_effective\",\"#partner_id\",6)"
+                },
+                "F40": {
+                    "style": 7,
+                    "format": 1,
+                    "content": "=ODOO.PIVOT(4,\"hours_effective\",\"#partner_id\",7)"
+                },
+                "F41": {
+                    "format": 1,
+                    "content": "=ODOO.PIVOT(4,\"hours_effective\",\"#partner_id\",8)"
+                },
+                "F42": {
+                    "style": 7,
+                    "format": 1,
+                    "content": "=ODOO.PIVOT(4,\"hours_effective\",\"#partner_id\",9)"
+                },
+                "F43": {
+                    "format": 1,
+                    "content": "=ODOO.PIVOT(4,\"hours_effective\",\"#partner_id\",10)"
+                },
+                "G7": {
+                    "style": 5,
+                    "border": 1
+                },
+                "G19": {
+                    "style": 5,
+                    "border": 1
+                },
+                "G20": {
+                    "style": 6,
+                    "content": "=_t(\"Tasks\")",
+                    "border": 2
+                },
+                "G21": {
+                    "style": 7,
+                    "format": 2,
+                    "content": "=ODOO.PIVOT(2,\"nbr\",\"#project_id\",1)"
+                },
+                "G22": {
+                    "format": 2,
+                    "content": "=ODOO.PIVOT(2,\"nbr\",\"#project_id\",2)"
+                },
+                "G23": {
+                    "style": 7,
+                    "format": 2,
+                    "content": "=ODOO.PIVOT(2,\"nbr\",\"#project_id\",3)"
+                },
+                "G24": {
+                    "format": 2,
+                    "content": "=ODOO.PIVOT(2,\"nbr\",\"#project_id\",4)"
+                },
+                "G25": {
+                    "style": 7,
+                    "format": 2,
+                    "content": "=ODOO.PIVOT(2,\"nbr\",\"#project_id\",5)"
+                },
+                "G26": {
+                    "format": 2,
+                    "content": "=ODOO.PIVOT(2,\"nbr\",\"#project_id\",6)"
+                },
+                "G27": {
+                    "style": 7,
+                    "format": 2,
+                    "content": "=ODOO.PIVOT(2,\"nbr\",\"#project_id\",7)"
+                },
+                "G28": {
+                    "format": 2,
+                    "content": "=ODOO.PIVOT(2,\"nbr\",\"#project_id\",8)"
+                },
+                "G29": {
+                    "style": 7,
+                    "format": 2,
+                    "content": "=ODOO.PIVOT(2,\"nbr\",\"#project_id\",9)"
+                },
+                "G30": {
+                    "format": 2,
+                    "content": "=ODOO.PIVOT(2,\"nbr\",\"#project_id\",10)"
+                },
+                "G32": {
+                    "style": 5,
+                    "border": 1
+                },
+                "G33": {
+                    "style": 6,
+                    "content": "=_t(\"Tasks\")",
+                    "border": 2
+                },
+                "G34": {
+                    "style": 7,
+                    "format": 2,
+                    "content": "=ODOO.PIVOT(4,\"nbr\",\"#partner_id\",1)"
+                },
+                "G35": {
+                    "format": 2,
+                    "content": "=ODOO.PIVOT(4,\"nbr\",\"#partner_id\",2)"
+                },
+                "G36": {
+                    "style": 7,
+                    "format": 2,
+                    "content": "=ODOO.PIVOT(4,\"nbr\",\"#partner_id\",3)"
+                },
+                "G37": {
+                    "format": 2,
+                    "content": "=ODOO.PIVOT(4,\"nbr\",\"#partner_id\",4)"
+                },
+                "G38": {
+                    "style": 7,
+                    "format": 2,
+                    "content": "=ODOO.PIVOT(4,\"nbr\",\"#partner_id\",5)"
+                },
+                "G39": {
+                    "format": 2,
+                    "content": "=ODOO.PIVOT(4,\"nbr\",\"#partner_id\",6)"
+                },
+                "G40": {
+                    "style": 7,
+                    "format": 2,
+                    "content": "=ODOO.PIVOT(4,\"nbr\",\"#partner_id\",7)"
+                },
+                "G41": {
+                    "format": 2,
+                    "content": "=ODOO.PIVOT(4,\"nbr\",\"#partner_id\",8)"
+                },
+                "G42": {
+                    "style": 7,
+                    "format": 2,
+                    "content": "=ODOO.PIVOT(4,\"nbr\",\"#partner_id\",9)"
+                },
+                "G43": {
+                    "format": 2,
+                    "content": "=ODOO.PIVOT(4,\"nbr\",\"#partner_id\",10)"
+                },
+                "A8": {
+                    "border": 2
+                },
+                "B8": {
+                    "border": 2
+                },
+                "C8": {
+                    "border": 2
+                },
+                "E8": {
+                    "border": 2
+                },
+                "F8": {
+                    "border": 2
+                },
+                "G8": {
+                    "border": 2
+                }
+            },
+            "conditionalFormats": [],
+            "figures": [
+                {
+                    "id": "26f09a19-26d7-4d7d-b8d9-9eda7661ef5a",
+                    "x": 0,
+                    "y": 178,
+                    "width": 475,
+                    "height": 230,
+                    "tag": "chart",
+                    "data": {
+                        "title": "",
+                        "id": "26f09a19-26d7-4d7d-b8d9-9eda7661ef5a",
+                        "background": "#FFFFFF",
+                        "legendPosition": "top",
+                        "metaData": {
+                            "groupBy": [
+                                "stage_id",
+                                "state"
+                            ],
+                            "measure": "__count",
+                            "order": null,
+                            "resModel": "report.project.task.user"
+                        },
+                        "searchParams": {
+                            "comparison": null,
+                            "context": {
+                                "group_by_no_leaf": 1,
+                                "group_by": [],
+                                "graph_measure": "__count__"
+                            },
+                            "domain": [],
+                            "groupBy": [
+                                "stage_id",
+                                "state"
+                            ],
+                            "orderBy": []
+                        },
+                        "type": "odoo_bar",
+                        "verticalAxisPosition": "left",
+                        "stacked": true
+                    }
+                },
+                {
+                    "id": "70a88eff-8ce0-4392-8905-156ef2771086",
+                    "x": 525,
+                    "y": 178,
+                    "width": 475,
+                    "height": 230,
+                    "tag": "chart",
+                    "data": {
+                        "title": "",
+                        "id": "70a88eff-8ce0-4392-8905-156ef2771086",
+                        "background": "#FFFFFF",
+                        "legendPosition": "right",
+                        "metaData": {
+                            "groupBy": [
+                                "state"
+                            ],
+                            "measure": "__count",
+                            "order": null,
+                            "resModel": "report.project.task.user"
+                        },
+                        "searchParams": {
+                            "comparison": null,
+                            "context": {
+                                "group_by_no_leaf": 1,
+                                "group_by": [],
+                                "graph_measure": "__count__"
+                            },
+                            "domain": [],
+                            "groupBy": [
+                                "state"
+                            ],
+                            "orderBy": []
+                        },
+                        "type": "odoo_pie"
+                    }
+                },
+                {
+                    "id": "8eae55ae-5435-49ee-ad58-dae822bbd9dd",
+                    "x": 0,
+                    "y": 0,
+                    "width": 200,
+                    "height": 120,
+                    "tag": "chart",
+                    "data": {
+                        "baselineColorDown": "#DC6965",
+                        "baselineColorUp": "#00A04A",
+                        "baselineMode": "difference",
+                        "title": "Tasks",
+                        "type": "scorecard",
+                        "background": "",
+                        "keyValue": "Data!D2"
+                    }
+                },
+                {
+                    "id": "746a2799-0dc9-4bce-b309-4cedffa67a3a",
+                    "x": 210,
+                    "y": 0,
+                    "width": 200,
+                    "height": 120,
+                    "tag": "chart",
+                    "data": {
+                        "baselineColorDown": "#DC6965",
+                        "baselineColorUp": "#00A04A",
+                        "baselineMode": "percentage",
+                        "title": "Hours Logged",
+                        "type": "scorecard",
+                        "background": "",
+                        "baseline": "Data!E3",
+                        "baselineDescr": "since last period",
+                        "keyValue": "Data!D3"
+                    }
+                },
+                {
+                    "id": "488da38e-01db-46a0-b4b0-e2fafc4ad390",
+                    "x": 420,
+                    "y": 0,
+                    "width": 200,
+                    "height": 120,
+                    "tag": "chart",
+                    "data": {
+                        "baselineColorDown": "#DC6965",
+                        "baselineColorUp": "#00A04A",
+                        "baselineMode": "difference",
+                        "title": "Time to Assign",
+                        "type": "scorecard",
+                        "background": "",
+                        "baseline": "Data!E4",
+                        "baselineDescr": "last period",
+                        "keyValue": "Data!D4"
+                    }
+                },
+                {
+                    "id": "ce7e17ea-eed0-493e-9968-5905c0969ca9",
+                    "x": 630,
+                    "y": 0,
+                    "width": 200,
+                    "height": 120,
+                    "tag": "chart",
+                    "data": {
+                        "baselineColorDown": "#DC6965",
+                        "baselineColorUp": "#00A04A",
+                        "baselineMode": "difference",
+                        "title": "Time to Assign",
+                        "type": "scorecard",
+                        "background": "",
+                        "baseline": "Data!E5",
+                        "baselineDescr": "last period",
+                        "keyValue": "Data!D5"
+                    }
+                }
+            ],
+            "areGridLinesVisible": true,
+            "isVisible": true
+        },
+        {
+            "id": "add7aca3-0196-4975-a083-1a0ad034c57d",
+            "name": "Data",
+            "colNumber": 26,
+            "rowNumber": 90,
+            "rows": {},
+            "cols": {
+                "0": {
+                    "size": 118.8818359375
+                },
+                "1": {
+                    "size": 118.8818359375
+                },
+                "2": {
+                    "size": 96.51171875
+                },
+                "3": {
+                    "size": 144.4111328125
+                },
+                "4": {
+                    "size": 137.52392578125
+                }
+            },
+            "merges": [],
+            "cells": {
+                "A1": {
+                    "style": 2,
+                    "content": "=_t(\"KPI\")"
+                },
+                "A2": {
+                    "content": "=_t(\"Tasks\")"
+                },
+                "A3": {
+                    "content": "=_t(\"Hours logged\")"
+                },
+                "A4": {
+                    "content": "=_t(\"Days to assign\")"
+                },
+                "A5": {
+                    "content": "=_t(\"Days to close\")"
+                },
+                "B1": {
+                    "style": 2,
+                    "content": "=_t(\"Current\")"
+                },
+                "B2": {
+                    "content": "=ODOO.PIVOT(5,\"nbr\")"
+                },
+                "B3": {
+                    "content": "=ODOO.PIVOT(5,\"hours_effective\")"
+                },
+                "B4": {
+                    "content": "=ODOO.PIVOT(5,\"working_days_open\")"
+                },
+                "B5": {
+                    "content": "=ODOO.PIVOT(5,\"working_days_close\")"
+                },
+                "C1": {
+                    "style": 2,
+                    "content": "=_t(\"Previous\")"
+                },
+                "C2": {
+                    "content": "=ODOO.PIVOT(6,\"nbr\")"
+                },
+                "C3": {
+                    "content": "=ODOO.PIVOT(6,\"hours_effective\")"
+                },
+                "C4": {
+                    "content": "=ODOO.PIVOT(6,\"working_days_open\")"
+                },
+                "C5": {
+                    "content": "=ODOO.PIVOT(6,\"working_days_close\")"
+                },
+                "D1": {
+                    "style": 8,
+                    "content": "=_t(\"Current\")"
+                },
+                "D2": {
+                    "style": 7,
+                    "content": "=FORMAT.LARGE.NUMBER(B2)"
+                },
+                "D3": {
+                    "style": 7,
+                    "content": "=FORMAT.LARGE.NUMBER(B3)"
+                },
+                "D4": {
+                    "style": 9,
+                    "content": "=CONCATENATE(ROUND(B4),_t(\" days\"))"
+                },
+                "D5": {
+                    "style": 9,
+                    "content": "=CONCATENATE(ROUND(B5),_t(\" days\"))"
+                },
+                "E1": {
+                    "style": 8,
+                    "content": "=_t(\"Previous\")"
+                },
+                "E2": {
+                    "style": 7,
+                    "content": "=FORMAT.LARGE.NUMBER(C2)"
+                },
+                "E3": {
+                    "style": 7,
+                    "content": "=FORMAT.LARGE.NUMBER(C3)"
+                },
+                "E4": {
+                    "style": 9,
+                    "format": 1,
+                    "content": "=ROUND(C4)"
+                },
+                "E5": {
+                    "style": 9,
+                    "format": 1,
+                    "content": "=ROUND(C5)"
+                }
+            },
+            "conditionalFormats": [],
+            "figures": [],
+            "areGridLinesVisible": true,
+            "isVisible": true
+        }
+    ],
+    "entities": {},
+    "styles": {
+        "1": {
+            "textColor": "#01666b",
+            "fontSize": 16,
+            "bold": true
+        },
+        "2": {
+            "bold": true
+        },
+        "3": {
+            "fillColor": "#f2f2f2",
+            "textColor": "#741b47"
+        },
+        "4": {
+            "textColor": "#741b47"
+        },
+        "5": {
+            "fontSize": 16,
+            "bold": true
+        },
+        "6": {
+            "align": "right",
+            "bold": true
+        },
+        "7": {
+            "fillColor": "#f2f2f2"
+        },
+        "8": {
+            "bold": true,
+            "fillColor": "#f2f2f2"
+        },
+        "9": {
+            "align": "right",
+            "fillColor": "#f2f2f2"
+        }
+    },
+    "formats": {
+        "1": "#,##0",
+        "2": "0"
+    },
+    "borders": {
+        "1": {
+            "bottom": [
+                "thin",
+                "#000"
+            ]
+        },
+        "2": {
+            "top": [
+                "thin",
+                "#000"
+            ]
+        }
+    },
+    "revisionId": "a27b63b0-4806-496d-ab33-12c0f1072fc2",
+    "chartOdooMenusReferences": {
+        "26f09a19-26d7-4d7d-b8d9-9eda7661ef5a": "project.menu_main_pm",
+        "70a88eff-8ce0-4392-8905-156ef2771086": "project.menu_main_pm",
+        "8eae55ae-5435-49ee-ad58-dae822bbd9dd": "project.menu_project_report_task_analysis",
+        "746a2799-0dc9-4bce-b309-4cedffa67a3a": "project.menu_project_report_task_analysis",
+        "488da38e-01db-46a0-b4b0-e2fafc4ad390": "project.menu_project_report_task_analysis",
+        "ce7e17ea-eed0-493e-9968-5905c0969ca9": "project.menu_project_report_task_analysis"
+    },
+    "odooVersion": 4,
+    "lists": {},
+    "listNextId": 1,
+    "pivots": {
+        "1": {
+            "colGroupBys": [],
+            "context": {
+                "group_by_no_leaf": 1,
+                "group_by": [],
+                "graph_measure": "__count__"
+            },
+            "domain": [
+                [
+                    "user_ids",
+                    "!=",
+                    false
+                ]
+            ],
+            "id": "1",
+            "measures": [
+                {
+                    "field": "hours_effective"
+                },
+                {
+                    "field": "nbr"
+                }
+            ],
+            "model": "report.project.task.user",
+            "rowGroupBys": [
+                "user_ids"
+            ],
+            "name": "Tasks Analysis by Assignees",
+            "sortedColumn": {
+                "groupId": [
+                    [],
+                    []
+                ],
+                "measure": "nbr",
+                "order": "desc"
+            }
+        },
+        "2": {
+            "colGroupBys": [],
+            "context": {
+                "group_by_no_leaf": 1,
+                "group_by": [],
+                "graph_measure": "__count__"
+            },
+            "domain": [
+                [
+                    "project_id",
+                    "!=",
+                    false
+                ]
+            ],
+            "id": "2",
+            "measures": [
+                {
+                    "field": "hours_effective"
+                },
+                {
+                    "field": "nbr"
+                }
+            ],
+            "model": "report.project.task.user",
+            "rowGroupBys": [
+                "project_id"
+            ],
+            "name": "Tasks Analysis by Project",
+            "sortedColumn": {
+                "groupId": [
+                    [],
+                    []
+                ],
+                "measure": "nbr",
+                "order": "desc"
+            }
+        },
+        "3": {
+            "colGroupBys": [],
+            "context": {
+                "group_by_no_leaf": 1,
+                "group_by": [],
+                "graph_measure": "__count__"
+            },
+            "domain": [
+                [
+                    "tag_ids",
+                    "!=",
+                    false
+                ]
+            ],
+            "id": "3",
+            "measures": [
+                {
+                    "field": "hours_effective"
+                },
+                {
+                    "field": "nbr"
+                }
+            ],
+            "model": "report.project.task.user",
+            "rowGroupBys": [
+                "tag_ids"
+            ],
+            "name": "Tasks Analysis by Tags",
+            "sortedColumn": {
+                "groupId": [
+                    [],
+                    []
+                ],
+                "measure": "nbr",
+                "order": "desc"
+            }
+        },
+        "4": {
+            "colGroupBys": [],
+            "context": {
+                "group_by_no_leaf": 1,
+                "group_by": [],
+                "graph_measure": "__count__"
+            },
+            "domain": [
+                [
+                    "partner_id",
+                    "!=",
+                    false
+                ]
+            ],
+            "id": "4",
+            "measures": [
+                {
+                    "field": "hours_effective"
+                },
+                {
+                    "field": "nbr"
+                }
+            ],
+            "model": "report.project.task.user",
+            "rowGroupBys": [
+                "partner_id"
+            ],
+            "name": "Tasks Analysis by Customer",
+            "sortedColumn": {
+                "groupId": [
+                    [],
+                    []
+                ],
+                "measure": "nbr",
+                "order": "desc"
+            }
+        },
+        "5": {
+            "colGroupBys": [],
+            "context": {
+                "group_by_no_leaf": 1,
+                "group_by": [],
+                "graph_measure": "__count__"
+            },
+            "domain": [],
+            "id": "5",
+            "measures": [
+                {
+                    "field": "nbr"
+                },
+                {
+                    "field": "hours_effective"
+                },
+                {
+                    "field": "working_days_open"
+                },
+                {
+                    "field": "working_days_close"
+                }
+            ],
+            "model": "report.project.task.user",
+            "rowGroupBys": [],
+            "name": "stats - current",
+            "sortedColumn": {
+                "groupId": [
+                    [],
+                    []
+                ],
+                "measure": "nbr",
+                "order": "desc"
+            }
+        },
+        "6": {
+            "colGroupBys": [],
+            "context": {
+                "group_by_no_leaf": 1,
+                "group_by": [],
+                "graph_measure": "__count__"
+            },
+            "domain": [],
+            "id": "6",
+            "measures": [
+                {
+                    "field": "nbr"
+                },
+                {
+                    "field": "hours_effective"
+                },
+                {
+                    "field": "working_days_open"
+                },
+                {
+                    "field": "working_days_close"
+                }
+            ],
+            "model": "report.project.task.user",
+            "rowGroupBys": [],
+            "name": "stats - previous",
+            "sortedColumn": {
+                "groupId": [
+                    [],
+                    []
+                ],
+                "measure": "nbr",
+                "order": "desc"
+            }
+        }
+    },
+    "pivotNextId": 7,
+    "globalFilters": [
+        {
+            "id": "83b5c62c-1c67-4477-a057-c0ec29edd595",
+            "type": "date",
+            "label": "Period",
+            "defaultValue": "last_month",
+            "rangeType": "relative",
+            "defaultsToCurrentPeriod": false,
+            "pivotFields": {
+                "1": {
+                    "field": "date_assign",
+                    "type": "datetime",
+                    "offset": 0
+                },
+                "2": {
+                    "field": "create_date",
+                    "type": "datetime",
+                    "offset": 0
+                },
+                "3": {
+                    "field": "create_date",
+                    "type": "datetime",
+                    "offset": 0
+                },
+                "4": {
+                    "field": "create_date",
+                    "type": "datetime",
+                    "offset": 0
+                },
+                "5": {
+                    "field": "create_date",
+                    "type": "datetime",
+                    "offset": 0
+                },
+                "6": {
+                    "field": "create_date",
+                    "type": "datetime",
+                    "offset": -1
+                }
+            },
+            "listFields": {},
+            "graphFields": {
+                "26f09a19-26d7-4d7d-b8d9-9eda7661ef5a": {
+                    "field": "create_date",
+                    "type": "datetime",
+                    "offset": 0
+                },
+                "70a88eff-8ce0-4392-8905-156ef2771086": {
+                    "field": "create_date",
+                    "type": "datetime",
+                    "offset": 0
+                }
+            }
+        },
+        {
+            "id": "fb7f6ae2-e19c-40d5-9976-7a05b1f18c2d",
+            "type": "relation",
+            "label": "Assignees",
+            "modelName": "res.users",
+            "defaultValue": [],
+            "defaultValueDisplayNames": [],
+            "rangeType": "year",
+            "defaultsToCurrentPeriod": false,
+            "pivotFields": {
+                "1": {
+                    "field": "user_ids",
+                    "type": "many2many"
+                },
+                "2": {
+                    "field": "user_ids",
+                    "type": "many2many"
+                },
+                "3": {
+                    "field": "user_ids",
+                    "type": "many2many"
+                },
+                "4": {
+                    "field": "user_ids",
+                    "type": "many2many"
+                },
+                "5": {
+                    "field": "user_ids",
+                    "type": "many2many"
+                },
+                "6": {
+                    "field": "user_ids",
+                    "type": "many2many"
+                }
+            },
+            "listFields": {},
+            "graphFields": {
+                "26f09a19-26d7-4d7d-b8d9-9eda7661ef5a": {
+                    "field": "user_ids",
+                    "type": "many2many"
+                },
+                "70a88eff-8ce0-4392-8905-156ef2771086": {
+                    "field": "user_ids",
+                    "type": "many2many"
+                }
+            }
+        },
+        {
+            "id": "3fc9b370-1aae-436e-b77e-6bbc5f10f56c",
+            "type": "relation",
+            "label": "Project",
+            "modelName": "project.project",
+            "defaultValue": [],
+            "defaultValueDisplayNames": [],
+            "rangeType": "year",
+            "defaultsToCurrentPeriod": false,
+            "pivotFields": {
+                "1": {
+                    "field": "project_id",
+                    "type": "many2one"
+                },
+                "2": {
+                    "field": "project_id",
+                    "type": "many2one"
+                },
+                "3": {
+                    "field": "project_id",
+                    "type": "many2one"
+                },
+                "4": {
+                    "field": "project_id",
+                    "type": "many2one"
+                },
+                "5": {
+                    "field": "project_id",
+                    "type": "many2one"
+                },
+                "6": {
+                    "field": "project_id",
+                    "type": "many2one"
+                }
+            },
+            "listFields": {},
+            "graphFields": {
+                "26f09a19-26d7-4d7d-b8d9-9eda7661ef5a": {
+                    "field": "project_id",
+                    "type": "many2one"
+                },
+                "70a88eff-8ce0-4392-8905-156ef2771086": {
+                    "field": "project_id",
+                    "type": "many2one"
+                }
+            }
+        },
+        {
+            "id": "cfccbf2c-c86e-4915-a73d-c1e8ae69abe9",
+            "type": "relation",
+            "label": "Tags",
+            "modelName": "project.tags",
+            "defaultValue": [],
+            "defaultValueDisplayNames": [],
+            "rangeType": "year",
+            "defaultsToCurrentPeriod": false,
+            "pivotFields": {
+                "1": {
+                    "field": "tag_ids",
+                    "type": "many2many"
+                },
+                "2": {
+                    "field": "tag_ids",
+                    "type": "many2many"
+                },
+                "3": {
+                    "field": "tag_ids",
+                    "type": "many2many"
+                },
+                "4": {
+                    "field": "tag_ids",
+                    "type": "many2many"
+                },
+                "5": {
+                    "field": "tag_ids",
+                    "type": "many2many"
+                },
+                "6": {
+                    "field": "tag_ids",
+                    "type": "many2many"
+                }
+            },
+            "listFields": {},
+            "graphFields": {
+                "26f09a19-26d7-4d7d-b8d9-9eda7661ef5a": {
+                    "field": "tag_ids",
+                    "type": "many2many"
+                },
+                "70a88eff-8ce0-4392-8905-156ef2771086": {
+                    "field": "tag_ids",
+                    "type": "many2many"
+                }
+            }
+        },
+        {
+            "id": "9c9461c3-974d-41c1-8cbd-2fa8e89de148",
+            "type": "relation",
+            "label": "Customer",
+            "modelName": "res.partner",
+            "defaultValue": [],
+            "defaultValueDisplayNames": [],
+            "rangeType": "year",
+            "defaultsToCurrentPeriod": false,
+            "pivotFields": {
+                "1": {
+                    "field": "partner_id",
+                    "type": "many2one"
+                },
+                "2": {
+                    "field": "partner_id",
+                    "type": "many2one"
+                },
+                "3": {
+                    "field": "partner_id",
+                    "type": "many2one"
+                },
+                "4": {
+                    "field": "partner_id",
+                    "type": "many2one"
+                },
+                "5": {
+                    "field": "partner_id",
+                    "type": "many2one"
+                },
+                "6": {
+                    "field": "partner_id",
+                    "type": "many2one"
+                }
+            },
+            "listFields": {},
+            "graphFields": {
+                "26f09a19-26d7-4d7d-b8d9-9eda7661ef5a": {
+                    "field": "partner_id",
+                    "type": "many2one"
+                },
+                "70a88eff-8ce0-4392-8905-156ef2771086": {
+                    "field": "partner_id",
+                    "type": "many2one"
+                }
+            }
+        }
+    ]
+}

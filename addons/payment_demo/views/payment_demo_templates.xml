@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <template id="inline_form">
+        <div t-attf-id="demo-container-{{provider_id}}">
+            <div class="row">
+                <div class="mb-3">
+                    <input name="provider_id" type="hidden" id="provider_id" t-att-value="id"/>
+                    <input name="partner_id" type="hidden" t-att-value="partner_id"/>
+                </div>
+                <div class="col mt-0 mb-0">
+                    <label for="customer_input" class="mt-0">
+                        <small><b>Payment Details (test data)</b></small>
+                    </label>
+                    <input type="text"
+                           name="customer_input"
+                           id="customer_input"
+                           class="form-control"
+                           placeholder="XXXX XXXX XXXX XXXX"/>
+                </div>
+                <div class="col mb-0">
+                    <label for="simulated_payment_state" class="mt-0">
+                        <small><b>Payment Status</b></small>
+                    </label>
+                    <select id="simulated_payment_state" class="form-select">
+                        <option value="done" title="Successful payment">
+                            Successful
+                        </option>
+                        <option value="pending" title="Payment processing">
+                            Pending
+                        </option>
+                        <option value="cancel" title="Payment canceled by customer">
+                            Canceled
+                        </option>
+                        <option value="error" title="Processing error">
+                            Error
+                        </option>
+                    </select>
+                </div>
+            </div>
+        </div>
+    </template>
+
+    <template id="token_inline_form">
+        <div t-attf-id="demo-token-container-{{token.id}}">
+            <div class="alert alert-warning m-2">
+                <span t-if="token.demo_simulated_state=='pending'">
+                    Payments made with this payment method will remain <b>pending</b>.
+                </span>
+                <span t-elif="token.demo_simulated_state=='done'">
+                    Payments made with this payment method will be <b>successful</b>.
+                </span>
+                <span t-elif="token.demo_simulated_state=='cancel'">
+                    Payments made with this payment method will be automatically <b>canceled</b>.
+                </span>
+                <span t-else="">
+                    Payments made with this payment method will simulate a processing <b>error</b>.
+                </span>
+            </div>
+        </div>
+    </template>
+
+</odoo>

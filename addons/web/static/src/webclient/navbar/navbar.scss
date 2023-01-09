@@ -1,0 +1,128 @@
+
+// = Main Navbar
+// ============================================================================
+.o_main_navbar {
+    @include print-variable(o-navbar-height, $o-navbar-height-xs);
+
+    @include media-breakpoint-up(lg) {
+        @include print-variable(o-navbar-height, $o-navbar-height-lg);
+    }
+
+    display: flex;
+    height: var(--o-navbar-height);
+    min-width: min-content;
+    border-bottom: $o-navbar-border-bottom;
+    background: $o-navbar-background;
+
+    // = Reset browsers defaults
+    // --------------------------------------------------------------------------
+    > ul {
+        padding: 0;
+        margin: 0;
+        list-style: none;
+    }
+
+    // = General components & behaviours
+    // --------------------------------------------------------------------------
+    .dropdown.show > .dropdown-toggle {
+        @extend %-main-navbar-entry-active;
+    }
+
+    .o_nav_entry {
+        @extend %-main-navbar-entry-base;
+        @extend %-main-navbar-entry-spacing;
+        @extend %-main-navbar-entry-bg-hover;
+    }
+
+    .dropdown-toggle {
+        @extend %-main-navbar-entry-base;
+        @extend %-main-navbar-entry-spacing;
+        @extend %-main-navbar-entry-bg-hover;
+        border: 0;
+    }
+
+    .dropdown-menu {
+        margin-top: 0;
+        border-top: 0;
+        @include border-top-radius(0);
+    }
+
+    .o_dropdown_menu_group_entry.dropdown-item {
+        padding-left: $o-dropdown-hpadding * 1.5;
+
+        + .dropdown-item:not(.o_dropdown_menu_group_entry) {
+            margin-top: .8em;
+        }
+    }
+
+    // = Navbar Sections & Children
+    // --------------------------------------------------------------------------
+    .o_navbar_apps_menu .dropdown-toggle {
+        @extend %-main-navbar-entry-base;
+        padding-left: $o-horizontal-padding;
+        font-size: $o-navbar-brand-font-size;
+    }
+
+    .o_menu_brand {
+        @extend %-main-navbar-entry-base;
+        @extend %-main-navbar-entry-spacing;
+        padding-left: 0;
+        font-size: $o-navbar-brand-font-size;
+
+        &:hover {
+            background: none;
+        }
+    }
+
+    .o_menu_sections {
+        width: 0;
+
+        .o_more_dropdown_section_group {
+            margin-top: .8em;
+
+            &:first-child {
+                margin-top: $dropdown-padding-y * -1;
+                padding-top: $dropdown-padding-y * 1.5;
+            }
+        }
+    }
+
+    .o_menu_systray > * {
+        > a, > .dropdown > a, > button, > label { // <label> is required by website
+            @extend %-main-navbar-entry-base;
+            @extend %-main-navbar-entry-spacing;
+            @extend %-main-navbar-entry-bg-hover;
+
+            @include media-breakpoint-up(lg) {
+                padding: 0 $o-horizontal-padding * .6;
+            }
+
+            .badge {
+                margin-right: -.5em;
+                border: 0;
+                height: $o-navbar-badge-size + $o-navbar-badge-padding + $o-navbar-badge-size-adjust;
+                padding: ($o-navbar-badge-padding * .5) $o-navbar-badge-padding;
+                background-color: var(--o-navbar-badge-bg, #{$o-navbar-badge-bg});
+                font-size: $o-navbar-badge-size;
+                color: var(--o-navbar-badge-color, inherit);
+                text-shadow: var(--o-navbar-badge-text-shadow, #{1px 1px 0 rgba($black, .3)});
+                transform: translate(-10%, -30%);
+            }
+        }
+    }
+}
+
+
+// = SuperUser Design
+// ============================================================================
+body.o_is_superuser .o_menu_systray {
+    position: relative;
+    background: repeating-linear-gradient(135deg, #d9b904, #d9b904 10px, #373435 10px, #373435 20px);
+
+    &:before {
+        content: "";
+        @include o-position-absolute(2px, 2px, 2px, 2px);
+        background-color: $o-brand-odoo;
+    }
+}
+

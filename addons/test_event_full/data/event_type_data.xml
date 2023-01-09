@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo><data noupdate="0">
+
+    <record id="event_booth_category_data_1" model="event.booth.category">
+        <field name="description" type="html"><p>Standard</p></field>
+        <field name="name">Standard</field>
+        <field name="product_id" ref="event_booth_sale.product_product_event_booth"/>
+    </record>
+    <record id="event_booth_category_data_2" model="event.booth.category">
+        <field name="description" type="html"><p>Premium</p></field>
+        <field name="name">Premium</field>
+        <field name="product_id" ref="event_booth_sale.product_product_event_booth"/>
+        <field name="price">90</field>
+    </record>
+
+    <record id="event_type_data_full" model="event.type">
+        <field name="auto_confirm" eval="True"/>
+        <field name="default_timezone">Europe/Paris</field>
+        <field name="event_type_booth_ids" eval="[
+            (5, 0),
+            (0, 0, {'booth_category_id': ref('test_event_full.event_booth_category_data_1'),
+                    'name': 'Standard Booth',
+                   }
+            ),
+            (0, 0, {'booth_category_id': ref('test_event_full.event_booth_category_data_1'),
+                    'name': 'Standard Booth 2',
+                   }
+            ),
+            (0, 0, {'booth_category_id': ref('test_event_full.event_booth_category_data_2'),
+                    'name': 'Premium Booth',
+                   }
+            ),
+            (0, 0, {'booth_category_id': ref('test_event_full.event_booth_category_data_2'),
+                    'name': 'Premium Booth 2',
+                   }
+            )]"/>
+        <field name="event_type_mail_ids" eval="[
+            (5, 0),
+            (0, 0, {'interval_unit': 'now',
+                    'interval_type': 'after_sub',
+                    'notification_type': 'mail',
+                    'template_ref': 'mail.template,%i' % ref('event.event_subscription'),
+                   }
+            ),
+            (0, 0, {'interval_nbr': 1,
+                    'interval_unit': 'days',
+                    'interval_type': 'before_event',
+                    'notification_type': 'mail',
+                    'template_ref': 'mail.template,%i' % ref('event.event_reminder'),
+                   }
+            ),
+            (0, 0, {'interval_nbr': 1,
+                    'interval_unit': 'days',
+                    'interval_type': 'after_event',
+                    'notification_type': 'sms',
+                    'template_ref': 'sms.template,%i' % ref('event_sms.sms_template_data_event_reminder'),
+                   }
+            )]"/>
+        <field name="event_type_ticket_ids" eval="[
+            (5, 0),
+            (0, 0, {'description': 'Ticket1 Description',
+                    'name': 'Ticket1',
+                    'product_id': ref('event_sale.product_product_event'),
+                    'seats_max': 10,
+                   }
+            ),
+            (0, 0, {'description': 'Ticket2 Description',
+                    'name': 'Ticket2',
+                    'product_id': ref('event_sale.product_product_event'),
+                    'price': 45,
+                   }
+            )]"/>
+        <field name="has_seats_limitation" eval="True"/>
+        <field name="name">Test Type</field>
+        <field name="note" type="html"><p>Template note</p></field>
+        <field name="question_ids" eval="[(5, 0)]"/>
+        <field name="seats_max">30</field>
+        <field name="tag_ids" eval="[(5, 0)]"/>
+        <field name="ticket_instructions" type="html"><p>Ticket Instructions</p></field>
+        <field name="website_menu" eval="True"/>
+    </record>
+
+    <record id="event_question_type_full_1" model="event.question">
+        <field name="question_type">simple_choice</field>
+        <field name="once_per_order" eval="False"/>
+        <field name="event_type_id" ref="test_event_full.event_type_data_full"/>
+        <field name="title">Question1</field>
+    </record>
+    <record id="event_question_type_full_1_answer_1" model="event.question.answer">
+        <field name="name">Q1-Answer1</field>
+        <field name="sequence">1</field>
+        <field name="question_id" ref="test_event_full.event_question_type_full_1"/>
+    </record>
+    <record id="event_question_type_full_1_answer_2" model="event.question.answer">
+        <field name="name">Q1-Answer2</field>
+        <field name="sequence">2</field>
+        <field name="question_id" ref="test_event_full.event_question_type_full_1"/>
+    </record>
+    <record id="event_question_type_full_2" model="event.question">
+        <field name="question_type">simple_choice</field>
+        <field name="once_per_order" eval="False"/>
+        <field name="event_type_id" ref="test_event_full.event_type_data_full"/>
+        <field name="title">Question2</field>
+    </record>
+    <record id="event_question_type_full_2_answer_1" model="event.question.answer">
+        <field name="name">Q2-Answer1</field>
+        <field name="sequence">1</field>
+        <field name="question_id" ref="test_event_full.event_question_type_full_2"/>
+    </record>
+    <record id="event_question_type_full_2_answer_2" model="event.question.answer">
+        <field name="name">Q2-Answer2</field>
+        <field name="sequence">2</field>
+        <field name="question_id" ref="test_event_full.event_question_type_full_2"/>
+    </record>
+    <record id="event_question_type_full_3" model="event.question">
+        <field name="question_type">text_box</field>
+        <field name="once_per_order" eval="True"/>
+        <field name="event_type_id" ref="test_event_full.event_type_data_full"/>
+        <field name="title">Question3</field>
+    </record>
+
+</data></odoo>

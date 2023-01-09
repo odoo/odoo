@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_account_accrued_orders_wizard" model="ir.ui.view">
+        <field name="name">account.accrued.orders.wizard.view</field>
+        <field name="model">account.accrued.orders.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Make Accrual Entries">
+                <field name="company_id" invisible="1"/>
+                <group>
+                    <div class="alert alert-info" colspan="4" role="alert" attrs="{'invisible': [('display_amount', '!=', True)]}">
+                      There doesn't appear to be anything to invoice for the selected order. However, you can use the amount field to force an accrual entry.
+                    </div>
+                  <group>
+                    <field name="journal_id"/>
+                    <field name="account_id"/>
+                    <field name="amount" attrs="{'invisible': [('display_amount', '!=', True)]}"/>
+                    <field name="display_amount" invisible="1"/>
+                  </group>
+                  <group>
+                    <field name="date"/>
+                    <field name="reversal_date"/>
+                  </group>
+                </group>
+                <field name="preview_data" widget="grouped_view_widget" class="w-100"/>
+                <footer>
+                    <button string='Create Entry' name="create_entries" type="object" class="btn-primary"/>
+                    <button string="Cancel" class="btn-secondary" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+</odoo>

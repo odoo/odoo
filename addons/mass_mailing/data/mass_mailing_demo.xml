@@ -1,0 +1,296 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+
+        <record id="mass_mail_attach_1" model="ir.attachment">
+            <field name="datas">bWlncmF0aW9uIHRlc3Q=</field>
+            <field name="name">SampleDoc.doc</field>
+        </record>
+
+        <!-- Create Extra Mailing List for Demo -->
+        <record id="mailing_list_1" model="mailing.list">
+            <field name="name">Imported Contacts</field>
+        </record>
+
+        <!-- Create Contacts -->
+        <record id="mass_mail_contact_1" model="mailing.contact">
+            <field name="name">Aristide Antario</field>
+            <field name="email">alexandre.antario@example.com</field>
+            <field name="list_ids" eval="[(6,0,[ref('mass_mailing.mailing_list_data')])]"/>
+        </record>
+        <record id="mass_mail_contact_2" model="mailing.contact">
+            <field name="name">Beverly Bridge</field>
+            <field name="email">beverly.bridge@example.com</field>
+            <field name="list_ids" eval="[(6,0,[ref('mass_mailing.mailing_list_data')])]"/>
+        </record>
+        <record id="mass_mail_contact_3" model="mailing.contact">
+            <field name="name">Carol Cartridge</field>
+            <field name="email">carol.cartridge@example.com</field>
+            <field name="list_ids" eval="[(6,0,[ref('mass_mailing.mailing_list_data'),ref('mass_mailing.mailing_list_1')])]"/>
+        </record>
+        <record id="mass_mail_contact_4" model="mailing.contact">
+            <field name="name">David Dawson</field>
+            <field name="email">david.dawson@example.com</field>
+        </record>
+        <record id="mass_mail_contact_5" model="mailing.contact">
+            <field name="name">Elsa Ericson</field>
+            <field name="email">elsa.ericson@example.com</field>
+            <field name="message_bounce">5</field>
+            <field name="list_ids" eval="[(6,0,[ref('mass_mailing.mailing_list_data')])]"/>
+        </record>
+        <record id="mass_mail_contact_6" model="mailing.contact">
+            <field name="name">Franz Faubourg</field>
+            <field name="email">franz.faubourg@example.com</field>
+            <field name="list_ids" eval="[(6,0,[ref('mass_mailing.mailing_list_1')])]"/>
+        </record>
+
+        <!-- Create Opt-out Records -->
+        <record id="mass_mail_contact_list_rel_1" model="mailing.contact.subscription">
+            <field name="list_id" ref="mass_mailing.mailing_list_data"/>
+            <field name="contact_id" ref="mass_mailing.mass_mail_contact_4"/>
+            <field name="opt_out">True</field>
+        </record>
+        <record id="mass_mail_contact_list_rel_2" model="mailing.contact.subscription">
+            <field name="list_id" ref="mass_mailing.mailing_list_data"/>
+            <field name="contact_id" ref="mass_mailing.mass_mail_contact_6"/>
+            <field name="opt_out">True</field>
+        </record>
+
+        <!-- Create Blacklist Records -->
+        <record id="blacklist_1" model="mail.blacklist">
+            <field name="email">elsa.ericson@example.com</field>
+        </record>
+
+        <!-- Create campaign and mailings -->
+        <record id="utm_source_0" model="utm.source">
+            <field name="name">Newsletter 1</field>
+        </record>
+        <record id="mass_mail_campaign_1" model="utm.campaign">
+            <field name="name">Newsletter</field>
+            <field name="stage_id" ref="utm.campaign_stage_1"/>
+            <field name="user_id" ref="base.user_admin"/>
+            <field name="tag_ids" eval="[(6,0,[ref('utm.utm_tag_1')])]"/>
+        </record>
+
+        <record id="mass_mail_1" model="mailing.mailing">
+            <field name="name">Newsletter 1</field>
+            <field name="subject">Monthly Newsletter</field>
+            <field name="state">done</field>
+            <field name="user_id" ref="base.user_admin"/>
+            <field name="email_from">info@yourcompany.example.com</field>
+            <field name="sent_date" eval="(DateTime.today() - relativedelta(days=5)).strftime('%Y-%m-%d %H:%M:%S')"/>
+            <field name="campaign_id" ref="mass_mail_campaign_1"/>
+            <field name="source_id" ref="mass_mailing.utm_source_0"/>
+            <field name="mailing_model_id" ref="base.model_res_partner"/>
+            <field name="mailing_domain" eval="[('parent_id', '=', ref('base.res_partner_4'))]"/>
+            <field name="reply_to_mode">new</field>
+            <field name="reply_to">Info &lt;info@yourcompany.example.com&gt;</field>
+            <field name="body_arch" type="html">
+<div class="o_layout o_default_theme oe_unremovable oe_unmovable" data-name="Mailing">
+    <div class="container o_mail_wrapper oe_unremovable oe_unmovable" style="border-collapse:collapse;">
+        <div class="row">
+            <div class="col o_mail_no_options o_mail_wrapper_td bg-white oe_structure" style="text-align:left;width:100%;">
+                <div class="o_mail_block_header_logo" data-snippet="s_mail_block_header_logo">
+                    <div class="o_mail_snippet_general" style="margin:0px auto 0px auto;background-color:rgb(255, 255, 255);max-width:600px;width:100%;">
+                        <div class="container o_mail_h_padding" style="padding:0 20px 0 20px;width:100%;border-collapse:separate;">
+                            <div class="row">
+                                <div valign="center" width="30%" class="col text-center o_mail_v_padding pb0" style="padding:20px 0 0px 0;vertical-align:middle;text-align:center;">
+                                    <a href="http://www.example.com" style="text-decoration:none;font-weight:bold;background-color:transparent;color:rgb(100, 89, 116);">
+                                        <img border="0" src="/mass_mailing/static/src/img/theme_default/s_default_image_header_logo.png" style="border-style:none;height:auto;vertical-align:middle;max-width:400px;width:auto"/> ​
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="o_mail_block_footer_separator" data-snippet="s_hr" style="margin:0 20px 0 20px;">
+                    <div class="o_mail_snippet_general" style="margin:0px auto 0px auto;background-color:rgb(255, 255, 255);max-width:600px;width:100%;">
+                        <div class="container" style="width:100%;border-collapse:separate;">
+                            <div class="row">
+                                <div valign="top" style="padding:20px 0 20px 0;text-align:left;vertical-align:top;width:100%;" class="col o_mail_v_padding o_mail_no_colorpicker">
+                                    <div style="background-color:rgb(245, 245, 245);height:2px;width:100%;" class="separator"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="o_mail_block_text" data-snippet="s_text_block">
+                    <div class="o_mail_snippet_general" style="margin:0px auto 0px auto;background-color:rgb(255, 255, 255);max-width:600px;width:100%;">
+                        <div class="container" style="width:100%;border-collapse:separate;">
+                            <div class="row">
+                                <div class="col-12 o_mail_h_padding o_mail_v_padding o_mail_no_colorpicker" style="padding:20px;text-align:left;vertical-align:top;">
+                                    <p style="margin:0px 0 1rem 0;font-size:14px;">
+                                        Great stories have personality. Consider telling a great story that provides personality. Writing a story with personality for potential clients will assist with making a relationship connection. This shows up in small quirks like word choices or phrases. Write from your point of view, not from someone else's experience.
+                                        <br/>Great stories are for everyone even when only written for just one person. If you try to write with a wide general audience in mind, your story will ring false and be bland. No one will be interested. Write for one person. If it’s genuine for the one, it’s genuine for the rest.
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="o_mail_block_footer_social o_mail_footer_social_center" data-snippet="s_mail_block_footer_social">
+                    <div class="o_mail_snippet_general" style="margin:0px auto 0px auto;background-color:rgb(255, 255, 255);max-width:600px;width:100%;">
+                        <div align="center" class="container" style="border-style:solid none none none;padding:20px 0 20px 0;border-top-color:rgb(245, 245, 245);border-top-width:2px;width:100%;border-collapse:separate;">
+                            <div class="row">
+                                <div class="col o_mail_footer_links o_default_snippet_text" style="padding:10px 0 10px 0;text-align:center;vertical-align:middle;">
+                                    <a href="/unsubscribe_from_list" class="btn btn-link o_default_snippet_text" style="text-decoration:none;border-radius:0.25rem;border-style:solid;padding:0px;cursor:pointer;line-height:1.5;font-size:12px;border-start-color:transparent;border-bottom-color:transparent;border-end-color:transparent;border-top-color:transparent;border-start-width:1px;border-bottom-width:1px;border-end-width:1px;border-top-width:1px;user-select:none;vertical-align:middle;white-space:nowrap;text-align:center;font-weight:bold;display:inline-block;background-color:transparent;color:rgb(100, 89, 116);">Unsubscribe</a> |
+
+                                    <a href="/contactus" class="btn btn-link o_default_snippet_text" style="text-decoration:none;border-radius:0.25rem;border-style:solid;padding:0px;cursor:pointer;line-height:1.5;font-size:12px;border-start-color:transparent;border-bottom-color:transparent;border-end-color:transparent;border-top-color:transparent;border-start-width:1px;border-bottom-width:1px;border-end-width:1px;border-top-width:1px;user-select:none;vertical-align:middle;white-space:nowrap;text-align:center;font-weight:bold;display:inline-block;background-color:transparent;color:rgb(100, 89, 116);">Contact</a>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col" style="text-align:left;vertical-align:middle;">
+                                    <p class="o_mail_footer_copy" style="margin:0px 0 1rem 0;text-align:center;font-weight:bold;color:rgb(147, 146, 146);font-size:9px;">
+                                        <img src="/web_editor/font_to_img/61945/rgb(147,146,146)/9" data-class="fa fa-copyright" style="border-style:none;max-width:100%;width:100%;vertical-align:middle;height: auto; width: auto;"/>2018 All Rights Reserved
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div align="center" class="container" style="width:100%;border-collapse:separate;">
+        <div class="row">
+            <div align="center" style="padding:16px 0 16px 0;" class="col pt16 pb16">
+                Powered by <a target="_blank" href="https://www.odoo.com" style="text-decoration:none;background-color:transparent;color:#875A7B;">Odoo</a>
+            </div>
+        </div>
+    </div>
+</div>
+</field>
+            <field name="attachment_ids" eval="[(4, ref('mass_mail_attach_1'))]"/>
+        </record>
+        <!-- Generate link tracker information from it -->
+        <function model="mailing.mailing" name="convert_links" eval="[ref('mass_mailing.mass_mail_1')]"/>
+
+        <record id="mass_mail_1_stat_0" model="mailing.trace">
+            <field name="mass_mailing_id" ref="mass_mail_1"/>
+            <field name="message_id">1111000@odoo.com</field>
+            <field name="model">res.partner</field>
+            <field name="res_id" ref="base.res_partner_address_7"/>
+            <field name="email">billy.fox45@example.com</field>
+            <field name="trace_status">reply</field>
+            <field name="sent_datetime" eval="(DateTime.today() - relativedelta(days=5)).strftime('%Y-%m-%d %H:%M:%S')"/>
+            <field name="open_datetime" eval="(DateTime.today() - relativedelta(days=4)).strftime('%Y-%m-%d %H:%M:%S')"/>
+            <field name="reply_datetime" eval="(DateTime.today() - relativedelta(days=3)).strftime('%Y-%m-%d %H:%M:%S')"/>
+            <field name="write_date" eval="(DateTime.today() - relativedelta(days=3)).strftime('%Y-%m-%d %H:%M:%S')"/>
+        </record>
+        <record id="mass_mail_1_stat_1" model="mailing.trace">
+            <field name="mass_mailing_id" ref="mass_mail_1"/>
+            <field name="message_id">1111001@odoo.com</field>
+            <field name="model">res.partner</field>
+            <field name="res_id" ref="base.res_partner_address_13"/>
+            <field name="email">kim.snyder96@example.com</field>
+            <field name="trace_status">reply</field>
+            <field name="sent_datetime" eval="(DateTime.today() - relativedelta(days=5)).strftime('%Y-%m-%d %H:%M:%S')"/>
+            <field name="open_datetime" eval="(DateTime.today() - relativedelta(days=2)).strftime('%Y-%m-%d %H:%M:%S')"/>
+            <field name="reply_datetime" eval="(DateTime.today() - relativedelta(days=0)).strftime('%Y-%m-%d %H:%M:%S')"/>
+            <field name="write_date" eval="(DateTime.today() - relativedelta(days=0)).strftime('%Y-%m-%d %H:%M:%S')"/>
+        </record>
+        <record id="mass_mail_1_stat_2" model="mailing.trace">
+            <field name="mass_mailing_id" ref="mass_mail_1"/>
+            <field name="message_id">1111002@odoo.com</field>
+            <field name="model">res.partner</field>
+            <field name="res_id" ref="base.res_partner_address_14"/>
+            <field name="email">edith.sanchez68@example.com</field>
+            <field name="trace_status">open</field>
+            <field name="sent_datetime" eval="(DateTime.today() - relativedelta(days=5)).strftime('%Y-%m-%d %H:%M:%S')"/>
+            <field name="open_datetime" eval="(DateTime.today() - relativedelta(days=2)).strftime('%Y-%m-%d %H:%M:%S')"/>
+            <field name="write_date" eval="(DateTime.today() - relativedelta(days=2)).strftime('%Y-%m-%d %H:%M:%S')"/>
+        </record>
+        <record id="mass_mail_1_stat_3" model="mailing.trace">
+            <field name="mass_mailing_id" ref="mass_mail_1"/>
+            <field name="message_id">1111003@odoo.com</field>
+            <field name="model">res.partner</field>
+            <field name="res_id" ref="base.res_partner_address_24"/>
+            <field name="email">theodore.gardner36@example.com</field>
+            <field name="trace_status">open</field>
+            <field name="sent_datetime" eval="(DateTime.today() - relativedelta(days=5)).strftime('%Y-%m-%d %H:%M:%S')"/>
+            <field name="open_datetime" eval="(DateTime.today() - relativedelta(days=1)).strftime('%Y-%m-%d %H:%M:%S')"/>
+            <field name="write_date" eval="(DateTime.today() - relativedelta(days=1)).strftime('%Y-%m-%d %H:%M:%S')"/>
+        </record>
+        <record id="mass_mail_1_stat_4" model="mailing.trace">
+            <field name="mass_mailing_id" ref="mass_mail_1"/>
+            <field name="message_id">1111004@odoo.com</field>
+            <field name="model">res.partner</field>
+            <field name="res_id" ref="base.res_partner_address_32"/>
+            <field name="email">sandra.neal80@example.com</field>
+            <field name="trace_status">sent</field>
+            <field name="sent_datetime" eval="(DateTime.today() - relativedelta(days=5)).strftime('%Y-%m-%d %H:%M:%S')"/>
+            <field name="write_date" eval="(DateTime.today() - relativedelta(days=5)).strftime('%Y-%m-%d %H:%M:%S')"/>
+        </record>
+        <record id="mass_mail_1_stat_5" model="mailing.trace">
+            <field name="mass_mailing_id" ref="mass_mail_1"/>
+            <field name="message_id">1111005@odoo.com</field>
+            <field name="model">res.partner</field>
+            <field name="res_id" ref="base.res_partner_address_33"/>
+            <field name="email">julie.richards84@example.com</field>
+            <field name="trace_status">error</field>
+            <field name="sent_datetime" eval="False"/>
+        </record>
+        <record id="mass_mail_1_stat_6" model="mailing.trace">
+            <field name="mass_mailing_id" ref="mass_mail_1"/>
+            <field name="message_id">1111006@odoo.com</field>
+            <field name="model">res.partner</field>
+            <field name="res_id" ref="base.res_partner_address_34"/>
+            <field name="email">travis.mendoza24@example.com</field>
+            <field name="trace_status">bounce</field>
+            <field name="sent_datetime" eval="(DateTime.today() - relativedelta(days=5)).strftime('%Y-%m-%d %H:%M:%S')"/>
+            <field name="write_date" eval="(DateTime.today() - relativedelta(days=3)).strftime('%Y-%m-%d %H:%M:%S')"/>
+        </record>
+        <record id="mass_mail_1_stat_7" model="mailing.trace">
+            <field name="mass_mailing_id" ref="mass_mail_1"/>
+            <field name="message_id">1111007@odoo.com</field>
+            <field name="model">res.partner</field>
+            <field name="res_id" ref="base.res_partner_address_34"/>
+            <field name="email">travis.mendoza24@example.com</field>
+            <field name="trace_status">bounce</field>
+            <field name="sent_datetime" eval="False"/>
+        </record>
+
+        <!-- Generate some clicks -->
+        <function model="link.tracker.click" name="add_click">
+            <value model="link.tracker.code"
+                search="[('link_id.url', '=', 'http://www.example.com')]"
+                use="code"/>
+            <value name="ip">100.01.02.03</value>
+            <value name="country_code">BE</value>
+            <value name="mailing_trace_id" eval="ref('mass_mail_1_stat_0')"/>
+        </function>
+        <function model="link.tracker.click" name="add_click">
+            <value model="link.tracker.code"
+                search="[('link_id.url', '=', 'http://www.example.net/page/contactus')]"
+                use="code"/>
+            <value name="ip">100.01.02.03</value>
+            <value name="country_code">BE</value>
+            <value name="mailing_trace_id" eval="ref('mass_mail_1_stat_0')"/>
+        </function>
+        <function model="link.tracker.click" name="add_click">
+            <value model="link.tracker.code"
+                search="[('link_id.url', '=', 'http://www.example.com')]"
+                use="code"/>
+            <value name="ip">100.01.02.04</value>
+            <value name="country_code">BE</value>
+            <value name="mailing_trace_id" eval="ref('mass_mail_1_stat_1')"/>
+        </function>
+        <function model="link.tracker.click" name="add_click">
+            <value model="link.tracker.code"
+                search="[('link_id.url', '=', 'http://www.example.net/page/contactus')]"
+                use="code"/>
+            <value name="ip">100.01.02.04</value>
+            <value name="country_code">BE</value>
+            <value name="mailing_trace_id" eval="ref('mass_mail_1_stat_0')"/>
+        </function>
+        <function model="link.tracker.click" name="add_click">
+            <value model="link.tracker.code"
+                search="[('link_id.url', '=', 'http://www.example.com')]"
+                use="code"/>
+            <value name="ip">100.01.02.05</value>
+            <value name="country_code">BE</value>
+            <value name="mailing_trace_id" eval="ref('mass_mail_1_stat_2')"/>
+        </function>
+
+    </data>
+</odoo>

@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="web.Many2OneField.CreateConfirmationDialog" owl="1">
+        <Dialog title="title" size="'md'">
+            <div>
+                Create <strong t-esc="props.value"/> as a new <t t-esc="props.name"/>?
+            </div>
+            <t t-set-slot="footer">
+                <button class="btn btn-primary" t-on-click="onCreate">Create</button>
+                <button class="btn" t-on-click="() => props.close()">Discard</button>
+            </t>
+        </Dialog>
+    </t>
+
+    <t t-name="web.Many2OneField" owl="1">
+        <t t-if="props.readonly">
+            <t t-if="!props.canOpen">
+                <span>
+                    <span t-esc="displayName" />
+                    <t t-foreach="extraLines" t-as="extraLine" t-key="extraLine_index">
+                        <br />
+                        <span t-esc="extraLine" />
+                    </t>
+                </span>
+            </t>
+            <t t-else="">
+                <a
+                    t-if="props.value"
+                    class="o_form_uri"
+                    t-att-href="props.value ? `#id=${props.value[0]}&amp;model=${relation}` : '#'"
+                    t-on-click.prevent="onClick"
+                >
+                    <span t-esc="displayName" />
+                    <t t-foreach="extraLines" t-as="extraLine" t-key="extraLine_index">
+                        <br />
+                        <span t-esc="extraLine" />
+                    </t>
+                </a>
+            </t>
+        </t>
+        <t t-else="">
+            <div class="o_field_many2one_selection">
+                <Many2XAutocomplete t-props="Many2XAutocompleteProps"/>
+                <t t-if="hasExternalButton">
+                    <button
+                        type="button"
+                        class="btn btn-secondary fa o_external_button"
+                        t-att-class="props.openTarget === 'current' ? 'fa-arrow-right' : 'fa-external-link'"
+                        tabindex="-1"
+                        draggable="false"
+                        aria-label="Internal link"
+                        data-tooltip="Internal link"
+                        t-on-click="onExternalBtnClick"
+                    />
+                </t>
+                <button
+                    t-if="hasBarcodeButton"
+                    t-on-click="onBarcodeBtnClick"
+                    type="button"
+                    class="btn ms-3 o_barcode"
+                    tabindex="-1"
+                    draggable="false"
+                    aria-label="Scan barcode"
+                    title="Scan barcode"
+                    data-tooltip="Scan barcode"
+                />
+            </div>
+            <div class="o_field_many2one_extra">
+                <t t-foreach="extraLines" t-as="extraLine" t-key="extraLine_index">
+                    <br t-if="!extraLine_first" />
+                    <span t-esc="extraLine" />
+                </t>
+            </div>
+        </t>
+    </t>
+
+</templates>

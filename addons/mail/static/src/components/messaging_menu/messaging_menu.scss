@@ -1,0 +1,54 @@
+// ------------------------------------------------------------------
+// Layout
+// ------------------------------------------------------------------
+
+.o_MessagingMenu_dropdownMenu {
+    &:not(.o-isDeviceSmall) {
+        width: 450px;
+        min-height: 50px;
+        /**
+        * Note: Min() refers to CSS min() and not SCSS min().
+        *
+        * We want CSS min() and not SCSS min() because the former supports calc while the latter doesn't.
+        * To by-pass SCSS min() shadowing CSS min(), we rely on SCSS being case-sensitive while CSS isn't.
+        * As a result, Min() is ignored by SCSS while CSS interprets as its min() function.
+        */
+        max-height: Min(calc(100vh - 140px), 630px);
+        z-index: $zindex-modal; // on top of chat windows
+    }
+
+    &.o-isDeviceSmall {
+        top: $o-mail-chat-window-header-height-mobile;
+        max-height: none;
+    }
+}
+
+.o_MessagingMenu_dropdownMenuHeader.o-isDeviceSmall {
+    // Could be replaced by "d-grid" after the migration to BS5.
+    display: grid;
+    grid-template-areas:
+        "top"
+        "bottom";
+    grid-template-rows: auto auto;
+}
+
+.o_MessagingMenu_newMessageButton.o-isDeviceSmall {
+    grid-area: top;
+    justify-self: start;
+}
+
+.o_MessagingMenu_mobileNewMessageInput {
+    grid-area: bottom;
+}
+
+// ------------------------------------------------------------------
+// Style
+// ------------------------------------------------------------------
+
+.o_MessagingMenu_dropdownMenuHeader {
+    z-index: 1;
+}
+
+.o_MessagingMenu_mobileNewMessageInput {
+    appearance: none;
+}

@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <div t-name="mrp.BomOverviewComponent" class="o_action" owl="1">
+        <BomOverviewControlPanel
+            bomQuantity="state.bomQuantity"
+            uomName="uomName"
+            variants="variants"
+            showOptions="state.showOptions"
+            showVariants="showVariants"
+            currentWarehouse="state.currentWarehouse"
+            warehouses="warehouses"
+            print.bind="onClickPrint"
+            changeWarehouse.bind="onChangeWarehouse"
+            changeVariant.bind="onChangeVariant"
+            changeBomQuantity.bind="onChangeBomQuantity"
+            changeDisplay.bind="onChangeDisplay"/>
+
+        <BomOverviewTable
+            uomName="uomName"
+            showOptions="state.showOptions"
+            currentWarehouseId="state.currentWarehouse.id"
+            data="state.bomData"
+            changeFolded.bind="onChangeFolded"/>
+    </div>
+
+</templates>

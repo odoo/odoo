@@ -1,0 +1,197 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="web.PropertyDefinition" owl="1">
+        <div class="o_field_property_definition o_field_widget d-block" t-ref="propertyDefinition">
+            <div class="o_field_property_definition_header d-flex flex-row align-items-center justify-content-between m-3">
+                <h6 t-if="props.readonly" t-out="state.propertyDefinition.string" class="text-truncate"/>
+                <input
+                    t-else=""
+                    class="o_input px-2 me-3"
+                    type="text"
+                    required=""
+                    placeholder="Property Name"
+                    t-model="state.propertyDefinition.string"
+                    t-on-change="onPropertyLabelChange"
+                    t-on-keypress="onPropertyLabelKeypress"
+                />
+                <div class="d-flex flex-row me-3">
+                    <button
+                        t-attf-class="btn btn-link p-0 m-0 me-2 {{this.isFirst ? 'disabled' : ''}}"
+                        t-on-click="() => this.onPropertyMove('up')">
+                        <i class="fa fa-chevron-up"/>
+                    </button>
+                    <button
+                        t-attf-class="btn btn-link p-0 m-0 {{this.isLast ? 'disabled' : ''}}"
+                        t-on-click="() => this.onPropertyMove('down')">
+                        <i class="fa fa-chevron-down"/>
+                    </button>
+                    <button
+                        t-if="!props.readonly &amp;&amp; props.canChangeDefinition"
+                        class="btn text-danger p-0 float-end o_field_property_definition_delete ms-3"
+                        title="Remove Property"
+                        t-on-click="props.onDelete">
+                        <i class="fa fa-trash"/> Delete
+                    </button>
+                </div>
+            </div>
+            <table class="m-3">
+                <tr>
+                    <td class="align-top pe-2">
+                        <label t-att-for="getUniqueDomID('type')">
+                            <b>Field Type</b>
+                        </label>
+                    </td>
+                    <td class="o_field_property_definition_type">
+                        <div
+                            t-if="props.readonly"
+                            class="d-flex align-items-center">
+                            <img class="me-3"
+                                t-attf-src="/web/static/src/views/fields/properties/icons/{{state.propertyDefinition.type}}.png"/>
+                            <span t-out="state.typeLabel"/>
+                        </div>
+                        <Dropdown
+                            t-else=""
+                            title="state.typeLabel" togglerClass="'btn btn-link d-flex p-0 w-100'">
+                            <t t-set-slot="toggler">
+                                <div class="o_input_dropdown w-100 o_field_property_dropdown">
+                                    <input type="text" class="dropdown text-start w-100 o_input py-1"
+                                        t-att-id="getUniqueDomID('type')"
+                                        t-att-value="state.typeLabel" readonly=""
+                                        t-attf-style="background-image: url(/web/static/src/views/fields/properties/icons/{{state.propertyDefinition.type}}.png)"/>
+                                    <a role="button" class="o_dropdown_button"/>
+                                </div>
+                            </t>
+                            <t t-foreach="availablePropertyTypes" t-as="option" t-key="option[0]">
+                                <DropdownItem onSelected.bind="() => this.onPropertyTypeChange(option[0])">
+                                    <div class="d-flex align-items-center">
+                                        <img class="me-2"
+                                            t-attf-src="/web/static/src/views/fields/properties/icons/{{option[0]}}.png"/>
+                                        <span t-out="option[1]"/>
+                                    </div>
+                                </DropdownItem>
+                            </t>
+                        </Dropdown>
+                    </td>
+                </tr>
+                <!-- Add / remove selection labels -->
+                <tr t-if="state.propertyDefinition.type === 'selection'">
+                    <td class="o_td_label align-top pe-2">
+                        <b>Values</b>
+                    </td>
+                    <td>
+                        <PropertyDefinitionSelection
+                            readonly="props.readonly || !props.canChangeDefinition"
+                            canChangeDefinition="props.canChangeDefinition"
+                            default="state.propertyDefinition.default || ''"
+                            options="state.propertyDefinition.selection || []"
+                            onOptionsChange.bind="onSelectionOptionChange"
+                            onDefaultOptionChange.bind="onDefaultChange"
+                        />
+                    </td>
+                </tr>
+                <tr t-if="state.propertyDefinition.type === 'tags'">
+                    <td class="o_td_label align-top">
+                        <label t-att-for="getUniqueDomID('tags')">
+                            <b>Tags</b>
+                        </label>
+                    </td>
+                    <td>
+                        <PropertyTags
+                            id="getUniqueDomID('tags')"
+                            selectedTags="propertyTagValues"
+                            tags="state.propertyDefinition.tags || []"
+                            readonly="props.readonly"
+                            canChangeTags="props.canChangeDefinition"
+                            deleteAction="'tags'"
+                            onTagsChange.bind="onTagsChange"/>
+                    </td>
+                </tr>
+                <tr t-if="state.propertyDefinition.type === 'many2one' || state.propertyDefinition.type === 'many2many'" class="o_field_property_definition_model">
+                    <td class="o_td_label align-top pe-2">
+                        <label t-att-for="getUniqueDomID('model')">
+                            <b>Model</b>
+                        </label>
+                    </td>
+                    <td>
+                        <span t-if="props.readonly">
+                            <t t-if="state.resModelDescription" t-out="state.resModelDescription"/>
+                        </span>
+                        <ModelSelector
+                            t-else=""
+                            id="getUniqueDomID('model')"
+                            value="state.resModelDescription"
+                            onModelSelected.bind="onModelChange"
+                        />
+                    </td>
+                </tr>
+                <tr t-if="(state.propertyDefinition.type === 'many2one' || state.propertyDefinition.type === 'many2many')
+                    &amp;&amp; state.propertyDefinition.comodel &amp;&amp; state.propertyDefinition.comodel.length">
+                    <td class="o_td_label align-top pe-2">
+                        <b>Domain</b>
+                    </td>
+                    <td>
+                        <DomainSelector
+                            resModel="state.propertyDefinition.comodel"
+                            value="state.propertyDefinition.domain || '[]'"
+                            readonly="props.readonly"
+                            update.bind="onDomainChange"
+                            isDebugMode="!!env.debug"
+                            className="props.readonly ? 'o_read_mode d-inline-block me-2' : 'o_edit_mode d-inline-block me-2'"
+                        />
+                        <div t-if="state.matchingRecordsCount !== undefined" class="d-inline-block">
+                            <i class="fa fa-arrow-right" role="img" title="Domain"/>
+                            <button class="btn btn-sm btn-secondary" type="button"
+                                t-on-click.stop="onButtonDomainClick">
+                                <t t-out="state.matchingRecordsCount"/> record(s)
+                            </button>
+                        </div>
+                    </td>
+                </tr>
+                <tr t-if="!['tags', 'selection'].includes(state.propertyDefinition.type)
+                    &amp;&amp; (!['many2one', 'many2many'].includes(state.propertyDefinition.type)
+                    || (state.propertyDefinition.comodel &amp;&amp; state.propertyDefinition.comodel.length))"
+                    class="o_field_property_definition_value">
+                    <td class="o_td_label align-top pe-2">
+                        <label t-att-for="getUniqueDomID('default')">
+                            <b t-if="state.propertyDefinition.type === 'boolean'">
+                                Default State
+                            </b>
+                            <b t-else="">
+                                Default Value
+                            </b>
+                        </label>
+                    </td>
+                    <td>
+                        <PropertyValue
+                            id="getUniqueDomID('default')"
+                            readonly="props.readonly"
+                            canChangeDefinition="props.canChangeDefinition"
+                            type="state.propertyDefinition.type"
+                            string="state.propertyDefinition.string"
+                            value="state.propertyDefinition.default"
+                            comodel="state.propertyDefinition.comodel || ''"
+                            domain="state.propertyDefinition.domain || '[]'"
+                            context="props.context"
+                            onChange.bind="onDefaultChange"
+                        />
+                    </td>
+                </tr>
+                <tr t-if="!props.hideKanbanOption" class="o_field_property_definition_kanban">
+                    <td class="o_td_label align-top pe-2">
+                        <label t-att-for="getUniqueDomID('kanban')">
+                            <b>View In Kanban</b>
+                        </label>
+                    </td>
+                    <td>
+                        <CheckBox
+                            id="getUniqueDomID('kanban')"
+                            value="props.propertyDefinition.view_in_kanban"
+                            disabled="props.readonly"
+                            onChange.bind="onViewInKanbanChange"
+                        />
+                    </td>
+                </tr>
+            </table>
+        </div>
+    </t>
+</templates>

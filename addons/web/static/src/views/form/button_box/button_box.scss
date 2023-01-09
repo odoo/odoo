@@ -1,0 +1,125 @@
+.o-form-buttonbox {
+    --o-input-border-color: #{map-get($grays, '600')};
+    margin-bottom: $o-sheet-vpadding;
+    margin-top: -$o-sheet-vpadding;
+    @include o-form-sheet-negative-margin;
+    // Use box-shadow instead of border-bottom because some button boxes are
+    // empty in some cases and we do not want to see a floating border in
+    // that cases.
+    box-shadow: inset 0 -1px 0 $border-color;
+
+    .btn.oe_stat_button, > .o_field_widget {
+        flex: 0 0 auto;
+        width: percentage(1/3); // Adapt the number of visible buttons for each screen width
+        @include media-breakpoint-up(md) {
+            width: percentage(1/5);
+        }
+        @include media-breakpoint-up(lg) {
+            width: percentage(1/7);
+        }
+        @include media-breakpoint-up(xl) {
+            width: percentage(1/8);
+        }
+    }
+
+    &.o_full > *:first-child {
+        border-left: none !important;
+        box-shadow: -1px 0 0 $border-color;
+    }
+    
+    .btn.oe_stat_button {
+        height: $o-statbutton-height;
+
+        > .o_button_icon {
+            display: inline-block;
+            vertical-align: middle;
+            line-height: $o-statbutton-height;
+            width: 30%;
+
+            &:before {
+                font-size: 22px;
+                vertical-align: middle;
+            }
+        }
+
+        > .o_field_percent_pie {
+            margin-left: $o-statbutton-spacing; // To create the button padding left (firefox bug)
+        }
+
+        // Some buttons only display text without using StatInfo template
+        > span {
+            @include o-text-overflow(block);
+            white-space: normal; // text on several lines if needed
+        }
+
+        > .o_stat_info, > span, > .o_field_statinfo { // contains the value and text
+            display: inline-block;
+            vertical-align: middle;
+            font-weight: $font-weight-normal;
+
+            max-width: 70%;
+            padding-right: $o-statbutton-spacing;
+            line-height: 1.3;
+
+            > .o_stat_value, > .o_stat_text {
+                @include o-text-overflow(block);
+                line-height: 1.2;
+            }
+
+            .o_stat_value {
+                font-weight: $font-weight-bold;
+                color: map-get($o-theme-text-colors, 'odoo');
+            }
+
+            .o_stat_text .o_field_empty {
+                display: none;
+            }
+        }
+
+        &:not(:disabled) {
+            > .o_stat_info .o_field_widget, > span .o_field_widget {
+                cursor: pointer;
+            }
+        }
+
+        &:not(:hover) .o_stat_info > .o_hover {
+            display: none !important;
+        }
+        &:hover .o_stat_info > .o_not_hover {
+            display: none !important
+        }
+    }
+    .oe_stat_button {
+        border-left: 1px solid $border-color;
+    }
+    &.o_full > .oe_stat_button:first-child {
+        border-left: none;
+    }
+
+    // "More" button and dropdown
+    .oe_stat_button.dropdown {
+        > .o_button_more {
+            width: 100%;
+            height: 100%;
+            &:after {
+                margin-left: 5px;
+                @include o-caret-down;
+            }
+        }
+        &.show > .o_button_more {
+            &:after {
+                @include o-caret-up;
+            }
+        }
+
+        .o_dropdown_more {
+            width: 150px;
+            > .dropdown-item {
+                .oe_stat_button {
+                    border: none;
+                    width: 100%;
+                }
+            }
+        }
+    }
+}

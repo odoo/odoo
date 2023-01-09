@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="view_base_document_layout" model="ir.ui.view">
+            <field name="name">Document Layout</field>
+            <field name="model">base.document.layout</field>
+            <field name="arch" type="xml">
+                <form class="o_document_layout">
+                    <group>
+                        <group class="o_document_layout_company">
+                            <field name="company_id" invisible="1"/>
+                            <field name="external_report_layout_id" invisible="1" />
+                            <field name="logo_primary_color" invisible="1" />
+                            <field name="logo_secondary_color" invisible="1" />
+                            <field name="report_layout_id" widget="radio" string="Layout" required="1"/>
+                            <field name="font" widget="selection" required="1"/>
+                            <field name="logo" widget="image" options="{'size': [0, 50]}"/>
+                            <label for="primary_color" string="Colors" />
+                            <div class="o_document_layout_colors">
+                                <field name="primary_color" widget="color"/>
+                                <field name="secondary_color" widget="color"/>
+                                <div class="o_custom_colors" title="Reset to logo colors"
+                                    attrs="{'invisible': [('custom_colors', '=', False)]}">
+                                    <span class="fa fa-refresh fa-2x"></span>
+                                    <field name="custom_colors" nolabel="1"/>
+                                </div>
+                            </div>
+                            <field name="layout_background" widget="selection" required="1"/>
+                            <field name="layout_background_image" options="{'accepted_file_extensions': 'image/*'}" attrs="{'invisible': [('layout_background', '!=', 'Custom')], 'required': [('layout_background', '=', 'Custom')]}">Upload your file</field>
+                            <field name="report_header" placeholder="e.g. Global Business Solutions" options="{'resizable': false}"/>
+                            <field name="company_details" string="Company Details" options="{'resizable': false}"/>
+                            <field name="report_footer" string="Footer" options="{'resizable': false}"/>
+                            <field name="paperformat_id" widget="selection" required="1" domain="[('report_ids', '=', False)]"/>
+                        </group>
+                        <div>
+                            <field name="preview" widget="iframe_wrapper" />
+                            <button name="web.action_report_layout_preview" string="Download PDF Preview" type="action" class="oe_link" icon="fa-arrow-right"/>
+                        </div>
+                    </group>
+                    <footer>
+                        <button string="Save" class="btn-primary" type="object" name="document_layout_save" data-hotkey="q"/>
+                        <button special="cancel" data-hotkey="z" string="Cancel" />
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+        <record id="action_base_document_layout_configurator" model="ir.actions.act_window">
+            <field name="type">ir.actions.act_window</field>
+            <field name="name">Configure your document layout</field>
+            <field name="view_mode">form</field>
+            <field name="target">new</field>
+            <field name="res_model">base.document.layout</field>
+            <field name="view_id" ref="web.view_base_document_layout"/>
+        </record>
+
+    </data>
+</odoo>
+

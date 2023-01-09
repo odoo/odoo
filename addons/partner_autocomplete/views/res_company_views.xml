@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_company_form_inherit_partner_autocomplete" model="ir.ui.view">
+        <field name="name">res.company.form.inherit.web.partner.autocomplete</field>
+        <field name="model">res.company</field>
+        <field name="inherit_id" ref="base.view_company_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//div[hasclass('oe_title')]/h1/field[@name='name']" position="attributes">
+                <attribute name="widget">field_partner_autocomplete</attribute>
+            </xpath>
+            <xpath expr="//field[@name='vat']" position="attributes">
+                <attribute name="widget">field_partner_autocomplete</attribute>
+            </xpath>
+            <xpath expr="//field[@name='company_registry']" position="after">
+                <field name="partner_gid" invisible="1"/>
+                <field name="iap_enrich_auto_done" invisible="1"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>

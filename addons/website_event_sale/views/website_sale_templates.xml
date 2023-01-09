@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- If the sale order line concerns an event, we want the "product" link to point to the event itself and not to the product on the ecommerce -->
+    <template id="cart_line_product_link_inherit_website_event_sale" inherit_id="website_sale.cart_line_product_link" name="Event Shopping Cart Line Product Link">
+        <xpath expr="//a" position="attributes">
+            <attribute name="t-attf-href"/>
+            <attribute name="t-att-href">
+                line.event_id and ('/event/%s/register' % slug(line.event_id)) or line.product_id.website_url
+            </attribute>
+        </xpath>
+    </template>
+
+    <!-- If the sale order line concerns an event, we want to show an additional line with the event name even on small screens -->
+    <template id="cart_lines_inherit_website_event_sale" inherit_id="website_sale.cart_lines" name="Event Shopping Cart Lines">
+        <xpath expr="//t[@t-call='website_sale.cart_line_description_following_lines']/t[@t-set='div_class']" position="after">
+            <t t-if="line.event_id">
+                <t t-set="div_class" t-value="''"/>
+            </t>
+        </xpath>
+        <xpath expr="//del" position="attributes">
+            <attribute name="t-attf-class" separator=" " add="#{line.event_id and 'd-none' or ''}"/>
+        </xpath>
+    </template>
+
+    <!-- If the sale order line concerns an event, we want to show an additional line with the event name -->
+    <template id="cart_popover_inherit_website_event_sale" inherit_id="website_sale.cart_popover" name="Event Cart Popover">
+        <xpath expr="//t[@t-call='website_sale.cart_line_product_link']" position="after">
+            <t t-if="line.event_id" t-call="website_sale.cart_line_description_following_lines"/>
+        </xpath>
+    </template>
+
+    <!-- If the sale order line concerns an event, we want to show an additional line with the event name -->
+    <template id="cart_summary_inherit_website_event_sale" inherit_id="website_sale.cart_summary" name="Event Cart right column">
+        <xpath expr="//td[hasclass('td-product_name')]/div/strong" position="after">
+            <t t-if="line.event_id" t-call="website_sale.cart_line_description_following_lines"/>
+        </xpath>
+    </template>
+
+    <template id="event_confirmation" inherit_id="website_sale.confirmation">
+        <xpath expr="//div[@id='oe_structure_website_sale_confirmation_2']" position="inside">
+            <t t-if="events">
+                <section class="s_title pt40" data-snippet="s_title" data-name="Title">
+                    <div class="s_allow_columns container">
+                        <h4>
+                            We are looking forward to meeting you at the following <t t-if="len(events) == 1">event</t><t t-else="">events</t>:
+                        </h4>
+                    </div>
+                </section>
+                <section class="pb32 o_cc o_cc2 o_colored_level bg-transparent">
+                    <div class="s_nb_column_fixed s_col_no_bgcolor o_wevent_index" t-foreach="events" t-as="event">
+                        <div class="col-lg-12 card mt-3 mx-auto item pt16 pb16">
+                            <div class="row s_col_no_bgcolor g-0 align-items-center o_cc1">
+                                <div class="col-lg-4 align-self-stretch d-block o_wevent_events_list">
+                                    <t t-call="website.record_cover">
+                                        <t t-set="_record" t-value="event" />
+                                        <div class="o_wevent_event_date position-absolute bg-white shadow-sm text-dark">
+                                            <span t-field="event.with_context(tz=event.date_tz).date_begin" t-options="{'format': 'LLL'}" class="o_wevent_event_month" />
+                                            <span t-field="event.with_context(tz=event.date_tz).date_begin" t-options="{'format': 'dd'}" class="o_wevent_event_day oe_hide_on_date_edit" />
+                                        </div>
+                                        <small class="o_wevent_participating text-bg-success">
+                                            <i class="fa fa-check me-2" />
+                                            Registered
+                                        </small>
+                                        <small t-if="not event.website_published" class="o_wevent_unpublished text-bg-danger">
+                                            <i class="fa fa-ban me-2" />
+                                            Unpublished
+                                        </small>
+                                    </t>
+                                </div>
+                                <div class="col-lg-8 p-4">
+                                    <h3 t-esc="event.name" />
+                                    <a class="btn btn-primary mb-2" t-attf-href="/event/#{ slug(event) }">Go to Event</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            </t>
+        </xpath>
+    </template>
+
+</odoo>

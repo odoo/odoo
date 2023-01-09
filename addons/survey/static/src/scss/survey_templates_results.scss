@@ -1,0 +1,90 @@
+@media print {
+    .tab-content > .tab-pane {
+        display: block;
+    }
+    .tab-content > .survey_graph {
+        max-width: 768px;
+    }
+    html {
+        height: unset;
+    }
+}
+
+.o_survey_results_topbar {
+    border: 1px solid rgba(0, 0, 0, 0.125);
+
+    .nav-item.dropdown a {
+        min-width: 13em;
+    }
+    .o_survey_results_topbar_dropdown_filters {
+        // Dropdown adapted from event templates to get a coherent styling
+        .dropdown-toggle {
+            text-align: left;
+            &:hover, &:focus {
+                text-decoration: none;
+            }
+            &:after {
+                float:right;
+                margin-top: .5em;
+            }
+            .fa {
+                margin-right: .4em;
+            }
+        }
+        .dropdown-menu {
+            margin-top: $navbar-padding-y;
+            min-width: 12rem;
+            max-height: 250px;
+            overflow-y: auto;
+        }
+        .dropdown-item {
+            &.active .badge { // Invert badge display when the item is active
+                background-color: color-contrast(map-get($theme-colors, 'primary'));
+                color: map-get($theme-colors, 'primary');
+            }
+        }
+    }
+    .o_survey_results_topbar_answer_filters {
+        .btn.filter-remove-answer {
+            border-color: #DEE2E6;
+            background-color: transparent;
+            white-space: normal;
+            text-align: left;
+            i.fa-times {
+                cursor: pointer;
+            }
+        }
+    }
+    .o_survey_results_topbar_clear_filters {
+        cursor: pointer;
+
+        &:hover {
+            text-decoration: underline;
+        }
+    }
+}
+
+.o_survey_results_question {
+    .o_survey_results_question_pill {
+        .only_right_radius {
+            border-radius: 0 2em 2em 0;
+        }
+        .only_left_radius {
+            border-radius: 2em 0 0 2em;
+        }
+    }
+    .o_survey_answer i {
+        padding:3px;
+        cursor:pointer;
+
+        &.o_survey_answer_matrix_whitespace {
+            padding-right:18px;
+            cursor:default;
+        }
+    }
+    .nav-tabs .nav-link.active {
+        background-color: transparent;
+        border-color: #DEE2E6;
+        font-weight: bold;
+    }
+}

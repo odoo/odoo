@@ -1,0 +1,17 @@
+# This file may be changed either manually or by running dpkg-reconfigure.
+#
+# N.B.: dpkg-reconfigure deletes everything from this file except for
+# the assignments to variables INTERFACES, HOTPLUG_INTERFACES, ARGS and
+# SUSPEND_ACTION.  When run it uses the current values of those variables
+# as their default values, thus preserving the administrator's changes.
+#
+# This file is sourced by both the init script /etc/init.d/ifplugd and
+# the udev script /lib/udev/ifplugd.agent to give default values.
+# The init script starts ifplugd for all interfaces listed in
+# INTERFACES, and the udev script starts ifplugd for all interfaces
+# listed in HOTPLUG_INTERFACES. The special value all starts one
+# ifplugd for all interfaces being present.
+INTERFACES="eth0"  # auto
+HOTPLUG_INTERFACES="eth0"  # all
+ARGS="-q -f -u0 -d10 -w -I"
+SUSPEND_ACTION="stop"

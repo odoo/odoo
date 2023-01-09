@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_account_invoice_filter" model="ir.ui.view">
+        <field name="name">account.move.select</field>
+        <field name="model">account.move</field>
+        <field name="inherit_id" ref="account.view_account_invoice_filter"/>
+        <field name="arch" type="xml">
+            <field name="partner_id" position="after">
+                <field name="l10n_latam_document_type_id"/>
+            </field>
+            <group>
+                <filter string="Document Type" name="l10n_latam_document_type" domain="" context="{'group_by':'l10n_latam_document_type_id'}"/>
+            </group>
+        </field>
+    </record>
+
+    <record id="view_account_move_filter" model="ir.ui.view">
+        <field name="name">account.move.filter</field>
+        <field name="model">account.move</field>
+        <field name="inherit_id" ref="account.view_account_move_filter"/>
+        <field name="arch" type="xml">
+            <field name="partner_id" position="after">
+                <field name="l10n_latam_document_type_id"/>
+            </field>
+            <group>
+                <filter string="Document Type" name="l10n_latam_document_type" domain="" context="{'group_by':'l10n_latam_document_type_id'}"/>
+            </group>
+        </field>
+    </record>
+
+    <record id="view_move_form" model="ir.ui.view">
+        <field name="name">account.move.form</field>
+        <field name="model">account.move</field>
+        <field name="inherit_id" ref="account.view_move_form"/>
+        <field name="arch" type="xml">
+            <form>
+                <field name="l10n_latam_available_document_type_ids" invisible="1"/>
+                <field name="l10n_latam_use_documents" invisible="1"/>
+                <field name="l10n_latam_manual_document_number" invisible="1"/>
+            </form>
+
+            <xpath expr="//div[@name='journal_div']" position="after">
+                <field name="l10n_latam_document_type_id"
+                    attrs="{'invisible': [('l10n_latam_use_documents', '=', False)], 'required': [('partner_id', '!=', False), ('l10n_latam_use_documents', '=', True)], 'readonly': [('posted_before', '=', True)]}"
+                    domain="[('id', 'in', l10n_latam_available_document_type_ids)]" options="{'no_open': True, 'no_create': True}"/>
+                <field name="l10n_latam_document_number"
+                    attrs="{'invisible': ['|', ('l10n_latam_use_documents', '=', False), ('l10n_latam_manual_document_number', '=', False), '|', '|', ('l10n_latam_use_documents', '=', False), ('highest_name', '!=', False), ('state', '!=', 'draft')],
+                            'required': [('partner_id', '!=', False), ('l10n_latam_use_documents', '=', True), '|', ('l10n_latam_manual_document_number', '=', True), ('highest_name', '=', False)],
+                            'readonly': [('posted_before', '=', True), ('state', '!=', 'draft')]}"/>
+            </xpath>
+
+            <!-- on latam_documents we use document_number to set name -->
+            <field name="name" position="attributes">
+                <attribute name="attrs">{'invisible':[('name', '=', '/'), ('posted_before', '=', False), ('quick_edit_mode', '=', False)],
+                                         'readonly': ['|', ('state', '!=', 'draft'), ('l10n_latam_use_documents', '=', True)]}</attribute>
+            </field>
+
+        </field>
+    </record>
+
+</odoo>

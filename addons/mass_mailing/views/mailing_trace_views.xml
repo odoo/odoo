@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!--  MAILING TRACE !-->
+    <record model="ir.ui.view" id="mailing_trace_view_search">
+        <field name="name">mailing.trace.view.search</field>
+        <field name="model">mailing.trace</field>
+        <field name="arch" type="xml">
+           <search string="Mail Statistics">
+                <field name="mail_mail_id_int"/>
+                <field name="message_id"/>
+                <field name="email"/>
+                <field name="mass_mailing_id"/>
+                <filter string="Scheduled" name="filter_scheduled" domain="[('trace_status', '=', 'outgoing')]"/>
+                <filter string="Canceled" name="filter_canceled" domain="[('trace_status', '=', 'cancel')]"/>
+                <filter string="Sent" name="filter_sent" domain="[('sent_datetime', '!=', False)]"/>
+                <filter string="Clicked" name="filter_clicked" domain="[('links_click_datetime', '!=', False)]"/>
+                <filter string="Delivered" name="filter_delivered" domain="[('sent_datetime', '!=', False), ('trace_status', 'not in', ['error', 'cancel'])]"/>
+                <filter string="Opened" name="filter_opened" domain="[('trace_status', 'in', ['open', 'reply'])]"/>
+                <filter string="Replied" name="filter_replied" domain="[('trace_status', '=', 'reply')]"/>
+                <filter string="Bounced" name="filter_bounced" domain="[('trace_status', '=', 'bounce')]"/>
+                <filter string="Failed" name="filter_failed" domain="[('trace_status', '=', 'error')]"/>
+                <group expand="0" string="Group By">
+                    <filter string="State" name="state" domain="[]" context="{'group_by': 'trace_status'}"/>
+                    <filter string="Open Date" name="group_open_date" domain="[('trace_status', 'in', ['open', 'reply'])]" context="{'group_by': 'open_datetime:day'}"/>
+                    <filter string="Reply Date" name="group_reply_date" domain="[('trace_status', '=', 'reply')]" context="{'group_by': 'reply_datetime:day'}"/>
+                    <filter string="Last State Update" name="state_update" domain="[]" context="{'group_by': 'write_date'}"/>
+                    <filter string="Mass Mailing" name="mass_mailing" domain="[]" context="{'group_by': 'mass_mailing_id'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="mailing_trace_view_tree" model="ir.ui.view">
+        <field name="name">mailing.trace.view.tree</field>
+        <field name="model">mailing.trace</field>
+        <field name="arch" type="xml">
+            <tree string="Mailing Traces" create="0">
+                <field name="mass_mailing_id"/>
+                <field name="email"/>
+                <field name="message_id"/>
+                <field name="sent_datetime"/>
+                <field name="links_click_datetime"/>
+                <field name="trace_status" widget="badge"/>
+                <field name="failure_type" optional="show"/>
+                <field name="open_datetime" optional="hide"/>
+                <field name="reply_datetime" optional="hide"/>
+                <button name="action_view_contact" type="object"
+                        string="Open Recipient" icon="fa-user"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="mailing_trace_view_tree_mail" model="ir.ui.view">
+        <field name="name">mailing.trace.view.tree.mail</field>
+        <field name="model">mailing.trace</field>
+        <field name="priority">20</field>
+        <field name="arch" type="xml">
+            <tree string="Mail Traces" create="0">
+                <field name="mass_mailing_id"/>
+                <field name="email"/>
+                <field name="message_id" optional="hide"/>
+                <field name="sent_datetime"/>
+                <field name="links_click_datetime"/>
+                <field name="trace_status" widget="badge"/>
+                <field name="failure_type" optional="show"/>
+                <field name="open_datetime" optional="hide"/>
+                <field name="reply_datetime" optional="hide"/>
+                <button name="action_view_contact" type="object"
+                        string="Open Recipient" icon="fa-user"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="mailing_trace_view_form" model="ir.ui.view">
+        <field name="name">mailing.trace.view.form</field>
+        <field name="model">mailing.trace</field>
+        <field name="arch" type="xml">
+            <form string="Mail Statistics" create="0" edit="0">
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button name="action_view_contact"
+                                type="object" icon="fa-user" class="oe_stat_button">
+                            <span widget="statinfo">Open Recipient</span>
+                        </button>
+                    </div>
+                    <group>
+                        <group string="Status">
+                            <field name="trace_status"/>
+                            <field name="failure_type" attrs="{'invisible' : [('failure_type', '=', False)]}"/>
+                            <field name="sent_datetime" attrs="{'invisible' : [('sent_datetime', '=', False)]}"/>
+                            <field name="links_click_datetime" attrs="{'invisible' : [('links_click_datetime', '=', False)]}"/>
+                            <field name="open_datetime" attrs="{'invisible' : [('open_datetime', '=', False)]}"/>
+                            <field name="reply_datetime" attrs="{'invisible' : [('reply_datetime', '=', False)]}"/>
+                        </group>
+                        <group string="Mailing">
+                            <field name="trace_type" invisible="1"/>
+                            <field name="email" string="Recipient Address"/>
+                            <field name="mass_mailing_id"/>
+                            <field name="mail_mail_id_int" string="Mail ID" groups="base.group_no_one"/>
+                            <field name="message_id" groups="base.group_no_one"/>
+                        </group>
+                        <group string="Marketing">
+                            <field name="campaign_id" groups="mass_mailing.group_mass_mailing_campaign"/>
+                            <field name="medium_id"/>
+                            <field name="source_id"/>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_mail_mail_statistics_graph" model="ir.ui.view">
+        <field name="name">Mail Statistics Graph</field>
+        <field name="model">mailing.trace</field>
+        <field name="arch" type="xml">
+            <graph string="Mail Statistics" sample="1">
+                <field name="write_date" interval="day"/>
+                <field name="trace_status"/>
+            </graph>
+        </field>
+    </record>
+
+    <record id="mailing_trace_action" model="ir.actions.act_window">
+        <field name="name">Mailing Traces</field>
+        <field name="res_model">mailing.trace</field>
+        <field name="view_mode">tree,form,graph,pivot</field>
+        <field name="domain">[]</field>
+    </record>
+
+    <record id="action_view_mail_mail_statistics_mailing" model="ir.actions.act_window">
+        <field name="name">Mail Statistics</field>
+        <field name="res_model">mailing.trace</field>
+        <field name="view_mode">graph,tree,form,pivot</field>
+        <field name="domain">[]</field>
+        <field name="context">{'search_default_mass_mailing_id': active_id}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                No data yet!
+            </p>
+        </field>
+    </record>
+</odoo>

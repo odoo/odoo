@@ -1,0 +1,51 @@
+<odoo>
+    <record model="ir.actions.server" id="demo_failure_action">
+        <field name="name">Failed to install demo data for some modules, demo disabled</field>
+        <field name="model_id" ref="base.model_ir_demo_failure_wizard"/>
+        <field name="state">code</field>
+        <field name="code">
+failures = env['ir.demo_failure'].search([
+    ('wizard_id', '=', False),
+])
+record = model.create({
+    'failure_ids': [Command.set(failures.ids)],
+})
+action = {
+    'type': 'ir.actions.act_window',
+    'res_id': record.id,
+    'res_model': 'ir.demo_failure.wizard',
+    'target': 'new',
+    'views': [(env.ref('base.demo_failures_dialog').id, 'form')],
+}
+        </field>
+    </record>
+
+    <record model="ir.ui.view" id="demo_failures_dialog">
+        <field name="name">Demo Failure Dialog</field>
+        <field name="model">ir.demo_failure.wizard</field>
+        <field name="arch" type="xml">
+            <form>
+                <h3>
+                    The demonstration data of <field name="failures_count"/>
+                    module(s) failed to install and were disabled
+                </h3>
+                <field name="failure_ids">
+                    <tree>
+                        <field name="module_id"/>
+                        <field name="error"/>
+                    </tree>
+                </field>
+                <footer>
+                    <button string="Ok" class="oe_highlight" type="object" name="done" data-hotkey="q"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record model="ir.actions.todo" id="demo_failure_todo">
+        <field name="name">Demo Failure Notification</field>
+        <field name="sequence">1</field>
+        <field name="state">done</field>
+        <field name="action_id" ref="base.demo_failure_action"/>
+    </record>
+</odoo>

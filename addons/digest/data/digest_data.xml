@@ -1,0 +1,474 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo><data noupdate="1">
+
+    <!-- Email layout: encapsulation when sending (not used in backend display) -->
+    <template id="digest_mail_layout">
+&lt;!DOCTYPE html&gt;
+<html xmlns="http://www.w3.org/1999/xhtml">
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+        <meta name="format-detection" content="telephone=no"/>
+        <meta name="viewport" content="width=device-width; initial-scale=1.0; maximum-scale=1.0; user-scalable=no;"/>
+        <meta http-equiv="X-UA-Compatible" content="IE=9; IE=8; IE=7; IE=EDGE" />
+
+        <style type="text/css">
+            :root {
+                --color-company: <t t-esc="company.secondary_color or '#875a7b'"/>;
+            }
+            body {
+                margin: 0;
+                padding: 0;
+                font-family: Arial, Helvetica, Verdana, sans-serif;
+            }
+            #header_background {
+                background-color: var(--color-company);
+            }
+            .global_layout {
+                max-width: 588px;
+                margin: 0 auto;
+                border: 1px solid #eeeeee;
+                border-top: 0;
+                background-color: #ffffff;
+            }
+            .company_name {
+                display: inline;
+                vertical-align: middle;
+                font-weight: bold;
+                color: #8f8f8f;
+            }
+            .title_subtitle {
+                font-weight: bold;
+                color: #282f33;
+                word-break: break-all;
+            }
+            .button {
+                float: right;
+                background-color: var(--color-company);
+                color: #ffffff;
+                border-radius: 5px;
+            }
+            #button_connect {
+                text-align: center;
+            }
+            .date {
+                color: #8f8f8f;
+            }
+            .tip_title {
+                margin-top: 0;
+                font-weight: bold;
+            }
+            .tip_content {
+                margin: 0 auto;
+                color:#333333;
+                text-align: justify;
+                text-justify: inter-word;
+            }
+            .tip_button {
+                background-color: var(--color-company);
+                border-radius: 5px;
+                margin: 14px 16px 14px 0px;
+                padding: 10px;
+                text-decoration: none;
+            }
+            .tip_button_text {
+                color: #ffffff;
+            }
+            .illustration_border {
+                width: 100%;
+                border: 1px solid grey;
+            }
+            .kpi_row_footer {
+                padding-bottom: 20px;
+            }
+            .kpi_header {
+                overflow: auto;
+                padding-bottom: 10px;
+                border-bottom: 1px solid #eeeeee;
+                font-size: 15px;
+                font-weight: bold;
+                color: #282f33;
+            }
+            #button_open_report {
+                padding: 5px 10px;
+                font-size: 12px;
+                font-weight: normal;
+            }
+            .kpi_cell {
+                float: left;
+                width: 33%;
+                text-align: center;
+                padding-top: 2px;
+            }
+            .kpi_cell_center {
+                border-top: 2px solid var(--color-company);
+            }
+            .kpi_cell_border {
+                border-top: 2px solid #00A09D;
+            }
+            .kpi_value {
+                color: #282f33;
+                font-weight: bold;
+                text-decoration: none;
+            }
+            .kpi_center_col {
+                color: var(--color-company);
+            }
+            .kpi_border_col {
+                color: #00A09D;
+            }
+            .kpi_value_label {
+                display: inline-block;
+                margin-bottom: 10px;
+                color: #888888;
+                font-size: 12px;
+                text-transform: uppercase;
+            }
+            .kpi_margin {
+                width: 75px;
+                padding: 5px 10px;
+                text-decoration: none;
+                border-radius: 5px;
+            }
+            .positive_kpi_margin {
+                border: 1px solid #c4ecd7;
+                background-color: #d5f1e2;
+                color: #17613a;
+            }
+            .negative_kpi_margin {
+                border: 1px solid #f4cfce;
+                background-color: #f7dddc;
+                color: #712b29;
+            }
+            .kpi_trick {
+                clear: both;
+            }
+            .download_app {
+                height: 40px;
+                margin-bottom: 5px;
+                display: inline-block;
+            }
+            .preference_div {
+                clear: both;
+                background-color: #eeeeee;
+                text-align: center;
+            }
+            .preference {
+                margin-bottom: 15px;
+                color: #6b6d70;
+            }
+            .preference a {
+                text-decoration: none;
+            }
+            .by_odoo {
+                color: #8f8f8f;
+            }
+            .odoo_link {
+                text-decoration: none;
+            }
+            .odoo_link_text {
+                font-weight: bold;
+                color: var(--color-company);
+            }
+            .run_business {
+                color: #2d2a26;
+            }
+            #footer {
+                background-color: #eeeeee;
+                color: #8f8f8f;
+                text-align: center;
+            }
+
+            @media only screen and (max-width: 650px) {
+                .d-block {
+                    display: block !important;
+                }
+                #header_background {
+                    padding-top: 0px;
+                }
+                #header {
+                    padding: 15px 20px;
+                    border: 1px solid #eeeeee;
+                }
+                .global_layout {
+                    padding: 20px;
+                }
+                .company_name {
+                    font-size: 15px;
+                }
+                .title_subtitle {
+                    margin: 5px auto;
+                }
+                #button_connect {
+                    padding: 4px 10px;
+                    font-size: 12px;
+                }
+                .date {
+                    margin-top: 10px;
+                    font-size: 10px;
+                }
+                .tip_title {
+                    font-size: 14px;
+                }
+                .tip_content {
+                    margin: 10px auto 0 auto;
+                    font-size: 12px;
+                    line-height: 20px;
+                }
+                .illustration_border {
+                    margin-top: 15px;
+                }
+                .kpi_value {
+                    font-size: 20px;
+                }
+                .kpi_margin {
+                    font-size: 10px;
+                }
+                .kpi_margin_margin {
+                    margin-bottom: 5px;
+                }
+                .preference_div {
+                    padding: 15px;
+                }
+                .preference {
+                    font-size: 12px;
+                }
+                .by_odoo {
+                    font-size: 10px;
+                }
+                .run_business {
+                    margin: 20px auto;
+                    font-size: 12px;
+                }
+                #footer {
+                    font-size: 15px;
+                }
+                #powered {
+                    margin-top: 15px;
+                }
+                .tip_twocol {
+                    overflow: auto;
+                    margin-top: 15px;
+                }
+                .tip_twocol_left {
+                    text-align: left;
+                }
+                .tip_twocol_img {
+                    width: 90%;
+                }
+            }
+
+            @media only screen and (min-width: 651px) {
+                #header_background {
+                    padding-top: 70px;
+                }
+                #header {
+                    padding: 20px 30px 25px 30px;
+                    border-start: 1px solid var(--color-company);
+                    border-end: 1px solid var(--color-company);
+                }
+                .global_layout {
+                    padding: 25px 30px 30px 30px;
+                }
+                .company_name {
+                    font-size: 25px;
+                }
+                .title_subtitle {
+                    margin: 10px auto;
+                }
+                .button {
+                    padding: 5px 10px;
+                }
+                #button_connect {
+                    padding: 6px 10px;
+                    font-size: 15px;
+                }
+                .date {
+                    margin-top: 15px;
+                    font-size: 12px;
+                }
+                .tip_title {
+                    font-size: 20px;
+                }
+                .tip_content {
+                    margin: 15px auto 0 auto;
+                    font-size: 15px;
+                    line-height: 25px;
+                }
+                .illustration_border {
+                    margin-top: 20px;
+                }
+                .kpi_value {
+                    font-size: 30px;
+                }
+                .kpi_margin {
+                    font-size: 12px;
+                }
+                .kpi_margin_margin {
+                    margin-bottom: 10px;
+                }
+                .preference_div {
+                    padding: 20px;
+                }
+                .preference {
+                    font-size: 15px;
+                }
+                .by_odoo {
+                    font-size: 12px;
+                }
+                .run_business {
+                    margin: 15px auto;
+                    font-size: 18px;
+                }
+                #footer {
+                    font-size: 20px;
+                }
+                #stock_tip {
+                    overflow: auto;
+                    margin-top: 20px;
+                }
+                #stock_div_img {
+                    text-align: center;
+                }
+                #stock_img {
+                    width: 70%;
+                }
+            }
+         </style>
+    </head>
+    <body>
+        <t t-out="body"/>
+    </body>
+</html>
+    </template>
+
+    <!-- DIGEST MAIN TEMPLATE -->
+    <template id="digest_mail_main">
+<div id="header_background">
+    <div class="global_layout" id="header">
+        <div style="overflow: auto;">
+            <p t-field="company.name" class="company_name" />
+            <a t-att-href="top_button_url" target="_blank"><span t-esc="top_button_label" class="button" id="button_connect" /></a>
+        </div>
+        <div class="title_subtitle">
+            <p t-esc="title" />
+            <p t-if="sub_title" t-esc="sub_title" />
+        </div>
+        <div t-esc="formatted_date" class="date" />
+    </div>
+</div>
+
+<div style="background-color: #eeeeee;">
+<div t-foreach="tips" t-as="tip" t-out="tip" class="global_layout" />
+
+<div t-if="kpi_data" class="global_layout" style="padding-bottom: 0;">
+    <t t-set="kpi_color" t-value="'kpi_border_col'"/>
+    <div t-foreach="kpi_data" t-as="kpi_info" class="kpi_row_footer">
+        <div t-if="kpi_info.get('kpi_col1') or kpi_info.get('kpi_col2') or kpi_info.get('kpi_col3')" t-att-data-field="kpi_info['kpi_name']">
+            <div class="kpi_header">
+                <span t-esc="kpi_info['kpi_fullname']" style="vertical-align: middle;" />
+                <a t-if="kpi_info['kpi_action']" t-att-href="'/web#action=%s' % kpi_info['kpi_action']"><span class="button" id="button_open_report">Open Report</span></a>
+            </div>
+            <div t-if="kpi_info.get('kpi_col1')" class="kpi_cell kpi_cell_border">
+                <div t-call="digest.digest_tool_kpi" >
+                    <t t-set="kpi_value" t-value="kpi_info['kpi_col1']['value']"/>
+                    <t t-set="kpi_margin" t-value="kpi_info['kpi_col1'].get('margin')"/>
+                    <t t-set="kpi_subtitle" t-value="kpi_info['kpi_col1']['col_subtitle']"/>
+                </div>
+            </div>
+            <div t-if="kpi_info.get('kpi_col2')" class="kpi_cell kpi_cell_center">
+                <div t-call="digest.digest_tool_kpi">
+                    <t t-set="kpi_value" t-value="kpi_info['kpi_col2']['value']"/>
+                    <t t-set="kpi_margin" t-value="kpi_info['kpi_col2'].get('margin')"/>
+                    <t t-set="kpi_subtitle" t-value="kpi_info['kpi_col2']['col_subtitle']"/>
+                </div>
+            </div>
+            <div t-if="kpi_info.get('kpi_col3')" class="kpi_cell kpi_cell_border">
+                <div t-call="digest.digest_tool_kpi">
+                    <t t-set="kpi_value" t-value="kpi_info['kpi_col3']['value']"/>
+                    <t t-set="kpi_margin" t-value="kpi_info['kpi_col3'].get('margin')"/>
+                    <t t-set="kpi_subtitle" t-value="kpi_info['kpi_col3']['col_subtitle']"/>
+                </div>
+            </div>
+            <div class="kpi_trick" />
+        </div>
+    </div>
+</div>
+
+<t t-if="body" t-out="body"/>
+
+<div>
+    <div class="global_layout">
+        <div class="preference_div">
+            <div t-if="preferences" t-foreach="preferences" t-as="preference"
+                class="preference">
+                <t t-out="preference"/>
+            </div>
+            <div class="by_odoo">
+                Sent by <a href="https://www.odoo.com" target="_blank" class="odoo_link"><span class="odoo_link_text">Odoo</span></a>
+                <t t-if="unsubscribe_token">
+                    –
+                    <a t-attf-href="/digest/#{object.id}/unsubscribe?token=#{unsubscribe_token}&amp;user_id=#{user.id}"
+                       target="_blank" style="text-decoration: none;">
+                        <span style="color: #8f8f8f;">Unsubscribe</span>
+                    </a>
+                </t>
+                <t t-elif="object and object._name == 'digest.digest'">
+                    –
+                    <a t-att-href="'/web#view_type=form&amp;model=digest.digest&amp;id=%s' % object.id"
+                       target="_blank" style="text-decoration: none;">
+                        <span style="color: #8f8f8f;">Unsubscribe</span>
+                    </a>
+                </t>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div t-if="display_mobile_banner" t-call="digest.digest_section_mobile" />
+
+<div class="global_layout" id="footer">
+    <p style="font-weight: bold;" t-esc="company.name"/>
+    <p class="by_odoo" id="powered">
+        Powered by <a href="https://www.odoo.com" target="_blank" class="odoo_link"><span class="odoo_link_text">Odoo</span></a>
+    </p>
+</div>
+</div>
+    </template>
+
+
+    <!--                     DIGEST PARTS                    -->
+
+    <!-- MOBILE BANNER -->
+    <template id="digest_section_mobile">
+<div class="global_layout" style="overflow: auto;">
+    <div style="width: 50%; float: left; text-align: right;">
+        <img src="https://www.odoo.com/web/image/24717933/odoo-mobile.png" alt="Odoo Mobile" />
+    </div>
+    <div style="width: 50%; float: left;">
+        <p class="run_business">Run your business from anywhere with <b>Odoo Mobile</b>.</p>
+        <div>
+            <a href="https://play.google.com/store/apps/details?id=com.odoo.mobile" target="_blank"><img class="download_app" src="https://download.odoocdn.com/digests/digest/static/src/img/google_play.png" /></a>
+        </div>
+        <div>
+            <a href="https://itunes.apple.com/us/app/odoo/id1272543640" target="_blank"><img class="download_app" src="https://download.odoocdn.com/digests/digest/static/src/img/app_store.png" /></a>
+        </div>
+    </div>
+</div>
+    </template>
+
+
+    <!--                     DIGEST TOOLS                    -->
+
+    <!-- KPI DISPLAY -->
+    <template id="digest_tool_kpi">
+<span t-esc="kpi_value" t-att-class="'kpi_value %s' % kpi_color " />
+<br/>
+<span t-esc="kpi_subtitle" class="kpi_value_label" />
+<div t-if="kpi_margin" class="kpi_margin_margin">
+    <span   t-if="kpi_margin &gt; 0.0" class="kpi_margin positive_kpi_margin">▲ <t t-esc="'%.2f' % kpi_margin"/> %</span>
+    <span t-elif="kpi_margin &lt; 0.0" class="kpi_margin negative_kpi_margin">▼ <t t-esc="'%.2f' % kpi_margin"/> %</span>
+</div>
+    </template>
+
+</data>
+</odoo>

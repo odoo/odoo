@@ -1,0 +1,44 @@
+<?xml version="1.0"?>
+<odoo>
+    <record id="mailing_contact_import_view_form" model="ir.ui.view">
+        <field name="name">mailing.contact.import.view.form</field>
+        <field name="model">mailing.contact.import</field>
+        <field name="arch" type="xml">
+            <form string="Import Mailing Contacts">
+                <group>
+                    <field name="mailing_list_ids" string="Import contacts in"
+                        widget="many2many_tags" placeholder="Select mailing lists"
+                        options="{'no_create': True}"/>
+                </group>
+                <p>
+                    Write or paste email addresses in the field below.
+                    Each line will be imported as a mailing list contact.
+                </p>
+                <label for="contact_list" class="mb-2">Contact List</label>
+                <field name="contact_list" class="o_mailing_contact_import_list"
+                    nolabel="1" default_focus="1"
+                    placeholder='"Damien Roberts" &lt;d.roberts@example.com&gt;&#10;"Rick Sanchez" &lt;rick_sanchez@example.com&gt;&#10;victor_hugo@example.com'/>
+                <p class="text-muted mb-0">
+                    Want to import country, company name and more?
+                    <button type="object" name="action_open_base_import"
+                        class="fw-normal px-0 btn btn-link">
+                        Upload a file
+                    </button>
+                </p>
+                <footer>
+                    <button string="Import" type="object" name="action_import"
+                        class="btn-primary" data-hotkey="i"/>
+                    <button string="Discard" class="btn-secondary"
+                        special="cancel" data-hotkey="z"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="mailing_contact_import_action" model="ir.actions.act_window">
+        <field name="name">Import Mailing Contacts</field>
+        <field name="res_model">mailing.contact.import</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+</odoo>

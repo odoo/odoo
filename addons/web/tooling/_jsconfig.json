@@ -1,0 +1,55 @@
+{
+    "compilerOptions": {
+        "moduleResolution": "node",
+        "baseUrl": ".",
+        "target": "ES2022",
+        "noEmit": true,
+        "disableSizeLimit": true,
+        "typeRoots": ["addons/web/tooling/types"],
+        "paths": {
+            "@web/*": ["addons/web/static/src/*"],
+            "@web_enterprise/*": ["web_enterprise/static/src/*"],
+            "@web_kanban_gauge/*": ["addons/web_kanban_gauge/static/src/*"],
+            "@web_unsplash/*": ["addons/web_unsplash/static/src/*"],
+            "@web_editor/*": ["addons/web_editor/static/src/*"],
+            "@web_tour/*": ["addons/web_tour/static/src/*"],
+            "@web_gantt/*": ["web_gantt/static/src/*"],
+            "@web_cohort/*": ["web_cohort/static/src/*"],
+            "@web_map/*": ["web_map/static/src/*"],
+            "@web_mobile/*": ["web_mobile/static/src/*"],
+            "@web_grid/*": ["web_grid/static/src/*"],
+            "@web_studio/*": ["web_studio/static/src/*"],
+            "@mail/*": ["addons/mail/static/src/*"],
+            "@point_of_sale/*": ["addons/point_of_sale/static/src/*"],
+
+            "@l10n_co_pos/*": ["addons/l10n_co_pos/static/src/*"],
+            "@l10n_fr_pos_cert/*": ["addons/l10n_fr_pos_cert/static/src/*"],
+            "@l10n_gcc_pos/*": ["addons/l10n_gcc_pos/static/src/*"],
+            "@l10n_in_pos/*": ["addons/l10n_in_pos/static/src/*"],
+            "@l10n_sa_pos/*": ["addons/l10n_sa_pos/static/src/*"],
+            "@pos_adyen/*": ["addons/pos_adyen/static/src/*"],
+            "@pos_discount/*": ["addons/pos_discount/static/src/*"],
+            "@pos_epson_printer/*": ["addons/pos_epson_printer/static/src/*"],
+            "@pos_epson_printer_restaurant/*": ["addons/pos_epson_printer_restaurant/static/src/*"],
+            "@pos_hr/*": ["addons/pos_hr/static/src/*"],
+            "@pos_loyalty/*": ["addons/pos_loyalty/static/src/*"],
+            "@pos_mercury/*": ["addons/pos_mercury/static/src/*"],
+            "@pos_restaurant/*": ["addons/pos_restaurant/static/src/*"],
+            "@pos_restaurant_adyen/*": ["addons/pos_restaurant_adyen/static/src/*"],
+            "@pos_restaurant_stripe/*": ["addons/pos_restaurant_stripe/static/src/*"],
+            "@pos_sale/*": ["addons/pos_sale/static/src/*"],
+            "@pos_sale_product_configurator/*": ["addons/pos_sale_product_configurator/static/src/*"],
+            "@pos_six/*": ["addons/pos_six/static/src/*"],
+            "@pos_stripe/*": ["addons/pos_stripe/static/src/*"]
+        }
+    },
+    "include": ["**/*.js", "**/*.ts"],
+    "exclude": [
+        "node_modules",
+        "setup",
+        "doc",
+        "**/lib",
+        "**/l10n*",
+        "addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js"
+    ]
+}

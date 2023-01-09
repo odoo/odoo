@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+
+<t t-extend="website_event_track_live.website_event_track_suggestion">
+    <t t-jquery="a.owevent_track_suggestion_replay" t-operation="before">
+        <a t-if="widget.currentTrack.showQuiz" class="btn btn-primary btn-lg me-2 owevent_track_suggestion_quiz"
+           href="#we_track_quiz_container"
+           onclick="$('.o_quiz_js_quiz_container').removeClass('d-none');">
+            <span>Take the Quiz</span>
+        </a>
+    </t>
+</t>
+
+</odoo>

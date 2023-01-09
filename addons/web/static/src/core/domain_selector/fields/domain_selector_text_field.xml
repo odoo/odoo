@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates xml:space="preserve">
+
+    <t t-name="web.DomainSelectorTextField" owl="1">
+        <t t-if="props.operator.category === 'in'">
+            <DomainSelectorFieldInputWithTags t-props="props" />
+        </t>
+        <t t-else="">
+            <div class="o_ds_value_cell">
+                <DomainSelectorFieldInput t-props="props" />
+            </div>
+        </t>
+    </t>
+
+</templates>

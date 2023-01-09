@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_edit_robots" model="ir.ui.view">
+        <field name="name">Edit Robots.txt</field>
+        <field name="model">website.robots</field>
+        <field name="arch" type="xml">
+            <form>
+                <field name="content"/>
+                <small>
+                    <a role="button" class="btn btn-link" target="_blank" href="https://www.google.com/webmasters/tools/robots-testing-tool">
+                        Test your robots.txt with Google Search Console
+                    </a>
+                    <br/><br/>
+                    Example of rule:<br/>
+                    <code class='ms-4'>Disallow: /web/login</code><br/>
+                    <code class='ms-4'>Allow: *</code>
+                </small>
+                <footer>
+                    <button string="Save" name="action_save" type="object" class="oe_highlight" data-hotkey="q"/>
+                    <button string="Cancel" class="btn btn-default" special="cancel" data-hotkey="z"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+</odoo>

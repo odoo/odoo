@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="sale_coupon_result" inherit_id="website_sale.coupon_form">
+        <xpath expr="//form[@name='coupon_code']//input[@name='promo']" position="attributes">
+            <attribute name="placeholder">Gift card or discount code...</attribute>
+        </xpath>
+        <xpath expr="//t[@name='code_not_available']" position="replace"/>
+    </template>
+
+    <template id="modify_code_form" inherit_id="website_sale.total" name="Loyalty, coupon, gift card">
+        <xpath expr="//div[@id='cart_total']//table/tr[last()]" position="after">
+            <tr t-if="not hide_promotions" class="oe_website_sale_gift_card">
+                <td colspan="3" class="text-center text-xl-end border-0">
+                    <span class=''>
+                        <t t-if="request.params.get('code_not_available')">
+                            <div class="alert alert-danger text-start mt16" role="alert">
+                                Invalid or expired promo code.
+                            </div>
+                        </t>
+                        <t t-if="website_sale_order.get_promo_code_error(delete=False)">
+                            <div class="alert alert-danger text-start mt16" role="alert">
+                                <t t-esc="website_sale_order.get_promo_code_error()"/>
+                            </div>
+                        </t>
+                        <t t-if="website_sale_order and website_sale_order.get_promo_code_success_message(delete=False)">
+                            <div class="alert alert-success text-start mt16" role="alert">
+                                You have successfully applied the following code: <strong t-esc="website_sale_order.get_promo_code_success_message()"/>
+                            </div>
+                        </t>
+                        <t t-if="website_sale_order">
+                            <t t-foreach="website_sale_order._get_claimable_rewards().items()" t-as="coupon_reward">
+                                <t t-foreach="coupon_reward[1]" t-as="reward">
+                                    <form t-att-action="'/shop/claimreward%s' % (redirect and '?r=' + redirect or '')"
+                                        method="post" name="claim_reward">
+                                        <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
+                                        <input type="hidden" name="reward" t-att-value="reward.id"/>
+                                        <div class="alert alert-success text-start mt16" role="alert">
+                                            <div class="d-flex flex-row">
+                                                <div class="flex-grow-1">
+                                                    <strong t-esc="reward.description"/>
+                                                    <div t-if="reward.program_id.portal_visible">
+                                                        <t t-if="not reward.program_id.is_nominative"><span t-out="website_sale_order._get_real_points_for_coupon(coupon_reward[0])"/> <span t-out="reward.point_name"/></t>
+                                                        <t t-else="">
+                                                            <span>You have <t t-out="website_sale_order._get_real_points_for_coupon(coupon_reward[0])"/></span> <span t-out="reward.point_name"/>
+                                                            <span t-if="reward.program_id.program_type == 'ewallet'"> in your ewallet</span>
+                                                            <t t-if="reward.program_id.program_type != 'ewallet'">
+                                                                <br/>
+                                                                <span>Costs <t t-out="reward.required_points"/></span> <span t-out="reward.point_name"/>
+                                                            </t>
+                                                        </t>
+                                                    </div>
+                                                </div>
+                                                <div class="justify-content-end">
+                                                    <a class="btn btn-primary a-submit" href="#" role="button">
+                                                        <t t-if="reward.program_id.program_type == 'ewallet'">Pay with eWallet</t>
+                                                        <t t-else="">Claim</t>
+                                                    </a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </form>
+                                </t>
+                            </t>
+                        </t>
+                    </span>
+                </td>
+            </tr>
+        </xpath>
+    </template>
+
+    <template id="website_sale_coupon_cart_hide_qty" inherit_id="website_sale.cart_lines">
+        <xpath expr="//del" position="attributes">
+            <attribute name="t-if">not line.is_reward_line</attribute>
+        </xpath>
+    </template>
+
+    <template id="layout" inherit_id="website.layout">
+        <body position="inside">
+            <t t-set="coupon_error" t-value="request.params.get('coupon_error')"/>
+            <t t-set="pending_coupon_code" t-value="request.session.get('pending_coupon_code')"/>
+            <t t-if="coupon_error and pending_coupon_code">
+                <div t-attf-class="d-none coupon-message coupon-{{ request.params.get('coupon_error_type', 'error') }}-message">
+                    <span class="coupon-message-title">Could not apply the promo code: <t t-out="pending_coupon_code"/></span>
+                    <span class="coupon-message-content" t-out="coupon_error"/>
+                </div>
+            </t>
+            <t t-set="notify_coupon" t-value="request.params.get('notify_coupon')"/>
+            <div t-if="notify_coupon" class="d-none coupon-message coupon-info-message">
+                <span class="coupon-message-content">The following promo code was applied on your order: <t t-out="notify_coupon"/></span>
+            </div>
+        </body>
+    </template>
+
+    <template id="cart_discount" name="Show Discount in Subtotal" active="False" inherit_id="website_sale.total">
+        <xpath expr="//tr[@id='order_total_untaxed']" position="before">
+            <tr t-if="website_sale_order and website_sale_order.reward_amount">
+            <td class="text-end border-0 text-muted" title="Discounted amount">Discount:</td>
+            <td class="text-xl-end border-0 text-muted">
+                <span t-field="website_sale_order.reward_amount" style="white-space: nowrap;"
+                    class="monetary_field"
+                    t-options='{
+                            "widget": "monetary",
+                            "display_currency": website_sale_order.currency_id,
+                    }'/>
+            </td>
+            </tr>
+        </xpath>
+    </template>
+
+    <template id="reduction_coupon_code" inherit_id="website_sale.reduction_code">
+        <xpath expr="//t[@t-set='force_coupon']" position="replace">
+            <t t-set='force_coupon' t-value="website_sale_order.pricelist_id.code or request.params.get('code_not_available') or website_sale_order.get_promo_code_error(delete=False)"/>
+        </xpath>
+        <xpath expr="//a" position="replace">
+            <a href="#" class="show_coupon">Discount code or gift card</a>
+        </xpath>
+    </template>
+
+    <template id="cart_summary" name="Payment" inherit_id="website_sale.cart_summary">
+        <xpath expr="//table[@id='cart_products']/tbody/tr/td[hasclass('td-price')]/child::*" position="attributes">
+            <attribute name="t-att-style">'display: None;' if line.reward_id.reward_type == 'shipping' else ''</attribute>
+        </xpath>
+    </template>
+
+    <template id="cart_line_product_no_link" inherit_id="website_sale.cart_line_product_link">
+        <xpath expr="//a" position="replace">
+            <t t-if="line.is_reward_line">
+                <strong t-field="line.name"/>
+                <t t-call="sale_loyalty.used_gift_card"/>
+            </t>
+            <t t-else="">$0</t>
+        </xpath>
+    </template>
+
+    <template id="cart_summary_inherit_website_gift_card_sale" inherit_id="website_sale.cart_summary">
+        <xpath expr="//td[hasclass('td-product_name')]/div/strong" position="after">
+            <t t-call="sale_loyalty.used_gift_card"/>
+        </xpath>
+    </template>
+
+    <template id="website_sale_purchased_gift_card" inherit_id="website_sale.confirmation" >
+        <xpath expr="//div[@id='oe_structure_website_sale_confirmation_2']" position="after">
+            <t t-call="sale_loyalty.sale_purchased_gift_card"/>
+        </xpath>
+    </template>
+</odoo>

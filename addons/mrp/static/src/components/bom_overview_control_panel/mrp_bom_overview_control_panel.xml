@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="mrp.BomOverviewControlPanel" owl="1">
+        <ControlPanel display="controlPanelDisplay">
+            <t t-set-slot="control-panel-bottom-left-buttons">
+                <div class="o_cp_buttons">
+                    <div class="o_list_buttons o_mrp_bom_report_buttons">
+                        <button t-on-click="() => this.props.print()" type="button" class="btn btn-primary">Print</button>
+                        <t t-if="props.showVariants">
+                            <button t-on-click="() => this.props.print(true)" type="button" class="btn btn-primary ms-1">Print All Variants</button>
+                        </t>
+                        <button t-on-click="clickUnfold" type="button" class="btn btn-primary ms-1">Unfold</button>
+                    </div>
+                </div>
+            </t>
+
+            <t t-set-slot="control-panel-top-right">
+                <form class="row gx-0">
+                    <div class="col-lg-8 row">
+                        <div class="col-lg-11 row gx-1 mb-2">
+                            <label for="bom_quantity" class="col-xl-2 col-lg-3 col-sm-4">Quantity:</label>
+                            <div t-attf-class="{{ props.showOptions.uom ? 'col-xl-7 col-lg-6 col-sm-5' : 'col-xl-10 col-lg-9 col-sm-8' }}">
+                                <input id="bom_quantity" type="number" step="any" t-on-change="ev => this.updateQuantity(ev)" t-on-keypress="ev => this.onKeyPress(ev)" t-att-value="props.bomQuantity" min="1" class="o_input"/>
+                            </div>
+                            <div t-if="props.showOptions.uom" class="col-xl-3 col-lg-3 col-sm-3">
+                                <span t-esc="props.uomName"/>
+                            </div>
+                        </div>
+                        <div t-if="props.showVariants" class="col-lg-11 row gx-1 mb-1">
+                            <label class="col-xl-2 col-lg-3 col-sm-4">Variant:</label>
+                            <div class="col-xl-10 col-lg-9 col-sm-8">
+                                <select class="o_input" t-on-change="(ev) => this.props.changeVariant(ev.target.value)">
+                                    <option t-foreach="props.variants" t-as="variant" t-att-value="variant" t-key="variant">
+                                        <t t-esc="props.variants[variant]"/>
+                                    </option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </t>
+
+            <t t-set-slot="control-panel-bottom-right">
+                <div class="o_search_options">
+                    <t t-if="props.warehouses.length > 1">
+                        <Dropdown class="'btn-group'" togglerClass="'btn btn-secondary'">
+                            <t t-set-slot="toggler">
+                                <span class="fa fa-home"/> Warehouse: <span t-esc="props.currentWarehouse.name"/>
+                            </t>
+                            <t t-foreach="props.warehouses" t-as="wh" t-key="wh.id">
+                                <DropdownItem onSelected="() => this.props.changeWarehouse(wh.id)" t-esc="wh.name"/>
+                            </t>
+                        </Dropdown>
+                    </t>
+                    <BomOverviewDisplayFilter
+                        showOptions="props.showOptions"
+                        changeDisplay.bind="props.changeDisplay"/>
+                </div>
+            </t>
+        </ControlPanel>
+    </t>
+
+</templates>

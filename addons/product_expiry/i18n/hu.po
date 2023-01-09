@@ -1,0 +1,211 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* product_expiry
+# 
+# Translators:
+# Martin Trigaux, 2019
+# krnkris, 2019
+# gezza <geza.nagy@oregional.hu>, 2019
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server saas~12.5\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2019-09-09 12:17+0000\n"
+"PO-Revision-Date: 2019-08-26 09:13+0000\n"
+"Last-Translator: gezza <geza.nagy@oregional.hu>, 2019\n"
+"Language-Team: Hungarian (https://www.transifex.com/odoo/teams/41243/hu/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: hu\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#. module: product_expiry
+#: model_terms:ir.ui.view,arch_db:product_expiry.view_move_form_expiry
+msgid ""
+"<span class=\"badge badge-danger\" attrs=\"{'invisible': "
+"[('product_expiry_alert', '=', False)]}\">Expiration Alert</span>"
+msgstr ""
+"<span class=\"badge badge-danger\" attrs=\"{'invisible': "
+"[('product_expiry_alert', '=', False)]}\">Lejárati riasztás</span>"
+
+#. module: product_expiry
+#: model_terms:ir.ui.view,arch_db:product_expiry.view_product_form_expiry
+msgid "<span> days</span>"
+msgstr ""
+
+#. module: product_expiry
+#: model:ir.model.fields,field_description:product_expiry.field_stock_production_lot__alert_date
+msgid "Alert Date"
+msgstr "Riasztás dátuma"
+
+#. module: product_expiry
+#: model:mail.activity.type,name:product_expiry.mail_activity_type_alert_date_reached
+msgid "Alert Date Reached"
+msgstr "Riasztás dátuma elérve"
+
+#. module: product_expiry
+#: model:ir.model.fields,field_description:product_expiry.field_stock_production_lot__use_date
+msgid "Best before Date"
+msgstr "Minőség megőrzésének dátuma"
+
+#. module: product_expiry
+#: model:ir.model.fields,help:product_expiry.field_stock_production_lot__alert_date
+msgid ""
+"Date to determine the expired lots and serial numbers using the filter "
+"\"Expiration Alerts\"."
+msgstr ""
+"Lejárt lot-ok és szériaszámok megállapításához használt dátum a \"Lejárati "
+"riasztások\" szűrő használatával."
+
+#. module: product_expiry
+#: model_terms:ir.ui.view,arch_db:product_expiry.view_move_form_expiry
+#: model_terms:ir.ui.view,arch_db:product_expiry.view_product_form_expiry
+msgid "Dates"
+msgstr "Dátumok"
+
+#. module: product_expiry
+#: model:ir.model.fields,field_description:product_expiry.field_stock_production_lot__life_date
+msgid "End of Life Date"
+msgstr "Életciklus vége dátum"
+
+#. module: product_expiry
+#: model_terms:ir.ui.view,arch_db:product_expiry.search_product_lot_filter_inherit_product_expiry
+msgid "Expiration Alerts"
+msgstr "Lejárati riasztások"
+
+#. module: product_expiry
+#: model:ir.model.fields,field_description:product_expiry.field_stock_production_lot__product_expiry_reminded
+msgid "Expiry has been reminded"
+msgstr ""
+
+#. module: product_expiry
+#: model:ir.model,name:product_expiry.model_stock_production_lot
+msgid "Lot/Serial"
+msgstr "Lot/Széria"
+
+#. module: product_expiry
+#: model:ir.model.fields,help:product_expiry.field_product_product__alert_time
+#: model:ir.model.fields,help:product_expiry.field_product_template__alert_time
+msgid ""
+"Number of days before an alert should be raised on the lot/serial number."
+msgstr ""
+"Napok száma, mielőtt figyelmeztetést kell küldeni a lot/szériaszám kapcsán."
+
+#. module: product_expiry
+#: model:ir.model.fields,help:product_expiry.field_product_product__life_time
+#: model:ir.model.fields,help:product_expiry.field_product_template__life_time
+msgid ""
+"Number of days before the goods may become dangerous and must not be "
+"consumed. It will be computed on the lot/serial number."
+msgstr ""
+"Napok száma mielőtt az áruk veszélyessé válhatnak és már nem fogyaszthatók. "
+"A lot/szériaszám kapcsán kerül kiszámításra."
+
+#. module: product_expiry
+#: model:ir.model.fields,help:product_expiry.field_product_product__removal_time
+#: model:ir.model.fields,help:product_expiry.field_product_template__removal_time
+msgid ""
+"Number of days before the goods should be removed from the stock. It will be"
+" computed on the lot/serial number."
+msgstr ""
+"Napok száma, mielőtt az árukat el kell távolítani a készletből. A "
+"lot/szériaszám alapján kerül kiszámításra."
+
+#. module: product_expiry
+#: model:ir.model.fields,help:product_expiry.field_product_product__use_time
+#: model:ir.model.fields,help:product_expiry.field_product_template__use_time
+msgid ""
+"Number of days before the goods starts deteriorating, without being "
+"dangerous yet. It will be computed using the lot/serial number."
+msgstr ""
+"Napok száma, mielőtt az áruk romlani kezdenek, de még nem veszélyesek. A "
+"lot/szériaszám alapján kerül kiszámításra."
+
+#. module: product_expiry
+#: model:ir.model,name:product_expiry.model_procurement_group
+msgid "Procurement Group"
+msgstr "Beszerzési csoport"
+
+#. module: product_expiry
+#: model:ir.model.fields,field_description:product_expiry.field_product_product__alert_time
+#: model:ir.model.fields,field_description:product_expiry.field_product_template__alert_time
+msgid "Product Alert Time"
+msgstr "Termék riasztási idő"
+
+#. module: product_expiry
+#: model:ir.model.fields,field_description:product_expiry.field_stock_production_lot__product_expiry_alert
+msgid "Product Expiry Alert"
+msgstr "Termék lejárat riasztás"
+
+#. module: product_expiry
+#: model:ir.model.fields,field_description:product_expiry.field_product_product__life_time
+#: model:ir.model.fields,field_description:product_expiry.field_product_template__life_time
+msgid "Product Life Time"
+msgstr "Termék élettartama"
+
+#. module: product_expiry
+#: model:ir.model.fields,field_description:product_expiry.field_product_product__removal_time
+#: model:ir.model.fields,field_description:product_expiry.field_product_template__removal_time
+msgid "Product Removal Time"
+msgstr "Termék eltávolításának ideje"
+
+#. module: product_expiry
+#: model:ir.model,name:product_expiry.model_product_template
+msgid "Product Template"
+msgstr "Terméksablon"
+
+#. module: product_expiry
+#: model:ir.model.fields,field_description:product_expiry.field_product_product__use_time
+#: model:ir.model.fields,field_description:product_expiry.field_product_template__use_time
+msgid "Product Use Time"
+msgstr "Termék használati ideje"
+
+#. module: product_expiry
+#: model:ir.model,name:product_expiry.model_stock_quant
+msgid "Quants"
+msgstr "Kvantok"
+
+#. module: product_expiry
+#: model:ir.model.fields,field_description:product_expiry.field_stock_production_lot__removal_date
+#: model:ir.model.fields,field_description:product_expiry.field_stock_quant__removal_date
+msgid "Removal Date"
+msgstr "Eltávolítás dátuma"
+
+#. module: product_expiry
+#: model:ir.model.fields,help:product_expiry.field_stock_production_lot__product_expiry_alert
+msgid "The Alert Date has been reached."
+msgstr "A riasztási dátum elérve"
+
+#. module: product_expiry
+#: code:addons/product_expiry/models/production_lot.py:0
+#, python-format
+msgid "The alert date has been reached for this lot/serial number"
+msgstr "A riasztási dátum elérésre került a lot/szériaszám kapcsán"
+
+#. module: product_expiry
+#: model:ir.model.fields,help:product_expiry.field_stock_production_lot__life_date
+msgid ""
+"This is the date on which the goods with this Serial Number may become "
+"dangerous and must not be consumed."
+msgstr ""
+"Ez az a dátum, amikor az ezzel a szériaszámmal rendelkező áru veszélyes "
+"lehet és már nem fogyasztható."
+
+#. module: product_expiry
+#: model:ir.model.fields,help:product_expiry.field_stock_production_lot__removal_date
+#: model:ir.model.fields,help:product_expiry.field_stock_quant__removal_date
+msgid ""
+"This is the date on which the goods with this Serial Number should be "
+"removed from the stock. This date will be used in FEFO removal strategy."
+msgstr ""
+
+#. module: product_expiry
+#: model:ir.model.fields,help:product_expiry.field_stock_production_lot__use_date
+msgid ""
+"This is the date on which the goods with this Serial Number start "
+"deteriorating, without being dangerous yet."
+msgstr ""
+"Ez az a dátum, amikor az ezzel a szériaszámmal rendelkező áru elkezd "
+"romlani, anélkül, hogy az még veszélyes lenne."

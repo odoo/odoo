@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates xml:space="preserve">
+
+    <t t-name="web.ModelFieldSelectorPopover" owl="1">
+        <div class="o_field_selector_popover"
+             t-on-keydown="onInputKeydown" tabindex="0">
+            <div class="o_field_selector_popover_header text-center">
+                <t t-if="chain.length > 1">
+                    <i
+                        class="fa fa-arrow-left o_field_selector_popover_option o_field_selector_prev_page"
+                        title="Previous"
+                        role="img"
+                        aria-label="Previous"
+                        t-on-click="onPreviousBtnClick"
+                    />
+                </t>
+                <t t-if="isDefaultValueVisible">
+                    <div class="o_field_selector_title">Default value</div>
+                </t>
+                <t t-else="">
+                    <div class="o_field_selector_title" t-out="currentFieldName" />
+                </t>
+                <i
+                    class="fa fa-times o_field_selector_popover_option o_field_selector_close"
+                    title="Close"
+                    role="img"
+                    aria-label="Close"
+                    t-on-click="props.close"
+                />
+                <t t-if="props.showSearchInput &amp;&amp; !isDefaultValueVisible">
+                    <div class="o_field_selector_search mt-2">
+                        <input type="text"
+                               placeholder='Search...'
+                               class="o_input"
+                               t-att-value="searchValue"
+                               t-on-input="onSearch"
+                               t-ref="autofocus" />
+                    </div>
+                </t>
+                <t t-if="isDefaultValueVisible">
+                    <div class="o_field_selector_default_value_input mt-2">
+                        <input type="text"
+                               placeholder='Type a default text or press ENTER'
+                               class="o_input"
+                               t-att-value="defaultValue"
+                               t-on-input="onDefaultValue"
+                               t-ref="autofocusDefaultValue"/>
+                    </div>
+                </t>
+            </div>
+            <div class="o_field_selector_popover_body">
+                <ul class="o_field_selector_page" t-if="!isDefaultValueVisible">
+                    <t t-foreach="fieldKeys" t-as="fieldKey" t-key="fieldKey">
+                        <t t-set="field" t-value="fields[fieldKey]" />
+                        <t t-if="field.searchable and props.filter(field)">
+                            <li
+                                t-on-click="() => this.onFieldSelected({ ...field, name: fieldKey })"
+                                t-att-data-name="fieldKey"
+                                t-attf-class="o_field_selector_item #{fieldKey === currentActiveField and ' active' or ''}">
+                                <t t-out="field.string" />
+                                <div t-if="props.isDebugMode" class="text-muted o_field_selector_item_title"><t t-out="fieldKey"/> (<t t-out="field.type"/>)</div>
+                                <t t-if="field.relation and props.followRelations">
+                                    <i
+                                        class="fa fa-chevron-right o_field_selector_relation_icon"
+                                        role="img"
+                                        aria-label="Relation to follow"
+                                        title="Relation to follow"
+                                    />
+                                </t>
+                            </li>
+                        </t>
+                    </t>
+                </ul>
+                <ul class="o_field_selector_page" t-if="isDefaultValueVisible">
+                    <li class="o_field_selector_item" t-on-click="() => this.selectDefaultValue(defaultValue !== '')">
+                        <t t-if="defaultValue === ''">
+                            <div class="text-muted o_field_selector_item_title">Default text is used when no values are set</div>
+                        </t>
+                        <t t-else="">
+                            <div class="text-muted o_field_selector_item_title">As a default text when no value are set</div>
+                        </t>
+                    </li>
+                </ul>
+            </div>
+            <t t-if="props.isDebugMode">
+                <div class="o_field_selector_popover_footer">
+                    <input type="text" class="o_input o_field_selector_debug" t-att-value="fullFieldName" t-on-change="onFieldNameChange" />
+                </div>
+            </t>
+        </div>
+    </t>
+
+</templates>

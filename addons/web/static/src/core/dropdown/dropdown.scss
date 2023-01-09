@@ -1,0 +1,64 @@
+// = Owl components specific rules
+// -----------------------------------------------------------------------------
+.dropdown-menu {
+  .dropdown-toggle:focus, .dropdown-item:focus {
+    background-color: transparent;
+    outline: none;
+  }
+  .dropdown-toggle.focus, .dropdown-item.focus {
+    background-color: $dropdown-link-hover-bg;
+  }
+}
+
+.dropdown-item:not(.disabled):not(:disabled) {
+  // Needed 'cause <DropdownItem> generate <span> html tags that for browsers are
+  // normally not clickable.
+  &,label {
+    cursor: pointer;
+  }
+}
+
+button.dropdown-toggle {
+  &.active, &:hover, &:focus, &:active {
+    outline: none;
+    box-shadow: none !important;
+  }
+  &.dropdown-item {
+    &::after, &::before {
+      // Changes the placement of bootstrap dropdown carets for subdropdowns
+      @include o-position-absolute($right: 0, $top: 0);
+      transform: translate(-.6em, .6em) #{"/*rtl:translate(.6em, .6em) scaleX(-1)*/"};
+    }
+  }
+}
+
+// = New Owl Dropdown specific rules
+// -----------------------------------------------------------------------------
+.o-dropdown {
+  &--menu {
+    // Makes sure the dropdown menus are already in a
+    // fixed position before the positioning computations begin.
+    position: fixed;
+  }
+  /*!rtl:begin:ignore*/
+  &.dropup > .o-dropdown--menu,
+  &.dropdown > .o-dropdown--menu,
+  &.dropstart > .o-dropdown--menu,
+  &.dropend > .o-dropdown--menu {
+    // Also makes sure that left/right stuffs are not polluted
+    // by bootstrap rules processed by rtlcss
+    left: auto;
+    right: auto;
+    margin-left: 0;
+    margin-right: 0;
+  }
+  /*!rtl:end:ignore*/
+
+  &--no-caret {
+    > .dropdown-toggle {
+        &::before, &::after {
+            content: normal;
+        }
+    }
+  }
+}

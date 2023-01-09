@@ -1,0 +1,142 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* account_tax_python
+# 
+# Translators:
+# Martin Trigaux, 2019
+# krnkris, 2019
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server saas~12.5\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2019-08-26 08:16+0000\n"
+"PO-Revision-Date: 2019-08-26 09:08+0000\n"
+"Last-Translator: krnkris, 2019\n"
+"Language-Team: Hungarian (https://www.transifex.com/odoo/teams/41243/hu/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: hu\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#. module: account_tax_python
+#: model:ir.model.fields,help:account_tax_python.field_account_tax__amount_type
+msgid ""
+"\n"
+"    - Group of Taxes: The tax is a set of sub taxes.\n"
+"    - Fixed: The tax amount stays the same whatever the price.\n"
+"    - Percentage of Price: The tax amount is a % of the price:\n"
+"        e.g 100 * 10% = 110 (not price included)\n"
+"        e.g 110 / (1 + 10%) = 100 (price included)\n"
+"    - Percentage of Price Tax Included: The tax amount is a division of the price:\n"
+"        e.g 180 / (1 - 10%) = 200 (not price included)\n"
+"        e.g 200 * (1 - 10%) = 180 (price included)\n"
+"        "
+msgstr ""
+
+#. module: account_tax_python
+#: model:ir.model.fields,field_description:account_tax_python.field_account_tax__python_applicable
+#: model:ir.model.fields,field_description:account_tax_python.field_account_tax_template__python_applicable
+msgid "Applicable Code"
+msgstr "Alkalmazható kód"
+
+#. module: account_tax_python
+#: model:ir.model.fields,help:account_tax_python.field_account_tax__python_compute
+msgid ""
+"Compute the amount of the tax by setting the variable 'result'.\n"
+"\n"
+":param base_amount: float, actual amount on which the tax is applied\n"
+":param price_unit: float\n"
+":param quantity: float\n"
+":param company: res.company recordset singleton\n"
+":param product: product.product recordset singleton or None\n"
+":param partner: res.partner recordset singleton or None"
+msgstr ""
+"Adó összegének kiszámítása az 'eredmény' változó beállításával.\n"
+"\n"
+":param base_amount: lebegőpontos, aktuális összeg melyre az adót  alkalmaztuk\n"
+":param price_unit: lebegőpontos\n"
+":param quantity: lebegőpontos\n"
+":param company: res.company recordset egyetlen\n"
+":param product: product.product recordset egyetlen vagy semmi\n"
+":param partner: res.partner recordset egyetlen vagy semmi"
+
+#. module: account_tax_python
+#: model:ir.model.fields,help:account_tax_python.field_account_tax_template__python_compute
+msgid ""
+"Compute the amount of the tax by setting the variable 'result'.\n"
+"\n"
+":param base_amount: float, actual amount on which the tax is applied\n"
+":param price_unit: float\n"
+":param quantity: float\n"
+":param product: product.product recordset singleton or None\n"
+":param partner: res.partner recordset singleton or None"
+msgstr ""
+"Adó összegének kiszámítása az 'eredmény' változó beállításával.\n"
+"\n"
+":param base_amount: lebegőpontos, aktuális összeg melyre az adót  alkalmaztuk\n"
+":param price_unit: lebegőpontos\n"
+":param quantity: lebegőpontos\n"
+":param product: product.product recordset egyetlen vagy SEMMI\n"
+":param partner: res.partner recordset egyetlen or SEMMI"
+
+#. module: account_tax_python
+#: model:ir.model.fields,help:account_tax_python.field_account_tax__python_applicable
+msgid ""
+"Determine if the tax will be applied by setting the variable 'result' to True or False.\n"
+"\n"
+":param price_unit: float\n"
+":param quantity: float\n"
+":param company: res.company recordset singleton\n"
+":param product: product.product recordset singleton or None\n"
+":param partner: res.partner recordset singleton or None"
+msgstr ""
+"Adó alkalmazásának meghatározása az 'eredmény' változó Igaz vagy Hamis beállításától függően.\n"
+"\n"
+":param price_unit: lebegőpontos\n"
+":param quantity: lebegőpontos\n"
+":param company: res.company recordset egyetlen\n"
+":param product: product.product recordset egyetlen vagy Semmi\n"
+":param partner: res.partner recordset egyetlen vagy Semmi"
+
+#. module: account_tax_python
+#: model:ir.model.fields,help:account_tax_python.field_account_tax_template__python_applicable
+msgid ""
+"Determine if the tax will be applied by setting the variable 'result' to True or False.\n"
+"\n"
+":param price_unit: float\n"
+":param quantity: float\n"
+":param product: product.product recordset singleton or None\n"
+":param partner: res.partner recordset singleton or None"
+msgstr ""
+"Adó alkalmazásának meghatározása az 'eredmény' változó Igaz vagy Hamis beállításától függően.\n"
+"\n"
+":param price_unit: lebegőpontos\n"
+":param quantity: lebegőpontos\n"
+":param product: product.product recordset egyetlen vagy Semmi\n"
+":param partner: res.partner recordset egyetlen vagy Semmi"
+
+#. module: account_tax_python
+#: model:ir.model.fields,field_description:account_tax_python.field_account_tax__python_compute
+#: model:ir.model.fields,field_description:account_tax_python.field_account_tax_template__python_compute
+#: model:ir.model.fields.selection,name:account_tax_python.selection__account_tax__amount_type__code
+#: model:ir.model.fields.selection,name:account_tax_python.selection__account_tax_template__amount_type__code
+msgid "Python Code"
+msgstr "Python kód"
+
+#. module: account_tax_python
+#: model:ir.model,name:account_tax_python.model_account_tax
+msgid "Tax"
+msgstr "Adó"
+
+#. module: account_tax_python
+#: model:ir.model.fields,field_description:account_tax_python.field_account_tax__amount_type
+#: model:ir.model.fields,field_description:account_tax_python.field_account_tax_template__amount_type
+msgid "Tax Computation"
+msgstr "Adó kiszámítás"
+
+#. module: account_tax_python
+#: model:ir.model,name:account_tax_python.model_account_tax_template
+msgid "Templates for Taxes"
+msgstr "Sablonok adókhoz"

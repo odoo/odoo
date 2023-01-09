@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="hr_applicant_skill_view_form" model="ir.ui.view">
+        <field name="name">hr.applicant.skill.view.form</field>
+        <field name="model">hr.applicant.skill</field>
+        <field name="arch" type="xml">
+            <form string="Skills" class="o_hr_skills_dialog_form">
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="applicant_id" invisible="1"/>
+                            <field name="skill_type_id" widget="radio" />
+                        </group>
+                        <group>
+                            <field name="skill_id" options="{'no_open': True, 'no_create_edit': True}"
+                                    context="{'default_skill_type_id': skill_type_id}"
+                                    domain="[('skill_type_id', '=', skill_type_id)]"
+                                    attrs="{'invisible': [('skill_type_id', '=', False)]}"/>
+                            <label for="skill_level_id"
+                                    attrs="{'invisible': ['|', ('skill_id', '=', False), ('skill_type_id', '=', False)]}"/>
+                            <div class="o_row"
+                                    attrs="{'invisible': ['|', ('skill_id', '=', False), ('skill_type_id', '=', False)]}">
+                                <span class="ps-0" style="flex:1">
+                                    <field name="skill_level_id"
+                                            attrs="{'readonly': [('skill_id', '=', False)]}"
+                                            context="{'from_skill_level_dropdown': True}" />
+                                </span>
+                                <span style="flex:1">
+                                    <field name="level_progress" widget="progressbar" class="o_hr_skills_progress" attrs="{'invisible': [('skill_level_id', '=', False)]}" />
+                                </span>
+                            </div>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+</odoo>

@@ -1,0 +1,195 @@
+# -*- coding: utf-8 -*-
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
+
+from datetime import datetime, date
+from dateutil.relativedelta import relativedelta
+import pytz
+
+from odoo.tests.common import tagged
+from odoo.fields import Date, Datetime
+from odoo.addons.hr_work_entry_holidays.tests.common import TestWorkEntryHolidaysBase
+
+
+@tagged('work_entry')
+class TestWorkeEntryHolidaysWorkEntry(TestWorkEntryHolidaysBase):
+    @classmethod
+    def setUpClass(cls):
+        super(TestWorkeEntryHolidaysWorkEntry, cls).setUpClass()
+        cls.tz = pytz.timezone(cls.richard_emp.tz)
+        cls.start = datetime(2015, 11, 1, 1, 0, 0)
+        cls.end = datetime(2015, 11, 30, 23, 59, 59)
+        cls.resource_calendar_id = cls.env['resource.calendar'].create({'name': 'Zboub'})
+        contract = cls.env['hr.contract'].create({
+            'date_start': cls.start.date() - relativedelta(days=5),
+            'name': 'dodo',
+            'resource_calendar_id': cls.resource_calendar_id.id,
+            'wage': 1000,
+            'employee_id': cls.richard_emp.id,
+            'state': 'open',
+            'date_generated_from': cls.end.date() + relativedelta(days=5),
+        })
+        cls.richard_emp.resource_calendar_id = cls.resource_calendar_id
+        cls.richard_emp.contract_id = contract
+
+    def test_validate_non_approved_leave_work_entry(self):
+        work_entry1 = self.env['hr.work.entry'].create({
+            'name': '1',
+            'employee_id': self.richard_emp.id,
+            'work_entry_type_id': self.work_entry_type_leave.id,
+            'contract_id': self.richard_emp.contract_id.id,
+            'date_start': self.start,
+            'date_stop': self.end,
+        })
+        self.env['hr.leave'].create({
+            'name': 'Doctor Appointment',
+            'employee_id': self.richard_emp.id,
+            'holiday_status_id': self.leave_type.id,
+            'date_from': self.start - relativedelta(days=1),
+            'date_to': self.start + relativedelta(days=1),
+            'number_of_days': 2,
+        })
+        self.assertFalse(work_entry1.action_validate(), "It should not validate work_entries conflicting with non approved leaves")
+        self.assertEqual(work_entry1.state, 'conflict')
+
+    def test_refuse_leave_work_entry(self):
+        start = datetime(2015, 11, 1, 9, 0, 0)
+        end = datetime(2015, 11, 3, 13, 0, 0)
+        leave = self.env['hr.leave'].create({
+            'name': 'Doctor Appointment',
+            'employee_id': self.richard_emp.id,
+            'holiday_status_id': self.leave_type.id,
+            'date_from': start,
+            'date_to': start + relativedelta(days=1),
+            'number_of_days': 2,
+        })
+        work_entry = self.env['hr.work.entry'].create({
+            'name': '1',
+            'employee_id': self.richard_emp.id,
+            'contract_id': self.richard_emp.contract_id.id,
+            'work_entry_type_id': self.work_entry_type.id,
+            'date_start': start,
+            'date_stop': end,
+            'leave_id': leave.id
+        })
+        work_entry.action_validate()
+        self.assertEqual(work_entry.state, 'conflict', "It should have an error (conflicting leave to approve")
+        leave.action_refuse()
+        self.assertNotEqual(work_entry.state, 'conflict', "It should not have an error")
+
+    def test_time_week_leave_work_entry(self):
+        # /!\ this is a week day => it exists an calendar attendance at this time
+        start = datetime(2015, 11, 2, 10, 0, 0)
+        end = datetime(2015, 11, 2, 17, 0, 0)
+        work_days_data = self.jules_emp._get_work_days_data_batch(start, end)
+        leave = self.env['hr.leave'].create({
+            'name': '1leave',
+            'employee_id': self.richard_emp.id,
+            'holiday_status_id': self.leave_type.id,
+            'date_from': start,
+            'date_to': end,
+            'number_of_days': work_days_data[self.jules_emp.id]['days'],
+        })
+        leave.action_validate()
+
+        work_entries = self.richard_emp.contract_id._generate_work_entries(self.start, self.end)
+        work_entries.action_validate()
+        leave_work_entry = work_entries.filtered(lambda we: we.work_entry_type_id in self.work_entry_type_leave)
+        sum_hours = sum(leave_work_entry.mapped('duration'))
+
+        self.assertEqual(sum_hours, 5.0, "It should equal the number of hours richard should have worked")
+
+    def test_contract_on_another_company(self):
+        """ Test that the work entry generation still work if
+            the contract is not on the same company than
+            the employee (Internal Use Case)
+            So when generating the work entries in Belgium,
+            there is an issue when accessing to the time off
+            in Hong Kong.
+        """
+        company = self.env['res.company'].create({'name': 'Another Company'})
+
+        employee = self.env['hr.employee'].create({
+            'name': 'New Employee',
+            'company_id': company.id,
+        })
+
+        self.env['hr.contract'].create({
+            'name': 'Employee Contract',
+            'employee_id': employee.id,
+            'date_start': Date.from_string('2015-01-01'),
+            'state': 'open',
+            'company_id': self.env.ref('base.main_company').id,
+            'wage': 4000,
+        })
+
+        leave_type = self.env['hr.leave.type'].create({
+            'name': 'Sick',
+            'request_unit': 'hour',
+            'leave_validation_type': 'both',
+            'requires_allocation': 'no',
+            'company_id': company.id,
+        })
+        leave1 = self.env['hr.leave'].create({
+            'name': 'Sick 1 week during christmas snif',
+            'employee_id': employee.id,
+            'holiday_status_id': leave_type.id,
+            'date_from': Datetime.from_string('2019-12-23 06:00:00'),
+            'date_to': Datetime.from_string('2019-12-27 20:00:00'),
+            'number_of_days': 5,
+        })
+        leave1.action_approve()
+        leave1.action_validate()
+
+        # The work entries generation shouldn't raise an error
+
+        user = self.env['res.users'].create({
+            'name': 'Classic User',
+            'login': 'Classic User',
+            'company_id': self.env.ref('base.main_company').id,
+            'company_ids': self.env.ref('base.main_company').ids,
+            'groups_id': [(6, 0, [self.env.ref('hr_contract.group_hr_contract_manager').id, self.env.ref('base.group_user').id])],
+        })
+        self.env['hr.employee'].with_user(user).generate_work_entries('2019-12-01', '2019-12-31')
+
+    def test_work_entries_generation_if_parent_leave_zero_hours(self):
+        # Test case: The employee has a parental leave at 0 hours per week
+        # The employee has a leave during that period
+
+        employee = self.env['hr.employee'].create({'name': 'My employee'})
+        calendar = self.env['resource.calendar'].create({
+            'name': 'Parental 0h',
+            'attendance_ids': False,
+        })
+        employee.resource_calendar_id = calendar
+        contract = self.env['hr.contract'].create({
+            'date_start': self.start.date() - relativedelta(years=1),
+            'name': 'Contract - Parental 0h',
+            'resource_calendar_id': calendar.id,
+            'wage': 1000,
+            'employee_id': employee.id,
+            'state': 'open',
+        })
+
+        leave_type = self.env['hr.leave.type'].create({
+            'name': 'Sick',
+            'request_unit': 'hour',
+            'leave_validation_type': 'both',
+            'requires_allocation': 'no',
+        })
+
+        leave = self.env['hr.leave'].create({
+            'name': "Sick 1 that doesn't make sense, but it's the prod so YOLO",
+            'employee_id': employee.id,
+            'holiday_status_id': leave_type.id,
+            'date_from': date(2020, 9, 4),
+            'request_date_from': date(2020, 9, 4),
+            'date_to': date(2020, 9, 4),
+            'request_date_to': date(2020, 9, 4),
+            'number_of_days': 1,
+        })
+        leave.action_approve()
+        leave.action_validate()
+
+        work_entries = contract._generate_work_entries(date(2020, 7, 1), date(2020, 9, 30))
+
+        self.assertEqual(len(work_entries), 0)

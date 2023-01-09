@@ -1,0 +1,217 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <template id="add_to_wishlist" inherit_id="website_sale.products_item" name="Wishlist Button" priority="20">
+        <xpath expr="//div[hasclass('o_wsale_product_btn')]" position="inside">
+            <t t-nocache="The wishlist depends on the user and must not be shared with other users. As this rendering is in the loop, the product value is set in the template, we must retain the id of the product on which we are."
+               t-nocache-product_template_id="product.id">
+                <t t-set="product" t-value="products.filtered(lambda p: p.id == product_template_id)"/>
+                <t t-set="in_wish" t-value="product._is_in_wishlist()"/>
+                <t t-set="product_variant_id" t-value="product._get_first_possible_variant_id()"/>
+                <button t-if="product_variant_id" type="button" role="button" class="btn btn-outline-primary bg-white o_add_wishlist" t-att-disabled='in_wish or None' title="Add to Wishlist" t-att-data-product-template-id="product.id" t-att-data-product-product-id="product_variant_id" data-action="o_wishlist"><span class="fa fa-heart" role="img" aria-label="Add to wishlist"></span></button>
+            </t>
+        </xpath>
+    </template>
+
+    <template id="product_add_to_wishlist" inherit_id="website_sale.product" name="Wishlist Button" priority="20">
+        <xpath expr="//div[@id='product_option_block']" position="inside">
+            <t t-nocache="The wishlist depends on the user and must not be shared with other users. The product come from the controller.">
+                <t t-set="product_variant" t-value="product_variant or product._create_first_product_variant()"/>
+                <t t-set="in_wish" t-value="product_variant and product_variant._is_in_wishlist()"/>
+                <button t-if="product_variant" type="button" role="button" class="btn btn-link px-0 pe-3 o_add_wishlist_dyn" t-att-disabled='in_wish or None' t-att-data-product-template-id="product.id" t-att-data-product-product-id="product_variant.id" data-action="o_wishlist" title="Add to wishlist"><i class="fa fa-heart-o me-2" role="img" aria-label="Add to wishlist"/>Add to wishlist</button>
+            </t>
+        </xpath>
+    </template>
+
+    <template id="header_wishlist_link" name="Header Wishlist Link">
+        <t t-nocache="The wishlist may vary and depends on the user."
+           t-nocache-_icon="_icon"
+           t-nocache-_item_class="_item_class"
+           t-nocache-_link_class="_link_class"
+           t-nocache-_text="_text">
+            <t t-set="wishcount" t-value="len(request.env['product.wishlist'].current())"/>
+            <t t-set="show_wishes" t-value="True"/>
+            <li t-attf-class="o_wsale_my_wish #{not show_wishes and 'd-none'} #{_item_class}">
+                <a href="/shop/wishlist" t-attf-class="#{_link_class}">
+                    <i t-if="_icon" class="fa fa-1x fa-heart"/>
+                    <span t-if="_text">Wishlist</span>
+                    <sup t-esc="wishcount" t-attf-class="my_wish_quantity o_animate_blink badge text-bg-primary"/>
+                </a>
+            </li>
+        </t>
+    </template>
+
+    <template id="header_hide_empty_wishlist_link" inherit_id="website_sale_wishlist.header_wishlist_link">
+        <xpath expr="//t[@t-set='show_wishes']" position="after">
+            <t t-set="show_wishes" t-value="show_wishes and wishcount > 0"/>
+        </xpath>
+        <xpath expr="//li[contains(@t-attf-class, 'o_wsale_my_wish')]" position="attributes">
+            <attribute name="t-attf-class" add="o_wsale_my_wish_hide_empty" separator=" "/>
+        </xpath>
+    </template>
+
+    <template id="template_header_default" inherit_id="website_sale.template_header_default">
+        <xpath expr="//t[@t-call='website_sale.header_cart_link']" position="after">
+            <t t-call="website_sale_wishlist.header_wishlist_link">
+                <t t-set="_icon" t-value="True"/>
+                <t t-set="_item_class" t-value="'nav-item me-lg-3'"/>
+                <t t-set="_link_class" t-value="'nav-link'"/>
+            </t>
+        </xpath>
+    </template>
+
+    <template id="template_header_hamburger" inherit_id="website_sale.template_header_hamburger">
+        <xpath expr="//t[@t-call='website_sale.header_cart_link']" position="after">
+            <t t-call="website_sale_wishlist.header_wishlist_link">
+                <t t-set="_text" t-value="True"/>
+                <t t-set="_item_class" t-value="'nav-item'"/>
+                <t t-set="_link_class" t-value="'nav-link'"/>
+            </t>
+        </xpath>
+    </template>
+
+    <template id="template_header_vertical" inherit_id="website_sale.template_header_vertical">
+        <xpath expr="//t[@t-call='website_sale.header_cart_link']" position="after">
+            <t t-call="website_sale_wishlist.header_wishlist_link">
+                <t t-set="_icon" t-value="True"/>
+                <t t-set="_item_class" t-value="'nav-item ms-lg-3'"/>
+                <t t-set="_link_class" t-value="'nav-link'"/>
+            </t>
+        </xpath>
+    </template>
+
+    <template id="template_header_sidebar" inherit_id="website_sale.template_header_sidebar">
+        <xpath expr="//t[@t-call='website_sale.header_cart_link']" position="after">
+            <t t-call="website_sale_wishlist.header_wishlist_link">
+                <t t-set="_icon" t-value="True"/>
+                <t t-set="_text" t-value="True"/>
+                <t t-set="_item_class" t-value="'nav-item'"/>
+                <t t-set="_link_class" t-value="'nav-link'"/>
+            </t>
+        </xpath>
+    </template>
+
+    <template id="template_header_slogan" inherit_id="website_sale.template_header_slogan">
+        <xpath expr="//t[@t-call='website_sale.header_cart_link']" position="after">
+            <t t-call="website_sale_wishlist.header_wishlist_link">
+                <t t-set="_icon" t-value="True"/>
+                <t t-set="_item_class" t-value="'nav-item ms-lg-3'"/>
+                <t t-set="_link_class" t-value="'nav-link'"/>
+            </t>
+        </xpath>
+    </template>
+
+    <template id="template_header_contact" inherit_id="website_sale.template_header_contact">
+        <xpath expr="//t[@t-call='website_sale.header_cart_link']" position="after">
+            <t t-call="website_sale_wishlist.header_wishlist_link">
+                <t t-set="_icon" t-value="True"/>
+                <t t-set="_item_class" t-value="'nav-item ms-lg-3'"/>
+                <t t-set="_link_class" t-value="'nav-link'"/>
+            </t>
+        </xpath>
+    </template>
+
+    <template id="template_header_boxed" inherit_id="website_sale.template_header_boxed">
+        <xpath expr="//t[@t-call='website_sale.header_cart_link']" position="after">
+            <t t-call="website_sale_wishlist.header_wishlist_link">
+                <t t-set="_text" t-value="True"/>
+                <t t-set="_item_class" t-value="'nav-item ms-lg-3'"/>
+                <t t-set="_link_class" t-value="'nav-link'"/>
+            </t>
+        </xpath>
+    </template>
+
+    <template id="template_header_centered_logo" inherit_id="website_sale.template_header_centered_logo">
+        <xpath expr="//t[@t-call='website_sale.header_cart_link']" position="after">
+            <t t-call="website_sale_wishlist.header_wishlist_link">
+                <t t-set="_icon" t-value="True"/>
+                <t t-set="_item_class" t-value="'nav-item ms-1'"/>
+                <t t-set="_link_class" t-value="'nav-link'"/>
+            </t>
+        </xpath>
+    </template>
+
+    <template id="template_header_image" inherit_id="website_sale.template_header_image">
+        <xpath expr="//t[@t-call='website_sale.header_cart_link']" position="after">
+            <t t-call="website_sale_wishlist.header_wishlist_link">
+                <t t-set="_icon" t-value="True"/>
+                <t t-set="_item_class" t-value="'nav-item ms-lg-2'"/>
+                <t t-set="_link_class" t-value="'nav-link'"/>
+            </t>
+        </xpath>
+    </template>
+
+    <template id="template_header_hamburger_full" inherit_id="website_sale.template_header_hamburger_full">
+        <xpath expr="//t[@t-call='website_sale.header_cart_link']" position="after">
+            <t t-call="website_sale_wishlist.header_wishlist_link">
+                <t t-set="_icon" t-value="True"/>
+                <t t-set="_item_class" t-value="'nav-item ms-lg-2'"/>
+                <t t-set="_link_class" t-value="'nav-link'"/>
+            </t>
+        </xpath>
+    </template>
+
+    <template id="template_header_magazine" inherit_id="website_sale.template_header_magazine">
+        <xpath expr="//t[@t-call='website_sale.header_cart_link']" position="after">
+            <t t-call="website_sale_wishlist.header_wishlist_link">
+                <t t-set="_text" t-value="True"/>
+                <t t-set="_item_class" t-value="'nav-item'"/>
+                <t t-set="_link_class" t-value="'nav-link'"/>
+            </t>
+        </xpath>
+    </template>
+
+    <template id="product_wishlist" name="Wishlist Page">
+        <t t-call="website.layout">
+            <t t-set="additional_title">Shop Wishlist</t>
+            <div id="wrap" class="js_sale">
+                <div class="oe_structure" id="oe_structure_website_sale_wishlist_product_wishlist_1"/>
+                <div class="container oe_website_sale pt-3">
+                    <section class="container wishlist-section">
+                        <h3>My Wishlist</h3>
+                        <div class="checkbox">
+                            <label class='text-muted'><input type="checkbox" id='b2b_wish' value="1" class="mr8"/>Add product to my cart but keep it in my wishlist</label>
+                        </div>
+                        <table class="table table-bordered table-striped table-hover text-center mt16 table-comparator " style="table-layout:auto" id="o_comparelist_table">
+                            <body>
+                                <t t-foreach="wishes" t-as="wish">
+                                    <t t-set="combination_info" t-value="wish.product_id._get_combination_info_variant()"/>
+                                    <tr t-att-data-wish-id='wish.id' t-att-data-product-id='wish.product_id.id'
+                                        t-att-data-product-tracking-info="json.dumps(request.env['product.template'].get_google_analytics_data(combination_info))">
+                                        <td class='td-img align-middle'>
+                                            <a t-att-href="wish.product_id.website_url">
+                                                <img t-attf-src="/web/image/product.product/#{wish.product_id.id}/image_128" class="img img-fluid" style="margin:auto;" alt="Product image"/>
+                                            </a>
+                                        </td>
+                                        <td class='text-start align-middle'>
+                                            <strong><a t-att-href="wish.product_id.website_url"><t t-esc="wish.product_id.display_name" /></a></strong>
+                                            <small class='d-none d-md-block'><p t-field="wish.product_id.description_sale" class="text-muted"/></small>
+                                            <button type="button" class="btn btn-link o_wish_rm no-decoration"><small><i class='fa fa-trash-o'></i> Remove</small></button>
+                                        </td>
+                                        <td class="align-middle" t-if="combination_info['prevent_zero_price_sale']">
+                                            <span t-field="website.prevent_zero_price_sale_text"/>
+                                        </td>
+                                        <td class="align-middle o_wish_price" t-else="">
+                                            <t t-esc="combination_info['price']" t-options="{'widget': 'monetary', 'display_currency': website.pricelist_id.currency_id}"/>
+                                            <small t-if="combination_info['base_unit_price']" class="cart_product_base_unit_price d-block text-muted" groups="website_sale.group_show_uom_price">
+                                                <t t-call='website_sale.base_unit_price'><t t-set='product' t-value='wish.product_id' /></t>
+                                            </small>
+                                        </td>
+                                        <td class='text-center td-wish-btn align-middle'>
+                                            <input name="product_id" t-att-value="wish.product_id.id" type="hidden"/>
+                                            <a t-if="combination_info['prevent_zero_price_sale']" t-att-href="website.contact_us_button_url" class="btn btn-primary btn_cta">Contact Us</a>
+                                            <button id="add_to_cart_button" t-else="" type="button" role="button" class="btn btn-secondary btn-block o_wish_add mb4" >
+                                                Add <span class='d-none d-md-inline'>to Cart</span>
+                                            </button>
+                                        </td>
+                                    </tr>
+                                </t>
+                            </body>
+                        </table>
+                    </section>
+                </div>
+            </div>
+        </t>
+    </template>
+
+</odoo>

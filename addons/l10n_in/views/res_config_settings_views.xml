@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="res_config_settings_view_form_inherit_l10n_in" model="ir.ui.view">
+        <field name="name">res.config.settings.form.inherit.l10n_in</field>
+        <field name="model">res.config.settings</field>
+        <field name="inherit_id" ref="account.res_config_settings_view_form"/>
+        <field name="arch" type="xml">
+            <block id="invoicing_settings" position="inside">
+                <setting help="Use this if setup with Reseller(E-Commerce)." name="ecommerce_reseller_setting" title="Manage Reseller(E-Commerce)" attrs="{'invisible': [('country_code', '!=', 'IN')]}">
+                    <field name="group_l10n_in_reseller"/>
+                </setting>
+            </block>
+        </field>
+    </record>
+</odoo>

@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="hr_expense.KanbanRenderer" t-inherit="web.KanbanRenderer" t-inherit-mode="primary" owl="1">
+        <xpath expr="//div[hasclass('o_kanban_renderer')]" position="before">
+            <div t-if="dragState.showDragZone" class="o_dropzone">
+                <i class="fa fa-upload fa-10x"></i>
+            </div>
+        </xpath>
+    </t>
+
+    <t t-name="hr_expense.DashboardKanbanRenderer" t-inherit="hr_expense.KanbanRenderer" t-inherit-mode="primary" owl="1">
+        <xpath expr="//div[hasclass('o_kanban_renderer')]" position="before">
+            <ExpenseDashboard/>
+        </xpath>
+    </t>
+
+    <t t-name="hr_expense.KanbanButtons" t-inherit="web.KanbanView.Buttons" t-inherit-mode="primary" owl="1">
+        <xpath expr="//t[@t-if='canCreate']" position="after">
+            <button type="button" class="d-none d-md-inline o_button_upload_expense btn btn-primary mx-1" t-on-click.prevent="uploadDocument">
+                Upload
+            </button>
+        </xpath>
+
+        <xpath expr="//t[@t-if='canCreate']" position="before">
+            <button type="button" class="d-inline d-md-none o_button_upload_expense btn btn-primary mx-1" t-on-click.prevent="uploadDocument">
+                Scan
+            </button>
+        </xpath>
+
+        <xpath expr="//div" position="inside">
+            <input type="file" name="ufile" class="d-none" t-ref="fileInput" multiple="1" accept="*" t-on-change="onChangeFileInput" />
+        </xpath>
+    </t>
+</templates>

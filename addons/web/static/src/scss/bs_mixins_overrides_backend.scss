@@ -1,0 +1,63 @@
+//==============================================================================
+// Bootstrap Mixins and Functions Extensions
+// Those will affect how bootstrap is generated in the backend only
+//==============================================================================
+
+
+// Function used to retrive a text color prioritizing our finetuned ones.
+//------------------------------------------------------------------------------
+@function o-text-color($key) {
+  $-all-text-colors: map-merge($theme-colors, $o-theme-text-colors);
+
+  @if map-has-key($-all-text-colors, $key) {
+    @return map-get($-all-text-colors, $key);
+  }
+
+  @return false;
+}
+
+
+// Customize boostrap 'text-emphasis-variant' mixin allowing text colors other
+// than the '$theme-colors' ones.
+// It prioritizes the '$o-theme-text-colors' map and fallbacks to default.
+//------------------------------------------------------------------------------
+@mixin text-emphasis-variant($parent, $color) {
+  $-hover: $link-shade-percentage;
+
+  // Check for the color name in '$theme-colors'.
+  $color-name: null;
+  @each $-name, $-value in $theme-colors {
+    @if $-value == $color {
+      $color-name: $-name;
+    }
+  }
+
+  // Retrive the finetuned text color or fallback to default.
+  $color-value: o-text-color($color-name) or $color;
+
+  #{$parent} {
+    color: $color-value!important;
+  }
+
+  a#{$parent}, button#{$parent} {
+    &:hover, &:focus {
+      color: darken($color-value, $-hover) !important;
+    }
+  }
+
+  // Handle a very specific exception for the 'fa-circle' class when used in
+  // conjunction with contextual classes to achieve "status" graphical elements.
+  // Ideally any '.fa-circle.text-x'occurrency should be replaced with the
+  // 'o_status' component that uses background-color rather than text-color.
+  @if map-has-key($o-theme-text-colors, $color-name) {
+    #{$parent}.fa-circle {
+      color: $color!important;
+    }
+
+    a#{$parent}.fa-circle, button#{$parent}.fa-circle {
+      &:hover, &:focus {
+        color: darken($color, $-hover) !important;
+      }
+    }
+  }
+}

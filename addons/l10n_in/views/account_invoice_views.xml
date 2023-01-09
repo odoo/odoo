@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="invoice_form_inherit_l10n_in" model="ir.ui.view">
+        <field name="name">account.move.form.inherit.l10n.in</field>
+        <field name="model">account.move</field>
+        <field name="inherit_id" ref="account.view_move_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='ref']" position="after">
+                <field name="country_code" invisible="1"/>
+                <field name="l10n_in_gst_treatment"
+                    attrs="{'invisible': ['|', ('country_code', '!=', 'IN'), ('move_type', '=', 'entry')], 'required': [('country_code', '=', 'IN'), ('move_type', '!=', 'entry')], 'readonly': [('state', '!=', 'draft')]}"/>
+            </xpath>
+            <xpath expr="//page[@id='other_tab']/group[@id='other_tab_group']" position="after">
+                <group string="Export India" attrs="{'invisible': ['|', ('l10n_in_gst_treatment', 'not in', ['overseas', 'deemed_export']), ('move_type', 'not in', ['out_invoice', 'out_refund'])]}">
+                    <field name="l10n_in_shipping_bill_number"/>
+                    <field name="l10n_in_shipping_bill_date"/>
+                    <field name="l10n_in_shipping_port_code_id"/>
+                </group>
+                <group string="Import India" attrs="{'invisible': ['|', ('l10n_in_gst_treatment', 'not in', ['overseas', 'special_economic_zone']), ('move_type', 'not in', ['in_invoice', 'in_refund'])]}">
+                    <field name="l10n_in_shipping_bill_number" string="Bill of Entry Number"/>
+                    <field name="l10n_in_shipping_bill_date" string="Bill of Entry Date"/>
+                    <field name="l10n_in_shipping_port_code_id"/>
+                </group>
+            </xpath>
+            <xpath expr="//field[@name='partner_id']" position="after">
+                <field name="l10n_in_reseller_partner_id"
+                       groups="l10n_in.group_l10n_in_reseller"
+                       attrs="{'invisible': ['|', '|',('move_type', 'not in', ('out_invoice', 'out_refund')), ('country_code', '!=', 'IN'), ('move_type', '=', 'entry')]}"
+                       />
+            </xpath>
+        </field>
+    </record>
+</odoo>

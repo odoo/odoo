@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+
+    <record id="ri_tax_other_taxes_ventas" model="account.tax" context="{'allowed_company_ids': [ref('company_ri')]}">
+        <field name="name">Other Tax</field>
+        <field name="description">Other Tax</field>
+        <field name="sequence">4</field>
+        <field name="amount_type">fixed</field>
+        <field name="amount" eval="0.1"/>
+        <field name="invoice_repartition_line_ids" model="account.account" eval="[(5, 0, 0),
+            (0,0, {'repartition_type': 'base'}),
+
+            (0,0, {
+                'repartition_type': 'tax',
+                'account_id': obj().search([
+                    ('company_id', '=', obj().env.ref('l10n_ar.company_ri').id),
+                    ('group_id', '=', obj().env.ref('l10n_ar.account_group_otros_impuestos').id)
+                ], limit=1).id,
+            }),
+        ]"/>
+        <field name="refund_repartition_line_ids" model="account.account" eval="[(5, 0, 0),
+            (0,0, {'repartition_type': 'base'}),
+
+            (0,0, {
+                'repartition_type': 'tax',
+                'account_id': obj().search([
+                    ('company_id', '=', obj().env.ref('l10n_ar.company_ri').id),
+                    ('group_id', '=', obj().env.ref('l10n_ar.account_group_otros_impuestos').id)
+                ], limit=1).id,
+            }),
+        ]"/>
+        <field name="type_tax_use">sale</field>
+        <field name="tax_group_id" ref="l10n_ar.tax_group_otros_impuestos"/>
+        <field name="company_id" ref="l10n_ar.company_ri"/>
+    </record>
+
+    <record id="ri_tax_other_taxes_compras" model="account.tax" context="{'allowed_company_ids': [ref('company_ri')]}">
+        <field name="name">Other Tax</field>
+        <field name="description">Other Tax</field>
+        <field name="sequence">4</field>
+        <field name="amount_type">fixed</field>
+        <field name="amount" eval="0.1"/>
+        <field name="invoice_repartition_line_ids" model="account.account" eval="[(5, 0, 0),
+            (0,0, {'repartition_type': 'base'}),
+
+            (0,0, {
+                'repartition_type': 'tax',
+                'account_id': obj().search([
+                    ('company_id', '=', obj().env.ref('l10n_ar.company_ri').id),
+                    ('group_id', '=', obj().env.ref('l10n_ar.account_group_otros_impuestos').id)
+                ], limit=1).id,
+
+            }),
+        ]"/>
+        <field name="refund_repartition_line_ids" model="account.account" eval="[(5, 0, 0),
+            (0,0, {'repartition_type': 'base'}),
+
+            (0,0, {
+                'repartition_type': 'tax',
+                'account_id': obj().search([
+                    ('company_id', '=', obj().env.ref('l10n_ar.company_ri').id),
+                    ('group_id', '=', obj().env.ref('l10n_ar.account_group_otros_impuestos').id)
+                ], limit=1).id,
+            }),
+        ]"/>
+        <field name="type_tax_use">purchase</field>
+        <field name="tax_group_id" ref="l10n_ar.tax_group_otros_impuestos"/>
+        <field name="company_id" ref="l10n_ar.company_ri"/>
+    </record>
+
+    <!-- for demo data we activate all the taxes related to perception iva iibb and other taxes for the already created demo companies -->
+
+    <function model="account.tax" name="write" context="{'active_test': False}">
+        <value model="account.tax" eval="obj().search([('company_id', '=', ref('company_ri')), ('tax_group_id', 'in',
+            [ref('tax_group_percepcion_iva'),
+             ref('tax_group_percepcion_ganancias'),
+             ref('tax_group_percepcion_iibb_caba'),
+             ref('tax_group_percepcion_iibb_ba'),
+             ref('tax_group_percepcion_iibb_co'),
+             ref('tax_group_percepcion_iibb_sf'),
+             ref('l10n_ar.tax_group_otros_impuestos')]
+        )]).ids"/>
+        <value eval="{'amount': 0.1, 'active': True}"/>
+    </function>
+
+</odoo>

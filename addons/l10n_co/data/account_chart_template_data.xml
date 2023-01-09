@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <menuitem id="account_reports_co_statements_menu" name="Colombia" parent="account.menu_finance_reports" sequence="5" groups="account.group_account_readonly"/>
+
+        <!-- Chart Template -->
+        <record id="l10n_co_chart_template_generic" model="account.chart.template">
+            <field name="property_account_receivable_id" ref="co_puc_130505"/>
+            <field name="property_account_payable_id" ref="co_puc_220505"/>
+            <field name="property_account_expense_categ_id" ref="co_puc_613595"/>
+            <field name="property_account_income_categ_id" ref="co_puc_413595"/>
+            <field name="income_currency_exchange_account_id" ref="co_puc_421020"/>
+            <field name="expense_currency_exchange_account_id" ref="co_puc_530525"/>
+            <field name="default_pos_receivable_account_id" ref="co_puc_130507"/>
+            <field name="account_journal_early_pay_discount_loss_account_id" ref="co_puc_530535"/>
+            <field name="account_journal_early_pay_discount_gain_account_id" ref="co_puc_421040"/>
+        </record>
+</odoo>

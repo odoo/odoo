@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <template id="course_main" inherit_id="website_slides.course_main" name="Certification Course Main">
+            <xpath expr="//div[@id='wrap']" position="attributes">
+                <attribute name="t-attf-class" separator=" " add="#{'o_wss_certification_channel' if channel.nbr_certification > 0 else ''}"/>
+            </xpath>
+
+            <xpath expr="//div[@id='courseMainTabContent']//div[@id='home']/t" position="before">
+                <t t-set="first_slide" t-value="channel.slide_content_ids[0] if len(channel.slide_content_ids) > 0 else None"/>
+                <div t-if="channel.nbr_certification > 0 and channel.is_member and channel.completion == 0" class="alert alert-success d-flex align-items-center justify-content-between flex-wrap">
+                    <div>Begin your <b>certification</b> today!</div>
+
+                    <a t-attf-href="#{'/slides_survey/slide/get_certification_url?slide_id=%s' %(first_slide.id) if first_slide.slide_category == 'certification' and channel.total_slides == 1 else '/slides/slide/%s?fullscreen=1' %(slug(first_slide))}" class="btn btn-success mt-2 mt-sm-0">
+                        <span>Start Now</span><i class="fa fa-chevron-right ms-2 align-middle"/>
+                    </a>
+                </div>
+            </xpath>
+        </template>
+
+        <template id="slide_icon_inherit_survey" inherit_id="website_slides.slide_icon">
+            <xpath expr="//i[last()]" position="after">
+                <i t-if="slide.slide_type == 'certification'" t-att-class="'fa fa-trophy %s' % icon_class"></i>
+            </xpath>
+        </template>
+
+        <template id="course_slides_list_slide_inherit_survey" inherit_id="website_slides.course_slides_list_slide">
+            <xpath expr="//a[hasclass('o_wslides_js_slides_list_slide_link')]" position="attributes">
+                <attribute name="t-attf-href">#{'/slides_survey/slide/get_certification_url?slide_id=%s' %(slide.id) if slide.slide_category == 'certification' and slide.channel_id.total_slides == 1 else '/slides/slide/%s' %(slug(slide))}</attribute>
+            </xpath>
+            <xpath expr="//a[@name='o_wslides_list_slide_add_quizz']" position="attributes">
+                <attribute name="t-if">channel.can_upload and not slide.question_ids and slide.slide_category != 'certification'</attribute>
+            </xpath>
+            <xpath expr="//a[@name='o_wslides_slide_toggle_is_preview']" position="attributes">
+                <attribute name="t-attf-class">#{'d-none' if slide.slide_type == 'certification' else ''}</attribute>
+            </xpath>
+        </template>
+
+        <template id="course_slides_list_inherit_survey" inherit_id="website_slides.course_slides_list">
+            <xpath expr="//div[hasclass('o_wslides_content_actions')]" position="inside">
+                <div class="o_wslides_survey_certification_upload_toast"/>
+            </xpath>
+        </template>
+    </data>
+</odoo>

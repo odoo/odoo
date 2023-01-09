@@ -1,0 +1,160 @@
+<?xml version="1.0" ?>
+<odoo><data>
+
+<!-- Share on social networks -->
+<template id='slide_share_social' name="Slides Media Share">
+    <t t-if="not website_share_url">
+        <t t-set="website_share_url"
+           t-value="record.website_share_url if 'website_share_url' in record else record.website_url"/>
+    </t>
+    <div class="btn-group" role="group">
+        <div class="s_share">
+            <a t-attf-href="https://www.facebook.com/sharer/sharer.php?u=#{website_share_url}" class="btn border bg-white o_wslides_js_social_share"
+                social-key="facebook" aria-label="Share on Facebook" title="Share on Facebook" target="_blank">
+                <i class="fa fa-facebook-square fa-fw"/>
+            </a>
+            <a t-attf-href="https://twitter.com/intent/tweet?text=#{record.name}&amp;url=#{website_share_url}" class="btn border bg-white o_wslides_js_social_share"
+                social-key="twitter" aria-label="Share on Twitter" title="Share on Twitter" target="_blank">
+                <i class="fa fa-twitter fa-fw"/>
+            </a>
+            <a t-attf-href="http://www.linkedin.com/sharing/share-offsite/?url=#{website_share_url}" class="btn border bg-white o_wslides_js_social_share"
+                social-key="linkedin" aria-label="Share on LinkedIn" title="Share on LinkedIn" target="_blank">
+                <i class="fa fa-linkedin fa-fw"/>
+            </a>
+            <a t-attf-href="https://wa.me/?text=#{website_share_url}" class="btn border bg-white o_wslides_js_social_share"
+                social-key="whatsapp" aria-label="Share on Whatsapp" title="Share on Whatsapp" target="_blank">
+                <i class="fa fa-whatsapp fa-fw"/>
+            </a>
+            <a t-attf-href="http://pinterest.com/pin/create/button/?url=#{website_share_url}"
+                social-key="pinterest"
+                class="btn border bg-white o_wslides_js_social_share"
+                aria-label="Share on Pinterest" title="Share on Pinterest">
+                <i class="fa fa-pinterest fa-fw"/>
+            </a>
+        </div>
+    </div>
+</template>
+
+<!-- Slide sub-template: share: send by email -->
+<template id='slide_social_email' name="Share by Email">
+    <h5 class="mt-4">Share by Email</h5>
+    <div t-if="not is_public_user">
+        <form class="oe_slide_js_share_email" role="form">
+            <div class="input-group">
+                <input type="text" class="form-control" placeholder="your-friend@domain.com, your-friend2@domain.com"/>
+                <button class="btn btn-primary" type="button"
+                    data-loading-text="Sending..."
+                    t-attf-data-slide-id="#{record.id if record._name == 'slide.slide' else False}"
+                    t-attf-data-channel-id="#{record.id if record._name == 'slide.channel' else False}"
+                    style="border-top-end-radius: 4px;border-bottom-end-radius: 4px;">
+                    <i class="fa fa-envelope"/> Send Email
+                </button>
+            </div>
+            <div class="alert alert-info d-none" role="alert">
+                <strong>Sharing is caring!</strong> Email(s) sent.
+            </div>
+            <div class="alert alert-warning d-none" role="alert">Please enter valid email(s)</div>
+        </form>
+    </div>
+    <div t-if="is_public_user" class="alert alert-info d-inline-block">
+        <p class="mb-0">Please <a t-attf-href="/web?redirect=#{request.httprequest.url}" class="fw-bold"> login </a> to share this
+        <span t-field="record.slide_category" t-if="record._name == 'slide.slide'"/>
+        <span t-field="record.name" t-if="record._name == 'slide.channel'"/> by email.</p>
+    </div>
+</template>
+
+<!-- Slide sub-template: share: embed in your website -->
+<template id="slide_social_embed" name="Share on Your Website">
+    <div class="oe_slide_js_embed_code_widget mt-4">
+        <h5 class="mt0">Embed in another Website</h5>
+        <div>
+            <textarea class="form-control slide_embed_code" readonly="readonly" onClick="this.select();" t-attf-id="wslides_share_embed_id_{{record.id}}">
+                <!-- Use the external embedding URL here, see python controller '_slide_embed' method for more details. -->
+                <t t-esc="slide.embed_code_external"/>
+            </textarea>
+            <button t-att-id="'share_embed_clipboard_button_id_%s' % record.id" class="btn btn-sm btn-primary o_embed_clipboard_button float-end mt-1 p-2" >
+                <i class="fa fa-clipboard"/> Copy Embed Code
+            </button>
+        </div>
+        <div t-if="slide.slide_category == 'document' and not embed_hide_starting_page" class="input-group mt-5">
+            <span class="input-group-text">Start at Page</span>
+            <input type="number" value="1" class="form-control"/>
+        </div>
+    </div>
+</template>
+
+<!-- Share: social media -->
+<template id='slide_share_modal'>
+    <div class="modal fade" t-att-id="'slideShareModal_%s' % record.id" tabindex="-1" role="dialog" aria-labelledby="slideShareModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <t t-call="website_slides.slide_share_modal_header"/>
+                <t t-call="website_slides.slide_share_modal_body"/>
+            </div>
+        </div>
+    </div>
+</template>
+
+<template id="slide_share_modal_header">
+    <div class="modal-header">
+        <h5 class="modal-title" id="slideShareModalLabel">
+            <t t-if="slide_share_modal_title" t-out="slide_share_modal_title"/>
+            <t t-else="">Share This Content</t>
+        </h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+    </div>
+</template>
+
+<template id="slide_share_modal_body">
+    <div class="modal-body">
+        <t t-call="website_slides.slide_share_link"/>
+        <h5 class="mt-3">Share on Social Media</h5>
+        <t t-call="website_slides.slide_share_social"/>
+        <t t-call="website_slides.slide_social_email"/>
+        <t t-if="include_embed" t-call="website_slides.slide_social_embed"/>
+    </div>
+</template>
+
+<template id="slide_share_link">
+    <t t-if="not website_share_url">
+        <t t-set="website_share_url"
+           t-value="record.website_share_url if 'website_share_url' in record else record.website_url"/>
+    </t>
+    <h5>Share Link</h5>
+    <div class="input-group">
+        <input type="text" t-attf-id="wslides_share_link_id_{{record.id}}"
+            class="form-control o_wslides_js_share_link text-center"
+            readonly="readonly" onclick="this.select();"
+            t-att-value="website_share_url"/>
+        <button t-att-id="'share_link_clipboard_button_id_%s' % record.id" class="btn btn-sm btn-primary o_clipboard_button" >
+            <i class="fa fa-clipboard"/> Copy Link
+        </button>
+    </div>
+</template>
+
+<template id="join_course_link" name="Join Course Link">
+    <a class="o_wslides_js_course_join_link" href="#" t-att-data-channel-enroll="slide.channel_id.enroll"
+       t-att-data-channel-id="slide.channel_id.id">Join this Course</a><t t-if="for_resources"> to access resources</t>
+</template>
+
+<!-- Python equivalent of the JS template "website.slides.sidebar.done.button" -->
+<template id="slide_sidebar_done_button" name="Sidebar Done Button">
+    <div t-if="is_member"
+        class="o_wslides_sidebar_done_button align-self-start"
+        t-att-data-id="slide.id"
+        t-att-data-completed="slide_completed"
+        t-att-data-can-self-mark-completed="slide.can_self_mark_completed"
+        t-att-data-can-self-mark-uncompleted="slide.can_self_mark_uncompleted"
+        t-att-data-is-member="is_member">
+        <button class="o_wslides_button_complete btn btn-sm" t-if="slide_completed and slide.can_self_mark_uncompleted or not slide_completed and slide.can_self_mark_completed">
+            <i t-if="slide_completed" class="o_wslides_slide_completed fa fa-check-circle fa-fw text-success fa-lg" t-att-data-slide-id="slide.id" title="Mark as not done"/>
+            <i t-else="" class="fa fa-circle-thin fa-fw fa-lg" t-att-data-slide-id="slide.id" title="Mark as done"/>
+        </button>
+        <button class="o_wslides_button_complete o_wslides_button_uncompleted btn btn-sm" t-else="" disabled="1">
+            <i t-if="not slide_completed" class="fa fa-circle-thin fa-fw fa-lg" t-att-data-slide-id="slide.id" title="Can not be marked as done"/>
+            <i t-else="" class="o_wslides_slide_completed fa fa-check fa-fw text-success fa-lg" t-att-data-slide-id="slide.id" title="Can not be marked as not done"/>
+        </button>
+    </div>
+</template>
+
+</data></odoo>

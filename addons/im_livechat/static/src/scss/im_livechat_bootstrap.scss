@@ -1,0 +1,35 @@
+.text-muted {
+  color: map-get($grays, '600');
+}
+
+.text-start {
+  text-align: left;
+}
+
+.text-center {
+  text-align: center;
+}
+
+.o_thread_window {
+  &,* {
+    box-sizing: border-box;
+  }
+  .o_thread_window_header {
+    height: 35px;
+    .fa-close {
+      text-decoration: none;
+      font-weight: bold;
+      &:before {
+        content: "\00d7";
+        font-size: initial;
+      }
+    }
+    > span {
+      margin: auto 0;
+    }
+  }
+
+  .o_email_chat_button:after {
+    content:' \27A4';
+  }
+}

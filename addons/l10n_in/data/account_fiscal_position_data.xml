@@ -1,0 +1,211 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- Fiscal Position Templates -->
+    <record model="account.fiscal.position.template" id="fiscal_position_in_inter_state">
+        <field name="chart_template_id" ref="indian_chart_template_standard"/>
+        <field name="name">Inter State</field>
+    </record>
+
+    <record model="account.fiscal.position.template" id="fiscal_position_in_export">
+        <field name="chart_template_id" ref="indian_chart_template_standard"/>
+        <field name="name">Export</field>
+    </record>
+
+    <!-- Fiscal Position Tax Templates -->
+    <record id="account_fiscal_position_tax_in_sale_1_inter" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_in_inter_state"/>
+        <field name="tax_src_id" ref="sgst_sale_1"/>
+        <field name="tax_dest_id" ref="igst_sale_1"/>
+    </record>
+    <record id="account_fiscal_position_tax_in_sale_2_inter" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_in_inter_state"/>
+        <field name="tax_src_id" ref="sgst_sale_2"/>
+        <field name="tax_dest_id" ref="igst_sale_2"/>
+    </record>
+    <record id="account_fiscal_position_tax_in_sale_5_inter" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_in_inter_state"/>
+        <field name="tax_src_id" ref="sgst_sale_5"/>
+        <field name="tax_dest_id" ref="igst_sale_5"/>
+    </record>
+    <record id="account_fiscal_position_tax_in_sale_12_inter" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_in_inter_state"/>
+        <field name="tax_src_id" ref="sgst_sale_12"/>
+        <field name="tax_dest_id" ref="igst_sale_12"/>
+    </record>
+    <record id="account_fiscal_position_tax_in_sale_18_inter" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_in_inter_state"/>
+        <field name="tax_src_id" ref="sgst_sale_18"/>
+        <field name="tax_dest_id" ref="igst_sale_18"/>
+    </record>
+    <record id="account_fiscal_position_tax_in_sale_28_inter" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_in_inter_state"/>
+        <field name="tax_src_id" ref="sgst_sale_28"/>
+        <field name="tax_dest_id" ref="igst_sale_28"/>
+    </record>
+
+    <record id="account_fiscal_position_tax_in_purchase_1_inter" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_in_inter_state"/>
+        <field name="tax_src_id" ref="sgst_purchase_1"/>
+        <field name="tax_dest_id" ref="igst_purchase_1"/>
+    </record>
+    <record id="account_fiscal_position_tax_in_purchase_2_inter" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_in_inter_state"/>
+        <field name="tax_src_id" ref="sgst_purchase_2"/>
+        <field name="tax_dest_id" ref="igst_purchase_2"/>
+    </record>
+    <record id="account_fiscal_position_tax_in_purchase_5_inter" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_in_inter_state"/>
+        <field name="tax_src_id" ref="sgst_purchase_5"/>
+        <field name="tax_dest_id" ref="igst_purchase_5"/>
+    </record>
+    <record id="account_fiscal_position_tax_in_purchase_12_inter" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_in_inter_state"/>
+        <field name="tax_src_id" ref="sgst_purchase_12"/>
+        <field name="tax_dest_id" ref="igst_purchase_12"/>
+    </record>
+    <record id="account_fiscal_position_tax_in_purchase_18_inter" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_in_inter_state"/>
+        <field name="tax_src_id" ref="sgst_purchase_18"/>
+        <field name="tax_dest_id" ref="igst_purchase_18"/>
+    </record>
+    <record id="account_fiscal_position_tax_in_purchase_28_inter" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_in_inter_state"/>
+        <field name="tax_src_id" ref="sgst_purchase_28"/>
+        <field name="tax_dest_id" ref="igst_purchase_28"/>
+    </record>
+
+    <record id="account_fiscal_position_tax_in_sale_1_exp" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_in_export"/>
+        <field name="tax_src_id" ref="sgst_sale_1"/>
+        <field name="tax_dest_id" ref="igst_sale_1"/>
+    </record>
+    <record id="account_fiscal_position_tax_in_sale_2_exp" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_in_export"/>
+        <field name="tax_src_id" ref="sgst_sale_2"/>
+        <field name="tax_dest_id" ref="igst_sale_2"/>
+    </record>
+    <record id="account_fiscal_position_tax_in_sale_5_exp" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_in_export"/>
+        <field name="tax_src_id" ref="sgst_sale_5"/>
+        <field name="tax_dest_id" ref="igst_sale_5"/>
+    </record>
+    <record id="account_fiscal_position_tax_in_sale_12_exp" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_in_export"/>
+        <field name="tax_src_id" ref="sgst_sale_12"/>
+        <field name="tax_dest_id" ref="igst_sale_12"/>
+    </record>
+    <record id="account_fiscal_position_tax_in_sale_18_exp" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_in_export"/>
+        <field name="tax_src_id" ref="sgst_sale_18"/>
+        <field name="tax_dest_id" ref="igst_sale_18"/>
+    </record>
+    <record id="account_fiscal_position_tax_in_sale_28_exp" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_in_export"/>
+        <field name="tax_src_id" ref="sgst_sale_28"/>
+        <field name="tax_dest_id" ref="igst_sale_28"/>
+    </record>
+
+    <record id="account_fiscal_position_tax_in_purchase_1_exp" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_in_export"/>
+        <field name="tax_src_id" ref="sgst_purchase_1"/>
+        <field name="tax_dest_id" ref="igst_purchase_1"/>
+    </record>
+    <record id="account_fiscal_position_tax_in_purchase_2_exp" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_in_export"/>
+        <field name="tax_src_id" ref="sgst_purchase_2"/>
+        <field name="tax_dest_id" ref="igst_purchase_2"/>
+    </record>
+    <record id="account_fiscal_position_tax_in_purchase_5_exp" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_in_export"/>
+        <field name="tax_src_id" ref="sgst_purchase_5"/>
+        <field name="tax_dest_id" ref="igst_purchase_5"/>
+    </record>
+    <record id="account_fiscal_position_tax_in_purchase_12_exp" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_in_export"/>
+        <field name="tax_src_id" ref="sgst_purchase_12"/>
+        <field name="tax_dest_id" ref="igst_purchase_12"/>
+    </record>
+    <record id="account_fiscal_position_tax_in_purchase_18_exp" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_in_export"/>
+        <field name="tax_src_id" ref="sgst_purchase_18"/>
+        <field name="tax_dest_id" ref="igst_purchase_18"/>
+    </record>
+    <record id="account_fiscal_position_tax_in_purchase_28_exp" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_in_export"/>
+        <field name="tax_src_id" ref="sgst_purchase_28"/>
+        <field name="tax_dest_id" ref="igst_purchase_28"/>
+    </record>
+
+    <record model="account.fiscal.position.template" id="fiscal_position_in_reverse_charge_intra">
+        <field name="chart_template_id" ref="indian_chart_template_standard"/>
+        <field name="name">Reverse charge Intra State</field>
+    </record>
+
+    <record id="account_fiscal_position_tax_in_purchase_1_intra_rc" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_in_reverse_charge_intra"/>
+        <field name="tax_src_id" ref="sgst_purchase_1"/>
+        <field name="tax_dest_id" ref="sgst_purchase_1_rc"/>
+    </record>
+    <record id="account_fiscal_position_tax_in_purchase_2_intra_rc" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_in_reverse_charge_intra"/>
+        <field name="tax_src_id" ref="sgst_purchase_2"/>
+        <field name="tax_dest_id" ref="sgst_purchase_2_rc"/>
+    </record>
+    <record id="account_fiscal_position_tax_in_purchase_5_intra_rc" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_in_reverse_charge_intra"/>
+        <field name="tax_src_id" ref="sgst_purchase_5"/>
+        <field name="tax_dest_id" ref="sgst_purchase_5_rc"/>
+    </record>
+    <record id="account_fiscal_position_tax_in_purchase_12_intra_rc" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_in_reverse_charge_intra"/>
+        <field name="tax_src_id" ref="sgst_purchase_12"/>
+        <field name="tax_dest_id" ref="sgst_purchase_12_rc"/>
+    </record>
+    <record id="account_fiscal_position_tax_in_purchase_18_intra_rc" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_in_reverse_charge_intra"/>
+        <field name="tax_src_id" ref="sgst_purchase_18"/>
+        <field name="tax_dest_id" ref="sgst_purchase_18_rc"/>
+    </record>
+    <record id="account_fiscal_position_tax_in_purchase_28_intra_rc" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_in_reverse_charge_intra"/>
+        <field name="tax_src_id" ref="sgst_purchase_28"/>
+        <field name="tax_dest_id" ref="sgst_purchase_28_rc"/>
+    </record>
+
+    <record model="account.fiscal.position.template" id="fiscal_position_in_reverse_charge_inter">
+        <field name="chart_template_id" ref="indian_chart_template_standard"/>
+        <field name="name">Reverse charge Inter State</field>
+    </record>
+
+    <record id="account_fiscal_position_tax_in_purchase_1_rc_inter_rc" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_in_reverse_charge_inter"/>
+        <field name="tax_src_id" ref="sgst_purchase_1"/>
+        <field name="tax_dest_id" ref="igst_purchase_1_rc"/>
+    </record>
+    <record id="account_fiscal_position_tax_in_purchase_2_rc_inter_rc" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_in_reverse_charge_inter"/>
+        <field name="tax_src_id" ref="sgst_purchase_2"/>
+        <field name="tax_dest_id" ref="igst_purchase_2_rc"/>
+    </record>
+    <record id="account_fiscal_position_tax_in_purchase_5_rc_inter_rc" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_in_reverse_charge_inter"/>
+        <field name="tax_src_id" ref="sgst_purchase_5"/>
+        <field name="tax_dest_id" ref="igst_purchase_5_rc"/>
+    </record>
+    <record id="account_fiscal_position_tax_in_purchase_12_rc_inter_rc" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_in_reverse_charge_inter"/>
+        <field name="tax_src_id" ref="sgst_purchase_12"/>
+        <field name="tax_dest_id" ref="igst_purchase_12_rc"/>
+    </record>
+    <record id="account_fiscal_position_tax_in_purchase_18_rc_inter_rc" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_in_reverse_charge_inter"/>
+        <field name="tax_src_id" ref="sgst_purchase_18"/>
+        <field name="tax_dest_id" ref="igst_purchase_18_rc"/>
+    </record>
+    <record id="account_fiscal_position_tax_in_purchase_28_rc_inter_rc" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_in_reverse_charge_inter"/>
+        <field name="tax_src_id" ref="sgst_purchase_28"/>
+        <field name="tax_dest_id" ref="igst_purchase_28_rc"/>
+    </record>
+</odoo>

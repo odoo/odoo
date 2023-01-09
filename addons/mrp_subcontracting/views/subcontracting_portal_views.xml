@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="subcontracting_portal_production_form_view" model="ir.ui.view">
+        <field name="name">subcontracting.portal.production.view.form</field>
+        <field name="model">stock.picking</field>
+        <field name="priority">999</field>
+        <field name="arch" type="xml">
+            <form js_class="subcontracting_portal_picking_form_view" string="Manufacturing Orders">
+                <sheet>
+                    <div class="oe_title">
+                        <h1>
+                            <field name="name" placeholder="Manufacturing Reference" nolabel="1"/>
+                        </h1>
+                    </div>
+                    <group>
+                        <field name="state" invisible='1'/>
+                        <field name="scheduled_date" attrs="{'required': [('id', '!=', False)]}" decoration-warning="state not in ('done', 'cancel') and scheduled_date &lt; now" decoration-danger="state not in ('done', 'cancel') and scheduled_date &lt; current_date" decoration-bf="state not in ('done', 'cancel') and (scheduled_date &lt; current_date or scheduled_date &lt; now)"/>
+                        <field name="date_deadline" attrs="{'invisible': ['|', ('state', 'in', ('done', 'cancel')), ('date_deadline', '=', False)]}" decoration-danger="date_deadline and date_deadline &lt; current_date" decoration-bf="date_deadline and date_deadline &lt; current_date"/>
+                        <field name="origin" placeholder="e.g. PO0032"/>
+                    </group>
+                    <notebook>
+                        <page string="Operations" name="operations">
+                            <field name="move_ids_without_package" mode="tree">
+                                <tree no_open="1">
+                                    <field name="id" readonly="1" invisible="1"/>
+                                    <field name="product_id" readonly="1"/>
+                                    <field name="show_details_visible" invisible="1"/>
+                                    <field name="description_picking" string="Description" optional="hide"/>
+                                    <field name="date" optional="hide"/>
+                                    <field name="date_deadline" optional="hide"/>
+                                    <field name="product_packaging_id" groups="product.group_stock_packaging"/>
+                                    <field name="product_uom_qty" string="Demand" readonly="1"/>
+                                    <field name="product_qty" invisible="1" readonly="1"/>
+                                    <field name="quantity_done" string="Done"/>
+                                    <field name="product_uom" groups="uom.group_uom"/>
+                                    <button name="action_show_details" type="object" icon="fa-list" width="0.1" title="Details"
+                                                attrs="{'invisible': [('show_details_visible', '=', False)]}" context="{'is_subcontracting_portal': 1}"/>
+                                    <field name="show_subcontracting_details_visible" invisible="1"/>
+                                    <button name="action_show_subcontract_details" string="Register components for subcontracted product" type="object" icon="fa-sitemap"
+                                        width="0.1" attrs="{'invisible': [('show_subcontracting_details_visible', '=', False)]}"/>
+                                </tree>
+                            </field>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="subcontracting_portal_view_production_action" model="ir.actions.act_window">
+        <field name="name">Subcontracting Portal</field>
+        <field name="res_model">stock.picking</field>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="subcontracting_portal_production_form_view"/>
+    </record>
+
+</odoo>

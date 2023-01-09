@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+
+    <t t-name="TextInputPopup" owl="1">
+            <div class="popup popup-textinput">
+                <header class="title">
+                    <t t-esc="props.title" />
+                </header>
+                <main>
+                    <p t-esc="props.body" />
+                    <input type="text" t-model="state.inputValue" t-ref="input" t-att-placeholder="props.placeholder"/>
+                </main>
+                <div class="footer footer-flex">
+                    <div class="button confirm highlight" t-on-click="confirm">
+                        <t t-esc="props.confirmText" />
+                    </div>
+                    <div class="button cancel" t-on-click="cancel">
+                        <t t-esc="props.cancelText" />
+                    </div>
+                </div>
+            </div>
+    </t>
+
+</templates>

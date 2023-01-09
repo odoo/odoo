@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="product_template_search_view_pos" model="ir.ui.view">
+        <field name="name">product.template.search.pos.form</field>
+        <field name="model">product.template</field>
+        <field name="inherit_id" ref="product.product_template_search_view"/>
+        <field name="arch" type="xml">
+            <filter name="filter_to_sell" position="before">
+               <filter name="filter_to_availabe_pos" string="Available in POS" domain="[('available_in_pos', '=', True)]"/>
+            </filter>
+            <filter name="categ_id" position="after">
+                <filter string="POS Product Category" name="pos_categ_id" context="{'group_by':'pos_categ_id'}"/>
+            </filter>
+        </field>
+    </record>
+
+    <record id="product_template_action_pos_product" model="ir.actions.act_window">
+        <field name="name">Products</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">product.template</field>
+        <field name="view_mode">kanban,tree,form,activity</field>
+        <field name="context" eval="{'search_default_filter_to_availabe_pos': 1, 'default_available_in_pos': True, 'create_variant_never': 'no_variant'}"/>
+    </record>
+    <record id="product_product_action" model="ir.actions.act_window">
+        <field name="name">Product Variants</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">product.product</field>
+        <field name="view_mode">kanban,tree,form,activity</field>
+        <field name="context" eval="{'search_default_filter_to_availabe_pos': 1, 'default_available_in_pos': True}"/>
+        <field name="domain" eval="[]"/>
+        <field name="search_view_id" eval="False"/> <!-- Force empty -->
+        <field name="view_id" ref="product.product_product_tree_view"/>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create a new product variant
+            </p><p>
+                You must define a product for everything you sell through
+                the point of sale interface.
+            </p>
+        </field>
+    </record>
+    <record id="product_category_action" model="ir.actions.act_window">
+        <field name="name">Internal Categories</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">product.category</field>
+        <field name="search_view_id" ref="product.product_category_search_view"/>
+        <field name="view_id" ref="product.product_category_list_view"/>
+    </record>
+
+    <record id="product_template_only_form_view" model="ir.ui.view">
+        <field name="name">product.template.only.form.inherit</field>
+        <field name="model">product.template</field>
+        <field name="inherit_id" ref="product.product_template_only_form_view"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='attribute_line_ids']//field[@name='attribute_id']" position="attributes">
+                <attribute name="context">{'default_create_variant': context.get('create_variant_never', 'always')}</attribute>
+            </xpath>
+        </field>
+    </record>
+
+
+    <record id="product_template_form_view" model="ir.ui.view">
+        <field name="name">product.template.form.inherit</field>
+        <field name="model">product.template</field>
+        <field name="inherit_id" ref="product.product_template_form_view"/>
+        <field name="arch" type="xml">
+            <xpath expr="//page[@name='sales']" position="attributes">
+                <attribute name="invisible">0</attribute>
+            </xpath>
+            <xpath expr="//page[@name='sales']/group[@name='sale']" position="inside">
+                <group name="pos" string="Point of Sale" attrs="{'invisible': [('sale_ok','=',False)]}">
+                    <field name="available_in_pos"/>
+                    <field name="to_weight" attrs="{'invisible': [('available_in_pos', '=', False)]}"/>
+                    <field name="pos_categ_id" attrs="{'invisible': [('available_in_pos', '=', False)]}" string="Category"/>
+                </group>
+            </xpath>
+        </field>
+    </record>
+
+    <!-- Product Catalog menus and sub menus -->
+    <menuitem id="pos_config_menu_catalog"
+        name="Products"
+        parent="point_of_sale.menu_point_root"/>
+    <menuitem id="menu_pos_products"
+        action="product_template_action_pos_product"
+        parent="point_of_sale.pos_config_menu_catalog"
+        sequence="5"/>
+    <menuitem id="pos_config_menu_action_product_product"
+        name="Product Variants"
+        parent="point_of_sale.pos_config_menu_catalog"
+        action="product_product_action"
+        groups="product.group_product_variant"
+        sequence="10"/>
+    <menuitem id="pos_config_menu_action_product_pricelist"
+        parent="point_of_sale.pos_config_menu_catalog"
+        action="product.product_pricelist_action2"
+        groups="product.group_product_pricelist"
+        sequence="20"/>
+
+    <record id="product_uom_categ_form_view" model="ir.ui.view">
+        <field name="name">uom.category.form.inherit</field>
+        <field name="model">uom.category</field>
+        <field name="inherit_id" ref="uom.product_uom_categ_form_view"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='name']" position="after">
+                <field name="is_pos_groupable" groups="base.group_no_one"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="product_uom_categ_tree_view" model="ir.ui.view">
+        <field name="name">uom.category.tree.inherit</field>
+        <field name="model">uom.category</field>
+        <field name="inherit_id" ref="uom.product_uom_categ_tree_view"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='name']" position="after">
+                <field name="is_pos_groupable" groups="base.group_no_one"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="product_template_tree_view" model="ir.ui.view">
+        <field name="name">product.template.product.tree.inherit</field>
+        <field name="model">product.template</field>
+        <field name="inherit_id" ref="product.product_template_tree_view"/>
+        <field name="arch" type="xml">
+            <field name="categ_id" position="before">
+                <field name="pos_categ_id" optional="hide" string="POS Product Category"/>
+            </field>
+        </field>
+    </record>
+
+    <record id="product_product_tree_view" model="ir.ui.view">
+        <field name="name">product.product.product.tree.inherit</field>
+        <field name="model">product.product</field>
+        <field name="inherit_id" ref="product.product_product_tree_view"/>
+        <field name="arch" type="xml">
+            <field name="categ_id" position="before">
+                <field name="pos_categ_id" optional="hide" string="POS Product Category"/>
+            </field>
+        </field>
+    </record>
+</odoo>

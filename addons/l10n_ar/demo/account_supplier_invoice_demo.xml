@@ -1,0 +1,212 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate="True">
+
+    <!-- we add l10n_latam_document_number on on a separete line because we need l10n_latam_document_type_id to be auto assigned so that account.move.name can be computed with the _inverse_l10n_latam_document_number -->
+
+    <!-- Invoice from gritti support service, auto fiscal position set VAT Not Applicable -->
+    <record id="demo_sup_invoice_1" model="account.move" context="{'allowed_company_ids': [ref('company_ri')]}">
+        <field name="partner_id" ref="res_partner_gritti_agrimensura"/>
+        <field name="invoice_user_id" ref="base.user_demo"/>
+        <field name="invoice_payment_term_id" ref="account.account_payment_term_end_following_month"/>
+        <field name="move_type">in_invoice</field>
+        <field name="invoice_date" eval="time.strftime('%Y-%m')+'-01'"/>
+        <field name="invoice_line_ids" eval="[
+            (0, 0, {'product_id': ref('product.product_product_2'), 'price_unit': 642.0, 'quantity': 1}),
+            (0, 0, {'product_id': ref('product.product_product_27'), 'price_unit': 642.0, 'quantity': 5}),
+            (0, 0, {'product_id': ref('product_product_telefonia'), 'price_unit': 250.0, 'quantity': 1}),
+            (0, 0, {'product_id': ref('product_product_no_gravado'), 'price_unit': 50.0, 'quantity': 10}),
+            (0, 0, {'product_id': ref('product_product_cero'), 'price_unit': 200.0, 'quantity': 1}),
+            (0, 0, {'product_id': ref('product_product_exento'), 'price_unit': 100.0, 'quantity': 1}),
+        ]"/>
+    </record>
+
+    <!-- Invoice from Foreign with vat 21, 27 and 10,5 -->
+    <record id="demo_sup_invoice_2" model="account.move" context="{'allowed_company_ids': [ref('company_ri')]}">
+        <field name="partner_id" ref="res_partner_foreign"/>
+        <field name="invoice_user_id" ref="base.user_demo"/>
+        <field name="invoice_payment_term_id" ref="account.account_payment_term_end_following_month"/>
+        <field name="move_type">in_invoice</field>
+        <field name="invoice_date" eval="time.strftime('%Y-%m')+'-01'"/>
+        <field name="invoice_line_ids" eval="[
+            (0, 0, {'product_id': ref('product.product_product_27'), 'price_unit': 642.0, 'quantity': 5}),
+            (0, 0, {'product_id': ref('product_product_telefonia'), 'price_unit': 250.0, 'quantity': 1}),
+            (0, 0, {'product_id': ref('product.product_product_25'), 'price_unit': 3245.0, 'quantity': 2}),
+        ]"/>
+    </record>
+
+    <!-- Invoice from Foreign with vat zero and 21 -->
+    <record id="demo_sup_invoice_3" model="account.move" context="{'allowed_company_ids': [ref('company_ri')]}">
+        <field name="partner_id" ref="res_partner_foreign"/>
+        <field name="invoice_user_id" ref="base.user_demo"/>
+        <field name="invoice_payment_term_id" ref="account.account_payment_term_end_following_month"/>
+        <field name="move_type">in_invoice</field>
+        <field name="invoice_date" eval="time.strftime('%Y-%m')+'-11'"/>
+        <field name="invoice_line_ids" eval="[
+            (0, 0, {'product_id': ref('product.product_product_27'), 'price_unit': 642.0, 'quantity': 5}),
+            (0, 0, {'product_id': ref('product_product_cero'), 'price_unit': 200.0, 'quantity': 1}),
+        ]"/>
+    </record>
+
+    <!-- Invoice to Foreign with vat exempt and 21 -->
+    <record id="demo_sup_invoice_4" model="account.move" context="{'allowed_company_ids': [ref('company_ri')]}">
+        <field name="partner_id" ref="res_partner_foreign"/>
+        <field name="invoice_user_id" ref="base.user_demo"/>
+        <field name="invoice_payment_term_id" ref="account.account_payment_term_end_following_month"/>
+        <field name="move_type">in_invoice</field>
+        <field name="invoice_date" eval="time.strftime('%Y-%m')+'-15'"/>
+        <field name="invoice_line_ids" eval="[
+            (0, 0, {'product_id': ref('product.product_product_27'), 'price_unit': 642.0, 'quantity': 5}),
+            (0, 0, {'product_id': ref('product_product_exento'), 'price_unit': 100.0, 'quantity': 1}),
+        ]"/>
+    </record>
+
+    <!-- Invoice to Foreign with all type of taxes  -->
+    <record id="demo_sup_invoice_5" model="account.move" context="{'allowed_company_ids': [ref('company_ri')]}">
+        <field name="partner_id" ref="res_partner_foreign"/>
+        <field name="invoice_user_id" ref="base.user_demo"/>
+        <field name="invoice_payment_term_id" ref="account.account_payment_term_end_following_month"/>
+        <field name="move_type">in_invoice</field>
+        <field name="invoice_date" eval="time.strftime('%Y-%m')+'-18'"/>
+        <field name="invoice_line_ids" eval="[
+            (0, 0, {'product_id': ref('product.product_product_27'), 'price_unit': 642.0, 'quantity': 5}),
+            (0, 0, {'product_id': ref('product_product_telefonia'), 'price_unit': 250.0, 'quantity': 1}),
+            (0, 0, {'product_id': ref('product.product_product_25'), 'price_unit': 3245.0, 'quantity': 2}),
+            (0, 0, {'product_id': ref('product_product_no_gravado'), 'price_unit': 50.0, 'quantity': 10}),
+            (0, 0, {'product_id': ref('product_product_cero'), 'price_unit': 200.0, 'quantity': 1}),
+            (0, 0, {'product_id': ref('product_product_exento'), 'price_unit': 100.0, 'quantity': 1}),
+        ]"/>
+    </record>
+
+    <!-- Service Import to Odoo, fiscal position changes tax not correspond -->
+    <record id="demo_sup_invoice_6" model="account.move" context="{'allowed_company_ids': [ref('company_ri')]}">
+        <field name="partner_id" ref="res_partner_odoo"/>
+        <field name="invoice_user_id" ref="base.user_demo"/>
+        <field name="invoice_payment_term_id" ref="account.account_payment_term_end_following_month"/>
+        <field name="move_type">in_invoice</field>
+        <field name="invoice_date" eval="time.strftime('%Y-%m')+'-26'"/>
+        <field name="invoice_line_ids" eval="[
+            (0, 0, {'product_id': ref('product.product_product_2'), 'price_unit': 1642.0, 'quantity': 1}),
+        ]"/>
+    </record>
+
+    <!-- Similar to last one but with line that have tax not correspond with negative amount -->
+    <record id="demo_sup_invoice_7" model="account.move" context="{'allowed_company_ids': [ref('company_ri')]}">
+        <field name="partner_id" ref="res_partner_odoo"/>
+        <field name="invoice_user_id" ref="base.user_demo"/>
+        <field name="invoice_payment_term_id" ref="account.account_payment_term_end_following_month"/>
+        <field name="move_type">in_invoice</field>
+        <field name="invoice_date" eval="time.strftime('%Y-%m')+'-27'"/>
+        <field name="invoice_line_ids" eval="[
+            (0, 0, {'product_id': ref('product.product_product_2'), 'price_unit': 1642.0, 'quantity': 1}),
+            (0, 0, {'product_id': ref('product_product_no_gravado'), 'price_unit': -50.0, 'quantity': 10}),
+        ]"/>
+    </record>
+
+    <!-- Invoice to ADHOC with multiple taxes and perceptions -->
+    <record id="demo_sup_invoice_8" model="account.move" context="{'allowed_company_ids': [ref('company_ri')]}">
+        <field name="partner_id" ref="l10n_ar.res_partner_adhoc"/>
+        <field name="invoice_user_id" ref="base.user_demo"/>
+        <field name="invoice_payment_term_id" ref="account.account_payment_term_end_following_month"/>
+        <field name="move_type">in_invoice</field>
+        <field name="invoice_date" eval="time.strftime('%Y-%m')+'-01'"/>
+        <field name="invoice_line_ids" eval="[
+            (0, 0, {'product_id': ref('product.product_product_27'), 'price_unit': 642.0, 'quantity': 5}),
+            (0, 0, {'product_id': ref('product_product_telefonia'), 'price_unit': 250.0, 'quantity': 1}),
+            (0, 0, {'product_id': ref('product.product_product_25'), 'price_unit': 3245.0, 'quantity': 2}),
+        ]"/>
+    </record>
+
+    <!-- Import Cleareance -->
+    <record id="demo_despacho_1" model="account.move" context="{'allowed_company_ids': [ref('company_ri')]}">
+        <field name="partner_id" ref="l10n_ar.partner_afip"/>
+        <field name="invoice_user_id" ref="base.user_demo"/>
+        <field name="invoice_payment_term_id" ref="account.account_payment_term_end_following_month"/>
+        <field name="move_type">in_invoice</field>
+        <field name="invoice_date" eval="time.strftime('%Y-%m')+'-13'"/>
+        <field name="invoice_line_ids" eval="[
+            (0, 0, {
+                'price_unit': 5064.98,
+                'name': '[AFIP_DESPACHO] Despacho de importación',
+                'product_id': ref('l10n_ar.product_product_quote_despacho'),
+            }),
+            (0, 0, {
+                'price_unit': 152.08,
+                'name': '[AFIP_TASA_EST] Tasa Estadística',
+                'product_id': ref('l10n_ar.product_product_tasa_estadistica'),
+            }),
+            (0, 0, {
+                'price_unit': 10.0,
+                'name': '[AFIP_ARANCEL] Arancel',
+                'product_id': ref('l10n_ar.product_product_arancel'),
+            }),
+            (0, 0, {
+                'price_unit': 28.00,
+                'name': '[AFIP_SERV_GUARDA] Servicio de Guarda',
+                'product_id': ref('l10n_ar.product_product_servicio_de_guarda'),
+            }),
+            (0, 0, {
+                'name': 'FOB Total',
+                'price_unit': 28936.06,
+                'tax_ids': [(6, 0, [ref('l10n_ar.{}_ri_tax_vat_21_compras'.format(ref('company_ri')))])],
+            }),
+            (0, 0, {
+                'name': 'Flete',
+                'price_unit': 1350.00,
+                'tax_ids': [(6, 0, [ref('l10n_ar.{}_ri_tax_vat_21_compras'.format(ref('company_ri')))])],
+            }),
+            (0, 0, {
+                'name': 'Seguro',
+                'price_unit': 130.21,
+                'tax_ids': [(6, 0, [ref('l10n_ar.{}_ri_tax_vat_21_compras'.format(ref('company_ri')))])],
+            }),
+            (0, 0, {
+                'name': '-FOB Total',
+                'price_unit': -28936.06,
+                'tax_ids': [(6, 0, [ref('l10n_ar.{}_ri_tax_vat_no_gravado_compras'.format(ref('company_ri')))])],
+            }),
+            (0, 0, {
+                'name': '-Flete',
+                'price_unit': -1350.00,
+                'tax_ids': [(6, 0, [ref('l10n_ar.{}_ri_tax_vat_no_gravado_compras'.format(ref('company_ri')))])],
+            }),
+            (0, 0, {
+                'name': '-Seguro',
+                'price_unit': -130.21,
+                'tax_ids': [(6, 0, [ref('l10n_ar.{}_ri_tax_vat_no_gravado_compras'.format(ref('company_ri')))])],
+            }),
+        ]"/>
+    </record>
+
+    <record id="demo_sup_invoice_1" model="account.move">
+        <field name="l10n_latam_document_number">0001-00000008</field>
+    </record>
+    <record id="demo_sup_invoice_2" model="account.move">
+        <field name="l10n_latam_document_number">0002-00000123</field>
+    </record>
+    <record id="demo_sup_invoice_3" model="account.move">
+        <field name="l10n_latam_document_number">0003-00000312</field>
+    </record>
+    <record id="demo_sup_invoice_4" model="account.move">
+        <field name="l10n_latam_document_number">0001-00000200</field>
+    </record>
+    <record id="demo_sup_invoice_5" model="account.move">
+        <field name="l10n_latam_document_number">0001-00000222</field>
+    </record>
+    <record id="demo_sup_invoice_6" model="account.move">
+        <field name="l10n_latam_document_number">0001-00000333</field>
+    </record>
+    <record id="demo_sup_invoice_7" model="account.move">
+        <field name="l10n_latam_document_number">0001-00000334</field>
+    </record>
+    <record id="demo_sup_invoice_8" model="account.move">
+        <field name="l10n_latam_document_number">0001-00000335</field>
+    </record>
+    <record id="demo_despacho_1" model="account.move">
+        <field name="l10n_latam_document_number">16052IC04000605L</field>
+    </record>
+
+    <function model="account.move" name="action_post">
+        <value eval="[ref('demo_sup_invoice_1'), ref('demo_sup_invoice_2'), ref('demo_sup_invoice_3'), ref('demo_sup_invoice_4'), ref('demo_sup_invoice_5'), ref('demo_sup_invoice_6'), ref('demo_sup_invoice_7'), ref('demo_sup_invoice_8'), ref('demo_despacho_1')]"/>
+    </function>
+
+</odoo>

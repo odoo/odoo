@@ -1,0 +1,83 @@
+<?xml version="1.0"?>
+<odoo>
+<data noupdate="1">
+
+    <!-- Meeting Types (for interview meetings) -->
+    <record model="calendar.event.type" id="categ_meet_interview">
+        <field name="name">Interview</field>
+    </record>
+
+    <record model="hr.recruitment.degree" id="degree_graduate">
+        <field name="name">Graduate</field>
+        <field name="sequence">1</field>
+    </record>
+    <record model="hr.recruitment.degree" id="degree_bachelor">
+        <field name="name">Bachelor Degree</field>
+        <field name="sequence">2</field>
+    </record>
+    <record model="hr.recruitment.degree" id="degree_licenced">
+        <field name="name">Master Degree</field>
+        <field name="sequence">3</field>
+    </record>
+    <record model="hr.recruitment.degree" id="degree_bac5">
+        <field name="name">Doctoral Degree</field>
+        <field name="sequence">4</field>
+    </record>
+
+    <!-- Applicant Categories(Tag) -->
+    <record id="tag_applicant_reserve" model="hr.applicant.category">
+        <field name="name">Reserve</field>
+    </record>
+    <record id="tag_applicant_manager" model="hr.applicant.category">
+        <field name="name">Manager</field>
+    </record>
+    <record id="tag_applicant_it" model="hr.applicant.category">
+        <field name="name">IT</field>
+    </record>
+    <record id="tag_applicant_sales" model="hr.applicant.category">
+        <field name="name">Sales</field>
+    </record>
+    <record model="utm.campaign" id="utm_campaign_job">
+            <field name="name">Job Campaign</field>
+    </record>
+
+    <record model="hr.recruitment.stage" id="stage_job1">
+        <field name="name">Initial Qualification</field>
+        <field name="sequence">1</field>
+    </record>
+    <record model="hr.recruitment.stage" id="stage_job2">
+        <field name="name">First Interview</field>
+        <field name="sequence">2</field>
+        <field name="template_id" ref="email_template_data_applicant_congratulations"/> 
+    </record>
+    <record model="hr.recruitment.stage" id="stage_job3">
+        <field name="name">Second Interview</field>
+        <field name="sequence">3</field>
+    </record>
+    <record model="hr.recruitment.stage" id="stage_job4">
+        <field name="name">Contract Proposal</field>
+        <field name="sequence">4</field>
+    </record>
+    <record model="hr.recruitment.stage" id="stage_job5">
+        <field name="name">Contract Signed</field>
+        <field name="sequence">5</field>
+        <field name="fold" eval="True"/>
+        <field name="hired_stage">True</field>
+    </record>
+
+    <!-- applicant refuse reason -->
+        <record id="refuse_reason_1" model="hr.applicant.refuse.reason">
+            <field name="name">Doesn't fit the job requirements</field>
+            <field name="template_id" ref="email_template_data_applicant_refuse"/>
+        </record>
+        <record id="refuse_reason_2" model="hr.applicant.refuse.reason">
+            <field name="name">The applicant is not interested anymore</field>
+            <field name="template_id" ref="email_template_data_applicant_not_interested"/>
+        </record>
+        <record id="refuse_reason_3" model="hr.applicant.refuse.reason">
+            <field name="name">The applicant gets a better offer</field>
+            <field name="template_id" ref="email_template_data_applicant_not_interested"/>
+        </record>
+
+</data>
+</odoo>

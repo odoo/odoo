@@ -1,0 +1,413 @@
+.o_dashboards {
+    background-color: $o-view-background-color;
+
+    &:has(iframe[src*='plausible']) {
+        background-color: #f9fafb; // Copied from iframe.
+    }
+
+    .o_website_dashboard {
+        background-color: $o-view-background-color;
+
+        &:has(iframe[src*='plausible']) {
+            background-color: #f9fafb; // Copied from iframe.
+
+            iframe {
+                // TODO: Find another way to set the height, not robust enough,
+                // especially if plausible change those values later.
+                height: 2350px; // Copied from iframe.
+                top: 2px; // Do not cover eCommerce dashboard border.
+
+                @include media-breakpoint-only(md) {
+                    height: 2500px; // Copied from iframe.
+                }
+                @include media-breakpoint-only(lg) {
+                    height: 1600px; // Copied from iframe.
+                }
+                @include media-breakpoint-only(xl) {
+                    height: 1570px; // Copied from iframe.
+                }
+                @include media-breakpoint-only(xxl) {
+                    height: 1650px; // Copied from iframe.
+                }
+            }
+        }
+
+        div.o_box {
+            @include clearfix;
+            color: $o-main-color-muted;
+            background-color: $o-view-background-color;
+            background-size: cover;
+            margin-top: $o-horizontal-padding;
+            position: static;
+            box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.3);
+
+            h2, h4 {
+                text-transform: uppercase;
+                margin-top: 0;
+                color: $o-brand-odoo;
+            }
+
+            h4 { margin: 0 0 0 8px; }
+
+            .col-lg-7, .col-12 {
+                padding: 15px;
+
+                .js_field_selection {
+                    width: 30%;
+                    margin: 0 0 20px 0;
+                    float: right;
+                    border-radius: 0;
+                }
+
+                .table-responsive {
+                    border: none;
+                }
+
+                table {
+
+                    tr:first-child {
+                        background: white;
+                    }
+
+                    tr:nth-child(even):not(:hover) {
+                        background: #f5f6f7;
+                    }
+
+                    th {
+                        text-transform: uppercase;
+                        color: $o-main-text-color;
+                        border-top-width: 0px;
+                    }
+                    td, th {
+                        text-align: right;
+                        border-left: none;
+
+                        &:first-child {
+                            text-align: left;
+                        }
+                    }
+                    .o_tooltip_key {
+                        text-align: left;
+                    }
+                }
+            }
+        }
+
+        .o_dashboard_common {
+            .o_box {
+                display: flex;
+                flex-flow: row wrap;
+                justify-content: flex-start;
+                > .o_inner_box {
+                    @include media-breakpoint-down(md) {
+                        flex: 1 1 200px;
+                        display: block !important;
+                    }
+                    @include media-breakpoint-up(md) {
+                        flex: 0 0 16.6%;
+                    }
+                }
+            }
+            .o_inner_box {
+                padding-top: 10px;
+                text-align: center;
+                border: 1px solid $o-view-background-color;
+                height: 80px;
+                overflow: hidden;
+                text-overflow: ellipsis;
+                white-space: nowrap;
+                cursor: pointer;
+                color: white;
+                background-color: $o-brand-primary;
+                    &:hover {
+                        background-color: darken($o-brand-primary, 10%);
+                    }
+                &.o_primary {
+                    background-color: $o-brand-odoo;
+                    color: white;
+                    &:hover {
+                        background-color: darken($o-brand-odoo, 10%);
+                    }
+                }
+                .o_highlight {
+                    font-size: 27px;
+                }
+            }
+        }
+
+        .o_graph_sales {
+            direction: ltr#{"/*rtl:ignore*/"};
+            .o_legend0 {
+                background-color: $o-brand-primary;
+            }
+            .o_legend1 {
+                background-color: $o-main-color-muted;
+            }
+        }
+
+        .o_box > h2 {
+            padding: 15px;
+        }
+
+        .o_dashboard_visits {
+
+            .o_demo_background {
+
+                margin-top: 16px;
+                height: 300px;
+                background-size: 100% !important;
+                background: var(--Dashboard__demoBackground, url("/website/static/src/img/website_dashboard_visit_demo.png")) no-repeat;
+                position: relative;
+
+                .o_buttons {
+                    position: relative;
+                }
+
+                .o_layer {
+                    background-color: rgba($o-view-background-color,.3);
+                    position: absolute;
+                    top: 0;
+                    left: 0;
+                    width: 100%;
+                    height: 100%;
+                }
+            }
+        }
+
+        tr.o_product_template {
+            cursor: pointer;
+            color: $o-main-text-color;
+        }
+
+        .o_loader {
+            text-align: center;
+            width: 100%;
+            height: 20em;
+        }
+    }
+}
+
+.oe_stat_button.o_stat_button_info {
+    pointer-events: none;
+}
+
+.o_field_website_redirect_button {
+    display: contents;
+}
+
+.o_kanban_renderer.o_theme_kanban {
+    $o-theme-kanban-gray: #fcfcfc;
+
+    /// Un-grouped Layout (default)
+    &.o_kanban_ungrouped {
+        justify-content: space-between;
+        margin: 0 0 0 ($o-kanban-record-margin - 2 * $grid-gutter-width);
+
+        @include media-breakpoint-down(md) {
+            padding-left: $o-horizontal-padding - $o-kanban-record-margin;
+            padding-right: $o-horizontal-padding;
+        }
+
+        .o_kanban_record {
+            flex: 1 0 220px;
+        }
+    }
+
+    .o_kanban_record {
+        margin-left: $grid-gutter-width * 2;
+        margin-top: 16px;
+        margin-bottom: 16px;
+
+        .o_theme_preview {
+            box-shadow: none;
+            background: none;
+            border: none;
+            padding: 0;
+            &.o_theme_installed .o_theme_preview_top {
+                @include o-we-active-wrapper($top: 7px, $right: 7px);
+            }
+        }
+
+        .o_theme_preview_top {
+            position: relative;
+            border-radius: 2px;
+            transform-origin: center bottom;
+            transition: all .1s ease 0s;
+
+            .o_theme_cover, .o_theme_logo, .o_theme_screenshot {
+                width: 100%;
+                padding-bottom: 127%;
+                background-repeat: no-repeat;
+                background-position: center top;
+                background-size: 40% 32%;
+            }
+
+            .o_theme_cover {
+                background-size: contain;
+            }
+
+            .o_theme_screenshot {
+                background-size: cover;
+            }
+        }
+
+        .o_theme_preview_bottom {
+            h5, h6 {
+                line-height: 16px;
+            }
+        }
+
+        .o_button_area {
+            @include o-position-absolute(0, 0, 0, 0);
+            transition: opacity 100ms ease 0s;
+            display: flex;
+            flex-flow: column nowrap;
+            justify-content: center;
+            transform: translate3d(0,0,0);
+            background-image: linear-gradient(0deg, rgba(black, 0.6), rgba(black, 0.3));
+            padding: 10% 20%;
+            opacity: 0;
+            visibility: hidden;
+
+            > .btn {
+                padding: $btn-padding-y-lg $btn-padding-x-lg;
+            }
+
+            hr {
+                width: 100%;
+            }
+        }
+
+        .o_theme_preview_top:hover {
+            transition: all .3s ease 0s;
+            transform: translateY(-10px);
+            border-color: darken($o-theme-kanban-gray, 26%);
+            box-shadow: 0 15px 12px -8px rgba(0, 0, 0, .4);
+
+            .o_theme_screenshot {
+                animation: o_theme_screenshot_scroll 4s linear .25s infinite alternate;
+            }
+            @keyframes o_theme_screenshot_scroll {
+                25% {
+                    background-position: center top;
+                }
+                75%, 100% {
+                    background-position: center bottom;
+                }
+            }
+
+            .o_button_area {
+                opacity: 1;
+                visibility: visible;
+                transition: opacity 0.2s ease 0.1s;
+            }
+        }
+    }
+
+    /// Grouped Layout
+    &.o_kanban_grouped {
+        .o_kanban_group {
+            background-color: $o-theme-kanban-gray;
+            padding: 0 20px;
+
+            .o_kanban_header {
+                height: 30px;
+
+                .o_column_title {
+                    padding: 0;
+                    color: $body-color;
+                }
+
+                &:hover, &.show {
+                    .o_kanban_config {
+                        display: none;
+                    }
+                }
+            }
+
+            .o_theme_preview_top {
+                border-color: darken($o-theme-kanban-gray, 16%);
+            }
+
+            &:nth-child(even) {
+                background-color: darken($o-theme-kanban-gray, 4%);
+
+                .o_theme_cover, .o_theme_logo {
+                    background-color: white;
+                }
+            }
+        }
+
+        .o_kanban_record {
+            width: 100%;
+            margin-left: 0;
+            margin-right: 0;
+
+            .o_theme_preview_top {
+                .o_theme_cover, .o_theme_logo {
+                    padding-bottom: 50%;
+                    background-size: 32% 62%;
+                }
+
+                .o_theme_cover {
+                    background-size: cover;
+                }
+            }
+        }
+    }
+}
+
+// Mobile preview
+%o-mobile-phone {
+    @include media-breakpoint-up(md) {
+        height: 735px !important;
+        width: 362px;
+        left: 50%;
+        top: 50%;
+        transform: translate(-50%, -50%);
+
+        // Below the following height, the preview size decreases to ensure it
+        // will always be fully visible.
+        @media(max-height: calc(800px + #{$o-navbar-height})) {
+            height: 602px !important;
+            width: 310px;
+
+            div.o_mobile_preview_layout, img.img_mobile {
+                height: 659px;
+                width: 342px;
+                top: -30px;
+                left: -17px;
+            }
+        }
+
+        .o_mobile_preview_layout, .img_mobile {
+            position: absolute;
+            pointer-events: none;
+            // The mobile phone image placed on top of the iframe must be moved
+            // to align the outlines of the iframe with the outlines of the
+            // mobile screen.
+            top: -36px;
+            left: -20px;
+        }
+    }
+}
+
+.o_view_form_theme_preview_controller {
+    div.o_form_nosheet {
+        padding: 0px;
+        height:100%;
+        width:100%;
+    }
+
+    .o_field_iframe {
+        width: 100%;
+        height: 100%;
+
+        div.is_mobile {
+            @extend %o-mobile-phone;
+            @include media-breakpoint-up(md) {
+                position: relative;
+            }
+        }
+    }
+}

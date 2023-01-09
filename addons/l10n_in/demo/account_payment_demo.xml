@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate="1">
+    <!-- Demo of at(Tax liability on advances). Advance payment need to consideration for which invoices have not been issued in the same month.-->
+    <record id="demo_payment_at" model="account.payment">
+        <field name="partner_id" ref="l10n_in.res_partner_registered_customer"/>
+        <field name="partner_type">customer</field>
+        <field name="amount">10000</field>
+        <field name="payment_type">inbound</field>
+        <field name="date" eval="time.strftime('%Y-%m')+'-01'"/>
+        <field name="journal_id" model="account.journal"
+            eval="obj().search([
+                ('type', '=', 'cash'),
+                ('company_id', '=', ref('l10n_in.demo_company_in'))], limit=1).id"/>
+    </record>
+
+    <function model="account.payment" name="action_post">
+        <value eval="[ref('demo_payment_at')]"/>
+    </function>
+</odoo>

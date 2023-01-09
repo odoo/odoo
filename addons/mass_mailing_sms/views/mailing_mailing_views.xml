@@ -1,0 +1,284 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo><data>
+
+    <record model="ir.ui.view" id="mailing_mailing_view_search_sms">
+        <field name="name">mailing.mailing.search</field>
+        <field name="model">mailing.mailing</field>
+        <field name="inherit_id" ref="mass_mailing.view_mail_mass_mailing_search"/>
+        <field name="mode">primary</field>
+        <field name="arch" type="xml">
+            <xpath expr="//filter[@name='assigned_to_me']" position="attributes">
+                <attribute name="string">My SMS Marketing</attribute>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="mailing_mailing_view_form_sms" model="ir.ui.view">
+        <field name="name">mailing.mailing.view.form.inherit.sms</field>
+        <field name="model">mailing.mailing</field>
+        <field name="inherit_id" ref="mass_mailing.view_mail_mass_mailing_form"/>
+        <field name="arch" type="xml">
+            <!-- Buttons / Actions -->
+            <xpath expr="//button[@name='action_launch']" position="attributes">
+                <attribute name="attrs">{'invisible': ['|', ('mailing_type', '!=', 'mail'), ('state', 'in', ('in_queue', 'sending', 'done'))]}</attribute>
+            </xpath>
+            <xpath expr="//button[@name='action_schedule']" position="before">
+                <field name="sms_force_send" invisible="1"/>
+                <field name="schedule_type" invisible="1"/>
+                <button name="action_put_in_queue" type="object"
+                    string="Send" class="oe_highlight" data-hotkey="v"
+                    attrs="{'invisible': ['|', '|', ('mailing_type', '=', 'mail'), ('state', 'in', ('in_queue', 'sending', 'done')), ('sms_force_send', '=', True)]}"
+                    confirm="This will send SMS to all recipients. Do you still want to proceed ?"/>
+                <button name="action_send_mail" type="object"
+                    string="Send Now" class="oe_highlight" data-hotkey="g"
+                    attrs="{'invisible': ['|', '|', '|', ('mailing_type', '=', 'mail'), ('state', 'in', ('in_queue', 'done')), ('schedule_type', '=', 'scheduled'), ('sms_force_send', '!=', True)]}"
+                    confirm="This will send SMS to all recipients now. Do you still want to proceed ?"/>
+            </xpath>
+            <!-- Headers / Warnings -->
+            <xpath expr="//header" position="after">
+                <field name="sms_has_insufficient_credit" invisible="1"/>
+                <div class="alert alert-warning text-center o-hidden-ios" attrs="{'invisible': [('sms_has_insufficient_credit', '=', False)]}" role="alert">
+                    <button class="btn-link py-0"
+                            name="action_buy_sms_credits"
+                            type="object">
+                        <strong>
+                            It appears you don't have enough IAP credits. Click here to buy credits.
+                        </strong>
+                    </button>
+                </div>
+                <field name="sms_has_unregistered_account" invisible="1"/>
+                <div class="alert alert-warning text-center o-hidden-ios" attrs="{'invisible': [('sms_has_unregistered_account', '=', False)]}" role="alert">
+                    <button class="btn-link py-0"
+                            name="action_buy_sms_credits"
+                            type="object">
+                        <strong>
+                            It appears your SMS account is not registered. Click here to set up your account.
+                        </strong>
+                    </button>
+                </div>
+            </xpath>
+            <xpath expr="//span[@name='canceled_text']" position="attributes">
+                <attribute name="attrs">{'invisible': [('mailing_type', '!=', 'mail')]}</attribute>
+            </xpath>
+            <xpath expr="//span[@name='canceled_text']" position="after">
+                <span name="canceled_text_sms" attrs="{'invisible': [('mailing_type', '!=', 'sms')]}">SMS Text Message have been canceled and will not be sent.</span>
+            </xpath>
+            <xpath expr="//span[@name='scheduled_text']" position="attributes">
+                <attribute name="attrs">{'invisible': [('mailing_type', '!=', 'mail')]}</attribute>
+            </xpath>
+            <xpath expr="//span[@name='scheduled_text']" position="after">
+                <span name="scheduled_text_sms" attrs="{'invisible': [('mailing_type', '!=', 'sms')]}">SMS Text Message are in queue and will be sent soon.</span>
+            </xpath>
+            <xpath expr="//span[@name='sent']" position="attributes">
+                <attribute name="attrs">{'invisible': [('mailing_type', '!=', 'mail')]}</attribute>
+            </xpath>
+            <xpath expr="//span[@name='sent']" position="after">
+                <span name="sent_sms" attrs="{'invisible': [('mailing_type', '!=', 'sms')]}">SMS Text Message have been sent.</span>
+            </xpath>
+            <xpath expr="//span[@name='failed_text']" position="attributes">
+                <attribute name="attrs">{'invisible': [('mailing_type', '!=', 'mail')]}</attribute>
+            </xpath>
+            <xpath expr="//span[@name='failed_text']" position="after">
+                <span name="failed_text_sms" attrs="{'invisible': [('mailing_type', '!=', 'sms')]}">SMS Text Message could not be sent.</span>
+            </xpath>
+            <xpath expr="//span[@name='next_departure_text']" position='attributes'>
+                <attribute name="attrs">{'invisible': [('mailing_type', '!=', 'mail')]}</attribute>
+            </xpath>
+            <xpath expr="//span[@name='next_departure_text']" position='after'>
+                <span name="next_departure_text" attrs="{'invisible': [('mailing_type', '!=', 'sms')]}">This SMS marketing is scheduled for </span>
+            </xpath>
+            <!-- Stat Buttons -->
+            <xpath expr="//button[@name='action_view_opened']" position="attributes">
+                <attribute name="attrs">{'invisible': ['|',('mailing_type', '!=', 'mail'),('state', 'in', ('draft','test'))]}</attribute>
+            </xpath>
+            <xpath expr="//button[@name='action_view_replied']" position="attributes">
+                <attribute name="attrs">{'invisible': ['|',('mailing_type', '!=', 'mail'),('state', 'in', ('draft','test'))]}</attribute>
+            </xpath>
+            <!-- Form -->
+            <xpath expr="//field[@name='subject']" position="attributes">
+                <attribute name="attrs">{'invisible': [('mailing_type', '!=', 'mail')], 'readonly': [('state', 'in', ('sending', 'done'))], 'required': [('mailing_type', '=', 'mail')]}</attribute>
+                <!-- overrided in xml view to prevent remaining helper changes (on mass_mailing module) when mass_mailing_sms uninstalled-->
+                <attribute name="help">For an Email, Subject your Recipients will see in their inbox.
+                    For an SMS Text Message, internal Title of the Message.</attribute>
+            </xpath>
+            <xpath expr="//field[@name='subject']" position="after">
+                <field class="text-break" name="sms_subject" string="Title" placeholder="e.g. Black Friday SMS coupon" attrs="{'invisible': [('mailing_type', '!=', 'sms')], 'readonly': [('state', 'in', ('sending', 'done'))], 'required': [('mailing_type', '=', 'sms')]}"/>
+            </xpath>
+            <xpath expr="//button[@name='action_set_favorite']" position="attributes">
+                <attribute name="attrs">{'invisible': ['|', ('mailing_type', '!=', 'mail'), ('favorite', '=', True)]}</attribute>
+            </xpath>
+            <xpath expr="//button[@name='action_remove_favorite']" position="attributes">
+                <attribute name="attrs">{'invisible': ['|', ('mailing_type', '!=', 'mail'), ('favorite', '=', False)]}</attribute>
+            </xpath>
+            <xpath expr="//field[@name='preview']" position="attributes">
+                <attribute name="attrs">{'readonly': [('state', 'in', ('sending', 'done'))], 'invisible': [('mailing_type', '!=', 'mail')]}</attribute>
+            </xpath>
+            <xpath expr="//page[@name='mail_body']" position="attributes">
+                <attribute name="attrs">{'invisible': [('mailing_type', '!=', 'mail')]}</attribute>
+            </xpath>
+            <xpath expr="//page[@name='mail_body']" position="after">
+                <page string="SMS Content" name="sms_body" attrs="{'invisible': [('mailing_type', '!=', 'sms')]}">
+                    <field name="body_plaintext" widget="sms_widget"
+                        attrs="{'required': [('mailing_type', '=', 'sms')], 'readonly': [('state', 'in', ('sending', 'done'))]}"
+                        options="{'dynamic_placeholder': true}" enable_emojis="true"/>
+                </page>
+            </xpath>
+            <xpath expr="//page[@name='settings']/group/group[@name='email_content']" position="after">
+                <group string="Options" attrs="{'invisible': [('mailing_type', '!=', 'sms')]}">
+                    <field name="sms_allow_unsubscribe" attrs="{'invisible': [('mailing_type', '!=', 'sms')], 'readonly': [('state', 'in', ('sending', 'done'))]}"/>
+                </group>
+            </xpath>
+
+            <xpath expr="//field[@name='contact_list_ids']" position="attributes">
+                <attribute name="context">
+                    {'mailing_sms' : context.get('mailing_sms'),
+                    'form_view_ref': 'mass_mailing.mailing_list_view_form_simplified'}
+                </attribute>
+            </xpath>
+            <!-- Option page tweaks -->
+            <xpath expr="//field[@name='email_from']" position="attributes">
+                <attribute name="attrs">{
+                    'invisible': [('mailing_type', '!=', 'mail')],
+                    'readonly': [('state', 'in', ('sending', 'done'))]}
+                </attribute>
+            </xpath>
+            <xpath expr="//label[@for='reply_to']" position="attributes">
+                <attribute name="attrs">{'invisible': [('mailing_type', '!=', 'mail')]}</attribute>
+            </xpath>
+            <xpath expr="//div[@name='reply_to_details']" position="attributes">
+                <attribute name="attrs">{'invisible': [('mailing_type', '!=', 'mail')]}</attribute>
+            </xpath>
+            <xpath expr="//label[@for='attachment_ids']" position="attributes">
+                <attribute name="attrs">{'invisible': [('mailing_type', '!=', 'mail')]}</attribute>
+            </xpath>
+            <xpath expr="//div[@name='attachment_ids_details']" position="attributes">
+                <attribute name="attrs">{'invisible': [('mailing_type', '!=', 'mail')]}</attribute>
+            </xpath>
+            <xpath expr="//field[@name='mail_server_id']" position="attributes">
+                <attribute name="attrs">{'invisible': ['|', ('mailing_type', '!=', 'mail'),
+                    ('mail_server_available', '=', False)], 'readonly': [('state', 'in', ('sending', 'done'))]}</attribute>
+            </xpath>
+            <!-- A/B Testing -->
+            <xpath expr="//field[@name='ab_testing_winner_selection']" position="after">
+                <label for="ab_testing_sms_winner_selection" string="Winner Selection"
+                    attrs="{'invisible': ['|', ('ab_testing_enabled', '=', False), ('mailing_type', '!=', 'sms')]}"/>
+                <field name="ab_testing_sms_winner_selection" nolabel="1"
+                    attrs="{'required': [('ab_testing_enabled', '=', True), ('mailing_type', '=', 'sms')], 'invisible': ['|', ('ab_testing_enabled', '=', False), ('mailing_type', '!=', 'sms')], 'readonly': [('state', '!=', 'draft')]}"/>
+            </xpath>
+            <xpath expr="//field[@name='ab_testing_schedule_datetime']" position="replace">
+                 <field name="ab_testing_schedule_datetime"
+                        attrs="{'required': [('ab_testing_enabled', '=', True), ('ab_testing_winner_selection', '!=', 'manual'), ('ab_testing_sms_winner_selection', '!=', 'manual')], 'readonly': ['|', ('ab_testing_enabled', '=', False), ('state', '!=', 'draft')], 'invisible': ['|', '|', ('ab_testing_enabled', '=', False), ('ab_testing_winner_selection', '=', 'manual'), ('ab_testing_sms_winner_selection', '=', 'manual')]}"/>
+            </xpath>
+            <xpath expr="//span[@name='ab_test_manual']" position="attributes">
+                <attribute name="attrs">{'invisible': ['|', ('ab_testing_winner_selection', '!=', 'manual'),
+                    ('ab_testing_sms_winner_selection', '!=', 'manual')]}</attribute>
+            </xpath>
+            <xpath expr="//span[@name='ab_test_auto']" position="attributes">
+                <attribute name="attrs">{'invisible': [('ab_testing_winner_selection', '=', 'manual'),
+                    ('ab_testing_sms_winner_selection', '=', 'manual')]}</attribute>
+            </xpath>
+            <xpath expr="//button[@name='action_select_as_winner']" position="attributes">
+                <attribute name="attrs">{'invisible': ['|', ('ab_testing_completed', '!=', False), '|',
+                    ('ab_testing_winner_selection', '=', 'manual'),
+                    ('ab_testing_sms_winner_selection', '=', 'manual')]}</attribute>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="mailing_mailing_view_form_mixed" model="ir.ui.view">
+        <!-- View allowign to display the mailing type and therefore choosing
+        the way of mailing: not prioritized one, used in some specific cases
+        like "contacting people" without predefining mail or sms -->
+        <field name="name">mailing.mailing.view.form.mixed</field>
+        <field name="model">mailing.mailing</field>
+        <field name="mode">primary</field>
+        <field name="priority">30</field>
+        <field name="inherit_id" ref="mass_mailing_sms.mailing_mailing_view_form_sms"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='mailing_type']" position="attributes">
+                <attribute name="invisible">0</attribute>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="mailing_mailing_view_kanban_sms" model="ir.ui.view">
+        <field name="name">mailing.mailing.view.kanban.inherit.sms</field>
+        <field name="model">mailing.mailing</field>
+        <field name="inherit_id" ref="mass_mailing.view_mail_mass_mailing_kanban"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='active']" position="after">
+                <field name="sms_has_insufficient_credit"/>
+                <field name="sms_has_unregistered_account"/>
+            </xpath>
+            <xpath expr="//div[@name='stat_opened']" position="attributes">
+                <attribute name="attrs">{'invisible': [('mailing_type', '!=', 'mail')]}</attribute>
+            </xpath>
+            <xpath expr="//div[@name='stat_replied']" position="attributes">
+                <attribute name="attrs">{'invisible': [('mailing_type', '!=', 'mail')]}</attribute>
+            </xpath>
+            <xpath expr="//div[@name='div_responsible_avatar']" position="after">
+                <div class="alert alert-warning mb-0 mt-3 o-hidden-ios" role="alert" attrs="{'invisible': [('sms_has_insufficient_credit', '=', False)]}">
+                    <a name="action_buy_sms_credits" type="object">Insufficient credits</a>
+                </div>
+                <div class="alert alert-warning mb-0 mt-3" role="alert" attrs="{'invisible': [('sms_has_unregistered_account', '=', False)]}">
+                    <a name="action_buy_sms_credits" type="object">Unregistered account</a>
+                </div>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="mailing_mailing_view_tree_sms" model="ir.ui.view">
+        <field name="name">mailing.mailing.view.tree.sms</field>
+        <field name="model">mailing.mailing</field>
+        <field name="priority">20</field>
+        <field name="arch" type="xml">
+            <tree string="SMS Marketing" sample="1" decoration-info="state == 'draft'">
+                <field name="calendar_date" string="Date"/>
+                <field name="subject" string="Title"/>
+                <field name="mailing_type" invisible="1"/>
+                <field name="mailing_model_id" string="Recipients" optional="hide"/>
+                <field name="user_id" widget="many2one_avatar_user"/>
+                <field name="campaign_id" string="Campaign" groups="mass_mailing.group_mass_mailing_campaign" optional="hide"/>
+                <field name="ab_testing_enabled" string="A/B Test" groups="mass_mailing.group_mass_mailing_campaign"/>
+                <field name="sent" sum="Total Sent"/>
+                <field name="clicked" string="Clicked (%)" widget="progressbar" avg="Average of Clicked"/>
+                <field name="bounced" string="Bounced (%)" widget="progressbar" optional="hide" avg="Average of Bounced"/>
+                <field name="state" decoration-info="state in ('draft', 'in_queue')" decoration-success="state in ('sending', 'done')" widget="badge"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="mailing_mailing_action_sms" model="ir.actions.act_window">
+        <field name="name">SMS Marketing</field>
+        <field name="res_model">mailing.mailing</field>
+        <field name="view_mode">kanban,tree,form,calendar,graph</field>
+        <field name="search_view_id" ref="mailing_mailing_view_search_sms"/>
+        <field name="domain">[('mailing_type', '=', 'sms')]</field>
+        <field name="context">{
+                'search_default_assigned_to_me': 1,
+                'default_user_id': uid,
+                'default_mailing_type': 'sms',
+                'mailing_sms': True
+        }</field>
+        <field name="help" type="html">
+          <p class="o_view_nocontent_smiling_face">
+            Create a SMS Marketing Mailing
+          </p><p>
+            Write an appealing SMS Text Message, define recipients and track its results.
+          </p>
+        </field>
+    </record>
+    <record id="mailing_mailing_action_sms_view_kanban" model="ir.actions.act_window.view">
+        <field name="sequence">1</field>
+        <field name="view_mode">kanban</field>
+        <field name="view_id" ref="mailing_mailing_view_kanban_sms"/>
+        <field name="act_window_id" ref="mailing_mailing_action_sms"/>
+    </record>
+    <record id="mailing_mailing_action_sms_view_tree" model="ir.actions.act_window.view">
+        <field name="sequence">2</field>
+        <field name="view_mode">tree</field>
+        <field name="view_id" ref="mailing_mailing_view_tree_sms"/>
+        <field name="act_window_id" ref="mailing_mailing_action_sms"/>
+    </record>
+
+</data></odoo>

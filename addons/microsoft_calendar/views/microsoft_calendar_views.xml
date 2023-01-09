@@ -1,0 +1,13 @@
+<?xml version="1.0"?>
+<odoo>
+    <record id="view_microsoft_calendar_event" model="ir.ui.view">
+        <field name="name">microsoft_calendar.event.calendar</field>
+        <field name="model">calendar.event</field>
+        <field name="inherit_id" ref="calendar.view_calendar_event_calendar"/>
+        <field name="arch" type="xml">
+            <field name="attendee_status" position="after">
+                <field name="microsoft_id" invisible="1"/>
+            </field>
+        </field>
+    </record>
+</odoo>

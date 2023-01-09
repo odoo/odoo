@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="web.CharField" owl="1">
+        <t t-if="props.readonly">
+            <span t-esc="formattedValue" />
+        </t>
+        <t t-else="">
+            <input
+                class="o_input"
+                t-att-class="{'o_field_translate': props.isTranslatable}"
+                t-att-id="props.id"
+                t-att-type="props.isPassword ? 'password' : 'text'"
+                t-att-autocomplete="props.autocomplete or (props.isPassword ? 'new-password' : 'off')"
+                t-att-maxlength="props.maxLength > 0 and props.maxLength"
+                t-att-placeholder="props.placeholder"
+                t-ref="input"
+            />
+            <t t-if="props.isTranslatable">
+                <TranslationButton
+                    fieldName="props.name"
+                    record="props.record"
+                    updateField="props.update"
+                />
+            </t>
+        </t>
+    </t>
+
+</templates>

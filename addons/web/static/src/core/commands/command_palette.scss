@@ -1,0 +1,55 @@
+.o_command_palette {
+    $-app-icon-size: 1.8rem;
+
+    > .modal-body {
+        padding: 0;
+    }
+
+    &_listbox {
+        max-height: 50vh;
+
+        .o_command {
+            &.focused {
+                background: rgba($o-brand-primary, 0.25);
+            }
+
+            &_hotkey {
+                align-items: center;
+                justify-content: space-between;
+                background-color: inherit;
+                padding: 0.5rem 1.3em;
+                display: flex;
+                > icon {
+                    position: relative;
+                    top: 0.4em;
+                }
+            }
+            a {
+                text-decoration: none;
+                color: inherit;
+            }
+        }
+
+    }
+
+    .o_favorite {
+        color: $o-main-favorite-color;
+    }
+
+    .o_app_icon {
+        height: $-app-icon-size;
+        width: $-app-icon-size;
+    }
+    .o_command{
+        cursor: pointer;
+        .text-ellipsis {
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            overflow: hidden;
+        }
+        .o_command_focus {
+            white-space: nowrap;
+            opacity: 0.9;
+        }
+    }
+}

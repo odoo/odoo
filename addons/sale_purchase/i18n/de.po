@@ -1,0 +1,195 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* sale_purchase
+# 
+# Translators:
+# Leon Grill <leg@odoo.com>, 2019
+# Martin Trigaux, 2019
+# darenkster <inactive+darenkster@transifex.com>, 2019
+# Johannes Croe <jcr@odoo.com>, 2019
+# Chris Egal <sodaswed@web.de>, 2019
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server saas~12.5\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2019-08-26 08:17+0000\n"
+"PO-Revision-Date: 2019-08-26 09:14+0000\n"
+"Last-Translator: Chris Egal <sodaswed@web.de>, 2019\n"
+"Language-Team: German (https://www.transifex.com/odoo/teams/41243/de/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: de\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#. module: sale_purchase
+#: model_terms:ir.ui.view,arch_db:sale_purchase.exception_purchase_on_sale_cancellation
+#: model_terms:ir.ui.view,arch_db:sale_purchase.exception_sale_on_purchase_cancellation
+msgid ""
+".\n"
+"            Manual actions may be needed."
+msgstr ""
+".\n"
+"         Manuelle Aktion wird möglicherweise benötigt."
+
+#. module: sale_purchase
+#: model_terms:ir.ui.view,arch_db:sale_purchase.exception_sale_on_purchase_cancellation
+msgid "Exception(s) occurred on the purchase order(s):"
+msgstr "Ausnahme (n) bei Bestellung (en) aufgetreten"
+
+#. module: sale_purchase
+#: model_terms:ir.ui.view,arch_db:sale_purchase.exception_purchase_on_sale_cancellation
+#: model_terms:ir.ui.view,arch_db:sale_purchase.exception_purchase_on_sale_quantity_decreased
+msgid "Exception(s) occurred on the sale order(s):"
+msgstr "Bei den Verkaufsaufträgen sind Ausnahmen aufgetreten:"
+
+#. module: sale_purchase
+#: model_terms:ir.ui.view,arch_db:sale_purchase.exception_purchase_on_sale_cancellation
+#: model_terms:ir.ui.view,arch_db:sale_purchase.exception_purchase_on_sale_quantity_decreased
+#: model_terms:ir.ui.view,arch_db:sale_purchase.exception_sale_on_purchase_cancellation
+msgid "Exception(s):"
+msgstr "Ausnahme(n):"
+
+#. module: sale_purchase
+#: model:ir.model.fields,field_description:sale_purchase.field_sale_order_line__purchase_line_ids
+msgid "Generated Purchase Lines"
+msgstr "Generierte Kaufpositionen"
+
+#. module: sale_purchase
+#: model:ir.model.fields,help:sale_purchase.field_product_product__service_to_purchase
+#: model:ir.model.fields,help:sale_purchase.field_product_template__service_to_purchase
+msgid ""
+"If ticked, each time you sell this product through a SO, a RfQ is "
+"automatically created to buy the product. Tip: don't forget to set a vendor "
+"on the product."
+msgstr ""
+"Wenn diese Option aktiviert ist, wird jedes Mal, wenn Sie dieses Produkt "
+"über ein SO verkaufen, automatisch ein RfQ erstellt, um das Produkt zu "
+"kaufen. Tipp: Vergessen Sie nicht, einen Anbieter für das Produkt "
+"festzulegen."
+
+#. module: sale_purchase
+#: model_terms:ir.ui.view,arch_db:sale_purchase.exception_purchase_on_sale_quantity_decreased
+msgid "Manual actions may be needed."
+msgstr "Manuelle Aktionen können erforderlich sein."
+
+#. module: sale_purchase
+#: model:ir.model.fields,field_description:sale_purchase.field_sale_order__purchase_order_count
+msgid "Number of Purchase Order"
+msgstr "Nummer der Bestellung"
+
+#. module: sale_purchase
+#: model:ir.model.fields,field_description:sale_purchase.field_sale_order_line__purchase_line_count
+msgid "Number of generated purchase items"
+msgstr "Anzahl der generierten Kaufgegenstände"
+
+#. module: sale_purchase
+#: code:addons/sale_purchase/models/sale_order.py:0
+#, python-format
+msgid "Ordered quantity decreased!"
+msgstr "Bestellte Menge verringert!"
+
+#. module: sale_purchase
+#: model:ir.model.fields,field_description:sale_purchase.field_purchase_order_line__sale_line_id
+msgid "Origin Sale Item"
+msgstr "Herstellungsverlauf Gegenstand"
+
+#. module: sale_purchase
+#: model:ir.model,name:sale_purchase.model_product_template
+msgid "Product Template"
+msgstr "Produktvorlage"
+
+#. module: sale_purchase
+#: model:ir.model.constraint,message:sale_purchase.constraint_product_template_service_to_purchase
+msgid "Product that is not a service can not create RFQ."
+msgstr ""
+"Produkte die keine Dienstleistung sind können keine Anfrage erstellen."
+
+#. module: sale_purchase
+#: model:ir.model.fields,field_description:sale_purchase.field_product_product__service_to_purchase
+#: model:ir.model.fields,field_description:sale_purchase.field_product_template__service_to_purchase
+msgid "Purchase Automatically"
+msgstr "Automatisch kaufen"
+
+#. module: sale_purchase
+#: model:ir.model,name:sale_purchase.model_purchase_order
+msgid "Purchase Order"
+msgstr "Beschaffungsauftrag"
+
+#. module: sale_purchase
+#: model:ir.model,name:sale_purchase.model_purchase_order_line
+msgid "Purchase Order Line"
+msgstr "Bestellposition"
+
+#. module: sale_purchase
+#: model_terms:ir.ui.view,arch_db:sale_purchase.sale_order_form_view_inherit
+msgid "Purchase Orders"
+msgstr "Bestellungen"
+
+#. module: sale_purchase
+#: model:ir.model.fields,help:sale_purchase.field_sale_order_line__purchase_line_ids
+msgid ""
+"Purchase line generated by this Sales item on order confirmation, or when "
+"the quantity was increased."
+msgstr ""
+"Kaufzeile, die von dieser Verkaufsposition bei Auftragsbestätigung oder bei "
+"Erhöhung der Menge generiert wurde."
+
+#. module: sale_purchase
+#: model_terms:ir.ui.view,arch_db:sale_purchase.product_template_form_view_inherit
+msgid "Reordering"
+msgstr "Nachbestellung"
+
+#. module: sale_purchase
+#: model:ir.model.fields,field_description:sale_purchase.field_purchase_order_line__sale_order_id
+msgid "Sale Order"
+msgstr "Verkaufsauftrag"
+
+#. module: sale_purchase
+#: model:ir.model,name:sale_purchase.model_sale_order
+msgid "Sales Order"
+msgstr "Verkaufsauftrag "
+
+#. module: sale_purchase
+#: model:ir.model,name:sale_purchase.model_sale_order_line
+msgid "Sales Order Line"
+msgstr "Kundenauftragszeile"
+
+#. module: sale_purchase
+#: code:addons/sale_purchase/models/sale_order.py:0
+#, python-format
+msgid ""
+"There is no vendor associated to the product %s. Please define a vendor for "
+"this product."
+msgstr ""
+"Dem Produkt %s wurde kein Lieferant zugewiesen. Bitte definieren Sie einen "
+"Lieferanten für dieses Produkt."
+
+#. module: sale_purchase
+#: code:addons/sale_purchase/models/sale_order.py:0
+#, python-format
+msgid ""
+"You are decreasing the ordered quantity! Do not forget to manually update "
+"the purchase order if needed."
+msgstr ""
+"Sie verringern die bestellte Menge! Vergessen Sie nicht, die Bestellung bei "
+"Bedarf manuell zu aktualisieren."
+
+#. module: sale_purchase
+#: model_terms:ir.ui.view,arch_db:sale_purchase.exception_purchase_on_sale_cancellation
+#: model_terms:ir.ui.view,arch_db:sale_purchase.exception_sale_on_purchase_cancellation
+msgid "cancelled"
+msgstr "abgebrochen"
+
+#. module: sale_purchase
+#: model_terms:ir.ui.view,arch_db:sale_purchase.exception_purchase_on_sale_cancellation
+#: model_terms:ir.ui.view,arch_db:sale_purchase.exception_purchase_on_sale_quantity_decreased
+#: model_terms:ir.ui.view,arch_db:sale_purchase.exception_sale_on_purchase_cancellation
+msgid "of"
+msgstr "von"
+
+#. module: sale_purchase
+#: model_terms:ir.ui.view,arch_db:sale_purchase.exception_purchase_on_sale_quantity_decreased
+msgid "ordered instead of"
+msgstr "bestellt statt"

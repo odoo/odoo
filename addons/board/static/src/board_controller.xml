@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="board.BoardView" owl="1">
+        <div class="o_dashboard d-flex flex-column">
+            <t t-if="board.isEmpty">
+                <t t-call="board.NoContent"/>
+            </t>
+            <t t-else="">
+                <t t-call="board.Content"/>
+            </t>
+        </div>
+    </t>
+
+    <t t-name="board.Content" owl="1">
+        <!-- Note: need to add mobile support that i just removed for now -->
+        <div class="o-dashboard-header d-flex justify-content-end">
+            <Dropdown togglerClass="'btn btn-secondary m-2 p-2'">
+                <t t-set-slot="toggler">
+                    <img t-attf-src="/board/static/img/layout_{{board.layout}}.png" width="16" height="16" alt=""/>
+                    Change Layout
+                </t>
+                <t t-foreach="'1 1-1 1-1-1 1-2 2-1'.split(' ')" t-as="layout" t-key="layout">
+                    <DropdownItem onSelected="() => this.selectLayout(layout)">
+                        <img t-attf-src="/board/static/img/layout_{{layout}}.png" alt=""/>
+                        <i t-if="layout == board.layout" class="fa fa-check fa-lg text-success" aria-label='Layout' role="img" title="Layout"/>
+                    </DropdownItem>
+                </t>
+            </Dropdown>
+        </div>
+        <div class="o-dashboard-layout flex-grow-1" t-attf-class="o-dashboard-layout-{{board.layout}}" t-ref="main">
+            <t t-foreach="board.columns" t-as="column" t-key="column_index">
+                <div t-if="column_index lt board.colNumber" class="o-dashboard-column h-100" t-att-data-idx="column_index">
+                    <t t-foreach="column.actions" t-as="action" t-key="action.id">
+                        <div class="o-dashboard-action mx-3 my-1" t-att-data-idx="action_index">
+                            <h3 t-attf-class="o-dashboard-action-header {{action.title ? '' : 'oe_header_empty'}} p-2 m-2">
+                                <span> <t t-esc="action.title"/> </span>
+                                <span class="btn float-end p-1 text-muted" t-on-click="() => this.closeAction(column, action)"><i class="fa fa-close"/></span>
+                                <span class="btn float-end p-1 text-muted" t-if="!action.isFolded" t-on-click="() => this.toggleAction(action)"><i class="fa fa-window-minimize"/></span>
+                                <span class="btn float-end p-1 text-muted" t-if="action.isFolded"  t-on-click="() => this.toggleAction(action)"><i class="fa fa-window-maximize"/></span>
+                            </h3>
+                            <BoardAction t-if="!action.isFolded" action="action" />
+                        </div>
+                    </t>
+                </div>
+            </t>
+        </div>
+    </t>
+
+    <t t-name="board.NoContent" owl="1">
+        <div class="o_view_nocontent">
+            <div class="o_nocontent_help">
+                <p class="o_view_nocontent_neutral_face">
+                  Your personal dashboard is empty
+                </p>
+                <p>
+                  To add your first report into this dashboard, go to any
+                  menu, switch to list or graph view, and click <i>"Add to
+                  Dashboard"</i> in the extended search options.
+                </p>
+                <p>
+                  You can filter and group data before inserting into the
+                  dashboard using the search options.
+                </p>
+            </div>
+        </div>
+    </t>
+
+    <t t-name="board.arch" owl="1">
+        <form t-att-string="title">
+            <board t-att-style="layout">
+                <column t-foreach="columns" t-as="column" t-key="column_index">
+                    <t t-foreach="column.actions" t-as="action" t-key="action_index">
+                        <action
+                            t-att-name="action.actionId"
+                            t-att-string="action.title"
+                            t-att-view_mode="action.viewMode"
+                            t-att-context="action.context"
+                            t-att-domain="action.domain"
+                            t-att-fold="action.isFolded ? 1 : 0"/>
+                    </t>
+                </column>
+            </board>
+        </form>
+    </t>
+
+
+</templates>

@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rng:grammar xmlns:rng="http://relaxng.org/ns/structure/1.0"
+             xmlns:a="http://relaxng.org/ns/annotation/1.0"
+             datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes">
+    <!-- Handling of element overloading when inheriting from a base
+         template
+    -->
+    <rng:include href="common.rng"/>
+    <rng:define name="graph">
+        <rng:element name="graph">
+            <rng:optional><rng:attribute name="string" /></rng:optional>
+            <rng:optional>
+                <rng:attribute name="type">
+                    <rng:choice>
+                        <rng:value>bar</rng:value>
+                        <rng:value>pie</rng:value>
+                        <rng:value>line</rng:value>
+                    </rng:choice>
+                </rng:attribute>
+            </rng:optional>
+            <rng:optional><rng:attribute name="js_class"/></rng:optional>
+            <rng:optional><rng:attribute name="stacked"/></rng:optional>
+            <rng:optional><rng:attribute name="order"/></rng:optional>
+            <rng:optional><rng:attribute name="disable_linking"/></rng:optional>
+            <rng:optional><rng:attribute name="sample"/></rng:optional>
+            <rng:optional><rng:attribute name="banner_route"/></rng:optional>
+            <rng:zeroOrMore>
+                <rng:ref name="field"/>
+            </rng:zeroOrMore>
+        </rng:element>
+    </rng:define>
+    <rng:start>
+        <rng:choice>
+            <rng:ref name="graph" />
+        </rng:choice>
+    </rng:start>
+</rng:grammar>

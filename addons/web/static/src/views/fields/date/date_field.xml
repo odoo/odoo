@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="web.DateField" owl="1">
+        <t t-if="props.readonly">
+            <span t-esc="formattedValue" />
+        </t>
+        <t t-else="">
+            <DatePicker
+                t-props="props.pickerOptions"
+                date="date"
+                inputId="props.id"
+                placeholder="props.placeholder"
+                onDateTimeChanged="(date) => this.onDateTimeChanged(date)"
+            />
+        </t>
+    </t>
+
+</templates>

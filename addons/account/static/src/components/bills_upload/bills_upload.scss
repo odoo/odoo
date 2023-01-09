@@ -1,0 +1,27 @@
+.o_drop_area {
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    background-color: #AAAA;
+    z-index: 2;
+    left: 0;
+    top: 0;
+    i {
+      justify-content: center;
+      display: flex;
+      align-items: center;
+      height: 100%;
+    }
+}
+
+.file_upload_kanban_action_a {
+  @include o-kanban-dashboard-dropdown-link($link-padding-gap: $o-kanban-dashboard-dropdown-complex-gap);
+}
+
+.o_widget_account_file_uploader {
+  .btn-primary.oe_kanban_action_button {
+    a {
+      color: $white;
+    }
+  }
+}

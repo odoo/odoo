@@ -1,0 +1,190 @@
+@font-face {
+    font-family: LiberationSans;
+    src: url('../font/LiberationSans-Bold.woff') format('woff');
+    font-weight: bold;
+}
+@font-face {
+    font-family: LiberationSans;
+    src: url('../font/LiberationSans-Regular.woff') format('woff');
+}
+
+$l10n-ch-qr-ratio: 1.25;
+
+body.l10n_ch_qr{
+    padding: 0;
+    span{
+        padding-left: 10mm;
+        white-space: nowrap;
+    }
+
+    /* Disable custom bakground */
+    .o_report_layout_striped {
+        background: none;
+        min-height: 0;
+    }
+}
+
+.swissqr_page_title {
+    color: black;
+    font-weight: bold;
+    height: 7mm * $l10n-ch-qr-ratio;
+    padding: 15px;
+    padding-top: 150px;
+    h1{
+        padding-left:20mm;
+        white-space:nowrap;
+    }
+}
+
+.swissqr_content_v2 {
+
+    $receipt_width: 52mm * $l10n-ch-qr-ratio;
+    $left_col_width: 46mm * $l10n-ch-qr-ratio;
+    $right_col_width: 87mm * $l10n-ch-qr-ratio;
+    $rounding_offset: 0.25mm;
+
+    @mixin font {
+        font-family: LiberationSans;
+        color: black;
+    }
+    @mixin title {
+        @include font;
+        font-weight: bold;
+    }
+
+    /* New QR Bill code */
+    background-color: white;
+
+    /* Disable custom font-family */
+    .o_company_2_layout {
+        font-family: revert;
+    }
+
+    .title {
+        @include title;
+    }
+
+    .swissqr_text {
+        @include font;
+    }
+
+    .swissqr_section_title {
+        @include title;
+        width: $receipt_width;
+        height: 7mm * $l10n-ch-qr-ratio;
+        font-size: 11pt * $l10n-ch-qr-ratio;
+        line-height: 9pt * $l10n-ch-qr-ratio;
+    }
+
+    .swissqr_receipt {
+        position: absolute;
+        left: 0mm;
+        top: 192mm * $l10n-ch-qr-ratio;
+        width: 62mm * $l10n-ch-qr-ratio;
+        height: 105mm * $l10n-ch-qr-ratio - $rounding_offset;
+        border: 0.75pt * $l10n-ch-qr-ratio dashed black;
+        border-right: 0pt;
+        padding: 5mm * $l10n-ch-qr-ratio;
+        .title {
+            font-size: 6pt * $l10n-ch-qr-ratio;
+            line-height: 9pt * $l10n-ch-qr-ratio;
+        }
+        .content {
+            font-size: 8pt * $l10n-ch-qr-ratio;
+            line-height: 9pt * $l10n-ch-qr-ratio;
+        }
+        .receipt_indication_zone {
+            width: $receipt_width;
+            height: 56mm * $l10n-ch-qr-ratio;
+        }
+        .receipt_amount_zone {
+            width: $receipt_width;
+            height: 14mm * $l10n-ch-qr-ratio;
+            .column {
+                float: left;
+                margin-right: 5mm;
+            }
+            .content {
+                font-size: 8pt * $l10n-ch-qr-ratio;
+                line-height: 11pt * $l10n-ch-qr-ratio;
+            }
+        }
+        .receipt_acceptance_point_zone {
+            width: $receipt_width;
+            height: 18mm * $l10n-ch-qr-ratio;
+            .content {
+                float: right;
+                padding-right: 2mm * $l10n-ch-qr-ratio;
+                font-size: 6pt * $l10n-ch-qr-ratio;
+                line-height: 8pt * $l10n-ch-qr-ratio;
+            }
+        }
+    }
+
+    .swissqr_body {
+        position: absolute;
+        top: 192mm * $l10n-ch-qr-ratio;
+        left: 62mm * $l10n-ch-qr-ratio;
+        width: 148mm * $l10n-ch-qr-ratio;
+        height: 105mm * $l10n-ch-qr-ratio - $rounding_offset;
+        border: 0.75pt * $l10n-ch-qr-ratio dashed black;
+        padding: 5mm * $l10n-ch-qr-ratio;
+        .title {
+            font-size: 8pt * $l10n-ch-qr-ratio;
+            line-height: 11pt * $l10n-ch-qr-ratio;
+        }
+        .content {
+            font-size: 10pt * $l10n-ch-qr-ratio;
+            line-height: 11pt * $l10n-ch-qr-ratio;
+        }
+        .swissqr_column_left {
+            float: left;
+            width: $left_col_width;
+            .swissqr_section_title{
+                height: 7mm * $l10n-ch-qr-ratio;
+            }
+            .swissqr {
+                margin-top: 5mm * $l10n-ch-qr-ratio;
+                margin-bottom: 5mm * $l10n-ch-qr-ratio;
+                height: 46mm * $l10n-ch-qr-ratio;
+                width: 46mm * $l10n-ch-qr-ratio;
+            }
+            .amount_zone {
+                width: $left_col_width;
+                height: 22mm * $l10n-ch-qr-ratio;
+                .column {
+                    margin-right: 3mm;
+                    float: left;
+                }
+                .title {
+                    font-size: 8pt * $l10n-ch-qr-ratio;
+                    line-height: 11pt * $l10n-ch-qr-ratio;
+                }
+                .content {
+                    font-size: 10pt * $l10n-ch-qr-ratio;
+                    line-height: 13pt * $l10n-ch-qr-ratio;
+                }
+            }
+        }
+        .swissqr_column_right {
+            float: right;
+            width: $right_col_width;
+        }
+    }
+
+    .scissors {
+        width: 16px;
+        height: 16px;
+    }
+    .vertical_scissors {
+        position: absolute;
+        top: 5mm * $l10n-ch-qr-ratio;
+        left: -1.8mm * $l10n-ch-qr-ratio;
+    }
+    .horizontal_scissors {
+        position: absolute;
+        top: -2mm * $l10n-ch-qr-ratio;
+        left: 6mm * $l10n-ch-qr-ratio;
+    }
+
+}

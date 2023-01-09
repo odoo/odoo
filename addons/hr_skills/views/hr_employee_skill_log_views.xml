@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="hr_employee_skill_log_view_graph_employee" model="ir.ui.view">
+          <field name="name">hr.employee.skill.log.view.graph</field>
+          <field name="model">hr.employee.skill.log</field>
+          <field name="arch" type="xml">
+            <graph string="Skills History" type="line" stacked="0" js_class="skills_graph">
+                <field name="date" interval="day" type="row"/>
+                <field name="skill_id" type="row"/>
+                <field name="level_progress" type="measure"/>
+            </graph>
+          </field>
+    </record>
+
+    <record id="hr_employee_skill_log_view_graph_department" model="ir.ui.view">
+          <field name="name">hr.employee.skill.log.view.graph</field>
+          <field name="model">hr.employee.skill.log</field>
+          <field name="arch" type="xml">
+            <graph string="Skills History" type="line" stacked="0" js_class="skills_graph">
+                <field name="date" interval="day" type="row"/>
+                <field name="skill_id" type="row"/>
+                <field name="level_progress" type="measure"/>
+            </graph>
+          </field>
+    </record>
+
+    <record id="hr_employee_skill_log_view_tree" model="ir.ui.view">
+          <field name="name">hr.employee.skill.log.view.tree</field>
+          <field name="model">hr.employee.skill.log</field>
+          <field name="arch" type="xml">
+            <tree string="Skills History">
+                <field name="employee_id"/>
+                <field name="department_id"/>
+                <field name="skill_type_id"/>
+                <field name="skill_id"/>
+                <field name="level_progress"/>
+                <field name="date"/>
+            </tree>
+          </field>
+    </record>
+
+    <record id="hr_employee_skill_log_view_search" model="ir.ui.view">
+          <field name="name">hr.employee.skill.log.view.search</field>
+          <field name="model">hr.employee.skill.log</field>
+          <field name="arch" type="xml">
+            <search string="Search Logs">
+                <field name="employee_id"/>
+                <field name="skill_id"/>
+                <field name="skill_type_id"/>
+                <field name="date"/>
+                <separator />
+                <group expand="0" string="Group By">
+                    <filter string="Employee" name="group_by_employee_id" domain="[]" context="{'group_by': 'employee_id'}"/>
+                    <filter string="Skill" name="group_by_skill_id" domain="[]" context="{'group_by': 'skill_id'}"/>
+                    <filter string="Skill Type" name="group_by_skill_type_id" domain="[]" context="{'group_by': 'skill_type_id'}"/>
+                    <filter string="Date" name="group_by_date" domain="[]" context="{'group_by': 'date'}"/>
+                </group>
+            </search>
+          </field>
+    </record>
+
+    <record id="action_hr_employee_skill_log_employee" model="ir.actions.act_window">
+        <field name="name">Skill History Report</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">hr.employee.skill.log</field>
+        <field name="view_mode">graph,tree</field>
+        <field name="view_id" ref="hr_employee_skill_log_view_graph_employee"/>
+        <field name="context">{'fill_temporal': 0}</field>
+        <field name="target">current</field>
+    </record>
+
+    <record id="action_hr_employee_skill_log_department" model="ir.actions.act_window">
+        <field name="name">Skill History Report</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">hr.employee.skill.log</field>
+        <field name="view_mode">graph,tree</field>
+        <field name="view_id" ref="hr_employee_skill_log_view_graph_department"/>
+        <field name="context">{'fill_temporal': 0, 'search_default_group_by_skill_type_id': 1, 'search_default_group_by_skill_id': 2}</field>
+        <field name="target">current</field>
+    </record>
+</odoo>

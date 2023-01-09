@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="fetchmail_server_view_form" model="ir.ui.view">
+        <field name="name">fetchmail.server.view.form.inherit.gmail</field>
+        <field name="model">fetchmail.server</field>
+        <field name="priority">100</field>
+        <field name="inherit_id" ref="mail.view_email_server_form"/>
+        <field name="arch" type="xml">
+            <field name="user" position="after">
+                <field name="google_gmail_uri" invisible="1"/>
+                <field name="google_gmail_refresh_token" invisible="1"/>
+                <div attrs="{'invisible': [('server_type', '!=', 'gmail')]}"
+                    class="d-flex flex-row align-items-center" colspan="2">
+                    <span attrs="{'invisible': ['|', ('server_type', '!=', 'gmail'), ('google_gmail_refresh_token', '=', False)]}"
+                        class="badge text-bg-success">
+                        Gmail Token Valid
+                    </span>
+                    <button type="object"
+                        name="open_google_gmail_uri" class="btn-link px-0"
+                        attrs="{'invisible': ['|', '|', ('google_gmail_uri', '=', False), ('server_type', '!=', 'gmail'), ('google_gmail_refresh_token', '!=', False)]}">
+                        <i class="fa fa-arrow-right"/>
+                        Connect your Gmail account
+                    </button>
+                    <button type="object"
+                        name="open_google_gmail_uri" class="btn-link px-0 ms-2"
+                        attrs="{'invisible': ['|', '|', ('google_gmail_uri', '=', False), ('server_type', '!=', 'gmail'), ('google_gmail_refresh_token', '=', False)]}">
+                        <i class="fa fa-cog" title="Edit Settings"/>
+                    </button>
+                    <button class="alert alert-warning d-block mt-2 text-start"
+                        icon="fa-arrow-right" type="action" role="alert"
+                        name="%(base.res_config_setting_act_window)d"
+                        attrs="{'invisible': ['|', ('server_type', '!=', 'gmail'), ('google_gmail_uri', '!=', False)]}">
+                        Setup your Gmail API credentials in the general settings to link a Gmail account.
+                    </button>
+                </div>
+            </field>
+        </field>
+    </record>
+</odoo>

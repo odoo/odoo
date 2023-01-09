@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates xml:space="preserve">
+
+    <t t-name="web.DomainSelectorLeafNode" owl="1">
+        <div class="o_domain_node o_domain_leaf o_domain_selector_row" t-ref="root">
+            <t t-if="props.readonly">
+                <div class="o_domain_leaf_info">
+                    <ModelFieldSelector fieldName="props.node.operands[0].toString()" resModel="props.resModel" readonly="props.readonly" isDebugMode="props.isDebugMode" />
+                    <t t-if="typeof props.node.operands[1] === 'string'">
+                        <span class="o_domain_leaf_operator"> <t t-esc="displayedOperator" /></span>
+                        <span class="o_domain_leaf_value text-primary"> "<t t-esc="props.node.operands[1]" />"</span>
+                    </t>
+                    <t t-elif="typeof props.node.operands[1] === 'number'">
+                        <span class="o_domain_leaf_operator"> <t t-esc="displayedOperator" /></span>
+                        <span class="o_domain_leaf_value text-primary"> <t t-esc="props.node.operands[1]" /></span>
+                    </t>
+                    <t t-elif="typeof props.node.operands[1] === 'boolean'">
+                        is
+                        <t t-if="(props.node.operator === '=' and props.node.operands[1] === false) or (props.node.operator === '!=' and props.node.operands[1] === true)">
+                            not
+                        </t>
+                        set
+                    </t>
+                    <t t-elif="Array.isArray(props.node.operands[1])">
+                        <span class="o_domain_leaf_operator"> <t t-esc="displayedOperator" /></span>
+                        <t t-foreach="props.node.operands[1]" t-as="value" t-key="value_index">
+                            <span class="o_domain_leaf_value text-primary"> "<t t-esc="value"/>"</span>
+                            <t t-if="!value_last"> or </t>
+                        </t>
+                    </t>
+                </div>
+            </t>
+            <t t-else="">
+                <DomainSelectorControlPanel
+                    node="props.node"
+                    onHoverDeleteNodeBtn.bind="onHoverDeleteNodeBtn"
+                    onHoverInsertLeafNodeBtn.bind="onHoverInsertLeafNodeBtn"
+                    onHoverInsertBranchNodeBtn.bind="onHoverInsertBranchNodeBtn"
+                />
+                <div class="o_domain_leaf_edition">
+                    <ModelFieldSelector fieldName="props.node.operands[0].toString()" resModel="props.resModel" readonly="props.readonly" update="(name) => this.onFieldChange(name)" isDebugMode="props.isDebugMode" />
+                    <t t-set="field" t-value="getFieldComponent(fieldInfo.type)" />
+                    <t t-if="field">
+                        <div>
+                            <select class="o_domain_leaf_operator_select o_input text-truncate pe-1" t-on-change="onOperatorChange">
+                                <t t-foreach="getOperators(field)" t-as="operator" t-key="operator.value">
+                                    <option
+                                        t-att-value="operator_index"
+                                        t-att-selected="operator.matches({ fieldInfo, operator: props.node.operator, value: props.node.operands[1] })"
+                                        t-esc="operator.label"
+                                    />
+                                </t>
+                            </select>
+                        </div>
+                        <t t-if="!isValueHidden">
+                            <t
+                                t-component="field"
+                                t-key="fieldInfo.type"
+                                field="fieldInfo"
+                                operator="getOperatorInfo(props.node.operator)"
+                                value="props.node.operands[1]"
+                                update="(changes) => props.node.update(changes)"
+                            />
+                        </t>
+                    </t>
+                </div>
+            </t>
+        </div>
+    </t>
+
+</templates>

@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <!-- Grant survey permissions to demo user -->
+        <record id="base.user_demo" model="res.users">
+            <field eval="[(4, ref('group_survey_manager'))]" name="groups_id"/>
+        </record>
+    </data>
+</odoo>

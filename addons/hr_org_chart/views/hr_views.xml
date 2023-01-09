@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="hr_employee_view_form_inherit_org_chart" model="ir.ui.view">
+        <field name="name">hr.employee.view.form.inherit.org_chart</field>
+        <field name="model">hr.employee</field>
+        <field name="inherit_id" ref="hr.view_employee_form"/>
+        <field name="arch" type="xml">
+            <div id="o_work_employee_main" position="after">
+                <div id="o_employee_right" class="col-lg-4 px-0 ps-lg-5 pe-lg-0">
+                    <separator string="Organization Chart"/>
+                    <field name="child_ids" class="position-relative" widget="hr_org_chart" readonly="1" nolabel="1"/>
+                </div>
+            </div>
+        </field>
+    </record>
+
+    <record id="hr_employee_public_view_form_inherit_org_chart" model="ir.ui.view">
+        <field name="name">hr.employee.public.view.form.inherit.org_chart</field>
+        <field name="model">hr.employee.public</field>
+        <field name="inherit_id" ref="hr.hr_employee_public_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//div[@id='o_work_employee_main']" position="after">
+                <div id="o_employee_right" class="col-lg-4 px-0 ps-lg-5">
+                    <separator string="Organization Chart"/>
+                    <field name="child_ids" class="position-relative" widget="hr_org_chart" readonly="1" nolabel="1"/>
+                </div>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="res_users_view_form" model="ir.ui.view">
+        <field name="name">res.users.preferences.view.form.inherit.org_chart</field>
+        <field name="model">res.users</field>
+        <field name="inherit_id" ref="hr.res_users_view_form_profile"/>
+        <field name="arch" type="xml">
+            <div id="o_work_employee_main" position="after">
+                <div id="o_employee_right" class="col-lg-4 px-0 ps-lg-5">
+                    <separator string="Organization Chart"/>
+                    <field name="child_ids" class="position-relative" widget="hr_org_chart" readonly="1" nolabel="1"/>
+                </div>
+            </div>
+        </field>
+    </record>
+</odoo>

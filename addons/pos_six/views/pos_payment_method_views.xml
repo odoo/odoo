@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="pos_payment_method_view_form_inherit_pos_adyen" model="ir.ui.view">
+        <field name="name">pos.payment.method.form.inherit.adyen</field>
+        <field name="model">pos.payment.method</field>
+        <field name="inherit_id" ref="point_of_sale.pos_payment_method_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='use_payment_terminal']" position="after">
+                <field name="six_terminal_ip"
+                    attrs="{'invisible': [('use_payment_terminal', '!=', 'six')], 'required': [('use_payment_terminal', '=', 'six')]}"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>

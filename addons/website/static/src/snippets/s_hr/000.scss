@@ -1,0 +1,15 @@
+
+.s_hr {
+    line-height: 0;
+    hr {
+        padding: 0;
+        border: 0;
+        border-top: 1px solid currentColor;
+        margin: 0;
+        color: inherit;
+        // As BS5 added "opacity" and "background-color" on hr tag, we remove
+        // that here to let users set the color as they want.
+        opacity: 1;
+        background-color: transparent;
+    }
+}

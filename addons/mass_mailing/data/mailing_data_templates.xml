@@ -1,0 +1,165 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+<data noupdate="1">
+    <!--
+    Reference: https://litmus.com/community/learning/24-how-to-code-a-responsive-email-from-scratch
+    https://www.campaignmonitor.com/css/link-element/link-in-head/
+    -->
+    <template id="mass_mailing_mail_layout">
+        &lt;!DOCTYPE html&gt;
+        <html xmlns="http://www.w3.org/1999/xhtml">
+            <head>
+                <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+                <meta name="format-detection" content="telephone=no"/>
+                <meta name="viewport" content="width=device-width; initial-scale=1.0; maximum-scale=1.0; user-scalable=no;"/>
+                <meta http-equiv="X-UA-Compatible" content="IE=9; IE=8; IE=7; IE=EDGE" />
+
+                <t t-call="mass_mailing.mass_mailing_mail_style"/>
+            </head>
+            <body>
+                <t t-out="body"/>
+            </body>
+        </html>
+    </template>
+
+    <template id="mass_mailing_mail_style">
+        <style>
+            .o_layout * {
+                box-sizing: border-box !important;
+            }
+            .o_layout :not(.fa) {
+                font-family: Arial,Helvetica Neue,Helvetica,sans-serif;
+            }
+            /* Remove space around the email design. */
+                html,
+                body {
+                    margin: 0 auto !important;
+                    padding: 0 !important;
+                    height: 100% !important;
+                    width: 100% !important;
+                }
+
+                /* Stop Outlook resizing small text. */
+                * {
+                    -ms-text-size-adjust: 100%;
+                }
+
+                /* Stop Outlook from adding extra spacing to tables. */
+                table,
+                td {
+                    mso-table-lspace: 0pt !important;
+                    mso-table-rspace: 0pt !important;
+                }
+
+                /* Use a better rendering method when resizing images in Outlook IE. */
+                img {
+                    -ms-interpolation-mode:bicubic;
+                }
+
+                /* Prevent Windows 10 Mail from underlining links. Styles for underlined links should be inline. */
+                a {
+                    text-decoration: none;
+                }
+            @media screen and (max-width: 768px) {
+                .o_mail_snippet_general .container {
+                    width: 100% !important;
+                }
+                .s_header_social table td, .s_header_text_social table td, .s_header_logo table td,
+                .o_mail_block_footer_social td,
+                .s_showcase td,
+                .s_mail_product_list td,
+                .s_references td {
+                    text-align: center !important;
+                }
+            }
+            @media screen and (max-width: 1135px) {
+                td {
+                    max-width: inherit !important;
+                }
+                td > img:only-child {
+                    min-width: 100% !important;
+                }
+                .o_desktop_h100 {
+                    height: unset !important;
+                }
+            }
+        </style>
+    </template>
+</data>
+
+<data noupdate="0">
+    <template id="ab_testing_description" name="Mass Mailing: A/B Test Description">
+        <div name="ab_testing_description" class="mb-2">
+            <t t-if="mailing.ab_testing_completed">
+                <p t-if="mailing.ab_testing_pc == 100">
+                    This <t t-out="mailing.mailing_type_description"/> is the winner of the A/B testing campaign and has been sent to all remaining recipients.
+                </p>
+                <p t-else="">The winner has already been sent. Use <b>Compare Version</b> to get an overview of this A/B testing campaign.</p>
+            </t>
+            <t t-elif="mailing.ab_testing_mailings_count >= 2">
+                <p>
+                    A sample of <b><t t-out="mailing.ab_testing_pc"/>% of recipients</b> will receive this <b><t t-out="mailing.mailing_type_description"/></b>, and <t t-out="other_ab_testing_pc"/>% receive one of the
+                    <b><t t-out="mailing.ab_testing_mailings_count - 1"/> other versions</b> from the same campaign.
+                </p>
+                <p>
+		    <t t-if="mailing.ab_testing_winner_selection == 'manual'">Don't forget to send your preferred version</t>
+		    <t t-elif="not mailing.ab_testing_schedule_datetime">Since the date and time for this test has not been scheduled, don't forget to manually send your preferred version.</t>
+                    <t t-else="">
+                        Then on <b><t t-out="mailing.ab_testing_schedule_datetime.strftime('%b %d, %Y')"/></b> the <t t-out="mailing.mailing_type_description"/> having the <b><t t-out="ab_testing_winner_selection_description"/></b> will be sent
+                    </t> to the remaining <t t-out="remaining_ab_testing_pc"/>% of recipients.
+                </p>
+            </t>
+            <t t-else="">
+                <p>
+                    A sample of <b><t t-out="mailing.ab_testing_pc"/>% of recipients</b> will receive this <b><t t-out="mailing.mailing_type_description"/></b>.
+                </p>
+                <p>Try different variations in the campaign to compare their <t t-out="ab_testing_winner_selection_description"/>.</p>
+                <p>
+                    <t t-if="mailing.ab_testing_winner_selection != 'manual'">Once the best version is identified, we will send the best one to the remaining recipients.</t>
+                    <t t-else="">
+                        The actual <t t-out="mailing.mailing_type_description"/> will be sent to the remaining recipients.
+                    </t>
+                </p>
+            </t>
+        </div>
+    </template>
+
+    <template id="mass_mailing.mass_mailing_kpi_link_trackers" name="Marketing: mailing link trackers statistic">
+        <div class="global_layout" t-if="link_trackers">
+            <table bgcolor="#ffffff" cellspacing="0" cellpadding="0" width="650" align="center" border="0" style="width: 100%; max-width: 650px;">
+                <tr>
+                    <td style="width: 100%;">
+                        <table cellspacing="0" cellpadding="0" border="0" width="580" align="center" style="width:100%; max-width:580px;">
+                            <tr>
+                                <td align="left">
+                                    <span style="color:#282f33; font-size: 15px; font-weight: bold; line-height: 30px">
+                                        <t t-esc="'Click Rate Report on %i %s Sent' % (object.expected, mailing_type)"/>
+                                    </span>
+                                </td>
+                            </tr>
+                        </table>
+                    </td>
+                </tr>
+                <tr>
+                    <td style="margin: 0; padding:0;">
+                        <table cellspacing="0" cellpadding="0" border="0" width="580" align="center" style="width:100%; max-width:580px;border-collapse: collapse;">
+                            <tr style="color: #875a7b; font-size: 16px; font-weight: 500;">
+                                <td style="width: 70%;padding: 10px 0; text-align: center; border: 1px solid #e7e7e7;">Button Label</td>
+                                <td style="width: 30%;padding: 10px 0; text-align: center; border: 1px solid #e7e7e7;">%Click (Total)</td>
+                            </tr>
+                            <tr t-foreach="link_trackers" t-as="link_tracker" style="color: #888888; font-size: 15px; font-weight: 300;">
+                                <td style="width: 70%;padding: 10px 0; border: 1px solid #e7e7e7;">
+                                    <a t-att-href="link_tracker.absolute_url" target="_blank" style="color: #56b3b5; text-decoration: none;" t-esc="link_tracker.label or link_tracker.url"/>
+                                </td>
+                                <td style="width: 30%;padding: 10px 0; text-align: center;  border: 1px solid #e7e7e7;">
+                                    <t t-esc="int(link_tracker.count * 100 / object.sent) if object.sent else 0"/>% (<t t-esc="link_tracker.count"/>)
+                                </td>
+                            </tr>
+                        </table>
+                    </td>
+                </tr>
+            </table>
+        </div>
+    </template>
+</data>
+</odoo>

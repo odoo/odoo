@@ -1,0 +1,29 @@
+<templates>
+
+    <t t-name="event_booth_registration_complete">
+        <div class="col-12 p-5">
+            <div class="row mb-3">
+                <div class="col-12">
+                    <h3>Booth Registration completed!</h3>
+                    <span class="h4 text-muted" t-out="event_name"/>
+                </div>
+            </div>
+            <div class="d-flex flex-column">
+                <span t-if="contact.name" t-out="contact.name" class="fw-bold"/>
+                <span t-if="contact.email">
+                    <i class="fa fa-fw fa-envelope me-2"/>
+                    <t t-out="contact.email"/>
+                </span>
+                <span t-if="contact.phone">
+                    <i class="fa fa-fw fa-phone me-2"/>
+                    <t t-out="contact.phone"/>
+                </span>
+                <span t-if="contact.mobile">
+                    <i class="fa fa-fw fa-mobile me-2"/>
+                    <t t-out="contact.mobile"/>
+                </span>
+            </div>
+        </div>
+    </t>
+
+</templates>

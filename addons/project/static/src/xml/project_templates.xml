@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<templates id="template" xml:space="preserve">
+    <span t-name="project.statusWithColor" t-att-class="'o_status_bubble me-2 o_color_bubble_' + color"></span>
+
+    <div t-name="project.ControlPanel" t-inherit="web.Legacy.ControlPanel" t-inherit-mode="extension" owl="1">
+        <xpath expr="//ol[hasclass('breadcrumb')]" position="inside">
+            <t t-call="project.ProjectControlPanelContent">
+                <t t-set="showProjectUpdate" t-value="show_project_update"/>
+                <t t-set="isProjectUser" t-value="is_project_user"/>
+            </t>
+        </xpath>
+    </div>
+
+    <t t-name="project.task.PrivateProjectName">
+        <span class="fst-italic text-muted"><i class="fa fa-lock"></i> Private</span>
+    </t>
+
+</templates>

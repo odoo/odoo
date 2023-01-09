@@ -1,0 +1,35 @@
+.o_kanban_renderer.o_crm_team_kanban {
+    --KanbanRecord-width: 400px;
+}
+
+.o_kanban_renderer.o_crm_team_member_kanban {
+    --KanbanRecord-width: 350px;
+
+    .o_kanban_group:not(.o_column_folded) {
+        min-height: 100px;
+    }
+    .o_kanban_record {
+        &:not(.o_kanban_ghost){
+            min-height: 100px;
+        }
+    }
+    .ribbon {
+        &::before, &::after {
+            display: none;
+        }
+
+        span {
+            padding: 5px;
+            font-size: small;
+            height: auto;
+        }
+    }
+    .ribbon-top-right {
+        margin-top: -$o-kanban-dashboard-vpadding;
+
+        span {
+            left: 0px;
+            right: 30px;
+        }
+    }
+}

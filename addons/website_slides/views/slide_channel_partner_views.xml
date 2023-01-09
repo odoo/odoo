@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="slide_channel_partner_view_search" model="ir.ui.view">
+            <field name="name">slide.channel.partner.search</field>
+            <field name="model">slide.channel.partner</field>
+            <field name="arch" type="xml">
+                <search string="Channel Member">
+                    <field name="partner_id"/>
+                    <field name="partner_email"/>
+                    <field name="channel_id" string="Course"/>
+                     <separator/>
+                    <filter string="Completed" name="filter_completed" domain="[('completed', '=', True)]"/>
+                    <group expand="0" string="Group By">
+                        <filter string="Channel" name="groupby_channel_id" context="{'group_by': 'channel_id'}"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+
+        <record id="slide_channel_partner_view_tree" model="ir.ui.view">
+            <field name="name">slide.channel.partner.tree</field>
+            <field name="model">slide.channel.partner</field>
+            <field name="arch" type="xml">
+                <tree string="Attendees" editable="top" sample="1">
+                    <field name="channel_id" string="Course Name"/>
+                    <field name="channel_user_id"/>
+                    <field name="partner_email" string="Email"/>
+                    <field name="create_date" string="Enrolled On"/>
+                    <field name="write_date" string="Last Action On"/>
+                    <field name="completion" string="Progress" widget="progressbar"/>
+                    <field name="channel_type" optional="hide"/>
+                    <field name="channel_visibility" optional="hide"/>
+                    <field name="channel_enroll" widget="badge"
+                        decoration-success="channel_enroll == 'public'"
+                        decoration-info="channel_enroll == 'invite'"
+                        decoration-warning="channel_enroll == 'payment'"
+                        optional="hide"/>
+                    <field name="channel_website_id" groups="website.group_multi_website" optional="hide"/>
+                    <button name="unlink" title="Remove" icon="fa-times" type="object"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="slide_channel_partner_view_kanban" model="ir.ui.view">
+            <field name="name">slide.channel.partner.view.kanban</field>
+            <field name="model">slide.channel.partner</field>
+            <field name="arch" type="xml">
+                <kanban string="Followed Courses">
+                    <templates>
+                        <t t-name="kanban-box">
+                            <div t-attf-class="oe_kanban_color oe_kanban_card">
+                                <div class="o_kanban_card_header">
+                                    <div class="o_kanban_card_header_title mb-3">
+                                        <strong class="o_kanban_record_title oe_partner_heading">
+                                            <field name="channel_id"/>
+                                        </strong>
+                                        <br/>
+                                        <field name="partner_id"/>
+                                    </div>
+                                </div>
+                                <div class="o_kanban_record_bottom">
+                                    <div class="oe_kanban_bottom_left">
+                                        <field name="completion" widget="progressbar"/>
+                                    </div>
+                                    <div class="oe_kanban_bottom_right">
+                                        <field name="channel_user_id" widget="many2one_avatar_user"/>
+                                    </div>
+                                </div>
+                            </div>
+                        </t>
+                    </templates>
+                </kanban>
+            </field>
+        </record>
+
+        <record id="slide_channel_partner_action" model="ir.actions.act_window">
+            <field name="name">Attendees</field>
+            <field name="res_model">slide.channel.partner</field>
+            <field name="view_mode">tree,form,kanban</field>
+            <field name="search_view_id" ref="website_slides.slide_channel_partner_view_search"/>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">
+                    <strong>No Attendees Yet!</strong>
+                </p>
+                <p>
+                    From here you'll be able to monitor attendees and to track their progress.
+                </p>
+            </field>
+        </record>
+
+        <record id="slide_channel_partner_action_report" model="ir.actions.act_window">
+            <field name="name">Attendees</field>
+            <field name="res_model">slide.channel.partner</field>
+            <field name="view_mode">tree,form,kanban</field>
+            <field name="search_view_id" ref="website_slides.slide_channel_partner_view_search"/>
+            <field name="context">{'search_default_groupby_channel': 1}</field>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">
+                    <strong>No Attendees Yet!</strong>
+                </p>
+                <p>
+                    From here you'll be able to monitor attendees and to track their progress.
+                </p>
+            </field>
+        </record>
+
+    </data>
+</odoo>

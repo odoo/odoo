@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="purchase_requisition_alternative_warning_form" model="ir.ui.view">
+            <field name="name">Alternative Warning</field>
+            <field name="model">purchase.requisition.alternative.warning</field>
+            <field name="arch" type="xml">
+                <form string="Alternative Warning">
+                    <div>
+                        <field name="alternative_po_count"/>
+                        alternative request for quotations are still open, do you want to cancel them?
+                    </div>
+                    <field name="alternative_po_ids" nolabel="1" readonly="1">
+                        <tree create="0" delete="0" edit="0">
+                            <field name="partner_id"/>
+                            <field name="name" string="Reference"/>
+                            <field name="date_planned"/>
+                            <field name="amount_total"/>
+                            <field name="state"/>
+                        </tree>
+                    </field>
+                    <footer>
+                        <button name="action_cancel_alternatives" string="Cancel Alternatives" data-hotkey="q" type="object" colspan="1" class="btn-primary"/>
+                        <button name="action_keep_alternatives" string="Keep Alternatives" data-hotkey="w" type="object" colspan="1" class="btn-primary"/>
+                        <button string="Cancel"  data-hotkey="x" special="cancel" colspan="1" class="btn-secondary"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+    </data>
+</odoo>

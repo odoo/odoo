@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+
+    <t t-name="SplitBillScreen" owl="1">
+        <div class="splitbill-screen screen">
+            <div class="contents">
+                <div class="top-content">
+                    <span class="button back" t-on-click="back">
+                        <i class="fa fa-angle-double-left"></i>
+                        <span> </span>
+                        <span>Back</span>
+                    </span>
+                    <div class="top-content-center">
+                        <h1>Bill Splitting</h1>
+                    </div>
+                </div>
+                <div t-if="newOrder" class="main">
+                    <div class="lines">
+                        <div class="order">
+                            <ul class="orderlines">
+                                <t t-foreach="orderlines" t-as="line" t-key="line.cid">
+                                    <SplitOrderline line="line" split="splitlines[line.id]" />
+                                </t>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="controls">
+                        <div class="order-info">
+                            <span class="subtotal">
+                                <t t-esc="env.pos.format_currency(newOrder.get_subtotal())" />
+                            </span>
+                        </div>
+                        <div class="pay-button">
+                            <div class="button" t-on-click="proceed">
+                                <i class="fa fa-chevron-right" />
+                                <span> </span>
+                                <span>Payment</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </t>
+
+</templates>

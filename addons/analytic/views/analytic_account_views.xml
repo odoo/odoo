@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+        <record id="view_account_analytic_account_form" model="ir.ui.view">
+            <field name="name">analytic.analytic.account.form</field>
+            <field name="model">account.analytic.account</field>
+            <field name="arch" type="xml">
+                <form string="Analytic Account">
+                    <field name="company_id" invisible="1"/>
+                    <sheet string="Analytic Account">
+                        <div class="oe_button_box" name="button_box">
+                            <button class="oe_stat_button" type="action" name="%(account_analytic_line_action)d" icon="fa-usd">
+                                <div class="o_form_field o_stat_info">
+                                    <span class="o_stat_text">Gross Margin</span>
+                                    <span class="o_stat_value">
+                                        <field name="balance" widget='monetary'/>
+                                    </span>
+                                </div>
+                            </button>
+                        </div>
+                        <widget name="web_ribbon" title="Archived" bg_color="bg-danger" attrs="{'invisible': [('active', '=', True)]}"/>
+                        <div class="oe_title">
+                            <label for="name"/>
+                            <h1>
+                                <field name="name" class="oe_inline" placeholder="e.g. Project XYZ"/>
+                            </h1>
+                        </div>
+                        <div name="project"/>
+                        <group name="main">
+                            <group>
+                                <field name="active" invisible="1"/>
+                                <field name="partner_id"/>
+                                <field name="code"/>
+                            </group>
+                            <group>
+                                <field name="plan_id" options="{'no_quick_create': True}"/>
+                                <field name="company_id" options="{'no_create': True}" groups="base.group_multi_company"/>
+                                <field name="currency_id" options="{'no_create': True}" groups="base.group_multi_currency"/>
+                            </group>
+                        </group>
+                    </sheet>
+                    <div class="oe_chatter">
+                        <field name="message_follower_ids"/>
+                        <field name="message_ids"/>
+                    </div>
+                </form>
+            </field>
+        </record>
+
+        <record id="view_account_analytic_account_list" model="ir.ui.view">
+            <field name="name">account.analytic.account.list</field>
+            <field name="model">account.analytic.account</field>
+            <field eval="8" name="priority"/>
+            <field name="arch" type="xml">
+                <tree string="Analytic Accounts" multi_edit="1">
+                    <field name="company_id" invisible="1"/>
+                    <field name="name" string="Name"/>
+                    <field name="code"/>
+                    <field name="partner_id"/>
+                    <field name="plan_id"/>
+                    <field name="active" invisible="1"/>
+                    <field name="company_id" groups="base.group_multi_company"/>
+                    <field name="debit" sum="Debit"/>
+                    <field name="credit" sum="Credit"/>
+                    <field name="balance" sum="Balance"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="view_account_analytic_account_kanban" model="ir.ui.view">
+            <field name="name">account.analytic.account.kanban</field>
+            <field name="model">account.analytic.account</field>
+            <field name="arch" type="xml">
+               <kanban class="o_kanban_mobile">
+                   <field name="display_name"/>
+                   <field name="balance"/>
+                   <field name="currency_id"/>
+                   <templates>
+                        <t t-name="kanban-box">
+                            <div t-attf-class="oe_kanban_card oe_kanban_global_click">
+                                <div t-attf-class="#{!selection_mode ? 'text-center' : ''}">
+                                   <strong><span><field name="display_name"/></span></strong>
+                                </div>
+                                <hr class="mt8 mb8"/>
+                                <div class="row">
+                                    <div t-attf-class="col-12 #{!selection_mode ? 'text-center' : ''}">
+                                        <span>
+                                            Balance: <field name="balance" widget="monetary"/>
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                        </t>
+                    </templates>
+                </kanban>
+            </field>
+        </record>
+
+        <record id="view_account_analytic_account_search" model="ir.ui.view">
+            <field name="name">account.analytic.account.search</field>
+            <field name="model">account.analytic.account</field>
+            <field name="arch" type="xml">
+                <search string="Analytic Account">
+                    <field name="name" filter_domain="['|', ('name', 'ilike', self), ('code', 'ilike', self)]" string="Analytic Account"/>
+                    <field name="partner_id"/>
+                    <separator/>
+                    <filter string="Archived" domain="[('active', '=', False)]" name="inactive"/>
+                    <group expand="0" string="Group By...">
+                        <filter string="Associated Partner" name="associatedpartner" domain="[]" context="{'group_by': 'partner_id'}"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+
+        <record id="action_analytic_account_form" model="ir.actions.act_window">
+            <field name="name">Chart of Analytic Accounts</field>
+            <field name="res_model">account.analytic.account</field>
+            <field name="view_mode">tree,kanban,form</field>
+            <field name="search_view_id" ref="view_account_analytic_account_search"/>
+            <field name="context">{'search_default_active':1}</field>
+            <field name="view_id" ref="view_account_analytic_account_list"/>
+            <field name="help" type="html">
+              <p class="o_view_nocontent_smiling_face">
+                Add a new analytic account
+              </p>
+            </field>
+        </record>
+
+        <record id="action_account_analytic_account_form" model="ir.actions.act_window">
+            <field name="name">Analytic Accounts</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">account.analytic.account</field>
+            <field name="search_view_id" ref="view_account_analytic_account_search"/>
+            <field name="context">{'search_default_active':1}</field>
+            <field name="view_mode">tree,kanban,form</field>
+            <field name="help" type="html">
+              <p class="o_view_nocontent_smiling_face">
+                Add a new analytic account
+              </p>
+            </field>
+        </record>
+</odoo>

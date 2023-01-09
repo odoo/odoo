@@ -1,0 +1,102 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* base_vat
+# 
+# Translators:
+# Martin Trigaux, 2019
+# Manuel Gómez <nuelgoz@gmail.com>, 2019
+# Gabriel Umana <gabriel.umana@delfixcr.com>, 2019
+# Cristopher Cravioto <ccr@odoo.com>, 2019
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server saas~12.4\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2019-08-12 11:32+0000\n"
+"PO-Revision-Date: 2019-08-26 09:09+0000\n"
+"Last-Translator: Cristopher Cravioto <ccr@odoo.com>, 2019\n"
+"Language-Team: Spanish (https://www.transifex.com/odoo/teams/41243/es/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: es\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#. module: base_vat
+#: model_terms:ir.ui.view,arch_db:base_vat.res_config_settings_view_form
+msgid ""
+"<span class=\"fa fa-lg fa-building-o\" title=\"Values set here are company-"
+"specific.\" aria-label=\"Values set here are company-specific.\" "
+"groups=\"base.group_multi_company\" role=\"img\"/>"
+msgstr ""
+"<span class=\"fa fa-lg fa-building-o\" title=\"Los valores establecidos aquí"
+" son específicos de la empresa.\" aria-label=\"Los valores establecidos aquí"
+" son específicos de la empresa.\" groups=\"base.group_multi_company\" "
+"role=\"img\"/>"
+
+#. module: base_vat
+#: model_terms:ir.ui.view,arch_db:base_vat.view_partner_form
+msgid "<span class=\"o_vat_label\">VAT</span>"
+msgstr ""
+
+#. module: base_vat
+#: model:ir.model,name:base_vat.model_res_company
+msgid "Companies"
+msgstr "Compañías"
+
+#. module: base_vat
+#: model:ir.model,name:base_vat.model_res_config_settings
+msgid "Config Settings"
+msgstr "Opciones de Configuración"
+
+#. module: base_vat
+#: model:ir.model,name:base_vat.model_res_partner
+msgid "Contact"
+msgstr "Contacto"
+
+#. module: base_vat
+#: model_terms:ir.ui.view,arch_db:base_vat.res_config_settings_view_form
+msgid ""
+"If this checkbox is ticked, you will not be able to save a contact if its "
+"VAT number cannot be verified by the European VIES service."
+msgstr ""
+"Si esta casilla de verificación está marcada, no podrá guardar un contacto "
+"si el CIF no puede validarse por el servicio VIES."
+
+#. module: base_vat
+#: code:addons/base_vat/models/res_partner.py:188
+#, python-format
+msgid ""
+"The VAT number [%s] for partner [%s] does not seem to be valid. \n"
+"Note: the expected format is %s"
+msgstr ""
+"El NIF [%s] para la empresa [%s] no parece ser válido.\n"
+"Nota: el formato esperado es %s"
+
+#. module: base_vat
+#: code:addons/base_vat/models/res_partner.py:187
+#, python-format
+msgid ""
+"The VAT number [%s] for partner [%s] either failed the VIES VAT validation "
+"check or did not respect the expected format %s."
+msgstr ""
+"El NIF [%s] para la empresa [%s] o bien falla en la comprobación de "
+"validación VIES o no respeta el formato esperado %s."
+
+#. module: base_vat
+#: model_terms:ir.ui.view,arch_db:base_vat.company_form_vat
+#: model_terms:ir.ui.view,arch_db:base_vat.view_partner_form
+#: model_terms:ir.ui.view,arch_db:base_vat.view_partner_short_form
+msgid "VAT"
+msgstr "NIF"
+
+#. module: base_vat
+#: model:ir.model.fields,field_description:base_vat.field_res_company__vat_check_vies
+#: model:ir.model.fields,field_description:base_vat.field_res_config_settings__vat_check_vies
+msgid "Verify VAT Numbers"
+msgstr "Verificar números NIF"
+
+#. module: base_vat
+#: model_terms:ir.ui.view,arch_db:base_vat.res_config_settings_view_form
+msgid "Verify VAT numbers using the European VIES service"
+msgstr "Verificar números NIF usando el servicio VIES"

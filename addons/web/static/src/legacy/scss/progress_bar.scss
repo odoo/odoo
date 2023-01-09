@@ -1,0 +1,36 @@
+.o_progressbar {
+
+    > div {
+        display: inline-block;
+    }
+
+    .o_progressbar_title {
+        white-space: nowrap;
+        padding-right: 10px;
+    }
+
+    .o_progress {
+        width: 100px;
+        height: 15px;
+        vertical-align: middle;
+
+        border: 1px solid $o-gray-300;
+        overflow: hidden;
+
+        background-color: $o-view-background-color;
+        &.o_progress_overflow {
+            background-color: $o-brand-secondary;
+        }
+
+        .o_progressbar_complete {
+            background-color: $o-brand-primary;
+            height: 100%;
+        }
+    }
+
+    .o_progressbar_value {
+        width: 100px;
+        white-space: nowrap;
+        padding-left: 10px;
+    }
+}

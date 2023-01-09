@@ -1,0 +1,5 @@
+.o_kanban_renderer.o_kanban_dashboard.o_pos_kanban.o_kanban_ungrouped {
+	.o_kanban_record {
+        width: 500px;
+	}
+}

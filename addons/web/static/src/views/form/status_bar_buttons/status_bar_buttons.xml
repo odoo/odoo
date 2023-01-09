@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="web.StatusBarButtons" owl="1">
+        <div class="o_statusbar_buttons d-flex align-items-center align-content-around">
+            <t t-set="slots" t-value="visibleSlotNames" />
+            <t t-if="env.isSmall and slots.length > 1">
+                <Dropdown togglerClass="'btn btn-primary'">
+                    <t t-set-slot="toggler">Action</t>
+                    <t t-foreach="slots" t-as="slot" t-key="slot">
+                        <DropdownItem class="'o_statusbar_button_dropdown_item'">
+                            <t t-slot="{{ slot }}" />
+                        </DropdownItem>
+                    </t>
+                </Dropdown>
+            </t>
+            <t t-else="">
+                <t t-foreach="slots" t-as="slot" t-key="slot">
+                    <t t-slot="{{ slot }}" />
+                </t>
+            </t>
+        </div>
+    </t>
+
+</templates>

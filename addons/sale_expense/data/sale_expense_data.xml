@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+
+        <record id="hr_expense.expense_product_meal" model="product.product">
+            <field name="expense_policy">sales_price</field>
+        </record>
+
+        <record id="hr_expense.expense_product_mileage" model="product.product">
+            <field name="invoice_policy">delivery</field>
+            <field name="expense_policy">sales_price</field>
+        </record>
+
+        <record id="hr_expense.expense_product_travel_accommodation" model="product.product">
+            <field name="invoice_policy">delivery</field>
+            <field name="expense_policy">cost</field>
+        </record>
+
+        <record id="hr_expense.expense_product_communication" model="product.product">
+            <field name="expense_policy">cost</field>
+        </record>
+
+    </data>
+</odoo>

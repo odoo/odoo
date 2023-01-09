@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+        <record id="action_partner_deduplicate" model="ir.actions.act_window">
+            <field name="name">Deduplicate Contacts</field>
+            <field name="res_model">base.partner.merge.automatic.wizard</field>
+            <field name="view_mode">form</field>
+            <field name="target">new</field>
+            <field name="context">{'active_test': False}</field>
+        </record>
+
+        <record id="base_partner_merge_automatic_wizard_form" model="ir.ui.view">
+            <field name='name'>base.partner.merge.automatic.wizard.form</field>
+            <field name='model'>base.partner.merge.automatic.wizard</field>
+            <field name='arch' type='xml'>
+                <form string='Automatic Merge Wizard'>
+                    <sheet>
+                        <group attrs="{'invisible': [('state', '!=', 'finished')]}" col="1">
+                            <h2>There are no more contacts to merge for this request</h2>
+                            <button name="%(action_partner_deduplicate)d" string="Deduplicate the other Contacts" class="oe_highlight" type="action"/>
+                        </group>
+                        <p class="oe_grey" attrs="{'invisible': [('state', '!=', ('option'))]}">
+                            Select the list of fields used to search for
+                            duplicated records. If you select several fields,
+                            Odoo will propose you to merge only those having
+                            all these fields in common. (not one of the fields).
+                        </p>
+                        <group attrs="{'invisible': ['|', ('state', 'not in', ('selection', 'finished')), ('number_group', '=', 0)]}">
+                            <field name="state" invisible="1" />
+                            <field name="number_group"/>
+                        </group>
+                        <group string="Search duplicates based on duplicated data in"
+                            attrs="{'invisible': [('state', 'not in', ('option',))]}">
+                            <field name='group_by_email' />
+                            <field name='group_by_name' />
+                            <field name='group_by_is_company' />
+                            <field name='group_by_vat' />
+                            <field name='group_by_parent_id' />
+                        </group>
+                        <group string="Exclude contacts having"
+                            attrs="{'invisible': [('state', 'not in', ('option',))]}">
+                            <field name='exclude_contact' />
+                            <field name='exclude_journal_item' />
+                        </group>
+                        <separator string="Options" attrs="{'invisible': [('state', 'not in', ('option',))]}"/>
+                        <group attrs="{'invisible': [('state', 'not in', ('option','finished'))]}">
+                            <field name='maximum_group' attrs="{'readonly': [('state', 'in', ('finished'))]}"/>
+                        </group>
+                        <separator string="Merge the following contacts"
+                            attrs="{'invisible': [('state', 'in', ('option', 'finished'))]}"/>
+                        <group attrs="{'invisible': [('state', 'in', ('option', 'finished'))]}" col="1">
+                            <p class="oe_grey">
+                                Selected contacts will be merged together.
+                                All documents linked to one of these contacts
+                                will be redirected to the destination contact.
+                                You can remove contacts from this list to avoid merging them.
+                            </p>
+                            <group col="2">
+                                <field name="dst_partner_id"
+                                    domain="[('id', 'in', partner_ids or False)]"
+                                    attrs="{'required': [('state', '=', 'selection')]}"
+                                    context="{'partner_show_db_id': True}"
+                                    options="{'always_reload': True}"/>
+                            </group>
+                            <field name="partner_ids" nolabel="1">
+                                <tree string="Partners">
+                                    <field name="id" />
+                                    <field name="display_name" />
+                                    <field name="email" />
+                                    <field name="is_company" />
+                                    <field name="vat" />
+                                    <field name="country_id" />
+                                </tree>
+                            </field>
+                        </group>
+                    </sheet>
+                    <footer>
+                        <button name='action_merge' string='Merge Contacts'
+                            class='oe_highlight'
+                            type='object' data-hotkey="q"
+                            attrs="{'invisible': [('state', 'in', ('option', 'finished' ))]}" />
+                        <button name='action_skip' string='Skip these contacts'
+                            type='object'
+                            attrs="{'invisible': [('state', '!=', 'selection')]}" />
+                        <button name='action_start_manual_process'
+                            string='Merge with Manual Check' data-hotkey="x"
+                            type='object'  class='oe_highlight'
+                            attrs="{'invisible': [('state', '!=', 'option')]}" />
+                        <button name='action_start_automatic_process'
+                            string='Merge Automatically' data-hotkey="l"
+                            type='object' class='oe_highlight'
+                            confirm="Are you sure to execute the automatic merge of your contacts ?"
+                            attrs="{'invisible': [('state', '!=', 'option')]}" />
+                        <button name='action_update_all_process'
+                            string='Merge Automatically all process'
+                            type='object' data-hotkey="y"
+                            confirm="Are you sure to execute the list of automatic merges of your contacts ?"
+                            attrs="{'invisible': [('state', '!=', 'option')]}" />
+                        <button special="cancel" data-hotkey="z" string="Cancel" type="object" class="btn btn-secondary oe_inline" attrs="{'invisible': [('state', '=', 'finished')]}"/>
+                        <button special="cancel" data-hotkey="z" string="Close" type="object" class="btn btn-secondary oe_inline" attrs="{'invisible': [('state', '!=', 'finished')]}"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+        <record id="action_partner_merge" model="ir.actions.act_window">
+            <field name="name">Merge</field>
+            <field name="res_model">base.partner.merge.automatic.wizard</field>
+            <field name="view_mode">form</field>
+            <field name="target">new</field>
+            <field name="binding_model_id" ref="base.model_res_partner"/>
+            <field name="binding_view_types">list</field>
+        </record>
+</odoo>

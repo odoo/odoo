@@ -1,0 +1,186 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- Dedicated actions used in views below -->
+    <record id="action_quotations_salesteams" model="ir.actions.act_window">
+        <field name="name">Quotations</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">sale.order</field>
+        <field name="view_id" ref="sale.view_quotation_tree"/>
+        <field name="view_mode">tree,form,calendar,graph,kanban,pivot</field>
+        <field name="context">{
+                'search_default_team_id': [active_id],
+                'default_team_id': active_id,
+                'show_address': 1,
+            }
+        </field>
+        <field name="domain">[]</field>
+        <field name="search_view_id" ref="sale.sale_order_view_search_inherit_quotation"/>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+            Create a new quotation, the first step of a new sale!
+            </p><p>
+            Once the quotation is confirmed by the customer, it becomes a sales order.<br/> You will be able to create an invoice and collect the payment.
+            </p>
+        </field>
+    </record>
+
+    <record id="action_quotation_form" model="ir.actions.act_window">
+        <field name="name">New Quotation</field>
+        <field name="res_model">sale.order</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="view_mode">form</field>
+        <field name="context">{
+                'search_default_team_id': [active_id],
+                'default_team_id': active_id,
+                'default_user_id': uid,
+        }
+        </field>
+        <field name="search_view_id" ref="sale_order_view_search_inherit_quotation"/>
+    </record>
+
+    <record id="action_orders_salesteams" model="ir.actions.act_window">
+        <field name="name">Sales Orders</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">sale.order</field>
+        <field name="view_mode">tree,form,calendar,graph,kanban,pivot</field>
+        <field name="search_view_id" ref="sale.sale_order_view_search_inherit_sale"/>
+        <field name="domain">[('state','not in',('draft','sent','cancel'))]</field>
+        <field name="context">{
+                'search_default_team_id': [active_id],
+                'default_team_id': active_id,
+            }
+        </field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+            Create a new quotation, the first step of a new sale!
+            </p><p>
+            Once the quotation is confirmed by the customer, it becomes a sales order.<br/> You will be able to create an invoice and collect the payment.
+            </p>
+        </field>
+    </record>
+
+    <record id="action_orders_to_invoice_salesteams" model="ir.actions.act_window">
+        <field name="name">Sales Orders</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">sale.order</field>
+        <field name="view_mode">tree,form,calendar,graph,kanban,pivot</field>
+        <field name="search_view_id" ref="sale.sale_order_view_search_inherit_sale"/>
+        <field name="domain">[('invoice_status','=','to invoice')]</field>
+        <field name="context">{
+                'search_default_team_id': [active_id],
+                'default_team_id': active_id,
+            }
+        </field>
+    </record>
+
+    <!-- crm.team views (& actions) -->
+
+    <record id="crm_team_salesteams_view_form" model="ir.ui.view">
+        <field name="name">crm.team.form</field>
+        <field name="model">crm.team</field>
+        <field name="priority">9</field>
+        <field name="inherit_id" ref="sales_team.crm_team_view_form"/>
+        <field name="arch" type="xml">
+            <div name="options_active" position="inside">
+                <div class="o_row" style="display:inherit">
+                    <field name="use_quotations"/><label for="use_quotations"/>
+                </div>
+            </div>
+            <field name="company_id" position="after">
+                <label for="invoiced_target"/>
+                <div class="o_row">
+                    <field name="invoiced_target" widget="monetary" options="{'currency_field': 'currency_id'}" class="oe_inline"/>
+                    <span class="flex-grow-1">/ Month</span>
+                </div>
+            </field>
+        </field>
+    </record>
+
+    <record id="crm_team_view_kanban_dashboard" model="ir.ui.view">
+        <field name="name">crm.team.view.kanban.dashboard.inherit.sale</field>
+        <field name="model">crm.team</field>
+        <field name="inherit_id" ref="sales_team.crm_team_view_kanban_dashboard"/>
+        <field name="arch" type="xml">
+            <xpath expr="//templates" position="before">
+                <field name="use_quotations"/>
+                <field name="invoiced_target"/>
+            </xpath>
+
+            <xpath expr="//t[@name='second_options']" position="after">
+                <div class="row" t-if="record.quotations_count.raw_value">
+                    <div class="col">
+                        <a name="%(action_quotations_salesteams)d" type="action" context="{'search_default_draft': True, 'search_default_sent': True}">
+                            <field name="quotations_count" class="me-1"/>
+                            <t t-if="record.quotations_count.raw_value == 1">Quotation</t>
+                            <t t-else="">Quotations</t>
+                        </a>
+                    </div>
+                    <div class="col-auto text-truncate">
+                        <field name="quotations_amount" widget="monetary"/>
+                    </div>
+                </div>
+                <div class="row" name="orders_to_invoice" t-if="record.sales_to_invoice_count.raw_value">
+                    <div class="col-8">
+                        <a name="%(action_orders_to_invoice_salesteams)d" type="action">
+                            <field name="sales_to_invoice_count" class="me-1"/>
+                            <t t-if="record.sales_to_invoice_count.raw_value == 1">Order to Invoice</t>
+                            <t t-else="">Orders to Invoice</t>
+                        </a>
+                    </div>
+                </div>
+            </xpath>
+
+            <xpath expr="//div[hasclass('o_kanban_primary_bottom')]" position="after">
+                <t groups="sales_team.group_sale_manager">
+                    <div class="col-12 o_kanban_primary_bottom bottom_block">
+                        <field name="invoiced" widget="sales_team_progressbar" title="Invoicing" options="{'current_value': 'invoiced', 'max_value': 'invoiced_target', 'editable': true, 'edit_max_value': true, 'on_change': 'update_invoiced_target'}"/>
+                    </div>
+                </t>
+            </xpath>
+
+            <xpath expr="//div[hasclass('o_kanban_manage_view')]" position="inside">
+                <div t-if="record.use_quotations.raw_value">
+                    <a name="%(action_quotations_salesteams)d" type="action" class="o_quotation_view_button">Quotations</a>
+                </div>
+                <div>
+                    <a name="%(action_orders_salesteams)d" type="action">Sales Orders</a>
+                </div>
+                <div groups="account.group_account_invoice">
+                    <a name="%(action_invoice_salesteams)d" type="action">Invoices</a>
+                </div>
+            </xpath>
+
+            <xpath expr="//div[hasclass('o_kanban_manage_new')]" position="inside">
+                <div t-if="record.use_quotations.raw_value">
+                    <a name="%(action_quotation_form)d" type="action">
+                        Quotation
+                    </a>
+                </div>
+            </xpath>
+
+            <div name="o_team_kanban_report_separator" position="before">
+                <div t-if="record.use_quotations.raw_value">
+                     <a name="%(action_order_report_quotation_salesteam)d" type="action">
+                         Quotations
+                     </a>
+                </div>
+                <div name="sales_report">
+                    <a name="%(action_order_report_so_salesteam)d" type="action">
+                        Sales
+                    </a>
+                </div>
+                <div groups="account.group_account_invoice" name="invoices_report">
+                    <a name="%(action_account_invoice_report_salesteam)d" type="action">
+                        Invoices
+                    </a>
+                </div>
+            </div>
+        </field>
+    </record>
+
+    <record id="sales_team.mail_activity_type_action_config_sales" model="ir.actions.act_window">
+        <field name="domain">['|', ('res_model', '=', False), ('res_model', 'in', ['sale.order', 'res.partner', 'product.template', 'product.product'])]</field>
+    </record>
+
+</odoo>

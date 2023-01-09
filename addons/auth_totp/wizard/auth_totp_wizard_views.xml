@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record model="ir.ui.view" id="view_totp_wizard">
+        <field name="name">auth_totp wizard</field>
+        <field name="model">auth_totp.wizard</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <div class="o_auth_totp_enable_2FA container">
+                        <div class="mb-3 w-100">
+                            <h3 class="fw-bold">Authenticator App Setup</h3>
+                            <ul>
+                                <div class="d-md-none d-block">
+                                    <li>
+                                        <field class="text-wrap" name="url" widget="url" options="{'website_path': True}"
+                                        text="Click on this link to open your authenticator app"/></li>
+                                </div>
+                                <li>
+                                    <div class="d-flex align-items-center flex-wrap">
+                                        <span class="d-md-none d-block">Or install an authenticator app</span>
+                                        <span class="d-none d-md-block">Install an authenticator app on your mobile device</span>
+                                        <div class="d-block d-md-none">
+                                            <a href="https://play.google.com/store/search?q=authenticator&amp;c=apps" class="mx-2" target="blank">
+                                                <img alt="On Google Play" style="width: 24px;" src="/base_setup/static/src/img/logo_google_play.png"/>
+                                            </a>
+                                            <a href="http://appstore.com/2fa" class="mx-2" target="blank">
+                                                <img alt="On Apple Store" style="width: 24px;" src="/base_setup/static/src/img/logo_apple_store.png"/>
+                                            </a>
+                                        </div>
+                                    </div>
+                                </li>
+
+                                <span class="text-muted">Popular ones include Authy, Google Authenticator or the Microsoft Authenticator.</span>
+                                <li>Look for an "Add an account" button</li>
+                                <li>
+                                    <span class="d-none d-md-block">When requested to do so, scan the barcode below</span>
+                                    <span class="d-block d-md-none">When requested to do so, copy the key below</span>
+                                </li>
+                            </ul>
+
+                            <!-- Desktop version -->
+                            <div class="text-center d-none d-md-block">
+                                <field name="qrcode" readonly="True" widget="image"/>
+
+                                <h3 class="fw-bold"><a data-bs-toggle="collapse"
+                                   href="#collapseTotpSecret" role="button" aria-expanded="false"
+                                   aria-controls="collapseTotpSecret">Cannot scan it?</a></h3>
+                                <div class="collapse" id="collapseTotpSecret">
+                                  <field name="secret" widget="CopyClipboardChar" readonly="1" class="mb-3 ps-3"/>
+                                </div>
+                            </div>
+
+                            <!-- Mobile Version -->
+                            <div class="text-center d-block d-md-none">
+                                <field name="secret" widget="CopyClipboardChar" readonly="1" class="mb-3 ps-3"/>
+                            </div>
+
+                            <h3 class="fw-bold">Enter your six-digit code below</h3>
+                            <div class="mt-2">
+                                <label for="code" class="px-0">Verification Code</label>
+                                <div class="d-flex align-items-center">
+                                    <field required="True" name="code" autocomplete="off" class="o_field_highlight px-0 me-2" placeholder="e.g. 123456"/>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </sheet>
+                <footer>
+                    <button type="object" name="enable" class="btn btn-primary"
+                            string="Activate" data-hotkey="q"/>
+                    <button string="Cancel" special="cancel" data-hotkey="z"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+</odoo>

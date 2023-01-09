@@ -1,0 +1,101 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* payment_adyen
+# 
+# Translators:
+# Martin Trigaux, 2019
+# krnkris, 2019
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server saas~12.5\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2019-08-26 08:16+0000\n"
+"PO-Revision-Date: 2019-08-26 09:12+0000\n"
+"Last-Translator: krnkris, 2019\n"
+"Language-Team: Hungarian (https://www.transifex.com/odoo/teams/41243/hu/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: hu\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#. module: payment_adyen
+#: code:addons/payment_adyen/models/payment.py:0
+#, python-format
+msgid "; multiple order found"
+msgstr "; többszörös rendelést talált"
+
+#. module: payment_adyen
+#: code:addons/payment_adyen/models/payment.py:0
+#, python-format
+msgid "; no order found"
+msgstr "; nem talált rendelést"
+
+#. module: payment_adyen
+#: model:ir.model.fields.selection,name:payment_adyen.selection__payment_acquirer__provider__adyen
+msgid "Adyen"
+msgstr "Adyen"
+
+#. module: payment_adyen
+#: code:addons/payment_adyen/models/payment.py:0
+#, python-format
+msgid "Adyen: feedback error"
+msgstr "Adyen: visszajelzési hiba"
+
+#. module: payment_adyen
+#: code:addons/payment_adyen/models/payment.py:0
+#, python-format
+msgid "Adyen: invalid merchantSig, received %s, computed %s"
+msgstr "Adyen: érvénytelen merchantSig, fogadott %s, kiszámított %s"
+
+#. module: payment_adyen
+#: code:addons/payment_adyen/models/payment.py:0
+#, python-format
+msgid "Adyen: received data for reference %s"
+msgstr "Adyen: fogadott adat ehhez a referenciához %s"
+
+#. module: payment_adyen
+#: code:addons/payment_adyen/models/payment.py:0
+#, python-format
+msgid ""
+"Adyen: received data with missing reference (%s) or missing pspReference "
+"(%s)"
+msgstr ""
+"Adyen: beérkeztetett adat hiányzó hivatkozással (%s) vagy hiányzó "
+"pspReference (%s)"
+
+#. module: payment_adyen
+#: model_terms:ir.ui.view,arch_db:payment_adyen.acquirer_form_adyen
+msgid "How to configure your Adyen account?"
+msgstr "Hogyan állítsa be a Adyen számla fiókját?"
+
+#. module: payment_adyen
+#: model:ir.model.fields,field_description:payment_adyen.field_payment_acquirer__adyen_merchant_account
+msgid "Merchant Account"
+msgstr "Kereskedelmi számla"
+
+#. module: payment_adyen
+#: model:ir.model,name:payment_adyen.model_payment_acquirer
+msgid "Payment Acquirer"
+msgstr "Fizetést lebonyolító"
+
+#. module: payment_adyen
+#: model:ir.model,name:payment_adyen.model_payment_transaction
+msgid "Payment Transaction"
+msgstr "Fizetési tranzakció"
+
+#. module: payment_adyen
+#: model:ir.model.fields,field_description:payment_adyen.field_payment_acquirer__provider
+msgid "Provider"
+msgstr "Szolgáltató"
+
+#. module: payment_adyen
+#: model:ir.model.fields,field_description:payment_adyen.field_payment_acquirer__adyen_skin_code
+msgid "Skin Code"
+msgstr "Külső kód"
+
+#. module: payment_adyen
+#: model:ir.model.fields,field_description:payment_adyen.field_payment_acquirer__adyen_skin_hmac_key
+msgid "Skin HMAC Key"
+msgstr "Külső HMAC kulcs"

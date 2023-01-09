@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<template name="Steps" id="s_process_steps">
+    <section class="s_process_steps pt24 pb24 s_process_steps_connector_line" data-vcss="001">
+        <svg class="s_process_step_svg_defs position-absolute">
+            <defs>
+                <marker class="s_process_steps_arrow_head" markerWidth="15" markerHeight="10" refX="6" refY="6" orient="auto">
+                    <path d="M 2,2 L10,6 L2,10 L6,6 L2,2" vector-effect="non-scaling-size"/>
+                </marker>
+            </defs>
+        </svg>
+        <div class="container">
+            <div class="row g-0">
+                <div class="col-lg-3 s_process_step pt24 pb24">
+                    <svg class="s_process_step_connector" viewBox="0 0 100 20" preserveAspectRatio="none">
+                        <path d="M 0 10 L 100 10" vector-effect="non-scaling-stroke"/>
+                    </svg>
+                    <div class="s_process_step_icon">
+                        <i class="fa fa-shopping-basket fa-2x mx-auto rounded-circle bg-primary"/>
+                    </div>
+                    <div class="s_process_step_content">
+                        <h2>Add to cart</h2>
+                        <p>Let your customers follow <br/>and understand your process.</p>
+                    </div>
+                </div>
+                <div class="col-lg-3 s_process_step pt24 pb24">
+                    <svg class="s_process_step_connector" viewBox="0 0 100 20" preserveAspectRatio="none">
+                        <path d="M 0 10 L 100 10" vector-effect="non-scaling-stroke"/>
+                    </svg>
+                    <div class="s_process_step_icon">
+                        <i class="fa fa-unlock-alt fa-2x mx-auto rounded-circle bg-o-color-5"/>
+                    </div>
+                    <div class="s_process_step_content">
+                        <h2>Sign in</h2>
+                        <p>Click on the icon to adapt it <br/>to your purpose.</p>
+                    </div>
+                </div>
+                <div class="col-lg-3 s_process_step pt24 pb24">
+                    <svg class="s_process_step_connector" viewBox="0 0 100 20" preserveAspectRatio="none">
+                        <path d="M 0 10 L 100 10" vector-effect="non-scaling-stroke"/>
+                    </svg>
+                    <div class="s_process_step_icon">
+                        <i class="fa fa-paypal fa-2x mx-auto rounded-circle bg-secondary"/>
+                    </div>
+                    <div class="s_process_step_content">
+                        <h2>Pay</h2>
+                        <p>Duplicate blocks <br/>to add more steps.</p>
+                    </div>
+                </div>
+                <div class="col-lg-3 s_process_step pt24 pb24">
+                    <svg class="s_process_step_connector" viewBox="0 0 100 20" preserveAspectRatio="none">
+                        <path d="M 0 10 L 100 10" vector-effect="non-scaling-stroke"/>
+                    </svg>
+                    <div class="s_process_step_icon">
+                        <i class="fa fa-plane fa-2x mx-auto rounded-circle bg-o-color-3"/>
+                    </div>
+                    <div class="s_process_step_content">
+                        <h2>Get Delivered</h2>
+                        <p>Select and delete blocks <br/>to remove some steps.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</template>
+
+<template id="s_process_steps_options" inherit_id="website.snippet_options">
+    <xpath expr="." position="inside">
+        <div data-js="StepsConnector" data-selector=".s_process_steps">
+            <we-row string="Connector">
+                <we-select data-name="connector_type">
+                    <we-button data-select-class="" data-name="no_connector_opt">None</we-button>
+                    <we-button data-select-class="s_process_steps_connector_line">Line</we-button>
+                    <we-button data-select-class="s_process_steps_connector_arrow">Straight arrow</we-button>
+                    <we-button data-select-class="s_process_steps_connector_curved_arrow">Curved arrow</we-button>
+                </we-select>
+                <we-colorpicker
+                    data-select-style="true"
+                    data-name="connector_color_opt"
+                    data-dependencies="!no_connector_opt"
+                    data-apply-to=".s_process_step_connector path"
+                    data-css-property="stroke" data-change-color="true"/>
+            </we-row>
+        </div>
+    </xpath>
+</template>
+
+<record id="website.s_process_steps_000_scss" model="ir.asset">
+    <field name="name">Process steps 000 SCSS</field>
+    <field name="bundle">web.assets_frontend</field>
+    <field name="path">website/static/src/snippets/s_process_steps/000.scss</field>
+    <field name="active" eval="False"/>
+</record>
+
+<record id="website.s_process_steps_001_scss" model="ir.asset">
+    <field name="name">Process steps 001 SCSS</field>
+    <field name="bundle">web.assets_frontend</field>
+    <field name="path">website/static/src/snippets/s_process_steps/001.scss</field>
+</record>
+
+</odoo>

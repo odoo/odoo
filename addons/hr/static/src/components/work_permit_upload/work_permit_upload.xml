@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+
+    <t t-name="hr.WorkPermitUploadField" t-inherit="web.BinaryField" t-inherit-mode="primary" owl="1">
+        <xpath expr="//label[hasclass('o_select_file_button')]" position="attributes">
+            <attribute name="class" remove="btn-primary" add="btn-secondary" separator=" " />
+        </xpath>
+    </t>
+
+</templates>

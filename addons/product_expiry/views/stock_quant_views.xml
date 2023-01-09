@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding='UTF-8'?>
+<odoo>
+    <record id="view_stock_quant_tree_expiry" model="ir.ui.view">
+        <field name="name">stock.quant.inherit.form</field>
+        <field name="model">stock.quant</field>
+        <field name="inherit_id" ref="stock.view_stock_quant_tree"/>
+        <field name="arch" type="xml">
+            <xpath expr="//tree" position="attributes">
+                <attribute name="decoration-danger">
+                    removal_date &lt; current_date or quantity &lt; 0
+                </attribute>
+            </xpath>
+            <xpath expr="//field[@name='quantity']" position="after" >
+                <field name="removal_date"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="view_stock_quant_tree_editable_expiry" model="ir.ui.view">
+        <field name="name">stock.quant.inherit.form</field>
+        <field name="model">stock.quant</field>
+        <field name="inherit_id" ref="stock.view_stock_quant_tree_editable"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='lot_id']" position="after">
+                <field name="use_expiration_date" invisible="1"/>
+                <field name="removal_date" optional="hide"
+                    invisible="context.get('hide_removal_date')" attrs="{'readonly': ['|', ('tracking', '=', 'none'), ('use_expiration_date', '=', False)]}"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="quant_search_view_inherit_product_expiry" model="ir.ui.view">
+        <field name="name">stock.quant.search.inherit</field>
+        <field name="model">stock.quant</field>
+        <field name="inherit_id" ref="stock.quant_search_view"/>
+        <field name="arch" type="xml">
+            <xpath expr="//filter[@name='reserved']" position="after">
+                <separator/>
+                <filter string="Expiration Alerts" name="expiration_alerts"
+                    domain="[('lot_id.alert_date', '&lt;=', context_today().strftime('%Y-%m-%d'))]"/>
+            </xpath>
+        </field>
+     </record>
+</odoo>
