@@ -26,19 +26,45 @@ class PosOrderInherit(models.Model):
     x_receipt_printed_date = fields.Date("OR Printed Date")
     website_order_id = fields.Char("Website Order ID")
 
-    pos_si_trans_reference = fields.Char(string='Si/Trans Receipt Number', readonly=True, copy=False)
+
+    pos_trans_reference = fields.Char(string='Trans Receipt Number', readonly=True, copy=False) # trans # for order/refund
+    pos_si_trans_reference = fields.Char(string='SI Receipt Number', copy=False) # si # for order
+    pos_refund_si_reference = fields.Char(string='Refund SI Receipt Number', readonly=True, copy=False) #si # for refund
+
+    pos_refunded_id = fields.Many2one('pos.order', string='Order')
+
 
     def create(self, vals):
         res = super(PosOrderInherit, self).create(vals)
         for i in res:
-            i.pos_si_trans_reference = self.env.ref('fg_custom.seq_pos_si_trans').next_by_id()
+            i.pos_trans_reference = self.env.ref('fg_custom.seq_pos_trans').next_by_id()
+            if i.refunded_orders_count > 0:
+                i.pos_refund_si_reference = self.env.ref('fg_custom.seq_pos_refund_si').next_by_id()
+                order = i.refunded_order_ids[0]
+                i.pos_refunded_id = order
+            else:
+                i.pos_si_trans_reference = self.env.ref('fg_custom.seq_pos_si_trans').next_by_id()
         return res
 
     def get_si_trans_sequence_number(self, name):
         if name:
             order = self.search([('pos_reference', '=', name)], limit=1)
             if order:
-                return order.pos_si_trans_reference
+                pos_trans_reference = order.pos_trans_reference
+                pos_refunded_id = False
+                pos_si_trans_reference = False
+                pos_refund_si_reference = False
+                if order.pos_refunded_id:
+                    pos_refunded_id = order.pos_refunded_id.pos_si_trans_reference
+                    pos_refund_si_reference = order.pos_refund_si_reference
+                else:
+                    pos_si_trans_reference = order.pos_si_trans_reference
+                return {
+                    'pos_trans_reference': pos_trans_reference,
+                    'pos_refunded_id': pos_refunded_id,
+                    'pos_refund_si_reference': pos_refund_si_reference,
+                    'pos_si_trans_reference': pos_si_trans_reference
+                }
         else:
             return False
 

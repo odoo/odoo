@@ -33,18 +33,33 @@ class FgZReport(models.AbstractModel):
         return_order_ids = self.env['pos.order']
         open_cashier_list = []
         close_cashier_list = []
-        start_end_order_list = []
-        receipt_start_end_order_list = []
+        start_end_order_list = [] #trans
+        receipt_start_end_order_list = [] #si
+        refund_start_end_order_list = [] #refund si
         total_entry_encoding = 0
 
-        asc_start_end_order_id = self.env['pos.order'].search([('session_id', 'in', session_ids.ids)], limit=1, order='pos_si_trans_reference asc')
-        desc_start_end_order_id = self.env['pos.order'].search([('session_id', 'in', session_ids.ids)], limit=1, order='pos_si_trans_reference desc')
-        if asc_start_end_order_id.pos_si_trans_reference and desc_start_end_order_id.pos_si_trans_reference:
-            start_end_order_list.append(asc_start_end_order_id.pos_si_trans_reference + ' - ' + desc_start_end_order_id.pos_si_trans_reference)
-            receipt_start_end_order_list.append(asc_start_end_order_id.pos_si_trans_reference + ' - ' + desc_start_end_order_id.pos_si_trans_reference)
+        asc_start_end_order_id = self.env['pos.order'].search([('session_id', 'in', session_ids.ids),('pos_trans_reference', '!=', False)], limit=1, order='pos_trans_reference asc')
+        desc_start_end_order_id = self.env['pos.order'].search([('session_id', 'in', session_ids.ids),('pos_trans_reference', '!=', False)], limit=1, order='pos_trans_reference desc')
+
+        asc_receipt_end_order_id = self.env['pos.order'].search([('session_id', 'in', session_ids.ids),('pos_si_trans_reference', '!=', False)], limit=1, order='pos_si_trans_reference asc')
+        desc_receipt_end_order_id = self.env['pos.order'].search([('session_id', 'in', session_ids.ids),('pos_si_trans_reference', '!=', False)], limit=1, order='pos_si_trans_reference desc')
+
+        asc_refund_end_order_id = self.env['pos.order'].search([('session_id', 'in', session_ids.ids),('pos_refund_si_reference', '!=', False)], limit=1, order='pos_refund_si_reference asc')
+        desc_refund_end_order_id = self.env['pos.order'].search([('session_id', 'in', session_ids.ids),('pos_refund_si_reference', '!=', False)], limit=1, order='pos_refund_si_reference desc')
+
+        if asc_start_end_order_id.pos_trans_reference and desc_start_end_order_id.pos_trans_reference:
+            start_end_order_list.append(asc_start_end_order_id.pos_trans_reference + ' - ' + desc_start_end_order_id.pos_trans_reference)
+
+        if asc_receipt_end_order_id.pos_si_trans_reference and desc_receipt_end_order_id.pos_si_trans_reference:
+            receipt_start_end_order_list.append(asc_receipt_end_order_id.pos_si_trans_reference + ' - ' + desc_receipt_end_order_id.pos_si_trans_reference)
+
+        if asc_refund_end_order_id.pos_refund_si_reference and desc_refund_end_order_id.pos_refund_si_reference:
+            refund_start_end_order_list.append(asc_refund_end_order_id.pos_refund_si_reference + ' - ' + desc_refund_end_order_id.pos_refund_si_reference)
+
         for session_id in session_ids:
-            return_order_ids |= session_id.order_ids.filtered(lambda x: x.is_refunded)
-            for order in session_id.order_ids.filtered(lambda x: not x.is_refunded and x.amount_total > 0):
+            return_order_ids |= session_id.order_ids.filtered(lambda x: x.pos_refund_si_reference)
+            #for order in session_id.order_ids.filtered(lambda x: not x.is_refunded and x.amount_total > 0):
+            for order in session_id.order_ids.filtered(lambda x: x.pos_si_trans_reference and x.amount_total > 0):
                 total_qty += 1
                 is_total_discount_qty = False
                 is_total_vat_qty = False
@@ -158,13 +173,14 @@ class FgZReport(models.AbstractModel):
                 'close_cashier_list': close_cashier_list,
                 'start_end_order_list': start_end_order_list,
                 'receipt_start_end_order_list': receipt_start_end_order_list,
+                'refund_start_end_order_list': refund_start_end_order_list,
                 'cash_register_balance_start': cash_register_balance_start,
                 'cash_register_balance_end_real': cash_register_balance_end_real,
                 'stop_at': localized_dt.strftime('%m/%d/%Y'), 'stop_time': localized_dt.strftime('%H:%M:%S'),
                 'total_amt': total_amt,
                 'total_qty': int(total_qty),
                 'return_order_count': len(return_order_ids),
-                'return_order_total': sum([order.amount_total for order in return_order_ids if order]),
+                'return_order_total': sum([(order.amount_total*-1) for order in return_order_ids if order]),
                 'total_discount_qty': int(total_discount_qty),
                 'total_discount_percentage': total_discount_percentage,
                 'total_discount_global_minus': total_discount_global_minus,

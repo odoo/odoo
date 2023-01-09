@@ -32,18 +32,33 @@ class FgXReport(models.AbstractModel):
         localized_dt = timezone('UTC').localize(datetime.utcnow()).astimezone(timezone(tz_name))
         return_order_ids = self.env['pos.order']
         open_cashier_list = []
-        start_end_order_list = []
-        receipt_start_end_order_list = []
+        start_end_order_list = []  #trans
+        receipt_start_end_order_list = [] #si
+        refund_start_end_order_list = [] #refund
         total_entry_encoding = 0
 
         for session_id in session_ids:
-            start_order_id = self.env['pos.order'].search([('session_id', '=', session_id.id)], limit=1, order='pos_si_trans_reference asc')
-            end_order_id = self.env['pos.order'].search([('session_id', '=', session_id.id)], limit=1, order='pos_si_trans_reference desc')
-            return_order_ids |= session_id.order_ids.filtered(lambda x: x.is_refunded)
-            if end_order_id.pos_si_trans_reference and start_order_id.pos_si_trans_reference:
-                start_end_order_list.append(start_order_id.pos_si_trans_reference + ' - ' + end_order_id.pos_si_trans_reference)
+            trans_start_order_id = self.env['pos.order'].search([('session_id', '=', session_id.id),('pos_trans_reference', '!=', False)], limit=1, order='pos_trans_reference asc')
+            trans_end_order_id = self.env['pos.order'].search([('session_id', '=', session_id.id),('pos_trans_reference', '!=', False)], limit=1, order='pos_trans_reference desc')
+
+            start_order_id = self.env['pos.order'].search([('session_id', '=', session_id.id),('pos_si_trans_reference', '!=', False)], limit=1, order='pos_si_trans_reference asc')
+            end_order_id = self.env['pos.order'].search([('session_id', '=', session_id.id),('pos_si_trans_reference', '!=', False)], limit=1, order='pos_si_trans_reference desc')
+
+            refund_start_order_id = self.env['pos.order'].search([('session_id', '=', session_id.id),('pos_refund_si_reference', '!=', False)], limit=1, order='pos_refund_si_reference asc')
+            refund_end_order_id = self.env['pos.order'].search([('session_id', '=', session_id.id),('pos_refund_si_reference', '!=', False)], limit=1, order='pos_refund_si_reference desc')
+
+            return_order_ids |= session_id.order_ids.filtered(lambda x: x.pos_refund_si_reference)
+            if trans_end_order_id.pos_trans_reference and trans_start_order_id.pos_trans_reference: #trans
+                start_end_order_list.append(trans_start_order_id.pos_trans_reference + ' - ' + trans_end_order_id.pos_trans_reference)
+
+            if end_order_id.pos_si_trans_reference and start_order_id.pos_si_trans_reference: #si
                 receipt_start_end_order_list.append(start_order_id.pos_si_trans_reference + ' - ' + end_order_id.pos_si_trans_reference)
-            for order in session_id.order_ids.filtered(lambda x: not x.is_refunded and x.amount_total > 0):
+
+            if refund_end_order_id.pos_refund_si_reference and refund_start_order_id.pos_refund_si_reference: #refund si
+                refund_start_end_order_list.append(refund_start_order_id.pos_refund_si_reference + ' - ' + refund_end_order_id.pos_refund_si_reference)
+
+            #for order in session_id.order_ids.filtered(lambda x: not x.is_refunded and x.amount_total > 0 and x.pos_si_trans_reference ):
+            for order in session_id.order_ids.filtered(lambda x: x.pos_si_trans_reference and x.amount_total > 0 ):
                 total_qty += 1
                 is_total_discount_qty = False
                 is_total_vat_qty = False
@@ -148,13 +163,14 @@ class FgXReport(models.AbstractModel):
                 'open_cashier_list': open_cashier_list,
                  'start_end_order_list': start_end_order_list,
                  'receipt_start_end_order_list': receipt_start_end_order_list,
+                 'refund_start_end_order_list': refund_start_end_order_list,
                  'cash_register_balance_start': cash_register_balance_start,
                  'cash_register_balance_end_real': cash_register_balance_end_real,
                  'stop_at': localized_dt.strftime('%m/%d/%Y'), 'stop_time': localized_dt.strftime('%H:%M:%S'),
                  'total_amt': total_amt,
                  'total_qty': int(total_qty),
                  'return_order_count': len(return_order_ids),
-                 'return_order_total': sum([order.amount_total for order in return_order_ids if order]),
+                 'return_order_total': sum([(order.amount_total*-1) for order in return_order_ids if order]),
                  'total_discount_qty': int(total_discount_qty),
                  'total_discount_percentage': total_discount_percentage,
                  'total_discount_global_minus': total_discount_global_minus,
