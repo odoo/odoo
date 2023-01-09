@@ -11,6 +11,9 @@ class ResCompany(models.Model):
     siret = fields.Char(related='partner_id.siret', string='SIRET', size=14, readonly=False)
     ape = fields.Char(string='APE')
 
+    l10n_fr_rounding_difference_loss_account_id = fields.Many2one('account.account')
+    l10n_fr_rounding_difference_profit_account_id = fields.Many2one('account.account')
+
     @api.model
     def _get_unalterable_country(self):
         return ['FR', 'MF', 'MQ', 'NC', 'PF', 'RE', 'GF', 'GP', 'TF'] # These codes correspond to France and DOM-TOM.
