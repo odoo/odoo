@@ -67,7 +67,7 @@
                         </group>
                         <group>
                             <field name="active" invisible="1"/>
-                            <field name="user_id" string="Project Manager" widget="many2one_avatar_user" attrs="{'readonly':[('active','=',False)]}" domain="[('share', '=', False)]"/>
+                            <field name="user_id" string="Project Manager" widget="many2one_avatar_user" attrs="{'readonly':[('active','=',False)]}" domain="[('share', '=', False)]" options="{'no_quick_create': True}"/>
                             <label for="date_start" string="Planned Date"/>
                             <div name="dates" class="o_row">
                                 <field name="date_start" widget="daterange" options='{"related_end_date": "date"}'/>
