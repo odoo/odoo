@@ -25,7 +25,6 @@ import {
     onMounted,
     onWillDestroy,
     useExternalListener,
-    useState,
     useSubEnv,
     reactive,
     markRaw,
@@ -102,9 +101,6 @@ export class Chrome extends PosComponent {
 
         this.mainScreen = this.state.mainScreen;
         this.mainScreenProps = {};
-
-        this.tempScreen = useState({ isShown: false, name: null, component: null });
-        this.tempScreenProps = {};
 
         useSubEnv({
             pos: reactive(
@@ -317,14 +313,14 @@ export class Chrome extends PosComponent {
     }
     __showTempScreen(event) {
         const { name, props, resolve } = event.detail;
-        this.tempScreen.isShown = true;
-        this.tempScreen.name = name;
-        this.tempScreen.component = this.constructor.components[name];
-        this.tempScreenProps = Object.assign({}, props, { resolve });
+        this.state.tempScreen = {
+            name,
+            component: this.constructor.components[name],
+            props: { ...props, resolve },
+        };
     }
     __closeTempScreen() {
-        this.tempScreen.isShown = false;
-        this.tempScreen.name = null;
+        this.state.tempScreen = null;
     }
     __showScreen({ detail: { name, props = {} } }) {
         const component = this.constructor.components[name];

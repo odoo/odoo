@@ -21,6 +21,7 @@ export class PosStore {
         this.debugWidgetIsShown = !toRaw(this).debugWidgetIsShown;
     }, 100);
     mainScreen = { name: null, component: null };
+    tempScreen = null;
     constructor() {
         this.setup();
     }
