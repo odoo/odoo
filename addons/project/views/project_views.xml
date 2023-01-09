@@ -1498,7 +1498,7 @@
             <field name="model">project.task</field>
             <field eval="2" name="priority"/>
             <field name="arch" type="xml">
-                <tree string="Tasks" multi_edit="1" sample="1" js_class="project_task_list">
+                <tree string="Tasks" multi_edit="1" sample="1" js_class="project_task_list" default_group_by="stage_id">
                     <field name="message_needaction" invisible="1" readonly="1"/>
                     <field name="is_closed" invisible="1" />
                     <field name="sequence" invisible="1" readonly="1"/>
@@ -1663,6 +1663,9 @@
             <field name="inherit_id" ref="view_task_tree2"/>
             <field name="mode">primary</field>
             <field name="arch" type="xml">
+                <tree position="attributes">
+                    <attribute name="default_group_by">personal_stage_type_ids</attribute>
+                </tree>
                 <field name="stage_id" position="replace">
                     <field name="stage_display" optional="show" string="Stage"/>
                 </field>
@@ -1675,6 +1678,9 @@
             <field name="inherit_id" ref="view_task_tree2"/>
             <field name="mode">primary</field>
             <field name="arch" type="xml">
+                <tree position="attributes">
+                    <attribute name="default_group_by">project_id</attribute>
+                </tree>
                 <field name="stage_id" position="replace">
                     <field name="stage_display" optional="show" string="Stage"/>
                 </field>
