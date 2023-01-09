@@ -14,9 +14,6 @@
         tabindex="1"
     >
         <div class="o-mail-ChatWindow-header d-flex align-items-center flex-shrink-0 bg-100" t-on-click="onClickHeader" t-att-class="{ 'cursor-pointer': !ui.isSmall, 'border-bottom': !props.chatWindow.folded }">
-            <div t-if="ui.isSmall" class="cursor-pointer d-flex align-items-center h-100 px-3 py-0 me-2" title="Close conversation" t-on-click="() => this.close()">
-                <i class="oi oi-arrow-left"/>
-            </div>
             <t t-if="threadActions.actions.length > 3">
                 <Dropdown position="'bottom-start'" onStateChanged="state => this.onActionsMenuStateChanged(state)" togglerClass="`o-mail-ChatWindow-command d-flex btn align-items-center text-truncate p-0 p-1 ${ !ui.isSmall ? 'ms-2' : '' }`" menuClass="'d-flex flex-column py-0'" class="'d-flex text-truncate'" disabled="state.editingName" title="actionsMenuTitleText">
                     <t t-set-slot="toggler">
@@ -75,7 +72,7 @@
 </t>
 
 <t t-name="mail.ChatWindow.headerContent" owl="1">
-    <div t-if="thread" class="o-mail-ChatWindow-threadAvatar my-0" t-attf-class="{{ ui.isSmall or threadActions.actions.length > 4 ? 'ms-1' : 'ms-3' }} me-1">
+    <div t-if="thread" class="o-mail-ChatWindow-threadAvatar my-0" t-attf-class="{{ threadActions.actions.length > 4 ? 'ms-1' : 'ms-3' }} me-1">
         <img class="rounded" t-att-src="thread.imgUrl" alt="Thread Image"/>
     </div>
     <ThreadIcon t-if="thread and thread.type === 'chat' and thread.correspondent" thread="thread"/>
