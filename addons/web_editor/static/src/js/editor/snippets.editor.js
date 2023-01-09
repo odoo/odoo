@@ -2054,6 +2054,15 @@ var SnippetsMenu = Widget.extend({
      * - Remove the 'contentEditable' attributes
      */
     cleanForSave: async function () {
+        // Wait for snippet post-drop code here, since sometimes we save very
+        // quickly after a snippet drop during automated testing, which breaks
+        // some options code (executed while destroying the editor).
+        // TODO we should find a better way, by better locking the drag and drop
+        // code inside the edition mutex... which unfortunately cannot be done
+        // given the state of the code, as internal operations of that drag and
+        // drop code need to use the mutex themselves.
+        await this.postSnippetDropPromise;
+
         // First disable the snippet selection, calling options onBlur, closing
         // widgets, etc. Then wait for full resolution of the mutex as widgets
         // may have triggered some final edition requests that need to be
@@ -2157,6 +2166,10 @@ var SnippetsMenu = Widget.extend({
      * @returns {Promise}
      */
     callPostSnippetDrop: async function ($target) {
+        this.postSnippetDropPromise = new Promise(resolve => {
+            this._postSnippetDropResolver = resolve;
+        });
+
         // First call the onBuilt of all options of each item in the snippet
         // (and so build their editor instance first).
         await this._callForEachChildSnippet($target, function (editor, $snippet) {
@@ -2180,6 +2193,8 @@ var SnippetsMenu = Widget.extend({
         // Lastly, ensure that the snippets or its related parts are added to
         // the invisible DOM list if needed.
         await this._updateInvisibleDOM();
+
+        this._postSnippetDropResolver();
     },
     /**
      * Public implementation of _execWithLoadingEffect.
@@ -2532,13 +2547,20 @@ var SnippetsMenu = Widget.extend({
                 }
 
                 return editorToEnable;
-            }).then(editor => {
+            }).then(async editor => {
                 // If a link was clicked, the linktools should be focused after
                 // the right panel is shown to the user.
-                if (this._currentTab === this.tabs.OPTIONS
-                        && this.options.wysiwyg.linkTools
-                        && !this.options.wysiwyg.linkTools.noFocusUrl) {
-                    this.options.wysiwyg.linkTools.focusUrl();
+                // TODO: this should be reviewed to be done another way: we
+                // should avoid focusing something here while it is being
+                // rendered elsewhere.
+                const linkTools = this.options.wysiwyg.linkTools;
+                if (linkTools && this._currentTab === this.tabs.OPTIONS
+                        && !linkTools.noFocusUrl) {
+                    // Wait for `linkTools` potential in-progress rendering
+                    // before focusing the URL input on `snippetsMenu` (this
+                    // prevents race condition for automated testing).
+                    await linkTools.renderingPromise;
+                    linkTools.focusUrl();
                 }
                 return editor;
             });

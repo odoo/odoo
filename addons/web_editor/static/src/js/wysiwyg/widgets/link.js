@@ -125,6 +125,8 @@ const Link = Widget.extend({
         if (/(?:s_website_form_send|o_submit)/.test(this.data.className)) {
             this.isButton = true;
         }
+
+        this.renderingPromise = new Promise(resolve => this._renderingResolver = resolve);
     },
     /**
      * @override
@@ -152,7 +154,7 @@ const Link = Widget.extend({
 
         const _super = this._super.bind(this);
 
-        await this._updateOptionsUI();
+        this._updateOptionsUI();
 
         if (this.data.url) {
             var match = /mailto:(.+)/.exec(this.data.url);
@@ -166,6 +168,20 @@ const Link = Widget.extend({
         }
 
         return _super(...arguments);
+    },
+    /**
+     * @private
+     */
+    async _widgetRenderAndInsert() {
+        const res = await this._super(...arguments);
+
+        // TODO find a better solution than this during the upcoming refactoring
+        // of the link tools / link dialog.
+        if (this._renderingResolver) {
+            this._renderingResolver();
+        }
+
+        return res;
     },
     /**
      * @override
