@@ -126,9 +126,8 @@ class TestMailComposerForm(TestMailComposer):
         )
         saved_form = form.save()
         self.assertEqual(
-            # saved_form.partner_ids, partner_private + partner_classic,
-            saved_form.partner_ids, partner_classic,
-            'Default value is kept at save (FIXME: loosing private partner)'
+            saved_form.partner_ids, partner_private + partner_classic,
+            'Default value is kept at save'
         )
 
         with self.mock_mail_gateway():
@@ -136,11 +135,7 @@ class TestMailComposerForm(TestMailComposer):
 
         message = self.test_record.message_ids[0]
         self.assertEqual(message.body, '<p>Hello</p>')
-        # self.assertEqual(message.partner_ids, partner_private + partner_classic)
-        self.assertEqual(
-            message.partner_ids, partner_classic,
-            'FIXME: loosing private partner'
-        )
+        self.assertEqual(message.partner_ids, partner_private + partner_classic)
         self.assertEqual(message.subject, f'Re: {test_record.name}')
 
     @mute_logger('odoo.addons.base.models.ir_rule', 'odoo.addons.mail.models.mail_mail')
