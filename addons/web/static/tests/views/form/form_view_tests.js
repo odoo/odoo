@@ -1702,6 +1702,73 @@ QUnit.module("Views", (hooks) => {
         assert.hasClass(target.querySelector(".o_notebook .nav-link"), "active");
     });
 
+    QUnit.test(
+        "trying to leave an invalid form view should not change the navbar",
+        async function (assert) {
+            serverData.menus = {
+                root: { id: "root", children: [1, 2], name: "root", appID: "root" },
+                1: { id: 1, children: [], name: "App0", appID: 1, xmlid: "menu_3", actionID: 1 },
+                2: { id: 2, children: [], name: "App1", appID: 2, xmlid: "menu_3", actionID: 2 },
+            };
+            serverData.views = {
+                "partner,false,form": `
+                <form>
+                    <sheet>
+                        <field name="display_name" required="1"/>
+                        <field name="foo"/>
+                    </sheet>
+                </form>`,
+                "product,false,list": '<tree><field name="display_name"/></tree>',
+                "product,false,search": "<search></search>",
+                "partner,false,search": "<search></search>",
+            };
+
+            serverData.actions = {
+                1: {
+                    id: 1,
+                    name: "Partner",
+                    res_model: "partner",
+                    type: "ir.actions.act_window",
+                    views: [[false, "form"]],
+                },
+                2: {
+                    id: 2,
+                    name: "Product",
+                    res_model: "product",
+                    type: "ir.actions.act_window",
+                    views: [[false, "list"]],
+                },
+            };
+
+            const target = getFixture();
+            const webClient = await createWebClient({ serverData });
+
+            await doAction(webClient, 1);
+            assert.strictEqual(
+                target.querySelector(".o_main_navbar .o_menu_brand").textContent,
+                "App0"
+            );
+
+            await editInput(target, "[name='foo'] input", "blop");
+            await click(target, ".o_navbar_apps_menu button");
+            await click(target, ".o_navbar_apps_menu .dropdown-item[data-section='2']");
+            await nextTick();
+            assert.strictEqual(
+                target.querySelector(".o_main_navbar .o_menu_brand").textContent,
+                "App0"
+            );
+
+            await editInput(target, "[name='display_name'] input", "blop");
+            await click(target, ".o_navbar_apps_menu button");
+            await click(target, ".o_navbar_apps_menu .dropdown-item[data-section='2']");
+            await nextTick();
+            assert.strictEqual(
+                target.querySelector(".o_main_navbar .o_menu_brand").textContent,
+                "App1"
+            );
+        }
+    );
+
     QUnit.test("rendering stat buttons with action", async function (assert) {
         assert.expect(3);
 

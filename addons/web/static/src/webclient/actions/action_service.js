@@ -1240,7 +1240,7 @@ function makeActionManager(env) {
                 if (action.target !== "new") {
                     const canProceed = await clearUncommittedChanges(env);
                     if (!canProceed) {
-                        return;
+                        return new Promise(() => {});
                     }
                 }
                 return _executeActWindowAction(action, options);
