@@ -851,7 +851,7 @@ class Website(models.Model):
                 dependencies.setdefault(model_name, [])
                 dependencies[model_name] += [{
                     'field_name': Model.fields_get()[column]['string'],
-                    'record_name': rec.name,
+                    'record_name': rec.display_name,
                     'link': 'website_url' in rec and rec.website_url or f'/web#id={rec.id}&view_type=form&model={model}',
                     'model_name': model_name,
                 } for rec in dependency_records]
@@ -1104,9 +1104,9 @@ class Website(models.Model):
 
         for rule in router.iter_rules():
             if 'sitemap' in rule.endpoint.routing and rule.endpoint.routing['sitemap'] is not True:
-                if rule.endpoint in sitemap_endpoint_done:
+                if rule.endpoint.func in sitemap_endpoint_done:
                     continue
-                sitemap_endpoint_done.add(rule.endpoint)
+                sitemap_endpoint_done.add(rule.endpoint.func)
 
                 func = rule.endpoint.routing['sitemap']
                 if func is False:

@@ -1,8 +1,15 @@
 /** @odoo-module **/
 
-import { click, editInput, getFixture, triggerEvent } from "@web/../tests/helpers/utils";
+import {
+    click,
+    editInput,
+    getFixture,
+    nextTick,
+    patchWithCleanup,
+} from "@web/../tests/helpers/utils";
 import { makeView, setupViewRegistries } from "@web/../tests/views/helpers";
 import { registry } from "@web/core/registry";
+import { AttachDocumentWidget } from "@web/views/widgets/attach_document/attach_document";
 
 const serviceRegistry = registry.category("services");
 
@@ -35,6 +42,14 @@ QUnit.module("Widgets", (hooks) => {
     QUnit.module("AttachDocument");
 
     QUnit.test("attach document widget calls action with attachment ids", async function (assert) {
+        let fileInput;
+        patchWithCleanup(AttachDocumentWidget.prototype, {
+            setup() {
+                this._super();
+                fileInput = this.fileInput;
+            },
+        });
+
         serviceRegistry.add("http", {
             start: () => ({
                 post: (route, params) => {
@@ -77,19 +92,22 @@ QUnit.module("Widgets", (hooks) => {
 
         await editInput(target, "[name='display_name'] input", "yop");
         await click(target, ".o_attach_document");
-        await triggerEvent(
-            target,
-            ".o_file_input input",
-            "change",
-            {},
-            { skipVisibilityCheck: true }
-        );
+        fileInput.dispatchEvent(new Event("change"));
+        await nextTick();
         assert.verifySteps(["write", "read", "post", "my_action", "read"]);
     });
 
     QUnit.test(
         "attach document widget calls action with attachment ids on a new record",
         async function (assert) {
+            let fileInput;
+            patchWithCleanup(AttachDocumentWidget.prototype, {
+                setup() {
+                    this._super();
+                    fileInput = this.fileInput;
+                },
+            });
+
             serviceRegistry.add("http", {
                 start: () => ({
                     post: (route, params) => {
@@ -131,13 +149,8 @@ QUnit.module("Widgets", (hooks) => {
 
             await editInput(target, "[name='display_name'] input", "yop");
             await click(target, ".o_attach_document");
-            await triggerEvent(
-                target,
-                ".o_file_input input",
-                "change",
-                {},
-                { skipVisibilityCheck: true }
-            );
+            fileInput.dispatchEvent(new Event("change"));
+            await nextTick();
             assert.verifySteps(["create", "read", "post", "my_action", "read"]);
         }
     );

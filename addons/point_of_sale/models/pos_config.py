@@ -179,6 +179,13 @@ class PosConfig(models.Model):
         for config in self:
             config.cash_control = bool(config.payment_method_ids.filtered('is_cash_count'))
 
+    @api.onchange('payment_method_ids')
+    def _check_cash_payment_method(self):
+        for config in self:
+            if len(config.payment_method_ids.filtered('is_cash_count')) > 1:
+                config.payment_method_ids = config.payment_method_ids._origin
+                raise ValidationError(_('You can only have one cash payment method.'))
+
     @api.depends('company_id')
     def _compute_company_has_template(self):
         for config in self:
@@ -498,7 +505,7 @@ class PosConfig(models.Model):
             domain.append(('pos_categ_id', 'in', self.iface_available_categ_ids.ids))
         if not self.env['product.product'].search(domain):
             return {
-                'name': _("There is no products linked to your PoS"),
+                'name': _("There is no product linked to your PoS"),
                 'type': 'ir.actions.act_window',
                 'view_type': 'form',
                 'view_mode': 'form',

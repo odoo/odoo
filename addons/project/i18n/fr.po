@@ -6,7 +6,7 @@
 # Alexandra Jubert, 2022
 # Cécile Collart <cco@odoo.com>, 2022
 # Martin Trigaux, 2022
-# Jolien De Paepe, 2022
+# Jolien De Paepe, 2023
 # 
 msgid ""
 msgstr ""
@@ -14,7 +14,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-12-15 12:48+0000\n"
 "PO-Revision-Date: 2022-09-22 05:54+0000\n"
-"Last-Translator: Jolien De Paepe, 2022\n"
+"Last-Translator: Jolien De Paepe, 2023\n"
 "Language-Team: French (https://www.transifex.com/odoo/teams/41243/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -1390,7 +1390,7 @@ msgid ""
 "     of a product, of a team, of a construction site, etc.</i>"
 msgstr ""
 "Choisissez un <b>nom</b> pour votre projet. <i>Cela peut être ce que vous voulez: le nom d'un client,\n"
-"     d'un article, d'une équipe, d'un site de construction, etc.</i>"
+"     d'un produit, d'une équipe, d'un site de construction, etc.</i>"
 
 #. module: project
 #. odoo-javascript
@@ -1894,9 +1894,9 @@ msgid ""
 "Date on which this task was last assigned (or unassigned). Based on this, "
 "you can get statistics on the time it usually takes to assign tasks."
 msgstr ""
-"Date à laquelle cette tâche a été dernièrement assignée (ou retirée). Vous "
+"Date à laquelle cette tâche a été dernièrement attribuée (ou retirée). Vous "
 "pouvez ainsi obtenir des statistiques sur le temps qu'il faut normalement "
-"pour assigner des tâches."
+"pour attribuer des tâches."
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__repeat_weekday
@@ -5928,7 +5928,7 @@ msgstr "Me désassigner"
 #: model_terms:ir.ui.view,arch_db:project.view_task_project_user_search
 #: model_terms:ir.ui.view,arch_db:project.view_task_search_form
 msgid "Unassigned"
-msgstr "Non assigné"
+msgstr "Non attribué"
 
 #. module: project
 #. odoo-python
@@ -6252,13 +6252,6 @@ msgstr ""
 
 #. module: project
 #. odoo-python
-#: code:addons/project/models/project.py:0
-#, python-format
-msgid "You cannot %s %s fields in task."
-msgstr "Vous ne pouvez pas %s %s champs dans les tâches."
-
-#. module: project
-#. odoo-python
 #: code:addons/project/models/analytic_account.py:0
 #, python-format
 msgid ""
@@ -6295,6 +6288,20 @@ msgid ""
 msgstr ""
 "Vous ne pouvez pas supprimer des étapes contenant des tâches. Vous devez "
 "d'abord supprimer toutes leurs tâches."
+
+#. module: project
+#. odoo-python
+#: code:addons/project/models/project.py:0
+#, python-format
+msgid "You cannot read %s fields in task."
+msgstr ""
+
+#. module: project
+#. odoo-python
+#: code:addons/project/models/project.py:0
+#, python-format
+msgid "You cannot write on %s fields in task."
+msgstr ""
 
 #. module: project
 #. odoo-python
