@@ -15,6 +15,7 @@ const formatters = registry.category("formatters");
 const parsers = registry.category("parsers");
 
 const FIELD_TYPES = {
+    binary: "binary",
     boolean: "boolean",
     char: "char",
     date: "date",
@@ -33,6 +34,10 @@ const FIELD_TYPES = {
 
 // FilterMenu parameters
 const FIELD_OPERATORS = {
+    binary: [
+        { symbol: "!=", description: _lt("is set"), value: false },
+        { symbol: "=", description: _lt("is not set"), value: false },
+    ],
     boolean: [
         { symbol: "=", description: _lt("is Yes"), value: true },
         { symbol: "!=", description: _lt("is No"), value: true },
