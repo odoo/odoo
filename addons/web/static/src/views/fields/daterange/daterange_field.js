@@ -50,7 +50,7 @@ export class DateRangeField extends Component {
                     }
                 };
             },
-            () => [this.root.el]
+            () => [this.root.el, this.props.value]
         );
     }
 

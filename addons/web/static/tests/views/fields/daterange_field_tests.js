@@ -14,6 +14,7 @@ import {
 import { localization } from "@web/core/l10n/localization";
 import { makeView, setupViewRegistries } from "@web/../tests/views/helpers";
 import { registerCleanup } from "@web/../tests/helpers/cleanup";
+import { pagerNext } from "@web/../tests/search/helpers";
 
 let serverData;
 let target;
@@ -660,4 +661,158 @@ QUnit.module("Fields", (hooks) => {
             "09 Feb, 2017 05:30:00"
         );
     });
+
+    QUnit.test(
+        "Datetime field - open datepicker and switch page [REQUIRE FOCUS]",
+        async function (assert) {
+            serverData.models.partner.fields.datetime_end = {
+                string: "Datetime End",
+                type: "datetime",
+            };
+            serverData.models.partner.records[0].datetime_end = "2017-03-13 00:00:00";
+            serverData.models.partner.records.push({
+                id: 2,
+                date: "2017-03-04",
+                datetime: "2017-03-10 11:00:00",
+                datetime_end: "2017-04-15 00:00:00",
+            });
+
+            await makeView({
+                type: "form",
+                resModel: "partner",
+                resId: 1,
+                resIds: [1, 2],
+                serverData,
+                arch: `
+                    <form>
+                        <field name="datetime" widget="daterange" options="{'related_end_date': 'datetime_end'}"/>
+                        <field name="datetime_end" widget="daterange" options="{'related_start_date': 'datetime'}"/>
+                    </form>`,
+            });
+
+            // Check date range picker initialization
+            let datepickers = document.querySelectorAll(`.daterangepicker`);
+            assert.isNotVisible(
+                datepickers[0],
+                "first date range picker should be closed initially"
+            );
+            assert.isNotVisible(
+                datepickers[datepickers.length - 1],
+                "second date range picker should be closed initially"
+            );
+
+            // open datepicker
+            let fields = target.querySelectorAll(".o_field_daterange");
+            await click(fields[0].querySelector("input"));
+
+            let datepicker = document.querySelector(
+                `.daterangepicker[data-name="${fields[0].getAttribute("name")}"]`
+            );
+            assert.isVisible(datepicker, "first date range picker should be opened");
+
+            // Start date: id=1
+            assert.strictEqual(
+                datepicker.querySelector(".drp-calendar.left .active.start-date").textContent,
+                "8",
+                "active start date should be '8' in date range picker"
+            );
+            assert.strictEqual(
+                datepicker.querySelector(".drp-calendar.left .hourselect").value,
+                "15",
+                "active start date hour should be '15' in date range picker"
+            );
+            assert.strictEqual(
+                datepicker.querySelector(".drp-calendar.left .minuteselect").value,
+                "30",
+                "active start date minute should be '30' in date range picker"
+            );
+
+            // End date: id=1
+            assert.strictEqual(
+                datepicker.querySelector(".drp-calendar.right .active.end-date").textContent,
+                "13",
+                "active end date should be '13' in date range picker"
+            );
+            assert.strictEqual(
+                datepicker.querySelector(".drp-calendar.right .hourselect").value,
+                "5",
+                "active end date hour should be '5' in date range picker"
+            );
+            assert.strictEqual(
+                datepicker.querySelector(".drp-calendar.right .minuteselect").value,
+                "30",
+                "active end date minute should be '30' in date range picker"
+            );
+
+            // Close picker
+            await click(datepicker.querySelector(".cancelBtn"));
+            assert.strictEqual(
+                datepicker.style.display,
+                "none",
+                "date range picker should be closed"
+            );
+
+            await pagerNext(target);
+
+            // Check date range picker initialization
+            assert.containsN(
+                document.body,
+                ".daterangepicker",
+                2,
+                "should initialize 2 date range picker"
+            );
+            datepickers = document.querySelectorAll(`.daterangepicker`);
+            assert.isNotVisible(
+                datepickers[0],
+                "first date range picker should be closed initially"
+            );
+            assert.isNotVisible(
+                datepickers[datepickers.length - 1],
+                "second date range picker should be closed initially"
+            );
+
+            // open date range picker
+            fields = target.querySelectorAll(".o_field_daterange");
+            await click(fields[0].querySelector("input"));
+
+            datepicker = document.querySelector(
+                `.daterangepicker[data-name="${fields[0].getAttribute("name")}"]`
+            );
+            assert.isVisible(datepicker, "first date range picker should be opened");
+
+            // Start date: id=2
+            assert.strictEqual(
+                datepicker.querySelector(".drp-calendar.left .active.start-date").textContent,
+                "10",
+                "active start date should be '10' in date range picker"
+            );
+            assert.strictEqual(
+                datepicker.querySelector(".drp-calendar.left .hourselect").value,
+                "16",
+                "active start date hour should be '16' in date range picker"
+            );
+            assert.strictEqual(
+                datepicker.querySelector(".drp-calendar.left .minuteselect").value,
+                "30",
+                "active start date minute should be '30' in date range picker"
+            );
+
+            // End date id=2
+            assert.strictEqual(
+                datepicker.querySelector(".drp-calendar.right .active.end-date").textContent,
+                "15",
+                "active end date should be '15' in date range picker"
+            );
+            assert.strictEqual(
+                datepicker.querySelector(".drp-calendar.right .hourselect").value,
+                "5",
+                "active end date hour should be '5' in date range picker"
+            );
+            assert.strictEqual(
+                datepicker.querySelector(".drp-calendar.right .minuteselect").value,
+                "30",
+                "active end date minute should be '30' in date range picker"
+            );
+        }
+    );
 });
