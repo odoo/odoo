@@ -39,7 +39,23 @@ const LinkTools = Link.extend({
         // Keep track of each selected custom color and colorpicker.
         this.customColors = {};
         this.colorpickers = {};
+        // TODO remove me in master: we still save the promises indicating when
+        // each colorpicker is fully instantiated but we now make sure to never
+        // use them while they are not, without this.
         this.colorpickersPromises = {};
+        this.COLORPICKER_CSS_PROPERTIES = ['color', 'background-color', 'border-color'];
+        this.PREFIXES = {
+            'color': 'text-',
+            'background-color': 'bg-',
+        };
+    },
+    /**
+     * @override
+     */
+    willStart: async function () {
+        const _super = this._super.bind(this);
+        await Promise.all(this.COLORPICKER_CSS_PROPERTIES.map(cssProperty => this._addColorPicker(cssProperty)));
+        return _super(...arguments);
     },
     /**
      * @override
@@ -48,12 +64,24 @@ const LinkTools = Link.extend({
         this._addHintClasses();
         const ret = await this._super(...arguments);
         const link = this.$link[0];
+        const colorpickerLocations = {
+            'color': '.link-custom-color-text .dropdown-menu',
+            'background-color': '.link-custom-color-fill .dropdown-menu',
+            'border-color': '.link-custom-color-border .o_we_so_color_palette .dropdown-menu',
+        };
+        for (const cssProperty of this.COLORPICKER_CSS_PROPERTIES) {
+            // Colorpickers were created into fragments before any UI or event
+            // handler of this main widget was built. This just moves those
+            // colorpickers at their rightful position, synchronously.
+            const locationEl = this.el.querySelector(colorpickerLocations[cssProperty]);
+            this.colorpickers[cssProperty].$el.appendTo(locationEl);
+        }
         const customStyleProps = ['color', 'background-color', 'background-image', 'border-width', 'border-style', 'border-color'];
         if (customStyleProps.some(s => link.style[s])) {
             // Force custom style if style exists on the link.
             const customOption = this.el.querySelector('[name="link_style_color"] we-button[data-value="custom"]');
             this._setSelectOption($(customOption), true);
-            await this._updateOptionsUI();
+            this._updateOptionsUI();
         }
         return ret;
     },
@@ -222,7 +250,7 @@ const LinkTools = Link.extend({
     /**
      * @override
      */
-    _updateOptionsUI: async function () {
+    _updateOptionsUI: function () {
         const el = this.el.querySelector('[name="link_style_color"] we-button.active');
         if (el) {
             this.colorCombinationClass = el.dataset.value;
@@ -231,9 +259,12 @@ const LinkTools = Link.extend({
             // Show custom colors only for Custom style.
             this.$('.link-custom-color').toggleClass('d-none', el.dataset.value !== 'custom');
 
-            await this._updateColorpicker('color');
-            await this._updateColorpicker('background-color');
-            await this._updateColorpicker('border-color');
+            // Note: the _updateColorpicker method is supposedly async but can
+            // be used synchronously given the fact that _addColorPicker was
+            // called during this widget initialization.
+            this._updateColorpicker('color');
+            this._updateColorpicker('background-color');
+            this._updateColorpicker('border-color');
 
             const borderWidth = this.linkEl.style['border-width'];
             const numberAndUnit = getNumericAndUnit(borderWidth);
@@ -257,57 +288,14 @@ const LinkTools = Link.extend({
      * @param {string} cssProperty
      */
     _updateColorpicker: async function (cssProperty) {
-        const prefix = {
-            'color': 'text-',
-            'background-color': 'bg-',
-        }[cssProperty];
-
+        const prefix = this.PREFIXES[cssProperty];
         let colorpicker = this.colorpickers[cssProperty];
-        await this.colorpickersPromises[cssProperty];
-        if (!colorpicker) {
-            colorpicker = new ColorPaletteWidget(this, {
-                excluded: ['transparent_grayscale'],
-                $editable: $(this.options.wysiwyg.odooEditor.editable),
-                withGradients: cssProperty === 'background-color',
-            });
-            this.colorpickers[cssProperty] = colorpicker;
-            const target = this.el.querySelector({
-                'color': '.link-custom-color-text .dropdown-menu',
-                'background-color': '.link-custom-color-fill .dropdown-menu',
-                'border-color': '.link-custom-color-border .o_we_so_color_palette .dropdown-menu',
-            }[cssProperty]);
-            this.colorpickersPromises[cssProperty] = colorpicker.appendTo($(target));
-            await this.colorpickersPromises[cssProperty];
-            colorpicker.on('custom_color_picked color_picked color_hover color_leave', this, (ev) => {
-                // Reset color styles in link content to make sure new color is not hidden.
-                // Only done when applied to avoid losing state during preview.
-                if (['custom_color_picked', 'color_picked'].includes(ev.name)) {
-                    const selection = window.getSelection();
-                    const range = document.createRange();
-                    range.selectNodeContents(this.linkEl);
-                    selection.removeAllRanges();
-                    selection.addRange(range);
-                    this.options.wysiwyg.odooEditor.execCommand('applyColor', '', 'color');
-                    this.options.wysiwyg.odooEditor.execCommand('applyColor', '', 'backgroundColor');
-                }
 
-                let color = ev.data.color;
-                const colorNames = colorpicker.getColorNames();
-                const colorClasses = prefix ? computeColorClasses(colorNames, prefix) : [];
-                const colorClass = `${prefix}${color}`;
-                if (colorClasses.includes(colorClass)) {
-                    color = colorClass;
-                } else if (colorNames.includes(color)) {
-                    // Store as color value.
-                    color = getCSSVariableValue(color);
-                }
-                this.customColors[cssProperty] = color;
-                this.applyLinkToDom(this._getData());
-                if (['custom_color_picked', 'color_picked'].includes(ev.name)) {
-                    this.options.wysiwyg.odooEditor.historyStep();
-                    this._updateOptionsUI();
-                }
-            });
+        if (!colorpicker) {
+            // As a fix, we made it possible to use this method always
+            // synchronously. This is just kept as compatibility.
+            // TODO Remove in master.
+            colorpicker = await this._addColorPicker(cssProperty);
         }
 
         // Update selected color.
@@ -344,6 +332,52 @@ const LinkTools = Link.extend({
             $colorPreview.css('background-color', isColorGradient(color) ? 'rgba(0, 0, 0, 0)' : color);
             $colorPreview.css('background-image', isColorGradient(color) ? color : '');
         }
+    },
+    /**
+     * @private
+     * @param {string} cssProperty
+     */
+    async _addColorPicker(cssProperty) {
+        const prefix = this.PREFIXES[cssProperty];
+        const colorpicker = new ColorPaletteWidget(this, {
+            excluded: ['transparent_grayscale'],
+            $editable: $(this.options.wysiwyg.odooEditor.editable),
+            withGradients: cssProperty === 'background-color',
+        });
+        this.colorpickers[cssProperty] = colorpicker;
+        this.colorpickersPromises[cssProperty] = colorpicker.appendTo(document.createDocumentFragment());
+        await this.colorpickersPromises[cssProperty];
+        colorpicker.on('custom_color_picked color_picked color_hover color_leave', this, (ev) => {
+            // Reset color styles in link content to make sure new color is not hidden.
+            // Only done when applied to avoid losing state during preview.
+            if (['custom_color_picked', 'color_picked'].includes(ev.name)) {
+                const selection = window.getSelection();
+                const range = document.createRange();
+                range.selectNodeContents(this.linkEl);
+                selection.removeAllRanges();
+                selection.addRange(range);
+                this.options.wysiwyg.odooEditor.execCommand('applyColor', '', 'color');
+                this.options.wysiwyg.odooEditor.execCommand('applyColor', '', 'backgroundColor');
+            }
+
+            let color = ev.data.color;
+            const colorNames = colorpicker.getColorNames();
+            const colorClasses = prefix ? computeColorClasses(colorNames, prefix) : [];
+            const colorClass = `${prefix}${color}`;
+            if (colorClasses.includes(colorClass)) {
+                color = colorClass;
+            } else if (colorNames.includes(color)) {
+                // Store as color value.
+                color = getCSSVariableValue(color);
+            }
+            this.customColors[cssProperty] = color;
+            this.applyLinkToDom(this._getData());
+            if (['custom_color_picked', 'color_picked'].includes(ev.name)) {
+                this.options.wysiwyg.odooEditor.historyStep();
+                this._updateOptionsUI();
+            }
+        });
+        return colorpicker;
     },
     /**
      * Add hint to the classes of the link and button.
