@@ -33,15 +33,12 @@
         @param {im_livechat/legacy/widgets/public_livechat_window/public_livechat_window} widget
     -->
     <t t-name="im_livechat.legacy.PublicLivechatWindow.HeaderContent">
-        <span t-if="widget.isMobile()">
-            <a href="#" class="o_thread_window_close oi oi-arrow-left" aria-label="Close chat window" title="Close chat window"/>
-        </span>
         <span class="o_thread_window_title">
             <t t-esc="widget.messaging.publicLivechatGlobal.publicLivechat.name"/>
             <span t-if="widget.messaging.publicLivechatGlobal.publicLivechat.unreadCounter"> (<t t-esc="widget.messaging.publicLivechatGlobal.publicLivechat.unreadCounter"/>)</span>
             <t t-if="widget.messaging.publicLivechatGlobal.publicLivechat.widget.isSomeoneTyping()" t-call="im_livechat.legacy.mail.ThreadTypingIcon"/>
         </span>
-        <span t-if="!widget.isMobile()" class="o_thread_window_buttons">
+        <span class="o_thread_window_buttons">
             <a href="#" class="o_thread_window_close fa fa-close"/>
         </span>
     </t>
