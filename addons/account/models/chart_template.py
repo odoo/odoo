@@ -48,6 +48,15 @@ def update_taxes_from_templates(cr, chart_template_xmlid):
             xml_id = old_tax.get_xml_id().get(old_tax.id)
             if xml_id:
                 _remove_xml_id(xml_id)
+
+        # the tax should be instanciated with the tag's country if there is one
+        template_rep_line_ids = template.invoice_repartition_line_ids + template.refund_repartition_line_ids
+        tag_countries = [line._get_tags_to_add().country_id.id for line in template_rep_line_ids if line._get_tags_to_add().country_id]
+        if tag_countries:
+            if tag_countries.count(tag_countries[0]) != len(tag_countries):
+                raise ValidationError(_("Couldn't create tax with template repartition lines having tags with different countries."))
+            template_vals["country_id"] = tag_countries[0]
+
         chart_template.create_record_with_xmlid(company, template, "account.tax", template_vals)
 
     def _update_tax_from_template(template, tax):
