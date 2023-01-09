@@ -342,6 +342,7 @@ class AccountReportLine(models.Model):
         # create account.report.expression for each report line based on the formula provided to each
         # engine-related field. This makes xmls a bit shorter
         vals_list = []
+        xml_ids = self.expression_ids.filtered(lambda exp: exp.label == 'balance').get_external_id()
         for report_line in self:
             if engine == 'domain' and report_line.domain_formula:
                 subformula, formula = DOMAIN_REGEX.match(report_line.domain_formula or '').groups()
@@ -352,6 +353,10 @@ class AccountReportLine(models.Model):
             elif engine == 'aggregation' and report_line.aggregation_formula:
                 subformula, formula = None, report_line.aggregation_formula
             else:
+                # If we want to replace a formula shortcut with a full-syntax expression, we need to make the formula field falsy
+                # We can't simply remove it from the xml because it won't be updated
+                # If the formula field is falsy, we need to remove the expression that it generated
+                report_line.expression_ids.filtered(lambda exp: exp.engine == engine and exp.label == 'balance' and not xml_ids.get(exp.id)).unlink()
                 continue
 
             vals = {
@@ -365,8 +370,15 @@ class AccountReportLine(models.Model):
                 # expressions already exists, update the first expression with the right engine
                 # since syntactic sugar aren't meant to be used with multiple expressions
                 for expression in report_line.expression_ids:
-                    if expression.engine == engine:
-                        expression.write(vals)
+                    if expression.label == 'balance':
+                        # If we had a 'balance' expression coming from the xml and are using a formula shortcut on top of it,
+                        # we expect the shortcut to replace the original expression. The full declaration should also
+                        # be removed from the data file, leading to the ORM deleting it automatically.
+                        if xml_ids.get(expression.id):
+                            expression.unlink()
+                            vals_list.append(vals)
+                        else:
+                            expression.write(vals)
                         break
             else:
                 # else prepare batch creation
