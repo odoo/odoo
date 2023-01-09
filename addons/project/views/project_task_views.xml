@@ -716,7 +716,7 @@
             <field eval="2" name="priority"/>
             <field name="arch" type="xml">
                 <calendar date_start="date_deadline" string="Tasks" mode="month"
-                          color="color" event_limit="5" hide_time="true"
+                          color="stage_id" event_limit="5" hide_time="true"
                           event_open_popup="true" quick_add="false" show_unusual_days="True"
                           js_class="project_calendar"
                           scales="month,year">
@@ -740,7 +740,7 @@
             <field name="mode">primary</field>
             <field name="arch" type="xml">
                 <xpath expr="//calendar" position="attributes">
-                    <attribute name="color">project_color</attribute>
+                    <attribute name="color">project_id</attribute>
                 </xpath>
                 <xpath expr="//field[@name='project_id']" position="attributes">
                     <attribute name="filters">1</attribute>
