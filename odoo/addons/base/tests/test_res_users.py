@@ -3,7 +3,7 @@
 
 from odoo.addons.base.models.res_users import is_selection_groups, get_selection_groups, name_selection_groups
 from odoo.exceptions import UserError
-from odoo.tests.common import TransactionCase, Form, tagged
+from odoo.tests.common import TransactionCase, Form, tagged, new_test_user
 from odoo.tools import mute_logger
 
 
@@ -187,6 +187,15 @@ class TestUsers(TransactionCase):
         self.assertTrue(portal_user_2.exists(), 'Should have kept the user')
         self.assertTrue(portal_partner_2.exists(), 'Should have kept the partner')
         self.assertEqual(asked_deletion_2.state, 'fail', 'Should have marked the deletion as failed')
+
+    def test_context_get_lang_false(self):
+        user = new_test_user(self.env, 'jackoneill')
+        user = user.with_user(user)
+
+        self.assertEqual(user.context_get()['lang'], 'en_US')
+
+        user.lang = False
+        self.assertEqual(user.context_get()['lang'], 'en_US')
 
 
 @tagged('post_install', '-at_install')
