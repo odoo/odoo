@@ -12,11 +12,11 @@
             <field name='name'>base.partner.merge.automatic.wizard.form</field>
             <field name='model'>base.partner.merge.automatic.wizard</field>
             <field name='arch' type='xml'>
-                <form string='Automatic Merge Wizard'>
+                <form string='Automatic Merge Wizard' class="o_partner_merge_wizard">
                     <sheet>
-                        <group attrs="{'invisible': [('state', '!=', 'finished')]}" col="1">
-                            <h2>There are no more contacts to merge for this request</h2>
-                            <button name="%(action_partner_deduplicate)d" string="Deduplicate the other Contacts" class="oe_highlight" type="action"/>
+                        <group attrs="{'invisible': [('state', '!=', 'finished')]}">
+                            <h2 colspan="2">There are no more contacts to merge for this request</h2>
+                            <button name="%(action_partner_deduplicate)d" string="Deduplicate the other Contacts" class="oe_highlight" type="action" colspan="2"/>
                         </group>
                         <p class="oe_grey" attrs="{'invisible': [('state', '!=', ('option'))]}">
                             Select the list of fields used to search for
