@@ -8,7 +8,9 @@ from odoo.tools import email_normalize
 class ResPartner(models.Model):
     """ Inherits partner and adds Tasks information in the partner form """
     _inherit = 'res.partner'
+    _check_company_auto = True
 
+    project_ids = fields.One2many('project.project', 'partner_id', string='Projects', check_company=True)
     task_ids = fields.One2many('project.task', 'partner_id', string='Tasks')
     task_count = fields.Integer(compute='_compute_task_count', string='# Tasks')
 

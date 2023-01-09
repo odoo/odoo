@@ -174,3 +174,26 @@ class TestProjectBase(TestProjectCommon):
 
         self.assertTrue(self.project_pigs.id < self.project_goats.id)
         self.assertEqual(Project.search(domain, order='id').ids, project_ids)
+
+    def test_change_project_or_partner_company(self):
+        """ Tests that it is impossible to change the company of a project
+            if the company of the partner is different and vice versa.
+        """
+        company_1 = self.env.company
+        company_2 = self.env['res.company'].create({'name': 'Company 2'})
+        partner = self.env['res.partner'].create({
+            'name': 'Partner',
+        })
+        self.project_pigs.partner_id = partner
+        # Can change the company of a project if the company of the partner is not set
+        self.assertFalse(partner.company_id)
+        self.project_pigs.company_id = company_2
+        self.project_pigs.partner_id.company_id = company_2
+
+        with self.assertRaises(UserError):
+            # Cannot change the company of a partner if the company of the project is different
+            partner.company_id = company_1
+
+        with self.assertRaises(UserError):
+            # Cannot change the company of a project if the company of the partner is different
+            self.project_pigs.company_id = company_1
