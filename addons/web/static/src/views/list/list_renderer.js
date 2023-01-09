@@ -1852,14 +1852,26 @@ export class ListRenderer extends Component {
      * @param {HTMLElement} params.element
      * @param {HTMLElement} [params.group]
      */
-    sortStart() {}
+    sortStart({ element }) {
+        const table = this.tableRef.el;
+        const headers = [...table.querySelectorAll("thead th")];
+        const cells = [...element.querySelectorAll("td")];
+        for (const [index, header] of Object.entries(headers)) {
+            const style = getComputedStyle(header);
+            cells[index].style.width = style.width;
+        }
+    }
 
     /**
      * @param {Object} params
      * @param {HTMLElement} params.element
      * @param {HTMLElement} [params.group]
      */
-    sortStop() {}
+    sortStop({ element }) {
+        for (const cell of element.querySelectorAll("td")) {
+            cell.style.width = null;
+        }
+    }
 
     ignoreEventInSelectionMode(ev) {
         const { list } = this.props;
