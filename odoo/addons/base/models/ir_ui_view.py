@@ -254,7 +254,6 @@ class View(models.Model):
                                                                          Useful to (soft) reset a broken view.""")
     inherit_id = fields.Many2one('ir.ui.view', string='Inherited View', ondelete='restrict', index=True)
     inherit_children_ids = fields.One2many('ir.ui.view', 'inherit_id', string='Views which inherit from this one')
-    field_parent = fields.Char(string='Child Field')
     model_data_id = fields.Many2one('ir.model.data', string="Model Data",
                                     compute='_compute_model_data_id', search='_search_model_data_id')
     xml_id = fields.Char(string="External ID", compute='_compute_xml_id',
