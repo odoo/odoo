@@ -81,28 +81,9 @@ class ModuleCategory(models.Model):
     _description = "Application"
     _order = 'name'
 
-    @api.depends('module_ids')
-    def _compute_module_nr(self):
-        self.env['ir.module.module'].flush_model(['category_id'])
-        self.flush_model(['parent_id'])
-        cr = self._cr
-        cr.execute('SELECT category_id, COUNT(*) \
-                      FROM ir_module_module \
-                     WHERE category_id IN %(ids)s \
-                        OR category_id IN (SELECT id \
-                                             FROM ir_module_category \
-                                            WHERE parent_id IN %(ids)s) \
-                     GROUP BY category_id', {'ids': tuple(self.ids)}
-                   )
-        result = dict(cr.fetchall())
-        for cat in self.filtered('id'):
-            cr.execute('SELECT id FROM ir_module_category WHERE parent_id=%s', (cat.id,))
-            cat.module_nr = sum([result.get(c, 0) for (c,) in cr.fetchall()], result.get(cat.id, 0))
-
     name = fields.Char(string='Name', required=True, translate=True, index=True)
     parent_id = fields.Many2one('ir.module.category', string='Parent Application', index=True)
     child_ids = fields.One2many('ir.module.category', 'parent_id', string='Child Applications')
-    module_nr = fields.Integer(string='Number of Apps', compute='_compute_module_nr')
     module_ids = fields.One2many('ir.module.module', 'category_id', string='Modules')
     description = fields.Text(string='Description', translate=True)
     sequence = fields.Integer(string='Sequence')
