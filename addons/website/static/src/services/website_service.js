@@ -127,7 +127,10 @@ export const websiteService = {
                 // Chrome.
                 const isWebsitePage = dataset && dataset.websiteId;
                 if (!isWebsitePage) {
-                    currentWebsite.metadata = {};
+                    orm.call('website', 'get_current_website').then((website) => {
+                        this.currentWebsiteId = unslugHtmlDataObject(website).id;
+                        currentWebsite.metadata = { externalOrNonEditableXML: true };
+                    });
                 } else {
                     const { mainObject, seoObject, isPublished, canPublish, editableInBackend, translatable, viewXmlid, websiteId } = dataset;
                     this.currentWebsiteId = parseInt(websiteId, 10);
