@@ -8,3 +8,5 @@ from . import FgMessageWizard
 from . import account_tax
 from . import x_report
 from . import z_report
+from . import transaction_log
+from . import pos_config
