@@ -357,11 +357,21 @@ var EditPageMenu = websiteNavbarData.WebsiteNavbarActionWidget.extend({
         // grep: COMPANY_TEAM_CONTENTEDITABLE
         const $extraEditableZones = $editableSavableZones.find('.s_company_team .o_not_editable img');
 
-        return $editableSavableZones.add($extraEditableZones).toArray();
+        return $editableSavableZones.add($extraEditableZones).toArray().concat(
+            // To make sure the selection remains bounded to the active tab,
+            // each tab is made non editable while keeping its nested
+            // oe_structure editable. This avoids having a selection range span
+            // over all further inactive tabs when using Chrome.
+            ...document.querySelectorAll('#wrapwrap .s_tabs > div > .s_tabs_main > .s_tabs_content > .tab-pane > .oe_structure')
+        );
     },
 
     _getReadOnlyAreas () {
-        return [];
+        // To make sure the selection remains bounded to the active tab,
+        // each tab is made non editable while keeping its nested
+        // oe_structure editable. This avoids having a selection range span
+        // over all further inactive tabs when using Chrome.
+        return document.querySelectorAll('#wrapwrap .s_tabs > div > .s_tabs_main > .s_tabs_content > .tab-pane');
     },
     _getUnremovableElements () {
         // TODO adapt in master: this was added as a fix to target some elements
