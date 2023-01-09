@@ -28,8 +28,9 @@
                                    t-key="paymentMethod.id">
                                     <div class="button paymentmethod"
                                         t-on-click="() => this.trigger('new-payment-line', paymentMethod)">
-                                        <div class="payment-name">
-                                            <t t-esc="paymentMethod.name" />
+                                        <div class="payment-method-display">
+                                            <div><img class="payment-method-icon" t-att-src="paymentMethodImage(paymentMethod.id)"/></div>
+                                            <span class="payment-name"><t t-esc="paymentMethod.name" /></span>
                                         </div>
                                     </div>
                                 </t>
