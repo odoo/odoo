@@ -5,7 +5,6 @@ import { registry } from "@web/core/registry";
 import { pick } from "@web/core/utils/objects";
 import { groupBy, sortBy } from "@web/core/utils/arrays";
 import { sprintf } from "@web/core/utils/strings";
-import { isRelational } from "@web/views/utils";
 import { useState } from "@odoo/owl";
 import { ImportBlockUI } from "./import_block_ui";
 
@@ -436,26 +435,6 @@ export class BaseImportModel {
         }
 
         this.fields = res.fields;
-
-        // If in advanced mode, handle subfields as well
-        if (this.importOptionsValues.advanced.value) {
-            const subfields = [];
-            const loadSubfields = (field) => {
-                for (const subfield of field.fields) {
-                    subfield.id = `${field.id}/${subfield.id}`;
-                    subfield.name = `${field.name}/${subfield.name}`;
-                    subfield.string = `${field.string}/${subfield.string}`;
-                    field.isRelation = true;
-                    subfields.push(subfield);
-                    loadSubfields(subfield);
-                }
-            };
-            for (const field of this.fields) {
-                loadSubfields(field);
-            }
-            this.fields.push(...subfields);
-        }
-
         this.columns = this._getColumns(res);
 
         // Set import messages
@@ -538,7 +517,6 @@ export class BaseImportModel {
      */
     _getFields(res, index) {
         const advanced = this.importOptionsValues.advanced.value;
-        const acceptedTypes = res.header_types[index];
         const fields = {
             basic: [],
             suggested: [],
@@ -546,16 +524,30 @@ export class BaseImportModel {
             relational: [],
         };
 
+        function isRegular(subfields) {
+            return (
+                !subfields ||
+                subfields.length === 0 ||
+                (subfields.length === 2 &&
+                    subfields[0].name === "id" &&
+                    subfields[1].name === ".id")
+            );
+        }
+
         function hasType(types, field) {
             return types && types.indexOf(field.type) !== -1;
         }
 
-        const sortSingleField = (field, collection, types) => {
+        const sortSingleField = (field, ancestors, collection, types) => {
+            ancestors.push(field);
+            field.fieldPath = ancestors.map((f) => f.name).join("/");
+            field.label = ancestors.map((f) => f.string).join(" / ");
+
             // Get field respective category
             if (!collection) {
                 if (field.name === "id") {
                     collection = fields.basic;
-                } else if (!isRelational(field)) {
+                } else if (isRegular(field.fields)) {
                     collection = hasType(types, field) ? fields.suggested : fields.additional;
                 } else {
                     collection = fields.relational;
@@ -567,7 +559,7 @@ export class BaseImportModel {
 
             if (advanced) {
                 for (const subfield of field.fields) {
-                    sortSingleField(subfield, collection, types);
+                    sortSingleField(subfield, [...ancestors], collection, types);
                 }
             }
         };
@@ -576,12 +568,14 @@ export class BaseImportModel {
         for (const field of this.fields) {
             if (!field.isRelation) {
                 if (advanced) {
-                    sortSingleField(field, undefined, ["all"]);
+                    sortSingleField(field, [], undefined, ["all"]);
                 } else {
-                    sortSingleField(field, undefined, acceptedTypes);
+                    const acceptedTypes = res.header_types[index];
+                    sortSingleField(field, [], undefined, acceptedTypes);
                 }
             }
         }
+
         return fields;
     }
 
