@@ -29,6 +29,8 @@ class AccountChartTemplate(models.AbstractModel):
                 'expense_currency_exchange_account_id': 'pcg_666',
                 'account_journal_early_pay_discount_loss_account_id': 'pcg_665',
                 'account_journal_early_pay_discount_gain_account_id': 'pcg_765',
+                'l10n_fr_rounding_difference_loss_account_id': 'pcg_658',
+                'l10n_fr_rounding_difference_profit_account_id': 'pcg_758',
             },
         }
 
