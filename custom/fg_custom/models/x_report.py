@@ -170,6 +170,8 @@ class FgXReport(models.AbstractModel):
                  'changes_order_count': int(changes_order_count),
                  'changes_order_total': changes_order_total,
         }
+        if session_ids:
+            self.env['transaction.log'].sudo().create_transaction_log('xreport_generation', 'pos.session', session_ids[0].id)
         return data
     
     @api.model

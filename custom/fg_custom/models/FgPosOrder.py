@@ -185,3 +185,5 @@ class PosOrder(models.Model):
 class PosOrderLineInherit(models.Model):
     _inherit = "pos.order.line"
     _description = "inherit Point of Sale Order Lines"
+
+    date_order = fields.Datetime(related="order_id.date_order", string='Order Date', store=True)
