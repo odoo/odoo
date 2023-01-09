@@ -4,7 +4,6 @@
     <t t-name="Chrome" owl="1">
         <div class="pos" t-att-class="{ 'big-scrollbars': state.hasBigScrollBars }">
             <div class="pos-receipt-print"></div>
-            <div t-if="tempScreen.isShown" class="block-top-header" />
             <t t-if="state.uiState === 'READY'">
                 <Navbar showCashMoveButton="showCashMoveButton"/>
                 <div class="pos-content">
@@ -12,10 +11,10 @@
                         <div class="subwindow">
                             <div class="subwindow-container">
                                 <div class="subwindow-container-fix screens">
-                                    <t isShown="!tempScreen.isShown" t-component="mainScreen.component"
+                                    <t isShown="!state.tempScreen" t-component="mainScreen.component"
                                        t-props="mainScreenProps" t-key="mainScreen.name" />
-                                    <t t-if="tempScreen.isShown" t-component="tempScreen.component"
-                                       t-props="tempScreenProps" t-key="tempScreen.name" />
+                                    <t t-if="state.tempScreen" t-component="state.tempScreen.component"
+                                       t-props="state.tempScreen.props" t-key="state.tempScreen.name" />
                                 </div>
                             </div>
                         </div>

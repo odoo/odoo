@@ -59,7 +59,7 @@ const PosResChrome = (Chrome) =>
                 this.env.posbus.trigger("close-popups-but-error", { resolve })
             );
             if (isPopupClosed) {
-                if (this.tempScreen.isShown) {
+                if (this.state.tempScreen) {
                     this.trigger("close-temp-screen");
                 }
                 const table = this.env.pos.table;
