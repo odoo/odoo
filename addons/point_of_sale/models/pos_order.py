@@ -2,6 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 import logging
 from datetime import timedelta
+from markupsafe import Markup
 from functools import partial
 from itertools import groupby
 from collections import defaultdict
@@ -923,7 +924,12 @@ class PosOrder(models.Model):
         }
 
     def _prepare_mail_values(self, name, client, ticket):
-        message = _("<p>Dear %s,<br/>Here is your electronic ticket for the %s. </p>") % (client['name'], name)
+        message = Markup(
+            _("<p>Dear %(client_name)s,<br/>Here is your electronic ticket for the %(pos_name)s. </p>")
+        ) % {
+            'client_name': client['name'],
+            'pos_name': name,
+        }
 
         return {
             'subject': _('Receipt %s', name),
