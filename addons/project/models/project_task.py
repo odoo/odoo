@@ -1546,7 +1546,8 @@ class Task(models.Model):
     def _send_task_rating_mail(self, force_send=False):
         for task in self:
             rating_template = task.stage_id.rating_template_id
-            if rating_template:
+            partner = task.partner_id
+            if rating_template and partner and partner != self.env.user.partner_id:
                 task.rating_send_request(rating_template, lang=task.partner_id.lang, force_send=force_send)
 
     def _rating_get_partner(self):
