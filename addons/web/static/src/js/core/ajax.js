@@ -293,6 +293,10 @@ function get_file(options) {
         var decoder = new FileReader();
         decoder.onload = function () {
             var contents = decoder.result;
+            if (xhr.response.type === 'application/json'){
+                options.error(JSON.parse(contents));
+                return;
+            }
 
             var err;
             var doc = new DOMParser().parseFromString(contents, 'text/html');
