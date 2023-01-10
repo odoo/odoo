@@ -8,11 +8,17 @@ export class EmployeeProfileController extends formView.Controller {
     setup() {
         super.setup();
         this.action = useService("action");
+        this.mustReload = false;
+    }
+
+    onWillSaveRecord(record) {
+        const dirtyFields = record.dirtyFields.map((f) => f.name);
+        this.mustReload = dirtyFields.includes("lang");
     }
 
     onRecordSaved(record) {
-        const dirtyFields = record.dirtyFields.map((f) => f.name);
-        if (dirtyFields.includes("lang")) {
+        if (this.mustReload) {
+            this.mustReload = false;
             return this.action.doAction("reload_context");
         }
     }
