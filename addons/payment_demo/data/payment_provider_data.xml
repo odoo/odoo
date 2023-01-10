@@ -5,7 +5,9 @@
         <field name="code">demo</field>
         <field name="inline_form_view_id" ref="inline_form"/>
         <field name="token_inline_form_view_id" ref="token_inline_form"/>
+        <field name="express_checkout_form_view_id" ref="express_checkout_form"/>
         <field name="allow_tokenization">True</field>
+        <field name="allow_express_checkout">True</field>
         <field name="payment_method_ids"
                eval="[Command.set([
                          ref('payment_demo.payment_method_demo'),
