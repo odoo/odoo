@@ -338,7 +338,7 @@ class AccountEdiFormat(models.Model):
         if move.is_purchase_document(include_receipts=True):
             res = {
                 "seller_details":  move.partner_id,
-                "dispatch_details": move._l10n_in_get_shipping_partner(),
+                "dispatch_details": move.partner_shipping_id or move.partner_id,
                 "buyer_details": move.company_id.partner_id,
                 "ship_to_details": move._l10n_in_get_warehouse_address() or move.company_id.partner_id,
             }
