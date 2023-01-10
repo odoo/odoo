@@ -22,7 +22,7 @@ patch(LoginScreen.prototype, "pos_hr.LoginScreen methods", {
         }
     },
     async barcodeCashierAction(code) {
-        if (await this._super(code)) {
+        if (await this._super(code) && this.env.pos.get_cashier().id) {
             this.back();
         }
     },
