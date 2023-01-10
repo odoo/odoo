@@ -34,13 +34,23 @@ class MrpProduction(models.Model):
             self.analytic_account_id = self.bom_id.analytic_account_id
 
     def write(self, vals):
+        origin_analytic_account = {production: production.analytic_account_id for production in self}
         res = super().write(vals)
-        if vals.get('name'):
-            for production in self:
+        for production in self:
+            if vals.get('name'):
                 production.move_raw_ids.analytic_account_line_id.ref = production.display_name
                 for workorder in production.workorder_ids:
                     workorder.mo_analytic_account_line_id.ref = production.display_name
                     workorder.mo_analytic_account_line_id.name = _("[WC] %s", workorder.display_name)
+            if 'analytic_account_id' in vals and production.state != 'draft':
+                if vals['analytic_account_id'] and origin_analytic_account[production]:
+                    # Link the account analytic lines to the new AA
+                    production.move_raw_ids.analytic_account_line_id.write({'account_id': vals['analytic_account_id']})
+                elif vals['analytic_account_id'] and not origin_analytic_account[production]:
+                    # Create the account analytic lines if no AA is set in the MO
+                    production.move_raw_ids._account_analytic_entry_move()
+                else:
+                    production.move_raw_ids.analytic_account_line_id.unlink()
         return res
 
     def action_view_stock_valuation_layers(self):

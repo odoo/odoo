@@ -60,7 +60,7 @@
             <tree editable="top" decoration-muted="state == 'cancel'" string="Move Lines" default_order="location_id">
                 <field name="tracking" invisible="1"/>
                 <field name="state" invisible="1"/>
-                <field name="product_id" context="{'default_type': 'product'}" required="1" attrs="{'readonly': [('id', '!=', False)]}"/>
+                <field name="product_id" context="{'default_detailed_type': 'product'}" required="1" attrs="{'readonly': [('id', '!=', False)]}"/>
                 <field name="picking_id" required="1" attrs="{'readonly': [('id', '!=', False)]}"
                     options="{'no_create_edit': True}" domain="[('id', 'in', parent.picking_ids)]"/>
                 <field name="lot_id" groups="stock.group_production_lot" attrs="{'readonly': [('tracking', 'not in', ['lot', 'serial'])]}"/>
@@ -84,6 +84,7 @@
             <form string="Stock Batch Transfer">
                 <field name="show_check_availability" invisible="1"/>
                 <field name="show_validate" invisible="1"/>
+                <field name="show_allocation" invisible="1"/>
                 <field name="picking_type_code" invisible="1"/>
                 <field name="is_wave" invisible="1"/>
                 <header>
@@ -126,7 +127,7 @@
                     <div class="oe_button_box" name="button_box">
                         <button name="action_view_reception_report" string="Allocation" type="object"
                             class="oe_stat_button" icon="fa-list"
-                            attrs="{'invisible': ['|', ('picking_ids', '=', []), ('picking_type_code', '=', 'outgoing')]}"
+                            attrs="{'invisible': [('show_allocation', '=', False)]}"
                             groups="stock.group_reception_report"/>
                     </div>
                     <div class="oe_title">

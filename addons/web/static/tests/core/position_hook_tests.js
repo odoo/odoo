@@ -3,7 +3,13 @@
 import { browser } from "@web/core/browser/browser";
 import { computePositioning, DEFAULTS, usePosition } from "@web/core/position/position_hook";
 import { registerCleanup } from "../helpers/cleanup";
-import { getFixture, nextTick, patchWithCleanup, triggerEvent } from "../helpers/utils";
+import {
+    getFixture,
+    mockAnimationFrame,
+    nextTick,
+    patchWithCleanup,
+    triggerEvent,
+} from "../helpers/utils";
 
 const { Component, mount, tags } = owl;
 const { css, xml } = tags;
@@ -109,6 +115,33 @@ QUnit.test("can use a t-ref as popper", async (assert) => {
     const comp = await mount(TestComp, { target: container });
     assert.notOk(isWellPositioned(comp.el));
     assert.ok(isWellPositioned(comp.el.querySelector("#popper")));
+});
+
+QUnit.test("has no effect when component is destroyed", async (assert) => {
+    const execRegisteredCallbacks = mockAnimationFrame();
+    const originalReference = reference;
+    reference = () => {
+        assert.step("reference called");
+        return originalReference;
+    };
+
+    const popper = await mount(TestComp, { target: container });
+    assert.verifySteps(["reference called"], "reference called when component mounted");
+
+    triggerEvent(document, null, "scroll");
+    await nextTick();
+    assert.verifySteps([]);
+    execRegisteredCallbacks();
+    assert.verifySteps(["reference called"], "reference called when document scrolled");
+
+    triggerEvent(document, null, "scroll");
+    await nextTick();
+    popper.destroy();
+    execRegisteredCallbacks();
+    assert.verifySteps(
+        [],
+        "reference not called even if scroll happened right before the component destroys"
+    );
 });
 
 const getPositionTest = (position, positionToCheck) => {

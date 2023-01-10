@@ -4,7 +4,7 @@
         <t t-set="website_sale_order" t-value="website.sale_get_order()" />
         <t t-set="show_cart" t-value="true"/>
         <li t-attf-class="#{_item_class} divider d-none"/> <!-- Make sure the cart and related menus are not folded (see autohideMenu) -->
-        <li t-attf-class="o_wsale_my_cart #{not show_cart and 'd-none'} #{_item_class}">
+        <li t-attf-class="o_wsale_my_cart align-self-md-start #{not show_cart and 'd-none'} #{_item_class}">
             <a href="/shop/cart" t-attf-class="#{_link_class}">
                 <i t-if="_icon" class="fa fa-shopping-cart"/>
                 <span t-if="_text">My Cart</span>
@@ -124,7 +124,7 @@
         <xpath expr="//t[@t-foreach='website.menu_id.child_id']" position="after">
             <t t-call="website_sale.header_cart_link">
                 <t t-set="_text" t-value="True"/>
-                <t t-set="_item_class" t-value="'nav-item'"/>
+                <t t-set="_item_class" t-value="'nav-item ml-md-auto'"/>
                 <t t-set="_link_class" t-value="'nav-link'"/>
             </t>
         </xpath>
@@ -310,7 +310,7 @@
                                 </table>
                             </div>
                             <t t-else="">
-                                <div class="text-center text-muted">
+                                <div class="text-center text-muted mt128 mb256">
                                     <t t-if="not search">
                                         <h3 class="mt8">No product defined</h3>
                                         <p t-if="category">No product defined in category "<strong t-esc="category.display_name"/>".</p>
@@ -396,7 +396,7 @@
     </template>
 
     <template id="categorie_link" name="Category Link">
-        <div t-attf-onclick="location.href='#{keep('/shop/category/' + slug(c), category=0)}';" class="custom-control custom-radio mb-1 d-inline-block">
+        <div t-att-data-link-href="keep('/shop/category/' + slug(c), category=0)" class="custom-control custom-radio mb-1 d-inline-block">
             <input type="radio" style="pointer-events:none;" class="custom-control-input" t-att-id="c.id" t-att-value="c.id" t-att-checked="'true' if c.id == category.id else None"/>
             <label class="custom-control-label font-weight-normal" t-att-for="c.id" t-field="c.name"/>
         </div>
@@ -419,7 +419,7 @@
                 <ul class="nav flex-column my-2">
                     <form>
                         <li class="nav-item">
-                            <div t-attf-onclick="location.href='#{keep('/shop', category=0)}';" class="custom-control custom-radio mb-1 d-inline-block">
+                            <div t-att-data-link-href="keep('/shop', category=0)" class="custom-control custom-radio mb-1 d-inline-block">
                                 <input type="radio" style="pointer-events:none;" class="custom-control-input o_not_editable" t-att-id="all_products" t-att-value="all_products" t-att-checked="'true' if not category else None"/>
                                 <label class="custom-control-label font-weight-normal" t-att-for="all_products">All Products</label>
                             </div>
@@ -910,7 +910,7 @@
                                             <div class="form-group col-12 s_website_form_field s_website_form_custom" data-type="binary" data-name="Field">
                                                 <div class="row s_col_no_resize s_col_no_bgcolor">
                                                     <label class="col-form-label col-sm-auto s_website_form_label" style="width: 200px" for="sale3">
-                                                        <span class="s_website_form_label_content">A document to provide</span>
+                                                        <span class="s_website_form_label_content">Upload a document</span>
                                                     </label>
                                                     <div class="col-sm">
                                                         <input id="sale3" type="file" class="form-control-file s_website_form_input" name="a_document" />
@@ -1554,7 +1554,7 @@
                                     <h3 class="mb24">Pay with </h3>
                                     <t t-call="payment.checkout">
                                         <t t-set="footer_template_id" t-value="'website_sale.payment_footer'"/>
-                                        <t t-set="submit_button_label" t-value="'Pay Now'"/>
+                                        <t t-set="submit_button_label">Pay Now</t>
                                     </t>
                                 </div>
                                 <div t-else="" class="alert alert-warning">
@@ -1574,7 +1574,7 @@
                                 <form target="_self" action="/shop/payment/validate" method="post">
                                     <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()" />
                                     <t t-call="website_sale.payment_footer">
-                                        <t t-set="submit_button_label" t-value="'Confirm Order'"/>
+                                        <t t-set="submit_button_label">Confirm Order</t>
                                     </t>
                                 </form>
                             </div>
@@ -1840,7 +1840,7 @@
                         <b>Communication: </b><span t-esc='order.reference'/>
                     </div>
                     <div t-if="payment_tx_id.acquirer_id.sudo().qr_code">
-                        <t t-set="qr_code" t-value="payment_tx_id.acquirer_id.sudo().journal_id.bank_account_id.build_qr_code_url(order.amount_total,payment_tx_id.reference, None, payment_tx_id.currency_id, payment_tx_id.partner_id)"/>
+                        <t t-set="qr_code" t-value="payment_tx_id.company_id.partner_id.bank_ids[:1].build_qr_code_base64(order.amount_total,payment_tx_id.reference, None, payment_tx_id.currency_id, payment_tx_id.partner_id)"/>
                         <div class="card-body" t-if="qr_code">
                             <h3>Or scan me with your banking app.</h3>
                             <img class="border border-dark rounded" t-att-src="qr_code"/>

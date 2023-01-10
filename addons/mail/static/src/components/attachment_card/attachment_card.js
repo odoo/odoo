@@ -25,12 +25,8 @@ export class AttachmentCard extends Component {
 }
 
 Object.assign(AttachmentCard, {
-    defaultProps: {
-        isEditable: true,
-    },
     props: {
         attachmentCardLocalId: String,
-        isEditable: Boolean,
     },
     template: 'mail.AttachmentCard',
 });

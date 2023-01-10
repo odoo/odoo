@@ -48,7 +48,7 @@
                                 </div>
                                 <field name="subject" placeholder="Subject..." attrs="{'required': [('is_email', '=', True), ('composition_mode', '=', 'comment')]}"/>
                             </group>
-                            <field name="body" style="border:none;" options="{'style-inline': true}"/>
+                            <field name="body" class="oe-bordered-editor" options="{'style-inline': true}"/>
                         </div>
                         <group>
                             <group attrs="{'invisible': [('composition_mode', '=', 'mass_mail')]}">

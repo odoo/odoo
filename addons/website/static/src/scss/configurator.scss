@@ -61,6 +61,8 @@
             animation: configuratorFadeIn .35s;
         }
 
+        // TODO review in master, this seems useless and had to be overridden
+        // in stable templates. All the templates can be improved.
         .o_configurator_screen_content {
             overflow-y: auto;
         }
@@ -270,15 +272,6 @@
             .theme_svg_container svg {
                 width: 100%;
                 height: auto;
-
-                // Handle text and other components readability when
-                // placed over a coloured bg. Both the element and the
-                // underlying bg must have the same color, eg [FILL="#FFF"].
-                .svgc_text {
-                    filter: saturate(0) invert(1) contrast(1000%);
-                    -moz-filter: saturate(0) invert(1) contrast(1000%);
-                    -webkit-filter: saturate(0) invert(1) contrast(1000%);
-                }
             }
 
             .button_area {

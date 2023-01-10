@@ -45,12 +45,13 @@ odoo.define('pos_gift_card.PaymentScreen', function(require) {
                                     });
                                     return;
                                 }
-                                this.env.pos.giftCard.find(gift => gift.id === gift_card[0].id).balance += line.price;
                             }
                         }
                     } catch (e) {
                         // do nothing with the error
                     }
+                } else {
+                    return; // do nothing if the order is not valid
                 }
             }
             await super.validateOrder(...arguments);

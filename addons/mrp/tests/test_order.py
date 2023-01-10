@@ -3,6 +3,7 @@
 
 from odoo.tests import Form
 from datetime import datetime, timedelta
+from freezegun import freeze_time
 
 from odoo import fields
 from odoo.exceptions import UserError
@@ -1299,7 +1300,7 @@ class TestMrpOrder(TestMrpCommon):
         mo = mo_form.save()
         for i in range(2):
             move = self.env['stock.move'].create({
-                'name': 'mrp_move_' + str(i),
+                'name': 'mrp_move',
                 'product_id': self.product_2.id,
                 'product_uom': self.ref('uom.product_uom_unit'),
                 'production_id': mo.id,
@@ -1511,7 +1512,7 @@ class TestMrpOrder(TestMrpCommon):
         self.assertEqual(mos.move_finished_ids.mapped('quantity_done'), [1] * 3)
 
     def test_components_availability(self):
-        self.bom_2.unlink()  # remove the kit bom of product_5
+        self.bom_2.unlink()  # remove the kit bom of product_5 
         now = fields.Datetime.now()
         mo_form = Form(self.env['mrp.production'])
         mo_form.bom_id = self.bom_3  # product_5 (2), product_4 (8), product_2 (12)
@@ -1539,12 +1540,12 @@ class TestMrpOrder(TestMrpCommon):
         (move1 | move2 | move3)._action_confirm()
 
         mo.invalidate_cache(['components_availability', 'components_availability_state'], mo.ids)
-        self.assertEqual(mo.components_availability, 'Exp %s' % format_date(self.env, tommorrow))
+        self.assertEqual(mo.components_availability, f'Exp {format_date(self.env, tommorrow)}')
         self.assertEqual(mo.components_availability_state, 'late')
 
         mo.date_planned_start = after_tommorrow
 
-        self.assertEqual(mo.components_availability, 'Exp %s' % format_date(self.env, tommorrow))
+        self.assertEqual(mo.components_availability, f'Exp {format_date(self.env, tommorrow)}')
         self.assertEqual(mo.components_availability_state, 'expected')
 
         (move1 | move2 | move3)._set_quantities_to_reservation()
@@ -1557,7 +1558,7 @@ class TestMrpOrder(TestMrpCommon):
         mo.action_assign()
 
         self.assertEqual(mo.reservation_state, 'assigned')
-        self.assertEqual(mo.components_availability, 'Ready')
+        self.assertEqual(mo.components_availability, 'Available')
         self.assertEqual(mo.components_availability_state, 'available')
 
 
@@ -1959,6 +1960,40 @@ class TestMrpOrder(TestMrpCommon):
         self.assertEqual(sum(move_prod_1_bo.mapped('product_uom_qty')), 60.0)
         self.assertEqual(sum(move_prod_2_bo.mapped('product_uom_qty')), 40.0)
 
+    def test_backorder_with_underconsumption(self):
+        """ Check that the components of the backorder have the correct quantities
+        when there is underconsumption in the initial MO
+        """
+        mo, _, _, p1, p2 = self.generate_mo(qty_final=20, qty_base_1=1, qty_base_2=1)
+        mo.action_confirm()
+        mo.qty_producing = 10
+        mo.move_raw_ids.filtered(lambda m: m.product_id == p1).quantity_done = 5
+        mo.move_raw_ids.filtered(lambda m: m.product_id == p2).quantity_done = 10
+        action = mo.button_mark_done()
+        backorder = Form(self.env['mrp.production.backorder'].with_context(**action['context']))
+        backorder.save().action_backorder()
+        mo_backorder = mo.procurement_group_id.mrp_production_ids[-1]
+
+        # Check quantities of the original MO
+        self.assertEqual(mo.product_uom_qty, 10.0)
+        self.assertEqual(mo.qty_produced, 10.0)
+        move_prod_1_done = mo.move_raw_ids.filtered(lambda m: m.product_id == p1 and m.state == 'done')
+        self.assertEqual(sum(move_prod_1_done.mapped('quantity_done')), 5)
+        self.assertEqual(sum(move_prod_1_done.mapped('product_uom_qty')), 5)
+        move_prod_1_cancel = mo.move_raw_ids.filtered(lambda m: m.product_id == p1 and m.state == 'cancel')
+        self.assertEqual(sum(move_prod_1_cancel.mapped('quantity_done')), 0)
+        self.assertEqual(sum(move_prod_1_cancel.mapped('product_uom_qty')), 5)
+        move_prod_2 = mo.move_raw_ids.filtered(lambda m: m.product_id == p2)
+        self.assertEqual(sum(move_prod_2.mapped('quantity_done')), 10)
+        self.assertEqual(sum(move_prod_2.mapped('product_uom_qty')), 10)
+
+        # Check quantities of the backorder MO
+        self.assertEqual(mo_backorder.product_uom_qty, 10.0)
+        move_prod_1_bo = mo_backorder.move_raw_ids.filtered(lambda m: m.product_id == p1)
+        move_prod_2_bo = mo_backorder.move_raw_ids.filtered(lambda m: m.product_id == p2)
+        self.assertEqual(sum(move_prod_1_bo.mapped('product_uom_qty')), 10.0)
+        self.assertEqual(sum(move_prod_2_bo.mapped('product_uom_qty')), 10.0)
+
     def test_state_workorders(self):
         bom = self.env['mrp.bom'].create({
             'product_id': self.product_4.id,
@@ -2154,6 +2189,7 @@ class TestMrpOrder(TestMrpCommon):
         self.assertEqual(wo_1.state, 'ready')
 
         wo_1.button_start()
+        wo_1.qty_producing = 10
         self.assertEqual(mo.state, 'progress')
         wo_1.button_finish()
 
@@ -2181,9 +2217,7 @@ class TestMrpOrder(TestMrpCommon):
         self.assertEqual(mo_2.state, 'progress')
         wo_4, wo_5, wo_6 = mo_2.workorder_ids
 
-        self.assertEqual(wo_4.state, 'ready')
-        wo_4.button_start()
-        wo_4.button_finish()
+        self.assertEqual(wo_4.state, 'cancel')
 
         wo_5.button_start()
         self.assertEqual(mo_2.state, 'progress')
@@ -2438,3 +2472,268 @@ class TestMrpOrder(TestMrpCommon):
         production_form.product_qty = 5
         production = production_form.save()
         self.assertEqual(production.workorder_ids[0].duration_expected, 30.0, "Produce 5 with capacity 2, expected is 10mn for each run -> 30mn")
+
+    def test_planning_workorder(self):
+        """
+            Check that the fastest work center is used when planning the workorder.
+
+            - create two work centers with similar production capacity
+                but the work_center_2 with a longer start and stop time.
+
+            1:/ produce 2 units > work_center_1 faster because
+                it does not need much time to start and to finish the production.
+
+            2/ - update the production capacity of the work_center_2 to 4
+                - produce 4 units > work_center_2 faster because
+                it must do a single cycle while the work_center_1 have to do two cycles.
+        """
+        workcenter_1 = self.env['mrp.workcenter'].create({
+            'name': 'wc1',
+            'capacity': 2,
+            'time_start': 1,
+            'time_stop': 1,
+            'time_efficiency': 100,
+        })
+
+        workcenter_2 = self.env['mrp.workcenter'].create({
+            'name': 'wc2',
+            'capacity': 2,
+            'time_start': 10,
+            'time_stop': 5,
+            'time_efficiency': 100,
+            'alternative_workcenter_ids': [workcenter_1.id]
+        })
+
+        product_to_build = self.env['product.product'].create({
+            'name': 'final product',
+            'type': 'product',
+        })
+
+        product_to_use = self.env['product.product'].create({
+            'name': 'component',
+            'type': 'product',
+        })
+
+        bom = self.env['mrp.bom'].create({
+            'product_id': product_to_build.id,
+            'product_tmpl_id': product_to_build.product_tmpl_id.id,
+            'product_uom_id': self.uom_unit.id,
+            'product_qty': 1.0,
+            'type': 'normal',
+            'consumption': 'flexible',
+            'operation_ids': [
+                (0, 0, {'name': 'Test', 'workcenter_id': workcenter_2.id, 'time_cycle': 60, 'sequence': 1}),
+            ],
+            'bom_line_ids': [
+                (0, 0, {'product_id': product_to_use.id, 'product_qty': 1}),
+            ]})
+
+        #MO_1
+        mo_form = Form(self.env['mrp.production'])
+        mo_form.product_id = product_to_build
+        mo_form.bom_id = bom
+        mo_form.product_qty = 2
+        mo = mo_form.save()
+        mo.action_confirm()
+        mo.button_plan()
+        self.assertEqual(mo.workorder_ids[0].workcenter_id.id, workcenter_1.id, 'workcenter_1 is faster than workcenter_2 to manufacture 2 units')
+        # Unplan the mo to prevent the first workcenter from being busy
+        mo.button_unplan()
+
+        # Update the production capcity
+        workcenter_2.capacity = 4
+
+        #MO_2
+        mo_form = Form(self.env['mrp.production'])
+        mo_form.product_id = product_to_build
+        mo_form.bom_id = bom
+        mo_form.product_qty = 4
+        mo_2 = mo_form.save()
+        mo_2.action_confirm()
+        mo_2.button_plan()
+        self.assertEqual(mo_2.workorder_ids[0].workcenter_id.id, workcenter_2.id, 'workcenter_2 is faster than workcenter_1 to manufacture 4 units')
+
+    def test_timers_after_cancelling_mo(self):
+        """
+            Check that the timers in the workorders are stopped after the cancellation of the MO
+        """
+        mo_form = Form(self.env['mrp.production'])
+        mo_form.bom_id = self.bom_2
+        mo_form.product_qty = 1
+        mo = mo_form.save()
+        mo.action_confirm()
+        mo.button_plan()
+
+        wo = mo.workorder_ids
+        wo.button_start()
+        mo.action_cancel()
+        self.assertEqual(mo.state, 'cancel', 'Manufacturing order should be cancelled.')
+        self.assertEqual(wo.state, 'cancel', 'Workorders should be cancelled.')
+        self.assertTrue(mo.workorder_ids.time_ids.date_end, 'The timers must stop after the cancellation of the MO')
+
+    def test_starting_wo_twice(self):
+        """
+            Check that the work order is started only once when clicking the start button several times.
+        """
+        production_form = Form(self.env['mrp.production'])
+        production_form.bom_id = self.bom_2
+        production_form.product_qty = 1
+        production = production_form.save()
+        production_form = Form(production)
+        with production_form.workorder_ids.new() as wo:
+            wo.name = 'OP1'
+            wo.workcenter_id = self.workcenter_1
+            wo.duration_expected = 40
+        production = production_form.save()
+        production.action_confirm()
+        production.button_plan()
+        production.workorder_ids[0].button_start()
+        production.workorder_ids[0].button_start()
+        self.assertEqual(len(production.workorder_ids[0].time_ids.filtered(lambda t: t.date_start and not t.date_end)), 1)
+
+    def test_qty_update_and_method_reservation(self):
+        """
+        When the reservation method of Manufacturing is 'manual', updating the
+        quantity of a confirmed MO shouldn't trigger the reservation of the
+        components
+        """
+        warehouse = self.env['stock.warehouse'].search([('company_id', '=', self.env.company.id)], order='id', limit=1)
+        warehouse.manu_type_id.reservation_method = 'manual'
+
+        for product in self.product_1 + self.product_2:
+            product.type = 'product'
+            self.env['stock.quant']._update_available_quantity(product, warehouse.lot_stock_id, 10)
+
+        mo_form = Form(self.env['mrp.production'])
+        mo_form.bom_id = self.bom_1
+        mo = mo_form.save()
+        mo.action_confirm()
+
+        self.assertFalse(mo.move_raw_ids.move_line_ids)
+
+        wizard = self.env['change.production.qty'].create({
+            'mo_id': mo.id,
+            'product_qty': 5,
+        })
+        wizard.change_prod_qty()
+
+        self.assertFalse(mo.move_raw_ids.move_line_ids)
+
+    def test_source_and_child_mo(self):
+        """
+        Suppose three manufactured products A, B and C. C is a component of B
+        and B is a component of A. If B and C have the routes MTO + Manufacture,
+        when producing one A, it should generate a MO for B and C. Moreover,
+        starting from one of the MOs, we should be able to find the source/child
+        MO.
+        (The test checks the flow in 1-step, 2-steps and 3-steps manufacturing)
+        """
+        warehouse = self.env['stock.warehouse'].search([('company_id', '=', self.env.company.id)], limit=1)
+        mto_route = warehouse.mto_pull_id.route_id
+        manufacture_route = warehouse.manufacture_pull_id.route_id
+        mto_route.active = True
+
+        grandparent, parent, child = self.env['product.product'].create([{
+            'name': n,
+            'type': 'product',
+            'route_ids': [(6, 0, mto_route.ids + manufacture_route.ids)],
+        } for n in ['grandparent', 'parent', 'child']])
+        component = self.env['product.product'].create({
+            'name': 'component',
+            'type': 'consu',
+        })
+
+        self.env['mrp.bom'].create([{
+            'product_tmpl_id': finished_product.product_tmpl_id.id,
+            'product_qty': 1,
+            'type': 'normal',
+            'bom_line_ids': [
+                (0, 0, {'product_id': compo.id, 'product_qty': 1}),
+            ],
+        } for finished_product, compo in [(grandparent, parent), (parent, child), (child, component)]])
+
+        none_production = self.env['mrp.production']
+        for steps, case_description, in [('mrp_one_step', '1-step Manufacturing'), ('pbm', '2-steps Manufacturing'), ('pbm_sam', '3-steps Manufacturing')]:
+            warehouse.manufacture_steps = steps
+
+            grandparent_production_form = Form(self.env['mrp.production'])
+            grandparent_production_form.product_id = grandparent
+            grandparent_production = grandparent_production_form.save()
+            grandparent_production.action_confirm()
+
+            child_production, parent_production = self.env['mrp.production'].search([('product_id', 'in', (parent + child).ids)], order='id desc', limit=2)
+
+            for source_mo, mo, product, child_mo in [(none_production, grandparent_production, grandparent, parent_production),
+                                                     (grandparent_production, parent_production, parent, child_production),
+                                                     (parent_production, child_production, child, none_production)]:
+
+                self.assertEqual(mo.product_id, product, '[%s] There should be a MO for product %s' % (case_description, product.display_name))
+                self.assertEqual(mo.mrp_production_source_count, len(source_mo), '[%s] Incorrect value for product %s' % (case_description, product.display_name))
+                self.assertEqual(mo.mrp_production_child_count, len(child_mo), '[%s] Incorrect value for product %s' % (case_description, product.display_name))
+
+                source_action = mo.action_view_mrp_production_sources()
+                child_action = mo.action_view_mrp_production_childs()
+                self.assertEqual(source_action.get('res_id', False), source_mo.id, '[%s] Incorrect value for product %s' % (case_description, product.display_name))
+                self.assertEqual(child_action.get('res_id', False), child_mo.id, '[%s] Incorrect value for product %s' % (case_description, product.display_name))
+
+    @freeze_time('2022-06-28 08:00')
+    def test_replan_workorders01(self):
+        """
+        Create two MO, each one with one WO. Set the same scheduled start date
+        to each WO during the creation of the MO. A warning will be displayed.
+        -> The user replans one of the WO: the warnings should disappear and the
+        WO should be postponed.
+        """
+        mos = self.env['mrp.production']
+        for _ in range(2):
+            mo_form = Form(self.env['mrp.production'])
+            mo_form.bom_id = self.bom_4
+            with mo_form.workorder_ids.edit(0) as wo_line:
+                wo_line.date_planned_start = datetime.now()
+            mos += mo_form.save()
+        mos.action_confirm()
+
+        mo_01, mo_02 = mos
+        wo_01 = mo_01.workorder_ids
+        wo_02 = mo_02.workorder_ids
+
+        self.assertTrue(wo_01.show_json_popover)
+        self.assertTrue(wo_02.show_json_popover)
+
+        wo_02.action_replan()
+
+        self.assertFalse(wo_01.show_json_popover)
+        self.assertFalse(wo_02.show_json_popover)
+        self.assertEqual(wo_01.date_planned_finished, wo_02.date_planned_start)
+
+    @freeze_time('2022-06-28 08:00')
+    def test_replan_workorders02(self):
+        """
+        Create two MO, each one with one WO. Set the same scheduled start date
+        to each WO after the creation of the MO. A warning will be displayed.
+        -> The user replans one of the WO: the warnings should disappear and the
+        WO should be postponed.
+        """
+        mos = self.env['mrp.production']
+        for _ in range(2):
+            mo_form = Form(self.env['mrp.production'])
+            mo_form.bom_id = self.bom_4
+            mos += mo_form.save()
+        mos.action_confirm()
+        mo_01, mo_02 = mos
+
+        for mo in mos:
+            with Form(mo) as mo_form:
+                with mo_form.workorder_ids.edit(0) as wo_line:
+                    wo_line.date_planned_start = datetime.now()
+
+        wo_01 = mo_01.workorder_ids
+        wo_02 = mo_02.workorder_ids
+        self.assertTrue(wo_01.show_json_popover)
+        self.assertTrue(wo_02.show_json_popover)
+
+        wo_02.action_replan()
+
+        self.assertFalse(wo_01.show_json_popover)
+        self.assertFalse(wo_02.show_json_popover)
+        self.assertEqual(wo_01.date_planned_finished, wo_02.date_planned_start)

@@ -42,7 +42,8 @@ export function useAutofocus(params = {}) {
     const selector = params.selector || "[autofocus]";
     let forceFocusCount = 0;
     useEffect(
-        function autofocus(target) {
+        function autofocus() {
+            const target = comp.el.querySelector(selector);
             if (target) {
                 target.focus();
                 if (["INPUT", "TEXTAREA"].includes(target.tagName)) {
@@ -51,7 +52,7 @@ export function useAutofocus(params = {}) {
                 }
             }
         },
-        () => [comp.el.querySelector(selector), forceFocusCount]
+        () => [forceFocusCount]
     );
 
     return function focusOnUpdate() {
@@ -248,4 +249,18 @@ export function useService(serviceName) {
         }
     }
     return service;
+}
+
+/**
+ * Executes "callback" when the component is being destroyed
+ * @param  {Function} callback
+ */
+export function onDestroyed(callback) {
+    const component = useComponent();
+    const _destroy = component.__destroy;
+    component.__destroy = (...args) => {
+        _destroy.call(component, ...args);
+        // callback is called after super to guarantee the component is actually destroyed
+        callback();
+    };
 }

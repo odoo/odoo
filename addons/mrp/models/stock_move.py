@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import api, fields, models
+from odoo import api, Command, fields, models, _
 from odoo.osv import expression
 from odoo.tools import float_compare, float_round, float_is_zero, OrderedSet
 
@@ -237,6 +237,9 @@ class StockMove(models.Model):
                     defaults['state'] = 'done'
                     defaults['additional'] = True
                 defaults['product_uom_qty'] = 0.0
+            elif production_id.state == 'draft':
+                defaults['group_id'] = production_id.procurement_group_id.id
+                defaults['reference'] = production_id.name
         return defaults
 
     def write(self, vals):
@@ -305,14 +308,14 @@ class StockMove(models.Model):
         elif self.production_id:
             action['views'] = [(self.env.ref('mrp.view_stock_move_operations_finished').id, 'form')]
             action['context']['show_source_location'] = False
+            action['context']['show_reserved_quantity'] = False
         return action
 
     def _action_cancel(self):
         res = super(StockMove, self)._action_cancel()
-        for production in self.mapped('raw_material_production_id'):
-            if production.state != 'cancel':
-                continue
-            production._action_cancel()
+        mo_to_cancel = self.mapped('raw_material_production_id').filtered(lambda p: all(m.state == 'cancel' for m in p.move_raw_ids))
+        if mo_to_cancel:
+            mo_to_cancel._action_cancel()
         return res
 
     def _prepare_move_split_vals(self, qty):
@@ -351,6 +354,15 @@ class StockMove(models.Model):
         res = super()._consuming_picking_types()
         res.append('mrp_operation')
         return res
+
+    def _get_backorder_move_vals(self):
+        self.ensure_one()
+        return {
+            'state': 'confirmed',
+            'reservation_date': self.reservation_date,
+            'move_orig_ids': [Command.link(m.id) for m in self.mapped('move_orig_ids')],
+            'move_dest_ids': [Command.link(m.id) for m in self.mapped('move_dest_ids')]
+        }
 
     def _get_source_document(self):
         res = super()._get_source_document()
@@ -392,12 +404,11 @@ class StockMove(models.Model):
 
     @api.model
     def _prepare_merge_moves_distinct_fields(self):
-        return super()._prepare_merge_moves_distinct_fields() + ['created_production_id', 'cost_share']
+        return super()._prepare_merge_moves_distinct_fields() + ['created_production_id', 'cost_share', 'bom_line_id']
 
-    def _merge_moves_fields(self):
-        res = super()._merge_moves_fields()
-        res['cost_share'] = sum(self.mapped('cost_share'))
-        return res
+    @api.model
+    def _prepare_merge_negative_moves_excluded_distinct_fields(self):
+        return super()._prepare_merge_negative_moves_excluded_distinct_fields() + ['created_production_id']
 
     def _compute_kit_quantities(self, product_id, kit_qty, kit_bom, filters):
         """ Computes the quantity delivered or received when a kit is sold or purchased.
@@ -425,7 +436,7 @@ class StockMove(models.Model):
                 # Then, we collect every relevant moves related to a specific component
                 # to know how many are considered delivered.
                 uom_qty_per_kit = bom_line_data['qty'] / bom_line_data['original_qty']
-                qty_per_kit = bom_line.product_uom_id._compute_quantity(uom_qty_per_kit, bom_line.product_id.uom_id)
+                qty_per_kit = bom_line.product_uom_id._compute_quantity(uom_qty_per_kit, bom_line.product_id.uom_id, round=False)
                 if not qty_per_kit:
                     continue
                 incoming_moves = bom_line_moves.filtered(filters['incoming_moves'])
@@ -475,3 +486,8 @@ class StockMove(models.Model):
             self.move_line_ids = self._set_quantity_done_prepare_vals(quantity_done)
         else:
             super()._multi_line_quantity_done_set(quantity_done)
+
+    def _prepare_procurement_values(self):
+        res = super()._prepare_procurement_values()
+        res['bom_line_id'] = self.bom_line_id.id
+        return res

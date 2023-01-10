@@ -35,7 +35,7 @@ class TestResUsersSettings(MailCommon):
         with self.assertBus(
                 [(self.cr.dbname, 'res.partner', self.partner_employee.id)],
                 [{
-                    "type": "res.users_settings_changed",
+                    "type": "res.users.settings/changed",
                     "payload": {"is_discuss_sidebar_category_chat_open": True}
                 }]):
             settings.set_res_users_settings({'is_discuss_sidebar_category_chat_open': True})

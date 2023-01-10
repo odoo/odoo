@@ -3,12 +3,13 @@
 
 from datetime import datetime
 import random
-import json
+import re
 
 from odoo import api, models, fields, _
 from odoo.addons.http_routing.models.ir_http import slug, unslug
+from odoo.addons.website.tools import text_from_html
+from odoo.tools.json import scriptsafe as json_scriptsafe
 from odoo.tools.translate import html_translate
-from odoo.tools import html2plaintext
 
 
 class Blog(models.Model):
@@ -99,7 +100,7 @@ class Blog(models.Model):
         fetch_fields = ['id', 'name']
         mapping = {
             'name': {'name': 'name', 'type': 'text', 'match': True},
-            'website_url': {'name': 'url', 'type': 'text'},
+            'website_url': {'name': 'url', 'type': 'text', 'truncate': False},
         }
         if with_description:
             search_fields.append('subtitle')
@@ -197,7 +198,8 @@ class BlogPost(models.Model):
             if blog_post.teaser_manual:
                 blog_post.teaser = blog_post.teaser_manual
             else:
-                content = html2plaintext(blog_post.content).replace('\n', ' ')
+                content = text_from_html(blog_post.content)
+                content = re.sub('\\s+', ' ', content).strip()
                 blog_post.teaser = content[:200] + '...'
 
     def _set_teaser(self):
@@ -246,7 +248,7 @@ class BlogPost(models.Model):
             if (published_in_vals and 'published_date' not in vals and
                     (not post.published_date or post.published_date <= fields.Datetime.now())):
                 copy_vals['published_date'] = vals[list(published_in_vals)[0]] and fields.Datetime.now() or False
-            result &= super(BlogPost, self).write(copy_vals)
+            result &= super(BlogPost, post).write(copy_vals)
         self._check_for_publication(vals)
         return result
 
@@ -298,7 +300,7 @@ class BlogPost(models.Model):
         res['default_opengraph']['article:modified_time'] = self.write_date
         res['default_opengraph']['article:tag'] = self.tag_ids.mapped('name')
         # background-image might contain single quotes eg `url('/my/url')`
-        res['default_opengraph']['og:image'] = res['default_twitter']['twitter:image'] = json.loads(self.cover_properties).get('background-image', 'none')[4:-1].strip("'")
+        res['default_opengraph']['og:image'] = res['default_twitter']['twitter:image'] = json_scriptsafe.loads(self.cover_properties).get('background-image', 'none')[4:-1].strip("'")
         res['default_opengraph']['og:title'] = res['default_twitter']['twitter:title'] = self.name
         res['default_meta_description'] = self.subtitle
         return res
@@ -335,7 +337,7 @@ class BlogPost(models.Model):
         fetch_fields = ['name', 'website_url']
         mapping = {
             'name': {'name': 'name', 'type': 'text', 'match': True},
-            'website_url': {'name': 'website_url', 'type': 'text'},
+            'website_url': {'name': 'website_url', 'type': 'text', 'truncate': False},
         }
         if with_description:
             search_fields.append('content')

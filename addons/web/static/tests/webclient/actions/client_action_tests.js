@@ -6,7 +6,7 @@ import core from "web.core";
 import AbstractAction from "web.AbstractAction";
 import testUtils from "web.test_utils";
 import { registerCleanup } from "../../helpers/cleanup";
-import { click, legacyExtraNextTick, patchWithCleanup } from "../../helpers/utils";
+import { click, legacyExtraNextTick, nextTick, patchWithCleanup } from "../../helpers/utils";
 import { createWebClient, doAction, getActionManagerServerData } from "./../helpers";
 
 const { Component, tags } = owl;
@@ -32,6 +32,22 @@ QUnit.module("ActionManager", (hooks) => {
         });
         assert.containsOnce(webClient, ".modal .test_client_action");
         assert.strictEqual(webClient.el.querySelector(".modal-title").textContent, "Dialog Test");
+    });
+
+    QUnit.test("can display client actions in Dialog and close the dialog", async function (assert) {
+        assert.expect(3);
+        const webClient = await createWebClient({ serverData });
+        await doAction(webClient, {
+            name: "Dialog Test",
+            target: "new",
+            tag: "__test__client__action__",
+            type: "ir.actions.client",
+        });
+        assert.containsOnce(webClient, ".modal .test_client_action");
+        assert.strictEqual(webClient.el.querySelector(".modal-title").textContent, "Dialog Test");
+        webClient.el.querySelector('.modal footer .btn.btn-primary').click()
+        await nextTick();
+        assert.containsNone(webClient, ".modal .test_client_action");
     });
 
     QUnit.test("can display client actions as main, then in Dialog", async function (assert) {
@@ -130,6 +146,25 @@ QUnit.module("ActionManager", (hooks) => {
         await doAction(webClient, "my_action");
         assert.containsOnce(webClient, ".o_kanban_view");
     });
+
+    QUnit.test(
+        "'CLEAR-UNCOMMITTED-CHANGES' is not triggered for function client actions",
+        async function (assert) {
+            assert.expect(2);
+
+            registry.category("actions").add("my_action", async () => {
+                assert.step("my_action");
+            });
+
+            const webClient = await createWebClient({ serverData });
+            webClient.env.bus.on("CLEAR-UNCOMMITTED-CHANGES", webClient, () => {
+                assert.step("CLEAR-UNCOMMITTED-CHANGES");
+            });
+
+            await doAction(webClient, "my_action");
+            assert.verifySteps(["my_action"]);
+        }
+    );
 
     QUnit.test("client action with control panel (legacy)", async function (assert) {
         assert.expect(4);

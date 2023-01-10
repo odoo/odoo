@@ -67,8 +67,8 @@ class PaymentAcquirer(models.Model):
             "Accept": "application/json",
             "Authorization": f'Bearer {self.mollie_api_key}',
             "Content-Type": "application/json",
-            # User agent string used by Mollie
-            "User-Agent": f'Odoo/{odoo_version} MollieOdoo/{module_version}',
+            # See https://docs.mollie.com/integration-partners/user-agent-strings
+            "User-Agent": f'Odoo/{odoo_version} MollieNativeOdoo/{module_version}',
         }
 
         try:

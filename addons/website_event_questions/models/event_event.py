@@ -36,7 +36,7 @@ class EventEvent(models.Model):
           * type lines are added;
         """
         if self._origin.question_ids:
-            # lines to keep: those with already sent emails or registrations
+            # lines to keep: those with already given answers
             questions_tokeep_ids = self.env['event.registration.answer'].search(
                 [('question_id', 'in', self._origin.question_ids.ids)]
             ).question_id.ids
@@ -52,7 +52,7 @@ class EventEvent(models.Model):
                 command = [(3, question.id) for question in questions_toremove]
             else:
                 command = [(5, 0)]
-            if event.event_type_id.event_type_mail_ids:
+            if event.event_type_id.question_ids:
                 command += [
                     (0, 0, {
                         'title': question.title,

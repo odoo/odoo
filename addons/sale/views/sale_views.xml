@@ -343,6 +343,7 @@
                                     attrs="{'invisible': ['|', ('show_update_pricelist', '=', False), ('state', 'in', ['sale', 'done','cancel'])]}"/>
                             </div>
                             <field name="currency_id" invisible="1"/>
+                            <field name="tax_country_id" invisible="1"/>
                             <field name="payment_term_id" options="{'no_open':True,'no_create': True}"/>
                         </group>
                     </group>
@@ -409,7 +410,7 @@
                                             </div>
                                             <field name="product_packaging_id" attrs="{'invisible': [('product_id', '=', False)]}" context="{'default_product_id': product_id, 'tree_view_ref':'product.product_packaging_tree_view', 'form_view_ref':'product.product_packaging_form_view'}" groups="product.group_stock_packaging" />
                                             <field name="price_unit"/>
-                                            <field name="tax_id" widget="many2many_tags" options="{'no_create': True}" context="{'search_view_ref': 'account.account_tax_view_search'}" domain="[('type_tax_use','=','sale'),('company_id','=',parent.company_id)]"
+                                            <field name="tax_id" widget="many2many_tags" options="{'no_create': True}" context="{'search_view_ref': 'account.account_tax_view_search'}" domain="[('type_tax_use','=','sale'), ('company_id','=',parent.company_id), ('country_id', '=', parent.tax_country_id)]"
                                                 attrs="{'readonly': [('qty_invoiced', '&gt;', 0)]}"/>
                                             <label for="discount" groups="product.group_discount_per_so_line"/>
                                             <div name="discount" groups="product.group_discount_per_so_line">
@@ -464,7 +465,6 @@
                                             'readonly': [('product_updatable', '=', False)],
                                             'required': [('display_type', '=', False)],
                                         }"
-                                        options="{'no_open': True}"
                                         force_save="1"
                                         context="{
                                             'partner_id': parent.partner_id,
@@ -485,7 +485,6 @@
                                           'readonly': [('product_updatable', '=', False)],
                                           'required': [('display_type', '=', False)],
                                       }"
-                                      options="{'no_open': True}"
                                       context="{
                                           'partner_id': parent.partner_id,
                                           'quantity': product_uom_qty,
@@ -566,7 +565,8 @@
                                         name="tax_id"
                                         widget="many2many_tags"
                                         options="{'no_create': True}"
-                                        domain="[('type_tax_use','=','sale'),('company_id','=',parent.company_id)]"
+                                        domain="[('type_tax_use','=','sale'),('company_id','=',parent.company_id), ('country_id', '=', parent.tax_country_id)]"
+                                        context="{'active_test': True}"
                                         attrs="{'readonly': [('qty_invoiced', '&gt;', 0)]}"
                                         optional="show"
                                     />
@@ -641,7 +641,7 @@
                             </field>
                             <group name="note_group" col="6" class="mt-2 mt-md-0">
                                 <group colspan="4">
-                                    <field name="note" nolabel="1" placeholder="Terms and conditions..."/>
+                                    <field name="note" class="oe-bordered-editor" nolabel="1" placeholder="Terms and conditions..."/>
                                 </group>
                                 <group class="oe_subtotal_footer oe_right" colspan="2" name="sale_total">
                                     <field name="tax_totals_json" widget="account-tax-totals-field" nolabel="1" colspan="2"/>
@@ -652,7 +652,7 @@
                         <page string="Other Info" name="other_information">
                             <group>
                                 <group name="sales_person" string="Sales">
-                                    <field name="user_id" domain="[('share', '=', False)]" widget="many2one_avatar_user"/>
+                                    <field name="user_id" widget="many2one_avatar_user"/>
                                     <field name="team_id" kanban_view_ref="%(sales_team.crm_team_view_kanban)s" options="{'no_create': True}"/>
                                     <field name="company_id" options="{'no_create': True}" groups="base.group_multi_company"/>
                                     <field name="require_signature"/>
@@ -1229,11 +1229,8 @@
                     <xpath expr="//field[@name='partner_id']" position="after">
                        <field name="partner_shipping_id"
                               groups="sale.group_delivery_invoice_address"
-                              attrs="{'invisible': [('move_type', 'not in', ('out_invoice', 'out_refund', 'in_invoice', 'in_refund'))]}"/>
+                              attrs="{'invisible': [('move_type', 'not in', ('out_invoice', 'out_refund', 'out_receipt'))]}"/>
                    </xpath>
-                    <xpath expr="//field[@name='invoice_line_ids']//field[@name='discount']" position="attributes">
-                        <attribute name="groups">product.group_discount_per_so_line</attribute>
-                    </xpath>
                     <xpath expr="//group[@name='sale_info_group']/field[@name='invoice_user_id']" position="after">
                         <field name="team_id" kanban_view_ref="%(sales_team.crm_team_view_kanban)s"/>
                     </xpath>

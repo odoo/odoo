@@ -30,7 +30,6 @@
       <field name="code">LUTAX_049</field>
     </record>
 
-
     <record id="account_tax_report_line_2b_base_exempt" model="account.tax.report.line">
       <field name="name">194 - base exempt</field>
       <field name="tag_name">194</field>
@@ -67,6 +66,15 @@
       <field name="code">LUTAX_715</field>
     </record>
 
+    <record id="account_tax_report_line_2b_manufactured_tobacco" model="account.tax.report.line">
+      <field name="name">719 - of manufactured tobacco (VAT is collected at the exit of the tax warehouse with excise duties)</field>
+      <field name="tag_name">719</field>
+      <field name="sequence">11</field>
+      <field name="code">LUTAX_719</field>
+      <field name="report_id" ref="tax_report"/>
+        <field name="parent_id" ref="account_tax_report_line_2b_intra_community_acqui_of_goods_base"/>
+    </record>
+
     <record id="account_tax_report_line_2d_importation_of_goods_base" model="account.tax.report.line">
       <field name="name">065 - Importation of goods – base</field>
       <field name="sequence">6</field>
@@ -78,7 +86,7 @@
     <record id="account_tax_report_line_2d_2_base_exempt" model="account.tax.report.line">
       <field name="name">196 - for non-business purposes: base exempt</field>
       <field name="tag_name">196</field>
-      <field name="sequence">12</field>
+      <field name="sequence">13</field>
       <field name="report_id" ref="tax_report"/>
         <field name="parent_id" ref="account_tax_report_line_2d_importation_of_goods_base"/>
       <field name="code">LUTAX_196</field>
@@ -111,10 +119,19 @@
       <field name="code">LUTAX_725</field>
     </record>
 
+    <record id="account_tax_report_line_2d_1_manufactured_tobacco" model="account.tax.report.line">
+      <field name="name">729 - of manufactured tobacco (VAT is collected at the exit of the tax warehouse with excise duties)</field>
+      <field name="tag_name">729</field>
+      <field name="sequence">8</field>
+      <field name="code">LUTAX_729</field>
+      <field name="report_id" ref="tax_report"/>
+        <field name="parent_id" ref="account_tax_report_line_2d_importation_of_goods_base"/>
+    </record>
+
     <record id="account_tax_report_line_2d_2_base_17" model="account.tax.report.line">
       <field name="name">731 - for non-business purposes: base 17%</field>
       <field name="tag_name">731</field>
-      <field name="sequence">8</field>
+      <field name="sequence">9</field>
       <field name="report_id" ref="tax_report"/>
         <field name="parent_id" ref="account_tax_report_line_2d_importation_of_goods_base"/>
       <field name="code">LUTAX_731</field>
@@ -123,7 +140,7 @@
     <record id="account_tax_report_line_2d_2_base_14" model="account.tax.report.line">
       <field name="name">733 - for non-business purposes: base 14%</field>
       <field name="tag_name">733</field>
-      <field name="sequence">9</field>
+      <field name="sequence">10</field>
       <field name="report_id" ref="tax_report"/>
         <field name="parent_id" ref="account_tax_report_line_2d_importation_of_goods_base"/>
       <field name="code">LUTAX_733</field>
@@ -132,7 +149,7 @@
     <record id="account_tax_report_line_2d_2_base_8" model="account.tax.report.line">
       <field name="name">735 - for non-business purposes: base 8%</field>
       <field name="tag_name">735</field>
-      <field name="sequence">10</field>
+      <field name="sequence">11</field>
       <field name="report_id" ref="tax_report"/>
         <field name="parent_id" ref="account_tax_report_line_2d_importation_of_goods_base"/>
       <field name="code">LUTAX_735</field>
@@ -150,7 +167,7 @@
     <record id="account_tax_report_line_2d_2_base_3" model="account.tax.report.line">
       <field name="name">063 - for non-business purposes: base 3%</field>
       <field name="tag_name">063</field>
-      <field name="sequence">11</field>
+      <field name="sequence">12</field>
       <field name="report_id" ref="tax_report"/>
         <field name="parent_id" ref="account_tax_report_line_2d_importation_of_goods_base"/>
       <field name="code">LUTAX_063</field>
@@ -346,7 +363,7 @@
         <field name="parent_id" ref="account_tax_report_line_1a_total_sale"/>
         <field name="report_id" ref="tax_report"/>
         <field name="code">LUTAX_472</field>
-        <field name="formula">LUTAX_021 + LUTAX_037 - LUTAX_456</field>
+        <field name="formula">LUTAX_021 + LUTAX_037 - LUTAX_456 - LUTAX_455 - LUTAX_471</field>
     </record>
 
     <record id="account_tax_report_line_1a_app_goods_non_bus" model="account.tax.report.line">
@@ -928,6 +945,7 @@
 
     <record id="account_tax_report_line_3b1_rel_trans" model="account.tax.report.line">
       <field name="name">094 - relating to transactions which are exempt pursuant to articles 44 and 56quater</field>
+      <field name="tag_name">094</field>
       <field name="sequence">1</field>
       <field name="parent_id" ref="account_tax_report_line_3b_total_input_tax_nd"/>
       <field name="code">LUTAX_094</field>
@@ -936,12 +954,23 @@
 
     <record id="account_tax_report_line_3b2_ded_prop" model="account.tax.report.line">
       <field name="name">095 - where the deductible proportion determined in accordance to article 50 is applied</field>
+      <field name="tag_name">095</field>
       <field name="sequence">2</field>
       <field name="parent_id" ref="account_tax_report_line_3b_total_input_tax_nd"/>
       <field name="code">LUTAX_095</field>
       <field name="report_id" ref="tax_report"/>
     </record>
 
+    <record id="account_tax_report_line_3b2_input_tax_margin" model="account.tax.report.line">
+      <field name="name">096 - Non recoverable input tax in accordance with Art. 56ter-1(7) and 56ter-2(7) (when applying the margin scheme)</field>
+      <field name="tag_name">096</field>
+      <field name="sequence">3</field>
+      <field name="code">LUTAX_096</field>
+      <field name="report_id" ref="tax_report"/>
+      <field name="parent_id" ref="account_tax_report_line_3b_total_input_tax_nd"/>
+    </record>
+
+    <!-- Note: any change in formula here should be reflected in section `IV.B. Total input tax deductible (104)` above -->
     <record id="account_tax_report_line_3c_total_input_tax_deductible" model="account.tax.report.line">
       <field name="name">102 - Total input tax deductible</field>
       <field name="sequence">3</field>

@@ -4,6 +4,7 @@ import clientAction from 'report.client_action';
 import core from 'web.core';
 
 const qweb = core.qweb;
+const _t = core._t;
 
 const ReceptionReport = clientAction.extend({
     /**
@@ -70,7 +71,7 @@ const ReceptionReport = clientAction.extend({
 
 
     _switchButton: function (button) {
-        button.innerText = button.innerText.includes('Unassign') ? "Assign" : "Unassign";
+        button.innerText = button.innerText.includes(_t("Unassign")) ? _t("Assign") : _t("Unassign");
         button.name = button.name === 'assign_link' ? 'unassign_link' : 'assign_link';
         button.classList.toggle("o_report_reception_assign");
         button.classList.toggle("o_report_reception_unassign");
@@ -99,7 +100,9 @@ const ReceptionReport = clientAction.extend({
                 nodeToAssign = iframe.querySelectorAll('.o_report_reception_assign:not(.o_assign_all)');
             } else { // Local assign all
                 nodeToAssign = el.closest('thead').nextElementSibling.querySelectorAll('.o_report_reception_assign:not(.o_assign_all)');
-                el.closest('thead').nextElementSibling.querySelectorAll('.o_print_label_all').forEach(button => button.removeAttribute('disabled'));
+                const thead = el.closest('thead');
+                thead.querySelector('.o_print_label_all').removeAttribute('disabled');
+                thead.nextElementSibling.querySelectorAll('.o_print_label_all').forEach(button => button.removeAttribute('disabled'));
             }
         }
         nodeToAssign.forEach(node => {
@@ -124,15 +127,17 @@ const ReceptionReport = clientAction.extend({
      */
      _onClickUnassign: function (ev) {
         const el = ev.currentTarget;
-        this._switchButton(el);
         const quantity = parseFloat(el.getAttribute('qty'));
         const modelId = parseInt(el.getAttribute('move-id'));
         const inIds = JSON.parse("[" + el.getAttribute('move-ins-ids') + "]");
-        el.closest('td').nextElementSibling.querySelectorAll('.o_print_label').forEach(button => button.setAttribute('disabled', true));
         return this._rpc({
             model: 'report.stock.report_reception',
             args: [false, modelId, quantity, inIds[0]],
             method: 'action_unassign'
+        }).then(() => {
+            // only switch buttons if successful
+            this._switchButton(el);
+            el.closest('td').nextElementSibling.querySelectorAll('.o_print_label').forEach(button => button.setAttribute('disabled', true));
         });
     },
 
@@ -156,16 +161,10 @@ const ReceptionReport = clientAction.extend({
      * Print the corresponding source label
      */
     _onClickPrintLabel: function (ev) {
-        // unfortunately, due to different reports needed for different models, we will handle
-        // pickings here and others models will have to be extended/printed separately until better
-        // technique to merge into continuous pdf to written
-        return this._printLabel(ev, 'stock.report_reception_report_label', 'stock.picking');
-    },
-
-    _printLabel: function (ev, report_file, sourceModel) {
         const el = ev.currentTarget;
         const modelIds = [];
         const productQtys = [];
+        const report_file = 'stock.report_reception_report_label';
         let nodeToPrint = [];
 
         if (el.name === 'print_label') { // One line print
@@ -179,10 +178,8 @@ const ReceptionReport = clientAction.extend({
         }
 
         nodeToPrint.forEach(node => {
-            if (node.getAttribute('source-model') === sourceModel) {
-                modelIds.push(parseInt(node.getAttribute('source-id')));
-                productQtys.push(Math.ceil(node.getAttribute('qty')) || '1');
-            }
+            modelIds.push(parseInt(node.getAttribute('move-id')));
+            productQtys.push(Math.ceil(node.getAttribute('qty')) || '1');
         });
 
         if (!modelIds.length) { // Nothing to print for this model.

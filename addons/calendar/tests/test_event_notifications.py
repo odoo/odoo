@@ -124,23 +124,25 @@ class TestEventNotifications(TransactionCase, MailCase, CronMixinCase):
         })
         now = fields.Datetime.now()
         with patch.object(fields.Datetime, 'now', lambda: now):
-            with self.assertBus([(self.env.cr.dbname, 'calendar.alarm', self.partner.id)]):
+            with self.assertBus([(self.env.cr.dbname, 'res.partner', self.partner.id)], [
+                {
+                    "type": "calendar.alarm",
+                    "payload": [{
+                        "alarm_id": alarm.id,
+                        "event_id": self.event.id,
+                        "title": "Doom's day",
+                        "message": self.event.display_time,
+                        "timer": 20 * 60,
+                        "notify_at": fields.Datetime.to_string(now + relativedelta(minutes=20)),
+                    }],
+                },
+            ]):
                 self.event.with_context(no_mail_to_attendees=True).write({
                     'start': now + relativedelta(minutes=50),
                     'stop': now + relativedelta(minutes=55),
                     'partner_ids': [(4, self.partner.id)],
                     'alarm_ids': [(4, alarm.id)]
                 })
-            bus_message = [{
-                "alarm_id": alarm.id,
-                "event_id": self.event.id,
-                "title": "Doom's day",
-                "message": self.event.display_time,
-                "timer": 20*60,
-                "notify_at": fields.Datetime.to_string(now + relativedelta(minutes=20)),
-            }]
-            notif = self.env['calendar.alarm_manager'].with_user(self.user).get_next_notif()
-            self.assertEqual(notif, bus_message)
 
     def test_email_alarm(self):
         now = fields.Datetime.now()

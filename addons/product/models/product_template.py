@@ -55,7 +55,6 @@ class ProductTemplate(models.Model):
             ('consu', 'Consumable'),
             ('service', 'Service')
         ],
-        default='consu',
         compute='_compute_type',
         store=True,
         readonly=False,
@@ -86,7 +85,7 @@ class ProductTemplate(models.Model):
         inverse='_set_standard_price', search='_search_standard_price',
         digits='Product Price', groups="base.group_user",
         help="""In Standard Price & AVCO: value of the product (automatically computed in AVCO).
-        In FIFO: value of the last unit that left the stock (automatically computed).
+        In FIFO: value of the next unit that will leave the stock (automatically computed).
         Used to value the product when the purchase cost is not known (e.g. inventory adjustment).
         Used to compute margins on sale orders.""")
 
@@ -278,8 +277,14 @@ class ProductTemplate(models.Model):
     def _compute_barcode(self):
         self.barcode = False
         for template in self:
-            if len(template.product_variant_ids) == 1:
+            # TODO master: update product_variant_count depends and use it instead
+            variant_count = len(template.product_variant_ids)
+            if variant_count == 1:
                 template.barcode = template.product_variant_ids.barcode
+            elif variant_count == 0:
+                archived_variants = template.with_context(active_test=False).product_variant_ids
+                if len(archived_variants) == 1:
+                    template.barcode = archived_variants.barcode
 
     def _search_barcode(self, operator, value):
         templates = self.with_context(active_test=False).search([('product_variant_ids.barcode', operator, value)])
@@ -417,12 +422,12 @@ class ProductTemplate(models.Model):
         for record in self:
             record.type = type_mapping.get(record.detailed_type, record.detailed_type)
 
-    # @api.constrains('type', 'detailed_type')
-    # def _constrains_detailed_type(self):
-    #     type_mapping = self._detailed_type_mapping()
-    #     for record in self:
-    #         if record.type != type_mapping.get(record.detailed_type, record.detailed_type):
-    #             raise ValidationError(_("The Type of this product doesn't match the Detailed Type"))
+    @api.constrains('type', 'detailed_type')
+    def _constrains_detailed_type(self):
+        type_mapping = self._detailed_type_mapping()
+        for record in self:
+            if record.type != type_mapping.get(record.detailed_type, record.detailed_type):
+                raise ValidationError(_("The Type of this product doesn't match the Detailed Type"))
 
     @api.constrains('uom_id', 'uom_po_id')
     def _check_uom(self):
@@ -445,6 +450,12 @@ class ProductTemplate(models.Model):
         return {}
 
     def _sanitize_vals(self, vals):
+        """Sanitize vales for writing/creating product templates and variants.
+
+        Values need to be sanitized to keep values synchronized, and to be able to preprocess the
+        vals in extensions of create/write.
+        :param vals: create/write values dictionary
+        """
         if 'type' in vals and 'detailed_type' not in vals:
             if vals['type'] not in self.mapped('type'):
                 vals['detailed_type'] = vals['type']
@@ -536,7 +547,6 @@ class ProductTemplate(models.Model):
 
         Product = self.env['product.product']
         templates = self.browse([])
-        domain_no_variant = [('product_variant_ids', '=', False)]
         while True:
             domain = templates and [('product_tmpl_id', 'not in', templates.ids)] or []
             args = args if args is not None else []
@@ -551,13 +561,7 @@ class ProductTemplate(models.Model):
                    If this happens, an infinite loop will occur."""
                 break
             templates |= new_templates
-            current_round_templates = self.browse([])
-            if not products:
-                domain_template = args + domain_no_variant + (templates and [('id', 'not in', templates.ids)] or [])
-                template_ids = super(ProductTemplate, self)._name_search(name=name, args=domain_template, operator=operator, limit=limit, name_get_uid=name_get_uid)
-                current_round_templates |= self.browse(template_ids)
-                templates |= current_round_templates
-            if (not products and not current_round_templates) or (limit and (len(templates) > limit)):
+            if (not products) or (limit and (len(templates) > limit)):
                 break
 
         searched_ids = set(templates.ids)
@@ -565,10 +569,16 @@ class ProductTemplate(models.Model):
         # we need to add the base _name_search to the results
         # FIXME awa: this is really not performant at all but after discussing with the team
         # we don't see another way to do it
+        tmpl_without_variant_ids = []
         if not limit or len(searched_ids) < limit:
+            tmpl_without_variant_ids = self.env['product.template'].search(
+                [('id', 'not in', self.env['product.template']._search([('product_variant_ids.active', '=', True)]))]
+            )
+        if tmpl_without_variant_ids:
+            domain = expression.AND([args or [], [('id', 'in', tmpl_without_variant_ids.ids)]])
             searched_ids |= set(super(ProductTemplate, self)._name_search(
                     name,
-                    args=args,
+                    args=domain,
                     operator=operator,
                     limit=limit,
                     name_get_uid=name_get_uid))
@@ -689,6 +699,9 @@ class ProductTemplate(models.Model):
                 # For each possible variant, create if it doesn't exist yet.
                 for combination_tuple in all_combinations:
                     combination = self.env['product.template.attribute.value'].concat(*combination_tuple)
+                    is_combination_possible = tmpl_id._is_combination_possible_by_config(combination, ignore_no_variant=True)
+                    if not is_combination_possible:
+                        continue
                     if combination in existing_variants:
                         current_variants_to_activate += existing_variants[combination]
                     else:
@@ -719,6 +732,9 @@ class ProductTemplate(models.Model):
             Product.create(variants_to_create)
         if variants_to_unlink:
             variants_to_unlink._unlink_or_archive()
+            # prevent change if exclusion deleted template by deleting last variant
+            if self.exists() != self:
+                raise UserError(_("This configuration of product attributes, values, and exclusions would lead to no possible variant. Please archive or delete your product directly if intended."))
 
         # prefetched o2m have to be reloaded (because of active_test)
         # (eg. product.template: product_variant_ids)
@@ -923,6 +939,15 @@ class ProductTemplate(models.Model):
             # combination has different values than the ones configured on the template
             return False
 
+        exclusions = self._get_own_attribute_exclusions()
+        if exclusions:
+            # exclude if the current value is in an exclusion,
+            # and the value excluding it is also in the combination
+            for ptav in combination:
+                for exclusion in exclusions.get(ptav.id):
+                    if exclusion in combination.ids:
+                        return False
+
         return True
 
     def _is_combination_possible(self, combination, parent_combination=None, ignore_no_variant=False):
@@ -966,15 +991,6 @@ class ProductTemplate(models.Model):
             if not variant or not variant.active:
                 # not dynamic, the variant has been archived or deleted
                 return False
-
-        exclusions = self._get_own_attribute_exclusions()
-        if exclusions:
-            # exclude if the current value is in an exclusion,
-            # and the value excluding it is also in the combination
-            for ptav in combination:
-                for exclusion in exclusions.get(ptav.id):
-                    if exclusion in combination.ids:
-                        return False
 
         parent_exclusions = self._get_parent_attribute_exclusions(parent_combination)
         if parent_exclusions:

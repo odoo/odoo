@@ -184,7 +184,7 @@ export function useDropdownNavigation() {
                 menuElement = menuElements[nextIndex];
             }
             menuElement.makeOnlyActive();
-            scrollTo(menuElement.el, menuElement.el.parentElement);
+            scrollTo(menuElement.el, { scrollable: menuElement.el.parentElement });
         }
     };
 

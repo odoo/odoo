@@ -49,7 +49,8 @@ class Website(models.Model):
                     "id": chat_request_channel.id,
                     "operator_pid": [
                         chat_request_channel.livechat_operator_id.id,
-                        chat_request_channel.livechat_operator_id.display_name
+                        chat_request_channel.livechat_operator_id.user_livechat_username or chat_request_channel.livechat_operator_id.display_name,
+                        chat_request_channel.livechat_operator_id.user_livechat_username,
                     ],
                     "name": chat_request_channel.name,
                     "uuid": chat_request_channel.uuid,

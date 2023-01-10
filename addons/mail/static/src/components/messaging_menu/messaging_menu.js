@@ -30,6 +30,16 @@ export class MessagingMenu extends Component {
      */
     _constructor() {}
 
+    /**
+     * @override
+     */
+    setup() {
+        // for now, the legacy env is needed for internal functions such as
+        // `useModels` to work
+        this.env = owl.Component.env;
+        super.setup();
+    }
+
     mounted() {
         document.addEventListener('click', this._onClickCaptureGlobal, true);
     }
@@ -90,7 +100,7 @@ export class MessagingMenu extends Component {
             return;
         }
         // ignore click inside the menu
-        if (this.el.contains(ev.target)) {
+        if (!this.el || this.el.contains(ev.target)) {
             return;
         }
         // in all other cases: close the messaging menu when clicking outside

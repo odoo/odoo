@@ -18,7 +18,7 @@ class MrpRoutingWorkcenter(models.Model):
         help="Gives the sequence order when displaying a list of routing Work Centers.")
     bom_id = fields.Many2one(
         'mrp.bom', 'Bill of Material',
-        index=True, ondelete='cascade', required=True,
+        index=True, ondelete='cascade', required=True, check_company=True,
         help="The Bill of Material this operation is linked to")
     company_id = fields.Many2one('res.company', 'Company', related='bom_id.company_id')
     worksheet_type = fields.Selection([
@@ -93,7 +93,14 @@ class MrpRoutingWorkcenter(models.Model):
         if 'bom_id' in self.env.context:
             bom_id = self.env.context.get('bom_id')
             for operation in self:
-                operation.copy({'name': _("%s (copy)", operation.name), 'bom_id': bom_id})
+                operation.copy({'bom_id': bom_id})
+            return {
+                'view_mode': 'form',
+                'res_model': 'mrp.bom',
+                'views': [(False, 'form')],
+                'type': 'ir.actions.act_window',
+                'res_id': bom_id,
+            }
 
     def _skip_operation_line(self, product):
         """ Control if a operation should be processed, can be inherited to add
@@ -103,3 +110,9 @@ class MrpRoutingWorkcenter(models.Model):
         if product._name == 'product.template':
             return False
         return not product._match_all_variant_values(self.bom_product_template_attribute_value_ids)
+
+    def _get_comparison_values(self):
+        if not self:
+            return False
+        self.ensure_one()
+        return tuple(self[key] for key in  ('name', 'company_id', 'workcenter_id', 'time_mode', 'time_cycle_manual', 'bom_product_template_attribute_value_ids'))

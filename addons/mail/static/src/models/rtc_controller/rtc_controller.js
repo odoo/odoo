@@ -2,7 +2,7 @@
 
 import { registerNewModel } from '@mail/model/model_core';
 import { attr, one2one } from '@mail/model/model_field';
-import { create } from '@mail/model/model_field_command';
+import { insertAndReplace } from '@mail/model/model_field_command';
 
 function factory(dependencies) {
 
@@ -94,7 +94,7 @@ function factory(dependencies) {
          * @private
          */
         _computeIsSmall() {
-            return this.callViewer && this.callViewer.threadView.compact && !this.callViewer.isFullScreen;
+            return Boolean(this.callViewer && this.callViewer.threadView.compact && !this.callViewer.isFullScreen);
         }
 
     }
@@ -102,19 +102,20 @@ function factory(dependencies) {
     RtcController.fields = {
         callViewer: one2one('mail.rtc_call_viewer', {
             inverse: 'rtcController',
+            readonly: true,
             required: true,
         }),
         isSmall: attr({
             compute: '_computeIsSmall',
         }),
         rtcOptionList: one2one('mail.rtc_option_list', {
-            default: create(),
+            default: insertAndReplace(),
             inverse: 'rtcController',
             isCausal: true,
             required: true,
         }),
     };
-
+    RtcController.identifyingFields = ['callViewer'];
     RtcController.modelName = 'mail.rtc_controller';
 
     return RtcController;

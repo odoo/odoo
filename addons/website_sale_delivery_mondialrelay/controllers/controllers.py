@@ -80,7 +80,7 @@ class PaymentPortalMondialRelay(PaymentPortal):
     @http.route()
     def shop_payment_transaction(self, *args, **kwargs):
         order = request.website.sale_get_order()
-        if order.partner_shipping_id.is_mondialrelay and not order.carrier_id.is_mondialrelay:
+        if order.partner_shipping_id.is_mondialrelay and order.carrier_id and not order.carrier_id.is_mondialrelay and order.delivery_set:
             raise ValidationError(_('Point Relais® can only be used with the delivery method Mondial Relay.'))
         elif not order.partner_shipping_id.is_mondialrelay and order.carrier_id.is_mondialrelay:
             raise ValidationError(_('Delivery method Mondial Relay can only ship to Point Relais®.'))

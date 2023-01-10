@@ -11,19 +11,20 @@ registerInstancePatchModel('mail.messaging_notification_handler', 'website_livec
     /**
      * @override
      */
-    _handleNotificationPartner(data) {
-        const { info } = data;
-        if (info === 'send_chat_request') {
-            this._handleNotificationPartnerChannel(data);
+    async _handleNotification(message) {
+        if (message.type === 'website_livechat.send_chat_request') {
+            const convertedData = this.messaging.models['mail.thread'].convertData(
+                Object.assign({ model: 'mail.channel' }, message.payload)
+            );
+            this.messaging.models['mail.thread'].insert(convertedData);
             const channel = this.messaging.models['mail.thread'].findFromIdentifyingData({
-                id: data.id,
+                id: message.payload.id,
                 model: 'mail.channel',
             });
             this.messaging.chatWindowManager.openThread(channel, {
                 makeActive: true,
             });
-            return;
         }
-        return this._super(data);
+        return this._super(message);
     },
 });

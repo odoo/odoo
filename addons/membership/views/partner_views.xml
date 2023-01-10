@@ -91,9 +91,9 @@
             <field name="model">res.partner</field>
             <field name="inherit_id" ref="base.view_partner_tree"/>
             <field name="arch" type="xml">
-                <tree string="Contacts">
+                <field name="category_id" position="after">
                     <field name="membership_state" optional="hide"/>
-                </tree>
+                </field>
             </field>
         </record>
 

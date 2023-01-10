@@ -65,8 +65,8 @@
                                         <field name="suspense_account_id"
                                                attrs="{'required': [('type', 'in', ('bank', 'cash'))], 'invisible': [('type', 'not in', ('bank', 'cash'))]}"
                                                groups="account.group_account_readonly"/>
-                                        <field name="profit_account_id" attrs="{'invisible': [('type', '!=', 'cash')]}"/>
-                                        <field name="loss_account_id" attrs="{'invisible': [('type', '!=', 'cash')]}"/>
+                                        <field name="profit_account_id" attrs="{'invisible': ['!', ('type', 'in', ('cash', 'bank'))]}"/>
+                                        <field name="loss_account_id" attrs="{'invisible': ['!', ('type', 'in', ('cash', 'bank'))]}"/>
                                         <!-- Sales -->
                                         <field name="default_account_id" string="Default Income Account"
                                                attrs="{'required': [('type', '=', 'sale')], 'invisible': [('type', '!=', 'sale')]}"
@@ -98,7 +98,7 @@
                                         <field name="payment_method_id" options="{'no_create': True, 'no_open': True}"/>
                                         <field name="name"/>
                                         <field name="payment_account_id"
-                                               placeholder="Let empty to use the default outstanding account"
+                                               placeholder="Leave empty to use the default outstanding account"
                                                string="Outstanding Receipts accounts"
                                                optional="hide"
                                                groups="account.group_account_readonly"/>
@@ -115,7 +115,7 @@
                                             <field name="payment_method_id" options="{'no_create': True, 'no_open': True}"/>
                                             <field name="name"/>
                                             <field name="payment_account_id"
-                                                   placeholder="Let empty to use the default outstanding account"
+                                                   placeholder="Leave empty to use the default outstanding account"
                                                    string="Outstanding Payments accounts"
                                                    optional="hide"
                                                    groups="account.group_account_readonly"/>
@@ -128,7 +128,7 @@
                                 <group>
                                     <group string="Control-Access" groups="account.group_account_manager">
                                         <div class="text-muted" colspan="2">Keep empty for no control</div>
-                                        <field name="type_control_ids" widget="many2many_tags"/>
+                                        <field name="type_control_ids" widget="many2many_tags" options="{'no_create': True}"/>
                                         <field name="account_control_ids" widget="many2many_tags"/>
                                         <field name="restrict_mode_hash_table" groups="account.group_account_readonly" attrs="{'invisible': [('type', 'in', ['bank', 'cash'])]}"/>
                                     </group>

@@ -265,7 +265,7 @@ def html_sanitize(src, silent=True, sanitize_tags=True, sanitize_attributes=Fals
 # ----------------------------------------------------------
 
 URL_REGEX = r'(\bhref=[\'"](?!mailto:|tel:|sms:)([^\'"]+)[\'"])'
-TEXT_URL_REGEX = r'https?://[a-zA-Z0-9@:%._\+~#=/-]+(?:\?\S+)?'
+TEXT_URL_REGEX = r'https?://[\w@:%.+&~#=/-]+(?:\?\S+)?'
 # retrieve inner content of the link
 HTML_TAG_URL_REGEX = URL_REGEX + r'([^<>]*>([^<>]+)<\/)?'
 
@@ -604,7 +604,7 @@ def encapsulate_email(old_email, new_email):
     e.g.
     * Old From: "Admin" <admin@gmail.com>
     * New From: notifications@odoo.com
-    * Output:   "Admin (admin@gmail.com)" <notifications@odoo.com>
+    * Output: "Admin" <notifications@odoo.com>
     """
     old_email_split = getaddresses([old_email])
     if not old_email_split or not old_email_split[0]:
@@ -614,10 +614,11 @@ def encapsulate_email(old_email, new_email):
     if not new_email_split or not new_email_split[0]:
         return
 
-    if old_email_split[0][0]:
-        name_part = '%s (%s)' % old_email_split[0]
+    old_name, old_email = old_email_split[0]
+    if old_name:
+        name_part = old_name
     else:
-        name_part = old_email_split[0][1]
+        name_part = old_email.split("@")[0]
 
     return formataddr((
         name_part,

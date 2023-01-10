@@ -3,18 +3,18 @@
 # 	* hr_org_chart
 # 
 # Translators:
-# Martin Trigaux, 2019
-# Bole <bole@dajmi5.com>, 2019
-# Đurđica Žarković <durdica.zarkovic@storm.hr>, 2019
-# Karolina Tonković <karolina.tonkovic@storm.hr>, 2019
+# Karolina Tonković <karolina.tonkovic@storm.hr>, 2022
+# Milan Tribuson <one.mile.code@gmail.com>, 2022
+# Martin Trigaux, 2022
+# Bole <bole@dajmi5.com>, 2022
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~12.4\n"
+"Project-Id-Version: Odoo Server saas~14.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-08-12 11:32+0000\n"
-"PO-Revision-Date: 2019-08-26 09:10+0000\n"
-"Last-Translator: Karolina Tonković <karolina.tonkovic@storm.hr>, 2019\n"
+"POT-Creation-Date: 2021-07-12 07:50+0000\n"
+"PO-Revision-Date: 2021-09-14 12:22+0000\n"
+"Last-Translator: Bole <bole@dajmi5.com>, 2022\n"
 "Language-Team: Croatian (https://www.transifex.com/odoo/teams/41243/hr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -25,17 +25,17 @@ msgstr ""
 #. module: hr_org_chart
 #: model:ir.model,name:hr_org_chart.model_hr_employee_base
 msgid "Basic Employee"
-msgstr ""
+msgstr "Obični zaposlenik"
 
 #. module: hr_org_chart
 #: model:ir.model.fields,help:hr_org_chart.field_hr_employee__subordinate_ids
 #: model:ir.model.fields,help:hr_org_chart.field_hr_employee_public__subordinate_ids
 msgid "Direct and indirect subordinates"
-msgstr ""
+msgstr "Direktni i indirektni podređeni"
 
 #. module: hr_org_chart
 #. openerp-web
-#: code:addons/hr_org_chart/static/src/xml/hr_org_chart.xml:126
+#: code:addons/hr_org_chart/static/src/xml/hr_org_chart.xml:0
 #, python-format
 msgid "Direct subordinates"
 msgstr "Direktno podređeni"
@@ -47,35 +47,36 @@ msgstr "Zaposlenik"
 
 #. module: hr_org_chart
 #. openerp-web
-#: code:addons/hr_org_chart/static/src/xml/hr_org_chart.xml:88
+#: code:addons/hr_org_chart/static/src/xml/hr_org_chart.xml:0
 #, python-format
 msgid "In order to get an organigram, set a manager and save the record."
-msgstr ""
+msgstr "kako bi dobili organigram, postavite voditelja i snimite zapis."
 
 #. module: hr_org_chart
 #: model:ir.model.fields,field_description:hr_org_chart.field_hr_employee__child_all_count
 #: model:ir.model.fields,field_description:hr_org_chart.field_hr_employee_base__child_all_count
 #: model:ir.model.fields,field_description:hr_org_chart.field_hr_employee_public__child_all_count
-msgid "Indirect Surbordinates Count"
-msgstr "Broj indirektno podređenih"
+msgid "Indirect Subordinates Count"
+msgstr "Broj indirektnih podređenih"
 
 #. module: hr_org_chart
 #. openerp-web
-#: code:addons/hr_org_chart/static/src/xml/hr_org_chart.xml:136
+#: code:addons/hr_org_chart/static/src/xml/hr_org_chart.xml:0
 #, python-format
 msgid "Indirect subordinates"
 msgstr "Indirektno podređeni"
 
 #. module: hr_org_chart
 #. openerp-web
-#: code:addons/hr_org_chart/static/src/xml/hr_org_chart.xml:65
+#: code:addons/hr_org_chart/static/src/xml/hr_org_chart.xml:0
+#: code:addons/hr_org_chart/static/src/xml/hr_org_chart.xml:0
 #, python-format
 msgid "More managers"
 msgstr "Više voditelja"
 
 #. module: hr_org_chart
 #. openerp-web
-#: code:addons/hr_org_chart/static/src/xml/hr_org_chart.xml:86
+#: code:addons/hr_org_chart/static/src/xml/hr_org_chart.xml:0
 #, python-format
 msgid "No hierarchy position."
 msgstr "Nema strukturnu poziciju"
@@ -90,14 +91,22 @@ msgstr "Struktura organizacije"
 #. module: hr_org_chart
 #: model:ir.model,name:hr_org_chart.model_hr_employee_public
 msgid "Public Employee"
-msgstr ""
+msgstr "Javni djelatnik"
 
 #. module: hr_org_chart
 #. openerp-web
-#: code:addons/hr_org_chart/static/src/xml/hr_org_chart.xml:155
+#: code:addons/hr_org_chart/static/src/xml/hr_org_chart.xml:0
+#: code:addons/hr_org_chart/static/src/xml/hr_org_chart.xml:0
 #, python-format
 msgid "Redirect"
 msgstr "Preusmjeri"
+
+#. module: hr_org_chart
+#. openerp-web
+#: code:addons/hr_org_chart/static/src/xml/hr_org_chart.xml:108
+#, python-format
+msgid "See All"
+msgstr ""
 
 #. module: hr_org_chart
 #: model:ir.model.fields,field_description:hr_org_chart.field_hr_employee__subordinate_ids
@@ -107,14 +116,21 @@ msgstr "Podređeni djelatnici"
 
 #. module: hr_org_chart
 #. openerp-web
-#: code:addons/hr_org_chart/static/src/xml/hr_org_chart.xml:87
+#: code:addons/hr_org_chart/static/src/js/hr_org_chart.js:181
+#, python-format
+msgid "Team"
+msgstr "Tim"
+
+#. module: hr_org_chart
+#. openerp-web
+#: code:addons/hr_org_chart/static/src/xml/hr_org_chart.xml:0
 #, python-format
 msgid "This employee has no manager or subordinate."
 msgstr "Ovaj djelatnik nema voditelja ili podređenih."
 
 #. module: hr_org_chart
 #. openerp-web
-#: code:addons/hr_org_chart/static/src/xml/hr_org_chart.xml:144
+#: code:addons/hr_org_chart/static/src/xml/hr_org_chart.xml:0
 #, python-format
 msgid "Total"
 msgstr "Ukupno"

@@ -59,7 +59,7 @@ class ReceptionReport(models.AbstractModel):
 
         # only match for non-mto moves in same warehouse
         warehouse = pickings[0].picking_type_id.warehouse_id
-        wh_location_ids = self.env['stock.location'].search([('id', 'child_of', warehouse.view_location_id.id), ('location_id.usage', '!=', 'supplier')]).ids
+        wh_location_ids = self.env['stock.location']._search([('id', 'child_of', warehouse.view_location_id.id), ('usage', '!=', 'supplier')])
 
         allowed_states = ['confirmed', 'partially_available', 'waiting']
         if 'done' in picking_states:
@@ -86,10 +86,12 @@ class ReceptionReport(models.AbstractModel):
         # show potential moves that can be assigned
         for product_id, outs in products_to_outs.items():
             for out in outs:
-                # only show pickings or MOs, no SOs
-                source = out.picking_id if out.picking_id else out._get_source_document()
+                # we expect len(source) = 2 when picking + origin [e.g. SO] and len() = 1 otherwise [e.g. MO]
+                source = (out._get_source_document(),)
                 if not source:
                     continue
+                if out.picking_id and source[0] != out.picking_id:
+                    source = (out.picking_id, source[0])
 
                 qty_to_reserve = out.product_qty
                 product_uom = out.product_id.uom_id
@@ -114,14 +116,14 @@ class ReceptionReport(models.AbstractModel):
                         break
 
                 if not float_is_zero(qty_done, precision_rounding=product_uom.rounding):
-                    sources_to_lines[source].append(self._prepare_report_line(qty_done, product_id, out, source, move_ins=self.env['stock.move'].browse(moves_in_ids)))
+                    sources_to_lines[source].append(self._prepare_report_line(qty_done, product_id, out, source[0], move_ins=self.env['stock.move'].browse(moves_in_ids)))
 
                 # draft qtys can be shown but not assigned
                 qty_expected = product_to_qty_draft.get(product_id, 0)
                 if float_compare(qty_to_reserve, qty_done, precision_rounding=product_uom.rounding) > 0 and\
                         not float_is_zero(qty_expected, precision_rounding=product_uom.rounding):
                     to_expect = min(qty_expected, qty_to_reserve - qty_done)
-                    sources_to_lines[source].append(self._prepare_report_line(to_expect, product_id, out, source, is_qty_assignable=False))
+                    sources_to_lines[source].append(self._prepare_report_line(to_expect, product_id, out, source[0], is_qty_assignable=False))
                     product_to_qty_draft[product_id] -= to_expect
 
         # show already assigned moves
@@ -135,17 +137,19 @@ class ReceptionReport(models.AbstractModel):
                     # it is possible there are different in moves linked to the same out moves due to batch
                     # => we guess as to which outs correspond to this report...
                     continue
-                source = out_move.picking_id if out_move.picking_id else out_move._get_source_document()
+                source = (out_move._get_source_document(),)
                 if not source:
                     continue
+                if out_move.picking_id and source[0] != out_move.picking_id:
+                    source = (out_move.picking_id, source[0])
                 qty_assigned = min(total_assigned, out_move.product_qty)
                 sources_to_lines[source].append(
-                    self._prepare_report_line(qty_assigned, product_id, out_move, source, is_assigned=True, move_ins=moves_in))
+                    self._prepare_report_line(qty_assigned, product_id, out_move, source[0], is_assigned=True, move_ins=moves_in))
 
         # dates aren't auto-formatted when printed in report :(
         sources_to_formatted_scheduled_date = defaultdict(list)
         for source, dummy in sources_to_lines.items():
-            sources_to_formatted_scheduled_date[source] = self._get_formatted_scheduled_date(source)
+            sources_to_formatted_scheduled_date[source] = self._get_formatted_scheduled_date(source[0])
 
         return {
             'data': data,
@@ -262,9 +266,12 @@ class ReceptionReport(models.AbstractModel):
             amount_unassigned += min(qty, in_move.product_qty)
             if float_compare(qty, amount_unassigned, precision_rounding=out.product_id.uom_id.rounding) <= 0:
                 break
-        if out.move_orig_ids:
-            # annoying use case: batch reserved + individual picking unreserved, need to split the out move
-            new_move_vals = out._split(amount_unassigned)
+        if out.move_orig_ids and out.state != 'done':
+            # annoying use cases where we need to split the out move:
+            # 1. batch reserved + individual picking unreserved
+            # 2. moves linked from backorder generation
+            total_still_linked = sum(out.move_orig_ids.mapped('product_qty'))
+            new_move_vals = out._split(out.product_qty - total_still_linked)
             if new_move_vals:
                 new_move_vals[0]['procure_method'] = 'make_to_order'
                 new_out = self.env['stock.move'].create(new_move_vals)
@@ -292,3 +299,4 @@ class ReceptionReport(models.AbstractModel):
                 new_out._recompute_state()
         out.procure_method = 'make_to_stock'
         out._recompute_state()
+        return True

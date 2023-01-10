@@ -33,6 +33,18 @@
                             <i class="fa fa-phone"/>
                         </div>
                     </t>
+                    <t t-if="chatWindow.hasInviteFeature">
+                        <t t-if="!chatWindow.channelInvitationForm">
+                            <div class="o_ChatWindowHeader_command" title="Add users" t-on-click="chatWindow.onClickShowInviteForm">
+                                <i class="fa fa-lg fa-user-plus"/>
+                            </div>
+                        </t>
+                        <t t-if="chatWindow.channelInvitationForm">
+                            <div class="o_ChatWindowHeader_command" title="Stop adding users" t-on-click="chatWindow.onClickHideInviteForm">
+                                <i class="fa fa-lg fa-user-plus"/>
+                            </div>
+                        </t>
+                    </t>
                     <t t-if="chatWindow.thread and chatWindow.thread.hasMemberListFeature and !chatWindow.isMemberListOpened">
                         <div class="o_ChatWindowHeader_command o_ChatWindowHeader_commandShowMemberList" t-att-class="{ 'o-mobile': messaging.device.isMobile }"  title="Show Member List" t-on-click="chatWindow.onClickShowMemberList">
                             <i class="fa fa-users"/>

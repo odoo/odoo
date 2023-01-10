@@ -5,7 +5,7 @@
     'name': 'Check Printing Base',
     'version': '1.0',
     'category': 'Accounting/Accounting',
-    'summary': 'Check printing commons',
+    'summary': 'Check printing basic features',
     'description': """
 This module offers the basic functionalities to make payments by printing checks.
 It must be used as a dependency for modules that provide country-specific check templates.

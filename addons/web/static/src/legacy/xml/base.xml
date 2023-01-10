@@ -314,7 +314,7 @@
         <span class="btn-group" aria-atomic="true">
             <!-- accesskeys not wanted in X2Many widgets -->
             <button type="button"
-                class="fa fa-chevron-left btn btn-secondary o_pager_previous px-2 rounded-left"
+                class="fa fa-chevron-left btn btn-secondary o_pager_previous rounded-left"
                 t-att-disabled="state.disabled || singlePage"
                 t-att-accesskey="props.withAccessKey ? 'p' : false"
                 aria-label="Previous page"
@@ -323,7 +323,7 @@
                 t-on-click="_changeSelection(-1)"
             />
             <button type="button"
-                class="fa fa-chevron-right btn btn-secondary o_pager_next px-2 rounded-right"
+                class="fa fa-chevron-right btn btn-secondary o_pager_next rounded-right"
                 t-att-disabled="state.disabled || singlePage"
                 t-att-accesskey="props.withAccessKey ? 'n' : false"
                 aria-label="Next page"
@@ -402,19 +402,19 @@
 <t t-name="web.ActionMenus" owl="1">
     <div class="o_cp_action_menus" t-on-item-selected.stop="_onItemSelected">
         <DropdownMenu t-if="printItems.length"
-            title="env._t('Print')"
+            title="printButtonStrings.title"
             items="printItems"
             icon="'fa fa-print'"
             hotkey="'shift+u'"
-            hotkeyTitle="'Printing options'"
+            hotkeyTitle="printButtonStrings.hotkey"
         />
         <DropdownMenu t-if="actionItems.length"
-            title="env._t('Action')"
+            title="actionButtonStrings.title"
             items="actionItems"
             icon="'fa fa-cog'"
             closeOnSelected="true"
             hotkey="'u'"
-            hotkeyTitle="'Additional actions'"
+            hotkeyTitle="actionButtonStrings.hotkey"
         />
     </div>
 </t>
@@ -796,14 +796,19 @@
 </t>
 <t t-name="FieldDomain.content">
     <div t-if="hasModel" class="o_field_domain_panel">
-        <i class="fa fa-arrow-right" role="img" aria-label="Domain" title="Domain"/>
+        <t t-if="nbRecords !== null">
+            <i class="fa fa-arrow-right" role="img" aria-label="Domain" title="Domain"/>
+            <button t-if="isValid" class="btn btn-sm btn-secondary o_domain_show_selection_button" type="button">
+                <t t-esc="nbRecords"/> record(s)
+            </button>
+            <span t-else="" class="text-warning" role="alert"><i class="fa fa-exclamation-triangle" role="img" aria-label="Warning" title="Warning"/> Invalid domain</span>
+            <button t-if="isDebug and editMode" class="btn btn-sm btn-icon fa fa-refresh o_refresh_count" role="img" aria-label="Refresh" title="Refresh"/>
+        </t>
+        <t t-else="">
+            <i class="fa fa-circle-o-notch fa-spin" role="img" aria-label="Loading" title="Loading"/>
+        </t>
 
-        <button t-if="isValid" class="btn btn-sm btn-secondary o_domain_show_selection_button" type="button">
-            <t t-esc="nbRecords"/> record(s)
-        </button>
-        <span t-else="" class="text-warning" role="alert"><i class="fa fa-exclamation-triangle" role="img" aria-label="Warning" title="Warning"/> Invalid domain</span>
-
-        <button t-if="inDialogEdit" class="btn btn-sm btn-primary o_field_domain_dialog_button">Edit Domain</button>
+        <button t-if="inDialog and editMode" class="btn btn-sm btn-primary o_field_domain_dialog_button">Edit Domain</button>
     </div>
     <div t-else="">Select a model to add a filter.</div>
 </t>
@@ -852,7 +857,7 @@
     </t>
     <label t-if="widget.debug &amp;&amp; !widget.readonly" class="o_domain_debug_container">
         <span class="small"># Code editor</span>
-        <input type="text" class="o_domain_debug_input"/>
+        <textarea type="text" class="o_domain_debug_input"/>
     </label>
 </div>
 <div t-name="DomainTree" class="o_domain_node o_domain_tree">
@@ -1070,11 +1075,11 @@
             </t>
             <t t-if="hasDropdown">
                 <a role="button" href="#" class="dropdown-toggle o-no-caret" data-toggle="dropdown" aria-expanded="false">
-                    <span t-out="_badge_text"/>
+                    <t t-out="_badge_text"/>
                 </a>
             </t>
             <t t-else="">
-                <span t-out="_badge_text"/>
+                <t t-out="_badge_text"/>
             </t>
             <a t-if="!readonly" href="#" class="fa fa-times o_delete" title="Delete" aria-label="Delete"/>
         </div>
@@ -1341,7 +1346,7 @@
             <t t-set="fileupload_action" t-translation="off">/web/binary/upload_attachment</t>
             <t t-set="multi_upload" t-value="true"/>
             <input type="hidden" name="model" t-att-value="widget.model"/>
-            <input type="hidden" name="id" value="0"/>
+            <input type="hidden" name="id" t-att-value="widget.res_id or 0"/>
         </t>
     </div>
 </div>

@@ -21,10 +21,10 @@ export class ComposerSuggestion extends Component {
     //--------------------------------------------------------------------------
 
     /**
-     * @returns {mail.composer}
+     * @returns {mail.composer_view}
      */
-    get composer() {
-        return this.messaging && this.messaging.models['mail.composer'].get(this.props.composerLocalId);
+    get composerView() {
+        return this.messaging && this.messaging.models['mail.composer_view'].get(this.props.composerViewLocalId);
     }
 
     get isCannedResponse() {
@@ -81,14 +81,14 @@ export class ComposerSuggestion extends Component {
      */
     _update() {
         if (
-            this.composer &&
-            this.composer.hasToScrollToActiveSuggestion &&
+            this.composerView &&
+            this.composerView.hasToScrollToActiveSuggestion &&
             this.props.isActive
         ) {
             this.el.scrollIntoView({
                 block: 'center',
             });
-            this.composer.update({ hasToScrollToActiveSuggestion: false });
+            this.composerView.update({ hasToScrollToActiveSuggestion: false });
         }
     }
 
@@ -102,10 +102,10 @@ export class ComposerSuggestion extends Component {
      */
     _onClick(ev) {
         ev.preventDefault();
-        this.composer.update({ activeSuggestedRecord: link(this.record) });
-        this.composer.insertSuggestion();
-        this.composer.closeSuggestions();
-        this.trigger('o-composer-suggestion-clicked');
+        this.composerView.update({ activeSuggestedRecord: link(this.record) });
+        this.composerView.insertSuggestion();
+        this.composerView.closeSuggestions();
+        this.composerView.update({ doFocus: true });
     }
 
 }
@@ -115,7 +115,7 @@ Object.assign(ComposerSuggestion, {
         isActive: false,
     },
     props: {
-        composerLocalId: String,
+        composerViewLocalId: String,
         isActive: Boolean,
         modelName: String,
         recordLocalId: String,

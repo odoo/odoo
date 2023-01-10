@@ -23,3 +23,9 @@ class PurchaseOrder(models.Model):
         moves_subcontracted = self.order_line.move_ids.filtered(lambda m: m.is_subcontract)
         subcontracted_productions = moves_subcontracted.move_orig_ids.production_id
         return subcontracted_productions.picking_ids
+
+    def _get_mrp_productions(self, **kwargs):
+        productions = super()._get_mrp_productions(**kwargs)
+        if kwargs.get('remove_archived_picking_types', True):
+            productions = productions.filtered(lambda production: production.with_context(active_test=False).picking_type_id.active)
+        return productions

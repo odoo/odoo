@@ -149,15 +149,20 @@ class ResPartner(models.Model):
 
     @api.constrains('vat', 'country_id')
     def check_vat(self):
+        # The context key 'no_vat_validation' allows you to store/set a VAT number without doing validations.
+        # This is for API pushes from external platforms where you have no control over VAT numbers.
+        if self.env.context.get('no_vat_validation'):
+            return
+
         for partner in self:
             country = partner.commercial_partner_id.country_id
-            if partner.vat and self._run_vat_test(partner.vat, country) is False:
+            if partner.vat and self._run_vat_test(partner.vat, country, partner.is_company) is False:
                 partner_label = _("partner [%s]", partner.name)
                 msg = partner._build_vat_error_message(country and country.code.lower() or None, partner.vat, partner_label)
                 raise ValidationError(msg)
 
     @api.model
-    def _run_vat_test(self, vat_number, default_country):
+    def _run_vat_test(self, vat_number, default_country, partner_is_company=True):
         """ Checks a VAT number, either syntactically or using VIES, depending
         on the active company's configuration.
         A first check is made by using the first two characters of the VAT as
@@ -165,6 +170,7 @@ class ResPartner(models.Model):
 
         :param vat_number: a string with the VAT number to check.
         :param default_country: a res.country object
+        :param partner_is_company: True if the partner is a company, else False
 
         :return: The country code (in lower case) of the country the VAT number
                  was validated for, if it was validated. False if it could not be validated
@@ -179,7 +185,7 @@ class ResPartner(models.Model):
 
         # Get check function: either simple syntactic check or call to VIES service
         eu_countries = self.env.ref('base.europe').country_ids
-        if company.vat_check_vies and default_country in eu_countries:
+        if company.vat_check_vies and default_country in eu_countries and partner_is_company:
             check_func = self.vies_vat_check
         else:
             check_func = self.simple_vat_check
@@ -226,7 +232,7 @@ class ResPartner(models.Model):
             )
 
         return '\n' + _(
-            'The VAT number [%(wrong_vat)s] for record_label does not seem to be valid. \nNote: the expected format is %(expected_format)s',
+            'The VAT number [%(wrong_vat)s] for %(record_label)s does not seem to be valid. \nNote: the expected format is %(expected_format)s',
             wrong_vat=wrong_vat,
             record_label=record_label,
             expected_format=expected_format,
@@ -262,60 +268,18 @@ class ResPartner(models.Model):
             return check == int(num[8])
         return False
 
-    def _checksum_ci_ec(self, number):
-        """Calculate a checksum over the number."""
-        fold = lambda x: x - 9 if x > 9 else x
-        return sum(fold((2, 1)[i % 2] * int(n))
-                for i, n in enumerate(number)) % 10
-
-    def _checksum_ruc_ec(self, number, weights):
-        """Calculate a checksum over the number given the weights."""
-        return sum(w * int(n) for w, n in zip(weights, number)) % 11
-
-    def is_valid_ci_ec(self, vat):
-        """Check if the number provided is a valid CI number. This checks the
-        length, formatting and check digit."""
-        if len(vat) != 10:
-            return False
-        if not vat.isdecimal():
-            return False
-        if (vat[:2] < '01' or vat[:2] > '24') and (vat[:2] not in ('30', '50')):
-            return False
-        if vat[2] > '6':
-            return False
-        if self._checksum_ci_ec(vat) != 0:
-            return False
-        return True
 
     def is_valid_ruc_ec(self, vat):
-        """Check if the number provided is a valid RUC number. This checks the
-        length, formatting, check digit and check sum."""
-        if len(vat) != 13:
-            return False
-        if not vat.isdecimal():
-            return False
-        if (vat[:2] < '01' or vat[:2] > '24') and (vat[:2] not in ('30', '50')):
-            return False
-        if vat[2] <= '5':
-            # 0..5 = natural RUC: CI plus establishment number
-            if vat[-3:] == '000':
-                return False
-            return self.is_valid_ci_ec(vat[:10])
-        elif vat[2] == '6':
-            # 6 = public RUC
-            #if vat[-4:] == '0000':
-            #    return False
-            if self._checksum_ruc_ec(vat[:9], (3, 2, 7, 6, 5, 4, 3, 2, 1)) != 0:
-                return False
-        elif vat[2] == '9':
-            # 9 = juridical RUC
-            if vat[-3:] == '000':
-                return False
-            if self._checksum_ruc_ec(vat[:10], (4, 3, 2, 7, 6, 5, 4, 3, 2, 1)) != 0:
-                return False
-        else:
-            return False
-        return True
+        ci = stdnum.util.get_cc_module("ec", "ci")
+        ruc = stdnum.util.get_cc_module("ec", "ruc")
+        if len(vat) == 10:
+            return ci.is_valid(vat)
+        elif len(vat) == 13:
+            if vat[2] == "6" and ci.is_valid(vat[:10]):
+                return True
+            else:
+                return ruc.is_valid(vat)
+        return False
 
     def check_vat_ec(self, vat):
         vat = clean(vat, ' -.').upper().strip()
@@ -614,6 +578,11 @@ class ResPartner(models.Model):
             vat = vat.replace(" ", "")
             return len(vat) == 11 and vat.isdigit()
         return check_func(vat)
+
+    def format_vat_eu(self, vat):
+        # Foreign companies that trade with non-enterprises in the EU
+        # may have a VATIN starting with "EU" instead of a country code.
+        return vat
 
     def format_vat_ch(self, vat):
         stdnum_vat_format = getattr(stdnum.util.get_cc_module('ch', 'vat'), 'format', None)

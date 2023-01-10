@@ -97,7 +97,7 @@ class AccountMove(models.Model):
         posted = super()._post(soft)
 
         for invoice in posted.filtered(lambda move: move.is_invoice()):
-            payments = invoice.mapped('transaction_ids.payment_id')
+            payments = invoice.mapped('transaction_ids.payment_id').filtered(lambda x: x.state == 'posted')
             move_lines = payments.line_ids.filtered(lambda line: line.account_internal_type in ('receivable', 'payable') and not line.reconciled)
             for line in move_lines:
                 invoice.js_assign_outstanding_line(line.id)
@@ -119,3 +119,14 @@ class AccountMove(models.Model):
         # OVERRIDE
         self.ensure_one()
         return self.partner_shipping_id.id or super(AccountMove, self)._get_invoice_delivery_partner_id()
+
+    def _action_invoice_ready_to_be_sent(self):
+        # OVERRIDE
+        # Make sure the send invoice CRON is called when an invoice becomes ready to be sent by mail.
+        res = super()._action_invoice_ready_to_be_sent()
+
+        send_invoice_cron = self.env.ref('sale.send_invoice_cron', raise_if_not_found=False)
+        if send_invoice_cron:
+            send_invoice_cron._trigger()
+
+        return res

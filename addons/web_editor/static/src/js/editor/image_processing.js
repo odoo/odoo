@@ -230,6 +230,11 @@ async function applyModifications(img, dataOptions = {}) {
     result.width = resizeWidth || croppedImg.width;
     result.height = croppedImg.height * result.width / croppedImg.width;
     const ctx = result.getContext('2d');
+    ctx.imageSmoothingQuality = "high";
+    ctx.mozImageSmoothingEnabled = true;
+    ctx.webkitImageSmoothingEnabled = true;
+    ctx.msImageSmoothingEnabled = true;
+    ctx.imageSmoothingEnabled = true;
     ctx.drawImage(croppedImg, 0, 0, croppedImg.width, croppedImg.height, 0, 0, result.width, result.height);
 
     // GL filter
@@ -333,6 +338,19 @@ async function loadImageInfo(img, rpc, attachmentSrc = '') {
 function isImageSupportedForProcessing(mimetype) {
     return ['image/jpeg', 'image/png'].includes(mimetype);
 }
+/**
+ * @param {HTMLImageElement} img
+ * @returns {Boolean}
+ */
+function isImageSupportedForStyle(img) {
+    return img.parentElement && !img.parentElement.dataset.oeType
+        // Editable root elements are technically *potentially* supported here
+        // (if the edited attributes are not computed inside the related view,
+        // they could technically be saved... but as we cannot tell the computed
+        // ones apart from the "static" ones, we choose to not support edition
+        // at all in those "root" cases).
+        && !img.dataset.oeXpath;
+}
 
 return {
     applyModifications,
@@ -342,5 +360,6 @@ return {
     loadImage,
     removeOnImageChangeAttrs: [...cropperDataFields, ...modifierFields, 'aspectRatio'],
     isImageSupportedForProcessing,
+    isImageSupportedForStyle,
 };
 });

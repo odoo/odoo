@@ -5,6 +5,14 @@ import { clear } from '@mail/model/model_field_command';
 
 const { Component } = owl;
 
+const getChatterNextTemporaryId = (function () {
+    let tmpId = 0;
+    return () => {
+        tmpId += 1;
+        return tmpId;
+    };
+})();
+
 /**
  * This component abstracts chatter component to its parent, so that it can be
  * mounted and receive chatter data even when a chatter component cannot be
@@ -21,6 +29,7 @@ export class ChatterContainer extends Component {
     constructor(...args) {
         super(...args);
         this.chatter = undefined;
+        this.chatterId = getChatterNextTemporaryId();
         this._insertFromProps(this.props);
     }
 
@@ -54,15 +63,11 @@ export class ChatterContainer extends Component {
         if (this.__owl__.status === 5 /* destroyed */) {
             return;
         }
-        const values = Object.assign({}, props);
+        const values = { id: this.chatterId, ...props };
         if (values.threadId === undefined) {
             values.threadId = clear();
         }
-        if (!this.chatter) {
-            this.chatter = messaging.models['mail.chatter'].create(values);
-        } else {
-            this.chatter.update(values);
-        }
+        this.chatter = messaging.models['mail.chatter'].insert(values);
         this.chatter.refresh();
         this.render();
     }

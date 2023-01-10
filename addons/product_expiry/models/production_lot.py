@@ -66,7 +66,7 @@ class StockProductionLot(models.Model):
         # use `_get_date_values` with _origin to keep a stability in the values.
         # Otherwise it will recompute from the updated values if the user calls
         # this onchange multiple times without save between each onchange.
-        vals = self._origin._get_date_values(time_delta)
+        vals = self._origin._get_date_values(time_delta, self.expiration_date)
         self.update(vals)
 
     @api.onchange('product_id')
@@ -105,21 +105,19 @@ class StockProductionLot(models.Model):
     def _update_date_values(self, new_date):
         if new_date:
             time_delta = new_date - (self.expiration_date or fields.Datetime.now())
-            vals = self._get_date_values(time_delta)
+            vals = self._get_date_values(time_delta, new_date)
             vals['expiration_date'] = new_date
             self.write(vals)
 
-    def _get_date_values(self, time_delta):
+    def _get_date_values(self, time_delta, new_date=False):
         ''' Return a dict with different date values updated depending of the
         time_delta. Used in the onchange of `expiration_date` and when user
         defines a date at the receipt. '''
-        vals = {}
-        if self.use_date:
-            vals['use_date'] = self.use_date + time_delta
-        if self.removal_date:
-            vals['removal_date'] = self.removal_date + time_delta
-        if self.alert_date:
-            vals['alert_date'] = self.alert_date + time_delta
+        vals = {
+            'use_date': self.use_date and (self.use_date + time_delta) or new_date,
+            'removal_date': self.removal_date and (self.removal_date + time_delta) or new_date,
+            'alert_date': self.alert_date and (self.alert_date + time_delta) or new_date,
+        }
         return vals
 
 

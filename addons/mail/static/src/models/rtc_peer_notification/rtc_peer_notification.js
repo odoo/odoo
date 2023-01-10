@@ -17,6 +17,15 @@ function factory(dependencies) {
             readonly: true,
             required: true,
         }),
+        /**
+         * States the id of this RTC peer notification. This id does not
+         * correspond to any specific value, it is just a unique identifier
+         * given by the creator of this record.
+         */
+        id: attr({
+            readonly: true,
+            required: true,
+        }),
         payload: attr({
             readonly: true,
         }),
@@ -29,7 +38,7 @@ function factory(dependencies) {
             required: true,
         }),
     };
-
+    RTCPeerNotification.identifyingFields = ['id'];
     RTCPeerNotification.modelName = 'mail.rtc_peer_notification';
 
     return RTCPeerNotification;

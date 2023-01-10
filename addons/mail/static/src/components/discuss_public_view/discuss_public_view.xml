@@ -4,10 +4,7 @@
         <div class="o_DiscussPublicView d-flex flex-column h-100">
             <t t-if="discussPublicView">
                 <ThreadView t-if="discussPublicView.threadView"
-                    composerAttachmentsDetailsMode="'card'"
-                    hasComposer="true"
                     hasComposerThreadTyping="true"
-                    hasSquashCloseMessages="true"
                     threadViewLocalId="discussPublicView.threadView.localId"
                 />
                 <WelcomeView t-if="discussPublicView.welcomeView"

@@ -15,9 +15,9 @@ export const calendarNotificationService = {
         env.bus.on("WEB_CLIENT_READY", null, async () => {
             const legacyEnv = owl.Component.env;
             legacyEnv.services.bus_service.onNotification(this, (notifications) => {
-                for (const notif of notifications) {
-                    if (notif[0][1] === "calendar.alarm") {
-                        displayCalendarNotification(notif[1]);
+                for (const { payload, type } of notifications) {
+                    if (type === "calendar.alarm") {
+                        displayCalendarNotification(payload);
                     }
                 }
             });
@@ -61,11 +61,12 @@ export const calendarNotificationService = {
                             {
                                 name: env._t("Details"),
                                 onClick: async () => {
-                                    await action.doAction(
-                                        "calendar.action_calendar_event_notify",
-                                        {
-                                            resId: notif.event_id,
-                                        }
+                                    await action.doAction({
+                                        type: 'ir.actions.act_window',
+                                        res_model: 'calendar.event',
+                                        res_id: notif.event_id,
+                                        views: [[false, 'form']],
+                                    }
                                     );
                                     notificationRemove();
                                 },

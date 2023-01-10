@@ -831,3 +831,311 @@ class TestPacking(TestPackingCommon):
         self.assertEqual(receipt.state, 'assigned')
         receipt.move_ids_without_package[1].product_uom_qty = 0
         self.assertEqual(receipt.state, 'assigned')
+
+    def test_2_steps_and_backorder(self):
+        """ When creating a backorder with a package, the latter should be reserved in the new picking. Moreover,
+         the initial picking shouldn't have any line about this package """
+        def create_picking(type, from_loc, to_loc):
+            picking = self.env['stock.picking'].create({
+                'picking_type_id': type.id,
+                'location_id': from_loc.id,
+                'location_dest_id': to_loc.id,
+            })
+            move_A, move_B = self.env['stock.move'].create([{
+                'name': self.productA.name,
+                'product_id': self.productA.id,
+                'product_uom_qty': 1,
+                'product_uom': self.productA.uom_id.id,
+                'picking_id': picking.id,
+                'location_id': from_loc.id,
+                'location_dest_id': to_loc.id,
+            }, {
+                'name': self.productB.name,
+                'product_id': self.productB.id,
+                'product_uom_qty': 1,
+                'product_uom': self.productB.uom_id.id,
+                'picking_id': picking.id,
+                'location_id': from_loc.id,
+                'location_dest_id': to_loc.id,
+            }])
+            picking.action_confirm()
+            picking.action_assign()
+            return picking, move_A, move_B
+
+        self.warehouse.delivery_steps = 'pick_ship'
+
+        output_location = self.warehouse.wh_output_stock_loc_id
+        pick_type = self.warehouse.pick_type_id
+        delivery_type = self.warehouse.out_type_id
+
+        self.env['stock.quant']._update_available_quantity(self.productA, self.stock_location, 1)
+        self.env['stock.quant']._update_available_quantity(self.productB, self.stock_location, 1)
+
+        picking, moveA, moveB = create_picking(pick_type, pick_type.default_location_src_id, pick_type.default_location_dest_id)
+        moveA.move_line_ids.qty_done = 1
+        picking.action_put_in_pack()
+        moveB.move_line_ids.qty_done = 1
+        picking.action_put_in_pack()
+        picking.button_validate()
+
+        picking, _, _ = create_picking(delivery_type, delivery_type.default_location_src_id, self.customer_location)
+        packB = picking.package_level_ids[1]
+        with Form(picking) as picking_form:
+            with picking_form.package_level_ids_details.edit(0) as package_level:
+                package_level.is_done = True
+        action_data = picking.button_validate()
+        backorder_wizard = Form(self.env['stock.backorder.confirmation'].with_context(action_data['context'])).save()
+        backorder_wizard.process()
+        bo = self.env['stock.picking'].search([('backorder_id', '=', picking.id)])
+
+        self.assertNotIn(packB, picking.package_level_ids)
+        self.assertEqual(packB, bo.package_level_ids)
+        self.assertEqual(bo.package_level_ids.state, 'assigned')
+
+    def test_package_and_sub_location(self):
+        """
+        Suppose there are some products P available in shelf1, a child location of the pack location.
+        When moving these P to another child location of pack location, the source location of the
+        related package level should be shelf1
+        """
+        shelf1_location = self.env['stock.location'].create({
+            'name': 'shelf1',
+            'usage': 'internal',
+            'location_id': self.pack_location.id,
+        })
+        shelf2_location = self.env['stock.location'].create({
+            'name': 'shelf2',
+            'usage': 'internal',
+            'location_id': self.pack_location.id,
+        })
+
+        pack = self.env['stock.quant.package'].create({'name': 'Super Package'})
+        self.env['stock.quant']._update_available_quantity(self.productA, shelf1_location, 20.0, package_id=pack)
+
+        picking = self.env['stock.picking'].create({
+            'picking_type_id': self.warehouse.in_type_id.id,
+            'location_id': self.pack_location.id,
+            'location_dest_id': shelf2_location.id,
+        })
+        package_level = self.env['stock.package_level'].create({
+            'package_id': pack.id,
+            'picking_id': picking.id,
+            'location_dest_id': picking.location_dest_id.id,
+            'company_id': picking.company_id.id,
+        })
+
+        self.assertEqual(package_level.location_id, shelf1_location)
+
+        picking.action_confirm()
+        package_level.is_done = True
+        picking.button_validate()
+
+        self.assertEqual(package_level.location_id, shelf1_location)
+
+    def test_pack_in_receipt_two_step_multi_putaway_02(self):
+        """
+        Suppose a product P, its weight is equal to 1kg
+        We have 100 x P on two pallets.
+        Receipt in two steps + Sub locations in WH/Stock + Storage Category
+        The Storage Category adds some constraints on weight/pallets capacity
+        """
+        warehouse = self.stock_location.warehouse_id
+        warehouse.reception_steps = "two_steps"
+        self.productA.weight = 1.0
+        self.env.user.write({'groups_id': [(4, self.env.ref('stock.group_stock_storage_categories').id)]})
+        self.env.user.write({'groups_id': [(4, self.env.ref('stock.group_stock_multi_locations').id)]})
+
+        package_type = self.env['stock.package.type'].create({
+            'name': "Super Pallet",
+        })
+        package_01, package_02 = self.env['stock.quant.package'].create([{
+            'name': 'Pallet %s' % i,
+            'package_type_id': package_type.id,
+        } for i in [1, 2]])
+
+        # max 100kg (so 100 x P) and max 1 pallet -> we will work with pallets,
+        # so the pallet capacity constraint should be the effective one
+        stor_category = self.env['stock.storage.category'].create({
+            'name': 'Super Storage Category',
+            'max_weight': 100,
+            'package_capacity_ids': [(0, 0, {
+                'package_type_id': package_type.id,
+                'quantity': 1,
+            })]
+        })
+
+        # 3 sub locations with the storage category
+        # (the third location should never be used)
+        sub_loc_01, sub_loc_02, dummy = self.env['stock.location'].create([{
+            'name': 'Sub Location %s' % i,
+            'usage': 'internal',
+            'location_id': self.stock_location.id,
+            'storage_category_id': stor_category.id,
+        } for i in [1, 2, 3]])
+
+        self.env['stock.putaway.rule'].create({
+            'location_in_id': self.stock_location.id,
+            'location_out_id': self.stock_location.id,
+            'package_type_ids': [(4, package_type.id)],
+            'storage_category_id': stor_category.id,
+        })
+
+        # Receive 100 x P
+        receipt_picking = self.env['stock.picking'].create({
+            'picking_type_id': warehouse.in_type_id.id,
+            'location_id': self.env.ref('stock.stock_location_suppliers').id,
+            'location_dest_id': warehouse.wh_input_stock_loc_id.id,
+        })
+        self.env['stock.move'].create({
+            'name': self.productA.name,
+            'product_id': self.productA.id,
+            'product_uom': self.productA.uom_id.id,
+            'product_uom_qty': 100.0,
+            'picking_id': receipt_picking.id,
+            'location_id': receipt_picking.location_id.id,
+            'location_dest_id': receipt_picking.location_dest_id.id,
+        })
+        receipt_picking.action_confirm()
+
+        # Distribute the products on two pallets, one with 49 x P and a second
+        # one with 51 x P (to easy the debugging in case of trouble)
+        move_form = Form(receipt_picking.move_lines, view="stock.view_stock_move_operations")
+        with move_form.move_line_ids.edit(0) as line:
+            line.qty_done = 49
+            line.result_package_id = package_01
+        with move_form.move_line_ids.new() as line:
+            line.qty_done = 51
+            line.result_package_id = package_02
+        move_form.save()
+        receipt_picking.button_validate()
+
+        # We are in two-steps receipt -> check the internal picking
+        internal_picking = self.env['stock.picking'].search([], order='id desc', limit=1)
+        self.assertRecordValues(internal_picking.move_line_ids, [
+            {'product_uom_qty': 49, 'qty_done': 0, 'result_package_id': package_01.id, 'location_dest_id': sub_loc_01.id},
+            {'product_uom_qty': 51, 'qty_done': 0, 'result_package_id': package_02.id, 'location_dest_id': sub_loc_02.id},
+        ])
+
+        # Change the constraints of the storage category:
+        # max 75kg (so 75 x P) and max 2 pallet -> this time, the weight
+        # constraint should be the effective one
+        stor_category.max_weight = 75
+        stor_category.package_capacity_ids.quantity = 2
+        internal_picking.do_unreserve()
+        internal_picking.action_assign()
+        self.assertRecordValues(internal_picking.move_line_ids, [
+            {'product_uom_qty': 49, 'qty_done': 0, 'result_package_id': package_01.id, 'location_dest_id': sub_loc_01.id},
+            {'product_uom_qty': 51, 'qty_done': 0, 'result_package_id': package_02.id, 'location_dest_id': sub_loc_02.id},
+        ])
+
+        move_form = Form(internal_picking.move_lines, view="stock.view_stock_move_operations")
+        # lines order is reversed: [Pallet 02, Pallet 01]
+        with move_form.move_line_ids.edit(0) as line:
+            line.qty_done = 51
+        with move_form.move_line_ids.edit(1) as line:
+            line.qty_done = 49
+        move_form.save()
+        # lines order is reversed: [Pallet 02, Pallet 01]
+        self.assertRecordValues(internal_picking.move_line_ids, [
+            {'product_uom_qty': 51, 'qty_done': 51, 'result_package_id': package_02.id, 'location_dest_id': sub_loc_02.id},
+            {'product_uom_qty': 49, 'qty_done': 49, 'result_package_id': package_01.id, 'location_dest_id': sub_loc_01.id},
+        ])
+
+    def test_pack_in_receipt_two_step_multi_putaway_03(self):
+        """
+        Two sublocations (max 100kg, max 2 pallet)
+        Two products P1, P2, weight = 1kg
+        There are 10 x P1 on a pallet in the first sub location
+        Receive a pallet of 50 x P1 + 50 x P2 => because of weight constraint, should be redirected to the
+            second sub location
+        Then, same with max 200kg max 1 pallet => same result, this time because of pallet count constraint
+        """
+        warehouse = self.stock_location.warehouse_id
+        warehouse.reception_steps = "two_steps"
+        self.productA.weight = 1.0
+        self.productB.weight = 1.0
+        self.env.user.write({'groups_id': [(4, self.env.ref('stock.group_stock_storage_categories').id)]})
+        self.env.user.write({'groups_id': [(4, self.env.ref('stock.group_stock_multi_locations').id)]})
+
+        package_type = self.env['stock.package.type'].create({
+            'name': "Super Pallet",
+        })
+        package_01, package_02 = self.env['stock.quant.package'].create([{
+            'name': 'Pallet %s' % i,
+            'package_type_id': package_type.id,
+        } for i in [1, 2]])
+
+        # max 100kg and max 2 pallets
+        stor_category = self.env['stock.storage.category'].create({
+            'name': 'Super Storage Category',
+            'max_weight': 100,
+            'package_capacity_ids': [(0, 0, {
+                'package_type_id': package_type.id,
+                'quantity': 2,
+            })]
+        })
+
+        # 3 sub locations with the storage category
+        # (the third location should never be used)
+        sub_loc_01, sub_loc_02, dummy = self.env['stock.location'].create([{
+            'name': 'Sub Location %s' % i,
+            'usage': 'internal',
+            'location_id': self.stock_location.id,
+            'storage_category_id': stor_category.id,
+        } for i in [1, 2, 3]])
+
+        self.env['stock.quant']._update_available_quantity(self.productA, sub_loc_01, 10, package_id=package_01)
+
+        self.env['stock.putaway.rule'].create({
+            'location_in_id': self.stock_location.id,
+            'location_out_id': self.stock_location.id,
+            'package_type_ids': [(4, package_type.id)],
+            'storage_category_id': stor_category.id,
+        })
+
+        # Receive 50 x P_A and 50 x P_B
+        receipt_picking = self.env['stock.picking'].create({
+            'picking_type_id': warehouse.in_type_id.id,
+            'location_id': self.env.ref('stock.stock_location_suppliers').id,
+            'location_dest_id': warehouse.wh_input_stock_loc_id.id,
+        })
+        self.env['stock.move'].create([{
+            'name': p.name,
+            'product_id': p.id,
+            'product_uom': p.uom_id.id,
+            'product_uom_qty': 50,
+            'picking_id': receipt_picking.id,
+            'location_id': receipt_picking.location_id.id,
+            'location_dest_id': receipt_picking.location_dest_id.id,
+        } for p in [self.productA, self.productB]])
+        receipt_picking.action_confirm()
+
+        move_form = Form(receipt_picking.move_lines[0], view="stock.view_stock_move_operations")
+        with move_form.move_line_ids.edit(0) as line:
+            line.qty_done = 50
+            line.result_package_id = package_02
+        move_form.save()
+        move_form = Form(receipt_picking.move_lines[1], view="stock.view_stock_move_operations")
+        with move_form.move_line_ids.edit(0) as line:
+            line.qty_done = 50
+            line.result_package_id = package_02
+        move_form.save()
+        receipt_picking.button_validate()
+
+        # We are in two-steps receipt -> check the internal picking
+        internal_picking = self.env['stock.picking'].search([], order='id desc', limit=1)
+        self.assertRecordValues(internal_picking.move_line_ids, [
+            {'product_id': self.productA.id, 'product_uom_qty': 50, 'qty_done': 0, 'result_package_id': package_02.id, 'location_dest_id': sub_loc_02.id},
+            {'product_id': self.productB.id, 'product_uom_qty': 50, 'qty_done': 0, 'result_package_id': package_02.id, 'location_dest_id': sub_loc_02.id},
+        ])
+
+        # Change the constraints of the storage category:
+        # max 200kg and max 1 pallet
+        stor_category.max_weight = 200
+        stor_category.package_capacity_ids.quantity = 1
+        internal_picking.do_unreserve()
+        internal_picking.action_assign()
+        self.assertRecordValues(internal_picking.move_line_ids, [
+            {'product_id': self.productA.id, 'product_uom_qty': 50, 'qty_done': 0, 'result_package_id': package_02.id, 'location_dest_id': sub_loc_02.id},
+            {'product_id': self.productB.id, 'product_uom_qty': 50, 'qty_done': 0, 'result_package_id': package_02.id, 'location_dest_id': sub_loc_02.id},
+        ])

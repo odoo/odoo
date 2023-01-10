@@ -587,7 +587,7 @@ REMOVE_CLASS = u"""
                     <h4 class="modal-title">Odoo Error<span class="o_subtitle text-muted"></span></h4>
                 </div>
                 <div class="o_error_detail modal-body">
-                    <pre>An error occured in a modal and I will send you back the html to try opening one on your end</pre>
+                    <pre>An error occurred in a modal and I will send you back the html to try opening one on your end</pre>
                 </div>
             </div>
         </div>
@@ -596,7 +596,7 @@ REMOVE_CLASS = u"""
 """
 REMOVE_CLASS_IN = [
     u'<div style="font-size:12pt; font-family:\'Times New Roman\'; color:#000000">',
-    u'An error occured in a modal and I will send you back the html to try opening one on your end']
+    u'An error occurred in a modal and I will send you back the html to try opening one on your end']
 REMOVE_CLASS_OUT = [
     u'<div class="modal-backdrop in">',
     u'<div class="modal-content openerp">',

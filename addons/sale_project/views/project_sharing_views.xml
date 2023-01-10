@@ -8,9 +8,9 @@
         <field name="arch" type="xml">
             <div name="button_box" position="inside">
                 <field name="sale_order_id" invisible="1"/>
-                <button class="d-none d-md-inline oe_stat_button o_debounce_disabled"
-                        type="object" name="action_view_so" icon="fa-dollar" special="cancel"
-                        attrs="{'invisible': [('sale_order_id', '=', False)]}"
+                <button class="d-none d-md-inline oe_stat_button"
+                        type="object" name="action_view_so" icon="fa-dollar"
+                        invisible="1"
                         string="Sales Order"/>
             </div>
             <xpath expr="//field[@name='partner_id']" position="attributes">

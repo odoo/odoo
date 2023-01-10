@@ -18,6 +18,7 @@ from odoo.tools import email_normalize, hmac, generate_tracking_message_id
 
 _logger = logging.getLogger(__name__)
 
+# TODO remove me master
 GROUP_SEND_BATCH_SIZE = 500
 
 
@@ -251,9 +252,7 @@ class MailGroup(models.Model):
 
         if alias.alias_contact == 'followers':
             # Members only
-            author_id = message_dict.get('author_id', None)
-            email_from = message_dict.get('email_from')
-            if not self._find_member(email_from, author_id):
+            if not self._find_member(message_dict.get('email_from')):
                 return _('Only members can send email to the mailing list.')
             # Skip the verification because the partner is in the member list
             return
@@ -409,7 +408,6 @@ class MailGroup(models.Model):
         base_url = self.get_base_url()
         body = self.env['mail.render.mixin']._replace_local_links(message.body)
         access_token = self._generate_group_access_token()
-        mail_values = []
 
         # Email added in a dict to be sure to send only once the email to each address
         member_emails = {
@@ -417,7 +415,9 @@ class MailGroup(models.Model):
             for member in self.member_ids
         }
 
-        for batch_email_member in tools.split_every(GROUP_SEND_BATCH_SIZE, member_emails.items()):
+        batch_size = int(self.env['ir.config_parameter'].sudo().get_param('mail.session.batch.size', GROUP_SEND_BATCH_SIZE))
+        for batch_email_member in tools.split_every(batch_size, member_emails.items()):
+            mail_values = []
             for email_member_normalized, email_member in batch_email_member:
                 if email_member_normalized == message.email_from_normalized:
                     # Do not send the email to his author
@@ -426,10 +426,19 @@ class MailGroup(models.Model):
                 # SMTP headers related to the subscription
                 email_url_encoded = urls.url_quote(email_member)
                 headers = {
+                    ** self._notify_email_header_dict(),
                     'List-Archive': f'<{base_url}/groups/{slug(self)}>',
                     'List-Subscribe': f'<{base_url}/groups?email={email_url_encoded}>',
                     'List-Unsubscribe': f'<{base_url}/groups?unsubscribe&email={email_url_encoded}>',
+                    'Precedence': 'list',
+                    'X-Auto-Response-Suppress': 'OOF',  # avoid out-of-office replies from MS Exchange
                 }
+                if self.alias_name and self.alias_domain:
+                    headers.update({
+                        'List-Id': f'<{self.alias_name}.{self.alias_domain}>',
+                        'List-Post': f'<mailto:{self.alias_name}@{self.alias_domain}>',
+                        'X-Forge-To': f'"{self.name}" <{self.alias_name}@{self.alias_domain}>',
+                    })
 
                 if message.mail_message_id.parent_id:
                     headers['In-Reply-To'] = message.mail_message_id.parent_id.message_id
@@ -683,6 +692,10 @@ class MailGroup(models.Model):
         - A member whose email match the given email and has partner
         """
         order = 'partner_id ASC'
+        if not email_normalize(email):
+            # empty email should match nobody
+            return {}
+
         domain = [('email_normalized', '=', email_normalize(email))]
         if partner_id:
             domain = expression.OR([

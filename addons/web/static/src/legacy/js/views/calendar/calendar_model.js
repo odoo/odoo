@@ -477,6 +477,7 @@ return AbstractModel.extend({
             monthNamesShort: moment.monthsShort(),
             dayNames: moment.weekdays(),
             dayNamesShort: moment.weekdaysShort(),
+            dayNamesMin: moment.weekdaysMin(),
             firstDay: this.week_start,
             slotLabelFormat: _t.database.parameters.time_format.search("%H") !== -1 ? format24Hour : format12Hour,
             allDaySlot: this.mapping.all_day || this.fields[this.mapping.date_start].type === 'date',
@@ -707,8 +708,8 @@ return AbstractModel.extend({
                 if (ids.length) {
                     defs.push(self._rpc({
                         model: filter.color_model,
-                        method: 'read',
-                        args: [_.uniq(ids), [filter.field_color]],
+                        method: 'search_read',
+                        args: [[['id', 'in', _.uniq(ids)]], [filter.field_color]],
                     })
                     .then(function (res) {
                         _.each(res, function (c) {

@@ -45,9 +45,75 @@
         </field>
     </record>
 
+    <record id="pos_order_line_form_custom_fg" model="ir.ui.view">
+        <field name="name">pos.order.line.form.custom.fg</field>
+        <field name="model">pos.order</field>
+        <field name="inherit_id" ref="point_of_sale.view_pos_pos_form"/>
+        <field name="arch" type="xml">
+            <field name="pos_reference" position="after">
+                <field name="pos_si_trans_reference" invisible="0"/>
+            </field>
+            <xpath expr="//field[@name='price_subtotal_incl']" position='after'>
+                <field name="is_non_zero_vat"/>
+            </xpath>
+        </field>
+    </record>
+
     <!-- PRODUCTS SETUP-->
     <!-- tree-->
 
     <!--product group-->
     <!-- tree-->
+
+    <record id="fg_pos_order_line_tree" model="ir.ui.view">
+        <field name="name">pos.order.line.tree.fg</field>
+        <field name="model">pos.order.line</field>
+        <field name="arch" type="xml">
+            <tree edit="0" create="0" delete="0">
+                <field name="name" string="Order Ref"/>
+                <field name="full_product_name"/>
+                <field name="pack_lot_ids" widget="many2many_tags" groups="stock.group_production_lot"/>
+                <field name="qty"/>
+                <field name="customer_note" optional="hide"/>
+                <field name="product_uom_id" string="UoM" groups="uom.group_uom"/>
+                <field name="price_unit" widget="monetary"/>
+                <field name="is_total_cost_computed" invisible="1"/>
+                <field name="total_cost" attrs="{'invisible': [('is_total_cost_computed','=', False)]}" optional="hide" widget="monetary"/>
+                <field name="margin" attrs="{'invisible': [('is_total_cost_computed','=', False)]}" optional="hide" widget="monetary"/>
+                <field name="margin_percent" attrs="{'invisible': [('is_total_cost_computed','=', False)]}" optional="hide" widget="percentage"/>
+                <field name="discount" string="Disc.%"/>
+                <field name="tax_ids_after_fiscal_position" widget="many2many_tags" string="Taxes"/>
+                <field name="tax_ids" widget="many2many_tags" invisible="1"/>
+                <field name="price_subtotal" widget="monetary" force_save="1"/>
+                <field name="price_subtotal_incl" widget="monetary" force_save="1"/>
+                <field name="currency_id" invisible="1"/>
+                <field name="refunded_qty" optional="hide" />
+            </tree>
+        </field>
+    </record>
+
+    <record id="fg_pos_order_line_search" model="ir.ui.view">
+        <field name="name">pos.order.line.search.fg</field>
+        <field name="model">pos.order.line</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="name"/>
+                <field name="date_order"/>
+                <filter string="Order Date" name="order_date" date="date_order"/>
+                <separator/>
+                <filter string="Today" name="today_ref" domain="[('create_date', '&gt;=', datetime.datetime.now().strftime('%Y-%m-%d 00:00:00')),('create_date', '&lt;=', datetime.datetime.now().strftime('%Y-%m-%d 23:59:59'))]"/>
+            </search>
+        </field>
+    </record>
+
+    <record id="fg_pos_order_line_action" model="ir.actions.act_window">
+        <field name="name">All sales lines</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">pos.order.line</field>
+        <field name="view_id" ref="fg_pos_order_line_tree" />
+        <field name="search_view_id" ref="fg_pos_order_line_search"/>
+    </record>
+
+    <menuitem id="menu_fg_pos_order_line" parent="point_of_sale.menu_point_of_sale" action="fg_pos_order_line_action" sequence="3" groups="point_of_sale.group_pos_manager,point_of_sale.group_pos_user"/>
+
 </odoo>

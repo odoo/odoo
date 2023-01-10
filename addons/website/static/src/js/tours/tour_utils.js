@@ -106,6 +106,7 @@ function changePaddingSize(direction) {
     return {
         trigger: `.oe_overlay.ui-draggable.o_we_overlay_sticky.oe_active .o_handle.${paddingDirection}`,
         content: Markup(_.str.sprintf(_t("<b>Slide</b> this button to change the %s padding"), direction)),
+        consumeEvent: 'mousedown',
         position: position,
     };
 }
@@ -131,7 +132,7 @@ function clickOnEdit(position = "bottom") {
 function clickOnSnippet(snippet, position = "bottom") {
     return {
         trigger: snippet.id ? `#wrapwrap .${snippet.id}` : snippet,
-        extra_trigger: "body.editor_enable",
+        extra_trigger: "body.editor_enable #oe_snippets.o_loaded",
         content: Markup(_t("<b>Click on a snippet</b> to access its options menu.")),
         position: position,
         run: "click",
@@ -242,6 +243,18 @@ function registerThemeHomepageTour(name, steps) {
     ));
 }
 
+function clickOnExtraMenuItem(stepOptions) {
+    return Object.assign({}, {
+        content: "Click on the extra menu dropdown toggle if it is there",
+        trigger: '#top_menu',
+        run: function () {
+            const extraMenuButton = this.$anchor[0].querySelector('.o_extra_menu_items a.nav-link');
+            if (extraMenuButton) {
+                extraMenuButton.click();
+            }
+        },
+    }, stepOptions);
+}
 
 return {
     addMedia,
@@ -263,7 +276,7 @@ return {
     selectHeader,
     selectNested,
     selectSnippetColumn,
-
     registerThemeHomepageTour,
+    clickOnExtraMenuItem,
 };
 });

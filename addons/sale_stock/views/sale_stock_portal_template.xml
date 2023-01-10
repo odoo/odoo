@@ -14,7 +14,7 @@
                     <strong>Delivery Orders</strong>
                 </div>
                 <div>
-                    <t t-foreach="sale_order.picking_ids.filtered(lambda picking: picking.picking_type_id.code != 'internal')" t-as="i">
+                    <t t-foreach="sale_order.picking_ids.filtered(lambda picking: picking.picking_type_id.code == 'outgoing')" t-as="i">
                         <t t-set="delivery_report_url" t-value="'/my/picking/pdf/%s?%s' % (i.id, keep_query())"/>
                         <div class="d-flex flex-wrap align-items-center justify-content-between o_sale_stock_picking">
                             <div>

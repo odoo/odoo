@@ -73,6 +73,8 @@ var FormViewDialog = ViewDialog.extend({
      *   creation mode
      * @param {boolean} [options.deletable=false] whether or not the record can
      *   be deleted
+     * @param {boolean} [options.editable=true] whether or not the record can
+     *   be edited
      * @param {boolean} [options.disable_multiple_selection=false] set to true
      *   to remove the possibility to create several records in a row
      * @param {function} [options.on_saved] callback executed after saving a
@@ -105,6 +107,7 @@ var FormViewDialog = ViewDialog.extend({
         this.shouldSaveLocally = options.shouldSaveLocally;
         this.readonly = options.readonly;
         this.deletable = options.deletable;
+        this.editable = options.editable;
         this.disable_multiple_selection = options.disable_multiple_selection;
         var oBtnRemove = 'o_btn_remove';
 
@@ -209,6 +212,7 @@ var FormViewDialog = ViewDialog.extend({
                 parentID: self.parentID,
                 recordID: self.recordID,
                 isFromFormViewDialog: true,
+                editable: self.editable
             });
             return formview.getController(self);
         }).then(function (formView) {
@@ -292,7 +296,7 @@ var FormViewDialog = ViewDialog.extend({
     _setRemoveButtonOption(options, btnClasses) {
         const self = this;
         options.buttons.push({
-            text: options.removeButtonText || _t("Remove"),
+            text: _t("Remove"),
             classes: 'btn-secondary ' + btnClasses,
             click: function() {
                 self._remove().then(self.close.bind(self));
@@ -463,8 +467,7 @@ var SelectCreateDialog = ViewDialog.extend({
                 disabled: true,
                 close: true,
                 click: async () => {
-                    const resIds = await this.viewController.getSelectedIdsWithDomain();
-                    const values = resIds.map(e => ({id: e}));
+                    const values = await this.viewController.getSelectedRecordsWithDomain();
                     this.on_selected(values);
                 },
             });

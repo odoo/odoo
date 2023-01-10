@@ -24,9 +24,7 @@ class ProductTemplate(models.Model):
         if combination_info['product_id']:
             product = self.env['product.product'].sudo().browse(combination_info['product_id'])
             website = self.env['website'].get_current_website()
-            product_with_context = product.with_context(warehouse=website.warehouse_id.id)
-
-            free_qty = product_with_context.free_qty
+            free_qty = product.with_context(warehouse=website._get_warehouse_available()).free_qty
             combination_info.update({
                 'free_qty': free_qty,
                 'product_type': product.type,

@@ -2,6 +2,9 @@
 
 import { data } from 'mail.discuss_public_channel_template';
 
+// ensure components are registered beforehand.
+import '@mail/components/dialog_manager/dialog_manager';
+import '@mail/components/discuss_public_view/discuss_public_view';
 import { MessagingService } from '@mail/services/messaging/messaging';
 import { getMessagingComponent } from '@mail/utils/messaging_component';
 
@@ -66,6 +69,10 @@ owl.Component.env = legacyEnv;
 
 async function createAndMountDiscussPublicView() {
     const messaging = await owl.Component.env.services.messaging.get();
+    // needed by the attachment viewer
+    const DialogManager = getMessagingComponent('DialogManager');
+    const dialogManagerComponent = new DialogManager(null, {});
+    await dialogManagerComponent.mount(document.body);
     messaging.models['mail.thread'].insert(messaging.models['mail.thread'].convertData(data.channelData));
     const discussPublicView = messaging.models['mail.discuss_public_view'].create(data.discussPublicViewData);
     if (discussPublicView.shouldDisplayWelcomeViewInitially) {

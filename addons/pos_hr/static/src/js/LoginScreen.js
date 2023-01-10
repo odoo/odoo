@@ -6,6 +6,7 @@ odoo.define('pos_hr.LoginScreen', function (require) {
     const Registries = require('point_of_sale.Registries');
     const useSelectEmployee = require('pos_hr.useSelectEmployee');
     const { useBarcodeReader } = require('point_of_sale.custom_hooks');
+    const { posbus } = require('point_of_sale.utils');
 
     class LoginScreen extends PosComponent {
         constructor() {
@@ -23,6 +24,8 @@ odoo.define('pos_hr.LoginScreen', function (require) {
         back() {
             this.props.resolve({ confirmed: false, payload: false });
             this.trigger('close-temp-screen');
+            this.env.pos.hasLoggedIn = true;
+            posbus.trigger('start-cash-control');
         }
         confirm() {
             this.props.resolve({ confirmed: true, payload: true });

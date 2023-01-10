@@ -179,7 +179,7 @@ odoo.define('web.filter_menu_generator_tests', function (require) {
 
             // Default value
             expectedFilters = [{
-                description: 'Color is "black"',
+                description: 'Color is "Black"',
                 domain: '[["color","=","black"]]',
                 type: 'filter',
             }];
@@ -189,7 +189,7 @@ odoo.define('web.filter_menu_generator_tests', function (require) {
 
             // Updated value
             expectedFilters = [{
-                description: 'Color is "white"',
+                description: 'Color is "White"',
                 domain: '[["color","=","white"]]',
                 type: 'filter',
             }];
@@ -414,6 +414,45 @@ odoo.define('web.filter_menu_generator_tests', function (require) {
             const valueInputs = cfi.el.querySelectorAll('.o_generator_menu_value .o_input');
             await testUtils.fields.editSelect(valueInputs[0], '02/22/2017 11:00:00'); // in TZ
             await testUtils.fields.editSelect(valueInputs[1], '02-22-2017 17:00:00'); // in TZ
+            await cpHelpers.applyFilter(cfi);
+
+            cfi.destroy();
+        });
+
+        QUnit.test('default custom filter datetime', async function (assert) {
+            assert.expect(5);
+
+            class MockedSearchModel extends ActionModel {
+                dispatch(method, ...args) {
+                    assert.strictEqual(method, 'createNewFilters');
+                    const domain = JSON.parse(args[0][0].domain);
+                    assert.strictEqual(domain[0][2].split(' ')[1],
+                        '04:00:00',
+                        "domain should be in UTC format");
+                    assert.strictEqual(domain[1][2].split(' ')[1],
+                        '03:59:59',
+                        "domain should be in UTC format");
+                }
+            }
+            const searchModel = new MockedSearchModel();
+            const cfi = await createComponent(CustomFilterItem, {
+                props: {
+                    fields: this.fields,
+                },
+                session: {
+                    getTZOffset() {
+                        return -240;
+                    },
+                },
+                env: { searchModel },
+            });
+
+            await toggleAddCustomFilterStandalone(cfi);
+            await testUtils.fields.editSelect(cfi.el.querySelector('.o_generator_menu_field'), 'date_time_field');
+
+            assert.strictEqual(cfi.el.querySelector('.o_generator_menu_field').value, 'date_time_field');
+            assert.strictEqual(cfi.el.querySelector('.o_generator_menu_operator').value, 'between');
+
             await cpHelpers.applyFilter(cfi);
 
             cfi.destroy();

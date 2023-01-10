@@ -78,8 +78,15 @@ $.fn.tooltip.Constructor.prototype.show = function () {
     // Overwrite bootstrap tooltip method to prevent showing 2 tooltip at the
     // same time
     $('.tooltip').remove();
-
-    return bootstrapShowFunction.call(this);
+    const errorsToIgnore = ["Please use show on visible elements"];
+    try {
+        return bootstrapShowFunction.call(this);
+    } catch (error) {
+        if (errorsToIgnore.includes(error.message)) {
+            return 0;
+        }
+        throw error;
+    }
 };
 
 /* Bootstrap scrollspy fix for non-body to spy */

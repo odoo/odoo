@@ -155,7 +155,7 @@ class AccountEdiFormat(models.Model):
 
             # Currency
             currency = self._retrieve_currency(_find_value('./{*}DocumentCurrencyCode'))
-            if currency:
+            if currency and currency.active:
                 invoice_form.currency_id = currency
 
             # Partner

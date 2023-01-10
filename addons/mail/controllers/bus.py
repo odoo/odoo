@@ -25,16 +25,14 @@ class MailChatController(BusController):
         if request.session.uid:
             partner = request.env.user.partner_id
             mail_channels = partner.channel_ids
-            # personal and needaction channel
-            channels.append((request.db, 'res.partner', partner.id))
-            channels.append((request.db, 'ir.needaction', partner.id))
+            channels.append(partner)
         elif guest_sudo:
             if 'bus_inactivity' in options:
                 guest_sudo.env['bus.presence'].update(inactivity_period=options.get('bus_inactivity'), identity_field='guest_id', identity_value=guest_sudo.id)
             mail_channels = guest_sudo.channel_ids
-            channels.append((request.db, 'mail.guest', guest_sudo.id))
+            channels.append(guest_sudo)
         for mail_channel in mail_channels:
-            channels.append((request.db, 'mail.channel', mail_channel.id))
+            channels.append(mail_channel)
         return super()._poll(dbname, channels, last, options)
 
     # --------------------------

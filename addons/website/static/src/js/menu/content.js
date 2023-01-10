@@ -132,8 +132,20 @@ var PagePropertiesDialog = weWidgets.Dialog.extend({
             });
             dep_text = dep_text.join(', ');
             self.$('#dependencies_redirect').html(qweb.render('website.show_page_dependencies', { dependencies: dependencies, dep_text: dep_text }));
-            self.$('#dependencies_redirect [data-toggle="popover"]').popover({
-                container: 'body',
+            self.$('a.o_dependencies_redirect_link').on('click', () => {
+                self.$('.o_dependencies_redirect_list_popover').popover({
+                    html: true,
+                    title: _t('Dependencies'),
+                    boundary: 'viewport',
+                    placement: 'right',
+                    trigger: 'focus',
+                    content: () => {
+                        return qweb.render('website.get_tooltip_dependencies', {
+                            dependencies: dependencies,
+                        });
+                    },
+                    template: qweb.render('website.page_dependencies_popover'),
+                }).popover('toggle');
             });
         }));
 
@@ -473,9 +485,9 @@ var MenuEntryDialog = weWidgets.LinkDialog.extend({
             if (!$e.val() || !$e[0].checkValidity()) {
                 $e.closest('.form-group').addClass('o_has_error').find('.form-control, .custom-select').addClass('is-invalid');
                 $e.focus();
-                return;
+                return Promise.reject();
             }
-            oldSave.bind(this.linkWidget)();
+            return oldSave.bind(this.linkWidget)();
         };
 
         this.menuType = data.menuType;
@@ -879,6 +891,7 @@ var ContentMenu = websiteNavbarData.WebsiteNavbarActionWidget.extend({
         return new Promise(function (resolve) {
             var dialog = new EditMenuDialog(self, {}, rootID);
             dialog.on('save', self, function () {
+                window.document.body.classList.add('o_wait_reload');
                 // Before reloading the page after menu modification, does the
                 // given action to do.
                 if (beforeReloadCallback) {
@@ -978,6 +991,15 @@ var ContentMenu = websiteNavbarData.WebsiteNavbarActionWidget.extend({
         // If simulate is true, it means we want the option to be toggled but
         // not saved on the server yet
         if (!forceSave) {
+            // Add the 'o_dirty' class on an editable element specific to the
+            // page to notify the editor that the page should be saved,
+            // otherwise it won't save anything if it doesn't detect any change
+            // inside the #wrapwrap. (e.g. the header "over the content" option
+            // which adds a class on the #wrapwrap itself and not inside it).
+            const pageEl = document.querySelector(`.o_editable[data-oe-model="ir.ui.view"][data-oe-id="${mo.viewid}"]`);
+            if (pageEl) {
+                pageEl.classList.add('o_dirty');
+            }
             return Promise.resolve();
         }
 

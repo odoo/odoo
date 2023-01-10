@@ -246,5 +246,33 @@ odoo.define('web.action_menus_tests', function (require) {
 
             actionMenus.destroy();
         });
+
+        QUnit.test('execute action with context', async function (assert) {
+            assert.expect(1);
+            const actionMenus = await createComponent(ActionMenus, {
+                env: {
+                    action: this.action,
+                    view: this.view,
+                },
+                props: {
+                    ...this.props,
+                    isDomainSelected:  true,
+                    context: {
+                        allowed_company_ids: [112],
+                    },
+                },
+                async mockRPC(route, args) {
+                    if (route === "/web/dataset/call_kw/hobbit/search"){
+                        assert.deepEqual(args.kwargs.context, { allowed_company_ids: [112] }, "The kwargs should contains the right context");
+                    }
+                    return this._super(...arguments);
+                },
+            });
+
+            await testUtils.controlPanel.toggleActionMenu(actionMenus, "Action");
+            await testUtils.controlPanel.toggleMenuItem(actionMenus, "What's taters, precious ?");
+
+            actionMenus.destroy();
+        });
     });
 });

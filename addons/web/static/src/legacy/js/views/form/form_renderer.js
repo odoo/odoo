@@ -10,6 +10,7 @@ var viewUtils = require('web.viewUtils');
 var _t = core._t;
 var qweb = core.qweb;
 
+const scrollUtils = require("@web/core/utils/scrolling");
 // symbol used as key to set the <field> node id on its widget
 const symbol = Symbol('form');
 
@@ -52,6 +53,9 @@ var FormRenderer = BasicRenderer.extend({
         // display them (e.g. in Studio, in "show invisible" mode). This flag
         // allows to disable this optimization.
         this.renderInvisible = false;
+        // Keeps track of buttons that are disabled momentarily and need to be renabled.
+        // Needed to compare with buttons that have to stay disabled all the time.
+        this.manuallyDisabledButtons = new Set();
     },
     /**
      * @override
@@ -59,6 +63,20 @@ var FormRenderer = BasicRenderer.extend({
     start: function () {
         this._applyFormSizeClass();
         return this._super.apply(this, arguments);
+    },
+    /**
+     * Called each time the form view is attached into the DOM
+     */
+    on_attach_callback: function () {
+        this._super.apply(this, arguments);
+        core.bus.on("SCROLLER:ANCHOR_LINK_CLICKED", this, this._onAnchorLinkClicked);
+    },
+     /**
+     * Called each time the form view is detached into the DOM
+     */
+    on_detach_callback: function () {
+        this._super.apply(this, arguments);
+        core.bus.off("SCROLLER:ANCHOR_LINK_CLICKED", this, this._onAnchorLinkClicked);
     },
 
     //--------------------------------------------------------------------------
@@ -182,16 +200,24 @@ var FormRenderer = BasicRenderer.extend({
      *
      */
     disableButtons: function () {
-        this.$('.o_statusbar_buttons button, .oe_button_box button')
-            .attr('disabled', true);
+        const allButtons = this.$el[0].querySelectorAll('.o_statusbar_buttons button, .oe_button_box button');
+        for (const button of allButtons) {
+            if (!button.getAttribute("disabled")) {
+                this.manuallyDisabledButtons.add(button)
+                button.setAttribute("disabled", true)
+            }
+        }
     },
     /**
      * Enable statusbar buttons and stat buttons so they can be clicked again
      *
      */
     enableButtons: function () {
-        this.$('.o_statusbar_buttons button, .oe_button_box button')
-            .removeAttr('disabled');
+        const allButtons = this.$el[0].querySelectorAll('.o_statusbar_buttons button, .oe_button_box button');
+        this.manuallyDisabledButtons.forEach((button) => {
+            button.removeAttribute("disabled");
+        });
+        this.manuallyDisabledButtons.clear();
     },
     /**
      * Put the focus on the last activated widget.
@@ -1109,6 +1135,7 @@ var FormRenderer = BasicRenderer.extend({
         return Promise.all(defs).then(() => this.__renderView()).then(function () {
             self._postProcessLabels();
             self._updateView($form.contents());
+            self.manuallyDisabledButtons.clear();
             if (self.state.res_id in self.alertFields) {
                 self.displayTranslationAlert();
             }
@@ -1197,6 +1224,47 @@ var FormRenderer = BasicRenderer.extend({
         ev.stopPropagation();
         var index = this.allFieldWidgets[this.state.id].indexOf(ev.data.target);
         this._activateNextFieldWidget(this.state, index);
+    },
+    /**
+     * Ensure that the pane containing an anchor `element` that has been
+     * targeted by a link will be visible in a notebook.
+     * @param {CustomEvent} ev
+     * @param {object} ev[detail] payload containing the element and the id to look for
+     * 
+     */
+    _onAnchorLinkClicked(ev) {
+        // Todo: we might need to search for the element elsewhere to know wich tab to activate
+        // Maybe a t-if rule is hidding the target from the DOM
+        const anchor = ev.detail.element || null;
+        if (!anchor) {
+            return;
+        }
+        function _getNotebookParent() {
+            const notebook = anchor.closest(".o_notebook");
+            // If the notebook is containing the element, return the notebook
+            return notebook && notebook.contains(anchor) ? notebook : null;
+        }
+        function _setNotebookPage() {
+            // Simulate a click on the nav link corresponding to the target pane
+            const parentPane = anchor.closest(".tab-pane");
+            if (notebook.contains(parentPane) && !parentPane.classList.contains(".active")) {
+                const navLink = [...notebook.querySelectorAll(".nav-link")].filter((e) =>
+                    e.href.includes(parentPane.id)
+                );
+                navLink[0].click();
+            }
+        }
+        
+        const notebook = _getNotebookParent();
+
+        // If the element is contained in a notebook, the page must be visible
+        if (notebook) {
+            _setNotebookPage();
+            // Prevent the scroll to be handled by the scroller service itself
+            ev.preventDefault();
+            ev.detail.originalEv.preventDefault();
+            scrollUtils.scrollTo(ev.detail.element, { isAnchor: true });
+        }
     },
     /**
      * @private

@@ -67,7 +67,8 @@ class GoogleCalendarService():
 
     @requires_auth_token
     def insert(self, values, token=None, timeout=TIMEOUT):
-        url = "/calendar/v3/calendars/primary/events?sendUpdates=all"
+        send_updates = self._context.get('send_updates', True)
+        url = "/calendar/v3/calendars/primary/events?sendUpdates=%s" % ("all" if send_updates else "none")
         headers = {'Content-type': 'application/json', 'Authorization': 'Bearer %s' % token}
         if not values.get('id'):
             values['id'] = uuid4().hex
@@ -78,7 +79,7 @@ class GoogleCalendarService():
     def patch(self, event_id, values, token=None, timeout=TIMEOUT):
         url = "/calendar/v3/calendars/primary/events/%s?sendUpdates=all" % event_id
         headers = {'Content-type': 'application/json', 'Authorization': 'Bearer %s' % token}
-        self.google_service._do_request(url, json.dumps(values), headers, method='PUT', timeout=timeout)
+        self.google_service._do_request(url, json.dumps(values), headers, method='PATCH', timeout=timeout)
 
     @requires_auth_token
     def delete(self, event_id, token=None, timeout=TIMEOUT):

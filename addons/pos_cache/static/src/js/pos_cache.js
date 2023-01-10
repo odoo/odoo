@@ -82,6 +82,8 @@ models.PosModel = models.PosModel.extend({
             return new Promise((resolve, reject) => {
                 next(resolve, reject);
             });
+        }).then(() => {
+            self.models.push(self.product_model);
         });
     },
 });

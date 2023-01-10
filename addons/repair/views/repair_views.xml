@@ -145,7 +145,8 @@
                                 <field name="product_uom" string="UoM" groups="uom.group_uom" optional="show"/>
                                 <field name="price_unit"/>
                                 <field name="tax_id" widget="many2many_tags" optional="show"/>
-                                <field name="price_subtotal" widget="monetary"/>
+                                <field name="price_subtotal" widget="monetary" groups="account.group_show_line_subtotals_tax_excluded"/>
+                                <field name="price_total" widget="monetary" groups="account.group_show_line_subtotals_tax_included"/>
                                 <field name="currency_id" invisible="1"/>
                             </tree>
                         </field>
@@ -182,14 +183,15 @@
                             </form>
                             <tree string="Fees" editable="bottom">
                                 <field name="company_id" invisible="1" force_save="1"/>
-                                <field name="product_id" required="True"/>
+                                <field name="product_id" required="True" context="{'default_type': 'service'}"/>
                                 <field name='name' optional="show"/>
                                 <field name="product_uom_qty" string="Quantity"/>
                                 <field name="product_uom_category_id" invisible="1"/>
                                 <field name="product_uom" string="Unit of Measure" groups="uom.group_uom" optional="show"/>
                                 <field name="price_unit"/>
                                 <field name="tax_id" widget="many2many_tags" optional="show"/>
-                                <field name="price_subtotal" widget="monetary"/>
+                                <field name="price_subtotal" widget="monetary" groups="account.group_show_line_subtotals_tax_excluded"/>
+                                <field name="price_total" widget="monetary" groups="account.group_show_line_subtotals_tax_included"/>
                                 <field name="currency_id" invisible="1"/>
                             </tree>
                         </field>

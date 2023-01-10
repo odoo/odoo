@@ -26,19 +26,21 @@ LivechatButton.include({
             else {
                 session.rpc('/bus/test_mode_activated', {}).then(function (in_test_mode) {
                     if (in_test_mode) {
-                        var notification = [
-                            self._livechat.getUUID(),
-                            {
-                                'id': -1,
-                                'author_id': [0, 'Website Visitor Test'],
-                                'email_from': 'Website Visitor Test',
-                                'body': '<p>' + message.content + '</p>',
-                                'is_discussion': true,
-                                'subtype_id': [1, "Discussions"],
-                                'date': moment().format('YYYY-MM-DD HH:mm:ss'),
-                            }
-                        ]
-                        self._handleNotification(notification);
+                        self._handleNotification({
+                            type: 'mail.channel/new_message',
+                            payload: {
+                                id: self._livechat._id,
+                                message: {
+                                    id: -1,
+                                    author_id: [0, 'Website Visitor Test'],
+                                    email_from: 'Website Visitor Test',
+                                    body: '<p>' + message.content + '</p>',
+                                    is_discussion: true,
+                                    subtype_id: [1, "Discussions"],
+                                    date: moment().format('YYYY-MM-DD HH:mm:ss'),
+                                },
+                            },
+                        });
                     }
                 });
             }

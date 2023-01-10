@@ -10,7 +10,6 @@ __base="$(basename ${__file} .sh)"
 
 # Recommends: antiword, graphviz, ghostscript, python-gevent, poppler-utils
 export DEBIAN_FRONTEND=noninteractive
-echo "nameserver 8.8.8.8" >> /etc/resolv.conf
 
 # set locale to en_US
 echo "set locale to en_US"
@@ -20,6 +19,8 @@ echo "export LC_ALL=en_US.UTF-8" >> ~/.bashrc
 locale-gen
 source ~/.bashrc
 
+# upgrade firmware-brcm80211 broke access point on rpi4
+apt-mark hold firmware-brcm80211
 apt-get update && apt-get -y upgrade
 # Do not be too fast to upgrade to more recent firmware and kernel than 4.38
 # Firmware 4.44 seems to prevent the LED mechanism from working
@@ -51,7 +52,6 @@ PKGS_TO_INSTALL="
     python3-decorator \
     python3-dev \
     python3-docutils \
-    python3-html2text \
     python3-jinja2 \
     python3-ldap \
     python3-libsass \

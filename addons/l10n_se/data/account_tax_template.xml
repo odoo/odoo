@@ -1,6 +1,6 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <odoo>
-    <data noupdate="1">
+    <data>
         <record id="sale_tax_25_goods" model="account.tax.template">
             <field name="chart_template_id" ref="l10nse_chart_template"/>
             <field name="name">Utgående moms 25%</field>
@@ -1141,6 +1141,164 @@
                     'factor_percent': -100,
                     'repartition_type': 'tax',
                     'account_id': ref('a2634')
+                })]"/>
+        </record>
+
+        <!--Tax template in triangular trade-->
+        <record id="triangular_tax_25_goods" model="account.tax.template">
+            <field name="chart_template_id" ref="l10nse_chart_template"/>
+            <field name="name">Trepartshandel - moms 25%</field>
+            <field name="description">T25</field>
+            <field name="amount">25</field>
+            <field name="type_tax_use">sale</field>
+            <field name="tax_group_id" ref="tax_group_25"/>
+            <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+                (0, 0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'base',
+                    'plus_report_line_ids': [ref('tax_report_line_37')],
+                    'minus_report_line_ids': [ref('tax_report_line_38')],
+                }),
+                (0, 0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'tax',
+                    'account_id': ref('a2615'),
+                }),
+                (0, 0, {
+                    'factor_percent': -100,
+                    'repartition_type': 'tax',
+                    'account_id': ref('a2645'),
+                })]"/>
+            <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+                (0, 0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'base',
+                    'minus_report_line_ids': [ref('tax_report_line_37')],
+                    'plus_report_line_ids': [ref('tax_report_line_38')],
+                }),
+                (0, 0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'tax',
+                    'account_id': ref('a2615'),
+                }),
+                (0, 0, {
+                    'factor_percent': -100,
+                    'repartition_type': 'tax',
+                    'account_id': ref('a2645'),
+                })]"/>
+        </record>
+        <record id="triangular_tax_12_goods" model="account.tax.template">
+            <field name="chart_template_id" ref="l10nse_chart_template"/>
+            <field name="name">Trepartshandel - moms 12%</field>
+            <field name="description">T12</field>
+            <field name="amount">12</field>
+            <field name="type_tax_use">sale</field>
+            <field name="tax_group_id" ref="tax_group_25"/>
+            <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+                (0, 0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'base',
+                    'plus_report_line_ids': [ref('tax_report_line_37')],
+                    'minus_report_line_ids': [ref('tax_report_line_38')],
+                }),
+                (0, 0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'tax',
+                    'account_id': ref('a2625'),
+                }),
+                (0, 0, {
+                    'factor_percent': -100,
+                    'repartition_type': 'tax',
+                    'account_id': ref('a2645'),
+                })]"/>
+            <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+                (0, 0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'base',
+                    'minus_report_line_ids': [ref('tax_report_line_37')],
+                    'plus_report_line_ids': [ref('tax_report_line_38')],
+                }),
+                (0, 0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'tax',
+                    'account_id': ref('a2625'),
+                }),
+                (0, 0, {
+                    'factor_percent': -100,
+                    'repartition_type': 'tax',
+                    'account_id': ref('a2645'),
+                })]"/>
+        </record>
+        <record id="triangular_tax_6_goods" model="account.tax.template">
+            <field name="chart_template_id" ref="l10nse_chart_template"/>
+            <field name="name">Trepartshandel - moms 6%</field>
+            <field name="description">T6</field>
+            <field name="amount">6</field>
+            <field name="type_tax_use">sale</field>
+            <field name="tax_group_id" ref="tax_group_25"/>
+            <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+                (0, 0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'base',
+                    'plus_report_line_ids': [ref('tax_report_line_37')],
+                    'minus_report_line_ids': [ref('tax_report_line_38')],
+                }),
+                (0, 0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'tax',
+                    'account_id': ref('a2635'),
+                }),
+                (0, 0, {
+                    'factor_percent': -100,
+                    'repartition_type': 'tax',
+                    'account_id': ref('a2645'),
+                })]"/>
+            <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+                (0, 0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'base',
+                    'minus_report_line_ids': [ref('tax_report_line_37')],
+                    'plus_report_line_ids': [ref('tax_report_line_38')],
+                }),
+                (0, 0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'tax',
+                    'account_id': ref('a2635'),
+                }),
+                (0, 0, {
+                    'factor_percent': -100,
+                    'repartition_type': 'tax',
+                    'account_id': ref('a2645'),
+                })]"/>
+        </record>
+        <record id="triangular_tax_0_goods" model="account.tax.template">
+            <field name="chart_template_id" ref="l10nse_chart_template"/>
+            <field name="name">Trepartshandel - momsfrei</field>
+            <field name="description">T0</field>
+            <field name="amount">0</field>
+            <field name="type_tax_use">sale</field>
+            <field name="tax_group_id" ref="tax_group_25"/>
+            <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+                (0, 0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'base',
+                    'plus_report_line_ids': [ref('tax_report_line_37')],
+                    'minus_report_line_ids': [ref('tax_report_line_38')],
+                }),
+                (0, 0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'tax',
+            })]"/>
+            <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+                (0, 0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'base',
+                    'minus_report_line_ids': [ref('tax_report_line_37')],
+                    'plus_report_line_ids': [ref('tax_report_line_38')],
+                }),
+                (0, 0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'tax',
                 })]"/>
         </record>
     </data>

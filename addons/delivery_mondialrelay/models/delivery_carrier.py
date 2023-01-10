@@ -26,4 +26,4 @@ class DeliveryCarrierMondialRelay(models.Model):
                 'track': picking.carrier_tracking_ref,
                 'lang': (picking.partner_id.lang or 'fr').split('_')[0],
             }
-        return super().based_on_rule_get_tracking_link(picking)
+        return super().base_on_rule_get_tracking_link(picking)

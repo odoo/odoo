@@ -46,15 +46,16 @@ class TestRecruitmentSurvey(common.SingleTransactionCase):
         action = self.job_sysadmin.action_send_survey()
 
         invite_form = Form(self.env[action['res_model']].with_context({
-            'active_id': self.job_sysadmin.id,
             **action['context'],
         }))
         invite = invite_form.save()
         invite.action_invite()
 
+        self.assertEqual(invite.applicant_id, self.job_sysadmin)
         self.assertNotEqual(self.job_sysadmin.response_id.id, False)
         answers = Answer.search([('survey_id', '=', self.survey_sysadmin.id)])
         self.assertEqual(len(answers), 1)
+        self.assertEqual(self.job_sysadmin.response_id, answers)
         self.assertEqual(
             set(answers.mapped('email')),
             set([self.job_sysadmin.email_from]))

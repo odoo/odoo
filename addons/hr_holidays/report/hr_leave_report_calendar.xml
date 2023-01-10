@@ -56,6 +56,6 @@
         <field name="view_mode">calendar</field>
         <field name="search_view_id" ref="hr_leave_report_calendar_view_search"/>
         <field name="domain">[('employee_id.active','=',True)]</field>
-        <field name="context">{'hide_employee_name': 1}</field>
+        <field name="context">{'hide_employee_name': 1, 'search_default_my_team': 1}</field>
     </record>
 </odoo>

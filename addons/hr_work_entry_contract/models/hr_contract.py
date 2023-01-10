@@ -3,11 +3,10 @@
 
 from collections import defaultdict
 from datetime import datetime, date
-from dateutil.relativedelta import relativedelta
-
-from odoo import api, fields, models
+from odoo import fields, models, _
 from odoo.addons.resource.models.resource import datetime_to_string, string_to_datetime, Intervals
 from odoo.osv import expression
+from odoo.exceptions import UserError
 
 import pytz
 
@@ -49,6 +48,17 @@ class HrContract(models.Model):
                 return self._get_leave_work_entry_type_dates(leave[2], interval_start, interval_stop, self.employee_id)
         return self.env.ref('hr_work_entry_contract.work_entry_type_leave')
 
+    def _get_leave_domain(self, start_dt, end_dt):
+        self.ensure_one()
+        return [
+            ('time_type', '=', 'leave'),
+            ('calendar_id', 'in', [False, self.resource_calendar_id.id]),
+            ('resource_id', 'in', [False, self.employee_id.resource_id.id]),
+            ('date_from', '<=', end_dt),
+            ('date_to', '>=', start_dt),
+            ('company_id', 'in', [False, self.company_id.id]),
+        ]
+
     def _get_contract_work_entries_values(self, date_start, date_stop):
         contract_vals = []
         bypassing_work_entry_type_codes = self._get_bypassing_work_entry_type_codes()
@@ -70,17 +80,10 @@ class HrContract(models.Model):
             # in master.
             resources_list = [self.env['resource.resource'], resource]
             resource_ids = [False, resource.id]
-            leave_domain = [
-                ('time_type', '=', 'leave'),
-                # ('calendar_id', '=', self.id), --> Get all the time offs
-                ('resource_id', 'in', resource_ids),
-                ('date_from', '<=', datetime_to_string(end_dt)),
-                ('date_to', '>=', datetime_to_string(start_dt)),
-                ('company_id', '=', self.env.company.id),
-            ]
+            leave_domain = contract._get_leave_domain(start_dt, end_dt)
             result = defaultdict(lambda: [])
             tz_dates = {}
-            for leave in self.env['resource.calendar.leaves'].search(leave_domain):
+            for leave in self.env['resource.calendar.leaves'].sudo().search(leave_domain):
                 for resource in resources_list:
                     if leave.resource_id.id not in [False, resource.id]:
                         continue
@@ -178,6 +181,11 @@ class HrContract(models.Model):
         return contract_vals
 
     def _generate_work_entries(self, date_start, date_stop, force=False):
+        canceled_contracts = self.filtered(lambda c: c.state == 'cancel')
+        if canceled_contracts:
+            raise UserError(
+                _("Sorry, generating work entries from cancelled contracts is not allowed.") + '\n%s' % (
+                    ', '.join(canceled_contracts.mapped('name'))))
         vals_list = []
         date_start = fields.Datetime.to_datetime(date_start)
         date_stop = datetime.combine(fields.Datetime.to_datetime(date_stop), datetime.max.time())
@@ -285,28 +293,3 @@ class HrContract(models.Model):
     def _get_fields_that_recompute_we(self):
         # Returns the fields that should recompute the work entries
         return ['resource_calendar_id']
-
-    @api.model
-    def _cron_generate_missing_work_entries(self):
-        # retrieve contracts for the current month
-        today = fields.Date.today()
-        start = today + relativedelta(day=1)
-        stop = today + relativedelta(day=31)
-        contracts = self.env['hr.employee']._get_all_contracts(
-            start, stop, states=['open', 'close'])
-        # determine contracts to do (the ones without work entries this month)
-        work_entry_groups = self.env['hr.work.entry'].read_group([
-            ('date_start', '<=', stop),
-            ('date_stop', '>=', start),
-            ('contract_id', 'in', contracts.ids)
-            ], ['contract_id'], ['contract_id'])
-        contracts_done = self.browse(group['contract_id'][0] for group in work_entry_groups)
-        contracts_todo = contracts - contracts_done
-        if not contracts_todo:
-            return
-        # generate a batch of work entries
-        BATCH_SIZE = 100
-        contracts_todo[:BATCH_SIZE]._generate_work_entries(start, stop, False)
-        # if necessary, retrigger the cron to generate more work entries
-        if len(contracts_todo) > BATCH_SIZE:
-            self.env.ref('hr_work_entry_contract.ir_cron_generate_missing_work_entries')._trigger()

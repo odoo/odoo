@@ -1,0 +1,380 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+#   * event_booth_sale
+# 
+# Translators:
+# 敬雲 林 <chingyun@yuanchih-consult.com>, 2021
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server saas~14.5\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2021-09-14 10:28+0000\n"
+"PO-Revision-Date: 2021-09-14 12:21+0000\n"
+"Last-Translator: 敬雲 林 <chingyun@yuanchih-consult.com>, 2021\n"
+"Language-Team: Chinese (Taiwan) (https://www.transifex.com/odoo/teams/41243/zh_TW/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: zh_TW\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+
+#. module: event_booth_sale
+#: model:ir.model.fields,help:event_booth_sale.field_product_product__detailed_type
+#: model:ir.model.fields,help:event_booth_sale.field_product_template__detailed_type
+msgid ""
+"A storable product is a product for which you manage stock. The Inventory app has to be installed.\n"
+"A consumable product is a product for which stock is not managed.\n"
+"A service is a non-material product you provide."
+msgstr ""
+"可庫存商品是指在倉庫中受存量管控的產品。 要使用此功能您必須安裝倉庫模組。\n"
+"可消耗商品是指不受庫存量管控的產品。\n"
+"服務是指您提供的非產品類服務業務。"
+
+#. module: event_booth_sale
+#: model:ir.model.fields,field_description:event_booth_sale.field_event_booth_configurator__event_booth_ids
+#: model:ir.model.fields,field_description:event_booth_sale.field_event_booth_registration__event_booth_id
+msgid "Booth"
+msgstr "攤位"
+
+#. module: event_booth_sale
+#: model:ir.model.fields,field_description:event_booth_sale.field_event_booth_configurator__event_booth_category_id
+msgid "Booth Category"
+msgstr "攤位類別"
+
+#. module: event_booth_sale
+#: model:ir.model.fields,help:event_booth_sale.field_event_booth_configurator__event_booth_category_available_ids
+msgid "Booth Category for which booths are still available. Used in frontend"
+msgstr "攤位仍然可用的攤位類別。前台使用"
+
+#. module: event_booth_sale
+#: model:ir.model.fields,field_description:event_booth_sale.field_sale_order__event_booth_count
+msgid "Booth Count"
+msgstr "攤位數量"
+
+#. module: event_booth_sale
+#: model_terms:ir.ui.view,arch_db:event_booth_sale.event_booth_category_view_form
+msgid "Booth Details"
+msgstr "攤位詳情"
+
+#. module: event_booth_sale
+#: model_terms:ir.ui.view,arch_db:event_booth_sale.event_booth_registration_view_form
+#: model_terms:ir.ui.view,arch_db:event_booth_sale.event_booth_registration_view_tree
+msgid "Booth Registration"
+msgstr "攤位租用"
+
+#. module: event_booth_sale
+#: model:ir.model.fields,field_description:event_booth_sale.field_sale_order__event_booth_ids
+#: model_terms:ir.ui.view,arch_db:event_booth_sale.sale_order_view_form
+msgid "Booths"
+msgstr "攤位"
+
+#. module: event_booth_sale
+#: model:ir.model.fields,field_description:event_booth_sale.field_sale_order_line__event_booth_category_id
+msgid "Booths Category"
+msgstr "攤位類別"
+
+#. module: event_booth_sale
+#: model_terms:ir.ui.view,arch_db:event_booth_sale.event_booth_configurator_view_form
+msgid "Cancel"
+msgstr "取消"
+
+#. module: event_booth_sale
+msgid "Configure an event booth"
+msgstr "設置活動攤位"
+
+#. module: event_booth_sale
+#: model:ir.model.fields,field_description:event_booth_sale.field_sale_order_line__event_booth_ids
+msgid "Confirmed Booths"
+msgstr "確認攤位"
+
+#. module: event_booth_sale
+#: model:ir.model.fields,field_description:event_booth_sale.field_sale_order_line__event_booth_registration_ids
+msgid "Confirmed Registration"
+msgstr "確認租用"
+
+#. module: event_booth_sale
+#: model_terms:ir.ui.view,arch_db:event_booth_sale.event_booth_registration_view_form
+msgid "Contact"
+msgstr "聯絡人"
+
+#. module: event_booth_sale
+#: model:ir.model.fields,field_description:event_booth_sale.field_event_booth_registration__contact_email
+msgid "Contact Email"
+msgstr "聯繫電郵"
+
+#. module: event_booth_sale
+#: model:ir.model.fields,field_description:event_booth_sale.field_event_booth_registration__contact_mobile
+msgid "Contact Mobile"
+msgstr "聯繫手機"
+
+#. module: event_booth_sale
+#: model:ir.model.fields,field_description:event_booth_sale.field_event_booth_registration__contact_name
+msgid "Contact Name"
+msgstr "聯絡人姓名"
+
+#. module: event_booth_sale
+#: model:ir.model.fields,field_description:event_booth_sale.field_event_booth_registration__contact_phone
+msgid "Contact Phone"
+msgstr "聯絡電話"
+
+#. module: event_booth_sale
+#: model:ir.model.fields,field_description:event_booth_sale.field_event_booth_configurator__create_uid
+#: model:ir.model.fields,field_description:event_booth_sale.field_event_booth_registration__create_uid
+msgid "Created by"
+msgstr "創立者"
+
+#. module: event_booth_sale
+#: model:ir.model.fields,field_description:event_booth_sale.field_event_booth_configurator__create_date
+#: model:ir.model.fields,field_description:event_booth_sale.field_event_booth_registration__create_date
+msgid "Created on"
+msgstr "建立於"
+
+#. module: event_booth_sale
+#: model:ir.model.fields,field_description:event_booth_sale.field_event_booth__currency_id
+#: model:ir.model.fields,field_description:event_booth_sale.field_event_booth_category__currency_id
+#: model:ir.model.fields,field_description:event_booth_sale.field_event_type_booth__currency_id
+msgid "Currency"
+msgstr "幣別"
+
+#. module: event_booth_sale
+#: model:ir.model.fields,field_description:event_booth_sale.field_event_booth_registration__partner_id
+msgid "Customer"
+msgstr "客戶"
+
+#. module: event_booth_sale
+#: model_terms:ir.ui.view,arch_db:event_booth_sale.event_booth_registration_view_form
+msgid "Details"
+msgstr "詳細訊息"
+
+#. module: event_booth_sale
+#: model:ir.model.fields,field_description:event_booth_sale.field_event_booth_configurator__display_name
+#: model:ir.model.fields,field_description:event_booth_sale.field_event_booth_registration__display_name
+msgid "Display Name"
+msgstr "顯示名稱"
+
+#. module: event_booth_sale
+#: model:ir.model.fields,field_description:event_booth_sale.field_event_booth_configurator__event_id
+msgid "Event"
+msgstr "活動"
+
+#. module: event_booth_sale
+#: model:ir.model,name:event_booth_sale.model_event_booth
+#: model:ir.model.fields.selection,name:event_booth_sale.selection__product_template__detailed_type__event_booth
+#: model:product.product,name:event_booth_sale.product_product_event_booth
+msgid "Event Booth"
+msgstr "活動攤位"
+
+#. module: event_booth_sale
+#: model:ir.model,name:event_booth_sale.model_event_booth_category
+msgid "Event Booth Category"
+msgstr "活動攤位類別"
+
+#. module: event_booth_sale
+#: model:ir.model.fields,field_description:event_booth_sale.field_event_booth_configurator__event_booth_category_available_ids
+msgid "Event Booth Category Available"
+msgstr "活動攤位類別可用"
+
+#. module: event_booth_sale
+#: model:ir.model,name:event_booth_sale.model_event_booth_configurator
+msgid "Event Booth Configurator"
+msgstr "活動攤位配置器"
+
+#. module: event_booth_sale
+#: model:ir.model,name:event_booth_sale.model_event_booth_registration
+#: model:ir.model.fields,field_description:event_booth_sale.field_event_booth__event_booth_registration_ids
+msgid "Event Booth Registration"
+msgstr "活動攤位租用"
+
+#. module: event_booth_sale
+#: model:ir.model,name:event_booth_sale.model_event_type_booth
+msgid "Event Booth Template"
+msgstr "活動攤位模板"
+
+#. module: event_booth_sale
+#: model:ir.model.fields,field_description:event_booth_sale.field_event_booth__sale_order_line_id
+msgid "Final Sale Order Line"
+msgstr "最終銷售訂單項目"
+
+#. module: event_booth_sale
+#: model:ir.model.fields,field_description:event_booth_sale.field_event_booth_configurator__id
+#: model:ir.model.fields,field_description:event_booth_sale.field_event_booth_registration__id
+msgid "ID"
+msgstr "ID"
+
+#. module: event_booth_sale
+#: model:ir.model.fields,field_description:event_booth_sale.field_event_booth_category__image_1920
+msgid "Image"
+msgstr "圖像"
+
+#. module: event_booth_sale
+#: model:ir.model.fields,field_description:event_booth_sale.field_sale_order_line__is_event_booth
+msgid "Is Event Booth"
+msgstr "活動攤位"
+
+#. module: event_booth_sale
+#: model:ir.model.fields,field_description:event_booth_sale.field_event_booth__is_paid
+msgid "Is Paid"
+msgstr "為已支付"
+
+#. module: event_booth_sale
+#: model:ir.model,name:event_booth_sale.model_account_move
+msgid "Journal Entry"
+msgstr "日記帳分錄"
+
+#. module: event_booth_sale
+#: model:ir.model.fields,field_description:event_booth_sale.field_event_booth_configurator____last_update
+#: model:ir.model.fields,field_description:event_booth_sale.field_event_booth_registration____last_update
+msgid "Last Modified on"
+msgstr "最後修改於"
+
+#. module: event_booth_sale
+#: model:ir.model.fields,field_description:event_booth_sale.field_event_booth_configurator__write_uid
+#: model:ir.model.fields,field_description:event_booth_sale.field_event_booth_registration__write_uid
+msgid "Last Updated by"
+msgstr "最後更新者"
+
+#. module: event_booth_sale
+#: model:ir.model.fields,field_description:event_booth_sale.field_event_booth_configurator__write_date
+#: model:ir.model.fields,field_description:event_booth_sale.field_event_booth_registration__write_date
+msgid "Last Updated on"
+msgstr "最後更新於"
+
+#. module: event_booth_sale
+#: model_terms:ir.ui.view,arch_db:event_booth_sale.event_booth_configurator_view_form
+msgid "Ok"
+msgstr "確定"
+
+#. module: event_booth_sale
+#: model:ir.model.fields,field_description:event_booth_sale.field_event_booth__sale_order_id
+msgid "Order Reference"
+msgstr "訂單關聯"
+
+#. module: event_booth_sale
+#: model_terms:ir.ui.view,arch_db:event_booth_sale.event_booth_view_form_from_event
+msgid "Paid"
+msgstr "已支付"
+
+#. module: event_booth_sale
+#: model:ir.model.fields,field_description:event_booth_sale.field_sale_order_line__event_booth_pending_ids
+msgid "Pending Booths"
+msgstr "待確認攤位"
+
+#. module: event_booth_sale
+#: model:ir.model.fields,field_description:event_booth_sale.field_event_booth__price
+#: model:ir.model.fields,field_description:event_booth_sale.field_event_booth_category__price
+#: model:ir.model.fields,field_description:event_booth_sale.field_event_type_booth__price
+msgid "Price"
+msgstr "價格"
+
+#. module: event_booth_sale
+#: model:ir.model.fields,field_description:event_booth_sale.field_event_booth_category__price_reduce
+msgid "Price Reduce"
+msgstr "降價"
+
+#. module: event_booth_sale
+#: model:ir.model,name:event_booth_sale.model_product_product
+#: model:ir.model.fields,field_description:event_booth_sale.field_event_booth__product_id
+#: model:ir.model.fields,field_description:event_booth_sale.field_event_booth_category__product_id
+#: model:ir.model.fields,field_description:event_booth_sale.field_event_booth_configurator__product_id
+#: model:ir.model.fields,field_description:event_booth_sale.field_event_type_booth__product_id
+msgid "Product"
+msgstr "商品"
+
+#. module: event_booth_sale
+#: model:ir.model,name:event_booth_sale.model_product_template
+msgid "Product Template"
+msgstr "產品模板"
+
+#. module: event_booth_sale
+#: model:ir.model.fields,field_description:event_booth_sale.field_product_product__detailed_type
+#: model:ir.model.fields,field_description:event_booth_sale.field_product_template__detailed_type
+msgid "Product Type"
+msgstr "產品類型"
+
+#. module: event_booth_sale
+#: model_terms:ir.ui.view,arch_db:event_booth_sale.event_booth_view_form_from_event
+msgid "Registrations"
+msgstr "報名"
+
+#. module: event_booth_sale
+#: code:addons/event_booth_sale/models/sale_order_line.py:0
+#, python-format
+msgid "Registrations from the same Order Line must belong to a single event."
+msgstr "來自同一訂單明細的租用必須屬於單個活動。"
+
+#. module: event_booth_sale
+#: model:ir.model.fields,field_description:event_booth_sale.field_event_booth__sale_order_line_registration_ids
+msgid "SO Lines with reservations"
+msgstr "預訂的 SO 項目"
+
+#. module: event_booth_sale
+#: model_terms:ir.ui.view,arch_db:event_booth_sale.event_booth_view_form_from_event
+msgid "Sale Order"
+msgstr "銷售訂單"
+
+#. module: event_booth_sale
+#: model:ir.model.fields,field_description:event_booth_sale.field_event_booth_configurator__sale_order_line_id
+#: model:ir.model.fields,field_description:event_booth_sale.field_event_booth_registration__sale_order_line_id
+msgid "Sale Order Line"
+msgstr "銷售訂單明細"
+
+#. module: event_booth_sale
+#: model:ir.model,name:event_booth_sale.model_sale_order
+msgid "Sales Order"
+msgstr "銷售訂單"
+
+#. module: event_booth_sale
+#: model:ir.model,name:event_booth_sale.model_sale_order_line
+msgid "Sales Order Line"
+msgstr "銷售訂單明細"
+
+#. module: event_booth_sale
+#: model:ir.actions.act_window,name:event_booth_sale.event_booth_configurator_action
+msgid "Select an event booth"
+msgstr "選擇活動攤位"
+
+#. module: event_booth_sale
+#: code:addons/event_booth_sale/models/sale_order_line.py:0
+#, python-format
+msgid ""
+"The following booths are unavailable, please remove them to continue : "
+"%(booth_names)s"
+msgstr "以下攤位不可用，請移除它們以繼續：%(booth_names)s"
+
+#. module: event_booth_sale
+#: model:ir.model.constraint,message:event_booth_sale.constraint_event_booth_registration_unique_registration
+msgid "There can be only one registration for a booth by sale order line"
+msgstr "每個銷售訂單細項只能有一個攤位租用"
+
+#. module: event_booth_sale
+#: model:product.product,uom_name:event_booth_sale.product_product_event_booth
+msgid "Units"
+msgstr "單位"
+
+#. module: event_booth_sale
+#: model:ir.model.fields,help:event_booth_sale.field_sale_order_line__event_booth_pending_ids
+msgid "Used to create registration when providing the desired event booth."
+msgstr "用於在提供所需的活動攤位時建立租用。"
+
+#. module: event_booth_sale
+#: code:addons/event_booth_sale/models/event_booth.py:0
+#, python-format
+msgid ""
+"You can't delete the following booths as they are linked to sales orders: "
+"%(booths)s"
+msgstr "您無法刪除以下攤位，因為它們與銷售訂單相關聯：%(booths)s"
+
+#. module: event_booth_sale
+#: code:addons/event_booth_sale/wizard/event_booth_configurator.py:0
+#, python-format
+msgid "You have to select at least one booth."
+msgstr "您必須至少選擇一個攤位。"
+
+#. module: event_booth_sale
+#: code:addons/event_booth_sale/models/event_booth_registration.py:0
+#, python-format
+msgid ""
+"Your order has been cancelled because the following booths have been "
+"reserved"
+msgstr "您的訂單已被取消，因為以下攤位已被預訂"

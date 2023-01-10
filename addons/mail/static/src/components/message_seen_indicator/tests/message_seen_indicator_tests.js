@@ -1,6 +1,6 @@
 /** @odoo-module **/
 
-import { create, insert, link } from '@mail/model/model_field_command';
+import { insert, insertAndReplace, link } from '@mail/model/model_field_command';
 import {
     afterEach,
     beforeEach,
@@ -46,20 +46,17 @@ QUnit.test('rendering when just one has received the message', async function (a
     const thread = this.messaging.models['mail.thread'].create({
         id: 1000,
         model: 'mail.channel',
-        partnerSeenInfos: create([
+        partnerSeenInfos: insertAndReplace([
             {
-                channelId: 1000,
                 lastFetchedMessage: insert({ id: 100 }),
-                partnerId: 10,
+                partner: insertAndReplace({ id: 10 }),
             },
             {
-                channelId: 1000,
-                partnerId: 100,
+                partner: insertAndReplace({ id: 100 }),
             },
         ]),
-        messageSeenIndicators: insert({
-            channelId: 1000,
-            messageId: 100,
+        messageSeenIndicators: insertAndReplace({
+            message: insertAndReplace({ id: 100 }),
         }),
     });
     const message = this.messaging.models['mail.message'].insert({
@@ -93,21 +90,18 @@ QUnit.test('rendering when everyone have received the message', async function (
     const thread = this.messaging.models['mail.thread'].create({
         id: 1000,
         model: 'mail.channel',
-        partnerSeenInfos: create([
+        partnerSeenInfos: insertAndReplace([
             {
-                channelId: 1000,
                 lastFetchedMessage: insert({ id: 100 }),
-                partnerId: 10,
+                partner: insertAndReplace({ id: 10 }),
             },
             {
-                channelId: 1000,
                 lastFetchedMessage: insert({ id: 99 }),
-                partnerId: 100,
+                partner: insertAndReplace({ id: 100 }),
             },
         ]),
-        messageSeenIndicators: insert({
-            channelId: 1000,
-            messageId: 100,
+        messageSeenIndicators: insertAndReplace({
+            message: insertAndReplace({ id: 100 }),
         }),
     });
     const message = this.messaging.models['mail.message'].insert({
@@ -141,22 +135,19 @@ QUnit.test('rendering when just one has seen the message', async function (asser
     const thread = this.messaging.models['mail.thread'].create({
         id: 1000,
         model: 'mail.channel',
-        partnerSeenInfos: create([
+        partnerSeenInfos: insertAndReplace([
             {
-                channelId: 1000,
                 lastFetchedMessage: insert({ id: 100 }),
                 lastSeenMessage: insert({ id: 100 }),
-                partnerId: 10,
+                partner: insertAndReplace({ id: 10 }),
             },
             {
-                channelId: 1000,
                 lastFetchedMessage: insert({ id: 99 }),
-                partnerId: 100,
+                partner: insertAndReplace({ id: 100 }),
             },
         ]),
-        messageSeenIndicators: insert({
-            channelId: 1000,
-            messageId: 100,
+        messageSeenIndicators: insertAndReplace({
+            message: insertAndReplace({ id: 100 }),
         }),
     });
     const message = this.messaging.models['mail.message'].insert({
@@ -191,21 +182,18 @@ QUnit.test('rendering when just one has seen & received the message', async func
     const thread = this.messaging.models['mail.thread'].create({
         id: 1000,
         model: 'mail.channel',
-        partnerSeenInfos: create([
+        partnerSeenInfos: insertAndReplace([
             {
-                channelId: 1000,
                 lastFetchedMessage: insert({ id: 100 }),
                 lastSeenMessage: insert({ id: 100 }),
-                partnerId: 10,
+                partner: insertAndReplace({ id: 10 }),
             },
             {
-                channelId: 1000,
-                partnerId: 100,
+                partner: insertAndReplace({ id: 100 }),
             },
         ]),
-        messageSeenIndicators: insert({
-            channelId: 1000,
-            messageId: 100,
+        messageSeenIndicators: insertAndReplace({
+            message: insertAndReplace({ id: 100 }),
         }),
     });
     const message = this.messaging.models['mail.message'].insert({
@@ -240,23 +228,20 @@ QUnit.test('rendering when just everyone has seen the message', async function (
     const thread = this.messaging.models['mail.thread'].create({
         id: 1000,
         model: 'mail.channel',
-        partnerSeenInfos: create([
+        partnerSeenInfos: insertAndReplace([
             {
-                channelId: 1000,
                 lastFetchedMessage: insert({ id: 100 }),
                 lastSeenMessage: insert({ id: 100 }),
-                partnerId: 10,
+                partner: insertAndReplace({ id: 10 }),
             },
             {
-                channelId: 1000,
                 lastFetchedMessage: insert({ id: 100 }),
                 lastSeenMessage: insert({ id: 100 }),
-                partnerId: 100,
+                partner: insertAndReplace({ id: 100 }),
             },
         ]),
-        messageSeenIndicators: insert({
-            channelId: 1000,
-            messageId: 100,
+        messageSeenIndicators: insertAndReplace({
+            message: insertAndReplace({ id: 100 }),
         }),
     });
     const message = this.messaging.models['mail.message'].insert({

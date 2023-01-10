@@ -10,7 +10,7 @@ class ProductTemplate(models.Model):
 
     detailed_type = fields.Selection(selection_add=[
         ('gift', 'Gift Card'),
-    ], ondelete={'gift': 'set default'})
+    ], ondelete={'gift': 'set service'})
 
     def _detailed_type_mapping(self):
         type_mapping = super()._detailed_type_mapping()

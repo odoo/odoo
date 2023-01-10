@@ -321,21 +321,11 @@ publicWidget.registry.WebsiteSale = publicWidget.Widget.extend(VariantMixin, car
             if (!data.cart_quantity) {
                 return window.location = '/shop/cart';
             }
-            wSaleUtils.updateCartNavBar(data);
             $input.val(data.quantity);
             $('.js_quantity[data-line-id='+line_id+']').val(data.quantity).text(data.quantity);
 
-            if (data.warning) {
-                var cart_alert = $('.oe_cart').parent().find('#data_warning');
-                if (cart_alert.length === 0) {
-                    $('.oe_cart').prepend('<div class="alert alert-danger alert-dismissable" role="alert" id="data_warning">'+
-                            '<button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button> ' + data.warning + '</div>');
-                }
-                else {
-                    cart_alert.html('<button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button> ' + data.warning);
-                }
-                $input.val(data.quantity);
-            }
+            wSaleUtils.updateCartNavBar(data);
+            wSaleUtils.showWarning(data.warning);
         });
     },
     /**
@@ -478,8 +468,16 @@ publicWidget.registry.WebsiteSale = publicWidget.Widget.extend(VariantMixin, car
      */
     _onClickAdd: function (ev) {
         ev.preventDefault();
-        this.getCartHandlerOptions(ev);
-        return this._handleAdd($(ev.currentTarget).closest('form'));
+        var def = () => {
+            this.getCartHandlerOptions(ev);
+            return this._handleAdd($(ev.currentTarget).closest('form'));
+        };
+        if ($('.js_add_cart_variants').children().length) {
+            return this._getCombinationInfo(ev).then(() => {
+                return !$(ev.target).closest('.js_product').hasClass("css_not_available") ? def() : Promise.resolve();
+            });
+        }
+        return def();
     },
     /**
      * Initializes the optional products modal
@@ -771,6 +769,10 @@ publicWidget.registry.WebsiteSaleLayout = publicWidget.Widget.extend({
      * @param {Event} ev
      */
     _onApplyShopLayoutChange: function (ev) {
+        const wysiwyg = this.options.wysiwyg;
+        if (wysiwyg) {
+            wysiwyg.odooEditor.observerUnactive('_onApplyShopLayoutChange');
+        }
         var switchToList = $(ev.currentTarget).find('.o_wsale_apply_list input').is(':checked');
         if (!this.editableMode) {
             this._rpc({
@@ -789,6 +791,9 @@ publicWidget.registry.WebsiteSaleLayout = publicWidget.Widget.extend({
         $grid.toggleClass('o_wsale_layout_list', switchToList);
         void $grid[0].offsetWidth;
         $grid.find('*').css('transition', '');
+        if (wysiwyg) {
+            wysiwyg.odooEditor.observerActive('_onApplyShopLayoutChange');
+        }
     },
 });
 

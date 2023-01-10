@@ -1,6 +1,7 @@
 /** @odoo-module **/
 
 import { browser } from "@web/core/browser/browser";
+import { CommandPalette } from "@web/core/commands/command_palette";
 import { CommandPaletteDialog } from "@web/core/commands/command_palette_dialog";
 import { commandService } from "@web/core/commands/command_service";
 import { dialogService } from "@web/core/dialog/dialog_service";
@@ -732,6 +733,164 @@ QUnit.test("press enter on command", async (assert) => {
     assert.verifySteps(["C2"]);
 });
 
+QUnit.test("keyboard navigation scroll", async (assert) => {
+    testComponent = await mount(TestComponent, { env, target });
+    const commands = [
+        { name: "Command1" },
+        { name: "Command2" },
+        { name: "Command3" },
+        { name: "Command4" },
+    ];
+    const providers = [
+        {
+            provide: () => commands,
+        },
+    ];
+    const config = {
+        providers,
+    };
+    env.services.dialog.add(CommandPaletteDialog, {
+        config,
+    });
+
+    const isVisible = (el) => {
+        // Returns the visibility of the element in the scrollable element
+        return (
+            el.getBoundingClientRect().bottom <=
+                target.querySelector(".o_command_palette_listbox").getBoundingClientRect().bottom &&
+            el.getBoundingClientRect().top >=
+                target.querySelector(".o_command_palette_listbox").getBoundingClientRect().top
+        );
+    };
+
+    const border = (el) => {
+        // Returns the state of the element in relation to the borders
+        const element = el.getBoundingClientRect();
+        const scrollable = target
+            .querySelector(".o_command_palette_listbox")
+            .getBoundingClientRect();
+        return {
+            top: element.top === scrollable.top,
+            bottom: element.bottom === scrollable.bottom,
+        };
+    };
+
+    await nextTick();
+    // The listbox height is set to be lower than the list of commands
+    // to assure the command palette is scrollable. The palette is only able to
+    // display three rows of commands so we are sure we always have one row
+    // element out of bounds
+    target.querySelectorAll(".o_command").forEach((e) => (e.style.height = "50px"));
+    target.querySelector(".o_command_palette_listbox").style.maxHeight = "150px";
+    target.querySelector(".o_command_category").style.padding = "0";
+    assert.containsOnce(target, ".o_command_palette");
+    assert.containsN(target, ".o_command", 4);
+
+    let focusedCommand = target.querySelector(".o_command.focused");
+    assert.ok(
+        isVisible(target.querySelector("#o_command_0")) &&
+            isVisible(target.querySelector("#o_command_1")) &&
+            isVisible(target.querySelector("#o_command_2")) &&
+            !isVisible(target.querySelector("#o_command_3")),
+        "commands 1-2-3 are visible"
+    );
+    assert.ok(
+        border(focusedCommand).top && !border(focusedCommand).bottom,
+        "the focus is at the top border"
+    );
+
+    triggerHotkey("arrowdown");
+    await nextTick();
+    focusedCommand = target.querySelector(".o_command.focused");
+    assert.ok(
+        isVisible(target.querySelector("#o_command_0")) &&
+            isVisible(target.querySelector("#o_command_1")) &&
+            isVisible(target.querySelector("#o_command_2")) &&
+            !isVisible(target.querySelector("#o_command_3")),
+        "commands 1-2-3 are visible"
+    );
+    assert.ok(isVisible(target.querySelector("#o_command_1")), "the second element is visible");
+    assert.ok(
+        !border(focusedCommand).top && !border(focusedCommand).bottom,
+        "the focus does not reach a border"
+    );
+
+    triggerHotkey("arrowdown");
+    await nextTick();
+    focusedCommand = target.querySelector(".o_command.focused");
+    assert.ok(
+        isVisible(target.querySelector("#o_command_0")) &&
+            isVisible(target.querySelector("#o_command_1")) &&
+            isVisible(target.querySelector("#o_command_2")) &&
+            !isVisible(target.querySelector("#o_command_3")),
+        "commands 1-2-3 are visible"
+    );
+    assert.ok(
+        !border(focusedCommand).top && border(focusedCommand).bottom,
+        "the focus has reached the bottom border"
+    );
+
+    triggerHotkey("arrowdown");
+    await nextTick();
+    focusedCommand = target.querySelector(".o_command.focused");
+    assert.ok(
+        !isVisible(target.querySelector("#o_command_0")) &&
+            isVisible(target.querySelector("#o_command_1")) &&
+            isVisible(target.querySelector("#o_command_2")) &&
+            isVisible(target.querySelector("#o_command_3")),
+        "commands 2-3-4 are visible"
+    );
+    assert.ok(
+        !border(focusedCommand).top && border(focusedCommand).bottom,
+        "the focus is still at the bottom border"
+    );
+
+    triggerHotkey("arrowup");
+    await nextTick();
+    focusedCommand = target.querySelector(".o_command.focused");
+    assert.ok(
+        !isVisible(target.querySelector("#o_command_0")) &&
+            isVisible(target.querySelector("#o_command_1")) &&
+            isVisible(target.querySelector("#o_command_2")) &&
+            isVisible(target.querySelector("#o_command_3")),
+        "commands 2-3-4 are visible"
+    );
+    assert.ok(
+        !border(focusedCommand).top && !border(focusedCommand).bottom,
+        "the focus does not reach a border"
+    );
+
+    triggerHotkey("arrowup");
+    await nextTick();
+    focusedCommand = target.querySelector(".o_command.focused");
+    assert.ok(
+        !isVisible(target.querySelector("#o_command_0")) &&
+            isVisible(target.querySelector("#o_command_1")) &&
+            isVisible(target.querySelector("#o_command_2")) &&
+            isVisible(target.querySelector("#o_command_3")),
+        "commands 2-3-4 are visible"
+    );
+    assert.ok(
+        border(focusedCommand).top && !border(focusedCommand).bottom,
+        "the focus has reached the top border"
+    );
+
+    triggerHotkey("arrowup");
+    await nextTick();
+    focusedCommand = target.querySelector(".o_command.focused");
+    assert.ok(
+        isVisible(target.querySelector("#o_command_0")) &&
+            isVisible(target.querySelector("#o_command_1")) &&
+            isVisible(target.querySelector("#o_command_2")) &&
+            !isVisible(target.querySelector("#o_command_3")),
+        "commands 1-2-3 are visible"
+    );
+    assert.ok(
+        border(focusedCommand).top && !border(focusedCommand).bottom,
+        "the focus is still at the top border"
+    );
+});
+
 QUnit.test("multi level command", async (assert) => {
     testComponent = await mount(TestComponent, { env, target });
     const emptyMessageByNamespace = {
@@ -911,4 +1070,42 @@ QUnit.test("navigate in the command palette with an empty list", async (assert) 
     await nextTick();
     assert.containsNone(target, ".o_command");
     assert.containsOnce(target, ".o_command_palette_listbox_empty");
+});
+
+QUnit.test("generate new session id when opened", async (assert) => {
+    assert.expect(4);
+
+    let lastSessionId;
+    CommandPalette.lastSessionId = 0;
+    testComponent = await mount(TestComponent, { env, target });
+    const providers = [
+        {
+            provide: (env, {sessionId}) => {
+                lastSessionId = sessionId;
+                return [];
+            },
+        },
+    ];
+    const config = {
+        providers,
+    };
+    env.services.dialog.add(CommandPaletteDialog, {
+        config,
+    });
+
+    await nextTick();
+    assert.equal(lastSessionId, 0);
+
+    await editSearchBar("a");
+    assert.equal(lastSessionId, 0);
+
+    window.dispatchEvent(new MouseEvent("mousedown"));
+    await nextTick();
+    assert.equal(lastSessionId, 0);
+
+    env.services.dialog.add(CommandPaletteDialog, {
+        config,
+    });
+    await nextTick();
+    assert.equal(lastSessionId, 1);
 });

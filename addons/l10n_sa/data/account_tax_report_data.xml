@@ -1,0 +1,483 @@
+<odoo>
+    <data>
+        <record id="tax_report_vat_filing" model="account.tax.report">
+            <field name="name">VAT Filing Report</field>
+            <field name="country_id" ref="base.sa"/>
+        </record>
+        <record id="tax_report_line_vat_all_sales_base" model="account.tax.report.line">
+            <field name="name">VAT on Sales and all other Outputs (Base)</field>
+            <field name="report_id" ref="tax_report_vat_filing"/>
+            <field name="sequence" eval="1"/>
+        </record>
+        <record id="tax_report_line_standard_rated_15_base" model="account.tax.report.line">
+            <field name="name">1. Standard Rated 15% (Base)</field>
+            <field name="tag_name">1. Standard Rates 15% (Base)</field>
+            <field name="parent_id" ref="tax_report_line_vat_all_sales_base"/>
+            <field name="report_id" ref="tax_report_vat_filing"/>
+            <field name="code">STD_SALE_B</field>
+            <field name="sequence" eval="1"/>
+        </record>
+        <record id="tax_report_line_special_sales_to_locals_base" model="account.tax.report.line">
+            <field name="name">2. Special Sales to Locals (Base)</field>
+            <field name="tag_name">2. Special Sales to Locals (Base)</field>
+            <field name="parent_id" ref="tax_report_line_vat_all_sales_base"/>
+            <field name="report_id" ref="tax_report_vat_filing"/>
+            <field name="code">SPCL_SALE_B</field>
+            <field name="sequence" eval="2"/>
+        </record>
+        <record id="tax_report_line_local_sales_subject_to_0_base" model="account.tax.report.line">
+            <field name="name">3. Local Sales Subject to 0% (Base)</field>
+            <field name="tag_name">3. Local Sales Subject to 0% (Base)</field>
+            <field name="parent_id" ref="tax_report_line_vat_all_sales_base"/>
+            <field name="report_id" ref="tax_report_vat_filing"/>
+            <field name="code">ZERO_SALE_B</field>
+            <field name="sequence" eval="3"/>
+        </record>
+        <record id="tax_report_line_export_sales_base" model="account.tax.report.line">
+            <field name="name">4. Export Sales (Base)</field>
+            <field name="tag_name">4. Export Sales (Base)</field>
+            <field name="parent_id" ref="tax_report_line_vat_all_sales_base"/>
+            <field name="report_id" ref="tax_report_vat_filing"/>
+            <field name="code">EXP_SALE_B</field>
+            <field name="sequence" eval="4"/>
+        </record>
+        <record id="tax_report_line_exempt_sales_base" model="account.tax.report.line">
+            <field name="name">5. Exempt Sales (Base)</field>
+            <field name="tag_name">5. Exempt Sales (Base)</field>
+            <field name="parent_id" ref="tax_report_line_vat_all_sales_base"/>
+            <field name="report_id" ref="tax_report_vat_filing"/>
+            <field name="code">EXM_SALE_B</field>
+            <field name="sequence" eval="5"/>
+        </record>
+        <record id="tax_report_line_net_sales_base" model="account.tax.report.line">
+            <field name="name">6. Net Sales (Base)</field>
+            <field name="parent_id" ref="tax_report_line_vat_all_sales_base"/>
+            <field name="report_id" ref="tax_report_vat_filing"/>
+            <field name="formula">STD_SALE_B + SPCL_SALE_B + ZERO_SALE_B + EXP_SALE_B + EXM_SALE_B</field>
+            <field name="sequence" eval="6"/>
+        </record>
+        <record id="tax_report_line_vat_all_sales_tax" model="account.tax.report.line">
+            <field name="name">VAT on Sales and all other Outputs (Tax)</field>
+            <field name="report_id" ref="tax_report_vat_filing"/>
+            <field name="sequence" eval="3"/>
+        </record>
+        <record id="tax_report_line_standard_rated_15_tax" model="account.tax.report.line">
+            <field name="name">1. Standard Rated 15% (Tax)</field>
+            <field name="tag_name">1. Standard Rates 15% (Tax)</field>
+            <field name="parent_id" ref="tax_report_line_vat_all_sales_tax"/>
+            <field name="report_id" ref="tax_report_vat_filing"/>
+            <field name="code">STD_SALE_T</field>
+            <field name="sequence" eval="2"/>
+        </record>
+        <record id="tax_report_line_special_sales_to_locals_tax" model="account.tax.report.line">
+            <field name="name">2. Special Sales to Locals (Tax)</field>
+            <field name="tag_name">2. Special Sales to Locals (Tax)</field>
+            <field name="parent_id" ref="tax_report_line_vat_all_sales_tax"/>
+            <field name="report_id" ref="tax_report_vat_filing"/>
+            <field name="code">SPCL_SALE_T</field>
+            <field name="sequence" eval="2"/>
+        </record>
+        <record id="tax_report_line_local_sales_subject_to_0_tax" model="account.tax.report.line">
+            <field name="name">3. Local Sales Subject to 0% (Tax)</field>
+            <field name="tag_name">3. Local Sales Subject to 0% (Tax)</field>
+            <field name="parent_id" ref="tax_report_line_vat_all_sales_tax"/>
+            <field name="report_id" ref="tax_report_vat_filing"/>
+            <field name="code">ZERO_SALE_T</field>
+            <field name="sequence" eval="3"/>
+        </record>
+        <record id="tax_report_line_export_sales_tax" model="account.tax.report.line">
+            <field name="name">4. Export Sales (Tax)</field>
+            <field name="tag_name">4. Export Sales (Tax)</field>
+            <field name="parent_id" ref="tax_report_line_vat_all_sales_tax"/>
+            <field name="report_id" ref="tax_report_vat_filing"/>
+            <field name="code">EXP_SALE_T</field>
+            <field name="sequence" eval="4"/>
+        </record>
+        <record id="tax_report_line_exempt_sales_tax" model="account.tax.report.line">
+            <field name="name">5. Exempt Sales (Tax)</field>
+            <field name="tag_name">5. Exempt Sales (Tax)</field>
+            <field name="parent_id" ref="tax_report_line_vat_all_sales_tax"/>
+            <field name="report_id" ref="tax_report_vat_filing"/>
+            <field name="code">EXM_SALE_T</field>
+            <field name="sequence" eval="5"/>
+        </record>
+        <record id="tax_report_line_net_sales_tax" model="account.tax.report.line">
+            <field name="name">6. Net Sales (Tax)</field>
+            <field name="parent_id" ref="tax_report_line_vat_all_sales_tax"/>
+            <field name="report_id" ref="tax_report_vat_filing"/>
+            <field name="formula">STD_SALE_T + SPCL_SALE_T + ZERO_SALE_T + EXP_SALE_T + EXM_SALE_T</field>
+            <field name="sequence" eval="6"/>
+        </record>
+        <record id="tax_report_line_vat_all_expenses_base" model="account.tax.report.line">
+            <field name="name">VAT on Expenses and all other Inputs (Base)</field>
+            <field name="report_id" ref="tax_report_vat_filing"/>
+            <field name="sequence" eval="3"/>
+        </record>
+        <record id="tax_report_line_standard_rated_15_purchases_base" model="account.tax.report.line">
+            <field name="name">7. Standard rated 15% Purchases (Base)</field>
+            <field name="tag_name">7. Standard rated 15% Purchases (Base)</field>
+            <field name="parent_id" ref="tax_report_line_vat_all_expenses_base"/>
+            <field name="report_id" ref="tax_report_vat_filing"/>
+            <field name="code">STD_PUR_B</field>
+            <field name="sequence" eval="1"/>
+        </record>
+        <record id="tax_report_line_taxable_imports_15_paid_to_customs_base" model="account.tax.report.line">
+            <field name="name">8. Taxable Imports 15% Paid to Customs (Base)</field>
+            <field name="tag_name">8. Taxable Imports 15% Paid to Customs (Base)</field>
+            <field name="parent_id" ref="tax_report_line_vat_all_expenses_base"/>
+            <field name="report_id" ref="tax_report_vat_filing"/>
+            <field name="code">CUST_PUR_B</field>
+            <field name="sequence" eval="2"/>
+        </record>
+        <record id="tax_report_line_imports_subject_tp_reverse_charge_mechanism_base" model="account.tax.report.line">
+            <field name="name">9. Imports subject to reverse charge mechanism (Base)</field>
+            <field name="tag_name">9. Imports subject to reverse charge mechanism (Base)</field>
+            <field name="parent_id" ref="tax_report_line_vat_all_expenses_base"/>
+            <field name="report_id" ref="tax_report_vat_filing"/>
+            <field name="code">RCM_PUR_B</field>
+            <field name="sequence" eval="3"/>
+        </record>
+        <record id="tax_report_line_zero_rated_purchases_base" model="account.tax.report.line">
+            <field name="name">10. Zero Rated Purchases (Base)</field>
+            <field name="tag_name">10. Zero Rated Purchases (Base)</field>
+            <field name="parent_id" ref="tax_report_line_vat_all_expenses_base"/>
+            <field name="report_id" ref="tax_report_vat_filing"/>
+            <field name="code">ZER_PUR_B</field>
+            <field name="sequence" eval="4"/>
+        </record>
+        <record id="tax_report_line_exempt_purchases_base" model="account.tax.report.line">
+            <field name="name">11. Exempt Purchases (Base)</field>
+            <field name="tag_name">11. Exempt Purchases (Base)</field>
+            <field name="parent_id" ref="tax_report_line_vat_all_expenses_base"/>
+            <field name="report_id" ref="tax_report_vat_filing"/>
+            <field name="code">EXM_PUR_B</field>
+            <field name="sequence" eval="5"/>
+        </record>
+        <record id="tax_report_line_net_purchases_base" model="account.tax.report.line">
+            <field name="name">12. Net Purchases (Base)</field>
+            <field name="parent_id" ref="tax_report_line_vat_all_expenses_base"/>
+            <field name="report_id" ref="tax_report_vat_filing"/>
+            <field name="formula">STD_PUR_B + CUST_PUR_B + RCM_PUR_B + ZER_PUR_B + EXM_PUR_B</field>
+            <field name="sequence" eval="6"/>
+        </record>
+        <record id="tax_report_line_vat_all_expenses_tax" model="account.tax.report.line">
+            <field name="name">VAT on Expenses and all other Inputs (Tax)</field>
+            <field name="report_id" ref="tax_report_vat_filing"/>
+            <field name="sequence" eval="4"/>
+        </record>
+        <record id="tax_report_line_standard_rated_15_purchases_tax" model="account.tax.report.line">
+            <field name="name">7. Standard rated 15% Purchases (Tax)</field>
+            <field name="tag_name">7. Standard rated 15% Purchases (Tax)</field>
+            <field name="parent_id" ref="tax_report_line_vat_all_expenses_tax"/>
+            <field name="report_id" ref="tax_report_vat_filing"/>
+            <field name="code">STD_PUR_T</field>
+            <field name="sequence" eval="1"/>
+        </record>
+        <record id="tax_report_line_taxable_imports_15_paid_to_customs_tax" model="account.tax.report.line">
+            <field name="name">8. Taxable Imports 15% Paid to Customs (Tax)</field>
+            <field name="tag_name">8. Taxable Imports 15% Paid to Customs (Tax)</field>
+            <field name="parent_id" ref="tax_report_line_vat_all_expenses_tax"/>
+            <field name="report_id" ref="tax_report_vat_filing"/>
+            <field name="code">CUST_PUR_T</field>
+            <field name="sequence" eval="2"/>
+        </record>
+        <record id="tax_report_line_imports_subject_tp_reverse_charge_mechanism_tax" model="account.tax.report.line">
+            <field name="name">9. Imports subject to reverse charge mechanism (Tax)</field>
+            <field name="tag_name">9. Imports subject to reverse charge mechanism (Tax)</field>
+            <field name="parent_id" ref="tax_report_line_vat_all_expenses_tax"/>
+            <field name="report_id" ref="tax_report_vat_filing"/>
+            <field name="code">RCM_PUR_T</field>
+            <field name="sequence" eval="3"/>
+        </record>
+        <record id="tax_report_line_zero_rated_purchases_tax" model="account.tax.report.line">
+            <field name="name">10. Zero Rated Purchases (Tax)</field>
+            <field name="tag_name">10. Zero Rated Purchases (Tax)</field>
+            <field name="parent_id" ref="tax_report_line_vat_all_expenses_tax"/>
+            <field name="report_id" ref="tax_report_vat_filing"/>
+            <field name="code">ZER_PUR_T</field>
+            <field name="sequence" eval="4"/>
+        </record>
+        <record id="tax_report_line_exempt_purchases_tax" model="account.tax.report.line">
+            <field name="name">11. Exempt Purchases (Tax)</field>
+            <field name="tag_name">11. Exempt Purchases (Tax)</field>
+            <field name="parent_id" ref="tax_report_line_vat_all_expenses_tax"/>
+            <field name="report_id" ref="tax_report_vat_filing"/>
+            <field name="code">EXM_PUR_T</field>
+            <field name="sequence" eval="5"/>
+        </record>
+        <record id="tax_report_line_net_purchases_tax" model="account.tax.report.line">
+            <field name="name">12. Net Purchases (Tax)</field>
+            <field name="parent_id" ref="tax_report_line_vat_all_expenses_tax"/>
+            <field name="report_id" ref="tax_report_vat_filing"/>
+            <field name="formula">STD_PUR_T + CUST_PUR_T + RCM_PUR_T + ZER_PUR_T + EXM_PUR_T</field>
+            <field name="sequence" eval="6"/>
+        </record>
+        <record id="tax_report_line_net_vat_due" model="account.tax.report.line">
+            <field name="name">Net VAT Due</field>
+            <field name="report_id" ref="tax_report_vat_filing"/>
+            <field name="sequence" eval="5"/>
+        </record>
+        <record id="tax_report_line_total_value_of_due_tax_for_the_period" model="account.tax.report.line">
+            <field name="name">Total value of due tax for the period</field>
+            <field name="parent_id" ref="tax_report_line_net_vat_due"/>
+            <field name="report_id" ref="tax_report_vat_filing"/>
+            <field name="formula">STD_SALE_T + SPCL_SALE_T + ZERO_SALE_T + EXP_SALE_T + EXM_SALE_T</field>
+            <field name="sequence" eval="1"/>
+        </record>
+        <record id="tax_report_line_total_value_of_recoverable_tax_for_the_period" model="account.tax.report.line">
+            <field name="name">Total value of recoverable tax for the period</field>
+            <field name="parent_id" ref="tax_report_line_net_vat_due"/>
+            <field name="report_id" ref="tax_report_vat_filing"/>
+            <field name="formula">STD_PUR_T + CUST_PUR_T + RCM_PUR_T + ZER_PUR_T + EXM_PUR_T</field>
+            <field name="sequence" eval="2"/>
+        </record>
+        <record id="tax_report_line_net_vat_due_or_reclaimed_for_the_period" model="account.tax.report.line">
+            <field name="name">Net VAT due (or reclaimed) for the period</field>
+            <field name="parent_id" ref="tax_report_line_net_vat_due"/>
+            <field name="report_id" ref="tax_report_vat_filing"/>
+            <field name="formula">STD_SALE_T + SPCL_SALE_T + ZERO_SALE_T + EXP_SALE_T + EXM_SALE_T - (STD_PUR_T + CUST_PUR_T + RCM_PUR_T + ZER_PUR_T + EXM_PUR_T)</field>
+            <field name="sequence" eval="3"/>
+        </record>
+
+
+        <!-- New report for Withholding Taxes-->
+
+
+        <record id="tax_report_withholding_tax" model="account.tax.report">
+            <field name="name">Withholding Tax Report</field>
+            <field name="country_id" ref="base.sa"/>
+        </record>
+        <record id="tax_report_line_withholding_tax_on_purchased_services_base" model="account.tax.report.line">
+            <field name="name">Withholding Tax on Purchased Services (Base)</field>
+            <field name="report_id" ref="tax_report_withholding_tax"/>
+            <field name="sequence" eval="1"/>
+        </record>
+        <record id="tax_report_line_withholding_tax_5_rental_base" model="account.tax.report.line">
+            <field name="name">Withholding Tax 5% (Rental) (Base)</field>
+            <field name="tag_name">Withholding Tax 5% (Rental) (Base)</field>
+            <field name="parent_id" ref="tax_report_line_withholding_tax_on_purchased_services_base"/>
+            <field name="report_id" ref="tax_report_withholding_tax"/>
+            <field name="code">RENTB</field>
+            <field name="sequence" eval="1"/>
+        </record>
+        <record id="tax_report_line_withholding_tax_5_tickets_or_air_freight_base" model="account.tax.report.line">
+            <field name="name">Withholding Tax 5% (Tickets or Air Freight) (Base)</field>
+            <field name="tag_name">Withholding Tax 5% (Tickets or Air Freight) (Base)</field>
+            <field name="parent_id" ref="tax_report_line_withholding_tax_on_purchased_services_base"/>
+            <field name="report_id" ref="tax_report_withholding_tax"/>
+            <field name="code">AIRB</field>
+            <field name="sequence" eval="2"/>
+        </record>
+        <record id="tax_report_line_withholding_tax_5_tickets_or_sea_freight_base" model="account.tax.report.line">
+            <field name="name">Withholding Tax 5% (Tickets or Sea Freight)(Base)</field>
+            <field name="tag_name">Withholding Tax 5% (Tickets or Sea Freight)(Base)</field>
+            <field name="parent_id" ref="tax_report_line_withholding_tax_on_purchased_services_base"/>
+            <field name="report_id" ref="tax_report_withholding_tax"/>
+            <field name="code">SEAB</field>
+            <field name="sequence" eval="3"/>
+        </record>
+        <record id="tax_report_line_withholding_tax_5_international_telecommunication_base" model="account.tax.report.line">
+            <field name="name">Withholding Tax 5% (International Telecommunication)(Base)</field>
+            <field name="tag_name">Withholding Tax 5% (International Telecommunication)(Base)</field>
+            <field name="parent_id" ref="tax_report_line_withholding_tax_on_purchased_services_base"/>
+            <field name="report_id" ref="tax_report_withholding_tax"/>
+            <field name="code">TELEB</field>
+            <field name="sequence" eval="4"/>
+        </record>
+        <record id="tax_report_line_withholding_tax_5_distributed_profits_base" model="account.tax.report.line">
+            <field name="name">Withholding Tax 5% (Distributed Profits) (Base)</field>
+            <field name="tag_name">Withholding Tax 5% (Distributed Profits) (Base)</field>
+            <field name="parent_id" ref="tax_report_line_withholding_tax_on_purchased_services_base"/>
+            <field name="report_id" ref="tax_report_withholding_tax"/>
+            <field name="code">DIVB</field>
+            <field name="sequence" eval="5"/>
+        </record>
+        <record id="tax_report_line_withholding_tax_5_consulting_and_technical_base" model="account.tax.report.line">
+            <field name="name">Withholding Tax 5% (Consulting and Technical) (Base)</field>
+            <field name="tag_name">Withholding Tax 5% (Consulting and Technical) (Base)</field>
+            <field name="parent_id" ref="tax_report_line_withholding_tax_on_purchased_services_base"/>
+            <field name="report_id" ref="tax_report_withholding_tax"/>
+            <field name="code">CONB</field>
+            <field name="sequence" eval="6"/>
+        </record>
+        <record id="tax_report_line_withholding_tax_5_return_from_loans_base" model="account.tax.report.line">
+            <field name="name">Withholding Tax 5% (Return from Loans) (Base)</field>
+            <field name="tag_name">Withholding Tax 5% (Return from Loans) (Base)</field>
+            <field name="parent_id" ref="tax_report_line_withholding_tax_on_purchased_services_base"/>
+            <field name="report_id" ref="tax_report_withholding_tax"/>
+            <field name="code">ROLB</field>
+            <field name="sequence" eval="7"/>
+        </record>
+        <record id="tax_report_line_withholding_tax_5_insurance_and_reinsurance_base" model="account.tax.report.line">
+            <field name="name">Withholding Tax 5% (Insurance &amp; Reinsurance) (Base)</field>
+            <field name="tag_name">Withholding Tax 5% (Insurance &amp; Reinsurance) (Base)</field>
+            <field name="parent_id" ref="tax_report_line_withholding_tax_on_purchased_services_base"/>
+            <field name="report_id" ref="tax_report_withholding_tax"/>
+            <field name="code">INSB</field>
+            <field name="sequence" eval="8"/>
+        </record>
+        <record id="tax_report_line_withholding_tax_15_royalties_base" model="account.tax.report.line">
+            <field name="name">Withholding Tax 15% (Royalties)(Base)</field>
+            <field name="tag_name">Withholding Tax 15% (Royalties)(Base)</field>
+            <field name="parent_id" ref="tax_report_line_withholding_tax_on_purchased_services_base"/>
+            <field name="report_id" ref="tax_report_withholding_tax"/>
+            <field name="code">ROYB</field>
+            <field name="sequence" eval="9"/>
+        </record>
+        <record id="tax_report_line_withholding_tax_15_paid_services_from_main_branch_base" model="account.tax.report.line">
+            <field name="name">Withholding Tax 15% (Paid Services from Main Branch)(Base)</field>
+            <field name="tag_name">Withholding Tax 15% (Paid Services from Main Branch)(Base)</field>
+            <field name="parent_id" ref="tax_report_line_withholding_tax_on_purchased_services_base"/>
+            <field name="report_id" ref="tax_report_withholding_tax"/>
+            <field name="code">MAIB</field>
+            <field name="sequence" eval="10"/>
+        </record>
+        <record id="tax_report_line_withholding_tax_15_paid_services_from_another_branch_base" model="account.tax.report.line">
+            <field name="name">Withholding Tax 15% (Paid Services from another branch)(Base)</field>
+            <field name="tag_name">Withholding Tax 15% (Paid Services from another branch)(Base)</field>
+            <field name="parent_id" ref="tax_report_line_withholding_tax_on_purchased_services_base"/>
+            <field name="report_id" ref="tax_report_withholding_tax"/>
+            <field name="code">BRAB</field>
+            <field name="sequence" eval="11"/>
+        </record>
+        <record id="tax_report_line_withholding_tax_15_others_base" model="account.tax.report.line">
+            <field name="name">Withholding Tax 15% (Others)(Base)</field>
+            <field name="tag_name">Withholding Tax 15% (Others)(Base)</field>
+            <field name="parent_id" ref="tax_report_line_withholding_tax_on_purchased_services_base"/>
+            <field name="report_id" ref="tax_report_withholding_tax"/>
+            <field name="code">OTHB</field>
+            <field name="sequence" eval="12"/>
+        </record>
+        <record id="tax_report_line_withholding_tax_20_managerial_base" model="account.tax.report.line">
+            <field name="name">Withholding Tax 20% (Managerial)(Base)</field>
+            <field name="tag_name">Withholding Tax 20% (Managerial)(Base)</field>
+            <field name="parent_id" ref="tax_report_line_withholding_tax_on_purchased_services_base"/>
+            <field name="report_id" ref="tax_report_withholding_tax"/>
+            <field name="code">MAGB</field>
+            <field name="sequence" eval="13"/>
+        </record>
+        <record id="tax_report_line_withholding_tax_total_base" model="account.tax.report.line">
+            <field name="name">Withholding Tax Total (Base)</field>
+            <field name="parent_id" ref="tax_report_line_withholding_tax_on_purchased_services_base"/>
+            <field name="report_id" ref="tax_report_withholding_tax"/>
+            <field name="formula">RENTB+AIRB+SEAB+TELEB+DIVB+CONB+ROLB+INSB+ROYB+MAIB+BRAB+OTHB+MAGB</field>
+            <field name="sequence" eval="14"/>
+        </record>
+        <record id="tax_report_line_withholding_tax_on_purchased_services_tax" model="account.tax.report.line">
+            <field name="name">Withholding Tax on Purchased Services (Tax)</field>
+            <field name="report_id" ref="tax_report_withholding_tax"/>
+            <field name="sequence" eval="2"/>
+        </record>
+        <record id="tax_report_line_withholding_tax_5_rental_tax" model="account.tax.report.line">
+            <field name="name">Withholding Tax 5% (Rental) (Tax)</field>
+            <field name="tag_name">Withholding Tax 5% (Rental) (Tax)</field>
+            <field name="parent_id" ref="tax_report_line_withholding_tax_on_purchased_services_tax"/>
+            <field name="report_id" ref="tax_report_withholding_tax"/>
+            <field name="code">RENTT</field>
+            <field name="sequence" eval="1"/>
+        </record>
+        <record id="tax_report_line_withholding_tax_5_tickets_or_air_freight_tax" model="account.tax.report.line">
+            <field name="name">Withholding Tax 5% (Tickets or Air Freight) (Tax)</field>
+            <field name="tag_name">Withholding Tax 5% (Tickets or Air Freight) (Tax)</field>
+            <field name="parent_id" ref="tax_report_line_withholding_tax_on_purchased_services_tax"/>
+            <field name="report_id" ref="tax_report_withholding_tax"/>
+            <field name="code">AIRT</field>
+            <field name="sequence" eval="2"/>
+        </record>
+        <record id="tax_report_line_withholding_tax_5_tickets_or_sea_freight_tax" model="account.tax.report.line">
+            <field name="name">Withholding Tax 5% (Tickets or Sea Freight)(Tax)</field>
+            <field name="tag_name">Withholding Tax 5% (Tickets or Sea Freight)(Tax)</field>
+            <field name="parent_id" ref="tax_report_line_withholding_tax_on_purchased_services_tax"/>
+            <field name="report_id" ref="tax_report_withholding_tax"/>
+            <field name="code">SEAT</field>
+            <field name="sequence" eval="3"/>
+        </record>
+        <record id="tax_report_line_withholding_tax_5_international_telecommunication_tax" model="account.tax.report.line">
+            <field name="name">Withholding Tax 5% (International Telecommunication)(Tax)</field>
+            <field name="tag_name">Withholding Tax 5% (International Telecommunication)(Tax)</field>
+            <field name="parent_id" ref="tax_report_line_withholding_tax_on_purchased_services_tax"/>
+            <field name="report_id" ref="tax_report_withholding_tax"/>
+            <field name="code">TELET</field>
+            <field name="sequence" eval="4"/>
+        </record>
+        <record id="tax_report_line_withholding_tax_5_distributed_profits_tax" model="account.tax.report.line">
+            <field name="name">Withholding Tax 5% (Distributed Profits) (Tax)</field>
+            <field name="tag_name">Withholding Tax 5% (Distributed Profits) (Tax)</field>
+            <field name="parent_id" ref="tax_report_line_withholding_tax_on_purchased_services_tax"/>
+            <field name="report_id" ref="tax_report_withholding_tax"/>
+            <field name="code">DIVT</field>
+            <field name="sequence" eval="5"/>
+        </record>
+        <record id="tax_report_line_withholding_tax_5_consulting_and_technical_tax" model="account.tax.report.line">
+            <field name="name">Withholding Tax 5% (Consulting and Technical) (Tax)</field>
+            <field name="tag_name">Withholding Tax 5% (Consulting and Technical) (Tax)</field>
+            <field name="parent_id" ref="tax_report_line_withholding_tax_on_purchased_services_tax"/>
+            <field name="report_id" ref="tax_report_withholding_tax"/>
+            <field name="code">CONT</field>
+            <field name="sequence" eval="6"/>
+        </record>
+        <record id="tax_report_line_withholding_tax_5_return_from_loans_tax" model="account.tax.report.line">
+            <field name="name">Withholding Tax 5% (Return from Loans) (Tax)</field>
+            <field name="tag_name">Withholding Tax 5% (Return from Loans) (Tax)</field>
+            <field name="parent_id" ref="tax_report_line_withholding_tax_on_purchased_services_tax"/>
+            <field name="report_id" ref="tax_report_withholding_tax"/>
+            <field name="code">ROLT</field>
+            <field name="sequence" eval="7"/>
+        </record>
+        <record id="tax_report_line_withholding_tax_5_insurance_and_reinsurance_tax" model="account.tax.report.line">
+            <field name="name">Withholding Tax 5% (Insurance &amp; Reinsurance) (Tax)</field>
+            <field name="tag_name">Withholding Tax 5% (Insurance &amp; Reinsurance) (Tax)</field>
+            <field name="parent_id" ref="tax_report_line_withholding_tax_on_purchased_services_tax"/>
+            <field name="report_id" ref="tax_report_withholding_tax"/>
+            <field name="code">INST</field>
+            <field name="sequence" eval="8"/>
+        </record>
+        <record id="tax_report_line_withholding_tax_15_royalties_tax" model="account.tax.report.line">
+            <field name="name">Withholding Tax 15% (Royalties)(Tax)</field>
+            <field name="tag_name">Withholding Tax 15% (Royalties)(Tax)</field>
+            <field name="parent_id" ref="tax_report_line_withholding_tax_on_purchased_services_tax"/>
+            <field name="report_id" ref="tax_report_withholding_tax"/>
+            <field name="code">ROYT</field>
+            <field name="sequence" eval="9"/>
+        </record>
+        <record id="tax_report_line_withholding_tax_15_paid_services_from_main_branch_tax" model="account.tax.report.line">
+            <field name="name">Withholding Tax 15% (Paid Services from Main Branch)(Tax)</field>
+            <field name="tag_name">Withholding Tax 15% (Paid Services from Main Branch)(Tax)</field>
+            <field name="parent_id" ref="tax_report_line_withholding_tax_on_purchased_services_tax"/>
+            <field name="report_id" ref="tax_report_withholding_tax"/>
+            <field name="code">MAIT</field>
+            <field name="sequence" eval="10"/>
+        </record>
+        <record id="tax_report_line_withholding_tax_15_paid_services_from_another_branch_tax" model="account.tax.report.line">
+            <field name="name">Withholding Tax 15% (Paid Services from another branch)(Tax)</field>
+            <field name="tag_name">Withholding Tax 15% (Paid Services from another branch)(Tax)</field>
+            <field name="parent_id" ref="tax_report_line_withholding_tax_on_purchased_services_tax"/>
+            <field name="report_id" ref="tax_report_withholding_tax"/>
+            <field name="code">BRAT</field>
+            <field name="sequence" eval="11"/>
+        </record>
+        <record id="tax_report_line_withholding_tax_15_others_tax" model="account.tax.report.line">
+            <field name="name">Withholding Tax 15% (Others)(Tax)</field>
+            <field name="tag_name">Withholding Tax 15% (Others)(Tax)</field>
+            <field name="parent_id" ref="tax_report_line_withholding_tax_on_purchased_services_tax"/>
+            <field name="report_id" ref="tax_report_withholding_tax"/>
+            <field name="code">OTHT</field>
+            <field name="sequence" eval="12"/>
+        </record>
+        <record id="tax_report_line_withholding_tax_20_managerial_tax" model="account.tax.report.line">
+            <field name="name">Withholding Tax 20% (Managerial)(Tax)</field>
+            <field name="tag_name">Withholding Tax 20% (Managerial)(Tax)</field>
+            <field name="parent_id" ref="tax_report_line_withholding_tax_on_purchased_services_tax"/>
+            <field name="report_id" ref="tax_report_withholding_tax"/>
+            <field name="code">MAGT</field>
+            <field name="sequence" eval="13"/>
+        </record>
+        <record id="tax_report_line_withholding_tax_total_tax" model="account.tax.report.line">
+            <field name="name">Withholding Tax Total (Tax)</field>
+            <field name="parent_id" ref="tax_report_line_withholding_tax_on_purchased_services_tax"/>
+            <field name="report_id" ref="tax_report_withholding_tax"/>
+            <field name="formula">RENTT+AIRT+SEAT+TELET+DIVT+CONT+ROLT+INST+ROYT+MAIT+BRAT+OTHT+MAGT</field>
+            <field name="sequence" eval="14"/>
+        </record>
+    </data>
+</odoo>

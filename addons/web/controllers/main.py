@@ -26,12 +26,12 @@ import werkzeug.wrappers
 import werkzeug.wsgi
 from lxml import etree, html
 from markupsafe import Markup
-from werkzeug.urls import url_encode, url_parse, iri_to_uri
+from werkzeug.urls import url_encode, url_decode, iri_to_uri
 
 import odoo
 import odoo.modules.registry
 from odoo.api import call_kw
-from odoo.addons.base.models.qweb import QWeb
+from odoo.addons.base.models.ir_qweb import render as qweb_render
 from odoo.modules import get_resource_path, module
 from odoo.tools import html_escape, pycompat, ustr, apply_inheritance_specs, lazy_property, float_repr, osutil
 from odoo.tools.mimetypes import guess_mimetype
@@ -97,7 +97,7 @@ def serialize_exception(f):
         try:
             return f(*args, **kwargs)
         except Exception as e:
-            _logger.exception("An exception occured during an http request")
+            _logger.exception("An exception occurred during an http request")
             se = _serialize_exception(e)
             error = {
                 'code': 200,
@@ -108,9 +108,8 @@ def serialize_exception(f):
     return wrap
 
 def abort_and_redirect(url):
-    r = request.httprequest
     response = request.redirect(url, 302)
-    response = r.app.get_response(r, response, explicit_session=False)
+    response = http.root.get_response(request.httprequest, response, explicit_session=False)
     werkzeug.exceptions.abort(response)
 
 def ensure_db(redirect='/web/database/selector'):
@@ -492,14 +491,27 @@ class HomeStaticTemplateHelpers(object):
             if re.match(COMMENT_PATTERN, comment.text.strip()):
                 comment.getparent().remove(comment)
 
-    def _read_addon_file(self, file_path):
-        """Reads the content of a file given by file_path
-        Usefull to make 'self' testable
-        :param str file_path:
-        :returns: str
+    def _read_addon_file(self, path_or_url):
+        """Read the content of a file or an ``ir.attachment`` record given by
+        ``path_or_url``.
+
+        :param str path_or_url:
+        :returns: bytes
+        :raises FileNotFoundError: if the path does not match a module file
+            or an attachment
         """
-        with file_open(file_path, 'rb') as fp:
-            contents = fp.read()
+        try:
+            with file_open(path_or_url, 'rb') as fp:
+                contents = fp.read()
+        except FileNotFoundError as e:
+            attachment = request.env['ir.attachment'].sudo().search([
+                ('url', '=', path_or_url),
+                ('type', '=', 'binary'),
+            ], limit=1)
+            if attachment:
+                contents = attachment.raw
+            else:
+                raise e
         return contents
 
     def _concat_xml(self, file_dict):
@@ -562,6 +574,10 @@ class HomeStaticTemplateHelpers(object):
     def get_qweb_templates(cls, addons=None, db=None, debug=False, bundle=None):
         return cls(addons, db, debug=debug)._get_qweb_templates(bundle)[0]
 
+# Shared parameters for all login/signup flows
+SIGN_UP_REQUEST_PARAMS = {'db', 'login', 'debug', 'token', 'message', 'error', 'scope', 'mode',
+                          'redirect', 'redirect_hostname', 'email', 'name', 'partner_id',
+                          'password', 'confirm_password', 'city', 'country_id', 'lang'}
 
 class GroupsTreeNode:
     """
@@ -849,7 +865,7 @@ class Home(http.Controller):
         if not request.uid:
             request.uid = odoo.SUPERUSER_ID
 
-        values = request.params.copy()
+        values = {k: v for k, v in request.params.items() if k in SIGN_UP_REQUEST_PARAMS}
         try:
             values['databases'] = http.db_list()
         except odoo.exceptions.AccessDenied:
@@ -970,7 +986,7 @@ class WebClient(http.Controller):
         return {"modules": translations_per_module,
                 "lang_parameters": None}
 
-    @http.route('/web/webclient/translations/<string:unique>', type='http', auth="public")
+    @http.route('/web/webclient/translations/<string:unique>', type='http', auth="public", cors="*")
     def translations(self, unique, mods=None, lang=None):
         """
         Load the translations for the specified language and modules
@@ -1029,10 +1045,9 @@ class Proxy(http.Controller):
             if not data:
                 raise werkzeug.exceptions.BadRequest()
             from werkzeug.test import Client
-            from werkzeug.wrappers import BaseResponse
             base_url = request.httprequest.base_url
             query_string = request.httprequest.query_string
-            client = Client(request.httprequest.app, BaseResponse)
+            client = Client(http.root, werkzeug.wrappers.Response)
             headers = {'X-Openerp-Session-Id': request.session.sid}
             return client.post('/' + path, base_url=base_url, query_string=query_string,
                                headers=headers, data=data)
@@ -1068,7 +1083,7 @@ class Database(http.Controller):
         def load(template_name, options):
             return (html.fragment_fromstring(templates[template_name]), template_name)
 
-        return QWeb()._render(html.document_fromstring(template), d, load=load)
+        return qweb_render(html.document_fromstring(template), d, load=load)
 
     @http.route('/web/database/selector', type='http', auth="none")
     def selector(self, **kw):
@@ -1476,13 +1491,17 @@ class Binary(http.Controller):
                 filename = unicodedata.normalize('NFD', ufile.filename)
 
             try:
-                attachment = Model.create({
+                cids = request.httprequest.cookies.get('cids', str(request.env.user.company_id.id))
+                allowed_company_ids = [int(cid) for cid in cids.split(',')]
+                attachment = Model.with_context(allowed_company_ids=allowed_company_ids).create({
                     'name': filename,
                     'datas': base64.encodebytes(ufile.read()),
                     'res_model': model,
                     'res_id': int(id)
                 })
                 attachment._post_add_create()
+            except AccessError:
+                args.append({'error': _("You are not allowed to upload an attachment here.")})
             except Exception:
                 args.append({'error': _("Something horrible happened")})
                 _logger.exception("Fail to upload attachment %s" % ufile.filename)
@@ -1942,9 +1961,10 @@ class ReportController(http.Controller):
     # Misc. route utils
     #------------------------------------------------------
     @http.route(['/report/barcode', '/report/barcode/<type>/<path:value>'], type='http', auth="public")
-    def report_barcode(self, type, value, width=600, height=100, humanreadable=0, quiet=1, mask=None):
+    def report_barcode(self, type, value, **kwargs):
         """Contoller able to render barcode images thanks to reportlab.
-        Samples:
+        Samples::
+
             <img t-att-src="'/report/barcode/QR/%s' % o.name"/>
             <img t-att-src="'/report/barcode/?type=%s&amp;value=%s&amp;width=%s&amp;height=%s' %
                 ('QR', o.name, 200, 200)"/>
@@ -1952,6 +1972,8 @@ class ReportController(http.Controller):
         :param type: Accepted types: 'Codabar', 'Code11', 'Code128', 'EAN13', 'EAN8', 'Extended39',
         'Extended93', 'FIM', 'I2of5', 'MSI', 'POSTNET', 'QR', 'Standard39', 'Standard93',
         'UPCA', 'USPS_4State'
+        :param width: Pixel width of the barcode
+        :param height: Pixel height of the barcode
         :param humanreadable: Accepted values: 0 (default) or 1. 1 will insert the readable value
         at the bottom of the output image
         :param quiet: Accepted values: 0 (default) or 1. 1 will display white
@@ -1959,10 +1981,11 @@ class ReportController(http.Controller):
         :param mask: The mask code to be used when rendering this QR-code.
                      Masks allow adding elements on top of the generated image,
                      such as the Swiss cross in the center of QR-bill codes.
+        :param barLevel: QR code Error Correction Levels. Default is 'L'.
+        ref: https://hg.reportlab.com/hg-public/reportlab/file/830157489e00/src/reportlab/graphics/barcode/qr.py#l101
         """
         try:
-            barcode = request.env['ir.actions.report'].barcode(type, value, width=width,
-                height=height, humanreadable=humanreadable, quiet=quiet, mask=mask)
+            barcode = request.env['ir.actions.report'].barcode(type, value, **kwargs)
         except (ValueError, AttributeError):
             raise werkzeug.exceptions.HTTPException(description='Cannot convert into barcode.')
 
@@ -1998,7 +2021,7 @@ class ReportController(http.Controller):
                     response = self.report_routes(reportname, docids=docids, converter=converter, context=context)
                 else:
                     # Particular report:
-                    data = url_parse(url).decode_query(cls=dict)  # decoding the args represented in JSON
+                    data = dict(url_decode(url.split('?')[1]).items())  # decoding the args represented in JSON
                     if 'context' in data:
                         context, data_context = json.loads(context or '{}'), json.loads(data.pop('context'))
                         context = json.dumps({**context, **data_context})

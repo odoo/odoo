@@ -46,11 +46,12 @@ class ResPartner(models.Model):
                     else:
                         valid = self.is_valid_ruc_ec(partner.vat)
                     if not valid:
-                        raise ValidationError(
-                            _(
-                                "VAT %s is not valid for an Ecuadorian company, "
-                                "it must be like this form 0993143790001"
-                            )
-                            % partner.vat
-                        )
+                        error_message = ""
+                        if partner.l10n_latam_identification_type_id.id == it_dni.id:
+                            error_message = _("VAT %s is not valid for an Ecuadorian DNI, "
+                                              "it must be like this form 0915068258") % partner.vat
+                        if partner.l10n_latam_identification_type_id.id == it_ruc.id:
+                            error_message = _("VAT %s is not valid for an Ecuadorian company, "
+                                              "it must be like this form 0993143790001") % partner.vat
+                        raise ValidationError(error_message)
         return super(ResPartner, self - ecuadorian_partners).check_vat()

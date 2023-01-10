@@ -80,20 +80,20 @@ odoo.define('payment.manage_form', require => {
         _deleteToken: function (tokenId) {
             const execute = () => {
                 this._rpc({
-                    model: 'payment.token',
-                    method: 'write',
-                    args: [[tokenId], {active: false}],
-                }).then(result => {
-                    if (result === true) { // Token successfully deleted, remove it from the view
-                        const $tokenCard = this.$(
-                            `input[name="o_payment_radio"][data-payment-option-id="${tokenId}"]` +
-                            `[data-payment-option-type="token"]`
-                        ).closest('div[name="o_payment_option_card"]');
-                        $tokenCard.siblings(`#o_payment_token_inline_form_${tokenId}`).remove();
-                        $tokenCard.remove();
-                        this._disableButton(false);
-                    }
+                    route: '/payment/archive_token',
+                    params: {
+                        'token_id': tokenId,
+                    },
+                }).then(() => {
+                    const $tokenCard = this.$(
+                        `input[name="o_payment_radio"][data-payment-option-id="${tokenId}"]` +
+                        `[data-payment-option-type="token"]`
+                    ).closest('div[name="o_payment_option_card"]');
+                    $tokenCard.siblings(`#o_payment_token_inline_form_${tokenId}`).remove();
+                    $tokenCard.remove();
+                    this._disableButton(false);
                 }).guardedCatch(error => {
+                    error.event.preventDefault();
                     this._displayError(
                         _t("Server Error"),
                         _t("We are not able to delete your payment method."),
@@ -171,7 +171,7 @@ odoo.define('payment.manage_form', require => {
             ev.preventDefault();
 
             // Extract contextual values from the delete button
-            const linkedRadio = $(ev.target).siblings().find('input[name="o_payment_radio"]')[0];
+            const linkedRadio = $(ev.currentTarget).siblings().find('input[name="o_payment_radio"]')[0];
             const tokenId = this._getPaymentOptionIdFromRadio(linkedRadio);
 
             // Delete the token
@@ -206,6 +206,10 @@ odoo.define('payment.manage_form', require => {
             // Save the payment method
             this._hideError(); // Don't keep the error displayed if the user is going through 3DS2
             this._disableButton(true); // Disable until it is needed again
+            $('body').block({
+                message: false,
+                overlayCSS: {backgroundColor: "#000", opacity: 0, zIndex: 1050},
+            });
             if (flow !== 'token') { // Creation of a new token
                 this.txContext.tokenizationRequested = true;
                 this.txContext.isValidation = true;

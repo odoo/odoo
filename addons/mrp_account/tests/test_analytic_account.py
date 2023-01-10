@@ -187,3 +187,40 @@ class TestAnalyticAccount(TransactionCase):
         self.assertEqual(mo.workorder_ids.mo_analytic_account_line_id.account_id, self.analytic_account)
         self.assertEqual(mo.workorder_ids.wc_analytic_account_line_id.amount, -20.0)
         self.assertEqual(mo.workorder_ids.wc_analytic_account_line_id.account_id, wc_analytic_account)
+
+    def test_changing_mo_analytic_account(self):
+        """ Check if the MO account analytic lines are correctly updated
+            after the change of the MO account analytic.
+        """
+        # create a mo
+        mo_form = Form(self.env['mrp.production'])
+        mo_form.product_id = self.product
+        mo_form.bom_id = self.bom
+        mo_form.product_qty = 1
+        mo_form.analytic_account_id = self.analytic_account
+        mo = mo_form.save()
+        mo.action_confirm()
+        self.assertEqual(mo.state, 'confirmed')
+        self.assertEqual(len(mo.move_raw_ids.analytic_account_line_id), 0)
+
+        # Mark as done
+        wizard_dict = mo.button_mark_done()
+        Form(self.env[(wizard_dict.get('res_model'))].with_context(wizard_dict['context'])).save().process()
+        self.assertEqual(mo.state, 'done')
+        self.assertEqual(len(mo.move_raw_ids.analytic_account_line_id), 1)
+
+        # Create a new analytic account
+        new_analytic_account = self.env['account.analytic.account'].create({'name': 'test_analytic_account_2'})
+        # Change the MO analytic account
+        mo.analytic_account_id = new_analytic_account
+        self.assertEqual(mo.move_raw_ids.analytic_account_line_id.account_id.id, new_analytic_account.id)
+
+        #Get the MO analytic account lines
+        mo_analytic_account_lines = mo.move_raw_ids.analytic_account_line_id
+        mo.analytic_account_id = False
+        # Check that the MO analytic account lines are deleted
+        self.assertEqual(len(mo.move_raw_ids.analytic_account_line_id), 0)
+        self.assertFalse(mo_analytic_account_lines.exists())
+        # Check that the AA lines are recreated correctly if we delete the AA, save the MO, and assign a new one
+        mo.analytic_account_id = self.analytic_account
+        self.assertEqual(len(mo.move_raw_ids.analytic_account_line_id), 1)

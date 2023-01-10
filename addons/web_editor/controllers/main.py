@@ -34,12 +34,15 @@ class Web_Editor(http.Controller):
         '/web_editor/font_to_img/<icon>',
         '/web_editor/font_to_img/<icon>/<color>',
         '/web_editor/font_to_img/<icon>/<color>/<int:size>',
+        '/web_editor/font_to_img/<icon>/<color>/<int:width>x<int:height>',
         '/web_editor/font_to_img/<icon>/<color>/<int:size>/<int:alpha>',
+        '/web_editor/font_to_img/<icon>/<color>/<int:width>x<int:height>/<int:alpha>',
         '/web_editor/font_to_img/<icon>/<color>/<bg>',
         '/web_editor/font_to_img/<icon>/<color>/<bg>/<int:size>',
-        '/web_editor/font_to_img/<icon>/<color>/<bg>/<int:size>/<int:alpha>',
+        '/web_editor/font_to_img/<icon>/<color>/<bg>/<int:width>x<int:height>',
+        '/web_editor/font_to_img/<icon>/<color>/<bg>/<int:width>x<int:height>/<int:alpha>',
         ], type='http', auth="none")
-    def export_icon_to_png(self, icon, color='#000', bg=None, size=100, alpha=255, font='/web/static/lib/fontawesome/fonts/fontawesome-webfont.ttf'):
+    def export_icon_to_png(self, icon, color='#000', bg=None, size=100, alpha=255, font='/web/static/lib/fontawesome/fonts/fontawesome-webfont.ttf', width=None, height=None):
         """ This method converts an unicode character to an image (using Font
             Awesome font by default) and is used only for mass mailing because
             custom fonts are not supported in mail.
@@ -49,14 +52,20 @@ class Web_Editor(http.Controller):
             :param size : Pixels in integer
             :param alpha : transparency of the image from 0 to 255
             :param font : font path
+            :param width : Pixels in integer
+            :param height : Pixels in integer
 
             :returns PNG image converted from given font
         """
+        size = max(width, height, 1) if width else size
+        width = width or size
+        height = height or size
         # Make sure we have at least size=1
-        size = max(1, min(size, 512))
+        width = max(1, min(width, 512))
+        height = max(1, min(height, 512))
         # Initialize font
-        addons_path = http.addons_manifest['web']['addons_path']
-        font_obj = ImageFont.truetype(addons_path + font, size)
+        with tools.file_open(font.lstrip('/'), 'rb') as f:
+            font_obj = ImageFont.truetype(f, size)
 
         # if received character is not a number, keep old behaviour (icon is character)
         icon = chr(int(icon)) if icon.isdigit() else icon
@@ -67,7 +76,7 @@ class Web_Editor(http.Controller):
             bg = ','.join(bg.split(',')[:-1])+')'
 
         # Determine the dimensions of the icon
-        image = Image.new("RGBA", (size, size), color=(0, 0, 0, 0))
+        image = Image.new("RGBA", (width, height), color)
         draw = ImageDraw.Draw(image)
 
         boxw, boxh = draw.textsize(icon, font=font_obj)
@@ -77,7 +86,7 @@ class Web_Editor(http.Controller):
         # Create an alpha mask
         imagemask = Image.new("L", (boxw, boxh), 0)
         drawmask = ImageDraw.Draw(imagemask)
-        drawmask.text((-left, -top), icon, font=font_obj, fill=alpha)
+        drawmask.text((-left, -top), icon, font=font_obj, fill=255)
 
         # Create a solid color image and apply the mask
         if color.startswith('rgba'):
@@ -87,7 +96,7 @@ class Web_Editor(http.Controller):
         iconimage.putalpha(imagemask)
 
         # Create output image
-        outimage = Image.new("RGBA", (boxw, size), bg or (0, 0, 0, 0))
+        outimage = Image.new("RGBA", (boxw, height), bg or (0, 0, 0, 0))
         outimage.paste(iconimage, (left, top), iconimage)
 
         # output image
@@ -598,7 +607,15 @@ class Web_Editor(http.Controller):
                     or attachment.type != 'binary'
                     or not attachment.public
                     or not attachment.url.startswith(request.httprequest.path)):
-                raise werkzeug.exceptions.NotFound()
+                # Fallback to URL lookup to allow using shapes that were
+                # imported from data files.
+                attachment = request.env['ir.attachment'].sudo().search([
+                    ('type', '=', 'binary'),
+                    ('public', '=', True),
+                    ('url', '=', request.httprequest.path),
+                ], limit=1)
+                if not attachment:
+                    raise werkzeug.exceptions.NotFound()
             svg = b64decode(attachment.datas).decode('utf-8')
         else:
             svg = self._get_shape_svg(module, 'shapes', filename)
@@ -713,4 +730,5 @@ class Web_Editor(http.Controller):
         document.check_access_rule('write')
 
         channel = (request.db, 'editor_collaboration', model_name, field_name, int(res_id))
-        request.env['bus.bus'].sendone(channel, bus_data)
+        bus_data.update({'model_name': model_name, 'field_name': field_name, 'res_id': res_id})
+        request.env['bus.bus']._sendone(channel, 'editor_collaboration', bus_data)

@@ -8,7 +8,8 @@ from odoo.addons.project.tests.test_project_base import TestProjectCommon
 
 from datetime import date
 
-@tagged('-at_install', 'post_install', 'task_dependencies')
+
+@tagged('-at_install', 'post_install')
 class TestTaskDependencies(TestProjectCommon):
 
     @classmethod
@@ -128,3 +129,56 @@ class TestTaskDependencies(TestProjectCommon):
         self.flush_tracking()
         self.assertEqual(len(self.task_1.message_ids), 3,
             'Changing multiple fields on task 2 should only log one message in task 1.')
+
+    def test_task_dependencies_settings_change(self):
+
+        def set_task_dependencies_setting(enabled):
+            features_config = self.env["res.config.settings"].create({'group_project_task_dependencies': enabled})
+            features_config.execute()
+
+        self.project_pigs.write({
+            'allow_task_dependencies': False,
+        })
+
+        # As the the Project General Setting group_project_task_dependencies needs to be toggled in order
+        # to be applied on the existing projects we need to force it so that it does not depends on anything
+        # (like demo data for instance)
+        set_task_dependencies_setting(False)
+        set_task_dependencies_setting(True)
+        self.assertTrue(self.project_pigs.allow_task_dependencies, "Projects allow_task_dependencies should follow group_project_task_dependencies setting changes")
+
+        self.project_chickens = self.env['project.project'].create({
+            'name': 'My Chicken Project'
+        })
+        self.assertTrue(self.project_chickens.allow_task_dependencies, "New Projects allow_task_dependencies should default to group_project_task_dependencies")
+
+        set_task_dependencies_setting(False)
+        self.assertFalse(self.project_pigs.allow_task_dependencies, "Projects allow_task_dependencies should follow group_project_task_dependencies setting changes")
+
+        self.project_ducks = self.env['project.project'].create({
+            'name': 'My Ducks Project'
+        })
+        self.assertFalse(self.project_ducks.allow_task_dependencies, "New Projects allow_task_dependencies should default to group_project_task_dependencies")
+
+    def test_duplicate_project_with_task_dependencies(self):
+
+        self.project_pigs.allow_task_dependencies = True
+        self.task_1.depend_on_ids = self.task_2
+        pigs_copy = self.project_pigs.copy()
+
+        task1_copy = pigs_copy.task_ids.filtered(lambda t: t.name == 'Pigs UserTask')
+        task2_copy = pigs_copy.task_ids.filtered(lambda t: t.name == 'Pigs ManagerTask')
+
+        self.assertEqual(len(task1_copy), 1, "Should only contain 1 copy of UserTask")
+        self.assertEqual(len(task2_copy), 1, "Should only contain 1 copy of ManagerTask")
+
+        self.assertEqual(task1_copy.depend_on_ids.ids, [task2_copy.id],
+                         "Copy should only create a relation between both copy if they are both part of the project")
+
+        task1_copy.depend_on_ids = self.task_1
+
+        pigs_copy_copy = pigs_copy.copy()
+        task1_copy_copy = pigs_copy_copy.task_ids.filtered(lambda t: t.name == 'Pigs UserTask')
+
+        self.assertEqual(task1_copy_copy.depend_on_ids.ids, [self.task_1.id],
+                         "Copy should not alter the relation if the other task is in a different project")

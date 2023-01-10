@@ -5,7 +5,7 @@
             <field name="name">mail.mail.form</field>
             <field name="model">mail.mail</field>
             <field name="arch" type="xml">
-                <form string="Email message">
+                <form string="Email message" duplicate="0">
                     <header>
                         <button name="send" string="Send Now" type="object" states='outgoing' class="oe_highlight"/>
                         <button name="mark_outgoing" string="Retry" type="object" states='exception,cancel'/>
@@ -27,7 +27,7 @@
                             <field name="recipient_ids" widget="many2many_tags"/>
                             <field name="email_cc"/>
                             <field name="reply_to"/>
-                            <field name="scheduled_date"/>
+                            <field name="scheduled_date" placeholder="YYYY-MM-DD HH:MM:SS"/>
                         </group>
                         <notebook>
                             <page string="Body" name="body">

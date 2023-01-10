@@ -47,20 +47,18 @@
     <!-- options -->
     <div t-name="web_editor.snippet.option.colorpicker" class="colorpicker">
         <div class="o_we_colorpicker_switch_panel d-flex justify-content-end px-2">
-            <button type="button" tabindex="1" class="o_we_colorpicker_switch_pane_btn" t-attf-data-target="#{widget.withCombinations? 'color-combinations' : 'theme-colors'}">
+            <button type="button" tabindex="1" class="o_we_colorpicker_switch_pane_btn" t-attf-data-target="#{widget.withCombinations? 'color-combinations' : 'theme-colors'}" title="Theme">
                 <span>Theme</span>
             </button>
-            <button type="button" tabindex="2" class="o_we_colorpicker_switch_pane_btn" data-target="custom-colors">
+            <button type="button" tabindex="2" class="o_we_colorpicker_switch_pane_btn" data-target="custom-colors" title="Solid">
                 <span>Solid</span>
             </button>
-            <button type="button" tabindex="3" class="o_we_colorpicker_switch_pane_btn" data-target="gradients">
+            <button type="button" tabindex="3" class="o_we_colorpicker_switch_pane_btn" data-target="gradients" title="Gradient">
                 <span>Gradient</span>
             </button>
             <t t-if="widget.resetButton">
                 <t t-set="trash_title"><t t-if="widget.withCombinations">None</t><t t-else="">Reset</t></t>
-                <button type="button" class="my-1 ml-5 py-0 o_we_color_btn o_colorpicker_reset o_we_hover_danger" t-att-title="trash_title">
-                    <i class="fa fa-trash"/>
-                </button>
+                <button type="button" class="fa fa-trash my-1 ml-5 py-0 o_we_color_btn o_colorpicker_reset o_we_hover_danger" t-att-title="trash_title"/>
             </t>
         </div>
         <div class="o_colorpicker_sections pt-2 px-2 pb-3" data-color-tab="color-combinations">

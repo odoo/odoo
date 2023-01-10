@@ -3,8 +3,8 @@ odoo.define('wysiwyg.widgets.Link', function (require) {
 
 const core = require('web.core');
 const OdooEditorLib = require('@web_editor/../lib/odoo-editor/src/OdooEditor');
-const wysiwygUtils = require('@web_editor/js/wysiwyg/wysiwyg_utils');
 const Widget = require('web.Widget');
+const {isColorGradient} = require('web_editor.utils');
 
 const getDeepRange = OdooEditorLib.getDeepRange;
 const getInSelection = OdooEditorLib.getInSelection;
@@ -19,6 +19,7 @@ const Link = Widget.extend({
         'input': '_onAnyChange',
         'change': '_onAnyChange',
         'input input[name="url"]': '_onURLInput',
+        'change input[name="url"]': '_onURLInputChange',
     },
 
     /**
@@ -31,9 +32,12 @@ const Link = Widget.extend({
             title: _t("Link to"),
         }, this.options));
 
+        this._setLinkContent = true;
+
         this.data = data || {};
         this.isButton = this.data.isButton;
         this.$button = $button;
+        this.noFocusUrl = this.options.noFocusUrl;
 
         this.data.className = this.data.className || "";
         this.data.iniClassName = this.data.iniClassName || "";
@@ -60,9 +64,6 @@ const Link = Widget.extend({
             this.data.range = range;
             this.$link = $(link);
             this.linkEl = link;
-        } else {
-            const selection = editable && editable.ownerDocument.getSelection();
-            this.data.range = selection && selection.rangeCount && selection.getRangeAt(0);
         }
 
         if (this.data.range) {
@@ -81,21 +82,35 @@ const Link = Widget.extend({
                 $node = $node.parent();
             }
             const linkNode = this.$link[0] || this.data.range.cloneContents();
-            const linkText = linkNode.innerHTML || linkNode.textContent;
+            const linkText = linkNode.textContent;
             this.data.content = linkText.replace(/[ \t\r\n]+/g, ' ');
             this.data.originalText = this.data.content;
+            if (linkNode instanceof DocumentFragment) {
+                this.data.originalHTML = $('<fakeEl>').append(linkNode).html();
+            } else {
+                this.data.originalHTML = linkNode.innerHTML;
+            }
             this.data.url = this.$link.attr('href') || '';
         } else {
             this.data.content = this.data.content ? this.data.content.replace(/[ \t\r\n]+/g, ' ') : '';
+        }
+
+        if (!this.data.url) {
+            const urls = this.data.content.match(OdooEditorLib.URL_REGEX_WITH_INFOS);
+            if (urls) {
+                this.data.url = urls[0];
+            }
         }
 
         if (this.linkEl) {
             this.data.isNewWindow = this.data.isNewWindow || this.linkEl.target === '_blank';
         }
 
-        const allBtnClassSuffixes = /(^|\s+)btn(-[a-z0-9_-]*)?/gi;
+        const allBtnColorPrefixes = /(^|\s+)(bg|text|border)(-[a-z0-9_-]*)?/gi;
+        const allBtnClassSuffixes = /(^|\s+)btn(?!-block)(-[a-z0-9_-]*)?/gi;
         const allBtnShapes = /\s*(rounded-circle|flat)\s*/gi;
         this.data.className = this.data.iniClassName
+            .replace(allBtnColorPrefixes, ' ')
             .replace(allBtnClassSuffixes, ' ')
             .replace(allBtnShapes, ' ');
         // 'o_submit' class will force anchor to be handled as a button in linkdialog.
@@ -110,7 +125,7 @@ const Link = Widget.extend({
         for (const option of this._getLinkOptions()) {
             const $option = $(option);
             const value = $option.is('input') ? $option.val() : $option.data('value');
-            let active = false;
+            let active = true;
             if (value) {
                 const subValues = value.split(',');
                 let subActive = true;
@@ -119,8 +134,6 @@ const Link = Widget.extend({
                     subActive = subActive && classPrefix.test(this.data.iniClassName);
                 }
                 active = subActive;
-            } else {
-                active = !this.data.iniClassName || this.data.iniClassName.includes('btn-link') || !this.data.iniClassName.includes('btn-');
             }
             this._setSelectOption($option, active);
         }
@@ -128,21 +141,25 @@ const Link = Widget.extend({
             var match = /mailto:(.+)/.exec(this.data.url);
             this.$('input[name="url"]').val(match ? match[1] : this.data.url);
             this._onURLInput();
+            this._savedURLInputOnDestroy = false;
         }
 
         this._updateOptionsUI();
-        this._adaptPreview();
 
-        if (!this.options.noFocusUrl) {
-            // ensure the focus in the first input of the link modal
-            setTimeout(()=> {
-                const firstInput = this.$('input:visible:first');
-                firstInput.focus();
-                firstInput.select();
-            }, 0);
+        if (!this.noFocusUrl) {
+            this.focusUrl();
         }
 
         return this._super.apply(this, arguments);
+    },
+    /**
+     * @override
+     */
+    destroy () {
+        if (this._savedURLInputOnDestroy) {
+            this._adaptPreview();
+        }
+        this._super(...arguments);
     },
 
     //--------------------------------------------------------------------------
@@ -160,9 +177,16 @@ const Link = Widget.extend({
         if (!data.classes.includes('btn') && this.data.iniClassName.includes("btn-link")) {
             data.classes += " btn btn-link";
         }
-        if (!['btn-custom', 'btn-outline-custom', 'btn-fill-custom'].some(className =>
+        if (['btn-custom', 'btn-outline-custom', 'btn-fill-custom'].some(className =>
             data.classes.includes(className)
         )) {
+            this.$link.css('color', data.classes.includes(data.customTextColor) ? '' : data.customTextColor);
+            this.$link.css('background-color', data.classes.includes(data.customFill) || isColorGradient(data.customFill) ? '' : data.customFill);
+            this.$link.css('background-image', isColorGradient(data.customFill) ? data.customFill : '');
+            this.$link.css('border-width', data.customBorderWidth);
+            this.$link.css('border-style', data.customBorderStyle);
+            this.$link.css('border-color', data.customBorder);
+        } else {
             this.$link.css('color', '');
             this.$link.css('background-color', '');
             this.$link.css('background-image', '');
@@ -174,7 +198,8 @@ const Link = Widget.extend({
             href: data.url,
             target: data.isNewWindow ? '_blank' : '',
         });
-        if (data.classes) {
+        if (typeof data.classes === "string") {
+            data.classes = data.classes.replace(/o_default_snippet_text/, '');
             attrs.class = `${data.classes}`;
         }
         if (data.rel) {
@@ -185,54 +210,27 @@ const Link = Widget.extend({
         if (!this.$link.attr('target')) {
             this.$link[0].removeAttribute('target');
         }
-        if (data.content !== this.data.originalText || data.url !== this.data.url) {
-            const content = (data.content && data.content.length) ? data.content : data.url;
-            // If there is a this.data.originalText, it means that we selected
-            // the text and we could not change the content through the text
-            // input.html() is needed in case we selected rich html content.
-            if (this.data.originalText) {
-                this.$link.html(content);
-            } else {
-                this.$link.text(content);
-            }
-        }
+        this._updateLinkContent(this.$link, data);
     },
+    /**
+     * Focuses the url input.
+     */
+    focusUrl() {
+        const urlInput = this.el.querySelector('input[name="url"]');
+        urlInput.focus();
+        urlInput.select();
+    },
+
     /**
      * Return the link element to edit. Create one from selection if none was
      * present in selection.
      *
-     * @param {Node} editable
-     * @returns {Node}
+     * @param {Node} [options.containerNode]
+     * @param {Node} [options.startNode]
+     * @returns {Object}
      */
-    getOrCreateLink: function (editable) {
-        const doc = editable.ownerDocument;
-        this.needLabel = this.needLabel || false;
-        let link = getInSelection(doc, 'a');
-        const $link = $(link);
-        const range = getDeepRange(editable, {splitText: true, select: true, correctTripleClick: true});
-        if (link && (!$link.has(range.startContainer).length || !$link.has(range.endContainer).length)) {
-            // Expand the current link to include the whole selection.
-            let before = link.previousSibling;
-            while (before !== null && range.intersectsNode(before)) {
-                link.insertBefore(before, link.firstChild);
-                before = link.previousSibling;
-            }
-            let after = link.nextSibling;
-            while (after !== null && range.intersectsNode(after)) {
-                link.appendChild(after);
-                after = link.nextSibling;
-            }
-        } else if (!link) {
-            link = document.createElement('a');
-            if (range.collapsed) {
-                range.insertNode(link);
-                this.needLabel = true;
-            } else {
-                link.appendChild(range.extractContents());
-                range.insertNode(link);
-            }
-        }
-        return link;
+    getOrCreateLink (options) {
+        Link.getOrCreateLink(options);
     },
 
     //--------------------------------------------------------------------------
@@ -254,7 +252,7 @@ const Link = Widget.extend({
             url = url.replace(/^tel:([0-9]+)$/, 'tel://$1');
         } else if (url.indexOf('@') !== -1 && url.indexOf(':') === -1) {
             url = 'mailto:' + url;
-        } else if (url.indexOf('://') === -1 && url[0] !== '/'
+        } else if (url && url.indexOf('://') === -1 && url[0] !== '/'
                     && url[0] !== '#' && url.slice(0, 2) !== '${') {
             url = 'http://' + url;
         }
@@ -289,6 +287,7 @@ const Link = Widget.extend({
         const customBorder = this._getLinkCustomBorder();
         const customBorderWidth = this._getLinkCustomBorderWidth();
         const customBorderStyle = this._getLinkCustomBorderStyle();
+        const customClasses = this._getLinkCustomClasses();
         const size = this._getLinkSize();
         const shape = this._getLinkShape();
         const shapes = shape ? shape.split(',') : [];
@@ -296,6 +295,7 @@ const Link = Widget.extend({
         const shapeClasses = shapes.slice(style ? 1 : 0).join(' ');
         const classes = (this.data.className || '') +
             (type ? (` btn btn-${style}${type}`) : '') +
+            (type === 'custom' ? customClasses : '') +
             (type && shapeClasses ? (` ${shapeClasses}`) : '') +
             (type && size ? (' btn-' + size) : '');
         var isNewWindow = this._isNewWindow(url);
@@ -411,6 +411,14 @@ const Link = Widget.extend({
      */
     _getLinkCustomFill: function () {},
     /**
+     * Returns the custom text, fill and border color classes for custom type.
+     *
+     * @abstract
+     * @private
+     * @returns {string}
+     */
+    _getLinkCustomClasses: function () {},
+    /**
      * Abstract method: return true if the link should open in a new window.
      *
      * @abstract
@@ -428,6 +436,25 @@ const Link = Widget.extend({
      */
     _setSelectOption: function ($option, active) {},
     /**
+     * Update the link content.
+     *
+     * @private
+     * @param {JQuery} $link
+     * @param {object} linkInfos
+     * @param {boolean} force
+     */
+    _updateLinkContent($link, linkInfos, { force = false } = {}) {
+        if (force || (this._setLinkContent && (linkInfos.content !== this.data.originalText || linkInfos.url !== this.data.url))) {
+            if (linkInfos.content === this.data.originalText) {
+                $link.html(this.data.originalHTML);
+            } else if (linkInfos.content && linkInfos.content.length) {
+                $link.text(linkInfos.content);
+            } else {
+                $link.text(linkInfos.url);
+            }
+        }
+    },
+    /**
      * @abstract
      * @private
      */
@@ -440,20 +467,73 @@ const Link = Widget.extend({
     /**
      * @private
      */
-    _onAnyChange: function () {
-        this._adaptPreview();
+    _onAnyChange: function (e) {
+        if (!e.target.closest('input[type="text"]')) {
+            this._adaptPreview();
+        }
     },
     /**
      * @private
      */
     _onURLInput: function () {
+        this._savedURLInputOnDestroy = true;
         var $linkUrlInput = this.$('#o_link_dialog_url_input');
         let value = $linkUrlInput.val();
         let isLink = value.indexOf('@') < 0;
         this.$('input[name="is_new_window"]').closest('.form-group').toggleClass('d-none', !isLink);
         this.$('.o_strip_domain').toggleClass('d-none', value.indexOf(window.location.origin) !== 0);
     },
+    _onURLInputChange: function () {
+        this._adaptPreview();
+        this._savedURLInputOnDestroy = false;
+    },
 });
+
+/**
+ * Return the link element to edit. Create one from selection if none was
+ * present in selection.
+ *
+ * @param {Node} [options.containerNode]
+ * @param {Node} [options.startNode]
+ * @returns {Object}
+ */
+Link.getOrCreateLink = ({ containerNode, startNode } = {})  => {
+
+    if (startNode && !$(startNode).is('a')) {
+        $(startNode).wrap('<a href="#"/>');
+        return { link: startNode.parentElement, needLabel: false };
+    }
+
+    const doc = containerNode && containerNode.ownerDocument || document;
+    let needLabel = false;
+    let link = getInSelection(doc, 'a');
+    const $link = $(link);
+    const range = getDeepRange(containerNode, {splitText: true, select: true, correctTripleClick: true});
+    const isContained = containerNode.contains(range.startContainer) && containerNode.contains(range.endContainer);
+    if (link && (!$link.has(range.startContainer).length || !$link.has(range.endContainer).length)) {
+        // Expand the current link to include the whole selection.
+        let before = link.previousSibling;
+        while (before !== null && range.intersectsNode(before)) {
+            link.insertBefore(before, link.firstChild);
+            before = link.previousSibling;
+        }
+        let after = link.nextSibling;
+        while (after !== null && range.intersectsNode(after)) {
+            link.appendChild(after);
+            after = link.nextSibling;
+        }
+    } else if (!link && isContained) {
+        link = document.createElement('a');
+        if (range.collapsed) {
+            range.insertNode(link);
+            needLabel = true;
+        } else {
+            link.appendChild(range.extractContents());
+            range.insertNode(link);
+        }
+    }
+    return { link, needLabel };
+};
 
 return Link;
 });

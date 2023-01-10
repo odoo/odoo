@@ -3,20 +3,20 @@
 # 	* pos_hr
 # 
 # Translators:
-# Ediz Duman <neps1192@gmail.com>, 2019
-# Martin Trigaux, 2019
-# Levent Karakaş <levent@mektup.at>, 2019
-# Murat Kaplan <muratk@projetgrup.com>, 2019
-# Ramiz Deniz Öner <deniz@denizoner.com>, 2019
-# Umur Akın <umura@projetgrup.com>, 2019
+# Martin Trigaux, 2021
+# Levent Karakaş <levent@mektup.at>, 2021
+# Murat Kaplan <muratk@projetgrup.com>, 2021
+# Ramiz Deniz Öner <deniz@denizoner.com>, 2021
+# Umur Akın <umura@projetgrup.com>, 2021
+# Ertuğrul Güreş <ertugrulg@projetgrup.com>, 2022
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~12.5\n"
+"Project-Id-Version: Odoo Server saas~14.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-08-26 08:16+0000\n"
-"PO-Revision-Date: 2019-08-26 09:13+0000\n"
-"Last-Translator: Umur Akın <umura@projetgrup.com>, 2019\n"
+"POT-Creation-Date: 2021-07-12 07:50+0000\n"
+"PO-Revision-Date: 2021-09-14 12:25+0000\n"
+"Last-Translator: Ertuğrul Güreş <ertugrulg@projetgrup.com>, 2022\n"
 "Language-Team: Turkish (https://www.transifex.com/odoo/teams/41243/tr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -27,7 +27,7 @@ msgstr ""
 #. module: pos_hr
 #: model_terms:ir.ui.view,arch_db:pos_hr.pos_config_form_view_inherit
 msgid "<span class=\"o_form_label oe_edit_only\">Allowed Employees </span>"
-msgstr ""
+msgstr "<span class=\"o_form_label oe_edit_only\">İzin Verilen Çalışanlar </span>"
 
 #. module: pos_hr
 #: model:ir.model.fields,field_description:pos_hr.field_pos_order__cashier
@@ -38,18 +38,10 @@ msgstr "Kasiyer"
 
 #. module: pos_hr
 #. openerp-web
-#: code:addons/pos_hr/static/src/js/chrome.js:0
-#: code:addons/pos_hr/static/src/js/screens.js:0
+#: code:addons/pos_hr/static/src/js/useSelectEmployee.js:0
 #, python-format
 msgid "Change Cashier"
 msgstr "Kasiyer Değiştir"
-
-#. module: pos_hr
-#. openerp-web
-#: code:addons/pos_hr/static/src/xml/pos.xml:0
-#, python-format
-msgid "Close session"
-msgstr ""
 
 #. module: pos_hr
 #: model:ir.model,name:pos_hr.model_hr_employee
@@ -64,50 +56,36 @@ msgstr "Personel"
 #, python-format
 msgid "Employee: %s - PoS Config(s): %s \n"
 msgstr ""
+"Çalışan: %s - PoS Yapılandırmaları: %s\n"
+"\n"
 
 #. module: pos_hr
 #: model:ir.model.fields,field_description:pos_hr.field_pos_config__employee_ids
 msgid "Employees with access"
-msgstr ""
+msgstr "Erişimi olan çalışanlar"
 
 #. module: pos_hr
 #: model:ir.model.fields,help:pos_hr.field_pos_config__employee_ids
 msgid "If left empty, all employees can log in to the PoS session"
-msgstr ""
+msgstr "Boş bırakılırsa, tüm çalışanlar PoS oturumunda oturum açabilir"
 
 #. module: pos_hr
 #. openerp-web
-#: code:addons/pos_hr/static/src/js/gui.js:0
+#: code:addons/pos_hr/static/src/js/useSelectEmployee.js:0
 #, python-format
 msgid "Incorrect Password"
 msgstr "Yanlış Parola"
 
 #. module: pos_hr
 #. openerp-web
-#: code:addons/pos_hr/static/src/js/chrome.js:0
-#, python-format
-msgid "Lock"
-msgstr "Kilitle"
-
-#. module: pos_hr
-#. openerp-web
-#: code:addons/pos_hr/static/src/xml/pos.xml:0
+#: code:addons/pos_hr/static/src/xml/LoginScreen.xml:0
 #, python-format
 msgid "Log in to"
-msgstr ""
-
-#. module: pos_hr
-#: model_terms:ir.ui.view,arch_db:pos_hr.pos_config_form_view_inherit
-msgid ""
-"Only users with Manager access rights for PoS app can modify the product "
-"prices on orders."
-msgstr ""
-"Sadece Yetkili erişim hakkı ile kullanıcılar ürün fiyatlarını ya da "
-"siparişlerini POS uygulaması için değiştirebilir."
+msgstr "Giriş yap"
 
 #. module: pos_hr
 #. openerp-web
-#: code:addons/pos_hr/static/src/js/gui.js:0
+#: code:addons/pos_hr/static/src/js/useSelectEmployee.js:0
 #, python-format
 msgid "Password ?"
 msgstr "Parola ?"
@@ -132,38 +110,21 @@ msgstr "Satış Noktası Siparişi"
 #. module: pos_hr
 #: model:ir.model,name:pos_hr.model_report_pos_order
 msgid "Point of Sale Orders Report"
-msgstr ""
-
-#. module: pos_hr
-#: model_terms:ir.ui.view,arch_db:pos_hr.pos_config_form_view_inherit
-msgid "Price Control"
-msgstr "Fiyat Kontrolü"
-
-#. module: pos_hr
-#: model_terms:ir.ui.view,arch_db:pos_hr.pos_config_form_view_inherit
-msgid "Restrict price modification to managers"
-msgstr "Fiyatları sadece yönetici yetkisi olan kullanıcılar değiştirebilsin"
+msgstr "Satış Noktası Siparişleri Raporu"
 
 #. module: pos_hr
 #. openerp-web
-#: code:addons/pos_hr/static/src/xml/pos.xml:0
+#: code:addons/pos_hr/static/src/xml/LoginScreen.xml:0
 #, python-format
 msgid "Scan your badge"
 msgstr "Rozetinizi Tarayın"
 
 #. module: pos_hr
 #. openerp-web
-#: code:addons/pos_hr/static/src/xml/pos.xml:0
+#: code:addons/pos_hr/static/src/xml/LoginScreen.xml:0
 #, python-format
 msgid "Select Cashier"
-msgstr ""
-
-#. module: pos_hr
-#. openerp-web
-#: code:addons/pos_hr/static/src/js/gui.js:0
-#, python-format
-msgid "Select User"
-msgstr "Kullanıcı Seç"
+msgstr "Kasiyer Seç"
 
 #. module: pos_hr
 #: code:addons/pos_hr/models/hr_employee.py:0
@@ -172,10 +133,19 @@ msgid ""
 "You cannot delete an employee that may be used in an active PoS session, "
 "close the session(s) first: \n"
 msgstr ""
+"Etkin bir PoS oturumunda kullanılabilecek bir çalışanı silemezsiniz, önce "
+"oturumları kapatın: \n"
 
 #. module: pos_hr
 #. openerp-web
-#: code:addons/pos_hr/static/src/xml/pos.xml:0
+#: code:addons/pos_hr/static/src/xml/LoginScreen.xml:0
 #, python-format
 msgid "or"
 msgstr "veya"
+
+#. module: pos_hr
+#. openerp-web
+#: code:addons/pos_hr/static/src/xml/CashierName.xml:0
+#, python-format
+msgid "selectCashier"
+msgstr "kasiyerseç"

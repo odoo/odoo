@@ -8,7 +8,7 @@ from psycopg2 import sql, DatabaseError
 
 from odoo import api, fields, models, _
 from odoo.tools import DEFAULT_SERVER_DATETIME_FORMAT
-from odoo.exceptions import ValidationError
+from odoo.exceptions import ValidationError, UserError
 from odoo.addons.base.models.res_partner import WARNING_MESSAGE, WARNING_HELP
 
 _logger = logging.getLogger(__name__)
@@ -31,7 +31,7 @@ class AccountFiscalPosition(models.Model):
     note = fields.Html('Notes', translate=True, help="Legal mentions that have to be printed on the invoices.")
     auto_apply = fields.Boolean(string='Detect Automatically', help="Apply automatically this fiscal position.")
     vat_required = fields.Boolean(string='VAT required', help="Apply only if partner has a VAT number.")
-    company_country_id = fields.Many2one(string="Company Country", related='company_id.country_id')
+    company_country_id = fields.Many2one(string="Company Country", related='company_id.account_fiscal_country_id')
     country_id = fields.Many2one('res.country', string='Country',
         help="Apply only if delivery country matches.")
     country_group_id = fields.Many2one('res.country.group', string='Country Group',
@@ -217,11 +217,17 @@ class AccountFiscalPosition(models.Model):
         # This can be easily overridden to apply more complex fiscal rules
         PartnerObj = self.env['res.partner']
         partner = PartnerObj.browse(partner_id)
+        delivery = PartnerObj.browse(delivery_id)
 
-        # if no delivery use invoicing
-        if delivery_id:
-            delivery = PartnerObj.browse(delivery_id)
-        else:
+        company = self.env.company
+        eu_country_codes = set(self.env.ref('base.europe').country_ids.mapped('code'))
+        intra_eu = vat_exclusion = False
+        if company.vat and partner.vat:
+            intra_eu = company.vat[:2] in eu_country_codes and partner.vat[:2] in eu_country_codes
+            vat_exclusion = company.vat[:2] == partner.vat[:2]
+
+        # If company and partner have the same vat prefix (and are both within the EU), use invoicing
+        if not delivery or (intra_eu and vat_exclusion):
             delivery = partner
 
         # partner manually set fiscal position always win
@@ -340,7 +346,7 @@ class ResPartner(models.Model):
               AND NOT acc.deprecated AND acc.company_id = %s
               AND move.state = 'posted'
             GROUP BY partner.id
-            HAVING %s * COALESCE(SUM(aml.amount_residual), 0) ''' + operator + ''' %s''', (account_type, self.env.user.company_id.id, sign, operand))
+            HAVING %s * COALESCE(SUM(aml.amount_residual), 0) ''' + operator + ''' %s''', (account_type, self.env.company.id, sign, operand))
         res = self._cr.fetchall()
         if not res:
             return [('id', '=', '0')]
@@ -477,8 +483,8 @@ class ResPartner(models.Model):
     invoice_warn_msg = fields.Text('Message for Invoice')
     # Computed fields to order the partners as suppliers/customers according to the
     # amount of their generated incoming/outgoing account moves
-    supplier_rank = fields.Integer(default=0)
-    customer_rank = fields.Integer(default=0)
+    supplier_rank = fields.Integer(default=0, copy=False)
+    customer_rank = fields.Integer(default=0, copy=False)
 
     def _get_name_search_order_by_fields(self):
         res = super()._get_name_search_order_by_fields()
@@ -513,11 +519,12 @@ class ResPartner(models.Model):
     def action_view_partner_invoices(self):
         self.ensure_one()
         action = self.env["ir.actions.actions"]._for_xml_id("account.action_move_out_invoice_type")
+        all_child = self.with_context(active_test=False).search([('id', 'child_of', self.ids)])
         action['domain'] = [
             ('move_type', 'in', ('out_invoice', 'out_refund')),
-            ('partner_id', 'child_of', self.id),
+            ('partner_id', 'in', all_child.ids)
         ]
-        action['context'] = {'default_move_type':'out_invoice', 'move_type':'out_invoice', 'journal_type': 'sale', 'search_default_unpaid': 1}
+        action['context'] = {'default_move_type': 'out_invoice', 'move_type': 'out_invoice', 'journal_type': 'sale', 'search_default_unpaid': 1, 'active_test': False}
         return action
 
     def can_edit_vat(self):
@@ -544,6 +551,20 @@ class ResPartner(models.Model):
                 elif is_supplier and 'supplier_rank' not in vals:
                     vals['supplier_rank'] = 1
         return super().create(vals_list)
+
+    @api.ondelete(at_uninstall=False)
+    def _unlink_if_partner_in_account_move(self):
+        """
+        Prevent the deletion of a partner "Individual", child of a company if:
+        - partner in 'account.move'
+        - state: all states (draft and posted)
+        """
+        moves = self.sudo().env['account.move'].search_count([
+            ('partner_id', 'in', self.ids),
+            ('state', 'in', ['draft', 'posted']),
+        ])
+        if moves:
+            raise UserError(_("The partner cannot be deleted because it is used in Accounting"))
 
     def _increase_rank(self, field, n=1):
         if self.ids and field in ['customer_rank', 'supplier_rank']:

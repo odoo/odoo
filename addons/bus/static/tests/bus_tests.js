@@ -61,24 +61,20 @@ QUnit.module('Bus', {
         widget.call('bus_service', 'addChannel', 'lambda');
 
         pollPromise.resolve([{
-            id: 1,
-            channel: 'lambda',
             message: 'beta',
         }]);
         await testUtils.nextTick();
 
         pollPromise.resolve([{
-            id: 2,
-            channel: 'lambda',
             message: 'epsilon',
         }]);
         await testUtils.nextTick();
 
         assert.verifySteps([
             '/longpolling/poll - lambda',
-            'notification - lambda,beta',
+            'notification - beta',
             '/longpolling/poll - lambda',
-            'notification - lambda,epsilon',
+            'notification - epsilon',
             '/longpolling/poll - lambda',
         ]);
 
@@ -253,8 +249,8 @@ QUnit.module('Bus', {
 
         assert.verifySteps([
             'master - /longpolling/poll - lambda',
-            'master - notification - lambda,beta',
-            'slave - notification - lambda,beta',
+            'master - notification - beta',
+            'slave - notification - beta',
             'master - /longpolling/poll - lambda',
         ]);
 
@@ -348,11 +344,11 @@ QUnit.module('Bus', {
 
         assert.verifySteps([
             'master - /longpolling/poll - lambda',
-            'master - notification - lambda,beta',
-            'slave - notification - lambda,beta',
+            'master - notification - beta',
+            'slave - notification - beta',
             'master - /longpolling/poll - lambda',
             'slave - /longpolling/poll - lambda',
-            'slave - notification - lambda,gamma',
+            'slave - notification - gamma',
             'slave - /longpolling/poll - lambda',
         ]);
 

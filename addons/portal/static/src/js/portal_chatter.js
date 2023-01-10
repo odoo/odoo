@@ -122,7 +122,7 @@ var PortalChatter = publicWidget.Widget.extend({
      */
     _setOptions: function (options) {
         // underscorize the camelcased option keys
-        const defaultOptions = {
+        const defaultOptions = Object.assign({
             'allow_composer': true,
             'display_composer': false,
             'csrf_token': odoo.csrf_token,
@@ -137,7 +137,7 @@ var PortalChatter = publicWidget.Widget.extend({
             'pid': false,
             'domain': [],
             'two_columns': false,
-        };
+        }, this.options || {});
 
         this.options = Object.entries(options).reduce(
             (acc, [key, value]) => {

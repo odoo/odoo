@@ -18,10 +18,10 @@ tour.register('shop_sale_coupon', {
         },
         {
             content: "enable 'Show # found' if needed",
-            trigger: "#customize-menu a:contains(Show # found)",
+            trigger: "#customize-menu label:contains(Show # found)",
             run: function () {
-                if (!$('#customize-menu a:contains(Show # found) input').prop('checked')) {
-                    $('#customize-menu a:contains(Show # found)').click();
+                if (!$('#customize-menu label:contains(Show # found) input').prop('checked')) {
+                    $('#customize-menu label:contains(Show # found)').click();
                 }
             }
         },
@@ -48,10 +48,10 @@ tour.register('shop_sale_coupon', {
         },
         {
             content: "enable 'Promo Code' if needed",
-            trigger: "#customize-menu a:contains(Promo Code)",
+            trigger: "#customize-menu label:contains(Promo Code)",
             run: function () {
-                if (!$('#customize-menu a:contains(Promo Code) input').prop('checked')) {
-                    $('#customize-menu a:contains(Promo Code)').click();
+                if (!$('#customize-menu label:contains(Promo Code) input').prop('checked')) {
+                    $('#customize-menu label:contains(Promo Code)').click();
                 }
             }
         },

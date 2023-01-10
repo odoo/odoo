@@ -16,7 +16,7 @@ from odoo.addons.base.models.ir_qweb_fields import nl2br
 
 class WebsiteForm(http.Controller):
 
-    @http.route('/website/form/', type='http', auth="public", methods=['POST'], multilang=False)
+    @http.route('/website/form', type='http', auth="public", methods=['POST'], multilang=False)
     def website_form_empty(self, **kwargs):
         # This is a workaround to don't add language prefix to <form action="/website/form/" ...>
         return ""
@@ -141,7 +141,7 @@ class WebsiteForm(http.Controller):
             'meta': '',         # Add metadata if enabled
         }
 
-        authorized_fields = model.sudo()._get_form_writable_fields()
+        authorized_fields = model.with_user(SUPERUSER_ID)._get_form_writable_fields()
         error_fields = []
         custom_fields = []
 
@@ -169,6 +169,15 @@ class WebsiteForm(http.Controller):
                     data['record'][field_name] = input_filter(self, field_name, field_value)
                 except ValueError:
                     error_fields.append(field_name)
+
+                if dest_model._name == 'mail.mail' and field_name == 'email_from':
+                    # As the "email_from" is used to populate the email_from of the
+                    # sent mail.mail, it could be filtered out at sending time if no
+                    # outgoing mail server "from_filter" match the sender email.
+                    # To make sure the email contains that (important) information
+                    # we also add it to the "custom message" that will be included
+                    # in the body of the email sent.
+                    custom_fields.append((_('email'), field_value))
 
             # If it's a custom field
             elif field_name != 'context':
@@ -239,7 +248,7 @@ class WebsiteForm(http.Controller):
         orphan_attachment_ids = []
         model_name = model.sudo().model
         record = model.env[model_name].browse(id_record)
-        authorized_fields = model.sudo()._get_form_writable_fields()
+        authorized_fields = model.with_user(SUPERUSER_ID)._get_form_writable_fields()
         for file in files:
             custom_field = file.field_name not in authorized_fields
             attachment_value = {

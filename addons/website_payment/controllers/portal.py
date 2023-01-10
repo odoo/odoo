@@ -75,7 +75,7 @@ class PaymentPortal(payment_portal.PaymentPortal):
             })
         elif not tx_sudo.partner_country_id:
             tx_sudo.partner_country_id = kwargs['partner_details']['country_id']
-        self._update_landing_route(tx_sudo)
+        self._update_landing_route(tx_sudo, access_token)
 
         # Send a notification to warn that a donation has been made
         recipient_email = kwargs['donation_recipient_email']

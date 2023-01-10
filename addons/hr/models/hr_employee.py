@@ -111,7 +111,7 @@ class HrEmployeePrivate(models.Model):
         string='Tags')
     # misc
     notes = fields.Text('Notes', groups="hr.group_hr_user")
-    color = fields.Integer('Color Index', default=0, groups="hr.group_hr_user")
+    color = fields.Integer('Color Index', default=0)
     barcode = fields.Char(string="Badge ID", help="ID used for employee identification.", groups="hr.group_hr_user", copy=False)
     pin = fields.Char(string="PIN", groups="hr.group_hr_user", copy=False,
         help="PIN used to Check In/Out in the Kiosk Mode of the Attendance application (if enabled in Configuration) and to change the cashier in the Point of Sale application.")
@@ -150,7 +150,7 @@ class HrEmployeePrivate(models.Model):
 
     def _compute_avatar(self, avatar_field, image_field):
         for employee in self:
-            avatar = employee[image_field]
+            avatar = employee._origin[image_field]
             if not avatar:
                 if employee.user_id:
                     avatar = employee.user_id[avatar_field]
@@ -219,7 +219,10 @@ class HrEmployeePrivate(models.Model):
         """
         if self.check_access_rights('read', raise_exception=False):
             return super(HrEmployeePrivate, self)._search(args, offset=offset, limit=limit, order=order, count=count, access_rights_uid=access_rights_uid)
-        ids = self.env['hr.employee.public']._search(args, offset=offset, limit=limit, order=order, count=count, access_rights_uid=access_rights_uid)
+        try:
+            ids = self.env['hr.employee.public']._search(args, offset=offset, limit=limit, order=order, count=count, access_rights_uid=access_rights_uid)
+        except ValueError:
+            raise AccessError(_('You do not have access to this document.'))
         if not count and isinstance(ids, Query):
             # the result is expected from this table, so we should link tables
             ids = super(HrEmployeePrivate, self.sudo())._search([('id', 'in', ids)])

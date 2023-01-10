@@ -656,9 +656,6 @@ var FieldDateRange = InputField.extend({
         '/web/static/lib/daterangepicker/daterangepicker.js',
         '/web/static/src/legacy/js/libs/daterangepicker.js',
     ],
-    cssLibs: [
-        '/web/static/lib/daterangepicker/daterangepicker.css',
-    ],
     supportedFieldTypes: ['date', 'datetime'],
     isQuickEditable: true,
     /**
@@ -676,6 +673,8 @@ var FieldDateRange = InputField.extend({
                 autoUpdateInput: false,
                 timePickerIncrement: 5,
                 locale: {
+                    applyLabel: _t('Apply'),
+                    cancelLabel: _t('Cancel'),
                     format: this.isDateField ? time.getLangDateFormat() : time.getLangDatetimeFormat(),
                 },
             }
@@ -989,6 +988,7 @@ var FieldDate = InputField.extend({
 
     /**
      * Confirm the value on hit enter and re-render
+     * It will also remove the offset to get the UTC value
      *
      * @private
      * @override
@@ -997,7 +997,14 @@ var FieldDate = InputField.extend({
     async _onKeydown(ev) {
         this._super(...arguments);
         if (ev.which === $.ui.keyCode.ENTER) {
-            await this._setValue(this.$input.val());
+            let value = this.$input.val();
+            try {
+                value = this._parseValue(value);
+                if (this.datewidget.type_of_date === "datetime") {
+                    value.add(-this.getSession().getTZOffset(value), "minutes");
+                }
+            } catch (err) {}
+            await this._setValue(value);
             this._render();
         }
     },
@@ -1684,7 +1691,7 @@ var FieldEmail = InputField.extend({
     description: _lt("Email"),
     className: 'o_field_email',
     events: _.extend({}, InputField.prototype.events, {
-        'click': '_onClick',
+        'click': '_onClickLink',
     }),
     prefix: 'mailto',
     supportedFieldTypes: ['char'],
@@ -1759,8 +1766,10 @@ var FieldEmail = InputField.extend({
      * @private
      * @param {MouseEvent} ev
      */
-    _onClick: function (ev) {
-        ev.stopPropagation();
+    _onClickLink: function (ev) {
+        if (ev.target.matches("a")) {
+            ev.stopImmediatePropagation();
+        }
     },
 });
 
@@ -2135,10 +2144,18 @@ var FieldBinaryImage = AbstractFieldBinary.extend({
         if (width) {
             $img.attr('width', width);
             $img.css('max-width', width + 'px');
+            if (!height) {
+                $img.css('height', 'auto');
+                $img.css('max-height', '100%');
+            }
         }
         if (height) {
             $img.attr('height', height);
             $img.css('max-height', height + 'px');
+            if (!width) {
+                $img.css('width', 'auto');
+                $img.css('max-width', '100%');
+            }
         }
         this.$('> img').remove();
         this.$el.prepend($img);
@@ -2236,10 +2253,18 @@ var CharImageUrl = AbstractField.extend({
             if (width) {
                 $img.attr('width', width);
                 $img.css('max-width', width + 'px');
+                if (!height) {
+                    $img.css('height', 'auto');
+                    $img.css('max-height', '100%');
+                }
             }
             if (height) {
                 $img.attr('height', height);
                 $img.css('max-height', height + 'px');
+                if (!width) {
+                    $img.css('width', 'auto');
+                    $img.css('max-width', '100%');
+                }
             }
             this.$('> img').remove();
             this.$el.prepend($img);
@@ -2298,22 +2323,13 @@ var FieldBinaryFile = AbstractFieldBinary.extend({
         this.filename_value = this.recordData[this.attrs.filename];
     },
     _renderReadonly: function () {
-        this.do_toggle(!!this.value);
-        if (this.value) {
-            this.$el.empty().append($("<span/>").addClass('fa fa-download'));
-            if (this.recordData.id) {
-                this.$el.css('cursor', 'pointer');
-            } else {
-                this.$el.css('cursor', 'not-allowed');
-            }
-            if (this.filename_value) {
-                this.$el.append(" " + this.filename_value);
-            }
-        }
-        if (!this.res_id) {
-            this.$el.css('cursor', 'not-allowed');
-        } else {
-            this.$el.css('cursor', 'pointer');
+        var visible = !!(this.value && this.res_id);
+        this.$el.empty().css('cursor', 'not-allowed');
+        this.do_toggle(visible);
+        if (visible) {
+            this.$el.css('cursor', 'pointer')
+                    .text(this.filename_value || '')
+                    .prepend($('<span class="fa fa-download"/>'), ' ');
         }
     },
     _renderEdit: function () {
@@ -2476,7 +2492,7 @@ var PriorityWidget = AbstractField.extend({
     events: {
         'mouseover > a': '_onMouseOver',
         'mouseout > a': '_onMouseOut',
-        'click > a': '_onClick',
+        'click > a': '_onPriorityClick',
         'keydown > a': '_onKeydown',
     },
     supportedFieldTypes: ['selection'],
@@ -2599,7 +2615,7 @@ var PriorityWidget = AbstractField.extend({
      * @param {MouseEvent} event
      * @private
      */
-    _onClick: function (event) {
+    _onPriorityClick: function (event) {
         event.preventDefault();
         event.stopPropagation();
         var index = $(event.currentTarget).data('index');
@@ -2955,6 +2971,9 @@ var BooleanToggle = FieldBoolean.extend({
      * Adds the icon fa-check-circle if value is true else adds icon
      * fa-times-circle
      *
+     * The boolean_toggle should only be disabled when there is a readonly modifier
+     * not when the view is in readonly mode
+     *
      * @override
      */
     async _render() {
@@ -2966,6 +2985,8 @@ var BooleanToggle = FieldBoolean.extend({
         const i = document.createElement("i");
         i.setAttribute('class', `fa ${classToApply}`);
         this.el.querySelector('label').appendChild(i);
+        const isReadonly = this.record.evalModifiers(this.attrs.modifiers).readonly || false;
+        this.$input.prop('disabled', isReadonly);
     },
 
     //--------------------------------------------------------------------------
@@ -2980,8 +3001,10 @@ var BooleanToggle = FieldBoolean.extend({
      */
     _onClick: async function (event) {
         event.stopPropagation();
-        await this._setValue(!this.value);
-        this._render();
+        if (!this.$input.prop('disabled')) {
+            await this._setValue(!this.value);
+            this._render();
+        }
     },
 });
 
@@ -3320,6 +3343,10 @@ var FieldToggleBoolean = AbstractField.extend({
         this.$('i')
             .toggleClass('o_toggle_button_success', !!this.value)
             .toggleClass('text-muted', !this.value);
+        const isReadonly = this.record.evalModifiers(this.attrs.modifiers).readonly;
+        if (isReadonly) {
+            this.el.setAttribute('disabled', isReadonly);
+        }
         var title = this.value ? this.attrs.options.active : this.attrs.options.inactive;
         this.$el.attr('title', title);
         this.$el.attr('aria-pressed', this.value);
@@ -3499,16 +3526,11 @@ var JournalDashboardGraph = AbstractField.extend({
  * not allow to).
  */
 var FieldDomain = AbstractField.extend({
-    /**
-     * Fetches the number of records which are matched by the domain (if the
-     * domain is not server-valid, the value is false) and the model the
-     * field must work with.
-     */
-    specialData: "_fetchSpecialDomain",
-
+    resetOnAnyFieldChange: true,
     events: _.extend({}, AbstractField.prototype.events, {
         "click .o_domain_show_selection_button": "_onShowSelectionButtonClick",
         "click .o_field_domain_dialog_button": "_onDialogEditButtonClick",
+        "click .o_refresh_count": "_onRefreshCountClick",
     }),
     custom_events: _.extend({}, AbstractField.prototype.custom_events, {
         domain_changed: "_onDomainSelectorValueChange",
@@ -3534,6 +3556,11 @@ var FieldDomain = AbstractField.extend({
         }
 
         this._setState();
+
+        this._isValidForModel = true;
+        this.nbRecords = null;
+        this.lastCountFetchKey = null; // used to prevent from unnecessary fetching the count
+        this.debugEdition = false; // true iff the domain was edited with the textarea (in debug only)
     },
     /**
      * We use the on_attach_callback hook here when widget is attached to the DOM, so that
@@ -3550,6 +3577,19 @@ var FieldDomain = AbstractField.extend({
     // Public
     //--------------------------------------------------------------------------
 
+    /**
+     * The record is about to be saved, we need to ensure that the current
+     * domain is valid, if we manually edited it with the textarea. To do so,
+     * we perform a search_count with that domain.
+     *
+     * @override
+     * @returns {Promise|undefined}
+     */
+    commitChanges() {
+        if (this.debugEdition) {
+            return this._fetchCount();
+        }
+    },
     /**
      * A domain field is always set since the false value is considered to be
      * equal to "[]" (match all records).
@@ -3580,11 +3620,56 @@ var FieldDomain = AbstractField.extend({
     //--------------------------------------------------------------------------
 
     /**
+     * Fetches the number of records matching the current domain.
+     *
+     * @private
+     * @param {boolean} [force=false] if true, performs the rpc, even if the
+     *   domain is the same as before
+     * @returns {Promise}
+     */
+     _fetchCount(force = false) {
+        if (!this._domainModel) {
+            this._isValidForModel = true;
+            this.nbRecords = 0;
+            return Promise.resolve();
+        }
+
+        // do not re-fetch the count if nothing has changed
+        const value = this.value || "[]"; // false stands for the empty domain
+        const key = `${this._domainModel}/${value}`;
+        if (!force && this.lastCountFetchKey === key) {
+            return this.lastCountFetchProm;
+        }
+        this.lastCountFetchKey = key;
+
+        this.nbRecords = null;
+
+        const context = this.record.getContext({ fieldName: this.name });
+        this.lastCountFetchProm = new Promise((resolve) => {
+            this._rpc({
+                model: this._domainModel,
+                method: 'search_count',
+                args: [Domain.prototype.stringToArray(value, this.record.evalContext)],
+                context: context
+            }, { shadow: true }).then((nbRecords) => {
+                this._isValidForModel = true;
+                this.nbRecords = nbRecords;
+                resolve();
+            }).guardedCatch((reason) => {
+                reason.event.preventDefault(); // prevent traceback (the search_count might be intended to break)
+                this._isValidForModel = false;
+                this.nbRecords = 0;
+                resolve();
+            });
+        });
+        return this.lastCountFetchProm;
+    },
+    /**
      * @private
      * @override _render from AbstractField
      * @returns {Promise}
      */
-    _render: function () {
+    _render: async function () {
         // If there is no model, only change the non-domain-selector content
         if (!this._domainModel) {
             this._replaceContent();
@@ -3603,11 +3688,24 @@ var FieldDomain = AbstractField.extend({
                 debugMode: config.isDebug(),
             });
             def = this.domainSelector.prependTo(this.$el);
-        } else {
+        } else if (!this.debugEdition) {
+            // do not update the domainSelector if we edited the domain with the textarea
+            // as we don't want it to format what we just wrote
             def = this.domainSelector.setDomain(value);
         }
+
         // ... then replace the other content (matched records, etc)
-        return def.then(this._replaceContent.bind(this));
+        await Promise.resolve(def);
+        this._replaceContent();
+
+        // Finally, fetch the number of records matching the domain, but do not
+        // wait for it to render the field widget (simply update the number of
+        // records when we know it)
+        if (!this.debugEdition) {
+            // do not automatically recompute the count if we're editing the
+            // domain with the textarea
+            this._fetchCount().then(() => this._replaceContent());
+        }
     },
     /**
      * Render the field DOM except for the domain selector part. The full field
@@ -3623,8 +3721,10 @@ var FieldDomain = AbstractField.extend({
         this._$content = $(qweb.render("FieldDomain.content", {
             hasModel: !!this._domainModel,
             isValid: !!this._isValidForModel,
-            nbRecords: this.record.specialData[this.name].nbRecords || 0,
-            inDialogEdit: this.inDialog && this.mode === "edit",
+            nbRecords: this.nbRecords,
+            inDialog: this.inDialog,
+            editMode: this.mode === "edit",
+            isDebug: config.isDebug(),
         }));
         this._$content.appendTo(this.$el);
     },
@@ -3634,7 +3734,7 @@ var FieldDomain = AbstractField.extend({
      *
      * @private
      */
-    _reset: function () {
+    _reset: function (record, ev) {
         this._super.apply(this, arguments);
         var oldDomainModel = this._domainModel;
         this._setState();
@@ -3642,6 +3742,9 @@ var FieldDomain = AbstractField.extend({
             // If the model has changed, destroy the current domain selector
             this.domainSelector.destroy();
             this.domainSelector = null;
+        }
+        if (!ev || ev.target !== this) {
+            this.debugEdition = false;
         }
     },
     /**
@@ -3652,15 +3755,31 @@ var FieldDomain = AbstractField.extend({
      * @private
      */
     _setState: function () {
-        var specialData = this.record.specialData[this.name];
-        this._domainModel = specialData.model;
-        this._isValidForModel = (specialData.nbRecords !== false);
+        let domainModel = this.nodeOptions.model;
+        if (Object.prototype.hasOwnProperty.call(this.record.data, domainModel)) {
+            domainModel = this.record.data[domainModel];
+        }
+        this._domainModel = domainModel;
     },
 
     //--------------------------------------------------------------------------
     // Handlers
     //--------------------------------------------------------------------------
 
+    /**
+     * Recompute the number of records matching the domain when the user clicks
+     * on the refresh button. Useful after manually editing the domain through
+     * the textarea in debug mode, as in this case, the count isn't automatically
+     * recomputed.
+     *
+     * @param {MouseEvent} ev
+     */
+    async _onRefreshCountClick(ev) {
+        ev.stopPropagation();
+        ev.currentTarget.setAttribute("disabled", "disabled");
+        await this._fetchCount(true);
+        this._replaceContent();
+    },
     /**
      * Called when the "Show selection" button is clicked
      * -> Open a modal to see the matched records
@@ -3694,15 +3813,17 @@ var FieldDomain = AbstractField.extend({
         }).open();
     },
     /**
-     * Called when the domain selector value is changed (do nothing if it is the
-     * one which is in a dialog (@see _onDomainSelectorDialogValueChange))
+     * Called when the domain selector value is changed
      * -> Adapt the internal value state
      *
      * @param {OdooEvent} e
+     * @param {Domain} e.data.domain
      */
     _onDomainSelectorValueChange: function (e) {
-        if (this.inDialog) return;
-        this._setValue(Domain.prototype.arrayToString(this.domainSelector.getDomain()));
+        // we don't want to recompute the count if the domain has been edited
+        // from the debug textarea (for performance reasons, as it might be costly)
+        this.debugEdition = !!e.data.debug;
+        this._setValue(e.data.domain);
     },
     /**
      * Called when the in-dialog domain selector value is confirmed
@@ -3721,6 +3842,19 @@ var FieldDomain = AbstractField.extend({
      */
     _onOpenRecord: function (event) {
         event.stopPropagation();
+    },
+    /**
+     * Stops the enter navigation in a DomainSelector's textarea.
+     *
+     * @private
+     * @param {OdooEvent} ev
+     */
+     _onKeydown: function (ev) {
+        if (ev.which === $.ui.keyCode.ENTER && ev.target.tagName === "TEXTAREA") {
+            ev.stopPropagation();
+            return;
+        }
+        this._super.apply(this, arguments);
     },
 });
 
@@ -3942,7 +4076,7 @@ var FieldColorPicker = FieldInteger.extend({
         _t('Green'),
         _t('Purple'),
     ],
-
+    widthInList: '1',
     /**
      * Prepares the rendering, since we are based on an input but not using it
      * setting tagName after parent init force the widget to not render an input

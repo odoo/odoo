@@ -3,6 +3,7 @@
 import Widget from 'web.Widget';
 import {_t} from 'web.core';
 import {DropPrevious} from 'web.concurrency';
+import { ancestors } from '@web_editor/js/common/wysiwyg_utils';
 
 const LinkPopoverWidget = Widget.extend({
     template: 'wysiwyg.widgets.link.edit.tooltip',
@@ -15,9 +16,11 @@ const LinkPopoverWidget = Widget.extend({
     /**
      * @constructor
      * @param {Element} target: target Element for which we display a popover
+     * @param {Wysiwyg} [option.wysiwyg]: The wysiwyg editor
      */
-    init(parent, target) {
+    init(parent, target, options) {
         this._super(...arguments);
+        this.options = options;
         this.target = target;
         this.$target = $(target);
         this.href = this.$target.attr('href'); // for template
@@ -48,7 +51,16 @@ const LinkPopoverWidget = Widget.extend({
         });
 
         // init tooltips & popovers
-        this.$('[data-toggle="tooltip"]').tooltip({delay: 0, placement: 'bottom'});
+        this.$('[data-toggle="tooltip"]').tooltip({
+            delay: 0,
+            placement: 'bottom',
+            container: this.options.wysiwyg.odooEditor.document.body,
+        });
+        const tooltips = [];
+        for (const el of this.$('[data-toggle="tooltip"]').toArray()) {
+            tooltips.push($(el).data('bs.tooltip'));
+        }
+        let popoverShown = true;
         this.$target.popover({
             html: true,
             content: this.$el,
@@ -59,14 +71,58 @@ const LinkPopoverWidget = Widget.extend({
             // 3. Remain open when the popover content is clicked..
             // 4. ..except if it the click was on a button of the popover content
             // 5. Close when the user click somewhere on the page (not being the link or the popover content)
-            trigger: 'focus',
+            trigger: 'manual',
             boundary: 'viewport',
+            container: this.options.wysiwyg.odooEditor.document.body,
         })
         .on('show.bs.popover.link_popover', () => {
+            this.options.wysiwyg.odooEditor.observerUnactive('show.bs.popover');
             this._loadAsyncLinkPreview();
+            popoverShown = true;
         })
-        .popover('show')
-        .data('bs.popover').tip.classList.add('o_edit_menu_popover');
+        .on('inserted.bs.popover', () => {
+            this.options.wysiwyg.odooEditor.observerActive('show.bs.popover');
+        })
+        .on('hide.bs.popover.link_popover', () => {
+            this.options.wysiwyg.odooEditor.observerUnactive('hide.bs.popover');
+            popoverShown = false;
+        })
+        .on('hidden.bs.popover.link_popover', () => {
+            this.options.wysiwyg.odooEditor.observerActive('hide.bs.popover');
+            for (const tooltip of tooltips) {
+                tooltip.hide();
+            }
+        })
+        .on('inserted.bs.popover.link_popover', () => {
+            this.$target.data('bs.popover').tip.classList.add('o_edit_menu_popover');
+        })
+        .popover('show');
+
+
+        this.popover = this.$target.data('bs.popover');
+        this.$target.on('mousedown.link_popover', (e) => {
+            if (!popoverShown) {
+                this.$target.popover('show');
+            }
+        });
+        const onClickDocument = (e) => {
+            if (popoverShown) {
+                const hierarchy = [e.target, ...ancestors(e.target)];
+                if (
+                    !(
+                        hierarchy.includes(this.$target[0]) ||
+                        (hierarchy.includes(this.$el[0]) &&
+                            !hierarchy.some(x => x.tagName && x.tagName === 'A'))
+                    )
+                ) {
+                    this.popover.hide();
+                }
+            }
+        }
+        $(document).on('mouseup.link_popover', onClickDocument);
+        if (document !== this.options.wysiwyg.odooEditor.document) {
+            $(this.options.wysiwyg.odooEditor.document).on('mouseup.link_popover', onClickDocument);
+        }
 
         return this._super(...arguments);
     },
@@ -79,8 +135,17 @@ const LinkPopoverWidget = Widget.extend({
         // leak. However, it is only one leak per click on a link during edit
         // mode so this should not be a huge problem.
         this.$target.off('.link_popover');
+        $(document).off('.link_popover');
+        $(this.options.wysiwyg.odooEditor.document).off('.link_popover');
         this.$target.popover('dispose');
         return this._super(...arguments);
+    },
+
+    /**
+     *  Hide the popover.
+     */
+    hide() {
+        this.$target.popover('hide');
     },
 
     //--------------------------------------------------------------------------
@@ -174,7 +239,8 @@ const LinkPopoverWidget = Widget.extend({
      * @param {Event} ev
      */
     _onEditLinkClick(ev) {
-        $('#wrapwrap').data('wysiwyg').toggleLinkTools({
+        ev.preventDefault();
+        this.options.wysiwyg.toggleLinkTools({
             forceOpen: true,
             link: this.$target[0],
         });
@@ -187,21 +253,29 @@ const LinkPopoverWidget = Widget.extend({
      * @param {Event} ev
      */
     _onRemoveLinkClick(ev) {
-        // TODO surely there is better to do than finding the editor instance in the DOM?
-        $('#wrapwrap').data('wysiwyg').odooEditor.execCommand('unlink');
+        ev.preventDefault();
+        this.options.wysiwyg.odooEditor.execCommand('unlink');
         ev.stopImmediatePropagation();
     },
 });
 
-LinkPopoverWidget.createFor = async function (parent, targetEl) {
+LinkPopoverWidget.createFor = async function (parent, targetEl, options) {
     const noLinkPopoverClass = ".o_no_link_popover, .carousel-control-prev, .carousel-control-next, .dropdown-toggle";
     // Target might already have a popover, eg cart icon in navbar
     const alreadyPopover = $(targetEl).data('bs.popover');
     if (alreadyPopover || $(targetEl).is(noLinkPopoverClass) || !!$(targetEl).parents(noLinkPopoverClass).length) {
         return null;
     }
-    const popoverWidget = new this(parent, targetEl);
-    return popoverWidget.appendTo(targetEl).then(() => popoverWidget);
+    const popoverWidget = new this(parent, targetEl, options);
+    const wysiwyg = $('#wrapwrap').data('wysiwyg');
+    if (wysiwyg) {
+        wysiwyg.odooEditor.observerUnactive('LinkPopoverWidget');
+    }
+    await popoverWidget.appendTo(targetEl)
+    if (wysiwyg) {
+        wysiwyg.odooEditor.observerActive('LinkPopoverWidget');
+    }
+    return popoverWidget;
 };
 
 export default LinkPopoverWidget;

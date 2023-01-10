@@ -23,7 +23,6 @@
         padding:10px;
         z-index: 2;
         pointer-events: none;
-        word-break: break-all;
     }
 
     div.o_graph_custom_tooltip {
@@ -49,6 +48,9 @@
             padding-bottom: 1px;
         }
         td {
+            &:nth-child(1) {
+                min-width: 100px;
+            }
             span.o_square {
                 height: 12px;
                 width: 12px;

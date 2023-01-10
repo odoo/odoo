@@ -1,15 +1,15 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import fields, models, _
+from odoo import fields, models, _, _lt
 
 
 class Project(models.Model):
     _inherit = "project.project"
 
-    production_count = fields.Integer(related="analytic_account_id.production_count")
-    workorder_count = fields.Integer(related="analytic_account_id.workorder_count")
-    bom_count = fields.Integer(related="analytic_account_id.bom_count")
+    production_count = fields.Integer(related="analytic_account_id.production_count", groups='mrp.group_mrp_user')
+    workorder_count = fields.Integer(related="analytic_account_id.workorder_count", groups='mrp.group_mrp_user')
+    bom_count = fields.Integer(related="analytic_account_id.bom_count", groups='mrp.group_mrp_user')
 
     def action_view_mrp_production(self):
         self.ensure_one()
@@ -29,7 +29,7 @@ class Project(models.Model):
         self.ensure_one()
         action = self.analytic_account_id.action_view_workorder()
         if self.workorder_count > 1:
-            action['view_mode'] = 'tree,form,kanban,calendar,pivot,graph,gantt'
+            action['view_mode'] = 'tree,form,kanban,calendar,pivot,graph'
         return action
 
     # ----------------------------
@@ -41,7 +41,7 @@ class Project(models.Model):
         if self.user_has_groups('mrp.group_mrp_user'):
             buttons.extend([{
                 'icon': 'wrench',
-                'text': _('Manufacturing Orders'),
+                'text': _lt('Manufacturing Orders'),
                 'number': self.production_count,
                 'action_type': 'object',
                 'action': 'action_view_mrp_production',
@@ -50,7 +50,7 @@ class Project(models.Model):
             },
             {
                 'icon': 'cog',
-                'text': _('Work Orders'),
+                'text': _lt('Work Orders'),
                 'number': self.workorder_count,
                 'action_type': 'object',
                 'action': 'action_view_workorder',
@@ -59,7 +59,7 @@ class Project(models.Model):
             },
             {
                 'icon': 'flask',
-                'text': _('Bills of Materials'),
+                'text': _lt('Bills of Materials'),
                 'number': self.bom_count,
                 'action_type': 'object',
                 'action': 'action_view_mrp_bom',

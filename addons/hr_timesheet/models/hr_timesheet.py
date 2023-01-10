@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from collections import defaultdict
 from lxml import etree
 import re
 
@@ -17,7 +18,7 @@ class AccountAnalyticLine(models.Model):
         if 'encoding_uom_id' in field_list:
             result['encoding_uom_id'] = self.env.company.timesheet_encode_uom_id.id
         if not self.env.context.get('default_employee_id') and 'employee_id' in field_list and result.get('user_id'):
-            result['employee_id'] = self.env['hr.employee'].search([('user_id', '=', result['user_id'])], limit=1).id
+            result['employee_id'] = self.env['hr.employee'].search([('user_id', '=', result['user_id']), ('company_id', '=', result.get('company_id', self.env.company.id))], limit=1).id
         return result
 
     def _domain_project_id(self):
@@ -45,9 +46,10 @@ class AccountAnalyticLine(models.Model):
         'project.project', 'Project', compute='_compute_project_id', store=True, readonly=False,
         domain=_domain_project_id)
     user_id = fields.Many2one(compute='_compute_user_id', store=True, readonly=False)
-    employee_id = fields.Many2one('hr.employee', "Employee", domain=_domain_employee_id)
+    employee_id = fields.Many2one('hr.employee', "Employee", domain=_domain_employee_id, context={'active_test': False})
     department_id = fields.Many2one('hr.department', "Department", compute='_compute_department_id', store=True, compute_sudo=True)
     encoding_uom_id = fields.Many2one('uom.uom', compute='_compute_encoding_uom_id')
+    partner_id = fields.Many2one(compute='_compute_partner_id', store=True, readonly=False)
 
     def name_get(self):
         result = super().name_get()
@@ -70,6 +72,12 @@ class AccountAnalyticLine(models.Model):
     def _compute_encoding_uom_id(self):
         for analytic_line in self:
             analytic_line.encoding_uom_id = analytic_line.company_id.timesheet_encode_uom_id
+
+    @api.depends('task_id.partner_id', 'project_id.partner_id')
+    def _compute_partner_id(self):
+        for timesheet in self:
+            if timesheet.project_id:
+                timesheet.partner_id = timesheet.task_id.partner_id or timesheet.project_id.partner_id
 
     @api.depends('task_id', 'task_id.project_id')
     def _compute_project_id(self):
@@ -103,18 +111,33 @@ class AccountAnalyticLine(models.Model):
     def create(self, vals_list):
         default_user_id = self._default_user()
         user_ids = list(map(lambda x: x.get('user_id', default_user_id), filter(lambda x: not x.get('employee_id') and x.get('project_id'), vals_list)))
-        employees = self.env['hr.employee'].search([('user_id', 'in', user_ids)])
-        user_map = {employee.user_id.id: employee.id for employee in employees}
 
         for vals in vals_list:
             # when the name is not provide by the 'Add a line', we set a default one
             if vals.get('project_id') and not vals.get('name'):
                 vals['name'] = '/'
-            # compute employee only for timesheet lines, makes no sense for other lines
-            if not vals.get('employee_id') and vals.get('project_id'):
-                vals['employee_id'] = user_map.get(vals.get('user_id') or default_user_id)
             vals.update(self._timesheet_preprocess(vals))
 
+        # Although this make a second loop on the vals, we need to wait the preprocess as it could change the company_id in the vals
+        # TODO To be refactored in master
+        employees = self.env['hr.employee'].sudo().search([('user_id', 'in', user_ids)])
+        employee_for_user_company = defaultdict(dict)
+        for employee in employees:
+            employee_for_user_company[employee.user_id.id][employee.company_id.id] = employee.id
+
+        employee_ids = set()
+        for vals in vals_list:
+            # compute employee only for timesheet lines, makes no sense for other lines
+            if not vals.get('employee_id') and vals.get('project_id'):
+                employee_for_company = employee_for_user_company.get(vals.get('user_id', default_user_id), False)
+                if not employee_for_company:
+                    continue
+                company_id = list(employee_for_company)[0] if len(employee_for_company) == 1 else vals.get('company_id', self.env.company.id)
+                vals['employee_id'] = employee_for_company.get(company_id, False)
+            elif vals.get('employee_id'):
+                employee_ids.add(vals['employee_id'])
+        if any(not emp.active for emp in self.env['hr.employee'].browse(list(employee_ids))):
+            raise UserError(_('Timesheets must be created with an active employee.'))
         lines = super(AccountAnalyticLine, self).create(vals_list)
         for line, values in zip(lines, vals_list):
             if line.project_id:  # applied only for timesheet
@@ -127,6 +150,10 @@ class AccountAnalyticLine(models.Model):
             raise AccessError(_("You cannot access timesheets that are not yours."))
 
         values = self._timesheet_preprocess(values)
+        if values.get('employee_id'):
+            employee = self.env['hr.employee'].browse(values['employee_id'])
+            if not employee.active:
+                raise UserError(_('You cannot set an archived employee to the existing timesheets.'))
         if 'name' in values and not values.get('name'):
             values['name'] = '/'
         result = super(AccountAnalyticLine, self).write(values)
@@ -156,9 +183,10 @@ class AccountAnalyticLine(models.Model):
     def _apply_time_label(self, view_arch, related_model):
         doc = etree.XML(view_arch)
         Model = self.env[related_model]
-        encoding_uom = self.env.company.timesheet_encode_uom_id
+        # Just fetch the name of the uom in `timesheet_encode_uom_id` of the current company
+        encoding_uom_name = self.env.company.timesheet_encode_uom_id.with_context(prefetch_fields=False).sudo().name
         for node in doc.xpath("//field[@widget='timesheet_uom'][not(@string)] | //field[@widget='timesheet_uom_no_toggle'][not(@string)]"):
-            name_with_uom = re.sub(_('Hours') + "|Hours", encoding_uom.name or '', Model._fields[node.get('name')]._description_string(self.env), flags=re.IGNORECASE)
+            name_with_uom = re.sub(_('Hours') + "|Hours", encoding_uom_name or '', Model._fields[node.get('name')]._description_string(self.env), flags=re.IGNORECASE)
             node.set('string', name_with_uom)
 
         return etree.tostring(doc, encoding='unicode')
@@ -211,7 +239,7 @@ class AccountAnalyticLine(models.Model):
             if partner_id:
                 vals['partner_id'] = partner_id
         # set timesheet UoM from the AA company (AA implies uom)
-        if 'product_uom_id' not in vals and all(v in vals for v in ['account_id', 'project_id']):  # project_id required to check this is timesheet flow
+        if not vals.get('product_uom_id') and all(v in vals for v in ['account_id', 'project_id']):  # project_id required to check this is timesheet flow
             analytic_account = self.env['account.analytic.account'].sudo().browse(vals['account_id'])
             vals['product_uom_id'] = analytic_account.company_id.project_time_mode_id.id
         return vals
@@ -240,7 +268,7 @@ class AccountAnalyticLine(models.Model):
                 cost = timesheet._employee_timesheet_cost()
                 amount = -timesheet.unit_amount * cost
                 amount_converted = timesheet.employee_id.currency_id._convert(
-                    amount, timesheet.account_id.currency_id, self.env.company, timesheet.date)
+                    amount, timesheet.account_id.currency_id or timesheet.currency_id, self.env.company, timesheet.date)
                 result[timesheet.id].update({
                     'amount': amount_converted,
                 })

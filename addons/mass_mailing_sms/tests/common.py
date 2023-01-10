@@ -1,5 +1,7 @@
 # -*- coding: utf-8 -*-
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+import random
 import re
 import werkzeug
 
@@ -147,7 +149,7 @@ class MassSMSCase(SMSCase):
 
                 self.env['link.tracker.click'].sudo().add_click(
                     code,
-                    ip='100.200.300.400',
+                    ip='100.200.300.%3f' % random.random(),
                     country_code='BE',
                     mailing_trace_id=trace_id
                 )

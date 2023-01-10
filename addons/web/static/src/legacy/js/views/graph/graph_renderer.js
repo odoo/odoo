@@ -23,6 +23,7 @@ odoo.define("web/static/src/js/views/graph/graph_renderer", function (require) {
             super(...arguments);
 
             this.noDataLabel = [this.env._t("No data")];
+            this.fakeDataLabel = [""];
             this.sampleDataTargets = [".o_graph_canvas_container"];
             this._processProps(this.props);
 
@@ -164,7 +165,7 @@ odoo.define("web/static/src/js/views/graph/graph_renderer", function (require) {
                 dataset.pointBackgroundColor = dataset.borderColor;
                 dataset.pointBorderColor = "rgba(0,0,0,0.2)";
             }
-            if (data.datasets.length === 1) {
+            if (data.datasets.length === 1 && data.datasets[0].originIndex === 0) {
                 const dataset = data.datasets[0];
                 dataset.fill = "origin";
                 dataset.backgroundColor = hexToRGBA(COLORS[0], 0.4);
@@ -174,7 +175,7 @@ odoo.define("web/static/src/js/views/graph/graph_renderer", function (require) {
             // on the left and the graph seems empty)
             data.labels = data.labels.length > 1 ?
                 data.labels :
-                [[""], ...data.labels, [""]];
+                [this.fakeDataLabel, ...data.labels, this.fakeDataLabel];
 
             // prepare options
             const options = this._prepareOptions(data.datasets.length);
@@ -263,6 +264,7 @@ odoo.define("web/static/src/js/views/graph/graph_renderer", function (require) {
             const innerHTML = this.env.qweb.renderToString("web.GraphRenderer.CustomTooltip", {
                 maxWidth: getMaxWidth(this.chart.chartArea),
                 measure: this.measureDescription,
+                mode: this.props.mode,
                 tooltipItems: this._getTooltipItems(tooltipModel),
             });
             const template = Object.assign(document.createElement("template"), { innerHTML });
@@ -616,11 +618,14 @@ odoo.define("web/static/src/js/views/graph/graph_renderer", function (require) {
             let label = data.labels[item.index];
             let value;
             let boxColor;
+            let percentage;
             if (this.props.mode === "pie") {
                 if (label === this.noDataLabel) {
                     value = this._formatValue(0);
                 } else {
                     value = this._formatValue(dataset.data[item.index]);
+                    const totalData = dataset.data.reduce((a, b) => a + b, 0);
+                    percentage = totalData && ((dataset.data[item.index] * 100) / totalData).toFixed(2);
                 }
                 label = this._relabelling(label, comparisonFieldIndex, dataset.originIndex);
                 if (this.props.origins.length > 1) {
@@ -640,7 +645,7 @@ odoo.define("web/static/src/js/views/graph/graph_renderer", function (require) {
                     dataset.backgroundColor :
                     dataset.borderColor;
             }
-            return { id, label, value, boxColor };
+            return { id, label, value, boxColor, percentage };
         }
 
         /**
@@ -776,7 +781,7 @@ odoo.define("web/static/src/js/views/graph/graph_renderer", function (require) {
          * @returns {string}
          */
         _relabelling(label, index, originIndex) {
-            if (label === this.noDataLabel) {
+            if (label === this.noDataLabel || label === this.fakeDataLabel) {
                 return label[0];
             }
             if (this.props.mode !== "pie" && index === 0) {

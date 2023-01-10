@@ -221,12 +221,17 @@ class L10nInAccountInvoiceReport(models.Model):
                     THEN aml.balance
                     ELSE 0
                     END AS sgst_amount,
-                (SELECT sum(temp_aml.balance) from account_move_line temp_aml
+                (WITH account_tax_temp_table AS (
+                    SELECT account_account_tag_id
+                    FROM account_tax_report_line_tags_rel
+                    WHERE account_tax_report_line_id IN
+                        (SELECT res_id FROM ir_model_data where module='l10n_in' AND name in ('tax_report_line_cess', 'tax_report_line_cess_rc'))
+                    )
+                    SELECT sum(temp_aml.balance) from account_move_line temp_aml
                     JOIN account_account_tag_account_move_line_rel aat_aml_rel_temp ON aat_aml_rel_temp.account_move_line_id = temp_aml.id
                     JOIN account_account_tag aat_temp ON aat_temp.id = aat_aml_rel_temp.account_account_tag_id
-                    JOIN account_tax_report_line_tags_rel tag_rep_ln_temp ON aat_temp.id = tag_rep_ln_temp.account_account_tag_id
+                    JOIN account_tax_temp_table tag_rep_ln_temp ON aat_temp.id = tag_rep_ln_temp.account_account_tag_id
                     where temp_aml.move_id = aml.move_id and temp_aml.product_id = aml.product_id
-                    and tag_rep_ln_temp.account_tax_report_line_id IN (SELECT res_id FROM ir_model_data WHERE module='l10n_in' AND name in ('tax_report_line_cess', 'tax_report_line_cess_rc'))
                     ) AS cess_amount,
                 CASE WHEN tag_rep_ln.account_tax_report_line_id IN
                     (SELECT res_id FROM ir_model_data WHERE module='l10n_in' AND name in ('tax_report_line_sgst', 'tax_report_line_sgst_rc'))

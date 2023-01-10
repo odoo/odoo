@@ -13,11 +13,11 @@ class MailMessage(models.Model):
             field_list += ['rating_value']
         return super(MailMessage, self)._portal_message_format(field_list)
 
-    def _message_format(self, fnames):
+    def _message_format(self, fnames, format_reply=True):
         """ Override the method to add information about a publisher comment
         on each rating messages if requested, and compute a plaintext value of it.
         """
-        vals_list = super(MailMessage, self)._message_format(fnames)
+        vals_list = super(MailMessage, self)._message_format(fnames, format_reply=format_reply)
 
         if self._context.get('rating_include'):
             infos = ["id", "publisher_comment", "publisher_id", "publisher_datetime", "message_id"]

@@ -180,7 +180,7 @@ if magic:
         _guesser = ms.buffer
 
     def guess_mimetype(bin_data, default=None):
-        mimetype = _guesser(bin_data)
+        mimetype = _guesser(bin_data[:1024])
         # upgrade incorrect mimetype to official one, fixed upstream
         # https://github.com/file/file/commit/1a08bb5c235700ba623ffa6f3c95938fe295b262
         if mimetype == 'image/svg':
@@ -190,8 +190,20 @@ else:
     guess_mimetype = _odoo_guess_mimetype
 
 
+
 def neuter_mimetype(mimetype, user):
     wrong_type = 'ht' in mimetype or 'xml' in mimetype or 'svg' in mimetype
     if wrong_type and not user._is_system():
         return 'text/plain'
     return mimetype
+
+
+def get_extension(filename):
+    """ Return the extension the current filename based on the heuristic that
+    ext is less than or equal to 10 chars and is alphanumeric.
+
+    :param str filename: filename to try and guess a extension for
+    :returns: detected extension or ``
+    """
+    ext = '.' in filename and filename.split('.')[-1]
+    return ext and len(ext) <= 10 and ext.isalnum() and '.' + ext.lower() or ''

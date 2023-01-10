@@ -122,7 +122,7 @@
                     </div>
                     <form id="form_restore_db" role="form" action="/web/database/restore" method="post" enctype="multipart/form-data">
                         <div class="modal-body">
-                            <!-- <t t-call="master_input" /> -->
+                            <t t-call="master_input" />
                             <div class="form-group row">
                                 <label for="backup_file" class="col-md-4 col-form-label">File</label>
                                 <div class="col-md-8">
@@ -171,7 +171,7 @@
                         <div class="modal-body">
                             <p>The master password is required to create, delete, dump or restore databases.</p>
                             <t t-set="set_master_pwd" t-value="True" />
-                            <!-- <t t-call="master_input" /> -->
+                            <t t-call="master_input" />
                             <div class="form-group">
                                 <label for="master_pwd_new" class="col-form-label">New Master Password</label>
                                 <div class="input-group">
@@ -201,7 +201,7 @@
                     <form id="form-duplicate-db" role="form" action="/web/database/duplicate" method="post">
                         <div class="modal-body">
                             <t t-set="set_master_pwd" t-value="False" />
-                            <!-- <t t-call="master_input" /> -->
+                            <t t-call="master_input" />
                             <div class="form-group">
                                 <label for="name" class="col-form-label">Database Name</label>
                                 <input id="dbname_duplicate" type="text" name="name" class="form-control" required="required" readonly="readonly"/>
@@ -229,7 +229,7 @@
                     </div>
                     <form id="form_drop_db" role="form" action="/web/database/drop" method="post">
                         <div class="modal-body">
-                            <!-- <t t-call="master_input" /> -->
+                            <t t-call="master_input" />
                             <div class="form-group">
                                 <label for="name" class="col-form-label">Database</label>
                                 <input id="dbname_delete" type="text" name="name" class="form-control" required="required" readonly="readonly"/>
@@ -253,7 +253,7 @@
                     </div>
                     <form id="form_backup_db" role="form" action="/web/database/backup" method="post">
                         <div class="modal-body">
-                            <!-- <t t-call="master_input" /> -->
+                            <t t-call="master_input" />
                             <div class="form-group">
                                 <label for="name" class="col-form-label">Database Name</label>
                                 <input id="dbname_backup" type="text" name="name" class="form-control" required="required" readonly="readonly"/>

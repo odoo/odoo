@@ -4,10 +4,13 @@
     <t t-name="mail.WelcomeView" owl="1">
         <div class="o_WelcomeView h-100 d-flex flex-column justify-content-center align-items-center bg-light">
             <t t-if="welcomeView">
-                <h1 class="font-weight-light">You've been invited to a meeting!</h1>
+                <h1 class="font-weight-light">
+                    <span t-if="welcomeView.mediaPreview">You've been invited to a meeting!</span>
+                    <span t-if="!welcomeView.mediaPreview">You've been invited to a chat!</span>
+                </h1>
                 <h2 class="m-5" t-esc="messaging.companyName"/>
                 <div class="d-flex justify-content-center">
-                    <MediaPreview class="mr-5" localId="welcomeView.mediaPreview.localId"/>
+                    <MediaPreview t-if="welcomeView.mediaPreview" class="mr-5" localId="welcomeView.mediaPreview.localId"/>
                     <div class="d-flex flex-column justify-content-center">
                         <t t-if="messaging.currentGuest">
                             <label class="o_WelcomeView_guestNameInputLabel text-center" t-att-for="welcomeView.guestNameInputUniqueId">What's your name?</label>

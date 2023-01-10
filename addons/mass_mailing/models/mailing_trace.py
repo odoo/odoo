@@ -131,8 +131,11 @@ class MailingTrace(models.Model):
         return traces
 
     def set_opened(self, domain=None):
+        """ Reply / Open are a bit shared in various processes: reply implies
+        open, click implies open. Let us avoid status override by skipping traces
+        that are not already opened or replied. """
         traces = self + (self.search(domain) if domain else self.env['mailing.trace'])
-        traces.write({'trace_status': 'open', 'open_datetime': fields.Datetime.now()})
+        traces.filtered(lambda t: t.trace_status not in ('open', 'reply')).write({'trace_status': 'open', 'open_datetime': fields.Datetime.now()})
         return traces
 
     def set_clicked(self, domain=None):

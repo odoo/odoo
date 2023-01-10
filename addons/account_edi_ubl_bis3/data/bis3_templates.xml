@@ -11,6 +11,7 @@
                 xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2">
                 <t t-set="partner" t-value="partner_vals['partner']"/>
                 <cbc:EndpointID
+                        t-if="partner_vals.get('bis3_endpoint')"
                         t-att-schemeID="partner_vals['bis3_endpoint_scheme']"
                         t-esc="partner_vals['bis3_endpoint']"/>
                 <cac:PartyIdentification t-if="partner_vals.get('partner_identification')">
@@ -120,8 +121,8 @@
                 <cbc:TaxCurrencyCode t-if="record.currency_id != record.company_currency_id"
                                      t-esc="record.company_currency_id.name"/>
                 <cbc:BuyerReference t-esc="record.commercial_partner_id.name"/>
-                <cac:OrderReference t-if="record.invoice_origin">
-                    <cbc:ID t-esc="record.invoice_origin"/>
+                <cac:OrderReference t-if="record.ref">
+                    <cbc:ID t-esc="record.ref"/>
                 </cac:OrderReference>
                 <cac:AccountingSupplierParty t-call="account_edi_ubl_bis3.export_bis3_invoice_partner">
                     <t t-set="partner_vals" t-value="supplier_vals"/>

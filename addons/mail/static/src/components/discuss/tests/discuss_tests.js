@@ -6,6 +6,7 @@ import {
     afterEach,
     afterNextRender,
     beforeEach,
+    isScrolledToBottom,
     nextAnimationFrame,
     start,
 } from '@mail/utils/test_utils';
@@ -28,8 +29,9 @@ QUnit.module('discuss_tests.js', {
                 data: this.data,
                 hasDiscuss: true,
             }));
-            const { afterEvent, env, widget } = res;
+            const { afterEvent, components, env, widget } = res;
             this.afterEvent = afterEvent;
+            this.components = components;
             this.env = env;
             this.widget = widget;
             return res;
@@ -618,9 +620,9 @@ QUnit.test('sidebar: public/private channel rendering', async function (assert) 
             }).localId
         }"]
     `);
-    assert.notOk(
-        channel1.querySelectorAll(`:scope .o_ThreadIcon`).length,
-        "channel1 (public) should not have any icon"
+    assert.ok(
+        channel1.querySelectorAll(`:scope .o_ThreadIcon_channelPublic`).length,
+        "channel1 (public) should have globe icon"
     );
     assert.strictEqual(
         channel2.querySelectorAll(`:scope .o_ThreadIcon_channelPrivate`).length,
@@ -1174,7 +1176,7 @@ QUnit.test('open channel from active_id as channel id', async function (assert) 
 
 QUnit.test('basic rendering of message', async function (assert) {
     // AKU TODO: should be in message-only tests
-    assert.expect(14);
+    assert.expect(15);
 
     // channel expected to be rendered, with a random unique id that will be referenced in the test
     this.data['mail.channel'].records.push({ id: 20 });
@@ -1253,8 +1255,8 @@ QUnit.test('basic rendering of message', async function (assert) {
     );
     assert.strictEqual(
         message.querySelectorAll(`:scope .o_MessageActionList_action`).length,
-        2,
-        "should have 2 actions in action list of message"
+        3,
+        "should have 3 actions in action list of message"
     );
     assert.strictEqual(
         message.querySelectorAll(`:scope .o_MessageActionList_actionStar`).length,
@@ -1266,6 +1268,11 @@ QUnit.test('basic rendering of message', async function (assert) {
         '.o_MessageActionList_actionReaction',
         "should have action to add a reaction"
     );
+    assert.containsOnce(
+        message,
+        '.o_MessageActionList_actionReply',
+        "should have action to reply to message"
+    );
     assert.strictEqual(
         message.querySelectorAll(`:scope .o_Message_content`).length,
         1,
@@ -1275,6 +1282,34 @@ QUnit.test('basic rendering of message', async function (assert) {
         message.querySelector(`:scope .o_Message_content`).textContent.trim(),
         "body",
         "should have body of message in content part of message"
+    );
+});
+
+QUnit.test('should not be able to reply to temporary/transient messages', async function (assert) {
+    assert.expect(1);
+
+    this.data['mail.channel'].records.push({ id: 20 });
+    await this.start({
+        discuss: {
+            params: {
+                default_active_id: 'mail.channel_20',
+            },
+        },
+    });
+    // these user interactions is to forge a transient message response from channel command "/who"
+    await afterNextRender(() => {
+        document.querySelector(`.o_ComposerTextInput_textarea`).focus();
+        document.execCommand('insertText', false, "/who");
+    });
+    await afterNextRender(() =>
+        document.querySelector('.o_Composer_buttonSend').click()
+    );
+    // click on message to show actions on the transient message resulting from the "/who" command
+    await afterNextRender(() => document.querySelector('.o_Message').click());
+    assert.containsNone(
+        document.body,
+        '.o_MessageActionList_actionReply',
+        "should not have action to reply to temporary/transient messages"
     );
 });
 
@@ -1640,7 +1675,7 @@ QUnit.test('auto-scroll to bottom of thread', async function (assert) {
                     thread &&
                     thread.model === 'mail.channel' &&
                     thread.id === 20 &&
-                    scrollTop === messageList.scrollHeight - messageList.clientHeight
+                    isScrolledToBottom(messageList)
                 );
             },
         },
@@ -1653,9 +1688,8 @@ QUnit.test('auto-scroll to bottom of thread', async function (assert) {
         "should have 25 messages"
     );
     const messageList = document.querySelector(`.o_Discuss_thread .o_ThreadView_messageList`);
-    assert.strictEqual(
-        messageList.scrollTop,
-        messageList.scrollHeight - messageList.clientHeight,
+    assert.ok(
+        isScrolledToBottom(messageList),
         "should have scrolled to bottom of thread"
     );
 });
@@ -1687,7 +1721,7 @@ QUnit.test('load more messages from channel (auto-load on scroll)', async functi
                     thread &&
                     thread.model === 'mail.channel' &&
                     thread.id === 20 &&
-                    scrollTop === messageList.scrollHeight - messageList.clientHeight
+                    isScrolledToBottom(messageList)
                 );
             },
         },
@@ -1775,7 +1809,7 @@ QUnit.test('new messages separator [REQUIRE FOCUS]', async function (assert) {
                     thread &&
                     thread.model === 'mail.channel' &&
                     thread.id === 20 &&
-                    scrollTop === messageList.scrollHeight - messageList.clientHeight
+                    isScrolledToBottom(messageList)
                 );
             },
         },
@@ -1845,7 +1879,7 @@ QUnit.test('new messages separator [REQUIRE FOCUS]', async function (assert) {
                 thread &&
                 thread.model === 'mail.channel' &&
                 thread.id === 20 &&
-                scrollTop === messageList.scrollHeight - messageList.clientHeight
+                isScrolledToBottom(messageList)
             );
         },
     });
@@ -1915,9 +1949,8 @@ QUnit.test('restore thread scroll position', async function (assert) {
         .o_Discuss_thread
         .o_ThreadView_messageList
     `);
-    assert.strictEqual(
-        initialMessageList.scrollTop,
-        initialMessageList.scrollHeight - initialMessageList.clientHeight,
+    assert.ok(
+        isScrolledToBottom(initialMessageList),
         "should have scrolled to bottom of channel 11 initially"
     );
 
@@ -1960,7 +1993,7 @@ QUnit.test('restore thread scroll position', async function (assert) {
                 thread &&
                 thread.model === 'mail.channel' &&
                 thread.id === 12 &&
-                scrollTop === messageList.scrollHeight - messageList.clientHeight
+                isScrolledToBottom(messageList)
             );
         },
     });
@@ -2023,14 +2056,13 @@ QUnit.test('restore thread scroll position', async function (assert) {
                 thread &&
                 thread.model === 'mail.channel' &&
                 thread.id === 12 &&
-                scrollTop === messageList.scrollHeight - messageList.clientHeight
+                isScrolledToBottom(messageList)
             );
         },
     });
     const messageList = document.querySelector('.o_ThreadView_messageList');
-    assert.strictEqual(
-        messageList.scrollTop,
-        messageList.scrollHeight - messageList.clientHeight,
+    assert.ok(
+        isScrolledToBottom(messageList),
         "should have recovered scroll position of channel 12 (scroll to bottom)"
     );
 });
@@ -3063,15 +3095,16 @@ QUnit.test('receive new needaction messages', async function (assert) {
 
     // simulate receiving a new needaction message
     await afterNextRender(() => {
-        const data = {
-            body: "not empty",
-            id: 100,
-            needaction_partner_ids: [3],
-            model: 'res.partner',
-            res_id: 20,
-        };
-        const notifications = [[['my-db', 'ir.needaction', 3], data]];
-        this.widget.call('bus_service', 'trigger', 'notification', notifications);
+        this.widget.call('bus_service', 'trigger', 'notification', [{
+            type: 'mail.message/inbox',
+            payload: {
+                body: "not empty",
+                id: 100,
+                needaction_partner_ids: [3],
+                model: 'res.partner',
+                res_id: 20,
+            },
+        }]);
     });
     assert.ok(
         document.querySelector(`
@@ -3105,15 +3138,16 @@ QUnit.test('receive new needaction messages', async function (assert) {
 
     // simulate receiving another new needaction message
     await afterNextRender(() => {
-        const data2 = {
-            body: "not empty",
-            id: 101,
-            needaction_partner_ids: [3],
-            model: 'res.partner',
-            res_id: 20,
-        };
-        const notifications2 = [[['my-db', 'ir.needaction', 3], data2]];
-        this.widget.call('bus_service', 'trigger', 'notification', notifications2);
+        this.widget.call('bus_service', 'trigger', 'notification', [{
+            type: 'mail.message/inbox',
+            payload: {
+                body: "not empty",
+                id: 101,
+                needaction_partner_ids: [3],
+                model: 'res.partner',
+                res_id: 20,
+            },
+        }]);
     });
     assert.strictEqual(
         document.querySelector(`
@@ -3562,7 +3596,7 @@ QUnit.test('all messages in "Inbox" in "History" after marked all as read', asyn
                     thread.model === 'mail.box' &&
                     thread.id === 'inbox' &&
                     orderedMessages.length === 30 &&
-                    scrollTop === messageList.scrollHeight - messageList.clientHeight
+                    isScrolledToBottom(messageList)
                 );
             },
         },
@@ -3595,7 +3629,7 @@ QUnit.test('all messages in "Inbox" in "History" after marked all as read', asyn
                 thread.model === 'mail.box' &&
                 thread.id === 'history' &&
                 orderedMessages.length === 30 &&
-                scrollTop === messageList.scrollHeight - messageList.clientHeight
+                isScrolledToBottom(messageList)
             );
         },
     });
@@ -3648,13 +3682,17 @@ QUnit.test('receive new chat message: out of odoo focus (notification, channel)'
 
     // simulate receiving a new message with odoo focused
     await afterNextRender(() => {
-        const messageData = {
-            id: 126,
-            model: 'mail.channel',
-            res_id: 20,
-        };
-        const notifications = [[['my-db', 'mail.channel', 20], messageData]];
-        this.widget.call('bus_service', 'trigger', 'notification', notifications);
+        this.widget.call('bus_service', 'trigger', 'notification', [{
+            type: 'mail.channel/new_message',
+            payload: {
+                id: 20,
+                message: {
+                    id: 126,
+                    model: 'mail.channel',
+                    res_id: 20,
+                },
+            },
+        }]);
     });
     assert.verifySteps(['set_title_part']);
 });
@@ -3686,13 +3724,17 @@ QUnit.test('receive new chat message: out of odoo focus (notification, chat)', a
 
     // simulate receiving a new message with odoo focused
     await afterNextRender(() => {
-        const messageData = {
-            id: 126,
-            model: 'mail.channel',
-            res_id: 10,
-        };
-        const notifications = [[['my-db', 'mail.channel', 10], messageData]];
-        this.widget.call('bus_service', 'trigger', 'notification', notifications);
+        this.widget.call('bus_service', 'trigger', 'notification', [{
+            type: 'mail.channel/new_message',
+            payload: {
+                id: 10,
+                message: {
+                    id: 126,
+                    model: 'mail.channel',
+                    res_id: 10,
+                },
+            },
+        }]);
     });
     assert.verifySteps(['set_title_part']);
 });
@@ -3737,37 +3779,49 @@ QUnit.test('receive new chat messages: out of odoo focus (tab title)', async fun
 
     // simulate receiving a new message in chat 20 with odoo focused
     await afterNextRender(() => {
-        const messageData1 = {
-            id: 126,
-            model: 'mail.channel',
-            res_id: 20,
-        };
-        const notifications1 = [[['my-db', 'mail.channel', 20], messageData1]];
-        this.widget.call('bus_service', 'trigger', 'notification', notifications1);
+        this.widget.call('bus_service', 'trigger', 'notification', [{
+            type: 'mail.channel/new_message',
+            payload: {
+                id: 20,
+                message: {
+                    id: 126,
+                    model: 'mail.channel',
+                    res_id: 20,
+                },
+            },
+        }]);
     });
     assert.verifySteps(['set_title_part']);
 
     // simulate receiving a new message in chat 10 with odoo focused
     await afterNextRender(() => {
-        const messageData2 = {
-            id: 127,
-            model: 'mail.channel',
-            res_id: 10,
-        };
-        const notifications2 = [[['my-db', 'mail.channel', 10], messageData2]];
-        this.widget.call('bus_service', 'trigger', 'notification', notifications2);
+        this.widget.call('bus_service', 'trigger', 'notification', [{
+            type: 'mail.channel/new_message',
+            payload: {
+                id: 10,
+                message: {
+                    id: 127,
+                    model: 'mail.channel',
+                    res_id: 10,
+                },
+            },
+        }]);
     });
     assert.verifySteps(['set_title_part']);
 
     // simulate receiving another new message in chat 10 with odoo focused
     await afterNextRender(() => {
-        const messageData3 = {
-            id: 128,
-            model: 'mail.channel',
-            res_id: 10,
-        };
-        const notifications3 = [[['my-db', 'mail.channel', 10], messageData3]];
-        this.widget.call('bus_service', 'trigger', 'notification', notifications3);
+        this.widget.call('bus_service', 'trigger', 'notification', [{
+            type: 'mail.channel/new_message',
+            payload: {
+                id: 10,
+                message: {
+                    id: 128,
+                    model: 'mail.channel',
+                    res_id: 10,
+                },
+            },
+        }]);
     });
     assert.verifySteps(['set_title_part']);
 });

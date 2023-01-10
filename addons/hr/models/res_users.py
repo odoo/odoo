@@ -73,8 +73,13 @@ HR_WRITABLE_FIELDS = [
 class User(models.Model):
     _inherit = ['res.users']
 
+    def _employee_ids_domain(self):
+        # employee_ids is considered a safe field and as such will be fetched as sudo.
+        # So try to enforce the security rules on the field to make sure we do not load employees outside of active companies
+        return [('company_id', 'in', self.env.company.ids + self.env.context.get('allowed_company_ids', []))]
+
     # note: a user can only be linked to one employee per company (see sql constraint in ´hr.employee´)
-    employee_ids = fields.One2many('hr.employee', 'user_id', string='Related employee')
+    employee_ids = fields.One2many('hr.employee', 'user_id', string='Related employee', domain=_employee_ids_domain)
     employee_id = fields.Many2one('hr.employee', string="Company employee",
         compute='_compute_company_employee', search='_search_company_employee', store=False)
 
@@ -137,7 +142,7 @@ class User(models.Model):
 
     @api.depends_context('uid')
     def _compute_is_system(self):
-        self.write({'is_system': self.env.user._is_system()})
+        self.is_system = self.env.user._is_system()
 
     def _compute_can_edit(self):
         can_edit = self.env['ir.config_parameter'].sudo().get_param('hr.hr_employee_self_edit') or self.env.user.has_group('hr.group_hr_user')
@@ -168,9 +173,19 @@ class User(models.Model):
         # Note: limit the `sudo` to the only action of "editing own profile" action in order to
         # avoid breaking `groups` mecanism on res.users form view.
         profile_view = self.env.ref("hr.res_users_view_form_profile")
+        original_user = self.env.user
         if profile_view and view_id == profile_view.id:
             self = self.with_user(SUPERUSER_ID)
-        return super(User, self).fields_view_get(view_id=view_id, view_type=view_type, toolbar=toolbar, submenu=submenu)
+        result = super(User, self).fields_view_get(view_id=view_id, view_type=view_type, toolbar=toolbar, submenu=submenu)
+        # Due to using the SUPERUSER the result will contain action that the user may not have access too
+        # here we filter out actions that requires special implicit rights to avoid having unusable actions
+        # in the dropdown menu.
+        if toolbar and self.env.user != original_user:
+            self = self.with_user(original_user.id)
+            if not self.user_has_groups("base.group_erp_manager"):
+                change_password_action = self.env.ref("base.change_password_wizard_action")
+                result['toolbar']['action'] = [act for act in result['toolbar']['action'] if act['id'] != change_password_action.id]
+        return result
 
     def write(self, vals):
         """

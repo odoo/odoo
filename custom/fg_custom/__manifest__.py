@@ -7,13 +7,23 @@
     'description': """
     Pilmico custom addons
         """,
-    'depends': ['product', 'account', 'point_of_sale', 'base'],
+    'depends': ['product', 'account', 'point_of_sale', 'base', 'sale', 'pos_coupon'],
     'data': [
+        'security/groups.xml',
         'views/FgOrderDetails.xml',
         'views/FgImportOrders.xml',
         'views/FgMessageWizard.xml',
         'views/FgCustomerMaster.xml',
         'views/FgPosOrder.xml',
+        'views/FgPosSessionView.xml',
+        'views/account_tax_views.xml',
+        'views/point_of_sale_sequence.xml',
+        'wizard/x_report_view.xml',
+        'wizard/z_report_view.xml',
+        'views/FgPosReport.xml',
+        'views/x_report.xml',
+        'views/menuitem.xml',
+        'views/transaction_log.xml',
         'security/ir.model.access.csv'
     ],
     'author': "1FG",
@@ -25,6 +35,9 @@
         ],
         'web.assets_qweb': [
             'fg_custom/static/src/pos/xml/**/*',
+        ],
+        'web.assets_backend': [
+            'fg_custom/static/src/base/*',
         ],
     },
     'license': 'LGPL-3',

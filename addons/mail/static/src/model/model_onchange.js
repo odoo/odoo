@@ -18,4 +18,11 @@ export class OnChange {
         this.dependencies = dependencies;
         this.methodName = methodName;
     }
+
+    /**
+     * @returns {string}
+     */
+    toString() {
+        return `onChange(${this.methodName})`;
+    }
 }

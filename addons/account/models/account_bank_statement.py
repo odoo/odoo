@@ -210,9 +210,9 @@ class AccountBankStatement(models.Model):
     reference = fields.Char(string='External Reference', states={'open': [('readonly', False)]}, copy=False, readonly=True, help="Used to hold the reference of the external mean that created this statement (name of imported file, reference of online synchronization...)")
     date = fields.Date(required=True, states={'confirm': [('readonly', True)]}, index=True, copy=False, default=fields.Date.context_today)
     date_done = fields.Datetime(string="Closed On")
-    balance_start = fields.Monetary(string='Starting Balance', states={'confirm': [('readonly', True)]}, compute='_compute_starting_balance', readonly=False, store=True)
-    balance_end_real = fields.Monetary('Ending Balance', states={'confirm': [('readonly', True)]}, compute='_compute_ending_balance', recursive=True, readonly=False, store=True)
-    state = fields.Selection(string='Status', required=True, readonly=True, copy=False, selection=[
+    balance_start = fields.Monetary(string='Starting Balance', states={'confirm': [('readonly', True)]}, compute='_compute_starting_balance', readonly=False, store=True, tracking=True)
+    balance_end_real = fields.Monetary('Ending Balance', states={'confirm': [('readonly', True)]}, compute='_compute_ending_balance', recursive=True, readonly=False, store=True, tracking=True)
+    state = fields.Selection(string='Status', required=True, readonly=True, copy=False, tracking=True, selection=[
             ('open', 'New'),
             ('posted', 'Processing'),
             ('confirm', 'Validated'),
@@ -508,6 +508,7 @@ class AccountBankStatementLine(models.Model):
     # == Business fields ==
     move_id = fields.Many2one(
         comodel_name='account.move',
+        auto_join=True,
         string='Journal Entry', required=True, readonly=True, ondelete='cascade',
         check_company=True)
     statement_id = fields.Many2one(
@@ -585,7 +586,7 @@ class AccountBankStatementLine(models.Model):
         statement = self.statement_id
         journal = statement.journal_id
         company_currency = journal.company_id.currency_id
-        journal_currency = journal.currency_id if journal.currency_id != company_currency else False
+        journal_currency = journal.currency_id or company_currency
 
         if self.foreign_currency_id and journal_currency:
             currency_id = journal_currency.id
@@ -715,7 +716,7 @@ class AccountBankStatementLine(models.Model):
             **counterpart_vals,
             'name': counterpart_vals.get('name', move_line.name if move_line else ''),
             'move_id': self.move_id.id,
-            'partner_id': self.partner_id.id or (move_line.partner_id.id if move_line else False),
+            'partner_id': self.partner_id.id or counterpart_vals.get('partner_id', move_line.partner_id.id if move_line else False),
             'currency_id': currency_id,
             'account_id': counterpart_vals.get('account_id', move_line.account_id.id if move_line else False),
             'debit': balance if balance > 0.0 else 0.0,
@@ -862,12 +863,14 @@ class AccountBankStatementLine(models.Model):
         for i, st_line in enumerate(st_lines):
             counterpart_account_id = counterpart_account_ids[i]
 
-            to_write = {'statement_line_id': st_line.id}
+            to_write = {'statement_line_id': st_line.id, 'narration': st_line.narration}
             if 'line_ids' not in vals_list[i]:
                 to_write['line_ids'] = [(0, 0, line_vals) for line_vals in st_line._prepare_move_line_default_vals(counterpart_account_id=counterpart_account_id)]
 
             st_line.move_id.write(to_write)
 
+            # Otherwise field narration will be recomputed silently (at next flush) when writing on partner_id
+            self.env.remove_to_compute(st_line.move_id._fields['narration'], st_line.move_id)
         return st_lines
 
     def write(self, vals):
@@ -901,7 +904,7 @@ class AccountBankStatementLine(models.Model):
             st_line_vals_to_write = {}
 
             if 'state' in changed_fields:
-                if (st_line.state == 'open' and move.state != 'draft') or (st_line.state == 'posted' and move.state != 'posted'):
+                if (st_line.state == 'open' and move.state != 'draft') or (st_line.state in ('posted', 'confirm') and move.state != 'posted'):
                     raise UserError(_(
                         "You can't manually change the state of journal entry %s, as it has been created by bank "
                         "statement %s."
@@ -1002,11 +1005,13 @@ class AccountBankStatementLine(models.Model):
             for line in other_lines:
                 line_ids_commands.append((2, line.id))
 
-            st_line.move_id.write({
-                'partner_id': st_line.partner_id.id,
+            st_line_vals = {
                 'currency_id': (st_line.foreign_currency_id or journal_currency or company_currency).id,
                 'line_ids': line_ids_commands,
-            })
+            }
+            if st_line.move_id.partner_id != st_line.partner_id:
+                st_line_vals['partner_id'] = st_line.partner_id.id
+            st_line.move_id.write(st_line_vals)
 
     # -------------------------------------------------------------------------
     # RECONCILIATION METHODS
@@ -1236,8 +1241,8 @@ class AccountBankStatementLine(models.Model):
         if not self.partner_id:
             rec_overview_partners = set(overview['counterpart_line'].partner_id.id
                                         for overview in reconciliation_overview
-                                        if overview.get('counterpart_line') and overview['counterpart_line'].partner_id)
-            if len(rec_overview_partners) == 1:
+                                        if overview.get('counterpart_line'))
+            if len(rec_overview_partners) == 1 and rec_overview_partners != {False}:
                 self.line_ids.write({'partner_id': rec_overview_partners.pop()})
 
         # Refresh analytic lines.

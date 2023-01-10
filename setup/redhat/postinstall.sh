@@ -9,7 +9,7 @@ ODOO_GROUP="odoo"
 ODOO_LOG_DIR=/var/log/odoo
 ODOO_LOG_FILE=$ODOO_LOG_DIR/odoo-server.log
 ODOO_USER="odoo"
-ABI=$(rpm -q --provides python3 | awk '/abi/ {print $NF}')
+ABI=$(rpm -q --provides python3 | uniq | awk '/abi/ {print $NF}')
 
 if ! getent passwd | grep -q "^odoo:"; then
     groupadd $ODOO_GROUP

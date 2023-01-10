@@ -23,8 +23,13 @@
             <field name="model">mail.message</field>
             <field name="priority">20</field>
             <field name="arch" type="xml">
-                <form string="Message">
+                <form string="Message" duplicate="0">
                     <sheet>
+                        <div class="oe_button_box" name="button_box">
+                            <button name="action_open_document" string="Open Document"
+                                type="object" class="oe_link" icon="fa-file-text-o"
+                                attrs="{'invisible': ['|', ('model', '=', False), ('res_id', '=', 0)]}"/>
+                        </div>
                         <group>
                             <group>
                                 <field name="subject"/>

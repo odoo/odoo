@@ -8,7 +8,7 @@ class ProductTemplate(models.Model):
 
     detailed_type = fields.Selection(selection_add=[
         ('event', 'Event Ticket'),
-    ], ondelete={'event': 'set default'})
+    ], ondelete={'event': 'set service'})
 
     @api.onchange('detailed_type')
     def _onchange_type_event(self):

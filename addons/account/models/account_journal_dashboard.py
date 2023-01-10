@@ -157,7 +157,7 @@ class account_journal(models.Model):
 
     def get_bar_graph_datas(self):
         data = []
-        today = fields.Datetime.now(self)
+        today = fields.Date.today()
         data.append({'label': _('Due'), 'value':0.0, 'type': 'past'})
         day_of_week = int(format_datetime(today, 'e', locale=get_lang(self.env).code))
         first_day_of_week = today + timedelta(days=-day_of_week+1)
@@ -179,23 +179,29 @@ class account_journal(models.Model):
         (select_sql_clause, query_args) = self._get_bar_graph_select_query()
         query = ''
         start_date = (first_day_of_week + timedelta(days=-7))
+        weeks = []
         for i in range(0,6):
             if i == 0:
                 query += "("+select_sql_clause+" and invoice_date_due < '"+start_date.strftime(DF)+"')"
+                weeks.append((start_date.min, start_date))
             elif i == 5:
                 query += " UNION ALL ("+select_sql_clause+" and invoice_date_due >= '"+start_date.strftime(DF)+"')"
+                weeks.append((start_date, start_date.max))
             else:
                 next_date = start_date + timedelta(days=7)
                 query += " UNION ALL ("+select_sql_clause+" and invoice_date_due >= '"+start_date.strftime(DF)+"' and invoice_date_due < '"+next_date.strftime(DF)+"')"
+                weeks.append((start_date, next_date))
                 start_date = next_date
-
+        # Ensure results returned by postgres match the order of data list
         self.env.cr.execute(query, query_args)
         query_results = self.env.cr.dictfetchall()
         is_sample_data = True
         for index in range(0, len(query_results)):
             if query_results[index].get('aggr_date') != None:
                 is_sample_data = False
-                data[index]['value'] = query_results[index].get('total')
+                aggr_date = query_results[index]['aggr_date']
+                week_index = next(i for i in range(0, len(weeks)) if weeks[i][0] <= aggr_date < weeks[i][1])
+                data[week_index]['value'] = query_results[index].get('total')
 
         [graph_title, graph_key] = self._graph_title_and_key()
 
@@ -244,9 +250,9 @@ class account_journal(models.Model):
             last_balance = last_statement.balance_end
             has_at_least_one_statement = bool(last_statement)
             bank_account_balance, nb_lines_bank_account_balance = self._get_journal_bank_account_balance(
-                domain=[('move_id.state', '=', 'posted')])
+                domain=[('parent_state', '=', 'posted')])
             outstanding_pay_account_balance, nb_lines_outstanding_pay_account_balance = self._get_journal_outstanding_payments_account_balance(
-                domain=[('move_id.state', '=', 'posted')])
+                domain=[('parent_state', '=', 'posted')])
 
             self._cr.execute('''
                 SELECT COUNT(st_line.id)

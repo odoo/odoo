@@ -169,12 +169,16 @@ var LivechatButton = Widget.extend({
     },
     /**
      * @private
-     * @param {Array} notification
+     * @param {Object} notification
+     * @param {Object} notification.payload
+     * @param {string} notification.type
      */
-    _handleNotification: function (notification) {
-        const [livechatUUID, notificationData] = notification;
-        if (this._livechat && (livechatUUID === this._livechat.getUUID())) {
-            if (notificationData._type === 'history_command') { // history request
+    _handleNotification: function ({ payload, type }) {
+        switch (type) {
+            case 'im_livechat.history_command': {
+                if (payload.id !== this._livechat._id) {
+                    return;
+                }
                 const cookie = utils.get_cookie(LIVECHAT_COOKIE_HISTORY);
                 const history = cookie ? JSON.parse(cookie) : [];
                 session.rpc('/im_livechat/history', {
@@ -182,18 +186,29 @@ var LivechatButton = Widget.extend({
                     channel_uuid: this._livechat.getUUID(),
                     page_history: history,
                 });
-            } else if (notificationData.info === 'typing_status') {
-                const partnerID = notificationData.partner_id;
+                return;
+            }
+            case 'mail.channel.partner/typing_status': {
+                if (payload.channel_id !== this._livechat._id) {
+                    return;
+                }
+                const partnerID = payload.partner_id;
                 if (partnerID === this.options.current_partner_id) {
                     // ignore typing display of current partner.
                     return;
                 }
-                if (notificationData.is_typing) {
+                if (payload.is_typing) {
                     this._livechat.registerTyping({ partnerID });
                 } else {
                     this._livechat.unregisterTyping({ partnerID });
                 }
-            } else if ('body' in notificationData) { // normal message
+                return;
+            }
+            case 'mail.channel/new_message': {
+                if (payload.id !== this._livechat._id) {
+                    return;
+                }
+                const notificationData = payload.message;
                 // If message from notif is already in chatter messages, stop handling
                 if (this._messages.some(message => message.getID() === notificationData.id)) {
                     return;
@@ -204,6 +219,16 @@ var LivechatButton = Widget.extend({
                     this._livechat.incrementUnreadCounter();
                 }
                 this._renderMessages();
+                return;
+            }
+            case 'mail.message/insert': {
+                const message = this._messages.find(message => message._id === payload.id);
+                if (!message) {
+                    return;
+                }
+                message._body = utils.Markup(payload.body);
+                this._renderMessages()
+                return;
             }
         }
     },
@@ -405,6 +430,7 @@ var LivechatButton = Widget.extend({
         } else {
             this._closeChat();
         }
+        this._visitorLeaveSession();
     },
     /**
      * @private
@@ -453,6 +479,19 @@ var LivechatButton = Widget.extend({
     _onUpdatedUnreadCounter: function (ev) {
         ev.stopPropagation();
         this._chatWindow.renderHeader();
+    },
+    /**
+     * @private
+     * Called when the visitor leaves the livechat chatter the first time (first click on X button)
+     * this will deactivate the mail_channel, notify operator that visitor has left the channel.
+     */
+    _visitorLeaveSession: function () {
+        var cookie = utils.get_cookie('im_livechat_session');
+        if (cookie) {
+            var channel = JSON.parse(cookie);
+            session.rpc('/im_livechat/visitor_leave_session', {uuid: channel.uuid});
+            utils.set_cookie('im_livechat_session', "", -1); // remove cookie
+        }
     },
 });
 
@@ -671,7 +710,8 @@ var WebsiteLivechat = AbstractThread.extend(ThreadTypingMixin, {
      * @returns {im_livechat.legacy.im_livechat.model.WebsiteLivechatMessage[]}
      */
     getMessages: function () {
-        return this._messages;
+        // ignore removed messages
+        return this._messages.filter(message => !message.isEmpty());
     },
     /**
      * @returns {Array}
@@ -2967,7 +3007,7 @@ var ThreadWidget = Widget.extend({
         this._currentThreadID = thread.getID();
 
         // copy so that reverse do not alter order in the thread object
-        var messages = _.clone(thread.getMessages({ domain: options.domain || [] }));
+        var messages = _.clone(thread.getMessages());
 
         var modeOptions = options.isCreateMode ? this._disabledOptions :
                                                     this._enabledOptions;

@@ -21,7 +21,7 @@ MockServer.include({
      *
      * @override
      */
-    _mockMailChannelChannelInfo(ids, extra_info) {
+    _mockMailChannelChannelInfo(ids) {
         const channelInfos = this._super(...arguments);
         for (const channelInfo of channelInfos) {
             const channel = this._getRecords('mail.channel', [['id', '=', channelInfo.id]])[0];
@@ -33,11 +33,12 @@ MockServer.include({
                     country_id: country && country.id,
                     display_name: visitor.display_name,
                     history: visitor.history, // TODO should be computed
+                    id: visitor.id,
                     is_connected: visitor.is_connected,
                     lang_name: visitor.lang_name,
                     partner_id: visitor.partner_id,
                     website_name: visitor.website_name,
-                }
+                };
             }
         }
         return channelInfos;
@@ -67,9 +68,10 @@ MockServer.include({
                 public: 'private',
             });
             // notify operator
-            const channelInfo = this._mockMailChannelChannelInfo([livechatId], 'send_chat_request')[0];
-            const notification = [[false, 'res.partner', this.currentPartnerId], channelInfo];
-            this._widget.call('bus_service', 'trigger', 'notification', [notification]);
+            this._widget.call('bus_service', 'trigger', 'notification', [{
+                type: 'website_livechat.send_chat_request',
+                payload: this._mockMailChannelChannelInfo([livechatId])[0],
+            }]);
         }
     },
 });

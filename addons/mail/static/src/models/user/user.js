@@ -101,7 +101,7 @@ function factory(dependencies) {
                 thread.model === 'mail.channel' &&
                 thread.public === 'private'
             );
-            if (!chat ||!chat.isPinned) {
+            if (!chat || !chat.isPinned) {
                 // if chat is not pinned then it has to be pinned client-side
                 // and server-side, which is a side effect of following rpc
                 chat = await this.async(() =>
@@ -167,13 +167,6 @@ function factory(dependencies) {
         //----------------------------------------------------------------------
 
         /**
-         * @override
-         */
-        static _createRecordLocalId(data) {
-            return `${this.modelName}_${data.id}`;
-        }
-
-        /**
          * @private
          * @returns {string|undefined}
          */
@@ -192,6 +185,7 @@ function factory(dependencies) {
 
     User.fields = {
         id: attr({
+            readonly: true,
             required: true,
         }),
         /**
@@ -217,7 +211,7 @@ function factory(dependencies) {
          */
         resUsersSettingsId: attr(),
     };
-
+    User.identifyingFields = ['id'];
     User.modelName = 'mail.user';
 
     return User;

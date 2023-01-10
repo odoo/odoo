@@ -80,7 +80,7 @@ odoo.define('fg_custom.FgAddPaymentDetailsButton', function (require) {
            async AddCardDetails() {
                 this.trigger('new-payment-line', this.props.paymentMethod)
                 var popupTitle = "Card Details"
-                var currentOrder = this.env.pos.get_order();this.env.pos.get_order();
+                var currentOrder = this.env.pos.get_order();
                 if(currentOrder.selected_paymentline){
                     if(currentOrder.selected_paymentline.name == 'Debit Card' || currentOrder.selected_paymentline.name == 'Credit Card'){
                         const { confirmed, payload } = await this.showPopup('FgCardDetailsPopup');

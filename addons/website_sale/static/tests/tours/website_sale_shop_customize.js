@@ -15,7 +15,7 @@ odoo.define('website_sale.tour_shop_customize', function (require) {
             },
             {
                 content: "click on 'Attributes & Variants filters'",
-                trigger: "#customize-menu a:contains(Attributes & Variants filters)",
+                trigger: "#customize-menu label:contains(Attributes & Variants filters)",
             },
             {
                 content: "select product attribute Steel",
@@ -39,7 +39,7 @@ odoo.define('website_sale.tour_shop_customize', function (require) {
             },
             {
                 content: "check page loaded after enable  variant group",
-                trigger: '#customize-menu a:contains(List View of Variants)',
+                trigger: '#customize-menu label:contains(List View of Variants)',
                 run: function () {}, // it's a check
             },
             {
@@ -49,7 +49,7 @@ odoo.define('website_sale.tour_shop_customize', function (require) {
             },
             {
                 content: "click on 'List View of Variants'",
-                trigger: "#customize-menu a:contains(List View of Variants)",
+                trigger: "#customize-menu label:contains(List View of Variants)",
             },
             {
                 content: "check page loaded after list of variant customization enabled",
@@ -81,7 +81,7 @@ odoo.define('website_sale.tour_shop_customize', function (require) {
             },
             {
                 content: "remove 'List View of Variants'",
-                trigger: "#customize-menu a:contains(List View of Variants):has(input:checked)",
+                trigger: "#customize-menu label:contains(List View of Variants):has(input:checked)",
             },
             {
                 content: "check page loaded after list of variant customization disabled",
@@ -133,7 +133,7 @@ odoo.define('website_sale.tour_shop_customize', function (require) {
             },
             {
                 content: "remove 'Attributes & Variants filters'",
-                trigger: "#customize-menu a:contains(Attributes & Variants filters):has(input:checked)",
+                trigger: "#customize-menu label:contains(Attributes & Variants filters):has(input:checked)",
             },
             {
                 content: "finish",

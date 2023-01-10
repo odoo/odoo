@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import fields, models
+from odoo import fields, models, _
 
 
 class AccountTaxReportLine(models.AbstractModel):
@@ -32,7 +32,7 @@ class AccountTaxReportLine(models.AbstractModel):
         if amount_in_euro <= 25.82:
             return (None, 0)
         else:
-            return None
+            return (None, None)
 
     def vp14_credit_carryover_condition(self, options, line_amount, carried_over_amount):
         """

@@ -101,6 +101,7 @@ class Registry(Mapping):
             registry._init = False
             registry.ready = True
             registry.registry_invalidated = bool(update_module)
+            registry.new = registry.init = registry.registries = None
 
         _logger.info("Registry loaded in %.3fs", time.time() - t0)
         return registry
@@ -393,7 +394,9 @@ class Registry(Mapping):
             try:
                 func(*args, **kwargs)
             except Exception as e:
-                _schema.error(*e.args)
+                # warn only, this is not a deployment showstopper, and
+                # can sometimes be a transient error
+                _schema.warning(*e.args)
 
     def init_models(self, cr, model_names, context, install=True):
         """ Initialize a list of models (given by their name). Call methods
@@ -716,15 +719,10 @@ class Registry(Mapping):
         """ Return a new cursor for the database. The cursor itself may be used
             as a context manager to commit/rollback and close automatically.
         """
-        if self.test_cr is None:
-            cr = self._db.cursor()
-        else:
+        if self.test_cr is not None:
             # in test mode we use a proxy object that uses 'self.test_cr' underneath
-            cr = TestCursor(self.test_cr, self.test_lock)
-
-        # bind the cursor to a Transaction object, which manages environments
-        cr.transaction = odoo.api.Transaction(self)
-        return cr
+            return TestCursor(self.test_cr, self.test_lock)
+        return self._db.cursor()
 
 
 class DummyRLock(object):

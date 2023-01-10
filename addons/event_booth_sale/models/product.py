@@ -9,7 +9,7 @@ class ProductTemplate(models.Model):
 
     detailed_type = fields.Selection(selection_add=[
         ('event_booth', 'Event Booth'),
-    ], ondelete={'event_booth': 'set default'})
+    ], ondelete={'event_booth': 'set service'})
 
     @api.onchange('detailed_type')
     def _onchange_type_event_booth(self):

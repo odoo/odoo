@@ -1,6 +1,7 @@
 odoo.define('point_of_sale.TicketScreen', function (require) {
     'use strict';
 
+    const { useState } = owl.hooks;
     const models = require('point_of_sale.models');
     const Registries = require('point_of_sale.Registries');
     const IndependentToOrderScreen = require('point_of_sale.IndependentToOrderScreen');
@@ -32,6 +33,9 @@ odoo.define('point_of_sale.TicketScreen', function (require) {
                 triggerAtInput: 'update-selected-orderline',
             });
             this._state = this.env.pos.TICKET_SCREEN_STATE;
+            this.state = useState({
+                showSearchBar: !this.env.isMobile,
+            });
             const defaultUIState = this.props.reuseSavedUIState
                 ? this._state.ui
                 : {
@@ -104,10 +108,11 @@ odoo.define('point_of_sale.TicketScreen', function (require) {
             const screen = order.get_screen_data();
             if (['ProductScreen', 'PaymentScreen'].includes(screen.name) && order.get_orderlines().length > 0) {
                 const { confirmed } = await this.showPopup('ConfirmPopup', {
-                    title: 'Existing orderlines',
-                    body: `${order.name} has total amount of ${this.getTotal(
-                        order
-                    )}.\n Are you sure you want delete this order?`,
+                    title: this.env._t('Existing orderlines'),
+                    body: _.str.sprintf(
+                      this.env._t('%s has a total amount of %s, are you sure you want to delete this order ?'),
+                      order.name, this.getTotal(order)
+                    ),
                 });
                 if (!confirmed) return;
             }
@@ -193,20 +198,13 @@ odoo.define('point_of_sale.TicketScreen', function (require) {
                 return this.render();
             }
 
+            if (this._doesOrderHaveSoleItem(order)) {
+                this._prepareAutoRefundOnOrder(order);
+            }
+
             const customer = order.get_client();
 
-            // Select the lines from toRefundLines (can come from different orders)
-            // such that:
-            //   - the quantity to refund is not zero
-            //   - if there is customer in the selected paid order, select the items
-            //     with the same orderPartnerId
-            //   - it is not yet linked to an active order (no destinationOrderUid)
-            const allToRefundDetails = Object.values(this.env.pos.toRefundLines).filter(
-                ({ qty, orderline, destinationOrderUid }) =>
-                    !this.env.pos.isProductQtyZero(qty) &&
-                    (customer ? orderline.orderPartnerId == customer.id : true) &&
-                    !destinationOrderUid
-            );
+            const allToRefundDetails = this._getRefundableDetails(customer)
             if (allToRefundDetails.length == 0) {
                 this._state.ui.highlightHeaderNote = !this._state.ui.highlightHeaderNote;
                 return this.render();
@@ -222,21 +220,16 @@ odoo.define('point_of_sale.TicketScreen', function (require) {
 
             // Add orderline for each toRefundDetail to the destinationOrder.
             for (const refundDetail of allToRefundDetails) {
-                const { qty, orderline } = refundDetail;
-                await destinationOrder.add_product(this.env.pos.db.get_product_by_id(orderline.productId), {
-                    quantity: -qty,
-                    price: orderline.price,
-                    lst_price: orderline.price,
-                    extras: { price_manually_set: true },
-                    merge: false,
-                    refunded_orderline_id: orderline.id,
-                });
+                const product = this.env.pos.db.get_product_by_id(refundDetail.orderline.productId);
+                const options = this._prepareRefundOrderlineOptions(refundDetail);
+                await destinationOrder.add_product(product, options);
                 refundDetail.destinationOrderUid = destinationOrder.uid;
             }
 
             // Set the customer to the destinationOrder.
             if (customer && !destinationOrder.get_client()) {
                 destinationOrder.set_client(customer);
+                destinationOrder.updatePricelist(customer);
             }
 
             this._onCloseScreen();
@@ -355,6 +348,7 @@ odoo.define('point_of_sale.TicketScreen', function (require) {
         getHasItemsToRefund() {
             const order = this.getSelectedSyncedOrder();
             if (!order) return false;
+            if (this._doesOrderHaveSoleItem(order)) return true;
             const total = Object.values(this.env.pos.toRefundLines)
                 .filter(
                     (toRefundDetail) =>
@@ -366,6 +360,24 @@ odoo.define('point_of_sale.TicketScreen', function (require) {
         }
         //#endregion
         //#region PRIVATE METHODS
+        _doesOrderHaveSoleItem(order) {
+            const orderlines = order.get_orderlines();
+            if (orderlines.length !== 1) return false;
+            const theOrderline = orderlines[0];
+            const refundableQty = theOrderline.get_quantity() - theOrderline.refunded_qty;
+            return this.env.pos.isProductQtyZero(refundableQty - 1);
+        }
+        _prepareAutoRefundOnOrder(order) {
+            const selectedOrderlineId = this.getSelectedOrderlineId();
+            const orderline = order.orderlines.models.find((line) => line.id == selectedOrderlineId);
+            if (!orderline) return;
+
+            const toRefundDetail = this._getToRefundDetail(orderline);
+            const refundableQty = orderline.get_quantity() - orderline.refunded_qty;
+            if (this.env.pos.isProductQtyZero(refundableQty - 1)) {
+                toRefundDetail.qty = 1;
+            }
+        }
         /**
          * Returns the corresponding toRefundDetail of the given orderline.
          * SIDE-EFFECT: Automatically creates a toRefundDetail object for
@@ -390,11 +402,49 @@ odoo.define('point_of_sale.TicketScreen', function (require) {
                         orderUid: orderline.order.uid,
                         orderBackendId: orderline.order.backendId,
                         orderPartnerId,
+                        tax_ids: orderline.get_taxes().map(tax => tax.id),
+                        discount: orderline.discount,
                     },
                     destinationOrderUid: false,
                 };
                 this.env.pos.toRefundLines[orderline.id] = newToRefundDetail;
                 return newToRefundDetail;
+            }
+        }
+        /**
+         * Select the lines from toRefundLines, as they can come from different orders.
+         * Returns only details that:
+         * - The quantity to refund is not zero
+         * - Filtered by customer (optional)
+         * - It's not yet linked to an active order (no destinationOrderUid)
+         *
+         * @param {Object} customer (optional)
+         * @returns {Array} refundableDetails
+         */
+        _getRefundableDetails(customer) {
+            return Object.values(this.env.pos.toRefundLines).filter(
+                ({ qty, orderline, destinationOrderUid }) =>
+                    !this.env.pos.isProductQtyZero(qty) &&
+                    (customer ? orderline.orderPartnerId == customer.id : true) &&
+                    !destinationOrderUid
+            );
+        }
+        /**
+         * Prepares the options to add a refund orderline.
+         *
+         * @param {Object} toRefundDetail
+         * @returns {Object}
+         */
+        _prepareRefundOrderlineOptions(toRefundDetail) {
+            const { qty, orderline } = toRefundDetail;
+            return {
+                quantity: -qty,
+                price: orderline.price,
+                extras: { price_manually_set: true },
+                merge: false,
+                refunded_orderline_id: orderline.id,
+                tax_ids: orderline.tax_ids,
+                discount: orderline.discount,
             }
         }
         _setOrder(order) {
@@ -518,6 +568,8 @@ odoo.define('point_of_sale.TicketScreen', function (require) {
                     args: [idsNotInCache],
                     context: this.env.session.user_context,
                 });
+                // Check for missing products and load them in the PoS
+                await this.env.pos._loadMissingProducts(fetchedOrders);
                 // Cache these fetched orders so that next time, no need to fetch
                 // them again, unless invalidated. See `_onInvoiceOrder`.
                 fetchedOrders.forEach((order) => {

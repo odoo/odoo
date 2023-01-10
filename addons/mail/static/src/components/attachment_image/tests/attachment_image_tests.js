@@ -4,7 +4,6 @@ import { link } from '@mail/model/model_field_command';
 import {
     afterEach,
     beforeEach,
-    createRootMessagingComponent,
     start,
 } from '@mail/utils/test_utils';
 
@@ -15,20 +14,14 @@ QUnit.module('attachment_image_tests.js', {
     beforeEach() {
         beforeEach(this);
 
-        this.createMessageComponent = async (message, otherProps) => {
-            const props = Object.assign({ messageLocalId: message.localId }, otherProps);
-            await createRootMessagingComponent(this, "Message", {
-                props,
-                target: this.widget.el,
-            });
-        };
-
         this.start = async params => {
-            const { env, widget } = await start(Object.assign({}, params, {
-                data: this.data,
-            }));
+            const res = await start({ ...params, data: this.data });
+            const { afterEvent, components, env, widget } = res;
+            this.afterEvent = afterEvent;
+            this.components = components;
             this.env = env;
             this.widget = widget;
+            return res;
         };
     },
     afterEach() {
@@ -39,7 +32,7 @@ QUnit.module('attachment_image_tests.js', {
 QUnit.test('auto layout with image', async function (assert) {
     assert.expect(3);
 
-    await this.start();
+    const { createMessageComponent } = await this.start();
     const attachment = this.messaging.models['mail.attachment'].create({
         filename: "test.png",
         id: 750,
@@ -52,7 +45,7 @@ QUnit.test('auto layout with image', async function (assert) {
         body: "<p>Test</p>",
         id: 100,
     });
-    await this.createMessageComponent(message);
+    await createMessageComponent(message);
     assert.strictEqual(
         document.querySelectorAll(`.o_AttachmentImage img`).length,
         1,

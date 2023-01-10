@@ -48,5 +48,5 @@ export class OnboardingBanner extends owl.Component {
     }
 }
 
-OnboardingBanner.template = owl.tags.xml`<div t-raw="bannerHTML" />`;
+OnboardingBanner.template = owl.tags.xml`<div class="w-100" t-raw="bannerHTML" />`;
 OnboardingBanner.props = {};

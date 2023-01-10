@@ -32,8 +32,8 @@ odoo.define('pos_restaurant.SubmitOrderButton', function(require) {
                     order.saveChanges();
                 } else {
                     await this.showPopup('ErrorPopup', {
-                        title: 'Printing failed',
-                        body: 'Failed in printing the changes in the order',
+                        title: this.env._t('Printing failed'),
+                        body: this.env._t('Failed in printing the changes in the order'),
                     });
                 }
             }

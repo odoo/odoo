@@ -16,9 +16,6 @@
                     </div>
                 </div>
                 <div class="default-view">
-                    <div class="pos-receipt-container">
-                        <OrderReceipt order="currentOrder" t-ref="order-receipt" />
-                    </div>
                     <div class="actions">
                         <h1>How would you like to receive your receipt<t t-if="currentOrder.is_to_invoice()"> &amp; invoice</t>?</h1>
                         <div class="buttons">
@@ -27,10 +24,11 @@
                             </div>
                         </div>
                         <form t-on-submit.prevent="onSendEmail" class="send-email">
-                            <div class="email-icon"><i class="fa fa-envelope-o" aria-hidden="true"></i></div>
                             <div class="input-email">
                                 <input type="email" placeholder="Email Receipt" t-model="orderUiState.inputEmail" />
-                                <button class="send" t-att-class="{ highlight: is_email(orderUiState.inputEmail) }" type="submit">Send</button>
+                                <button class="send" t-att-class="{ highlight: is_email(orderUiState.inputEmail) }" type="submit">
+                                    <i class="fa fa-paper-plane" aria-hidden="true"/>
+                                </button>
                             </div>
                         </form>
                         <div class="notice">
@@ -41,6 +39,9 @@
                                 (Both will be sent by email)
                             </div>
                         </div>
+                    </div>
+                    <div class="pos-receipt-container">
+                        <OrderReceipt order="currentOrder" t-ref="order-receipt" />
                     </div>
                 </div>
             </div>

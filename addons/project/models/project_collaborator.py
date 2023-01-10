@@ -23,8 +23,6 @@ class ProjectCollaborator(models.Model):
     def create(self, vals_list):
         collaborator = self.env['project.collaborator'].search([], limit=1)
         project_collaborators = super().create(vals_list)
-        non_authenticated_collaborator = project_collaborators.partner_id.filtered(lambda partner: not partner.user_ids)
-        non_authenticated_collaborator._create_portal_users()
         if not collaborator:
             self._toggle_project_sharing_portal_rules(True)
         return project_collaborators

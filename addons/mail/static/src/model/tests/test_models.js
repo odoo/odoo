@@ -2,27 +2,23 @@
 
 import { registerNewModel } from '@mail/model/model_core';
 import { attr, many2one, one2many, one2one } from '@mail/model/model_field';
-import { create } from '@mail/model/model_field_command';
+import { insertAndReplace } from '@mail/model/model_field_command';
 
 function factoryAddress(dependencies) {
     class Address extends dependencies['mail.model'] {
-        static _createRecordLocalId(data) {
-            if (data.id) {
-                return `${this.modelName}_${data.id}`;
-            } else {
-                return _.uniqueId(`${this.modelName}_`);
-            }
-        }
     }
 
     Address.fields = {
-        id: attr(),
+        id: attr({
+            readonly: true,
+            required: true,
+        }),
         addressInfo: attr(),
         contact: one2one('test.contact', {
             inverse: 'address',
         }),
     };
-
+    Address.identifyingFields = ['id'];
     Address.modelName = 'test.address';
 
     return Address;
@@ -32,25 +28,27 @@ function factoryContact(dependencies) {
     class Contact extends dependencies['mail.model'] {}
 
     Contact.fields = {
-        id: attr(),
+        id: attr({
+            readonly: true,
+            required: true,
+        }),
         address: one2one('test.address', {
             inverse: 'contact',
         }),
         favorite: one2one('test.hobby', {
-            default: create({ description: 'football' }),
+            default: insertAndReplace({ description: 'football' }),
         }),
         hobbies: one2many('test.hobby', {
-            default: [
-                create({ description: 'hiking' }),
-                create({ description: 'fishing' }),
-            ],
+            default: insertAndReplace([
+                { description: 'hiking' },
+                { description: 'fishing' },
+            ]),
         }),
         tasks: one2many('test.task', {
             inverse: 'responsible'
         }),
-
     };
-
+    Contact.identifyingFields = ['id'];
     Contact.modelName = 'test.contact';
 
     return Contact;
@@ -59,8 +57,13 @@ function factoryContact(dependencies) {
 function factoryHobby(dependencies) {
     class Hobby extends dependencies['mail.model'] {}
 
-    Hobby.fields = { description: attr() };
-
+    Hobby.fields = {
+        description: attr({
+            readonly: true,
+            required: true,
+        }),
+    };
+    Hobby.identifyingFields = ['description'];
     Hobby.modelName = 'test.hobby';
 
     return Hobby;
@@ -68,17 +71,13 @@ function factoryHobby(dependencies) {
 
 function factoryTask(dependencies) {
     class Task extends dependencies['mail.model'] {
-        static _createRecordLocalId(data) {
-            if (data.id) {
-                return `${this.modelName}_${data.id}`;
-            } else {
-                return _.uniqueId(`${this.modelName}_`);
-            }
-        }
     }
 
     Task.fields = {
-        id: attr(),
+        id: attr({
+            readonly: true,
+            required: true,
+        }),
         title: attr(),
         difficulty: attr({
             default: 1,
@@ -87,7 +86,7 @@ function factoryTask(dependencies) {
             inverse: 'tasks'
         }),
     };
-
+    Task.identifyingFields = ['id'];
     Task.modelName = 'test.task';
 
     return Task;

@@ -11,7 +11,7 @@ from odoo.http import request
 from odoo.addons.portal.controllers.portal import CustomerPortal, pager as portal_pager
 from odoo.tools import groupby as groupbyelem
 
-from odoo.osv.expression import OR
+from odoo.osv.expression import OR, AND
 
 from odoo.addons.web.controllers.main import HomeStaticTemplateHelpers
 
@@ -21,9 +21,11 @@ class ProjectCustomerPortal(CustomerPortal):
     def _prepare_home_portal_values(self, counters):
         values = super()._prepare_home_portal_values(counters)
         if 'project_count' in counters:
-            values['project_count'] = request.env['project.project'].search_count([])
+            values['project_count'] = request.env['project.project'].search_count([]) \
+                if request.env['project.project'].check_access_rights('read', raise_exception=False) else 0
         if 'task_count' in counters:
-            values['task_count'] = request.env['project.task'].search_count([])
+            values['task_count'] = request.env['project.task'].search_count([]) \
+                if request.env['project.task'].check_access_rights('read', raise_exception=False) else 0
         return values
 
     # ------------------------------------------------------------
@@ -58,6 +60,9 @@ class ProjectCustomerPortal(CustomerPortal):
 
         Task = request.env['project.task']
         if access_token:
+            Task = Task.sudo()
+        elif not request.env.user._is_public():
+            domain = AND([domain, request.env['ir.rule']._compute_domain(Task._name, 'read')])
             Task = Task.sudo()
 
         # task count
@@ -159,16 +164,16 @@ class ProjectCustomerPortal(CustomerPortal):
         values['task_url'] = 'project/%s/task' % project_id
         return request.render("project.portal_my_project", values)
 
-    @http.route("/my/project/<int:project_id>/project_sharing", type="http", auth="user", methods=['GET'])
-    def render_project_backend_view(self, project_id):
-        project = request.env['project.project'].sudo().browse(project_id)
-        if not project.exists() or not project.with_user(request.env.user)._check_project_sharing_access():
-            return request.not_found()
-
+    def _prepare_project_sharing_session_info(self, project):
         session_info = request.env['ir.http'].session_info()
         user_context = request.session.get_context() if request.session.uid else {}
         mods = conf.server_wide_modules or []
         qweb_checksum = HomeStaticTemplateHelpers.get_qweb_templates_checksum(debug=request.session.debug, bundle="project.assets_qweb")
+        if request.env.lang:
+            lang = request.env.lang
+            session_info['user_context']['lang'] = lang
+            # Update Cache
+            user_context['lang'] = lang
         lang = user_context.get("lang")
         translation_hash = request.env['ir.translation'].get_web_translations_hash(mods, lang)
         cache_hashes = {
@@ -190,11 +195,20 @@ class ProjectCustomerPortal(CustomerPortal):
                     },
                 },
             },
+            # FIXME: See if we prefer to give only the currency that the portal user just need to see the correct information in project sharing
+            currencies=request.env['ir.http'].get_currencies(),
         )
+        return session_info
+
+    @http.route("/my/project/<int:project_id>/project_sharing", type="http", auth="user", methods=['GET'])
+    def render_project_backend_view(self, project_id):
+        project = request.env['project.project'].sudo().browse(project_id)
+        if not project.exists() or not project.with_user(request.env.user)._check_project_sharing_access():
+            return request.not_found()
 
         return request.render(
             'project.project_sharing_embed',
-            {'session_info': session_info},
+            {'session_info': self._prepare_project_sharing_session_info(project)},
         )
 
     @http.route('/my/project/<int:project_id>/task/<int:task_id>', type='http', auth='public', website=True)
@@ -206,9 +220,9 @@ class ProjectCustomerPortal(CustomerPortal):
         Task = request.env['project.task']
         if access_token:
             Task = Task.sudo()
-        task = Task.search([('project_id', '=', project_id), ('id', '=', task_id)], limit=1)
-        task.sudo().attachment_ids.generate_access_token()
-        values = self._task_get_page_view_values(task, access_token, project=project_sudo, **kw)
+        task_sudo = Task.search([('project_id', '=', project_id), ('id', '=', task_id)], limit=1).sudo()
+        task_sudo.attachment_ids.generate_access_token()
+        values = self._task_get_page_view_values(task_sudo, access_token, project=project_sudo, **kw)
         values['project'] = project_sudo
         return request.render("project.portal_my_task", values)
 
@@ -369,8 +383,11 @@ class ProjectCustomerPortal(CustomerPortal):
         if search and search_in:
             domain += self._task_get_search_domain(search_in, search)
 
+        TaskSudo = request.env['project.task'].sudo()
+        domain = AND([domain, request.env['ir.rule']._compute_domain(TaskSudo._name, 'read')])
+
         # task count
-        task_count = request.env['project.task'].search_count(domain)
+        task_count = TaskSudo.search_count(domain)
         # pager
         pager = portal_pager(
             url="/my/tasks",
@@ -382,7 +399,7 @@ class ProjectCustomerPortal(CustomerPortal):
         # content according to pager and archive selected
         order = self._task_get_order(order, groupby)
 
-        tasks = request.env['project.task'].search(domain, order=order, limit=self._items_per_page, offset=pager['offset'])
+        tasks = TaskSudo.search(domain, order=order, limit=self._items_per_page, offset=pager['offset'])
         request.session['my_tasks_history'] = tasks.ids[:100]
 
         groupby_mapping = self._task_get_groupby_mapping()

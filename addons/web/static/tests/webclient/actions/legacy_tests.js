@@ -10,7 +10,7 @@ import { makeTestEnv } from "../../helpers/mock_env";
 import { createWebClient, doAction, getActionManagerServerData } from "./../helpers";
 import makeTestEnvironment from "web.test_env";
 
-import { ClientActionAdapter } from "@web/legacy/action_adapters";
+import { ClientActionAdapter, ViewAdapter } from "@web/legacy/action_adapters";
 import { makeLegacyCrashManagerService } from "@web/legacy/utils";
 import { useDebugCategory } from "@web/core/debug/debug_context";
 import { ErrorDialog } from "@web/core/errors/error_dialogs";
@@ -81,6 +81,32 @@ QUnit.module("ActionManager", (hooks) => {
         assert.containsOnce(document.body, ".modal");
         assert.strictEqual($(".modal-title").text(), "Warning!!!");
         assert.strictEqual($(".modal-body").text(), "This is a warning...");
+    });
+
+    QUnit.test("display multiline warning as modal", async function (assert) {
+        assert.expect(5);
+        let list;
+        patchWithCleanup(ListController.prototype, {
+            init() {
+                this._super(...arguments);
+                list = this;
+            },
+        });
+
+        const webClient = await createWebClient({ serverData });
+        await doAction(webClient, 3);
+        assert.containsOnce(webClient, ".o_list_view");
+        list.trigger_up("warning", {
+            title: "Warning!!!",
+            message: "This is a warning...\nabc",
+            type: "dialog",
+        });
+        await testUtils.nextTick();
+        await legacyExtraNextTick();
+        assert.containsOnce(webClient, ".o_list_view");
+        assert.containsOnce(document.body, ".modal");
+        assert.strictEqual($(".modal-title").text(), "Warning!!!");
+        assert.strictEqual($(".modal-body")[0].innerText, "This is a warning...\nabc");
     });
 
     QUnit.test(
@@ -408,5 +434,100 @@ QUnit.module("ActionManager", (hooks) => {
         await createWebClient({ serverData });
         assert.verifySteps(["do action"]);
         delete SystrayMenu.Items.FakeSystrayItemWidget;
+    });
+
+    QUnit.test("usercontext always added to legacy actions", async (assert) => {
+        assert.expect(8);
+        core.action_registry.add("testClientAction", AbstractAction);
+        registerCleanup(() => delete core.action_registry.map.testClientAction);
+        patchWithCleanup(ClientActionAdapter.prototype, {
+            setup() {
+                assert.step("ClientActionAdapter");
+                const action = { ...this.props.widgetArgs[0] };
+                const originalAction = JSON.parse(action._originalAction);
+                assert.deepEqual(originalAction.context, undefined);
+                assert.deepEqual(action.context, this.env.services.user.context);
+                this._super();
+            },
+        });
+        patchWithCleanup(ViewAdapter.prototype, {
+            setup() {
+                assert.step("ViewAdapter");
+                const action = { ...this.props.viewParams.action };
+                const originalAction = JSON.parse(action._originalAction);
+                assert.deepEqual(originalAction.context, undefined);
+                assert.deepEqual(action.context, this.env.services.user.context);
+                this._super();
+            },
+        });
+        const webClient = await createWebClient({ serverData });
+        await doAction(webClient, "testClientAction");
+        assert.verifySteps(["ClientActionAdapter"]);
+        await doAction(webClient, 1);
+        assert.verifySteps(["ViewAdapter"]);
+    });
+
+    QUnit.test("correctly transports legacy Props for doAction", async (assert) => {
+        assert.expect(4);
+
+        let ID = 0;
+        const MyAction = AbstractAction.extend({
+            init() {
+                this._super(...arguments);
+                this.ID = ID++;
+                assert.step(`id: ${this.ID} props: ${JSON.stringify(arguments[2])}`);
+            },
+            async start() {
+                const res = await this._super(...arguments);
+                const link = document.createElement("a");
+                link.setAttribute("id", `client_${this.ID}`);
+                link.addEventListener("click", () => {
+                    this.do_action("testClientAction", {
+                        clear_breadcrumbs: true,
+                        props: { chain: "never break" },
+                    });
+                });
+
+                this.el.appendChild(link);
+                return res;
+            },
+        });
+        core.action_registry.add("testClientAction", MyAction);
+        registerCleanup(() => delete core.action_registry.map.testClientAction);
+
+        const webClient = await createWebClient({ serverData });
+        await doAction(webClient, "testClientAction");
+        assert.verifySteps(['id: 0 props: {"breadcrumbs":[]}']);
+
+        await click(document.getElementById("client_0"));
+        assert.verifySteps(['id: 1 props: {"chain":"never break","breadcrumbs":[]}']);
+    });
+
+    QUnit.test("breadcrumbs are correct in stacked legacy client actions", async function (assert) {
+        const ClientAction = AbstractAction.extend({
+            hasControlPanel: true,
+            async start() {
+                this.$el.addClass("client_action");
+                return this._super(...arguments);
+            },
+            getTitle() {
+                return "Blabla";
+            },
+        });
+        core.action_registry.add("clientAction", ClientAction);
+        registerCleanup(() => delete core.action_registry.map.clientAction);
+
+        const webClient = await createWebClient({ serverData });
+
+        await doAction(webClient, 3);
+        assert.containsOnce(webClient, ".o_list_view");
+        assert.strictEqual($(webClient.el).find(".breadcrumb-item").text(), "Partners");
+
+        await doAction(webClient, {
+            type: "ir.actions.client",
+            tag: "clientAction",
+        });
+        assert.containsOnce(webClient, ".client_action");
+        assert.strictEqual($(webClient.el).find(".breadcrumb-item").text(), "PartnersBlabla");
     });
 });

@@ -35,6 +35,7 @@ David Beal david.beal@akretion.com https://github.com/bealdav
 Florian da Costa florian.dacosta@akretion.com https://github.com/florian-dacosta
 Magno Barcelo da Costa magno.costa@akretion.com.br https://github.com/mbcosta
 Mourad El Hadj Mimoune mourad.elhadj.mimoune@akretion.com https://github.com/mourad-ehm
+Pierrick Brun pierrick.brun@akretion.com https://github.com/PierrickBrun
 Raphaël Reverdy raphael.reverdy@akretion.com https://github.com/hparfr
 Raphaël Valyi raphael.valyi@akretion.com https://github.com/rvalyi
 Renato Lima renato.lima@akretion.com https://github.com/renatonlima

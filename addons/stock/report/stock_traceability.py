@@ -4,6 +4,7 @@
 from odoo import api, models, _
 from odoo.tools import config
 from odoo.tools import format_datetime
+from markupsafe import Markup
 
 
 rec = 0
@@ -221,11 +222,11 @@ class MrpStockReport(models.TransientModel):
         )
 
         header = self.env['ir.actions.report']._render_template("web.internal_layout", values=rcontext)
-        header = self.env['ir.actions.report']._render_template("web.minimal_layout", values=dict(rcontext, subst=True, body=header))
+        header = self.env['ir.actions.report']._render_template("web.minimal_layout", values=dict(rcontext, subst=True, body=Markup(header.decode())))
 
         return self.env['ir.actions.report']._run_wkhtmltopdf(
             [body],
-            header=header,
+            header=header.decode(),
             landscape=True,
             specific_paperformat_args={'data-report-margin-top': 17, 'data-report-header-spacing': 12}
         )

@@ -43,10 +43,7 @@ export class EmojisPopover extends Component {
      * @returns {boolean}
      */
     contains(node) {
-        if (!this.el) {
-            return false;
-        }
-        return this.el.contains(node);
+        return Boolean(this.el && this.el.contains(node));
     }
 
     //--------------------------------------------------------------------------

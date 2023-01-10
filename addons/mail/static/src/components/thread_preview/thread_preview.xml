@@ -24,7 +24,7 @@
                     </div>
                 </div>
                 <div class="o_ThreadPreview_content">
-                    <div class="o_ThreadPreview_header">
+                    <div class="o_ThreadPreview_header align-items-baseline">
                         <span class="o_ThreadPreview_name text-truncate" t-att-class="{ 'o-mobile': messaging.device.isMobile, 'o-muted': thread.localMessageUnreadCounter === 0 }">
                             <t t-esc="thread.displayName"/>
                         </span>
@@ -32,6 +32,9 @@
                             <span class="o_ThreadPreview_counter" t-att-class="{ 'o-muted': thread.localMessageUnreadCounter === 0 }">
                                 (<t t-esc="thread.localMessageUnreadCounter"/>)
                             </span>
+                        </t>
+                        <t t-if="thread.rtcSessions.length > 0">
+                            <span class="o_ThreadPreview_callIndicator fa fa-volume-up mx-2" t-att-class="{ 'o-isCalling': thread.rtc }"/>
                         </t>
                         <span class="o-autogrow"/>
                         <t t-if="thread.lastMessage and thread.lastMessage.date">

@@ -8,16 +8,21 @@
     position: relative;
 }
 
-.o_RtcCallParticipantCard_avatar {
+.o_RtcCallParticipantCard_avatarFrame {
     display: flex;
-    justify-content: center;
-    max-height: 100%;
     user-select: none;
+    aspect-ratio: 16/9;
+
+    &.o-isMinimized {
+        aspect-ratio: 1;
+    }
 }
 
 .o_RtcCallParticipantCard_avatarImage {
-    max-height: 100px;
-    max-width: 100px;
+    max-height: #{"min(100%, 100px)"}; // interpolated as not supported by Sass
+    max-width: #{"min(100%, 100px)"};
+    aspect-ratio: 1;
+    object-fit: cover;
     border: 5px solid gray('700');
 
     &.o-isTalking {
@@ -74,6 +79,7 @@
     max-width: 50%;
     overflow: hidden;
     bottom: 0;
+    left: 0;
 }
 
 .o_RtcCallParticipantCard_overlayTop {
@@ -110,12 +116,23 @@
 .o_RtcCallParticipantCard {
     border-radius: $o-mail-rounded-rectangle-border-radius-sm;
 
+    &.o-isClickable {
+        cursor: pointer;
+    }
+
     &.o-isTalking {
-        box-shadow: inset 0 0 0 map-get($spacers, 2) darken($o-enterprise-primary-color, 5%);
+        box-shadow: inset 0 0 0 map-get($spacers, 1) darken($o-enterprise-primary-color, 5%);
     }
 
     &.o-isInvitation {
         opacity: 0.6;
+    }
+}
+
+.o_RtcCallParticipantCard_avatarFrame {
+    border-radius: $o-mail-rounded-rectangle-border-radius-sm;
+    &:not(.o-isMinimized) {
+        background-color: $o-brand-secondary;
     }
 }
 
@@ -125,14 +142,6 @@
 
 .o_RtcCallParticipantCard_container {
     border-radius: $o-mail-rounded-rectangle-border-radius-sm;
-
-    &.o-canClick {
-        cursor: pointer;
-    }
-
-    &:not(.o-isMinimized) {
-        background-color: $o-brand-secondary;
-    }
 }
 
 .o_RtcCallParticipantCard_liveIndicator {

@@ -76,7 +76,7 @@ class StockMove(models.Model):
         if self._subcontrating_should_be_record() or self._subcontrating_can_be_record():
             return self._action_record_components()
         action = super(StockMove, self).action_show_details()
-        if self.is_subcontract and self._get_subcontract_production():
+        if self.is_subcontract and all(p._has_been_recorded() for p in self._get_subcontract_production()):
             action['views'] = [(self.env.ref('stock.view_stock_move_operations').id, 'form')]
             action['context'].update({
                 'show_lots_m2o': self.has_tracking != 'none',
@@ -179,6 +179,7 @@ class StockMove(models.Model):
     def _get_subcontract_production(self):
         return self.filtered(lambda m: m.is_subcontract).move_orig_ids.production_id
 
+    # TODO: To be deleted, use self._get_subcontract_production()._has_tracked_component() instead
     def _has_tracked_subcontract_components(self):
         return any(m.has_tracking != 'none' for m in self._get_subcontract_production().move_raw_ids)
 

@@ -35,6 +35,7 @@ const ReplenishReport = clientAction.extend({
         var loadWarehouses = this._rpc({
             model: 'report.stock.report_product_product_replenishment',
             method: 'get_warehouses',
+            context: this.context,
         }).then((res) => {
             this.warehouses = res;
             if (this.context.warehouse) {
@@ -90,6 +91,9 @@ const ReplenishReport = clientAction.extend({
         const graphController = await graphPromise;
         const iframeDoc = this.iframe.contentDocument;
         const reportGraphDiv = iframeDoc.querySelector(".o_report_graph");
+        if (!reportGraphDiv) {
+            return;
+        }
         dom.append(reportGraphDiv, graphController.el, {
             in_DOM: true,
             callbacks: [{ widget: graphController }],
@@ -117,6 +121,7 @@ const ReplenishReport = clientAction.extend({
             modelName: model,
             noContentHelp: _t("Try to add some incoming or outgoing transfers."),
             withControlPanel: false,
+            context: {fill_temporal: false},
         };
         const GraphView = viewRegistry.get("graph");
         const graphView = new GraphView(viewInfo, params);

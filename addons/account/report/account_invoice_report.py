@@ -100,7 +100,7 @@ class AccountInvoiceReport(models.Model):
                 -line.balance * currency_table.rate                         AS price_subtotal,
                 -COALESCE(
                    -- Average line price
-                   (line.balance / NULLIF(line.quantity, 0.0))
+                   (line.balance / NULLIF(line.quantity, 0.0)) * (CASE WHEN move.move_type IN ('in_invoice','out_refund','in_receipt') THEN -1 ELSE 1 END)
                    -- convert to template uom
                    * (NULLIF(COALESCE(uom_line.factor, 1), 0.0) / NULLIF(COALESCE(uom_template.factor, 1), 0.0)),
                    0.0) * currency_table.rate                               AS price_average,

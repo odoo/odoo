@@ -24,7 +24,7 @@
                     <i class="o_RtcOptionList_buttonIcon fa fa-lg fa-cog"/>
                     <span class="o_RtcOptionList_buttonText">Settings</span>
                 </button>
-                <t t-if="env.isDebug()">
+                <t t-if="messaging.modelManager.isDebug">
                     <button class="o_RtcOptionList_button" t-on-click="rtcOptionList.onClickDownloadLogs">
                         <i class="o_RtcOptionList_buttonIcon fa fa-lg fa-file-text-o"/>
                         <span class="o_RtcOptionList_buttonText">Download logs</span>

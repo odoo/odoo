@@ -2,6 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from ast import literal_eval
+from collections import defaultdict
 import functools
 import itertools
 import logging
@@ -208,8 +209,8 @@ class MergePartnerAutomatic(models.TransientModel):
             update_records('mail.message', src=partner)
             update_records('ir.model.data', src=partner)
 
-        records = self.env['ir.model.fields'].search([('ttype', '=', 'reference')])
-        for record in records.sudo():
+        records = self.env['ir.model.fields'].sudo().search([('ttype', '=', 'reference')])
+        for record in records:
             try:
                 Model = self.env[record.model]
                 field = Model._fields[record.name]
@@ -250,8 +251,10 @@ class MergePartnerAutomatic(models.TransientModel):
                 return item.id
             else:
                 return item
+
         # get all fields that are not computed or x2many
         values = dict()
+        values_by_company = defaultdict(dict)   # {company: vals}
         for column in model_fields:
             field = dst_partner._fields[column]
             if field.type not in ('many2many', 'one2many') and field.compute is None:
@@ -261,10 +264,21 @@ class MergePartnerAutomatic(models.TransientModel):
                             values[column] += write_serializer(item[column])
                         else:
                             values[column] = write_serializer(item[column])
+            elif field.company_dependent and column in summable_fields:
+                # sum the values of partners for each company; use sudo() to
+                # compute the sum on all companies, including forbidden ones
+                partners = (src_partners + dst_partner).sudo()
+                for company in self.env['res.company'].sudo().search([]):
+                    values_by_company[company][column] = sum(
+                        partners.with_company(company).mapped(column)
+                    )
+
         # remove fields that can not be updated (id and parent_id)
         values.pop('id', None)
         parent_id = values.pop('parent_id', None)
         dst_partner.write(values)
+        for company, vals in values_by_company.items():
+            dst_partner.with_company(company).sudo().write(vals)
         # try to update the parent_id
         if parent_id and parent_id != dst_partner.id:
             try:
@@ -481,7 +495,7 @@ class MergePartnerAutomatic(models.TransientModel):
         model_mapping = self._compute_models()
 
         # group partner query
-        self._cr.execute(query)
+        self._cr.execute(query) # pylint: disable=sql-injection
 
         counter = 0
         for min_id, aggr_ids in self._cr.fetchall():

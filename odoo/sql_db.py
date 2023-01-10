@@ -28,6 +28,7 @@ from werkzeug import urls
 psycopg2.extensions.register_type(psycopg2.extensions.UNICODE)
 
 _logger = logging.getLogger(__name__)
+real_time = time.time.__call__  # ensure we have a non patched time for query times when using freezegun
 
 def unbuffer(symb, cr):
     if symb is None:
@@ -204,9 +205,11 @@ class BaseCursor:
         return self
 
     def __exit__(self, exc_type, exc_value, traceback):
-        if exc_type is None:
-            self.commit()
-        self.close()
+        try:
+            if exc_type is None:
+                self.commit()
+        finally:
+            self.close()
 
 
 class Cursor(BaseCursor):
@@ -354,7 +357,7 @@ class Cursor(BaseCursor):
 
         if self.sql_log:
             _logger.debug("query: %s", self._format(query, params))
-        start = time.time()
+        start = real_time()
         try:
             params = params or None
             res = self._obj.execute(query, params)
@@ -365,7 +368,7 @@ class Cursor(BaseCursor):
 
         # simple query count is always computed
         self.sql_log_count += 1
-        delay = (time.time() - start)
+        delay = (real_time() - start)
         current_thread = threading.current_thread()
         if hasattr(current_thread, 'query_count'):
             current_thread.query_count += 1
@@ -649,7 +652,8 @@ class TestCursor(BaseCursor):
 
 
 class PsycoConnection(psycopg2.extensions.connection):
-    pass
+    def lobject(*args, **kwargs):
+        pass
 
 class ConnectionPool(object):
     """ The pool of connections to database(s)

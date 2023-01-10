@@ -2,14 +2,16 @@
 
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
-import { useEffect, useService } from "@web/core/utils/hooks";
+import { useEffect, useService, onDestroyed, useBus } from "@web/core/utils/hooks";
 import { registry } from "@web/core/registry";
 import { debounce } from "@web/core/utils/timing";
 import { ErrorHandler, NotUpdatable } from "@web/core/utils/components";
 
 const { Component, hooks } = owl;
-const { useExternalListener, useRef } = hooks;
+const { useExternalListener, useRef, onWillUnmount } = hooks;
 const systrayRegistry = registry.category("systray");
+
+const getBoundingClientRect = Element.prototype.getBoundingClientRect;
 
 export class MenuDropdown extends Dropdown {
     setup() {
@@ -53,22 +55,26 @@ export class NavBar extends Component {
         this.menuService = useService("menu");
         this.appSubMenus = useRef("appSubMenus");
         const debouncedAdapt = debounce(this.adapt.bind(this), 250);
+        onDestroyed(() => debouncedAdapt.cancel());
         useExternalListener(window, "resize", debouncedAdapt);
-    }
 
-    mounted() {
-        this.adapt();
-        const renderAndAdapt = async () => {
-            await this.render();
-            await this.adapt();
+        let adaptCounter = 0;
+        const renderAndAdapt = () => {
+            adaptCounter++;
+            this.render();
         };
+
         systrayRegistry.on("UPDATE", this, renderAndAdapt);
         this.env.bus.on("MENUS:APP-CHANGED", this, renderAndAdapt);
-    }
 
-    willUnmount() {
-        systrayRegistry.off("UPDATE", this);
-        this.env.bus.off("MENUS:APP-CHANGED", this);
+        onWillUnmount(() => {
+            systrayRegistry.off("UPDATE", this);
+            this.env.bus.off("MENUS:APP-CHANGED", this);
+        });
+
+        // We don't want to adapt every time we are patched
+        // rather, we adapt only when menus or systrays have changed.
+        useEffect(() => {this.adapt();}, () => [adaptCounter]);
     }
 
     handleItemError(error, item) {
@@ -92,7 +98,8 @@ export class NavBar extends Component {
 
     get systrayItems() {
         return systrayRegistry
-            .getAll()
+            .getEntries()
+            .map(([key, value]) => ({ key, ...value }))
             .filter((item) => ("isDisplayed" in item ? item.isDisplayed(this.env) : true))
             .reverse();
     }
@@ -136,8 +143,10 @@ export class NavBar extends Component {
         this.currentAppSectionsExtra = [];
 
         // ------- Check overflowing sections -------
-        const sectionsAvailableWidth = sectionsMenu.offsetWidth;
-        const sectionsTotalWidth = sections.reduce((sum, s) => sum + s.offsetWidth, 0);
+        // use getBoundingClientRect to get unrounded values for width in order to avoid rounding problem
+        // with offsetWidth.
+        const sectionsAvailableWidth = getBoundingClientRect.call(sectionsMenu).width;
+        const sectionsTotalWidth = sections.reduce((sum, s) => sum + getBoundingClientRect.call(s).width, 0);
         if (sectionsAvailableWidth < sectionsTotalWidth) {
             // Sections are overflowing
             // Initial width is harcoded to the width the more menu dropdown will take
@@ -186,8 +195,8 @@ export class NavBar extends Component {
 
     getMenuItemHref(payload) {
         const parts = [`menu_id=${payload.id}`];
-        if (payload.action) {
-            parts.push(`action=${payload.action.split(",")[1]}`);
+        if (payload.actionID) {
+            parts.push(`action=${payload.actionID}`);
         }
         return "#" + parts.join("&");
     }

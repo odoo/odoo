@@ -101,6 +101,7 @@
             'web/static/src/legacy/js/services/data_manager.js',
             'web/static/src/legacy/js/services/session.js',
             'web/static/src/legacy/js/widgets/date_picker.js',
+            'web/static/src/legacy/legacy_promise_error_handler.js',
             'web/static/src/legacy/legacy_rpc_error_handler.js',
             'web/static/src/legacy/utils.js',
             'web/static/src/legacy/xml/base.xml',
@@ -132,6 +133,7 @@
             'mail/static/src/main.js',
         ],
         'mail.assets_discuss_public_test_tours': [
+            'mail/static/tests/tours/discuss_public_tour.js',
             'mail/static/tests/tours/mail_channel_as_guest_tour.js',
         ],
         'web.assets_tests': [

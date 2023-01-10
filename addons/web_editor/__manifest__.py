@@ -9,7 +9,7 @@ Odoo Web Editor widget.
 ==========================
 
 """,
-    'depends': ['web', 'mail'],
+    'depends': ['web'],
     'data': [
         'security/ir.model.access.csv',
         'data/editor_assets.xml',
@@ -26,7 +26,6 @@ Odoo Web Editor widget.
             'web_editor/static/src/xml/*.xml',
         ],
         'web_editor.assets_wysiwyg': [
-
             # lib
             'web_editor/static/lib/cropperjs/cropper.css',
             'web_editor/static/lib/cropperjs/cropper.js',
@@ -41,7 +40,6 @@ Odoo Web Editor widget.
             'web_editor/static/lib/odoo-editor/src/utils/constants.js',
             'web_editor/static/lib/odoo-editor/src/utils/sanitize.js',
             'web_editor/static/lib/odoo-editor/src/utils/serialize.js',
-            'web_editor/static/lib/odoo-editor/src/utils/utils.js',
             'web_editor/static/lib/odoo-editor/src/utils/DOMPurify.js',
             'web_editor/static/lib/odoo-editor/src/tablepicker/TablePicker.js',
             'web_editor/static/lib/odoo-editor/src/powerbox/patienceDiff.js',
@@ -57,7 +55,6 @@ Odoo Web Editor widget.
             'web_editor/static/lib/odoo-editor/src/commands/toggleList.js',
 
             # utils
-            'web_editor/static/src/js/wysiwyg/wysiwyg_utils.js',
             'web_editor/static/src/js/wysiwyg/PeerToPeer.js',
 
             # odoo utils
@@ -87,10 +84,13 @@ Odoo Web Editor widget.
             'web_editor/static/src/js/wysiwyg/wysiwyg_iframe.js',
         ],
         'web.assets_common': [
+            'web_editor/static/lib/odoo-editor/src/base_style.css',
             'web_editor/static/lib/vkbeautify/**/*',
             'web_editor/static/src/js/common/**/*',
+            'web_editor/static/lib/odoo-editor/src/utils/utils.js',
         ],
         'web.assets_backend': [
+            'web_editor/static/src/js/wysiwyg/linkDialogCommand.js',
             'web_editor/static/src/scss/web_editor.common.scss',
             'web_editor/static/src/scss/web_editor.backend.scss',
 

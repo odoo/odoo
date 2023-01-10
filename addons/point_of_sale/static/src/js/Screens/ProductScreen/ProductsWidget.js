@@ -25,6 +25,7 @@ odoo.define('point_of_sale.ProductsWidget', function(require) {
         }
         willUnmount() {
             this.env.pos.off('change:selectedCategoryId', null, this);
+            this.trigger('toggle-mobile-searchbar', false);
         }
         get selectedCategoryId() {
             return this.env.pos.get('selectedCategoryId');

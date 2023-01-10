@@ -1,6 +1,6 @@
 /** @odoo-module **/
 
-import { create, insert } from '@mail/model/model_field_command';
+import { insert, insertAndReplace } from '@mail/model/model_field_command';
 import {
     afterEach,
     beforeEach,
@@ -51,7 +51,7 @@ QUnit.test('insert: should create and replace a new record for a non-empty x2one
 
     const contact = this.messaging.models['test.contact'].create({
         id: 10,
-        address: create({ id: 10 }),
+        address: insertAndReplace({ id: 10 }),
     });
     const address10 = this.messaging.models['test.address'].findFromIdentifyingData({ id: 10 });
     contact.update({ address: insert({ id: 20 }) });
@@ -79,7 +79,7 @@ QUnit.test('insert: should update the existing record for an x2one field', async
 
     const contact = this.messaging.models['test.contact'].create({
         id: 10,
-        address: create({
+        address: insertAndReplace({
             id: 10,
             addressInfo: 'address 10',
         }),
@@ -133,7 +133,7 @@ QUnit.test('insert: should create and add a new record for an x2many field', asy
 
     const contact = this.messaging.models['test.contact'].create({
         id: 10,
-        tasks: create({ id: 10 }),
+        tasks: insertAndReplace({ id: 10 }),
     });
     const task10 = this.messaging.models['test.task'].findFromIdentifyingData({ id: 10 });
     contact.update({ tasks: insert({ id: 20 }) });
@@ -166,7 +166,7 @@ QUnit.test('insert: should update existing records for an x2many field', async f
 
     const contact = this.messaging.models['test.contact'].create({
         id: 10,
-        tasks: create({
+        tasks: insertAndReplace({
             id: 10,
             title: 'task 10',
         }),

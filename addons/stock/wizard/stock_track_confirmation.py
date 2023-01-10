@@ -13,8 +13,8 @@ class StockTrackConfirmation(models.TransientModel):
     product_ids = fields.Many2many('product.product', string='Products')
 
     def action_confirm(self):
-        for confirmation in self:
-            confirmation.quant_ids._apply_inventory()
+        self.quant_ids._apply_inventory()
+        self.quant_ids.inventory_quantity_set = False
 
     @api.onchange('product_ids')
     def _onchange_quants(self):

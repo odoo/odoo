@@ -1,0 +1,81 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* account_lock
+# 
+# Translators:
+# JH CHOI <hwangtog@gmail.com>, 2021
+# Linkup <link-up@naver.com>, 2021
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server saas~14.4\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2021-07-12 07:50+0000\n"
+"PO-Revision-Date: 2021-09-14 12:19+0000\n"
+"Last-Translator: Linkup <link-up@naver.com>, 2021\n"
+"Language-Team: Korean (https://www.transifex.com/odoo/teams/41243/ko/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: ko\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+
+#. module: account_lock
+#: code:addons/account_lock/models/res_company.py:0
+#, python-format
+msgid ""
+"Any new All Users Lock Date must be posterior (or equal) to the previous "
+"one."
+msgstr "모든 신규 사용자 잠금 날짜는 이전 날짜보다 이후(또는 동일)여야 합니다."
+
+#. module: account_lock
+#: model:ir.model,name:account_lock.model_res_company
+msgid "Companies"
+msgstr "회사"
+
+#. module: account_lock
+#: code:addons/account_lock/models/res_company.py:0
+#, python-format
+msgid "The lock date for advisors is irreversible and can't be removed."
+msgstr "감사의 잠금 날짜는 되돌릴 수 없으며 제거할 수 없습니다."
+
+#. module: account_lock
+#: code:addons/account_lock/models/res_company.py:0
+#, python-format
+msgid "The new tax lock date must be set after the previous lock date."
+msgstr "신규 세금 잠금 날짜는 이전 잠금 날짜 이후에 설정해야 합니다."
+
+#. module: account_lock
+#: code:addons/account_lock/models/res_company.py:0
+#, python-format
+msgid "The tax lock date is irreversible and can't be removed."
+msgstr "세금 잠금 날짜는 되돌릴 수 없으며 제거할 수 없습니다."
+
+#. module: account_lock
+#: code:addons/account_lock/models/res_company.py:0
+#, python-format
+msgid ""
+"You cannot lock a period that has not yet ended. Therefore, the All Users "
+"Lock Date must be anterior (or equal) to the last day of the previous month."
+msgstr ""
+"아직 끝나지 않은 기간을 잠글수 없습니다. 따라서, 모든 사용자 잠금 일자는 반드시 이전 달의 마지막 날 이전(또는 동일)이어야 합니다."
+
+#. module: account_lock
+#: code:addons/account_lock/models/res_company.py:0
+#, python-format
+msgid ""
+"You cannot lock a period that has not yet ended. Therefore, the tax lock "
+"date must be anterior (or equal) to the last day of the previous month."
+msgstr ""
+"아직 끝나지 않은 기간을 잠글 수 없습니다. 따라서, 세금 잠금일자는 반드시 이전 달의 마지막 날 이전(또는 동일)이어야 합니다."
+
+#. module: account_lock
+#: code:addons/account_lock/models/res_company.py:0
+#, python-format
+msgid ""
+"You cannot set stricter restrictions on advisors than on users. Therefore, "
+"the All Users Lock Date must be anterior (or equal) to the Invoice/Bills "
+"Lock Date."
+msgstr ""
+"사용자보다 감사에 대해 더 엄격한 제한을 설정할 수 없습니다. 따라서 모든 사용자 잠금 날짜는 청구서/공급업체 청구서 잠금 날짜보다 "
+"이전(또는 동일)이어야 합니다."

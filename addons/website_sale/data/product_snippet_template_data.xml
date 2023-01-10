@@ -5,7 +5,7 @@
         <template id="dynamic_filter_template_product_product_add_to_cart" name="Classic Card">
             <t t-foreach="records" t-as="data">
                 <t t-set="record" t-value="data['_record']"/>
-                <div class="o_carousel_product_card card h-100 w-100">
+                <div class="o_carousel_product_card card h-100 w-100" t-att-data-add2cart-rerender="data.get('_add2cart_rerender')">
                     <div t-if="is_sample" class="h5 o_ribbon_right bg-primary text-uppercase">Sample</div>
                     <input type="hidden" name="product-id" t-att-data-product-id="record.id"/>
                     <a class="o_carousel_product_img_link" t-att-href="record.website_url">
@@ -39,7 +39,7 @@
         <template id="dynamic_filter_template_product_product_view_detail" name="Detailed Product">
             <t t-foreach="records" t-as="data">
                 <t t-set="record" t-value="data['_record']"/>
-                <div class="o_carousel_product_card card h-100 w-100" t-att-data-url="record.website_url">
+                <div class="o_carousel_product_card card h-100 w-100" t-att-data-url="record.website_url" t-att-data-add2cart-rerender="data.get('_add2cart_rerender')">
                     <div t-if="is_sample" class="h5 o_ribbon_right bg-primary text-uppercase">Sample</div>
                     <a class="o_carousel_product_img_link" t-att-href="record.website_url">
                         <img class="card-img-top p-3" loading="lazy" t-att-src="data['image_512']" t-att-alt="record.display_name"/>
@@ -117,7 +117,7 @@
         <template id="dynamic_filter_template_product_product_centered" name="Centered Product">
             <t t-foreach="records" t-as="data">
                 <t t-set="record" t-value="data['_record']"/>
-                <div class="o_carousel_product_card card w-100">
+                <div class="o_carousel_product_card card w-100" t-att-data-add2cart-rerender="data.get('_add2cart_rerender')">
                     <div t-if="is_sample" class="h5 o_ribbon_right bg-primary text-uppercase">Sample</div>
                     <input type="hidden" name="product-id" t-att-data-product-id="record.id"/>
                     <a class="o_carousel_product_img_link position-absolute mx-auto" t-att-href="record.website_url">
@@ -179,7 +179,7 @@
         <template id="dynamic_filter_template_product_product_borderless_2" name="Borderless Product n°2">
             <t t-foreach="records" t-as="data">
                 <t t-set="record" t-value="data['_record']"/>
-                <div class="o_carousel_product_card card w-100 border-0">
+                <div class="o_carousel_product_card card w-100 border-0" t-att-data-add2cart-rerender="data.get('_add2cart_rerender')">
                     <div t-if="is_sample" class="h5 o_ribbon_right bg-primary text-uppercase">Sample</div>
                     <input type="hidden" name="product-id" t-att-data-product-id="record.id"/>
                     <a class="o_carousel_product_img_link o_dynamic_product_hovered" t-att-href="record.website_url">
@@ -191,7 +191,7 @@
                                 <t t-call="website_sale.price_dynamic_filter_template_product_product"/>
                             </div>
                             <t t-if="is_view_active('website_sale.product_comment')">
-                                <t t-call="portal_rating.rating_widget_stars_static_compressed">
+                                <t t-call="portal_rating.rating_widget_stars_static">
                                     <t t-set="rating_avg" t-value="record.rating_avg"/>
                                     <t t-set="rating_count" t-value="record.rating_count"/>
                                 </t>
@@ -211,7 +211,7 @@
         <template id="dynamic_filter_template_product_product_banner" name="Large Banner">
             <t t-foreach="records" t-as="data" data-number-of-elements="1" data-number-of-elements-sm="1">
                 <t t-set="record" t-value="data['_record']"/>
-                <div class="o_carousel_product_card card w-100 p-3">
+                <div class="o_carousel_product_card card w-100 p-3" t-att-data-add2cart-rerender="data.get('_add2cart_rerender')">
                     <div t-if="is_sample" class="h5 o_ribbon_right bg-primary text-uppercase">Sample</div>
                     <input type="hidden" name="product-id" t-att-data-product-id="record.id"/>
                     <div class="row flex-row-reverse">
@@ -249,7 +249,7 @@
         <template id="dynamic_filter_template_product_product_horizontal_card" name="Horizontal Card">
             <t t-foreach="records" t-as="data" data-number-of-elements="3" data-number-of-elements-sm="1">
                 <t t-set="record" t-value="data['_record']"/>
-                <div class="o_carousel_product_card card w-100 border-0 bg-light p-3">
+                <div class="o_carousel_product_card card w-100 border-0 bg-light p-3" t-att-data-add2cart-rerender="data.get('_add2cart_rerender')">
                     <div t-if="is_sample" class="h5 o_ribbon_right bg-primary text-uppercase">Sample</div>
                     <input type="hidden" name="product-id" t-att-data-product-id="record.id"/>
                     <div class="row h-100">

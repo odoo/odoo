@@ -18,9 +18,9 @@ QUnit.module("Project", {}, () => {
                     burndown_chart: {
                         fields: {
                             date: { string: "Date", type: "date", store: true, sortable: true },
-                            project_id: { string: "Project", type: "many2one", relation: "project", store: true },
-                            stage_id: { string: "Stage", type: "many2one", relation: "stage", store: true },
-                            nb_tasks: { string: "Number of Tasks", type: "integer", store: true, group_operator: "sum" }
+                            project_id: { string: "Project", type: "many2one", relation: "project", store: true, sortable: true },
+                            stage_id: { string: "Stage", type: "many2one", relation: "stage", store: true, sortable: true },
+                            nb_tasks: { string: "Number of Tasks", type: "integer", store: true, sortable: true, group_operator: "sum" }
                         },
                         records: [
                             { id: 1, project_id: 1, stage_id: 1, date: "2020-01-01", nb_tasks: 10 },

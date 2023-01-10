@@ -14,7 +14,7 @@ var CustomizeMenu = Widget.extend({
     xmlDependencies: ['/website/static/src/xml/website.editor.xml'],
     events: {
         'show.bs.dropdown': '_onDropdownShow',
-        'click .dropdown-item[data-view-key]': '_onCustomizeOptionClick',
+        'change .dropdown-item[data-view-key]': '_onCustomizeOptionChange',
     },
 
     /**
@@ -95,10 +95,10 @@ var CustomizeMenu = Widget.extend({
                     currentGroup = item.inherit_id[1];
                     $menu.append('<li class="dropdown-header">' + currentGroup + '</li>');
                 }
-                var $a = $('<a/>', {href: '#', class: 'dropdown-item', 'data-view-key': item.key, role: 'menuitem'})
-                            .append(qweb.render('website.components.switch', {id: 'switch-' + item.id, label: item.name}));
-                $a.find('input').prop('checked', !!item.active);
-                $menu.append($a);
+                var $label = $(qweb.render('website.components.switch', {id: 'switch-' + item.id, label: item.name}));
+                $label.attr("data-view-key", item.key);
+                $label.find('input').prop('checked', !!item.active);
+                $menu.append($label);
             });
         });
     },
@@ -114,7 +114,7 @@ var CustomizeMenu = Widget.extend({
      * @private
      * @param {Event} ev
      */
-    _onCustomizeOptionClick: function (ev) {
+    _onCustomizeOptionChange: function (ev) {
         ev.preventDefault();
         var viewKey = $(ev.currentTarget).data('viewKey');
         this._doCustomize(viewKey);
@@ -180,6 +180,7 @@ var AceEditorMenu = websiteNavbarData.WebsiteNavbarActionWidget.extend({
             self.trigger_up('action_demand', {
                 actionName: 'close_all_widgets',
                 onSuccess: resolve,
+                onFailure: reject,
             });
         });
         prom.then(function () {

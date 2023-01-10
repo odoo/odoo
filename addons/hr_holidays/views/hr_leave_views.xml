@@ -56,7 +56,7 @@
                 <filter name="filter_date_from" date="date_from"/>
                 <separator/>
                 <filter name="active_time_off" string="Active Time Off"
-                    domain="[('holiday_status_id.active', '=', True)]" help="Active Time Off"/>
+                    domain="[('holiday_status_id.active', '=', True), '|', ('employee_id', '!=', False), '&amp;', ('employee_id', '=', False), ('state', '!=', 'validate')]" help="Active Time Off"/>
                 <filter name="archive" string="Archived Time Off"
                     domain="[('holiday_status_id.active', '=', False)]" help="Archived Time Off"/>
                 <filter invisible="1" string="Late Activities" name="activities_overdue"
@@ -256,7 +256,7 @@
                                         'invisible': ['|', ('request_unit_half', '=', True), ('request_unit_hours', '=', True)],
                                         'required': ['|', ('date_from', '=', False), ('date_to', '=', False)]
                                             }"
-                                    widget="daterange" options="{'related_end_date': 'request_date_from'}"/>
+                                    widget="daterange" options="{'related_start_date': 'request_date_from'}"/>
                                 <field name="request_date_from_period" class="oe_inline"
                                     string="In"
                                     options="{'horizontal': True}"
@@ -408,7 +408,7 @@
             <field name="holiday_status_id" position="replace"/>
             <div name="title" position="inside">
                 <h1 class="d-flex flex-row justify-content-between">
-                    <field name="holiday_status_id" options="{'no_open': True}"/>
+                    <field name="holiday_status_id" options="{'no_open': True}" context="{'from_manager_leave_form': True ,'employee_id': employee_id}"/>
                 </h1>
             </div>
             <field name="employee_id" position="replace"/>
@@ -573,7 +573,7 @@
         <field name="name">Dashboard</field>
         <field name="res_model">hr.leave</field>
         <field name="view_mode">calendar,tree,form,activity</field>
-        <field name="domain">[('user_id', '=', uid)]</field>
+        <field name="domain">[('user_id', '=', uid), ('employee_id.company_id', 'in', allowed_company_ids)]</field>
         <field name="context">{'short_name': 1, 'search_default_active_time_off': 1}</field>
         <field name="search_view_id" ref="hr_holidays.hr_leave_view_search_my"/>
         <field name="help" type="html">
@@ -662,7 +662,7 @@
             'search_default_active_time_off': 4,
             'hide_employee_name': 1}
         </field>
-        <field name="domain">[]</field>
+        <field name="domain">[('employee_id.company_id', 'in', allowed_company_ids)]</field>
         <field name="help" type="html">
             <p class="o_view_nocontent_smiling_face">
                 Meet the time off dashboard.

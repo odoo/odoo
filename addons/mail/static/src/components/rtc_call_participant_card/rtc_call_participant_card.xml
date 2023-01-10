@@ -4,33 +4,30 @@
     <t t-name="mail.RtcCallParticipantCard" owl="1">
         <div class="o_RtcCallParticipantCard"
              t-att-class="{
+                'o-isClickable': callParticipantCard.invitedGuest or callParticipantCard.invitedPartner or !callParticipantCard.isMinimized,
                 'o-isTalking': callParticipantCard and !callParticipantCard.isMinimized and callParticipantCard.isTalking,
                 'o-isInvitation': callParticipantCard and callParticipantCard.isInvitation,
             }"
             t-on-contextmenu="_onContextMenu"
         >
             <t t-if="callParticipantCard">
-                <div class="o_RtcCallParticipantCard_container"
-                     t-att-class="{
-                        'o-isMinimized': callParticipantCard.isMinimized,
-                        'o-canClick': !callParticipantCard.isInvitation,
-                     }"
+                <div class="o_RtcCallParticipantCard_container align-items-center"
                      t-att-title="callParticipantCard.name"
                      t-att-aria-label="callParticipantCard.name"
                      t-on-click="callParticipantCard.onClick"
                 >
                     <!-- card -->
                     <t t-if="callParticipantCard.rtcSession and callParticipantCard.rtcSession.videoStream">
-                        <RtcVideo t-on-click="callParticipantCard.onClickVideo" rtcSessionLocalId="callParticipantCard.rtcSession.localId"/>
+                        <RtcVideo rtcSessionLocalId="callParticipantCard.rtcSession.localId"/>
                     </t>
                     <t t-else="">
-                        <div class="o_RtcCallParticipantCard_avatar" draggable="false">
+                        <div class="o_RtcCallParticipantCard_avatarFrame mh-100 mw-100 h-100 align-items-center justify-content-center" t-att-class="{ 'o-isMinimized': callParticipantCard.isMinimized }" draggable="false">
                             <img alt="Avatar"
                                  t-att-class="{
                                     'o-isTalking': callParticipantCard.isTalking,
                                     'o-isInvitation': callParticipantCard.isInvitation,
                                  }"
-                                 class="o_RtcCallParticipantCard_avatarImage rounded-circle"
+                                 class="o_RtcCallParticipantCard_avatarImage h-100 rounded-circle"
                                  t-att-src="callParticipantCard.avatarUrl"
                                  draggable="false"
                             />
@@ -79,14 +76,12 @@
 
                         <!-- volume popover -->
                         <t t-if="!callParticipantCard.rtcSession.isOwnSession">
-                            <i class="o_RtcCallParticipantCard_volumeMenuAnchor">
-                                <Popover>
-                                    <i t-ref="volumeMenuAnchor"/>
-                                    <t t-set="opened">
-                                        <input type="range" min="0.0" max="1" step="0.01" t-att-value="callParticipantCard.rtcSession.volume" t-on-change="callParticipantCard.onChangeVolume"/>
-                                    </t>
-                                </Popover>
-                            </i>
+                            <Popover>
+                                <i class="o_RtcCallParticipantCard_volumeMenuAnchor" t-on-click="callParticipantCard.onClickVolumeAnchor" t-ref="volumeMenuAnchor"/>
+                                <t t-set="opened">
+                                    <input type="range" min="0.0" max="1" step="0.01" t-att-value="callParticipantCard.rtcSession.volume" t-on-change="callParticipantCard.onChangeVolume"/>
+                                </t>
+                            </Popover>
                         </t>
                     </t>
 

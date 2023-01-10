@@ -8,7 +8,7 @@
                 <t t-if="!env.isSmall"><t t-esc="currentCompany.name"/></t>
             </span>
         </t>
-        <t t-foreach="Object.values(companyService.availableCompanies)" t-as="company">
+        <t t-foreach="Object.values(companyService.availableCompanies).sort((c1, c2) => c1.sequence - c2.sequence)" t-as="company">
             <t t-call="web.SwitchCompanyItem">
                 <t t-set="company" t-value="company" />
             </t>

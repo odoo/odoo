@@ -2,8 +2,8 @@
 // Layout
 // ------------------------------------------------------------------
 .o_AttachmentImage {
-    min-width: 50px;
-    min-height: 50px;
+    min-width: 20px;
+    min-height: 20px;
     flex-shrink: 0;
     margin: map-get($spacers, 1);
 
@@ -16,10 +16,6 @@
         .o_AttachmentImage_imageOverlay {
             opacity: 1;
         }
-    }
-
-    &.o-composer-attachment {
-        width: 50px;
     }
 }
 
@@ -51,11 +47,6 @@
     top: 0;
 }
 
-.o_AttachmentImage_imageOverlayDetails {
-    margin: map-get($spacers, 1);
-    width: 200px;
-}
-
 
 // ------------------------------------------------------------------
 // Style
@@ -68,9 +59,10 @@
 .o_AttachmentImage_action {
     border-radius: 10px;
     cursor: pointer;
+    background: rgba(0, 0, 0, 0.2);
 
     &:hover {
-        background: rgba(0, 0, 0, 0.2);
+        background: rgba(0, 0, 0, 0.5);
     }
 }
 

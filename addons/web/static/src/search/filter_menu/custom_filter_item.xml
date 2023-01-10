@@ -7,7 +7,7 @@
                 Add Custom Filter
             </t>
             <t t-foreach="conditions" t-as="condition" t-key="condition_index">
-                <div class=" o_filter_condition dropdown-item-text">
+                <div class=" o_filter_condition dropdown-item-text position-relative">
                     <t t-set="fieldType" t-value="fields[condition.field].type"/>
                     <t t-set="selectedOperator" t-value="OPERATORS[FIELD_TYPES[fieldType]][condition.operator]"/>
                     <span t-if="!condition_first" class="o_or_filter">or</span>

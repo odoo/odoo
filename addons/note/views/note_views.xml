@@ -91,6 +91,7 @@
           <progressbar field="activity_state" colors='{"planned": "success", "today": "warning", "overdue": "danger"}'/>
           <templates>
             <t t-name="kanban-box">
+              <t t-set="noteHasFollowers" t-value="record.message_partner_ids.raw_value.length &gt; 1"/>
 
               <div t-attf-class="#{!selection_mode ? kanban_color(record.color.raw_value) : ''} oe_kanban_global_click_edit oe_semantic_html_override oe_kanban_card">
 
@@ -105,25 +106,40 @@
                         <ul class="oe_kanban_colorpicker" data-field="color"/>
                     </div>
                 </div>
-                  <span>
-                    <a name="action_close" type="object" t-if="record.open.raw_value"><i class="fa fa-check" role="img" aria-label="Opened" title="Opened"/></a>
-                    <a name="action_open" type="object" t-if="!record.open.raw_value"><i class="fa fa-undo" role="img" aria-label="Closed" title="Closed"/></a>
-                  </span>
-                <!-- kanban note -->
-                <span t-attf-class="oe_kanban_content #{record.open.raw_value ? '' : 'note_text_line_through'}">
-                  <!-- title -->
-                  <field name="name"/>
-                  <div class="o_kanban_inline_block float-right mr4">
+                <div t-attf-class="d-flex #{noteHasFollowers ? 'flex-wrap' : 'flex-nowrap'}">
+                  <div class="d-flex flex-grow-1">
+                    <span class="mr-2">
+                      <a name="action_close" type="object" t-if="record.open.raw_value">
+                        <i class="fa fa-check" role="img" aria-label="Opened" title="Opened"/>
+                      </a>
+                      <a name="action_open" type="object" t-if="!record.open.raw_value">
+                        <i class="fa fa-undo" role="img" aria-label="Closed" title="Closed"/>
+                      </a>
+                    </span>
+
+                    <span t-attf-class="oe_kanban_content flex-grow-1 #{record.open.raw_value ? '' : 'note_text_line_through'}">
+                      <!-- title -->
+                      <field name="name"/>
+                    </span>
+                  </div>
+                  <div t-attf-class="d-flex #{noteHasFollowers ? 'w-100 align-items-center justify-content-end' : 'align-items-end'}">
+                    <div t-if="noteHasFollowers" class="d-flex align-items-center mr-2 mt-2">
+                      <t t-foreach="record.message_partner_ids.raw_value" t-as="follower">
+                        <img
+                            t-if="follower_index &lt; 5"
+                            t-att-src="kanban_image('res.partner', 'avatar_128', follower)"
+                            class="oe_kanban_avatar o_image_24_cover rounded-circle border border-white bg-white ml-n2"
+                            t-att-data-member_id="follower"
+                            alt="Follower"/>
+                        <small
+                            t-if="follower_index == 5"
+                            t-esc="'+' + (follower_size - 5)"
+                            class="text-info font-weight-bold ml-1"/>
+                      </t>
+                    </div>
                     <field name="activity_ids" widget="kanban_activity" />
                   </div>
-                </span>
-                <t t-if="record.message_partner_ids.raw_value.length &gt; 1">
-                    <div class="clearfix"></div>
-                      <t t-foreach="record.message_partner_ids.raw_value" t-as="follower">
-                        <img t-att-src="kanban_image('res.partner', 'avatar_128', follower)" class="oe_kanban_avatar o_image_24_cover float-right mt-2" t-att-data-member_id="follower" alt="Follower"/>
-                      </t>
-                    <div class="clearfix"></div>
-                </t>
+                </div>
               </div>
             </t>
           </templates>

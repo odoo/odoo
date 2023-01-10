@@ -150,7 +150,7 @@ class TestSchema(common.TransactionCase):
         columns_data = self.get_columns_data('test_new_api_foo')
         self.assertEqual(set(columns_data),
                          {'id', 'create_date', 'create_uid', 'write_date',
-                          'write_uid', 'name', 'value1', 'value2'})
+                          'write_uid', 'name', 'value1', 'value2', 'text'})
 
         # retrieve schema data about the table's foreign keys
         foreign_keys = self.get_foreign_keys('test_new_api_foo')

@@ -298,28 +298,32 @@ class PaymentTransaction(models.Model):
         if any(tx.state != 'authorized' for tx in self):
             raise ValidationError(_("Only authorized transactions can be captured."))
 
+        payment_utils.check_rights_on_recordset(self)
         for tx in self:
-            tx._send_capture_request()
+            # In sudo mode because we need to be able to read on acquirer fields.
+            tx.sudo()._send_capture_request()
 
     def action_void(self):
         """ Check the state of the transaction and request to have them voided. """
         if any(tx.state != 'authorized' for tx in self):
             raise ValidationError(_("Only authorized transactions can be voided."))
 
+        payment_utils.check_rights_on_recordset(self)
         for tx in self:
-            tx._send_void_request()
+            # In sudo mode because we need to be able to read on acquirer fields.
+            tx.sudo()._send_void_request()
 
-    def action_refund(self, refund_amount=None):
+    def action_refund(self, amount_to_refund=None):
         """ Check the state of the transactions and request their refund.
 
-        :param float refund_amount: The amount to be refunded
+        :param float amount_to_refund: The amount to be refunded
         :return: None
         """
         if any(tx.state != 'done' for tx in self):
             raise ValidationError(_("Only confirmed transactions can be refunded."))
 
         for tx in self:
-            tx._send_refund_request(refund_amount)
+            tx._send_refund_request(amount_to_refund)
 
     #=== BUSINESS METHODS - PAYMENT FLOW ===#
 
@@ -536,7 +540,7 @@ class PaymentTransaction(models.Model):
         self.ensure_one()
         self._log_sent_message()
 
-    def _send_refund_request(self, refund_amount=None, create_refund_transaction=True):
+    def _send_refund_request(self, amount_to_refund=None, create_refund_transaction=True):
         """ Request the provider of the acquirer handling the transaction to refund it.
 
         For an acquirer to support refunds, it must override this method and request a refund
@@ -544,18 +548,19 @@ class PaymentTransaction(models.Model):
 
         Note: self.ensure_one()
 
-        :param float refund_amount: The amount to be refunded
+        :param float amount_to_refund: The amount to be refunded
         :param bool create_refund_transaction: Whether a refund transaction should be created
-        :return: The refund transaction if any, or `None`
+        :return: The refund transaction if any
         :rtype: recordset of `payment.transaction`
         """
         self.ensure_one()
 
-        refund_tx = None
         if create_refund_transaction:
-            refund_tx = self._create_refund_transaction(refund_amount=refund_amount)
+            refund_tx = self._create_refund_transaction(amount_to_refund=amount_to_refund)
             refund_tx._log_sent_message()
-        return refund_tx
+            return refund_tx
+        else:
+            return self.env['payment.transaction']
 
     def _send_capture_request(self):
         """ Request the provider of the acquirer handling the transaction to capture it.
@@ -581,21 +586,22 @@ class PaymentTransaction(models.Model):
         """
         self.ensure_one()
 
-    def _create_refund_transaction(self, refund_amount=None, **custom_create_values):
+    def _create_refund_transaction(self, amount_to_refund=None, **custom_create_values):
         """ Create a new transaction with operation 'refund' and link it to the current transaction.
 
-        :param float refund_amount: The strictly positive amount to refund, in the same currency as
-                                    the source transaction
+        :param float amount_to_refund: The strictly positive amount to refund, in the same currency
+                                       as the source transaction
         :return: The refund transaction
         :rtype: recordset of `payment.transaction`
         """
-        self.ensure_one
+        self.ensure_one()
 
         return self.create({
             'acquirer_id': self.acquirer_id.id,
             'reference': self._compute_reference(self.provider, prefix=f'R-{self.reference}'),
-            'amount': -(refund_amount or self.amount),
+            'amount': -(amount_to_refund or self.amount),
             'currency_id': self.currency_id.id,
+            'token_id': self.token_id.id,
             'operation': 'refund',
             'source_transaction_id': self.id,
             'partner_id': self.partner_id.id,
@@ -860,8 +866,9 @@ class PaymentTransaction(models.Model):
         if not txs_to_post_process:
             # Let the client post-process transactions so that they remain available in the portal
             client_handling_limit_date = datetime.now() - relativedelta.relativedelta(minutes=10)
-            # Don't try forever to post-process a transaction that doesn't go through
-            retry_limit_date = datetime.now() - relativedelta.relativedelta(days=2)
+            # Don't try forever to post-process a transaction that doesn't go through. Set the limit
+            # to 4 days because some providers (PayPal) need that much for the payment verification.
+            retry_limit_date = datetime.now() - relativedelta.relativedelta(days=4)
             # Retrieve all transactions matching the criteria for post-processing
             txs_to_post_process = self.search([
                 ('state', '=', 'done'),
@@ -1045,8 +1052,8 @@ class PaymentTransaction(models.Model):
                 acq_name=self.acquirer_id.name
             )
             if self.payment_id:
-                message += _(
-                    "\nThe related payment is posted: %s",
+                message += "<br />" + _(
+                    "The related payment is posted: %s",
                     self.payment_id._get_payment_chatter_link()
                 )
         elif self.state == 'error':
@@ -1056,14 +1063,14 @@ class PaymentTransaction(models.Model):
                 ref=self.reference, amount=formatted_amount, acq_name=self.acquirer_id.name
             )
             if self.state_message:
-                message += _("\nError: %s", self.state_message)
+                message += "<br />" + _("Error: %s", self.state_message)
         else:
             message = _(
                 "The transaction with reference %(ref)s for %(amount)s is canceled (%(acq_name)s).",
                 ref=self.reference, amount=formatted_amount, acq_name=self.acquirer_id.name
             )
             if self.state_message:
-                message += _("\nReason: %s", self.state_message)
+                message += "<br />" + _("Reason: %s", self.state_message)
         return message
 
     def _get_last(self):

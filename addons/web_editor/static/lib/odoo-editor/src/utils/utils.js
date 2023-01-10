@@ -1,5 +1,4 @@
 /** @odoo-module **/
-const INVISIBLE_REGEX = /\u200c/g;
 
 export const DIRECTIONS = {
     LEFT: false,
@@ -26,9 +25,9 @@ export const CTGROUPS = {
 };
 
 export const URL_REGEX =
-    /((?:(?:https?:\/\/)|(?:[-a-zA-Z0-9@:%._\+~#=]{1,64}\.))[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,63}\b(?:[^\s]*))/gi;
+    /((?:(?:https?:\/\/)|(?:[-a-zA-Z0-9@:%._\+~#=]{1,64}\.))[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-zA-Z0-9()]{2,63}\b(?:(?!\.)[^\s]*))/gi;
 export const URL_REGEX_WITH_INFOS =
-    /((?:(https?:\/\/)|(?:[-a-zA-Z0-9@:%._\+~#=]{1,64}\.))[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,63}\b(?:[^\s]*))/gi;
+    /((?:(https?:\/\/)|(?:[-a-zA-Z0-9@:%._\+~#=]{1,64}\.))[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-zA-Z0-9()]{2,63}\b(?:(?!\.)[^\s]*))/gi;
 export const YOUTUBE_URL_GET_VIDEO_ID =
     /^(?:(?:https?:)?\/\/)?(?:(?:www|m)\.)?(?:youtube\.com|youtu\.be)(?:\/(?:[\w-]+\?v=|embed\/|v\/)?)([^\s?&#]+)(?:\S+)?$/i;
 
@@ -201,54 +200,6 @@ export function createDOMPathGenerator(
     };
 }
 
-export function createDOMPathGeneratorBak(direction, deepOnly, inline, inScope = false) {
-    const nextDeepest =
-        direction === DIRECTIONS.LEFT
-            ? node => lastLeaf(node.previousSibling, inline ? isBlock : undefined)
-            : node => firstLeaf(node.nextSibling, inline ? isBlock : undefined);
-
-    const firstNode =
-        direction === DIRECTIONS.LEFT
-            ? (node, offset) => lastLeaf(node.childNodes[offset - 1], inline ? isBlock : undefined)
-            : (node, offset) => firstLeaf(node.childNodes[offset], inline ? isBlock : undefined);
-
-    // Note "reasons" is a way for the caller to be able to know why the
-    // generator ended yielding values.
-    return function* (node, offset, reasons = []) {
-        let movedUp = false;
-
-        let currentNode = firstNode(node, offset);
-        if (!currentNode) {
-            movedUp = true;
-            currentNode = node;
-        }
-
-        while (currentNode) {
-            if (inline && isBlock(currentNode)) {
-                reasons.push(movedUp ? PATH_END_REASONS.BLOCK_OUT : PATH_END_REASONS.BLOCK_HIT);
-                break;
-            }
-            if (inScope && currentNode === node) {
-                reasons.push(PATH_END_REASONS.OUT_OF_SCOPE);
-                break;
-            }
-            if (!deepOnly || !movedUp) {
-                yield currentNode;
-            }
-
-            movedUp = false;
-            let nextNode = nextDeepest(currentNode);
-            if (!nextNode) {
-                movedUp = true;
-                nextNode = currentNode.parentNode;
-            }
-            currentNode = nextNode;
-        }
-
-        reasons.push(PATH_END_REASONS.NO_NODE);
-    };
-}
-
 /**
  * Find a node.
  * @param {findCallback} findCallback - This callback check if this function
@@ -285,10 +236,15 @@ export function findNode(domPath, findCallback = () => true, stopCallback = () =
  *
  * @param {Node} node
  * @param {string} [selector=undefined]
+ * @param {boolean} [restrictToEditable=false]
  * @returns {HTMLElement}
  */
-export function closestElement(node, selector) {
+export function closestElement(node, selector, restrictToEditable=false) {
     const element = node.nodeType === Node.TEXT_NODE ? node.parentElement : node;
+    if (restrictToEditable && selector && element) {
+        const elementFound = element.closest(selector);
+        return elementFound && elementFound.querySelector('.odoo-editor-editable') ? null : elementFound;
+    }
     return selector && element ? element.closest(selector) : element || node;
 }
 
@@ -302,6 +258,20 @@ export function closestElement(node, selector) {
 export function ancestors(node, editable) {
     if (!node || !node.parentElement || node === editable) return [];
     return [node.parentElement, ...ancestors(node.parentElement, editable)];
+}
+
+/**
+ * Take a node, return all of its descendants, in depth-first order.
+ *
+ * @param {Node} node
+ * @returns {Node[]}
+ */
+export function descendants(node) {
+    const posterity = [];
+    for (const child of (node.childNodes || [])) {
+        posterity.push(child, ...descendants(child));
+    }
+    return posterity;
 }
 
 export function closestBlock(node) {
@@ -587,9 +557,8 @@ export function getCursorDirection(anchorNode, anchorOffset, focusNode, focusOff
  * @param {Node} editable
  * @returns {Node[]}
  */
-export function getTraversedNodes(editable) {
+export function getTraversedNodes(editable, range = getDeepRange(editable)) {
     const document = editable.ownerDocument;
-    const range = getDeepRange(editable);
     if (!range) return [];
     const iterator = document.createNodeIterator(range.commonAncestorContainer);
     let node;
@@ -795,7 +764,7 @@ export function preserveCursor(document) {
  * Source:
  * https://developer.mozilla.org/en-US/docs/Web/HTML/Block-level_elements
  *
- * */
+ **/
 const blockTagNames = [
     'ADDRESS',
     'ARTICLE',
@@ -897,9 +866,90 @@ export function isBold(node) {
     const fontWeight = +getComputedStyle(closestElement(node)).fontWeight;
     return fontWeight > 500 || fontWeight > +getComputedStyle(closestBlock(node)).fontWeight;
 }
+/**
+ * Return true if the given node appears italic.
+ *
+ * @param {Node} node
+ * @returns {boolean}
+ */
+export function isItalic(node) {
+    return getComputedStyle(closestElement(node)).fontStyle === 'italic';
+}
+/**
+ * Return true if the given node appears underlined.
+ *
+ * @param {Node} node
+ * @returns {boolean}
+ */
+export function isUnderline(node) {
+    let parent = closestElement(node);
+    while (parent) {
+        if (getComputedStyle(parent).textDecorationLine === 'underline') {
+            return true;
+        }
+        parent = parent.parentElement;
+    }
+    return false;
+}
+/**
+ * Return true if the given node appears struck through.
+ *
+ * @param {Node} node
+ * @returns {boolean}
+ */
+export function isStrikeThrough(node) {
+    let parent = closestElement(node);
+    while (parent) {
+        if (getComputedStyle(parent).textDecorationLine === 'line-through') {
+            return true;
+        }
+        parent = parent.parentElement;
+    }
+    return false;
+}
+/**
+ * Return true if the given node appears in a different direction than that of
+ * the editable ('ltr' or 'rtl').
+ *
+ * Note: The direction of the editable is set on its "dir" attribute, to the
+ * value of the "direction" option on instantiation of the editor.
+ *
+ * @param {Node} node
+ * @param {Element} editable
+ * @returns {boolean}
+ */
+ export function isDirectionSwitched(node, editable) {
+    const defaultDirection = editable.getAttribute('dir');
+    return getComputedStyle(closestElement(node)).direction !== defaultDirection;
+}
+export const isFormat = {
+    bold: isBold,
+    italic: isItalic,
+    underline: isUnderline,
+    strikeThrough: isStrikeThrough,
+    switchDirection: isDirectionSwitched,
+};
+/**
+ * Return true if the current selection on the editable appears as the given
+ * format. The selection is considered to appear as that format if every text
+ * node in it appears as that format.
+ *
+ * @param {Element} editable
+ * @param {String} format 'bold'|'italic'|'underline'|'strikeThrough'|'switchDirection'
+ * @returns {boolean}
+ */
+export function isSelectionFormat(editable, format) {
+    const selectedText = getSelectedNodes(editable)
+        .filter(n => n.nodeType === Node.TEXT_NODE && n.nodeValue.trim().length);
+    if (selectedText.length) {
+        return selectedText.every(n => isFormat[format](n.parentElement, editable))
+    } else {
+        return isFormat[format](closestElement(editable.ownerDocument.getSelection().anchorNode), editable);
+    }
+}
 
 export function isUnbreakable(node) {
-    if (!node || node.nodeType === Node.TEXT_NODE || !node.isContentEditable) {
+    if (!node || node.nodeType === Node.TEXT_NODE) {
         return false;
     }
     if (node.nodeType !== Node.ELEMENT_NODE) {
@@ -927,15 +977,10 @@ export function isUnremovable(node) {
     if (node.nodeType !== Node.ELEMENT_NODE && node.nodeType !== Node.TEXT_NODE) {
         return true;
     }
-    const isEditableRoot =
-        node.isContentEditable &&
-        node.parentElement &&
-        !node.parentElement.isContentEditable &&
-        node.nodeName !== 'A'; // links can be their own contenteditable but should be removable by default.
     return (
-        isEditableRoot ||
+        node.oid === 'root' ||
         (node.nodeType === Node.ELEMENT_NODE &&
-            (node.getAttribute('t-set') || node.getAttribute('t-call'))) ||
+            (node.classList.contains('o_editable') || node.getAttribute('t-set') || node.getAttribute('t-call'))) ||
         (node.classList && node.classList.contains('oe_unremovable'))
     );
 }
@@ -951,6 +996,12 @@ export function isFontAwesome(node) {
         node &&
         (node.nodeName === 'I' || node.nodeName === 'SPAN') &&
         ['fa', 'fab', 'fad', 'far'].some(faClass => node.classList.contains(faClass))
+    );
+}
+export function isZWS(node) {
+    return (
+        node &&
+        node.textContent === '\u200B'
     );
 }
 export function isMediaElement(node) {
@@ -978,6 +1029,53 @@ export function getInSelection(document, selector) {
                 node => range.intersectsNode(node),
             ))
     );
+}
+
+// This is a list of "paragraph-related elements", defined as elements that
+// behave like paragraphs.
+const paragraphRelatedElements = [
+    'P',
+    'H1',
+    'H2',
+    'H3',
+    'H4',
+    'H5',
+    'H6',
+];
+
+/**
+ * Return true if the given node allows "paragraph-related elements".
+ *
+ * @see paragraphRelatedElements
+ * @param {Node} node
+ * @returns {boolean}
+ */
+export function allowsParagraphRelatedElements(node) {
+    return isBlock(node) && !paragraphRelatedElements.includes(node.nodeName);
+}
+
+/**
+ * Take a node and unwrap all of its block contents recursively. All blocks
+ * (except for firstChilds) are preceded by a <br> in order to preserve the line
+ * breaks.
+ *
+ * @param {Node} node
+ */
+export function makeContentsInline(node) {
+    let childIndex = 0;
+    for (const child of node.childNodes) {
+        if (isBlock(child)) {
+            if (childIndex && paragraphRelatedElements.includes(child.nodeName)) {
+                child.before(document.createElement('br'));
+            }
+            for (const grandChild of child.childNodes) {
+                child.before(grandChild);
+                makeContentsInline(grandChild);
+            }
+            child.remove();
+        }
+        childIndex += 1;
+    }
 }
 
 /**
@@ -1058,6 +1156,7 @@ export function isContentTextNode(node) {
  * will always return 'true' while it is sometimes invisible.
  *
  * @param {Node} node
+ * @param {boolean} areBlocksAlwaysVisible
  * @returns {boolean}
  */
 export function isVisible(node, areBlocksAlwaysVisible = true) {
@@ -1207,7 +1306,7 @@ export function isFakeLineBreak(brEl) {
  * @returns {boolean}
  */
 export function isEmptyBlock(blockEl) {
-    if (blockEl.nodeType !== Node.ELEMENT_NODE) {
+    if (!blockEl || blockEl.nodeType !== Node.ELEMENT_NODE) {
         return false;
     }
     if (isVisibleStr(blockEl.textContent)) {
@@ -1316,8 +1415,46 @@ export function splitElement(element, offset) {
     return [before, after];
 }
 
+/**
+ * Split around the given elements, until a given ancestor (included). Elements
+ * will be removed in the process so caution is advised in dealing with their
+ * references. Returns a tuple containing the new elements on both sides of the
+ * split.
+ *
+ * @see splitElement
+ * @param {Node[] | Node} elements
+ * @param {Node} limitAncestor
+ * @returns {[Node, Node]}
+ */
+export function splitAroundUntil(elements, limitAncestor) {
+    elements = Array.isArray(elements) ? elements : [elements];
+    let after = elements[elements.length - 1].nextSibling;
+    let newUntil = limitAncestor;
+    let beforeSplit, afterSplit;
+    // Split up ancestors up to font
+    while (after && after.parentElement !== limitAncestor) {
+        afterSplit = splitElement(after.parentElement, childNodeIndex(after))[0];
+        newUntil = afterSplit;
+        after = newUntil.nextSibling;
+    }
+    if (after) {
+        afterSplit = splitElement(limitAncestor, childNodeIndex(after))[0];
+        limitAncestor = afterSplit;
+    }
+    let before = elements[0].previousSibling;
+    while (before && before.parentElement !== limitAncestor) {
+        beforeSplit = splitElement(before.parentElement, childNodeIndex(before) + 1)[1];
+        newUntil = beforeSplit;
+        before = newUntil.previousSibling;
+    }
+    if (before) {
+        beforeSplit = splitElement(limitAncestor, childNodeIndex(before) + 1)[1];
+    }
+    return [beforeSplit, afterSplit];
+}
+
 export function insertText(sel, content) {
-    if (sel.anchorNode.nodeType == Node.TEXT_NODE) {
+    if (sel.anchorNode.nodeType === Node.TEXT_NODE) {
         const pos = [sel.anchorNode.parentElement, splitTextNode(sel.anchorNode, sel.anchorOffset)];
         setSelection(...pos, ...pos, false);
     }
@@ -1326,6 +1463,7 @@ export function insertText(sel, content) {
     sel.getRangeAt(0).insertNode(txt);
     restore();
     setSelection(...boundariesOut(txt), false);
+    return txt;
 }
 
 /**
@@ -1360,12 +1498,39 @@ export function fillEmpty(el) {
         blockEl.appendChild(br);
         fillers.br = br;
     }
-    if (!el.textContent.length && isUnremovable(el) && !isBlock(el)) {
+    if (
+        !el.textContent.length &&
+        !isBlock(el) &&
+        el.nodeName !== 'BR' &&
+        !el.hasAttribute("oe-zws-empty-inline")
+    ) {
+        // As soon as there is actual content in the node, the zero-width space
+        // is removed by the sanitize function.
         const zws = document.createTextNode('\u200B');
         el.appendChild(zws);
+        el.setAttribute("oe-zws-empty-inline", "");
         fillers.zws = zws;
+        const previousSibling = el.previousSibling;
+        if (previousSibling && previousSibling.nodeName === "BR") {
+            previousSibling.remove();
+        }
+        setSelection(zws, 0, zws, 0);
     }
     return fillers;
+}
+/**
+ * Takes a selection (assumed to be collapsed) and insert a zero-width space at
+ * its anchor point. Then, select that zero-width space.
+ *
+ * @param {Selection} selection
+ * @returns {Node} the inserted zero-width space
+ */
+export function insertAndSelectZws(selection) {
+    const offset = selection.anchorOffset;
+    const zws = insertText(selection, '\u200B');
+    splitTextNode(zws, offset);
+    selection.getRangeAt(0).selectNode(zws);
+    return zws;
 }
 /**
  * Removes the given node if invisible and all its invisible ancestors.
@@ -1383,7 +1548,7 @@ export function clearEmpty(node) {
 }
 
 export function setTagName(el, newTagName) {
-    if (el.tagName == newTagName) {
+    if (el.tagName === newTagName) {
         return el;
     }
     var n = document.createElement(newTagName);
@@ -1522,6 +1687,7 @@ export function prepareUpdate(...args) {
  * @param {HTMLElement} el
  * @param {number} offset
  * @param {number} direction @see DIRECTIONS.LEFT @see DIRECTIONS.RIGHT
+ * @param {CTYPES} leftCType
  * @returns {Object}
  */
 export function getState(el, offset, direction, leftCType) {
@@ -1557,7 +1723,7 @@ export function getState(el, offset, direction, leftCType) {
     let lastSpace = null;
     for (const node of domPath) {
         if (node.nodeType === Node.TEXT_NODE) {
-            const value = node.nodeValue.replace(INVISIBLE_REGEX, '');
+            const value = node.nodeValue;
             // If we hit a text node, the state depends on the path direction:
             // any space encountered backwards is a visible space if we hit
             // visible content afterwards. If going forward, spaces are only

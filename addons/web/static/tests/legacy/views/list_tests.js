@@ -557,7 +557,7 @@ QUnit.module('Views', {
         assert.hasClass(cpButtons[0].querySelector('button[name="x"]'), 'btn btn-secondary');
         assert.containsOnce(cpButtons[0], '.o_list_selection_box');
         assert.strictEqual(
-            cpButtons[0].querySelector('button[name="x"]').previousElementSibling,
+            cpButtons[0].querySelector('button[name="x"]').nextElementSibling,
             cpButtons[0].querySelector('.o_list_selection_box')
         );
         assert.containsNone(cpButtons[0], 'button[name="y"]');
@@ -2234,6 +2234,38 @@ QUnit.module('Views', {
         list.destroy();
     });
 
+    QUnit.test('selection box is displayed after header buttons', async function (assert) {
+        assert.expect(5);
+
+        const list = await createView({
+            View: ListView,
+            model: 'foo',
+            data: this.data,
+            arch:
+                `<tree>
+                    <header>
+                         <button name="x" type="object" class="plaf" string="plaf"/>
+                         <button name="y" type="object" class="plouf" string="plouf"/>
+                    </header>
+                    <field name="foo"/>
+                    <field name="bar"/>
+                </tree>`,
+        });
+
+        assert.containsN(list, '.o_data_row', 4);
+        assert.containsNone(list.$('.o_cp_buttons'), '.o_list_selection_box');
+
+        // select a record
+        await testUtils.dom.click(list.$('.o_data_row:first .o_list_record_selector input'));
+        assert.containsOnce(list.$('.o_cp_buttons'), '.o_list_selection_box');
+        const lastElement = list.$('.o_cp_buttons .o_list_buttons').children(":last")[0];
+        assert.strictEqual(lastElement, list.$('.o_cp_buttons .o_list_selection_box')[0],
+            "last element should selection box");
+        assert.strictEqual(list.$('.o_list_selection_box').text().trim(), '1 selected');
+
+        list.destroy();
+    });
+
     QUnit.test('selection box is removed after multi record edition', async function (assert) {
         assert.expect(6);
 
@@ -2372,7 +2404,7 @@ QUnit.module('Views', {
 
         // Let's update the view to dislay NO records
         await list.update({domain: ['&', ['bar', '=', false], ['int_field', '>', 0]]});
-        assert.strictEqual(list.$('tfoot td:nth(2)').text(), "0", "total should have been recomputed to 0");
+        assert.strictEqual(list.$('tfoot td:nth(2)').text(), "", "No records, so no total.");
 
         list.destroy();
     });
@@ -2404,6 +2436,34 @@ QUnit.module('Views', {
                         "total should be 10 as first record of first group is selected");
         list.destroy();
     });
+
+    QUnit.test('hide aggregated value in grouped lists when no data provided by RPC call', async function(assert) {
+        assert.expect(1);
+
+        var list = await createView({
+            View: ListView,
+            model: 'foo',
+            data: this.data,
+            groupBy: ['bar'],
+            arch: '<tree editable="bottom"><field name="foo"/><field name="qux" widget="float_time" sum="Sum"/></tree>',
+            mockRPC: function (route, args) {
+                return this._super.apply(this, arguments).then(result => {
+                    // On PY-side, a read_group won't provide any aggregate value
+                    // if the field does not have a `group_operator` attribute.
+                    // (see 5691b126f06/odoo/models.py#L2521-L2528)
+                    // Here, since `qux` does not have such an attribute, we
+                    // remove the value provided by `_mockReadGroup`
+                    _.each(result.groups, function(group) {
+                      delete group.qux
+                    })
+                    return Promise.resolve(result)
+                });
+            },
+        });
+
+        assert.strictEqual(list.$('tfoot td:nth(2)').text(), "", "There isn't any aggregated value");
+        list.destroy();
+    })
 
     QUnit.test('aggregates are updated when a line is edited', async function (assert) {
         assert.expect(2);
@@ -2874,8 +2934,8 @@ QUnit.module('Views', {
 
         assert.strictEqual(list.$('table').width(), list.$('.o_list_view').width());
         const largeCells = list.$('.o_data_cell.large');
-        assert.strictEqual(largeCells[0].offsetWidth, largeCells[1].offsetWidth);
-        assert.strictEqual(largeCells[1].offsetWidth, largeCells[2].offsetWidth);
+        assert.ok(Math.abs(largeCells[0].offsetWidth - largeCells[1].offsetWidth) <= 1);
+        assert.ok(Math.abs(largeCells[1].offsetWidth - largeCells[2].offsetWidth) <= 1);
         assert.ok(list.$('.o_data_cell:not(.large)')[0].offsetWidth < largeCells[0].offsetWidth);
 
         list.destroy();
@@ -3366,7 +3426,7 @@ QUnit.module('Views', {
         const text = list.el.querySelector('th[data-name="text"]');
         const textWidth = Math.ceil(text.getBoundingClientRect().width);
 
-        assert.strictEqual(fooWidth, textWidth, "both columns should have been given the same width");
+        assert.ok(Math.abs(fooWidth - textWidth) <= 1, "both columns should have been given the same width");
 
         const firstRowHeight = list.$('.o_data_row:nth(0)')[0].offsetHeight;
         const secondRowHeight = list.$('.o_data_row:nth(1)')[0].offsetHeight;
@@ -7238,6 +7298,7 @@ QUnit.module('Views', {
                 if (route === '/web/dataset/resequence') {
                     if (moves === 0) {
                         assert.deepEqual(args, {
+                            context: {},
                             model: "foo",
                             ids: [4, 3],
                             offset: 13,
@@ -7246,6 +7307,7 @@ QUnit.module('Views', {
                     }
                     if (moves === 1) {
                         assert.deepEqual(args, {
+                            context: {},
                             model: "foo",
                             ids: [4, 2],
                             offset: 12,
@@ -7254,6 +7316,7 @@ QUnit.module('Views', {
                     }
                     if (moves === 2) {
                         assert.deepEqual(args, {
+                            context: {},
                             model: "foo",
                             ids: [2, 4],
                             offset: 12,
@@ -7262,6 +7325,7 @@ QUnit.module('Views', {
                     }
                     if (moves === 3) {
                         assert.deepEqual(args, {
+                            context: {},
                             model: "foo",
                             ids: [4, 2],
                             offset: 12,
@@ -7690,6 +7754,54 @@ QUnit.module('Views', {
             'Value 2',
             'Value 3',
         ]);
+        list.destroy();
+    });
+
+    QUnit.test('multi edit in view grouped by field not in view', async function (assert) {
+        assert.expect(3);
+
+        this.data.foo.records = [
+            // group 1
+            {id: 1, foo: '1', m2o: 1},
+            {id: 3, foo: '2', m2o: 1},
+            //group 2
+            {id: 2, foo: '1', m2o: 2},
+            {id: 4, foo: '2', m2o: 2},
+            // group 3
+            {id: 5, foo: '2', m2o: 3},
+        ];
+
+        const list = await createView({
+            View: ListView,
+            model: 'foo',
+            data: this.data,
+            arch: `<tree expand="1" multi_edit="1">
+                   <field name="foo"/>
+               </tree>`,
+            groupBy: ['m2o'],
+        });
+
+        // Select items from the first group
+        await testUtils.dom.click(list.$('.o_data_row .o_list_record_selector input:eq(0)'));
+        await testUtils.dom.click(list.$('.o_data_row .o_list_record_selector input:eq(1)'));
+
+        await testUtils.dom.click(list.$('.o_list_char:eq(0)'));
+
+        await testUtils.fields.editInput(list.$('.o_field_widget[name=foo]'), 'test');
+
+        assert.containsOnce(document.body, '.modal');
+        await testUtils.dom.click($('.modal .modal-footer .btn-primary'));
+        assert.containsNone(document.body, '.modal');
+
+        const allNames = [...document.querySelectorAll('.o_data_cell')].map(n => n.textContent);
+        assert.deepEqual(allNames, [
+            'test',
+            'test',
+            '1',
+            '2',
+            '2',
+        ]);
+
         list.destroy();
     });
 
@@ -12692,6 +12804,29 @@ QUnit.module('Views', {
         await testUtils.dom.click(list.$('.o_data_cell:eq(1)'))
         assert.ok($('table.o_list_table > tbody > tr:eq(1)')[0].classList.contains('o_selected_row'), "The second row should be selected")
 
+        list.destroy();
+    });
+
+    QUnit.test('FieldColorPicker: dont overflow color picker in list', async function (assert) {
+        const list = await createView({
+            View: ListView,
+            model: 'foo',
+            data: this.data,
+            arch: `
+                <tree editable="top" string="Partners">
+                    <field name="date"/>
+                    <field name="int_field" widget="color_picker"/>
+                </tree>`,
+            domain: [['id', '<', 0]],
+       });
+        await testUtils.dom.click(list.el.querySelector('.o_list_button_add'))
+        const date_column_width = list.el.querySelector('.o_list_table thead th[data-name="date"]').style.width.replace('px', '');
+        const int_field_column_width = list.el.querySelector('.o_list_table thead th[data-name="int_field"]').style.width.replace('px', '');
+        // Default values for date and int fields are: date: '92px', integer: '74px'
+        // With the screen growing, the proportion is kept and thus int_field would remain smaller than date if
+        // the color_picker wouldn't have widthInList set to '1'. With that property set, int_field size will be bigger
+        // than date's one.
+        assert.ok(parseFloat(date_column_width) < parseFloat(int_field_column_width), "colorpicker should display properly (Horizontly)");
         list.destroy();
     });
 

@@ -89,10 +89,14 @@ var FieldMany2One = AbstractField.extend({
     }),
     events: _.extend({}, AbstractField.prototype.events, {
         'click input': '_onInputClick',
+        'click': '_onLinkClick',
         'focusout input': '_onInputFocusout',
         'keyup input': '_onInputKeyup',
         'click .o_external_button': '_onExternalButtonClick',
     }),
+    quickEditExclusion: [
+        '.o_form_uri',
+    ],
     AUTOCOMPLETE_DELAY: 200,
     SEARCH_MORE_LIMIT: 320,
     isQuickEditable: true,
@@ -313,6 +317,10 @@ var FieldMany2One = AbstractField.extend({
             open: function (event) {
                 self._onScroll = function (ev) {
                     if (ev.target !== self.$input.get(0) && self.$input.hasClass('ui-autocomplete-input')) {
+                        if (ev.target.id === self.$input.autocomplete('widget').get(0).id) {
+                            ev.stopPropagation();
+                            return;
+                        }
                         self.$input.autocomplete('close');
                     }
                 };
@@ -663,13 +671,10 @@ var FieldMany2One = AbstractField.extend({
         if (this.limit < values.length) {
             values = this._manageSearchMore(values, value, domain, context);
         }
-        if (!this.can_create) {
-            return values;
-        }
 
         // Additional options...
-        const canQuickCreate = !this.nodeOptions.no_quick_create;
-        const canCreateEdit = !this.nodeOptions.no_create_edit;
+        const canQuickCreate = this.can_create && !this.nodeOptions.no_quick_create;
+        const canCreateEdit = this.can_create && !this.nodeOptions.no_create_edit;
         if (value.length) {
             // "Quick create" option
             const nameExists = results.some((result) => result[1] === value);
@@ -699,7 +704,8 @@ var FieldMany2One = AbstractField.extend({
             // "No results" option
             if (!values.length) {
                 values.push({
-                    label: _t("No results to show..."),
+                    label: _t("No records"),
+                    classname: 'o_m2o_no_result',
                 });
             }
         } else if (!this.value && (canQuickCreate || canCreateEdit)) {
@@ -748,13 +754,11 @@ var FieldMany2One = AbstractField.extend({
      * @override
      * @param {MouseEvent} event
      */
-    _onClick: function (event) {
+    _onLinkClick: function (event) {
         var self = this;
         if (this.mode === 'readonly') {
             event.preventDefault();
-            if (this.noOpen) {
-                this._super(...arguments);
-            } else {
+            if (!this.noOpen) {
                 event.stopPropagation();
                 this._rpc({
                     model: this.field.relation,
@@ -2003,7 +2007,7 @@ var FieldOne2Many = FieldX2Many.extend({
                         index = self.value.data.length - 1;
                     }
                     var newID = self.value.data[index].id;
-                    self.renderer.editRecord(newID);
+                    return self.renderer.editRecord(newID);
                 }
             }
         });
@@ -2125,6 +2129,7 @@ var FieldOne2Many = FieldX2Many.extend({
             parentID: this.value.id,
             viewInfo: this.view,
             deletable: this.activeActions.delete && params.deletable && this.canDelete,
+            editable: !this.hasReadonlyModifier,
             disable_multiple_selection: params.disable_multiple_selection,
         }));
     },
@@ -3397,6 +3402,14 @@ var FieldRadio = FieldSelection.extend({
     //--------------------------------------------------------------------------
 
     /**
+     * @override
+     * @returns {boolean} always true
+     */
+    isSet: function () {
+        return true;
+    },
+
+    /**
      * Returns the currently-checked radio button, or the first one if no radio
      * button is checked.
      *
@@ -3405,14 +3418,6 @@ var FieldRadio = FieldSelection.extend({
     getFocusableElement: function () {
         var checked = this.$("[checked='true']");
         return checked.length ? checked : this.$("[data-index='0']");
-    },
-
-    /**
-     * @override
-     * @returns {boolean} always true
-     */
-    isSet: function () {
-        return true;
     },
 
     /**
@@ -3428,6 +3433,34 @@ var FieldRadio = FieldSelection.extend({
     //--------------------------------------------------------------------------
     // Private
     //--------------------------------------------------------------------------
+
+    /**
+     * @private
+     * @param {MouseEvent} ev
+     * @returns {Object}
+     */
+    _getQuickEditExtraInfo: function (ev) {
+        // can be either the input or the label
+        const $target = ev.target.nodeName === 'INPUT'
+            ? $(ev.target)
+            : $(ev.target).siblings('input');
+
+        const index = $target.data('index');
+        const value = this.values[index];
+        return {value};
+    },
+
+    /**
+     * @private
+     * @override
+     * @params {Object} extraInfo
+     */
+    _quickEdit: function (extraInfo) {
+        if (extraInfo.value) {
+            this._saveValue(extraInfo.value);
+        }
+        return this._super.apply(this, arguments);
+    },
 
     /**
      * @private
@@ -3479,6 +3512,19 @@ var FieldRadio = FieldSelection.extend({
         }
     },
 
+    /**
+     * @private
+     * @param {Array} new value, [value] for a selection field,
+     *                           [id, display_name] for a Many2One
+     */
+    _saveValue: function (value) {
+        if (this.field.type === 'many2one') {
+            this._setValue({id: value[0], display_name: value[1]});
+        } else {
+            this._setValue(value[0]);
+        }
+    },
+
     //--------------------------------------------------------------------------
     // Handlers
     //--------------------------------------------------------------------------
@@ -3488,12 +3534,12 @@ var FieldRadio = FieldSelection.extend({
      * @param {MouseEvent} event
      */
     _onInputClick: function (event) {
-        var index = $(event.target).data('index');
-        var value = this.values[index];
-        if (this.field.type === 'many2one') {
-            this._setValue({id: value[0], display_name: value[1]});
+        if (this.mode === 'readonly') {
+            this._onClick(...arguments);
         } else {
-            this._setValue(value[0]);
+            const index = $(event.currentTarget).data('index');
+            const value = this.values[index];
+            this._saveValue(value);
         }
     },
 });

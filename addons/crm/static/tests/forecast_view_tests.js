@@ -191,12 +191,12 @@ QUnit.module("Views", (hooks) => {
 
             patchWithCleanup(AbstractModel.prototype, {
                 async load(params) {
-                    this._super(...arguments);
                     assert.deepEqual(params.domain, expectedDomains.shift());
+                    return this._super(...arguments);
                 },
                 async reload(_, params) {
-                    this._super(...arguments);
                     assert.deepEqual(params.domain, expectedDomains.shift());
+                    return this._super(...arguments);
                 },
             });
 

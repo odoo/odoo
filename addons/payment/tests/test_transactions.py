@@ -74,7 +74,7 @@ class TestTransactions(PaymentCommon):
         )
 
         # Test the values of a partial refund transaction with custom refund amount
-        partial_refund_tx = tx._create_refund_transaction(refund_amount=11.11)
+        partial_refund_tx = tx._create_refund_transaction(amount_to_refund=11.11)
         self.assertAlmostEqual(
             partial_refund_tx.amount,
             -11.11,

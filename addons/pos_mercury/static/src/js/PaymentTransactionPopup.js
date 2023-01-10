@@ -4,6 +4,7 @@ odoo.define('pos_mercury.PaymentTransactionPopup', function(require) {
     const { useState } = owl.hooks;
     const AbstractAwaitablePopup = require('point_of_sale.AbstractAwaitablePopup');
     const Registries = require('point_of_sale.Registries');
+    const { _lt } = require('@web/core/l10n/translation');
 
     class PaymentTransactionPopup extends AbstractAwaitablePopup {
         constructor() {
@@ -25,9 +26,9 @@ odoo.define('pos_mercury.PaymentTransactionPopup', function(require) {
     }
     PaymentTransactionPopup.template = 'PaymentTransactionPopup';
     PaymentTransactionPopup.defaultProps = {
-        confirmText: 'Ok',
-        cancelText: 'Cancel',
-        title: 'Online Payment',
+        confirmText: _lt('Ok'),
+        cancelText: _lt('Cancel'),
+        title: _lt('Online Payment'),
         body: '',
     };
 

@@ -33,12 +33,12 @@ odoo.define('mass_mailing.unsubscribe', function (require) {
                         toggle_opt_out_section(true);
                     }
                     else {
-                        $('#subscription_info').html(_t('An error occured. Please try again later or contact us.'));
+                        $('#subscription_info').text(_t('An error occurred. Please try again later or contact us.'));
                         $('#info_state').removeClass('alert-success').removeClass('alert-info').removeClass('alert-warning').addClass('alert-error');
                     }
                 })
                 .guardedCatch(function () {
-                    $('#subscription_info').html(_t('An error occured. Please try again later or contact us.'));
+                    $('#subscription_info').text(_t('An error occurred. Please try again later or contact us.'));
                     $('#info_state').removeClass('alert-success').removeClass('alert-info').removeClass('alert-warning').addClass('alert-error');
                 });
         }
@@ -74,20 +74,20 @@ odoo.define('mass_mailing.unsubscribe', function (require) {
         ajax.jsonRpc('/mail/mailing/unsubscribe', 'call', {'opt_in_ids': checked_ids, 'opt_out_ids': unchecked_ids, 'email': email, 'mailing_id': mailing_id, 'res_id': res_id, 'token': token})
             .then(function (result) {
                 if (result == 'unauthorized'){
-                    $('#subscription_info').html(_t('You are not authorized to do this!'));
+                    $('#subscription_info').text(_t('You are not authorized to do this!'));
                     $('#info_state').removeClass('alert-success').removeClass('alert-info').removeClass('alert-error').addClass('alert-warning');
                 }
                 else if (result == true) {
-                    $('#subscription_info').html(_t('Your changes have been saved.'));
+                    $('#subscription_info').text(_t('Your changes have been saved.'));
                     $('#info_state').removeClass('alert-info').addClass('alert-success');
                 }
                 else {
-                    $('#subscription_info').html(_t('An error occurred. Your changes have not been saved, try again later.'));
+                    $('#subscription_info').text(_t('An error occurred. Your changes have not been saved, try again later.'));
                     $('#info_state').removeClass('alert-info').addClass('alert-warning');
                 }
             })
             .guardedCatch(function () {
-                $('#subscription_info').html(_t('An error occurred. Your changes have not been saved, try again later.'));
+                $('#subscription_info').text(_t('An error occurred. Your changes have not been saved, try again later.'));
                 $('#info_state').removeClass('alert-info').addClass('alert-warning');
             });
     });
@@ -101,7 +101,7 @@ odoo.define('mass_mailing.unsubscribe', function (require) {
         ajax.jsonRpc('/mailing/blacklist/add', 'call', {'email': email, 'mailing_id': mailing_id, 'res_id': res_id, 'token': token})
             .then(function (result) {
                 if (result == 'unauthorized'){
-                    $('#subscription_info').html(_t('You are not authorized to do this!'));
+                    $('#subscription_info').text(_t('You are not authorized to do this!'));
                     $('#info_state').removeClass('alert-success').removeClass('alert-info').removeClass('alert-error').addClass('alert-warning');
                 }
                 else
@@ -113,7 +113,7 @@ odoo.define('mass_mailing.unsubscribe', function (require) {
                         toggle_opt_out_section(false);
                     }
                     else {
-                        $('#subscription_info').html(_t('An error occured. Please try again later or contact us.'));
+                        $('#subscription_info').text(_t('An error occurred. Please try again later or contact us.'));
                         $('#info_state').removeClass('alert-success').removeClass('alert-info').removeClass('alert-warning').addClass('alert-error');
                     }
                     $('#button_add_blacklist').hide();
@@ -122,7 +122,7 @@ odoo.define('mass_mailing.unsubscribe', function (require) {
                 }
             })
             .guardedCatch(function () {
-                $('#subscription_info').html(_t('An error occured. Please try again later or contact us.'));
+                $('#subscription_info').text(_t('An error occurred. Please try again later or contact us.'));
                 $('#info_state').removeClass('alert-success').removeClass('alert-info').removeClass('alert-warning').addClass('alert-error');
             });
     });
@@ -133,7 +133,7 @@ odoo.define('mass_mailing.unsubscribe', function (require) {
         ajax.jsonRpc('/mailing/blacklist/remove', 'call', {'email': email, 'mailing_id': mailing_id, 'res_id': res_id, 'token': token})
             .then(function (result) {
                 if (result == 'unauthorized'){
-                    $('#subscription_info').html(_t('You are not authorized to do this!'));
+                    $('#subscription_info').text(_t('You are not authorized to do this!'));
                     $('#info_state').removeClass('alert-success').removeClass('alert-info').removeClass('alert-error').addClass('alert-warning');
                 }
                 else
@@ -145,7 +145,7 @@ odoo.define('mass_mailing.unsubscribe', function (require) {
                         toggle_opt_out_section(true);
                     }
                     else {
-                        $('#subscription_info').html(_t('An error occured. Please try again later or contact us.'));
+                        $('#subscription_info').text(_t('An error occurred. Please try again later or contact us.'));
                         $('#info_state').removeClass('alert-success').removeClass('alert-info').removeClass('alert-warning').addClass('alert-error');
                     }
                     $('#button_add_blacklist').show();
@@ -154,7 +154,7 @@ odoo.define('mass_mailing.unsubscribe', function (require) {
                 }
             })
             .guardedCatch(function () {
-                $('#subscription_info').html(_t('An error occured. Please try again later or contact us.'));
+                $('#subscription_info').text(_t('An error occurred. Please try again later or contact us.'));
                 $('#info_state').removeClass('alert-success').removeClass('alert-info').removeClass('alert-warning').addClass('alert-error');
             });
     });
@@ -168,21 +168,21 @@ odoo.define('mass_mailing.unsubscribe', function (require) {
         ajax.jsonRpc('/mailing/feedback', 'call', {'mailing_id': mailing_id, 'res_id': res_id, 'email': email, 'feedback': feedback, 'token': token})
             .then(function (result) {
                 if (result == 'unauthorized'){
-                    $('#subscription_info').html(_t('You are not authorized to do this!'));
+                    $('#subscription_info').text(_t('You are not authorized to do this!'));
                     $('#info_state').removeClass('alert-success').removeClass('alert-info').removeClass('alert-error').addClass('alert-warning');
                 }
                 else if (result == true){
-                    $('#subscription_info').html(_t('Thank you! Your feedback has been sent successfully!'));
+                    $('#subscription_info').text(_t('Thank you! Your feedback has been sent successfully!'));
                     $('#info_state').removeClass('alert-warning').removeClass('alert-info').removeClass('alert-error').addClass('alert-success');
                     $("#div_feedback").hide();
                 }
                 else {
-                    $('#subscription_info').html(_t('An error occured. Please try again later or contact us.'));
+                    $('#subscription_info').text(_t('An error occurred. Please try again later or contact us.'));
                     $('#info_state').removeClass('alert-success').removeClass('alert-info').removeClass('alert-error').addClass('alert-warning');
                 }
             })
             .guardedCatch(function () {
-                $('#subscription_info').html(_t('An error occured. Please try again later or contact us.'));
+                $('#subscription_info').text(_t('An error occurred. Please try again later or contact us.'));
                 $('#info_state').removeClass('alert-info').removeClass('alert-success').removeClass('alert-error').addClass('alert-warning');
             });
     });

@@ -5,7 +5,7 @@ import { browser } from "@web/core/browser/browser";
 import { registerNewModel } from '@mail/model/model_core';
 import { attr, one2one, one2many } from '@mail/model/model_field';
 import { OnChange } from '@mail/model/model_onchange';
-import { clear, create, insert, insertAndReplace, link, unlink } from '@mail/model/model_field_command';
+import { clear, insert, insertAndReplace, link, unlink } from '@mail/model/model_field_command';
 
 import { isEventHandled, markEventHandled } from '@mail/utils/utils';
 
@@ -32,6 +32,7 @@ function factory(dependencies) {
          * @override
          */
         _willDelete() {
+            browser.clearTimeout(this._timeoutId);
             browser.removeEventListener('fullscreenchange', this._onFullScreenChange);
             return super._willDelete(...arguments);
         }
@@ -78,7 +79,7 @@ function factory(dependencies) {
             this.update({
                 showOverlay: true,
             });
-            this._timeoutId && browser.clearTimeout(this._timeoutId);
+            browser.clearTimeout(this._timeoutId);
         }
 
         /**
@@ -130,7 +131,7 @@ function factory(dependencies) {
 
         toggleLayoutMenu() {
             if (!this.rtcLayoutMenu) {
-                this.update({ rtcLayoutMenu: create() });
+                this.update({ rtcLayoutMenu: insertAndReplace() });
                 return;
             }
             this.update({ rtcLayoutMenu: unlink() });
@@ -180,10 +181,13 @@ function factory(dependencies) {
             if (!this.threadView) {
                 return 'tiled';
             }
+            if (this.isMinimized) {
+                return 'tiled';
+            }
             if (!this.threadView.thread.rtc) {
                 return 'tiled';
             }
-            if (!this.threadView.thread.videoCount || !this.mainParticipantCard) {
+            if (!this.mainParticipantCard) {
                 return 'tiled';
             }
             if (
@@ -201,6 +205,14 @@ function factory(dependencies) {
 
         /**
          * @private
+         * @returns {string}
+         */
+         _computeLayoutSettingsTitle() {
+            return this.env._t("Change Layout");
+        }
+
+        /**
+         * @private
          */
         _computeMainParticipantCard() {
             if (!this.messaging || !this.threadView) {
@@ -214,6 +226,14 @@ function factory(dependencies) {
                 });
             }
             return unlink();
+        }
+
+        /**
+         * @private
+         * @returns {string}
+         */
+        _computeSettingsTitle() {
+            return this.env._t("Settings");
         }
 
         /**
@@ -262,7 +282,7 @@ function factory(dependencies) {
          * @private
          */
         _debounce(f, { delay = 0 } = {}) {
-            this._timeoutId && browser.clearTimeout(this._timeoutId);
+            browser.clearTimeout(this._timeoutId);
             this._timeoutId = browser.setTimeout(() => {
                 if (!this.exists()) {
                     return;
@@ -366,6 +386,12 @@ function factory(dependencies) {
             compute: '_computeLayout',
         }),
         /**
+         * Text content that is displayed on title of the layout settings dialog.
+         */
+        layoutSettingsTitle: attr({
+            compute: '_computeLayoutSettingsTitle',
+        }),
+        /**
          * If set, the card to be displayed as the "main/spotlight" card.
          */
         mainParticipantCard: one2one('mail.rtc_call_participant_card', {
@@ -376,7 +402,7 @@ function factory(dependencies) {
          * The model for the controller (buttons).
          */
         rtcController: one2one('mail.rtc_controller', {
-            default: create(),
+            default: insertAndReplace(),
             readonly: true,
             required: true,
             inverse: 'callViewer',
@@ -390,6 +416,12 @@ function factory(dependencies) {
             isCausal: true,
         }),
         /**
+         * Text content that is displayed on title of the settings dialog.
+         */
+        settingsTitle: attr({
+            compute: '_computeSettingsTitle',
+        }),
+        /**
          * Determines if we show the overlay with the control buttons.
          */
         showOverlay: attr({
@@ -400,6 +432,7 @@ function factory(dependencies) {
          */
         threadView: one2one('mail.thread_view', {
             inverse: 'rtcCallViewer',
+            readonly: true,
             required: true,
         }),
         /**
@@ -410,6 +443,7 @@ function factory(dependencies) {
             inverse: 'rtcCallViewerOfTile',
         }),
     };
+    RtcCallViewer.identifyingFields = ['threadView'];
     RtcCallViewer.onChanges = [
         new OnChange({
             dependencies: ['threadView.thread.rtc'],

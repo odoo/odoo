@@ -3,18 +3,16 @@
 # 	* website_crm
 # 
 # Translators:
-# Bohdan Lisnenko, 2019
-# ТАрас <tratatuta@i.ua>, 2019
-# Martin Trigaux, 2019
-# Alina Lisnenko <alinasemeniuk1@gmail.com>, 2019
+# Martin Trigaux, 2021
+# Alina Lisnenko <alinasemeniuk1@gmail.com>, 2022
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~12.5\n"
+"Project-Id-Version: Odoo Server saas~14.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-09-23 11:31+0000\n"
-"PO-Revision-Date: 2019-08-26 09:15+0000\n"
-"Last-Translator: Alina Lisnenko <alinasemeniuk1@gmail.com>, 2019\n"
+"POT-Creation-Date: 2021-07-12 07:50+0000\n"
+"PO-Revision-Date: 2021-09-14 12:27+0000\n"
+"Last-Translator: Alina Lisnenko <alinasemeniuk1@gmail.com>, 2022\n"
 "Language-Team: Ukrainian (https://www.transifex.com/odoo/teams/41243/uk/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -25,12 +23,63 @@ msgstr ""
 #. module: website_crm
 #: model:ir.model.fields,field_description:website_crm.field_website_visitor__lead_count
 msgid "# Leads"
-msgstr ""
+msgstr "К-сть лідів"
 
 #. module: website_crm
 #: model:ir.model.fields,field_description:website_crm.field_crm_lead__visitor_page_count
 msgid "# Page Views"
 msgstr "К-сть переглядів"
+
+#. module: website_crm
+#: model_terms:ir.ui.view,arch_db:website_crm.res_config_settings_view_form
+msgid "<span class=\"o_form_label\">Contact Form</span>"
+msgstr "<span class=\"o_form_label\">Контактна форма</span>"
+
+#. module: website_crm
+#: model_terms:ir.ui.view,arch_db:website_crm.contactus_form
+msgid ""
+"<span class=\"s_website_form_label_content\">Email</span>\n"
+"                                                <span class=\"s_website_form_mark\"> *</span>"
+msgstr ""
+"<span class=\"s_website_form_label_content\">Email</span>\n"
+"                                                <span class=\"s_website_form_mark\"> *</span>"
+
+#. module: website_crm
+#: model_terms:ir.ui.view,arch_db:website_crm.contactus_form
+msgid "<span class=\"s_website_form_label_content\">Phone Number</span>"
+msgstr "<span class=\"s_website_form_label_content\">Номер телефону</span>"
+
+#. module: website_crm
+#: model_terms:ir.ui.view,arch_db:website_crm.contactus_form
+msgid ""
+"<span class=\"s_website_form_label_content\">Subject</span>\n"
+"                                                <span class=\"s_website_form_mark\"> *</span>"
+msgstr ""
+"<span class=\"s_website_form_label_content\">Тема</span>\n"
+"                                                <span class=\"s_website_form_mark\"> *</span>"
+
+#. module: website_crm
+#: model_terms:ir.ui.view,arch_db:website_crm.contactus_form
+msgid "<span class=\"s_website_form_label_content\">Your Company</span>"
+msgstr "<span class=\"s_website_form_label_content\">Ваша компанія</span>"
+
+#. module: website_crm
+#: model_terms:ir.ui.view,arch_db:website_crm.contactus_form
+msgid ""
+"<span class=\"s_website_form_label_content\">Your Name</span>\n"
+"                                                <span class=\"s_website_form_mark\"> *</span>"
+msgstr ""
+"<span class=\"s_website_form_label_content\">Ваше ім'я</span>\n"
+"                                                <span class=\"s_website_form_mark\"> *</span>"
+
+#. module: website_crm
+#: model_terms:ir.ui.view,arch_db:website_crm.contactus_form
+msgid ""
+"<span class=\"s_website_form_label_content\">Your Question</span>\n"
+"                                                <span class=\"s_website_form_mark\"> *</span>"
+msgstr ""
+"<span class=\"s_website_form_label_content\">Ваше запитання</span>\n"
+"                                                <span class=\"s_website_form_mark\"> *</span>"
 
 #. module: website_crm
 #: model_terms:ir.ui.view,arch_db:website_crm.res_config_settings_view_form
@@ -41,8 +90,8 @@ msgstr "Додайте контактну форму в"
 #. openerp-web
 #: code:addons/website_crm/static/src/js/website_crm_editor.js:0
 #, python-format
-msgid "Assign leads/opportunities to a sales channel."
-msgstr "Призначте ліди/нагоди каналу продажу."
+msgid "Assign leads/opportunities to a sales team."
+msgstr "Призначте ліди/нагоди команді продажу."
 
 #. module: website_crm
 #. openerp-web
@@ -63,18 +112,13 @@ msgstr "Налаштування"
 
 #. module: website_crm
 #: model_terms:ir.ui.view,arch_db:website_crm.res_config_settings_view_form
-msgid "Contact Form"
-msgstr "Форма контакту"
-
-#. module: website_crm
-#: model_terms:ir.ui.view,arch_db:website_crm.res_config_settings_view_form
 msgid "Contact Us"
 msgstr "Зв'язатися з нами"
 
 #. module: website_crm
 #: model:ir.model.fields,field_description:website_crm.field_res_config_settings__crm_default_team_id
 msgid "Default Sales Team"
-msgstr "Типова команда продажу"
+msgstr "Команда продажу за замовчуванням"
 
 #. module: website_crm
 #: model:ir.model.fields,help:website_crm.field_res_config_settings__crm_default_team_id
@@ -104,14 +148,6 @@ msgstr ""
 "Зв'язатися з нами."
 
 #. module: website_crm
-#. openerp-web
-#: code:addons/website_crm/static/src/xml/website_crm.xml:0
-#: model_terms:ir.ui.view,arch_db:website_crm.contactus_form
-#, python-format
-msgid "Email"
-msgstr "Ел. пошта"
-
-#. module: website_crm
 #: model:ir.model,name:website_crm.model_crm_lead
 msgid "Lead/Opportunity"
 msgstr "Лід/Нагода"
@@ -137,20 +173,12 @@ msgstr "Нові повідомлення керуються як ліди аб�
 #. module: website_crm
 #: model_terms:ir.actions.act_window,help:website_crm.website_visitor_crm_lead_action
 msgid "No lead linked for this visitor"
-msgstr ""
+msgstr "Жоден лід не пов'язаний із цим відвідувачем"
 
 #. module: website_crm
 #: model_terms:ir.ui.view,arch_db:website_crm.crm_lead_view_form
 msgid "Page views"
 msgstr "Перегляди сторінки"
-
-#. module: website_crm
-#. openerp-web
-#: code:addons/website_crm/static/src/xml/website_crm.xml:0
-#: model_terms:ir.ui.view,arch_db:website_crm.contactus_form
-#, python-format
-msgid "Phone Number"
-msgstr "Номер телефону"
 
 #. module: website_crm
 #: model_terms:ir.ui.view,arch_db:website_crm.res_config_settings_view_form
@@ -164,12 +192,8 @@ msgstr ""
 #. module: website_crm
 #. openerp-web
 #: code:addons/website_crm/static/src/js/website_crm_editor.js:0
-#, python-format
-msgid "Sales Channel"
-msgstr "Канал продажу"
-
-#. module: website_crm
 #: model_terms:ir.ui.view,arch_db:website_crm.res_config_settings_view_form
+#, python-format
 msgid "Sales Team"
 msgstr "Команда продажу"
 
@@ -183,26 +207,13 @@ msgstr "Продавець"
 
 #. module: website_crm
 #: model_terms:ir.ui.view,arch_db:website_crm.contactus_form
-msgid "Send"
-msgstr "Надіслати"
-
-#. module: website_crm
-#. openerp-web
-#: code:addons/website_crm/static/src/xml/website_crm.xml:0
-#: model_terms:ir.ui.view,arch_db:website_crm.contactus_form
-#, python-format
-msgid "Subject"
-msgstr "Тема"
-
-#. module: website_crm
-#: model_terms:ir.ui.view,arch_db:website_crm.website_visitor_view_search
-msgid "Visitors"
-msgstr ""
+msgid "Submit"
+msgstr "Розглянути"
 
 #. module: website_crm
 #: model:ir.model.fields,field_description:website_crm.field_crm_lead__visitor_ids
 msgid "Web Visitors"
-msgstr ""
+msgstr "Веб-відвідувачі"
 
 #. module: website_crm
 #: model:ir.model,name:website_crm.model_website
@@ -217,31 +228,7 @@ msgstr "Форма контакту на сайті"
 #. module: website_crm
 #: model:ir.model,name:website_crm.model_website_visitor
 msgid "Website Visitor"
-msgstr ""
-
-#. module: website_crm
-#. openerp-web
-#: code:addons/website_crm/static/src/xml/website_crm.xml:0
-#: model_terms:ir.ui.view,arch_db:website_crm.contactus_form
-#, python-format
-msgid "Your Company"
-msgstr "Ваша компанія"
-
-#. module: website_crm
-#. openerp-web
-#: code:addons/website_crm/static/src/xml/website_crm.xml:0
-#: model_terms:ir.ui.view,arch_db:website_crm.contactus_form
-#, python-format
-msgid "Your Name"
-msgstr "Ваше ім’я"
-
-#. module: website_crm
-#. openerp-web
-#: code:addons/website_crm/static/src/xml/website_crm.xml:0
-#: model_terms:ir.ui.view,arch_db:website_crm.contactus_form
-#, python-format
-msgid "Your Question"
-msgstr "Ваше запитання"
+msgstr "Відвідувач веб-сайту"
 
 #. module: website_crm
 #: model_terms:ir.ui.view,arch_db:website_crm.res_config_settings_view_form

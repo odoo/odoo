@@ -442,13 +442,15 @@ QUnit.module("Search", (hooks) => {
     );
 
     QUnit.test("custom filter datetime with equal operator", async function (assert) {
-        assert.expect(4);
+        assert.expect(5);
 
         const originalZoneName = luxon.Settings.defaultZoneName;
         luxon.Settings.defaultZoneName = new luxon.FixedOffsetZone.instance(-240);
         registerCleanup(() => {
             luxon.Settings.defaultZoneName = originalZoneName;
         });
+
+        patchDate(2017, 1, 22, 12, 30, 0);
 
         const controlPanel = await makeWithSearch({
             serverData,
@@ -470,6 +472,12 @@ QUnit.module("Search", (hooks) => {
         assert.strictEqual(
             controlPanel.el.querySelector(".o_generator_menu_operator").value,
             "between"
+        );
+        assert.deepEqual(
+            [...controlPanel.el.querySelectorAll(".o_generator_menu_value input")].map(
+                (v) => v.value
+            ),
+            ["02/22/2017 00:00:00", "02/22/2017 23:59:59"]
         );
 
         await editConditionOperator(controlPanel, 0, "=");
@@ -489,13 +497,15 @@ QUnit.module("Search", (hooks) => {
     });
 
     QUnit.test("custom filter datetime between operator", async function (assert) {
-        assert.expect(4);
+        assert.expect(5);
 
         const originalZoneName = luxon.Settings.defaultZoneName;
         luxon.Settings.defaultZoneName = new luxon.FixedOffsetZone.instance(-240);
         registerCleanup(() => {
             luxon.Settings.defaultZoneName = originalZoneName;
         });
+
+        patchDate(2017, 1, 22, 12, 30, 0);
 
         const controlPanel = await makeWithSearch({
             serverData,
@@ -516,6 +526,12 @@ QUnit.module("Search", (hooks) => {
         assert.strictEqual(
             controlPanel.el.querySelector(".o_generator_menu_operator").value,
             "between"
+        );
+        assert.deepEqual(
+            [...controlPanel.el.querySelectorAll(".o_generator_menu_value input")].map(
+                (v) => v.value
+            ),
+            ["02/22/2017 00:00:00", "02/22/2017 23:59:59"]
         );
 
         await editConditionValue(controlPanel, 0, "02/22/2017 11:00:00", 0); // in TZ
@@ -686,5 +702,38 @@ QUnit.module("Search", (hooks) => {
             ["float_field", "=", 7.2],
             ["id", "=", 9],
         ]);
+    });
+
+    QUnit.test("delete button is visible", async function (assert) {
+        const controlPanel = await makeWithSearch({
+            serverData,
+            resModel: "foo",
+            Component: ControlPanel,
+            searchViewId: false,
+            searchMenuTypes: ["filter"],
+        });
+
+        await toggleFilterMenu(controlPanel);
+        await toggleAddCustomFilter(controlPanel);
+
+        assert.containsNone(
+            controlPanel,
+            ".o_generator_menu_delete",
+            "There is no delete button by default"
+        );
+
+        await addCondition(controlPanel);
+        assert.containsN(
+            controlPanel,
+            ".o_generator_menu_delete",
+            2,
+            "A delete button has been added to each condition"
+        );
+        assert.containsN(
+            controlPanel,
+            "i.o_generator_menu_delete.fa-trash-o",
+            2,
+            "The delete button is shown as a trash icon"
+        );
     });
 });

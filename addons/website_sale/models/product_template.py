@@ -74,7 +74,8 @@ class ProductTemplate(models.Model):
     @api.depends('price', 'list_price', 'base_unit_count')
     def _compute_base_unit_price(self):
         for template in self:
-            template.base_unit_price = template.base_unit_count and (template.price or template.list_price) / template.base_unit_count
+            template_price = (template.price or template.list_price) if template.id else template.list_price
+            template.base_unit_price = template.base_unit_count and template_price / template.base_unit_count
 
     @api.depends('uom_name', 'base_unit_id.name')
     def _compute_base_unit_name(self):
@@ -198,6 +199,8 @@ class ProductTemplate(models.Model):
                 list_price = taxes.compute_all(combination_info['list_price'], pricelist.currency_id, quantity_1, product, partner)[tax_display]
             else:
                 list_price = price
+            combination_info['price_extra'] = self.env['account.tax']._fix_tax_included_price_company(combination_info['price_extra'], product_taxes, taxes, company_id)
+            price_extra = taxes.compute_all(combination_info['price_extra'], pricelist.currency_id, quantity_1, product, partner)[tax_display]
             has_discounted_price = pricelist.currency_id.compare_amounts(list_price, price) == 1
 
             combination_info.update(
@@ -205,6 +208,7 @@ class ProductTemplate(models.Model):
                 base_unit_price=product.base_unit_price,
                 price=price,
                 list_price=list_price,
+                price_extra=price_extra,
                 has_discounted_price=has_discounted_price,
             )
 
@@ -231,11 +235,11 @@ class ProductTemplate(models.Model):
         :rtype: recordset of 'product.template' or recordset of 'product.product'
         """
         self.ensure_one()
-        if self.image_1920:
+        if self.image_128:
             return self
         variant = self.env['product.product'].browse(self._get_first_possible_variant_id())
         # if the variant has no image anyway, spare some queries by using template
-        return variant if variant.image_variant_1920 else self
+        return variant if variant.image_variant_128 else self
 
     def _get_current_company_fallback(self, **kwargs):
         """Override: if a website is set on the product or given, fallback to
@@ -359,15 +363,19 @@ class ProductTemplate(models.Model):
                     ids = [value[1]]
             if attrib:
                 domains.append([('attribute_line_ids.value_ids', 'in', ids)])
-        search_fields = ['name']
+        search_fields = ['name', 'product_variant_ids.default_code']
         fetch_fields = ['id', 'name', 'website_url']
         mapping = {
             'name': {'name': 'name', 'type': 'text', 'match': True},
-            'website_url': {'name': 'website_url', 'type': 'text'},
+            'product_variant_ids.default_code': {'name': 'product_variant_ids.default_code', 'type': 'text', 'match': True},
+            'website_url': {'name': 'website_url', 'type': 'text', 'truncate': False},
         }
         if with_image:
             mapping['image_url'] = {'name': 'image_url', 'type': 'html'}
         if with_description:
+            # Internal note is not part of the rendering.
+            search_fields.append('description')
+            fetch_fields.append('description')
             search_fields.append('description_sale')
             fetch_fields.append('description_sale')
             mapping['description'] = {'name': 'description_sale', 'type': 'text', 'match': True}
@@ -375,8 +383,8 @@ class ProductTemplate(models.Model):
             mapping['detail'] = {'name': 'price', 'type': 'html', 'display_currency': options['display_currency']}
             mapping['detail_strike'] = {'name': 'list_price', 'type': 'html', 'display_currency': options['display_currency']}
         if with_category:
-            mapping['extra_link'] = {'name': 'category', 'type': 'text', 'match': True}
-            mapping['extra_link_url'] = {'name': 'category_url', 'type': 'text'}
+            mapping['extra_link'] = {'name': 'category', 'type': 'dict', 'item_type': 'text'}
+            mapping['extra_link_url'] = {'name': 'category_url', 'type': 'dict', 'item_type': 'text'}
         return {
             'model': 'product.template',
             'base_domain': domains,
@@ -391,7 +399,9 @@ class ProductTemplate(models.Model):
         with_category = 'extra_link' in mapping
         with_price = 'detail' in mapping
         results_data = super()._search_render_results(fetch_fields, mapping, icon, limit)
+        current_website = self.env['website'].get_current_website()
         for product, data in zip(self, results_data):
+            categ_ids = product.public_categ_ids.filtered(lambda c: not c.website_id or c.website_id == current_website)
             if with_price:
                 combination_info = product._get_combination_info(only_template=True)
                 monetary_options = {'display_currency': mapping['detail']['display_currency']}
@@ -400,10 +410,13 @@ class ProductTemplate(models.Model):
                     data['list_price'] = self.env['ir.qweb.field.monetary'].value_to_html(combination_info['list_price'], monetary_options)
             if with_image:
                 data['image_url'] = '/web/image/product.template/%s/image_128' % data['id']
-            if with_category and product.public_categ_ids:
-                data['category'] = _('Category: %s', product.public_categ_ids.name)
-                slugs = [slug(category) for category in product.public_categ_ids]
-                data['category_url'] = '/shop/category/%s' % ','.join(slugs)
+            if with_category and categ_ids:
+                data['category'] = {'extra_link_title': _('Categories:') if len(categ_ids) > 1 else _('Category:')}
+                data['category_url'] = dict()
+                for categ in categ_ids:
+                    slug_categ = slug(categ)
+                    data['category'][slug_categ] = categ.name
+                    data['category_url'][slug_categ] = '/shop/category/%s' % slug_categ
         return results_data
 
     @api.model

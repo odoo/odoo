@@ -5,7 +5,7 @@
         <tr t-attf-class="client-line {{highlight}}" t-att-data-id="props.partner.id"
             t-on-click="trigger('click-client', {client: props.partner})">
             <td>
-                <t t-esc="props.partner.name" />
+                <t t-esc="props.partner.name or ''" />
                 <span t-if="highlight">
                     <br/><button class="edit-client-button" t-on-click.stop="trigger('click-edit')">EDIT</button>
                 </span>

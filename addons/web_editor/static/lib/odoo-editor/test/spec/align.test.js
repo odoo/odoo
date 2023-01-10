@@ -28,7 +28,9 @@ describe('Align', () => {
         it('should not align left a non-editable node', async () => {
             await testEditor(BasicEditor, {
                 contentBefore: '<p>ab</p><div contenteditable="false"><p>c[]d</p></div>',
+                contentBeforeEdit: '<p>ab</p><div contenteditable="false" oe-keep-contenteditable=""><p>c[]d</p></div>',
                 stepFunction: justifyLeft,
+                contentAfterEdit: '<p>ab</p><div contenteditable="false" oe-keep-contenteditable=""><p>c[]d</p></div>',
                 contentAfter: '<p>ab</p><div contenteditable="false"><p>c[]d</p></div>',
             });
         });

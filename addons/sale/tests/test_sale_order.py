@@ -637,6 +637,8 @@ class TestSaleOrder(TestSaleCommon):
         `update_prices` is shown as a button to update
         prices when the pricelist was changed.
         """
+        self.env.user.write({'groups_id': [(4, self.env.ref('product.group_discount_per_so_line').id)]})
+
         sale_order = self.sale_order
         so_amount = sale_order.amount_total
         sale_order.update_prices()
@@ -736,3 +738,104 @@ class TestSaleOrder(TestSaleCommon):
         # (541,26 / 1,15) * ,98 * 38 = 17527,410782609 ~= 17527.41
         self.assertEqual(line.price_subtotal, 17527.41)
         self.assertEqual(line.untaxed_amount_to_invoice, line.price_subtotal)
+
+    def test_discount_and_amount_undiscounted(self):
+        """When adding a discount on a SO line, this test ensures that amount undiscounted is
+        consistent with the used tax"""
+        sale_order = self.env['sale.order'].create({
+            'partner_id': self.partner_a.id,
+            'order_line': [(0, 0, {
+                'product_id': self.product_a.id,
+                'product_uom_qty': 1,
+                'price_unit': 100.0,
+                'discount': 1.00,
+            })]
+        })
+        sale_order.action_confirm()
+        line = sale_order.order_line
+
+        # test discount and qty 1
+        self.assertEqual(sale_order.amount_undiscounted, 100.0)
+        self.assertEqual(line.price_subtotal, 99.0)
+
+        # more quantity 1 -> 3
+        sale_form = Form(sale_order)
+        with sale_form.order_line.edit(0) as line_form:
+            line_form.product_uom_qty = 3.0
+            line_form.price_unit = 100.0
+        sale_order = sale_form.save()
+
+        self.assertEqual(sale_order.amount_undiscounted, 300.0)
+        self.assertEqual(line.price_subtotal, 297.0)
+
+        # undiscounted
+        with sale_form.order_line.edit(0) as line_form:
+            line_form.discount = 0.0
+        sale_order = sale_form.save()
+        self.assertEqual(line.price_subtotal, 300.0)
+        self.assertEqual(sale_order.amount_undiscounted, 300.0)
+
+        # Same with an included-in-price tax
+        sale_order = sale_order.copy()
+        line = sale_order.order_line
+        line.tax_id = [(0, 0, {
+            'name': 'Super Tax',
+            'amount_type': 'percent',
+            'amount': 10.0,
+            'price_include': True,
+        })]
+        line.discount = 50.0
+        sale_order.action_confirm()
+
+        # 300 with 10% incl tax -> 272.72 total tax excluded without discount
+        # 136.36 price tax excluded with discount applied
+        self.assertEqual(sale_order.amount_undiscounted, 272.72)
+        self.assertEqual(line.price_subtotal, 136.36)
+
+    def test_free_product_and_price_include_fixed_tax(self):
+        """ Check that fixed tax include are correctly computed while the price_unit is 0
+        """
+        # please ensure this test remains consistent with
+        # test_out_invoice_line_onchange_2_taxes_fixed_price_include_free_product in account module
+        sale_order = self.env['sale.order'].create({
+            'partner_id': self.partner_a.id,
+            'order_line': [(0, 0, {
+                'product_id': self.company_data['product_order_no'].id,
+                'product_uom_qty': 1,
+                'price_unit': 0.0,
+            })]
+        })
+        sale_order.action_confirm()
+        line = sale_order.order_line
+        line.tax_id = [
+            (0, 0, {
+                'name': 'BEBAT 0.05',
+                'type_tax_use': 'sale',
+                'amount_type': 'fixed',
+                'amount': 0.05,
+                'price_include': True,
+                'include_base_amount': True,
+            }),
+            (0, 0, {
+                'name': 'Recupel 0.25',
+                'type_tax_use': 'sale',
+                'amount_type': 'fixed',
+                'amount': 0.25,
+                'price_include': True,
+                'include_base_amount': True,
+            }),
+        ]
+        sale_order.action_confirm()
+        self.assertRecordValues(sale_order, [{
+            'amount_untaxed': -0.30,
+            'amount_tax': 0.30,
+            'amount_total': 0.0,
+        }])
+
+    def test_sol_name_search(self):
+        # Shouldn't raise
+        self.env['sale.order']._search([('order_line', 'ilike', 'acoustic')])
+
+        name_search_data = self.env['sale.order.line'].name_search(name=self.sale_order.name)
+        sol_ids_found = dict(name_search_data).keys()
+        self.assertEqual(list(sol_ids_found), self.sale_order.order_line.ids)

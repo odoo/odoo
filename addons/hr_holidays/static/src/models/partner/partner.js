@@ -41,7 +41,10 @@ registerInstancePatchModel('mail.partner', 'hr_holidays/static/src/models/partne
         if (currentDate.getFullYear() !== date.getFullYear()) {
             options.year = 'numeric';
         }
-        const localeCode = this.messaging.locale.language.replace(/_/g, '-');
+        let localeCode = this.messaging.locale.language.replace(/_/g, '-');
+        if (localeCode == "sr@latin") {
+            localeCode = "sr-Latn-RS";
+        }
         const formattedDate = date.toLocaleDateString(localeCode, options);
         return _.str.sprintf(this.env._t("Out of office until %s"), formattedDate);
     },

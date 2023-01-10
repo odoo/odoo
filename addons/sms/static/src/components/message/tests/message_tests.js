@@ -1,12 +1,11 @@
 /** @odoo-module **/
 
-import { create, insert, link } from '@mail/model/model_field_command';
+import { insert, insertAndReplace } from '@mail/model/model_field_command';
 import { makeDeferred } from '@mail/utils/deferred/deferred';
 import {
     afterEach,
     afterNextRender,
     beforeEach,
-    createRootMessagingComponent,
     start,
 } from '@mail/utils/test_utils';
 
@@ -19,20 +18,14 @@ QUnit.module('message_tests.js', {
     beforeEach() {
         beforeEach(this);
 
-        this.createMessageComponent = async (message, otherProps) => {
-            const props = Object.assign({ messageLocalId: message.localId }, otherProps);
-            await createRootMessagingComponent(this, "Message", {
-                props,
-                target: this.widget.el,
-            });
-        };
-
         this.start = async params => {
-            const { env, widget } = await start(Object.assign({}, params, {
-                data: this.data,
-            }));
+            const res = await start({ ...params, data: this.data });
+            const { afterEvent, components, env, widget } = res;
+            this.afterEvent = afterEvent;
+            this.components = components;
             this.env = env;
             this.widget = widget;
+            return res;
         };
     },
     afterEach() {
@@ -43,28 +36,32 @@ QUnit.module('message_tests.js', {
 QUnit.test('Notification Sent', async function (assert) {
     assert.expect(9);
 
-    await this.start();
+    this.data['res.partner'].records.push({ id: 12, name: "Someone", partner_share: true });
+    this.data['mail.channel'].records.push({ id: 11 });
+    this.data['mail.message'].records.push({
+        body: 'not empty',
+        id: 10,
+        message_type: 'sms',
+        model: 'mail.channel',
+        res_id: 11,
+    });
+    this.data['mail.notification'].records.push({
+        id: 11,
+        mail_message_id: 10,
+        notification_status: 'sent',
+        notification_type: 'sms',
+        res_partner_id: 12,
+    });
+    const { createThreadViewComponent } = await this.start();
     const threadViewer = this.messaging.models['mail.thread_viewer'].create({
         hasThreadView: true,
-        thread: create({
+        qunitTest: insertAndReplace(),
+        thread: insert({
             id: 11,
             model: 'mail.channel',
         }),
     });
-    const message = this.messaging.models['mail.message'].create({
-        id: 10,
-        message_type: 'sms',
-        notifications: insert({
-            id: 11,
-            notification_status: 'sent',
-            notification_type: 'sms',
-            partner: insert({ id: 12, name: "Someone" }),
-        }),
-        originThread: link(threadViewer.thread)
-    });
-    await this.createMessageComponent(message, {
-        threadViewLocalId: threadViewer.threadView.localId
-    });
+    await createThreadViewComponent(threadViewer.threadView);
 
     assert.containsOnce(
         document.body,
@@ -136,28 +133,32 @@ QUnit.test('Notification Error', async function (assert) {
         );
         openResendActionDef.resolve();
     });
-
-    await this.start({ env: { bus } });
+    this.data['res.partner'].records.push({ id: 12, name: "Someone", partner_share: true });
+    this.data['mail.channel'].records.push({ id: 11 });
+    this.data['mail.message'].records.push({
+        body: 'not empty',
+        id: 10,
+        message_type: 'sms',
+        model: 'mail.channel',
+        res_id: 11,
+    });
+    this.data['mail.notification'].records.push({
+        id: 11,
+        mail_message_id: 10,
+        notification_status: 'exception',
+        notification_type: 'sms',
+        res_partner_id: 12,
+    });
+    const { createThreadViewComponent } = await this.start({ env: { bus } });
     const threadViewer = this.messaging.models['mail.thread_viewer'].create({
         hasThreadView: true,
-        thread: create({
+        qunitTest: insertAndReplace(),
+        thread: insert({
             id: 11,
             model: 'mail.channel',
         }),
     });
-    const message = this.messaging.models['mail.message'].create({
-        id: 10,
-        message_type: 'sms',
-        notifications: insert({
-            id: 11,
-            notification_status: 'exception',
-            notification_type: 'sms',
-        }),
-        originThread: link(threadViewer.thread)
-    });
-    await this.createMessageComponent(message, {
-        threadViewLocalId: threadViewer.threadView.localId
-    });
+    await createThreadViewComponent(threadViewer.threadView);
 
     assert.containsOnce(
         document.body,

@@ -23,11 +23,11 @@ class StockPicking(models.Model):
             # Hide if not encoding state or it is not a subcontracting picking
             if picking.state in ('draft', 'cancel', 'done') or not picking._is_subcontract():
                 continue
-            subconctracted_moves = picking.move_lines.filtered(lambda m: m.is_subcontract)
-            if subconctracted_moves._subcontrating_should_be_record():
+            subcontracted_moves = picking.move_lines.filtered(lambda m: m.is_subcontract)
+            if subcontracted_moves._subcontrating_should_be_record():
                 picking.display_action_record_components = 'mandatory'
                 continue
-            if subconctracted_moves._subcontrating_can_be_record():
+            if subcontracted_moves._subcontrating_can_be_record():
                 picking.display_action_record_components = 'facultative'
 
     # -------------------------------------------------------------------------
@@ -39,11 +39,18 @@ class StockPicking(models.Model):
         for move in self.move_lines.filtered(lambda move: move.is_subcontract):
             # Auto set qty_producing/lot_producing_id of MO wasn't recorded
             # manually (if the flexible + record_component or has tracked component)
-            production = move._get_subcontract_production().filtered(lambda p: not p._has_been_recorded())
+            productions = move._get_subcontract_production()
+            recorded_productions = productions.filtered(lambda p: p._has_been_recorded())
+            recorded_qty = sum(recorded_productions.mapped('qty_producing'))
+            sm_done_qty = sum(productions._get_subcontract_move().mapped('quantity_done'))
+            rounding = self.env['decimal.precision'].precision_get('Product Unit of Measure')
+            if float_compare(recorded_qty, sm_done_qty, precision_digits=rounding) >= 0:
+                continue
+            production = productions - recorded_productions
             if not production:
                 continue
             if len(production) > 1:
-                raise UserError("It shouldn't happen to have multiple production to record for the same subconctracted move")
+                raise UserError("It shouldn't happen to have multiple production to record for the same subcontracted move")
             # Manage additional quantities
             quantity_done_move = move.product_uom._compute_quantity(move.quantity_done, production.product_uom_id)
             if float_compare(production.product_qty, quantity_done_move, precision_rounding=production.product_uom_id.rounding) == -1:
@@ -58,6 +65,7 @@ class StockPicking(models.Model):
                     production.lot_producing_id = move_line.lot_id
                 production.qty_producing = move_line.product_uom_id._compute_quantity(move_line.qty_done, production.product_uom_id)
                 production._set_qty_producing()
+                production.subcontracting_has_been_recorded = True
                 if move_line != move.move_line_ids[-1]:
                     backorder = production._generate_backorder_productions(close_mo=False)
                     # The move_dest_ids won't be set because the _split filter out done move
@@ -67,6 +75,9 @@ class StockPicking(models.Model):
 
         for picking in self:
             productions_to_done = picking._get_subcontract_production()._subcontracting_filter_to_done()
+            if not productions_to_done:
+                continue
+            productions_to_done = productions_to_done.sudo()
             production_ids_backorder = []
             if not self.env.context.get('cancel_backorder'):
                 production_ids_backorder = productions_to_done.filtered(lambda mo: mo.state == "progress").ids

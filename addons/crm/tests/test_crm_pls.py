@@ -502,8 +502,8 @@ class TestCRMPLS(TransactionCase):
 
     def test_pls_no_share_stage(self):
         """ We test here the situation where all stages are team specific, as there is
-            a current limitation (can be seen in _pls_get_won_lost_total_count) regarding
-            the first stage (used to know how many lost and won there is) that requires
+            a current limitation (can be seen in _pls_get_won_lost_total_count) regarding 
+            the first stage (used to know how many lost and won there is) that requires 
             to have no team assigned to it."""
         Lead = self.env['crm.lead']
         team_id = self.env['crm.team'].create([{'name': 'Team Test'}]).id

@@ -1,6 +1,6 @@
 /** @odoo-module **/
 
-import { create, link } from '@mail/model/model_field_command';
+import { insertAndReplace, link } from '@mail/model/model_field_command';
 import {
     afterEach,
     beforeEach,
@@ -49,12 +49,12 @@ QUnit.test('link: should replace a record to a non-empty x2one field', async fun
     assert.expect(3);
     await this.start();
 
-    const contact =  this.messaging.models['test.contact'].create({
+    const contact = this.messaging.models['test.contact'].create({
         id: 10,
-        address: create({ id: 10 }),
+        address: insertAndReplace({ id: 10 }),
     });
     const address10 = this.messaging.models['test.address'].findFromIdentifyingData({ id: 10 });
-    const address20 = this.messaging.models['test.address'].create({ id: 20 });;
+    const address20 = this.messaging.models['test.address'].create({ id: 20 });
     contact.update({ address: link(address20) });
     assert.strictEqual(
         contact.address,
@@ -103,7 +103,7 @@ QUnit.test('link: should link and add a record to a non-empty x2many field', asy
 
     const contact = this.messaging.models['test.contact'].create({
         id: 10,
-        tasks: create({ id: 10 }),
+        tasks: insertAndReplace({ id: 10 }),
     });
     const task10 = this.messaging.models['test.task'].findFromIdentifyingData({ id: 10 });
     const task20 = this.messaging.models['test.task'].create({ id: 20 });
@@ -122,7 +122,7 @@ QUnit.test('link: should link and add a record to a non-empty x2many field', asy
         contact.tasks[1],
         task20,
         "the new record should be added"
-    )
+    );
     assert.ok(
         contact.tasks instanceof Array &&
         contact.tasks.length === 2 &&

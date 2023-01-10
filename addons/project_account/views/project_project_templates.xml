@@ -3,9 +3,9 @@
         <record id="res_config_settings_view_form" model="ir.ui.view">
             <field name="name">res.config.settings.view.form.inherit.project</field>
             <field name="model">res.config.settings</field>
-            <field name="inherit_id" ref="project.res_config_settings_view_form" />
+            <field name="inherit_id" eval="False" />
             <field name="arch" type="xml">
-                <xpath expr="//div[@name='analytic']/div" position="replace"/>
+                <form/>
             </field>
         </record>
 </odoo>

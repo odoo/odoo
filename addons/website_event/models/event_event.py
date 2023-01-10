@@ -301,7 +301,9 @@ class Event(models.Model):
         :param menus_update_by_field: see ``_get_menus_update_by_field``"""
         for event in self:
             if event.menu_id and not event.website_menu:
-                event.menu_id.sudo().unlink()
+                # do not rely on cascade, as it is done in SQL -> not calling override and
+                # letting some ir.ui.views in DB
+                (event.menu_id + event.menu_id.child_id).sudo().unlink()
             elif event.website_menu and not event.menu_id:
                 root_menu = self.env['website.menu'].sudo().create({'name': event.name, 'website_id': event.website_id.id})
                 event.menu_id = root_menu
@@ -520,7 +522,7 @@ class Event(models.Model):
         fetch_fields = ['name', 'website_url']
         mapping = {
             'name': {'name': 'name', 'type': 'text', 'match': True},
-            'website_url': {'name': 'website_url', 'type': 'text'},
+            'website_url': {'name': 'website_url', 'type': 'text', 'truncate': False},
         }
         if with_description:
             search_fields.append('subtitle')

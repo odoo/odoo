@@ -515,3 +515,128 @@ class TestCreatePicking(common.TestProductCommon):
         po.order_line.product_qty += 2
         backorder = po.picking_ids.filtered(lambda picking: picking.state == 'assigned')
         self.assertEqual(backorder.move_lines.product_uom_qty, 9)
+
+    def test_08_check_update_qty_mto_chain(self):
+        """ Simulate a mto chain with a purchase order. Updating the
+        initial demand should also impact the initial move and the
+        purchase order if it wasn't yet confirmed.
+        """
+        def create_run_procurement(product, product_qty, values=None):
+            if not values:
+                values = {
+                    'warehouse_id': picking_type_out.warehouse_id,
+                    'action': 'pull_push',
+                    'group_id': procurement_group,
+                }
+            return self.env['procurement.group'].run([self.env['procurement.group'].Procurement(
+                product, product_qty, self.uom_unit, vendor.property_stock_customer,
+                product.name, '/', self.env.company, values)
+            ])
+
+        # Prepare procurement that replicates a sale order.
+        picking_type_out = self.env.ref('stock.picking_type_out')
+        partner = self.env['res.partner'].create({
+            'name': 'Jhon'
+        })
+        seller = self.env['product.supplierinfo'].create({
+            'name': partner.id,
+            'price': 12.0,
+        })
+        vendor = self.env['res.partner'].create({
+            'name': 'Roger'
+        })
+        # This needs to be tried with MTO route activated
+        self.env['stock.location.route'].browse(self.ref('stock.route_warehouse0_mto')).action_unarchive()
+        product = self.env['product.product'].create({
+            'name': 'product',
+            'type': 'product',
+            'route_ids': [(4, self.ref('stock.route_warehouse0_mto')), (4, self.ref('purchase_stock.route_warehouse0_buy'))],
+            'seller_ids': [(6, 0, [seller.id])],
+            'categ_id': self.env.ref('product.product_category_all').id,
+            'supplier_taxes_id': [(6, 0, [])],
+        })
+
+        procurement_group = self.env['procurement.group'].create({
+            'move_type': 'direct',
+            'partner_id': vendor.id
+        })
+        # Create initial procurement that will generate the initial move and its picking.
+        create_run_procurement(product, 50, {
+            'group_id': procurement_group,
+            'warehouse_id': picking_type_out.warehouse_id,
+            'partner_id': vendor
+        })
+        customer_move = self.env['stock.move'].search([('group_id', '=', procurement_group.id)])
+        purchase_order = self.env['purchase.order'].search([('partner_id', '=', partner.id)])
+        self.assertTrue(purchase_order, 'No purchase order created.')
+
+        # Check purchase order line data.
+        purchase_order_line = purchase_order.order_line
+        self.assertEqual(purchase_order_line.product_id, product, 'The product on the purchase order line is not correct.')
+        self.assertEqual(purchase_order_line.product_qty, 50, 'The purchase order line qty should be the same as the move.')
+
+        # Create procurement to decrease quantity in the initial move and the related RFQ.
+        create_run_procurement(product, -10.00)
+        self.assertEqual(customer_move.product_uom_qty, 40, 'The demand on the initial move should have been decreased when merged with the procurement.')
+        self.assertEqual(purchase_order_line.product_qty, 40, 'The demand on the Purchase Order should have been decreased since it is still a RFQ.')
+
+        # Create procurement to increase quantity on the initial move and the related RFQ.
+        create_run_procurement(product, 5.00)
+        self.assertEqual(customer_move.product_uom_qty, 45, 'The demand on the initial move should have been increased when merged with the procurement.')
+        self.assertEqual(purchase_order_line.product_qty, 45, 'The demand on the Purchase Order should have been increased since it is still a RFQ.')
+
+        purchase_order.button_confirm()
+        # Create procurement to decrease quantity in the initial move but not the confirmed PO.
+        create_run_procurement(product, -10.00)
+        self.assertEqual(customer_move.product_uom_qty, 35, 'The demand on the initial move should have been decreased when merged with the procurement.')
+        self.assertEqual(purchase_order_line.product_qty, 45, 'The demand on the Purchase Order should not have been decreased since it is has been confirmed.')
+        purchase_orders = self.env['purchase.order'].search([('partner_id', '=', partner.id)])
+        self.assertEqual(len(purchase_orders), 1, 'No RFQ should have been created for a negative demand')
+
+        # Create procurement to increase quantity on the initial move that will create a new move and a new RFQ for missing demand.
+        create_run_procurement(product, 5.00)
+        self.assertEqual(customer_move.product_uom_qty, 35, 'The demand on the initial move should not have been increased since it should be a new move.')
+        self.assertEqual(purchase_order_line.product_qty, 45, 'The demand on the Purchase Order should not have been increased since it is has been confirmed.')
+        purchase_orders = self.env['purchase.order'].search([('partner_id', '=', partner.id)])
+        self.assertEqual(len(purchase_orders), 2, 'A new RFQ should have been created for missing demand.')
+
+    def test_update_qty_purchased(self):
+        """
+            Test that the price unit in the purchase order line and the move is updated
+            according to the pricelist defined in the product, and that the "stock.moves"
+            are merged correctly when changing the qty purchased.
+        """
+        # add vendor to the product
+        self.product_id_1.seller_ids = [(0, 0, {
+            'name': self.partner_id.id,
+            'min_qty': 10,
+            'price': 15,
+        })]
+
+        # Create PO
+        po_form = Form(self.env['purchase.order'])
+        po_form.partner_id = self.partner_id
+        with po_form.order_line.new() as po_line:
+            po_line.product_id = self.product_id_1
+            po_line.product_qty = 10
+        purchase_order = po_form.save()
+
+        # Confirm Purchase order
+        purchase_order.button_confirm()
+        # Check purchase order state, it should be "purchase".
+        self.assertEqual(purchase_order.state, 'purchase', 'Purchase order should be in purchase state.')
+        # Make sure that picking has been created
+        self.assertEqual(len(purchase_order.picking_ids), 1)
+        # check that the price list has been applied
+        self.assertEqual(purchase_order.order_line.price_unit, 15)
+        self.assertEqual(purchase_order.picking_ids.move_lines.price_unit, 15)
+        # update the product qty purchased
+        with po_form.order_line.edit(0) as po_line:
+            po_line.product_qty = 9
+        purchase_order = po_form.save()
+        # verify that the move for the decreased qty has been merged with the initial move
+        self.assertEqual(len(purchase_order.picking_ids), 1)
+        self.assertEqual(len(purchase_order.picking_ids.move_lines), 1)
+        # check that the price has been updated in the purchase order line and in the stock.move
+        self.assertEqual(purchase_order.order_line.price_unit, 0)
+        self.assertEqual(purchase_order.picking_ids.move_lines.price_unit, 0)

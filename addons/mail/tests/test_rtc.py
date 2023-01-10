@@ -29,20 +29,20 @@ class TestChannelInternals(MailCommon):
             ],
             [
                 {
-                    'type': 'rtc_session_ended',
+                    'type': 'mail.channel.rtc.session/ended',
                     'payload': {
                         'sessionId': channel_partner.rtc_session_ids.id,
                     },
                 },
                 {
-                    'type': 'rtc_sessions_update',
+                    'type': 'mail.channel/rtc_sessions_update',
                     'payload': {
                         'id': channel.id,
                         'rtcSessions': [('insert-and-unlink', [{'id': channel_partner.rtc_session_ids.id}])],
                     },
                 },
                 {
-                    'type': 'rtc_sessions_update',
+                    'type': 'mail.channel/rtc_sessions_update',
                     'payload': {
                         'id': channel.id,
                         'rtcSessions': [('insert', [{
@@ -102,7 +102,7 @@ class TestChannelInternals(MailCommon):
             ],
             [
                 {
-                    'type': 'rtc_sessions_update',
+                    'type': 'mail.channel/rtc_sessions_update',
                     'payload': {
                         'id': channel.id,
                         'rtcSessions': [('insert', [{
@@ -119,7 +119,7 @@ class TestChannelInternals(MailCommon):
                     },
                 },
                 {
-                    'type': 'mail.channel_update',
+                    'type': 'mail.channel/insert',
                     'payload': {
                         'id': channel.id,
                         'invitedPartners': [('insert', [{'id': test_user.partner_id.id, 'name': 'Test User'}])],
@@ -157,7 +157,7 @@ class TestChannelInternals(MailCommon):
             ],
             [
                 {
-                    'type': 'rtc_sessions_update',
+                    'type': 'mail.channel/rtc_sessions_update',
                     'payload': {
                         'id': channel.id,
                         'rtcSessions': [('insert', [{
@@ -174,7 +174,7 @@ class TestChannelInternals(MailCommon):
                     },
                 },
                 {
-                    'type': 'rtc_sessions_update',
+                    'type': 'mail.channel/rtc_sessions_update',
                     'payload': {
                         'id': channel.id,
                         'rtcSessions': [('insert', [{
@@ -191,7 +191,7 @@ class TestChannelInternals(MailCommon):
                     },
                 },
                 {
-                    'type': 'mail.channel_update',
+                    'type': 'mail.channel/insert',
                     'payload': {
                         'id': channel.id,
                         'invitedGuests': [('insert', [{'id': test_guest.id, 'name': 'Test Guest'}])],
@@ -226,21 +226,21 @@ class TestChannelInternals(MailCommon):
             ],
             [
                 {
-                    'type': 'mail.channel_update',
+                    'type': 'mail.channel/insert',
                     'payload': {
                         'id': channel.id,
                         'rtcInvitingSession': [('unlink',)],
                     },
                 },
                 {
-                    'type': 'mail.channel_update',
+                    'type': 'mail.channel/insert',
                     'payload': {
                         'id': channel.id,
                         'invitedPartners': [('insert-and-unlink', [{'id': test_user.partner_id.id}])],
                     },
                 },
                 {
-                    'type': 'rtc_sessions_update',
+                    'type': 'mail.channel/rtc_sessions_update',
                     'payload': {
                         'id': channel.id,
                         'rtcSessions': [('insert', [
@@ -272,21 +272,21 @@ class TestChannelInternals(MailCommon):
             ],
             [
                 {
-                    'type': 'mail.channel_update',
+                    'type': 'mail.channel/insert',
                     'payload': {
                         'id': channel.id,
                         'rtcInvitingSession': [('unlink',)],
                     },
                 },
                 {
-                    'type': 'mail.channel_update',
+                    'type': 'mail.channel/insert',
                     'payload': {
                         'id': channel.id,
                         'invitedGuests': [('insert-and-unlink', [{'id': test_guest.id}])],
                     },
                 },
                 {
-                    'type': 'rtc_sessions_update',
+                    'type': 'mail.channel/rtc_sessions_update',
                     'payload': {
                         'id': channel.id,
                         'rtcSessions': [('insert', [
@@ -327,14 +327,14 @@ class TestChannelInternals(MailCommon):
             ],
             [
                 {
-                    'type': 'mail.channel_update',
+                    'type': 'mail.channel/insert',
                     'payload': {
                         'id': channel.id,
                         'rtcInvitingSession': [('unlink',)],
                     },
                 },
                 {
-                    'type': 'mail.channel_update',
+                    'type': 'mail.channel/insert',
                     'payload': {
                         'id': channel.id,
                         'invitedPartners': [('insert-and-unlink', [{'id': test_user.partner_id.id}])],
@@ -353,14 +353,14 @@ class TestChannelInternals(MailCommon):
             ],
             [
                 {
-                    'type': 'mail.channel_update',
+                    'type': 'mail.channel/insert',
                     'payload': {
                         'id': channel.id,
                         'rtcInvitingSession': [('unlink',)],
                     },
                 },
                 {
-                    'type': 'mail.channel_update',
+                    'type': 'mail.channel/insert',
                     'payload': {
                         'id': channel.id,
                         'invitedGuests': [('insert-and-unlink', [{'id': test_guest.id}])],
@@ -391,27 +391,27 @@ class TestChannelInternals(MailCommon):
             ],
             [
                 {
-                    'type': 'rtc_session_ended',
+                    'type': 'mail.channel.rtc.session/ended',
                     'payload': {
                         'sessionId': channel_partner.rtc_session_ids.id,
                     },
                 },
                 {
-                    'type': 'mail.channel_update',
+                    'type': 'mail.channel/insert',
                     'payload': {
                         'id': channel.id,
                         'rtcInvitingSession': [('unlink',)],
                     },
                 },
                 {
-                    'type': 'mail.channel_update',
+                    'type': 'mail.channel/insert',
                     'payload': {
                         'id': channel.id,
                         'rtcInvitingSession': [('unlink',)],
                     },
                 },
                 {
-                    'type': 'mail.channel_update',
+                    'type': 'mail.channel/insert',
                     'payload': {
                         'id': channel.id,
                         'invitedGuests': [('insert-and-unlink', [{'id': test_guest.id}])],
@@ -419,7 +419,7 @@ class TestChannelInternals(MailCommon):
                     },
                 },
                 {
-                    'type': 'rtc_sessions_update',
+                    'type': 'mail.channel/rtc_sessions_update',
                     'payload': {
                         'id': channel.id,
                         'rtcSessions': [('insert-and-unlink', [{'id': channel_partner.rtc_session_ids.id}])],
@@ -448,10 +448,14 @@ class TestChannelInternals(MailCommon):
                 (self.cr.dbname, 'res.partner', test_user.partner_id.id),  # incoming invitation
                 (self.cr.dbname, 'mail.guest', test_guest.id),  # incoming invitation
                 (self.cr.dbname, 'mail.channel', channel.id),  # update list of invitations
+                (self.cr.dbname, 'res.partner', self.user_employee.partner_id.id),  # update of last interest (not asserted below)
+                (self.cr.dbname, 'res.partner', test_user.partner_id.id),  # update of last interest (not asserted below)
+                (self.cr.dbname, 'mail.channel', channel.id),  # new member (guest) (not asserted below)
+                (self.cr.dbname, 'mail.guest', test_guest.id), # channel joined for guest (not asserted below)
             ],
             [
                 {
-                    'type': 'mail.channel_update',
+                    'type': 'mail.channel/insert',
                     'payload': {
                         'id': channel.id,
                         'rtcInvitingSession': [('insert', {
@@ -468,7 +472,7 @@ class TestChannelInternals(MailCommon):
                     },
                 },
                 {
-                    'type': 'mail.channel_update',
+                    'type': 'mail.channel/insert',
                     'payload': {
                         'id': channel.id,
                         'rtcInvitingSession': [('insert', {
@@ -485,7 +489,7 @@ class TestChannelInternals(MailCommon):
                     },
                 },
                 {
-                    'type': 'mail.channel_update',
+                    'type': 'mail.channel/insert',
                     'payload': {
                         'id': channel.id,
                         'invitedGuests': [('insert', [{'id': test_guest.id, 'name': 'Test Guest'}])],
@@ -510,13 +514,13 @@ class TestChannelInternals(MailCommon):
             ],
             [
                 {
-                    'type': 'rtc_session_ended',
+                    'type': 'mail.channel.rtc.session/ended',
                     'payload': {
                         'sessionId': channel_partner.rtc_session_ids.id,
                     },
                 },
                 {
-                    'type': 'rtc_sessions_update',
+                    'type': 'mail.channel/rtc_sessions_update',
                     'payload': {
                         'id': channel.id,
                         'rtcSessions': [('insert-and-unlink', [{'id': channel_partner.rtc_session_ids.id}])],
@@ -542,13 +546,13 @@ class TestChannelInternals(MailCommon):
             ],
             [
                 {
-                    'type': 'rtc_session_ended',
+                    'type': 'mail.channel.rtc.session/ended',
                     'payload': {
                         'sessionId': channel_partner.rtc_session_ids.id,
                     },
                 },
                 {
-                    'type': 'rtc_sessions_update',
+                    'type': 'mail.channel/rtc_sessions_update',
                     'payload': {
                         'id': channel.id,
                         'rtcSessions': [('insert-and-unlink', [{'id': channel_partner.rtc_session_ids.id}])],
@@ -573,13 +577,13 @@ class TestChannelInternals(MailCommon):
             ],
             [
                 {
-                    'type': 'rtc_session_ended',
+                    'type': 'mail.channel.rtc.session/ended',
                     'payload': {
                         'sessionId': channel_partner.rtc_session_ids.id,
                     },
                 },
                 {
-                    'type': 'rtc_sessions_update',
+                    'type': 'mail.channel/rtc_sessions_update',
                     'payload': {
                         'id': channel.id,
                         'rtcSessions': [('insert-and-unlink', [{'id': channel_partner.rtc_session_ids.id}])],
@@ -589,3 +593,45 @@ class TestChannelInternals(MailCommon):
         ):
             channel_partner.rtc_session_ids.action_disconnect()
         self.assertFalse(channel_partner.rtc_session_ids)
+
+    @users('employee')
+    @mute_logger('odoo.models.unlink')
+    def test_60_rtc_sync_sessions_should_gc_and_return_outdated_and_active_sessions(self):
+        channel = self.env['mail.channel'].browse(self.env['mail.channel'].create_group(partners_to=self.user_employee.partner_id.ids)['id'])
+        channel_partner = channel.sudo().channel_last_seen_partner_ids.filtered(lambda channel_partner: channel_partner.partner_id == self.user_employee.partner_id)
+        join_call_values = channel_partner._rtc_join_call()
+        test_guest = self.env['mail.guest'].sudo().create({'name': "Test Guest"})
+        test_channel_partner = self.env['mail.channel.partner'].create({
+            'guest_id': test_guest.id,
+            'channel_id': channel.id,
+        })
+        test_session = self.env['mail.channel.rtc.session'].sudo().create({'channel_partner_id': test_channel_partner.id})
+        test_session.flush()
+        test_session._write({'write_date': fields.Datetime.now() - relativedelta(days=2)})
+        unused_ids = [9998, 9999]
+        self.env['bus.bus'].sudo().search([]).unlink()
+        with self.assertBus(
+            [
+                (self.cr.dbname, 'mail.guest', test_guest.id),  # session ended
+                (self.cr.dbname, 'mail.channel', channel.id),  # update list of sessions
+            ],
+            [
+                {
+                    'type': 'mail.channel.rtc.session/ended',
+                    'payload': {
+                        'sessionId': test_session.id,
+                    },
+                },
+                {
+                    'type': 'mail.channel/rtc_sessions_update',
+                    'payload': {
+                        'id': channel.id,
+                        'rtcSessions': [('insert-and-unlink', [{'id': test_session.id}])],
+                    },
+                },
+            ],
+        ):
+            current_rtc_sessions, outdated_rtc_sessions = channel_partner._rtc_sync_sessions(check_rtc_session_ids=[join_call_values['sessionId']] + unused_ids)
+        self.assertEqual(channel_partner.rtc_session_ids, current_rtc_sessions)
+        self.assertEqual(unused_ids, outdated_rtc_sessions.ids)
+        self.assertFalse(outdated_rtc_sessions.exists())

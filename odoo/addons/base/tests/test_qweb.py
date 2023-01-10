@@ -5,6 +5,7 @@ import collections
 import json
 import os.path
 import re
+import markupsafe
 
 from lxml import etree, html
 from lxml.builder import E
@@ -683,6 +684,7 @@ class TestQWebBasic(TransactionCase):
             ("fn(a=11, b=22) or a",                     {'a': 1, 'fn': lambda a,b: b},  22),
             ("(lambda a: a)(5)",                        {},                             5),
             ("(lambda a: a[0])([5])",                   {},                             5),
+            ("(lambda test: len(test))('aaa')",         {},                             3),
             ("{'a': lambda a: a[0], 'b': 3}['a']([5])", {},                             5),
             ("list(map(lambda a: a[0], r))",            {'r': [(1,11), (2,22)]},        [1, 2]),
             ("z + (head or 'z')",                       {'z': 'a'},                     "az"),
@@ -692,8 +694,10 @@ class TestQWebBasic(TransactionCase):
             ("any({x == 5 for x in [1,2,3]})",          {},                             False),
             ("{x:y for x,y in [('a', 11),('b', 22)]}",  {},                             {'a': 11, 'b': 22}),
             ("[(y,x) for x,y in [(1, 11),(2, 22)]]",    {},                             [(11, 1), (22, 2)]),
-            ("(lambda a: a + 5)(a=x)",                  {'x': 10},                      15),
+            ("(lambda a: a + 5)(x)",                    {'x': 10},                      15),
+            ("(lambda a: a + x)(5)",                    {'x': 10},                      15),
             ("sum(x for x in range(4)) + ((x))",        {'x': 10},                      16),
+            ("['test_' + x for x in ['a', 'b']]",       {},                             ['test_a', 'test_b'])
         ]
 
         IrQweb = self.env['ir.qweb']
@@ -1004,6 +1008,32 @@ class TestQWebBasic(TransactionCase):
         rendered = self.env['ir.qweb']._render(t.id, {})
         self.assertEqual(rendered.strip(), result.strip())
 
+    def test_out_default_value(self):
+        t = self.env['ir.ui.view'].create({
+            'name': 'test',
+            'type': 'qweb',
+            'arch_db': '''<t t-name="out-default">
+                <span rows="10" t-out="a">
+                    DEFAULT
+                    <t t-out="'Text'" />
+                </span>
+            </t>'''
+        })
+        result = """
+                <span rows="10">Hello</span>
+        """
+        rendered = self.env['ir.qweb']._render(t.id, {'a': 'Hello'})
+        self.assertEqual(str(rendered.strip()), result.strip())
+
+        result = """
+                <span rows="10">
+                    DEFAULT
+                    Text
+                </span>
+        """
+        rendered = self.env['ir.qweb']._render(t.id, {})
+        self.assertEqual(str(rendered.strip()), result.strip())
+
     def test_esc_markup(self):
         # t-esc is equal to t-out
         t = self.env['ir.ui.view'].create({
@@ -1080,7 +1110,7 @@ class TestQWebBasic(TransactionCase):
         try:
             self.env['ir.qweb']._render(t.id)
         except QWebException as e:
-            self.assertIn('Can not compile expression', e.message)
+            self.assertIn('Cannot compile expression', e.message)
             self.assertIn('<div t-esc="abc + def + ("/>', e.message)
 
 from copy import deepcopy
@@ -1262,3 +1292,26 @@ class TestEmptyLines(TransactionCase):
         self.assertTrue(re.compile('^\s+\n').match(rendered))
         self.assertTrue(re.compile('\n\s+\n').match(rendered))
 
+
+class TestQWebMisc(TransactionCase):
+    def test_render_comment_tail(self):
+        """ Test the rendering of a tail text, near a comment.
+        """
+
+        view1 = self.env['ir.ui.view'].create({
+            'name': "dummy",
+            'type': "qweb",
+            'arch': """
+            <t>
+                <!-- it is a comment -->
+                <!-- it is another comment -->
+                Text 1
+                <!-- it is still another comment -->
+                Text 2
+                <t>ok</t>
+            </t>
+            """
+        })
+        emptyline = '\n                '
+        expected = markupsafe.Markup('Text 1' + emptyline + 'Text 2' + emptyline + 'ok')
+        self.assertEqual(view1._render(), expected)

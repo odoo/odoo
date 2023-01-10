@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <!-- View Logs -->
+        <record id="transaction_log_form" model="ir.ui.view">
+            <field name="name">transaction.log.form</field>
+            <field name="model">transaction.log</field>
+            <field name="arch" type="xml">
+                <form string="Transaction Logs" duplicate="false" edit="false" create="false" delete="1">
+                    <sheet>
+                        <group>
+                            <group>
+                                <field name="user_id"/>
+                                <field name="event_type"/>
+                                <field name="date_time"/>
+                            </group>
+                            <group>
+                                <field name="model"/>
+                                <field name="res_id"/>
+                                <field name="reference" widget="reference" string="Record"/>
+                            </group>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="transaction_log_tree" model="ir.ui.view">
+            <field name="name">transaction.log.tree</field>
+            <field name="model">transaction.log</field>
+            <field name="arch" type="xml">
+                <tree string="Transaction Logs" duplicate="false" edit="false" create="false" delete="1">
+                    <field name="user_id"/>
+                    <field name="event_type"/>
+                    <field name="date_time"/>
+                    <field name="model"/>
+                    <field name="res_id"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="transaction_log_search" model="ir.ui.view">
+            <field name="name">transaction.log.search</field>
+            <field name="model">transaction.log</field>
+            <field name="arch" type="xml">
+                <search string="Logs">
+                    <field name="event_type" string="Event Type"/>
+                    <field name="user_id" string="User"/>
+                    <field name="model" string="Model"/>
+                    <field name="date_time" string="Date Time"/>
+                    <filter string="Date Time" name="date_time_filter" date="date_time"/>
+                    <group expand="0" string="Group By">
+                        <filter string="Event Type" name="group_by_event_type" domain="[]" context="{'group_by':'event_type'}"/>
+                        <filter string="User" name="group_by_user_id" domain="[]" context="{'group_by':'user_id'}"/>
+                        <filter string="Model" name="group_by_model" domain="[]" context="{'group_by':'model'}"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+
+        <record id="action_transaction_log" model="ir.actions.act_window">
+            <field name="name">Transaction Logs</field>
+            <field name="res_model">transaction.log</field>
+            <field name="view_mode">tree,form</field>
+            <field name="view_id" ref="fg_custom.transaction_log_tree"/>
+            <field name="search_view_id" ref="fg_custom.transaction_log_search"/>
+            <field name="target">current</field>
+        </record>
+
+        <menuitem id="menu_transaction_log"
+             action="fg_custom.action_transaction_log"
+             parent="point_of_sale.menu_point_config_product"
+             groups="base.group_no_one"
+             sequence="56"/>
+
+        <record id="fg_coupon_program_view_form" model="ir.ui.view">
+            <field name="name">coupon.program.form.fg</field>
+            <field name="model">coupon.program</field>
+            <field name="inherit_id" ref="coupon.coupon_program_view_form_common"/>
+            <field name="arch" type="xml">
+                <xpath expr="//group[@name='conditions']" position="inside">
+                    <label string="FG Discount Type" for="fg_discount_type"/>
+                    <div>
+                        <field name="fg_discount_type" class="oe_inline"/>
+                    </div>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>

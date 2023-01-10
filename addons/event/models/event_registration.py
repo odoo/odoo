@@ -3,7 +3,7 @@
 
 from dateutil.relativedelta import relativedelta
 
-from odoo import _, api, fields, models
+from odoo import _, api, fields, models, SUPERUSER_ID
 from odoo.tools import format_datetime
 from odoo.exceptions import AccessError, ValidationError
 
@@ -229,13 +229,13 @@ class EventRegistration(models.Model):
             message loaded by default
         """
         self.ensure_one()
-        template = self.env.ref('event.event_registration_mail_template_badge')
+        template = self.env.ref('event.event_registration_mail_template_badge', raise_if_not_found=False)
         compose_form = self.env.ref('mail.email_compose_message_wizard_form')
         ctx = dict(
             default_model='event.registration',
             default_res_id=self.id,
             default_use_template=bool(template),
-            default_template_id=template.id,
+            default_template_id=template and template.id,
             default_composition_mode='comment',
             custom_layout="mail.mail_notification_light",
         )
@@ -268,7 +268,7 @@ class EventRegistration(models.Model):
         # we could simply call _create_missing_mail_registrations and let cron do their job
         # but it currently leads to several delays. We therefore call execute until
         # cron triggers are correctly used
-        onsubscribe_schedulers.execute()
+        onsubscribe_schedulers.with_user(SUPERUSER_ID).execute()
 
     # ------------------------------------------------------------
     # MAILING / GATEWAY

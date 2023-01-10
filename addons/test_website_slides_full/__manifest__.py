@@ -16,6 +16,9 @@ certification flow including purchase, certification, failure and success.
         'website_slides_survey',
         'payment_test'
     ],
+    'data': [
+        'data/res_groups_data.xml',
+    ],
     'demo': [
         'data/product_demo.xml',
     ],

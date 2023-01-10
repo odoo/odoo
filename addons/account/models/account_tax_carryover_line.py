@@ -9,11 +9,10 @@ class AccountTaxCarryoverLine(models.Model):
 
     name = fields.Char(required=True)
     amount = fields.Float(required=True, default=0.0)
-    date = fields.Date(required=True, default=fields.Date.context_today, readonly=True)
+    date = fields.Date(required=True, default=fields.Date.context_today)
     tax_report_line_id = fields.Many2one(
         comodel_name='account.tax.report.line',
         string="Tax report line",
-        domain="[('report_id', '=', tax_report_id)]",
     )
     tax_report_id = fields.Many2one(related='tax_report_line_id.report_id')
     tax_report_country_id = fields.Many2one(related='tax_report_id.country_id')

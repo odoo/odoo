@@ -3,17 +3,16 @@
 # 	* auth_password_policy
 # 
 # Translators:
-# Mustafa Rawi <mustafa@cubexco.com>, 2019
-# Akram Alfusayal <akram_ma@hotmail.com>, 2019
-# Ali Alrehawi <alrehawi@hotmail.com>, 2019
+# Martin Trigaux, 2021
+# Malaz Abuidris <msea@odoo.com>, 2022
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~12.4\n"
+"Project-Id-Version: Odoo Server saas~14.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-08-12 11:32+0000\n"
-"PO-Revision-Date: 2019-08-26 09:09+0000\n"
-"Last-Translator: Ali Alrehawi <alrehawi@hotmail.com>, 2019\n"
+"POT-Creation-Date: 2021-07-12 07:50+0000\n"
+"PO-Revision-Date: 2021-09-14 12:20+0000\n"
+"Last-Translator: Malaz Abuidris <msea@odoo.com>, 2022\n"
 "Language-Team: Arabic (https://www.transifex.com/odoo/teams/41243/ar/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -24,7 +23,7 @@ msgstr ""
 #. module: auth_password_policy
 #: model:ir.model,name:auth_password_policy.model_res_config_settings
 msgid "Config Settings"
-msgstr "ضبط الإعدادات"
+msgstr "تهيئة الإعدادات "
 
 #. module: auth_password_policy
 #: model:ir.model.fields,field_description:auth_password_policy.field_res_config_settings__minlength
@@ -35,17 +34,18 @@ msgstr "الحد الأدنى لطول كلمة المرور"
 #: model:ir.model.fields,help:auth_password_policy.field_res_config_settings__minlength
 msgid ""
 "Minimum number of characters passwords must contain, set to 0 to disable."
-msgstr "الحد الأدنى لعدد أحرف كلمات المرور اللازمة، ضع 0 لإلغاء التفعيل."
+msgstr ""
+"الحد الأدنى لعدد الأحرف التي يجب أن تحتويها كلمات المرور. ضع 0 للتعطيل. "
 
 #. module: auth_password_policy
-#: code:addons/auth_password_policy/models/res_users.py:30
+#: code:addons/auth_password_policy/models/res_users.py:0
 #, python-format
 msgid "Passwords must have at least %d characters, got %d."
-msgstr "يجب أن تتكون كلمات المرور من %d حرفًا، الحالية %d."
+msgstr "يجب أن تتكون كلمات المرور من %d حرفًا، كلمة المرور الحالية بها %d. "
 
 #. module: auth_password_policy
 #. openerp-web
-#: code:addons/auth_password_policy/static/src/js/password_gauge.js:123
+#: code:addons/auth_password_policy/static/src/js/password_gauge.js:0
 #, python-format
 msgid ""
 "Required: %s.\n"
@@ -54,37 +54,37 @@ msgid ""
 msgstr ""
 "المطلوب: %s.\n"
 "\n"
-"تلميح: زد طول كلمة المرور،استخدم كلمات متعددة ورموز لتقوية كلمة المرور."
+"تلميح: زد طول كلمة المرور، استخدم كلمات متعددة ورموز أخرى غير الأحرف لتقوية كلمة المرور. "
 
 #. module: auth_password_policy
 #: model:ir.model,name:auth_password_policy.model_res_users
 msgid "Users"
-msgstr "المستخدمون"
+msgstr "المستخدمين "
 
 #. module: auth_password_policy
 #. openerp-web
-#: code:addons/auth_password_policy/static/src/js/password_gauge.js:28
+#: code:addons/auth_password_policy/static/src/js/password_gauge.js:0
 #, python-format
 msgid "at least %d character classes"
-msgstr "الحد الأدنى %d حرفًا"
+msgstr "%d فئة رمز على الأقل "
 
 #. module: auth_password_policy
 #. openerp-web
-#: code:addons/auth_password_policy/static/src/js/password_gauge.js:22
+#: code:addons/auth_password_policy/static/src/js/password_gauge.js:0
 #, python-format
 msgid "at least %d characters"
-msgstr "الحد الأدنى %d حرفًا"
+msgstr "%d رمزاً على الأقل "
 
 #. module: auth_password_policy
 #. openerp-web
-#: code:addons/auth_password_policy/static/src/js/password_gauge.js:25
+#: code:addons/auth_password_policy/static/src/js/password_gauge.js:0
 #, python-format
 msgid "at least %d words"
-msgstr "الحد الأدنى %d كلمة"
+msgstr "%d كلمة على الأقل "
 
 #. module: auth_password_policy
 #. openerp-web
-#: code:addons/auth_password_policy/static/src/js/password_gauge.js:125
+#: code:addons/auth_password_policy/static/src/js/password_gauge.js:0
 #, python-format
 msgid "no requirements"
 msgstr "لا توجد متطلبات"

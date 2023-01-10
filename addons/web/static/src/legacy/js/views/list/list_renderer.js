@@ -176,8 +176,11 @@ var ListRenderer = BasicRenderer.extend({
                 aggregateValue = Infinity;
             }
             _.each(data, function (d) {
-                count += 1;
                 var value = (d.type === 'record') ? d.data[attrs.name] : d.aggregateValues[attrs.name];
+                if (Number(value) !== value) {
+                    return;
+                }
+                count += 1;
                 if (func === 'avg') {
                     aggregateValue += value;
                 } else if (func === 'sum') {
@@ -191,10 +194,14 @@ var ListRenderer = BasicRenderer.extend({
             if (func === 'avg') {
                 aggregateValue = count ? aggregateValue / count : aggregateValue;
             }
-            column.aggregate = {
-                help: attrs[func],
-                value: aggregateValue,
-            };
+            if (count) {
+                column.aggregate = {
+                    help: attrs[func],
+                    value: aggregateValue,
+                };
+            } else {
+                delete column.aggregate;
+            }
         }
     },
     /**

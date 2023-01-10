@@ -9,7 +9,7 @@ import { actionService } from "@web/webclient/actions/action_service";
 import { hotkeyService } from "@web/core/hotkeys/hotkey_service";
 import { NavBar } from "@web/webclient/navbar/navbar";
 import { clearRegistryWithCleanup, makeTestEnv } from "../helpers/mock_env";
-import { click, getFixture, nextTick, patchWithCleanup } from "../helpers/utils";
+import { click, getFixture, nextTick, patchWithCleanup, makeDeferred, mockTimeout } from "../helpers/utils";
 
 const { Component, mount, tags } = owl;
 const { xml } = tags;
@@ -62,6 +62,22 @@ QUnit.test("dropdown menu can be toggled", async (assert) => {
     assert.containsOnce(dropdown, ".dropdown-menu");
     await click(dropdown, "button.dropdown-toggle");
     assert.containsNone(dropdown, ".dropdown-menu");
+    navbar.destroy();
+});
+
+QUnit.test("href attribute on apps menu items", async (assert) => {
+    baseConfig.serverData.menus = {
+        root: { id: "root", children: [1], name: "root", appID: "root" },
+        1: { id: 1, children: [2], name: "My app", appID: 1, actionID: 339 },
+    };
+    const env = await makeTestEnv(baseConfig);
+    const target = getFixture();
+    const navbar = await mount(NavBar, { env, target });
+    const appsMenu = navbar.el.querySelector(".o_navbar_apps_menu");
+    await click(appsMenu, "button.dropdown-toggle");
+    const dropdownItem = navbar.el.querySelector(".o_navbar_apps_menu .dropdown-item");
+    assert.strictEqual(dropdownItem.getAttribute("href"), "#menu_id=1&action=339");
+
     navbar.destroy();
 });
 
@@ -161,6 +177,32 @@ QUnit.test("navbar can display systray items ordered based on their sequence", a
     const menuSystray = navbar.el.getElementsByClassName("o_menu_systray")[0];
     assert.containsN(menuSystray, "li", 4, "four systray items should be displayed");
     assert.strictEqual(menuSystray.innerText, "my item 3\nmy item 4\nmy item 2\nmy item 1");
+    navbar.destroy();
+});
+
+QUnit.test("navbar updates after adding a systray item", async (assert) => {
+    class MyItem1 extends Component {}
+    MyItem1.template = xml`<li class="my-item-1">my item 1</li>`;
+
+    clearRegistryWithCleanup(systrayRegistry);
+    systrayRegistry.add('addon.myitem1', { Component: MyItem1 });
+
+    const env = await makeTestEnv(baseConfig);
+    const target = getFixture();
+
+    patchWithCleanup(NavBar.prototype, {
+         mounted() {
+            class MyItem2 extends Component {}
+            MyItem2.template = xml`<li class="my-item-2">my item 2</li>`;
+            systrayRegistry.add('addon.myitem2', {Component: MyItem2});
+            this._super();
+        }
+    });
+
+    const navbar = await mount(NavBar, { env, target });
+    await nextTick();
+    const menuSystray = navbar.el.getElementsByClassName("o_menu_systray")[0];
+    assert.containsN(menuSystray, "li", 2, "2 systray items should be displayed");
     navbar.destroy();
 });
 
@@ -419,4 +461,31 @@ QUnit.test("'more' menu sections properly updated on app change", async (assert)
         "'more' menu should contain App2 sections"
     );
     navbar.destroy();
+});
+
+QUnit.test("Do not execute adapt when navbar is destroyed", async (assert) => {
+    assert.expect(5);
+
+    const execRegisteredTimeouts = mockTimeout();
+    class MyNavbar extends NavBar {
+        async adapt() {
+            assert.step("adapt NavBar");
+            return super.adapt();
+        }
+    }
+    const env = await makeTestEnv(baseConfig);
+
+    const target = getFixture();
+
+    // Set menu and mount
+    env.services.menu.setCurrentMenu(1);
+    const navbar = await mount(MyNavbar, { env, target });
+    assert.verifySteps(["adapt NavBar"]);
+    window.dispatchEvent(new Event("resize"));
+    execRegisteredTimeouts();
+    assert.verifySteps(["adapt NavBar"]);
+    window.dispatchEvent(new Event("resize"));
+    navbar.destroy();
+    execRegisteredTimeouts();
+    assert.verifySteps([]);
 });

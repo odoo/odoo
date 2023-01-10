@@ -14,10 +14,11 @@ class ProductionLot(models.Model):
     _inherit = ['mail.thread', 'mail.activity.mixin']
     _description = 'Lot/Serial'
     _check_company_auto = True
+    _order = 'name, id'
 
     name = fields.Char(
         'Lot/Serial Number', default=lambda self: self.env['ir.sequence'].next_by_code('stock.lot.serial'),
-        required=True, help="Unique Lot/Serial Number")
+        required=True, help="Unique Lot/Serial Number", index=True)
     ref = fields.Char('Internal Reference', help="Internal reference number in case it differs from the manufacturer's lot/serial number")
     product_id = fields.Many2one(
         'product.product', 'Product', index=True,
@@ -40,8 +41,8 @@ class ProductionLot(models.Model):
         # We look if the first lot contains at least one digit.
         caught_initial_number = regex_findall(r"\d+", first_lot)
         if not caught_initial_number:
-            raise UserError(_('The lot name must contain at least one digit.'))
-        # We base the serie on the last number found in the base lot.
+            return self.generate_lot_names(first_lot + "0", count)
+        # We base the series on the last number found in the base lot.
         initial_number = caught_initial_number[-1]
         padding = len(initial_number)
         # We split the lot name to get the prefix and suffix.
@@ -61,7 +62,7 @@ class ProductionLot(models.Model):
         return lot_names
 
     @api.model
-    def get_next_serial(self, company, product):
+    def _get_next_serial(self, company, product):
         """Return the next serial number to be attributed to the product."""
         if product.tracking == "serial":
             last_serial = self.env['stock.production.lot'].search(
@@ -131,7 +132,7 @@ class ProductionLot(models.Model):
     @api.model_create_multi
     def create(self, vals_list):
         self._check_create()
-        return super(ProductionLot, self).create(vals_list)
+        return super(ProductionLot, self.with_context(mail_create_nosubscribe=True)).create(vals_list)
 
     def write(self, vals):
         if 'company_id' in vals:
@@ -188,22 +189,46 @@ class ProductionLot(models.Model):
             })
         return action
 
-    def _find_delivery_ids_by_lot(self):
+    def _find_delivery_ids_by_lot(self, lot_path=None, delivery_by_lot=None):
+        if lot_path is None:
+            lot_path = set()
         domain = [
             ('lot_id', 'in', self.ids),
             ('state', '=', 'done'),
             '|', ('picking_code', '=', 'outgoing'), ('produce_line_ids', '!=', False)
         ]
         move_lines = self.env['stock.move.line'].search(domain)
-        delivery_by_lot = dict()
+        moves_by_lot = {
+            lot_id: {'producing_lines': set(), 'barren_lines': set()}
+            for lot_id in move_lines.lot_id.ids
+        }
+        for line in move_lines:
+            if line.produce_line_ids:
+                moves_by_lot[line.lot_id.id]['producing_lines'].add(line.id)
+            else:
+                moves_by_lot[line.lot_id.id]['barren_lines'].add(line.id)
+        if delivery_by_lot is None:
+            delivery_by_lot = dict()
         for lot in self:
             delivery_ids = set()
-            for line in move_lines.filtered(lambda ml: ml.lot_id.id == lot.id):
-                if line.produce_line_ids:
-                    # Do the same process for lot_id contained in produce_line_ids, to fetch the end product deliveries
-                    for delivery_ids_set in line.produce_line_ids.lot_id._find_delivery_ids_by_lot().values():
-                        delivery_ids.update(delivery_ids_set)
-                else:
-                    delivery_ids.add(line.picking_id.id)
+
+            if moves_by_lot.get(lot.id):
+                producing_move_lines = self.env['stock.move.line'].browse(moves_by_lot[lot.id]['producing_lines'])
+                barren_move_lines = self.env['stock.move.line'].browse(moves_by_lot[lot.id]['barren_lines'])
+
+                if producing_move_lines:
+                    lot_path.add(lot.id)
+                    next_lots = producing_move_lines.produce_line_ids.lot_id.filtered(lambda l: l.id not in lot_path)
+                    next_lots_ids = set(next_lots.ids)
+                    # If some producing lots are in lot_path, it means that they have been previously processed.
+                    # Their results are therefore already in delivery_by_lot and we add them to delivery_ids directly.
+                    delivery_ids.update(*(delivery_by_lot.get(lot_id, []) for lot_id in (producing_move_lines.produce_line_ids.lot_id - next_lots).ids))
+
+                    for lot_id, delivery_ids_set in next_lots._find_delivery_ids_by_lot(lot_path=lot_path, delivery_by_lot=delivery_by_lot).items():
+                        if lot_id in next_lots_ids:
+                            delivery_ids.update(delivery_ids_set)
+                delivery_ids.update(barren_move_lines.picking_id.ids)
+
+                # delivery_ids = self._find_delivery_ids(moves_by_lot[lot.id])
             delivery_by_lot[lot.id] = list(delivery_ids)
         return delivery_by_lot

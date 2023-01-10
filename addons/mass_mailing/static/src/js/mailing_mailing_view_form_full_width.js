@@ -17,15 +17,23 @@ const MassMailingFullWidthFormController = FormController.extend({
      */
     init() {
         this._super(...arguments);
-        this._boundOnDomUpdated = this._onDomUpdated.bind(this);
         bus.on('DOM_updated', this, this._onDomUpdated);
-        this._resizeObserver = new ResizeObserver(this._onResizeIframeContents.bind(this));
+        this._resizeObserver =  new ResizeObserver(entries => {
+            // We wrap this in requestAnimationFrame to greatly mitigate
+            // the "ResizeObserver loop limit exceeded" error.
+            window.requestAnimationFrame(() => {
+                if (!Array.isArray(entries) || !entries.length) {
+                    return;
+                }
+                this._onResizeIframeContents(entries);
+            });
+        });
     },
     /**
      * @override
      */
     destroy() {
-        bus.off('DOM_updated', this, this._boundOnDomUpdated);
+        bus.off('DOM_updated', this, this._onDomUpdated);
         this._super(...arguments);
     },
 

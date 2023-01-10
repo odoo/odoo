@@ -1,0 +1,91 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* auth_password_policy
+# 
+# Translators:
+# Martin Trigaux, 2021
+# Lucia Pacheco <lpo@odoo.com>, 2021
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server saas~14.4\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2021-07-12 07:50+0000\n"
+"PO-Revision-Date: 2021-09-14 12:20+0000\n"
+"Last-Translator: Lucia Pacheco <lpo@odoo.com>, 2021\n"
+"Language-Team: Spanish (Mexico) (https://www.transifex.com/odoo/teams/41243/es_MX/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: es_MX\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#. module: auth_password_policy
+#: model:ir.model,name:auth_password_policy.model_res_config_settings
+msgid "Config Settings"
+msgstr "Ajustes de configuración"
+
+#. module: auth_password_policy
+#: model:ir.model.fields,field_description:auth_password_policy.field_res_config_settings__minlength
+msgid "Minimum Password Length"
+msgstr "Longitud mínima de contraseña"
+
+#. module: auth_password_policy
+#: model:ir.model.fields,help:auth_password_policy.field_res_config_settings__minlength
+msgid ""
+"Minimum number of characters passwords must contain, set to 0 to disable."
+msgstr ""
+"El número mínimo de caracteres que deben contener las contraseñas, cambie a "
+"0 para deshabilitar."
+
+#. module: auth_password_policy
+#: code:addons/auth_password_policy/models/res_users.py:0
+#, python-format
+msgid "Passwords must have at least %d characters, got %d."
+msgstr "Las contraseñas deben tener por lo menos %dcaracteres, pero tiene %d."
+
+#. module: auth_password_policy
+#. openerp-web
+#: code:addons/auth_password_policy/static/src/js/password_gauge.js:0
+#, python-format
+msgid ""
+"Required: %s.\n"
+"\n"
+"Hint: increase length, use multiple words and use non-letter characters to increase your password's strength."
+msgstr ""
+"Requerido: %s.\n"
+"\n"
+"Sugerencia: aumente la longitud, use varias palabras y caracteres que no sean letras para aumentar la seguridad de su contraseña."
+
+#. module: auth_password_policy
+#: model:ir.model,name:auth_password_policy.model_res_users
+msgid "Users"
+msgstr "Usuarios"
+
+#. module: auth_password_policy
+#. openerp-web
+#: code:addons/auth_password_policy/static/src/js/password_gauge.js:0
+#, python-format
+msgid "at least %d character classes"
+msgstr "por lo menos %d clases de caracteres"
+
+#. module: auth_password_policy
+#. openerp-web
+#: code:addons/auth_password_policy/static/src/js/password_gauge.js:0
+#, python-format
+msgid "at least %d characters"
+msgstr "por lo menos %d caracteres"
+
+#. module: auth_password_policy
+#. openerp-web
+#: code:addons/auth_password_policy/static/src/js/password_gauge.js:0
+#, python-format
+msgid "at least %d words"
+msgstr "por lo menos %d palabras"
+
+#. module: auth_password_policy
+#. openerp-web
+#: code:addons/auth_password_policy/static/src/js/password_gauge.js:0
+#, python-format
+msgid "no requirements"
+msgstr "sin requisitos"

@@ -419,6 +419,63 @@ QUnit.module('basic_fields', {
         form.destroy();
     });
 
+    QUnit.test('boolean toggle widget is not disabled in readonly mode', async function (assert) {
+        assert.expect(3);
+
+        const form = await createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: '<form><field name="bar" widget="boolean_toggle"/></form>',
+            res_id: 5,
+        });
+
+        assert.containsOnce(form, ".custom-checkbox.o_boolean_toggle", "Boolean toggle widget applied to boolean field");
+        assert.notOk(form.$('.o_boolean_toggle input')[0].checked);
+        await testUtils.dom.click(form.$('.o_boolean_toggle'));
+        assert.ok(form.$('.o_boolean_toggle input')[0].checked);
+        form.destroy();
+    });
+
+    QUnit.test('boolean toggle widget is disabled with a readonly attribute', async function (assert) {
+        assert.expect(3);
+
+        const form = await createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: '<form><field name="bar" widget="boolean_toggle" readonly="1"/></form>',
+            res_id: 5,
+        });
+
+        assert.containsOnce(form, ".custom-checkbox.o_boolean_toggle", "Boolean toggle widget applied to boolean field");
+        await testUtils.dom.click(form.$buttons.find('.o_form_button_edit'));
+        assert.notOk(form.$('.o_boolean_toggle input')[0].checked);
+        await testUtils.dom.click(form.$('.o_boolean_toggle'));
+        assert.notOk(form.$('.o_boolean_toggle input')[0].checked);
+        form.destroy();
+    });
+
+    QUnit.test('boolean toggle widget is enabled in edit mode', async function (assert) {
+        assert.expect(3);
+
+        const form = await createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: '<form><field name="bar" widget="boolean_toggle"/></form>',
+            res_id: 5,
+        });
+
+        assert.containsOnce(form, ".custom-checkbox.o_boolean_toggle", "Boolean toggle widget applied to boolean field");
+        await testUtils.dom.click(form.$buttons.find('.o_form_button_edit'));
+
+        assert.notOk(form.$('.o_boolean_toggle input')[0].checked);
+        await testUtils.dom.click(form.$('.o_boolean_toggle'));
+        assert.ok(form.$('.o_boolean_toggle input')[0].checked);
+        form.destroy();
+    });
+
     QUnit.module('FieldToggleButton');
 
     QUnit.test('use toggle_button in list view', async function (assert) {
@@ -527,6 +584,39 @@ QUnit.module('basic_fields', {
         assert.strictEqual(form.$('.o_field_widget[name=bar] i.text-muted:not(.o_toggle_button_success)').length,
             1, "should be gray");
         assert.verifySteps(['write']);
+
+        form.destroy();
+    });
+
+    QUnit.test('toggle_button in form view with readonly modifiers', async function (assert) {
+        assert.expect(3);
+
+        const form = await createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: `<form>
+                    <field name="bar" widget="toggle_button" options="{'active': 'Active value', 'inactive': 'Inactive value'}" readonly="True"/>
+                </form>`,
+            mockRPC: function (route, args) {
+                if (args.method === 'write') {
+                    throw new Error("Should not do a write RPC with readonly toggle_button");
+                }
+                return this._super.apply(this, arguments);
+            },
+            res_id: 2,
+        });
+
+        assert.strictEqual(form.$('.o_field_widget[name=bar] i.o_toggle_button_success:not(.text-muted)').length,
+            1, "should be green");
+        assert.ok(form.$('.o_field_widget[name=bar]').prop('disabled'),
+            "button should be disabled when readonly attribute is given");
+
+        // click on the button to check click doesn't call write as we throw error in write call
+        await testUtils.dom.click(form.$('.o_field_widget[name=bar]'));
+
+        assert.strictEqual(form.$('.o_field_widget[name=bar] i.o_toggle_button_success:not(.text-muted)').length,
+            1, "should be green even after click");
 
         form.destroy();
     });
@@ -1265,6 +1355,38 @@ QUnit.module('basic_fields', {
             'email text should be updated');
 
         form.destroy();
+    });
+
+    QUnit.test("click on email field link don't switch to edit mode", async function (assert) {
+        testUtils.mock.patch(field_registry.map.email, {
+            _onClickLink: function (ev) {
+                assert.step(ev.target.nodeName + " clicked");
+                this._super.apply(this, arguments);
+            },
+        });
+        var form = await createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: '<form string="Partners">' +
+                    '<sheet>' +
+                        '<group>' +
+                            '<field name="foo" widget="email"/>' +
+                        '</group>' +
+                    '</sheet>' +
+                '</form>',
+            res_id: 1,
+        });
+
+        await testUtils.dom.click(form.el.querySelector('.o_field_email a'));
+        assert.containsOnce(form.el, ".o_form_readonly", "form view is not in edit mode");
+
+        await testUtils.dom.click(form.el.querySelector('.o_field_email'));
+        assert.verifySteps(["A clicked", "DIV clicked"]);
+        assert.containsOnce(form.el, ".o_form_editable", "form view is in edit mode");
+
+        form.destroy();
+        testUtils.mock.unpatch(field_registry.map.email);
     });
 
     QUnit.module('FieldChar');
@@ -2679,7 +2801,7 @@ QUnit.module('basic_fields', {
     });
 
     QUnit.test('binary fields that are readonly in create mode do not download', async function (assert) {
-        assert.expect(2);
+        assert.expect(4);
 
         // save the session function
         var oldGetFile = session.get_file;
@@ -2711,10 +2833,17 @@ QUnit.module('basic_fields', {
         await testUtils.fields.many2one.clickOpenDropdown('product_id');
         await testUtils.fields.many2one.clickHighlightedItem('product_id');
 
-        assert.containsOnce(form, 'a.o_field_widget[name="document"] > .fa-download',
+        assert.containsOnce(form, 'a.o_field_widget[name="document"]',
             'The link to download the binary should be present');
+        assert.containsNone(form, 'a.o_field_widget[name="document"] > .fa-download',
+            'The download icon should not be present');
 
-        testUtils.dom.click(form.$('a.o_field_widget[name="document"]'));
+        var link = form.$('a.o_field_widget[name="document"]');
+        assert.ok(link.is(':hidden'), "the link element should not be visible");
+
+        // force visibility to test that the clicking has also been disabled
+        link.removeClass('o_hidden');
+        testUtils.dom.click(link);
 
         assert.verifySteps([]); // We shouldn't have passed through steps
 
@@ -2933,6 +3062,48 @@ QUnit.module('basic_fields', {
             "the image should correctly set its attributes");
         assert.strictEqual(form.$('div[name="document"] > img').css('max-width'), "90px",
             "the image should correctly set its attributes");
+        form.destroy();
+    });
+
+    QUnit.test('image fields are correctly rendered with one dimension set', async function (assert) {
+        assert.expect(6);
+
+        this.data.partner.fields.picture = { string: 'Picture', type: 'binary' };
+        this.data.partner.records[0].__last_update = '2017-02-08 10:00:00';
+        this.data.partner.records[0].document = 'myimage1';
+        this.data.partner.records[0].picture = 'myimage2';
+
+        const form = await createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: '<form string="Partners">' +
+                '<field name="document" widget="image" options="{\'size\': [180, 0]}"/> ' +
+                '<field name="picture" widget="image" options="{\'size\': [0, 270]}"/> ' +
+                '</form>',
+            res_id: 1,
+            mockRPC: function (route, args) {
+                if (route.startsWith('data:image/png;base64,myimage')) {
+                    return Promise.resolve('wow');
+                }
+                return this._super.apply(this, arguments);
+            },
+        });
+
+        assert.containsOnce(form, 'div[name="document"] > img', "the widget should contain an image");
+        assert.hasAttrValue(form.$('div[name="document"] > img'), 'width', "180",
+            "the image should correctly set its attributes");
+        const image1Style = form.$('div[name="document"] > img').attr('style');
+        assert.ok(['max-width: 180px', 'height: auto', 'max-height: 100%'].every(e => image1Style.includes(e)),
+            "the image should correctly set its style");
+
+        assert.containsOnce(form, 'div[name="picture"] > img', "the widget should contain an image");
+        assert.hasAttrValue(form.$('div[name="picture"] > img'), 'height', "270",
+            "the image should correctly set its attributes");
+        const image2Style = form.$('div[name="picture"] > img').attr('style');
+        assert.ok(['max-height: 270px', 'width: auto', 'max-width: 100%'].every(e => image2Style.includes(e)),
+            "the image should correctly set its style");
+
         form.destroy();
     });
 
@@ -3178,6 +3349,39 @@ QUnit.module('basic_fields', {
             "the image should correctly set its attributes");
         assert.strictEqual(form.$('div[name="foo"] > img').css('max-width'), "90px",
             "the image should correctly set its attributes");
+        form.destroy();
+    });
+
+    QUnit.test('image fields are correctly rendered with one dimension set', async function (assert) {
+        assert.expect(6);
+
+        this.data.partner.fields.tortue = {string: "Tortue", type: "char", default: "a"};
+
+        const form = await createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: '<form string="Partners">' +
+                '<field name="foo" widget="image_url" options="{\'size\': [180, 0]}"/> ' +
+                '<field name="tortue" widget="image_url" options="{\'size\': [0, 270]}"/> ' +
+                '</form>',
+            res_id: 6,
+        });
+
+        assert.containsOnce(form, 'div[name="foo"] > img', "the widget should contain an image");
+        assert.hasAttrValue(form.$('div[name="foo"] > img'), 'width', "180",
+            "the image should correctly set its attributes");
+        const image1Style = form.$('div[name="foo"] > img').attr('style');
+        assert.ok(['max-width: 180px', 'height: auto', 'max-height: 100%'].every(e => image1Style.includes(e)),
+            "the image should correctly set its style");
+
+        assert.containsOnce(form, 'div[name="tortue"] > img', "the widget should contain an image");
+        assert.hasAttrValue(form.$('div[name="tortue"] > img'), 'height', "270",
+            "the image should correctly set its attributes");
+        const image2Style = form.$('div[name="tortue"] > img').attr('style');
+        assert.ok(['max-height: 270px', 'width: auto', 'max-width: 100%'].every(e => image2Style.includes(e)),
+            "the image should correctly set its style");
+
         form.destroy();
     });
 
@@ -3916,7 +4120,7 @@ QUnit.module('basic_fields', {
                     if (ev.data.service === 'notification') {
                         assert.strictEqual(ev.data.method, 'notify');
                         assert.strictEqual(ev.data.args[0].title, 'Invalid fields:');
-                        assert.strictEqual(ev.data.args[0].message, '<ul><li>A date</li></ul>');
+                        assert.strictEqual(ev.data.args[0].message.toString(), '<ul><li>A date</li></ul>');
                     }
                 }
             },
@@ -4494,6 +4698,11 @@ QUnit.module('basic_fields', {
             viewOptions: {
                 mode: 'edit',
             },
+            session: {
+                getTZOffset: function () {
+                    return 120;
+                },
+            },
         });
 
         const year = (new Date()).getFullYear();
@@ -4952,6 +5161,93 @@ QUnit.module('basic_fields', {
         $.each($('.day:not(:last-child):not(:nth-child(2))'), function (index, value) {
             assert.doesNotHaveClass(value, 'disabled', 'other days must stay clickable');
         });
+        form.destroy();
+    });
+
+    QUnit.test('datetime field: hit enter should update value', async function (assert) {
+        /*
+        This test verifies that the field datetime is correctly computed when:
+            - we press enter to validate our entry
+            - we click outside the field to validate our entry
+            - we save
+        */
+        assert.expect(3);
+
+        const form = await createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch:'<form string="Partners"><field name="datetime"/></form>',
+            res_id: 1,
+            translateParameters: {  // Avoid issues due to localization formats
+                date_format: '%m/%d/%Y',
+                time_format: '%H:%M:%S',
+            },
+            viewOptions: {
+                mode: 'edit',
+            },
+            session: {
+                getTZOffset: function () {
+                    return 120;
+                },
+            },
+        });
+
+        const datetime = form.el.querySelector('input[name="datetime"]');
+
+        // Enter a beginning of date and press enter to validate
+        await testUtils.fields.editInput(datetime, '01/08/22 14:30:40');
+        await testUtils.fields.triggerKeydown(datetime, 'enter');
+
+        const datetimeValue = `01/08/2022 14:30:40`;
+
+        assert.strictEqual(datetime.value, datetimeValue);
+
+        // Click outside the field to check that the field is not changed
+        await testUtils.dom.click(form.$el);
+        assert.strictEqual(datetime.value, datetimeValue);
+
+        // Save and check that it's still ok
+        await testUtils.form.clickSave(form);
+
+        const { textContent } = form.el.querySelector('span[name="datetime"]')
+        assert.strictEqual(textContent, datetimeValue);
+
+        form.destroy();
+    });
+
+    QUnit.test('datetime field with date widget: hit enter should update value', async function (assert) {
+        assert.expect(2);
+
+        const form = await createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch:'<form string="Partners"><field name="datetime" widget="date"/></form>',
+            res_id: 1,
+            translateParameters: {  // Avoid issues due to localization formats
+                date_format: '%m/%d/%Y',
+            },
+            viewOptions: {
+                mode: 'edit',
+            },
+            session: {
+                getTZOffset: function () {
+                    return 120;
+                },
+            },
+        });
+
+        const datetime = form.el.querySelector('input[name="datetime"]');
+
+        await testUtils.fields.editInput(datetime, '01/08/22');
+        await testUtils.fields.triggerKeydown(datetime, 'enter');
+        assert.strictEqual(datetime.value, '01/08/2022');
+
+        // Click outside the field to check that the field is not changed
+        await testUtils.dom.click(form.$el);
+        assert.strictEqual(datetime.value, '01/08/2022');
+
         form.destroy();
     });
 
@@ -6095,7 +6391,7 @@ QUnit.module('basic_fields', {
                     if (ev.data.service === 'notification') {
                         assert.strictEqual(ev.data.method, 'notify');
                         assert.strictEqual(ev.data.args[0].title, 'Invalid fields:');
-                        assert.strictEqual(ev.data.args[0].message, '<ul><li>Qux</li></ul>');
+                        assert.strictEqual(ev.data.args[0].message.toString(), '<ul><li>Qux</li></ul>');
                     }
                 }
             },
@@ -6550,21 +6846,29 @@ QUnit.module('basic_fields', {
     });
 
     QUnit.test('priority widget with readonly attribute', async function (assert) {
-        assert.expect(1);
+        assert.expect(2);
 
         const form = await createView({
             View: FormView,
             model: 'partner',
             data: this.data,
-            arch: `
-                <form>
-                    <field name="selection" widget="priority" readonly="1"/>
-                </form>`,
+            arch: '<form><field name="selection" widget="priority" readonly="1"/></form>',
             res_id: 2,
+            mockRPC(route, args) {
+                if (args.method === "write") {
+                    throw new Error("should not save");
+                }
+                return this._super.apply(this, arguments);
+            },
         });
 
-        assert.containsN(form, '.o_field_widget.o_priority span', 2,
-            "stars of priority widget should rendered with span tag if readonly");
+        assert.strictEqual(form.$('span.o_priority_star.fa.fa-star-o').length, 2,
+        "stars of priority widget should rendered with span tag if readonly");
+
+        await testUtils.dom.click(form.$('.o_priority_star.fa-star-o').last());
+
+        assert.strictEqual(form.$('.o_priority_star.fa.fa-star-o').length, 2,
+        "should still have two stars");
 
         form.destroy();
     });
@@ -7719,7 +8023,7 @@ QUnit.module('basic_fields', {
     });
 
     QUnit.test('domain field: handle false domain as []', async function (assert) {
-        assert.expect(3);
+        assert.expect(4);
 
         this.data.partner.records[0].foo = false;
         this.data.partner.fields.bar.type = "char";
@@ -7826,6 +8130,243 @@ QUnit.module('basic_fields', {
             "should have picked the correct list view");
 
         form.destroy();
+    });
+
+    QUnit.test('domain field: manually edit domain with textarea', async function (assert) {
+        assert.expect(9);
+
+        const originalDebug = odoo.debug;
+        odoo.debug = true;
+
+        this.data.partner.records[0].foo = false;
+        this.data.partner.fields.bar.type = "char";
+        this.data.partner.records[0].bar = "product";
+
+        const form = await createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: `
+                <form>
+                    <field name="bar"/>
+                    <field name="foo" widget="domain" options="{'model': 'bar'}"/>
+                </form>`,
+            mockRPC(route, args) {
+                if (args.method === 'search_count') {
+                    assert.step(JSON.stringify(args.args[0]));
+                }
+                return this._super.apply(this, arguments);
+            },
+            viewOptions: {
+                mode: 'edit',
+            },
+            res_id: 1,
+        });
+
+        assert.strictEqual(form.$(".o_domain_show_selection_button").text().trim(), "2 record(s)");
+        assert.verifySteps(["[]"]);
+
+        await testUtils.fields.editAndTrigger(form.$('.o_domain_debug_input'), "[['id', '<', 40]]", ["change"]);
+        // the count should not be re-computed when editing with the textarea
+        assert.strictEqual(form.$(".o_domain_show_selection_button").text().trim(), "2 record(s)");
+        assert.verifySteps([]);
+
+        await testUtils.form.clickSave(form);
+        assert.strictEqual(form.$(".o_domain_show_selection_button").text().trim(), "1 record(s)");
+        assert.verifySteps([
+            "[[\"id\",\"<\",40]]", // to validate the domain, before saving
+            "[[\"id\",\"<\",40]]", // to render in readonly once it has been saved
+        ]);
+
+        form.destroy();
+        odoo.debug = originalDebug;
+    });
+
+    QUnit.test('domain field: manually set an invalid domain with textarea', async function (assert) {
+        assert.expect(9);
+
+        const originalDebug = odoo.debug;
+        odoo.debug = true;
+
+        this.data.partner.records[0].foo = false;
+        this.data.partner.fields.bar.type = "char";
+        this.data.partner.records[0].bar = "product";
+
+        const form = await createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: `
+                <form>
+                    <field name="bar"/>
+                    <field name="foo" widget="domain" options="{'model': 'bar'}"/>
+                </form>`,
+            mockRPC(route, args) {
+                if (args.method === 'search_count') {
+                    assert.step(JSON.stringify(args.args[0]));
+                }
+                if (args.method === "write") {
+                    throw new Error("should not save");
+                }
+                return this._super.apply(this, arguments);
+            },
+            viewOptions: {
+                mode: 'edit',
+            },
+            res_id: 1,
+        });
+
+        assert.strictEqual(form.$(".o_domain_show_selection_button").text().trim(), "2 record(s)");
+        assert.verifySteps(["[]"]);
+
+        await testUtils.fields.editAndTrigger(form.$('.o_domain_debug_input'), "[['abc']]", ["change"]);
+        // the count should not be re-computed when editing with the textarea
+        assert.strictEqual(form.$(".o_domain_show_selection_button").text().trim(), "2 record(s)");
+        assert.verifySteps([]);
+
+        await testUtils.form.clickSave(form);
+        assert.hasClass(form.$(".o_field_domain"), "o_field_invalid", "the field is marked as invalid");
+        assert.hasClass(form.$(".o_form_view"), "o_form_editable", "the view is still in edit mode");
+        assert.verifySteps(["[[\"abc\"]]"]);
+
+        form.destroy();
+        odoo.debug = originalDebug;
+    });
+
+    QUnit.test('domain field: reload count by clicking on the refresh button', async function (assert) {
+        assert.expect(7);
+
+        const originalDebug = odoo.debug;
+        odoo.debug = true;
+
+        this.data.partner.records[0].foo = "[]";
+        this.data.partner.fields.bar.type = "char";
+        this.data.partner.records[0].bar = "product";
+
+        const form = await createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: `
+                <form>
+                    <field name="bar"/>
+                    <field name="foo" widget="domain" options="{'model': 'bar'}"/>
+                </form>`,
+            async mockRPC(route, args) {
+                if (args.method === 'search_count') {
+                    assert.step(JSON.stringify(args.args[0]));
+                }
+                return this._super.apply(this, arguments);
+            },
+            viewOptions: {
+                mode: 'edit',
+            },
+            res_id: 1,
+        });
+
+        assert.strictEqual(form.$(".o_domain_show_selection_button").text().trim(), "2 record(s)");
+
+        await testUtils.fields.editAndTrigger(form.$('.o_domain_debug_input'), "[['id', '<', 40]]", ["change"]);
+        // the count should not be re-computed when editing with the textarea
+        assert.strictEqual(form.$(".o_domain_show_selection_button").text().trim(), "2 record(s)");
+        assert.verifySteps(["[]"]);
+
+        // click on the refresh button
+        await testUtils.dom.click(form.$(".o_refresh_count"));
+        assert.strictEqual(form.$(".o_domain_show_selection_button").text().trim(), "1 record(s)");
+        assert.verifySteps(["[[\"id\",\"<\",40]]"]);
+
+        form.destroy();
+        odoo.debug = originalDebug;
+    });
+
+    QUnit.test('domain field: does not wait for the count to render', async function (assert) {
+        assert.expect(5);
+
+        this.data.partner.records[0].foo = "[]";
+        this.data.partner.fields.bar.type = "char";
+        this.data.partner.records[0].bar = "product";
+
+        const def = testUtils.makeTestPromise();
+        const form = await createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: `
+                <form>
+                    <field name="bar"/>
+                    <field name="foo" widget="domain" options="{'model': 'bar'}"/>
+                </form>`,
+            async mockRPC(route, args) {
+                const result = this._super.apply(this, arguments);
+                if (args.method === 'search_count') {
+                    await def;
+                }
+                return result;
+            },
+            res_id: 1,
+        });
+
+        assert.containsOnce(form, ".o_field_domain_panel .fa-circle-o-notch.fa-spin");
+        assert.containsNone(form, ".o_field_domain_panel .o_domain_show_selection_button");
+
+        def.resolve();
+        await testUtils.nextTick();
+
+        assert.containsNone(form, ".o_field_domain_panel .fa-circle-o-notch .fa-spin");
+        assert.containsOnce(form, ".o_field_domain_panel .o_domain_show_selection_button");
+        assert.strictEqual(form.$(".o_domain_show_selection_button").text().trim(), "2 record(s)");
+
+        form.destroy();
+    });
+
+    QUnit.test('domain field: edit domain with dynamic content', async function (assert) {
+        assert.expect(2);
+
+        const originalDebug = odoo.debug;
+        odoo.debug = true;
+        let rawDomain = `
+            [
+                ["date", ">=", datetime.datetime.combine(context_today() + relativedelta(days = -365), datetime.time(0, 0, 0)).to_utc().strftime("%Y-%m-%d %H:%M:%S")]
+            ]
+        `;
+        this.data.partner.records[0].foo = rawDomain;
+        this.data.partner.fields.bar.type = "char";
+        this.data.partner.records[0].bar = "partner";
+
+        const form = await createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: `
+                <form>
+                    <field name="bar"/>
+                    <field name="foo" widget="domain" options="{'model': 'bar'}"/>
+                </form>`,
+            async mockRPC(route, args) {
+                if (args.method === 'write') {
+                    assert.strictEqual(args.args[1].foo, rawDomain);
+                }
+                return this._super.apply(this, arguments);
+            },
+            res_id: 1,
+            viewOptions: {
+                mode: 'edit',
+            },
+        });
+
+        assert.strictEqual(form.$(".o_domain_debug_input").val(), rawDomain);
+
+        rawDomain = `
+            [
+                ["date", ">=", datetime.datetime.combine(context_today() + relativedelta(days = -1), datetime.time(0, 0, 0)).to_utc().strftime("%Y-%m-%d %H:%M:%S")]
+            ]
+        `;
+        await testUtils.fields.editAndTrigger(form.$('.o_domain_debug_input'), rawDomain, ["change"]);
+        await testUtils.form.clickSave(form);
+
+        form.destroy();
+        odoo.debug = originalDebug;
     });
 
     QUnit.module('FieldProgressBar');

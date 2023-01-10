@@ -15,7 +15,7 @@
 
         <!-- App Brand -->
         <MenuItem
-          t-if="currentApp"
+          t-if="currentApp and !env.isSmall"
           href="getMenuItemHref(currentApp)"
           payload="currentApp"
           t-esc="currentApp.name"
@@ -24,13 +24,13 @@
         />
 
         <!-- Current App Sections -->
-        <t t-if="currentAppSections.length" t-call="web.NavBar.SectionsMenu">
+        <t t-if="currentAppSections.length and !env.isSmall" t-call="web.NavBar.SectionsMenu">
           <t t-set="sections" t-value="currentAppSections" />
         </t>
 
         <!-- Systray -->
         <div class="o_menu_systray" role="menu">
-          <t t-foreach="systrayItems" t-as="item" t-key="item_index">
+          <t t-foreach="systrayItems" t-as="item" t-key="item.key">
             <NotUpdatable>
                 <ErrorHandler onError="error => handleItemError(error, item)">
                     <t t-component="item.Component" t-props="item.props" />

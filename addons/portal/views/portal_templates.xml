@@ -71,7 +71,7 @@
             <a href="#" role="button" data-toggle="dropdown" t-attf-class="dropdown-toggle #{_link_class}">
                 <t t-if="_avatar">
                     <t t-set="avatar_source" t-value="image_data_uri(user_id.avatar_256)"/>
-                    <img t-att-src="avatar_source" t-attf-class="rounded-circle #{_avatar_class}" width="24" height="24" alt="" loading="eager"/>
+                    <img t-att-src="avatar_source" t-attf-class="rounded-circle o_object_fit_cover #{_avatar_class}" width="24" height="24" alt="" loading="eager"/>
                 </t>
                 <i t-if="_icon" t-attf-class="fa fa-1x fa-fw fa-user-circle-o #{_icon_class}"/>
                 <span t-if="_user_name" t-attf-class="#{_user_name_class}" t-esc="user_id.name[:23] + '...' if user_id.name and len(user_id.name) &gt; 25 else user_id.name"/>
@@ -376,17 +376,20 @@
                             <div class="clearfix" />
                             <div t-attf-class="form-group mb-1 #{error.get('company_name') and 'o_has_error' or ''} col-xl-6">
                                 <label class="col-form-label label-optional" for="company_name">Company Name</label>
-                                <!-- The <input> is replace by a <p> to avoid sending an unauthorized value on form submit.
+                                <!-- The <input> use "disabled" attribute to avoid sending an unauthorized value on form submit.
                                      The user might not have rights to change company_name but should still be able to see it.
                                 -->
-                                <input type="text" name="company_name" t-attf-class="form-control #{error.get('company_name') and 'is-invalid' or ''}" t-att-value="company_name or partner.commercial_company_name" t-att-readonly="None if partner_can_edit_vat else '1'" />
+                                <input type="text" name="company_name" t-attf-class="form-control #{error.get('company_name') and 'is-invalid' or ''}" t-att-value="company_name or partner.commercial_company_name" t-att-disabled="None if partner_can_edit_vat else '1'" />
                                 <small t-if="not partner_can_edit_vat" class="form-text text-muted d-block d-xl-none">
                                     Changing company name is not allowed once document(s) have been issued for your account. Please contact us directly for this operation.
                                 </small>
                             </div>
                             <div t-attf-class="form-group mb-1 #{error.get('vat') and 'o_has_error' or ''} col-xl-6">
                                 <label class="col-form-label label-optional" for="vat">VAT Number</label>
-                                <input type="text" name="vat" t-attf-class="form-control #{error.get('vat') and 'is-invalid' or ''}" t-att-value="vat or partner.vat" t-att-readonly="None if partner_can_edit_vat else '1'" />
+                                <!-- The <input> use "disabled" attribute to avoid sending an unauthorized value on form submit.
+                                     The user might not have rights to change company_name but should still be able to see it.
+                                -->
+                                <input type="text" name="vat" t-attf-class="form-control #{error.get('vat') and 'is-invalid' or ''}" t-att-value="vat or partner.vat" t-att-disabled="None if partner_can_edit_vat else '1'" />
                                 <small t-if="not partner_can_edit_vat" class="form-text text-muted d-block d-xl-none">Changing VAT number is not allowed once document(s) have been issued for your account. Please contact us directly for this operation.</small>
                             </div>
                             <div t-if="not partner_can_edit_vat" class="col-12 d-none d-xl-block">
@@ -494,6 +497,41 @@
                     </div>
                     <button type="submit" class="btn btn-danger">Change Password</button>
                 </form>
+            </section>
+            <section t-if="debug and allow_api_keys">
+                <h3>
+                Developer API Keys
+                    <a href="https://www.odoo.com/documentation/15.0/developer/misc/api/external_api.html#api-keys" target="_blank">
+                        <i title="Documentation" class="fa fa-fw o_button_icon fa-info-circle"></i>
+                    </a>
+                </h3>
+                <div>
+                    <table class="table o_main_table">
+                        <thead>
+                            <tr>
+                                <th>Description</th>
+                                <th>Scope</th>
+                                <th>Added On</th>
+                                <th/>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <t t-foreach="request.env.user.api_key_ids" t-as="key">
+                                <tr>
+                                    <td><span t-field="key.name"/></td>
+                                    <td><span t-field="key.scope"/></td>
+                                    <td><span t-field="key.create_date"/></td>
+                                    <td>
+                                        <i class="fa fa-trash text-danger o_portal_remove_api_key" type="button" t-att-id="key.id"/>
+                                    </td>
+                                </tr>
+                            </t>
+                        </tbody>
+                    </table>
+                </div>
+                <div>
+                    <button type="submit" class="btn btn-primary o_portal_new_api_key">New API Key</button>
+                </div>
             </section>
         </div></t>
     </template>

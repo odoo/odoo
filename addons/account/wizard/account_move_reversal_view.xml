@@ -12,10 +12,10 @@
                     <field name="move_type" invisible="1"/>
                     <field name="available_journal_ids" invisible="1"/>
                     <group>
-                         <group attrs="{'invisible': [('move_type', 'not in', ('out_invoice', 'in_invoice'))]}">
+                         <group attrs="{'invisible': ['|',('move_type', 'not in', ('out_invoice', 'in_invoice')),('residual', '=', 0)]}">
                             <field name="refund_method" widget="radio" attrs="{'readonly': [('residual', '=', 0)]}"/>
                          </group>
-                         <group attrs="{'invisible': [('move_type', 'not in', ('out_invoice', 'in_invoice', 'some_invoice'))]}">
+                         <group attrs="{'invisible': ['|', ('move_type', 'not in', ('out_invoice', 'in_invoice', 'some_invoice')), ('residual', '=', 0)]}">
                             <div attrs="{'invisible':[('refund_method', '!=', 'refund')]}" class="oe_grey" colspan="4">
                                The credit note is created in draft and can be edited before being issued.
                             </div>

@@ -86,7 +86,7 @@ export class ChatWindowHiddenMenu extends Component {
      * @param {MouseEvent} ev
      */
     _onClickCaptureGlobal(ev) {
-        if (this.el.contains(ev.target)) {
+        if (!this.el || this.el.contains(ev.target)) {
             return;
         }
         this.messaging.chatWindowManager.closeHiddenMenu();

@@ -24,7 +24,7 @@
                             <i class="fa fa-download"/> <span><t t-esc="template.label"/></span>
                         </a>
                     </div>
-                    <a href="https://www.odoo.com/documentation/14.0/applications/general/base_import/import_faq.html" target="new">Import FAQ</a>
+                    <a href="https://www.odoo.com/documentation/15.0/applications/general/export_import_data.html" target="new">Import FAQ</a>
                 </div>
             </div>
         </form>
@@ -158,7 +158,7 @@
         <div class="oe_import_report_message">
             <t t-if="errors[0].value">
             No matching records found for the following <t t-esc="errors[0].field_type"/> </t>
-            <t t-else="">Multiple errors occured </t>
+            <t t-else="">Multiple errors occurred </t>
             in field <b t-esc="errors[0].field_name"/>:
             <ul>
                 <t t-foreach="errors.length" t-as="index">
@@ -292,7 +292,7 @@ lines composed only of empty cells">
                         <i class="fa fa-download"/> <span>Download Template</span>
                     </a>
                 </div>
-                <a href="https://www.odoo.com/documentation/14.0/applications/general/base_import/import_faq.html" target="new">
+                <a href="https://www.odoo.com/documentation/15.0/applications/general/export_import_data.html" target="new">
                     <i class="fa fa-external-link"></i> Go to Import FAQ
                 </a>
 

@@ -12,6 +12,6 @@ class ResCompany(models.Model):
     @api.model
     def action_open_website_sale_onboarding_payment_acquirer(self):
         """ Called by onboarding panel above the quotation list."""
-        self.env.company.get_chart_of_accounts_or_fail()
-        action = self.env["ir.actions.actions"]._for_xml_id("website_sale.action_open_website_sale_onboarding_payment_acquirer_wizard")
-        return action
+        self.env.company.payment_onboarding_payment_method = 'stripe'
+        menu_id = self.env.ref('website.menu_website_dashboard').id
+        return self._run_payment_onboarding_step(menu_id)

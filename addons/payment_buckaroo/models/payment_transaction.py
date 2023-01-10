@@ -84,7 +84,7 @@ class PaymentTransaction(models.Model):
         if not reference or not shasign:
             raise ValidationError(
                 "Buckaroo: " + _(
-                    "Received data with missing reference (%(ref)s) or shasign (%(sign))",
+                    "Received data with missing reference (%(ref)s) or shasign (%(sign)s)",
                     ref=reference, sign=shasign
                 )
             )
@@ -138,7 +138,7 @@ class PaymentTransaction(models.Model):
         elif status_code in STATUS_CODES_MAPPING['refused']:
             self._set_error(_("Your payment was refused (code %s). Please try again.", status_code))
         elif status_code in STATUS_CODES_MAPPING['error']:
-            self._set_error(_("An error occured during processing of your payment (code %s). Please try again.", status_code))
+            self._set_error(_("An error occurred during processing of your payment (code %s). Please try again.", status_code))
         else:
             _logger.warning("Buckaroo: received unknown status code: %s", status_code)
             self._set_error("Buckaroo: " + _("Unknown status code: %s", status_code))

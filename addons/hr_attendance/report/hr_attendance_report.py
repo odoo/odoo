@@ -21,7 +21,7 @@ class HRAttendanceReport(models.Model):
                 (
                     SELECT
                         hra.id,
-                        department_id,
+                        hr_employee.department_id,
                         hra.employee_id,
                         hra.check_in,
                         hra.worked_hours,

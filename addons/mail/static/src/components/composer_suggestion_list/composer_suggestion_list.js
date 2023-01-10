@@ -11,10 +11,10 @@ export class ComposerSuggestionList extends Component {
     //--------------------------------------------------------------------------
 
     /**
-     * @returns {mail.composer}
+     * @returns {mail.composer_view}
      */
-    get composer() {
-        return this.messaging && this.messaging.models['mail.composer'].get(this.props.composerLocalId);
+    get composerView() {
+        return this.messaging && this.messaging.models['mail.composer_view'].get(this.props.composerViewLocalId);
     }
 
 }
@@ -24,7 +24,7 @@ Object.assign(ComposerSuggestionList, {
         isBelow: false,
     },
     props: {
-        composerLocalId: String,
+        composerViewLocalId: String,
         isBelow: Boolean,
     },
     template: 'mail.ComposerSuggestionList',

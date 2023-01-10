@@ -18,7 +18,7 @@ class WebsiteSnippetFilter(models.Model):
     _description = 'Website Snippet Filter'
     _order = 'name ASC'
 
-    name = fields.Char(required=True)
+    name = fields.Char(required=True, translate=True)
     action_server_id = fields.Many2one('ir.actions.server', 'Server Action', ondelete='cascade')
     field_names = fields.Char(help="A list of comma-separated field names", required=True)
     filter_id = fields.Many2one('ir.filters', 'Filter', ondelete='cascade')
@@ -93,7 +93,7 @@ class WebsiteSnippetFilter(models.Model):
             if search_domain:
                 domain = expression.AND([domain, search_domain])
             try:
-                records = self.env[filter_sudo.model_id].search(
+                records = self.env[filter_sudo.model_id].with_context(**literal_eval(filter_sudo.context)).search(
                     domain,
                     order=','.join(literal_eval(filter_sudo.sort)) or None,
                     limit=limit

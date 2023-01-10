@@ -59,6 +59,19 @@ registerClassPatchModel('mail.thread', 'im_livechat/static/src/models/thread/thr
 });
 
 registerInstancePatchModel('mail.thread', 'im_livechat/static/src/models/thread/thread.js', {
+    //----------------------------------------------------------------------
+    // Public
+    //----------------------------------------------------------------------
+
+    /**
+     * @override
+     */
+    getMemberName(partner) {
+        if (this.channel_type === 'livechat' && partner.livechat_username) {
+            return partner.livechat_username;
+        }
+        return this._super(partner);
+    },
 
     //----------------------------------------------------------------------
     // Private
@@ -110,4 +123,14 @@ registerInstancePatchModel('mail.thread', 'im_livechat/static/src/models/thread/
     _computeIsChatChannel() {
         return this.channel_type === 'livechat' || this._super();
     },
+    /**
+     * @override
+     */
+    _getDiscussSidebarCategory() {
+        switch (this.channel_type) {
+            case 'livechat':
+                return this.messaging.discuss.categoryLivechat;
+        }
+        return this._super();
+    }
 });

@@ -61,7 +61,7 @@ class SaleOrderLine(models.Model):
             price = line.price_unit * (1 - (line.discount or 0.0) / 100.0)
             taxes = line.tax_id.compute_all(price, line.order_id.currency_id, line.product_uom_qty, product=line.product_id, partner=line.order_id.partner_shipping_id)
             line.update({
-                'price_tax': taxes['total_included'] - taxes['total_excluded'],
+                'price_tax': sum(t.get('amount', 0.0) for t in taxes.get('taxes', [])),
                 'price_total': taxes['total_included'],
                 'price_subtotal': taxes['total_excluded'],
             })
@@ -107,8 +107,7 @@ class SaleOrderLine(models.Model):
                     if invoice_line.move_id.move_type == 'out_invoice':
                         qty_invoiced += invoice_line.product_uom_id._compute_quantity(invoice_line.quantity, line.product_uom)
                     elif invoice_line.move_id.move_type == 'out_refund':
-                        if not line.is_downpayment or line.untaxed_amount_to_invoice == 0:
-                            qty_invoiced -= invoice_line.product_uom_id._compute_quantity(invoice_line.quantity, line.product_uom)
+                        qty_invoiced -= invoice_line.product_uom_id._compute_quantity(invoice_line.quantity, line.product_uom)
             line.qty_invoiced = qty_invoiced
 
     def _get_invoice_lines(self):
@@ -243,7 +242,7 @@ class SaleOrderLine(models.Model):
     price_total = fields.Monetary(compute='_compute_amount', string='Total', store=True)
 
     price_reduce = fields.Float(compute='_compute_price_reduce', string='Price Reduce', digits='Product Price', store=True)
-    tax_id = fields.Many2many('account.tax', string='Taxes', domain=['|', ('active', '=', False), ('active', '=', True)])
+    tax_id = fields.Many2many('account.tax', string='Taxes', context={'active_test': False})
     price_reduce_taxinc = fields.Monetary(compute='_compute_price_reduce_taxinc', string='Price Reduce Tax inc', store=True)
     price_reduce_taxexcl = fields.Monetary(compute='_compute_price_reduce_taxexcl', string='Price Reduce Tax excl', store=True)
 
@@ -290,9 +289,10 @@ class SaleOrderLine(models.Model):
     salesman_id = fields.Many2one(related='order_id.user_id', store=True, string='Salesperson')
     currency_id = fields.Many2one(related='order_id.currency_id', depends=['order_id.currency_id'], store=True, string='Currency')
     company_id = fields.Many2one(related='order_id.company_id', string='Company', store=True, index=True)
-    order_partner_id = fields.Many2one(related='order_id.partner_id', store=True, string='Customer')
+    order_partner_id = fields.Many2one(related='order_id.partner_id', store=True, string='Customer', index=True)
     analytic_tag_ids = fields.Many2many(
         'account.analytic.tag', string='Analytic Tags',
+        compute='_compute_analytic_tag_ids', store=True, readonly=False,
         domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]")
     analytic_line_ids = fields.One2many('account.analytic.line', 'so_line', string="Analytic lines")
     is_expense = fields.Boolean('Is expense', help="Is true if the sales order line comes from an expense or a vendor bills")
@@ -517,6 +517,19 @@ class SaleOrderLine(models.Model):
 
             line.untaxed_amount_to_invoice = amount_to_invoice
 
+    @api.depends('product_id', 'order_id.date_order', 'order_id.partner_id')
+    def _compute_analytic_tag_ids(self):
+        for line in self:
+            if not line.analytic_tag_ids:
+                default_analytic_account = line.env['account.analytic.default'].sudo().account_get(
+                    product_id=line.product_id.id,
+                    partner_id=line.order_id.partner_id.id,
+                    user_id=self.env.uid,
+                    date=line.order_id.date_order,
+                    company_id=line.company_id.id,
+                )
+                line.analytic_tag_ids = default_analytic_account.analytic_tag_ids
+
     def _get_invoice_line_sequence(self, new=0, old=0):
         """
         Method intended to be overridden in third-party module if we want to prevent the resequencing
@@ -547,10 +560,11 @@ class SaleOrderLine(models.Model):
             'discount': self.discount,
             'price_unit': self.price_unit,
             'tax_ids': [(6, 0, self.tax_id.ids)],
-            'analytic_account_id': self.order_id.analytic_account_id.id,
             'analytic_tag_ids': [(6, 0, self.analytic_tag_ids.ids)],
             'sale_line_ids': [(4, self.id)],
         }
+        if self.order_id.analytic_account_id:
+            res['analytic_account_id'] = self.order_id.analytic_account_id.id
         if optional_values:
             res.update(optional_values)
         if self.display_type:
@@ -598,6 +612,21 @@ class SaleOrderLine(models.Model):
 
     @api.onchange('product_id')
     def product_id_change(self):
+        self._update_description()
+        self._update_taxes()
+
+        product = self.product_id
+        if product and product.sale_line_warn != 'no-message':
+            if product.sale_line_warn == 'block':
+                self.product_id = False
+            return {
+                'warning': {
+                    'title': _("Warning for %s", product.name),
+                    'message': product.sale_line_warn_msg,
+                }
+            }
+
+    def _update_description(self):
         if not self.product_id:
             return
         valid_values = self.product_id.product_tmpl_id.valid_product_template_attribute_line_ids.product_template_value_ids
@@ -618,6 +647,20 @@ class SaleOrderLine(models.Model):
 
         product = self.product_id.with_context(
             lang=get_lang(self.env, self.order_id.partner_id.lang).code,
+        )
+
+        self.update({'name': self.get_sale_order_line_multiline_description_sale(product)})
+
+    def _update_taxes(self):
+        if not self.product_id:
+            return
+
+        vals = {}
+        if not self.product_uom or (self.product_id.uom_id.id != self.product_uom.id):
+            vals['product_uom'] = self.product_id.uom_id
+            vals['product_uom_qty'] = self.product_uom_qty or 1.0
+
+        product = self.product_id.with_context(
             partner=self.order_id.partner_id,
             quantity=vals.get('product_uom_qty') or self.product_uom_qty,
             date=self.order_id.date_order,
@@ -625,24 +668,20 @@ class SaleOrderLine(models.Model):
             uom=self.product_uom.id
         )
 
-        vals.update(name=self.get_sale_order_line_multiline_description_sale(product))
-
         self._compute_tax_id()
 
         if self.order_id.pricelist_id and self.order_id.partner_id:
-            vals['price_unit'] = self.env['account.tax']._fix_tax_included_price_company(self._get_display_price(product), product.taxes_id, self.tax_id, self.company_id)
+            vals['price_unit'] = product._get_tax_included_unit_price(
+                self.company_id,
+                self.order_id.currency_id,
+                self.order_id.date_order,
+                'sale',
+                fiscal_position=self.order_id.fiscal_position_id,
+                product_price_unit=self._get_display_price(product),
+                product_currency=self.order_id.currency_id
+            )
+
         self.update(vals)
-
-        if product.sale_line_warn != 'no-message':
-            if product.sale_line_warn == 'block':
-                self.product_id = False
-
-            return {
-                'warning': {
-                    'title': _("Warning for %s", product.name),
-                    'message': product.sale_line_warn_msg,
-                }
-            }
 
     @api.onchange('product_uom', 'product_uom_qty')
     def product_uom_change(self):
@@ -659,7 +698,15 @@ class SaleOrderLine(models.Model):
                 uom=self.product_uom.id,
                 fiscal_position=self.env.context.get('fiscal_position')
             )
-            self.price_unit = self.env['account.tax']._fix_tax_included_price_company(self._get_display_price(product), product.taxes_id, self.tax_id, self.company_id)
+            self.price_unit = product._get_tax_included_unit_price(
+                self.company_id or self.order_id.company_id,
+                self.order_id.currency_id,
+                self.order_id.date_order,
+                'sale',
+                fiscal_position=self.order_id.fiscal_position_id,
+                product_price_unit=self._get_display_price(product),
+                product_currency=self.order_id.currency_id
+            )
 
     def name_get(self):
         result = []
@@ -677,6 +724,7 @@ class SaleOrderLine(models.Model):
                 args or [],
                 ['|', ('order_id.name', operator, name), ('name', operator, name)]
             ])
+            return self._search(args, limit=limit, access_rights_uid=name_get_uid)
         return super(SaleOrderLine, self)._name_search(name, args=args, operator=operator, limit=limit, name_get_uid=name_get_uid)
 
     def _check_line_unlink(self):
@@ -685,10 +733,11 @@ class SaleOrderLine(models.Model):
 
         Lines cannot be deleted if the order is confirmed; downpayment
         lines who have not yet been invoiced bypass that exception.
+        Also, allow deleting UX lines (notes/sections).
         :rtype: recordset sale.order.line
         :returns: set of lines that cannot be deleted
         """
-        return self.filtered(lambda line: line.state in ('sale', 'done') and (line.invoice_lines or not line.is_downpayment))
+        return self.filtered(lambda line: line.state in ('sale', 'done') and (line.invoice_lines or not line.is_downpayment) and not line.display_type)
 
     @api.ondelete(at_uninstall=False)
     def _unlink_except_confirmed(self):

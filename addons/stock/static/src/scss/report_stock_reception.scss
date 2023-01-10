@@ -10,6 +10,7 @@
     }
     & .btn {
         &.btn-primary {
+            height: 31px;
             background-color: $o-brand-primary;
             border-color: $o-brand-primary;
             &:hover:not([disabled]) {
@@ -38,6 +39,10 @@
         font-size:80%;
         width: 57mm;
         height: 32mm;
+        & span, div {
+            line-height: 1;
+            white-space: nowrap;
+        }
     }
 
     span[itemprop="name"] {

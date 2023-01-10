@@ -170,7 +170,11 @@ class Warehouse(models.Model):
 
         # If another partner assigned
         if vals.get('partner_id'):
-            warehouses._update_partner_data(vals['partner_id'], vals.get('company_id'))
+            if vals.get('company_id'):
+                warehouses._update_partner_data(vals['partner_id'], vals.get('company_id'))
+            else:
+                for warehouse in self:
+                    warehouse._update_partner_data(vals['partner_id'], warehouse.company_id.id)
 
         res = super(Warehouse, self).write(vals)
 

@@ -11,8 +11,8 @@ class PricelistItem(models.Model):
             msg = ''
             if self.applied_on == '3_global' or self.applied_on == '2_product_category':
                 msg = _("A pricelist item with a positive min. quantity will not be applied to the event tickets products.")
-            elif ((self.applied_on == '1_product' and self.product_tmpl_id.type == 'event') or
-                    (self.applied_on == '0_product_variant' and self.product_id.type == 'event')):
+            elif ((self.applied_on == '1_product' and self.product_tmpl_id.detailed_type == 'event') or
+                    (self.applied_on == '0_product_variant' and self.product_id.detailed_type == 'event')):
                 msg = _("A pricelist item with a positive min. quantity cannot be applied to this event tickets product.")
             if msg:
                 return {'warning':

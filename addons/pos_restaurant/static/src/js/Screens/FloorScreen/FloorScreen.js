@@ -6,6 +6,7 @@ odoo.define('pos_restaurant.FloorScreen', function (require) {
     const { useState, useRef } = owl.hooks;
     const { useListener } = require('web.custom_hooks');
     const Registries = require('point_of_sale.Registries');
+    const { posbus } = require('point_of_sale.utils');
 
     class FloorScreen extends PosComponent {
         /**
@@ -45,6 +46,7 @@ odoo.define('pos_restaurant.FloorScreen', function (require) {
             if (this.env.pos.table) {
                 this.env.pos.set_table(null);
             }
+            posbus.trigger('start-cash-control');
             this.floorMapRef.el.style.background = this.state.floorBackground;
             this.state.floorMapScrollTop = this.floorMapRef.el.getBoundingClientRect().top;
             // call _tableLongpolling once then set interval of 5sec.
@@ -67,6 +69,29 @@ odoo.define('pos_restaurant.FloorScreen', function (require) {
             return this.state.selectedTableId !== null
                 ? this.env.pos.tables_by_id[this.state.selectedTableId]
                 : false;
+        }
+        movePinch(hypot) {
+            const delta = hypot / this.scalehypot ;
+            const value = this.initalScale * delta;
+            this.setScale(value);
+        }
+        startPinch(hypot) {
+            this.scalehypot = hypot;
+            this.initalScale = this.getScale();
+        }
+        getMapNode() {
+            return this.el.querySelector('.floor-map > .tables, .floor-map > .empty-floor');
+        }
+        getScale() {
+            const scale = this.getMapNode().style.getPropertyValue('--scale');
+            const parsedScaleValue = parseFloat(scale);
+            return isNaN(parsedScaleValue) ? 1 : parsedScaleValue;
+        }
+        setScale(value) {
+            // a scale can't be a negative number
+            if (value > 0) {
+                this.getMapNode().style.setProperty('--scale', value);
+            }
         }
         selectFloor(floor) {
             this.state.selectedFloorId = floor.id;
@@ -188,6 +213,25 @@ odoo.define('pos_restaurant.FloorScreen', function (require) {
                 }
             }
         }
+        _computePinchHypo(ev, callbackFunction) {
+            const touches = ev.touches;
+            // If two pointers are down, check for pinch gestures
+            if (touches.length === 2) {
+                const deltaX = touches[0].pageX - touches[1].pageX;
+                const deltaY = touches[0].pageY - touches[1].pageY;
+                callbackFunction(Math.hypot(deltaX, deltaY))
+            }
+        }
+        _onPinchStart(ev) {
+            ev.currentTarget.style.setProperty('touch-action', 'none');
+            this._computePinchHypo(ev, this.startPinch.bind(this));
+        }
+        _onPinchEnd(ev) {
+            ev.currentTarget.style.removeProperty('touch-action');
+        }
+        _onPinchMove(ev) {
+            debounce(this._computePinchHypo, 10, true)(ev, this.movePinch.bind(this));
+        }
         _onSelectTable(event) {
             const table = event.detail;
             if (this.state.isEditMode) {
@@ -298,8 +342,8 @@ odoo.define('pos_restaurant.FloorScreen', function (require) {
             } catch (error) {
                 if (error.message.code < 0) {
                     await this.showPopup('OfflineErrorPopup', {
-                        title: 'Offline',
-                        body: 'Unable to get orders count',
+                        title: this.env._t('Offline'),
+                        body: this.env._t('Unable to get orders count'),
                     });
                 } else {
                     throw error;

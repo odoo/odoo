@@ -38,11 +38,11 @@
                 <nav class="navbar navbar-light border-top shadow-sm navbar-expand-md">
                     <div class="container align-items-baseline">
                         <a t-att-href="event.website_url" t-field="event.name" class="navbar-brand h4 my-0 mr-0"/>
-                        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#o_wevent_event_submenu" aria-controls="o_wevent_event_submenu" aria-expanded="false" aria-label="Toggle navigation">
+                        <button class="navbar-toggler ml-auto" type="button" data-toggle="collapse" data-target="#o_wevent_event_submenu" aria-controls="o_wevent_event_submenu" aria-expanded="false" aria-label="Toggle navigation">
                             <span class="navbar-toggler-icon"></span>
                         </button>
                         <div id="o_wevent_event_submenu" class="collapse navbar-collapse">
-                            <ul class="navbar-nav w-100 d-flex flex-row flex-wrap" t-att-data-menu_name="editable and 'Event Menu'" t-att-data-content_menu_id="editable and event.menu_id.id">
+                            <ul class="navbar-nav w-100 flex-md-wrap" t-att-data-menu_name="editable and 'Event Menu'" t-att-data-content_menu_id="editable and event.menu_id.id">
                                 <t t-foreach="event.menu_id.child_id" t-as="submenu">
                                     <t t-call="website.submenu">
                                         <t t-set="item_class" t-value="'nav-item'"/>

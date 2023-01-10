@@ -1,11 +1,6 @@
 /** @odoo-module **/
 
-import {
-    afterEach,
-    beforeEach,
-    createRootMessagingComponent,
-    start,
-} from '@mail/utils/test_utils';
+import { afterEach, beforeEach, start } from '@mail/utils/test_utils';
 
 QUnit.module('mail', {}, function () {
 QUnit.module('components', {}, function () {
@@ -14,19 +9,12 @@ QUnit.module('composer_suggestion_channel_tests.js', {
     beforeEach() {
         beforeEach(this);
 
-        this.createComposerSuggestion = async props => {
-            await createRootMessagingComponent(this, "ComposerSuggestion", {
-                props,
-                target: this.widget.el,
-            });
-        };
-
         this.start = async params => {
-            const { env, widget } = await start(Object.assign({}, params, {
-                data: this.data,
-            }));
+            const res = await start({ ...params, data: this.data });
+            const { env, widget } = res;
             this.env = env;
             this.widget = widget;
+            return res;
         };
     },
     afterEach() {
@@ -38,13 +26,12 @@ QUnit.test('channel mention suggestion displayed', async function (assert) {
     assert.expect(1);
 
     this.data['mail.channel'].records.push({ id: 20 });
-    await this.start();
+    const { createComposerSuggestionComponent } = await this.start();
     const thread = this.messaging.models['mail.thread'].findFromIdentifyingData({
         id: 20,
         model: 'mail.channel',
     });
-    await this.createComposerSuggestion({
-        composerLocalId: thread.composer.localId,
+    await createComposerSuggestionComponent(thread.composer, {
         isActive: true,
         modelName: 'mail.thread',
         recordLocalId: thread.localId,
@@ -64,13 +51,12 @@ QUnit.test('channel mention suggestion correct data', async function (assert) {
         id: 20,
         name: "General",
     });
-    await this.start();
+    const { createComposerSuggestionComponent } = await this.start();
     const thread = this.messaging.models['mail.thread'].findFromIdentifyingData({
         id: 20,
         model: 'mail.channel',
     });
-    await this.createComposerSuggestion({
-        composerLocalId: thread.composer.localId,
+    await createComposerSuggestionComponent(thread.composer, {
         isActive: true,
         modelName: 'mail.thread',
         recordLocalId: thread.localId,
@@ -97,13 +83,12 @@ QUnit.test('channel mention suggestion active', async function (assert) {
     assert.expect(2);
 
     this.data['mail.channel'].records.push({ id: 20 });
-    await this.start();
+    const { createComposerSuggestionComponent } = await this.start();
     const thread = this.messaging.models['mail.thread'].findFromIdentifyingData({
         id: 20,
         model: 'mail.channel',
     });
-    await this.createComposerSuggestion({
-        composerLocalId: thread.composer.localId,
+    await createComposerSuggestionComponent(thread.composer, {
         isActive: true,
         modelName: 'mail.thread',
         recordLocalId: thread.localId,

@@ -4,6 +4,7 @@ odoo.define('point_of_sale.TextInputPopup', function(require) {
     const { useState, useRef } = owl.hooks;
     const AbstractAwaitablePopup = require('point_of_sale.AbstractAwaitablePopup');
     const Registries = require('point_of_sale.Registries');
+    const { _lt } = require('@web/core/l10n/translation');
 
     // formerly TextInputPopupWidget
     class TextInputPopup extends AbstractAwaitablePopup {
@@ -21,8 +22,8 @@ odoo.define('point_of_sale.TextInputPopup', function(require) {
     }
     TextInputPopup.template = 'TextInputPopup';
     TextInputPopup.defaultProps = {
-        confirmText: 'Ok',
-        cancelText: 'Cancel',
+        confirmText: _lt('Ok'),
+        cancelText: _lt('Cancel'),
         title: '',
         body: '',
         startingValue: '',

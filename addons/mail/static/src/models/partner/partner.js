@@ -371,17 +371,7 @@ function factory(dependencies) {
          * @returns {string}
          */
         _computeAvatarUrl() {
-            if (this === this.messaging.partnerRoot) {
-                return '/mail/static/src/img/odoobot.png';
-            }
             return `/web/image/res.partner/${this.id}/avatar_128`;
-        }
-
-        /**
-         * @override
-         */
-        static _createRecordLocalId(data) {
-            return `${this.modelName}_${data.id}`;
         }
 
         /**
@@ -451,11 +441,16 @@ function factory(dependencies) {
         avatarUrl: attr({
             compute: '_computeAvatarUrl',
         }),
-        correspondentThreads: one2many('mail.thread', {
-            inverse: 'correspondent',
-            readonly: true,
-        }),
         country: many2one('mail.country'),
+        /**
+         * Deprecated.
+         * States the `display_name` of this partner, as returned by the server.
+         * The value of this field is unreliable (notably its value depends on
+         * context on which it was received) therefore it should only be used as
+         * a default if the actual `name` is missing (@see `nameOrDisplayName`).
+         * And if a specific name format is required, it should be computed from
+         * relevant fields instead.
+         */
         display_name: attr({
             compute: '_computeDisplayName',
             default: "",
@@ -472,6 +467,7 @@ function factory(dependencies) {
             default: false,
         }),
         id: attr({
+            readonly: true,
             required: true,
         }),
         im_status: attr(),
@@ -497,6 +493,10 @@ function factory(dependencies) {
         nameOrDisplayName: attr({
             compute: '_computeNameOrDisplayName',
         }),
+        partnerSeenInfos: one2many('mail.thread_partner_seen_info', {
+            inverse: 'partner',
+            isCausal: true,
+        }),
         rtcSessions: one2many('mail.rtc_session', {
             inverse: 'partner',
         }),
@@ -507,7 +507,7 @@ function factory(dependencies) {
             inverse: 'partner',
         }),
     };
-
+    Partner.identifyingFields = ['id'];
     Partner.modelName = 'mail.partner';
 
     return Partner;

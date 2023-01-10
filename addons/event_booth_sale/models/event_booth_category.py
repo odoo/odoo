@@ -16,15 +16,16 @@ class EventBoothCategory(models.Model):
 
     product_id = fields.Many2one(
         'product.product', string='Product', required=True,
-        domain=[('detailed_type', '=', 'event_booth')], default=_default_product_id,
-        groups="event.group_event_registration_desk")
-    price = fields.Float(
-        string='Price', compute='_compute_price', digits='Product Price', readonly=False,
-        store=True, groups="event.group_event_registration_desk")
-    currency_id = fields.Many2one(related='product_id.currency_id', groups="event.group_event_registration_desk")
+        domain=[('detailed_type', '=', 'event_booth')], default=_default_product_id)
+    price = fields.Float(string='Price', compute='_compute_price', digits='Product Price', readonly=False, store=True)
+    currency_id = fields.Many2one(related='product_id.currency_id')
     price_reduce = fields.Float(
         string='Price Reduce', compute='_compute_price_reduce',
-        compute_sudo=True, digits='Product Price', groups="event.group_event_registration_desk")
+        compute_sudo=True, digits='Product Price')
+    price_reduce_taxinc = fields.Float(
+        string='Price Reduce Tax inc', compute='_compute_price_reduce_taxinc',
+        compute_sudo=True
+    )
     image_1920 = fields.Image(compute='_compute_image_1920', readonly=False, store=True)
 
     @api.depends('product_id')
@@ -35,18 +36,33 @@ class EventBoothCategory(models.Model):
     @api.depends('product_id')
     def _compute_price(self):
         """ By default price comes from category but can be changed by event
-        people as product may be shared accross various categories. """
+        people as product may be shared across various categories. """
         for category in self:
             if category.product_id and category.product_id.list_price:
                 category.price = category.product_id.list_price + category.product_id.price_extra
 
+    @api.depends_context('pricelist', 'quantity')
     @api.depends('product_id', 'price')
     def _compute_price_reduce(self):
         for category in self:
             product = category.product_id
-            list_price = product.list_price + product.price_extra
-            discount = (list_price - product.price) / list_price if list_price else 0.0
+            pricelist = self.env['product.pricelist'].browse(self._context.get('pricelist'))
+            lst_price = product.currency_id._convert(
+                product.lst_price,
+                pricelist.currency_id,
+                self.env.company,
+                fields.Datetime.now()
+            )
+            discount = (lst_price - product.price) / lst_price if lst_price else 0.0
             category.price_reduce = (1.0 - discount) * category.price
+
+    @api.depends_context('pricelist', 'quantity')
+    @api.depends('product_id', 'price_reduce')
+    def _compute_price_reduce_taxinc(self):
+        for category in self:
+            tax_ids = category.product_id.taxes_id
+            taxes = tax_ids.compute_all(category.price_reduce, category.currency_id, 1.0, product=category.product_id)
+            category.price_reduce_taxinc = taxes['total_included']
 
     def _init_column(self, column_name):
         """ Initialize product_id for existing columns when installing sale

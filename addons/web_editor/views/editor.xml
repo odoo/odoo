@@ -2,9 +2,8 @@
 <odoo>
 
 <template id="wysiwyg_iframe_editor_assets" name="Editor assets for wysiwyg iframe content" groups="base.group_user">
-    <t t-call-assets="web.assets_common"/>
-    <t t-call-assets="web.assets_frontend" t-js="false"/>
-    <t t-call-assets="web_editor.assets_wysiwyg"/>
+    <t t-call-assets="web.assets_common" t-css="false" />
+    <t t-call-assets="web_editor.assets_wysiwyg" t-css="false" />
 </template>
 
 <template id="compiled_assets_wysiwyg" name="Wysiwyg Editor" groups="base.group_public,base.group_portal,base.group_user">
@@ -35,7 +34,11 @@
 <template id="web_editor.colorpicker" name="Color-Picker" groups="base.group_user">
     <colorpicker>
         <div class="o_colorpicker_section" data-name="theme">
-            <button t-foreach="5" t-as="i" t-attf-data-color="o-color-#{i + 1}"></button>
+            <button data-color="o-color-1"/>
+            <button data-color="o-color-3"/>
+            <button data-color="o-color-2"/>
+            <button data-color="o-color-4" class="ml-2"/>
+            <button data-color="o-color-5"/>
         </div>
         <div class="o_colorpicker_section" data-name="common">
             <button data-color="black"></button>

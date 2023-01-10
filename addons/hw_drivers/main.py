@@ -96,7 +96,7 @@ class Manager(Thread):
                     self.send_alldevices()
                     self.previous_iot_devices = iot_devices.copy()
                 time.sleep(3)
-            except Exception:
+            except:
                 # No matter what goes wrong, the Manager loop needs to keep running
                 _logger.error(format_exc())
 

@@ -4,7 +4,6 @@ odoo.define('fg_custom.FgPosStock', function (require) {
     var models = require('point_of_sale.models');
     var super_posmodel = models.PosModel.prototype;
 
-     console.log(super_posmodel);
     models.PosModel = models.PosModel.extend({
         initialize: function (session, attributes) {
             var product_model = _.find(this.models, function (model){

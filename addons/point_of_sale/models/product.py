@@ -46,9 +46,12 @@ class ProductProduct(models.Model):
         # Tax related
         taxes = self.taxes_id.compute_all(price, config.currency_id, quantity, self)
         all_prices = {
-            'price_without_tax': taxes['total_excluded']/quantity,
-            'price_with_tax': taxes['total_included']/quantity,
-            'tax_details': [{'name': tax['name'], 'amount': tax['amount']/quantity} for tax in taxes['taxes']],
+            'price_without_tax': taxes['total_excluded']/quantity if quantity else 0,
+            'price_with_tax': taxes['total_included']/quantity if quantity else 0,
+            'tax_details': [{
+                    'name': tax['name'],
+                    'amount': tax['amount']/quantity if quantity else 0
+                } for tax in taxes['taxes']],
         }
 
         # Pricelists

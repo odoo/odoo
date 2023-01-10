@@ -43,7 +43,7 @@ class Certificate(models.Model):
         if not self.password:
             return None, None, None
 
-        private_key, certificate, _additional_certificates = pkcs12.load_key_and_certificates(
+        private_key, certificate, dummy = pkcs12.load_key_and_certificates(
             b64decode(self.content),
             self.password.encode(),
             backend=default_backend(),
@@ -68,7 +68,7 @@ class Certificate(models.Model):
         spain_tz = timezone('Europe/Madrid')
         spain_dt = self._get_es_current_datetime()
         try:
-            _pem_certificate, _pem_private_key, certificate = record._decode_certificate()
+            pem_certificate, pem_private_key, certificate = record._decode_certificate()
             cert_date_start = spain_tz.localize(certificate.not_valid_before)
             cert_date_end = spain_tz.localize(certificate.not_valid_after)
         except Exception:

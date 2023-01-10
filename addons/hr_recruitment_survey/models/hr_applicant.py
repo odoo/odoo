@@ -8,7 +8,7 @@ class Applicant(models.Model):
     _inherit = "hr.applicant"
 
     survey_id = fields.Many2one('survey.survey', related='job_id.survey_id', string="Survey", readonly=True)
-    response_id = fields.Many2one('survey.user_input', "Response", ondelete="set null")
+    response_id = fields.Many2one('survey.user_input', "Response", ondelete="set null", copy=False)
     response_state = fields.Selection(related='response_id.state', readonly=True)
 
     def action_print_survey(self):
@@ -31,4 +31,4 @@ class Applicant(models.Model):
                 'phone': self.partner_phone,
                 'mobile': self.partner_mobile
             })
-        return self.survey_id.with_context(default_partner_ids=self.partner_id.ids, active_model='hr.applicant', active_id=self.id).action_send_survey()
+        return self.survey_id.with_context(default_applicant_id=self.id, default_partner_ids=self.partner_id.ids).action_send_survey()

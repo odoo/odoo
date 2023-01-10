@@ -3434,6 +3434,70 @@ QUnit.module('Views', {
         pivot.destroy();
     });
 
+    QUnit.test('comparison with two groupbys: rows from reference period should be displayed', async function (assert) {
+        assert.expect(3);
+
+        this.data.partner.records = [
+            { id: 1, date: "2021-10-10", product_id: 1, customer: 1 },
+            { id: 2, date: "2020-10-10", product_id: 2, customer: 1 },
+        ]
+        this.data.product.records = [
+            { id: 1, display_name: "A" },
+            { id: 2, display_name: "B" },
+        ]
+        this.data.customer.records = [
+            { id: 1, display_name: "P" },
+        ]
+
+        const pivot = await createView({
+            View: PivotView,
+            model: "partner",
+            data: this.data,
+            arch: '<pivot><field name="customer" type="row"/><field name="product_id" type="row"/></pivot>',
+            archs: {
+                "partner,false,search": "<search><filter name='date' date='date'/></search>"
+            },
+        });
+
+        // compare 2021 to 2020
+        await cpHelpers.toggleFilterMenu(pivot.el);
+        await cpHelpers.toggleMenuItem(pivot.el, "Date");
+        await cpHelpers.toggleMenuItemOption(pivot.el, "Date", "2021");
+        await cpHelpers.toggleComparisonMenu(pivot.el);
+        await cpHelpers.toggleMenuItem(pivot.el, 0);
+
+        assert.strictEqual(
+            pivot.$('th').slice(0, 6).text(),
+            [
+                        "Total",
+                        "Count",
+                "2020", "2021", "Variation"
+            ].join(''),
+            "The col headers should be as expected"
+        );
+
+        assert.strictEqual(
+            pivot.$('th').slice(6).text(),
+            [
+                'Total',
+                    'P',
+                        'B',
+                        'A',
+            ].join(''),
+            "The row headers should be as expected"
+        );
+
+        const values = [
+            "1", "1", "0%",
+            "1", "1", "0%",
+            "1", "0", "-100%",
+            "0", "1", "100%",
+        ];
+        assert.strictEqual(getCurrentValues(pivot), values.join());
+
+        pivot.destroy();
+    });
+
     QUnit.test('pivot rendering with boolean field', async function (assert) {
         assert.expect(4);
 

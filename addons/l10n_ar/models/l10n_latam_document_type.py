@@ -31,12 +31,6 @@ class L10nLatamDocumentType(models.Model):
             ('X', 'X'),
             ('I', 'I'),  # used for mapping of imports
         ]
-    def _filter_taxes_included(self, taxes):
-        """ In argentina we include taxes depending on document letter """
-        self.ensure_one()
-        if self.country_id.code == "AR" and self.l10n_ar_letter in ['B', 'C', 'X', 'R']:
-            return taxes.filtered(lambda x: x.tax_group_id.l10n_ar_vat_afip_code)
-        return super()._filter_taxes_included(taxes)
 
     def _format_document_number(self, document_number):
         """ Make validation of Import Dispatch Number

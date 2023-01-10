@@ -10,8 +10,9 @@ export class MainComponentsContainer extends Component {
     }
 
     handleComponentError(error, C) {
-        // remove the faulty component
+        // remove the faulty component and rerender without it
         this.Components.splice(this.Components.indexOf(C), 1);
+        this.render();
         /**
          * we rethrow the error to notify the user something bad happened.
          * We do it after a tick to make sure owl can properly finish its

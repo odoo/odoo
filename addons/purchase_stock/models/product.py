@@ -11,7 +11,8 @@ class ProductTemplate(models.Model):
 
     @api.model
     def _get_buy_route(self):
-        buy_route = self.env.ref('purchase_stock.route_warehouse0_buy', raise_if_not_found=False)
+        buy_route_id = self.env.ref('purchase_stock.route_warehouse0_buy', raise_if_not_found=False).id
+        buy_route = self.env['stock.location.route'].search([('id', '=', buy_route_id)])
         if buy_route:
             return buy_route.ids
         return []

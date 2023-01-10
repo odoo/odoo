@@ -31,7 +31,7 @@ tour.register('shop_list_view_b2c', {
         },
         {
             content: "click on 'List View of Variants'",
-            trigger: '#customize-menu a:contains(List View of Variants)',
+            trigger: '#customize-menu label:contains(List View of Variants)',
         },
         {
             content: "check page loaded after list of variant customization enabled",

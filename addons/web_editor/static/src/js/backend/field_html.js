@@ -44,7 +44,6 @@ var FieldHtml = basic_fields.DebouncedField.extend(TranslatableFieldMixin, {
         wysiwyg_change: '_onChange',
         wysiwyg_attachment: '_onAttachmentChange',
     },
-
     /**
      * @override
      */
@@ -93,16 +92,25 @@ var FieldHtml = basic_fields.DebouncedField.extend(TranslatableFieldMixin, {
      *
      * @override
      */
-    commitChanges: function () {
+    commitChanges: async function () {
         if (this.mode == "readonly" || !this.isRendered) {
             return this._super();
         }
         var _super = this._super.bind(this);
-        this.wysiwyg.odooEditor.clean();
-        return this.wysiwyg.saveModifiedImages(this.$content).then(() => {
-            this._isDirty = this.wysiwyg.isDirty();
-            _super();
-        });
+        // Do not wait for the resolution of the cleanForSave promise to update
+        // the internal value in case this happens during an urgentSave as the
+        // beforeunload event does not play well with asynchronicity. It is
+        // better to have a partially cleared value than to lose changes. When
+        // this function is called outside of an urgentSave context, the full
+        // cleaning is still awaited below and `_super` will reupdate the value.
+        const fullClean = this.wysiwyg.cleanForSave();
+        this._setValue(this._getValue());
+        this._isDirty = this.wysiwyg.isDirty();
+        await fullClean;
+        await this.wysiwyg.saveModifiedImages(this.$content);
+        // Update the value to the fully cleaned version.
+        this._setValue(this._getValue());
+        _super();
     },
     /**
      * @override
@@ -169,7 +177,6 @@ var FieldHtml = basic_fields.DebouncedField.extend(TranslatableFieldMixin, {
      */
     _createWysiwygIntance: async function () {
         this.wysiwyg = await wysiwygLoader.createWysiwyg(this, this._getWysiwygOptions());
-        this.wysiwyg.__extraAssetsForIframe = this.__extraAssetsForIframe || [];
         return this.wysiwyg.appendTo(this.$el).then(() => {
             this.$content = this.wysiwyg.$editable;
             this._onLoadWysiwyg();
@@ -200,14 +207,19 @@ var FieldHtml = basic_fields.DebouncedField.extend(TranslatableFieldMixin, {
             iframeCssAssets: this.nodeOptions.cssEdit,
             snippets: this.nodeOptions.snippets,
             value: this.value,
+            allowCommandVideo: Boolean(this.nodeOptions.allowCommandVideo) && (!this.field.sanitize || !this.field.sanitize_tags),
             mediaModalParams: {
                 noVideos: 'noVideos' in this.nodeOptions ? this.nodeOptions.noVideos : true,
+                res_model: this.model,
+                res_id: this.res_id,
+                useMediaLibrary: true,
             },
             linkForceNewWindow: true,
-
             tabsize: 0,
-            height: this.nodeOptions.height || 110,
-            resizable: 'resizable' in this.nodeOptions ? this.nodeOptions.resizable : true,
+            height: this.nodeOptions.height,
+            minHeight: this.nodeOptions.minHeight,
+            maxHeight: this.nodeOptions.maxHeight,
+            resizable: 'resizable' in this.nodeOptions ? this.nodeOptions.resizable : false,
             editorPlugins: [QWebPlugin],
         });
     },
@@ -215,29 +227,30 @@ var FieldHtml = basic_fields.DebouncedField.extend(TranslatableFieldMixin, {
      * Toggle the code view and update the UI.
      *
      * @param {JQuery} $codeview
-     * @param {JQuery} [$codeviewButton] include the button to move it back and
-     *                                   forth between the toolbar and the code
-     *                                   view.
      */
-    _toggleCodeView: function ($codeview, $codeviewButton) {
+    _toggleCodeView: function ($codeview) {
         this.wysiwyg.odooEditor.observerUnactive();
         $codeview.height(this.$content.height());
         $codeview.toggleClass('d-none');
         this.$content.toggleClass('d-none');
         if ($codeview.hasClass('d-none')) {
+            if (this.resizerHandleObserver) {
+                this.resizerHandleObserver.disconnect();
+                delete this.resizerHandleObserver;
+            }
             this.wysiwyg.odooEditor.observerActive();
             this.wysiwyg.setValue($codeview.val());
-            this.wysiwyg.odooEditor.historyStep();
-            if ($codeviewButton) {
-                this.wysiwyg.toolbar.$el.append($codeviewButton);
-            }
         } else {
+            this.resizerHandleObserver = new MutationObserver((mutations, observer) => {
+                for (let mutation of mutations) {
+                    if (mutation.type === 'attributes' && mutation.attributeName === 'style') {
+                        $codeview[0].style.height = this.$content[0].style.height;
+                    }
+                }
+            });
+            this.resizerHandleObserver.observe(this.$content[0], {attributes: true});
             $codeview.val(this.$content.html());
             this.wysiwyg.odooEditor.observerActive();
-            if ($codeviewButton) {
-                $codeview.after($codeviewButton);
-                this.wysiwyg.toolbar.$el.css({ visibility: 'hidden' });
-            }
         }
     },
     /**
@@ -308,6 +321,7 @@ var FieldHtml = basic_fields.DebouncedField.extend(TranslatableFieldMixin, {
         var def = new Promise(function (resolve) {
             resolver = resolve;
         });
+        const externalLinkSelector = `a:not([href^="${location.origin}"]):not([href^="/"])`;
         if (this.nodeOptions.cssReadonly) {
             this.$iframe = $('<iframe class="o_readonly d-none"/>');
             this.$iframe.appendTo(this.$el);
@@ -335,9 +349,15 @@ var FieldHtml = basic_fields.DebouncedField.extend(TranslatableFieldMixin, {
                         return;
                     }
                     var cwindow = self.$iframe[0].contentWindow;
+                    try {
+                        cwindow.document;
+                    } catch (e) {
+                        return;
+                    }
                     cwindow.document
                         .open("text/html", "replace")
                         .write(
+                            '<!DOCTYPE html><html>' +
                             '<head>' +
                                 '<meta charset="utf-8"/>' +
                                 '<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>\n' +
@@ -356,7 +376,8 @@ var FieldHtml = basic_fields.DebouncedField.extend(TranslatableFieldMixin, {
                                         'window.top.' + self._onUpdateIframeId + '(' + _avoidDoubleLoad + ')' +
                                     '}' +
                                 '</script>\n' +
-                            '</body>');
+                            '</body>' +
+                            '</html>');
 
                     var height = cwindow.document.body.scrollHeight;
                     self.$iframe.css('height', Math.max(30, Math.min(height, 500)) + 'px');
@@ -366,6 +387,12 @@ var FieldHtml = basic_fields.DebouncedField.extend(TranslatableFieldMixin, {
                             self._onClick(ev);
                         }
                     });
+
+                    // Ensure all external links are opened in a new tab.
+                    for (const externalLink of cwindow.document.body.querySelectorAll(externalLinkSelector)) {
+                        externalLink.setAttribute('target', '_blank');
+                        externalLink.setAttribute('rel', 'noreferrer');
+                    }
                 });
             });
         } else {
@@ -373,11 +400,18 @@ var FieldHtml = basic_fields.DebouncedField.extend(TranslatableFieldMixin, {
             this.$content.appendTo(this.$el);
             this._qwebPlugin = new QWebPlugin();
             this._qwebPlugin.sanitizeElement(this.$content[0]);
+            // Ensure all external links are opened in a new tab.
+            for (const externalLink of this.$content.find(externalLinkSelector)) {
+                externalLink.setAttribute('target', '_blank');
+                externalLink.setAttribute('rel', 'noreferrer');
+            }
             resolver();
         }
 
         def.then(function () {
-            self.$content.on('click', 'ul.o_checklist > li', self._onReadonlyClickChecklist.bind(self));
+            if (!self.hasReadonlyModifier) {
+                self.$content.on('click', 'ul.o_checklist > li', self._onReadonlyClickChecklist.bind(self));
+            }
             if (self.$iframe) {
                 // Iframe is hidden until fully loaded to avoid glitches.
                 self.$iframe.removeClass('d-none');
@@ -520,22 +554,25 @@ var FieldHtml = basic_fields.DebouncedField.extend(TranslatableFieldMixin, {
         $button.css({
             'font-size': '15px',
             position: 'absolute',
-            right: '+5px',
-            top: '+5px',
+            right: odoo.debug && this.nodeOptions.codeview ? '40px' : '5px',
+            top: '5px',
         });
         this.$el.append($button);
         if (odoo.debug && this.nodeOptions.codeview) {
-            const $codeviewButton = $(`
+            const $codeviewButtonToolbar = $(`
                 <div id="codeview-btn-group" class="btn-group">
                     <button class="o_codeview_btn btn btn-primary">
                         <i class="fa fa-code"></i>
                     </button>
                 </div>
             `);
+            this.$floatingCodeViewButton = $codeviewButtonToolbar.clone();
             this._$codeview = $('<textarea class="o_codeview d-none"/>');
             this.wysiwyg.$editable.after(this._$codeview);
-            this.wysiwyg.toolbar.$el.append($codeviewButton);
-            $codeviewButton.click(() => this._toggleCodeView(this._$codeview, $codeviewButton));
+            this._$codeview.after(this.$floatingCodeViewButton);
+            this.wysiwyg.toolbar.$el.append($codeviewButtonToolbar);
+            $codeviewButtonToolbar.click(() => this._toggleCodeView(this._$codeview));
+            this.$floatingCodeViewButton.click(() => this._toggleCodeView(this._$codeview));
         }
     },
     /**

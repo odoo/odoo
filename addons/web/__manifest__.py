@@ -61,6 +61,7 @@ This module provides the core of the Odoo Web Client.
             'web/static/src/boot.js',
             'web/static/src/session.js',
             'web/static/src/legacy/js/core/cookie_utils.js',
+            'web/static/src/legacy/js/core/menu.js',
         ],
         'web.assets_common': [
             ('include', 'web._assets_helpers'),
@@ -79,6 +80,7 @@ This module provides the core of the Odoo Web Client.
             ('remove', 'web/static/src/boot.js'),
             ('remove', 'web/static/src/session.js'),
             ('remove', 'web/static/src/legacy/js/core/cookie_utils.js'),
+            ('remove', 'web/static/src/legacy/js/core/menu.js'),
         ],
         'web.assets_backend': [
             ('include', 'web._assets_helpers'),
@@ -135,6 +137,7 @@ This module provides the core of the Odoo Web Client.
             'web/static/src/legacy/scss/fields_extra.scss',
             'web/static/src/legacy/scss/form_view_extra.scss',
             'web/static/src/legacy/scss/list_view_extra.scss',
+            'web/static/src/legacy/scss/profiling_qweb_view.scss',
 
             'web/static/src/legacy/action_adapters.js',
             'web/static/src/legacy/debug_manager.js',
@@ -160,6 +163,7 @@ This module provides the core of the Odoo Web Client.
             'web/static/src/legacy/js/core/context.js',
             'web/static/src/legacy/js/core/data_comparison_utils.js',
             'web/static/src/legacy/js/core/misc.js',
+            'web/static/src/legacy/js/core/profiling_qweb_view.js',
             'web/static/src/legacy/js/fields/*',
             'web/static/src/legacy/js/report/utils.js',
             'web/static/src/legacy/js/report/client_action.js',
@@ -211,8 +215,10 @@ This module provides the core of the Odoo Web Client.
             ('include', 'web._assets_bootstrap'),
 
             'web/static/src/env.js',
-            'web/static/src/core/utils/transitions.scss', # included early because used by other files
+            'web/static/src/core/utils/transitions.scss',  # included early because used by other files
             'web/static/src/core/**/*',
+            ('remove', 'web/static/src/core/commands/**/*'),
+            ('remove', 'web/static/src/core/debug/debug_menu.js'),
             'web/static/src/public/error_notifications.js',
 
             'web/static/src/legacy/scss/base_frontend.scss',
@@ -276,7 +282,7 @@ This module provides the core of the Odoo Web Client.
             'web/static/src/legacy/js/report/report.js',
         ],
         'web.report_assets_pdf': [
-            'web/static/src/css/reset.min.css',
+            'web/static/src/legacy/js/report/reset.min.css',
         ],
 
         # ---------------------------------------------------------------------
@@ -319,10 +325,13 @@ This module provides the core of the Odoo Web Client.
             'web/static/src/legacy/scss/bootstrap_overridden_frontend.scss',
         ],
         'web._assets_common_styles': [
+            'web/static/src/legacy/scss/tempusdominus_overridden.scss',
+            'web/static/lib/tempusdominus/tempusdominus.scss',
             'web/static/lib/jquery.ui/jquery-ui.css',
             'web/static/lib/fontawesome/css/font-awesome.css',
             'web/static/lib/select2/select2.css',
             'web/static/lib/select2-bootstrap-css/select2-bootstrap.css',
+            'web/static/lib/daterangepicker/daterangepicker.css',
             'web/static/fonts/fonts.scss',
             'web/static/src/legacy/scss/ui.scss',
             'web/static/src/legacy/scss/ui_extra.scss',
@@ -341,7 +350,6 @@ This module provides the core of the Odoo Web Client.
             'web/static/src/legacy/scss/web.zoomodoo.scss',
             'web/static/src/legacy/scss/color_picker.scss',
             'web/static/src/legacy/scss/fontawesome_overridden.scss',
-            'web/static/lib/tempusdominus/tempusdominus.scss',
         ],
         'web._assets_common_scripts': [
             'web/static/lib/underscore/underscore.js',
@@ -442,7 +450,6 @@ This module provides the core of the Odoo Web Client.
             'web/static/tests/legacy/helpers/test_utils_file.js'
         ],
         'web.tests_assets': [
-            'web/static/lib/daterangepicker/daterangepicker.css',
             'web/static/lib/qunit/qunit-2.9.1.css',
             'web/static/lib/qunit/qunit-2.9.1.js',
             'web/static/tests/legacy/helpers/**/*',

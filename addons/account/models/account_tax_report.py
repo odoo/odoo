@@ -54,11 +54,7 @@ class AccountTaxReport(models.Model):
         copied_report = super(AccountTaxReport, self).copy(default=copy_default) #This copies the report without its lines
 
         lines_map = {} # maps original lines to their copies (using ids)
-        lines_to_treat = list(self.line_ids.filtered(lambda x: not x.parent_id))
-        while lines_to_treat:
-            line = lines_to_treat.pop()
-            lines_to_treat += list(line.children_line_ids)
-
+        for line in self.get_lines_in_hierarchy():
             copy = line.copy({'parent_id': lines_map.get(line.parent_id.id, None), 'report_id': copied_report.id})
             lines_map[line.id] = copy.id
 
@@ -69,10 +65,10 @@ class AccountTaxReport(models.Model):
         ar all directly followed by their children.
         """
         self.ensure_one()
-        lines_to_treat = list(self.line_ids.filtered(lambda x: not x.parent_id).sorted(lambda x: x.sequence)) # Used as a stack, whose index 0 is the top
+        lines_to_treat = list(self.line_ids.filtered(lambda x: not x.parent_id)) # Used as a stack, whose index 0 is the top
         while lines_to_treat:
             to_yield = lines_to_treat[0]
-            lines_to_treat = list(to_yield.children_line_ids.sorted(lambda x: x.sequence)) + lines_to_treat[1:]
+            lines_to_treat = list(to_yield.children_line_ids) + lines_to_treat[1:]
             yield to_yield
 
     def get_checks_to_perform(self, amounts, carried_over):
@@ -95,7 +91,7 @@ class AccountTaxReport(models.Model):
 class AccountTaxReportLine(models.Model):
     _name = "account.tax.report.line"
     _description = 'Account Tax Report Line'
-    _order = 'sequence'
+    _order = 'sequence, id'
     _parent_store = True
 
     name = fields.Char(string="Name", required=True, help="Complete name for this report line, to be used in report.")
@@ -105,7 +101,7 @@ class AccountTaxReportLine(models.Model):
     parent_id = fields.Many2one(string="Parent Line", comodel_name='account.tax.report.line')
     sequence = fields.Integer(string='Sequence', required=True,
         help="Sequence determining the order of the lines in the report (smaller ones come first). This order is applied locally per section (so, children of the same line are always rendered one after the other).")
-    parent_path = fields.Char(index=True, unaccent=False)
+    parent_path = fields.Char(index=True)
     report_id = fields.Many2one(string="Tax Report", required=True, comodel_name='account.tax.report', ondelete='cascade', help="The parent tax report of this line")
 
     # helper to create tags (positive and negative) on report line creation
@@ -140,7 +136,7 @@ class AccountTaxReportLine(models.Model):
     )
     is_carryover_persistent = fields.Boolean(
         string="Persistent",
-        help="Defines how this report line creates carry over lines when performing tax closing."
+        help="Defines how this report line creates carry over lines when performing tax closing. "
              "If true, the amounts carried over will always be added on top of each other: "
              "for example, a report line with a balance of 10 with an existing carryover of 50 "
              "will add an additional 10 to it when doing the closing, making a total carryover of 60. "
@@ -151,7 +147,7 @@ class AccountTaxReportLine(models.Model):
     )
     is_carryover_used_in_balance = fields.Boolean(
         string="Used in line balance",
-        help="If set, the carryover amount for this line will be used when calculating its balance in the report."
+        help="If set, the carryover amount for this line will be used when calculating its balance in the report. "
              "This means that the carryover could affect other lines if they are using this one in their computation."
     )
 
@@ -191,20 +187,23 @@ class AccountTaxReportLine(models.Model):
         return [(0, 0, minus_tag_vals), (0, 0, plus_tag_vals)]
 
     def write(self, vals):
-        tag_name_postponed = None
-
         # If tag_name was set, but not tag_ids, we postpone the write of
         # tag_name, and perform it only after having generated/retrieved the tags.
         # Otherwise, tag_name and tags' name would not match, breaking
         # _validate_tags constaint.
-        postpone_tag_name = 'tag_name' in vals and not 'tag_ids' in vals
+        postponed_vals = {}
 
-        if postpone_tag_name:
-            tag_name_postponed = vals.pop('tag_name')
+        if 'tag_name' in vals and 'tag_ids' not in vals:
+            postponed_vals = {'tag_name': vals.pop('tag_name')}
+            tag_name_postponed = postponed_vals['tag_name']
+            # if tag_name is posponed then we also postpone formula to avoid
+            # breaking _validate_formula constraint
+            if 'formula' in vals:
+                postponed_vals['formula'] = vals.pop('formula')
 
         rslt = super(AccountTaxReportLine, self).write(vals)
 
-        if postpone_tag_name:
+        if postponed_vals:
             # If tag_name modification has been postponed,
             # we need to search for existing tags corresponding to the new tag name
             # (or create them if they don't exist yet) and assign them to the records
@@ -225,7 +224,7 @@ class AccountTaxReportLine(models.Model):
                         minus_child_tags.write({'name': '-' + tag_name_postponed})
                         plus_child_tags = tags_to_update.filtered(lambda x: not x.tax_negate)
                         plus_child_tags.write({'name': '+' + tag_name_postponed})
-                        super(AccountTaxReportLine, to_update).write({'tag_name': tag_name_postponed})
+                        super(AccountTaxReportLine, to_update).write(postponed_vals)
 
                     else:
                         existing_tags = self.env['account.account.tag']._get_tax_tags(tag_name_postponed, country_id)
@@ -237,7 +236,7 @@ class AccountTaxReportLine(models.Model):
                             # linking it to the first report line of the record set
                             first_record = records_to_link[0]
                             tags_to_remove += first_record.tag_ids
-                            first_record.write({'tag_name': tag_name_postponed, 'tag_ids': [(5, 0, 0)] + self._get_tags_create_vals(tag_name_postponed, country_id)})
+                            first_record.write({**postponed_vals, 'tag_ids': [(5, 0, 0)] + self._get_tags_create_vals(tag_name_postponed, country_id)})
                             existing_tags = first_record.tag_ids
                             records_to_link -= first_record
 
@@ -245,7 +244,7 @@ class AccountTaxReportLine(models.Model):
                         tags_to_remove += records_to_link.mapped('tag_ids')
                         records_to_link = tags_to_remove.mapped('tax_report_line_ids')
                         tags_to_remove.mapped('tax_report_line_ids')._remove_tags_used_only_by_self()
-                        records_to_link.write({'tag_name': tag_name_postponed, 'tag_ids': [(2, tag.id) for tag in tags_to_remove] + [(6, 0, existing_tags.ids)]})
+                        records_to_link.write({**postponed_vals, 'tag_ids': [(2, tag.id) for tag in tags_to_remove] + [(6, 0, existing_tags.ids)]})
 
                 else:
                     # tag_name was set empty, so we remove the tags on current lines
@@ -256,7 +255,7 @@ class AccountTaxReportLine(models.Model):
                     if not other_lines_same_tag:
                         self._delete_tags_from_taxes(line_tags.ids)
                     orm_cmd_code = other_lines_same_tag and 3 or 2
-                    records.write({'tag_name': None, 'tag_ids': [(orm_cmd_code, tag.id) for tag in line_tags]})
+                    records.write({**postponed_vals, 'tag_ids': [(orm_cmd_code, tag.id) for tag in line_tags]})
 
         return rslt
 

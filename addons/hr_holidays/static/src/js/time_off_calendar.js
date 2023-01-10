@@ -9,7 +9,6 @@ odoo.define('hr_holidays.dashboard.view_custo', function(require) {
     var CalendarModel = require("web.CalendarModel");
     var CalendarView = require("web.CalendarView");
     var dialogs = require('web.view_dialogs');
-    var Dialog = require('web.Dialog');
     var viewRegistry = require('web.view_registry');
 
     var _t = core._t;
@@ -75,37 +74,30 @@ odoo.define('hr_holidays.dashboard.view_custo', function(require) {
         },
 
         //--------------------------------------------------------------------------
-        // Private
-        //--------------------------------------------------------------------------
-
-        /**
-         * @override
-         */
-        _getFormDialogOptions(self, event) {
-            var options = this._super(self, event);
-            // Get the time off data from the event
-            var timeoffData = event.target.state.data.filter((timeOff) => timeOff.id === parseInt(event.data._id));
-            // Take the record associated to the timeoffData and read its state to hide or not the Delete button
-            var timeoffState = timeoffData[0].record.state;
-            if(timeoffState && ['validate', 'refuse'].indexOf(timeoffState) === -1) {
-                options.deletable = true;
-                options.removeButtonText = _t("Delete");
-                options.on_remove = function() {
-                    Dialog.confirm(self, _t("Are you sure you want to delete this record ?"), {
-                        confirm_callback: function () {
-                            self.model.deleteRecords(self._getEventId(event), self.modelName).then(function () {
-                                self.reload();
-                            });
-                        }
-                    });
-                };
-            }
-            return options;
-        },
-
-        //--------------------------------------------------------------------------
         // Handlers
         //--------------------------------------------------------------------------
+
+        _getNewTimeOffContext: function() {
+            let date_from = moment().set({
+                'hour': 0,
+                'minute': 0,
+                'second': 0
+            });
+            date_from.subtract(this.getSession().getTZOffset(date_from), 'minutes');
+            date_from = date_from.locale('en').format('YYYY-MM-DD HH:mm:ss');
+            let date_to = moment().set({
+                'hour': 23,
+                'minute': 59,
+                'second': 59
+            });
+            date_to.subtract(this.getSession().getTZOffset(date_to), 'minutes');
+            date_to = date_to.locale('en').format('YYYY-MM-DD HH:mm:ss');
+            return {
+                'default_date_from': date_from,
+                'default_date_to': date_to,
+                'lang': this.context.lang
+            }
+        },
 
         /**
          * Action: create a new time off request
@@ -113,32 +105,22 @@ odoo.define('hr_holidays.dashboard.view_custo', function(require) {
          * @private
          */
         _onNewTimeOff: function () {
-            let self = this;
-
-            let domain = [
-                ['name', '=', 'hr.leave.view.form.dashboard.new.time.off'],
-                ['model', '=', 'hr.leave']
-            ];
-
-            self._rpc({
+            this._rpc({
                 model: 'ir.ui.view',
-                method: 'search',
-                args: [domain],
-            }).then(function(ids) {
-                self.timeOffDialog = new dialogs.FormViewDialog(self, {
+                method: 'get_view_id',
+                args: ['hr_holidays.hr_leave_view_form_dashboard_new_time_off'],
+            }).then((ids) => {
+                this.timeOffDialog = new dialogs.FormViewDialog(this, {
                     res_model: "hr.leave",
                     view_id: ids,
-                    context: {
-                        'default_date_from': moment().format('YYYY-MM-DD'),
-                        'default_date_to': moment().add(1, 'days').format('YYYY-MM-DD'),
-                    },
+                    context: this._getNewTimeOffContext(),
                     title: _t("New time off"),
                     disable_multiple_selection: true,
-                    on_saved: function() {
-                        self.reload();
+                    on_saved: () => {
+                        this.reload();
                     },
                 });
-                self.timeOffDialog.open();
+                this.timeOffDialog.open();
             });
         },
 
@@ -150,22 +132,17 @@ odoo.define('hr_holidays.dashboard.view_custo', function(require) {
         _onNewAllocation: function () {
             let self = this;
 
-            let domain = [
-                ['name', '=', 'hr.leave.view.form.dashboard'],
-                ['model', '=', 'hr.leave.allocation']
-            ];
-
             self._rpc({
                 model: 'ir.ui.view',
-                method: 'search',
-                args: [domain],
+                method: 'get_view_id',
+                args: ['hr_holidays.hr_leave_allocation_view_form_dashboard'],
             }).then(function(ids) {
                 self.allocationDialog = new dialogs.FormViewDialog(self, {
                     res_model: "hr.leave.allocation",
                     view_id: ids,
                     context: {
-                        'default_employee_ids': self.context.employee_id,
                         'default_state': 'confirm',
+                        'lang': self.context.lang,
                     },
                     title: _t("New Allocation"),
                     disable_multiple_selection: true,
@@ -175,17 +152,6 @@ odoo.define('hr_holidays.dashboard.view_custo', function(require) {
                 });
                 self.allocationDialog.open();
             });
-        },
-
-        _onOpenCreate: function() {
-            var self = this;
-            this._super(...arguments);
-            if(this.previousOpen) {
-                this.previousOpen.on('closed', this, function(ev){
-                    // we reload as record can be created or modified (sent, unpublished, ...)
-                    self.reload();
-                });
-            }
         },
 
         /**
@@ -277,34 +243,13 @@ odoo.define('hr_holidays.dashboard.view_custo', function(require) {
                             const elem = QWeb.render('hr_holidays.dashboard_calendar_header_mobile', {
                                 timeoff: data,
                             });
-                            self.$el.find('.o_calendar_filter_item[data-value=' + data[4] + '] .o_cw_filter_title').append(elem);
+                            self.$el.find('.o_calendar_filter_item[data-value=' + data[3] + '] .o_cw_filter_title').append(elem);
                         });
                     } else {
                         const elem = QWeb.render('hr_holidays.dashboard_calendar_header', {
                             timeoffs: result,
                         });
                         self.$el.before(elem);
-
-                        //add popover to the information tags
-                        _.each(self.$el.parent().find('.fa-question-circle-o'), function(popup){
-                            $(popup).popover({
-                                trigger: 'hover',
-                                html: true,
-                                delay: {show: 300, hide: 0},
-                                content: function () {
-                                    var data = {
-                                        allocated: popup.dataset.allocated,
-                                        approved: popup.dataset.approved,
-                                        planned: popup.dataset.planned,
-                                        left: popup.dataset.left
-                                    };
-                                    var elem_popover = QWeb.render('hr_holidays.dashboard_calendar_header_leave_type_popover', {
-                                        data: data,
-                                    });
-                                    return elem_popover
-                                },
-                            });
-                        });
                     }
                 }
             });
@@ -314,7 +259,6 @@ odoo.define('hr_holidays.dashboard.view_custo', function(require) {
         config: _.extend({}, CalendarView.prototype.config, {
             Controller: TimeOffCalendarController,
             Renderer: TimeOffCalendarRenderer,
-            Model: CalendarModel,
         }),
     });
 

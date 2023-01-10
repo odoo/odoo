@@ -61,6 +61,11 @@ class TestMailGroup(TestMailListCommon):
             'mail_group_id': self.test_group.id,
         })
 
+        self.env['mail.group.member'].create({
+            'email': "Alice",
+            'mail_group_id': self.test_group.id,
+        })
+
         member = self.test_group._find_member(email)
         self.assertEqual(member, member_1, 'When no partner is provided, return the member without partner in priority')
 
@@ -77,6 +82,34 @@ class TestMailGroup(TestMailListCommon):
         member_1.unlink()
         member = self.test_group._find_member(email, partner_2.id)
         self.assertFalse(member, 'Should not return any member because the only one with the same email has a different partner')
+
+        member = self.test_group._find_member('', None)
+        self.assertEqual(member, None, 'When no email nor partner is provided, return nobody')
+
+
+    def test_find_member_for_alias(self):
+        """Test the matching of a mail_group.members, when 2 users have the same partner email, and
+        that the first user was subscribed."""
+        user = self.user_portal
+        user2 = mail_new_test_user(self.env, login='login_2', email=user.email)
+
+        member = self.env['mail.group.member'].create({
+            # subscribe with the first user
+            'partner_id': user.partner_id.id,
+            'mail_group_id': self.test_group.id,
+        })
+        self.assertEqual(member.email, user.email)
+
+        # In case of matching, function return a falsy value.
+        # Should not return string (exception) if at least one members have the same email, whatever
+        # the partner (author_id) that could match this email.
+        msg_dict = {
+            # send mail with the second user
+            'author_id': user2.partner_id.id,
+            'email_from': user2.email,
+        }
+        self.test_group.alias_id.alias_contact = 'followers'
+        self.assertFalse(self.test_group._alias_get_error_message({}, msg_dict, self.test_group.alias_id))
 
     @users('employee')
     def test_join_group(self):

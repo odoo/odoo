@@ -311,6 +311,7 @@ QUnit.test('activity view: activity widget', async function (assert) {
                     assert.step("do_action_compose");
                 } else if (action.res_model === 'mail.activity') {
                     assert.deepEqual({
+                        "default_activity_type_id": 2,
                         "default_res_id": 30,
                         "default_res_model": "task"
                     }, action.context);

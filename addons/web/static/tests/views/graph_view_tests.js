@@ -1,13 +1,14 @@
 /** @odoo-module **/
 
 import { makeFakeLocalizationService } from "@web/../tests/helpers/mock_services";
-import { click, makeDeferred, nextTick, triggerEvent } from "@web/../tests/helpers/utils";
+import { click, makeDeferred, nextTick, patchDate, triggerEvent } from "@web/../tests/helpers/utils";
 import {
     editFavoriteName,
     saveFavorite,
     setupControlPanelFavoriteMenuRegistry,
     setupControlPanelServiceRegistry,
     switchView,
+    toggleComparisonMenu,
     toggleFavoriteMenu,
     toggleFilterMenu,
     toggleGroupByMenu,
@@ -151,19 +152,21 @@ QUnit.module("Views", (hooks) => {
                 foo: {
                     fields: {
                         id: { string: "Id", type: "integer" },
-                        foo: { string: "Foo", type: "integer", store: true, group_operator: "sum" },
-                        bar: { string: "bar", type: "boolean", store: true },
+                        foo: { string: "Foo", type: "integer", store: true, group_operator: "sum", sortable: true },
+                        bar: { string: "bar", type: "boolean", store: true, sortable: true },
                         product_id: {
                             string: "Product",
                             type: "many2one",
                             relation: "product",
                             store: true,
+                            sortable: true
                         },
                         color_id: {
                             string: "Color",
                             type: "many2one",
                             relation: "color",
                             store: true,
+                            sortable: true
                         },
                         date: { string: "Date", type: "date", store: true, sortable: true },
                         revenue: {
@@ -171,6 +174,7 @@ QUnit.module("Views", (hooks) => {
                             type: "float",
                             store: true,
                             group_operator: "sum",
+                            sortable: true
                         },
                     },
                     records: [
@@ -1271,7 +1275,7 @@ QUnit.module("Views", (hooks) => {
             stack: undefined,
         });
         checkLegend(assert, graph, "Total");
-        checkTooltip(assert, graph, { lines: [{ label: "Total", value: "8" }] }, 0);
+        checkTooltip(assert, graph, { lines: [{ label: "Total", value: "8 (100.00%)" }] }, 0);
     });
 
     QUnit.test("pie chart rendering (one groupBy)", async function (assert) {
@@ -1294,8 +1298,8 @@ QUnit.module("Views", (hooks) => {
             data: [3, 5],
         });
         checkLegend(assert, graph, ["true", "false"]);
-        checkTooltip(assert, graph, { lines: [{ label: "true", value: "3" }] }, 0);
-        checkTooltip(assert, graph, { lines: [{ label: "false", value: "5" }] }, 1);
+        checkTooltip(assert, graph, { lines: [{ label: "true", value: "3 (37.50%)" }] }, 0);
+        checkTooltip(assert, graph, { lines: [{ label: "false", value: "5 (62.50%)" }] }, 1);
     });
 
     QUnit.test("pie chart rendering (two groupBy)", async function (assert) {
@@ -1320,9 +1324,9 @@ QUnit.module("Views", (hooks) => {
             label: "",
         });
         checkLegend(assert, graph, ["true / xphone", "false / xphone", "false / xpad"]);
-        checkTooltip(assert, graph, { lines: [{ label: "true / xphone", value: "3" }] }, 0);
-        checkTooltip(assert, graph, { lines: [{ label: "false / xphone", value: "1" }] }, 1);
-        checkTooltip(assert, graph, { lines: [{ label: "false / xpad", value: "4" }] }, 2);
+        checkTooltip(assert, graph, { lines: [{ label: "true / xphone", value: "3 (37.50%)" }] }, 0);
+        checkTooltip(assert, graph, { lines: [{ label: "false / xphone", value: "1 (12.50%)" }] }, 1);
+        checkTooltip(assert, graph, { lines: [{ label: "false / xpad", value: "4 (50.00%)" }] }, 2);
     });
 
     QUnit.test("pie chart rendering (no groupBy, several domains)", async function (assert) {
@@ -1369,7 +1373,7 @@ QUnit.module("Views", (hooks) => {
             graph,
             {
                 title: "Revenue",
-                lines: [{ label: "True group / Total", value: "6" }],
+                lines: [{ label: "True group / Total", value: "6 (100.00%)" }],
             },
             0,
             0
@@ -1379,7 +1383,7 @@ QUnit.module("Views", (hooks) => {
             graph,
             {
                 title: "Revenue",
-                lines: [{ label: "False group / Total", value: "17" }],
+                lines: [{ label: "False group / Total", value: "17 (100.00%)" }],
             },
             0,
             1
@@ -1439,7 +1443,7 @@ QUnit.module("Views", (hooks) => {
             graph,
             {
                 title: "Revenue",
-                lines: [{ label: "True group / 1", value: "14" }],
+                lines: [{ label: "True group / 1", value: "14 (100.00%)" }],
             },
             0,
             0
@@ -1449,7 +1453,7 @@ QUnit.module("Views", (hooks) => {
             graph,
             {
                 title: "Revenue",
-                lines: [{ label: "False group / 1", value: "12" }],
+                lines: [{ label: "False group / 1", value: "12 (63.16%)" }],
             },
             0,
             1
@@ -1459,7 +1463,7 @@ QUnit.module("Views", (hooks) => {
             graph,
             {
                 title: "Revenue",
-                lines: [{ label: "False group / 2", value: "5" }],
+                lines: [{ label: "False group / 2", value: "5 (26.32%)" }],
             },
             1,
             1
@@ -1469,7 +1473,7 @@ QUnit.module("Views", (hooks) => {
             graph,
             {
                 title: "Revenue",
-                lines: [{ label: "False group / 4", value: "2" }],
+                lines: [{ label: "False group / 4", value: "2 (10.53%)" }],
             },
             2,
             1
@@ -1553,7 +1557,7 @@ QUnit.module("Views", (hooks) => {
                 assert,
                 graph,
                 {
-                    lines: [{ label: "February 2021 / W05 2021", value: "1" }],
+                    lines: [{ label: "February 2021 / W05 2021", value: "1 (50.00%)" }],
                 },
                 0,
                 0
@@ -1562,7 +1566,7 @@ QUnit.module("Views", (hooks) => {
                 assert,
                 graph,
                 {
-                    lines: [{ label: "January 2021 / W01 2021", value: "1" }],
+                    lines: [{ label: "January 2021 / W01 2021", value: "1 (25.00%)" }],
                 },
                 0,
                 1
@@ -1571,7 +1575,7 @@ QUnit.module("Views", (hooks) => {
                 assert,
                 graph,
                 {
-                    lines: [{ label: "February 2021 / W07 2021", value: "1" }],
+                    lines: [{ label: "February 2021 / W07 2021", value: "1 (50.00%)" }],
                 },
                 1,
                 0
@@ -1580,7 +1584,7 @@ QUnit.module("Views", (hooks) => {
                 assert,
                 graph,
                 {
-                    lines: [{ label: "January 2021 / W02 2021", value: "1" }],
+                    lines: [{ label: "January 2021 / W02 2021", value: "1 (25.00%)" }],
                 },
                 1,
                 1
@@ -1589,7 +1593,7 @@ QUnit.module("Views", (hooks) => {
                 assert,
                 graph,
                 {
-                    lines: [{ label: "January 2021 / W03 2021", value: "1" }],
+                    lines: [{ label: "January 2021 / W03 2021", value: "1 (25.00%)" }],
                 },
                 2,
                 1
@@ -1598,7 +1602,7 @@ QUnit.module("Views", (hooks) => {
                 assert,
                 graph,
                 {
-                    lines: [{ label: "January 2021 / W04 2021", value: "1" }],
+                    lines: [{ label: "January 2021 / W04 2021", value: "1 (25.00%)" }],
                 },
                 3,
                 1
@@ -1674,7 +1678,7 @@ QUnit.module("Views", (hooks) => {
                 graph,
                 {
                     title: "Revenue",
-                    lines: [{ label: "February 2021 / true / W05 2021", value: "14" }],
+                    lines: [{ label: "February 2021 / true / W05 2021", value: "14 (100.00%)" }],
                 },
                 0,
                 0
@@ -1684,7 +1688,7 @@ QUnit.module("Views", (hooks) => {
                 graph,
                 {
                     title: "Revenue",
-                    lines: [{ label: "January 2021 / true / W01 2021", value: "12" }],
+                    lines: [{ label: "January 2021 / true / W01 2021", value: "12 (70.59%)" }],
                 },
                 1,
                 1
@@ -1694,7 +1698,7 @@ QUnit.module("Views", (hooks) => {
                 graph,
                 {
                     title: "Revenue",
-                    lines: [{ label: "January 2021 / false / W02 2021", value: "5" }],
+                    lines: [{ label: "January 2021 / false / W02 2021", value: "5 (29.41%)" }],
                 },
                 2,
                 1
@@ -1726,7 +1730,7 @@ QUnit.module("Views", (hooks) => {
             ]
         );
         checkLegend(assert, graph, ["No data"]);
-        checkTooltip(assert, graph, { lines: [{ label: "No data", value: "0" }] }, 0);
+        checkTooltip(assert, graph, { lines: [{ label: "No data", value: "0 (100.00%)" }] }, 0);
     });
 
     QUnit.test("pie chart rendering (no data, several domains)", async function (assert) {
@@ -1772,14 +1776,14 @@ QUnit.module("Views", (hooks) => {
         checkTooltip(
             assert,
             graph,
-            { lines: [{ label: "True group / xphone", value: "1" }] },
+            { lines: [{ label: "True group / xphone", value: "1 (100.00%)" }] },
             0,
             0
         );
         checkTooltip(
             assert,
             graph,
-            { lines: [{ label: "False group / No data", value: "0" }] },
+            { lines: [{ label: "False group / No data", value: "0 (100.00%)" }] },
             1,
             1
         );
@@ -3509,5 +3513,128 @@ QUnit.module("Views", (hooks) => {
                 }
             },
         });
+    });
+
+    QUnit.test('fake data in line chart', async function (assert) {
+        assert.expect(1);
+
+        patchDate(2020, 4, 19, 1, 0, 0);
+
+        serverData.models.foo.records = [];
+
+        const graph = await makeView({
+            type: "graph",
+            resModel: "foo",
+            serverData,
+            context: { search_default_date_filter: 1, },
+            arch: `
+                <graph type="line">
+                    <field name="date"/>
+                </graph>
+            `,
+            searchViewArch:`
+                <search>
+                    <filter name="date_filter" domain="[]" date="date" default_period="third_quarter"/>
+                </search>
+            `,
+        });
+
+        await toggleComparisonMenu(graph);
+        await toggleMenuItem(graph, 'Date: Previous period');
+
+        checkLabels(assert, graph, ['', '']);
+    });
+
+    QUnit.test('no filling color for period of comparison', async function (assert) {
+        assert.expect(1);
+
+        patchDate(2020, 4, 19, 1, 0, 0);
+
+        serverData.models.foo.records.forEach((r) => {
+            if (r.date) {
+                r.date = r.date.replace(/\d\d\d\d/, "2019");
+            }
+        });
+
+        const graph = await makeView({
+            type: "graph",
+            resModel: "foo",
+            serverData,
+            context: { search_default_date_filter: 1, },
+            arch: `
+                <graph type="line">
+                    <field name="product_id"/>
+                </graph>
+            `,
+            searchViewArch: `
+                <search>
+                    <filter name="date_filter" domain="[]" date="date" default_period="this_year"/>
+                </search>
+            `,
+        });
+
+        await toggleComparisonMenu(graph);
+        await toggleMenuItem(graph, 'Date: Previous period');
+
+        checkDatasets(assert, graph, "backgroundColor", {
+            "backgroundColor": undefined,
+        });
+    });
+
+    QUnit.test("group by a non stored, sortable field", async function (assert) {
+        assert.expect(1);
+        // When a field is non-stored but sortable it's inherited
+        // from a stored field, so it can be sortable
+        serverData.models.foo.fields.date.store = false;
+        const graph = await makeView({
+            serverData,
+            type: "graph",
+            resModel: "foo",
+            groupBy: ["date:month"],
+            arch: `<graph type="line"/>`,
+            config: {
+                views: [[false, "search"]],
+            },
+        });
+        checkLabels(assert, graph, ["January 2016", "March 2016", "May 2016", "April 2016"]);
+    });
+
+    QUnit.test("graph_groupbys should be also used after first load", async function (assert) {
+        const graph = await makeView({
+            serverData,
+            type: "graph",
+            resModel: "foo",
+            groupBy: ["date:quarter"],
+            arch: `<graph/>`,
+            irFilters: [
+                {
+                    user_id: [2, "Mitchell Admin"],
+                    name: "Favorite",
+                    id: 1,
+                    context: `{
+                        "group_by": [],
+                        "graph_measure": "revenue",
+                        "graph_mode": "bar",
+                        "graph_groupbys": ["color_id"],
+                    }`,
+                    sort: "[]",
+                    domain: "",
+                    is_default: false,
+                    model_id: "foo",
+                    action_id: false,
+                },
+            ],
+        });
+
+        checkModeIs(assert, graph, "bar");
+        checkLabels(assert, graph, ["Q1 2016", "Q2 2016", "Undefined"]);
+        checkLegend(assert, graph, "Count");
+
+        await toggleFavoriteMenu(graph);
+        await toggleMenuItem(graph, "Favorite");
+
+        checkModeIs(assert, graph, "bar");
+        checkLabels(assert, graph, ["Undefined", "red"]);
+        checkLegend(assert, graph, "Revenue");
     });
 });

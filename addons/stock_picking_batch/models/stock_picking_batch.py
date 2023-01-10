@@ -3,6 +3,7 @@
 
 from odoo import api, fields, models, _
 from odoo.exceptions import UserError
+from odoo.osv.expression import AND
 from odoo.tools.float_utils import float_compare, float_is_zero, float_round
 
 class StockPickingBatch(models.Model):
@@ -33,6 +34,9 @@ class StockPickingBatch(models.Model):
     show_validate = fields.Boolean(
         compute='_compute_show_validate',
         help='Technical field used to decide whether the validate button should be shown.')
+    show_allocation = fields.Boolean(
+        compute='_compute_show_allocation',
+        help='Technical Field used to decide whether the button "Allocation" should be displayed.')
     allowed_picking_ids = fields.One2many('stock.picking', compute='_compute_allowed_picking_ids')
     move_ids = fields.One2many(
         'stock.move', string="Stock moves", compute='_compute_move_ids')
@@ -72,9 +76,10 @@ class StockPickingBatch(models.Model):
                 domain_states.append('draft')
             domain = [
                 ('company_id', '=', batch.company_id.id),
-                ('immediate_transfer', '=', False),
                 ('state', 'in', domain_states),
             ]
+            if not batch.is_wave:
+                domain = AND([domain, [('immediate_transfer', '=', False)]])
             if batch.picking_type_id:
                 domain += [('picking_type_id', '=', batch.picking_type_id.id)]
             batch.allowed_picking_ids = self.env['stock.picking'].search(domain)
@@ -91,12 +96,20 @@ class StockPickingBatch(models.Model):
         for batch in self:
             batch.show_validate = any(picking.show_validate for picking in batch.picking_ids)
 
+    @api.depends('state', 'move_ids', 'picking_type_id')
+    def _compute_show_allocation(self):
+        self.show_allocation = False
+        if not self.user_has_groups('stock.group_reception_report'):
+            return
+        for batch in self:
+            batch.show_allocation = batch.picking_ids._get_show_allocation(batch.picking_type_id)
+
     @api.depends('picking_ids', 'picking_ids.state')
     def _compute_state(self):
         batchs = self.filtered(lambda batch: batch.state not in ['cancel', 'done'])
         for batch in batchs:
             if not batch.picking_ids:
-                return
+                continue
             # Cancels automatically the batch picking if all its transfers are cancelled.
             if all(picking.state == 'cancel' for picking in batch.picking_ids):
                 batch.state = 'cancel'
@@ -106,7 +119,8 @@ class StockPickingBatch(models.Model):
 
     @api.depends('picking_ids', 'picking_ids.scheduled_date')
     def _compute_scheduled_date(self):
-        self.scheduled_date = min(self.picking_ids.filtered('scheduled_date').mapped('scheduled_date'), default=False)
+        for rec in self:
+            rec.scheduled_date = min(rec.picking_ids.filtered('scheduled_date').mapped('scheduled_date'), default=False)
 
     @api.onchange('scheduled_date')
     def onchange_scheduled_date(self):
@@ -136,6 +150,8 @@ class StockPickingBatch(models.Model):
 
     def write(self, vals):
         res = super().write(vals)
+        if not self.picking_ids and self.state == 'in_progress':
+            self.action_cancel()
         if vals.get('picking_type_id'):
             self._sanity_check()
         if vals.get('picking_ids'):

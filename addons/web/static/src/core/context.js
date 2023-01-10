@@ -8,17 +8,21 @@ import { evaluateExpr } from "./py_js/py";
  */
 
 /**
- * Create an evaluated context from an arbitrary list of context representations
+ * Create an evaluated context from an arbitrary list of context representations.
+ * The evaluated context in construction is used along the way to evaluate further parts.
  *
- * @param  {...ContextDescription} contexts
+ * @param {ContextDescription[]} contexts
+ * @param {Context} [initialEvaluationContext] optional evaluation context to start from.
  * @returns {Context}
  */
-export function makeContext(...contexts) {
-    let context = {};
+export function makeContext(contexts, initialEvaluationContext) {
+    const evaluationContext = Object.assign({}, initialEvaluationContext);
+    const context = {};
     for (let ctx of contexts) {
         if (ctx !== "") {
-            const subCtx = typeof ctx === "string" ? evaluateExpr(ctx, context) : ctx;
-            Object.assign(context, subCtx);
+            ctx = typeof ctx === "string" ? evaluateExpr(ctx, evaluationContext) : ctx;
+            Object.assign(context, ctx);
+            Object.assign(evaluationContext, context); // is this behavior really wanted ?
         }
     }
     return context;

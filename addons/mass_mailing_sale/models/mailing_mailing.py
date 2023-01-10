@@ -87,4 +87,5 @@ class MassMailing(models.Model):
             'value': formated_amount,
             'col_subtitle': _('INVOICED'),
         }
+        values['kpi_data'][1]['kpi_name'] = 'sale'
         return values

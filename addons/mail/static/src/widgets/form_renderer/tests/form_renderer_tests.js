@@ -5,6 +5,7 @@ import {
     afterEach,
     afterNextRender,
     beforeEach,
+    isScrolledToBottom,
     nextAnimationFrame,
     start,
 } from '@mail/utils/test_utils';
@@ -341,7 +342,7 @@ QUnit.test('basic chatter rendering without followers', async function (assert) 
     assert.containsNone(
         document.body,
         '.o_FollowerListMenu',
-        "there should be no followers menu"
+        "there should be no followers menu because the 'message_follower_ids' field is not present in 'oe_chatter'"
     );
     assert.containsOnce(
         document.body,
@@ -391,7 +392,7 @@ QUnit.test('basic chatter rendering without activities', async function (assert)
     assert.containsNone(
         document.body,
         '.o_ChatterTopbar_buttonScheduleActivity',
-        "there should be a schedule activity button"
+        "there should be no schedule activity button because the 'activity_ids' field is not present in 'oe_chatter'"
     );
     assert.containsOnce(
         document.body,
@@ -456,7 +457,7 @@ QUnit.test('basic chatter rendering without messages', async function (assert) {
     assert.containsNone(
         document.body,
         '.o_Chatter_thread',
-        "there should be a thread"
+        "there should be no thread because the 'message_ids' field is not present in 'oe_chatter'"
     );
 });
 
@@ -844,9 +845,8 @@ QUnit.test('Form view not scrolled when switching record', async function (asser
             'scroll'
         );
     });
-    assert.strictEqual(
-        controllerContentEl.scrollTop,
-        controllerContentEl.scrollHeight - controllerContentEl.clientHeight,
+    assert.ok(
+        isScrolledToBottom(controllerContentEl),
         "The controller container should be scrolled to its bottom"
     );
 
@@ -970,6 +970,81 @@ QUnit.test('chatter just contains "creating a new record" message during the cre
         document.querySelector('.o_Message_content').textContent,
         'Creating a new record...',
         "the message content should be in accord to the creation of this record"
+    );
+});
+
+QUnit.test('[TECHNICAL] unfolded read more/less links should not fold on message click besides those button links', async function (assert) {
+    // message click triggers a re-render. Before writing of this test, the
+    // insertion of read more/less links were done during render. This meant
+    // any re-render would re-insert the read more/less links. If some button
+    // links were unfolded, any re-render would fold them again.
+    //
+    // This previous behavior is undesirable, and results to bothersome UX
+    // such as inability to copy/paste unfolded message content due to click
+    // from text selection automatically folding all read more/less links.
+    assert.expect(3);
+
+    this.data['mail.message'].records.push({
+        author_id: 100,
+        // "data-o-mail-quote" added by server is intended to be compacted in read more/less blocks
+        body: `
+            <div>
+                Dear Joel Willis,<br>
+                Thank you for your enquiry.<br>
+                If you have any questions, please let us know.
+                <br><br>
+                Thank you,<br>
+                <span data-o-mail-quote="1">-- <br data-o-mail-quote="1">
+                    System
+                </span>
+            </div>
+        `,
+        id: 1000,
+        model: 'res.partner',
+        res_id: 2,
+    });
+    this.data['res.partner'].records.push({
+        display_name: "Someone",
+        id: 100,
+    });
+    await this.createView({
+        data: this.data,
+        hasView: true,
+        // View params
+        View: FormView,
+        model: 'res.partner',
+        res_id: 2,
+        arch: `
+            <form string="Partners">
+                <sheet>
+                    <field name="name"/>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_ids"/>
+                </div>
+            </form>
+        `,
+    });
+    assert.strictEqual(
+        document.querySelector('.o_Message_readMoreLess').textContent,
+        "read more",
+        "read more/less link on message should be folded initially (read more)"
+    );
+
+    document.querySelector('.o_Message_readMoreLess').click(),
+    assert.strictEqual(
+        document.querySelector('.o_Message_readMoreLess').textContent,
+        "read less",
+        "read more/less link on message should be unfolded after a click from initial rendering (read less)"
+    );
+
+    await afterNextRender(
+        () => document.querySelector('.o_Message').click(),
+    );
+    assert.strictEqual(
+        document.querySelector('.o_Message_readMoreLess').textContent,
+        "read less",
+        "read more/less link on message should still be unfolded after a click on message aside of this button click (read less)"
     );
 });
 

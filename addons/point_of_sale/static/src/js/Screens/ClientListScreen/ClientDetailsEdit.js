@@ -56,6 +56,9 @@ odoo.define('point_of_sale.ClientDetailsEdit', function(require) {
                 });
             }
             processedChanges.id = this.props.partner.id || false;
+            if (!this.props.partner.id) {
+                processedChanges.company_id = this.env.pos.company.id;
+            }
             this.trigger('save-changes', { processedChanges });
         }
         async uploadImage(event) {

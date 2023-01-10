@@ -1,7 +1,9 @@
 # -*- coding: utf-8 -*-
 
-from odoo import models, api, _
+from odoo import models, _
 from odoo.exceptions import UserError
+from odoo.tools import pdf
+
 
 class IrActionsReport(models.Model):
     _inherit = 'ir.actions.report'
@@ -34,7 +36,7 @@ class IrActionsReport(models.Model):
                 attachment.register_as_main_attachment(force=False)
         return res
 
-    def render_qweb_pdf(self, res_ids=None, data=None):
+    def _render_qweb_pdf(self, res_ids=None, data=None):
         # Overridden so that the print > invoices actions raises an error
         # when trying to print a miscellaneous operation instead of an invoice.
         if self.model == 'account.move' and res_ids:
@@ -44,4 +46,13 @@ class IrActionsReport(models.Model):
                 if any(not move.is_invoice(include_receipts=True) for move in moves):
                     raise UserError(_("Only invoices could be printed."))
 
-        return super().render_qweb_pdf(res_ids=res_ids, data=data)
+        return super()._render_qweb_pdf(res_ids=res_ids, data=data)
+
+    def _retrieve_stream_from_attachment(self, attachment):
+        # Overridden in order to add a banner in the upper right corner of the exported Vendor Bill PDF.
+        stream = super()._retrieve_stream_from_attachment(attachment)
+        vendor_bill_export = self.env.ref('account.action_account_original_vendor_bill')
+        if self == vendor_bill_export and attachment.mimetype == 'application/pdf':
+            record = self.env[attachment.res_model].browse(attachment.res_id)
+            return pdf.add_banner(stream, record.name, logo=True)
+        return stream

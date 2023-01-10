@@ -207,25 +207,25 @@ body:not(.o_fullscreen) {
     .navbar-collapse {
         min-width: 0; // Allows it to shrink during loading
     }
-    .nav-item {
-        transition: opacity 1000ms ease 0s;
-    }
     .btn {
         // This was a default bootstrap style before but it was removed from
         // the library at some point. It seems important in the header so that
         // the header does not flicker during loading.
         white-space: nowrap;
     }
-    .o_menu_loading {
+    .o_menu_image_placeholder {
+        width: 80px !important;
+    }
+    #top_menu {
         flex-wrap: nowrap !important;
-        overflow: hidden !important;
-
-        .nav-item {
+        &.o_menu_loading {
+            overflow: hidden !important;
             opacity: 0 !important;
         }
     }
 }
-.navbar-brand, .navbar-text, .navbar .nav-link, .navbar a.js_change_lang span {
+.navbar-brand, .navbar-text, .navbar .nav-link, .navbar a.js_change_lang span,
+.navbar a.o_add_language {
     @if $o-theme-navbar-font != $o-theme-font {
         font-family: $o-theme-navbar-font;
     }
@@ -755,7 +755,17 @@ $-transition-duration: 200ms;
     display: block;
     @include o-position-absolute(0, 0, auto, 0);
     position: fixed;
-    background: $light;
+
+    // TODO remove me in master, the $light color makes no sense as is visible
+    // if the header uses rounded corners but is impossible to edit / remove.
+    // As a stable fix, it was decided to not remove it if the header uses a
+    // transparent color, in which case mixing it with $light actually alters
+    // the whole menu color. In case there is a background gradient, we suppose
+    // it is opaque and remove the $light color.
+    $-menu-color: o-color('menu-custom') or o-color('menu');
+    @if not o-website-value('menu-gradient') and (not $-menu-color or alpha($-menu-color) < 0.95) {
+        background: $light;
+    }
 
     &:not(.o_header_no_transition) {
         transition: transform $-transition-duration;
@@ -801,7 +811,7 @@ $-transition-duration: 200ms;
 }
 
 // Navbar
-.navbar .o_extra_menu_items.show > ul {
+.navbar .o_extra_menu_items.show > div {
     > li {
         + li {
             border-top: 1px solid gray('200');
@@ -894,7 +904,7 @@ header {
                     padding-top: 15vh;
                     padding-bottom: 15vh;
                 }
-                text-align: center;
+                text-align: center !important;
             }
         }
     }
@@ -931,6 +941,15 @@ header {
             max-height: 100vh;
             transition: none;
             transform: none;
+
+            @if o-website-value('header-template') == 'magazine' {
+                @include media-breakpoint-up(lg) {
+                    position: fixed;
+                }
+                #top_menu {
+                    align-items: normal !important;
+                }
+            }
 
             &, & > .o_header_collapsed_content_wrapper {
                 // TODO improve: ugly code to reset a potential wrapper
@@ -1014,9 +1033,25 @@ header {
                 }
             }
 
-            .o_connected_user:not(.editor_has_snippets) header & {
-                top: -$o-navbar-height;
-                padding-top: $o-navbar-height;
+            .o_connected_user:not(.editor_has_snippets):not(.o_fullscreen) header & {
+                // TODO this has to be reviewed
+                $-header-template: o-website-value('header-template');
+                @if not index(('Contact', 'boxed', 'magazine'), $-header-template) {
+                    top: -$o-navbar-height;
+                    padding-top: $o-navbar-height;
+                } @else if $-header-template == 'magazine' {
+                    @include media-breakpoint-up(lg) {
+                        padding-top: $o-navbar-height;
+                    }
+                }
+            }
+
+            .editor_has_snippets:not(.o_fullscreen) header & {
+                @if (o-website-value('header-template') == 'magazine') {
+                    @include media-breakpoint-up(lg) {
+                        right: $o-we-sidebar-width;
+                    }
+                }
             }
         }
         &.collapsing #top_menu {
@@ -1108,7 +1143,7 @@ header {
                 }
             }
         }
-        body.o_connected_user {
+        body.o_connected_user:not(.o_fullscreen) {
             &:not(.editor_has_snippets) #wrapwrap > header {
                 top: $o-navbar-height;
             }
@@ -1153,6 +1188,11 @@ header {
                 }
             }
         }
+        @include media-breakpoint-up(lg) {
+            #wrapwrap > header #top_menu {
+                align-items: center !important;
+            }
+        }
     }
 }
 
@@ -1171,6 +1211,7 @@ header {
         padding-right: $grid-gutter-width / 2;
     }
 }
+
 .o_mega_menu_container_size {
     $-header-template: o-website-value('header-template');
     @if not index(('sidebar', 'hamburger', 'magazine'), $-header-template) {
@@ -1188,6 +1229,26 @@ header {
         ));
     }
     @include make-container-max-widths($-mm-max-widths);
+}
+
+// The design of some of the new mega menu templates required a column with
+// an overlay that would overflow until the end of the container. For
+// technical reasons, this overlay has to be hardcoded here.
+%s_mega_menu_gray_area {
+    z-index: 1;
+
+    &:before {
+        content: '';
+        display: block;
+        width: 100vw;
+        height: 100%;
+        position: absolute;
+        left: 0;
+        top: 0;
+        z-index: -1;
+        pointer-events: none;
+        background: rgba(0, 0, 0, .05);
+    }
 }
 
 #wrapwrap.o_header_overlay {
@@ -1307,7 +1368,7 @@ header {
     margin-right: 0.2em;
     border-radius: $rounded-pill;
 }
-a.js_change_lang:hover {
+a.js_change_lang:hover, a.o_add_language:hover {
     text-decoration: none;
 
     span {
@@ -1320,9 +1381,14 @@ span.list-inline-item.o_add_language:last-child {
 
 // Footer scrolltop button
 @if o-website-value('footer-scrolltop') {
+    #o_footer_scrolltop_wrapper {
+        position: relative;
+        z-index: 1;
+    }
     #o_footer_scrolltop {
-        $-footer-color: o-color('footer-custom') or o-color('footer');
-        $-copyright-color: o-color('copyright-custom') or o-color('copyright');
+        $-footer-color: o-color('footer-custom') or o-color('footer') or rgba(0, 0, 0, 0);
+        $-footer-color: mix(rgba($-footer-color, 1.0), $body-bg, percentage(alpha($-footer-color)));
+        $-copyright-color: o-color('copyright-custom') or o-color('copyright') or rgba(0, 0, 0, 0);
         $-copyright-color: mix(rgba($-copyright-color, 1.0), $-footer-color, percentage(alpha($-copyright-color)));
 
         box-sizing: content-box;
@@ -1330,8 +1396,7 @@ span.list-inline-item.o_add_language:last-child {
         height: 3rem;
         border: 0;
         padding: 0;
-        @include o-apply-colors('footer', $with-extras: false, $background: $-footer-color);
-        @include o-apply-colors('footer-custom', $with-extras: false, $background: $-footer-color);
+        @include o-apply-colors($-footer-color, $with-extras: false, $background: $-footer-color);
         text-decoration: none;
 
         @if $-footer-color == $-copyright-color {
@@ -1458,6 +1523,13 @@ $ribbon-padding: 100px;
     :not(.o_cookies_popup) {
         bottom: 0;
     }
+    .o_cookies_discrete {
+        .js_close_popup.o_cookies_bar_text_button, .o_cookies_bar_text_policy {
+            @include media-breakpoint-down(md) {
+                margin-bottom: 1rem;
+            }
+        }
+    }
 }
 
 .o_website_btn_loading {
@@ -1492,7 +1564,7 @@ ul.o_checklist > li.o_checked::after {
     text-rendering: geometricPrecision; // take care of animated titles
     visibility: hidden;
 
-    &:not(.o_animating) {
+    &:not(.o_animating):not(.o_animate_in_dropdown) {
         transform: none !important;
     }
 }

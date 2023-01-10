@@ -13,8 +13,8 @@ class PurchaseOrder(models.Model):
         if not self.dest_address_id:
             return super()._get_destination_location()
 
-        if self.mrp_production_count:
-            mrp_production_ids = self._get_mrp_productions()
+        mrp_production_ids = self._get_mrp_productions(remove_archived_picking_types=False)
+        if mrp_production_ids:
             if self.dest_address_id in mrp_production_ids.bom_id.subcontractor_ids:
                 return self.dest_address_id.property_stock_subcontractor.id
         elif self.sale_order_count:

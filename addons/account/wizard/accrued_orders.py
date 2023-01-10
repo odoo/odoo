@@ -65,7 +65,7 @@ class AccruedExpenseRevenue(models.TransientModel):
     @api.depends('date')
     def _compute_reversal_date(self):
         for record in self:
-            if not record.reversal_date or record.reversal_date <= record.data:
+            if not record.reversal_date or record.reversal_date <= record.date:
                 record.reversal_date = record.date + relativedelta(days=1)
             else:
                 record.reversal_date = record.reversal_date
@@ -157,10 +157,11 @@ class AccruedExpenseRevenue(models.TransientModel):
                     o.order_line.with_context(accrual_entry_date=self.date)._compute_untaxed_amount_invoiced()
                     o.order_line.with_context(accrual_entry_date=self.date)._get_to_invoice_qty()
                 lines = o.order_line.filtered(
-                    lambda l: fields.Float.compare(
+                    lambda l: l.display_type not in ['line_section', 'line_note'] and
+                    fields.Float.compare(
                         l.qty_to_invoice,
                         0,
-                        precision_digits=l.product_uom.rounding,
+                        precision_rounding=l.product_uom.rounding,
                     ) == 1
                 )
                 for order_line in lines:

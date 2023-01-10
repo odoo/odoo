@@ -4,7 +4,7 @@ from pytz import timezone
 from datetime import datetime
 
 from odoo.tests import tagged
-from odoo.tools import misc
+from odoo.tools import misc, float_compare
 from odoo.addons.account_edi.tests.common import AccountEdiTestCommon
 
 

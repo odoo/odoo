@@ -7,7 +7,7 @@ import { _lt } from "../../core/l10n/translation";
 import { session } from "@web/session";
 
 function documentationItem(env) {
-    const documentationURL = "https://www.odoo.com/documentation/14.0";
+    const documentationURL = "https://www.odoo.com/documentation/15.0";
     return {
         type: "item",
         id: "documentation",
@@ -76,7 +76,7 @@ function odooAccountItem(env) {
     return {
         type: "item",
         id: "account",
-        description: env._t("My Odoo.com.account"),
+        description: env._t("My Odoo.com account"),
         callback: () => {
             env.services
                 .rpc("/web/session/account")

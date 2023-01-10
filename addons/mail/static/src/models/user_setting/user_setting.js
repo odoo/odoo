@@ -4,7 +4,7 @@ import { browser } from "@web/core/browser/browser";
 
 import { registerNewModel } from '@mail/model/model_core';
 import { attr, one2one, one2many } from '@mail/model/model_field';
-import { create } from '@mail/model/model_field_command';
+import { insertAndReplace } from '@mail/model/model_field_command';
 
 function factory(dependencies) {
 
@@ -17,6 +17,8 @@ function factory(dependencies) {
             const res = super._created(...arguments);
             this._timeoutIds = {};
             this._loadLocalSettings();
+            this._onStorage = this._onStorage.bind(this);
+            browser.addEventListener('storage', this._onStorage);
             return res;
         }
 
@@ -24,6 +26,7 @@ function factory(dependencies) {
          * @override
          */
         _willDelete() {
+            browser.removeEventListener('storage', this._onStorage);
             for (const timeoutId of Object.values(this._timeoutIds)) {
                 browser.clearTimeout(timeoutId);
             }
@@ -144,10 +147,12 @@ function factory(dependencies) {
         }
 
         /**
-         * @param {mail.partner} partner
-         * @param {number} volume
+         * @param {Object} param0
+         * @param {number} [param0.guestId]
+         * @param {number} [param0.partnerId]
+         * @param {number} param0.volume
          */
-        async saveVolumeSetting(partnerId, volume) {
+        async saveVolumeSetting({ guestId, partnerId, volume }) {
             this._debounce(async () => {
                 await this.async(() => this.env.services.rpc(
                     {
@@ -158,6 +163,9 @@ function factory(dependencies) {
                             partnerId,
                             volume,
                         ],
+                        kwargs: {
+                            guest_id: guestId,
+                        },
                     },
                     { shadow: true },
                 ));
@@ -222,13 +230,10 @@ function factory(dependencies) {
             const audioInputDeviceId = this.env.services.local_storage.getItem(
                 "mail_user_setting_audio_input_device_id"
             );
-            const voiceActivationThreshold = parseFloat(voiceActivationThresholdString);
-            if (voiceActivationThreshold > 0) {
-                this.update({
-                    voiceActivationThreshold,
-                    audioInputDeviceId,
-                });
-            }
+            this.update({
+                voiceActivationThreshold: voiceActivationThresholdString ? parseFloat(voiceActivationThresholdString) : undefined,
+                audioInputDeviceId: audioInputDeviceId || undefined,
+            });
         }
 
         /**
@@ -251,6 +256,17 @@ function factory(dependencies) {
             }, 2000, 'globalSettings');
         }
 
+        /**
+         * @private
+         * @param {Event} ev
+         */
+        async _onStorage(ev) {
+            if (ev.key === 'mail_user_setting_voice_threshold') {
+                this.update({ voiceActivationThreshold: ev.newValue });
+                await this.messaging.rtc.updateVoiceActivation();
+            }
+        }
+
     }
 
     UserSetting.fields = {
@@ -260,7 +276,10 @@ function factory(dependencies) {
         audioInputDeviceId: attr({
             default: '',
         }),
-        id: attr(),
+        id: attr({
+            readonly: true,
+            required: true,
+        }),
         /**
          * true if the dialog for the call viewer layout is open
          */
@@ -277,7 +296,7 @@ function factory(dependencies) {
          * Model for the component with the controls for RTC related settings.
          */
         rtcConfigurationMenu: one2one('mail.rtc_configuration_menu', {
-            default: create(),
+            default: insertAndReplace(),
             inverse: 'userSetting',
             isCausal: true,
             required: true,
@@ -315,7 +334,7 @@ function factory(dependencies) {
             isCausal: true,
         }),
     };
-
+    UserSetting.identifyingFields = ['id'];
     UserSetting.modelName = 'mail.user_setting';
 
     return UserSetting;

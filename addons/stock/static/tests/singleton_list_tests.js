@@ -107,7 +107,7 @@ QUnit.module('Views', {
 
         // Checks we have still only 3 records...
         assert.containsN(list, '.o_data_row', 3, "should still have 3 records");
-        // ... and verify modification was occured.
+        // ... and verify modification was occurred.
         var nameField = list.$('td[title="' + name + '"]');
         var ageField = nameField.parent().find('.o_list_number');
         assert.strictEqual(ageField.text(), age, "The age field must be updated");
@@ -160,7 +160,7 @@ QUnit.module('Views', {
 
         // Checks we have still only 1 record...
         assert.containsN(list, '.o_data_row', 1, "should now have 1 records");
-        // ... and verify modification was occured.
+        // ... and verify modification was occurred.
         var nameField = list.$('td[title="' + name + '"]');
         var ageField = nameField.parent().find('.o_list_number');
         assert.strictEqual(ageField.text(), age, "The age field must be updated");

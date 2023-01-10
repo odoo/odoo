@@ -46,6 +46,7 @@ up a management by affair.
     'application': False,
     'auto_install': False,
     'post_init_hook': 'create_internal_project',
+    'uninstall_hook': '_uninstall_hook',
     'assets': {
         'web.assets_backend': [
             'hr_timesheet/static/src/scss/timesheets_task_form.scss',
@@ -56,6 +57,9 @@ up a management by affair.
             'hr_timesheet/static/src/js/qr_code_action.js',
             'hr_timesheet/static/src/js/timesheet_graph_view.js',
             'hr_timesheet/static/src/js/timesheet_graph_model.js',
+        ],
+        "web.assets_backend_legacy_lazy": [
+            'hr_timesheet/static/src/js/*_legacy.js',
         ],
         'web.qunit_suite_tests': [
             'hr_timesheet/static/tests/**/*',

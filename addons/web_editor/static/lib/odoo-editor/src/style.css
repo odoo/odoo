@@ -4,10 +4,6 @@
     position: absolute;
 }
 
-.oe-noscroll {
-    overflow: hidden !important;
-}
-
 /* toolbar styling */
 
 .oe-toolbar {
@@ -43,6 +39,7 @@
     border: transparent 10px solid;
     border-top: #222222 10px solid;
     z-index: 0;
+    pointer-events: none;
 }
 .oe-toolbar .button-group {
     display: inline-block;
@@ -197,9 +194,6 @@
 }
 /* Content styling */
 
-li.oe-nested {
-    display: block;
-}
 .oe-commandbar-wrapper {
     position: absolute;
     z-index: 1051;
@@ -217,6 +211,7 @@ li.oe-nested {
     flex: 1 1 auto;
     overflow: auto;
     padding: 5px 0;
+    overscroll-behavior: contain;
 }
 
 .oe-commandbar-groupName,  .oe-commandbar-noResult {

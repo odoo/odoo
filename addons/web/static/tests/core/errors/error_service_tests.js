@@ -1,4 +1,5 @@
-	/** @odoo-module **/
+/** @odoo-module **/
+
 import { browser } from "@web/core/browser/browser";
 import { dialogService } from "@web/core/dialog/dialog_service";
 import {
@@ -19,12 +20,15 @@ import {
     makeFakeRPCService,
 } from "../../helpers/mock_services";
 import { makeDeferred, nextTick, patchWithCleanup } from "../../helpers/utils";
+
 const { Component, tags } = owl;
 const errorDialogRegistry = registry.category("error_dialogs");
 const errorHandlerRegistry = registry.category("error_handlers");
 const serviceRegistry = registry.category("services");
+
 let errorCb;
 let unhandledRejectionCb;
+
 QUnit.module("Error Service", {
     async beforeEach() {
         serviceRegistry.add("error", errorService);
@@ -46,6 +50,7 @@ QUnit.module("Error Service", {
         });
     },
 });
+
 QUnit.test("handle RPC_ERROR of type='server' and no associated dialog class", async (assert) => {
     assert.expect(2);
     const error = new RPCError();
@@ -75,7 +80,6 @@ QUnit.test("handle RPC_ERROR of type='server' and no associated dialog class", a
 });
 
 QUnit.test(
-    "handle RPC_ERROR of type='server' and associated custom dialog class",
     "handle custom RPC_ERROR of type='server' and associated custom dialog class",
     async (assert) => {
         assert.expect(2);
@@ -85,7 +89,6 @@ QUnit.test(
         const error = new RPCError();
         error.code = 701;
         error.message = "Some strange error occured";
-        error.exceptionName = "strange_error";
         const errorData = {
             context: { exception_class: "strange_error" },
             name: "strange_error",
@@ -97,11 +100,9 @@ QUnit.test(
                 name: "RPC_ERROR",
                 type: "server",
                 code: 701,
-                data: null,
                 data: errorData,
                 subType: null,
                 message: "Some strange error occured",
-                exceptionName: "strange_error",
                 exceptionName: null,
                 traceback: error.stack,
             });
@@ -153,6 +154,7 @@ QUnit.test(
         await unhandledRejectionCb(errorEvent);
     }
 );
+
 QUnit.test("handle CONNECTION_LOST_ERROR", async (assert) => {
     patchWithCleanup(browser, {
         setTimeout: (callback, delay) => {
@@ -196,6 +198,7 @@ QUnit.test("handle CONNECTION_LOST_ERROR", async (assert) => {
         "create (Connection restored. You are back online.)",
     ]);
 });
+
 QUnit.test("will let handlers from the registry handle errors first", async (assert) => {
     errorHandlerRegistry.add("__test_handler__", (env, err, originalError) => {
         assert.strictEqual(originalError, error);
@@ -210,11 +213,13 @@ QUnit.test("will let handlers from the registry handle errors first", async (ass
     await unhandledRejectionCb(errorEvent);
     assert.verifySteps(["in handler"]);
 });
+
 QUnit.test("handle uncaught promise errors", async (assert) => {
     class TestError extends Error {}
     const error = new TestError();
     error.message = "This is an error test";
     error.name = "TestError";
+
     function addDialog(dialogClass, props) {
         assert.strictEqual(dialogClass, ClientErrorDialog);
         assert.deepEqual(props, {
@@ -225,14 +230,17 @@ QUnit.test("handle uncaught promise errors", async (assert) => {
     }
     serviceRegistry.add("dialog", makeFakeDialogService(addDialog), { force: true });
     await makeTestEnv();
+
     const errorEvent = new PromiseRejectionEvent("error", { reason: error, promise: null });
     await unhandledRejectionCb(errorEvent);
 });
+
 QUnit.test("handle uncaught client errors", async (assert) => {
     class TestError extends Error {}
     const error = new TestError();
     error.message = "This is an error test";
     error.name = "TestError";
+
     function addDialog(dialogClass, props) {
         assert.strictEqual(dialogClass, ClientErrorDialog);
         assert.strictEqual(props.name, "UncaughtClientError > TestError");
@@ -240,6 +248,7 @@ QUnit.test("handle uncaught client errors", async (assert) => {
     }
     serviceRegistry.add("dialog", makeFakeDialogService(addDialog), { force: true });
     await makeTestEnv();
+
     const errorEvent = new ErrorEvent("error", {
         error,
         colno: 1,
@@ -248,54 +257,70 @@ QUnit.test("handle uncaught client errors", async (assert) => {
     });
     await errorCb(errorEvent);
 });
+
 QUnit.test("handle uncaught CORS errors", async (assert) => {
     class TestError extends Error {}
     const error = new TestError();
     error.message = "This is a cors error";
     error.name = "CORS error";
+
     function addDialog(dialogClass, props) {
         assert.strictEqual(dialogClass, NetworkErrorDialog);
         assert.strictEqual(props.message, "Uncaught CORS Error");
     }
     serviceRegistry.add("dialog", makeFakeDialogService(addDialog), { force: true });
     await makeTestEnv();
+
     // CORS error event has no colno, no lineno and no filename
     const errorEvent = new ErrorEvent("error", { error });
     await errorCb(errorEvent);
 });
+
 QUnit.test("check retry", async (assert) => {
     assert.expect(3);
+
     errorHandlerRegistry.add("__test_handler__", () => {
         assert.step("dispatched");
     });
+
     const def = makeDeferred();
     patchWithCleanup(browser, {
         setTimeout(fn) {
             def.then(fn);
         },
     });
+
     serviceRegistry.remove("dialog");
     await makeTestEnv();
+
     class TestError extends Error {}
     const error = new TestError();
     error.message = "This is an error test";
     error.name = "TestError";
+
     const errorEvent = new PromiseRejectionEvent("error", { reason: error, promise: null });
     await unhandledRejectionCb(errorEvent);
+
     assert.verifySteps([]);
+
     serviceRegistry.add("dialog", dialogService);
     await nextTick();
+
     await def.resolve();
     assert.verifySteps(["dispatched"]);
 });
+
 QUnit.test("lazy loaded handlers", async (assert) => {
     await makeTestEnv();
     const errorEvent = new PromiseRejectionEvent("error", { reason: new Error(), promise: null });
+
     await unhandledRejectionCb(errorEvent);
     assert.verifySteps([]);
+
     errorHandlerRegistry.add("__test_handler__", () => {
         assert.step("in handler");
     });
+
     await unhandledRejectionCb(errorEvent);
     assert.verifySteps(["in handler"]);
 });

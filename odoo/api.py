@@ -350,6 +350,9 @@ def split_context(method, args, kwargs):
     """ Extract the context from a pair of positional and keyword arguments.
         Return a triple ``context, args, kwargs``.
     """
+    # altering kwargs is a cause of errors, for instance when retrying a request
+    # after a serialization error: the retry is done without context!
+    kwargs = kwargs.copy()
     return kwargs.pop('context', None), args, kwargs
 
 
@@ -501,8 +504,12 @@ class Environment(Mapping):
         assert context is not None
         args = (cr, uid, context, su)
 
-        # if env already exists, return it
+        # determine transaction object
         transaction = cr.transaction
+        if transaction is None:
+            transaction = cr.transaction = Transaction(Registry(cr.dbname))
+
+        # if env already exists, return it
         for env in transaction.envs:
             if env.args == args:
                 return env

@@ -3,13 +3,13 @@
 
     <t t-name="SaleOrderList" owl="1">
         <div class="orders">
-            <div class="order-row header">
-                <div class="header name">Order</div>
-                <div class="header date">Date</div>
-                <div class="header customer">Customer</div>
-                <div class="header salesman">Salesperson</div>
-                <div class="header total">Total</div>
-                <div class="header state">State</div>
+            <div class="header-row" t-att-class="{ oe_hidden: env.isMobile }">
+                <div class="col name">Order</div>
+                <div class="col date">Date</div>
+                <div class="col customer">Customer</div>
+                <div class="col salesman">Salesperson</div>
+                <div class="col end total">Total</div>
+                <div class="col state">State</div>
             </div>
             <div class="order-list">
                 <t t-foreach="props.orders" t-as="order" t-key="order.id">

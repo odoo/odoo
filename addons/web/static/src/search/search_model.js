@@ -407,7 +407,7 @@ export class SearchModel extends EventBus {
      */
     get context() {
         if (!this._context) {
-            this._context = this._getContext();
+            this._context = makeContext([this._getContext(), this.globalContext]);
         }
         return deepCopy(this._context);
     }
@@ -549,6 +549,7 @@ export class SearchModel extends EventBus {
     async createNewFavorite(params) {
         const { preFavorite, irFilter } = this._getIrFilterDescription(params);
         const serverSideId = await this.orm.call("ir.filters", "create_or_replace", [irFilter]);
+        this.env.bus.trigger("CLEAR-CACHES");
 
         // before the filter cache was cleared!
         this.blockNotification = true;
@@ -658,9 +659,8 @@ export class SearchModel extends EventBus {
             return;
         }
         const { serverSideId } = searchItem;
-        await this.orm.unlink("ir.filters", [
-            serverSideId,
-        ]); /** @todo we should maybe expose some method in view_manager: before, the filter cache was invalidated */
+        await this.orm.unlink("ir.filters", [serverSideId]);
+        this.env.bus.trigger("CLEAR-CACHES");
         const index = this.query.findIndex((queryElem) => queryElem.searchItemId === favoriteId);
         delete this.searchItems[favoriteId];
         if (index >= 0) {
@@ -1325,7 +1325,7 @@ export class SearchModel extends EventBus {
      */
     _getContext() {
         const groups = this._getGroups();
-        const contexts = [this.userService.context, this.globalContext];
+        const contexts = [this.userService.context];
         for (const group of groups) {
             for (const activeItem of group.activeItems) {
                 const context = this._getSearchItemContext(activeItem);
@@ -1336,7 +1336,7 @@ export class SearchModel extends EventBus {
         }
         let context;
         try {
-            context = makeContext(...contexts); // what we want?
+            context = makeContext(contexts);
             return context;
         } catch (error) {
             throw new Error(
@@ -1732,7 +1732,7 @@ export class SearchModel extends EventBus {
         const { description, isDefault, isShared } = params;
         const fns = this.env.__getContext__.callbacks;
         const localContext = Object.assign({}, ...fns.map((fn) => fn()));
-        const context = makeContext(this._getContext(), localContext);
+        const context = makeContext([this._getContext(), localContext]);
         const userContext = this.userService.context;
         for (const key in context) {
             if (key in userContext || /^search(panel)?_default_/.test(key)) {
@@ -1836,7 +1836,7 @@ export class SearchModel extends EventBus {
             case "favorite":
             case "filter": {
                 //Return a deep copy of the filter/favorite to avoid the view to modify the context
-                return makeContext(searchItem.context && deepCopy(searchItem.context));
+                return makeContext([searchItem.context && deepCopy(searchItem.context)]);
             }
             default: {
                 return null;

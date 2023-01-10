@@ -308,7 +308,9 @@ class MailActivityMixin(models.AbstractModel):
             where_clause=where_clause or '1=1',
             group_by=', '.join(groupby_terms),
         )
-        self.env.cr.execute(select_query, [tz] * 3 + where_params)
+        num_from_params = from_clause.count('%s')
+        where_params[num_from_params:num_from_params] = [tz] * 3 # timezone after from parameters
+        self.env.cr.execute(select_query, where_params)
         fetched_data = self.env.cr.dictfetchall()
         self._read_group_resolve_many2x_fields(fetched_data, annotated_groupbys)
         data = [
@@ -413,9 +415,10 @@ class MailActivityMixin(models.AbstractModel):
                 'date_deadline': date_deadline,
                 'res_model_id': model_id,
                 'res_id': record.id,
-                'user_id': act_values.get('user_id') or activity_type.default_user_id.id or self.env.uid
             }
             create_vals.update(act_values)
+            if not create_vals.get('user_id'):
+                create_vals['user_id'] = activity_type.default_user_id.id or self.env.uid
             activities |= self.env['mail.activity'].create(create_vals)
         return activities
 

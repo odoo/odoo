@@ -1,5 +1,9 @@
 ///
-/// This file regroups basic style rules for web_editor enable page edition and backend utils.
+/// This file regroups basic style rules for web_editor enable page edition and
+/// backend utils.
+/// TODO many of those rules should probably not be declared for the backend.
+/// in particular the o_ccX rules, see code linked to the variable named
+/// 'prevent-backend-colors-alteration'.
 ///
 
 :root {
@@ -62,6 +66,9 @@
             @include print-variable('o-cc#{$index}-btn-secondary-border', $-btn-secondary or theme-color('secondary'));
         }
     }
+
+    @include print-variable('o-grid-gutter-width', $grid-gutter-width);
+    @include print-variable('o-md-container-max-width', map-get($container-max-widths, md));
 }
 
 html, body {
@@ -132,18 +139,20 @@ ul.o_checklist {
             display: block;
             height: $o-checklist-before-size;
             width: $o-checklist-before-size;
-            margin-top: 4px;
+            top: 4px;
             border: 1px solid;
             text-align: center;
             cursor: pointer;
         }
         &.o_checked {
             text-decoration: line-through;
-            &::after {
+            &::before {
                 content: "✓";
-                position: absolute;
-                left: - ($o-checklist-margin-left - $o-checklist-checkmark-width);
-                top: +1px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                padding-left: 1px #{"/*rtl:ignore*/"};
+                padding-top: 1px;
             }
         }
     }
@@ -405,10 +414,13 @@ a.o_underline {
         @mixin ace-line-error-mixin {
             content: "";
             z-index: 1000;
-            display: block;
-            background-color: theme-color('danger');
-            opacity: 0.5;
-            pointer-events: none;
+            display: flex;
+            background-color: $o-we-color-danger;
+            color: white;
+            font-size: 1.2em;
+            align-items: center;
+            justify-content: center;
+            cursor: help;
         }
 
         height: 70%; // in case flex is not supported
@@ -420,9 +432,16 @@ a.o_underline {
             .ace_gutter-cell.o_error {
                 position: relative;
 
+                &::before {
+                    @include o-position-absolute(-100vh, 0, -100vh);
+                    @include ace-line-error-mixin;
+                    width: 2px;
+                }
                 &::after {
                     @include o-position-absolute(-100%, 0, -100%, 0);
                     @include ace-line-error-mixin;
+                    font-family: FontAwesome;
+                    content: "\f071";
                 }
             }
         }
@@ -433,12 +452,28 @@ a.o_underline {
             height: 100%;
             cursor: ew-resize;
         }
+    }
+}
 
-        .ace_scroller.o_error::after {
-            @include o-position-absolute(0, auto, 0, 0);
-            width: 3px;
-            @include ace-line-error-mixin;
-        }
+.o_ace_error_popover {
+    max-width: 40vw;
+
+    .popover-body {
+        background-color: lighten($o-we-ace-color, 10%);
+        color: #ebecee;
+    }
+    &.bs-popover-left .arrow::after {
+        border-left-color: lighten($o-we-ace-color, 10%);
+    }
+    &.bs-popover-right .arrow::after {
+        border-right-color: lighten($o-we-ace-color, 10%);
+    }
+    code {
+        display: block;
+        max-width: 100%;
+        overflow-x: auto;
+        white-space: pre;
+        color: cyan;
     }
 }
 
@@ -511,11 +546,11 @@ a.o_underline {
     // modal select media
     .o_technical_modal.o_web_editor_dialog {
         // see template 'web_editor.FieldTextHtml.fullscreen'
-        z-index: 2001;
+        z-index: $o-we-technical-modal-zindex;
 
         > .o_select_media_dialog {
             max-width: inherit !important;
-            z-index: 2001;
+            z-index: $o-we-technical-modal-zindex;
 
             .modal-dialog, .model-content {
                 height: 100%;
@@ -757,15 +792,11 @@ blockquote {
 .btn-custom:hover, .btn-fill-custom:hover {
     filter: invert(0.2);
 }
-.btn-outline-custom {
-    &:not(:hover) {
-        background-color: transparent !important;
-        background-image: none !important;
-    }
-    &:hover {
-        background-color: '';
-        background-image: '';
-    }
+.btn-outline-custom:not(:hover) {
+    // Custom buttons have their fill color or gradient specified in their
+    // element style. They must only be shown on hover for outline buttons.
+    background-color: transparent !important;
+    background-image: none !important;
 }
 
 // Base snippet rules
@@ -846,7 +877,7 @@ section, .oe_img_bg, [data-oe-shape-data] {
 
 /* QWEB */
 
-.odoo-editor, .o_readonly {
+.odoo-editor-editable, .o_readonly {
     t,
     [t-if],
     [t-elif],

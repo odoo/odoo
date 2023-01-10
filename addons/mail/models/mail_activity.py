@@ -283,9 +283,7 @@ class MailActivity(models.Model):
 
             self.env[activity.res_model].browse(activity.res_id).message_subscribe(partner_ids=[partner_id])
             if activity.date_deadline <= fields.Date.today():
-                self.env['bus.bus'].sendone(
-                    (self._cr.dbname, 'res.partner', activity.user_id.partner_id.id),
-                    {'type': 'activity_updated', 'activity_created': True})
+                self.env['bus.bus']._sendone(activity.user_id.partner_id, 'mail.activity/updated', {'activity_created': True})
         return activities
 
     def read(self, fields=None, load='_classic_read'):
@@ -314,23 +312,17 @@ class MailActivity(models.Model):
             for activity in user_changes:
                 self.env[activity.res_model].browse(activity.res_id).message_subscribe(partner_ids=[activity.user_id.partner_id.id])
                 if activity.date_deadline <= fields.Date.today():
-                    self.env['bus.bus'].sendone(
-                        (self._cr.dbname, 'res.partner', activity.user_id.partner_id.id),
-                        {'type': 'activity_updated', 'activity_created': True})
+                    self.env['bus.bus']._sendone(activity.user_id.partner_id, 'mail.activity/updated', {'activity_created': True})
             for activity in user_changes:
                 if activity.date_deadline <= fields.Date.today():
                     for partner in pre_responsibles:
-                        self.env['bus.bus'].sendone(
-                            (self._cr.dbname, 'res.partner', partner.id),
-                            {'type': 'activity_updated', 'activity_deleted': True})
+                        self.env['bus.bus']._sendone(partner, 'mail.activity/updated', {'activity_deleted': True})
         return res
 
     def unlink(self):
         for activity in self:
             if activity.date_deadline <= fields.Date.today():
-                self.env['bus.bus'].sendone(
-                    (self._cr.dbname, 'res.partner', activity.user_id.partner_id.id),
-                    {'type': 'activity_updated', 'activity_deleted': True})
+                self.env['bus.bus']._sendone(activity.user_id.partner_id, 'mail.activity/updated', {'activity_deleted': True})
         return super(MailActivity, self).unlink()
 
     @api.model
@@ -364,14 +356,14 @@ class MailActivity(models.Model):
             self._cr.execute("""
                 SELECT DISTINCT activity.id, activity.res_model, activity.res_id
                 FROM "%s" activity
-                WHERE activity.id = ANY (%%(ids)s)""" % self._table, dict(ids=list(sub_ids)))
-            activities_to_check = self._cr.dictfetchall()
+                WHERE activity.id = ANY (%%(ids)s) AND activity.res_id != 0""" % self._table, dict(ids=list(sub_ids)))
+            activities_to_check += self._cr.dictfetchall()
 
         activity_to_documents = {}
         for activity in activities_to_check:
-            activity_to_documents.setdefault(activity['res_model'], list()).append(activity['res_id'])
+            activity_to_documents.setdefault(activity['res_model'], set()).add(activity['res_id'])
 
-        allowed_ids = []
+        allowed_ids = set()
         for doc_model, doc_ids in activity_to_documents.items():
             # fall back on related document access right checks. Use the same as defined for mail.thread
             # if available; otherwise fall back on read
@@ -383,9 +375,10 @@ class MailActivity(models.Model):
             right = DocumentModel.check_access_rights(doc_operation, raise_exception=False)
             if right:
                 valid_docs = DocumentModel.browse(doc_ids)._filter_access_rules(doc_operation)
-                allowed_ids += [
+                valid_doc_ids = set(valid_docs.ids)
+                allowed_ids.update(
                     activity['id'] for activity in activities_to_check
-                    if activity['res_model'] == doc_model and activity['res_id'] in valid_docs.ids]
+                    if activity['res_model'] == doc_model and activity['res_id'] in valid_doc_ids)
 
         if count:
             return len(allowed_ids)

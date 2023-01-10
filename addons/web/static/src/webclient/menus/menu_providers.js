@@ -41,10 +41,15 @@ commandProviderRegistry.add("menu", {
         }
 
         apps.forEach((menu) => {
-            const prefix = "data:image/png;base64,";
-            const webIconData = menu.webIconData.startsWith(prefix)
-                ? menu.webIconData
-                : prefix + menu.webIconData.replace(/\s/g, "");
+            const props = {};
+            if (menu.webIconData) {
+                const prefix = "data:image/png;base64,";
+                props.webIconData = menu.webIconData.startsWith(prefix)
+                    ? menu.webIconData
+                    : prefix + menu.webIconData.replace(/\s/g, "");
+            } else {
+                props.webIcon = menu.webIcon;
+            }
             result.push({
                 Component: AppIconCommand,
                 action() {
@@ -52,9 +57,7 @@ commandProviderRegistry.add("menu", {
                 },
                 category: "apps",
                 name: menu.label,
-                props: {
-                    webIconData: webIconData,
-                },
+                props,
             });
         });
 

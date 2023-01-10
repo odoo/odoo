@@ -2,6 +2,7 @@
 
 import { registerNewModel } from '@mail/model/model_core';
 import { attr, one2one } from '@mail/model/model_field';
+import { clear } from '@mail/model/model_field_command';
 
 function factory(dependencies) {
 
@@ -35,6 +36,9 @@ function factory(dependencies) {
                     this.callViewer.update({
                         filterVideoGrid: true,
                     });
+                    if (this.messaging.focusedRtcSession && !this.messaging.focusedRtcSession.videoStream) {
+                        this.messaging.update({ focusedRtcSession: clear() });
+                    }
                     break;
             }
         }
@@ -56,9 +60,10 @@ function factory(dependencies) {
         component: attr(),
         callViewer: one2one('mail.rtc_call_viewer', {
             inverse: 'rtcLayoutMenu',
+            readonly: true,
         }),
     };
-
+    RtcLayoutMenu.identifyingFields = ['callViewer'];
     RtcLayoutMenu.modelName = 'mail.rtc_layout_menu';
 
     return RtcLayoutMenu;

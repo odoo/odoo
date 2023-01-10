@@ -4,6 +4,7 @@
 from odoo import api, fields, models, _
 from odoo.exceptions import ValidationError
 from odoo.tools import float_round
+from odoo.osv import expression
 
 
 class HolidaysAllocation(models.Model):
@@ -12,13 +13,11 @@ class HolidaysAllocation(models.Model):
     def default_get(self, fields):
         res = super().default_get(fields)
         if 'holiday_status_id' in fields and self.env.context.get('deduct_extra_hours'):
-            # Prevent loading manager allocated time off type
-            type_operator = '=' if self.env.context.get('deduct_extra_hours_allocation_type') else '!='
-            type_value = self.env.context.get('deduct_extra_hours_allocation_type', 'no')
-            leave_type = self.env['hr.leave.type'].search([
-                ('has_valid_allocation', '=', True),
-                ('overtime_deductible', '=', True),
-                ('requires_allocaiton', '=', 'yes')], limit=1)
+            domain = [('overtime_deductible', '=', True), ('requires_allocation', '=', 'yes')]
+            if self.env.context.get('deduct_extra_hours_employee_request', False):
+                # Prevent loading manager allocated time off type in self request contexts
+                domain = expression.AND([domain, [('employee_requests', '=', 'yes')]])
+            leave_type = self.env['hr.leave.type'].search(domain, limit=1)
             res['holiday_status_id'] = leave_type.id
         return res
 

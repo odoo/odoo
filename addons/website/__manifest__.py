@@ -27,6 +27,7 @@
         'security/website_security.xml',
         'security/ir.model.access.csv',
         'data/ir_asset.xml',
+        'data/ir_cron_data.xml',
         'data/mail_mail_data.xml',
         'data/website_data.xml',
         'data/website_visitor_cron.xml',
@@ -106,9 +107,7 @@
         'views/res_partner_views.xml',
         'wizard/base_language_install_views.xml',
         'wizard/website_robots.xml',
-
-        # Old snippets
-        ],
+    ],
     'demo': [
         'data/website_demo.xml',
     ],
@@ -122,6 +121,7 @@
             'website/static/src/scss/website.ui.scss',
             'website/static/src/js/utils.js',
             'website/static/src/js/content/website_root.js',
+            'website/static/src/js/widgets/dialog.js',
             'website/static/src/js/widgets/fullscreen_indication.js',
             'website/static/src/js/content/compatibility.js',
             'website/static/src/js/content/menu.js',
@@ -130,13 +130,19 @@
             'website/static/src/js/show_password.js',
             'website/static/src/js/post_link.js',
             'website/static/src/js/user_custom_javascript.js',
+            # Stable fix, will be replaced by an `ir.asset` in master to be able
+            # to archive and not load that JS file if we have to create a 001.js
+            # and the DB has no snippet using the 000.js left.
+            'website/static/src/snippets/s_map/000.js',
         ],
         'web.assets_frontend_minimal': [
             'website/static/src/js/content/inject_dom.js',
+            'website/static/src/js/content/auto_hide_menu.js',
         ],
         'web.assets_frontend_lazy': [
             # Remove assets_frontend_minimal
             ('remove', 'website/static/src/js/content/inject_dom.js'),
+            ('remove', 'website/static/src/js/content/auto_hide_menu.js'),
         ],
         'web._assets_primary_variables': [
             'website/static/src/scss/primary_variables.scss',

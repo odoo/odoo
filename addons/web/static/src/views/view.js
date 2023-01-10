@@ -162,6 +162,7 @@ export class View extends Component {
             view[0] = viewDescription.viewId;
             searchViewDescription = viewDescriptions.search;
             if (loadSearchView) {
+                searchViewId = searchViewId || searchViewDescription.viewId;
                 if (!searchViewArch) {
                     searchViewArch = searchViewDescription.arch;
                     searchViewFields = searchViewDescription.fields;
@@ -235,7 +236,7 @@ export class View extends Component {
             }
         }
 
-        // prepare the WithSearh component props
+        // prepare the WithSearch component props
         this.withSearchProps = {
             ...this.props,
             Component: ViewClass,

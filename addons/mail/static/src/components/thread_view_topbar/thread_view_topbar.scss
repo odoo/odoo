@@ -6,13 +6,19 @@
     height: $o-statusbar-height * 1.25;
 }
 
+.o_ThreadViewTopbar_avatar {
+    height: 26px;
+    width: 26px;
+    object-fit: cover;
+}
+
+.o_ThreadViewTopbar_editableItem {
+    border: $border-width solid;
+}
+
 .o_ThreadViewTopbar_threadDescriptionSeparator {
     width: $border-width;
     height: $font-size-sm;
-}
-
-.o_ThreadViewTopbar_threadName, .o_ThreadViewTopbar_threadDescription {
-    border: $border-width solid;
 }
 
 .o_ThreadViewTopbar_title {
@@ -46,7 +52,12 @@
     }
 }
 
-.o_ThreadViewTopbar_invitePopover .popover-body {
+// use selector specificity to override bootstrap style
+input.o_ThreadViewTopbar_guestNameInput {
+    width: 150px;
+}
+
+.o_ThreadViewTopbar_invitePopoverView .popover-body {
     padding: 0; // cancel unwanted padding
 }
 
@@ -85,5 +96,16 @@
 
     &:hover {
         color: gray('900');
+    }
+}
+
+.o_ThreadViewTopbar_userName {
+    &:not(.o-userNameEditable) {
+        border-color: transparent;
+    }
+
+    &.o-userNameEditable {
+        background-color: $white;
+        border-color: $border-color;
     }
 }

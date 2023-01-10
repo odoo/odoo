@@ -5,8 +5,10 @@ from odoo import Command
 from odoo.addons.account_edi.tests.common import AccountEdiTestCommon, _mocked_post_two_steps, _generate_mocked_needs_web_services, _mocked_cancel_failed, _generate_mocked_support_batching
 from unittest.mock import patch
 from odoo.addons.base.tests.test_ir_cron import CronMixinCase
+from odoo.tests import tagged
 
 
+@tagged('post_install', '-at_install')
 class TestAccountEdi(AccountEdiTestCommon, CronMixinCase):
 
     @classmethod
@@ -227,3 +229,17 @@ class TestAccountEdi(AccountEdiTestCommon, CronMixinCase):
             self.env.ref('account_edi.ir_cron_edi_network').method_direct_trigger()
             self.assertEqual(len(capt.records), 2, "Not all records have been processed in this run, the cron should "
                                                    "re-trigger itself to process some more later")
+
+    def test_invoice_ready_to_be_sent(self):
+        def _is_needed_for_invoice(edi_format, invoice):
+            return True
+
+        with self.mock_edi(
+                _needs_web_services_method=_generate_mocked_needs_web_services(True),
+                _is_required_for_invoice_method=_is_needed_for_invoice,
+        ):
+            self.invoice.action_post()
+            doc = self.invoice._get_edi_document(self.edi_format)
+            self.assertFalse(self.invoice._is_ready_to_be_sent())
+            doc._process_documents_web_services(with_commit=False)
+            self.assertTrue(self.invoice._is_ready_to_be_sent())

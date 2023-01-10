@@ -47,6 +47,29 @@ WebsiteNewMenu.include({
 });
 });
 
+odoo.define('website_sale.editMenu', function (require) {
+    'use strict';
+
+var WebsiteEditMenu = require('website.editMenu');
+
+WebsiteEditMenu.include({
+    /**
+     * @override
+     */
+    _getContentEditableAreas () {
+        return $(this.savableSelector).not('input, [data-oe-readonly],[data-oe-type="monetary"],[data-oe-many2one-id], [data-oe-field="arch"]:empty').filter((_, el) => {
+            return !$(el).closest('.o_not_editable, .oe_website_sale .products_header').length;
+        }).toArray();
+    },
+    /**
+     * @override
+     */
+    _getReadOnlyAreas () {
+        return $("#wrapwrap").find('.oe_website_sale .products_header, .oe_website_sale .products_header a').toArray();
+    },
+});
+});
+
 //==============================================================================
 
 odoo.define('website_sale.editor', function (require) {
@@ -247,25 +270,6 @@ Wysiwyg.include({
     _onSetProductRibbon(ev) {
         const {templateId, ribbonId} = ev.data;
         this.productTemplatesRibbons.push({templateId, ribbonId});
-    },
-});
-
-publicWidget.registry.websiteSaleCurrency = publicWidget.Widget.extend({
-    selector: '.oe_website_sale',
-    disabledInEditableMode: false,
-    edit_events: {
-        'click .oe_currency_value:o_editable': '_onCurrencyValueClick',
-    },
-
-    //--------------------------------------------------------------------------
-    // Handlers
-    //--------------------------------------------------------------------------
-
-    /**
-     * @private
-     */
-    _onCurrencyValueClick: function (ev) {
-        $(ev.currentTarget).selectContent();
     },
 });
 

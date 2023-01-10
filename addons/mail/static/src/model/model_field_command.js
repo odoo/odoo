@@ -100,10 +100,10 @@ function insert(data) {
  * - or update the record(s) if they can be found from identifying data;
  * - and then replace the record(s) for a relation field.
  *
- * @param {Object|Object[]} data - data object or data objects array to insert and replace record(s).
+ * @param {Object|Object[]} [data={}] - data object or data objects array to insert and replace record(s).
  * @returns {FieldCommand}
  */
-function insertAndReplace(data) {
+function insertAndReplace(data = {}) {
     return new FieldCommand('insert-and-replace', data);
 }
 
@@ -174,17 +174,6 @@ function unlinkAll() {
     return new FieldCommand('unlink-all');
 }
 
-/**
- * Returns an update command to give to the model manager at create/update.
- * `update` command can be used for x2one relation fields.
- * - updates the values of the current related record with the given values
- *
- * @returns {FieldCommand}
- */
-function update(newValue) {
-    return new FieldCommand('update', newValue);
-}
-
 export {
     FieldCommand,
     clear,
@@ -198,6 +187,4 @@ export {
     set,
     unlink,
     unlinkAll,
-    update,
 };
-

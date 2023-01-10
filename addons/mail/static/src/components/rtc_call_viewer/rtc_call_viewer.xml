@@ -11,9 +11,9 @@
             <!-- Call members display -->
             <div class="o_RtcCallViewer_participantContainer" t-on-click="rtcCallViewer.onClick" t-on-mousemove="rtcCallViewer.onMouseMove">
                 <t t-if="rtcCallViewer.layout !== 'tiled'">
-                    <div class="o_RtcCallViewer_mainParticipantContainer">
+                    <div class="o_RtcCallViewer_mainParticipantContainer justify-content-center mw-100 mh-100">
                         <t t-if="rtcCallViewer.mainParticipantCard">
-                            <RtcCallParticipantCard class="o_RtcCallViewer_participantCard o_RtcCallViewer_mainParticipant" callParticipantCardLocalId="rtcCallViewer.mainParticipantCard.localId"/>
+                            <RtcCallParticipantCard class="o_RtcCallViewer_participantCard w-100" callParticipantCardLocalId="rtcCallViewer.mainParticipantCard.localId"/>
                         </t>
                     </div>
                 </t>
@@ -31,7 +31,7 @@
                             <t t-if="!rtcCallViewer.filterVideoGrid or (participantCard.rtcSession and participantCard.rtcSession.videoStream)">
                                 <!-- maybe filter focused partner out? -->
                                 <RtcCallParticipantCard
-                                    class="o_RtcCallViewer_participantCard o_RtcCallViewer_gridTile"
+                                    class="o_RtcCallViewer_participantCard o_RtcCallViewer_gridTile mw-100"
                                     callParticipantCardLocalId="participantCard.localId"
                                 />
                             </t>
@@ -51,7 +51,7 @@
 
             <!-- Dialogs -->
             <t t-if="messaging.userSetting.rtcConfigurationMenu.isOpen">
-                <Dialog size="'small'" title="'Settings'" t-on-dialog-closed="rtcCallViewer.onRtcSettingsDialogClosed">
+                <Dialog size="'small'" title="rtcCallViewer.settingsTitle" t-on-dialog-closed="rtcCallViewer.onRtcSettingsDialogClosed">
                     <RtcConfigurationMenu/>
                     <t t-set-slot="buttons">
                         <!-- Explicit No buttons -->
@@ -59,7 +59,7 @@
                 </Dialog>
             </t>
             <t t-if="rtcCallViewer and rtcCallViewer.rtcLayoutMenu">
-                <Dialog size="'small'" title="'Change Layout'" t-on-dialog-closed="rtcCallViewer.onLayoutSettingsDialogClosed">
+                <Dialog size="'small'" title="rtcCallViewer.layoutSettingsTitle" t-on-dialog-closed="rtcCallViewer.onLayoutSettingsDialogClosed">
                     <RtcLayoutMenu localId="rtcCallViewer.rtcLayoutMenu.localId"/>
                     <t t-set-slot="buttons">
                         <!-- Explicit No buttons -->

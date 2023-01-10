@@ -2,11 +2,20 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from datetime import timedelta
-
+from itertools import groupby
+import operator as py_operator
 from odoo import api, fields, models
-from odoo.tools import groupby
 from odoo.tools.float_utils import float_round, float_is_zero
 
+
+OPERATORS = {
+    '<': py_operator.lt,
+    '>': py_operator.gt,
+    '<=': py_operator.le,
+    '>=': py_operator.ge,
+    '=': py_operator.eq,
+    '!=': py_operator.ne
+}
 
 class ProductTemplate(models.Model):
     _inherit = "product.template"
@@ -167,18 +176,33 @@ class ProductProduct(models.Model):
         """
         bom_kits = self.env['mrp.bom']._bom_find(self, bom_type='phantom')
         kits = self.filtered(lambda p: bom_kits.get(p))
-        res = super(ProductProduct, self - kits)._compute_quantities_dict(lot_id, owner_id, package_id, from_date=from_date, to_date=to_date)
+        regular_products = self - kits
+        res = (
+            super(ProductProduct, regular_products)._compute_quantities_dict(lot_id, owner_id, package_id, from_date=from_date, to_date=to_date)
+            if regular_products
+            else {}
+        )
         qties = self.env.context.get("mrp_compute_quantities", {})
         qties.update(res)
+        # pre-compute bom lines and identify missing kit components to prefetch
+        bom_sub_lines_per_kit = {}
+        prefetch_component_ids = set()
         for product in bom_kits:
-            boms, bom_sub_lines = bom_kits[product].explode(product, 1)
+            __, bom_sub_lines = bom_kits[product].explode(product, 1)
+            bom_sub_lines_per_kit[product] = bom_sub_lines
+            for bom_line, __ in bom_sub_lines:
+                if bom_line.product_id.id not in qties:
+                    prefetch_component_ids.add(bom_line.product_id.id)
+        # compute kit quantities
+        for product in bom_kits:
+            bom_sub_lines = bom_sub_lines_per_kit[product]
             ratios_virtual_available = []
             ratios_qty_available = []
             ratios_incoming_qty = []
             ratios_outgoing_qty = []
             ratios_free_qty = []
             for bom_line, bom_line_data in bom_sub_lines:
-                component = bom_line.product_id.with_context(mrp_compute_quantities=qties)
+                component = bom_line.product_id.with_context(mrp_compute_quantities=qties).with_prefetch(prefetch_component_ids)
                 if component.type != 'product' or float_is_zero(bom_line_data['qty'], precision_rounding=bom_line.product_uom_id.rounding):
                     # As BoMs allow components with 0 qty, a.k.a. optionnal components, we simply skip those
                     # to avoid a division by zero. The same logic is applied to non-storable products as those
@@ -188,13 +212,18 @@ class ProductProduct(models.Model):
                 qty_per_kit = bom_line.product_uom_id._compute_quantity(uom_qty_per_kit, bom_line.product_id.uom_id, round=False, raise_if_failure=False)
                 if not qty_per_kit:
                     continue
-                component_res = qties.get(component.id, {
-                    "virtual_available": component.virtual_available,
-                    "qty_available": component.qty_available,
-                    "incoming_qty": component.incoming_qty,
-                    "outgoing_qty": component.outgoing_qty,
-                    "free_qty": component.free_qty,
-                })
+                rounding = component.uom_id.rounding
+                component_res = (
+                    qties.get(component.id)
+                    if component.id in qties
+                    else {
+                        "virtual_available": float_round(component.virtual_available, precision_rounding=rounding),
+                        "qty_available": float_round(component.qty_available, precision_rounding=rounding),
+                        "incoming_qty": float_round(component.incoming_qty, precision_rounding=rounding),
+                        "outgoing_qty": float_round(component.outgoing_qty, precision_rounding=rounding),
+                        "free_qty": float_round(component.free_qty, precision_rounding=rounding),
+                    }
+                )
                 ratios_virtual_available.append(component_res["virtual_available"] / qty_per_kit)
                 ratios_qty_available.append(component_res["qty_available"] / qty_per_kit)
                 ratios_incoming_qty.append(component_res["incoming_qty"] / qty_per_kit)
@@ -257,7 +286,33 @@ class ProductProduct(models.Model):
         self.ensure_one()
         if not product_template_attribute_value_ids:
             return True
-        for _, iter_ptav in groupby(product_template_attribute_value_ids, lambda ptav: ptav.attribute_line_id):
+        for _, iter_ptav in groupby(product_template_attribute_value_ids.sorted('attribute_line_id'), lambda ptav: ptav.attribute_line_id):
             if not any(ptav in self.product_template_attribute_value_ids for ptav in iter_ptav):
                 return False
         return True
+
+    def _count_returned_sn_products(self, sn_lot):
+        res = self.env['stock.move.line'].search_count([
+            ('lot_id', '=', sn_lot.id),
+            ('qty_done', '=', 1),
+            ('state', '=', 'done'),
+            ('production_id', '=', False),
+            ('location_id.usage', '=', 'production'),
+            ('move_id.unbuild_id', '!=', False),
+        ])
+        return super()._count_returned_sn_products(sn_lot) + res
+
+    def _search_qty_available_new(self, operator, value, lot_id=False, owner_id=False, package_id=False):
+        '''extending the method in stock.product to take into account kits'''
+        product_ids = super(ProductProduct, self)._search_qty_available_new(operator, value, lot_id, owner_id, package_id)
+        kit_boms = self.env['mrp.bom'].search([('type', "=", 'phantom')])
+        kit_products = self.env['product.product']
+        for kit in kit_boms:
+            if kit.product_id:
+                kit_products |= kit.product_id
+            else:
+                kit_products |= kit.product_tmpl_id.product_variant_ids
+        for product in kit_products:
+            if OPERATORS[operator](product.qty_available, value):
+                product_ids.append(product.id)
+        return list(set(product_ids))

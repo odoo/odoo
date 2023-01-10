@@ -656,3 +656,115 @@ class TestSaleService(TestCommonSaleTimesheet):
         })
         self.assertEqual(timesheet.so_line, prepaid_service_sol, "The SOL should be the same than one containing the prepaid service product.")
         self.assertEqual(prepaid_service_sol.remaining_hours, 2, "The remaining hours should not change.")
+
+    def test_several_uom_sol_to_planned_hours(self):
+        planned_hours_for_uom = {
+            'day': 8.0,
+            'hour': 1.0,
+            'unit': 1.0,
+            'gram': 0.0,
+        }
+
+        Product = self.env['product.product']
+        product_vals = {
+            'type': 'service',
+            'service_type': 'timesheet',
+            'project_id': self.project_global.id,
+            'service_tracking': 'task_global_project',
+        }
+
+        SaleOrderLine = self.env['sale.order.line']
+        sol_vals = {
+            'product_uom_qty': 1,
+            'price_unit': 100,
+            'order_id': self.sale_order.id,
+        }
+
+        self.project_global.task_ids = False
+        for uom_name in planned_hours_for_uom:
+            uom_id = self.env.ref('uom.product_uom_%s' % uom_name)
+
+            product_vals.update({
+                'name': uom_name,
+                'uom_id': uom_id.id,
+                'uom_po_id': uom_id.id,
+            })
+            product = Product.create(product_vals)
+
+            sol_vals.update({
+                'name': uom_name,
+                'product_id': product.id,
+                'product_uom': uom_id.id,
+            })
+            SaleOrderLine.create(sol_vals)
+
+        self.sale_order.action_confirm()
+
+        tasks = self.project_global.task_ids
+        for task in tasks:
+            self.assertEqual(task.planned_hours, planned_hours_for_uom[task.sale_line_id.name])
+
+        project_updates_data = self.project_global._get_sold_items()['data']
+        for datum in project_updates_data:
+            # A datum looks like this: {'name': 'day', 'value': '0.0 / 8.0 Hours',...}
+            uom_in = datum['name']
+
+            # So the value looks like this: '0.0 / 8.0 Hours'
+            # We extract the ordered quantity (second number in the string) and the displayed unit of measure
+            values = datum['value'][6:].split(' ')
+            qty = float(values[0])
+            uom_out = values[1]
+
+            # All uom but grams should have been converted to company's project time unit
+            company_time_uom = self.env.company.project_time_mode_id
+            if uom_in == 'gram':
+                self.assertEqual(qty, 1.0)
+                self.assertEqual(uom_out, self.env.ref('uom.product_uom_gram').display_name)
+            else:
+                self.assertEqual(qty, planned_hours_for_uom[uom_in])
+                self.assertEqual(uom_out, company_time_uom.display_name)
+
+    def test_add_product_analytic_account(self):
+        """ When we have a project with an analytic account and we add a product to the task,
+            the consequent invoice line should have the same analytic account as the project.
+        """
+        # Ensure the SO has no analytic account to give to its SOLs
+        self.assertFalse(self.sale_order.analytic_account_id)
+        Product = self.env['product.product']
+        SaleOrderLine = self.env['sale.order.line']
+
+        # Create a SO with a service that creates a task
+        product_create = Product.create({
+            'name': 'Product that creates the task',
+            'type': 'service',
+            'service_type': 'timesheet',
+            'project_id': self.project_global.id,
+            'service_tracking': 'task_global_project',
+        })
+        sale_order_line_create = SaleOrderLine.create({
+            'order_id': self.sale_order.id,
+            'name': product_create.name,
+            'product_id': product_create.id,
+            'product_uom_qty': 5,
+            'product_uom': product_create.uom_id.id,
+            'price_unit': product_create.list_price,
+        })
+        self.sale_order.action_confirm()
+
+        # Add a SOL with a task_id to mimmic the "Add a product" flow on the task
+        product_add = Product.create({'name': 'Product added on task'})
+        SaleOrderLine.create({
+            'order_id': self.sale_order.id,
+            'name': product_add.name,
+            'product_id': product_add.id,
+            'product_uom_qty': 5,
+            'product_uom': product_add.uom_id.id,
+            'price_unit': product_add.list_price,
+            'task_id': sale_order_line_create.task_id.id,
+        })
+        self.sale_order._create_invoices()
+
+        # Check that the resulting invoice line and the project have the same analytic account
+        invoice_line = self.sale_order.invoice_ids.line_ids.filtered(lambda line: line.product_id == product_add)
+        self.assertEqual(invoice_line.analytic_account_id, self.project_global.analytic_account_id,
+             "SOL's analytic account should be the same as the project's")

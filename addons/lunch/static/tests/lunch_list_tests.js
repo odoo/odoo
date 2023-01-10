@@ -40,10 +40,11 @@ QUnit.module('LunchListView', {
             'lunch.location': {
                 fields: {
                     name: {string: 'Name', type: 'char'},
+                    company_id: {string: 'Company', type: 'many2one', relation: 'res.company'},
                 },
                 records: [
-                    {id: 1, name: "Office 1"},
-                    {id: 2, name: "Office 2"},
+                    {id: 1, name: "Office 1", company_id: false},
+                    {id: 2, name: "Office 2", company_id: false},
                 ],
             },
             'res.users': {
@@ -57,6 +58,13 @@ QUnit.module('LunchListView', {
                     {id: 3, name: "Jean-Luc Portal", groups_id: [PORTAL_GROUP_ID]},
                 ],
             },
+            'res.company': {
+                fields: {
+                    name: {string: 'Name', type: 'char'},
+                }, records: [
+                    {id: 1, name: "Dunder Trade Company"},
+                ]
+            }
         };
         this.regularInfos = {
             username: "Marc Demo",

@@ -98,6 +98,27 @@ class PaymentCommon(PaymentTestUtils):
         cls.currency = cls.currency_euro
         cls.partner = cls.default_partner
         cls.reference = "Test Transaction"
+        cls.account = cls.company.account_journal_payment_credit_account_id
+        cls.invoice = cls.env['account.move'].create({
+            'move_type': 'entry',
+            'date': '2019-01-01',
+            'line_ids': [
+                (0, 0, {
+                    'account_id': cls.account.id,
+                    'currency_id': cls.currency_euro.id,
+                    'debit': 100.0,
+                    'credit': 0.0,
+                    'amount_currency': 200.0,
+                }),
+                (0, 0, {
+                    'account_id': cls.account.id,
+                    'currency_id': cls.currency_euro.id,
+                    'debit': 0.0,
+                    'credit': 100.0,
+                    'amount_currency': -200.0,
+                }),
+            ],
+        })
 
     #=== Utils ===#
 
@@ -172,3 +193,28 @@ class PaymentCommon(PaymentTestUtils):
         return self.env['payment.transaction'].sudo().search([
             ('reference', '=', reference),
         ])
+
+    def _prepare_transaction_values(self, payment_option_id, flow):
+        """ Prepare the basic payment/transaction route values.
+
+        :param int payment_option_id: The payment option handling the transaction, as a
+                                      `payment.acquirer` id or a `payment.token` id
+        :param str flow: The payment flow
+        :return: The route values
+        :rtype: dict
+        """
+        return {
+            'amount': self.amount,
+            'currency_id': self.currency.id,
+            'partner_id': self.partner.id,
+            'access_token': self._generate_test_access_token(
+                self.partner.id, self.amount, self.currency.id
+            ),
+            'payment_option_id': payment_option_id,
+            'reference_prefix': 'test',
+            'tokenization_requested': True,
+            'landing_route': 'Test',
+            'is_validation': False,
+            'invoice_id': self.invoice.id,
+            'flow': flow,
+        }

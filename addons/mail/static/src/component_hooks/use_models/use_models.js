@@ -12,6 +12,8 @@ export function useModels() {
     const component = useComponent();
     const { modelManager } = component.env.services.messaging;
     const listener = new Listener({
+        isLocking: false, // unfortunately __render has side effects such as children components updating their reference to their corresponding model
+        name: `useModels() of ${component}`,
         onChange: () => component.render(),
     });
     const __render = component.__render;

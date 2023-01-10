@@ -40,11 +40,11 @@ export class SwitchCompanyMenu extends Component {
 SwitchCompanyMenu.template = "web.SwitchCompanyMenu";
 SwitchCompanyMenu.toggleDelay = 1000;
 
-const systrayItem = {
+export const systrayItem = {
     Component: SwitchCompanyMenu,
     isDisplayed(env) {
         const { availableCompanies } = env.services.company;
-        return Object.keys(availableCompanies).length > 1 && !env.isSmall;
+        return Object.keys(availableCompanies).length > 1;
     },
 };
 

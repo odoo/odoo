@@ -184,6 +184,26 @@ function _areCssValuesEqual(value1, value2, cssProp, $target) {
         return value1 === value2;
     }
 
+    // In case the values are meant as box-shadow, this is difficult to compare.
+    // In this case we use the kinda hacky and probably inneficient but probably
+    // easiest way: applying the value as box-shadow of two fakes elements and
+    // compare their computed value.
+    if (cssProp === 'box-shadow') {
+        const temp1El = document.createElement('div');
+        temp1El.style.boxShadow = value1;
+        document.body.appendChild(temp1El);
+        value1 = getComputedStyle(temp1El).boxShadow;
+        document.body.removeChild(temp1El);
+
+        const temp2El = document.createElement('div');
+        temp2El.style.boxShadow = value2;
+        document.body.appendChild(temp2El);
+        value2 = getComputedStyle(temp2El).boxShadow;
+        document.body.removeChild(temp2El);
+
+        return value1 === value2;
+    }
+
     // Convert the second value in the unit of the first one and compare
     // floating values
     const data = _getNumericAndUnit(value1);
@@ -317,6 +337,19 @@ function _isColorGradient(value) {
     // FIXME duplicated in odoo-editor/utils.js
     return value && value.includes('-gradient(');
 }
+/**
+ * Returns the class of the element that matches the specified prefix.
+ *
+ * @private
+ * @param {Element} el element from which to recover the color class
+ * @param {string[]} colorNames
+ * @param {string} prefix prefix of the color class to recover
+ * @returns {string} color class matching the prefix or an empty string
+ */
+function _getColorClass(el, colorNames, prefix) {
+    const prefixedColorNames = _computeColorClasses(colorNames, prefix);
+    return el.classList.value.split(' ').filter(cl => prefixedColorNames.includes(cl)).join(' ');
+}
 
 return {
     CSS_SHORTHANDS: CSS_SHORTHANDS,
@@ -335,5 +368,6 @@ return {
     getBgImageURL: _getBgImageURL,
     backgroundImageCssToParts: _backgroundImageCssToParts,
     backgroundImagePartsToCss: _backgroundImagePartsToCss,
+    getColorClass: _getColorClass,
 };
 });

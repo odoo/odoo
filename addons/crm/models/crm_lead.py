@@ -154,7 +154,7 @@ class Lead(models.Model):
     recurring_revenue_monthly_prorated = fields.Monetary('Prorated MRR', currency_field='company_currency', store=True,
                                                compute="_compute_recurring_revenue_monthly_prorated",
                                                groups="crm.group_use_recurring_revenues")
-    company_currency = fields.Many2one("res.currency", string='Currency', related='company_id.currency_id', readonly=True)
+    company_currency = fields.Many2one("res.currency", string='Currency', compute="_compute_company_currency", readonly=True)
     # Dates
     date_closed = fields.Datetime('Closed Date', readonly=True, copy=False)
     date_action_last = fields.Datetime('Last Action', readonly=True)
@@ -195,7 +195,9 @@ class Lead(models.Model):
         ('correct', 'Correct'),
         ('incorrect', 'Incorrect')], string='Email Quality', compute="_compute_email_state", store=True)
     website = fields.Char('Website', index=True, help="Website of the contact", compute="_compute_website", readonly=False, store=True)
-    lang_id = fields.Many2one('res.lang', string='Language')
+    lang_id = fields.Many2one(
+        'res.lang', string='Language',
+        compute='_compute_lang_id', readonly=False, store=True)
     # Address fields
     street = fields.Char('Street', compute='_compute_partner_address_values', readonly=False, store=True)
     street2 = fields.Char('Street2', compute='_compute_partner_address_values', readonly=False, store=True)
@@ -254,6 +256,14 @@ class Lead(models.Model):
             else:
                 lead.user_company_ids = lead.company_id
 
+    @api.depends('company_id')
+    def _compute_company_currency(self):
+        for lead in self:
+            if not lead.company_id:
+                lead.company_currency = self.env.company.currency_id
+            else:
+                lead.company_currency = lead.company_id.currency_id
+
     @api.depends('user_id', 'type')
     def _compute_team_id(self):
         """ When changing the user, also set a team_id or restrict team id
@@ -269,26 +279,40 @@ class Lead(models.Model):
             team = self.env['crm.team']._get_default_team_id(user_id=user.id, domain=team_domain)
             lead.team_id = team.id
 
-    @api.depends('user_id', 'team_id')
+    @api.depends('user_id', 'team_id', 'partner_id')
     def _compute_company_id(self):
         """ Compute company_id coherency. """
         for lead in self:
             proposal = lead.company_id
 
-            # invalidate wrong configuration: company not in responsible companies or in team company if set
-            if proposal and lead.user_id and proposal not in lead.user_id.company_ids:
-                proposal = False
-            if proposal and lead.team_id.company_id and proposal != lead.team_id.company_id:
-                proposal = False
+            # invalidate wrong configuration
+            if proposal:
+                # company not in responsible companies
+                if lead.user_id and proposal not in lead.user_id.company_ids:
+                    proposal = False
+                # inconsistent
+                if lead.team_id.company_id and proposal != lead.team_id.company_id:
+                    proposal = False
+                # void company on team and no assignee
+                if lead.team_id and not lead.team_id.company_id and not lead.user_id:
+                    proposal = False
+                # no user and no team -> void company and let assignment do its job
+                # unless customer has a company
+                if not lead.team_id and not lead.user_id and \
+                   (not lead.partner_id or lead.partner_id.company_id != proposal):
+                    proposal = False
 
             # propose a new company based on responsible, limited by team
             if not proposal:
-                if not lead.user_id or lead.user_id == self.env.user:
-                    proposal = self.env.company
+                if lead.user_id and lead.team_id.company_id:
+                    proposal = lead.team_id.company_id
                 elif lead.user_id:
-                    proposal = lead.user_id.company_id
-
-                if lead.team_id.company_id and proposal != lead.team_id.company_id:
+                    proposal = lead.user_id.company_id & self.env.companies
+                elif lead.team_id:
+                    proposal = lead.team_id.company_id
+                elif lead.partner_id:
+                    proposal = lead.partner_id.company_id
+                else:
                     proposal = False
 
             # set a new company
@@ -378,6 +402,21 @@ class Lead(models.Model):
         for lead in self:
             if not lead.website or lead.partner_id.website:
                 lead.website = lead.partner_id.website
+
+    @api.depends('partner_id')
+    def _compute_lang_id(self):
+        """ compute the lang based on partner when partner_id has changed """
+        wo_lang = self.filtered(lambda lead: not lead.lang_id and lead.partner_id)
+        if not wo_lang:
+            return
+        # prepare cache
+        lang_codes = [code for code in wo_lang.mapped('partner_id.lang') if code]
+        lang_id_by_code = dict(
+            (code, self.env['res.lang']._lang_get_id(code))
+            for code in lang_codes
+        )
+        for lead in wo_lang:
+            lead.lang_id = lang_id_by_code.get(lead.partner_id.lang, False)
 
     @api.depends('partner_id')
     def _compute_partner_address_values(self):
@@ -590,6 +629,8 @@ class Lead(models.Model):
 
         # For other fields, get the info from the partner, but only if set
         values.update({f: partner[f] or self[f] for f in PARTNER_FIELDS_TO_SYNC})
+        if partner.lang:
+            values['lang_id'] = self.env['res.lang']._lang_get_id(partner.lang)
 
         # Fields with specific logic
         values.update(self._prepare_contact_name_from_partner(partner))
@@ -678,24 +719,37 @@ class Lead(models.Model):
         if vals.get('website'):
             vals['website'] = self.env['res.partner']._clean_website(vals['website'])
 
+        stage_updated, stage_is_won = vals.get('stage_id'), False
         # stage change: update date_last_stage_update
-        if 'stage_id' in vals:
-            stage_id = self.env['crm.stage'].browse(vals['stage_id'])
-            if stage_id.is_won:
+        if stage_updated:
+            stage = self.env['crm.stage'].browse(vals['stage_id'])
+            if stage.is_won:
                 vals.update({'probability': 100, 'automated_probability': 100})
+                stage_is_won = True
 
         # stage change with new stage: update probability and date_closed
         if vals.get('probability', 0) >= 100 or not vals.get('active', True):
             vals['date_closed'] = fields.Datetime.now()
-        elif 'probability' in vals:
+        elif vals.get('probability', 0) > 0:
+            vals['date_closed'] = False
+        elif stage_updated and not stage_is_won and not 'probability' in vals:
             vals['date_closed'] = False
 
         if any(field in ['active', 'stage_id'] for field in vals):
             self._handle_won_lost(vals)
 
-        write_result = super(Lead, self).write(vals)
+        if not stage_is_won:
+            return super(Lead, self).write(vals)
 
-        return write_result
+        # stage change between two won stages: does not change the date_closed
+        leads_already_won = self.filtered(lambda lead: lead.stage_id.is_won)
+        remaining = self - leads_already_won
+        if remaining:
+            result = super(Lead, remaining).write(vals)
+        if leads_already_won:
+            vals.pop('date_closed', False)
+            result = super(Lead, leads_already_won).write(vals)
+        return result
 
     @api.model
     def search(self, args, offset=0, limit=None, order=None, count=False):
@@ -795,17 +849,17 @@ class Lead(models.Model):
             if 'stage_id' in vals:
                 if vals['stage_id'] in won_stage_ids:
                     if lead.probability == 0:
-                        leads_leave_lost |= lead
-                    leads_reach_won |= lead
+                        leads_leave_lost += lead
+                    leads_reach_won += lead
                 elif lead.stage_id.id in won_stage_ids and lead.active:  # a lead can be lost at won_stage
-                    leads_leave_won |= lead
+                    leads_leave_won += lead
             if 'active' in vals:
                 if not vals['active'] and lead.active:  # archive lead
                     if lead.stage_id.id in won_stage_ids and lead not in leads_leave_won:
-                        leads_leave_won |= lead
-                    leads_reach_lost |= lead
+                        leads_leave_won += lead
+                    leads_reach_lost += lead
                 elif vals['active'] and not lead.active:  # restore lead
-                    leads_leave_lost |= lead
+                    leads_leave_lost += lead
 
         leads_reach_won._pls_increment_frequencies(to_state='won')
         leads_leave_won._pls_increment_frequencies(from_state='won')
@@ -829,6 +883,20 @@ class Lead(models.Model):
             default['recurring_revenue'] = 0
             default['recurring_plan'] = False
         return super(Lead, self.with_context(context)).copy(default=default)
+
+    def unlink(self):
+        """ Update meetings when removing opportunities, otherwise you have
+        a link to a record that does not lead anywhere. """
+        meetings = self.env['calendar.event'].search([
+            ('res_id', 'in', self.ids),
+            ('res_model', '=', self._name),
+        ])
+        if meetings:
+            meetings.write({
+                'res_id': False,
+                'res_model_id': False,
+            })
+        return super(Lead, self).unlink()
 
     @api.model
     def _fields_view_get(self, view_id=None, view_type='form', toolbar=False, submenu=False):
@@ -927,7 +995,7 @@ class Lead(models.Model):
             if not stage_id:
                 stage_id = next((stage for stage in reversed(won_stages) if stage.sequence <= lead.stage_id.sequence), won_stages)
             if stage_id in leads_by_won_stage:
-                leads_by_won_stage[stage_id] |= lead
+                leads_by_won_stage[stage_id] += lead
             else:
                 leads_by_won_stage[stage_id] = lead
         for won_stage_id, leads in leads_by_won_stage.items():
@@ -1028,6 +1096,7 @@ class Lead(models.Model):
             partner_ids.append(self.partner_id.id)
         current_opportunity_id = self.id if self.type == 'opportunity' else False
         action['context'] = {
+            'search_default_opportunity_id': current_opportunity_id,
             'default_opportunity_id': current_opportunity_id,
             'default_partner_id': self.partner_id.id,
             'default_partner_ids': partner_ids,
@@ -2050,7 +2119,7 @@ class Lead(models.Model):
         # - avoid blocking the table for too long with a too big transaction
         transactions_count, transactions_failed_count = 0, 0
         cron_update_lead_start_date = datetime.now()
-        auto_commit = not getattr(threading.currentThread(), 'testing', False)
+        auto_commit = not getattr(threading.current_thread(), 'testing', False)
         for probability, probability_lead_ids in probability_leads.items():
             for lead_ids_current in tools.split_every(PLS_UPDATE_BATCH_STEP, probability_lead_ids):
                 transactions_count += 1

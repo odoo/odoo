@@ -58,11 +58,33 @@ class StockAssignSerialNumbers(models.TransientModel):
         self.show_apply = self.produced_qty == self.expected_qty
         self.show_backorders = self.produced_qty > 0 and self.produced_qty < self.expected_qty
 
+    def _assign_serial_numbers(self, cancel_remaining_quantity=False):
+        serial_numbers = self._get_serial_numbers()
+        productions = self.production_id._split_productions(
+            {self.production_id: [1] * len(serial_numbers)}, cancel_remaining_quantity, set_consumed_qty=True)
+        production_lots_vals = []
+        for serial_name in serial_numbers:
+            production_lots_vals.append({
+                'product_id': self.production_id.product_id.id,
+                'company_id': self.production_id.company_id.id,
+                'name': serial_name,
+            })
+        production_lots = self.env['stock.production.lot'].create(production_lots_vals)
+        for production, production_lot in zip(productions, production_lots):
+            production.lot_producing_id = production_lot.id
+            production.qty_producing = production.product_qty
+            for workorder in production.workorder_ids:
+                workorder.qty_produced = workorder.qty_producing
+
+        if productions and len(production_lots) < len(productions):
+            productions[-1].move_raw_ids.move_line_ids.write({'qty_done': 0})
+            productions[-1].state = "confirmed"
+
     def apply(self):
-        self.production_id._generate_backorder_productions_multi(self._get_serial_numbers())
+        self._assign_serial_numbers()
 
     def create_backorder(self):
-        self.production_id._generate_backorder_productions_multi(self._get_serial_numbers(), False)
+        self._assign_serial_numbers(False)
 
     def no_backorder(self):
-        self.production_id._generate_backorder_productions_multi(self._get_serial_numbers(), True)
+        self._assign_serial_numbers(True)

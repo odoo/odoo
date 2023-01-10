@@ -107,10 +107,7 @@ class UserInputSession(http.Controller):
                 'session_question_id': next_question.id,
                 'session_question_start_time': fields.Datetime.now() + relativedelta(seconds=1)
             })
-            request.env['bus.bus'].sendone(survey.access_token, {
-                'question_start': now.timestamp(),
-                'type': 'next_question'
-            })
+            request.env['bus.bus']._sendone(survey.access_token, 'next_question', {'question_start': now.timestamp()})
 
             template_values = self._prepare_manage_session_values(survey)
             template_values['is_rpc_call'] = True

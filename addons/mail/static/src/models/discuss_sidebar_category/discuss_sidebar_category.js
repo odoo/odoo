@@ -1,8 +1,8 @@
 /** @odoo-module **/
 
 import { registerNewModel } from '@mail/model/model_core';
-import { attr, many2one, one2many, one2one } from '@mail/model/model_field';
-import { clear, insertAndReplace, link, replace } from '@mail/model/model_field_command';
+import { attr, one2many, one2one } from '@mail/model/model_field';
+import { clear, insertAndReplace, replace } from '@mail/model/model_field_command';
 import { OnChange } from '@mail/model/model_onchange';
 
 function factory(dependencies) {
@@ -78,7 +78,10 @@ function factory(dependencies) {
         _computeActiveItem() {
             const thread = this.messaging.discuss.thread;
             if (thread && this.supportedChannelTypes.includes(thread.channel_type)) {
-                return insertAndReplace({ channelId: thread.id });
+                return insertAndReplace({
+                    channel: replace(thread),
+                    category: replace(this),
+                });
             }
             return clear();
         }
@@ -87,30 +90,17 @@ function factory(dependencies) {
          * @private
          * @returns {mail.discuss_sidebar_category_item[]}
          */
-        _computeCategoryItems() {
-            let channels = this.selectedSortedChannels;
+        _computeFilteredCategoryItems() {
+            let categoryItems = this.categoryItems;
             const searchValue = this.messaging.discuss.sidebarQuickSearchValue;
             if (searchValue) {
                 const qsVal = searchValue.toLowerCase();
-                channels = channels.filter(t => {
-                    const nameVal = t.displayName.toLowerCase();
+                categoryItems = categoryItems.filter(categoryItem => {
+                    const nameVal = categoryItem.channel.displayName.toLowerCase();
                     return nameVal.includes(qsVal);
                 });
             }
-            return insertAndReplace(channels.map(c => ({ channelId: c.id })));
-        }
-
-        /**
-         * @private
-         * @returns {integer}
-         */
-        _computeCounter() {
-            switch (this.counterComputeMethod) {
-                case 'needaction':
-                    return this.selectedChannels.filter(thread => thread.message_needaction_counter > 0).length;
-                case 'unread':
-                    return this.selectedChannels.filter(thread => thread.localMessageUnreadCounter > 0).length;
-            }
+            return replace(categoryItems);
         }
 
         /**
@@ -123,70 +113,25 @@ function factory(dependencies) {
 
         /**
          * @private
-         * @returns {mail.thread[]}
+         * @returns {Array[]}
          */
-        _computeSelectedChannels() {
-            return replace(this.messaging.models['mail.thread'].all(thread =>
-                thread.model === 'mail.channel' &&
-                thread.isPinned &&
-                this.supportedChannelTypes.includes(thread.channel_type))
-            );
-        }
-
-        /**
-         *
-         * @private
-         * @returns {mail.thread[]}
-         */
-        _computeSelectedSortedChannels() {
+        _sortDefinitionCategoryItems() {
             switch (this.sortComputeMethod) {
                 case 'name':
-                    return replace(this._sortByDisplayName());
+                    return [
+                        ['defined-first', 'channel'],
+                        ['defined-first', 'channel.displayName'],
+                        ['case-insensitive-asc', 'channel.displayName'],
+                        ['smaller-first', 'channel.id'],
+                    ];
                 case 'last_action':
-                    return replace(this._sortByLastInterestDateTime());
+                    return [
+                        ['defined-first', 'channel'],
+                        ['defined-first', 'channel.lastInterestDateTime'],
+                        ['greater-first', 'channel.lastInterestDateTime'],
+                        ['greater-first', 'channel.id'],
+                    ];
             }
-        }
-
-        /**
-         * Sorts `selectedChannels` by `displayName` in
-         * case-insensitive alphabetical order.
-         *
-         * @private
-         * @returns {mail.thread[]}
-         */
-        _sortByDisplayName() {
-            return this.selectedChannels.sort((t1, t2) => {
-                if (t1.displayName && !t2.displayName) {
-                    return -1;
-                } else if (!t1.displayName && t2.displayName) {
-                    return 1;
-                } else if (t1.displayName && t2.displayName && t1.displayName !== t2.displayName) {
-                    return t1.displayName.toLowerCase() < t2.displayName.toLowerCase() ? -1 : 1;
-                } else {
-                    return t1.id - t2.id;
-                }
-            });
-        }
-
-        /**
-         * Sorts `selectedChannels` by `lastInterestDateTime`.
-         * The most recent one will come first.
-         *
-         * @private
-         * @returns {mail.thread[]}
-         */
-        _sortByLastInterestDateTime() {
-            return this.selectedChannels.sort((t1, t2) => {
-                if (t1.lastInterestDateTime && !t2.lastInterestDateTime) {
-                    return -1;
-                } else if (!t1.lastInterestDateTime && t2.lastInterestDateTime) {
-                    return 1;
-                } else if (t1.lastInterestDateTime && t2.lastInterestDateTime && t1.lastInterestDateTime !== t2.lastInterestDateTime) {
-                    return t2.lastInterestDateTime - t1.lastInterestDateTime;
-                } else {
-                    return t2.id - t1.id;
-                }
-            });
         }
 
         //--------------------------------------------------------------------------
@@ -302,24 +247,38 @@ function factory(dependencies) {
          */
         commandAddTitleText: attr(),
         /**
-         * The sorted category items which belong to the category.
-         * These items are also filtered by `sidebarQuickSearchValue`.
+         * Determines the discuss sidebar category items that are displayed by
+         * this discuss sidebar category.
          */
         categoryItems: one2many('mail.discuss_sidebar_category_item', {
-            compute: '_computeCategoryItems',
+            inverse: 'category',
+            isCausal: true,
+            sort: '_sortDefinitionCategoryItems',
         }),
         /**
-         * The total amount unread/action-needed threads in the category.
+         * States the total amount of unread/action-needed threads in this
+         * category.
          */
         counter: attr({
-            compute: '_computeCounter',
+            default: 0,
+            readonly: true,
+            sum: 'categoryItems.categoryCounterContribution',
+        }),
+        discussAsChannel: one2one('mail.discuss', {
+            inverse: 'categoryChannel',
+            readonly: true,
+        }),
+        discussAsChat: one2one('mail.discuss', {
+            inverse: 'categoryChat',
+            readonly: true,
         }),
         /**
-         * Determines how the counter of this category should be computed.
-         * Supported methods: 'needaction', 'unread'.
+         * Determines the filtered and sorted discuss sidebar category items
+         * that are displayed by this discuss sidebar category.
          */
-        counterComputeMethod: attr({
-            required: true,
+        filteredCategoryItems: one2many('mail.discuss_sidebar_category_item', {
+            compute: '_computeFilteredCategoryItems',
+            readonly: true,
         }),
         /**
          * Display name of the category.
@@ -366,22 +325,12 @@ function factory(dependencies) {
          */
         newItemPlaceholderText: attr(),
         /**
-         * Channels which belong to the category,
-         */
-        selectedChannels: one2many('mail.thread', {
-            compute: '_computeSelectedChannels',
-        }),
-        /**
-         * Channels which belongs to the category,
-         * and sorted based on the `supported_channel_type`.
-         */
-        selectedSortedChannels: one2many('mail.thread', {
-            compute: '_computeSelectedSortedChannels',
-        }),
-        /**
          * The key used in the server side for the category state
          */
-        serverStateKey: attr(),
+        serverStateKey: attr({
+            readonly: true,
+            required: true,
+        }),
         /**
          * Determines the sorting method of channels in this category.
          * Must be one of: 'name', 'last_action'.
@@ -397,6 +346,7 @@ function factory(dependencies) {
             readonly: true,
         }),
     };
+    DiscussSidebarCategory.identifyingFields = [['discussAsChannel', 'discussAsChat']];
     DiscussSidebarCategory.onChanges = [
         new OnChange({
             dependencies: ['isServerOpen'],

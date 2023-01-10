@@ -16,7 +16,7 @@ __path__ = [
 ]
 
 import sys
-assert sys.version_info > (3, 6), "Outdated python version detected, Odoo requires Python >= 3.6 to run."
+assert sys.version_info > (3, 7), "Outdated python version detected, Odoo requires Python >= 3.7 to run."
 
 #----------------------------------------------------------
 # Running mode flags (gevent, prefork)
@@ -100,7 +100,7 @@ def registry(database_name=None):
     """
     if database_name is None:
         import threading
-        database_name = threading.currentThread().dbname
+        database_name = threading.current_thread().dbname
     return modules.registry.Registry(database_name)
 
 #----------------------------------------------------------

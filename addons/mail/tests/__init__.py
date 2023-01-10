@@ -4,6 +4,7 @@
 from . import test_mail_channel
 from . import test_mail_channel_as_guest
 from . import test_mail_channel_partner
+from . import test_mail_composer
 from . import test_mail_full_composer
 from . import test_mail_render
 from . import test_mail_template

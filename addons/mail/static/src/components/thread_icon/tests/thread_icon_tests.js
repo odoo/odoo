@@ -69,14 +69,15 @@ QUnit.test('chat: correspondent is typing', async function (assert) {
 
     // simulate receive typing notification from demo "is typing"
     await afterNextRender(() => {
-        const typingData = {
-            info: 'typing_status',
-            is_typing: true,
-            partner_id: 17,
-            partner_name: "Demo",
-        };
-        const notification = [[false, 'mail.channel', 20], typingData];
-        this.widget.call('bus_service', 'trigger', 'notification', [notification]);
+        this.widget.call('bus_service', 'trigger', 'notification', [{
+            type: 'mail.channel.partner/typing_status',
+            payload: {
+                channel_id: 20,
+                is_typing: true,
+                partner_id: 17,
+                partner_name: "Demo",
+            },
+        }]);
     });
     assert.containsOnce(
         document.body,
@@ -91,14 +92,15 @@ QUnit.test('chat: correspondent is typing', async function (assert) {
 
     // simulate receive typing notification from demo "no longer is typing"
     await afterNextRender(() => {
-        const typingData = {
-            info: 'typing_status',
-            is_typing: false,
-            partner_id: 17,
-            partner_name: "Demo",
-        };
-        const notification = [[false, 'mail.channel', 20], typingData];
-        this.widget.call('bus_service', 'trigger', 'notification', [notification]);
+        this.widget.call('bus_service', 'trigger', 'notification', [{
+            type: 'mail.channel.partner/typing_status',
+            payload: {
+                channel_id: 20,
+                is_typing: false,
+                partner_id: 17,
+                partner_name: "Demo",
+            },
+        }]);
     });
     assert.containsOnce(
         document.body,

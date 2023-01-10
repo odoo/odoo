@@ -52,6 +52,11 @@ options.registry.Donation = options.Class.extend({
      */
     displayOptions(previewMode, widgetValue, params) {
         this.$target[0].dataset.displayOptions = widgetValue;
+        if (!widgetValue && this.$target[0].dataset.customAmount === "slider") {
+            this.$target[0].dataset.customAmount = "freeAmount";
+        } else if (widgetValue && !this.$target[0].dataset.prefilledOptions) {
+            this.$target[0].dataset.customAmount = "slider";
+        }
         this._rebuildPrefilledOptions();
     },
     /**
@@ -62,6 +67,9 @@ options.registry.Donation = options.Class.extend({
     togglePrefilledOptions(previewMode, widgetValue, params) {
         this.$target[0].dataset.prefilledOptions = widgetValue;
         this.$el.find('.o_we_prefilled_options_list').toggleClass('d-none', !widgetValue);
+        if (!widgetValue && this.$target[0].dataset.displayOptions) {
+            this.$target[0].dataset.customAmount = "slider";
+        }
         this._rebuildPrefilledOptions();
     },
     /**
@@ -176,6 +184,15 @@ options.registry.Donation = options.Class.extend({
             case 'setSliderStep': {
                 return this.$target[0].dataset.sliderStep;
             }
+        }
+        return this._super(...arguments);
+    },
+    /**
+     * @override
+     */
+    async _computeWidgetVisibility(widgetName, params) {
+        if (widgetName === 'free_amount_opt') {
+            return !(this.$target[0].dataset.displayOptions && !this.$target[0].dataset.prefilledOptions);
         }
         return this._super(...arguments);
     },

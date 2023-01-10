@@ -6,6 +6,7 @@ from odoo.addons.base.models.res_bank import sanitize_account_number
 from odoo.tools import remove_accents
 import logging
 import re
+import warnings
 
 _logger = logging.getLogger(__name__)
 
@@ -61,6 +62,7 @@ class AccountJournal(models.Model):
             ('bank', 'Bank'),
             ('general', 'Miscellaneous'),
         ], required=True,
+        inverse='_inverse_type',
         help="Select 'Sale' for customer invoices journals.\n"\
         "Select 'Purchase' for vendor bills journals.\n"\
         "Select 'Cash' or 'Bank' for journals that are used in customer or vendor payments.\n"\
@@ -83,7 +85,7 @@ class AccountJournal(models.Model):
              "allowing finding the right account.", string='Suspense Account',
         domain=lambda self: "[('deprecated', '=', False), ('company_id', '=', company_id), \
                              ('user_type_id.type', 'not in', ('receivable', 'payable')), \
-                             ('user_type_id', '=', %s)]" % self.env.ref('account.data_account_type_current_liabilities').id)
+                             ('user_type_id', '=', %s)]" % self.env.ref('account.data_account_type_current_assets').id)
     restrict_mode_hash_table = fields.Boolean(string="Lock Posted Entries with Hash",
         help="If ticked, the accounting entry or invoice receives a hash as soon as it is posted and cannot be modified anymore.")
     sequence = fields.Integer(help='Used to order Journals in the dashboard view', default=10)
@@ -170,7 +172,7 @@ class AccountJournal(models.Model):
                                                                   "Any file extension will be accepted.\n\n"
                                                                   "Only PDF and XML files will be interpreted by Odoo", copy=False)
     alias_domain = fields.Char('Alias domain', compute='_compute_alias_domain')
-    alias_name = fields.Char('Alias Name', copy=False, related='alias_id.alias_name', help="It creates draft invoices and bills by sending an email.", readonly=False)
+    alias_name = fields.Char('Alias Name', copy=False, compute='_compute_alias_name', inverse='_inverse_type', help="It creates draft invoices and bills by sending an email.", readonly=False)
 
     journal_group_ids = fields.Many2many('account.journal.group',
         domain="[('company_id', '=', company_id)]",
@@ -277,7 +279,7 @@ class AccountJournal(models.Model):
             else:
                 journal.default_account_type = False
 
-    @api.depends('type')
+    @api.depends('type', 'currency_id')
     def _compute_inbound_payment_method_line_ids(self):
         for journal in self:
             pay_method_line_ids_commands = [Command.clear()]
@@ -289,7 +291,7 @@ class AccountJournal(models.Model):
                 }) for pay_method in default_methods]
             journal.inbound_payment_method_line_ids = pay_method_line_ids_commands
 
-    @api.depends('type')
+    @api.depends('type', 'currency_id')
     def _compute_outbound_payment_method_line_ids(self):
         for journal in self:
             pay_method_line_ids_commands = [Command.clear()]
@@ -323,9 +325,18 @@ class AccountJournal(models.Model):
             else:
                 journal.suspense_account_id = False
 
+    def _inverse_type(self):
+        for record in self:
+            record._update_mail_alias()
+
     @api.depends('name')
     def _compute_alias_domain(self):
         self.alias_domain = self.env["ir.config_parameter"].sudo().get_param("mail.catchall.domain")
+
+    @api.depends('alias_id')
+    def _compute_alias_name(self):
+        for record in self:
+            record.alias_name = record.alias_id.alias_name
 
     @api.constrains('type_control_ids')
     def _constrains_type_control_ids(self):
@@ -353,6 +364,7 @@ class AccountJournal(models.Model):
             WHERE aml.journal_id in (%s)
             AND EXISTS (SELECT 1 FROM journal_account_control_rel rel WHERE rel.journal_id = aml.journal_id)
             AND NOT EXISTS (SELECT 1 FROM journal_account_control_rel rel WHERE rel.account_id = aml.account_id AND rel.journal_id = aml.journal_id)
+            AND aml.display_type IS NULL
         """, tuple(self.ids))
         if self._cr.fetchone():
             raise ValidationError(_('Some journal items already exist in this journal but with other accounts than the allowed ones.'))
@@ -413,8 +425,8 @@ class AccountJournal(models.Model):
                 JOIN account_journal journal on journal.id = apml.journal_id
                 JOIN res_company company on journal.company_id = company.id
                 WHERE apm.code in %s
-                GROUP BY 
-                    company.id, 
+                GROUP BY
+                    company.id,
                     apm.id
                 HAVING array_length(array_agg(journal.id), 1) > 1;
             ''', [unique_codes])
@@ -446,10 +458,22 @@ class AccountJournal(models.Model):
         self.refund_sequence = self.type in ('sale', 'purchase')
 
     def _get_alias_values(self, type, alias_name=None):
+        """ This function verifies that the user-given mail alias (or its fallback) doesn't contain non-ascii chars.
+            The fallbacks are the journal's name, code, or type - these are suffixed with the
+            company's name or id (in case the company's name is not ascii either).
+        """
+        def get_company_suffix():
+            if self.company_id != self.env.ref('base.main_company'):
+                try:
+                    remove_accents(self.company_id.name).encode('ascii')
+                    return '-' + str(self.company_id.name)
+                except UnicodeEncodeError:
+                    return '-' + str(self.company_id.id)
+            return ''
+
         if not alias_name:
             alias_name = self.name
-            if self.company_id != self.env.ref('base.main_company'):
-                alias_name += '-' + str(self.company_id.name)
+            alias_name += get_company_suffix()
         try:
             remove_accents(alias_name).encode('ascii')
         except UnicodeEncodeError:
@@ -458,6 +482,7 @@ class AccountJournal(models.Model):
                 safe_alias_name = self.code
             except UnicodeEncodeError:
                 safe_alias_name = self.type
+            safe_alias_name += get_company_suffix()
             _logger.warning("Cannot use '%s' as email alias, fallback to '%s'",
                 alias_name, safe_alias_name)
             alias_name = safe_alias_name
@@ -506,19 +531,24 @@ class AccountJournal(models.Model):
 
         return super(AccountJournal, self).copy(default)
 
-    def _update_mail_alias(self, vals):
+    def _update_mail_alias(self, vals=None):
+        if vals is not None:
+            warnings.warn(
+                '`vals` is a deprecated argument of `_update_mail_alias`',
+                DeprecationWarning,
+                stacklevel=2
+            )
         self.ensure_one()
-        alias_values = self._get_alias_values(type=vals.get('type') or self.type, alias_name=vals.get('alias_name'))
-        if self.alias_id:
-            self.alias_id.sudo().write(alias_values)
-        else:
-            alias_values['alias_model_id'] = self.env['ir.model']._get('account.move').id
-            alias_values['alias_parent_model_id'] = self.env['ir.model']._get('account.journal').id
-            self.alias_id = self.env['mail.alias'].sudo().create(alias_values)
-
-        if vals.get('alias_name'):
-            # remove alias_name to avoid useless write on alias
-            del(vals['alias_name'])
+        if self.type in ('purchase', 'sale'):
+            alias_values = self._get_alias_values(type=self.type, alias_name=self.alias_name)
+            if self.alias_id:
+                self.alias_id.sudo().write(alias_values)
+            else:
+                alias_values['alias_model_id'] = self.env['ir.model']._get('account.move').id
+                alias_values['alias_parent_model_id'] = self.env['ir.model']._get('account.journal').id
+                self.alias_id = self.env['mail.alias'].sudo().create(alias_values)
+        elif self.alias_id:
+            self.alias_id.unlink()
 
     def write(self, vals):
         for journal in self:
@@ -542,8 +572,6 @@ class AccountJournal(models.Model):
                     bank_account = self.env['res.partner.bank'].browse(vals['bank_account_id'])
                     if bank_account.partner_id != company.partner_id:
                         raise UserError(_("The partners of the journal's company and the related bank account mismatch."))
-            if 'alias_name' in vals:
-                journal._update_mail_alias(vals)
             if 'restrict_mode_hash_table' in vals and not vals.get('restrict_mode_hash_table'):
                 journal_entry = self.env['account.move'].search([('journal_id', '=', self.id), ('state', '=', 'posted'), ('secure_sequence_number', '!=', 0)], limit=1)
                 if len(journal_entry) > 0:
@@ -629,9 +657,9 @@ class AccountJournal(models.Model):
                 default_account_code = self.env['account.account']._search_new_account_code(company, digits, liquidity_account_prefix)
                 default_account_vals = self._prepare_liquidity_account_vals(company, default_account_code, vals)
                 vals['default_account_id'] = self.env['account.account'].create(default_account_vals).id
-            if journal_type == 'cash' and not has_profit_account:
+            if journal_type in ('cash', 'bank') and not has_profit_account:
                 vals['profit_account_id'] = company.default_cash_difference_income_account_id.id
-            if journal_type == 'cash' and not has_loss_account:
+            if journal_type in ('cash', 'bank') and not has_loss_account:
                 vals['loss_account_id'] = company.default_cash_difference_expense_account_id.id
 
         # === Fill missing refund_sequence ===
@@ -644,9 +672,6 @@ class AccountJournal(models.Model):
         self._fill_missing_values(vals)
 
         journal = super(AccountJournal, self.with_context(mail_create_nolog=True)).create(vals)
-
-        if 'alias_name' in vals:
-            journal._update_mail_alias(vals)
 
         # Create the bank_account_id if necessary
         if journal.type == 'bank' and not journal.bank_account_id and vals.get('bank_acc_number'):
@@ -784,7 +809,7 @@ class AccountJournal(models.Model):
         domain = (domain or []) + [
             ('account_id', 'in', tuple(self.default_account_id.ids)),
             ('display_type', 'not in', ('line_section', 'line_note')),
-            ('move_id.state', '!=', 'cancel'),
+            ('parent_state', '!=', 'cancel'),
         ]
         query = self.env['account.move.line']._where_calc(domain)
         tables, where_clause, where_params = query.get_sql()
@@ -849,7 +874,7 @@ class AccountJournal(models.Model):
         domain = (domain or []) + [
             ('account_id', 'in', tuple(accounts.ids)),
             ('display_type', 'not in', ('line_section', 'line_note')),
-            ('move_id.state', '!=', 'cancel'),
+            ('parent_state', '!=', 'cancel'),
             ('reconciled', '=', False),
             ('journal_id', '=', self.id),
         ]
@@ -917,3 +942,23 @@ class AccountJournal(models.Model):
             return self.inbound_payment_method_line_ids
         else:
             return self.outbound_payment_method_line_ids
+
+    def _is_payment_method_available(self, payment_method_code):
+        """ Check if the payment method is available on this journal. """
+        self.ensure_one()
+        pm_info = self.env['account.payment.method']._get_payment_method_information().get(payment_method_code)
+        if not pm_info:
+            return False
+        currency_ids = pm_info.get('currency_ids')
+        country_id = pm_info.get('country_id')
+        domain = pm_info.get('domain', [('type', 'in', ('bank', 'cash'))])
+        journal_types = next(right for left, operator, right in domain if left == 'type' and operator in ('in', '='))
+
+        journal_currency_id = self.currency_id.id or self.company_id.currency_id.id
+        if currency_ids and journal_currency_id not in currency_ids:
+            return False
+        if country_id and self.company_id.account_fiscal_country_id.id != country_id:
+            return False
+        if self.type not in journal_types:
+            return False
+        return True

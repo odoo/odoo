@@ -1,11 +1,10 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-import base64
-
 from .test_project_base import TestProjectCommon
+from odoo import Command
 from odoo.tools import mute_logger
-from odoo.modules.module import get_resource_path
+from odoo.addons.mail.tests.common import MockEmail
 
 
 EMAIL_TPL = """Return-Path: <whatever-2a840@postmaster.twitter.com>
@@ -34,12 +33,27 @@ Raoul Boitempoils
 Integrator at Agrolait"""
 
 
-class TestProjectFlow(TestProjectCommon):
+class TestProjectFlow(TestProjectCommon, MockEmail):
 
     def test_project_process_project_manager_duplicate(self):
+        Task = self.env['project.task'].with_context({'tracking_disable': True})
         pigs = self.project_pigs.with_user(self.user_projectmanager)
+        root_task = self.task_1
+        sub_task = Task.create({
+            'name': 'Sub Task',
+            'parent_id': root_task.id,
+            'project_id': self.project_pigs.id,
+        })
+        Task.create({
+            'name': 'Sub Sub Task',
+            'parent_id': sub_task.id,
+            'project_id': self.project_pigs.id,
+        })
         dogs = pigs.copy()
-        self.assertEqual(len(dogs.tasks), 2, 'project: duplicating a project must duplicate its tasks')
+        self.assertEqual(len(dogs.tasks), 4, 'project: duplicating a project must duplicate its tasks')
+        self.assertEqual(dogs.task_count, 2, 'project: duplicating a project must not change the original project')
+        self.assertEqual(pigs.task_count, 2, 'project: duplicating a project must duplicate its displayed tasks')
+        self.assertEqual(dogs.task_count_with_subtasks, 4, 'project: duplicating a project must duplicate its subtasks')
 
     @mute_logger('odoo.addons.mail.mail_thread')
     def test_task_process_without_stage(self):
@@ -297,3 +311,38 @@ class TestProjectFlow(TestProjectCommon):
                 self.project_pigs[field]
             except Exception as e:
                 raise AssertionError("Error raised unexpectedly while computing a field of the project ! Exception : " + e.args[0])
+
+    def test_send_rating_review(self):
+        project_settings = self.env["res.config.settings"].create({'group_project_rating': True})
+        project_settings.execute()
+        self.assertTrue(self.project_goats.rating_active, 'The customer ratings should be enabled in this project.')
+
+        won_stage = self.project_goats.type_ids[-1]
+        rating_request_mail_template = self.env.ref('project.rating_project_request_email_template')
+        won_stage.write({'rating_template_id': rating_request_mail_template.id})
+        tasks = self.env['project.task'].with_context(mail_create_nolog=True, default_project_id=self.project_goats.id).create([
+            {'name': 'Goat Task 1', 'user_ids': [Command.set([])]},
+            {'name': 'Goat Task 2', 'user_ids': [Command.link(self.user_projectuser.id)]},
+            {
+                'name': 'Goat Task 3',
+                'user_ids': [
+                    Command.link(self.user_projectmanager.id),
+                    Command.link(self.user_projectuser.id),
+                ],
+            },
+        ])
+
+        with self.mock_mail_gateway():
+            tasks.with_user(self.user_projectmanager).write({'stage_id': won_stage.id})
+
+        tasks.invalidate_cache(fnames=['rating_ids'])
+        for task in tasks:
+            self.assertEqual(len(task.rating_ids), 1, 'This task should have a generated rating when it arrives in the Won stage.')
+            rating_request_message = task.message_ids[:1]
+            if not task.user_ids or len(task.user_ids) > 1:
+                self.assertFalse(task.rating_ids.rated_partner_id, 'This rating should have no assigned user if the task related have no assignees or more than one assignee.')
+                self.assertEqual(rating_request_message.email_from, self.user_projectmanager.partner_id.email_formatted, 'The message should have the email of the Project Manager as email from.')
+            else:
+                self.assertEqual(task.rating_ids.rated_partner_id, task.user_ids.partner_id, 'The rating should have an assigned user if the task has only one assignee.')
+                self.assertEqual(rating_request_message.email_from, task.user_ids.partner_id.email_formatted, 'The message should have the email of the assigned user in the task as email from.')
+            self.assertTrue(self.partner_1 in rating_request_message.partner_ids, 'The customer of the task should be in the partner_ids of the rating request message.')

@@ -2,15 +2,12 @@
 
 from odoo import models, fields, api, _
 
-import werkzeug
-
 
 class ResPartnerBank(models.Model):
     _inherit = 'res.partner.bank'
 
-    def _get_qr_code_url(self, qr_method, amount, currency, debtor_partner, free_communication, structured_communication):
+    def _get_qr_vals(self, qr_method, amount, currency, debtor_partner, free_communication, structured_communication):
         if qr_method == 'sct_qr':
-
             comment = (free_communication or '') if not structured_communication else ''
 
             qr_code_vals = [
@@ -27,10 +24,19 @@ class ResPartnerBank(models.Model):
                 comment[:141],                                          # Remittance Information (Unstructured) (can't be set if there is a structured one)
                 '',                                                     # Beneficiary to Originator Information
             ]
+            return qr_code_vals
+        return super()._get_qr_vals(qr_method, amount, currency, debtor_partner, free_communication, structured_communication)
 
-            return '/report/barcode/?' + werkzeug.urls.url_encode({'type': 'QR', 'value': '\n'.join(qr_code_vals), 'width': 128, 'height': 128, 'humanreadable': 1})
-
-        return super()._get_qr_code_url(qr_method, amount, currency, debtor_partner, free_communication, structured_communication)
+    def _get_qr_code_generation_params(self, qr_method, amount, currency, debtor_partner, free_communication, structured_communication):
+        if qr_method == 'sct_qr':
+            return {
+                'barcode_type': 'QR',
+                'width': 128,
+                'height': 128,
+                'humanreadable': 1,
+                'value': '\n'.join(self._get_qr_vals(qr_method, amount, currency, debtor_partner, free_communication, structured_communication)),
+            }
+        return super()._get_qr_code_generation_params(qr_method, amount, currency, debtor_partner, free_communication, structured_communication)
 
     def _eligible_for_qr_code(self, qr_method, debtor_partner, currency):
         if qr_method == 'sct_qr':

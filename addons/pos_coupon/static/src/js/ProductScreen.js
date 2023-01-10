@@ -16,6 +16,27 @@ odoo.define('pos_coupon.ProductScreen', function (require) {
             _onCouponScan(code) {
                 this.currentOrder.activateCode(code.base_code);
             }
+            async _updateSelectedOrderline(event) {
+                const selectedLine = this.currentOrder.get_selected_orderline();
+                if (selectedLine && selectedLine.is_program_reward && event.detail.key === 'Backspace') {
+                    const program = this.env.pos.coupon_programs_by_id[selectedLine.program_id]
+                    const { confirmed } = await this.showPopup('ConfirmPopup', {
+                        title: this.env._t('Deactivating program'),
+                        body: _.str.sprintf(
+                            this.env._t('Are you sure you want to deactivate %s in this order?'),
+                            program.name
+                        ),
+                        cancelText: this.env._t('No'),
+                        confirmText: this.env._t('Yes'),
+                    });
+                    if (confirmed) {
+                        event.detail.buffer = null;
+                    } else {
+                        return; // do nothing on the line
+                    }
+                }
+                return super._updateSelectedOrderline(...arguments);
+            }
             /**
              * 1/ Perform the usual set value operation (super._setValue) if the line being modified
              * is not a reward line or if it is a reward line, the `val` being set is '' or 'remove' only.

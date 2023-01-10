@@ -72,6 +72,22 @@ var WebsiteAceEditor = AceEditor.extend({
     /**
      * @override
      */
+    _switchType(type) {
+        const ret = this._super(...arguments);
+
+        if (type === 'scss') {
+            // By default show the user_custom_rules.scss one as some people
+            // would write rules in user_custom_bootstrap_overridden.scss
+            // otherwise, not reading the comment inside explaining how that
+            // file should be used.
+            this._displayResource('/website/static/src/scss/user_custom_rules.scss');
+        }
+
+        return ret;
+    },
+    /**
+     * @override
+     */
     _resetResource: function () {
         return this._super.apply(this, arguments).then((function () {
             window.location.reload();

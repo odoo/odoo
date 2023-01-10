@@ -6,18 +6,6 @@ import { attr, one2many } from '@mail/model/model_field';
 function factory(dependencies) {
 
     class ActivityType extends dependencies['mail.model'] {
-
-        //----------------------------------------------------------------------
-        // Private
-        //----------------------------------------------------------------------
-
-        /**
-         * @override
-         */
-        static _createRecordLocalId(data) {
-            return `${this.modelName}_${data.id}`;
-        }
-
     }
 
     ActivityType.fields = {
@@ -26,10 +14,11 @@ function factory(dependencies) {
         }),
         displayName: attr(),
         id: attr({
+            readonly: true,
             required: true,
         }),
     };
-
+    ActivityType.identifyingFields = ['id'];
     ActivityType.modelName = 'mail.activity_type';
 
     return ActivityType;

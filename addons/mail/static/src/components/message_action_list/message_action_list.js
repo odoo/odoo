@@ -9,24 +9,22 @@ export class MessageActionList extends Component {
 
     setup() {
         super.setup();
-        useRefToModel({ fieldName: 'reactionPopoverRef', modelName: 'mail.message_action_list', propNameAsRecordLocalId: 'actionListLocalId', refName: 'reactionPopover' });
+        useRefToModel({ fieldName: 'reactionPopoverRef', modelName: 'mail.message_action_list', propNameAsRecordLocalId: 'messageActionListLocalId', refName: 'reactionPopover' });
         this.ADD_A_REACTION = this.env._t("Add a Reaction");
     }
 
     /**
      * @returns {mail.message}
      */
-    get actionList() {
-        return this.messaging && this.messaging.models['mail.message_action_list'].get(this.props.actionListLocalId);
+    get messageActionList() {
+        return this.messaging && this.messaging.models['mail.message_action_list'].get(this.props.messageActionListLocalId);
     }
 
 }
 
 Object.assign(MessageActionList, {
     props: {
-        actionListLocalId: String,
-        hasMarkAsReadIcon: Boolean,
-        hasReplyIcon: Boolean,
+        messageActionListLocalId: String,
     },
     template: "mail.MessageActionList",
 });

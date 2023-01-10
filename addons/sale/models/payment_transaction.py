@@ -3,6 +3,9 @@
 import logging
 import re
 
+from datetime import datetime
+from dateutil import relativedelta
+
 from odoo import api, fields, models, _, SUPERUSER_ID
 from odoo.tools import float_compare
 
@@ -98,16 +101,45 @@ class PaymentTransaction(models.Model):
         self._invoice_sale_orders()
         res = super()._reconcile_after_done()
         if self.env['ir.config_parameter'].sudo().get_param('sale.automatic_invoice') and any(so.state in ('sale', 'done') for so in self.sale_order_ids):
-            default_template = self.env['ir.config_parameter'].sudo().get_param('sale.default_invoice_email_template')
-            if default_template:
-                for trans in self.filtered(lambda t: t.sale_order_ids.filtered(lambda so: so.state in ('sale', 'done'))):
-                    trans = trans.with_company(trans.acquirer_id.company_id).with_context(
-                        mark_invoice_as_sent=True,
-                        company_id=trans.acquirer_id.company_id.id,
-                    )
-                    for invoice in trans.invoice_ids.with_user(SUPERUSER_ID):
-                        invoice.message_post_with_template(int(default_template), email_layout_xmlid="mail.mail_notification_paynow")
+            self.filtered(lambda t: t.sale_order_ids.filtered(lambda so: so.state in ('sale', 'done')))._send_invoice()
         return res
+
+    def _send_invoice(self):
+        default_template = self.env['ir.config_parameter'].sudo().get_param('sale.default_invoice_email_template')
+        if not default_template:
+            return
+
+        for trans in self:
+            trans = trans.with_company(trans.acquirer_id.company_id).with_context(
+                company_id=trans.acquirer_id.company_id.id,
+            )
+            invoice_to_send = trans.invoice_ids.filtered(
+                lambda i: not i.is_move_sent and i.state == 'posted' and i._is_ready_to_be_sent()
+            )
+            invoice_to_send.is_move_sent = True # Mark invoice as sent
+            for invoice in invoice_to_send.with_user(SUPERUSER_ID):
+                invoice.message_post_with_template(int(default_template), email_layout_xmlid="mail.mail_notification_paynow")
+
+    def _cron_send_invoice(self):
+        """
+            Cron to send invoice that where not ready to be send directly after posting
+        """
+        if not self.env['ir.config_parameter'].sudo().get_param('sale.automatic_invoice'):
+            return
+
+        # No need to retrieve old transactions
+        retry_limit_date = datetime.now() - relativedelta.relativedelta(days=2)
+        # Retrieve all transactions matching the criteria for post-processing
+        self.search([
+            ('state', '=', 'done'),
+            ('is_post_processed', '=', True),
+            ('invoice_ids', 'in', self.env['account.move']._search([
+                ('is_move_sent', '=', False),
+                ('state', '=', 'posted'),
+            ])),
+            ('sale_order_ids.state', 'in', ('sale', 'done')),
+            ('last_state_change', '>=', retry_limit_date),
+        ])._send_invoice()
 
     def _invoice_sale_orders(self):
         if self.env['ir.config_parameter'].sudo().get_param('sale.automatic_invoice'):
@@ -118,6 +150,10 @@ class PaymentTransaction(models.Model):
                 if confirmed_orders:
                     confirmed_orders._force_lines_to_invoice_policy_order()
                     invoices = confirmed_orders._create_invoices()
+                    # Setup access token in advance to avoid serialization failure between
+                    # edi postprocessing of invoice and displaying the sale order on the portal
+                    for invoice in invoices:
+                        invoice._portal_ensure_token()
                     trans.invoice_ids = [(6, 0, invoices.ids)]
 
     @api.model

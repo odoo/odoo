@@ -32,7 +32,7 @@ class TestSaleMrpProcurement(TransactionCase):
         product.categ_id = product_category_allproductssellable0
         product.list_price = 200.0
         product.name = 'Slider Mobile'
-        product.type = 'product'
+        product.detailed_type = 'product'
         product.uom_id = uom_unit
         product.uom_po_id = uom_unit
         product.route_ids.clear()
@@ -68,6 +68,9 @@ class TestSaleMrpProcurement(TransactionCase):
         # I verify that a manufacturing order has been generated, and that its name and reference are correct
         mo = self.env['mrp.production'].search([('origin', 'like', sale_order_so0.name)], limit=1)
         self.assertTrue(mo, 'Manufacturing order has not been generated')
+
+        # Check the mo is displayed on the so
+        self.assertEqual(mo.id, sale_order_so0.action_view_mrp_production()['res_id'])
 
     def test_sale_mrp_pickings(self):
         """ Test sale of multiple mrp products in MTO
@@ -161,6 +164,9 @@ class TestSaleMrpProcurement(TransactionCase):
         sale_order_so0 = so_form.save()
 
         sale_order_so0.action_confirm()
+
+        # Verify buttons are working as expected
+        self.assertEqual(sale_order_so0.mrp_production_count, 2, "User should see the correct number of manufacture orders in smart button")
 
         pickings = sale_order_so0.picking_ids
 

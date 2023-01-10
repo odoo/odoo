@@ -19,7 +19,7 @@
  * - value: this is the unicode representation of an emoji, i.e. its "true"
  *          representation in the system.
  */
-var data = {
+const data = {
     ":)":             "😊",
     ":-)":            "😊", // alternative (alt.)
     "=)":             "😊", // alt.
@@ -146,6 +146,6 @@ _.each(data, function (unicode, source) {
     }
 });
 
-var emojis = _.values(emojiDict);
+export const emojis = _.values(emojiDict);
 
 export default emojis;

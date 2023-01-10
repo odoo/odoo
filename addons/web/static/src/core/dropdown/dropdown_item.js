@@ -30,7 +30,9 @@ export class DropdownItem extends Component {
      * @param {MouseEvent} ev
      */
     onClick(ev) {
-        ev.preventDefault();
+        if (this.props.href){
+            ev.preventDefault();
+        }
 
         /** @type DropdownItemSelectedEventDetail */
         const detail = {

@@ -169,7 +169,7 @@ export function searchModelStateToLegacy(state) {
             case "filter":
                 let context = item.context;
                 try {
-                    context = makeContext(context);
+                    context = makeContext([context]);
                 } catch (e) {}
                 filter.context = context;
         }
@@ -228,9 +228,7 @@ export function mapDoActionOptionAPI(legacyOptions) {
         clearBreadcrumbs: legacyOptions.clear_breadcrumbs,
         viewType: legacyOptions.view_type,
         onClose: legacyOptions.on_close,
-        props: {
-            resId: legacyOptions.res_id,
-        },
+        props: Object.assign({ resId: legacyOptions.res_id }, legacyOptions.props),
     });
     if (legacyOptions.controllerState) {
         legacyOptions.props.globalState = getGlobalState(legacyOptions.controllerState);

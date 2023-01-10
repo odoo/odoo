@@ -120,9 +120,9 @@ odoo.define('web.CustomFilterItem', function (require) {
                     }
                     break;
                 case 'datetime':
-                    condition.value = [moment('00:00:00', 'hh:mm:ss')];
+                    condition.value = [moment('00:00:00', 'hh:mm:ss').utcOffset(0, true)];
                     if (operator.symbol === 'between') {
-                        condition.value.push(moment('23:59:59', 'hh:mm:ss'));
+                        condition.value.push(moment('23:59:59', 'hh:mm:ss').utcOffset(0, true));
                     }
                     break;
                 case 'selection':
@@ -168,6 +168,10 @@ odoo.define('web.CustomFilterItem', function (require) {
                         val => field_utils.format[type](val, { type }, { timezone: false })
                     );
                     descriptionArray.push(`"${dateValue.join(" " + this.env._t("and") + " ")}"`);
+                } else if (type === "selection") {
+                    domainValue = [condition.value];
+                    const formattedValue = field_utils.format[type](condition.value, field);
+                    descriptionArray.push(`"${formattedValue}"`);
                 } else {
                     domainValue = [condition.value];
                     descriptionArray.push(`"${condition.value}"`);

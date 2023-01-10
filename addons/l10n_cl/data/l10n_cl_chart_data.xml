@@ -944,6 +944,14 @@
         <field name="chart_template_id" ref="cl_chart_template"/>
     </record>
 
+    <record id="account_210715" model="account.account.template">
+        <field name="code">210715</field>
+        <field name="name">IVA Retenido a terceros</field>
+        <field ref="account.data_account_type_current_liabilities" name="user_type_id"/>
+        <field name="reconcile" eval="False"/>
+        <field name="chart_template_id" ref="cl_chart_template"/>
+    </record>
+
     <record id="account_210750" model="account.account.template">
         <field name="code">210750</field>
         <field name="name">Impuesto Renta 1a Categoría por Pagar</field>

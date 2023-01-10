@@ -26,7 +26,7 @@ class CustomerInherit(models.Model):
 
     currentDate = datetime.date.today()
 
-    @api.constrains('fg_birthdate')
+    @api.constrains('x_birthdate')
     def _check_value(self):
         if self.fg_birthdate >= self.currentDate:
             raise ValidationError(_('Birthdate should not be greater than current date.'))

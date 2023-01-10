@@ -2,36 +2,10 @@
 
 import { registerNewModel } from '@mail/model/model_core';
 import { one2many } from '@mail/model/model_field';
-import { link } from '@mail/model/model_field_command';
 
 function factory(dependencies) {
 
     class DialogManager extends dependencies['mail.model'] {
-
-        //----------------------------------------------------------------------
-        // Public
-        //----------------------------------------------------------------------
-
-        /**
-         * @param {string} modelName
-         * @param {Object} [recordData]
-         */
-        open(modelName, recordData) {
-            if (!modelName) {
-                throw new Error("Dialog should have a link to a model");
-            }
-            const Model = this.messaging.models[modelName];
-            if (!Model) {
-                throw new Error(`No model exists with name ${modelName}`);
-            }
-            const record = Model.create(recordData);
-            const dialog = this.messaging.models['mail.dialog'].create({
-                manager: link(this),
-                record: link(record),
-            });
-            return dialog;
-        }
-
     }
 
     DialogManager.fields = {
@@ -41,7 +15,7 @@ function factory(dependencies) {
             isCausal: true,
         }),
     };
-
+    DialogManager.identifyingFields = ['messaging'];
     DialogManager.modelName = 'mail.dialog_manager';
 
     return DialogManager;

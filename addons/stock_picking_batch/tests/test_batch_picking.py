@@ -359,3 +359,12 @@ class TestBatchPicking(TransactionCase):
 
         # final package location should be correctly set based on wizard
         self.assertEqual(package.location_id.id, self.customer_location.id)
+
+    def test_remove_all_transfers_from_confirmed_batch(self):
+        """
+            Check that the batch is canceled when all transfers are deleted
+        """
+        self.batch.action_confirm()
+        self.assertEqual(self.batch.state, 'in_progress', 'Batch Transfers should be in progress.')
+        self.batch.write({'picking_ids': [[5, 0, 0]]})
+        self.assertEqual(self.batch.state, 'cancel', 'Batch Transfers should be cancelled when there are no transfers.')

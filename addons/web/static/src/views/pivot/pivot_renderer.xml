@@ -47,13 +47,28 @@
     </t>
 
     <t t-name="web.PivotHeader" owl="1">
-        <th t-att-colspan="isXAxis ? cell.width : undefined" t-att-rowspan="isXAxis ? cell.height : undefined" t-att-class="{
+        <th
+            t-att-colspan="isXAxis ? cell.width : undefined"
+            t-att-rowspan="isXAxis ? cell.height : undefined"
+            t-att-class="{
                 o_pivot_header_cell_closed: cell.isLeaf,
                 o_pivot_header_cell_opened: !cell.isLeaf,
-            }" t-attf-style="{{ isXAxis ? undefined : 'padding-left: ' + getPadding(cell) + 'px;' }}" t-att-data-tooltip="cell.label" data-tooltip-position="right" t-on-click.prevent="onHeaderClick(cell, isXAxis ? 'col' : 'row')">
+            }"
+            t-attf-style="{{
+                isXAxis
+                    ? undefined
+                    : l10n.direction === 'ltr'
+                        ? 'padding-left: ' + getPadding(cell) + 'px;'
+                        : 'padding-right: ' + getPadding(cell) + 'px;'
+            }}"
+            t-att-data-tooltip="cell.label"
+            t-attf-data-tooltip-position="{{ l10n.direction === 'ltr' ? 'right' : 'left' }}"
+            t-on-click.prevent="onHeaderClick(cell, isXAxis ? 'col' : 'row')"
+        >
             <t t-if="cell.isLeaf and !cell.isFolded">
                 <PivotGroupByMenu
                     toggler="'parent'"
+                    position="isXAxis ? 'bottom-start' : 'bottom-end'"
                     cell="cell"
                     customGroupBys="model.metaData.customGroupBys"
                     showActiveItems="false"

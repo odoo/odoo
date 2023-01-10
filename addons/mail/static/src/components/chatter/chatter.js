@@ -2,6 +2,7 @@
 
 import { registerMessagingComponent } from '@mail/utils/messaging_component';
 import { useUpdate } from '@mail/component_hooks/use_update/use_update';
+import { useComponentToModel } from '@mail/component_hooks/use_component_to_model/use_component_to_model';
 import { useRefToModel } from '@mail/component_hooks/use_ref_to_model/use_ref_to_model';
 
 const { Component } = owl;
@@ -15,20 +16,13 @@ export class Chatter extends Component {
     constructor(...args) {
         super(...args);
         useUpdate({ func: () => this._update() });
+        useComponentToModel({ fieldName: 'component', modelName: 'mail.chatter', propNameAsRecordLocalId: 'chatterLocalId' });
         useRefToModel({ fieldName: 'threadRef', modelName: 'mail.chatter', propNameAsRecordLocalId: 'chatterLocalId', refName: 'thread' });
-        /**
-         * Reference of the composer. Useful to focus it.
-         */
-        this._composerRef = useRef('composer');
         /**
          * Reference of the scroll Panel (Real scroll element). Useful to pass the Scroll element to
          * child component to handle proper scrollable element.
          */
         this._scrollPanelRef = useRef('scrollPanel');
-        /**
-         * Reference of the message list. Useful to trigger the scroll event on it.
-         */
-        this._threadRef = useRef('thread');
         this.getScrollableElement = this.getScrollableElement.bind(this);
     }
 
@@ -76,13 +70,6 @@ export class Chatter extends Component {
         }
         if (this.chatter.thread) {
             this._notifyRendered();
-        }
-        if (this.chatter.isDoFocus) {
-            this.chatter.update({ isDoFocus: false });
-            const composer = this._composerRef.comp;
-            if (composer) {
-                composer.focus();
-            }
         }
     }
 

@@ -7,7 +7,7 @@
 
     <!-- Custom checkbox (material-design-like toggle) -->
     <t t-name="website.components.switch">
-        <label class="o_switch" t-att-for="id">
+        <label class="o_switch dropdown-item m-0" t-att-for="id">
             <input type="checkbox" t-att-id="id" t-att-checked="checked ? 'checked' : undefined"/>
             <span/>
             <div t-if="label"><t t-esc="label"/></div>

@@ -112,19 +112,22 @@ QUnit.test('thread notifications are re-ordered on receiving a new message', asy
     );
 
     await afterNextRender(() => {
-        const messageData = {
-            author_id: [7, "Demo User"],
-            body: "<p>New message !</p>",
-            date: "2020-03-23 10:00:00",
-            id: 44,
-            message_type: 'comment',
-            model: 'mail.channel',
-            record_name: 'Channel 2019',
-            res_id: 100,
-        };
-        this.widget.call('bus_service', 'trigger', 'notification', [
-            [['my-db', 'mail.channel', 100], messageData]
-        ]);
+        this.widget.call('bus_service', 'trigger', 'notification', [{
+            type: 'mail.channel/new_message',
+            payload: {
+                id: 100,
+                message: {
+                    author_id: [7, "Demo User"],
+                    body: "<p>New message !</p>",
+                    date: "2020-03-23 10:00:00",
+                    id: 44,
+                    message_type: 'comment',
+                    model: 'mail.channel',
+                    record_name: 'Channel 2019',
+                    res_id: 100,
+                },
+            },
+        }]);
     });
     assert.containsN(
         document.body,

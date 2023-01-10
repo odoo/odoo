@@ -123,13 +123,10 @@ class ResUsers(models.Model):
             invite_partner = user.create_uid.partner_id
             if invite_partner:
                 # notify invite user that new user is connected
-                title = _("%s connected", user.name)
-                message = _("This is their first connection. Wish them luck.")
-                self.env['bus.bus'].sendone(
-                    (self._cr.dbname, 'res.partner', invite_partner.id),
-                    {'type': 'user_connection', 'title': title,
-                     'message': message, 'partner_id': user.partner_id.id}
-                )
+                self.env['bus.bus']._sendone(invite_partner, 'res.users/connection', {
+                    'username': user.name,
+                    'partnerId': user.partner_id.id,
+                })
 
     def _create_user_from_template(self, values):
         template_user_id = literal_eval(self.env['ir.config_parameter'].sudo().get_param('base.template_portal_user_id', 'False'))

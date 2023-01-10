@@ -5335,4 +5335,220 @@ QUnit.module("Views", (hooks) => {
         // No separator should be displayed in the menu "Measures"
         assert.containsNone(pivot, ".o_cp_bottom_left .dropdown-menu div.dropdown-divider");
     });
+
+    QUnit.test(
+        "comparison with two groupbys: rows from reference period should be displayed",
+        async function (assert) {
+            assert.expect(3);
+
+            serverData.models.partner.records = [
+                { id: 1, date: "2021-10-10", product_id: 1, customer: 1 },
+                { id: 2, date: "2020-10-10", product_id: 2, customer: 1 },
+            ];
+            serverData.models.product.records = [
+                { id: 1, display_name: "A" },
+                { id: 2, display_name: "B" },
+            ];
+            serverData.models.customer.records = [{ id: 1, display_name: "P" }];
+
+            const pivot = await makeView({
+                type: "pivot",
+                resModel: "partner",
+                serverData,
+                arch: `
+                <pivot>
+                    <field name="customer" type="row"/>
+                    <field name="product_id" type="row"/>
+                </pivot>
+            `,
+                searchViewArch: `
+                <search>
+                    <filter name='date' date='date'/>
+                </search>
+            `,
+            });
+
+            // compare 2021 to 2020
+            await toggleFilterMenu(pivot);
+            await toggleMenuItem(pivot, "Date");
+            await toggleMenuItemOption(pivot, "Date", "2021");
+            await toggleComparisonMenu(pivot);
+            await toggleMenuItem(pivot, 0);
+
+            assert.deepEqual(
+                [...pivot.el.querySelectorAll("th")].slice(0, 6).map((el) => el.innerText),
+                ["", "Total", "Count", "2020", "2021", "Variation"],
+                "The col headers should be as expected"
+            );
+
+            assert.deepEqual(
+                [...pivot.el.querySelectorAll("th")].slice(6).map((el) => el.innerText),
+                ["Total", "P", "B", "A"],
+                "The row headers should be as expected"
+            );
+
+            const values = ["1", "1", "0%", "1", "1", "0%", "1", "0", "-100%", "0", "1", "100%"];
+            assert.strictEqual(getCurrentValues(pivot), values.join());
+        }
+    );
+
+    QUnit.test("pivot_row_groupby should be also used after first load", async function (assert) {
+        const ids = [1, 2];
+        const expectedContexts = [
+            {
+                group_by: ["bar"],
+                pivot_column_groupby: [],
+                pivot_measures: ["__count"],
+                pivot_row_groupby: ["product_id"],
+            },
+            {
+                group_by: ["bar", "customer"],
+                pivot_column_groupby: [],
+                pivot_measures: ["__count"],
+                pivot_row_groupby: ["customer"],
+            },
+        ];
+
+        const pivot = await makeView({
+            type: "pivot",
+            resModel: "partner",
+            serverData,
+            arch: `<pivot/>`,
+            searchViewArch: `
+                <search>
+                    <filter name='product_id' string="Product" context="{'group_by':'product_id'}"/>
+                    <filter name='customer' string="Customer" context="{'group_by':'customer'}"/>
+                </search>
+            `,
+            groupBy: ["bar"],
+            mockRPC(route, args) {
+                if (args.method === "create_or_replace") {
+                    assert.deepEqual(args.args[0].context, expectedContexts.shift());
+                    return ids.shift();
+                }
+            },
+        });
+
+        assert.deepEqual(
+            [...pivot.el.querySelectorAll("th")].slice(3).map((el) => el.innerText),
+            ["Total", "true", "Undefined"],
+            "The row headers should be as expected"
+        );
+
+        await click(pivot.el.querySelector("tbody th")); // click on row header "Total"
+        await click(pivot.el.querySelector("tbody th")); // click on row header "Total"
+        await click(pivot.el.querySelector("tbody .o_group_by_menu .o_menu_item")); // select "Product"
+
+        assert.deepEqual(
+            [...pivot.el.querySelectorAll("th")].slice(3).map((el) => el.innerText),
+            ["Total", "xphone", "xpad"],
+            "The row headers should be as expected"
+        );
+
+        await toggleFavoriteMenu(pivot);
+        await toggleSaveFavorite(pivot);
+        await editFavoriteName(pivot, "Favorite");
+        await saveFavorite(pivot);
+
+        assert.deepEqual(
+            [...pivot.el.querySelectorAll("th")].slice(3).map((el) => el.innerText),
+            ["Total", "xphone", "xpad"],
+            "The row headers should be as expected"
+        );
+
+        await removeFacet(pivot);
+
+        assert.deepEqual(
+            [...pivot.el.querySelectorAll("th")].slice(3).map((el) => el.innerText),
+            ["Total", "true", "Undefined"],
+            "The row headers should be as expected"
+        );
+
+        await toggleFavoriteMenu(pivot);
+        await toggleMenuItem(pivot, "Favorite");
+
+        assert.deepEqual(
+            [...pivot.el.querySelectorAll("th")].slice(3).map((el) => el.innerText),
+            ["Total", "xphone", "xpad"],
+            "The row headers should be as expected"
+        );
+
+        await toggleGroupByMenu(pivot);
+        await toggleMenuItem(pivot, "Customer");
+
+        assert.deepEqual(
+            [...pivot.el.querySelectorAll("th")].slice(3).map((el) => el.innerText),
+            ["Total", "xphone", "First", "xpad", "Second", "First"],
+            "The row headers should be as expected"
+        );
+
+        await click(pivot.el.querySelector("tbody th")); // click on row header "Total"
+        await click(pivot.el.querySelector("tbody th")); // click on row header "Total"
+        await click(pivot.el.querySelectorAll("tbody .o_group_by_menu .o_menu_item")[1]); // select "Customer"
+
+        assert.deepEqual(
+            [...pivot.el.querySelectorAll("th")].slice(3).map((el) => el.innerText),
+            ["Total", "First", "Second"],
+            "The row headers should be as expected"
+        );
+
+        await toggleFavoriteMenu(pivot);
+        await toggleSaveFavorite(pivot);
+        await editFavoriteName(pivot, "Favorite 2");
+        await saveFavorite(pivot);
+
+        assert.deepEqual(
+            [...pivot.el.querySelectorAll("th")].slice(3).map((el) => el.innerText),
+            ["Total", "First", "Second"],
+            "The row headers should be as expected"
+        );
+    });
+
+    QUnit.test(
+        "pivot_row_groupby should be also used after first load (2)",
+        async function (assert) {
+            const pivot = await makeView({
+                serverData,
+                type: "pivot",
+                resModel: "partner",
+                groupBy: ["product_id"],
+                arch: `<pivot/>`,
+                irFilters: [
+                    {
+                        user_id: [2, "Mitchell Admin"],
+                        name: "Favorite",
+                        id: 1,
+                        context: `
+                            {
+                                "group_by": [],
+                                "pivot_row_groupby": ["customer"],
+                                "pivot_col_groupby": [],
+                                "pivot_measures": ["foo"],
+                            }
+                        `,
+                        sort: "[]",
+                        domain: "",
+                        is_default: false,
+                        model_id: "foo",
+                        action_id: false,
+                    },
+                ],
+            });
+
+            assert.deepEqual(
+                [...pivot.el.querySelectorAll("th")].slice(3).map((el) => el.innerText),
+                ["Total", "xphone", "xpad"],
+                "The row headers should be as expected"
+            );
+
+            await toggleFavoriteMenu(pivot);
+            await toggleMenuItem(pivot, "Favorite");
+
+            assert.deepEqual(
+                [...pivot.el.querySelectorAll("th")].slice(3).map((el) => el.innerText),
+                ["Total", "First", "Second"],
+                "The row headers should be as expected"
+            );
+        }
+    );
 });

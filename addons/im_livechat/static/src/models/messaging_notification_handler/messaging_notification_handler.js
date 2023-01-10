@@ -25,10 +25,9 @@ registerInstancePatchModel('mail.messaging_notification_handler', 'im_livechat/s
     /**
      * @override
      */
-    _handleNotificationChannelTypingStatus(channelId, data) {
-        const { partner_id, partner_name } = data;
+    _handleNotificationChannelPartnerTypingStatus({ channel_id, is_typing, livechat_username, partner_id, partner_name }) {
         const channel = this.messaging.models['mail.thread'].findFromIdentifyingData({
-            id: channelId,
+            id: channel_id,
             model: 'mail.channel',
         });
         if (!channel) {
@@ -45,9 +44,20 @@ registerInstancePatchModel('mail.messaging_notification_handler', 'im_livechat/s
             partnerId = partner_id;
             partnerName = partner_name;
         }
-        this._super(channelId, Object.assign(data, {
+        const data = {
+            channel_id,
+            is_typing,
             partner_id: partnerId,
             partner_name: partnerName,
-        }));
+        };
+        if (livechat_username) {
+            // flux specific, livechat_username is returned instead of name for livechat channels
+            delete data.partner_name; // value still present for API compatibility in stable
+            this.models['mail.partner'].insert({
+                id: partnerId,
+                livechat_username: livechat_username,
+            });
+        }
+        this._super(data);
     },
 });

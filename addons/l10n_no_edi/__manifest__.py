@@ -6,13 +6,14 @@
     'category': 'Accounting/Localizations/EDI',
     'summary': 'E-Invoicing, Universal Business Language (EHF 3)',
     'description': """
-EHF 3 is the Norvegian implementation of EN 16931 norm.
+EHF 3 is the Norwegian implementation of EN 16931 norm.
     """,
     'depends': ['l10n_no', 'account_edi_ubl_bis3'],
     'data': [
         'data/account_edi_data.xml',
         'data/ehf_3_template.xml',
     ],
+    'post_init_hook': '_post_init_hook',
     'installable': True,
     'auto_install': True,
     'license': 'LGPL-3',

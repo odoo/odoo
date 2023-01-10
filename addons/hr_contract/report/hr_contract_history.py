@@ -111,7 +111,7 @@ class ContractHistory(models.Model):
             RIGHT JOIN hr_employee AS employee
                 ON  contract_information.employee_id = employee.id
                 AND contract.company_id = employee.company_id
-            WHERE   employee.employee_type IN ('employee', 'student')
+            WHERE   employee.employee_type IN ('employee', 'student', 'trainee')
         )""" % (self._table, self._get_fields()))
 
     @api.depends('employee_id.contract_ids')

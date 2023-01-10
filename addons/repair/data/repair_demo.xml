@@ -9,6 +9,7 @@
     </record>
 
     <record id="repair_r1" model="repair.order">
+        <field name="schedule_date" eval="DateTime.today()"/>
         <field name="address_id" ref="base.res_partner_address_1"/>
         <field name="guarantee_limit" eval="datetime.today().strftime('%Y-%m-%d')"/>
         <field name="invoice_method">none</field>
@@ -41,6 +42,7 @@
     </record>
 
     <record id="repair_r0" model="repair.order">
+        <field name="schedule_date" eval="DateTime.today()"/>
         <field name="product_id" ref="product.product_product_5"/>
         <field name="product_uom" ref="uom.product_uom_unit"/>
         <field name="address_id" ref="base.res_partner_address_1"/>
@@ -73,6 +75,8 @@
     </record>
 
     <record id="repair_r2" model="repair.order">
+        <field name="priority">1</field>
+        <field name="schedule_date" eval="DateTime.today() + relativedelta(days=-5)"/>
         <field name="product_id" ref="product.product_product_6"/>
         <field name="product_uom" ref="uom.product_uom_unit"/>
         <field name="address_id" ref="base.res_partner_address_1"/>

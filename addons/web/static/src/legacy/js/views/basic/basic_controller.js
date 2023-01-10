@@ -11,6 +11,7 @@ var AbstractController = require('web.AbstractController');
 var core = require('web.core');
 var Dialog = require('web.Dialog');
 var FieldManagerMixin = require('web.FieldManagerMixin');
+var {Markup} = require('web.utils');
 var TranslationDialog = require('web.TranslationDialog');
 
 var _t = core._t;
@@ -592,9 +593,8 @@ var BasicController = AbstractController.extend(FieldManagerMixin, {
         warnings.push('</ul>');
         this.displayNotification({
             title: _t("Invalid fields:"),
-            message: warnings.join(''),
+            message: Markup(warnings.join('')),
             type: 'danger',
-            messageIsHtml: true, // dynamic parts of the message are escaped above
         });
     },
     /**

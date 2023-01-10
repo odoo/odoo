@@ -12,5 +12,5 @@ class PurchaseOrder(models.Model):
         super()._onchange_requisition_id()
         if self.requisition_id and self.requisition_id.procurement_group_id:
             self.group_id = self.requisition_id.procurement_group_id.id
-            if self.group_id.sale_id.partner_id:
-                self.dest_address_id = self.group_id.sale_id.partner_id.id
+            if self.group_id.sale_id.partner_shipping_id:
+                self.dest_address_id = self.group_id.sale_id.partner_shipping_id.id

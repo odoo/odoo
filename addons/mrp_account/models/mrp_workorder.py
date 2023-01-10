@@ -33,7 +33,7 @@ class MrpWorkorder(models.Model):
             'account_id': account.id,
             'unit_amount': unit_amount,
             'product_id': self.product_id.id,
-            'product_uom_id': self.product_id.uom_id.id,
+            'product_uom_id': self.env.ref('uom.product_uom_hour').id,
             'company_id': self.company_id.id,
             'ref': self.production_id.name,
             'category': 'manufacturing_order',

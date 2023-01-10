@@ -83,7 +83,7 @@ class PosConfig(models.Model):
     restrict_price_control = fields.Boolean(string='Restrict Price Modifications to Managers',
         help="Only users with Manager access rights for PoS app can modify the product prices on orders.")
     cash_control = fields.Boolean(string='Advanced Cash Control', compute='_compute_cash_control', help="Check the amount of the cashbox at opening and closing.")
-    set_maximum_difference = fields.Boolean('Set Maximum Difference', help="Set a maximum difference allowed between the expected and counted cash during the closing of the session.")
+    set_maximum_difference = fields.Boolean('Set Maximum Difference', help="Set a maximum difference allowed between the expected and counted money during the closing of the session.")
     receipt_header = fields.Text(string='Receipt Header', help="A short text that will be inserted as a header in the printed receipt.")
     receipt_footer = fields.Text(string='Receipt Footer', help="A short text that will be inserted as a footer in the printed receipt.")
     proxy_ip = fields.Char(string='IP Address', size=45,
@@ -280,7 +280,7 @@ class PosConfig(models.Model):
         for config in self:
             if config.cash_rounding and config.rounding_method.strategy != 'add_invoice_line':
                 selection_value = "Add a rounding line"
-                for key, val in self.env["account.cash.rounding"]._fields["stategy"]._description_selection(config.env):
+                for key, val in self.env["account.cash.rounding"]._fields["strategy"]._description_selection(config.env):
                     if key == "add_invoice_line":
                         selection_value = val
                         break
@@ -338,6 +338,14 @@ class PosConfig(models.Model):
             raise ValidationError(
                 _("You must have at least one payment method configured to launch a session.")
             )
+
+    @api.constrains('pricelist_id', 'available_pricelist_ids')
+    def _check_pricelists(self):
+        self._check_companies()
+        self = self.sudo()
+        if self.pricelist_id.company_id and self.pricelist_id.company_id != self.company_id:
+            raise ValidationError(
+                _("The default pricelist must belong to no company or the company of the point of sale."))
 
     @api.constrains('company_id', 'available_pricelist_ids')
     def _check_companies(self):
@@ -524,7 +532,8 @@ class PosConfig(models.Model):
          }
 
     def _force_http(self):
-        if self.other_devices:
+        enforce_https = self.env['ir.config_parameter'].sudo().get_param('point_of_sale.enforce_https')
+        if not enforce_https and self.other_devices:
             return True
         return False
 
@@ -557,6 +566,7 @@ class PosConfig(models.Model):
         """
         self.ensure_one()
         if not self.current_session_id:
+            self._check_pricelists()
             self._check_company_journal()
             self._check_company_invoice_journal()
             self._check_company_payment()
@@ -578,6 +588,7 @@ class PosConfig(models.Model):
         return self._open_session(self.current_session_id.id)
 
     def _open_session(self, session_id):
+        self._check_pricelists()  # The pricelist company might have changed after the first opening of the session
         return {
             'name': _('Session'),
             'view_mode': 'form,tree',
@@ -668,29 +679,39 @@ class PosConfig(models.Model):
             else:
                 pos_config.write({'module_account': False})
 
-    def get_limited_products_loading(self):
-        self.env.cr.execute("""
-            WITH pm AS
-            (
-                     SELECT   product_id,
-                              Max(write_date) date
-                     FROM     stock_quant
-                     GROUP BY product_id)
-            SELECT    p.id
-            FROM      product_product p
-            LEFT JOIN product_template t
-            ON        (
-                                product_tmpl_id=t.id)
-            LEFT JOIN pm
-            ON        (
-                                p.id=pm.product_id)
-            WHERE     p.active
-            AND       t.available_in_pos
-            ORDER BY  t.priority DESC,
+    def get_limited_products_loading(self, fields):
+        query = """
+            WITH pm AS (
+                  SELECT product_id,
+                         Max(write_date) date
+                    FROM stock_quant
+                GROUP BY product_id
+            )
+               SELECT p.id
+                 FROM product_product p
+            LEFT JOIN product_template t ON product_tmpl_id=t.id
+            LEFT JOIN pm ON p.id=pm.product_id
+                WHERE (
+                        t.available_in_pos
+                    AND t.sale_ok
+                    AND (t.company_id=%(company_id)s OR t.company_id IS NULL)
+                    AND %(available_categ_ids)s IS NULL OR t.pos_categ_id=ANY(%(available_categ_ids)s)
+                )    OR p.id=%(tip_product_id)s
+             ORDER BY t.priority DESC,
                       t.detailed_type DESC,
-                      COALESCE(pm.date,p.write_date) DESC limit %s
-        """, [str(self.limited_products_amount)])
-        return self.env.cr.fetchall()
+                      COALESCE(pm.date,p.write_date) DESC 
+                LIMIT %(limit)s
+        """
+        params = {
+            'company_id': self.company_id.id,
+            'available_categ_ids': self.iface_available_categ_ids.mapped('id') if self.iface_available_categ_ids else None,
+            'tip_product_id': self.tip_product_id.id if self.tip_product_id else None,
+            'limit': self.limited_products_amount
+        }
+        self.env.cr.execute(query, params)
+        product_ids = self.env.cr.fetchall()
+        products = self.env['product.product'].search_read([('id', 'in', product_ids)], fields=fields)
+        return products
 
     def get_limited_partners_loading(self):
         self.env.cr.execute("""

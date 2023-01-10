@@ -201,7 +201,7 @@ class IrModel(models.Model):
         self.count = 0
         for model in self:
             records = self.env[model.model]
-            if not records._abstract:
+            if not records._abstract and records._auto:
                 cr.execute(sql.SQL('SELECT COUNT(*) FROM {}').format(sql.Identifier(records._table)))
                 model.count = cr.fetchone()[0]
 
@@ -1435,6 +1435,8 @@ class IrModelSelection(models.Model):
             elif ondelete == 'set default':
                 value = field.convert_to_write(field.default(Model), Model)
                 safe_write(selection._get_records(), field.name, value)
+            elif ondelete.startswith('set '):
+                safe_write(selection._get_records(), field.name, ondelete[4:])
             elif ondelete == 'cascade':
                 selection._get_records().unlink()
             else:
@@ -2192,6 +2194,10 @@ class IrModelData(models.Model):
         module_data.unlink()
 
     @api.model
+    def _process_end_unlink_record(self, record):
+        record.unlink()
+
+    @api.model
     def _process_end(self, modules):
         """ Clear records removed from updated module data.
         This method is called at the end of the module loading process.
@@ -2260,7 +2266,7 @@ class IrModelData(models.Model):
             if record.exists():
                 module = xmlid.split('.', 1)[0]
                 record = record.with_context(module=module)
-                record.unlink()
+                self._process_end_unlink_record(record)
             else:
                 bad_imd_ids.append(id)
         if bad_imd_ids:
@@ -2276,7 +2282,7 @@ class IrModelData(models.Model):
         """ Toggle the noupdate flag on the external id of the record """
         record = self.env[model].browse(res_id)
         if record.check_access_rights('write'):
-            for xid in  self.search([('model', '=', model), ('res_id', '=', res_id)]):
+            for xid in self.search([('model', '=', model), ('res_id', '=', res_id)]):
                 xid.noupdate = not xid.noupdate
 
 

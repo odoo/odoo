@@ -89,7 +89,7 @@
         }
 
         .o_or_filter {
-            @include o-position-absolute($left: $dropdown-item-padding-x*.5);
+            @include o-position-absolute($left: $dropdown-item-padding-x*.2);
         }
 
         .o_generator_menu_value {
@@ -102,16 +102,10 @@
         }
 
         .o_generator_menu_delete {
-            @include o-hover-opacity;
-
-            &:before {
-                @include o-position-absolute(0, 0, 0, 0);
-                pointer-events: none;
-                z-index: -1;
-                content: "";
-            }
-
-            &:hover:before {
+            @include o-hover-opacity(0.8, 1);
+            @include o-position-absolute($dropdown-item-padding-x*.3, $dropdown-item-padding-x*.2, auto, auto);
+            
+            &:hover {
                 background-color: gray('100');
             }
         }

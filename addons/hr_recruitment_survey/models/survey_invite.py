@@ -1,23 +1,30 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import fields, models, _
+from odoo.tools.misc import clean_context
 
 
 class SurveyInvite(models.TransientModel):
     _inherit = "survey.invite"
 
-    applicant_id = fields.Many2one('hr.applicant', string='Applicant', default=lambda self: self.env.context.get('active_id', None))
+    applicant_id = fields.Many2one('hr.applicant', string='Applicant')
 
     def action_invite(self):
         self.ensure_one()
+        if self.applicant_id:
+            survey = self.survey_id.with_context(clean_context(self.env.context))
 
-        if not self.applicant_id.response_id:
-            response = self.applicant_id.survey_id._create_answer(partner=self.applicant_id.partner_id)
-            self.applicant_id.response_id = response.id
+            if not self.applicant_id.response_id:
+                self.applicant_id.write({
+                    'response_id': survey._create_answer(partner=self.applicant_id.partner_id).id
+                })
 
-        body = _('The survey has been sent to "%s".', self.applicant_id.partner_name)
-        self.applicant_id.message_post(body=body)
-
+            partner = self.applicant_id.partner_id
+            survey_link = '<a href="#" data-oe-model="%s" data-oe-id="%s">%s</a>' % (survey._name, survey.id, survey.title)
+            partner_link = '<a href="#" data-oe-model="%s" data-oe-id="%s">%s</a>' % (partner._name, partner.id, partner.name)
+            content = _('The survey %(survey_link)s has been sent to %(partner_link)s', survey_link=survey_link, partner_link=partner_link)
+            body = '<p>%s</p>' % content
+            self.applicant_id.message_post(body=body)
         return super().action_invite()
 
 

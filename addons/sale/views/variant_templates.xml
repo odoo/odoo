@@ -29,24 +29,7 @@
                                     t-att-data-is_single="single"
                                     t-att-data-is_single_and_custom="single_and_custom">
                                     <span t-field="ptav.name"/>
-                                    <span t-if="ptav.price_extra" class="badge badge-pill badge-secondary">
-                                        <!--
-                                            price_extra is displayed as catalog price instead of
-                                            price after pricelist because it is impossible to
-                                            compute. Indeed, the pricelist rule might depend on the
-                                            selected variant, so the price_extra will be different
-                                            depending on the selected combination. The price of an
-                                            attribute is therefore variable and it's not very
-                                            accurate to display it.
-                                            -->
-                                        <t t-esc="ptav.price_extra > 0 and '+' or '-'"/>
-                                        <span t-esc="abs(ptav.price_extra)" class="variant_price_extra" style="white-space: nowrap;"
-                                            t-options='{
-                                                "widget": "monetary",
-                                                "from_currency": product.currency_id,
-                                                "display_currency": (pricelist or product).currency_id
-                                            }'/>
-                                    </span>
+                                    <t t-call="sale.badge_extra_price"/>
                                 </option>
                             </t>
                         </select>
@@ -133,13 +116,25 @@
         </ul>
     </template>
     <template id="badge_extra_price" name="Badge Extra Price">
-        <span class="badge badge-pill badge-light border" t-if="ptav.price_extra">
-        <!-- see note above about price_extra -->
-        <span class="sign_badge_price_extra" t-esc="ptav.price_extra > 0 and '+' or '-'"/>
-        <span t-esc="abs(ptav.price_extra)" class="variant_price_extra text-muted font-italic" style="white-space: nowrap;"
+        <t t-set="combination_info_variant" t-value="product._get_combination_info(ptav, pricelist=pricelist)"/>
+        <span class="badge badge-pill badge-light border" t-if="combination_info_variant['price_extra']">
+        <!--
+            price_extra is displayed as catalog price instead of
+            price after pricelist because it is impossible to
+            compute. Indeed, the pricelist rule might depend on the
+            selected variant, so the price_extra will be different
+            depending on the selected combination. The price of an
+            attribute is therefore variable and it's not very
+            accurate to display it.
+
+            To cover some generic cases, the price_extra also
+            covers the price-included taxes in e-commerce flows.
+            (See the override of `_get_combination_info`)
+        -->
+        <span class="sign_badge_price_extra" t-esc="combination_info_variant['price_extra'] > 0 and '+' or '-'"/>
+        <span t-esc="abs(combination_info_variant['price_extra'])" class="variant_price_extra text-muted font-italic" style="white-space: nowrap;"
             t-options='{
                 "widget": "monetary",
-                "from_currency": product.currency_id,
                 "display_currency": (pricelist or product).currency_id
             }'/>
         </span>

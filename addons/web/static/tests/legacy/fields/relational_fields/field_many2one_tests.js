@@ -10,6 +10,8 @@ var StandaloneFieldManagerMixin = require('web.StandaloneFieldManagerMixin');
 var testUtils = require('web.test_utils');
 var Widget = require('web.Widget');
 
+const { legacyExtraNextTick, triggerScroll } = require("@web/../tests/helpers/utils");
+const { createWebClient, doAction } = require('@web/../tests/webclient/helpers');
 const { browser } = require('@web/core/browser/browser');
 const { patchWithCleanup } = require('@web/../tests/helpers/utils');
 const cpHelpers = require('@web/../tests/search/helpers');
@@ -2585,6 +2587,33 @@ QUnit.module('fields', {}, function () {
             form.destroy();
         });
 
+        QUnit.test('many2one with can_create=false shows no result item when searched something that doesn\'t exist', async function (assert) {
+            assert.expect(2);
+
+            const form = await createView({
+                View: FormView,
+                model: 'partner',
+                data: this.data,
+                arch:
+                    `<form string="Partners">
+                    <sheet>
+                        <field name="product_id" can_create="false" can_write="false"/>
+                    </sheet>
+                </form>`,
+            });
+
+            await testUtils.dom.click(form.$('.o_field_many2one input'));
+            await testUtils.fields.editAndTrigger(form.$('.o_field_many2one[name="product_id"] input'),
+                'abc', 'keydown');
+            await testUtils.nextTick();
+            assert.strictEqual($('.ui-autocomplete .o_m2o_dropdown_option:contains(Create)').length, 0,
+                "there shouldn't be any option to search and create");
+            assert.strictEqual($('.ui-autocomplete .ui-menu-item a:contains(No records)').length, 1,
+                "there should be option for 'No records'");
+
+            form.destroy();
+        });
+
         QUnit.test('pressing enter in a m2o in an editable list', async function (assert) {
             assert.expect(8);
             var M2O_DELAY = relationalFields.FieldMany2One.prototype.AUTOCOMPLETE_DELAY;
@@ -3268,7 +3297,9 @@ QUnit.module('fields', {}, function () {
         });
 
         QUnit.test('many2one dropdown disappears on scroll', async function (assert) {
-            assert.expect(2);
+            assert.expect(4);
+
+            this.data.partner.records[0].display_name = "Veeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeery Loooooooooooooooooooooooooooooooooooooooooooong Naaaaaaaaaaaaaaaaaaaaaaaaaaaaaaame";
 
             var form = await createView({
                 View: FormView,
@@ -3286,12 +3317,17 @@ QUnit.module('fields', {}, function () {
             await testUtils.form.clickEdit(form);
 
             var $input = form.$('.o_field_many2one input');
+            var dropdown = document.querySelector(".dropdown-menu.ui-front");
 
             await testUtils.dom.click($input);
             assert.isVisible($input.autocomplete('widget'), "dropdown should be opened");
 
-            form.el.dispatchEvent(new Event('scroll'));
-            assert.isNotVisible($input.autocomplete('widget'), "dropdown should be closed");
+            await triggerScroll(dropdown, { left: 50 }, false);
+            assert.strictEqual(dropdown.scrollLeft, 50, "a scroll happened");
+            assert.isVisible($input.autocomplete('widget'), "dropdown stays open if the scroll is inside the dropdown");
+
+            await triggerScroll(window, { top: 50 });
+            assert.isNotVisible($input.autocomplete('widget'), "dropdown closes if the scroll is outside the dropdown");
 
             form.destroy();
         });
@@ -3631,6 +3667,70 @@ QUnit.module('fields', {}, function () {
             assert.containsOnce(form, 'th:not(.o_list_record_remove_header)',
                 "should be 1 column after the value change");
             form.destroy();
+        });
+
+        QUnit.test('many2one links form view call', async function (assert) {
+            assert.expect(5);
+
+            let serverData = {};
+            serverData.models = this.data;
+            serverData.models['turtle'].records[1].product_id = 37;
+            serverData.views= {
+                "partner,false,form": '<form string="Partners"> <field name="turtles"/> </form>',
+                "partner,false,search": '<search></search>',
+                'turtle,false,list':`
+                        <tree readonly="1">
+                            <field name="product_id" widget="many2one"/>
+                        </tree>`,
+                "product,false,search": '<search></search>',
+                "product,false,form": '<form></form>',
+            }
+            serverData.actions= {
+                1: {
+                    name: 'Partner',
+                    res_model: 'partner',
+                    res_id: 1,
+                    type: 'ir.actions.act_window',
+                    views: [[false, 'form']],
+                }
+            }
+
+            const webClient = await createWebClient({
+                serverData,
+                legacyParams: { withLegacyMockServer: true },
+                mockRPC: function (route, args){
+                     if (args.method === 'get_formview_action'){
+                        assert.step('get_formview_action')
+                        return {
+                            type: "ir.actions.act_window",
+                            res_model: "product",
+                            view_type: "form",
+                            view_mode: "form",
+                            views: [[false, "form"]],
+                            target: "current",
+                            res_id: args[0],
+                        };
+                     }
+                }
+            });
+            await doAction(webClient, 1);
+
+            assert.containsOnce(webClient, 'a.o_form_uri',
+                "should display 1 m2o link in form");
+
+            assert.containsN(webClient, '.breadcrumb-item', 1,
+                "Should only contain one breadcrumb at the start");
+
+            await testUtils.dom.click($(webClient.el).find('a.o_form_uri'));
+
+            await legacyExtraNextTick();
+
+            assert.verifySteps(['get_formview_action'])
+
+            assert.containsN(webClient, '.breadcrumb-item', 2,
+                "Should contain 2 breadcrumbs after the clicking on the link");
+
+            webClient.destroy();
         });
 
         QUnit.module('Many2OneAvatar');

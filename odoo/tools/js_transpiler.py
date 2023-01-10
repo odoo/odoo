@@ -37,7 +37,8 @@ def transpile_javascript(url, content):
         convert_star_from_export,
         partial(convert_relative_require, url),
         remove_index,
-        convert_export_function_or_class,
+        convert_export_function,
+        convert_export_class,
         convert_variable_export,
         convert_object_export,
         convert_default_export,
@@ -104,30 +105,49 @@ return __exports;
 """
 
 
-EXPORT_FCT_OR_CLASS_RE = re.compile(r"""
+EXPORT_FCT_RE = re.compile(r"""
     ^
     (?P<space>\s*)                          # space and empty line
     export\s+                               # export
-    (?P<type>(async\s+)?function|class)\s+  # async function or function or class
-    (?P<identifier>\w+)                     # name of the class or the function
+    (?P<type>(async\s+)?function)\s+        # async function or function
+    (?P<identifier>\w+)                     # name the function
     """, re.MULTILINE | re.VERBOSE)
 
 
-def convert_export_function_or_class(content):
+def convert_export_function(content):
     """
-    Transpile functions and classes that are being exported.
+    Transpile functions that are being exported.
 
     .. code-block:: javascript
 
         // before
         export function name
         // after
-        const name = __exports.name = function name
+       __exports.name = name; function name
 
         // before
         export async function name
         // after
-        const name = __exports.name = async function name
+        __exports.name = name; async function name
+
+    """
+    repl = r"\g<space>__exports.\g<identifier> = \g<identifier>; \g<type> \g<identifier>"
+    return EXPORT_FCT_RE.sub(repl, content)
+
+EXPORT_CLASS_RE = re.compile(r"""
+    ^
+    (?P<space>\s*)                          # space and empty line
+    export\s+                               # export
+    (?P<type>class)\s+                      # class
+    (?P<identifier>\w+)                     # name of the class
+    """, re.MULTILINE | re.VERBOSE)
+
+
+def convert_export_class(content):
+    """
+    Transpile classes that are being exported.
+
+    .. code-block:: javascript
 
         // before
         export class name
@@ -136,33 +156,52 @@ def convert_export_function_or_class(content):
 
     """
     repl = r"\g<space>const \g<identifier> = __exports.\g<identifier> = \g<type> \g<identifier>"
-    return EXPORT_FCT_OR_CLASS_RE.sub(repl, content)
+    return EXPORT_CLASS_RE.sub(repl, content)
 
 
-EXPORT_FCT_OR_CLASS_DEFAULT_RE = re.compile(r"""
+EXPORT_FCT_DEFAULT_RE = re.compile(r"""
     ^
     (?P<space>\s*)                          # space and empty line
     export\s+default\s+                     # export default
-    (?P<type>(async\s+)?function|class)\s+  # async function or function or class
-    (?P<identifier>\w+)                     # name of the class or the function
+    (?P<type>(async\s+)?function)\s+        # async function or function
+    (?P<identifier>\w+)                     # name of the function
     """, re.MULTILINE | re.VERBOSE)
 
 
-def convert_export_function_or_class_default(content):
+def convert_export_function_default(content):
     """
-    Transpile functions and classes that are being exported as default value.
+    Transpile functions that are being exported as default value.
 
     .. code-block:: javascript
 
         // before
         export default function name
         // after
-        const name = __exports[Symbol.for("default")] = function name
+        __exports[Symbol.for("default")] = name; function name
 
         // before
         export default async function name
         // after
-        const name = __exports[Symbol.for("default")] = async function name
+        __exports[Symbol.for("default")] = name; async function name
+
+    """
+    repl = r"""\g<space>__exports[Symbol.for("default")] = \g<identifier>; \g<type> \g<identifier>"""
+    return EXPORT_FCT_DEFAULT_RE.sub(repl, content)
+
+EXPORT_CLASS_DEFAULT_RE = re.compile(r"""
+    ^
+    (?P<space>\s*)                          # space and empty line
+    export\s+default\s+                     # export default
+    (?P<type>class)\s+                      # class
+    (?P<identifier>\w+)                     # name of the class or the function
+    """, re.MULTILINE | re.VERBOSE)
+
+
+def convert_export_class_default(content):
+    """
+    Transpile classes that are being exported as default value.
+
+    .. code-block:: javascript
 
         // before
         export default class name
@@ -171,8 +210,7 @@ def convert_export_function_or_class_default(content):
 
     """
     repl = r"""\g<space>const \g<identifier> = __exports[Symbol.for("default")] = \g<type> \g<identifier>"""
-    return EXPORT_FCT_OR_CLASS_DEFAULT_RE.sub(repl, content)
-
+    return EXPORT_CLASS_DEFAULT_RE.sub(repl, content)
 
 EXPORT_VAR_RE = re.compile(r"""
     ^
@@ -336,7 +374,8 @@ def convert_default_export(content):
         // after
         __exports[Symbol.for("default")] =
     """
-    new_content = convert_export_function_or_class_default(content)
+    new_content = convert_export_function_default(content)
+    new_content = convert_export_class_default(new_content)
     new_content = convert_variable_export_default(new_content)
     repl = r"""\g<space>__exports[Symbol.for("default")] ="""
     return EXPORT_DEFAULT_RE.sub(repl, new_content)

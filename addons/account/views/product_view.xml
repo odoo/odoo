@@ -55,8 +55,8 @@
                     <attribute name="invisible">0</attribute>
                 </xpath>
                 <page name="inventory" position="after">
-                    <page string="Accounting" name="invoicing" groups="account.group_account_readonly">
-                        <group name="properties">
+                    <page string="Accounting" name="invoicing" groups="account.group_account_readonly,account.group_account_invoice">
+                        <group name="properties" groups="account.group_account_readonly">
                             <group string="Receivables">
                                 <field name="property_account_income_id"
                                     groups="account.group_account_readonly"/>
@@ -66,7 +66,7 @@
                                     groups="account.group_account_readonly"/>
                             </group>
                         </group>
-                        <group name="accounting"/>
+                        <group name="accounting" groups="account.group_account_readonly,account.group_account_invoice"/>
                     </page>
                 </page>
                 <xpath expr="//div[@name='pricing']" position="after">

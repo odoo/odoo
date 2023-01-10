@@ -88,8 +88,13 @@ publicWidget.registry.SurveyFormWidget = publicWidget.Widget.extend({
      * @param {Event} event
      */
     _onKeyDown: function (event) {
-        // If user is answering a text input, do not handle keydown (can be forced by pressing CTRL)
-        if ((this.$("textarea").is(":focus") || this.$('input').is(':focus')) && !event.ctrlKey) {
+        var self = this;
+        var keyCode = event.keyCode;
+
+        // If user is answering a text input, do not handle keydown
+        // CTRL+enter will force submission
+        if ((this.$("textarea").is(":focus") || this.$('input').is(':focus')) &&
+            (!event.ctrlKey || keyCode !== 13)) {
             return;
         }
         // If in session mode and question already answered, do not handle keydown
@@ -97,8 +102,6 @@ publicWidget.registry.SurveyFormWidget = publicWidget.Widget.extend({
             return;
         }
 
-        var self = this;
-        var keyCode = event.keyCode;
         var letter = String.fromCharCode(keyCode).toUpperCase();
 
         // Handle Start / Next / Submit
@@ -303,12 +306,9 @@ publicWidget.registry.SurveyFormWidget = publicWidget.Widget.extend({
         var nextPageEvent = false;
         if (notifications && notifications.length !== 0) {
             notifications.forEach(function (notification) {
-                if (notification.length >= 2) {
-                    var event = notification[1];
-                    if (event.type === 'next_question' ||
-                        event.type === 'end_session') {
-                        nextPageEvent = event;
-                    }
+                if (notification.type === 'next_question' ||
+                    notification.type === 'end_session') {
+                    nextPageEvent = notification;
                 }
             });
         }
@@ -321,7 +321,7 @@ publicWidget.registry.SurveyFormWidget = publicWidget.Widget.extend({
 
         if (nextPageEvent) {
             if (nextPageEvent.type === 'next_question') {
-                var serverDelayMS = moment.utc().valueOf() - moment.unix(nextPageEvent.question_start).utc().valueOf();
+                var serverDelayMS = moment.utc().valueOf() - moment.unix(nextPageEvent.payload.question_start).utc().valueOf();
                 if (serverDelayMS < 0) {
                     serverDelayMS = 0;
                 } else if (serverDelayMS > 1000) {

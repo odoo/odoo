@@ -34,6 +34,10 @@ class StockMove(models.Model):
         self.analytic_account_line_id.unlink()
         return super()._action_cancel()
 
+    def _should_force_price_unit(self):
+        self.ensure_one()
+        return False
+
     def _get_price_unit(self):
         """ Returns the unit price to value this stock move """
         self.ensure_one()
@@ -41,8 +45,10 @@ class StockMove(models.Model):
         precision = self.env['decimal.precision'].precision_get('Product Price')
         # If the move is a return, use the original move's price unit.
         if self.origin_returned_move_id and self.origin_returned_move_id.sudo().stock_valuation_layer_ids:
-            price_unit = self.origin_returned_move_id.sudo().stock_valuation_layer_ids[-1].unit_cost
-        return not float_is_zero(price_unit, precision) and price_unit or self.product_id.standard_price
+            layers = self.origin_returned_move_id.sudo().stock_valuation_layer_ids
+            quantity = sum(layers.mapped("quantity"))
+            return layers.currency_id.round(sum(layers.mapped("value")) / quantity) if not float_is_zero(quantity, precision_rounding=layers.uom_id.rounding) else 0
+        return price_unit if not float_is_zero(price_unit, precision) or self._should_force_price_unit() else self.product_id.standard_price
 
     @api.model
     def _get_valued_types(self):
@@ -400,15 +406,15 @@ class StockMove(models.Model):
         elif self.product_id.valuation == 'real_time':
             accounts_data = self.product_id.product_tmpl_id.get_product_accounts()
             account_valuation = accounts_data.get('stock_valuation', False)
-            analalytic_line_vals = self.stock_valuation_layer_ids.account_move_id.line_ids.filtered(
+            analytic_line_vals = self.stock_valuation_layer_ids.account_move_id.line_ids.filtered(
                 lambda l: l.account_id == account_valuation)._prepare_analytic_line()
-            amount = - sum(vals['amount'] for vals in analalytic_line_vals)
-            unit_amount = - sum(vals['unit_amount'] for vals in analalytic_line_vals)
+            amount = - sum(vals['amount'] for vals in analytic_line_vals)
+            unit_amount = - sum(vals['unit_amount'] for vals in analytic_line_vals)
         elif sum(self.stock_valuation_layer_ids.mapped('quantity')):
             amount = sum(self.stock_valuation_layer_ids.mapped('value'))
-            unit_amount = sum(self.stock_valuation_layer_ids.mapped('quantity'))
+            unit_amount = - sum(self.stock_valuation_layer_ids.mapped('quantity'))
         if self.analytic_account_line_id:
-            self.analytic_account_line_id.unit_amount = - unit_amount
+            self.analytic_account_line_id.unit_amount = unit_amount
             self.analytic_account_line_id.amount = amount
             return False
         elif amount:
@@ -525,7 +531,7 @@ class StockMove(models.Model):
         if self.product_id.type != 'product':
             # no stock valuation for consumable products
             return am_vals
-        if self.restrict_partner_id:
+        if self.restrict_partner_id and self.restrict_partner_id != self.company_id.partner_id:
             # if the move isn't owned by the company, we don't make any valuation
             return am_vals
 

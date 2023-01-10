@@ -7,7 +7,7 @@ import { download } from "@web/core/network/download";
 import { evaluateExpr } from "@web/core/py_js/py";
 import { registry } from "@web/core/registry";
 import { KeepLast } from "@web/core/utils/concurrency";
-import { useBus } from "@web/core/utils/hooks";
+import { useBus, useService } from "@web/core/utils/hooks";
 import { sprintf } from "@web/core/utils/strings";
 import { cleanDomFromBootstrap } from "@web/legacy/utils";
 import { View } from "@web/views/view";
@@ -23,7 +23,7 @@ const viewRegistry = registry.category("views");
 
 /** @typedef {number|false} ActionId */
 /** @typedef {Object} ActionDescription */
-/** @typedef {"current" | "fullscreen" | "new" | "self" | "inline"} ActionMode */
+/** @typedef {"current" | "fullscreen" | "new" | "main" | "self" | "inline"} ActionMode */
 /** @typedef {string} ActionTag */
 /** @typedef {string} ActionXMLId */
 /** @typedef {Object} Context */
@@ -183,14 +183,19 @@ function makeActionManager(env) {
      * with a unique jsId.
      */
     function _preprocessAction(action, context = {}) {
-        action.context = makeContext(env.services.user.context, context, action.context);
+        action._originalAction = JSON.stringify(action);
+        action.context = makeContext([context, action.context], env.services.user.context);
         if (action.domain) {
             const domain = action.domain || [];
             action.domain =
-                typeof domain === "string" ? evaluateExpr(domain, action.context) : domain;
+                typeof domain === "string"
+                    ? evaluateExpr(
+                          domain,
+                          Object.assign({}, env.services.user.context, action.context)
+                      )
+                    : domain;
         }
         action = { ...action }; // manipulate a copy to keep cached action unmodified
-        action._originalAction = JSON.stringify(action);
         action.jsId = `action_${++id}`;
         if (action.type === "ir.actions.act_window" || action.type === "ir.actions.client") {
             action.target = action.target || "current";
@@ -292,6 +297,12 @@ function makeActionManager(env) {
                 const storedAction = browser.sessionStorage.getItem("current_action");
                 const lastAction = JSON.parse(storedAction || "{}");
                 if (lastAction.res_model === state.model) {
+                    if (lastAction.context) {
+                        // If this method is called because of a company switch, the
+                        // stored allowed_company_ids is incorrect.
+                        // (Fix will be improved in master)
+                        delete lastAction.context.allowed_company_ids;
+                    }
                     actionRequest = lastAction;
                     options.viewType = state.view_type;
                 }
@@ -394,11 +405,15 @@ function makeActionManager(env) {
                 return viewSwitcherEntry;
             });
         const context = action.context || {};
+        let groupBy = context.group_by || [];
+        if (typeof groupBy === "string") {
+            groupBy = [groupBy];
+        }
         const viewProps = Object.assign({}, props, {
             context,
             display: { mode: target === "new" ? "inDialog" : target },
             domain: action.domain || [],
-            groupBy: action.context.group_by || [],
+            groupBy,
             loadActionMenus: target !== "new" && target !== "inline",
             loadIrFilters: action.views.some((v) => v[1] === "search"),
             resModel: action.res_model,
@@ -514,15 +529,19 @@ function makeActionManager(env) {
             reject = _rej;
         });
         const action = controller.action;
-
-        // Compute breadcrumbs
         const index = _computeStackIndex(options);
         const controllerArray = [controller];
         if (options.lazyController) {
             controllerArray.unshift(options.lazyController);
         }
         const nextStack = controllerStack.slice(0, index).concat(controllerArray);
-        controller.config.breadcrumbs = _getBreadcrumbs(nextStack.slice(0, -1));
+
+        // Compute breadcrumbs
+        if (action.target === "new") {
+            controller.config.breadcrumbs = [];
+        } else {
+            controller.config.breadcrumbs = _getBreadcrumbs(nextStack.slice(0, -1));
+        }
         if (controller.Component.isLegacy) {
             controller.props.breadcrumbs = controller.config.breadcrumbs;
         }
@@ -531,6 +550,7 @@ function makeActionManager(env) {
             setup() {
                 this.Component = controller.Component;
                 this.componentRef = useRef("component");
+                this.titleService = useService("title");
                 useDebugCategory("action", { action });
                 useSubEnv({ config: controller.config });
                 if (action.target !== "new") {
@@ -547,6 +567,7 @@ function makeActionManager(env) {
                         __getLocalState__: this.__getLocalState__,
                     });
                 }
+                this.isMounted = false;
             }
             catchError(error) {
                 reject(error);
@@ -624,12 +645,15 @@ function makeActionManager(env) {
                     }
                     // END LEGACY CODE COMPATIBILITY
                     controllerStack = nextStack; // the controller is mounted, commit the new stack
-                    // wait Promise callbacks to be executed
                     pushState(controller);
+                    this.titleService.setParts({
+                        action: controller.title || this.env.config.displayName,
+                    });
                     browser.sessionStorage.setItem("current_action", action._originalAction);
                 }
                 resolve();
                 env.bus.trigger("ACTION_MANAGER:UI-UPDATED", _getActionMode(action));
+                this.isMounted = true;
             }
             willUnmount() {
                 if (action.target === "new" && dialogCloseResolve) {
@@ -646,6 +670,10 @@ function makeActionManager(env) {
             }
             onTitleUpdated(ev) {
                 controller.title = ev.detail;
+                if (this.isMounted) {
+                    // if not mounted yet, will be done in "mounted"
+                    this.titleService.setParts({ action: controller.title });
+                }
             }
         }
         ControllerComponent.template = ControllerComponentTemplate;
@@ -726,8 +754,9 @@ function makeActionManager(env) {
      *
      * @private
      * @param {ActURLAction} action
+     * @param {ActionOptions} options
      */
-    function _executeActURLAction(action) {
+    function _executeActURLAction(action, options) {
         if (action.target === "self") {
             env.services.router.redirect(action.url);
         } else {
@@ -741,6 +770,9 @@ function makeActionManager(env) {
                     sticky: true,
                     type: "warning",
                 });
+            }
+            if (options.onClose) {
+                options.onClose();
             }
         }
     }
@@ -841,8 +873,11 @@ function makeActionManager(env) {
     async function _executeClientAction(action, options) {
         const clientAction = actionRegistry.get(action.tag);
         if (clientAction.prototype instanceof Component) {
-            if (action.target !== "new" && clientAction.target) {
-                action.target = clientAction.target;
+            if (action.target !== "new") {
+                await clearUncommittedChanges(env);
+                if (clientAction.target) {
+                    action.target = clientAction.target;
+                }
             }
             const controller = {
                 jsId: `controller_${++id}`,
@@ -963,10 +998,21 @@ function makeActionManager(env) {
             report_url: _getReportUrl(action, "html"),
             context: Object.assign({}, action.context),
         });
-        const clientActionOptions = Object.assign({}, options, {
-            props,
+
+        const controller = {
+            jsId: `controller_${++id}`,
+            // for historical reasons, the report Component is a client action,
+            // but there's no need to keep this when it will be converted to owl.
+            Component: actionRegistry.get("report.client_action"),
+            action,
+            ..._getActionInfo(action, props),
+        };
+
+        return _updateUI(controller, {
+            clearBreadcrumbs: options.clearBreadcrumbs,
+            stackPosition: options.stackPosition,
+            onClose: options.onClose,
         });
-        return doAction("report.client_action", clientActionOptions);
     }
 
     /**
@@ -1031,7 +1077,7 @@ function makeActionManager(env) {
     async function _executeServerAction(action, options) {
         const runProm = env.services.rpc("/web/action/run", {
             action_id: action.id,
-            context: action.context || {},
+            context: makeContext([env.services.user.context, action.context]),
         });
         let nextAction = await keepLast.add(runProm);
         nextAction = nextAction || { type: "ir.actions.act_window_close" };
@@ -1067,9 +1113,10 @@ function makeActionManager(env) {
         const actionProm = _loadAction(actionRequest, options.additionalContext);
         let action = await keepLast.add(actionProm);
         action = _preprocessAction(action, options.additionalContext);
+        options.clearBreadcrumbs = action.target === "main" || options.clearBreadcrumbs;
         switch (action.type) {
             case "ir.actions.act_url":
-                return _executeActURLAction(action);
+                return _executeActURLAction(action, options);
             case "ir.actions.act_window":
                 if (action.target !== "new") {
                     await clearUncommittedChanges(env);
@@ -1078,9 +1125,6 @@ function makeActionManager(env) {
             case "ir.actions.act_window_close":
                 return _executeCloseAction({ onClose: options.onClose, onCloseInfo: action.infos });
             case "ir.actions.client":
-                if (action.target !== "new") {
-                    await clearUncommittedChanges(env);
-                }
                 return _executeClientAction(action, options);
             case "ir.actions.report":
                 return _executeReportAction(action, options);
@@ -1111,7 +1155,7 @@ function makeActionManager(env) {
     async function doActionButton(params) {
         // determine the action to execute according to the params
         let action;
-        const context = makeContext(params.context, params.buttonContext);
+        const context = makeContext([params.context, params.buttonContext]);
         if (params.special) {
             action = { type: "ir.actions.act_window_close", infos: { special: true } };
         } else if (params.type === "object") {
@@ -1162,7 +1206,7 @@ function makeActionManager(env) {
             activeCtx.active_id = params.resId;
             activeCtx.active_ids = [params.resId];
         }
-        action.context = makeContext(currentCtx, params.buttonContext, activeCtx, action.context);
+        action.context = makeContext([currentCtx, params.buttonContext, activeCtx, action.context]);
         // in case an effect is returned from python and there is already an effect
         // attribute on the button, the priority is given to the button attribute
         const effect = params.effect ? evaluateExpr(params.effect) : action.effect;
@@ -1186,6 +1230,11 @@ function makeActionManager(env) {
      * @returns {Promise<Number>}
      */
     async function switchView(viewType, props = {}) {
+        if (dialog) {
+            // we don't want to switch view when there's a dialog open, as we would
+            // not switch in the correct action (action in background != dialog action)
+            return;
+        }
         const controller = controllerStack[controllerStack.length - 1];
         const view = _getView(viewType);
         if (!view) {
@@ -1196,6 +1245,7 @@ function makeActionManager(env) {
                 )
             );
         }
+        await keepLast.add(Promise.resolve());
         const newController = controller.action.controllers[viewType] || {
             jsId: `controller_${++id}`,
             Component: view.isLegacy ? view : View,
@@ -1245,6 +1295,7 @@ function makeActionManager(env) {
      * @param {string} jsId
      */
     async function restore(jsId) {
+        await keepLast.add(Promise.resolve());
         let index;
         if (!jsId) {
             index = controllerStack.length - 2;
@@ -1307,7 +1358,7 @@ function makeActionManager(env) {
         if (action.context) {
             const activeId = action.context.active_id;
             if (activeId) {
-                newState.active_id = `${activeId}`;
+                newState.active_id = activeId;
             }
             const activeIds = action.context.active_ids;
             // we don't push active_ids if it's a single element array containing
@@ -1320,7 +1371,7 @@ function makeActionManager(env) {
             const props = controller.props;
             newState.model = props.resModel;
             newState.view_type = props.type;
-            newState.id = props.resId ? `${props.resId}` : undefined;
+            newState.id = props.resId || (props.state && props.state.currentId) || undefined;
         }
         env.services.router.pushState(newState, { replace: true });
     }

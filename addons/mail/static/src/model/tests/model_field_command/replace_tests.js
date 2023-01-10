@@ -1,6 +1,6 @@
 /** @odoo-module **/
 
-import { create, replace } from '@mail/model/model_field_command';
+import { insertAndReplace, replace } from '@mail/model/model_field_command';
 import {
     afterEach,
     beforeEach,
@@ -51,10 +51,10 @@ QUnit.test('replace: should replace a record for a non-empty x2one field', async
 
     const contact = this.messaging.models['test.contact'].create({
         id: 10,
-        address: create({ id: 10 }),
+        address: insertAndReplace({ id: 10 }),
     });
     const address10 = this.messaging.models['test.address'].findFromIdentifyingData({ id: 10 });
-    const address20 = this.messaging.models['test.address'].create({ id: 20 });;
+    const address20 = this.messaging.models['test.address'].create({ id: 20 });
     contact.update({ address: replace(address20) });
     assert.strictEqual(
         contact.address,
@@ -77,14 +77,14 @@ QUnit.test('replace: should link a record for an empty x2many field', async func
     assert.expect(4);
     await this.start();
 
-    const contact = this.messaging.models['test.contact'].create({ id : 10 });
+    const contact = this.messaging.models['test.contact'].create({ id: 10 });
     const task = this.messaging.models['test.task'].create({ id: 10 });
     contact.update({ tasks: replace(task) });
     assert.strictEqual(
         contact.tasks.length,
         1,
         "should have 1 record"
-    )
+    );
     assert.strictEqual(
         contact.tasks.length,
         1,
@@ -108,7 +108,7 @@ QUnit.test('replace: should replace all records for a non-empty field', async fu
 
     const contact = this.messaging.models['test.contact'].create({
         id: 10,
-        tasks: create([
+        tasks: insertAndReplace([
             { id: 10 },
             { id: 20 },
         ]),
@@ -150,7 +150,7 @@ QUnit.test('replace: should order the existing records for x2many field', async 
 
     const contact = this.messaging.models['test.contact'].create({
         id: 10,
-        tasks: create([
+        tasks: insertAndReplace([
             { id: 10 },
             { id: 20 },
         ]),

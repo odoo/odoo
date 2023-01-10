@@ -24,7 +24,7 @@
             <div class="py-3 m-0 p-0 text-right">
                 <div class="o_survey_progress_wrapper d-inline-block pr-5 text-left">
                     <t t-call="survey.survey_progression"
-                        t-if="survey and survey.questions_layout != 'one_page' and answer and answer.state == 'in_progress' and (not question or not question.is_page)">
+                        t-if="survey and survey.questions_layout != 'one_page' and answer and answer.state == 'in_progress' and (not question or not question.is_page) and not survey_form_readonly">
                         <t t-if="survey.questions_layout == 'page_per_section'">
                             <t t-set="page_ids" t-value="survey.page_ids.ids"/>
                             <t t-set="page_number" t-value="page_ids.index(page.id) + (1 if survey.progression_mode == 'number' else 0)"/>
@@ -65,11 +65,11 @@
         <div class="o_survey_nav pt16 mb-2">
             <div class="container m-0 p-0">
                 <div class="row">
-                    <div  class="col-10">
+                    <div  class="col-lg-10">
                         <h1 t-if="answer.state == 'new' or survey.questions_layout != 'page_per_question'"
                             t-esc="survey.title" class="o_survey_main_title pt-4"></h1>
                     </div>
-                    <div class="o_survey_timer col-2 pt-4">
+                    <div class="o_survey_timer col-lg-2 pt-4">
                         <h1 class="o_survey_timer_container timer text-right">
                         </h1>
                     </div>
@@ -115,7 +115,7 @@
             <div class="modal-dialog">
                 <div class="modal-content">
                     <header class="modal-header">
-                        <h4 class="modal-title">A problem has occured</h4>
+                        <h4 class="modal-title">A problem has occurred</h4>
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">×</button>
                     </header>
                     <main class="modal-body"><p>To take this survey, please close all other tabs on <strong class="text-danger"></strong>.</p></main>

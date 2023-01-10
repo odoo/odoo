@@ -133,7 +133,8 @@ var Session = core.Class.extend(mixins.EventDispatcherMixin, {
         return this.rpc("/web/session/destroy", {});
     },
     user_has_group: function (group) {
-        if (!this.uid) {
+        // the frontend session info has no `uid` but an `user_id`
+        if (!this.uid && !this.user_id) {
             return Promise.resolve(false);
         }
         var def = this._groups_def[group];
@@ -305,7 +306,7 @@ var Session = core.Class.extend(mixins.EventDispatcherMixin, {
      * @returns {integer}
      */
     getTZOffset: function (date) {
-        return -new Date(date).getTimezoneOffset();
+        return -new Date(new Date(date).toISOString().replace('Z', '')).getTimezoneOffset();
     },
     //--------------------------------------------------------------------------
     // Public

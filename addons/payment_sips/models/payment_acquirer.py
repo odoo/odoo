@@ -22,10 +22,10 @@ class PaymentAcquirer(models.Model):
         string="Secret Key Version", required_if_provider='sips', default=2)
     sips_test_url = fields.Char(
         string="Test URL", required_if_provider='sips',
-        default="https://payment-webinit.simu.sips-atos.com/paymentInit")
+        default="https://payment-webinit.simu.sips-services.com/paymentInit")
     sips_prod_url = fields.Char(
         string="Production URL", required_if_provider='sips',
-        default="https://payment-webinit.sips-atos.com/paymentInit")
+        default="https://payment-webinit.sips-services.com/paymentInit")
     sips_version = fields.Char(
         string="Interface Version", required_if_provider='sips', default="HP_2.31")
 

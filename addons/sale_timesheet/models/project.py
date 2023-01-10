@@ -4,7 +4,7 @@
 import json
 from collections import defaultdict
 
-from odoo import api, fields, models, _
+from odoo import api, fields, models, _, _lt
 from odoo.osv import expression
 from odoo.exceptions import ValidationError, UserError
 from odoo.tools import format_amount, float_is_zero, formatLang
@@ -39,20 +39,20 @@ class Project(models.Model):
         "By extension, it defines the rate at which an employee's time on the project is billed.")
     allow_billable = fields.Boolean("Billable", help="Invoice your time and material from tasks.")
     billable_percentage = fields.Integer(
-        compute='_compute_billable_percentage',
+        compute='_compute_billable_percentage', groups='hr_timesheet.group_hr_timesheet_approver',
         help="% of timesheets that are billable compared to the total number of timesheets linked to the AA of the project, rounded to the unit.")
     display_create_order = fields.Boolean(compute='_compute_display_create_order')
     timesheet_product_id = fields.Many2one(
         'product.product', string='Timesheet Product',
         domain="""[
-            ('type', '=', 'service'),
+            ('detailed_type', '=', 'service'),
             ('invoice_policy', '=', 'delivery'),
             ('service_type', '=', 'timesheet'),
             '|', ('company_id', '=', False), ('company_id', '=', company_id)]""",
         help='Select a Service product with which you would like to bill your time spent on tasks.',
         compute="_compute_timesheet_product_id", store=True, readonly=False,
         default=_default_timesheet_product_id)
-    warning_employee_rate = fields.Boolean(compute='_compute_warning_employee_rate')
+    warning_employee_rate = fields.Boolean(compute='_compute_warning_employee_rate', compute_sudo=True)
     partner_id = fields.Many2one(compute='_compute_partner_id', store=True, readonly=False)
 
     @api.depends('sale_line_id', 'sale_line_employee_ids', 'allow_billable')
@@ -77,9 +77,9 @@ class Project(models.Model):
                 - value = 'employee_rate': [('sale_line_employee_ids', '!=', False), ('allow_billable', '=', True)]
                 - value is False: [('allow_billable', '=', False)]
             - operator = '!=':
-                - value = 'task_rate': ['|', ('sale_line_employee_ids', '!=', False), ('sale_line_id', '!=', False), ('allow_billable', '=', True)]
-                - value = 'fixed_rate': ['|', ('sale_line_employee_ids', '!=', False), ('sale_line_id', '=', False), ('allow_billable', '=', True)]
-                - value = 'employee_rate': [('sale_line_employee_ids', '=', False), ('allow_billable', '=', True)]
+                - value = 'task_rate': ['|', '|', ('sale_line_employee_ids', '!=', False), ('sale_line_id', '!=', False), ('allow_billable', '=', False)]
+                - value = 'fixed_rate': ['|', '|', ('sale_line_employee_ids', '!=', False), ('sale_line_id', '=', False), ('allow_billable', '=', False)]
+                - value = 'employee_rate': ['|', ('sale_line_employee_ids', '=', False), ('allow_billable', '=', False)]
                 - value is False: [('allow_billable', '!=', False)]
 
             :param operator: the supported operator is either '=' or '!='.
@@ -101,13 +101,13 @@ class Project(models.Model):
         elif value == 'fixed_rate':
             domain = [sol_cond, expression.NOT_OPERATOR, mapping_cond]
         else:  # value == 'employee_rate'
-            domain = [sol_cond, mapping_cond]
+            domain = [mapping_cond]
 
+        domain = expression.AND([domain, [('allow_billable', '=', True)]])
         domain = expression.normalize_domain(domain)
         if operator != '=':
             domain.insert(0, expression.NOT_OPERATOR)
         domain = expression.distribute_not(domain)
-        domain = expression.AND([domain, [('allow_billable', '=', True)]])
         return domain
 
     @api.depends('analytic_account_id', 'timesheet_ids')
@@ -268,14 +268,13 @@ class Project(models.Model):
                 'default_project_id': self.id,
             },
             'domain': [('project_id', '=', self.id)],
-            'view_mode': 'tree,grid,kanban,pivot,graph,form',
+            'view_mode': 'tree,kanban,pivot,graph,form',
             'views': [
                 [self.env.ref('hr_timesheet.timesheet_view_tree_user').id, 'tree'],
-                [self.env.ref('timesheet_grid.timesheet_view_grid_by_employee').id, 'grid'],
                 [self.env.ref('hr_timesheet.view_kanban_account_analytic_line').id, 'kanban'],
                 [self.env.ref('hr_timesheet.view_hr_timesheet_line_pivot').id, 'pivot'],
                 [self.env.ref('hr_timesheet.view_hr_timesheet_line_graph_all').id, 'graph'],
-                [self.env.ref('timesheet_grid.timesheet_view_form').id, 'form'],
+                [self.env.ref('hr_timesheet.timesheet_view_form_user').id, 'form'],
             ],
         })
         return action
@@ -290,7 +289,7 @@ class Project(models.Model):
             'context': {
                 'search_default_rating_last_30_days': True,
             },
-            'domain': [('consumed', '=', True), ('parent_res_model', '=', 'project.project'), ('parent_res_id', '=', self.id)],
+            'domain': [('consumed','=',True), ('parent_res_model','=','project.project'), ('parent_res_id', '=', self.id)],
         }
 
     # ----------------------------
@@ -307,10 +306,14 @@ class Project(models.Model):
         }
 
     def _get_sale_order_lines(self):
-        sale_orders = self.sale_order_id | self.tasks.sale_order_id
-        return self.env['sale.order.line'].search([('order_id', 'in', sale_orders.ids), ('is_service', '=', True)], order='id asc')
+        sale_orders = self._get_sale_orders()
+        return self.env['sale.order.line'].search([('order_id', 'in', sale_orders.ids), ('is_service', '=', True), ('is_downpayment', '=', False)], order='id asc')
 
     def _get_sold_items(self):
+        timesheet_encode_uom = self.env.company.timesheet_encode_uom_id
+        product_uom_unit = self.env.ref('uom.product_uom_unit')
+        product_uom_hour = self.env.ref('uom.product_uom_hour')
+
         sols = self._get_sale_order_lines()
         number_sale_orders = len(sols.order_id)
         sold_items = {
@@ -319,28 +322,59 @@ class Project(models.Model):
             'number_sols': len(sols),
             'total_sold': 0,
             'effective_sold': 0,
-            'company_unit_name': self.env.company.timesheet_encode_uom_id.name
+            'company_unit_name': timesheet_encode_uom.name
         }
-        product_uom_unit = self.env.ref('uom.product_uom_unit')
+
         for sol in sols:
             name = [x[1] for x in sol.name_get()] if number_sale_orders > 1 else sol.name
-            qty_delivered = sol.product_uom._compute_quantity(sol.qty_delivered, self.env.company.timesheet_encode_uom_id, raise_if_failure=False)
-            product_uom_qty = sol.product_uom._compute_quantity(sol.product_uom_qty, self.env.company.timesheet_encode_uom_id, raise_if_failure=False)
-            sold_items['data'].append({
-                'name': name,
-                'value': '%s / %s %s' % (formatLang(self.env, qty_delivered, 1), formatLang(self.env, product_uom_qty, 1), sol.product_uom.name if sol.product_uom == product_uom_unit else self.env.company.timesheet_encode_uom_id.name),
-                'color': 'red' if qty_delivered > product_uom_qty else 'black'
-            })
-            #We only want to consider hours and days for this calculation
-            if sol.product_uom.category_id == self.env.company.timesheet_encode_uom_id.category_id:
-                sold_items['total_sold'] += product_uom_qty
-                sold_items['effective_sold'] += sol.product_uom._compute_quantity(qty_delivered, self.env.company.timesheet_encode_uom_id, raise_if_failure=False)
+
+            product_uom_convert = sol.product_uom
+            if product_uom_convert == product_uom_unit:
+                product_uom_convert = product_uom_hour
+            qty_delivered = product_uom_convert._compute_quantity(sol.qty_delivered, timesheet_encode_uom, raise_if_failure=False)
+            product_uom_qty = product_uom_convert._compute_quantity(sol.product_uom_qty, timesheet_encode_uom, raise_if_failure=False)
+            if product_uom_convert.category_id == timesheet_encode_uom.category_id:
+                product_uom_convert = timesheet_encode_uom
+
+            if qty_delivered > 0 or product_uom_qty > 0:
+                sold_items['data'].append({
+                    'name': name,
+                    'value': '%s / %s %s' % (formatLang(self.env, qty_delivered, 1), formatLang(self.env, product_uom_qty, 1), product_uom_convert.name),
+                    'color': 'red' if qty_delivered > product_uom_qty else 'black'
+                })
+                #We only want to consider hours and days for this calculation, and eventually units if the service policy is not based on milestones
+                if sol.product_uom.category_id == timesheet_encode_uom.category_id or (sol.product_uom == product_uom_unit and sol.product_id.service_policy != 'delivered_manual'):
+                    sold_items['total_sold'] += product_uom_qty
+                    sold_items['effective_sold'] += qty_delivered
         remaining = sold_items['total_sold'] - sold_items['effective_sold']
         sold_items['remaining'] = {
             'value': remaining,
             'color': 'red' if remaining < 0 else 'black',
         }
         return sold_items
+
+    def _fetch_sale_order_item_ids(self, domain_per_model=None, limit=None, offset=None):
+        if not self or not self.filtered('allow_billable'):
+            return []
+        return super()._fetch_sale_order_item_ids(domain_per_model, limit, offset)
+
+    def _get_sale_order_items_query(self, domain_per_model=None):
+        billable_project_domain = [('allow_billable', '=', True)]
+        if domain_per_model is None:
+            domain_per_model = {
+                'project.project': billable_project_domain,
+                'project.task': billable_project_domain,
+            }
+        else:
+            domain_per_model['project.project'] = expression.AND([
+                domain_per_model.get('project.project', []),
+                billable_project_domain,
+            ])
+            domain_per_model['project.task'] = expression.AND([
+                domain_per_model.get('project.task', []),
+                billable_project_domain,
+            ])
+        return super()._get_sale_order_items_query(domain_per_model)
 
     def _get_profitability_items(self):
         if not self.user_has_groups('project.group_project_manager'):
@@ -399,12 +433,17 @@ class Project(models.Model):
             })
         return result
 
+    def _get_sale_order_stat_button(self):
+        so_button = super()._get_sale_order_stat_button()
+        so_button['show'] &= self.allow_billable
+        return so_button
+
     def _get_stat_buttons(self):
         buttons = super(Project, self)._get_stat_buttons()
         if self.user_has_groups('hr_timesheet.group_hr_timesheet_approver'):
             buttons.append({
                 'icon': 'clock-o',
-                'text': _('Billable Time'),
+                'text': _lt('Billable Time'),
                 'number': '%s %%' % (self.billable_percentage),
                 'action_type': 'object',
                 'action': 'action_billable_time_button',

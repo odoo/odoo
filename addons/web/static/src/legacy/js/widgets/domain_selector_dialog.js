@@ -11,8 +11,12 @@ var _t = core._t;
  * @class DomainSelectorDialog
  */
 return Dialog.extend({
+    custom_events: _.extend({}, Dialog.prototype.custom_events, {
+        domain_changed: "_onDomainChange",
+    }),
     init: function (parent, model, domain, options) {
         this.model = model;
+        this.newDomain = null;
         this.options = _.extend({
             readonly: true,
             debugMode: false,
@@ -26,7 +30,9 @@ return Dialog.extend({
         } else {
             buttons = [
                 {text: _t("Save"), classes: "btn-primary", close: true, click: function () {
-                    this.trigger_up("domain_selected", {domain: this.domainSelector.getDomain()});
+                    this.trigger_up("domain_selected", {
+                        domain: this.newDomain !== null ? this.newDomain : this.domainSelector.getDomain(),
+                    });
                 }},
                 {text: _t("Discard"), close: true},
             ];
@@ -49,6 +55,15 @@ return Dialog.extend({
             this._super.apply(this, arguments),
             this.domainSelector.appendTo(this.$el)
         ]);
+    },
+    /**
+     * Called when the domain selector value is changed.
+     *
+     * @param {OdooEvent} ev
+     */
+    _onDomainChange: function (ev) {
+        ev.stopPropagation();
+        this.newDomain = ev.data.domain;
     },
 });
 });

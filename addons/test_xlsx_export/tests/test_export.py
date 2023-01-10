@@ -267,7 +267,7 @@ class TestGroupedExport(XlsxCreatorCase):
             ['    export.integer:4 (1)' ,''],
             ['10'                       ,'export.integer:4'],
             ['    Undefined (1)'        ,''],
-            ['10'                       ,'False'],
+            ['10'                       ,''],
         ])
 
     def test_nested_records(self):
