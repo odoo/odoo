@@ -2,18 +2,8 @@
 <odoo>
     <!-- new layout for mass_mailing -->
     <template id="mass_mailing.layout" name="Mass Mailing Layout">
-        <t t-call="web.layout">
-            <t t-set="head">
-                <t t-if="request.httprequest.cookies.get('color_scheme') == 'dark'">
-                    <t t-call-assets="web.dark_mode_assets_common"/>
-                    <t t-call-assets="web.dark_mode_assets_backend"/>
-                </t>
-                <t t-else="">
-                    <t t-call-assets="web.assets_common"/>
-                    <t t-call-assets="web.assets_backend"/>
-                </t>
-            </t>
-            <body class="o_white_body">
+        <t t-call="web.frontend_layout">
+            <body class="bg-white o_mailing_portal_body">
                 <header>
                     <div><title>Odoo</title></div>
                     <div class="text-center">
@@ -25,16 +15,11 @@
                     <t t-out="0"/>
                 </main>
             </body>
-            <xpath expr="//footer" position="replace">
-                <div class="container mt16 mb8">
-                    <div class="float-end" t-ignore="true" t-if="not editable">
-                        Create a <a target="_blank" href="https://www.odoo.com/app/website">free website</a> with
-                        <a target="_blank" class="label label-danger" href="https://www.odoo.com/app/website">Odoo</a>
-                    </div>
-                    <div class="float-start text-muted" itemscope="itemscope" itemtype="https://schema.org/Organization">
-                        Copyright &amp;copy; <span t-field="res_company.name" itemprop="name">Company name</span>
-                    </div>
-                </div>
+            <xpath expr="//head/t[@t-call-assets][last()]" position="after">
+                <t t-call-assets="mass_mailing.mailing_assets" lazy_load="True"/>
+            </xpath>
+            <xpath expr="//header" position="before">
+                <t t-set="no_header" t-value="True"/>
             </xpath>
          </t>
      </template>

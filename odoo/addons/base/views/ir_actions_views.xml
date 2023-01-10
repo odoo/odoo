@@ -343,7 +343,7 @@
                                     <div attrs="{'invisible': [('state', '!=', 'code')]}">
                                         <p>Example of Python code</p>
 <code style='white-space: pre-wrap'>
-partner_name = record.name + '_code'
+partner_name = record.name + '_code' \n
 env['res.partner'].create({'name': partner_name})
 </code>
                                     </div>

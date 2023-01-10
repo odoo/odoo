@@ -99,7 +99,7 @@ class WebClient(http.Controller):
         translations_per_module, lang_params = request.env["ir.http"].get_translations_for_webclient(mods, lang)
 
         body = json.dumps({
-            'lang': lang,
+            'lang': lang_params and lang_params["code"],
             'lang_parameters': lang_params,
             'modules': translations_per_module,
             'multi_lang': len(request.env['res.lang'].sudo().get_installed()) > 1,

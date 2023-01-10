@@ -5,7 +5,6 @@
         <xpath expr="//t[@name='byproducts']" position="after">
             <t t-if="data.subcontracting">
                 <BomOverviewSpecialLine
-                    bus="props.bus"
                     type="'subcontracting'"
                     showOptions="props.showOptions"
                     data="props.data"/>

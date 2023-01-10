@@ -17,6 +17,7 @@ function assertCssVariable(variableName, variableValue, trigger = 'iframe body')
     return {
         content: `Check CSS variable ${variableName}=${variableValue}`,
         trigger: trigger,
+        auto: true,
         run: function () {
             const styleValue = getComputedStyle(this.$anchor[0]).getPropertyValue(variableName);
             if ((styleValue && styleValue.trim()) !== variableValue.trim()) {
@@ -327,6 +328,7 @@ function registerWebsitePreviewTour(name, options, steps) {
             content: "Wait for the edit mode to be started",
             trigger: '.o_website_preview.editor_enable.editor_has_snippets',
             timeout: 30000,
+            auto: true,
             run: () => {}, // It's a check
         });
     } else {

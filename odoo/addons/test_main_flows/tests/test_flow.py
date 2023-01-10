@@ -81,8 +81,4 @@ class TestUiMobile(BaseTestUi):
     touch_enabled = True
 
     def test_01_main_flow_tour_mobile(self):
-
-        if odoo.release.version_info[-1] == 'e':
-            self.main_flow_tour()
-        else:
-            raise unittest.SkipTest("Mobile testing not needed in community")
+        self.main_flow_tour()

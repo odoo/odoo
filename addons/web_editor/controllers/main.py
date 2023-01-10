@@ -630,12 +630,7 @@ class Web_Editor(http.Controller):
         if stream.type == 'url':
             return stream.get_response()
 
-        if stream.type == 'path':
-            with file_open(stream.path, 'rb') as file:
-                image = file.read()
-        else:
-            image = stream.data
-
+        image = stream.read()
         img = binary_to_image(image)
         width, height = tuple(str(size) for size in img.size)
         root = etree.fromstring(svg)

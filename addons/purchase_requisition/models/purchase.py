@@ -198,6 +198,7 @@ class PurchaseOrder(models.Model):
         ctx = dict(
             self.env.context,
             search_default_groupby_product=True,
+            purchase_order_id=self.id,
         )
         view_id = self.env.ref('purchase_requisition.purchase_order_line_compare_tree').id
         return {
@@ -254,8 +255,15 @@ class PurchaseOrderLine(models.Model):
             for line in pol.order_id.requisition_id.line_ids:
                 if line.product_id == pol.product_id:
                     pol.price_unit = line.product_uom_id._compute_price(line.price_unit, pol.product_uom)
-                    partner = pol.order_id.partner_id or pol.order_id.requisition.vendor_id
-                    product_ctx = {'seller_id': partner.id, 'lang': get_lang(pol.env, partner.lang).code}
+                    partner = pol.order_id.partner_id or pol.order_id.requisition_id.vendor_id
+                    params = {'order_id': pol.order_id}
+                    seller = pol.product_id._select_seller(
+                        partner_id=partner,
+                        quantity=pol.product_qty,
+                        date=pol.order_id.date_order and pol.order_id.date_order.date(),
+                        uom_id=line.product_uom_id,
+                        params=params)
+                    product_ctx = {'seller_id': seller.id, 'lang': get_lang(pol.env, partner.lang).code}
                     name = pol._get_product_purchase_description(pol.product_id.with_context(product_ctx))
                     if line.product_description_variants:
                         name += '\n' + line.product_description_variants
@@ -288,7 +296,7 @@ class PurchaseOrderLine(models.Model):
             'tag': 'display_notification',
             'params': {
                 'title': _("Nothing to clear"),
-                'message': _("There are no quantites to clear."),
+                'message': _("There are no quantities to clear."),
                 'sticky': False,
             }
         }

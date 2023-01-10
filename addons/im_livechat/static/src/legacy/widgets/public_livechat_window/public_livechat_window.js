@@ -52,10 +52,6 @@ const PublicLivechatWindow = Widget.extend({
         } else {
             this._focusInput();
         }
-        if (!config.device.isMobile) {
-            const margin_dir = _t.database.parameters.direction === "rtl" ? "margin-left" : "margin-right";
-            this.$el.css(margin_dir, $.position.scrollbarWidth());
-        }
         const def = this.messaging.publicLivechatGlobal.chatWindow.publicLivechatView.widget.replace(this.$('.o_thread_window_content')).then(() => {
             this.messaging.publicLivechatGlobal.chatWindow.publicLivechatView.widget.$el.on('scroll', this, this._debouncedOnScroll);
         });
@@ -115,6 +111,29 @@ const PublicLivechatWindow = Widget.extend({
     renderHeader() {
         this.$header.html(qweb.render('im_livechat.legacy.PublicLivechatWindow.HeaderContent', { widget: this }));
     },
+
+    /**
+     * Render the chat window itself.
+     */
+    renderChatWindow() {
+        this.renderElement();
+        this.adjustPosition();
+    },
+
+    /**
+     * Compute position of this chat window and apply corresponding styles to
+     * the underlying widget.
+     */
+    adjustPosition() {
+        const cssProps = { bottom: 0 };
+        cssProps[this.messaging.locale.textDirection === 'rtl' ? 'left' : 'right'] = 0;
+        if (!config.device.isMobile) {
+            const margin_dir = _t.database.parameters.direction === "rtl" ? "margin-left" : "margin-right";
+            cssProps[margin_dir] = $.position.scrollbarWidth();
+        }
+        this.$el.css(cssProps);
+    },
+
     /**
      * Replace the thread content with provided new content
      *
@@ -138,7 +157,9 @@ const PublicLivechatWindow = Widget.extend({
             folded = !this.messaging.publicLivechatGlobal.publicLivechat.isFolded;
         }
         this.messaging.publicLivechatGlobal.publicLivechat.update({ isFolded: folded });
-        setCookie('im_livechat_session', unaccent(JSON.stringify(this.messaging.publicLivechatGlobal.publicLivechat.widget.toData()), true), 60 * 60, 'required');
+        if (this.messaging.publicLivechatGlobal.publicLivechat.operator) {
+            setCookie('im_livechat_session', unaccent(JSON.stringify(this.messaging.publicLivechatGlobal.publicLivechat.widget.toData()), true), 60 * 60, 'required');
+        }
         this.updateVisualFoldState();
     },
     /**
@@ -197,6 +218,9 @@ const PublicLivechatWindow = Widget.extend({
             await this.messaging.publicLivechatGlobal.livechatButtonView.sendMessage(messageData);
         } catch (_err) {
             await this.messaging.publicLivechatGlobal.livechatButtonView.sendMessage(messageData); // try again just in case
+        }
+        if (!this.messaging.publicLivechatGlobal.publicLivechat.operator) {
+            return;
         }
         this.messaging.publicLivechatGlobal.publicLivechat.widget.postMessage(messageData)
             .then(() => {

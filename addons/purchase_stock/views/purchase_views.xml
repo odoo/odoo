@@ -40,6 +40,9 @@
                     <span attrs="{'invisible': [('on_time_rate', '&gt;=', 0)]}">No On-time Delivery Data</span>
                 </button>
             </xpath>
+            <xpath expr="//label[@for='receipt_reminder_email']" position="attributes">
+                <attribute name="attrs">{'invisible': [('effective_date', '!=', False)]}</attribute>
+            </xpath>
             <xpath expr="//div[@name='reminder']" position="attributes">
                 <attribute name="attrs">{'invisible': [('effective_date', '!=', False)]}</attribute>
             </xpath>

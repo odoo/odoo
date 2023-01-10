@@ -218,9 +218,10 @@ class PaymentTransaction(models.Model):
                 'payment_intents',
                 payload=self._stripe_prepare_payment_intent_payload(payment_by_token=True),
                 offline=self.operation == 'offline',
+                # Prevent multiple offline payments by token (e.g., due to a cursor rollback).
                 idempotency_key=payment_utils.generate_idempotency_key(
                     self, scope='payment_intents_token'
-                ),  # Prevent multiple offline payments by token (e.g., due to a cursor rollback).
+                ) if self.operation == 'offline' else None,
             )
         else:  # 'online_direct' (express checkout).
             response = self.provider_id._stripe_make_request(

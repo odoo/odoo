@@ -83,7 +83,7 @@
         <div t-att-class="not hide_date and 'small fw-bold'" style="line-height:1">
             <span t-if="editable" t-field="blog_post.author_id" t-options='{ "widget": "contact", "fields": ["name"]}'/>
             <span t-else="" t-esc="blog_post.author_name"/>
-            <small t-if="not hide_date" t-field="blog_post.post_date" t-options='{"format": "d MMMM, yyyy"}'/>
+            <small t-if="not hide_date" t-field="blog_post.post_date" t-options="{'format': 'long', 'date_only': 'true'}"/>
         </div>
     </div>
 </template>

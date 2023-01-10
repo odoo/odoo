@@ -17,14 +17,17 @@
 # Martin Trigaux, 2022
 # Arma Gedonsky <armagedonsky@hot.ee>, 2022
 # Triine Aavik <triine@avalah.ee>, 2022
+# Leaanika Randmets, 2022
+# Patrick-Jordan Kiudorv, 2022
+# Jana Jaakson, 2023
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 16.0beta\n"
+"Project-Id-Version: Odoo Server 16.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-10-10 10:22+0000\n"
+"POT-Creation-Date: 2022-12-15 12:49+0000\n"
 "PO-Revision-Date: 2022-09-22 05:53+0000\n"
-"Last-Translator: Triine Aavik <triine@avalah.ee>, 2022\n"
+"Last-Translator: Jana Jaakson, 2023\n"
 "Language-Team: Estonian (https://www.transifex.com/odoo/teams/41243/et/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -51,6 +54,7 @@ msgstr ""
 " * Tühistatud: Tootmistellimus on tühistatud, seda ei saa enam kinnitada."
 
 #. module: mrp
+#. odoo-python
 #: code:addons/mrp/models/stock_rule.py:0
 #, python-format
 msgid " <br/><br/> The components will be taken from <b>%s</b>."
@@ -89,30 +93,35 @@ msgid "# of BoM Where is Used"
 msgstr "Retsepte, kus kasutatud"
 
 #. module: mrp
+#. odoo-python
 #: code:addons/mrp/models/mrp_unbuild.py:0
 #, python-format
 msgid "%(qty)s %(measure)s unbuilt in %(order)s"
 msgstr ""
 
 #. module: mrp
+#. odoo-python
 #: code:addons/mrp/models/mrp_routing.py:0
 #, python-format
 msgid "%i work orders"
 msgstr ""
 
 #. module: mrp
+#. odoo-python
 #: code:addons/mrp/models/mrp_bom.py:0
 #, python-format
 msgid "%s (new) %s"
 msgstr ""
 
 #. module: mrp
+#. odoo-python
 #: code:addons/mrp/models/mrp_production.py:0
 #, python-format
 msgid "%s Child MO's"
 msgstr "%s Alam-tootmistellimused"
 
 #. module: mrp
+#. odoo-python
 #: code:addons/mrp/models/mrp_production.py:0
 #, python-format
 msgid "%s cannot be deleted. Try to cancel them before."
@@ -121,7 +130,7 @@ msgstr "%s ei saa kustutada. Proovige neid esmalt tühistada."
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.view_immediate_production
 msgid "&gt;"
-msgstr ""
+msgstr "&gt;"
 
 #. module: mrp
 #: model:ir.actions.report,print_report_name:mrp.action_report_bom_structure
@@ -144,12 +153,13 @@ msgid "'Work Order - %s' % object.name"
 msgstr ""
 
 #. module: mrp
+#. odoo-python
 #: code:addons/mrp/models/stock_rule.py:0
 #: code:addons/mrp/models/stock_rule.py:0
 #: code:addons/mrp/models/stock_rule.py:0
 #, python-format
 msgid "+ %d day(s)"
-msgstr ""
+msgstr "+ %d päev(a)"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.exception_on_mo
@@ -161,12 +171,12 @@ msgstr ""
 "            Võib-olla on vaja teha manuaalseid tegevusi."
 
 #. module: mrp
-#: model_terms:product.product,description:mrp.product_product_computer_desk_leg
 #: model_terms:product.template,description:mrp.product_product_computer_desk_leg_product_template
 msgid "18″ x 2½″ Square Leg"
 msgstr "18″ x 2½″ Square Leg"
 
 #. module: mrp
+#. odoo-python
 #: code:addons/mrp/models/mrp_unbuild.py:0
 #, python-format
 msgid ": Insufficient Quantity To Unbuild"
@@ -194,6 +204,7 @@ msgid "<i class=\"fa fa-stop\" role=\"img\" aria-label=\"Stop\" title=\"Stop\"/>
 msgstr "<i class=\"fa fa-stop\" role=\"img\" aria-label=\"Stop\" title=\"Stop\"/>"
 
 #. module: mrp
+#. odoo-python
 #: code:addons/mrp/models/mrp_bom.py:0
 #, python-format
 msgid ""
@@ -457,12 +468,14 @@ msgstr ""
 "BoMi tüüpi komplekti kasutatakse selleks, et eraldada toodet komponetideks."
 
 #. module: mrp
+#. odoo-python
 #: code:addons/mrp/models/mrp_workorder.py:0
 #, python-format
 msgid "A Manufacturing Order is already done or cancelled."
 msgstr "Tootmistellimus on juba tehtud või tühistatud"
 
 #. module: mrp
+#. odoo-python
 #: code:addons/mrp/models/stock_warehouse.py:0
 #, python-format
 msgid ""
@@ -472,12 +485,12 @@ msgstr "Komplekti-tüüpi retseptil ei saa olla juurdetellimisreeglit."
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_document__access_token
 msgid "Access Token"
-msgstr "Juurdepääsu võti"
+msgstr "Ligipääsu võti"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_rule__action
 msgid "Action"
-msgstr "Toiming"
+msgstr "Tegevus"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom__message_needaction
@@ -492,7 +505,7 @@ msgstr "Vajalik toiming"
 #: model:ir.model.fields,field_description:mrp.field_mrp_routing_workcenter__active
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter__active
 msgid "Active"
-msgstr "Tegev"
+msgstr "Aktiivne"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__activity_ids
@@ -510,13 +523,13 @@ msgstr "Tegevuse erandlik kohendus"
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__activity_state
 #: model:ir.model.fields,field_description:mrp.field_mrp_unbuild__activity_state
 msgid "Activity State"
-msgstr "Tegevuse seis"
+msgstr "Tegevuse staatus"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__activity_type_icon
 #: model:ir.model.fields,field_description:mrp.field_mrp_unbuild__activity_type_icon
 msgid "Activity Type Icon"
-msgstr "Tegevuse liigi sümbol"
+msgstr "Tegevustüübi ikoon"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_workcenter_block_wizard_form
@@ -560,6 +573,7 @@ msgid "All"
 msgstr "Kõik"
 
 #. module: mrp
+#. odoo-python
 #: code:addons/mrp/controller/main.py:0
 #, python-format
 msgid "All files uploaded"
@@ -723,7 +737,8 @@ msgid "Attachment URL"
 msgstr "Manuse URL"
 
 #. module: mrp
-#. openerp-web
+#. odoo-javascript
+#. odoo-python
 #: code:addons/mrp/models/mrp_bom.py:0
 #: code:addons/mrp/static/src/components/bom_overview_line/mrp_bom_overview_line.js:0
 #: code:addons/mrp/static/src/components/bom_overview_table/mrp_bom_overview_table.xml:0
@@ -743,21 +758,21 @@ msgid "Attribute Values"
 msgstr "Atribuudi väärtused"
 
 #. module: mrp
-#. openerp-web
+#. odoo-javascript
 #: code:addons/mrp/static/src/components/bom_overview_display_filter/mrp_bom_overview_display_filter.js:0
 #, python-format
 msgid "Availabilities"
 msgstr "Saadavused"
 
 #. module: mrp
-#. openerp-web
+#. odoo-javascript
 #: code:addons/mrp/static/src/components/bom_overview_table/mrp_bom_overview_table.xml:0
 #, python-format
 msgid "Availabilities on products."
 msgstr ""
 
 #. module: mrp
-#. openerp-web
+#. odoo-javascript
 #: code:addons/mrp/static/src/components/bom_overview_table/mrp_bom_overview_table.xml:0
 #: model:ir.model.fields.selection,name:mrp.selection__mrp_workcenter_productivity_loss_type__loss_type__availability
 #: model_terms:ir.ui.view,arch_db:mrp.report_mrp_bom
@@ -771,6 +786,7 @@ msgid "Availability Losses"
 msgstr "Toodete kättesaadavuse kahjud"
 
 #. module: mrp
+#. odoo-python
 #: code:addons/mrp/models/mrp_production.py:0
 #: code:addons/mrp/report/mrp_report_bom_structure.py:0
 #: model:ir.model.fields.selection,name:mrp.selection__mrp_production__components_availability_state__available
@@ -796,7 +812,7 @@ msgstr ""
 #. module: mrp
 #: model:ir.model,name:mrp.model_report_mrp_report_bom_structure
 msgid "BOM Overview Report"
-msgstr ""
+msgstr "Retseptide ülevaatlik aruanne"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_product_product__variant_bom_ids
@@ -826,12 +842,14 @@ msgid "Backorder Confirmation Lines"
 msgstr "Järelsaatelehe kinnitusread"
 
 #. module: mrp
+#. odoo-python
 #: code:addons/mrp/models/mrp_production.py:0
 #, python-format
 msgid "Backorder MO"
 msgstr "Tootmistellimuse järelsaateleht"
 
 #. module: mrp
+#. odoo-python
 #: code:addons/mrp/models/mrp_production.py:0
 #, python-format
 msgid "Backorder MO's"
@@ -990,7 +1008,7 @@ msgid "BoM Components"
 msgstr "BOMi komponendid"
 
 #. module: mrp
-#. openerp-web
+#. odoo-javascript
 #: code:addons/mrp/static/src/components/bom_overview_table/mrp_bom_overview_table.xml:0
 #: model_terms:ir.ui.view,arch_db:mrp.report_mrp_bom
 #, python-format
@@ -1021,19 +1039,19 @@ msgid "BoM Type"
 msgstr "BOMi tüüp"
 
 #. module: mrp
+#. odoo-python
 #: code:addons/mrp/models/mrp_bom.py:0
 #, python-format
 msgid "BoM line product %s should not be the same as BoM product."
 msgstr "Retsepti rea toode %s ei tohiks olla sama mis retsepti toode."
 
 #. module: mrp
-#: model:product.product,name:mrp.product_product_computer_desk_bolt
 #: model:product.template,name:mrp.product_product_computer_desk_bolt_product_template
 msgid "Bolt"
 msgstr "Polt"
 
 #. module: mrp
-#. openerp-web
+#. odoo-javascript
 #: code:addons/mrp/static/src/components/bom_overview_special_line/mrp_bom_overview_special_line.xml:0
 #: model:ir.model.fields,field_description:mrp.field_res_config_settings__group_mrp_byproducts
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
@@ -1047,6 +1065,7 @@ msgid "By-product"
 msgstr "Kõrvalsaadus"
 
 #. module: mrp
+#. odoo-python
 #: code:addons/mrp/models/mrp_bom.py:0
 #, python-format
 msgid "By-product %s should not be the same as BoM product."
@@ -1065,6 +1084,7 @@ msgid "By-products"
 msgstr "Kõrvalsaadused"
 
 #. module: mrp
+#. odoo-python
 #: code:addons/mrp/models/mrp_bom.py:0
 #: code:addons/mrp/models/mrp_production.py:0
 #, python-format
@@ -1078,12 +1098,14 @@ msgid "Byproduct"
 msgstr "Kõrvaltoode"
 
 #. module: mrp
+#. odoo-python
 #: code:addons/mrp/report/mrp_report_bom_structure.py:0
 #, python-format
 msgid "Byproducts"
 msgstr ""
 
 #. module: mrp
+#. odoo-python
 #: code:addons/mrp/models/stock_warehouse.py:0
 #, python-format
 msgid "Can't find any production location."
@@ -1107,6 +1129,7 @@ msgid "Cancelled"
 msgstr "Tühistatud"
 
 #. module: mrp
+#. odoo-python
 #: code:addons/mrp/models/mrp_production.py:0
 #, python-format
 msgid "Cannot delete a manufacturing order in done state."
@@ -1224,7 +1247,7 @@ msgid "Component Status"
 msgstr ""
 
 #. module: mrp
-#. openerp-web
+#. odoo-javascript
 #: code:addons/mrp/static/src/mrp_forecasted/forecasted_details.xml:0
 #, python-format
 msgid "Component of Draft MO"
@@ -1382,7 +1405,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom_byproduct__cost_share
 #: model:ir.model.fields,field_description:mrp.field_stock_move__cost_share
 msgid "Cost Share (%)"
-msgstr ""
+msgstr "Kulude osakaal (%)"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter__costs_hour
@@ -1396,14 +1419,14 @@ msgid "Costing Information"
 msgstr "Kulude info"
 
 #. module: mrp
-#. openerp-web
+#. odoo-javascript
 #: code:addons/mrp/static/src/components/bom_overview_display_filter/mrp_bom_overview_display_filter.js:0
 #, python-format
 msgid "Costs"
 msgstr "Kulud"
 
 #. module: mrp
-#. openerp-web
+#. odoo-javascript
 #: code:addons/mrp/static/src/views/fields/google_slides_viewer.js:0
 #, python-format
 msgid "Could not display the selected spreadsheet"
@@ -1477,7 +1500,7 @@ msgstr "Loo järeltellimus"
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.res_config_settings_view_form
 msgid "Create customizable worksheets for your quality checks"
-msgstr ""
+msgstr "Looge oma kvaliteedikontrolli jaoks kohandatavaid töölehti"
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_bom__allow_operation_dependencies
@@ -1550,7 +1573,7 @@ msgstr "Loonud"
 #: model:ir.model.fields,field_description:mrp.field_mrp_workorder__create_date
 #: model:ir.model.fields,field_description:mrp.field_stock_warn_insufficient_qty_unbuild__create_date
 msgid "Created on"
-msgstr "Loomise kuupäev"
+msgstr "Loodud"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
@@ -1600,7 +1623,7 @@ msgstr "Andmebaasi andmed"
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.oee_search_view
 msgid "Date"
-msgstr "Date"
+msgstr "Kuupäev"
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_production__date_planned_finished
@@ -1614,7 +1637,7 @@ msgid "Date at which you plan to start the production."
 msgstr "Kuupäev, millal planeerite tootmist alustada"
 
 #. module: mrp
-#. openerp-web
+#. odoo-javascript
 #: code:addons/mrp/static/src/components/bom_overview_line/mrp_bom_overview_line.xml:0
 #: model_terms:ir.ui.view,arch_db:mrp.report_mrp_bom
 #: model_terms:ir.ui.view,arch_db:mrp.report_mrp_bom_pdf_line
@@ -1623,6 +1646,7 @@ msgid "Days"
 msgstr "päev(a)"
 
 #. module: mrp
+#. odoo-python
 #: code:addons/mrp/models/stock_rule.py:0
 #, python-format
 msgid "Days to Supply Components"
@@ -1683,6 +1707,10 @@ msgid ""
 "  Note that in the case of component Manual Consumption, where consumption is registered manually exclusively, consumption warnings will still be issued when appropriate also.\n"
 "  * Blocked: only a manager can close a manufacturing order when the BoM consumption is not respected."
 msgstr ""
+"Määrab ära, kas te soovite tarbida ära rohkem või vähem komponente, kui on määratud ära retseptis:\n"
+"* Lubatud: lubatud kõikidele tootmise kasutajatele.\n"
+"* Lubatud hoiatusega: lubatud kõikidele tootmistellimuse kasutajatele koos kuvatud tarbimise kokkuvõtte erinevustega enne tootmise lõpetamist.\n"
+"* Blokeeritud: ainult juhataja saab sulgeda tootmistellimust, mille komponentide tarbimine pole vastavuses."
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__delay_alert_date
@@ -1697,7 +1725,7 @@ msgstr "Kustuta"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__delivery_count
 msgid "Delivery Orders"
-msgstr "Saatelehed"
+msgstr "Kauba väljastus"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_document__description
@@ -1760,7 +1788,7 @@ msgstr "Loobu"
 #: model:ir.model.fields,field_description:mrp.field_mrp_workorder__display_name
 #: model:ir.model.fields,field_description:mrp.field_stock_warn_insufficient_qty_unbuild__display_name
 msgid "Display Name"
-msgstr "Näidatav nimi"
+msgstr "Kuva nimi"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__show_serial_mass_produce
@@ -1773,7 +1801,7 @@ msgid "Display the serial number shortcut on the moves"
 msgstr "Kuva liikumistel seerianumbri otsetee"
 
 #. module: mrp
-#. openerp-web
+#. odoo-javascript
 #: code:addons/mrp/static/src/components/bom_overview_display_filter/mrp_bom_overview_display_filter.xml:0
 #, python-format
 msgid "Display:"
@@ -1825,19 +1853,16 @@ msgid "Draft"
 msgstr "Mustand"
 
 #. module: mrp
-#: model:product.product,name:mrp.product_product_drawer_drawer
 #: model:product.template,name:mrp.product_product_drawer_drawer_product_template
 msgid "Drawer Black"
 msgstr "Must kummut"
 
 #. module: mrp
-#: model:product.product,name:mrp.product_product_drawer_case
 #: model:product.template,name:mrp.product_product_drawer_case_product_template
 msgid "Drawer Case Black"
 msgstr "Must sahtlitega kummut"
 
 #. module: mrp
-#: model_terms:product.product,description:mrp.product_product_drawer_drawer
 #: model_terms:product.template,description:mrp.product_product_drawer_drawer_product_template
 msgid "Drawer on casters for great usability."
 msgstr "Ratastel kummut paremaks kasutamiseks."
@@ -1848,6 +1873,7 @@ msgid "Dropdown menu"
 msgstr "Rippmenüü"
 
 #. module: mrp
+#. odoo-python
 #: code:addons/mrp/wizard/stock_assign_serial_numbers.py:0
 #, python-format
 msgid "Duplicate Serial Numbers (%s)"
@@ -1917,6 +1943,7 @@ msgid "Ensure the traceability of a storable product in your warehouse."
 msgstr "Tagage oma lattu ladustava toote jälgitavus."
 
 #. module: mrp
+#. odoo-python
 #: code:addons/mrp/report/mrp_report_bom_structure.py:0
 #, python-format
 msgid "Estimated %s"
@@ -1930,15 +1957,17 @@ msgstr "Tootmistellimuse peal on tehtud muudatusi:"
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.exception_on_mo
 msgid "Exception(s):"
-msgstr "Erand(id)"
+msgstr "Muudatus(ed):"
 
 #. module: mrp
+#. odoo-python
 #: code:addons/mrp/wizard/stock_assign_serial_numbers.py:0
 #, python-format
 msgid "Existing Serial Numbers (%s)"
 msgstr ""
 
 #. module: mrp
+#. odoo-python
 #: code:addons/mrp/models/mrp_production.py:0
 #, python-format
 msgid "Exp %s"
@@ -1950,6 +1979,7 @@ msgid "Expected"
 msgstr "Eeldatav"
 
 #. module: mrp
+#. odoo-python
 #: code:addons/mrp/report/mrp_report_bom_structure.py:0
 #, python-format
 msgid "Expected %s"
@@ -1988,7 +2018,7 @@ msgid "File Size"
 msgstr "Faili suurus"
 
 #. module: mrp
-#. openerp-web
+#. odoo-javascript
 #: code:addons/mrp/static/src/components/bom_overview_table/mrp_bom_overview_table.xml:0
 #, python-format
 msgid "Files attached to the product."
@@ -2071,12 +2101,12 @@ msgid "Force"
 msgstr "Sunni"
 
 #. module: mrp
-#. openerp-web
+#. odoo-javascript
 #: code:addons/mrp/static/src/components/bom_overview_line/mrp_bom_overview_line.xml:0
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
 #, python-format
 msgid "Forecast Report"
-msgstr ""
+msgstr "Prognoosi aruanne"
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_stock_move__product_virtual_available
@@ -2102,14 +2132,14 @@ msgid "Forecasted Issue"
 msgstr ""
 
 #. module: mrp
-#. openerp-web
+#. odoo-javascript
 #: code:addons/mrp/static/src/components/bom_overview_table/mrp_bom_overview_table.xml:0
 #, python-format
 msgid "Free to Use"
-msgstr ""
+msgstr "Kasutamiseks vaba"
 
 #. module: mrp
-#. openerp-web
+#. odoo-javascript
 #: code:addons/mrp/static/src/components/bom_overview_table/mrp_bom_overview_table.xml:0
 #: model_terms:ir.ui.view,arch_db:mrp.report_mrp_bom
 #, python-format
@@ -2175,7 +2205,7 @@ msgid "Google Slide Link"
 msgstr "Google Slide Link"
 
 #. module: mrp
-#. openerp-web
+#. odoo-javascript
 #: code:addons/mrp/static/src/views/fields/google_slides_viewer.js:0
 #, python-format
 msgid "Google Slides Viewer"
@@ -2184,7 +2214,7 @@ msgstr ""
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_production_workorder_form_view_filter
 msgid "Group By"
-msgstr "Grupeeri"
+msgstr "Rühmitamine"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_bom_filter
@@ -2215,7 +2245,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__has_message
 #: model:ir.model.fields,field_description:mrp.field_mrp_unbuild__has_message
 msgid "Has Message"
-msgstr ""
+msgstr "On sõnum"
 
 #. module: mrp
 #: model:ir.model.fields.selection,name:mrp.selection__mrp_document__priority__2
@@ -2229,7 +2259,7 @@ msgstr "Ajalugu"
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_workcenter__costs_hour
-msgid "Hourly cost of work center."
+msgid "Hourly processing cost."
 msgstr ""
 
 #. module: mrp
@@ -2290,7 +2320,7 @@ msgstr ""
 #: model:ir.model.fields,help:mrp.field_mrp_production__message_needaction
 #: model:ir.model.fields,help:mrp.field_mrp_unbuild__message_needaction
 msgid "If checked, new messages require your attention."
-msgstr "Kui märgitud, siis uued sõnumid nõuavad Su tähelepanu."
+msgstr "Kui kontrollitud, siis uued sõnumid nõuavad Su tähelepanu."
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_bom__message_has_error
@@ -2300,7 +2330,7 @@ msgstr "Kui märgitud, siis uued sõnumid nõuavad Su tähelepanu."
 #: model:ir.model.fields,help:mrp.field_mrp_unbuild__message_has_error
 #: model:ir.model.fields,help:mrp.field_mrp_unbuild__message_has_sms_error
 msgid "If checked, some messages have a delivery error."
-msgstr "Kui valitud, on mõningatel sõnumitel saatmiserror."
+msgstr "Kui valitud, on mõningate sõnumitel saatmiserror."
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_production__propagate_cancel
@@ -2357,6 +2387,7 @@ msgid "Immediate Production Lines"
 msgstr "Kohesed tootmisliinid"
 
 #. module: mrp
+#. odoo-python
 #: code:addons/mrp/models/mrp_production.py:0
 #, python-format
 msgid "Immediate Production?"
@@ -2373,12 +2404,14 @@ msgid "Impacted Transfer(s):"
 msgstr "Mõjutatud siirded:"
 
 #. module: mrp
+#. odoo-python
 #: code:addons/mrp/models/mrp_bom.py:0
 #, python-format
 msgid "Import Template for Bills of Materials"
 msgstr "Impordi retsepti mall"
 
 #. module: mrp
+#. odoo-python
 #: code:addons/mrp/models/mrp_workorder.py:0
 #, python-format
 msgid ""
@@ -2462,12 +2495,14 @@ msgid "Is the Current User Working"
 msgstr "Kas praegune kasutaja töötab"
 
 #. module: mrp
+#. odoo-python
 #: code:addons/mrp/models/mrp_workcenter.py:0
 #, python-format
 msgid "It has already been unblocked."
 msgstr "See on juba blokeeringust vabastatud."
 
 #. module: mrp
+#. odoo-python
 #: code:addons/mrp/models/mrp_workorder.py:0
 #, python-format
 msgid ""
@@ -2526,7 +2561,7 @@ msgstr "Komplekt"
 #: model:ir.model.fields,field_description:mrp.field_mrp_workorder____last_update
 #: model:ir.model.fields,field_description:mrp.field_stock_warn_insufficient_qty_unbuild____last_update
 msgid "Last Modified on"
-msgstr "Viimati muudetud"
+msgstr "Viimati muudetud (millal)"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_change_production_qty__write_uid
@@ -2555,7 +2590,7 @@ msgstr "Viimati muudetud"
 #: model:ir.model.fields,field_description:mrp.field_mrp_workorder__write_uid
 #: model:ir.model.fields,field_description:mrp.field_stock_warn_insufficient_qty_unbuild__write_uid
 msgid "Last Updated by"
-msgstr "Viimati uuendas"
+msgstr "Viimati uuendatud (kelle poolt)"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_change_production_qty__write_date
@@ -2619,13 +2654,12 @@ msgid ""
 msgstr ""
 
 #. module: mrp
-#: model_terms:product.product,description:mrp.product_product_wood_ply
 #: model_terms:product.template,description:mrp.product_product_wood_ply_product_template
 msgid "Layers that are stick together to assemble wood panels."
 msgstr "Puupaneelide kokkupanemiseks koosolevad kihid."
 
 #. module: mrp
-#. openerp-web
+#. odoo-javascript
 #: code:addons/mrp/static/src/components/bom_overview_table/mrp_bom_overview_table.xml:0
 #: model_terms:ir.ui.view,arch_db:mrp.report_mrp_bom
 #, python-format
@@ -2633,11 +2667,11 @@ msgid "Lead Time"
 msgstr "Viiteaeg"
 
 #. module: mrp
-#. openerp-web
+#. odoo-javascript
 #: code:addons/mrp/static/src/components/bom_overview_display_filter/mrp_bom_overview_display_filter.js:0
 #, python-format
 msgid "Lead Times"
-msgstr ""
+msgstr "Viiteajad"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workorder__leave_id
@@ -2650,6 +2684,7 @@ msgid "Line of issue consumption"
 msgstr "Line of issue consumption"
 
 #. module: mrp
+#. odoo-python
 #: code:addons/mrp/models/mrp_production.py:0
 #, python-format
 msgid ""
@@ -2739,6 +2774,7 @@ msgid "MO Backorder"
 msgstr "MO järeltellimus"
 
 #. module: mrp
+#. odoo-python
 #: code:addons/mrp/models/mrp_production.py:0
 #, python-format
 msgid "MO Generated by %s"
@@ -2772,6 +2808,7 @@ msgid "Main Attachment"
 msgstr "Peamine manus"
 
 #. module: mrp
+#. odoo-python
 #: code:addons/mrp/models/stock_warehouse.py:0
 #: code:addons/mrp/models/stock_warehouse.py:0
 #, python-format
@@ -2779,6 +2816,7 @@ msgid "Make To Order"
 msgstr "Telli/tooda tellimuse korral"
 
 #. module: mrp
+#. odoo-python
 #: code:addons/mrp/models/mrp_production.py:0
 #, python-format
 msgid ""
@@ -2808,6 +2846,7 @@ msgid "Manuf. Lead Time"
 msgstr ""
 
 #. module: mrp
+#. odoo-python
 #: code:addons/mrp/models/stock_warehouse.py:0
 #: code:addons/mrp/models/stock_warehouse.py:0
 #: model:ir.model.fields,field_description:mrp.field_stock_warehouse__manufacture_steps
@@ -2819,6 +2858,7 @@ msgid "Manufacture"
 msgstr "Tooda"
 
 #. module: mrp
+#. odoo-python
 #: code:addons/mrp/models/stock_warehouse.py:0
 #: model:ir.model.fields.selection,name:mrp.selection__stock_warehouse__manufacture_steps__mrp_one_step
 #, python-format
@@ -2836,6 +2876,7 @@ msgid "Manufacture Rule"
 msgstr "Tootmise reegel"
 
 #. module: mrp
+#. odoo-python
 #: code:addons/mrp/models/stock_rule.py:0
 #, python-format
 msgid "Manufacture Security Lead Time"
@@ -2870,6 +2911,7 @@ msgid "Manufactured in the last 365 days"
 msgstr "Toodetud viimase 365 päeva jooksul"
 
 #. module: mrp
+#. odoo-python
 #: code:addons/mrp/models/stock_warehouse.py:0
 #: model:ir.model.fields.selection,name:mrp.selection__stock_picking_type__code__mrp_operation
 #: model:ir.ui.menu,name:mrp.menu_mrp_root
@@ -2880,7 +2922,7 @@ msgid "Manufacturing"
 msgstr "Tootmine"
 
 #. module: mrp
-#. openerp-web
+#. odoo-javascript
 #: code:addons/mrp/static/src/mrp_forecasted/forecasted_buttons.xml:0
 #: code:addons/mrp/static/src/mrp_forecasted/forecasted_buttons.xml:0
 #, python-format
@@ -2888,6 +2930,7 @@ msgid "Manufacturing Forecast"
 msgstr ""
 
 #. module: mrp
+#. odoo-python
 #: code:addons/mrp/models/stock_rule.py:0
 #: model:ir.model.fields,field_description:mrp.field_product_product__produce_delay
 #: model:ir.model.fields,field_description:mrp.field_product_template__produce_delay
@@ -3036,7 +3079,8 @@ msgid "Minimum Inventory Rule"
 msgstr "Miinimumlao reegel"
 
 #. module: mrp
-#. openerp-web
+#. odoo-javascript
+#. odoo-python
 #: code:addons/mrp/report/mrp_report_bom_structure.py:0
 #: code:addons/mrp/static/src/components/bom_overview_special_line/mrp_bom_overview_special_line.xml:0
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_workcenter_view
@@ -3099,6 +3143,7 @@ msgid "Name"
 msgstr "Nimi"
 
 #. module: mrp
+#. odoo-python
 #: code:addons/mrp/models/mrp_production.py:0
 #: code:addons/mrp/models/mrp_production.py:0
 #: code:addons/mrp/models/mrp_production.py:0
@@ -3119,7 +3164,7 @@ msgstr "Järgmine tegevus"
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__activity_calendar_event_id
 #: model:ir.model.fields,field_description:mrp.field_mrp_unbuild__activity_calendar_event_id
 msgid "Next Activity Calendar Event"
-msgstr ""
+msgstr "Järgmine tegevus kalendris"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__activity_date_deadline
@@ -3151,7 +3196,7 @@ msgid "No bill of materials found. Let's create one!"
 msgstr "Retsepti ei leitud. Loome ühe!"
 
 #. module: mrp
-#. openerp-web
+#. odoo-javascript
 #: code:addons/mrp/static/src/components/bom_overview_table/mrp_bom_overview_table.xml:0
 #: model_terms:ir.ui.view,arch_db:mrp.report_mrp_bom
 #, python-format
@@ -3210,6 +3255,7 @@ msgid "Normal"
 msgstr "Tavaline"
 
 #. module: mrp
+#. odoo-python
 #: code:addons/mrp/models/mrp_production.py:0
 #: code:addons/mrp/report/mrp_report_bom_structure.py:0
 #, python-format
@@ -3217,6 +3263,7 @@ msgid "Not Available"
 msgstr "Pole saadaval"
 
 #. module: mrp
+#. odoo-python
 #: code:addons/mrp/models/mrp_workcenter.py:0
 #, python-format
 msgid ""
@@ -3228,6 +3275,15 @@ msgstr ""
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.view_assign_serial_numbers_production
 msgid "Note that components"
+msgstr ""
+
+#. module: mrp
+#. odoo-python
+#: code:addons/mrp/models/product.py:0 code:addons/mrp/models/product.py:0
+#, python-format
+msgid ""
+"Note that product(s): '%s' is/are still linked to active Bill of Materials, "
+"which means that the product can still be used on it/them."
 msgstr ""
 
 #. module: mrp
@@ -3262,7 +3318,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__message_has_error_counter
 #: model:ir.model.fields,field_description:mrp.field_mrp_unbuild__message_has_error_counter
 msgid "Number of errors"
-msgstr "Veateadete arv"
+msgstr "Vigade arv"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__mrp_production_child_count
@@ -3314,6 +3370,7 @@ msgid "On Hand"
 msgstr "Laos"
 
 #. module: mrp
+#. odoo-python
 #: code:addons/mrp/models/mrp_production.py:0
 #, python-format
 msgid ""
@@ -3321,6 +3378,7 @@ msgid ""
 msgstr ""
 
 #. module: mrp
+#. odoo-python
 #: code:addons/mrp/models/mrp_production.py:0
 #, python-format
 msgid "Only manufacturing orders with a Bill of Materials can be %s."
@@ -3368,7 +3426,8 @@ msgstr ""
 "Iga tegevus viidakse läbi kindlas töökeskuses ning selle on kindel kestus."
 
 #. module: mrp
-#. openerp-web
+#. odoo-javascript
+#. odoo-python
 #: code:addons/mrp/report/mrp_report_bom_structure.py:0
 #: code:addons/mrp/static/src/components/bom_overview_display_filter/mrp_bom_overview_display_filter.js:0
 #: code:addons/mrp/static/src/components/bom_overview_special_line/mrp_bom_overview_special_line.xml:0
@@ -3525,12 +3584,14 @@ msgid "Performance over the last month"
 msgstr "Tootlus viimase kuu jooksul"
 
 #. module: mrp
+#. odoo-python
 #: code:addons/mrp/models/stock_warehouse.py:0
 #, python-format
 msgid "Pick Components"
 msgstr "Tootmiseelne komplekteerimine"
 
 #. module: mrp
+#. odoo-python
 #: code:addons/mrp/models/stock_warehouse.py:0
 #, python-format
 msgid "Pick components and then manufacture"
@@ -3542,6 +3603,7 @@ msgid "Pick components and then manufacture (2 steps)"
 msgstr "Komplekteeri laost toormaterjal ja seejärel tooda (2 sammu)"
 
 #. module: mrp
+#. odoo-python
 #: code:addons/mrp/models/stock_warehouse.py:0
 #: model:ir.model.fields.selection,name:mrp.selection__stock_warehouse__manufacture_steps__pbm_sam
 #, python-format
@@ -3568,7 +3630,7 @@ msgstr "Tootmiseelse komplekteerimise marsruut"
 #. module: mrp
 #: model:ir.model,name:mrp.model_stock_picking_type
 msgid "Picking Type"
-msgstr "Laolehe tüüp"
+msgstr "Noppetüüp"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__picking_ids
@@ -3608,6 +3670,7 @@ msgid "Planned Date"
 msgstr "Planeeritud kuupäev"
 
 #. module: mrp
+#. odoo-python
 #: code:addons/mrp/models/mrp_workorder.py:0
 #, python-format
 msgid "Planned at the same time as other workorder(s) at %s"
@@ -3617,7 +3680,7 @@ msgstr "Planeeritud samale ajale kui teised tootmistellimused keskuses %s"
 #: model:ir.ui.menu,name:mrp.mrp_planning_menu_root
 #: model_terms:ir.ui.view,arch_db:mrp.res_config_settings_view_form
 msgid "Planning"
-msgstr "Töögraafik"
+msgstr "Planeerimine"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_production_filter
@@ -3625,19 +3688,16 @@ msgid "Planning Issues"
 msgstr "Planeerimisprobleemid"
 
 #. module: mrp
-#: model:product.product,name:mrp.product_product_plastic_laminate
 #: model:product.template,name:mrp.product_product_plastic_laminate_product_template
 msgid "Plastic Laminate"
 msgstr "Plastiklaminaat"
 
 #. module: mrp
-#: model:product.product,name:mrp.product_product_wood_ply
 #: model:product.template,name:mrp.product_product_wood_ply_product_template
 msgid "Ply Layer"
 msgstr "Turvisekiht"
 
 #. module: mrp
-#: model:product.product,name:mrp.product_product_ply_veneer
 #: model:product.template,name:mrp.product_product_ply_veneer_product_template
 msgid "Ply Veneer"
 msgstr "Vineer"
@@ -3656,26 +3716,28 @@ msgid "Possible Product Template Attribute Value"
 msgstr ""
 
 #. module: mrp
+#. odoo-python
 #: code:addons/mrp/models/stock_warehouse.py:0
 #, python-format
 msgid "Post-Production"
 msgstr "Tootmisjärgne"
 
 #. module: mrp
+#. odoo-python
 #: code:addons/mrp/models/stock_warehouse.py:0
 #, python-format
 msgid "Pre-Production"
 msgstr "Tootmiseelne"
 
 #. module: mrp
-#. openerp-web
+#. odoo-javascript
 #: code:addons/mrp/static/src/components/bom_overview_control_panel/mrp_bom_overview_control_panel.xml:0
 #, python-format
 msgid "Print"
 msgstr "Prindi"
 
 #. module: mrp
-#. openerp-web
+#. odoo-javascript
 #: code:addons/mrp/static/src/components/bom_overview_control_panel/mrp_bom_overview_control_panel.xml:0
 #, python-format
 msgid "Print All Variants"
@@ -3746,7 +3808,7 @@ msgid "Produced in Operation"
 msgstr "Operatsioon, milles toodetud"
 
 #. module: mrp
-#. openerp-web
+#. odoo-javascript
 #: code:addons/mrp/static/src/components/bom_overview_table/mrp_bom_overview_table.xml:0
 #: model:ir.model,name:mrp.model_product_template
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom__product_tmpl_id
@@ -3778,7 +3840,7 @@ msgid "Product Capacities"
 msgstr ""
 
 #. module: mrp
-#. openerp-web
+#. odoo-javascript
 #: code:addons/mrp/static/src/components/bom_overview_table/mrp_bom_overview_table.xml:0
 #: model_terms:ir.ui.view,arch_db:mrp.report_mrp_bom
 #, python-format
@@ -3911,7 +3973,7 @@ msgid "Production Workcenter"
 msgstr "Tootmise töökeskus"
 
 #. module: mrp
-#. openerp-web
+#. odoo-javascript
 #: code:addons/mrp/static/src/mrp_forecasted/forecasted_details.xml:0
 #, python-format
 msgid "Production of Draft MO"
@@ -3983,7 +4045,7 @@ msgstr "Kvaliteedikaod"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_res_config_settings__module_quality_control_worksheet
 msgid "Quality Worksheet"
-msgstr ""
+msgstr "Kvaliteedi tööleht"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_warn_insufficient_qty_unbuild__quant_ids
@@ -3991,7 +4053,7 @@ msgid "Quant"
 msgstr "Koguseosa"
 
 #. module: mrp
-#. openerp-web
+#. odoo-javascript
 #: code:addons/mrp/static/src/components/bom_overview_table/mrp_bom_overview_table.xml:0
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom__product_qty
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom_byproduct__product_qty
@@ -4045,7 +4107,7 @@ msgid "Quantity that can be produced with the current stock of components"
 msgstr ""
 
 #. module: mrp
-#. openerp-web
+#. odoo-javascript
 #: code:addons/mrp/static/src/components/bom_overview_control_panel/mrp_bom_overview_control_panel.xml:0
 #, python-format
 msgid "Quantity:"
@@ -4066,7 +4128,7 @@ msgid "Ready"
 msgstr "Valmis"
 
 #. module: mrp
-#. openerp-web
+#. odoo-javascript
 #: code:addons/mrp/static/src/components/bom_overview_table/mrp_bom_overview_table.xml:0
 #: model_terms:ir.ui.view,arch_db:mrp.report_mrp_bom
 #, python-format
@@ -4080,13 +4142,14 @@ msgid "Real Duration"
 msgstr "Tegelik kestus"
 
 #. module: mrp
-#. openerp-web
+#. odoo-javascript
 #: code:addons/mrp/static/src/components/bom_overview_table/mrp_bom_overview_table.xml:0
 #, python-format
 msgid "Reception time estimation."
 msgstr ""
 
 #. module: mrp
+#. odoo-python
 #: code:addons/mrp/models/mrp_bom.py:0
 #, python-format
 msgid ""
@@ -4115,7 +4178,7 @@ msgid ""
 msgstr "Selle tootmistellimuse taotluse genereerinud dokumendi viide."
 
 #. module: mrp
-#. openerp-web
+#. odoo-javascript
 #: code:addons/mrp/static/src/components/bom_overview_table/mrp_bom_overview_table.xml:0
 #: model_terms:ir.ui.view,arch_db:mrp.report_mrp_bom
 #, python-format
@@ -4128,7 +4191,7 @@ msgid "Related attachment"
 msgstr "Seotud manus"
 
 #. module: mrp
-#. openerp-web
+#. odoo-javascript
 #: code:addons/mrp/static/src/widgets/mrp_workorder_popover.xml:0
 #, python-format
 msgid "Replan"
@@ -4140,7 +4203,7 @@ msgid "Reporting"
 msgstr "Aruandlus"
 
 #. module: mrp
-#. openerp-web
+#. odoo-javascript
 #: code:addons/mrp/static/src/mrp_forecasted/forecasted_details.xml:0
 #, python-format
 msgid "Reserve"
@@ -4190,14 +4253,14 @@ msgid "Responsible User"
 msgstr "Vastutav kasutaja"
 
 #. module: mrp
-#. openerp-web
+#. odoo-javascript
 #: code:addons/mrp/static/src/components/bom_overview_table/mrp_bom_overview_table.xml:0
 #, python-format
 msgid "Resupply lead time."
 msgstr ""
 
 #. module: mrp
-#. openerp-web
+#. odoo-javascript
 #: code:addons/mrp/static/src/components/bom_overview_table/mrp_bom_overview_table.xml:0
 #: model_terms:ir.ui.view,arch_db:mrp.report_mrp_bom
 #, python-format
@@ -4225,7 +4288,7 @@ msgstr "Käivita planeerija"
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__message_has_sms_error
 #: model:ir.model.fields,field_description:mrp.field_mrp_unbuild__message_has_sms_error
 msgid "SMS Delivery error"
-msgstr "Sõnumi kohaletoimetamise veateade"
+msgstr "Sõnumi kohaletoimetamise viga"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production_split_line__date
@@ -4242,7 +4305,7 @@ msgstr "Ajastage tootmistellimusi viivituste vältimiseks varasemaks"
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_production_filter
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_production_workorder_form_view_filter
 msgid "Scheduled Date"
-msgstr "Planeeritud saatmise kuupäev"
+msgstr "Planeeritud kuupäev"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_production_filter
@@ -4261,6 +4324,7 @@ msgid "Scheduled Start Date"
 msgstr "Planeeritud alguskuupäev"
 
 #. module: mrp
+#. odoo-python
 #: code:addons/mrp/models/mrp_workorder.py:0
 #, python-format
 msgid ""
@@ -4270,13 +4334,14 @@ msgstr ""
 "%(end)s"
 
 #. module: mrp
-#. openerp-web
+#. odoo-javascript
 #: code:addons/mrp/static/src/widgets/mrp_workorder_popover.xml:0
 #, python-format
 msgid "Scheduling Information"
 msgstr "Planeerimise informatsioon"
 
 #. module: mrp
+#. odoo-python
 #: code:addons/mrp/models/mrp_production.py:0
 #: code:addons/mrp/models/mrp_workorder.py:0
 #: model:ir.model,name:mrp.model_stock_scrap
@@ -4299,7 +4364,6 @@ msgid "Scraps"
 msgstr "Praak"
 
 #. module: mrp
-#: model:product.product,name:mrp.product_product_computer_desk_screw
 #: model:product.template,name:mrp.product_product_computer_desk_screw_product_template
 msgid "Screw"
 msgstr "Kruvi"
@@ -4341,6 +4405,7 @@ msgid "Security days for each manufacturing operation."
 msgstr "Varupäevad iga tootmisoperatsiooni jaoks."
 
 #. module: mrp
+#. odoo-python
 #: code:addons/mrp/models/mrp_routing.py:0
 #, python-format
 msgid "Select Operations to Copy"
@@ -4357,18 +4422,21 @@ msgid "Sequence"
 msgstr "Järjestus"
 
 #. module: mrp
+#. odoo-python
 #: code:addons/mrp/models/stock_warehouse.py:0
 #, python-format
 msgid "Sequence picking before manufacturing"
 msgstr "Tootmiseelse komplekteerimise järjestus"
 
 #. module: mrp
+#. odoo-python
 #: code:addons/mrp/models/stock_warehouse.py:0
 #, python-format
 msgid "Sequence production"
 msgstr "Tootmisjärjestus"
 
 #. module: mrp
+#. odoo-python
 #: code:addons/mrp/models/stock_warehouse.py:0
 #, python-format
 msgid "Sequence stock after manufacturing"
@@ -4458,7 +4526,8 @@ msgstr "Näita tootmisi"
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_production_filter
 msgid "Show all records which has next action date is before today"
 msgstr ""
-"Näita kõiki andmeid, mille järgmise tegevuse kuupäev on enne tänast kuupäeva"
+"Näita kõiki andmeid, millel on järgmise tegevuse kuupäev on ennem tänast "
+"kuupäeva"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production_backorder__show_backorder_lines
@@ -4466,7 +4535,7 @@ msgid "Show backorder lines"
 msgstr "Näita järeltellimuste ridu"
 
 #. module: mrp
-#. openerp-web
+#. odoo-javascript
 #: code:addons/mrp/static/src/views/fields/google_slides_viewer.xml:0
 #, python-format
 msgid "Slides viewer"
@@ -4478,18 +4547,17 @@ msgid "Slot into workcenter calendar once planned"
 msgstr "Märgi ära töökeskuste kalendrisse, kui planeeritud"
 
 #. module: mrp
-#: model_terms:product.product,description:mrp.product_product_computer_desk_head
 #: model_terms:product.template,description:mrp.product_product_computer_desk_head_product_template
 msgid "Solid wood is a durable natural material."
 msgstr "Solid wood is a durable natural material."
 
 #. module: mrp
-#: model_terms:product.product,description:mrp.product_product_computer_desk
 #: model_terms:product.template,description:mrp.product_product_computer_desk_product_template
 msgid "Solid wood table."
 msgstr "Solid wood table."
 
 #. module: mrp
+#. odoo-python
 #: code:addons/mrp/models/mrp_unbuild.py:0
 #, python-format
 msgid ""
@@ -4500,6 +4568,7 @@ msgstr ""
 "tootmistellimuse, et saada kätte õiged kõrvaltooted."
 
 #. module: mrp
+#. odoo-python
 #: code:addons/mrp/models/mrp_unbuild.py:0
 #, python-format
 msgid ""
@@ -4519,6 +4588,7 @@ msgstr ""
 "lõplikult tühistada. Kas olede kindel, et soovite tegevust läbi viia ?"
 
 #. module: mrp
+#. odoo-python
 #: code:addons/mrp/models/mrp_production.py:0
 #, python-format
 msgid ""
@@ -4529,6 +4599,7 @@ msgstr ""
 " maha võtta."
 
 #. module: mrp
+#. odoo-python
 #: code:addons/mrp/models/mrp_production.py:0
 #, python-format
 msgid ""
@@ -4541,7 +4612,7 @@ msgstr ""
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__origin
 msgid "Source"
-msgstr "Alusdokument"
+msgstr "Tellimuse nr"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_unbuild__location_id
@@ -4604,13 +4675,11 @@ msgid "Split productions"
 msgstr ""
 
 #. module: mrp
-#: model_terms:product.product,description:mrp.product_product_computer_desk_screw
 #: model_terms:product.template,description:mrp.product_product_computer_desk_screw_product_template
 msgid "Stainless steel screw"
 msgstr "Stainless steel screw"
 
 #. module: mrp
-#: model_terms:product.product,description:mrp.product_product_computer_desk_bolt
 #: model_terms:product.template,description:mrp.product_product_computer_desk_bolt_product_template
 msgid "Stainless steel screw full (dia - 5mm, Length - 10mm)"
 msgstr "Stainless steel screw full (dia - 5mm, Length - 10mm)"
@@ -4636,7 +4705,7 @@ msgstr "Alguskuupäev"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__state
 msgid "State"
-msgstr "Maakond"
+msgstr "Staatus"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_unbuild__state
@@ -4644,7 +4713,7 @@ msgstr "Maakond"
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_production_filter
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_production_workorder_form_view_filter
 msgid "Status"
-msgstr "Staatus"
+msgstr "Olek"
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_production__activity_state
@@ -4698,7 +4767,7 @@ msgstr "Laosiirded"
 #. module: mrp
 #: model:ir.model,name:mrp.model_report_stock_report_reception
 msgid "Stock Reception Report"
-msgstr ""
+msgstr "Laovastuvõtu aruanne"
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_report_stock_report_product_product_replenishment
@@ -4721,6 +4790,7 @@ msgid "Stock rule report"
 msgstr "Laoreegli aruanne"
 
 #. module: mrp
+#. odoo-python
 #: code:addons/mrp/models/stock_warehouse.py:0
 #, python-format
 msgid "Store Finished Product"
@@ -4747,31 +4817,26 @@ msgid "Subcontracting"
 msgstr "Alltöövõtt"
 
 #. module: mrp
-#: model:product.product,name:mrp.product_product_computer_desk
 #: model:product.template,name:mrp.product_product_computer_desk_product_template
 msgid "Table"
 msgstr "Laud"
 
 #. module: mrp
-#: model:product.product,name:mrp.product_product_table_kit
 #: model:product.template,name:mrp.product_product_table_kit_product_template
 msgid "Table Kit"
 msgstr "Lauakomplekt"
 
 #. module: mrp
-#: model:product.product,name:mrp.product_product_computer_desk_leg
 #: model:product.template,name:mrp.product_product_computer_desk_leg_product_template
 msgid "Table Leg"
 msgstr "Lauajalg"
 
 #. module: mrp
-#: model:product.product,name:mrp.product_product_computer_desk_head
 #: model:product.template,name:mrp.product_product_computer_desk_head_product_template
 msgid "Table Top"
 msgstr "Lauaplaat"
 
 #. module: mrp
-#: model_terms:product.product,description:mrp.product_product_table_kit
 #: model_terms:product.template,description:mrp.product_product_table_kit_product_template
 msgid "Table kit"
 msgstr "Lauakomplekt"
@@ -4792,6 +4857,8 @@ msgid ""
 "Technical Field used to decide whether the button \"Allocation\" should be "
 "displayed."
 msgstr ""
+"Tehniline väli, mida kasutatakse selleks, et otsustada, kas nupp \"Toodete "
+"eraldamine\" tuleb kuvada."
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_production__reserve_visible
@@ -4809,6 +4876,7 @@ msgid "Text"
 msgstr "Tekst"
 
 #. module: mrp
+#. odoo-python
 #: code:addons/mrp/models/mrp_bom.py:0 code:addons/mrp/models/mrp_bom.py:0
 #, python-format
 msgid ""
@@ -4817,12 +4885,14 @@ msgid ""
 msgstr "Valitud toote mõõtühikul on teine kategooria kui toote vormis."
 
 #. module: mrp
+#. odoo-python
 #: code:addons/mrp/models/mrp_workcenter.py:0
 #, python-format
 msgid "The Workorder (%s) cannot be started twice!"
 msgstr ""
 
 #. module: mrp
+#. odoo-python
 #: code:addons/mrp/models/mrp_bom.py:0
 #, python-format
 msgid ""
@@ -4833,18 +4903,21 @@ msgstr ""
 "tootega %(bom_product)s."
 
 #. module: mrp
+#. odoo-python
 #: code:addons/mrp/models/mrp_workcenter.py:0
 #, python-format
 msgid "The capacity must be strictly positive."
 msgstr "The capacity must be strictly positive."
 
 #. module: mrp
+#. odoo-python
 #: code:addons/mrp/models/mrp_production.py:0
 #, python-format
 msgid "The component %s should not be the same as the product to produce."
 msgstr ""
 
 #. module: mrp
+#. odoo-python
 #: code:addons/mrp/models/stock_orderpoint.py:0
 #, python-format
 msgid "The following replenishment order has been generated"
@@ -4880,6 +4953,7 @@ msgid ""
 msgstr ""
 
 #. module: mrp
+#. odoo-python
 #: code:addons/mrp/models/mrp_workorder.py:0
 #, python-format
 msgid ""
@@ -4890,6 +4964,7 @@ msgstr ""
 "palun parandage see, et salvestada töökäsk."
 
 #. module: mrp
+#. odoo-python
 #: code:addons/mrp/models/mrp_bom.py:0
 #, python-format
 msgid ""
@@ -4905,6 +4980,7 @@ msgid ""
 msgstr ""
 
 #. module: mrp
+#. odoo-python
 #: code:addons/mrp/models/mrp_production.py:0
 #: model:ir.model.constraint,message:mrp.constraint_mrp_bom_qty_positive
 #: model:ir.model.constraint,message:mrp.constraint_mrp_production_qty_positive
@@ -4913,15 +4989,7 @@ msgid "The quantity to produce must be positive!"
 msgstr "Toodetav kogus peab olema positiivne!"
 
 #. module: mrp
-#: code:addons/mrp/models/mrp_unbuild.py:0
-#: code:addons/mrp/models/mrp_unbuild.py:0
-#, python-format
-msgid ""
-"The selected serial number does not correspond to the one used in the "
-"manufacturing order, please select another one."
-msgstr ""
-
-#. module: mrp
+#. odoo-python
 #: code:addons/mrp/models/mrp_production.py:0
 #, python-format
 msgid ""
@@ -4932,6 +5000,7 @@ msgstr ""
 "toodetud"
 
 #. module: mrp
+#. odoo-python
 #: code:addons/mrp/models/mrp_production.py:0
 #, python-format
 msgid ""
@@ -4946,12 +5015,14 @@ msgid "The tag name must be unique."
 msgstr ""
 
 #. module: mrp
+#. odoo-python
 #: code:addons/mrp/models/mrp_bom.py:0
 #, python-format
 msgid "The total cost share for a BoM's by-products cannot exceed 100."
 msgstr ""
 
 #. module: mrp
+#. odoo-python
 #: code:addons/mrp/models/mrp_production.py:0
 #, python-format
 msgid ""
@@ -4960,6 +5031,7 @@ msgid ""
 msgstr ""
 
 #. module: mrp
+#. odoo-python
 #: code:addons/mrp/models/mrp_workorder.py:0
 #, python-format
 msgid "The work order should have already been processed."
@@ -4971,6 +5043,7 @@ msgid "Theme Template"
 msgstr "Teema mall"
 
 #. module: mrp
+#. odoo-python
 #: code:addons/mrp/wizard/stock_assign_serial_numbers.py:0
 #, python-format
 msgid "There are more Serial Numbers than the Quantity to Produce"
@@ -5010,7 +5083,7 @@ msgstr ""
 " eeldatav kestus 30 minutit."
 
 #. module: mrp
-#. openerp-web
+#. odoo-javascript
 #: code:addons/mrp/static/src/components/bom_overview_line/mrp_bom_overview_line.xml:0
 #: code:addons/mrp/static/src/components/bom_overview_line/mrp_bom_overview_line.xml:0
 #, python-format
@@ -5018,7 +5091,7 @@ msgid "This is a BoM of type Kit!"
 msgstr "See on Komplekti tüüpi retsept!"
 
 #. module: mrp
-#. openerp-web
+#. odoo-javascript
 #: code:addons/mrp/static/src/components/bom_overview_table/mrp_bom_overview_table.xml:0
 #, python-format
 msgid ""
@@ -5029,7 +5102,7 @@ msgstr ""
 "valmistamiseks minevate komponentide ja tegevuste kulu."
 
 #. module: mrp
-#. openerp-web
+#. odoo-javascript
 #: code:addons/mrp/static/src/components/bom_overview_table/mrp_bom_overview_table.xml:0
 #, python-format
 msgid "This is the cost defined on the product."
@@ -5045,20 +5118,22 @@ msgstr ""
 "                Te saate toote filtreerida, et näha kõiki toote eelnevaid liikumisi."
 
 #. module: mrp
+#. odoo-python
 #: code:addons/mrp/models/mrp_production.py:0
 #, python-format
 msgid "This production has been merge in %s"
 msgstr ""
 
 #. module: mrp
+#. odoo-python
 #: code:addons/mrp/models/stock_rule.py:0
 #, python-format
 msgid "This production order has been created from Replenishment Report."
 msgstr ""
 
 #. module: mrp
+#. odoo-python
 #: code:addons/mrp/models/mrp_production.py:0
-#: code:addons/mrp/models/mrp_workorder.py:0
 #, python-format
 msgid "This serial number for product %s has already been produced"
 msgstr "Toote%s seerianumber on juba toodetud"
@@ -5092,6 +5167,7 @@ msgid "Time Tracking"
 msgstr "Aja jälgimine"
 
 #. module: mrp
+#. odoo-python
 #: code:addons/mrp/models/mrp_workorder.py:0
 #, python-format
 msgid "Time Tracking: %(user)s"
@@ -5180,7 +5256,6 @@ msgid "Today Activities"
 msgstr "Tänased tegevused"
 
 #. module: mrp
-#: model_terms:product.product,description:mrp.product_product_wood_wear
 #: model_terms:product.template,description:mrp.product_product_wood_wear_product_template
 msgid "Top layer of a wood panel."
 msgstr "Top layer of a wood panel."
@@ -5267,7 +5342,7 @@ msgstr "Jälgimine"
 #. module: mrp
 #: model:ir.model,name:mrp.model_stock_picking
 msgid "Transfer"
-msgstr "Ülekanne"
+msgstr "Siirded"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
@@ -5291,6 +5366,7 @@ msgid "Type of the exception activity on record."
 msgstr "Kirjel oleva erandtegevuse tüüp."
 
 #. module: mrp
+#. odoo-python
 #: code:addons/mrp/models/mrp_production.py:0
 #, python-format
 msgid "Unable to split with more than the quantity to produce."
@@ -5317,6 +5393,7 @@ msgid "Unbuild Order"
 msgstr "Tee tellimus komponentideks"
 
 #. module: mrp
+#. odoo-python
 #: code:addons/mrp/models/mrp_unbuild.py:0
 #, python-format
 msgid "Unbuild Order product quantity has to be strictly positive."
@@ -5330,6 +5407,7 @@ msgid "Unbuild Orders"
 msgstr "Kreedit tootmistellimused"
 
 #. module: mrp
+#. odoo-python
 #: code:addons/mrp/models/mrp_production.py:0
 #, python-format
 msgid "Unbuild: %s"
@@ -5346,19 +5424,19 @@ msgid "Unbuilt"
 msgstr ""
 
 #. module: mrp
-#. openerp-web
+#. odoo-javascript
 #: code:addons/mrp/static/src/components/bom_overview_control_panel/mrp_bom_overview_control_panel.xml:0
 #, python-format
 msgid "Unfold"
 msgstr "Ava"
 
 #. module: mrp
-#. openerp-web
+#. odoo-javascript
 #: code:addons/mrp/static/src/components/bom_overview_table/mrp_bom_overview_table.xml:0
 #: code:addons/mrp/static/src/components/bom_overview_table/mrp_bom_overview_table.xml:0
 #, python-format
 msgid "Unit Cost"
-msgstr ""
+msgstr "Ühiku kulu"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_move__unit_factor
@@ -5384,36 +5462,6 @@ msgid ""
 "Unit of Measure (Unit of Measure) is the unit of measurement for the "
 "inventory control"
 msgstr "Mõõtühik on laovarude kontrollimiseks kasutatav ühikinventory control"
-
-#. module: mrp
-#: model:product.product,uom_name:mrp.product_product_computer_desk
-#: model:product.product,uom_name:mrp.product_product_computer_desk_bolt
-#: model:product.product,uom_name:mrp.product_product_computer_desk_head
-#: model:product.product,uom_name:mrp.product_product_computer_desk_leg
-#: model:product.product,uom_name:mrp.product_product_computer_desk_screw
-#: model:product.product,uom_name:mrp.product_product_drawer_case
-#: model:product.product,uom_name:mrp.product_product_drawer_drawer
-#: model:product.product,uom_name:mrp.product_product_plastic_laminate
-#: model:product.product,uom_name:mrp.product_product_ply_veneer
-#: model:product.product,uom_name:mrp.product_product_table_kit
-#: model:product.product,uom_name:mrp.product_product_wood_panel
-#: model:product.product,uom_name:mrp.product_product_wood_ply
-#: model:product.product,uom_name:mrp.product_product_wood_wear
-#: model:product.template,uom_name:mrp.product_product_computer_desk_bolt_product_template
-#: model:product.template,uom_name:mrp.product_product_computer_desk_head_product_template
-#: model:product.template,uom_name:mrp.product_product_computer_desk_leg_product_template
-#: model:product.template,uom_name:mrp.product_product_computer_desk_product_template
-#: model:product.template,uom_name:mrp.product_product_computer_desk_screw_product_template
-#: model:product.template,uom_name:mrp.product_product_drawer_case_product_template
-#: model:product.template,uom_name:mrp.product_product_drawer_drawer_product_template
-#: model:product.template,uom_name:mrp.product_product_plastic_laminate_product_template
-#: model:product.template,uom_name:mrp.product_product_ply_veneer_product_template
-#: model:product.template,uom_name:mrp.product_product_table_kit_product_template
-#: model:product.template,uom_name:mrp.product_product_wood_panel_product_template
-#: model:product.template,uom_name:mrp.product_product_wood_ply_product_template
-#: model:product.template,uom_name:mrp.product_product_wood_wear_product_template
-msgid "Units"
-msgstr "tk"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
@@ -5444,7 +5492,7 @@ msgid "Unplan"
 msgstr "Eemalda plaanist"
 
 #. module: mrp
-#. openerp-web
+#. odoo-javascript
 #: code:addons/mrp/static/src/mrp_forecasted/forecasted_details.xml:0
 #: model:ir.actions.server,name:mrp.mrp_production_action_unreserve_tree
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
@@ -5459,7 +5507,7 @@ msgid "UoM"
 msgstr "Mõõtühikud"
 
 #. module: mrp
-#. openerp-web
+#. odoo-javascript
 #: code:addons/mrp/static/src/views/mrp_documents_kanban/mrp_documents_kanban_controller.xml:0
 #: code:addons/mrp/static/src/xml/mrp_document_template.xml:0
 #, python-format
@@ -5527,7 +5575,7 @@ msgid "Validate"
 msgstr "Kinnita"
 
 #. module: mrp
-#. openerp-web
+#. odoo-javascript
 #: code:addons/mrp/static/src/components/bom_overview_control_panel/mrp_bom_overview_control_panel.xml:0
 #, python-format
 msgid "Variant:"
@@ -5583,6 +5631,7 @@ msgid "Waiting for components"
 msgstr ""
 
 #. module: mrp
+#. odoo-python
 #: code:addons/mrp/models/mrp_workorder.py:0
 #, python-format
 msgid "Waiting the previous work order, planned from %(start)s to %(end)s"
@@ -5595,7 +5644,7 @@ msgid "Warehouse"
 msgstr "Ladu"
 
 #. module: mrp
-#. openerp-web
+#. odoo-javascript
 #: code:addons/mrp/static/src/components/bom_overview_control_panel/mrp_bom_overview_control_panel.xml:0
 #, python-format
 msgid "Warehouse:"
@@ -5607,12 +5656,11 @@ msgid "Warn Insufficient Unbuild Quantity"
 msgstr "Hoiata puuduvat lahti võtmise kogust"
 
 #. module: mrp
+#. odoo-python
 #: code:addons/mrp/models/mrp_bom.py:0 code:addons/mrp/models/mrp_bom.py:0
 #: code:addons/mrp/models/mrp_bom.py:0
 #: code:addons/mrp/models/mrp_production.py:0
 #: code:addons/mrp/models/mrp_production.py:0
-#: code:addons/mrp/models/mrp_unbuild.py:0
-#: code:addons/mrp/models/mrp_unbuild.py:0
 #: code:addons/mrp/models/stock_scrap.py:0
 #, python-format
 msgid "Warning"
@@ -5624,7 +5672,6 @@ msgid "Warnings"
 msgstr "Hoiatused"
 
 #. module: mrp
-#: model:product.product,name:mrp.product_product_wood_wear
 #: model:product.template,name:mrp.product_product_wood_wear_product_template
 msgid "Wear Layer"
 msgstr "Wear Layer"
@@ -5681,6 +5728,7 @@ msgid ""
 msgstr "Toodete valmistamisel saab neid selles laos valmistada."
 
 #. module: mrp
+#. odoo-python
 #: code:addons/mrp/models/stock_rule.py:0
 #, python-format
 msgid ""
@@ -5728,7 +5776,6 @@ msgid "Wizard to mark as done or create back order"
 msgstr "Wizard to mark as done or create back order"
 
 #. module: mrp
-#: model:product.product,name:mrp.product_product_wood_panel
 #: model:product.template,name:mrp.product_product_wood_panel_product_template
 msgid "Wood Panel"
 msgstr "Wood Panel"
@@ -5858,7 +5905,6 @@ msgid "Work Orders Planning"
 msgstr "Töökorralduse planeerimine"
 
 #. module: mrp
-#: model:ir.model.fields,field_description:mrp.field_mrp_routing_workcenter__worksheet_type
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_routing_workcenter_form_view
 msgid "Work Sheet"
 msgstr "Tööleht"
@@ -5901,6 +5947,7 @@ msgid "Workcenter"
 msgstr "Töökeskus"
 
 #. module: mrp
+#. odoo-python
 #: code:addons/mrp/models/mrp_workcenter.py:0
 #, python-format
 msgid "Workcenter %s cannot be an alternative of itself."
@@ -5953,6 +6000,7 @@ msgid "Working user on this work order."
 msgstr "Sellel töökorraldusel töötav kasutaja"
 
 #. module: mrp
+#: model:ir.model.fields,field_description:mrp.field_mrp_routing_workcenter__worksheet_type
 #: model:ir.model.fields,field_description:mrp.field_mrp_workorder__worksheet
 msgid "Worksheet"
 msgstr "Tööleht"
@@ -5968,6 +6016,7 @@ msgid "Worksheet URL"
 msgstr "Töölehe URL"
 
 #. module: mrp
+#. odoo-python
 #: code:addons/mrp/models/stock_lot.py:0
 #, python-format
 msgid ""
@@ -5991,6 +6040,7 @@ msgstr ""
 "lingi oma failile"
 
 #. module: mrp
+#. odoo-python
 #: code:addons/mrp/models/mrp_bom.py:0
 #, python-format
 msgid ""
@@ -6001,6 +6051,7 @@ msgstr ""
 "üks juurdetellimisreegel."
 
 #. module: mrp
+#. odoo-python
 #: code:addons/mrp/models/mrp_bom.py:0
 #, python-format
 msgid ""
@@ -6011,6 +6062,7 @@ msgstr ""
 "Please close or cancel it first."
 
 #. module: mrp
+#. odoo-python
 #: code:addons/mrp/models/mrp_production.py:0
 #, python-format
 msgid ""
@@ -6018,6 +6070,7 @@ msgid ""
 msgstr ""
 
 #. module: mrp
+#. odoo-python
 #: code:addons/mrp/models/mrp_production.py:0
 #, python-format
 msgid ""
@@ -6026,18 +6079,21 @@ msgid ""
 msgstr ""
 
 #. module: mrp
+#. odoo-python
 #: code:addons/mrp/models/mrp_production.py:0
 #, python-format
 msgid "You can only merge manufacturing with the same operation type"
 msgstr ""
 
 #. module: mrp
+#. odoo-python
 #: code:addons/mrp/models/mrp_production.py:0
 #, python-format
 msgid "You can only merge manufacturing with the same state."
 msgstr ""
 
 #. module: mrp
+#. odoo-python
 #: code:addons/mrp/models/mrp_workorder.py:0
 #, python-format
 msgid ""
@@ -6047,12 +6103,14 @@ msgstr ""
 "Te ei saa muuta töökeskust töökäsul, mis on töös või tehtud staatusega."
 
 #. module: mrp
+#. odoo-python
 #: code:addons/mrp/models/mrp_bom.py:0
 #, python-format
 msgid "You cannot create a new Bill of Material from here."
 msgstr "Te ei saa siit luua uut retsepti."
 
 #. module: mrp
+#. odoo-python
 #: code:addons/mrp/models/mrp_routing.py:0
 #: code:addons/mrp/models/mrp_workorder.py:0
 #, python-format
@@ -6060,12 +6118,14 @@ msgid "You cannot create cyclic dependency."
 msgstr ""
 
 #. module: mrp
+#. odoo-python
 #: code:addons/mrp/models/mrp_unbuild.py:0
 #, python-format
 msgid "You cannot delete an unbuild order if the state is 'Done'."
 msgstr "Te ei saa kustutada lahti võtmise käsku, kui staatus on \"Tehtud2."
 
 #. module: mrp
+#. odoo-python
 #: code:addons/mrp/models/mrp_production.py:0
 #, python-format
 msgid "You cannot have %s  as the finished product and in the Byproducts"
@@ -6073,12 +6133,14 @@ msgstr ""
 "Teil ei saa olla toode %s samaaegselt nii lõpptoode kui ka kõrvaltoode."
 
 #. module: mrp
+#. odoo-python
 #: code:addons/mrp/models/mrp_workorder.py:0
 #, python-format
 msgid "You cannot link this work order to another manufacturing order."
 msgstr "Te ei saa ühendada seda töökäsku teise tootmistellimusega."
 
 #. module: mrp
+#. odoo-python
 #: code:addons/mrp/models/mrp_production.py:0
 #, python-format
 msgid "You cannot move a manufacturing order once it is cancelled or done."
@@ -6087,18 +6149,21 @@ msgstr ""
 " märgitud."
 
 #. module: mrp
+#. odoo-python
 #: code:addons/mrp/models/mrp_workorder.py:0
 #, python-format
 msgid "You cannot produce the same serial number twice."
 msgstr "You cannot produce the same serial number twice."
 
 #. module: mrp
+#. odoo-python
 #: code:addons/mrp/models/mrp_unbuild.py:0
 #, python-format
 msgid "You cannot unbuild a undone manufacturing order."
 msgstr "You cannot unbuild a undone manufacturing order."
 
 #. module: mrp
+#. odoo-python
 #: code:addons/mrp/models/mrp_bom.py:0
 #, python-format
 msgid ""
@@ -6130,6 +6195,7 @@ msgstr ""
 "                        </b>"
 
 #. module: mrp
+#. odoo-python
 #: code:addons/mrp/wizard/change_production_qty.py:0
 #, python-format
 msgid ""
@@ -6158,6 +6224,7 @@ msgstr ""
 "toodab Odoo kõik valmistooted ja tarbib komponendid."
 
 #. module: mrp
+#. odoo-python
 #: code:addons/mrp/models/mrp_production.py:0
 #, python-format
 msgid ""
@@ -6166,12 +6233,14 @@ msgid ""
 msgstr ""
 
 #. module: mrp
+#. odoo-python
 #: code:addons/mrp/models/mrp_production.py:0
 #, python-format
 msgid "You need at least two production orders to merge them."
 msgstr ""
 
 #. module: mrp
+#. odoo-python
 #: code:addons/mrp/models/mrp_workorder.py:0
 #, python-format
 msgid ""
@@ -6184,6 +6253,7 @@ msgstr ""
 " efektiivsus menüü all."
 
 #. module: mrp
+#. odoo-python
 #: code:addons/mrp/models/mrp_workorder.py:0
 #, python-format
 msgid ""
@@ -6196,6 +6266,7 @@ msgstr ""
 "Tootmise efektiivsus menüü all."
 
 #. module: mrp
+#. odoo-python
 #: code:addons/mrp/models/mrp_workcenter.py:0
 #, python-format
 msgid ""
@@ -6208,12 +6279,14 @@ msgstr ""
 " efektiivsus menüü all."
 
 #. module: mrp
+#. odoo-python
 #: code:addons/mrp/models/mrp_workorder.py:0
 #, python-format
 msgid "You need to provide a lot for the finished product."
 msgstr "Te peate lisama partii lõpptootele."
 
 #. module: mrp
+#. odoo-python
 #: code:addons/mrp/wizard/mrp_immediate_production.py:0
 #, python-format
 msgid "You need to supply Lot/Serial Number for products:"
@@ -6225,6 +6298,7 @@ msgid "You produced less than initial demand"
 msgstr "Teil on toodetud algsest nõutud kogustest vähem."
 
 #. module: mrp
+#. odoo-python
 #: code:addons/mrp/models/mrp_unbuild.py:0
 #, python-format
 msgid "You should provide a lot number for the final product."
@@ -6259,7 +6333,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:mrp.res_config_settings_view_form
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_product_template_form_inherited
 msgid "days"
-msgstr "päeva pärast"
+msgstr "päev(a)"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_workorder_form_view_inherit
@@ -6285,18 +6359,21 @@ msgid "last"
 msgstr "viimane"
 
 #. module: mrp
+#. odoo-python
 #: code:addons/mrp/models/mrp_production.py:0
 #, python-format
 msgid "manufacturing order"
 msgstr "Tootmistellimus"
 
 #. module: mrp
+#. odoo-python
 #: code:addons/mrp/models/mrp_production.py:0
 #, python-format
 msgid "merged"
 msgstr ""
 
 #. module: mrp
+#. odoo-python
 #: code:addons/mrp/report/mrp_report_bom_structure.py:0
 #: code:addons/mrp/report/mrp_report_bom_structure.py:0
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_routing_workcenter_form_view
@@ -6336,6 +6413,7 @@ msgid "real duration"
 msgstr ""
 
 #. module: mrp
+#. odoo-python
 #: code:addons/mrp/models/mrp_production.py:0
 #, python-format
 msgid "split"

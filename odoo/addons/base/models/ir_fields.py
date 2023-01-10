@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+import json
 import functools
 import itertools
 
@@ -191,6 +192,13 @@ class IrFieldsConverter(models.AbstractModel):
         if not converter:
             return None
         return functools.partial(converter, model, field)
+
+    def _str_to_json(self, model, field, value):
+        try:
+            return json.loads(value), []
+        except ValueError:
+            msg = _("'%s' does not seem to be a valid JSON for field '%%(field)s'")
+            raise self._format_import_error(ValueError, msg, value)
 
     @api.model
     def _str_to_boolean(self, model, field, value):
@@ -604,7 +612,7 @@ class IrFieldsConverter(models.AbstractModel):
         def log(f, exception):
             if not isinstance(exception, Warning):
                 current_field_name = self.env[field.comodel_name]._fields[f].string
-                arg0 = exception.args[0] % {'field': '%(field)s/' + current_field_name}
+                arg0 = exception.args[0].replace('%(field)s', '%(field)s/' + current_field_name)
                 exception.args = (arg0, *exception.args[1:])
                 raise exception
             warnings.append(exception)

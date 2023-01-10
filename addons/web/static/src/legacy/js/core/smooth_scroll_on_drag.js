@@ -378,8 +378,7 @@ const SmoothScrollOnDrag = Class.extend(mixins.ParentedMixin, {
      */
     _onSmoothDragStart(ev, ui, onDragStartCallBack) {
         this.scrollTargetIsDocument = this.$scrollTarget.is('html');
-        const iframeEl = this.$scrollTarget[0].ownerDocument.defaultView.frameElement;
-        this.iframeOffset = iframeEl && iframeEl.getBoundingClientRect();
+        this.iframeOffset = false;
         this.scrollTargetIsParent = this.$scrollTarget.get(0).contains(this.$element.get(0));
         this._updatePositionOptions(ui);
         this._startSmoothScroll(ui);

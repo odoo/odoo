@@ -1,26 +1,48 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# * hr_timesheet_attendance
+# 	* hr_timesheet_attendance
 # 
 # Translators:
-# Martin Trigaux, 2018
-# Morten Schou <ms@msteknik.dk>, 2018
-# Jesper Carstensen <jc@danodoo.dk>, 2018
-# Sanne Kristensen <sanne@vkdata.dk>, 2018
+# Martin Trigaux, 2022
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.5\n"
+"Project-Id-Version: Odoo Server 15.5alpha1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-09-21 13:17+0000\n"
-"PO-Revision-Date: 2018-08-24 09:19+0000\n"
-"Last-Translator: Sanne Kristensen <sanne@vkdata.dk>, 2018\n"
+"POT-Creation-Date: 2022-09-20 09:02+0000\n"
+"PO-Revision-Date: 2022-09-22 05:52+0000\n"
+"Last-Translator: Martin Trigaux, 2022\n"
 "Language-Team: Danish (https://www.transifex.com/odoo/teams/41243/da/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: da\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#. module: hr_timesheet_attendance
+#: model:ir.model.fields,field_description:hr_timesheet_attendance.field_hr_timesheet_attendance_report__attendance_cost
+msgid "Attendance Cost"
+msgstr ""
+
+#. module: hr_timesheet_attendance
+#: model:ir.model.fields,field_description:hr_timesheet_attendance.field_hr_timesheet_attendance_report__total_attendance
+msgid "Attendance Hours"
+msgstr ""
+
+#. module: hr_timesheet_attendance
+#: model:ir.model.fields,field_description:hr_timesheet_attendance.field_hr_timesheet_attendance_report__company_id
+msgid "Company"
+msgstr "Virksomhed"
+
+#. module: hr_timesheet_attendance
+#: model_terms:ir.actions.act_window,help:hr_timesheet_attendance.action_hr_timesheet_attendance_report
+msgid "Compare the time recorded by your employees with their attendance."
+msgstr ""
+
+#. module: hr_timesheet_attendance
+#: model:ir.model.fields,field_description:hr_timesheet_attendance.field_hr_timesheet_attendance_report__cost_difference
+msgid "Cost Difference"
+msgstr ""
 
 #. module: hr_timesheet_attendance
 #: model:ir.model.fields,field_description:hr_timesheet_attendance.field_hr_timesheet_attendance_report__date
@@ -34,8 +56,13 @@ msgid "Display Name"
 msgstr "Vis navn"
 
 #. module: hr_timesheet_attendance
-#: model:ir.actions.act_window,name:hr_timesheet_attendance.action_hr_timesheet_attendance_report
-msgid "HR Timesheet/Attendance Report"
+#: model_terms:ir.ui.view,arch_db:hr_timesheet_attendance.view_hr_timesheet_attendance_report_search
+msgid "Employee"
+msgstr "Medarbejder"
+
+#. module: hr_timesheet_attendance
+#: model:ir.model.fields,field_description:hr_timesheet_attendance.field_hr_timesheet_attendance_report__total_difference
+msgid "Hours Difference"
 msgstr ""
 
 #. module: hr_timesheet_attendance
@@ -49,37 +76,60 @@ msgid "Last Modified on"
 msgstr "Sidst ændret den"
 
 #. module: hr_timesheet_attendance
+#: model:ir.model,name:hr_timesheet_attendance.model_ir_ui_menu
+msgid "Menu"
+msgstr "Menu"
+
+#. module: hr_timesheet_attendance
+#: model_terms:ir.actions.act_window,help:hr_timesheet_attendance.action_hr_timesheet_attendance_report
+msgid "No data yet!"
+msgstr "Ingen data endnu!"
+
+#. module: hr_timesheet_attendance
+#: model_terms:ir.ui.view,arch_db:hr_timesheet_attendance.hr_timesheet_attendance_report_view_tree
+msgid "Sum of Total Attendance"
+msgstr ""
+
+#. module: hr_timesheet_attendance
+#: model_terms:ir.ui.view,arch_db:hr_timesheet_attendance.hr_timesheet_attendance_report_view_tree
+msgid "Sum of Total Difference"
+msgstr ""
+
+#. module: hr_timesheet_attendance
+#: model_terms:ir.ui.view,arch_db:hr_timesheet_attendance.hr_timesheet_attendance_report_view_tree
+msgid "Sum of Total Timesheet"
+msgstr ""
+
+#. module: hr_timesheet_attendance
+#: model:ir.actions.act_window,name:hr_timesheet_attendance.action_hr_timesheet_attendance_report
 #: model:ir.ui.menu,name:hr_timesheet_attendance.menu_hr_timesheet_attendance_report
 msgid "Timesheet / Attendance"
 msgstr "Timesedler / fremmøde"
 
 #. module: hr_timesheet_attendance
-#: model:ir.model,name:hr_timesheet_attendance.model_hr_timesheet_attendance_report
-msgid "Timesheet Attendance Report"
+#: model_terms:ir.ui.view,arch_db:hr_timesheet_attendance.hr_timesheet_attendance_report_view_graph
+#: model_terms:ir.ui.view,arch_db:hr_timesheet_attendance.hr_timesheet_attendance_report_view_tree
+#: model_terms:ir.ui.view,arch_db:hr_timesheet_attendance.view_hr_timesheet_attendance_report_pivot
+#: model_terms:ir.ui.view,arch_db:hr_timesheet_attendance.view_hr_timesheet_attendance_report_search
+msgid "Timesheet Attendance"
 msgstr ""
 
 #. module: hr_timesheet_attendance
-#: model:ir.model.fields,field_description:hr_timesheet_attendance.field_hr_timesheet_attendance_report__total_attendance
-msgid "Total Attendance"
-msgstr "Total fremmøde"
+#: model:ir.model,name:hr_timesheet_attendance.model_hr_timesheet_attendance_report
+msgid "Timesheet Attendance Report"
+msgstr "Fremmøderapport ud fra timesedler "
 
 #. module: hr_timesheet_attendance
-#: model:ir.model.fields,field_description:hr_timesheet_attendance.field_hr_timesheet_attendance_report__total_difference
-msgid "Total Difference"
-msgstr "Difference i alt"
+#: model:ir.model.fields,field_description:hr_timesheet_attendance.field_hr_timesheet_attendance_report__timesheets_cost
+msgid "Timesheet Cost"
+msgstr "Timeseddel kostpris"
 
 #. module: hr_timesheet_attendance
 #: model:ir.model.fields,field_description:hr_timesheet_attendance.field_hr_timesheet_attendance_report__total_timesheet
-msgid "Total Timesheet"
-msgstr "I alt på tidsskema"
+msgid "Timesheets Hours"
+msgstr ""
 
 #. module: hr_timesheet_attendance
 #: model:ir.model.fields,field_description:hr_timesheet_attendance.field_hr_timesheet_attendance_report__user_id
 msgid "User"
 msgstr "Bruger"
-
-#. module: hr_timesheet_attendance
-#: model_terms:ir.ui.view,arch_db:hr_timesheet_attendance.view_hr_timesheet_attendance_report_pivot
-#: model_terms:ir.ui.view,arch_db:hr_timesheet_attendance.view_hr_timesheet_attendance_report_search
-msgid "timesheet attendance"
-msgstr ""

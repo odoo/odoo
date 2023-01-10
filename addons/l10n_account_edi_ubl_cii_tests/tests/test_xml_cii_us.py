@@ -23,6 +23,12 @@ class TestCIIUS(TestUBLCommon):
             'country_id': cls.env.ref('base.us').id,
         })
 
+        cls.tax_0 = cls.env['account.tax'].create({
+            'name': "Tax 0%",
+            'type_tax_use': 'purchase',
+            'amount': 0,
+        })
+
     @classmethod
     def setup_company_data(cls, company_name, chart_template):
         # OVERRIDE

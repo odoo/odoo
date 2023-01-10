@@ -430,6 +430,7 @@ export class ListController extends Component {
             confirm: async () => {
                 const total = root.count;
                 const resIds = await this.model.root.deleteRecords();
+                this.model.notify();
                 if (
                     root.isDomainSelected &&
                     resIds.length === session.active_ids_limit &&

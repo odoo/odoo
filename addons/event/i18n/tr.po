@@ -85,10 +85,8 @@ msgstr "%s (kopya)"
 #: model:ir.actions.report,print_report_name:event.action_report_event_registration_foldable_badge
 msgid ""
 "'Foldable Badge - %s - %s' % ((object.event_id.name or "
-"'Event').replace('/',''), object.name.replace('/',''))"
+"'Event').replace('/',''), (object.name or '').replace('/',''))"
 msgstr ""
-"'Katlanabilir Rozet - %s - %s' % ((object.event_id.name or "
-"'Event').replace('/',''), object.name.replace('/',''))"
 
 #. module: event
 #: model:ir.actions.report,print_report_name:event.action_report_event_event_foldable_badge
@@ -99,10 +97,8 @@ msgstr "'Katlanabilir Rozet - %s' % (object.name or 'Event').replace('/','')"
 #: model:ir.actions.report,print_report_name:event.action_report_event_registration_full_page_ticket
 msgid ""
 "'Full Page Ticket - %s - %s' % ((object.event_id.name or "
-"'Event').replace('/',''), object.name.replace('/',''))"
+"'Event').replace('/',''), (object.name or '').replace('/',''))"
 msgstr ""
-"'Tam Sayfa Bilet - %s - %s' % ((object.event_id.name or "
-"'Event').replace('/',''), object.name.replace('/',''))"
 
 #. module: event
 #: model:ir.actions.report,print_report_name:event.action_report_event_event_full_page_ticket
@@ -924,6 +920,13 @@ msgstr ""
 #: model:event.stage,name:event.event_stage_announced
 msgid "Announced"
 msgstr "Duyruldu"
+
+#. module: event
+#. openerp-web
+#: code:addons/event/static/src/js/tours/event_tour.js:0
+#, python-format
+msgid "Apply change."
+msgstr ""
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_search
@@ -2608,6 +2611,13 @@ msgstr "Online Katılımcılar"
 #: model:ir.model.fields,field_description:event.field_res_config_settings__module_website_event_sale
 msgid "Online Ticketing"
 msgstr "Çevrimiçi Biletleme"
+
+#. module: event
+#. openerp-web
+#: code:addons/event/static/src/js/tours/event_tour.js:0
+#, python-format
+msgid "Open date range picker. Pick a Start date for your event"
+msgstr ""
 
 #. module: event
 #: model_terms:event.event,description:event.event_0

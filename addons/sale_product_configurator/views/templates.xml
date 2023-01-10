@@ -104,6 +104,15 @@
                     <div class="text-muted small">
                         <div t-field="product.description_sale"/>
                         <div class="js_attributes"/>
+                        <div t-if="product_custom_attribute_values">
+                            <t t-foreach="product_custom_attribute_values" t-as="custom_value">
+                                <span t-esc="custom_value.get('attribute_value_name', None)"/>: <span t-esc="custom_value['custom_value']"/>
+                                <input type="hidden" class="variant_custom_value"
+                                       t-att-data-custom_product_template_attribute_value_id="custom_value['custom_product_template_attribute_value_id']"
+                                       t-att-data-attribute_value_name="custom_value.get('attribute_value_name', None)"
+                                       t-att-value="custom_value['custom_value']"/>
+                            </t>
+                        </div>
                     </div>
                     <div>
                         <t t-if="product.product_tmpl_id and not combination">

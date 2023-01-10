@@ -23,7 +23,7 @@
                     <td/>
                     <td/>
                 </tr>
-                <tr t-foreach="props.docs.lines" t-as="line" t-key="line" t-attf-class="#{line.is_matched and 'o_grid_match'}">
+                <tr t-foreach="props.docs.lines" t-as="line" t-key="line.index" t-attf-class="#{line.is_matched and 'o_grid_match'}">
                     <td t-attf-class="#{line.is_late and 'o_grid_warning'}">
                         <a t-if="line.document_in"
                             href="#" 

@@ -4,15 +4,15 @@
 # 
 # Translators:
 # Martin Trigaux, 2022
-# Jolien De Paepe, 2022
+# Jolien De Paepe, 2023
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 15.5alpha1\n"
+"Project-Id-Version: Odoo Server 16.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-09-20 09:02+0000\n"
+"POT-Creation-Date: 2022-12-15 12:51+0000\n"
 "PO-Revision-Date: 2022-09-22 05:53+0000\n"
-"Last-Translator: Jolien De Paepe, 2022\n"
+"Last-Translator: Jolien De Paepe, 2023\n"
 "Language-Team: French (https://www.transifex.com/odoo/teams/41243/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -90,8 +90,8 @@ msgid ""
 "Compute the price of the product using products and operations of related "
 "bill of materials, for manufactured products only."
 msgstr ""
-"Calculer le prix de l'article en utilisant les articles et les opérations de"
-" la nomenclature correspondante, seulement pour les articles fabriqués."
+"Calculer le prix du produit en utilisant les produits et les opérations de "
+"la nomenclature correspondante, seulement pour les produits fabriqués."
 
 #. module: mrp_account
 #: model:ir.model.fields,field_description:mrp_account.field_mrp_workcenter_productivity__cost_already_recorded
@@ -102,15 +102,6 @@ msgstr "Coût enregistré"
 #: model:ir.model.fields,field_description:mrp_account.field_mrp_production__extra_cost
 msgid "Extra Unit Cost"
 msgstr "Coût de l'unité supplémentaire"
-
-#. module: mrp_account
-#: model:ir.model.fields,help:mrp_account.field_mrp_workcenter__costs_hour_account_id
-msgid ""
-"Fill this only if you want automatic analytic accounting entries on "
-"production orders."
-msgstr ""
-"Remplissez uniquement si vous souhaitez des écritures de comptabilité "
-"analytique automatiques sur les ordres de fabrication."
 
 #. module: mrp_account
 #: model:ir.model,name:mrp_account.model_account_move_line
@@ -139,14 +130,23 @@ msgid "Mo Analytic Account Line"
 msgstr "Ligne de compte analytique OP"
 
 #. module: mrp_account
+#: model:ir.model.fields,help:mrp_account.field_mrp_workcenter__costs_hour_account_id
+msgid ""
+"Posts analytical accounting entries in real time for both component and "
+"operational costs."
+msgstr ""
+"Publiez des écritures comptables analytiques en temps réel pour les coûts "
+"des composants et les coûts opérationnels."
+
+#. module: mrp_account
 #: model:ir.model,name:mrp_account.model_product_template
 msgid "Product"
-msgstr "Article"
+msgstr "Produit"
 
 #. module: mrp_account
 #: model:ir.model,name:mrp_account.model_product_product
 msgid "Product Variant"
-msgstr "Variante d'article"
+msgstr "Variante de produit"
 
 #. module: mrp_account
 #: model:ir.model,name:mrp_account.model_mrp_production
@@ -184,6 +184,11 @@ msgid "Work Center"
 msgstr "Poste de Travail"
 
 #. module: mrp_account
+#: model:ir.model,name:mrp_account.model_mrp_routing_workcenter
+msgid "Work Center Usage"
+msgstr "Utilisation du poste de charge"
+
+#. module: mrp_account
 #: model:ir.model,name:mrp_account.model_mrp_workorder
 msgid "Work Order"
 msgstr "Ordre de travail"
@@ -204,12 +209,14 @@ msgid "Workcenters"
 msgstr "Postes de Travail"
 
 #. module: mrp_account
+#. odoo-python
 #: code:addons/mrp_account/models/stock_move.py:0
 #, python-format
 msgid "[Raw] %s"
 msgstr "[Cru] %s"
 
 #. module: mrp_account
+#. odoo-python
 #: code:addons/mrp_account/models/mrp_production.py:0
 #: code:addons/mrp_account/models/mrp_workorder.py:0
 #, python-format

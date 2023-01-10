@@ -396,3 +396,61 @@ class TestSaleMrpKitBom(TransactionCase):
 
         for move_line in ship.move_line_ids:
             self.assertEqual(move_line.move_id.product_uom_qty, move_line.qty_done, "Quantity done should be equal to the quantity reserved in the move line")
+
+    def test_kit_in_delivery_slip(self):
+        """
+        Suppose this structure:
+        Sale order:
+            - Kit 1 with a sales description("test"):
+                |- Compo 1
+            - Product 1
+        This test ensures that, when delivering a Kit product with a sales description,
+        the delivery report is correctly printed with all the products.
+        """
+        kit_1, component_1, product_1 = self.env['product.product'].create([{
+            'name': n,
+            'type': 'product',
+        } for n in ['Kit 1', 'Compo 1', 'Product 1']])
+        kit_1.description_sale = "test"
+
+        self.env['mrp.bom'].create([{
+            'product_tmpl_id': kit_1.product_tmpl_id.id,
+            'product_qty': 1,
+            'type': 'phantom',
+            'bom_line_ids': [
+                (0, 0, {'product_id': component_1.id, 'product_qty': 1}),
+            ],
+        }])
+        customer = self.env['res.partner'].create({
+            'name': 'customer',
+        })
+        so = self.env['sale.order'].create({
+            'partner_id': customer.id,
+            'order_line': [
+                (0, 0, {
+                    'product_id': kit_1.id,
+                    'product_uom_qty': 1.0,
+                }),
+                (0, 0, {
+                    'product_id': product_1.id,
+                    'product_uom_qty': 1.0,
+                })],
+        })
+        so.action_confirm()
+        picking = so.picking_ids
+        self.assertEqual(len(so.picking_ids.move_ids_without_package), 2)
+        picking.move_ids.quantity_done = 1
+        picking.button_validate()
+        self.assertEqual(picking.state, 'done')
+
+        html_report = self.env['ir.actions.report']._render_qweb_html('stock.report_deliveryslip', picking.ids)[0].decode('utf-8').split('\n')
+        keys = [
+            "Kit 1", "Compo 1",
+            "Products not associated with a kit", "Product 1",
+        ]
+        for line in html_report:
+            if not keys:
+                break
+            if keys[0] in line:
+                keys = keys[1:]
+        self.assertFalse(keys, "All keys should be in the report with the defined order")

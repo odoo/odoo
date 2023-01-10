@@ -1,24 +1,19 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# 	* crm_iap_lead_website
+# 	* website_crm_iap_reveal
 # 
 # Translators:
-# Martin Trigaux, 2019
-# Hans Henrik Gabelgaard <hhg@gabelgaard.org>, 2019
-# Morten Schou <ms@msteknik.dk>, 2019
-# Jesper Carstensen <jc@danodoo.dk>, 2019
-# Pernille Kristensen <pernillekristensen1994@gmail.com>, 2019
-# Sanne Kristensen <sanne@vkdata.dk>, 2019
-# Ejner Sønniksen <ejner@vkdata.dk>, 2019
-# lhmflexerp <lhm@flexerp.dk>, 2019
+# Mads Søndergaard, 2022
+# Preben Lisby <preben.lisby@gmail.com>, 2022
+# Martin Trigaux, 2022
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~12.5\n"
+"Project-Id-Version: Odoo Server 16.0beta\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-08-26 08:16+0000\n"
-"PO-Revision-Date: 2019-08-26 09:09+0000\n"
-"Last-Translator: lhmflexerp <lhm@flexerp.dk>, 2019\n"
+"POT-Creation-Date: 2022-10-10 10:23+0000\n"
+"PO-Revision-Date: 2022-09-22 05:56+0000\n"
+"Last-Translator: Martin Trigaux, 2022\n"
 "Language-Team: Danish (https://www.transifex.com/odoo/teams/41243/da/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -26,499 +21,531 @@ msgstr ""
 "Language: da\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-#. module: crm_iap_lead_website
-#: model_terms:ir.ui.view,arch_db:crm_iap_lead_website.crm_reveal_rule_form
+#. module: website_crm_iap_reveal
+#: model_terms:ir.ui.view,arch_db:website_crm_iap_reveal.crm_reveal_rule_form
 msgid ""
 "1 credit is consumed per visitor matching the website traffic conditions and"
 " whose company can be identified.<br/>"
 msgstr ""
+"1 kredit forbruges per besøgende der matcher hjemmeside trafik "
+"betingelserne, og hvis firma kan identificeres.<br/>"
 
-#. module: crm_iap_lead_website
-#: model_terms:ir.ui.view,arch_db:crm_iap_lead_website.crm_reveal_rule_form
+#. module: website_crm_iap_reveal
+#: model_terms:ir.ui.view,arch_db:website_crm_iap_reveal.crm_reveal_rule_form
 msgid "<span class=\"o_stat_text\"> Leads </span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">Kundeemner </span>"
 
-#. module: crm_iap_lead_website
-#: model_terms:ir.ui.view,arch_db:crm_iap_lead_website.crm_reveal_rule_form
+#. module: website_crm_iap_reveal
+#: model_terms:ir.ui.view,arch_db:website_crm_iap_reveal.crm_reveal_rule_form
 msgid "<span class=\"o_stat_text\"> Opportunities </span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\"> Muligheder </span>"
 
-#. module: crm_iap_lead_website
-#: model:ir.model.fields,field_description:crm_iap_lead_website.field_crm_reveal_rule__active
+#. module: website_crm_iap_reveal
+#: model:ir.model.fields,field_description:website_crm_iap_reveal.field_crm_reveal_rule__active
 msgid "Active"
 msgstr "Aktiv"
 
-#. module: crm_iap_lead_website
-#: model_terms:ir.ui.view,arch_db:crm_iap_lead_website.crm_reveal_rule_view_search
+#. module: website_crm_iap_reveal
+#: model_terms:ir.ui.view,arch_db:website_crm_iap_reveal.crm_reveal_rule_view_search
 msgid "Archived"
 msgstr "Arkiveret"
 
-#. module: crm_iap_lead_website
-#: model:ir.model,name:crm_iap_lead_website.model_crm_reveal_rule
+#. module: website_crm_iap_reveal
+#: model:ir.model,name:website_crm_iap_reveal.model_crm_reveal_rule
 msgid "CRM Lead Generation Rules"
-msgstr ""
+msgstr "CRM Kundeemne genererings regler"
 
-#. module: crm_iap_lead_website
-#: model:ir.model,name:crm_iap_lead_website.model_crm_reveal_view
+#. module: website_crm_iap_reveal
+#: model:ir.model,name:website_crm_iap_reveal.model_crm_reveal_view
 msgid "CRM Reveal View"
-msgstr ""
+msgstr "CRM Afslør visning"
 
-#. module: crm_iap_lead_website
-#: model:ir.model.fields,help:crm_iap_lead_website.field_crm_reveal_rule__lead_for
+#. module: website_crm_iap_reveal
+#: model:ir.model.fields,help:website_crm_iap_reveal.field_crm_reveal_rule__lead_for
 msgid "Choose whether to track companies only or companies and their contacts"
 msgstr ""
+"Vælg hvorvidt det kun er virksomheder, eller både virksomheder og deres "
+"kontakter, der skal spores."
 
-#. module: crm_iap_lead_website
-#: model:ir.model.fields.selection,name:crm_iap_lead_website.selection__crm_reveal_rule__lead_for__companies
+#. module: website_crm_iap_reveal
+#: model:ir.model.fields.selection,name:website_crm_iap_reveal.selection__crm_reveal_rule__lead_for__companies
 msgid "Companies"
 msgstr "Virksomheder"
 
-#. module: crm_iap_lead_website
-#: model:ir.model.fields.selection,name:crm_iap_lead_website.selection__crm_reveal_rule__lead_for__people
+#. module: website_crm_iap_reveal
+#: model:ir.model.fields.selection,name:website_crm_iap_reveal.selection__crm_reveal_rule__lead_for__people
 msgid "Companies and their Contacts"
-msgstr ""
+msgstr "Virksomheder og deres kontakter"
 
-#. module: crm_iap_lead_website
-#: model:ir.model.fields,field_description:crm_iap_lead_website.field_crm_reveal_rule__company_size_min
+#. module: website_crm_iap_reveal
+#: model:ir.model.fields,field_description:website_crm_iap_reveal.field_crm_reveal_rule__company_size_min
 msgid "Company Size"
-msgstr ""
+msgstr "Virksomhed størrelse"
 
-#. module: crm_iap_lead_website
-#: model:ir.model.fields,field_description:crm_iap_lead_website.field_crm_reveal_rule__company_size_max
+#. module: website_crm_iap_reveal
+#: model:ir.model.fields,field_description:website_crm_iap_reveal.field_crm_reveal_rule__company_size_max
 msgid "Company Size Max"
-msgstr ""
+msgstr "Virksomhed maksimum størrelse"
 
-#. module: crm_iap_lead_website
-#: model_terms:ir.ui.view,arch_db:crm_iap_lead_website.crm_reveal_rule_form
+#. module: website_crm_iap_reveal
+#: model_terms:ir.ui.view,arch_db:website_crm_iap_reveal.crm_reveal_rule_form
 msgid "Contact Filter"
-msgstr ""
+msgstr "Virksomhed filter"
 
-#. module: crm_iap_lead_website
-#: model:ir.model.fields,field_description:crm_iap_lead_website.field_crm_reveal_rule__country_ids
+#. module: website_crm_iap_reveal
+#: model:ir.model.fields,field_description:website_crm_iap_reveal.field_crm_reveal_rule__country_ids
 msgid "Countries"
 msgstr "Lande"
 
-#. module: crm_iap_lead_website
-#: model:ir.model.fields,field_description:crm_iap_lead_website.field_crm_reveal_view__create_date
+#. module: website_crm_iap_reveal
+#: model:ir.model.fields,field_description:website_crm_iap_reveal.field_crm_reveal_view__create_date
 msgid "Create Date"
 msgstr "Oprettelsesdato"
 
-#. module: crm_iap_lead_website
-#: model_terms:ir.actions.act_window,help:crm_iap_lead_website.crm_reveal_rule_action
+#. module: website_crm_iap_reveal
+#: model_terms:ir.actions.act_window,help:website_crm_iap_reveal.crm_reveal_rule_action
 msgid "Create a conversion rule"
-msgstr ""
+msgstr "Opret en konverterings regel"
 
-#. module: crm_iap_lead_website
-#: model_terms:ir.actions.act_window,help:crm_iap_lead_website.crm_reveal_rule_action
+#. module: website_crm_iap_reveal
+#: model_terms:ir.actions.act_window,help:website_crm_iap_reveal.crm_reveal_rule_action
 msgid ""
 "Create rules to generate B2B leads/opportunities from your website visitors."
 msgstr ""
+"Opret regler for at oprette B2B kundeemner/muligheder ud fra din hjemmesides"
+" besøgende."
 
-#. module: crm_iap_lead_website
-#: model:ir.model.fields,field_description:crm_iap_lead_website.field_crm_reveal_rule__create_uid
-#: model:ir.model.fields,field_description:crm_iap_lead_website.field_crm_reveal_view__create_uid
+#. module: website_crm_iap_reveal
+#: model:ir.model.fields,field_description:website_crm_iap_reveal.field_crm_reveal_rule__create_uid
+#: model:ir.model.fields,field_description:website_crm_iap_reveal.field_crm_reveal_view__create_uid
 msgid "Created by"
 msgstr "Oprettet af"
 
-#. module: crm_iap_lead_website
-#: model:ir.model.fields,field_description:crm_iap_lead_website.field_crm_reveal_rule__create_date
+#. module: website_crm_iap_reveal
+#: model:ir.model.fields,field_description:website_crm_iap_reveal.field_crm_reveal_rule__create_date
 msgid "Created on"
 msgstr "Oprettet den"
 
-#. module: crm_iap_lead_website
-#: model:ir.model.fields,field_description:crm_iap_lead_website.field_crm_reveal_rule__lead_for
+#. module: website_crm_iap_reveal
+#: model:ir.model.fields,field_description:website_crm_iap_reveal.field_crm_reveal_rule__lead_for
 msgid "Data Tracking"
-msgstr ""
+msgstr "Data sporing"
 
-#. module: crm_iap_lead_website
-#: model:ir.model.fields,field_description:crm_iap_lead_website.field_crm_reveal_rule__display_name
-#: model:ir.model.fields,field_description:crm_iap_lead_website.field_crm_reveal_view__display_name
+#. module: website_crm_iap_reveal
+#: model:ir.model.fields,field_description:website_crm_iap_reveal.field_crm_reveal_rule__display_name
+#: model:ir.model.fields,field_description:website_crm_iap_reveal.field_crm_reveal_view__display_name
 msgid "Display Name"
 msgstr "Vis navn"
 
-#. module: crm_iap_lead_website
-#: code:addons/crm_iap_lead_website/models/crm_reveal_rule.py:0
+#. module: website_crm_iap_reveal
+#: code:addons/website_crm_iap_reveal/models/crm_reveal_rule.py:0
 #, python-format
 msgid "Enter Valid Regex."
-msgstr ""
+msgstr "Angiv gyldig regex."
 
-#. module: crm_iap_lead_website
-#: model:ir.model.fields,field_description:crm_iap_lead_website.field_crm_reveal_rule__contact_filter_type
+#. module: website_crm_iap_reveal
+#: model:ir.model.fields,field_description:website_crm_iap_reveal.field_crm_reveal_rule__contact_filter_type
 msgid "Filter On"
-msgstr ""
+msgstr "Filtrér på"
 
-#. module: crm_iap_lead_website
-#: model:ir.model.fields,help:crm_iap_lead_website.field_crm_reveal_rule__filter_on_size
+#. module: website_crm_iap_reveal
+#: model:ir.model.fields,help:website_crm_iap_reveal.field_crm_reveal_rule__filter_on_size
 msgid "Filter companies based on their size."
-msgstr ""
+msgstr "Filtrér virksomheder baseret på størrelse."
 
-#. module: crm_iap_lead_website
-#: model:ir.model.fields,field_description:crm_iap_lead_website.field_crm_reveal_rule__filter_on_size
+#. module: website_crm_iap_reveal
+#: model:ir.model.fields,field_description:website_crm_iap_reveal.field_crm_reveal_rule__filter_on_size
 msgid "Filter on Size"
-msgstr ""
+msgstr "Filtrer størrelse"
 
-#. module: crm_iap_lead_website
-#: model_terms:ir.ui.view,arch_db:crm_iap_lead_website.crm_reveal_rule_form
+#. module: website_crm_iap_reveal
+#: model_terms:ir.ui.view,arch_db:website_crm_iap_reveal.crm_reveal_rule_form
 msgid "From"
 msgstr "Fra"
 
-#. module: crm_iap_lead_website
-#: model:ir.model.fields,field_description:crm_iap_lead_website.field_crm_reveal_rule__lead_ids
+#. module: website_crm_iap_reveal
+#: model:ir.model.fields,field_description:website_crm_iap_reveal.field_crm_reveal_rule__lead_ids
 msgid "Generated Lead / Opportunity"
-msgstr ""
+msgstr "Genereret potentiel kunde / mulighed"
 
-#. module: crm_iap_lead_website
-#: model:ir.model,name:crm_iap_lead_website.model_ir_http
+#. module: website_crm_iap_reveal
+#: model:ir.model,name:website_crm_iap_reveal.model_ir_http
 msgid "HTTP Routing"
 msgstr "HTTP Routing"
 
-#. module: crm_iap_lead_website
-#: model:ir.model.fields.selection,name:crm_iap_lead_website.selection__crm_reveal_rule__priority__2
+#. module: website_crm_iap_reveal
+#: model:ir.model.fields.selection,name:website_crm_iap_reveal.selection__crm_reveal_rule__priority__2
 msgid "High"
 msgstr "Høj"
 
-#. module: crm_iap_lead_website
-#: model:ir.model.fields,field_description:crm_iap_lead_website.field_crm_lead__reveal_iap_credits
+#. module: website_crm_iap_reveal
+#: model:ir.model.fields,field_description:website_crm_iap_reveal.field_crm_lead__reveal_iap_credits
 msgid "IAP Credits"
-msgstr ""
+msgstr "IAP Kredit"
 
-#. module: crm_iap_lead_website
-#: model:ir.model.fields,field_description:crm_iap_lead_website.field_crm_reveal_rule__id
-#: model:ir.model.fields,field_description:crm_iap_lead_website.field_crm_reveal_view__id
+#. module: website_crm_iap_reveal
+#: model:ir.model.fields,field_description:website_crm_iap_reveal.field_crm_reveal_rule__id
+#: model:ir.model.fields,field_description:website_crm_iap_reveal.field_crm_reveal_view__id
 msgid "ID"
 msgstr "ID"
 
-#. module: crm_iap_lead_website
-#: model:ir.model.fields,field_description:crm_iap_lead_website.field_crm_lead__reveal_ip
-#: model:ir.model.fields,field_description:crm_iap_lead_website.field_crm_reveal_view__reveal_ip
+#. module: website_crm_iap_reveal
+#: model:ir.model.fields,field_description:website_crm_iap_reveal.field_crm_lead__reveal_ip
+#: model:ir.model.fields,field_description:website_crm_iap_reveal.field_crm_reveal_view__reveal_ip
 msgid "IP Address"
 msgstr "IP adresse"
 
-#. module: crm_iap_lead_website
-#: model:ir.model.fields,field_description:crm_iap_lead_website.field_crm_reveal_rule__industry_tag_ids
+#. module: website_crm_iap_reveal
+#: model:ir.model.fields,field_description:website_crm_iap_reveal.field_crm_reveal_rule__industry_tag_ids
 msgid "Industries"
-msgstr ""
+msgstr "Industrier"
 
-#. module: crm_iap_lead_website
-#: model:ir.model.fields,field_description:crm_iap_lead_website.field_crm_reveal_rule____last_update
-#: model:ir.model.fields,field_description:crm_iap_lead_website.field_crm_reveal_view____last_update
+#. module: website_crm_iap_reveal
+#: model:ir.model.fields,field_description:website_crm_iap_reveal.field_crm_reveal_rule____last_update
+#: model:ir.model.fields,field_description:website_crm_iap_reveal.field_crm_reveal_view____last_update
 msgid "Last Modified on"
 msgstr "Sidst ændret den"
 
-#. module: crm_iap_lead_website
-#: model:ir.model.fields,field_description:crm_iap_lead_website.field_crm_reveal_rule__write_uid
-#: model:ir.model.fields,field_description:crm_iap_lead_website.field_crm_reveal_view__write_uid
+#. module: website_crm_iap_reveal
+#: model:ir.model.fields,field_description:website_crm_iap_reveal.field_crm_reveal_rule__write_uid
+#: model:ir.model.fields,field_description:website_crm_iap_reveal.field_crm_reveal_view__write_uid
 msgid "Last Updated by"
 msgstr "Sidst opdateret af"
 
-#. module: crm_iap_lead_website
-#: model:ir.model.fields,field_description:crm_iap_lead_website.field_crm_reveal_rule__write_date
-#: model:ir.model.fields,field_description:crm_iap_lead_website.field_crm_reveal_view__write_date
+#. module: website_crm_iap_reveal
+#: model:ir.model.fields,field_description:website_crm_iap_reveal.field_crm_reveal_rule__write_date
+#: model:ir.model.fields,field_description:website_crm_iap_reveal.field_crm_reveal_view__write_date
 msgid "Last Updated on"
 msgstr "Sidst opdateret den"
 
-#. module: crm_iap_lead_website
-#: model:ir.model.fields.selection,name:crm_iap_lead_website.selection__crm_reveal_rule__lead_type__lead
+#. module: website_crm_iap_reveal
+#: model:ir.model.fields.selection,name:website_crm_iap_reveal.selection__crm_reveal_rule__lead_type__lead
 msgid "Lead"
 msgstr "Emne"
 
-#. module: crm_iap_lead_website
-#: model_terms:ir.ui.view,arch_db:crm_iap_lead_website.crm_reveal_rule_form
+#. module: website_crm_iap_reveal
+#: model_terms:ir.ui.view,arch_db:website_crm_iap_reveal.crm_reveal_rule_form
 msgid "Lead Data"
-msgstr ""
+msgstr "Kundeemne data"
 
-#. module: crm_iap_lead_website
-#: model_terms:ir.ui.view,arch_db:crm_iap_lead_website.crm_reveal_lead_opportunity_form
+#. module: website_crm_iap_reveal
+#: model_terms:ir.ui.view,arch_db:website_crm_iap_reveal.crm_reveal_lead_opportunity_form
 msgid "Lead Generation Information"
-msgstr ""
+msgstr "Kundeemne genererings information"
 
-#. module: crm_iap_lead_website
-#: model:ir.model.fields,field_description:crm_iap_lead_website.field_crm_lead__reveal_rule_id
-#: model:ir.model.fields,field_description:crm_iap_lead_website.field_crm_reveal_view__reveal_rule_id
+#. module: website_crm_iap_reveal
+#: model:ir.model.fields,field_description:website_crm_iap_reveal.field_crm_lead__reveal_rule_id
+#: model:ir.model.fields,field_description:website_crm_iap_reveal.field_crm_reveal_view__reveal_rule_id
 msgid "Lead Generation Rule"
-msgstr ""
+msgstr "Kundeemne genererings regel"
 
-#. module: crm_iap_lead_website
-#: model:ir.actions.act_window,name:crm_iap_lead_website.crm_reveal_view_action
-#: model:ir.ui.menu,name:crm_iap_lead_website.crm_reveal_view_menu_action
+#. module: website_crm_iap_reveal
+#: model:ir.actions.act_window,name:website_crm_iap_reveal.crm_reveal_view_action
+#: model:ir.ui.menu,name:website_crm_iap_reveal.crm_reveal_view_menu_action
 msgid "Lead Generation Views"
-msgstr ""
+msgstr "Kundeemne genererings visninger"
 
-#. module: crm_iap_lead_website
-#: code:addons/crm_iap_lead_website/models/crm_reveal_rule.py:0
+#. module: website_crm_iap_reveal
+#: code:addons/website_crm_iap_reveal/models/crm_reveal_rule.py:0
 #, python-format
 msgid ""
 "Lead Generation requires a GeoIP resolver which could not be found on your "
 "system. Please consult https://pypi.org/project/GeoIP/."
 msgstr ""
+"Kundeemne generering kræver en GeoIP løser, som ikke kunne findes i dit "
+"system. Konsultér venligst https://pypi.org/project/GeoIP/."
 
-#. module: crm_iap_lead_website
-#: model:ir.actions.server,name:crm_iap_lead_website.ir_cron_crm_reveal_lead_ir_actions_server
-#: model:ir.cron,cron_name:crm_iap_lead_website.ir_cron_crm_reveal_lead
-#: model:ir.cron,name:crm_iap_lead_website.ir_cron_crm_reveal_lead
+#. module: website_crm_iap_reveal
+#: model:ir.actions.server,name:website_crm_iap_reveal.ir_cron_crm_reveal_lead_ir_actions_server
+#: model:ir.cron,cron_name:website_crm_iap_reveal.ir_cron_crm_reveal_lead
+#: model:ir.cron,name:website_crm_iap_reveal.ir_cron_crm_reveal_lead
 msgid "Lead Generation: Leads/Opportunities Generation"
-msgstr ""
+msgstr "Kundeemne generering: Kundeemne/Muligheder generering"
 
-#. module: crm_iap_lead_website
-#: model:ir.model,name:crm_iap_lead_website.model_crm_lead
+#. module: website_crm_iap_reveal
+#: model:ir.model,name:website_crm_iap_reveal.model_crm_lead
 msgid "Lead/Opportunity"
 msgstr "Kundeemne/Salgsmulighed"
 
-#. module: crm_iap_lead_website
-#: model:ir.model.fields,help:crm_iap_lead_website.field_crm_reveal_rule__industry_tag_ids
+#. module: website_crm_iap_reveal
+#: model:ir.model.fields,help:website_crm_iap_reveal.field_crm_reveal_rule__industry_tag_ids
 msgid "Leave empty to always match. Odoo will not create lead if no match"
 msgstr ""
+"Efterlad tom for altid at matche. Odoo opretter ikke et Kundeemne uden et "
+"match"
 
-#. module: crm_iap_lead_website
-#: model:ir.model.fields.selection,name:crm_iap_lead_website.selection__crm_reveal_rule__priority__0
+#. module: website_crm_iap_reveal
+#: model:ir.model.fields.selection,name:website_crm_iap_reveal.selection__crm_reveal_rule__priority__0
 msgid "Low"
 msgstr "Lav"
 
-#. module: crm_iap_lead_website
-#: model_terms:ir.ui.view,arch_db:crm_iap_lead_website.crm_reveal_rule_form
+#. module: website_crm_iap_reveal
+#: model_terms:ir.ui.view,arch_db:website_crm_iap_reveal.crm_reveal_rule_form
 msgid ""
 "Make sure you know if you have to be GDPR compliant for storing personal "
 "data."
 msgstr ""
+"Vær sikker på, om du skal overholde GDPR, hvis du lagre personlig data."
 
-#. module: crm_iap_lead_website
-#: model:ir.model.constraint,message:crm_iap_lead_website.constraint_crm_reveal_rule_limit_extra_contacts
+#. module: website_crm_iap_reveal
+#: model:ir.model.constraint,message:website_crm_iap_reveal.constraint_crm_reveal_rule_limit_extra_contacts
 msgid "Maximum 5 contacts are allowed!"
-msgstr ""
+msgstr "Højst 5 kontakter tilladt!"
 
-#. module: crm_iap_lead_website
-#: model:ir.model.fields.selection,name:crm_iap_lead_website.selection__crm_reveal_rule__priority__1
+#. module: website_crm_iap_reveal
+#: model:ir.model.fields.selection,name:website_crm_iap_reveal.selection__crm_reveal_rule__priority__1
 msgid "Medium"
 msgstr "Medium"
 
-#. module: crm_iap_lead_website
-#: code:addons/crm_iap_lead_website/models/crm_reveal_rule.py:0
+#. module: website_crm_iap_reveal
+#: code:addons/website_crm_iap_reveal/models/crm_reveal_rule.py:0
 #, python-format
 msgid "Missing Library"
-msgstr ""
+msgstr "Manglende bibliotek"
 
-#. module: crm_iap_lead_website
-#: model:ir.model.fields.selection,name:crm_iap_lead_website.selection__crm_reveal_view__reveal_state__not_found
+#. module: website_crm_iap_reveal
+#: model:ir.model.fields.selection,name:website_crm_iap_reveal.selection__crm_reveal_view__reveal_state__not_found
 msgid "Not Found"
-msgstr ""
+msgstr "Ej fundet"
 
-#. module: crm_iap_lead_website
-#: model:ir.model.fields,field_description:crm_iap_lead_website.field_crm_reveal_rule__extra_contacts
+#. module: website_crm_iap_reveal
+#: model:ir.model.fields,field_description:website_crm_iap_reveal.field_crm_reveal_rule__extra_contacts
 msgid "Number of Contacts"
 msgstr "Antal kontakter"
 
-#. module: crm_iap_lead_website
-#: model:ir.model.fields,field_description:crm_iap_lead_website.field_crm_reveal_rule__leads_count
+#. module: website_crm_iap_reveal
+#: model:ir.model.fields,field_description:website_crm_iap_reveal.field_crm_reveal_rule__lead_count
 msgid "Number of Generated Leads"
-msgstr ""
+msgstr "Antal af oprettede potentielle kudner"
 
-#. module: crm_iap_lead_website
-#: model:ir.model.fields,field_description:crm_iap_lead_website.field_crm_reveal_rule__opportunity_count
+#. module: website_crm_iap_reveal
+#: model:ir.model.fields,field_description:website_crm_iap_reveal.field_crm_reveal_rule__opportunity_count
 msgid "Number of Generated Opportunity"
-msgstr ""
+msgstr "Antal genererede muligheder"
 
-#. module: crm_iap_lead_website
-#: model:ir.model.fields,help:crm_iap_lead_website.field_crm_reveal_rule__country_ids
+#. module: website_crm_iap_reveal
+#: model:ir.model.fields,help:website_crm_iap_reveal.field_crm_reveal_rule__country_ids
 msgid ""
 "Only visitors of following countries will be converted into "
 "leads/opportunities (using GeoIP)."
 msgstr ""
+"Kun besøgende fra følgende lande vil blive omdannet til Kundeemne/Muligheder"
+" (gennem GeoIP)."
 
-#. module: crm_iap_lead_website
-#: model:ir.model.fields,help:crm_iap_lead_website.field_crm_reveal_rule__state_ids
+#. module: website_crm_iap_reveal
+#: model:ir.model.fields,help:website_crm_iap_reveal.field_crm_reveal_rule__state_ids
 msgid ""
 "Only visitors of following states will be converted into "
 "leads/opportunities."
 msgstr ""
+"Kun besøgende fra følgende stater vil blive omdannet til "
+"Kundeemne/Muligheder."
 
-#. module: crm_iap_lead_website
-#: model:ir.model.fields.selection,name:crm_iap_lead_website.selection__crm_reveal_rule__lead_type__opportunity
+#. module: website_crm_iap_reveal
+#: model:ir.model.fields.selection,name:website_crm_iap_reveal.selection__crm_reveal_rule__lead_type__opportunity
 msgid "Opportunity"
 msgstr "Salgsmuligheder"
 
-#. module: crm_iap_lead_website
-#: model_terms:ir.ui.view,arch_db:crm_iap_lead_website.crm_reveal_rule_form
+#. module: website_crm_iap_reveal
+#: model_terms:ir.ui.view,arch_db:website_crm_iap_reveal.crm_reveal_rule_form
 msgid "Opportunity Data"
-msgstr ""
+msgstr "Mulighed data"
 
-#. module: crm_iap_lead_website
-#: model_terms:ir.ui.view,arch_db:crm_iap_lead_website.crm_reveal_rule_form
+#. module: website_crm_iap_reveal
+#: model_terms:ir.ui.view,arch_db:website_crm_iap_reveal.crm_reveal_rule_form
 msgid "Opportunity Generation Conditions"
-msgstr ""
+msgstr "Mulighed genererings betingelser"
 
-#. module: crm_iap_lead_website
-#: model:ir.model.fields,field_description:crm_iap_lead_website.field_crm_reveal_rule__other_role_ids
+#. module: website_crm_iap_reveal
+#: code:addons/website_crm_iap_reveal/models/crm_reveal_rule.py:0
+#, python-format
+msgid "Opportunity created by Odoo Lead Generation"
+msgstr "Mulighed oprettet af Odoo potientel kunde generering"
+
+#. module: website_crm_iap_reveal
+#: model:ir.model.fields,field_description:website_crm_iap_reveal.field_crm_reveal_rule__other_role_ids
 msgid "Other Roles"
-msgstr ""
+msgstr "Andre roller"
 
-#. module: crm_iap_lead_website
-#: model:ir.model.fields,field_description:crm_iap_lead_website.field_crm_reveal_rule__preferred_role_id
+#. module: website_crm_iap_reveal
+#: model:ir.model.fields,field_description:website_crm_iap_reveal.field_crm_reveal_rule__preferred_role_id
 msgid "Preferred Role"
-msgstr ""
+msgstr "Foretrukket rolle"
 
-#. module: crm_iap_lead_website
-#: model:ir.model.fields,field_description:crm_iap_lead_website.field_crm_reveal_rule__priority
+#. module: website_crm_iap_reveal
+#: model:ir.model.fields,field_description:website_crm_iap_reveal.field_crm_reveal_rule__priority
 msgid "Priority"
 msgstr "Prioritet"
 
-#. module: crm_iap_lead_website
-#: model:ir.model.fields,help:crm_iap_lead_website.field_crm_reveal_rule__regex_url
+#. module: website_crm_iap_reveal
+#: model:ir.model.fields,help:website_crm_iap_reveal.field_crm_reveal_rule__regex_url
 msgid ""
 "Regex to track website pages. Leave empty to track the entire website, or / "
 "to target the homepage. Example: /page* to track all the pages which begin "
 "with /page"
 msgstr ""
+"Regex til at spore hjemmesider. Lad være tom for at spore hele hjemmesiden, "
+"eller / for at pege på hjemmesiden. Eksempel: /page* sporer alle sider som "
+"begynder med /page"
 
-#. module: crm_iap_lead_website
-#: model:ir.model.fields,help:crm_iap_lead_website.field_crm_reveal_rule__website_id
+#. module: website_crm_iap_reveal
+#: model:ir.model.fields,help:website_crm_iap_reveal.field_crm_reveal_rule__website_id
 msgid "Restrict Lead generation to this website."
-msgstr ""
+msgstr "Begræns Kundeemne generering til denne hjemmeside."
 
-#. module: crm_iap_lead_website
-#: model:ir.model.fields.selection,name:crm_iap_lead_website.selection__crm_reveal_rule__contact_filter_type__role
+#. module: website_crm_iap_reveal
+#: model:ir.model.fields.selection,name:website_crm_iap_reveal.selection__crm_reveal_rule__contact_filter_type__role
 msgid "Role"
 msgstr "Rolle"
 
-#. module: crm_iap_lead_website
-#: model_terms:ir.ui.view,arch_db:crm_iap_lead_website.crm_reveal_rule_view_search
+#. module: website_crm_iap_reveal
+#: model_terms:ir.ui.view,arch_db:website_crm_iap_reveal.crm_reveal_rule_view_search
 msgid "Rule"
 msgstr "Regel"
 
-#. module: crm_iap_lead_website
-#: model:ir.model.fields,field_description:crm_iap_lead_website.field_crm_reveal_rule__name
+#. module: website_crm_iap_reveal
+#: model:ir.model.fields,field_description:website_crm_iap_reveal.field_crm_reveal_rule__name
 msgid "Rule Name"
 msgstr "Regel navn"
 
-#. module: crm_iap_lead_website
-#: model:ir.model.fields,field_description:crm_iap_lead_website.field_crm_reveal_rule__team_id
+#. module: website_crm_iap_reveal
+#: model:ir.model.fields,field_description:website_crm_iap_reveal.field_crm_reveal_rule__team_id
 msgid "Sales Team"
 msgstr "Salgsteam"
 
-#. module: crm_iap_lead_website
-#: model:ir.model.fields,field_description:crm_iap_lead_website.field_crm_reveal_rule__user_id
+#. module: website_crm_iap_reveal
+#: model:ir.model.fields,field_description:website_crm_iap_reveal.field_crm_reveal_rule__user_id
 msgid "Salesperson"
 msgstr "Sælger"
 
-#. module: crm_iap_lead_website
-#: model_terms:ir.ui.view,arch_db:crm_iap_lead_website.crm_reveal_rule_view_search
+#. module: website_crm_iap_reveal
+#: model_terms:ir.ui.view,arch_db:website_crm_iap_reveal.crm_reveal_rule_view_search
 msgid "Search CRM Reveal Rule"
-msgstr ""
+msgstr "Søg CRM afslør regel"
 
-#. module: crm_iap_lead_website
-#: model:ir.model.fields,field_description:crm_iap_lead_website.field_crm_reveal_rule__seniority_id
-#: model:ir.model.fields.selection,name:crm_iap_lead_website.selection__crm_reveal_rule__contact_filter_type__seniority
+#. module: website_crm_iap_reveal
+#: model:ir.model.fields,field_description:website_crm_iap_reveal.field_crm_reveal_rule__seniority_id
+#: model:ir.model.fields.selection,name:website_crm_iap_reveal.selection__crm_reveal_rule__contact_filter_type__seniority
 msgid "Seniority"
-msgstr ""
+msgstr "Anciennitet"
 
-#. module: crm_iap_lead_website
-#: model:ir.model.fields,field_description:crm_iap_lead_website.field_crm_reveal_rule__sequence
+#. module: website_crm_iap_reveal
+#: model:ir.model.fields,field_description:website_crm_iap_reveal.field_crm_reveal_rule__sequence
 msgid "Sequence"
 msgstr "Sekvens"
 
-#. module: crm_iap_lead_website
-#: model:ir.model.fields,field_description:crm_iap_lead_website.field_crm_reveal_view__reveal_state
+#. module: website_crm_iap_reveal
+#: model:ir.model.fields,field_description:website_crm_iap_reveal.field_crm_reveal_view__reveal_state
 msgid "State"
 msgstr "Stat"
 
-#. module: crm_iap_lead_website
-#: model:ir.model.fields,field_description:crm_iap_lead_website.field_crm_reveal_rule__state_ids
+#. module: website_crm_iap_reveal
+#: model:ir.model.fields,field_description:website_crm_iap_reveal.field_crm_reveal_rule__state_ids
 msgid "States"
 msgstr "Status"
 
-#. module: crm_iap_lead_website
-#: model:ir.model.fields,field_description:crm_iap_lead_website.field_crm_reveal_rule__suffix
+#. module: website_crm_iap_reveal
+#: model:ir.model.fields,field_description:website_crm_iap_reveal.field_crm_reveal_rule__suffix
 msgid "Suffix"
 msgstr "Suffiks"
 
-#. module: crm_iap_lead_website
-#: model:ir.model.fields,field_description:crm_iap_lead_website.field_crm_reveal_rule__tag_ids
+#. module: website_crm_iap_reveal
+#: model:ir.model.fields,field_description:website_crm_iap_reveal.field_crm_reveal_rule__tag_ids
 msgid "Tags"
 msgstr "Tags"
 
-#. module: crm_iap_lead_website
-#: model:ir.model.fields,help:crm_iap_lead_website.field_crm_reveal_rule__extra_contacts
+#. module: website_crm_iap_reveal
+#: model:ir.model.fields,help:website_crm_iap_reveal.field_crm_reveal_rule__extra_contacts
 msgid ""
 "This is the number of contacts to track if their role/seniority match your "
 "criteria. Their details will show up in the history thread of generated "
 "leads/opportunities. One credit is consumed per tracked contact."
 msgstr ""
+"Detter er antallet af kontakter der skal spores, hvis deres "
+"rolle/anciennitet stemmer overens med dine kriterie. Deres detaljer vil "
+"blive vist i historik tråden over genererede Kundeemne/Muligheder. Ét kredit"
+" forbruges per sporte kontakt."
 
-#. module: crm_iap_lead_website
-#: model:ir.model.fields,help:crm_iap_lead_website.field_crm_reveal_rule__suffix
+#. module: website_crm_iap_reveal
+#: model:ir.model.fields,help:website_crm_iap_reveal.field_crm_reveal_rule__suffix
 msgid ""
 "This will be appended in name of generated lead so you can identify "
 "lead/opportunity is generated with this rule"
 msgstr ""
+"Dette vil blive vedhæftet på navnet af det genererede Kundeemne, så du kan "
+"identificere at Kundeemne/Mulighed blev oprettet via denne regel."
 
-#. module: crm_iap_lead_website
-#: model:ir.model.fields.selection,name:crm_iap_lead_website.selection__crm_reveal_view__reveal_state__to_process
+#. module: website_crm_iap_reveal
+#: model:ir.model.fields.selection,name:website_crm_iap_reveal.selection__crm_reveal_view__reveal_state__to_process
 msgid "To Process"
-msgstr ""
+msgstr "At behandle"
 
-#. module: crm_iap_lead_website
-#: model:ir.model.fields,field_description:crm_iap_lead_website.field_crm_reveal_rule__lead_type
+#. module: website_crm_iap_reveal
+#: model:ir.model.fields,field_description:website_crm_iap_reveal.field_crm_reveal_rule__lead_type
 msgid "Type"
 msgstr "Type"
 
-#. module: crm_iap_lead_website
-#: model:ir.model.fields,field_description:crm_iap_lead_website.field_crm_reveal_rule__regex_url
+#. module: website_crm_iap_reveal
+#: model:ir.model.fields,field_description:website_crm_iap_reveal.field_crm_reveal_rule__regex_url
 msgid "URL Expression"
-msgstr ""
+msgstr "URL Udtryk"
 
-#. module: crm_iap_lead_website
-#: model_terms:ir.ui.view,arch_db:crm_iap_lead_website.crm_reveal_rule_form
+#. module: website_crm_iap_reveal
+#: model_terms:ir.ui.view,arch_db:website_crm_iap_reveal.crm_reveal_rule_form
 msgid "Up to"
-msgstr ""
+msgstr "Op til"
 
-#. module: crm_iap_lead_website
-#: model:ir.model.fields,help:crm_iap_lead_website.field_crm_reveal_rule__sequence
+#. module: website_crm_iap_reveal
+#: model:ir.model.fields,help:website_crm_iap_reveal.field_crm_reveal_rule__sequence
 msgid ""
 "Used to order the rules with same URL and countries. Rules with a lower "
 "sequence number will be processed first."
 msgstr ""
+"Brugt til at rangere regler med samme URL og lande. Regler med lavere "
+"sekvens numre vil blive behandlet først."
 
-#. module: crm_iap_lead_website
-#: model:ir.model.fields.selection,name:crm_iap_lead_website.selection__crm_reveal_rule__priority__3
+#. module: website_crm_iap_reveal
+#: model:ir.model.fields.selection,name:website_crm_iap_reveal.selection__crm_reveal_rule__priority__3
 msgid "Very High"
 msgstr "Meget høj"
 
-#. module: crm_iap_lead_website
-#: model:ir.actions.act_window,name:crm_iap_lead_website.crm_reveal_rule_action
-#: model:ir.ui.menu,name:crm_iap_lead_website.crm_reveal_rule_menu_action
+#. module: website_crm_iap_reveal
+#: model:ir.actions.act_window,name:website_crm_iap_reveal.crm_reveal_rule_action
+#: model:ir.ui.menu,name:website_crm_iap_reveal.crm_reveal_rule_menu_action
 msgid "Visits to Leads Rules"
-msgstr ""
+msgstr "Besøg til Kundeemne regler"
 
-#. module: crm_iap_lead_website
-#: model:ir.model.fields,field_description:crm_iap_lead_website.field_crm_reveal_rule__website_id
+#. module: website_crm_iap_reveal
+#: model:ir.model.fields,field_description:website_crm_iap_reveal.field_crm_reveal_rule__website_id
 msgid "Website"
 msgstr "Hjemmeside"
 
-#. module: crm_iap_lead_website
-#: model_terms:ir.ui.view,arch_db:crm_iap_lead_website.crm_reveal_rule_form
+#. module: website_crm_iap_reveal
+#: model_terms:ir.ui.view,arch_db:website_crm_iap_reveal.crm_reveal_rule_form
 msgid "Website Traffic Conditions"
-msgstr ""
+msgstr "Hjemmeside trafik betingelser"
 
-#. module: crm_iap_lead_website
-#: model_terms:ir.ui.view,arch_db:crm_iap_lead_website.crm_reveal_rule_form
+#. module: website_crm_iap_reveal
+#: model_terms:ir.ui.view,arch_db:website_crm_iap_reveal.crm_reveal_rule_form
 msgid "additional credit(s) are consumed if the company matches this rule."
-msgstr ""
+msgstr "yderligere kredit forbruges, hvis firmaet matcher denne regel."
 
-#. module: crm_iap_lead_website
-#: model_terms:ir.ui.view,arch_db:crm_iap_lead_website.crm_reveal_rule_form
+#. module: website_crm_iap_reveal
+#: model_terms:ir.ui.view,arch_db:website_crm_iap_reveal.crm_reveal_rule_form
 msgid "e.g. /page"
-msgstr ""
+msgstr "f.eks. /page"
 
-#. module: crm_iap_lead_website
-#: model_terms:ir.ui.view,arch_db:crm_iap_lead_website.crm_reveal_rule_form
+#. module: website_crm_iap_reveal
+#: model_terms:ir.ui.view,arch_db:website_crm_iap_reveal.crm_reveal_rule_form
 msgid "e.g. US Visitors"
-msgstr ""
+msgstr "f.eks. Besøgende fra USA"
 
-#. module: crm_iap_lead_website
-#: model_terms:ir.ui.view,arch_db:crm_iap_lead_website.crm_reveal_rule_form
+#. module: website_crm_iap_reveal
+#: model_terms:ir.ui.view,arch_db:website_crm_iap_reveal.crm_reveal_rule_form
 msgid "employees"
-msgstr ""
+msgstr "ansatte"
 
-#. module: crm_iap_lead_website
-#: model_terms:ir.ui.view,arch_db:crm_iap_lead_website.crm_reveal_rule_form
+#. module: website_crm_iap_reveal
+#: model_terms:ir.ui.view,arch_db:website_crm_iap_reveal.crm_reveal_rule_form
 msgid "to"
 msgstr "til"

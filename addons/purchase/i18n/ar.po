@@ -5,16 +5,17 @@
 # Translators:
 # Mustafa J. Kadhem <safi2266@gmail.com>, 2022
 # Samer Ali, 2022
-# Malaz Abuidris <msea@odoo.com>, 2022
 # Martin Trigaux, 2022
+# Malaz Abuidris <msea@odoo.com>, 2022
+# Niyas Raphy, 2022
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 16.0beta\n"
+"Project-Id-Version: Odoo Server 16.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-10-10 10:22+0000\n"
+"POT-Creation-Date: 2022-12-15 12:48+0000\n"
 "PO-Revision-Date: 2022-09-22 05:54+0000\n"
-"Last-Translator: Martin Trigaux, 2022\n"
+"Last-Translator: Niyas Raphy, 2022\n"
 "Language-Team: Arabic (https://www.transifex.com/odoo/teams/41243/ar/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -45,12 +46,14 @@ msgid "# of Lines"
 msgstr "عدد البنود"
 
 #. module: purchase
+#. odoo-python
 #: code:addons/purchase/models/purchase.py:0
 #, python-format
 msgid "%(amount)s due %(date)s"
 msgstr "%(amount)s مستحق %(date)s "
 
 #. module: purchase
+#. odoo-python
 #: code:addons/purchase/models/purchase.py:0
 #: code:addons/purchase/models/purchase.py:0
 #, python-format
@@ -58,12 +61,14 @@ msgid "%(product)s from %(original_receipt_date)s to %(new_receipt_date)s"
 msgstr "%(product)s من %(original_receipt_date)s إلى %(new_receipt_date)s "
 
 #. module: purchase
+#. odoo-python
 #: code:addons/purchase/models/purchase.py:0
 #, python-format
 msgid "%s confirmed the receipt will take place on %s."
 msgstr "قام %s بتأكيد أن الإيصال سيكون بتاريخ %s. "
 
 #. module: purchase
+#. odoo-python
 #: code:addons/purchase/models/purchase.py:0
 #, python-format
 msgid "%s modified receipt dates for the following products:"
@@ -466,6 +471,7 @@ msgid "<strong>Your Order Reference:</strong>"
 msgstr "<strong>الرقم المرجعي لطلبك:</strong> "
 
 #. module: purchase
+#. odoo-python
 #: code:addons/purchase/models/purchase.py:0
 #, python-format
 msgid "A sample email has been sent to %s."
@@ -497,6 +503,7 @@ msgstr ""
 "الوحدات لكل حزمة. "
 
 #. module: purchase
+#. odoo-python
 #: code:addons/purchase/models/purchase.py:0
 #, python-format
 msgid "Accept"
@@ -569,7 +576,7 @@ msgid "Add several variants to the purchase order from a grid"
 msgstr "أضف عدة متغيرات إلى أمر الشراء من الشبكة "
 
 #. module: purchase
-#. openerp-web
+#. odoo-javascript
 #: code:addons/purchase/static/src/js/tours/purchase.js:0
 #, python-format
 msgid "Add some products or services to your quotation."
@@ -581,34 +588,35 @@ msgid "Administrator"
 msgstr "المدير "
 
 #. module: purchase
+#. odoo-python
 #: code:addons/purchase/controllers/portal.py:0
 #, python-format
 msgid "All"
 msgstr "الكل"
 
 #. module: purchase
-#. openerp-web
+#. odoo-javascript
 #: code:addons/purchase/static/src/views/purchase_dashboard.xml:0
 #, python-format
 msgid "All Draft RFQs"
 msgstr "كافة طلبات عروض الأسعار في حالة المسودة "
 
 #. module: purchase
-#. openerp-web
+#. odoo-javascript
 #: code:addons/purchase/static/src/views/purchase_dashboard.xml:0
 #, python-format
 msgid "All Late RFQs"
 msgstr "كافة طلبات عروض الأسعار المتأخرة "
 
 #. module: purchase
-#. openerp-web
+#. odoo-javascript
 #: code:addons/purchase/static/src/views/purchase_dashboard.xml:0
 #, python-format
 msgid "All RFQs"
 msgstr "كافة طلبات عروض الأسعار  "
 
 #. module: purchase
-#. openerp-web
+#. odoo-javascript
 #: code:addons/purchase/static/src/views/purchase_dashboard.xml:0
 #, python-format
 msgid "All Waiting RFQs"
@@ -665,14 +673,14 @@ msgid "Analytic Account"
 msgstr "الحساب التحليلي"
 
 #. module: purchase
-#: model:ir.model.fields,field_description:purchase.field_purchase_order_line__analytic_distribution_stored_char
-msgid "Analytic Distribution Stored Char"
-msgstr ""
-
-#. module: purchase
 #: model:ir.model,name:purchase.model_account_analytic_applicability
 msgid "Analytic Plan's Applicabilities"
-msgstr ""
+msgstr "إمكانية تطبيق الخطة التحليلية "
+
+#. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_purchase_order_line__analytic_precision
+msgid "Analytic Precision"
+msgstr "التحليل الاحكام"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
@@ -748,7 +756,7 @@ msgid "Average Days to Purchase"
 msgstr "متوسط عدد الأيام حتى الشراء "
 
 #. module: purchase
-#. openerp-web
+#. odoo-javascript
 #: code:addons/purchase/static/src/views/purchase_dashboard.xml:0
 #, python-format
 msgid "Avg Order Value"
@@ -813,7 +821,7 @@ msgstr "رسالة الحظر"
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__user_id
 msgid "Buyer"
-msgstr ""
+msgstr "مشتر"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_calendar
@@ -833,6 +841,7 @@ msgid "Cancel"
 msgstr "إلغاء "
 
 #. module: purchase
+#. odoo-python
 #: code:addons/purchase/controllers/portal.py:0
 #: model:ir.model.fields.selection,name:purchase.selection__purchase_order__state__cancel
 #: model:ir.model.fields.selection,name:purchase.selection__purchase_report__state__cancel
@@ -846,6 +855,7 @@ msgid "Cancelled Purchase Order #"
 msgstr "رقم أمر الشراء الملغي "
 
 #. module: purchase
+#. odoo-python
 #: code:addons/purchase/models/purchase.py:0
 #, python-format
 msgid "Cannot delete a purchase order line which is in state '%s'."
@@ -881,6 +891,7 @@ msgid "Company Currency"
 msgstr "عملة الشركة "
 
 #. module: purchase
+#. odoo-python
 #: code:addons/purchase/models/purchase.py:0
 #: code:addons/purchase/models/purchase.py:0
 #, python-format
@@ -898,6 +909,7 @@ msgid "Configuration"
 msgstr "التهيئة "
 
 #. module: purchase
+#. odoo-python
 #: code:addons/purchase/models/purchase.py:0
 #, python-format
 msgid "Confirm"
@@ -919,7 +931,7 @@ msgid "Confirm purchase orders in one step"
 msgstr "تأكيد أوامر الشراء في خطوة واحدة"
 
 #. module: purchase
-#. openerp-web
+#. odoo-javascript
 #: code:addons/purchase/static/src/js/tours/purchase.js:0
 #, python-format
 msgid "Confirm your purchase."
@@ -967,7 +979,7 @@ msgstr ""
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__country_code
 msgid "Country code"
-msgstr ""
+msgstr "رمز الدولة "
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
@@ -1031,6 +1043,7 @@ msgid "Date Calendar Start"
 msgstr "تاريخ بدء التقويم "
 
 #. module: purchase
+#. odoo-python
 #: code:addons/purchase/models/purchase.py:0
 #: code:addons/purchase/models/purchase.py:0
 #, python-format
@@ -1043,7 +1056,7 @@ msgid "Date:"
 msgstr "التاريخ:"
 
 #. module: purchase
-#. openerp-web
+#. odoo-javascript
 #: code:addons/purchase/static/src/views/purchase_dashboard.xml:0
 #, python-format
 msgid "Days"
@@ -1173,6 +1186,7 @@ msgid "Extended Filters"
 msgstr "عوامل التصفية التفصيلية "
 
 #. module: purchase
+#. odoo-python
 #: code:addons/purchase/models/purchase.py:0
 #, python-format
 msgid "Extra line with %s "
@@ -1306,12 +1320,14 @@ msgid "If true, the packaging can be used for purchase orders"
 msgstr "إذا كان صحيحاً، يمكن استخدام التعبئة لأوامر الشراء "
 
 #. module: purchase
+#. odoo-python
 #: code:addons/purchase/models/product.py:0
 #, python-format
 msgid "Import Template for Products"
 msgstr "استيراد قالب للمنتجات"
 
 #. module: purchase
+#. odoo-python
 #: code:addons/purchase/models/purchase.py:0
 #, python-format
 msgid "In order to delete a purchase order, you must cancel it first."
@@ -1323,7 +1339,7 @@ msgid "Incoterm"
 msgstr "شرط تجاري"
 
 #. module: purchase
-#. openerp-web
+#. odoo-javascript
 #: code:addons/purchase/static/src/js/tours/purchase.js:0
 #, python-format
 msgid "Indicate the product quantity you want to order."
@@ -1384,7 +1400,7 @@ msgid "Last Updated on"
 msgstr "آخر تحديث في"
 
 #. module: purchase
-#. openerp-web
+#. odoo-javascript
 #: code:addons/purchase/static/src/views/purchase_dashboard.xml:0
 #, python-format
 msgid "Late"
@@ -1402,21 +1418,21 @@ msgid "Late RFQs"
 msgstr "طلبات عروض الأسعار المتأخرة "
 
 #. module: purchase
-#. openerp-web
+#. odoo-javascript
 #: code:addons/purchase/static/src/views/purchase_dashboard.xml:0
 #, python-format
 msgid "Lead Time to Purchase"
 msgstr "المهلة حتى الشراء "
 
 #. module: purchase
-#. openerp-web
+#. odoo-javascript
 #: code:addons/purchase/static/src/js/tours/purchase.js:0
 #, python-format
 msgid "Let's create your first request for quotation."
 msgstr "فلنقم بإنشاء أول طلب عرض سعر لك. "
 
 #. module: purchase
-#. openerp-web
+#. odoo-javascript
 #: code:addons/purchase/static/src/js/tours/purchase.js:0
 #: code:addons/purchase/static/src/js/tours/purchase.js:0
 #, python-format
@@ -1448,6 +1464,7 @@ msgid "Lock Confirmed Orders"
 msgstr "إقفال الأوامر المؤكدّة "
 
 #. module: purchase
+#. odoo-python
 #: code:addons/purchase/controllers/portal.py:0
 #: model:ir.model.fields.selection,name:purchase.selection__purchase_order__state__done
 #, python-format
@@ -1533,7 +1550,7 @@ msgstr "الرسائل"
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_res_config_settings__po_double_validation_amount
 msgid "Minimum Amount"
-msgstr "المبلغ الأدنى "
+msgstr "الحد الأدنى للمبلغ "
 
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_res_company__po_double_validation_amount
@@ -1544,7 +1561,7 @@ msgstr "المبلغ الأدنى الذي يتطلب التصديق المزد�
 #. module: purchase
 #: model:ir.model.constraint,message:purchase.constraint_purchase_order_line_accountable_required_fields
 msgid "Missing required fields on accountable purchase order line."
-msgstr "حقول مطلوبة مفقودة في بند أمر البيع المحسوب. "
+msgstr "حقول مطلوبة مفقودة في بند أمر الشراء المحسوب. "
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__my_activity_date_deadline
@@ -1552,14 +1569,14 @@ msgid "My Activity Deadline"
 msgstr "نهاية الوقت المعين للنشاط"
 
 #. module: purchase
-#. openerp-web
+#. odoo-javascript
 #: code:addons/purchase/static/src/views/purchase_dashboard.xml:0
 #, python-format
 msgid "My Draft RFQs"
 msgstr "مسودات طلبات عروض الأسعار "
 
 #. module: purchase
-#. openerp-web
+#. odoo-javascript
 #: code:addons/purchase/static/src/views/purchase_dashboard.xml:0
 #, python-format
 msgid "My Late RFQs"
@@ -1576,20 +1593,21 @@ msgid "My Purchases"
 msgstr "مشترياتي"
 
 #. module: purchase
-#. openerp-web
+#. odoo-javascript
 #: code:addons/purchase/static/src/views/purchase_dashboard.xml:0
 #, python-format
 msgid "My RFQs"
 msgstr "طلبات عروض الأسعار "
 
 #. module: purchase
-#. openerp-web
+#. odoo-javascript
 #: code:addons/purchase/static/src/views/purchase_dashboard.xml:0
 #, python-format
 msgid "My Waiting RFQs"
 msgstr "طلبات عروض الأسعار قيد الانتظار "
 
 #. module: purchase
+#. odoo-python
 #: code:addons/purchase/controllers/portal.py:0
 #, python-format
 msgid "Name"
@@ -1603,6 +1621,7 @@ msgstr ""
 " المرجعي "
 
 #. module: purchase
+#. odoo-python
 #: code:addons/purchase/controllers/portal.py:0
 #, python-format
 msgid "Newest"
@@ -1733,7 +1752,7 @@ msgid "On received quantities"
 msgstr "حسب الكميات المستلمة"
 
 #. module: purchase
-#. openerp-web
+#. odoo-javascript
 #: code:addons/purchase/static/src/js/tours/purchase.js:0
 #, python-format
 msgid ""
@@ -1980,6 +1999,7 @@ msgid "Purchase History"
 msgstr ""
 
 #. module: purchase
+#. odoo-python
 #: code:addons/purchase/models/product.py:0
 #: code:addons/purchase/models/product.py:0
 #: code:addons/purchase/models/purchase.py:0
@@ -1994,6 +2014,7 @@ msgid "Purchase Lead Time"
 msgstr "مهلة الشراء"
 
 #. module: purchase
+#. odoo-python
 #: code:addons/purchase/controllers/portal.py:0
 #: code:addons/purchase/models/purchase.py:0
 #: code:addons/purchase/models/purchase.py:0
@@ -2131,7 +2152,6 @@ msgstr "شراء المنتجات بمضاعفات عدد الوحدات لكل 
 #. module: purchase
 #: model:ir.actions.server,name:purchase.purchase_send_reminder_mail_ir_actions_server
 #: model:ir.cron,cron_name:purchase.purchase_send_reminder_mail
-#: model:ir.cron,name:purchase.purchase_send_reminder_mail
 msgid "Purchase reminder"
 msgstr "تذكير الشراء "
 
@@ -2162,7 +2182,7 @@ msgid "Purchased"
 msgstr "تم الشراء "
 
 #. module: purchase
-#. openerp-web
+#. odoo-javascript
 #: code:addons/purchase/static/src/views/purchase_dashboard.xml:0
 #, python-format
 msgid "Purchased Last 7 Days"
@@ -2268,7 +2288,7 @@ msgid "RFQs"
 msgstr "طلبات عروض الأسعار "
 
 #. module: purchase
-#. openerp-web
+#. odoo-javascript
 #: code:addons/purchase/static/src/views/purchase_dashboard.xml:0
 #, python-format
 msgid "RFQs Sent Last 7 Days"
@@ -2389,6 +2409,7 @@ msgid "Reporting"
 msgstr "التقارير"
 
 #. module: purchase
+#. odoo-python
 #: code:addons/purchase/models/purchase.py:0
 #: model:ir.actions.report,name:purchase.report_purchase_quotation
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_portal_content
@@ -2459,7 +2480,7 @@ msgid "Search Reference Document"
 msgstr "البحث في المستند المرجع"
 
 #. module: purchase
-#. openerp-web
+#. odoo-javascript
 #: code:addons/purchase/static/src/js/tours/purchase.js:0
 #, python-format
 msgid "Search a vendor name, or create one on the fly."
@@ -2486,7 +2507,7 @@ msgid "Security Token"
 msgstr "رمز الحماية"
 
 #. module: purchase
-#. openerp-web
+#. odoo-javascript
 #: code:addons/purchase/static/src/js/tours/purchase.js:0
 #, python-format
 msgid "Select a product, or create a new one on the fly."
@@ -2531,7 +2552,7 @@ msgid "Send by Email"
 msgstr "الإرسال عبر البريد الإلكتروني "
 
 #. module: purchase
-#. openerp-web
+#. odoo-javascript
 #: code:addons/purchase/static/src/js/tours/purchase.js:0
 #: code:addons/purchase/static/src/js/tours/purchase.js:0
 #, python-format
@@ -2673,7 +2694,7 @@ msgstr "دولة الضريبة "
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__tax_totals
 msgid "Tax Totals"
-msgstr ""
+msgstr "إجمالي الضرائب "
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__amount_tax
@@ -2714,6 +2735,7 @@ msgstr ""
 "يمكنك استخدام هذا الحقل لإجراء بحث سريع."
 
 #. module: purchase
+#. odoo-python
 #: code:addons/purchase/models/purchase.py:0
 #, python-format
 msgid "The order receipt has been acknowledged by %s."
@@ -2741,6 +2763,7 @@ msgid "There are currently no requests for quotation for your account."
 msgstr "لا توجد حالياً أي طلبات لعروض الأسعار لحسابك. "
 
 #. module: purchase
+#. odoo-python
 #: code:addons/purchase/models/purchase.py:0
 #, python-format
 msgid ""
@@ -2783,6 +2806,7 @@ msgid "This note is added to purchase orders."
 msgstr "تمت إضافة هذه الملاحظة إلى أوامر الشراء. "
 
 #. module: purchase
+#. odoo-python
 #: code:addons/purchase/models/purchase.py:0
 #, python-format
 msgid ""
@@ -2793,12 +2817,14 @@ msgstr ""
 "%(quantity).2f %(unit)s. "
 
 #. module: purchase
+#. odoo-python
 #: code:addons/purchase/models/account_invoice.py:0
 #, python-format
 msgid "This vendor bill has been created from: %s"
 msgstr "تم إنشاء فاتورة هذا المورد من: %s"
 
 #. module: purchase
+#. odoo-python
 #: code:addons/purchase/models/account_invoice.py:0
 #, python-format
 msgid "This vendor bill has been modified from: %s"
@@ -2834,7 +2860,7 @@ msgid "To Invoice Quantity"
 msgstr "الكمية المُراد فوترتها"
 
 #. module: purchase
-#. openerp-web
+#. odoo-javascript
 #: code:addons/purchase/static/src/views/purchase_dashboard.xml:0
 #, python-format
 msgid "To Send"
@@ -2847,6 +2873,7 @@ msgid "Today Activities"
 msgstr "أنشطة اليوم "
 
 #. module: purchase
+#. odoo-python
 #: code:addons/purchase/controllers/portal.py:0
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__amount_total
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line__price_total
@@ -2887,11 +2914,18 @@ msgid "True if the reminder email is confirmed by the vendor."
 msgstr "تكون القيمة صحيحة إذا تم تأكيد البريد الإلكتروني من قِبَل المورّد. "
 
 #. module: purchase
+#: model_terms:ir.ui.view,arch_db:purchase.res_partner_view_purchase_buttons
+#: model_terms:ir.ui.view,arch_db:purchase.view_product_supplier_inherit
+msgid "Type a message..."
+msgstr "اكتب رسالة... "
+
+#. module: purchase
 #: model:ir.model.fields,help:purchase.field_purchase_order__activity_exception_decoration
 msgid "Type of the exception activity on record."
 msgstr "نوع النشاط الاستثنائي المسجل."
 
 #. module: purchase
+#. odoo-python
 #: code:addons/purchase/models/purchase.py:0
 #, python-format
 msgid ""
@@ -2958,6 +2992,7 @@ msgid "UoM"
 msgstr "وحدة القياس"
 
 #. module: purchase
+#. odoo-python
 #: code:addons/purchase/models/purchase.py:0
 #, python-format
 msgid "Update Dates"
@@ -2972,6 +3007,15 @@ msgstr "عاجل"
 #: model:res.groups,name:purchase.group_purchase_user
 msgid "User"
 msgstr "المستخدم"
+
+#. module: purchase
+#. odoo-python
+#: code:addons/purchase/report/purchase_report.py:0
+#, python-format
+msgid ""
+"Value: 'avg_days_to_purchase' should only be used to show an average. If you"
+" are seeing this message then it is being accessed incorrectly."
+msgstr ""
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.res_config_settings_view_form_purchase
@@ -3037,6 +3081,7 @@ msgstr ""
 "                    في أودو. "
 
 #. module: purchase
+#. odoo-python
 #: code:addons/purchase/models/purchase.py:0
 #, python-format
 msgid "View"
@@ -3048,7 +3093,7 @@ msgid "Volume"
 msgstr "الكثافة "
 
 #. module: purchase
-#. openerp-web
+#. odoo-javascript
 #: code:addons/purchase/static/src/views/purchase_dashboard.xml:0
 #, python-format
 msgid "Waiting"
@@ -3066,6 +3111,7 @@ msgid "Waiting RFQs"
 msgstr "طلبات عروض الأسعار قيد النتظار "
 
 #. module: purchase
+#. odoo-python
 #: code:addons/purchase/models/purchase.py:0
 #: model:ir.model.fields.selection,name:purchase.selection__product_template__purchase_line_warn__warning
 #: model:ir.model.fields.selection,name:purchase.selection__res_partner__purchase_warn__warning
@@ -3074,6 +3120,7 @@ msgid "Warning"
 msgstr "تحذير"
 
 #. module: purchase
+#. odoo-python
 #: code:addons/purchase/models/purchase.py:0
 #: code:addons/purchase/models/purchase.py:0
 #, python-format
@@ -3146,6 +3193,7 @@ msgstr ""
 "البريد الإلكتروني، أو عن طريق مرجع داخلي. "
 
 #. module: purchase
+#. odoo-python
 #: code:addons/purchase/models/purchase.py:0
 #, python-format
 msgid ""
@@ -3174,6 +3222,7 @@ msgstr ""
 "                سواءً كان منتجاً قابلاً للتخزين أو استهلاكي أو خدمة. "
 
 #. module: purchase
+#. odoo-python
 #: code:addons/purchase/models/purchase.py:0
 #, python-format
 msgid ""

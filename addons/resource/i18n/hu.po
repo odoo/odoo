@@ -3,18 +3,21 @@
 # 	* resource
 # 
 # Translators:
-# Martin Trigaux, 2019
-# krnkris, 2019
-# gezza <geza.nagy@oregional.hu>, 2019
-# Ákos Nagy <akos.nagy@oregional.hu>, 2019
+# Ákos Nagy <akos.nagy@oregional.hu>, 2022
+# Krisztián Juhász <juhasz.krisztian@josafar.hu>, 2022
+# Tamás Dombos, 2022
+# gezza <geza.nagy@oregional.hu>, 2022
+# krnkris, 2022
+# Martin Trigaux, 2022
+# Tamás Németh <ntomasz81@gmail.com>, 2022
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~12.5\n"
+"Project-Id-Version: Odoo Server 16.0beta\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-08-26 08:17+0000\n"
-"PO-Revision-Date: 2019-08-26 09:13+0000\n"
-"Last-Translator: Ákos Nagy <akos.nagy@oregional.hu>, 2019\n"
+"POT-Creation-Date: 2022-10-10 10:23+0000\n"
+"PO-Revision-Date: 2022-09-22 05:54+0000\n"
+"Last-Translator: Tamás Németh <ntomasz81@gmail.com>, 2022\n"
 "Language-Team: Hungarian (https://www.transifex.com/odoo/teams/41243/hu/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -24,11 +27,13 @@ msgstr ""
 
 #. module: resource
 #: code:addons/resource/models/resource.py:0
+#: code:addons/resource/models/resource.py:0
 #, python-format
 msgid "%s (copy)"
 msgstr "%s (másolat)"
 
 #. module: resource
+#: model:ir.model.fields,field_description:resource.field_resource_calendar__active
 #: model:ir.model.fields,field_description:resource.field_resource_resource__active
 msgid "Active"
 msgstr "Aktív"
@@ -36,7 +41,14 @@ msgstr "Aktív"
 #. module: resource
 #: model:ir.model.fields.selection,name:resource.selection__resource_calendar_attendance__day_period__afternoon
 msgid "Afternoon"
-msgstr ""
+msgstr "Délután"
+
+#. module: resource
+#: model_terms:ir.ui.view,arch_db:resource.resource_resource_form
+#: model_terms:ir.ui.view,arch_db:resource.view_resource_calendar_search
+#: model_terms:ir.ui.view,arch_db:resource.view_resource_resource_search
+msgid "Archived"
+msgstr "Archivált"
 
 #. module: resource
 #: model_terms:ir.ui.view,arch_db:resource.resource_calendar_form
@@ -44,6 +56,7 @@ msgid ""
 "Are you sure you want to switch this calendar to 1 week calendar ? All "
 "entries will be lost"
 msgstr ""
+"Biztos benne, hogy átvált egyhetes naptárra? Minden adata el fog veszni"
 
 #. module: resource
 #: model_terms:ir.ui.view,arch_db:resource.resource_calendar_form
@@ -51,17 +64,18 @@ msgid ""
 "Are you sure you want to switch this calendar to 2 weeks calendar ? All "
 "entries will be lost"
 msgstr ""
+"Biztos benne, hogy átvált kéthetes naptárra? Minden adata el fog veszni"
 
 #. module: resource
 #: code:addons/resource/models/resource.py:0
 #, python-format
 msgid "Attendances can't overlap."
-msgstr ""
+msgstr "A jelenlétek nem fedhetik egymást."
 
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_calendar__hours_per_day
 msgid "Average Hour per Day"
-msgstr ""
+msgstr "Átlagóra naponta"
 
 #. module: resource
 #: model:ir.model.fields,help:resource.field_resource_calendar__hours_per_day
@@ -73,7 +87,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:resource.field_resource_calendar__two_weeks_calendar
 #: model:ir.model.fields,field_description:resource.field_resource_calendar_attendance__two_weeks_calendar
 msgid "Calendar in 2 weeks mode"
-msgstr ""
+msgstr "Naptár kéthetes módban"
 
 #. module: resource
 #: model:ir.actions.act_window,name:resource.resource_calendar_closing_days
@@ -90,7 +104,6 @@ msgstr "Vállalatok"
 #: model:ir.model.fields,field_description:resource.field_resource_calendar_leaves__company_id
 #: model:ir.model.fields,field_description:resource.field_resource_mixin__company_id
 #: model:ir.model.fields,field_description:resource.field_resource_resource__company_id
-#: model:ir.model.fields,field_description:resource.field_resource_test__company_id
 #: model_terms:ir.ui.view,arch_db:resource.view_resource_calendar_leaves_search
 #: model_terms:ir.ui.view,arch_db:resource.view_resource_resource_search
 msgid "Company"
@@ -101,7 +114,6 @@ msgstr "Vállalat"
 #: model:ir.model.fields,field_description:resource.field_resource_calendar_attendance__create_uid
 #: model:ir.model.fields,field_description:resource.field_resource_calendar_leaves__create_uid
 #: model:ir.model.fields,field_description:resource.field_resource_resource__create_uid
-#: model:ir.model.fields,field_description:resource.field_resource_test__create_uid
 msgid "Created by"
 msgstr "Létrehozta"
 
@@ -110,14 +122,13 @@ msgstr "Létrehozta"
 #: model:ir.model.fields,field_description:resource.field_resource_calendar_attendance__create_date
 #: model:ir.model.fields,field_description:resource.field_resource_calendar_leaves__create_date
 #: model:ir.model.fields,field_description:resource.field_resource_resource__create_date
-#: model:ir.model.fields,field_description:resource.field_resource_test__create_date
 msgid "Created on"
 msgstr "Létrehozva"
 
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_calendar_attendance__day_period
 msgid "Day Period"
-msgstr ""
+msgstr "Napi időszak"
 
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_calendar_attendance__dayofweek
@@ -128,15 +139,7 @@ msgstr "A hét napja"
 #: model:ir.model.fields,field_description:resource.field_res_company__resource_calendar_id
 #: model:ir.model.fields,field_description:resource.field_res_users__resource_calendar_id
 msgid "Default Working Hours"
-msgstr ""
-
-#. module: resource
-#: model:ir.model.fields,help:resource.field_res_users__resource_calendar_id
-#: model:ir.model.fields,help:resource.field_resource_mixin__resource_calendar_id
-#: model:ir.model.fields,help:resource.field_resource_resource__calendar_id
-#: model:ir.model.fields,help:resource.field_resource_test__resource_calendar_id
-msgid "Define the schedule of resource"
-msgstr "Az erőforrás ütemezésének meghatározása"
+msgstr "Alapértelmezett munkaórák"
 
 #. module: resource
 #: model_terms:ir.actions.act_window,help:resource.action_resource_calendar_form
@@ -151,16 +154,14 @@ msgstr ""
 #: model:ir.model.fields,field_description:resource.field_resource_calendar__display_name
 #: model:ir.model.fields,field_description:resource.field_resource_calendar_attendance__display_name
 #: model:ir.model.fields,field_description:resource.field_resource_calendar_leaves__display_name
-#: model:ir.model.fields,field_description:resource.field_resource_mixin__display_name
 #: model:ir.model.fields,field_description:resource.field_resource_resource__display_name
-#: model:ir.model.fields,field_description:resource.field_resource_test__display_name
 msgid "Display Name"
 msgstr "Megjelenített név"
 
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_calendar_attendance__display_type
 msgid "Display Type"
-msgstr ""
+msgstr "Típus megjeleítése"
 
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_resource__time_efficiency
@@ -171,17 +172,23 @@ msgstr "Hatékonysági tényező"
 #: model:ir.model.fields,field_description:resource.field_resource_calendar_attendance__date_to
 #: model:ir.model.fields,field_description:resource.field_resource_calendar_leaves__date_to
 msgid "End Date"
-msgstr "Befejezés dátuma"
-
-#. module: resource
-#: model:ir.model.fields.selection,name:resource.selection__resource_calendar_attendance__week_type__0
-msgid "Even week"
-msgstr ""
+msgstr "Záródátum"
 
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_calendar__two_weeks_explanation
 msgid "Explanation"
-msgstr ""
+msgstr "Magyarázat"
+
+#. module: resource
+#: model:ir.model.fields.selection,name:resource.selection__resource_calendar_attendance__week_type__0
+msgid "First"
+msgstr "Első"
+
+#. module: resource
+#: code:addons/resource/models/resource.py:0
+#, python-format
+msgid "First week"
+msgstr "Első hét"
 
 #. module: resource
 #: model:ir.model.fields.selection,name:resource.selection__resource_calendar_attendance__dayofweek__4
@@ -192,13 +199,13 @@ msgstr "Péntek"
 #: code:addons/resource/models/resource.py:0
 #, python-format
 msgid "Friday Afternoon"
-msgstr ""
+msgstr "Péntek délután"
 
 #. module: resource
 #: code:addons/resource/models/resource.py:0
 #, python-format
 msgid "Friday Morning"
-msgstr ""
+msgstr "Péntek reggel"
 
 #. module: resource
 #: model:ir.model.fields,help:resource.field_resource_calendar_attendance__sequence
@@ -207,7 +214,6 @@ msgstr ""
 
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_calendar__global_leave_ids
-#: model_terms:ir.ui.view,arch_db:resource.resource_calendar_form
 msgid "Global Time Off"
 msgstr ""
 
@@ -220,10 +226,11 @@ msgstr "Csoportosítás"
 #. module: resource
 #: model_terms:ir.ui.view,arch_db:resource.view_resource_calendar_attendance_form
 msgid "Hours"
-msgstr "Órák"
+msgstr "óra"
 
 #. module: resource
 #: model:ir.model.fields.selection,name:resource.selection__resource_resource__resource_type__user
+#: model_terms:ir.ui.view,arch_db:resource.view_resource_resource_search
 msgid "Human"
 msgstr "Ember"
 
@@ -231,9 +238,7 @@ msgstr "Ember"
 #: model:ir.model.fields,field_description:resource.field_resource_calendar__id
 #: model:ir.model.fields,field_description:resource.field_resource_calendar_attendance__id
 #: model:ir.model.fields,field_description:resource.field_resource_calendar_leaves__id
-#: model:ir.model.fields,field_description:resource.field_resource_mixin__id
 #: model:ir.model.fields,field_description:resource.field_resource_resource__id
-#: model:ir.model.fields,field_description:resource.field_resource_test__id
 msgid "ID"
 msgstr "Azonosító"
 
@@ -254,17 +259,24 @@ msgstr ""
 "anélkül, hogy törölné azt."
 
 #. module: resource
-#: model_terms:ir.ui.view,arch_db:resource.view_resource_resource_search
-msgid "Inactive"
-msgstr "Inaktív"
+#: model:ir.model.fields,help:resource.field_resource_calendar__active
+msgid ""
+"If the active field is set to false, it will allow you to hide the Working "
+"Time without removing it."
+msgstr ""
+
+#. module: resource
+#: code:addons/resource/models/resource.py:0
+#, python-format
+msgid ""
+"In a calendar with 2 weeks mode, all periods need to be in the sections."
+msgstr ""
 
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_calendar____last_update
 #: model:ir.model.fields,field_description:resource.field_resource_calendar_attendance____last_update
 #: model:ir.model.fields,field_description:resource.field_resource_calendar_leaves____last_update
-#: model:ir.model.fields,field_description:resource.field_resource_mixin____last_update
 #: model:ir.model.fields,field_description:resource.field_resource_resource____last_update
-#: model:ir.model.fields,field_description:resource.field_resource_test____last_update
 msgid "Last Modified on"
 msgstr "Legutóbb frissítve"
 
@@ -273,7 +285,6 @@ msgstr "Legutóbb frissítve"
 #: model:ir.model.fields,field_description:resource.field_resource_calendar_attendance__write_uid
 #: model:ir.model.fields,field_description:resource.field_resource_calendar_leaves__write_uid
 #: model:ir.model.fields,field_description:resource.field_resource_resource__write_uid
-#: model:ir.model.fields,field_description:resource.field_resource_test__write_uid
 msgid "Last Updated by"
 msgstr "Frissítette"
 
@@ -282,23 +293,23 @@ msgstr "Frissítette"
 #: model:ir.model.fields,field_description:resource.field_resource_calendar_attendance__write_date
 #: model:ir.model.fields,field_description:resource.field_resource_calendar_leaves__write_date
 #: model:ir.model.fields,field_description:resource.field_resource_resource__write_date
-#: model:ir.model.fields,field_description:resource.field_resource_test__write_date
 msgid "Last Updated on"
-msgstr "Frissítve "
+msgstr "Frissítve ekkor"
 
 #. module: resource
 #: model_terms:ir.ui.view,arch_db:resource.view_resource_calendar_leaves_search
 msgid "Leave Date"
-msgstr ""
+msgstr "Távollét dátuma"
 
 #. module: resource
 #: model_terms:ir.ui.view,arch_db:resource.resource_calendar_leave_form
 #: model_terms:ir.ui.view,arch_db:resource.resource_calendar_leave_tree
 msgid "Leave Detail"
-msgstr "Erőforrás-távollét részletei"
+msgstr "Távollét részletei"
 
 #. module: resource
 #: model:ir.model.fields.selection,name:resource.selection__resource_resource__resource_type__material
+#: model_terms:ir.ui.view,arch_db:resource.view_resource_resource_search
 msgid "Material"
 msgstr "Anyag"
 
@@ -311,36 +322,35 @@ msgstr "Hétfő"
 #: code:addons/resource/models/resource.py:0
 #, python-format
 msgid "Monday Afternoon"
-msgstr ""
+msgstr "Hétfő délután"
 
 #. module: resource
 #: code:addons/resource/models/resource.py:0
 #, python-format
 msgid "Monday Morning"
-msgstr ""
+msgstr "Hétfő reggel"
 
 #. module: resource
 #: model:ir.model.fields.selection,name:resource.selection__resource_calendar_attendance__day_period__morning
 msgid "Morning"
-msgstr ""
+msgstr "Reggel"
 
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_calendar__name
 #: model:ir.model.fields,field_description:resource.field_resource_calendar_attendance__name
 #: model:ir.model.fields,field_description:resource.field_resource_resource__name
-#: model:ir.model.fields,field_description:resource.field_resource_test__name
 msgid "Name"
 msgstr "Név"
-
-#. module: resource
-#: model:ir.model.fields.selection,name:resource.selection__resource_calendar_attendance__week_type__1
-msgid "Odd week"
-msgstr ""
 
 #. module: resource
 #: model:ir.model.fields.selection,name:resource.selection__resource_calendar_leaves__time_type__other
 msgid "Other"
 msgstr "Egyéb"
+
+#. module: resource
+#: model_terms:ir.ui.view,arch_db:resource.view_resource_calendar_leaves_search
+msgid "Period"
+msgstr "Időszak"
 
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_calendar_leaves__name
@@ -353,19 +363,16 @@ msgstr "Ok"
 #: model:ir.model.fields,help:resource.field_resource_resource__user_id
 msgid "Related user name for the resource to manage its access."
 msgstr ""
-"Az erőforráshoz kapcsolódó felhasználó neve, aki kezeli a hozzáférést az "
-"erőforráshoz."
+"Az erőforráshoz kapcsolódó felhasználó neve, aki annak hozzáférését kezeli."
 
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_calendar_attendance__resource_id
 #: model:ir.model.fields,field_description:resource.field_resource_calendar_leaves__resource_id
 #: model:ir.model.fields,field_description:resource.field_resource_mixin__resource_id
-#: model:ir.model.fields,field_description:resource.field_resource_test__resource_id
 #: model:ir.ui.menu,name:resource.menu_resource_config
 #: model_terms:ir.ui.view,arch_db:resource.resource_resource_form
 #: model_terms:ir.ui.view,arch_db:resource.view_resource_calendar
 #: model_terms:ir.ui.view,arch_db:resource.view_resource_calendar_leaves_search
-#: model_terms:ir.ui.view,arch_db:resource.view_resource_resource_search
 msgid "Resource"
 msgstr "Erőforrás"
 
@@ -387,14 +394,9 @@ msgid "Resource Time Off Detail"
 msgstr ""
 
 #. module: resource
-#: model:ir.model.fields,field_description:resource.field_resource_resource__resource_type
-msgid "Resource Type"
-msgstr "Erőforrás típus"
-
-#. module: resource
 #: model:ir.model,name:resource.model_resource_calendar
 msgid "Resource Working Time"
-msgstr ""
+msgstr "Erőforrás munkaidő"
 
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_calendar_attendance__calendar_id
@@ -450,6 +452,17 @@ msgid "Search Working Time"
 msgstr "Munkaidő keresése"
 
 #. module: resource
+#: model:ir.model.fields.selection,name:resource.selection__resource_calendar_attendance__week_type__1
+msgid "Second"
+msgstr "Második"
+
+#. module: resource
+#: code:addons/resource/models/resource.py:0
+#, python-format
+msgid "Second week"
+msgstr "Második hét"
+
+#. module: resource
 #: model:ir.model.fields.selection,name:resource.selection__resource_calendar_attendance__display_type__line_section
 msgid "Section"
 msgstr "Szakasz"
@@ -463,12 +476,12 @@ msgstr "Sorszám"
 #: code:addons/resource/models/res_company.py:0
 #, python-format
 msgid "Standard 40 hours/week"
-msgstr ""
+msgstr "Normál 40 óra/hét"
 
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_calendar_leaves__date_from
 msgid "Start Date"
-msgstr "Kezdő dátum"
+msgstr "Kezdődátum"
 
 #. module: resource
 #: model:ir.model.fields,help:resource.field_resource_calendar_attendance__hour_from
@@ -476,6 +489,8 @@ msgid ""
 "Start and End time of working.\n"
 "A specific value of 24:00 is interpreted as 23:59:59.999999."
 msgstr ""
+"A munka kezdő és befejező időpontja.\n"
+"A 24:00 speciális érték 23:59:59:999999-ként lesz értelmezve."
 
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_calendar_attendance__date_from
@@ -485,7 +500,7 @@ msgstr "Kezdés dátuma"
 #. module: resource
 #: model_terms:ir.ui.view,arch_db:resource.view_resource_calendar_leaves_search
 msgid "Starting Date of Leave"
-msgstr ""
+msgstr "A távollét kezdő dátuma"
 
 #. module: resource
 #: model:ir.model.fields.selection,name:resource.selection__resource_calendar_attendance__dayofweek__6
@@ -495,40 +510,34 @@ msgstr "Vasárnap"
 #. module: resource
 #: model_terms:ir.ui.view,arch_db:resource.resource_calendar_form
 msgid "Switch to 1 week calendar"
-msgstr ""
+msgstr "Váltás egyhetes naptárra"
 
 #. module: resource
 #: model_terms:ir.ui.view,arch_db:resource.resource_calendar_form
 msgid "Switch to 2 weeks calendar"
-msgstr ""
+msgstr "Váltás kéthetes naptárra"
 
 #. module: resource
 #: model:ir.model.fields,help:resource.field_resource_calendar_attendance__display_type
 msgid "Technical field for UX purpose."
-msgstr ""
+msgstr "Technikai mező UX célokra."
 
 #. module: resource
-#: model:ir.model,name:resource.model_resource_test
-msgid "Test Resource Model"
+#: code:addons/resource/models/resource.py:0
+#, python-format
+msgid "The current week (from %s to %s) correspond to the  %s one."
 msgstr ""
 
 #. module: resource
 #: code:addons/resource/models/resource.py:0
 #, python-format
-msgid "The efficiency factor cannot be equal to 0."
+msgid "The start date of the time off must be earlier than the end date."
 msgstr ""
-
-#. module: resource
-#: code:addons/resource/models/resource.py:0
-#, python-format
-msgid "The start date of the time off must be earlier end date."
-msgstr ""
+"A szabadság kezdő dátumának korábbinak kell lennie, mint a befejező dátuma."
 
 #. module: resource
 #: model:ir.model.fields,help:resource.field_resource_calendar__tz
 #: model:ir.model.fields,help:resource.field_resource_mixin__tz
-#: model:ir.model.fields,help:resource.field_resource_resource__tz
-#: model:ir.model.fields,help:resource.field_resource_test__tz
 msgid ""
 "This field is used in order to define in which timezone the resources will "
 "work."
@@ -537,8 +546,8 @@ msgstr ""
 #. module: resource
 #: model:ir.model.fields,help:resource.field_resource_resource__time_efficiency
 msgid ""
-"This field is used to calculate the the expected duration of a work order at"
-" this work center. For example, if a work order takes one hour and the "
+"This field is used to calculate the expected duration of a work order at "
+"this work center. For example, if a work order takes one hour and the "
 "efficiency factor is 100%, then the expected duration will be one hour. If "
 "the efficiency factor is 200%, however the expected duration will be 30 "
 "minutes."
@@ -553,38 +562,42 @@ msgstr "Csütörtök"
 #: code:addons/resource/models/resource.py:0
 #, python-format
 msgid "Thursday Afternoon"
-msgstr ""
+msgstr "Csütörtök délután"
 
 #. module: resource
 #: code:addons/resource/models/resource.py:0
 #, python-format
 msgid "Thursday Morning"
-msgstr ""
+msgstr "Csütörtök reggel"
 
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_calendar__leave_ids
 #: model:ir.model.fields.selection,name:resource.selection__resource_calendar_leaves__time_type__leave
 #: model_terms:ir.ui.view,arch_db:resource.resource_calendar_form
 msgid "Time Off"
-msgstr ""
+msgstr "Szabadság"
 
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_calendar_leaves__time_type
 msgid "Time Type"
-msgstr ""
+msgstr "Időtípus"
 
 #. module: resource
 #: model:ir.model.constraint,message:resource.constraint_resource_resource_check_time_efficiency
 msgid "Time efficiency must be strictly positive"
-msgstr ""
+msgstr "Az időhatékonyságnak mindenképpen pozitívnak kell lennie"
 
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_calendar__tz
 #: model:ir.model.fields,field_description:resource.field_resource_mixin__tz
 #: model:ir.model.fields,field_description:resource.field_resource_resource__tz
-#: model:ir.model.fields,field_description:resource.field_resource_test__tz
 msgid "Timezone"
 msgstr "Időzóna"
+
+#. module: resource
+#: model:ir.model.fields,field_description:resource.field_resource_calendar__tz_offset
+msgid "Timezone offset"
+msgstr "Időzóna eltolódás"
 
 #. module: resource
 #: model:ir.model.fields.selection,name:resource.selection__resource_calendar_attendance__dayofweek__1
@@ -595,29 +608,26 @@ msgstr "Kedd"
 #: code:addons/resource/models/resource.py:0
 #, python-format
 msgid "Tuesday Afternoon"
-msgstr ""
+msgstr "Kedd délután"
 
 #. module: resource
 #: code:addons/resource/models/resource.py:0
 #, python-format
 msgid "Tuesday Morning"
-msgstr ""
+msgstr "Kedd reggel"
 
 #. module: resource
+#: model:ir.model.fields,field_description:resource.field_resource_resource__resource_type
 #: model_terms:ir.ui.view,arch_db:resource.view_resource_resource_search
 msgid "Type"
 msgstr "Típus"
 
 #. module: resource
+#: model:ir.model,name:resource.model_res_users
 #: model:ir.model.fields,field_description:resource.field_resource_resource__user_id
 #: model_terms:ir.ui.view,arch_db:resource.view_resource_resource_search
 msgid "User"
 msgstr "Felhasználó"
-
-#. module: resource
-#: model:ir.model,name:resource.model_res_users
-msgid "Users"
-msgstr "Felhasználók"
 
 #. module: resource
 #: model:ir.model.fields.selection,name:resource.selection__resource_calendar_attendance__dayofweek__2
@@ -628,18 +638,18 @@ msgstr "Szerda"
 #: code:addons/resource/models/resource.py:0
 #, python-format
 msgid "Wednesday Afternoon"
-msgstr ""
+msgstr "Szerda délután"
 
 #. module: resource
 #: code:addons/resource/models/resource.py:0
 #, python-format
 msgid "Wednesday Morning"
-msgstr ""
+msgstr "Szerda reggel"
 
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_calendar_attendance__week_type
-msgid "Week Even/Odd"
-msgstr ""
+msgid "Week Number"
+msgstr "Hét száma"
 
 #. module: resource
 #: model:ir.model.fields,help:resource.field_resource_calendar_leaves__time_type
@@ -656,23 +666,22 @@ msgstr "Munka részletei"
 #. module: resource
 #: model_terms:ir.ui.view,arch_db:resource.resource_calendar_form
 msgid "Work Resources"
-msgstr ""
+msgstr "Munka erőforrások"
 
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_calendar_attendance__hour_from
 msgid "Work from"
-msgstr "Ekkortól dolgozik"
+msgstr "Munka kezdete"
 
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_calendar_attendance__hour_to
 msgid "Work to"
-msgstr "Eddig dolgozik"
+msgstr "Munka vége"
 
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_res_company__resource_calendar_ids
 #: model:ir.model.fields,field_description:resource.field_resource_calendar_leaves__calendar_id
 #: model:ir.model.fields,field_description:resource.field_resource_mixin__resource_calendar_id
-#: model:ir.model.fields,field_description:resource.field_resource_test__resource_calendar_id
 #: model_terms:ir.ui.view,arch_db:resource.resource_calendar_form
 msgid "Working Hours"
 msgstr "Munkaórák"
@@ -681,12 +690,7 @@ msgstr "Munkaórák"
 #: code:addons/resource/models/resource.py:0
 #, python-format
 msgid "Working Hours of %s"
-msgstr ""
-
-#. module: resource
-#: model_terms:ir.ui.view,arch_db:resource.view_resource_resource_search
-msgid "Working Period"
-msgstr "Munkaidőszak"
+msgstr "%s munkaóra"
 
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_calendar__attendance_ids
@@ -696,6 +700,7 @@ msgstr "Munkaidőszak"
 #: model_terms:ir.ui.view,arch_db:resource.view_resource_calendar_attendance_tree
 #: model_terms:ir.ui.view,arch_db:resource.view_resource_calendar_search
 #: model_terms:ir.ui.view,arch_db:resource.view_resource_calendar_tree
+#: model_terms:ir.ui.view,arch_db:resource.view_resource_resource_search
 msgid "Working Time"
 msgstr "Munkaidő"
 
@@ -703,7 +708,7 @@ msgstr "Munkaidő"
 #: model:ir.actions.act_window,name:resource.action_resource_calendar_form
 #: model:ir.ui.menu,name:resource.menu_resource_calendar
 msgid "Working Times"
-msgstr ""
+msgstr "Munkaidő"
 
 #. module: resource
 #: code:addons/resource/models/resource.py:0
@@ -714,11 +719,23 @@ msgstr ""
 #. module: resource
 #: code:addons/resource/models/resource.py:0
 #, python-format
-msgid "even"
-msgstr ""
+msgid "first"
+msgstr "első"
 
 #. module: resource
 #: code:addons/resource/models/resource.py:0
 #, python-format
-msgid "odd"
-msgstr ""
+msgid "other week"
+msgstr "másik hét"
+
+#. module: resource
+#: code:addons/resource/models/resource.py:0
+#, python-format
+msgid "second"
+msgstr "második"
+
+#. module: resource
+#: code:addons/resource/models/resource.py:0
+#, python-format
+msgid "this week"
+msgstr "ez a hét"

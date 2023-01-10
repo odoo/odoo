@@ -49,6 +49,17 @@ class TestItEdiReverseCharge(TestItEdi):
             'is_company': True
         })
 
+        cls.san_marino_partner = cls.env['res.partner'].create({
+            'name': 'Prospectra',
+            'vat': 'SM6784',
+            'country_id': cls.env.ref('base.sm').id,
+            'street': 'Via Ventotto Luglio 212 Centro Uffici',
+            'zip': '47893',
+            'city': 'San Marino',
+            'company_id': cls.company.id,
+            'is_company': True,
+        })
+
         # Taxes -----------
         tax_data = {
             'name': 'Tax 4% (Goods) Reverse Charge',
@@ -163,27 +174,27 @@ class TestItEdiReverseCharge(TestItEdi):
             'invoice_date': fields.Date.from_string('2022-03-24'),
         }])
 
+        # Import bill San Marino
+        bill_data_san_marino = {
+            'company_id': cls.company.id,
+            'move_type': 'in_invoice',
+            'invoice_date': fields.Date.from_string('2022-03-24'),
+            'invoice_date_due': fields.Date.from_string('2022-03-24'),
+            'partner_id': cls.san_marino_partner.id,
+            'partner_bank_id': cls.test_bank.id,
+            'invoice_line_ids': product_lines(
+                ProductLine(cls.line_tax_22p, 'Product A', product_a.id),
+                ProductLine(cls.line_tax_4p, 'Product B, taxed 4%', product_b.id)
+            )
+        }
+        cls.reverse_charge_bill_san_marino = cls.env['account.move'].with_company(cls.company).create(bill_data_san_marino)
+
         # Posting moves -----------
         cls.reverse_charge_invoice._post()
         cls.reverse_charge_bill._post()
         cls.reverse_charge_bill_2._post()
+        cls.reverse_charge_bill_san_marino._post()
         cls.reverse_charge_refund._post()
-
-    def _cleanup_etree(self, content, xpaths=None):
-        xpaths = {
-            **(xpaths or {}),
-            '//FatturaElettronicaBody/Allegati': 'Allegati',
-            '//DatiTrasmissione/ProgressivoInvio': 'ProgressivoInvio',
-        }
-        return self.with_applied_xpath(
-            etree.fromstring(content),
-            "".join([f"<xpath expr='{x}' position='replace'>{y}</xpath>" for x, y in xpaths.items()])
-        )
-
-    def _test_invoice_with_sample_file(self, invoice, filename, xpaths_file=None, xpaths_result=None):
-        result = self._cleanup_etree(self.edi_format._l10n_it_edi_export_invoice_as_xml(invoice), xpaths_result)
-        expected = self._cleanup_etree(self._get_test_file_content(filename), xpaths_file)
-        self.assertXmlTreeEqual(result, expected)
 
     def test_reverse_charge_invoice(self):
         self._test_invoice_with_sample_file(self.reverse_charge_invoice, "reverse_charge_invoice.xml")
@@ -206,6 +217,42 @@ class TestItEdiReverseCharge(TestItEdi):
             }
         )
 
+
+    def test_reverse_charge_bill_san_marino(self):
+        self._test_invoice_with_sample_file(
+            self.reverse_charge_bill_san_marino,
+            "reverse_charge_bill.xml",
+            xpaths_result={
+                "//DatiGeneraliDocumento/Numero": "<Numero/>",
+                "(//DettaglioLinee/Descrizione)[2]": "<Descrizione/>",
+            },
+            xpaths_file={
+                "//CedentePrestatore": """
+                <CedentePrestatore>
+                    <DatiAnagrafici>
+                        <IdFiscaleIVA>
+                            <IdPaese>SM</IdPaese>
+                            <IdCodice>OO99999999999</IdCodice>
+                        </IdFiscaleIVA>
+                        <Anagrafica>
+                            <Denominazione>Prospectra</Denominazione>
+                        </Anagrafica>
+                        <RegimeFiscale>RF18</RegimeFiscale>
+                    </DatiAnagrafici>
+                    <Sede>
+                        <Indirizzo>Via Ventotto Luglio 212 Centro Uffici</Indirizzo>
+                        <CAP>00000</CAP>
+                        <Comune>San Marino</Comune>
+                        <Nazione>SM</Nazione>
+                    </Sede>
+                </CedentePrestatore>
+                """,
+                "//DatiGeneraliDocumento/TipoDocumento": "<TipoDocumento>TD28</TipoDocumento>",
+                "//DatiGeneraliDocumento/Numero": "<Numero/>",
+                "(//DettaglioLinee/Descrizione)[2]": "<Descrizione/>",
+            }
+        )
+
     def test_reverse_charge_refund(self):
         self._test_invoice_with_sample_file(
             self.reverse_charge_refund,
@@ -216,7 +263,7 @@ class TestItEdiReverseCharge(TestItEdi):
             },
             xpaths_file={
                 "//DatiGeneraliDocumento/Numero": "<Numero/>",
-                "//DatiGeneraliDocumento/ImportoTotaleDocumento": "<ImportoTotaleDocumento>-1808.91</ImportoTotaleDocumento>",
+                "//DatiGeneraliDocumento/ImportoTotaleDocumento": "<ImportoTotaleDocumento>-1808.90</ImportoTotaleDocumento>",
                 "//DatiPagamento/DettaglioPagamento/DataScadenzaPagamento": "<DataScadenzaPagamento/>",
                 "(//DettaglioLinee/PrezzoUnitario)[1]": "<PrezzoUnitario>-800.400000</PrezzoUnitario>",
                 "(//DettaglioLinee/PrezzoUnitario)[2]": "<PrezzoUnitario>-800.400000</PrezzoUnitario>",

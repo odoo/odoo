@@ -74,7 +74,7 @@
 
     <record id="hr_contract_qdp" model="hr.contract">
         <field name="name">Demo Contract</field>
-        <field name="date_start" eval="time.strftime('%Y')+'-1-1'"/>
+        <field name="date_start" eval="(DateTime.today() + relativedelta(years=-1, month=9))"/>
         <field name="employee_id" ref="hr.employee_qdp"/>
         <field name="job_id" model="hr.job"
             eval="obj().env.ref('hr.employee_qdp').job_id.id"/>

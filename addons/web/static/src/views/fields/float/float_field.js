@@ -49,12 +49,20 @@ FloatField.supportedTypes = ["float"];
 
 FloatField.isEmpty = () => false;
 FloatField.extractProps = ({ attrs, field }) => {
+    // Sadly, digits param was available as an option and an attr.
+    // The option version could be removed with some xml refactoring.
+    let digits;
+    if (attrs.digits) {
+        digits = JSON.parse(attrs.digits);
+    } else if (attrs.options.digits) {
+        digits = attrs.options.digits;
+    } else if (Array.isArray(field.digits)) {
+        digits = field.digits;
+    }
     return {
         inputType: attrs.options.type,
         step: attrs.options.step,
-        // Sadly, digits param was available as an option and an attr.
-        // The option version could be removed with some xml refactoring.
-        digits: (attrs.digits ? JSON.parse(attrs.digits) : attrs.options.digits) || field.digits,
+        digits,
         placeholder: attrs.placeholder,
     };
 };

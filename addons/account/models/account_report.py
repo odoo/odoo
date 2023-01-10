@@ -32,7 +32,10 @@ class AccountReport(models.Model):
     variant_report_ids = fields.One2many(string="Variants", comodel_name='account.report', inverse_name='root_report_id')
     chart_template_id = fields.Many2one(string="Chart of Accounts", comodel_name='account.chart.template')
     country_id = fields.Many2one(string="Country", comodel_name='res.country')
-    only_tax_exigible = fields.Boolean(string="Only Tax Exigible Lines")
+    only_tax_exigible = fields.Boolean(
+        string="Only Tax Exigible Lines",
+        compute=lambda x: x._compute_report_option_filter('only_tax_exigible'), readonly=False, store=True, depends=['root_report_id'],
+    )
     availability_condition = fields.Selection(
         string="Availability",
         selection=[('country', "Country Matches"), ('coa', "Chart of Accounts Matches"), ('always', "Always")],
@@ -99,7 +102,7 @@ class AccountReport(models.Model):
     filter_hierarchy = fields.Selection(
         string="Account Groups",
         selection=[('by_default', "Enabled by Default"), ('optional', "Optional"), ('never', "Never")],
-        compute=lambda x: x._compute_report_option_filter('filter_hierarchy', 'never'), readonly=False, store=True, depends=['root_report_id'],
+        compute=lambda x: x._compute_report_option_filter('filter_hierarchy', 'optional'), readonly=False, store=True, depends=['root_report_id'],
     )
     filter_account_type = fields.Boolean(
         string="Account Types",
@@ -172,8 +175,9 @@ class AccountReport(models.Model):
             default = {}
         default['name'] = self._get_copied_name()
         copied_report = super().copy(default=default)
+        code_mapping = {}
         for line in self.line_ids.filtered(lambda x: not x.parent_id):
-            line._copy_hierarchy(copied_report)
+            line._copy_hierarchy(copied_report, code_mapping=code_mapping)
         for column in self.column_ids:
             column.copy({'report_id': copied_report.id})
         return copied_report
@@ -293,7 +297,7 @@ class AccountReportLine(models.Model):
         })
 
         # Keep track of old_code -> new_code in a mutable dict
-        if not code_mapping:
+        if code_mapping is None:
             code_mapping = {}
         if self.code:
             code_mapping[self.code] = copied_line.code
@@ -339,9 +343,6 @@ class AccountReportLine(models.Model):
         # engine-related field. This makes xmls a bit shorter
         vals_list = []
         for report_line in self:
-            if report_line.expression_ids:
-                continue
-
             if engine == 'domain' and report_line.domain_formula:
                 subformula, formula = DOMAIN_REGEX.match(report_line.domain_formula or '').groups()
                 # Resolve the calls to ref(), to mimic the fact those formulas are normally given with an eval="..." in XML
@@ -360,7 +361,16 @@ class AccountReportLine(models.Model):
                 'formula': formula.lstrip(' \t\n'),  # Avoid IndentationError in evals
                 'subformula': subformula
             }
-            vals_list.append(vals)
+            if report_line.expression_ids:
+                # expressions already exists, update the first expression with the right engine
+                # since syntactic sugar aren't meant to be used with multiple expressions
+                for expression in report_line.expression_ids:
+                    if expression.engine == engine:
+                        expression.write(vals)
+                        break
+            else:
+                # else prepare batch creation
+                vals_list.append(vals)
 
         if vals_list:
             self.env['account.report.expression'].create(vals_list)
@@ -424,13 +434,16 @@ class AccountReportExpression(models.Model):
     def _get_auditable_engines(self):
         return {'tax_tags', 'domain', 'account_codes', 'external', 'aggregation'}
 
+    def _strip_formula(self, vals):
+        if 'formula' in vals and isinstance(vals['formula'], str):
+            vals['formula'] = re.sub(r'\s+', ' ', vals['formula'].strip())
+
     @api.model_create_multi
     def create(self, vals_list):
         # Overridden so that we create the corresponding account.account.tag objects when instantiating an expression
         # with engine 'tax_tags'.
         for vals in vals_list:
-            if 'formula' in vals and isinstance(vals['formula'], str):
-                vals['formula'] = vals['formula'].replace('\n', '').strip()
+            self._strip_formula(vals)
 
         result = super().create(vals_list)
 
@@ -449,6 +462,8 @@ class AccountReportExpression(models.Model):
     def write(self, vals):
         if 'formula' not in vals:
             return super().write(vals)
+
+        self._strip_formula(vals)
 
         tax_tags_expressions = self.filtered(lambda x: x.engine == 'tax_tags')
         former_formulas_by_country = defaultdict(lambda: [])
@@ -638,4 +653,4 @@ class AccountReportExternalValue(models.Model):
     def _check_fiscal_position(self):
         for record in self:
             if record.foreign_vat_fiscal_position_id and record.foreign_vat_fiscal_position_id.country_id != record.report_country_id:
-                raise ValidationError(_("The country set on the the foreign VAT fiscal position must match the one set on the report."))
+                raise ValidationError(_("The country set on the foreign VAT fiscal position must match the one set on the report."))

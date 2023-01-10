@@ -2,7 +2,9 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 from odoo.addons.hr_expense.tests.common import TestExpenseCommon
 from odoo.tests import tagged, Form
+from odoo.tools.misc import formatLang
 from odoo import fields, Command
+from odoo.exceptions import UserError
 
 
 @tagged('-at_install', 'post_install')
@@ -229,6 +231,28 @@ class TestExpenses(TestExpenseCommon):
                 'currency_id': self.company_data['currency'].id,
             },
         ])
+
+    def test_expense_company_account(self):
+        """ Create an expense with payment mode 'Company' and post it (it should not fail) """
+        with Form(self.env['hr.expense']) as expense_form:
+            expense_form.name = 'Company expense'
+            expense_form.date = '2022-11-17'
+            expense_form.total_amount = 1000.0
+            expense_form.payment_mode = 'company_account'
+            expense_form.employee_id = self.expense_employee
+            expense_form.product_id = self.product_a
+            expense = expense_form.save()
+
+        with Form(self.env['hr.expense.sheet']) as expense_sheet_form:
+            # Use same values that will be used by action_submit_expenses
+            expense_sheet_form.employee_id = expense.employee_id
+            expense_sheet_form.name = expense.name
+            expense_sheet_form.expense_line_ids.add(expense)
+            expense_sheet = expense_sheet_form.save()
+
+        expense_sheet.action_submit_sheet()
+        expense_sheet.approve_expense_sheets()
+        expense_sheet.action_sheet_move_create()
 
     def test_account_entry_multi_currency(self):
         """ Checking accounting move entries and analytic entries when submitting expense. With
@@ -551,3 +575,196 @@ class TestExpenses(TestExpenseCommon):
         self.assertRecordValues(expense_sheet.account_move_id, [{
             'partner_id': self.expense_user_employee.partner_id.id,
         }])
+
+    def test_print_expense_check(self):
+        """
+        Test the check content when printing a check
+        that comes from an expense
+        """
+        sheet = self.env['hr.expense.sheet'].create({
+            'company_id': self.env.company.id,
+            'employee_id': self.expense_employee.id,
+            'name': 'test sheet',
+            'expense_line_ids': [
+                (0, 0, {
+                    'name': 'expense_1',
+                    'date': '2016-01-01',
+                    'product_id': self.product_a.id,
+                    'unit_amount': 10.0,
+                    'employee_id': self.expense_employee.id,
+                }),
+                (0, 0, {
+                    'name': 'expense_2',
+                    'date': '2016-01-01',
+                    'product_id': self.product_a.id,
+                    'unit_amount': 1.0,
+                    'employee_id': self.expense_employee.id,
+                }),
+            ],
+        })
+
+        #actions
+        sheet.action_submit_sheet()
+        sheet.approve_expense_sheets()
+        sheet.action_sheet_move_create()
+        action_data = sheet.action_register_payment()
+        payment_method_line = self.env.company.bank_journal_ids.outbound_payment_method_line_ids.filtered(lambda m: m.code == 'check_printing')
+        with Form(self.env[action_data['res_model']].with_context(action_data['context'])) as wiz_form:
+            wiz_form.payment_method_line_id = payment_method_line
+        wizard = wiz_form.save()
+        action = wizard.action_create_payments()
+        self.assertEqual(sheet.state, 'done', 'all account.move.line linked to expenses must be reconciled after payment')
+
+        payments = self.env[action['res_model']].search(action['domain'])
+        for payment in payments:
+            pages = payment._check_get_pages()
+            stub_line = pages[0]['stub_lines'][:1]
+            self.assertTrue(stub_line)
+            move = self.env[action_data['context']['active_model']].browse(action_data['context']['active_ids'])
+            self.assertDictEqual(stub_line[0], {
+                'due_date': payment.date.strftime("%m/%d/%Y"),
+                'number': ' - '.join([move.name, move.ref] if move.ref else [move.name]),
+                'amount_total': formatLang(self.env, move.amount_total, currency_obj=self.env.company.currency_id),
+                'amount_residual': '-',
+                'amount_paid': formatLang(self.env, payment.amount_total, currency_obj=self.env.company.currency_id),
+                'currency': self.env.company.currency_id
+            })
+
+    def test_hr_expense_split(self):
+        """
+        Check Split Expense flow.
+        """
+        expense = self.env['hr.expense'].create({
+            'name': 'Expense To Test Split - Diego, libre dans sa tête',
+            'employee_id': self.expense_employee.id,
+            'product_id': self.product_zero_cost.id,
+            'total_amount': 100.00,
+            'tax_ids': [(6, 0, [self.tax_purchase_a.id])],
+            'analytic_distribution': {self.analytic_account_1.id: 100},
+        })
+
+        split_wizard = expense.action_split_wizard()
+        wizard = self.env['hr.expense.split.wizard'].browse(split_wizard['res_id'])
+
+        # Check default hr.expense.split values
+        self.assertRecordValues(wizard.expense_split_line_ids, [
+            {
+                'name': expense.name,
+                'wizard_id': wizard.id,
+                'expense_id': expense.id,
+                'product_id': expense.product_id.id,
+                'tax_ids': expense.tax_ids.ids,
+                'total_amount': expense.total_amount / 2,
+                'amount_tax': 6.52,
+                'employee_id': expense.employee_id.id,
+                'company_id': expense.company_id.id,
+                'currency_id': expense.currency_id.id,
+                'analytic_distribution': expense.analytic_distribution,
+            } for i in range(0, 2)])
+
+        self.assertEqual(wizard.split_possible, True)
+        self.assertEqual(wizard.total_amount, expense.total_amount)
+
+        # Grant Analytic Accounting rights, to be able to modify analytic_distribution from the wizard
+        self.env.user.groups_id += self.env.ref('analytic.group_analytic_accounting')
+
+        with Form(wizard) as form:
+            form.expense_split_line_ids.remove(index=0)
+            self.assertEqual(form.split_possible, False)
+
+            # Check removing tax_ids and analytic_distribution
+            with form.expense_split_line_ids.edit(0) as line:
+                line.total_amount = 20
+                line.tax_ids.clear()
+                line.analytic_distribution = {}
+                self.assertEqual(line.total_amount, 20)
+                self.assertEqual(line.amount_tax, 0)
+
+            self.assertEqual(form.split_possible, False)
+
+            # This line should have the same tax_ids and analytic_distribution as original expense
+            with form.expense_split_line_ids.new() as line:
+                line.total_amount = 30
+                self.assertEqual(line.total_amount, 30)
+                self.assertEqual(line.amount_tax, 3.91)
+            self.assertEqual(form.split_possible, False)
+            self.assertEqual(form.total_amount, 50)
+
+            # Check adding tax_ids and setting analytic_distribution
+            with form.expense_split_line_ids.new() as line:
+                line.total_amount = 50
+                line.tax_ids.add(self.tax_purchase_b)
+                line.analytic_distribution = {self.analytic_account_2.id: 100}
+                self.assertEqual(line.total_amount, 50)
+                self.assertAlmostEqual(line.amount_tax, 11.54)
+
+            # Check wizard values
+            self.assertEqual(form.total_amount, 100)
+            self.assertEqual(form.total_amount_original, 100)
+            self.assertAlmostEqual(form.total_amount_taxes, 15.45)
+            self.assertEqual(form.split_possible, True)
+
+        wizard.action_split_expense()
+        # Check that split resulted into expenses with correct values
+        expenses_after_split = self.env['hr.expense'].search(
+            [
+                ('name', '=', expense.name)
+            ]
+        )
+        self.assertRecordValues(expenses_after_split.sorted('total_amount'), [
+            {
+                'name': expense.name,
+                'employee_id': expense.employee_id.id,
+                'product_id': expense.product_id.id,
+                'total_amount': 20.0,
+                'tax_ids': [],
+                'amount_tax': 0,
+                'untaxed_amount': 20,
+                'analytic_distribution': False,
+            },
+            {
+                'name': expense.name,
+                'employee_id': expense.employee_id.id,
+                'product_id': expense.product_id.id,
+                'total_amount': 30,
+                'tax_ids': [self.tax_purchase_a.id],
+                'amount_tax': 3.91,
+                'untaxed_amount': 26.09,
+                'analytic_distribution': {str(self.analytic_account_1.id): 100},
+            },
+            {
+                'name': expense.name,
+                'employee_id': expense.employee_id.id,
+                'product_id': expense.product_id.id,
+                'total_amount': 50,
+                'tax_ids': [self.tax_purchase_a.id, self.tax_purchase_b.id],
+                'amount_tax': 11.54,
+                'untaxed_amount': 38.46,
+                'analytic_distribution': {str(self.analytic_account_2.id): 100},
+            }
+        ])
+
+    def test_analytic_account_deleted(self):
+        """ Test that an analytic account cannot be deleted if it is used in an expense """
+
+        expense = self.env['hr.expense.sheet'].create({
+            'name': 'Expense for Dick Tracy',
+            'employee_id': self.expense_employee.id,
+        })
+        expense = self.env['hr.expense'].create({
+            'name': 'Choucroute Saucisse',
+            'employee_id': self.expense_employee.id,
+            'product_id': self.product_a.id,
+            'unit_amount': 700.00,
+            'sheet_id': expense.id,
+            'analytic_distribution': {
+                self.analytic_account_1.id: 50,
+                self.analytic_account_2.id: 50,
+            },
+        })
+
+        with self.assertRaises(UserError):
+            (self.analytic_account_1 | self.analytic_account_2).unlink()
+
+        expense.unlink()
+        self.analytic_account_1.unlink()

@@ -1,9 +1,5 @@
 .o_field_properties {
     width: 100%;
-
-    .o_group {
-        gap: map-get($spacers, 2) $o-horizontal-padding * 2;
-    }
 }
 
 // The web client will add a "o_field_invalid" class when the field is considered
@@ -38,37 +34,11 @@
 }
 
 .o_property_field {
-    .o_property_field_value {
-        height: fit-content;
-        padding: 0 $o-innergroup-rpadding 0 0;
-    }
-
-    .o_field_property_dropdown input {
-        cursor: pointer;
-    }
-
-    .o_input_dropdown {
-        min-width: 100%;
-    }
-
     .popover-body {
         min-width: 500px;
     }
-    .o_td_label {
-        min-width: 150px;
-    }
 
     .o_field_property_label {
-        max-width: 150px;
-        width: fit-content;
-        margin-right: -25px !important;
-
-        b {
-            word-break: break-word;
-            max-height: 100px;
-            overflow-y: hidden;
-        }
-
         &:hover .o_field_property_open_popover,
         .o_field_property_open_popover:focus {
             opacity: 1;
@@ -90,7 +60,7 @@
     }
 
     .o_property_field_highlight .o_field_property_empty_label,
-    .o_property_field_highlight b, {
+    .o_property_field_highlight b {
         border: 1px solid $primary;
         padding: 5px;
         margin: -5px;
@@ -110,36 +80,10 @@
     font-size: inherit;
     box-shadow: 0 3rem 5rem rgba($black, .18) !important;
     box-sizing: border-box;
-    .end-auto {
-        display: none;
-    }
-
-    .o_input_dropdown {
-        width: 100%;
-    }
 }
 
 .o_xxs_form_view .o_field_properties {
     // mobile view
-    .o_property_field {
-        margin-bottom: 20px;
-        min-width: 100%;
-        flex-wrap: wrap;
-        padding: 0;
-
-        .o_td_label,
-        .o_property_field_value {
-            min-width: 100%;
-            padding: 0 !important;
-            &>* {
-                max-width: 100%;
-            }
-            .o_input_dropdown {
-                min-width: 0;
-                width: 100%;
-            }
-        }
-    }
     .o_field_property_add,
     .o_field_property_open_popover {
         display: none;

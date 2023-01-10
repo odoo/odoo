@@ -18,6 +18,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
             'name': 'Paid Time Off',
             'time_type': 'leave',
             'requires_allocation': 'yes',
+            'allocation_validation_type': 'officer',
         })
 
     def setAllocationCreateDate(self, allocation_id, date):

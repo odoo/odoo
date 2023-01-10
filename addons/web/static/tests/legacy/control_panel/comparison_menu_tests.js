@@ -38,8 +38,6 @@ odoo.define('web.comparison_menu_tests', function (require) {
         QUnit.module('ComparisonMenu (legacy)');
 
         QUnit.test('simple rendering', async function (assert) {
-            assert.expect(6);
-
             const unpatchDate = patchDate(1997, 0, 9, 12, 0, 0);
             const params = {
                 cpModelConfig: this.cpModelConfig,
@@ -58,6 +56,12 @@ odoo.define('web.comparison_menu_tests', function (require) {
             assert.strictEqual(controlPanel.el.querySelector('div.o_comparison_menu > button span').innerText.trim(), "Comparison");
 
             await cpHelpers.toggleComparisonMenu(controlPanel);
+            assert.containsN(controlPanel.el, ".o_comparison_menu .dropdown-item", 2);
+            assert.containsN(
+                controlPanel.el,
+                ".o_comparison_menu .dropdown-item[role=menuitemcheckbox]",
+                2
+            );
 
             const comparisonOptions = [...controlPanel.el.querySelectorAll(
                 '.o_comparison_menu .o_menu_item'
@@ -67,13 +71,15 @@ odoo.define('web.comparison_menu_tests', function (require) {
                 comparisonOptions.map(e => e.innerText),
                 ["Birthday: Previous Period", "Birthday: Previous Year"]
             );
+            assert.deepEqual(
+                comparisonOptions.map((e) => e.ariaChecked),
+                ["false", "false"]
+            );
 
             unpatchDate();
         });
 
         QUnit.test('activate a comparison works', async function (assert) {
-            assert.expect(5);
-
             const unpatchDate = patchDate(1997, 0, 9, 12, 0, 0);
             const params = {
                 cpModelConfig: this.cpModelConfig,
@@ -113,6 +119,23 @@ odoo.define('web.comparison_menu_tests', function (require) {
 
             await cpHelpers.toggleComparisonMenu(controlPanel);
             await cpHelpers.toggleMenuItem(controlPanel, "Birthday: Previous Year");
+            assert.containsN(controlPanel.el, ".o_comparison_menu .dropdown-item", 2);
+            assert.containsN(
+                controlPanel.el,
+                ".o_comparison_menu .dropdown-item[role=menuitemcheckbox]",
+                2
+            );
+            const comparisonOptions = [
+                ...controlPanel.el.querySelectorAll(".o_comparison_menu .dropdown-item"),
+            ];
+            assert.deepEqual(
+                comparisonOptions.map((e) => e.innerText.trim()),
+                ["Birthday: Previous Period", "Birthday: Previous Year"]
+            );
+            assert.deepEqual(
+                comparisonOptions.map((e) => e.ariaChecked),
+                ["false", "true"]
+            );
 
             assert.deepEqual(cpHelpers.getFacetTexts(controlPanel), [
                 "Birthday: January 1997",

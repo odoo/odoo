@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo.exceptions import AccessError, MissingError
@@ -15,14 +14,8 @@ class CustomerPortal(portal.CustomerPortal):
         :return: rendered html of the order portal details
         :rtype: dict
         """
-        return {
-            'sale_template': request.env['ir.ui.view']._render_template(
-                'sale.sale_order_portal_content', {
-                    'sale_order': order_sudo,
-                    'report_type': 'html',
-                },
-            ),
-        }
+        # TODO remove me in master
+        return
 
     @route(['/my/orders/<int:order_id>/update_line_dict'], type='json', auth="public", website=True)
     def portal_quote_option_update(self, order_id, line_id, access_token=None, remove=False, unlink=False, input_quantity=False, **kwargs):

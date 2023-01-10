@@ -9,9 +9,9 @@
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 16.0beta\n"
+"Project-Id-Version: Odoo Server 16.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-10-04 09:24+0000\n"
+"POT-Creation-Date: 2022-12-15 12:49+0000\n"
 "PO-Revision-Date: 2022-09-22 05:55+0000\n"
 "Last-Translator: Martin Trigaux, 2022\n"
 "Language-Team: German (https://www.transifex.com/odoo/teams/41243/de/)\n"
@@ -67,18 +67,21 @@ msgid "% completed"
 msgstr "% vollständig"
 
 #. module: survey
+#. odoo-python
 #: code:addons/survey/models/survey_survey.py:0
 #, python-format
 msgid "%s (copy)"
 msgstr "%s (Kopie)"
 
 #. module: survey
+#. odoo-python
 #: code:addons/survey/models/survey_survey.py:0
 #, python-format
 msgid "%s certification passed"
 msgstr "%s Zertifizierung bestanden"
 
 #. module: survey
+#. odoo-python
 #: code:addons/survey/models/survey_survey.py:0
 #, python-format
 msgid "%s challenge certification"
@@ -821,6 +824,7 @@ msgid "A \"Citrus\" could give you ..."
 msgstr "Ein \"Citrus\" könnte Ihnen ..."
 
 #. module: survey
+#. odoo-python
 #: code:addons/survey/models/survey_question.py:0
 #, python-format
 msgid "A label must be attached to only one question."
@@ -857,6 +861,7 @@ msgid "A problem has occurred"
 msgstr "Ein Problem ist aufgetreten"
 
 #. module: survey
+#. odoo-python
 #: code:addons/survey/models/survey_user_input.py:0
 #, python-format
 msgid "A question can either be skipped or answered, not both."
@@ -1232,6 +1237,7 @@ msgid "Beware of leap years !"
 msgstr ""
 
 #. module: survey
+#. odoo-python
 #: code:addons/survey/models/survey_survey_template.py:0
 #, python-format
 msgid "Blue Pen"
@@ -1258,6 +1264,7 @@ msgid "Burger Quiz"
 msgstr "Burger-Quiz"
 
 #. module: survey
+#. odoo-python
 #: code:addons/survey/models/survey_survey_template.py:0
 #, python-format
 msgid "But first, keep listening to the host."
@@ -1289,6 +1296,7 @@ msgid "Cancel"
 msgstr "Abbrechen"
 
 #. module: survey
+#. odoo-python
 #: code:addons/survey/models/survey_survey_template.py:0
 #: model_terms:ir.actions.act_window,help:survey.action_survey_form
 #: model_terms:ir.ui.view,arch_db:survey.survey_survey_view_tree
@@ -1307,6 +1315,7 @@ msgid "Certification Badge "
 msgstr "Zertifizierung Abzeichen"
 
 #. module: survey
+#. odoo-python
 #: code:addons/survey/models/survey_survey.py:0
 #, python-format
 msgid "Certification Badge is not configured for the survey %(survey_name)s"
@@ -1385,6 +1394,7 @@ msgid "Chart"
 msgstr "Diagramm"
 
 #. module: survey
+#. odoo-python
 #: code:addons/survey/models/survey_survey_template.py:0
 #, python-format
 msgid "Cheating on your neighbors will not help!"
@@ -1467,14 +1477,14 @@ msgid "Comment"
 msgstr "Kommentar"
 
 #. module: survey
-#: model:ir.model.fields,field_description:survey.field_survey_question__comment_count_as_answer
-msgid "Comment Field is an Answer Choice"
-msgstr "Das Kommentarfeld ist eine Antwortmöglichkeit"
-
-#. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_question__comments_message
 msgid "Comment Message"
 msgstr "Anmerkung Kommentarfeld"
+
+#. module: survey
+#: model:ir.model.fields,field_description:survey.field_survey_question__comment_count_as_answer
+msgid "Comment is an answer"
+msgstr ""
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_res_partner__certifications_company_count
@@ -1499,6 +1509,7 @@ msgid "Compose Email"
 msgstr "E-Mail schreiben"
 
 #. module: survey
+#. odoo-python
 #: code:addons/survey/models/survey_user_input.py:0
 #, python-format
 msgid "Computing score requires a question in arguments."
@@ -1515,7 +1526,7 @@ msgid "Conference chair"
 msgstr "Konferenzplatz"
 
 #. module: survey
-#. openerp-web
+#. odoo-javascript
 #: code:addons/survey/static/src/js/tours/survey_tour.js:0
 #, python-format
 msgid "Congratulations! You are now ready to collect feedback like a pro :-)"
@@ -1569,7 +1580,7 @@ msgid "Cookies"
 msgstr "Cookies"
 
 #. module: survey
-#. openerp-web
+#. odoo-javascript
 #: code:addons/survey/static/src/js/survey_session_manage.js:0
 #, python-format
 msgid "Copied !"
@@ -1586,7 +1597,8 @@ msgid "Corner Desk Right Sit"
 msgstr "Eckschreibtisch rechts sitzen"
 
 #. module: survey
-#. openerp-web
+#. odoo-javascript
+#. odoo-python
 #: code:addons/survey/models/survey_user_input.py:0
 #: code:addons/survey/static/src/js/survey_result.js:0
 #: model:ir.model.fields,field_description:survey.field_survey_question_answer__is_correct
@@ -1667,12 +1679,14 @@ msgid "Created on"
 msgstr "Erstellt am"
 
 #. module: survey
+#. odoo-python
 #: code:addons/survey/models/survey_survey.py:0
 #, python-format
 msgid "Creating test token is not allowed for you."
 msgstr "Das Erstellen von Test-Token ist für Sie nicht erlaubt."
 
 #. module: survey
+#. odoo-python
 #: code:addons/survey/models/survey_survey.py:0
 #, python-format
 msgid ""
@@ -1683,6 +1697,7 @@ msgstr ""
 "Umfragen nicht erlaubt."
 
 #. module: survey
+#. odoo-python
 #: code:addons/survey/models/survey_survey.py:0
 #, python-format
 msgid "Creating token for closed/archived surveys is not allowed."
@@ -1691,6 +1706,7 @@ msgstr ""
 "zulässig."
 
 #. module: survey
+#. odoo-python
 #: code:addons/survey/models/survey_survey.py:0
 #: code:addons/survey/models/survey_survey.py:0
 #, python-format
@@ -1941,6 +1957,7 @@ msgid "Eyjafjallajökull (Iceland)"
 msgstr "Eyjafjallajökull (Island)"
 
 #. module: survey
+#. odoo-python
 #: code:addons/survey/models/survey_survey.py:0
 #: model_terms:ir.ui.view,arch_db:survey.survey_user_input_view_form
 #, python-format
@@ -1958,6 +1975,7 @@ msgid "Fanta"
 msgstr "Fanta"
 
 #. module: survey
+#. odoo-python
 #: code:addons/survey/models/survey_survey_template.py:0
 #: model:survey.survey,title:survey.survey_feedback
 #: model_terms:ir.actions.act_window,help:survey.action_survey_form
@@ -1977,7 +1995,7 @@ msgid "Filter surveys"
 msgstr ""
 
 #. module: survey
-#. openerp-web
+#. odoo-javascript
 #: code:addons/survey/static/src/js/survey_session_manage.js:0
 #: model_terms:ir.ui.view,arch_db:survey.user_input_session_manage_content
 #, python-format
@@ -2069,6 +2087,7 @@ msgid "Good"
 msgstr "Gut"
 
 #. module: survey
+#. odoo-python
 #: code:addons/survey/models/survey_survey_template.py:0
 #, python-format
 msgid "Good luck!"
@@ -2136,7 +2155,7 @@ msgid "Hemiunu"
 msgstr "Hemiunu"
 
 #. module: survey
-#. openerp-web
+#. odoo-javascript
 #: code:addons/survey/static/src/js/tours/survey_tour.js:0
 #, python-format
 msgid "Here, you can overview all the participations."
@@ -2159,18 +2178,21 @@ msgid "How frequently do you buy products online ?"
 msgstr "Wie häufig kaufen Sie Produkte online?"
 
 #. module: survey
+#. odoo-python
 #: code:addons/survey/models/survey_survey_template.py:0
 #, python-format
 msgid "How frequently do you use our products?"
 msgstr ""
 
 #. module: survey
+#. odoo-python
 #: code:addons/survey/models/survey_survey_template.py:0
 #, python-format
 msgid "How good of a presenter are you? Let's find out!"
 msgstr ""
 
 #. module: survey
+#. odoo-python
 #: code:addons/survey/models/survey_survey_template.py:0
 #, python-format
 msgid "How likely are you to recommend the following products to a friend?"
@@ -2195,6 +2217,7 @@ msgid "How many days is our money-back guarantee?"
 msgstr "Wie viele Tage beträgt unsere Geld-zurück-Garantie?"
 
 #. module: survey
+#. odoo-python
 #: code:addons/survey/models/survey_survey_template.py:0
 #, python-format
 msgid "How many orders did you pass during the last 6 months?"
@@ -2418,7 +2441,7 @@ msgid "Image Filename"
 msgstr ""
 
 #. module: survey
-#. openerp-web
+#. odoo-javascript
 #: code:addons/survey/static/src/xml/survey_image_zoomer_templates.xml:0
 #, python-format
 msgid "Image Zoom Dialog"
@@ -2461,7 +2484,8 @@ msgstr ""
 "und eine Antwortwertung, um berücksichtigt zu werden."
 
 #. module: survey
-#. openerp-web
+#. odoo-javascript
+#. odoo-python
 #: code:addons/survey/models/survey_user_input.py:0
 #: code:addons/survey/static/src/js/survey_result.js:0
 #, python-format
@@ -2536,30 +2560,35 @@ msgid "Istanbul"
 msgstr "Istanbul"
 
 #. module: survey
+#. odoo-python
 #: code:addons/survey/models/survey_survey_template.py:0
 #, python-format
 msgid "It does not mean anything specific"
 msgstr ""
 
 #. module: survey
+#. odoo-python
 #: code:addons/survey/models/survey_survey_template.py:0
 #, python-format
 msgid "It helps attendees focus on what you are saying"
 msgstr ""
 
 #. module: survey
+#. odoo-python
 #: code:addons/survey/models/survey_survey_template.py:0
 #, python-format
 msgid "It helps attendees remember the content of your presentation"
 msgstr ""
 
 #. module: survey
+#. odoo-python
 #: code:addons/survey/models/survey_survey_template.py:0
 #, python-format
 msgid "It is a small bit of text, displayed to help participants answer"
 msgstr ""
 
 #. module: survey
+#. odoo-python
 #: code:addons/survey/models/survey_survey_template.py:0
 #, python-format
 msgid "It is an option that can be different for each Survey"
@@ -2571,12 +2600,14 @@ msgid "It is easy to find the product that I want"
 msgstr "Es ist einfach, das gewünschte Produkt zu finden"
 
 #. module: survey
+#. odoo-python
 #: code:addons/survey/models/survey_survey_template.py:0
 #, python-format
 msgid "It is more engaging for your audience"
 msgstr ""
 
 #. module: survey
+#. odoo-python
 #: code:addons/survey/models/survey_survey_template.py:0
 #, python-format
 msgid "It's a Belgian word for \"Management\""
@@ -2712,34 +2743,35 @@ msgid "Lemon Trees"
 msgstr "Zitronenbäume"
 
 #. module: survey
-#. openerp-web
+#. odoo-javascript
 #: code:addons/survey/static/src/js/tours/survey_tour.js:0
 #, python-format
 msgid "Let's get started!"
 msgstr ""
 
 #. module: survey
-#. openerp-web
+#. odoo-javascript
 #: code:addons/survey/static/src/js/tours/survey_tour.js:0
 #, python-format
 msgid "Let's give it a spin!"
 msgstr ""
 
 #. module: survey
-#. openerp-web
+#. odoo-javascript
 #: code:addons/survey/static/src/js/tours/survey_tour.js:0
 #, python-format
 msgid "Let's have a look at your answers!"
 msgstr ""
 
 #. module: survey
-#. openerp-web
+#. odoo-javascript
 #: code:addons/survey/static/src/js/tours/survey_tour.js:0
 #, python-format
 msgid "Let's open the survey you just submitted."
 msgstr ""
 
 #. module: survey
+#. odoo-python
 #: code:addons/survey/models/survey_survey_template.py:0
 #, python-format
 msgid "Likely"
@@ -2757,6 +2789,7 @@ msgid "Limited number of attempts"
 msgstr "Begrenzte Anzahl von Versuchen"
 
 #. module: survey
+#. odoo-python
 #: code:addons/survey/models/survey_survey_template.py:0
 #: model_terms:ir.actions.act_window,help:survey.action_survey_form
 #, python-format
@@ -2774,7 +2807,7 @@ msgid "Live Sessions"
 msgstr "Live Sitzungen"
 
 #. module: survey
-#. openerp-web
+#. odoo-javascript
 #: code:addons/survey/static/src/js/tours/survey_tour.js:0
 #, python-format
 msgid "Load a <b>sample Survey</b> to get started quickly."
@@ -2991,12 +3024,14 @@ msgid "MyCompany Vendor Certification"
 msgstr "Meine Firma Lieferanten-Zertifizierung"
 
 #. module: survey
+#. odoo-python
 #: code:addons/survey/models/survey_survey_template.py:0
 #, python-format
 msgid "Neutral"
 msgstr "Neutral"
 
 #. module: survey
+#. odoo-python
 #: code:addons/survey/models/survey_survey_template.py:0
 #, python-format
 msgid "Never (less than once a month)"
@@ -3068,6 +3103,7 @@ msgid "No answers yet!"
 msgstr ""
 
 #. module: survey
+#. odoo-python
 #: code:addons/survey/models/survey_survey.py:0
 #, python-format
 msgid "No attempts left."
@@ -3119,14 +3155,14 @@ msgid "Not started yet"
 msgstr "Noch nicht begonnen"
 
 #. module: survey
-#. openerp-web
+#. odoo-javascript
 #: code:addons/survey/static/src/js/tours/survey_tour.js:0
 #, python-format
 msgid "Now that you are done, submit your form."
 msgstr ""
 
 #. module: survey
-#. openerp-web
+#. odoo-javascript
 #: code:addons/survey/static/src/js/tours/survey_tour.js:0
 #, python-format
 msgid "Now, use this shortcut to go back to the survey."
@@ -3184,6 +3220,7 @@ msgid "Numerical answer"
 msgstr "Numerische Antwort"
 
 #. module: survey
+#. odoo-python
 #: code:addons/survey/models/survey_survey_template.py:0
 #, python-format
 msgid "Object-Directed Open Organization"
@@ -3195,6 +3232,7 @@ msgid "Occurrence"
 msgstr "Vorkommen"
 
 #. module: survey
+#. odoo-python
 #: code:addons/survey/models/survey_survey_template.py:0
 #, python-format
 msgid "Odoo Certification"
@@ -3206,12 +3244,14 @@ msgid "Office Chair Black"
 msgstr "Schwarzer Bürostuhl"
 
 #. module: survey
+#. odoo-python
 #: code:addons/survey/models/survey_survey_template.py:0
 #, python-format
 msgid "Often (1-3 times per week)"
 msgstr ""
 
 #. module: survey
+#. odoo-python
 #: code:addons/survey/models/survey_survey_template.py:0
 #, python-format
 msgid ""
@@ -3246,12 +3286,14 @@ msgid "One choice per row"
 msgstr "Eine Auswahl je Reihe"
 
 #. module: survey
+#. odoo-python
 #: code:addons/survey/models/survey_survey_template.py:0
 #, python-format
 msgid "One needs to answer at least half the questions correctly"
 msgstr ""
 
 #. module: survey
+#. odoo-python
 #: code:addons/survey/models/survey_survey_template.py:0
 #, python-format
 msgid "One needs to get 50% of the total score"
@@ -3273,7 +3315,7 @@ msgid "One page with all the questions"
 msgstr "Eine Seite mit allen Fragen"
 
 #. module: survey
-#. openerp-web
+#. odoo-javascript
 #: code:addons/survey/static/src/js/tours/survey_tour.js:0
 #, python-format
 msgid "Only a single question left!"
@@ -3286,6 +3328,7 @@ msgid "Only show survey results having selected this answer"
 msgstr ""
 
 #. module: survey
+#. odoo-python
 #: code:addons/survey/models/survey_survey.py:0
 #: code:addons/survey/models/survey_survey.py:0
 #, python-format
@@ -3303,7 +3346,7 @@ msgid "Open Session Manager"
 msgstr "Session Manager öffnen"
 
 #. module: survey
-#. openerp-web
+#. odoo-javascript
 #: code:addons/survey/static/src/question_page/description_page_field.xml:0
 #, python-format
 msgid "Open section"
@@ -3329,12 +3372,14 @@ msgid "Options"
 msgstr "Optionen"
 
 #. module: survey
+#. odoo-python
 #: code:addons/survey/models/survey_survey_template.py:0
 #, python-format
 msgid "Organizational Development for Operation Officers"
 msgstr ""
 
 #. module: survey
+#. odoo-python
 #: code:addons/survey/models/survey_question.py:0
 #: code:addons/survey/models/survey_question.py:0
 #, python-format
@@ -3352,7 +3397,7 @@ msgid "Outgoing mail server"
 msgstr "Ausgehender Mailserver"
 
 #. module: survey
-#. openerp-web
+#. odoo-javascript
 #: code:addons/survey/static/src/js/survey_result.js:0
 #, python-format
 msgid "Overall Performance"
@@ -3389,7 +3434,8 @@ msgid "Partial"
 msgstr "Teillieferung"
 
 #. module: survey
-#. openerp-web
+#. odoo-javascript
+#. odoo-python
 #: code:addons/survey/models/survey_user_input.py:0
 #: code:addons/survey/static/src/js/survey_result.js:0
 #, python-format
@@ -3424,6 +3470,7 @@ msgid "Partner"
 msgstr "Partner"
 
 #. module: survey
+#. odoo-python
 #: code:addons/survey/models/survey_survey.py:0
 #: model_terms:ir.ui.view,arch_db:survey.survey_survey_view_kanban
 #: model_terms:ir.ui.view,arch_db:survey.survey_user_input_view_form
@@ -3452,7 +3499,7 @@ msgid "Percentage left"
 msgstr "Verbleibender Anteil"
 
 #. module: survey
-#. openerp-web
+#. odoo-javascript
 #: code:addons/survey/static/src/js/survey_result.js:0
 #, python-format
 msgid "Performance by Section"
@@ -3467,6 +3514,21 @@ msgstr "Vielleicht"
 #: model:survey.question.answer,value:survey.survey_demo_burger_quiz_p4_q1_sug2
 msgid "Peter W. Higgs"
 msgstr "Peter W. Higgs"
+
+#. module: survey
+#: model_terms:ir.ui.view,arch_db:survey.survey_survey_view_form
+msgid "Pick a Badge..."
+msgstr ""
+
+#. module: survey
+#: model_terms:ir.ui.view,arch_db:survey.survey_survey_view_form
+msgid "Pick a Style..."
+msgstr ""
+
+#. module: survey
+#: model_terms:ir.ui.view,arch_db:survey.survey_survey_view_form
+msgid "Pick a Template..."
+msgstr ""
 
 #. module: survey
 #: model:survey.question,title:survey.survey_demo_burger_quiz_p1_q1
@@ -3489,6 +3551,7 @@ msgid "Placeholder"
 msgstr "Platzhalter"
 
 #. module: survey
+#. odoo-python
 #: code:addons/survey/models/survey_survey_template.py:0
 #, python-format
 msgid ""
@@ -3497,6 +3560,7 @@ msgid ""
 msgstr ""
 
 #. module: survey
+#. odoo-python
 #: code:addons/survey/wizard/survey_invite.py:0
 #, python-format
 msgid "Please enter at least one valid recipient."
@@ -3528,6 +3592,7 @@ msgid "Poor quality"
 msgstr "Schlechte Qualität"
 
 #. module: survey
+#. odoo-python
 #: code:addons/survey/models/survey_survey_template.py:0
 #, python-format
 msgid "Practice in front of a mirror"
@@ -3617,6 +3682,7 @@ msgstr ""
 "Frage, die die auslösende Antwort enthält, um die aktuelle Frage anzuzeigen."
 
 #. module: survey
+#. odoo-python
 #: code:addons/survey/models/survey_question.py:0
 #, python-format
 msgid "Question type should be empty for these pages: %s"
@@ -3657,6 +3723,7 @@ msgid "Randomized per Section"
 msgstr "Randomisiert pro Abschnitt"
 
 #. module: survey
+#. odoo-python
 #: code:addons/survey/models/survey_survey_template.py:0
 #, python-format
 msgid "Rarely (1-3 times per month)"
@@ -3668,7 +3735,7 @@ msgid "Ready"
 msgstr "Bereit"
 
 #. module: survey
-#. openerp-web
+#. odoo-javascript
 #: code:addons/survey/static/src/js/tours/survey_tour.js:0
 #, python-format
 msgid "Ready to change the way you <b>gather data</b>?"
@@ -3685,6 +3752,7 @@ msgid "Recipients"
 msgstr "Empfänger"
 
 #. module: survey
+#. odoo-python
 #: code:addons/survey/models/survey_survey_template.py:0
 #, python-format
 msgid "Red Pen"
@@ -3980,6 +4048,7 @@ msgid "Share"
 msgstr "Teilen"
 
 #. module: survey
+#. odoo-python
 #: code:addons/survey/models/survey_survey.py:0
 #, python-format
 msgid "Share a Survey"
@@ -4001,6 +4070,7 @@ msgid "Show all records which has next action date is before today"
 msgstr "Alle Datensätze mit vor heute geplanten Aktionen anzeigen"
 
 #. module: survey
+#. odoo-python
 #: code:addons/survey/models/survey_survey_template.py:0
 #, python-format
 msgid "Show them slides with a ton of text they need to read fast"
@@ -4012,6 +4082,7 @@ msgid "Single Line Text Box"
 msgstr "Einzeilige Textbox"
 
 #. module: survey
+#. odoo-python
 #: code:addons/survey/models/survey_user_input.py:0
 #: model:ir.model.fields,field_description:survey.field_survey_user_input_line__skipped
 #: model_terms:ir.ui.view,arch_db:survey.survey_page_print
@@ -4026,6 +4097,7 @@ msgid "Soft"
 msgstr "Soft"
 
 #. module: survey
+#. odoo-python
 #: code:addons/survey/wizard/survey_invite.py:0
 #, python-format
 msgid "Some emails you just entered are incorrect: %s"
@@ -4057,12 +4129,14 @@ msgid "Space stations"
 msgstr "Raumstationen"
 
 #. module: survey
+#. odoo-python
 #: code:addons/survey/models/survey_survey_template.py:0
 #, python-format
 msgid "Speak softly so that they need to focus to hear you"
 msgstr ""
 
 #. module: survey
+#. odoo-python
 #: code:addons/survey/models/survey_survey_template.py:0
 #, python-format
 msgid "Speak too fast"
@@ -4216,6 +4290,7 @@ msgid "Survey Label"
 msgstr "Umfrageüberschrift"
 
 #. module: survey
+#. odoo-python
 #: code:addons/survey/models/survey_user_input.py:0
 #, python-format
 msgid "Survey Participant"
@@ -4320,6 +4395,7 @@ msgid "Text answer"
 msgstr "Testantwort"
 
 #. module: survey
+#. odoo-python
 #: code:addons/survey/models/survey_survey_template.py:0
 #, python-format
 msgid "Thank you for your participation, hope you had a blast!"
@@ -4327,6 +4403,7 @@ msgstr ""
 "Vielen Dank für Ihre Teilnahme, wir hoffen, Sie haben sich gut amüsiert!"
 
 #. module: survey
+#. odoo-python
 #: code:addons/survey/models/survey_survey_template.py:0
 #, python-format
 msgid "Thank you very much for your feedback. We highly value your opinion !"
@@ -4339,18 +4416,21 @@ msgid "Thank you!"
 msgstr "Vielen Dank!"
 
 #. module: survey
+#. odoo-python
 #: code:addons/survey/models/survey_survey_template.py:0
 #, python-format
 msgid "Thank you. We will contact you soon."
 msgstr "Vielen Dank. Wir melden uns in Kürze bei Ihnen."
 
 #. module: survey
+#. odoo-python
 #: code:addons/survey/models/survey_user_input.py:0
 #, python-format
 msgid "The answer must be in the right type"
 msgstr "Der Typ der Antwort muss korrekt sein"
 
 #. module: survey
+#. odoo-python
 #: code:addons/survey/models/survey_question.py:0
 #: code:addons/survey/models/survey_question.py:0
 #: code:addons/survey/models/survey_question.py:0
@@ -4390,14 +4470,14 @@ msgid "The current question of the survey session."
 msgstr "Die aktuelle Frage der Umfragesitzung."
 
 #. module: survey
-#. openerp-web
+#. odoo-javascript
 #: code:addons/survey/static/src/js/survey_form.js:0
 #, python-format
 msgid "The date you selected is greater than the maximum date: "
 msgstr "Das von Ihnen gewählte Datum ist größer als das Maximaldatum"
 
 #. module: survey
-#. openerp-web
+#. odoo-javascript
 #: code:addons/survey/static/src/js/survey_form.js:0
 #, python-format
 msgid "The date you selected is lower than the minimum date: "
@@ -4415,18 +4495,21 @@ msgstr ""
 "bevor sie die Umfrage starten."
 
 #. module: survey
+#. odoo-python
 #: code:addons/survey/wizard/survey_invite.py:0
 #, python-format
 msgid "The following customers have already received an invite"
 msgstr "Die folgenden Kunden haben bereits eine Einladung erhalten"
 
 #. module: survey
+#. odoo-python
 #: code:addons/survey/wizard/survey_invite.py:0
 #, python-format
 msgid "The following emails have already received an invite"
 msgstr "Die folgenden E-Mails haben bereits eine Einladung erhalten"
 
 #. module: survey
+#. odoo-python
 #: code:addons/survey/wizard/survey_invite.py:0
 #, python-format
 msgid ""
@@ -4468,6 +4551,7 @@ msgid "The session will begin automatically when the host starts."
 msgstr "Die Sitzung beginnt automatisch, wenn der Host startet."
 
 #. module: survey
+#. odoo-python
 #: code:addons/survey/controllers/main.py:0
 #, python-format
 msgid "The survey has already started."
@@ -4503,6 +4587,7 @@ msgstr ""
 "treffen"
 
 #. module: survey
+#. odoo-python
 #: code:addons/survey/controllers/main.py:0
 #, python-format
 msgid "The user has not succeeded the certification"
@@ -4514,12 +4599,14 @@ msgid "There was an error during the validation of the survey."
 msgstr "Bei der Validierung der Umfrage ist ein Fehler aufgetreten."
 
 #. module: survey
+#. odoo-python
 #: code:addons/survey/models/survey_survey_template.py:0
 #, python-format
 msgid "They are a default answer, used if the participant skips the question"
 msgstr ""
 
 #. module: survey
+#. odoo-python
 #: code:addons/survey/models/survey_survey_template.py:0
 #, python-format
 msgid ""
@@ -4527,6 +4614,7 @@ msgid ""
 msgstr ""
 
 #. module: survey
+#. odoo-python
 #: code:addons/survey/models/survey_question.py:0
 #: code:addons/survey/tests/test_survey.py:0
 #, python-format
@@ -4534,7 +4622,7 @@ msgid "This answer must be an email address"
 msgstr "Diese Antwort muss eine E-Mail-Adresse sein"
 
 #. module: survey
-#. openerp-web
+#. odoo-javascript
 #: code:addons/survey/static/src/js/survey_form.js:0
 #, python-format
 msgid "This answer must be an email address."
@@ -4569,7 +4657,8 @@ msgid "This is a Test Survey."
 msgstr "Dies ist eine Testumfrage."
 
 #. module: survey
-#. openerp-web
+#. odoo-javascript
+#. odoo-python
 #: code:addons/survey/models/survey_question.py:0
 #: code:addons/survey/static/src/js/survey_form.js:0
 #: code:addons/survey/tests/test_survey.py:0
@@ -4578,6 +4667,7 @@ msgid "This is not a date"
 msgstr "Dies ist kein Datum"
 
 #. module: survey
+#. odoo-python
 #: code:addons/survey/models/survey_question.py:0
 #: code:addons/survey/tests/test_survey.py:0
 #, python-format
@@ -4606,6 +4696,7 @@ msgid "This question depends on another question's answer."
 msgstr "Diese Frage hängt von der Antwort einer anderen Frage ab."
 
 #. module: survey
+#. odoo-python
 #: code:addons/survey/models/survey_question.py:0
 #: code:addons/survey/models/survey_question.py:0
 #: code:addons/survey/models/survey_question.py:0
@@ -4621,6 +4712,7 @@ msgid "This question was skipped"
 msgstr ""
 
 #. module: survey
+#. odoo-python
 #: code:addons/survey/wizard/survey_invite.py:0
 #, python-format
 msgid ""
@@ -4748,6 +4840,7 @@ msgid "Ulmaceae"
 msgstr "Ulmaceae"
 
 #. module: survey
+#. odoo-python
 #: code:addons/survey/wizard/survey_invite.py:0
 #, python-format
 msgid "Unable to post message, please configure the sender's email address."
@@ -4756,7 +4849,8 @@ msgstr ""
 "E-Mail-Adresse des Absenders."
 
 #. module: survey
-#. openerp-web
+#. odoo-javascript
+#. odoo-python
 #: code:addons/survey/models/survey_user_input.py:0
 #: code:addons/survey/static/src/js/survey_result.js:0
 #, python-format
@@ -4764,6 +4858,7 @@ msgid "Unanswered"
 msgstr "Nicht beantwortet"
 
 #. module: survey
+#. odoo-python
 #: code:addons/survey/models/survey_user_input.py:0
 #, python-format
 msgid "Uncategorized"
@@ -4785,6 +4880,7 @@ msgid "Unique"
 msgstr "Eindeutig"
 
 #. module: survey
+#. odoo-python
 #: code:addons/survey/models/survey_survey_template.py:0
 #, python-format
 msgid "Unlikely"
@@ -4796,19 +4892,21 @@ msgid "Upcoming Activities"
 msgstr "Zukünftige Aktivitäten"
 
 #. module: survey
+#. odoo-python
 #: code:addons/survey/models/survey_survey_template.py:0
 #, python-format
 msgid "Use a fun visual support, like a live presentation"
 msgstr ""
 
 #. module: survey
+#. odoo-python
 #: code:addons/survey/models/survey_survey_template.py:0
 #, python-format
 msgid "Use humor and make jokes"
 msgstr ""
 
 #. module: survey
-#. openerp-web
+#. odoo-javascript
 #: code:addons/survey/static/src/js/tours/survey_tour.js:0
 #, python-format
 msgid "Use the breadcrumbs to quickly go back to the dashboard."
@@ -4927,6 +5025,7 @@ msgid "Website communication history"
 msgstr "Website-Kommunikationshistorie"
 
 #. module: survey
+#. odoo-python
 #: code:addons/survey/models/survey_survey_template.py:0
 #, python-format
 msgid ""
@@ -4968,24 +5067,28 @@ msgid "What do you think about this survey ?"
 msgstr "Was denken Sie über diese Umfrage?"
 
 #. module: survey
+#. odoo-python
 #: code:addons/survey/models/survey_survey_template.py:0
 #, python-format
 msgid "What does \"ODOO\" stand for?"
 msgstr ""
 
 #. module: survey
+#. odoo-python
 #: code:addons/survey/models/survey_survey_template.py:0
 #, python-format
 msgid "What does one need to get to pass an Odoo Survey?"
 msgstr ""
 
 #. module: survey
+#. odoo-python
 #: code:addons/survey/models/survey_survey_template.py:0
 #, python-format
 msgid "What is a frequent mistake public speakers do?"
 msgstr ""
 
 #. module: survey
+#. odoo-python
 #: code:addons/survey/models/survey_survey_template.py:0
 #, python-format
 msgid "What is the best way to catch the attention of an audience?"
@@ -5037,7 +5140,7 @@ msgid "When is your date of birth ?"
 msgstr "Wann ist Ihr Geburtsdatum?"
 
 #. module: survey
-#. openerp-web
+#. odoo-javascript
 #: code:addons/survey/static/src/js/tours/survey_tour.js:0
 #, python-format
 msgid "Whenever you pick an answer, Odoo saves it for you."
@@ -5118,6 +5221,7 @@ msgstr ""
 "Oszillationen, die zeigt, dass Neutrinos Masse haben ?"
 
 #. module: survey
+#. odoo-python
 #: code:addons/survey/models/survey_survey_template.py:0
 #, python-format
 msgid ""
@@ -5158,6 +5262,7 @@ msgstr ""
 "                                        <i class=\"fa fa-calendar\" role=\"img\" aria-label=\"Calendar\" title=\"Kalender\"/>"
 
 #. module: survey
+#. odoo-python
 #: code:addons/survey/models/survey_survey_template.py:0
 #, python-format
 msgid "Yellow Pen"
@@ -5191,6 +5296,7 @@ msgid ""
 msgstr ""
 
 #. module: survey
+#. odoo-python
 #: code:addons/survey/models/survey_survey.py:0
 #, python-format
 msgid ""
@@ -5201,6 +5307,7 @@ msgstr ""
 "senden, wenn die Umfrage keine Abschnitte hat."
 
 #. module: survey
+#. odoo-python
 #: code:addons/survey/models/survey_survey.py:0
 #, python-format
 msgid ""
@@ -5211,12 +5318,14 @@ msgstr ""
 "versenden, wenn die Umfrage nur leere Abschnitte enthält."
 
 #. module: survey
+#. odoo-python
 #: code:addons/survey/models/survey_survey.py:0
 #, python-format
 msgid "You cannot send an invitation for a survey that has no questions."
 msgstr "Sie können keine Einladung zu einer Umfrage ohne Fragen versenden."
 
 #. module: survey
+#. odoo-python
 #: code:addons/survey/models/survey_survey.py:0
 #, python-format
 msgid "You cannot send invitations for closed surveys."
@@ -5238,6 +5347,7 @@ msgid "Your feeling"
 msgstr "Ihr Gefühl"
 
 #. module: survey
+#. odoo-python
 #: code:addons/survey/models/survey_survey_template.py:0
 #, python-format
 msgid ""
@@ -5246,21 +5356,21 @@ msgid ""
 msgstr ""
 
 #. module: survey
-#. openerp-web
+#. odoo-javascript
 #: code:addons/survey/static/src/xml/survey_image_zoomer_templates.xml:0
 #, python-format
 msgid "Zoom in"
 msgstr ""
 
 #. module: survey
-#. openerp-web
+#. odoo-javascript
 #: code:addons/survey/static/src/xml/survey_image_zoomer_templates.xml:0
 #, python-format
 msgid "Zoom out"
 msgstr ""
 
 #. module: survey
-#. openerp-web
+#. odoo-javascript
 #: code:addons/survey/static/src/xml/survey_image_zoomer_templates.xml:0
 #, python-format
 msgid "Zoomed Image"
@@ -5282,7 +5392,7 @@ msgid "attempts"
 msgstr "Versuche"
 
 #. module: survey
-#. openerp-web
+#. odoo-javascript
 #: code:addons/survey/static/src/xml/survey_image_zoomer_templates.xml:0
 #, python-format
 msgid "close"
@@ -5370,21 +5480,21 @@ msgid "of achievement"
 msgstr ""
 
 #. module: survey
-#. openerp-web
+#. odoo-javascript
 #: code:addons/survey/static/src/js/survey_form.js:0
 #, python-format
 msgid "or press CTRL+Enter"
 msgstr "oder drücken Sie STRG+Enter"
 
 #. module: survey
-#. openerp-web
+#. odoo-javascript
 #: code:addons/survey/static/src/js/survey_form.js:0
 #, python-format
 msgid "or press Enter"
 msgstr "oder drücken Sie Enter"
 
 #. module: survey
-#. openerp-web
+#. odoo-javascript
 #: code:addons/survey/static/src/js/survey_form.js:0
 #, python-format
 msgid "or press ⌘+Enter"

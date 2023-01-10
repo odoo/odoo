@@ -552,7 +552,7 @@ class MailGroup(models.Model):
         existing_member = self._find_member(email, partner_id)
         if existing_member:
             # Update the information of the partner to force the synchronization
-            # If one the the value is not up to date (e.g. if our email is subscribed
+            # If one the value is not up to date (e.g. if our email is subscribed
             # but our partner was not set)
             existing_member.write({
                 'email': email,

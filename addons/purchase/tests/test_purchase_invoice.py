@@ -6,12 +6,11 @@ from odoo.tests.common import Form
 from odoo import Command, fields
 
 
-@tagged('post_install', '-at_install')
-class TestPurchaseToInvoice(AccountTestInvoicingCommon):
+class TestPurchaseToInvoiceCommon(AccountTestInvoicingCommon):
 
     @classmethod
     def setUpClass(cls):
-        super(TestPurchaseToInvoice, cls).setUpClass()
+        super(TestPurchaseToInvoiceCommon, cls).setUpClass()
         uom_unit = cls.env.ref('uom.product_uom_unit')
         uom_hour = cls.env.ref('uom.product_uom_hour')
         cls.product_order = cls.env['product.product'].create({
@@ -58,6 +57,10 @@ class TestPurchaseToInvoice(AccountTestInvoicingCommon):
             'default_code': 'PROD_DEL',
             'taxes_id': False,
         })
+
+
+@tagged('post_install', '-at_install')
+class TestPurchaseToInvoice(TestPurchaseToInvoiceCommon):
 
     def test_vendor_bill_delivered(self):
         """Test if a order of product invoiced by delivered quantity can be

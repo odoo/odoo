@@ -5,7 +5,7 @@
         <td name="td_mrp_bom">
             <div t-attf-style="margin-left: {{ marginMultiplicator * 20 }}px">
                 <t t-if="data.level > 0 &amp;&amp; hasComponents">
-                    <button t-on-click="onToggleFolded" class="o_mrp_bom_unfoldable btn btn-light p-0" t-attf-aria-label="{{ props.isFolded ? 'Unfold' : 'Fold' }}" t-attf-title="{{ props.isFolded ? 'Unfold' : 'Fold' }}" style="margin-right: 1px">
+                    <button t-on-click="() => this.props.toggleFolded(identifier)" class="o_mrp_bom_unfoldable btn btn-light p-0" t-attf-aria-label="{{ props.isFolded ? 'Unfold' : 'Fold' }}" t-attf-title="{{ props.isFolded ? 'Unfold' : 'Fold' }}" style="margin-right: 1px">
                         <i t-attf-class="fa fa-fw fa-caret-{{ props.isFolded ? 'right' : 'down' }}" role="img"/>
                     </button>
                 </t>

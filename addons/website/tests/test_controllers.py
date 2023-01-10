@@ -6,7 +6,7 @@ import json
 from werkzeug.urls import url_encode
 
 from odoo import tests
-from odoo.tools import mute_logger
+from odoo.tools import mute_logger, submap
 
 
 @tests.tagged('post_install', '-at_install')
@@ -69,3 +69,24 @@ class TestControllers(tests.HttpCase):
             self.assertEqual(
                 resp.url, f'{base_url}/web#{backend_params}',
                 "Internal user should have landed in the backend")
+
+    def test_03_website_image(self):
+        attachment = self.env['ir.attachment'].create({
+            'name': 'one_pixel.png',
+            'datas': 'iVBORw0KGgoAAAANSUhEUgAAAAYAAAAGCAYAAADgzO9IAAAAJElEQVQI'
+                     'mWP4/b/qPzbM8Pt/1X8GBgaEAJTNgFcHXqOQMV4dAMmObXXo1/BqAAAA'
+                     'AElFTkSuQmCC',
+            'public': True,
+        })
+
+        res = self.url_open(f'/website/image/ir.attachment/{attachment.id}_unique/raw?download=1')
+        res.raise_for_status()
+
+        headers = {
+            'Content-Length': '93',
+            'Content-Type': 'image/png',
+            'Content-Disposition': 'attachment; filename=one_pixel.png',
+            'Cache-Control': 'public, max-age=31536000, immutable',
+        }
+        self.assertEqual(submap(res.headers, headers.keys()), headers)
+        self.assertEqual(res.content, attachment.raw)

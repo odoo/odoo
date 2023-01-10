@@ -5,10 +5,11 @@ from markupsafe import Markup
 from odoo.addons.mail.tests.common import MailCommon
 from odoo.exceptions import AccessError, UserError
 from odoo.modules.module import get_module_resource
-from odoo.tests import Form, users
+from odoo.tests import Form, tagged, users
 from odoo.tools import convert_file
 
 
+@tagged('mail_template')
 class TestMailTemplate(MailCommon):
 
     @classmethod
@@ -147,6 +148,7 @@ class TestMailTemplate(MailCommon):
         self.assertFalse(server.active)
 
 
+@tagged('mail_template')
 class TestMailTemplateReset(MailCommon):
 
     def _load(self, module, *args):

@@ -181,7 +181,7 @@ export const _getBundle = (assets.getBundle = memoize(async function getBundle(b
  *
  * @returns {Promise}
  */
-export const _loadBundle = (assets.loadBundle = memoize(async function loadBundle(desc) {
+export const _loadBundle = (assets.loadBundle = async function loadBundle(desc) {
     // Load css in parallel
     const promiseCSS = Promise.all((desc.cssLibs || []).map(assets.loadCSS)).then(() => {
         if (desc.cssContents && desc.cssContents.length) {
@@ -230,7 +230,7 @@ export const _loadBundle = (assets.loadBundle = memoize(async function loadBundl
             );
         }
     }
-}));
+});
 
 export const loadJS = function (url) {
     return assets.loadJS(url);

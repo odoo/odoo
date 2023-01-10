@@ -17,7 +17,9 @@
                     </t>
                 </div>
                 <div class="o_cp_bottom_right w-auto flex-shrink-0">
-                    <t t-slot="control-panel-status-indicator" />
+                    <t t-if="env.isSmall">
+                        <t t-slot="control-panel-status-indicator" />
+                    </t>
                     <t t-slot="control-panel-action-menu" t-if="display['bottom-left']"/>
                     <div t-if="pagerProps and pagerProps.total > 0" class="o_cp_pager" role="search">
                         <Pager t-props="pagerProps"/>

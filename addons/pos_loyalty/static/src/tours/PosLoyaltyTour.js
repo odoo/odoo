@@ -178,3 +178,31 @@ PosLoyalty.check.orderTotalIs('49.50');
 
 
 Tour.register('PosLoyaltyTour3', { test: true, url: '/pos/web' }, getSteps());
+
+startSteps();
+
+ProductScreen.do.confirmOpeningPopup();
+ProductScreen.do.clickHomeCategory();
+
+ProductScreen.exec.addOrderline('Test Product 1', '1');
+ProductScreen.exec.addOrderline('Test Product 2', '1');
+ProductScreen.do.clickPricelistButton();
+ProductScreen.do.selectPriceList('Public Pricelist');
+PosLoyalty.do.enterCode('abcda');
+PosLoyalty.check.orderTotalIs('0.00');
+ProductScreen.do.clickPricelistButton();
+ProductScreen.do.selectPriceList('Test multi-currency');
+PosLoyalty.check.orderTotalIs('0.00');
+
+Tour.register('PosLoyaltyTour4', { test: true, url: '/pos/web' }, getSteps());
+
+startSteps();
+
+ProductScreen.do.clickHomeCategory();
+
+ProductScreen.exec.addOrderline('Test Product 1', '1.00', '100');
+PosLoyalty.do.clickDiscountButton();
+PosLoyalty.do.clickConfirmButton();
+ProductScreen.check.totalAmountIs('92.00');
+
+Tour.register('PosLoyaltyTour5', { test: true, url: '/pos/web' }, getSteps());

@@ -20,10 +20,7 @@ class TestWebsiteSaleStockAbandonedCartEmail(TestWebsiteSaleCartAbandonedCommon)
             'type': 'product',
             'allow_out_of_stock_order': False
         })
-        storable_product_product = self.env['product.product'].create({
-            'name': 'storable_product_product',
-            'product_tmpl_id': storable_product_template.id,
-        })
+        storable_product_product = storable_product_template.product_variant_id
         order_line = [[0, 0, {
             'name': 'The Product',
             'product_id': storable_product_product.id,

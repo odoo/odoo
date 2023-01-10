@@ -8,9 +8,9 @@
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 16.0beta\n"
+"Project-Id-Version: Odoo Server 16.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-10-04 09:24+0000\n"
+"POT-Creation-Date: 2022-12-15 12:50+0000\n"
 "PO-Revision-Date: 2022-09-22 05:45+0000\n"
 "Last-Translator: Martin Trigaux, 2022\n"
 "Language-Team: German (https://www.transifex.com/odoo/teams/41243/de/)\n"
@@ -21,6 +21,7 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: delivery
+#. odoo-python
 #: code:addons/delivery/models/sale_order.py:0
 #, python-format
 msgid " (Estimated Cost: %s )"
@@ -37,6 +38,7 @@ msgid "<i class=\"fa fa-arrow-right me-1\"/>Get rate"
 msgstr "<i class=\"fa fa-arrow-right me-1\"/>Preis erhalten"
 
 #. module: delivery
+#. odoo-python
 #: code:addons/delivery/models/delivery_carrier.py:0
 #, python-format
 msgid ""
@@ -177,6 +179,7 @@ msgid "Add"
 msgstr "Hinzufügen"
 
 #. module: delivery
+#. odoo-python
 #: code:addons/delivery/models/sale_order.py:0
 #: code:addons/delivery/wizard/choose_delivery_carrier.py:0
 #, python-format
@@ -492,6 +495,7 @@ msgid "Environment"
 msgstr "Umgebung"
 
 #. module: delivery
+#. odoo-python
 #: code:addons/delivery/models/delivery_carrier.py:0
 #: code:addons/delivery/models/delivery_grid.py:0
 #, python-format
@@ -535,6 +539,7 @@ msgid "Fixed Price"
 msgstr "Festpreis"
 
 #. module: delivery
+#. odoo-python
 #: code:addons/delivery/models/sale_order.py:0
 #, python-format
 msgid "Free Shipping"
@@ -542,7 +547,6 @@ msgstr "Kostenloser Versand"
 
 #. module: delivery
 #: model:delivery.carrier,name:delivery.free_delivery_carrier
-#: model:product.product,name:delivery.product_product_delivery
 #: model:product.template,name:delivery.product_product_delivery_product_template
 msgid "Free delivery charges"
 msgstr "Versandkostenfrei"
@@ -661,7 +665,6 @@ msgstr "Zuletzt aktualisiert am"
 
 #. module: delivery
 #: model:delivery.carrier,name:delivery.delivery_local_delivery
-#: model:product.product,name:delivery.product_product_local_delivery
 #: model:product.template,name:delivery.product_product_local_delivery_product_template
 msgid "Local Delivery"
 msgstr ""
@@ -702,11 +705,19 @@ msgid "Name"
 msgstr "Name"
 
 #. module: delivery
+#. odoo-python
+#: code:addons/delivery/models/delivery_carrier.py:0
+#, python-format
+msgid "New Providers"
+msgstr ""
+
+#. module: delivery
 #: model:ir.model.fields.selection,name:delivery.selection__stock_package_type__package_carrier_type__none
 msgid "No carrier integration"
 msgstr "Keine Frachtführerintegration"
 
 #. module: delivery
+#. odoo-python
 #: code:addons/delivery/models/delivery_grid.py:0
 #, python-format
 msgid "No price rule matching this order; delivery cost cannot be computed."
@@ -741,12 +752,14 @@ msgid "Package"
 msgstr "Verpackung"
 
 #. module: delivery
+#. odoo-python
 #: code:addons/delivery/models/stock_picking.py:0
 #, python-format
 msgid "Package Details"
 msgstr "Paketdetails"
 
 #. module: delivery
+#. odoo-python
 #: code:addons/delivery/wizard/choose_delivery_package.py:0
 #, python-format
 msgid "Package too heavy!"
@@ -772,6 +785,15 @@ msgstr "Präfix"
 #: model:ir.model.constraint,message:delivery.constraint_delivery_zip_prefix_name_uniq
 msgid "Prefix already exists!"
 msgstr "Prefix existiert bereits!"
+
+#. module: delivery
+#: model:ir.model.fields,help:delivery.field_delivery_carrier__zip_prefix_ids
+msgid ""
+"Prefixes of zip codes that this carrier applies to. Note that regular "
+"expressions can be used to support countries with varying zip code lengths, "
+"i.e. '$' can be added to end of prefix to match the exact zip (e.g. '100$' "
+"will only match '100' and not '1000')"
+msgstr ""
 
 #. module: delivery
 #: model:ir.model.fields.selection,name:delivery.selection__delivery_price_rule__variable__price
@@ -910,6 +932,7 @@ msgstr ""
 "zertifiziert ist."
 
 #. module: delivery
+#. odoo-python
 #: code:addons/delivery/models/stock_picking.py:0
 #, python-format
 msgid ""
@@ -1030,10 +1053,19 @@ msgstr ""
 
 #. module: delivery
 #: model:delivery.carrier,name:delivery.delivery_carrier
-#: model:product.product,name:delivery.product_product_delivery_poste
 #: model:product.template,name:delivery.product_product_delivery_poste_product_template
 msgid "The Poste"
 msgstr "The Poste"
+
+#. module: delivery
+#. odoo-python
+#: code:addons/delivery/models/delivery_carrier.py:0
+#: code:addons/delivery/models/delivery_carrier.py:0
+#, python-format
+msgid ""
+"The package cannot be created because the total weight of the products in "
+"the picking is 0.0 %s"
+msgstr ""
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier__get_return_label_from_portal
@@ -1054,18 +1086,21 @@ msgid "The shipping insurance must be a percentage between 0 and 100."
 msgstr "Die Versandversicherung muss ein Prozentsatz zwischen 0 und 100 sein."
 
 #. module: delivery
+#. odoo-python
 #: code:addons/delivery/models/delivery_carrier.py:0
 #, python-format
 msgid "The shipping is free since the order amount exceeds %.2f."
 msgstr "Der Versand ist kostenlos, da der Bestellwert höher ist als %.2f."
 
 #. module: delivery
+#. odoo-python
 #: code:addons/delivery/wizard/choose_delivery_carrier.py:0
 #, python-format
 msgid "The shipping price will be set once the delivery is done."
 msgstr "Der Versandpreis wird nach erfolgter Lieferung festgelegt."
 
 #. module: delivery
+#. odoo-python
 #: code:addons/delivery/wizard/choose_delivery_package.py:0
 #, python-format
 msgid ""
@@ -1076,6 +1111,7 @@ msgstr ""
 "Höchstgewicht. Bitte wählen Sie einen anderen Pakettyp."
 
 #. module: delivery
+#. odoo-python
 #: code:addons/delivery/models/delivery_grid.py:0
 #, python-format
 msgid "There is no matching delivery rule."
@@ -1161,21 +1197,12 @@ msgid "Transfer"
 msgstr "Transfer"
 
 #. module: delivery
-#: model:product.product,uom_name:delivery.product_product_delivery
-#: model:product.product,uom_name:delivery.product_product_delivery_poste
-#: model:product.product,uom_name:delivery.product_product_local_delivery
-#: model:product.template,uom_name:delivery.product_product_delivery_poste_product_template
-#: model:product.template,uom_name:delivery.product_product_delivery_product_template
-#: model:product.template,uom_name:delivery.product_product_local_delivery_product_template
-msgid "Units"
-msgstr "Einheiten"
-
-#. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.choose_delivery_carrier_view_form
 msgid "Update"
 msgstr "Aktualisieren"
 
 #. module: delivery
+#. odoo-python
 #: code:addons/delivery/models/sale_order.py:0
 #: model_terms:ir.ui.view,arch_db:delivery.view_order_form_with_carrier
 #, python-format
@@ -1237,6 +1264,7 @@ msgid "Weight:"
 msgstr "Gewicht:"
 
 #. module: delivery
+#. odoo-python
 #: code:addons/delivery/models/sale_order.py:0
 #, python-format
 msgid ""
@@ -1255,6 +1283,7 @@ msgid "You have multiple tracker links, they are available in the chatter."
 msgstr "Sie haben mehrere Tracker-Links, die im Chatter verfügbar sind."
 
 #. module: delivery
+#. odoo-python
 #: code:addons/delivery/models/stock_picking.py:0
 #, python-format
 msgid ""

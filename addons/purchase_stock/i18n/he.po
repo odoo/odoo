@@ -15,14 +15,15 @@
 # Yihya Hugirat <hugirat@gmail.com>, 2022
 # ZVI BLONDER <ZVIBLONDER@gmail.com>, 2022
 # NoaFarkash, 2022
+# Ha Ketem <haketem@gmail.com>, 2022
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 16.0beta\n"
+"Project-Id-Version: Odoo Server 16.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-10-10 10:22+0000\n"
+"POT-Creation-Date: 2022-12-15 12:49+0000\n"
 "PO-Revision-Date: 2022-09-22 05:54+0000\n"
-"Last-Translator: NoaFarkash, 2022\n"
+"Last-Translator: Ha Ketem <haketem@gmail.com>, 2022\n"
 "Language-Team: Hebrew (https://www.transifex.com/odoo/teams/41243/he/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -36,12 +37,13 @@ msgid "% On-Time Delivery"
 msgstr "% משלוח בזמן"
 
 #. module: purchase_stock
+#. odoo-python
 #: code:addons/purchase_stock/models/stock_rule.py:0
 #: code:addons/purchase_stock/models/stock_rule.py:0
 #: code:addons/purchase_stock/models/stock_rule.py:0
 #, python-format
 msgid "+ %d day(s)"
-msgstr ""
+msgstr "+%d יום(ימים)"
 
 #. module: purchase_stock
 #: model_terms:ir.ui.view,arch_db:purchase_stock.purchase_order_view_form_inherit
@@ -103,6 +105,8 @@ msgid ""
 "  - Manual: the quantity is set manually on the line\n"
 "  - Stock Moves: the quantity comes from confirmed pickings\n"
 msgstr ""
+"על-פי הגדרות המוצר, אפשר לחשב את הכמות שהתקבלה עם מנגנון אוטומטי ידני: הכמות נקבעת ידנית בשורה\n"
+"תנועות מלאי: הכמות נקבעת לפי בחירות שאושרו\n"
 
 #. module: purchase_stock
 #: model:ir.model.fields,field_description:purchase_stock.field_stock_rule__action
@@ -129,6 +133,7 @@ msgid "Average Receipt Delay"
 msgstr "עיכוב קבלה ממוצע"
 
 #. module: purchase_stock
+#. odoo-python
 #: code:addons/purchase_stock/models/stock.py:0
 #: model:ir.model.fields.selection,name:purchase_stock.selection__stock_rule__action__buy
 #: model:stock.route,name:purchase_stock.route_warehouse0_buy
@@ -168,6 +173,7 @@ msgid "Contact"
 msgstr "איש קשר"
 
 #. module: purchase_stock
+#. odoo-python
 #: code:addons/purchase_stock/models/purchase.py:0
 #, python-format
 msgid "Corresponding receipt not found."
@@ -179,6 +185,7 @@ msgid "Created Purchase Order Line"
 msgstr "שורת הזמנת רכש שנוצרה"
 
 #. module: purchase_stock
+#. odoo-python
 #: code:addons/purchase_stock/models/stock_move.py:0
 #: code:addons/purchase_stock/models/stock_move.py:0
 #, python-format
@@ -191,13 +198,18 @@ msgid "Custom Description"
 msgstr "תיאור"
 
 #. module: purchase_stock
+#: model_terms:ir.ui.view,arch_db:purchase_stock.res_config_settings_view_form_stock
+msgid "Days needed to confirm a PO"
+msgstr ""
+
+#. module: purchase_stock
 #: model:ir.model.fields,help:purchase_stock.field_res_company__days_to_purchase
 #: model:ir.model.fields,help:purchase_stock.field_res_config_settings__days_to_purchase
-#: model_terms:ir.ui.view,arch_db:purchase_stock.res_config_settings_view_form_stock
 msgid "Days needed to confirm a PO, define when a PO should be validated"
 msgstr "הימים הדרושים לאישור הזמנה, מגדירים מתי יש לאמת הזמנה"
 
 #. module: purchase_stock
+#. odoo-python
 #: code:addons/purchase_stock/models/stock_rule.py:0
 #: model:ir.model.fields,field_description:purchase_stock.field_res_company__days_to_purchase
 #: model:ir.model.fields,field_description:purchase_stock.field_res_config_settings__days_to_purchase
@@ -274,6 +286,7 @@ msgid "Exception(s):"
 msgstr "חריגה(ות):"
 
 #. module: purchase_stock
+#. odoo-python
 #: code:addons/purchase_stock/models/purchase.py:0
 #, python-format
 msgid ""
@@ -298,14 +311,14 @@ msgid "Fully Received"
 msgstr ""
 
 #. module: purchase_stock
-#. openerp-web
+#. odoo-javascript
 #: code:addons/purchase_stock/static/src/js/tours/purchase_stock.js:0
 #, python-format
 msgid "Generate the draft vendor bill."
 msgstr ""
 
 #. module: purchase_stock
-#. openerp-web
+#. odoo-javascript
 #: code:addons/purchase_stock/static/src/js/tours/purchase_stock.js:0
 #, python-format
 msgid "Go back to the purchase order to generate the vendor bill."
@@ -427,6 +440,7 @@ msgid "Not Received"
 msgstr "לא התקבל"
 
 #. module: purchase_stock
+#. odoo-python
 #: code:addons/purchase_stock/models/stock_move.py:0
 #, python-format
 msgid ""
@@ -488,7 +502,7 @@ msgid "Partially Received"
 msgstr ""
 
 #. module: purchase_stock
-#. openerp-web
+#. odoo-javascript
 #: code:addons/purchase_stock/static/src/js/tours/purchase_stock.js:0
 #, python-format
 msgid "Process all the receipt quantities."
@@ -556,6 +570,7 @@ msgid "Purchase Report"
 msgstr "דוח רכש"
 
 #. module: purchase_stock
+#. odoo-python
 #: code:addons/purchase_stock/models/stock_rule.py:0
 #, python-format
 msgid "Purchase Security Lead Time"
@@ -596,7 +611,7 @@ msgid "Receive Products"
 msgstr "קבל מוצרים"
 
 #. module: purchase_stock
-#. openerp-web
+#. odoo-javascript
 #: code:addons/purchase_stock/static/src/js/tours/purchase_stock.js:0
 #, python-format
 msgid "Receive the ordered products."
@@ -618,7 +633,7 @@ msgid "Request your vendors to deliver to your customers"
 msgstr "בקש מהספקים שלך לשלוח מוצרים ישירות ללקוחות שלך"
 
 #. module: purchase_stock
-#. openerp-web
+#. odoo-javascript
 #: code:addons/purchase_stock/static/src/purchase_stock_forecasted/forecasted_details.xml:0
 #, python-format
 msgid "Requests for quotation"
@@ -642,10 +657,8 @@ msgstr "מסלולים"
 
 #. module: purchase_stock
 #: model_terms:ir.ui.view,arch_db:purchase_stock.res_config_settings_view_form_stock
-msgid ""
-"Schedule automatically generated request for quotations earlier to avoid "
-"delays"
-msgstr "תזמן מוקדם יותר בקשה להצעות מחיר שנוצרו אוטומטית כדי למנוע עיכובים"
+msgid "Schedule request for quotations earlier to avoid delays"
+msgstr ""
 
 #. module: purchase_stock
 #: model_terms:ir.ui.view,arch_db:purchase_stock.product_supplierinfo_replenishment_tree_view
@@ -709,12 +722,14 @@ msgid "Technical field used to display the Drop Ship Address"
 msgstr "שדה טכני המשמש להצגת כתובת דרופשיפינג"
 
 #. module: purchase_stock
+#. odoo-python
 #: code:addons/purchase_stock/models/stock.py:0
 #, python-format
 msgid "The following replenishment order has been generated"
 msgstr ""
 
 #. module: purchase_stock
+#. odoo-python
 #: code:addons/purchase_stock/models/purchase.py:0
 #, python-format
 msgid ""
@@ -723,6 +738,7 @@ msgid ""
 msgstr ""
 
 #. module: purchase_stock
+#. odoo-python
 #: code:addons/purchase_stock/models/stock_rule.py:0
 #, python-format
 msgid ""
@@ -754,6 +770,7 @@ msgid "This will determine operation type of incoming shipment"
 msgstr "זה יקבע את סוג הפעולה של המשלוח הנכנס"
 
 #. module: purchase_stock
+#. odoo-python
 #: code:addons/purchase_stock/models/purchase.py:0
 #, python-format
 msgid ""
@@ -762,6 +779,7 @@ msgid ""
 msgstr ""
 
 #. module: purchase_stock
+#. odoo-python
 #: code:addons/purchase_stock/models/purchase.py:0
 #, python-format
 msgid "Those dates have been updated accordingly on the receipt %s."
@@ -778,6 +796,7 @@ msgid "Transfer"
 msgstr "העברה"
 
 #. module: purchase_stock
+#. odoo-python
 #: code:addons/purchase_stock/models/purchase.py:0
 #, python-format
 msgid ""
@@ -786,7 +805,7 @@ msgid ""
 msgstr "לא ניתן לבטל הזמנת רכש %s מאחר ובוצעו מספר קבלות סחורה."
 
 #. module: purchase_stock
-#. openerp-web
+#. odoo-javascript
 #: code:addons/purchase_stock/static/src/js/tours/purchase_stock.js:0
 #, python-format
 msgid "Validate the receipt of all ordered products."
@@ -805,6 +824,7 @@ msgid "Vendor Delay Report"
 msgstr ""
 
 #. module: purchase_stock
+#. odoo-python
 #: code:addons/purchase_stock/models/stock_rule.py:0
 #, python-format
 msgid "Vendor Lead Time"
@@ -837,16 +857,17 @@ msgid "When products are bought, they can be delivered to this warehouse"
 msgstr "כאשר המוצרים נרכשים, הם יכולים להיות מועברים למחסן זה"
 
 #. module: purchase_stock
+#. odoo-python
 #: code:addons/purchase_stock/models/stock_rule.py:0
 #, python-format
 msgid ""
 "When products are needed in <b>%s</b>, <br/> a request for quotation is "
-"created to fulfill the need."
+"created to fulfill the need.<br/>Note: This rule will be used in combination"
+" with the rules<br/>of the reception route(s)"
 msgstr ""
-"כאשר מוצרים נדרשים ב <b>%s</b>, <br/> בקשה להצעת מחיר נוצרת כדי למלא את "
-"הצורך."
 
 #. module: purchase_stock
+#. odoo-python
 #: code:addons/purchase_stock/models/purchase.py:0
 #, python-format
 msgid ""
@@ -857,6 +878,7 @@ msgstr ""
 "תחילה עליך ליצור החזרה."
 
 #. module: purchase_stock
+#. odoo-python
 #: code:addons/purchase_stock/models/purchase.py:0
 #, python-format
 msgid "You must set a Vendor Location for this partner %s"

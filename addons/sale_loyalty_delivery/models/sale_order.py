@@ -30,6 +30,7 @@ class SaleOrder(models.Model):
             'product_uom': reward.discount_line_product_id.uom_id.id,
             'order_id': self.id,
             'is_reward_line': True,
+            'sequence': max(self.order_line.filtered(lambda x: not x.is_reward_line).mapped('sequence')) + 1,
             'tax_id': [(Command.CLEAR, 0, 0)] + [(Command.LINK, tax.id, False) for tax in taxes],
         }]
 

@@ -144,6 +144,7 @@ class PosSession(models.Model):
     def action_stock_picking(self):
         self.ensure_one()
         action = self.env['ir.actions.act_window']._for_xml_id('stock.action_picking_tree_ready')
+        action['display_name'] = _('Pickings')
         action['context'] = {}
         action['domain'] = [('id', 'in', self.picking_ids.ids)]
         return action
@@ -339,7 +340,7 @@ class PosSession(models.Model):
                     'pos_session_id': self.id,
                 }
 
-            if self.cash_register_difference < 0.0:
+            if amount < 0.0:
                 if not self.cash_journal_id.loss_account_id:
                     raise UserError(
                         _('Please go on the %s journal and define a Loss Account. This account will be used to record cash difference.',
@@ -415,6 +416,9 @@ class PosSession(models.Model):
         return {'successful': True}
 
     def update_closing_control_state_session(self, notes):
+        # Prevent closing the session again if it was already closed
+        if self.state == 'closed':
+            raise UserError(_('This session is already closed.'))
         # Prevent the session to be opened again.
         self.write({'state': 'closing_control', 'stop_at': fields.Datetime.now()})
         self._post_cash_details_message('Closing', self.cash_register_difference, notes)
@@ -753,7 +757,7 @@ class PosSession(models.Model):
                     for move in stock_moves:
                         exp_key = move.product_id._get_product_accounts()['expense']
                         out_key = move.product_id.categ_id.property_stock_account_output_categ_id
-                        amount = -sum(move.sudo().stock_valuation_layer_ids.mapped('value'))
+                        amount = move.product_qty * move.product_id._compute_average_price(0, move.product_qty, move)
                         stock_expense[exp_key] = self._update_amounts(stock_expense[exp_key], {'amount': amount}, move.picking_id.date, force_company_currency=True)
                         if move.location_id.usage == 'customer':
                             stock_return[out_key] = self._update_amounts(stock_return[out_key], {'amount': amount}, move.picking_id.date, force_company_currency=True)
@@ -779,7 +783,7 @@ class PosSession(models.Model):
                 for move in stock_moves:
                     exp_key = move.product_id._get_product_accounts()['expense']
                     out_key = move.product_id.categ_id.property_stock_account_output_categ_id
-                    amount = -sum(move.stock_valuation_layer_ids.mapped('value'))
+                    amount = move.product_qty * move.product_id._compute_average_price(0, move.product_qty, move)
                     stock_expense[exp_key] = self._update_amounts(stock_expense[exp_key], {'amount': amount}, move.picking_id.date, force_company_currency=True)
                     if move.location_id.usage == 'customer':
                         stock_return[out_key] = self._update_amounts(stock_return[out_key], {'amount': amount}, move.picking_id.date, force_company_currency=True)

@@ -131,13 +131,15 @@ class Repair(models.Model):
     invoice_state = fields.Selection(string='Invoice State', related='invoice_id.state')
     priority = fields.Selection([('0', 'Normal'), ('1', 'Urgent')], default='0', string="Priority")
 
+    @api.depends('product_id')
     def _compute_allowed_picking_type_ids(self):
         '''
             computes the ids of return picking types
         '''
         out_picking_types = self.env['stock.picking.type'].search_read(domain=[('code', '=', 'outgoing')],
                                                                           fields=['return_picking_type_id'], load='')
-        self.allowed_picking_type_ids = [pick_type['return_picking_type_id'] for pick_type in out_picking_types]
+        self.allowed_picking_type_ids = [
+            pt['return_picking_type_id'] for pt in out_picking_types if pt['return_picking_type_id']]
 
     @api.depends('partner_id')
     def _compute_default_address_id(self):
@@ -194,7 +196,7 @@ class Repair(models.Model):
         picking_warehouse = self.picking_id.location_dest_id.warehouse_id
         if location_warehouse and picking_warehouse and location_warehouse != picking_warehouse:
             return {
-                'warning': {'title': "Warning", 'message': "Note that the warehouse of the return and repair locations don't match!"},
+                'warning': {'title': _("Warning"), 'message': _("Note that the warehouses of the return and repair locations don't match!")},
             }
 
     @api.depends('product_id')
@@ -884,6 +886,20 @@ class RepairFee(models.Model):
                 return {'warning': warning}
             else:
                 self.price_unit = price
+
+    # TODO: replace with computes in master
+    @api.model_create_multi
+    def create(self, vals_list):
+        for vals in vals_list:
+            if not vals.get('product_uom'):
+                vals['product_uom'] = self.env["product.product"].browse(vals.get('product_id')).uom_id.id
+        return super().create(vals_list)
+
+    # TODO: replace with computes in master
+    def write(self, vals):
+        if vals.get('product_id') and not vals.get('product_uom'):
+            vals['product_uom'] = self.env["product.product"].browse(vals.get('product_id')).uom_id.id
+        return super().write(vals)
 
 
 class RepairTags(models.Model):

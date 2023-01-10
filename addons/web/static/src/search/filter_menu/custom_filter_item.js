@@ -313,7 +313,10 @@ export class CustomFilterItem extends Component {
         } catch (_err) {
             // Parsing error: nothing is done
         }
-        ev.target.value = condition.displayedValue;
+        // Only reset the target's value if it is not a selection field.
+        if (field.type !== "selection") {
+            ev.target.value = condition.displayedValue;
+        }
     }
 }
 

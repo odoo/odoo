@@ -181,7 +181,7 @@ class Pricelist(models.Model):
 
         return [
             ('pricelist_id', '=', self.id),
-            '|', ('categ_id', '=', False), ('categ_id', 'child_of', products.categ_id.ids),
+            '|', ('categ_id', '=', False), ('categ_id', 'parent_of', products.categ_id.ids),
             '|', ('product_tmpl_id', '=', False), templates_domain,
             '|', ('product_id', '=', False), products_domain,
             '|', ('date_start', '=', False), ('date_start', '<=', date),

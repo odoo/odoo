@@ -536,9 +536,6 @@ QUnit.module("DebugMenu", (hooks) => {
             fields: {},
             records: [{ id: 18 }],
         };
-        serverData.models.partner.fields.m2o.depends = [];
-        serverData.models.partner.fields.foo.depends = [];
-        serverData.models.partner.fields.o2m.depends = [];
         serverData.models.partner.records = [{ id: 1, display_name: "p1", foo: "hello" }];
 
         const mockRPC = async (route, args) => {
@@ -585,7 +582,6 @@ QUnit.module("DebugMenu", (hooks) => {
             fields: {},
             records: [{ id: 18 }],
         };
-        serverData.models.partner.fields.foo.depends = [];
         serverData.models.partner.records = [{ id: 1, display_name: "p1", foo: "hello" }];
 
         const mockRPC = async (route, args) => {
@@ -635,7 +631,6 @@ QUnit.module("DebugMenu", (hooks) => {
             fields: {},
             records: [{ id: 18 }],
         };
-        serverData.models.partner.fields.foo.depends = [];
         serverData.models.partner.records = [{ id: 1, display_name: "p1", foo: "hello" }];
 
         const mockRPC = async (route, args) => {

@@ -14,6 +14,7 @@
                 </t>
                 <t t-if="item.type ==='favorite'">
                     <DropdownItem class="{ o_menu_item: true, selected: item.isActive }"
+                        checked="item.isActive"
                         parentClosingMode="'none'"
                         onSelected="() => this.onFavoriteSelected(item.id)"
                         >

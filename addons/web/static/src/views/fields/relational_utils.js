@@ -33,7 +33,14 @@ import { SelectCreateDialog } from "@web/views/view_dialogs/select_create_dialog
  * @property {Function | null} onDelete
  */
 
-import { Component, useComponent, useEffect, useEnv, useSubEnv, onWillUpdateProps } from "@odoo/owl";
+import {
+    Component,
+    useComponent,
+    useEffect,
+    useEnv,
+    useSubEnv,
+    onWillUpdateProps,
+} from "@odoo/owl";
 
 //
 // Commons
@@ -213,13 +220,17 @@ export class Many2XAutocomplete extends Component {
     }
 
     async loadOptionsSource(request) {
-        const records = await this.orm.call(this.props.resModel, "name_search", [], {
+        if (this.lastProm) {
+            this.lastProm.abort(false);
+        }
+        this.lastProm = this.orm.call(this.props.resModel, "name_search", [], {
             name: request,
             operator: "ilike",
             args: this.props.getDomain(),
             limit: this.props.searchLimit + 1,
             context: this.props.context,
         });
+        const records = await this.lastProm;
 
         const options = records.map((result) => ({
             value: result[0],
@@ -281,7 +292,7 @@ export class Many2XAutocomplete extends Component {
         return options;
     }
 
-    async onSearchMoreSmall() {
+    async onBarcodeSearch() {
         const autoCompleteInput = this.autoCompleteContainer.el.querySelector("input");
         return this.onSearchMore(autoCompleteInput.value);
     }

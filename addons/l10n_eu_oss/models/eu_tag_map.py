@@ -80,9 +80,9 @@ EU_TAG_MAP = {
     },
     # France
     'l10n_fr.l10n_fr_pcg_chart_template': {
-        'invoice_base_tag': None,
+        'invoice_base_tag': 'l10n_fr.tax_report_E3_tag',
         'invoice_tax_tag': None,
-        'refund_base_tag': None,
+        'refund_base_tag': 'l10n_fr.tax_report_F8_tag',
         'refund_tax_tag': None,
     },
     # Germany SKR03

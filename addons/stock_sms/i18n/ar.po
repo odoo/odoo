@@ -27,6 +27,9 @@ msgid ""
 "                {{ (object.company_id.name + ': We are glad to inform you that your order n° ' + object.origin + ' has been shipped.' if object.origin else object.company_id.name + ': We are glad to inform you that your order has been shipped.') + (' Your tracking reference is ' + (object.carrier_tracking_ref) + '.' if hasattr(object, 'carrier_tracking_ref') and object.carrier_tracking_ref else '') }}\n"
 "            "
 msgstr ""
+"\n"
+"                {{ (object.company_id.name + ': يسرنا إعلامك بأن طلبك n° ' + object.origin + ' قد تم شحنه.' if object.origin else object.company_id.name + ': يسرنا إعلامك بأن طلبك قد تم شحنه.') + (' مرجع التتبع الخاص بك هو ' + (object.carrier_tracking_ref) + '.' if hasattr(object, 'carrier_tracking_ref') and object.carrier_tracking_ref else '') }}\n"
+"            "
 
 #. module: stock_sms
 #: model_terms:ir.ui.view,arch_db:stock_sms.view_confirm_stock_sms
@@ -51,7 +54,7 @@ msgstr "تأكيد"
 #. module: stock_sms
 #: model:ir.model,name:stock_sms.model_confirm_stock_sms
 msgid "Confirm Stock SMS"
-msgstr ""
+msgstr "تأكيد المخزون عن طريق الرسائل النصية القصيرة "
 
 #. module: stock_sms
 #: model:ir.model.fields,field_description:stock_sms.field_confirm_stock_sms__create_uid
@@ -66,12 +69,12 @@ msgstr "أنشئ في"
 #. module: stock_sms
 #: model:sms.template,name:stock_sms.sms_template_data_stock_delivery
 msgid "Delivery: Send by SMS Text Message"
-msgstr ""
+msgstr "التوصيل: الإرسال في رسالة نصية قصيرة "
 
 #. module: stock_sms
 #: model_terms:ir.ui.view,arch_db:stock_sms.view_confirm_stock_sms
 msgid "Disable SMS"
-msgstr ""
+msgstr "تعطيل الرسائل النصية القصيرة "
 
 #. module: stock_sms
 #: model:ir.model.fields,field_description:stock_sms.field_confirm_stock_sms__display_name
@@ -81,7 +84,7 @@ msgstr "اسم العرض "
 #. module: stock_sms
 #: model:ir.model.fields,field_description:stock_sms.field_res_company__has_received_warning_stock_sms
 msgid "Has Received Warning Stock Sms"
-msgstr ""
+msgstr "يحتوي على الرسالة النصية المستلمة للتحذير بشأن المخزون "
 
 #. module: stock_sms
 #: model:ir.model.fields,field_description:stock_sms.field_confirm_stock_sms__id
@@ -131,7 +134,7 @@ msgstr "قالب الرسائل النصية القصيرة "
 #. module: stock_sms
 #: model:ir.model.fields,field_description:stock_sms.field_res_config_settings__stock_move_sms_validation
 msgid "SMS Validation with stock move"
-msgstr ""
+msgstr "التصديق عن طريق الرسائل النصية القصيرة مع حركات المخزون "
 
 #. module: stock_sms
 #: model:ir.model.fields,help:stock_sms.field_res_company__stock_sms_confirmation_template_id
@@ -150,3 +153,5 @@ msgid ""
 "You are about to confirm this Delivery Order by SMS Text Message.<br/>\n"
 "                This feature can easily be disabled from the Settings of Inventory or by clicking on \"Disable SMS\".<br/>"
 msgstr ""
+"أنت على وشك تأكيد أمر التوصيل هذا عن طريق رسالة نصية قصيرة.<br/>\n"
+"                يمكن تعطيل هذه الخاصية بسهولة من إعدادات المخزون أو عن طريق الضغط على \"تعطيل الرسائل النصية القصيرة\".<br/> "

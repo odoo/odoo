@@ -26,7 +26,7 @@ class PurchaseRequisitionCreateAlternative(models.TransientModel):
         groups="purchase.group_warning_purchase")
     copy_products = fields.Boolean(
         "Copy Products", default=True,
-        help="If this is checked, the product quantites of the original PO will be copied")
+        help="If this is checked, the product quantities of the original PO will be copied")
 
     @api.depends('partner_id', 'copy_products')
     def _compute_purchase_warn(self):

@@ -37,6 +37,22 @@ export class GroupListArchParser extends XMLParser {
 }
 
 export class ListArchParser extends XMLParser {
+    isColumnVisible(columnInvisibleModifier) {
+        return columnInvisibleModifier !== true;
+    }
+
+    parseFieldNode(node, models, modelName) {
+        return Field.parseFieldNode(node, models, modelName, "list");
+    }
+
+    parseWidgetNode(node, models, modelName) {
+        return Widget.parseWidgetNode(node);
+    }
+
+    processButton(node) {
+        return processButton(node);
+    }
+
     parse(arch, models, modelName) {
         const xmlDoc = this.parseXML(arch);
         const fieldNodes = {};
@@ -62,9 +78,9 @@ export class ListArchParser extends XMLParser {
             }
             if (node.tagName === "button") {
                 const modifiers = JSON.parse(node.getAttribute("modifiers") || "{}");
-                if (modifiers.column_invisible !== true) {
+                if (this.isColumnVisible(modifiers.column_invisible)) {
                     const button = {
-                        ...processButton(node),
+                        ...this.processButton(node),
                         defaultRank: "btn-link",
                         type: "button",
                         id: buttonId++,
@@ -82,7 +98,7 @@ export class ListArchParser extends XMLParser {
                     }
                 }
             } else if (node.tagName === "field") {
-                const fieldInfo = Field.parseFieldNode(node, models, modelName, "list");
+                const fieldInfo = this.parseFieldNode(node, models, modelName);
                 fieldNodes[fieldInfo.name] = fieldInfo;
                 node.setAttribute("field_id", fieldInfo.name);
                 if (fieldInfo.widget === "handle") {
@@ -93,7 +109,7 @@ export class ListArchParser extends XMLParser {
                     models[modelName],
                     fieldInfo.FieldComponent.fieldDependencies
                 );
-                if (fieldInfo.modifiers.column_invisible !== true) {
+                if (this.isColumnVisible(fieldInfo.modifiers.column_invisible)) {
                     const label = fieldInfo.FieldComponent.label;
                     columns.push({
                         ...fieldInfo,
@@ -107,7 +123,7 @@ export class ListArchParser extends XMLParser {
                 }
                 return false;
             } else if (node.tagName === "widget") {
-                const widgetInfo = Widget.parseWidgetNode(node);
+                const widgetInfo = this.parseWidgetNode(node);
                 addFieldDependencies(
                     activeFields,
                     models[modelName],

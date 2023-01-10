@@ -134,10 +134,9 @@ class BaseLanguageInstall(models.TransientModel):
 
     def lang_install(self):
         self.ensure_one()
-        res = super(BaseLanguageInstall, self).lang_install()
-        lang_codes = set(self.lang_ids.mapped('code'))
         installed = {code for code, __ in self.env['res.lang'].get_installed()}
-        to_install = lang_codes - installed
+        res = super(BaseLanguageInstall, self).lang_install()
+        to_install = set(self.lang_ids.mapped('code')) - installed
         if not to_install:
             # update of translations instead of new installation
             # skip to avoid duplicating the translations
@@ -150,14 +149,14 @@ class BaseLanguageInstall(models.TransientModel):
                 # companies on which it is installed
                 for company in self.env['res.company'].search([('chart_template_id', '=', coa.id)]):
                     # write account.account translations in the real COA
-                    coa._process_accounts_translations(company.id, coa_langs_codes, 'name')
+                    coa.sudo()._process_accounts_translations(company.id, coa_langs_codes, 'name')
                     # write account.group translations
-                    coa._process_account_group_translations(company.id, coa_langs_codes, 'name')
+                    coa.sudo()._process_account_group_translations(company.id, coa_langs_codes, 'name')
                     # copy account.tax name translations
-                    coa._process_taxes_translations(company.id, coa_langs_codes, 'name')
+                    coa.sudo()._process_taxes_translations(company.id, coa_langs_codes, 'name')
                     # copy account.tax description translations
-                    coa._process_taxes_translations(company.id, coa_langs_codes, 'description')
+                    coa.sudo()._process_taxes_translations(company.id, coa_langs_codes, 'description')
                     # copy account.fiscal.position translations
-                    coa._process_fiscal_pos_translations(company.id, coa_langs_codes, 'name')
+                    coa.sudo()._process_fiscal_pos_translations(company.id, coa_langs_codes, 'name')
 
         return res

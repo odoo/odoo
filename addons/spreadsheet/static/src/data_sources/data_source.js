@@ -1,6 +1,7 @@
 /** @odoo-module */
 
 import { LoadingDataError } from "@spreadsheet/o_spreadsheet/errors";
+import { KeepLast } from "@web/core/utils/concurrency";
 
 /**
  * DataSource is an abstract class that contains the logic of fetching and
@@ -23,6 +24,7 @@ export class LoadableDataSource {
          */
         this._lastUpdate = undefined;
 
+        this._concurrency = new KeepLast();
         /**
          * Promise to control the loading of data
          */
@@ -32,8 +34,8 @@ export class LoadableDataSource {
 
     /**
      * Load data in the model
-     * @param {Object} params Params for fetching data
-     * @param {boolean=false} params.reload Force the reload of the data
+     * @param {object} [params] Params for fetching data
+     * @param {boolean} [params.reload=false] Force the reload of the data
      *
      * @returns {Promise} Resolved when data are fetched.
      */
@@ -43,7 +45,7 @@ export class LoadableDataSource {
         }
         if (!this._loadPromise) {
             this._isFullyLoaded = false;
-            this._loadPromise = this._load().then(() => {
+            this._loadPromise = this._concurrency.add(this._load()).then(() => {
                 this._lastUpdate = Date.now();
                 this._isFullyLoaded = true;
                 this._notify();
@@ -54,6 +56,13 @@ export class LoadableDataSource {
 
     get lastUpdate() {
         return this._lastUpdate;
+    }
+
+    /**
+     * @returns {boolean}
+     */
+    isReady() {
+        return this._isFullyLoaded;
     }
 
     /**

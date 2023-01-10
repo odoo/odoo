@@ -79,7 +79,8 @@ class ProductConfiguratorController(http.Controller):
             'pricelist': pricelist,
             'handle_stock': handle_stock,
             'already_configured': kw.get("already_configured", False),
-            'mode': kw.get('mode', 'add')
+            'mode': kw.get('mode', 'add'),
+            'product_custom_attribute_values': kw.get('product_custom_attribute_values', None)
         })
 
     def _get_pricelist(self, pricelist_id, pricelist_fallback=False):

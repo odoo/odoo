@@ -45,12 +45,15 @@ class ResCompany(models.Model):
         stripe_provider.journal_id = stripe_provider.journal_id or default_journal
         if stripe_provider.state == 'disabled':  # The onboarding step has never been run
             # Configure PayPal
-            paypal_provider = new_env.ref('payment.payment_provider_paypal')
-            if not paypal_provider.paypal_email_account:
-                paypal_provider.paypal_email_account = new_env.user.email or new_env.company.email
-            if paypal_provider.state == 'disabled' and paypal_provider.paypal_email_account:
-                paypal_provider.state = 'enabled'
-            paypal_provider.journal_id = paypal_provider.journal_id or default_journal
+            paypal_provider = new_env.ref(
+                'payment.payment_provider_paypal', raise_if_not_found=False
+            )
+            if paypal_provider:
+                if not paypal_provider.paypal_email_account:
+                    paypal_provider.paypal_email_account = new_env.user.email or new_env.company.email
+                if paypal_provider.state == 'disabled' and paypal_provider.paypal_email_account:
+                    paypal_provider.state = 'enabled'
+                paypal_provider.journal_id = paypal_provider.journal_id or default_journal
 
         return stripe_provider.action_stripe_connect_account(menu_id=menu_id)
 

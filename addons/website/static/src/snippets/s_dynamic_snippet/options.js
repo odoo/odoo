@@ -81,6 +81,10 @@ const dynamicSnippetOptions = options.Class.extend({
         if (params.attributeName === 'templateKey' && previewMode === false) {
             this._templateUpdated(widgetValue, params.activeValue);
         }
+        // TODO adapt in master
+        if (params.attributeName === 'numberOfRecords' && previewMode === false) {
+            this.$target.get(0).dataset.forceMinimumMaxLimitTo16 = '1';
+        }
     },
 
     //--------------------------------------------------------------------------

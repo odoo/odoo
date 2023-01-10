@@ -121,15 +121,19 @@
         }
     }
 
-    .calendar-time select {
-        &.hourselect, &.minuteselect, &.secondselect, &.ampmselect {
-            display: initial;
-            border-color: var(--daterangepicker__select-border-color);
-            background-color: var(--daterangepicker__select-bg);
-            color: var(--daterangepicker__select-color);
-            -webkit-appearance: menulist-button;
-            -moz-appearance: menulist-button;
-            appearance: menulist-button;
+    .calendar-time {
+        /*rtl:ignore*/
+        direction:ltr;
+        select {
+            &.hourselect, &.minuteselect, &.secondselect, &.ampmselect {
+                display: initial;
+                border-color: var(--daterangepicker__select-border-color);
+                background-color: var(--daterangepicker__select-bg);
+                color: var(--daterangepicker__select-color);
+                -webkit-appearance: menulist-button;
+                -moz-appearance: menulist-button;
+                appearance: menulist-button;
+            }
         }
     }
 

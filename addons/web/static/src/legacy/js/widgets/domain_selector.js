@@ -176,7 +176,7 @@ var DomainTree = DomainNode.extend({
      * @constructor
      * @see DomainNode.init
      * The initialization of a DomainTree creates a "children" array attribute
-     * which will contain the the DomainNode children. It also deduces the
+     * which will contain the DomainNode children. It also deduces the
      * operator from the domain.
      * @see DomainTree._addFlattenedChildren
      */

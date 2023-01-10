@@ -5,6 +5,7 @@ import spreadsheet from "@spreadsheet/o_spreadsheet/o_spreadsheet_extended";
 import { getFirstPivotFunction } from "../pivot_helpers";
 import { FILTER_DATE_OPTION, monthsOptions } from "@spreadsheet/assets_backend/constants";
 import { Domain } from "@web/core/domain";
+import { NO_RECORD_AT_THIS_POSITION } from "../pivot_model";
 
 const { astToFormula } = spreadsheet;
 const { DateTime } = luxon;
@@ -96,9 +97,25 @@ export default class PivotUIPlugin extends spreadsheet.UIPlugin {
                 break;
             case "ADD_GLOBAL_FILTER":
             case "EDIT_GLOBAL_FILTER":
+            case "REMOVE_GLOBAL_FILTER":
             case "SET_GLOBAL_FILTER_VALUE":
             case "CLEAR_GLOBAL_FILTER_VALUE":
                 this._addDomains();
+                break;
+            case "UNDO":
+            case "REDO":
+                if (
+                    cmd.commands.find((command) =>
+                        [
+                            "ADD_GLOBAL_FILTER",
+                            "EDIT_GLOBAL_FILTER",
+                            "REMOVE_GLOBAL_FILTER",
+                        ].includes(command.type)
+                    )
+                ) {
+                    this._addDomains();
+                }
+                break;
         }
     }
 
@@ -222,6 +239,9 @@ export default class PivotUIPlugin extends spreadsheet.UIPlugin {
             const pivotFieldMatching = this.getters.getPivotFieldMatching(pivotId, filter.id);
             if (pivotFieldMatching && pivotFieldMatching.chain === field.name) {
                 let value = dataSource.getPivotHeaderValue(evaluatedArgs.slice(-2));
+                if (value === NO_RECORD_AT_THIS_POSITION) {
+                    continue;
+                }
                 let transformedValue;
                 const currentValue = this.getters.getGlobalFilterValue(filter.id);
                 switch (filter.type) {

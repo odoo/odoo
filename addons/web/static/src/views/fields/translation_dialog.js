@@ -79,7 +79,8 @@ export class TranslationDialog extends Component {
                     if (!translations[term.lang]) {
                         translations[term.lang] = {};
                     }
-                    translations[term.lang][term.source] = updatedTermValue;
+                    const source = term.value ? term.value : term.source;
+                    translations[term.lang][source] = updatedTermValue;
                 } else {
                     translations[term.lang] = updatedTermValue;
                 }

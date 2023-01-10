@@ -68,8 +68,8 @@ Wysiwyg.include({
     /**
      * @override
      **/
-    _editorOptions: function () {
-        let options = this._super.apply(this, arguments);
+    _getEditorOptions: function () {
+        const options = this._super.apply(this, arguments);
         options.getContextFromParentRect = () => {
             return this.$iframe && this.$iframe.length ? this.$iframe[0].getBoundingClientRect() : { top: 0, left: 0 };
         };
@@ -84,8 +84,12 @@ Wysiwyg.include({
      */
     _loadIframe: function () {
         var self = this;
+        const isEditableRoot = this.$editable === this.$root;
         this.$editable = $('<div class="note-editable oe_structure odoo-editor-editable"></div>');
         this.$el.removeClass('note-editable oe_structure odoo-editor-editable');
+        if (isEditableRoot) {
+            this.$root = this.$editable;
+        }
         this.$iframe = $('<iframe class="wysiwyg_iframe o_iframe">').css({
             'min-height': '55vh',
             width: '100%'

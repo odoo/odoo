@@ -20,6 +20,7 @@
         <field name="amount_type">percent</field>
         <field name="amount">-47.0</field>
         <field name="price_include" eval="0"/>
+        <field name="tax_group_id" ref="tax_group_withheld"/>
         <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
                 (0,0, {'repartition_type': 'base'}),
                 (0,0, {
@@ -217,47 +218,12 @@
                 }),
             ]"/>
     </record>
-    <record id="au_tax_purchase_10" model="account.tax.template">
-        <field name="chart_template_id" ref="l10n_au_chart_template"/>
-        <field name="name">Purch (10%)</field>
-        <field name="sequence">1</field>
-        <field name="description">GST Purchases</field>
-        <field name="type_tax_use">purchase</field>
-        <field name="tax_scope">consu</field>
-        <field name="amount_type">percent</field>
-        <field name="amount">10.0</field>
-        <field name="price_include" eval="0"/>
-        <field name="tax_group_id" ref="tax_group_gst_10"/>
-        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
-                (0,0, {
-                    'repartition_type': 'base',
-                    'plus_report_expression_ids': [ref('account_tax_report_gstrpt_g11_tag')],
-                }),
-                (0,0, {
-                    'repartition_type': 'tax',
-                    'account_id': ref('au_21330'),
-                    'plus_report_expression_ids': [ref('account_tax_report_gstrpt_g11_tag'), ref('account_tax_report_gstrpt_comparison_gl_tag')],
-                }),
-            ]"/>
-        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
-                (0,0, {
-                    'repartition_type': 'base',
-                    'minus_report_expression_ids': [ref('account_tax_report_gstrpt_g11_tag')],
-                }),
-                (0,0, {
-                    'repartition_type': 'tax',
-                    'account_id': ref('au_21330'),
-                    'minus_report_expression_ids': [ref('account_tax_report_gstrpt_g11_tag'), ref('account_tax_report_gstrpt_comparison_gl_tag')],
-                }),
-            ]"/>
-    </record>
     <record id="au_tax_purchase_10_service" model="account.tax.template">
         <field name="chart_template_id" ref="l10n_au_chart_template"/>
         <field name="name">Purch (10%)</field>
         <field name="sequence">1</field>
         <field name="description">GST Purchases</field>
         <field name="type_tax_use">purchase</field>
-        <field name="tax_scope">service</field>
         <field name="amount_type">percent</field>
         <field name="amount">10.0</field>
         <field name="price_include" eval="0"/>
@@ -333,47 +299,12 @@
         <field name="children_tax_ids" eval="[(6,0,[ref('au_tax_purchase_10_service_tpar'), ref('au_tax_witheld')])]"/>
         <field name="tax_group_id" ref="tax_group_gst_10"/>
     </record>
-    <record id="au_tax_purchase_inc_10" model="account.tax.template">
-        <field name="chart_template_id" ref="l10n_au_chart_template"/>
-        <field name="name">GST Inc Purch (10%)</field>
-        <field name="sequence">2</field>
-        <field name="description">GST Inclusive Purchases</field>
-        <field name="type_tax_use">purchase</field>
-        <field name="tax_scope">consu</field>
-        <field name="amount_type">percent</field>
-        <field name="amount">10.0</field>
-        <field name="price_include" eval="1"/>
-        <field name="tax_group_id" ref="tax_group_gst_10"/>
-        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
-                (0,0, {
-                    'repartition_type': 'base',
-                    'plus_report_expression_ids': [ref('account_tax_report_gstrpt_g11_tag')],
-                }),
-                (0,0, {
-                    'repartition_type': 'tax',
-                    'account_id': ref('au_21330'),
-                    'plus_report_expression_ids': [ref('account_tax_report_gstrpt_g11_tag'), ref('account_tax_report_gstrpt_comparison_gl_tag')],
-                }),
-            ]"/>
-        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
-                (0,0, {
-                    'repartition_type': 'base',
-                    'minus_report_expression_ids': [ref('account_tax_report_gstrpt_g11_tag')],
-                }),
-                (0,0, {
-                    'repartition_type': 'tax',
-                    'account_id': ref('au_21330'),
-                    'minus_report_expression_ids': [ref('account_tax_report_gstrpt_g11_tag'), ref('account_tax_report_gstrpt_comparison_gl_tag')],
-                }),
-            ]"/>
-    </record>
     <record id="au_tax_purchase_inc_10_service" model="account.tax.template">
         <field name="chart_template_id" ref="l10n_au_chart_template"/>
         <field name="name">GST Inc Purch (10%)</field>
         <field name="sequence">2</field>
         <field name="description">GST Inclusive Purchases</field>
         <field name="type_tax_use">purchase</field>
-        <field name="tax_scope">service</field>
         <field name="amount_type">percent</field>
         <field name="amount">10.0</field>
         <field name="price_include" eval="1"/>
@@ -449,47 +380,12 @@
         <field name="children_tax_ids" eval="[(6,0,[ref('au_tax_purchase_inc_10_service_tpar'), ref('au_tax_witheld')])]"/>
         <field name="tax_group_id" ref="tax_group_gst_10"/>
     </record>
-    <record id="au_tax_purchase_capital" model="account.tax.template">
-        <field name="chart_template_id" ref="l10n_au_chart_template"/>
-        <field name="name">Capital (10.0%)</field>
-        <field name="sequence">3</field>
-        <field name="description">Capital Purchases</field>
-        <field name="type_tax_use">purchase</field>
-        <field name="tax_scope">consu</field>
-        <field name="amount_type">percent</field>
-        <field name="amount">10.0</field>
-        <field name="price_include" eval="0"/>
-        <field name="tax_group_id" ref="tax_group_gst_10"/>
-        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
-                (0,0, {
-                    'repartition_type': 'base',
-                    'plus_report_expression_ids': [ref('account_tax_report_gstrpt_g10_tag')],
-                }),
-                (0,0, {
-                    'repartition_type': 'tax',
-                    'account_id': ref('au_21330'),
-                    'plus_report_expression_ids': [ref('account_tax_report_gstrpt_g10_tag'), ref('account_tax_report_gstrpt_comparison_gl_tag')],
-                }),
-            ]"/>
-        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
-                (0,0, {
-                    'repartition_type': 'base',
-                    'minus_report_expression_ids': [ref('account_tax_report_gstrpt_g10_tag')],
-                }),
-                (0,0, {
-                    'repartition_type': 'tax',
-                    'account_id': ref('au_21330'),
-                    'minus_report_expression_ids': [ref('account_tax_report_gstrpt_g10_tag'), ref('account_tax_report_gstrpt_comparison_gl_tag')],
-                }),
-            ]"/>
-    </record>
     <record id="au_tax_purchase_capital_service" model="account.tax.template">
         <field name="chart_template_id" ref="l10n_au_chart_template"/>
         <field name="name">Capital (10.0%)</field>
         <field name="sequence">3</field>
         <field name="description">Capital Purchases</field>
         <field name="type_tax_use">purchase</field>
-        <field name="tax_scope">service</field>
         <field name="amount_type">percent</field>
         <field name="amount">10.0</field>
         <field name="price_include" eval="0"/>
@@ -565,39 +461,12 @@
         <field name="children_tax_ids" eval="[(6,0,[ref('au_tax_purchase_capital_service_tpar'), ref('au_tax_witheld')])]"/>
         <field name="tax_group_id" ref="tax_group_gst_10"/>
     </record>
-    <record id="au_tax_purchase_0" model="account.tax.template">
-        <field name="chart_template_id" ref="l10n_au_chart_template"/>
-        <field name="name">Zero Rated Purch</field>
-        <field name="sequence">4</field>
-        <field name="description">Capital Purchases</field>
-        <field name="type_tax_use">purchase</field>
-        <field name="tax_scope">consu</field>
-        <field name="amount_type">percent</field>
-        <field name="amount">0</field>
-        <field name="price_include" eval="0"/>
-        <field name="tax_group_id" ref="tax_group_gst_0"/>
-        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
-                (0,0, {
-                    'repartition_type': 'base',
-                    'plus_report_expression_ids': [ref('account_tax_report_gstrpt_g11_tag'), ref('account_tax_report_gstrpt_g14_tag')],
-                }),
-                (0,0, {'repartition_type': 'tax'}),
-            ]"/>
-        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
-                (0,0, {
-                    'repartition_type': 'base',
-                    'minus_report_expression_ids': [ref('account_tax_report_gstrpt_g11_tag'), ref('account_tax_report_gstrpt_g14_tag')],
-                }),
-                (0,0, {'repartition_type': 'tax'}),
-            ]"/>
-    </record>
     <record id="au_tax_purchase_0_service" model="account.tax.template">
         <field name="chart_template_id" ref="l10n_au_chart_template"/>
         <field name="name">Zero Rated Purch</field>
         <field name="sequence">4</field>
         <field name="description">Capital Purchases</field>
         <field name="type_tax_use">purchase</field>
-        <field name="tax_scope">service</field>
         <field name="amount_type">percent</field>
         <field name="amount">0</field>
         <field name="price_include" eval="0"/>
@@ -661,50 +530,14 @@
         <field name="children_tax_ids" eval="[(6,0,[ref('au_tax_purchase_0_service_tpar'), ref('au_tax_witheld')])]"/>
         <field name="tax_group_id" ref="tax_group_gst_10"/>
     </record>
-    <record id="au_tax_purchase_taxable_import" model="account.tax.template">
-        <field name="chart_template_id" ref="l10n_au_chart_template"/>
-        <field name="name">Purch (Taxable Imports)</field>
-        <field name="sequence">5</field>
-        <field name="description">Purchase (Taxable Imports) - Tax Paid Separately</field>
-        <field name="type_tax_use">purchase</field>
-        <field name="tax_scope">consu</field>
-        <field name="amount_type">percent</field>
-        <field name="amount">100000000000</field>
-        <!--
-          The tax percentage is so high because on imported goods we
-          needed to link the tax line acknowledgment (not to be paid)
-          on the customer invoice and what need to actually be
-          paid from another invoice given by a clearance house
-          (i.e. customs)
-          For more info see the complete discussion below
-          https://github.com/odoo/odoo/pull/48700#issuecomment-607586417
-        -->
-        <field name="price_include" eval="1"/>
-        <field name="tax_group_id" ref="tax_group_gst_100000000"/>
-        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
-                (0,0, {
-                    'repartition_type': 'base',
-                    'plus_report_expression_ids': [ref('account_tax_report_gstrpt_g11_tag'), ref('account_tax_report_gstrpt_g14_tag')],
-                }),
-                (0,0, {'repartition_type': 'tax'}),
-            ]"/>
-        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
-                (0,0, {
-                    'repartition_type': 'base',
-                    'minus_report_expression_ids': [ref('account_tax_report_gstrpt_g11_tag'), ref('account_tax_report_gstrpt_g14_tag')],
-                }),
-                (0,0, {'repartition_type': 'tax'}),
-            ]"/>
-    </record>
     <record id="au_tax_purchase_taxable_import_service" model="account.tax.template">
         <field name="chart_template_id" ref="l10n_au_chart_template"/>
         <field name="name">Purch (Taxable Imports)</field>
         <field name="sequence">5</field>
         <field name="description">Purchase (Taxable Imports) - Tax Paid Separately</field>
         <field name="type_tax_use">purchase</field>
-        <field name="tax_scope">service</field>
         <field name="amount_type">percent</field>
-        <field name="amount">100000000000</field>
+        <field name="amount">100</field>
         <field name="price_include" eval="1"/>
         <field name="tax_group_id" ref="tax_group_gst_100000000"/>
         <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
@@ -730,7 +563,7 @@
         <field name="type_tax_use">purchase</field>
         <field name="tax_scope">service</field>
         <field name="amount_type">percent</field>
-        <field name="amount">100000000000</field>
+        <field name="amount">100</field>
         <field name="price_include" eval="1"/>
         <field name="tax_group_id" ref="tax_group_gst_100000000"/>
         <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
@@ -766,45 +599,12 @@
         <field name="children_tax_ids" eval="[(6,0,[ref('au_tax_purchase_taxable_import_service_tpar'), ref('au_tax_witheld')])]"/>
         <field name="tax_group_id" ref="tax_group_gst_10"/>
     </record>
-    <record id="au_tax_purchase_input" model="account.tax.template">
-        <field name="chart_template_id" ref="l10n_au_chart_template"/>
-        <field name="name">Purch for Input Sales</field>
-        <field name="sequence">6</field>
-        <field name="description">Purchases for Input Taxed Sales</field>
-        <field name="type_tax_use">purchase</field>
-        <field name="tax_scope">consu</field>
-        <field name="amount_type">percent</field>
-        <field name="amount">10.0</field>
-        <field name="price_include" eval="0"/>
-        <field name="tax_group_id" ref="tax_group_gst_10"/>
-        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
-                (0,0, {
-                    'repartition_type': 'base',
-                    'plus_report_expression_ids': [ref('account_tax_report_gstrpt_g11_tag'), ref('account_tax_report_gstrpt_g13_tag')],
-                }),
-                (0,0, {
-                    'repartition_type': 'tax',
-                    'plus_report_expression_ids': [ref('account_tax_report_gstrpt_g11_tag'), ref('account_tax_report_gstrpt_g13_tag')],
-                }),
-            ]"/>
-        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
-                (0,0, {
-                    'repartition_type': 'base',
-                    'minus_report_expression_ids': [ref('account_tax_report_gstrpt_g11_tag'), ref('account_tax_report_gstrpt_g13_tag')],
-                }),
-                (0,0, {
-                    'repartition_type': 'tax',
-                    'minus_report_expression_ids': [ref('account_tax_report_gstrpt_g11_tag'), ref('account_tax_report_gstrpt_g13_tag')],
-                }),
-            ]"/>
-    </record>
     <record id="au_tax_purchase_input_service" model="account.tax.template">
         <field name="chart_template_id" ref="l10n_au_chart_template"/>
         <field name="name">Purch for Input Sales</field>
         <field name="sequence">6</field>
         <field name="description">Purchases for Input Taxed Sales</field>
         <field name="type_tax_use">purchase</field>
-        <field name="tax_scope">service</field>
         <field name="amount_type">percent</field>
         <field name="amount">10.0</field>
         <field name="price_include" eval="0"/>
@@ -876,45 +676,12 @@
         <field name="children_tax_ids" eval="[(6,0,[ref('au_tax_purchase_input_service_tpar'), ref('au_tax_witheld')])]"/>
         <field name="tax_group_id" ref="tax_group_gst_10"/>
     </record>
-    <record id="au_tax_purchase_private" model="account.tax.template">
-        <field name="chart_template_id" ref="l10n_au_chart_template"/>
-        <field name="name">Purch Private (10%)</field>
-        <field name="sequence">7</field>
-        <field name="description">Purchases for Private use or not deductible</field>
-        <field name="type_tax_use">purchase</field>
-        <field name="tax_scope">consu</field>
-        <field name="amount_type">percent</field>
-        <field name="amount">10.0</field>
-        <field name="price_include" eval="0"/>
-        <field name="tax_group_id" ref="tax_group_gst_10"/>
-        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
-                (0,0, {
-                    'repartition_type': 'base',
-                    'plus_report_expression_ids': [ref('account_tax_report_gstrpt_g11_tag'), ref('account_tax_report_gstrpt_g15_tag')],
-                }),
-                (0,0, {
-                    'repartition_type': 'tax',
-                    'plus_report_expression_ids': [ref('account_tax_report_gstrpt_g11_tag'), ref('account_tax_report_gstrpt_g15_tag')],
-                }),
-            ]"/>
-        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
-                (0,0, {
-                    'repartition_type': 'base',
-                    'minus_report_expression_ids': [ref('account_tax_report_gstrpt_g11_tag'), ref('account_tax_report_gstrpt_g15_tag')],
-                }),
-                (0,0, {
-                    'repartition_type': 'tax',
-                    'minus_report_expression_ids': [ref('account_tax_report_gstrpt_g11_tag'), ref('account_tax_report_gstrpt_g15_tag')],
-                }),
-            ]"/>
-    </record>
     <record id="au_tax_purchase_private_service" model="account.tax.template">
         <field name="chart_template_id" ref="l10n_au_chart_template"/>
         <field name="name">Purch Private (10%)</field>
         <field name="sequence">7</field>
         <field name="description">Purchases for Private use or not deductible</field>
         <field name="type_tax_use">purchase</field>
-        <field name="tax_scope">service</field>
         <field name="amount_type">percent</field>
         <field name="amount">10.0</field>
         <field name="price_include" eval="0"/>
@@ -986,43 +753,14 @@
         <field name="children_tax_ids" eval="[(6,0,[ref('au_tax_purchase_private_service_tpar'), ref('au_tax_witheld')])]"/>
         <field name="tax_group_id" ref="tax_group_gst_10"/>
     </record>
-    <record id="au_tax_purchase_gst_only" model="account.tax.template">
-        <field name="chart_template_id" ref="l10n_au_chart_template"/>
-        <field name="name">GST Only on Imports</field>
-        <field name="sequence">8</field>
-        <field name="description">GST Only on Imports</field>
-        <field name="type_tax_use">purchase</field>
-        <field name="tax_scope">consu</field>
-        <field name="amount_type">percent</field>
-        <field name="amount">100000000</field>
-        <field name="price_include" eval="1"/>
-        <field name="tax_group_id" ref="tax_group_gst_100000000"/>
-        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
-                (0,0, {'repartition_type': 'base'}),
-                (0,0, {
-                    'repartition_type': 'tax',
-                    'account_id': ref('au_21330'),
-                    'plus_report_expression_ids': [ref('account_tax_report_gstrpt_gstonly_tag'), ref('account_tax_report_gstrpt_comparison_gl_tag')],
-                }),
-            ]"/>
-        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
-                (0,0, {'repartition_type': 'base'}),
-                (0,0, {
-                    'repartition_type': 'tax',
-                    'account_id': ref('au_21330'),
-                    'minus_report_expression_ids': [ref('account_tax_report_gstrpt_gstonly_tag'), ref('account_tax_report_gstrpt_comparison_gl_tag')],
-                }),
-            ]"/>
-    </record>
     <record id="au_tax_purchase_gst_only_service" model="account.tax.template">
         <field name="chart_template_id" ref="l10n_au_chart_template"/>
         <field name="name">GST Only on Imports</field>
         <field name="sequence">8</field>
         <field name="description">GST Only on Imports</field>
         <field name="type_tax_use">purchase</field>
-        <field name="tax_scope">service</field>
         <field name="amount_type">percent</field>
-        <field name="amount">100000000</field>
+        <field name="amount">100</field>
         <field name="price_include" eval="1"/>
         <field name="tax_group_id" ref="tax_group_gst_100000000"/>
         <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
@@ -1050,7 +788,7 @@
         <field name="type_tax_use">purchase</field>
         <field name="tax_scope">service</field>
         <field name="amount_type">percent</field>
-        <field name="amount">100000000</field>
+        <field name="amount">100</field>
         <field name="price_include" eval="1"/>
         <field name="tax_group_id" ref="tax_group_gst_100000000"/>
         <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
@@ -1084,47 +822,12 @@
         <field name="children_tax_ids" eval="[(6,0,[ref('au_tax_purchase_gst_only_service_tpar'), ref('au_tax_witheld')])]"/>
         <field name="tax_group_id" ref="tax_group_gst_10"/>
     </record>
-    <record id="au_tax_purchase_adj" model="account.tax.template">
-        <field name="chart_template_id" ref="l10n_au_chart_template"/>
-        <field name="name">Purch Adj (10%)</field>
-        <field name="sequence">9</field>
-        <field name="description">Tax Adjustments (Purchases)</field>
-        <field name="type_tax_use">purchase</field>
-        <field name="tax_scope">consu</field>
-        <field name="amount_type">percent</field>
-        <field name="amount">10.0</field>
-        <field name="price_include" eval="0"/>
-        <field name="tax_group_id" ref="tax_group_gst_10"/>
-        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
-                (0,0, {
-                    'repartition_type': 'base',
-                    'plus_report_expression_ids': [ref('account_tax_report_gstrpt_g18_tag')],
-                }),
-                (0,0, {
-                    'repartition_type': 'tax',
-                    'account_id': ref('au_21330'),
-                    'plus_report_expression_ids': [ref('account_tax_report_gstrpt_g18_tag'), ref('account_tax_report_gstrpt_comparison_gl_tag')],
-                }),
-            ]"/>
-        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
-                (0,0, {
-                    'repartition_type': 'base',
-                    'minus_report_expression_ids': [ref('account_tax_report_gstrpt_g18_tag')],
-                }),
-                (0,0, {
-                    'repartition_type': 'tax',
-                    'account_id': ref('au_21330'),
-                    'minus_report_expression_ids': [ref('account_tax_report_gstrpt_g18_tag'), ref('account_tax_report_gstrpt_comparison_gl_tag')],
-                }),
-            ]"/>
-    </record>
     <record id="au_tax_purchase_adj_service" model="account.tax.template">
         <field name="chart_template_id" ref="l10n_au_chart_template"/>
         <field name="name">Purch Adj (10%)</field>
         <field name="sequence">9</field>
         <field name="description">Tax Adjustments (Purchases)</field>
         <field name="type_tax_use">purchase</field>
-        <field name="tax_scope">service</field>
         <field name="amount_type">percent</field>
         <field name="amount">10.0</field>
         <field name="price_include" eval="0"/>

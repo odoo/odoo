@@ -103,6 +103,9 @@ QUnit.module("Fields", (hooks) => {
         };
 
         setupViewRegistries();
+        patchWithCleanup(browser, {
+            setTimeout: (fn) => Promise.resolve().then(fn),
+        });
     });
 
     QUnit.module("Many2ManyTagsField");
@@ -905,12 +908,10 @@ QUnit.module("Fields", (hooks) => {
             null,
             "new"
         );
-        await selectDropdownItem(target, "timmy", `Create "new"`);
-
+        await clickOpenedDropdownItem(target, "timmy", `Create "new"`);
         assert.containsOnce(target, ".o_field_many2many_tags .badge");
 
         await clickSave(target);
-
         assert.strictEqual(
             target.querySelector(".o_field_many2many_tags").textContent.trim(),
             "new"
@@ -1444,7 +1445,7 @@ QUnit.module("Fields", (hooks) => {
         // try to quick create a record
         await triggerEvent(target, ".o_field_many2many_tags input", "focus");
         await editInput(target, ".o_field_many2many_tags input", "new partner");
-        await selectDropdownItem(target, "timmy", `Create "new partner"`);
+        await clickOpenedDropdownItem(target, "timmy", `Create "new partner"`);
 
         // as the quick create failed, a dialog should be open to 'slow create' the record
         assert.containsOnce(target, ".modal .o_form_view");
@@ -1582,9 +1583,6 @@ QUnit.module("Fields", (hooks) => {
     });
 
     QUnit.test("Many2ManyTagsField supports 'create' props to be a Boolean", async (assert) => {
-        patchWithCleanup(browser, {
-            setTimeout: (fn) => Promise.resolve().then(fn),
-        });
         await makeView({
             type: "form",
             resModel: "partner",
@@ -1625,9 +1623,6 @@ QUnit.module("Fields", (hooks) => {
         serverData.views = {
             "partner_type,false,form": `<form><field name="name"/><field name="color"/></form>`,
         };
-        patchWithCleanup(browser, {
-            setTimeout: (fn) => Promise.resolve().then(fn),
-        });
         await makeView({
             type: "form",
             resModel: "partner",
@@ -1657,9 +1652,6 @@ QUnit.module("Fields", (hooks) => {
     });
 
     QUnit.test("Many2ManyTagsField with option 'no_create' set to true", async (assert) => {
-        patchWithCleanup(browser, {
-            setTimeout: (fn) => Promise.resolve().then(fn),
-        });
         await makeView({
             type: "form",
             resModel: "partner",
@@ -1673,9 +1665,6 @@ QUnit.module("Fields", (hooks) => {
     });
 
     QUnit.test("Many2ManyTagsField with attribute 'can_create' set to false", async (assert) => {
-        patchWithCleanup(browser, {
-            setTimeout: (fn) => Promise.resolve().then(fn),
-        });
         await makeView({
             type: "form",
             resModel: "partner",
@@ -1688,10 +1677,6 @@ QUnit.module("Fields", (hooks) => {
     });
 
     QUnit.test("Many2ManyTagsField with arch context in form view", async (assert) => {
-        patchWithCleanup(browser, {
-            setTimeout: (fn) => Promise.resolve().then(fn),
-        });
-
         await makeView({
             type: "form",
             resModel: "partner",
@@ -1724,10 +1709,6 @@ QUnit.module("Fields", (hooks) => {
     });
 
     QUnit.test("Many2ManyTagsField with arch context in list view", async (assert) => {
-        patchWithCleanup(browser, {
-            setTimeout: (fn) => Promise.resolve().then(fn),
-        });
-
         await makeView({
             type: "list",
             resModel: "partner",

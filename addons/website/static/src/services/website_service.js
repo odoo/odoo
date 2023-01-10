@@ -57,11 +57,15 @@ export const websiteService = {
 
         hotkey.add("escape", () => {
             // Toggle fullscreen mode when pressing escape.
-            if (currentWebsiteId) {
-                fullscreen = !fullscreen;
-                document.body.classList.toggle('o_website_fullscreen', fullscreen);
-                bus.trigger((fullscreen ? 'FULLSCREEN-INDICATION-SHOW' : 'FULLSCREEN-INDICATION-HIDE'));
+            if (!currentWebsiteId && !fullscreen) {
+                // Only allow to use this feature while on the website app, or
+                // while it is already fullscreen (in case you left the website
+                // app in fullscreen mode, thanks to CTRL-K).
+                return;
             }
+            fullscreen = !fullscreen;
+            document.body.classList.toggle('o_website_fullscreen', fullscreen);
+            bus.trigger(fullscreen ? 'FULLSCREEN-INDICATION-SHOW' : 'FULLSCREEN-INDICATION-HIDE');
         }, { global: true });
         registry.category('main_components').add('FullscreenIndication', {
             Component: FullscreenIndication,
@@ -109,11 +113,14 @@ export const websiteService = {
                     contentWindow = null;
                     return;
                 }
-                // Not all files have a dataset. (e.g. XML)
-                if (!document.documentElement.dataset) {
+                const { dataset } = document.documentElement;
+                // XML files have no dataset on Firefox, and an empty one on
+                // Chrome.
+                const isWebsitePage = dataset && dataset.websiteId;
+                if (!isWebsitePage) {
                     currentMetadata = {};
                 } else {
-                    const { mainObject, seoObject, isPublished, canPublish, editableInBackend, translatable, viewXmlid } = document.documentElement.dataset;
+                    const { mainObject, seoObject, isPublished, canPublish, editableInBackend, translatable, viewXmlid } = dataset;
                     const contentMenus = [...document.querySelectorAll('[data-content_menu_id]')].map(menu => [
                         menu.dataset.menu_name,
                         menu.dataset.content_menu_id,
@@ -182,7 +189,11 @@ export const websiteService = {
                 invalidateSnippetCache = value;
             },
 
-            goToWebsite({ websiteId, path, edition, translation } = {}) {
+            goToWebsite({ websiteId, path, edition, translation, lang } = {}) {
+                if (lang) {
+                    invalidateSnippetCache = true;
+                    path = `/website/lang/${lang}?r=${encodeURIComponent(path)}`;
+                }
                 action.doAction('website.website_preview', {
                     clearBreadcrumbs: true,
                     additionalContext: {

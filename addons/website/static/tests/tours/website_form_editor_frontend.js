@@ -138,6 +138,11 @@ tour.register("website_form_editor_tour_submit", {
         trigger: "input[name='email_cc']",
     },
     {
+        content: "Select state option",
+        trigger: "select[name='State']",
+        run: 'text 44 - UK',
+    },
+    {
         content:  "Send the form",
         trigger:  ".s_website_form_send"
     },
@@ -161,7 +166,7 @@ tour.register("website_form_editor_tour_results", {
                         ['email_to', '=', 'test@test.test'],
                         ['body_html', 'like', 'A useless message'],
                         ['body_html', 'like', 'Service : Development Service'],
-                        ['body_html', 'like', 'State : Belgium'],
+                        ['body_html', 'like', 'State : 44 - UK'],
                         ['body_html', 'like', 'Products : Xperia,Wiko Stairway']
                     ]],
                 });

@@ -5,14 +5,15 @@
 # Translators:
 # Martin Trigaux, 2022
 # Ryoko Tsuda <ryoko@quartile.co>, 2022
+# Andy Yiu, 2022
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 16.0beta\n"
+"Project-Id-Version: Odoo Server 16.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-10-04 09:24+0000\n"
+"POT-Creation-Date: 2022-12-15 12:50+0000\n"
 "PO-Revision-Date: 2022-09-22 05:45+0000\n"
-"Last-Translator: Ryoko Tsuda <ryoko@quartile.co>, 2022\n"
+"Last-Translator: Andy Yiu, 2022\n"
 "Language-Team: Japanese (https://www.transifex.com/odoo/teams/41243/ja/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -21,6 +22,7 @@ msgstr ""
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: delivery
+#. odoo-python
 #: code:addons/delivery/models/sale_order.py:0
 #, python-format
 msgid " (Estimated Cost: %s )"
@@ -37,6 +39,7 @@ msgid "<i class=\"fa fa-arrow-right me-1\"/>Get rate"
 msgstr ""
 
 #. module: delivery
+#. odoo-python
 #: code:addons/delivery/models/delivery_carrier.py:0
 #, python-format
 msgid ""
@@ -90,7 +93,7 @@ msgstr "<span> - 重量　: </span>"
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.report_package_barcode_small_delivery
 msgid "<span>Shipping Weight: </span>"
-msgstr "<span>出荷重量　: </span>"
+msgstr "<span>荷物重量: </span>"
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.report_delivery_document2
@@ -106,12 +109,12 @@ msgstr "<strong>HS コード</strong>"
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.delivery_report_saleorder_document
 msgid "<strong>Shipping Description:</strong>"
-msgstr ""
+msgstr "<strong>配送概要:</strong>"
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.report_package_barcode_delivery
 msgid "<strong>Shipping Weight: </strong>"
-msgstr ""
+msgstr "<strong>荷物重量: </strong>"
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.report_package_barcode_delivery
@@ -119,6 +122,8 @@ msgid ""
 "<strong>Shipping Weight:</strong>\n"
 "                    <br/>"
 msgstr ""
+"<strong>荷物重量:</strong>\n"
+"                    <br/>"
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.report_delivery_document2
@@ -172,6 +177,7 @@ msgid "Add"
 msgstr "追加"
 
 #. module: delivery
+#. odoo-python
 #: code:addons/delivery/models/sale_order.py:0
 #: code:addons/delivery/wizard/choose_delivery_carrier.py:0
 #, python-format
@@ -480,6 +486,7 @@ msgid "Environment"
 msgstr "環境"
 
 #. module: delivery
+#. odoo-python
 #: code:addons/delivery/models/delivery_carrier.py:0
 #: code:addons/delivery/models/delivery_grid.py:0
 #, python-format
@@ -517,6 +524,7 @@ msgid "Fixed Price"
 msgstr "固定価格"
 
 #. module: delivery
+#. odoo-python
 #: code:addons/delivery/models/sale_order.py:0
 #, python-format
 msgid "Free Shipping"
@@ -524,7 +532,6 @@ msgstr "送料無料"
 
 #. module: delivery
 #: model:delivery.carrier,name:delivery.free_delivery_carrier
-#: model:product.product,name:delivery.product_product_delivery
 #: model:product.template,name:delivery.product_product_delivery_product_template
 msgid "Free delivery charges"
 msgstr "配送無料"
@@ -641,7 +648,6 @@ msgstr "最終更新日"
 
 #. module: delivery
 #: model:delivery.carrier,name:delivery.delivery_local_delivery
-#: model:product.product,name:delivery.product_product_local_delivery
 #: model:product.template,name:delivery.product_product_local_delivery_product_template
 msgid "Local Delivery"
 msgstr ""
@@ -682,11 +688,19 @@ msgid "Name"
 msgstr "名称"
 
 #. module: delivery
+#. odoo-python
+#: code:addons/delivery/models/delivery_carrier.py:0
+#, python-format
+msgid "New Providers"
+msgstr ""
+
+#. module: delivery
 #: model:ir.model.fields.selection,name:delivery.selection__stock_package_type__package_carrier_type__none
 msgid "No carrier integration"
 msgstr "連携配送業者はありません。"
 
 #. module: delivery
+#. odoo-python
 #: code:addons/delivery/models/delivery_grid.py:0
 #, python-format
 msgid "No price rule matching this order; delivery cost cannot be computed."
@@ -719,12 +733,14 @@ msgid "Package"
 msgstr "パッケージ"
 
 #. module: delivery
+#. odoo-python
 #: code:addons/delivery/models/stock_picking.py:0
 #, python-format
 msgid "Package Details"
 msgstr "梱包詳細"
 
 #. module: delivery
+#. odoo-python
 #: code:addons/delivery/wizard/choose_delivery_package.py:0
 #, python-format
 msgid "Package too heavy!"
@@ -749,6 +765,15 @@ msgstr "プレフィクス"
 #. module: delivery
 #: model:ir.model.constraint,message:delivery.constraint_delivery_zip_prefix_name_uniq
 msgid "Prefix already exists!"
+msgstr ""
+
+#. module: delivery
+#: model:ir.model.fields,help:delivery.field_delivery_carrier__zip_prefix_ids
+msgid ""
+"Prefixes of zip codes that this carrier applies to. Note that regular "
+"expressions can be used to support countries with varying zip code lengths, "
+"i.e. '$' can be added to end of prefix to match the exact zip (e.g. '100$' "
+"will only match '100' and not '1000')"
 msgstr ""
 
 #. module: delivery
@@ -884,6 +909,7 @@ msgid "Set to True if your credentials are certified for production."
 msgstr "証明書が本稼動のために認定されている場合はTrueに設定します。"
 
 #. module: delivery
+#. odoo-python
 #: code:addons/delivery/models/stock_picking.py:0
 #, python-format
 msgid ""
@@ -899,7 +925,7 @@ msgstr "配送費用"
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.view_picking_withcarrier_out_form
 msgid "Shipping Information"
-msgstr "出荷情報"
+msgstr "配送情報"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_choose_delivery_carrier__carrier_id
@@ -920,12 +946,12 @@ msgstr "配送方法"
 #: model:ir.model.fields,field_description:delivery.field_choose_delivery_package__shipping_weight
 #: model:ir.model.fields,field_description:delivery.field_stock_quant_package__shipping_weight
 msgid "Shipping Weight"
-msgstr "配送重量"
+msgstr "荷物重量"
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.report_package_barcode_small_delivery
 msgid "Shipping Weight:"
-msgstr ""
+msgstr "荷物重量:"
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier__shipping_insurance
@@ -991,10 +1017,19 @@ msgstr ""
 
 #. module: delivery
 #: model:delivery.carrier,name:delivery.delivery_carrier
-#: model:product.product,name:delivery.product_product_delivery_poste
 #: model:product.template,name:delivery.product_product_delivery_poste_product_template
 msgid "The Poste"
 msgstr "郵便"
+
+#. module: delivery
+#. odoo-python
+#: code:addons/delivery/models/delivery_carrier.py:0
+#: code:addons/delivery/models/delivery_carrier.py:0
+#, python-format
+msgid ""
+"The package cannot be created because the total weight of the products in "
+"the picking is 0.0 %s"
+msgstr ""
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier__get_return_label_from_portal
@@ -1013,18 +1048,21 @@ msgid "The shipping insurance must be a percentage between 0 and 100."
 msgstr ""
 
 #. module: delivery
+#. odoo-python
 #: code:addons/delivery/models/delivery_carrier.py:0
 #, python-format
 msgid "The shipping is free since the order amount exceeds %.2f."
 msgstr ""
 
 #. module: delivery
+#. odoo-python
 #: code:addons/delivery/wizard/choose_delivery_carrier.py:0
 #, python-format
 msgid "The shipping price will be set once the delivery is done."
 msgstr ""
 
 #. module: delivery
+#. odoo-python
 #: code:addons/delivery/wizard/choose_delivery_package.py:0
 #, python-format
 msgid ""
@@ -1033,6 +1071,7 @@ msgid ""
 msgstr ""
 
 #. module: delivery
+#. odoo-python
 #: code:addons/delivery/models/delivery_grid.py:0
 #, python-format
 msgid "There is no matching delivery rule."
@@ -1113,21 +1152,12 @@ msgid "Transfer"
 msgstr "運送"
 
 #. module: delivery
-#: model:product.product,uom_name:delivery.product_product_delivery
-#: model:product.product,uom_name:delivery.product_product_delivery_poste
-#: model:product.product,uom_name:delivery.product_product_local_delivery
-#: model:product.template,uom_name:delivery.product_product_delivery_poste_product_template
-#: model:product.template,uom_name:delivery.product_product_delivery_product_template
-#: model:product.template,uom_name:delivery.product_product_local_delivery_product_template
-msgid "Units"
-msgstr "個"
-
-#. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.choose_delivery_carrier_view_form
 msgid "Update"
 msgstr "更新"
 
 #. module: delivery
+#. odoo-python
 #: code:addons/delivery/models/sale_order.py:0
 #: model_terms:ir.ui.view,arch_db:delivery.view_order_form_with_carrier
 #, python-format
@@ -1169,12 +1199,12 @@ msgstr "重量×数量"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_stock_picking__shipping_weight
 msgid "Weight for Shipping"
-msgstr "配送重量"
+msgstr "荷物重量"
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.view_picking_withcarrier_out_form
 msgid "Weight for shipping"
-msgstr "配送重量"
+msgstr "荷物重量"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_choose_delivery_package__weight_uom_name
@@ -1189,6 +1219,7 @@ msgid "Weight:"
 msgstr ""
 
 #. module: delivery
+#. odoo-python
 #: code:addons/delivery/models/sale_order.py:0
 #, python-format
 msgid ""
@@ -1204,6 +1235,7 @@ msgid "You have multiple tracker links, they are available in the chatter."
 msgstr ""
 
 #. module: delivery
+#. odoo-python
 #: code:addons/delivery/models/stock_picking.py:0
 #, python-format
 msgid ""

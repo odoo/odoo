@@ -25,6 +25,7 @@
         t-att-data-hotkey="props.hotkey"
         t-att-data-tooltip="props.tooltip"
         t-att-tabindex="props.skipTogglerTabbing ? -1 : 0"
+        t-att-aria-expanded="state.open ? 'true' : 'false'"
         t-ref="togglerRef"
       >
         <t t-slot="toggler" />
@@ -33,6 +34,7 @@
         t-if="state.open"
         class="o-dropdown--menu dropdown-menu d-block"
         t-att-class="props.menuClass"
+        role="menu"
         t-ref="menuRef"
       >
         <t t-slot="default" />

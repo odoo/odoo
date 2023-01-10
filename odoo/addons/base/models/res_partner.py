@@ -487,7 +487,7 @@ class Partner(models.Model):
     @api.constrains('barcode')
     def _check_barcode_unicity(self):
         if self.barcode and self.env['res.partner'].search_count([('barcode', '=', self.barcode)]) > 1:
-            raise ValidationError('An other user already has this barcode')
+            raise ValidationError(_('Another user already has this barcode'))
 
     def _update_fields_values(self, fields):
         """ Returns dict of write() values for synchronizing ``fields`` """
@@ -526,7 +526,7 @@ class Partner(models.Model):
         partners that aren't `commercial entities` themselves, and will be
         delegated to the parent `commercial entity`. The list is meant to be
         extended by inheriting classes. """
-        return ['vat', 'company_registry']
+        return ['vat', 'company_registry', 'industry_id']
 
     def _commercial_sync_from_company(self):
         """ Handle sync of commercial fields when a new parent commercial entity is set,

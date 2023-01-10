@@ -923,6 +923,8 @@ class PreforkServer(CommonServer):
             # FIXME make longpolling process handle SIGTERM correctly
             self.worker_kill(self.long_polling_pid, signal.SIGKILL)
             self.long_polling_pid = None
+        if self.socket:
+            self.socket.close()
         if graceful:
             _logger.info("Stopping gracefully")
             super().stop()
@@ -941,8 +943,6 @@ class PreforkServer(CommonServer):
             _logger.info("Stopping forcefully")
         for pid in self.workers:
             self.worker_kill(pid, signal.SIGTERM)
-        if self.socket:
-            self.socket.close()
 
     def run(self, preload, stop):
         self.start()
@@ -1308,7 +1308,7 @@ def preload_registries(dbnames):
                 _logger.info("Starting post tests")
                 tests_before = registry._assertion_report.testsRun
                 post_install_suite = loader.make_suite(module_names, 'post_install')
-                if post_install_suite.countTestCases():
+                if post_install_suite.has_http_case():
                     with registry.cursor() as cr:
                         env = odoo.api.Environment(cr, odoo.SUPERUSER_ID, {})
                         env['ir.qweb']._pregenerate_assets_bundles()

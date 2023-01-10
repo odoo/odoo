@@ -9,10 +9,10 @@ class IrHttp(models.AbstractModel):
 
     def session_info(self):
         result = super().session_info()
-        result['dbuuid'] = request.env['ir.config_parameter'].sudo().get_param('database.uuid')
+        result['dbuuid'] = self.env['ir.config_parameter'].sudo().get_param('database.uuid')
         return result
 
     def get_frontend_session_info(self):
         result = super().get_frontend_session_info()
-        result['dbuuid'] = request.env['ir.config_parameter'].sudo().get_param('database.uuid')
+        result['dbuuid'] = self.env['ir.config_parameter'].sudo().get_param('database.uuid')
         return result

@@ -1,6 +1,6 @@
 <odoo>
 <template id="contact_name">
-    <div t-if="'name' in fields">
+    <div t-if="'name' in fields" class="o_force_ltr">
         <t t-if="object.name">
             <span itemprop="name" t-esc="name"/>
         </t>

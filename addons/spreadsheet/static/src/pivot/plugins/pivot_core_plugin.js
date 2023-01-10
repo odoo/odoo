@@ -1,7 +1,6 @@
 /** @odoo-module */
 
 /**
- * @typedef {import("@spreadsheet/global_filters/plugins/global_filters_ui_plugin").FieldMatching} FieldMatching
  *
  * @typedef {Object} PivotDefinition
  * @property {Array<string>} colGroupBys
@@ -20,6 +19,7 @@
  * @property {PivotDefinition} definition
  * @property {Object} fieldMatching
  *
+ * @typedef {import("@spreadsheet/global_filters/plugins/global_filters_core_plugin").FieldMatching} FieldMatching
  */
 
 import spreadsheet from "@spreadsheet/o_spreadsheet/o_spreadsheet_extended";
@@ -32,6 +32,7 @@ import CommandResult from "../../o_spreadsheet/cancelled_reason";
 import { _t } from "@web/core/l10n/translation";
 import { globalFiltersFieldMatchers } from "@spreadsheet/global_filters/plugins/global_filters_core_plugin";
 import { sprintf } from "@web/core/utils/strings";
+import { checkFilterFieldMatching } from "@spreadsheet/global_filters/helpers";
 
 const { CorePlugin } = spreadsheet;
 
@@ -69,9 +70,11 @@ export default class PivotCorePlugin extends CorePlugin {
                     return CommandResult.InvalidNextId;
                 }
                 break;
-            case "REMOVE_GLOBAL_FILTER":
-                this._removeGlobalFilter(cmd.id);
-                break;
+            case "ADD_GLOBAL_FILTER":
+            case "EDIT_GLOBAL_FILTER":
+                if (cmd.pivot) {
+                    return checkFilterFieldMatching(cmd.pivot);
+                }
         }
         return CommandResult.Success;
     }
@@ -258,11 +261,6 @@ export default class PivotCorePlugin extends CorePlugin {
     // -------------------------------------------------------------------------
     // Private
     // -------------------------------------------------------------------------
-    _removeGlobalFilter(filterId) {
-        for (const pivotId of this.getters.getPivotIds()) {
-            this.history.update("pivots", pivotId, "fieldMatching", filterId, undefined);
-        }
-    }
 
     /**
      *
@@ -275,9 +273,8 @@ export default class PivotCorePlugin extends CorePlugin {
     /**
      * Sets the current pivotFieldMatching on a pivot
      *
-     * @param {string} pivotId
      * @param {string} filterId
-     * @param {FieldMatching} fieldMatching
+     * @param {Record<string,FieldMatching>} pivotFieldMatches
      */
     _setPivotFieldMatching(filterId, pivotFieldMatches) {
         const pivots = { ...this.pivots };

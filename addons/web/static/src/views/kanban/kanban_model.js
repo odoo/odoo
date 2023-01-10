@@ -333,8 +333,9 @@ class KanbanGroup extends Group {
 }
 
 export class KanbanDynamicGroupList extends DynamicGroupList {
-    setup() {
+    setup(params, state) {
         super.setup(...arguments);
+        this.previousParams = state.previousParams || "[]";
 
         this.groupBy = this.groupBy.slice(0, 1);
 
@@ -358,6 +359,17 @@ export class KanbanDynamicGroupList extends DynamicGroupList {
         return [...super.fieldNames, ...this.sumFields];
     }
 
+    get currentParams() {
+        return JSON.stringify([this.domain, this.groupBy]);
+    }
+
+    exportState() {
+        return {
+            ...super.exportState(),
+            previousParams: this.currentParams,
+        };
+    }
+
     /**
      * After a reload, empty groups are expcted to disappear from the web_read_group.
      * However, if the parameters are the same (domain + groupBy), we want to
@@ -366,7 +378,20 @@ export class KanbanDynamicGroupList extends DynamicGroupList {
      * @override
      */
     async load() {
-        await this._loadWithProgressData(super.load());
+        const load = async () => {
+            const previousGroups = this.groups.map((g, i) => [g, i]);
+            await super.load();
+            if (this.previousParams === this.currentParams) {
+                for (const [group, index] of previousGroups) {
+                    const newGroup = this.groups.find((g) => group.valueEquals(g.value));
+                    if (!group.deleted && !newGroup) {
+                        group.empty();
+                        this.groups.splice(index, 0, group);
+                    }
+                }
+            }
+        };
+        await this._loadWithProgressData(load());
     }
 
     /**

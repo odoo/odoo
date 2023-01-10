@@ -6,6 +6,12 @@
         <field name="model">payment.link.wizard</field>
         <field name="arch" type="xml">
             <form string="Generate Payment Link">
+                <div class="alert alert-warning fw-bold"
+                     role="alert"
+                     attrs="{'invisible': [('partner_email', '!=', False)]}">
+                     This partner has no email, which may cause issues with some payment providers.
+                     Setting an email for this partner is advised.
+                </div>
                 <group>
                     <group>
                         <field name="res_id" invisible="1"/>
@@ -24,9 +30,6 @@
                 </group>
                 <group>
                     <field name="link" readonly="1" widget="CopyClipboardChar"/>
-                </group>
-                <group attrs="{'invisible':[('partner_email', '!=', False)]}">
-                    <p class="alert alert-warning fw-bold" role="alert">This partner has no email, which may cause issues with some payment providers. Setting an email for this partner is advised.</p>
                 </group>
                 <footer>
                     <button string="Close" class="btn-primary" special="cancel" data-hotkey="z"/>

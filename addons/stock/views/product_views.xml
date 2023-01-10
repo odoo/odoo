@@ -54,8 +54,9 @@
             <field name="inherit_id" ref="product.product_template_tree_view"/>
             <field name="arch" type="xml">
                 <field name="uom_id" position="before">
-                    <field name="qty_available" attrs="{'invisible':[('type', '!=', 'product')]}" optional="show" decoration-danger="qty_available &lt; 0"/>
-                    <field name="virtual_available" attrs="{'invisible':[('type', '!=', 'product')]}" optional="show" decoration-danger="virtual_available &lt; 0" decoration-bf="1"/>
+                    <field name="show_on_hand_qty_status_button" invisible="1"/>
+                    <field name="qty_available" attrs="{'invisible':[('show_on_hand_qty_status_button', '=', False)]}" optional="show" decoration-danger="qty_available &lt; 0"/>
+                    <field name="virtual_available" attrs="{'invisible':[('show_on_hand_qty_status_button', '=', False)]}" optional="show" decoration-danger="virtual_available &lt; 0" decoration-bf="1"/>
                 </field>
                 <field name="default_code" position="after">
                     <field name="responsible_id" widget="many2one_avatar_user"/>
@@ -157,9 +158,10 @@
             <field name="arch" type="xml">
                 <xpath expr="//kanban" position="inside">
                     <field name="type"/>
+                    <field name="show_on_hand_qty_status_button"/>
                 </xpath>
                 <xpath expr="//div[@name='product_lst_price']" position="after">
-                    <div t-if="record.type.raw_value == 'product'">On hand: <field name="qty_available"/> <field name="uom_id"/></div>
+                    <div t-if="record.show_on_hand_qty_status_button.raw_value">On hand: <field name="qty_available"/> <field name="uom_id"/></div>
                 </xpath>
             </field>
         </record>

@@ -301,6 +301,7 @@ export async function testEditor(Editor = OdooEditor, spec, options = {}) {
         } else {
             document.getSelection().removeAllRanges();
         }
+        editor.observerUnactive('beforeUnitTests');
 
         // we have to sanitize after having put the cursor
         sanitize(editor.editable);
@@ -318,7 +319,9 @@ export async function testEditor(Editor = OdooEditor, spec, options = {}) {
         }
 
         if (spec.stepFunction) {
+            editor.observerActive('beforeUnitTests');
             await spec.stepFunction(editor);
+            editor.observerUnactive('afterUnitTests');
         }
 
         if (spec.contentAfterEdit) {
@@ -425,13 +428,40 @@ export async function click(el, options) {
     await nextTickFrame();
 }
 
-
 export async function deleteForward(editor) {
-    editor.execCommand('oDeleteForward');
+    const selection = document.getSelection();
+    if (selection.isCollapsed) {
+        editor.execCommand('oDeleteForward');
+    } else {
+        // Better representation of what happened in the editor when the user
+        // presses the delete key.
+        await triggerEvent(editor.editable, 'keydown', { key: 'Delete' });
+        editor.document.execCommand('delete');
+    }
 }
 
 export async function deleteBackward(editor) {
-    editor.execCommand('oDeleteBackward');
+    const selection = document.getSelection();
+    if (selection.isCollapsed) {
+        editor.execCommand('oDeleteBackward');
+    } else {
+        // Better representation of what happened in the editor when the user
+        // presses the backspace key.
+        await triggerEvent(editor.editable, 'keydown', { key: 'Backspace' });
+        editor.document.execCommand('delete');
+    }
+}
+
+export async function deleteBackwardMobile(editor) {
+    // Some mobile keyboard use input event to trigger delete.
+    // This is a way to simulate this behavior.
+    const inputEvent = new InputEvent('input', {
+        inputType: 'deleteContentBackward',
+        data: null,
+        bubbles: true,
+        cancelable: false,
+    });
+    editor._onInput(inputEvent);
 }
 
 export async function insertParagraphBreak(editor) {

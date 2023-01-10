@@ -577,3 +577,60 @@ class TestUi(TestPointOfSaleHttpCommon):
         self.assertAlmostEqual(lines[1].balance, 0)
         self.assertEqual(lines[2].account_id, tax_received_account)
         self.assertAlmostEqual(lines[2].balance, 1)
+
+    def test_change_without_cash_method(self):
+        #create bank payment method
+        bank_pm = self.env['pos.payment.method'].create({
+            'name': 'Bank',
+            'receivable_account_id': self.env.company.account_default_pos_receivable_account_id.id,
+            'is_cash_count': False,
+            'split_transactions': False,
+            'company_id': self.env.company.id,
+        })
+        self.main_pos_config.write({'payment_method_ids': [(6, 0, bank_pm.ids)]})
+        self.main_pos_config.open_ui()
+        self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, 'PaymentScreenTour2', login="accountman")
+
+    def test_rounding_up(self):
+        rouding_method = self.env['account.cash.rounding'].create({
+            'name': 'Rounding up',
+            'rounding': 0.05,
+            'rounding_method': 'UP',
+        })
+
+        self.env['product.product'].create({
+            'name': 'Product Test',
+            'available_in_pos': True,
+            'list_price': 1.98,
+            'taxes_id': False,
+        })
+
+        self.main_pos_config.write({
+            'rounding_method': rouding_method.id,
+            'cash_rounding': True,
+        })
+
+        self.main_pos_config.open_ui()
+        self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, 'PaymentScreenRoundingUp', login="accountman")
+
+    def test_rounding_down(self):
+        rouding_method = self.env['account.cash.rounding'].create({
+            'name': 'Rounding down',
+            'rounding': 0.05,
+            'rounding_method': 'DOWN',
+        })
+
+        self.env['product.product'].create({
+            'name': 'Product Test',
+            'available_in_pos': True,
+            'list_price': 1.98,
+            'taxes_id': False,
+        })
+
+        self.main_pos_config.write({
+            'rounding_method': rouding_method.id,
+            'cash_rounding': True,
+        })
+
+        self.main_pos_config.open_ui()
+        self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, 'PaymentScreenRoundingDown', login="accountman")

@@ -5,14 +5,15 @@
 # Translators:
 # Martin Trigaux, 2022
 # JH CHOI <hwangtog@gmail.com>, 2022
+# Sarah Park, 2022
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 16.0beta\n"
+"Project-Id-Version: Odoo Server 16.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-10-10 10:22+0000\n"
+"POT-Creation-Date: 2022-12-15 12:49+0000\n"
 "PO-Revision-Date: 2022-09-22 05:53+0000\n"
-"Last-Translator: JH CHOI <hwangtog@gmail.com>, 2022\n"
+"Last-Translator: Sarah Park, 2022\n"
 "Language-Team: Korean (https://www.transifex.com/odoo/teams/41243/ko/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -33,6 +34,7 @@ msgid ""
 msgstr ""
 
 #. module: mrp
+#. odoo-python
 #: code:addons/mrp/models/stock_rule.py:0
 #, python-format
 msgid " <br/><br/> The components will be taken from <b>%s</b>."
@@ -71,30 +73,35 @@ msgid "# of BoM Where is Used"
 msgstr "# 재료 명세서 사용처"
 
 #. module: mrp
+#. odoo-python
 #: code:addons/mrp/models/mrp_unbuild.py:0
 #, python-format
 msgid "%(qty)s %(measure)s unbuilt in %(order)s"
 msgstr ""
 
 #. module: mrp
+#. odoo-python
 #: code:addons/mrp/models/mrp_routing.py:0
 #, python-format
 msgid "%i work orders"
 msgstr ""
 
 #. module: mrp
+#. odoo-python
 #: code:addons/mrp/models/mrp_bom.py:0
 #, python-format
 msgid "%s (new) %s"
 msgstr ""
 
 #. module: mrp
+#. odoo-python
 #: code:addons/mrp/models/mrp_production.py:0
 #, python-format
 msgid "%s Child MO's"
 msgstr "%s 하위 생산계획"
 
 #. module: mrp
+#. odoo-python
 #: code:addons/mrp/models/mrp_production.py:0
 #, python-format
 msgid "%s cannot be deleted. Try to cancel them before."
@@ -126,6 +133,7 @@ msgid "'Work Order - %s' % object.name"
 msgstr ""
 
 #. module: mrp
+#. odoo-python
 #: code:addons/mrp/models/stock_rule.py:0
 #: code:addons/mrp/models/stock_rule.py:0
 #: code:addons/mrp/models/stock_rule.py:0
@@ -143,12 +151,12 @@ msgstr ""
 "            수동 작업이 필요할 수 있습니다."
 
 #. module: mrp
-#: model_terms:product.product,description:mrp.product_product_computer_desk_leg
 #: model_terms:product.template,description:mrp.product_product_computer_desk_leg_product_template
 msgid "18″ x 2½″ Square Leg"
 msgstr "18″ x 2½″ 각형 다리"
 
 #. module: mrp
+#. odoo-python
 #: code:addons/mrp/models/mrp_unbuild.py:0
 #, python-format
 msgid ": Insufficient Quantity To Unbuild"
@@ -176,6 +184,7 @@ msgid "<i class=\"fa fa-stop\" role=\"img\" aria-label=\"Stop\" title=\"Stop\"/>
 msgstr "<i class=\"fa fa-stop\" role=\"img\" aria-label=\"Stop\" title=\"Stop\"/>"
 
 #. module: mrp
+#. odoo-python
 #: code:addons/mrp/models/mrp_bom.py:0
 #, python-format
 msgid ""
@@ -438,12 +447,14 @@ msgid "A BoM of type kit is used to split the product into its components."
 msgstr "키트 유형의 BoM은 제품을 부품으로 나누는 데 사용됩니다."
 
 #. module: mrp
+#. odoo-python
 #: code:addons/mrp/models/mrp_workorder.py:0
 #, python-format
 msgid "A Manufacturing Order is already done or cancelled."
 msgstr "제조 주문이 이미 완료되었거나 취소되었습니다."
 
 #. module: mrp
+#. odoo-python
 #: code:addons/mrp/models/stock_warehouse.py:0
 #, python-format
 msgid ""
@@ -507,7 +518,7 @@ msgstr "설명 추가..."
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_routing_workcenter_bom_tree_view
 msgid "Add a line"
-msgstr "항목 추가하기"
+msgstr "항목 추가"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.res_config_settings_view_form
@@ -540,6 +551,7 @@ msgid "All"
 msgstr "전체"
 
 #. module: mrp
+#. odoo-python
 #: code:addons/mrp/controller/main.py:0
 #, python-format
 msgid "All files uploaded"
@@ -700,7 +712,8 @@ msgid "Attachment URL"
 msgstr "첨부 파일 URL"
 
 #. module: mrp
-#. openerp-web
+#. odoo-javascript
+#. odoo-python
 #: code:addons/mrp/models/mrp_bom.py:0
 #: code:addons/mrp/static/src/components/bom_overview_line/mrp_bom_overview_line.js:0
 #: code:addons/mrp/static/src/components/bom_overview_table/mrp_bom_overview_table.xml:0
@@ -720,21 +733,21 @@ msgid "Attribute Values"
 msgstr "속성 값"
 
 #. module: mrp
-#. openerp-web
+#. odoo-javascript
 #: code:addons/mrp/static/src/components/bom_overview_display_filter/mrp_bom_overview_display_filter.js:0
 #, python-format
 msgid "Availabilities"
 msgstr "사용 가능성"
 
 #. module: mrp
-#. openerp-web
+#. odoo-javascript
 #: code:addons/mrp/static/src/components/bom_overview_table/mrp_bom_overview_table.xml:0
 #, python-format
 msgid "Availabilities on products."
 msgstr ""
 
 #. module: mrp
-#. openerp-web
+#. odoo-javascript
 #: code:addons/mrp/static/src/components/bom_overview_table/mrp_bom_overview_table.xml:0
 #: model:ir.model.fields.selection,name:mrp.selection__mrp_workcenter_productivity_loss_type__loss_type__availability
 #: model_terms:ir.ui.view,arch_db:mrp.report_mrp_bom
@@ -748,6 +761,7 @@ msgid "Availability Losses"
 msgstr "손실 가능"
 
 #. module: mrp
+#. odoo-python
 #: code:addons/mrp/models/mrp_production.py:0
 #: code:addons/mrp/report/mrp_report_bom_structure.py:0
 #: model:ir.model.fields.selection,name:mrp.selection__mrp_production__components_availability_state__available
@@ -803,12 +817,14 @@ msgid "Backorder Confirmation Lines"
 msgstr "가용주문 승인 내역"
 
 #. module: mrp
+#. odoo-python
 #: code:addons/mrp/models/mrp_production.py:0
 #, python-format
 msgid "Backorder MO"
 msgstr ""
 
 #. module: mrp
+#. odoo-python
 #: code:addons/mrp/models/mrp_production.py:0
 #, python-format
 msgid "Backorder MO's"
@@ -964,7 +980,7 @@ msgid "BoM Components"
 msgstr "BoM 부품"
 
 #. module: mrp
-#. openerp-web
+#. odoo-javascript
 #: code:addons/mrp/static/src/components/bom_overview_table/mrp_bom_overview_table.xml:0
 #: model_terms:ir.ui.view,arch_db:mrp.report_mrp_bom
 #, python-format
@@ -995,19 +1011,19 @@ msgid "BoM Type"
 msgstr "BoM 유형"
 
 #. module: mrp
+#. odoo-python
 #: code:addons/mrp/models/mrp_bom.py:0
 #, python-format
 msgid "BoM line product %s should not be the same as BoM product."
 msgstr "%s 상품의 BoM 내역은 BoM 상품과 달라야 합니다."
 
 #. module: mrp
-#: model:product.product,name:mrp.product_product_computer_desk_bolt
 #: model:product.template,name:mrp.product_product_computer_desk_bolt_product_template
 msgid "Bolt"
 msgstr "볼트"
 
 #. module: mrp
-#. openerp-web
+#. odoo-javascript
 #: code:addons/mrp/static/src/components/bom_overview_special_line/mrp_bom_overview_special_line.xml:0
 #: model:ir.model.fields,field_description:mrp.field_res_config_settings__group_mrp_byproducts
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
@@ -1021,6 +1037,7 @@ msgid "By-product"
 msgstr "부산물"
 
 #. module: mrp
+#. odoo-python
 #: code:addons/mrp/models/mrp_bom.py:0
 #, python-format
 msgid "By-product %s should not be the same as BoM product."
@@ -1039,6 +1056,7 @@ msgid "By-products"
 msgstr "부산물"
 
 #. module: mrp
+#. odoo-python
 #: code:addons/mrp/models/mrp_bom.py:0
 #: code:addons/mrp/models/mrp_production.py:0
 #, python-format
@@ -1052,12 +1070,14 @@ msgid "Byproduct"
 msgstr "부산물"
 
 #. module: mrp
+#. odoo-python
 #: code:addons/mrp/report/mrp_report_bom_structure.py:0
 #, python-format
 msgid "Byproducts"
 msgstr "부산물"
 
 #. module: mrp
+#. odoo-python
 #: code:addons/mrp/models/stock_warehouse.py:0
 #, python-format
 msgid "Can't find any production location."
@@ -1081,6 +1101,7 @@ msgid "Cancelled"
 msgstr "취소 됨"
 
 #. module: mrp
+#. odoo-python
 #: code:addons/mrp/models/mrp_production.py:0
 #, python-format
 msgid "Cannot delete a manufacturing order in done state."
@@ -1198,7 +1219,7 @@ msgid "Component Status"
 msgstr ""
 
 #. module: mrp
-#. openerp-web
+#. odoo-javascript
 #: code:addons/mrp/static/src/mrp_forecasted/forecasted_details.xml:0
 #, python-format
 msgid "Component of Draft MO"
@@ -1366,14 +1387,14 @@ msgid "Costing Information"
 msgstr "원가 계산 정보"
 
 #. module: mrp
-#. openerp-web
+#. odoo-javascript
 #: code:addons/mrp/static/src/components/bom_overview_display_filter/mrp_bom_overview_display_filter.js:0
 #, python-format
 msgid "Costs"
 msgstr "비용"
 
 #. module: mrp
-#. openerp-web
+#. odoo-javascript
 #: code:addons/mrp/static/src/views/fields/google_slides_viewer.js:0
 #, python-format
 msgid "Could not display the selected spreadsheet"
@@ -1582,7 +1603,7 @@ msgid "Date at which you plan to start the production."
 msgstr "생산을 시작하려는 날짜입니다."
 
 #. module: mrp
-#. openerp-web
+#. odoo-javascript
 #: code:addons/mrp/static/src/components/bom_overview_line/mrp_bom_overview_line.xml:0
 #: model_terms:ir.ui.view,arch_db:mrp.report_mrp_bom
 #: model_terms:ir.ui.view,arch_db:mrp.report_mrp_bom_pdf_line
@@ -1591,6 +1612,7 @@ msgid "Days"
 msgstr "일"
 
 #. module: mrp
+#. odoo-python
 #: code:addons/mrp/models/stock_rule.py:0
 #, python-format
 msgid "Days to Supply Components"
@@ -1739,7 +1761,7 @@ msgid "Display the serial number shortcut on the moves"
 msgstr ""
 
 #. module: mrp
-#. openerp-web
+#. odoo-javascript
 #: code:addons/mrp/static/src/components/bom_overview_display_filter/mrp_bom_overview_display_filter.xml:0
 #, python-format
 msgid "Display:"
@@ -1791,19 +1813,16 @@ msgid "Draft"
 msgstr "임시"
 
 #. module: mrp
-#: model:product.product,name:mrp.product_product_drawer_drawer
 #: model:product.template,name:mrp.product_product_drawer_drawer_product_template
 msgid "Drawer Black"
 msgstr "검은색 서랍장"
 
 #. module: mrp
-#: model:product.product,name:mrp.product_product_drawer_case
 #: model:product.template,name:mrp.product_product_drawer_case_product_template
 msgid "Drawer Case Black"
 msgstr "검은색 서랍장 케이스"
 
 #. module: mrp
-#: model_terms:product.product,description:mrp.product_product_drawer_drawer
 #: model_terms:product.template,description:mrp.product_product_drawer_drawer_product_template
 msgid "Drawer on casters for great usability."
 msgstr "뛰어난 사용 편의성을 가진 바퀴 달린 서랍장."
@@ -1814,6 +1833,7 @@ msgid "Dropdown menu"
 msgstr "드롭다운 메뉴"
 
 #. module: mrp
+#. odoo-python
 #: code:addons/mrp/wizard/stock_assign_serial_numbers.py:0
 #, python-format
 msgid "Duplicate Serial Numbers (%s)"
@@ -1883,6 +1903,7 @@ msgid "Ensure the traceability of a storable product in your warehouse."
 msgstr "창고에 보관 가능한 품목의 추적성을 확인하십시오."
 
 #. module: mrp
+#. odoo-python
 #: code:addons/mrp/report/mrp_report_bom_structure.py:0
 #, python-format
 msgid "Estimated %s"
@@ -1899,12 +1920,14 @@ msgid "Exception(s):"
 msgstr "예외 :"
 
 #. module: mrp
+#. odoo-python
 #: code:addons/mrp/wizard/stock_assign_serial_numbers.py:0
 #, python-format
 msgid "Existing Serial Numbers (%s)"
 msgstr ""
 
 #. module: mrp
+#. odoo-python
 #: code:addons/mrp/models/mrp_production.py:0
 #, python-format
 msgid "Exp %s"
@@ -1916,6 +1939,7 @@ msgid "Expected"
 msgstr "예상됨"
 
 #. module: mrp
+#. odoo-python
 #: code:addons/mrp/report/mrp_report_bom_structure.py:0
 #, python-format
 msgid "Expected %s"
@@ -1954,7 +1978,7 @@ msgid "File Size"
 msgstr "파일 크기"
 
 #. module: mrp
-#. openerp-web
+#. odoo-javascript
 #: code:addons/mrp/static/src/components/bom_overview_table/mrp_bom_overview_table.xml:0
 #, python-format
 msgid "Files attached to the product."
@@ -2037,7 +2061,7 @@ msgid "Force"
 msgstr ""
 
 #. module: mrp
-#. openerp-web
+#. odoo-javascript
 #: code:addons/mrp/static/src/components/bom_overview_line/mrp_bom_overview_line.xml:0
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
 #, python-format
@@ -2068,14 +2092,14 @@ msgid "Forecasted Issue"
 msgstr ""
 
 #. module: mrp
-#. openerp-web
+#. odoo-javascript
 #: code:addons/mrp/static/src/components/bom_overview_table/mrp_bom_overview_table.xml:0
 #, python-format
 msgid "Free to Use"
 msgstr ""
 
 #. module: mrp
-#. openerp-web
+#. odoo-javascript
 #: code:addons/mrp/static/src/components/bom_overview_table/mrp_bom_overview_table.xml:0
 #: model_terms:ir.ui.view,arch_db:mrp.report_mrp_bom
 #, python-format
@@ -2141,7 +2165,7 @@ msgid "Google Slide Link"
 msgstr "구글 슬라이드 링크"
 
 #. module: mrp
-#. openerp-web
+#. odoo-javascript
 #: code:addons/mrp/static/src/views/fields/google_slides_viewer.js:0
 #, python-format
 msgid "Google Slides Viewer"
@@ -2195,7 +2219,7 @@ msgstr "기록"
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_workcenter__costs_hour
-msgid "Hourly cost of work center."
+msgid "Hourly processing cost."
 msgstr ""
 
 #. module: mrp
@@ -2319,6 +2343,7 @@ msgid "Immediate Production Lines"
 msgstr ""
 
 #. module: mrp
+#. odoo-python
 #: code:addons/mrp/models/mrp_production.py:0
 #, python-format
 msgid "Immediate Production?"
@@ -2335,12 +2360,14 @@ msgid "Impacted Transfer(s):"
 msgstr "영향을 받은 전달 :"
 
 #. module: mrp
+#. odoo-python
 #: code:addons/mrp/models/mrp_bom.py:0
 #, python-format
 msgid "Import Template for Bills of Materials"
 msgstr "재료 명세서를 위한 서식 가져오기"
 
 #. module: mrp
+#. odoo-python
 #: code:addons/mrp/models/mrp_workorder.py:0
 #, python-format
 msgid ""
@@ -2422,12 +2449,14 @@ msgid "Is the Current User Working"
 msgstr "현재 사용자 작업 여부"
 
 #. module: mrp
+#. odoo-python
 #: code:addons/mrp/models/mrp_workcenter.py:0
 #, python-format
 msgid "It has already been unblocked."
 msgstr "이미 차단이 해제되었습니다."
 
 #. module: mrp
+#. odoo-python
 #: code:addons/mrp/models/mrp_workorder.py:0
 #, python-format
 msgid ""
@@ -2579,13 +2608,12 @@ msgid ""
 msgstr ""
 
 #. module: mrp
-#: model_terms:product.product,description:mrp.product_product_wood_ply
 #: model_terms:product.template,description:mrp.product_product_wood_ply_product_template
 msgid "Layers that are stick together to assemble wood panels."
 msgstr "나무 패널을 조립하기 위해 서로 붙어 있는 층."
 
 #. module: mrp
-#. openerp-web
+#. odoo-javascript
 #: code:addons/mrp/static/src/components/bom_overview_table/mrp_bom_overview_table.xml:0
 #: model_terms:ir.ui.view,arch_db:mrp.report_mrp_bom
 #, python-format
@@ -2593,7 +2621,7 @@ msgid "Lead Time"
 msgstr "리드타임"
 
 #. module: mrp
-#. openerp-web
+#. odoo-javascript
 #: code:addons/mrp/static/src/components/bom_overview_display_filter/mrp_bom_overview_display_filter.js:0
 #, python-format
 msgid "Lead Times"
@@ -2610,6 +2638,7 @@ msgid "Line of issue consumption"
 msgstr ""
 
 #. module: mrp
+#. odoo-python
 #: code:addons/mrp/models/mrp_production.py:0
 #, python-format
 msgid ""
@@ -2696,6 +2725,7 @@ msgid "MO Backorder"
 msgstr ""
 
 #. module: mrp
+#. odoo-python
 #: code:addons/mrp/models/mrp_production.py:0
 #, python-format
 msgid "MO Generated by %s"
@@ -2729,6 +2759,7 @@ msgid "Main Attachment"
 msgstr "주요 첨부 파일"
 
 #. module: mrp
+#. odoo-python
 #: code:addons/mrp/models/stock_warehouse.py:0
 #: code:addons/mrp/models/stock_warehouse.py:0
 #, python-format
@@ -2736,6 +2767,7 @@ msgid "Make To Order"
 msgstr "주문하기"
 
 #. module: mrp
+#. odoo-python
 #: code:addons/mrp/models/mrp_production.py:0
 #, python-format
 msgid ""
@@ -2765,6 +2797,7 @@ msgid "Manuf. Lead Time"
 msgstr ""
 
 #. module: mrp
+#. odoo-python
 #: code:addons/mrp/models/stock_warehouse.py:0
 #: code:addons/mrp/models/stock_warehouse.py:0
 #: model:ir.model.fields,field_description:mrp.field_stock_warehouse__manufacture_steps
@@ -2776,6 +2809,7 @@ msgid "Manufacture"
 msgstr "제조"
 
 #. module: mrp
+#. odoo-python
 #: code:addons/mrp/models/stock_warehouse.py:0
 #: model:ir.model.fields.selection,name:mrp.selection__stock_warehouse__manufacture_steps__mrp_one_step
 #, python-format
@@ -2793,6 +2827,7 @@ msgid "Manufacture Rule"
 msgstr "제조 규칙"
 
 #. module: mrp
+#. odoo-python
 #: code:addons/mrp/models/stock_rule.py:0
 #, python-format
 msgid "Manufacture Security Lead Time"
@@ -2827,6 +2862,7 @@ msgid "Manufactured in the last 365 days"
 msgstr "최근 1년간 제조량"
 
 #. module: mrp
+#. odoo-python
 #: code:addons/mrp/models/stock_warehouse.py:0
 #: model:ir.model.fields.selection,name:mrp.selection__stock_picking_type__code__mrp_operation
 #: model:ir.ui.menu,name:mrp.menu_mrp_root
@@ -2837,7 +2873,7 @@ msgid "Manufacturing"
 msgstr "제조"
 
 #. module: mrp
-#. openerp-web
+#. odoo-javascript
 #: code:addons/mrp/static/src/mrp_forecasted/forecasted_buttons.xml:0
 #: code:addons/mrp/static/src/mrp_forecasted/forecasted_buttons.xml:0
 #, python-format
@@ -2845,6 +2881,7 @@ msgid "Manufacturing Forecast"
 msgstr ""
 
 #. module: mrp
+#. odoo-python
 #: code:addons/mrp/models/stock_rule.py:0
 #: model:ir.model.fields,field_description:mrp.field_product_product__produce_delay
 #: model:ir.model.fields,field_description:mrp.field_product_template__produce_delay
@@ -2988,7 +3025,8 @@ msgid "Minimum Inventory Rule"
 msgstr "최소 재고 규칙"
 
 #. module: mrp
-#. openerp-web
+#. odoo-javascript
+#. odoo-python
 #: code:addons/mrp/report/mrp_report_bom_structure.py:0
 #: code:addons/mrp/static/src/components/bom_overview_special_line/mrp_bom_overview_special_line.xml:0
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_workcenter_view
@@ -3051,6 +3089,7 @@ msgid "Name"
 msgstr "이름"
 
 #. module: mrp
+#. odoo-python
 #: code:addons/mrp/models/mrp_production.py:0
 #: code:addons/mrp/models/mrp_production.py:0
 #: code:addons/mrp/models/mrp_production.py:0
@@ -3103,7 +3142,7 @@ msgid "No bill of materials found. Let's create one!"
 msgstr ""
 
 #. module: mrp
-#. openerp-web
+#. odoo-javascript
 #: code:addons/mrp/static/src/components/bom_overview_table/mrp_bom_overview_table.xml:0
 #: model_terms:ir.ui.view,arch_db:mrp.report_mrp_bom
 #, python-format
@@ -3160,6 +3199,7 @@ msgid "Normal"
 msgstr "일반"
 
 #. module: mrp
+#. odoo-python
 #: code:addons/mrp/models/mrp_production.py:0
 #: code:addons/mrp/report/mrp_report_bom_structure.py:0
 #, python-format
@@ -3167,6 +3207,7 @@ msgid "Not Available"
 msgstr "사용불가"
 
 #. module: mrp
+#. odoo-python
 #: code:addons/mrp/models/mrp_workcenter.py:0
 #, python-format
 msgid ""
@@ -3178,6 +3219,15 @@ msgstr ""
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.view_assign_serial_numbers_production
 msgid "Note that components"
+msgstr ""
+
+#. module: mrp
+#. odoo-python
+#: code:addons/mrp/models/product.py:0 code:addons/mrp/models/product.py:0
+#, python-format
+msgid ""
+"Note that product(s): '%s' is/are still linked to active Bill of Materials, "
+"which means that the product can still be used on it/them."
 msgstr ""
 
 #. module: mrp
@@ -3264,6 +3314,7 @@ msgid "On Hand"
 msgstr "보유량"
 
 #. module: mrp
+#. odoo-python
 #: code:addons/mrp/models/mrp_production.py:0
 #, python-format
 msgid ""
@@ -3271,6 +3322,7 @@ msgid ""
 msgstr ""
 
 #. module: mrp
+#. odoo-python
 #: code:addons/mrp/models/mrp_production.py:0
 #, python-format
 msgid "Only manufacturing orders with a Bill of Materials can be %s."
@@ -3316,7 +3368,8 @@ msgid ""
 msgstr ""
 
 #. module: mrp
-#. openerp-web
+#. odoo-javascript
+#. odoo-python
 #: code:addons/mrp/report/mrp_report_bom_structure.py:0
 #: code:addons/mrp/static/src/components/bom_overview_display_filter/mrp_bom_overview_display_filter.js:0
 #: code:addons/mrp/static/src/components/bom_overview_special_line/mrp_bom_overview_special_line.xml:0
@@ -3473,12 +3526,14 @@ msgid "Performance over the last month"
 msgstr "지난 달과 비교한 실적"
 
 #. module: mrp
+#. odoo-python
 #: code:addons/mrp/models/stock_warehouse.py:0
 #, python-format
 msgid "Pick Components"
 msgstr "부품 선택"
 
 #. module: mrp
+#. odoo-python
 #: code:addons/mrp/models/stock_warehouse.py:0
 #, python-format
 msgid "Pick components and then manufacture"
@@ -3490,6 +3545,7 @@ msgid "Pick components and then manufacture (2 steps)"
 msgstr "부품을 선택하고 제조합니다 (2단계)"
 
 #. module: mrp
+#. odoo-python
 #: code:addons/mrp/models/stock_warehouse.py:0
 #: model:ir.model.fields.selection,name:mrp.selection__stock_warehouse__manufacture_steps__pbm_sam
 #, python-format
@@ -3554,6 +3610,7 @@ msgid "Planned Date"
 msgstr "계획일"
 
 #. module: mrp
+#. odoo-python
 #: code:addons/mrp/models/mrp_workorder.py:0
 #, python-format
 msgid "Planned at the same time as other workorder(s) at %s"
@@ -3563,7 +3620,7 @@ msgstr ""
 #: model:ir.ui.menu,name:mrp.mrp_planning_menu_root
 #: model_terms:ir.ui.view,arch_db:mrp.res_config_settings_view_form
 msgid "Planning"
-msgstr "계획 관리"
+msgstr "일정 관리"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_production_filter
@@ -3571,19 +3628,16 @@ msgid "Planning Issues"
 msgstr ""
 
 #. module: mrp
-#: model:product.product,name:mrp.product_product_plastic_laminate
 #: model:product.template,name:mrp.product_product_plastic_laminate_product_template
 msgid "Plastic Laminate"
 msgstr "플라스틱 라미네이트"
 
 #. module: mrp
-#: model:product.product,name:mrp.product_product_wood_ply
 #: model:product.template,name:mrp.product_product_wood_ply_product_template
 msgid "Ply Layer"
 msgstr "합판"
 
 #. module: mrp
-#: model:product.product,name:mrp.product_product_ply_veneer
 #: model:product.template,name:mrp.product_product_ply_veneer_product_template
 msgid "Ply Veneer"
 msgstr "베니어 합판"
@@ -3602,26 +3656,28 @@ msgid "Possible Product Template Attribute Value"
 msgstr ""
 
 #. module: mrp
+#. odoo-python
 #: code:addons/mrp/models/stock_warehouse.py:0
 #, python-format
 msgid "Post-Production"
 msgstr "생산 후"
 
 #. module: mrp
+#. odoo-python
 #: code:addons/mrp/models/stock_warehouse.py:0
 #, python-format
 msgid "Pre-Production"
 msgstr "생산 전"
 
 #. module: mrp
-#. openerp-web
+#. odoo-javascript
 #: code:addons/mrp/static/src/components/bom_overview_control_panel/mrp_bom_overview_control_panel.xml:0
 #, python-format
 msgid "Print"
 msgstr "인쇄"
 
 #. module: mrp
-#. openerp-web
+#. odoo-javascript
 #: code:addons/mrp/static/src/components/bom_overview_control_panel/mrp_bom_overview_control_panel.xml:0
 #, python-format
 msgid "Print All Variants"
@@ -3692,7 +3748,7 @@ msgid "Produced in Operation"
 msgstr "운영 중 생산됨"
 
 #. module: mrp
-#. openerp-web
+#. odoo-javascript
 #: code:addons/mrp/static/src/components/bom_overview_table/mrp_bom_overview_table.xml:0
 #: model:ir.model,name:mrp.model_product_template
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom__product_tmpl_id
@@ -3724,7 +3780,7 @@ msgid "Product Capacities"
 msgstr ""
 
 #. module: mrp
-#. openerp-web
+#. odoo-javascript
 #: code:addons/mrp/static/src/components/bom_overview_table/mrp_bom_overview_table.xml:0
 #: model_terms:ir.ui.view,arch_db:mrp.report_mrp_bom
 #, python-format
@@ -3857,7 +3913,7 @@ msgid "Production Workcenter"
 msgstr "생산 작업장"
 
 #. module: mrp
-#. openerp-web
+#. odoo-javascript
 #: code:addons/mrp/static/src/mrp_forecasted/forecasted_details.xml:0
 #, python-format
 msgid "Production of Draft MO"
@@ -3937,7 +3993,7 @@ msgid "Quant"
 msgstr "Quant"
 
 #. module: mrp
-#. openerp-web
+#. odoo-javascript
 #: code:addons/mrp/static/src/components/bom_overview_table/mrp_bom_overview_table.xml:0
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom__product_qty
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom_byproduct__product_qty
@@ -3991,7 +4047,7 @@ msgid "Quantity that can be produced with the current stock of components"
 msgstr ""
 
 #. module: mrp
-#. openerp-web
+#. odoo-javascript
 #: code:addons/mrp/static/src/components/bom_overview_control_panel/mrp_bom_overview_control_panel.xml:0
 #, python-format
 msgid "Quantity:"
@@ -4012,7 +4068,7 @@ msgid "Ready"
 msgstr "준비"
 
 #. module: mrp
-#. openerp-web
+#. odoo-javascript
 #: code:addons/mrp/static/src/components/bom_overview_table/mrp_bom_overview_table.xml:0
 #: model_terms:ir.ui.view,arch_db:mrp.report_mrp_bom
 #, python-format
@@ -4026,13 +4082,14 @@ msgid "Real Duration"
 msgstr "실 기간"
 
 #. module: mrp
-#. openerp-web
+#. odoo-javascript
 #: code:addons/mrp/static/src/components/bom_overview_table/mrp_bom_overview_table.xml:0
 #, python-format
 msgid "Reception time estimation."
 msgstr ""
 
 #. module: mrp
+#. odoo-python
 #: code:addons/mrp/models/mrp_bom.py:0
 #, python-format
 msgid ""
@@ -4059,7 +4116,7 @@ msgid ""
 msgstr "생산 주문 요청을 생성한 문서의 참조"
 
 #. module: mrp
-#. openerp-web
+#. odoo-javascript
 #: code:addons/mrp/static/src/components/bom_overview_table/mrp_bom_overview_table.xml:0
 #: model_terms:ir.ui.view,arch_db:mrp.report_mrp_bom
 #, python-format
@@ -4072,7 +4129,7 @@ msgid "Related attachment"
 msgstr "관련 첨부 파일"
 
 #. module: mrp
-#. openerp-web
+#. odoo-javascript
 #: code:addons/mrp/static/src/widgets/mrp_workorder_popover.xml:0
 #, python-format
 msgid "Replan"
@@ -4084,7 +4141,7 @@ msgid "Reporting"
 msgstr "보고"
 
 #. module: mrp
-#. openerp-web
+#. odoo-javascript
 #: code:addons/mrp/static/src/mrp_forecasted/forecasted_details.xml:0
 #, python-format
 msgid "Reserve"
@@ -4134,14 +4191,14 @@ msgid "Responsible User"
 msgstr "담당 사용자"
 
 #. module: mrp
-#. openerp-web
+#. odoo-javascript
 #: code:addons/mrp/static/src/components/bom_overview_table/mrp_bom_overview_table.xml:0
 #, python-format
 msgid "Resupply lead time."
 msgstr ""
 
 #. module: mrp
-#. openerp-web
+#. odoo-javascript
 #: code:addons/mrp/static/src/components/bom_overview_table/mrp_bom_overview_table.xml:0
 #: model_terms:ir.ui.view,arch_db:mrp.report_mrp_bom
 #, python-format
@@ -4205,6 +4262,7 @@ msgid "Scheduled Start Date"
 msgstr "예약된 시작 날짜"
 
 #. module: mrp
+#. odoo-python
 #: code:addons/mrp/models/mrp_workorder.py:0
 #, python-format
 msgid ""
@@ -4212,13 +4270,14 @@ msgid ""
 msgstr ""
 
 #. module: mrp
-#. openerp-web
+#. odoo-javascript
 #: code:addons/mrp/static/src/widgets/mrp_workorder_popover.xml:0
 #, python-format
 msgid "Scheduling Information"
 msgstr ""
 
 #. module: mrp
+#. odoo-python
 #: code:addons/mrp/models/mrp_production.py:0
 #: code:addons/mrp/models/mrp_workorder.py:0
 #: model:ir.model,name:mrp.model_stock_scrap
@@ -4241,7 +4300,6 @@ msgid "Scraps"
 msgstr "폐기물"
 
 #. module: mrp
-#: model:product.product,name:mrp.product_product_computer_desk_screw
 #: model:product.template,name:mrp.product_product_computer_desk_screw_product_template
 msgid "Screw"
 msgstr "나사"
@@ -4283,6 +4341,7 @@ msgid "Security days for each manufacturing operation."
 msgstr "각 제조 작업을 위한 보안 일수"
 
 #. module: mrp
+#. odoo-python
 #: code:addons/mrp/models/mrp_routing.py:0
 #, python-format
 msgid "Select Operations to Copy"
@@ -4299,18 +4358,21 @@ msgid "Sequence"
 msgstr "순서"
 
 #. module: mrp
+#. odoo-python
 #: code:addons/mrp/models/stock_warehouse.py:0
 #, python-format
 msgid "Sequence picking before manufacturing"
 msgstr "제조 전 순서 선택"
 
 #. module: mrp
+#. odoo-python
 #: code:addons/mrp/models/stock_warehouse.py:0
 #, python-format
 msgid "Sequence production"
 msgstr "생산 순서"
 
 #. module: mrp
+#. odoo-python
 #: code:addons/mrp/models/stock_warehouse.py:0
 #, python-format
 msgid "Sequence stock after manufacturing"
@@ -4407,7 +4469,7 @@ msgid "Show backorder lines"
 msgstr ""
 
 #. module: mrp
-#. openerp-web
+#. odoo-javascript
 #: code:addons/mrp/static/src/views/fields/google_slides_viewer.xml:0
 #, python-format
 msgid "Slides viewer"
@@ -4419,18 +4481,17 @@ msgid "Slot into workcenter calendar once planned"
 msgstr "계획한 대로 작업장 일정표에 넣기"
 
 #. module: mrp
-#: model_terms:product.product,description:mrp.product_product_computer_desk_head
 #: model_terms:product.template,description:mrp.product_product_computer_desk_head_product_template
 msgid "Solid wood is a durable natural material."
 msgstr "단단한 나무는 내구성이 강한 천연 소재입니다."
 
 #. module: mrp
-#: model_terms:product.product,description:mrp.product_product_computer_desk
 #: model_terms:product.template,description:mrp.product_product_computer_desk_product_template
 msgid "Solid wood table."
 msgstr "견고한 나무 테이블."
 
 #. module: mrp
+#. odoo-python
 #: code:addons/mrp/models/mrp_unbuild.py:0
 #, python-format
 msgid ""
@@ -4439,6 +4500,7 @@ msgid ""
 msgstr "일부 부산물이 추적되므로 올바른 부산물을 검색하려면 제조 주문을 지정해야 합니다."
 
 #. module: mrp
+#. odoo-python
 #: code:addons/mrp/models/mrp_unbuild.py:0
 #, python-format
 msgid ""
@@ -4454,6 +4516,7 @@ msgid ""
 msgstr "일부 상품 이동이 이미 확인되었으므로 이 제조 주문을 완전히 취소할 수 없습니다. 여전히 처리 하시겠습니까?"
 
 #. module: mrp
+#. odoo-python
 #: code:addons/mrp/models/mrp_production.py:0
 #, python-format
 msgid ""
@@ -4462,6 +4525,7 @@ msgid ""
 msgstr "일부 작업 지시가 이미 완료되었으므로 이 제조 주문을 취소할 수 없습니다."
 
 #. module: mrp
+#. odoo-python
 #: code:addons/mrp/models/mrp_production.py:0
 #, python-format
 msgid ""
@@ -4535,13 +4599,11 @@ msgid "Split productions"
 msgstr ""
 
 #. module: mrp
-#: model_terms:product.product,description:mrp.product_product_computer_desk_screw
 #: model_terms:product.template,description:mrp.product_product_computer_desk_screw_product_template
 msgid "Stainless steel screw"
 msgstr "스테인레스 강철 나사"
 
 #. module: mrp
-#: model_terms:product.product,description:mrp.product_product_computer_desk_bolt
 #: model_terms:product.template,description:mrp.product_product_computer_desk_bolt_product_template
 msgid "Stainless steel screw full (dia - 5mm, Length - 10mm)"
 msgstr "스테인레스 강철 나사 전체 (직경 - 5mm, 길이 - 10mm)"
@@ -4652,6 +4714,7 @@ msgid "Stock rule report"
 msgstr "재고 규칙 보고서"
 
 #. module: mrp
+#. odoo-python
 #: code:addons/mrp/models/stock_warehouse.py:0
 #, python-format
 msgid "Store Finished Product"
@@ -4678,31 +4741,26 @@ msgid "Subcontracting"
 msgstr "외주생산"
 
 #. module: mrp
-#: model:product.product,name:mrp.product_product_computer_desk
 #: model:product.template,name:mrp.product_product_computer_desk_product_template
 msgid "Table"
 msgstr "표"
 
 #. module: mrp
-#: model:product.product,name:mrp.product_product_table_kit
 #: model:product.template,name:mrp.product_product_table_kit_product_template
 msgid "Table Kit"
 msgstr "책상 조립 세트"
 
 #. module: mrp
-#: model:product.product,name:mrp.product_product_computer_desk_leg
 #: model:product.template,name:mrp.product_product_computer_desk_leg_product_template
 msgid "Table Leg"
 msgstr "책상 다리"
 
 #. module: mrp
-#: model:product.product,name:mrp.product_product_computer_desk_head
 #: model:product.template,name:mrp.product_product_computer_desk_head_product_template
 msgid "Table Top"
 msgstr "책상 상판"
 
 #. module: mrp
-#: model_terms:product.product,description:mrp.product_product_table_kit
 #: model_terms:product.template,description:mrp.product_product_table_kit_product_template
 msgid "Table kit"
 msgstr "책상 조립 세트"
@@ -4740,6 +4798,7 @@ msgid "Text"
 msgstr "문자"
 
 #. module: mrp
+#. odoo-python
 #: code:addons/mrp/models/mrp_bom.py:0 code:addons/mrp/models/mrp_bom.py:0
 #, python-format
 msgid ""
@@ -4748,12 +4807,14 @@ msgid ""
 msgstr "상품 단위는 상품 양식과는 다른 범주를 선택합니다."
 
 #. module: mrp
+#. odoo-python
 #: code:addons/mrp/models/mrp_workcenter.py:0
 #, python-format
 msgid "The Workorder (%s) cannot be started twice!"
 msgstr ""
 
 #. module: mrp
+#. odoo-python
 #: code:addons/mrp/models/mrp_bom.py:0
 #, python-format
 msgid ""
@@ -4762,18 +4823,21 @@ msgid ""
 msgstr ""
 
 #. module: mrp
+#. odoo-python
 #: code:addons/mrp/models/mrp_workcenter.py:0
 #, python-format
 msgid "The capacity must be strictly positive."
 msgstr "수량은 양수입니다."
 
 #. module: mrp
+#. odoo-python
 #: code:addons/mrp/models/mrp_production.py:0
 #, python-format
 msgid "The component %s should not be the same as the product to produce."
 msgstr ""
 
 #. module: mrp
+#. odoo-python
 #: code:addons/mrp/models/stock_orderpoint.py:0
 #, python-format
 msgid "The following replenishment order has been generated"
@@ -4807,6 +4871,7 @@ msgid ""
 msgstr ""
 
 #. module: mrp
+#. odoo-python
 #: code:addons/mrp/models/mrp_workorder.py:0
 #, python-format
 msgid ""
@@ -4815,6 +4880,7 @@ msgid ""
 msgstr "작업 지시의 계획된 종료 날짜가 계획된 시작 날짜 이전일 수 없습니다. 작업 지시를 저장하려면 이를 수정하십시오."
 
 #. module: mrp
+#. odoo-python
 #: code:addons/mrp/models/mrp_bom.py:0
 #, python-format
 msgid ""
@@ -4830,6 +4896,7 @@ msgid ""
 msgstr ""
 
 #. module: mrp
+#. odoo-python
 #: code:addons/mrp/models/mrp_production.py:0
 #: model:ir.model.constraint,message:mrp.constraint_mrp_bom_qty_positive
 #: model:ir.model.constraint,message:mrp.constraint_mrp_production_qty_positive
@@ -4838,15 +4905,7 @@ msgid "The quantity to produce must be positive!"
 msgstr "생산량은 양수입니다!"
 
 #. module: mrp
-#: code:addons/mrp/models/mrp_unbuild.py:0
-#: code:addons/mrp/models/mrp_unbuild.py:0
-#, python-format
-msgid ""
-"The selected serial number does not correspond to the one used in the "
-"manufacturing order, please select another one."
-msgstr ""
-
-#. module: mrp
+#. odoo-python
 #: code:addons/mrp/models/mrp_production.py:0
 #, python-format
 msgid ""
@@ -4855,6 +4914,7 @@ msgid ""
 msgstr ""
 
 #. module: mrp
+#. odoo-python
 #: code:addons/mrp/models/mrp_production.py:0
 #, python-format
 msgid ""
@@ -4868,12 +4928,14 @@ msgid "The tag name must be unique."
 msgstr ""
 
 #. module: mrp
+#. odoo-python
 #: code:addons/mrp/models/mrp_bom.py:0
 #, python-format
 msgid "The total cost share for a BoM's by-products cannot exceed 100."
 msgstr ""
 
 #. module: mrp
+#. odoo-python
 #: code:addons/mrp/models/mrp_production.py:0
 #, python-format
 msgid ""
@@ -4882,6 +4944,7 @@ msgid ""
 msgstr ""
 
 #. module: mrp
+#. odoo-python
 #: code:addons/mrp/models/mrp_workorder.py:0
 #, python-format
 msgid "The work order should have already been processed."
@@ -4893,6 +4956,7 @@ msgid "Theme Template"
 msgstr "테마 서식"
 
 #. module: mrp
+#. odoo-python
 #: code:addons/mrp/wizard/stock_assign_serial_numbers.py:0
 #, python-format
 msgid "There are more Serial Numbers than the Quantity to Produce"
@@ -4927,7 +4991,7 @@ msgid ""
 msgstr ""
 
 #. module: mrp
-#. openerp-web
+#. odoo-javascript
 #: code:addons/mrp/static/src/components/bom_overview_line/mrp_bom_overview_line.xml:0
 #: code:addons/mrp/static/src/components/bom_overview_line/mrp_bom_overview_line.xml:0
 #, python-format
@@ -4935,7 +4999,7 @@ msgid "This is a BoM of type Kit!"
 msgstr "이것은 키트 유형의 재료 명세서입니다."
 
 #. module: mrp
-#. openerp-web
+#. odoo-javascript
 #: code:addons/mrp/static/src/components/bom_overview_table/mrp_bom_overview_table.xml:0
 #, python-format
 msgid ""
@@ -4944,7 +5008,7 @@ msgid ""
 msgstr "이것은 제품의 BoM을 기준으로 한 단가입니다. 제품을 구축하는 데 필요한 부품 및 운영 비용을 합산하여 계산됩니다."
 
 #. module: mrp
-#. openerp-web
+#. odoo-javascript
 #: code:addons/mrp/static/src/components/bom_overview_table/mrp_bom_overview_table.xml:0
 #, python-format
 msgid "This is the cost defined on the product."
@@ -4958,20 +5022,22 @@ msgid ""
 msgstr ""
 
 #. module: mrp
+#. odoo-python
 #: code:addons/mrp/models/mrp_production.py:0
 #, python-format
 msgid "This production has been merge in %s"
 msgstr ""
 
 #. module: mrp
+#. odoo-python
 #: code:addons/mrp/models/stock_rule.py:0
 #, python-format
 msgid "This production order has been created from Replenishment Report."
 msgstr ""
 
 #. module: mrp
+#. odoo-python
 #: code:addons/mrp/models/mrp_production.py:0
-#: code:addons/mrp/models/mrp_workorder.py:0
 #, python-format
 msgid "This serial number for product %s has already been produced"
 msgstr ""
@@ -5005,6 +5071,7 @@ msgid "Time Tracking"
 msgstr "시간 추적"
 
 #. module: mrp
+#. odoo-python
 #: code:addons/mrp/models/mrp_workorder.py:0
 #, python-format
 msgid "Time Tracking: %(user)s"
@@ -5091,7 +5158,6 @@ msgid "Today Activities"
 msgstr "오늘 활동"
 
 #. module: mrp
-#: model_terms:product.product,description:mrp.product_product_wood_wear
 #: model_terms:product.template,description:mrp.product_product_wood_wear_product_template
 msgid "Top layer of a wood panel."
 msgstr "목재 패널의 상단 층."
@@ -5202,6 +5268,7 @@ msgid "Type of the exception activity on record."
 msgstr "레코드에 있는 예외 활동의 유형입니다."
 
 #. module: mrp
+#. odoo-python
 #: code:addons/mrp/models/mrp_production.py:0
 #, python-format
 msgid "Unable to split with more than the quantity to produce."
@@ -5228,6 +5295,7 @@ msgid "Unbuild Order"
 msgstr "해체 지시"
 
 #. module: mrp
+#. odoo-python
 #: code:addons/mrp/models/mrp_unbuild.py:0
 #, python-format
 msgid "Unbuild Order product quantity has to be strictly positive."
@@ -5241,6 +5309,7 @@ msgid "Unbuild Orders"
 msgstr "해체 지시서"
 
 #. module: mrp
+#. odoo-python
 #: code:addons/mrp/models/mrp_production.py:0
 #, python-format
 msgid "Unbuild: %s"
@@ -5257,14 +5326,14 @@ msgid "Unbuilt"
 msgstr ""
 
 #. module: mrp
-#. openerp-web
+#. odoo-javascript
 #: code:addons/mrp/static/src/components/bom_overview_control_panel/mrp_bom_overview_control_panel.xml:0
 #, python-format
 msgid "Unfold"
 msgstr "펼치기"
 
 #. module: mrp
-#. openerp-web
+#. odoo-javascript
 #: code:addons/mrp/static/src/components/bom_overview_table/mrp_bom_overview_table.xml:0
 #: code:addons/mrp/static/src/components/bom_overview_table/mrp_bom_overview_table.xml:0
 #, python-format
@@ -5297,36 +5366,6 @@ msgid ""
 msgstr "단위(UOM)는 재고 관리를 위한 단위입니다."
 
 #. module: mrp
-#: model:product.product,uom_name:mrp.product_product_computer_desk
-#: model:product.product,uom_name:mrp.product_product_computer_desk_bolt
-#: model:product.product,uom_name:mrp.product_product_computer_desk_head
-#: model:product.product,uom_name:mrp.product_product_computer_desk_leg
-#: model:product.product,uom_name:mrp.product_product_computer_desk_screw
-#: model:product.product,uom_name:mrp.product_product_drawer_case
-#: model:product.product,uom_name:mrp.product_product_drawer_drawer
-#: model:product.product,uom_name:mrp.product_product_plastic_laminate
-#: model:product.product,uom_name:mrp.product_product_ply_veneer
-#: model:product.product,uom_name:mrp.product_product_table_kit
-#: model:product.product,uom_name:mrp.product_product_wood_panel
-#: model:product.product,uom_name:mrp.product_product_wood_ply
-#: model:product.product,uom_name:mrp.product_product_wood_wear
-#: model:product.template,uom_name:mrp.product_product_computer_desk_bolt_product_template
-#: model:product.template,uom_name:mrp.product_product_computer_desk_head_product_template
-#: model:product.template,uom_name:mrp.product_product_computer_desk_leg_product_template
-#: model:product.template,uom_name:mrp.product_product_computer_desk_product_template
-#: model:product.template,uom_name:mrp.product_product_computer_desk_screw_product_template
-#: model:product.template,uom_name:mrp.product_product_drawer_case_product_template
-#: model:product.template,uom_name:mrp.product_product_drawer_drawer_product_template
-#: model:product.template,uom_name:mrp.product_product_plastic_laminate_product_template
-#: model:product.template,uom_name:mrp.product_product_ply_veneer_product_template
-#: model:product.template,uom_name:mrp.product_product_table_kit_product_template
-#: model:product.template,uom_name:mrp.product_product_wood_panel_product_template
-#: model:product.template,uom_name:mrp.product_product_wood_ply_product_template
-#: model:product.template,uom_name:mrp.product_product_wood_wear_product_template
-msgid "Units"
-msgstr "단위"
-
-#. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
 msgid "Unlock"
 msgstr "잠금 해제"
@@ -5353,7 +5392,7 @@ msgid "Unplan"
 msgstr "미계획"
 
 #. module: mrp
-#. openerp-web
+#. odoo-javascript
 #: code:addons/mrp/static/src/mrp_forecasted/forecasted_details.xml:0
 #: model:ir.actions.server,name:mrp.mrp_production_action_unreserve_tree
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
@@ -5368,7 +5407,7 @@ msgid "UoM"
 msgstr "단위"
 
 #. module: mrp
-#. openerp-web
+#. odoo-javascript
 #: code:addons/mrp/static/src/views/mrp_documents_kanban/mrp_documents_kanban_controller.xml:0
 #: code:addons/mrp/static/src/xml/mrp_document_template.xml:0
 #, python-format
@@ -5435,7 +5474,7 @@ msgid "Validate"
 msgstr "승인"
 
 #. module: mrp
-#. openerp-web
+#. odoo-javascript
 #: code:addons/mrp/static/src/components/bom_overview_control_panel/mrp_bom_overview_control_panel.xml:0
 #, python-format
 msgid "Variant:"
@@ -5491,6 +5530,7 @@ msgid "Waiting for components"
 msgstr ""
 
 #. module: mrp
+#. odoo-python
 #: code:addons/mrp/models/mrp_workorder.py:0
 #, python-format
 msgid "Waiting the previous work order, planned from %(start)s to %(end)s"
@@ -5503,7 +5543,7 @@ msgid "Warehouse"
 msgstr "창고"
 
 #. module: mrp
-#. openerp-web
+#. odoo-javascript
 #: code:addons/mrp/static/src/components/bom_overview_control_panel/mrp_bom_overview_control_panel.xml:0
 #, python-format
 msgid "Warehouse:"
@@ -5515,12 +5555,11 @@ msgid "Warn Insufficient Unbuild Quantity"
 msgstr "해체 수량 부족 경고"
 
 #. module: mrp
+#. odoo-python
 #: code:addons/mrp/models/mrp_bom.py:0 code:addons/mrp/models/mrp_bom.py:0
 #: code:addons/mrp/models/mrp_bom.py:0
 #: code:addons/mrp/models/mrp_production.py:0
 #: code:addons/mrp/models/mrp_production.py:0
-#: code:addons/mrp/models/mrp_unbuild.py:0
-#: code:addons/mrp/models/mrp_unbuild.py:0
 #: code:addons/mrp/models/stock_scrap.py:0
 #, python-format
 msgid "Warning"
@@ -5532,7 +5571,6 @@ msgid "Warnings"
 msgstr "경고"
 
 #. module: mrp
-#: model:product.product,name:mrp.product_product_wood_wear
 #: model:product.template,name:mrp.product_product_wood_wear_product_template
 msgid "Wear Layer"
 msgstr "마감재"
@@ -5587,6 +5625,7 @@ msgid ""
 msgstr "제품이 제조된 경우 이 창고에서 제조할 수 있습니다."
 
 #. module: mrp
+#. odoo-python
 #: code:addons/mrp/models/stock_rule.py:0
 #, python-format
 msgid ""
@@ -5626,7 +5665,6 @@ msgid "Wizard to mark as done or create back order"
 msgstr ""
 
 #. module: mrp
-#: model:product.product,name:mrp.product_product_wood_panel
 #: model:product.template,name:mrp.product_product_wood_panel_product_template
 msgid "Wood Panel"
 msgstr "목재판"
@@ -5755,7 +5793,6 @@ msgid "Work Orders Planning"
 msgstr "작업 지시 계획"
 
 #. module: mrp
-#: model:ir.model.fields,field_description:mrp.field_mrp_routing_workcenter__worksheet_type
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_routing_workcenter_form_view
 msgid "Work Sheet"
 msgstr "작업 계획표"
@@ -5794,6 +5831,7 @@ msgid "Workcenter"
 msgstr "작업장"
 
 #. module: mrp
+#. odoo-python
 #: code:addons/mrp/models/mrp_workcenter.py:0
 #, python-format
 msgid "Workcenter %s cannot be an alternative of itself."
@@ -5846,6 +5884,7 @@ msgid "Working user on this work order."
 msgstr "이 작업 지시에 대한 작업자."
 
 #. module: mrp
+#: model:ir.model.fields,field_description:mrp.field_mrp_routing_workcenter__worksheet_type
 #: model:ir.model.fields,field_description:mrp.field_mrp_workorder__worksheet
 msgid "Worksheet"
 msgstr "작업 계획표"
@@ -5861,6 +5900,7 @@ msgid "Worksheet URL"
 msgstr "작업 계획표 URL"
 
 #. module: mrp
+#. odoo-python
 #: code:addons/mrp/models/stock_lot.py:0
 #, python-format
 msgid ""
@@ -5880,6 +5920,7 @@ msgid ""
 msgstr "컴퓨터에서 파일을 업로드하거나 인터넷 링크를 복사하여 파일에 붙여 넣을 수 있습니다."
 
 #. module: mrp
+#. odoo-python
 #: code:addons/mrp/models/mrp_bom.py:0
 #, python-format
 msgid ""
@@ -5888,6 +5929,7 @@ msgid ""
 msgstr "하나 이상의 재주문 규칙이 있는 제품에는 키트 유형의 재료 청구서를 만들 수 없습니다."
 
 #. module: mrp
+#. odoo-python
 #: code:addons/mrp/models/mrp_bom.py:0
 #, python-format
 msgid ""
@@ -5898,6 +5940,7 @@ msgstr ""
 "먼저 닫거나 취소하십시오."
 
 #. module: mrp
+#. odoo-python
 #: code:addons/mrp/models/mrp_production.py:0
 #, python-format
 msgid ""
@@ -5905,6 +5948,7 @@ msgid ""
 msgstr ""
 
 #. module: mrp
+#. odoo-python
 #: code:addons/mrp/models/mrp_production.py:0
 #, python-format
 msgid ""
@@ -5913,18 +5957,21 @@ msgid ""
 msgstr ""
 
 #. module: mrp
+#. odoo-python
 #: code:addons/mrp/models/mrp_production.py:0
 #, python-format
 msgid "You can only merge manufacturing with the same operation type"
 msgstr ""
 
 #. module: mrp
+#. odoo-python
 #: code:addons/mrp/models/mrp_production.py:0
 #, python-format
 msgid "You can only merge manufacturing with the same state."
 msgstr ""
 
 #. module: mrp
+#. odoo-python
 #: code:addons/mrp/models/mrp_workorder.py:0
 #, python-format
 msgid ""
@@ -5933,12 +5980,14 @@ msgid ""
 msgstr "진행 중이거나 완료된 작업 지시의 작업장을 변경할 수 없습니다."
 
 #. module: mrp
+#. odoo-python
 #: code:addons/mrp/models/mrp_bom.py:0
 #, python-format
 msgid "You cannot create a new Bill of Material from here."
 msgstr "여기서는 새로운 재료 명세서를 만들 수 없습니다."
 
 #. module: mrp
+#. odoo-python
 #: code:addons/mrp/models/mrp_routing.py:0
 #: code:addons/mrp/models/mrp_workorder.py:0
 #, python-format
@@ -5946,42 +5995,49 @@ msgid "You cannot create cyclic dependency."
 msgstr ""
 
 #. module: mrp
+#. odoo-python
 #: code:addons/mrp/models/mrp_unbuild.py:0
 #, python-format
 msgid "You cannot delete an unbuild order if the state is 'Done'."
 msgstr "상태가 '완료'인 해체 지시는 삭제할 수 없습니다."
 
 #. module: mrp
+#. odoo-python
 #: code:addons/mrp/models/mrp_production.py:0
 #, python-format
 msgid "You cannot have %s  as the finished product and in the Byproducts"
 msgstr "%s을 완제품 및 부산물로 가질 수 없습니다."
 
 #. module: mrp
+#. odoo-python
 #: code:addons/mrp/models/mrp_workorder.py:0
 #, python-format
 msgid "You cannot link this work order to another manufacturing order."
 msgstr "이 작업 지시를 다른 제조 주문에 연결할 수 없습니다."
 
 #. module: mrp
+#. odoo-python
 #: code:addons/mrp/models/mrp_production.py:0
 #, python-format
 msgid "You cannot move a manufacturing order once it is cancelled or done."
 msgstr "취소되거나 완료된 제조 주문은 이동할 수 없습니다."
 
 #. module: mrp
+#. odoo-python
 #: code:addons/mrp/models/mrp_workorder.py:0
 #, python-format
 msgid "You cannot produce the same serial number twice."
 msgstr "동일한 일련 번호를 두 번 생성할 수 없습니다."
 
 #. module: mrp
+#. odoo-python
 #: code:addons/mrp/models/mrp_unbuild.py:0
 #, python-format
 msgid "You cannot unbuild a undone manufacturing order."
 msgstr "취소된 제조 주문을 해체 지시할 수 없습니다."
 
 #. module: mrp
+#. odoo-python
 #: code:addons/mrp/models/mrp_bom.py:0
 #, python-format
 msgid ""
@@ -6004,6 +6060,7 @@ msgid ""
 msgstr ""
 
 #. module: mrp
+#. odoo-python
 #: code:addons/mrp/wizard/change_production_qty.py:0
 #, python-format
 msgid ""
@@ -6028,6 +6085,7 @@ msgid ""
 msgstr ""
 
 #. module: mrp
+#. odoo-python
 #: code:addons/mrp/models/mrp_production.py:0
 #, python-format
 msgid ""
@@ -6036,12 +6094,14 @@ msgid ""
 msgstr "구성 요소 중 하나 이상에 대해 0이 아닌 값을 지정해야 합니다."
 
 #. module: mrp
+#. odoo-python
 #: code:addons/mrp/models/mrp_production.py:0
 #, python-format
 msgid "You need at least two production orders to merge them."
 msgstr ""
 
 #. module: mrp
+#. odoo-python
 #: code:addons/mrp/models/mrp_workorder.py:0
 #, python-format
 msgid ""
@@ -6052,6 +6112,7 @@ msgstr ""
 "'실적' 범주에서 적어도 하나의 생산성 손실을 정의해야 합니다. 제조 관리 앱 메뉴에서 환경 설정 / 생산성 손실에서 만듭니다."
 
 #. module: mrp
+#. odoo-python
 #: code:addons/mrp/models/mrp_workorder.py:0
 #, python-format
 msgid ""
@@ -6062,6 +6123,7 @@ msgstr ""
 "'생산성' 범주에서 적어도 하나의 생산성 손실을 정의해야 합니다. 제조 관리 앱 메뉴에서 환경 설정 / 생산성 손실에서 만듭니다."
 
 #. module: mrp
+#. odoo-python
 #: code:addons/mrp/models/mrp_workcenter.py:0
 #, python-format
 msgid ""
@@ -6072,12 +6134,14 @@ msgstr ""
 "'실적' 범주에서 적어도 하나의 비활성 생산성 손실을 정의해야 합니다. 제조 관리 앱 메뉴에서 환경 설정 / 생산성 손실에서 만듭니다."
 
 #. module: mrp
+#. odoo-python
 #: code:addons/mrp/models/mrp_workorder.py:0
 #, python-format
 msgid "You need to provide a lot for the finished product."
 msgstr "완제품을 위해서는 많은 것을 제공해야 합니다."
 
 #. module: mrp
+#. odoo-python
 #: code:addons/mrp/wizard/mrp_immediate_production.py:0
 #, python-format
 msgid "You need to supply Lot/Serial Number for products:"
@@ -6089,6 +6153,7 @@ msgid "You produced less than initial demand"
 msgstr ""
 
 #. module: mrp
+#. odoo-python
 #: code:addons/mrp/models/mrp_unbuild.py:0
 #, python-format
 msgid "You should provide a lot number for the final product."
@@ -6149,18 +6214,21 @@ msgid "last"
 msgstr "최근"
 
 #. module: mrp
+#. odoo-python
 #: code:addons/mrp/models/mrp_production.py:0
 #, python-format
 msgid "manufacturing order"
 msgstr "제조 주문"
 
 #. module: mrp
+#. odoo-python
 #: code:addons/mrp/models/mrp_production.py:0
 #, python-format
 msgid "merged"
 msgstr ""
 
 #. module: mrp
+#. odoo-python
 #: code:addons/mrp/report/mrp_report_bom_structure.py:0
 #: code:addons/mrp/report/mrp_report_bom_structure.py:0
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_routing_workcenter_form_view
@@ -6200,6 +6268,7 @@ msgid "real duration"
 msgstr ""
 
 #. module: mrp
+#. odoo-python
 #: code:addons/mrp/models/mrp_production.py:0
 #, python-format
 msgid "split"

@@ -755,6 +755,7 @@ td {
     padding-right: 40px;
     border-top: none;
     border-right: none;
+    overflow-wrap: break-word;
 }
 .pos .actionpad .button.set-partner.decentered {
     padding-left: 40px;
@@ -1160,8 +1161,7 @@ td {
 
 @media screen and (max-width: 768px) {
     .pos .product:active {
-        border: solid 3px $primary;
-        box-sizing: border-box;
+        box-shadow: 0 0 0 3px $primary;
     }
 }
 
@@ -2182,6 +2182,7 @@ td {
     padding: map-get($spacers, 2) map-get($spacers, 3);
     border-top: 1px solid $gray-200;
     box-sizing: border-box;
+    background:  inherit;
 }
 .pos .order .summary .total {
     font-size: 22px;

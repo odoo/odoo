@@ -58,3 +58,5 @@ Andrea Arce andrea@vauxoo.com https://github.com/andreaarce
 Francisco Alejandro González Luna aluna@vauxoo.com https://github.com/TheAlekLuna
 Juan Benavente jbenavente@vauxoo.com https://github.com/jjbenavaz
 Alejandro Garza agarza@vauxoo.com https://github.com/agarzaarvizu
+Ulises Rivadeneyra ulises@vauxoo.com https://github.com/UlisesRivadeneyra
+Alexis Hernandez alexis@vauxoo.com https://github.com/sebasdrk17

@@ -95,6 +95,11 @@
         @extend .oe_inline;
         float: right!important;
     }
+    @for $i from 2 through 12 {
+        .o_field_widget.o_input_#{$i}ch input{
+            width: 1ch * $i !important;
+        }
+    }
 
     .o_field_empty:empty {
         min-height: $font-size-base * $line-height-base;
@@ -205,16 +210,11 @@
     // rules for fields borders: only on hover/focus by default
     // except when used with o_field_highlight (on parent or on the field)
     .o_input {
-        border-color: transparent;
         padding: $o-input-padding-y $o-input-padding-x;
-
-        &:hover, &:focus {
-            border-color: var(--o-input-border-color);
-        }
     }
 
-    &.o_field_invalid .o_input {
-        border-color: var(--o-input-border-color);
+    &:not(.o_field_highlight) .o_field_widget:not(.o_field_invalid):not(.o_field_highlight) .o_input:not(:hover):not(:focus) {
+        --o-input-border-color: transparent;
     }
 
     .o_datepicker {
@@ -449,13 +449,13 @@
         }
         .o_wrap_label .o_form_label {
             font-weight: $font-weight-bold;
-            margin-right: $o-form-label-margin-right;
         }
     }
 
     .o_inner_group {
         --columns: 1;
         gap: map-get($spacers, 2) $o-horizontal-padding;
+        margin-bottom: map-get($spacers, 2);
 
         span, .o_field_boolean, .oe_avatar, .o_form_uri {
             &.o_field_widget {
@@ -467,6 +467,9 @@
     @include media-breakpoint-up(sm) {
         .o_inner_group {
             grid-template-columns: fit-content(150px) 1fr;
+            &.o_form_fw_labels {
+                grid-template-columns: 150px 1fr;
+            }
         }
     }
 
@@ -486,7 +489,6 @@
 
         > .o_form_label {
             color: $headings-color;
-            margin-right: $o-form-label-margin-right;
             font-weight: $font-weight-bold;
         }
     }
@@ -592,7 +594,6 @@
 
     // Labels
     .o_form_label {
-        margin-right: $o-form-spacing-unit;
         font-size: $font-size-base; // The label muse have the same size whatever their position
         line-height: $line-height-base;
         font-weight: $font-weight-bold;

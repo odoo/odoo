@@ -516,7 +516,6 @@
                     "format": 3
                 },
                 "C44": {
-                    "format": 3,
                     "content": "=iferror(if(B44,B44/ODOO.PIVOT(2,\"price_subtotal\"),\"\"),\"\")"
                 },
                 "C45": {
@@ -839,8 +838,7 @@
                     "border": 2
                 },
                 "F21": {
-                    "style": 14,
-                    "format": 1,
+                    "style": 15,
                     "content": "=ODOO.LIST(1,1,\"invoice_date\")"
                 },
                 "F22": {
@@ -1004,52 +1002,42 @@
                 },
                 "G21": {
                     "style": 17,
-                    "format": 3,
                     "content": "=ODOO.LIST(1,1,\"amount_untaxed_signed\")"
                 },
                 "G22": {
                     "style": 6,
-                    "format": 3,
                     "content": "=ODOO.LIST(1,2,\"amount_untaxed_signed\")"
                 },
                 "G23": {
                     "style": 17,
-                    "format": 3,
                     "content": "=ODOO.LIST(1,3,\"amount_untaxed_signed\")"
                 },
                 "G24": {
                     "style": 6,
-                    "format": 3,
                     "content": "=ODOO.LIST(1,4,\"amount_untaxed_signed\")"
                 },
                 "G25": {
                     "style": 17,
-                    "format": 3,
                     "content": "=ODOO.LIST(1,5,\"amount_untaxed_signed\")"
                 },
                 "G26": {
                     "style": 6,
-                    "format": 3,
                     "content": "=ODOO.LIST(1,6,\"amount_untaxed_signed\")"
                 },
                 "G27": {
                     "style": 17,
-                    "format": 3,
                     "content": "=ODOO.LIST(1,7,\"amount_untaxed_signed\")"
                 },
                 "G28": {
                     "style": 6,
-                    "format": 3,
                     "content": "=ODOO.LIST(1,8,\"amount_untaxed_signed\")"
                 },
                 "G29": {
                     "style": 17,
-                    "format": 3,
                     "content": "=ODOO.LIST(1,9,\"amount_untaxed_signed\")"
                 },
                 "G30": {
                     "style": 6,
-                    "format": 3,
                     "content": "=ODOO.LIST(1,10,\"amount_untaxed_signed\")"
                 },
                 "G31": {
@@ -1113,7 +1101,6 @@
                     "format": 3
                 },
                 "G44": {
-                    "format": 3,
                     "content": "=iferror(if(F44,F44/ODOO.PIVOT(1,\"price_subtotal\"),\"\"),\"\")"
                 },
                 "G45": {
@@ -1235,7 +1222,6 @@
                     "tag": "chart",
                     "data": {
                         "title": "",
-                        "id": "5ea5dd7f-9f83-4482-a2bb-2ec72ab35912",
                         "background": "#FFFFFF",
                         "legendPosition": "none",
                         "metaData": {
@@ -1396,35 +1382,28 @@
                     "content": "=_t(\"KPI - Unpaid Invoices\")"
                 },
                 "B1": {
-                    "format": 4,
                     "content": "=ODOO.PIVOT(5,\"price_subtotal\")"
                 },
                 "B2": {
-                    "format": 4,
-                    "content": "=ODOO.PIVOT(6,\"price_subtotal\")/B3"
+                    "content": "=IFERROR(ODOO.PIVOT(6,\"price_subtotal\")/B3)"
                 },
                 "B3": {
                     "format": 1,
                     "content": "=ODOO.PIVOT(6,\"__count\")"
                 },
                 "B4": {
-                    "format": 4,
                     "content": "=YEAR(TODAY())"
                 },
                 "B5": {
-                    "format": 4,
                     "content": "=ODOO.BALANCE(ODOO.ACCOUNT.GROUP(\"asset_receivable\"),$B$4)"
                 },
                 "B6": {
-                    "format": 4,
                     "content": "=-ODOO.BALANCE(ODOO.ACCOUNT.GROUP(\"income\"),$B$4)"
                 },
                 "B7": {
-                    "format": 4,
                     "content": "=ODOO.BALANCE(ODOO.ACCOUNT.GROUP(\"expense_direct_cost\"),$B$4)"
                 },
                 "B8": {
-                    "format": 4,
                     "content": "=B6-B7"
                 },
                 "B9": {
@@ -1435,7 +1414,6 @@
                     "content": "=ROUND(IFERROR(B5/B8*B9))"
                 },
                 "B11": {
-                    "format": 4,
                     "content": "=ODOO.PIVOT(7,\"price_subtotal\")"
                 },
                 "C1": {
@@ -1444,7 +1422,6 @@
                 },
                 "C2": {
                     "style": 15,
-                    "format": 3,
                     "content": "=FORMAT.LARGE.NUMBER(B2)"
                 },
                 "C3": {
@@ -1952,7 +1929,7 @@
             "id": "757a1b4b-e339-4879-beb6-9851050387cf",
             "type": "date",
             "label": "Period",
-            "defaultValue": "last_year",
+            "defaultValue": "last_three_months",
             "rangeType": "relative",
             "defaultsToCurrentPeriod": true,
             "pivotFields": {
@@ -2048,7 +2025,7 @@
             },
             "listFields": {
                 "1": {
-                    "field": "partner_id",
+                    "field": "partner_id.country_id",
                     "type": "many2one"
                 }
             },
@@ -2100,8 +2077,8 @@
             },
             "listFields": {
                 "1": {
-                    "field": "invoice_line_ids",
-                    "type": "one2many"
+                    "field": "invoice_line_ids.product_id.categ_id",
+                    "type": "many2one"
                 }
             },
             "graphFields": {
@@ -2152,8 +2129,8 @@
             },
             "listFields": {
                 "1": {
-                    "field": "invoice_line_ids",
-                    "type": "one2many"
+                    "field": "invoice_line_ids.product_id",
+                    "type": "many2one"
                 }
             },
             "graphFields": {

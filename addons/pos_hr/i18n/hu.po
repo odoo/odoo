@@ -3,17 +3,17 @@
 # 	* pos_hr
 # 
 # Translators:
-# Martin Trigaux, 2019
-# krnkris, 2019
-# Ákos Nagy <akos.nagy@oregional.hu>, 2019
+# Zsolt Godó <zsolttokio@gmail.com>, 2022
+# krnkris, 2022
+# Martin Trigaux, 2022
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~12.5\n"
+"Project-Id-Version: Odoo Server 16.0beta\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-08-26 08:16+0000\n"
-"PO-Revision-Date: 2019-08-26 09:13+0000\n"
-"Last-Translator: Ákos Nagy <akos.nagy@oregional.hu>, 2019\n"
+"POT-Creation-Date: 2022-09-23 08:02+0000\n"
+"PO-Revision-Date: 2022-09-22 05:54+0000\n"
+"Last-Translator: Martin Trigaux, 2022\n"
 "Language-Team: Hungarian (https://www.transifex.com/odoo/teams/41243/hu/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -23,7 +23,8 @@ msgstr ""
 
 #. module: pos_hr
 #: model_terms:ir.ui.view,arch_db:pos_hr.pos_config_form_view_inherit
-msgid "<span class=\"o_form_label oe_edit_only\">Allowed Employees </span>"
+#: model_terms:ir.ui.view,arch_db:pos_hr.res_config_settings_view_form
+msgid "Allowed Employees"
 msgstr ""
 
 #. module: pos_hr
@@ -35,18 +36,15 @@ msgstr "Pénztáros"
 
 #. module: pos_hr
 #. openerp-web
-#: code:addons/pos_hr/static/src/js/chrome.js:0
-#: code:addons/pos_hr/static/src/js/screens.js:0
+#: code:addons/pos_hr/static/src/js/SelectCashierMixin.js:0
 #, python-format
 msgid "Change Cashier"
 msgstr "Kassza aprópénz"
 
 #. module: pos_hr
-#. openerp-web
-#: code:addons/pos_hr/static/src/xml/pos.xml:0
-#, python-format
-msgid "Close session"
-msgstr ""
+#: model:ir.model,name:pos_hr.model_res_config_settings
+msgid "Config Settings"
+msgstr "Beállítások módosítása"
 
 #. module: pos_hr
 #: model:ir.model,name:pos_hr.model_hr_employee
@@ -64,45 +62,33 @@ msgstr ""
 
 #. module: pos_hr
 #: model:ir.model.fields,field_description:pos_hr.field_pos_config__employee_ids
+#: model:ir.model.fields,field_description:pos_hr.field_res_config_settings__pos_employee_ids
 msgid "Employees with access"
 msgstr ""
 
 #. module: pos_hr
 #: model:ir.model.fields,help:pos_hr.field_pos_config__employee_ids
+#: model:ir.model.fields,help:pos_hr.field_res_config_settings__pos_employee_ids
 msgid "If left empty, all employees can log in to the PoS session"
 msgstr ""
 
 #. module: pos_hr
 #. openerp-web
-#: code:addons/pos_hr/static/src/js/gui.js:0
+#: code:addons/pos_hr/static/src/js/SelectCashierMixin.js:0
 #, python-format
 msgid "Incorrect Password"
 msgstr "Hibás jelszó"
 
 #. module: pos_hr
 #. openerp-web
-#: code:addons/pos_hr/static/src/js/chrome.js:0
-#, python-format
-msgid "Lock"
-msgstr "Zárolás"
-
-#. module: pos_hr
-#. openerp-web
-#: code:addons/pos_hr/static/src/xml/pos.xml:0
+#: code:addons/pos_hr/static/src/xml/LoginScreen.xml:0
 #, python-format
 msgid "Log in to"
 msgstr ""
 
 #. module: pos_hr
-#: model_terms:ir.ui.view,arch_db:pos_hr.pos_config_form_view_inherit
-msgid ""
-"Only users with Manager access rights for PoS app can modify the product "
-"prices on orders."
-msgstr ""
-
-#. module: pos_hr
 #. openerp-web
-#: code:addons/pos_hr/static/src/js/gui.js:0
+#: code:addons/pos_hr/static/src/js/SelectCashierMixin.js:0
 #, python-format
 msgid "Password ?"
 msgstr "Jelszó ?"
@@ -132,35 +118,23 @@ msgid "Point of Sale Orders Report"
 msgstr ""
 
 #. module: pos_hr
-#: model_terms:ir.ui.view,arch_db:pos_hr.pos_config_form_view_inherit
-msgid "Price Control"
-msgstr ""
-
-#. module: pos_hr
-#: model_terms:ir.ui.view,arch_db:pos_hr.pos_config_form_view_inherit
-msgid "Restrict price modification to managers"
-msgstr ""
+#: model:ir.model,name:pos_hr.model_pos_session
+msgid "Point of Sale Session"
+msgstr "Értékesítési Pont Értékesítési folyamat"
 
 #. module: pos_hr
 #. openerp-web
-#: code:addons/pos_hr/static/src/xml/pos.xml:0
+#: code:addons/pos_hr/static/src/xml/LoginScreen.xml:0
 #, python-format
 msgid "Scan your badge"
 msgstr "Jelvénye beszkennelése"
 
 #. module: pos_hr
 #. openerp-web
-#: code:addons/pos_hr/static/src/xml/pos.xml:0
+#: code:addons/pos_hr/static/src/xml/LoginScreen.xml:0
 #, python-format
 msgid "Select Cashier"
 msgstr ""
-
-#. module: pos_hr
-#. openerp-web
-#: code:addons/pos_hr/static/src/js/gui.js:0
-#, python-format
-msgid "Select User"
-msgstr "Felhasználó kiválasztása"
 
 #. module: pos_hr
 #: code:addons/pos_hr/models/hr_employee.py:0
@@ -172,7 +146,7 @@ msgstr ""
 
 #. module: pos_hr
 #. openerp-web
-#: code:addons/pos_hr/static/src/xml/pos.xml:0
+#: code:addons/pos_hr/static/src/xml/LoginScreen.xml:0
 #, python-format
 msgid "or"
 msgstr "vagy"

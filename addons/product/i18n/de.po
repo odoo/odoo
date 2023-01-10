@@ -10,9 +10,9 @@
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 16.0beta\n"
+"Project-Id-Version: Odoo Server 16.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-10-04 09:25+0000\n"
+"POT-Creation-Date: 2022-12-15 12:51+0000\n"
 "PO-Revision-Date: 2022-09-22 05:54+0000\n"
 "Last-Translator: Martin Trigaux, 2022\n"
 "Language-Team: German (https://www.transifex.com/odoo/teams/41243/de/)\n"
@@ -34,6 +34,7 @@ msgid "# Products"
 msgstr "# Produkte"
 
 #. module: product
+#. odoo-python
 #: code:addons/product/models/product_pricelist_item.py:0
 #, python-format
 msgid ""
@@ -44,24 +45,28 @@ msgstr ""
 "Beispiel: %(amount)s * %(discount_charge)s + %(price_surcharge)s → %(total_amount)s"
 
 #. module: product
+#. odoo-python
 #: code:addons/product/models/product_pricelist_item.py:0
 #, python-format
 msgid "%(percentage)s %% discount and %(price)s surcharge"
 msgstr "%(percentage)s%% Rabatt und %(price)s Aufschlag"
 
 #. module: product
+#. odoo-python
 #: code:addons/product/models/product_pricelist_item.py:0
 #, python-format
 msgid "%s %% discount"
 msgstr "%s %% Rabatt"
 
 #. module: product
+#. odoo-python
 #: code:addons/product/models/product_template.py:0
 #, python-format
 msgid "%s (copy)"
 msgstr "%s (Kopie)"
 
 #. module: product
+#. odoo-python
 #: code:addons/product/models/product_pricelist_item.py:0
 #, python-format
 msgid "%s : end date (%s) should be greater than start date (%s)"
@@ -79,6 +84,7 @@ msgid "'Products packaging - %s' % (object.name)"
 msgstr "'Produktpackungen - %s' % (object.name)"
 
 #. module: product
+#. odoo-python
 #: code:addons/product/models/product_product.py:0
 #, python-format
 msgid "- Barcode \"%s\" already assigned to product(s): %s"
@@ -103,10 +109,6 @@ msgid "1 year"
 msgstr "1 Jahr"
 
 #. module: product
-#: model:product.product,description_sale:product.product_product_4
-#: model:product.product,description_sale:product.product_product_4b
-#: model:product.product,description_sale:product.product_product_4c
-#: model:product.product,description_sale:product.product_product_4d
 #: model:product.template,description_sale:product.product_product_4_product_template
 msgid "160x80cm, with large legs."
 msgstr "160x80cm, mit langen Beinen."
@@ -237,6 +239,7 @@ msgstr ""
 "Kundenrechnung/Kreditanmerkung kopiert."
 
 #. module: product
+#. odoo-python
 #: code:addons/product/models/product_product.py:0
 #, python-format
 msgid "A packaging already uses the barcode"
@@ -250,6 +253,7 @@ msgid ""
 msgstr ""
 
 #. module: product
+#. odoo-python
 #: code:addons/product/models/product_packaging.py:0
 #, python-format
 msgid "A product already uses the barcode"
@@ -268,7 +272,6 @@ msgstr ""
 "Eine Dienstleistung ist ein von Ihnen bereitgestelltes immaterielles Produkt."
 
 #. module: product
-#: model:product.product,name:product.product_product_25
 #: model:product.template,name:product.product_product_25_product_template
 msgid "Acoustic Bloc Screens"
 msgstr "Akustische Blockbildschirme"
@@ -321,7 +324,7 @@ msgid "Activity Type Icon"
 msgstr "Aktivitäts-Typ-Icon"
 
 #. module: product
-#. openerp-web
+#. odoo-javascript
 #: code:addons/product/static/src/xml/pricelist_report.xml:0
 #, python-format
 msgid "Add a quantity"
@@ -354,6 +357,7 @@ msgid "All Product Variants using this Tag"
 msgstr ""
 
 #. module: product
+#. odoo-python
 #: code:addons/product/models/product_pricelist_item.py:0
 #: model:ir.model.fields.selection,name:product.selection__product_pricelist_item__applied_on__3_global
 #, python-format
@@ -379,8 +383,6 @@ msgstr ""
 
 #. module: product
 #: model:product.attribute.value,name:product.product_attribute_value_2
-#: model:product.template.attribute.value,name:product.product_11_attribute_1_value_2
-#: model:product.template.attribute.value,name:product.product_4_attribute_1_value_2
 msgid "Aluminium"
 msgstr "Aluminium"
 
@@ -417,7 +419,7 @@ msgid "Assigns the priority to the list of product vendor."
 msgstr "Weist der Produkt-Lieferantenliste Prioritäten zu."
 
 #. module: product
-#. openerp-web
+#. odoo-javascript
 #: code:addons/product/static/src/js/product_pricelist_report.js:0
 #, python-format
 msgid ""
@@ -502,6 +504,7 @@ msgstr ""
 "enthaltenen Einheiten zu verschieben"
 
 #. module: product
+#. odoo-python
 #: code:addons/product/models/product_product.py:0
 #, python-format
 msgid ""
@@ -535,12 +538,10 @@ msgstr "Basispreisliste"
 
 #. module: product
 #: model:product.attribute.value,name:product.product_attribute_value_4
-#: model:product.template.attribute.value,name:product.product_4_attribute_2_value_2
 msgid "Black"
 msgstr "Schwarz"
 
 #. module: product
-#: model:product.product,name:product.product_product_10
 #: model:product.template,name:product.product_product_10_product_template
 msgid "Cabinet with Doors"
 msgstr "Schrank mit Türen"
@@ -576,6 +577,7 @@ msgid "Category"
 msgstr "Kategorie"
 
 #. module: product
+#. odoo-python
 #: code:addons/product/models/product_pricelist_item.py:0
 #, python-format
 msgid "Category: %s"
@@ -663,14 +665,11 @@ msgid "Conditions"
 msgstr "Bedingungen"
 
 #. module: product
-#: model:product.product,name:product.product_product_11
-#: model:product.product,name:product.product_product_11b
 #: model:product.template,name:product.product_product_11_product_template
 msgid "Conference Chair"
 msgstr "Konferenzstuhl"
 
 #. module: product
-#: model:product.product,description_sale:product.consu_delivery_02
 #: model:product.template,description_sale:product.consu_delivery_02_product_template
 msgid "Conference room table"
 msgstr "Konferenzraumtisch"
@@ -702,6 +701,7 @@ msgid "Consumable"
 msgstr "Verbrauchsartikel"
 
 #. module: product
+#. odoo-python
 #: code:addons/product/models/product_template.py:0
 #, python-format
 msgid ""
@@ -717,10 +717,6 @@ msgid "Contact"
 msgstr "Kontakt"
 
 #. module: product
-#: model_terms:product.product,website_description:product.product_product_4
-#: model_terms:product.product,website_description:product.product_product_4b
-#: model_terms:product.product,website_description:product.product_product_4c
-#: model_terms:product.product,website_description:product.product_product_4d
 #: model_terms:product.template,website_description:product.product_product_4_product_template
 msgid "Contact Us"
 msgstr "Kontaktieren Sie uns"
@@ -741,13 +737,11 @@ msgid "Contained quantity"
 msgstr "Enthaltene Menge"
 
 #. module: product
-#: model:product.product,name:product.product_product_13
 #: model:product.template,name:product.product_product_13_product_template
 msgid "Corner Desk Left Sit"
 msgstr "Eckschreibtisch Links Sitzen"
 
 #. module: product
-#: model:product.product,name:product.product_product_5
 #: model:product.template,name:product.product_product_5_product_template
 msgid "Corner Desk Right Sit"
 msgstr "Eckschreibtisch rechts sitzen"
@@ -863,19 +857,9 @@ msgid "Customer Ref"
 msgstr "Kunden Ref"
 
 #. module: product
-#: model:product.product,name:product.product_product_4
-#: model:product.product,name:product.product_product_4b
-#: model:product.product,name:product.product_product_4c
-#: model:product.product,name:product.product_product_4d
 #: model:product.template,name:product.product_product_4_product_template
 msgid "Customizable Desk"
 msgstr "Anpassbarer Schreibtisch"
-
-#. module: product
-#: model:product.product,uom_name:product.expense_hotel
-#: model:product.template,uom_name:product.expense_hotel_product_template
-msgid "Days"
-msgstr "Tage"
 
 #. module: product
 #: model:ir.model,name:product.model_decimal_precision
@@ -883,6 +867,7 @@ msgid "Decimal Precision"
 msgstr "Dezimalstellen"
 
 #. module: product
+#. odoo-python
 #: code:addons/product/models/res_company.py:0
 #: code:addons/product/models/res_company.py:0
 #, python-format
@@ -934,19 +919,16 @@ msgid "Description"
 msgstr "Beschreibung"
 
 #. module: product
-#: model:product.product,name:product.product_product_3
 #: model:product.template,name:product.product_product_3_product_template
 msgid "Desk Combination"
 msgstr "Schreibtischkombination"
 
 #. module: product
-#: model:product.product,name:product.product_product_22
 #: model:product.template,name:product.product_product_22_product_template
 msgid "Desk Stand with Screen"
 msgstr "Tischständer mit Leinwand"
 
 #. module: product
-#: model:product.product,description_sale:product.product_product_3
 #: model:product.template,description_sale:product.product_product_3_product_template
 msgid "Desk combination, black-brown: chair + desk + drawer."
 msgstr ""
@@ -1010,7 +992,7 @@ msgid "Display Name"
 msgstr "Anzeigename"
 
 #. module: product
-#. openerp-web
+#. odoo-javascript
 #: code:addons/product/static/src/xml/pricelist_report.xml:0
 #, python-format
 msgid "Display Pricelist"
@@ -1029,19 +1011,16 @@ msgid "Documentation"
 msgstr "Dokumentation"
 
 #. module: product
-#: model:product.product,name:product.product_product_27
 #: model:product.template,name:product.product_product_27_product_template
 msgid "Drawer"
 msgstr "Schublade"
 
 #. module: product
-#: model:product.product,name:product.product_product_16
 #: model:product.template,name:product.product_product_16_product_template
 msgid "Drawer Black"
 msgstr "Schublade schwarz"
 
 #. module: product
-#: model_terms:product.product,description:product.product_product_27
 #: model_terms:product.template,description:product.product_product_27_product_template
 msgid "Drawer with two routing possiblities."
 msgstr "Schublade mit zwei Fräsmöglichkeiten."
@@ -1088,10 +1067,6 @@ msgstr ""
 "Der angezeigte Wert hängt von der in Ihren Einstellungen festgelegten Zeitzone ab."
 
 #. module: product
-#: model_terms:product.product,website_description:product.product_product_4
-#: model_terms:product.product,website_description:product.product_product_4b
-#: model_terms:product.product,website_description:product.product_product_4c
-#: model_terms:product.product,website_description:product.product_product_4d
 #: model_terms:product.template,website_description:product.product_product_4_product_template
 msgid "Ergonomic"
 msgstr "Ergonomisch"
@@ -1145,7 +1120,6 @@ msgid "Fixed Price"
 msgstr "Festpreis"
 
 #. module: product
-#: model:product.product,name:product.product_product_20
 #: model:product.template,name:product.product_product_20_product_template
 msgid "Flipover"
 msgstr "Flipover"
@@ -1188,13 +1162,11 @@ msgid "Formula"
 msgstr "Formel"
 
 #. module: product
-#: model:product.product,name:product.consu_delivery_03
 #: model:product.template,name:product.consu_delivery_03_product_template
 msgid "Four Person Desk"
 msgstr "Schreibtisch für vier Personen"
 
 #. module: product
-#: model:product.product,description_sale:product.consu_delivery_03
 #: model:product.template,description_sale:product.consu_delivery_03_product_template
 msgid "Four person modern office workstation"
 msgstr "Moderner Büroarbeitsplatz für vier Personen"
@@ -1271,18 +1243,9 @@ msgstr ""
 "um die Farbe anzuzeigen, wenn das Attribut vom Typ \"Farbe\" ist."
 
 #. module: product
-#: model:product.product,name:product.expense_hotel
 #: model:product.template,name:product.expense_hotel_product_template
 msgid "Hotel Accommodation"
 msgstr "Übernachtungskosten"
-
-#. module: product
-#: model:product.product,uom_name:product.product_product_1
-#: model:product.product,uom_name:product.product_product_2
-#: model:product.template,uom_name:product.product_product_1_product_template
-#: model:product.template,uom_name:product.product_product_2_product_template
-msgid "Hours"
-msgstr "Stunden"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_attribute__id
@@ -1323,7 +1286,9 @@ msgstr "Falls markiert, benötigen neue Nachrichten Ihre Kenntnisnahme."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_product__message_has_error
+#: model:ir.model.fields,help:product.field_product_product__message_has_sms_error
 #: model:ir.model.fields,help:product.field_product_template__message_has_error
+#: model:ir.model.fields,help:product.field_product_template__message_has_sms_error
 msgid "If checked, some messages have a delivery error."
 msgstr "Wenn gewählt, ist das Senden einiger Nachrichten fehlgeschlagen."
 
@@ -1383,18 +1348,21 @@ msgid "Image 512"
 msgstr "Bild 512"
 
 #. module: product
+#. odoo-python
 #: code:addons/product/models/product_pricelist.py:0
 #, python-format
 msgid "Import Template for Pricelists"
 msgstr "Importvorlage für Preislisten"
 
 #. module: product
+#. odoo-python
 #: code:addons/product/models/product_template.py:0
 #, python-format
 msgid "Import Template for Products"
 msgstr "Importier-Vorlage für Produkte "
 
 #. module: product
+#. odoo-python
 #: code:addons/product/models/product_supplierinfo.py:0
 #, python-format
 msgid "Import Template for Vendor Pricelists"
@@ -1420,7 +1388,6 @@ msgid "Inactive"
 msgstr "Inaktiv"
 
 #. module: product
-#: model:product.product,name:product.product_product_24
 #: model:product.template,name:product.product_product_24_product_template
 msgid "Individual Workplace"
 msgstr "Individueller Arbeitsplatz"
@@ -1485,19 +1452,16 @@ msgid "Kilograms"
 msgstr "Kilogramm"
 
 #. module: product
-#: model:product.product,name:product.product_product_6
 #: model:product.template,name:product.product_product_6_product_template
 msgid "Large Cabinet"
 msgstr "Großer Schrank"
 
 #. module: product
-#: model:product.product,name:product.product_product_8
 #: model:product.template,name:product.product_product_8_product_template
 msgid "Large Desk"
 msgstr "Großer Schreibtisch"
 
 #. module: product
-#: model:product.product,name:product.consu_delivery_02
 #: model:product.template,name:product.consu_delivery_02_product_template
 msgid "Large Meeting Table"
 msgstr "Großer Besprechungstisch"
@@ -1587,10 +1551,6 @@ msgid "Lines"
 msgstr "Zeilen"
 
 #. module: product
-#: model_terms:product.product,website_description:product.product_product_4
-#: model_terms:product.product,website_description:product.product_product_4b
-#: model_terms:product.product,website_description:product.product_product_4c
-#: model_terms:product.product,website_description:product.product_product_4d
 #: model_terms:product.template,website_description:product.product_product_4_product_template
 msgid "Locally handmade"
 msgstr "Handgefertigt in der Region"
@@ -1602,10 +1562,6 @@ msgid "Logistics"
 msgstr "Logistik"
 
 #. module: product
-#: model_terms:product.product,website_description:product.product_product_4
-#: model_terms:product.product,website_description:product.product_product_4b
-#: model_terms:product.product,website_description:product.product_product_4c
-#: model_terms:product.product,website_description:product.product_product_4d
 #: model_terms:product.template,website_description:product.product_product_4_product_template
 msgid ""
 "Looking for a custom bamboo stain to match existing furniture? Contact us "
@@ -1741,6 +1697,7 @@ msgid "Next Activity Type"
 msgstr "Nächster Aktivitätstyp"
 
 #. module: product
+#. odoo-python
 #: code:addons/product/wizard/product_label_layout.py:0
 #, python-format
 msgid ""
@@ -1759,6 +1716,7 @@ msgid "Normal"
 msgstr "Normal"
 
 #. module: product
+#. odoo-python
 #: code:addons/product/models/product_product.py:0
 #: code:addons/product/models/product_template.py:0
 #, python-format
@@ -1801,30 +1759,27 @@ msgid "Number of price rules"
 msgstr "Anzahl der Preisregeln"
 
 #. module: product
-#: model:product.product,name:product.product_delivery_01
 #: model:product.template,name:product.product_delivery_01_product_template
 msgid "Office Chair"
 msgstr "Büro Stuhl"
 
 #. module: product
-#: model:product.product,name:product.product_product_12
 #: model:product.template,name:product.product_product_12_product_template
 msgid "Office Chair Black"
 msgstr "Schwarzer Bürostuhl"
 
 #. module: product
-#: model:product.product,name:product.product_order_01
 #: model:product.template,name:product.product_order_01_product_template
 msgid "Office Design Software"
 msgstr "Büro-Design-Software"
 
 #. module: product
-#: model:product.product,name:product.product_delivery_02
 #: model:product.template,name:product.product_delivery_02_product_template
 msgid "Office Lamp"
 msgstr "Büro Lampe"
 
 #. module: product
+#. odoo-python
 #: code:addons/product/models/product_attribute.py:0
 #, python-format
 msgid ""
@@ -1835,6 +1790,7 @@ msgstr ""
 "verknüpfen, da sie nicht kompatibel sind."
 
 #. module: product
+#. odoo-python
 #: code:addons/product/models/product_attribute.py:0
 #, python-format
 msgid ""
@@ -1869,7 +1825,6 @@ msgid "Parent Path"
 msgstr "Übergeordneter Pfad"
 
 #. module: product
-#: model:product.product,name:product.product_product_9
 #: model:product.template,name:product.product_product_9_product_template
 msgid "Pedal Bin"
 msgstr "Pedalbehälter"
@@ -1885,13 +1840,14 @@ msgid "Pills"
 msgstr "Pillen"
 
 #. module: product
-#. openerp-web
+#. odoo-javascript
 #: code:addons/product/static/src/js/product_pricelist_report.js:0
 #, python-format
 msgid "Please enter a positive whole number"
 msgstr "Bitte geben Sie eine positive ganze Zahl ein"
 
 #. module: product
+#. odoo-python
 #: code:addons/product/models/product_pricelist_item.py:0
 #, python-format
 msgid "Please specify the category for which this rule should be applied"
@@ -1899,6 +1855,7 @@ msgstr ""
 "Bitte geben Sie die Kategorie an, auf die diese Regel angewendet werden soll"
 
 #. module: product
+#. odoo-python
 #: code:addons/product/models/product_pricelist_item.py:0
 #, python-format
 msgid "Please specify the product for which this rule should be applied"
@@ -1906,6 +1863,7 @@ msgstr ""
 "Bitte geben Sie das Produkt an, auf das diese Regel angewendet werden soll."
 
 #. module: product
+#. odoo-python
 #: code:addons/product/models/product_pricelist_item.py:0
 #, python-format
 msgid ""
@@ -1920,10 +1878,6 @@ msgid "Pounds"
 msgstr "Pfund"
 
 #. module: product
-#: model_terms:product.product,website_description:product.product_product_4
-#: model_terms:product.product,website_description:product.product_product_4b
-#: model_terms:product.product,website_description:product.product_product_4c
-#: model_terms:product.product,website_description:product.product_product_4d
 #: model_terms:product.template,website_description:product.product_product_4_product_template
 msgid ""
 "Press a button and watch your desk glide effortlessly from sitting to "
@@ -1957,6 +1911,7 @@ msgid "Price Rounding"
 msgstr "Preisrundung"
 
 #. module: product
+#. odoo-python
 #: code:addons/product/models/product_product.py:0
 #: code:addons/product/models/product_template.py:0
 #: model:ir.actions.act_window,name:product.product_pricelist_item_action
@@ -2006,7 +1961,7 @@ msgid "Pricelist Name"
 msgstr "Preisliste Bezeichnung"
 
 #. module: product
-#. openerp-web
+#. odoo-javascript
 #: code:addons/product/static/src/js/product_pricelist_report.js:0
 #: model:ir.model,name:product.model_report_product_report_pricelist
 #, python-format
@@ -2027,7 +1982,7 @@ msgid "Pricelist Rules"
 msgstr "Preislistenregeln"
 
 #. module: product
-#. openerp-web
+#. odoo-javascript
 #: code:addons/product/static/src/xml/pricelist_report.xml:0
 #: model_terms:ir.ui.view,arch_db:product.report_pricelist_page
 #, python-format
@@ -2057,7 +2012,7 @@ msgid "Pricing"
 msgstr "Preiskalkulation"
 
 #. module: product
-#. openerp-web
+#. odoo-javascript
 #: code:addons/product/static/src/js/product_pricelist_report.js:0
 #, python-format
 msgid "Print"
@@ -2266,6 +2221,7 @@ msgid "Product Variant"
 msgstr "Produktvarianten"
 
 #. module: product
+#. odoo-python
 #: code:addons/product/models/product_attribute.py:0
 #, python-format
 msgid "Product Variant Values"
@@ -2281,6 +2237,7 @@ msgid "Product Variants"
 msgstr "Produktvarianten"
 
 #. module: product
+#. odoo-python
 #: code:addons/product/report/product_label_report.py:0
 #, python-format
 msgid "Product model not defined, Please contact your administrator."
@@ -2288,6 +2245,7 @@ msgstr ""
 "Produktmodell nicht definiert, bitte wenden Sie sich an Ihren Administrator."
 
 #. module: product
+#. odoo-python
 #: code:addons/product/models/product_pricelist_item.py:0
 #, python-format
 msgid "Product: %s"
@@ -2327,6 +2285,7 @@ msgid "Products Price Search"
 msgstr "Produkte Preissuche"
 
 #. module: product
+#. odoo-python
 #: code:addons/product/models/product_product.py:0
 #, python-format
 msgid "Products: %(category)s"
@@ -2360,7 +2319,7 @@ msgid "Purchase UoM"
 msgstr "Kaufmengeneinheit"
 
 #. module: product
-#. openerp-web
+#. odoo-javascript
 #: code:addons/product/static/src/xml/pricelist_report.xml:0
 #, python-format
 msgid "Quantities:"
@@ -2373,7 +2332,7 @@ msgid "Quantity"
 msgstr "Menge"
 
 #. module: product
-#. openerp-web
+#. odoo-javascript
 #: code:addons/product/static/src/js/product_pricelist_report.js:0
 #, python-format
 msgid "Quantity already present (%d)."
@@ -2404,6 +2363,7 @@ msgstr ""
 " basierend auf der Menge und dem Zeitraum."
 
 #. module: product
+#. odoo-python
 #: code:addons/product/models/product_attribute.py:0
 #: model:ir.model.fields,field_description:product.field_product_attribute__product_tmpl_ids
 #, python-format
@@ -2416,7 +2376,7 @@ msgid "Related Variants"
 msgstr "Verwandte Varianten"
 
 #. module: product
-#. openerp-web
+#. odoo-javascript
 #: code:addons/product/static/src/xml/pricelist_report.xml:0
 #, python-format
 msgid "Remove quantity"
@@ -2429,7 +2389,6 @@ msgid "Responsible User"
 msgstr "Manager Veranstaltung"
 
 #. module: product
-#: model:product.product,name:product.expense_product
 #: model:product.template,name:product.expense_product_product_template
 msgid "Restaurant Expenses"
 msgstr "Restaurantausgaben"
@@ -2448,6 +2407,12 @@ msgstr "Zeilen"
 #: model:ir.model.fields,field_description:product.field_product_pricelist_item__rule_tip
 msgid "Rule Tip"
 msgstr "Regel-Tipp"
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_product_product__message_has_sms_error
+#: model:ir.model.fields,field_description:product.field_product_template__message_has_sms_error
+msgid "SMS Delivery error"
+msgstr "SMS Zustellungsfehler"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_template_form_view
@@ -2613,13 +2578,10 @@ msgstr ""
 
 #. module: product
 #: model:product.attribute.value,name:product.product_attribute_value_1
-#: model:product.template.attribute.value,name:product.product_11_attribute_1_value_1
-#: model:product.template.attribute.value,name:product.product_4_attribute_1_value_1
 msgid "Steel"
 msgstr "Stahl"
 
 #. module: product
-#: model:product.product,name:product.product_product_7
 #: model:product.template,name:product.product_product_7_product_template
 msgid "Storage Box"
 msgstr "Aufbewahrungsbox"
@@ -2650,6 +2612,7 @@ msgid "Tags are used to search product for a given theme."
 msgstr ""
 
 #. module: product
+#. odoo-python
 #: code:addons/product/models/product_product.py:0
 #: code:addons/product/models/product_template.py:0
 #, python-format
@@ -2657,6 +2620,7 @@ msgid "The Internal Reference '%s' already exists."
 msgstr "Die interne Referenz '%s' existiert bereits."
 
 #. module: product
+#. odoo-python
 #: code:addons/product/models/product_template.py:0
 #, python-format
 msgid "The Type of this product doesn't match the Detailed Type"
@@ -2664,6 +2628,7 @@ msgstr ""
 "Der Typ dieses Produkts stimmt nicht mit dem detaillierten Typ überein"
 
 #. module: product
+#. odoo-python
 #: code:addons/product/models/product_attribute.py:0
 #, python-format
 msgid "The attribute %s must have at least one value for the product %s."
@@ -2687,6 +2652,7 @@ msgstr ""
 "Der ermittelte Preis wird in der Vorgabe-Maßeinheit des Produkts angegeben."
 
 #. module: product
+#. odoo-python
 #: code:addons/product/models/product_template.py:0
 #, python-format
 msgid ""
@@ -2709,10 +2675,6 @@ msgid "The first in the sequence is the default one."
 msgstr "Der Erste der Reihenfolge gilt als Vorgabe."
 
 #. module: product
-#: model_terms:product.product,website_description:product.product_product_4
-#: model_terms:product.product,website_description:product.product_product_4b
-#: model_terms:product.product,website_description:product.product_product_4c
-#: model_terms:product.product,website_description:product.product_product_4d
 #: model_terms:product.template,website_description:product.product_product_4_product_template
 msgid ""
 "The minimum height is 65 cm, and for standing work the maximum height "
@@ -2722,6 +2684,7 @@ msgstr ""
 " Höhe 125 cm."
 
 #. module: product
+#. odoo-python
 #: code:addons/product/models/product_pricelist_item.py:0
 #, python-format
 msgid "The minimum margin should be lower than the maximum margin."
@@ -2737,6 +2700,7 @@ msgstr ""
 "werden nicht berücksichtigt)"
 
 #. module: product
+#. odoo-python
 #: code:addons/product/models/product_template.py:0
 #, python-format
 msgid ""
@@ -2756,6 +2720,7 @@ msgid "The price to purchase a product"
 msgstr "Der Preis zum Erwerb eines Produkts"
 
 #. module: product
+#. odoo-python
 #: code:addons/product/models/product_template.py:0
 #, python-format
 msgid "The product template is archived so no combination is possible."
@@ -2785,30 +2750,35 @@ msgstr ""
 "zusätzlichen Attributpreise festzulegen."
 
 #. module: product
+#. odoo-python
 #: code:addons/product/models/product_attribute.py:0
 #, python-format
 msgid "The value %s is not defined for the attribute %s on the product %s."
 msgstr "Der Wert %s ist für das Attribut %s des Produkts %s nicht definiert."
 
 #. module: product
+#. odoo-python
 #: code:addons/product/models/product_template.py:0
 #, python-format
 msgid "There are no possible combination."
 msgstr "Es gibt keine mögliche Kombination."
 
 #. module: product
+#. odoo-python
 #: code:addons/product/models/product_template.py:0
 #, python-format
 msgid "There are no remaining closest combination."
 msgstr "Es gibt keine verbleibende engste Kombination."
 
 #. module: product
+#. odoo-python
 #: code:addons/product/models/product_template.py:0
 #, python-format
 msgid "There are no remaining possible combination."
 msgstr "Es sind keine weiteren Kombinationen möglich."
 
 #. module: product
+#. odoo-python
 #: code:addons/product/models/product_template.py:0
 #, python-format
 msgid ""
@@ -2846,6 +2816,7 @@ msgstr ""
 "aktuellen Partner genutzt."
 
 #. module: product
+#. odoo-python
 #: code:addons/product/models/uom_uom.py:0
 #, python-format
 msgid ""
@@ -2878,13 +2849,11 @@ msgstr ""
 " interne Bezeichnung verwendet."
 
 #. module: product
-#: model:product.product,description_sale:product.consu_delivery_01
 #: model:product.template,description_sale:product.consu_delivery_01_product_template
 msgid "Three Seater Sofa with Lounger in Steel Grey Colour"
 msgstr "Dreisitzer-Sofa mit Liege in stahlgrauer Farbe"
 
 #. module: product
-#: model:product.product,name:product.consu_delivery_01
 #: model:product.template,name:product.consu_delivery_01_product_template
 msgid "Three-Seat Sofa"
 msgstr "Dreisitziges Sofa"
@@ -2907,6 +2876,7 @@ msgid "Type of the exception activity on record."
 msgstr "Typ der Ausnahmeaktivität im Datensatz."
 
 #. module: product
+#. odoo-python
 #: code:addons/product/wizard/product_label_layout.py:0
 #, python-format
 msgid "Unable to find report template for %s format"
@@ -2930,62 +2900,6 @@ msgstr "Maßeinheit"
 #: model:ir.model.fields,field_description:product.field_product_template__uom_name
 msgid "Unit of Measure Name"
 msgstr "Name der Mengeneinheit"
-
-#. module: product
-#: model:product.product,uom_name:product.consu_delivery_01
-#: model:product.product,uom_name:product.consu_delivery_02
-#: model:product.product,uom_name:product.consu_delivery_03
-#: model:product.product,uom_name:product.expense_product
-#: model:product.product,uom_name:product.product_delivery_01
-#: model:product.product,uom_name:product.product_delivery_02
-#: model:product.product,uom_name:product.product_order_01
-#: model:product.product,uom_name:product.product_product_10
-#: model:product.product,uom_name:product.product_product_11
-#: model:product.product,uom_name:product.product_product_11b
-#: model:product.product,uom_name:product.product_product_12
-#: model:product.product,uom_name:product.product_product_13
-#: model:product.product,uom_name:product.product_product_16
-#: model:product.product,uom_name:product.product_product_20
-#: model:product.product,uom_name:product.product_product_22
-#: model:product.product,uom_name:product.product_product_24
-#: model:product.product,uom_name:product.product_product_25
-#: model:product.product,uom_name:product.product_product_27
-#: model:product.product,uom_name:product.product_product_3
-#: model:product.product,uom_name:product.product_product_4
-#: model:product.product,uom_name:product.product_product_4b
-#: model:product.product,uom_name:product.product_product_4c
-#: model:product.product,uom_name:product.product_product_4d
-#: model:product.product,uom_name:product.product_product_5
-#: model:product.product,uom_name:product.product_product_6
-#: model:product.product,uom_name:product.product_product_7
-#: model:product.product,uom_name:product.product_product_8
-#: model:product.product,uom_name:product.product_product_9
-#: model:product.template,uom_name:product.consu_delivery_01_product_template
-#: model:product.template,uom_name:product.consu_delivery_02_product_template
-#: model:product.template,uom_name:product.consu_delivery_03_product_template
-#: model:product.template,uom_name:product.expense_product_product_template
-#: model:product.template,uom_name:product.product_delivery_01_product_template
-#: model:product.template,uom_name:product.product_delivery_02_product_template
-#: model:product.template,uom_name:product.product_order_01_product_template
-#: model:product.template,uom_name:product.product_product_10_product_template
-#: model:product.template,uom_name:product.product_product_11_product_template
-#: model:product.template,uom_name:product.product_product_12_product_template
-#: model:product.template,uom_name:product.product_product_13_product_template
-#: model:product.template,uom_name:product.product_product_16_product_template
-#: model:product.template,uom_name:product.product_product_20_product_template
-#: model:product.template,uom_name:product.product_product_22_product_template
-#: model:product.template,uom_name:product.product_product_24_product_template
-#: model:product.template,uom_name:product.product_product_25_product_template
-#: model:product.template,uom_name:product.product_product_27_product_template
-#: model:product.template,uom_name:product.product_product_3_product_template
-#: model:product.template,uom_name:product.product_product_4_product_template
-#: model:product.template,uom_name:product.product_product_5_product_template
-#: model:product.template,uom_name:product.product_product_6_product_template
-#: model:product.template,uom_name:product.product_product_7_product_template
-#: model:product.template,uom_name:product.product_product_8_product_template
-#: model:product.template,uom_name:product.product_product_9_product_template
-msgid "Units"
-msgstr "Einheiten"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_res_config_settings__group_uom
@@ -3102,6 +3016,7 @@ msgid "Variant Values"
 msgstr "Variantenwerte"
 
 #. module: product
+#. odoo-python
 #: code:addons/product/models/product_pricelist_item.py:0
 #, python-format
 msgid "Variant: %s"
@@ -3160,13 +3075,11 @@ msgid "Vendors"
 msgstr "Lieferanten"
 
 #. module: product
-#: model:product.product,name:product.product_product_2
 #: model:product.template,name:product.product_product_2_product_template
 msgid "Virtual Home Staging"
 msgstr "Virtuelle Heiminszenierung"
 
 #. module: product
-#: model:product.product,name:product.product_product_1
 #: model:product.template,name:product.product_product_1_product_template
 msgid "Virtual Interior Design"
 msgstr "Virtuelle Innenarchitektur"
@@ -3191,6 +3104,7 @@ msgid "Volume unit of measure label"
 msgstr "Etikett für die Volumeneinheit der Maßeinheit"
 
 #. module: product
+#. odoo-python
 #: code:addons/product/models/decimal_precision.py:0
 #: code:addons/product/models/uom_uom.py:0
 #, python-format
@@ -3203,10 +3117,6 @@ msgid "Warnings"
 msgstr "Warnungen"
 
 #. module: product
-#: model_terms:product.product,website_description:product.product_product_4
-#: model_terms:product.product,website_description:product.product_product_4b
-#: model_terms:product.product,website_description:product.product_product_4c
-#: model_terms:product.product,website_description:product.product_product_4d
 #: model_terms:product.template,website_description:product.product_product_4_product_template
 msgid ""
 "We pay special attention to detail, which is why our desks are of a superior"
@@ -3214,6 +3124,18 @@ msgid ""
 msgstr ""
 "Wir achten ganz besonders auf die Details, darum sind unsere Schreibtische "
 "so hochwertig."
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_product_product__website_message_ids
+#: model:ir.model.fields,field_description:product.field_product_template__website_message_ids
+msgid "Website Messages"
+msgstr "Website-Nachrichten"
+
+#. module: product
+#: model:ir.model.fields,help:product.field_product_product__website_message_ids
+#: model:ir.model.fields,help:product.field_product_template__website_message_ids
+msgid "Website communication history"
+msgstr "Website-Kommunikationshistorie"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__weight
@@ -3235,11 +3157,11 @@ msgstr "Gewichtseinheit Etikett"
 
 #. module: product
 #: model:product.attribute.value,name:product.product_attribute_value_3
-#: model:product.template.attribute.value,name:product.product_4_attribute_2_value_1
 msgid "White"
 msgstr "Weiß"
 
 #. module: product
+#. odoo-python
 #: code:addons/product/models/decimal_precision.py:0
 #, python-format
 msgid ""
@@ -3271,6 +3193,7 @@ msgstr ""
 "Angebots eine auswählen."
 
 #. module: product
+#. odoo-python
 #: code:addons/product/models/product_pricelist_item.py:0
 #, python-format
 msgid ""
@@ -3280,6 +3203,7 @@ msgstr ""
 "Preislistenposition zuordnen."
 
 #. module: product
+#. odoo-python
 #: code:addons/product/models/product_attribute.py:0
 #, python-format
 msgid ""
@@ -3290,6 +3214,7 @@ msgstr ""
 "%s"
 
 #. module: product
+#. odoo-python
 #: code:addons/product/models/product_attribute.py:0
 #, python-format
 msgid ""
@@ -3300,6 +3225,7 @@ msgstr ""
 "Produkte verwendet wird:%s"
 
 #. module: product
+#. odoo-python
 #: code:addons/product/models/product_attribute.py:0
 #, python-format
 msgid "You cannot change the product of the value %s set on product %s."
@@ -3308,6 +3234,7 @@ msgstr ""
 "ändern."
 
 #. module: product
+#. odoo-python
 #: code:addons/product/models/product_attribute.py:0
 #, python-format
 msgid "You cannot change the value of the value %s set on product %s."
@@ -3316,6 +3243,7 @@ msgstr ""
 "nicht ändern."
 
 #. module: product
+#. odoo-python
 #: code:addons/product/models/product_category.py:0
 #, python-format
 msgid "You cannot create recursive categories."
@@ -3330,6 +3258,7 @@ msgstr ""
 "erstellen."
 
 #. module: product
+#. odoo-python
 #: code:addons/product/models/decimal_precision.py:0
 #, python-format
 msgid ""
@@ -3340,12 +3269,14 @@ msgstr ""
 "Rundungsfaktor für die Hauptwährung des Unternehmens."
 
 #. module: product
+#. odoo-python
 #: code:addons/product/models/product_category.py:0
 #, python-format
 msgid "You cannot delete the %s product category."
 msgstr ""
 
 #. module: product
+#. odoo-python
 #: code:addons/product/models/product_attribute.py:0
 #, python-format
 msgid ""
@@ -3356,6 +3287,7 @@ msgstr ""
 "%s"
 
 #. module: product
+#. odoo-python
 #: code:addons/product/models/product_attribute.py:0
 #, python-format
 msgid ""
@@ -3366,6 +3298,7 @@ msgstr ""
 "%s"
 
 #. module: product
+#. odoo-python
 #: code:addons/product/models/product_category.py:0
 #, python-format
 msgid ""
@@ -3375,6 +3308,7 @@ msgstr ""
 "generische Kategorie."
 
 #. module: product
+#. odoo-python
 #: code:addons/product/models/product_pricelist.py:0
 #, python-format
 msgid ""
@@ -3389,6 +3323,7 @@ msgstr ""
 "%s"
 
 #. module: product
+#. odoo-python
 #: code:addons/product/models/product_pricelist_item.py:0
 #, python-format
 msgid ""
@@ -3399,6 +3334,7 @@ msgstr ""
 "oder archivieren Sie stattdessen ihre Preisliste."
 
 #. module: product
+#. odoo-python
 #: code:addons/product/models/product_attribute.py:0
 #, python-format
 msgid ""
@@ -3407,6 +3343,7 @@ msgstr ""
 "SIe können das Attribut %s nicht vom Produkt %s zum Produkt %s verschieben."
 
 #. module: product
+#. odoo-python
 #: code:addons/product/models/product_attribute.py:0
 #: code:addons/product/models/product_attribute.py:0
 #, python-format
@@ -3454,6 +3391,7 @@ msgstr ""
 "                Preis, Hinweise im Angebot, Buchhaltungsdaten, Beschaffungsmethoden, etc."
 
 #. module: product
+#. odoo-python
 #: code:addons/product/wizard/product_label_layout.py:0
 #, python-format
 msgid "You need to set a positive quantity."
@@ -3491,6 +3429,7 @@ msgid "per"
 msgstr "pro"
 
 #. module: product
+#. odoo-python
 #: code:addons/product/models/product_product.py:0
 #: code:addons/product/models/product_template.py:0
 #, python-format

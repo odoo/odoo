@@ -4,14 +4,15 @@
 # 
 # Translators:
 # Martin Trigaux, 2022
+# Malaz Abuidris <msea@odoo.com>, 2022
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~15.4\n"
+"Project-Id-Version: Odoo Server 16.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-06-09 14:05+0000\n"
+"POT-Creation-Date: 2022-12-15 12:50+0000\n"
 "PO-Revision-Date: 2022-09-22 05:45+0000\n"
-"Last-Translator: Martin Trigaux, 2022\n"
+"Last-Translator: Malaz Abuidris <msea@odoo.com>, 2022\n"
 "Language-Team: Arabic (https://www.transifex.com/odoo/teams/41243/ar/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -27,12 +28,9 @@ msgstr "اسم يحتوي على أحرف وأرقام "
 #. module: barcodes_gs1_nomenclature
 #: model:ir.model.fields,help:barcodes_gs1_nomenclature.field_barcode_nomenclature__gs1_separator_fnc1
 msgid ""
-"Alternative regex delimiter for the FNC1 (by default, if not set, it is <GS>"
-" ASCII 29 char). The separator must not match the begin/end of any related "
-"rules pattern."
+"Alternative regex delimiter for the FNC1. The separator must not match the "
+"begin/end of any related rules pattern."
 msgstr ""
-"حد التعبير النمطي البديل لـ FNC1 (بشكل افتراضي، وإلا، فسيكون <GS> ASCII 29 "
-"خانة). يجب ألا يطابق الفاصل بداية/نهاية نمط أي قواعد ذات صلة. "
 
 #. module: barcodes_gs1_nomenclature
 #: model:ir.model.fields,field_description:barcodes_gs1_nomenclature.field_barcode_rule__associated_uom_id
@@ -95,20 +93,25 @@ msgid "GS1-128"
 msgstr "GS1-128"
 
 #. module: barcodes_gs1_nomenclature
+#: model:ir.model,name:barcodes_gs1_nomenclature.model_ir_http
+msgid "HTTP Routing"
+msgstr "مسار HTTP"
+
+#. module: barcodes_gs1_nomenclature
 #: model:ir.model.fields,help:barcodes_gs1_nomenclature.field_barcode_rule__gs1_decimal_usage
 msgid ""
 "If True, use the last digit of AI to determine where the first decimal is"
 msgstr ""
 
 #. module: barcodes_gs1_nomenclature
-#. openerp-web
+#. odoo-javascript
 #: code:addons/barcodes_gs1_nomenclature/static/src/js/barcode_parser.js:0
 #, python-format
 msgid "Invalid barcode: can't be formated as date"
 msgstr "الباركود غير صالح: لا يمكن صياغته كتاريخ "
 
 #. module: barcodes_gs1_nomenclature
-#. openerp-web
+#. odoo-javascript
 #: code:addons/barcodes_gs1_nomenclature/static/src/js/barcode_parser.js:0
 #, python-format
 msgid "Invalid barcode: the check digit is incorrect"
@@ -143,7 +146,7 @@ msgstr "المعرف الرقمي  "
 #. module: barcodes_gs1_nomenclature
 #: model:ir.model.fields.selection,name:barcodes_gs1_nomenclature.selection__barcode_rule__type__pack_date
 msgid "Pack Date"
-msgstr ""
+msgstr "تاريخ التعبئة "
 
 #. module: barcodes_gs1_nomenclature
 #: model:ir.model.fields.selection,name:barcodes_gs1_nomenclature.selection__barcode_rule__type__package
@@ -161,6 +164,7 @@ msgid "Quantity"
 msgstr "الكمية"
 
 #. module: barcodes_gs1_nomenclature
+#. odoo-python
 #: code:addons/barcodes_gs1_nomenclature/models/barcode_nomenclature.py:0
 #, python-format
 msgid "The FNC1 Separator Alternative is not a valid Regex: "
@@ -182,12 +186,14 @@ msgstr ""
 " أحرف وأرقام: باركود ذو أطوال متفاوتة. "
 
 #. module: barcodes_gs1_nomenclature
+#. odoo-python
 #: code:addons/barcodes_gs1_nomenclature/models/barcode_rule.py:0
 #, python-format
 msgid "The rule pattern \"%s\" is not a valid Regex: "
 msgstr "نمط القاعدة \"%s\" ليس تعبيراً نمطياً صالحاً: "
 
 #. module: barcodes_gs1_nomenclature
+#. odoo-python
 #: code:addons/barcodes_gs1_nomenclature/models/barcode_rule.py:0
 #, python-format
 msgid ""
@@ -200,6 +206,7 @@ msgstr ""
 "\t- والثانية لرصد القيمة. "
 
 #. module: barcodes_gs1_nomenclature
+#. odoo-python
 #: code:addons/barcodes_gs1_nomenclature/models/barcode_nomenclature.py:0
 #, python-format
 msgid ""
@@ -222,14 +229,14 @@ msgstr ""
 "النوع من التسمية. "
 
 #. module: barcodes_gs1_nomenclature
-#. openerp-web
+#. odoo-javascript
 #: code:addons/barcodes_gs1_nomenclature/static/src/js/barcode_parser.js:0
 #, python-format
 msgid "This barcode can't be parsed by any barcode rules."
 msgstr "لا يمكن تحليل الباركود من قِبَل أي قواعد باركود. "
 
 #. module: barcodes_gs1_nomenclature
-#. openerp-web
+#. odoo-javascript
 #: code:addons/barcodes_gs1_nomenclature/static/src/js/barcode_parser.js:0
 #, python-format
 msgid "This barcode can't be partially or fully parsed."

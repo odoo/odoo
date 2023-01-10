@@ -8,6 +8,7 @@
 # marcescu, 2022
 # Martin Trigaux, 2022
 # Leonardo J. Caballero G. <leonardocaballero@gmail.com>, 2022
+# Óscar Fonseca <tecnico@extreme-micro.com>, 2022
 # 
 msgid ""
 msgstr ""
@@ -15,7 +16,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-10-04 09:24+0000\n"
 "PO-Revision-Date: 2022-09-22 05:45+0000\n"
-"Last-Translator: Leonardo J. Caballero G. <leonardocaballero@gmail.com>, 2022\n"
+"Last-Translator: Óscar Fonseca <tecnico@extreme-micro.com>, 2022\n"
 "Language-Team: Spanish (https://www.transifex.com/odoo/teams/41243/es/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -68,10 +69,8 @@ msgstr "%s (copia)"
 #: model:ir.actions.report,print_report_name:event.action_report_event_registration_foldable_badge
 msgid ""
 "'Foldable Badge - %s - %s' % ((object.event_id.name or "
-"'Event').replace('/',''), object.name.replace('/',''))"
+"'Event').replace('/',''), (object.name or '').replace('/',''))"
 msgstr ""
-"'Insignia plegable - %s - %s' % ((object.event_id.name or "
-"'Event').replace('/',''), object.name.replace('/',''))"
 
 #. module: event
 #: model:ir.actions.report,print_report_name:event.action_report_event_event_foldable_badge
@@ -82,16 +81,14 @@ msgstr "'Insignia plegable - %s' % (object.name or 'Evento').replace('/','')"
 #: model:ir.actions.report,print_report_name:event.action_report_event_registration_full_page_ticket
 msgid ""
 "'Full Page Ticket - %s - %s' % ((object.event_id.name or "
-"'Event').replace('/',''), object.name.replace('/',''))"
+"'Event').replace('/',''), (object.name or '').replace('/',''))"
 msgstr ""
-"'Ticket de página completa - %s - %s' % ((object.event_id.name or "
-"'Evento').replace('/',''), object.name.replace('/',''))"
 
 #. module: event
 #: model:ir.actions.report,print_report_name:event.action_report_event_event_full_page_ticket
 msgid "'Full Page Ticket - %s' % (object.name or 'Event').replace('/','')"
 msgstr ""
-"'Ticket de página completa - %s' % (object.name or 'Event').replace('/','')"
+"'Tíquet de página completa - %s' % (object.name or 'Event').replace('/','')"
 
 #. module: event
 #: code:addons/event/models/event_event.py:0
@@ -106,7 +103,7 @@ msgid ""
 "- the ticket \"%(ticket_name)s\" (%(event_name)s): Missing %(nb_too_many)i "
 "seats."
 msgstr ""
-"- el boleto \"%(ticket_name)s\" (%(event_name)s): faltan %(nb_too_many)i "
+"- la entrada \"%(ticket_name)s\" (%(event_name)s): faltan %(nb_too_many)i "
 "asientos."
 
 #. module: event
@@ -1342,6 +1339,13 @@ msgid "Announced"
 msgstr "Anunciado"
 
 #. module: event
+#. openerp-web
+#: code:addons/event/static/src/js/tours/event_tour.js:0
+#, python-format
+msgid "Apply change."
+msgstr ""
+
+#. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_search
 #: model_terms:ir.ui.view,arch_db:event.view_registration_search
 msgid "Archived"
@@ -2336,7 +2340,7 @@ msgstr "Entrada de página completa"
 msgid ""
 "Full Page Ticket - {{ (object.event_id.name or 'Event').replace('/','') }}"
 msgstr ""
-"Ticket de página completa - {{ (object.event_id.name or "
+"Tíquet de página completa - {{ (object.event_id.name or "
 "'Event').replace('/','') }}"
 
 #. module: event
@@ -3039,6 +3043,13 @@ msgid "Online Ticketing"
 msgstr "Venta de entradas en línea"
 
 #. module: event
+#. openerp-web
+#: code:addons/event/static/src/js/tours/event_tour.js:0
+#, python-format
+msgid "Open date range picker. Pick a Start date for your event"
+msgstr ""
+
+#. module: event
 #: model_terms:event.event,description:event.event_0
 msgid ""
 "OpenElec Applications reserves the right to cancel, re-name or re-locate the"
@@ -3667,8 +3678,8 @@ msgid ""
 "The stop date cannot be earlier than the start date. Please check ticket "
 "%(ticket_name)s"
 msgstr ""
-"La fecha en la que se detiene no puede ser anterior a la fecha de inicio. "
-"Revise el boleto %(ticket_name)s"
+"La fecha de finalización no puede ser anterior a la fecha de inicio. Revise "
+"la entrada %(ticket_name)s"
 
 #. module: event
 #: code:addons/event/models/event_event.py:0
@@ -3784,7 +3795,7 @@ msgstr "Entradas"
 #: model_terms:event.event,ticket_instructions:event.event_0
 msgid "Tickets can be printed or scanned directly from your phone."
 msgstr ""
-"Las entradaspueden imprimirse o escanearse directamente desde su teléfono."
+"Las entradas pueden imprimirse o escanearse directamente desde su teléfono."
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__date_tz
@@ -4028,7 +4039,7 @@ msgstr "Si es posible vender estos boletos"
 #. module: event
 #: model:ir.model.fields,help:event.field_event_event_ticket__is_sold_out
 msgid "Whether seats are not available for this ticket."
-msgstr "Si no hay asientos disponibles para este boleto."
+msgstr "Si no hay asientos disponibles para esta entrada."
 
 #. module: event
 #: model:event.event.ticket,description:event.event_0_ticket_2

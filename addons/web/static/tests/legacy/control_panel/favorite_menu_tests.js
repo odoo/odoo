@@ -245,7 +245,7 @@ odoo.define('web.favorite_menu_tests', function (require) {
         });
 
         QUnit.test('delete an active favorite remove it both in list of favorite and in search bar', async function (assert) {
-            assert.expect(6);
+            assert.expect(9);
 
             const favoriteFilters = [{
                 context: "{}",
@@ -276,6 +276,10 @@ odoo.define('web.favorite_menu_tests', function (require) {
             const controlPanel = await createControlPanel(params);
 
             await cpHelpers.toggleFavoriteMenu(controlPanel);
+            const favorite = controlPanel.el.querySelector(".o_favorite_menu .dropdown-item");
+            assert.equal(favorite.innerText, "My favorite");
+            assert.deepEqual(favorite.getAttribute("role"), "menuitemcheckbox");
+            assert.deepEqual(favorite.ariaChecked, "true");
 
             const { domain } = controlPanel.getQuery();
             assert.deepEqual(domain, [["foo", "=", "qsdf"]]);
@@ -321,7 +325,7 @@ odoo.define('web.favorite_menu_tests', function (require) {
         });
 
         QUnit.test('toggle favorite correctly clears filter, groupbys, comparison and field "options"', async function (assert) {
-            assert.expect(11);
+            assert.expect(15);
 
             const unpatchDate = patchDate(2019, 6, 31, 13, 43, 0);
 
@@ -417,7 +421,12 @@ odoo.define('web.favorite_menu_tests', function (require) {
 
             // activate the unique existing favorite
             await cpHelpers.toggleFavoriteMenu(controlPanel);
+            const favorite = controlPanel.el.querySelector(".o_favorite_menu .dropdown-item");
+            assert.equal(favorite.innerText, "My favorite");
+            assert.deepEqual(favorite.getAttribute("role"), "menuitemcheckbox");
+            assert.deepEqual(favorite.ariaChecked, "false");
             await cpHelpers.toggleMenuItem(controlPanel, 0);
+            assert.deepEqual(favorite.ariaChecked, "true");
 
             assert.deepEqual(
                 cpHelpers.getFacetTexts(controlPanel),

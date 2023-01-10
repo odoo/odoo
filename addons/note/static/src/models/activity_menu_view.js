@@ -5,6 +5,7 @@ import { attr } from '@mail/model/model_field';
 import { clear } from '@mail/model/model_field_command';
 
 const { DateTime } = luxon;
+const urlRegExp = /http(s)?:\/\/(www\.)?[a-zA-Z0-9@:%_+~#=~#?&/=\-;!.]{3,2000}/g;
 
 registerPatch({
     name: 'ActivityMenuView',
@@ -55,7 +56,7 @@ registerPatch({
             }
         },
         async saveNote() {
-            const note = this.noteInputRef.el.value.trim();
+            const note = this.noteInputRef.el.value.replace(urlRegExp, '<a href="$&">$&</a>').trim();
             if (!note) {
                 return;
             }

@@ -5,7 +5,6 @@
 # Translators:
 # Martin Trigaux, 2022
 # Jeffery CHEN <jeffery9@gmail.com>, 2022
-# Raymond Yu <cl_yu@hotmail.com>, 2022
 # 
 msgid ""
 msgstr ""
@@ -13,7 +12,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-09-23 08:03+0000\n"
 "PO-Revision-Date: 2022-09-22 05:55+0000\n"
-"Last-Translator: Raymond Yu <cl_yu@hotmail.com>, 2022\n"
+"Last-Translator: Jeffery CHEN <jeffery9@gmail.com>, 2022\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -29,7 +28,7 @@ msgid ""
 "                                </span>"
 msgstr ""
 "<span class=\"oe_grey oe_inline\">\n"
-"                                    例如：1*（参考单位）=比率*（本单位）。\n"
+"                                    例如：1*（参照单位）=比率*（本单位）。\n"
 "                                </span>"
 
 #. module: uom
@@ -40,7 +39,7 @@ msgid ""
 "                                </span>"
 msgstr ""
 "<span class=\"oe_grey oe_inline\">\n"
-"                                    例如：1*（本单位）=比率*（参考单位）。\n"
+"                                    例如：1*（本单位）=比率*（参照单位）。\n"
 "                                </span>"
 
 #. module: uom
@@ -71,7 +70,7 @@ msgstr "更大比率"
 #. module: uom
 #: model:ir.model.fields.selection,name:uom.selection__uom_uom__uom_type__bigger
 msgid "Bigger than the reference Unit of Measure"
-msgstr "大于参考单位"
+msgstr "大于参照单位"
 
 #. module: uom
 #: model:ir.model.fields,field_description:uom.field_uom_uom__category_id
@@ -139,14 +138,14 @@ msgstr "小时"
 msgid ""
 "How many times this Unit of Measure is bigger than the reference Unit of "
 "Measure in this category: 1 * (this unit) = ratio * (reference unit)"
-msgstr "本类别计量单位和参考计量单位相比，大或者小的倍数。1 * (参考单位)=比率 * (本单位)"
+msgstr "本类别计量单位和参照计量单位相比，大或者小的倍数。1 * (参照单位)=比率 * (本单位)"
 
 #. module: uom
 #: model:ir.model.fields,help:uom.field_uom_uom__factor
 msgid ""
 "How much bigger or smaller this unit is compared to the reference Unit of "
 "Measure for this category: 1 * (reference unit) = ratio * (this unit)"
-msgstr "本类别计量单位和参考计量单位相比，大或者小的倍数。1 * (参考单位)=比率 * (本单位)"
+msgstr "本类别计量单位和参照计量单位相比，大或者小的倍数。1 * (参照单位)=比率 * (本单位)"
 
 #. module: uom
 #: model:ir.model.fields,field_description:uom.field_uom_category__id
@@ -201,7 +200,7 @@ msgstr "比例"
 #. module: uom
 #: model:ir.model.fields.selection,name:uom.selection__uom_uom__uom_type__reference
 msgid "Reference Unit of Measure for this category"
-msgstr "这个类别的参考计量单位"
+msgstr "这个类别的参照计量单位"
 
 #. module: uom
 #: model:ir.model.fields,field_description:uom.field_uom_category__reference_uom_id
@@ -226,7 +225,7 @@ msgstr "搜索 计量单位 类别"
 #. module: uom
 #: model:ir.model.fields.selection,name:uom.selection__uom_uom__uom_type__smaller
 msgid "Smaller than the reference Unit of Measure"
-msgstr "小于参考计量单位"
+msgstr "小于参照计量单位"
 
 #. module: uom
 #: code:addons/uom/models/uom_uom.py:0
@@ -278,7 +277,7 @@ msgstr ""
 #. module: uom
 #: model:ir.model.constraint,message:uom.constraint_uom_uom_factor_reference_is_one
 msgid "The reference unit must have a conversion factor equal to 1."
-msgstr "参考单位的转换系数必须是1。"
+msgstr "参照单位的转换系数必须是1。"
 
 #. module: uom
 #: model:ir.model.constraint,message:uom.constraint_uom_uom_rounding_gt_zero
@@ -304,7 +303,7 @@ msgstr "类型"
 #: model:ir.model.fields,help:uom.field_uom_uom__active
 msgid ""
 "Uncheck the active field to disable a unit of measure without deleting it."
-msgstr "取消选中启用字段以禁用度量单位，而不删除它。"
+msgstr "取消选中启用字段以禁用计量单位，而不删除它。"
 
 #. module: uom
 #: model:uom.category,name:uom.product_uom_categ_unit
@@ -361,19 +360,19 @@ msgstr ""
 #: code:addons/uom/models/uom_uom.py:0
 #, python-format
 msgid "UoM category %s must have at least one reference unit of measure."
-msgstr "计量单位类别%s必须至少有一个参考计量单位。"
+msgstr "计量单位类别%s必须至少有一个参照计量单位。"
 
 #. module: uom
 #: code:addons/uom/models/uom_uom.py:0
 #, python-format
 msgid "UoM category %s should have a reference unit of measure."
-msgstr "计量单位类别%s应该有一个参考计量单位。"
+msgstr "计量单位类别%s应该有一个参照计量单位。"
 
 #. module: uom
 #: code:addons/uom/models/uom_uom.py:0
 #, python-format
 msgid "UoM category %s should only have one reference unit of measure."
-msgstr "计量单位类别%s应该有一个参考计量单位。"
+msgstr "计量单位类别%s应该有一个参照计量单位。"
 
 #. module: uom
 #: model:ir.model.fields,field_description:uom.field_uom_category__uom_ids
@@ -399,7 +398,7 @@ msgstr "重量"
 #. module: uom
 #: model:uom.category,name:uom.uom_categ_wtime
 msgid "Working Time"
-msgstr "工时"
+msgstr "工作时间"
 
 #. module: uom
 #: model_terms:ir.actions.act_window,help:uom.product_uom_form_action
@@ -413,67 +412,67 @@ msgstr ""
 #. module: uom
 #: model:uom.uom,name:uom.product_uom_cm
 msgid "cm"
-msgstr "厘米"
+msgstr "cm"
 
 #. module: uom
 #: model:uom.uom,name:uom.product_uom_floz
 msgid "fl oz (US)"
-msgstr "液量盎司 (美制)"
+msgstr "fl oz (US)"
 
 #. module: uom
 #: model:uom.uom,name:uom.product_uom_foot
 msgid "ft"
-msgstr "英尺"
+msgstr "ft"
 
 #. module: uom
 #: model:uom.uom,name:uom.uom_square_foot
 msgid "ft²"
-msgstr "平方英尺"
+msgstr "ft²"
 
 #. module: uom
 #: model:uom.uom,name:uom.product_uom_cubic_foot
 msgid "ft³"
-msgstr "立方英尺"
+msgstr "ft³"
 
 #. module: uom
 #: model:uom.uom,name:uom.product_uom_gal
 msgid "gal (US)"
-msgstr "加仑(美制)"
+msgstr "gal (US)"
 
 #. module: uom
 #: model:uom.uom,name:uom.product_uom_inch
 msgid "in"
-msgstr "在"
+msgstr "in"
 
 #. module: uom
 #: model:uom.uom,name:uom.product_uom_cubic_inch
 msgid "in³"
-msgstr "立方英寸"
+msgstr "in³"
 
 #. module: uom
 #: model:uom.uom,name:uom.product_uom_kgm
 msgid "kg"
-msgstr "公斤"
+msgstr "kg"
 
 #. module: uom
 #: model:uom.uom,name:uom.product_uom_km
 msgid "km"
-msgstr "千米"
+msgstr "km"
 
 #. module: uom
 #: model:uom.uom,name:uom.product_uom_lb
 msgid "lb"
-msgstr "磅"
+msgstr "lb"
 
 #. module: uom
 #: model:uom.uom,name:uom.product_uom_mile
 msgid "mi"
-msgstr "英里"
+msgstr "mi"
 
 #. module: uom
 #: model:uom.uom,name:uom.product_uom_millimeter
 msgid "mm"
-msgstr "毫米"
+msgstr "mm"
 
 #. module: uom
 #: model:uom.uom,name:uom.uom_square_meter
@@ -483,19 +482,19 @@ msgstr "m²"
 #. module: uom
 #: model:uom.uom,name:uom.product_uom_cubic_meter
 msgid "m³"
-msgstr "立方米"
+msgstr "m³"
 
 #. module: uom
 #: model:uom.uom,name:uom.product_uom_oz
 msgid "oz"
-msgstr "盎司"
+msgstr "oz"
 
 #. module: uom
 #: model:uom.uom,name:uom.product_uom_qt
 msgid "qt (US)"
-msgstr "夸脱(美制)"
+msgstr "qt (US)"
 
 #. module: uom
 #: model:uom.uom,name:uom.product_uom_yard
 msgid "yd"
-msgstr "码"
+msgstr "yd"

@@ -7,6 +7,7 @@
 # Piia Paurson <piia@avalah.ee>, 2022
 # Arma Gedonsky <armagedonsky@hot.ee>, 2022
 # Eneli Õigus <enelioigus@gmail.com>, 2022
+# Leaanika Randmets, 2022
 # 
 msgid ""
 msgstr ""
@@ -14,7 +15,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-04-19 13:57+0000\n"
 "PO-Revision-Date: 2022-09-22 05:45+0000\n"
-"Last-Translator: Eneli Õigus <enelioigus@gmail.com>, 2022\n"
+"Last-Translator: Leaanika Randmets, 2022\n"
 "Language-Team: Estonian (https://www.transifex.com/odoo/teams/41243/et/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -26,22 +27,22 @@ msgstr ""
 #: code:addons/crm_livechat/models/chatbot_script_step.py:0
 #, python-format
 msgid "%s's New Lead"
-msgstr ""
+msgstr "%s uus müügivihje"
 
 #. module: crm_livechat
 #: model:ir.model,name:crm_livechat.model_chatbot_script
 msgid "Chatbot Script"
-msgstr ""
+msgstr "Chatboti skript"
 
 #. module: crm_livechat
 #: model:ir.model,name:crm_livechat.model_chatbot_script_step
 msgid "Chatbot Script Step"
-msgstr ""
+msgstr "Chatboti skripti samm"
 
 #. module: crm_livechat
 #: model:ir.model.fields.selection,name:crm_livechat.selection__chatbot_script_step__step_type__create_lead
 msgid "Create Lead"
-msgstr ""
+msgstr "Loo müügivihje"
 
 #. module: crm_livechat
 #. openerp-web
@@ -55,7 +56,7 @@ msgstr "Looge uus müügivihje"
 #: code:addons/crm_livechat/models/mail_channel.py:0
 #, python-format
 msgid "Created a new lead: %s"
-msgstr ""
+msgstr "Uue müügivihje looja: %s"
 
 #. module: crm_livechat
 #: model:ir.model,name:crm_livechat.model_mail_channel
@@ -65,22 +66,22 @@ msgstr "Sõnumite kanal"
 #. module: crm_livechat
 #: model:ir.model.fields,field_description:crm_livechat.field_chatbot_script__lead_count
 msgid "Generated Lead Count"
-msgstr ""
+msgstr "Genereeritud müügivihje loendus"
 
 #. module: crm_livechat
 #: model:chatbot.script.step,message:crm_livechat.chatbot_script_lead_generation_step_welcome
 msgid "Hi there, what brings you to our website today? 👋"
-msgstr ""
+msgstr "Hei, mis toob teid täna meie veebilehele? 👋"
 
 #. module: crm_livechat
 #: model:chatbot.script.step,message:crm_livechat.chatbot_script_lead_generation_step_noone_available
 msgid "Hu-ho, it looks like none of our operators are available 🙁"
-msgstr ""
+msgstr "Oi, tundub, et ükski meie operaator ei ole saadaval 🙁"
 
 #. module: crm_livechat
 #: model:chatbot.script,title:crm_livechat.chatbot_script_lead_generation_bot
 msgid "Lead Generation Bot"
-msgstr ""
+msgstr "Müügivihjete genereerimise robot"
 
 #. module: crm_livechat
 #: model_terms:ir.ui.view,arch_db:crm_livechat.chatbot_script_view_form
@@ -95,12 +96,12 @@ msgstr "Müügi meeskond"
 #. module: crm_livechat
 #: model:ir.model.fields,field_description:crm_livechat.field_chatbot_script_step__step_type
 msgid "Step Type"
-msgstr ""
+msgstr "Sammutüüp"
 
 #. module: crm_livechat
 #: model:chatbot.script.step,message:crm_livechat.chatbot_script_welcome_step_just_looking
 msgid "Thank you, you should hear back from us very soon!"
-msgstr ""
+msgstr "Täname! Võtame teiega peatselt ühendust!"
 
 #. module: crm_livechat
 #: model:ir.model.fields,help:crm_livechat.field_chatbot_script_step__crm_team_id
@@ -108,9 +109,12 @@ msgid ""
 "Used in combination with 'create_lead' step type in order to automatically "
 "assign the created lead/opportunity to the defined team"
 msgstr ""
+"Kasutatakse koos sammutüübiga 'create_lead', et määrata loodud "
+"müügivihje/võimalus valitud meeskonnale automaatselt"
 
 #. module: crm_livechat
 #: model:chatbot.script.step,message:crm_livechat.chatbot_script_welcome_step_pricing_email
 msgid ""
 "Would you mind leaving your email address so that we can reach you back?"
 msgstr ""
+"Kas jätaksite oma e-posti aadressi, et saaksime teiega ühendust võtta?"

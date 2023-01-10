@@ -58,6 +58,7 @@ html:not(.o_mass_mailing_iframe), body:not(.o_mass_mailing_iframe), html.o_fulls
 
 .o_mail_theme_selector_new {
     display: block;
+    font-size: 1rem;
     position: absolute;
     overflow: auto;
     background-color: $o-we-sidebar-bg;
@@ -66,6 +67,11 @@ html:not(.o_mass_mailing_iframe), body:not(.o_mass_mailing_iframe), html.o_fulls
     bottom: 0;
     left: 0;
     right: 0;
+
+    h5 {
+        font-size: 1.25rem!important;
+    }
+
     .dropdown-item {
         padding: 10px 10px;
         &:first-child {
@@ -196,9 +202,6 @@ html:not(.o_mass_mailing_iframe), body:not(.o_mass_mailing_iframe), html.o_fulls
     .o_mail_theme_selector_new {
         .dropdown-item {
             max-width: 50%!important;
-        }
-        h5 {
-            font-size: 1.2rem!important;
         }
     }
     .o_mail_template_preview {

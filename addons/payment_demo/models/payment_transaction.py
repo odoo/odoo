@@ -163,6 +163,8 @@ class PaymentTransaction(models.Model):
         if self.provider_code != 'demo':
             return
 
+        self.provider_reference = f'demo-{self.reference}'
+
         if self.tokenize:
             # The reasons why we immediately tokenize the transaction regardless of the state rather
             # than waiting for the payment method to be validated ('authorized' or 'done') like the

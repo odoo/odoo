@@ -3,19 +3,22 @@
 # 	* website_customer
 # 
 # Translators:
-# Martin Trigaux, 2019
-# krnkris, 2019
-# gezza <geza.nagy@oregional.hu>, 2019
-# Ákos Nagy <akos.nagy@oregional.hu>, 2019
-# Daniel Gerstenbrand <daniel.gerstenbrand@gmail.com>, 2019
+# Gergő Kertész <gergo.kertesz@maxflow.hu>, 2022
+# Daniel Gerstenbrand <daniel.gerstenbrand@gmail.com>, 2022
+# Krisztián Juhász <juhasz.krisztian@josafar.hu>, 2022
+# Ákos Nagy <akos.nagy@oregional.hu>, 2022
+# Tamás Németh <ntomasz81@gmail.com>, 2022
+# gezza <geza.nagy@oregional.hu>, 2022
+# Martin Trigaux, 2022
+# krnkris, 2022
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~12.5\n"
+"Project-Id-Version: Odoo Server 15.5alpha1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-08-26 08:17+0000\n"
-"PO-Revision-Date: 2019-08-26 09:15+0000\n"
-"Last-Translator: Daniel Gerstenbrand <daniel.gerstenbrand@gmail.com>, 2019\n"
+"POT-Creation-Date: 2022-09-20 09:02+0000\n"
+"PO-Revision-Date: 2022-09-22 05:56+0000\n"
+"Last-Translator: krnkris, 2022\n"
 "Language-Team: Hungarian (https://www.transifex.com/odoo/teams/41243/hu/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -51,7 +54,7 @@ msgstr "Összes ország"
 #. module: website_customer
 #: code:addons/website_customer/controllers/main.py:0
 #, python-format
-msgid "All Sectors of Activity"
+msgid "All Industries"
 msgstr ""
 
 #. module: website_customer
@@ -67,7 +70,7 @@ msgstr "Rendszerbetöltő osztály a színek testreszabásához"
 #. module: website_customer
 #: model:ir.model.fields,field_description:website_customer.field_res_partner_tag__can_publish
 msgid "Can Publish"
-msgstr ""
+msgstr "Publikálhat"
 
 #. module: website_customer
 #: model:ir.model.fields,field_description:website_customer.field_res_partner_tag__name
@@ -90,9 +93,14 @@ msgid "Contact"
 msgstr "Kapcsolat"
 
 #. module: website_customer
+#: model_terms:ir.ui.view,arch_db:website_customer.snippet_options
+msgid "Countries Filter"
+msgstr ""
+
+#. module: website_customer
 #: model_terms:ir.actions.act_window,help:website_customer.action_partner_tag_form
 msgid "Create a new contact tag"
-msgstr ""
+msgstr "Új kapcsolat címke létrehozása"
 
 #. module: website_customer
 #: model:ir.model.fields,field_description:website_customer.field_res_partner_tag__create_uid
@@ -120,6 +128,11 @@ msgid "Implemented By"
 msgstr "Végrehajtva"
 
 #. module: website_customer
+#: model_terms:ir.ui.view,arch_db:website_customer.snippet_options
+msgid "Industry Filter"
+msgstr ""
+
+#. module: website_customer
 #: model:ir.model.fields,field_description:website_customer.field_res_partner_tag__is_published
 msgid "Is Published"
 msgstr ""
@@ -137,7 +150,7 @@ msgstr "Frissítette"
 #. module: website_customer
 #: model:ir.model.fields,field_description:website_customer.field_res_partner_tag__write_date
 msgid "Last Updated on"
-msgstr "Frissítve "
+msgstr "Frissítve ekkor"
 
 #. module: website_customer
 #: model_terms:ir.actions.act_window,help:website_customer.action_partner_tag_form
@@ -175,10 +188,16 @@ msgid "Partners"
 msgstr "Partnerek"
 
 #. module: website_customer
+#: code:addons/website_customer/models/website.py:0
 #: model_terms:ir.ui.view,arch_db:website_customer.references_block
-#: model:website.menu,name:website_customer.menu_customers
+#, python-format
 msgid "References"
 msgstr "Hivatkozások"
+
+#. module: website_customer
+#: model_terms:ir.ui.view,arch_db:website_customer.snippet_options
+msgid "References Page"
+msgstr ""
 
 #. module: website_customer
 #: model_terms:ir.ui.view,arch_db:website_customer.opt_country_list
@@ -187,7 +206,7 @@ msgstr "Országonkénti referenciák"
 
 #. module: website_customer
 #: model_terms:ir.ui.view,arch_db:website_customer.opt_industry_list
-msgid "References by Sectors of Activity"
+msgid "References by Industries"
 msgstr ""
 
 #. module: website_customer
@@ -203,6 +222,16 @@ msgstr "Keresés"
 #. module: website_customer
 #: model_terms:ir.ui.view,arch_db:website_customer.res_partner_tag_view_search
 msgid "Search Partner Tag"
+msgstr ""
+
+#. module: website_customer
+#: model_terms:ir.ui.view,arch_db:website_customer.snippet_options
+msgid "Show Map"
+msgstr ""
+
+#. module: website_customer
+#: model_terms:ir.ui.view,arch_db:website_customer.snippet_options
+msgid "Tags Filter"
 msgstr ""
 
 #. module: website_customer
@@ -222,6 +251,11 @@ msgid "Visible on current website"
 msgstr ""
 
 #. module: website_customer
+#: model:ir.model,name:website_customer.model_website
+msgid "Website"
+msgstr "Honlap"
+
+#. module: website_customer
 #: model:ir.actions.act_window,name:website_customer.action_partner_tag_form
 #: model:ir.ui.menu,name:website_customer.menu_partner_tag_form
 #: model_terms:ir.ui.view,arch_db:website_customer.view_partner_tag_list
@@ -232,7 +266,7 @@ msgstr "Weboldal címkék"
 #. module: website_customer
 #: model:ir.model.fields,field_description:website_customer.field_res_partner_tag__website_url
 msgid "Website URL"
-msgstr "Honlap URL"
+msgstr "Honlap címe"
 
 #. module: website_customer
 #: model:ir.model.fields,field_description:website_customer.field_res_partner__website_tag_ids

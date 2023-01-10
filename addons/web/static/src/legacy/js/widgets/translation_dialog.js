@@ -132,7 +132,7 @@ odoo.define('web.TranslationDialog', function (require) {
             this.el.querySelectorAll('input[type=text],textarea').forEach((t) => {
                 var initialValue = this.data.find((d) => d.id == t.dataset.id);
                 if (initialValue.value !== t.value) {
-                    updatedTerm[t.dataset.id] = {lang: initialValue.lang, source: initialValue.source, value: t.value};
+                    updatedTerm[t.dataset.id] = {lang: initialValue.lang, source: initialValue.source, value: t.value, initialValue: initialValue.value};
 
                     if (initialValue.lang === this.currentInterfaceLanguage && !this.showSource) {
                         // when the user has changed the term for the language he is
@@ -159,7 +159,8 @@ odoo.define('web.TranslationDialog', function (require) {
                     if (!translations[term.lang]) {
                        translations[term.lang] = {};
                     }
-                    translations[term.lang][term.source] = term.value;
+                    const source = term.initialValue ? term.initialValue : term.source;
+                    translations[term.lang][source] = term.value;
                 });
             }
             else { // model translation

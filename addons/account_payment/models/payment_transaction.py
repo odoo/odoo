@@ -147,7 +147,7 @@ class PaymentTransaction(models.Model):
             'payment_method_line_id': payment_method_line.id,
             'payment_token_id': self.token_id.id,
             'payment_transaction_id': self.id,
-            'ref': self.reference,
+            'ref': f'{self.reference} - {self.partner_id.name} - {self.provider_reference or ""}',
             **extra_create_values,
         }
         payment = self.env['account.payment'].create(payment_values)

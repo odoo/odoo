@@ -3,9 +3,9 @@
 # 	* mass_mailing_sms
 # 
 # Translators:
-# Jolien De Paepe, 2022
 # Martin Trigaux, 2022
 # Cécile Collart <cco@odoo.com>, 2022
+# Jolien De Paepe, 2022
 # 
 msgid ""
 msgstr ""
@@ -13,7 +13,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-10-04 09:24+0000\n"
 "PO-Revision-Date: 2022-09-22 05:53+0000\n"
-"Last-Translator: Cécile Collart <cco@odoo.com>, 2022\n"
+"Last-Translator: Jolien De Paepe, 2022\n"
 "Language-Team: French (https://www.transifex.com/odoo/teams/41243/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -337,8 +337,8 @@ msgid ""
 "Field used to store sanitized phone number. Helps speeding up searches and "
 "comparisons."
 msgstr ""
-"Champ utilisé pour stocker le numéro de téléphone aseptisé. Aide à accélérer"
-" les recherches et comparaisons."
+"Champ utilisé pour stocker le numéro de téléphone nettoyé. Aide à accélérer "
+"les recherches et comparaisons."
 
 #. module: mass_mailing_sms
 #: model:ir.model.fields,field_description:mass_mailing_sms.field_mailing_contact__message_follower_ids
@@ -400,7 +400,7 @@ msgid ""
 "If the sanitized phone number is on the blacklist, the contact won't receive"
 " mass mailing sms anymore, from any list"
 msgstr ""
-"Si le numéro de téléphone aseptisé est sur la liste noire, le contact ne "
+"Si le numéro de téléphone nettoyé est sur la liste noire, le contact ne "
 "recevra plus de campagnes de mail par SMS, d'aucunes listes."
 
 #. module: mass_mailing_sms
@@ -425,9 +425,9 @@ msgid ""
 "distinguish which number is blacklisted             when there is both a "
 "mobile and phone field in a model."
 msgstr ""
-"Indique si un numéro de téléphone blacklisté et aseptisé est un numéro de "
-"téléphone portable. Aide à distinguer quel numéro est blacklisté quand il y "
-"a et un champ portable et un champ téléphone dans un modèle."
+"Indique si un numéro de téléphone nettoyé et sur liste noire est un numéro "
+"de téléphone portable. Aide à distinguer quel numéro est sur liste noire "
+"quand il y a et un champ portable et un champ téléphone dans un modèle."
 
 #. module: mass_mailing_sms
 #: model:ir.model.fields,help:mass_mailing_sms.field_mailing_contact__phone_blacklisted
@@ -436,9 +436,9 @@ msgid ""
 "distinguish which number is blacklisted             when there is both a "
 "mobile and phone field in a model."
 msgstr ""
-"Indique si un numéro de téléphone blacklisté et aseptisé est un numéro de "
-"téléphone portable. Aide à distinguer quel numéro est blacklisté quand il y "
-"a et un champ portable et un champ téléphone dans un modèle."
+"Indique si un numéro de téléphone nettoyé et sur liste noire est un numéro "
+"de téléphone portable. Aide à distinguer quel numéro est sur liste noire "
+"quand il y a et un champ portable et un champ téléphone dans un modèle."
 
 #. module: mass_mailing_sms
 #: model:ir.model.fields.selection,name:mass_mailing_sms.selection__mailing_trace__failure_type__sms_credit
@@ -791,7 +791,7 @@ msgstr "STOP SMS : %s"
 #. module: mass_mailing_sms
 #: model:ir.model.fields,field_description:mass_mailing_sms.field_mailing_contact__phone_sanitized
 msgid "Sanitized Number"
-msgstr "Numéro Aseptisé"
+msgstr "Numéro nettoyé"
 
 #. module: mass_mailing_sms
 #: model_terms:ir.ui.view,arch_db:mass_mailing_sms.mailing_mailing_view_form_sms

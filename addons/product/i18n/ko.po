@@ -3,16 +3,17 @@
 # 	* product
 # 
 # Translators:
-# Martin Trigaux, 2022
 # JH CHOI <hwangtog@gmail.com>, 2022
+# Sarah Park, 2022
+# Martin Trigaux, 2022
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 16.0beta\n"
+"Project-Id-Version: Odoo Server 16.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-10-04 09:25+0000\n"
+"POT-Creation-Date: 2022-12-15 12:51+0000\n"
 "PO-Revision-Date: 2022-09-22 05:54+0000\n"
-"Last-Translator: JH CHOI <hwangtog@gmail.com>, 2022\n"
+"Last-Translator: Martin Trigaux, 2022\n"
 "Language-Team: Korean (https://www.transifex.com/odoo/teams/41243/ko/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -32,6 +33,7 @@ msgid "# Products"
 msgstr "# 품목"
 
 #. module: product
+#. odoo-python
 #: code:addons/product/models/product_pricelist_item.py:0
 #, python-format
 msgid ""
@@ -40,24 +42,28 @@ msgid ""
 msgstr ""
 
 #. module: product
+#. odoo-python
 #: code:addons/product/models/product_pricelist_item.py:0
 #, python-format
 msgid "%(percentage)s %% discount and %(price)s surcharge"
 msgstr ""
 
 #. module: product
+#. odoo-python
 #: code:addons/product/models/product_pricelist_item.py:0
 #, python-format
 msgid "%s %% discount"
 msgstr "%s %% 할인"
 
 #. module: product
+#. odoo-python
 #: code:addons/product/models/product_template.py:0
 #, python-format
 msgid "%s (copy)"
 msgstr "%s (사본)"
 
 #. module: product
+#. odoo-python
 #: code:addons/product/models/product_pricelist_item.py:0
 #, python-format
 msgid "%s : end date (%s) should be greater than start date (%s)"
@@ -75,6 +81,7 @@ msgid "'Products packaging - %s' % (object.name)"
 msgstr "'품목 포장 - %s' % (object.name)"
 
 #. module: product
+#. odoo-python
 #: code:addons/product/models/product_product.py:0
 #, python-format
 msgid "- Barcode \"%s\" already assigned to product(s): %s"
@@ -99,10 +106,6 @@ msgid "1 year"
 msgstr "1년"
 
 #. module: product
-#: model:product.product,description_sale:product.product_product_4
-#: model:product.product,description_sale:product.product_product_4b
-#: model:product.product,description_sale:product.product_product_4c
-#: model:product.product,description_sale:product.product_product_4d
 #: model:product.template,description_sale:product.product_product_4_product_template
 msgid "160x80cm, with large legs."
 msgstr "160x80cm. 긴 다리."
@@ -218,6 +221,7 @@ msgid ""
 msgstr "고객에게 전달하고자 하는 품목 설명. 이 설명은 모든 판매 주문, 배송 주문 및 고객 청구서/대변전표에 복사됩니다"
 
 #. module: product
+#. odoo-python
 #: code:addons/product/models/product_product.py:0
 #, python-format
 msgid "A packaging already uses the barcode"
@@ -231,6 +235,7 @@ msgid ""
 msgstr ""
 
 #. module: product
+#. odoo-python
 #: code:addons/product/models/product_packaging.py:0
 #, python-format
 msgid "A product already uses the barcode"
@@ -249,7 +254,6 @@ msgstr ""
 "서비스는 귀하가 제공하는 비물질 품목입니다."
 
 #. module: product
-#: model:product.product,name:product.product_product_25
 #: model:product.template,name:product.product_product_25_product_template
 msgid "Acoustic Bloc Screens"
 msgstr "어쿠스틱 블록 스크린"
@@ -302,7 +306,7 @@ msgid "Activity Type Icon"
 msgstr "활동 유형 아이콘"
 
 #. module: product
-#. openerp-web
+#. odoo-javascript
 #: code:addons/product/static/src/xml/pricelist_report.xml:0
 #, python-format
 msgid "Add a quantity"
@@ -335,6 +339,7 @@ msgid "All Product Variants using this Tag"
 msgstr ""
 
 #. module: product
+#. odoo-python
 #: code:addons/product/models/product_pricelist_item.py:0
 #: model:ir.model.fields.selection,name:product.selection__product_pricelist_item__applied_on__3_global
 #, python-format
@@ -358,8 +363,6 @@ msgstr ""
 
 #. module: product
 #: model:product.attribute.value,name:product.product_attribute_value_2
-#: model:product.template.attribute.value,name:product.product_11_attribute_1_value_2
-#: model:product.template.attribute.value,name:product.product_4_attribute_1_value_2
 msgid "Aluminium"
 msgstr "알루미늄"
 
@@ -396,7 +399,7 @@ msgid "Assigns the priority to the list of product vendor."
 msgstr "품목 공급업체 목록에 우선 순위를 지정합니다."
 
 #. module: product
-#. openerp-web
+#. odoo-javascript
 #: code:addons/product/static/src/js/product_pricelist_report.js:0
 #, python-format
 msgid ""
@@ -477,6 +480,7 @@ msgstr ""
 "꾸러미 상품 식별에 사용되는 바코드. 포함된 모든 장치를 이동하려면 바코드 앱에서 전송에서 이 꾸러미 상품 바코드를 스캔하십시오."
 
 #. module: product
+#. odoo-python
 #: code:addons/product/models/product_product.py:0
 #, python-format
 msgid ""
@@ -510,12 +514,10 @@ msgstr "기본 가격표"
 
 #. module: product
 #: model:product.attribute.value,name:product.product_attribute_value_4
-#: model:product.template.attribute.value,name:product.product_4_attribute_2_value_2
 msgid "Black"
 msgstr "검정색"
 
 #. module: product
-#: model:product.product,name:product.product_product_10
 #: model:product.template,name:product.product_product_10_product_template
 msgid "Cabinet with Doors"
 msgstr "문이 있는 캐비닛"
@@ -551,6 +553,7 @@ msgid "Category"
 msgstr "카테고리"
 
 #. module: product
+#. odoo-python
 #: code:addons/product/models/product_pricelist_item.py:0
 #, python-format
 msgid "Category: %s"
@@ -638,14 +641,11 @@ msgid "Conditions"
 msgstr "조건"
 
 #. module: product
-#: model:product.product,name:product.product_product_11
-#: model:product.product,name:product.product_product_11b
 #: model:product.template,name:product.product_product_11_product_template
 msgid "Conference Chair"
 msgstr ""
 
 #. module: product
-#: model:product.product,description_sale:product.consu_delivery_02
 #: model:product.template,description_sale:product.consu_delivery_02_product_template
 msgid "Conference room table"
 msgstr "회의실 테이블"
@@ -677,6 +677,7 @@ msgid "Consumable"
 msgstr "소모품"
 
 #. module: product
+#. odoo-python
 #: code:addons/product/models/product_template.py:0
 #, python-format
 msgid ""
@@ -690,10 +691,6 @@ msgid "Contact"
 msgstr "연락처"
 
 #. module: product
-#: model_terms:product.product,website_description:product.product_product_4
-#: model_terms:product.product,website_description:product.product_product_4b
-#: model_terms:product.product,website_description:product.product_product_4c
-#: model_terms:product.product,website_description:product.product_product_4d
 #: model_terms:product.template,website_description:product.product_product_4_product_template
 msgid "Contact Us"
 msgstr "문의하기"
@@ -714,13 +711,11 @@ msgid "Contained quantity"
 msgstr "포함된 수량"
 
 #. module: product
-#: model:product.product,name:product.product_product_13
 #: model:product.template,name:product.product_product_13_product_template
 msgid "Corner Desk Left Sit"
 msgstr ""
 
 #. module: product
-#: model:product.product,name:product.product_product_5
 #: model:product.template,name:product.product_product_5_product_template
 msgid "Corner Desk Right Sit"
 msgstr "코너 데스크 오른쪽 시트"
@@ -836,19 +831,9 @@ msgid "Customer Ref"
 msgstr "고객 참조"
 
 #. module: product
-#: model:product.product,name:product.product_product_4
-#: model:product.product,name:product.product_product_4b
-#: model:product.product,name:product.product_product_4c
-#: model:product.product,name:product.product_product_4d
 #: model:product.template,name:product.product_product_4_product_template
 msgid "Customizable Desk"
 msgstr ""
-
-#. module: product
-#: model:product.product,uom_name:product.expense_hotel
-#: model:product.template,uom_name:product.expense_hotel_product_template
-msgid "Days"
-msgstr "일"
 
 #. module: product
 #: model:ir.model,name:product.model_decimal_precision
@@ -856,6 +841,7 @@ msgid "Decimal Precision"
 msgstr "소수점 정밀도"
 
 #. module: product
+#. odoo-python
 #: code:addons/product/models/res_company.py:0
 #: code:addons/product/models/res_company.py:0
 #, python-format
@@ -886,12 +872,12 @@ msgstr ""
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.res_config_settings_view_form
 msgid "Define your volume unit of measure"
-msgstr ""
+msgstr "부피 측정 단위를 선택하세요"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.res_config_settings_view_form
 msgid "Define your weight unit of measure"
-msgstr ""
+msgstr "무게 측정 단위를 선택하세요"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_supplierinfo__delay
@@ -905,19 +891,16 @@ msgid "Description"
 msgstr "설명"
 
 #. module: product
-#: model:product.product,name:product.product_product_3
 #: model:product.template,name:product.product_product_3_product_template
 msgid "Desk Combination"
 msgstr "책상 조합"
 
 #. module: product
-#: model:product.product,name:product.product_product_22
 #: model:product.template,name:product.product_product_22_product_template
 msgid "Desk Stand with Screen"
 msgstr "스크린이 있는 데스크 스탠드"
 
 #. module: product
-#: model:product.product,description_sale:product.product_product_3
 #: model:product.template,description_sale:product.product_product_3_product_template
 msgid "Desk combination, black-brown: chair + desk + drawer."
 msgstr "책상 조합, 블랙 브라운 : 의자 + 책상 + 서랍."
@@ -980,7 +963,7 @@ msgid "Display Name"
 msgstr "표시명"
 
 #. module: product
-#. openerp-web
+#. odoo-javascript
 #: code:addons/product/static/src/xml/pricelist_report.xml:0
 #, python-format
 msgid "Display Pricelist"
@@ -999,19 +982,16 @@ msgid "Documentation"
 msgstr "문서화"
 
 #. module: product
-#: model:product.product,name:product.product_product_27
 #: model:product.template,name:product.product_product_27_product_template
 msgid "Drawer"
 msgstr "서랍장"
 
 #. module: product
-#: model:product.product,name:product.product_product_16
 #: model:product.template,name:product.product_product_16_product_template
 msgid "Drawer Black"
 msgstr "검은색 서랍장"
 
 #. module: product
-#: model_terms:product.product,description:product.product_product_27
 #: model_terms:product.template,description:product.product_product_27_product_template
 msgid "Drawer with two routing possiblities."
 msgstr "두 가지 라우팅 가능성이 있는 서랍."
@@ -1055,10 +1035,6 @@ msgid ""
 msgstr ""
 
 #. module: product
-#: model_terms:product.product,website_description:product.product_product_4
-#: model_terms:product.product,website_description:product.product_product_4b
-#: model_terms:product.product,website_description:product.product_product_4c
-#: model_terms:product.product,website_description:product.product_product_4d
 #: model_terms:product.template,website_description:product.product_product_4_product_template
 msgid "Ergonomic"
 msgstr ""
@@ -1110,7 +1086,6 @@ msgid "Fixed Price"
 msgstr "고정 가격"
 
 #. module: product
-#: model:product.product,name:product.product_product_20
 #: model:product.template,name:product.product_product_20_product_template
 msgid "Flipover"
 msgstr "뒤집기"
@@ -1153,13 +1128,11 @@ msgid "Formula"
 msgstr "수식"
 
 #. module: product
-#: model:product.product,name:product.consu_delivery_03
 #: model:product.template,name:product.consu_delivery_03_product_template
 msgid "Four Person Desk"
 msgstr "4인용 책상"
 
 #. module: product
-#: model:product.product,description_sale:product.consu_delivery_03
 #: model:product.template,description_sale:product.consu_delivery_03_product_template
 msgid "Four person modern office workstation"
 msgstr "4인용 현대적인 사무실 워크스테이션"
@@ -1233,18 +1206,9 @@ msgid ""
 msgstr "속성 유형이 '색깔'인 경우, 특정한 HTML 색 색인(예를 들어 #ff0000)을 설정할 수 있습니다."
 
 #. module: product
-#: model:product.product,name:product.expense_hotel
 #: model:product.template,name:product.expense_hotel_product_template
 msgid "Hotel Accommodation"
 msgstr "호텔 숙박"
-
-#. module: product
-#: model:product.product,uom_name:product.product_product_1
-#: model:product.product,uom_name:product.product_product_2
-#: model:product.template,uom_name:product.product_product_1_product_template
-#: model:product.template,uom_name:product.product_product_2_product_template
-msgid "Hours"
-msgstr "시간"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_attribute__id
@@ -1285,7 +1249,9 @@ msgstr "만약 선택하였으면, 신규 메시지에 주의를 기울여야 �
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_product__message_has_error
+#: model:ir.model.fields,help:product.field_product_product__message_has_sms_error
 #: model:ir.model.fields,help:product.field_product_template__message_has_error
+#: model:ir.model.fields,help:product.field_product_template__message_has_sms_error
 msgid "If checked, some messages have a delivery error."
 msgstr "이 옵션을 선택하면 일부 정보가 전달 오류를 생성합니다."
 
@@ -1340,18 +1306,21 @@ msgid "Image 512"
 msgstr "512 이미지"
 
 #. module: product
+#. odoo-python
 #: code:addons/product/models/product_pricelist.py:0
 #, python-format
 msgid "Import Template for Pricelists"
 msgstr "가격표 서식 가져오기"
 
 #. module: product
+#. odoo-python
 #: code:addons/product/models/product_template.py:0
 #, python-format
 msgid "Import Template for Products"
 msgstr "품목 가져오기"
 
 #. module: product
+#. odoo-python
 #: code:addons/product/models/product_supplierinfo.py:0
 #, python-format
 msgid "Import Template for Vendor Pricelists"
@@ -1373,7 +1342,6 @@ msgid "Inactive"
 msgstr "비활성"
 
 #. module: product
-#: model:product.product,name:product.product_product_24
 #: model:product.template,name:product.product_product_24_product_template
 msgid "Individual Workplace"
 msgstr "개별 작업위치"
@@ -1438,19 +1406,16 @@ msgid "Kilograms"
 msgstr "킬로그램"
 
 #. module: product
-#: model:product.product,name:product.product_product_6
 #: model:product.template,name:product.product_product_6_product_template
 msgid "Large Cabinet"
 msgstr "큰 캐비넷"
 
 #. module: product
-#: model:product.product,name:product.product_product_8
 #: model:product.template,name:product.product_product_8_product_template
 msgid "Large Desk"
 msgstr "큰 책상"
 
 #. module: product
-#: model:product.product,name:product.consu_delivery_02
 #: model:product.template,name:product.consu_delivery_02_product_template
 msgid "Large Meeting Table"
 msgstr "큰 회의용 테이블"
@@ -1537,10 +1502,6 @@ msgid "Lines"
 msgstr "명세"
 
 #. module: product
-#: model_terms:product.product,website_description:product.product_product_4
-#: model_terms:product.product,website_description:product.product_product_4b
-#: model_terms:product.product,website_description:product.product_product_4c
-#: model_terms:product.product,website_description:product.product_product_4d
 #: model_terms:product.template,website_description:product.product_product_4_product_template
 msgid "Locally handmade"
 msgstr ""
@@ -1552,10 +1513,6 @@ msgid "Logistics"
 msgstr "물류 센터"
 
 #. module: product
-#: model_terms:product.product,website_description:product.product_product_4
-#: model_terms:product.product,website_description:product.product_product_4b
-#: model_terms:product.product,website_description:product.product_product_4c
-#: model_terms:product.product,website_description:product.product_product_4d
 #: model_terms:product.template,website_description:product.product_product_4_product_template
 msgid ""
 "Looking for a custom bamboo stain to match existing furniture? Contact us "
@@ -1686,6 +1643,7 @@ msgid "Next Activity Type"
 msgstr "다음 활동 유형"
 
 #. module: product
+#. odoo-python
 #: code:addons/product/wizard/product_label_layout.py:0
 #, python-format
 msgid ""
@@ -1704,6 +1662,7 @@ msgid "Normal"
 msgstr "일반"
 
 #. module: product
+#. odoo-python
 #: code:addons/product/models/product_product.py:0
 #: code:addons/product/models/product_template.py:0
 #, python-format
@@ -1746,30 +1705,27 @@ msgid "Number of price rules"
 msgstr "가격 규칙 수"
 
 #. module: product
-#: model:product.product,name:product.product_delivery_01
 #: model:product.template,name:product.product_delivery_01_product_template
 msgid "Office Chair"
 msgstr "사무용 의자"
 
 #. module: product
-#: model:product.product,name:product.product_product_12
 #: model:product.template,name:product.product_product_12_product_template
 msgid "Office Chair Black"
 msgstr "사무실용 검정색 의자"
 
 #. module: product
-#: model:product.product,name:product.product_order_01
 #: model:product.template,name:product.product_order_01_product_template
 msgid "Office Design Software"
 msgstr "사무실 디자인 소프트웨어"
 
 #. module: product
-#: model:product.product,name:product.product_delivery_02
 #: model:product.template,name:product.product_delivery_02_product_template
 msgid "Office Lamp"
 msgstr "사무실용 등"
 
 #. module: product
+#. odoo-python
 #: code:addons/product/models/product_attribute.py:0
 #, python-format
 msgid ""
@@ -1778,6 +1734,7 @@ msgid ""
 msgstr "%s 품목에 %s 값이 일치하지 않기 때문에 %s 속성과 연결할 수 없습니다."
 
 #. module: product
+#. odoo-python
 #: code:addons/product/models/product_attribute.py:0
 #, python-format
 msgid ""
@@ -1810,7 +1767,6 @@ msgid "Parent Path"
 msgstr "상위 경로"
 
 #. module: product
-#: model:product.product,name:product.product_product_9
 #: model:product.template,name:product.product_product_9_product_template
 msgid "Pedal Bin"
 msgstr "페달이 달린 쓰레기통"
@@ -1826,25 +1782,28 @@ msgid "Pills"
 msgstr "필"
 
 #. module: product
-#. openerp-web
+#. odoo-javascript
 #: code:addons/product/static/src/js/product_pricelist_report.js:0
 #, python-format
 msgid "Please enter a positive whole number"
 msgstr ""
 
 #. module: product
+#. odoo-python
 #: code:addons/product/models/product_pricelist_item.py:0
 #, python-format
 msgid "Please specify the category for which this rule should be applied"
 msgstr "이 규칙을 적용할 범주를 지정하십시오"
 
 #. module: product
+#. odoo-python
 #: code:addons/product/models/product_pricelist_item.py:0
 #, python-format
 msgid "Please specify the product for which this rule should be applied"
 msgstr "이 규칙을 적용할 품목을 지정하십시오"
 
 #. module: product
+#. odoo-python
 #: code:addons/product/models/product_pricelist_item.py:0
 #, python-format
 msgid ""
@@ -1857,10 +1816,6 @@ msgid "Pounds"
 msgstr "파운드"
 
 #. module: product
-#: model_terms:product.product,website_description:product.product_product_4
-#: model_terms:product.product,website_description:product.product_product_4b
-#: model_terms:product.product,website_description:product.product_product_4c
-#: model_terms:product.product,website_description:product.product_product_4d
 #: model_terms:product.template,website_description:product.product_product_4_product_template
 msgid ""
 "Press a button and watch your desk glide effortlessly from sitting to "
@@ -1892,6 +1847,7 @@ msgid "Price Rounding"
 msgstr "가격 반올림"
 
 #. module: product
+#. odoo-python
 #: code:addons/product/models/product_product.py:0
 #: code:addons/product/models/product_template.py:0
 #: model:ir.actions.act_window,name:product.product_pricelist_item_action
@@ -1941,7 +1897,7 @@ msgid "Pricelist Name"
 msgstr "가격표 이름"
 
 #. module: product
-#. openerp-web
+#. odoo-javascript
 #: code:addons/product/static/src/js/product_pricelist_report.js:0
 #: model:ir.model,name:product.model_report_product_report_pricelist
 #, python-format
@@ -1962,7 +1918,7 @@ msgid "Pricelist Rules"
 msgstr ""
 
 #. module: product
-#. openerp-web
+#. odoo-javascript
 #: code:addons/product/static/src/xml/pricelist_report.xml:0
 #: model_terms:ir.ui.view,arch_db:product.report_pricelist_page
 #, python-format
@@ -1992,7 +1948,7 @@ msgid "Pricing"
 msgstr "가격 책정"
 
 #. module: product
-#. openerp-web
+#. odoo-javascript
 #: code:addons/product/static/src/js/product_pricelist_report.js:0
 #, python-format
 msgid "Print"
@@ -2201,6 +2157,7 @@ msgid "Product Variant"
 msgstr "파생 품목"
 
 #. module: product
+#. odoo-python
 #: code:addons/product/models/product_attribute.py:0
 #, python-format
 msgid "Product Variant Values"
@@ -2216,12 +2173,14 @@ msgid "Product Variants"
 msgstr "파생 품목"
 
 #. module: product
+#. odoo-python
 #: code:addons/product/report/product_label_report.py:0
 #, python-format
 msgid "Product model not defined, Please contact your administrator."
 msgstr ""
 
 #. module: product
+#. odoo-python
 #: code:addons/product/models/product_pricelist_item.py:0
 #, python-format
 msgid "Product: %s"
@@ -2261,6 +2220,7 @@ msgid "Products Price Search"
 msgstr "품목 가격 검색"
 
 #. module: product
+#. odoo-python
 #: code:addons/product/models/product_product.py:0
 #, python-format
 msgid "Products: %(category)s"
@@ -2274,7 +2234,7 @@ msgstr ""
 #. module: product
 #: model:product.pricelist,name:product.list0
 msgid "Public Pricelist"
-msgstr "공개 가격표"
+msgstr "일반용 가격표"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_template_form_view
@@ -2294,7 +2254,7 @@ msgid "Purchase UoM"
 msgstr ""
 
 #. module: product
-#. openerp-web
+#. odoo-javascript
 #: code:addons/product/static/src/xml/pricelist_report.xml:0
 #, python-format
 msgid "Quantities:"
@@ -2307,7 +2267,7 @@ msgid "Quantity"
 msgstr "수량"
 
 #. module: product
-#. openerp-web
+#. odoo-javascript
 #: code:addons/product/static/src/js/product_pricelist_report.js:0
 #, python-format
 msgid "Quantity already present (%d)."
@@ -2336,6 +2296,7 @@ msgid ""
 msgstr "공급업체로부터 요청받은 각각의 품목에 대한 단가를, 수량과 기간에 맞춰 등록합니다. "
 
 #. module: product
+#. odoo-python
 #: code:addons/product/models/product_attribute.py:0
 #: model:ir.model.fields,field_description:product.field_product_attribute__product_tmpl_ids
 #, python-format
@@ -2348,7 +2309,7 @@ msgid "Related Variants"
 msgstr "연관된 파생품"
 
 #. module: product
-#. openerp-web
+#. odoo-javascript
 #: code:addons/product/static/src/xml/pricelist_report.xml:0
 #, python-format
 msgid "Remove quantity"
@@ -2361,7 +2322,6 @@ msgid "Responsible User"
 msgstr "담당 사용자"
 
 #. module: product
-#: model:product.product,name:product.expense_product
 #: model:product.template,name:product.expense_product_product_template
 msgid "Restaurant Expenses"
 msgstr "식당 경비"
@@ -2380,6 +2340,12 @@ msgstr "행"
 #: model:ir.model.fields,field_description:product.field_product_pricelist_item__rule_tip
 msgid "Rule Tip"
 msgstr ""
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_product_product__message_has_sms_error
+#: model:ir.model.fields,field_description:product.field_product_template__message_has_sms_error
+msgid "SMS Delivery error"
+msgstr "SMS 전송 에러"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_template_form_view
@@ -2535,13 +2501,10 @@ msgstr ""
 
 #. module: product
 #: model:product.attribute.value,name:product.product_attribute_value_1
-#: model:product.template.attribute.value,name:product.product_11_attribute_1_value_1
-#: model:product.template.attribute.value,name:product.product_4_attribute_1_value_1
 msgid "Steel"
 msgstr "철"
 
 #. module: product
-#: model:product.product,name:product.product_product_7
 #: model:product.template,name:product.product_product_7_product_template
 msgid "Storage Box"
 msgstr "보관함"
@@ -2572,6 +2535,7 @@ msgid "Tags are used to search product for a given theme."
 msgstr ""
 
 #. module: product
+#. odoo-python
 #: code:addons/product/models/product_product.py:0
 #: code:addons/product/models/product_template.py:0
 #, python-format
@@ -2579,12 +2543,14 @@ msgid "The Internal Reference '%s' already exists."
 msgstr ""
 
 #. module: product
+#. odoo-python
 #: code:addons/product/models/product_template.py:0
 #, python-format
 msgid "The Type of this product doesn't match the Detailed Type"
 msgstr ""
 
 #. module: product
+#. odoo-python
 #: code:addons/product/models/product_attribute.py:0
 #, python-format
 msgid "The attribute %s must have at least one value for the product %s."
@@ -2605,6 +2571,7 @@ msgid ""
 msgstr "계산된 가격은 품목의 기본 단위로 표시됩니다."
 
 #. module: product
+#. odoo-python
 #: code:addons/product/models/product_template.py:0
 #, python-format
 msgid ""
@@ -2625,10 +2592,6 @@ msgid "The first in the sequence is the default one."
 msgstr "순서의 첫 번째가 기본입니다."
 
 #. module: product
-#: model_terms:product.product,website_description:product.product_product_4
-#: model_terms:product.product,website_description:product.product_product_4b
-#: model_terms:product.product,website_description:product.product_product_4c
-#: model_terms:product.product,website_description:product.product_product_4d
 #: model_terms:product.template,website_description:product.product_product_4_product_template
 msgid ""
 "The minimum height is 65 cm, and for standing work the maximum height "
@@ -2636,6 +2599,7 @@ msgid ""
 msgstr ""
 
 #. module: product
+#. odoo-python
 #: code:addons/product/models/product_pricelist_item.py:0
 #, python-format
 msgid "The minimum margin should be lower than the maximum margin."
@@ -2649,6 +2613,7 @@ msgid ""
 msgstr "이 카테고리에 속하는 품목 수 (하위 카테고리는 고려하지 않음)"
 
 #. module: product
+#. odoo-python
 #: code:addons/product/models/product_template.py:0
 #, python-format
 msgid ""
@@ -2666,6 +2631,7 @@ msgid "The price to purchase a product"
 msgstr "품목 구매 가격"
 
 #. module: product
+#. odoo-python
 #: code:addons/product/models/product_template.py:0
 #, python-format
 msgid "The product template is archived so no combination is possible."
@@ -2688,30 +2654,35 @@ msgid ""
 msgstr "판매 가격은 품목양식에서 관리됩니다. 추가 파생 품목 가격을 설정하려면 '파생 품목 구성' 버튼을 클릭하십시오."
 
 #. module: product
+#. odoo-python
 #: code:addons/product/models/product_attribute.py:0
 #, python-format
 msgid "The value %s is not defined for the attribute %s on the product %s."
 msgstr "%s 값이  %s 사양에 대해 정의되지 않았으며 해당 속성을 가진 품목은 %s입니다."
 
 #. module: product
+#. odoo-python
 #: code:addons/product/models/product_template.py:0
 #, python-format
 msgid "There are no possible combination."
 msgstr "가능한 조합이 없습니다."
 
 #. module: product
+#. odoo-python
 #: code:addons/product/models/product_template.py:0
 #, python-format
 msgid "There are no remaining closest combination."
 msgstr "남아있는 가까운 조합이 없습니다."
 
 #. module: product
+#. odoo-python
 #: code:addons/product/models/product_template.py:0
 #, python-format
 msgid "There are no remaining possible combination."
 msgstr "남아있는 가능한 조합이 없습니다."
 
 #. module: product
+#. odoo-python
 #: code:addons/product/models/product_template.py:0
 #, python-format
 msgid ""
@@ -2744,6 +2715,7 @@ msgid ""
 msgstr "이 가격표는 기본 협력사 대신 현재 협력사에게 판매하는 데 사용됩니다"
 
 #. module: product
+#. odoo-python
 #: code:addons/product/models/uom_uom.py:0
 #, python-format
 msgid ""
@@ -2770,13 +2742,11 @@ msgid ""
 msgstr "이 공급업체의 품목 이름은 견적 요청을 인쇄할 때 사용됩니다. 내부용으로 사용하려면 비워 두십시오."
 
 #. module: product
-#: model:product.product,description_sale:product.consu_delivery_01
 #: model:product.template,description_sale:product.consu_delivery_01_product_template
 msgid "Three Seater Sofa with Lounger in Steel Grey Colour"
 msgstr "강철 회색 색깔에 안락함을 가진 3인용 소파"
 
 #. module: product
-#: model:product.product,name:product.consu_delivery_01
 #: model:product.template,name:product.consu_delivery_01_product_template
 msgid "Three-Seat Sofa"
 msgstr "3인용 소파"
@@ -2799,6 +2769,7 @@ msgid "Type of the exception activity on record."
 msgstr "레코드에 있는 예외 활동의 유형입니다."
 
 #. module: product
+#. odoo-python
 #: code:addons/product/wizard/product_label_layout.py:0
 #, python-format
 msgid "Unable to find report template for %s format"
@@ -2822,62 +2793,6 @@ msgstr "단위"
 #: model:ir.model.fields,field_description:product.field_product_template__uom_name
 msgid "Unit of Measure Name"
 msgstr "단위명"
-
-#. module: product
-#: model:product.product,uom_name:product.consu_delivery_01
-#: model:product.product,uom_name:product.consu_delivery_02
-#: model:product.product,uom_name:product.consu_delivery_03
-#: model:product.product,uom_name:product.expense_product
-#: model:product.product,uom_name:product.product_delivery_01
-#: model:product.product,uom_name:product.product_delivery_02
-#: model:product.product,uom_name:product.product_order_01
-#: model:product.product,uom_name:product.product_product_10
-#: model:product.product,uom_name:product.product_product_11
-#: model:product.product,uom_name:product.product_product_11b
-#: model:product.product,uom_name:product.product_product_12
-#: model:product.product,uom_name:product.product_product_13
-#: model:product.product,uom_name:product.product_product_16
-#: model:product.product,uom_name:product.product_product_20
-#: model:product.product,uom_name:product.product_product_22
-#: model:product.product,uom_name:product.product_product_24
-#: model:product.product,uom_name:product.product_product_25
-#: model:product.product,uom_name:product.product_product_27
-#: model:product.product,uom_name:product.product_product_3
-#: model:product.product,uom_name:product.product_product_4
-#: model:product.product,uom_name:product.product_product_4b
-#: model:product.product,uom_name:product.product_product_4c
-#: model:product.product,uom_name:product.product_product_4d
-#: model:product.product,uom_name:product.product_product_5
-#: model:product.product,uom_name:product.product_product_6
-#: model:product.product,uom_name:product.product_product_7
-#: model:product.product,uom_name:product.product_product_8
-#: model:product.product,uom_name:product.product_product_9
-#: model:product.template,uom_name:product.consu_delivery_01_product_template
-#: model:product.template,uom_name:product.consu_delivery_02_product_template
-#: model:product.template,uom_name:product.consu_delivery_03_product_template
-#: model:product.template,uom_name:product.expense_product_product_template
-#: model:product.template,uom_name:product.product_delivery_01_product_template
-#: model:product.template,uom_name:product.product_delivery_02_product_template
-#: model:product.template,uom_name:product.product_order_01_product_template
-#: model:product.template,uom_name:product.product_product_10_product_template
-#: model:product.template,uom_name:product.product_product_11_product_template
-#: model:product.template,uom_name:product.product_product_12_product_template
-#: model:product.template,uom_name:product.product_product_13_product_template
-#: model:product.template,uom_name:product.product_product_16_product_template
-#: model:product.template,uom_name:product.product_product_20_product_template
-#: model:product.template,uom_name:product.product_product_22_product_template
-#: model:product.template,uom_name:product.product_product_24_product_template
-#: model:product.template,uom_name:product.product_product_25_product_template
-#: model:product.template,uom_name:product.product_product_27_product_template
-#: model:product.template,uom_name:product.product_product_3_product_template
-#: model:product.template,uom_name:product.product_product_4_product_template
-#: model:product.template,uom_name:product.product_product_5_product_template
-#: model:product.template,uom_name:product.product_product_6_product_template
-#: model:product.template,uom_name:product.product_product_7_product_template
-#: model:product.template,uom_name:product.product_product_8_product_template
-#: model:product.template,uom_name:product.product_product_9_product_template
-msgid "Units"
-msgstr "단위"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_res_config_settings__group_uom
@@ -2994,6 +2909,7 @@ msgid "Variant Values"
 msgstr "파생 상품 값"
 
 #. module: product
+#. odoo-python
 #: code:addons/product/models/product_pricelist_item.py:0
 #, python-format
 msgid "Variant: %s"
@@ -3052,13 +2968,11 @@ msgid "Vendors"
 msgstr "공급업체"
 
 #. module: product
-#: model:product.product,name:product.product_product_2
 #: model:product.template,name:product.product_product_2_product_template
 msgid "Virtual Home Staging"
 msgstr "가상 홈 스테이징"
 
 #. module: product
-#: model:product.product,name:product.product_product_1
 #: model:product.template,name:product.product_product_1_product_template
 msgid "Virtual Interior Design"
 msgstr "가상 인테리어 디자인"
@@ -3083,6 +2997,7 @@ msgid "Volume unit of measure label"
 msgstr "부피 단위 꼬리표"
 
 #. module: product
+#. odoo-python
 #: code:addons/product/models/decimal_precision.py:0
 #: code:addons/product/models/uom_uom.py:0
 #, python-format
@@ -3095,15 +3010,23 @@ msgid "Warnings"
 msgstr "경고"
 
 #. module: product
-#: model_terms:product.product,website_description:product.product_product_4
-#: model_terms:product.product,website_description:product.product_product_4b
-#: model_terms:product.product,website_description:product.product_product_4c
-#: model_terms:product.product,website_description:product.product_product_4d
 #: model_terms:product.template,website_description:product.product_product_4_product_template
 msgid ""
 "We pay special attention to detail, which is why our desks are of a superior"
 " quality."
 msgstr ""
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_product_product__website_message_ids
+#: model:ir.model.fields,field_description:product.field_product_template__website_message_ids
+msgid "Website Messages"
+msgstr "웹사이트 메시지"
+
+#. module: product
+#: model:ir.model.fields,help:product.field_product_product__website_message_ids
+#: model:ir.model.fields,help:product.field_product_template__website_message_ids
+msgid "Website communication history"
+msgstr "웹사이트 대화 이력"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__weight
@@ -3125,11 +3048,11 @@ msgstr "무게 단위 꼬리표"
 
 #. module: product
 #: model:product.attribute.value,name:product.product_attribute_value_3
-#: model:product.template.attribute.value,name:product.product_4_attribute_2_value_1
 msgid "White"
 msgstr "흰색"
 
 #. module: product
+#. odoo-python
 #: code:addons/product/models/decimal_precision.py:0
 #, python-format
 msgid ""
@@ -3157,6 +3080,7 @@ msgid ""
 msgstr "고객에게 가격표를 배정하거나 새 판매 견적을 작성할 때 가격표를 선택할 수 있습니다."
 
 #. module: product
+#. odoo-python
 #: code:addons/product/models/product_pricelist_item.py:0
 #, python-format
 msgid ""
@@ -3164,6 +3088,7 @@ msgid ""
 msgstr "가격표 항목에서 주 가격표를 다른 가격표로 지정할 수 없습니다"
 
 #. module: product
+#. odoo-python
 #: code:addons/product/models/product_attribute.py:0
 #, python-format
 msgid ""
@@ -3174,6 +3099,7 @@ msgstr ""
 "%s"
 
 #. module: product
+#. odoo-python
 #: code:addons/product/models/product_attribute.py:0
 #, python-format
 msgid ""
@@ -3182,18 +3108,21 @@ msgid ""
 msgstr "%s 값은 다음 품목에 사용되므로 변경할 수 없습니다. : %s"
 
 #. module: product
+#. odoo-python
 #: code:addons/product/models/product_attribute.py:0
 #, python-format
 msgid "You cannot change the product of the value %s set on product %s."
 msgstr "%s 값의 품목이 %s 품목에 설정되어 있어 변경할 수 없습니다."
 
 #. module: product
+#. odoo-python
 #: code:addons/product/models/product_attribute.py:0
 #, python-format
 msgid "You cannot change the value of the value %s set on product %s."
 msgstr "%s 값이 %s 품목에 설정되어 있어 변경할 수 없습니다."
 
 #. module: product
+#. odoo-python
 #: code:addons/product/models/product_category.py:0
 #, python-format
 msgid "You cannot create recursive categories."
@@ -3206,6 +3135,7 @@ msgid ""
 msgstr "동일한 속성에 대해 동일한 이름을 가진 두 개의 값을 작성할 수 없습니다."
 
 #. module: product
+#. odoo-python
 #: code:addons/product/models/decimal_precision.py:0
 #, python-format
 msgid ""
@@ -3214,12 +3144,14 @@ msgid ""
 msgstr "'계정'의 십진 정밀도를 회사 주요 통화의 반올림 계수보다 큰 것으로 정의할 수 없습니다"
 
 #. module: product
+#. odoo-python
 #: code:addons/product/models/product_category.py:0
 #, python-format
 msgid "You cannot delete the %s product category."
 msgstr ""
 
 #. module: product
+#. odoo-python
 #: code:addons/product/models/product_attribute.py:0
 #, python-format
 msgid ""
@@ -3230,6 +3162,7 @@ msgstr ""
 "%s"
 
 #. module: product
+#. odoo-python
 #: code:addons/product/models/product_attribute.py:0
 #, python-format
 msgid ""
@@ -3240,6 +3173,7 @@ msgstr ""
 "%s"
 
 #. module: product
+#. odoo-python
 #: code:addons/product/models/product_category.py:0
 #, python-format
 msgid ""
@@ -3247,6 +3181,7 @@ msgid ""
 msgstr "이 품목 카테고리는 일반적인 기본 카테고리이므로 삭제할 수 없습니다."
 
 #. module: product
+#. odoo-python
 #: code:addons/product/models/product_pricelist.py:0
 #, python-format
 msgid ""
@@ -3257,6 +3192,7 @@ msgid ""
 msgstr ""
 
 #. module: product
+#. odoo-python
 #: code:addons/product/models/product_pricelist_item.py:0
 #, python-format
 msgid ""
@@ -3265,6 +3201,7 @@ msgid ""
 msgstr ""
 
 #. module: product
+#. odoo-python
 #: code:addons/product/models/product_attribute.py:0
 #, python-format
 msgid ""
@@ -3272,6 +3209,7 @@ msgid ""
 msgstr "%s 사양을 %s 품목에서 %s 품목으로 이동할 수 없습니다."
 
 #. module: product
+#. odoo-python
 #: code:addons/product/models/product_attribute.py:0
 #: code:addons/product/models/product_attribute.py:0
 #, python-format
@@ -3315,6 +3253,7 @@ msgstr ""
 "                  가격, 견적서의 주석, 회계 데이터, 조달 방법 등."
 
 #. module: product
+#. odoo-python
 #: code:addons/product/wizard/product_label_layout.py:0
 #, python-format
 msgid "You need to set a positive quantity."
@@ -3352,6 +3291,7 @@ msgid "per"
 msgstr "당"
 
 #. module: product
+#. odoo-python
 #: code:addons/product/models/product_product.py:0
 #: code:addons/product/models/product_template.py:0
 #, python-format

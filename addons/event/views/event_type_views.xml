@@ -14,28 +14,20 @@
                     </div>
                    <group>
                        <group>
-                           <div colspan="2" class="o_checkbox_optional_field">
-                               <label for="default_timezone"/>
-                               <field name="default_timezone" class="w-100"/>
-                           </div>
-                           <div colspan="2" class="o_checkbox_optional_field">
-                               <label for="tag_ids"/>
-                               <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color', 'no_quick_create': True}"/>
-                           </div>
+                           <field name="default_timezone" class="w-100"/>
+                           <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color', 'no_quick_create': True}"/>
                        </group>
                        <group>
-                           <div colspan="2" class="o_checkbox_optional_field">
-                               <label for="has_seats_limitation" string="Limit Registrations"/>
+                           <label for="has_seats_limitation" string="Limit Registrations"/>
+                           <div>
                                <field name="has_seats_limitation"/>
                                <span attrs="{'invisible': [('has_seats_limitation', '=', False)], 'required': [('has_seats_limitation', '=', False)]}">
-                                   to <field name="seats_max" class="oe_inline"/>
+                                   to <field name="seats_max" class="oe_inline o_input_9ch"/>
                                    Confirmed Attendees
                                </span>
                            </div>
-                           <div colspan="2" class="o_checkbox_optional_field">
-                               <label for="auto_confirm" string="Autoconfirmation"/>
-                               <field name="auto_confirm"/>
-                           </div>
+                           <label for="auto_confirm" string="Autoconfirmation"/>
+                           <field name="auto_confirm" nolabel="1"/>
                        </group>
                    </group>
 

@@ -1,17 +1,19 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# * note
+# 	* note
 # 
 # Translators:
-# Martin Trigaux, 2018
-# Slobodan Simić <slsimic@gmail.com>, 2018
+# Uros Kalajdzic <ukalajdzic@gmail.com>, 2022
+# Martin Trigaux, 2022
+# Dragan Vukosavljevic <dragan.vukosavljevic@gmail.com>, 2022
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.5\n"
+"Project-Id-Version: Odoo Server 15.5alpha1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-09-21 13:17+0000\n"
-"PO-Revision-Date: 2018-09-21 13:17+0000\n"
-"Last-Translator: Slobodan Simić <slsimic@gmail.com>, 2018\n"
+"POT-Creation-Date: 2022-09-20 09:01+0000\n"
+"PO-Revision-Date: 2022-09-22 05:53+0000\n"
+"Last-Translator: Dragan Vukosavljevic <dragan.vukosavljevic@gmail.com>, 2022\n"
 "Language-Team: Serbian (https://www.transifex.com/odoo/teams/41243/sr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -20,35 +22,69 @@ msgstr ""
 "Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
 
 #. module: note
+#: model_terms:ir.ui.view,arch_db:note.view_note_note_kanban
+msgid "<i class=\"fa fa-check\" role=\"img\" aria-label=\"Opened\" title=\"Opened\"/>"
+msgstr ""
+
+#. module: note
+#: model_terms:ir.ui.view,arch_db:note.view_note_note_kanban
+msgid "<i class=\"fa fa-undo\" role=\"img\" aria-label=\"Closed\" title=\"Closed\"/>"
+msgstr ""
+
+#. module: note
+#: model:ir.model.fields,field_description:note.field_mail_activity_type__category
+msgid "Action"
+msgstr "Radnja"
+
+#. module: note
 #: model:ir.model.fields,field_description:note.field_note_note__message_needaction
 msgid "Action Needed"
+msgstr "Potrebna akcija"
+
+#. module: note
+#: model:ir.model.fields,help:note.field_mail_activity_type__category
+msgid ""
+"Actions may trigger specific behavior like opening calendar view or "
+"automatically mark as done when a document is uploaded"
 msgstr ""
+"Radnje mogu pokrenuti određeno ponašanje poput otvaranja prikaza kalendara "
+"ili automatski označiti kao gotovo kada se dokument učita"
 
 #. module: note
 #: model:ir.model.fields,field_description:note.field_note_note__open
 #: model_terms:ir.ui.view,arch_db:note.view_note_note_filter
 msgid "Active"
-msgstr "Активно"
+msgstr "Aktivno"
 
 #. module: note
 #: model:ir.model.fields,field_description:note.field_note_note__activity_ids
 msgid "Activities"
-msgstr "Активности"
+msgstr "Aktivnosti"
 
 #. module: note
 #: model:ir.model,name:note.model_mail_activity
 msgid "Activity"
-msgstr "Активност"
+msgstr "Aktivnost"
+
+#. module: note
+#: model:ir.model.fields,field_description:note.field_note_note__activity_exception_decoration
+msgid "Activity Exception Decoration"
+msgstr "Dekoracija izuzeć́a aktivnosti"
 
 #. module: note
 #: model:ir.model.fields,field_description:note.field_note_note__activity_state
 msgid "Activity State"
-msgstr ""
+msgstr "Stanje aktivnosti"
 
 #. module: note
 #: model:ir.model,name:note.model_mail_activity_type
 msgid "Activity Type"
-msgstr ""
+msgstr "Vrsta aktivnosti"
+
+#. module: note
+#: model:ir.model.fields,field_description:note.field_note_note__activity_type_icon
+msgid "Activity Type Icon"
+msgstr "Ikonica vrste aktivnosti"
 
 #. module: note
 #: model_terms:ir.actions.act_window,help:note.action_note_note
@@ -58,18 +94,18 @@ msgstr ""
 #. module: note
 #: model_terms:ir.actions.act_window,help:note.note_tag_action
 msgid "Add a new tag"
-msgstr ""
+msgstr "Dodaj novu oznaku"
 
 #. module: note
 #. openerp-web
-#: code:addons/note/static/src/xml/systray.xml:14
+#: code:addons/note/static/src/components/activity_menu_view/activity_menu_view.xml:0
 #, python-format
 msgid "Add a note"
-msgstr ""
+msgstr "Dodajte belešku"
 
 #. module: note
 #. openerp-web
-#: code:addons/note/static/src/xml/systray.xml:6
+#: code:addons/note/static/src/components/activity_menu_view/activity_menu_view.xml:0
 #, python-format
 msgid "Add new note"
 msgstr ""
@@ -77,12 +113,12 @@ msgstr ""
 #. module: note
 #: model_terms:ir.ui.view,arch_db:note.view_note_note_filter
 msgid "Archive"
-msgstr ""
+msgstr "Arhiva"
 
 #. module: note
 #: model:ir.model.fields,field_description:note.field_note_note__message_attachment_count
 msgid "Attachment Count"
-msgstr ""
+msgstr "Brojač priloga"
 
 #. module: note
 #: model_terms:ir.ui.view,arch_db:note.view_note_note_filter
@@ -90,46 +126,41 @@ msgid "By sticky note Category"
 msgstr ""
 
 #. module: note
-#: model:ir.model.fields,help:note.field_mail_activity_type__category
-msgid "Categories may trigger specific behavior like opening calendar view"
-msgstr ""
-
-#. module: note
-#: model:ir.model.fields,field_description:note.field_mail_activity_type__category
-msgid "Category"
-msgstr "Kategorija"
-
-#. module: note
 #. openerp-web
-#: code:addons/note/static/src/xml/systray.xml:10
+#: code:addons/note/static/src/components/activity_menu_view/activity_menu_view.xml:0
 #, python-format
 msgid "Channel"
-msgstr "Канал"
+msgstr "Kanal"
 
 #. module: note
 #: model:ir.model.fields,field_description:note.field_note_note__color
 #: model:ir.model.fields,field_description:note.field_note_tag__color
 msgid "Color Index"
-msgstr ""
+msgstr "Indeks boja"
+
+#. module: note
+#: model:ir.model.fields,field_description:note.field_note_note__company_id
+msgid "Company"
+msgstr "Kompanija"
 
 #. module: note
 #: model:ir.ui.menu,name:note.menu_note_configuration
 msgid "Configuration"
-msgstr "Konfiguracija"
+msgstr "Podešavanje"
 
 #. module: note
 #: model:ir.model.fields,field_description:note.field_note_note__create_uid
 #: model:ir.model.fields,field_description:note.field_note_stage__create_uid
 #: model:ir.model.fields,field_description:note.field_note_tag__create_uid
 msgid "Created by"
-msgstr ""
+msgstr "Kreirao"
 
 #. module: note
 #: model:ir.model.fields,field_description:note.field_note_note__create_date
 #: model:ir.model.fields,field_description:note.field_note_stage__create_date
 #: model:ir.model.fields,field_description:note.field_note_tag__create_date
 msgid "Created on"
-msgstr "Kreiran"
+msgstr "Kreirano"
 
 #. module: note
 #: model:ir.model.fields,field_description:note.field_note_note__date_done
@@ -139,19 +170,19 @@ msgstr "Datum završetka"
 #. module: note
 #: model_terms:ir.ui.view,arch_db:note.view_note_note_kanban
 msgid "Delete"
-msgstr ""
+msgstr "Obriši"
 
 #. module: note
 #: model:ir.model.fields,field_description:note.field_note_note__display_name
 #: model:ir.model.fields,field_description:note.field_note_stage__display_name
 #: model:ir.model.fields,field_description:note.field_note_tag__display_name
 msgid "Display Name"
-msgstr ""
+msgstr "Naziv za prikaz"
 
 #. module: note
 #: model_terms:ir.ui.view,arch_db:note.view_note_note_kanban
 msgid "Dropdown menu"
-msgstr ""
+msgstr "Padajući meni"
 
 #. module: note
 #: model:ir.model.fields,field_description:note.field_note_stage__fold
@@ -166,27 +197,32 @@ msgstr ""
 #. module: note
 #: model:ir.model.fields,field_description:note.field_note_note__message_follower_ids
 msgid "Followers"
-msgstr ""
-
-#. module: note
-#: model:ir.model.fields,field_description:note.field_note_note__message_channel_ids
-msgid "Followers (Channels)"
-msgstr ""
+msgstr "Pratioci"
 
 #. module: note
 #: model:ir.model.fields,field_description:note.field_note_note__message_partner_ids
 msgid "Followers (Partners)"
-msgstr ""
+msgstr "Pratioci (Partneri)"
+
+#. module: note
+#: model:ir.model.fields,help:note.field_note_note__activity_type_icon
+msgid "Font awesome icon e.g. fa-tasks"
+msgstr "Font awesome ikonica npr. fa-tasks"
 
 #. module: note
 #: model_terms:ir.ui.view,arch_db:note.view_note_note_filter
 msgid "Future Activities"
-msgstr ""
+msgstr "Buduće aktivnosti"
 
 #. module: note
 #: model_terms:ir.ui.view,arch_db:note.view_note_note_filter
 msgid "Group By"
 msgstr "Grupiši po"
+
+#. module: note
+#: model:ir.model.fields,field_description:note.field_note_note__has_message
+msgid "Has Message"
+msgstr "Ima poruku"
 
 #. module: note
 #: model:ir.model.fields,field_description:note.field_note_note__id
@@ -196,60 +232,61 @@ msgid "ID"
 msgstr "ID"
 
 #. module: note
-#: model:ir.model.fields,help:note.field_note_note__message_unread
-msgid "If checked new messages require your attention."
-msgstr ""
+#: model:ir.model.fields,field_description:note.field_note_note__activity_exception_icon
+msgid "Icon"
+msgstr "Ikona"
+
+#. module: note
+#: model:ir.model.fields,help:note.field_note_note__activity_exception_icon
+msgid "Icon to indicate an exception activity."
+msgstr "Ikonica koja označava aktivnost izuzetka."
 
 #. module: note
 #: model:ir.model.fields,help:note.field_note_note__message_needaction
 msgid "If checked, new messages require your attention."
-msgstr ""
+msgstr "Ako je označeno, nove poruke zahtevaju vašu pažnju."
 
 #. module: note
 #: model:ir.model.fields,help:note.field_note_note__message_has_error
+#: model:ir.model.fields,help:note.field_note_note__message_has_sms_error
 msgid "If checked, some messages have a delivery error."
-msgstr ""
+msgstr "Ako je označeno, neke poruke imaju grešku u isporuci."
 
 #. module: note
 #: model:ir.model.fields,field_description:note.field_note_note__message_is_follower
 msgid "Is Follower"
-msgstr ""
+msgstr "Je Pratilac"
 
 #. module: note
 #: model:ir.model.fields,field_description:note.field_note_note____last_update
 #: model:ir.model.fields,field_description:note.field_note_stage____last_update
 #: model:ir.model.fields,field_description:note.field_note_tag____last_update
 msgid "Last Modified on"
-msgstr ""
+msgstr "Poslednja izmena dana"
 
 #. module: note
 #: model:ir.model.fields,field_description:note.field_note_note__write_uid
 #: model:ir.model.fields,field_description:note.field_note_stage__write_uid
 #: model:ir.model.fields,field_description:note.field_note_tag__write_uid
 msgid "Last Updated by"
-msgstr ""
+msgstr "Poslednje izmenio/la"
 
 #. module: note
 #: model:ir.model.fields,field_description:note.field_note_note__write_date
 #: model:ir.model.fields,field_description:note.field_note_stage__write_date
 #: model:ir.model.fields,field_description:note.field_note_tag__write_date
 msgid "Last Updated on"
-msgstr ""
+msgstr "Poslednje ažuriranje dana"
 
 #. module: note
 #: model_terms:ir.ui.view,arch_db:note.view_note_note_filter
 msgid "Late Activities"
-msgstr ""
+msgstr "Zakasnele aktivnosti"
 
 #. module: note
 #: model:ir.model.fields,field_description:note.field_note_note__message_main_attachment_id
 msgid "Main Attachment"
-msgstr ""
-
-#. module: note
-#: selection:mail.activity.type,category:0
-msgid "Meeting"
-msgstr "Sastanak"
+msgstr "Glavni prilog"
 
 #. module: note
 #: model:note.stage,name:note.note_stage_01
@@ -259,7 +296,7 @@ msgstr ""
 #. module: note
 #: model:ir.model.fields,field_description:note.field_note_note__message_has_error
 msgid "Message Delivery error"
-msgstr ""
+msgstr "Greška u isporuci poruke"
 
 #. module: note
 #: model:ir.model.fields,field_description:note.field_note_note__message_ids
@@ -267,36 +304,41 @@ msgid "Messages"
 msgstr "Poruke"
 
 #. module: note
-#: model_terms:ir.ui.view,arch_db:note.view_note_note_filter
-msgid "My Activities"
-msgstr ""
+#: model:ir.model.fields,field_description:note.field_note_note__my_activity_date_deadline
+msgid "My Activity Deadline"
+msgstr "Rok moje aktivnosti"
 
 #. module: note
 #: model:note.stage,name:note.note_stage_00
 msgid "New"
-msgstr "Novi"
+msgstr "Novo"
+
+#. module: note
+#: model:ir.model.fields,field_description:note.field_note_note__activity_calendar_event_id
+msgid "Next Activity Calendar Event"
+msgstr "Sledeća aktivnost događaj u kalendaru"
 
 #. module: note
 #: model:ir.model.fields,field_description:note.field_note_note__activity_date_deadline
 msgid "Next Activity Deadline"
-msgstr ""
+msgstr "Rok za sledeću aktivnosti"
 
 #. module: note
 #: model:ir.model.fields,field_description:note.field_note_note__activity_summary
 msgid "Next Activity Summary"
-msgstr ""
+msgstr "Pregled sledeće aktivnosti"
 
 #. module: note
 #: model:ir.model.fields,field_description:note.field_note_note__activity_type_id
 msgid "Next Activity Type"
-msgstr ""
+msgstr "Tip sledeće aktivnosti"
 
 #. module: note
 #: model:ir.model,name:note.model_note_note
 #: model_terms:ir.ui.view,arch_db:note.view_note_note_filter
 #: model_terms:ir.ui.view,arch_db:note.view_note_note_form
 msgid "Note"
-msgstr "Napomena"
+msgstr "Beleška"
 
 #. module: note
 #: model:ir.model.fields,field_description:note.field_note_note__memo
@@ -319,11 +361,11 @@ msgid "Note Tag"
 msgstr ""
 
 #. module: note
-#: code:addons/note/models/res_users.py:61
+#: code:addons/note/models/res_users.py:0
 #: model:ir.actions.act_window,name:note.action_note_note
 #: model:ir.ui.menu,name:note.menu_note_notes
-#: model_terms:ir.ui.view,arch_db:note.view_note_note_filter
 #: model:note.stage,name:note.note_stage_02
+#: model_terms:ir.ui.view,arch_db:note.view_note_note_filter
 #, python-format
 msgid "Notes"
 msgstr "Beleške"
@@ -338,37 +380,22 @@ msgstr ""
 #. module: note
 #: model:ir.model.fields,field_description:note.field_note_note__message_needaction_counter
 msgid "Number of Actions"
-msgstr ""
+msgstr "Broj akcija"
 
 #. module: note
 #: model:ir.model.fields,field_description:note.field_note_note__message_has_error_counter
-msgid "Number of error"
-msgstr ""
+msgid "Number of errors"
+msgstr "Broj grešaka"
 
 #. module: note
 #: model:ir.model.fields,help:note.field_note_note__message_needaction_counter
 msgid "Number of messages which requires an action"
-msgstr ""
+msgstr "Broj poruka koje zahtevaju akciju"
 
 #. module: note
 #: model:ir.model.fields,help:note.field_note_note__message_has_error_counter
 msgid "Number of messages with delivery error"
-msgstr ""
-
-#. module: note
-#: model:ir.model.fields,help:note.field_note_note__message_unread_counter
-msgid "Number of unread messages"
-msgstr ""
-
-#. module: note
-#: selection:mail.activity.type,category:0
-msgid "Other"
-msgstr "Ostalo"
-
-#. module: note
-#: selection:note.note,activity_state:0
-msgid "Overdue"
-msgstr ""
+msgstr "Broj poruka sa greškom u isporuci"
 
 #. module: note
 #: model:ir.model.fields,field_description:note.field_note_note__user_id
@@ -377,29 +404,19 @@ msgid "Owner"
 msgstr "Vlasnik"
 
 #. module: note
-#: model:ir.model.fields,help:note.field_note_stage__user_id
-msgid "Owner of the note stage"
-msgstr ""
-
-#. module: note
-#: selection:note.note,activity_state:0
-msgid "Planned"
-msgstr ""
-
-#. module: note
 #: model:ir.model.fields,field_description:note.field_mail_activity__note_id
 msgid "Related Note"
 msgstr ""
 
 #. module: note
 #. openerp-web
-#: code:addons/note/static/src/xml/systray.xml:23
+#: code:addons/note/static/src/components/activity_menu_view/activity_menu_view.xml:0
 #, python-format
 msgid "Remember..."
 msgstr ""
 
 #. module: note
-#: selection:mail.activity.type,category:0
+#: model:ir.model.fields.selection,name:note.selection__mail_activity_type__category__reminder
 #: model:mail.activity.type,name:note.mail_activity_data_reminder
 msgid "Reminder"
 msgstr ""
@@ -411,10 +428,15 @@ msgstr "Odgovorni korisnik"
 
 #. module: note
 #. openerp-web
-#: code:addons/note/static/src/xml/systray.xml:25
+#: code:addons/note/static/src/components/activity_menu_view/activity_menu_view.xml:0
 #, python-format
 msgid "SAVE"
 msgstr ""
+
+#. module: note
+#: model:ir.model.fields,field_description:note.field_note_note__message_has_sms_error
+msgid "SMS Delivery error"
+msgstr "Greška u dostavi SMS-a"
 
 #. module: note
 #: model:ir.model.fields,field_description:note.field_note_note__sequence
@@ -423,16 +445,10 @@ msgid "Sequence"
 msgstr "Niz"
 
 #. module: note
-#. openerp-web
-#: code:addons/note/static/src/xml/systray.xml:18
-#, python-format
-msgid "Set date and time"
-msgstr ""
-
-#. module: note
 #: model_terms:ir.ui.view,arch_db:note.view_note_note_filter
 msgid "Show all records which has next action date is before today"
 msgstr ""
+"Prikaži sve zapise koji imaju datum sledeće aktivnosti pre današnjeg datuma"
 
 #. module: note
 #: model:ir.model.fields,field_description:note.field_note_note__stage_id
@@ -475,16 +491,20 @@ msgid ""
 "Today: Activity date is today\n"
 "Planned: Future activities."
 msgstr ""
+"Status na osnovu aktivnosti\n"
+"Isteklo: Datum postavljen kao rok je već prošao\n"
+"Danas: Datum aktivnosti je danas\n"
+"Planirano: Buduće aktivnosti."
 
 #. module: note
 #: model:ir.model.fields,field_description:note.field_note_tag__name
 msgid "Tag Name"
-msgstr ""
+msgstr "Naziv oznake"
 
 #. module: note
-#: sql_constraint:note.tag:0
+#: model:ir.model.constraint,message:note.constraint_note_tag_name_uniq
 msgid "Tag name already exists !"
-msgstr ""
+msgstr "Naziv oznake već postoji !"
 
 #. module: note
 #: model:ir.actions.act_window,name:note.note_tag_action
@@ -498,8 +518,7 @@ msgstr "Oznake"
 
 #. module: note
 #. openerp-web
-#: code:addons/note/static/src/js/systray_activity_menu.js:97
-#: selection:note.note,activity_state:0
+#: code:addons/note/static/src/models/activity_menu_view.js:0
 #, python-format
 msgid "Today"
 msgstr "Danas"
@@ -507,7 +526,7 @@ msgstr "Danas"
 #. module: note
 #: model_terms:ir.ui.view,arch_db:note.view_note_note_filter
 msgid "Today Activities"
-msgstr ""
+msgstr "Današnje aktivnosti"
 
 #. module: note
 #: model:note.stage,name:note.note_stage_03
@@ -515,31 +534,21 @@ msgid "Todo"
 msgstr "Za Uraditi"
 
 #. module: note
-#: model:ir.model.fields,field_description:note.field_note_note__message_unread
-msgid "Unread Messages"
-msgstr ""
-
-#. module: note
-#: model:ir.model.fields,field_description:note.field_note_note__message_unread_counter
-msgid "Unread Messages Counter"
-msgstr ""
-
-#. module: note
-#: model:ir.model.fields,help:note.field_note_stage__sequence
-msgid "Used to order the note stages"
-msgstr ""
+#: model:ir.model.fields,help:note.field_note_note__activity_exception_decoration
+msgid "Type of the exception activity on record."
+msgstr "Zabeležen tip aktivnosti izuzeća."
 
 #. module: note
 #: model:ir.model,name:note.model_res_users
-msgid "Users"
-msgstr "Korisnici"
+msgid "User"
+msgstr "Korisnik"
 
 #. module: note
 #: model:ir.model.fields,field_description:note.field_note_note__website_message_ids
 msgid "Website Messages"
-msgstr ""
+msgstr "Website poruke"
 
 #. module: note
 #: model:ir.model.fields,help:note.field_note_note__website_message_ids
 msgid "Website communication history"
-msgstr ""
+msgstr "Istorija website komunikacije"

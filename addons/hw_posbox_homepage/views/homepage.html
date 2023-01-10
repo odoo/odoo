@@ -155,7 +155,9 @@
             <div class="title arrow-down">Restart</div>
             <div class="content">
                 <div class="device-status">
-                    <button class="btn btn-sm btn-sm-restart" onclick="restart_odoo_or_reboot('reboot_iot_box')">Reboot the IoT Box</button>
+                    {% if system == "Linux" %}
+                        <button class="btn btn-sm btn-sm-restart" onclick="restart_odoo_or_reboot('reboot_iot_box')">Reboot the IoT Box</button>
+                    {% endif %}
                     <button class="btn btn-sm btn-sm-restart" onclick="restart_odoo_or_reboot('restart_odoo')">Restart Odoo service</button>
                 </div>
             </div>
@@ -165,11 +167,11 @@
     <table align="center" cellpadding="3">
         <tr>
             <td class="heading">Name</td>
-            <td> {{ hostname }} <a class="btn btn-sm float-end" href='/server'>configure</a></td>
+            <td> {{ hostname }} {% if system == "Linux" %}<a class="btn btn-sm float-right" href='/server'>configure</a>{% endif %}</td>
         </tr>
         <tr>
             <td class="heading">Version</td>
-            <td> {{ version }} <a class="btn btn-sm float-end" href='/hw_proxy/upgrade/'>update</a></td>
+            <td> {{ version }} {% if system == "Linux" %}<a class="btn btn-sm float-right" href='/hw_proxy/upgrade/'>update</a>{% endif %}</td>
         </tr>
         <tr>
             <td class="heading">IP Address</td>
@@ -181,7 +183,7 @@
         </tr>
         <tr>
             <td class="heading">Network</td>
-            <td>{{ network_status }} <a class="btn btn-sm float-end" href='/wifi'>configure wifi</a></td>
+            <td>{{ network_status }} {% if system == "Linux" %}<a class="btn btn-sm float-right" href='/wifi'>configure wifi</a>{% endif %}</td>
         </tr>
         <tr>
             <td class="heading">Server</td>
@@ -191,6 +193,12 @@
         <tr>
             <td class="heading">Six payment terminal</td>
             <td>{{ six_terminal }} <a class="btn btn-sm float-end" href='/six_payment_terminal'>configure</a></td>
+        </tr>
+        {% endif %}
+        {% if pairing_code %}
+        <tr>
+            <td class="heading">Pairing code</td>
+            <td>{{ pairing_code }}</td>
         </tr>
         {% endif %}
         <tr>
@@ -220,8 +228,10 @@
     </table>
     <div style="margin: 20px auto 10px auto;" class="text-center">
         <a class="btn" href='/point_of_sale/display'>POS Display</a>
-        <a class="btn" style="margin-left: 10px;" href='/remote_connect'>Remote Debug</a>
-        <a target="_blank" class="btn" style="margin-left: 10px;" href="http://{{ ip }}:631">Printers server</a>
+        {% if system == "Linux" %}
+            <a class="btn" style="margin-left: 10px;" href='/remote_connect'>Remote Debug</a>
+            <a target="_blank" class="btn" style="margin-left: 10px;" href="http://{{ ip }}:631">Printers server</a>
+        {% endif %}
         {% if server_status != "Not Configured" %}
         <a class="btn" style="margin-left: 10px;" href='/list_credential'>Credential</a>
         {% endif %}

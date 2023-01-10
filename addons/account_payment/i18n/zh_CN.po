@@ -3,18 +3,18 @@
 # 	* account_payment
 # 
 # Translators:
-# Martin Trigaux, 2022
-# Jeffery CHEN <jeffery9@gmail.com>, 2022
 # Raymond Yu <cl_yu@hotmail.com>, 2022
 # 稀饭~~ <wangwhai@qq.com>, 2022
+# Martin Trigaux, 2022
+# Jeffery CHEN <jeffery9@gmail.com>, 2022
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 16.0beta\n"
+"Project-Id-Version: Odoo Server 16.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-10-04 09:24+0000\n"
+"POT-Creation-Date: 2022-12-15 12:49+0000\n"
 "PO-Revision-Date: 2022-09-22 05:44+0000\n"
-"Last-Translator: 稀饭~~ <wangwhai@qq.com>, 2022\n"
+"Last-Translator: Jeffery CHEN <jeffery9@gmail.com>, 2022\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -44,7 +44,7 @@ msgstr "<i class=\"fa fa-fw fa-arrow-circle-right\"/>立即支付"
 #. module: account_payment
 #: model_terms:ir.ui.view,arch_db:account_payment.portal_invoice_page_inherit_payment
 msgid "<i class=\"fa fa-fw fa-check-circle\"/> Paid"
-msgstr "<i class=\"fa fa-fw fa-check-circle\"/> 已付"
+msgstr "<i class=\"fa fa-fw fa-check-circle\"/> 已支付"
 
 #. module: account_payment
 #: model_terms:ir.ui.view,arch_db:account_payment.portal_invoice_page_inherit_payment
@@ -75,7 +75,7 @@ msgid ""
 "Payment</span></span>"
 msgstr ""
 "<span class=\"badge rounded-pill text-bg-info\"><i class=\"fa fa-fw fa-"
-"clock-o\"/><span class=\"d-none d-md-inline\"> 等待付款</span></span>"
+"clock-o\"/><span class=\"d-none d-md-inline\"> 等待支付</span></span>"
 
 #. module: account_payment
 #: model_terms:ir.ui.view,arch_db:account_payment.portal_my_invoices_payment
@@ -119,7 +119,7 @@ msgid ""
 "<strong>No suitable payment option could be found.</strong><br/>\n"
 "                                If you believe that it is an error, please contact the website administrator."
 msgstr ""
-"<strong>找不到合适的付款方式。</strong><br/>\n"
+"<strong>找不到合适的支付方式。</strong><br/>\n"
 "                                如果您认为这是一个错误，请联系网站管理员。"
 
 #. module: account_payment
@@ -134,12 +134,14 @@ msgstr ""
 "                        请检查您的支付服务提供商配置。"
 
 #. module: account_payment
+#. odoo-python
 #: code:addons/account_payment/models/account_payment.py:0
 #, python-format
 msgid "A payment transaction with reference %s already exists."
 msgstr "已经存在一个单号%s的支付交易。"
 
 #. module: account_payment
+#. odoo-python
 #: code:addons/account_payment/models/account_payment.py:0
 #, python-format
 msgid "A token is required to create a new payment transaction."
@@ -212,7 +214,7 @@ msgstr "显示名称"
 msgid ""
 "Done, your online payment has been successfully processed. Thank you for "
 "your order."
-msgstr "已完成，您的线上付款已成功处理完毕。 感谢您的订购。"
+msgstr "已完成，您的线上支付已成功处理完毕。 感谢您的订购。"
 
 #. module: account_payment
 #: model:ir.model,name:account_payment.model_payment_link_wizard
@@ -240,7 +242,7 @@ msgid ""
 "In test mode, a fake payment is processed through a test payment interface.\n"
 "This mode is advised when setting up the provider."
 msgstr ""
-"在测试模式下，通过测试付款界面处理虚假付款。\n"
+"在测试模式下，通过测试支付界面处理虚假支付。\n"
 "设置提供程序时，建议使用此模式。"
 
 #. module: account_payment
@@ -249,6 +251,7 @@ msgid "Invoice(s)"
 msgstr "结算单"
 
 #. module: account_payment
+#. odoo-python
 #: code:addons/account_payment/models/payment_transaction.py:0
 #: model:ir.model.fields,field_description:account_payment.field_payment_transaction__invoice_ids
 #, python-format
@@ -258,7 +261,7 @@ msgstr "结算单"
 #. module: account_payment
 #: model:ir.model.fields,field_description:account_payment.field_payment_transaction__invoices_count
 msgid "Invoices Count"
-msgstr "结算单数量"
+msgstr "结算单计数"
 
 #. module: account_payment
 #: model:ir.model,name:account_payment.model_account_journal
@@ -328,7 +331,7 @@ msgstr "支付"
 #. module: account_payment
 #: model:ir.model.fields,field_description:account_payment.field_payment_refund_wizard__payment_amount
 msgid "Payment Amount"
-msgstr "付款金额"
+msgstr "支付金额"
 
 #. module: account_payment
 #: model:ir.ui.menu,name:account_payment.payment_icon_menu
@@ -338,13 +341,13 @@ msgstr "支付图标"
 #. module: account_payment
 #: model:ir.model.fields,field_description:account_payment.field_payment_provider__journal_id
 msgid "Payment Journal"
-msgstr "付款日记账"
+msgstr "支付日记账"
 
 #. module: account_payment
 #: model:ir.model,name:account_payment.model_account_payment_method
 #: model:ir.model,name:account_payment.model_account_payment_method_line
 msgid "Payment Methods"
-msgstr "付款方式"
+msgstr "支付方式"
 
 #. module: account_payment
 #: model:ir.model,name:account_payment.model_payment_provider
@@ -360,12 +363,12 @@ msgstr "支付提供商"
 #. module: account_payment
 #: model:ir.model,name:account_payment.model_payment_refund_wizard
 msgid "Payment Refund Wizard"
-msgstr "付款退款向导"
+msgstr "支付退款向导"
 
 #. module: account_payment
 #: model:ir.ui.menu,name:account_payment.payment_token_menu
 msgid "Payment Tokens"
-msgstr "付款令牌"
+msgstr "支付令牌"
 
 #. module: account_payment
 #: model:ir.model,name:account_payment.model_payment_transaction
@@ -373,12 +376,12 @@ msgstr "付款令牌"
 #: model:ir.model.fields,field_description:account_payment.field_payment_refund_wizard__transaction_id
 #: model_terms:ir.ui.view,arch_db:account_payment.account_invoice_view_form_inherit_payment
 msgid "Payment Transaction"
-msgstr "付款交易"
+msgstr "支付交易"
 
 #. module: account_payment
 #: model:ir.ui.menu,name:account_payment.payment_transaction_menu
 msgid "Payment Transactions"
-msgstr "付款交易"
+msgstr "支付交易"
 
 #. module: account_payment
 #: model:ir.model,name:account_payment.model_account_payment
@@ -386,12 +389,14 @@ msgid "Payments"
 msgstr "支付"
 
 #. module: account_payment
+#. odoo-python
 #: code:addons/account_payment/models/account_payment_method_line.py:0
 #, python-format
 msgid "Provider"
-msgstr "物流商"
+msgstr "服务商"
 
 #. module: account_payment
+#. odoo-python
 #: code:addons/account_payment/models/account_payment.py:0
 #: code:addons/account_payment/models/account_payment.py:0
 #: model_terms:ir.ui.view,arch_db:account_payment.payment_refund_wizard_view_form
@@ -423,7 +428,7 @@ msgstr "退款计数"
 #. module: account_payment
 #: model:ir.model,name:account_payment.model_account_payment_register
 msgid "Register Payment"
-msgstr "登记付款"
+msgstr "登记支付"
 
 #. module: account_payment
 #: model_terms:ir.ui.view,arch_db:account_payment.view_account_journal_form
@@ -438,12 +443,12 @@ msgstr "保存的支付令牌"
 #. module: account_payment
 #: model:ir.model.fields,field_description:account_payment.field_account_payment_register__payment_token_id
 msgid "Saved payment token"
-msgstr "保存的付款令牌"
+msgstr "保存的支付令牌"
 
 #. module: account_payment
 #: model:ir.model.fields,field_description:account_payment.field_account_payment__source_payment_id
 msgid "Source Payment"
-msgstr "来源付款"
+msgstr "来源支付"
 
 #. module: account_payment
 #: model:ir.model.fields,field_description:account_payment.field_account_payment_method_line__payment_provider_state
@@ -457,6 +462,14 @@ msgid "Suitable Payment Token"
 msgstr "合适的支付令牌"
 
 #. module: account_payment
+#. odoo-python
+#: code:addons/account_payment/controllers/payment.py:0
+#, python-format
+msgid "The access token is invalid."
+msgstr "访问令牌无效。"
+
+#. module: account_payment
+#. odoo-python
 #: code:addons/account_payment/wizards/payment_refund_wizard.py:0
 #, python-format
 msgid ""
@@ -469,14 +482,16 @@ msgid "The journal in which the successful transactions are posted."
 msgstr "在其中过帐成功交易记录的日志。"
 
 #. module: account_payment
+#. odoo-python
 #: code:addons/account_payment/models/payment_transaction.py:0
 #, python-format
 msgid ""
 "The payment related to the transaction with reference %(ref)s has been "
 "posted: %(link)s"
-msgstr "与参考编号%(ref)s的交易相关的付款已过帐：%(link)s"
+msgstr "与参考编号%(ref)s的交易相关的支付已过帐：%(link)s"
 
 #. module: account_payment
+#. odoo-python
 #: code:addons/account_payment/controllers/payment.py:0
 #: code:addons/account_payment/controllers/payment.py:0
 #, python-format
@@ -491,24 +506,24 @@ msgstr "相关退款支付的源头支付"
 #. module: account_payment
 #: model_terms:ir.ui.view,arch_db:account_payment.portal_invoice_error
 msgid "There was an error processing your payment: invalid invoice."
-msgstr "您有一个付款的错误：无效结算单。"
+msgstr "您有一个支付的错误：无效结算单。"
 
 #. module: account_payment
 #: model_terms:ir.ui.view,arch_db:account_payment.portal_invoice_error
 msgid ""
 "There was an error processing your payment: issue with credit card ID "
 "validation."
-msgstr "您有一个付款的错误：信用卡身份验证问题。"
+msgstr "您有一个支付的错误：信用卡身份验证问题。"
 
 #. module: account_payment
 #: model_terms:ir.ui.view,arch_db:account_payment.portal_invoice_error
 msgid "There was an error processing your payment: transaction failed.<br/>"
-msgstr "您有一个付款的错误：交易失败<br/>"
+msgstr "您有一个支付的错误：交易失败<br/>"
 
 #. module: account_payment
 #: model_terms:ir.ui.view,arch_db:account_payment.portal_invoice_error
 msgid "There was en error processing your payment: invalid credit card ID."
-msgstr "您有一个付款的错误：无效的信用卡号"
+msgstr "您有一个支付的错误：无效的信用卡号"
 
 #. module: account_payment
 #: model:ir.model.fields,field_description:account_payment.field_account_bank_statement_line__transaction_ids
@@ -534,11 +549,12 @@ msgid "Void Transaction"
 msgstr "无效交易"
 
 #. module: account_payment
+#. odoo-python
 #: code:addons/account_payment/models/account_journal.py:0
 #, python-format
 msgid ""
 "You can't delete a payment method that is linked to a provider in the enabled or test state.\n"
 "Linked provider(s): %s"
 msgstr ""
-"您无法删除链接到处于已启用或测试状态的提供商的付款方式。\n"
+"您无法删除链接到处于已启用或测试状态的提供商的支付方式。\n"
 "链接的提供程序： %s"

@@ -10,6 +10,14 @@
                         file="{ data: props.value, name: fileName }"
                         onUploaded.bind="update"
                     >
+                        <t if="props.record.resId">
+                            <button
+                                class="btn btn-secondary fa fa-download"
+                                data-tooltip="Download"
+                                aria-label="Download"
+                                t-on-click="onFileDownload"
+                            />
+                        </t>
                         <t t-set-slot="toggler">
                             <input type="text" class="o_input" t-att-value="fileName" readonly="readonly" />
                             <button

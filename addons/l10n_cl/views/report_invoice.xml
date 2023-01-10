@@ -50,7 +50,9 @@
                                         <strong t-att-style="'color: %s;' % o.company_id.primary_color">
                                             <br/>
                                             <span style="line-height: 180%;">RUT:</span>
-                                            <span t-esc="o.company_id.partner_id._format_dotted_vat_cl(o.company_id.partner_id.vat)"/>
+                                            <t t-if="o.company_id.partner_id.vat">
+                                                <span t-esc="o.company_id.partner_id._format_dotted_vat_cl(o.company_id.partner_id.vat)"/>
+                                            </t>
                                             <br/>
                                             <span class="text-uppercase" t-esc="report_name"/>
                                             <br/>
@@ -94,17 +96,13 @@
                     <span t-esc="o.partner_id.vat"/>
                     <br/>
                 </t>
-                <strong>GIRO:</strong>
-                <span t-esc="o.partner_id.industry_id.name or ''"/>
-                <br/>
+                <strong>Address:</strong>
+                <span t-esc="o.partner_id._display_address(without_company=True)"/>
             </div>
             <div class="col-6">
                 <strong>Due Date:</strong>
                 <span t-esc="o.invoice_date_due" t-options='{"widget": "date"}'/>
                 <br/>
-                <strong>Address:</strong>
-                <span t-field="o.partner_id"
-                      t-options="{'widget': 'contact', 'fields': ['address'], 'no_marker': True}"/>
 
                 <strong>Payment Terms:</strong>
                 <span t-esc="o.invoice_payment_term_id.name or ''"/>
@@ -116,6 +114,14 @@
                     <span t-field="o.invoice_incoterm_id.name"/>
                 </t>
 
+                <t t-if="o.partner_shipping_id and o.partner_id not in o.partner_shipping_id" >
+                    <br/>
+                    <strong>Delivery Address:</strong>
+                    <span t-esc="o.partner_shipping_id._display_address(without_company=True)"/>
+                </t>
+                <br/>
+                <strong>GIRO:</strong>
+                <span t-esc="o.partner_id.industry_id.name or ''"/>
             </div>
         </div>
         <div id="references" class="row">
@@ -134,7 +140,15 @@
         </t>
 
         <!-- remove default partner address -->
-        <t t-set="address" position="replace"/>
+        <xpath expr="//div[@name='address_not_same_as_shipping']" position="replace">
+            <div name="address_not_same_as_shipping"/>
+        </xpath>
+        <xpath expr="//div[@name='address_same_as_shipping']" position="replace">
+            <div name="address_same_as_shipping"/>
+        </xpath>
+        <xpath expr="//div[@name='no_shipping']" position="replace">
+            <div name="no_shipping"/>
+        </xpath>
 
         <xpath expr="//h2" position="replace"/>
 

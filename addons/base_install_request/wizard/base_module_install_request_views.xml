@@ -3,20 +3,19 @@
     <record id="base_module_install_request_view_form" model="ir.ui.view">
         <field name="name">base.module.install.request.view.form</field>
         <field name="model">base.module.install.request</field>
-        <field name="type">form</field>
         <field name="arch" type="xml">
-            <div class="alert alert-warning mb-0" role="alert">
-                <p class="mt-3">
-                    This app is included in your subscription. It's free to activate, but only an administrator can do it. Fill this form to send an activation request.
-                </p>
-            </div>
             <form>
+                <div class="alert alert-warning oe_button_box" role="alert">
+                    <p class="mt-3">
+                        This app is included in your subscription. It's free to activate, but only an administrator can do it. Fill this form to send an activation request.
+                    </p>
+                </div>
                 <field name="module_id" invisible="1"/>
                 <group string="Send to:">
-                    <field name="user_ids" widget="many2many_tags" nolabel="1"/>
+                    <field colspan="2" name="user_ids" widget="many2many_tags" nolabel="1"/>
                 </group>
                 <group string="Why do you need this module ?">
-                    <field name="body_html" widget="html" nolabel="1" placeholder="e.g. I'd like to use the SMS Marketing module to organize the promotion of our internal events, and exhibitions. I need access for 3 people of my team."/>
+                    <field colspan="2" name="body_html" widget="html" nolabel="1" placeholder="e.g. I'd like to use the SMS Marketing module to organize the promotion of our internal events, and exhibitions. I need access for 3 people of my team."/>
                 </group>
                 <footer>
                     <button string="Request Activation" class="btn-primary" type="object" name="action_send_request" data-hotkey="q"/>
@@ -29,14 +28,13 @@
     <record id="base_module_install_review_view_form" model="ir.ui.view">
         <field name="name">base.module.install.review.view.form</field>
         <field name="model">base.module.install.review</field>
-        <field name="type">form</field>
         <field name="arch" type="xml">
-            <div class="alert alert-success mb-0" role="alert">
-                <p class="mt-3">
-                    No extra cost, this application is free.
-                </p>
-            </div>
             <form>
+                <div class="alert alert-success oe_button_box" role="alert">
+                    <p class="mt-3">
+                        No extra cost, this application is free.
+                    </p>
+                </div>
                 <field name="module_id" invisible="1"/>
                 <field name="module_ids" widget="many2many_tags" invisible="1"/>
                 <field name="modules_description"/>

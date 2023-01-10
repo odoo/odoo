@@ -15,13 +15,13 @@ class LinkPreview(models.Model):
     _description = "Store link preview data"
 
     message_id = fields.Many2one('mail.message', string='Message', index=True, ondelete='cascade', required=True)
-    source_url = fields.Char('url', required=True)
-    og_type = fields.Char('type')
-    og_title = fields.Char('title')
-    og_image = fields.Char('image')
-    og_description = fields.Text('description')
-    og_mimetype = fields.Char('mimetype')
-    image_mimetype = fields.Char('image_mimetype')
+    source_url = fields.Char('URL', required=True)
+    og_type = fields.Char('Type')
+    og_title = fields.Char('Title')
+    og_image = fields.Char('Image')
+    og_description = fields.Text('Description')
+    og_mimetype = fields.Char('MIME type')
+    image_mimetype = fields.Char('Image MIME type')
     create_date = fields.Datetime(index=True)
 
     @api.model

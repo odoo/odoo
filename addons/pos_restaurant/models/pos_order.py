@@ -1,8 +1,10 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-from itertools import groupby
+from odoo.tools import groupby
 from re import search
 from functools import partial
+
+import pytz
 
 from odoo import api, fields, models
 
@@ -65,6 +67,22 @@ class PosOrder(models.Model):
         ])
         return fields
 
+    def _prepare_order_line(self, order_line):
+        """Method that will allow the cleaning of values to send the correct information.
+        :param order_line: order_line that will be cleaned.
+        :type order_line: pos.order.line.
+        :returns: dict -- dict representing the order line's values.
+        """
+        order_line["product_id"] = order_line["product_id"][0]
+        order_line["server_id"] = order_line["id"]
+
+        del order_line["id"]
+        if not "pack_lot_ids" in order_line:
+            order_line["pack_lot_ids"] = []
+        else:
+            order_line["pack_lot_ids"] = [[0, 0, lot] for lot in order_line["pack_lot_ids"]]
+        return order_line
+
     def _get_order_lines(self, orders):
         """Add pos_order_lines to the orders.
 
@@ -82,15 +100,7 @@ class PosOrder(models.Model):
 
         extended_order_lines = []
         for order_line in order_lines:
-            order_line['product_id'] = order_line['product_id'][0]
-            order_line['server_id'] = order_line['id']
-
-            del order_line['id']
-            if not 'pack_lot_ids' in order_line:
-                order_line['pack_lot_ids'] = []
-            else:
-                order_line['pack_lot_ids'] = [[0, 0, lot] for lot in order_line['pack_lot_ids']]
-            extended_order_lines.append([0, 0, order_line])
+            extended_order_lines.append([0, 0, self._prepare_order_line(order_line)])
 
         for order_id, order_lines in groupby(extended_order_lines, key=lambda x:x[2]['order_id']):
             next(order for order in orders if order['id'] == order_id[0])['lines'] = list(order_lines)
@@ -168,11 +178,12 @@ class PosOrder(models.Model):
         self._get_order_lines(table_orders)
         self._get_payment_lines(table_orders)
 
+        timezone = pytz.timezone(self._context.get('tz') or self.env.user.tz or 'UTC')
         for order in table_orders:
             order['pos_session_id'] = order['session_id'][0]
             order['uid'] = search(r"\d{5,}-\d{3,}-\d{4,}", order['pos_reference']).group(0)
             order['name'] = order['pos_reference']
-            order['creation_date'] = order['create_date']
+            order['creation_date'] = order['create_date'].astimezone(timezone)
             order['server_id'] = order['id']
             if order['fiscal_position_id']:
                 order['fiscal_position_id'] = order['fiscal_position_id'][0]

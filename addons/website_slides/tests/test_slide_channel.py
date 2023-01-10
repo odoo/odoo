@@ -131,7 +131,7 @@ class TestSlidesManagement(slides_common.SlidesCase):
 
         self.assertEqual(
             slide_created_mails.mapped('subject'),
-            ['Congratulation! You completed %s' % self.channel.name, 'ATestSubject']
+            ['Congratulations! You completed %s' % self.channel.name, 'ATestSubject']
         )
 
     def test_unlink_slide_channel(self):

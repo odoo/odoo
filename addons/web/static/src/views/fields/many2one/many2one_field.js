@@ -232,7 +232,7 @@ export class Many2OneField extends Component {
             searchInput.value = barcode;
             searchInput.dispatchEvent(new Event("input"));
             if (this.env.isSmall) {
-                searchInput.click();
+                searchInput.dispatchEvent(new Event("barcode-search"));
             }
         }
     }

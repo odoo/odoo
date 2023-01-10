@@ -14,13 +14,4 @@ class StockQuant(models.Model):
         if operator not in ['=', '!='] or not isinstance(value, bool):
             raise UserError(_('Operation not supported'))
 
-        subcontract_locations = self.env['stock.location'].search([('is_subcontracting_location', '=', 'True')])
-
-        quant_ids = self.env['stock.quant'].search([
-            ('location_id', 'in', subcontract_locations.ids),
-        ]).ids
-        if (operator == '!=' and value is True) or (operator == '=' and value is False):
-            domain_operator = 'not in'
-        else:
-            domain_operator = 'in'
-        return [('id', domain_operator, quant_ids)]
+        return [('location_id.is_subcontracting_location', operator, value)]

@@ -3,21 +3,16 @@
 # 	* sale_product_configurator
 # 
 # Translators:
-# Martin Trigaux, 2019
-# Per Rasmussen <perhgrasmussen@gmail.com>, 2019
-# Morten Schou <ms@msteknik.dk>, 2019
-# Jesper Carstensen <jc@danodoo.dk>, 2019
-# Pernille Kristensen <pernillekristensen1994@gmail.com>, 2019
-# Sanne Kristensen <sanne@vkdata.dk>, 2019
-# lhmflexerp <lhm@flexerp.dk>, 2019
+# lhmflexerp <lhm@flexerp.dk>, 2022
+# Martin Trigaux, 2022
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~12.5\n"
+"Project-Id-Version: Odoo Server 16.0beta\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-09-09 12:18+0000\n"
-"PO-Revision-Date: 2019-08-26 09:14+0000\n"
-"Last-Translator: lhmflexerp <lhm@flexerp.dk>, 2019\n"
+"POT-Creation-Date: 2022-10-04 09:25+0000\n"
+"PO-Revision-Date: 2022-09-22 05:55+0000\n"
+"Last-Translator: Martin Trigaux, 2022\n"
 "Language-Team: Danish (https://www.transifex.com/odoo/teams/41243/da/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -28,7 +23,22 @@ msgstr ""
 #. module: sale_product_configurator
 #: model_terms:ir.ui.view,arch_db:sale_product_configurator.optional_product_items
 msgid "<i class=\"fa fa-shopping-cart add-optionnal-item\"/> Add to cart"
-msgstr ""
+msgstr "<i class=\"fa fa-shopping-cart add-optionnal-item\"/> Tilføj til kurv"
+
+#. module: sale_product_configurator
+#: model_terms:ir.ui.view,arch_db:sale_product_configurator.configure_optional_products
+msgid "<span class=\"label\">Price</span>"
+msgstr "<span class=\"label\">Pris</span>"
+
+#. module: sale_product_configurator
+#: model_terms:ir.ui.view,arch_db:sale_product_configurator.configure_optional_products
+msgid "<span class=\"label\">Product</span>"
+msgstr "<span class=\"label\">Produkt</span>"
+
+#. module: sale_product_configurator
+#: model_terms:ir.ui.view,arch_db:sale_product_configurator.configure_optional_products
+msgid "<span class=\"label\">Quantity</span>"
+msgstr "<span class=\"label\">Mængde</span>"
 
 #. module: sale_product_configurator
 #: model_terms:ir.ui.view,arch_db:sale_product_configurator.configure_optional_products
@@ -36,110 +46,58 @@ msgid "<strong>Total:</strong>"
 msgstr "<strong>Total:</strong>"
 
 #. module: sale_product_configurator
-#: model_terms:ir.ui.view,arch_db:sale_product_configurator.sale_product_configurator_view_form
-msgid "Add"
-msgstr "Tilføj"
-
-#. module: sale_product_configurator
-#: model_terms:ir.ui.view,arch_db:sale_product_configurator.configure
-#: model_terms:ir.ui.view,arch_db:sale_product_configurator.configure_optional_products
-#: model_terms:ir.ui.view,arch_db:sale_product_configurator.optional_product_items
+#: model_terms:ir.ui.view,arch_db:sale_product_configurator.product_quantity_config
 msgid "Add one"
 msgstr "Tilføj en"
 
 #. module: sale_product_configurator
 #: model:ir.model.fields,field_description:sale_product_configurator.field_sale_order_line__product_template_attribute_value_ids
-#: model:ir.model.fields,field_description:sale_product_configurator.field_sale_product_configurator__product_template_attribute_value_ids
 msgid "Attribute Values"
 msgstr "Egenskabs værdier"
 
 #. module: sale_product_configurator
 #: model_terms:ir.ui.view,arch_db:sale_product_configurator.configure_optional_products
 msgid "Available Options:"
-msgstr ""
+msgstr "Tilgængelige muligheder:"
 
 #. module: sale_product_configurator
 #. openerp-web
-#: code:addons/sale_product_configurator/static/src/js/product_configurator_controller.js:0
+#: code:addons/sale_product_configurator/static/src/js/sale_product_field.js:0
 #, python-format
 msgid "Back"
 msgstr "Tilbage"
 
 #. module: sale_product_configurator
-#: model_terms:ir.ui.view,arch_db:sale_product_configurator.sale_product_configurator_view_form
-msgid "Cancel"
-msgstr "Annullér"
+#: model:product.template,name:sale_product_configurator.product_product_1_product_template
+msgid "Chair floor protection"
+msgstr "Stol gulvbeskyttelse"
 
 #. module: sale_product_configurator
 #. openerp-web
-#: code:addons/sale_product_configurator/static/src/js/product_configurator_controller.js:0
+#: code:addons/sale_product_configurator/static/src/js/sale_product_field.js:0
 #, python-format
 msgid "Configure"
 msgstr "Konfigurer"
 
 #. module: sale_product_configurator
-#: model:ir.actions.act_window,name:sale_product_configurator.sale_product_configurator_action
-msgid "Configure a product"
-msgstr "Konfigurer et produkt"
-
-#. module: sale_product_configurator
 #. openerp-web
-#: code:addons/sale_product_configurator/static/src/js/product_configurator_controller.js:0
+#: code:addons/sale_product_configurator/static/src/js/sale_product_field.js:0
 #, python-format
 msgid "Confirm"
 msgstr "Bekræft"
 
 #. module: sale_product_configurator
-#: model:ir.model.fields,field_description:sale_product_configurator.field_sale_product_configurator__create_uid
-msgid "Created by"
-msgstr "Oprettet af"
-
-#. module: sale_product_configurator
-#: model:ir.model.fields,field_description:sale_product_configurator.field_sale_product_configurator__create_date
-msgid "Created on"
-msgstr "Oprettet den"
-
-#. module: sale_product_configurator
-#: model:ir.model.fields,field_description:sale_product_configurator.field_sale_product_configurator__product_custom_attribute_value_ids
-msgid "Custom Values"
-msgstr ""
-
-#. module: sale_product_configurator
-#: model:ir.model.fields,field_description:sale_product_configurator.field_sale_product_configurator__display_name
-msgid "Display Name"
-msgstr "Vis navn"
-
-#. module: sale_product_configurator
-#: model:ir.model.fields,field_description:sale_product_configurator.field_sale_product_configurator__product_no_variant_attribute_value_ids
-msgid "Extra Values"
-msgstr ""
-
-#. module: sale_product_configurator
-#: model:ir.model.fields,field_description:sale_product_configurator.field_sale_product_configurator__id
-msgid "ID"
-msgstr "ID"
-
-#. module: sale_product_configurator
 #: model:ir.model.fields,field_description:sale_product_configurator.field_sale_order_line__is_configurable_product
 msgid "Is the product configurable?"
-msgstr ""
+msgstr "Kan produktet konfigureres?"
 
 #. module: sale_product_configurator
-#: model:ir.model.fields,field_description:sale_product_configurator.field_sale_product_configurator____last_update
-msgid "Last Modified on"
-msgstr "Sidst ændret den"
+#: model:product.template,description_sale:sale_product_configurator.product_product_1_product_template
+msgid "Office chairs can harm your floor: protect it."
+msgstr "Kontorstole kan beskadige dit gulv: beskyt det."
 
 #. module: sale_product_configurator
-#: model:ir.model.fields,field_description:sale_product_configurator.field_sale_product_configurator__write_uid
-msgid "Last Updated by"
-msgstr "Sidst opdateret af"
-
-#. module: sale_product_configurator
-#: model:ir.model.fields,field_description:sale_product_configurator.field_sale_product_configurator__write_date
-msgid "Last Updated on"
-msgstr "Sidst opdateret den"
-
-#. module: sale_product_configurator
+#: model_terms:ir.ui.view,arch_db:sale_product_configurator.configure_optional_products
 #: model_terms:ir.ui.view,arch_db:sale_product_configurator.optional_product_items
 msgid "Option not available"
 msgstr "Valgmulighed ikke tilgængelig"
@@ -161,23 +119,7 @@ msgstr ""
 "(krydssalgs-strategi, f.eks. til computere: garanti, software osv.)."
 
 #. module: sale_product_configurator
-#: model_terms:ir.ui.view,arch_db:sale_product_configurator.product_template_view_form
-msgid "Options"
-msgstr "Valgmuligheder"
-
-#. module: sale_product_configurator
-#: model_terms:ir.ui.view,arch_db:sale_product_configurator.configure_optional_products
-msgid "Price"
-msgstr "Pris"
-
-#. module: sale_product_configurator
-#: model:ir.model.fields,field_description:sale_product_configurator.field_sale_product_configurator__pricelist_id
-msgid "Pricelist"
-msgstr "Prisliste"
-
-#. module: sale_product_configurator
-#: model:ir.model.fields,field_description:sale_product_configurator.field_sale_product_configurator__product_template_id
-#: model_terms:ir.ui.view,arch_db:sale_product_configurator.configure_optional_products
+#: model:ir.model,name:sale_product_configurator.model_product_template
 msgid "Product"
 msgstr "Produkt"
 
@@ -189,27 +131,19 @@ msgid "Product Image"
 msgstr "Produktbillede"
 
 #. module: sale_product_configurator
-#: model:ir.model,name:sale_product_configurator.model_product_template
-msgid "Product Template"
-msgstr "Produktskabelon"
+#: model_terms:ir.ui.view,arch_db:sale_product_configurator.sale_order_view_form
+msgid "Product Variant"
+msgstr "Varevariant"
 
 #. module: sale_product_configurator
-#: model:ir.model.fields,field_description:sale_product_configurator.field_sale_product_configurator__quantity
-#: model_terms:ir.ui.view,arch_db:sale_product_configurator.configure_optional_products
-msgid "Quantity"
-msgstr "Antal"
+#: model_terms:ir.ui.view,arch_db:sale_product_configurator.product_template_view_form
+msgid "Recommend when 'Adding to Cart' or quotation"
+msgstr ""
 
 #. module: sale_product_configurator
-#: model_terms:ir.ui.view,arch_db:sale_product_configurator.configure
-#: model_terms:ir.ui.view,arch_db:sale_product_configurator.configure_optional_products
-#: model_terms:ir.ui.view,arch_db:sale_product_configurator.optional_product_items
+#: model_terms:ir.ui.view,arch_db:sale_product_configurator.product_quantity_config
 msgid "Remove one"
 msgstr "Fjern én"
-
-#. module: sale_product_configurator
-#: model:ir.model,name:sale_product_configurator.model_sale_product_configurator
-msgid "Sale Product Configurator"
-msgstr ""
 
 #. module: sale_product_configurator
 #: model:ir.model,name:sale_product_configurator.model_sale_order_line
@@ -217,16 +151,16 @@ msgid "Sales Order Line"
 msgstr "Salgsordrelinje"
 
 #. module: sale_product_configurator
-#: model_terms:ir.ui.view,arch_db:sale_product_configurator.sale_product_configurator_view_form
-msgid "Save"
-msgstr "Gem"
-
-#. module: sale_product_configurator
 #: model_terms:ir.ui.view,arch_db:sale_product_configurator.configure
 msgid "This combination does not exist."
-msgstr ""
+msgstr "Denne kombination eksistere ikke."
 
 #. module: sale_product_configurator
 #: model_terms:ir.ui.view,arch_db:sale_product_configurator.configure
 msgid "This product has no valid combination."
-msgstr ""
+msgstr "Dette produkt har ingen gyldig kombination."
+
+#. module: sale_product_configurator
+#: model:product.template,uom_name:sale_product_configurator.product_product_1_product_template
+msgid "Units"
+msgstr "Enheder"

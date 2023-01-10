@@ -6,21 +6,21 @@
 # Ladislav Tomm <tomm@helemik.cz>, 2022
 # Jaroslav Helemik Nemec <nemec@helemik.cz>, 2022
 # Jan Horzinka <jan.horzinka@centrum.cz>, 2022
-# Chris <krystof.reklamy13@gmail.com>, 2022
+# Chris, 2022
 # Rastislav Brencic <rastislav.brencic@azet.sk>, 2022
-# Michal Veselý <michal@veselyberanek.net>, 2022
 # Damian Brencic <brencicdamian12313@gmail.com>, 2022
 # karolína schusterová <karolina.schusterova@vdp.sk>, 2022
-# trendspotter <jirka.p@volny.cz>, 2022
+# Michal Veselý <michal@veselyberanek.net>, 2022
 # Martin Trigaux, 2022
+# trendspotter <jirka.p@volny.cz>, 2022
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 16.0beta\n"
+"Project-Id-Version: Odoo Server 16.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-10-10 10:22+0000\n"
+"POT-Creation-Date: 2022-12-15 12:49+0000\n"
 "PO-Revision-Date: 2022-09-22 05:57+0000\n"
-"Last-Translator: Martin Trigaux, 2022\n"
+"Last-Translator: trendspotter <jirka.p@volny.cz>, 2022\n"
 "Language-Team: Czech (https://www.transifex.com/odoo/teams/41243/cs/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -62,11 +62,6 @@ msgid "'. Showing results for '"
 msgstr ""
 
 #. module: website_sale
-#: model:product.template.attribute.value,name:website_sale.product_1_attribute_3_value_1
-msgid "1 year"
-msgstr "1 rok"
-
-#. module: website_sale
 #: model:ir.model.fields.selection,name:website_sale.selection__website__product_page_image_width__100_pc
 msgid "100 %"
 msgstr "100 %"
@@ -75,11 +70,6 @@ msgstr "100 %"
 #: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
 msgid "100 percent"
 msgstr ""
-
-#. module: website_sale
-#: model:product.template.attribute.value,name:website_sale.product_1_attribute_3_value_2
-msgid "2 year"
-msgstr "2 roky"
 
 #. module: website_sale
 #: model:ir.model.fields.selection,name:website_sale.selection__website__product_page_image_width__50_pc
@@ -240,6 +230,7 @@ msgid ""
 msgstr ""
 
 #. module: website_sale
+#. odoo-python
 #: code:addons/website_sale/models/crm_team.py:0
 #, python-format
 msgid ""
@@ -258,7 +249,7 @@ msgid "<small class=\"d-none d-lg-inline text-muted\">Sort By:</small>"
 msgstr ""
 
 #. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.address_b2b
+#: model_terms:ir.ui.view,arch_db:website_sale.address
 msgid ""
 "<small class=\"form-text text-muted\">Changing company name or VAT number is"
 " not allowed once document(s) have been issued for your account. Please "
@@ -524,6 +515,13 @@ msgid "A short description that will also appear on documents."
 msgstr "Stručný popis, který se také objeví v dokumentech."
 
 #. module: website_sale
+#. odoo-javascript
+#: code:addons/website_sale/static/src/xml/website_sale_dashboard.xml:0
+#, python-format
+msgid "AT A GLANCE"
+msgstr "NA PRVNÍ POHLED"
+
+#. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.view_sales_order_filter_ecommerce
 msgid "Abandoned"
 msgstr "Opuštěný"
@@ -534,7 +532,10 @@ msgid "Abandoned Cart"
 msgstr "Opuštěný košík"
 
 #. module: website_sale
+#. odoo-javascript
+#. odoo-python
 #: code:addons/website_sale/models/crm_team.py:0
+#: code:addons/website_sale/static/src/xml/website_sale_dashboard.xml:0
 #: model:ir.actions.act_window,name:website_sale.action_view_abandoned_tree
 #: model:ir.ui.menu,name:website_sale.menu_orders_abandoned_orders
 #, python-format
@@ -603,7 +604,7 @@ msgid "Add"
 msgstr "Přidat"
 
 #. module: website_sale
-#. openerp-web
+#. odoo-javascript
 #: code:addons/website_sale/static/src/xml/website_sale_reorder_modal.xml:0
 #, python-format
 msgid "Add To Cart"
@@ -644,7 +645,7 @@ msgid "Add download link for customers at the end of checkout"
 msgstr ""
 
 #. module: website_sale
-#. openerp-web
+#. odoo-javascript
 #: code:addons/website_sale/static/src/xml/website_sale_reorder_modal.xml:0
 #: code:addons/website_sale/static/src/xml/website_sale_reorder_modal.xml:0
 #: model_terms:ir.ui.view,arch_db:website_sale.cart_lines
@@ -654,7 +655,7 @@ msgid "Add one"
 msgstr "Přidat jeden"
 
 #. module: website_sale
-#. openerp-web
+#. odoo-javascript
 #: code:addons/website_sale/static/src/snippets/s_add_to_cart/options.js:0
 #: model_terms:ir.ui.view,arch_db:website_sale.dynamic_filter_template_product_product_add_to_cart
 #: model_terms:ir.ui.view,arch_db:website_sale.dynamic_filter_template_product_product_banner
@@ -734,7 +735,7 @@ msgid "Apply"
 msgstr "Použít"
 
 #. module: website_sale
-#. openerp-web
+#. odoo-javascript
 #: code:addons/website_sale/static/src/js/website_sale.editor.js:0
 #, python-format
 msgid "Are you sure you want to delete this badge ?"
@@ -753,6 +754,14 @@ msgid "Attributes"
 msgstr "Vlastnosti"
 
 #. module: website_sale
+#. odoo-javascript
+#: code:addons/website_sale/static/src/xml/website_sale_dashboard.xml:0
+#: code:addons/website_sale/static/src/xml/website_sale_dashboard.xml:0
+#, python-format
+msgid "Average Order"
+msgstr "Průměrná objednávka"
+
+#. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_template__rating_avg
 msgid "Average Rating"
 msgstr ""
@@ -768,7 +777,7 @@ msgid "Badge"
 msgstr "Odznak"
 
 #. module: website_sale
-#. openerp-web
+#. odoo-javascript
 #: code:addons/website_sale/static/src/js/website_sale.editor.js:0
 #, python-format
 msgid "Badge Text"
@@ -812,6 +821,13 @@ msgid "Benelux"
 msgstr "Benelux"
 
 #. module: website_sale
+#. odoo-javascript
+#: code:addons/website_sale/static/src/xml/website_sale_dashboard.xml:0
+#, python-format
+msgid "Best Sellers"
+msgstr "Nejlepší prodejci"
+
+#. module: website_sale
 #: model:ir.model.fields.selection,name:website_sale.selection__website__product_page_image_spacing__big
 msgid "Big"
 msgstr "Velký"
@@ -828,6 +844,7 @@ msgid "Billing Address"
 msgstr "fakturační adresa"
 
 #. module: website_sale
+#. odoo-python
 #: code:addons/website_sale/models/website_snippet_filter.py:0
 #, python-format
 msgid "Bin"
@@ -858,6 +875,7 @@ msgid "Bottom"
 msgstr "Spodek"
 
 #. module: website_sale
+#. odoo-python
 #: code:addons/website_sale/models/website_snippet_filter.py:0
 #, python-format
 msgid "Box"
@@ -896,7 +914,7 @@ msgid "Buy Now"
 msgstr ""
 
 #. module: website_sale
-#. openerp-web
+#. odoo-javascript
 #: code:addons/website_sale/static/src/snippets/s_add_to_cart/options.js:0
 #, python-format
 msgid "Buy now"
@@ -906,6 +924,14 @@ msgstr ""
 #: model:product.public.category,name:website_sale.public_category_cabinets
 msgid "Cabinets"
 msgstr "Skříně"
+
+#. module: website_sale
+#. odoo-javascript
+#: code:addons/website_sale/static/src/xml/website_sale_dashboard.xml:0
+#: code:addons/website_sale/static/src/xml/website_sale_dashboard.xml:0
+#, python-format
+msgid "Campaigns"
+msgstr "Kampaně"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_image__can_image_1024_be_zoomed
@@ -918,10 +944,18 @@ msgid "Can Publish"
 msgstr "Může publikovat"
 
 #. module: website_sale
+#. odoo-python
 #: code:addons/website_sale/controllers/main.py:0
 #, python-format
 msgid "Can not resequence embedded image/video with a non compatible image."
 msgstr ""
+
+#. module: website_sale
+#. odoo-javascript
+#: code:addons/website_sale/static/src/xml/website_sale_dashboard.xml:0
+#, python-format
+msgid "Capture order payments when the delivery is completed."
+msgstr "Po dokončení doručení zaúčtujte platby za objednávku."
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
@@ -954,6 +988,14 @@ msgstr "E-mail pro obnovení košíku"
 #: model:ir.model.fields,field_description:website_sale.field_sale_order__cart_recovery_email_sent
 msgid "Cart recovery email already sent"
 msgstr "E-mail na obnovu košíku byl již odeslán"
+
+#. module: website_sale
+#. odoo-javascript
+#: code:addons/website_sale/static/src/xml/website_sale_dashboard.xml:0
+#: code:addons/website_sale/static/src/xml/website_sale_dashboard.xml:0
+#, python-format
+msgid "Carts"
+msgstr "Košíky"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
@@ -998,6 +1040,7 @@ msgid "Category:"
 msgstr "Kategorie:"
 
 #. module: website_sale
+#. odoo-python
 #: code:addons/website_sale/models/website_snippet_filter.py:0
 #, python-format
 msgid "Chair"
@@ -1009,7 +1052,7 @@ msgid "Chairs"
 msgstr "Židle"
 
 #. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.address_b2b
+#: model_terms:ir.ui.view,arch_db:website_sale.address
 msgid ""
 "Changing VAT number is not allowed once document(s) have been issued for "
 "your account. Please contact us directly for this operation."
@@ -1018,7 +1061,7 @@ msgstr ""
 "kontaktujte nás přímo pro tuto operaci."
 
 #. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.address_b2b
+#: model_terms:ir.ui.view,arch_db:website_sale.address
 msgid ""
 "Changing company name is not allowed once document(s) have been issued for "
 "your account. Please contact us directly for this operation."
@@ -1027,6 +1070,7 @@ msgstr ""
 "Kontaktujte nás přímo pro tuto operaci."
 
 #. module: website_sale
+#. odoo-python
 #: code:addons/website_sale/controllers/main.py:0
 #, python-format
 msgid ""
@@ -1074,21 +1118,21 @@ msgid "Click here"
 msgstr "Kliknout zde"
 
 #. module: website_sale
-#. openerp-web
+#. odoo-javascript
 #: code:addons/website_sale/static/src/js/tours/website_sale_shop.js:0
 #, python-format
 msgid "Click here to open the reporting menu"
 msgstr ""
 
 #. module: website_sale
-#. openerp-web
+#. odoo-javascript
 #: code:addons/website_sale/static/src/js/tours/website_sale_shop.js:0
 #, python-format
 msgid "Click on <em>Save</em> to create the product."
 msgstr ""
 
 #. module: website_sale
-#. openerp-web
+#. odoo-javascript
 #: code:addons/website_sale/static/src/js/tours/website_sale_shop.js:0
 #, python-format
 msgid "Click on this button so your customers can see it."
@@ -1122,7 +1166,7 @@ msgid "Companies"
 msgstr "Společnosti"
 
 #. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.address_b2b
+#: model_terms:ir.ui.view,arch_db:website_sale.address
 msgid "Company Name"
 msgstr " Název společnosti "
 
@@ -1195,6 +1239,13 @@ msgid "Confirm Order"
 msgstr "Potvrdit objednávku"
 
 #. module: website_sale
+#. odoo-javascript
+#: code:addons/website_sale/static/src/xml/website_sale_dashboard.xml:0
+#, python-format
+msgid "Confirm orders when you get paid."
+msgstr "Potvrďte objednávku když jdete platit"
+
+#. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.view_sales_order_filter_ecommerce
 msgid "Confirmed"
 msgstr "Potvrzeno"
@@ -1223,6 +1274,14 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
 msgid "Content"
 msgstr "Obsah"
+
+#. module: website_sale
+#. odoo-javascript
+#: code:addons/website_sale/static/src/xml/website_sale_dashboard.xml:0
+#: code:addons/website_sale/static/src/xml/website_sale_dashboard.xml:0
+#, python-format
+msgid "Conversion"
+msgstr "Konverze"
 
 #. module: website_sale
 #: model:product.public.category,name:website_sale.public_category_furnitures_couches
@@ -1340,6 +1399,7 @@ msgid "Customize Abandoned Email Template"
 msgstr ""
 
 #. module: website_sale
+#. odoo-python
 #: code:addons/website_sale/models/res_config_settings.py:0
 #: code:addons/website_sale/models/res_config_settings.py:0
 #, python-format
@@ -1455,7 +1515,7 @@ msgid "Disabled (buy as guest)"
 msgstr ""
 
 #. module: website_sale
-#. openerp-web
+#. odoo-javascript
 #: code:addons/website_sale/static/src/xml/website_sale_reorder_modal.xml:0
 #, python-format
 msgid "Discard"
@@ -1507,13 +1567,14 @@ msgid ""
 msgstr ""
 
 #. module: website_sale
+#. odoo-python
 #: code:addons/website_sale/models/digest.py:0
 #, python-format
 msgid "Do not have access, skip this data for user's digest email"
 msgstr "Nemáte přístup, přeskočte tato data pro e-mail uživatele"
 
 #. module: website_sale
-#. openerp-web
+#. odoo-javascript
 #: code:addons/website_sale/static/src/js/website_sale_reorder.js:0
 #, python-format
 msgid "Do you wish to clear your cart before adding products to it?"
@@ -1525,7 +1586,7 @@ msgid "Done"
 msgstr "Hotovo"
 
 #. module: website_sale
-#. openerp-web
+#. odoo-javascript
 #: code:addons/website_sale/static/src/js/tours/website_sale_shop.js:0
 #, python-format
 msgid "Double click here to set an image describing your product."
@@ -1537,13 +1598,14 @@ msgid "Drag building blocks here to customize the header for \""
 msgstr "Přetáhněte stavební bloky sem a upravte záhlaví pro \""
 
 #. module: website_sale
-#. openerp-web
+#. odoo-javascript
 #: code:addons/website_sale/static/src/js/tours/website_sale_shop.js:0
 #, python-format
 msgid "Drag this website block and drop it in your page."
 msgstr "Přetáhněte tento blok webstránky a umístěte jej na svou stránku."
 
 #. module: website_sale
+#. odoo-python
 #: code:addons/website_sale/models/website_snippet_filter.py:0
 #, python-format
 msgid "Drawer"
@@ -1596,7 +1658,7 @@ msgid "Edit in Website Builder"
 msgstr ""
 
 #. module: website_sale
-#. openerp-web
+#. odoo-javascript
 #: code:addons/website_sale/static/src/js/tours/website_sale_shop.js:0
 #, python-format
 msgid "Edit the price of this product by clicking on the amount."
@@ -1623,13 +1685,14 @@ msgid "Embed Code"
 msgstr "Embed kód"
 
 #. module: website_sale
-#. openerp-web
+#. odoo-javascript
 #: code:addons/website_sale/static/src/js/tours/website_sale_shop.js:0
 #, python-format
 msgid "Enter a name for your new product"
 msgstr "Zadejte název nového produktu"
 
 #. module: website_sale
+#. odoo-python
 #: code:addons/website_sale/models/product_public_category.py:0
 #, python-format
 msgid "Error ! You cannot create recursive categories."
@@ -1673,6 +1736,7 @@ msgid "Extra Variant Media"
 msgstr "Varianta produktu navíc"
 
 #. module: website_sale
+#. odoo-python
 #: code:addons/website_sale/models/website.py:0
 #, python-format
 msgid "Featured"
@@ -1719,6 +1783,13 @@ msgid "Furnitures"
 msgstr "Nábytek"
 
 #. module: website_sale
+#. odoo-javascript
+#: code:addons/website_sale/static/src/xml/website_sale_dashboard.xml:0
+#, python-format
+msgid "Generate an invoice from orders ready for invoicing."
+msgstr "Vytvořit fakturu z objednávek připravených k fakturaci."
+
+#. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
 msgid ""
 "Generate the invoice automatically when the online payment is confirmed"
@@ -1730,7 +1801,7 @@ msgid "Gives the sequence order when displaying a list of product categories."
 msgstr "Určuje pořadí posloupnosti při zobrazení seznamu kategorií výrobků."
 
 #. module: website_sale
-#. openerp-web
+#. odoo-javascript
 #: code:addons/website_sale/static/src/js/tours/tour_utils.js:0
 #: model:ir.model.fields.selection,name:website_sale.selection__website__add_to_cart_action__go_to_cart
 #, python-format
@@ -1871,12 +1942,14 @@ msgid "Instant checkout, instead of adding to cart"
 msgstr ""
 
 #. module: website_sale
+#. odoo-python
 #: code:addons/website_sale/controllers/main.py:0
 #, python-format
 msgid "Invalid Email! Please enter a valid email address."
 msgstr "Neplatný e-mail! Prosím zadejte platnou emailovou adresu."
 
 #. module: website_sale
+#. odoo-python
 #: code:addons/website_sale/controllers/main.py:0
 #, python-format
 msgid "Invalid image"
@@ -1906,6 +1979,7 @@ msgid "Issue invoices to customers"
 msgstr "Vydávání faktur zákazníkům"
 
 #. module: website_sale
+#. odoo-python
 #: code:addons/website_sale/models/sale_order.py:0
 #, python-format
 msgid "It is forbidden to modify a sales order which is not in draft status."
@@ -1928,6 +2002,7 @@ msgid "Kpi Website Sale Total Value"
 msgstr "Kpi Celková hodnota prodeje z webových stránek "
 
 #. module: website_sale
+#. odoo-python
 #: code:addons/website_sale/models/website_snippet_filter.py:0
 #, python-format
 msgid "Lamp"
@@ -2018,14 +2093,14 @@ msgid "Let the customer select a Mondial Relay shipping point"
 msgstr ""
 
 #. module: website_sale
-#. openerp-web
+#. odoo-javascript
 #: code:addons/website_sale/static/src/js/tours/website_sale_shop.js:0
 #, python-format
 msgid "Let's create your first product."
 msgstr "Vytvořme si svůj první produkt."
 
 #. module: website_sale
-#. openerp-web
+#. odoo-javascript
 #: code:addons/website_sale/static/src/js/tours/website_sale_shop.js:0
 #, python-format
 msgid ""
@@ -2034,6 +2109,7 @@ msgid ""
 msgstr ""
 
 #. module: website_sale
+#. odoo-python
 #: code:addons/website_sale/models/website_snippet_filter.py:0
 #, python-format
 msgid "Lightbulb sold separately"
@@ -2086,7 +2162,10 @@ msgid "Mandatory (no guest checkout)"
 msgstr ""
 
 #. module: website_sale
+#. odoo-javascript
+#: code:addons/website_sale/static/src/xml/website_sale_dashboard.xml:0
 #: model:ir.model.fields.selection,name:website_sale.selection__website__product_page_image_spacing__medium
+#, python-format
 msgid "Medium"
 msgstr "Médium"
 
@@ -2131,7 +2210,7 @@ msgid "Multimedia"
 msgstr "Multimedia"
 
 #. module: website_sale
-#. openerp-web
+#. odoo-javascript
 #: code:addons/website_sale/static/src/js/website_sale.js:0
 #: model_terms:ir.ui.view,arch_db:website_sale.header_cart_link
 #, python-format
@@ -2148,6 +2227,7 @@ msgid "Name"
 msgstr "Jméno"
 
 #. module: website_sale
+#. odoo-python
 #: code:addons/website_sale/models/website.py:0
 #, python-format
 msgid "Name (A-Z)"
@@ -2159,9 +2239,7 @@ msgid "Name Short"
 msgstr "Krátký název"
 
 #. module: website_sale
-#: code:addons/website_sale/controllers/main.py:0
 #: model:ir.actions.act_window,name:website_sale.product_product_action_add
-#, python-format
 msgid "New Product"
 msgstr "Nový produkt"
 
@@ -2171,6 +2249,7 @@ msgid "New!"
 msgstr "Novinka!"
 
 #. module: website_sale
+#. odoo-python
 #: code:addons/website_sale/models/website.py:0
 #, python-format
 msgid "Newest Arrivals"
@@ -2182,7 +2261,7 @@ msgid "Newest Products"
 msgstr ""
 
 #. module: website_sale
-#. openerp-web
+#. odoo-javascript
 #: code:addons/website_sale/static/src/xml/website_sale_image_viewer.xml:0
 #, python-format
 msgid "Next (Right-Arrow)"
@@ -2194,7 +2273,7 @@ msgid "Next <span class=\"fa fa-chevron-right\"/>"
 msgstr "Další <span class=\"fa fa-chevron-right\"/>"
 
 #. module: website_sale
-#. openerp-web
+#. odoo-javascript
 #: code:addons/website_sale/static/src/xml/website_sale_reorder_modal.xml:0
 #, python-format
 msgid "No"
@@ -2277,13 +2356,14 @@ msgid "On Site Payments & Picking"
 msgstr ""
 
 #. module: website_sale
+#. odoo-python
 #: code:addons/website_sale/models/website_snippet_filter.py:0
 #, python-format
 msgid "On wheels"
 msgstr ""
 
 #. module: website_sale
-#. openerp-web
+#. odoo-javascript
 #: code:addons/website_sale/static/src/js/tours/website_sale_shop.js:0
 #, python-format
 msgid "Once you click on <b>Save</b>, your product is updated."
@@ -2310,6 +2390,7 @@ msgid "Only Services"
 msgstr "Pouze služby"
 
 #. module: website_sale
+#. odoo-python
 #: code:addons/website_sale/models/product_pricelist.py:0
 #, python-format
 msgid ""
@@ -2320,6 +2401,7 @@ msgstr ""
 "Pole Společnost nechte prázdné nebo vyberte web od této společnosti."
 
 #. module: website_sale
+#. odoo-python
 #: code:addons/website_sale/models/res_partner.py:0
 #, python-format
 msgid "Open Sale Orders"
@@ -2340,12 +2422,14 @@ msgstr ""
 "komprese."
 
 #. module: website_sale
+#. odoo-python
 #: code:addons/website_sale/models/sale_order_line.py:0
 #, python-format
 msgid "Option for: %s"
 msgstr "Možnost pro: %s"
 
 #. module: website_sale
+#. odoo-python
 #: code:addons/website_sale/models/sale_order_line.py:0
 #, python-format
 msgid "Option: %s"
@@ -2391,9 +2475,13 @@ msgid "Order Total"
 msgstr "Objednávka celkem"
 
 #. module: website_sale
+#. odoo-javascript
+#: code:addons/website_sale/static/src/xml/website_sale_dashboard.xml:0
+#: code:addons/website_sale/static/src/xml/website_sale_dashboard.xml:0
 #: model:ir.actions.act_window,name:website_sale.action_orders_ecommerce
 #: model:ir.ui.menu,name:website_sale.menu_orders
 #: model:ir.ui.menu,name:website_sale.menu_orders_orders
+#, python-format
 msgid "Orders"
 msgstr "Objednávky"
 
@@ -2401,6 +2489,21 @@ msgstr "Objednávky"
 #: model:ir.actions.act_window,name:website_sale.sale_order_action_to_invoice
 msgid "Orders To Invoice"
 msgstr "Objednávky k fakturaci"
+
+#. module: website_sale
+#. odoo-javascript
+#: code:addons/website_sale/static/src/xml/website_sale_dashboard.xml:0
+#, python-format
+msgid "Orders to Invoice"
+msgstr "Objednávky k fakturaci"
+
+#. module: website_sale
+#. odoo-javascript
+#: code:addons/website_sale/static/src/xml/website_sale_dashboard.xml:0
+#: code:addons/website_sale/static/src/xml/website_sale_dashboard.xml:0
+#, python-format
+msgid "Orders/Day"
+msgstr "Objednávky / Dni"
 
 #. module: website_sale
 #: model:product.ribbon,html:website_sale.out_of_stock_ribbon
@@ -2458,6 +2561,14 @@ msgid "Payment Transactions"
 msgstr "Platební transakce"
 
 #. module: website_sale
+#. odoo-javascript
+#: code:addons/website_sale/static/src/xml/website_sale_dashboard.xml:0
+#, python-format
+msgid "Payments to Capture"
+msgstr "Platby k zachycení"
+
+#. module: website_sale
+#. odoo-python
 #: code:addons/website_sale/models/website_snippet_filter.py:0
 #, python-format
 msgid "Pedal-based opening system"
@@ -2504,32 +2615,35 @@ msgid "Prevent Sale of Zero Priced Product"
 msgstr ""
 
 #. module: website_sale
-#. openerp-web
+#. odoo-javascript
 #: code:addons/website_sale/static/src/xml/website_sale_image_viewer.xml:0
 #, python-format
 msgid "Previous (Left-Arrow)"
 msgstr "Předchozí (Šipka doleva)"
 
 #. module: website_sale
+#. odoo-python
 #: code:addons/website_sale/controllers/backend.py:0
 #, python-format
 msgid "Previous Month"
 msgstr "Předchozí měsíc"
 
 #. module: website_sale
+#. odoo-python
 #: code:addons/website_sale/controllers/backend.py:0
 #, python-format
 msgid "Previous Week"
 msgstr "Minulý týden"
 
 #. module: website_sale
+#. odoo-python
 #: code:addons/website_sale/controllers/backend.py:0
 #, python-format
 msgid "Previous Year"
 msgstr "Minulý rok"
 
 #. module: website_sale
-#. openerp-web
+#. odoo-javascript
 #: code:addons/website_sale/static/src/xml/website_sale_reorder_modal.xml:0
 #: model_terms:ir.ui.view,arch_db:website_sale.cart_lines
 #: model_terms:ir.ui.view,arch_db:website_sale.cart_summary
@@ -2539,12 +2653,14 @@ msgid "Price"
 msgstr "Cena"
 
 #. module: website_sale
+#. odoo-python
 #: code:addons/website_sale/models/website.py:0
 #, python-format
 msgid "Price - High to Low"
 msgstr ""
 
 #. module: website_sale
+#. odoo-python
 #: code:addons/website_sale/models/website.py:0
 #, python-format
 msgid "Price - Low to High"
@@ -2601,7 +2717,8 @@ msgid "Prod. Desc."
 msgstr ""
 
 #. module: website_sale
-#. openerp-web
+#. odoo-javascript
+#: code:addons/website_sale/static/src/xml/website_sale_dashboard.xml:0
 #: code:addons/website_sale/static/src/xml/website_sale_reorder_modal.xml:0
 #: model:ir.model,name:website_sale.model_product_template
 #: model:ir.model.fields,field_description:website_sale.field_website_track__product_id
@@ -2709,7 +2826,9 @@ msgid "Product Tag"
 msgstr ""
 
 #. module: website_sale
+#: model:ir.actions.act_window,name:website_sale.product_public_tags_action
 #: model:ir.model.fields,field_description:website_sale.field_product_ribbon__product_tag_ids
+#: model:ir.ui.menu,name:website_sale.product_catalog_product_tags
 msgid "Product Tags"
 msgstr ""
 
@@ -2756,6 +2875,7 @@ msgid "Product names"
 msgstr ""
 
 #. module: website_sale
+#. odoo-python
 #: code:addons/website_sale/controllers/main.py:0
 #, python-format
 msgid "Product not found"
@@ -2829,6 +2949,7 @@ msgstr ""
 "a publikujte je."
 
 #. module: website_sale
+#. odoo-python
 #: code:addons/website_sale/models/product_image.py:0
 #, python-format
 msgid ""
@@ -2869,13 +2990,21 @@ msgid "Qty:"
 msgstr "Množství:"
 
 #. module: website_sale
-#. openerp-web
+#. odoo-javascript
+#: code:addons/website_sale/static/src/xml/website_sale_dashboard.xml:0
 #: code:addons/website_sale/static/src/xml/website_sale_reorder_modal.xml:0
 #: model_terms:ir.ui.view,arch_db:website_sale.cart_lines
 #: model_terms:ir.ui.view,arch_db:website_sale.cart_summary
 #, python-format
 msgid "Quantity"
 msgstr "Množství"
+
+#. module: website_sale
+#. odoo-javascript
+#: code:addons/website_sale/static/src/xml/website_sale_dashboard.xml:0
+#, python-format
+msgid "REVENUE BY"
+msgstr "PŘÍJMY OD"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
@@ -2958,6 +3087,7 @@ msgid "Recovery Email to Send"
 msgstr "Obnovovací e-mail k odeslání"
 
 #. module: website_sale
+#. odoo-python
 #: code:addons/website_sale/models/website_snippet_filter.py:0
 #, python-format
 msgid "Reinforced for heavy loads"
@@ -2979,7 +3109,7 @@ msgid "Remove from cart"
 msgstr "Odstranit z košíku"
 
 #. module: website_sale
-#. openerp-web
+#. odoo-javascript
 #: code:addons/website_sale/static/src/xml/website_sale_reorder_modal.xml:0
 #: code:addons/website_sale/static/src/xml/website_sale_reorder_modal.xml:0
 #: model_terms:ir.ui.view,arch_db:website_sale.cart_lines
@@ -3002,6 +3132,7 @@ msgid "Restrict publishing to this website."
 msgstr "Omezit publikování na této webstránce."
 
 #. module: website_sale
+#. odoo-python
 #: code:addons/website_sale/models/sale_order.py:0
 #, python-format
 msgid "Resume Order"
@@ -3061,9 +3192,13 @@ msgid "Sale Analysis"
 msgstr ""
 
 #. module: website_sale
+#. odoo-javascript
+#: code:addons/website_sale/static/src/xml/website_sale_dashboard.xml:0
+#: code:addons/website_sale/static/src/xml/website_sale_dashboard.xml:0
 #: model:ir.actions.act_window,name:website_sale.sale_report_action_carts
 #: model_terms:ir.ui.view,arch_db:website_sale.digest_digest_view_form
 #: model_terms:ir.ui.view,arch_db:website_sale.sale_report_view_search_website
+#, python-format
 msgid "Sales"
 msgstr "Prodej"
 
@@ -3086,6 +3221,30 @@ msgstr "Prodejní objednávka"
 #: model:ir.model,name:website_sale.model_sale_order_line
 msgid "Sales Order Line"
 msgstr "Řádek zakázky"
+
+#. module: website_sale
+#. odoo-javascript
+#: code:addons/website_sale/static/src/xml/website_sale_dashboard.xml:0
+#: code:addons/website_sale/static/src/xml/website_sale_dashboard.xml:0
+#, python-format
+msgid "Sales Since Last Month"
+msgstr "Prodeje od minulého měsíce"
+
+#. module: website_sale
+#. odoo-javascript
+#: code:addons/website_sale/static/src/xml/website_sale_dashboard.xml:0
+#: code:addons/website_sale/static/src/xml/website_sale_dashboard.xml:0
+#, python-format
+msgid "Sales Since Last Week"
+msgstr "Prodeje od minulého týdne"
+
+#. module: website_sale
+#. odoo-javascript
+#: code:addons/website_sale/static/src/xml/website_sale_dashboard.xml:0
+#: code:addons/website_sale/static/src/xml/website_sale_dashboard.xml:0
+#, python-format
+msgid "Sales Since Last Year"
+msgstr "Prodeje od minulého roku"
 
 #. module: website_sale
 #: model:ir.model,name:website_sale.model_crm_team
@@ -3128,7 +3287,7 @@ msgid "Select"
 msgstr "Vybrat"
 
 #. module: website_sale
-#. openerp-web
+#. odoo-javascript
 #: code:addons/website_sale/static/src/js/tours/website_sale_shop.js:0
 #, python-format
 msgid ""
@@ -3167,6 +3326,14 @@ msgstr "Odeslat e-mail pro obnovu košíku"
 #: model_terms:ir.ui.view,arch_db:website_sale.sale_order_view_form_cart_recovery
 msgid "Send a Recovery Email"
 msgstr "Odeslat e-mail pro obnovení"
+
+#. module: website_sale
+#. odoo-javascript
+#: code:addons/website_sale/static/src/xml/website_sale_dashboard.xml:0
+#, python-format
+msgid "Send a recovery email to visitors who haven't completed their order."
+msgstr ""
+"Pošlete e-mail pro obnovení návštěvníkům, kteří nedokončili svou objednávku."
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
@@ -3299,6 +3466,7 @@ msgid "Sign in/up at checkout"
 msgstr ""
 
 #. module: website_sale
+#. odoo-python
 #: code:addons/website_sale/models/website_snippet_filter.py:0
 #, python-format
 msgid "Sit comfortably"
@@ -3332,11 +3500,20 @@ msgid "Small"
 msgstr "Malý"
 
 #. module: website_sale
+#. odoo-javascript
+#: code:addons/website_sale/static/src/xml/website_sale_dashboard.xml:0
+#: code:addons/website_sale/static/src/xml/website_sale_dashboard.xml:0
+#, python-format
+msgid "Sold"
+msgstr "Prodáno"
+
+#. module: website_sale
 #: model:product.ribbon,html:website_sale.sold_out_ribbon
 msgid "Sold out"
 msgstr "Vyprodáno"
 
 #. module: website_sale
+#. odoo-python
 #: code:addons/website_sale/controllers/main.py:0
 #, python-format
 msgid "Some required fields are empty."
@@ -3346,6 +3523,19 @@ msgstr "Některá povinná pole jsou prázdná."
 #: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
 msgid "Sort by"
 msgstr "Řadit podle"
+
+#. module: website_sale
+#. odoo-javascript
+#: code:addons/website_sale/static/src/xml/website_sale_dashboard.xml:0
+#, python-format
+msgid "Sources"
+msgstr "Zdroje"
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.product_product_normal_website_form_view
+#: model_terms:ir.ui.view,arch_db:website_sale.product_template_only_website_form_view
+msgid "Specify unit"
+msgstr ""
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.address
@@ -3418,7 +3608,7 @@ msgid "Suggested accessories in the eCommerce cart"
 msgstr ""
 
 #. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.address_b2b
+#: model_terms:ir.ui.view,arch_db:website_sale.address
 msgid "TIN / VAT"
 msgstr "DIČ / DPH"
 
@@ -3463,6 +3653,7 @@ msgid "The #1"
 msgstr "Číslo 1"
 
 #. module: website_sale
+#. odoo-python
 #: code:addons/website_sale/controllers/main.py:0
 #, python-format
 msgid "The access token is invalid."
@@ -3476,6 +3667,14 @@ msgid ""
 msgstr ""
 
 #. module: website_sale
+#. odoo-python
+#: code:addons/website_sale/controllers/main.py:0
+#, python-format
+msgid "The cart has been updated. Please refresh the page."
+msgstr ""
+
+#. module: website_sale
+#. odoo-python
 #: code:addons/website_sale/models/sale_order.py:0
 #, python-format
 msgid ""
@@ -3490,6 +3689,7 @@ msgid "The full URL to access the document through the website."
 msgstr "Celá adresa URL pro přístup k dokumentu prostřednictvím webstránky."
 
 #. module: website_sale
+#. odoo-python
 #: code:addons/website_sale/models/sale_order.py:0
 #, python-format
 msgid ""
@@ -3497,12 +3697,14 @@ msgid ""
 msgstr "Uvedená kombinace neexistuje, proto ji nelze přidat do košíku."
 
 #. module: website_sale
+#. odoo-python
 #: code:addons/website_sale/models/sale_order.py:0
 #, python-format
 msgid "The given product does not exist therefore it cannot be added to cart."
 msgstr "Daný produkt neexistuje, proto jej nelze přidat do košíku."
 
 #. module: website_sale
+#. odoo-python
 #: code:addons/website_sale/models/sale_order.py:0
 #, python-format
 msgid ""
@@ -3520,6 +3722,7 @@ msgstr ""
 "produkt, ale nikoli pro již existující produkty."
 
 #. module: website_sale
+#. odoo-python
 #: code:addons/website_sale/controllers/main.py:0
 #, python-format
 msgid "The order has been canceled."
@@ -3540,6 +3743,7 @@ msgid "The time to mark a cart as abandoned can be changed in the settings."
 msgstr "Čas od kdy bude košík označen za opuštěný lze změnit v nastavení."
 
 #. module: website_sale
+#. odoo-python
 #: code:addons/website_sale/models/product_product.py:0
 #, python-format
 msgid ""
@@ -3553,10 +3757,24 @@ msgid "There is no confirmed order from the website"
 msgstr "Z webových stránek není potvrzena objednávka"
 
 #. module: website_sale
+#. odoo-javascript
+#: code:addons/website_sale/static/src/xml/website_sale_dashboard.xml:0
+#, python-format
+msgid "There is no recent confirmed order."
+msgstr "Není tu žádná nedávno potvrzená objednávka."
+
+#. module: website_sale
 #: model_terms:ir.actions.act_window,help:website_sale.action_unpaid_orders_ecommerce
 #: model_terms:ir.actions.act_window,help:website_sale.action_view_unpaid_quotation_tree
 msgid "There is no unpaid order from the website yet"
 msgstr "Z webových stránek zatím není žádná nezaplacená objednávka"
+
+#. module: website_sale
+#. odoo-javascript
+#: code:addons/website_sale/static/src/xml/website_sale_dashboard.xml:0
+#, python-format
+msgid "There isn't any UTM tag detected in orders"
+msgstr "V objednávkách není detekována žádná značka UTM"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.product
@@ -3569,6 +3787,7 @@ msgid "This is your current cart."
 msgstr "Toto je váš aktuální košík."
 
 #. module: website_sale
+#. odoo-python
 #: code:addons/website_sale/models/res_partner.py:0
 #, python-format
 msgid ""
@@ -3578,7 +3797,7 @@ msgid ""
 msgstr ""
 
 #. module: website_sale
-#. openerp-web
+#. odoo-javascript
 #: code:addons/website_sale/static/src/snippets/s_add_to_cart/000.js:0
 #, python-format
 msgid "This product does not exist therefore it cannot be added to cart."
@@ -3595,7 +3814,7 @@ msgid "This product is no longer available."
 msgstr "Tento produkt již není k dispozici."
 
 #. module: website_sale
-#. openerp-web
+#. odoo-javascript
 #: code:addons/website_sale/static/src/js/website_sale_reorder.js:0
 #, python-format
 msgid "This product is not available for purchase."
@@ -3627,7 +3846,7 @@ msgid "Top Bar"
 msgstr ""
 
 #. module: website_sale
-#. openerp-web
+#. odoo-javascript
 #: code:addons/website_sale/static/src/xml/website_sale_reorder_modal.xml:0
 #, python-format
 msgid "Total"
@@ -3686,21 +3905,17 @@ msgid "Unit of Measure for price per unit on eCommerce products."
 msgstr ""
 
 #. module: website_sale
-#: model:product.product,uom_name:website_sale.product_product_1
-#: model:product.product,uom_name:website_sale.product_product_1b
-#: model:product.template,uom_name:website_sale.product_product_1_product_template
-msgid "Units"
-msgstr "Jednotky"
-
-#. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.view_sales_order_filter_ecommerce
 msgid "Unpaid"
 msgstr "Nezaplacené"
 
 #. module: website_sale
+#. odoo-javascript
+#: code:addons/website_sale/static/src/xml/website_sale_dashboard.xml:0
 #: model:ir.actions.act_window,name:website_sale.action_unpaid_orders_ecommerce
 #: model:ir.actions.act_window,name:website_sale.action_view_unpaid_quotation_tree
 #: model:ir.ui.menu,name:website_sale.menu_orders_unpaid_orders
+#, python-format
 msgid "Unpaid Orders"
 msgstr "Nezaplacené objednávky"
 
@@ -3710,7 +3925,14 @@ msgid "Unpublished"
 msgstr "Nepublikovaný"
 
 #. module: website_sale
-#. openerp-web
+#. odoo-javascript
+#: code:addons/website_sale/static/src/xml/website_sale_dashboard.xml:0
+#, python-format
+msgid "Untaxed Total Sold"
+msgstr "Celkem prodáno bez daně"
+
+#. module: website_sale
+#. odoo-javascript
 #: code:addons/website_sale/static/src/js/tours/website_sale_shop.js:0
 #, python-format
 msgid "Upload a file from your local library."
@@ -3759,7 +3981,7 @@ msgid "View product"
 msgstr ""
 
 #. module: website_sale
-#. openerp-web
+#. odoo-javascript
 #: code:addons/website_sale/static/src/xml/website_sale_image_viewer.xml:0
 #, python-format
 msgid "Viewer"
@@ -3810,15 +4032,11 @@ msgid "Warning"
 msgstr "Varování"
 
 #. module: website_sale
-#: model:product.product,name:website_sale.product_product_1
-#: model:product.product,name:website_sale.product_product_1b
 #: model:product.template,name:website_sale.product_product_1_product_template
 msgid "Warranty"
 msgstr "Záruka"
 
 #. module: website_sale
-#: model:product.product,description_sale:website_sale.product_product_1
-#: model:product.product,description_sale:website_sale.product_product_1b
 #: model:product.template,description_sale:website_sale.product_product_1_product_template
 msgid ""
 "Warranty, issued to the purchaser of an article by its manufacturer, "
@@ -3829,7 +4047,7 @@ msgstr ""
 "nahradit, je-li to nutné, ve stanovené lhůtě."
 
 #. module: website_sale
-#. openerp-web
+#. odoo-javascript
 #: code:addons/website_sale/static/src/js/website_sale_validate.js:0
 #, python-format
 msgid "We are waiting for confirmation from the bank or the payment provider"
@@ -3939,6 +4157,7 @@ msgid "What should be done on \"Add to Cart\"?"
 msgstr ""
 
 #. module: website_sale
+#. odoo-python
 #: code:addons/website_sale/models/website_snippet_filter.py:0
 #, python-format
 msgid "Whiteboard"
@@ -3961,19 +4180,21 @@ msgstr ""
 "Ceníků."
 
 #. module: website_sale
+#. odoo-python
 #: code:addons/website_sale/models/product_pricelist.py:0
 #, python-format
 msgid "With this action, '%s' website would not have any pricelist available."
 msgstr "Při této akci by web „%s“ neměl k dispozici žádný ceník."
 
 #. module: website_sale
+#. odoo-python
 #: code:addons/website_sale/models/website_snippet_filter.py:0
 #, python-format
 msgid "With three feet"
 msgstr ""
 
 #. module: website_sale
-#. openerp-web
+#. odoo-javascript
 #: code:addons/website_sale/static/src/xml/website_sale_reorder_modal.xml:0
 #, python-format
 msgid "Yes"
@@ -4073,6 +4294,7 @@ msgid "e.g. lamp,bin"
 msgstr ""
 
 #. module: website_sale
+#. odoo-python
 #: code:addons/website_sale/models/website.py:0
 #: model:ir.ui.menu,name:website_sale.menu_ecommerce
 #: model:ir.ui.menu,name:website_sale.menu_ecommerce_settings
@@ -4105,7 +4327,6 @@ msgstr ""
 #. module: website_sale
 #: model:ir.actions.server,name:website_sale.ir_cron_send_availability_email_ir_actions_server
 #: model:ir.cron,cron_name:website_sale.ir_cron_send_availability_email
-#: model:ir.cron,name:website_sale.ir_cron_send_availability_email
 msgid "eCommerce: send email to customers about their abandoned cart"
 msgstr ""
 

@@ -18,7 +18,6 @@ class WebsiteSaleShopPriceListCompareListPriceDispayTests(AccountTestInvoicingHt
         website = cls.env['website'].create({
             'name': "Test website",
             'company_id': cls.env.company.id,
-            'user_id': cls.env.user.id,
             'sequence': 1,
         })
 

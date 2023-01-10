@@ -460,7 +460,7 @@ interface Assert {
   ) => void;
   type ModuleOnly = { only: moduleFunc1 & moduleFunc2 };
   
-  declare namespace QUnit {
+  declare namespace QUnitNamespace {
     interface BeginDetails {
       totalTests: number;
     }
@@ -523,7 +523,7 @@ interface Assert {
      *
      * @callback callback Callback to execute.
      */
-    begin(callback: (details: QUnit.BeginDetails) => void | Promise<void>): void;
+    begin(callback: (details: QUnitNamespace.BeginDetails) => void | Promise<void>): void;
   
     /**
      * Configuration for QUnit
@@ -538,7 +538,7 @@ interface Assert {
      *
      * @param callback Callback to execute
      */
-    done(callback: (details: QUnit.DoneDetails) => void | Promise<void>): void;
+    done(callback: (details: QUnitNamespace.DoneDetails) => void | Promise<void>): void;
   
     /**
      * Advanced and extensible data dumping for JavaScript.
@@ -582,7 +582,7 @@ interface Assert {
      *
      * @param callback Callback to execute
      */
-    log(callback: (details: QUnit.LogDetails) => void): void;
+    log(callback: (details: QUnitNamespace.LogDetails) => void): void;
   
     /**
      * Group related tests under a single label.
@@ -630,7 +630,7 @@ interface Assert {
      * @param callback Callback to execute
      */
     moduleDone(
-      callback: (details: QUnit.ModuleDoneDetails) => void | Promise<void>
+      callback: (details: QUnitNamespace.ModuleDoneDetails) => void | Promise<void>
     ): void;
   
     /**
@@ -639,7 +639,7 @@ interface Assert {
      * @param callback Callback to execute
      */
     moduleStart(
-      callback: (details: QUnit.ModuleStartDetails) => void | Promise<void>
+      callback: (details: QUnitNamespace.ModuleStartDetails) => void | Promise<void>
     ): void;
   
     /**
@@ -659,7 +659,25 @@ interface Assert {
      * @param callback Function to close over assertions
      */
     only(name: string, callback: (assert: Assert) => void | Promise<void>): void;
-  
+
+    /**
+     * Adds a test to exclusively run in debug mode, preventing all other tests from running.
+     *
+     * Use this method to focus your test suite on a specific test. QUnit.debug
+     * will cause any other tests in your suite to be ignored.
+     *
+     * Note, that if more than one QUnit.debug is present only the first instance
+     * will run.
+     *
+     * This is an alternative to filtering tests to run in the HTML reporter. It
+     * is especially useful when you use a console reporter or in a codebase
+     * with a large set of long running tests.
+     *
+     * @param {string} name Title of unit being tested
+     * @param callback Function to close over assertions
+     */
+    debug(name: string, callback: (assert: Assert) => void | Promise<void>): void;
+
     /**
      * DEPRECATED: Report the result of a custom assertion.
      *
@@ -759,7 +777,7 @@ interface Assert {
      * @param callback Callback to execute
      */
     testStart(
-      callback: (details: QUnit.TestStartDetails) => void | Promise<void>
+      callback: (details: QUnitNamespace.TestStartDetails) => void | Promise<void>
     ): void;
   
     /**

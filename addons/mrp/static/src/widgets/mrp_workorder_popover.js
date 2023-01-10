@@ -30,8 +30,6 @@ class WorkOrderPopover extends PopoverComponent {
     }
 };
 
-WorkOrderPopover.template = 'mrp.workorderPopover';
-
 class WorkOrderPopoverField extends PopoverWidgetField {};
 
 WorkOrderPopoverField.components = {

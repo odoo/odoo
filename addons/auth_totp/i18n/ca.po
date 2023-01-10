@@ -6,9 +6,10 @@
 # AncesLatino2004, 2022
 # Manel Fernandez Ramirez <manelfera@outlook.com>, 2022
 # Arnau Ros, 2022
-# jabelchi, 2022
+# Josep Anton Belchi, 2022
 # Martin Trigaux, 2022
 # marcescu, 2022
+# Ivan Espinola, 2022
 # 
 msgid ""
 msgstr ""
@@ -16,7 +17,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-10-10 10:22+0000\n"
 "PO-Revision-Date: 2022-09-22 05:45+0000\n"
-"Last-Translator: marcescu, 2022\n"
+"Last-Translator: Ivan Espinola, 2022\n"
 "Language-Team: Catalan (https://www.transifex.com/odoo/teams/41243/ca/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -44,9 +45,25 @@ msgstr "2-L'autenticació de factor està habilitada."
 #. module: auth_totp
 #: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_form
 msgid ""
+"<i title=\"Documentation\" class=\"fa fa-fw o_button_icon fa-info-circle\"/>\n"
+"                                    Learn More"
+msgstr ""
+
+#. module: auth_totp
+#: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_field
+msgid ""
+"<i title=\"Documentation\" class=\"fa fa-fw o_button_icon fa-info-circle\"/>\n"
+"                            Learn More"
+msgstr ""
+
+#. module: auth_totp
+#: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_form
+msgid ""
 "<span attrs=\"{'invisible': [('totp_enabled', '=', False)]}\" class=\"text-"
 "muted\">This account is protected!</span>"
 msgstr ""
+"<span attrs=\"{'invisible': [('totpenabled', '=', False)]}\" class=\"text-"
+"muted\">Aquest compte està protegit!</span>"
 
 #. module: auth_totp
 #: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_field
@@ -106,6 +123,8 @@ msgid ""
 "Are you sure? The user may be asked to enter two-factor codes again on those"
 " devices"
 msgstr ""
+"N'estàs segur? Es pot demanar a l'usuari que torni a introduir codis de dos "
+"factors en aquests dispositius"
 
 #. module: auth_totp
 #: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_field
@@ -113,6 +132,8 @@ msgid ""
 "Are you sure? You may be asked to enter two-factor codes again on those "
 "devices"
 msgstr ""
+"N'estàs segur? Se us pot demanar que torneu a introduir codis de dos factors"
+" en aquests dispositius"
 
 #. module: auth_totp
 #: model_terms:ir.ui.view,arch_db:auth_totp.auth_totp_form
@@ -350,6 +371,9 @@ msgid ""
 "                        The first one is done with your password and the second one with a code you get from a dedicated mobile app.\n"
 "                        Popular ones include Authy, Google Authenticator or the Microsoft Authenticator."
 msgstr ""
+"L'autenticació de dos factors (\"2FA\") és un sistema d'autenticació doble.\n"
+"                        La primera es fa amb la contrasenya i la segona amb un codi que s'obté d'una aplicació mòbil dedicada.\n"
+"                        Els més populars inclouen Authy, Google Authenticator o Microsoft Authenticator."
 
 #. module: auth_totp
 #: model:ir.model.fields,field_description:auth_totp.field_res_users__totp_enabled

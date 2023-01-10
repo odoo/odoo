@@ -7,6 +7,7 @@ from odoo import _, api, fields, models
 from odoo.exceptions import UserError, ValidationError
 
 from odoo.addons.payment import utils as payment_utils
+from odoo.addons.payment_adyen import utils as adyen_utils
 from odoo.addons.payment_adyen.const import CURRENCY_DECIMALS, RESULT_CODES_MAPPING
 
 _logger = logging.getLogger(__name__)
@@ -75,6 +76,10 @@ class PaymentTransaction(models.Model):
             'recurringProcessingModel': 'Subscription',
             'shopperIP': payment_utils.get_customer_ip_address(),
             'shopperInteraction': 'ContAuth',
+            'shopperEmail': self.partner_email,
+            'shopperName': adyen_utils.format_partner_name(self.partner_name),
+            'telephoneNumber': self.partner_phone,
+            **adyen_utils.include_partner_addresses(self),
         }
 
         # Force the capture delay on Adyen side if the provider is not configured for capturing

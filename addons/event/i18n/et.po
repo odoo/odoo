@@ -3,19 +3,21 @@
 # 	* event
 # 
 # Translators:
-# Oliver Ernest, 2022
 # Egon Raamat <egon@avalah.ee>, 2022
 # Aveli Kannel <aveli@avalah.ee>, 2022
 # Martin Talts <martin.t@avalah.ee>, 2022
 # Martin Aavastik <martin@avalah.ee>, 2022
 # Rivo Zängov <eraser@eraser.ee>, 2022
 # Algo Kärp <algokarp@gmail.com>, 2022
+# Piia Paurson <piia@avalah.ee>, 2022
 # Andre Roomet <andreroomet@gmail.com>, 2022
+# Triine Aavik <triine@avalah.ee>, 2022
 # Eneli Õigus <enelioigus@gmail.com>, 2022
 # Martin Trigaux, 2022
-# Triine Aavik <triine@avalah.ee>, 2022
 # Arma Gedonsky <armagedonsky@hot.ee>, 2022
-# Piia Paurson <piia@avalah.ee>, 2022
+# Jana Jaakson, 2022
+# Leaanika Randmets, 2022
+# Anna, 2023
 # 
 msgid ""
 msgstr ""
@@ -23,7 +25,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-10-04 09:24+0000\n"
 "PO-Revision-Date: 2022-09-22 05:45+0000\n"
-"Last-Translator: Piia Paurson <piia@avalah.ee>, 2022\n"
+"Last-Translator: Anna, 2023\n"
 "Language-Team: Estonian (https://www.transifex.com/odoo/teams/41243/et/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -35,36 +37,36 @@ msgstr ""
 #: model:ir.model.fields,field_description:event.field_res_partner__event_count
 #: model:ir.model.fields,field_description:event.field_res_users__event_count
 msgid "# Events"
-msgstr ""
+msgstr "# Sündmus"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_mail__mail_count_done
 msgid "# Sent"
-msgstr ""
+msgstr "# Saadetud"
 
 #. module: event
 #: code:addons/event/models/event_event.py:0
 #, python-format
 msgid "%(event_name)s (%(count)s seats remaining)"
-msgstr ""
+msgstr "%(event_name)s (%(count)s kohta saadaval)"
 
 #. module: event
 #: code:addons/event/models/event_event.py:0
 #, python-format
 msgid "%(event_name)s (Sold out)"
-msgstr ""
+msgstr "%(event_name)s (Välja müüdud)"
 
 #. module: event
 #: code:addons/event/models/event_ticket.py:0
 #, python-format
 msgid "%(ticket_name)s (%(count)s seats remaining)"
-msgstr ""
+msgstr "%(ticket_name)s (%(count)s kohta saadaval)"
 
 #. module: event
 #: code:addons/event/models/event_ticket.py:0
 #, python-format
 msgid "%(ticket_name)s (Sold out)"
-msgstr ""
+msgstr "%(ticket_name)s (Välja müüdud)"
 
 #. module: event
 #: code:addons/event/models/event_event.py:0
@@ -76,7 +78,7 @@ msgstr "%s (koopia)"
 #: model:ir.actions.report,print_report_name:event.action_report_event_registration_foldable_badge
 msgid ""
 "'Foldable Badge - %s - %s' % ((object.event_id.name or "
-"'Event').replace('/',''), object.name.replace('/',''))"
+"'Event').replace('/',''), (object.name or '').replace('/',''))"
 msgstr ""
 
 #. module: event
@@ -88,7 +90,7 @@ msgstr ""
 #: model:ir.actions.report,print_report_name:event.action_report_event_registration_full_page_ticket
 msgid ""
 "'Full Page Ticket - %s - %s' % ((object.event_id.name or "
-"'Event').replace('/',''), object.name.replace('/',''))"
+"'Event').replace('/',''), (object.name or '').replace('/',''))"
 msgstr ""
 
 #. module: event
@@ -100,7 +102,7 @@ msgstr ""
 #: code:addons/event/models/event_event.py:0
 #, python-format
 msgid "- \"%(event_name)s\": Missing %(nb_too_many)i seats."
-msgstr ""
+msgstr "- \"%(event_name)s\": Puudu on %(nb_too_many)i kohta."
 
 #. module: event
 #: code:addons/event/models/event_ticket.py:0
@@ -109,26 +111,28 @@ msgid ""
 "- the ticket \"%(ticket_name)s\" (%(event_name)s): Missing %(nb_too_many)i "
 "seats."
 msgstr ""
+"- pilet \"%(ticket_name)s\" (%(event_name)s): Puudu on %(nb_too_many)i "
+"kohta."
 
 #. module: event
 #: model:event.tag,name:event.event_tag_category_1_tag_2
 msgid "10-14"
-msgstr ""
+msgstr "10-14"
 
 #. module: event
 #: model:event.tag,name:event.event_tag_category_1_tag_3
 msgid "15-18"
-msgstr ""
+msgstr "15-18"
 
 #. module: event
 #: model:event.tag,name:event.event_tag_category_1_tag_4
 msgid "18+"
-msgstr ""
+msgstr "18+"
 
 #. module: event
 #: model:event.tag,name:event.event_tag_category_1_tag_1
 msgid "5-10"
-msgstr ""
+msgstr "5-10"
 
 #. module: event
 #: model_terms:event.event,description:event.event_0
@@ -285,7 +289,7 @@ msgstr ""
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_registration_view_kanban
 msgid "<span class=\"bg-danger\">Archived</span>"
-msgstr ""
+msgstr "<span class=\"bg-danger\">Arhiveeritud</span>"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.res_config_settings_view_form
@@ -303,6 +307,9 @@ msgid ""
 "                                Registration statistics\n"
 "                            </span>"
 msgstr ""
+"<span class=\"o_stat_text\">\n"
+"                                Registreerimise statistika\n"
+"                            </span>"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_registration_view_kanban
@@ -317,7 +324,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:event.event_report_template_foldable_badge
 #: model_terms:ir.ui.view,arch_db:event.event_report_template_full_page_ticket
 msgid "<span>John Doe</span>"
-msgstr ""
+msgstr "<span>John Doe</span>"
 
 #. module: event
 #: model:mail.template,body_html:event.event_reminder
@@ -766,7 +773,7 @@ msgstr "Vajalik toiming"
 #: model:ir.model.fields,field_description:event.field_event_event__active
 #: model:ir.model.fields,field_description:event.field_event_registration__active
 msgid "Active"
-msgstr "Tegev"
+msgstr "Aktiivne"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__activity_ids
@@ -789,13 +796,13 @@ msgstr "Tegevuse erandlik kohendus"
 #: model:ir.model.fields,field_description:event.field_event_event__activity_state
 #: model:ir.model.fields,field_description:event.field_event_registration__activity_state
 msgid "Activity State"
-msgstr "Tegevuse seis"
+msgstr "Tegevuse staatus"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__activity_type_icon
 #: model:ir.model.fields,field_description:event.field_event_registration__activity_type_icon
 msgid "Activity Type Icon"
-msgstr "Tegevuse liigi sümbol"
+msgstr "Tegevustüübi ikoon"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_stage_view_form
@@ -813,7 +820,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:event.view_event_form
 #: model_terms:ir.ui.view,arch_db:event.view_event_type_form
 msgid "Add some internal notes (to do lists, contact info, ...)"
-msgstr ""
+msgstr "Lisa sisemisi märkmeid (tegevuste nimekiri, kontakt jms)"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__address_search
@@ -834,18 +841,18 @@ msgstr ""
 #: model:ir.model.fields.selection,name:event.selection__event_mail__interval_type__after_sub
 #: model:ir.model.fields.selection,name:event.selection__event_type_mail__interval_type__after_sub
 msgid "After each registration"
-msgstr ""
+msgstr "Peale igat registreerimist"
 
 #. module: event
 #: model:ir.model.fields.selection,name:event.selection__event_mail__interval_type__after_event
 #: model:ir.model.fields.selection,name:event.selection__event_type_mail__interval_type__after_event
 msgid "After the event"
-msgstr ""
+msgstr "Peale sündmust"
 
 #. module: event
 #: model:event.tag.category,name:event.event_tag_category_1
 msgid "Age"
-msgstr ""
+msgstr "Vanus"
 
 #. module: event
 #: model:event.event,name:event.event_6
@@ -862,6 +869,13 @@ msgstr ""
 #. module: event
 #: model:event.stage,name:event.event_stage_announced
 msgid "Announced"
+msgstr ""
+
+#. module: event
+#. openerp-web
+#: code:addons/event/static/src/js/tours/event_tour.js:0
+#, python-format
+msgid "Apply change."
 msgstr ""
 
 #. module: event
@@ -912,14 +926,14 @@ msgstr "Manuste arv"
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.res_config_settings_view_form
 msgid "Attendance"
-msgstr "Kohalolek"
+msgstr "Kohalviibimine"
 
 #. module: event
 #: model:ir.model.fields.selection,name:event.selection__event_registration__state__done
 #: model_terms:ir.ui.view,arch_db:event.view_event_registration_form
 #: model_terms:ir.ui.view,arch_db:event.view_registration_search
 msgid "Attended"
-msgstr ""
+msgstr "Osales"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_registration__date_closed
@@ -936,7 +950,7 @@ msgstr "Osaleja"
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_registration__name
 msgid "Attendee Name"
-msgstr ""
+msgstr "Osaleja nimi"
 
 #. module: event
 #: model:ir.actions.act_window,name:event.act_event_registration_from_event
@@ -965,13 +979,13 @@ msgstr ""
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_type__auto_confirm
 msgid "Automatically Confirm Registrations"
-msgstr ""
+msgstr "Kinnita registreerimised automaatselt"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__seats_available
 #: model:ir.model.fields,field_description:event.field_event_event_ticket__seats_available
 msgid "Available Seats"
-msgstr ""
+msgstr "Vabad kohad"
 
 #. module: event
 #: model_terms:event.event,description:event.event_3
@@ -989,7 +1003,7 @@ msgstr "Triipkood"
 #: model:ir.model.fields.selection,name:event.selection__event_mail__interval_type__before_event
 #: model:ir.model.fields.selection,name:event.selection__event_type_mail__interval_type__before_event
 msgid "Before the event"
-msgstr ""
+msgstr "Enne sündmust"
 
 #. module: event
 #: code:addons/event/models/event_stage.py:0
@@ -1021,18 +1035,18 @@ msgstr ""
 #. module: event
 #: model:event.stage,name:event.event_stage_booked
 msgid "Booked"
-msgstr ""
+msgstr "Broneeritud"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_report_template_full_page_ticket
 msgid "Booked By"
-msgstr ""
+msgstr "Broneeritud"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_registration__partner_id
 #: model_terms:ir.ui.view,arch_db:event.event_registration_view_kanban
 msgid "Booked by"
-msgstr ""
+msgstr "Broneeritud"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_res_config_settings__module_event_booth
@@ -1082,7 +1096,7 @@ msgstr "Kategooria"
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_tag__category_sequence
 msgid "Category Sequence"
-msgstr ""
+msgstr "Kategooria järjestus"
 
 #. module: event
 #: model_terms:event.event,description:event.event_2
@@ -1138,18 +1152,18 @@ msgstr "Koosta e-kiri"
 #: model:event.tag,name:event.event_tag_category_3_tag_2
 #: model:event.type,name:event.event_type_data_conference
 msgid "Conference"
-msgstr ""
+msgstr "Konverents"
 
 #. module: event
 #: model:event.event,name:event.event_2
 #: model_terms:event.event,description:event.event_2
 msgid "Conference for Architects"
-msgstr ""
+msgstr "Arhitektide konverents"
 
 #. module: event
 #: model_terms:event.event,description:event.event_0
 msgid "Conferences, workshops and trainings will be organized in 6 rooms:"
-msgstr ""
+msgstr "Konveretsid, töötoad ja koolitused korraldatakse kuues ruumis:"
 
 #. module: event
 #: model:ir.model,name:event.model_res_config_settings
@@ -1170,7 +1184,7 @@ msgstr "Kinnita"
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_registration_view_kanban
 msgid "Confirm Attendance"
-msgstr ""
+msgstr "Kinnita osalemine"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_registration_view_kanban
@@ -1189,7 +1203,7 @@ msgstr "Kinnitatud"
 #: model_terms:ir.ui.view,arch_db:event.view_event_form
 #: model_terms:ir.ui.view,arch_db:event.view_event_type_form
 msgid "Confirmed Attendees"
-msgstr ""
+msgstr "Kinnitanud osalejad"
 
 #. module: event
 #: model:ir.model,name:event.model_res_partner
@@ -1209,22 +1223,22 @@ msgstr ""
 #. module: event
 #: model_terms:ir.actions.act_window,help:event.action_event_view
 msgid "Create an Event"
-msgstr ""
+msgstr "Loo sündmus"
 
 #. module: event
 #: model_terms:ir.actions.act_window,help:event.event_stage_action
 msgid "Create an Event Stage"
-msgstr ""
+msgstr "Loo sündmuse etapp"
 
 #. module: event
 #: model_terms:ir.actions.act_window,help:event.event_tag_category_action_tree
 msgid "Create an Event Tag Category"
-msgstr ""
+msgstr "Loo sündmuse sildi kategooria"
 
 #. module: event
 #: model_terms:ir.actions.act_window,help:event.action_event_type
 msgid "Create an Event Template"
-msgstr ""
+msgstr "Loo sündmuse mall"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__create_uid
@@ -1259,7 +1273,7 @@ msgstr "Loomise kuupäev"
 #. module: event
 #: model:event.tag,name:event.event_tag_category_2_tag_1
 msgid "Culture"
-msgstr ""
+msgstr "Kultuur"
 
 #. module: event
 #: code:addons/event/models/event_registration.py:0
@@ -1277,13 +1291,13 @@ msgstr "Kliendi e-post"
 #: model_terms:ir.ui.view,arch_db:event.event_event_view_form_quick_create
 #: model_terms:ir.ui.view,arch_db:event.view_event_form
 msgid "Date"
-msgstr "Date"
+msgstr "Kuupäev"
 
 #. module: event
 #: model:ir.model.fields.selection,name:event.selection__event_mail__interval_unit__days
 #: model:ir.model.fields.selection,name:event.selection__event_type_mail__interval_unit__days
 msgid "Days"
-msgstr "päev(a)"
+msgstr "Päevad"
 
 #. module: event
 #: model:ir.model.fields,help:event.field_event_event_ticket__seats_max
@@ -1293,6 +1307,9 @@ msgid ""
 "you will not be able to sell tickets anymore. Set 0 to ignore this rule set "
 "as unlimited."
 msgstr ""
+"Määrake saadaolevate piletite arv. Kui teil on liiga palju registreerumisi, "
+"ei saa te enam pileteid müüa. Määrake 0, et piletite müük oleks "
+"limiteerimata."
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__description
@@ -1304,12 +1321,12 @@ msgstr "Kirjeldus"
 #. module: event
 #: model:event.event,name:event.event_0
 msgid "Design Fair Los Angeles"
-msgstr ""
+msgstr "Disainilaat Los Angeles"
 
 #. module: event
 #: model:event.event,subtitle:event.event_4
 msgid "Discover how to grow a sustainable business with our experts."
-msgstr ""
+msgstr "Avastage, kuidas koos meie ekspertidega jätkusuutlikku äri kasvatada."
 
 #. module: event
 #: model_terms:res.partner,website_description:event.res_partner_event_1
@@ -1342,7 +1359,7 @@ msgstr "Näidatav nimi"
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.res_config_settings_view_form
 msgid "Display Sponsors and Exhibitors on your event pages"
-msgstr ""
+msgstr "Näidake oma sündmuste lehtedel sponsoreid ja eksponente"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_mail__sequence
@@ -1389,7 +1406,7 @@ msgstr ""
 #. module: event
 #: model:event.stage,name:event.event_stage_done
 msgid "Ended"
-msgstr ""
+msgstr "Lõppenud"
 
 #. module: event
 #: model:event.event,subtitle:event.event_2
@@ -1410,7 +1427,7 @@ msgstr "Sündmus"
 #. module: event
 #: model:ir.model,name:event.model_event_mail
 msgid "Event Automated Mailing"
-msgstr ""
+msgstr "Sündmuste automatiseeritud postitamine"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event_ticket__event_type_id
@@ -1424,12 +1441,12 @@ msgstr "Ürituse kategooria"
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_tag_view_form
 msgid "Event Category Tag"
-msgstr ""
+msgstr "Ürituse kategooria silt"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_registration__event_end_date
 msgid "Event End Date"
-msgstr ""
+msgstr "Ürituse lõppkuupäev"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.res_config_settings_view_form
@@ -1439,32 +1456,32 @@ msgstr ""
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_registration_form
 msgid "Event Information"
-msgstr ""
+msgstr "Sündmuse informatsioon"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_mail_form
 msgid "Event Mail Scheduler"
-msgstr ""
+msgstr "Sündmuse kirja planeerija"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_mail_tree
 msgid "Event Mail Schedulers"
-msgstr ""
+msgstr "Sündmuse kirja planeerijad"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_form
 msgid "Event Name"
-msgstr ""
+msgstr "Sündmuse nimi"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_calendar
 msgid "Event Organization"
-msgstr ""
+msgstr "Sündmuse organisatsioon"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_registration__event_organizer_id
 msgid "Event Organizer"
-msgstr ""
+msgstr "Sündmuse korraldaja"
 
 #. module: event
 #: model:ir.model,name:event.model_event_registration
@@ -1477,7 +1494,7 @@ msgstr "Sündmuse registreerimine"
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_registration__event_user_id
 msgid "Event Responsible"
-msgstr ""
+msgstr "Sündmuse eest vastutaja"
 
 #. module: event
 #: code:addons/event/models/event_mail.py:0
@@ -1500,36 +1517,36 @@ msgstr ""
 #. module: event
 #: model:ir.model,name:event.model_event_stage
 msgid "Event Stage"
-msgstr ""
+msgstr "Sündmuse etapp"
 
 #. module: event
 #: model:ir.actions.act_window,name:event.event_stage_action
 #: model:ir.ui.menu,name:event.event_stage_menu
 msgid "Event Stages"
-msgstr ""
+msgstr "Sündmuse etapid"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_registration__event_begin_date
 #: model_terms:ir.ui.view,arch_db:event.view_registration_search
 msgid "Event Start Date"
-msgstr ""
+msgstr "Sündmuse alguskuupäev"
 
 #. module: event
 #: model:ir.model,name:event.model_event_tag
 msgid "Event Tag"
-msgstr ""
+msgstr "Sündmuse silt"
 
 #. module: event
 #: model:ir.model,name:event.model_event_tag_category
 msgid "Event Tag Category"
-msgstr ""
+msgstr "Sündmuse sildi kategooria"
 
 #. module: event
 #: model:ir.actions.act_window,name:event.event_tag_category_action_tree
 #: model:ir.ui.menu,name:event.menu_event_category
 #: model_terms:ir.ui.view,arch_db:event.event_tag_view_tree
 msgid "Event Tags Categories"
-msgstr ""
+msgstr "Sündmuse siltide kategooriad"
 
 #. module: event
 #: model:ir.model,name:event.model_event_type
@@ -1537,7 +1554,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:event.view_event_type_form
 #: model_terms:ir.ui.view,arch_db:event.view_event_type_tree
 msgid "Event Template"
-msgstr ""
+msgstr "Sündmuse mall"
 
 #. module: event
 #: model:ir.model,name:event.model_event_type_ticket
@@ -1548,14 +1565,14 @@ msgstr "Sündmuse malli pilet"
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_type_ticket_view_tree_from_type
 msgid "Event Template Tickets"
-msgstr ""
+msgstr "Sündmuse malli piletid"
 
 #. module: event
 #: model:ir.actions.act_window,name:event.action_event_type
 #: model:ir.ui.menu,name:event.menu_event_type
 #: model_terms:ir.ui.view,arch_db:event.event_type_view_search
 msgid "Event Templates"
-msgstr ""
+msgstr "Sündmuse mallid"
 
 #. module: event
 #: model_terms:ir.actions.act_window,help:event.action_event_type
@@ -1593,6 +1610,8 @@ msgid ""
 "Event stages are used to track the progress of an Event from its origin "
 "until its conclusion."
 msgstr ""
+"Sündmuse etappe kasutatakse sündmuse edenemise jälgimiseks selle algusest "
+"kuni lõpuni."
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_event_ticket_form_view
@@ -1604,7 +1623,7 @@ msgstr ""
 #: model:ir.cron,cron_name:event.event_mail_scheduler
 #: model:ir.cron,name:event.event_mail_scheduler
 msgid "Event: Mail Scheduler"
-msgstr ""
+msgstr "Sündmus: kirja planeerija"
 
 #. module: event
 #: model:mail.template,name:event.event_registration_mail_template_badge
@@ -1614,12 +1633,12 @@ msgstr ""
 #. module: event
 #: model:mail.template,name:event.event_subscription
 msgid "Event: Registration Confirmation"
-msgstr ""
+msgstr "Sündmus: Registreerimise kinnitus"
 
 #. module: event
 #: model:mail.template,name:event.event_reminder
 msgid "Event: Reminder"
-msgstr ""
+msgstr "Sündmus: Meeldetuletus"
 
 #. module: event
 #: model:ir.actions.act_window,name:event.action_event_view
@@ -1636,13 +1655,13 @@ msgstr "Sündmused"
 #. module: event
 #: model:ir.actions.act_window,name:event.action_event_mail
 msgid "Events Mail Schedulers"
-msgstr ""
+msgstr "Sündmuste kirja planeerija"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_stage_view_form
 #: model_terms:ir.ui.view,arch_db:event.event_stage_view_tree
 msgid "Events Stage"
-msgstr ""
+msgstr "Sündmuste etapp"
 
 #. module: event
 #: model:ir.model.fields,help:event.field_event_type__auto_confirm
@@ -1679,7 +1698,7 @@ msgstr ""
 #. module: event
 #: model:event.type,name:event.event_type_0
 msgid "Exhibition"
-msgstr ""
+msgstr "Näitus"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_registration_search
@@ -1689,17 +1708,17 @@ msgstr "Eeldatav"
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_tree
 msgid "Expected Attendees"
-msgstr ""
+msgstr "Eeldatavad osalejad"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_kanban
 msgid "Expected attendees"
-msgstr ""
+msgstr "Eeldatavad osalejad"
 
 #. module: event
 #: model:event.event,subtitle:event.event_3
 msgid "Experience live music, local food and beverages."
-msgstr ""
+msgstr "Kogege elavat muusikat, kohalikku toitu ja jooke."
 
 #. module: event
 #: model:ir.actions.report,name:event.action_report_event_registration_foldable_badge
@@ -1748,7 +1767,7 @@ msgstr "Font awesome icon nt. fa-tasks"
 #: model_terms:event.event,description:event.event_5
 #: model_terms:event.event,description:event.event_7
 msgid "For any additional information, please contact us at"
-msgstr ""
+msgstr "Lisateabe saamiseks võtke meiega ühendust"
 
 #. module: event
 #: model:ir.model.fields,help:event.field_event_event__seats_max
@@ -1771,17 +1790,17 @@ msgstr ""
 #. module: event
 #: model:event.event.ticket,name:event.event_0_ticket_0
 msgid "Free"
-msgstr "Vaba"
+msgstr "Tasuta"
 
 #. module: event
 #: model:event.event.ticket,description:event.event_0_ticket_0
 msgid "Free entrance, no food !"
-msgstr ""
+msgstr "Tasuta sissepääs, toitu pole!"
 
 #. module: event
 #: model:event.stage,description:event.event_stage_new
 msgid "Freshly created"
-msgstr ""
+msgstr "Värskelt loodud"
 
 #. module: event
 #: model_terms:ir.actions.act_window,help:event.action_registration
@@ -1810,7 +1829,7 @@ msgstr ""
 #. module: event
 #: model:event.stage,description:event.event_stage_done
 msgid "Fully ended"
-msgstr ""
+msgstr "Täielikult lõppenud"
 
 #. module: event
 #: model_terms:event.event,description:event.event_2
@@ -1831,7 +1850,7 @@ msgstr ""
 #. module: event
 #: model:event.event,subtitle:event.event_0
 msgid "Get Inspired • Stay Connected • Have Fun"
-msgstr ""
+msgstr "Hankige inspiratsiooni • Püsige ühenduses • Lõbutsege"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_mail__mail_state
@@ -1848,12 +1867,12 @@ msgstr ""
 #: code:addons/event/static/src/js/tours/event_tour.js:0
 #, python-format
 msgid "Great! Now all you have to do is wait for your attendees to show up!"
-msgstr ""
+msgstr "Suurepärane! Nüüd jääb üle vaid oodata, kuni osalejad kohale tulevad!"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_stage__legend_done
 msgid "Green Kanban Label"
-msgstr "Roheline Kanban´i silt."
+msgstr "Roheline Kanbani silt"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_stage__legend_normal
@@ -1864,7 +1883,7 @@ msgstr "Hall Kanbani silt"
 #: model_terms:ir.ui.view,arch_db:event.view_event_search
 #: model_terms:ir.ui.view,arch_db:event.view_registration_search
 msgid "Group By"
-msgstr "Grupeeri"
+msgstr "Rühmitamine"
 
 #. module: event
 #: model_terms:res.partner,website_description:event.res_partner_event_1
@@ -1878,7 +1897,7 @@ msgstr "Hea meel olla Sponsor"
 #: model:ir.model.fields,field_description:event.field_event_event__has_message
 #: model:ir.model.fields,field_description:event.field_event_registration__has_message
 msgid "Has Message"
-msgstr ""
+msgstr "On sõnum"
 
 #. module: event
 #: model_terms:event.event,description:event.event_2
@@ -1893,7 +1912,7 @@ msgstr ""
 #. module: event
 #: model:event.event,name:event.event_5
 msgid "Hockey Tournament"
-msgstr ""
+msgstr "Hokiturniir"
 
 #. module: event
 #: model:ir.model.fields.selection,name:event.selection__event_mail__interval_unit__hours
@@ -1947,19 +1966,19 @@ msgstr "Ikoon"
 #: code:addons/event/static/src/icon_selection_field/icon_selection_field.js:0
 #, python-format
 msgid "Icon Selection"
-msgstr ""
+msgstr "Ikooni valik"
 
 #. module: event
 #: model:ir.model.fields,help:event.field_event_event__activity_exception_icon
 #: model:ir.model.fields,help:event.field_event_registration__activity_exception_icon
 msgid "Icon to indicate an exception activity."
-msgstr "Ikoon, mis näitab erandi tegevust"
+msgstr "Ikoon, mis näitab erandi tegevust."
 
 #. module: event
 #: model:ir.model.fields,help:event.field_event_event__message_needaction
 #: model:ir.model.fields,help:event.field_event_registration__message_needaction
 msgid "If checked, new messages require your attention."
-msgstr "Kui märgitud, siis uued sõnumid nõuavad Su tähelepanu."
+msgstr "Kui kontrollitud, siis uued sõnumid nõuavad Su tähelepanu."
 
 #. module: event
 #: model:ir.model.fields,help:event.field_event_event__message_has_error
@@ -1978,7 +1997,7 @@ msgstr ""
 #. module: event
 #: model_terms:event.event,ticket_instructions:event.event_0
 msgid "If you don't have this ticket, you will <b>not</b> be allowed entry!"
-msgstr ""
+msgstr "Kui teil seda piletit pole, <b>ei</b> lubata teil siseneda!"
 
 #. module: event
 #: model_terms:event.event,description:event.event_5
@@ -1991,12 +2010,12 @@ msgstr ""
 #: model:ir.model.fields.selection,name:event.selection__event_mail__interval_unit__now
 #: model:ir.model.fields.selection,name:event.selection__event_type_mail__interval_unit__now
 msgid "Immediately"
-msgstr ""
+msgstr "Koheselt"
 
 #. module: event
 #: model_terms:event.event,ticket_instructions:event.event_0
 msgid "Important ticket information"
-msgstr ""
+msgstr "Oluline pileti informatsioon"
 
 #. module: event
 #: code:addons/event/models/event_stage.py:0
@@ -2027,28 +2046,28 @@ msgstr "Intervall"
 #. module: event
 #: model_terms:event.event,description:event.event_2
 msgid "Introduction, CRM, Sales Management"
-msgstr ""
+msgstr "Sissejuhatus, CRM, müügijuhtimine"
 
 #. module: event
 #: code:addons/event/models/event_registration.py:0
 #, python-format
 msgid "Invalid event / ticket choice"
-msgstr ""
+msgstr "Kehtetu sündmuse/pileti valik"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event_ticket__sale_available
 msgid "Is Available"
-msgstr "On saadaval"
+msgstr "Saadaval"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event_ticket__is_expired
 msgid "Is Expired"
-msgstr ""
+msgstr "Aegunud"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__is_finished
 msgid "Is Finished"
-msgstr ""
+msgstr "Lõpetatud"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__message_is_follower
@@ -2059,12 +2078,12 @@ msgstr "Jälgija"
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__is_one_day
 msgid "Is One Day"
-msgstr ""
+msgstr "Üks päev"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__is_ongoing
 msgid "Is Ongoing"
-msgstr ""
+msgstr "Käimasolev"
 
 #. module: event
 #: model:ir.model.fields,help:event.field_event_type__seats_max
@@ -2111,7 +2130,7 @@ msgstr "Kanbani seisund"
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__kanban_state_label
 msgid "Kanban State Label"
-msgstr ""
+msgstr "Kanban´i oleku silt"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__legend_done
@@ -2136,7 +2155,7 @@ msgstr "Viimased 30 päeva"
 #: model:ir.model.fields,field_description:event.field_event_type_mail____last_update
 #: model:ir.model.fields,field_description:event.field_event_type_ticket____last_update
 msgid "Last Modified on"
-msgstr "Viimati muudetud"
+msgstr "Viimati muudetud (millal)"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__write_uid
@@ -2151,7 +2170,7 @@ msgstr "Viimati muudetud"
 #: model:ir.model.fields,field_description:event.field_event_type_mail__write_uid
 #: model:ir.model.fields,field_description:event.field_event_type_ticket__write_uid
 msgid "Last Updated by"
-msgstr "Viimati uuendas"
+msgstr "Viimati uuendatud (kelle poolt)"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__write_date
@@ -2179,25 +2198,25 @@ msgstr "Hilinenud tegevused"
 #: code:addons/event/static/src/js/tours/event_tour.js:0
 #, python-format
 msgid "Let's create your first <b>event</b>."
-msgstr ""
+msgstr "Loome teie esimese <b>sündmuse</b>."
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__seats_limited
 #: model:ir.model.fields,field_description:event.field_event_event_ticket__seats_limited
 #: model:ir.model.fields,field_description:event.field_event_type_ticket__seats_limited
 msgid "Limit Attendees"
-msgstr ""
+msgstr "Limiteeri osalejad"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_form
 #: model_terms:ir.ui.view,arch_db:event.view_event_type_form
 msgid "Limit Registrations"
-msgstr ""
+msgstr "Limiteeri registreerimised"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_type__has_seats_limitation
 msgid "Limited Seats"
-msgstr ""
+msgstr "Limiteeri kohad"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.res_config_settings_view_form
@@ -2244,12 +2263,12 @@ msgstr ""
 #. module: event
 #: model:ir.model,name:event.model_event_type_mail
 msgid "Mail Scheduling on Event Category"
-msgstr ""
+msgstr "Sündmuse kategooria kirjade ajastamine"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_mail_registration__mail_sent
 msgid "Mail Sent"
-msgstr ""
+msgstr "Kiri saadetud"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__message_main_attachment_id
@@ -2275,30 +2294,30 @@ msgstr "Turundus"
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_event_ticket_view_tree_from_event
 msgid "Maximum"
-msgstr ""
+msgstr "Maksimum"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__seats_max
 #: model:ir.model.fields,field_description:event.field_event_event_ticket__seats_max
 #: model:ir.model.fields,field_description:event.field_event_type_ticket__seats_max
 msgid "Maximum Attendees"
-msgstr ""
+msgstr "Maksimaalne osalejate arv"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_type__seats_max
 msgid "Maximum Registrations"
-msgstr ""
+msgstr "Maksimaalne registreerimiste arv"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_tree
 msgid "Maximum Seats"
-msgstr ""
+msgstr "Maksimaalne kohtade arv"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_registration__utm_medium_id
 #: model_terms:ir.ui.view,arch_db:event.view_registration_search
 msgid "Medium"
-msgstr "Levitamise vahend"
+msgstr "Keskmine"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__message_has_error
@@ -2321,12 +2340,12 @@ msgstr "Mobiil"
 #: model:ir.model.fields.selection,name:event.selection__event_mail__interval_unit__months
 #: model:ir.model.fields.selection,name:event.selection__event_type_mail__interval_unit__months
 msgid "Months"
-msgstr "kuu järel"
+msgstr "Kuud"
 
 #. module: event
 #: model:event.tag,name:event.event_tag_category_2_tag_2
 msgid "Music"
-msgstr ""
+msgstr "Muusika"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__my_activity_date_deadline
@@ -2356,7 +2375,7 @@ msgstr "Uus"
 #: model:ir.model.fields,field_description:event.field_event_event__activity_calendar_event_id
 #: model:ir.model.fields,field_description:event.field_event_registration__activity_calendar_event_id
 msgid "Next Activity Calendar Event"
-msgstr ""
+msgstr "Järgmine tegevus kalendris"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__activity_date_deadline
@@ -2379,7 +2398,7 @@ msgstr "Järgmise tegevuse tüüp"
 #. module: event
 #: model_terms:ir.actions.act_window,help:event.event_registration_action
 msgid "No Attendees expected yet!"
-msgstr ""
+msgstr "Eeldatavaid osalejaid veel pole!"
 
 #. module: event
 #: model_terms:ir.actions.act_window,help:event.act_event_registration_from_event
@@ -2387,7 +2406,7 @@ msgstr ""
 #: model_terms:ir.actions.act_window,help:event.event_registration_action_kanban
 #: model_terms:ir.actions.act_window,help:event.event_registration_action_stats_from_event
 msgid "No Attendees yet!"
-msgstr ""
+msgstr "Osalejaid veel pole!"
 
 #. module: event
 #: code:addons/event/models/event_registration.py:0
@@ -2412,7 +2431,7 @@ msgstr "Märkused"
 #. module: event
 #: model_terms:ir.actions.act_window,help:event.action_event_mail
 msgid "Nothing Scheduled yet!"
-msgstr ""
+msgstr "Midagi pole veel plaanitud!"
 
 #. module: event
 #. openerp-web
@@ -2420,6 +2439,8 @@ msgstr ""
 #, python-format
 msgid "Now that your event is ready, click here to move it to another stage."
 msgstr ""
+"Nüüd, kui teie sündmus on valmis, klõpsake selle teise etappi teisaldamiseks"
+" siin."
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__message_needaction_counter
@@ -2430,7 +2451,7 @@ msgstr "Toimingute arv"
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__seats_used
 msgid "Number of Attendees"
-msgstr ""
+msgstr "Osalejate arv"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__seats_expected
@@ -2440,7 +2461,7 @@ msgstr "Eeldatav osavõtjate arv"
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__seats_reserved
 msgid "Number of Registrations"
-msgstr ""
+msgstr "Registreerimiste arv"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__message_has_error_counter
@@ -2468,12 +2489,12 @@ msgstr "Eesmärgid"
 #. module: event
 #: model_terms:event.event,description:event.event_3
 msgid "Once again we assembled the most legendary bands in Rock history."
-msgstr ""
+msgstr "Taas panime kokku rocki ajaloo legendaarseimad bändid."
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_registration_search
 msgid "Ongoing Events"
-msgstr ""
+msgstr "Käimasoleva sündmused"
 
 #. module: event
 #: model:event.tag,name:event.event_tag_category_3_tag_1
@@ -2483,12 +2504,19 @@ msgstr "Online"
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.res_config_settings_view_form
 msgid "Online Exhibitors"
-msgstr ""
+msgstr "Veebi eksponendid"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_res_config_settings__module_website_event_sale
 msgid "Online Ticketing"
-msgstr ""
+msgstr "Veebis piletite müük"
+
+#. module: event
+#. openerp-web
+#: code:addons/event/static/src/js/tours/event_tour.js:0
+#, python-format
+msgid "Open date range picker. Pick a Start date for your event"
+msgstr "Ava kuupäevavahemiku valija. Valige oma sündmuse alguskuupäev"
 
 #. module: event
 #: model_terms:event.event,description:event.event_0
@@ -2513,7 +2541,7 @@ msgstr ""
 #: code:addons/event/models/event_event.py:0
 #, python-format
 msgid "Operation not supported."
-msgstr ""
+msgstr "Toimingut ei toetata."
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__organizer_id
@@ -2560,7 +2588,7 @@ msgstr "Osaleja"
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_registration_search
 msgid "Partner"
-msgstr "Partner"
+msgstr "Kontakti kaart"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_registration__phone
@@ -2571,7 +2599,7 @@ msgstr "Telefon"
 #: model_terms:event.event,ticket_instructions:event.event_0
 msgid ""
 "Please come <b>at least</b> 30 minutes before the beginning of the event."
-msgstr ""
+msgstr "Tulge <b>vähemalt</b> 30 minutit enne ürituse algust."
 
 #. module: event
 #: model_terms:event.event,description:event.event_2
@@ -2582,12 +2610,12 @@ msgstr ""
 #: model_terms:event.event,description:event.event_0
 #: model_terms:event.event,description:event.event_2
 msgid "Program"
-msgstr ""
+msgstr "Programm"
 
 #. module: event
 #: model_terms:event.event,description:event.event_2
 msgid "Project management, Human resources, Contract management."
-msgstr "Projekti juhtimine, inimressursid, lepingute haldus"
+msgstr "Projekti juhtimine, inimressursid, lepingute haldus."
 
 #. module: event
 #: model_terms:event.event,description:event.event_2
@@ -2624,7 +2652,7 @@ msgstr "Järgmise etapi jaoks valmis"
 #: code:addons/event/static/src/js/tours/event_tour.js:0
 #, python-format
 msgid "Ready to <b>organize events</b> in a few minutes? Let's get started!"
-msgstr ""
+msgstr "Kas olete valmis mõne minutiga <b>üritusi korraldama</b>? Alustame!"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_stage__legend_blocked
@@ -2648,7 +2676,7 @@ msgstr "Registreerimine"
 #: model_terms:ir.ui.view,arch_db:event.view_event_registration_tree
 #: model_terms:ir.ui.view,arch_db:event.view_registration_search
 msgid "Registration Date"
-msgstr ""
+msgstr "Registreerimise kuupäev"
 
 #. module: event
 #: model:res.groups,name:event.group_event_registration_desk
@@ -2658,32 +2686,32 @@ msgstr "Registreerimislaud"
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event_ticket__end_sale_datetime
 msgid "Registration End"
-msgstr ""
+msgstr "Registreerimise lõpp"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_registration_search
 msgid "Registration ID"
-msgstr ""
+msgstr "Registreerimise ID"
 
 #. module: event
 #: model:ir.model,name:event.model_event_mail_registration
 msgid "Registration Mail Scheduler"
-msgstr ""
+msgstr "Registreerimiskirja planeerija"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_mail_form
 msgid "Registration Mails"
-msgstr ""
+msgstr "Registreerimiskirjad"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event_ticket__start_sale_datetime
 msgid "Registration Start"
-msgstr ""
+msgstr "Registreerimise algus"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_res_config_settings__module_website_event_questions
 msgid "Registration Survey"
-msgstr ""
+msgstr "Registreerimise küsitlus"
 
 #. module: event
 #: code:addons/event/models/event_ticket.py:0
@@ -2694,17 +2722,17 @@ msgstr ""
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_mail_form
 msgid "Registration mail"
-msgstr ""
+msgstr "Registreerimiskiri"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__event_registrations_open
 msgid "Registration open"
-msgstr ""
+msgstr "Registreerimine avatud"
 
 #. module: event
 #: model:ir.actions.act_window,name:event.event_registration_action_stats_from_event
 msgid "Registration statistics"
-msgstr ""
+msgstr "Registreerimise statistika"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event_ticket__registration_ids
@@ -2719,11 +2747,15 @@ msgid ""
 "- there are seats available on event\n"
 "- the tickets are sellable (if ticketing is used)"
 msgstr ""
+"Registreerimine on avatud, kui:\n"
+"- üritus ei ole lõppenud\n"
+"- üritusel on vabu kohti\n"
+"- piletid on müüdavad (kui kasutatakse piletit)"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__event_registrations_started
 msgid "Registrations started"
-msgstr ""
+msgstr "Registreerimised algasid"
 
 #. module: event
 #: model:ir.ui.menu,name:event.menu_reporting_events
@@ -2733,7 +2765,7 @@ msgstr "Aruandlus"
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event_ticket__seats_reserved
 msgid "Reserved Seats"
-msgstr ""
+msgstr "Reserveeritud kohad"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__user_id
@@ -2780,6 +2812,8 @@ msgid ""
 "Schedule and organize your events: handle registrations, send automated "
 "confirmation emails, sell tickets, etc."
 msgstr ""
+"Planeerige ja korraldage oma üritusi: tegelege registreerimisega, saatke "
+"automaatseid kinnitusmeile, müüge pileteid jne."
 
 #. module: event
 #: model:ir.model.fields.selection,name:event.selection__event_mail__mail_state__scheduled
@@ -2795,21 +2829,22 @@ msgstr "Planeeritud aeg"
 #: model_terms:event.event,description:event.event_5
 msgid "Seasoned Hockey Fans and curious people, this tournament is for you !"
 msgstr ""
+"Kogenud hokifännid ja uudishimulikud inimesed, see turniir on teie jaoks!"
 
 #. module: event
 #: model:event.type,name:event.event_type_data_ticket
 msgid "Sell Online"
-msgstr ""
+msgstr "Müü veebis"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.res_config_settings_view_form
 msgid "Sell tickets on your website"
-msgstr ""
+msgstr "Müü pileteid veebilehel"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.res_config_settings_view_form
 msgid "Sell tickets with sales orders"
-msgstr ""
+msgstr "Müü pileteid müügitellimusel"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_mail__notification_type
@@ -2894,7 +2929,7 @@ msgstr "Alusdokument"
 #: model:event.tag,name:event.event_tag_category_2_tag_3
 #: model:event.type,name:event.event_type_2
 msgid "Sport"
-msgstr ""
+msgstr "Sport"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__stage_id
@@ -2915,7 +2950,7 @@ msgstr "Etapi nimi"
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_stage__description
 msgid "Stage description"
-msgstr ""
+msgstr "Etapi kirjeldus"
 
 #. module: event
 #: model:event.event.ticket,name:event.event_0_ticket_1
@@ -2939,7 +2974,7 @@ msgstr ""
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__start_sale_datetime
 msgid "Start sale date"
-msgstr ""
+msgstr "Müügi alguskuupäev"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_registration__state
@@ -2959,7 +2994,7 @@ msgstr ""
 "Tegevuspõhised staatused\n"
 "Üle aja: Tähtaeg on juba möödas\n"
 "Täna: Tegevuse tähtaeg on täna\n"
-"Planeeritud: Tulevased tegevused"
+"Planeeritud: Tulevased tegevused."
 
 #. module: event
 #: model:ir.model.fields,help:event.field_event_tag__color
@@ -3134,7 +3169,7 @@ msgstr ""
 #: code:addons/event/models/event_event.py:0
 #, python-format
 msgid "This operator is not supported"
-msgstr ""
+msgstr "Seda operaatorit ei toetata"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_stage_view_form
@@ -3152,7 +3187,7 @@ msgstr "Pilet"
 #: model_terms:ir.ui.view,arch_db:event.view_event_form
 #: model_terms:ir.ui.view,arch_db:event.view_event_type_form
 msgid "Ticket Instructions"
-msgstr ""
+msgstr "Pileti juhendid"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_event_ticket_form_view
@@ -3181,7 +3216,7 @@ msgstr "Kasutajatoe piletid"
 #. module: event
 #: model_terms:event.event,ticket_instructions:event.event_0
 msgid "Tickets can be printed or scanned directly from your phone."
-msgstr ""
+msgstr "Pileteid saab skaneerida otse telefonist või prinditult paberilt."
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__date_tz
@@ -3204,7 +3239,7 @@ msgstr "Kokku"
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_form
 msgid "Total Registrations for this Event"
-msgstr ""
+msgstr "Sellele üritusele registreerujate arv"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_res_config_settings__module_website_event_track
@@ -3214,7 +3249,7 @@ msgstr ""
 #. module: event
 #: model:event.type,name:event.event_type_1
 msgid "Training"
-msgstr "Treening"
+msgstr "Koolitus"
 
 #. module: event
 #: model:res.partner,website_short_description:event.res_partner_event_3
@@ -3231,7 +3266,7 @@ msgstr "Tellimise meetod"
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_mail__interval_type
 msgid "Trigger "
-msgstr ""
+msgstr "Tellimise meetod"
 
 #. module: event
 #: model:event.tag.category,name:event.event_tag_category_3
@@ -3254,13 +3289,13 @@ msgstr "KInnitamata"
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__seats_unconfirmed
 msgid "Unconfirmed Registrations"
-msgstr ""
+msgstr "Kinnitamata registreerimised"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event_ticket__seats_unconfirmed
 #: model_terms:ir.ui.view,arch_db:event.view_event_tree
 msgid "Unconfirmed Seats"
-msgstr ""
+msgstr "Kinnitamata kohad"
 
 #. module: event
 #: model_terms:ir.actions.act_window,help:event.action_event_mail
@@ -3268,6 +3303,8 @@ msgid ""
 "Under this technical menu you will find all scheduled communication related "
 "to your events."
 msgstr ""
+"Selle tehnilise menüü alt leiate kogu teie sündmustega seotud ajastatud "
+"suhtluse."
 
 #. module: event
 #: model_terms:event.event,description:event.event_2
@@ -3283,12 +3320,12 @@ msgstr "Ühik"
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_search
 msgid "Upcoming events from today"
-msgstr ""
+msgstr "Tulevased sündmused tänasest"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_search
 msgid "Upcoming/Running"
-msgstr ""
+msgstr "Tulemas/jooksev"
 
 #. module: event
 #: model_terms:ir.actions.act_window,help:event.event_tag_category_action_tree
@@ -3318,19 +3355,19 @@ msgstr "Kasutaja"
 #: model:event.event.ticket,name:event.event_3_ticket_1
 #: model:event.event.ticket,name:event.event_7_ticket_2
 msgid "VIP"
-msgstr ""
+msgstr "VIP"
 
 #. module: event
 #: code:addons/event/models/event_event.py:0
 #: code:addons/event/models/event_event.py:0
 #, python-format
 msgid "Value should be True or False (not %s)"
-msgstr ""
+msgstr "Väide peab olema tõene või väär (mitte %s)"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__address_id
 msgid "Venue"
-msgstr ""
+msgstr "Toimumiskoht"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__address_inline
@@ -3382,7 +3419,7 @@ msgstr "Veebilehe suhtluse ajalugu"
 #: model:ir.model.fields.selection,name:event.selection__event_mail__interval_unit__weeks
 #: model:ir.model.fields.selection,name:event.selection__event_type_mail__interval_unit__weeks
 msgid "Weeks"
-msgstr "nädala järel"
+msgstr "Nädalad"
 
 #. module: event
 #: model_terms:event.event,description:event.event_0
@@ -3448,7 +3485,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:event.event_event_view_form_quick_create
 #: model_terms:ir.ui.view,arch_db:event.view_event_form
 msgid "e.g. Conference for Architects"
-msgstr ""
+msgstr "nt. Arhitektide konverents"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_form
@@ -3459,12 +3496,12 @@ msgstr ""
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_type_form
 msgid "e.g. Online Conferences"
-msgstr ""
+msgstr "nt. Veebikonverents"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_event_ticket_form_view
 msgid "e.g. VIP Ticket"
-msgstr ""
+msgstr "nt. VIP pilet"
 
 #. module: event
 #: model_terms:event.event,description:event.event_2
@@ -3488,25 +3525,25 @@ msgstr ""
 #: code:addons/event/models/event_registration.py:0
 #, python-format
 msgid "in %d days"
-msgstr ""
+msgstr "%d päeva jooksul"
 
 #. module: event
 #: code:addons/event/models/event_registration.py:0
 #, python-format
 msgid "next month"
-msgstr ""
+msgstr "järgmine kuu"
 
 #. module: event
 #: code:addons/event/models/event_registration.py:0
 #, python-format
 msgid "next week"
-msgstr ""
+msgstr "järgmine nädal"
 
 #. module: event
 #: code:addons/event/models/event_registration.py:0
 #, python-format
 msgid "on %(date)s"
-msgstr ""
+msgstr "kuupäeval %(date)s"
 
 #. module: event
 #: model:ir.model.fields,help:event.field_event_event__event_registrations_started
@@ -3518,7 +3555,7 @@ msgstr ""
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_event_ticket_view_kanban_from_event
 msgid "reserved +"
-msgstr ""
+msgstr "reserveeritud +"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_form
@@ -3536,12 +3573,12 @@ msgstr "täna"
 #: code:addons/event/models/event_registration.py:0
 #, python-format
 msgid "tomorrow"
-msgstr ""
+msgstr "homme"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_event_ticket_view_kanban_from_event
 msgid "unconfirmed"
-msgstr ""
+msgstr "kinnitamata"
 
 #. module: event
 #: model:mail.template,subject:event.event_reminder

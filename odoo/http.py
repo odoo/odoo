@@ -343,6 +343,31 @@ def db_filter(dbs, host=None):
 
     return list(dbs)
 
+
+def dispatch_rpc(service_name, method, params):
+    """
+    Perform a RPC call.
+
+    :param str service_name: either "common", "db" or "object".
+    :param str method: the method name of the given service to execute
+    :param Mapping params: the keyword arguments for method call
+    :return: the return value of the called method
+    :rtype: Any
+    """
+    rpc_dispatchers = {
+        'common': odoo.service.common.dispatch,
+        'db': odoo.service.db.dispatch,
+        'object': odoo.service.model.dispatch,
+    }
+
+    with borrow_request():
+        threading.current_thread().uid = None
+        threading.current_thread().dbname = None
+
+        dispatch = rpc_dispatchers[service_name]
+        return dispatch(method, params)
+
+
 def is_cors_preflight(request, endpoint):
     return request.httprequest.method == 'OPTIONS' and endpoint.routing.get('cors', False)
 
@@ -754,10 +779,10 @@ def _generate_routing_rules(modules, nodb_only, converters=None):
                 'readonly': False,
             }
 
-            for cls in unique(reversed(type(ctrl).mro())):  # ancestors first
-                submethod = getattr(cls, method_name, None)
-                if submethod is None:
+            for cls in unique(reversed(type(ctrl).mro()[:-2])):  # ancestors first
+                if method_name not in cls.__dict__:
                     continue
+                submethod = getattr(cls, method_name)
 
                 if not hasattr(submethod, 'original_routing'):
                     _logger.warning("The endpoint %s is not decorated by @route(), decorating it myself.", f'{cls.__module__}.{cls.__name__}.{method_name}')
@@ -832,6 +857,7 @@ class FilesystemSessionStore(sessions.FilesystemSessionStore):
         session.sid = self.generate_key()
         if session.uid and env:
             session.session_token = security.compute_session_token(session, env)
+        session.should_rotate = False
         self.save(session)
 
     def vacuum(self):
@@ -889,6 +915,10 @@ class Session(collections.abc.MutableMapping):
             super().__setattr__(key, val)
         else:
             self[key] = val
+
+    def clear(self):
+        self.data.clear()
+        self.is_dirty = True
 
     #
     # Session methods
@@ -1107,9 +1137,11 @@ class Request:
         self.dispatcher = _dispatchers['http'](self)  # until we match
         #self.params = {}  # set by the Dispatcher
 
-        self.session, self.db = self._get_session_and_dbname()
         self.registry = None
         self.env = None
+
+    def _post_init(self):
+        self.session, self.db = self._get_session_and_dbname()
 
     def _get_session_and_dbname(self):
         # The session is explicit when it comes from the query-string or
@@ -1767,7 +1799,7 @@ class JsonRPCDispatcher(Dispatcher):
         self.request.params = dict(self.jsonrequest.get('params', {}), **args)
         ctx = self.request.params.pop('context', None)
         if ctx is not None and self.request.db:
-            self.request.update_env(context=ctx)
+            self.request.update_context(**ctx)
 
         if self.request.db:
             result = self.request.registry['ir.http']._dispatch(endpoint)
@@ -1937,20 +1969,13 @@ class Application:
                 return
             ProxyFix(fake_app)(environ, fake_start_response)
 
-        # Some URLs in website are concatenated, first url ends with /,
-        # second url starts with /, resulting url contains two following
-        # slashes that must be merged.
-        if environ['REQUEST_METHOD'] == 'GET' and '//' in environ['PATH_INFO']:
-            response = werkzeug.utils.redirect(
-                environ['PATH_INFO'].replace('//', '/'), 301)
-            return response(environ, start_response)
-
         httprequest = werkzeug.wrappers.Request(environ)
         httprequest.user_agent_class = UserAgent  # use vendored userAgent since it will be removed in 2.1
         httprequest.parameter_storage_class = (
             werkzeug.datastructures.ImmutableOrderedMultiDict)
         request = Request(httprequest)
         _request_stack.push(request)
+        request._post_init()
         current_thread.url = httprequest.url
 
         try:

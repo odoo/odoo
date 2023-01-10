@@ -61,7 +61,6 @@ export class SettingsFormController extends formView.Controller {
                 this.dialogService.add(SettingsConfirmationDialog, {
                     body: message,
                     confirm: async () => {
-                        await this.model.root.save({ stayInEdition: true });
                         await this._save();
                         // It doesn't make sense to do the action of the button
                         // as the res.config.settings `execute` method will trigger a reload.

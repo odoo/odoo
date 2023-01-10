@@ -49,6 +49,13 @@ options.registry.SnippetPopup = options.Class.extend({
      */
     onBuilt: function () {
         this._assignUniqueID();
+        // Fix in stable to convert the data-focus bootstrap option from version 4.0 to
+        // 5.1 (renamed to data-bs-focus).
+        const popup = this.$target.closest('.s_popup_middle');
+        if (popup && popup.attr('data-focus')) {
+            popup.attr('data-bs-focus', popup.attr('data-focus'));
+            popup[0].removeAttribute('data-focus');
+        }
     },
     /**
      * @override
@@ -91,8 +98,10 @@ options.registry.SnippetPopup = options.Class.extend({
      * @see this.selectClass for parameters
      */
     moveBlock: function (previewMode, widgetValue, params) {
-        const $container = $(widgetValue === 'moveToFooter' ? 'footer' : 'main');
-        this.$target.closest('.s_popup').prependTo($container.find('.oe_structure:o_editable').first());
+        const containerEl = this.$target[0].ownerDocument.querySelector(widgetValue === 'moveToFooter' ? 'footer' : 'main');
+        const whereEl = $(containerEl).find('.oe_structure:o_editable')[0];
+        const popupEl = this.$target[0].closest('.s_popup');
+        whereEl.prepend(popupEl);
     },
     /**
      * @see this.selectClass for parameters

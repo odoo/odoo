@@ -8,11 +8,11 @@ import { Component, useState, onWillUpdateProps } from "@odoo/owl";
 export class ColorField extends Component {
     setup() {
         this.state = useState({
-            color: this.props.value || "#000000",
+            color: this.props.value || '',
         });
 
         onWillUpdateProps((nextProps) => {
-            this.state.color = nextProps.value || "#000000";
+            this.state.color = nextProps.value || '';
         });
     }
 

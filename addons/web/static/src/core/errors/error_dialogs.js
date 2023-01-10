@@ -63,7 +63,7 @@ export class RPCErrorDialog extends ErrorDialog {
         this.inferTitle();
         this.traceback = this.props.traceback;
         if (this.props.data && this.props.data.debug) {
-            this.traceback = `${this.props.data.debug}`;
+            this.traceback = `${this.props.data.debug}\nThe above server error caused the following client error:\n${this.traceback}`;
         }
     }
     inferTitle() {

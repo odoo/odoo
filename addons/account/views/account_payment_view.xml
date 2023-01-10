@@ -249,9 +249,11 @@
                                 <field name="payment_type" widget="radio" options="{'horizontal': True}"
                                         attrs="{'readonly': [('state', '!=', 'draft')]}"/>
                                 <field name="partner_id" context="{'default_is_company': True}" string="Customer"
+                                       options="{'no_quick_create': True}"
                                        attrs="{'readonly':[('state', '!=', 'draft')],
                                              'invisible':['|', ('partner_type','!=','customer'), ('is_internal_transfer', '=', True)]}"/>
                                 <field name="partner_id" context="{'default_is_company': True}" string="Vendor"
+                                       options="{'no_quick_create': True}"
                                        attrs="{'readonly':[('state', '!=', 'draft')],
                                                'invisible':['|', ('partner_type','!=','supplier'), ('is_internal_transfer', '=', True)]}"/>
                                 <label for="amount"/>

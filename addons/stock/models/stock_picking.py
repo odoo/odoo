@@ -48,7 +48,7 @@ class PickingType(models.Model):
         check_company=True)
     show_entire_packs = fields.Boolean('Move Entire Packages', help="If ticked, you will be able to select entire packages to move")
     warehouse_id = fields.Many2one(
-        'stock.warehouse', 'Warehouse', ondelete='cascade',
+        'stock.warehouse', 'Warehouse', compute='_compute_warehouse_id', store=True, readonly=False, ondelete='cascade',
         check_company=True)
     active = fields.Boolean('Active', default=True)
     use_create_lots = fields.Boolean(
@@ -100,7 +100,7 @@ class PickingType(models.Model):
     def create(self, vals_list):
         for vals in vals_list:
             if 'sequence_id' not in vals or not vals['sequence_id']:
-                if vals['warehouse_id']:
+                if vals.get('warehouse_id'):
                     wh = self.env['stock.warehouse'].browse(vals['warehouse_id'])
                     vals['sequence_id'] = self.env['ir.sequence'].sudo().create({
                         'name': wh.name + ' ' + _('Sequence') + ' ' + vals['sequence_code'],
@@ -207,8 +207,10 @@ class PickingType(models.Model):
                     }
                 }
 
-    @api.onchange('company_id')
-    def _onchange_company_id(self):
+    @api.depends('company_id')
+    def _compute_warehouse_id(self):
+        if self.warehouse_id:
+            return
         if self.company_id:
             warehouse = self.env['stock.warehouse'].search([('company_id', '=', self.company_id.id)], limit=1)
             self.warehouse_id = warehouse
@@ -519,6 +521,7 @@ class Picking(models.Model):
         picking_no_alert.json_popover = False
         for picking in (self - picking_no_alert):
             picking.json_popover = json.dumps({
+                'popoverTemplate': 'stock.PopoverStockRescheduling',
                 'delay_alert_date': format_datetime(self.env, picking.delay_alert_date, dt_format=False),
                 'late_elements': [{
                     'id': late_move.id,
@@ -818,6 +821,14 @@ class Picking(models.Model):
         self.write({'printed': True})
         return self.env.ref('stock.action_report_picking').report_action(self)
 
+    def should_print_delivery_address(self):
+        self.ensure_one()
+        return self.move_ids and self.move_ids[0].partner_id and self._is_to_external_location()
+
+    def _is_to_external_location(self):
+        self.ensure_one()
+        return self.picking_type_code == 'outgoing'
+
     def action_confirm(self):
         self._check_company()
         self.mapped('package_level_ids').filtered(lambda pl: pl.state == 'draft' and not pl.move_ids)._generate_moves()
@@ -1073,7 +1084,7 @@ class Picking(models.Model):
             lines = self.move_ids.filtered(lambda m: m.product_id.type == 'product' and m.state != 'cancel' and m.quantity_done and not m.move_dest_ids)
             if lines:
                 # don't show reception report if all already assigned/nothing to assign
-                wh_location_ids = self.env['stock.location']._search([('id', 'child_of', self.picking_type_id.warehouse_id.view_location_id.id), ('usage', '!=', 'supplier')])
+                wh_location_ids = self.env['stock.location']._search([('id', 'child_of', self.picking_type_id.warehouse_id.view_location_id.ids), ('usage', '!=', 'supplier')])
                 if self.env['stock.move'].search([
                         ('state', 'in', ['confirmed', 'partially_available', 'waiting', 'assigned']),
                         ('product_qty', '>', 0),

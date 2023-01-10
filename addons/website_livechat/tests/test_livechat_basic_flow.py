@@ -9,6 +9,14 @@ from odoo.addons.website_livechat.tests.common import TestLivechatCommon
 
 @tests.tagged('post_install', '-at_install')
 class TestLivechatBasicFlowHttpCase(tests.HttpCase, TestLivechatCommon):
+    def test_channel_created_on_user_interaction(self):
+        self.start_tour('/', 'im_livechat_request_chat', login=None)
+        channel = self.env['mail.channel'].search([['livechat_active', '=', True], ['livechat_visitor_id', '=', self.visitor.id]])
+        self.assertFalse(channel, 'Channel should not be created until user sends a message')
+        self.start_tour('/', 'im_livechat_request_chat_and_send_message', login=None)
+        channel = self.env['mail.channel'].search([['livechat_active', '=', True], ['livechat_visitor_id', '=', self.visitor.id]])
+        self.assertTrue(channel, 'Channel should be created after sending the first message')
+
     def test_visitor_banner_history(self):
         # create visitor history
         self.env['website.track'].create([{

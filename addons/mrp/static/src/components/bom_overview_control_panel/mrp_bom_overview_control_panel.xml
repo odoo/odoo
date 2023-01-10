@@ -6,9 +6,9 @@
             <t t-set-slot="control-panel-bottom-left-buttons">
                 <div class="o_cp_buttons">
                     <div class="o_list_buttons o_mrp_bom_report_buttons">
-                        <button t-on-click="() => this.clickPrint()" type="button" class="btn btn-primary">Print</button>
+                        <button t-on-click="() => this.props.print()" type="button" class="btn btn-primary">Print</button>
                         <t t-if="props.showVariants">
-                            <button t-on-click="() => this.clickPrint(true)" type="button" class="btn btn-primary ms-1">Print All Variants</button>
+                            <button t-on-click="() => this.props.print(true)" type="button" class="btn btn-primary ms-1">Print All Variants</button>
                         </t>
                         <button t-on-click="clickUnfold" type="button" class="btn btn-primary ms-1">Unfold</button>
                     </div>
@@ -30,7 +30,7 @@
                         <div t-if="props.showVariants" class="col-lg-11 row gx-1 mb-1">
                             <label class="col-xl-2 col-lg-3 col-sm-4">Variant:</label>
                             <div class="col-xl-10 col-lg-9 col-sm-8">
-                                <select class="o_input" t-on-change="changeVariant">
+                                <select class="o_input" t-on-change="(ev) => this.props.changeVariant(ev.target.value)">
                                     <option t-foreach="props.variants" t-as="variant" t-att-value="variant" t-key="variant">
                                         <t t-esc="props.variants[variant]"/>
                                     </option>
@@ -42,20 +42,20 @@
             </t>
 
             <t t-set-slot="control-panel-bottom-right">
-                <div class="o_cp_bottom_right_sp">
+                <div class="o_search_options">
                     <t t-if="props.warehouses.length > 1">
                         <Dropdown class="'btn-group'" togglerClass="'btn btn-secondary'">
                             <t t-set-slot="toggler">
                                 <span class="fa fa-home"/> Warehouse: <span t-esc="props.currentWarehouse.name"/>
                             </t>
                             <t t-foreach="props.warehouses" t-as="wh" t-key="wh.id">
-                                <DropdownItem onSelected="() => this.changeWarehouse(wh.id)" t-esc="wh.name"/>
+                                <DropdownItem onSelected="() => this.props.changeWarehouse(wh.id)" t-esc="wh.name"/>
                             </t>
                         </Dropdown>
                     </t>
                     <BomOverviewDisplayFilter
-                        bus="props.bus"
-                        showOptions="props.showOptions"/>
+                        showOptions="props.showOptions"
+                        changeDisplay.bind="props.changeDisplay"/>
                 </div>
             </t>
         </ControlPanel>

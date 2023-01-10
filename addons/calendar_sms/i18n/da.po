@@ -3,17 +3,16 @@
 # 	* calendar_sms
 # 
 # Translators:
-# Martin Trigaux, 2019
-# Sanne Kristensen <sanne@vkdata.dk>, 2019
-# lhmflexerp <lhm@flexerp.dk>, 2019
+# Martin Trigaux, 2022
+# Sanne Kristensen <sanne@vkdata.dk>, 2022
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~12.5\n"
+"Project-Id-Version: Odoo Server 15.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-08-26 08:16+0000\n"
-"PO-Revision-Date: 2019-08-26 09:09+0000\n"
-"Last-Translator: lhmflexerp <lhm@flexerp.dk>, 2019\n"
+"POT-Creation-Date: 2021-10-05 10:53+0000\n"
+"PO-Revision-Date: 2022-09-22 05:45+0000\n"
+"Last-Translator: Sanne Kristensen <sanne@vkdata.dk>, 2022\n"
 "Language-Team: Danish (https://www.transifex.com/odoo/teams/41243/da/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -24,12 +23,12 @@ msgstr ""
 #. module: calendar_sms
 #: model:ir.model,name:calendar_sms.model_calendar_event
 msgid "Calendar Event"
-msgstr ""
+msgstr "Kalender begivenhed"
 
 #. module: calendar_sms
 #: model:sms.template,name:calendar_sms.sms_template_data_calendar_reminder
 msgid "Calendar Event: Reminder"
-msgstr ""
+msgstr "Kalender begivenhed: Påmindelse"
 
 #. module: calendar_sms
 #: model:ir.model,name:calendar_sms.model_calendar_alarm
@@ -42,17 +41,25 @@ msgid "Event Alarm Manager"
 msgstr "Arrangements notifikations ansvarlig"
 
 #. module: calendar_sms
+#: code:addons/calendar_sms/models/calendar_event.py:0
+#, python-format
+msgid "Event reminder: %(name)s, %(time)s."
+msgstr "Begivenheds påmindelse: %(name)s, %(time)s."
+
+#. module: calendar_sms
 #: model:sms.template,body:calendar_sms.sms_template_data_calendar_reminder
-msgid ""
-"Event reminder: ${object.name} on ${object.start_datetime or "
-"object.start_date}"
+msgid "Event reminder: {{ object.name }}, {{ object.display_time }}"
 msgstr ""
 
 #. module: calendar_sms
-#: code:addons/calendar_sms/models/calendar.py:0
-#, python-format
-msgid "Event reminder: %s on %s."
-msgstr "Påmindelse om arrangement: %s den %s."
+#: model_terms:ir.ui.view,arch_db:calendar_sms.view_calendar_event_form_inherited
+msgid "SMS"
+msgstr "SMS"
+
+#. module: calendar_sms
+#: model:ir.model.fields,field_description:calendar_sms.field_calendar_alarm__sms_template_id
+msgid "SMS Template"
+msgstr "SMS skabelon"
 
 #. module: calendar_sms
 #: model:ir.model.fields.selection,name:calendar_sms.selection__calendar_alarm__alarm_type__sms
@@ -60,9 +67,31 @@ msgid "SMS Text Message"
 msgstr "SMS besked"
 
 #. module: calendar_sms
-#: model:ir.actions.act_window,name:calendar_sms.calendar_event_act_window_sms_composer_single
+#: model_terms:ir.ui.view,arch_db:calendar_sms.view_calendar_event_tree_inherited
+msgid "Send SMS"
+msgstr "Send SMS"
+
+#. module: calendar_sms
+#: code:addons/calendar_sms/models/calendar_event.py:0
+#, python-format
+msgid "Send SMS Text Message"
+msgstr "Send SMS tekst besked"
+
+#. module: calendar_sms
+#: model_terms:ir.ui.view,arch_db:calendar_sms.view_calendar_event_form_inherited
 msgid "Send SMS to attendees"
 msgstr "Send SMS til deltagere"
+
+#. module: calendar_sms
+#: model:ir.model.fields,help:calendar_sms.field_calendar_alarm__sms_template_id
+msgid "Template used to render SMS reminder content."
+msgstr ""
+
+#. module: calendar_sms
+#: code:addons/calendar_sms/models/calendar_event.py:0
+#, python-format
+msgid "There are no attendees on these events"
+msgstr "Der er ingen deltagere til disse arrangementer"
 
 #. module: calendar_sms
 #: model:ir.model.fields,field_description:calendar_sms.field_calendar_alarm__alarm_type

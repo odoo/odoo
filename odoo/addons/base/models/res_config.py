@@ -383,24 +383,6 @@ class ResConfigSettings(models.TransientModel, ResConfigModuleInstallationMixin)
     def copy(self, default=None):
         raise UserError(_("Cannot duplicate configuration!"))
 
-    @api.model
-    def _get_view(self, view_id=None, view_type='form', **options):
-        arch, view = super()._get_view(view_id, view_type, **options)
-
-        can_install_modules = self.env['ir.module.module'].check_access_rights(
-                                    'write', raise_exception=False)
-
-        for node in arch.xpath("//field[@name]"):
-            if not node.get('name').startswith("module_"):
-                continue
-            if not can_install_modules:
-                node.set("readonly", "1")
-                modifiers = json.loads(node.get("modifiers"))
-                modifiers['readonly'] = True
-                node.set("modifiers", json.dumps(modifiers))
-
-        return arch, view
-
     def onchange_module(self, field_value, module_name):
         module_sudo = self.env['ir.module.module']._get(module_name[7:])
         if not int(field_value) and module_sudo.state in ('to install', 'installed', 'to upgrade'):
@@ -578,12 +560,8 @@ class ResConfigSettings(models.TransientModel, ResConfigModuleInstallationMixin)
         for name, icp in classified['config']:
             field = self._fields[name]
             value = self[name]
-            current_value = current_settings[name]
-            if not field.relational and value == current_value:
-                # pre-check before the value is formatted
-                # because the values in current_settings are
-                # in field format, not in str/False parameter format
-                continue
+            current_value = IrConfigParameter.get_param(icp)
+
             if field.type == 'char':
                 # storing developer keys as ir.config_parameter may lead to nasty
                 # bugs when users leave spaces around them
@@ -594,7 +572,7 @@ class ResConfigSettings(models.TransientModel, ResConfigModuleInstallationMixin)
                 # value is a (possibly empty) recordset
                 value = value.id
 
-            if current_value == value:
+            if current_value == str(value) or current_value == value:
                 continue
             IrConfigParameter.set_param(icp, value)
 

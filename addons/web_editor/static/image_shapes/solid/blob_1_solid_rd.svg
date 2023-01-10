@@ -14,5 +14,13 @@
     </svg><svg viewBox="0 0 1 1" id="preview" preserveAspectRatio="none">
         <use xlink:href="#filterPath" fill="darkgrey"></use>
     </svg>
-    <image xlink:href="" clip-path="url(#clip-path)"></image>
+    <image xlink:href="" clip-path="url(#clip-path)">
+        <!--
+            TODO: improve this:
+            The <animateMotion... /> hack is used on <image/> to force content
+            animation and prevent GIF animation loss when non-animated shapes
+            are applied (on Safari & FF).
+        -->
+        <animateMotion dur="1ms" repeatCount="indefinite"/>
+    </image>
 </svg>

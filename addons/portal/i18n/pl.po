@@ -10,7 +10,6 @@
 # Piotr Cierkosz <piotr.w.cierkosz@gmail.com>, 2022
 # Andrzej Wiśniewski <a.wisniewski@hadron.eu.com>, 2022
 # Dariusz Żbikowski <darek@krokus.com.pl>, 2022
-# Maksym <ms@myodoo.pl>, 2022
 # Tomasz Leppich <t.leppich@gmail.com>, 2022
 # Maja Stawicka <mjstwck@wp.pl>, 2022
 # Marcin Młynarczyk <mlynarczyk@gmail.com>, 2022
@@ -21,14 +20,17 @@
 # Piotr Strębski <strebski@gmail.com>, 2022
 # Martin Trigaux, 2022
 # Piotr Szlązak <szlazakpiotr@gmail.com>, 2022
+# Krzysztof Przygoda, 2022
+# Maksym <ms@myodoo.pl>, 2022
+# Łukasz Grzenkowicz <lukasz.grzenkowicz@gmail.com>, 2022
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 16.0beta\n"
+"Project-Id-Version: Odoo Server 16.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-10-04 09:26+0000\n"
+"POT-Creation-Date: 2022-12-15 12:45+0000\n"
 "PO-Revision-Date: 2022-09-22 05:53+0000\n"
-"Last-Translator: Piotr Szlązak <szlazakpiotr@gmail.com>, 2022\n"
+"Last-Translator: Łukasz Grzenkowicz <lukasz.grzenkowicz@gmail.com>, 2022\n"
 "Language-Team: Polish (https://www.transifex.com/odoo/teams/41243/pl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -42,7 +44,7 @@ msgid "\" to validate your action."
 msgstr ""
 
 #. module: portal
-#. openerp-web
+#. odoo-javascript
 #: code:addons/portal/static/src/js/portal_sidebar.js:0
 #, python-format
 msgid "%1d days overdue"
@@ -71,11 +73,15 @@ msgid ""
 "<i class=\"fa fa-chevron-left\" role=\"img\" aria-label=\"Previous\" "
 "title=\"Previous\"/>"
 msgstr ""
+"<i class=\"fa fa-chevron-left\" role=\"img\" aria-label=\"Poprzednie\" "
+"title=\"Poprzednie\"/>"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.record_pager
 msgid "<i class=\"fa fa-chevron-right\" role=\"img\" aria-label=\"Next\" title=\"Next\"/>"
 msgstr ""
+"<i class=\"fa fa-chevron-right\" role=\"img\" aria-label=\"Następne\" "
+"title=\"Następne\"/>"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.my_account_link
@@ -95,17 +101,17 @@ msgstr ""
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_layout
 msgid "<i class=\"fa fa-pencil mx-1\"/>Edit Security Settings"
-msgstr ""
+msgstr "<i class=\"fa fa-pencil mx-1\"/>Edytuj ustawienia bezpieczeństwa"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_layout
 msgid "<i class=\"fa fa-pencil\"/> Edit"
-msgstr ""
+msgstr "<i class=\"fa fa-pencil\"/> Edytuj"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_security
 msgid "<i title=\"Documentation\" class=\"fa fa-fw o_button_icon fa-info-circle\"/>"
-msgstr ""
+msgstr "<i title=\"Dokumentacja\" class=\"fa fa-fw o_button_icon fa-info-circle\"/>"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_details_fields
@@ -114,6 +120,9 @@ msgid ""
 " not allowed once document(s) have been issued for your account. <br/>Please"
 " contact us directly for this operation.</small>"
 msgstr ""
+"<small class=\"form-text text-muted\">Zmiana nazwy firmy lub numery VAT jest"
+" niedozwolone kiedy istnieją już wystawione dokumenty na koncie. <br/>Proszę"
+" się skontaktować z nami w celu wykonania tej operacji.</small>"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_searchbar
@@ -214,16 +223,96 @@ msgid ""
 "</table>\n"
 "            "
 msgstr ""
+"<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" style=\"padding-top: 16px; background-color: #F1F1F1; font-family:Verdana, Arial,sans-serif; color: #454748; width: 100%; border-collapse:separate;\"><tr><td align=\"center\">\n"
+"<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"padding: 16px; background-color: white; color: #454748; border-collapse:separate;\">\n"
+"<tbody>\n"
+"    <!-- HEADER -->\n"
+"    <tr>\n"
+"        <td align=\"center\" style=\"min-width: 590px;\">\n"
+"            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"min-width: 590px; background-color: white; padding: 0px 8px 0px 8px; border-collapse:separate;\">\n"
+"                <tr><td valign=\"middle\">\n"
+"                    <span style=\"font-size: 10px;\">Twoje konto</span><br/>\n"
+"                    <span style=\"font-size: 20px; font-weight: bold;\" t-out=\"object.user_id.name or ''\">Marc Demo</span>\n"
+"                </td><td valign=\"middle\" align=\"right\">\n"
+"                    <img t-attf-src=\"/logo.png?company={{ object.user_id.company_id.id }}\" style=\"padding: 0px; margin: 0px; height: auto; width: 80px;\" t-att-alt=\"object.user_id.company_id.name\"/>\n"
+"                </td></tr>\n"
+"                <tr><td colspan=\"2\" style=\"text-align:center;\">\n"
+"                  <hr width=\"100%\" style=\"background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0; margin:16px 0px 16px 0px;\"/>\n"
+"                </td></tr>\n"
+"            </table>\n"
+"        </td>\n"
+"    </tr>\n"
+"    <!-- CONTENT -->\n"
+"    <tr>\n"
+"        <td align=\"center\" style=\"min-width: 590px;\">\n"
+"            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"min-width: 590px; background-color: white; padding: 0px 8px 0px 8px; border-collapse:separate;\">\n"
+"                <tr><td valign=\"top\" style=\"font-size: 13px;\">\n"
+"                    <div>\n"
+"                        Drogi/a <t t-out=\"object.user_id.name or ''\">Marc Demo</t>,<br/> <br/>\n"
+"                        Witaj w portalu firmy <t t-out=\"object.user_id.company_id.name\">YourCompany</t><br/><br/>\n"
+"                        Zostało utworzone dla Ciebie konto z następującym loginem: <t t-out=\"object.user_id.login\">demo</t><br/><br/>\n"
+"                        Kliknij w poniższy przycisk aby wybrać hasło i aktywować swoje konto.\n"
+"                        <div style=\"margin: 16px 0px 16px 0px; text-align: center;\">\n"
+"                            <a t-att-href=\"object.user_id.signup_url\" style=\"display: inline-block; padding: 10px; text-decoration: none; font-size: 12px; background-color: #875A7B; color: #fff; border-radius: 5px;\">\n"
+"                                <strong>Aktywuj konto</strong>\n"
+"                            </a>\n"
+"                        </div>\n"
+"                        <t t-out=\"object.wizard_id.welcome_message or ''\">Witaj w portalu naszej firmy.</t>\n"
+"                    </div>\n"
+"                </td></tr>\n"
+"                <tr><td style=\"text-align:center;\">\n"
+"                  <hr width=\"100%\" style=\"background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0; margin: 16px 0px 16px 0px;\"/>\n"
+"                </td></tr>\n"
+"            </table>\n"
+"        </td>\n"
+"    </tr>\n"
+"    <!-- FOOTER -->\n"
+"    <tr>\n"
+"        <td align=\"center\" style=\"min-width: 590px;\">\n"
+"            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"min-width: 590px; background-color: white; font-size: 11px; padding: 0px 8px 0px 8px; border-collapse:separate;\">\n"
+"                <tr><td valign=\"middle\" align=\"left\">\n"
+"                    <t t-out=\"object.user_id.company_id.name or ''\">YourCompany</t>\n"
+"                </td></tr>\n"
+"                <tr><td valign=\"middle\" align=\"left\" style=\"opacity: 0.7;\">\n"
+"                    <t t-out=\"object.user_id.company_id.phone or ''\">+1 650-123-4567</t>\n"
+"                    <t t-if=\"object.user_id.company_id.email\">\n"
+"                        | <a t-attf-href=\"'mailto:%s' % {{ object.user_id.company_id.email }}\" style=\"text-decoration:none; color: #454748;\" t-out=\"object.user_id.company_id.email or ''\">info@yourcompany.com</a>\n"
+"                    </t>\n"
+"                    <t t-if=\"object.user_id.company_id.website\">\n"
+"                        | <a t-attf-href=\"'%s' % {{ object.user_id.company_id.website }}\" style=\"text-decoration:none; color: #454748;\" t-out=\"object.user_id.company_id.website or ''\">http://www.example.com</a>\n"
+"                    </t>\n"
+"                </td></tr>\n"
+"            </table>\n"
+"        </td>\n"
+"    </tr>\n"
+"</tbody>\n"
+"</table>\n"
+"</td></tr>\n"
+"<!-- POWERED BY -->\n"
+"<tr><td align=\"center\" style=\"min-width: 590px;\">\n"
+"    <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"min-width: 590px; background-color: #F1F1F1; color: #454748; padding: 8px; border-collapse:separate;\">\n"
+"      <tr><td style=\"text-align: center; font-size: 13px;\">\n"
+"        Zasilane przez <a target=\"_blank\" href=\"https://www.odoo.com?utm_source=db&amp;utm_medium=portalinvite\" style=\"color: #875A7B;\">Odoo</a>\n"
+"      </td></tr>\n"
+"    </table>\n"
+"</td></tr>\n"
+"</table>\n"
+"            "
 
 #. module: portal
-#. openerp-web
-#: code:addons/portal/static/src/js/portal.js:0
-#, python-format
-msgid "API Key Ready"
+#: model:ir.model,name:portal.model_res_users_apikeys_description
+msgid "API Key Description"
 msgstr ""
 
 #. module: portal
-#. openerp-web
+#. odoo-javascript
+#: code:addons/portal/static/src/js/portal.js:0
+#, python-format
+msgid "API Key Ready"
+msgstr "Klucz API gotowy"
+
+#. module: portal
+#. odoo-javascript
 #: code:addons/portal/static/src/js/portal_signature.js:0
 #, python-format
 msgid "Accept & Sign"
@@ -241,6 +330,7 @@ msgid "Account Security"
 msgstr "Bezpieczeństwo konta"
 
 #. module: portal
+#. odoo-python
 #: code:addons/portal/controllers/portal.py:0
 #, python-format
 msgid "Account deleted!"
@@ -252,7 +342,7 @@ msgid "Add a note"
 msgstr "Dodaj notatkę"
 
 #. module: portal
-#. openerp-web
+#. odoo-javascript
 #: code:addons/portal/static/src/xml/portal_chatter.xml:0
 #, python-format
 msgid "Add attachment"
@@ -261,17 +351,17 @@ msgstr "Dodaj załącznik"
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_share_wizard
 msgid "Add contacts to share the document..."
-msgstr ""
+msgstr "Dodaj kontakty, aby udostępnić dokument..."
 
 #. module: portal
 #: model:ir.model.fields,help:portal.field_portal_share__note
 msgid "Add extra content to display in the email"
-msgstr ""
+msgstr "Dodaj dodatkową treść do wyświetlenia w wiadomości e-mail"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_security
 msgid "Added On"
-msgstr ""
+msgstr "Dodano"
 
 #. module: portal
 #: model:ir.model.fields.selection,name:portal.selection__portal_wizard_user__email_state__exist
@@ -279,10 +369,11 @@ msgid "Already Registered"
 msgstr ""
 
 #. module: portal
+#. odoo-python
 #: code:addons/portal/controllers/mail.py:0
 #, python-format
 msgid "An access token must be provided for each attachment."
-msgstr ""
+msgstr "Dla każdego załącznika należy podać token dostępu."
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_security
@@ -290,14 +381,14 @@ msgid "Are you sure you want to do this?"
 msgstr ""
 
 #. module: portal
-#. openerp-web
+#. odoo-javascript
 #: code:addons/portal/static/src/xml/portal_chatter.xml:0
 #, python-format
 msgid "Avatar"
 msgstr "Awatar"
 
 #. module: portal
-#. openerp-web
+#. odoo-javascript
 #: code:addons/portal/static/src/js/portal.js:0
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_security
 #: model_terms:ir.ui.view,arch_db:portal.portal_share_wizard
@@ -311,6 +402,7 @@ msgid "Change Password"
 msgstr "Zmień hasło"
 
 #. module: portal
+#. odoo-python
 #: code:addons/portal/controllers/portal.py:0
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_details_fields
 #, python-format
@@ -318,6 +410,8 @@ msgid ""
 "Changing VAT number is not allowed once document(s) have been issued for "
 "your account. Please contact us directly for this operation."
 msgstr ""
+"Zmiana numeru VAT nie jest dozwolona po wystawieniu dokumentu(ów) dla "
+"Twojego konta. Prosimy o bezpośredni kontakt w sprawie tej operacji."
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_details_fields
@@ -325,13 +419,15 @@ msgid ""
 "Changing company name is not allowed once document(s) have been issued for "
 "your account. Please contact us directly for this operation."
 msgstr ""
+"Zmiana nazwy firmy jest niedozwolona po wystawieniu dokumentów dla Twojego "
+"konta. Prosimy o bezpośredni kontakt w sprawie tej operacji."
 
 #. module: portal
-#. openerp-web
+#. odoo-javascript
 #: code:addons/portal/static/src/js/portal.js:0
 #, python-format
 msgid "Check failed"
-msgstr ""
+msgstr "Sprawdzanie nie powiodło się"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_details_fields
@@ -339,14 +435,14 @@ msgid "City"
 msgstr "Miejscowość"
 
 #. module: portal
-#. openerp-web
+#. odoo-javascript
 #: code:addons/portal/static/src/xml/portal_signature.xml:0
 #, python-format
 msgid "Click here to see your document."
 msgstr "Kliknij tutaj aby zobaczyć swoje dokumenty"
 
 #. module: portal
-#. openerp-web
+#. odoo-javascript
 #: code:addons/portal/static/src/js/portal.js:0
 #: model_terms:ir.ui.view,arch_db:portal.portal_back_in_edit_mode
 #: model_terms:ir.ui.view,arch_db:portal.wizard_view
@@ -365,7 +461,7 @@ msgid "Config Settings"
 msgstr "Ustawienia konfiguracji"
 
 #. module: portal
-#. openerp-web
+#. odoo-javascript
 #: code:addons/portal/static/src/js/portal.js:0
 #, python-format
 msgid "Confirm"
@@ -381,7 +477,7 @@ msgstr ""
 "                                <span class=\"fa fa-long-arrow-right\"/>"
 
 #. module: portal
-#. openerp-web
+#. odoo-javascript
 #: code:addons/portal/static/src/js/portal.js:0
 #, python-format
 msgid "Confirm Password"
@@ -404,11 +500,11 @@ msgid "Contacts"
 msgstr "Kontakty"
 
 #. module: portal
-#. openerp-web
+#. odoo-javascript
 #: code:addons/portal/static/src/js/portal_composer.js:0
 #, python-format
 msgid "Could not save file <strong>%s</strong>"
-msgstr ""
+msgstr "Nie można zapisać pliku <strong>%s</strong>"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_details_fields
@@ -435,27 +531,31 @@ msgid "Created on"
 msgstr "Data utworzenia"
 
 #. module: portal
-#. openerp-web
+#. odoo-javascript
 #: code:addons/portal/static/src/xml/portal_chatter.xml:0
 #, python-format
 msgid ""
 "Currently available to everyone viewing this document, click to restrict to "
 "internal employees."
 msgstr ""
+"Obecnie ten dokument jest dostępny dla wszystkich przeglądających kliknij, "
+"aby ograniczyć go do pracowników wewnętrznych."
 
 #. module: portal
-#. openerp-web
+#. odoo-javascript
 #: code:addons/portal/static/src/xml/portal_chatter.xml:0
 #, python-format
 msgid ""
 "Currently restricted to internal employees, click to make it available to "
 "everyone viewing this document."
 msgstr ""
+"Obecnie ten dokument jest ograniczony do pracowników wewnętrznych. Kliknij, "
+"aby udostępnić je wszystkim przeglądającym."
 
 #. module: portal
 #: model:ir.model.fields,field_description:portal.field_res_config_settings__portal_allow_api_keys
 msgid "Customer API Keys"
-msgstr ""
+msgstr "Klucze API klienta"
 
 #. module: portal
 #: model:ir.model.fields,help:portal.field_portal_mixin__access_url
@@ -468,7 +568,7 @@ msgid "Dear"
 msgstr "Szanowny"
 
 #. module: portal
-#. openerp-web
+#. odoo-javascript
 #: code:addons/portal/static/src/xml/portal_chatter.xml:0
 #, python-format
 msgid "Delete"
@@ -493,7 +593,7 @@ msgstr "Szczegóły"
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_security
 msgid "Developer API Keys"
-msgstr ""
+msgstr "Klucze API programisty"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_security
@@ -506,7 +606,7 @@ msgid ""
 msgstr ""
 
 #. module: portal
-#. openerp-web
+#. odoo-javascript
 #: code:addons/portal/static/src/js/portal.js:0
 #, python-format
 msgid "Discard"
@@ -525,18 +625,18 @@ msgid "Documents"
 msgstr "Dokumenty"
 
 #. module: portal
-#. openerp-web
+#. odoo-javascript
 #: code:addons/portal/static/src/js/portal_sidebar.js:0
 #, python-format
 msgid "Due in %1d days"
 msgstr "W ciągu %1d dni"
 
 #. module: portal
-#. openerp-web
+#. odoo-javascript
 #: code:addons/portal/static/src/js/portal_sidebar.js:0
 #, python-format
 msgid "Due today"
-msgstr ""
+msgstr "Do dziś"
 
 #. module: portal
 #: model:ir.model.fields,field_description:portal.field_portal_wizard_user__email
@@ -555,25 +655,25 @@ msgid "Email Thread"
 msgstr "Wątek email"
 
 #. module: portal
-#. openerp-web
+#. odoo-javascript
 #: code:addons/portal/static/src/xml/portal_chatter.xml:0
 #, python-format
 msgid "Employees Only"
 msgstr "Tylko pracownicy"
 
 #. module: portal
-#. openerp-web
+#. odoo-javascript
 #: code:addons/portal/static/src/xml/portal_security.xml:0
 #, python-format
 msgid "Enter a description of and purpose for the key."
-msgstr ""
+msgstr "Wprowadź opis i przeznaczenie klucza."
 
 #. module: portal
-#. openerp-web
+#. odoo-javascript
 #: code:addons/portal/static/src/xml/portal_security.xml:0
 #, python-format
 msgid "Forgot password?"
-msgstr ""
+msgstr "Zapomniałeś hasło?"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.wizard_view
@@ -597,13 +697,15 @@ msgid "HTTP Routing"
 msgstr "Wytyczanie HTTP"
 
 #. module: portal
-#. openerp-web
+#. odoo-javascript
 #: code:addons/portal/static/src/xml/portal_security.xml:0
 #, python-format
 msgid ""
 "Here is your new API key, use it instead of a password for RPC access.\n"
 "                Your login is still necessary for interactive usage."
 msgstr ""
+"Oto twój nowy klucz API, użyj go zamiast hasła dostępu RPC.\n"
+"Twój login jest nadal niezbędny do interaktywnego użytkowania."
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_breadcrumbs
@@ -618,14 +720,14 @@ msgid "ID"
 msgstr "ID"
 
 #. module: portal
-#. openerp-web
+#. odoo-javascript
 #: code:addons/portal/static/src/xml/portal_security.xml:0
 #, python-format
 msgid "Important:"
-msgstr ""
+msgstr "Ważny:"
 
 #. module: portal
-#. openerp-web
+#. odoo-javascript
 #: code:addons/portal/static/src/xml/portal_chatter.xml:0
 #, python-format
 msgid "Internal Note"
@@ -637,11 +739,11 @@ msgid "Internal User"
 msgstr "Wewnętrzny użytkownik"
 
 #. module: portal
-#. openerp-web
+#. odoo-javascript
 #: code:addons/portal/static/src/xml/portal_chatter.xml:0
 #, python-format
 msgid "Internal notes are only displayed to internal users."
-msgstr ""
+msgstr "Notatki wewnętrzne są wyświetlane tylko użytkownikom wewnętrznym."
 
 #. module: portal
 #: model:ir.model.fields.selection,name:portal.selection__portal_wizard_user__email_state__ko
@@ -654,16 +756,18 @@ msgid "Invalid Email Address"
 msgstr ""
 
 #. module: portal
+#. odoo-python
 #: code:addons/portal/controllers/portal.py:0
 #, python-format
 msgid "Invalid Email! Please enter a valid email address."
 msgstr "Niepoprawny email! Proszę wpisać poprawny adres e-mail."
 
 #. module: portal
+#. odoo-python
 #: code:addons/portal/controllers/portal.py:0
 #, python-format
 msgid "Invalid report type: %s"
-msgstr ""
+msgstr "Nieprawidłowy typ raportu: %s"
 
 #. module: portal
 #: model:ir.model.fields,field_description:portal.field_portal_wizard__welcome_message
@@ -678,21 +782,23 @@ msgstr ""
 #. module: portal
 #: model:ir.model.fields,field_description:portal.field_portal_wizard_user__is_internal
 msgid "Is Internal"
-msgstr ""
+msgstr "Jest wewnętrzny"
 
 #. module: portal
 #: model:ir.model.fields,field_description:portal.field_portal_wizard_user__is_portal
 msgid "Is Portal"
-msgstr ""
+msgstr "Jest portal"
 
 #. module: portal
-#. openerp-web
+#. odoo-javascript
 #: code:addons/portal/static/src/xml/portal_security.xml:0
 #, python-format
 msgid ""
 "It is very important that this description be clear\n"
 "                and complete,"
 msgstr ""
+"Bardzo ważne jest, aby ten opis był jasny \n"
+"i kompletny,"
 
 #. module: portal
 #: model:ir.model.fields,field_description:portal.field_portal_share____last_update
@@ -718,10 +824,10 @@ msgstr "Data ostatniej aktualizacji"
 #. module: portal
 #: model:ir.model.fields,field_description:portal.field_portal_wizard_user__login_date
 msgid "Latest Authentication"
-msgstr ""
+msgstr "Ostatnie logowanie"
 
 #. module: portal
-#. openerp-web
+#. odoo-javascript
 #: code:addons/portal/static/src/xml/portal_chatter.xml:0
 #, python-format
 msgid "Leave a comment"
@@ -730,7 +836,7 @@ msgstr "Zostaw komentarz"
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.res_config_settings_view_form
 msgid "Let your customers create developer API keys"
-msgstr ""
+msgstr "Pozwól swoim klientom tworzyć klucz API"
 
 #. module: portal
 #: model:ir.model.fields,field_description:portal.field_portal_share__share_link
@@ -743,14 +849,18 @@ msgid "Message"
 msgstr "Wiadomość"
 
 #. module: portal
+#. odoo-python
 #: code:addons/portal/models/mail_thread.py:0
 #, python-format
 msgid ""
 "Model %(model_name)s does not support token signature, as it does not have "
 "%(field_name)s field."
 msgstr ""
+"Model %(model_name)s nie obsługuje tokena, ponieważ nie ma pola "
+"%(field_name)s."
 
 #. module: portal
+#. odoo-python
 #: code:addons/portal/controllers/portal.py:0
 #, python-format
 msgid "Multi company reports are not supported."
@@ -762,14 +872,14 @@ msgid "Name"
 msgstr "Nazwa"
 
 #. module: portal
-#. openerp-web
+#. odoo-javascript
 #: code:addons/portal/static/src/xml/portal_security.xml:0
 #, python-format
 msgid "Name your key"
-msgstr ""
+msgstr "Nazwa Twojego klucza"
 
 #. module: portal
-#. openerp-web
+#. odoo-javascript
 #: code:addons/portal/static/src/js/portal.js:0
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_security
 #, python-format
@@ -779,10 +889,10 @@ msgstr "Nowy klucz API"
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_security
 msgid "New Password:"
-msgstr ""
+msgstr "Nowe hasło:"
 
 #. module: portal
-#. openerp-web
+#. odoo-javascript
 #: code:addons/portal/static/src/xml/portal_chatter.xml:0
 #: code:addons/portal/static/src/xml/portal_chatter.xml:0
 #: model_terms:ir.ui.view,arch_db:portal.pager
@@ -806,13 +916,15 @@ msgid "Odoo Logo"
 msgstr "Logo Odoo"
 
 #. module: portal
+#. odoo-python
 #: code:addons/portal/models/res_users_apikeys_description.py:0
 #, python-format
 msgid "Only internal and portal users can create API keys"
 msgstr ""
+"Tylko użytkownicy wewnętrzni i użytkownicy portalu mogą tworzyć klucze API"
 
 #. module: portal
-#. openerp-web
+#. odoo-javascript
 #: code:addons/portal/static/src/xml/portal_chatter.xml:0
 #, python-format
 msgid "Oops! Something went wrong. Try to reload the page and log in."
@@ -831,12 +943,12 @@ msgstr "Hasło"
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_security
 msgid "Password Updated!"
-msgstr ""
+msgstr "Hasło zaktualizowane!"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_security
 msgid "Password:"
-msgstr ""
+msgstr "Hasło:"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_details_fields
@@ -844,13 +956,14 @@ msgid "Phone"
 msgstr "Telefon"
 
 #. module: portal
-#. openerp-web
+#. odoo-javascript
 #: code:addons/portal/static/src/xml/portal_security.xml:0
 #, python-format
 msgid "Please enter your password to confirm you own this account"
-msgstr ""
+msgstr "Wprowadź hasło, aby potwierdzić, że jesteś właścicielem tego konta"
 
 #. module: portal
+#. odoo-python
 #: code:addons/portal/wizard/portal_wizard.py:0
 #: model_terms:ir.ui.view,arch_db:portal.wizard_view
 #, python-format
@@ -870,7 +983,7 @@ msgstr ""
 #. module: portal
 #: model:ir.model,name:portal.model_portal_share
 msgid "Portal Sharing"
-msgstr ""
+msgstr "Udostępnienie portalu"
 
 #. module: portal
 #: model:ir.model,name:portal.model_portal_wizard_user
@@ -880,7 +993,7 @@ msgstr "Konfiguracja użytkownika portalu"
 #. module: portal
 #: model:mail.template,name:portal.mail_template_data_portal_welcome
 msgid "Portal: User Invite"
-msgstr ""
+msgstr "Portal: Zaproszenie użytkownika"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_record_sidebar
@@ -893,7 +1006,7 @@ msgid "Prev"
 msgstr "Poprzedni"
 
 #. module: portal
-#. openerp-web
+#. odoo-javascript
 #: code:addons/portal/static/src/xml/portal_chatter.xml:0
 #: code:addons/portal/static/src/xml/portal_chatter.xml:0
 #, python-format
@@ -901,7 +1014,7 @@ msgid "Previous"
 msgstr "Poprzedni"
 
 #. module: portal
-#. openerp-web
+#. odoo-javascript
 #: code:addons/portal/static/src/js/portal_chatter.js:0
 #, python-format
 msgid "Published on %s"
@@ -917,12 +1030,12 @@ msgstr ""
 #. module: portal
 #: model:ir.model,name:portal.model_ir_qweb
 msgid "Qweb"
-msgstr ""
+msgstr "Qweb"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.wizard_view
 msgid "Re-Invite"
-msgstr ""
+msgstr "Zaproś ponownie"
 
 #. module: portal
 #: model:ir.model.fields,field_description:portal.field_portal_share__partner_ids
@@ -932,7 +1045,7 @@ msgstr "Odbiorcy"
 #. module: portal
 #: model:ir.model.fields,field_description:portal.field_portal_share__resource_ref
 msgid "Related Document"
-msgstr ""
+msgstr "Powiązany dokument"
 
 #. module: portal
 #: model:ir.model.fields,field_description:portal.field_portal_share__res_id
@@ -947,7 +1060,7 @@ msgstr "Powiązany model dokumentu"
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.wizard_view
 msgid "Revoke Access"
-msgstr ""
+msgstr "Cofnij dostęp"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_security
@@ -965,7 +1078,7 @@ msgid "Security"
 msgstr "Uprawnienia"
 
 #. module: portal
-#. openerp-web
+#. odoo-javascript
 #: code:addons/portal/static/src/js/portal.js:0
 #, python-format
 msgid "Security Control"
@@ -988,7 +1101,7 @@ msgstr ""
 "                        Jeśli trzeba, to popraw adresy mailowe bezpośrednio w tej liście."
 
 #. module: portal
-#. openerp-web
+#. odoo-javascript
 #: code:addons/portal/static/src/xml/portal_chatter.xml:0
 #: model_terms:ir.ui.view,arch_db:portal.portal_share_wizard
 #, python-format
@@ -999,7 +1112,7 @@ msgstr "Wyślij"
 #: model:ir.actions.act_window,name:portal.portal_share_action
 #: model_terms:ir.ui.view,arch_db:portal.portal_share_wizard
 msgid "Share Document"
-msgstr ""
+msgstr "Udostępnij dokument"
 
 #. module: portal
 #: model:ir.model.fields,field_description:portal.field_ir_ui_view__customize_show
@@ -1012,15 +1125,18 @@ msgid "Sign in"
 msgstr "Zaloguj się"
 
 #. module: portal
-#. openerp-web
+#. odoo-javascript
 #: code:addons/portal/static/src/js/portal_composer.js:0
 #, python-format
 msgid ""
 "Some fields are required. Please make sure to write a message or attach a "
 "document"
 msgstr ""
+"Niektóre pola są wymagane. Pamiętaj, aby napisać wiadomość lub załączyć "
+"dokument"
 
 #. module: portal
+#. odoo-python
 #: code:addons/portal/controllers/portal.py:0
 #, python-format
 msgid "Some required fields are empty."
@@ -1042,72 +1158,84 @@ msgid "Street"
 msgstr "Ulica"
 
 #. module: portal
-#. openerp-web
+#. odoo-javascript
 #: code:addons/portal/static/src/xml/portal_signature.xml:0
 #, python-format
 msgid "Thank You!"
-msgstr ""
+msgstr "Dziękujemy!"
 
 #. module: portal
+#. odoo-python
 #: code:addons/portal/controllers/portal.py:0
 #, python-format
 msgid "The attachment %s cannot be removed because it is linked to a message."
 msgstr ""
+"Załącznik %s nie może zostać usunięty, ponieważ jest powiązany z "
+"wiadomością."
 
 #. module: portal
+#. odoo-python
 #: code:addons/portal/controllers/portal.py:0
 #, python-format
 msgid ""
 "The attachment %s cannot be removed because it is not in a pending state."
 msgstr ""
+"Załącznika %s nie można usunąć, ponieważ nie jest w stanie oczekiwania."
 
 #. module: portal
+#. odoo-python
 #: code:addons/portal/controllers/mail.py:0
 #, python-format
 msgid ""
 "The attachment %s does not exist or you do not have the rights to access it."
-msgstr ""
+msgstr "Załącznik %s nie istnieje lub nie masz uprawnień dostępu do niego."
 
 #. module: portal
+#. odoo-python
 #: code:addons/portal/controllers/portal.py:0
 #, python-format
 msgid ""
 "The attachment does not exist or you do not have the rights to access it."
-msgstr ""
+msgstr "Załącznik nie istnieje lub nie masz uprawnień dostępu do niego."
 
 #. module: portal
+#. odoo-python
 #: code:addons/portal/wizard/portal_wizard.py:0
 #, python-format
 msgid "The contact \"%s\" does not have a valid email."
-msgstr ""
+msgstr "Kontakt \"%s\" nie ma prawidłowego adresu e-mail."
 
 #. module: portal
+#. odoo-python
 #: code:addons/portal/wizard/portal_wizard.py:0
 #, python-format
 msgid "The contact \"%s\" has the same email as an existing user"
 msgstr ""
 
 #. module: portal
+#. odoo-python
 #: code:addons/portal/controllers/portal.py:0
 #, python-format
 msgid ""
 "The document does not exist or you do not have the rights to access it."
-msgstr ""
+msgstr "Dokument nie istnieje lub nie masz uprawnień dostępu do niego."
 
 #. module: portal
-#. openerp-web
+#. odoo-javascript
 #: code:addons/portal/static/src/xml/portal_security.xml:0
 #, python-format
 msgid "The key cannot be retrieved later and provides"
-msgstr ""
+msgstr "Klucza nie można odzyskać później i zapewnia"
 
 #. module: portal
+#. odoo-python
 #: code:addons/portal/controllers/portal.py:0
 #, python-format
 msgid "The new password and its confirmation must be identical."
 msgstr "Nowe hasło i jego potwierdzenie muszą być jednakowe."
 
 #. module: portal
+#. odoo-python
 #: code:addons/portal/controllers/portal.py:0
 #, python-format
 msgid ""
@@ -1116,33 +1244,39 @@ msgstr ""
 "Poprzednie hasło wprowadziłeś niepoprawnie. Hasło nie zostało zmienione."
 
 #. module: portal
+#. odoo-python
 #: code:addons/portal/wizard/portal_wizard.py:0
 #, python-format
 msgid "The partner \"%s\" already has the portal access."
-msgstr ""
+msgstr "Klient \"%s\" posiada już dostęp do portalu."
 
 #. module: portal
+#. odoo-python
 #: code:addons/portal/wizard/portal_wizard.py:0
 #, python-format
 msgid "The partner \"%s\" has no portal access or is internal."
 msgstr ""
 
 #. module: portal
+#. odoo-python
 #: code:addons/portal/wizard/portal_wizard.py:0
 #, python-format
 msgid ""
 "The template \"Portal: new user\" not found for sending email to the portal "
 "user."
 msgstr ""
+"Nie znaleziono szablonu „Portal: nowy użytkownik” do wysyłania wiadomości "
+"e-mail do użytkownika portalu."
 
 #. module: portal
-#. openerp-web
+#. odoo-javascript
 #: code:addons/portal/static/src/xml/portal_chatter.xml:0
 #, python-format
 msgid "There are no comments for now."
 msgstr "Na razie nie ma komentarzy."
 
 #. module: portal
+#. odoo-python
 #: code:addons/portal/controllers/portal.py:0
 #, python-format
 msgid "This document does not exist."
@@ -1159,12 +1293,16 @@ msgid ""
 "This partner is linked to an internal User and already has access to the "
 "Portal."
 msgstr ""
+"Ten partner jest powiązany z użytkownikiem wewnętrznym i ma już dostęp do "
+"portalu."
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.wizard_view
 msgid ""
 "This text is included at the end of the email sent to new portal users."
 msgstr ""
+"Ten tekst znajduje się na końcu wiadomości e-mail wysyłanej do nowych "
+"użytkowników portalu."
 
 #. module: portal
 #: model:ir.model.fields,help:portal.field_portal_wizard__welcome_message
@@ -1175,7 +1313,7 @@ msgstr ""
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_searchbar
 msgid "Toggle filters"
-msgstr ""
+msgstr "Przełącz filtry"
 
 #. module: portal
 #: model:ir.model.fields,field_description:portal.field_portal_wizard_user__user_id
@@ -1205,7 +1343,7 @@ msgstr ""
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_security
 msgid "Verify New Password:"
-msgstr ""
+msgstr "Powtórz nowe hasło:"
 
 #. module: portal
 #: model:ir.model,name:portal.model_ir_ui_view
@@ -1213,7 +1351,7 @@ msgid "View"
 msgstr "Widok"
 
 #. module: portal
-#. openerp-web
+#. odoo-javascript
 #: code:addons/portal/static/src/xml/portal_chatter.xml:0
 #, python-format
 msgid "Visible"
@@ -1230,8 +1368,6 @@ msgstr "Widoczne"
 #: model:ir.model.fields,field_description:portal.field_mail_thread_cc__website_message_ids
 #: model:ir.model.fields,field_description:portal.field_mail_thread_phone__website_message_ids
 #: model:ir.model.fields,field_description:portal.field_phone_blacklist__website_message_ids
-#: model:ir.model.fields,field_description:portal.field_product_product__website_message_ids
-#: model:ir.model.fields,field_description:portal.field_product_template__website_message_ids
 #: model:ir.model.fields,field_description:portal.field_res_partner__website_message_ids
 #: model:ir.model.fields,field_description:portal.field_res_users__website_message_ids
 msgid "Website Messages"
@@ -1248,19 +1384,17 @@ msgstr "Wiadomości"
 #: model:ir.model.fields,help:portal.field_mail_thread_cc__website_message_ids
 #: model:ir.model.fields,help:portal.field_mail_thread_phone__website_message_ids
 #: model:ir.model.fields,help:portal.field_phone_blacklist__website_message_ids
-#: model:ir.model.fields,help:portal.field_product_product__website_message_ids
-#: model:ir.model.fields,help:portal.field_product_template__website_message_ids
 #: model:ir.model.fields,help:portal.field_res_partner__website_message_ids
 #: model:ir.model.fields,help:portal.field_res_users__website_message_ids
 msgid "Website communication history"
 msgstr "Historia komunikacji"
 
 #. module: portal
-#. openerp-web
+#. odoo-javascript
 #: code:addons/portal/static/src/xml/portal_security.xml:0
 #, python-format
 msgid "What's this key for?"
-msgstr ""
+msgstr "Po co ten klucz?"
 
 #. module: portal
 #: model:ir.model.fields,field_description:portal.field_portal_wizard_user__wizard_id
@@ -1268,18 +1402,18 @@ msgid "Wizard"
 msgstr "Kreator"
 
 #. module: portal
-#. openerp-web
+#. odoo-javascript
 #: code:addons/portal/static/src/xml/portal_chatter.xml:0
 #, python-format
 msgid "Write a message..."
 msgstr "Napisz wiadomość..."
 
 #. module: portal
-#. openerp-web
+#. odoo-javascript
 #: code:addons/portal/static/src/xml/portal_security.xml:0
 #, python-format
 msgid "Write down your key"
-msgstr ""
+msgstr "Zapisz swój klucz"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_security
@@ -1287,6 +1421,7 @@ msgid "Wrong password."
 msgstr ""
 
 #. module: portal
+#. odoo-python
 #: code:addons/portal/wizard/portal_share.py:0
 #: code:addons/portal/wizard/portal_share.py:0
 #, python-format
@@ -1294,6 +1429,7 @@ msgid "You are invited to access %s"
 msgstr "Jesteś zaproszony do uzyskania dostępu do %s"
 
 #. module: portal
+#. odoo-python
 #: code:addons/portal/controllers/portal.py:0
 #, python-format
 msgid "You cannot leave any password empty."
@@ -1305,7 +1441,7 @@ msgid "You have been invited to access the following document:"
 msgstr "Zostałeś zaproszony do uzyskania dostępu do następującego dokumentu:"
 
 #. module: portal
-#. openerp-web
+#. odoo-javascript
 #: code:addons/portal/static/src/xml/portal_chatter.xml:0
 #, python-format
 msgid "You must be"
@@ -1317,6 +1453,7 @@ msgid "You should enter \""
 msgstr ""
 
 #. module: portal
+#. odoo-python
 #: code:addons/portal/wizard/portal_wizard.py:0
 #, python-format
 msgid "You should first grant the portal access to the partner \"%s\"."
@@ -1325,12 +1462,12 @@ msgstr "Powinieneś najpierw przyznać dostęp do portalu swojemu partnerowi \"%
 #. module: portal
 #: model:mail.template,subject:portal.mail_template_data_portal_welcome
 msgid "Your account at {{ object.user_id.company_id.name }}"
-msgstr ""
+msgstr "Twoje konto w {{ object.user_id.company_id.name }}"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_contact
 msgid "Your contact"
-msgstr ""
+msgstr "Twój kontakt"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_details_fields
@@ -1338,44 +1475,46 @@ msgid "Zip / Postal Code"
 msgstr "Kod pocztowy"
 
 #. module: portal
-#. openerp-web
+#. odoo-javascript
 #: code:addons/portal/static/src/xml/portal_chatter.xml:0
 #, python-format
 msgid "avatar"
 msgstr "awatar"
 
 #. module: portal
-#. openerp-web
+#. odoo-javascript
 #: code:addons/portal/static/src/xml/portal_chatter.xml:0
 #, python-format
 msgid "comment"
 msgstr "komentarz"
 
 #. module: portal
-#. openerp-web
+#. odoo-javascript
 #: code:addons/portal/static/src/xml/portal_chatter.xml:0
 #, python-format
 msgid "comments"
 msgstr "komentarze"
 
 #. module: portal
-#. openerp-web
+#. odoo-javascript
 #: code:addons/portal/static/src/xml/portal_security.xml:0
 #, python-format
 msgid "full access"
-msgstr ""
+msgstr "pełen dostęp"
 
 #. module: portal
-#. openerp-web
+#. odoo-javascript
 #: code:addons/portal/static/src/xml/portal_security.xml:0
 #, python-format
 msgid ""
 "it will be the only way to\n"
 "                identify the key once created"
 msgstr ""
+"będzie to jedyny sposób aby \n"
+"zidentyfikować klucz po utworzeniu"
 
 #. module: portal
-#. openerp-web
+#. odoo-javascript
 #: code:addons/portal/static/src/xml/portal_chatter.xml:0
 #, python-format
 msgid "logged in"
@@ -1384,17 +1523,12 @@ msgstr "Zalogowano"
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_record_sidebar
 msgid "odoo"
-msgstr ""
+msgstr "odoo"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_security
 msgid "password"
-msgstr ""
-
-#. module: portal
-#: model:ir.model,name:portal.model_res_users_apikeys_description
-msgid "res.users.apikeys.description"
-msgstr ""
+msgstr "hasło"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_details_fields
@@ -1402,15 +1536,17 @@ msgid "select..."
 msgstr "wybierz..."
 
 #. module: portal
-#. openerp-web
+#. odoo-javascript
 #: code:addons/portal/static/src/xml/portal_chatter.xml:0
 #, python-format
 msgid "to post a comment."
 msgstr "aby skomentować post."
 
 #. module: portal
-#. openerp-web
+#. odoo-javascript
 #: code:addons/portal/static/src/xml/portal_security.xml:0
 #, python-format
 msgid "to your user account, it is very important to store it securely."
 msgstr ""
+"do konta użytkownika, bardzo ważne jest, aby przechowywać je w bezpieczny "
+"sposób."

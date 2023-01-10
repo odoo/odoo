@@ -10,7 +10,8 @@ export class SendSMSButton extends Component {
         this.user = useService("user");
         this.title = this.env._t("Send SMS Text Message");
     }
-    onClick() {
+    async onClick() {
+        await this.props.record.save();
         this.action.doAction({
             type: "ir.actions.act_window",
             target: "new",
@@ -26,7 +27,7 @@ export class SendSMSButton extends Component {
             }
         }, {
             onClose: () => {
-                this.props.record.model.load()
+                this.props.record.model.load({ resId: this.props.record.resId });
             },
         });
     }

@@ -3,7 +3,7 @@
 import { useService } from '@web/core/utils/hooks';
 import { registry } from '@web/core/registry'
 
-import { formatDate, parseDateTime } from "@web/core/l10n/dates";
+import { formatDate } from "@web/core/l10n/dates";
 
 const { Component, useState, onWillStart, onWillUpdateProps } = owl;
 const { DateTime } = luxon;
@@ -72,8 +72,8 @@ export class LeaveStatsComponent extends Component {
 
         this.state.departmentLeaves = departmentLeaves.map((leave) => {
             return Object.assign({}, leave, {
-                dateFrom: formatDate(parseDateTime(leave.date_from)),
-                dateTo: formatDate(parseDateTime(leave.date_to)),
+                dateFrom: formatDate(DateTime.fromSQL(leave.date_from, { zone: 'utc' }).toLocal()),
+                dateTo: formatDate(DateTime.fromSQL(leave.date_to, { zone: 'utc' }).toLocal()),
                 sameEmployee: leave.employee_id[0] === employee[0],
             });
         });

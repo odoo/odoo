@@ -167,8 +167,8 @@
                 t-attf-class="o_group_name fs-6 fw-bold {{!group.isFolded ? 'text-900' : 'text-700'}}"
                 t-att-colspan="getGroupNameCellColSpan(group)">
                 <div class="d-flex">
-                    <span t-attf-class="fa fa-fw {{group.isFolded ? 'fa-caret-right' : 'fa-caret-down' }}"
-                        t-attf-style="padding-left: {{2 + getGroupLevel(group) * 20}}px; padding-right: 5px"/>
+                    <span t-attf-class="o_group_caret fa fa-fw {{group.isFolded ? 'fa-caret-right' : 'fa-caret-down' }} me-1"
+                        t-attf-style="--o-list-group-level: {{getGroupLevel(group)}}"/>
                     <t t-esc="getGroupDisplayName(group)"/> (<t t-esc="group.count"/>)
                     <div t-if="(groupByButtons[group.groupByField.name] and !group.isFolded)" class="o_group_buttons">
                         <t t-foreach="groupByButtons[group.groupByField.name]" t-as="button" t-key="button.id">
@@ -209,6 +209,10 @@
         <tr class="o_data_row"
             t-att-class="getRowClass(record)"
             t-att-data-id="record.id"
+            t-on-click.capture="(ev) => this.onClickCapture(record, ev)"
+            t-on-mouseover.capture="(ev) => this.ignoreEventInSelectionMode(ev)"
+            t-on-mouseout.capture="(ev) => this.ignoreEventInSelectionMode(ev)"
+            t-on-mouseenter.capture="(ev) => this.ignoreEventInSelectionMode(ev)"
             t-on-touchstart="(ev) => this.onRowTouchStart(record, ev)"
             t-on-touchend="() => this.onRowTouchEnd(record)"
             t-on-touchmove="() => this.onRowTouchMove(record)"
@@ -233,13 +237,13 @@
                     </td>
                 </t>
                 <t t-if="column.type === 'button_group'">
-                    <td t-on-keydown.synthetic="(ev) => this.onCellKeydown(ev, group, record)" class="o_data_cell" t-att-class="getCellClass(column, record)" t-on-click="(ev) => this.onButtonCellClicked(record, column, ev)" tabindex="-1">
+                    <td t-on-keydown.synthetic="(ev) => this.onCellKeydown(ev, group, record)" class="o_data_cell cursor-pointer" t-att-class="getCellClass(column, record)" t-on-click="(ev) => this.onButtonCellClicked(record, column, ev)" tabindex="-1">
                         <t t-foreach="column.buttons" t-as="button" t-key="button.id">
                             <ViewButton t-if="!evalModifier(button.modifiers.invisible, record)"
                                 className="button.className"
                                 clickParams="button.clickParams"
                                 defaultRank="button.defaultRank"
-                                disabled="record.isVirtual"
+                                disabled="record.isVirtual || button.disabled"
                                 icon="button.icon"
                                 record="record"
                                 string="button.string"

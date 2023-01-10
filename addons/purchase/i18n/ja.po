@@ -4,14 +4,16 @@
 # 
 # Translators:
 # Martin Trigaux, 2022
+# Yoshi Tashiro (Quartile) <tashiro@roomsfor.hk>, 2022
+# Andy Yiu, 2022
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 16.0beta\n"
+"Project-Id-Version: Odoo Server 16.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-10-10 10:22+0000\n"
+"POT-Creation-Date: 2022-12-15 12:48+0000\n"
 "PO-Revision-Date: 2022-09-22 05:54+0000\n"
-"Last-Translator: Martin Trigaux, 2022\n"
+"Last-Translator: Andy Yiu, 2022\n"
 "Language-Team: Japanese (https://www.transifex.com/odoo/teams/41243/ja/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -42,12 +44,14 @@ msgid "# of Lines"
 msgstr "行数"
 
 #. module: purchase
+#. odoo-python
 #: code:addons/purchase/models/purchase.py:0
 #, python-format
 msgid "%(amount)s due %(date)s"
 msgstr ""
 
 #. module: purchase
+#. odoo-python
 #: code:addons/purchase/models/purchase.py:0
 #: code:addons/purchase/models/purchase.py:0
 #, python-format
@@ -55,12 +59,14 @@ msgid "%(product)s from %(original_receipt_date)s to %(new_receipt_date)s"
 msgstr ""
 
 #. module: purchase
+#. odoo-python
 #: code:addons/purchase/models/purchase.py:0
 #, python-format
 msgid "%s confirmed the receipt will take place on %s."
 msgstr "%s は、%sに入荷されることを確認しました。"
 
 #. module: purchase
+#. odoo-python
 #: code:addons/purchase/models/purchase.py:0
 #, python-format
 msgid "%s modified receipt dates for the following products:"
@@ -406,7 +412,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:purchase.report_purchaseorder_document
 #: model_terms:ir.ui.view,arch_db:purchase.report_purchasequotation_document
 msgid "<strong>Shipping address:</strong>"
-msgstr "<strong>出荷先:</strong>"
+msgstr "<strong>お届け先:</strong>"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.report_purchaseorder_document
@@ -444,6 +450,7 @@ msgid "<strong>Your Order Reference:</strong>"
 msgstr "<strong>ご注文のリファレンス:</strong>"
 
 #. module: purchase
+#. odoo-python
 #: code:addons/purchase/models/purchase.py:0
 #, python-format
 msgid "A sample email has been sent to %s."
@@ -473,6 +480,7 @@ msgid ""
 msgstr ""
 
 #. module: purchase
+#. odoo-python
 #: code:addons/purchase/models/purchase.py:0
 #, python-format
 msgid "Accept"
@@ -545,7 +553,7 @@ msgid "Add several variants to the purchase order from a grid"
 msgstr "グリッドビューから購買オーダに複数のバリアントを追加"
 
 #. module: purchase
-#. openerp-web
+#. odoo-javascript
 #: code:addons/purchase/static/src/js/tours/purchase.js:0
 #, python-format
 msgid "Add some products or services to your quotation."
@@ -557,34 +565,35 @@ msgid "Administrator"
 msgstr "管理者"
 
 #. module: purchase
+#. odoo-python
 #: code:addons/purchase/controllers/portal.py:0
 #, python-format
 msgid "All"
 msgstr "全て"
 
 #. module: purchase
-#. openerp-web
+#. odoo-javascript
 #: code:addons/purchase/static/src/views/purchase_dashboard.xml:0
 #, python-format
 msgid "All Draft RFQs"
 msgstr "全てのドラフト見積依頼書"
 
 #. module: purchase
-#. openerp-web
+#. odoo-javascript
 #: code:addons/purchase/static/src/views/purchase_dashboard.xml:0
 #, python-format
 msgid "All Late RFQs"
 msgstr "すべての遅延RFQ"
 
 #. module: purchase
-#. openerp-web
+#. odoo-javascript
 #: code:addons/purchase/static/src/views/purchase_dashboard.xml:0
 #, python-format
 msgid "All RFQs"
 msgstr "全ての見積依頼書"
 
 #. module: purchase
-#. openerp-web
+#. odoo-javascript
 #: code:addons/purchase/static/src/views/purchase_dashboard.xml:0
 #, python-format
 msgid "All Waiting RFQs"
@@ -638,13 +647,13 @@ msgid "Analytic Account"
 msgstr "分析勘定"
 
 #. module: purchase
-#: model:ir.model.fields,field_description:purchase.field_purchase_order_line__analytic_distribution_stored_char
-msgid "Analytic Distribution Stored Char"
+#: model:ir.model,name:purchase.model_account_analytic_applicability
+msgid "Analytic Plan's Applicabilities"
 msgstr ""
 
 #. module: purchase
-#: model:ir.model,name:purchase.model_account_analytic_applicability
-msgid "Analytic Plan's Applicabilities"
+#: model:ir.model.fields,field_description:purchase.field_purchase_order_line__analytic_precision
+msgid "Analytic Precision"
 msgstr ""
 
 #. module: purchase
@@ -719,7 +728,7 @@ msgid "Average Days to Purchase"
 msgstr "平均購入日数"
 
 #. module: purchase
-#. openerp-web
+#. odoo-javascript
 #: code:addons/purchase/static/src/views/purchase_dashboard.xml:0
 #, python-format
 msgid "Avg Order Value"
@@ -784,7 +793,7 @@ msgstr "阻止メッセージ"
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__user_id
 msgid "Buyer"
-msgstr ""
+msgstr "購買担当者"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_calendar
@@ -804,6 +813,7 @@ msgid "Cancel"
 msgstr "取消"
 
 #. module: purchase
+#. odoo-python
 #: code:addons/purchase/controllers/portal.py:0
 #: model:ir.model.fields.selection,name:purchase.selection__purchase_order__state__cancel
 #: model:ir.model.fields.selection,name:purchase.selection__purchase_report__state__cancel
@@ -817,6 +827,7 @@ msgid "Cancelled Purchase Order #"
 msgstr "キャンセルされた注文書#"
 
 #. module: purchase
+#. odoo-python
 #: code:addons/purchase/models/purchase.py:0
 #, python-format
 msgid "Cannot delete a purchase order line which is in state '%s'."
@@ -852,6 +863,7 @@ msgid "Company Currency"
 msgstr "会社の通貨"
 
 #. module: purchase
+#. odoo-python
 #: code:addons/purchase/models/purchase.py:0
 #: code:addons/purchase/models/purchase.py:0
 #, python-format
@@ -869,6 +881,7 @@ msgid "Configuration"
 msgstr "設定"
 
 #. module: purchase
+#. odoo-python
 #: code:addons/purchase/models/purchase.py:0
 #, python-format
 msgid "Confirm"
@@ -890,7 +903,7 @@ msgid "Confirm purchase orders in one step"
 msgstr "1段階の承認をもち購買オーダ確定"
 
 #. module: purchase
-#. openerp-web
+#. odoo-javascript
 #: code:addons/purchase/static/src/js/tours/purchase.js:0
 #, python-format
 msgid "Confirm your purchase."
@@ -1000,6 +1013,7 @@ msgid "Date Calendar Start"
 msgstr "日付カレンダー開始"
 
 #. module: purchase
+#. odoo-python
 #: code:addons/purchase/models/purchase.py:0
 #: code:addons/purchase/models/purchase.py:0
 #, python-format
@@ -1012,7 +1026,7 @@ msgid "Date:"
 msgstr "日付:"
 
 #. module: purchase
-#. openerp-web
+#. odoo-javascript
 #: code:addons/purchase/static/src/views/purchase_dashboard.xml:0
 #, python-format
 msgid "Days"
@@ -1129,7 +1143,7 @@ msgstr "Eメール構成ウィザード"
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__date_planned
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line__date_planned
 msgid "Expected Arrival"
-msgstr ""
+msgstr "入荷予定日"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.view_purchase_order_search
@@ -1137,6 +1151,7 @@ msgid "Extended Filters"
 msgstr "拡張フィルタ"
 
 #. module: purchase
+#. odoo-python
 #: code:addons/purchase/models/purchase.py:0
 #, python-format
 msgid "Extra line with %s "
@@ -1266,12 +1281,14 @@ msgid "If true, the packaging can be used for purchase orders"
 msgstr ""
 
 #. module: purchase
+#. odoo-python
 #: code:addons/purchase/models/product.py:0
 #, python-format
 msgid "Import Template for Products"
 msgstr "プロダクトテンプレートをインポート"
 
 #. module: purchase
+#. odoo-python
 #: code:addons/purchase/models/purchase.py:0
 #, python-format
 msgid "In order to delete a purchase order, you must cancel it first."
@@ -1283,7 +1300,7 @@ msgid "Incoterm"
 msgstr "インコタームズ"
 
 #. module: purchase
-#. openerp-web
+#. odoo-javascript
 #: code:addons/purchase/static/src/js/tours/purchase.js:0
 #, python-format
 msgid "Indicate the product quantity you want to order."
@@ -1342,7 +1359,7 @@ msgid "Last Updated on"
 msgstr "最終更新日"
 
 #. module: purchase
-#. openerp-web
+#. odoo-javascript
 #: code:addons/purchase/static/src/views/purchase_dashboard.xml:0
 #, python-format
 msgid "Late"
@@ -1360,21 +1377,21 @@ msgid "Late RFQs"
 msgstr "後期見積依頼"
 
 #. module: purchase
-#. openerp-web
+#. odoo-javascript
 #: code:addons/purchase/static/src/views/purchase_dashboard.xml:0
 #, python-format
 msgid "Lead Time to Purchase"
 msgstr "購入までのリードタイム"
 
 #. module: purchase
-#. openerp-web
+#. odoo-javascript
 #: code:addons/purchase/static/src/js/tours/purchase.js:0
 #, python-format
 msgid "Let's create your first request for quotation."
 msgstr "最初の見積依頼を作成しましょう。"
 
 #. module: purchase
-#. openerp-web
+#. odoo-javascript
 #: code:addons/purchase/static/src/js/tours/purchase.js:0
 #: code:addons/purchase/static/src/js/tours/purchase.js:0
 #, python-format
@@ -1404,6 +1421,7 @@ msgid "Lock Confirmed Orders"
 msgstr "確認済オーダをロック"
 
 #. module: purchase
+#. odoo-python
 #: code:addons/purchase/controllers/portal.py:0
 #: model:ir.model.fields.selection,name:purchase.selection__purchase_order__state__done
 #, python-format
@@ -1505,14 +1523,14 @@ msgid "My Activity Deadline"
 msgstr ""
 
 #. module: purchase
-#. openerp-web
+#. odoo-javascript
 #: code:addons/purchase/static/src/views/purchase_dashboard.xml:0
 #, python-format
 msgid "My Draft RFQs"
 msgstr "自分のドラフトRFQ"
 
 #. module: purchase
-#. openerp-web
+#. odoo-javascript
 #: code:addons/purchase/static/src/views/purchase_dashboard.xml:0
 #, python-format
 msgid "My Late RFQs"
@@ -1529,20 +1547,21 @@ msgid "My Purchases"
 msgstr "自分の購買"
 
 #. module: purchase
-#. openerp-web
+#. odoo-javascript
 #: code:addons/purchase/static/src/views/purchase_dashboard.xml:0
 #, python-format
 msgid "My RFQs"
 msgstr "自分のRFQ"
 
 #. module: purchase
-#. openerp-web
+#. odoo-javascript
 #: code:addons/purchase/static/src/views/purchase_dashboard.xml:0
 #, python-format
 msgid "My Waiting RFQs"
 msgstr "自分の待機中のRFQ"
 
 #. module: purchase
+#. odoo-python
 #: code:addons/purchase/controllers/portal.py:0
 #, python-format
 msgid "Name"
@@ -1554,6 +1573,7 @@ msgid "Name, TIN, Email, or Reference"
 msgstr "名称/納税者番号/Eメール/参照"
 
 #. module: purchase
+#. odoo-python
 #: code:addons/purchase/controllers/portal.py:0
 #, python-format
 msgid "Newest"
@@ -1682,7 +1702,7 @@ msgid "On received quantities"
 msgstr "入荷数量に基づく"
 
 #. module: purchase
-#. openerp-web
+#. odoo-javascript
 #: code:addons/purchase/static/src/js/tours/purchase.js:0
 #, python-format
 msgid ""
@@ -1925,6 +1945,7 @@ msgid "Purchase History"
 msgstr ""
 
 #. module: purchase
+#. odoo-python
 #: code:addons/purchase/models/product.py:0
 #: code:addons/purchase/models/product.py:0
 #: code:addons/purchase/models/purchase.py:0
@@ -1939,6 +1960,7 @@ msgid "Purchase Lead Time"
 msgstr "購買リードタイム"
 
 #. module: purchase
+#. odoo-python
 #: code:addons/purchase/controllers/portal.py:0
 #: code:addons/purchase/models/purchase.py:0
 #: code:addons/purchase/models/purchase.py:0
@@ -2074,7 +2096,6 @@ msgstr "複数単位でプロダクトを購入　#パッケージごと"
 #. module: purchase
 #: model:ir.actions.server,name:purchase.purchase_send_reminder_mail_ir_actions_server
 #: model:ir.cron,cron_name:purchase.purchase_send_reminder_mail
-#: model:ir.cron,name:purchase.purchase_send_reminder_mail
 msgid "Purchase reminder"
 msgstr "購入のリマインダー"
 
@@ -2105,7 +2126,7 @@ msgid "Purchased"
 msgstr "購入した"
 
 #. module: purchase
-#. openerp-web
+#. odoo-javascript
 #: code:addons/purchase/static/src/views/purchase_dashboard.xml:0
 #, python-format
 msgid "Purchased Last 7 Days"
@@ -2209,7 +2230,7 @@ msgid "RFQs"
 msgstr "RFQ"
 
 #. module: purchase
-#. openerp-web
+#. odoo-javascript
 #: code:addons/purchase/static/src/views/purchase_dashboard.xml:0
 #, python-format
 msgid "RFQs Sent Last 7 Days"
@@ -2329,6 +2350,7 @@ msgid "Reporting"
 msgstr "レポーティング"
 
 #. module: purchase
+#. odoo-python
 #: code:addons/purchase/models/purchase.py:0
 #: model:ir.actions.report,name:purchase.report_purchase_quotation
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_portal_content
@@ -2398,7 +2420,7 @@ msgid "Search Reference Document"
 msgstr "参照ドキュメントの検索"
 
 #. module: purchase
-#. openerp-web
+#. odoo-javascript
 #: code:addons/purchase/static/src/js/tours/purchase.js:0
 #, python-format
 msgid "Search a vendor name, or create one on the fly."
@@ -2425,7 +2447,7 @@ msgid "Security Token"
 msgstr "セキュリティトークン"
 
 #. module: purchase
-#. openerp-web
+#. odoo-javascript
 #: code:addons/purchase/static/src/js/tours/purchase.js:0
 #, python-format
 msgid "Select a product, or create a new one on the fly."
@@ -2469,7 +2491,7 @@ msgid "Send by Email"
 msgstr "Eメールで送信"
 
 #. module: purchase
-#. openerp-web
+#. odoo-javascript
 #: code:addons/purchase/static/src/js/tours/purchase.js:0
 #: code:addons/purchase/static/src/js/tours/purchase.js:0
 #, python-format
@@ -2651,6 +2673,7 @@ msgstr ""
 "これを使ってクイックサーチできます。"
 
 #. module: purchase
+#. odoo-python
 #: code:addons/purchase/models/purchase.py:0
 #, python-format
 msgid "The order receipt has been acknowledged by %s."
@@ -2675,6 +2698,7 @@ msgid "There are currently no requests for quotation for your account."
 msgstr ""
 
 #. module: purchase
+#. odoo-python
 #: code:addons/purchase/models/purchase.py:0
 #, python-format
 msgid ""
@@ -2711,6 +2735,7 @@ msgid "This note is added to purchase orders."
 msgstr "このメモは購買オーダに追加されます。"
 
 #. module: purchase
+#. odoo-python
 #: code:addons/purchase/models/purchase.py:0
 #, python-format
 msgid ""
@@ -2719,12 +2744,14 @@ msgid ""
 msgstr ""
 
 #. module: purchase
+#. odoo-python
 #: code:addons/purchase/models/account_invoice.py:0
 #, python-format
 msgid "This vendor bill has been created from: %s"
 msgstr "この仕入先請求書は次のオーダから作成されました: %s"
 
 #. module: purchase
+#. odoo-python
 #: code:addons/purchase/models/account_invoice.py:0
 #, python-format
 msgid "This vendor bill has been modified from: %s"
@@ -2760,7 +2787,7 @@ msgid "To Invoice Quantity"
 msgstr "請求対象数量"
 
 #. module: purchase
-#. openerp-web
+#. odoo-javascript
 #: code:addons/purchase/static/src/views/purchase_dashboard.xml:0
 #, python-format
 msgid "To Send"
@@ -2773,6 +2800,7 @@ msgid "Today Activities"
 msgstr "本日の活動"
 
 #. module: purchase
+#. odoo-python
 #: code:addons/purchase/controllers/portal.py:0
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__amount_total
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line__price_total
@@ -2813,11 +2841,18 @@ msgid "True if the reminder email is confirmed by the vendor."
 msgstr "リマインダーメールがベンダーによって確認された場合はTrue。"
 
 #. module: purchase
+#: model_terms:ir.ui.view,arch_db:purchase.res_partner_view_purchase_buttons
+#: model_terms:ir.ui.view,arch_db:purchase.view_product_supplier_inherit
+msgid "Type a message..."
+msgstr ""
+
+#. module: purchase
 #: model:ir.model.fields,help:purchase.field_purchase_order__activity_exception_decoration
 msgid "Type of the exception activity on record."
 msgstr "記録上の例外アクティビティのタイプ。"
 
 #. module: purchase
+#. odoo-python
 #: code:addons/purchase/models/purchase.py:0
 #, python-format
 msgid ""
@@ -2884,6 +2919,7 @@ msgid "UoM"
 msgstr "単位"
 
 #. module: purchase
+#. odoo-python
 #: code:addons/purchase/models/purchase.py:0
 #, python-format
 msgid "Update Dates"
@@ -2898,6 +2934,15 @@ msgstr "緊急"
 #: model:res.groups,name:purchase.group_purchase_user
 msgid "User"
 msgstr "ユーザ"
+
+#. module: purchase
+#. odoo-python
+#: code:addons/purchase/report/purchase_report.py:0
+#, python-format
+msgid ""
+"Value: 'avg_days_to_purchase' should only be used to show an average. If you"
+" are seeing this message then it is being accessed incorrectly."
+msgstr ""
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.res_config_settings_view_form_purchase
@@ -2960,6 +3005,7 @@ msgstr ""
 "仕入先請求書は、発注書または領収書に基づいて事前に生成できます。これにより、Odooのドラフト文書に従って、ベンダーから受け取る請求書を管理できます。"
 
 #. module: purchase
+#. odoo-python
 #: code:addons/purchase/models/purchase.py:0
 #, python-format
 msgid "View"
@@ -2971,7 +3017,7 @@ msgid "Volume"
 msgstr "容積"
 
 #. module: purchase
-#. openerp-web
+#. odoo-javascript
 #: code:addons/purchase/static/src/views/purchase_dashboard.xml:0
 #, python-format
 msgid "Waiting"
@@ -2989,6 +3035,7 @@ msgid "Waiting RFQs"
 msgstr "待機中のRFQ"
 
 #. module: purchase
+#. odoo-python
 #: code:addons/purchase/models/purchase.py:0
 #: model:ir.model.fields.selection,name:purchase.selection__product_template__purchase_line_warn__warning
 #: model:ir.model.fields.selection,name:purchase.selection__res_partner__purchase_warn__warning
@@ -2997,6 +3044,7 @@ msgid "Warning"
 msgstr "警告"
 
 #. module: purchase
+#. odoo-python
 #: code:addons/purchase/models/purchase.py:0
 #: code:addons/purchase/models/purchase.py:0
 #, python-format
@@ -3059,6 +3107,7 @@ msgid "You can find a vendor by its Name, TIN, Email or Internal Reference."
 msgstr "ベンダーは、名前、TIN、電子メール、または内部参照で見つけることができます。"
 
 #. module: purchase
+#. odoo-python
 #: code:addons/purchase/models/purchase.py:0
 #, python-format
 msgid ""
@@ -3081,6 +3130,7 @@ msgid ""
 msgstr "販売または購買するもの(在庫品、消耗品、サービス品等)は、プロダクトとして登録する必要があります。"
 
 #. module: purchase
+#. odoo-python
 #: code:addons/purchase/models/purchase.py:0
 #, python-format
 msgid ""

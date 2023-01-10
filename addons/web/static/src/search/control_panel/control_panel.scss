@@ -80,7 +80,7 @@
 
     .breadcrumb {
         font-size: 18px;
-        max-width: 100%;
+        min-width: 0;
 
         > li {
             @include o-text-overflow();
@@ -114,7 +114,7 @@
                     }
 
                     &.btn {
-                        padding: 0.4rem;
+                        padding: $o-cp-button-sm-no-border-padding;
                     }
 
                     > a {
@@ -192,11 +192,19 @@
     .o_cp_bottom_right {
         display: flex;
         flex-wrap: wrap;
-        justify-content: flex-end;
-        align-items: flex-start;
-        column-gap: $o-horizontal-padding;
-        @include media-breakpoint-down(md) {
-            align-items: center;
+        justify-content: space-between;
+        align-items: center;
+
+        @include media-breakpoint-up(md) {
+            column-gap: $o-horizontal-padding;
+        }
+
+        > .o_form_status_indicator {
+            @include media-breakpoint-down(md) {
+                .o_form_status_indicator_buttons > .btn {
+                    padding: $o-cp-button-sm-no-border-padding;
+                }
+            }
         }
 
         > .o_cp_pager {

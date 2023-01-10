@@ -494,11 +494,11 @@ class Project(models.Model):
         for project in self:
             project.milestone_count_reached = mapped_count.get(project.id, 0)
 
-    @api.depends('milestone_ids', 'milestone_ids.is_reached', 'milestone_ids.deadline')
+    @api.depends('milestone_ids', 'milestone_ids.is_reached', 'milestone_ids.deadline', 'allow_milestones')
     def _compute_is_milestone_exceeded(self):
         today = fields.Date.context_today(self)
         read_group = self.env['project.milestone']._read_group([
-            ('project_id', 'in', self.ids),
+            ('project_id', 'in', self.filtered('allow_milestones').ids),
             ('is_reached', '=', False),
             ('deadline', '<', today)], ['project_id'], ['project_id'])
         mapped_count = {group['project_id'][0]: group['project_id_count'] for group in read_group}
@@ -517,6 +517,7 @@ class Project(models.Model):
               FROM project_project P
          LEFT JOIN project_milestone M ON P.id = M.project_id
              WHERE M.is_reached IS false
+               AND P.allow_milestones IS true
                AND M.deadline < CAST(now() AS date)
         """
         if (operator == '=' and value is True) or (operator == '!=' and value is False):
@@ -1696,7 +1697,7 @@ class Task(models.Model):
 
     def _search_portal_user_names(self, operator, value):
         if operator != 'ilike' and not isinstance(value, str):
-            raise ValidationError('Not Implemented.')
+            raise ValidationError(_('Not Implemented.'))
 
         query = """
             SELECT task_user.task_id
@@ -1857,7 +1858,9 @@ class Task(models.Model):
             if project.analytic_account_id:
                 vals['analytic_account_id'] = project.analytic_account_id.id
         else:
-            vals['user_ids'] = [Command.link(self.env.user.id)]
+            user_ids = vals.get('user_ids', [])
+            user_ids.append(Command.link(self.env.user.id))
+            vals['user_ids'] = user_ids
 
         return vals
 
@@ -1877,7 +1880,11 @@ class Task(models.Model):
         if fields and (not check_group_user or self.env.user.has_group('base.group_portal')) and not self.env.su:
             unauthorized_fields = set(fields) - (self.SELF_READABLE_FIELDS if operation == 'read' else self.SELF_WRITABLE_FIELDS)
             if unauthorized_fields:
-                raise AccessError(_('You cannot %s %s fields in task.', operation if operation == 'read' else '%s on' % operation, ', '.join(unauthorized_fields)))
+                if operation == 'read':
+                    error_message = _('You cannot read %s fields in task.', ', '.join(unauthorized_fields))
+                else:
+                    error_message = _('You cannot write on %s fields in task.', ', '.join(unauthorized_fields))
+                raise AccessError(error_message)
 
     def read(self, fields=None, load='_classic_read'):
         self._ensure_fields_are_accessible(fields)
@@ -2177,7 +2184,7 @@ class Task(models.Model):
 
     def _search_has_late_and_unreached_milestone(self, operator, value):
         if operator not in ('=', '!=') or not isinstance(value, bool):
-            raise NotImplementedError(f'The search does not support the {operator} operator or {value} value.')
+            raise NotImplementedError(_('The search does not support the %s operator or %s value.', operator, value))
         domain = [
             ('allow_milestones', '=', True),
             ('milestone_id', '!=', False),
@@ -2401,7 +2408,6 @@ class Task(models.Model):
             'name': msg.get('subject') or _("No Subject"),
             'planned_hours': 0.0,
             'partner_id': msg.get('author_id'),
-            'description': msg.get('body'),
         }
         defaults.update(custom_values)
 
@@ -2454,6 +2460,9 @@ class Task(models.Model):
                     ('partner_id', '=', False),
                     ('email_from', '=', new_partner.email),
                     ('is_closed', '=', False)]).write({'partner_id': new_partner.id})
+        # use the sanitized body of the email from the message thread to populate the task's description
+        if not self.description and message.subtype_id == self._creation_subtype() and self.partner_id == message.author_id:
+            self.description = message.body
         return super(Task, self)._message_post_after_hook(message, msg_vals)
 
     def action_assign_to_me(self):
@@ -2556,7 +2565,7 @@ class Task(models.Model):
 
     def action_recurring_tasks(self):
         return {
-            'name': 'Tasks in Recurrence',
+            'name': _('Tasks in Recurrence'),
             'type': 'ir.actions.act_window',
             'res_model': 'project.task',
             'view_mode': 'tree,form,kanban,calendar,pivot,graph,activity',

@@ -14,8 +14,8 @@ TIMESHEET_INVOICE_TYPES = [
     ('non_billable', 'Non Billable Tasks'),
     ('timesheet_revenues', 'Timesheet Revenues'),
     ('service_revenues', 'Service Revenues'),
-    ('other_revenues', 'Other Revenues'),
-    ('other_costs', 'Other Costs'),
+    ('other_revenues', 'Materials'),
+    ('other_costs', 'Materials'),
 ]
 
 class AccountAnalyticLine(models.Model):
@@ -73,6 +73,10 @@ class AccountAnalyticLine(models.Model):
     @api.depends('timesheet_invoice_id.state')
     def _compute_partner_id(self):
         super(AccountAnalyticLine, self.filtered(lambda t: t._is_not_billed()))._compute_partner_id()
+
+    @api.depends('timesheet_invoice_id.state')
+    def _compute_project_id(self):
+        super(AccountAnalyticLine, self.filtered(lambda t: t._is_not_billed()))._compute_project_id()
 
     def _is_not_billed(self):
         self.ensure_one()

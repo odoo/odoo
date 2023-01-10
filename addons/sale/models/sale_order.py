@@ -276,7 +276,7 @@ class SaleOrder(models.Model):
         compute='_compute_tax_country_id',
         # Avoid access error on fiscal position when reading a sale order with company != user.company_ids
         compute_sudo=True)  # used to filter available taxes depending on the fiscal country and position
-    tax_totals = fields.Binary(compute='_compute_tax_totals')
+    tax_totals = fields.Binary(compute='_compute_tax_totals', exportable=False)
     terms_type = fields.Selection(related='company_id.terms_type')
     type_name = fields.Char(string="Type Name", compute='_compute_type_name')
 
@@ -567,13 +567,13 @@ class SaleOrder(models.Model):
                 order.partner_credit_warning = self.env['account.move']._build_credit_warning_message(
                     order, updated_credit)
 
-    @api.depends('order_line.tax_id', 'order_line.price_unit', 'amount_total', 'amount_untaxed')
+    @api.depends('order_line.tax_id', 'order_line.price_unit', 'amount_total', 'amount_untaxed', 'currency_id')
     def _compute_tax_totals(self):
         for order in self:
             order_lines = order.order_line.filtered(lambda x: not x.display_type)
             order.tax_totals = self.env['account.tax']._prepare_tax_totals(
                 [x._convert_to_tax_base_line_dict() for x in order_lines],
-                order.currency_id,
+                order.currency_id or order.company_id.currency_id,
             )
 
     @api.depends('state')
@@ -706,6 +706,7 @@ class SaleOrder(models.Model):
     def action_quotation_send(self):
         """ Opens a wizard to compose an email, with relevant mail template loaded by default """
         self.ensure_one()
+        self.order_line._validate_analytic_distribution()
         lang = self.env.context.get('lang')
         mail_template = self._find_mail_template()
         if mail_template and mail_template.lang:
@@ -781,6 +782,8 @@ class SaleOrder(models.Model):
                 "It is not allowed to confirm an order in the following states: %s",
                 ", ".join(self._get_forbidden_state_confirm()),
             ))
+
+        self.order_line._validate_analytic_distribution()
 
         for order in self:
             if order.partner_id in order.message_partner_ids:
@@ -901,7 +904,7 @@ class SaleOrder(models.Model):
     def _show_cancel_wizard(self):
         """ Decide whether the sale.order.cancel wizard should be shown to cancel specified orders.
 
-        :return: True if there are draft order(s) in the given orders
+        :return: True if there is any non-draft order in the given orders
         :rtype: bool
         """
         if self.env.context.get('disable_cancel_warning'):
@@ -1319,7 +1322,7 @@ class SaleOrder(models.Model):
         self.ensure_one()
         return {
             'description': self.name,
-            'amount': self.amount_total - sum(self.invoice_ids.filtered(lambda x: x.state != 'cancel').mapped('amount_total')),
+            'amount': self.amount_total - sum(self.invoice_ids.filtered(lambda x: x.state != 'cancel' and x.invoice_line_ids.sale_line_ids.order_id == self).mapped('amount_total')),
             'currency_id': self.currency_id.id,
             'partner_id': self.partner_id.id,
             'amount_max': self.amount_total,

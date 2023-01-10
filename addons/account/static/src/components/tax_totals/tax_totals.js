@@ -89,7 +89,7 @@ class TaxGroupComponent extends Component {
 }
 
 TaxGroupComponent.props = {
-    currency: {},
+    currency: { optional: true },
     taxGroup: { optional: true },
     onChangeTaxGroup: { optional: true },
     isReadonly: Boolean,

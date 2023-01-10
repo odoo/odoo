@@ -23,12 +23,12 @@
                     <field name="totp_enabled" invisible="1"/>
                     <!-- For own user, allow to activate the two-factor Authentication -->
                     <div>
-                        <div class="o_horizontal_separator d-flex align-items-center mt-0">Two-factor Authentication
+                        <div class="o_horizontal_separator d-flex align-items-center mt-2 mb-4 text-uppercase fw-bolder small">Two-factor Authentication
                                 <div attrs="{'invisible': [('totp_enabled', '!=', False)]}">
                                     <button attrs="{'invisible': &quot;[('id', '=', uid)]&quot;}" name="action_totp_enable_wizard"
                                             disabled="1" type="object" class="fa fa-toggle-off o_auth_2fa_btn disabled" aria-label="Enable 2FA"></button>
                                             <button attrs="{'invisible': &quot;[('id', '!=', uid)]&quot;}" name="action_totp_enable_wizard"
-                                            type="object" class="fa fa-toggle-off o_auth_2fa_btn disabled" aria-label="Enable 2FA"></button>
+                                            type="object" class="fa fa-toggle-off o_auth_2fa_btn disabled pe-auto" aria-label="Enable 2FA"></button>
                                 </div>
                                 <button attrs="{'invisible': [('totp_enabled', '=', False)]}" name="action_totp_disable" type="object"
                                 class="fa fa-toggle-on o_auth_2fa_btn text-primary enabled" aria-label="Disable 2FA"></button>
@@ -37,8 +37,10 @@
                                 Two-factor Authentication ("2FA") is a system of double authentication.
                                 The first one is done with your password and the second one with a code you get from a dedicated mobile app.
                                 Popular ones include Authy, Google Authenticator or the Microsoft Authenticator.
-                                <a href="https://www.odoo.com/documentation/16.0/applications/general/auth/2fa.html"
-                                   title="Learn More" target="_blank">Learn More</a>
+                                <a href="https://www.odoo.com/documentation/16.0/applications/general/auth/2fa.html" title="Learn More" target="_blank">
+                                    <i title="Documentation" class="fa fa-fw o_button_icon fa-info-circle"></i>
+                                    Learn More
+                                </a>
                                 </span>
                                 <span attrs="{'invisible': [('totp_enabled', '=', False)]}" class="text-muted">This account is protected!</span>
                             </div>
@@ -69,9 +71,9 @@
             <group name="auth" position="after">
                 <field name="totp_enabled" invisible="1"/>
                 <div>
-                    <div class="o_horizontal_separator mt-0">Two-factor Authentication
+                    <div class="o_horizontal_separator mt-2 mb-4 text-uppercase fw-bolder small">Two-factor Authentication
                         <button attrs="{'invisible': [('totp_enabled', '!=', False)]}" name="action_totp_enable_wizard"
-                            type="object" class="fa fa-toggle-off o_auth_2fa_btn mb-1" aria-label="Enable 2FA"/>
+                            type="object" class="fa fa-toggle-off o_auth_2fa_btn" aria-label="Enable 2FA"/>
                         <button attrs="{'invisible': [('totp_enabled', '=', False)]}" name="action_totp_disable"
                             type="object" class="fa fa-toggle-on o_auth_2fa_btn text-primary" aria-label="Disable 2FA"/>
                     </div>
@@ -80,8 +82,10 @@
                         Two-factor Authentication ("2FA") is a system of double authentication.
                         The first one is done with your password and the second one with a code you get from a dedicated mobile app.
                         Popular ones include Authy, Google Authenticator or the Microsoft Authenticator.
-                        <a href="https://www.odoo.com/documentation/16.0/applications/general/auth/2fa.html"
-                            title="Learn More" target="_blank">Learn More</a>
+                        <a href="https://www.odoo.com/documentation/16.0/applications/general/auth/2fa.html" title="Learn More" target="_blank">
+                            <i title="Documentation" class="fa fa-fw o_button_icon fa-info-circle"></i>
+                            Learn More
+                        </a>
                     </span>
                     <group name="auth_devices" string="Trusted Devices" attrs="{'invisible': [('totp_trusted_device_ids', '=', [])]}">
                         <div colspan="2">

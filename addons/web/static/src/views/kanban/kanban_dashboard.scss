@@ -105,11 +105,10 @@
                     div[class*="col-"] + div[class*="col-"] {
                         border-left: 1px solid map-get($grays, '300');
                     }
-
-                    // Default options box
-                    div.text-end {
-                        text-align: left; // :/
-                        @include o-kanban-dashboard-dropdown-link(0);
+                    > div:last-child {
+                        @include o-kanban-dashboard-dropdown-link($link-padding-gap: $o-kanban-dashboard-dropdown-complex-gap);
+                        padding-left: $dropdown-item-padding-x;
+                        padding-right: $dropdown-item-padding-x;
                     }
                 }
             }

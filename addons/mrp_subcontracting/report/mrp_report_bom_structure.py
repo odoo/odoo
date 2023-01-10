@@ -1,20 +1,21 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import api, models, _
+from odoo import api, models, _, fields
 
 class ReportBomStructure(models.AbstractModel):
     _inherit = 'report.mrp.report_bom_structure'
 
     def _get_subcontracting_line(self, bom, seller, level, bom_quantity):
         ratio_uom_seller = seller.product_uom.ratio / bom.product_uom_id.ratio
+        price = seller.currency_id._convert(seller.price, self.env.company.currency_id, (bom.company_id or self.env.company), fields.Date.today())
         return {
             'name': seller.partner_id.display_name,
             'partner_id': seller.partner_id.id,
             'quantity': bom_quantity,
             'uom': bom.product_uom_id.name,
-            'prod_cost': seller.price / ratio_uom_seller * bom_quantity,
-            'bom_cost': seller.price / ratio_uom_seller * bom_quantity,
+            'prod_cost': price / ratio_uom_seller * bom_quantity,
+            'bom_cost': price / ratio_uom_seller * bom_quantity,
             'level': level or 0
         }
 
@@ -46,6 +47,24 @@ class ReportBomStructure(models.AbstractModel):
         return lines
 
     @api.model
+    def _need_special_rules(self, product_info, parent_bom=False, parent_product_id=False):
+        if parent_bom and parent_product_id:
+            parent_info = product_info.get(parent_product_id, {}).get(parent_bom.id, {})
+            return parent_info and parent_info.get('route_type') == 'subcontract'
+        return super()._need_special_rules(product_info, parent_bom, parent_product_id)
+
+    @api.model
+    def _find_special_rules(self, product, product_info, parent_bom=False, parent_product_id=False):
+        res = super()._find_special_rules(product, product_info, parent_bom, parent_product_id)
+        # If no rules could be found within the warehouse, check if the product is a component from a subcontracted product.
+        parent_info = product_info.get(parent_product_id, {}).get(parent_bom.id, {})
+        if parent_info and parent_info.get('route_type') == 'subcontract':
+            # Since the product is subcontracted, check the subcontracted location for rules instead of the warehouse.
+            subcontracting_loc = parent_info['supplier'].partner_id.property_stock_subcontractor
+            return product._get_rules_from_location(subcontracting_loc)
+        return res
+
+    @api.model
     def _format_route_info(self, rules, rules_delay, warehouse, product, bom, quantity):
         res = super()._format_route_info(rules, rules_delay, warehouse, product, bom, quantity)
         subcontract_rules = [rule for rule in rules if rule.action == 'buy' and bom and bom.type == 'subcontract']
@@ -67,8 +86,8 @@ class ReportBomStructure(models.AbstractModel):
     @api.model
     def _get_quantities_info(self, product, bom_uom, parent_bom, product_info):
         if parent_bom and parent_bom.type == 'subcontract' and product.detailed_type == 'product':
-            parent_product = parent_bom.product_id or parent_bom.product_tmpl_id.product_variant_id
-            route_info = product_info[parent_product.id].get(parent_bom.id, {})
+            parent_product_id = self.env.context.get('parent_product_id', False)
+            route_info = product_info.get(parent_product_id, {}).get(parent_bom.id, {})
             if route_info and route_info['route_type'] == 'subcontract':
                 subcontracting_loc = route_info['supplier'].partner_id.property_stock_subcontractor
                 subloc_product = product.with_context(location=subcontracting_loc.id, warehouse=False).read(['free_qty', 'qty_available'])[0]

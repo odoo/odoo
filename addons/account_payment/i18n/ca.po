@@ -9,19 +9,21 @@
 # Manel Fernandez Ramirez <manelfera@outlook.com>, 2022
 # Joan Ignasi Florit <jfloritmir@gmail.com>, 2022
 # Denys Sarapulov, 2022
-# jabelchi, 2022
+# Josep Anton Belchi, 2022
 # Arnau Ros, 2022
 # Quim - eccit <quim@eccit.com>, 2022
-# CristianCruzParra, 2022
 # RGB Consulting <odoo@rgbconsulting.com>, 2022
+# Guspy12, 2022
+# CristianCruzParra, 2022
+# Ivan Espinola, 2022
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 16.0beta\n"
+"Project-Id-Version: Odoo Server 16.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-10-04 09:24+0000\n"
+"POT-Creation-Date: 2022-12-15 12:49+0000\n"
 "PO-Revision-Date: 2022-09-22 05:44+0000\n"
-"Last-Translator: RGB Consulting <odoo@rgbconsulting.com>, 2022\n"
+"Last-Translator: Ivan Espinola, 2022\n"
 "Language-Team: Catalan (https://www.transifex.com/odoo/teams/41243/ca/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -73,6 +75,8 @@ msgid ""
 "<span class=\"badge rounded-pill text-bg-danger\"><i class=\"fa fa-fw fa-"
 "remove\"/><span class=\"d-none d-md-inline\"> Cancelled</span></span>"
 msgstr ""
+"<span class=\"badge rounded-pill text-bg-danger\"><i class=\"fa fa-fw fa-"
+"remove\"/><span class=\"d-none d-md-inline\"> Cancel·lat</span></span>"
 
 #. module: account_payment
 #: model_terms:ir.ui.view,arch_db:account_payment.portal_my_invoices_payment
@@ -81,6 +85,9 @@ msgid ""
 "clock-o\"/><span class=\"d-none d-md-inline\"> Waiting for "
 "Payment</span></span>"
 msgstr ""
+"<span class=\"badge rounded-pill text-bg-info\"><i class=\"fa fa-fw fa-"
+"clock-o\"/><span class=\"d-none d-md-inline\"> Esperant el "
+"pagament</span></span>"
 
 #. module: account_payment
 #: model_terms:ir.ui.view,arch_db:account_payment.portal_my_invoices_payment
@@ -88,6 +95,8 @@ msgid ""
 "<span class=\"badge rounded-pill text-bg-primary\"><i class=\"fa fa-fw fa-"
 "check\"/><span class=\"d-none d-md-inline\"> Authorized</span></span>"
 msgstr ""
+"<span class=\"badge rounded-pill text-bg-primary\"><i class=\"fa fa-fw fa-"
+"check\"/><span class=\"d-none d-md-inline\"> Autoritzat</span></span>"
 
 #. module: account_payment
 #: model_terms:ir.ui.view,arch_db:account_payment.portal_my_invoices_payment
@@ -95,6 +104,8 @@ msgid ""
 "<span class=\"badge rounded-pill text-bg-success\"><i class=\"fa fa-fw fa-"
 "check\"/><span class=\"d-none d-md-inline\"> Paid</span></span>"
 msgstr ""
+"<span class=\"badge rounded-pill text-bg-success\"><i class=\"fa fa-fw fa-"
+"check\"/><span class=\"d-none d-md-inline\"> Pagat</span></span>"
 
 #. module: account_payment
 #: model_terms:ir.ui.view,arch_db:account_payment.portal_my_invoices_payment
@@ -102,6 +113,8 @@ msgid ""
 "<span class=\"badge rounded-pill text-bg-success\"><i class=\"fa fa-fw fa-"
 "check\"/><span class=\"d-none d-md-inline\"> Reversed</span></span>"
 msgstr ""
+"<span class=\"badge rounded-pill text-bg-success\"><i class=\"fa fa-fw fa-"
+"check\"/><span class=\"d-none d-md-inline\"> Invertit</span></span>"
 
 #. module: account_payment
 #: model_terms:ir.ui.view,arch_db:account_payment.portal_my_invoices_payment
@@ -109,6 +122,8 @@ msgid ""
 "<span class=\"badge rounded-pill text-bg-warning\"><span class=\"d-none "
 "d-md-inline\"> Pending</span></span>"
 msgstr ""
+"<span class=\"badge rounded-pill text-bg-warning\"><span class=\"d-none "
+"d-md-inline\"> Pendent</span></span>"
 
 #. module: account_payment
 #: model_terms:ir.ui.view,arch_db:account_payment.portal_invoice_payment
@@ -126,14 +141,19 @@ msgid ""
 "                        Wait a moment for it to be processed. If the refund is still pending in a\n"
 "                        few minutes, please check your payment provider configuration."
 msgstr ""
+"<strong>Avís!</strong> Hi ha un reemborsament pendent per aquest pagament.\n"
+"                        Espereu un moment perquè es processi. Si l'abonament encara està pendent en uns\n"
+"                        pocs minuts, comproveu la configuració del vostre proveïdor de pagaments."
 
 #. module: account_payment
+#. odoo-python
 #: code:addons/account_payment/models/account_payment.py:0
 #, python-format
 msgid "A payment transaction with reference %s already exists."
-msgstr ""
+msgstr "Ja existeix una transacció de pagament amb referència %s."
 
 #. module: account_payment
+#. odoo-python
 #: code:addons/account_payment/models/account_payment.py:0
 #, python-format
 msgid "A token is required to create a new payment transaction."
@@ -142,14 +162,14 @@ msgstr "Cal un testimoni per crear una transacció de pagament nova."
 #. module: account_payment
 #: model:ir.model.fields,field_description:account_payment.field_account_payment__amount_available_for_refund
 msgid "Amount Available For Refund"
-msgstr ""
+msgstr "Import disponible per l'abonament"
 
 #. module: account_payment
 #: model:ir.model.fields,field_description:account_payment.field_account_bank_statement_line__amount_paid
 #: model:ir.model.fields,field_description:account_payment.field_account_move__amount_paid
 #: model:ir.model.fields,field_description:account_payment.field_account_payment__amount_paid
 msgid "Amount paid"
-msgstr ""
+msgstr "Import pagat"
 
 #. module: account_payment
 #: model_terms:ir.ui.view,arch_db:account_payment.account_invoice_view_form_inherit_payment
@@ -238,6 +258,8 @@ msgid ""
 "In test mode, a fake payment is processed through a test payment interface.\n"
 "This mode is advised when setting up the provider."
 msgstr ""
+"En mode de prova, un pagament fals es processa a través d'una interfície de pagament de prova.\n"
+"Es recomana aquest mode quan es configura el proveïdor."
 
 #. module: account_payment
 #: model_terms:ir.ui.view,arch_db:account_payment.payment_transaction_form
@@ -245,6 +267,7 @@ msgid "Invoice(s)"
 msgstr "Factura(es)"
 
 #. module: account_payment
+#. odoo-python
 #: code:addons/account_payment/models/payment_transaction.py:0
 #: model:ir.model.fields,field_description:account_payment.field_payment_transaction__invoice_ids
 #, python-format
@@ -284,7 +307,7 @@ msgstr "Última actualització el"
 #. module: account_payment
 #: model:ir.model.fields,field_description:account_payment.field_payment_refund_wizard__amount_available_for_refund
 msgid "Maximum Refund Allowed"
-msgstr ""
+msgstr "Abonament màxim permes"
 
 #. module: account_payment
 #: model:ir.model.fields,help:account_payment.field_account_payment__payment_token_id
@@ -292,6 +315,8 @@ msgid ""
 "Note that only tokens from providers allowing to capture the amount are "
 "available."
 msgstr ""
+"Tingueu en compte que només hi ha disponibles tokens dels proveïdors que "
+"permeten capturar l'import."
 
 #. module: account_payment
 #: model:ir.model.fields,help:account_payment.field_account_payment_register__payment_token_id
@@ -299,6 +324,9 @@ msgid ""
 "Note that tokens from providers set to only authorize transactions (instead "
 "of capturing the amount) are not available."
 msgstr ""
+"Tingueu en compte que els testimonis dels proveïdors establerts per "
+"autoritzar només les transaccions (en lloc de capturar l'import) no estan "
+"disponibles."
 
 #. module: account_payment
 #: model_terms:ir.ui.view,arch_db:account_payment.portal_my_invoices_payment
@@ -346,12 +374,12 @@ msgstr "Formes de pagament"
 #: model:ir.model,name:account_payment.model_payment_provider
 #: model:ir.model.fields,field_description:account_payment.field_account_payment_method_line__payment_provider_id
 msgid "Payment Provider"
-msgstr ""
+msgstr "Proveïdor de pagament"
 
 #. module: account_payment
 #: model:ir.ui.menu,name:account_payment.payment_provider_menu
 msgid "Payment Providers"
-msgstr ""
+msgstr "Proveïdors de pagament"
 
 #. module: account_payment
 #: model:ir.model,name:account_payment.model_payment_refund_wizard
@@ -382,12 +410,14 @@ msgid "Payments"
 msgstr "Pagaments"
 
 #. module: account_payment
+#. odoo-python
 #: code:addons/account_payment/models/account_payment_method_line.py:0
 #, python-format
 msgid "Provider"
 msgstr "Proveïdor"
 
 #. module: account_payment
+#. odoo-python
 #: code:addons/account_payment/models/account_payment.py:0
 #: code:addons/account_payment/models/account_payment.py:0
 #: model_terms:ir.ui.view,arch_db:account_payment.payment_refund_wizard_view_form
@@ -424,7 +454,7 @@ msgstr "Registrar pagament"
 #. module: account_payment
 #: model_terms:ir.ui.view,arch_db:account_payment.view_account_journal_form
 msgid "SETUP"
-msgstr ""
+msgstr "CONFIGURACIÓ"
 
 #. module: account_payment
 #: model:ir.model.fields,field_description:account_payment.field_account_payment__payment_token_id
@@ -453,26 +483,38 @@ msgid "Suitable Payment Token"
 msgstr "Token de pagament adequat"
 
 #. module: account_payment
+#. odoo-python
+#: code:addons/account_payment/controllers/payment.py:0
+#, python-format
+msgid "The access token is invalid."
+msgstr "El testimoni d'accés no és vàlid."
+
+#. module: account_payment
+#. odoo-python
 #: code:addons/account_payment/wizards/payment_refund_wizard.py:0
 #, python-format
 msgid ""
 "The amount to be refunded must be positive and cannot be superior to %s."
-msgstr ""
+msgstr "L'import a reemborsar ha de ser positiu i no pot ser superior a %s."
 
 #. module: account_payment
 #: model:ir.model.fields,help:account_payment.field_payment_provider__journal_id
 msgid "The journal in which the successful transactions are posted."
-msgstr ""
+msgstr "El diari on es publiquen les transaccions amb èxit."
 
 #. module: account_payment
+#. odoo-python
 #: code:addons/account_payment/models/payment_transaction.py:0
 #, python-format
 msgid ""
 "The payment related to the transaction with reference %(ref)s has been "
 "posted: %(link)s"
 msgstr ""
+"S'ha publicat el pagament relacionat amb la transacció amb referència "
+"%(ref)s: %(link)s"
 
 #. module: account_payment
+#. odoo-python
 #: code:addons/account_payment/controllers/payment.py:0
 #: code:addons/account_payment/controllers/payment.py:0
 #, python-format
@@ -482,7 +524,7 @@ msgstr "Els paràmetres proporcionats no són vàlids"
 #. module: account_payment
 #: model:ir.model.fields,help:account_payment.field_account_payment__source_payment_id
 msgid "The source payment of related refund payments"
-msgstr ""
+msgstr "El pagament d'origen dels abonaments de reemborsament relacionats"
 
 #. module: account_payment
 #: model_terms:ir.ui.view,arch_db:account_payment.portal_invoice_error
@@ -519,7 +561,7 @@ msgstr "Transaccions"
 #. module: account_payment
 #: model:ir.model.fields,field_description:account_payment.field_payment_refund_wizard__support_refund
 msgid "Type of Refund Supported"
-msgstr ""
+msgstr "Tipus de reemborsament acceptat"
 
 #. module: account_payment
 #: model:ir.model.fields,field_description:account_payment.field_account_payment__use_electronic_payment_method
@@ -533,9 +575,12 @@ msgid "Void Transaction"
 msgstr "Transacció buida"
 
 #. module: account_payment
+#. odoo-python
 #: code:addons/account_payment/models/account_journal.py:0
 #, python-format
 msgid ""
 "You can't delete a payment method that is linked to a provider in the enabled or test state.\n"
 "Linked provider(s): %s"
 msgstr ""
+"No podeu suprimir un mètode de pagament que estigui enllaçat a un proveïdor en l'estat habilitat o de prova.\n"
+"Proveïdor(s) enllaçats: %s"

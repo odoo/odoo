@@ -136,12 +136,12 @@
                 <header>
                     <button name="action_rfq_send" states="draft" string="Send by Email" type="object" context="{'send_rfq':True}" class="oe_highlight" data-hotkey="g"/>
                     <button name="print_quotation" string="Print RFQ" type="object" states="draft" class="oe_highlight" groups="base.group_user" data-hotkey="k"/>
-                    <button name="button_confirm" type="object" states="sent" string="Confirm Order" class="oe_highlight" id="bid_confirm" data-hotkey="v"/>
+                    <button name="button_confirm" type="object" states="sent" string="Confirm Order" context="{'validate_analytic': True}" class="oe_highlight" id="bid_confirm" data-hotkey="v"/>
                     <button name="button_approve" type="object" states='to approve' string="Approve Order" class="oe_highlight" groups="purchase.group_purchase_manager" data-hotkey="z"/>
                     <button name="action_create_invoice" string="Create Bill" type="object" class="oe_highlight" context="{'create_bill':True}" attrs="{'invisible': ['|', ('state', 'not in', ('purchase', 'done')), ('invoice_status', 'in', ('no', 'invoiced'))]}" data-hotkey="w"/>
                     <button name="action_rfq_send" states="sent" string="Re-Send by Email" type="object" context="{'send_rfq':True}" data-hotkey="g"/>
                     <button name="print_quotation" string="Print RFQ" type="object" states="sent" groups="base.group_user" data-hotkey="k"/>
-                    <button name="button_confirm" type="object" states="draft" string="Confirm Order" id="draft_confirm"/>
+                    <button name="button_confirm" type="object" states="draft" context="{'validate_analytic': True}" string="Confirm Order" id="draft_confirm"/>
                     <button name="action_rfq_send" states="purchase" string="Send PO by Email" type="object" context="{'send_rfq':False}" data-hotkey="g"/>
                     <button name="confirm_reminder_mail" string="Confirm Receipt Date" type="object" attrs="{'invisible': ['|','|', ('state', 'not in', ('purchase', 'done')), ('mail_reminder_confirmed', '=', True), ('date_planned', '=', False)]}" groups="base.group_no_one" data-hotkey="o"/>
                     <button name="action_create_invoice" string="Create Bill" type="object" context="{'create_bill':True}" attrs="{'invisible': ['|', '|', ('state', 'not in', ('purchase', 'done')), ('invoice_status', 'not in', ('no', 'invoiced')), ('order_line', '=', [])]}" data-hotkey="w"/>
@@ -258,6 +258,8 @@
                                     <button name="action_purchase_history" type="object" icon="fa-history" title="Purchase History" attrs="{'invisible': [('id', '=', False)]}"/>
                                     <field name="taxes_id" widget="many2many_tags" domain="[('type_tax_use','=','purchase'), ('company_id', '=', parent.company_id), ('country_id', '=', parent.tax_country_id)]" context="{'default_type_tax_use': 'purchase', 'search_view_ref': 'account.account_tax_view_search'}" options="{'no_create': True}" optional="show"/>
                                     <field name="price_subtotal" widget="monetary"/>
+                                    <field name="price_total" invisible="1"/>
+                                    <field name="price_tax" invisible="1"/>
                                 </tree>
                                 <form string="Purchase Order Line">
                                         <field name="state" invisible="1"/>
@@ -335,7 +337,7 @@
                                                              <span>
                                                                  Quantity:
                                                                  <t t-esc="record.product_qty.value"/>
-                                                                 <t t-esc="record.product_uom.value"/>
+                                                                 <t t-esc="record.product_uom.value" groups="uom.group_uom"/>
                                                              </span>
                                                          </div>
                                                      </div>

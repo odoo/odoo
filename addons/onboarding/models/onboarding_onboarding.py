@@ -48,6 +48,8 @@ class Onboarding(models.Model):
             current_progress_id = onboarding.progress_ids.filtered(
                 lambda progress: progress.company_id.id in {False, self.env.company.id})
             if current_progress_id:
+                if len(current_progress_id) > 1:
+                    current_progress_id = current_progress_id.sorted('create_date', reverse=True)[0]
                 onboarding.current_onboarding_state = current_progress_id.onboarding_state
                 onboarding.current_progress_id = current_progress_id
                 onboarding.is_onboarding_closed = current_progress_id.is_onboarding_closed
@@ -94,12 +96,12 @@ class Onboarding(models.Model):
         self.ensure_one()
         values = {
             'bg_image': f'/web/image/onboarding.onboarding/{self.id}/panel_background_image',
+            'classes': f'o_onboarding_{self.panel_background_color}'
+                       if self.panel_background_color not in {False, 'none'} else '',
             'close_method': self.panel_close_action_name,
             'close_model': 'onboarding.onboarding',
             'steps': self.step_ids,
             'state': self.current_progress_id._get_and_update_onboarding_state(),
         }
-        if self.panel_background_color != 'none':
-            values.update(classes=f'o_onboarding_{self.panel_background_color}')
 
         return values

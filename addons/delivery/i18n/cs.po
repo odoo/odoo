@@ -12,9 +12,9 @@
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 16.0beta\n"
+"Project-Id-Version: Odoo Server 16.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-10-04 09:24+0000\n"
+"POT-Creation-Date: 2022-12-15 12:50+0000\n"
 "PO-Revision-Date: 2022-09-22 05:45+0000\n"
 "Last-Translator: trendspotter <jirka.p@volny.cz>, 2022\n"
 "Language-Team: Czech (https://www.transifex.com/odoo/teams/41243/cs/)\n"
@@ -25,15 +25,16 @@ msgstr ""
 "Plural-Forms: nplurals=4; plural=(n == 1 && n % 1 == 0) ? 0 : (n >= 2 && n <= 4 && n % 1 == 0) ? 1: (n % 1 != 0 ) ? 2 : 3;\n"
 
 #. module: delivery
+#. odoo-python
 #: code:addons/delivery/models/sale_order.py:0
 #, python-format
 msgid " (Estimated Cost: %s )"
-msgstr ""
+msgstr " (Odhadované náklady: %s )"
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.view_quant_package_weight_form
 msgid "(computed:"
-msgstr ""
+msgstr "(vypočteno:"
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.choose_delivery_carrier_view_form
@@ -41,6 +42,7 @@ msgid "<i class=\"fa fa-arrow-right me-1\"/>Get rate"
 msgstr ""
 
 #. module: delivery
+#. odoo-python
 #: code:addons/delivery/models/delivery_carrier.py:0
 #, python-format
 msgid ""
@@ -167,6 +169,7 @@ msgid "Add"
 msgstr "Přidat"
 
 #. module: delivery
+#. odoo-python
 #: code:addons/delivery/models/sale_order.py:0
 #: code:addons/delivery/wizard/choose_delivery_carrier.py:0
 #, python-format
@@ -477,6 +480,7 @@ msgid "Environment"
 msgstr "Prostředí"
 
 #. module: delivery
+#. odoo-python
 #: code:addons/delivery/models/delivery_carrier.py:0
 #: code:addons/delivery/models/delivery_grid.py:0
 #, python-format
@@ -518,6 +522,7 @@ msgid "Fixed Price"
 msgstr "Pevná cena"
 
 #. module: delivery
+#. odoo-python
 #: code:addons/delivery/models/sale_order.py:0
 #, python-format
 msgid "Free Shipping"
@@ -525,7 +530,6 @@ msgstr "Doprava zdarma"
 
 #. module: delivery
 #: model:delivery.carrier,name:delivery.free_delivery_carrier
-#: model:product.product,name:delivery.product_product_delivery
 #: model:product.template,name:delivery.product_product_delivery_product_template
 msgid "Free delivery charges"
 msgstr "Doprava zdarma"
@@ -644,7 +648,6 @@ msgstr "Naposled upraveno"
 
 #. module: delivery
 #: model:delivery.carrier,name:delivery.delivery_local_delivery
-#: model:product.product,name:delivery.product_product_local_delivery
 #: model:product.template,name:delivery.product_product_local_delivery_product_template
 msgid "Local Delivery"
 msgstr ""
@@ -685,11 +688,19 @@ msgid "Name"
 msgstr "Jméno"
 
 #. module: delivery
+#. odoo-python
+#: code:addons/delivery/models/delivery_carrier.py:0
+#, python-format
+msgid "New Providers"
+msgstr ""
+
+#. module: delivery
 #: model:ir.model.fields.selection,name:delivery.selection__stock_package_type__package_carrier_type__none
 msgid "No carrier integration"
 msgstr "Žádná integrace operátora"
 
 #. module: delivery
+#. odoo-python
 #: code:addons/delivery/models/delivery_grid.py:0
 #, python-format
 msgid "No price rule matching this order; delivery cost cannot be computed."
@@ -722,12 +733,14 @@ msgid "Package"
 msgstr "Balení"
 
 #. module: delivery
+#. odoo-python
 #: code:addons/delivery/models/stock_picking.py:0
 #, python-format
 msgid "Package Details"
 msgstr "Detaily balení"
 
 #. module: delivery
+#. odoo-python
 #: code:addons/delivery/wizard/choose_delivery_package.py:0
 #, python-format
 msgid "Package too heavy!"
@@ -752,6 +765,15 @@ msgstr "Předčíslí"
 #. module: delivery
 #: model:ir.model.constraint,message:delivery.constraint_delivery_zip_prefix_name_uniq
 msgid "Prefix already exists!"
+msgstr ""
+
+#. module: delivery
+#: model:ir.model.fields,help:delivery.field_delivery_carrier__zip_prefix_ids
+msgid ""
+"Prefixes of zip codes that this carrier applies to. Note that regular "
+"expressions can be used to support countries with varying zip code lengths, "
+"i.e. '$' can be added to end of prefix to match the exact zip (e.g. '100$' "
+"will only match '100' and not '1000')"
 msgstr ""
 
 #. module: delivery
@@ -889,6 +911,7 @@ msgstr ""
 "true."
 
 #. module: delivery
+#. odoo-python
 #: code:addons/delivery/models/stock_picking.py:0
 #, python-format
 msgid ""
@@ -996,9 +1019,18 @@ msgstr ""
 
 #. module: delivery
 #: model:delivery.carrier,name:delivery.delivery_carrier
-#: model:product.product,name:delivery.product_product_delivery_poste
 #: model:product.template,name:delivery.product_product_delivery_poste_product_template
 msgid "The Poste"
+msgstr ""
+
+#. module: delivery
+#. odoo-python
+#: code:addons/delivery/models/delivery_carrier.py:0
+#: code:addons/delivery/models/delivery_carrier.py:0
+#, python-format
+msgid ""
+"The package cannot be created because the total weight of the products in "
+"the picking is 0.0 %s"
 msgstr ""
 
 #. module: delivery
@@ -1018,18 +1050,21 @@ msgid "The shipping insurance must be a percentage between 0 and 100."
 msgstr ""
 
 #. module: delivery
+#. odoo-python
 #: code:addons/delivery/models/delivery_carrier.py:0
 #, python-format
 msgid "The shipping is free since the order amount exceeds %.2f."
 msgstr ""
 
 #. module: delivery
+#. odoo-python
 #: code:addons/delivery/wizard/choose_delivery_carrier.py:0
 #, python-format
 msgid "The shipping price will be set once the delivery is done."
 msgstr "Přepravní cena bude stanovena po dokončení dodávky."
 
 #. module: delivery
+#. odoo-python
 #: code:addons/delivery/wizard/choose_delivery_package.py:0
 #, python-format
 msgid ""
@@ -1040,6 +1075,7 @@ msgstr ""
 " Vyberte prosím jiný typ balíčku."
 
 #. module: delivery
+#. odoo-python
 #: code:addons/delivery/models/delivery_grid.py:0
 #, python-format
 msgid "There is no matching delivery rule."
@@ -1123,21 +1159,12 @@ msgid "Transfer"
 msgstr "Převod"
 
 #. module: delivery
-#: model:product.product,uom_name:delivery.product_product_delivery
-#: model:product.product,uom_name:delivery.product_product_delivery_poste
-#: model:product.product,uom_name:delivery.product_product_local_delivery
-#: model:product.template,uom_name:delivery.product_product_delivery_poste_product_template
-#: model:product.template,uom_name:delivery.product_product_delivery_product_template
-#: model:product.template,uom_name:delivery.product_product_local_delivery_product_template
-msgid "Units"
-msgstr "Jednotky"
-
-#. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.choose_delivery_carrier_view_form
 msgid "Update"
 msgstr "Aktualizace"
 
 #. module: delivery
+#. odoo-python
 #: code:addons/delivery/models/sale_order.py:0
 #: model_terms:ir.ui.view,arch_db:delivery.view_order_form_with_carrier
 #, python-format
@@ -1199,6 +1226,7 @@ msgid "Weight:"
 msgstr ""
 
 #. module: delivery
+#. odoo-python
 #: code:addons/delivery/models/sale_order.py:0
 #, python-format
 msgid ""
@@ -1214,6 +1242,7 @@ msgid "You have multiple tracker links, they are available in the chatter."
 msgstr ""
 
 #. module: delivery
+#. odoo-python
 #: code:addons/delivery/models/stock_picking.py:0
 #, python-format
 msgid ""

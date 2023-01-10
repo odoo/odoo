@@ -109,14 +109,14 @@
 
             <xpath expr="//t[@name='second_options']" position="after">
                 <div class="row" t-if="record.quotations_count.raw_value">
-                    <div class="col-8">
+                    <div class="col">
                         <a name="%(action_quotations_salesteams)d" type="action" context="{'search_default_draft': True, 'search_default_sent': True}">
                             <field name="quotations_count" class="me-1"/>
                             <t t-if="record.quotations_count.raw_value == 1">Quotation</t>
                             <t t-else="">Quotations</t>
                         </a>
                     </div>
-                    <div class="col-4 text-end text-truncate">
+                    <div class="col-auto text-truncate">
                         <field name="quotations_amount" widget="monetary"/>
                     </div>
                 </div>

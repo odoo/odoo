@@ -4,14 +4,15 @@
 # 
 # Translators:
 # Martin Trigaux, 2022
+# Sarah Park, 2022
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 16.0beta\n"
+"Project-Id-Version: Odoo Server 16.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-10-10 10:22+0000\n"
+"POT-Creation-Date: 2022-12-15 12:48+0000\n"
 "PO-Revision-Date: 2022-09-22 05:54+0000\n"
-"Last-Translator: Martin Trigaux, 2022\n"
+"Last-Translator: Sarah Park, 2022\n"
 "Language-Team: Korean (https://www.transifex.com/odoo/teams/41243/ko/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -42,12 +43,14 @@ msgid "# of Lines"
 msgstr "# 내역"
 
 #. module: purchase
+#. odoo-python
 #: code:addons/purchase/models/purchase.py:0
 #, python-format
 msgid "%(amount)s due %(date)s"
 msgstr ""
 
 #. module: purchase
+#. odoo-python
 #: code:addons/purchase/models/purchase.py:0
 #: code:addons/purchase/models/purchase.py:0
 #, python-format
@@ -55,12 +58,14 @@ msgid "%(product)s from %(original_receipt_date)s to %(new_receipt_date)s"
 msgstr ""
 
 #. module: purchase
+#. odoo-python
 #: code:addons/purchase/models/purchase.py:0
 #, python-format
 msgid "%s confirmed the receipt will take place on %s."
 msgstr ""
 
 #. module: purchase
+#. odoo-python
 #: code:addons/purchase/models/purchase.py:0
 #, python-format
 msgid "%s modified receipt dates for the following products:"
@@ -444,6 +449,7 @@ msgid "<strong>Your Order Reference:</strong>"
 msgstr "<strong>주문 참조 :</strong>"
 
 #. module: purchase
+#. odoo-python
 #: code:addons/purchase/models/purchase.py:0
 #, python-format
 msgid "A sample email has been sent to %s."
@@ -473,6 +479,7 @@ msgid ""
 msgstr ""
 
 #. module: purchase
+#. odoo-python
 #: code:addons/purchase/models/purchase.py:0
 #, python-format
 msgid "Accept"
@@ -522,12 +529,12 @@ msgstr "활동 상태"
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__activity_type_icon
 msgid "Activity Type Icon"
-msgstr "활동 유형 아이콘"
+msgstr "업무 유형 아이콘"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
 msgid "Add a note"
-msgstr "노트 추가하기"
+msgstr "메모 추가"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
@@ -537,7 +544,7 @@ msgstr "품목 추가하기"
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
 msgid "Add a section"
-msgstr "섹션 추가하기"
+msgstr "영역 추가"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.res_config_settings_view_form_purchase
@@ -545,7 +552,7 @@ msgid "Add several variants to the purchase order from a grid"
 msgstr "그리드에서 발주서에 여러 파생 상품을 추가하기"
 
 #. module: purchase
-#. openerp-web
+#. odoo-javascript
 #: code:addons/purchase/static/src/js/tours/purchase.js:0
 #, python-format
 msgid "Add some products or services to your quotation."
@@ -557,34 +564,35 @@ msgid "Administrator"
 msgstr "관리자"
 
 #. module: purchase
+#. odoo-python
 #: code:addons/purchase/controllers/portal.py:0
 #, python-format
 msgid "All"
 msgstr "전체"
 
 #. module: purchase
-#. openerp-web
+#. odoo-javascript
 #: code:addons/purchase/static/src/views/purchase_dashboard.xml:0
 #, python-format
 msgid "All Draft RFQs"
 msgstr "모든 초안상태의 견적요청서"
 
 #. module: purchase
-#. openerp-web
+#. odoo-javascript
 #: code:addons/purchase/static/src/views/purchase_dashboard.xml:0
 #, python-format
 msgid "All Late RFQs"
 msgstr "모든 기한초과상태의 견적요청서"
 
 #. module: purchase
-#. openerp-web
+#. odoo-javascript
 #: code:addons/purchase/static/src/views/purchase_dashboard.xml:0
 #, python-format
 msgid "All RFQs"
 msgstr "모든 견적요청서"
 
 #. module: purchase
-#. openerp-web
+#. odoo-javascript
 #: code:addons/purchase/static/src/views/purchase_dashboard.xml:0
 #, python-format
 msgid "All Waiting RFQs"
@@ -637,13 +645,13 @@ msgid "Analytic Account"
 msgstr "분석 계정"
 
 #. module: purchase
-#: model:ir.model.fields,field_description:purchase.field_purchase_order_line__analytic_distribution_stored_char
-msgid "Analytic Distribution Stored Char"
+#: model:ir.model,name:purchase.model_account_analytic_applicability
+msgid "Analytic Plan's Applicabilities"
 msgstr ""
 
 #. module: purchase
-#: model:ir.model,name:purchase.model_account_analytic_applicability
-msgid "Analytic Plan's Applicabilities"
+#: model:ir.model.fields,field_description:purchase.field_purchase_order_line__analytic_precision
+msgid "Analytic Precision"
 msgstr ""
 
 #. module: purchase
@@ -718,7 +726,7 @@ msgid "Average Days to Purchase"
 msgstr ""
 
 #. module: purchase
-#. openerp-web
+#. odoo-javascript
 #: code:addons/purchase/static/src/views/purchase_dashboard.xml:0
 #, python-format
 msgid "Avg Order Value"
@@ -803,6 +811,7 @@ msgid "Cancel"
 msgstr "취소"
 
 #. module: purchase
+#. odoo-python
 #: code:addons/purchase/controllers/portal.py:0
 #: model:ir.model.fields.selection,name:purchase.selection__purchase_order__state__cancel
 #: model:ir.model.fields.selection,name:purchase.selection__purchase_report__state__cancel
@@ -816,6 +825,7 @@ msgid "Cancelled Purchase Order #"
 msgstr "취소된 발주서 #"
 
 #. module: purchase
+#. odoo-python
 #: code:addons/purchase/models/purchase.py:0
 #, python-format
 msgid "Cannot delete a purchase order line which is in state '%s'."
@@ -851,6 +861,7 @@ msgid "Company Currency"
 msgstr "회사 통화"
 
 #. module: purchase
+#. odoo-python
 #: code:addons/purchase/models/purchase.py:0
 #: code:addons/purchase/models/purchase.py:0
 #, python-format
@@ -868,6 +879,7 @@ msgid "Configuration"
 msgstr "구성"
 
 #. module: purchase
+#. odoo-python
 #: code:addons/purchase/models/purchase.py:0
 #, python-format
 msgid "Confirm"
@@ -889,7 +901,7 @@ msgid "Confirm purchase orders in one step"
 msgstr "발주서 일괄승인"
 
 #. module: purchase
-#. openerp-web
+#. odoo-javascript
 #: code:addons/purchase/static/src/js/tours/purchase.js:0
 #, python-format
 msgid "Confirm your purchase."
@@ -999,6 +1011,7 @@ msgid "Date Calendar Start"
 msgstr ""
 
 #. module: purchase
+#. odoo-python
 #: code:addons/purchase/models/purchase.py:0
 #: code:addons/purchase/models/purchase.py:0
 #, python-format
@@ -1011,7 +1024,7 @@ msgid "Date:"
 msgstr "일자:"
 
 #. module: purchase
-#. openerp-web
+#. odoo-javascript
 #: code:addons/purchase/static/src/views/purchase_dashboard.xml:0
 #, python-format
 msgid "Days"
@@ -1136,6 +1149,7 @@ msgid "Extended Filters"
 msgstr "확장 필터"
 
 #. module: purchase
+#. odoo-python
 #: code:addons/purchase/models/purchase.py:0
 #, python-format
 msgid "Extra line with %s "
@@ -1265,12 +1279,14 @@ msgid "If true, the packaging can be used for purchase orders"
 msgstr ""
 
 #. module: purchase
+#. odoo-python
 #: code:addons/purchase/models/product.py:0
 #, python-format
 msgid "Import Template for Products"
 msgstr "품목 가져오기"
 
 #. module: purchase
+#. odoo-python
 #: code:addons/purchase/models/purchase.py:0
 #, python-format
 msgid "In order to delete a purchase order, you must cancel it first."
@@ -1282,7 +1298,7 @@ msgid "Incoterm"
 msgstr "국제 상업 약관"
 
 #. module: purchase
-#. openerp-web
+#. odoo-javascript
 #: code:addons/purchase/static/src/js/tours/purchase.js:0
 #, python-format
 msgid "Indicate the product quantity you want to order."
@@ -1298,7 +1314,7 @@ msgstr "Incoterm(국제 상업 약관)은 국제 거래에서 사용되는 미�
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
 msgid "Invoices and Incoming Shipments"
-msgstr "청구서와 입고 배송중"
+msgstr "청구서 및 입고 배송"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.res_config_settings_view_form_purchase
@@ -1341,7 +1357,7 @@ msgid "Last Updated on"
 msgstr "최근 갱신 일자"
 
 #. module: purchase
-#. openerp-web
+#. odoo-javascript
 #: code:addons/purchase/static/src/views/purchase_dashboard.xml:0
 #, python-format
 msgid "Late"
@@ -1359,21 +1375,21 @@ msgid "Late RFQs"
 msgstr ""
 
 #. module: purchase
-#. openerp-web
+#. odoo-javascript
 #: code:addons/purchase/static/src/views/purchase_dashboard.xml:0
 #, python-format
 msgid "Lead Time to Purchase"
 msgstr ""
 
 #. module: purchase
-#. openerp-web
+#. odoo-javascript
 #: code:addons/purchase/static/src/js/tours/purchase.js:0
 #, python-format
 msgid "Let's create your first request for quotation."
 msgstr ""
 
 #. module: purchase
-#. openerp-web
+#. odoo-javascript
 #: code:addons/purchase/static/src/js/tours/purchase.js:0
 #: code:addons/purchase/static/src/js/tours/purchase.js:0
 #, python-format
@@ -1403,6 +1419,7 @@ msgid "Lock Confirmed Orders"
 msgstr "확정된 주문 잠그기"
 
 #. module: purchase
+#. odoo-python
 #: code:addons/purchase/controllers/portal.py:0
 #: model:ir.model.fields.selection,name:purchase.selection__purchase_order__state__done
 #, python-format
@@ -1505,14 +1522,14 @@ msgid "My Activity Deadline"
 msgstr "내 활동 마감일"
 
 #. module: purchase
-#. openerp-web
+#. odoo-javascript
 #: code:addons/purchase/static/src/views/purchase_dashboard.xml:0
 #, python-format
 msgid "My Draft RFQs"
 msgstr ""
 
 #. module: purchase
-#. openerp-web
+#. odoo-javascript
 #: code:addons/purchase/static/src/views/purchase_dashboard.xml:0
 #, python-format
 msgid "My Late RFQs"
@@ -1529,20 +1546,21 @@ msgid "My Purchases"
 msgstr "나의 구매"
 
 #. module: purchase
-#. openerp-web
+#. odoo-javascript
 #: code:addons/purchase/static/src/views/purchase_dashboard.xml:0
 #, python-format
 msgid "My RFQs"
 msgstr ""
 
 #. module: purchase
-#. openerp-web
+#. odoo-javascript
 #: code:addons/purchase/static/src/views/purchase_dashboard.xml:0
 #, python-format
 msgid "My Waiting RFQs"
 msgstr ""
 
 #. module: purchase
+#. odoo-python
 #: code:addons/purchase/controllers/portal.py:0
 #, python-format
 msgid "Name"
@@ -1554,6 +1572,7 @@ msgid "Name, TIN, Email, or Reference"
 msgstr "이름, TIN, 이메일, 또는 참조"
 
 #. module: purchase
+#. odoo-python
 #: code:addons/purchase/controllers/portal.py:0
 #, python-format
 msgid "Newest"
@@ -1577,7 +1596,7 @@ msgstr "다음 활동 요약"
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__activity_type_id
 msgid "Next Activity Type"
-msgstr "다음 활동 유형"
+msgstr "다음 업무 유형"
 
 #. module: purchase
 #: model:ir.model.fields.selection,name:purchase.selection__product_template__purchase_line_warn__no-message
@@ -1684,7 +1703,7 @@ msgid "On received quantities"
 msgstr "수령한 수량"
 
 #. module: purchase
-#. openerp-web
+#. odoo-javascript
 #: code:addons/purchase/static/src/js/tours/purchase.js:0
 #, python-format
 msgid ""
@@ -1927,6 +1946,7 @@ msgid "Purchase History"
 msgstr ""
 
 #. module: purchase
+#. odoo-python
 #: code:addons/purchase/models/product.py:0
 #: code:addons/purchase/models/product.py:0
 #: code:addons/purchase/models/purchase.py:0
@@ -1941,6 +1961,7 @@ msgid "Purchase Lead Time"
 msgstr "구매 리드타임"
 
 #. module: purchase
+#. odoo-python
 #: code:addons/purchase/controllers/portal.py:0
 #: code:addons/purchase/models/purchase.py:0
 #: code:addons/purchase/models/purchase.py:0
@@ -2061,12 +2082,12 @@ msgstr "구매 경고"
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_view_search
 msgid "Purchase orders that have been invoiced."
-msgstr "청구서 발행완료된 발주서"
+msgstr "청구서 발행 완료된 구매 발주서"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_view_search
 msgid "Purchase orders that include lines not invoiced."
-msgstr "청구서 처리되지 않은 내역를 포함한 발주서"
+msgstr "청구서 미발행 내역을 포함한 구매 발주서"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.res_config_settings_view_form_purchase
@@ -2076,7 +2097,6 @@ msgstr ""
 #. module: purchase
 #: model:ir.actions.server,name:purchase.purchase_send_reminder_mail_ir_actions_server
 #: model:ir.cron,cron_name:purchase.purchase_send_reminder_mail
-#: model:ir.cron,name:purchase.purchase_send_reminder_mail
 msgid "Purchase reminder"
 msgstr ""
 
@@ -2107,7 +2127,7 @@ msgid "Purchased"
 msgstr "구매함"
 
 #. module: purchase
-#. openerp-web
+#. odoo-javascript
 #: code:addons/purchase/static/src/views/purchase_dashboard.xml:0
 #, python-format
 msgid "Purchased Last 7 Days"
@@ -2211,7 +2231,7 @@ msgid "RFQs"
 msgstr "견적 요청서"
 
 #. module: purchase
-#. openerp-web
+#. odoo-javascript
 #: code:addons/purchase/static/src/views/purchase_dashboard.xml:0
 #, python-format
 msgid "RFQs Sent Last 7 Days"
@@ -2332,6 +2352,7 @@ msgid "Reporting"
 msgstr "보고"
 
 #. module: purchase
+#. odoo-python
 #: code:addons/purchase/models/purchase.py:0
 #: model:ir.actions.report,name:purchase.report_purchase_quotation
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_portal_content
@@ -2402,7 +2423,7 @@ msgid "Search Reference Document"
 msgstr "참조 문서 검색"
 
 #. module: purchase
-#. openerp-web
+#. odoo-javascript
 #: code:addons/purchase/static/src/js/tours/purchase.js:0
 #, python-format
 msgid "Search a vendor name, or create one on the fly."
@@ -2429,7 +2450,7 @@ msgid "Security Token"
 msgstr "보안 토큰"
 
 #. module: purchase
-#. openerp-web
+#. odoo-javascript
 #: code:addons/purchase/static/src/js/tours/purchase.js:0
 #, python-format
 msgid "Select a product, or create a new one on the fly."
@@ -2474,7 +2495,7 @@ msgid "Send by Email"
 msgstr "이메일로 전송"
 
 #. module: purchase
-#. openerp-web
+#. odoo-javascript
 #: code:addons/purchase/static/src/js/tours/purchase.js:0
 #: code:addons/purchase/static/src/js/tours/purchase.js:0
 #, python-format
@@ -2622,7 +2643,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__amount_tax
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line__taxes_id
 msgid "Taxes"
-msgstr "세금"
+msgstr "세무"
 
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_purchase_order_line__display_type
@@ -2656,6 +2677,7 @@ msgstr ""
 "이 필드는 빠른 검색을 위해 사용할 수 있습니다."
 
 #. module: purchase
+#. odoo-python
 #: code:addons/purchase/models/purchase.py:0
 #, python-format
 msgid "The order receipt has been acknowledged by %s."
@@ -2682,6 +2704,7 @@ msgid "There are currently no requests for quotation for your account."
 msgstr ""
 
 #. module: purchase
+#. odoo-python
 #: code:addons/purchase/models/purchase.py:0
 #, python-format
 msgid ""
@@ -2718,6 +2741,7 @@ msgid "This note is added to purchase orders."
 msgstr "이 메모는 발주서에 추가됩니다."
 
 #. module: purchase
+#. odoo-python
 #: code:addons/purchase/models/purchase.py:0
 #, python-format
 msgid ""
@@ -2726,12 +2750,14 @@ msgid ""
 msgstr ""
 
 #. module: purchase
+#. odoo-python
 #: code:addons/purchase/models/account_invoice.py:0
 #, python-format
 msgid "This vendor bill has been created from: %s"
 msgstr "이 공급업체 청구서는 다음에서 작성되었습니다 : %s"
 
 #. module: purchase
+#. odoo-python
 #: code:addons/purchase/models/account_invoice.py:0
 #, python-format
 msgid "This vendor bill has been modified from: %s"
@@ -2767,7 +2793,7 @@ msgid "To Invoice Quantity"
 msgstr "청구서 발행할 수량"
 
 #. module: purchase
-#. openerp-web
+#. odoo-javascript
 #: code:addons/purchase/static/src/views/purchase_dashboard.xml:0
 #, python-format
 msgid "To Send"
@@ -2780,6 +2806,7 @@ msgid "Today Activities"
 msgstr "오늘 활동"
 
 #. module: purchase
+#. odoo-python
 #: code:addons/purchase/controllers/portal.py:0
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__amount_total
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line__price_total
@@ -2820,11 +2847,18 @@ msgid "True if the reminder email is confirmed by the vendor."
 msgstr ""
 
 #. module: purchase
+#: model_terms:ir.ui.view,arch_db:purchase.res_partner_view_purchase_buttons
+#: model_terms:ir.ui.view,arch_db:purchase.view_product_supplier_inherit
+msgid "Type a message..."
+msgstr ""
+
+#. module: purchase
 #: model:ir.model.fields,help:purchase.field_purchase_order__activity_exception_decoration
 msgid "Type of the exception activity on record."
 msgstr "레코드에 있는 예외 활동의 유형입니다."
 
 #. module: purchase
+#. odoo-python
 #: code:addons/purchase/models/purchase.py:0
 #, python-format
 msgid ""
@@ -2891,6 +2925,7 @@ msgid "UoM"
 msgstr "단위"
 
 #. module: purchase
+#. odoo-python
 #: code:addons/purchase/models/purchase.py:0
 #, python-format
 msgid "Update Dates"
@@ -2905,6 +2940,15 @@ msgstr "긴급"
 #: model:res.groups,name:purchase.group_purchase_user
 msgid "User"
 msgstr "사용자"
+
+#. module: purchase
+#. odoo-python
+#: code:addons/purchase/report/purchase_report.py:0
+#, python-format
+msgid ""
+"Value: 'avg_days_to_purchase' should only be used to show an average. If you"
+" are seeing this message then it is being accessed incorrectly."
+msgstr ""
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.res_config_settings_view_form_purchase
@@ -2968,6 +3012,7 @@ msgstr ""
 " 청구서를 관리할 수 있습니다."
 
 #. module: purchase
+#. odoo-python
 #: code:addons/purchase/models/purchase.py:0
 #, python-format
 msgid "View"
@@ -2979,7 +3024,7 @@ msgid "Volume"
 msgstr "부피"
 
 #. module: purchase
-#. openerp-web
+#. odoo-javascript
 #: code:addons/purchase/static/src/views/purchase_dashboard.xml:0
 #, python-format
 msgid "Waiting"
@@ -2997,6 +3042,7 @@ msgid "Waiting RFQs"
 msgstr ""
 
 #. module: purchase
+#. odoo-python
 #: code:addons/purchase/models/purchase.py:0
 #: model:ir.model.fields.selection,name:purchase.selection__product_template__purchase_line_warn__warning
 #: model:ir.model.fields.selection,name:purchase.selection__res_partner__purchase_warn__warning
@@ -3005,6 +3051,7 @@ msgid "Warning"
 msgstr "경고"
 
 #. module: purchase
+#. odoo-python
 #: code:addons/purchase/models/purchase.py:0
 #: code:addons/purchase/models/purchase.py:0
 #, python-format
@@ -3070,6 +3117,7 @@ msgid "You can find a vendor by its Name, TIN, Email or Internal Reference."
 msgstr "이름, TIN, 이메일 또는 내부 참조로 공급업체를 찾을 수 있습니다."
 
 #. module: purchase
+#. odoo-python
 #: code:addons/purchase/models/purchase.py:0
 #, python-format
 msgid ""
@@ -3094,6 +3142,7 @@ msgstr ""
 "              저장 가능한 제품이든 소모품이든 서비스든 상관 없습니다."
 
 #. module: purchase
+#. odoo-python
 #: code:addons/purchase/models/purchase.py:0
 #, python-format
 msgid ""

@@ -1513,6 +1513,7 @@ body.editor_enable.editor_has_snippets {
         .o_we_m2m {
             we-list, we-list > div, we-list we-select {
                 margin-top: 0;
+                max-width: 100%;
             }
         }
 
@@ -2224,8 +2225,13 @@ body.editor_enable.editor_has_snippets {
                     min-width: 22px;
                     padding: 0 $o-we-sidebar-content-field-button-group-button-spacing * .5;
                     color: $o-we-fg-lighter;
-                    &.oe_snippet_remove {
+                    // TODO In master: restore `.oe_snippet_remove`.
+                    &.fa-trash {
                         background-color: mix($o-we-color-danger, $o-we-sidebar-content-field-clickable-bg);
+                        // TODO In master: use `.o_disabled`.
+                        &:not(.oe_snippet_remove) {
+                            opacity: 0.5;
+                        }
                     }
                 }
                 > .o_overlay_move_options > .o_move_handle {
@@ -2257,6 +2263,16 @@ body.editor_enable.editor_has_snippets {
                         &:hover {
                             border-color: mix($o-we-handles-accent-color, $o-we-sidebar-content-field-pressed-bg, .4);
                             background-color: $o-we-sidebar-content-field-pressed-bg;
+
+                            // TODO In master: restore `.oe_snippet_remove`.
+                            &.fa-trash {
+                                border-color: mix($o-we-color-danger, $o-we-sidebar-content-field-pressed-bg, .4);
+                                background-color: $o-we-color-danger;
+                                // TODO In master: use `.o_disabled`.
+                                &:not(.oe_snippet_remove) {
+                                    opacity: 0.5;
+                                }
+                            }
                         }
                     }
                 }
@@ -2540,13 +2556,14 @@ we-button-group.o_grid {
 // Background grid.
 .o_we_background_grid {
     padding: 0 !important;
-}
 
-.o_we_cell {
-    fill: $o-brand-odoo;
-    fill-opacity: .2;
-    stroke: $o-we-border-color;
-    stroke-width: 1px;
+    .o_we_cell {
+        fill: $o-brand-odoo;
+        fill-opacity: .2;
+        stroke: $o-we-border-color;
+        stroke-width: 1px;
+        filter: drop-shadow(-1px -1px 0px rgba(255, 255, 255, 0.6));
+    }
 }
 
 .o_we_drag_helper {

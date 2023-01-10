@@ -61,7 +61,7 @@
                         </div>
                     </Transition>
                     <t t-if="section.canAddFilter">
-                        <FilterAutoComplete t-props="getAutoCompleteProps(section)" />
+                        <AutoComplete t-props="getAutoCompleteProps(section)" />
                     </t>
                 </div>
             </t>
@@ -141,10 +141,6 @@
                 />
             </div>
         </div>
-    </t>
-
-    <t t-name="web.FilterAutoComplete" owl="1">
-        <AutoComplete value="state.value" sources="sources" autoSelect="true" placeholder="props.placeholder" onSelect.bind="onSelect" onInput.bind="onInput" />
     </t>
 
 </templates>

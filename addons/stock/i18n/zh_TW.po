@@ -10,9 +10,9 @@
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 16.0beta\n"
+"Project-Id-Version: Odoo Server 16.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-10-10 10:22+0000\n"
+"POT-Creation-Date: 2022-12-15 12:48+0000\n"
 "PO-Revision-Date: 2022-09-22 05:55+0000\n"
 "Last-Translator: 226408 台北 <226408@so8d.com>, 2022\n"
 "Language-Team: Chinese (Taiwan) (https://www.transifex.com/odoo/teams/41243/zh_TW/)\n"
@@ -23,6 +23,7 @@ msgstr ""
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: stock
+#. odoo-python
 #: code:addons/stock/models/stock_move.py:0
 #, python-format
 msgid ""
@@ -35,6 +36,7 @@ msgstr ""
 "%s --> 產品單位是 %s (%s) - 庫存移動單位是 %s (%s)"
 
 #. module: stock
+#. odoo-python
 #: code:addons/stock/models/stock_move.py:0
 #, python-format
 msgid ""
@@ -47,6 +49,7 @@ msgstr ""
 "阻塞: %s"
 
 #. module: stock
+#. odoo-python
 #: code:addons/stock/models/stock_picking.py:0
 #, python-format
 msgid ""
@@ -59,6 +62,7 @@ msgstr ""
 "調撥 %s：如果沒有保留或完成數量，您將無法對這些調撥執行過帳。要強制進行這些調撥，請切換更多編輯並對完成的數量進行輸入。"
 
 #. module: stock
+#. odoo-python
 #: code:addons/stock/models/stock_picking.py:0
 #, python-format
 msgid ""
@@ -71,6 +75,7 @@ msgstr ""
 "調撥 %s：您需要提供產品 %s 的批號/序號。"
 
 #. module: stock
+#. odoo-python
 #: code:addons/stock/models/stock_move.py:0
 #, python-format
 msgid ""
@@ -81,6 +86,7 @@ msgstr ""
 "(%s) 存在於位置 %s"
 
 #. module: stock
+#. odoo-python
 #: code:addons/stock/models/stock_move.py:0
 #, python-format
 msgid ""
@@ -115,6 +121,7 @@ msgstr ""
 " • 已取消：轉讓已取消。"
 
 #. module: stock
+#. odoo-python
 #: code:addons/stock/models/stock_lot.py:0
 #, python-format
 msgid " - Product: %s, Serial Number: %s"
@@ -129,12 +136,14 @@ msgid ""
 msgstr " 當不為 0 時，存儲在此位置的產品的庫存盤點日期將按定義的頻率自動設置。"
 
 #. module: stock
+#. odoo-python
 #: code:addons/stock/models/stock_warehouse.py:0
 #, python-format
 msgid "%(warehouse)s: Supply Product from %(supplier)s"
 msgstr "%(warehouse)s：從%(supplier)s供應產品"
 
 #. module: stock
+#. odoo-python
 #: code:addons/stock/models/stock_location.py:0
 #: code:addons/stock/models/stock_package_type.py:0
 #: code:addons/stock/models/stock_storage_category.py:0
@@ -143,12 +152,14 @@ msgid "%s (copy)"
 msgstr "%s (副本)"
 
 #. module: stock
+#. odoo-python
 #: code:addons/stock/models/stock_move_line.py:0
 #, python-format
 msgid "%s [reverted]"
 msgstr ""
 
 #. module: stock
+#. odoo-python
 #: code:addons/stock/models/stock_warehouse.py:0
 #, python-format
 msgid ""
@@ -200,6 +211,7 @@ msgid ""
 msgstr "'撿貨單 - %s - %s' % (object.partner_id.name or '', object.name)"
 
 #. module: stock
+#. odoo-python
 #: code:addons/stock/models/stock_lot.py:0
 #, python-format
 msgid "(copy of) %s"
@@ -245,6 +257,7 @@ msgstr ""
 "• 運輸地點：應在公司間或倉庫間作業中使用的對應位置"
 
 #. module: stock
+#. odoo-python
 #: code:addons/stock/models/stock_rule.py:0
 #, python-format
 msgid "+ %d day(s)"
@@ -290,6 +303,7 @@ msgid "4 x 12"
 msgstr "4 × 12"
 
 #. module: stock
+#. odoo-python
 #: code:addons/stock/models/stock_scrap.py:0
 #, python-format
 msgid ": Insufficient Quantity To Scrap"
@@ -305,6 +319,7 @@ msgstr ""
 "                    <strong>目前庫存: </strong>"
 
 #. module: stock
+#. odoo-python
 #: code:addons/stock/models/stock_rule.py:0
 #, python-format
 msgid ""
@@ -313,6 +328,7 @@ msgid ""
 msgstr "<br>需求產生於 <b>%s</b> 為滿足這個需求，規則將會被觸發。"
 
 #. module: stock
+#. odoo-python
 #: code:addons/stock/models/stock_rule.py:0
 #, python-format
 msgid ""
@@ -710,6 +726,7 @@ msgid "A barcode can only be assigned to one package type !"
 msgstr "一個條碼只能分配給一種包裹類型！"
 
 #. module: stock
+#. odoo-python
 #: code:addons/stock/models/stock_move_line.py:0
 #, python-format
 msgid "A done move line should never have a reserved quantity."
@@ -896,7 +913,7 @@ msgid "All Transfers"
 msgstr "所有調撥"
 
 #. module: stock
-#. openerp-web
+#. odoo-javascript
 #: code:addons/stock/static/src/views/search/stock_report_search_panel.xml:0
 #, python-format
 msgid "All Warehouses"
@@ -964,6 +981,7 @@ msgid ""
 msgstr "不在具有循環庫存日期的位置的產品的年度庫存月份。如果沒有自動年度庫存，則設置為無月。"
 
 #. module: stock
+#. odoo-python
 #: code:addons/stock/models/stock_location.py:0
 #, python-format
 msgid ""
@@ -1011,7 +1029,7 @@ msgid "Apply"
 msgstr "套用"
 
 #. module: stock
-#. openerp-web
+#. odoo-javascript
 #: code:addons/stock/static/src/views/list/inventory_report_list.xml:0
 #, python-format
 msgid "Apply All"
@@ -1056,14 +1074,14 @@ msgid "Ask"
 msgstr ""
 
 #. module: stock
-#. openerp-web
+#. odoo-javascript
 #: code:addons/stock/static/src/components/reception_report_line/stock_reception_report_line.xml:0
 #, python-format
 msgid "Assign"
 msgstr "分配"
 
 #. module: stock
-#. openerp-web
+#. odoo-javascript
 #: code:addons/stock/static/src/components/reception_report_main/stock_reception_report_main.xml:0
 #: code:addons/stock/static/src/components/reception_report_table/stock_reception_report_table.xml:0
 #: code:addons/stock/static/src/xml/report_stock_reception.xml:0
@@ -1138,7 +1156,8 @@ msgid "Automatic No Step Added"
 msgstr "自動，不增加步驟"
 
 #. module: stock
-#. openerp-web
+#. odoo-javascript
+#. odoo-python
 #: code:addons/stock/models/stock_picking.py:0
 #: code:addons/stock/static/src/widgets/forecast_widget.xml:0
 #: model:ir.model.fields.selection,name:stock.selection__stock_move__state__assigned
@@ -1156,11 +1175,13 @@ msgstr "可用的產品"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_quant__available_quantity
 #: model_terms:ir.ui.view,arch_db:stock.replenishment_option_tree_view
+#: model_terms:ir.ui.view,arch_db:stock.view_stock_quant_form_editable
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_quant_tree_inventory_editable
 msgid "Available Quantity"
 msgstr "可用數量"
 
 #. module: stock
+#. odoo-python
 #: code:addons/stock/models/product.py:0
 #, python-format
 msgid "Available quantity should be set to zero before changing type"
@@ -1286,7 +1307,6 @@ msgid ""
 msgstr "通過取消勾選有效欄位，您能隱藏一個位置而不是刪除它。"
 
 #. module: stock
-#: model:product.product,name:stock.product_cable_management_box
 #: model:product.template,name:stock.product_cable_management_box_product_template
 msgid "Cable Management Box"
 msgstr "理線盒"
@@ -1297,12 +1317,14 @@ msgid "Calendar View"
 msgstr "日曆視圖"
 
 #. module: stock
+#. odoo-python
 #: code:addons/stock/models/stock_warehouse.py:0
 #, python-format
 msgid "Can't find any customer or supplier location."
 msgstr "找不到任何客戶或供應商位置。"
 
 #. module: stock
+#. odoo-python
 #: code:addons/stock/models/stock_warehouse.py:0
 #, python-format
 msgid "Can't find any generic route %s."
@@ -1344,6 +1366,7 @@ msgid "Cancelled Moves"
 msgstr "取消的移動"
 
 #. module: stock
+#. odoo-python
 #: code:addons/stock/models/stock_move.py:0
 #, python-format
 msgid ""
@@ -1415,6 +1438,7 @@ msgid "Change Product Quantity"
 msgstr "更改產品數量"
 
 #. module: stock
+#. odoo-python
 #: code:addons/stock/models/product_strategy.py:0
 #: code:addons/stock/models/stock_location.py:0
 #: code:addons/stock/models/stock_lot.py:0
@@ -1428,12 +1452,14 @@ msgid ""
 msgstr "此時禁止更改此記錄的公司，您更應該將其存檔並建立一個新記錄。"
 
 #. module: stock
+#. odoo-python
 #: code:addons/stock/models/stock_picking.py:0
 #, python-format
 msgid "Changing the operation type of this record is forbidden at this point."
 msgstr "此時禁止更改此記錄的操作類型。"
 
 #. module: stock
+#. odoo-python
 #: code:addons/stock/models/stock_move_line.py:0
 #, python-format
 msgid "Changing the product is only allowed in 'Draft' state."
@@ -1468,6 +1494,7 @@ msgid ""
 msgstr "勾取此選項以允許此位置放置已報廢/已毀壞的物資。"
 
 #. module: stock
+#. odoo-python
 #: code:addons/stock/models/stock_picking.py:0
 #: code:addons/stock/wizard/stock_label_type.py:0
 #, python-format
@@ -1475,6 +1502,7 @@ msgid "Choose Labels Layout"
 msgstr "選擇摘要格式"
 
 #. module: stock
+#. odoo-python
 #: code:addons/stock/models/stock_picking.py:0
 #, python-format
 msgid "Choose Type of Labels To Print"
@@ -1487,6 +1515,7 @@ msgid "Choose a date to get the inventory at that date"
 msgstr "選擇一個日期以獲得該日期的庫存"
 
 #. module: stock
+#. odoo-python
 #: code:addons/stock/models/stock_picking.py:0
 #, python-format
 msgid "Choose destination location"
@@ -1528,7 +1557,7 @@ msgid "Clear quantities"
 msgstr ""
 
 #. module: stock
-#. openerp-web
+#. odoo-javascript
 #: code:addons/stock/static/src/xml/stock_traceability_report_backend.xml:0
 #: model_terms:ir.ui.view,arch_db:stock.duplicated_sn_warning
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_move_operations
@@ -1653,6 +1682,7 @@ msgid "Conflict in Inventory"
 msgstr "庫存衝突"
 
 #. module: stock
+#. odoo-python
 #: code:addons/stock/models/stock_quant.py:0
 #, python-format
 msgid "Conflict in Inventory Adjustment"
@@ -1705,7 +1735,7 @@ msgid "Continue"
 msgstr "繼續"
 
 #. module: stock
-#. openerp-web
+#. odoo-javascript
 #: code:addons/stock/static/src/components/reception_report_main/stock_reception_report_main.xml:0
 #, python-format
 msgid "Control panel buttons"
@@ -1727,6 +1757,7 @@ msgid "Corridor (X)"
 msgstr "通道(X)"
 
 #. module: stock
+#. odoo-python
 #: code:addons/stock/wizard/stock_immediate_transfer.py:0
 #, python-format
 msgid ""
@@ -1792,6 +1823,7 @@ msgid "Create Backorder"
 msgstr "建立欠單"
 
 #. module: stock
+#. odoo-python
 #: code:addons/stock/models/stock_picking.py:0
 #, python-format
 msgid "Create Backorder?"
@@ -1945,6 +1977,7 @@ msgid "Created on"
 msgstr "建立於"
 
 #. module: stock
+#. odoo-python
 #: code:addons/stock/models/stock_warehouse.py:0
 #, python-format
 msgid ""
@@ -1964,6 +1997,7 @@ msgid "Creation Date, usually the time of the order"
 msgstr "建立日期，通常是訂單的時間"
 
 #. module: stock
+#. odoo-python
 #: code:addons/stock/models/stock_warehouse.py:0
 #, python-format
 msgid "Cross-Dock"
@@ -2139,6 +2173,7 @@ msgid "Deadline exceed or/and by the scheduled"
 msgstr "超過或/和超過預定的截止日期"
 
 #. module: stock
+#. odoo-python
 #: code:addons/stock/models/stock_move.py:0
 #, python-format
 msgid "Deadline updated due to delay on %s"
@@ -2235,6 +2270,7 @@ msgid "Delay Alert Date"
 msgstr "延遲提醒日期"
 
 #. module: stock
+#. odoo-python
 #: code:addons/stock/models/stock_rule.py:0
 #, python-format
 msgid "Delay on %s"
@@ -2246,31 +2282,35 @@ msgid "Deliver goods directly (1 step)"
 msgstr "直接出貨（1步）"
 
 #. module: stock
+#. odoo-python
 #: code:addons/stock/models/stock_warehouse.py:0
 #, python-format
 msgid "Deliver in 1 step (ship)"
 msgstr "1步出貨（發貨）"
 
 #. module: stock
+#. odoo-python
 #: code:addons/stock/models/stock_warehouse.py:0
 #, python-format
 msgid "Deliver in 2 steps (pick + ship)"
 msgstr "2步出貨（揀貨+發貨）"
 
 #. module: stock
+#. odoo-python
 #: code:addons/stock/models/stock_warehouse.py:0
 #, python-format
 msgid "Deliver in 3 steps (pick + pack + ship)"
 msgstr "3步出貨（揀貨+打包+發貨）"
 
 #. module: stock
+#. odoo-python
 #: code:addons/stock/models/product.py:0
 #, python-format
 msgid "Delivered Qty"
 msgstr "已交貨數量"
 
 #. module: stock
-#. openerp-web
+#. odoo-javascript
 #: code:addons/stock/static/src/stock_forecasted/forecasted_details.xml:0
 #: model:ir.model.fields.selection,name:stock.selection__stock_picking_type__code__outgoing
 #: model:ir.ui.menu,name:stock.menu_delivery
@@ -2289,6 +2329,7 @@ msgid "Delivery Methods"
 msgstr "交貨方式"
 
 #. module: stock
+#. odoo-python
 #: code:addons/stock/models/stock_warehouse.py:0
 #: model:stock.picking.type,name:stock.chi_picking_type_out
 #: model:stock.picking.type,name:stock.picking_type_out
@@ -2325,6 +2366,7 @@ msgid "Delivery order count"
 msgstr "交貨單數量"
 
 #. module: stock
+#. odoo-python
 #: code:addons/stock/models/stock_lot.py:0
 #, python-format
 msgid "Delivery orders of %s"
@@ -2411,6 +2453,7 @@ msgid "Destination Address "
 msgstr "目的地地址 "
 
 #. module: stock
+#. odoo-python
 #: code:addons/stock/models/stock_rule.py:0
 #: model:ir.model.fields,field_description:stock.field_stock_move__location_dest_id
 #: model:ir.model.fields,field_description:stock.field_stock_picking__location_dest_id
@@ -2460,6 +2503,7 @@ msgid "Destination route"
 msgstr "目的路線"
 
 #. module: stock
+#. odoo-python
 #: code:addons/stock/models/stock_move.py:0
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_form
 #, python-format
@@ -2618,6 +2662,12 @@ msgid "Done"
 msgstr "完成"
 
 #. module: stock
+#: model_terms:ir.ui.view,arch_db:stock.view_move_line_form
+#: model_terms:ir.ui.view,arch_db:stock.view_move_line_tree
+msgid "Done By"
+msgstr ""
+
+#. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_package_level__state__draft
 #: model:ir.model.fields.selection,name:stock.selection__stock_picking__state__draft
 #: model:ir.model.fields.selection,name:stock.selection__stock_scrap__state__draft
@@ -2646,12 +2696,14 @@ msgid "Easypost Connector"
 msgstr "Easypost 連接器"
 
 #. module: stock
+#. odoo-python
 #: code:addons/stock/models/stock_orderpoint.py:0
 #, python-format
 msgid "Edit Product"
 msgstr "編輯產品"
 
 #. module: stock
+#. odoo-python
 #: code:addons/stock/models/stock_quant.py:0
 #, python-format
 msgid ""
@@ -2709,7 +2761,7 @@ msgid "Ensure the traceability of a storable product in your warehouse."
 msgstr "確保可以追溯您倉庫中的庫存產品。"
 
 #. module: stock
-#. openerp-web
+#. odoo-javascript
 #: code:addons/stock/static/src/xml/stock_traceability_report_backend.xml:0
 #, python-format
 msgid "Error"
@@ -2740,6 +2792,7 @@ msgid "Exception(s):"
 msgstr "異常:"
 
 #. module: stock
+#. odoo-python
 #: code:addons/stock/models/stock_move.py:0
 #, python-format
 msgid ""
@@ -2747,19 +2800,21 @@ msgid ""
 msgstr "現有序號 (%s)。請更正編碼的序號。"
 
 #. module: stock
+#. odoo-python
 #: code:addons/stock/models/stock_move.py:0
 #, python-format
 msgid "Existing Serial numbers. Please correct the serial numbers encoded:"
 msgstr "現有序號。請更正編碼的序號："
 
 #. module: stock
-#. openerp-web
+#. odoo-javascript
 #: code:addons/stock/static/src/widgets/forecast_widget.xml:0
 #, python-format
 msgid "Exp"
 msgstr "Exp"
 
 #. module: stock
+#. odoo-python
 #: code:addons/stock/models/stock_picking.py:0
 #, python-format
 msgid "Exp %s"
@@ -2771,7 +2826,7 @@ msgid "Expected"
 msgstr "預期"
 
 #. module: stock
-#. openerp-web
+#. odoo-javascript
 #: code:addons/stock/static/src/components/reception_report_table/stock_reception_report_table.xml:0
 #: model_terms:ir.ui.view,arch_db:stock.report_reception_body
 #, python-format
@@ -2836,7 +2891,7 @@ msgid "Fixed Procurement Group"
 msgstr "固定的補貨組"
 
 #. module: stock
-#. openerp-web
+#. odoo-javascript
 #: code:addons/stock/static/src/xml/stock_traceability_report_line.xml:0
 #: code:addons/stock/static/src/xml/stock_traceability_report_line.xml:0
 #, python-format
@@ -2917,7 +2972,7 @@ msgstr ""
 "否則，這包括存儲在任何庫存位置具有\"內部\"類型的貨物。"
 
 #. module: stock
-#. openerp-web
+#. odoo-javascript
 #: code:addons/stock/static/src/stock_forecasted/forecasted_header.xml:0
 #: model_terms:ir.ui.view,arch_db:stock.product_product_stock_tree
 #, python-format
@@ -2925,7 +2980,7 @@ msgid "Forecasted"
 msgstr "預測"
 
 #. module: stock
-#. openerp-web
+#. odoo-javascript
 #: code:addons/stock/static/src/widgets/json_widget.xml:0
 #, python-format
 msgid "Forecasted Date"
@@ -2942,13 +2997,14 @@ msgid "Forecasted Expected date"
 msgstr "預測 預計日期"
 
 #. module: stock
-#. openerp-web
+#. odoo-javascript
 #: code:addons/stock/static/src/stock_forecasted/forecasted_details.xml:0
 #, python-format
 msgid "Forecasted Inventory"
 msgstr "庫存預測"
 
 #. module: stock
+#. odoo-python
 #: code:addons/stock/models/product.py:0
 #: model:ir.model.fields,field_description:stock.field_product_product__virtual_available
 #: model:ir.model.fields,field_description:stock.field_product_template__virtual_available
@@ -2964,9 +3020,10 @@ msgid "Forecasted Receipts"
 msgstr "預測收貨"
 
 #. module: stock
-#. openerp-web
+#. odoo-javascript
 #: code:addons/stock/static/src/widgets/forecast_widget.xml:0
 #: model:ir.actions.client,name:stock.stock_replenishment_product_product_action
+#: model:ir.actions.client,name:stock.stock_replenishment_product_template_action
 #, python-format
 msgid "Forecasted Report"
 msgstr "預測報告"
@@ -2982,7 +3039,7 @@ msgid "Forecasted Weight"
 msgstr "預測重量"
 
 #. module: stock
-#. openerp-web
+#. odoo-javascript
 #: code:addons/stock/static/src/stock_forecasted/forecasted_details.xml:0
 #, python-format
 msgid "Forecasted with Pending"
@@ -3000,7 +3057,7 @@ msgid "Free Qty"
 msgstr "可用數量"
 
 #. module: stock
-#. openerp-web
+#. odoo-javascript
 #: code:addons/stock/static/src/stock_forecasted/forecasted_details.xml:0
 #, python-format
 msgid "Free Stock"
@@ -3048,24 +3105,28 @@ msgid "Future Activities"
 msgstr "未來活動"
 
 #. module: stock
+#. odoo-python
 #: code:addons/stock/models/product.py:0
 #, python-format
 msgid "Future Deliveries"
 msgstr "未來交貨"
 
 #. module: stock
+#. odoo-python
 #: code:addons/stock/models/product.py:0
 #, python-format
 msgid "Future P&L"
 msgstr "未來的損益"
 
 #. module: stock
+#. odoo-python
 #: code:addons/stock/models/product.py:0
 #, python-format
 msgid "Future Productions"
 msgstr "未來生產"
 
 #. module: stock
+#. odoo-python
 #: code:addons/stock/models/product.py:0
 #, python-format
 msgid "Future Receipts"
@@ -3188,6 +3249,7 @@ msgid "Hide Reservation Method"
 msgstr ""
 
 #. module: stock
+#. odoo-python
 #: code:addons/stock/models/stock_quant.py:0
 #: model_terms:ir.ui.view,arch_db:stock.product_product_stock_tree
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_quant_tree_editable
@@ -3434,6 +3496,7 @@ msgid "Immediate Transfer Lines"
 msgstr "即時調撥明細"
 
 #. module: stock
+#. odoo-python
 #: code:addons/stock/models/stock_picking.py:0
 #, python-format
 msgid "Immediate Transfer?"
@@ -3445,12 +3508,14 @@ msgid "Immediate transfer?"
 msgstr "立即調撥？"
 
 #. module: stock
+#. odoo-python
 #: code:addons/stock/models/stock_quant.py:0
 #, python-format
 msgid "Import"
 msgstr "匯入"
 
 #. module: stock
+#. odoo-python
 #: code:addons/stock/models/stock_quant.py:0
 #, python-format
 msgid "Import Template for Inventory Adjustments"
@@ -3472,7 +3537,7 @@ msgstr ""
 "為了使其被受理，必須在交付貨物或提供服務後 8 天內通過以掛號信方式將任何索賠通知 My Company (Chicago) 到其註冊辦事處。"
 
 #. module: stock
-#. openerp-web
+#. odoo-javascript
 #: code:addons/stock/static/src/stock_forecasted/forecasted_header.xml:0
 #: model:ir.model.fields,field_description:stock.field_product_product__incoming_qty
 #: model:ir.model.fields,field_description:stock.field_product_template__incoming_qty
@@ -3488,7 +3553,7 @@ msgid "Incoming Date"
 msgstr "送貨日期"
 
 #. module: stock
-#. openerp-web
+#. odoo-javascript
 #: code:addons/stock/static/src/stock_forecasted/forecasted_details.xml:0
 #, python-format
 msgid "Incoming Draft Transfer"
@@ -3517,6 +3582,7 @@ msgid "Initial Demand"
 msgstr "初始需求"
 
 #. module: stock
+#. odoo-python
 #: code:addons/stock/models/stock_warehouse.py:0
 #, python-format
 msgid "Input"
@@ -3528,6 +3594,7 @@ msgid "Input Location"
 msgstr "進貨位置"
 
 #. module: stock
+#. odoo-python
 #: code:addons/stock/models/res_company.py:0
 #, python-format
 msgid "Inter-warehouse transit"
@@ -3561,6 +3628,7 @@ msgid "Internal Transfer"
 msgstr "內部調撥"
 
 #. module: stock
+#. odoo-python
 #: code:addons/stock/models/stock_warehouse.py:0
 #: model:stock.picking.type,name:stock.picking_type_internal
 #, python-format
@@ -3590,18 +3658,21 @@ msgid ""
 msgstr "內部編碼，它不同於製造商的批次/序號"
 
 #. module: stock
+#. odoo-python
 #: code:addons/stock/models/product.py:0
 #, python-format
 msgid "Invalid domain left operand %s"
 msgstr "不正確的domain左操作符 %s"
 
 #. module: stock
+#. odoo-python
 #: code:addons/stock/models/product.py:0
 #, python-format
 msgid "Invalid domain operator %s"
 msgstr "不正確的domain操作符 %s"
 
 #. module: stock
+#. odoo-python
 #: code:addons/stock/models/product.py:0
 #, python-format
 msgid "Invalid domain right operand %s"
@@ -3649,6 +3720,7 @@ msgid "Inventory Adjustment Warning"
 msgstr "庫存調整警告"
 
 #. module: stock
+#. odoo-python
 #: code:addons/stock/models/stock_quant.py:0
 #: model:ir.ui.menu,name:stock.menu_action_inventory_tree
 #, python-format
@@ -3688,7 +3760,7 @@ msgid "Inventory Loss"
 msgstr "庫存調整"
 
 #. module: stock
-#. openerp-web
+#. odoo-javascript
 #: code:addons/stock/static/src/stock_forecasted/forecasted_details.xml:0
 #: code:addons/stock/static/src/stock_forecasted/forecasted_details.xml:0
 #, python-format
@@ -3722,7 +3794,7 @@ msgid "Inventory Valuation"
 msgstr "存货估值"
 
 #. module: stock
-#. openerp-web
+#. odoo-javascript
 #: code:addons/stock/static/src/views/list/inventory_report_list.xml:0
 #: model:ir.model.fields,field_description:stock.field_stock_quantity_history__inventory_datetime
 #, python-format
@@ -3785,6 +3857,7 @@ msgid "Is quantity done editable"
 msgstr "完成數量是否可以編輯"
 
 #. module: stock
+#. odoo-python
 #: code:addons/stock/models/stock_quant.py:0
 #, python-format
 msgid ""
@@ -3792,6 +3865,7 @@ msgid ""
 msgstr "您不能保留超出庫存的%s 產品。"
 
 #. module: stock
+#. odoo-python
 #: code:addons/stock/models/stock_quant.py:0
 #, python-format
 msgid ""
@@ -3819,7 +3893,7 @@ msgid "Json Lead Days"
 msgstr "Json 前置日"
 
 #. module: stock
-#. openerp-web
+#. odoo-javascript
 #: code:addons/stock/static/src/widgets/json_widget.js:0
 #, python-format
 msgid "Json Popup"
@@ -4093,7 +4167,7 @@ msgid "Lead Time"
 msgstr "前置時間"
 
 #. module: stock
-#. openerp-web
+#. odoo-javascript
 #: code:addons/stock/static/src/widgets/json_widget.xml:0
 #, python-format
 msgid "Lead Times"
@@ -4207,6 +4281,7 @@ msgid "Location: When arrives to"
 msgstr "地點：到達時"
 
 #. module: stock
+#. odoo-python
 #: code:addons/stock/models/stock_quant.py:0
 #: model:ir.actions.act_window,name:stock.action_location_form
 #: model:ir.actions.act_window,name:stock.action_prod_inv_location_form
@@ -4353,6 +4428,7 @@ msgid "Main Attachment"
 msgstr "主要附件"
 
 #. module: stock
+#. odoo-python
 #: code:addons/stock/models/stock_warehouse.py:0
 #: code:addons/stock/models/stock_warehouse.py:0
 #, python-format
@@ -4410,6 +4486,7 @@ msgid "Manual Operation"
 msgstr "手動作業"
 
 #. module: stock
+#. odoo-python
 #: code:addons/stock/wizard/product_replenish.py:0
 #: code:addons/stock/wizard/product_replenish.py:0
 #, python-format
@@ -4690,6 +4767,7 @@ msgid "Never"
 msgstr "從不"
 
 #. module: stock
+#. odoo-python
 #: code:addons/stock/models/stock_scrap.py:0
 #: code:addons/stock/models/stock_scrap.py:0
 #: model:ir.model.fields.selection,name:stock.selection__stock_move__state__draft
@@ -4699,6 +4777,7 @@ msgid "New"
 msgstr "新建"
 
 #. module: stock
+#. odoo-python
 #: code:addons/stock/models/stock_move_line.py:0
 #, python-format
 msgid "New Move:"
@@ -4754,6 +4833,7 @@ msgid "Next transfer(s) impacted:"
 msgstr "影響到的下一步調撥:"
 
 #. module: stock
+#. odoo-python
 #: code:addons/stock/report/report_stock_reception.py:0
 #, python-format
 msgid "No %s selected or a delivery order selected"
@@ -4770,6 +4850,7 @@ msgid "No Message"
 msgstr "沒消息"
 
 #. module: stock
+#. odoo-python
 #: code:addons/stock/models/stock_quant.py:0
 #, python-format
 msgid "No Stock On Hand"
@@ -4781,7 +4862,7 @@ msgid "No Tracking"
 msgstr "無追蹤資訊"
 
 #. module: stock
-#. openerp-web
+#. odoo-javascript
 #: code:addons/stock/static/src/components/reception_report_main/stock_reception_report_main.xml:0
 #: model_terms:ir.ui.view,arch_db:stock.report_reception_body
 #, python-format
@@ -4789,6 +4870,7 @@ msgid "No allocation need found."
 msgstr ""
 
 #. module: stock
+#. odoo-python
 #: code:addons/stock/models/stock_move_line.py:0
 #, python-format
 msgid "No negative quantities allowed"
@@ -4810,6 +4892,7 @@ msgid "No product found. Let's create one!"
 msgstr "沒有找到產品. 讓我們建立一個吧!"
 
 #. module: stock
+#. odoo-python
 #: code:addons/stock/wizard/stock_picking_return.py:0
 #, python-format
 msgid ""
@@ -4828,6 +4911,7 @@ msgid "No reordering rule found"
 msgstr "未找到重新排序規則"
 
 #. module: stock
+#. odoo-python
 #: code:addons/stock/models/stock_rule.py:0
 #, python-format
 msgid ""
@@ -4838,6 +4922,7 @@ msgstr ""
 "驗證產品上的路線配置。"
 
 #. module: stock
+#. odoo-python
 #: code:addons/stock/models/stock_rule.py:0
 #, python-format
 msgid "No source location defined on stock rule: %s!"
@@ -4872,7 +4957,8 @@ msgid "Normal"
 msgstr "一般"
 
 #. module: stock
-#. openerp-web
+#. odoo-javascript
+#. odoo-python
 #: code:addons/stock/models/stock_picking.py:0
 #: code:addons/stock/static/src/stock_forecasted/forecasted_details.xml:0
 #: code:addons/stock/static/src/widgets/forecast_widget.xml:0
@@ -4896,6 +4982,7 @@ msgid "Notes"
 msgstr "備註"
 
 #. module: stock
+#. odoo-python
 #: code:addons/stock/models/stock_picking.py:0
 #, python-format
 msgid "Nothing to check the availability for."
@@ -4963,7 +5050,7 @@ msgid "October"
 msgstr "十月"
 
 #. module: stock
-#. openerp-web
+#. odoo-javascript
 #: code:addons/stock/static/src/stock_forecasted/forecasted_header.xml:0
 #: model:ir.model.fields,field_description:stock.field_stock_quant__on_hand
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse_orderpoint__qty_on_hand
@@ -5003,12 +5090,14 @@ msgid "One per unit"
 msgstr ""
 
 #. module: stock
+#. odoo-python
 #: code:addons/stock/models/stock_quant.py:0
 #, python-format
 msgid "Only a stock manager can validate an inventory adjustment."
 msgstr "只有庫存經理才能驗證庫存盤點。"
 
 #. module: stock
+#. odoo-python
 #: code:addons/stock/models/stock_rule.py:0
 #: model:ir.model.fields,field_description:stock.field_stock_move__picking_type_id
 #: model:ir.model.fields,field_description:stock.field_stock_picking__picking_type_id
@@ -5034,6 +5123,7 @@ msgid "Operation Types"
 msgstr "作業類型"
 
 #. module: stock
+#. odoo-python
 #: code:addons/stock/models/stock_quant.py:0
 #, python-format
 msgid "Operation not supported"
@@ -5111,7 +5201,7 @@ msgid "Options"
 msgstr "選項"
 
 #. module: stock
-#. openerp-web
+#. odoo-javascript
 #: code:addons/stock/static/src/views/stock_orderpoint_list_buttons.xml:0
 #: model_terms:ir.ui.view,arch_db:stock.replenishment_option_warning_view
 #, python-format
@@ -5124,12 +5214,14 @@ msgid "Order Once"
 msgstr "Order Once"
 
 #. module: stock
+#. odoo-python
 #: code:addons/stock/models/stock_picking.py:0
 #, python-format
 msgid "Order signed"
 msgstr "訂單已簽名"
 
 #. module: stock
+#. odoo-python
 #: code:addons/stock/models/stock_picking.py:0
 #, python-format
 msgid "Order signed by %s"
@@ -5196,7 +5288,7 @@ msgid "Out Type"
 msgstr "出庫類型"
 
 #. module: stock
-#. openerp-web
+#. odoo-javascript
 #: code:addons/stock/static/src/stock_forecasted/forecasted_header.xml:0
 #: model:ir.model.fields,field_description:stock.field_product_product__outgoing_qty
 #: model:ir.model.fields,field_description:stock.field_product_template__outgoing_qty
@@ -5207,7 +5299,7 @@ msgid "Outgoing"
 msgstr "出向"
 
 #. module: stock
-#. openerp-web
+#. odoo-javascript
 #: code:addons/stock/static/src/stock_forecasted/forecasted_details.xml:0
 #, python-format
 msgid "Outgoing Draft Transfer"
@@ -5224,6 +5316,7 @@ msgid "Outgoing Shipments"
 msgstr "出向運輸"
 
 #. module: stock
+#. odoo-python
 #: code:addons/stock/models/stock_warehouse.py:0
 #, python-format
 msgid "Output"
@@ -5261,19 +5354,21 @@ msgid "Owner :"
 msgstr "所有者:"
 
 #. module: stock
+#. odoo-python
 #: code:addons/stock/models/product.py:0
 #, python-format
 msgid "P&L Qty"
 msgstr "P&L 數量"
 
 #. module: stock
-#. openerp-web
+#. odoo-javascript
 #: code:addons/stock/static/src/xml/stock_traceability_report_backend.xml:0
 #, python-format
 msgid "PRINT"
 msgstr "列印"
 
 #. module: stock
+#. odoo-python
 #: code:addons/stock/models/stock_warehouse.py:0
 #, python-format
 msgid "Pack"
@@ -5334,6 +5429,7 @@ msgid "Package Capacity"
 msgstr "包裝容量"
 
 #. module: stock
+#. odoo-python
 #: code:addons/stock/models/stock_package_level.py:0
 #, python-format
 msgid "Package Content"
@@ -5457,6 +5553,7 @@ msgid "Packing Location"
 msgstr "打包位置"
 
 #. module: stock
+#. odoo-python
 #: code:addons/stock/models/stock_warehouse.py:0
 #, python-format
 msgid "Packing Zone"
@@ -5501,6 +5598,7 @@ msgid "Partner Address"
 msgstr "業務夥伴地址"
 
 #. module: stock
+#. odoo-python
 #: code:addons/stock/models/stock_warehouse.py:0
 #: model:ir.model.fields,field_description:stock.field_stock_backorder_confirmation__pick_ids
 #: model:ir.model.fields,field_description:stock.field_stock_immediate_transfer__pick_ids
@@ -5560,7 +5658,7 @@ msgid "Planned Transfer"
 msgstr "計劃的調撥"
 
 #. module: stock
-#. openerp-web
+#. odoo-javascript
 #: code:addons/stock/static/src/widgets/stock_rescheduling_popover.xml:0
 #, python-format
 msgid "Planning Issue"
@@ -5572,18 +5670,21 @@ msgid "Planning Issues"
 msgstr "計劃問題"
 
 #. module: stock
+#. odoo-python
 #: code:addons/stock/models/stock_picking.py:0
 #, python-format
 msgid "Please add 'Done' quantities to the picking to create a new pack."
 msgstr "請將“完成”數量添加到批次調撥中以建立新包裝。"
 
 #. module: stock
+#. odoo-python
 #: code:addons/stock/models/stock_picking.py:0
 #, python-format
 msgid "Please add some items to move."
 msgstr "請添加一些項目到移動."
 
 #. module: stock
+#. odoo-python
 #: code:addons/stock/wizard/stock_picking_return.py:0
 #, python-format
 msgid "Please specify at least one non-zero quantity."
@@ -5596,7 +5697,7 @@ msgid "Pre-fill Detailed Operations"
 msgstr "預填詳細操作"
 
 #. module: stock
-#. openerp-web
+#. odoo-javascript
 #: code:addons/stock/static/src/widgets/stock_rescheduling_popover.xml:0
 #, python-format
 msgid "Preceding operations"
@@ -5618,6 +5719,7 @@ msgid "Preferred route"
 msgstr "最優路線"
 
 #. module: stock
+#. odoo-python
 #: code:addons/stock/models/stock_quant.py:0
 #, python-format
 msgid ""
@@ -5626,7 +5728,7 @@ msgid ""
 msgstr ""
 
 #. module: stock
-#. openerp-web
+#. odoo-javascript
 #: code:addons/stock/static/src/components/reception_report_main/stock_reception_report_main.xml:0
 #: code:addons/stock/static/src/components/reception_report_main/stock_reception_report_main.xml:0
 #: code:addons/stock/static/src/legacy_web_report/report.xml:0
@@ -5647,7 +5749,7 @@ msgid "Print GS1 Barcodes for Lots & Serial Numbers"
 msgstr ""
 
 #. module: stock
-#. openerp-web
+#. odoo-javascript
 #: code:addons/stock/static/src/components/reception_report_line/stock_reception_report_line.xml:0
 #: model:ir.model.fields,field_description:stock.field_stock_picking_type__print_label
 #, python-format
@@ -5655,7 +5757,7 @@ msgid "Print Label"
 msgstr "列印備註"
 
 #. module: stock
-#. openerp-web
+#. odoo-javascript
 #: code:addons/stock/static/src/components/reception_report_main/stock_reception_report_main.xml:0
 #: code:addons/stock/static/src/components/reception_report_table/stock_reception_report_table.xml:0
 #: code:addons/stock/static/src/xml/report_stock_reception.xml:0
@@ -5712,7 +5814,6 @@ msgstr "補貨組"
 #. module: stock
 #: model:ir.actions.server,name:stock.ir_cron_scheduler_action_ir_actions_server
 #: model:ir.cron,cron_name:stock.ir_cron_scheduler_action
-#: model:ir.cron,name:stock.ir_cron_scheduler_action
 msgid "Procurement: run scheduler"
 msgstr "補貨: 執行調度器"
 
@@ -5722,13 +5823,14 @@ msgid "Produce Line"
 msgstr "生產項目"
 
 #. module: stock
+#. odoo-python
 #: code:addons/stock/models/product.py:0
 #, python-format
 msgid "Produced Qty"
 msgstr "生產的數量"
 
 #. module: stock
-#. openerp-web
+#. odoo-javascript
 #: code:addons/stock/static/src/stock_forecasted/forecasted_details.xml:0
 #: model:ir.model,name:stock.model_product_template
 #: model:ir.model.fields,field_description:stock.field_product_replenish__product_id
@@ -5790,6 +5892,7 @@ msgstr "產品類別"
 #: model:ir.model.fields,field_description:stock.field_stock_putaway_rule__category_id
 #: model:ir.model.fields,field_description:stock.field_stock_quant__product_categ_id
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse_orderpoint__product_category_id
+#: model_terms:ir.ui.view,arch_db:stock.quant_search_view
 #: model_terms:ir.ui.view,arch_db:stock.stock_putaway_list
 msgid "Product Category"
 msgstr "產品分類"
@@ -5841,19 +5944,21 @@ msgid "Product Packagings"
 msgstr "產品包裝"
 
 #. module: stock
+#. odoo-python
 #: code:addons/stock/models/stock_quant.py:0
 #, python-format
 msgid "Product Quantity Confirmed"
 msgstr "產品數量確認"
 
 #. module: stock
+#. odoo-python
 #: code:addons/stock/models/stock_quant.py:0
 #, python-format
 msgid "Product Quantity Updated"
 msgstr "產品數量更新"
 
 #. module: stock
-#. openerp-web
+#. odoo-javascript
 #: code:addons/stock/static/src/stock_forecasted/forecasted_buttons.js:0
 #: model:ir.model,name:stock.model_product_replenish
 #, python-format
@@ -5909,6 +6014,7 @@ msgid "Product Variants"
 msgstr "產品變體"
 
 #. module: stock
+#. odoo-python
 #: code:addons/stock/report/product_label_report.py:0
 #, python-format
 msgid "Product model not defined, Please contact your administrator."
@@ -5949,6 +6055,7 @@ msgid "Production Locations"
 msgstr "生產地點"
 
 #. module: stock
+#. odoo-python
 #: code:addons/stock/wizard/stock_quantity_history.py:0
 #: model:ir.actions.act_window,name:stock.act_product_location_open
 #: model:ir.actions.act_window,name:stock.product_template_action_product
@@ -5976,6 +6083,7 @@ msgid ""
 msgstr "產品將首先預留給具有最高優先順序的調撥。"
 
 #. module: stock
+#. odoo-python
 #: code:addons/stock/models/product.py:0
 #, python-format
 msgid "Products: %(location)s"
@@ -6047,6 +6155,7 @@ msgid "Putaway Rule"
 msgstr "上架規則"
 
 #. module: stock
+#. odoo-python
 #: code:addons/stock/models/product.py:0
 #: model:ir.actions.act_window,name:stock.category_open_putaway
 #: model:ir.actions.act_window,name:stock.location_open_putaway
@@ -6087,6 +6196,7 @@ msgid "Quality"
 msgstr "品質"
 
 #. module: stock
+#. odoo-python
 #: code:addons/stock/models/stock_warehouse.py:0
 #, python-format
 msgid "Quality Control"
@@ -6113,24 +6223,28 @@ msgid "Quant"
 msgstr "數量"
 
 #. module: stock
+#. odoo-python
 #: code:addons/stock/models/stock_quant.py:0
 #, python-format
 msgid "Quant's creation is restricted, you can't do this operation."
 msgstr "Quant 的建立受到限制，您無法進行此操作。"
 
 #. module: stock
+#. odoo-python
 #: code:addons/stock/models/stock_quant.py:0
 #, python-format
 msgid "Quant's editing is restricted, you can't do this operation."
 msgstr "Quant 的編輯受到限制，您不能進行此操作。"
 
 #. module: stock
+#. odoo-python
 #: code:addons/stock/models/stock_quant.py:0
 #, python-format
 msgid "Quantities Already Set"
 msgstr "數量已設定"
 
 #. module: stock
+#. odoo-python
 #: code:addons/stock/models/stock_quant.py:0
 #, python-format
 msgid "Quantities To Reset"
@@ -6189,12 +6303,14 @@ msgid "Quantity Reserved"
 msgstr "已預留數量"
 
 #. module: stock
+#. odoo-python
 #: code:addons/stock/wizard/stock_replenishment_info.py:0
 #, python-format
 msgid "Quantity available too low"
 msgstr ""
 
 #. module: stock
+#. odoo-python
 #: code:addons/stock/wizard/stock_change_product_qty.py:0
 #, python-format
 msgid "Quantity cannot be negative."
@@ -6281,6 +6397,7 @@ msgid "Quants"
 msgstr "數量"
 
 #. module: stock
+#. odoo-python
 #: code:addons/stock/models/stock_quant.py:0
 #, python-format
 msgid "Quants cannot be created for consumables or services."
@@ -6305,7 +6422,7 @@ msgid "Real Reserved Quantity"
 msgstr "實際預留數量"
 
 #. module: stock
-#. openerp-web
+#. odoo-javascript
 #: code:addons/stock/static/src/stock_forecasted/forecasted_details.xml:0
 #: model:ir.model.fields.selection,name:stock.selection__stock_picking_type__code__incoming
 #, python-format
@@ -6318,6 +6435,7 @@ msgid "Receipt Route"
 msgstr "收貨路線"
 
 #. module: stock
+#. odoo-python
 #: code:addons/stock/models/stock_warehouse.py:0
 #: model:stock.picking.type,name:stock.chi_picking_type_in
 #: model:stock.picking.type,name:stock.picking_type_in
@@ -6346,24 +6464,28 @@ msgid "Receive goods in input, then quality and then stock (3 steps)"
 msgstr "接收產品到收料區， 檢驗， 然後入庫（3步收貨）"
 
 #. module: stock
+#. odoo-python
 #: code:addons/stock/models/stock_warehouse.py:0
 #, python-format
 msgid "Receive in 1 step (stock)"
 msgstr "單步收貨"
 
 #. module: stock
+#. odoo-python
 #: code:addons/stock/models/stock_warehouse.py:0
 #, python-format
 msgid "Receive in 2 steps (input + stock)"
 msgstr "兩步收貨(收貨+入庫）"
 
 #. module: stock
+#. odoo-python
 #: code:addons/stock/models/stock_warehouse.py:0
 #, python-format
 msgid "Receive in 3 steps (input + quality + stock)"
 msgstr "三步收貨(收貨+質檢+入庫)"
 
 #. module: stock
+#. odoo-python
 #: code:addons/stock/models/product.py:0
 #, python-format
 msgid "Received Qty"
@@ -6445,6 +6567,7 @@ msgid "Removal Strategy"
 msgstr "下架策略"
 
 #. module: stock
+#. odoo-python
 #: code:addons/stock/models/stock_quant.py:0
 #, python-format
 msgid "Removal strategy %s not implemented."
@@ -6484,7 +6607,7 @@ msgid "Reordering Rules Search"
 msgstr "重訂貨規則搜尋"
 
 #. module: stock
-#. openerp-web
+#. odoo-javascript
 #: code:addons/stock/static/src/stock_forecasted/forecasted_buttons.xml:0
 #: code:addons/stock/static/src/stock_forecasted/forecasted_buttons.xml:0
 #: model:ir.actions.act_window,name:stock.action_product_replenish
@@ -6511,7 +6634,7 @@ msgid "Replenish wizard"
 msgstr "補給嚮導"
 
 #. module: stock
-#. openerp-web
+#. odoo-javascript
 #: code:addons/stock/static/src/stock_forecasted/forecasted_details.xml:0
 #: model:ir.actions.act_window,name:stock.action_orderpoint_replenish
 #: model:ir.actions.server,name:stock.action_replenishment
@@ -6534,12 +6657,14 @@ msgid "Replenishment Information"
 msgstr "補貨資訊"
 
 #. module: stock
+#. odoo-python
 #: code:addons/stock/models/stock_orderpoint.py:0
 #, python-format
 msgid "Replenishment Information for %s in %s"
 msgstr "%s 中 %s 的補貨訊息"
 
 #. module: stock
+#. odoo-python
 #: code:addons/stock/models/stock_orderpoint.py:0
 #, python-format
 msgid "Replenishment Report"
@@ -6578,7 +6703,7 @@ msgid "Reservations"
 msgstr "預留"
 
 #. module: stock
-#. openerp-web
+#. odoo-javascript
 #: code:addons/stock/static/src/stock_forecasted/forecasted_details.xml:0
 #, python-format
 msgid "Reserve"
@@ -6627,13 +6752,14 @@ msgid "Reserved Quantity"
 msgstr "預留數量"
 
 #. module: stock
-#. openerp-web
+#. odoo-javascript
 #: code:addons/stock/static/src/stock_forecasted/forecasted_details.xml:0
 #, python-format
 msgid "Reserved from stock"
 msgstr "有現貨"
 
 #. module: stock
+#. odoo-python
 #: code:addons/stock/models/stock_move_line.py:0
 #, python-format
 msgid "Reserving a negative quantity is not allowed."
@@ -6695,18 +6821,21 @@ msgid "Return Type"
 msgstr "退回類型"
 
 #. module: stock
+#. odoo-python
 #: code:addons/stock/wizard/stock_picking_return.py:0
 #, python-format
 msgid "Return of %s"
 msgstr "退回 %s"
 
 #. module: stock
+#. odoo-python
 #: code:addons/stock/wizard/stock_picking_return.py:0
 #, python-format
 msgid "Returned Picking"
 msgstr "退回的揀貨"
 
 #. module: stock
+#. odoo-python
 #: code:addons/stock/models/stock_warehouse.py:0
 #, python-format
 msgid "Returns"
@@ -6866,7 +6995,7 @@ msgid "STANDARD TERMS AND CONDITIONS OF SALE"
 msgstr "標准銷售條款和條件"
 
 #. module: stock
-#. openerp-web
+#. odoo-javascript
 #: code:addons/stock/static/src/widgets/json_widget.xml:0
 #, python-format
 msgid "Sales History"
@@ -6899,6 +7028,7 @@ msgid ""
 msgstr "第一部分送貨的計劃時間即將被處理。在此手動設定一個值將為所有庫存移動設定預期時間。"
 
 #. module: stock
+#. odoo-python
 #: code:addons/stock/models/stock_picking.py:0
 #: model:ir.model,name:stock.model_stock_scrap
 #: model:ir.model.fields,field_description:stock.field_stock_move__scrap_ids
@@ -7024,6 +7154,7 @@ msgid "September"
 msgstr "九月"
 
 #. module: stock
+#. odoo-python
 #: code:addons/stock/models/stock_picking.py:0
 #: code:addons/stock/models/stock_picking.py:0
 #: code:addons/stock/models/stock_picking.py:0
@@ -7046,36 +7177,42 @@ msgid "Sequence Prefix"
 msgstr "序列號前綴"
 
 #. module: stock
+#. odoo-python
 #: code:addons/stock/models/stock_warehouse.py:0
 #, python-format
 msgid "Sequence in"
 msgstr "序列"
 
 #. module: stock
+#. odoo-python
 #: code:addons/stock/models/stock_warehouse.py:0
 #, python-format
 msgid "Sequence internal"
 msgstr "內部序列"
 
 #. module: stock
+#. odoo-python
 #: code:addons/stock/models/stock_warehouse.py:0
 #, python-format
 msgid "Sequence out"
 msgstr "出庫序列"
 
 #. module: stock
+#. odoo-python
 #: code:addons/stock/models/stock_warehouse.py:0
 #, python-format
 msgid "Sequence packing"
 msgstr "打包序列"
 
 #. module: stock
+#. odoo-python
 #: code:addons/stock/models/stock_warehouse.py:0
 #, python-format
 msgid "Sequence picking"
 msgstr "揀貨序列"
 
 #. module: stock
+#. odoo-python
 #: code:addons/stock/models/stock_warehouse.py:0
 #, python-format
 msgid "Sequence return"
@@ -7087,6 +7224,7 @@ msgid "Serial Numbers"
 msgstr "序號"
 
 #. module: stock
+#. odoo-python
 #: code:addons/stock/models/stock_move_line.py:0
 #, python-format
 msgid ""
@@ -7095,6 +7233,7 @@ msgid ""
 msgstr "序號 (%s) 已存在於以下位置：%s。請更正編碼的序號。"
 
 #. module: stock
+#. odoo-python
 #: code:addons/stock/models/stock_quant.py:0
 #, python-format
 msgid ""
@@ -7107,6 +7246,7 @@ msgstr ""
 "請更正此問題以防止資料不一致。"
 
 #. module: stock
+#. odoo-python
 #: code:addons/stock/models/stock_quant.py:0
 #, python-format
 msgid ""
@@ -7344,7 +7484,7 @@ msgid "Size: Length × Width × Height"
 msgstr "尺寸：長×寬×高"
 
 #. module: stock
-#. openerp-web
+#. odoo-javascript
 #: code:addons/stock/static/src/views/stock_orderpoint_list_buttons.xml:0
 #: model:ir.actions.act_window,name:stock.action_orderpoint_snooze
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_orderpoint_snooze
@@ -7398,6 +7538,7 @@ msgid "Source Document"
 msgstr "來源單據"
 
 #. module: stock
+#. odoo-python
 #: code:addons/stock/models/stock_rule.py:0
 #: model:ir.model.fields,field_description:stock.field_stock_move__location_id
 #: model:ir.model.fields,field_description:stock.field_stock_picking__location_id
@@ -7473,6 +7614,7 @@ msgstr ""
 " 計劃：未來活動。"
 
 #. module: stock
+#. odoo-python
 #: code:addons/stock/models/stock_warehouse.py:0
 #: model:ir.actions.act_window,name:stock.action_product_stock_view
 #: model:ir.ui.menu,name:stock.menu_product_stock
@@ -7505,6 +7647,7 @@ msgstr "庫存移動"
 #. module: stock
 #: model:ir.actions.act_window,name:stock.stock_move_action
 #: model:ir.model.fields,field_description:stock.field_stock_picking__move_ids
+#: model:ir.ui.menu,name:stock.stock_move_menu
 #: model_terms:ir.ui.view,arch_db:stock.stock_move_line_view_search
 #: model_terms:ir.ui.view,arch_db:stock.view_move_form
 #: model_terms:ir.ui.view,arch_db:stock.view_move_search
@@ -7646,6 +7789,7 @@ msgid "Storable Product"
 msgstr "庫存產品"
 
 #. module: stock
+#. odoo-python
 #: code:addons/stock/models/product.py:0
 #, python-format
 msgid ""
@@ -7793,6 +7937,7 @@ msgid ""
 msgstr "「手動操作」的值會在目前操作之後建立庫存移動。當「自動無步驟添加」時，位置將在原來的移動中被替換。"
 
 #. module: stock
+#. odoo-python
 #: code:addons/stock/models/stock_quant.py:0
 #, python-format
 msgid ""
@@ -7805,6 +7950,7 @@ msgstr ""
 "這是符合預期的嗎？例如，如果在運作相應的收貨操作之前運作交貨作業，則會發生這種情況。在這種情況下，一旦完成所有步驟，問題將自動解決。否則，應更正序號以防止資料不一致。"
 
 #. module: stock
+#. odoo-python
 #: code:addons/stock/models/stock_picking.py:0
 #, python-format
 msgid "The backorder %s has been created."
@@ -7825,6 +7971,7 @@ msgid ""
 msgstr "客戶明確放棄其自己的標準條款和條件，即使這些是在這些標准銷售條款和條件之後制定的. 為了有效，任何減損必須事先以書面形式明確同意."
 
 #. module: stock
+#. odoo-python
 #: code:addons/stock/models/stock_lot.py:0
 #, python-format
 msgid ""
@@ -7840,6 +7987,7 @@ msgid "The company is automatically set from your user preferences."
 msgstr "該公司是從您的使用者喜好自動設定。"
 
 #. module: stock
+#. odoo-python
 #: code:addons/stock/models/stock_move.py:0
 #, python-format
 msgid "The deadline has been automatically updated due to a delay on %s."
@@ -7858,19 +8006,21 @@ msgid "The first in the sequence is the default one."
 msgstr "第一個序列中是預設的."
 
 #. module: stock
-#. openerp-web
+#. odoo-javascript
 #: code:addons/stock/static/src/widgets/json_widget.xml:0
 #, python-format
 msgid "The forecasted stock on the"
 msgstr "預估存量"
 
 #. module: stock
+#. odoo-python
 #: code:addons/stock/models/stock_orderpoint.py:0
 #, python-format
 msgid "The inter-warehouse transfers have been generated"
 msgstr ""
 
 #. module: stock
+#. odoo-python
 #: code:addons/stock/models/stock_move_line.py:0
 #, python-format
 msgid "The inventory adjustments have been reverted."
@@ -7887,6 +8037,7 @@ msgid "The name of the warehouse must be unique per company!"
 msgstr "每個公司的倉庫名稱必須唯一!"
 
 #. module: stock
+#. odoo-python
 #: code:addons/stock/wizard/stock_assign_serial_numbers.py:0
 #, python-format
 msgid "The number of Serial Numbers to generate must be greater than zero."
@@ -7931,6 +8082,7 @@ msgid "The product's counted quantity."
 msgstr "產品的計數數量。"
 
 #. module: stock
+#. odoo-python
 #: code:addons/stock/models/stock_move_line.py:0
 #, python-format
 msgid ""
@@ -7940,6 +8092,7 @@ msgid ""
 msgstr ""
 
 #. module: stock
+#. odoo-python
 #: code:addons/stock/models/stock_move.py:0
 #, python-format
 msgid ""
@@ -7948,6 +8101,7 @@ msgid ""
 msgstr "請求的作業無法處理，因為一個程序錯誤，設定`product_qty`欄位取代了 `product_uom_qty`。"
 
 #. module: stock
+#. odoo-python
 #: code:addons/stock/models/stock_move_line.py:0
 #, python-format
 msgid ""
@@ -7956,6 +8110,7 @@ msgid ""
 msgstr ""
 
 #. module: stock
+#. odoo-python
 #: code:addons/stock/models/stock_location.py:0
 #, python-format
 msgid ""
@@ -7964,6 +8119,7 @@ msgid ""
 msgstr "選定的庫存頻率（天）建立了一個離未來太遠的日期。"
 
 #. module: stock
+#. odoo-python
 #: code:addons/stock/models/stock_quant.py:0
 #, python-format
 msgid ""
@@ -8018,6 +8174,7 @@ msgid ""
 msgstr "在已建立的移動/補貨傳播的倉庫，它可以與此規則所針對的倉庫不同 (例如：從另外倉庫補貨的規則)"
 
 #. module: stock
+#. odoo-python
 #: code:addons/stock/models/stock_move_line.py:0
 #, python-format
 msgid "There are no inventory adjustments to revert."
@@ -8034,6 +8191,7 @@ msgid "This SN is already in another location."
 msgstr ""
 
 #. module: stock
+#. odoo-python
 #: code:addons/stock/models/stock_quant.py:0
 #, python-format
 msgid ""
@@ -8089,6 +8247,7 @@ msgid ""
 msgstr "這個位置（如果它是內部的）和它的所有後代通過 type=Internal 過濾。"
 
 #. module: stock
+#. odoo-python
 #: code:addons/stock/models/stock_location.py:0
 #, python-format
 msgid ""
@@ -8096,6 +8255,7 @@ msgid ""
 msgstr "該位置的使用情況不能更改為查看，因為其包含產品。"
 
 #. module: stock
+#. odoo-python
 #: code:addons/stock/models/stock_move_line.py:0
 #, python-format
 msgid ""
@@ -8157,6 +8317,7 @@ msgstr ""
 "(這會建立重複操作)"
 
 #. module: stock
+#. odoo-python
 #: code:addons/stock/models/product.py:0
 #, python-format
 msgid ""
@@ -8173,13 +8334,14 @@ msgid ""
 msgstr "此數量以該產品的預設計量單位表示。"
 
 #. module: stock
-#. openerp-web
+#. odoo-javascript
 #: code:addons/stock/static/src/views/list/inventory_report_list_controller.js:0
 #, python-format
 msgid "This record already exists."
 msgstr "此記錄已存在。"
 
 #. module: stock
+#. odoo-python
 #: code:addons/stock/report/report_stock_reception.py:0
 #, python-format
 msgid "This report cannot be used for done and not done %s at the same time"
@@ -8280,7 +8442,7 @@ msgid "To Reorder"
 msgstr "重新排序"
 
 #. module: stock
-#. openerp-web
+#. odoo-javascript
 #: code:addons/stock/static/src/widgets/json_widget.xml:0
 #, python-format
 msgid "Today"
@@ -8341,7 +8503,7 @@ msgid "Traceability"
 msgstr "追溯性"
 
 #. module: stock
-#. openerp-web
+#. odoo-javascript
 #: code:addons/stock/static/src/js/stock_traceability_report_widgets.js:0
 #: model:ir.actions.client,name:stock.action_stock_report
 #: model:ir.model,name:stock.model_stock_traceability_report
@@ -8379,6 +8541,7 @@ msgid "Track your stock quantities by creating storable products."
 msgstr "通過建立庫存產品來跟踪您的庫存數量。"
 
 #. module: stock
+#. odoo-python
 #: code:addons/stock/models/stock_quant.py:0
 #, python-format
 msgid "Tracked Products in Inventory Adjustment"
@@ -8433,6 +8596,7 @@ msgid "Transfers"
 msgstr "調撥"
 
 #. module: stock
+#. odoo-python
 #: code:addons/stock/models/stock_picking.py:0
 #, python-format
 msgid "Transfers %s: Please add some items to move."
@@ -8495,7 +8659,7 @@ msgid "Trigger Manual"
 msgstr ""
 
 #. module: stock
-#. openerp-web
+#. odoo-javascript
 #: code:addons/stock/static/src/stock_forecasted/stock_forecasted.js:0
 #, python-format
 msgid "Try to add some incoming or outgoing transfers."
@@ -8507,6 +8671,11 @@ msgstr "嘗試添加一些進貨或出貨調撥。"
 #: model:ir.model.fields,field_description:stock.field_product_template__type
 msgid "Type"
 msgstr "類型"
+
+#. module: stock
+#: model_terms:ir.ui.view,arch_db:stock.view_partner_stock_warnings_form
+msgid "Type a message..."
+msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move__picking_code
@@ -8535,14 +8704,14 @@ msgid "USPS Connector"
 msgstr "USPS 連接器"
 
 #. module: stock
-#. openerp-web
+#. odoo-javascript
 #: code:addons/stock/static/src/components/reception_report_line/stock_reception_report_line.xml:0
 #, python-format
 msgid "Unassign"
 msgstr "取消分派"
 
 #. module: stock
-#. openerp-web
+#. odoo-javascript
 #: code:addons/stock/static/src/xml/stock_traceability_report_line.xml:0
 #: code:addons/stock/static/src/xml/stock_traceability_report_line.xml:0
 #: code:addons/stock/static/src/xml/stock_traceability_report_line.xml:0
@@ -8596,12 +8765,6 @@ msgid "Unit of Measure Name"
 msgstr "單位名稱"
 
 #. module: stock
-#: model:product.product,uom_name:stock.product_cable_management_box
-#: model:product.template,uom_name:stock.product_cable_management_box_product_template
-msgid "Units"
-msgstr "單位"
-
-#. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
 msgid "Units Of Measure"
 msgstr "測量單位"
@@ -8622,6 +8785,7 @@ msgid "Unity of measure"
 msgstr "計量單位"
 
 #. module: stock
+#. odoo-python
 #: code:addons/stock/models/stock_quant.py:0
 #, python-format
 msgid "Unknown Pack"
@@ -8638,7 +8802,7 @@ msgid "Unpack"
 msgstr "拆包"
 
 #. module: stock
-#. openerp-web
+#. odoo-javascript
 #: code:addons/stock/static/src/stock_forecasted/forecasted_details.xml:0
 #: model:ir.actions.server,name:stock.action_unreserve_picking
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_form
@@ -8646,6 +8810,13 @@ msgstr "拆包"
 #, python-format
 msgid "Unreserve"
 msgstr "取消預留"
+
+#. module: stock
+#. odoo-python
+#: code:addons/stock/models/stock_move.py:0
+#, python-format
+msgid "Unsafe unit of measure"
+msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move__product_uom
@@ -8667,6 +8838,7 @@ msgid "Update Product Quantity"
 msgstr "更新產品數量"
 
 #. module: stock
+#. odoo-python
 #: code:addons/stock/models/product.py:0
 #: model_terms:ir.ui.view,arch_db:stock.product_form_view_procurement_button
 #: model_terms:ir.ui.view,arch_db:stock.product_product_view_form_easy_inherit_stock
@@ -8697,8 +8869,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
 msgid ""
 "Use GS1 nomenclature datamatrix whenever barcodes are printed for lots and "
-"serial numbers. Printing datamatrix requires extra software. If software "
-"can't be found then 1D barcodes will be printed."
+"serial numbers."
 msgstr ""
 
 #. module: stock
@@ -8728,7 +8899,7 @@ msgid "Use your own routes"
 msgstr "使用您自設的路線"
 
 #. module: stock
-#. openerp-web
+#. odoo-javascript
 #: code:addons/stock/static/src/stock_forecasted/forecasted_details.xml:0
 #, python-format
 msgid "Used by"
@@ -8759,7 +8930,7 @@ msgid "Validate"
 msgstr "庫存過帳"
 
 #. module: stock
-#. openerp-web
+#. odoo-javascript
 #: code:addons/stock/static/src/xml/inventory_lines.xml:0
 #, python-format
 msgid "Validate Inventory"
@@ -8906,20 +9077,21 @@ msgid "Warehouse view location"
 msgstr "倉庫視圖庫位"
 
 #. module: stock
+#. odoo-python
 #: code:addons/stock/models/stock_warehouse.py:0
 #, python-format
 msgid "Warehouse's Routes"
 msgstr "倉庫的路線"
 
 #. module: stock
-#. openerp-web
+#. odoo-javascript
 #: code:addons/stock/static/src/stock_forecasted/forecasted_warehouse_filter.xml:0
 #, python-format
 msgid "Warehouse:"
 msgstr "倉庫:"
 
 #. module: stock
-#. openerp-web
+#. odoo-javascript
 #: code:addons/stock/static/src/views/search/stock_report_search_panel.xml:0
 #: model:ir.actions.act_window,name:stock.action_warehouse_form
 #: model:ir.model.fields,field_description:stock.field_stock_route__warehouse_ids
@@ -8942,6 +9114,7 @@ msgid "Warn Insufficient Scrap Quantity"
 msgstr "報廢數量不足發出警告"
 
 #. module: stock
+#. odoo-python
 #: code:addons/stock/models/stock_move.py:0
 #: code:addons/stock/models/stock_move.py:0
 #: code:addons/stock/models/stock_move_line.py:0
@@ -8955,6 +9128,7 @@ msgid "Warning"
 msgstr "警告"
 
 #. module: stock
+#. odoo-python
 #: code:addons/stock/models/stock_quant.py:0
 #, python-format
 msgid "Warning Duplicated SN"
@@ -8971,6 +9145,7 @@ msgid "Warning on the Picking"
 msgstr "揀貨的警告"
 
 #. module: stock
+#. odoo-python
 #: code:addons/stock/models/product.py:0 code:addons/stock/models/product.py:0
 #, python-format
 msgid "Warning!"
@@ -9067,6 +9242,7 @@ msgid "When product arrives in"
 msgstr "產品到達時"
 
 #. module: stock
+#. odoo-python
 #: code:addons/stock/models/stock_rule.py:0
 #, python-format
 msgid ""
@@ -9075,6 +9251,7 @@ msgid ""
 msgstr "當 <b>%s</b>需要產品時, <br/> <b>%s</b> 將由 <b>%s</b>建立以用來滿足需求。"
 
 #. module: stock
+#. odoo-python
 #: code:addons/stock/models/stock_rule.py:0
 #, python-format
 msgid ""
@@ -9171,6 +9348,7 @@ msgid "You are good, no replenishment to perform!"
 msgstr "You are good, no replenishment to perform!"
 
 #. module: stock
+#. odoo-python
 #: code:addons/stock/models/stock_lot.py:0
 #, python-format
 msgid ""
@@ -9180,6 +9358,7 @@ msgid ""
 msgstr "如果已使用該數位建立了某些庫存移動, 則不允許更改連結到序號或批號的產品。這將導致您的股票不一致。"
 
 #. module: stock
+#. odoo-python
 #: code:addons/stock/models/stock_lot.py:0
 #, python-format
 msgid ""
@@ -9196,6 +9375,7 @@ msgid ""
 msgstr "您試圖將發貨到不同地方的產品裝進同一個包裝內"
 
 #. module: stock
+#. odoo-python
 #: code:addons/stock/models/stock_move.py:0
 #, python-format
 msgid ""
@@ -9227,6 +9407,7 @@ msgid "You can either :"
 msgstr "You can either :"
 
 #. module: stock
+#. odoo-python
 #: code:addons/stock/models/product.py:0
 #, python-format
 msgid ""
@@ -9236,6 +9417,14 @@ msgid ""
 msgstr "您無法更改目前在庫存移動中保留的產品類型。 如果您需要更改類型，則應先取消保留庫存的移動。"
 
 #. module: stock
+#. odoo-python
+#: code:addons/stock/models/product.py:0
+#, python-format
+msgid "You can not change the type of a product that was already used."
+msgstr ""
+
+#. module: stock
+#. odoo-python
 #: code:addons/stock/models/stock_move_line.py:0
 #, python-format
 msgid ""
@@ -9244,24 +9433,35 @@ msgid ""
 msgstr "如果揀貨已完成，不能刪除產品移動。您可以糾正完成數量。"
 
 #. module: stock
+#. odoo-python
 #: code:addons/stock/models/stock_move_line.py:0
 #, python-format
 msgid "You can not enter negative quantities."
 msgstr "不能輸入負數數量."
 
 #. module: stock
+#. odoo-python
 #: code:addons/stock/models/stock_move.py:0
 #, python-format
 msgid "You can only delete draft moves."
 msgstr "您只能刪除草稿狀態的移動。"
 
 #. module: stock
+#. odoo-python
+#: code:addons/stock/models/stock_scrap.py:0
+#, python-format
+msgid "You can only enter positive quantities."
+msgstr ""
+
+#. module: stock
+#. odoo-python
 #: code:addons/stock/models/stock_move_line.py:0
 #, python-format
 msgid "You can only process 1.0 %s of products with unique serial number."
 msgstr "只能處理1.0個%s具有唯一序號的產品。"
 
 #. module: stock
+#. odoo-python
 #: code:addons/stock/models/res_config_settings.py:0
 #, python-format
 msgid ""
@@ -9270,12 +9470,14 @@ msgid ""
 msgstr ""
 
 #. module: stock
+#. odoo-python
 #: code:addons/stock/models/stock_location.py:0
 #, python-format
 msgid "You cannot archive the location %s as it is used by your warehouse %s"
 msgstr "您不能歸檔庫存位置 %s，因為倉庫 %s 目前正使用它"
 
 #. module: stock
+#. odoo-python
 #: code:addons/stock/models/stock_move.py:0
 #, python-format
 msgid ""
@@ -9284,12 +9486,14 @@ msgid ""
 msgstr "您無法取消已設置為“完成”的庫存移動。請透過建立一個退回單據來執行反向作業。"
 
 #. module: stock
+#. odoo-python
 #: code:addons/stock/models/stock_picking.py:0
 #, python-format
 msgid "You cannot change the Scheduled Date on a done or cancelled transfer."
 msgstr "不能更改已完成或已取消傳輸的\"計畫日期\"。"
 
 #. module: stock
+#. odoo-python
 #: code:addons/stock/models/stock_move.py:0
 #, python-format
 msgid ""
@@ -9297,6 +9501,7 @@ msgid ""
 msgstr "您不能更改已設置為“完成”的庫存移動的計量單位。"
 
 #. module: stock
+#. odoo-python
 #: code:addons/stock/models/stock_location.py:0
 #, python-format
 msgid ""
@@ -9305,6 +9510,7 @@ msgid ""
 msgstr "您無法更改位置類型或此位置已被作為廢料位置且此位置中保留了產品。請先將產品取消保留。"
 
 #. module: stock
+#. odoo-python
 #: code:addons/stock/models/product.py:0
 #, python-format
 msgid ""
@@ -9313,6 +9519,7 @@ msgid ""
 msgstr "您無法更改此計量單位的比率，因為具有此計量單位的某些產品已被移動或當前已保留。"
 
 #. module: stock
+#. odoo-python
 #: code:addons/stock/models/product.py:0
 #, python-format
 msgid ""
@@ -9322,18 +9529,21 @@ msgid ""
 msgstr "您無法更改計量單位，因為此產品已有庫存變動。如果要更改計量單位，則應該歸檔此產品並建立新產品。"
 
 #. module: stock
+#. odoo-python
 #: code:addons/stock/models/stock_scrap.py:0
 #, python-format
 msgid "You cannot delete a scrap which is done."
 msgstr "不能刪除已完成的報廢。"
 
 #. module: stock
+#. odoo-python
 #: code:addons/stock/models/stock_quant.py:0
 #, python-format
 msgid "You cannot modify inventory loss quantity"
 msgstr "您不能修改庫存盤虧數量"
 
 #. module: stock
+#. odoo-python
 #: code:addons/stock/models/stock_move.py:0
 #, python-format
 msgid ""
@@ -9342,6 +9552,7 @@ msgid ""
 msgstr "您不能在同一調撥中多次移動同一包裝內容，或將同一包裝拆分到兩個位置。"
 
 #. module: stock
+#. odoo-python
 #: code:addons/stock/models/stock_move.py:0
 #, python-format
 msgid ""
@@ -9350,6 +9561,7 @@ msgid ""
 msgstr "您無法執行此移動，因為此計量單位與產品的計量單位不是同一類別。"
 
 #. module: stock
+#. odoo-python
 #: code:addons/stock/models/stock_location.py:0
 #, python-format
 msgid ""
@@ -9358,6 +9570,7 @@ msgid ""
 msgstr ""
 
 #. module: stock
+#. odoo-python
 #: code:addons/stock/models/stock_picking.py:0
 #, python-format
 msgid ""
@@ -9366,18 +9579,21 @@ msgid ""
 msgstr ""
 
 #. module: stock
+#. odoo-python
 #: code:addons/stock/models/stock_move.py:0
 #, python-format
 msgid "You cannot split a draft move. It needs to be confirmed first."
 msgstr "不能拆分一個移動草稿。您需要先確認它。"
 
 #. module: stock
+#. odoo-python
 #: code:addons/stock/models/stock_move.py:0
 #, python-format
 msgid "You cannot split a stock move that has been set to 'Done'."
 msgstr "您無法拆分狀態已標記為「完成」的庫存移動。"
 
 #. module: stock
+#. odoo-python
 #: code:addons/stock/models/stock_quant.py:0
 #, python-format
 msgid ""
@@ -9386,12 +9602,14 @@ msgid ""
 msgstr "您不能從“視圖”類型 (%s) 的位置取貨或交付產品。"
 
 #. module: stock
+#. odoo-python
 #: code:addons/stock/models/stock_move.py:0
 #, python-format
 msgid "You cannot unreserve a stock move that has been set to 'Done'."
 msgstr "您無法取消狀態已標記為「完成」的庫存移動。"
 
 #. module: stock
+#. odoo-python
 #: code:addons/stock/models/stock_move_line.py:0
 #: code:addons/stock/models/stock_move_line.py:0
 #, python-format
@@ -9401,6 +9619,7 @@ msgid ""
 msgstr "您不能使用兩次相同的序號。 請更正序號編碼。"
 
 #. module: stock
+#. odoo-python
 #: code:addons/stock/models/stock_picking.py:0
 #, python-format
 msgid ""
@@ -9409,6 +9628,7 @@ msgid ""
 msgstr "如果沒有保留或完成數量，則無法執行調撥過帳。要強制執行，請切換到編輯模式並對完成的數量進行輸入。"
 
 #. module: stock
+#. odoo-python
 #: code:addons/stock/wizard/stock_picking_return.py:0
 #, python-format
 msgid ""
@@ -9428,6 +9648,7 @@ msgid "You have processed less products than the initial demand."
 msgstr "您已經處理了初始需求的部分產品。"
 
 #. module: stock
+#. odoo-python
 #: code:addons/stock/models/product.py:0
 #, python-format
 msgid ""
@@ -9436,6 +9657,7 @@ msgid ""
 msgstr "您有沒有批次/序號的產品。您可以通過執行庫存調整來分配批位/序號。"
 
 #. module: stock
+#. odoo-python
 #: code:addons/stock/models/stock_orderpoint.py:0
 #, python-format
 msgid ""
@@ -9444,18 +9666,21 @@ msgid ""
 msgstr "您必須選擇與產品默認計量單位相同類別的產品計量單位"
 
 #. module: stock
+#. odoo-python
 #: code:addons/stock/wizard/stock_picking_return.py:0
 #, python-format
 msgid "You may only return Done pickings."
 msgstr "您只能退回已完成的揀貨。"
 
 #. module: stock
+#. odoo-python
 #: code:addons/stock/wizard/stock_picking_return.py:0
 #, python-format
 msgid "You may only return one picking at a time."
 msgstr "您每次只能退回一次揀貨。"
 
 #. module: stock
+#. odoo-python
 #: code:addons/stock/models/stock_picking.py:0
 #, python-format
 msgid ""
@@ -9464,12 +9689,14 @@ msgid ""
 msgstr "您需要啟動存儲位置才能執行內部作業類型。"
 
 #. module: stock
+#. odoo-python
 #: code:addons/stock/models/stock_move.py:0
 #, python-format
 msgid "You need to set a Serial Number before generating more."
 msgstr "在生成更多序號之前，您需要先設置序號。"
 
 #. module: stock
+#. odoo-python
 #: code:addons/stock/models/stock_move_line.py:0
 #, python-format
 msgid ""
@@ -9480,6 +9707,7 @@ msgstr ""
 " ——"
 
 #. module: stock
+#. odoo-python
 #: code:addons/stock/models/stock_picking.py:0
 #, python-format
 msgid "You need to supply a Lot/Serial number for products %s."
@@ -9491,12 +9719,14 @@ msgid "You should update this document to reflect your T&amp;C."
 msgstr "您應該更新此文件以反映您的 T&amp;C."
 
 #. module: stock
+#. odoo-python
 #: code:addons/stock/models/stock_warehouse.py:0
 #, python-format
 msgid "You still have ongoing operations for picking types %s in warehouse %s"
 msgstr "您仍有倉庫 %s 中揀貨類型 %s 執行中的操作"
 
 #. module: stock
+#. odoo-python
 #: code:addons/stock/models/product.py:0
 #, python-format
 msgid ""
@@ -9505,13 +9735,14 @@ msgid ""
 msgstr "您對此產品仍然有一些有效的重訂貨規則。 請先歸檔或刪除它們。"
 
 #. module: stock
+#. odoo-python
 #: code:addons/stock/models/stock_location.py:0
 #, python-format
 msgid "You still have some product in locations %s"
 msgstr "您仍有一些產品在位置 %s"
 
 #. module: stock
-#. openerp-web
+#. odoo-javascript
 #: code:addons/stock/static/src/views/list/inventory_report_list_controller.js:0
 #, python-format
 msgid ""
@@ -9538,6 +9769,7 @@ msgid ""
 msgstr ""
 
 #. module: stock
+#. odoo-python
 #: code:addons/stock/models/stock_quant.py:0
 #, python-format
 msgid "Your stock is currently empty"
@@ -9560,7 +9792,7 @@ msgid "]<br/>min:"
 msgstr "]<br/>min:"
 
 #. module: stock
-#. openerp-web
+#. odoo-javascript
 #: code:addons/stock/static/src/widgets/json_widget.xml:0
 #, python-format
 msgid "below the inventory"
@@ -9643,7 +9875,7 @@ msgid "in"
 msgstr "在"
 
 #. module: stock
-#. openerp-web
+#. odoo-javascript
 #: code:addons/stock/static/src/widgets/json_widget.xml:0
 #, python-format
 msgid "is"
@@ -9655,7 +9887,7 @@ msgid "manually to trigger the reordering rules right now."
 msgstr "立即手動觸發訂貨規則。"
 
 #. module: stock
-#. openerp-web
+#. odoo-javascript
 #: code:addons/stock/static/src/widgets/json_widget.xml:0
 #, python-format
 msgid "minimum of"
@@ -9667,7 +9899,7 @@ msgid "of"
 msgstr "的"
 
 #. module: stock
-#. openerp-web
+#. odoo-javascript
 #: code:addons/stock/static/src/widgets/stock_rescheduling_popover.xml:0
 #, python-format
 msgid "planned on"
@@ -9684,7 +9916,7 @@ msgid "report_stock_quantity_graph"
 msgstr "report_stock_quantity_graph"
 
 #. module: stock
-#. openerp-web
+#. odoo-javascript
 #: code:addons/stock/static/src/widgets/json_widget.xml:0
 #, python-format
 msgid "should be replenished"
@@ -9698,13 +9930,14 @@ msgid ""
 msgstr ""
 
 #. module: stock
-#. openerp-web
+#. odoo-javascript
 #: code:addons/stock/static/src/widgets/json_widget.xml:0
 #, python-format
 msgid "to reach the maximum of"
 msgstr "達到最大值"
 
 #. module: stock
+#. odoo-python
 #: code:addons/stock/wizard/stock_replenishment_info.py:0
 #, python-format
 msgid "{0} can only provide {1} {2}, while the quantity to order is {3} {2}."

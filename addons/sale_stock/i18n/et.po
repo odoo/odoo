@@ -15,6 +15,7 @@
 # Triine Aavik <triine@avalah.ee>, 2022
 # Rivo Zängov <eraser@eraser.ee>, 2022
 # Piia Paurson <piia@avalah.ee>, 2022
+# Leaanika Randmets, 2022
 # 
 msgid ""
 msgstr ""
@@ -22,7 +23,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-10-10 10:23+0000\n"
 "PO-Revision-Date: 2022-09-22 05:55+0000\n"
-"Last-Translator: Piia Paurson <piia@avalah.ee>, 2022\n"
+"Last-Translator: Leaanika Randmets, 2022\n"
 "Language-Team: Estonian (https://www.transifex.com/odoo/teams/41243/et/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -61,6 +62,9 @@ msgid ""
 "                    Some deliveries are already done. Returns can be created from the Delivery Orders.\n"
 "                </span>"
 msgstr ""
+"<span attrs=\"{'invisible': [('display_delivery_alert', '=', False)]}\">\n"
+"                    Mõned tarned on juba tehtud. Tagastust saab luua saatelehtedelt.\n"
+"                </span>"
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.res_config_settings_view_form_stock
@@ -204,7 +208,7 @@ msgstr "Saatelehed"
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order__delivery_status
 msgid "Delivery Status"
-msgstr ""
+msgstr "Tarne staatus"
 
 #. module: sale_stock
 #: model:ir.model.fields,help:sale_stock.field_sale_order__expected_date
@@ -308,7 +312,7 @@ msgstr "Vaba kogus täna"
 #. module: sale_stock
 #: model:ir.model.fields.selection,name:sale_stock.selection__sale_order__delivery_status__full
 msgid "Fully Delivered"
-msgstr ""
+msgstr "Täielikult tarnitud"
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order__show_json_popover
@@ -338,7 +342,7 @@ msgstr "Tarnetingimus"
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order__incoterm_location
 msgid "Incoterm Location"
-msgstr ""
+msgstr "Tarnetingimuse asukoht"
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_res_config_settings__group_display_incoterm
@@ -452,7 +456,7 @@ msgstr "Tulevikus ei ole piisavalt saadavust"
 #: code:addons/sale_stock/static/src/widgets/qty_at_date_widget.xml:0
 #, python-format
 msgid "No future availability"
-msgstr ""
+msgstr "Tulevikus ei ole saadavust"
 
 #. module: sale_stock
 #. openerp-web
@@ -464,14 +468,14 @@ msgstr "Tulevikus ei ole saadavust"
 #. module: sale_stock
 #: model:ir.model.fields.selection,name:sale_stock.selection__sale_order__delivery_status__pending
 msgid "Not Delivered"
-msgstr ""
+msgstr "Ei ole tarnitud"
 
 #. module: sale_stock
 #. openerp-web
 #: code:addons/sale_stock/static/src/widgets/qty_at_date_widget.xml:0
 #, python-format
 msgid "Not enough future availability"
-msgstr ""
+msgstr "Tulevikus ei ole piisavat saadavust"
 
 #. module: sale_stock
 #: model:ir.model.fields,help:sale_stock.field_sale_order_line__customer_lead
@@ -492,7 +496,7 @@ msgstr "sellel"
 #. module: sale_stock
 #: model:ir.model.fields.selection,name:sale_stock.selection__sale_order__delivery_status__partial
 msgid "Partially Delivered"
-msgstr ""
+msgstr "Osaliselt tarnitud"
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_res_config_settings__default_picking_policy
@@ -533,7 +537,7 @@ msgstr "Pakkumised"
 #: code:addons/sale_stock/static/src/widgets/qty_at_date_widget.xml:0
 #, python-format
 msgid "Remaining demand available at"
-msgstr "Järelejäänud vajadus saadaval "
+msgstr "Järelejäänud vajadus saadaval"
 
 #. module: sale_stock
 #. openerp-web
@@ -607,7 +611,7 @@ msgstr "Müügi turvalisuse päevad"
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.res_config_settings_view_form_stock
 msgid "Schedule deliveries earlier to avoid delays"
-msgstr "Planeeri tarned varasemaks, et vältida viivitusi."
+msgstr "Planeeri tarned varasemaks, et vältida viivitusi"
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order_line__scheduled_date
@@ -703,6 +707,8 @@ msgid ""
 "The ordered quantity cannot be decreased below the amount already delivered."
 " Instead, create a return in your inventory."
 msgstr ""
+"Tellitud kogust ei saa muuta alla juba tarnitud koguste. Selle asemel looge "
+"laos tagastus."
 
 #. module: sale_stock
 #. openerp-web
@@ -794,4 +800,4 @@ msgstr "protsessitud selle asemel"
 #: code:addons/sale_stock/static/src/xml/delay_alert.xml:0
 #, python-format
 msgid "will be late."
-msgstr "hilineb"
+msgstr "hilineb."

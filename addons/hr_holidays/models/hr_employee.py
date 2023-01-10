@@ -286,6 +286,7 @@ class HrEmployee(models.Model):
             '|',
                 ('resource_calendar_id', '=', False),
                 ('resource_calendar_id', 'in', (self.resource_calendar_id | self.env.company.resource_calendar_id).ids),
+            ('company_id', 'in', self.env.companies.ids),
         ])
 
         # a user with hr_holidays permissions will be able to see all stress days from his calendar

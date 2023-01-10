@@ -4,22 +4,23 @@
 # 
 # Translators:
 # Eugeni Chafer <eugeni@chafer.cat>, 2022
-# jabelchi, 2022
-# Arnau Ros, 2022
+# Josep Anton Belchi, 2022
 # Marc Tormo i Bochaca <mtbochaca@gmail.com>, 2022
 # Quim - eccit <quim@eccit.com>, 2022
 # Sandra Franch <sandra.franch@upc.edu>, 2022
 # marcescu, 2022
 # RGB Consulting <odoo@rgbconsulting.com>, 2022
 # Martin Trigaux, 2022
+# Ivan Espinola, 2022
+# Arnau Ros, 2022
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~15.4\n"
+"Project-Id-Version: Odoo Server 16.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-06-09 14:05+0000\n"
+"POT-Creation-Date: 2022-12-15 12:50+0000\n"
 "PO-Revision-Date: 2022-09-22 05:45+0000\n"
-"Last-Translator: Martin Trigaux, 2022\n"
+"Last-Translator: Arnau Ros, 2022\n"
 "Language-Team: Catalan (https://www.transifex.com/odoo/teams/41243/ca/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -35,13 +36,9 @@ msgstr "Nom alfanumèric"
 #. module: barcodes_gs1_nomenclature
 #: model:ir.model.fields,help:barcodes_gs1_nomenclature.field_barcode_nomenclature__gs1_separator_fnc1
 msgid ""
-"Alternative regex delimiter for the FNC1 (by default, if not set, it is <GS>"
-" ASCII 29 char). The separator must not match the begin/end of any related "
-"rules pattern."
+"Alternative regex delimiter for the FNC1. The separator must not match the "
+"begin/end of any related rules pattern."
 msgstr ""
-"Delimitador alternatiu d'expressió regular per al FNC1 (per defecte, si no "
-"està establert, és <GS> ASCII 29 char). El separador no ha de coincidir amb "
-"el principi/final de cap patró de regles relacionades."
 
 #. module: barcodes_gs1_nomenclature
 #: model:ir.model.fields,field_description:barcodes_gs1_nomenclature.field_barcode_rule__associated_uom_id
@@ -104,20 +101,27 @@ msgid "GS1-128"
 msgstr "GS1-128"
 
 #. module: barcodes_gs1_nomenclature
+#: model:ir.model,name:barcodes_gs1_nomenclature.model_ir_http
+msgid "HTTP Routing"
+msgstr "Enrutament HTTP"
+
+#. module: barcodes_gs1_nomenclature
 #: model:ir.model.fields,help:barcodes_gs1_nomenclature.field_barcode_rule__gs1_decimal_usage
 msgid ""
 "If True, use the last digit of AI to determine where the first decimal is"
 msgstr ""
+"Si és cert, utilitzeu l'últim dígit de la IA per a determinar on és el "
+"primer decimal"
 
 #. module: barcodes_gs1_nomenclature
-#. openerp-web
+#. odoo-javascript
 #: code:addons/barcodes_gs1_nomenclature/static/src/js/barcode_parser.js:0
 #, python-format
 msgid "Invalid barcode: can't be formated as date"
 msgstr "Codi de barres no vàlid: no es pot formatar com a data"
 
 #. module: barcodes_gs1_nomenclature
-#. openerp-web
+#. odoo-javascript
 #: code:addons/barcodes_gs1_nomenclature/static/src/js/barcode_parser.js:0
 #, python-format
 msgid "Invalid barcode: the check digit is incorrect"
@@ -152,7 +156,7 @@ msgstr "Identificador numèric"
 #. module: barcodes_gs1_nomenclature
 #: model:ir.model.fields.selection,name:barcodes_gs1_nomenclature.selection__barcode_rule__type__pack_date
 msgid "Pack Date"
-msgstr ""
+msgstr "Data del paquet"
 
 #. module: barcodes_gs1_nomenclature
 #: model:ir.model.fields.selection,name:barcodes_gs1_nomenclature.selection__barcode_rule__type__package
@@ -170,6 +174,7 @@ msgid "Quantity"
 msgstr "Quantitat"
 
 #. module: barcodes_gs1_nomenclature
+#. odoo-python
 #: code:addons/barcodes_gs1_nomenclature/models/barcode_nomenclature.py:0
 #, python-format
 msgid "The FNC1 Separator Alternative is not a valid Regex: "
@@ -192,12 +197,14 @@ msgstr ""
 "barres de longitud variable."
 
 #. module: barcodes_gs1_nomenclature
+#. odoo-python
 #: code:addons/barcodes_gs1_nomenclature/models/barcode_rule.py:0
 #, python-format
 msgid "The rule pattern \"%s\" is not a valid Regex: "
 msgstr "El patró de la regla\"%s\" no és un Regex vàlid:"
 
 #. module: barcodes_gs1_nomenclature
+#. odoo-python
 #: code:addons/barcodes_gs1_nomenclature/models/barcode_rule.py:0
 #, python-format
 msgid ""
@@ -210,6 +217,7 @@ msgstr ""
 "\t- Una segona per a captar el valor."
 
 #. module: barcodes_gs1_nomenclature
+#. odoo-python
 #: code:addons/barcodes_gs1_nomenclature/models/barcode_nomenclature.py:0
 #, python-format
 msgid ""
@@ -232,7 +240,7 @@ msgstr ""
 "regles de codificació GS1-128 és aquest tipus de nomenclatura."
 
 #. module: barcodes_gs1_nomenclature
-#. openerp-web
+#. odoo-javascript
 #: code:addons/barcodes_gs1_nomenclature/static/src/js/barcode_parser.js:0
 #, python-format
 msgid "This barcode can't be parsed by any barcode rules."
@@ -240,7 +248,7 @@ msgstr ""
 "Aquest codi de barres no es pot analitzar per cap regla de codi de barres."
 
 #. module: barcodes_gs1_nomenclature
-#. openerp-web
+#. odoo-javascript
 #: code:addons/barcodes_gs1_nomenclature/static/src/js/barcode_parser.js:0
 #, python-format
 msgid "This barcode can't be partially or fully parsed."

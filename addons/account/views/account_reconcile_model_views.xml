@@ -153,6 +153,7 @@
                                                attrs="{'invisible': ['|', ('match_partner', '=', False), ('rule_type', '=', 'writeoff_button')]}"/>
                                         <field name="match_partner_ids" nolabel="1"
                                                widget="many2many_tags"
+                                               options="{'no_quick_create': True}"
                                                attrs="{'invisible': ['|', ('match_partner', '=', False), ('rule_type', '=', 'writeoff_button')]}"/>
                                         <label for="match_partner_category_ids" class="ml16"
                                                attrs="{'invisible': ['|', ('match_partner', '=', False), ('rule_type', '=', 'writeoff_button')]}"/>

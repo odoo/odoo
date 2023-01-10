@@ -263,12 +263,6 @@ var SnippetEditor = Widget.extend({
         // a flickering when not needed.
         this.$target.on('transitionend.snippet_editor, animationend.snippet_editor', postAnimationCover);
 
-        // Set the `contenteditable` attribute to false for all the columns
-        // having the class `o_grid_item_image` (as it is removed when leaving
-        // the edit mode).
-        const imageColumnEls = this.$target[0].querySelectorAll('.o_grid_item_image');
-        imageColumnEls.forEach(imageColumnEl => imageColumnEl.contentEditable = false);
-
         return Promise.all(defs).then(() => {
             this.__isStartedResolveFunc(this);
         });
@@ -319,6 +313,7 @@ var SnippetEditor = Widget.extend({
         if (this.isDestroyed()) {
             return;
         }
+        this.willDestroyEditors = true;
         await this.toggleTargetVisibility(!this.$target.hasClass('o_snippet_invisible')
             && !this.$target.hasClass('o_snippet_mobile_invisible')
             && !this.$target.hasClass('o_snippet_desktop_invisible'));
@@ -784,6 +779,7 @@ var SnippetEditor = Widget.extend({
         $optionsSection.on('mouseenter', this._onOptionsSectionMouseEnter.bind(this));
         $optionsSection.on('mouseleave', this._onOptionsSectionMouseLeave.bind(this));
         $optionsSection.on('click', 'we-title > span', this._onOptionsSectionClick.bind(this));
+        // TODO In master: restrict selectors to `:not(.o_disabled)`.
         $optionsSection.on('click', '.oe_snippet_clone', this._onCloneClick.bind(this));
         $optionsSection.on('click', '.oe_snippet_remove', this._onRemoveClick.bind(this));
         this._customize$Elements.push($optionsSection);
@@ -1060,6 +1056,7 @@ var SnippetEditor = Widget.extend({
             width: self.$target.width(),
             height: self.$target.height()
         };
+        const closestFormEl = this.$target[0].closest('form');
         self.$target.after('<div class="oe_drop_clone" style="display: none;"/>');
         self.$target.detach();
         self.$el.addClass('d-none');
@@ -1080,6 +1077,23 @@ var SnippetEditor = Widget.extend({
                 $selectorChildren = $selectorChildren.add(self.selectorChildren[i].all());
             }
         }
+        // TODO In master, do not reference other module class + find a better
+        // system to define such cases + avoid duplicated code (drag & drop from
+        // editor panel + drag & drop from move button of existing block).
+        // Prevent dropping ToC inside another ToC. grep: NO_DOUBLE_TOC
+        if (this.$target[0].classList.contains('s_table_of_content')) {
+            $selectorChildren = $selectorChildren.filter((i, el) => !el.closest('.s_table_of_content'));
+        }
+        // Disallow dropping form fields outside of their form.
+        // TODO this can probably be implemented by reviewing data-drop-near
+        // definitions in master but we should find a better to define those and
+        // such cases.
+        if (this.$target[0].classList.contains('s_website_form_field')) {
+            $selectorSiblings = $selectorSiblings.filter(
+                (i, el) => closestFormEl === el.closest('form')
+            );
+        }
+
         const canBeSanitizedUnless = this._canBeSanitizedUnless(this.$target[0]);
 
         // Remove the siblings that belong to a snippet in grid mode
@@ -1308,12 +1322,8 @@ var SnippetEditor = Widget.extend({
             gridUtils._resizeGrid(rowEl);
         } else if (this.$target[0].classList.contains('o_grid_item') && this.dropped) {
             // Case when dropping a grid item in a non-grid dropzone.
-            this.$target[0].classList.remove('o_grid_item');
+            this.$target[0].classList.remove('o_grid_item', 'o_grid_item_image', 'o_grid_item_image_contain');
             this.$target[0].style.removeProperty('grid-area');
-            if (this.$target[0].classList.contains('o_grid_item_image')) {
-                this.$target[0].classList.remove('o_grid_item_image');
-                this.$target[0].removeAttribute('contentEditable');
-            }
         }
 
         // TODO lot of this is duplicated code of the d&d feature of snippets
@@ -1352,13 +1362,9 @@ var SnippetEditor = Widget.extend({
                     if (this.$target[0].classList.contains('o_grid_item')) {
                         // Case when a grid column is dropped near a non-grid
                         // dropzone.
-                        this.$target[0].classList.remove('o_grid_item');
+                        this.$target[0].classList.remove('o_grid_item', 'o_grid_item_image', 'o_grid_item_image_contain');
                         this.$target[0].style.removeProperty('z-index');
                         this.$target[0].style.removeProperty('grid-area');
-                        if (this.$target[0].classList.contains('o_grid_item_image')) {
-                            this.$target[0].classList.remove('o_grid_item_image');
-                            this.$target[0].removeAttribute('contentEditable');
-                        }
                     }
                 }
 
@@ -1505,6 +1511,10 @@ var SnippetEditor = Widget.extend({
      * @param {OdooEvent} ev
      */
     _onSnippetOptionVisibilityUpdate: function (ev) {
+        if (this.willDestroyEditors) {
+            // Do not update the option visibilities if we are destroying them.
+            return;
+        }
         ev.data.show = this._toggleVisibilityStatus(ev.data.show);
     },
     /**
@@ -2018,6 +2028,7 @@ var SnippetsMenu = Widget.extend({
         // when hidden, destroying the widget hides it.)
         await this._mutex.getUnlockedDef();
 
+        this.willDestroyEditors = true;
         // Then destroy all snippet editors, making them call their own
         // "clean for save" methods (and options ones).
         await this._destroyEditors();
@@ -2129,6 +2140,14 @@ var SnippetsMenu = Widget.extend({
         // Lastly, ensure that the snippets or its related parts are added to
         // the invisible DOM list if needed.
         await this._updateInvisibleDOM();
+    },
+    /**
+     * Public implementation of _execWithLoadingEffect.
+     *
+     * @see this._execWithLoadingEffect for parameters
+     */
+    execWithLoadingEffect(action, contentLoading = true, delay = 500) {
+        return this._execWithLoadingEffect(...arguments);
     },
 
     //--------------------------------------------------------------------------
@@ -2461,7 +2480,6 @@ var SnippetsMenu = Widget.extend({
                         if (editor.isSticky()) {
                             editor.toggleOverlay(true, false);
                             customize$Elements = await editor.toggleOptions(true);
-                            break;
                         }
                     }
                 }
@@ -2670,6 +2688,7 @@ var SnippetsMenu = Widget.extend({
     _computeSnippetTemplates: function (html) {
         var self = this;
         var $html = $(html);
+        this._patchForComputeSnippetTemplates($html);
         var $scroll = $html.siblings('#o_scroll');
 
         this.templateOptions = [];
@@ -2681,6 +2700,17 @@ var SnippetsMenu = Widget.extend({
             var selector = $style.data('selector');
             var exclude = $style.data('exclude') || '';
             const excludeParent = $style.attr('id') === "so_content_addition" ? snippetAdditionDropIn : '';
+
+            // TODO to remove in master: the Carousel snippet has a `content`
+            // class in its `.row` elements which makes dropzones appear when
+            // dragging inner content, allowing them to be dropped in the row,
+            // where it should not be the case.
+            if ($style[0].getAttribute('id') === 'so_content_addition') {
+                let dropInPatch = $style[0].dataset.dropIn.split(', ');
+                dropInPatch = dropInPatch.map(selector => selector === '.content' ? '.content:not(.row)' : selector);
+                $style[0].dataset.dropIn = dropInPatch.join(', ');
+            }
+
             var target = $style.data('target');
             var noCheck = $style.data('no-check');
             var optionID = $style.data('js') || $style.data('option-name'); // used in tour js as selector
@@ -2810,6 +2840,15 @@ var SnippetsMenu = Widget.extend({
         this.$el.addClass('o_loaded');
         $(this.el.ownerDocument.body).addClass('editor_has_snippets');
     },
+    /**
+     * Eases patching the XML definition for snippets and options in stable
+     * versions. Note: in the future, we will probably move to other ways to
+     * define snippets and options.
+     *
+     * @private
+     * @param {jQuery}
+     */
+    _patchForComputeSnippetTemplates($html) {},
     /**
      * Creates a snippet editor to associated to the given snippet. If the given
      * snippet already has a linked snippet editor, the function only returns
@@ -3064,6 +3103,16 @@ var SnippetsMenu = Widget.extend({
                                 $selectorChildren = $selectorChildren.add(temp[k]['drop-in'].all());
                             }
                         }
+                    }
+
+                    // TODO In master, do not reference other module class +
+                    // find a better system to define such cases + avoid
+                    // duplicated code (drag & drop from editor panel + drag &
+                    // drop from move button of existing block).
+                    // Prevent dropping ToC inside another ToC.
+                    // grep: NO_DOUBLE_TOC
+                    if ($baseBody[0].classList.contains('s_table_of_content')) {
+                        $selectorChildren = $selectorChildren.filter((i, el) => !el.closest('.s_table_of_content'));
                     }
 
                     $toInsert = $baseBody.clone();
@@ -3913,6 +3962,10 @@ var SnippetsMenu = Widget.extend({
      * @param {OdooEvent} ev
      */
     _onSnippetOptionVisibilityUpdate: async function (ev) {
+        if (this.willDestroyEditors) {
+            // Do not update the option visibilities if we are destroying them.
+            return;
+        }
         if (!ev.data.show) {
             await this._activateSnippet(false);
         }

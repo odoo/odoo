@@ -128,7 +128,7 @@ QUnit.module("Search", (hooks) => {
     });
 
     QUnit.test("delete an active favorite", async function (assert) {
-        assert.expect(11);
+        assert.expect(14);
 
         class ToyController extends Component {
             setup() {
@@ -183,6 +183,10 @@ QUnit.module("Search", (hooks) => {
         });
 
         await toggleFavoriteMenu(target);
+        const favorite = target.querySelector(".o_favorite_menu .dropdown-item");
+        assert.equal(favorite.innerText, "My favorite");
+        assert.deepEqual(favorite.getAttribute("role"), "menuitemcheckbox");
+        assert.deepEqual(favorite.ariaChecked, "true");
 
         assert.deepEqual(getFacetTexts(target), ["My favorite"]);
         assert.hasClass(target.querySelector(".o_favorite_menu .o_menu_item"), "selected");
@@ -235,8 +239,6 @@ QUnit.module("Search", (hooks) => {
     QUnit.test(
         'toggle favorite correctly clears filter, groupbys, comparison and field "options"',
         async function (assert) {
-            assert.expect(11);
-
             patchDate(2019, 6, 31, 13, 43, 0);
 
             const controlPanel = await makeWithSearch({
@@ -327,7 +329,12 @@ QUnit.module("Search", (hooks) => {
 
             // activate the unique existing favorite
             await toggleFavoriteMenu(target);
+            const favorite = target.querySelector(".o_favorite_menu .dropdown-item");
+            assert.equal(favorite.innerText, "My favorite");
+            assert.deepEqual(favorite.getAttribute("role"), "menuitemcheckbox");
+            assert.deepEqual(favorite.ariaChecked, "false");
             await toggleMenuItem(target, 0);
+            assert.deepEqual(favorite.ariaChecked, "true");
 
             domain = controlPanel.env.searchModel.domain;
             groupBy = controlPanel.env.searchModel.groupBy;

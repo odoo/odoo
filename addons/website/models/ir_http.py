@@ -124,6 +124,14 @@ class Http(models.AbstractModel):
         )
 
     @classmethod
+    def _get_public_users(cls):
+        public_users = super()._get_public_users()
+        website = request.env(user=SUPERUSER_ID)['website'].get_current_website()  # sudo
+        if website:
+            public_users.append(website._get_cached('user_id'))
+        return public_users
+
+    @classmethod
     def _auth_method_public(cls):
         """ If no user logged, set the public user of current website, or default
             public user as request uid.
@@ -394,6 +402,13 @@ class Http(models.AbstractModel):
                 # Cookies bar is disabled on this website
                 return True
             accepted_cookie_types = json_scriptsafe.loads(request.httprequest.cookies.get('website_cookies_bar', '{}'))
+
+            # pre-16.0 compatibility, `website_cookies_bar` was `"true"`.
+            # In that case we delete that cookie and let the user choose again.
+            if not isinstance(accepted_cookie_types, dict):
+                request.future_response.set_cookie('website_cookies_bar', expires=0, max_age=0)
+                return False
+
             if 'optional' in accepted_cookie_types:
                 return accepted_cookie_types['optional']
             return False

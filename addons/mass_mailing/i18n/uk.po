@@ -4,16 +4,16 @@
 # 
 # Translators:
 # ТАрас <tratatuta@i.ua>, 2022
-# Alina Lisnenko <alina.lisnenko@erp.co.ua>, 2022
 # Martin Trigaux, 2022
+# Alina Lisnenko <alina.lisnenko@erp.co.ua>, 2022
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 16.0beta\n"
+"Project-Id-Version: Odoo Server 16.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-10-10 10:22+0000\n"
+"POT-Creation-Date: 2022-12-15 12:49+0000\n"
 "PO-Revision-Date: 2022-09-22 05:53+0000\n"
-"Last-Translator: Martin Trigaux, 2022\n"
+"Last-Translator: Alina Lisnenko <alina.lisnenko@erp.co.ua>, 2022\n"
 "Language-Team: Ukrainian (https://www.transifex.com/odoo/teams/41243/uk/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -22,6 +22,7 @@ msgstr ""
 "Plural-Forms: nplurals=4; plural=(n % 1 == 0 && n % 10 == 1 && n % 100 != 11 ? 0 : n % 1 == 0 && n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % 100 > 14) ? 1 : n % 1 == 0 && (n % 10 ==0 || (n % 10 >=5 && n % 10 <=9) || (n % 100 >=11 && n % 100 <=14 )) ? 2: 3);\n"
 
 #. module: mass_mailing
+#. odoo-python
 #: code:addons/mass_mailing/wizard/mailing_contact_import.py:0
 #, python-format
 msgid " %i duplicates have been ignored."
@@ -38,7 +39,7 @@ msgstr ""
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_mailing__mailing_filter_count
 msgid "# Favorite Filters"
-msgstr ""
+msgstr "К-сть збережених фільтрів"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.s_comparisons
@@ -66,18 +67,21 @@ msgid "%Click (Total)"
 msgstr "%Натискань (Всього)"
 
 #. module: mass_mailing
+#. odoo-python
 #: code:addons/mass_mailing/wizard/mailing_contact_import.py:0
 #, python-format
 msgid "%i Contacts have been imported."
 msgstr ""
 
 #. module: mass_mailing
+#. odoo-python
 #: code:addons/mass_mailing/models/mailing_list.py:0
 #, python-format
 msgid "%s (copy)"
 msgstr "%s (копія)"
 
 #. module: mass_mailing
+#. odoo-python
 #: code:addons/mass_mailing/wizard/mailing_contact_to_list.py:0
 #, python-format
 msgid "%s Mailing Contacts have been added. "
@@ -89,6 +93,7 @@ msgid "&amp;nbsp;&amp;nbsp;"
 msgstr "&amp;nbsp;&amp;nbsp;"
 
 #. module: mass_mailing
+#. odoo-python
 #: code:addons/mass_mailing/models/ir_mail_server.py:0
 #, python-format
 msgid "(scheduled for %s)"
@@ -111,6 +116,7 @@ msgid "24H Stat Mailing Reports"
 msgstr ""
 
 #. module: mass_mailing
+#. odoo-python
 #: code:addons/mass_mailing/models/mailing.py:0
 #: code:addons/mass_mailing/models/mailing.py:0
 #, python-format
@@ -378,6 +384,8 @@ msgid ""
 "<span class=\"fa fa-hourglass-o me-2 small my-auto\" aria-label=\"Scheduled date\"/>\n"
 "                                            <span class=\"align-self-baseline\">Next Batch</span>"
 msgstr ""
+"<span class=\"fa fa-hourglass-o me-2 small my-auto\" aria-label=\"Scheduled date\"/>\n"
+"                                            <span class=\"align-self-baseline\">Наступне групове переміщення</span>"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.s_rating_options
@@ -570,6 +578,7 @@ msgid "<span>​</span>"
 msgstr ""
 
 #. module: mass_mailing
+#. odoo-python
 #: code:addons/mass_mailing/models/mailing.py:0
 #, python-format
 msgid "A campaign should be set when A/B test is enabled"
@@ -639,6 +648,7 @@ msgid "A/B Test Winner"
 msgstr "Переможець A/B тестування"
 
 #. module: mass_mailing
+#. odoo-python
 #: code:addons/mass_mailing/models/mailing.py:0
 #, python-format
 msgid "A/B Test: %s"
@@ -661,6 +671,7 @@ msgid "A/B Testing percentage"
 msgstr "A/B відсоток тестування"
 
 #. module: mass_mailing
+#. odoo-python
 #: code:addons/mass_mailing/models/mailing.py:0
 #: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_form
 #: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_search
@@ -674,6 +685,7 @@ msgid "A/B Tests to review"
 msgstr "A/B тестування до перегляду"
 
 #. module: mass_mailing
+#. odoo-python
 #: code:addons/mass_mailing/models/mailing.py:0
 #, python-format
 msgid "A/B test option has not been enabled"
@@ -728,7 +740,10 @@ msgstr ""
 "піктограми, щоби виконати свою дію."
 
 #. module: mass_mailing
+#. odoo-javascript
+#: code:addons/mass_mailing/static/src/xml/mailing_filter_widget.xml:0
 #: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_contact_to_list_view_form
+#, python-format
 msgid "Add"
 msgstr "Додати"
 
@@ -765,6 +780,13 @@ msgstr "Додати до списку"
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_form
 msgid "Add to Templates"
+msgstr "Додати до шаблонів"
+
+#. module: mass_mailing
+#. odoo-javascript
+#: code:addons/mass_mailing/static/src/xml/mailing_filter_widget.xml:0
+#, python-format
+msgid "Add to favorite filters"
 msgstr ""
 
 #. module: mass_mailing
@@ -888,7 +910,7 @@ msgid "Amazing pages"
 msgstr "Чудові сторінки"
 
 #. module: mass_mailing
-#. openerp-web
+#. odoo-javascript
 #: code:addons/mass_mailing/static/src/js/mailing_portal.js:0
 #: code:addons/mass_mailing/static/src/js/mailing_portal.js:0
 #: code:addons/mass_mailing/static/src/js/mailing_portal.js:0
@@ -902,7 +924,7 @@ msgid "An error occurred. Please try again later or contact us."
 msgstr "Виникла помилка. Спробуйте пізніше або зв'яжіться з нами."
 
 #. module: mass_mailing
-#. openerp-web
+#. odoo-javascript
 #: code:addons/mass_mailing/static/src/js/mailing_portal.js:0
 #: code:addons/mass_mailing/static/src/js/mailing_portal.js:0
 #, python-format
@@ -951,6 +973,7 @@ msgid "Archived"
 msgstr "Заархівовано"
 
 #. module: mass_mailing
+#. odoo-python
 #: code:addons/mass_mailing/models/mailing_list.py:0
 #, python-format
 msgid ""
@@ -1114,6 +1137,7 @@ msgid "Bounce (%)"
 msgstr "Відхилено (%)"
 
 #. module: mass_mailing
+#. odoo-python
 #: code:addons/mass_mailing/models/mailing.py:0
 #, python-format
 msgid ""
@@ -1144,6 +1168,7 @@ msgid "Bounced Ratio"
 msgstr "Повернений коефіцієнт"
 
 #. module: mass_mailing
+#. odoo-python
 #: code:addons/mass_mailing/models/mailing.py:0
 #, python-format
 msgid "Business Benefits on %(expected)i %(mailing_type)s Sent"
@@ -1155,7 +1180,7 @@ msgid "Button Label"
 msgstr "Напис на кнопці"
 
 #. module: mass_mailing
-#. openerp-web
+#. odoo-javascript
 #: code:addons/mass_mailing/static/src/js/tours/mass_mailing_tour.js:0
 #, python-format
 msgid "By using the <b>Breadcrumb</b>, you can navigate back to the overview."
@@ -1276,14 +1301,14 @@ msgid "Check out all our furniture"
 msgstr "Перевірте всі наші меблі"
 
 #. module: mass_mailing
-#. openerp-web
+#. odoo-javascript
 #: code:addons/mass_mailing/static/src/js/tours/mass_mailing_tour.js:0
 #, python-format
 msgid "Check the email address and click send."
 msgstr "Перевірте адресу електронної пошти та натисніть надіслати."
 
 #. module: mass_mailing
-#. openerp-web
+#. odoo-javascript
 #: code:addons/mass_mailing/static/src/js/tours/mass_mailing_tour.js:0
 #: code:addons/mass_mailing/static/src/js/tours/mass_mailing_tour.js:0
 #, python-format
@@ -1296,21 +1321,21 @@ msgid "Choose your mailing subscriptions"
 msgstr "Виберіть ваші підписки масової розсилки"
 
 #. module: mass_mailing
-#. openerp-web
+#. odoo-javascript
 #: code:addons/mass_mailing/static/src/xml/mass_mailing.xml:0
 #, python-format
 msgid "Click on the ⭐ next to the subject to save this mailing as a"
 msgstr ""
 
 #. module: mass_mailing
-#. openerp-web
+#. odoo-javascript
 #: code:addons/mass_mailing/static/src/js/tours/mass_mailing_tour.js:0
 #, python-format
 msgid "Click on this button to add this mailing to your templates."
 msgstr ""
 
 #. module: mass_mailing
-#. openerp-web
+#. odoo-javascript
 #: code:addons/mass_mailing/static/src/js/tours/mass_mailing_tour.js:0
 #: code:addons/mass_mailing/static/src/js/tours/mass_mailing_tour.js:0
 #, python-format
@@ -1376,6 +1401,7 @@ msgid "Come Back"
 msgstr "Повернутися"
 
 #. module: mass_mailing
+#. odoo-python
 #: code:addons/mass_mailing/models/mailing.py:0
 #, python-format
 msgid ""
@@ -1390,11 +1416,6 @@ msgstr "Компанії"
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_contact__company_name
 msgid "Company Name"
-msgstr "Назва компанії"
-
-#. module: mass_mailing
-#: model_terms:ir.ui.view,arch_db:mass_mailing.layout
-msgid "Company name"
 msgstr "Назва компанії"
 
 #. module: mass_mailing
@@ -1413,7 +1434,7 @@ msgid "Configure Outgoing Mail Servers"
 msgstr ""
 
 #. module: mass_mailing
-#. openerp-web
+#. odoo-javascript
 #: code:addons/mass_mailing/static/src/js/tours/mass_mailing_tour.js:0
 #, python-format
 msgid "Congratulations, I love your first mailing. :)"
@@ -1464,11 +1485,6 @@ msgid "Continue reading <i class=\"fa fa-long-arrow-right align-middle ms-1\"/>"
 msgstr ""
 
 #. module: mass_mailing
-#: model_terms:ir.ui.view,arch_db:mass_mailing.layout
-msgid "Copyright &amp;copy;"
-msgstr "Авторські права &amp;copy;"
-
-#. module: mass_mailing
 #: model:ir.model.fields,help:mass_mailing.field_mailing_contact__message_bounce
 #: model:ir.model.fields,help:mass_mailing.field_mailing_contact_subscription__message_bounce
 msgid "Counter of the number of bounced emails for this contact"
@@ -1478,11 +1494,6 @@ msgstr "Лічильник повернутих листів для цього �
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_contact__country_id
 msgid "Country"
 msgstr "Країна"
-
-#. module: mass_mailing
-#: model_terms:ir.ui.view,arch_db:mass_mailing.layout
-msgid "Create a"
-msgstr "Створити"
 
 #. module: mass_mailing
 #: model_terms:ir.actions.act_window,help:mass_mailing.mailing_mailing_action_mail
@@ -1560,7 +1571,7 @@ msgid "Custom"
 msgstr "Власний"
 
 #. module: mass_mailing
-#. openerp-web
+#. odoo-javascript
 #: code:addons/mass_mailing/static/src/js/mass_mailing_html_field.js:0
 #, python-format
 msgid "DRAG BUILDING BLOCKS HERE"
@@ -1651,7 +1662,7 @@ msgid "Delivered to"
 msgstr "Доставлено"
 
 #. module: mass_mailing
-#. openerp-web
+#. odoo-javascript
 #: code:addons/mass_mailing/static/src/js/snippets.editor.js:0
 #, python-format
 msgid "Design Options"
@@ -1665,12 +1676,14 @@ msgstr ""
 "результати."
 
 #. module: mass_mailing
+#. odoo-python
 #: code:addons/mass_mailing/models/mailing.py:0
 #, python-format
 msgid "Design added to the %s Templates!"
 msgstr ""
 
 #. module: mass_mailing
+#. odoo-python
 #: code:addons/mass_mailing/models/mailing.py:0
 #, python-format
 msgid "Design removed from the %s Templates!"
@@ -1741,7 +1754,7 @@ msgid "Don't forget to send your preferred version"
 msgstr ""
 
 #. module: mass_mailing
-#. openerp-web
+#. odoo-javascript
 #: code:addons/mass_mailing/static/src/js/tours/mass_mailing_tour.js:0
 #, python-format
 msgid "Don't worry, the mailing contact we created is an internal user."
@@ -1804,7 +1817,7 @@ msgid "Edit Styles"
 msgstr "Редагувати стилі"
 
 #. module: mass_mailing
-#. openerp-web
+#. odoo-javascript
 #: code:addons/mass_mailing/static/src/js/mass_mailing_html_field.js:0
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_contact__email
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_trace__email
@@ -1825,6 +1838,7 @@ msgid "Email Content"
 msgstr "Вміст електронного листа"
 
 #. module: mass_mailing
+#. odoo-python
 #: code:addons/mass_mailing/models/res_users.py:0
 #: model:ir.ui.menu,name:mass_mailing.mass_mailing_menu_root
 #: model_terms:ir.ui.view,arch_db:mass_mailing.res_config_settings_view_form
@@ -1833,6 +1847,7 @@ msgid "Email Marketing"
 msgstr "Email-маркетинг"
 
 #. module: mass_mailing
+#. odoo-python
 #: code:addons/mass_mailing/models/ir_mail_server.py:0
 #, python-format
 msgid ""
@@ -1850,6 +1865,7 @@ msgid "Email composition wizard"
 msgstr "Помічник створення електронного листа"
 
 #. module: mass_mailing
+#. odoo-python
 #: code:addons/mass_mailing/models/mailing.py:0
 #, python-format
 msgid "Emails"
@@ -1861,6 +1877,7 @@ msgid "Emails Statistics"
 msgstr "Статистика електронної пошти"
 
 #. module: mass_mailing
+#. odoo-python
 #: code:addons/mass_mailing/models/mailing.py:0
 #, python-format
 msgid "Engagement on %(expected)i %(mailing_type)s Sent"
@@ -1930,18 +1947,18 @@ msgstr ""
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_mailing__mailing_filter_id
 msgid "Favorite Filter"
-msgstr ""
+msgstr "Улюблений фільтр"
 
 #. module: mass_mailing
 #: model:ir.actions.act_window,name:mass_mailing.mailing_filter_action
 #: model:ir.ui.menu,name:mass_mailing.mailing_filter_menu_action
 msgid "Favorite Filters"
-msgstr ""
+msgstr "Улюблені фільтри"
 
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_mailing__mailing_filter_domain
 msgid "Favorite filter domain"
-msgstr ""
+msgstr "Домен улюбленого фільтру"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.s_three_columns
@@ -1959,6 +1976,7 @@ msgid "Feature Two"
 msgstr "Властивість 2"
 
 #. module: mass_mailing
+#. odoo-python
 #: code:addons/mass_mailing/controllers/main.py:0
 #, python-format
 msgid "Feedback from %(email)s: %(feedback)s"
@@ -2232,7 +2250,7 @@ msgid "Images"
 msgstr "Зображення"
 
 #. module: mass_mailing
-#. openerp-web
+#. odoo-javascript
 #: code:addons/mass_mailing/static/src/views/mass_mailing_views.xml:0
 #: code:addons/mass_mailing/static/src/views/mass_mailing_views.xml:0
 #: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_contact_import_view_form
@@ -2243,9 +2261,10 @@ msgstr "Імпорт"
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_list_view_kanban
 msgid "Import Contacts"
-msgstr ""
+msgstr "Імпорт контактів"
 
 #. module: mass_mailing
+#. odoo-python
 #: code:addons/mass_mailing/wizard/mailing_contact_import.py:0
 #: model:ir.actions.act_window,name:mass_mailing.mailing_contact_import_action
 #: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_contact_import_view_form
@@ -2254,6 +2273,7 @@ msgid "Import Mailing Contacts"
 msgstr ""
 
 #. module: mass_mailing
+#. odoo-python
 #: code:addons/mass_mailing/models/mailing_contact.py:0
 #, python-format
 msgid "Import Template for Mailing List Contacts"
@@ -2314,7 +2334,7 @@ msgstr "Стежить"
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_utm_campaign__is_mailing_campaign_activated
 msgid "Is Mailing Campaign Activated"
-msgstr ""
+msgstr "Чи активована кампанія масової розсилки"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.snippet_options
@@ -2416,7 +2436,7 @@ msgid "Left"
 msgstr "Лівий"
 
 #. module: mass_mailing
-#. openerp-web
+#. odoo-javascript
 #: code:addons/mass_mailing/static/src/js/tours/mass_mailing_tour.js:0
 #: code:addons/mass_mailing/static/src/js/tours/mass_mailing_tour.js:0
 #, python-format
@@ -2435,6 +2455,7 @@ msgid "Link Tracker Click"
 msgstr "Натискання на посилання відстеження"
 
 #. module: mass_mailing
+#. odoo-python
 #: code:addons/mass_mailing/models/mailing.py:0
 #, python-format
 msgid ""
@@ -2496,14 +2517,12 @@ msgstr "ID пошти (технологія)"
 #. module: mass_mailing
 #: model:ir.actions.server,name:mass_mailing.ir_cron_mass_mailing_ab_testing_ir_actions_server
 #: model:ir.cron,cron_name:mass_mailing.ir_cron_mass_mailing_ab_testing
-#: model:ir.cron,name:mass_mailing.ir_cron_mass_mailing_ab_testing
 msgid "Mail Marketing: A/B Testing"
 msgstr "Поштовий маркетинг: A/B тестування"
 
 #. module: mass_mailing
 #: model:ir.actions.server,name:mass_mailing.ir_cron_mass_mailing_queue_ir_actions_server
 #: model:ir.cron,cron_name:mass_mailing.ir_cron_mass_mailing_queue
-#: model:ir.cron,name:mass_mailing.ir_cron_mass_mailing_queue
 msgid "Mail Marketing: Process queue"
 msgstr "Поштовий маркетинг: Черга процесів"
 
@@ -2675,6 +2694,7 @@ msgid "Mailing Type Description"
 msgstr "Опис типу розсилки"
 
 #. module: mass_mailing
+#. odoo-python
 #: code:addons/mass_mailing/wizard/mailing_mailing_test.py:0
 #, python-format
 msgid "Mailing addresses incorrect: %s"
@@ -2767,6 +2787,7 @@ msgid "Mass Mailing"
 msgstr "Масова розсилка"
 
 #. module: mass_mailing
+#. odoo-python
 #: code:addons/mass_mailing/models/ir_mail_server.py:0
 #, python-format
 msgid "Mass Mailing \"%s\""
@@ -2909,7 +2930,7 @@ msgid "Missing email address"
 msgstr "Відсутня адреса електронної пошти"
 
 #. module: mass_mailing
-#. openerp-web
+#. odoo-javascript
 #: code:addons/mass_mailing/static/src/js/mass_mailing_html_field.js:0
 #, python-format
 msgid "Mobile Preview"
@@ -2931,6 +2952,7 @@ msgid "More Details"
 msgstr "Більше деталей"
 
 #. module: mass_mailing
+#. odoo-python
 #: code:addons/mass_mailing/models/mailing.py:0
 #, python-format
 msgid "More Info"
@@ -2979,6 +3001,7 @@ msgid "New Mailing List Name"
 msgstr "Назва нового списку розсилки"
 
 #. module: mass_mailing
+#. odoo-python
 #: code:addons/mass_mailing/wizard/mailing_contact_import.py:0
 #, python-format
 msgid "New contacts imported"
@@ -3010,36 +3033,42 @@ msgid "Next Activity Type"
 msgstr "Тип наступної дії"
 
 #. module: mass_mailing
+#. odoo-python
 #: code:addons/mass_mailing/models/mailing.py:0
 #, python-format
 msgid "No %s address bounced yet!"
 msgstr ""
 
 #. module: mass_mailing
+#. odoo-python
 #: code:addons/mass_mailing/models/mailing.py:0
 #, python-format
 msgid "No %s clicked your mailing yet!"
 msgstr ""
 
 #. module: mass_mailing
+#. odoo-python
 #: code:addons/mass_mailing/models/mailing.py:0
 #, python-format
 msgid "No %s opened your mailing yet!"
 msgstr ""
 
 #. module: mass_mailing
+#. odoo-python
 #: code:addons/mass_mailing/models/mailing.py:0
 #, python-format
 msgid "No %s received your mailing yet!"
 msgstr ""
 
 #. module: mass_mailing
+#. odoo-python
 #: code:addons/mass_mailing/models/mailing.py:0
 #, python-format
 msgid "No %s replied to your mailing yet!"
 msgstr ""
 
 #. module: mass_mailing
+#. odoo-python
 #: code:addons/mass_mailing/wizard/mailing_contact_import.py:0
 #, python-format
 msgid ""
@@ -3058,12 +3087,14 @@ msgid "No data yet!"
 msgstr "Ще немає даних!"
 
 #. module: mass_mailing
+#. odoo-python
 #: code:addons/mass_mailing/models/mailing.py:0
 #, python-format
 msgid "No mailing campaign has been found"
 msgstr "Не знайдено жодної кампанії розсилки"
 
 #. module: mass_mailing
+#. odoo-python
 #: code:addons/mass_mailing/models/mailing.py:0
 #, python-format
 msgid ""
@@ -3093,6 +3124,7 @@ msgid "No support"
 msgstr "Немає підтримки"
 
 #. module: mass_mailing
+#. odoo-python
 #: code:addons/mass_mailing/wizard/mailing_contact_import.py:0
 #, python-format
 msgid "No valid email address found."
@@ -3188,15 +3220,11 @@ msgid "ON YOUR NEXT ORDER!"
 msgstr "НА ВАШОМУ НАСТУПНОМУ ЗАМОВЛЕННІ!"
 
 #. module: mass_mailing
+#. odoo-python
 #: code:addons/mass_mailing/models/mailing.py:0
 #, python-format
 msgid "OPENED (%i)"
 msgstr "ВІДКРИТО (%i)"
-
-#. module: mass_mailing
-#: model_terms:ir.ui.view,arch_db:mass_mailing.layout
-msgid "Odoo"
-msgstr "Odoo"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.s_image_text
@@ -3345,7 +3373,7 @@ msgid "Pick a dedicated outgoing mail server for your mass mailings"
 msgstr ""
 
 #. module: mass_mailing
-#. openerp-web
+#. odoo-javascript
 #: code:addons/mass_mailing/static/src/js/tours/mass_mailing_tour.js:0
 #, python-format
 msgid "Pick the <b>email subject</b>."
@@ -3357,7 +3385,7 @@ msgid "Plain Text"
 msgstr ""
 
 #. module: mass_mailing
-#. openerp-web
+#. odoo-javascript
 #: code:addons/mass_mailing/static/src/js/mailing_m2o_filter.js:0
 #, python-format
 msgid "Please provide a name for the filter"
@@ -3399,12 +3427,14 @@ msgid "Quality"
 msgstr "Якість"
 
 #. module: mass_mailing
+#. odoo-python
 #: code:addons/mass_mailing/models/mailing.py:0
 #, python-format
 msgid "RECEIVED (%i)"
 msgstr "Одержано (%i)"
 
 #. module: mass_mailing
+#. odoo-python
 #: code:addons/mass_mailing/models/mailing.py:0
 #, python-format
 msgid "REPLIED (%i)"
@@ -3417,7 +3447,7 @@ msgid "Read More"
 msgstr "Читати більше"
 
 #. module: mass_mailing
-#. openerp-web
+#. odoo-javascript
 #: code:addons/mass_mailing/static/src/js/tours/mass_mailing_tour.js:0
 #, python-format
 msgid "Ready for take-off!"
@@ -3496,15 +3526,22 @@ msgstr "Звичайний"
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_form
 msgid "Reload a favorite filter"
-msgstr ""
+msgstr "Перезавантажте улюблений фільтр"
 
 #. module: mass_mailing
-#. openerp-web
+#. odoo-javascript
+#: code:addons/mass_mailing/static/src/xml/mailing_filter_widget.xml:0
+#, python-format
+msgid "Remove from Favorites"
+msgstr "Видалити з вибраного"
+
+#. module: mass_mailing
+#. odoo-javascript
 #: code:addons/mass_mailing/static/src/xml/mass_mailing.xml:0
 #: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_form
 #, python-format
 msgid "Remove from Templates"
-msgstr ""
+msgstr "Вилучити з шаблонів"
 
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_mailing__render_model
@@ -3559,18 +3596,21 @@ msgid "Reporting"
 msgstr "Звітність"
 
 #. module: mass_mailing
+#. odoo-python
 #: code:addons/mass_mailing/controllers/main.py:0
 #, python-format
 msgid "Requested blacklisting via unsubscribe link."
 msgstr "Запитувані чорні списки за допомогою посилання відписки."
 
 #. module: mass_mailing
+#. odoo-python
 #: code:addons/mass_mailing/controllers/main.py:0
 #, python-format
 msgid "Requested blacklisting via unsubscription page."
 msgstr "Запитувані чорні списки за допомогою сторінки відписки."
 
 #. module: mass_mailing
+#. odoo-python
 #: code:addons/mass_mailing/controllers/main.py:0
 #, python-format
 msgid "Requested de-blacklisting via unsubscription page."
@@ -3623,6 +3663,13 @@ msgstr "Зразок іконок"
 #: model:ir.model,name:mass_mailing.model_mailing_mailing_test
 msgid "Sample Mail Wizard"
 msgstr "Помічник Sample Mail"
+
+#. module: mass_mailing
+#. odoo-javascript
+#: code:addons/mass_mailing/static/src/xml/mailing_filter_widget.xml:0
+#, python-format
+msgid "Save as Favorite Filter"
+msgstr ""
 
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_filter__create_uid
@@ -3686,6 +3733,7 @@ msgid "Score"
 msgstr "Оцінка"
 
 #. module: mass_mailing
+#. odoo-python
 #: code:addons/mass_mailing/models/ir_model.py:0
 #, python-format
 msgid ""
@@ -3827,6 +3875,7 @@ msgid "Sent Date"
 msgstr "Дата відправлення"
 
 #. module: mass_mailing
+#. odoo-python
 #: code:addons/mass_mailing/models/mailing.py:0
 #, python-format
 msgid "Sent Mailings"
@@ -3932,7 +3981,7 @@ msgid "Start From Scratch"
 msgstr ""
 
 #. module: mass_mailing
-#. openerp-web
+#. odoo-javascript
 #: code:addons/mass_mailing/static/src/js/tours/mass_mailing_tour.js:0
 #, python-format
 msgid "Start by creating your first <b>Mailing</b>."
@@ -4029,25 +4078,28 @@ msgid "Test"
 msgstr "Тест"
 
 #. module: mass_mailing
+#. odoo-python
 #: code:addons/mass_mailing/models/mailing.py:0
 #, python-format
 msgid "Test Mailing"
 msgstr "Тестова розсилка"
 
 #. module: mass_mailing
+#. odoo-python
 #: code:addons/mass_mailing/wizard/mailing_mailing_test.py:0
 #, python-format
 msgid "Test mailing could not be sent to %s:<br>%s"
 msgstr "Тестову розсилку не можливо надіслати %s:<br>%s"
 
 #. module: mass_mailing
+#. odoo-python
 #: code:addons/mass_mailing/wizard/mailing_mailing_test.py:0
 #, python-format
 msgid "Test mailing successfully sent to %s"
 msgstr "Тестову розсилку успішно надіслано %s"
 
 #. module: mass_mailing
-#. openerp-web
+#. odoo-javascript
 #: code:addons/mass_mailing/static/src/js/tours/mass_mailing_tour.js:0
 #, python-format
 msgid "Test this mailing by sending a copy to yourself."
@@ -4079,7 +4131,7 @@ msgid "Thank you for joining us!"
 msgstr "Дякуємо, що приєдналися до нас!"
 
 #. module: mass_mailing
-#. openerp-web
+#. odoo-javascript
 #: code:addons/mass_mailing/static/src/js/mailing_portal.js:0
 #, python-format
 msgid "Thank you! Your feedback has been sent successfully!"
@@ -4107,6 +4159,7 @@ msgid "The contact has chosen not to receive mails anymore from this list"
 msgstr "Контакт вибрав не отримувати пошту з цього списку"
 
 #. module: mass_mailing
+#. odoo-python
 #: code:addons/mass_mailing/models/mailing_filter.py:0
 #, python-format
 msgid "The filter domain is not valid for this recipients."
@@ -4140,18 +4193,21 @@ msgstr ""
 " за кілька років."
 
 #. module: mass_mailing
+#. odoo-python
 #: code:addons/mass_mailing/models/mailing.py:0
 #, python-format
 msgid "The recipient <strong>subscribed to %s</strong> mailing list(s)"
 msgstr "Отримувач <strong>підписався на %s</strong> список(и) розсилки"
 
 #. module: mass_mailing
+#. odoo-python
 #: code:addons/mass_mailing/models/mailing.py:0
 #, python-format
 msgid "The recipient <strong>unsubscribed from %s</strong> mailing list(s)"
 msgstr "Отримувач <strong>скасував підписку на %s</strong> список(и) розсилки"
 
 #. module: mass_mailing
+#. odoo-python
 #: code:addons/mass_mailing/models/mailing.py:0
 #, python-format
 msgid ""
@@ -4160,6 +4216,7 @@ msgid ""
 msgstr ""
 
 #. module: mass_mailing
+#. odoo-python
 #: code:addons/mass_mailing/models/utm_campaign.py:0
 #, python-format
 msgid ""
@@ -4181,6 +4238,7 @@ msgid "Then on"
 msgstr "Потім на"
 
 #. module: mass_mailing
+#. odoo-python
 #: code:addons/mass_mailing/models/mailing.py:0
 #, python-format
 msgid "There are no recipients selected."
@@ -4197,6 +4255,7 @@ msgid "This"
 msgstr "Це"
 
 #. module: mass_mailing
+#. odoo-python
 #: code:addons/mass_mailing/models/mailing.py:0
 #, python-format
 msgid ""
@@ -4288,6 +4347,7 @@ msgstr ""
 "щоб створити нову копію."
 
 #. module: mass_mailing
+#. odoo-python
 #: code:addons/mass_mailing/models/mailing.py:0
 #, python-format
 msgid ""
@@ -4296,6 +4356,7 @@ msgstr ""
 "Щоб надіслати розсилку переможця, кампанія не повинна була бути завершена."
 
 #. module: mass_mailing
+#. odoo-python
 #: code:addons/mass_mailing/models/mailing.py:0
 #, python-format
 msgid ""
@@ -4305,6 +4366,7 @@ msgstr ""
 "кампанію"
 
 #. module: mass_mailing
+#. odoo-python
 #: code:addons/mass_mailing/models/mailing.py:0
 #, python-format
 msgid ""
@@ -4424,6 +4486,7 @@ msgid "Unsubscription Date"
 msgstr "Дата відмови на підписку"
 
 #. module: mass_mailing
+#. odoo-python
 #: code:addons/mass_mailing/models/mailing.py:0
 #, python-format
 msgid "Unsupported mass mailing model %s"
@@ -4519,6 +4582,7 @@ msgid "View Online"
 msgstr "Переглянути онлайн"
 
 #. module: mass_mailing
+#. odoo-python
 #: code:addons/mass_mailing/models/mailing.py:0
 #, python-format
 msgid ""
@@ -4665,7 +4729,7 @@ msgid "Write what the customer would like to know, not what you want to show."
 msgstr ""
 
 #. module: mass_mailing
-#. openerp-web
+#. odoo-javascript
 #: code:addons/mass_mailing/static/src/js/mailing_portal.js:0
 #: code:addons/mass_mailing/static/src/js/mailing_portal.js:0
 #: code:addons/mass_mailing/static/src/js/mailing_portal.js:0
@@ -4685,12 +4749,14 @@ msgid "You can edit colors and backgrounds to highlight features."
 msgstr "Ви можете редагувати кольори та фон, щоб виділити особливості."
 
 #. module: mass_mailing
+#. odoo-python
 #: code:addons/mass_mailing/wizard/mailing_list_merge.py:0
 #, python-format
 msgid "You can only apply this action from Mailing Lists."
 msgstr "Ви можете застосувати цю дію лише зі Списків Розсилки."
 
 #. module: mass_mailing
+#. odoo-python
 #: code:addons/mass_mailing/models/utm_medium.py:0
 #, python-format
 msgid ""
@@ -4699,6 +4765,7 @@ msgid ""
 msgstr ""
 
 #. module: mass_mailing
+#. odoo-python
 #: code:addons/mass_mailing/models/utm_source.py:0
 #, python-format
 msgid ""
@@ -4717,21 +4784,21 @@ msgstr ""
 "                надсилати електронні листи<br> будь-якому контакту, збереженому в інших додатках Odoo."
 
 #. module: mass_mailing
-#. openerp-web
+#. odoo-javascript
 #: code:addons/mass_mailing/static/src/js/mailing_portal.js:0
 #, python-format
 msgid "You have been <strong>successfully unsubscribed from %s</strong>."
 msgstr "Ви <strong>успішно відписалися від %s</strong>."
 
 #. module: mass_mailing
-#. openerp-web
+#. odoo-javascript
 #: code:addons/mass_mailing/static/src/js/mailing_portal.js:0
 #, python-format
 msgid "You have been <strong>successfully unsubscribed</strong>."
 msgstr "Ви <strong>успішно відписалися</strong>."
 
 #. module: mass_mailing
-#. openerp-web
+#. odoo-javascript
 #: code:addons/mass_mailing/static/src/js/mailing_portal.js:0
 #, python-format
 msgid ""
@@ -4742,7 +4809,7 @@ msgstr ""
 "зв'яжетеся з нашими службами."
 
 #. module: mass_mailing
-#. openerp-web
+#. odoo-javascript
 #: code:addons/mass_mailing/static/src/js/mailing_portal.js:0
 #, python-format
 msgid ""
@@ -4758,12 +4825,14 @@ msgid "You have been successfully <strong>unsubscribed</strong>!"
 msgstr "Ви успішно відмовилися від<strong>підписки</strong>!"
 
 #. module: mass_mailing
+#. odoo-python
 #: code:addons/mass_mailing/wizard/mailing_contact_import.py:0
 #, python-format
 msgid "You have to much emails, please upload a file."
 msgstr ""
 
 #. module: mass_mailing
+#. odoo-python
 #: code:addons/mass_mailing/models/mailing_contact.py:0
 #, python-format
 msgid ""
@@ -4786,11 +4855,18 @@ msgid "Your Title"
 msgstr ""
 
 #. module: mass_mailing
-#. openerp-web
+#. odoo-javascript
 #: code:addons/mass_mailing/static/src/js/mailing_portal.js:0
 #, python-format
 msgid "Your changes have been saved."
 msgstr "Ваші зміни були збережені."
+
+#. module: mass_mailing
+#. odoo-javascript
+#: code:addons/mass_mailing/static/src/xml/mailing_filter_widget.xml:0
+#, python-format
+msgid "e.g. \"VIP Customers\""
+msgstr ""
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_form
@@ -4821,11 +4897,6 @@ msgid ""
 msgstr ""
 "email1@example.com\n"
 "email2@example.com"
-
-#. module: mass_mailing
-#: model_terms:ir.ui.view,arch_db:mass_mailing.layout
-msgid "free website"
-msgstr "безкоштовний веб-сайт"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.ab_testing_description
@@ -4861,7 +4932,7 @@ msgid "schedule a mailing"
 msgstr "запланувати зустріч"
 
 #. module: mass_mailing
-#. openerp-web
+#. odoo-javascript
 #: code:addons/mass_mailing/static/src/xml/mass_mailing.xml:0
 #, python-format
 msgid "template"
@@ -4891,11 +4962,6 @@ msgstr "буде надіслано іншим одержувачам."
 #: model_terms:ir.ui.view,arch_db:mass_mailing.ab_testing_description
 msgid "will receive this"
 msgstr "отримає це"
-
-#. module: mass_mailing
-#: model_terms:ir.ui.view,arch_db:mass_mailing.layout
-msgid "with"
-msgstr "з"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.s_rating_options

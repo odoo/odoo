@@ -38,6 +38,7 @@ QUnit.module("Search", (hooks) => {
                         birth_datetime: { string: "Birth DateTime", type: "datetime" },
                         foo: { string: "Foo", type: "char" },
                         bool: { string: "Bool", type: "boolean" },
+                        company: { string: "Company", type: "many2one", relation: "partner" },
                     },
                     records: [
                         {
@@ -57,6 +58,7 @@ QUnit.module("Search", (hooks) => {
                             bool: false,
                             birthday: "1982-06-04",
                             birth_datetime: "1982-06-04 02:00:00",
+                            company: 1,
                         },
                         {
                             id: 3,
@@ -66,6 +68,7 @@ QUnit.module("Search", (hooks) => {
                             bool: false,
                             birthday: "1985-09-13",
                             birth_datetime: "1985-09-13 03:00:00",
+                            company: 5,
                         },
                         {
                             id: 4,
@@ -96,6 +99,7 @@ QUnit.module("Search", (hooks) => {
                         <field name="birthday"/>
                         <field name="birth_datetime"/>
                         <field name="bar" context="{'bar': self}"/>
+                        <field name="company" domain="[('bool', '=', True)]"/>
                         <filter string="Birthday" name="date_filter" date="birthday"/>
                         <filter string="Birthday" name="date_group_by" context="{'group_by': 'birthday:day'}"/>
                     </search>
@@ -315,8 +319,8 @@ QUnit.module("Search", (hooks) => {
         assert.containsN(
             target,
             ".o_searchview_autocomplete li",
-            2,
-            "there should be 2 result for 'a' in search bar autocomplete"
+            3,
+            "there should be 3 result for 'a' in search bar autocomplete"
         );
 
         const searchInput = target.querySelector(".o_searchview input");
@@ -946,5 +950,83 @@ QUnit.module("Search", (hooks) => {
         );
         await validateSearch(target);
         assert.deepEqual(getDomain(controlPanel), [["foo", "ilike", "1a"]]);
+    });
+
+    QUnit.test("check kwargs of a rpc call with a domain", async function (assert) {
+        assert.expect(3);
+
+        const mockRPC = async (route, args) => {
+            if (route.includes("/partner/name_search")) {
+                assert.deepEqual(args, {
+                    model: "partner",
+                    method: "name_search",
+                    args: [],
+                    kwargs: {
+                        args: [["bool", "=", true]],
+                        context: { lang: "en", uid: 7, tz: "taht" },
+                        limit: 8,
+                        name: "F",
+                    },
+                });
+            }
+        };
+
+        const controlPanel = await makeWithSearch({
+            serverData,
+            mockRPC,
+            resModel: "partner",
+            Component: ControlPanel,
+            searchMenuTypes: [],
+            searchViewId: false,
+        });
+
+        await editSearch(target, "F");
+        assert.containsN(
+            target,
+            ".o_searchview_autocomplete li",
+            3,
+            "there should be 3 result for 'F' in search bar autocomplete"
+        );
+
+        const searchInput = target.querySelector(".o_searchview input");
+        await triggerEvent(searchInput, null, "keydown", { key: "ArrowDown" });
+        await triggerEvent(searchInput, null, "keydown", { key: "ArrowDown" });
+        await triggerEvent(searchInput, null, "keydown", { key: "ArrowRight" });
+        await triggerEvent(searchInput, null, "keydown", { key: "ArrowDown" });
+        await triggerEvent(searchInput, null, "keydown", { key: "ArrowDown" });
+        await triggerEvent(searchInput, null, "keydown", { key: "ArrowDown" });
+        await triggerEvent(searchInput, null, "keydown", { key: "Enter" });
+        assert.deepEqual(getDomain(controlPanel), [["company", "=", 5]]);
+    });
+
+    QUnit.test("should wait label promises for one2many search defaults", async function (assert) {
+        assert.expect(3);
+
+        const target = getFixture();
+
+        const def = makeDeferred();
+        const mockRPC = async (_, args) => {
+            if (args.method === "name_get") {
+                await def;
+            }
+        };
+
+        makeWithSearch({
+            serverData,
+            mockRPC,
+            resModel: "partner",
+            Component: ControlPanel,
+            searchMenuTypes: [],
+            searchViewId: false,
+            context: { search_default_company: 1 },
+        });
+
+        await nextTick();
+        assert.containsNone(target, ".o_control_panel");
+
+        def.resolve();
+        await nextTick();
+        assert.containsOnce(target, ".o_control_panel");
+        assert.strictEqual(getFacetTexts(target)[0].replace("\n", ""), "CompanyFirst record");
     });
 });

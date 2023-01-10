@@ -973,6 +973,12 @@ header {
                 } @else {
                     max-width: 560px;
                     text-align: left !important;
+                    // Prevent #top_menu from overflowing the page below the
+                    // maximum width. (e.g. if contains an inline language
+                    // switcher with many elements.)
+                    @media(max-width: 560px) {
+                        max-width: 100%;
+                    }
                 }
                 min-width: 250px;
                 margin: 0 !important;
@@ -1023,6 +1029,11 @@ header {
                     padding-left: .5em;
                     padding-right: .5em;
                 }
+                .js_language_selector .dropdown-toggle {
+                    // Hide the language switcher button because it does not
+                    // make sense to show it if the dropdown is always open.
+                    display: none;
+                }
             }
         }
         &.collapsing #top_menu {
@@ -1067,12 +1078,27 @@ header {
 } @else if o-website-value('header-template') == 'sidebar' {
     @include media-breakpoint-up(lg) {
         #wrapwrap {
-            // Hack: padding is used by layout option (boxed, etc) so use
-            // border here to be able to combine the effect.
+            // Hack: padding is also used by layout option (boxed, etc), need to
+            // combine both options/effects...
             @if $-hamburger-right {
                 border-right: o-website-value('sidebar-width') solid transparent;
             } @else {
                 border-left: o-website-value('sidebar-width') solid transparent;
+            }
+            // ... but don't use it on Safari, it doesn't work, the menu is
+            // somehow broken and not visible.
+            &.o_safari_browser {
+                $padding-size: o-website-value('sidebar-width');
+                @if o-website-value('layout') != 'full' {
+                    $padding-size: calc(#{$grid-gutter-width} * 2 + #{$padding-size});
+                }
+                @if $-hamburger-right {
+                    padding-right: $padding-size;
+                    border-right: none;
+                } @else {
+                    padding-left: $padding-size;
+                    border-left: none;
+                }
             }
 
             > header {
@@ -1176,7 +1202,7 @@ header {
     }
 }
 
-.o_mega_menu_container_size {
+.dropdown-menu.o_mega_menu_container_size {
     $-header-template: o-website-value('header-template');
     @if not index(('sidebar', 'hamburger', 'magazine'), $-header-template) {
         $bp: if($-header-template == 'minimalist', md, lg);
@@ -1293,7 +1319,21 @@ header {
 
 @if index(('slideout_slide_hover', 'slideout_shadow'), o-website-value('footer-effect')) {
     @include media-breakpoint-up(lg) {
-        #wrapwrap.o_footer_effect_enable {
+        // This effect is disabled when a modal is opened. This is the easiest
+        // and probably most stable solution for this problem:
+        // - Add a popup in your page and select it to be for "All pages"
+        //   => In that case it ends up in the footer of your page
+        // - Enable the "Slide Hover" effect for your footer
+        //
+        // => In that case, when the popup opens, it is not visible because of
+        // the footer z-index ("Slide Hover" effect) and it actually also
+        // prevents the user to scroll.
+        //
+        // TODO in master, we may want to put such popups elsewhere than in the
+        // footer. When the footer is hidden, this is also a problem: the popup
+        // for all pages cannot be visible ever. This is considered a limitation
+        // in stable versions though.
+        body:not(.modal-open) #wrapwrap.o_footer_effect_enable {
             > main {
                 @if o-website-value('layout') == 'full' {
                     // Ensure a transparent snippet at the end of the content

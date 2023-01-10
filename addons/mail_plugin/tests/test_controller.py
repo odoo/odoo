@@ -1,10 +1,11 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from unittest.mock import Mock
+import json
+from unittest.mock import Mock, patch
 
 from odoo.addons.iap.tools import iap_tools
-from odoo.addons.mail_plugin.tests.common import TestMailPluginControllerCommon
+from odoo.addons.mail_plugin.tests.common import TestMailPluginControllerCommon, mock_auth_method_outlook
 
 
 class TestMailPluginController(TestMailPluginControllerCommon):
@@ -29,49 +30,33 @@ class TestMailPluginController(TestMailPluginControllerCommon):
         partner.invalidate_recordset()
         self.assertEqual(partner.parent_id, company, "Should change the company of the partner")
 
+    @mock_auth_method_outlook('employee')
     def test_get_partner_blacklisted_domain(self):
-        """Test enrichment on a blacklisted domain.
-
-        Even is the domain is blacklisted, we should not duplicate the company each
-        time a request is made.
-        """
+        """Test enrichment on a blacklisted domain, should return an error."""
         domain = list(iap_tools._MAIL_DOMAIN_BLACKLIST)[0]
 
-        result = self.mock_plugin_partner_get(
-            "Test", "qsd@" + domain,
-            lambda _, __: {
-                "name": "Name",
-                "email": ["contact@" + domain],
-                "iap_information": "test",
-            },
-        )
+        data = {
+            "id": 0,
+            "jsonrpc": "2.0",
+            "method": "call",
+            "params": {"email": "contact@" + domain, "name": "test"},
+        }
 
-        first_company_id = result["partner"]["company"]["id"]
-        self.assertTrue(first_company_id and first_company_id > 0)
-        self.assertEqual(result["partner"]["company"]["additionalInfo"]["iap_information"], "test")
+        mocked_request_enrich = Mock()
 
-        first_company = self.env["res.partner"].browse(first_company_id)
-        self.assertEqual(first_company.name, "Name")
-        self.assertEqual(first_company.email, "contact@" + domain)
+        with patch(
+            "odoo.addons.iap.models.iap_enrich_api.IapEnrichAPI"
+            "._request_enrich",
+            new=mocked_request_enrich,
+        ):
+            result = self.url_open(
+                "/mail_plugin/partner/get",
+                data=json.dumps(data).encode(),
+                headers={"Content-Type": "application/json"},
+            ).json().get("result", {})
 
-        # Test that we do not duplicate the company and that we return the previous one
-        mock_iap_enrich = Mock()
-        result = self.mock_plugin_partner_get("Test", "qsd@" + domain, mock_iap_enrich)
-        self.assertFalse(
-            mock_iap_enrich.called,
-            "We already enriched this company, should not call IAP a second time")
-
-        second_company_id = result["partner"]["company"]["id"]
-        self.assertEqual(first_company_id, second_company_id, "Should not create a new company")
-
-        # But the same blacklisted domain on a different local part
-        # should create a new company (e.g.: asbl_XXXX@gmail.com VS asbl_YYYY@gmail.com)
-        result = self.mock_plugin_partner_get(
-            "Test", "asbl@" + domain,
-            lambda _, domain: {"name": "Name", "email": ["asbl@" + domain]},
-        )
-        second_company_id = result["partner"]["company"]["id"]
-        self.assertNotEqual(first_company_id, second_company_id, "Should create a new company")
+        self.assertFalse(mocked_request_enrich.called)
+        self.assertEqual(result['partner']['enrichment_info']['type'], 'missing_data')
 
     def test_get_partner_company_found(self):
         company = self.env["res.partner"].create({

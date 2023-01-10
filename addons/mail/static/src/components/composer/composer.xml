@@ -94,7 +94,7 @@
                                 'flex-row flex-grow-1 justify-content-between': !composerView.isCompact,
                             }">
                             <div class="o_Composer_primaryToolButtons d-flex align-items-center" t-att-class="{ 'o-composer-is-compact px-2': composerView.isCompact, 'flex-column': composerView.messageViewInEditing and composerView.messageViewInEditing.isInChatWindow }">
-                                <button class="o_Composer_button o_Composer_buttonEmojis o_Composer_toolButton btn btn-light border-0 rounded-pill bg-view"
+                                <button class="o_Composer_button o_Composer_buttonEmojis o_Composer_toolButton btn btn-light border-0 rounded-pill"
                                     t-att-class="{
                                         'o-open bg-200': composerView.emojisPopoverView,
                                         'o-isDeviceSmall': messaging.device.isSmall,
@@ -105,9 +105,9 @@
                                     t-on-click="composerView.onClickButtonEmojis"
                                     t-ref="buttonEmojis"
                                 >
-                                    <i class="fa fa-smile-o" role="img" aria-label="Emojis"/>
+                                    <i class="fa fa-smile-o overflow-visible" role="img" aria-label="Emojis"/>
                                 </button>
-                                <button class="o_Composer_button o_Composer_buttonAttachment o_Composer_toolButton btn btn-light fa fa-paperclip border-0 rounded-pill bg-view" t-att-class="{ 'o-isDeviceSmall': messaging.device.isSmall }" t-attf-class="{{ composerView.messageViewInEditing ? 'my-1' : 'mx-1' }}" title="Add attachment" aria-label="Add attachment" type="button" t-on-click="composerView.onClickAddAttachment"/>
+                                <button class="o_Composer_button o_Composer_buttonAttachment o_Composer_toolButton btn btn-light fa fa-paperclip border-0 rounded-pill" t-att-class="{ 'o-isDeviceSmall': messaging.device.isSmall }" t-attf-class="{{ composerView.messageViewInEditing ? 'my-1' : 'mx-1' }}" title="Add attachment" aria-label="Add attachment" type="button" t-on-click="composerView.onClickAddAttachment"/>
                             </div>
                             <t t-if="composerView.isExpandable">
                                 <div class="o_Composer_secondaryToolButtons">

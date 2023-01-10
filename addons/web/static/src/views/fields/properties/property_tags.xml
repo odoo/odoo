@@ -2,7 +2,7 @@
 <templates xml:space="preserve">
     <t t-name="web.PropertyTags" owl="1">
         <!-- Copy many2many tags style without duplicating all the CSS -->
-        <div t-attf-class="o_field_property_tag o_field_widget o_field_many2many_tags py-1 d-flex flex-row align-items-center flex-wrap pt-2 w-100 {{props.readonly ? 'readonly' : ''}}">
+        <div t-attf-class="o_field_property_tag o_field_widget o_field_many2many_tags d-flex align-items-center {{props.readonly ? 'readonly' : ''}}">
             <TagsList
                 tags="tagListItems"
                 displayBadge="displayBadge"
@@ -11,6 +11,7 @@
                 t-if="!props.readonly"
                 class="o_field_property_dropdown_menu o_input_dropdown mt-2">
                 <AutoComplete
+                    id="props.id"
                     value="''"
                     sources="autocompleteSources"
                     onSelect.bind="({value}) => this.onOptionSelected(value)"

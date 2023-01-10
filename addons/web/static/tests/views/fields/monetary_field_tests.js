@@ -976,4 +976,57 @@ QUnit.module("Fields", (hooks) => {
         assert.containsOnce(target, ".o_form_editable");
         assert.strictEqual(target.querySelector("[name=monetary_field] input").value, "0.00");
     });
+
+    QUnit.test("uses 'currency_id' as currency field by default", async function (assert) {
+        await makeView({
+            type: "form",
+            resModel: "partner",
+            serverData,
+            arch: `
+                <form>
+                    <field name="monetary_field"/>
+                    <field name="currency_id" invisible="1"/>
+                </form>`,
+            resId: 6,
+        });
+
+        assert.containsOnce(target, ".o_form_editable");
+        assert.strictEqual(
+            target.querySelector(".o_field_widget[name=monetary_field] input").parentElement
+                .firstChild.textContent,
+            "$",
+            "The input should be preceded by a span containing the currency symbol."
+        );
+    });
+
+    QUnit.test("automatically uses currency_field if defined", async function (assert) {
+        serverData.models.partner.fields.custom_currency_id = {
+            string: "Currency",
+            type: "many2one",
+            relation: "currency",
+            searchable: true,
+        };
+        serverData.models.partner.fields.monetary_field.currency_field = "custom_currency_id";
+        serverData.models.partner.records[5].custom_currency_id = 1;
+
+        await makeView({
+            type: "form",
+            resModel: "partner",
+            serverData,
+            arch: `
+                <form>
+                    <field name="monetary_field"/>
+                    <field name="custom_currency_id" invisible="1"/>
+                </form>`,
+            resId: 6,
+        });
+
+        assert.containsOnce(target, ".o_form_editable");
+        assert.strictEqual(
+            target.querySelector(".o_field_widget[name=monetary_field] input").parentElement
+                .firstChild.textContent,
+            "$",
+            "The input should be preceded by a span containing the currency symbol."
+        );
+    });
 });

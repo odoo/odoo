@@ -6,7 +6,7 @@ from bisect import bisect_left
 from collections import defaultdict
 import re
 
-ACCOUNT_REGEX = re.compile(r'(?:(\S*\d+\S*)\s)?(.*)')
+ACCOUNT_REGEX = re.compile(r'(?:(\S*\d+\S*))?(.*)')
 ACCOUNT_CODE_REGEX = re.compile(r'^[A-Za-z0-9.]+$')
 
 class AccountAccount(models.Model):
@@ -690,7 +690,7 @@ class AccountAccount(models.Model):
         if 'import_file' in self.env.context:
             code, name = self._split_code_name(name)
             return self.create({'code': code, 'name': name}).name_get()[0]
-        raise ValueError(_("The values for the created account need to be verified."))
+        raise UserError(_("Please create new accounts from the Chart of Accounts menu."))
 
     def write(self, vals):
         # Do not allow changing the company_id when account_move_line already exist

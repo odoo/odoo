@@ -10,9 +10,9 @@
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 15.0\n"
+"Project-Id-Version: Odoo Server 16.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-10-05 10:53+0000\n"
+"POT-Creation-Date: 2022-12-15 12:50+0000\n"
 "PO-Revision-Date: 2022-09-22 05:45+0000\n"
 "Last-Translator: Lilach Gilliam <lilach.gilliam@gmail.com>, 2022\n"
 "Language-Team: Hebrew (https://www.transifex.com/odoo/teams/41243/he/)\n"
@@ -43,6 +43,7 @@ msgid "Event Alarm Manager"
 msgstr "מנהל התראות אירוע"
 
 #. module: calendar_sms
+#. odoo-python
 #: code:addons/calendar_sms/models/calendar_event.py:0
 #, python-format
 msgid "Event reminder: %(name)s, %(time)s."
@@ -50,8 +51,10 @@ msgstr "תזכורת לארוע: %(name)s, %(time)s"
 
 #. module: calendar_sms
 #: model:sms.template,body:calendar_sms.sms_template_data_calendar_reminder
-msgid "Event reminder: {{ object.name }}, {{ object.display_time }}"
-msgstr "תזכורת אירוע: ${object.name}, ${object.display_time}"
+msgid ""
+"Event reminder: {{ object.name }}, {{ "
+"object.get_display_time_tz(object.partner_id.tz) }}"
+msgstr ""
 
 #. module: calendar_sms
 #: model_terms:ir.ui.view,arch_db:calendar_sms.view_calendar_event_form_inherited
@@ -74,6 +77,7 @@ msgid "Send SMS"
 msgstr "שלח SMS"
 
 #. module: calendar_sms
+#. odoo-python
 #: code:addons/calendar_sms/models/calendar_event.py:0
 #, python-format
 msgid "Send SMS Text Message"
@@ -90,6 +94,7 @@ msgid "Template used to render SMS reminder content."
 msgstr "תבנית המשמשת לעיבוד תוכן תזכורת SMS."
 
 #. module: calendar_sms
+#. odoo-python
 #: code:addons/calendar_sms/models/calendar_event.py:0
 #, python-format
 msgid "There are no attendees on these events"

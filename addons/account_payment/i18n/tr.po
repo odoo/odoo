@@ -6,7 +6,6 @@
 # Ugur Yilmaz <ugurlu2001@hotmail.com>, 2022
 # Levent Karakaş <levent@mektup.at>, 2022
 # Buket Şeker <buket_skr@hotmail.com>, 2022
-# abc Def <hdogan1974@gmail.com>, 2022
 # Saban Yildiz <sabany@projetgrup.com>, 2022
 # Martin Trigaux, 2022
 # Ediz Duman <neps1192@gmail.com>, 2022
@@ -15,14 +14,15 @@
 # Ertuğrul Güreş <ertugrulg@projetgrup.com>, 2022
 # omerfarukcakmak <omerfarukckmk@protonmail.com>, 2022
 # Umur Akın <umura@projetgrup.com>, 2022
+# abc Def <hdogan1974@gmail.com>, 2022
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 16.0beta\n"
+"Project-Id-Version: Odoo Server 16.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-10-04 09:24+0000\n"
+"POT-Creation-Date: 2022-12-15 12:49+0000\n"
 "PO-Revision-Date: 2022-09-22 05:44+0000\n"
-"Last-Translator: Umur Akın <umura@projetgrup.com>, 2022\n"
+"Last-Translator: abc Def <hdogan1974@gmail.com>, 2022\n"
 "Language-Team: Turkish (https://www.transifex.com/odoo/teams/41243/tr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -129,12 +129,14 @@ msgid ""
 msgstr ""
 
 #. module: account_payment
+#. odoo-python
 #: code:addons/account_payment/models/account_payment.py:0
 #, python-format
 msgid "A payment transaction with reference %s already exists."
 msgstr "Referans %s olan bir ödeme işlemi zaten mevcut."
 
 #. module: account_payment
+#. odoo-python
 #: code:addons/account_payment/models/account_payment.py:0
 #, python-format
 msgid "A token is required to create a new payment transaction."
@@ -246,6 +248,7 @@ msgid "Invoice(s)"
 msgstr "Fatura(lar)"
 
 #. module: account_payment
+#. odoo-python
 #: code:addons/account_payment/models/payment_transaction.py:0
 #: model:ir.model.fields,field_description:account_payment.field_payment_transaction__invoice_ids
 #, python-format
@@ -383,12 +386,14 @@ msgid "Payments"
 msgstr "Ödemeler"
 
 #. module: account_payment
+#. odoo-python
 #: code:addons/account_payment/models/account_payment_method_line.py:0
 #, python-format
 msgid "Provider"
 msgstr "Sağlayıcı"
 
 #. module: account_payment
+#. odoo-python
 #: code:addons/account_payment/models/account_payment.py:0
 #: code:addons/account_payment/models/account_payment.py:0
 #: model_terms:ir.ui.view,arch_db:account_payment.payment_refund_wizard_view_form
@@ -454,6 +459,14 @@ msgid "Suitable Payment Token"
 msgstr "Uygun Ödeme Token'ı"
 
 #. module: account_payment
+#. odoo-python
+#: code:addons/account_payment/controllers/payment.py:0
+#, python-format
+msgid "The access token is invalid."
+msgstr "Erişim belirteci geçersiz."
+
+#. module: account_payment
+#. odoo-python
 #: code:addons/account_payment/wizards/payment_refund_wizard.py:0
 #, python-format
 msgid ""
@@ -466,6 +479,7 @@ msgid "The journal in which the successful transactions are posted."
 msgstr ""
 
 #. module: account_payment
+#. odoo-python
 #: code:addons/account_payment/models/payment_transaction.py:0
 #, python-format
 msgid ""
@@ -474,6 +488,7 @@ msgid ""
 msgstr ""
 
 #. module: account_payment
+#. odoo-python
 #: code:addons/account_payment/controllers/payment.py:0
 #: code:addons/account_payment/controllers/payment.py:0
 #, python-format
@@ -533,6 +548,7 @@ msgid "Void Transaction"
 msgstr "Geçersiz İşlem"
 
 #. module: account_payment
+#. odoo-python
 #: code:addons/account_payment/models/account_journal.py:0
 #, python-format
 msgid ""

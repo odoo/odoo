@@ -662,6 +662,7 @@
                             string="Approve"
                             type="object"
                             data-hotkey="v"
+                            context="{'validate_analytic': True}"
                             attrs="{'invisible': ['|', ('can_approve', '=', False), ('state', '!=', 'submit')]}"
                             class="oe_highlight o_expense_sheet_approve"/>
                     <button name="action_sheet_move_create"
@@ -716,7 +717,7 @@
                     <div class="oe_title">
                         <label for="name" class="oe_edit_only"/>
                         <h1>
-                            <field name="name" placeholder="e.g. Trip to NY" attrs="{'readonly': [('is_editable', '=', False)]}"/>
+                            <field name="name" placeholder="e.g. Trip to NY" attrs="{'readonly': [('is_editable', '=', False)]}" force_save="1"/>
                         </h1>
                     </div>
                     <group>
@@ -744,7 +745,8 @@
                                     domain="[('state', '=', 'draft'), ('employee_id', '=', employee_id), ('company_id', '=', company_id)]"
                                     options="{'reload_on_button': True}"
                                     context="{'form_view_ref' : 'hr_expense.hr_expense_view_form_without_header', 'default_company_id': company_id, 'default_employee_id': employee_id}" 
-                                    attrs="{'readonly': [('is_editable', '=', False)]}">
+                                    attrs="{'readonly': [('is_editable', '=', False)]}"
+                                    force_save="1">
                                 <tree decoration-danger="is_refused" editable="bottom" class="o_expense_line_list">
                                     <field name="date" optional="show"/>
                                     <field name="product_id"/>

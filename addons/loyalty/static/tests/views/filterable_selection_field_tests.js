@@ -44,7 +44,7 @@ QUnit.module("Fields", (hooks) => {
             serverData,
             arch: `
                 <form>
-                    <field name="program_type" widget="filterable_selection" options="{'whitelisted_values': ['coupon', 'promotion']}"/>
+                    <field name="program_type" widget="filterable_selection" options="{'whitelisted_values': ['coupons', 'promotion']}"/>
                 </form>`,
         });
 

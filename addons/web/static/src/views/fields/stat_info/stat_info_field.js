@@ -33,10 +33,18 @@ StatInfoField.supportedTypes = ["float", "integer", "monetary"];
 
 StatInfoField.isEmpty = () => false;
 StatInfoField.extractProps = ({ attrs, field }) => {
+    let digits;
+    if (attrs.digits) {
+        digits = JSON.parse(attrs.digits);
+    } else if (attrs.options.digits) {
+        digits = attrs.options.digits;
+    } else if (Array.isArray(field.digits)) {
+        digits = field.digits;
+    }
     return {
         labelField: attrs.options.label_field,
         noLabel: archParseBoolean(attrs.nolabel),
-        digits: (attrs.digits ? JSON.parse(attrs.digits) : attrs.options.digits) || field.digits,
+        digits,
     };
 };
 

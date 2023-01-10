@@ -4,6 +4,7 @@
 # 
 # Translators:
 # Martin Trigaux, 2022
+# Alina Lisnenko <alina.lisnenko@erp.co.ua>, 2022
 # 
 msgid ""
 msgstr ""
@@ -11,7 +12,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-09-23 08:02+0000\n"
 "PO-Revision-Date: 2022-09-22 05:52+0000\n"
-"Last-Translator: Martin Trigaux, 2022\n"
+"Last-Translator: Alina Lisnenko <alina.lisnenko@erp.co.ua>, 2022\n"
 "Language-Team: Ukrainian (https://www.transifex.com/odoo/teams/41243/uk/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -49,7 +50,7 @@ msgstr "Компанія"
 #: code:addons/hr_skills/static/src/fields/skills_one2many.xml:0
 #, python-format
 msgid "Create a new entry"
-msgstr ""
+msgstr "Створити новий запис"
 
 #. module: hr_skills
 #: model:ir.model.fields,field_description:hr_skills.field_hr_employee_skill__create_uid
@@ -99,7 +100,7 @@ msgstr "Дата початку"
 #. module: hr_skills
 #: model:ir.model.fields,field_description:hr_skills.field_hr_skill_level__default_level
 msgid "Default Level"
-msgstr ""
+msgstr "Типовий рівень"
 
 #. module: hr_skills
 #: model:ir.model.fields,field_description:hr_skills.field_hr_employee_skill_log__department_id
@@ -154,17 +155,17 @@ msgstr "Навички співробітника"
 #. module: hr_skills
 #: model:ir.model,name:hr_skills.model_hr_employee_skill_report
 msgid "Employee Skills Report"
-msgstr ""
+msgstr "Звіт навичок співробітника"
 
 #. module: hr_skills
 #: model_terms:ir.ui.view,arch_db:hr_skills.hr_employee_skill_report_view_search
 msgid "Employees with Skills"
-msgstr ""
+msgstr "Співробітники з навичками"
 
 #. module: hr_skills
 #: model_terms:ir.ui.view,arch_db:hr_skills.hr_employee_skill_report_view_search
 msgid "Employees without Skills"
-msgstr ""
+msgstr "Співробітники без навичок"
 
 #. module: hr_skills
 #: model_terms:ir.ui.view,arch_db:hr_skills.hr_employee_skill_log_view_search
@@ -194,6 +195,8 @@ msgid ""
 "If checked, this level will be the default one selected when choosing this "
 "skill."
 msgstr ""
+"Якщо позначено, цей рівень буде стандартним, вибраним під час вибору цієї "
+"навички."
 
 #. module: hr_skills
 #: model:ir.model.fields,field_description:hr_skills.field_hr_employee_skill____last_update
@@ -231,7 +234,7 @@ msgstr "Останнє оновлення"
 #. module: hr_skills
 #: model:ir.model.fields,field_description:hr_skills.field_hr_employee_skill_report__level_progress
 msgid "Level Progress"
-msgstr ""
+msgstr "Прогрес рівня"
 
 #. module: hr_skills
 #: model:ir.model.fields,field_description:hr_skills.field_hr_skill_type__skill_level_ids
@@ -242,7 +245,7 @@ msgstr "Рівні"
 #. module: hr_skills
 #: model:ir.ui.menu,name:hr_skills.hr_resume_line_type_menu
 msgid "Line Types"
-msgstr ""
+msgstr "Типи рядка"
 
 #. module: hr_skills
 #: model:ir.model.fields,field_description:hr_skills.field_hr_resume_line__name
@@ -257,7 +260,7 @@ msgstr "Назва"
 #: code:addons/hr_skills/models/hr_skill_level.py:0
 #, python-format
 msgid "Only one default level is allowed per skill type."
-msgstr ""
+msgstr "Лише один типовий рівень дозволено на тип навички."
 
 #. module: hr_skills
 #. openerp-web
@@ -288,17 +291,12 @@ msgstr "Прогрес від нульових знань (0%) до повної
 #. module: hr_skills
 #: model:ir.model.constraint,message:hr_skills.constraint_hr_skill_level_check_level_progress
 msgid "Progress should be a number between 0 and 100."
-msgstr ""
+msgstr "Прогрес має бути цифрою між 0 та 100."
 
 #. module: hr_skills
 #: model:ir.model,name:hr_skills.model_hr_employee_public
 msgid "Public Employee"
 msgstr "Зовнішній користувач"
-
-#. module: hr_skills
-#: model_terms:ir.ui.view,arch_db:hr_skills.hr_employee_view_form
-msgid "Resume"
-msgstr "Продовжити"
 
 #. module: hr_skills
 #: model:ir.ui.menu,name:hr_skills.menu_human_resources_configuration_resume
@@ -308,35 +306,35 @@ msgstr "Продовжити"
 #: model_terms:ir.ui.view,arch_db:hr_skills.hr_employee_view_search
 #: model_terms:ir.ui.view,arch_db:hr_skills.res_users_view_form
 #: model_terms:ir.ui.view,arch_db:hr_skills.resume_line_view_form
-msgid "Resumé"
-msgstr "Резюме"
+msgid "Resume"
+msgstr "Продовжити"
 
 #. module: hr_skills
 #: model:ir.actions.act_window,name:hr_skills.hr_resume_type_action
-msgid "Resumé Line Types"
-msgstr "Типи рядка резюме"
+msgid "Resume Line Types"
+msgstr ""
 
 #. module: hr_skills
 #: model:ir.model,name:hr_skills.model_hr_resume_line
-msgid "Resumé line of an employee"
-msgstr "Рядок резюме співробітника"
+msgid "Resume line of an employee"
+msgstr ""
 
 #. module: hr_skills
 #: model:ir.model.fields,field_description:hr_skills.field_hr_employee__resume_line_ids
 #: model:ir.model.fields,field_description:hr_skills.field_hr_employee_public__resume_line_ids
 #: model:ir.model.fields,field_description:hr_skills.field_res_users__resume_line_ids
-msgid "Resumé lines"
-msgstr "Рядки резюме"
+msgid "Resume lines"
+msgstr ""
 
 #. module: hr_skills
 #: model_terms:ir.ui.view,arch_db:hr_skills.hr_employee_skill_log_view_search
 msgid "Search Logs"
-msgstr ""
+msgstr "Пошук записів"
 
 #. module: hr_skills
 #: model_terms:ir.ui.view,arch_db:hr_skills.hr_skill_view_search
 msgid "Search Skill"
-msgstr ""
+msgstr "Пошук навичок"
 
 #. module: hr_skills
 #: model:ir.model.fields,field_description:hr_skills.field_hr_resume_line_type__sequence
@@ -367,7 +365,7 @@ msgstr "Навички"
 #: model:ir.actions.server,name:hr_skills.action_open_skills_log_department
 #: model:ir.actions.server,name:hr_skills.action_open_skills_log_employee
 msgid "Skill History Report"
-msgstr ""
+msgstr "Звіт історії навичок"
 
 #. module: hr_skills
 #: model:ir.model,name:hr_skills.model_hr_skill_level
@@ -433,7 +431,7 @@ msgstr "Навички"
 #: model_terms:ir.ui.view,arch_db:hr_skills.hr_employee_skill_log_view_graph_employee
 #: model_terms:ir.ui.view,arch_db:hr_skills.hr_employee_skill_log_view_tree
 msgid "Skills History"
-msgstr ""
+msgstr "Історія навичок"
 
 #. module: hr_skills
 #: code:addons/hr_skills/models/hr_employee_skill.py:0
@@ -465,7 +463,7 @@ msgstr "Два рівні для однієї і тієї ж навички не
 #. module: hr_skills
 #: model:ir.model.constraint,message:hr_skills.constraint_hr_employee_skill_log__unique_skill_log
 msgid "Two levels for the same skill on the same day is not allowed"
-msgstr ""
+msgstr "Два рівні для однієї й тієї ж навички в один день не допускаються"
 
 #. module: hr_skills
 #: model:ir.model.fields,field_description:hr_skills.field_hr_resume_line__line_type_id
@@ -474,8 +472,8 @@ msgstr "Тип"
 
 #. module: hr_skills
 #: model:ir.model,name:hr_skills.model_hr_resume_line_type
-msgid "Type of a resumé line"
-msgstr "Тип рядка резюме"
+msgid "Type of a resume line"
+msgstr ""
 
 #. module: hr_skills
 #: model:ir.model,name:hr_skills.model_res_users

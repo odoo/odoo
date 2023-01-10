@@ -47,6 +47,15 @@ export class SaleOrderLineProductField extends Many2OneField {
         }
     }
 
+    get isProductClickable() {
+        // product form should be accessible if the widget field is readonly
+        // or if the line cannot be edited (e.g. locked SO)
+        return (
+            this.props.record.isReadonly(this.props.name)
+            || this.props.record.model.root.isReadonly
+            && this.props.record.model.root.isReadonly('order_line')
+        )
+    }
     get hasExternalButton() {
         // Keep external button, even if field is specified as 'no_open' so that the user is not
         // redirected to the product when clicking on the field content
@@ -69,6 +78,17 @@ export class SaleOrderLineProductField extends Many2OneField {
 
     configurationButtonFAIcon() {
         return 'fa-pencil';
+    }
+
+    onClick(ev) {
+        // Override to get internal link to products in SOL that cannot be edited
+        if (this.props.readonly) {
+            ev.stopPropagation();
+            this.openAction();
+        }
+        else {
+            super.onClick(ev);
+        }
     }
 
     async _onProductTemplateUpdate() { }

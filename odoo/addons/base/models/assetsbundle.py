@@ -248,7 +248,9 @@ class AssetsBundle(object):
         Such a view would be website.layout when main_object is an ir.ui.view.
         """
         to_delete = set(attach.store_fname for attach in attachments if attach.store_fname)
-        self.env.cr.execute(f"DELETE FROM {attachments._table} WHERE id IN %s", [tuple(attachments.ids)])
+        self.env.cr.execute(f"""DELETE FROM {attachments._table} WHERE id IN (
+            SELECT id FROM {attachments._table} WHERE id in %s FOR NO KEY UPDATE SKIP LOCKED
+        )""", [tuple(attachments.ids)])
         for file_path in to_delete:
             attachments._file_delete(file_path)
 

@@ -6,7 +6,7 @@ from odoo import fields, models
 
 class ResumeLineType(models.Model):
     _name = 'hr.resume.line.type'
-    _description = "Type of a resumé line"
+    _description = "Type of a resume line"
     _order = "sequence"
 
     name = fields.Char(required=True)

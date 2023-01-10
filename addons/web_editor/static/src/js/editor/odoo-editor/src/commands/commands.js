@@ -23,6 +23,7 @@ import {
     isSelectionFormat,
     isShrunkBlock,
     isVisible,
+    isVisibleEmpty,
     isVisibleStr,
     leftLeafFirstPath,
     preserveCursor,
@@ -44,6 +45,7 @@ import {
     getRowIndex,
     parseHTML,
     formatSelection,
+    getDeepestPosition,
 } from '../utils/utils.js';
 
 const TEXT_CLASSES_REGEX = /\btext-[^\s]*\b/g;
@@ -173,30 +175,39 @@ export const editorCommands = {
             container.replaceChildren(...container.firstChild.childNodes);
         }
 
+        startNode = startNode || editor.document.getSelection().anchorNode;
+
         // In case the html inserted is all contained in a single root <p> or <li>
         // tag, we take the all content of the <p> or <li> and avoid inserting the
-        // <p> or <li>.
-        if (container.childElementCount === 1 && (container.firstChild.nodeName === 'P' || container.firstChild.nodeName === 'LI')) {
+        // <p> or <li>. The same is true for a <pre> inside a <pre>.
+        if (container.childElementCount === 1 && (
+            container.firstChild.nodeName === 'P' ||
+            container.firstChild.nodeName === 'LI' ||
+            container.firstChild.nodeName === 'PRE' && closestElement(startNode, 'pre')
+        )) {
             const p = container.firstElementChild;
             container.replaceChildren(...p.childNodes);
         } else if (container.childElementCount > 1) {
             // Grab the content of the first child block and isolate it.
-            if (isBlock(container.firstChild)) {
+            if (isBlock(container.firstChild) && container.firstChild.nodeName !== 'TABLE') {
                 containerFirstChild.replaceChildren(...container.firstElementChild.childNodes);
                 container.firstElementChild.remove();
             }
             // Grab the content of the last child block and isolate it.
-            if (isBlock(container.lastChild)) {
+            if (isBlock(container.lastChild) && container.lastChild.nodeName !== 'TABLE') {
                 containerLastChild.replaceChildren(...container.lastElementChild.childNodes);
                 container.lastElementChild.remove();
             }
         }
 
-        startNode = startNode || editor.document.getSelection().anchorNode;
         if (startNode.nodeType === Node.ELEMENT_NODE) {
             if (selection.anchorOffset === 0) {
                 const textNode = editor.document.createTextNode('');
-                startNode.prepend(textNode);
+                if (isVisibleEmpty(startNode)) {
+                    startNode.parentNode.insertBefore(textNode, startNode);
+                } else {
+                    startNode.prepend(textNode);
+                }
                 startNode = textNode;
             } else {
                 startNode = startNode.childNodes[selection.anchorOffset - 1];
@@ -282,7 +293,11 @@ export const editorCommands = {
         currentNode = lastChildNode || currentNode;
         selection.removeAllRanges();
         const newRange = new Range();
-        const lastPosition = rightPos(currentNode);
+        let lastPosition = rightPos(currentNode);
+        if (lastPosition[0] === editor.editable) {
+            // Correct the position if it happens to be in the editable root.
+            lastPosition = getDeepestPosition(...lastPosition);
+        }
         newRange.setStart(lastPosition[0], lastPosition[1]);
         newRange.setEnd(lastPosition[0], lastPosition[1]);
         selection.addRange(newRange);

@@ -12,14 +12,15 @@
 # Yihya Hugirat <hugirat@gmail.com>, 2022
 # ZVI BLONDER <ZVIBLONDER@gmail.com>, 2022
 # Moshe Flam <pashute@gmail.com>, 2022
+# Ha Ketem <haketem@gmail.com>, 2022
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 15.5alpha1\n"
+"Project-Id-Version: Odoo Server 16.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-09-20 09:01+0000\n"
+"POT-Creation-Date: 2022-12-15 12:49+0000\n"
 "PO-Revision-Date: 2022-09-22 05:44+0000\n"
-"Last-Translator: Moshe Flam <pashute@gmail.com>, 2022\n"
+"Last-Translator: Ha Ketem <haketem@gmail.com>, 2022\n"
 "Language-Team: Hebrew (https://www.transifex.com/odoo/teams/41243/he/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -28,6 +29,7 @@ msgstr ""
 "Plural-Forms: nplurals=4; plural=(n == 1 && n % 1 == 0) ? 0 : (n == 2 && n % 1 == 0) ? 1: (n % 10 == 0 && n % 1 == 0 && n > 10) ? 2 : 3;\n"
 
 #. module: account_check_printing
+#. odoo-python
 #: code:addons/account_check_printing/models/account_journal.py:0
 #, python-format
 msgid " : Check Number Sequence"
@@ -43,7 +45,7 @@ msgstr "הרצף המספרי של שיקים"
 msgid ""
 "Adjust the margins of generated checks to make it fit your printer's "
 "settings."
-msgstr ""
+msgstr "הגדירו שוליים לצ'ק שיופס כדי שיתאים להגדרות המדפסת."
 
 #. module: account_check_printing
 #: model:ir.model.fields,field_description:account_check_printing.field_account_payment__check_amount_in_words
@@ -59,7 +61,7 @@ msgstr "בטל"
 #: model:ir.model.fields,field_description:account_check_printing.field_res_company__account_check_printing_layout
 #: model:ir.model.fields,field_description:account_check_printing.field_res_config_settings__account_check_printing_layout
 msgid "Check Layout"
-msgstr ""
+msgstr "בדיקת פריסה"
 
 #. module: account_check_printing
 #: model:ir.model.fields,field_description:account_check_printing.field_res_company__account_check_printing_margin_left
@@ -94,10 +96,11 @@ msgid "Check Top Margin"
 msgstr "שוליים עליונים של שיק"
 
 #. module: account_check_printing
+#. odoo-python
 #: code:addons/account_check_printing/models/account_payment.py:0
 #, python-format
 msgid "Check numbers can only consist of digits"
-msgstr ""
+msgstr "מספרי צ'ק חייבים להיות בספרות בלבד"
 
 #. module: account_check_printing
 #: model:ir.model.fields,help:account_check_printing.field_account_journal__check_manual_sequencing
@@ -121,6 +124,7 @@ msgid "Checks numbering sequence."
 msgstr "הרצף המספרי של שיקים"
 
 #. module: account_check_printing
+#. odoo-python
 #: code:addons/account_check_printing/models/account_journal.py:0
 #: model_terms:ir.ui.view,arch_db:account_check_printing.view_payment_check_printing_search
 #, python-format
@@ -163,6 +167,7 @@ msgid "Display Name"
 msgstr "שם לתצוגה"
 
 #. module: account_check_printing
+#. odoo-python
 #: code:addons/account_check_printing/models/account_payment.py:0
 #: code:addons/account_check_printing/models/account_payment.py:0
 #, python-format
@@ -175,6 +180,7 @@ msgid "ID"
 msgstr "מזהה"
 
 #. module: account_check_printing
+#. odoo-python
 #: code:addons/account_check_printing/models/account_payment.py:0
 #, python-format
 msgid ""
@@ -228,7 +234,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:account_check_printing.field_res_company__account_check_printing_multi_stub
 #: model:ir.model.fields,field_description:account_check_printing.field_res_config_settings__account_check_printing_multi_stub
 msgid "Multi-Pages Check Stub"
-msgstr ""
+msgstr "פנקס צ'קים עם ספח."
 
 #. module: account_check_printing
 #: model:ir.model.fields,field_description:account_check_printing.field_account_journal__check_next_number
@@ -237,6 +243,7 @@ msgid "Next Check Number"
 msgstr "מספר השיק הבא"
 
 #. module: account_check_printing
+#. odoo-python
 #: code:addons/account_check_printing/models/account_journal.py:0
 #: code:addons/account_check_printing/wizard/print_prenumbered_checks.py:0
 #, python-format
@@ -266,12 +273,13 @@ msgid "Payments"
 msgstr "תשלומים"
 
 #. module: account_check_printing
+#. odoo-python
 #: code:addons/account_check_printing/models/account_payment.py:0
 #, python-format
 msgid ""
 "Payments to print as a checks must have 'Check' selected as payment method "
 "and not have already been reconciled"
-msgstr ""
+msgstr "כדי להדפיס צ'קים צריך לסמן 'צ'ק' כאמצעי תשלום בהוצאה שטרם עברה התאמה."
 
 #. module: account_check_printing
 #: model_terms:ir.ui.view,arch_db:account_check_printing.print_pre_numbered_checks_view
@@ -295,6 +303,9 @@ msgid ""
 "vendor bills by preferred payment method to register payments in mass. Use "
 "cases: create bank files for batch wires, check runs."
 msgstr ""
+"אמצעי תשלום מועדף כשמשלמים לספק זה. נשתמש בזה כדי לסנן חשבוניות ספקים ולרשום"
+" הוצאות מרובות אוטומטית. שימושים אפשריים: יצירת קבצים להעברות מרובות, הדפסת "
+"צ'קים."
 
 #. module: account_check_printing
 #: model_terms:ir.ui.view,arch_db:account_check_printing.print_pre_numbered_checks_view
@@ -318,6 +329,7 @@ msgid "Print Date Label"
 msgstr "הדפס תווית תאריך"
 
 #. module: account_check_printing
+#. odoo-python
 #: code:addons/account_check_printing/models/account_payment.py:0
 #: model:ir.model,name:account_check_printing.model_print_prenumbered_checks
 #: model_terms:ir.ui.view,arch_db:account_check_printing.print_pre_numbered_checks_view
@@ -342,6 +354,8 @@ msgid ""
 "Select the format corresponding to the check paper you will be printing your checks on.\n"
 "In order to disable the printing feature, select 'None'."
 msgstr ""
+"בחירת פורמט שמתאים לנייר עליו יודפסו הצ'קים .\n"
+"כדי להשבית את אפשרות ההדפסה בחרו 'ללא'."
 
 #. module: account_check_printing
 #: model_terms:ir.ui.view,arch_db:account_check_printing.view_account_payment_form_inherited
@@ -354,22 +368,34 @@ msgid "Sequence number of the next printed check."
 msgstr "מספר רץ של השיק המודפס הבא"
 
 #. module: account_check_printing
+#: model:ir.model.fields,field_description:account_check_printing.field_account_payment__show_check_number
+msgid "Show Check Number"
+msgstr ""
+
+#. module: account_check_printing
+#. odoo-python
 #: code:addons/account_check_printing/models/account_payment.py:0
 #, python-format
 msgid ""
 "Something went wrong with Check Layout, please select another layout in "
 "Invoicing/Accounting Settings and try again."
 msgstr ""
+"משהו השתבש בפריסת הצ'ק, נא להשתמש בפריסה אחרת תחת חשבוניות/הגדרות חשבונאיות "
+"ונסו שוב."
 
 #. module: account_check_printing
+#. odoo-python
 #: code:addons/account_check_printing/models/account_payment.py:0
 #, python-format
 msgid ""
 "The following numbers are already used:\n"
 "%s"
 msgstr ""
+"המספרים האלה כבר בשימוש:\n"
+"%s"
 
 #. module: account_check_printing
+#. odoo-python
 #: code:addons/account_check_printing/models/account_journal.py:0
 #, python-format
 msgid ""
@@ -396,6 +422,8 @@ msgid ""
 "This option allows you to print check details (stub) on multiple pages if "
 "they don't fit on a single page."
 msgstr ""
+"האפשרות הזו מאפשרת להדפיס פרטי צ'ק (ספח) במספר דפים, אם הפרטים לא נכנסים "
+"בעמוד אחד."
 
 #. module: account_check_printing
 #: model:ir.model.fields,help:account_check_printing.field_res_company__account_check_printing_date_label
@@ -419,12 +447,15 @@ msgstr "הורד סימון כנשלח"
 #. module: account_check_printing
 #: model_terms:ir.ui.view,arch_db:account_check_printing.view_account_payment_form_inherited
 msgid "Void Check"
-msgstr ""
+msgstr "צ'ק מבוטל"
 
 #. module: account_check_printing
+#. odoo-python
 #: code:addons/account_check_printing/models/account_payment.py:0
 #, python-format
 msgid ""
 "You have to choose a check layout. For this, go in Invoicing/Accounting "
 "Settings, search for 'Checks layout' and set one."
 msgstr ""
+"יש לבחור בפריסת צ'ק. עושים את זה תחת חשבוניות / הגדרות חשבונאיות, חפשו "
+"'פריסת צ'ק' והגדירו תצורה."

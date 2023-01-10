@@ -127,7 +127,7 @@
                         <field name="order_count" widget="statinfo" string="RFQs/Orders"/>
                     </button>
                 </div>
-                <div class="float-start">
+                <div class="oe_title">
                     <label for="name" class="oe_inline"/>
                     <h1>
                         <field name="name"/>
@@ -174,7 +174,7 @@
                                     <field name="product_qty"/>
                                     <field name="qty_ordered"/>
                                     <field name="product_uom_category_id" invisible="1"/>
-                                    <field name="product_uom_id" />
+                                    <field name="product_uom_id" groups="uom.group_uom"/>
                                     <field name="schedule_date"/>
                                     <field name="analytic_distribution" widget="analytic_distribution"
                                            groups="analytic.group_analytic_accounting"

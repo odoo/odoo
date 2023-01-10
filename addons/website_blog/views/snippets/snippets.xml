@@ -9,7 +9,7 @@
 
 <template id="snippet_options" inherit_id="website.snippet_options" name="Blog snippet options">
     <xpath expr="." position="inside">
-        <div data-js="BlogPostTagSelection" data-selector=".o_wblog_post_page_cover" data-target="#o_wblog_post_name">
+        <div data-js="BlogPostTagSelection" data-selector=".o_wblog_post_page_cover" data-target="#o_wblog_post_name" data-no-check="true">
             <we-many2many string="Tags"
                 data-no-preview="true"
                 data-model="blog.post"

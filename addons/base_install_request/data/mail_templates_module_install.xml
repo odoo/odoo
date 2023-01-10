@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <template id="base_install_request.base_module_install_review_description">
-        <p>The following apps will be installed:</p>
+        <p t-if="any(app.application for app in apps)">The following apps will be installed:</p>
         <div class="container-fluid">
             <ul class="list-unstyled row">
                 <t t-foreach="apps" t-as="app">

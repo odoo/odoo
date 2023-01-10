@@ -3,20 +3,22 @@
 # 	* google_calendar
 # 
 # Translators:
-# Martin Trigaux, 2019
-# krnkris, 2019
-# gezza <geza.nagy@oregional.hu>, 2019
-# Ákos Nagy <akos.nagy@oregional.hu>, 2019
-# Tibor Kőnig <konig.tibor@evitalit.hu>, 2019
-# Daniel Gerstenbrand <daniel.gerstenbrand@gmail.com>, 2019
+# Zsolt Godó <zsolttokio@gmail.com>, 2022
+# Daniel Gerstenbrand <daniel.gerstenbrand@gmail.com>, 2022
+# Ákos Nagy <akos.nagy@oregional.hu>, 2022
+# gezza <geza.nagy@oregional.hu>, 2022
+# Krisztián Juhász <juhasz.krisztian@josafar.hu>, 2022
+# Tamás Németh <ntomasz81@gmail.com>, 2022
+# Martin Trigaux, 2022
+# krnkris, 2022
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~12.5\n"
+"Project-Id-Version: Odoo Server 16.0beta\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-08-26 08:16+0000\n"
-"PO-Revision-Date: 2019-08-26 09:10+0000\n"
-"Last-Translator: Daniel Gerstenbrand <daniel.gerstenbrand@gmail.com>, 2019\n"
+"POT-Creation-Date: 2022-10-10 10:23+0000\n"
+"PO-Revision-Date: 2022-09-22 05:46+0000\n"
+"Last-Translator: krnkris, 2022\n"
 "Language-Team: Hungarian (https://www.transifex.com/odoo/teams/41243/hu/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -25,54 +27,62 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: google_calendar
-#: model_terms:ir.ui.view,arch_db:google_calendar.res_config_settings_view_form
-msgid "<i class=\"fa fa-fw fa-arrow-right\"/>Tutorial"
-msgstr "<i class=\"fa fa-fw fa-arrow-right\"/>Oktatás"
-
-#. module: google_calendar
-#. openerp-web
-#: code:addons/google_calendar/static/src/js/google_calendar.js:0
+#: code:addons/google_calendar/models/google_sync.py:0
 #, python-format
-msgid "Accounts"
-msgstr "Főkönyvi számlák"
-
-#. module: google_calendar
-#. openerp-web
-#: code:addons/google_calendar/static/src/js/google_calendar.js:0
-#, python-format
-msgid ""
-"All events have been disconnected from your previous account. You can now "
-"restart the synchronization"
+msgid "%(id)s and %(length)s following"
 msgstr ""
-"Mindegyik eseményt lekapcsoltuk az előző fiókjáról. Most újrakezdheti a "
-"szinkronizációt"
+
+#. module: google_calendar
+#: code:addons/google_calendar/models/calendar.py:0
+#, python-format
+msgid "%(reminder_type)s - %(duration)s Days"
+msgstr "%(reminder_type)s - %(duration)s nap"
+
+#. module: google_calendar
+#: code:addons/google_calendar/models/calendar.py:0
+#, python-format
+msgid "%(reminder_type)s - %(duration)s Hours"
+msgstr "%(reminder_type)s - %(duration)s óra"
+
+#. module: google_calendar
+#: code:addons/google_calendar/models/calendar.py:0
+#, python-format
+msgid "%(reminder_type)s - %(duration)s Minutes"
+msgstr "%(reminder_type)s - %(duration)s perc"
+
+#. module: google_calendar
+#: code:addons/google_calendar/models/calendar.py:0
+#, python-format
+msgid "(No title)"
+msgstr "(Nincs cím)"
+
+#. module: google_calendar
+#: model:ir.model.fields,field_description:google_calendar.field_calendar_event__active
+#: model:ir.model.fields,field_description:google_calendar.field_calendar_recurrence__active
+#: model:ir.model.fields,field_description:google_calendar.field_google_calendar_sync__active
+msgid "Active"
+msgstr "Aktív"
 
 #. module: google_calendar
 #. openerp-web
-#: code:addons/google_calendar/static/src/js/google_calendar.js:0
+#: code:addons/google_calendar/static/src/views/google_calendar/google_calendar_controller.js:0
 #, python-format
 msgid ""
 "An administrator needs to configure Google Synchronization before you can "
 "use it!"
 msgstr ""
-"Egy Rendszergazdának kell beállítania a Google Szinkronizációt mielőtt "
+"Egy rendszergazdának kell beállítania a Google Szinkronizációt mielőtt "
 "használni tudná azt!"
 
 #. module: google_calendar
-#. openerp-web
-#: code:addons/google_calendar/static/src/js/google_calendar.js:0
+#: code:addons/google_calendar/models/google_credentials.py:0
 #, python-format
 msgid ""
-"An error occured while disconnecting events from your previous account. "
-"Please retry or contact your administrator."
+"An error occurred while generating the token. Your authorization code may be"
+" invalid or has already expired [%s]. You should check your Client ID and "
+"secret on the Google APIs plateform or try to stop and restart your calendar"
+" synchronisation."
 msgstr ""
-"Hiba történt az esemény előző fiókjáról történt lekapcsolásakor. Kérem "
-"próbálja újra vagy lépjen kapcsolatba a rendszergazdával."
-
-#. module: google_calendar
-#: model_terms:ir.ui.view,arch_db:google_calendar.view_users_form
-msgid "Calendar"
-msgstr "Naptár"
 
 #. module: google_calendar
 #: model:ir.model,name:google_calendar.model_calendar_attendee
@@ -82,12 +92,18 @@ msgstr "Naptár résztvevő információ"
 #. module: google_calendar
 #: model:ir.model,name:google_calendar.model_calendar_event
 msgid "Calendar Event"
-msgstr ""
+msgstr "Naptári esemény"
 
 #. module: google_calendar
+#: model:ir.model.fields,field_description:google_calendar.field_google_calendar_credentials__calendar_cal_id
 #: model:ir.model.fields,field_description:google_calendar.field_res_users__google_calendar_cal_id
 msgid "Calendar ID"
-msgstr "Naptár azonosító ID"
+msgstr "Naptár azonosító"
+
+#. module: google_calendar
+#: model_terms:ir.ui.view,arch_db:google_calendar.google_calendar_reset_account_view_form
+msgid "Cancel"
+msgstr "Mégse"
 
 #. module: google_calendar
 #: model_terms:ir.ui.view,arch_db:google_calendar.res_config_settings_view_form
@@ -112,51 +128,104 @@ msgstr "Ügyfél_kulcs"
 #. module: google_calendar
 #: model:ir.model,name:google_calendar.model_res_config_settings
 msgid "Config Settings"
-msgstr "Konfigurációs beállítások"
+msgstr "Beállítások módosítása"
 
 #. module: google_calendar
 #. openerp-web
-#: code:addons/google_calendar/static/src/js/google_calendar.js:0
-#: code:addons/google_calendar/static/src/js/google_calendar.js:0
+#: code:addons/google_calendar/static/src/views/google_calendar/google_calendar_controller.js:0
+#: code:addons/google_calendar/static/src/views/google_calendar/google_calendar_controller.js:0
 #, python-format
 msgid "Configuration"
 msgstr "Konfiguráció"
 
 #. module: google_calendar
-#: model:ir.model.fields,field_description:google_calendar.field_google_calendar__display_name
+#: model_terms:ir.ui.view,arch_db:google_calendar.google_calendar_reset_account_view_form
+msgid "Confirm"
+msgstr "Megerősítés"
+
+#. module: google_calendar
+#: model:ir.model.fields,field_description:google_calendar.field_google_calendar_account_reset__create_uid
+#: model:ir.model.fields,field_description:google_calendar.field_google_calendar_credentials__create_uid
+msgid "Created by"
+msgstr "Létrehozta"
+
+#. module: google_calendar
+#: model:ir.model.fields,field_description:google_calendar.field_google_calendar_account_reset__create_date
+#: model:ir.model.fields,field_description:google_calendar.field_google_calendar_credentials__create_date
+msgid "Created on"
+msgstr "Létrehozva"
+
+#. module: google_calendar
+#: model:ir.model.fields.selection,name:google_calendar.selection__google_calendar_account_reset__delete_policy__delete_odoo
+msgid "Delete from Odoo"
+msgstr "Törlés az Odoo-ból"
+
+#. module: google_calendar
+#: model:ir.model.fields.selection,name:google_calendar.selection__google_calendar_account_reset__delete_policy__delete_both
+msgid "Delete from both"
+msgstr "Törlés mindkettőből"
+
+#. module: google_calendar
+#: model:ir.model.fields.selection,name:google_calendar.selection__google_calendar_account_reset__delete_policy__delete_google
+msgid "Delete from the current Google Calendar account"
+msgstr ""
+
+#. module: google_calendar
+#: model:ir.model.fields,field_description:google_calendar.field_google_calendar_account_reset__display_name
+#: model:ir.model.fields,field_description:google_calendar.field_google_calendar_credentials__display_name
 msgid "Display Name"
 msgstr "Megjelenített név"
 
 #. module: google_calendar
-#. openerp-web
-#: code:addons/google_calendar/static/src/js/google_calendar.js:0
+#: code:addons/google_calendar/models/calendar.py:0
 #, python-format
-msgid "Do you want to do this now?"
-msgstr "Ezt akarja most csinálni?"
+msgid "Email"
+msgstr "E-mail"
+
+#. module: google_calendar
+#: model:ir.model,name:google_calendar.model_calendar_recurrence
+msgid "Event Recurrence Rule"
+msgstr ""
 
 #. module: google_calendar
 #. openerp-web
-#: code:addons/google_calendar/static/src/js/google_calendar.js:0
+#: code:addons/google_calendar/static/src/views/google_calendar/google_calendar_controller.xml:0
+#: code:addons/google_calendar/static/src/views/google_calendar/google_calendar_controller.xml:0
 #, python-format
-msgid "Event disconnection error"
-msgstr "Esemény szétkapcsolási hiba"
+msgid "Google"
+msgstr "Google"
 
 #. module: google_calendar
-#. openerp-web
-#: code:addons/google_calendar/static/src/js/google_calendar.js:0
-#, python-format
-msgid "Event disconnection success"
-msgstr "Esemény szétkapcsolási visszaállt"
-
-#. module: google_calendar
-#: model:ir.model,name:google_calendar.model_google_calendar
+#: model_terms:ir.ui.view,arch_db:google_calendar.view_users_form
 msgid "Google Calendar"
-msgstr "Google naptár"
+msgstr "Google Naptár"
 
 #. module: google_calendar
-#: model:ir.model.fields,field_description:google_calendar.field_calendar_attendee__google_internal_event_id
+#: model:ir.model.fields,field_description:google_calendar.field_res_users__google_calendar_account_id
+msgid "Google Calendar Account"
+msgstr ""
+
+#. module: google_calendar
+#: model:ir.model,name:google_calendar.model_google_calendar_credentials
+msgid "Google Calendar Account Data"
+msgstr ""
+
+#. module: google_calendar
+#: model:ir.actions.act_window,name:google_calendar.google_calendar_reset_account_action
+#: model:ir.model,name:google_calendar.model_google_calendar_account_reset
+msgid "Google Calendar Account Reset"
+msgstr ""
+
+#. module: google_calendar
+#: model:ir.model.fields,field_description:google_calendar.field_calendar_event__google_id
 msgid "Google Calendar Event Id"
-msgstr "Google naptár rendezvény azonosító Id"
+msgstr "Google Naptár esemény azonosító"
+
+#. module: google_calendar
+#: model:ir.model.fields,field_description:google_calendar.field_calendar_recurrence__google_id
+#: model:ir.model.fields,field_description:google_calendar.field_google_calendar_sync__google_id
+msgid "Google Calendar Id"
+msgstr "Google Naptár azonosító"
 
 #. module: google_calendar
 #: model:ir.actions.server,name:google_calendar.ir_cron_sync_all_cals_ir_actions_server
@@ -166,39 +235,34 @@ msgid "Google Calendar: synchronization"
 msgstr "Google Naptár: szinkronizálás"
 
 #. module: google_calendar
-#: model:ir.model.constraint,message:google_calendar.constraint_calendar_attendee_google_id_uniq
-msgid "Google ID should be unique!"
-msgstr "Google azonosító ID egyedinek kell lennie!"
-
-#. module: google_calendar
-#: code:addons/google_calendar/models/google_calendar.py:0
-#, python-format
-msgid ""
-"Google is lost... the next synchro will be a full synchro. \n"
-"\n"
-" %s"
+#: model:ir.model.fields,field_description:google_calendar.field_google_calendar_credentials__synchronization_stopped
+#: model:ir.model.fields,field_description:google_calendar.field_res_users__google_synchronization_stopped
+msgid "Google Synchronization stopped"
 msgstr ""
-"Google összezavart... a következő szinkronizáció egy teljes szinkronizáció lesz. \n"
-"\n"
-" %s"
 
 #. module: google_calendar
-#: model:ir.model.fields,field_description:google_calendar.field_google_calendar__id
+#: code:addons/google_calendar/models/google_sync.py:0
+#, python-format
+msgid "Google gave the following explanation: %s"
+msgstr ""
+
+#. module: google_calendar
+#: model:ir.model.fields,field_description:google_calendar.field_google_calendar_account_reset__id
+#: model:ir.model.fields,field_description:google_calendar.field_google_calendar_credentials__id
 msgid "ID"
 msgstr "Azonosító"
 
 #. module: google_calendar
-#. openerp-web
-#: code:addons/google_calendar/static/src/js/google_calendar.js:0
-#, python-format
+#: model:ir.model.fields,help:google_calendar.field_calendar_event__active
 msgid ""
-"In order to do this, you first need to disconnect all existing events from "
-"the old account."
+"If the active field is set to false, it will allow you to hide the event "
+"alarm information without removing it."
 msgstr ""
-"Ahhoz, hogy ezt megtegye, elöször mindegyik eseményt le kell kapcsolnia a "
-"régi fiókjáról."
+"Ha egy aktív mező hamisra állított, akkor lehetővé teszi az esemény riasztás"
+" információ eltüntetését annak törlése nélkül."
 
 #. module: google_calendar
+#: model:ir.model.fields,help:google_calendar.field_google_calendar_credentials__calendar_cal_id
 #: model:ir.model.fields,help:google_calendar.field_res_users__google_calendar_cal_id
 msgid ""
 "Last Calendar ID who has been synchronized. If it is changed, we remove all "
@@ -208,47 +272,93 @@ msgstr ""
 "összes GoogleID és Odoo Google belső azonosító ID kapcsolatokat"
 
 #. module: google_calendar
-#: model:ir.model.fields,field_description:google_calendar.field_google_calendar____last_update
+#: model:ir.model.fields,field_description:google_calendar.field_google_calendar_account_reset____last_update
+#: model:ir.model.fields,field_description:google_calendar.field_google_calendar_credentials____last_update
 msgid "Last Modified on"
 msgstr "Legutóbb frissítve"
 
 #. module: google_calendar
-#: model:ir.model.fields,field_description:google_calendar.field_res_users__google_calendar_last_sync_date
-msgid "Last synchro date"
-msgstr "Utolsó szinkronizáció dátuma"
+#: model:ir.model.fields,field_description:google_calendar.field_google_calendar_account_reset__write_uid
+#: model:ir.model.fields,field_description:google_calendar.field_google_calendar_credentials__write_uid
+msgid "Last Updated by"
+msgstr "Frissítette"
 
 #. module: google_calendar
-#: model:ir.model.fields,field_description:google_calendar.field_calendar_attendee__oe_synchro_date
-msgid "Odoo Synchro Date"
-msgstr "Odoo rendszer szinkronizáció dátuma"
+#: model:ir.model.fields,field_description:google_calendar.field_google_calendar_account_reset__write_date
+#: model:ir.model.fields,field_description:google_calendar.field_google_calendar_credentials__write_date
+msgid "Last Updated on"
+msgstr "Frissítve ekkor"
 
 #. module: google_calendar
-#: model:ir.model.fields,field_description:google_calendar.field_calendar_event__oe_update_date
-msgid "Odoo Update Date"
-msgstr "Odoo rendszer frissítés dátuma"
+#: model:ir.model.fields.selection,name:google_calendar.selection__google_calendar_account_reset__delete_policy__dont_delete
+msgid "Leave them untouched"
+msgstr "Hagyja őket érintetlenül"
 
 #. module: google_calendar
-#. openerp-web
-#: code:addons/google_calendar/static/src/js/google_calendar.js:0
+#: model:ir.model.fields,field_description:google_calendar.field_calendar_event__need_sync
+#: model:ir.model.fields,field_description:google_calendar.field_calendar_recurrence__need_sync
+#: model:ir.model.fields,field_description:google_calendar.field_google_calendar_sync__need_sync
+msgid "Need Sync"
+msgstr ""
+
+#. module: google_calendar
+#: model:ir.model.fields,field_description:google_calendar.field_google_calendar_credentials__calendar_sync_token
+#: model:ir.model.fields,field_description:google_calendar.field_res_users__google_calendar_sync_token
+msgid "Next Sync Token"
+msgstr ""
+
+#. module: google_calendar
+#: model:ir.model.fields,field_description:google_calendar.field_google_calendar_account_reset__sync_policy
+msgid "Next Synchronization"
+msgstr "Következő szinkronizáció"
+
+#. module: google_calendar
+#: code:addons/google_calendar/models/calendar.py:0
 #, python-format
-msgid "Redirection"
-msgstr "Átirányítás"
+msgid "Notification"
+msgstr "Értesítés"
 
 #. module: google_calendar
+#: model:ir.model.fields,field_description:google_calendar.field_google_calendar_credentials__calendar_rtoken
 #: model:ir.model.fields,field_description:google_calendar.field_res_users__google_calendar_rtoken
 msgid "Refresh Token"
 msgstr "Token frissítés"
 
 #. module: google_calendar
-#. openerp-web
-#: code:addons/google_calendar/static/src/js/google_calendar.js:0
-#, python-format
-msgid "Sync with <b>Google</b>"
-msgstr "Szinkr. ezzel <b>Google</b>"
+#: model_terms:ir.ui.view,arch_db:google_calendar.view_users_form
+msgid "Reset Account"
+msgstr ""
+
+#. module: google_calendar
+#: model_terms:ir.ui.view,arch_db:google_calendar.google_calendar_reset_account_view_form
+msgid "Reset Google Calendar Account"
+msgstr ""
 
 #. module: google_calendar
 #. openerp-web
-#: code:addons/google_calendar/static/src/js/google_calendar.js:0
+#: code:addons/google_calendar/static/src/views/google_calendar/google_calendar_controller.js:0
+#, python-format
+msgid "Success"
+msgstr "Siker"
+
+#. module: google_calendar
+#: model:ir.model,name:google_calendar.model_google_calendar_sync
+msgid "Synchronize a record with Google Calendar"
+msgstr ""
+
+#. module: google_calendar
+#: model:ir.model.fields.selection,name:google_calendar.selection__google_calendar_account_reset__sync_policy__all
+msgid "Synchronize all existing events"
+msgstr "Minden létező esemény szinkronizálása"
+
+#. module: google_calendar
+#: model:ir.model.fields.selection,name:google_calendar.selection__google_calendar_account_reset__sync_policy__new
+msgid "Synchronize only new events"
+msgstr "Csak az új események szinkronizálása"
+
+#. module: google_calendar
+#. openerp-web
+#: code:addons/google_calendar/static/src/views/google_calendar/google_calendar_controller.js:0
 #, python-format
 msgid ""
 "The Google Synchronization needs to be configured before you can use it, do "
@@ -258,46 +368,79 @@ msgstr ""
 "tenni most?"
 
 #. module: google_calendar
-#. openerp-web
-#: code:addons/google_calendar/static/src/js/google_calendar.js:0
+#: code:addons/google_calendar/models/google_credentials.py:0
 #, python-format
-msgid ""
-"The account you are trying to synchronize (%s) is not the same as the last "
-"one used (%s)!"
+msgid "The account for the Google Calendar service is not configured."
 msgstr ""
-"A szinkronizálni kívánt fiók (%s) az nem ugyanaz mint amit legutóbb használt"
-" (%s)!"
 
 #. module: google_calendar
+#: code:addons/google_calendar/models/google_sync.py:0
+#, python-format
+msgid ""
+"The following event could not be synced with Google Calendar. </br>It will "
+"not be synced as long at it is not updated.</br>%(reason)s"
+msgstr ""
+
+#. module: google_calendar
+#. openerp-web
+#: code:addons/google_calendar/static/src/views/google_calendar/google_calendar_controller.js:0
+#, python-format
+msgid "The synchronization with Google calendar was successfully stopped."
+msgstr ""
+
+#. module: google_calendar
+#: model:ir.model.constraint,message:google_calendar.constraint_res_users_google_token_uniq
+msgid "The user has already a google account"
+msgstr ""
+
+#. module: google_calendar
+#: model:ir.model.fields,help:google_calendar.field_google_calendar_account_reset__delete_policy
+msgid "This will only affect events for which the user is the owner"
+msgstr ""
+
+#. module: google_calendar
+#: model:ir.model.fields,field_description:google_calendar.field_google_calendar_credentials__calendar_token_validity
 #: model:ir.model.fields,field_description:google_calendar.field_res_users__google_calendar_token_validity
 msgid "Token Validity"
 msgstr "Token érvényesség"
 
 #. module: google_calendar
-#: model:ir.model.fields,field_description:google_calendar.field_res_config_settings__server_uri
-msgid "URI for tuto"
-msgstr "URI elérési út az oktatáshoz"
+#: model:ir.model,name:google_calendar.model_res_users
+#: model:ir.model.fields,field_description:google_calendar.field_google_calendar_account_reset__user_id
+#: model:ir.model.fields,field_description:google_calendar.field_google_calendar_credentials__user_ids
+msgid "User"
+msgstr "Felhasználó"
 
 #. module: google_calendar
+#: model:ir.model.fields,field_description:google_calendar.field_google_calendar_credentials__calendar_token
 #: model:ir.model.fields,field_description:google_calendar.field_res_users__google_calendar_token
 msgid "User token"
 msgstr "Felhasználói token"
 
 #. module: google_calendar
-#: model:ir.model,name:google_calendar.model_res_users
-msgid "Users"
-msgstr "Felhasználók"
+#: model:ir.model.fields,field_description:google_calendar.field_google_calendar_account_reset__delete_policy
+msgid "User's Existing Events"
+msgstr ""
 
 #. module: google_calendar
 #. openerp-web
-#: code:addons/google_calendar/static/src/js/google_calendar.js:0
+#: code:addons/google_calendar/static/src/views/google_calendar/google_calendar_controller.js:0
 #, python-format
-msgid "You will be redirected to Google to authorize access to your calendar!"
+msgid ""
+"You are about to stop the synchronization of your calendar with Google. Are "
+"you sure you want to continue?"
 msgstr ""
-"Át lesz irányítva a Google-ra, hogy a naptár eléréshez jogosultságot kapjon!"
 
 #. module: google_calendar
-#: code:addons/google_calendar/models/google_calendar.py:0
+#: code:addons/google_calendar/models/google_sync.py:0
+#: code:addons/google_calendar/models/google_sync.py:0
 #, python-format
-msgid "Your token is invalid or has been revoked !"
-msgstr "Tokenje nem érvényes vagy visszavont !"
+msgid "undefined time"
+msgstr ""
+
+#. module: google_calendar
+#: code:addons/google_calendar/models/google_sync.py:0
+#, python-format
+msgid ""
+"you don't seem to have permission to modify this event on Google Calendar"
+msgstr ""

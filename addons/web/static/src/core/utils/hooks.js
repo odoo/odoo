@@ -164,14 +164,20 @@ export function useListener(eventName, querySelector, handler, options = {}) {
 // -----------------------------------------------------------------------------
 // useService
 // -----------------------------------------------------------------------------
-
 function _protectMethod(component, fn) {
-    return async function (...args) {
+    return function (...args) {
         if (status(component) === "destroyed") {
-            throw new Error("Component is destroyed");
+            return Promise.reject(new Error("Component is destroyed"));
         }
-        const result = await fn.call(this, ...args);
-        return status(component) === "destroyed" ? new Promise(() => {}) : result;
+
+        const prom = Promise.resolve(fn.call(this, ...args));
+        const protectedProm = prom.then((result) =>
+            status(component) === "destroyed" ? new Promise(() => {}) : result
+        );
+        return Object.assign(protectedProm, {
+            abort: prom.abort,
+            cancel: prom.cancel,
+        });
     };
 }
 

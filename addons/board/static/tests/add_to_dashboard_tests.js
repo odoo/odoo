@@ -1,6 +1,6 @@
 /** @odoo-module **/
 
-import { AddToBoard } from "@board/add_to_board/add_to_board";
+import { addToBoardItem } from "@board/add_to_board/add_to_board";
 import {
     click,
     getFixture,
@@ -84,11 +84,7 @@ QUnit.module("Board", (hooks) => {
         LegacyFavoriteMenu.registry.add("add-to-board-menu", LegacyAddToBoard, 10);
         favoriteMenuRegistry.add(
             "add-to-board",
-            {
-                Component: AddToBoard,
-                groupNumber: 4,
-                isDisplayed: ({ config }) => config.actionType === "ir.actions.act_window",
-            },
+            addToBoardItem,
             { sequence: 10 }
         );
         serverData = { models };
@@ -279,6 +275,36 @@ QUnit.module("Board", (hooks) => {
         );
         // add
         await testUtils.dom.click(target.querySelector(".o_add_to_board .dropdown-menu button"));
+    });
+
+    QUnit.test("add to dashboard with no action id", async function (assert) {
+        assert.expect(2);
+
+        serverData.views = {
+            "partner,false,pivot": '<pivot><field name="foo"/></pivot>',
+            "partner,false,search": '<search/>',
+        };
+        registry.category("services").add("user", makeFakeUserService());
+        const webClient = await createWebClient({ serverData });
+
+        await doAction(webClient, {
+            id: false,
+            res_model: "partner",
+            type: "ir.actions.act_window",
+            views: [[false, "pivot"]],
+        });
+        await toggleFavoriteMenu(target);
+        assert.containsNone(target, ".o_add_to_board");
+
+        // Sanity check
+        await doAction(webClient, {
+            id: 1,
+            res_model: "partner",
+            type: "ir.actions.act_window",
+            views: [[false, "pivot"]],
+        });
+        await toggleFavoriteMenu(target);
+        assert.containsOnce(target, ".o_add_to_board");
     });
 
     QUnit.test(

@@ -85,6 +85,10 @@
     ],
     'application': True,
     'assets': {
+        'mass_mailing.mailing_assets': [
+            'mass_mailing/static/src/scss/mailing_portal.scss',
+            'mass_mailing/static/src/js/mailing_portal.js',
+        ],
         'web.assets_backend': [
             'mass_mailing/static/src/scss/mailing_filter_widget.scss',
             'mass_mailing/static/src/scss/mass_mailing.scss',
@@ -98,7 +102,6 @@
             'mass_mailing/static/src/js/mass_mailing_mobile_preview.js',
             'mass_mailing/static/src/js/mass_mailing_html_field.js',
             'mass_mailing/static/src/js/mailing_mailing_view_form_full_width.js',
-            'mass_mailing/static/src/js/mailing_portal.js',
             'mass_mailing/static/src/xml/mailing_filter_widget.xml',
             'mass_mailing/static/src/xml/mass_mailing.xml',
             'mass_mailing/static/src/views/*.xml',

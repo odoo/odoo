@@ -18,17 +18,17 @@
 # Milan Tribuson <one.mile.code@gmail.com>, 2022
 # KRISTINA PALAŠ <kristina.palas@storm.hr>, 2022
 # Tina Milas, 2022
-# Bole <bole@dajmi5.com>, 2022
 # 0ba0ac30481a756f36528ba6f9a4317e_6443a87 <52eefe24349934c364624ef40611b7a3_1010754>, 2022
 # Matej Mijoč, 2022
+# Bole <bole@dajmi5.com>, 2022
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 16.0beta\n"
+"Project-Id-Version: Odoo Server 16.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-10-10 10:22+0000\n"
+"POT-Creation-Date: 2022-12-15 12:49+0000\n"
 "PO-Revision-Date: 2022-09-22 05:46+0000\n"
-"Last-Translator: Matej Mijoč, 2022\n"
+"Last-Translator: Bole <bole@dajmi5.com>, 2022\n"
 "Language-Team: Croatian (https://www.transifex.com/odoo/teams/41243/hr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -43,12 +43,14 @@ msgid "# emails to send"
 msgstr "# e-mailova za slanje"
 
 #. module: hr
+#. odoo-python
 #: code:addons/hr/wizard/hr_plan_wizard.py:0
 #, python-format
 msgid "%(activity)s, assigned to %(name)s, due on the %(deadline)s"
 msgstr ""
 
 #. module: hr
+#. odoo-python
 #: code:addons/hr/models/hr_job.py:0
 #, python-format
 msgid "%s (copy)"
@@ -120,6 +122,7 @@ msgid "4 Days after Interview"
 msgstr ""
 
 #. module: hr
+#. odoo-python
 #: code:addons/hr/models/hr_employee.py:0
 #, python-format
 msgid ""
@@ -163,7 +166,7 @@ msgstr ""
 msgid ""
 "<small role=\"img\" class=\"fa fa-fw fa-circle-o text-muted o_button_icon "
 "hr_presence align-middle\" attrs=\"{'invisible': [('hr_icon_display', '!=', "
-"'present_absent')]}\" aria-label=\"Absent\" title=\"Absent\" "
+"'presence_absent')]}\" aria-label=\"Absent\" title=\"Absent\" "
 "name=\"presence_absent\"/>"
 msgstr ""
 
@@ -246,7 +249,7 @@ msgstr ""
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.hr_department_view_kanban
 msgid "<span class=\"fw-bolder\">Reporting</span>"
-msgstr ""
+msgstr "<span class=\"fw-bolder\">Izvještavanje</span>"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.hr_departure_wizard_view_form
@@ -301,7 +304,7 @@ msgstr "<span class=\"o_stat_text\">Zaposlenik/ici</span>"
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_hr_job_form
 msgid "<span class=\"ps-1\">new Employees</span>"
-msgstr ""
+msgstr "<span class=\"ps-1\">novi djelatnici</span>"
 
 #. module: hr
 #: model_terms:hr.job,job_details:hr.job_ceo
@@ -453,12 +456,12 @@ msgstr "Dodaj novog zaposlenika"
 #. module: hr
 #: model_terms:ir.actions.act_window,help:hr.hr_plan_action
 msgid "Add a new plan"
-msgstr ""
+msgstr "Dodaj novi plan"
 
 #. module: hr
 #: model_terms:ir.actions.act_window,help:hr.hr_plan_activity_type_action
 msgid "Add a new plan activity"
-msgstr ""
+msgstr "Dodaj novu aktivnost"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_departure_wizard__departure_description
@@ -757,10 +760,10 @@ msgid "Change my Preferences"
 msgstr "Promijeni moje postavke"
 
 #. module: hr
-#: model_terms:ir.ui.view,arch_db:hr.hr_employee_public_view_form
-#: model_terms:ir.ui.view,arch_db:hr.hr_employee_public_view_kanban
-#: model_terms:ir.ui.view,arch_db:hr.hr_kanban_view_employees
-#: model_terms:ir.ui.view,arch_db:hr.view_employee_form
+#. odoo-javascript
+#: code:addons/hr/static/src/components/employee_chat/employee_chat.xml:0
+#: code:addons/hr/static/src/components/employee_chat/employee_chat.xml:0
+#, python-format
 msgid "Chat"
 msgstr "Chat"
 
@@ -800,6 +803,7 @@ msgid "Coach"
 msgstr "Trener"
 
 #. module: hr
+#. odoo-python
 #: code:addons/hr/models/hr_plan_activity_type.py:0
 #, python-format
 msgid "Coach of employee %s is not set."
@@ -838,7 +842,7 @@ msgstr "Tvrtka"
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__company_country_id
 msgid "Company Country"
-msgstr ""
+msgstr "Država tvrtke"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.print_employee_badge
@@ -942,6 +946,7 @@ msgid "Create Employee"
 msgstr "Kreiraj djelatnika"
 
 #. module: hr
+#. odoo-python
 #: code:addons/hr/models/hr_employee.py:0
 #: model:ir.actions.server,name:hr.action_hr_employee_create_user
 #, python-format
@@ -1024,6 +1029,7 @@ msgid "Date of Birth"
 msgstr "Datum rođenja"
 
 #. module: hr
+#. odoo-python
 #: code:addons/hr/models/hr_departure_reason.py:0
 #, python-format
 msgid "Default departure reasons cannot be deleted."
@@ -1154,7 +1160,7 @@ msgstr "Doktor"
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__driving_license
 msgid "Driving License"
-msgstr ""
+msgstr "Vozačka dozvola"
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_ceo
@@ -1251,7 +1257,7 @@ msgstr "Slika zaposlenika"
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_res_users__private_lang
 msgid "Employee Lang"
-msgstr ""
+msgstr "Jezik djelatnika"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__name
@@ -1267,7 +1273,7 @@ msgid "Employee Tags"
 msgstr "Oznake zaposlenika"
 
 #. module: hr
-#. openerp-web
+#. odoo-javascript
 #: code:addons/hr/static/src/views/archive_employee_hook.js:0
 #, python-format
 msgid "Employee Termination"
@@ -1348,7 +1354,7 @@ msgstr "Zaposlenici"
 #: model:ir.model.fields,field_description:hr.field_res_partner__employees_count
 #: model:ir.model.fields,field_description:hr.field_res_users__employees_count
 msgid "Employees Count"
-msgstr ""
+msgstr "Broj djelatnika"
 
 #. module: hr
 #: model:ir.actions.act_window,name:hr.open_view_employee_tree
@@ -1424,7 +1430,7 @@ msgstr "Iskusan developer"
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
 msgid "Family Status"
-msgstr ""
+msgstr "Obiteljski status"
 
 #. module: hr
 #: model:ir.model.fields.selection,name:hr.selection__hr_employee__gender__female
@@ -1462,6 +1468,7 @@ msgid "Font awesome icon e.g. fa-tasks"
 msgstr "Font awesome ikona npr. fa-tasks"
 
 #. module: hr
+#. odoo-python
 #: code:addons/hr/models/mail_channel.py:0
 #, python-format
 msgid ""
@@ -1545,7 +1552,6 @@ msgstr "Odjeli"
 #. module: hr
 #: model:ir.actions.server,name:hr.ir_cron_data_check_work_permit_validity_ir_actions_server
 #: model:ir.cron,cron_name:hr.ir_cron_data_check_work_permit_validity
-#: model:ir.cron,name:hr.ir_cron_data_check_work_permit_validity
 msgid "HR Employee: check work permit validity"
 msgstr ""
 
@@ -1714,6 +1720,7 @@ msgid "Image 512"
 msgstr "Slika 512"
 
 #. module: hr
+#. odoo-python
 #: code:addons/hr/models/hr_employee.py:0
 #, python-format
 msgid "Import Template for Employees"
@@ -1769,7 +1776,7 @@ msgstr "Poslovne pozicije"
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_hr_job_form
 msgid "Job Summary"
-msgstr ""
+msgstr "Sažetak posla"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__job_title
@@ -1876,6 +1883,7 @@ msgid "Launch Plan"
 msgstr "Plan pokretanja"
 
 #. module: hr
+#. odoo-python
 #: code:addons/hr/wizard/hr_plan_wizard.py:0
 #, python-format
 msgid "Launch Plans"
@@ -1939,6 +1947,7 @@ msgid "Manager"
 msgstr "Voditelj"
 
 #. module: hr
+#. odoo-python
 #: code:addons/hr/models/hr_plan_activity_type.py:0
 #, python-format
 msgid "Manager of employee %s is not set."
@@ -2033,10 +2042,10 @@ msgstr "Rok za moju aktivnost"
 #: model_terms:ir.ui.view,arch_db:hr.hr_employee_public_view_search
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_filter
 msgid "My Department"
-msgstr ""
+msgstr "Moj odjel"
 
 #. module: hr
-#. openerp-web
+#. odoo-javascript
 #: code:addons/hr/static/src/user_menu/my_profile.js:0
 #, python-format
 msgid "My Profile"
@@ -2117,6 +2126,7 @@ msgstr ""
 "radnog vremena"
 
 #. module: hr
+#. odoo-python
 #: code:addons/hr/models/hr_plan_activity_type.py:0
 #, python-format
 msgid "No specific user given on activity %s."
@@ -2242,6 +2252,7 @@ msgid "On/Offboarding Plans"
 msgstr ""
 
 #. module: hr
+#. odoo-python
 #: code:addons/hr/models/hr_employee_base.py:0
 #, python-format
 msgid "Operation not supported"
@@ -2389,12 +2400,12 @@ msgstr "Plan"
 #. module: hr
 #: model:ir.actions.act_window,name:hr.hr_plan_activity_type_action
 msgid "Plan Activities"
-msgstr ""
+msgstr "Aktivnosti plana"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.hr_plan_view_form
 msgid "Plan Name"
-msgstr ""
+msgstr "Naziv plana"
 
 #. module: hr
 #: model:ir.model,name:hr.model_hr_plan_wizard
@@ -2421,7 +2432,7 @@ msgstr "Planovi"
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_department__plans_count
 msgid "Plans Count"
-msgstr ""
+msgstr "Broj planova"
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_ceo
@@ -2583,6 +2594,7 @@ msgid "Recruitment"
 msgstr "Regrutiranje"
 
 #. module: hr
+#. odoo-python
 #: code:addons/hr/models/hr_employee.py:0
 #: model:ir.actions.act_window,name:hr.hr_departure_wizard_action
 #, python-format
@@ -2597,13 +2609,14 @@ msgid "Related Contact"
 msgstr ""
 
 #. module: hr
+#. odoo-python
 #: code:addons/hr/models/hr_employee_base.py:0
-#: model_terms:ir.ui.view,arch_db:hr.view_employee_form_smartbutton
 #, python-format
 msgid "Related Contacts"
 msgstr ""
 
 #. module: hr
+#. odoo-python
 #: code:addons/hr/models/res_partner.py:0
 #, python-format
 msgid "Related Employees"
@@ -2921,7 +2934,7 @@ msgstr ""
 #. module: hr
 #: model:hr.contract.type,name:hr.contract_type_temporary
 msgid "Temporary"
-msgstr ""
+msgstr "Privremeno"
 
 #. module: hr
 #: model:ir.model.constraint,message:hr.constraint_hr_employee_barcode_uniq
@@ -2941,12 +2954,14 @@ msgstr ""
 "Možete koristiti za brzo pretraživanje."
 
 #. module: hr
+#. odoo-python
 #: code:addons/hr/models/hr_employee.py:0
 #, python-format
 msgid "The PIN must be a sequence of digits."
 msgstr "PIN mora biti slijed znamenki."
 
 #. module: hr
+#. odoo-python
 #: code:addons/hr/models/hr_plan_activity_type.py:0
 #, python-format
 msgid "The employee %s should be linked to a user."
@@ -2971,6 +2986,7 @@ msgid ""
 msgstr ""
 
 #. module: hr
+#. odoo-python
 #: code:addons/hr/wizard/hr_plan_wizard.py:0
 #, python-format
 msgid "The employees should belong to the same company."
@@ -2982,6 +2998,7 @@ msgid "The expected number of new employees must be positive."
 msgstr ""
 
 #. module: hr
+#. odoo-python
 #: code:addons/hr/models/hr_employee.py:0
 #, python-format
 msgid ""
@@ -2992,6 +3009,7 @@ msgstr ""
 "zaposlenika."
 
 #. module: hr
+#. odoo-python
 #: code:addons/hr/models/hr_plan_activity_type.py:0
 #, python-format
 msgid "The manager of %s should be linked to a user."
@@ -3004,12 +3022,14 @@ msgstr ""
 "Nazivi radnih mjesta moraju biti jedinstveni po svakom odjelu u tvrtki"
 
 #. module: hr
+#. odoo-python
 #: code:addons/hr/wizard/hr_plan_wizard.py:0
 #, python-format
 msgid "The plan %s cannot be launched: <br><ul>"
 msgstr ""
 
 #. module: hr
+#. odoo-python
 #: code:addons/hr/wizard/hr_plan_wizard.py:0
 #, python-format
 msgid "The plan %s has been started"
@@ -3030,16 +3050,18 @@ msgstr ""
 "izvješćima."
 
 #. module: hr
+#. odoo-python
 #: code:addons/hr/models/hr_employee.py:0
 #, python-format
 msgid "The work permit of %(employee)s expires at %(date)s."
 msgstr ""
 
 #. module: hr
+#. odoo-python
 #: code:addons/hr/models/hr_employee.py:0
 #, python-format
 msgid "This employee already has an user."
-msgstr ""
+msgstr "Ovaj djelatnik već ima korisnika."
 
 #. module: hr
 #: model:ir.model.fields,help:hr.field_hr_employee__tz
@@ -3067,6 +3089,7 @@ msgid "To Define"
 msgstr "Definirati"
 
 #. module: hr
+#. odoo-python
 #: code:addons/hr/models/hr_employee.py:0
 #, python-format
 msgid ""
@@ -3145,6 +3168,7 @@ msgid "User"
 msgstr "Korisnik"
 
 #. module: hr
+#. odoo-python
 #: code:addons/hr/models/hr_plan_activity_type.py:0
 #, python-format
 msgid "User of coach of employee %s is not set."
@@ -3191,6 +3215,7 @@ msgid "Visa No"
 msgstr "Broj vize"
 
 #. module: hr
+#. odoo-python
 #: code:addons/hr/models/hr_employee.py:0
 #: model:ir.model.fields,field_description:hr.field_hr_plan_wizard__warning
 #, python-format
@@ -3368,6 +3393,7 @@ msgid "Working Hours"
 msgstr "Radni sati"
 
 #. module: hr
+#. odoo-python
 #: code:addons/hr/models/res_users.py:0
 #, python-format
 msgid ""
@@ -3378,7 +3404,7 @@ msgstr ""
 "odjela za ljudske resurse kako bi ste izmijenili ostale informacije."
 
 #. module: hr
-#. openerp-web
+#. odoo-javascript
 #: code:addons/hr/static/src/models/employee.js:0
 #, python-format
 msgid "You can only chat with employees that have a dedicated user."
@@ -3387,18 +3413,21 @@ msgstr ""
 "korisnika."
 
 #. module: hr
+#. odoo-python
 #: code:addons/hr/models/hr_department.py:0
 #, python-format
 msgid "You cannot create recursive departments."
 msgstr "Ne možete stvoriti rekurzivne odjele."
 
 #. module: hr
+#. odoo-python
 #: code:addons/hr/models/hr_employee.py:0
 #, python-format
 msgid "You do not have access to this document."
 msgstr ""
 
 #. module: hr
+#. odoo-python
 #: code:addons/hr/models/res_config_settings.py:0
 #, python-format
 msgid "You should select at least one Advanced Presence Control option."
@@ -3410,6 +3439,7 @@ msgid "ZIP"
 msgstr "Poštanski broj"
 
 #. module: hr
+#. odoo-python
 #: code:addons/hr/models/mail_alias.py:0
 #, python-format
 msgid "addresses linked to registered employees"
@@ -3441,6 +3471,7 @@ msgid "plan"
 msgstr "plan"
 
 #. module: hr
+#. odoo-python
 #: code:addons/hr/models/models.py:0
 #, python-format
 msgid "restricted to employees"

@@ -14,6 +14,7 @@ class TestTranslationImportModel1(models.Model):
     xml = fields.Text('XML', translate=xml_translate)
 
     def get_code_translation(self):
+        _('slot')  # a code translation for both python and js(static/src/xml/js_template.xml)
         return _('Code, English')
 
     def get_code_lazy_translation(self):

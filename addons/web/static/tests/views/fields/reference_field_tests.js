@@ -66,6 +66,10 @@ QUnit.module("Fields", (hooks) => {
                                 ["partner", "Partner"],
                             ],
                         },
+                        reference_char: {
+                            string: "Reference Field (Char)",
+                            type: "char",
+                        },
                         model_id: { string: "Model", type: "many2one", relation: "ir.model" },
                     },
                     records: [
@@ -497,6 +501,42 @@ QUnit.module("Fields", (hooks) => {
             "gold",
             "should contain a link with the new value"
         );
+    });
+
+    QUnit.test("computed reference field changed by onchange to 'False,0' value", async function (assert) {
+        assert.expect(1);
+
+        serverData.models.partner.onchanges = {
+            bar(obj) {
+                if (!obj.bar) {
+                    obj.reference_char = "False,0";
+                }
+            },
+        };
+        await makeView({
+            type: "form",
+            resModel: "partner",
+            serverData,
+            arch: `
+                <form>
+                    <field name="bar"/>
+                    <field name="reference_char" widget="reference"/>
+                </form>`,
+            mockRPC(route, { args, method }) {
+                if (method === "create") {
+                    assert.deepEqual(args[0], {
+                        bar: false,
+                        reference_char: "False,0",
+                    });
+                }
+            },
+        });
+
+        // trigger the onchange to set a value for the reference field
+        await click(target, ".o_field_boolean input");
+
+        // save
+        await clickSave(target);
     });
 
     QUnit.test("interact with reference field changed by onchange", async function (assert) {

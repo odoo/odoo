@@ -346,7 +346,7 @@ class HrExpense(models.Model):
 
         product = self.env['product.product'].search([('can_be_expensed', '=', True)])
         if product:
-            product = product.filtered(lambda p: p.default_code == "EXP_GEN") or product[0]
+            product = product.filtered(lambda p: p.default_code == "EXP_GEN")[:1] or product[0]
         else:
             raise UserError(_("You need to have at least one category that can be expensed in your database to proceed!"))
 
@@ -681,6 +681,9 @@ Or send your receipts at <a href="mailto:%(email)s?subject=Lunch%%20with%%20cust
             ('user_id.email', 'ilike', email_address)
         ], limit=1)
 
+        if not employee:
+            return super().message_new(msg_dict, custom_values=custom_values)
+
         expense_description = msg_dict.get('subject', '')
 
         if employee.user_id:
@@ -743,15 +746,16 @@ Or send your receipts at <a href="mailto:%(email)s?subject=Lunch%%20with%%20cust
         symbols_pattern = '|'.join(symbols)
         price_pattern = "((%s)?\s?%s\s?(%s)?)" % (symbols_pattern, float_pattern, symbols_pattern)
         matches = re.findall(price_pattern, expense_description)
+        currency = currencies and currencies[0]
         if matches:
             match = max(matches, key=lambda match: len([group for group in match if group])) # get the longuest match. e.g. "2 chairs 120$" -> the price is 120$, not 2
             full_str = match[0]
             currency_str = match[1] or match[3]
             price = match[2].replace(',', '.')
 
-            if currency_str:
-                currency = currencies.filtered(lambda c: currency_str in [c.symbol, c.name])[0]
-                currency = currency or currencies[0]
+            if currency_str and currencies:
+                currencies = currencies.filtered(lambda c: currency_str in [c.symbol, c.name])
+                currency = (currencies and currencies[0]) or currency
             expense_description = expense_description.replace(full_str, ' ') # remove price from description
             expense_description = re.sub(' +', ' ', expense_description.strip())
 
@@ -1142,12 +1146,21 @@ class HrExpenseSheet(models.Model):
     def approve_expense_sheets(self):
         self._check_can_approve()
 
+        self._validate_analytic_distribution()
         duplicates = self.expense_line_ids.duplicate_expense_ids.filtered(lambda exp: exp.state in ['approved', 'done'])
         if duplicates:
             action = self.env["ir.actions.act_window"]._for_xml_id('hr_expense.hr_expense_approve_duplicate_action')
             action['context'] = {'default_sheet_ids': self.ids, 'default_expense_ids': duplicates.ids}
             return action
         self._do_approve()
+
+    def _validate_analytic_distribution(self):
+        for line in self.expense_line_ids:
+            line._validate_distribution(**{
+                'account': line.account_id.id,
+                'business_domain': 'expense',
+                'company_id': line.company_id.id,
+            })
 
     def _do_approve(self):
         self._check_can_approve()

@@ -15,6 +15,11 @@ class TestSyncGoogle2Odoo(TestSyncGoogle):
 
     def setUp(self):
         super().setUp()
+        self.public_partner = self.env['res.partner'].create({
+            'name': 'Public Contact',
+            'email': 'public_email@example.com',
+            'type': 'contact',
+        })
         self.private_partner = self.env['res.partner'].create({
             'name': 'Private Contact',
             'email': 'private_email@example.com',
@@ -41,7 +46,7 @@ class TestSyncGoogle2Odoo(TestSyncGoogle):
             'visibility': 'public',
             'attendees': [{
                 'displayName': 'Mitchell Admin',
-                'email': 'admin@yourcompany.example.com',
+                'email': self.public_partner.email,
                 'responseStatus': 'needsAction'
             },],
             'reminders': {'useDefault': True},
@@ -62,9 +67,9 @@ class TestSyncGoogle2Odoo(TestSyncGoogle):
         self.assertEqual(html2plaintext(event.description), values.get('description'))
         self.assertEqual(event.start, datetime(2020, 1, 13, 15, 55))
         self.assertEqual(event.stop, datetime(2020, 1, 13, 18, 55))
-        admin_attendee = event.attendee_ids.filtered(lambda e: e.email == 'admin@yourcompany.example.com')
-        self.assertEqual('admin@yourcompany.example.com', admin_attendee.email)
-        self.assertEqual('Mitchell Admin', admin_attendee.partner_id.name)
+        admin_attendee = event.attendee_ids.filtered(lambda e: e.email == self.public_partner.email)
+        self.assertEqual(self.public_partner.email, admin_attendee.email)
+        self.assertEqual(self.public_partner.name, admin_attendee.partner_id.name)
         self.assertEqual(event.partner_ids, event.attendee_ids.partner_id)
         self.assertEqual('needsAction', admin_attendee.state)
         self.assertGoogleAPINotCalled()
@@ -749,7 +754,7 @@ class TestSyncGoogle2Odoo(TestSyncGoogle):
             'visibility': 'public',
             'attendees': [{
                 'displayName': 'Mitchell Admin',
-                'email': 'admin@yourcompany.example.com',
+                'email': self.public_partner.email,
                 'responseStatus': 'needsAction'
             }, ],
             'reminders': {'useDefault': True},
@@ -799,7 +804,7 @@ class TestSyncGoogle2Odoo(TestSyncGoogle):
             'visibility': 'public',
             'attendees': [{
                 'displayName': 'Mitchell Admin',
-                'email': 'admin@yourcompany.example.com',
+                'email': self.public_partner.email,
                 'responseStatus': 'needsAction'
             }, ],
             'reminders': {'overrides': [{"method": "email", "minutes": 10}], 'useDefault': False},
@@ -828,7 +833,7 @@ class TestSyncGoogle2Odoo(TestSyncGoogle):
             'visibility': 'public',
             'attendees': [{
                 'displayName': 'Mitchell Admin',
-                'email': 'admin@yourcompany.example.com',
+                'email': self.public_partner.email,
                 'responseStatus': 'needsAction'
             }, ],
             'reminders': {'overrides': [{"method": "email", "minutes": 10}], 'useDefault': False},
@@ -1094,7 +1099,7 @@ class TestSyncGoogle2Odoo(TestSyncGoogle):
             'visibility': 'public',
             'attendees': [{
                 'displayName': 'Mitchell Admin',
-                'email': 'admin@yourcompany.example.com',
+                'email': self.public_partner.email,
                 'responseStatus': 'needsAction'
             },],
             'reminders': {'useDefault': True},
@@ -1134,7 +1139,7 @@ class TestSyncGoogle2Odoo(TestSyncGoogle):
             'visibility': 'public',
             'attendees': [{
                 'displayName': 'Mitchell Admin',
-                'email': 'admin@yourcompany.example.com',
+                'email': self.public_partner.email,
                 'responseStatus': 'needsAction'
             },],
             'reminders': {'useDefault': True},
@@ -1164,7 +1169,7 @@ class TestSyncGoogle2Odoo(TestSyncGoogle):
             'visibility': 'public',
             'attendees': [{
                 'displayName': 'Mitchell Admin',
-                'email': 'admin@yourcompany.example.com',
+                'email': self.public_partner.email,
                 'responseStatus': 'needsAction'
             }, {
                 'displayName': 'Attendee',

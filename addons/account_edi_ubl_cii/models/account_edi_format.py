@@ -16,6 +16,7 @@ FORMAT_CODES = [
     'nlcius_1',
     'efff_1',
     'ubl_2_1',
+    'ubl_a_nz',
 ]
 
 class AccountEdiFormat(models.Model):
@@ -64,6 +65,8 @@ class AccountEdiFormat(models.Model):
             return self.env['account.edi.xml.ubl_de']
         if self.code == 'efff_1' and company.country_id.code == 'BE':
             return self.env['account.edi.xml.ubl_efff']
+        if self.code == 'ubl_a_nz' and company.country_id.code in ['AU', 'NZ']:
+            return self.env['account.edi.xml.ubl_a_nz']
 
     def _is_ubl_cii_available(self, company):
         """

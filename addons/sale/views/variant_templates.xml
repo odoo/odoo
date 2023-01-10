@@ -95,7 +95,7 @@
                         <ul t-att-data-attribute_id="ptal.attribute_id.id" t-attf-class="list-inline o_wsale_product_attribute #{'d-none' if single_and_custom else ''}">
                             <li t-foreach="ptal.product_template_value_ids._only_active()" t-as="ptav" class="list-inline-item me-1">
                                 <label t-attf-style="background-color:#{ptav.html_color or ptav.product_attribute_value_id.name if not ptav.is_custom else ''}"
-                                    t-attf-class="css_attribute_color #{'active' if ptav in combination else ''} #{'custom_value' if ptav.is_custom else ''}">
+                                    t-attf-class="css_attribute_color #{'active' if ptav in combination else ''} #{'custom_value' if ptav.is_custom else ''} #{'transparent' if (not ptav.is_custom and not ptav.html_color) else ''}">
                                     <input type="radio"
                                         t-attf-class="js_variant_change  #{ptal.attribute_id.create_variant}"
                                         t-att-checked="ptav in combination"

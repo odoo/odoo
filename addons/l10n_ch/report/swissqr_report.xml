@@ -14,9 +14,8 @@
 
         <template id="l10n_ch_swissqr_template">
             <t t-set="o" t-value="o.with_context(lang=lang)"/>
-            <t t-call="web.external_layout">
-                <!-- TODO master: remove this -->
-                <script t-if="0">document.body.className += " l10n_ch_qr";</script>
+            <t t-set="company" t-value="o.company_id"/>
+            <t t-call="web.external_layout_standard">
                 <!-- add default margin for header (matching A4 European margin) -->
                 <t t-set="report_header_style">padding-top:6.2mm; padding-left:8.2mm; padding-right:8.2mm;</t>
 

@@ -13,11 +13,6 @@ export class BomOverviewDisplayFilter extends Component {
             operations: this.env._t('Operations'),
         };
     }
-    //---- Handlers ----
-
-    onClickDisplay(optionKey) {
-        this.props.bus.trigger("change-display", { type: optionKey, value: !this.props.showOptions[optionKey] });
-    }
 
     //---- Getters ----
 
@@ -36,7 +31,6 @@ BomOverviewDisplayFilter.components = {
     DropdownItem,
 }
 BomOverviewDisplayFilter.props = {
-    bus: Object,
     showOptions: {
         type: Object,
         shape: {
@@ -48,4 +42,5 @@ BomOverviewDisplayFilter.props = {
             attachments: Boolean,
         },
     },
+    changeDisplay: Function,
 };

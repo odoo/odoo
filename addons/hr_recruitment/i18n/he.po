@@ -16,18 +16,20 @@
 # דודי מלכה <Dudimalka6@gmail.com>, 2022
 # Yihya Hugirat <hugirat@gmail.com>, 2022
 # Martin Trigaux, 2022
-# NoaFarkash, 2022
 # Lilach Gilliam <lilach.gilliam@gmail.com>, 2022
 # ZVI BLONDER <ZVIBLONDER@gmail.com>, 2022
 # Netta Waizer, 2022
+# NoaFarkash, 2022
+# Ha Ketem <haketem@gmail.com>, 2022
+# Roy Sayag, 2022
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 16.0beta\n"
+"Project-Id-Version: Odoo Server 16.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-10-10 10:22+0000\n"
+"POT-Creation-Date: 2022-12-15 12:49+0000\n"
 "PO-Revision-Date: 2022-09-22 05:52+0000\n"
-"Last-Translator: Netta Waizer, 2022\n"
+"Last-Translator: Roy Sayag, 2022\n"
 "Language-Team: Hebrew (https://www.transifex.com/odoo/teams/41243/he/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -36,34 +38,35 @@ msgstr ""
 "Plural-Forms: nplurals=4; plural=(n == 1 && n % 1 == 0) ? 0 : (n == 2 && n % 1 == 0) ? 1: (n % 10 == 0 && n % 1 == 0 && n > 10) ? 2 : 3;\n"
 
 #. module: hr_recruitment
+#. odoo-python
 #: code:addons/hr_recruitment/models/hr_recruitment.py:0
 #, python-format
 msgid "1 Meeting"
 msgstr "פגישה אחת"
 
 #. module: hr_recruitment
-#. openerp-web
+#. odoo-javascript
 #: code:addons/hr_recruitment/static/src/js/tours/hr_recruitment.js:0
 #, python-format
 msgid "<b>Click to view</b> the application."
 msgstr "<b>לחץ לראות</b> את הפנייה."
 
 #. module: hr_recruitment
-#. openerp-web
+#. odoo-javascript
 #: code:addons/hr_recruitment/static/src/js/tours/hr_recruitment.js:0
 #, python-format
 msgid "<b>Did you apply by sending an email?</b> Check incoming applications."
 msgstr ""
 
 #. module: hr_recruitment
-#. openerp-web
+#. odoo-javascript
 #: code:addons/hr_recruitment/static/src/js/tours/hr_recruitment.js:0
 #, python-format
 msgid "<b>Drag this card</b>, to qualify him for a first interview."
 msgstr ""
 
 #. module: hr_recruitment
-#. openerp-web
+#. odoo-javascript
 #: code:addons/hr_recruitment/static/src/js/tours/hr_recruitment.js:0
 #, python-format
 msgid ""
@@ -72,7 +75,7 @@ msgid ""
 msgstr ""
 
 #. module: hr_recruitment
-#. openerp-web
+#. odoo-javascript
 #: code:addons/hr_recruitment/static/src/js/tours/hr_recruitment.js:0
 #, python-format
 msgid ""
@@ -462,7 +465,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_job__activities_today
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.view_hr_job_kanban
 msgid "Activities Today"
-msgstr ""
+msgstr "פעילויות היום"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__activity_exception_decoration
@@ -665,7 +668,7 @@ msgstr "כמות פניות"
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__application_status
 msgid "Application Status"
-msgstr ""
+msgstr "סטטוס מועמדות"
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_form
@@ -731,10 +734,11 @@ msgid "Attachments"
 msgstr "קבצים מצורפים"
 
 #. module: hr_recruitment
+#. odoo-python
 #: code:addons/hr_recruitment/models/hr_recruitment.py:0
 #, python-format
 msgid "Attachments, like resumes, get indexed automatically."
-msgstr ""
+msgstr "קבצים מצורפים, כמו קורות חיים, מתווספים לאינדקס באופן אוטומטי."
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_applicant_send_mail__author_id
@@ -752,24 +756,8 @@ msgid "Bachelor Degree"
 msgstr "תואר ראשון"
 
 #. module: hr_recruitment
+#. odoo-python
 #: code:addons/hr_recruitment/models/hr_recruitment.py:0
-#: model:hr.applicant,legend_blocked:hr_recruitment.hr_case_advertisement
-#: model:hr.applicant,legend_blocked:hr_recruitment.hr_case_dev0
-#: model:hr.applicant,legend_blocked:hr_recruitment.hr_case_dev1
-#: model:hr.applicant,legend_blocked:hr_recruitment.hr_case_dev2
-#: model:hr.applicant,legend_blocked:hr_recruitment.hr_case_dev3
-#: model:hr.applicant,legend_blocked:hr_recruitment.hr_case_financejob0
-#: model:hr.applicant,legend_blocked:hr_recruitment.hr_case_financejob1
-#: model:hr.applicant,legend_blocked:hr_recruitment.hr_case_fresher0
-#: model:hr.applicant,legend_blocked:hr_recruitment.hr_case_marketingjob0
-#: model:hr.applicant,legend_blocked:hr_recruitment.hr_case_mkt0
-#: model:hr.applicant,legend_blocked:hr_recruitment.hr_case_mkt1
-#: model:hr.applicant,legend_blocked:hr_recruitment.hr_case_programmer
-#: model:hr.applicant,legend_blocked:hr_recruitment.hr_case_salesman0
-#: model:hr.applicant,legend_blocked:hr_recruitment.hr_case_salesman1
-#: model:hr.applicant,legend_blocked:hr_recruitment.hr_case_traineemca0
-#: model:hr.applicant,legend_blocked:hr_recruitment.hr_case_traineemca1
-#: model:hr.applicant,legend_blocked:hr_recruitment.hr_case_yrsexperienceinphp0
 #: model:hr.recruitment.stage,legend_blocked:hr_recruitment.stage_job1
 #: model:hr.recruitment.stage,legend_blocked:hr_recruitment.stage_job2
 #: model:hr.recruitment.stage,legend_blocked:hr_recruitment.stage_job3
@@ -837,7 +825,7 @@ msgid "Category of applicant"
 msgstr "קטגורית מועמד"
 
 #. module: hr_recruitment
-#. openerp-web
+#. odoo-javascript
 #: code:addons/hr_recruitment/static/src/js/tours/hr_recruitment.js:0
 #, python-format
 msgid "Choose an application email."
@@ -873,6 +861,7 @@ msgid "Confirmation email sent to all new job applications"
 msgstr ""
 
 #. module: hr_recruitment
+#. odoo-python
 #: code:addons/hr_recruitment/models/hr_recruitment.py:0
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__partner_id
 #, python-format
@@ -880,6 +869,7 @@ msgid "Contact"
 msgstr "איש קשר"
 
 #. module: hr_recruitment
+#. odoo-python
 #: code:addons/hr_recruitment/models/hr_recruitment.py:0
 #, python-format
 msgid "Contact Email"
@@ -911,7 +901,7 @@ msgid "Contract Signed"
 msgstr "חוזה חתום"
 
 #. module: hr_recruitment
-#. openerp-web
+#. odoo-javascript
 #: code:addons/hr_recruitment/static/src/js/tours/hr_recruitment.js:0
 #, python-format
 msgid "Copy this email address, to paste it in your email composer, to apply."
@@ -934,7 +924,7 @@ msgid "Create a Job Position"
 msgstr "צור משרה"
 
 #. module: hr_recruitment
-#. openerp-web
+#. odoo-javascript
 #: code:addons/hr_recruitment/static/src/js/tours/hr_recruitment.js:0
 #, python-format
 msgid "Create your first Job Position."
@@ -1100,6 +1090,7 @@ msgid "Display Name"
 msgstr "שם לתצוגה"
 
 #. module: hr_recruitment
+#. odoo-python
 #: code:addons/hr_recruitment/models/digest.py:0
 #, python-format
 msgid "Do not have access, skip this data for user's digest email"
@@ -1121,6 +1112,7 @@ msgid "Documentation"
 msgstr "תיעוד"
 
 #. module: hr_recruitment
+#. odoo-python
 #: code:addons/hr_recruitment/models/hr_job.py:0
 #: code:addons/hr_recruitment/models/hr_recruitment.py:0
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_job__document_ids
@@ -1184,6 +1176,7 @@ msgid "Email cc"
 msgstr "עותק דוא\"ל"
 
 #. module: hr_recruitment
+#. odoo-python
 #: code:addons/hr_recruitment/wizard/applicant_refuse_reason.py:0
 #, python-format
 msgid "Email of the applicant is not set, email won't be sent."
@@ -1195,12 +1188,14 @@ msgid "Email subject for applications sent via email"
 msgstr ""
 
 #. module: hr_recruitment
+#. odoo-python
 #: code:addons/hr_recruitment/wizard/applicant_refuse_reason.py:0
 #, python-format
 msgid "Email template must be selected to send a mail"
 msgstr "יש לבחור תבנית אימייל כדי לשלוח דוא\"ל"
 
 #. module: hr_recruitment
+#. odoo-python
 #: code:addons/hr_recruitment/models/hr_recruitment.py:0
 #: model:ir.model,name:hr_recruitment.model_hr_employee
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__emp_id
@@ -1465,24 +1460,8 @@ msgstr ""
 "אם השדה הפעיל מוגדר כ- לא נכון, הוא יאפשר להסתיר את התיק מבלי להסיר אותו."
 
 #. module: hr_recruitment
+#. odoo-python
 #: code:addons/hr_recruitment/models/hr_recruitment.py:0
-#: model:hr.applicant,legend_normal:hr_recruitment.hr_case_advertisement
-#: model:hr.applicant,legend_normal:hr_recruitment.hr_case_dev0
-#: model:hr.applicant,legend_normal:hr_recruitment.hr_case_dev1
-#: model:hr.applicant,legend_normal:hr_recruitment.hr_case_dev2
-#: model:hr.applicant,legend_normal:hr_recruitment.hr_case_dev3
-#: model:hr.applicant,legend_normal:hr_recruitment.hr_case_financejob0
-#: model:hr.applicant,legend_normal:hr_recruitment.hr_case_financejob1
-#: model:hr.applicant,legend_normal:hr_recruitment.hr_case_fresher0
-#: model:hr.applicant,legend_normal:hr_recruitment.hr_case_marketingjob0
-#: model:hr.applicant,legend_normal:hr_recruitment.hr_case_mkt0
-#: model:hr.applicant,legend_normal:hr_recruitment.hr_case_mkt1
-#: model:hr.applicant,legend_normal:hr_recruitment.hr_case_programmer
-#: model:hr.applicant,legend_normal:hr_recruitment.hr_case_salesman0
-#: model:hr.applicant,legend_normal:hr_recruitment.hr_case_salesman1
-#: model:hr.applicant,legend_normal:hr_recruitment.hr_case_traineemca0
-#: model:hr.applicant,legend_normal:hr_recruitment.hr_case_traineemca1
-#: model:hr.applicant,legend_normal:hr_recruitment.hr_case_yrsexperienceinphp0
 #: model:hr.recruitment.stage,legend_normal:hr_recruitment.stage_job1
 #: model:hr.recruitment.stage,legend_normal:hr_recruitment.stage_job2
 #: model:hr.recruitment.stage,legend_normal:hr_recruitment.stage_job3
@@ -1506,7 +1485,7 @@ msgstr "טפסי ראיון"
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__interviewer_ids
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_job__interviewer_ids
 msgid "Interviewers"
-msgstr ""
+msgstr "מראיינים"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_applicant_send_mail__is_mail_template_editor
@@ -1529,6 +1508,7 @@ msgid "Is Warning Visible"
 msgstr ""
 
 #. module: hr_recruitment
+#. odoo-python
 #: code:addons/hr_recruitment/models/hr_job.py:0
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_source__job_id
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_form
@@ -1538,6 +1518,7 @@ msgid "Job"
 msgstr "משרה"
 
 #. module: hr_recruitment
+#. odoo-python
 #: code:addons/hr_recruitment/models/hr_recruitment.py:0
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_job__application_ids
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.crm_case_pivot_view_job
@@ -1635,6 +1616,7 @@ msgid "Language"
 msgstr "שפה"
 
 #. module: hr_recruitment
+#. odoo-python
 #: code:addons/hr_recruitment/models/hr_recruitment.py:0
 #, python-format
 msgid "Last Meeting"
@@ -1694,6 +1676,7 @@ msgid "Late Activities"
 msgstr "פעילויות באיחור"
 
 #. module: hr_recruitment
+#. odoo-python
 #: code:addons/hr_recruitment/models/hr_recruitment.py:0
 #, python-format
 msgid "Let people apply by email to save time."
@@ -1706,7 +1689,7 @@ msgid "Let's create a job position."
 msgstr "בוא ניצור משרה."
 
 #. module: hr_recruitment
-#. openerp-web
+#. odoo-javascript
 #: code:addons/hr_recruitment/static/src/js/tours/hr_recruitment.js:0
 #, python-format
 msgid ""
@@ -1715,7 +1698,7 @@ msgid ""
 msgstr ""
 
 #. module: hr_recruitment
-#. openerp-web
+#. odoo-javascript
 #: code:addons/hr_recruitment/static/src/js/tours/hr_recruitment.js:0
 #: code:addons/hr_recruitment/static/src/js/tours/hr_recruitment.js:0
 #, python-format
@@ -1723,30 +1706,30 @@ msgid "Let's have a look at how to <b>improve</b> your <b>hiring process</b>."
 msgstr ""
 
 #. module: hr_recruitment
-#. openerp-web
+#. odoo-javascript
 #: code:addons/hr_recruitment/static/src/js/tours/hr_recruitment.js:0
 #, python-format
 msgid "Let's have a look at the applications pipeline."
 msgstr ""
 
 #. module: hr_recruitment
-#. openerp-web
+#. odoo-javascript
 #: code:addons/hr_recruitment/static/src/js/tours/hr_recruitment.js:0
 #, python-format
 msgid "Let’s create this new employee now."
 msgstr "בואו ניצור את העובד החדש הזה עכשיו."
 
 #. module: hr_recruitment
-#. openerp-web
+#. odoo-javascript
 #: code:addons/hr_recruitment/static/src/js/tours/hr_recruitment.js:0
 #, python-format
 msgid "Let’s go back to the dashboard."
-msgstr ""
+msgstr "בואו נחזור ללוח הבקרה."
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__linkedin_profile
 msgid "LinkedIn Profile"
-msgstr ""
+msgstr "פרופיל LinkedIn"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_applicant_send_mail__template_id
@@ -1772,7 +1755,7 @@ msgstr "אמצעי תקשורת"
 #. module: hr_recruitment
 #: model:ir.ui.menu,name:hr_recruitment.menu_hr_recruitment_utm_mediums
 msgid "Mediums"
-msgstr ""
+msgstr "ערוצים"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__meeting_display_date
@@ -1919,24 +1902,28 @@ msgid "Next Activity Type"
 msgstr "סוג הפעילות הבאה"
 
 #. module: hr_recruitment
+#. odoo-python
 #: code:addons/hr_recruitment/models/hr_recruitment.py:0
 #, python-format
 msgid "Next Meeting"
 msgstr "פגישה הבאה"
 
 #. module: hr_recruitment
+#. odoo-python
 #: code:addons/hr_recruitment/models/hr_recruitment.py:0
 #, python-format
 msgid "No Meeting"
 msgstr "אין פגישות"
 
 #. module: hr_recruitment
+#. odoo-python
 #: code:addons/hr_recruitment/models/hr_recruitment.py:0
 #, python-format
 msgid "No Subject"
 msgstr "ללא נושא"
 
 #. module: hr_recruitment
+#. odoo-python
 #: code:addons/hr_recruitment/models/hr_recruitment.py:0
 #, python-format
 msgid "No application yet"
@@ -2062,7 +2049,7 @@ msgstr ""
 "המתאימה, למשל. {{ object.partner_id.lang }}."
 
 #. module: hr_recruitment
-#. openerp-web
+#. odoo-javascript
 #: code:addons/hr_recruitment/static/src/js/tours/hr_recruitment.js:0
 #, python-format
 msgid "Or talk about this applicant privately with your colleagues."
@@ -2142,24 +2129,8 @@ msgid "Publish available jobs on your website"
 msgstr "פרסם תפקידים זמינים באתר האינטרנט שלך"
 
 #. module: hr_recruitment
+#. odoo-python
 #: code:addons/hr_recruitment/models/hr_recruitment.py:0
-#: model:hr.applicant,legend_done:hr_recruitment.hr_case_advertisement
-#: model:hr.applicant,legend_done:hr_recruitment.hr_case_dev0
-#: model:hr.applicant,legend_done:hr_recruitment.hr_case_dev1
-#: model:hr.applicant,legend_done:hr_recruitment.hr_case_dev2
-#: model:hr.applicant,legend_done:hr_recruitment.hr_case_dev3
-#: model:hr.applicant,legend_done:hr_recruitment.hr_case_financejob0
-#: model:hr.applicant,legend_done:hr_recruitment.hr_case_financejob1
-#: model:hr.applicant,legend_done:hr_recruitment.hr_case_fresher0
-#: model:hr.applicant,legend_done:hr_recruitment.hr_case_marketingjob0
-#: model:hr.applicant,legend_done:hr_recruitment.hr_case_mkt0
-#: model:hr.applicant,legend_done:hr_recruitment.hr_case_mkt1
-#: model:hr.applicant,legend_done:hr_recruitment.hr_case_programmer
-#: model:hr.applicant,legend_done:hr_recruitment.hr_case_salesman0
-#: model:hr.applicant,legend_done:hr_recruitment.hr_case_salesman1
-#: model:hr.applicant,legend_done:hr_recruitment.hr_case_traineemca0
-#: model:hr.applicant,legend_done:hr_recruitment.hr_case_traineemca1
-#: model:hr.applicant,legend_done:hr_recruitment.hr_case_yrsexperienceinphp0
 #: model:hr.recruitment.stage,legend_done:hr_recruitment.stage_job1
 #: model:hr.recruitment.stage,legend_done:hr_recruitment.stage_job2
 #: model:hr.recruitment.stage,legend_done:hr_recruitment.stage_job3
@@ -2266,6 +2237,7 @@ msgid "Refuse"
 msgstr "דחה"
 
 #. module: hr_recruitment
+#. odoo-python
 #: code:addons/hr_recruitment/models/hr_recruitment.py:0
 #: model:ir.actions.act_window,name:hr_recruitment.applicant_get_refuse_reason_action
 #: model:ir.model.fields,field_description:hr_recruitment.field_applicant_get_refuse_reason__refuse_reason_id
@@ -2322,7 +2294,7 @@ msgstr "דרישות"
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_search
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_search_bis
 msgid "Reserve"
-msgstr ""
+msgstr "שמירה"
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_search
@@ -2371,7 +2343,7 @@ msgid "Salary Proposed by the Organisation, extra advantages"
 msgstr "שכר שהוצע על ידי הארגון, תנאים נוספים"
 
 #. module: hr_recruitment
-#. openerp-web
+#. odoo-javascript
 #: code:addons/hr_recruitment/static/src/js/tours/hr_recruitment.js:0
 #, python-format
 msgid "Save it !"
@@ -2408,6 +2380,7 @@ msgid "Send CV to OCR to fill applications"
 msgstr ""
 
 #. module: hr_recruitment
+#. odoo-python
 #: code:addons/hr_recruitment/models/hr_recruitment.py:0
 #: model:ir.actions.server,name:hr_recruitment.action_applicant_send_mail
 #: model:ir.model.fields,field_description:hr_recruitment.field_applicant_get_refuse_reason__send_mail
@@ -2443,7 +2416,7 @@ msgid "Send texts to your contacts"
 msgstr "שלח הודעות טקסט לאנשי הקשר שלך"
 
 #. module: hr_recruitment
-#. openerp-web
+#. odoo-javascript
 #: code:addons/hr_recruitment/static/src/js/tours/hr_recruitment.js:0
 #, python-format
 msgid "Send your email. Followers will get a copy of the communication."
@@ -2478,6 +2451,11 @@ msgstr "הצג את כל הרשומות שתאריך הפעולה הבא שלה�
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_source__source_id
 msgid "Source"
 msgstr "מקור"
+
+#. module: hr_recruitment
+#: model:ir.ui.menu,name:hr_recruitment.hr_applicant_report_source_menu
+msgid "Source Analysis"
+msgstr ""
 
 #. module: hr_recruitment
 #: model:ir.model,name:hr_recruitment.model_hr_recruitment_source
@@ -2563,7 +2541,7 @@ msgstr "נושא"
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__name
 msgid "Subject / Application"
-msgstr ""
+msgstr "נושא / מועמד"
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.applicant_get_refuse_reason_view_form
@@ -2593,6 +2571,12 @@ msgid "Tags"
 msgstr "תגיות"
 
 #. module: hr_recruitment
+#: model:ir.ui.menu,name:hr_recruitment.hr_applicant_report_team_menu
+msgid "Team Performance"
+msgstr "ביצועי צוות"
+
+#. module: hr_recruitment
+#. odoo-python
 #: code:addons/hr_recruitment/models/utm_campaign.py:0
 #, python-format
 msgid ""
@@ -2616,6 +2600,7 @@ msgid "The date at which the applicant will be available to start working"
 msgstr "התאריך בו המועמד יהיה זמין להתחיל לעבוד"
 
 #. module: hr_recruitment
+#. odoo-python
 #: code:addons/hr_recruitment/wizard/applicant_refuse_reason.py:0
 #, python-format
 msgid ""
@@ -2624,6 +2609,7 @@ msgid ""
 msgstr "האימייל לא יישלח למועמדים הבאים מכיוון שאין להם כתובת דוא\"ל."
 
 #. module: hr_recruitment
+#. odoo-python
 #: code:addons/hr_recruitment/wizard/applicant_send_mail.py:0
 #, python-format
 msgid "The following applicants are missing an email address: %s."
@@ -2694,6 +2680,11 @@ msgid ""
 msgstr "שלב זה מקופל בתצוגת הקנבן כאשר אין רשומות בשלב זה להצגה."
 
 #. module: hr_recruitment
+#: model:ir.ui.menu,name:hr_recruitment.hr_applicant_stage_report_menu
+msgid "Time In Stage Analysis"
+msgstr ""
+
+#. module: hr_recruitment
 #: model:digest.tip,name:hr_recruitment.digest_tip_hr_recruitment_0
 #: model_terms:digest.tip,tip_description:hr_recruitment.digest_tip_hr_recruitment_0
 msgid "Tip: Let candidates apply by email"
@@ -2737,12 +2728,12 @@ msgstr "קמפיין UTM"
 #. module: hr_recruitment
 #: model:ir.model,name:hr_recruitment.model_utm_source
 msgid "UTM Source"
-msgstr ""
+msgstr "מקור UTM"
 
 #. module: hr_recruitment
 #: model:ir.ui.menu,name:hr_recruitment.menu_hr_recruitment_utm
 msgid "UTMs"
-msgstr ""
+msgstr "UTMים"
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.view_hr_job_kanban
@@ -2809,7 +2800,7 @@ msgid "Website communication history"
 msgstr "היסטורית התקשרויות מאתר האינטרנט"
 
 #. module: hr_recruitment
-#. openerp-web
+#. odoo-javascript
 #: code:addons/hr_recruitment/static/src/js/tours/hr_recruitment.js:0
 #, python-format
 msgid "What do you want to recruit today? Choose a job title..."
@@ -2827,6 +2818,7 @@ msgid "Write your message here..."
 msgstr ""
 
 #. module: hr_recruitment
+#. odoo-python
 #: code:addons/hr_recruitment/models/hr_recruitment.py:0
 #, python-format
 msgid "You are not allowed to perform this action."
@@ -2842,6 +2834,7 @@ msgstr ""
 "                        תוויות ברירת מחדל."
 
 #. module: hr_recruitment
+#. odoo-python
 #: code:addons/hr_recruitment/models/utm_source.py:0
 #, python-format
 msgid ""
@@ -2850,6 +2843,7 @@ msgid ""
 msgstr ""
 
 #. module: hr_recruitment
+#. odoo-python
 #: code:addons/hr_recruitment/models/hr_recruitment.py:0
 #, python-format
 msgid "You must define a Contact Name for this applicant."

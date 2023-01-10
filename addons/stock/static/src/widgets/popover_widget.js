@@ -35,9 +35,6 @@ export class PopoverWidgetField extends Component {
     }
 
     showPopup(ev){
-        if (this.jsonValue.popoverTemplate){
-            this.constructor.components.Popover.template = this.jsonValue.popoverTemplate;
-        }
         this.closePopover = this.popover.add(
             ev.currentTarget,
             this.constructor.components.Popover,

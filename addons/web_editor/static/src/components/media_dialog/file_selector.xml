@@ -58,7 +58,7 @@
             multiSelect="props.multiSelect"/>
         <t t-call="{{ constructor.attachmentsListTemplate }}"/>
         <div name="load_more_attachments" class="mt-4 text-center mx-auto o_we_load_more">
-            <button t-if="canLoadMore" class="btn btn-secondary o_load_more" type="button" t-on-click="loadMore">Load more...</button>
+            <button t-if="canLoadMore" class="btn btn-odoo o_load_more" type="button" t-on-click="loadMore">Load more...</button>
             <div t-if="hasContent and !canLoadMore" class="mt-4 o_load_done_msg">
                 <span><i t-esc="allLoadedText"/></span>
             </div>

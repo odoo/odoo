@@ -358,7 +358,7 @@ class ReceptionReport(models.AbstractModel):
 
     def _format_html_sources_info(self, sources_to_lines):
         """ Format used info from sources of sources_to_lines to be sent in an html request. """
-        return {str(source): [self._format_html_source(s, index == 0) for index, s in enumerate(source)] for source in sources_to_lines.keys()}
+        return {str(source): [self._format_html_source(s, s._name == 'stock.picking')for s in source] for source in sources_to_lines.keys()}
 
     def _format_html_source(self, source, is_picking=False):
         """ Format used info from a single source to be sent in an html request. """

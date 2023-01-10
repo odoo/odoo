@@ -31,6 +31,7 @@ from odoo.exceptions import AccessDenied, UserError
 from odoo.osv import expression
 from odoo.tools.parse_version import parse_version
 from odoo.tools.misc import topological_sort
+from odoo.tools.translate import TranslationImporter
 from odoo.http import request
 from odoo.modules import get_module_path, get_module_resource
 
@@ -156,6 +157,7 @@ STATES = [
 class Module(models.Model):
     _name = "ir.module.module"
     _rec_name = "shortdesc"
+    _rec_names_search = ['name', 'shortdesc', 'summary']
     _description = "Module"
     _order = 'application desc,sequence,name'
 
@@ -327,6 +329,10 @@ class Module(models.Model):
         self.clear_caches()
         return super(Module, self).unlink()
 
+    def _get_modules_to_load_domain(self):
+        """ Domain to retrieve the modules that should be loaded by the registry. """
+        return [('state', '=', 'installed')]
+
     @staticmethod
     def _check_python_external_dependency(pydep):
         try:
@@ -345,7 +351,6 @@ class Module(models.Model):
         except Exception as e:
             _logger.warning("get_distribution(%s) failed: %s", pydep, e)
             raise Exception('Error finding python library %s' % (pydep,))
-
 
     @staticmethod
     def _check_external_dependencies(terp):
@@ -636,8 +641,9 @@ class Module(models.Model):
 
     @assert_log_admin_access
     def button_uninstall(self):
-        if 'base' in self.mapped('name'):
-            raise UserError(_("The `base` module cannot be uninstalled"))
+        un_installable_modules = set(odoo.conf.server_wide_modules) & set(self.mapped('name'))
+        if un_installable_modules:
+            raise UserError(_("Those modules cannot be uninstalled: %s", ', '.join(un_installable_modules)))
         if any(state not in ('installed', 'to upgrade') for state in self.mapped('state')):
             raise UserError(_(
                 "One or more of the selected modules have already been uninstalled, if you "
@@ -1032,13 +1038,14 @@ class Module(models.Model):
     def _load_module_terms(self, modules, langs, overwrite=False):
         """ Load PO files of the given modules for the given languages. """
         # load i18n files
+        translation_importer = TranslationImporter(self.env.cr, verbose=False)
+
         for module_name in modules:
             modpath = get_module_path(module_name)
             if not modpath:
                 continue
             for lang in langs:
                 lang_code = tools.get_iso_codes(lang)
-                lang_overwrite = overwrite
                 base_lang_code = None
                 if '_' in lang_code:
                     base_lang_code = lang_code.split('_')[0]
@@ -1048,29 +1055,28 @@ class Module(models.Model):
                     base_trans_file = get_module_resource(module_name, 'i18n', base_lang_code + '.po')
                     if base_trans_file:
                         _logger.info('module %s: loading base translation file %s for language %s', module_name, base_lang_code, lang)
-                        tools.trans_load(self._cr, base_trans_file, lang, verbose=False, overwrite=lang_overwrite)
-                        lang_overwrite = True  # make sure the requested translation will override the base terms later
+                        translation_importer.load_file(base_trans_file, lang)
 
                     # i18n_extra folder is for additional translations handle manually (eg: for l10n_be)
                     base_trans_extra_file = get_module_resource(module_name, 'i18n_extra', base_lang_code + '.po')
                     if base_trans_extra_file:
                         _logger.info('module %s: loading extra base translation file %s for language %s', module_name, base_lang_code, lang)
-                        tools.trans_load(self._cr, base_trans_extra_file, lang, verbose=False, overwrite=lang_overwrite)
-                        lang_overwrite = True  # make sure the requested translation will override the base terms later
+                        translation_importer.load_file(base_trans_extra_file, lang)
 
                 # Step 2: then load the main translation file, possibly overriding the terms coming from the base language
                 trans_file = get_module_resource(module_name, 'i18n', lang_code + '.po')
                 if trans_file:
-                    _logger.info('module %s: loading translation file (%s) for language %s', module_name, lang_code, lang)
-                    tools.trans_load(self._cr, trans_file, lang, verbose=False, overwrite=lang_overwrite)
+                    _logger.info('module %s: loading translation file %s for language %s', module_name, lang_code, lang)
+                    translation_importer.load_file(trans_file, lang)
                 elif lang_code != 'en_US':
                     _logger.info('module %s: no translation for language %s', module_name, lang_code)
 
                 trans_extra_file = get_module_resource(module_name, 'i18n_extra', lang_code + '.po')
                 if trans_extra_file:
-                    _logger.info('module %s: loading extra translation file (%s) for language %s', module_name, lang_code, lang)
-                    tools.trans_load(self._cr, trans_extra_file, lang, verbose=False, overwrite=lang_overwrite)
-        return True
+                    _logger.info('module %s: loading extra translation file %s for language %s', module_name, lang_code, lang)
+                    translation_importer.load_file(trans_extra_file, lang)
+
+        translation_importer.save(overwrite=overwrite)
 
 
 DEP_STATES = STATES + [('unknown', 'Unknown')]

@@ -4,6 +4,7 @@
 # 
 # Translators:
 # Martin Trigaux, 2022
+# Alina Lisnenko <alina.lisnenko@erp.co.ua>, 2022
 # 
 msgid ""
 msgstr ""
@@ -11,7 +12,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-10-10 10:22+0000\n"
 "PO-Revision-Date: 2022-09-22 05:45+0000\n"
-"Last-Translator: Martin Trigaux, 2022\n"
+"Last-Translator: Alina Lisnenko <alina.lisnenko@erp.co.ua>, 2022\n"
 "Language-Team: Ukrainian (https://www.transifex.com/odoo/teams/41243/uk/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -28,7 +29,7 @@ msgstr "%(browser)s на %(platform)s"
 #. module: auth_totp
 #: model:ir.model,name:auth_totp.model_auth_totp_wizard
 msgid "2-Factor Setup Wizard"
-msgstr "Помічник двофакторного встановлення"
+msgstr "Помічник двофакторного налаштування"
 
 #. module: auth_totp
 #: code:addons/auth_totp/wizard/auth_totp_wizard.py:0
@@ -39,9 +40,29 @@ msgstr "Двофакторну аутентифікацію тепер увім�
 #. module: auth_totp
 #: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_form
 msgid ""
+"<i title=\"Documentation\" class=\"fa fa-fw o_button_icon fa-info-circle\"/>\n"
+"                                    Learn More"
+msgstr ""
+"<i title=\"Documentation\" class=\"fa fa-fw o_button_icon fa-info-circle\"/>\n"
+"                                    Дізнатися більше "
+
+#. module: auth_totp
+#: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_field
+msgid ""
+"<i title=\"Documentation\" class=\"fa fa-fw o_button_icon fa-info-circle\"/>\n"
+"                            Learn More"
+msgstr ""
+"<i title=\"Documentation\" class=\"fa fa-fw o_button_icon fa-info-circle\"/>\n"
+"                            Дізнатися більше"
+
+#. module: auth_totp
+#: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_form
+msgid ""
 "<span attrs=\"{'invisible': [('totp_enabled', '=', False)]}\" class=\"text-"
 "muted\">This account is protected!</span>"
 msgstr ""
+"<span attrs=\"{'invisible': [('totp_enabled', '=', False)]}\" class=\"text-"
+"muted\">Цей обліковий запис захищено!</span>"
 
 #. module: auth_totp
 #: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_field
@@ -101,6 +122,8 @@ msgid ""
 "Are you sure? The user may be asked to enter two-factor codes again on those"
 " devices"
 msgstr ""
+"Ви впевнені? Користувача можуть попросити знову ввести двофакторні коди на "
+"цих пристроях"
 
 #. module: auth_totp
 #: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_field
@@ -108,6 +131,8 @@ msgid ""
 "Are you sure? You may be asked to enter two-factor codes again on those "
 "devices"
 msgstr ""
+"Ви впевнені? Вас можуть попросити знову ввести двофакторні коди на цих "
+"пристроях"
 
 #. module: auth_totp
 #: model_terms:ir.ui.view,arch_db:auth_totp.auth_totp_form
@@ -170,7 +195,7 @@ msgstr "Пристрій"
 #: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_field
 #: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_form
 msgid "Disable 2FA"
-msgstr "Викнути 2FA"
+msgstr "Вимкнути 2FA"
 
 #. module: auth_totp
 #: model:ir.actions.server,name:auth_totp.action_disable_totp
@@ -298,7 +323,7 @@ msgid ""
 "To login, enter below the six-digit authentication code provided by your Authenticator app.\n"
 "                        <br/>"
 msgstr ""
-"Щоб увійти, введіть нижче шестизначний код аутентифікації, який надає ваш додаток аутентифікатор.\n"
+"Щоб увійти, введіть нижче шестизначний код аутентифікації, який надає ваш додаток Аутентифікатор.\n"
 "                        <br/>"
 
 #. module: auth_totp
@@ -344,6 +369,9 @@ msgid ""
 "                        The first one is done with your password and the second one with a code you get from a dedicated mobile app.\n"
 "                        Popular ones include Authy, Google Authenticator or the Microsoft Authenticator."
 msgstr ""
+"Двофакторна автентифікація («2FA») — це система подвійної автентифікації.\n"
+"                        Перший виконується за допомогою вашого пароля, а другий – за допомогою коду, який ви отримуєте зі спеціального мобільного додатка.\n"
+"                        До популярних належать Authy, Google Authenticator або Microsoft Authenticator."
 
 #. module: auth_totp
 #: model:ir.model.fields,field_description:auth_totp.field_res_users__totp_enabled

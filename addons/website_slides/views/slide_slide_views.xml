@@ -160,7 +160,7 @@
                             </page>
                             <page string="Additional Resources" name="external_links" >
                                 <group>
-                                    <field name="slide_resource_ids" widget="one2many" nolabel="1">
+                                    <field name="slide_resource_ids" widget="one2many" nolabel="1" colspan="2">
                                         <tree editable="top">
                                             <field name="resource_type"/>
                                             <field name="name" required="1"/>
@@ -182,8 +182,8 @@
                                             <field string="Fourth Try &amp; More" name="quiz_fourth_attempt_reward"/>
                                         </group>
                                     </group>
-                                    <group name="questions">
-                                        <field name="question_ids" nolabel="1">
+                                    <group name="questions" string="Questions">
+                                        <field name="question_ids" nolabel="1" colspan="2">
                                             <tree>
                                                 <field name="sequence" widget="handle"/>
                                                 <field name="question" string="Question"/>

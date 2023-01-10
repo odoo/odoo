@@ -36,26 +36,29 @@ class ChannelMember(models.Model):
 
     @api.depends('channel_id.message_ids', 'seen_message_id')
     def _compute_message_unread(self):
-        self.env['mail.message'].flush_model()
-        self.flush_recordset(['channel_id', 'seen_message_id'])
-        self.env.cr.execute("""
-                 SELECT count(mail_message.id) AS count,
-                        mail_channel_member.id
-                   FROM mail_message
-             INNER JOIN mail_channel_member
-                     ON mail_channel_member.channel_id = mail_message.res_id
-                  WHERE mail_message.model = 'mail.channel'
-                    AND mail_message.message_type NOT IN ('notification', 'user_notification')
-                    AND (
-                        mail_message.id > mail_channel_member.seen_message_id
-                     OR mail_channel_member.seen_message_id IS NULL
-                    )
-                    AND mail_channel_member.id IN %(ids)s
-               GROUP BY mail_channel_member.id
-        """, {'ids': tuple(self.ids)})
-        unread_counter_by_member = {res['id']: res['count'] for res in self.env.cr.dictfetchall()}
-        for member in self:
-            member.message_unread_counter = unread_counter_by_member.get(member.id)
+        if self.ids:
+            self.env['mail.message'].flush_model()
+            self.flush_recordset(['channel_id', 'seen_message_id'])
+            self.env.cr.execute("""
+                     SELECT count(mail_message.id) AS count,
+                            mail_channel_member.id
+                       FROM mail_message
+                 INNER JOIN mail_channel_member
+                         ON mail_channel_member.channel_id = mail_message.res_id
+                      WHERE mail_message.model = 'mail.channel'
+                        AND mail_message.message_type NOT IN ('notification', 'user_notification')
+                        AND (
+                            mail_message.id > mail_channel_member.seen_message_id
+                         OR mail_channel_member.seen_message_id IS NULL
+                        )
+                        AND mail_channel_member.id IN %(ids)s
+                   GROUP BY mail_channel_member.id
+            """, {'ids': tuple(self.ids)})
+            unread_counter_by_member = {res['id']: res['count'] for res in self.env.cr.dictfetchall()}
+            for member in self:
+                member.message_unread_counter = unread_counter_by_member.get(member.id)
+        else:
+            self.message_unread_counter = 0
 
     def name_get(self):
         return [(record.id, record.partner_id.name or record.guest_id.name) for record in self]

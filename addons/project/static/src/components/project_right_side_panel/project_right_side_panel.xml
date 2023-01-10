@@ -3,7 +3,7 @@
 
     <t t-name="project.ProjectRightSidePanel" owl="1">
         <div t-if="projectId" class="o_rightpanel pt-0 bg-view border-start overflow-auto">
-            <ProjectRightSidePanelSection 
+            <ProjectRightSidePanelSection
                 name="'stat_buttons'"
                 header="false"
                 show="!!state.data.buttons"
@@ -14,7 +14,7 @@
                             <ViewButton
                                 t-if="button.show"
                                 defaultRank="'oe_stat_button'"
-                                className="'h-auto py-2 border border-start-0 border-top-0'"
+                                className="'h-auto py-2 border border-start-0 border-top-0 text-start'"
                                 icon="`fa-${button.icon}`"
                                 title="button.text"
                                 clickParams="_getStatButtonClickParams(button)"
@@ -22,7 +22,7 @@
                             >
                                 <t t-set-slot="contents">
                                     <div class="o_field_widget o_stat_info">
-                                        <span class="o_stat_value">
+                                        <span class="o_stat_value text-start">
                                             <t t-esc="button.number"/>
                                         </span>
                                         <span class="o_stat_text">

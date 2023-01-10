@@ -9,6 +9,8 @@ import { WebsiteTranslator } from '../../components/translator/translator';
 import { unslugHtmlDataObject } from '../../services/website_service';
 import {OptimizeSEODialog} from '@website/components/dialog/seo';
 import { routeToUrl } from "@web/core/browser/router_service";
+import { getActiveHotkey } from "@web/core/hotkeys/hotkey_service";
+import wUtils from 'website.utils';
 
 const { Component, onWillStart, onMounted, onWillUnmount, useRef, useEffect, useState } = owl;
 
@@ -52,7 +54,16 @@ export class WebsitePreview extends Component {
             this.backendWebsiteId = unslugHtmlDataObject(backendWebsiteRepr).id;
 
             const encodedPath = encodeURIComponent(this.path);
-            if (this.websiteDomain && this.websiteDomain !== window.location.origin) {
+            if (this.websiteDomain && !wUtils.isHTTPSorNakedDomainRedirection(this.websiteDomain, window.location.origin)) {
+                // The website domain might be the naked one while the naked one
+                // is actually redirecting to `www` (or the other way around).
+                // In such a case, we need to consider those 2 from the same
+                // domain and let the iframe load that "different" domain. The
+                // iframe will actually redirect to the correct one (naked/www),
+                // which will ends up with the same domain as the parent window
+                // URL (event if it wasn't, it wouldn't be an issue as those are
+                // really considered as the same domain, the user will share the
+                // same session and CORS errors won't be a thing in such a case)
                 window.location.href = `${this.websiteDomain}/web#action=website.website_preview&path=${encodedPath}&website_id=${this.websiteId}`;
             } else {
                 this.initialUrl = `/website/force/${this.websiteId}?path=${encodedPath}`;
@@ -272,7 +283,10 @@ export class WebsitePreview extends Component {
             || (pathname
                 && (backendRoutes.includes(pathname)
                     || pathname.startsWith('/@/')
-                    || pathname.startsWith('/web/content/')));
+                    || pathname.startsWith('/web/content/')
+                    // This is defined here to avoid creating a
+                    // website_documents module for just one patch.
+                    || pathname.startsWith('/document/share/')));
     }
 
     /**
@@ -334,12 +348,14 @@ export class WebsitePreview extends Component {
             const { href, target, classList } = linkEl;
             if (classList.contains('o_add_language')) {
                 ev.preventDefault();
+                // TODO: in master adapt the href in template to only be the
+                // return URL and use it directly here to pass to url_return
                 this.action.doAction('base.action_view_base_language_install', {
                     target: 'new',
                     additionalContext: {
                         params: {
                             website_id: this.websiteId,
-                            url_return: '/[lang]',
+                            url_return: $.deparam(href).url_return || '/[lang]',
                         },
                     },
                 });
@@ -351,10 +367,9 @@ export class WebsitePreview extends Component {
                 const destinationUrl = new URL(href, window.location);
                 destinationUrl.searchParams.delete('edit_translations');
                 destinationUrl.hash = this.websiteService.contentWindow.location.hash;
-                const forceLangUrl = `/website/lang/${lang}?r=${destinationUrl.toString()}`;
                 this.websiteService.bus.trigger('LEAVE-EDIT-MODE', {
                     onLeave: () => {
-                        this.websiteService.goToWebsite({ path: forceLangUrl });
+                        this.websiteService.goToWebsite({ path: destinationUrl.toString(), lang });
                     },
                     reloadIframe: false,
                 });
@@ -364,6 +379,11 @@ export class WebsitePreview extends Component {
             }
         });
         this.iframe.el.contentDocument.addEventListener('keydown', ev => {
+            if (getActiveHotkey(ev) === 'control+k' && !this.websiteContext.edition) {
+                // Avoid for browsers to focus on the URL bar when pressing
+                // CTRL-K from within the iframe.
+                ev.preventDefault();
+            }
             this.iframe.el.dispatchEvent(new KeyboardEvent('keydown', ev));
         });
         this.iframe.el.contentDocument.addEventListener('keyup', ev => {

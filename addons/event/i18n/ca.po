@@ -11,11 +11,13 @@
 # Manel Fernandez Ramirez <manelfera@outlook.com>, 2022
 # RGB Consulting <odoo@rgbconsulting.com>, 2022
 # Sandra Franch <sandra.franch@upc.edu>, 2022
-# jabelchi, 2022
+# Josep Anton Belchi, 2022
 # Martin Trigaux, 2022
 # Arnau Ros, 2022
 # Quim - eccit <quim@eccit.com>, 2022
 # marcescu, 2022
+# Óscar Fonseca <tecnico@extreme-micro.com>, 2022
+# Farouk Jabiri, 2022
 # 
 msgid ""
 msgstr ""
@@ -23,7 +25,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-10-04 09:24+0000\n"
 "PO-Revision-Date: 2022-09-22 05:45+0000\n"
-"Last-Translator: marcescu, 2022\n"
+"Last-Translator: Farouk Jabiri, 2022\n"
 "Language-Team: Catalan (https://www.transifex.com/odoo/teams/41243/ca/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -46,25 +48,25 @@ msgstr "# Enviat"
 #: code:addons/event/models/event_event.py:0
 #, python-format
 msgid "%(event_name)s (%(count)s seats remaining)"
-msgstr ""
+msgstr "%(event_name)s (%(count)s seients restants)"
 
 #. module: event
 #: code:addons/event/models/event_event.py:0
 #, python-format
 msgid "%(event_name)s (Sold out)"
-msgstr ""
+msgstr "%(event_name)s (S'ha venut)"
 
 #. module: event
 #: code:addons/event/models/event_ticket.py:0
 #, python-format
 msgid "%(ticket_name)s (%(count)s seats remaining)"
-msgstr ""
+msgstr "%(ticket_name)s (%(count)s seients restants)"
 
 #. module: event
 #: code:addons/event/models/event_ticket.py:0
 #, python-format
 msgid "%(ticket_name)s (Sold out)"
-msgstr ""
+msgstr "%(ticket_name)s (S'ha venut)"
 
 #. module: event
 #: code:addons/event/models/event_event.py:0
@@ -76,10 +78,10 @@ msgstr "%s (còpia)"
 #: model:ir.actions.report,print_report_name:event.action_report_event_registration_foldable_badge
 msgid ""
 "'Foldable Badge - %s - %s' % ((object.event_id.name or "
-"'Event').replace('/',''), object.name.replace('/',''))"
+"'Event').replace('/',''), (object.name or '').replace('/',''))"
 msgstr ""
-"Insígnia portàtil - %s - %s' % ((object.event_id.name or "
-"'Event').replace('/',''), object.name.replace('/',''))"
+"'Insígnia dilatable - %s - %s' % ((object.eventid.name o "
+"'Event').reemplaça('/',''), (object.name o '').replace('/',''))"
 
 #. module: event
 #: model:ir.actions.report,print_report_name:event.action_report_event_event_foldable_badge
@@ -90,10 +92,10 @@ msgstr "'Insígnia portàtil - %s' % (object.name or 'Event').replace('/','')"
 #: model:ir.actions.report,print_report_name:event.action_report_event_registration_full_page_ticket
 msgid ""
 "'Full Page Ticket - %s - %s' % ((object.event_id.name or "
-"'Event').replace('/',''), object.name.replace('/',''))"
+"'Event').replace('/',''), (object.name or '').replace('/',''))"
 msgstr ""
-"'Ticket de pàgina complet - %s - %s' % ((object.event_id.name or "
-"'Event').replace('/',''), object.name.replace('/',''))"
+"'Ticket de pàgina completa - %s - %s' % ((object.eventid.name o "
+"'Event').replace('/',''), (object.name o '').replace('/',''))"
 
 #. module: event
 #: model:ir.actions.report,print_report_name:event.action_report_event_event_full_page_ticket
@@ -105,7 +107,7 @@ msgstr ""
 #: code:addons/event/models/event_event.py:0
 #, python-format
 msgid "- \"%(event_name)s\": Missing %(nb_too_many)i seats."
-msgstr ""
+msgstr "- \"%(event_name)s\": falten  %(nb_too_many)i seients."
 
 #. module: event
 #: code:addons/event/models/event_ticket.py:0
@@ -114,6 +116,8 @@ msgid ""
 "- the ticket \"%(ticket_name)s\" (%(event_name)s): Missing %(nb_too_many)i "
 "seats."
 msgstr ""
+"- l'entrada \"%(ticket_name)s\" (%(event_name)s): Falten %(nb_too_many)i "
+"seients."
 
 #. module: event
 #: model:event.tag,name:event.event_tag_category_1_tag_2
@@ -259,7 +263,7 @@ msgstr ""
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_kanban
 msgid "<i class=\"fa fa-arrow-right me-2 o_event_fontsize_09\" title=\"End date\"/>"
-msgstr ""
+msgstr "<i class=\"fa fa-arrow-right me-2 o_event_fontsize_09\" title=\"End date\"/>"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_registration_view_kanban
@@ -285,6 +289,8 @@ msgid ""
 "<i class=\"fa fa-info-circle me-2\"></i>This event and all the conferences "
 "are in <b>English</b>!"
 msgstr ""
+"<i class=\"fa fa-info-circle me-2\"></i>Aquest esdeveniment i totes les "
+"conferències són en <b>anglès</b>!"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_kanban
@@ -304,7 +310,7 @@ msgstr ""
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_kanban
 msgid "<i class=\"fa fa-map-marker mt-1 me-1\" title=\"Location\"/>"
-msgstr ""
+msgstr "<i class=\"fa fa-map-marker mt-1 me-1\" title=\"Location\"/>"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_registration_view_kanban
@@ -330,6 +336,8 @@ msgid ""
 "<span class=\"badge text-bg-secondary o_wevent_badge float-"
 "end\">SPEAKER</span>"
 msgstr ""
+"<span class=\"badge text-bg-secondary o_wevent_badge float-"
+"end\">PARLANT</span>"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_registration_view_kanban
@@ -352,6 +360,9 @@ msgid ""
 "                                Registration statistics\n"
 "                            </span>"
 msgstr ""
+"<span class=\"o_stat_text\">\n"
+"                                Estadístiques de registre\n"
+"                            </span>"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_registration_view_kanban
@@ -576,6 +587,209 @@ msgid ""
 "</table>\n"
 "            "
 msgstr ""
+"<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" style=\"padding-top: 16px; background-color: #F1F1F1; font-family:Verdana, Arial,sans-serif; color: #454748; width: 100%; border-collapse:separate;\"><tr><td align=\"center\">\n"
+"<t t-set=\"datebegin\" t-value=\"formatdatetime(object.eventid.datebegin, tz='UTC', dtformat=quot;yyyyMMdd'T'HHmmss'Z'quot;)\"/>\n"
+"<t t-set=\"dateend\" t-value=\"formatdatetime(object.eventid.dateend, tz='UTC', dtformat=quot;yyyyMMdd'T'HHmmss'Z'quot;)\"/>\n"
+"<t t-set=\"isonline\" t-value=\"'ispublished' in object.eventid and object.eventid.ispublished\"/>\n"
+"<t t-set=\"eventorganizer\" t-value=\"object.eventid.organizerid\"/>\n"
+"<t t-set=\"eventaddress\" t-value=\"object.eventid.addressid\"/>\n"
+"<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"padding: 16px; background-color: white; color: #454748; border-collapse:separate;\">\n"
+"<tbody>\n"
+"    <!-- HEADER -->\n"
+"    <tr>\n"
+"        <td align=\"center\" style=\"min-width: 590px;\">\n"
+"            <table width=\"590\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\" style=\"min-width: 590px; background-color: white; padding: 0px 8px 0px 8px; border-collapse:separate;\">\n"
+"                <tr><td valign=\"middle\">\n"
+"                    <span style=\"font-size: 10px;\">El vostre registre</span><br/>\n"
+"                    <span style=\"font-size: 20px; font-weight: bold;\" t-out=\"object.name or ''\">Oscar Morgan</span>\n"
+"                </td><td valign=\"middle\" align=\"right\">\n"
+"                    <t t-if=\"isonline\">\n"
+"                        <a t-attf-href=\"{{ object.eventid.websiteurl }}\" style=\"padding: 8px 12px; font-size: 12px; color: #FFFFFF; text-decoration: none !important; font-weight: 400; background-color: #875A7B; border: 0px solid #875A7B; border-radius:3px\">\n"
+"                            Visualitza l'esdeveniment\n"
+"                        </a>\n"
+"                    </t>\n"
+"                    <t t-else=\"\">\n"
+"                        <img t-att-src=\"'/logo.png?company=%s' % object.companyid.id\" style=\"padding: 0px; margin: 0px; height: auto; width: 80px;\" t-att-alt=\"'%s' % object.companyid.name\"/>\n"
+"                    </t>\n"
+"                </td></tr>\n"
+"                <tr><td colspan=\"2\" style=\"text-align:center;\">\n"
+"                  <hr width=\"100%\" style=\"background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0; margin:16px 0px 16px 0px;\"/>\n"
+"                </td></tr>\n"
+"            </table>\n"
+"        </td>\n"
+"    </tr>\n"
+"    <!-- EVENT DESCRIPTION -->\n"
+"    <tr>\n"
+"        <td align=\"center\" style=\"min-width: 590px;\">\n"
+"            <table width=\"590\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\" style=\"min-width: 590px; background-color: white; padding: 0px 8px 0px 8px; border-collapse:separate;\">\n"
+"                <tr><td valign=\"top\" style=\"font-size: 14px;\">\n"
+"                    <div>\n"
+"                        Hola <t t-out=\"object.name or ''\">Oscar Morgan</t>,<br/>\n"
+"                        Estem entusiasmats de recordar-vos que l'esdeveniment\n"
+"                        <t t-if=\"isonline\">\n"
+"                            <a t-att-href=\"object.eventid.websiteurl\" style=\"color:#875A7B;text-decoration:none;\" t-out=\"object.eventid.name or ''\">OpenWood Collection Online Revelació</a>\n"
+"                        </t>\n"
+"                        <t t-else=\"\">\n"
+"                            <strong t-out=\"object.eventid.name or ''\">OpenWood Collection Online Revelació</strong>\n"
+"                        </t>\n"
+"                        comença <strong t-out=\"object.getdaterangestr() or ''\">avui</strong>.\n"
+"                    </div>\n"
+"                    <div>\n"
+"                        <br/>\n"
+"                        <strong>Afegeix aquest esdeveniment al calendari</strong>\n"
+"                        <a t-attf-href=\"https://www.google.com/calendar/render?action=TEMPLATE&amp;text={{ object.event_id.name }}&amp;dates={{ date_begin }}/{{ date_end }}&amp;location={{ location }}\" style=\"padding:3px 5px;border:1px solid #875A7B;color:#875A7B;text-decoration:none;border-radius:3px;\" target=\"new\"><img src=\"/webeditor/fonttoimg/61525/rgb(135,90,123)/16\" style=\"vertical-align:middle;\" height=\"16\" alt=\"\"/> Google</a>\n"
+"                        <a t-attf-href=\"/event/{{ slug(object.eventid) }}/ics\" style=\"padding:3px 5px;border:1px solid #875A7B;color:#875A7B;text-decoration:none;border-radius:3px;\"><img src=\"/webeditor/fonttoimg/61525/rgb(135,90,123)/16\" style=\"vertical-align:middle;\" height=\"16\" alt=\"\"/> iCal/Outlook</a>\n"
+"                        <a t-attf-href=\"https://calendar.yahoo.com/?v=60&amp;view=d&amp;type=20&amp;title={{ object.event_id.name }}&amp;in_loc={{ location }}&amp;st={{ format_datetime(object.event_id.date_begin, tz='UTC', dt_format='yyyyMMdd\\'T\\'HHmmss') }}&amp;et={{ format_datetime(object.event_id.date_end, tz='UTC', dt_format='yyyyMMdd\\'T\\'HHmmss') }}\" style=\"padding:3px 5px;border:1px solid #875A7B;color:#875A7B;text-decoration:none;border-radius:3px;\" target=\"new\">\n"
+"                            <img src=\"/webeditor/fonttoimg/61525/rgb(135,90,123)/16\" style=\"vertical-align:middle;\" height=\"16\" alt=\"\"/> Yahoo\n"
+"                        </a>\n"
+"                        <br/><br/>\n"
+"                    </div>\n"
+"                    <div>\n"
+"                        Confirmem la teva inscripció i esperem conèixer-te allà,<br/>\n"
+"                        <span style=\"color: #454748;\">\n"
+"                        -- <br/>\n"
+"                        <t t-if=\"eventorganizer\">\n"
+"                            <t t-out=\"eventorganizer.name or ''\">YourCompany</t>\n"
+"                        </t>\n"
+"                        <t t-else=\"\">\n"
+"                            La <t t-out=\"object.eventid.name or ''\">OpenWood Collection Online Revela</t> Team\n"
+"                        </t>\n"
+"                        </span>\n"
+"                    </div>\n"
+"                </td></tr>\n"
+"                <tr><td style=\"text-align:center;\">\n"
+"                  <hr width=\"100%\" style=\"background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0; margin: 16px 0px 16px 0px;\"/>\n"
+"                </td></tr>\n"
+"            </table>\n"
+"        </td>\n"
+"    </tr>\n"
+"    <!-- DETAILS -->\n"
+"    <tr>\n"
+"        <td align=\"center\" style=\"min-width: 590px;\">\n"
+"            <table width=\"590\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\" style=\"min-width: 590px; background-color: white; padding: 0px 8px 0px 8px; border-collapse:separate;\">\n"
+"                <tr><td valign=\"top\" style=\"font-size: 14px;\">\n"
+"                    <table style=\"width:100%;\">\n"
+"                        <tr>\n"
+"                            <td style=\"vertical-align:top;\">\n"
+"                                <img src=\"/webeditor/fonttoimg/61555/rgb(81,81,102)/34\" style=\"padding:4px;max-width:inherit;\" height=\"34\" alt=\"\"/>\n"
+"                            </td>\n"
+"                            <td style=\"padding: 0px 10px 0px 10px;width:50%;line-height:20px;vertical-align:top;\">\n"
+"                                <div><strong>De</strong> <t t-out=\"object.eventid.datebeginlocated or ''\">4 de maig de 2021, 7:00:00 AM</t></div>\n"
+"                                <div><strong>A</strong> <t t-out=\"object.eventid.dateendlocated or ''\">6 de maig de 2021, 5:00:00 PM</t></div>\n"
+"                                <div style=\"font-size:12px;color:#9e9e9e\"><i><t t-out=\"object.eventid.datetz or ''\">Europa/Brussel·les</t></i></div>\n"
+"                            </td>\n"
+"                            <td style=\"vertical-align:top;\">\n"
+"                                <t t-if=\"eventaddress\">\n"
+"                                    <img src=\"/webeditor/fonttoimg/61505/rgb(81,81,102)/34\" style=\"padding:4px;max-width:inherit;\" height=\"34\" alt=\"\"/>\n"
+"                                </t>\n"
+"                            </td>\n"
+"                            <td style=\"padding: 0px 10px 0px 10px;width:50%;vertical-align:top;\">\n"
+"                                <t t-if=\"eventaddress\">\n"
+"                                    <t t-set=\"location\" t-value=\"''\"/>\n"
+"                                    <t t-if=\"object.eventid.addressid.name\">\n"
+"                                        <div t-out=\"object.eventid.addressid.name or ''\">Teksa SpA</div>\n"
+"                                    </t>\n"
+"                                    <t t-if=\"object.eventid.addressid.street\">\n"
+"                                        <div t-out=\"object.eventid.addressid.street or ''\">Puerto Madero 9710</div>\n"
+"                                        <t t-set=\"location\" t-value=\"object.eventid.addressid.street\"/>\n"
+"                                    </t>\n"
+"                                    <t t-if=\"object.eventid.addressid.street2\">\n"
+"                                        <div t-out=\"object.eventid.addressid.street2 or ''\">D'A15, Santiago (RM)</div>\n"
+"                                        <t t-set=\"location\" t-value=\"'%s, %s' % (location, object.eventid.addressid.street2)\"/>\n"
+"                                    </t>\n"
+"                                    <div>\n"
+"                                    <t t-if=\"object.eventid.addressid.city\">\n"
+"                                        <t t-out=\"object.eventid.addressid.city or ''\">Pudahuel</t>,\n"
+"                                        <t t-set=\"location\" t-value=\"'%s, %s' % (location, object.eventid.addressid.city)\"/>\n"
+"                                    </t>\n"
+"                                    <t t-if=\"object.eventid.addressid.stateid.name\">\n"
+"                                        <t t-out=\"object.eventid.addressid.stateid.name or ''\">C1</t>,\n"
+"                                        <t t-set=\"location\" t-value=\"'%s, %s' % (location, object.eventid.addressid.stateid.name)\"/>\n"
+"                                    </t>\n"
+"                                    <t t-if=\"object.eventid.addressid.zip\">\n"
+"                                        <t t-out=\"object.eventid.addressid.zip or ''\">98450</t>\n"
+"                                        <t t-set=\"location\" t-value=\"'%s, %s' % (location, object.eventid.addressid.zip)\"/>\n"
+"                                    </t>\n"
+"                                    </div>\n"
+"                                    <t t-if=\"object.eventid.addressid.countryid.name\">\n"
+"                                        <div t-out=\"object.eventid.addressid.countryid.name or ''\">Argentina</div>\n"
+"                                        <t t-set=\"location\" t-value=\"'%s, %s' % (location, object.eventid.addressid.countryid.name)\"/>\n"
+"                                    </t>\n"
+"                                </t>\n"
+"                            </td>\n"
+"                        </tr>\n"
+"                    </table>\n"
+"                </td></tr>\n"
+"                <tr><td style=\"text-align:center;\">\n"
+"                    <t t-if=\"eventorganizer\">\n"
+"                        <hr width=\"100%\" style=\"background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0; margin: 16px 0px 16px 0px;\"/>\n"
+"                    </t>\n"
+"                </td></tr>\n"
+"\n"
+"                <tr><td valign=\"top\" style=\"font-size: 14px;\">\n"
+"                    <!-- CONTACT ORGANIZER -->\n"
+"                    <t t-if=\"eventorganizer\">\n"
+"                        <div>\n"
+"                            <span style=\"font-weight:300;margin:10px 0px\">Preguntes sobre aquest esdeveniment?</span>\n"
+"                            <div>Contacteu amb l'organitzador:</div>\n"
+"                            <ul>\n"
+"                                <li t-out=\"eventorganizer.name or ''\">YourCompany</li>\n"
+"                                <t t-if=\"eventorganizer.email\">\n"
+"                                    <li>Correu: <a t-attf-href=\"mailto:{{ eventorganizer.email }}\" style=\"text-decoration:none;color:#875A7B;\" t-out=\"eventorganizer.email or ''\"/></li>\n"
+"                                </t>\n"
+"                                <t t-if=\"eventorganizer.phone\">\n"
+"                                    <li>Telèfon: <t t-out=\"eventorganizer.phone or ''\"/></li>\n"
+"                                </t>\n"
+"                            </ul>\n"
+"                        </div>\n"
+"                    </t>\n"
+"                </td></tr>\n"
+"                <tr><td style=\"text-align:center;\">\n"
+"                    <!-- CONTACT ORGANIZER SEPARATION -->\n"
+"                    <hr t-if=\"isonline or eventaddress\" width=\"100%\" style=\"background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0; margin: 16px 0px 16px 0px;\"/>\n"
+"                </td></tr>\n"
+"\n"
+"                <tr><td valign=\"top\" style=\"font-size: 14px;\">\n"
+"                    <!-- PWA MARKGETING -->\n"
+"                    <div t-if=\"isonline\">\n"
+"                        <strong>Obteniu la millor experiència mòbil.</strong>\n"
+"                        <a href=\"/event\">Instal·la la nostra aplicació mòbil</a>\n"
+"                    </div>\n"
+"                </td></tr>\n"
+"                <tr><td style=\"text-align:center;\">\n"
+"                    <!-- PWA MARKGETING SEPARATION-->\n"
+"                    <hr t-if=\"isonline and eventaddress\" width=\"100%\" style=\"background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0; margin: 16px 0px 16px 0px;\"/>\n"
+"                </td></tr>\n"
+"\n"
+"                <tr><td valign=\"top\" style=\"font-size: 14px;\">\n"
+"                    <!-- GOOGLE MAPS LINK -->\n"
+"                    <table t-if=\"eventaddress\" style=\"width:100%;\"><tr><td>\n"
+"                        <div>\n"
+"                            <a t-attf-href=\"https://maps.google.com/maps?q={{ location }}\" target=\"new\">\n"
+"                                <img t-attf-src=\"http://maps.googleapis.com/maps/api/staticmap?autoscale=1&amp;size=598x200&amp;maptype=roadmap&amp;format=png&amp;visual_refresh=true&amp;markers=size:mid%7Ccolor:0xa5117d%7Clabel:%7C{{ location }}\" style=\"vertical-align:bottom; width: 100%;\" alt=\"Google Maps\"/>\n"
+"                            </a>\n"
+"                        </div>\n"
+"                    </td></tr></table>\n"
+"                </td></tr>\n"
+"            </table>\n"
+"        </td>\n"
+"    </tr>\n"
+"</tbody>\n"
+"</table>\n"
+"</td></tr>\n"
+"<!-- FOOTER BY -->\n"
+"<tr><td align=\"center\" style=\"min-width: 590px;\">\n"
+"    <table t-if=\"object.companyid\" width=\"590\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\" style=\"min-width: 590px; background-color: #F1F1F1; color: #454748; padding: 8px; border-collapse:separate;\">\n"
+"      <tr><td style=\"text-align: center; font-size: 14px;\">\n"
+"        Enviat per <a target=\"_blank\" t-attf-href=\"{{ object.company_id.website }}\" style=\"color: #875A7B;\" t-out=\"object.company_id.name or ''\">YourCompany</a>\n"
+"        <t t-if=\"'websiteurl' in object.eventid and object.eventid.websiteurl\">\n"
+"            <br/>\n"
+"            Descobriu <a href=\"/event\" style=\"color:#875A7B;\">tots els nostres esdeveniments</a>.\n"
+"        </t>\n"
+"      </td></tr>\n"
+"    </table>\n"
+"</td></tr>\n"
+"</table>"
 
 #. module: event
 #: model:mail.template,body_html:event.event_subscription
@@ -797,6 +1011,221 @@ msgid ""
 "</table>\n"
 "            "
 msgstr ""
+"<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" style=\"padding-top: 16px; background-color: #F1F1F1; font-family:Verdana, Arial,sans-serif; color: #454748; width: 100%; border-collapse:separate;\"><tr><td align=\"center\">\n"
+"<t t-set=\"datebegin\" t-value=\"formatdatetime(object.eventid.datebegin, tz='UTC', dtformat=quot;yyyyMMdd'T'HHmmss'Z'quot;)\"/>\n"
+"<t t-set=\"dateend\" t-value=\"formatdatetime(object.eventid.dateend, tz='UTC', dtformat=quot;yyyyMMdd'T'HHmmss'Z'quot;)\"/>\n"
+"<t t-set=\"isonline\" t-value=\"'ispublished' in object.eventid and object.eventid.ispublished\"/>\n"
+"<t t-set=\"eventorganizer\" t-value=\"object.eventid.organizerid\"/>\n"
+"<t t-set=\"eventaddress\" t-value=\"object.eventid.addressid\"/>\n"
+"<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"padding: 16px; background-color: white; color: #454748; border-collapse:separate;\">\n"
+"<tbody>\n"
+"    <!-- HEADER -->\n"
+"    <tr>\n"
+"        <td align=\"center\" style=\"min-width: 590px;\">\n"
+"            <table width=\"590\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\" style=\"min-width: 590px; background-color: white; padding: 0px 8px 0px 8px; border-collapse:separate;\">\n"
+"                <tr><td valign=\"middle\">\n"
+"                    <span style=\"font-size: 10px;\">El vostre registre</span><br/>\n"
+"                    <span style=\"font-size: 20px; font-weight: bold;\">\n"
+"                        <t t-out=\"object.name or ''\">Oscar Morgan</t>\n"
+"                    </span>\n"
+"                </td><td valign=\"middle\" align=\"right\">\n"
+"                    <t t-if=\"isonline\">\n"
+"                        <a t-att-href=\"object.eventid.websiteurl\" style=\"padding: 8px 12px; font-size: 12px; color: #FFFFFF; text-decoration: none !important; font-weight: 400; background-color: #875A7B; border: 0px solid #875A7B; border-radius:3px\">\n"
+"                            Visualitza l'esdeveniment\n"
+"                        </a>\n"
+"                    </t>\n"
+"                    <t t-else=\"\">\n"
+"                        <img t-att-src=\"'/logo.png?company=%s' % object.companyid.id\" style=\"padding: 0px; margin: 0px; height: auto; width: 80px;\" t-att-alt=\"'%s' % object.companyid.name\"/>\n"
+"                    </t>\n"
+"                </td></tr>\n"
+"                <tr><td colspan=\"2\" style=\"text-align:center;\">\n"
+"                  <hr width=\"100%\" style=\"background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0; margin:16px 0px 16px 0px;\"/>\n"
+"                </td></tr>\n"
+"            </table>\n"
+"        </td>\n"
+"    </tr>\n"
+"    <!-- EVENT DESCRIPTION -->\n"
+"    <tr>\n"
+"        <td align=\"center\" style=\"min-width: 590px;\">\n"
+"            <table width=\"590\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\" style=\"min-width: 590px; background-color: white; padding: 0px 8px 0px 8px; border-collapse:separate;\">\n"
+"                <tr><td valign=\"top\" style=\"font-size: 14px;\">\n"
+"                    <div>\n"
+"                        Hola <t t-out=\"object.name or ''\">Oscar Morgan</t>,<br/>\n"
+"                        Ens complau confirmar la vostra inscripció a l'esdeveniment\n"
+"                        <t t-if=\"isonline\">\n"
+"                            <a t-att-href=\"object.eventid.websiteurl\" style=\"color:#875A7B;text-decoration:none;\" t-out=\"object.eventid.name or ''\">OpenWood Collection Online Revelació</a>\n"
+"                        </t>\n"
+"                        <t t-else=\"\">\n"
+"                            <strong t-out=\"object.eventid.name or ''\">OpenWood Collection Online Revelació</strong>\n"
+"                        </t>\n"
+"                        per l'assistent <t t-out=\"object.name or ''\">Oscar Morgan</t>.\n"
+"                    </div>\n"
+"                    <div>\n"
+"                        <br/>\n"
+"                        <strong>Afegeix aquest esdeveniment al calendari</strong>\n"
+"                        <a t-attf-href=\"https://www.google.com/calendar/render?action=TEMPLATE&amp;text={{ object.event_id.name }}&amp;dates={{ date_begin }}/{{ date_end }}&amp;location={{ location }}\" style=\"padding:3px 5px;border:1px solid #875A7B;color:#875A7B;text-decoration:none;border-radius:3px;\" target=\"new\"><img src=\"/webeditor/fonttoimg/61525/rgb(135,90,123)/16\" style=\"vertical-align:middle;\" height=\"16\" alt=\"\"/> Google</a>\n"
+"                        <a t-attf-href=\"/event/{{ slug(object.eventid) }}/ics\" style=\"padding:3px 5px;border:1px solid #875A7B;color:#875A7B;text-decoration:none;border-radius:3px;\"><img src=\"/webeditor/fonttoimg/61525/rgb(135,90,123)/16\" style=\"vertical-align:middle;\" height=\"16\" alt=\"\"/> iCal/Outlook</a>\n"
+"                        <a t-attf-href=\"https://calendar.yahoo.com/?v=60&amp;view=d&amp;type=20&amp;title={{ object.event_id.name }}&amp;in_loc={{ location }}&amp;st={{ format_datetime(object.event_id.date_begin, tz='UTC', dt_format='yyyyMMdd\\'T\\'HHmmss') }}&amp;et={{ format_datetime(object.event_id.date_end, tz='UTC', dt_format='yyyyMMdd\\'T\\'HHmmss') }}\" style=\"padding:3px 5px;border:1px solid #875A7B;color:#875A7B;text-decoration:none;border-radius:3px;\" target=\"new\">\n"
+"                            <img src=\"/webeditor/fonttoimg/61525/rgb(135,90,123)/16\" style=\"vertical-align:middle;\" height=\"16\" alt=\"\"/> Yahoo\n"
+"                        </a>\n"
+"                        <br/><br/>\n"
+"                    </div>\n"
+"                    <div>\n"
+"                        Ens veiem aviat,<br/>\n"
+"                        <span style=\"color: #454748;\">\n"
+"                        -- <br/>\n"
+"                        <t t-if=\"eventorganizer\">\n"
+"                            <t t-out=\"eventorganizer.name or ''\">YourCompany</t>\n"
+"                        </t>\n"
+"                        <t t-else=\"\">\n"
+"                            La <t t-out=\"object.eventid.name or ''\">OpenWood Collection Online Revela</t> Team\n"
+"                        </t>\n"
+"                        </span>\n"
+"                    </div>\n"
+"                </td></tr>\n"
+"                <tr><td style=\"text-align:center;\">\n"
+"                  <hr width=\"100%\" style=\"background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0; margin: 16px 0px 16px 0px;\"/>\n"
+"                </td></tr>\n"
+"            </table>\n"
+"        </td>\n"
+"    </tr>\n"
+"    <!-- DETAILS -->\n"
+"    <tr>\n"
+"        <td align=\"center\" style=\"min-width: 590px;\">\n"
+"            <table width=\"590\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\" style=\"min-width: 590px; background-color: white; padding: 0px 8px 0px 8px; border-collapse:separate;\">\n"
+"                <tr><td valign=\"top\" style=\"font-size: 14px;\">\n"
+"                    <table style=\"width:100%;\">\n"
+"                        <tr>\n"
+"                            <td style=\"vertical-align:top;\">\n"
+"                                <img src=\"/webeditor/fonttoimg/61555/rgb(81,81,102)/34\" style=\"padding:4px;max-width:inherit;\" height=\"34\" alt=\"\"/>\n"
+"                            </td>\n"
+"                            <td style=\"padding: 0px 10px 0px 10px;width:50%;line-height:20px;vertical-align:top;\">\n"
+"                                <div><strong>De</strong> <t t-out=\"object.eventid.datebeginlocated or ''\">4 de maig de 2021, 7:00:00 AM</t></div>\n"
+"                                <div><strong>A</strong> <t t-out=\"object.eventid.dateendlocated or ''\">6 de maig de 2021, 5:00:00 PM</t></div>\n"
+"                                <div style=\"font-size:12px;color:#9e9e9e\"><i>(<t t-out=\"object.eventid.datetz or ''\">Europa/Brussel·les</t>)</i></div>\n"
+"                            </td>\n"
+"                            <td style=\"vertical-align:top;\">\n"
+"                                <t t-if=\"eventaddress\">\n"
+"                                    <img src=\"/webeditor/fonttoimg/61505/rgb(81,81,102)/34\" style=\"padding:4px;max-width:inherit;\" height=\"34\" alt=\"\"/>\n"
+"                                </t>\n"
+"                            </td>\n"
+"                            <td style=\"padding: 0px 10px 0px 10px;width:50%;vertical-align:top;\">\n"
+"                                <t t-if=\"eventaddress\">\n"
+"                                    <t t-set=\"location\" t-value=\"''\"/>\n"
+"                                    <t t-if=\"object.eventid.addressid.name\">\n"
+"                                        <div t-out=\"object.eventid.addressid.name or ''\">Teksa SpA</div>\n"
+"                                    </t>\n"
+"                                    <t t-if=\"object.eventid.addressid.street\">\n"
+"                                        <div t-out=\"object.eventid.addressid.street or ''\">Puerto Madero 9710</div>\n"
+"                                        <t t-set=\"location\" t-value=\"object.eventid.addressid.street\"/>\n"
+"                                    </t>\n"
+"                                    <t t-if=\"object.eventid.addressid.street2\">\n"
+"                                        <div t-out=\"object.eventid.addressid.street2 or ''\">D'A15, Santiago (RM)</div>\n"
+"                                        <t t-set=\"location\" t-value=\"'%s, %s' % (location, object.eventid.addressid.street2)\"/>\n"
+"                                    </t>\n"
+"                                    <div>\n"
+"                                    <t t-if=\"object.eventid.addressid.city\">\n"
+"                                        <t t-out=\"object.eventid.addressid.city or ''\">Pudahuel</t>,\n"
+"                                        <t t-set=\"location\" t-value=\"'%s, %s' % (location, object.eventid.addressid.city)\"/>\n"
+"                                    </t>\n"
+"                                    <t t-if=\"object.eventid.addressid.stateid.name\">\n"
+"                                        <t t-out=\"object.eventid.addressid.stateid.name or ''\">C1</t>,\n"
+"                                        <t t-set=\"location\" t-value=\"'%s, %s' % (location, object.eventid.addressid.stateid.name)\"/>\n"
+"                                    </t>\n"
+"                                    <t t-if=\"object.eventid.addressid.zip\">\n"
+"                                        <t t-out=\"object.eventid.addressid.zip or ''\">98450</t>\n"
+"                                        <t t-set=\"location\" t-value=\"'%s, %s' % (location, object.eventid.addressid.zip)\"/>\n"
+"                                    </t>\n"
+"                                    </div>\n"
+"                                    <t t-if=\"object.eventid.addressid.countryid.name\">\n"
+"                                        <div t-out=\"object.eventid.addressid.countryid.name or ''\">Argentina</div>\n"
+"                                        <t t-set=\"location\" t-value=\"'%s, %s' % (location, object.eventid.addressid.countryid.name)\"/>\n"
+"                                    </t>\n"
+"                                </t>\n"
+"                            </td>\n"
+"                        </tr>\n"
+"                    </table>\n"
+"                </td></tr>\n"
+"                <tr><td style=\"text-align:center;\">\n"
+"                    <t t-if=\"eventorganizer\">\n"
+"                        <hr width=\"100%\" style=\"background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0; margin: 16px 0px 16px 0px;\"/>\n"
+"                    </t>\n"
+"                </td></tr>\n"
+"\n"
+"                <tr><td valign=\"top\" style=\"font-size: 14px;\">\n"
+"                    <!-- CONTACT ORGANIZER -->\n"
+"                    <t t-if=\"eventorganizer\">\n"
+"                        <div>\n"
+"                            <span style=\"font-weight:300;margin:10px 0px\">Preguntes sobre aquest esdeveniment?</span>\n"
+"                            <div>Contacteu amb l'organitzador:</div>\n"
+"                            <ul>\n"
+"                                <li><t t-out=\"eventorganizer.name or ''\">YourCompany</t></li>\n"
+"                                <t t-if=\"eventorganizer.email\">\n"
+"                                    <li>Correu:<a t-attf-href=\"mailto:{{ event_organizer.email }}\" style=\"text-decoration:none;color:#875A7B;\" t-out=\"event_organizer.email or ''\">info@yourcompany.com</a></li>\n"
+"                                </t>\n"
+"                                <t t-if=\"eventorganizer.phone\">\n"
+"                                    <li>Telèfon: <t t-out=\"eventorganizer.phone or ''\">+1 650-123-4567</t></li>\n"
+"                                </t>\n"
+"                            </ul>\n"
+"                        </div>\n"
+"                    </t>\n"
+"                </td></tr>\n"
+"                <tr><td style=\"text-align:center;\">\n"
+"                    <!-- CONTACT ORGANIZER SEPARATION -->\n"
+"                    <t t-if=\"isonline or eventaddress\">\n"
+"                        <hr width=\"100%\" style=\"background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0; margin: 16px 0px 16px 0px;\"/>\n"
+"                    </t>\n"
+"                </td></tr>\n"
+"\n"
+"                <tr><td valign=\"top\" style=\"font-size: 14px;\">\n"
+"                    <!-- PWA MARKGETING -->\n"
+"                    <t t-if=\"isonline\">\n"
+"                        <div>\n"
+"                            <strong>Obteniu la millor experiència mòbil.</strong>\n"
+"                            <a href=\"/event\">Instal·la la nostra aplicació mòbil</a>\n"
+"                        </div>\n"
+"                    </t>\n"
+"                </td></tr>\n"
+"                <tr><td style=\"text-align:center;\">\n"
+"                    <!-- PWA MARKGETING SEPARATION-->\n"
+"                    <t t-if=\"isonline and eventaddress\">\n"
+"                        <hr width=\"100%\" style=\"background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0; margin: 16px 0px 16px 0px;\"/>\n"
+"                    </t>\n"
+"                </td></tr>\n"
+"\n"
+"                <tr><td valign=\"top\" style=\"font-size: 14px;\">\n"
+"                    <!-- GOOGLE MAPS LINK -->\n"
+"                    <t t-if=\"eventaddress\">\n"
+"                        <table style=\"width:100%;\"><tr><td>\n"
+"                            <div>\n"
+"                                <a t-attf-href=\"https://maps.google.com/maps?q={{ location }}\" target=\"new\">\n"
+"                                    <img t-attf-src=\"http://maps.googleapis.com/maps/api/staticmap?autoscale=1&amp;size=598x200&amp;maptype=roadmap&amp;format=png&amp;visual_refresh=true&amp;markers=size:mid%7Ccolor:0xa5117d%7Clabel:%7C{{ location }}\" style=\"vertical-align:bottom; width: 100%;\" alt=\"Google Maps\"/>\n"
+"                                </a>\n"
+"                            </div>\n"
+"                        </td></tr></table>\n"
+"                    </t>\n"
+"                </td></tr>\n"
+"            </table>\n"
+"        </td>\n"
+"    </tr>\n"
+"</tbody>\n"
+"</table>\n"
+"</td></tr>\n"
+"<!-- FOOTER BY -->\n"
+"<tr><td align=\"center\" style=\"min-width: 590px;\">\n"
+"    <t t-if=\"object.companyid\">\n"
+"        <table width=\"590\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\" style=\"min-width: 590px; background-color: #F1F1F1; color: #454748; padding: 8px; border-collapse:separate;\">\n"
+"        <tr><td style=\"text-align: center; font-size: 14px;\">\n"
+"            Enviat per<a target=\"_blank\" t-attf-href=\"{{ object.company_id.website }}\" style=\"color: #875A7B;\" t-out=\"object.company_id.name or ''\">YourCompany</a>\n"
+"            <t t-if=\"isonline\">\n"
+"                <br/>\n"
+"                Descobriu <a href=\"/event\" style=\"color:#875A7B;\">tots els nostres esdeveniments</a>.\n"
+"            </t>\n"
+"        </td></tr>\n"
+"        </table>\n"
+"    </t>\n"
+"</td></tr>\n"
+"</table>"
 
 #. module: event
 #: model:ir.model.fields,help:event.field_event_event_ticket__description
@@ -865,6 +1294,8 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:event.view_event_type_form
 msgid "Add some internal notes (to do lists, contact info, ...)"
 msgstr ""
+"Afegeix algunes notes internes (per fer llistes, informació de contacte, "
+"...)"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__address_search
@@ -918,6 +1349,13 @@ msgid "Announced"
 msgstr "Anunciat"
 
 #. module: event
+#. openerp-web
+#: code:addons/event/static/src/js/tours/event_tour.js:0
+#, python-format
+msgid "Apply change."
+msgstr "Aplica el canvi."
+
+#. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_search
 #: model_terms:ir.ui.view,arch_db:event.view_registration_search
 msgid "Archived"
@@ -926,7 +1364,7 @@ msgstr "Arxivat"
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event_ticket__is_launched
 msgid "Are sales launched"
-msgstr ""
+msgstr "S'han llançat les vendes"
 
 #. module: event
 #: model_terms:event.event,description:event.event_1
@@ -1146,7 +1584,7 @@ msgstr "Categoria"
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_tag__category_sequence
 msgid "Category Sequence"
-msgstr ""
+msgstr "Seqüència de categories"
 
 #. module: event
 #: model_terms:event.event,description:event.event_2
@@ -1249,13 +1687,13 @@ msgstr "Confirmació registre"
 #: model_terms:ir.ui.view,arch_db:event.view_event_kanban
 #: model_terms:ir.ui.view,arch_db:event.view_registration_search
 msgid "Confirmed"
-msgstr "Confirmada"
+msgstr "Confirmat"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_form
 #: model_terms:ir.ui.view,arch_db:event.view_event_type_form
 msgid "Confirmed Attendees"
-msgstr ""
+msgstr "Assistents confirmats"
 
 #. module: event
 #: model:ir.model,name:event.model_res_partner
@@ -1541,7 +1979,7 @@ msgstr "Organització de l'esdeveniment"
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_registration__event_organizer_id
 msgid "Event Organizer"
-msgstr ""
+msgstr "Organitzador d'esdeveniments"
 
 #. module: event
 #: model:ir.model,name:event.model_event_registration
@@ -1554,7 +1992,7 @@ msgstr "Registre esdeveniment"
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_registration__event_user_id
 msgid "Event Responsible"
-msgstr ""
+msgstr "Esdeveniment responsable"
 
 #. module: event
 #: code:addons/event/models/event_mail.py:0
@@ -1653,6 +2091,9 @@ msgid ""
 "                usually based on the types of events you organize (e.g. \"Workshop\",\n"
 "                \"Roadshow\", \"Online Webinar\", etc)."
 msgstr ""
+"Les plantilles d'esdeveniment combinen configuracions que utilitzeu sovint i que són\n"
+"                generalment basat en els tipus d'esdeveniments que organitzeu (p. ex., \"Workshop\",\n"
+"                «Roadshow», «Online Webinar», etc)."
 
 #. module: event
 #: model:ir.model,name:event.model_event_event_ticket
@@ -1705,7 +2146,7 @@ msgstr "Esdeveniment: Insígnia de registre"
 #. module: event
 #: model:mail.template,name:event.event_subscription
 msgid "Event: Registration Confirmation"
-msgstr ""
+msgstr "Esdeveniment: confirmació de la inscripció"
 
 #. module: event
 #: model:mail.template,name:event.event_reminder
@@ -1762,6 +2203,8 @@ msgid ""
 "Every year we invite our community, partners and end-users to come and meet us! It's the ideal event to get together and present new features, roadmap of future versions, achievements of the software, workshops, training sessions, etc...\n"
 "            This event is also an opportunity to showcase our partners' case studies, methodology or developments. Be there and see directly from the source the features of the new version!"
 msgstr ""
+"Convidem cada any a la nostra comunitat, socis i usuaris finals a venir a trobar-nos! És l'esdeveniment ideal per reunir i presentar noves característiques, full de ruta de versions futures, èxits del programari, tallers, sessions de formació, etc...\n"
+"            Aquest esdeveniment és també una oportunitat per a mostrar els estudis, la metodologia o els avanços dels nostres socis. Sigueu allà i mireu directament des de la font les característiques de la nova versió!"
 
 #. module: event
 #: model_terms:event.event,description:event.event_0
@@ -2058,7 +2501,7 @@ msgstr "Icona"
 #: code:addons/event/static/src/icon_selection_field/icon_selection_field.js:0
 #, python-format
 msgid "Icon Selection"
-msgstr ""
+msgstr "Selecció d'icones"
 
 #. module: event
 #: model:ir.model.fields,help:event.field_event_event__activity_exception_icon
@@ -2304,7 +2747,7 @@ msgstr "Crearem el teu primer <b>esdeveniment</b>."
 #: model:ir.model.fields,field_description:event.field_event_event_ticket__seats_limited
 #: model:ir.model.fields,field_description:event.field_event_type_ticket__seats_limited
 msgid "Limit Attendees"
-msgstr ""
+msgstr "Limita els assistents"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_form
@@ -2550,7 +2993,7 @@ msgstr "Nombre d'accions"
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__seats_used
 msgid "Number of Attendees"
-msgstr ""
+msgstr "Nombre d'assistents"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__seats_expected
@@ -2560,7 +3003,7 @@ msgstr "Nre. d'assistents esperats"
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__seats_reserved
 msgid "Number of Registrations"
-msgstr ""
+msgstr "Nombre de registres"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__message_has_error_counter
@@ -2613,6 +3056,15 @@ msgid "Online Ticketing"
 msgstr "Ticketing Online"
 
 #. module: event
+#. openerp-web
+#: code:addons/event/static/src/js/tours/event_tour.js:0
+#, python-format
+msgid "Open date range picker. Pick a Start date for your event"
+msgstr ""
+"Obre el selector d'intervals de dates. Trieu una data d'inici per al vostre "
+"esdeveniment"
+
+#. module: event
 #: model_terms:event.event,description:event.event_0
 msgid ""
 "OpenElec Applications reserves the right to cancel, re-name or re-locate the"
@@ -2639,7 +3091,7 @@ msgstr ""
 #: code:addons/event/models/event_event.py:0
 #, python-format
 msgid "Operation not supported."
-msgstr ""
+msgstr "Operació no suportada."
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__organizer_id
@@ -2841,7 +3293,7 @@ msgstr "Registre obert"
 #. module: event
 #: model:ir.actions.act_window,name:event.event_registration_action_stats_from_event
 msgid "Registration statistics"
-msgstr ""
+msgstr "Estadístiques de registre"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event_ticket__registration_ids
@@ -2977,16 +3429,19 @@ msgstr "Enviat"
 msgid ""
 "Sent automatically to attendees if there is a reminder defined on the event"
 msgstr ""
+"Enviat automàticament als assistents si hi ha un recordatori definit a "
+"l'esdeveniment"
 
 #. module: event
 #: model:mail.template,description:event.event_registration_mail_template_badge
 msgid "Sent automatically to someone after they registered to an event"
 msgstr ""
+"Enviat automàticament a algú després d'haver-se registrat a un esdeveniment"
 
 #. module: event
 #: model:mail.template,description:event.event_subscription
 msgid "Sent to attendees after registering to an event"
-msgstr ""
+msgstr "Enviat als assistents després de registrar-se a un esdeveniment"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_stage__sequence
@@ -3239,13 +3694,15 @@ msgid ""
 "The stop date cannot be earlier than the start date. Please check ticket "
 "%(ticket_name)s"
 msgstr ""
+"La data de finalització no pot ser anterior a la data d'inici. Comproveu "
+"l'entrada %(ticket_name)s"
 
 #. module: event
 #: code:addons/event/models/event_event.py:0
 #: code:addons/event/models/event_ticket.py:0
 #, python-format
 msgid "There are not enough seats available for:"
-msgstr ""
+msgstr "No hi ha suficients seients disponibles."
 
 #. module: event
 #: model_terms:event.event,description:event.event_0
@@ -3430,7 +3887,7 @@ msgstr "No confirmat"
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__seats_unconfirmed
 msgid "Unconfirmed Registrations"
-msgstr ""
+msgstr "Registres no confirmats"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event_ticket__seats_unconfirmed
@@ -3516,7 +3973,7 @@ msgstr "Lloc"
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__address_inline
 msgid "Venue (formatted for one line uses)"
-msgstr ""
+msgstr "Lloc de venda (formatat per a utilitzar una línia)"
 
 #. module: event
 #: code:addons/event/models/event_mail.py:0
@@ -3595,12 +4052,12 @@ msgstr "Si l'esdeveniment ha començat"
 #. module: event
 #: model:ir.model.fields,help:event.field_event_event_ticket__sale_available
 msgid "Whether it is possible to sell these tickets"
-msgstr ""
+msgstr "Si és possible vendre aquests tiquets"
 
 #. module: event
 #: model:ir.model.fields,help:event.field_event_event_ticket__is_sold_out
 msgid "Whether seats are not available for this ticket."
-msgstr ""
+msgstr "Si no hi han disponibles seients per a aquesta entrada."
 
 #. module: event
 #: model:event.event.ticket,description:event.event_0_ticket_2
@@ -3646,6 +4103,7 @@ msgstr "ex. Conferència per a Arquitectes"
 #: model_terms:ir.ui.view,arch_db:event.view_event_type_form
 msgid "e.g. How to get to your event, door closing time, ..."
 msgstr ""
+"Per exemple, com arribar a l'esdeveniment, hora de tancament de la porta..."
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_type_form

@@ -37,7 +37,9 @@
             <table class="m-3">
                 <tr>
                     <td class="align-top pe-2">
-                        <b>Field Type</b>
+                        <label t-att-for="getUniqueDomID('type')">
+                            <b>Field Type</b>
+                        </label>
                     </td>
                     <td class="o_field_property_definition_type">
                         <div
@@ -53,6 +55,7 @@
                             <t t-set-slot="toggler">
                                 <div class="o_input_dropdown w-100 o_field_property_dropdown">
                                     <input type="text" class="dropdown text-start w-100 o_input py-1"
+                                        t-att-id="getUniqueDomID('type')"
                                         t-att-value="state.typeLabel" readonly=""
                                         t-attf-style="background-image: url(/web/static/src/views/fields/properties/icons/{{state.propertyDefinition.type}}.png)"/>
                                     <a role="button" class="o_dropdown_button"/>
@@ -88,10 +91,13 @@
                 </tr>
                 <tr t-if="state.propertyDefinition.type === 'tags'">
                     <td class="o_td_label align-top">
-                        <b>Tags</b>
+                        <label t-att-for="getUniqueDomID('tags')">
+                            <b>Tags</b>
+                        </label>
                     </td>
                     <td>
                         <PropertyTags
+                            id="getUniqueDomID('tags')"
                             selectedTags="propertyTagValues"
                             tags="state.propertyDefinition.tags || []"
                             readonly="props.readonly"
@@ -102,7 +108,9 @@
                 </tr>
                 <tr t-if="state.propertyDefinition.type === 'many2one' || state.propertyDefinition.type === 'many2many'" class="o_field_property_definition_model">
                     <td class="o_td_label align-top pe-2">
-                        <b>Model</b>
+                        <label t-att-for="getUniqueDomID('model')">
+                            <b>Model</b>
+                        </label>
                     </td>
                     <td>
                         <span t-if="props.readonly">
@@ -110,6 +118,7 @@
                         </span>
                         <ModelSelector
                             t-else=""
+                            id="getUniqueDomID('model')"
                             value="state.resModelDescription"
                             onModelSelected.bind="onModelChange"
                         />
@@ -143,15 +152,18 @@
                     || (state.propertyDefinition.comodel &amp;&amp; state.propertyDefinition.comodel.length))"
                     class="o_field_property_definition_value">
                     <td class="o_td_label align-top pe-2">
-                        <b t-if="state.propertyDefinition.type === 'boolean'">
-                            Default State
-                        </b>
-                        <b t-else="">
-                            Default Value
-                        </b>
+                        <label t-att-for="getUniqueDomID('default')">
+                            <b t-if="state.propertyDefinition.type === 'boolean'">
+                                Default State
+                            </b>
+                            <b t-else="">
+                                Default Value
+                            </b>
+                        </label>
                     </td>
                     <td>
                         <PropertyValue
+                            id="getUniqueDomID('default')"
                             readonly="props.readonly"
                             canChangeDefinition="props.canChangeDefinition"
                             type="state.propertyDefinition.type"
@@ -166,10 +178,13 @@
                 </tr>
                 <tr t-if="!props.hideKanbanOption" class="o_field_property_definition_kanban">
                     <td class="o_td_label align-top pe-2">
-                        <b>View In Kanban</b>
+                        <label t-att-for="getUniqueDomID('kanban')">
+                            <b>View In Kanban</b>
+                        </label>
                     </td>
                     <td>
                         <CheckBox
+                            id="getUniqueDomID('kanban')"
                             value="props.propertyDefinition.view_in_kanban"
                             disabled="props.readonly"
                             onChange.bind="onViewInKanbanChange"

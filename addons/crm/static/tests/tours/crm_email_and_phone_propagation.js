@@ -45,7 +45,7 @@ odoo.define('crm.crm_email_and_phone_propagation', function (require) {
             },
         }, {
             trigger: '.o_back_button',
-            // wait the the warning message to be visible
+            // wait the warning message to be visible
             extra_trigger: '.o_form_sheet_bg .fa-exclamation-triangle:not(.o_invisible_modifier)',
             content: 'Save the lead and exit to kanban',
             run: 'click',

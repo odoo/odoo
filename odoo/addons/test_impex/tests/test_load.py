@@ -1033,6 +1033,14 @@ class test_o2m(ImporterCase):
         [b] = self.browse()
         self.assertEqual(b.value.m2o.value, 101)
 
+    def test_escape_m2o_in_o2m(self):
+        result = self.import_(['value/m2o'], [['21%']])
+        self.assertEqual(result['messages'], [message(
+            u"No matching record found for name '21%' "
+            u"in field 'Value/M2O'", moreinfo=moreaction(
+                res_model='export.integer'),
+            field_name='Value', field_path=['value', 'm2o'], field_type='name', value='21%')])
+
 
 class test_o2m_multiple(ImporterCase):
     model_name = 'export.one2many.multiple'

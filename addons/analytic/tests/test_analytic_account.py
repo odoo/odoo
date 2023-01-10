@@ -2,6 +2,7 @@
 
 from odoo.tests import tagged
 from odoo.tests.common import TransactionCase
+from odoo import Command
 
 
 @tagged('post_install', '-at_install')
@@ -99,7 +100,7 @@ class TestAnalyticAccount(TransactionCase):
         plans_json = self.env['account.analytic.plan'].get_relevant_plans(**kwargs)
         self.assertEqual(1, len(plans_json), "Plan 1 should be unavailable")
 
-        kwargs = {'business_domain': 'purchase'}
+        kwargs = {'business_domain': 'purchase_order'}
         plans_json = self.env['account.analytic.plan'].get_relevant_plans(**kwargs)
         self.assertEqual(2, len(plans_json), "Both plans should be available")
 
@@ -113,9 +114,54 @@ class TestAnalyticAccount(TransactionCase):
         self.assertEqual(distribution_json, {}, "No distribution should be given")
         distribution_json = self.env['account.analytic.distribution.model']._get_distribution({
             "partner_id": self.partner_a.id,
+            "company_id": self.company_data.id,
         })
         self.assertEqual(distribution_json, {str(self.analytic_account_3.id): 100}, "Distribution 1 should be given")
         distribution_json = self.env['account.analytic.distribution.model']._get_distribution({
             "partner_id": self.partner_b.id,
+            "company_id": self.company_data.id,
         })
         self.assertEqual(distribution_json, {str(self.analytic_account_2.id): 100}, "Distribution 2 should be given")
+
+    def test_order_analytic_distribution_model(self):
+        """ Test the distribution returned with company field"""
+        distribution_3 = self.env['account.analytic.distribution.model'].create({
+            'partner_id': self.partner_a.id,
+            'analytic_distribution': {self.analytic_account_1.id: 100},
+            'company_id': self.company_data.id,
+        })
+        distribution_json = self.env['account.analytic.distribution.model']._get_distribution({})
+        self.assertEqual(distribution_json, {}, "No distribution should be given")
+
+        distribution_json = self.env['account.analytic.distribution.model']._get_distribution({
+            "partner_id": self.partner_a.id,
+            "company_id": self.company_data.id,
+        })
+        self.assertEqual(distribution_json, distribution_3.analytic_distribution,
+                         "Distribution 3 should be given, as the company is specified in the model")
+
+        distribution_json = self.env['account.analytic.distribution.model']._get_distribution({
+            "partner_id": self.partner_b.id,
+            "company_id": self.company_data.id,
+        })
+        self.assertEqual(distribution_json, {str(self.analytic_account_2.id): 100},
+                         "Distribution 2 should be given, for the partner")
+
+        partner_category = self.env['res.partner.category'].create({'name': 'partner_categ'})
+        self.partner_a.write({
+            'category_id': [Command.set([partner_category.id])]
+        })
+
+        distribution_4 = self.env['account.analytic.distribution.model'].create({
+            'partner_id': self.partner_a.id,
+            'analytic_distribution': {self.analytic_account_1.id: 100, self.analytic_account_2.id: 100},
+            'partner_category_id': partner_category.id,
+        })
+
+        distribution_json = self.env['account.analytic.distribution.model']._get_distribution({
+            "partner_id": self.partner_a.id,
+            "company_id": self.company_data.id,
+            "partner_category_id": partner_category.ids,
+        })
+        self.assertEqual(distribution_json, distribution_4.analytic_distribution,
+                         "Distribution 4 should be given, as the partner_category_id is better than the company_id")

@@ -407,6 +407,34 @@ class WithContext(HttpCase):
         self.assertEqual(r.url, home_url_full)
         self.assertIn(b'o_website_info', r.content)
 
+        # Case 6: Check controller redirect which has different `auth` method
+        website.homepage_url = '/my'
+        # -------------------------------------------
+        # / page exists | first menu  |  homepage_url
+        # -------------------------------------------
+        #     no        | /contactus  | /my
+        # -------------------------------------------
+        r = self.url_open(home_url)
+        self.assertEqual(r.status_code, 200)
+        self.assertNotIn(b'<title> My Portal', r.content)
+        self.assertIn(b'<title> Contact Us', r.content)
+        self.assertEqual(r.url, contactus_url_full)
+        self.assertEqual(r.history[0].status_code, 303)
+        # Now with /contactus which is a public content
+        self.env['website.menu'].create({
+            'name': '/my first menu',
+            'website_id': website.id,
+            'parent_id': website.menu_id.id,
+            'url': '/my',
+            'sequence': 1,
+        })
+        r = self.url_open(home_url)
+        self.assertEqual(r.status_code, 200)
+        self.assertNotIn(b'<title> My Portal', r.content)
+        self.assertIn(b'<title> Login', r.content)
+        self.assertIn('/web/login?redirect', r.url)
+        self.assertEqual(r.history[0].status_code, 303)
+
     def test_07_alternatives(self):
         website = self.env.ref('website.default_website')
         lang_fr = self.env['res.lang']._activate_lang('fr_FR')

@@ -253,7 +253,7 @@ const PosLoyaltyOrderline = (Orderline) => class PosLoyaltyOrderline extends Ord
     }
     ignoreLoyaltyPoints({ program }) {
         return (
-            ['gift_card', 'ewallet'].includes(program.program_type) &&
+            ['gift_card', 'ewallet'].includes(program.program_type) && this.eWalletGiftCardProgram &&
             this.eWalletGiftCardProgram.id !== program.id
         );
     }
@@ -381,6 +381,10 @@ const PosLoyaltyOrder = (Order) => class PosLoyaltyOrder extends Order {
     get_last_orderline() {
         const orderLines = super.get_orderlines(...arguments).filter((line) => !line.is_reward_line);
         return orderLines[orderLines.length - 1];
+    }
+    set_pricelist(pricelist) {
+        super.set_pricelist(...arguments);
+        this._updateRewards();
     }
     set_orderline_options(line, options) {
         super.set_orderline_options(...arguments);

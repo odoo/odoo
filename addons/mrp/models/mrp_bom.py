@@ -224,7 +224,7 @@ class MrpBom(models.Model):
 
     @api.model
     def _bom_find_domain(self, products, picking_type=None, company_id=False, bom_type=False):
-        domain = ['|', ('product_id', 'in', products.ids), '&', ('product_id', '=', False), ('product_tmpl_id', 'in', products.product_tmpl_id.ids)]
+        domain = ['&', '|', ('product_id', 'in', products.ids), '&', ('product_id', '=', False), ('product_tmpl_id', 'in', products.product_tmpl_id.ids), ('active', '=', True)]
         if company_id or self.env.context.get('company_id'):
             domain = AND([domain, ['|', ('company_id', '=', False), ('company_id', '=', company_id or self.env.context.get('company_id'))]])
         if picking_type:
@@ -415,11 +415,13 @@ class MrpBomLine(models.Model):
 
     @api.depends('product_id', 'bom_id')
     def _compute_child_bom_id(self):
+        products = self.product_id
+        bom_by_product = self.env['mrp.bom']._bom_find(products)
         for line in self:
             if not line.product_id:
                 line.child_bom_id = False
             else:
-                line.child_bom_id = self.env['mrp.bom']._bom_find(line.product_id)[line.product_id]
+                line.child_bom_id = bom_by_product.get(line.product_id, False)
 
     @api.depends('product_id')
     def _compute_attachments_count(self):

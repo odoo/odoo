@@ -143,6 +143,11 @@ export class AttachmentViewer extends Component {
         const attachmentViewer = this.attachmentViewer;
         const refs = this._getRefs();
         const image = refs[`image_${this.attachmentViewer.attachmentViewerViewable.localId}`];
+        // some actions are too fast that sometimes this function is called
+        // before setting the refs, so we just do nothing when image is null
+        if (!image) {
+            return;
+        }
         const tx = image.offsetWidth * attachmentViewer.scale > this._zoomerRef.el.offsetWidth
             ? this._translate.x + this._translate.dx
             : 0;

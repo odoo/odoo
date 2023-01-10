@@ -427,17 +427,43 @@ Dialog.alert = function (owner, message, options) {
 
 // static method to open simple confirm dialog
 Dialog.confirm = function (owner, message, options) {
+    /**
+     * Creates an improved callback from the given callback value at the given
+     * key from the parent function's options parameter. This is improved to:
+     *
+     * - Prevent calling given callbacks once one has been called.
+     *
+     * - Re-allow calling callbacks once a previous callback call's returned
+     *   Promise is rejected.
+     */
+    let isBlocked = false;
+    function makeCallback(key) {
+        const callback = options && options[key];
+        return function () {
+            if (isBlocked) {
+                // Do not (re)call any callback and return a rejected Promise
+                // to prevent closing the Dialog.
+                return Promise.reject();
+            }
+            isBlocked = true;
+            const callbackRes = callback && callback.apply(this, arguments);
+            Promise.resolve(callbackRes).guardedCatch(() => {
+                isBlocked = false;
+            });
+            return callbackRes;
+        };
+    }
     var buttons = [
         {
             text: _t("Ok"),
             classes: 'btn-primary',
             close: true,
-            click: options && options.confirm_callback,
+            click: makeCallback('confirm_callback'),
         },
         {
             text: _t("Cancel"),
             close: true,
-            click: options && options.cancel_callback
+            click: makeCallback('cancel_callback'),
         }
     ];
     return new Dialog(owner, _.extend({

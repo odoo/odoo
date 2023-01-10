@@ -548,75 +548,67 @@ class PosGlobalState extends PosModel {
     }
     async getProductInfo(product, quantity) {
         const order = this.get_order();
-        try {
-            // check back-end method `get_product_info_pos` to see what it returns
-            // We do this so it's easier to override the value returned and use it in the component template later
-            const productInfo = await this.env.services.rpc({
-                model: 'product.product',
-                method: 'get_product_info_pos',
-                args: [[product.id],
-                    product.get_price(order.pricelist, quantity),
-                    quantity,
-                    this.config.id],
-                kwargs: {context: this.env.session.user_context},
-            });
+        // check back-end method `get_product_info_pos` to see what it returns
+        // We do this so it's easier to override the value returned and use it in the component template later
+        const productInfo = await this.env.services.rpc({
+            model: 'product.product',
+            method: 'get_product_info_pos',
+            args: [[product.id],
+                product.get_price(order.pricelist, quantity),
+                quantity,
+                this.config.id],
+            kwargs: {context: this.env.session.user_context},
+        });
 
-            const priceWithoutTax = productInfo['all_prices']['price_without_tax'];
-            const margin = priceWithoutTax - product.standard_price;
-            const orderPriceWithoutTax = order.get_total_without_tax();
-            const orderCost = order.get_total_cost();
-            const orderMargin = orderPriceWithoutTax - orderCost;
+        const priceWithoutTax = productInfo['all_prices']['price_without_tax'];
+        const margin = priceWithoutTax - product.standard_price;
+        const orderPriceWithoutTax = order.get_total_without_tax();
+        const orderCost = order.get_total_cost();
+        const orderMargin = orderPriceWithoutTax - orderCost;
 
-            const costCurrency = this.format_currency(product.standard_price);
-            const marginCurrency = this.format_currency(margin);
-            const marginPercent = priceWithoutTax ? Math.round(margin/priceWithoutTax * 10000) / 100 : 0;
-            const orderPriceWithoutTaxCurrency = this.format_currency(orderPriceWithoutTax);
-            const orderCostCurrency = this.format_currency(orderCost);
-            const orderMarginCurrency = this.format_currency(orderMargin);
-            const orderMarginPercent = orderPriceWithoutTax ? Math.round(orderMargin/orderPriceWithoutTax * 10000) / 100 : 0;
-            return {
+        const costCurrency = this.format_currency(product.standard_price);
+        const marginCurrency = this.format_currency(margin);
+        const marginPercent = priceWithoutTax ? Math.round(margin/priceWithoutTax * 10000) / 100 : 0;
+        const orderPriceWithoutTaxCurrency = this.format_currency(orderPriceWithoutTax);
+        const orderCostCurrency = this.format_currency(orderCost);
+        const orderMarginCurrency = this.format_currency(orderMargin);
+        const orderMarginPercent = orderPriceWithoutTax ? Math.round(orderMargin/orderPriceWithoutTax * 10000) / 100 : 0;
+        return {
             costCurrency, marginCurrency, marginPercent, orderPriceWithoutTaxCurrency,
             orderCostCurrency, orderMarginCurrency, orderMarginPercent,productInfo
-            }
-        } catch (error) {
-            return { error }
         }
     }
     async getClosePosInfo() {
-        try {
-            const closingData = await this.env.services.rpc({
-                model: 'pos.session',
-                method: 'get_closing_control_data',
-                args: [[this.pos_session.id]]
-            });
-            const ordersDetails = closingData.orders_details;
-            const paymentsAmount = closingData.payments_amount;
-            const payLaterAmount = closingData.pay_later_amount;
-            const openingNotes = closingData.opening_notes;
-            const defaultCashDetails = closingData.default_cash_details;
-            const otherPaymentMethods = closingData.other_payment_methods;
-            const isManager = closingData.is_manager;
-            const amountAuthorizedDiff = closingData.amount_authorized_diff;
-            const cashControl = this.config.cash_control;
+        const closingData = await this.env.services.rpc({
+            model: 'pos.session',
+            method: 'get_closing_control_data',
+            args: [[this.pos_session.id]]
+        });
+        const ordersDetails = closingData.orders_details;
+        const paymentsAmount = closingData.payments_amount;
+        const payLaterAmount = closingData.pay_later_amount;
+        const openingNotes = closingData.opening_notes;
+        const defaultCashDetails = closingData.default_cash_details;
+        const otherPaymentMethods = closingData.other_payment_methods;
+        const isManager = closingData.is_manager;
+        const amountAuthorizedDiff = closingData.amount_authorized_diff;
+        const cashControl = this.config.cash_control;
 
-            // component state and refs definition
-            const state = {notes: '', payments: {}};
-            if (cashControl) {
-                state.payments[defaultCashDetails.id] = {counted: 0, difference: -defaultCashDetails.amount, number: 0};
-            }
-            if (otherPaymentMethods.length > 0) {
-                otherPaymentMethods.forEach(pm => {
-                    if (pm.type === 'bank') {
-                        state.payments[pm.id] = {counted: this.round_decimals_currency(pm.amount), difference: 0, number: pm.number}
-                    }
-                })
-            }
-            return {
+        // component state and refs definition
+        const state = {notes: '', acceptClosing: false, payments: {}};
+        if (cashControl) {
+            state.payments[defaultCashDetails.id] = {counted: 0, difference: -defaultCashDetails.amount, number: 0};
+        }
+        if (otherPaymentMethods.length > 0) {
+            otherPaymentMethods.forEach(pm => {
+                if (pm.type === 'bank') {
+                    state.payments[pm.id] = {counted: this.round_decimals_currency(pm.amount), difference: 0, number: pm.number}
+                }
+            })
+        }
+        return {
             ordersDetails, paymentsAmount, payLaterAmount, openingNotes, defaultCashDetails, otherPaymentMethods,
             isManager, amountAuthorizedDiff, state, cashControl
-            }
-        } catch (error) {
-            return { error }
         }
     }
     set_start_order(){
@@ -1519,7 +1511,7 @@ class Orderline extends PosModel {
         var pack_lot_lines = json.pack_lot_ids;
         for (var i = 0; i < pack_lot_lines.length; i++) {
             var packlotline = pack_lot_lines[i][2];
-            var pack_lot_line = Packlotline.create({}, {'json': _.extend(packlotline, {'order_line':this})});
+            var pack_lot_line = Packlotline.create({}, {'json': _.extend({...packlotline}, {'order_line':this})});
             this.pack_lot_lines.add(pack_lot_line);
         }
         this.tax_ids = json.tax_ids && json.tax_ids.length !== 0 ? json.tax_ids[0][2] : undefined;
@@ -2751,7 +2743,7 @@ class Order extends PosModel {
             to_merge_orderline.merge(line);
             this.select_orderline(to_merge_orderline);
         } else {
-            this.orderlines.add(line);
+            this.add_orderline(line);
             this.select_orderline(this.get_last_orderline());
         }
 
@@ -3094,28 +3086,33 @@ class Order extends PosModel {
             const last_line = paymentlines ? paymentlines[paymentlines.length-1]: false;
             const last_line_is_cash = last_line ? last_line.payment_method.is_cash_count == true: false;
             if (!only_cash || (only_cash && last_line_is_cash)) {
+                var rounding_method = this.pos.cash_rounding[0].rounding_method;
                 var remaining = this.get_total_with_tax() - this.get_total_paid();
-                var total = round_pr(remaining, this.pos.cash_rounding[0].rounding);
-                var sign = remaining > 0 ? 1.0 : -1.0;
+                var sign = this.get_total_with_tax() > 0 ? 1.0 : -1.0;
+                if(this.get_total_with_tax() < 0 && remaining > 0 || this.get_total_with_tax() > 0 && remaining < 0) {
+                    rounding_method = rounding_method === "UP" ? "DOWN" : "UP";
+                }
 
+                remaining *= sign;
+                var total = round_pr(remaining, this.pos.cash_rounding[0].rounding);
                 var rounding_applied = total - remaining;
-                rounding_applied *= sign;
+
                 // because floor and ceil doesn't include decimals in calculation, we reuse the value of the half-up and adapt it.
                 if (utils.float_is_zero(rounding_applied, this.pos.currency.decimal_places)){
                     // https://xkcd.com/217/
                     return 0;
                 } else if(Math.abs(this.get_total_with_tax()) < this.pos.cash_rounding[0].rounding) {
                     return 0;
-                } else if(this.pos.cash_rounding[0].rounding_method === "UP" && rounding_applied < 0 && remaining > 0) {
+                } else if(rounding_method === "UP" && rounding_applied < 0 && remaining > 0) {
                     rounding_applied += this.pos.cash_rounding[0].rounding;
                 }
-                else if(this.pos.cash_rounding[0].rounding_method === "UP" && rounding_applied > 0 && remaining < 0) {
+                else if(rounding_method === "UP" && rounding_applied > 0 && remaining < 0) {
                     rounding_applied -= this.pos.cash_rounding[0].rounding;
                 }
-                else if(this.pos.cash_rounding[0].rounding_method === "DOWN" && rounding_applied > 0 && remaining > 0){
+                else if(rounding_method === "DOWN" && rounding_applied > 0 && remaining > 0){
                     rounding_applied -= this.pos.cash_rounding[0].rounding;
                 }
-                else if(this.pos.cash_rounding[0].rounding_method === "DOWN" && rounding_applied < 0 && remaining < 0){
+                else if(rounding_method === "DOWN" && rounding_applied < 0 && remaining < 0){
                     rounding_applied += this.pos.cash_rounding[0].rounding;
                 }
                 return sign * rounding_applied;

@@ -5,14 +5,13 @@
         <record id="view_base_module_uninstall" model="ir.ui.view">
             <field name="name">Uninstall module</field>
             <field name="model">base.module.uninstall</field>
-            <field name="type">form</field>
             <field name="arch" type="xml">
-                <div class="alert alert-warning mb-0" role="alert">
-                    <p class="mt-3">
-                        Uninstalling modules can be risky, we recommend you to try it on a duplicate or test database first.
-                    </p>
-                </div>
                 <form string="Uninstall module">
+                    <div class="alert alert-warning oe_button_box" role="alert">
+                        <p class="mt-3">
+                            Uninstalling modules can be risky, we recommend you to try it on a duplicate or test database first.
+                        </p>
+                    </div>
                     <field name="module_id" invisible="1"/>
                     <div class="d-flex bd-highlight">
                         <div class="me-auto p-2 bd-highlight"><h3>Apps to Uninstall</h3></div>

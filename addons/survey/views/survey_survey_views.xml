@@ -73,6 +73,8 @@
                                     <field name="question_type" />
                                     <field name="is_page" invisible="1"/>
                                     <field name="questions_selection" invisible="1"/>
+                                    <field name="suggested_answer_ids" invisible="1"/>
+                                    <field name="matrix_row_ids" invisible="1"/>
                                     <field name="survey_id" invisible="1"/>
                                     <field name="triggering_question_id" invisible="1"/>
                                     <field name="random_questions_count"
@@ -263,7 +265,7 @@
                                    type="object"
                                    name="action_survey_user_input_certified"
                                    class="fw-bold">
-                                    <field name="success_ratio" widget="progressbar"/>
+                                    <field name="success_ratio" widget="progressbar" class="d-block"/>
                                     <span class="text-muted" t-if="!record.certification.raw_value">Passed</span>
                                     <span class="text-muted" t-else="">Certified</span>
                                 </a>

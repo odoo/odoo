@@ -815,6 +815,13 @@ class AccountPayment(models.Model):
             move.write(move._cleanup_write_orm_values(move, move_vals_to_write))
             pay.write(move._cleanup_write_orm_values(pay, payment_vals_to_write))
 
+    @api.model
+    def _get_trigger_fields_to_synchronize(self):
+        return (
+            'date', 'amount', 'payment_type', 'partner_type', 'payment_reference', 'is_internal_transfer',
+            'currency_id', 'partner_id', 'destination_account_id', 'partner_bank_id', 'journal_id'
+        )
+
     def _synchronize_to_moves(self, changed_fields):
         ''' Update the account.move regarding the modified account.payment.
         :param changed_fields: A list containing all modified fields on account.payment.
@@ -822,10 +829,7 @@ class AccountPayment(models.Model):
         if self._context.get('skip_account_move_synchronization'):
             return
 
-        if not any(field_name in changed_fields for field_name in (
-            'date', 'amount', 'payment_type', 'partner_type', 'payment_reference', 'is_internal_transfer',
-            'currency_id', 'partner_id', 'destination_account_id', 'partner_bank_id', 'journal_id'
-        )):
+        if not any(field_name in changed_fields for field_name in self._get_trigger_fields_to_synchronize()):
             return
 
         for pay in self.with_context(skip_account_move_synchronization=True):

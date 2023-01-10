@@ -272,7 +272,7 @@
         <field name="model">stock.picking</field>
         <field name="inherit_id" ref="stock.vpicktree"/>
         <field name="arch" type="xml">
-            <xpath expr="//field[@name='company_id']" position="before">
+            <xpath expr="//field[@name='picking_type_id']" position="after">
                 <field name="batch_id" optional="show"
                     domain="[
                         ('state', 'in', ['draft', 'in_progress']),

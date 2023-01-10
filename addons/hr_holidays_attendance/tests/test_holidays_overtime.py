@@ -6,6 +6,8 @@ from odoo.tests import new_test_user
 from odoo.tests.common import TransactionCase, tagged
 
 from odoo.exceptions import AccessError, ValidationError
+
+from freezegun import freeze_time
 import time
 
 @tagged('post_install', '-at_install', 'holidays_attendance')
@@ -45,6 +47,7 @@ class TestHolidaysOvertime(TransactionCase):
             'company_id': cls.company.id,
             'requires_allocation': 'yes',
             'employee_requests': 'yes',
+            'allocation_validation_type': 'officer',
             'overtime_deductible': True,
         })
 
@@ -126,6 +129,11 @@ class TestHolidaysOvertime(TransactionCase):
         self.assertTrue(leave.overtime_id.exists(), "Overtime should be created")
         self.assertEqual(self.employee.total_overtime, 0)
 
+        overtime = leave.overtime_id
+        leave.unlink()
+        self.assertFalse(overtime.exists(), "Overtime should be deleted along with the leave")
+        self.assertEqual(self.employee.total_overtime, 8)
+
     def test_leave_check_overtime_write(self):
         self.new_attendance(check_in=datetime(2021, 1, 2, 8), check_out=datetime(2021, 1, 2, 16))
         self.new_attendance(check_in=datetime(2021, 1, 3, 8), check_out=datetime(2021, 1, 3, 16))
@@ -183,6 +191,7 @@ class TestHolidaysOvertime(TransactionCase):
                 'company_id': self.company.id,
                 'requires_allocation': 'yes',
                 'employee_requests': 'yes',
+                'allocation_validation_type': 'officer',
                 'overtime_deductible': False,
             })
 
@@ -219,3 +228,26 @@ class TestHolidaysOvertime(TransactionCase):
 
         alloc.number_of_days = 2
         self.assertEqual(self.employee.total_overtime, 0)
+
+    @freeze_time('2022-1-1')
+    def test_leave_check_cancel(self):
+        self.new_attendance(check_in=datetime(2021, 1, 2, 8), check_out=datetime(2021, 1, 2, 16))
+        self.new_attendance(check_in=datetime(2021, 1, 3, 8), check_out=datetime(2021, 1, 3, 16))
+        self.assertEqual(self.employee.total_overtime, 16)
+
+        leave = self.env['hr.leave'].create({
+            'name': 'no overtime',
+            'employee_id': self.employee.id,
+            'holiday_status_id': self.leave_type_no_alloc.id,
+            'number_of_days': 1,
+            'date_from': datetime(2022, 1, 6),
+            'date_to': datetime(2022, 1, 6),
+        })
+        leave.with_user(self.user_manager).action_validate()
+        self.assertEqual(self.employee.total_overtime, 8)
+
+        self.assertTrue(leave.with_user(self.user).can_cancel)
+        self.env['hr.holidays.cancel.leave'].with_user(self.user).with_context(default_leave_id=leave.id) \
+            .new({'reason': 'Test remove holiday'}) \
+            .action_cancel_leave()
+        self.assertFalse(leave.overtime_id.exists())

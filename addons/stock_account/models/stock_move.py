@@ -248,6 +248,9 @@ class StockMove(models.Model):
 
         res = super(StockMove, self)._action_done(cancel_backorder=cancel_backorder)
 
+        # '_action_done' might have deleted some exploded stock moves
+        valued_moves = {value_type: moves.exists() for value_type, moves in valued_moves.items()}
+
         # '_action_done' might have created an extra move to be valued
         for move in res - self:
             for valued_type in self._get_valued_types():
@@ -593,3 +596,6 @@ class StockMove(models.Model):
             return self.location_id and self.location_id.usage == 'customer'   # goods returned from customer
         if valued_type == 'out':
             return self.location_dest_id and self.location_dest_id.usage == 'supplier'   # goods returned to supplier
+
+    def _get_all_related_aml(self):
+        return self.account_move_ids.line_ids

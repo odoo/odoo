@@ -3,20 +3,18 @@
 # 	* sale
 # 
 # Translators:
-# Ryan Zhang <so_happy_boy@hotmail.com>, 2022
-# 山西清水欧度(QQ:54773801) <54773801@qq.com>, 2022
 # keecome <7017511@qq.com>, 2022
-# Martin Trigaux, 2022
 # Raymond Yu <cl_yu@hotmail.com>, 2022
-# Jeffery CHEN <jeffery9@gmail.com>, 2022
+# Martin Trigaux, 2022
+# Jeffery CHEN Fan <jeffery9@gmail.com>, 2022
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 16.0beta\n"
+"Project-Id-Version: Odoo Server 16.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-10-10 10:23+0000\n"
+"POT-Creation-Date: 2022-12-15 12:51+0000\n"
 "PO-Revision-Date: 2022-09-22 05:54+0000\n"
-"Last-Translator: Jeffery CHEN <jeffery9@gmail.com>, 2022\n"
+"Last-Translator: Jeffery CHEN Fan <jeffery9@gmail.com>, 2022\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -45,18 +43,21 @@ msgid "# of Sales Orders"
 msgstr "销售订单笔数"
 
 #. module: sale
+#. odoo-python
 #: code:addons/sale/models/sale_order.py:0
 #, python-format
 msgid "%(amount)s due %(date)s"
 msgstr "%(amount)s 到期 %(date)s"
 
 #. module: sale
+#. odoo-python
 #: code:addons/sale/models/sale_order_line.py:0
 #, python-format
 msgid "%(line_description)s (Canceled)"
 msgstr "%(line_description)s（已取消）"
 
 #. module: sale
+#. odoo-python
 #: code:addons/sale/models/sale_order_line.py:0
 #, python-format
 msgid "%(line_description)s (Draft)"
@@ -82,13 +83,7 @@ msgstr ""
 " (object.name)"
 
 #. module: sale
-#: model:product.product,description_sale:sale.product_product_4e
-#: model:product.product,description_sale:sale.product_product_4f
-msgid "160x80cm, with large legs."
-msgstr "160X80cm，大桌腿."
-
-#. module: sale
-#. openerp-web
+#. odoo-javascript
 #: code:addons/sale/static/src/js/tours/sale.js:0
 #, python-format
 msgid ""
@@ -97,7 +92,7 @@ msgid ""
 msgstr "<b>恭喜你</b>，你的第一份报价单已经发出<br>请检查您的电子邮件以确认报价."
 
 #. module: sale
-#. openerp-web
+#. odoo-javascript
 #: code:addons/sale/static/src/js/tours/sale.js:0
 #, python-format
 msgid ""
@@ -105,7 +100,7 @@ msgid ""
 msgstr "<b>发送此报价</b>给你自己先审查一遍客户将看到的内容。"
 
 #. module: sale
-#. openerp-web
+#. odoo-javascript
 #: code:addons/sale/static/src/js/tours/sale.js:0
 #, python-format
 msgid "<b>Set a price</b>."
@@ -326,7 +321,7 @@ msgstr ""
 "            <tr style=\"border-bottom: 2px solid #dee2e6;\">\n"
 "                <td style=\"width: 150px;\"><span style=\"font-weight:bold;\">产品</span></td>\n"
 "                <td/>\n"
-"                <td width=\"15%\" align=\"center\"><span style=\"font-weight:bold;\">数量</span></td>\n"
+"                <td width=\"15%\" align=\"center\"><span style=\"font-weight:bold;\">计数</span></td>\n"
 "                <td width=\"20%\" align=\"right\"><span style=\"font-weight:bold;\">\n"
 "                <t t-if=\"object.user_id.has_group('account.group_show_line_subtotals_tax_excluded')\">\n"
 "                    不含税价.\n"
@@ -515,31 +510,31 @@ msgstr ""
 "<div style=\"margin: 0px; padding: 0px;\">\n"
 "    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
 "        <t t-set=\"doc_name\" t-value=\"'quotation' if object.state in ('draft', 'sent') else 'order'\"/>\n"
-"        你好。\n"
-"       <br/><br/>\n"
-"        您的\n"
-"       <t t-if=\"ctx.get('proforma')\">\n"
-"           <span style=\"font-weight: bold;\" t-out=\"object.name or ''\">S00052</span>号<t t-out=\"doc_name or ''\">报价单</t>的形式发票\n"
-"           <t t-if=\"object.origin\">\n"
-"                (参考：<t t-out=\"object.origin or ''\"/> )\n"
-"           </t>\n"
-"            金额为<span style=\"font-weight: bold;\" t-out=\"format_amount(object.amount_total, object.pricelist_id.currency_id) or ''\">10.00美元</span> </t>，可提供。\n"
-"        \n"
-"       <t t-else=\"\">\n"
-"           <t t-out=\"doc_name or ''\">报价单</t> <span style=\"font-weight: bold;\" t-out=\"object.name or ''\"/>\n"
-"           <t t-if=\"object.origin\">\n"
-"                (参考：<t t-out=\"object.origin or ''\">S00052</t> </t>)\n"
-"            \n"
-"            金额为<span style=\"font-weight: bold;\" t-out=\"format_amount(object.amount_total, object.pricelist_id.currency_id) or ''\">10.00美元</span></span> </t>，已准备好供审查。\n"
-"        \n"
-"       <br/><br/>\n"
-"        如果您有任何问题，请不要犹豫，与我们联系。\n"
-"       <t t-if=\"not is_html_empty(object.user_id.signature)\">\n"
-"           <br/><br/>\n"
-"           <t t-out=\"object.user_id.signature or ''\">--<br/>Mitchell 管理</t> </t>\n"
-"        \n"
-"       <br/><br/>\n"
-"   </t></p>\n"
+"        Hello,\n"
+"        <br/><br/>\n"
+"        Your\n"
+"        <t t-if=\"ctx.get('proforma')\">\n"
+"            Pro forma invoice for <t t-out=\"doc_name or ''\">quotation</t> <span style=\"font-weight: bold;\" t-out=\"object.name or ''\">S00052</span>\n"
+"            <t t-if=\"object.origin\">\n"
+"                (with reference: <t t-out=\"object.origin or ''\"/> )\n"
+"            </t>\n"
+"            amounting in <span style=\"font-weight: bold;\" t-out=\"format_amount(object.amount_total, object.pricelist_id.currency_id) or ''\">$ 10.00</span> is available.\n"
+"        </t>\n"
+"        <t t-else=\"\">\n"
+"            <t t-out=\"doc_name or ''\">quotation</t> <span style=\"font-weight: bold;\" t-out=\"object.name or ''\"/>\n"
+"            <t t-if=\"object.origin\">\n"
+"                (with reference: <t t-out=\"object.origin or ''\">S00052</t> )\n"
+"            </t>\n"
+"            amounting in <span style=\"font-weight: bold;\" t-out=\"format_amount(object.amount_total, object.pricelist_id.currency_id) or ''\">$ 10.00</span> is ready for review.\n"
+"        </t>\n"
+"        <br/><br/>\n"
+"        Do not hesitate to contact us if you have any questions.\n"
+"        <t t-if=\"not is_html_empty(object.user_id.signature)\">\n"
+"            <br/><br/>\n"
+"            <t t-out=\"object.user_id.signature or ''\">--<br/>Mitchell Admin</t>\n"
+"        </t>\n"
+"        <br/><br/>\n"
+"    </p>\n"
 "</div>\n"
 "            "
 
@@ -756,7 +751,7 @@ msgid ""
 msgstr ""
 "<span>您确定要取消这张订单吗? <br/></span>\n"
 "                        <span id=\"display_invoice_alert\" attrs=\"{'invisible': [('display_invoice_alert', '=', False)]}\">\n"
-"                            此订单的发票草稿将被取消. <br/>\n"
+"                            此订单的结算草稿将被取消. <br/>\n"
 "                        </span>"
 
 #. module: sale
@@ -907,7 +902,7 @@ msgid ""
 "A standard invoice is issued with all the order lines ready for "
 "invoicing,according to their invoicing policy (based on ordered or delivered"
 " quantity)."
-msgstr "根据他们的开票政策，开具包含所有订单行的标准发票（基于订购或交付的数量）."
+msgstr "根据他们的开票政策，开具包含所有订单行的标准结算（基于订购或交付的数量）."
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order_line__product_type
@@ -933,16 +928,18 @@ msgid ""
 msgstr "能够选择销售订单中的包裹类型，并强制为每个包裹数量的倍数。"
 
 #. module: sale
+#. odoo-python
 #: code:addons/sale/models/sale_order.py:0
 #, python-format
 msgid "Accept & Pay Quotation"
-msgstr "接受并支付报价单"
+msgstr "接受和支付报价单"
 
 #. module: sale
+#. odoo-python
 #: code:addons/sale/models/sale_order.py:0
 #, python-format
 msgid "Accept & Sign Quotation"
-msgstr "接受并签署报价单"
+msgstr "接受和签署报价单"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
@@ -1012,7 +1009,7 @@ msgstr "活动状态"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__activity_type_icon
 msgid "Activity Type Icon"
-msgstr "活动类型图表"
+msgstr "活动类型图标"
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.mail_activity_type_action_config_sale
@@ -1086,11 +1083,6 @@ msgid "Analytic Account"
 msgstr "分析账户"
 
 #. module: sale
-#: model:ir.model.fields,field_description:sale.field_sale_order_line__analytic_distribution_stored_char
-msgid "Analytic Distribution Stored Char"
-msgstr "分析分布存储字符"
-
-#. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__sale_order_line__qty_delivered_method__analytic
 msgid "Analytic From Expenses"
 msgstr "分析费用"
@@ -1104,6 +1096,11 @@ msgstr "分析行"
 #: model:ir.model,name:sale.model_account_analytic_applicability
 msgid "Analytic Plan's Applicabilities"
 msgstr "分析计划的适用范围"
+
+#. module: sale
+#: model:ir.model.fields,field_description:sale.field_sale_order_line__analytic_precision
+msgid "Analytic Precision"
+msgstr "分析精度"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__analytic_line_ids
@@ -1141,7 +1138,7 @@ msgstr "成本"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__message_attachment_count
 msgid "Attachment Count"
-msgstr "附件数量"
+msgstr "附件计数"
 
 #. module: sale
 #: model:ir.model,name:sale.model_product_attribute_value
@@ -1229,6 +1226,7 @@ msgid "Cancel"
 msgstr "取消"
 
 #. module: sale
+#. odoo-python
 #: code:addons/sale/models/sale_order.py:0
 #, python-format
 msgid "Cancel %s"
@@ -1268,14 +1266,14 @@ msgid "Choose how to confirm quotations"
 msgstr "选择如何确认报价"
 
 #. module: sale
-#. openerp-web
+#. odoo-javascript
 #: code:addons/sale/static/src/js/tours/sale.js:0
 #, python-format
 msgid "Click here to add some products or services to your quotation."
 msgstr "点击此处为您的报价添加一些产品或服务。"
 
 #. module: sale
-#. openerp-web
+#. odoo-javascript
 #: code:addons/sale/static/src/xml/sales_team_progress_bar_template.xml:0
 #, python-format
 msgid "Click to define an invoicing target"
@@ -1310,6 +1308,13 @@ msgstr "公司"
 #: model_terms:ir.ui.view,arch_db:sale.view_order_product_search
 msgid "Company"
 msgstr "公司"
+
+#. module: sale
+#. odoo-javascript
+#: code:addons/sale/static/src/js/tours/sale.js:0
+#, python-format
+msgid "Complete your company's data"
+msgstr ""
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -1376,12 +1381,6 @@ msgstr "连接器"
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
 msgid "Contact"
 msgstr "联系人"
-
-#. module: sale
-#: model_terms:product.product,website_description:sale.product_product_4e
-#: model_terms:product.product,website_description:sale.product_product_4f
-msgid "Contact Us"
-msgstr "联系我们"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_cancel__body
@@ -1504,7 +1503,6 @@ msgstr "汇率"
 
 #. module: sale
 #: model:product.attribute.value,name:sale.product_attribute_value_7
-#: model:product.template.attribute.value,name:sale.product_4_attribute_1_value_3
 msgid "Custom"
 msgstr "自定义"
 
@@ -1516,7 +1514,7 @@ msgstr "自定义值"
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__sale_payment_provider_onboarding_wizard__payment_method__manual
 msgid "Custom payment instructions"
-msgstr "自定义付款说明"
+msgstr "自定义支付说明"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__partner_id
@@ -1570,12 +1568,6 @@ msgid "Customers"
 msgstr "客户"
 
 #. module: sale
-#: model:product.product,name:sale.product_product_4e
-#: model:product.product,name:sale.product_product_4f
-msgid "Customizable Desk"
-msgstr "可定制化桌子"
-
-#. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.onboarding_quotation_layout_step
 msgid "Customize"
 msgstr "定制"
@@ -1586,7 +1578,7 @@ msgid "Customize the look of your quotations."
 msgstr "自定义报价的外观。"
 
 #. module: sale
-#. openerp-web
+#. odoo-javascript
 #: code:addons/sale/static/src/js/tours/sale.js:0
 #, python-format
 msgid "Customize your quotes and orders."
@@ -1610,7 +1602,7 @@ msgstr "日期:"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_advance_payment_inv__deduct_down_payments
 msgid "Deduct down payments"
-msgstr "扣除预付款"
+msgstr "扣除预支付"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -1644,6 +1636,7 @@ msgid "Delivered"
 msgstr "已交付"
 
 #. module: sale
+#. odoo-python
 #: code:addons/sale/models/sale_order_line.py:0
 #, python-format
 msgid "Delivered Quantity: %s"
@@ -1652,7 +1645,7 @@ msgstr "已交付数量: %s"
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__product_template__invoice_policy__delivery
 msgid "Delivered quantities"
-msgstr "已交付数量"
+msgstr "交付数量"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__partner_shipping_id
@@ -1686,7 +1679,6 @@ msgstr ""
 "你能承诺给客户的交货日期，通过服务产品的订单明细行的最小前置时间计算。一旦发货，订单的发货策略将会被考虑来决定是使用订单明细行的最小或最大前置时间。"
 
 #. module: sale
-#: model:product.product,name:sale.advance_product_0
 #: model:product.template,name:sale.advance_product_0_product_template
 msgid "Deposit"
 msgstr "定金"
@@ -1704,7 +1696,7 @@ msgid "Description"
 msgstr "说明"
 
 #. module: sale
-#. openerp-web
+#. odoo-javascript
 #: code:addons/sale/static/src/js/product_discount_field.js:0
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
 #, python-format
@@ -1752,7 +1744,7 @@ msgid "Display Type"
 msgstr "显示类型"
 
 #. module: sale
-#. openerp-web
+#. odoo-javascript
 #: code:addons/sale/static/src/js/product_discount_field.js:0
 #, python-format
 msgid "Do you want to apply this value to all lines ?"
@@ -1776,6 +1768,7 @@ msgid "Done"
 msgstr "完成"
 
 #. module: sale
+#. odoo-python
 #: code:addons/sale/wizard/sale_make_invoice_advance.py:0
 #, python-format
 msgid "Down Payment"
@@ -1784,25 +1777,27 @@ msgstr "预付款"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_advance_payment_inv__amount
 msgid "Down Payment Amount"
-msgstr "预付款总额"
+msgstr "预支付总额"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_advance_payment_inv__fixed_amount
 msgid "Down Payment Amount (Fixed)"
-msgstr "预付款金额 (固定)"
+msgstr "预支付金额 (固定)"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_advance_payment_inv__product_id
 msgid "Down Payment Product"
-msgstr "预付款产品"
+msgstr "预支付产品"
 
 #. module: sale
+#. odoo-python
 #: code:addons/sale/wizard/sale_make_invoice_advance.py:0
 #, python-format
 msgid "Down Payment: %s (Draft)"
 msgstr "预付款：%s (草稿)"
 
 #. module: sale
+#. odoo-python
 #: code:addons/sale/models/sale_order.py:0
 #: code:addons/sale/wizard/sale_make_invoice_advance.py:0
 #, python-format
@@ -1810,6 +1805,7 @@ msgid "Down Payments"
 msgstr "首付款"
 
 #. module: sale
+#. odoo-python
 #: code:addons/sale/wizard/sale_make_invoice_advance.py:0
 #, python-format
 msgid "Down payment"
@@ -1818,14 +1814,15 @@ msgstr "预付款"
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__sale_advance_payment_inv__advance_payment_method__fixed
 msgid "Down payment (fixed amount)"
-msgstr "预付款(固定金额)"
+msgstr "预支付(固定金额)"
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__sale_advance_payment_inv__advance_payment_method__percentage
 msgid "Down payment (percentage)"
-msgstr "预付款(百分比)"
+msgstr "预支付(百分比)"
 
 #. module: sale
+#. odoo-python
 #: code:addons/sale/wizard/sale_make_invoice_advance.py:0
 #, python-format
 msgid "Down payment of %s%%"
@@ -1836,7 +1833,7 @@ msgstr "预付款按 %s%%"
 msgid ""
 "Down payments are made when creating invoices from a sales order. They are "
 "not copied when duplicating a sales order."
-msgstr "从销售订单创建结算单时，将进行预付款。 复制销售订单时不会复制它们。"
+msgstr "从销售订单创建结算单时，将进行预支付。 复制销售订单时不会复制它们。"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
@@ -1854,7 +1851,7 @@ msgid "Easypost Connector"
 msgstr "Easypost 连接器"
 
 #. module: sale
-#. openerp-web
+#. odoo-javascript
 #: code:addons/sale/static/src/js/sale_product_field.js:0
 #, python-format
 msgid "Edit Configuration"
@@ -1863,7 +1860,7 @@ msgstr "编辑配置"
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__sale_payment_provider_onboarding_wizard__payment_method__digital_signature
 msgid "Electronic signature"
-msgstr "电子签名"
+msgstr "电子签字"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_payment_provider_onboarding_wizard__paypal_email_account
@@ -1878,18 +1875,12 @@ msgstr "EMail撰写向导"
 #. module: sale
 #: model:ir.model.fields,help:sale.field_res_config_settings__invoice_mail_template_id
 msgid "Email sent to the customer once the invoice is available."
-msgstr "收到发票后发送给客户的电子邮件。"
-
-#. module: sale
-#: model_terms:product.product,website_description:sale.product_product_4e
-#: model_terms:product.product,website_description:sale.product_product_4f
-msgid "Ergonomic"
-msgstr "人类工程学"
+msgstr "收到结算后发送给客户的电子邮件。"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__expected_date
 msgid "Expected Date"
-msgstr "预计日期"
+msgstr "预期日期"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
@@ -1921,6 +1912,7 @@ msgid "Extra Values"
 msgstr "附加值"
 
 #. module: sale
+#. odoo-python
 #: code:addons/sale/models/sale_order_line.py:0
 #, python-format
 msgid "Extra line with %s"
@@ -2010,7 +2002,7 @@ msgid "Get warnings in orders for products or customers"
 msgstr "得到的产品或客户订单的警告"
 
 #. module: sale
-#. openerp-web
+#. odoo-javascript
 #: code:addons/sale/static/src/js/tours/sale.js:0
 #, python-format
 msgid "Good job, let's continue."
@@ -2051,7 +2043,7 @@ msgstr "价格表已更改"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_advance_payment_inv__has_down_payments
 msgid "Has down payments"
-msgstr "有预付款"
+msgstr "有预支付"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
@@ -2112,6 +2104,7 @@ msgid "Import Amazon orders and sync deliveries"
 msgstr "导入亚马逊订单并同步交货"
 
 #. module: sale
+#. odoo-python
 #: code:addons/sale/models/product_template.py:0
 #, python-format
 msgid "Import Template for Products"
@@ -2128,18 +2121,21 @@ msgid "Income Account"
 msgstr "收入科目"
 
 #. module: sale
+#. odoo-python
 #: code:addons/sale/controllers/portal.py:0
 #, python-format
 msgid "Invalid order."
 msgstr "无效的订单。"
 
 #. module: sale
+#. odoo-python
 #: code:addons/sale/controllers/portal.py:0
 #, python-format
 msgid "Invalid signature data."
 msgstr "无效的签名数据。"
 
 #. module: sale
+#. odoo-python
 #: code:addons/sale/models/account_move.py:0
 #, python-format
 msgid "Invoice %s paid"
@@ -2163,7 +2159,7 @@ msgstr "结算单已确认"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__invoice_count
 msgid "Invoice Count"
-msgstr "结算单笔数"
+msgstr "结算单计数"
 
 #. module: sale
 #: model:mail.message.subtype,name:sale.mt_salesteam_invoice_created
@@ -2207,12 +2203,12 @@ msgstr "当月的结算单收入。 这是销售渠道本月开具的结算单�
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__res_config_settings__default_invoice_policy__delivery
 msgid "Invoice what is delivered"
-msgstr "按发货开票"
+msgstr "结算已经交付的"
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__res_config_settings__default_invoice_policy__order
 msgid "Invoice what is ordered"
-msgstr "订单结算单"
+msgstr "结算已经订购的"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
@@ -2225,6 +2221,7 @@ msgid "Invoiced Quantity"
 msgstr "已开结算单数量"
 
 #. module: sale
+#. odoo-python
 #: code:addons/sale/models/sale_order_line.py:0
 #, python-format
 msgid "Invoiced Quantity: %s"
@@ -2259,7 +2256,7 @@ msgid ""
 "Invoices will be created in draft so that you can review\n"
 "                    them before validation."
 msgstr ""
-"发票将在草稿中创建，以便您查看\n"
+"结算将在草稿中创建，以便您查看\n"
 "                     他们在验证之前。"
 
 #. module: sale
@@ -2300,7 +2297,7 @@ msgstr "开票与送货地址:"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_account_move_line__is_downpayment
 msgid "Is Downpayment"
-msgstr "是预付款"
+msgstr "是预支付"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_cancel__is_mail_template_editor
@@ -2320,7 +2317,7 @@ msgstr "关注者"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__is_downpayment
 msgid "Is a down payment"
-msgstr "是预付款吗"
+msgstr "是预支付吗"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__is_expense
@@ -2334,6 +2331,7 @@ msgid ""
 msgstr "此销售订单来源于报销单或供应商账单"
 
 #. module: sale
+#. odoo-python
 #: code:addons/sale/models/sale_order_line.py:0
 #, python-format
 msgid ""
@@ -2344,6 +2342,7 @@ msgstr ""
 "%s"
 
 #. module: sale
+#. odoo-python
 #: code:addons/sale/models/sale_order.py:0
 #, python-format
 msgid "It is not allowed to confirm an order in the following states: %s"
@@ -2415,24 +2414,18 @@ msgid "Let your customers log in to see their documents"
 msgstr "让你的客户登录查看他们的证件"
 
 #. module: sale
-#. openerp-web
+#. odoo-javascript
 #: code:addons/sale/static/src/js/tours/sale.js:0
 #, python-format
 msgid "Let's send the quote."
 msgstr "让我们发送报价."
 
 #. module: sale
-#. openerp-web
+#. odoo-javascript
 #: code:addons/sale/static/src/js/tours/sale.js:0
 #, python-format
 msgid "Lets keep electronic signature for now."
 msgstr "让我们暂时保留电子签名."
-
-#. module: sale
-#: model_terms:product.product,website_description:sale.product_product_4e
-#: model_terms:product.product,website_description:sale.product_product_4f
-msgid "Locally handmade"
-msgstr "本地手工制作"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_sales_order_auto_done_setting
@@ -2451,15 +2444,7 @@ msgid "Locked"
 msgstr "已锁定"
 
 #. module: sale
-#: model_terms:product.product,website_description:sale.product_product_4e
-#: model_terms:product.product,website_description:sale.product_product_4f
-msgid ""
-"Looking for a custom bamboo stain to match existing furniture? Contact us "
-"for a quote."
-msgstr "寻找与现有家具相匹配的定制竹染色？联系我们获取报价."
-
-#. module: sale
-#. openerp-web
+#. odoo-javascript
 #: code:addons/sale/static/src/js/tours/sale.js:0
 #, python-format
 msgid "Looks good. Let's continue."
@@ -2493,7 +2478,7 @@ msgstr "手动"
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__res_company__sale_onboarding_payment_method__manual
 msgid "Manual Payment"
-msgstr "手动付款"
+msgstr "手动支付"
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__product_template__service_type__manual
@@ -2508,7 +2493,7 @@ msgid ""
 "Timesheets on contract: Invoice based on the tracked hours on the related timesheet.\n"
 "Create a task and track hours: Create a task on the sales order validation and track the work hours."
 msgstr ""
-"手动设置订单数量：基于手动输入数量的结算单，不创建分析账户。\n"
+"手动设置订单计数：基于手动输入计数的结算单，不创建分析账户。\n"
 "时间表：在合同的基础上对相关结算单跟踪小时时间表。\n"
 "创建任务和跟踪时间：在销售订单验证上创建任务并跟踪工作时间。"
 
@@ -2572,7 +2557,7 @@ msgstr "消息"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_payment_provider_onboarding_wizard__manual_name
 msgid "Method"
-msgstr "付款方式"
+msgstr "支付方式"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__qty_delivered_method
@@ -2605,6 +2590,7 @@ msgid "My Sales Order Lines"
 msgstr "我的销售订单明细行"
 
 #. module: sale
+#. odoo-python
 #: code:addons/sale/models/sale_order.py:0
 #: code:addons/sale/models/sale_order.py:0
 #: code:addons/sale/models/sale_order.py:0
@@ -2665,7 +2651,7 @@ msgid "No orders to upsell found."
 msgstr "没有找到加售订单。"
 
 #. module: sale
-#. openerp-web
+#. odoo-javascript
 #: code:addons/sale/static/src/js/variant_mixin.js:0
 #, python-format
 msgid "Not available with %s"
@@ -2691,7 +2677,7 @@ msgid "Nothing to Invoice"
 msgstr "没有要开票的"
 
 #. module: sale
-#. openerp-web
+#. odoo-javascript
 #: code:addons/sale/static/src/js/tours/sale.js:0
 #, python-format
 msgid "Now, we'll create a sample quote."
@@ -2770,7 +2756,7 @@ msgstr "线上支付"
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__portal_confirmation_sign
 #: model:ir.model.fields,field_description:sale.field_sale_order__require_signature
 msgid "Online Signature"
-msgstr "线上签名"
+msgstr "线上签字"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
@@ -2778,6 +2764,7 @@ msgid "Online confirmation"
 msgstr "线上确认"
 
 #. module: sale
+#. odoo-python
 #: code:addons/sale/models/sale_order.py:0
 #, python-format
 msgid "Only draft orders can be marked as sent directly."
@@ -2790,7 +2777,7 @@ msgid ""
 msgstr "每个销售订单行的每个属性值只允许一个自定义值。"
 
 #. module: sale
-#. openerp-web
+#. odoo-javascript
 #: code:addons/sale/static/src/js/tours/sale.js:0
 #: code:addons/sale/static/src/js/tours/sale.js:0
 #, python-format
@@ -2828,9 +2815,10 @@ msgstr "订单确认"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_advance_payment_inv__count
 msgid "Order Count"
-msgstr "订购数量"
+msgstr "订购计数"
 
 #. module: sale
+#. odoo-python
 #: code:addons/sale/controllers/portal.py:0
 #: model:ir.model.fields,field_description:sale.field_sale_order__date_order
 #: model:ir.model.fields,field_description:sale.field_sale_report__date
@@ -2873,6 +2861,7 @@ msgid "Order Upsell"
 msgstr "加售订单"
 
 #. module: sale
+#. odoo-python
 #: code:addons/sale/controllers/portal.py:0
 #, python-format
 msgid "Order signed by %s"
@@ -2884,6 +2873,7 @@ msgid "Order to Invoice"
 msgstr "订单到结算单"
 
 #. module: sale
+#. odoo-python
 #: code:addons/sale/models/sale_order_line.py:0
 #, python-format
 msgid "Ordered Quantity: %(old_qty)s -> %(new_qty)s"
@@ -2966,7 +2956,7 @@ msgstr "支付方式"
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__res_company__sale_onboarding_payment_method__other
 msgid "Pay with another payment provider"
-msgstr "使用其他支付提供商付款"
+msgstr "使用其他支付提供商支付"
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__res_company__sale_onboarding_payment_method__paypal
@@ -2982,7 +2972,7 @@ msgstr "支付说明"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_payment_provider_onboarding_wizard__payment_method
 msgid "Payment Method"
-msgstr "付款方式"
+msgstr "支付方式"
 
 #. module: sale
 #: model:ir.model,name:sale.model_payment_provider
@@ -3002,12 +2992,12 @@ msgstr "付款参考."
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__payment_term_id
 msgid "Payment Terms"
-msgstr "付款条件"
+msgstr "支付条件"
 
 #. module: sale
 #: model:ir.model,name:sale.model_payment_transaction
 msgid "Payment Transaction"
-msgstr "付款交易"
+msgstr "支付交易"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
@@ -3023,14 +3013,6 @@ msgstr "Paypal 用户类型"
 #: model:ir.model.fields,field_description:sale.field_sale_order__access_url
 msgid "Portal Access URL"
 msgstr "门户访问网址"
-
-#. module: sale
-#: model_terms:product.product,website_description:sale.product_product_4e
-#: model_terms:product.product,website_description:sale.product_product_4f
-msgid ""
-"Press a button and watch your desk glide effortlessly from sitting to "
-"standing height in seconds."
-msgstr "按下一个按钮，您的办公桌会在几秒钟内轻松地从坐姿滑落到站立高度。"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__price_reduce
@@ -3154,12 +3136,14 @@ msgid "Product Variants"
 msgstr "产品变体"
 
 #. module: sale
+#. odoo-python
 #: code:addons/sale/models/sale_order.py:0
 #, python-format
 msgid "Product prices have been recomputed according to pricelist %s."
 msgstr "产品价格已根据价格表%s重新计算"
 
 #. module: sale
+#. odoo-python
 #: code:addons/sale/models/sale_order.py:0
 #, python-format
 msgid "Product taxes have been recomputed according to fiscal position %s."
@@ -3238,6 +3222,7 @@ msgid "Quantity:"
 msgstr "数量："
 
 #. module: sale
+#. odoo-python
 #: code:addons/sale/models/sale_order.py:0
 #: model:ir.model.fields.selection,name:sale.selection__sale_order__state__draft
 #: model_terms:ir.ui.view,arch_db:sale.crm_team_view_kanban_dashboard
@@ -3260,18 +3245,18 @@ msgstr "报价/订单"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_utm_campaign__quotation_count
 msgid "Quotation Count"
-msgstr "报价数量"
+msgstr "报价计数"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.portal_my_quotations
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid "Quotation Date"
-msgstr "订购日期"
+msgstr "报价日期"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
 msgid "Quotation Date:"
-msgstr "报价单日期："
+msgstr "报价日期："
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.onboarding_quotation_layout_step
@@ -3285,6 +3270,7 @@ msgid "Quotation Sent"
 msgstr "报价已发送"
 
 #. module: sale
+#: code:addons/sale/models/res_config_settings.py:0
 #: model:ir.model.constraint,message:sale.constraint_res_company_check_quotation_validity_days
 msgid "Quotation Validity is required and must be greater than 0."
 msgstr "报价有效期为必填项，且必须大于0。"
@@ -3302,6 +3288,7 @@ msgid "Quotation sent"
 msgstr "报价已发送"
 
 #. module: sale
+#. odoo-python
 #: code:addons/sale/controllers/portal.py:0
 #, python-format
 msgid "Quotation viewed by customer %s"
@@ -3367,6 +3354,7 @@ msgid "Recompute all taxes based on this fiscal position"
 msgstr "根据这一财政状况重新计算所有税款"
 
 #. module: sale
+#. odoo-python
 #: code:addons/sale/controllers/portal.py:0
 #, python-format
 msgid "Reference"
@@ -3380,7 +3368,7 @@ msgstr "生成此销售订单申请的文档参考"
 #. module: sale
 #: model:ir.model,name:sale.model_account_payment_register
 msgid "Register Payment"
-msgstr "登记付款"
+msgstr "登记支付"
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__sale_advance_payment_inv__advance_payment_method__delivered
@@ -3407,7 +3395,7 @@ msgstr "报告"
 msgid ""
 "Request a online signature and/or payment to the customer in order to "
 "confirm orders automatically."
-msgstr "向客户申请线上签名和/或支付，以便自动确认订单。"
+msgstr "向客户申请线上签字和/或支付，以便自动确认订单。"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -3420,6 +3408,7 @@ msgid "Request an online signature to confirm orders"
 msgstr "订单确认要求进行线上签名"
 
 #. module: sale
+#. odoo-python
 #: code:addons/sale/models/sale_order.py:0
 #, python-format
 msgid "Requested date is too soon."
@@ -3445,12 +3434,12 @@ msgstr "收入"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_utm_campaign__invoiced_amount
 msgid "Revenues generated by the campaign"
-msgstr "活动产生的收入"
+msgstr "营销产生的收入"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__message_has_sms_error
 msgid "SMS Delivery error"
-msgstr "短信发送错误"
+msgstr "短信息发送错误"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_advance_payment_inv__sale_order_ids
@@ -3466,7 +3455,7 @@ msgstr "销售订单"
 #: model:ir.model.fields,field_description:sale.field_res_partner__sale_order_count
 #: model:ir.model.fields,field_description:sale.field_res_users__sale_order_count
 msgid "Sale Order Count"
-msgstr "销售订单数量"
+msgstr "销售订单计数"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__group_warning_sale
@@ -3491,11 +3480,10 @@ msgstr "销售警告"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_company__sale_onboarding_payment_method
 msgid "Sale onboarding selected payment method"
-msgstr "请选择付款方式"
+msgstr "请选择支付方式"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_product_packaging__sales
-#: model:ir.ui.menu,name:sale.menu_report_product_all
 #: model:ir.ui.menu,name:sale.sale_menu_root
 #: model_terms:ir.ui.view,arch_db:sale.crm_team_view_kanban_dashboard
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -3507,9 +3495,10 @@ msgstr "销售"
 #. module: sale
 #: model:ir.model,name:sale.model_sale_advance_payment_inv
 msgid "Sales Advance Payment Invoice"
-msgstr "销售预付款结算单"
+msgstr "销售预支付结算单"
 
 #. module: sale
+#. odoo-python
 #: code:addons/sale/models/crm_team.py:0
 #: model:ir.actions.act_window,name:sale.action_order_report_all
 #: model:ir.actions.act_window,name:sale.action_order_report_so_salesteam
@@ -3533,6 +3522,7 @@ msgid "Sales Done"
 msgstr "完成销售"
 
 #. module: sale
+#. odoo-python
 #: code:addons/sale/models/sale_order.py:0
 #: model:ir.model,name:sale.model_sale_order
 #: model:ir.model.fields,field_description:sale.field_res_partner__sale_order_ids
@@ -3587,6 +3577,7 @@ msgid "Sales Order Lines related to a Sales Order of mine"
 msgstr "销售订单明细与我的销售订单"
 
 #. module: sale
+#. odoo-python
 #: code:addons/sale/models/payment_transaction.py:0
 #: model_terms:ir.ui.view,arch_db:sale.transaction_form_inherit_sale
 #, python-format
@@ -3646,7 +3637,7 @@ msgid ""
 "Sales order item to which the time spent will be added in order to be "
 "invoiced to your customer. Remove the sales order item for the timesheet "
 "entry to be non-billable."
-msgstr "销售订单项目，所花费的时间将被添加到其中，以便向客户开具发票。移除销售订单项目，使工时表条目不能开票。"
+msgstr "销售订单项目，所花费的时间将被添加到其中，以便向客户开具结算。移除销售订单项目，使工时表条目不能开票。"
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__product_template__expense_policy__sales_price
@@ -3669,6 +3660,7 @@ msgid "Sales: Send Quotation"
 msgstr "销售：发送报价"
 
 #. module: sale
+#. odoo-python
 #: code:addons/sale/models/crm_team.py:0
 #, python-format
 msgid "Sales: Untaxed Total"
@@ -3685,12 +3677,14 @@ msgid "Salesperson"
 msgstr "销售员"
 
 #. module: sale
+#. odoo-python
 #: code:addons/sale/models/res_company.py:0
 #, python-format
 msgid "Sample Order Line"
 msgstr "订单行示例"
 
 #. module: sale
+#. odoo-python
 #: code:addons/sale/models/res_company.py:0
 #, python-format
 msgid "Sample Product"
@@ -3723,7 +3717,7 @@ msgid "Security Token"
 msgstr "安全令牌"
 
 #. module: sale
-#. openerp-web
+#. odoo-javascript
 #: code:addons/sale/static/src/js/tours/sale.js:0
 #, python-format
 msgid "Select a product, or create a new one on the fly."
@@ -3864,6 +3858,7 @@ msgid "Show margins on orders"
 msgstr "订货时显示利润"
 
 #. module: sale
+#. odoo-python
 #: code:addons/sale/models/sale_order.py:0
 #, python-format
 msgid "Sign & Pay Quotation"
@@ -3883,9 +3878,10 @@ msgstr "线上签名"
 #: model:ir.model.fields,field_description:sale.field_sale_order__signature
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
 msgid "Signature"
-msgstr "签名"
+msgstr "签字"
 
 #. module: sale
+#. odoo-python
 #: code:addons/sale/controllers/portal.py:0
 #, python-format
 msgid "Signature is missing."
@@ -3933,13 +3929,14 @@ msgid "Specific Email"
 msgstr "特定的EMail"
 
 #. module: sale
+#. odoo-python
 #: code:addons/sale/controllers/portal.py:0
 #, python-format
 msgid "Stage"
 msgstr "阶段"
 
 #. module: sale
-#. openerp-web
+#. odoo-javascript
 #: code:addons/sale/static/src/js/tours/sale.js:0
 #, python-format
 msgid "Start by checking your company's data."
@@ -4041,6 +4038,7 @@ msgid "Taxes used for deposits"
 msgstr "用于押金的税金"
 
 #. module: sale
+#. odoo-python
 #: code:addons/sale/models/crm_team.py:0
 #, python-format
 msgid ""
@@ -4061,6 +4059,7 @@ msgid "Terms & Conditions format"
 msgstr "条款和条件格式"
 
 #. module: sale
+#. odoo-python
 #: code:addons/sale/models/sale_order.py:0
 #, python-format
 msgid "Terms & Conditions: %s"
@@ -4096,31 +4095,42 @@ msgstr ""
 " 您可以使用此字段进行快速搜索。"
 
 #. module: sale
+#. odoo-python
 #: code:addons/sale/models/account_move_line.py:0
 #, python-format
 msgid ""
 "The Sales Order %s linked to the Analytic Account %s is cancelled. You "
 "cannot register an expense on a cancelled Sales Order."
-msgstr "销售订单%s关联的分析账户%s被取消。你不能在取消的销售订单上登记费用。"
+msgstr "销售订单%s关联的分析科目%s被取消。你不能在取消的销售订单上登记费用。"
 
 #. module: sale
+#. odoo-python
 #: code:addons/sale/models/account_move_line.py:0
 #, python-format
 msgid ""
 "The Sales Order %s linked to the Analytic Account %s is currently locked. "
 "You cannot register an expense on a locked Sales Order. Please create a new "
 "SO linked to this Analytic Account."
-msgstr "销售订单%s关联的分析账户%s当前被锁定。你不能在锁定的销售订单上登记费用。请创建新的销售订单关联这个分析账户。"
+msgstr "销售订单%s关联的分析科目%s当前被锁定。你不能在锁定的销售订单上登记费用。请创建新的销售订单关联这个分析科目。"
 
 #. module: sale
+#. odoo-python
 #: code:addons/sale/models/account_move_line.py:0
 #, python-format
 msgid ""
 "The Sales Order %s linked to the Analytic Account %s must be validated "
 "before registering expenses."
-msgstr "销售订单%s关联的分析账户%s在登记费用前必须被验证。"
+msgstr "销售订单%s关联的分析科目%s在登记费用前必须被验证。"
 
 #. module: sale
+#. odoo-python
+#: code:addons/sale/controllers/portal.py:0
+#, python-format
+msgid "The access token is invalid."
+msgstr "访问令牌无效。"
+
+#. module: sale
+#. odoo-python
 #: code:addons/sale/models/sale_order.py:0
 #, python-format
 msgid ""
@@ -4134,6 +4144,7 @@ msgid "The fixed amount to be invoiced in advance, taxes excluded."
 msgstr "固定金额需提前结算，税额另计。"
 
 #. module: sale
+#. odoo-python
 #: code:addons/sale/models/product_template.py:0
 #, python-format
 msgid ""
@@ -4152,9 +4163,9 @@ msgid ""
 "The invoice is marked as paid and the payment is registered in the payment journal defined in the configuration of the payment provider.\n"
 "This mode is advised if you issue the final invoice at the order and not after the delivery."
 msgstr ""
-"当交易被支付提供商确认后，发票会自动生成，并在客户门户中可用。\n"
-"发票被标记为已付款，付款被登记在支付提供商配置中定义的支付日志中。\n"
-"如果你在订单上而不是在交货后开具最终发票，建议使用这种模式。"
+"当交易被支付提供商确认后，结算会自动生成，并在客户门户中可用。\n"
+"结算被标记为已付款，付款被登记在支付提供商配置中定义的支付日志中。\n"
+"如果你在订单上而不是在交货后开具最终结算，建议使用这种模式。"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -4164,20 +4175,14 @@ msgid ""
 msgstr "利润率计算计算结果为产品销售价格减去其明细表成本字段的和。"
 
 #. module: sale
-#: model_terms:product.product,website_description:sale.product_product_4e
-#: model_terms:product.product,website_description:sale.product_product_4f
-msgid ""
-"The minimum height is 65 cm, and for standing work the maximum height "
-"position is 125 cm."
-msgstr "最小高度为 65 厘米，站立工作的最大高度位置为 125 厘米。"
-
-#. module: sale
+#. odoo-python
 #: code:addons/sale/controllers/portal.py:0
 #, python-format
 msgid "The order is not in a state requiring customer signature."
 msgstr "订单未处于需要客户签名的状态。"
 
 #. module: sale
+#. odoo-python
 #: code:addons/sale/models/sale_order_line.py:0
 #, python-format
 msgid "The ordered quantity has been updated."
@@ -4194,6 +4199,7 @@ msgid "The percentage of amount to be invoiced in advance, taxes excluded."
 msgstr "预先结算金额的百分比，不含税。"
 
 #. module: sale
+#. odoo-python
 #: code:addons/sale/wizard/sale_make_invoice_advance.py:0
 #, python-format
 msgid ""
@@ -4202,6 +4208,7 @@ msgid ""
 msgstr "此产品用于开具预付定金结算单，开票策略应该设为“订购数量”。请更新你的定金产品，以创建定金结算单。"
 
 #. module: sale
+#. odoo-python
 #: code:addons/sale/wizard/sale_make_invoice_advance.py:0
 #, python-format
 msgid ""
@@ -4211,6 +4218,7 @@ msgid ""
 msgstr "用于开具首付款结算单的产品应将结算单策略设置为\"已订购数量\"。 请更新您的存款产品，以便能够创建存款结算单"
 
 #. module: sale
+#. odoo-python
 #: code:addons/sale/controllers/portal.py:0
 #: code:addons/sale/controllers/portal.py:0
 #, python-format
@@ -4218,6 +4226,7 @@ msgid "The provided parameters are invalid."
 msgstr "提供的参数无效。"
 
 #. module: sale
+#. odoo-python
 #: code:addons/sale/wizard/sale_make_invoice_advance.py:0
 #: code:addons/sale/wizard/sale_make_invoice_advance.py:0
 #, python-format
@@ -4235,6 +4244,7 @@ msgid "There are currently no quotations for your account."
 msgstr "目前，您的账户没有报价。"
 
 #. module: sale
+#. odoo-python
 #: code:addons/sale/models/sale_order.py:0
 #, python-format
 msgid ""
@@ -4293,6 +4303,7 @@ msgid ""
 msgstr "这是链接源，例如，搜索引擎、其他域名或EMail列表名称"
 
 #. module: sale
+#. odoo-python
 #: code:addons/sale/models/sale_order_line.py:0
 #, python-format
 msgid ""
@@ -4370,7 +4381,7 @@ msgid ""
 msgstr "要在B2B模式下发送邀请，请在列表视图中打开联系人或选择多个联系人，然后单击下拉菜单中的“门户访问管理”选项*动作。"
 
 #. module: sale
-#. openerp-web
+#. odoo-javascript
 #: code:addons/sale/static/src/js/tours/sale.js:0
 #, python-format
 msgid ""
@@ -4432,6 +4443,7 @@ msgid "Type Name"
 msgstr "类型名称"
 
 #. module: sale
+#: model_terms:ir.ui.view,arch_db:sale.product_form_view_sale_order_button
 #: model_terms:ir.ui.view,arch_db:sale.product_template_form_view_sale_order_button
 #: model_terms:ir.ui.view,arch_db:sale.res_partner_view_buttons
 msgid "Type a message..."
@@ -4455,9 +4467,10 @@ msgstr "USPS 连接器"
 #. module: sale
 #: model:ir.model,name:sale.model_utm_campaign
 msgid "UTM Campaign"
-msgstr "UTM活动"
+msgstr "UTM营销"
 
 #. module: sale
+#. odoo-python
 #: code:addons/sale/wizard/sale_order_cancel.py:0
 #, python-format
 msgid "Unable to post message, please configure the sender's email address."
@@ -4481,14 +4494,6 @@ msgstr "单价:"
 #: model_terms:ir.ui.view,arch_db:sale.view_order_line_tree
 msgid "Unit of Measure"
 msgstr "计量单位"
-
-#. module: sale
-#: model:product.product,uom_name:sale.advance_product_0
-#: model:product.product,uom_name:sale.product_product_4e
-#: model:product.product,uom_name:sale.product_product_4f
-#: model:product.template,uom_name:sale.advance_product_0_product_template
-msgid "Units"
-msgstr "件"
 
 #. module: sale
 #: model:ir.ui.menu,name:sale.menu_product_uom_form_action
@@ -4546,9 +4551,10 @@ msgstr "更新价格"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid "Update Taxes"
-msgstr "更新税率"
+msgstr "更新税"
 
 #. module: sale
+#. odoo-python
 #: code:addons/sale/models/sale_order.py:0
 #, python-format
 msgid "Upsell %(order)s for customer %(customer)s"
@@ -4581,12 +4587,14 @@ msgid "Variant Grid Entry"
 msgstr "变体表格输入"
 
 #. module: sale
+#. odoo-python
 #: code:addons/sale/models/sale_order.py:0
 #, python-format
 msgid "View Order"
 msgstr "查看订单"
 
 #. module: sale
+#. odoo-python
 #: code:addons/sale/models/sale_order.py:0
 #: code:addons/sale/models/sale_order.py:0
 #: code:addons/sale/models/sale_order.py:0
@@ -4605,18 +4613,20 @@ msgid "Volume"
 msgstr "体积"
 
 #. module: sale
+#. odoo-python
 #: code:addons/sale/models/product_product.py:0
 #: code:addons/sale/models/product_template.py:0
+#: code:addons/sale/models/res_config_settings.py:0
 #: code:addons/sale/models/sale_order_line.py:0
 #: model:ir.model.fields.selection,name:sale.selection__product_template__sale_line_warn__warning
 #: model:ir.model.fields.selection,name:sale.selection__res_partner__sale_warn__warning
 #: model_terms:ir.ui.view,arch_db:sale.product_template_form_view_sale_order_button
-#: model_terms:ir.ui.view,arch_db:sale.res_partner_view_buttons
 #, python-format
 msgid "Warning"
 msgstr "警告"
 
 #. module: sale
+#. odoo-python
 #: code:addons/sale/models/sale_order.py:0
 #: code:addons/sale/models/sale_order_line.py:0
 #, python-format
@@ -4635,14 +4645,6 @@ msgid "Warning when Selling this Product"
 msgstr "销售该产品时的警告"
 
 #. module: sale
-#: model_terms:product.product,website_description:sale.product_product_4e
-#: model_terms:product.product,website_description:sale.product_product_4f
-msgid ""
-"We pay special attention to detail, which is why our desks are of a superior"
-" quality."
-msgstr "我们特别注重细节，这就是我们的办公桌质量上乘的原因。"
-
-#. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__website_message_ids
 msgid "Website Messages"
 msgstr "网站消息"
@@ -4653,7 +4655,7 @@ msgid "Website communication history"
 msgstr "网上沟通记录"
 
 #. module: sale
-#. openerp-web
+#. odoo-javascript
 #: code:addons/sale/static/src/js/tours/sale.js:0
 #, python-format
 msgid "Write a company name to create one, or see suggestions."
@@ -4665,6 +4667,7 @@ msgid "You can invoice them before they are delivered."
 msgstr "您可以在发货前为其开具结算单。"
 
 #. module: sale
+#. odoo-python
 #: code:addons/sale/models/sale_order.py:0
 #, python-format
 msgid ""
@@ -4673,6 +4676,7 @@ msgid ""
 msgstr "您无法删除已发送的报价或已确认的销售订单。你必须先取消它。"
 
 #. module: sale
+#. odoo-python
 #: code:addons/sale/models/sale_order_line.py:0
 #, python-format
 msgid ""
@@ -4697,9 +4701,10 @@ msgid ""
 "You can set here the communication type that will appear on sales orders.The"
 " communication will be given to the customer when they choose the payment "
 "method."
-msgstr "您可以在此处设置将在销售订单上显示的通信类型。当客户选择付款方式时，将与客户进行通信。"
+msgstr "您可以在此处设置将在销售订单上显示的通信类型。当客户选择支付方式时，将与客户进行通信。"
 
 #. module: sale
+#. odoo-python
 #: code:addons/sale/models/product_product.py:0
 #: code:addons/sale/models/product_template.py:0
 #, python-format
@@ -4709,6 +4714,7 @@ msgid ""
 msgstr "您无法更改产品的类型，因为它已在销售订单中使用。"
 
 #. module: sale
+#. odoo-python
 #: code:addons/sale/models/sale_order_line.py:0
 #, python-format
 msgid ""
@@ -4751,6 +4757,7 @@ msgid "Your order is not in a state to be rejected."
 msgstr "您的订单不在被拒绝的状态。"
 
 #. module: sale
+#. odoo-python
 #: code:addons/sale/models/sale_order.py:0
 #, python-format
 msgid ""
@@ -4763,7 +4770,6 @@ msgstr ""
 #. module: sale
 #: model:ir.actions.server,name:sale.send_invoice_cron_ir_actions_server
 #: model:ir.cron,cron_name:sale.send_invoice_cron
-#: model:ir.cron,name:sale.send_invoice_cron
 msgid "automatic invoicing: send ready invoice"
 msgstr "自动开票：发送就绪的结算单"
 
@@ -4784,6 +4790,7 @@ msgid "days"
 msgstr "天数"
 
 #. module: sale
+#. odoo-python
 #: code:addons/sale/models/sale_order.py:0
 #, python-format
 msgid "sale order"
@@ -4814,8 +4821,8 @@ msgid ""
 "object.name or 'n/a' }})"
 msgstr ""
 "{{ object.company_id.name }} {{ object.state in ('draft', 'sent') and "
-"(ctx.get('proforma') and 'Proforma' or '报价') or 'Order' }} (Ref {{ "
-"object.name or 'n/a' }})"
+"(ctx.get('proforma') and '形式发票' or '报价') or '订单' }} (Ref {{ object.name or "
+"'n/a' }})"
 
 #. module: sale
 #: model:mail.template,subject:sale.mail_template_sale_cancellation

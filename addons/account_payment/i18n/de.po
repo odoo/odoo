@@ -3,16 +3,17 @@
 # 	* account_payment
 # 
 # Translators:
-# Martin Trigaux, 2022
 # Friederike Fasterling-Nesselbosch, 2022
+# Felix Schubert <felix.schubert@go-erp.com>, 2022
+# Martin Trigaux, 2022
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 16.0beta\n"
+"Project-Id-Version: Odoo Server 16.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-10-04 09:24+0000\n"
+"POT-Creation-Date: 2022-12-15 12:49+0000\n"
 "PO-Revision-Date: 2022-09-22 05:44+0000\n"
-"Last-Translator: Friederike Fasterling-Nesselbosch, 2022\n"
+"Last-Translator: Martin Trigaux, 2022\n"
 "Language-Team: German (https://www.transifex.com/odoo/teams/41243/de/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -132,12 +133,14 @@ msgid ""
 msgstr ""
 
 #. module: account_payment
+#. odoo-python
 #: code:addons/account_payment/models/account_payment.py:0
 #, python-format
 msgid "A payment transaction with reference %s already exists."
 msgstr "Ein Zahlungsvorgang mit Referenz %s ist bereits vorhanden."
 
 #. module: account_payment
+#. odoo-python
 #: code:addons/account_payment/models/account_payment.py:0
 #, python-format
 msgid "A token is required to create a new payment transaction."
@@ -249,6 +252,7 @@ msgid "Invoice(s)"
 msgstr "Rechnung(en)"
 
 #. module: account_payment
+#. odoo-python
 #: code:addons/account_payment/models/payment_transaction.py:0
 #: model:ir.model.fields,field_description:account_payment.field_payment_transaction__invoice_ids
 #, python-format
@@ -350,12 +354,12 @@ msgstr "Zahlungsmethoden"
 #: model:ir.model,name:account_payment.model_payment_provider
 #: model:ir.model.fields,field_description:account_payment.field_account_payment_method_line__payment_provider_id
 msgid "Payment Provider"
-msgstr ""
+msgstr "Zahlungsanbieter"
 
 #. module: account_payment
 #: model:ir.ui.menu,name:account_payment.payment_provider_menu
 msgid "Payment Providers"
-msgstr ""
+msgstr "Zahlungsanbieter"
 
 #. module: account_payment
 #: model:ir.model,name:account_payment.model_payment_refund_wizard
@@ -386,12 +390,14 @@ msgid "Payments"
 msgstr "Zahlungen"
 
 #. module: account_payment
+#. odoo-python
 #: code:addons/account_payment/models/account_payment_method_line.py:0
 #, python-format
 msgid "Provider"
 msgstr "Anbieter"
 
 #. module: account_payment
+#. odoo-python
 #: code:addons/account_payment/models/account_payment.py:0
 #: code:addons/account_payment/models/account_payment.py:0
 #: model_terms:ir.ui.view,arch_db:account_payment.payment_refund_wizard_view_form
@@ -457,6 +463,14 @@ msgid "Suitable Payment Token"
 msgstr "Geeignetes Zahlungs-Token"
 
 #. module: account_payment
+#. odoo-python
+#: code:addons/account_payment/controllers/payment.py:0
+#, python-format
+msgid "The access token is invalid."
+msgstr "Das Zugangs-Token ist ungültig."
+
+#. module: account_payment
+#. odoo-python
 #: code:addons/account_payment/wizards/payment_refund_wizard.py:0
 #, python-format
 msgid ""
@@ -471,6 +485,7 @@ msgid "The journal in which the successful transactions are posted."
 msgstr ""
 
 #. module: account_payment
+#. odoo-python
 #: code:addons/account_payment/models/payment_transaction.py:0
 #, python-format
 msgid ""
@@ -479,6 +494,7 @@ msgid ""
 msgstr ""
 
 #. module: account_payment
+#. odoo-python
 #: code:addons/account_payment/controllers/payment.py:0
 #: code:addons/account_payment/controllers/payment.py:0
 #, python-format
@@ -539,6 +555,7 @@ msgid "Void Transaction"
 msgstr "Nichtige Transaktion"
 
 #. module: account_payment
+#. odoo-python
 #: code:addons/account_payment/models/account_journal.py:0
 #, python-format
 msgid ""

@@ -598,7 +598,6 @@
                     "tag": "chart",
                     "data": {
                         "title": "",
-                        "id": "d84bdd18-3c66-4153-ae2e-7f4ec1672cfb",
                         "background": "#FFFFFF",
                         "legendPosition": "right",
                         "metaData": {
@@ -662,7 +661,7 @@
                 },
                 "B2": {
                     "style": 7,
-                    "content": "=ODOO.PIVOT(1,\"value\")"
+                    "content": "=FORMAT.LARGE.NUMBER(ODOO.PIVOT(1,\"value\"))"
                 }
             },
             "conditionalFormats": [],
@@ -874,6 +873,10 @@
             "rangeType": "year",
             "defaultsToCurrentPeriod": false,
             "pivotFields": {
+                "1": {
+                    "field": "stock_move_id.location_dest_id",
+                    "type": "many2one"
+                },
                 "2": {
                     "field": "location_id",
                     "type": "many2one"
@@ -940,6 +943,10 @@
             "rangeType": "year",
             "defaultsToCurrentPeriod": false,
             "pivotFields": {
+                "1": {
+                    "field": "stock_move_id.lot_ids",
+                    "type": "many2many"
+                },
                 "2": {
                     "field": "lot_id",
                     "type": "many2one"

@@ -12,17 +12,18 @@
 # Quim - eccit <quim@eccit.com>, 2022
 # Martin Trigaux, 2022
 # oscaryuu, 2022
-# jabelchi, 2022
+# Josep Anton Belchi, 2022
 # marcescu, 2022
-# Óscar Fonseca <tecnico@extreme-micro.com>, 2022
+# Ivan Espinola, 2022
+# Óscar Fonseca <tecnico@extreme-micro.com>, 2023
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 16.0beta\n"
+"Project-Id-Version: Odoo Server 16.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-10-10 10:22+0000\n"
+"POT-Creation-Date: 2022-12-15 12:49+0000\n"
 "PO-Revision-Date: 2022-09-22 05:45+0000\n"
-"Last-Translator: Óscar Fonseca <tecnico@extreme-micro.com>, 2022\n"
+"Last-Translator: Óscar Fonseca <tecnico@extreme-micro.com>, 2023\n"
 "Language-Team: Catalan (https://www.transifex.com/odoo/teams/41243/ca/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -31,7 +32,7 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: analytic
-#. openerp-web
+#. odoo-javascript
 #: code:addons/analytic/static/src/components/analytic_distribution/analytic_distribution.xml:0
 #, python-format
 msgid "(no accounts)"
@@ -63,7 +64,7 @@ msgid "Active"
 msgstr "Actiu"
 
 #. module: analytic
-#. openerp-web
+#. odoo-javascript
 #: code:addons/analytic/static/src/components/analytic_distribution/analytic_distribution.xml:0
 #, python-format
 msgid "Add a line"
@@ -92,7 +93,7 @@ msgid "Amount"
 msgstr "Import"
 
 #. module: analytic
-#. openerp-web
+#. odoo-javascript
 #: code:addons/analytic/static/src/components/analytic_distribution/analytic_distribution.xml:0
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_distribution_model__analytic_distribution
 #: model:ir.model.fields,field_description:analytic.field_analytic_mixin__analytic_distribution
@@ -140,13 +141,7 @@ msgid "Analytic Distribution Models"
 msgstr "Models de distribució analític"
 
 #. module: analytic
-#: model:ir.model.fields,field_description:analytic.field_account_analytic_distribution_model__analytic_distribution_stored_char
-#: model:ir.model.fields,field_description:analytic.field_analytic_mixin__analytic_distribution_stored_char
-msgid "Analytic Distribution Stored Char"
-msgstr ""
-
-#. module: analytic
-#. openerp-web
+#. odoo-javascript
 #: code:addons/analytic/static/src/components/analytic_distribution/analytic_distribution.js:0
 #, python-format
 msgid "Analytic Distribution Template"
@@ -200,17 +195,25 @@ msgid "Analytic Plans"
 msgstr "Plans analítics:"
 
 #. module: analytic
-#: model_terms:ir.ui.view,arch_db:analytic.account_analytic_distribution_model_form_view
-msgid "Analytic distribution to apply"
-msgstr ""
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_distribution_model__analytic_precision
+#: model:ir.model.fields,field_description:analytic.field_analytic_mixin__analytic_precision
+msgid "Analytic Precision"
+msgstr "Precisió analítica"
 
 #. module: analytic
+#: model_terms:ir.ui.view,arch_db:analytic.account_analytic_distribution_model_form_view
+msgid "Analytic distribution to apply"
+msgstr "Distribució analítica a aplicar"
+
+#. module: analytic
+#. odoo-python
 #: code:addons/analytic/models/analytic_plan.py:0
 #, python-format
 msgid "Analytical Accounts"
 msgstr "Comptes analítics"
 
 #. module: analytic
+#. odoo-python
 #: code:addons/analytic/models/analytic_plan.py:0
 #, python-format
 msgid "Analytical Plans"
@@ -288,7 +291,7 @@ msgstr "Nens"
 #. module: analytic
 #: model_terms:ir.actions.act_window,help:analytic.account_analytic_plan_action
 msgid "Click to add a new analytic account plan."
-msgstr ""
+msgstr "Feu clic per a afegir un nou pla de compte analític."
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_plan__color
@@ -303,7 +306,7 @@ msgstr "Índex de color"
 #. module: analytic
 #: model:account.analytic.account,name:analytic.analytic_commercial_marketing
 msgid "Commercial & Marketing"
-msgstr ""
+msgstr "Màrqueting comercial"
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_account__company_id
@@ -386,7 +389,7 @@ msgstr "Data"
 #. module: analytic
 #: model:ir.model.fields,help:analytic.field_account_analytic_account__active
 msgid "Deactivate the account."
-msgstr ""
+msgstr "Desactiva el compte."
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_account__debit
@@ -435,7 +438,7 @@ msgid "Domain"
 msgstr "Domini "
 
 #. module: analytic
-#. openerp-web
+#. odoo-javascript
 #: code:addons/analytic/static/src/components/analytic_distribution/analytic_distribution.js:0
 #, python-format
 msgid "Editing"
@@ -501,7 +504,7 @@ msgstr ""
 "analitzar els seus marges fàcilment."
 
 #. module: analytic
-#. openerp-web
+#. odoo-javascript
 #: code:addons/analytic/static/src/components/analytic_distribution/analytic_distribution.js:0
 #, python-format
 msgid "Invalid"
@@ -540,7 +543,7 @@ msgid "Last Updated on"
 msgstr "Última actualització el"
 
 #. module: analytic
-#. openerp-web
+#. odoo-javascript
 #: code:addons/analytic/static/src/components/analytic_distribution/analytic_distribution.js:0
 #, python-format
 msgid "Loading..."
@@ -562,7 +565,7 @@ msgid "Main Attachment"
 msgstr "Adjunt principal"
 
 #. module: analytic
-#. openerp-web
+#. odoo-javascript
 #: code:addons/analytic/static/src/components/analytic_distribution/analytic_distribution.js:0
 #: model:ir.model.fields.selection,name:analytic.selection__account_analytic_applicability__applicability__mandatory
 #: model:ir.model.fields.selection,name:analytic.selection__account_analytic_plan__default_applicability__mandatory
@@ -602,11 +605,11 @@ msgid "Nebula"
 msgstr "Nebula"
 
 #. module: analytic
-#. openerp-web
+#. odoo-javascript
 #: code:addons/analytic/static/src/components/analytic_distribution/analytic_distribution.js:0
 #, python-format
 msgid "No Analytic Accounts for this plan"
-msgstr ""
+msgstr "No hi ha cap compte analític per a aquest pla"
 
 #. module: analytic
 #: model_terms:ir.actions.act_window,help:analytic.account_analytic_line_action_entries
@@ -619,11 +622,11 @@ msgid "No activity yet on this account"
 msgstr "Encara sense activitat en aquest compte"
 
 #. module: analytic
-#. openerp-web
+#. odoo-javascript
 #: code:addons/analytic/static/src/components/analytic_distribution/analytic_distribution.xml:0
 #, python-format
 msgid "No plans available"
-msgstr ""
+msgstr "No hi ha plans disponibles"
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_account__message_needaction_counter
@@ -646,19 +649,26 @@ msgid "Number of messages with delivery error"
 msgstr "Nombre de missatges amb error d'entrega"
 
 #. module: analytic
-#. openerp-web
+#. odoo-javascript
 #: code:addons/analytic/static/src/components/analytic_distribution/analytic_distribution.js:0
 #, python-format
 msgid "OK"
 msgstr "D'acord"
 
 #. module: analytic
-#: model:account.analytic.account,name:analytic.analytic_internal
-msgid "Operating Costs"
-msgstr ""
+#. odoo-python
+#: code:addons/analytic/models/analytic_mixin.py:0
+#, python-format
+msgid "One or more lines require a 100% analytic distribution."
+msgstr "Una o més línies requereixen una distribució analítica del 100%."
 
 #. module: analytic
-#. openerp-web
+#: model:account.analytic.account,name:analytic.analytic_internal
+msgid "Operating Costs"
+msgstr "Costos operatius"
+
+#. module: analytic
+#. odoo-javascript
 #: code:addons/analytic/static/src/components/analytic_distribution/analytic_distribution.js:0
 #: model:ir.model.fields.selection,name:analytic.selection__account_analytic_applicability__applicability__optional
 #: model:ir.model.fields.selection,name:analytic.selection__account_analytic_plan__default_applicability__optional
@@ -674,7 +684,7 @@ msgstr "Altres"
 #. module: analytic
 #: model:account.analytic.account,name:analytic.analytic_our_super_product
 msgid "Our Super Product"
-msgstr ""
+msgstr "El nostre superproducte"
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_plan__parent_id
@@ -695,7 +705,7 @@ msgstr "Empresa"
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_distribution_model__partner_category_id
 msgid "Partner Category"
-msgstr ""
+msgstr "Categoria de socis"
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_account__plan_id
@@ -736,7 +746,7 @@ msgstr ""
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_account__root_plan_id
 msgid "Root Plan"
-msgstr ""
+msgstr "Pla arrel"
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_account__message_has_sms_error
@@ -746,7 +756,7 @@ msgstr "Error de lliurament SMS"
 #. module: analytic
 #: model:account.analytic.account,name:analytic.analytic_seagate_p2
 msgid "Seagate P2"
-msgstr ""
+msgstr "Seagate P2"
 
 #. module: analytic
 #: model_terms:ir.ui.view,arch_db:analytic.view_account_analytic_line_filter
@@ -760,6 +770,9 @@ msgid ""
 "create new customer invoice or Sales order if we select this company, it "
 "will automatically take this as an analytic account)"
 msgstr ""
+"Seleccioneu una empresa per a la qual s'utilitzarà la distribució analítica "
+"(p. ex. crear una nova factura de client o comanda de vendes si seleccioneu "
+"aquesta empresa, automàticament ho tindrà com a compte analític)"
 
 #. module: analytic
 #: model:ir.model.fields,help:analytic.field_account_analytic_distribution_model__partner_category_id
@@ -768,6 +781,9 @@ msgid ""
 "(e.g. create new customer invoice or Sales order if we select this partner, "
 "it will automatically take this as an analytic account)"
 msgstr ""
+"Seleccioneu una categoria de soci per a la qual s'utilitzarà la distribució "
+"analítica (p. ex. crear una nova factura de client o comanda de venda si "
+"seleccioneu aquest soci, automàticament ho tindrà com a compte analític)"
 
 #. module: analytic
 #: model:ir.model.fields,help:analytic.field_account_analytic_distribution_model__partner_id
@@ -776,11 +792,14 @@ msgid ""
 "create new customer invoice or Sales order if we select this partner, it "
 "will automatically take this as an analytic account)"
 msgstr ""
+"Seleccioneu un soci per al qual s'utilitzarà la distribució analítica (p. "
+"ex. crear una nova factura de client o comanda de vendes si seleccioneu "
+"aquest soci, automàticament tindrà això com un compte analític)"
 
 #. module: analytic
 #: model_terms:ir.ui.view,arch_db:analytic.account_analytic_distribution_model_form_view
 msgid "Simultaneous conditions to meet"
-msgstr ""
+msgstr "Condicions simultànies per complir"
 
 #. module: analytic
 #: model:account.analytic.account,name:analytic.analytic_spark
@@ -790,9 +809,10 @@ msgstr "Spark Systems"
 #. module: analytic
 #: model_terms:ir.ui.view,arch_db:analytic.account_analytic_plan_form_view
 msgid "Subplans"
-msgstr ""
+msgstr "Subplans"
 
 #. module: analytic
+#. odoo-python
 #: code:addons/analytic/models/analytic_line.py:0
 #, python-format
 msgid ""
@@ -844,11 +864,23 @@ msgid "Website communication history"
 msgstr "Historial de comunicacions del lloc web"
 
 #. module: analytic
+#. odoo-python
 #: code:addons/analytic/models/analytic_account.py:0
 #, python-format
 msgid ""
 "You can't set a different company on your analytic account since there are "
 "some analytic items linked to it."
+msgstr ""
+"No podeu establir una empresa diferent al vostre compte analític, ja que hi "
+"ha alguns elements analítics enllaçats."
+
+#. module: analytic
+#. odoo-python
+#: code:addons/analytic/models/analytic_distribution_model.py:0
+#, python-format
+msgid ""
+"You defined a distribution with analytic account(s) belonging to a specific "
+"company but a model shared between companies or with a different company"
 msgstr ""
 
 #. module: analytic

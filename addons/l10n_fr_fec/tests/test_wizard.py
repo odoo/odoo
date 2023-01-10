@@ -7,10 +7,9 @@ from freezegun import freeze_time
 
 from odoo.addons.account.tests.common import AccountTestInvoicingCommon
 from odoo.tests import tagged
-from odoo import fields
+from odoo import fields, Command
 
 
-@freeze_time('2021-05-02')
 @tagged('post_install_l10n', 'post_install', '-at_install')
 class TestAccountFrFec(AccountTestInvoicingCommon):
 
@@ -22,7 +21,35 @@ class TestAccountFrFec(AccountTestInvoicingCommon):
         company.vat = 'FR13542107651'
 
         lines_data = [(1437.12, 'Hello\tDarkness'), (1676.64, 'my\rold\nfriend'), (3353.28, '\t\t\r')]
-        today = fields.Date.today().strftime('%Y-%m-%d')
+
+        with freeze_time('2021-05-02'):
+            today = fields.Date.today().strftime('%Y-%m-%d')
+
+            cls.wizard = cls.env['account.fr.fec'].create({
+                'date_from': fields.Date.today() - timedelta(days=1),
+                'date_to': fields.Date.today(),
+                'export_type': 'official',
+                'test_file': True,
+            })
+
+        cls.tax_sale_a = cls.env['account.tax'].create({
+            'name': "TVA 20,0%",
+            'amount_type': 'percent',
+            'type_tax_use': 'sale',
+            'amount': 20,
+            'invoice_repartition_line_ids': [
+                Command.create({
+                    'factor_percent': 100.0,
+                    'repartition_type': 'base',
+                }),
+                Command.create({
+                    'repartition_type': 'tax',
+                    'factor_percent': 100.0,
+                    'account_id': cls.env['account.account'].search([('code', '=', "445710")], limit=1).id,
+                })
+            ]
+        })
+
         cls.invoice_a = cls.env['account.move'].create({
             'move_type': 'out_invoice',
             'partner_id': cls.partner_a.id,
@@ -38,13 +65,6 @@ class TestAccountFrFec(AccountTestInvoicingCommon):
             }) for price_unit, name in lines_data]
         })
         cls.invoice_a.action_post()
-
-        cls.wizard = cls.env['account.fr.fec'].create({
-            'date_from': fields.Date.today() - timedelta(days=1),
-            'date_to': fields.Date.today(),
-            'export_type': 'official',
-            'test_file': True,
-        })
 
     def test_generate_fec_sanitize_pieceref(self):
         self.wizard.generate_fec()

@@ -15,7 +15,7 @@
         <div class="o_burger_menu position-fixed top-0 bottom-0 start-100 d-flex flex-column flex-nowrap" t-att-class="transition.className" t-on-touchstart.stop="_onSwipeStart" t-on-touchend.stop="_onSwipeEnd">
           <div class="o_burger_menu_topbar d-flex align-items-center justify-content-between flex-shrink-0 py-0 fs-4"
               t-on-click.stop='_toggleUserMenu'>
-              <small class="o-no-caret dropdown-toggle d-flex align-items-center justify-content-between" t-att-class="{'active bg-view': isUserMenuUnfolded }">
+              <small class="o-no-caret dropdown-toggle d-flex align-items-center justify-content-between" t-att-class="{'active bg-view text-body': isUserMenuUnfolded }">
                   <img class="o_burger_menu_avatar o_image_24_cover rounded-circle" t-att-src="'/web/image?model=res.users&amp;field=avatar_128&amp;id=' + user.userId" alt="Menu"/>
                   <span class="o_burger_menu_username px-2"><t t-esc="user.name"/></span>
                   <i t-if="isUserMenuTogglable" class="fa" t-att-class="state.isUserMenuOpened ? 'fa-caret-down' : 'fa-caret-left'"/>

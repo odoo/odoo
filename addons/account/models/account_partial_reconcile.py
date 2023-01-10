@@ -303,7 +303,7 @@ class AccountPartialReconcile(models.Model):
             'tax_repartition_line_id': tax_line.tax_repartition_line_id.id,
             'tax_ids': [Command.set(tax_ids.ids)],
             'tax_tag_ids': [Command.set(all_tags.ids)],
-            'account_id': tax_line.tax_repartition_line_id.account_id.id or tax_line.account_id.id,
+            'account_id': tax_line.tax_repartition_line_id.account_id.id or tax_line.company_id.account_cash_basis_base_account_id.id or tax_line.account_id.id,
             'amount_currency': amount_currency,
             'currency_id': tax_line.currency_id.id,
             'partner_id': tax_line.partner_id.id,

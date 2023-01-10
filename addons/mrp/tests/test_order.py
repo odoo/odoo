@@ -874,10 +874,10 @@ class TestMrpOrder(TestMrpCommon):
         mo.move_raw_ids.filtered(lambda m: m.state != 'done')[0].quantity_done = 0
         update_quantity_wizard.change_prod_qty()
 
-        self.assertEqual(len(mo.move_raw_ids), 2)
+        self.assertEqual(len(mo.move_raw_ids), 4)
 
         mo.button_mark_done()
-        self.assertTrue(all(s == 'done' for s in mo.move_raw_ids.mapped('state')))
+        self.assertTrue(all(s in ['done', 'cancel'] for s in mo.move_raw_ids.mapped('state')))
         self.assertEqual(sum(mo.move_raw_ids.mapped('move_line_ids.reserved_uom_qty')), 0)
 
     def test_consumption_strict_1(self):
@@ -2315,7 +2315,7 @@ class TestMrpOrder(TestMrpCommon):
 
     def test_move_finished_onchanges(self):
         """ Test that move_finished_ids (i.e. produced products) are still correct even after
-        multiple onchanges have changed the the moves
+        multiple onchanges have changed the moves
         """
 
         product1 = self.env['product.product'].create({
@@ -2674,18 +2674,24 @@ class TestMrpOrder(TestMrpCommon):
 
         # produce 20 / 10 / 5 on workorders, create backorder
 
+        duration_expected = wo_1.duration_expected
         wo_1.button_start()
         wo_1.qty_producing = 20
         self.assertEqual(mo.state, 'progress')
         wo_1.button_finish()
+        self.assertEqual(duration_expected, wo_1.duration_expected)
 
+        duration_expected = wo_2.duration_expected
         wo_2.button_start()
         wo_2.qty_producing = 10
         wo_2.button_finish()
+        self.assertEqual(duration_expected, wo_2.duration_expected)
 
+        duration_expected = wo_3.duration_expected
         wo_3.button_start()
         wo_3.qty_producing = 5
         wo_3.button_finish()
+        self.assertEqual(duration_expected, wo_3.duration_expected)
 
         self.assertEqual(mo.state, 'to_close')
         mo.button_mark_done()
@@ -3014,6 +3020,82 @@ class TestMrpOrder(TestMrpCommon):
         self.assertFalse(wo_02.show_json_popover)
         self.assertEqual(wo_01.date_planned_finished, wo_02.date_planned_start)
 
+    @freeze_time('2022-10-05 12:00')
+    def test_replan_mo_without_bom(self):
+        """
+            Create 2 MOs without BoM
+                just set the product and a component
+
+            For first MO :
+                Add 2 WO (with different WC)
+                Don't schedule first WO
+                Schedule second WO
+                Confirm => MO is Confirmed and Planned
+                Schedule first WO before second WO
+                Confirm => MO should Replan without Error
+
+            For second MO :
+                Add 1 Scheduled WO
+                Confirm => MO is Confirmed and Planned
+                Add a second WO scheduled before the other one (with different WC)
+                Confirm => MO should Replan without Error
+        """
+
+        # Required for `workorder_ids` to be visible in the view
+        self.env.user.groups_id += self.env.ref('mrp.group_mrp_routings')
+
+        mos = self.env['mrp.production']
+        for _ in range(2):
+            mo_form = Form(self.env['mrp.production'])
+            mo_form.product_id = self.product_8
+            with mo_form.move_raw_ids.new() as component:
+                component.product_id = self.product_6
+            mos += mo_form.save()
+        mo_01, mo_02 = mos
+
+        #First MO
+        with Form(mo_01) as mo_01_form:
+            with mo_01_form.workorder_ids.new() as workorder:
+                workorder.name = "OP1"
+                workorder.workcenter_id = self.workcenter_2
+            with mo_01_form.workorder_ids.new() as workorder:
+                workorder.name = "OP2"
+                workorder.workcenter_id = self.workcenter_3
+                workorder.date_planned_start = datetime(2022, 10, 23, 12)
+            mo_01 = mo_01_form.save()
+        mo_01.action_confirm()
+
+        op_1, op_2 = mo_01.workorder_ids
+        self.assertEqual(op_2.date_planned_start, datetime(2022, 10, 23, 12))
+
+        with Form(mo_01) as mo_01_form:
+            with mo_01_form.workorder_ids.edit(0) as workorder:
+                workorder.date_planned_start = datetime(2022, 10, 18, 12)
+            mo_01 = mo_01_form.save()
+
+        self.assertEqual(op_1.date_planned_start, datetime(2022, 10, 18, 12))
+        self.assertEqual(op_1.date_planned_finished, op_2.date_planned_start)
+
+        #Second MO
+        with Form(mo_02) as mo_02_form:
+            with mo_02_form.workorder_ids.new() as workorder:
+                workorder.name = "OP1"
+                workorder.workcenter_id = self.workcenter_2
+                workorder.date_planned_start = datetime(2022, 10, 20, 12)
+            mo_02 = mo_02_form.save()
+        mo_02.action_confirm()
+
+        with Form(mo_02) as mo_02_form:
+            with mo_02_form.workorder_ids.new() as workorder:
+                workorder.name = "OP2"
+                workorder.workcenter_id = self.workcenter_3
+                workorder.date_planned_start = datetime(2022, 10, 18, 12)
+            mo_02 = mo_02_form.save()
+
+        op_1, op_2 = mo_02.workorder_ids
+        self.assertEqual(op_1.date_planned_start, datetime(2022, 10, 20, 12))
+        self.assertTrue(op_2.show_json_popover)
+
     def test_compute_product_id(self):
         """
             Tests the creation of a production order automatically sets the product when the bom is provided,
@@ -3078,3 +3160,57 @@ class TestMrpOrder(TestMrpCommon):
         update_quantity_wizard.change_prod_qty()
 
         self.assertEqual(mo.move_raw_ids[0].product_uom_qty, 2)
+
+    def test_update_qty_to_consume_of_component(self):
+        """
+        The UoM of the finished product has a rounding precision equal to 1.0
+        and the UoM of the component has a decimal one. When the producing qty
+        is set, an onchange autocomplete the consumed quantity of the component.
+        Then, when updating the 'to consume' quantity of the components, their
+        consumed quantity is updated again. The test ensures that this update
+        respects the rounding precisions
+        """
+        self.uom_dozen.rounding = 1
+        self.bom_4.product_uom_id = self.uom_dozen
+
+        mo_form = Form(self.env['mrp.production'])
+        mo_form.bom_id = self.bom_4
+        mo = mo_form.save()
+        mo.action_confirm()
+
+        mo.action_toggle_is_locked()
+        with Form(mo) as mo_form:
+            mo_form.qty_producing = 1
+            with mo_form.move_raw_ids.edit(0) as raw:
+                raw.product_uom_qty = 1.25
+
+        self.assertEqual(mo.move_raw_ids.quantity_done, 1.25)
+
+    def test_compute_picking_type_id(self):
+        """
+        Test that the operation type set on the bom is set in the manufacturing order
+        when selecting the BoM"""
+        self.env.user.groups_id += self.env.ref("stock.group_adv_location")
+        picking_type = self.env['stock.picking.type'].create({
+            'name': 'new_picking_type',
+            'code': 'internal',
+            'sequence_code': 'NPT',
+            'default_location_src_id': self.env.ref('stock.stock_location_stock').id,
+            'default_location_dest_id': self.stock_location_components.id,
+            'warehouse_id': self.warehouse_1.id,
+        })
+        self.bom_1.picking_type_id = picking_type
+        mo_form = Form(self.env['mrp.production'])
+        mo_form.bom_id = self.bom_1
+        mo = mo_form.save()
+        self.assertEqual(mo.picking_type_id.id, picking_type.id)
+        # MO_2
+        self.assertFalse(self.bom_2.picking_type_id)
+        mo_form = Form(self.env['mrp.production'])
+        mo_form.bom_id = self.bom_2
+        mo_2 = mo_form.save()
+        picking_type_company = self.env['stock.picking.type'].search_read([
+            ('code', '=', 'mrp_operation'),
+            ('warehouse_id.company_id', 'in', mo_2.company_id.ids),
+        ], ['company_id'], load=False, limit=1)
+        self.assertEqual(mo_2.picking_type_id.id, picking_type_company[0]['id'])

@@ -76,6 +76,9 @@ export class ImageField extends Component {
     getUrl(previewFieldName) {
         if (this.state.isValid && this.props.value) {
             if (isBinarySize(this.props.value)) {
+                if (!this.rawCacheKey) {
+                    this.rawCacheKey = this.props.record.data.__last_update;
+                }
                 return url("/web/image", {
                     model: this.props.record.resModel,
                     id: this.props.record.resId,
@@ -96,6 +99,8 @@ export class ImageField extends Component {
     }
     onFileUploaded(info) {
         this.state.isValid = true;
+        // Invalidate the `rawCacheKey`.
+        this.rawCacheKey = null;
         this.props.update(info.data);
     }
     onLoadFailed() {

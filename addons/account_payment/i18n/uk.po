@@ -8,9 +8,9 @@
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 16.0beta\n"
+"Project-Id-Version: Odoo Server 16.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-10-04 09:24+0000\n"
+"POT-Creation-Date: 2022-12-15 12:49+0000\n"
 "PO-Revision-Date: 2022-09-22 05:44+0000\n"
 "Last-Translator: Martin Trigaux, 2022\n"
 "Language-Team: Ukrainian (https://www.transifex.com/odoo/teams/41243/uk/)\n"
@@ -64,6 +64,8 @@ msgid ""
 "<span class=\"badge rounded-pill text-bg-danger\"><i class=\"fa fa-fw fa-"
 "remove\"/><span class=\"d-none d-md-inline\"> Cancelled</span></span>"
 msgstr ""
+"<span class=\"badge rounded-pill text-bg-danger\"><i class=\"fa fa-fw fa-"
+"remove\"/><span class=\"d-none d-md-inline\"> Скасовано</span></span>"
 
 #. module: account_payment
 #: model_terms:ir.ui.view,arch_db:account_payment.portal_my_invoices_payment
@@ -72,6 +74,9 @@ msgid ""
 "clock-o\"/><span class=\"d-none d-md-inline\"> Waiting for "
 "Payment</span></span>"
 msgstr ""
+"<span class=\"badge rounded-pill text-bg-info\"><i class=\"fa fa-fw fa-"
+"clock-o\"/><span class=\"d-none d-md-inline\"> Очікування "
+"платежу</span></span>"
 
 #. module: account_payment
 #: model_terms:ir.ui.view,arch_db:account_payment.portal_my_invoices_payment
@@ -79,6 +84,8 @@ msgid ""
 "<span class=\"badge rounded-pill text-bg-primary\"><i class=\"fa fa-fw fa-"
 "check\"/><span class=\"d-none d-md-inline\"> Authorized</span></span>"
 msgstr ""
+"<span class=\"badge rounded-pill text-bg-primary\"><i class=\"fa fa-fw fa-"
+"check\"/><span class=\"d-none d-md-inline\"> Авторизовано</span></span>"
 
 #. module: account_payment
 #: model_terms:ir.ui.view,arch_db:account_payment.portal_my_invoices_payment
@@ -86,6 +93,8 @@ msgid ""
 "<span class=\"badge rounded-pill text-bg-success\"><i class=\"fa fa-fw fa-"
 "check\"/><span class=\"d-none d-md-inline\"> Paid</span></span>"
 msgstr ""
+"<span class=\"badge rounded-pill text-bg-success\"><i class=\"fa fa-fw fa-"
+"check\"/><span class=\"d-none d-md-inline\"> Оплачено</span></span>"
 
 #. module: account_payment
 #: model_terms:ir.ui.view,arch_db:account_payment.portal_my_invoices_payment
@@ -93,6 +102,8 @@ msgid ""
 "<span class=\"badge rounded-pill text-bg-success\"><i class=\"fa fa-fw fa-"
 "check\"/><span class=\"d-none d-md-inline\"> Reversed</span></span>"
 msgstr ""
+"<span class=\"badge rounded-pill text-bg-success\"><i class=\"fa fa-fw fa-"
+"check\"/><span class=\"d-none d-md-inline\"> Повернено</span></span>"
 
 #. module: account_payment
 #: model_terms:ir.ui.view,arch_db:account_payment.portal_my_invoices_payment
@@ -100,6 +111,8 @@ msgid ""
 "<span class=\"badge rounded-pill text-bg-warning\"><span class=\"d-none "
 "d-md-inline\"> Pending</span></span>"
 msgstr ""
+"<span class=\"badge rounded-pill text-bg-warning\"><span class=\"d-none "
+"d-md-inline\"> Очікування</span></span>"
 
 #. module: account_payment
 #: model_terms:ir.ui.view,arch_db:account_payment.portal_invoice_payment
@@ -117,14 +130,19 @@ msgid ""
 "                        Wait a moment for it to be processed. If the refund is still pending in a\n"
 "                        few minutes, please check your payment provider configuration."
 msgstr ""
+"<strong>Увага!</strong> Для цього платежу очікується відшкодування.\n"
+"                        Зачекайте хвилинку, доки його оброблять. Якщо через кілька хвилин відшкодування все ще\n"
+" очікується, перевірте конфігурацію свого постачальника платежів."
 
 #. module: account_payment
+#. odoo-python
 #: code:addons/account_payment/models/account_payment.py:0
 #, python-format
 msgid "A payment transaction with reference %s already exists."
 msgstr "Платіжна операція з референсом %s вже існує."
 
 #. module: account_payment
+#. odoo-python
 #: code:addons/account_payment/models/account_payment.py:0
 #, python-format
 msgid "A token is required to create a new payment transaction."
@@ -228,6 +246,8 @@ msgid ""
 "In test mode, a fake payment is processed through a test payment interface.\n"
 "This mode is advised when setting up the provider."
 msgstr ""
+"У тестовому режимі фальшивий платіж обробляється через тестовий платіжний інтерфейс.\n"
+"Цей режим рекомендується використовувати при налаштуванні провайдера."
 
 #. module: account_payment
 #: model_terms:ir.ui.view,arch_db:account_payment.payment_transaction_form
@@ -235,6 +255,7 @@ msgid "Invoice(s)"
 msgstr "Рахунок(и)"
 
 #. module: account_payment
+#. odoo-python
 #: code:addons/account_payment/models/payment_transaction.py:0
 #: model:ir.model.fields,field_description:account_payment.field_payment_transaction__invoice_ids
 #, python-format
@@ -282,6 +303,8 @@ msgid ""
 "Note that only tokens from providers allowing to capture the amount are "
 "available."
 msgstr ""
+"Зауважте, що доступні лише токени від постачальників, які дозволяють "
+"зафіксувати суму."
 
 #. module: account_payment
 #: model:ir.model.fields,help:account_payment.field_account_payment_register__payment_token_id
@@ -289,6 +312,8 @@ msgid ""
 "Note that tokens from providers set to only authorize transactions (instead "
 "of capturing the amount) are not available."
 msgstr ""
+"Зауважте, що маркери від постачальників, налаштовані лише на авторизацію "
+"транзакцій (замість фіксації суми) недоступні."
 
 #. module: account_payment
 #: model_terms:ir.ui.view,arch_db:account_payment.portal_my_invoices_payment
@@ -336,12 +361,12 @@ msgstr "Способи оплати"
 #: model:ir.model,name:account_payment.model_payment_provider
 #: model:ir.model.fields,field_description:account_payment.field_account_payment_method_line__payment_provider_id
 msgid "Payment Provider"
-msgstr ""
+msgstr "Провайдер платежу"
 
 #. module: account_payment
 #: model:ir.ui.menu,name:account_payment.payment_provider_menu
 msgid "Payment Providers"
-msgstr ""
+msgstr "Провайдери платежу"
 
 #. module: account_payment
 #: model:ir.model,name:account_payment.model_payment_refund_wizard
@@ -372,12 +397,14 @@ msgid "Payments"
 msgstr "Платежі"
 
 #. module: account_payment
+#. odoo-python
 #: code:addons/account_payment/models/account_payment_method_line.py:0
 #, python-format
 msgid "Provider"
 msgstr "Провайдер"
 
 #. module: account_payment
+#. odoo-python
 #: code:addons/account_payment/models/account_payment.py:0
 #: code:addons/account_payment/models/account_payment.py:0
 #: model_terms:ir.ui.view,arch_db:account_payment.payment_refund_wizard_view_form
@@ -443,6 +470,14 @@ msgid "Suitable Payment Token"
 msgstr "Відповідний платіжний токен"
 
 #. module: account_payment
+#. odoo-python
+#: code:addons/account_payment/controllers/payment.py:0
+#, python-format
+msgid "The access token is invalid."
+msgstr "Токен доступу недійсний."
+
+#. module: account_payment
+#. odoo-python
 #: code:addons/account_payment/wizards/payment_refund_wizard.py:0
 #, python-format
 msgid ""
@@ -454,17 +489,20 @@ msgstr ""
 #. module: account_payment
 #: model:ir.model.fields,help:account_payment.field_payment_provider__journal_id
 msgid "The journal in which the successful transactions are posted."
-msgstr ""
+msgstr "Журнал, у якому публікуються успішні операції."
 
 #. module: account_payment
+#. odoo-python
 #: code:addons/account_payment/models/payment_transaction.py:0
 #, python-format
 msgid ""
 "The payment related to the transaction with reference %(ref)s has been "
 "posted: %(link)s"
 msgstr ""
+"Платіж, пов'язаний з транзакцією з референсом %(ref)s опубліковано: %(link)s"
 
 #. module: account_payment
+#. odoo-python
 #: code:addons/account_payment/controllers/payment.py:0
 #: code:addons/account_payment/controllers/payment.py:0
 #, python-format
@@ -488,8 +526,8 @@ msgid ""
 "There was an error processing your payment: issue with credit card ID "
 "validation."
 msgstr ""
-"Під час обробки вашого платежу виникла помилка: перевірте ідентифікатор "
-"кредитної картки."
+"Під час обробки вашого платежу виникла помилка: перевірте ID кредитної "
+"картки."
 
 #. module: account_payment
 #: model_terms:ir.ui.view,arch_db:account_payment.portal_invoice_error
@@ -528,9 +566,12 @@ msgid "Void Transaction"
 msgstr "Недійсна транзакція"
 
 #. module: account_payment
+#. odoo-python
 #: code:addons/account_payment/models/account_journal.py:0
 #, python-format
 msgid ""
 "You can't delete a payment method that is linked to a provider in the enabled or test state.\n"
 "Linked provider(s): %s"
 msgstr ""
+"Ви не можете видалити спосіб оплати, пов’язаний із постачальником у включеному або тестовому стані.\n"
+"Пов'язані провайдери: %s"

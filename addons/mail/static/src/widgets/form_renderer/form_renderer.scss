@@ -37,11 +37,11 @@
         border-top: 1px solid $border-color;
     }
 
-    &:not(.o-aside) .o_ChatterContainer {
-            @include make-container-max-widths();
+    &:not(.o-aside):not(.o-full-width) .o_ChatterContainer {
+        @include make-container-max-widths();
 
-            margin-left: auto;
-            margin-right: auto;
+        margin-left: auto;
+        margin-right: auto;
     }
 }
 

@@ -58,7 +58,10 @@ class ResPartner(models.Model):
 
             route = 'login'
             # the parameters to encode for the query
-            query = {'db': self.env.cr.dbname, 'signup_email': partner.email}
+            query = {'db': self.env.cr.dbname}
+            if self.env.context.get('create_user'):
+                query['signup_email'] = partner.email
+
             signup_type = self.env.context.get('signup_force_type_in_url', partner.sudo().signup_type or '')
             if signup_type:
                 route = 'reset_password' if signup_type == 'reset' else signup_type

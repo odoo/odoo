@@ -4,17 +4,18 @@
 # 
 # Translators:
 # Alexandra Jubert, 2022
-# Martin Trigaux, 2022
 # Malika Berardi, 2022
 # Cécile Collart <cco@odoo.com>, 2022
 # Loïc De Greef, 2022
+# Pierre Delacroix <pde@odoo.com>, 2022
+# Martin Trigaux, 2022
 # Jolien De Paepe, 2022
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 16.0beta\n"
+"Project-Id-Version: Odoo Server 16.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-10-04 09:24+0000\n"
+"POT-Creation-Date: 2022-12-15 12:49+0000\n"
 "PO-Revision-Date: 2022-09-22 05:44+0000\n"
 "Last-Translator: Jolien De Paepe, 2022\n"
 "Language-Team: French (https://www.transifex.com/odoo/teams/41243/fr/)\n"
@@ -139,12 +140,14 @@ msgstr ""
 "                        quelques minutes, veuillez vérifier la configuration de votre intermédiaire de paiement."
 
 #. module: account_payment
+#. odoo-python
 #: code:addons/account_payment/models/account_payment.py:0
 #, python-format
 msgid "A payment transaction with reference %s already exists."
 msgstr "Une transaction financière avec la référence %s existe déjà."
 
 #. module: account_payment
+#. odoo-python
 #: code:addons/account_payment/models/account_payment.py:0
 #, python-format
 msgid "A token is required to create a new payment transaction."
@@ -257,6 +260,7 @@ msgid "Invoice(s)"
 msgstr "Facture(s)"
 
 #. module: account_payment
+#. odoo-python
 #: code:addons/account_payment/models/payment_transaction.py:0
 #: model:ir.model.fields,field_description:account_payment.field_payment_transaction__invoice_ids
 #, python-format
@@ -356,7 +360,7 @@ msgstr "Journal des paiements"
 #: model:ir.model,name:account_payment.model_account_payment_method
 #: model:ir.model,name:account_payment.model_account_payment_method_line
 msgid "Payment Methods"
-msgstr "Méthodes de paiement"
+msgstr "Modes de paiement"
 
 #. module: account_payment
 #: model:ir.model,name:account_payment.model_payment_provider
@@ -377,7 +381,7 @@ msgstr "Assistant du remboursement de paiement"
 #. module: account_payment
 #: model:ir.ui.menu,name:account_payment.payment_token_menu
 msgid "Payment Tokens"
-msgstr "Tokens de Paiement"
+msgstr "Tokens de paiement"
 
 #. module: account_payment
 #: model:ir.model,name:account_payment.model_payment_transaction
@@ -398,19 +402,21 @@ msgid "Payments"
 msgstr "Paiements"
 
 #. module: account_payment
+#. odoo-python
 #: code:addons/account_payment/models/account_payment_method_line.py:0
 #, python-format
 msgid "Provider"
 msgstr "Fournisseur"
 
 #. module: account_payment
+#. odoo-python
 #: code:addons/account_payment/models/account_payment.py:0
 #: code:addons/account_payment/models/account_payment.py:0
 #: model_terms:ir.ui.view,arch_db:account_payment.payment_refund_wizard_view_form
 #: model_terms:ir.ui.view,arch_db:account_payment.view_account_payment_form_inherit_payment
 #, python-format
 msgid "Refund"
-msgstr "Retour"
+msgstr "Remboursement"
 
 #. module: account_payment
 #: model:ir.model.fields,field_description:account_payment.field_payment_refund_wizard__amount_to_refund
@@ -425,7 +431,7 @@ msgstr "Montant remboursé "
 #. module: account_payment
 #: model_terms:ir.ui.view,arch_db:account_payment.view_account_payment_form_inherit_payment
 msgid "Refunds"
-msgstr "Retours"
+msgstr "Remboursements"
 
 #. module: account_payment
 #: model:ir.model.fields,field_description:account_payment.field_account_payment__refunds_count
@@ -469,6 +475,14 @@ msgid "Suitable Payment Token"
 msgstr "Jeton de paiement approprié"
 
 #. module: account_payment
+#. odoo-python
+#: code:addons/account_payment/controllers/payment.py:0
+#, python-format
+msgid "The access token is invalid."
+msgstr "Le jeton d'accès n'est pas valide."
+
+#. module: account_payment
+#. odoo-python
 #: code:addons/account_payment/wizards/payment_refund_wizard.py:0
 #, python-format
 msgid ""
@@ -482,6 +496,7 @@ msgid "The journal in which the successful transactions are posted."
 msgstr "Le journal dans lequel les transactions réussies sont enregistrées."
 
 #. module: account_payment
+#. odoo-python
 #: code:addons/account_payment/models/payment_transaction.py:0
 #, python-format
 msgid ""
@@ -492,6 +507,7 @@ msgstr ""
 "comptabilisé : %(link)s"
 
 #. module: account_payment
+#. odoo-python
 #: code:addons/account_payment/controllers/payment.py:0
 #: code:addons/account_payment/controllers/payment.py:0
 #, python-format
@@ -549,7 +565,7 @@ msgstr "Type de remboursements pris en charge"
 #: model:ir.model.fields,field_description:account_payment.field_account_payment__use_electronic_payment_method
 #: model:ir.model.fields,field_description:account_payment.field_account_payment_register__use_electronic_payment_method
 msgid "Use Electronic Payment Method"
-msgstr "Utiliser la méthode de paiement électronique"
+msgstr "Utiliser le mode de paiement électronique"
 
 #. module: account_payment
 #: model_terms:ir.ui.view,arch_db:account_payment.account_invoice_view_form_inherit_payment
@@ -557,6 +573,7 @@ msgid "Void Transaction"
 msgstr "Annuler la transaction"
 
 #. module: account_payment
+#. odoo-python
 #: code:addons/account_payment/models/account_journal.py:0
 #, python-format
 msgid ""

@@ -10,10 +10,10 @@
 # Yedigen, 2022
 # Ayhan KIZILTAN <akiziltan76@hotmail.com>, 2022
 # Ramiz Deniz Öner <deniz@denizoner.com>, 2022
-# abc Def <hdogan1974@gmail.com>, 2022
 # Saban Yildiz <sabany@projetgrup.com>, 2022
 # Erdem Keskin <erdemkeskines@gmail.com>, 2022
 # Halil, 2022
+# Ertuğrul Güreş <ertugrulg@projetgrup.com>, 2022
 # cagri erarslan <cagri.erarslan@mechsoft.com.tr>, 2022
 # Umur Akın <umura@projetgrup.com>, 2022
 # Levent Karakaş <levent@mektup.at>, 2022
@@ -21,20 +21,20 @@
 # Murat Durmuş <muratd@projetgrup.com>, 2022
 # Nadir Gazioglu <nadirgazioglu@gmail.com>, 2022
 # Tugay Hatıl <tugayh@projetgrup.com>, 2022
-# Buket Şeker <buket_skr@hotmail.com>, 2022
 # Ugur Yilmaz <ugurlu2001@hotmail.com>, 2022
+# Buket Şeker <buket_skr@hotmail.com>, 2022
 # Murat Kaplan <muratk@projetgrup.com>, 2022
-# Ertuğrul Güreş <ertugrulg@projetgrup.com>, 2022
 # Ozlem Cikrikci <ozlemc@eskayazilim.com.tr>, 2022
 # Ediz Duman <neps1192@gmail.com>, 2022
+# abc Def <hdogan1974@gmail.com>, 2022
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 16.0beta\n"
+"Project-Id-Version: Odoo Server 16.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-10-10 10:23+0000\n"
+"POT-Creation-Date: 2022-12-15 12:51+0000\n"
 "PO-Revision-Date: 2022-09-22 05:54+0000\n"
-"Last-Translator: Ediz Duman <neps1192@gmail.com>, 2022\n"
+"Last-Translator: abc Def <hdogan1974@gmail.com>, 2022\n"
 "Language-Team: Turkish (https://www.transifex.com/odoo/teams/41243/tr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -63,18 +63,21 @@ msgid "# of Sales Orders"
 msgstr "# Satış Siparişleri"
 
 #. module: sale
+#. odoo-python
 #: code:addons/sale/models/sale_order.py:0
 #, python-format
 msgid "%(amount)s due %(date)s"
-msgstr ""
+msgstr "%(amount)s vadesi dolmuş %(date)s"
 
 #. module: sale
+#. odoo-python
 #: code:addons/sale/models/sale_order_line.py:0
 #, python-format
 msgid "%(line_description)s (Canceled)"
 msgstr ""
 
 #. module: sale
+#. odoo-python
 #: code:addons/sale/models/sale_order_line.py:0
 #, python-format
 msgid "%(line_description)s (Draft)"
@@ -100,13 +103,7 @@ msgstr ""
 "'Order - %s' % (object.name)"
 
 #. module: sale
-#: model:product.product,description_sale:sale.product_product_4e
-#: model:product.product,description_sale:sale.product_product_4f
-msgid "160x80cm, with large legs."
-msgstr "160x80cm, geniş bacak."
-
-#. module: sale
-#. openerp-web
+#. odoo-javascript
 #: code:addons/sale/static/src/js/tours/sale.js:0
 #, python-format
 msgid ""
@@ -115,7 +112,7 @@ msgid ""
 msgstr ""
 
 #. module: sale
-#. openerp-web
+#. odoo-javascript
 #: code:addons/sale/static/src/js/tours/sale.js:0
 #, python-format
 msgid ""
@@ -124,7 +121,7 @@ msgstr ""
 "<b>Teklifi gönder</b> kendinize ve müşterinin ne alacağını kontrol edin."
 
 #. module: sale
-#. openerp-web
+#. odoo-javascript
 #: code:addons/sale/static/src/js/tours/sale.js:0
 #, python-format
 msgid "<b>Set a price</b>."
@@ -728,12 +725,14 @@ msgstr ""
 "sayısının çoklu katı olan bir miktarı zorlayabilme."
 
 #. module: sale
+#. odoo-python
 #: code:addons/sale/models/sale_order.py:0
 #, python-format
 msgid "Accept & Pay Quotation"
 msgstr ""
 
 #. module: sale
+#. odoo-python
 #: code:addons/sale/models/sale_order.py:0
 #, python-format
 msgid "Accept & Sign Quotation"
@@ -879,11 +878,6 @@ msgid "Analytic Account"
 msgstr "Analitik Hesap"
 
 #. module: sale
-#: model:ir.model.fields,field_description:sale.field_sale_order_line__analytic_distribution_stored_char
-msgid "Analytic Distribution Stored Char"
-msgstr ""
-
-#. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__sale_order_line__qty_delivered_method__analytic
 msgid "Analytic From Expenses"
 msgstr "Gider Analitiği"
@@ -896,6 +890,11 @@ msgstr "Analitik Satırı"
 #. module: sale
 #: model:ir.model,name:sale.model_account_analytic_applicability
 msgid "Analytic Plan's Applicabilities"
+msgstr ""
+
+#. module: sale
+#: model:ir.model.fields,field_description:sale.field_sale_order_line__analytic_precision
+msgid "Analytic Precision"
 msgstr ""
 
 #. module: sale
@@ -1023,6 +1022,7 @@ msgid "Cancel"
 msgstr "İptal"
 
 #. module: sale
+#. odoo-python
 #: code:addons/sale/models/sale_order.py:0
 #, python-format
 msgid "Cancel %s"
@@ -1064,14 +1064,14 @@ msgid "Choose how to confirm quotations"
 msgstr "Tekliflerin nasıl onaylanacağını seçin"
 
 #. module: sale
-#. openerp-web
+#. odoo-javascript
 #: code:addons/sale/static/src/js/tours/sale.js:0
 #, python-format
 msgid "Click here to add some products or services to your quotation."
 msgstr "Teklifinize bazı ürünler veya hizmetler eklemek için burayı tıklayın."
 
 #. module: sale
-#. openerp-web
+#. odoo-javascript
 #: code:addons/sale/static/src/xml/sales_team_progress_bar_template.xml:0
 #, python-format
 msgid "Click to define an invoicing target"
@@ -1106,6 +1106,13 @@ msgstr "Şirketler"
 #: model_terms:ir.ui.view,arch_db:sale.view_order_product_search
 msgid "Company"
 msgstr "Şirket"
+
+#. module: sale
+#. odoo-javascript
+#: code:addons/sale/static/src/js/tours/sale.js:0
+#, python-format
+msgid "Complete your company's data"
+msgstr ""
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -1172,12 +1179,6 @@ msgstr "Bağlantılar"
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
 msgid "Contact"
 msgstr "Kontak"
-
-#. module: sale
-#: model_terms:product.product,website_description:sale.product_product_4e
-#: model_terms:product.product,website_description:sale.product_product_4f
-msgid "Contact Us"
-msgstr "Bize Ulaşın"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_cancel__body
@@ -1306,7 +1307,6 @@ msgstr "Para Birimi Çevrim Oranı"
 
 #. module: sale
 #: model:product.attribute.value,name:sale.product_attribute_value_7
-#: model:product.template.attribute.value,name:sale.product_4_attribute_1_value_3
 msgid "Custom"
 msgstr "Özel"
 
@@ -1372,12 +1372,6 @@ msgid "Customers"
 msgstr "Müşteriler"
 
 #. module: sale
-#: model:product.product,name:sale.product_product_4e
-#: model:product.product,name:sale.product_product_4f
-msgid "Customizable Desk"
-msgstr "Özelleştirilebilir Masa"
-
-#. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.onboarding_quotation_layout_step
 msgid "Customize"
 msgstr "Özelleştirme"
@@ -1388,7 +1382,7 @@ msgid "Customize the look of your quotations."
 msgstr "Teklifinizin görünümünü özelleştirin."
 
 #. module: sale
-#. openerp-web
+#. odoo-javascript
 #: code:addons/sale/static/src/js/tours/sale.js:0
 #, python-format
 msgid "Customize your quotes and orders."
@@ -1446,6 +1440,7 @@ msgid "Delivered"
 msgstr "Teslim Edilen"
 
 #. module: sale
+#. odoo-python
 #: code:addons/sale/models/sale_order_line.py:0
 #, python-format
 msgid "Delivered Quantity: %s"
@@ -1491,7 +1486,6 @@ msgstr ""
 "gönderim politikası dikkate alınacaktır."
 
 #. module: sale
-#: model:product.product,name:sale.advance_product_0
 #: model:product.template,name:sale.advance_product_0_product_template
 msgid "Deposit"
 msgstr "Depozito"
@@ -1509,7 +1503,7 @@ msgid "Description"
 msgstr "Açıklama"
 
 #. module: sale
-#. openerp-web
+#. odoo-javascript
 #: code:addons/sale/static/src/js/product_discount_field.js:0
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
 #, python-format
@@ -1557,7 +1551,7 @@ msgid "Display Type"
 msgstr "Görünüm Türü"
 
 #. module: sale
-#. openerp-web
+#. odoo-javascript
 #: code:addons/sale/static/src/js/product_discount_field.js:0
 #, python-format
 msgid "Do you want to apply this value to all lines ?"
@@ -1581,6 +1575,7 @@ msgid "Done"
 msgstr "Biten"
 
 #. module: sale
+#. odoo-python
 #: code:addons/sale/wizard/sale_make_invoice_advance.py:0
 #, python-format
 msgid "Down Payment"
@@ -1602,12 +1597,14 @@ msgid "Down Payment Product"
 msgstr "Peşinat verilecek ürün"
 
 #. module: sale
+#. odoo-python
 #: code:addons/sale/wizard/sale_make_invoice_advance.py:0
 #, python-format
 msgid "Down Payment: %s (Draft)"
 msgstr ""
 
 #. module: sale
+#. odoo-python
 #: code:addons/sale/models/sale_order.py:0
 #: code:addons/sale/wizard/sale_make_invoice_advance.py:0
 #, python-format
@@ -1615,6 +1612,7 @@ msgid "Down Payments"
 msgstr "Peşinat Ödemeleri"
 
 #. module: sale
+#. odoo-python
 #: code:addons/sale/wizard/sale_make_invoice_advance.py:0
 #, python-format
 msgid "Down payment"
@@ -1631,6 +1629,7 @@ msgid "Down payment (percentage)"
 msgstr "Peşinat (yüzde)"
 
 #. module: sale
+#. odoo-python
 #: code:addons/sale/wizard/sale_make_invoice_advance.py:0
 #, python-format
 msgid "Down payment of %s%%"
@@ -1661,7 +1660,7 @@ msgid "Easypost Connector"
 msgstr "Easypost Bağlantısı"
 
 #. module: sale
-#. openerp-web
+#. odoo-javascript
 #: code:addons/sale/static/src/js/sale_product_field.js:0
 #, python-format
 msgid "Edit Configuration"
@@ -1686,12 +1685,6 @@ msgstr "E-posta yazma sihirbazı"
 #: model:ir.model.fields,help:sale.field_res_config_settings__invoice_mail_template_id
 msgid "Email sent to the customer once the invoice is available."
 msgstr ""
-
-#. module: sale
-#: model_terms:product.product,website_description:sale.product_product_4e
-#: model_terms:product.product,website_description:sale.product_product_4f
-msgid "Ergonomic"
-msgstr "Ergonomik"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__expected_date
@@ -1731,6 +1724,7 @@ msgid "Extra Values"
 msgstr "Ekstra Değerler"
 
 #. module: sale
+#. odoo-python
 #: code:addons/sale/models/sale_order_line.py:0
 #, python-format
 msgid "Extra line with %s"
@@ -1827,7 +1821,7 @@ msgid "Get warnings in orders for products or customers"
 msgstr "Siparişlerde ürün veya müşteriler için uyarılar alın"
 
 #. module: sale
-#. openerp-web
+#. odoo-javascript
 #: code:addons/sale/static/src/js/tours/sale.js:0
 #, python-format
 msgid "Good job, let's continue."
@@ -1932,6 +1926,7 @@ msgid "Import Amazon orders and sync deliveries"
 msgstr "Amazon siparişlerini içe aktarma ve teslimatları senkronize etme"
 
 #. module: sale
+#. odoo-python
 #: code:addons/sale/models/product_template.py:0
 #, python-format
 msgid "Import Template for Products"
@@ -1948,18 +1943,21 @@ msgid "Income Account"
 msgstr "Gelir Hesabı"
 
 #. module: sale
+#. odoo-python
 #: code:addons/sale/controllers/portal.py:0
 #, python-format
 msgid "Invalid order."
 msgstr "Geçersiz sipariş."
 
 #. module: sale
+#. odoo-python
 #: code:addons/sale/controllers/portal.py:0
 #, python-format
 msgid "Invalid signature data."
 msgstr "Geçersiz imza verileri"
 
 #. module: sale
+#. odoo-python
 #: code:addons/sale/models/account_move.py:0
 #, python-format
 msgid "Invoice %s paid"
@@ -2050,6 +2048,7 @@ msgid "Invoiced Quantity"
 msgstr "Faturalanan Miktar"
 
 #. module: sale
+#. odoo-python
 #: code:addons/sale/models/sale_order_line.py:0
 #, python-format
 msgid "Invoiced Quantity: %s"
@@ -2159,6 +2158,7 @@ msgstr ""
 "doğrudur"
 
 #. module: sale
+#. odoo-python
 #: code:addons/sale/models/sale_order_line.py:0
 #, python-format
 msgid ""
@@ -2169,6 +2169,7 @@ msgstr ""
 "%s"
 
 #. module: sale
+#. odoo-python
 #: code:addons/sale/models/sale_order.py:0
 #, python-format
 msgid "It is not allowed to confirm an order in the following states: %s"
@@ -2240,24 +2241,18 @@ msgid "Let your customers log in to see their documents"
 msgstr "Müşterilerinize sizinle çalıştıkları tüm konular için bir portal açın"
 
 #. module: sale
-#. openerp-web
+#. odoo-javascript
 #: code:addons/sale/static/src/js/tours/sale.js:0
 #, python-format
 msgid "Let's send the quote."
 msgstr "Teklif gönderelim."
 
 #. module: sale
-#. openerp-web
+#. odoo-javascript
 #: code:addons/sale/static/src/js/tours/sale.js:0
 #, python-format
 msgid "Lets keep electronic signature for now."
 msgstr "Şimdilik elektronik imzayı saklayalım."
-
-#. module: sale
-#: model_terms:product.product,website_description:sale.product_product_4e
-#: model_terms:product.product,website_description:sale.product_product_4f
-msgid "Locally handmade"
-msgstr "Yerel ve elde yapılmış"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_sales_order_auto_done_setting
@@ -2276,17 +2271,7 @@ msgid "Locked"
 msgstr "Kilitli"
 
 #. module: sale
-#: model_terms:product.product,website_description:sale.product_product_4e
-#: model_terms:product.product,website_description:sale.product_product_4f
-msgid ""
-"Looking for a custom bamboo stain to match existing furniture? Contact us "
-"for a quote."
-msgstr ""
-"Mevcut mobilyanızla uyumlu özel bambu deseni mi arıyorsunuz? Teklif için "
-"bizimle iletişime geçiniz."
-
-#. module: sale
-#. openerp-web
+#. odoo-javascript
 #: code:addons/sale/static/src/js/tours/sale.js:0
 #, python-format
 msgid "Looks good. Let's continue."
@@ -2432,6 +2417,7 @@ msgid "My Sales Order Lines"
 msgstr "Satış Sipariş Satırlarım"
 
 #. module: sale
+#. odoo-python
 #: code:addons/sale/models/sale_order.py:0
 #: code:addons/sale/models/sale_order.py:0
 #: code:addons/sale/models/sale_order.py:0
@@ -2493,7 +2479,7 @@ msgid "No orders to upsell found."
 msgstr "Satış için sipariş bulunamadı"
 
 #. module: sale
-#. openerp-web
+#. odoo-javascript
 #: code:addons/sale/static/src/js/variant_mixin.js:0
 #, python-format
 msgid "Not available with %s"
@@ -2519,7 +2505,7 @@ msgid "Nothing to Invoice"
 msgstr "Faturalandıracak bir şey yok"
 
 #. module: sale
-#. openerp-web
+#. odoo-javascript
 #: code:addons/sale/static/src/js/tours/sale.js:0
 #, python-format
 msgid "Now, we'll create a sample quote."
@@ -2610,6 +2596,7 @@ msgid "Online confirmation"
 msgstr ""
 
 #. module: sale
+#. odoo-python
 #: code:addons/sale/models/sale_order.py:0
 #, python-format
 msgid "Only draft orders can be marked as sent directly."
@@ -2625,7 +2612,7 @@ msgstr ""
 " izin verilir."
 
 #. module: sale
-#. openerp-web
+#. odoo-javascript
 #: code:addons/sale/static/src/js/tours/sale.js:0
 #: code:addons/sale/static/src/js/tours/sale.js:0
 #, python-format
@@ -2669,6 +2656,7 @@ msgid "Order Count"
 msgstr "Sipariş Sayımı"
 
 #. module: sale
+#. odoo-python
 #: code:addons/sale/controllers/portal.py:0
 #: model:ir.model.fields,field_description:sale.field_sale_order__date_order
 #: model:ir.model.fields,field_description:sale.field_sale_report__date
@@ -2711,6 +2699,7 @@ msgid "Order Upsell"
 msgstr "Artırılmış Satış"
 
 #. module: sale
+#. odoo-python
 #: code:addons/sale/controllers/portal.py:0
 #, python-format
 msgid "Order signed by %s"
@@ -2722,6 +2711,7 @@ msgid "Order to Invoice"
 msgstr "Faturalanacak Sipariş"
 
 #. module: sale
+#. odoo-python
 #: code:addons/sale/models/sale_order_line.py:0
 #, python-format
 msgid "Ordered Quantity: %(old_qty)s -> %(new_qty)s"
@@ -2863,16 +2853,6 @@ msgid "Portal Access URL"
 msgstr "Portal Erişim URL"
 
 #. module: sale
-#: model_terms:product.product,website_description:sale.product_product_4e
-#: model_terms:product.product,website_description:sale.product_product_4f
-msgid ""
-"Press a button and watch your desk glide effortlessly from sitting to "
-"standing height in seconds."
-msgstr ""
-"Bir düğmeye basın ve masanızın kolayca oturma yüksekliğinden ayakta durma "
-"yüksekliğine saniyeler içinde geçmesini izleyin."
-
-#. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__price_reduce
 msgid "Price Reduce"
 msgstr "Fiyat Düşür"
@@ -2994,12 +2974,14 @@ msgid "Product Variants"
 msgstr "Ürün Varyantları"
 
 #. module: sale
+#. odoo-python
 #: code:addons/sale/models/sale_order.py:0
 #, python-format
 msgid "Product prices have been recomputed according to pricelist %s."
 msgstr ""
 
 #. module: sale
+#. odoo-python
 #: code:addons/sale/models/sale_order.py:0
 #, python-format
 msgid "Product taxes have been recomputed according to fiscal position %s."
@@ -3078,6 +3060,7 @@ msgid "Quantity:"
 msgstr "Miktar:"
 
 #. module: sale
+#. odoo-python
 #: code:addons/sale/models/sale_order.py:0
 #: model:ir.model.fields.selection,name:sale.selection__sale_order__state__draft
 #: model_terms:ir.ui.view,arch_db:sale.crm_team_view_kanban_dashboard
@@ -3125,6 +3108,7 @@ msgid "Quotation Sent"
 msgstr "Teklif Gönderildi"
 
 #. module: sale
+#: code:addons/sale/models/res_config_settings.py:0
 #: model:ir.model.constraint,message:sale.constraint_res_company_check_quotation_validity_days
 msgid "Quotation Validity is required and must be greater than 0."
 msgstr "Teklifin Geçerliliği için gereklidir ve 0 dan büyük olmalıdır."
@@ -3142,6 +3126,7 @@ msgid "Quotation sent"
 msgstr "Teklif gönderildi"
 
 #. module: sale
+#. odoo-python
 #: code:addons/sale/controllers/portal.py:0
 #, python-format
 msgid "Quotation viewed by customer %s"
@@ -3207,6 +3192,7 @@ msgid "Recompute all taxes based on this fiscal position"
 msgstr ""
 
 #. module: sale
+#. odoo-python
 #: code:addons/sale/controllers/portal.py:0
 #, python-format
 msgid "Reference"
@@ -3260,6 +3246,7 @@ msgid "Request an online signature to confirm orders"
 msgstr "Siparişleri onaylamak için çevrimiçi imza isteyin"
 
 #. module: sale
+#. odoo-python
 #: code:addons/sale/models/sale_order.py:0
 #, python-format
 msgid "Requested date is too soon."
@@ -3336,7 +3323,6 @@ msgstr "Satışa girişte seçilen ödeme yöntemi"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_product_packaging__sales
-#: model:ir.ui.menu,name:sale.menu_report_product_all
 #: model:ir.ui.menu,name:sale.sale_menu_root
 #: model_terms:ir.ui.view,arch_db:sale.crm_team_view_kanban_dashboard
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -3351,6 +3337,7 @@ msgid "Sales Advance Payment Invoice"
 msgstr "Peşin Ödemeli Satış Faturası"
 
 #. module: sale
+#. odoo-python
 #: code:addons/sale/models/crm_team.py:0
 #: model:ir.actions.act_window,name:sale.action_order_report_all
 #: model:ir.actions.act_window,name:sale.action_order_report_so_salesteam
@@ -3374,6 +3361,7 @@ msgid "Sales Done"
 msgstr "Satış Tamamlandı"
 
 #. module: sale
+#. odoo-python
 #: code:addons/sale/models/sale_order.py:0
 #: model:ir.model,name:sale.model_sale_order
 #: model:ir.model.fields,field_description:sale.field_res_partner__sale_order_ids
@@ -3428,6 +3416,7 @@ msgid "Sales Order Lines related to a Sales Order of mine"
 msgstr "Benim Satış Siparişlerimle ilişkili Satış Siparişi Kalemleri"
 
 #. module: sale
+#. odoo-python
 #: code:addons/sale/models/payment_transaction.py:0
 #: model_terms:ir.ui.view,arch_db:sale.transaction_form_inherit_sale
 #, python-format
@@ -3510,6 +3499,7 @@ msgid "Sales: Send Quotation"
 msgstr ""
 
 #. module: sale
+#. odoo-python
 #: code:addons/sale/models/crm_team.py:0
 #, python-format
 msgid "Sales: Untaxed Total"
@@ -3526,12 +3516,14 @@ msgid "Salesperson"
 msgstr "Satış Temsilcisi"
 
 #. module: sale
+#. odoo-python
 #: code:addons/sale/models/res_company.py:0
 #, python-format
 msgid "Sample Order Line"
 msgstr "Örnek Sipariş Satırı"
 
 #. module: sale
+#. odoo-python
 #: code:addons/sale/models/res_company.py:0
 #, python-format
 msgid "Sample Product"
@@ -3564,7 +3556,7 @@ msgid "Security Token"
 msgstr "Güvenlik Token"
 
 #. module: sale
-#. openerp-web
+#. odoo-javascript
 #: code:addons/sale/static/src/js/tours/sale.js:0
 #, python-format
 msgid "Select a product, or create a new one on the fly."
@@ -3711,6 +3703,7 @@ msgid "Show margins on orders"
 msgstr "Siparişlerde kar marjını gösterin"
 
 #. module: sale
+#. odoo-python
 #: code:addons/sale/models/sale_order.py:0
 #, python-format
 msgid "Sign & Pay Quotation"
@@ -3733,6 +3726,7 @@ msgid "Signature"
 msgstr "İmza"
 
 #. module: sale
+#. odoo-python
 #: code:addons/sale/controllers/portal.py:0
 #, python-format
 msgid "Signature is missing."
@@ -3780,13 +3774,14 @@ msgid "Specific Email"
 msgstr "Spesifik E-Posta"
 
 #. module: sale
+#. odoo-python
 #: code:addons/sale/controllers/portal.py:0
 #, python-format
 msgid "Stage"
 msgstr "Aşama"
 
 #. module: sale
-#. openerp-web
+#. odoo-javascript
 #: code:addons/sale/static/src/js/tours/sale.js:0
 #, python-format
 msgid "Start by checking your company's data."
@@ -3888,6 +3883,7 @@ msgid "Taxes used for deposits"
 msgstr "Ödemeler için kullanılmış vergi"
 
 #. module: sale
+#. odoo-python
 #: code:addons/sale/models/crm_team.py:0
 #, python-format
 msgid ""
@@ -3912,6 +3908,7 @@ msgid "Terms & Conditions format"
 msgstr "Satış Koşulları formatı"
 
 #. module: sale
+#. odoo-python
 #: code:addons/sale/models/sale_order.py:0
 #, python-format
 msgid "Terms & Conditions: %s"
@@ -3947,6 +3944,7 @@ msgstr ""
 "Hızlı arama için bu alanı kullanabilirsiniz."
 
 #. module: sale
+#. odoo-python
 #: code:addons/sale/models/account_move_line.py:0
 #, python-format
 msgid ""
@@ -3957,6 +3955,7 @@ msgstr ""
 "Satış Siparişine gider kaydedemezsiniz."
 
 #. module: sale
+#. odoo-python
 #: code:addons/sale/models/account_move_line.py:0
 #, python-format
 msgid ""
@@ -3969,6 +3968,7 @@ msgstr ""
 "bir Satış Siparişi oluşturun."
 
 #. module: sale
+#. odoo-python
 #: code:addons/sale/models/account_move_line.py:0
 #, python-format
 msgid ""
@@ -3979,6 +3979,14 @@ msgstr ""
 " olmalı."
 
 #. module: sale
+#. odoo-python
+#: code:addons/sale/controllers/portal.py:0
+#, python-format
+msgid "The access token is invalid."
+msgstr "Erişim belirteci geçersiz."
+
+#. module: sale
+#. odoo-python
 #: code:addons/sale/models/sale_order.py:0
 #, python-format
 msgid ""
@@ -3992,6 +4000,7 @@ msgid "The fixed amount to be invoiced in advance, taxes excluded."
 msgstr "Önceden faturalandırılacak sabit tutar, vergiler hariçtir."
 
 #. module: sale
+#. odoo-python
 #: code:addons/sale/models/product_template.py:0
 #, python-format
 msgid ""
@@ -4021,22 +4030,14 @@ msgstr ""
 "(Siparişteki Ürün Satış Fiyatı - Ürün Kartındaki Standart Maliyet) formülü ile hesaplanır."
 
 #. module: sale
-#: model_terms:product.product,website_description:sale.product_product_4e
-#: model_terms:product.product,website_description:sale.product_product_4f
-msgid ""
-"The minimum height is 65 cm, and for standing work the maximum height "
-"position is 125 cm."
-msgstr ""
-"Minimym yükseklik 65cm'dir ve ayakta yapılan işler için maksimum yükseklik "
-"pozisyonu 125cm'dir."
-
-#. module: sale
+#. odoo-python
 #: code:addons/sale/controllers/portal.py:0
 #, python-format
 msgid "The order is not in a state requiring customer signature."
 msgstr "Sipariş, müşteri imzası gerektiren bir durumda değildir."
 
 #. module: sale
+#. odoo-python
 #: code:addons/sale/models/sale_order_line.py:0
 #, python-format
 msgid "The ordered quantity has been updated."
@@ -4053,6 +4054,7 @@ msgid "The percentage of amount to be invoiced in advance, taxes excluded."
 msgstr "Önceden fatura edilecek tutarın yüzdesi, vergiler hariç."
 
 #. module: sale
+#. odoo-python
 #: code:addons/sale/wizard/sale_make_invoice_advance.py:0
 #, python-format
 msgid ""
@@ -4063,6 +4065,7 @@ msgstr ""
 "ürünün yerine başkasını kullanınız."
 
 #. module: sale
+#. odoo-python
 #: code:addons/sale/wizard/sale_make_invoice_advance.py:0
 #, python-format
 msgid ""
@@ -4072,6 +4075,7 @@ msgid ""
 msgstr ""
 
 #. module: sale
+#. odoo-python
 #: code:addons/sale/controllers/portal.py:0
 #: code:addons/sale/controllers/portal.py:0
 #, python-format
@@ -4079,6 +4083,7 @@ msgid "The provided parameters are invalid."
 msgstr "Sağlanan parametreler geçersizdir."
 
 #. module: sale
+#. odoo-python
 #: code:addons/sale/wizard/sale_make_invoice_advance.py:0
 #: code:addons/sale/wizard/sale_make_invoice_advance.py:0
 #, python-format
@@ -4096,6 +4101,7 @@ msgid "There are currently no quotations for your account."
 msgstr "Şu anda hesabınızda hiç teklif yok."
 
 #. module: sale
+#. odoo-python
 #: code:addons/sale/models/sale_order.py:0
 #, python-format
 msgid ""
@@ -4162,6 +4168,7 @@ msgstr ""
 "e-posta listesi adı"
 
 #. module: sale
+#. odoo-python
 #: code:addons/sale/models/sale_order_line.py:0
 #, python-format
 msgid ""
@@ -4258,7 +4265,7 @@ msgstr ""
 "seçeneğini tıklayın."
 
 #. module: sale
-#. openerp-web
+#. odoo-javascript
 #: code:addons/sale/static/src/js/tours/sale.js:0
 #, python-format
 msgid ""
@@ -4322,6 +4329,7 @@ msgid "Type Name"
 msgstr "Tür Adı"
 
 #. module: sale
+#: model_terms:ir.ui.view,arch_db:sale.product_form_view_sale_order_button
 #: model_terms:ir.ui.view,arch_db:sale.product_template_form_view_sale_order_button
 #: model_terms:ir.ui.view,arch_db:sale.res_partner_view_buttons
 msgid "Type a message..."
@@ -4348,6 +4356,7 @@ msgid "UTM Campaign"
 msgstr "UTM kampanyası"
 
 #. module: sale
+#. odoo-python
 #: code:addons/sale/wizard/sale_order_cancel.py:0
 #, python-format
 msgid "Unable to post message, please configure the sender's email address."
@@ -4372,14 +4381,6 @@ msgstr "Birim Fiyat:"
 #: model_terms:ir.ui.view,arch_db:sale.view_order_line_tree
 msgid "Unit of Measure"
 msgstr "Ölçü Birimi"
-
-#. module: sale
-#: model:product.product,uom_name:sale.advance_product_0
-#: model:product.product,uom_name:sale.product_product_4e
-#: model:product.product,uom_name:sale.product_product_4f
-#: model:product.template,uom_name:sale.advance_product_0_product_template
-msgid "Units"
-msgstr "Adet"
 
 #. module: sale
 #: model:ir.ui.menu,name:sale.menu_product_uom_form_action
@@ -4440,6 +4441,7 @@ msgid "Update Taxes"
 msgstr ""
 
 #. module: sale
+#. odoo-python
 #: code:addons/sale/models/sale_order.py:0
 #, python-format
 msgid "Upsell %(order)s for customer %(customer)s"
@@ -4472,12 +4474,14 @@ msgid "Variant Grid Entry"
 msgstr "Varyant Tablo Girişi"
 
 #. module: sale
+#. odoo-python
 #: code:addons/sale/models/sale_order.py:0
 #, python-format
 msgid "View Order"
 msgstr ""
 
 #. module: sale
+#. odoo-python
 #: code:addons/sale/models/sale_order.py:0
 #: code:addons/sale/models/sale_order.py:0
 #: code:addons/sale/models/sale_order.py:0
@@ -4496,18 +4500,20 @@ msgid "Volume"
 msgstr "Hacim"
 
 #. module: sale
+#. odoo-python
 #: code:addons/sale/models/product_product.py:0
 #: code:addons/sale/models/product_template.py:0
+#: code:addons/sale/models/res_config_settings.py:0
 #: code:addons/sale/models/sale_order_line.py:0
 #: model:ir.model.fields.selection,name:sale.selection__product_template__sale_line_warn__warning
 #: model:ir.model.fields.selection,name:sale.selection__res_partner__sale_warn__warning
 #: model_terms:ir.ui.view,arch_db:sale.product_template_form_view_sale_order_button
-#: model_terms:ir.ui.view,arch_db:sale.res_partner_view_buttons
 #, python-format
 msgid "Warning"
 msgstr "Uyarı"
 
 #. module: sale
+#. odoo-python
 #: code:addons/sale/models/sale_order.py:0
 #: code:addons/sale/models/sale_order_line.py:0
 #, python-format
@@ -4526,15 +4532,6 @@ msgid "Warning when Selling this Product"
 msgstr "Bu Ürün Satılırken Yapılacak Uyarı"
 
 #. module: sale
-#: model_terms:product.product,website_description:sale.product_product_4e
-#: model_terms:product.product,website_description:sale.product_product_4f
-msgid ""
-"We pay special attention to detail, which is why our desks are of a superior"
-" quality."
-msgstr ""
-"Detaylara özel itina gösteririz, bu yüzden masalarımız üstün kalitelidir."
-
-#. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__website_message_ids
 msgid "Website Messages"
 msgstr "Websitesi Mesajları"
@@ -4545,7 +4542,7 @@ msgid "Website communication history"
 msgstr "Websitesi iletişim geçmişi"
 
 #. module: sale
-#. openerp-web
+#. odoo-javascript
 #: code:addons/sale/static/src/js/tours/sale.js:0
 #, python-format
 msgid "Write a company name to create one, or see suggestions."
@@ -4557,6 +4554,7 @@ msgid "You can invoice them before they are delivered."
 msgstr "Teslim edilmeden önce faturalayabilirsiniz."
 
 #. module: sale
+#. odoo-python
 #: code:addons/sale/models/sale_order.py:0
 #, python-format
 msgid ""
@@ -4567,6 +4565,7 @@ msgstr ""
 "silemezsiniz.İlk önce iptal etmelisin."
 
 #. module: sale
+#. odoo-python
 #: code:addons/sale/models/sale_order_line.py:0
 #, python-format
 msgid ""
@@ -4595,6 +4594,7 @@ msgstr ""
 " verilecektir."
 
 #. module: sale
+#. odoo-python
 #: code:addons/sale/models/product_product.py:0
 #: code:addons/sale/models/product_template.py:0
 #, python-format
@@ -4606,6 +4606,7 @@ msgstr ""
 "değiştiremezsiniz."
 
 #. module: sale
+#. odoo-python
 #: code:addons/sale/models/sale_order_line.py:0
 #, python-format
 msgid ""
@@ -4651,6 +4652,7 @@ msgid "Your order is not in a state to be rejected."
 msgstr "Siparişiniz reddedilecek bir durumda değil."
 
 #. module: sale
+#. odoo-python
 #: code:addons/sale/models/sale_order.py:0
 #, python-format
 msgid ""
@@ -4663,7 +4665,6 @@ msgstr ""
 #. module: sale
 #: model:ir.actions.server,name:sale.send_invoice_cron_ir_actions_server
 #: model:ir.cron,cron_name:sale.send_invoice_cron
-#: model:ir.cron,name:sale.send_invoice_cron
 msgid "automatic invoicing: send ready invoice"
 msgstr "otomatik faturalandırma: hazır fatura gönder"
 
@@ -4684,6 +4685,7 @@ msgid "days"
 msgstr "gün"
 
 #. module: sale
+#. odoo-python
 #: code:addons/sale/models/sale_order.py:0
 #, python-format
 msgid "sale order"

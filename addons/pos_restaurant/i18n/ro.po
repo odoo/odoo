@@ -3,17 +3,17 @@
 # 	* pos_restaurant
 # 
 # Translators:
+# Dorin Hongu <dhongu@gmail.com>, 2022
 # Hongu Cosmin <cosmin513@gmail.com>, 2022
 # Cozmin Candea <office@terrabit.ro>, 2022
-# Dorin Hongu <dhongu@gmail.com>, 2022
 # Foldi Robert <foldirobert@nexterp.ro>, 2022
 # Martin Trigaux, 2022
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 16.0beta\n"
+"Project-Id-Version: Odoo Server 16.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-10-10 10:22+0000\n"
+"POT-Creation-Date: 2022-12-15 12:49+0000\n"
 "PO-Revision-Date: 2022-09-22 05:54+0000\n"
 "Last-Translator: Martin Trigaux, 2022\n"
 "Language-Team: Romanian (https://www.transifex.com/odoo/teams/41243/ro/)\n"
@@ -54,7 +54,7 @@ msgid "Active"
 msgstr "Activ"
 
 #. module: pos_restaurant
-#. openerp-web
+#. odoo-javascript
 #: code:addons/pos_restaurant/static/src/xml/Screens/FloorScreen/EditBar.xml:0
 #: code:addons/pos_restaurant/static/src/xml/Screens/FloorScreen/EditBar.xml:0
 #, python-format
@@ -62,7 +62,7 @@ msgid "Add"
 msgstr "Adaugă"
 
 #. module: pos_restaurant
-#. openerp-web
+#. odoo-javascript
 #: code:addons/pos_restaurant/static/src/js/Screens/ProductScreen/ControlButtons/OrderlineNoteButton.js:0
 #, python-format
 msgid "Add Internal Note"
@@ -79,14 +79,14 @@ msgid "Add a new restaurant order printer"
 msgstr "Adăugați o nouă imprimantă pentru comenzi la restaurant"
 
 #. module: pos_restaurant
-#. openerp-web
+#. odoo-javascript
 #: code:addons/pos_restaurant/static/src/xml/Screens/TipScreen.xml:0
 #, python-format
 msgid "Add a tip"
 msgstr "Adăugați un bacșiș"
 
 #. module: pos_restaurant
-#. openerp-web
+#. odoo-javascript
 #: code:addons/pos_restaurant/static/src/xml/Screens/FloorScreen/FloorScreen.xml:0
 #: code:addons/pos_restaurant/static/src/xml/Screens/FloorScreen/FloorScreen.xml:0
 #, python-format
@@ -104,7 +104,7 @@ msgid "Add tip after payment (North America specific)"
 msgstr "Adăugați bacșiș după plată (specific America de Nord)"
 
 #. module: pos_restaurant
-#. openerp-web
+#. odoo-javascript
 #: code:addons/pos_restaurant/static/src/xml/Screens/PaymentScreen/PaymentScreenPaymentLines.xml:0
 #: code:addons/pos_restaurant/static/src/xml/Screens/PaymentScreen/PaymentScreenPaymentLines.xml:0
 #, python-format
@@ -141,7 +141,7 @@ msgid "Allows to print the Bill before payment."
 msgstr "Permite să imprimați factura înainte de efectuarea plății"
 
 #. module: pos_restaurant
-#. openerp-web
+#. odoo-javascript
 #: code:addons/pos_restaurant/static/src/xml/Screens/TipScreen.xml:0
 #, python-format
 msgid "Amount"
@@ -169,14 +169,14 @@ msgid "Archived"
 msgstr "Arhivat"
 
 #. module: pos_restaurant
-#. openerp-web
+#. odoo-javascript
 #: code:addons/pos_restaurant/static/src/js/Screens/FloorScreen/FloorScreen.js:0
 #, python-format
 msgid "Are you sure ?"
 msgstr "Ești sigur ?"
 
 #. module: pos_restaurant
-#. openerp-web
+#. odoo-javascript
 #: code:addons/pos_restaurant/static/src/xml/Screens/SplitBillScreen/SplitBillScreen.xml:0
 #: code:addons/pos_restaurant/static/src/xml/Screens/TipScreen.xml:0
 #, python-format
@@ -184,7 +184,7 @@ msgid "Back"
 msgstr "Înapoi"
 
 #. module: pos_restaurant
-#. openerp-web
+#. odoo-javascript
 #: code:addons/pos_restaurant/static/src/xml/ChromeWidgets/BackToFloorButton.xml:0
 #: code:addons/pos_restaurant/static/src/xml/ChromeWidgets/BackToFloorButton.xml:0
 #, python-format
@@ -202,20 +202,19 @@ msgid "Background Image"
 msgstr "Imagine fundal"
 
 #. module: pos_restaurant
-#: model:product.product,name:pos_restaurant.pos_food_bacon
 #: model:product.template,name:pos_restaurant.pos_food_bacon_product_template
 msgid "Bacon Burger"
 msgstr "Burger Bacon"
 
 #. module: pos_restaurant
-#. openerp-web
+#. odoo-javascript
 #: code:addons/pos_restaurant/static/src/xml/Screens/ProductScreen/ControlButtons/PrintBillButton.xml:0
 #, python-format
 msgid "Bill"
 msgstr "Factură achiziție"
 
 #. module: pos_restaurant
-#. openerp-web
+#. odoo-javascript
 #: code:addons/pos_restaurant/static/src/xml/Screens/BillScreen.xml:0
 #: model:ir.model.fields,field_description:pos_restaurant.field_pos_config__iface_printbill
 #, python-format
@@ -223,7 +222,7 @@ msgid "Bill Printing"
 msgstr "Tipărire Nota de plată"
 
 #. module: pos_restaurant
-#. openerp-web
+#. odoo-javascript
 #: code:addons/pos_restaurant/static/src/xml/Screens/SplitBillScreen/SplitBillScreen.xml:0
 #: model:ir.model.fields,field_description:pos_restaurant.field_pos_config__iface_splitbill
 #, python-format
@@ -231,7 +230,14 @@ msgid "Bill Splitting"
 msgstr "Divizare Nota de plată"
 
 #. module: pos_restaurant
-#. openerp-web
+#. odoo-javascript
+#: code:addons/pos_restaurant/static/src/js/Screens/ProductScreen/ControlButtons/TableGuestsButton.js:0
+#, python-format
+msgid "Blocked action"
+msgstr ""
+
+#. module: pos_restaurant
+#. odoo-javascript
 #: code:addons/pos_restaurant/static/src/xml/Screens/FloorScreen/EditBar.xml:0
 #: code:addons/pos_restaurant/static/src/xml/Screens/FloorScreen/EditBar.xml:0
 #: code:addons/pos_restaurant/static/src/xml/Screens/FloorScreen/EditBar.xml:0
@@ -241,26 +247,24 @@ msgid "Blue"
 msgstr "Albastru"
 
 #. module: pos_restaurant
-#. openerp-web
+#. odoo-javascript
 #: code:addons/pos_restaurant/static/src/xml/multiprint.xml:0
 #, python-format
 msgid "CANCELLED"
 msgstr "ANULAT"
 
 #. module: pos_restaurant
-#: model:product.product,name:pos_restaurant.pos_food_cheeseburger
 #: model:product.template,name:pos_restaurant.pos_food_cheeseburger_product_template
 msgid "Cheese Burger"
 msgstr "Cheese Burger"
 
 #. module: pos_restaurant
-#: model:product.product,name:pos_restaurant.pos_food_chicken
 #: model:product.template,name:pos_restaurant.pos_food_chicken_product_template
 msgid "Chicken Curry Sandwich"
 msgstr "Sandwich de pui cu curry"
 
 #. module: pos_restaurant
-#. openerp-web
+#. odoo-javascript
 #: code:addons/pos_restaurant/static/src/xml/Screens/FloorScreen/EditBar.xml:0
 #: code:addons/pos_restaurant/static/src/xml/Screens/FloorScreen/EditBar.xml:0
 #: code:addons/pos_restaurant/static/src/xml/Screens/FloorScreen/EditBar.xml:0
@@ -270,20 +274,18 @@ msgid "Close"
 msgstr "Închide"
 
 #. module: pos_restaurant
-#. openerp-web
+#. odoo-javascript
 #: code:addons/pos_restaurant/static/src/xml/Screens/PaymentScreen/PaymentScreen.xml:0
 #, python-format
 msgid "Close Tab"
 msgstr "Închideți fila"
 
 #. module: pos_restaurant
-#: model:product.product,name:pos_restaurant.pos_food_club
 #: model:product.template,name:pos_restaurant.pos_food_club_product_template
 msgid "Club Sandwich"
 msgstr "Sandwich de Club"
 
 #. module: pos_restaurant
-#: model:product.product,name:pos_restaurant.coke
 #: model:product.template,name:pos_restaurant.coke_product_template
 msgid "Coca-Cola"
 msgstr "Coca-Cola"
@@ -313,7 +315,7 @@ msgid "Created on"
 msgstr "Creat în"
 
 #. module: pos_restaurant
-#. openerp-web
+#. odoo-javascript
 #: code:addons/pos_restaurant/static/src/xml/Screens/FloorScreen/EditBar.xml:0
 #: code:addons/pos_restaurant/static/src/xml/Screens/FloorScreen/EditBar.xml:0
 #, python-format
@@ -338,14 +340,14 @@ msgid "Drinks"
 msgstr "Băuturi"
 
 #. module: pos_restaurant
-#. openerp-web
+#. odoo-javascript
 #: code:addons/pos_restaurant/static/src/js/ChromeWidgets/TicketButton.js:0
 #, python-format
 msgid "Due to a connection error, the orders are not synchronized."
 msgstr ""
 
 #. module: pos_restaurant
-#. openerp-web
+#. odoo-javascript
 #: code:addons/pos_restaurant/static/src/xml/Screens/FloorScreen/EditBar.xml:0
 #: code:addons/pos_restaurant/static/src/xml/Screens/FloorScreen/EditBar.xml:0
 #, python-format
@@ -367,7 +369,7 @@ msgid "Early Receipt Printing"
 msgstr ""
 
 #. module: pos_restaurant
-#. openerp-web
+#. odoo-javascript
 #: code:addons/pos_restaurant/static/src/xml/Screens/FloorScreen/FloorScreen.xml:0
 #: code:addons/pos_restaurant/static/src/xml/Screens/FloorScreen/FloorScreen.xml:0
 #, python-format
@@ -380,7 +382,7 @@ msgid "Enables Bill Splitting in the Point of Sale."
 msgstr "Activare divizare factura în punctul de vânzare."
 
 #. module: pos_restaurant
-#. openerp-web
+#. odoo-javascript
 #: code:addons/pos_restaurant/static/src/js/Screens/ProductScreen/ControlButtons/SubmitOrderButton.js:0
 #, python-format
 msgid "Failed in printing the changes in the order"
@@ -403,6 +405,7 @@ msgid "Floor Plans"
 msgstr "Planuri Etaj"
 
 #. module: pos_restaurant
+#. odoo-python
 #: code:addons/pos_restaurant/models/pos_restaurant.py:0
 #, python-format
 msgid "Floor: %s - PoS Config: %s \n"
@@ -429,20 +432,19 @@ msgid "Food"
 msgstr "Mâncare"
 
 #. module: pos_restaurant
-#. openerp-web
+#. odoo-javascript
 #: code:addons/pos_restaurant/static/src/xml/Screens/ReceiptScreen/OrderReceipt.xml:0
 #, python-format
 msgid "For convenience, we are providing the following gratuity calculations:"
 msgstr "Pentru comoditate, oferim următoarele calcule de gratuitate:"
 
 #. module: pos_restaurant
-#: model:product.product,name:pos_restaurant.pos_food_funghi
 #: model:product.template,name:pos_restaurant.pos_food_funghi_product_template
 msgid "Funghi"
 msgstr "Funghi"
 
 #. module: pos_restaurant
-#. openerp-web
+#. odoo-javascript
 #: code:addons/pos_restaurant/static/src/xml/Screens/FloorScreen/EditBar.xml:0
 #: code:addons/pos_restaurant/static/src/xml/Screens/FloorScreen/EditBar.xml:0
 #: code:addons/pos_restaurant/static/src/xml/Screens/FloorScreen/EditBar.xml:0
@@ -452,7 +454,7 @@ msgid "Green"
 msgstr "Verde"
 
 #. module: pos_restaurant
-#. openerp-web
+#. odoo-javascript
 #: code:addons/pos_restaurant/static/src/xml/Screens/FloorScreen/EditBar.xml:0
 #: code:addons/pos_restaurant/static/src/xml/Screens/FloorScreen/EditBar.xml:0
 #: code:addons/pos_restaurant/static/src/xml/Screens/FloorScreen/EditBar.xml:0
@@ -462,7 +464,7 @@ msgid "Grey"
 msgstr "Gri"
 
 #. module: pos_restaurant
-#. openerp-web
+#. odoo-javascript
 #: code:addons/pos_restaurant/static/src/xml/Screens/ProductScreen/ControlButtons/TableGuestsButton.xml:0
 #: model:ir.model.fields,field_description:pos_restaurant.field_pos_order__customer_count
 #, python-format
@@ -470,14 +472,14 @@ msgid "Guests"
 msgstr "Vizitatori"
 
 #. module: pos_restaurant
-#. openerp-web
+#. odoo-javascript
 #: code:addons/pos_restaurant/static/src/js/Screens/ProductScreen/ControlButtons/TableGuestsButton.js:0
 #, python-format
 msgid "Guests ?"
 msgstr "Vizitatori ?"
 
 #. module: pos_restaurant
-#. openerp-web
+#. odoo-javascript
 #: code:addons/pos_restaurant/static/src/xml/Screens/ReceiptScreen/OrderReceipt.xml:0
 #, python-format
 msgid "Guests:"
@@ -510,7 +512,7 @@ msgstr ""
 "de vânzare"
 
 #. module: pos_restaurant
-#. openerp-web
+#. odoo-javascript
 #: code:addons/pos_restaurant/static/src/xml/Screens/ProductScreen/ControlButtons/OrderlineNoteButton.xml:0
 #, python-format
 msgid "Internal Note"
@@ -532,7 +534,7 @@ msgid "Is a Bar/Restaurant"
 msgstr "Este un bar / restaurant"
 
 #. module: pos_restaurant
-#. openerp-web
+#. odoo-javascript
 #: code:addons/pos_restaurant/static/src/xml/Screens/PaymentScreen/PaymentScreen.xml:0
 #, python-format
 msgid "Keep Open"
@@ -575,7 +577,7 @@ msgid "Last printed state of the order"
 msgstr ""
 
 #. module: pos_restaurant
-#. openerp-web
+#. odoo-javascript
 #: code:addons/pos_restaurant/static/src/xml/Screens/FloorScreen/EditBar.xml:0
 #: code:addons/pos_restaurant/static/src/xml/Screens/FloorScreen/EditBar.xml:0
 #: code:addons/pos_restaurant/static/src/xml/Screens/FloorScreen/EditBar.xml:0
@@ -585,44 +587,38 @@ msgid "Light grey"
 msgstr "Gri Deschis"
 
 #. module: pos_restaurant
-#. openerp-web
+#. odoo-javascript
 #: code:addons/pos_restaurant/static/src/xml/TipReceipt.xml:0
 #, python-format
 msgid "Logo"
 msgstr "Sigla"
 
 #. module: pos_restaurant
-#: model:product.product,name:pos_restaurant.pos_food_maki
 #: model:product.template,name:pos_restaurant.pos_food_maki_product_template
 msgid "Lunch Maki 18pc"
 msgstr "Prânz Maki 18 bucăți"
 
 #. module: pos_restaurant
-#: model:product.product,name:pos_restaurant.pos_food_salmon
 #: model:product.template,name:pos_restaurant.pos_food_salmon_product_template
 msgid "Lunch Salmon 20pc"
 msgstr "Prânz Somon 20 buc"
 
 #. module: pos_restaurant
-#: model:product.product,name:pos_restaurant.pos_food_temaki
 #: model:product.template,name:pos_restaurant.pos_food_temaki_product_template
 msgid "Lunch Temaki mix 3pc"
 msgstr "Prânz Mix Temaki 3 buc"
 
 #. module: pos_restaurant
-#: model:product.product,name:pos_restaurant.pos_food_margherita
 #: model:product.template,name:pos_restaurant.pos_food_margherita_product_template
 msgid "Margherita"
 msgstr "Margherita"
 
 #. module: pos_restaurant
-#: model:product.product,name:pos_restaurant.minute_maid
 #: model:product.template,name:pos_restaurant.minute_maid_product_template
 msgid "Minute Maid"
 msgstr "Minute Maid"
 
 #. module: pos_restaurant
-#: model:product.product,name:pos_restaurant.pos_food_mozza
 #: model:product.template,name:pos_restaurant.pos_food_mozza_product_template
 msgid "Mozzarella Sandwich"
 msgstr "Sandwich cu Mozzarella"
@@ -633,14 +629,14 @@ msgid "Multiprint Resume"
 msgstr ""
 
 #. module: pos_restaurant
-#. openerp-web
+#. odoo-javascript
 #: code:addons/pos_restaurant/static/src/xml/multiprint.xml:0
 #, python-format
 msgid "NEW"
 msgstr "NOU"
 
 #. module: pos_restaurant
-#. openerp-web
+#. odoo-javascript
 #: code:addons/pos_restaurant/static/src/xml/multiprint.xml:0
 #: code:addons/pos_restaurant/static/src/xml/multiprint.xml:0
 #, python-format
@@ -648,14 +644,14 @@ msgid "NOTE"
 msgstr "NOTĂ"
 
 #. module: pos_restaurant
-#. openerp-web
+#. odoo-javascript
 #: code:addons/pos_restaurant/static/src/xml/Screens/TipScreen.xml:0
 #, python-format
 msgid "No Tip"
 msgstr "Fără Bacșiș"
 
 #. module: pos_restaurant
-#. openerp-web
+#. odoo-javascript
 #: code:addons/pos_restaurant/static/src/xml/Screens/ProductScreen/Orderline.xml:0
 #: code:addons/pos_restaurant/static/src/xml/Screens/ProductScreen/Orderline.xml:0
 #, python-format
@@ -663,21 +659,21 @@ msgid "Note"
 msgstr "Notă"
 
 #. module: pos_restaurant
-#. openerp-web
+#. odoo-javascript
 #: code:addons/pos_restaurant/static/src/js/Screens/ProductScreen/ControlButtons/PrintBillButton.js:0
 #, python-format
 msgid "Nothing to Print"
 msgstr "Nimic de tipărit"
 
 #. module: pos_restaurant
-#. openerp-web
+#. odoo-javascript
 #: code:addons/pos_restaurant/static/src/js/Screens/FloorScreen/FloorScreen.js:0
 #, python-format
 msgid "Number of Seats ?"
 msgstr "Nr. de Locuri ?"
 
 #. module: pos_restaurant
-#. openerp-web
+#. odoo-javascript
 #: code:addons/pos_restaurant/static/src/js/ChromeWidgets/TicketButton.js:0
 #: code:addons/pos_restaurant/static/src/js/Screens/FloorScreen/FloorScreen.js:0
 #: code:addons/pos_restaurant/static/src/js/Screens/FloorScreen/FloorScreen.js:0
@@ -689,21 +685,21 @@ msgid "Offline"
 msgstr "Deconectat"
 
 #. module: pos_restaurant
-#. openerp-web
+#. odoo-javascript
 #: code:addons/pos_restaurant/static/src/xml/Screens/BillScreen.xml:0
 #, python-format
 msgid "Ok"
 msgstr "Ok"
 
 #. module: pos_restaurant
-#. openerp-web
+#. odoo-javascript
 #: code:addons/pos_restaurant/static/src/js/Screens/TicketScreen.js:0
 #, python-format
 msgid "Open"
 msgstr "Afișare"
 
 #. module: pos_restaurant
-#. openerp-web
+#. odoo-javascript
 #: code:addons/pos_restaurant/static/src/xml/Screens/FloorScreen/EditBar.xml:0
 #: code:addons/pos_restaurant/static/src/xml/Screens/FloorScreen/EditBar.xml:0
 #: code:addons/pos_restaurant/static/src/xml/Screens/FloorScreen/EditBar.xml:0
@@ -713,7 +709,7 @@ msgid "Orange"
 msgstr "Portocaliu"
 
 #. module: pos_restaurant
-#. openerp-web
+#. odoo-javascript
 #: code:addons/pos_restaurant/static/src/xml/Screens/ProductScreen/ControlButtons/SubmitOrderButton.xml:0
 #, python-format
 msgid "Order"
@@ -747,26 +743,24 @@ msgid "POS Printer"
 msgstr "Imprimante pentru POS"
 
 #. module: pos_restaurant
-#. openerp-web
+#. odoo-javascript
 #: code:addons/pos_restaurant/static/src/xml/Screens/ReceiptScreen/OrderReceipt.xml:0
 #, python-format
 msgid "PRO FORMA"
 msgstr "PRO FORMA"
 
 #. module: pos_restaurant
-#: model:product.product,name:pos_restaurant.pos_food_4formaggi
 #: model:product.template,name:pos_restaurant.pos_food_4formaggi_product_template
 msgid "Pasta 4 formaggi "
 msgstr "Paste 4 formagii"
 
 #. module: pos_restaurant
-#: model:product.product,name:pos_restaurant.pos_food_bolo
 #: model:product.template,name:pos_restaurant.pos_food_bolo_product_template
 msgid "Pasta Bolognese"
 msgstr "Paste Bolognese"
 
 #. module: pos_restaurant
-#. openerp-web
+#. odoo-javascript
 #: code:addons/pos_restaurant/static/src/xml/Screens/SplitBillScreen/SplitBillScreen.xml:0
 #, python-format
 msgid "Payment"
@@ -833,7 +827,7 @@ msgid "Pos Set Tip After Payment"
 msgstr ""
 
 #. module: pos_restaurant
-#. openerp-web
+#. odoo-javascript
 #: code:addons/pos_restaurant/static/src/xml/Screens/BillScreen.xml:0
 #, python-format
 msgid "Print"
@@ -865,21 +859,21 @@ msgid "Printers"
 msgstr "Imprimante"
 
 #. module: pos_restaurant
-#. openerp-web
+#. odoo-javascript
 #: code:addons/pos_restaurant/static/src/js/Screens/ProductScreen/ControlButtons/SubmitOrderButton.js:0
 #, python-format
 msgid "Printing failed"
 msgstr ""
 
 #. module: pos_restaurant
-#. openerp-web
+#. odoo-javascript
 #: code:addons/pos_restaurant/static/src/js/Screens/TipScreen.js:0
 #, python-format
 msgid "Printing is not supported on some browsers"
 msgstr "Imprimarea nu este acceptată pe unele browsere"
 
 #. module: pos_restaurant
-#. openerp-web
+#. odoo-javascript
 #: code:addons/pos_restaurant/static/src/js/Screens/TipScreen.js:0
 #, python-format
 msgid ""
@@ -897,7 +891,7 @@ msgid "Proxy IP Address"
 msgstr "Adresa Proxy IP"
 
 #. module: pos_restaurant
-#. openerp-web
+#. odoo-javascript
 #: code:addons/pos_restaurant/static/src/xml/Screens/FloorScreen/EditBar.xml:0
 #: code:addons/pos_restaurant/static/src/xml/Screens/FloorScreen/EditBar.xml:0
 #: code:addons/pos_restaurant/static/src/xml/Screens/FloorScreen/EditBar.xml:0
@@ -907,7 +901,7 @@ msgid "Purple"
 msgstr "Mov"
 
 #. module: pos_restaurant
-#. openerp-web
+#. odoo-javascript
 #: code:addons/pos_restaurant/static/src/xml/Screens/FloorScreen/EditBar.xml:0
 #: code:addons/pos_restaurant/static/src/xml/Screens/FloorScreen/EditBar.xml:0
 #: code:addons/pos_restaurant/static/src/xml/Screens/FloorScreen/EditBar.xml:0
@@ -917,14 +911,14 @@ msgid "Red"
 msgstr "Rosu"
 
 #. module: pos_restaurant
-#. openerp-web
+#. odoo-javascript
 #: code:addons/pos_restaurant/static/src/js/Screens/FloorScreen/FloorScreen.js:0
 #, python-format
 msgid "Removing a table cannot be undone"
 msgstr "Eliminarea unei mese nu poate fi anulată"
 
 #. module: pos_restaurant
-#. openerp-web
+#. odoo-javascript
 #: code:addons/pos_restaurant/static/src/xml/Screens/FloorScreen/EditBar.xml:0
 #: code:addons/pos_restaurant/static/src/xml/Screens/FloorScreen/EditBar.xml:0
 #, python-format
@@ -932,7 +926,7 @@ msgid "Rename"
 msgstr "Redenumire"
 
 #. module: pos_restaurant
-#. openerp-web
+#. odoo-javascript
 #: code:addons/pos_restaurant/static/src/xml/Screens/TipScreen.xml:0
 #, python-format
 msgid "Reprint receipts"
@@ -973,14 +967,14 @@ msgid "Restaurant Table"
 msgstr "Masă Restaurant"
 
 #. module: pos_restaurant
-#. openerp-web
+#. odoo-javascript
 #: code:addons/pos_restaurant/static/src/xml/Screens/PaymentScreen/PaymentScreenPaymentLines.xml:0
 #, python-format
 msgid "Reverse"
 msgstr "Inversare"
 
 #. module: pos_restaurant
-#. openerp-web
+#. odoo-javascript
 #: code:addons/pos_restaurant/static/src/xml/Screens/PaymentScreen/PaymentScreenPaymentLines.xml:0
 #, python-format
 msgid "Reverse Payment"
@@ -992,7 +986,7 @@ msgid "Round"
 msgstr "Rotund"
 
 #. module: pos_restaurant
-#. openerp-web
+#. odoo-javascript
 #: code:addons/pos_restaurant/static/src/xml/Screens/FloorScreen/EditBar.xml:0
 #: code:addons/pos_restaurant/static/src/xml/Screens/FloorScreen/EditBar.xml:0
 #, python-format
@@ -1000,13 +994,12 @@ msgid "Round Shape"
 msgstr "Formă Rotundă"
 
 #. module: pos_restaurant
-#: model:product.product,name:pos_restaurant.pos_food_chirashi
 #: model:product.template,name:pos_restaurant.pos_food_chirashi_product_template
 msgid "Salmon and Avocado"
 msgstr "Somon și Avocado"
 
 #. module: pos_restaurant
-#. openerp-web
+#. odoo-javascript
 #: code:addons/pos_restaurant/static/src/xml/Screens/FloorScreen/EditBar.xml:0
 #: code:addons/pos_restaurant/static/src/xml/Screens/FloorScreen/EditBar.xml:0
 #: model:ir.model.fields,field_description:pos_restaurant.field_restaurant_table__seats
@@ -1020,7 +1013,7 @@ msgid "Sequence"
 msgstr "Secvență"
 
 #. module: pos_restaurant
-#. openerp-web
+#. odoo-javascript
 #: code:addons/pos_restaurant/static/src/xml/TipReceipt.xml:0
 #, python-format
 msgid "Served by"
@@ -1032,7 +1025,7 @@ msgid "Set Tip After Payment"
 msgstr "Trimite bacșiș după plată"
 
 #. module: pos_restaurant
-#. openerp-web
+#. odoo-javascript
 #: code:addons/pos_restaurant/static/src/xml/Screens/TicketScreen.xml:0
 #: code:addons/pos_restaurant/static/src/xml/Screens/TipScreen.xml:0
 #, python-format
@@ -1045,7 +1038,7 @@ msgid "Shape"
 msgstr "Formă"
 
 #. module: pos_restaurant
-#. openerp-web
+#. odoo-javascript
 #: code:addons/pos_restaurant/static/src/xml/TipReceipt.xml:0
 #, python-format
 msgid "Signature"
@@ -1058,13 +1051,12 @@ msgstr ""
 "Săriți peste linie când trimiteți bilet către imprimantele din bucătărie."
 
 #. module: pos_restaurant
-#: model:product.product,name:pos_restaurant.pos_food_tuna
 #: model:product.template,name:pos_restaurant.pos_food_tuna_product_template
 msgid "Spicy Tuna Sandwich"
 msgstr "Sandwich cu Tuna Iute"
 
 #. module: pos_restaurant
-#. openerp-web
+#. odoo-javascript
 #: code:addons/pos_restaurant/static/src/xml/Screens/ProductScreen/ControlButtons/SplitBillButton.xml:0
 #, python-format
 msgid "Split"
@@ -1081,7 +1073,7 @@ msgid "Square"
 msgstr "Pătrat"
 
 #. module: pos_restaurant
-#. openerp-web
+#. odoo-javascript
 #: code:addons/pos_restaurant/static/src/xml/Screens/FloorScreen/EditBar.xml:0
 #: code:addons/pos_restaurant/static/src/xml/Screens/FloorScreen/EditBar.xml:0
 #, python-format
@@ -1089,14 +1081,14 @@ msgid "Square Shape"
 msgstr "Formă Pătrată"
 
 #. module: pos_restaurant
-#. openerp-web
+#. odoo-javascript
 #: code:addons/pos_restaurant/static/src/xml/TipReceipt.xml:0
 #, python-format
 msgid "Subtotal"
 msgstr "Subtotal"
 
 #. module: pos_restaurant
-#. openerp-web
+#. odoo-javascript
 #: code:addons/pos_restaurant/static/src/js/Screens/TicketScreen.js:0
 #: code:addons/pos_restaurant/static/src/xml/Screens/TicketScreen.xml:0
 #: code:addons/pos_restaurant/static/src/xml/Screens/TicketScreen.xml:0
@@ -1111,7 +1103,7 @@ msgid "Table Name"
 msgstr "Nume masă"
 
 #. module: pos_restaurant
-#. openerp-web
+#. odoo-javascript
 #: code:addons/pos_restaurant/static/src/js/Screens/FloorScreen/FloorScreen.js:0
 #, python-format
 msgid "Table Name ?"
@@ -1124,11 +1116,18 @@ msgid "Tables"
 msgstr "Tabele"
 
 #. module: pos_restaurant
-#. openerp-web
+#. odoo-javascript
 #: code:addons/pos_restaurant/static/src/xml/TipReceipt.xml:0
 #, python-format
 msgid "Tel:"
 msgstr "Tel:"
+
+#. module: pos_restaurant
+#. odoo-python
+#: code:addons/pos_restaurant/models/pos_restaurant.py:0
+#, python-format
+msgid "The %s is already used in another Pos Config."
+msgstr ""
 
 #. module: pos_restaurant
 #: model:ir.model.fields,help:pos_restaurant.field_restaurant_printer__proxy_ip
@@ -1195,21 +1194,21 @@ msgid "The table's width in pixels"
 msgstr "Lățimea tabelului în pixeli"
 
 #. module: pos_restaurant
-#. openerp-web
+#. odoo-javascript
 #: code:addons/pos_restaurant/static/src/js/Screens/ProductScreen/ControlButtons/PrintBillButton.js:0
 #, python-format
 msgid "There are no order lines"
 msgstr "Nu există linii de comandă"
 
 #. module: pos_restaurant
-#. openerp-web
+#. odoo-javascript
 #: code:addons/pos_restaurant/static/src/xml/Screens/FloorScreen/FloorScreen.xml:0
 #, python-format
 msgid "This floor has no tables yet, use the"
 msgstr "Acest etaj nu are încă mese, folosiți"
 
 #. module: pos_restaurant
-#. openerp-web
+#. odoo-javascript
 #: code:addons/pos_restaurant/static/src/js/Screens/TipScreen.js:0
 #, python-format
 msgid ""
@@ -1218,7 +1217,7 @@ msgid ""
 msgstr ""
 
 #. module: pos_restaurant
-#. openerp-web
+#. odoo-javascript
 #: code:addons/pos_restaurant/static/src/xml/Screens/FloorScreen/EditBar.xml:0
 #: code:addons/pos_restaurant/static/src/xml/Screens/FloorScreen/EditBar.xml:0
 #, python-format
@@ -1226,7 +1225,7 @@ msgid "Tint"
 msgstr "Tentă"
 
 #. module: pos_restaurant
-#. openerp-web
+#. odoo-javascript
 #: code:addons/pos_restaurant/static/src/xml/Screens/TicketScreen.xml:0
 #: code:addons/pos_restaurant/static/src/xml/Screens/TicketScreen.xml:0
 #, python-format
@@ -1234,35 +1233,35 @@ msgid "Tip"
 msgstr "Sfat"
 
 #. module: pos_restaurant
-#. openerp-web
+#. odoo-javascript
 #: code:addons/pos_restaurant/static/src/xml/TipReceipt.xml:0
 #, python-format
 msgid "Tip:"
 msgstr "Bacșiș:"
 
 #. module: pos_restaurant
-#. openerp-web
+#. odoo-javascript
 #: code:addons/pos_restaurant/static/src/js/Screens/TicketScreen.js:0
 #, python-format
 msgid "Tipping"
 msgstr "Bacșiș:"
 
 #. module: pos_restaurant
-#. openerp-web
+#. odoo-javascript
 #: code:addons/pos_restaurant/static/src/xml/TipReceipt.xml:0
 #, python-format
 msgid "Total:"
 msgstr "Total:"
 
 #. module: pos_restaurant
-#. openerp-web
+#. odoo-javascript
 #: code:addons/pos_restaurant/static/src/xml/Screens/ProductScreen/ControlButtons/TransferOrderButton.xml:0
 #, python-format
 msgid "Transfer"
 msgstr "Transfer"
 
 #. module: pos_restaurant
-#. openerp-web
+#. odoo-javascript
 #: code:addons/pos_restaurant/static/src/xml/Screens/FloorScreen/EditBar.xml:0
 #: code:addons/pos_restaurant/static/src/xml/Screens/FloorScreen/EditBar.xml:0
 #: code:addons/pos_restaurant/static/src/xml/Screens/FloorScreen/EditBar.xml:0
@@ -1272,89 +1271,49 @@ msgid "Turquoise"
 msgstr "Turcoaz"
 
 #. module: pos_restaurant
-#. openerp-web
+#. odoo-javascript
 #: code:addons/pos_restaurant/static/src/js/Screens/FloorScreen/FloorScreen.js:0
 #, python-format
 msgid "Unable to change background color"
 msgstr "Nu se poate schimba culoarea de fundal"
 
 #. module: pos_restaurant
-#. openerp-web
+#. odoo-javascript
 #: code:addons/pos_restaurant/static/src/js/Screens/FloorScreen/FloorScreen.js:0
 #, python-format
 msgid "Unable to create table because you are offline."
 msgstr "Imposibil de creat tabelul deoarece sunteți offline."
 
 #. module: pos_restaurant
-#. openerp-web
+#. odoo-javascript
 #: code:addons/pos_restaurant/static/src/js/Screens/FloorScreen/FloorScreen.js:0
 #, python-format
 msgid "Unable to delete table"
 msgstr "Nu se poate șterge tabelul"
 
 #. module: pos_restaurant
-#. openerp-web
+#. odoo-javascript
 #: code:addons/pos_restaurant/static/src/js/Screens/FloorScreen/FloorScreen.js:0
 #, python-format
 msgid "Unable to fetch orders"
 msgstr ""
 
 #. module: pos_restaurant
-#. openerp-web
+#. odoo-javascript
 #: code:addons/pos_restaurant/static/src/js/Screens/FloorScreen/FloorScreen.js:0
 #, python-format
 msgid "Unable to get orders count"
 msgstr ""
 
 #. module: pos_restaurant
-#: model:product.product,uom_name:pos_restaurant.coke
-#: model:product.product,uom_name:pos_restaurant.minute_maid
-#: model:product.product,uom_name:pos_restaurant.pos_food_4formaggi
-#: model:product.product,uom_name:pos_restaurant.pos_food_bacon
-#: model:product.product,uom_name:pos_restaurant.pos_food_bolo
-#: model:product.product,uom_name:pos_restaurant.pos_food_cheeseburger
-#: model:product.product,uom_name:pos_restaurant.pos_food_chicken
-#: model:product.product,uom_name:pos_restaurant.pos_food_chirashi
-#: model:product.product,uom_name:pos_restaurant.pos_food_club
-#: model:product.product,uom_name:pos_restaurant.pos_food_funghi
-#: model:product.product,uom_name:pos_restaurant.pos_food_maki
-#: model:product.product,uom_name:pos_restaurant.pos_food_margherita
-#: model:product.product,uom_name:pos_restaurant.pos_food_mozza
-#: model:product.product,uom_name:pos_restaurant.pos_food_salmon
-#: model:product.product,uom_name:pos_restaurant.pos_food_temaki
-#: model:product.product,uom_name:pos_restaurant.pos_food_tuna
-#: model:product.product,uom_name:pos_restaurant.pos_food_vege
-#: model:product.product,uom_name:pos_restaurant.water
-#: model:product.template,uom_name:pos_restaurant.coke_product_template
-#: model:product.template,uom_name:pos_restaurant.minute_maid_product_template
-#: model:product.template,uom_name:pos_restaurant.pos_food_4formaggi_product_template
-#: model:product.template,uom_name:pos_restaurant.pos_food_bacon_product_template
-#: model:product.template,uom_name:pos_restaurant.pos_food_bolo_product_template
-#: model:product.template,uom_name:pos_restaurant.pos_food_cheeseburger_product_template
-#: model:product.template,uom_name:pos_restaurant.pos_food_chicken_product_template
-#: model:product.template,uom_name:pos_restaurant.pos_food_chirashi_product_template
-#: model:product.template,uom_name:pos_restaurant.pos_food_club_product_template
-#: model:product.template,uom_name:pos_restaurant.pos_food_funghi_product_template
-#: model:product.template,uom_name:pos_restaurant.pos_food_maki_product_template
-#: model:product.template,uom_name:pos_restaurant.pos_food_margherita_product_template
-#: model:product.template,uom_name:pos_restaurant.pos_food_mozza_product_template
-#: model:product.template,uom_name:pos_restaurant.pos_food_salmon_product_template
-#: model:product.template,uom_name:pos_restaurant.pos_food_temaki_product_template
-#: model:product.template,uom_name:pos_restaurant.pos_food_tuna_product_template
-#: model:product.template,uom_name:pos_restaurant.pos_food_vege_product_template
-#: model:product.template,uom_name:pos_restaurant.water_product_template
-msgid "Units"
-msgstr "buc"
-
-#. module: pos_restaurant
-#. openerp-web
+#. odoo-javascript
 #: code:addons/pos_restaurant/static/src/js/ChromeWidgets/TicketButton.js:0
 #, python-format
 msgid "Unknown error"
 msgstr "Eroare necunoscută"
 
 #. module: pos_restaurant
-#. openerp-web
+#. odoo-javascript
 #: code:addons/pos_restaurant/static/src/js/Screens/TipScreen.js:0
 #, python-format
 msgid "Unsynced order"
@@ -1366,14 +1325,13 @@ msgid "Uuid"
 msgstr "Uuid"
 
 #. module: pos_restaurant
-#. openerp-web
+#. odoo-javascript
 #: code:addons/pos_restaurant/static/src/xml/TipReceipt.xml:0
 #, python-format
 msgid "VAT:"
 msgstr "TVA:"
 
 #. module: pos_restaurant
-#: model:product.product,name:pos_restaurant.pos_food_vege
 #: model:product.template,name:pos_restaurant.pos_food_vege_product_template
 msgid "Vegetarian"
 msgstr "Vegetarian"
@@ -1384,7 +1342,6 @@ msgid "Vertical Position"
 msgstr "Poziție verticală"
 
 #. module: pos_restaurant
-#: model:product.product,name:pos_restaurant.water
 #: model:product.template,name:pos_restaurant.water_product_template
 msgid "Water"
 msgstr "Apa"
@@ -1395,14 +1352,14 @@ msgid "Width"
 msgstr "Lățime"
 
 #. module: pos_restaurant
-#. openerp-web
+#. odoo-javascript
 #: code:addons/pos_restaurant/static/src/xml/Screens/SplitBillScreen/SplitOrderline.xml:0
 #, python-format
 msgid "With a"
 msgstr "Cu"
 
 #. module: pos_restaurant
-#. openerp-web
+#. odoo-javascript
 #: code:addons/pos_restaurant/static/src/xml/Screens/FloorScreen/EditBar.xml:0
 #: code:addons/pos_restaurant/static/src/xml/Screens/FloorScreen/EditBar.xml:0
 #: code:addons/pos_restaurant/static/src/xml/Screens/FloorScreen/EditBar.xml:0
@@ -1412,6 +1369,14 @@ msgid "Yellow"
 msgstr "Galben"
 
 #. module: pos_restaurant
+#. odoo-javascript
+#: code:addons/pos_restaurant/static/src/js/Screens/ProductScreen/ControlButtons/TableGuestsButton.js:0
+#, python-format
+msgid "You cannot put a number that exceeds %s "
+msgstr ""
+
+#. module: pos_restaurant
+#. odoo-python
 #: code:addons/pos_restaurant/models/pos_restaurant.py:0
 #, python-format
 msgid ""
@@ -1420,6 +1385,7 @@ msgid ""
 msgstr ""
 
 #. module: pos_restaurant
+#. odoo-python
 #: code:addons/pos_restaurant/models/pos_restaurant.py:0
 #, python-format
 msgid ""
@@ -1428,7 +1394,7 @@ msgid ""
 msgstr ""
 
 #. module: pos_restaurant
-#. openerp-web
+#. odoo-javascript
 #: code:addons/pos_restaurant/static/src/xml/TipReceipt.xml:0
 #: code:addons/pos_restaurant/static/src/xml/TipReceipt.xml:0
 #, python-format
@@ -1436,35 +1402,35 @@ msgid "________________________"
 msgstr "________________________"
 
 #. module: pos_restaurant
-#. openerp-web
+#. odoo-javascript
 #: code:addons/pos_restaurant/static/src/xml/TipReceipt.xml:0
 #, python-format
 msgid "______________________________________________"
 msgstr "______________________________________________"
 
 #. module: pos_restaurant
-#. openerp-web
+#. odoo-javascript
 #: code:addons/pos_restaurant/static/src/xml/Screens/SplitBillScreen/SplitOrderline.xml:0
 #, python-format
 msgid "at"
 msgstr "la"
 
 #. module: pos_restaurant
-#. openerp-web
+#. odoo-javascript
 #: code:addons/pos_restaurant/static/src/xml/Screens/ReceiptScreen/OrderReceipt.xml:0
 #, python-format
 msgid "at table"
 msgstr "la masă"
 
 #. module: pos_restaurant
-#. openerp-web
+#. odoo-javascript
 #: code:addons/pos_restaurant/static/src/xml/Screens/FloorScreen/FloorScreen.xml:0
 #, python-format
 msgid "button in the editing toolbar to create new tables."
 msgstr "din bara de instrumente de editare pentru a crea tabele noi."
 
 #. module: pos_restaurant
-#. openerp-web
+#. odoo-javascript
 #: code:addons/pos_restaurant/static/src/xml/Screens/SplitBillScreen/SplitOrderline.xml:0
 #, python-format
 msgid "discount"

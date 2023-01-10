@@ -28,8 +28,8 @@ __base="$(basename ${__file} .sh)"
 MOUNT_POINT="${__dir}/root_mount"
 OVERWRITE_FILES_BEFORE_INIT_DIR="${__dir}/overwrite_before_init"
 OVERWRITE_FILES_AFTER_INIT_DIR="${__dir}/overwrite_after_init"
-VERSION=15.0
-VERSION_IOTBOX=21.10
+VERSION=16.0
+VERSION_IOTBOX=22.11
 REPO=https://github.com/odoo/odoo.git
 
 if ! file_exists *raspios*.img ; then

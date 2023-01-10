@@ -4,9 +4,7 @@
 import datetime
 import logging
 from lxml import etree
-from freezegun import freeze_time
 
-from odoo import tools
 from odoo.tests import tagged
 from odoo.addons.l10n_it_edi.tests.common import TestItEdi
 from odoo.exceptions import UserError
@@ -58,49 +56,6 @@ class TestItEdiExport(TestItEdi):
                 (0, 0, {'factor_percent': 100, 'repartition_type': 'base'}),
                 (0, 0, {'factor_percent': 0, 'repartition_type': 'tax'}),
             ],
-        })
-
-        cls.italian_partner_a = cls.env['res.partner'].create({
-            'name': 'Alessi',
-            'vat': 'IT00465840031',
-            'l10n_it_codice_fiscale': '00465840031',
-            'country_id': cls.env.ref('base.it').id,
-            'street': 'Via Privata Alessi 6',
-            'zip': '28887',
-            'city': 'Milan',
-            'company_id': cls.company.id,
-            'is_company': True,
-        })
-
-        cls.italian_partner_b = cls.env['res.partner'].create({
-            'name': 'pa partner',
-            'vat': 'IT06655971007',
-            'l10n_it_codice_fiscale': '06655971007',
-            'l10n_it_pa_index': '123456',
-            'country_id': cls.env.ref('base.it').id,
-            'street': 'Via Test PA',
-            'zip': '32121',
-            'city': 'PA Town',
-            'is_company': True
-        })
-
-        cls.italian_partner_no_address_codice = cls.env['res.partner'].create({
-            'name': 'Alessi',
-            'l10n_it_codice_fiscale': '00465840031',
-            'is_company': True,
-        })
-
-        cls.italian_partner_no_address_VAT = cls.env['res.partner'].create({
-            'name': 'Alessi',
-            'vat': 'IT00465840031',
-            'is_company': True,
-        })
-
-        cls.american_partner = cls.env['res.partner'].create({
-            'name': 'Alessi',
-            'vat': '00465840031',
-            'country_id': cls.env.ref('base.us').id,
-            'is_company': True,
         })
 
         cls.standard_line_below_400 = {
@@ -319,13 +274,6 @@ class TestItEdiExport(TestItEdi):
         cls.edi_basis_xml = cls._get_test_file_content('IT00470550013_basis.xml')
         cls.edi_simplified_basis_xml = cls._get_test_file_content('IT00470550013_simpl.xml')
 
-    @classmethod
-    def _get_test_file_content(cls, filename):
-        """ Get the content of a test file inside this module """
-        path = 'l10n_it_edi/tests/expected_xmls/' + filename
-        with tools.file_open(path, mode='rb') as test_file:
-            return test_file.read()
-
     def test_price_included_taxes(self):
         """ When the tax is price included, there should be a rounding value added to the xml, if the sum(subtotals) * tax_rate is not
             equal to taxable base * tax rate (there is a constraint in the edi where taxable base * tax rate = tax amount, but also
@@ -535,16 +483,16 @@ class TestItEdiExport(TestItEdi):
               <DatiRiepilogo>
                 <AliquotaIVA>22.00</AliquotaIVA>
                 <ImponibileImporto>2401.20</ImponibileImporto>
-                <Imposta>528.27</Imposta>
+                <Imposta>528.26</Imposta>
                 <EsigibilitaIVA>I</EsigibilitaIVA>
               </DatiRiepilogo>
             </DatiBeniServizi>
             </xpath>
             <xpath expr="//DettaglioPagamento//ImportoPagamento" position="inside">
-              2929.47
+              2929.46
             </xpath>
             <xpath expr="//DatiGeneraliDocumento//ImportoTotaleDocumento" position="inside">
-              2929.47
+              2929.46
             </xpath>
             ''')
         invoice_etree = self.with_applied_xpath(invoice_etree, "<xpath expr='.//Allegati' position='replace'/>")
