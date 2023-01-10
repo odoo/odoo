@@ -42,9 +42,26 @@ class TestManual(common.TestAr):
         invoice = self._create_invoice({'partner': self.res_partner_cerrocastor})
         self.assertEqual(invoice.fiscal_position_id, self._search_fp('Compras / Ventas Zona Franca'))
 
-        # Expresso > Cliente / Proveedor del Exterior >  > IVA Exento
+        # Expresso > Cliente / Proveedor del Exterior > IVA Exento (without an existing fiscal position with country same as partner)
         invoice = self._create_invoice({'partner': self.res_partner_expresso})
         self.assertEqual(invoice.fiscal_position_id, self._search_fp('Compras / Ventas al exterior'))
+
+        # Expresso > Cliente / Proveedor del Exterior > IVA Exento (with an existing fiscal position with country same as partner)
+        self.assertNotEqual(self.res_partner_expresso.country_id.id, self.env.company.country_id.id)
+        partner_country = self.res_partner_expresso.country_id.name
+        fiscal_position_id = invoice.fiscal_position_id.copy({
+            "name": f"Compras / Ventas al exterior ({partner_country})",
+            'country_id': self.res_partner_expresso.country_id.id,
+        })
+        res_fiscal_position_id = self._search_fp(f"Compras / Ventas al exterior ({partner_country})")
+        self.assertEqual(fiscal_position_id, res_fiscal_position_id)
+        invoice = self._create_invoice({'partner': self.res_partner_expresso})
+        self.assertEqual(invoice.fiscal_position_id, res_fiscal_position_id)
+
+        # Expresso > Cliente / Proveedor del Exterior > Without Fiscal Positon  (partner has no country)
+        self.res_partner_expresso.country_id = False
+        invoice = self._create_invoice({'partner': self.res_partner_expresso})
+        self.assertFalse(invoice.fiscal_position_id, 'Fiscal position should be set to empty')
 
     def test_03_corner_cases(self):
         """ Mono partner of type Service and VAT 21 """
