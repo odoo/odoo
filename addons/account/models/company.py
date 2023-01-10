@@ -180,6 +180,12 @@ class ResCompany(models.Model):
             ('out_and_in_invoices', 'Customer Invoices and Vendor Bills')],
         string="Quick encoding")
 
+    company_registry_label = fields.Char(
+        compute='_compute_company_registry_label',
+        store=True,
+        help='This technical field is used to store the label that will be displayed on the company view for the company_registry field.'
+    )
+
     @api.constrains('account_opening_move_id', 'fiscalyear_last_day', 'fiscalyear_last_month')
     def _check_fiscalyear_last_day(self):
         # if the user explicitly chooses the 29th of February we allow it:
@@ -227,6 +233,16 @@ class ResCompany(models.Model):
                         raise_if_not_found=False)
             if html:
                 company.invoice_terms_html = html
+
+    @api.depends('country_id')
+    def _compute_company_registry_label(self):
+        # We can't reuse the computed field on the partner, because the country_id there is only set upon saving
+        # In the _inverse_country method.
+        for company in self:
+            if not company.partner_id:
+                company.company_registry_label = _('Company ID')
+            else:
+                company.company_registry_label = company.partner_id._get_company_registry_label(company.country_code)
 
     def get_and_update_account_invoice_onboarding_state(self):
         """ This method is called on the controller rendering method and ensures that the animations

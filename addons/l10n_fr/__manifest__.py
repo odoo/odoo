@@ -33,6 +33,7 @@ configuration of their taxes and fiscal positions manually.
     'data': [
         'data/account_chart_template_data.xml',
         'views/l10n_fr_view.xml',
+        'views/report_invoice.xml',
         'data/tax_report_data.xml',
         'data/res_country_data.xml',
     ],

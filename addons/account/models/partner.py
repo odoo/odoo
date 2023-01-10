@@ -296,6 +296,11 @@ class ResPartner(models.Model):
     _inherit = 'res.partner'
 
     fiscal_country_codes = fields.Char(compute='_compute_fiscal_country_codes')
+    company_registry_label = fields.Char(
+        compute='_compute_company_registry_label',
+        store=True,
+        help='This technical field is used to store the label that will be displayed on the partner view for the company_registry field.'
+    )
 
     @api.depends('company_id')
     @api.depends_context('allowed_company_ids')
@@ -303,6 +308,20 @@ class ResPartner(models.Model):
         for record in self:
             allowed_companies = record.company_id or self.env.companies
             record.fiscal_country_codes = ",".join(allowed_companies.mapped('account_fiscal_country_id.code'))
+
+    @api.depends('country_id')
+    def _compute_company_registry_label(self):
+        for partner in self:
+            partner.company_registry_label = partner._get_company_registry_label(partner.country_code)
+
+    @api.model
+    def _get_company_registry_label(self, country_code):
+        """ To inherit when needed in order to customize the label.
+        It can take the country code instead of only using the current record one as setting a company, the partner
+        behind it won't have it updated before saving.
+        """
+        self.ensure_one()
+        return _('Company ID')
 
     @property
     def _order(self):

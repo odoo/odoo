@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<templates>
+
+    <t t-name="account.LocalizedLabel" owl="1">
+        <span t-esc="this.state.term" class="fw-bold"/><sup class="btn-link p-1" t-if="this.field.help" t-att="{'data-tooltip-template': 'web.FieldTooltip', 'data-tooltip-info': tooltipInfo, 'data-tooltip-touch-tap-to-show': 'true'}">?</sup>
+    </t>
+
+</templates>

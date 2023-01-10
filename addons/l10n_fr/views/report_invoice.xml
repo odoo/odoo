@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <template id="report_invoice_document_fr" inherit_id="account.report_invoice_document">
+            <xpath expr="//t[@t-if='o.partner_shipping_id and (o.partner_shipping_id != o.partner_id)']/div/t/div[@t-if='o.partner_id.vat']" position="after">
+                <div t-if="o.partner_id.siret and o.partner_id.country_code == 'FR'">
+                    SIRET: <t t-out="o.partner_id.siret"/>
+                </div>
+            </xpath>
+
+            <xpath expr="//t[@t-elif='o.partner_shipping_id and (o.partner_shipping_id == o.partner_id)']/div/t[@t-set='address']/div[@t-if='o.partner_id.vat']" position="after">
+                <div t-if="o.partner_id.siret and o.partner_id.country_code == 'FR'">
+                    SIRET: <t t-out="o.partner_id.siret"/>
+                </div>
+            </xpath>
+
+            <xpath expr="//t[@t-else='']/div/t/div[@t-if='o.partner_id.vat']" position="after">
+                <div t-if="o.partner_id.siret and o.partner_id.country_code == 'FR'">
+                    SIRET: <t t-out="o.partner_id.siret"/>
+                </div>
+            </xpath>
+        </template>
+    </data>
+</odoo>

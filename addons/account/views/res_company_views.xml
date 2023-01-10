@@ -15,6 +15,11 @@
                     <field name="message_ids"/>
                 </div>
             </xpath>
+            <xpath expr="//field[@name='company_registry']" position="replace">
+                <field name="company_registry_label" invisible="1"/>
+                <widget name="localized_label" label_compute_field="company_registry_label" for="company_registry" class="o_td_label"/>
+                <field name="company_registry" nolabel="1"/>
+            </xpath>
         </field>
     </record>
 

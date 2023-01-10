@@ -297,5 +297,18 @@
               </p>
             </field>
         </record>
+
+        <record id="view_partner_form" model="ir.ui.view">
+            <field name="name">res.partner.form.inherit.account</field>
+            <field name="model">res.partner</field>
+            <field name="inherit_id" ref="base.view_partner_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='company_registry']" position="replace">
+                    <field name="company_registry_label" invisible="1"/>
+                    <widget name="localized_label" label_compute_field="company_registry_label" for="company_registry" class="o_td_label"/>
+                    <field name="company_registry" nolabel="1"/>
+                </xpath>
+            </field>
+        </record>
     </data>
 </odoo>
