@@ -158,9 +158,7 @@ class TestSaleStockMargin(TestStockValuationCommon):
 
         sale_order.picking_ids.move_ids[0].quantity_done = 2
         sale_order.picking_ids.move_ids[1].quantity_done = 3
-
-        res = sale_order.picking_ids.button_validate()
-        Form(self.env[res['res_model']].with_context(res['context'])).save().process()
+        sale_order.picking_ids.button_validate()
 
         self.assertAlmostEqual(order_line_1.purchase_price, 43)       # (35 + 51) / 2
         self.assertAlmostEqual(order_line_2.purchase_price, 12.5)     # (17 + 11 + 11 + 11) / 4
