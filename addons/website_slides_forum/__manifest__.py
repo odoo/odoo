@@ -25,8 +25,8 @@
     ],
     'auto_install': True,
     'assets': {
-        'web.assets_frontend': [
-            'website_slides_forum/static/src/js/**/*',
+        'website.assets_editor': [
+            'website_slides_forum/static/src/js/website_slides_forum.editor.js',
         ],
     },
     'license': 'LGPL-3',
