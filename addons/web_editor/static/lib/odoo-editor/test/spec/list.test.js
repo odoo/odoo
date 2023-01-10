@@ -1952,7 +1952,7 @@ describe('List', () => {
                                 await deleteForward(editor);
                             },
                             contentAfter:
-                                '<ol><li>abc[]def</li><li class="oe-nested"><ol><li>ghi</li></ol></li></ol>',
+                                '<ol><li>abc[]ef</li><li class="oe-nested"><ol><li>ghi</li></ol></li></ol>',
                         });
                     });
                     it('should merge a non-indented list item into an indented list item', async () => {
@@ -1972,7 +1972,7 @@ describe('List', () => {
                                 await deleteForward(editor);
                                 await deleteForward(editor);
                             },
-                            contentAfter: '<ul><li>abc[]def</li></ul>',
+                            contentAfter: '<ul><li>abc[]ef</li></ul>',
                         });
                     });
                     it('should merge an indented list item into a non-indented list item', async () => {
@@ -1985,7 +1985,7 @@ describe('List', () => {
                                 await deleteForward(editor);
                             },
                             contentAfter:
-                                '<ul class="o_checklist"><li>abc[]def</li><li class="oe-nested"><ul class="o_checklist"><li class="o_checked">ghi</li></ul></li></ul>',
+                                '<ul class="o_checklist"><li>abc[]ef</li><li class="oe-nested"><ul class="o_checklist"><li class="o_checked">ghi</li></ul></li></ul>',
                         });
                     });
                     it('should merge the only item in an indented list into a non-indented list item and remove the now empty indented list', async () => {
@@ -1997,13 +1997,12 @@ describe('List', () => {
                                 await deleteForward(editor);
                                 await deleteForward(editor);
                             },
-                            contentAfter: '<ul class="o_checklist"><li>abc[]def</li></ul>',
+                            contentAfter: '<ul class="o_checklist"><li>abc[]ef</li></ul>',
                         });
                     });
                 });
                 describe('Complex merges', () => {
                     it('should merge a list item into a paragraph', async () => {
-                        // Note: Not perfect but consistent with backspace, to change this, we should change backspace
                         await testEditor(BasicEditor, {
                             contentBefore: '<p>ab[]cd</p><ul><li>ef</li><li>gh</li></ul>',
                             stepFunction: async editor => {
@@ -2012,7 +2011,7 @@ describe('List', () => {
                                 await deleteForward(editor);
                                 await deleteForward(editor);
                             },
-                            contentAfter: '<p>ab[]ef</p><ul><li>gh</li></ul>',
+                            contentAfter: '<p>ab[]f</p><ul><li>gh</li></ul>',
                         });
                     });
                     it('should merge a paragraph into a list item', async () => {
@@ -2058,7 +2057,7 @@ describe('List', () => {
                                 await deleteForward(editor);
                             },
                             contentAfter:
-                                '<p>ab[]ef</p><ul class="o_checklist"><li class="o_checked">gh</li></ul>',
+                                '<p>ab[]f</p><ul class="o_checklist"><li class="o_checked">gh</li></ul>',
                         });
                     });
                     it('should merge a paragraph into a checklist item', async () => {
@@ -2977,7 +2976,7 @@ describe('List', () => {
                                 contentBefore:
                                     '<ol><li class="oe-nested"><ol><li>[]abc</li></ol></li></ol>',
                                 stepFunction: deleteBackward,
-                                contentAfter: '<ol><li>[]abc</li></ol>',
+                                contentAfter: '<p>[]abc</p>',
                             });
                         });
                         it('should delete the first character in a list item', async () => {
@@ -3018,20 +3017,20 @@ describe('List', () => {
                             await testEditor(BasicEditor, {
                                 contentBefore: '<ol><li>abc</li><li>[]def</li></ol>',
                                 stepFunction: deleteBackward,
-                                contentAfter: '<ol><li>abc[]def</li></ol>',
+                                contentAfter: '<ol><li>abc</li></ol><p>[]def</p>',
                             });
                             // With another list item after.
                             await testEditor(BasicEditor, {
                                 contentBefore: '<ol><li>abc</li><li>[]def</li><li>ghi</li></ol>',
                                 stepFunction: deleteBackward,
-                                contentAfter: '<ol><li>abc[]def</li><li>ghi</li></ol>',
+                                contentAfter: '<ol><li>abc</li></ol><p>[]def</p><ol><li>ghi</li></ol>',
                             });
                             // Where the list item to merge into is empty, with an
                             // empty list item before.
                             await testEditor(BasicEditor, {
                                 contentBefore: '<ol><li><br></li><li><br></li><li>[]abc</li></ol>',
                                 stepFunction: deleteBackward,
-                                contentAfter: '<ol><li><br></li><li>[]abc</li></ol>',
+                                contentAfter: '<ol><li><br></li><li><br></li></ol><p>[]abc</p>',
                             });
                         });
                         it('should rejoin sibling lists', async () => {
@@ -3182,7 +3181,7 @@ describe('List', () => {
                                     '<ol><li class="oe-nested"><ol><li>abc</li></ol></li><li>[]def</li></ol>',
                                 stepFunction: deleteBackward,
                                 contentAfter:
-                                    '<ol><li class="oe-nested"><ol><li>abc[]def</li></ol></li></ol>',
+                                    '<ol><li class="oe-nested"><ol><li>abc</li></ol></li></ol><p>[]def</p>',
                             });
                         });
                         it('should merge the only item in an indented list into a non-indented list item and remove the now empty indented list', async () => {
@@ -3201,14 +3200,14 @@ describe('List', () => {
                                 contentBefore:
                                     '<ol><li class="oe-nested"><ol><li>[]abc</li></ol></li></ol>',
                                 stepFunction: deleteBackward,
-                                contentAfter: '<ol><li>[]abc</li></ol>',
+                                contentAfter: '<p>[]abc</p>',
                             });
                             // With a paragraph before the list:
                             await testEditor(BasicEditor, {
                                 contentBefore:
                                     '<p>abc</p><ol><li class="oe-nested"><ol><li>[]def</li></ol></li></ol>',
                                 stepFunction: deleteBackward,
-                                contentAfter: '<p>abc</p><ol><li>[]def</li></ol>',
+                                contentAfter: '<p>abc</p><p>[]def</p>',
                             });
                         });
                         it.skip('should outdent while nested within a list item', async () => {
@@ -3280,7 +3279,7 @@ describe('List', () => {
                                     '<ol><li>abc</li><li class="oe-nested"><ol><li>[]<br></li><li><br></li></ol></li><li>def</li></ol>',
                                 stepFunction: deleteBackward,
                                 contentAfter:
-                                    '<ol><li>abc</li><li>[]<br></li><li class="oe-nested"><ol><li><br></li></ol></li><li>def</li></ol>',
+                                    '<ol><li>abc</li></ol><p>[]<br></p><ol><li class="oe-nested"><ol><li><br></li></ol></li><li>def</li></ol>',
                             });
                         });
                         it('should outdent an empty list within a list', async () => {
@@ -3288,7 +3287,7 @@ describe('List', () => {
                                 contentBefore:
                                     '<ol><li>abc</li><li class="oe-nested"><ol><li>[]<br></li></ol></li><li>def</li></ol>',
                                 stepFunction: deleteBackward,
-                                contentAfter: '<ol><li>abc</li><li>[]<br></li><li>def</li></ol>',
+                                contentAfter: '<ol><li>abc</li></ol><p>[]<br></p><ol><li>def</li></ol>',
                             });
                         });
                         it('should outdent an empty list', async () => {
@@ -3296,7 +3295,7 @@ describe('List', () => {
                                 contentBefore:
                                     '<ol><li class="oe-nested"><ol><li><br>[]</li></ol></li></ol>',
                                 stepFunction: deleteBackward,
-                                contentAfter: '<ol><li>[]<br></li></ol>',
+                                contentAfter: '<p>[]<br></p>',
                             });
                         });
                         it("should outdent a list to the point that it's a paragraph", async () => {
@@ -3364,7 +3363,7 @@ describe('List', () => {
                                 contentBefore:
                                     '<ul><li class="oe-nested"><ul><li>[]abc</li></ul></li></ul>',
                                 stepFunction: deleteBackward,
-                                contentAfter: '<ul><li>[]abc</li></ul>',
+                                contentAfter: '<p>[]abc</p>',
                             });
                         });
                         it('should delete the first character in a list item', async () => {
@@ -3405,20 +3404,20 @@ describe('List', () => {
                             await testEditor(BasicEditor, {
                                 contentBefore: '<ul><li>abc</li><li>[]def</li></ul>',
                                 stepFunction: deleteBackward,
-                                contentAfter: '<ul><li>abc[]def</li></ul>',
+                                contentAfter: '<ul><li>abc</li></ul><p>[]def</p>',
                             });
                             // With another list item after.
                             await testEditor(BasicEditor, {
                                 contentBefore: '<ul><li>abc</li><li>[]def</li><li>ghi</li></ul>',
                                 stepFunction: deleteBackward,
-                                contentAfter: '<ul><li>abc[]def</li><li>ghi</li></ul>',
+                                contentAfter: '<ul><li>abc</li></ul><p>[]def</p><ul><li>ghi</li></ul>',
                             });
                             // Where the list item to merge into is empty, with an
                             // empty list item before.
                             await testEditor(BasicEditor, {
                                 contentBefore: '<ul><li><br></li><li><br></li><li>[]abc</li></ul>',
                                 stepFunction: deleteBackward,
-                                contentAfter: '<ul><li><br></li><li>[]abc</li></ul>',
+                                contentAfter: '<ul><li><br></li><li><br></li></ul><p>[]abc</p>',
                             });
                         });
                         it('should rejoin sibling lists', async () => {
@@ -3584,7 +3583,7 @@ describe('List', () => {
                                     '<ul><li class="oe-nested"><ul><li>abc</li></ul></li><li>[]def</li></ul>',
                                 stepFunction: deleteBackward,
                                 contentAfter:
-                                    '<ul><li class="oe-nested"><ul><li>abc[]def</li></ul></li></ul>',
+                                    '<ul><li class="oe-nested"><ul><li>abc</li></ul></li></ul><p>[]def</p>',
                             });
                         });
                         it('should merge the only item in an indented list into a non-indented list item and remove the now empty indented list', async () => {
@@ -3603,14 +3602,14 @@ describe('List', () => {
                                 contentBefore:
                                     '<ul><li class="oe-nested"><ul><li>[]abc</li></ul></li></ul>',
                                 stepFunction: deleteBackward,
-                                contentAfter: '<ul><li>[]abc</li></ul>',
+                                contentAfter: '<p>[]abc</p>',
                             });
                             // With a paragraph before the list:
                             await testEditor(BasicEditor, {
                                 contentBefore:
                                     '<p>abc</p><ul><li class="oe-nested"><ul><li>[]def</li></ul></li></ul>',
                                 stepFunction: deleteBackward,
-                                contentAfter: '<p>abc</p><ul><li>[]def</li></ul>',
+                                contentAfter: '<p>abc</p><p>[]def</p>',
                             });
                         });
                         it('should outdent an empty list item within a list', async () => {
@@ -3619,7 +3618,7 @@ describe('List', () => {
                                     '<ul><li>abc</li><li class="oe-nested"><ul><li>[]<br></li><li><br></li></ul></li><li>def</li></ul>',
                                 stepFunction: deleteBackward,
                                 contentAfter:
-                                    '<ul><li>abc</li><li>[]<br></li><li class="oe-nested"><ul><li><br></li></ul></li><li>def</li></ul>',
+                                    '<ul><li>abc</li></ul><p>[]<br></p><ul><li class="oe-nested"><ul><li><br></li></ul></li><li>def</li></ul>',
                             });
                         });
                         it('should outdent an empty list within a list', async () => {
@@ -3627,7 +3626,7 @@ describe('List', () => {
                                 contentBefore:
                                     '<ul><li>abc</li><li class="oe-nested"><ul><li>[]<br></li></ul></li><li>def</li></ul>',
                                 stepFunction: deleteBackward,
-                                contentAfter: '<ul><li>abc</li><li>[]<br></li><li>def</li></ul>',
+                                contentAfter: '<ul><li>abc</li></ul><p>[]<br></p><ul><li>def</li></ul>',
                             });
                         });
                         it('should outdent an empty list', async () => {
@@ -3635,7 +3634,7 @@ describe('List', () => {
                                 contentBefore:
                                     '<ul><li class="oe-nested"><ul><li><br>[]</li></ul></li></ul>',
                                 stepFunction: deleteBackward,
-                                contentAfter: '<ul><li>[]<br></li></ul>',
+                                contentAfter: '<p>[]<br></p>',
                             });
                         });
                         it("should outdent a list to the point that it's a paragraph", async () => {
@@ -3720,7 +3719,7 @@ describe('List', () => {
                                     '<ul class="o_checklist"><li class="oe-nested"><ul class="o_checklist"><li class="o_checked">[]abc</li></ul></li></ul>',
                                 stepFunction: deleteBackward,
                                 contentAfter:
-                                    '<ul class="o_checklist"><li class="o_checked">[]abc</li></ul>',
+                                    '<p>[]abc</p>',
                             });
                         });
                         it('should delete the first character in a list item', async () => {
@@ -3780,7 +3779,7 @@ describe('List', () => {
                                     '<ul class="o_checklist"><li class="o_checked">abc</li><li class="o_checked">[]def</li></ul>',
                                 stepFunction: deleteBackward,
                                 contentAfter:
-                                    '<ul class="o_checklist"><li class="o_checked">abc[]def</li></ul>',
+                                    '<ul class="o_checklist"><li class="o_checked">abc</li></ul><p>[]def</p>',
                             });
                             await testEditor(BasicEditor, {
                                 removeCheckIds: true,
@@ -3788,14 +3787,14 @@ describe('List', () => {
                                     '<ul class="o_checklist"><li class="o_checked">abc</li><li>[]def</li></ul>',
                                 stepFunction: deleteBackward,
                                 contentAfter:
-                                    '<ul class="o_checklist"><li class="o_checked">abc[]def</li></ul>',
+                                    '<ul class="o_checklist"><li class="o_checked">abc</li></ul><p>[]def</p>',
                             });
                             await testEditor(BasicEditor, {
                                 removeCheckIds: true,
                                 contentBefore:
                                     '<ul class="o_checklist"><li>abc</li><li class="o_checked">[]def</li></ul>',
                                 stepFunction: deleteBackward,
-                                contentAfter: '<ul class="o_checklist"><li>abc[]def</li></ul>',
+                                contentAfter: '<ul class="o_checklist"><li>abc</li></ul><p>[]def</p>',
                             });
                             // With another list item after.
                             await testEditor(BasicEditor, {
@@ -3804,7 +3803,7 @@ describe('List', () => {
                                     '<ul class="o_checklist"><li class="o_checked">abc</li><li class="o_checked">[]def</li><li class="o_checked">ghi</li></ul>',
                                 stepFunction: deleteBackward,
                                 contentAfter:
-                                    '<ul class="o_checklist"><li class="o_checked">abc[]def</li><li class="o_checked">ghi</li></ul>',
+                                    '<ul class="o_checklist"><li class="o_checked">abc</li></ul><p>[]def</p><ul class="o_checklist"><li class="o_checked">ghi</li></ul>',
                             });
                             await testEditor(BasicEditor, {
                                 removeCheckIds: true,
@@ -3812,7 +3811,7 @@ describe('List', () => {
                                     '<ul class="o_checklist"><li class="o_checked">abc</li><li>[]def</li><li>ghi</li></ul>',
                                 stepFunction: deleteBackward,
                                 contentAfter:
-                                    '<ul class="o_checklist"><li class="o_checked">abc[]def</li><li>ghi</li></ul>',
+                                    '<ul class="o_checklist"><li class="o_checked">abc</li></ul><p>[]def</p><ul class="o_checklist"><li>ghi</li></ul>',
                             });
                             await testEditor(BasicEditor, {
                                 removeCheckIds: true,
@@ -3820,7 +3819,7 @@ describe('List', () => {
                                     '<ul class="o_checklist"><li class="o_checked">abc</li><li>[]def</li><li class="o_checked">ghi</li></ul>',
                                 stepFunction: deleteBackward,
                                 contentAfter:
-                                    '<ul class="o_checklist"><li class="o_checked">abc[]def</li><li class="o_checked">ghi</li></ul>',
+                                    '<ul class="o_checklist"><li class="o_checked">abc</li></ul><p>[]def</p><ul class="o_checklist"><li class="o_checked">ghi</li></ul>',
                             });
                             // Where the list item to merge into is empty, with an
                             // empty list item before.
@@ -3830,7 +3829,7 @@ describe('List', () => {
                                     '<ul class="o_checklist"><li><br></li><li><br></li><li class="o_checked">[]abc</li></ul>',
                                 stepFunction: deleteBackward,
                                 contentAfter:
-                                    '<ul class="o_checklist"><li><br></li><li>[]abc</li></ul>',
+                                    '<ul class="o_checklist"><li><br></li><li><br></li></ul><p>[]abc</p>',
                             });
                         });
                         it('should rejoin sibling lists', async () => {
@@ -4064,7 +4063,7 @@ describe('List', () => {
                                     '<ul class="o_checklist"><li class="oe-nested"><ul class="o_checklist"><li class="o_checked">abc</li></ul></li><li class="o_checked">[]def</li></ul>',
                                 stepFunction: deleteBackward,
                                 contentAfter:
-                                    '<ul class="o_checklist"><li class="oe-nested"><ul class="o_checklist"><li class="o_checked">abc[]def</li></ul></li></ul>',
+                                    '<ul class="o_checklist"><li class="oe-nested"><ul class="o_checklist"><li class="o_checked">abc</li></ul></li></ul><p>[]def</p>',
                             });
                         });
                         it('should merge the only item in an indented list into a non-indented list item and remove the now empty indented list', async () => {
@@ -4087,7 +4086,7 @@ describe('List', () => {
                                     '<ul class="o_checklist"><li class="oe-nested"><ul class="o_checklist"><li class="o_checked">[]abc</li></ul></li></ul>',
                                 stepFunction: deleteBackward,
                                 contentAfter:
-                                    '<ul class="o_checklist"><li class="o_checked">[]abc</li></ul>',
+                                    '<p>[]abc</p>',
                             });
                             // With a paragraph before the list:
                             await testEditor(BasicEditor, {
@@ -4096,7 +4095,7 @@ describe('List', () => {
                                     '<p>abc</p><ul class="o_checklist"><li class="oe-nested"><ul class="o_checklist"><li class="o_checked">[]def</li></ul></li></ul>',
                                 stepFunction: deleteBackward,
                                 contentAfter:
-                                    '<p>abc</p><ul class="o_checklist"><li class="o_checked">[]def</li></ul>',
+                                    '<p>abc</p><p>[]def</p>',
                             });
                         });
                         it.skip('should outdent while nested within a list item', async () => {
@@ -4140,16 +4139,18 @@ describe('List', () => {
                                     </ul>`),
                                 stepFunction: deleteBackward,
                                 contentAfter: unformat(`
-                                    <ul class="o_checklist">
-                                        <li>abc</li>
-                                        <li>[]<br></li>
-                                        <li class="oe-nested">
-                                            <ul class="o_checklist">
-                                                <li><br></li>
-                                            </ul>
-                                        </li>
-                                        <li class="o_checked">def</li>
-                                    </ul>`),
+                                <ul class="o_checklist">
+                                    <li>abc</li>
+                                </ul>
+                                <p>[]<br></p>
+                                <ul class="o_checklist">
+                                    <li class="oe-nested">
+                                        <ul class="o_checklist">
+                                            <li><br></li>
+                                        </ul>
+                                    </li>
+                                    <li class="o_checked">def</li>
+                                </ul>`),
                             });
                         });
                         it('should outdent an empty list within a list', async () => {
@@ -4159,7 +4160,7 @@ describe('List', () => {
                                     '<ul class="o_checklist"><li>abc</li><li class="oe-nested"><ul class="o_checklist"><li>[]<br></li></ul></li><li class="o_checked">def</li></ul>',
                                 stepFunction: deleteBackward,
                                 contentAfter:
-                                    '<ul class="o_checklist"><li>abc</li><li>[]<br></li><li class="o_checked">def</li></ul>',
+                                    '<ul class="o_checklist"><li>abc</li></ul><p>[]<br></p><ul class="o_checklist"><li class="o_checked">def</li></ul>',
                             });
                         });
                         it('should outdent an empty list', async () => {
@@ -4169,7 +4170,7 @@ describe('List', () => {
                                     '<ul class="o_checklist"><li class="oe-nested"><ul class="o_checklist"><li class="o_checked"><br>[]</li></ul></li></ul>',
                                 stepFunction: deleteBackward,
                                 contentAfter:
-                                    '<ul class="o_checklist"><li class="o_checked">[]<br></li></ul>',
+                                    '<p>[]<br></p>',
                             });
                         });
                         it("should outdent a list to the point that it's a paragraph", async () => {
@@ -4318,7 +4319,7 @@ describe('List', () => {
                                     '<ul><li>abc</li><li class="oe-nested"><ol><li>[]def</li><li>ghi</li></ol></li></ul>',
                                 stepFunction: deleteBackward,
                                 contentAfter:
-                                    '<ul><li>abc</li><li>[]def</li><li class="oe-nested"><ol><li>ghi</li></ol></li></ul>',
+                                    '<ul><li>abc</li></ul><p>[]def</p><ul><li class="oe-nested"><ol><li>ghi</li></ol></li></ul>',
                             });
                         });
                         it('should merge an ordered list item into an unordered list item that is in the same ordered list', async () => {
@@ -4327,7 +4328,7 @@ describe('List', () => {
                                     '<ol><li class="oe-nested"><ul><li>abc</li></ul></li><li>[]def</li></ol>',
                                 stepFunction: deleteBackward,
                                 contentAfter:
-                                    '<ol><li class="oe-nested"><ul><li>abc[]def</li></ul></li></ol>',
+                                    '<ol><li class="oe-nested"><ul><li>abc</li></ul></li></ol><p>[]def</p>',
                             });
                         });
                         it('should merge the only item in an ordered list that is in an unordered list into a list item that is in the same unordered list, and remove the now empty ordered list', async () => {
@@ -4346,14 +4347,14 @@ describe('List', () => {
                                 contentBefore:
                                     '<ul><li class="oe-nested"><ol><li>[]abc</li></ol></li></ul>',
                                 stepFunction: deleteBackward,
-                                contentAfter: '<ul><li>[]abc</li></ul>',
+                                contentAfter: '<p>[]abc</p>',
                             });
                             // With a paragraph before the list:
                             await testEditor(BasicEditor, {
                                 contentBefore:
                                     '<p>abc</p><ul><li class="oe-nested"><ol><li>[]def</li></ol></li></ul>',
                                 stepFunction: deleteBackward,
-                                contentAfter: '<p>abc</p><ul><li>[]def</li></ul>',
+                                contentAfter: '<p>abc</p><p>[]def</p>',
                             });
                         });
                         it('should outdent an empty ordered list item within an unordered list', async () => {
@@ -4362,7 +4363,7 @@ describe('List', () => {
                                     '<ul><li>abc</li><li class="oe-nested"><ol><li>[]<br></li><li><br></li></ol></li><li>def</li></ul>',
                                 stepFunction: deleteBackward,
                                 contentAfter:
-                                    '<ul><li>abc</li><li>[]<br></li><li class="oe-nested"><ol><li><br></li></ol></li><li>def</li></ul>',
+                                    '<ul><li>abc</li></ul><p>[]<br></p><ul><li class="oe-nested"><ol><li><br></li></ol></li><li>def</li></ul>',
                             });
                         });
                         it('should outdent an empty ordered list within an unordered list', async () => {
@@ -4370,7 +4371,7 @@ describe('List', () => {
                                 contentBefore:
                                     '<ul><li>abc</li><li class="oe-nested"><ol><li>[]<br></li></ol></li><li>def</li></ul>',
                                 stepFunction: deleteBackward,
-                                contentAfter: '<ul><li>abc</li><li>[]<br></li><li>def</li></ul>',
+                                contentAfter: '<ul><li>abc</li></ul><p>[]<br></p><ul><li>def</li></ul>',
                             });
                         });
                         it('should outdent an empty ordered list within an unordered list', async () => {
@@ -4378,7 +4379,7 @@ describe('List', () => {
                                 contentBefore:
                                     '<ul><li class="oe-nested"><ol><li><br>[]</li></ol></li></ul>',
                                 stepFunction: deleteBackward,
-                                contentAfter: '<ul><li>[]<br></li></ul>',
+                                contentAfter: '<p>[]<br></p>',
                             });
                         });
                     });
@@ -4434,7 +4435,9 @@ describe('List', () => {
                                 contentAfter: unformat(`
                                     <ol>
                                         <li>abc</li>
-                                        <li>[]def</li>
+                                    </ol>
+                                    <p>[]def</p>
+                                    <ol>
                                         <li class="oe-nested">
                                             <ul>
                                                 <li>ghi</li>
@@ -4449,7 +4452,7 @@ describe('List', () => {
                                     '<ul><li class="oe-nested"><ol><li>abc</li></ol></li><li>[]def</li></ul>',
                                 stepFunction: deleteBackward,
                                 contentAfter:
-                                    '<ul><li class="oe-nested"><ol><li>abc[]def</li></ol></li></ul>',
+                                    '<ul><li class="oe-nested"><ol><li>abc</li></ol></li></ul><p>[]def</p>',
                             });
                         });
                         it('should merge the only item in an unordered list that is in an ordered list into a list item that is in the same ordered list, and remove the now empty unordered list', async () => {
@@ -4468,14 +4471,14 @@ describe('List', () => {
                                 contentBefore:
                                     '<ol><li class="oe-nested"><ul><li>[]abc</li></ul></li></ol>',
                                 stepFunction: deleteBackward,
-                                contentAfter: '<ol><li>[]abc</li></ol>',
+                                contentAfter: '<p>[]abc</p>',
                             });
                             // With a paragraph before the list:
                             await testEditor(BasicEditor, {
                                 contentBefore:
                                     '<p>abc</p><ol><li class="oe-nested"><ul><li>[]def</li></ul></li></ol>',
                                 stepFunction: deleteBackward,
-                                contentAfter: '<p>abc</p><ol><li>[]def</li></ol>',
+                                contentAfter: '<p>abc</p><p>[]def</p>',
                             });
                         });
                         it('should outdent an empty unordered list item within an ordered list', async () => {
@@ -4484,7 +4487,7 @@ describe('List', () => {
                                     '<ol><li>abc</li><li class="oe-nested"><ul><li>[]<br></li><li><br></li></ul></li><li>def</li></ol>',
                                 stepFunction: deleteBackward,
                                 contentAfter:
-                                    '<ol><li>abc</li><li>[]<br></li><li class="oe-nested"><ul><li><br></li></ul></li><li>def</li></ol>',
+                                    '<ol><li>abc</li></ol><p>[]<br></p><ol><li class="oe-nested"><ul><li><br></li></ul></li><li>def</li></ol>',
                             });
                         });
                         it('should outdent an empty unordered list within an ordered list', async () => {
@@ -4492,7 +4495,7 @@ describe('List', () => {
                                 contentBefore:
                                     '<ol><li>abc</li><li class="oe-nested"><ul><li>[]<br></li></ul></li><li>def</li></ol>',
                                 stepFunction: deleteBackward,
-                                contentAfter: '<ol><li>abc</li><li>[]<br></li><li>def</li></ol>',
+                                contentAfter: '<ol><li>abc</li></ol><p>[]<br></p><ol><li>def</li></ol>',
                             });
                         });
                         it('should outdent an empty unordered list within an ordered list', async () => {
@@ -4500,7 +4503,7 @@ describe('List', () => {
                                 contentBefore:
                                     '<ol><li class="oe-nested"><ul><li><br>[]</li></ul></li></ol>',
                                 stepFunction: deleteBackward,
-                                contentAfter: '<ol><li>[]<br></li></ol>',
+                                contentAfter: '<p>[]<br></p>',
                             });
                         });
                     });
@@ -4563,7 +4566,7 @@ describe('List', () => {
                                     '<ul class="o_checklist"><li class="oe-nested"><ul><li>abc</li></ul></li><li>[]def</li></ul>',
                                 stepFunction: deleteBackward,
                                 contentAfter:
-                                    '<ul class="o_checklist"><li class="oe-nested"><ul><li>abc[]def</li></ul></li></ul>',
+                                    '<ul class="o_checklist"><li class="oe-nested"><ul><li>abc</li></ul></li></ul><p>[]def</p>',
                             });
                         });
                         it('should merge the only item in an checklist list that is in an unordered list into a checklist item that is in the same unordered list, and remove the now empty checklist list', async () => {
@@ -4582,14 +4585,14 @@ describe('List', () => {
                                 contentBefore:
                                     '<ul><li class="oe-nested"><ul class="o_checklist"><li class="o_checked">[]abc</li></ul></li></ul>',
                                 stepFunction: deleteBackward,
-                                contentAfter: '<ul><li class="o_checked">[]abc</li></ul>',
+                                contentAfter: '<p>[]abc</p>',
                             });
                             // With a paragraph before the list:
                             await testEditor(BasicEditor, {
                                 contentBefore:
                                     '<p>abc</p><ul><li class="oe-nested"><ul class="o_checklist"><li class="o_checked">[]def</li></ul></li></ul>',
                                 stepFunction: deleteBackward,
-                                contentAfter: '<p>abc</p><ul><li class="o_checked">[]def</li></ul>',
+                                contentAfter: '<p>abc</p><p>[]def</p>',
                             });
                         });
                         it('should outdent an empty checklist list item within an unordered list', async () => {
@@ -4599,7 +4602,7 @@ describe('List', () => {
                                     '<ul><li>abc</li><li class="oe-nested"><ul class="o_checklist"><li>[]<br></li><li><br></li></ul></li><li>def</li></ul>',
                                 stepFunction: deleteBackward,
                                 contentAfter:
-                                    '<ul><li>abc</li><li>[]<br></li><li class="oe-nested"><ul class="o_checklist"><li><br></li></ul></li><li>def</li></ul>',
+                                    '<ul><li>abc</li></ul><p>[]<br></p><ul><li class="oe-nested"><ul class="o_checklist"><li><br></li></ul></li><li>def</li></ul>',
                             });
                         });
                         it('should outdent an empty checklist list within an unordered list', async () => {
@@ -4607,7 +4610,7 @@ describe('List', () => {
                                 contentBefore:
                                     '<ul><li>abc</li><li class="oe-nested"><ul class="o_checklist"><li>[]<br></li></ul></li><li>def</li></ul>',
                                 stepFunction: deleteBackward,
-                                contentAfter: '<ul><li>abc</li><li>[]<br></li><li>def</li></ul>',
+                                contentAfter: '<ul><li>abc</li></ul><p>[]<br></p><ul><li>def</li></ul>',
                             });
                         });
                         it('should outdent an empty checklist list within an unordered list', async () => {
@@ -4615,7 +4618,7 @@ describe('List', () => {
                                 contentBefore:
                                     '<ul><li class="oe-nested"><ul class="o_checklist"><li><br>[]</li></ul></li></ul>',
                                 stepFunction: deleteBackward,
-                                contentAfter: '<ul><li>[]<br></li></ul>',
+                                contentAfter: '<p>[]<br></p>',
                             });
                         });
                     });
@@ -4704,7 +4707,7 @@ describe('List', () => {
                                     '<ul><li class="oe-nested"><ul class="o_checklist"><li class="o_checked">abc</li></ul></li><li>[]def</li></ul>',
                                 stepFunction: deleteBackward,
                                 contentAfter:
-                                    '<ul><li class="oe-nested"><ul class="o_checklist"><li class="o_checked">abc[]def</li></ul></li></ul>',
+                                    '<ul><li class="oe-nested"><ul class="o_checklist"><li class="o_checked">abc</li></ul></li></ul><p>[]def</p>',
                             });
                         });
                         it('should merge the only item in an unordered list that is in an checklist list into a checklist item that is in the same checklist list, and remove the now empty unordered list', async () => {
@@ -4726,7 +4729,7 @@ describe('List', () => {
                                 contentBefore:
                                     '<ul class="o_checklist"><li class="oe-nested"><ul><li>[]abc</li></ul></li></ul>',
                                 stepFunction: deleteBackward,
-                                contentAfter: '<ul class="o_checklist"><li>[]abc</li></ul>',
+                                contentAfter: '<p>[]abc</p>',
                             });
                             // With a paragraph before the list:
                             await testEditor(BasicEditor, {
@@ -4735,7 +4738,7 @@ describe('List', () => {
                                     '<p>abc</p><ul class="o_checklist"><li class="oe-nested"><ul><li>[]def</li></ul></li></ul>',
                                 stepFunction: deleteBackward,
                                 contentAfter:
-                                    '<p>abc</p><ul class="o_checklist"><li>[]def</li></ul>',
+                                    '<p>abc</p><p>[]def</p>',
                             });
                         });
                         it('should outdent an empty unordered list item within an checklist list (o_checked)', async () => {
@@ -4745,7 +4748,7 @@ describe('List', () => {
                                     '<ul class="o_checklist"><li class="o_checked">abc</li><li class="oe-nested"><ul><li>[]<br></li><li><br></li></ul></li><li class="o_checked">def</li></ul>',
                                 stepFunction: deleteBackward,
                                 contentAfter:
-                                    '<ul class="o_checklist"><li class="o_checked">abc</li><li>[]<br></li><li class="oe-nested"><ul><li><br></li></ul></li><li class="o_checked">def</li></ul>',
+                                    '<ul class="o_checklist"><li class="o_checked">abc</li></ul><p>[]<br></p><ul class="o_checklist"><li class="oe-nested"><ul><li><br></li></ul></li><li class="o_checked">def</li></ul>',
                             });
                         });
                         it('should outdent an empty unordered list item within an checklist list (unchecked)', async () => {
@@ -4755,7 +4758,7 @@ describe('List', () => {
                                     '<ul class="o_checklist"><li>abc</li><li class="oe-nested"><ul><li>[]<br></li><li><br></li></ul></li><li>def</li></ul>',
                                 stepFunction: deleteBackward,
                                 contentAfter:
-                                    '<ul class="o_checklist"><li>abc</li><li>[]<br></li><li class="oe-nested"><ul><li><br></li></ul></li><li>def</li></ul>',
+                                    '<ul class="o_checklist"><li>abc</li></ul><p>[]<br></p><ul class="o_checklist"><li class="oe-nested"><ul><li><br></li></ul></li><li>def</li></ul>',
                             });
                         });
                         it('should outdent an empty unordered list within an checklist list (checked)', async () => {
@@ -4765,7 +4768,7 @@ describe('List', () => {
                                     '<ul class="o_checklist"><li class="o_checked">abc</li><li class="oe-nested"><ul><li>[]<br></li></ul></li><li class="o_checked">def</li></ul>',
                                 stepFunction: deleteBackward,
                                 contentAfter:
-                                    '<ul class="o_checklist"><li class="o_checked">abc</li><li>[]<br></li><li class="o_checked">def</li></ul>',
+                                    '<ul class="o_checklist"><li class="o_checked">abc</li></ul><p>[]<br></p><ul class="o_checklist"><li class="o_checked">def</li></ul>',
                             });
                         });
                         it('should outdent an empty unordered list within an checklist list (unchecked)', async () => {
@@ -4775,7 +4778,7 @@ describe('List', () => {
                                     '<ul class="o_checklist"><li>abc</li><li class="oe-nested"><ul><li>[]<br></li></ul></li><li>def</li></ul>',
                                 stepFunction: deleteBackward,
                                 contentAfter:
-                                    '<ul class="o_checklist"><li>abc</li><li>[]<br></li><li>def</li></ul>',
+                                    '<ul class="o_checklist"><li>abc</li></ul><p>[]<br></p><ul class="o_checklist"><li>def</li></ul>',
                             });
                         });
                         it('should outdent an empty unordered list within an otherwise empty checklist list', async () => {
@@ -4784,7 +4787,7 @@ describe('List', () => {
                                 contentBefore:
                                     '<ul class="o_checklist"><li class="oe-nested"><ul><li><br>[]</li></ul></li></ul>',
                                 stepFunction: deleteBackward,
-                                contentAfter: '<ul class="o_checklist"><li>[]<br></li></ul>',
+                                contentAfter: '<p>[]<br></p>',
                             });
                         });
                     });
@@ -5484,8 +5487,8 @@ describe('List', () => {
                     stepFunction: deleteBackward,
                     contentAfter: unformat(`
                         <p class="oe_unbreakable">a[]</p>
-                        <p>ef</p>
                         <ol>
+                            <li>ef</li>
                             <li>ghi</li>
                         </ol>`),
                 });
@@ -5503,8 +5506,8 @@ describe('List', () => {
                         <div class="oe_unbreakable">
                             <p>a[]</p>
                         </div>
-                        <p>ef</p>
                         <ol>
+                            <li>ef</li>
                             <li>ghi</li>
                         </ol>`),
                 });
