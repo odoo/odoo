@@ -3586,13 +3586,18 @@ export class OdooEditor extends EventTarget {
             // Move selection if next character is zero-width space
             if (nextCharacter === '\u200B') {
                 focusOffset += 1;
-                while (focusNode && (!focusNode.textContent[focusOffset] || !closestElement(focusNode).isContentEditable)) {
-                    focusNode = nextLeaf(focusNode);
+                let newFocusNode = focusNode;
+                while (newFocusNode && (!newFocusNode.textContent[focusOffset] || !closestElement(newFocusNode).isContentEditable)) {
+                    newFocusNode = nextLeaf(newFocusNode);
                     focusOffset = 0;
                 }
-                const startContainer = ev.shiftKey ? selection.anchorNode : focusNode;
+                if (!focusOffset && closestBlock(focusNode) !== closestBlock(newFocusNode)) {
+                    newFocusNode = focusNode; // Do not move selection to next block.
+                    focusOffset = nodeSize(focusNode);
+                }
+                const startContainer = ev.shiftKey ? selection.anchorNode : newFocusNode;
                 const startOffset = ev.shiftKey ? selection.anchorOffset : focusOffset;
-                setSelection(startContainer, startOffset, focusNode, focusOffset);
+                setSelection(startContainer, startOffset, newFocusNode, focusOffset);
             }
         }
     }

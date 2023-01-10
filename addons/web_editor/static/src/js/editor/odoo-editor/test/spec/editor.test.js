@@ -5466,6 +5466,24 @@ X[]
                     // Final state: '<p>ab<span>\u200B</span>c[]d</p>'
                 });
             });
+            it('should move past a zws (collapsed at the end of a block)', async () => {
+                await testEditor(BasicEditor, {
+                    contentBefore: '<p>ab[]<span>\u200B</span></p><p>cd</p>',
+                    stepFunction: async editor => {
+                        triggerEvent(editor.editable, 'keydown', { key: 'ArrowRight'});
+                    },
+                    contentAfter: '<p>ab<span>\u200B[]</span></p><p>cd</p>',
+                    // Final state: '<p>ab<span>\u200B</span></p><p>[]cd</p>'
+                });
+                await testEditor(BasicEditor, {
+                    contentBefore: '<p>ab<span>[]\u200B</span></p><p>cd</p>',
+                    stepFunction: async editor => {
+                        triggerEvent(editor.editable, 'keydown', { key: 'ArrowRight'});
+                    },
+                    contentAfter: '<p>ab<span>\u200B[]</span></p><p>cd</p>',
+                    // Final state: '<p>ab<span>\u200B</span></p><p>[]cd</p>'
+                });
+            });
             it('should select a zws', async () => {
                 await testEditor(BasicEditor, {
                     contentBefore: '<p>[ab]<span>\u200B</span>cd</p>',
