@@ -13,7 +13,7 @@ General Chart of Accounts.
 Provide Templates for Chart of Accounts, Taxes for Uruguay.
 
 """,
-    'depends': ['account'],
+    'depends': ['l10n_multilang'],
     'data': [
         'data/l10n_uy_chart_data.xml',
         'data/account.account.template.csv',
