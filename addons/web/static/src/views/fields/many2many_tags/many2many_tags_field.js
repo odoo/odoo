@@ -53,6 +53,9 @@ export class Many2ManyTagsField extends Component {
         });
 
         this.update = (recordlist) => {
+            if (!recordlist) {
+                return;
+            }
             if (Array.isArray(recordlist)) {
                 const resIds = recordlist.map((rec) => rec.id);
                 return saveRecord(resIds);
