@@ -16,7 +16,7 @@ class LoginScreen extends SelectCashierMixin(PosComponent) {
         }
     }
     async barcodeCashierAction(code) {
-        if (await super.barcodeCashierAction(code)) {
+        if (await super.barcodeCashierAction(code) && this.env.pos.get_cashier().id) {
             this.back();
         }
     }
