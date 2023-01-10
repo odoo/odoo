@@ -223,7 +223,7 @@ export class ViewCompiler {
             { selector: "widget", fn: this.compileWidget },
         ];
         this.templates = templates;
-        this.ctx = { readonly: "this.props.readonly" };
+        this.ctx = { readonly: "__comp__.props.readonly" };
 
         this.owlDirectiveRegexesWhitelist = this.constructor.OWL_DIRECTIVE_WHITELIST.map(
             (d) => new RegExp(d)
@@ -246,8 +246,10 @@ export class ViewCompiler {
         if (typeof invisible === "boolean") {
             return;
         }
-        const recordExpr = params.recordExpr || "this.props.record";
-        let isVisileExpr = `!this.evalDomainFromRecord(${recordExpr},${JSON.stringify(invisible)})`;
+        const recordExpr = params.recordExpr || "__comp__.props.record";
+        let isVisileExpr = `!__comp__.evalDomainFromRecord(${recordExpr},${JSON.stringify(
+            invisible
+        )})`;
         if (compiled.hasAttribute("t-if")) {
             const formerTif = compiled.getAttribute("t-if");
             isVisileExpr = `( ${formerTif} ) and ${isVisileExpr}`;
@@ -323,7 +325,7 @@ export class ViewCompiler {
         }
         const button = createElement("ViewButton", {
             tag: toStringExpression(tag),
-            record: "this.props.record",
+            record: "__comp__.props.record",
         });
 
         assignOwlDirectives(button, el);
@@ -382,8 +384,8 @@ export class ViewCompiler {
         const field = createElement("Field");
         field.setAttribute("id", `'${fieldId}'`);
         field.setAttribute("name", `'${fieldName}'`);
-        field.setAttribute("record", params.recordExpr || "this.props.record");
-        field.setAttribute("fieldInfo", `this.props.archInfo.fieldNodes['${fieldId}']`);
+        field.setAttribute("record", params.recordExpr || "__comp__.props.record");
+        field.setAttribute("fieldInfo", `__comp__.props.archInfo.fieldNodes['${fieldId}']`);
 
         if (el.hasAttribute("widget")) {
             field.setAttribute("type", `'${el.getAttribute("widget")}'`);
@@ -422,7 +424,7 @@ export class ViewCompiler {
      */
     compileWidget(el) {
         const attrs = {};
-        const props = { record: "this.props.record", readonly: this.ctx.readonly };
+        const props = { record: "__comp__.props.record", readonly: this.ctx.readonly };
         for (const { name, value } of el.attributes) {
             switch (name) {
                 case "class":

@@ -45,6 +45,7 @@ export class ActivityRecord extends Component {
             user_context: this.user.context,
             widget: this.widget,
             luxon,
+            __comp__: Object.assign(Object.create(this), { this: this }),
         };
     }
 }
