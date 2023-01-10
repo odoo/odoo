@@ -367,7 +367,8 @@ class Survey(models.Model):
         This implementation assumes that the order of created questions/answers will be kept between
         the original and the clone, using 'zip()' to match the records between the two.
 
-        Note that when question_ids is provided in the default parameter, it falls back to the standard copy.
+        Note that when question_ids is provided in the default parameter, it falls back to the
+        standard copy, meaning that triggering logic will not be maintained.
         """
         self.ensure_one()
         clone = super(Survey, self).copy(default)
@@ -382,6 +383,7 @@ class Survey(models.Model):
         }
         for src, dst in zip(self.question_ids, clone.question_ids):
             if src.is_conditional:
+                dst.is_conditional = True
                 dst.triggering_question_id = questions_map.get(src.triggering_question_id.id)
                 dst.triggering_answer_id = answers_map.get(src.triggering_answer_id.id)
         return clone
