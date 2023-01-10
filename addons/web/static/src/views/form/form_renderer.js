@@ -93,7 +93,7 @@ export class FormRenderer extends Component {
     }
 }
 
-FormRenderer.template = xml`<t t-call="{{ templates.FormRenderer }}" t-call-context="{}" />`;
+FormRenderer.template = xml`<t t-call="{{ templates.FormRenderer }}" t-call-context="{ __comp__: Object.assign(Object.create(this), { this: this }) }" />`;
 FormRenderer.components = {
     Field,
     FormLabel,
