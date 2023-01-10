@@ -959,6 +959,44 @@ QUnit.module("Fields", (hooks) => {
         );
     });
 
+    QUnit.test("input and remove text without selecting any tag or option", async function (assert) {
+        serverData.models.partner_type.records.push({ id: 13, display_name: "red", color: 8 });
+
+        await makeView({
+            type: "form",
+            resModel: "partner",
+            serverData,
+            arch: '<form><field name="timmy" widget="many2many_tags"/></form>',
+        });
+
+        assert.containsNone(target, ".o_field_many2many_tags .badge");
+        const input = target.querySelector(".o_field_many2many_tags input");
+
+        // enter some text
+        await triggerEvent(input, null, "focus");
+        await click(input);
+        await editInput(input, null, "go");
+        // ensure no selection
+        for (const item of [...target.querySelectorAll(".o-autocomplete--dropdown-menu .o-autocomplete--dropdown-item")]) {
+            triggerEvent(item, null, "mouseleave");
+        }
+        await triggerEvent(input, null, "blur");
+        // ensure we're not adding any value
+        assert.containsNone(document.body, ".modal");
+        assert.containsNone(target, ".o_field_many2many_tags .badge");
+
+        // remove the added text to test behaviour with falsy value
+        await triggerEvent(input, null, "focus");
+        await click(input);
+        await editInput(input, null, "");
+        for (const item of [...target.querySelectorAll(".o-autocomplete--dropdown-menu .o-autocomplete--dropdown-item")]) {
+            triggerEvent(item, null, "mouseleave");
+        }
+        await triggerEvent(input, null, "blur");
+        assert.containsNone(document.body, ".modal");
+        assert.containsNone(target, ".o_field_many2many_tags .badge");
+    });
+
     QUnit.test("Many2ManyTagsField in one2many with display_name", async function (assert) {
         serverData.models.turtle.records[0].partner_ids = [2];
         serverData.views = {
