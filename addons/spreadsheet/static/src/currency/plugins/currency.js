@@ -13,7 +13,7 @@ const DATA_SOURCE_ID = "CURRENCIES";
 class CurrencyPlugin extends spreadsheet.UIPlugin {
     constructor(config) {
         super(config);
-        this.dataSources = config.external.dataSources;
+        this.dataSources = config.custom.dataSources;
         if (this.dataSources) {
             this.dataSources.add(DATA_SOURCE_ID, CurrencyDataSource);
         }

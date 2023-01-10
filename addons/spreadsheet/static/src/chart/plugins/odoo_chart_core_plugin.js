@@ -20,7 +20,7 @@ const { CorePlugin } = spreadsheet;
 export default class OdooChartCorePlugin extends CorePlugin {
     constructor(config) {
         super(config);
-        this.dataSources = config.external.dataSources;
+        this.dataSources = config.custom.dataSources;
 
         /** @type {Object.<string, Chart>} */
         this.charts = {};

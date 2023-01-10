@@ -39,7 +39,7 @@ const { CorePlugin } = spreadsheet;
 export default class PivotCorePlugin extends CorePlugin {
     constructor(config) {
         super(config);
-        this.dataSources = config.external.dataSources;
+        this.dataSources = config.custom.dataSources;
 
         this.nextId = 1;
         /** @type {Object.<string, Pivot>} */

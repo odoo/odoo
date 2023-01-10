@@ -16,7 +16,7 @@ const { Model } = spreadsheet;
  */
 
 export function setupDataSourceEvaluation(model) {
-    model.config.external.dataSources.addEventListener("data-source-updated", () => {
+    model.config.custom.dataSources.addEventListener("data-source-updated", () => {
         const sheetId = model.getters.getActiveSheetId();
         model.dispatch("EVALUATE_CELLS", { sheetId });
     });
@@ -37,7 +37,7 @@ export async function createModelWithDataSource(params = {}) {
         mockRPC: params.mockRPC,
     });
     const model = new Model(params.spreadsheetData, {
-        external: {
+        custom: {
             env,
             dataSources: new DataSources(env.services.orm.silent),
         },
@@ -62,7 +62,7 @@ export async function waitForDataSourcesLoaded(model) {
     // Read a first time in order to trigger the RPC
     readAllCellsValue();
     //@ts-ignore
-    await model.config.external.dataSources.waitForAllLoaded();
+    await model.config.custom.dataSources.waitForAllLoaded();
     await nextTick();
     // Read a second time to trigger the compute format (which could trigger a RPC for currency, in list)
     readAllCellsValue();
