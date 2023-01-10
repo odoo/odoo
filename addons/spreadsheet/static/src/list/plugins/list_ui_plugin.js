@@ -15,7 +15,7 @@ export default class ListUIPlugin extends spreadsheet.UIPlugin {
         super(config);
         /** @type {string} */
         this.selectedListId = undefined;
-        this.env = config.external.env;
+        this.env = config.custom.env;
     }
 
     beforeHandle(cmd) {

@@ -378,7 +378,7 @@ QUnit.module("spreadsheet > Global filters model", {}, () => {
         assert.equal(listDomain.length, 7, "it should have updated the list domain");
 
         const newModel = new Model(model.exportData(), {
-            external: model.config.external,
+            custom: model.config.custom,
         });
 
         assert.equal(newModel.getters.getGlobalFilters().length, 2);
@@ -638,7 +638,7 @@ QUnit.module("spreadsheet > Global filters model", {}, () => {
         const model = new Model(
             {},
             {
-                external: {
+                custom: {
                     dataSources: new DataSources({ ...orm, silent: orm }),
                     env: { services: { orm } },
                 },

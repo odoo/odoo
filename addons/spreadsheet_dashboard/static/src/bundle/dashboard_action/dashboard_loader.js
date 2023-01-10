@@ -211,7 +211,7 @@ export class DashboardLoader {
         const model = new Model(
             migrate(data),
             {
-                external: { env: this.env, orm: this.orm, dataSources },
+                custom: { env: this.env, orm: this.orm, dataSources },
                 mode: "dashboard",
             },
             revisions
