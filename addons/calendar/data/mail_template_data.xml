@@ -457,9 +457,9 @@
         <p placeholder="Enter your message here"><br/></p>
 
     </div>
-    <t t-if="object.event_id.user_id.signature">
+    <t t-if="object.user_id.signature">
         <br />
-        <t t-out="object.event_id.user_id.signature or ''">--<br/>Mitchell Admin</t>
+        <t t-out="object.user_id.signature or ''">--<br/>Mitchell Admin</t>
     </t>
 </div>
             </field>
