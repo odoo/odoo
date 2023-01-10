@@ -281,7 +281,7 @@ class SaleOrder(models.Model):
         discountable = 0
         discountable_per_tax = defaultdict(int)
         reward_applies_on = reward.discount_applicability
-        sequence = max(self.order_line.filtered(lambda x: not x.is_reward_line).mapped('sequence')) + 1
+        sequence = max(self.order_line.filtered(lambda x: not x.is_reward_line).mapped('sequence'), default=10) + 1
         if reward_applies_on == 'order':
             discountable, discountable_per_tax = self._discountable_order(reward)
         elif reward_applies_on == 'specific':
