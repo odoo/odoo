@@ -86,6 +86,7 @@ export class X2ManyField extends Component {
             activeActions: this.activeActions,
             onSelected: (resIds) => saveRecord(resIds),
             onCreateEdit: ({ context }) => this._openRecord({ context }),
+            onUnselect: this.isMany2Many ? false : () => saveRecord(),
         });
 
         this.selectCreate = (params) => {

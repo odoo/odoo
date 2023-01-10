@@ -447,6 +447,10 @@ export function formatText(value) {
     return value || "";
 }
 
+export function formatJson(value) {
+    return value && JSON.stringify(value) || "";
+}
+
 registry
     .category("formatters")
     .add("binary", formatBinary)
@@ -459,6 +463,7 @@ registry
     .add("float_time", formatFloatTime)
     .add("html", (value) => value)
     .add("integer", formatInteger)
+    .add("json", formatJson)
     .add("many2one", formatMany2one)
     .add("many2one_reference", formatInteger)
     .add("one2many", formatX2many)

@@ -8,6 +8,7 @@ import {
     formatFloat,
     formatFloatFactor,
     formatFloatTime,
+    formatJson,
     formatInteger,
     formatMany2one,
     formatMonetary,
@@ -185,6 +186,13 @@ QUnit.module("Fields", (hooks) => {
         assert.strictEqual(formatFloatTime(3.5 + 45 / 3600, { ...options, displaySeconds: true }), "3:30:45");
         assert.strictEqual(formatFloatTime(56 / 3600, {  ...options, displaySeconds: true }), "0:00:56");
         assert.strictEqual(formatFloatTime(-0.5, options), "-0:30");
+    });
+
+    QUnit.test("formatJson", function (assert) {
+        assert.strictEqual(formatJson(false), '');
+        assert.strictEqual(formatJson({}), '{}');
+        assert.strictEqual(formatJson({1: 111}), '{"1":111}');
+        assert.strictEqual(formatJson({"9": 11, 666: 42}), '{"9":11,"666":42}');
     });
 
     QUnit.test("formatInteger", function (assert) {
