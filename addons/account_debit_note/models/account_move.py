@@ -28,3 +28,7 @@ class AccountMove(models.Model):
             'view_mode': 'tree,form',
             'domain': [('debit_origin_id', '=', self.id)],
         }
+
+    def action_debit_note(self):
+        action = self.env.ref('account_debit_note.action_view_account_move_debit').read()[0]
+        return action
