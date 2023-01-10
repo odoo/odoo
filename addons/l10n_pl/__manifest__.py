@@ -20,9 +20,9 @@ Niniejszy moduł jest przeznaczony dla odoo 8.0.
 Wewnętrzny numer wersji OpenGLOBE 1.02
     """,
     'depends' : [
-        'account',
         'base_iban',
         'base_vat',
+        'l10n_multilang',
     ],
     'data': [
               'data/l10n_pl_chart_data.xml',
