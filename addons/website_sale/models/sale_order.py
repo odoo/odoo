@@ -129,7 +129,7 @@ class SaleOrder(models.Model):
             raise UserError(_('It is forbidden to modify a sales order which is not in draft status.'))
 
         product = self.env['product.product'].browse(product_id).exists()
-        if not product or not product._is_add_to_cart_allowed():
+        if add_qty and (not product or not product._is_add_to_cart_allowed()):
             raise UserError(_("The given product does not exist therefore it cannot be added to cart."))
 
         if product.lst_price == 0 and product.website_id.prevent_zero_price_sale:
