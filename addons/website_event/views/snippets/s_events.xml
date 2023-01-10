@@ -83,12 +83,13 @@
         <we-many2many t-if="snippet_name == 'event_upcoming_snippet'"
                       string="Event Tags"
                       data-name="event_tag_opt"
-                      data-model="event.event"
-                      data-m2o-field="tag_ids"
+                      data-model="event.tag"
+                      data-fakem2m="true"
                       data-domain='[["category_id.website_published", "=", true], ["color", "not in", ["0", false]]]'
                       data-limit="10"
-                      data-set-tags=""
                       data-attribute-name="filterByTagIds"
+                      data-fields="[&quot;category_id&quot;]"
+                      data-select-data-attribute=""
                       data-no-preview="true"/>
     </xpath>
 </template>
