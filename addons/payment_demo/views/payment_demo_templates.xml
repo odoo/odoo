@@ -3,41 +3,7 @@
 
     <template id="inline_form">
         <div t-attf-id="demo-container-{{provider_id}}">
-            <div class="row">
-                <div class="mb-3">
-                    <input name="provider_id" type="hidden" id="provider_id" t-att-value="id"/>
-                    <input name="partner_id" type="hidden" t-att-value="partner_id"/>
-                </div>
-                <div class="col mt-0 mb-0">
-                    <label for="customer_input" class="mt-0">
-                        <small><b>Payment Details (test data)</b></small>
-                    </label>
-                    <input type="text"
-                           name="customer_input"
-                           id="customer_input"
-                           class="form-control"
-                           placeholder="XXXX XXXX XXXX XXXX"/>
-                </div>
-                <div class="col mb-0">
-                    <label for="simulated_payment_state" class="mt-0">
-                        <small><b>Payment Status</b></small>
-                    </label>
-                    <select id="simulated_payment_state" class="form-select">
-                        <option value="done" title="Successful payment">
-                            Successful
-                        </option>
-                        <option value="pending" title="Payment processing">
-                            Pending
-                        </option>
-                        <option value="cancel" title="Payment canceled by customer">
-                            Canceled
-                        </option>
-                        <option value="error" title="Processing error">
-                            Error
-                        </option>
-                    </select>
-                </div>
-            </div>
+            <t t-call="payment_demo.payment_details"/>
         </div>
     </template>
 
@@ -57,6 +23,172 @@
                     Payments made with this payment method will simulate a processing <b>error</b>.
                 </span>
             </div>
+        </div>
+    </template>
+
+    <template id="express_checkout_form">
+        <div name="o_express_checkout_container"
+             t-attf-id="o_demo_express_checkout_container_{{provider.id}}"
+             t-att-data-provider-id="provider.id"
+             t-att-data-provider-code="provider.code">
+            <button type="button" class="btn btn-primary mt-2 w-100" data-bs-toggle="modal" t-attf-data-bs-target="#demoPaymentModal_{{provider.id}}">
+                    Pay with Demo
+                    <span t-if="not provider.is_published"
+                          class="badge rounded-pill text-bg-danger ms-1">
+                          Unpublished
+                    </span>
+            </button>
+            <div class="modal fade" t-attf-id="demoPaymentModal_{{provider.id}}" tabindex="-1" aria-labelledby="demoPaymentModalLabel" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="demoPaymentModalLabel">Demo Express Checkout</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            <t t-call="payment_demo.express_inline_form">
+                                <t t-set="provider_id" t-value="provider.id"/>
+                            </t>
+                            <t t-call="payment_demo.express_checkout_pay_button">
+                                <t t-set="label">Pay</t>
+                                <t t-set="icon_class" t-value="'fa fa-chevron-right'"/>
+                                <t t-set="provider_id" t-value="provider.id"/>
+                            </t>
+                        </div>  
+                            
+                    </div>
+                </div>
+            </div>
+        </div>
+   </template>
+
+   <template id="payment_details">
+        <div class="row">
+            <div class="mb-3">
+                <input name="provider_id" type="hidden" id="provider_id" t-att-value="id"/>
+                <input name="partner_id" type="hidden" t-att-value="partner_id"/>
+            </div>
+            <div class="col mt-0 mb-0">
+                <label for="customer_input" class="mt-0">
+                    <small><b>Payment Details (test data)</b></small>
+                </label>
+                <input type="text"
+                        name="customer_input"
+                        id="customer_input"
+                        class="form-control"
+                        placeholder="XXXX XXXX XXXX XXXX"/>
+            </div>
+            <div class="col mb-0">
+                <label for="simulated_payment_state" class="mt-0">
+                    <small><b>Payment Status</b></small>
+                </label>
+                <select id="simulated_payment_state" class="form-select">
+                    <option value="done" title="Successful payment">
+                        Successful
+                    </option>
+                    <option value="pending" title="Payment processing">
+                        Pending
+                    </option>
+                    <option value="cancel" title="Payment canceled by customer">
+                        Canceled
+                    </option>
+                    <option value="error" title="Processing error">
+                        Error
+                    </option>
+                </select>
+            </div>
+        </div>
+    </template>
+
+   <template id="express_inline_form">
+        <div t-attf-id="demo-express-checkout-container-{{provider_id}}">
+            <t t-call="payment_demo.payment_details"/>
+            <t t-if="shipping_info_required">
+                <div class="mt-3 mb-0" >
+                Shipping
+                </div>
+                <div class="row mt-0">
+                    <div class="col mb-0">
+                        <label for="ec_name" class=" mt-0">
+                            <small><b>Name</b></small>
+                        </label>
+                        <input type="text" 
+                                id="ec_name" 
+                                class="form-control"
+                                required=""/>
+                    </div>
+                    <div class="col mb-0">
+                        <label for="ec_mail" class=" mt-0">
+                            <small>Email</small>
+                        </label>
+                        <input type="text" 
+                                id="ec_mail" 
+                                class="form-control"/>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col mb-0">
+                        <label for="ec_address" class="mt-1">
+                            <small><b>Street and Number</b></small>
+                        </label>
+                        <input type="text" 
+                                id="ec_address" 
+                                class="form-control"
+                                required=""
+                                value="Rue des Bourlottes 9"/>
+                    </div>
+                    <div class="col mb-0">
+                        <label for="ec_address2" class="mt-1">
+                            <small>Street 2</small>
+                        </label>
+                        <input type="text" 
+                                id="ec_address2" 
+                                class="form-control"
+                            />
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col mb-0">
+                        <label for="ec_zip" class="mt-1">
+                            <small><b>Zip Code</b></small>
+                        </label>
+                        <input type="text" 
+                                id="ec_zip" 
+                                class="form-control"
+                                required=""
+                                value="1367"/>
+                    </div>
+                    <div class="col mb-0">
+                        <label for="ec_city" class="mt-1">
+                            <small><b>City</b></small>
+                        </label>
+                        <input type="text" 
+                                id="ec_city" 
+                                class="form-control"
+                                value="Ramillies"
+                                required=""/>
+                    </div>
+                    <div class="col mb-0">
+                        <label for="ec_country" class="mt-1">
+                            <small><b>Country</b></small>
+                        </label>
+                        <select id="ec_country" class="form-select" name="ec_country">
+                        </select>
+                    </div>
+                </div>
+            </t>
+        </div>
+    </template>
+
+    <template id="express_checkout_pay_button" name="Express Payment Pay Button">
+        <div class="float-end mt-2">
+            <button name="o_payment_submit_button"
+                    type="submit"
+                    class="btn btn-primary btn-lg mb8 mt8"
+                    t-att-data-icon-class="icon_class"
+                    t-att-data-provider-id="provider_id">
+                <i t-attf-class="fa {{icon_class}}"/> <t t-esc="label"/>
+            </button>
         </div>
     </template>
 

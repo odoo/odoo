@@ -28,6 +28,7 @@ class PaymentProvider(models.Model):
             'support_manual_capture': True,
             'support_refund': 'partial',
             'support_tokenization': True,
+            'support_express_checkout': True,
         })
 
     # === CONSTRAINT METHODS ===#

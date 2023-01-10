@@ -1,10 +1,12 @@
 odoo.define('payment_demo.payment_form', require => {
     'use strict';
 
+    const  DemoMixin = require('payment_demo.payment_demo_mixin');
+
     const checkoutForm = require('payment.checkout_form');
     const manageForm = require('payment.manage_form');
 
-    const paymentDemoMixin = {
+    const paymentDemoForm = {
 
         //--------------------------------------------------------------------------
         // Private
@@ -24,19 +26,7 @@ odoo.define('payment_demo.payment_form', require => {
             if (code !== 'demo') {
                 return this._super(...arguments);
             }
-
-            const customerInput = document.getElementById('customer_input').value;
-            const simulatedPaymentState = document.getElementById('simulated_payment_state').value;
-            return this._rpc({
-                route: '/payment/demo/simulate_payment',
-                params: {
-                    'reference': processingValues.reference,
-                    'payment_details': customerInput,
-                    'simulated_state': simulatedPaymentState,
-                },
-            }).then(() => {
-                window.location = '/payment/status';
-            });
+            DemoMixin._processDemoPayment(processingValues);
         },
 
         /**
@@ -49,7 +39,7 @@ odoo.define('payment_demo.payment_form', require => {
          * @param {string} flow - The online payment flow of the selected payment option
          * @return {Promise}
          */
-        _prepareInlineForm: function (code, paymentOptionId, flow) {
+        _prepareInlineForm: async function (code, paymentOptionId, flow) {
             if (code !== 'demo') {
                 return this._super(...arguments);
             } else if (flow === 'token') {
@@ -59,6 +49,6 @@ odoo.define('payment_demo.payment_form', require => {
             return Promise.resolve()
         },
     };
-    checkoutForm.include(paymentDemoMixin);
-    manageForm.include(paymentDemoMixin);
+    checkoutForm.include(paymentDemoForm);
+    manageForm.include(paymentDemoForm);
 });

@@ -1225,11 +1225,6 @@ class WebsiteSale(http.Controller):
                 )
                 order_sudo.partner_invoice_id = billing_partner_id
 
-        # In a non-express flow, `sale_last_order_id` would be added in the session before the
-        # payment. As we skip all the steps with the express checkout, `sale_last_order_id` must be
-        # assigned to ensure the right behavior from `shop_payment_confirmation()`.
-        request.session['sale_last_order_id'] = order_sudo.id
-
         return order_sudo.partner_id.id
 
     def _find_child_partner(self, commercial_partner_id, address):
@@ -1424,6 +1419,7 @@ class WebsiteSale(http.Controller):
     # ------------------------------------------------------
 
     def _get_express_shop_payment_values(self, order, **kwargs):
+        request.session['sale_last_order_id'] = order.id
         payment_form_values = sale_portal.CustomerPortal._get_payment_values(
             self, order, website_id=request.website.id, is_express_checkout=True
         )

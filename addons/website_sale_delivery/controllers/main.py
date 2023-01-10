@@ -88,8 +88,10 @@ class WebsiteSaleDelivery(WebsiteSale):
         :param dict kwargs: Optional data. This parameter is not used here.
         :return int: The order's partner id.
         """
-        if not (shipping_address and shipping_option):
-            return super().process_express_checkout(billing_address, **kwargs)
+        partner_id = super().process_express_checkout(billing_address, **kwargs)
+
+        if not shipping_address:
+            return partner_id
 
         order_sudo = request.website.sale_get_order()
 
@@ -128,9 +130,10 @@ class WebsiteSaleDelivery(WebsiteSale):
                 )
 
         # Process the delivery carrier
-        order_sudo._check_carrier_quotation(force_carrier_id=int(shipping_option['id']))
+        if shipping_option:
+            order_sudo._check_carrier_quotation(force_carrier_id=int(shipping_option['id']))
 
-        return super().process_express_checkout(billing_address, **kwargs)
+        return order_sudo.partner_id.id
 
     @http.route(
         _express_checkout_shipping_route, type='json', auth='public', methods=['POST'],
