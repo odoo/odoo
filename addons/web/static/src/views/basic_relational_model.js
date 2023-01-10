@@ -578,6 +578,8 @@ export class Record extends DataPoint {
      * @param {boolean} [options.useSaveErrorDialog=false] displays a custom
      *  dialog and await the response from this dialog when an error is
      *  returned by the server.
+     * @param {boolean} [options.throwOnError=false] throws the saving error if
+     *  applicable, allowing to catch it.
      * @returns {Promise<boolean>}
      */
     async save(
@@ -586,6 +588,7 @@ export class Record extends DataPoint {
             noReload: false,
             savePoint: false,
             useSaveErrorDialog: false,
+            throwOnError: false,
         }
     ) {
         const shouldSwitchToReadonly = !options.stayInEdition && this.isInEdition;
@@ -634,6 +637,9 @@ export class Record extends DataPoint {
             if (!this.isInEdition) {
                 await this.load();
                 this.model.notify();
+            }
+            if (options.throwOnError) {
+                throw _e;
             }
             return canProceed;
         }
