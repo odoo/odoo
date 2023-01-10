@@ -14925,7 +14925,8 @@ QUnit.module("Views", (hooks) => {
 
         await click(target.querySelector(".o_data_cell"));
         await editInput(target, '.o_data_cell [name="foo"] input', "");
-        await doAction(webClient, 2);
+        doAction(webClient, 2);
+        await nextTick();
         assert.deepEqual(
             [...target.querySelectorAll(".o_data_cell")].map((el) => el.textContent),
             ["", "blip", "gnap", "blip"]
