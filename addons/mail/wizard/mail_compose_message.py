@@ -104,6 +104,12 @@ class MailComposer(models.TransientModel):
         # comment mode by default removes emails
         if 'auto_delete' in fields_list and 'auto_delete' not in result and result.get('composition_mode') == 'comment':
             result['auto_delete'] = True
+        # batch post mode by default use queues for notifications
+        if 'force_send' in fields_list and 'force_send' not in result:
+            result['force_send'] = (
+                result.get('composition_mode') != 'comment' or
+                len(self._parse_res_ids(result.get('res_ids') or [])) <= 1
+            )
 
         return {
             fname: result[fname]
@@ -181,6 +187,8 @@ class MailComposer(models.TransientModel):
     auto_delete_keep_log = fields.Boolean(
         'Keep Message Copy', default=True,
         help='Keep a copy of the email content if emails are removed (mass mailing only)')
+    force_send = fields.Boolean(
+        'Send mailing or notifications directly')
     mail_server_id = fields.Many2one('ir.mail_server', 'Outgoing mail server')
     scheduled_date = fields.Char(
         'Scheduled Date',
@@ -463,10 +471,8 @@ class MailComposer(models.TransientModel):
         post_values_all = self._prepare_mail_values(res_ids)
         ActiveModel = self.env[self.model] if self.model and hasattr(self.env[self.model], 'message_post') else self.env['mail.thread']
         if self.composition_batch:
-            # do not send emails directly but use the queue instead
             # add context key to avoid subscribing the author
             ActiveModel = ActiveModel.with_context(
-                mail_notify_force_send=False,
                 mail_create_nosubscribe=True,
             )
 
@@ -510,6 +516,8 @@ class MailComposer(models.TransientModel):
 
             # as 'send' does not filter out scheduled mails (only 'process_email_queue'
             # does) we need to do it manually
+            if not self.force_send:
+                continue
             iter_mails_sudo_tosend = iter_mails_sudo.filtered(
                 lambda mail: (
                     not mail.scheduled_date or
@@ -563,6 +571,7 @@ class MailComposer(models.TransientModel):
         MAIL
             STA - 'auto_delete',
             DYN - 'body_html',
+            STA - 'force_send',  (notify parameter)
             STA - 'model',
             DYN - 'recipient_ids',  (from partner_ids)
             DYN - 'res_id',
@@ -667,6 +676,7 @@ class MailComposer(models.TransientModel):
             values.update(
                 email_add_signature=not bool(self.template_id) and self.email_add_signature,
                 email_layout_xmlid=self.email_layout_xmlid,
+                force_send=self.force_send,
                 mail_auto_delete=self.auto_delete,
                 model_description=model_description,
             )
