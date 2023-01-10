@@ -17,7 +17,7 @@ odoo.define('pos_hr.LoginScreen', function (require) {
             }
         }
         async barcodeCashierAction(code) {
-            if (await super.barcodeCashierAction(code)) {
+            if (await super.barcodeCashierAction(code) && this.env.pos.get_cashier().id) {
                 this.back();
             }
         }
