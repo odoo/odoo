@@ -36,7 +36,7 @@
               t-att-data-express-checkout-route="express_checkout_route"
               t-att-data-landing-route="landing_route"
         >
-            <t t-foreach="providers" t-as="provider_sudo">
+            <t t-foreach="providers_sudo" t-as="provider_sudo">
                 <t t-set="express_checkout_form_xml_id"
                    t-value="provider_sudo.express_checkout_form_view_id.xml_id"
                 />

@@ -24,6 +24,7 @@ class PaymentProvider(models.Model):
         """ Override of `payment` to enable additional features. """
         super()._compute_feature_support_fields()
         self.filtered(lambda p: p.code == 'demo').update({
+            'support_express_checkout': True,
             'support_manual_capture': 'partial',
             'support_refund': 'partial',
             'support_tokenization': True,

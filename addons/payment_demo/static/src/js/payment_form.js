@@ -1,8 +1,7 @@
 /** @odoo-module **/
 
-import { _t } from "@web/core/l10n/translation";
-
 import paymentForm from '@payment/js/payment_form';
+import paymentDemoMixin from '@payment_demo/js/payment_demo_mixin';
 
 paymentForm.include({
 
@@ -48,20 +47,7 @@ paymentForm.include({
             this._super(...arguments);
             return;
         }
-
-        const customerInput = document.getElementById('customer_input').value;
-        const simulatedPaymentState = document.getElementById('simulated_payment_state').value;
-        this.rpc('/payment/demo/simulate_payment', {
-            'reference': processingValues.reference,
-            'payment_details': customerInput,
-            'simulated_state': simulatedPaymentState,
-        }).then(() => {
-            window.location = '/payment/status';
-        }).guardedCatch(error => {
-            error.event.preventDefault();
-            this._displayErrorDialog(_t("Payment processing failed"), error.message.data.message);
-            this._enableButton(); // The button has been disabled before initiating the flow.
-        });
+        paymentDemoMixin.processDemoPayment(processingValues);
     },
 
 });
