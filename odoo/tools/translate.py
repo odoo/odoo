@@ -1370,7 +1370,7 @@ class TranslationImporter:
                     # [xmlid, translations, xmlid, translations, ...]
                     params = []
                     for xmlid, translations in sub_field_dictionary:
-                        params.extend([xmlid.split('.')[-1], Json(translations)])
+                        params.extend([*xmlid.split('.'), Json(translations)])
                     if not force_overwrite:
                         value_query = f"""CASE WHEN {overwrite} IS TRUE AND imd.noupdate IS FALSE
                         THEN m."{field_name}" || t.value
@@ -1381,10 +1381,10 @@ class TranslationImporter:
                         UPDATE "{model_table}" AS m
                         SET "{field_name}" = {value_query}
                         FROM (
-                            VALUES {', '.join(['(%s, %s::jsonb)'] * (len(params) // 2))}
-                        ) AS t(imd_name, value)
+                            VALUES {', '.join(['(%s, %s, %s::jsonb)'] * (len(params) // 3))}
+                        ) AS t(imd_module, imd_name, value)
                         JOIN "ir_model_data" AS imd
-                        ON imd."model" = '{model_name}' AND imd.name = t.imd_name
+                        ON imd."model" = '{model_name}' AND imd.name = t.imd_name AND imd.module = t.imd_module
                         WHERE imd."res_id" = m."id"
                     """, params)
 
