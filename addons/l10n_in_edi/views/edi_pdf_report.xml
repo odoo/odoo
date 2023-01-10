@@ -5,7 +5,7 @@
             <span style="font-size: 10px;" t-if="l10n_in_einvoice_json">IRN:<span t-esc="l10n_in_einvoice_json['Irn']"/></span>
         </div>
         <div name="company_address" position="after">
-            <div class="col-6 mt-3" t-if="l10n_in_einvoice_json">
+            <div class="col-6 mt-1" t-if="l10n_in_einvoice_json">
                 <div class="text-center">
                     <img t-att-src="'/report/barcode/?barcode_type=%s&amp;value=%s&amp;width=%s&amp;height=%s' %
                     ('QR', l10n_in_einvoice_json['SignedQRCode'], 150, 150)"/>
@@ -39,7 +39,7 @@
         </img>
         <xpath expr="//div[hasclass('row')]/div[hasclass('col-6')]" position="after">
             <div class="col-2 text-end" t-if="l10n_in_einvoice_json">
-                <img class="mt-2" t-att-src="'/report/barcode/?barcode_type=%s&amp;value=%s&amp;width=%s&amp;height=%s' %
+                <img class="m-2" t-att-src="'/report/barcode/?barcode_type=%s&amp;value=%s&amp;width=%s&amp;height=%s' %
                 ('QR', l10n_in_einvoice_json['SignedQRCode'], 150, 150)"/>
             </div>
         </xpath>
