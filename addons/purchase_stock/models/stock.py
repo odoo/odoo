@@ -194,12 +194,6 @@ class Orderpoint(models.Model):
             orderpoint_wh_supplier.route_id = route_id[0].id
         return super()._set_default_route_id()
 
-    def _get_orderpoint_procurement_date(self):
-        date = super()._get_orderpoint_procurement_date()
-        if any(rule.action == 'buy' for rule in self.rule_ids):
-            date -= relativedelta(days=self.company_id.po_lead)
-        return date
-
 
 class StockLot(models.Model):
     _inherit = 'stock.lot'

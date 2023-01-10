@@ -132,12 +132,6 @@ class StockWarehouseOrderpoint(models.Model):
             orderpoint_wh_bom.route_id = route_id[0].id
         return super()._set_default_route_id()
 
-    def _get_orderpoint_procurement_date(self):
-        date = super()._get_orderpoint_procurement_date()
-        if any(rule.action == 'manufacture' for rule in self.rule_ids):
-            date -= relativedelta(days=self.company_id.manufacturing_lead)
-        return date
-
     def _prepare_procurement_values(self, date=False, group=False):
         values = super()._prepare_procurement_values(date=date, group=group)
         values['bom_id'] = self.bom_id
