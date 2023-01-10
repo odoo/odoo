@@ -30,7 +30,7 @@
                     <!-- === Stat Buttons === -->
                     <div class="oe_button_box" name="button_box">
                         <button name="action_toggle_is_published"
-                                attrs="{'invisible': [('is_published', '=', False)]}"
+                                attrs="{'invisible': ['|', ('module_state', '=', 'uninstalled'), ('is_published', '=', False)]}"
                                 class="oe_stat_button"
                                 type="object"
                                 icon="fa-globe">
@@ -39,7 +39,7 @@
                             </div>
                         </button>
                         <button name="action_toggle_is_published"
-                                attrs="{'invisible': [('is_published', '=', True)]}"
+                                attrs="{'invisible': ['|', ('module_state', '=', 'uninstalled'), ('is_published', '=', True)]}"
                                 class="oe_stat_button"
                                 type="object"
                                 icon="fa-eye-slash">
@@ -48,11 +48,11 @@
                             </div>
                         </button>
                     </div>
-                    <field name="image_128" widget="image" class="oe_avatar"/>
-                    <widget name="web_ribbon" title="Disabled" bg_color="bg-danger" attrs="{'invisible': [('state', '!=', 'disabled')]}"/>
-                    <widget name="web_ribbon" title="Test Mode" bg_color="bg-warning" attrs="{'invisible': [('state', '!=', 'test')]}"/>
+                    <field name="image_128" widget="image" class="oe_avatar" attrs="{'readonly': [('module_state', '=', 'uninstalled')]}"/>
+                    <widget name="web_ribbon" title="Disabled" bg_color="bg-danger" attrs="{'invisible': ['|', ('module_state', '=', 'uninstalled'), ('state', '!=', 'disabled')]}"/>
+                    <widget name="web_ribbon" title="Test Mode" bg_color="bg-warning" attrs="{'invisible': ['|', ('module_state', '=', 'uninstalled'), ('state', '!=', 'test')]}"/>
                     <div class="oe_title">
-                        <h1><field name="name" placeholder="Name"/></h1>
+                        <h1><field name="name" placeholder="Name" attrs="{'readonly': [('module_state', '=', 'uninstalled')]}"/></h1>
                         <div attrs="{'invisible': ['|', ('module_state', '=', 'installed'), ('module_id', '=', False)]}">
                             <a attrs="{'invisible': [('module_to_buy', '=', False)]}" href="https://odoo.com/pricing?utm_source=db&amp;utm_medium=module" target="_blank" class="btn btn-info" role="button">Upgrade</a>
                             <button attrs="{'invisible': [('module_to_buy', '=', True)]}" type="object" class="btn btn-primary" name="button_immediate_install" string="Install"/>
@@ -66,7 +66,8 @@
                         <group name="payment_state">
                             <field name="code" groups="base.group_no_one" attrs="{'readonly': [('id', '!=', False)], 'invisible': [('module_id', '!=', False), ('module_state', '!=', 'installed')]}"/>
                             <field name="state" widget="radio" attrs="{'invisible': [('module_state', '=', 'uninstalled')]}"/>
-                            <field name="company_id" groups="base.group_multi_company" options='{"no_open":True}'/>
+                            <field name="company_id" groups="base.group_multi_company" options='{"no_open":True}'
+                                   attrs="{'invisible': [('module_state', '=', 'uninstalled')]}"/>
                         </group>
                     </group>
                     <notebook attrs="{'invisible': ['&amp;', ('module_id', '!=', False), ('module_state', '!=', 'installed')]}">
