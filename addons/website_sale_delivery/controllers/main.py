@@ -89,7 +89,7 @@ class WebsiteSaleDelivery(WebsiteSale):
         :return int: The order's partner id.
         """
         partner_id = super().process_express_checkout(billing_address, **kwargs)
-        
+
         if not shipping_address:
             return partner_id
 

@@ -1,10 +1,12 @@
 odoo.define('payment_demo.payment_form', require => {
     'use strict';
 
+    const  DemoMixin = require('payment_demo.payment_demo_mixin');
+
     const checkoutForm = require('payment.checkout_form');
     const manageForm = require('payment.manage_form');
 
-    const paymentDemoMixin = {
+    const paymentDemoForm = {
 
         //--------------------------------------------------------------------------
         // Private
@@ -24,84 +26,7 @@ odoo.define('payment_demo.payment_form', require => {
             if (code !== 'demo') {
                 return this._super(...arguments);
             }
-
-            const demoExpressCheckoutForm = document.getElementById(`o_demo_express_checkout_container_${providerId}`);
-            const customerInput = document.getElementById('customer_input').value;
-            const simulatedPaymentState = document.getElementById('simulated_payment_state').value;
-            var expressShippingAddress = {};
-            
-            if (demoExpressCheckoutForm){ 
-                const expressCheckoutRoute = document.querySelector('[name="o_payment_express_checkout_form"]').dataset.expressCheckoutRoute;
-                const shippingInformationRequired = document.querySelector('[name="o_payment_express_checkout_form"]').dataset.shippingInfoRequired
-                if (shippingInformationRequired){
-                
-                    const demoName = document.getElementById('ec_name');
-                    const demoMail = document.getElementById('ec_mail').value;
-                    const demoAddress = document.getElementById('ec_address');
-                    const demoAddress2 = document.getElementById('ec_address2').value;
-                    const demoZip = document.getElementById('ec_zip');
-                    const demoCity = document.getElementById('ec_city');
-                    const demoCountry = document.getElementById('ec_country');
-
-                    if (
-                        !demoAddress.reportValidity()
-                        || !demoName.reportValidity()
-                        || !demoZip.reportValidity()
-                        || !demoCity.reportValidity()
-                    ) {
-                        this._enableButton();
-                        $('body').unblock(); 
-                        return Promise.resolve(); 
-                    }
-
-                    expressShippingAddress =  {'name': demoName.value,
-                                                'email': demoMail,
-                                                'street': demoAddress.value,
-                                                'street2': demoAddress2,
-                                                'country': demoCountry.value,
-                                                'state':'',
-                                                'city': demoCity.value,
-                                                'zip':demoZip.value
-                    }
-                }   
-
-                return this._rpc({
-                    route: expressCheckoutRoute,
-                    params: {
-                        'shipping_address': expressShippingAddress,
-                        'billing_address': {'name': 'Demo User',
-                                            'email': 'demo@test.com',
-                                            'street': 'Baker Street 21',
-                                            'street2': '',
-                                            'country': 'BE',
-                                            'state':'',
-                                            'zip':'5000'
-                        },
-                    }
-                }).then(() => {
-                    this._rpc({
-                        route: '/payment/demo/simulate_payment',
-                        params: {
-                            'reference': processingValues.reference,
-                            'payment_details': customerInput,
-                            'simulated_state': simulatedPaymentState,
-                        },
-                    }).then(() => {
-                        window.location = '/payment/status';
-                    });
-                });
-            }
-
-            return this._rpc({
-                route: '/payment/demo/simulate_payment',
-                params: {
-                    'reference': processingValues.reference,
-                    'payment_details': customerInput,
-                    'simulated_state': simulatedPaymentState,
-                },
-            }).then(() => {
-                window.location = '/payment/status';
-            });
+            DemoMixin._processDemoPayment(processingValues);
         },
 
         /**
@@ -140,6 +65,6 @@ odoo.define('payment_demo.payment_form', require => {
             return Promise.resolve()
         },
     };
-    checkoutForm.include(paymentDemoMixin);
-    manageForm.include(paymentDemoMixin);
+    checkoutForm.include(paymentDemoForm);
+    manageForm.include(paymentDemoForm);
 });

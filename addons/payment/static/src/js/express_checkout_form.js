@@ -6,6 +6,21 @@ import publicWidget from 'web.public.widget';
 publicWidget.registry.PaymentExpressCheckoutForm = publicWidget.Widget.extend({
     selector: 'div[name="o_payment_express_checkout_form"]',
 
+    events: Object.assign({}, publicWidget.Widget.prototype.events, {
+        'click button[name="o_payment_submit_button"]': '_onClickPay',
+    }),
+    /**
+     * @constructor
+     */
+    init: function () {
+        const preventDoubleClick = handlerMethod => {
+            return _.debounce(handlerMethod, 500, true);
+        };
+        this._super(...arguments);
+        // Prevent double-clicks and browser glitches on all inputs
+        this._onClickPay = preventDoubleClick(this._onClickPay);
+    },
+
     /**
      * @override
      */
@@ -77,6 +92,65 @@ publicWidget.registry.PaymentExpressCheckoutForm = publicWidget.Widget.extend({
         };
     },
 
+    //--------------------------------------------------------------------------
+    // Handlers
+    //--------------------------------------------------------------------------
+
+    /**
+     * Handle a direct payment, a payment with redirection, or a payment by token.
+     *
+     * Called when clicking on the 'Pay' button or when submitting the form.
+     *
+     * @private
+     * @param {Event} ev
+     * @return {undefined}
+     */
+    _onClickPay: async function (ev) {
+    },
+
+    /**
+         * Check if the submit button can be enabled and do it if so.
+         *
+         * The icons are updated to show that the button is ready.
+         *
+         * @private
+         * @return {boolean} Whether the button was enabled.
+         */
+    _enableButton: function () {
+            const $submitButton = this.$('button[name="o_payment_submit_button"]');
+            const iconClass = $submitButton.data('icon-class');
+            $submitButton.attr('disabled', false);
+            $submitButton.find('i').addClass(iconClass);
+            $submitButton.find('span.o_loader').remove();
+            return true;
+    },
+
+
+    //--------------------------------------------------------------------------
+    // Private
+    //--------------------------------------------------------------------------
+
+    /**
+     * Disable the submit button.
+     *
+     * The icons are updated to either show that an action is processing or that the button is
+     * not ready, depending on the value of `showLoadingAnimation`.
+     *
+     * @private
+     * @param {boolean} showLoadingAnimation - Whether a spinning loader should be shown
+     * @return {undefined}
+     */
+    _disableButton: (showLoadingAnimation = true) => {
+        const $submitButton = this.$('button[name="o_payment_submit_button"]');
+        const iconClass = $submitButton.data('icon-class');
+        $submitButton.attr('disabled', true);
+        if (showLoadingAnimation) {
+            $submitButton.find('i').removeClass(iconClass);
+            $submitButton.prepend(
+                '<span class="o_loader"><i class="fa fa-refresh fa-spin"></i>&nbsp;</span>'
+            );
+        }
+    },
     /**
      * Update the amount of the express checkout form.
      *
