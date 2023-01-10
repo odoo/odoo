@@ -30,9 +30,8 @@ class AccruedExpenseRevenue(models.TransientModel):
     company_id = fields.Many2one('res.company', default=_get_default_company)
     journal_id = fields.Many2one(
         comodel_name='account.journal',
-        compute='_compute_journal_id',
+        compute='_compute_journal_id', store=True, readonly=False, precompute=True,
         domain="[('type', '=', 'general'), ('company_id', '=', company_id)]",
-        readonly=False,
         required=True,
         check_company=True,
         string='Journal',
