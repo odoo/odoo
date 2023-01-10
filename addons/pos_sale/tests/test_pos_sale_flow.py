@@ -57,9 +57,7 @@ class TestPoSSale(TestPointOfSaleHttpCommon):
         sale_order.action_confirm()
         picking = sale_order.picking_ids
         picking.move_ids.quantity_done = 300
-        action = picking.button_validate()
-        wizard = Form(self.env[action['res_model']].with_context(action['context']))
-        wizard.save().process()
+        picking.button_validate()
 
         self.assertEqual(sale_order.order_line.qty_delivered, 1)
 
