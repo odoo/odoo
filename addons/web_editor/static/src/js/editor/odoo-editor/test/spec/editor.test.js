@@ -1003,11 +1003,16 @@ X[]
                     contentAfter: '<div>a<p>b[]e</p>f</div>',
                 });
             });
-            it('should delete empty nodes ', async () => {
+            it('should not delete single remaining empty inline', async () => {
                 // Forward selection
                 await testEditor(BasicEditor, {
                     contentBefore: '<h1><font>[abcdef]</font></h1>',
                     stepFunction: deleteForward,
+                    // The flagged 200B is there to preserve the font so if we
+                    // write now, we still write in the font element's style.
+                    contentAfterEdit: '<h1><font data-oe-zws-empty-inline="">[]\u200B</font><br></h1>',
+                    // The flagged 200B is removed by the sanitizer if its
+                    // parent remains empty.
                     contentAfter: '<h1>[]<br></h1>',
                 });
             });
