@@ -58,7 +58,7 @@ patch(Chrome.prototype, "pos_restaurant.Chrome", {
             this.env.posbus.trigger("close-popups-but-error", { resolve })
         );
         if (isPopupClosed) {
-            if (this.state.tempScreen) {
+            if (this.pos.tempScreen) {
                 this.trigger("close-temp-screen");
             }
             const table = this.env.pos.table;
@@ -73,12 +73,12 @@ patch(Chrome.prototype, "pos_restaurant.Chrome", {
     },
     _shouldResetIdleTimer() {
         const stayPaymentScreen =
-            this.mainScreen.name === "PaymentScreen" &&
+            this.pos.mainScreen.name === "PaymentScreen" &&
             this.env.pos.get_order().paymentlines.length > 0;
         return (
             this.env.pos.config.iface_floorplan &&
             !stayPaymentScreen &&
-            this.mainScreen.name !== "FloorScreen"
+            this.pos.mainScreen.name !== "FloorScreen"
         );
     },
     __showScreen() {
