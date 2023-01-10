@@ -387,6 +387,16 @@ class Website(models.Model):
         website.configurator_done = True
 
     @api.model
+    def configurator_missing_industry(self, unknown_industry):
+        self._website_api_rpc(
+            '/api/website/unknown_industry',
+            {
+                'unknown_industry': unknown_industry,
+                'lang': self.env.context.get('lang'),
+            }
+        )
+
+    @api.model
     def configurator_apply(self, **kwargs):
         def set_colors(selected_palette):
             url = '/website/static/src/scss/options/user_values.scss'
