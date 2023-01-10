@@ -101,6 +101,7 @@
                             </group>
                             <group>
                                 <field name="department_id"/>
+                                <field name="job_id"/>
                                 <field name="parent_id"/>
                                 <field name="coach_id"/>
                             </group>
@@ -196,9 +197,6 @@
                                             <button string="Generate" class="btn btn-link" type="object" name="generate_random_barcode" attrs="{'invisible': [('barcode', '!=', False)]}"/>
                                             <button name="%(hr_employee_print_badge)d" string="Print Badge" class="btn btn-link" type="action" attrs="{'invisible': [('barcode', '=', False)]}"/>
                                         </div>
-                                    </group>
-                                    <group string='Payroll' name="payroll_group">
-                                        <field name="job_id"/>
                                     </group>
                                     <group name="application_group"/>
                                 </group>

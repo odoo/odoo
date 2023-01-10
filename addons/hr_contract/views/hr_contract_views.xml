@@ -25,9 +25,6 @@
                                 attrs="{'invisible': [('calendar_mismatch', '=', False)]}"/>
                         </div>
                     </xpath>
-                    <field name="job_id" position="before">
-                        <field name="contract_id" groups="hr_contract.group_hr_contract_manager"/>
-                    </field>
                 </data>
             </field>
         </record>
