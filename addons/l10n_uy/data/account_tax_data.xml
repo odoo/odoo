@@ -4,8 +4,8 @@
         <!-- Account Tax Template -->
         <record id="vat1" model="account.tax.template">
             <field name="chart_template_id" ref="uy_chart_template"/>
-            <field name="name">IVA Ventas (22%)</field>
-            <field name="description">IVA Ventas (22%)</field>
+            <field name="name">VAT Sales (22%)</field>
+            <field name="description">VAT Sales (22%)</field>
             <field name="amount">22</field>
             <field name="amount_type">percent</field>
             <field name="type_tax_use">sale</field>
@@ -35,8 +35,8 @@
         </record>
         <record id="vat2" model="account.tax.template">
             <field name="chart_template_id" ref="uy_chart_template"/>
-            <field name="name">IVA Ventas (10%)</field>
-            <field name="description">IVA Ventas (10%)</field>
+            <field name="name">VAT Sales (10%)</field>
+            <field name="description">VAT Sales (10%)</field>
             <field name="amount">10</field>
             <field name="amount_type">percent</field>
             <field name="type_tax_use">sale</field>
@@ -66,8 +66,8 @@
         </record>
         <record id="vat3" model="account.tax.template">
             <field name="chart_template_id" ref="uy_chart_template"/>
-            <field name="name">Ventas Exentos IVA</field>
-            <field name="description">Ventas Exentos IVA</field>
+            <field name="name">VAT Exempt Sales</field>
+            <field name="description">VAT Exempt Sales</field>
             <field name="amount">0</field>
             <field name="amount_type">fixed</field>
             <field name="type_tax_use">sale</field>
@@ -91,8 +91,8 @@
         </record>
         <record id="vat4" model="account.tax.template">
             <field name="chart_template_id" ref="uy_chart_template"/>
-            <field name="name">IVA Compras (22%)</field>
-            <field name="description">IVA Compras (22%)</field>
+            <field name="name">VAT Purchases (22%)</field>
+            <field name="description">VAT Purchases (22%)</field>
             <field name="amount">22</field>
             <field name="amount_type">percent</field>
             <field name="type_tax_use">purchase</field>
@@ -122,8 +122,8 @@
         </record>
         <record id="vat5" model="account.tax.template">
             <field name="chart_template_id" ref="uy_chart_template"/>
-            <field name="name">IVA Compras (10%)</field>
-            <field name="description">IVA Compras (10%)</field>
+            <field name="name">VAT Purchases (10%)</field>
+            <field name="description">VAT Purchases (10%)</field>
             <field name="amount">10</field>
             <field name="amount_type">percent</field>
             <field name="type_tax_use">purchase</field>
@@ -153,8 +153,8 @@
         </record>
         <record id="vat6" model="account.tax.template">
             <field name="chart_template_id" ref="uy_chart_template"/>
-            <field name="name">Compras Exentos IVA</field>
-            <field name="description">Compras Exentos IVA</field>
+            <field name="name">Purchases Exempt from VAT</field>
+            <field name="description">Purchases Exempt from VAT</field>
             <field name="amount">0</field>
             <field name="amount_type">fixed</field>
             <field name="type_tax_use">purchase</field>
