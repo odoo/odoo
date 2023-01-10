@@ -3,21 +3,20 @@
 import { parse } from "web.field_utils";
 import { numberBuffer } from "@point_of_sale/js/Misc/NumberBuffer";
 import { PosComponent } from "@point_of_sale/js/PosComponent";
-import { usePos } from "@point_of_sale/app/pos_store";
-import { registry } from "@web/core/registry";
 import { Transition } from "@web/core/transition";
 import { Draggable } from "@point_of_sale/js/Misc/Draggable";
 import { ConfirmPopup } from "@point_of_sale/js/Popups/ConfirmPopup";
 import { OrderImportPopup } from "@point_of_sale/js/Popups/OrderImportPopup";
+import { useService } from "@web/core/utils/hooks";
 
-const { onMounted, onWillUnmount, useRef, useState } = owl;
+import { onMounted, onWillUnmount, useRef, useState } from "@odoo/owl";
 
 export class DebugWidget extends PosComponent {
     static components = { Transition, Draggable };
     static template = "point_of_sale.DebugWidget";
     setup() {
         super.setup();
-        this.pos = usePos();
+        this.debug = useService("debug");
         this.state = useState({
             barcodeInput: "",
             weightInput: "",
@@ -162,5 +161,3 @@ export class DebugWidget extends PosComponent {
         return `"${this.state.buffer}"`;
     }
 }
-
-registry.category("main_components").add("DebugWidget", { Component: DebugWidget });

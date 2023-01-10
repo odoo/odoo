@@ -2,19 +2,19 @@
 <templates id="template" xml:space="preserve">
 
     <t t-name="Chrome" owl="1">
-        <div class="pos" t-att-class="{ 'big-scrollbars': state.hasBigScrollBars }">
+        <div class="pos" t-att-class="{ 'big-scrollbars': pos.hasBigScrollBars }">
             <div class="pos-receipt-print"></div>
-            <t t-if="state.uiState === 'READY'">
+            <t t-if="pos.uiState === 'READY'">
                 <Navbar showCashMoveButton="showCashMoveButton"/>
                 <div class="pos-content">
                     <div class="window">
                         <div class="subwindow">
                             <div class="subwindow-container">
                                 <div class="subwindow-container-fix screens">
-                                    <t isShown="!state.tempScreen" t-component="mainScreen.component"
-                                       t-props="mainScreenProps" t-key="mainScreen.name" />
-                                    <t t-if="state.tempScreen" t-component="state.tempScreen.component"
-                                       t-props="state.tempScreen.props" t-key="state.tempScreen.name" />
+                                    <t isShown="!pos.tempScreen" t-component="pos.mainScreen.component"
+                                       t-props="pos.mainScreen.props" t-key="pos.mainScreen.name" />
+                                    <t t-if="pos.tempScreen" t-component="pos.tempScreen.component"
+                                       t-props="pos.tempScreen.props" t-key="pos.tempScreen.name" />
                                 </div>
                             </div>
                         </div>
@@ -22,12 +22,12 @@
                 </div>
             </t>
 
-            <Transition visible="['LOADING', 'CLOSING'].includes(state.uiState)" name="'o-swing'" leaveDuration="800" t-slot-scope="transition">
+            <Transition visible="['LOADING', 'CLOSING'].includes(pos.uiState)" name="'o-swing'" leaveDuration="800" t-slot-scope="transition">
                 <div class="loader" t-att-class="transition.className">
                     <div class="loader-feedback">
                         <!-- spinner from https://loading.io/css/ -->
                         <div class="lds-ellipsis"><div></div><div></div><div></div><div></div></div>
-                        <t t-if="state.loadingSkipButtonIsShown">
+                        <t t-if="pos.loadingSkipButtonIsShown">
                             <h1 class="message">Connecting to devices</h1>
                             <div class="button skip" t-on-click="() => this.trigger('loading-skip-callback')">
                                 Skip
@@ -36,14 +36,6 @@
                     </div>
                 </div>
             </Transition>
-
-            <!-- Allow popups to be visible at any state of the ui. -->
-            <PosPopupController />
-
-            <Transition name="'o-fade'" visible="state.notification.isShown" leaveDuration="200" t-slot-scope="transition">
-                <Notification message="state.notification.message" duration="state.notification.duration" className="transition.className"/>
-            </Transition>
-
         </div>
         <WithEnv env="wowlEnv">
             <MainComponentsContainer/>

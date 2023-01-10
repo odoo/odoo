@@ -1,32 +1,27 @@
 /** @odoo-module */
 
+import { PosGlobalState } from "@point_of_sale/js/models";
+import { pos_env as legacyEnv } from "@point_of_sale/js/pos_env";
+
 import { registry } from "@web/core/registry";
 import { useService } from "@web/core/utils/hooks";
-import { debounce } from "@web/core/utils/timing";
-import { reactive, useState, toRaw } from "@odoo/owl";
+import { reactive, useState, markRaw } from "@odoo/owl";
 
 export class PosStore {
     /** @type {'LOADING' | 'READY' | 'CLOSING'} */
     uiState = "LOADING";
-    debugWidgetIsShown = true;
     hasBigScrollBars = false;
-    notification = {
-        isShown: false,
-        message: "",
-        duration: 2000,
-    };
     loadingSkipButtonIsShown = false;
-    // not using an arrow function here because we need the correct `this`
-    toggleDebugWidget = debounce(function toggleDebugWidget() {
-        this.debugWidgetIsShown = !toRaw(this).debugWidgetIsShown;
-    }, 100);
     mainScreen = { name: null, component: null };
     tempScreen = null;
+    legacyEnv = legacyEnv;
     constructor() {
         this.setup();
     }
-    // to allow other modules to add things to the store.
-    setup() {}
+    // use setup instead of constructor because setup can be patched.
+    setup() {
+        this.globalState = new PosGlobalState({ env: markRaw(legacyEnv) });
+    }
 }
 
 export const posService = {
@@ -37,6 +32,9 @@ export const posService = {
 
 registry.category("services").add("pos", posService);
 
+/**
+ * @returns {PosStore}
+ */
 export function usePos() {
     return useState(useService("pos"));
 }

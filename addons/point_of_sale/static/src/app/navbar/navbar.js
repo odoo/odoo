@@ -2,6 +2,7 @@
 
 import { PosComponent } from "@point_of_sale/js/PosComponent";
 import { usePos } from "@point_of_sale/app/pos_store";
+import { useService } from "@web/core/utils/hooks";
 
 import { CashierName } from "@point_of_sale/js/ChromeWidgets/CashierName";
 import { CashMoveButton } from "@point_of_sale/js/ChromeWidgets/CashMoveButton";
@@ -30,6 +31,7 @@ export class Navbar extends PosComponent {
     };
     setup() {
         this.pos = usePos();
+        this.debug = useService("debug");
     }
     get customerFacingDisplayButtonIsShown() {
         return this.env.pos.config.iface_customer_facing_display;
