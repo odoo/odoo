@@ -583,6 +583,13 @@ class Product(models.Model):
         else:
             return self._get_rules_from_location(rule.location_src_id, seen_rules=seen_rules | rule)
 
+    def _get_date_with_security_lead_days(self, date, location):
+        rules = self._get_rules_from_location(location)
+        for action, days in location.company_id._get_security_by_rule_action().items():
+            if action in rules.mapped('action'):
+                date -= relativedelta(days=days)
+        return date
+
     def _get_only_qty_available(self):
         """ Get only quantities available, it is equivalent to read qty_available
         but avoid fetching other qty fields (avoid costly read group on moves)
