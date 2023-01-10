@@ -939,7 +939,8 @@ class BaseModel(metaclass=MetaModel):
         :return: list of lists of corresponding values
         """
         import_compatible = self.env.context.get('import_compat', True)
-        env_en = self.env(context={'lang': 'en_US'})
+        if import_compatible:
+            env_en = self.env(context={'lang': 'en_US'})
         lines = []
 
         def splittor(rs):
@@ -979,8 +980,8 @@ class BaseModel(metaclass=MetaModel):
                     current[i] = (record._name, record.id)
                 else:
                     field = record._fields[name]
-                    if callable(field.translate):
-                        # model_terms translated fields are imported/exported only in en_US
+                    if import_compatible and callable(field.translate):
+                        # model_terms translated fields are imported only in en_US
                         value = record.with_env(env_en)[name]
                     else:
                         value = record[name]
@@ -4284,7 +4285,7 @@ class BaseModel(metaclass=MetaModel):
         for field_name, value in values.items():
             field = fields.get(field_name)
             if field and callable(field.translate):
-                # model_terms translated fields are imported/exported only in en_US
+                # model_terms translated fields are imported only in en_US
                 values_en[field_name] = value
             else:
                 values_lang[field_name] = value
