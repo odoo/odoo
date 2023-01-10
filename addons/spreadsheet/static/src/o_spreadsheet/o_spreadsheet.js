@@ -723,6 +723,14 @@
     function computeTextLinesHeight(textLineHeight, numberOfLines = 1) {
         return numberOfLines * (textLineHeight + MIN_CELL_TEXT_MARGIN) - MIN_CELL_TEXT_MARGIN;
     }
+    /**
+     * Get the default height of the cell given its style.
+     */
+    function getDefaultCellHeight(style) {
+        // TO DO: take multi text line into account to compute the real cell height in case of wrapping cell
+        const fontSize = computeTextFontSizeInPixels(style);
+        return computeTextLinesHeight(fontSize) + 2 * PADDING_AUTORESIZE_VERTICAL;
+    }
     function computeTextWidth(context, text, style) {
         context.save();
         context.font = computeTextFont(style);
@@ -3568,6 +3576,12 @@
         CellValueType["error"] = "error";
     })(CellValueType || (CellValueType = {}));
 
+    var ClipboardMIMEType;
+    (function (ClipboardMIMEType) {
+        ClipboardMIMEType["PlainText"] = "text/plain";
+        ClipboardMIMEType["Html"] = "text/html";
+    })(ClipboardMIMEType || (ClipboardMIMEType = {}));
+
     function isSheetDependent(cmd) {
         return "sheetId" in cmd;
     }
@@ -4217,6 +4231,18 @@
         return `${strikethrough ? "line-through" : ""} ${underline ? "underline" : ""}`;
     }
     /**
+     * Convert the cell style to CSS properties.
+     */
+    function cellStyleToCss(style) {
+        const attributes = cellTextStyleToCss(style);
+        if (!style)
+            return attributes;
+        if (style.fillColor) {
+            attributes["background"] = style.fillColor;
+        }
+        return attributes;
+    }
+    /**
      * Convert the cell text style to CSS properties.
      */
     function cellTextStyleToCss(style) {
@@ -4239,11 +4265,12 @@
         }
         return attributes;
     }
-    function cssPropertiesToCss(attributes) {
+    function cssPropertiesToCss(attributes, newLine = true) {
+        const separator = newLine ? "\n" : "";
         const str = Object.entries(attributes)
             .map(([attName, attValue]) => `${attName}: ${attValue};`)
-            .join("\n");
-        return "\n" + str + "\n";
+            .join(separator);
+        return str ? "\n" + str + "\n" : "";
     }
 
     const ERROR_TOOLTIP_MAX_HEIGHT = 80;
@@ -7837,17 +7864,6 @@
             style,
         });
     }
-    async function readOsClipboard(env) {
-        try {
-            return await env.clipboard.readText();
-        }
-        catch (e) {
-            // Permission is required to read the clipboard.
-            console.warn("The OS clipboard could not be read.");
-            console.error(e);
-            return undefined;
-        }
-    }
     //------------------------------------------------------------------------------
     // Simple actions
     //------------------------------------------------------------------------------
@@ -7855,40 +7871,35 @@
     const REDO_ACTION = (env) => env.model.dispatch("REQUEST_REDO");
     const COPY_ACTION = async (env) => {
         env.model.dispatch("COPY");
-        await env.clipboard.writeText(env.model.getters.getClipboardContent());
+        await env.clipboard.write(env.model.getters.getClipboardContent());
     };
     const CUT_ACTION = async (env) => {
         interactiveCut(env);
-        await env.clipboard.writeText(env.model.getters.getClipboardContent());
+        await env.clipboard.write(env.model.getters.getClipboardContent());
     };
-    const PASTE_ACTION = async (env) => {
-        const spreadsheetClipboard = env.model.getters.getClipboardContent();
-        const osClipboard = await readOsClipboard(env);
-        const target = env.model.getters.getSelectedZones();
-        if (osClipboard && osClipboard !== spreadsheetClipboard) {
-            interactivePasteFromOS(env, target, osClipboard);
+    const PASTE_ACTION = async (env) => paste(env);
+    const PASTE_VALUE_ACTION = async (env) => paste(env, "onlyValue");
+    async function paste(env, pasteOption) {
+        const spreadsheetClipboard = env.model.getters.getClipboardTextContent();
+        const osClipboard = await env.clipboard.readText();
+        switch (osClipboard.status) {
+            case "ok":
+                const target = env.model.getters.getSelectedZones();
+                if (osClipboard && osClipboard.content !== spreadsheetClipboard) {
+                    interactivePasteFromOS(env, target, osClipboard.content);
+                }
+                else {
+                    interactivePaste(env, target, pasteOption);
+                }
+                break;
+            case "notImplemented":
+                env.raiseError(_lt("Pasting from the context menu is not supported in this browser. Use keyboard shortcuts ctrl+c / ctrl+v instead."));
+                break;
+            case "permissionDenied":
+                env.raiseError(_lt("Access to the clipboard denied by the browser. Please enable clipboard permission for this page in your browser settings."));
+                break;
         }
-        else {
-            interactivePaste(env, target);
-        }
-    };
-    const PASTE_VALUE_ACTION = async (env) => {
-        const spreadsheetClipboard = env.model.getters.getClipboardContent();
-        const osClipboard = await readOsClipboard(env);
-        const target = env.model.getters.getSelectedZones();
-        if (osClipboard && osClipboard !== spreadsheetClipboard) {
-            env.model.dispatch("PASTE_FROM_OS_CLIPBOARD", {
-                target,
-                text: osClipboard,
-            });
-        }
-        else {
-            env.model.dispatch("PASTE", {
-                target: env.model.getters.getSelectedZones(),
-                pasteOption: "onlyValue",
-            });
-        }
-    };
+    }
     const PASTE_FORMAT_ACTION = (env) => interactivePaste(env, env.model.getters.getSelectedZones(), "onlyFormat");
     const DELETE_CONTENT_ACTION = (env) => env.model.dispatch("DELETE_CONTENT", {
         sheetId: env.model.getters.getActiveSheetId(),
@@ -9126,6 +9137,7 @@
         name: NumberFormatTerms.CustomCurrency,
         sequence: 39,
         separator: true,
+        isVisible: (env) => env.loadCurrencies !== undefined,
         action: OPEN_CUSTOM_CURRENCY_SIDEPANEL_ACTION,
     })
         .addChild("format_number_date", ["format", "format_number"], {
@@ -11639,7 +11651,7 @@
                 action: async () => {
                     this.env.model.dispatch("SELECT_FIGURE", { id: this.props.figure.id });
                     this.env.model.dispatch("COPY");
-                    await this.env.clipboard.writeText(this.env.model.getters.getClipboardContent());
+                    await this.env.clipboard.clear();
                 },
             });
             registry.add("cut", {
@@ -11648,7 +11660,7 @@
                 action: async () => {
                     this.env.model.dispatch("SELECT_FIGURE", { id: this.props.figure.id });
                     this.env.model.dispatch("CUT");
-                    await this.env.clipboard.writeText(this.env.model.getters.getClipboardContent());
+                    await this.env.clipboard.clear();
                 },
             });
             registry.add("delete", {
@@ -15341,7 +15353,7 @@
         assert(() => pv > 0, _lt("The present value (%s) must be strictly positive.", pv.toString()));
     }
     function assertPeriodSmallerOrEqualToLife(period, life) {
-        assert(() => period <= life, _lt("The period (%s) must be less than or equal life (%.", period.toString(), life.toString()));
+        assert(() => period <= life, _lt("The period (%s) must be less than or equal life (%s).", period.toString(), life.toString()));
     }
     function assertInvestmentStrictlyPositive(investment) {
         assert(() => investment > 0, _lt("The investment (%s) must be strictly positive.", investment.toString()));
@@ -23510,6 +23522,11 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
             if (!this.gridEl.contains(document.activeElement)) {
                 return;
             }
+            const clipboardData = ev.clipboardData;
+            if (!clipboardData) {
+                this.displayWarningCopyPasteNotSupported();
+                return;
+            }
             /* If we are currently editing a cell, let the default behavior */
             if (this.env.model.getters.getEditionMode() !== "inactive") {
                 return;
@@ -23521,7 +23538,9 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
                 this.env.model.dispatch("COPY");
             }
             const content = this.env.model.getters.getClipboardContent();
-            ev.clipboardData.setData("text/plain", content);
+            for (const type in content) {
+                clipboardData.setData(type, content[type]);
+            }
             ev.preventDefault();
         }
         paste(ev) {
@@ -23529,11 +23548,15 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
                 return;
             }
             const clipboardData = ev.clipboardData;
-            if (clipboardData.types.indexOf("text/plain") > -1) {
-                const content = clipboardData.getData("text/plain");
+            if (!clipboardData) {
+                this.displayWarningCopyPasteNotSupported();
+                return;
+            }
+            if (clipboardData.types.indexOf(ClipboardMIMEType.PlainText) > -1) {
+                const content = clipboardData.getData(ClipboardMIMEType.PlainText);
                 const target = this.env.model.getters.getSelectedZones();
-                const clipBoardString = this.env.model.getters.getClipboardContent();
-                if (clipBoardString === content) {
+                const clipboardString = this.env.model.getters.getClipboardTextContent();
+                if (clipboardString === content) {
                     // the paste actually comes from o-spreadsheet itself
                     interactivePaste(this.env, target);
                 }
@@ -23541,6 +23564,9 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
                     interactivePasteFromOS(this.env, target, content);
                 }
             }
+        }
+        displayWarningCopyPasteNotSupported() {
+            this.env.raiseError(_lt("Copy/Paste is not supported in this browser."));
         }
         closeMenu() {
             this.menuState.isOpen = false;
@@ -25467,8 +25493,8 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
     function formatAttributes(attrs) {
         return new XMLString(attrs.map(([key, val]) => `${key}="${xmlEscape(val)}"`).join(" "));
     }
-    function parseXML(xmlString) {
-        const document = new DOMParser().parseFromString(xmlString.toString(), "text/xml");
+    function parseXML(xmlString, mimeType = "text/xml") {
+        const document = new DOMParser().parseFromString(xmlString.toString(), mimeType);
         const parserError = document.querySelector("parsererror");
         if (parserError) {
             const errorString = parserError.innerHTML;
@@ -27213,6 +27239,11 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
          * @param sheetId an optional sheetId to adapt either range of that sheet specifically, or ranges pointing to that sheet
          */
         adaptRanges(applyChange, sheetId) { }
+        /**
+         * Implement this method to clean unused external resources, such as images
+         * stored on a server which have been deleted.
+         */
+        garbageCollectExternalResources() { }
     }
 
     /**
@@ -29233,7 +29264,7 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
         }
         getHeaderSize(sheetId, dimension, index) {
             var _a, _b, _c, _d;
-            return (((_b = (_a = this.sizes[sheetId]) === null || _a === void 0 ? void 0 : _a[dimension][index]) === null || _b === void 0 ? void 0 : _b.manualSize) ||
+            return Math.round(((_b = (_a = this.sizes[sheetId]) === null || _a === void 0 ? void 0 : _a[dimension][index]) === null || _b === void 0 ? void 0 : _b.manualSize) ||
                 ((_d = (_c = this.sizes[sheetId]) === null || _c === void 0 ? void 0 : _c[dimension][index]) === null || _d === void 0 ? void 0 : _d.computedSize()) ||
                 this.getDefaultHeaderSize(dimension));
         }
@@ -29266,9 +29297,7 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
                 return DEFAULT_CELL_HEIGHT;
             }
             const cell = this.getters.getCell(position);
-            // TO DO: take multi text line into account to compute the real cell height in case of wrapping cell
-            const fontSize = computeTextFontSizeInPixels(cell === null || cell === void 0 ? void 0 : cell.style);
-            return computeTextLinesHeight(fontSize) + 2 * PADDING_AUTORESIZE_VERTICAL;
+            return getDefaultCellHeight(cell === null || cell === void 0 ? void 0 : cell.style);
         }
         /**
          * Get the tallest cell of a row and its size.
@@ -29540,7 +29569,7 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
                 action: async () => {
                     this.env.model.dispatch("SELECT_FIGURE", { id: this.figureId });
                     this.env.model.dispatch("COPY");
-                    await this.env.clipboard.writeText(this.env.model.getters.getClipboardContent());
+                    await this.env.clipboard.clear();
                 },
             });
             registry.add("cut", {
@@ -29550,7 +29579,7 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
                 action: async () => {
                     this.env.model.dispatch("SELECT_FIGURE", { id: this.figureId });
                     this.env.model.dispatch("CUT");
-                    await this.env.clipboard.writeText(this.env.model.getters.getClipboardContent());
+                    await this.env.clipboard.clear();
                 },
             });
             registry.add("reset_size", {
@@ -29618,10 +29647,15 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
     };
 
     class ImagePlugin extends CorePlugin {
-        constructor() {
-            super(...arguments);
+        constructor(config) {
+            super(config);
             this.images = {};
+            /**
+             * paths of images synced with the file store server.
+             */
+            this.syncedImages = new Set();
             this.nextId = 1;
+            this.fileStore = config.external.fileStore;
         }
         // ---------------------------------------------------------------------------
         // Command Handling
@@ -29642,6 +29676,7 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
                 case "CREATE_IMAGE":
                     this.addFigure(cmd.figureId, cmd.sheetId, cmd.position, cmd.size);
                     this.history.update("images", cmd.sheetId, cmd.figureId, cmd.definition);
+                    this.syncedImages.add(cmd.definition.path);
                     break;
                 case "DUPLICATE_SHEET": {
                     const sheetFiguresFrom = this.getters.getFigures(cmd.sheetId);
@@ -29670,6 +29705,18 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
                 case "DELETE_SHEET":
                     this.history.update("images", cmd.sheetId, undefined);
                     break;
+            }
+        }
+        /**
+         * Delete unused images from the file store
+         */
+        garbageCollectExternalResources() {
+            var _a;
+            const images = new Set(this.getAllImages().map((image) => image.path));
+            for (const path of this.syncedImages) {
+                if (!images.has(path)) {
+                    (_a = this.fileStore) === null || _a === void 0 ? void 0 : _a.delete(path);
+                }
             }
         }
         // ---------------------------------------------------------------------------
@@ -29709,6 +29756,7 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
                 for (const image of images) {
                     this.history.update("nextId", this.nextId + 1);
                     this.history.update("images", sheet.id, image.id, image.data);
+                    this.syncedImages.add(image.data.path);
                 }
             }
         }
@@ -29720,6 +29768,13 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
                     image.data = (_a = this.images[sheet.id]) === null || _a === void 0 ? void 0 : _a[image.id];
                 }
             }
+        }
+        getAllImages() {
+            const images = [];
+            for (const sheetId in this.images) {
+                images.push(...Object.values(this.images[sheetId] || {}).filter(isDefined$1));
+            }
+            return images;
         }
     }
     ImagePlugin.getters = ["getImage", "getImagePath", "getImageSize"];
@@ -31532,7 +31587,7 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
             super(config);
             this.isUpToDate = false;
             this.evaluatedCells = {};
-            this.evalContext = config.external;
+            this.evalContext = config.custom;
             this.lazyEvaluation = config.lazyEvaluation;
         }
         // ---------------------------------------------------------------------------
@@ -36712,6 +36767,7 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
                     const position = { col, row, sheetId };
                     cellsInRow.push({
                         cell: getters.getCell(position),
+                        style: getters.getCellComputedStyle(position),
                         evaluatedCell: getters.getEvaluatedCell(position),
                         border: getters.getCellBorder(position) || undefined,
                         position,
@@ -37062,6 +37118,12 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
             }
         }
         getClipboardContent() {
+            return {
+                [ClipboardMIMEType.PlainText]: this.getPlainTextContent(),
+                [ClipboardMIMEType.Html]: this.getHTMLContent(),
+            };
+        }
+        getPlainTextContent() {
             return (this.cells
                 .map((cells) => {
                 return cells
@@ -37069,6 +37131,23 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
                     .join("\t");
             })
                 .join("\n") || "\t");
+        }
+        getHTMLContent() {
+            if (this.cells.length == 1 && this.cells[0].length == 1) {
+                return this.getters.getCellText(this.cells[0][0].position);
+            }
+            let htmlTable = '<table border="1" style="border-collapse:collapse">';
+            for (const row of this.cells) {
+                htmlTable += "<tr>";
+                for (const cell of row) {
+                    const cssStyle = cssPropertiesToCss(cellStyleToCss(cell.style), false);
+                    const cellText = this.getters.getCellText(cell.position);
+                    htmlTable += `<td style="${cssStyle}">` + xmlEscape(cellText) + "</td>";
+                }
+                htmlTable += "</tr>";
+            }
+            htmlTable += "</table>";
+            return htmlTable;
         }
         isColRowDirtyingClipboard(position, dimension) {
             if (!this.zones)
@@ -37160,7 +37239,7 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
             this.dispatch("SELECT_FIGURE", { id: newId });
         }
         getClipboardContent() {
-            return "\t";
+            return { [ClipboardMIMEType.PlainText]: "\t" };
         }
         isColRowDirtyingClipboard(position, dimension) {
             return false;
@@ -37250,7 +37329,9 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
             this.selection.selectZone({ cell: { col: activeCol, row: activeRow }, zone });
         }
         getClipboardContent() {
-            return this.values.map((values) => values.join("\t")).join("\n");
+            return {
+                [ClipboardMIMEType.PlainText]: this.values.map((values) => values.join("\t")).join("\n"),
+            };
         }
         getPasteZone(target) {
             const height = this.values.length;
@@ -37407,7 +37488,11 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
          */
         getClipboardContent() {
             var _a;
-            return ((_a = this.state) === null || _a === void 0 ? void 0 : _a.getClipboardContent()) || "\t";
+            return ((_a = this.state) === null || _a === void 0 ? void 0 : _a.getClipboardContent()) || { [ClipboardMIMEType.PlainText]: "\t" };
+        }
+        getClipboardTextContent() {
+            var _a;
+            return ((_a = this.state) === null || _a === void 0 ? void 0 : _a.getClipboardContent()[ClipboardMIMEType.PlainText]) || "\t";
         }
         isCutOperation() {
             return this.state ? this.state.operation === "CUT" : false;
@@ -37485,7 +37570,12 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
         }
     }
     ClipboardPlugin.layers = [2 /* LAYERS.Clipboard */];
-    ClipboardPlugin.getters = ["getClipboardContent", "isCutOperation", "isPaintingFormat"];
+    ClipboardPlugin.getters = [
+        "getClipboardContent",
+        "getClipboardTextContent",
+        "isCutOperation",
+        "isPaintingFormat",
+    ];
 
     const selectionStatisticFunctions = [
         {
@@ -39296,6 +39386,66 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
         onComposerContentFocused: Function,
     };
 
+    function instantiateClipboard() {
+        return new WebClipboardWrapper(navigator.clipboard);
+    }
+    class WebClipboardWrapper {
+        // Can be undefined because navigator.clipboard doesn't exist in old browsers
+        constructor(clipboard) {
+            this.clipboard = clipboard;
+        }
+        async write(clipboardContent) {
+            var _a;
+            try {
+                (_a = this.clipboard) === null || _a === void 0 ? void 0 : _a.write(this.getClipboardItems(clipboardContent));
+            }
+            catch (e) { }
+        }
+        async writeText(text) {
+            var _a;
+            try {
+                (_a = this.clipboard) === null || _a === void 0 ? void 0 : _a.writeText(text);
+            }
+            catch (e) { }
+        }
+        async readText() {
+            let permissionResult = undefined;
+            try {
+                //@ts-ignore - clipboard-read is not implemented in all browsers
+                permissionResult = await navigator.permissions.query({ name: "clipboard-read" });
+            }
+            catch (e) { }
+            try {
+                const clipboardContent = await this.clipboard.readText();
+                return { status: "ok", content: clipboardContent };
+            }
+            catch (e) {
+                const status = (permissionResult === null || permissionResult === void 0 ? void 0 : permissionResult.state) === "denied" ? "permissionDenied" : "notImplemented";
+                return { status };
+            }
+        }
+        async clear() {
+            var _a;
+            try {
+                (_a = this.clipboard) === null || _a === void 0 ? void 0 : _a.write([]);
+            }
+            catch (e) { }
+        }
+        getClipboardItems(content) {
+            return [
+                new ClipboardItem({
+                    [ClipboardMIMEType.PlainText]: this.getBlob(content, ClipboardMIMEType.PlainText),
+                    [ClipboardMIMEType.Html]: this.getBlob(content, ClipboardMIMEType.Html),
+                }),
+            ];
+        }
+        getBlob(clipboardContent, type) {
+            return new Blob([clipboardContent[type] || ""], {
+                type,
+            });
+        }
+    }
+
     css /* scss */ `
   .o-spreadsheet {
     position: relative;
@@ -39392,14 +39542,16 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
                 "CTRL+H": () => this.toggleSidePanel("FindAndReplace", {}),
                 "CTRL+F": () => this.toggleSidePanel("FindAndReplace", {}),
             };
+            const fileStore = this.model.config.external.fileStore;
             owl.useSubEnv({
                 model: this.model,
-                imageProvider: this.props.fileStore ? new ImageProvider(this.props.fileStore) : undefined,
+                imageProvider: fileStore ? new ImageProvider(fileStore) : undefined,
+                loadCurrencies: this.model.config.external.loadCurrencies,
                 isDashboard: () => this.model.getters.isDashboard(),
                 openSidePanel: this.openSidePanel.bind(this),
                 toggleSidePanel: this.toggleSidePanel.bind(this),
                 _t: Spreadsheet._t,
-                clipboard: navigator.clipboard,
+                clipboard: this.env.clipboard || instantiateClipboard(),
             });
             owl.useExternalListener(window, "resize", () => this.render(true));
             owl.useExternalListener(window, "beforeunload", this.unbindModelEvents.bind(this));
@@ -39535,7 +39687,6 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
     Spreadsheet._t = t;
     Spreadsheet.props = {
         model: Object,
-        fileStore: { type: Object, optional: true },
     };
 
     class LocalTransportService {
@@ -43046,6 +43197,7 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
             this.joinSession();
             if (config.snapshotRequested) {
                 this.session.snapshot(this.exportData());
+                this.garbageCollectExternalResources();
             }
             // mark all models as "raw", so they will not be turned into reactive objects
             // by owl, since we do not rely on reactivity
@@ -43136,6 +43288,7 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
             return {
                 ...config,
                 mode: config.mode || "normal",
+                custom: config.custom || {},
                 external: config.external || {},
                 transportService,
                 client,
@@ -43152,6 +43305,7 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
                 range: this.range,
                 dispatch: this.dispatchFromCorePlugin,
                 uuidGenerator: this.uuidGenerator,
+                custom: this.config.custom,
                 external: this.config.external,
             };
         }
@@ -43162,7 +43316,7 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
                 dispatch: this.dispatch,
                 selection: this.selection,
                 moveClient: this.session.move.bind(this.session),
-                external: this.config.external,
+                custom: this.config.custom,
                 uiActions: this.config,
                 lazyEvaluation: this.config.lazyEvaluation,
             };
@@ -43241,6 +43395,7 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
             if (mode !== "normal") {
                 this.dispatch("STOP_EDITION", { cancel: true });
             }
+            // @ts-ignore For testing purposes only
             this.config.mode = mode;
             this.trigger("update");
         }
@@ -43263,6 +43418,11 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
             }
             data = JSON.parse(JSON.stringify(data));
             return getXLSX(data);
+        }
+        garbageCollectExternalResources() {
+            for (const plugin of this.corePlugins) {
+                plugin.garbageCollectExternalResources();
+            }
         }
     }
 
@@ -43399,8 +43559,8 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
     Object.defineProperty(exports, '__esModule', { value: true });
 
     exports.__info__.version = '2.0.0';
-    exports.__info__.date = '2023-01-04T17:31:52.940Z';
-    exports.__info__.hash = 'f88b16b';
+    exports.__info__.date = '2023-01-10T08:40:22.199Z';
+    exports.__info__.hash = 'fc313d3';
 
 })(this.o_spreadsheet = this.o_spreadsheet || {}, owl);
 //# sourceMappingURL=o_spreadsheet.js.map

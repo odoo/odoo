@@ -21,7 +21,7 @@ export async function mountSpreadsheet(model) {
     const app = new App(Spreadsheet, {
         props: { model },
         templates: templates,
-        env: model.config.external.env,
+        env: model.config.custom.env,
         test: true,
     });
     registerCleanup(() => app.destroy());

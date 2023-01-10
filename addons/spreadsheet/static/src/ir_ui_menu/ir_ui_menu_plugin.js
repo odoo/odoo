@@ -5,7 +5,7 @@ const { CorePlugin } = spreadsheet;
 export default class IrMenuPlugin extends CorePlugin {
     constructor(config) {
         super(config);
-        this.env = config.external.env;
+        this.env = config.custom.env;
     }
 
     /**

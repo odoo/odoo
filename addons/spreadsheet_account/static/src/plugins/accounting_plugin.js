@@ -11,7 +11,7 @@ const DATA_SOURCE_ID = "ACCOUNTING_AGGREGATES";
 export default class AccountingPlugin extends spreadsheet.UIPlugin {
     constructor(config) {
         super(config);
-        this.dataSources = config.external.dataSources;
+        this.dataSources = config.custom.dataSources;
         if (this.dataSources) {
             this.dataSources.add(DATA_SOURCE_ID, AccountingDataSource);
         }
