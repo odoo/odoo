@@ -292,7 +292,8 @@ class StockWarehouseOrderpoint(models.Model):
         rules_groups = self.env['stock.rule']._read_group([
             ('route_id.product_selectable', '!=', False),
             ('location_dest_id', 'in', self.location_id.ids),
-            ('action', 'in', ['pull_push', 'pull'])
+            ('action', 'in', ['pull_push', 'pull']),
+            ('route_id.active', '!=', False)
         ], ['location_dest_id', 'route_id'], ['location_dest_id', 'route_id'], lazy=False)
         for g in rules_groups:
             if not g.get('route_id'):
