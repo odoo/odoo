@@ -13,7 +13,7 @@ from psycopg2 import IntegrityError
 from psycopg2.extras import Json
 
 from odoo.exceptions import AccessError, ValidationError
-from odoo.tests import common
+from odoo.tests import common, tagged
 from odoo.tools import get_cache_key_counter, mute_logger, view_validation
 from odoo.addons.base.models.ir_ui_view import (
     transfer_field_to_modifiers, transfer_node_to_modifiers, simplify_modifiers,
@@ -3335,6 +3335,7 @@ Forbidden owl directive used in arch (t-on-click).""",
         arch = "<kanban><templates><t t-name='kanban-box'>%s</t></templates></kanban>"
 
         self.assertValid(arch % ('<span t-esc="record.resId"/>'))
+        self.assertValid(arch % ('<t t-debug=""/>'))
 
         self.assertInvalid(
             arch % ('<span t-on-click="x.doIt()"/>'),
@@ -3399,6 +3400,14 @@ Forbidden attribute used in arch (t-att-data-tooltip)."""
 <kanban __validate__="1"><templates><t t-name="kanban-box"><span t-attf-data-tooltip-template="{{ test }}"/></t></templates></kanban>
 Forbidden attribute used in arch (t-attf-data-tooltip-template)."""
         )
+
+
+@tagged('post_install', '-at_install')
+class TestDebugger(common.TransactionCase):
+    def test_t_debug_in_qweb_based_views(self):
+        View = self.env['ir.ui.view']
+        views_with_t_debug = View.search([["arch_db", "like", "t-debug="]])
+        self.assertEqual([v.xml_id for v in views_with_t_debug], [])
 
 
 class TestViewTranslations(common.TransactionCase):

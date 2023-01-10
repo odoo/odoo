@@ -1961,6 +1961,7 @@ actual arch.
                 "t-key",
                 "t-att.*",
                 "t-call",
+                "t-debug",
             ])
         if (not next(filter(lambda regex: re.match(regex, directive), allowed_directives), None)):
             self._raise_view_error(_("Forbidden owl directive used in arch (%s).", directive), node)
