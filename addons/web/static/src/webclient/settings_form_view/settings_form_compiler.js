@@ -17,8 +17,11 @@ export class SettingsFormCompiler extends FormCompiler {
 
     compileForm(el, params) {
         const settingsPage = createElement("SettingsPage");
-        settingsPage.setAttribute("slots", "{NoContentHelper:this.props.slots.NoContentHelper}");
-        settingsPage.setAttribute("initialTab", "this.props.initialApp");
+        settingsPage.setAttribute(
+            "slots",
+            "{NoContentHelper:__comp__.props.slots.NoContentHelper}"
+        );
+        settingsPage.setAttribute("initialTab", "__comp__.props.initialApp");
         settingsPage.setAttribute("t-slot-scope", "settings");
 
         //props
@@ -91,7 +94,7 @@ export class SettingsFormCompiler extends FormCompiler {
             help: toStringExpression(el.getAttribute("help") || ""),
             companyDependent: el.getAttribute("company_dependent") === "1" || "false",
             documentation: toStringExpression(el.getAttribute("documentation") || ""),
-            record: `this.props.record`,
+            record: `__comp__.props.record`,
         });
         let string = toStringExpression(el.getAttribute("string") || "");
         let addLabel = true;
