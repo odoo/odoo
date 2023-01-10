@@ -6,7 +6,7 @@ import './spec/copyPaste.test.js';
 import './spec/list.test.js';
 import './spec/link.test.js';
 import './spec/format.test.js';
-import './spec/insertHTML.test.js';
+import './spec/insert.test.js';
 import './spec/fontAwesome.test.js';
 import './spec/tabs.test.js';
 import './spec/autostep.test.js';
