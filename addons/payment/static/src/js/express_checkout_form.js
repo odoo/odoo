@@ -4,7 +4,7 @@ import core from 'web.core';
 import publicWidget from 'web.public.widget';
 
 publicWidget.registry.PaymentExpressCheckoutForm = publicWidget.Widget.extend({
-    selector: 'form[name="o_payment_express_checkout_form"]',
+    selector: 'div[name="o_payment_express_checkout_form"]',
 
     /**
      * @override
@@ -34,7 +34,7 @@ publicWidget.registry.PaymentExpressCheckoutForm = publicWidget.Widget.extend({
      */
     _getExpressCheckoutForms() {
         return document.querySelectorAll(
-            'form[name="o_payment_express_checkout_form"] div[name="o_express_checkout_container"]'
+            'div[name="o_payment_express_checkout_form"] div[name="o_express_checkout_container"]'
         );
     },
 

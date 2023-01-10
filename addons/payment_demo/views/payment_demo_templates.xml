@@ -38,6 +38,80 @@
                     </select>
                 </div>
             </div>
+            <t t-if="shipping_info_required">
+                <div class="mt-3 mb-0" >
+                Shipping
+                </div>
+                <div class="row mt-0">
+                    <div class="col mb-0">
+                        <label for="ec_name" class=" mt-0">
+                            <small><b>Name</b></small>
+                        </label>
+                        <input type="text" 
+                                id="ec_name" 
+                                class="form-control"
+                                required=""/>
+                    </div>
+                    <div class="col mb-0">
+                        <label for="ec_mail" class=" mt-0">
+                            <small>Email</small>
+                        </label>
+                        <input type="text" 
+                                id="ec_mail" 
+                                class="form-control"/>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col mb-0">
+                        <label for="ec_address" class="mt-1">
+                            <small><b>Street and Number</b></small>
+                        </label>
+                        <input type="text" 
+                                id="ec_address" 
+                                class="form-control"
+                                required=""
+                                value="Rue des Bourlottes 9"/>
+                    </div>
+                    <div class="col mb-0">
+                        <label for="ec_address2" class="mt-1">
+                            <small>Street 2</small>
+                        </label>
+                        <input type="text" 
+                                id="ec_address2" 
+                                class="form-control"
+                            />
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col mb-0">
+                        <label for="ec_zip" class="mt-1">
+                            <small><b>Zip Code</b></small>
+                        </label>
+                        <input type="text" 
+                                id="ec_zip" 
+                                class="form-control"
+                                required=""
+                                value="1367"/>
+                    </div>
+                    <div class="col mb-0">
+                        <label for="ec_city" class="mt-1">
+                            <small><b>City</b></small>
+                        </label>
+                        <input type="text" 
+                                id="ec_city" 
+                                class="form-control"
+                                value="Ramillies"
+                                required=""/>
+                    </div>
+                    <div class="col mb-0">
+                        <label for="ec_country" class="mt-1">
+                            <small><b>Country</b></small>
+                        </label>
+                        <select id="ec_country" class="form-select" name="ec_country">
+                        </select>
+                    </div>
+                </div>
+            </t>
         </div>
     </template>
 
@@ -59,5 +133,35 @@
             </div>
         </div>
     </template>
+
+    <template id="express_checkout_form">
+        <div name="o_express_checkout_container"
+             t-attf-id="o_demo_express_checkout_container_{{provider.id}}">
+            <button type="button" class="btn btn-primary mt-2 w-100" data-bs-toggle="modal" data-bs-target="#demoPaymentModal">
+                    Pay with Demo
+                    <span t-if="not provider.is_published"
+                          class="badge rounded-pill text-bg-danger ms-1">
+                          Unpublished
+                    </span>
+            </button>
+            <div class="modal fade" id="demoPaymentModal" tabindex="-1" aria-labelledby="demoPaymentModalLabel" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="demoPaymentModalLabel">Demo Express Checkout</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            <t t-call="payment.checkout">
+                                <t t-set="providers" t-value="provider"/>
+                                <t t-set="show_tokenize_input" t-value="{provider.id: False}"/>
+                                <t t-set="access_token" t-value="payment_access_token"/>
+                            </t>
+                        </div>  
+                    </div>
+                </div>
+            </div>
+        </div>
+   </template>
 
 </odoo>

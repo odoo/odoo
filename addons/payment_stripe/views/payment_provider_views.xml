@@ -48,7 +48,7 @@
                             type="object"
                             name="action_stripe_verify_apple_pay_domain"
                             class="btn btn-primary"
-                            attrs="{'invisible': [('allow_express_checkout', '!=', True)]}"/>
+                            attrs="{'invisible': ['|',('allow_express_checkout', '!=', True),('code','!=','stripe')]}"/>
                 </div>
             </field>
         </field>

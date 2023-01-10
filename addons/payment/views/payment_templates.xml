@@ -363,7 +363,7 @@
                                          sent.
             - 'landing_route' - The route the user is redirected to after the transaction.
         -->
-        <form name="o_payment_express_checkout_form" class="container"
+        <div name="o_payment_express_checkout_form" class="container"
               t-att-data-reference-prefix="reference_prefix"
               t-att-data-amount="amount"
               t-att-data-minor-amount="minor_amount"
@@ -386,7 +386,7 @@
                     </t>
                 </t>
             </t>
-        </form>
+        </div>
     </template>
 
     <!-- Expandable payment methods icons list -->
