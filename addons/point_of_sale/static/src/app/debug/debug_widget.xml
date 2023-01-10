@@ -2,13 +2,13 @@
 <templates id="template" xml:space="preserve">
 
     <t t-name="point_of_sale.DebugWidget" owl="1">
-        <Transition t-if="env.isDebug() and pos.uiState === 'READY'" visible="pos.debugWidgetIsShown" name="'o-fade'" leaveDuration="200" t-slot-scope="transition">
+        <Transition visible="props.state.showWidget" name="'o-fade'" leaveDuration="200" t-slot-scope="transition">
             <Draggable limitArea="'.pos'">
                 <div class="debug-widget" t-att-class="transition.className">
                     <header class="drag-handle">
                         <h1>Debug Window</h1>
                     </header>
-                    <div class="toggle" t-on-click="() => pos.toggleDebugWidget()" title="Dismiss"
+                    <div class="toggle" t-on-click="() => debug.toggleWidget()" title="Dismiss"
                         role="img" aria-label="Dismiss"><i class="fa fa-times" /></div>
                     <div class="content">
                         <p class="category">Electronic Scale</p>

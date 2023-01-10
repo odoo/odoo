@@ -125,6 +125,7 @@
             'point_of_sale/static/src/js/**/*.js',
             'web/static/lib/zxing-library/zxing-library.js',
             'point_of_sale/static/src/xml/**/*.xml',
+            'point_of_sale/static/src/utils.js',
             'point_of_sale/static/src/app/**/*',
         ],
         # This bundle contains the code responsible for starting the POS UI.

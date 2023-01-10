@@ -2,6 +2,9 @@
 
 import { PosComponent } from "@point_of_sale/js/PosComponent";
 import { useBus } from "@web/core/utils/hooks";
+import { registry } from "@web/core/registry";
+import { usePos } from "@point_of_sale/app/pos_store";
+import { useExternalListener, useState } from "@odoo/owl";
 
 /**
  * This component is responsible in controlling the popups. It does so
@@ -29,11 +32,15 @@ export class PosPopupController extends PosComponent {
     static components = {};
 
     setup() {
+        this.pos = usePos();
+        // FIXME POSREF stop overwriting env
+        this.env = this.pos.legacyEnv;
+        this.__owl__.childEnv = this.env;
         super.setup();
         useBus(this.env.posbus, "show-popup", this._showPopup);
         useBus(this.env.posbus, "close-popup", this._closePopup);
-        owl.useExternalListener(window, "keyup", this._onWindowKeyup);
-        this.popups = owl.useState([]);
+        useExternalListener(window, "keyup", this._onWindowKeyup);
+        this.popups = useState([]);
     }
     /**
      * A popup can be cancelled/confirmed with 'Escape'/'Enter' key by default.
@@ -109,3 +116,7 @@ export class PosPopupController extends PosComponent {
         return this.topPopup === popup || popup.props.keepBehind;
     }
 }
+
+registry.category("main_components").add("PosPopupController", {
+    Component: PosPopupController,
+});

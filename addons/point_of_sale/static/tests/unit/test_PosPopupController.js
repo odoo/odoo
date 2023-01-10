@@ -6,6 +6,8 @@ import { PosComponent } from "@point_of_sale/js/PosComponent";
 import makeTestEnvironment from "web.test_env";
 import testUtils from "web.test_utils";
 import { mount } from "@web/../tests/helpers/utils";
+import { makeTestEnv } from "@web/../tests/helpers/mock_env";
+import { registry } from "@web/core/registry";
 
 const { EventBus, useSubEnv, xml } = owl;
 
@@ -35,29 +37,46 @@ CustomPopup2.template = xml/* html */ `
     </div>
 `;
 
-QUnit.module("unit tests for PosPopupController");
+let env;
+QUnit.module("unit tests for PosPopupController", {
+    async beforeEach() {
+        const posbus = new EventBus();
+        const makeService = (obj) => ({
+            start() {
+                return obj;
+            },
+        });
+        const legacyEnv = makeTestEnvironment();
+        registry.category("services").add("pos_notification", makeService({ add() {} }));
+        registry.category("services").add("sound", makeService({ play() {} }));
+        registry.category("services").add("pos", makeService({ legacyEnv }));
+        env = await makeTestEnv();
+        for (const service of ["pos", "pos_notification", "sound"]) {
+            legacyEnv.services[service] = env.services[service];
+        }
+        env.posbus = posbus;
+        legacyEnv.posbus = posbus;
+    },
+});
 
 QUnit.test("allow multiple popups at the same time", async function (assert) {
     assert.expect(12);
-
     class Root extends PosComponent {
         static components = { PosPopupController };
         setup() {
             super.setup();
             useSubEnv({
                 isDebug: () => false,
-                posbus: new EventBus(),
             });
         }
     }
-    Root.env = makeTestEnvironment();
     Root.template = xml/* html */ `
             <div>
                 <PosPopupController />
             </div>
         `;
 
-    const root = await mount(Root, testUtils.prepareTarget());
+    const root = await mount(Root, testUtils.prepareTarget(), { env });
 
     // Check 1 popup
     let popup1Promise = root.showPopup(CustomPopup1, {});
@@ -117,18 +136,16 @@ QUnit.test("pressing cancel/confirm key should only close the top popup", async 
             super.setup();
             useSubEnv({
                 isDebug: () => false,
-                posbus: new EventBus(),
             });
         }
     }
-    Root.env = makeTestEnvironment();
     Root.template = xml/* html */ `
             <div>
                 <PosPopupController />
             </div>
         `;
 
-    const root = await mount(Root, testUtils.prepareTarget());
+    const root = await mount(Root, testUtils.prepareTarget(), { env });
 
     const popup1Promise = root.showPopup(CustomPopup1, {
         confirmKey: "Enter",

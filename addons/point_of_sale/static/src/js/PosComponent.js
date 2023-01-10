@@ -1,11 +1,16 @@
 /** @odoo-module */
 
+import { useService } from "@web/core/utils/hooks";
 import { LegacyComponent } from "@web/legacy/legacy_component";
 
 let nextId = 0;
 
 export class PosComponent extends LegacyComponent {
     static components = {};
+    setup() {
+        this.notification = useService("pos_notification");
+        this.sound = useService("sound");
+    }
     /**
      * This function is available to all Components that inherit this class.
      * The goal of this function is to show an awaitable dialog (popup) that
@@ -42,7 +47,7 @@ export class PosComponent extends LegacyComponent {
      * @param {String} name 'bell' | 'error'
      */
     playSound(name) {
-        this.trigger("play-sound", name);
+        this.sound.play(name);
     }
     /**
      * Control the SyncNotification component.
@@ -52,10 +57,7 @@ export class PosComponent extends LegacyComponent {
     setSyncStatus(status, pending) {
         this.trigger("set-sync-status", { status, pending });
     }
-    showNotification(message, duration = 2000) {
-        this.trigger("show-notification", { message, duration });
-    }
-    closeNotification() {
-        this.trigger("close-notification");
+    showNotification(message, duration) {
+        this.notification.add(message, duration);
     }
 }

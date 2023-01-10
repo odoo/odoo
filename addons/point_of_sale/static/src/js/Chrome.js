@@ -15,13 +15,10 @@ import { Navbar } from "@point_of_sale/app/navbar/navbar";
 
 // ChromeAdapter imports
 import { ProductScreen } from "@point_of_sale/js/Screens/ProductScreen/ProductScreen";
-import { PosGlobalState } from "@point_of_sale/js/models";
 import { configureGui } from "@point_of_sale/js/Gui";
 import { registry } from "@web/core/registry";
 import { pos_env as env } from "@point_of_sale/js/pos_env";
 
-import { Notification } from "./Notification";
-import { PosPopupController } from "./Popups/PosPopupController";
 import { ErrorTracebackPopup } from "./Popups/ErrorTracebackPopup";
 import { CashOpeningPopup } from "./Popups/CashOpeningPopup";
 import { ConfirmPopup } from "./Popups/ConfirmPopup";
@@ -32,7 +29,6 @@ import {
     useExternalListener,
     useSubEnv,
     reactive,
-    markRaw,
     onWillUnmount,
 } from "@odoo/owl";
 import { usePos } from "@point_of_sale/app/pos_store";
@@ -43,18 +39,15 @@ import { usePos } from "@point_of_sale/app/pos_store";
 export class Chrome extends PosComponent {
     static template = "Chrome"; // FIXME POSREF namespace templates
     setup() {
+        this.pos = usePos();
         // BEGIN ChromeAdapter
         ProductScreen.sortControlButtons();
         const legacyActionManager = useService("legacy_action_manager");
 
-        // Instantiate PosGlobalState here to ensure that every extension
-        // (or class overloads) is taken into consideration.
-        const pos = new PosGlobalState({ env: markRaw(env) });
-
         this.batchedCustomerDisplayRender = batched(() => {
             reactivePos.send_current_order_to_customer_facing_display();
         });
-        const reactivePos = reactive(pos, this.batchedCustomerDisplayRender);
+        const reactivePos = reactive(this.pos.globalState, this.batchedCustomerDisplayRender);
         env.pos = reactivePos;
         env.legacyActionManager = legacyActionManager;
 
@@ -63,12 +56,13 @@ export class Chrome extends PosComponent {
 
         // TODO: Should we continue on exposing posmodel as global variable?
         // Expose only the reactive version of `pos` when in debug mode.
-        window.posmodel = pos.debug ? reactivePos : pos;
+        window.posmodel = this.pos.globalState.debug ? reactivePos : this.pos.globalState;
 
         this.wowlEnv = this.env;
-        env.services.pos = this.wowlEnv.services.pos;
-        env.services.sound = this.wowlEnv.services.sound;
-        window.sound = env.services.sound;
+        for (const service of ["pos", "sound", "debug", "pos_notification"]) {
+            env.services[service] = this.wowlEnv.services[service];
+        }
+
         this.env = env;
         this.__owl__.childEnv = env;
         useSubEnv({
@@ -94,19 +88,10 @@ export class Chrome extends PosComponent {
         useListener("close-temp-screen", this.__closeTempScreen);
         useListener("close-pos", this._closePos);
         useListener("loading-skip-callback", () => this.env.proxy.stop_searching());
-        const sound = useService("sound");
-        useListener("play-sound", ({ detail: name }) => sound.play(name));
         useListener("set-sync-status", this._onSetSyncStatus);
-        useListener("show-notification", this._onShowNotification);
-        useListener("close-notification", this._onCloseNotification);
         useListener("connect-to-proxy", this.connect_to_proxy);
         useBus(this.env.posbus, "start-cash-control", this.openCashControl);
         numberBuffer.activate();
-
-        this.state = usePos();
-
-        this.mainScreen = this.state.mainScreen;
-        this.mainScreenProps = {};
 
         useSubEnv({
             pos: reactive(
@@ -145,9 +130,9 @@ export class Chrome extends PosComponent {
      * NOTE: Wait for pos data to be completed before calling this getter.
      */
     get startScreen() {
-        if (this.state.uiState !== "READY") {
+        if (this.pos.uiState !== "READY") {
             console.warn(
-                `Accessing startScreen of Chrome component before 'state.uiState' to be 'READY' is not recommended.`
+                `Accessing startScreen of Chrome component before 'pos.uiState' to be 'READY' is not recommended.`
             );
         }
         return { name: "ProductScreen" };
@@ -184,7 +169,7 @@ export class Chrome extends PosComponent {
                 this.env.pos.config.start_category && this.env.pos.config.iface_start_categ_id
                     ? this.env.pos.config.iface_start_categ_id[0]
                     : 0;
-            this.state.uiState = "READY";
+            this.pos.uiState = "READY";
             this._showStartScreen();
             setTimeout(() => this._runBackgroundTasks());
         } catch (error) {
@@ -267,7 +252,7 @@ export class Chrome extends PosComponent {
     connect_to_proxy() {
         return new Promise((resolve, reject) => {
             this.env.barcode_reader.disconnect_from_proxy();
-            this.state.loadingSkipButtonIsShown = true;
+            this.pos.loadingSkipButtonIsShown = true;
             this.env.proxy
                 .autoconnect({
                     force_ip: this.env.pos.config.proxy_ip || undefined,
@@ -326,21 +311,19 @@ export class Chrome extends PosComponent {
     }
     __showTempScreen(event) {
         const { name, props, resolve } = event.detail;
-        this.state.tempScreen = {
+        this.pos.tempScreen = {
             name,
             component: registry.category("pos_screens").get(name),
             props: { ...props, resolve },
         };
     }
     __closeTempScreen() {
-        this.state.tempScreen = null;
+        this.pos.tempScreen = null;
     }
     __showScreen({ detail: { name, props = {} } }) {
         const component = registry.category("pos_screens").get(name);
         // 1. Set the information of the screen to display.
-        this.mainScreen.name = name;
-        this.mainScreen.component = component;
-        this.mainScreenProps = props;
+        this.pos.mainScreen = { name, component, props };
 
         // 2. Save the screen to the order.
         //  - This screen is shown when the order is selected.
@@ -402,8 +385,8 @@ export class Chrome extends PosComponent {
                 });
                 if (confirmed) {
                     // FIXME POSREF setting the location prevents the next render, the loading screen never shows
-                    this.state.uiState = "CLOSING";
-                    this.state.loadingSkipButtonIsShown = false;
+                    this.pos.uiState = "CLOSING";
+                    this.pos.loadingSkipButtonIsShown = false;
                     window.location = "/web#action=point_of_sale.action_client_pos_menu";
                 }
             }
@@ -412,14 +395,6 @@ export class Chrome extends PosComponent {
     _onSetSyncStatus({ detail: { status, pending } }) {
         this.env.pos.synch.status = status;
         this.env.pos.synch.pending = pending;
-    }
-    _onShowNotification({ detail: { message, duration } }) {
-        this.state.notification.isShown = true;
-        this.state.notification.message = message;
-        this.state.notification.duration = duration;
-    }
-    _onCloseNotification() {
-        this.state.notification.isShown = false;
     }
     /**
      * Save `env.pos.toRefundLines` in localStorage on beforeunload - closing the
@@ -458,7 +433,7 @@ export class Chrome extends PosComponent {
         }
 
         if (this.env.pos.config.iface_big_scrollbars) {
-            this.state.hasBigScrollBars = true;
+            this.pos.hasBigScrollBars = true;
         }
 
         this._disableBackspaceBack();
@@ -507,8 +482,6 @@ Object.defineProperty(Chrome, "components", {
                 MainComponentsContainer,
                 WithEnv,
                 Navbar,
-                PosPopupController,
-                Notification,
             },
             PosComponent.components
         );
