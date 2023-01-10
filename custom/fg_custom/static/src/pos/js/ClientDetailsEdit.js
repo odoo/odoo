@@ -21,17 +21,18 @@ odoo.define('fg_custom.FgClientDetailsEdit', function(require) {
                         processedChanges[key] = value;
                     }
                 }
-                if ((!this.props.partner.x_pwd_id && !processedChanges.x_pwd_id) || processedChanges.x_pwd_id === ''){
-                    return this.showPopup('ErrorPopup', {
-                      title: _t('A Customer PWD ID Is Required'),
-                    });
-                }else if((!this.props.partner.x_senior_id && !processedChanges.x_senior_id) || processedChanges.x_senior_id === ''){
-                    return this.showPopup('ErrorPopup', {
-                      title: _t('A Customer Senior ID Is Required'),
-                    });
-                }else{
-                    super.saveChanges();
-                }
+//                if ((!this.props.partner.x_pwd_id && !processedChanges.x_pwd_id) || processedChanges.x_pwd_id === ''){
+//                    return this.showPopup('ErrorPopup', {
+//                      title: _t('A Customer PWD ID Is Required'),
+//                    });
+//                }else if((!this.props.partner.x_senior_id && !processedChanges.x_senior_id) || processedChanges.x_senior_id === ''){
+//                    return this.showPopup('ErrorPopup', {
+//                      title: _t('A Customer Senior ID Is Required'),
+//                    });
+//                }else{
+//                    super.saveChanges();
+//                }
+                super.saveChanges();
             }
         };
 
