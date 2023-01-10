@@ -207,12 +207,24 @@ class PosOrder(models.Model):
         for line in self.lines:
             invoice_lines.append((0, None, self._prepare_invoice_line(line)))
             if line.order_id.pricelist_id.discount_policy == 'without_discount' and line.price_unit != line.product_id.lst_price:
-                invoice_lines.append((0, None, {
-                    'name': _('Price discount from %s -> %s',
-                              float_repr(line.product_id.lst_price, self.currency_id.decimal_places),
-                              float_repr(line.price_unit, self.currency_id.decimal_places)),
-                    'display_type': 'line_note',
-                }))
+                line_date = self.date_order or fields.Date.today()
+                product_context = dict(self.env.context, partner_id=self.partner_id.id, date=line_date, uom=line.product_uom_id.id)
+
+                _price, rule_id = self.pricelist_id.with_context(product_context).get_product_price_rule(line.product_id, line.qty or 1.0, self.partner_id)
+                new_list_price, currency = line.product_id.with_context(product_context)._get_real_price_currency(rule_id, line.qty, line.product_uom_id, self.pricelist_id.id, self.company_id)
+
+                if new_list_price != 0 and line.currency_id != currency:
+                    new_list_price = currency._convert(
+                        new_list_price, line.currency_id,
+                        self.company_id or self.env.company, line_date)
+
+                if (new_list_price > line.price_unit):
+                    invoice_lines.append((0, None, {
+                        'name': _('Price discount from %s -> %s',
+                                  float_repr(new_list_price, line.currency_id.decimal_places),
+                                  float_repr(line.price_unit, line.currency_id.decimal_places)),
+                        'display_type': 'line_note',
+                    }))
             if line.customer_note:
                 invoice_lines.append((0, None, {
                     'name': line.customer_note,
