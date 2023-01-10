@@ -94,6 +94,9 @@ export class ListRenderer extends Component {
 
         this.cellToFocus = null;
         this.activeRowId = null;
+
+        this.openOnClick =
+            this.props.archInfo.openOnClick || this.props.archInfo.openOnClick === null;
         onMounted(() => {
             this.activeElement = this.uiService.activeElement;
         });
@@ -920,7 +923,7 @@ export class ListRenderer extends Component {
             }
         } else if (this.props.list.editedRecord && this.props.list.editedRecord !== record) {
             this.props.list.unselectRecord(true);
-        } else if (!this.props.archInfo.noOpen) {
+        } else if (this.openOnClick) {
             this.props.openRecord(record);
         }
     }
@@ -1500,7 +1503,7 @@ export class ListRenderer extends Component {
                     return true;
                 }
 
-                if (!this.props.archInfo.noOpen) {
+                if (this.openOnClick) {
                     this.props.openRecord(record);
                     return true;
                 }

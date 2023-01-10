@@ -46,7 +46,7 @@
                             <field name="display_on_invoice" string="Display details"/>
 
                             <field name="line_ids" nolabel="1" colspan="2">
-                                <tree string="Payment Terms" editable="top" no_open="True">
+                                <tree string="Payment Terms" editable="top">
                                     <field name="value" string="Due Type"/>
                                     <field name="value_amount" attrs="{'invisible': [('value', '=', 'balance')]}" digits="[2, 2]"/>
                                     <field name="months"/>

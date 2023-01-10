@@ -202,7 +202,10 @@ export class ListArchParser extends XMLParser {
                 const groupsLimitAttr = node.getAttribute("groups_limit");
                 treeAttr.groupsLimit = groupsLimitAttr && parseInt(groupsLimitAttr, 10);
 
-                treeAttr.noOpen = archParseBoolean(node.getAttribute("no_open") || "");
+                treeAttr.openOnClick =
+                    node.getAttribute("open_on_click") === null
+                        ? null
+                        : archParseBoolean(node.getAttribute("open_on_click") || "");
                 treeAttr.expand = archParseBoolean(xmlDoc.getAttribute("expand") || "");
                 treeAttr.decorations = getDecoration(xmlDoc);
 

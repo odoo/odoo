@@ -647,7 +647,7 @@ QUnit.module("Fields", (hooks) => {
             arch: `
                 <form>
                     <field name="timmy">
-                        <tree>
+                        <tree open_on_click="1">
                             <field name="display_name"/><field name="float_field"/>
                         </tree>
                         <form>
@@ -1538,7 +1538,7 @@ QUnit.module("Fields", (hooks) => {
             arch: `
                 <form>
                     <field name="turtles">
-                        <tree>
+                        <tree open_on_click="1">
                             <field name="turtle_foo"/>
                         </tree>
                     </field>

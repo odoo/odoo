@@ -972,7 +972,7 @@ QUnit.module("Fields", (hooks) => {
             arch: `
                 <form>
                     <field name="turtles">
-                        <tree>
+                        <tree open_on_click="1">
                             <field name="partner_ids" widget="many2many_tags"/>
                         </tree>
                         <form>
@@ -1565,8 +1565,7 @@ QUnit.module("Fields", (hooks) => {
             type: "form",
             resModel: "partner",
             serverData,
-            arch:
-                '<form><field name="timmy" widget="many2many_tags" placeholder="Placeholder"/></form>',
+            arch: '<form><field name="timmy" widget="many2many_tags" placeholder="Placeholder"/></form>',
         });
 
         assert.strictEqual(

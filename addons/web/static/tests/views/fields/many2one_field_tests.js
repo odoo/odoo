@@ -517,7 +517,7 @@ QUnit.module("Fields", (hooks) => {
                         <field name="turtle_trululu" context="{'show_address': 1}" options="{'always_reload': 1}" />
                     </form>`,
                 "turtle,false,list": `
-                    <tree>
+                    <tree open_on_click="1">
                         <field name="display_name" />
                     </tree>`,
             };
@@ -560,7 +560,7 @@ QUnit.module("Fields", (hooks) => {
                         <field name="turtle_trululu" context="{'show_address': 1}" options="{'always_reload': 1}" />
                     </form>`,
                 "turtle,false,list": `
-                    <tree>
+                    <tree open_on_click="1">
                         <field name="display_name" />
                         <field name="turtle_trululu" />
                     </tree>`,

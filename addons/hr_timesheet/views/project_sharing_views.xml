@@ -35,7 +35,7 @@
                 <page string="Timesheets" id="timesheets_tab" attrs="{'invisible': [('allow_timesheets', '=', False)]}">
                     <field name="timesheet_ids" mode="tree,kanban"
                           attrs="{'invisible': [('analytic_account_active', '=', False)]}">
-                        <tree string="Timesheet Activities" default_order="date" no_open="1" create="false" delete="0">
+                        <tree string="Timesheet Activities" default_order="date" create="false" delete="0">
                             <field name="date"/>
                             <field name="employee_id"/>
                             <field name="name"/>

@@ -271,7 +271,7 @@ QUnit.module("Fields", (hooks) => {
                     <field name="reference" />
                 </form>`,
             "partner,false,list": `
-                <tree>
+                <tree open_on_click="1">
                     <field name="display_name"/>
                     <field name="reference" />
                 </tree>`,
@@ -324,7 +324,7 @@ QUnit.module("Fields", (hooks) => {
                     <field name="reference" />
                 </form>`,
             "partner,false,list": `
-                <tree>
+                <tree open_on_click="1">
                     <field name="display_name"/>
                     <field name="reference" />
                 </tree>`,
@@ -503,41 +503,44 @@ QUnit.module("Fields", (hooks) => {
         );
     });
 
-    QUnit.test("computed reference field changed by onchange to 'False,0' value", async function (assert) {
-        assert.expect(1);
+    QUnit.test(
+        "computed reference field changed by onchange to 'False,0' value",
+        async function (assert) {
+            assert.expect(1);
 
-        serverData.models.partner.onchanges = {
-            bar(obj) {
-                if (!obj.bar) {
-                    obj.reference_char = "False,0";
-                }
-            },
-        };
-        await makeView({
-            type: "form",
-            resModel: "partner",
-            serverData,
-            arch: `
+            serverData.models.partner.onchanges = {
+                bar(obj) {
+                    if (!obj.bar) {
+                        obj.reference_char = "False,0";
+                    }
+                },
+            };
+            await makeView({
+                type: "form",
+                resModel: "partner",
+                serverData,
+                arch: `
                 <form>
                     <field name="bar"/>
                     <field name="reference_char" widget="reference"/>
                 </form>`,
-            mockRPC(route, { args, method }) {
-                if (method === "create") {
-                    assert.deepEqual(args[0], {
-                        bar: false,
-                        reference_char: "False,0",
-                    });
-                }
-            },
-        });
+                mockRPC(route, { args, method }) {
+                    if (method === "create") {
+                        assert.deepEqual(args[0], {
+                            bar: false,
+                            reference_char: "False,0",
+                        });
+                    }
+                },
+            });
 
-        // trigger the onchange to set a value for the reference field
-        await click(target, ".o_field_boolean input");
+            // trigger the onchange to set a value for the reference field
+            await click(target, ".o_field_boolean input");
 
-        // save
-        await clickSave(target);
-    });
+            // save
+            await clickSave(target);
+        }
+    );
 
     QUnit.test("interact with reference field changed by onchange", async function (assert) {
         assert.expect(2);

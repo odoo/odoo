@@ -670,7 +670,7 @@ QUnit.module("Views", (hooks) => {
                 arch: `
                 <form edit="0">
                     <field name="partner_ids">
-                        <tree editable="top">
+                        <tree editable="top" open_on_click="1">
                             <field name="display_name"/>
                             <field name="timmy" widget="many2many_tags" options="{'color_field': 'color'}"/>
                         </tree>
@@ -703,7 +703,7 @@ QUnit.module("Views", (hooks) => {
             arch: `
                 <form>
                     <field name="p">
-                        <tree>
+                        <tree open_on_click="1">
                             <field name="foo" widget="my_widget"/>
                         </tree>
                     </field>
@@ -4494,10 +4494,10 @@ QUnit.module("Views", (hooks) => {
             arch: `
                 <form>
                     <field name="timmy">
-                        <tree><field name="display_name"/></tree>
+                        <tree open_on_click="1"><field name="display_name"/></tree>
                         <form>
                             <field name="partner_ids">
-                                <tree><field name="display_name"/></tree>
+                                <tree open_on_click="1"><field name="display_name"/></tree>
                                 <form><field name="display_name"/></form>
                             </field>
                         </form>
@@ -5920,7 +5920,7 @@ QUnit.module("Views", (hooks) => {
                     <field name="foo"/>
                     <field name="int_field"/>
                     <field name="p">
-                        <tree>
+                        <tree open_on_click="1">
                             <field name="display_name"/>
                             <field name="int_field"/>
                         </tree>
@@ -6104,7 +6104,7 @@ QUnit.module("Views", (hooks) => {
                             <field name="foo" widget="domain"/>
                         </group>
                         <field name="timmy">
-                            <tree>
+                            <tree open_on_click="1">
                                 <field name="display_name"/>
                             </tree>
                             <form>
@@ -6142,7 +6142,7 @@ QUnit.module("Views", (hooks) => {
                     <group>
                         <field name="foo"/>
                         <field name="timmy">
-                            <tree><field name="name"/></tree>
+                            <tree open_on_click="1"><field name="name"/></tree>
                             <form>
                                 <field name="name"/>
                                 <field name="color"/>
@@ -6601,7 +6601,7 @@ QUnit.module("Views", (hooks) => {
                     <field name="foo"/>
                     <field name="int_field"/>
                     <field name="p">
-                        <tree>
+                        <tree open_on_click="1">
                             <field name="foo"/>
                             <field name="bar"/>
                         </tree>
@@ -6737,7 +6737,7 @@ QUnit.module("Views", (hooks) => {
                     <form>
                         <field name="foo"/>
                         <field name="p" string="custom label">
-                            <tree>
+                            <tree open_on_click="1">
                                 <field name="foo"/>
                             </tree>
                             <form>
@@ -7634,7 +7634,7 @@ QUnit.module("Views", (hooks) => {
             arch: `
                 <form>
                     <field name="product_ids" widget="one2many">
-                        <tree create="0">
+                        <tree create="0" open_on_click="1">
                             <field name="display_name"/>
                             <field name="partner_type_ids"/>
                         </tree>
@@ -8429,7 +8429,7 @@ QUnit.module("Views", (hooks) => {
             arch: `
                 <form>
                     <field name="p">
-                        <tree default_order="foo desc">
+                        <tree open_on_click="1" default_order="foo desc">
                             <field name="display_name"/>
                             <field name="foo"/>
                         </tree>
@@ -8905,7 +8905,7 @@ QUnit.module("Views", (hooks) => {
             arch: `
                 <form>
                     <field name="p" widget="many2many" string="custom label">
-                        <tree><field name="display_name"/></tree>
+                        <tree open_on_click="1"><field name="display_name"/></tree>
                         <form><field name="display_name"/></form>
                     </field>
                 </form>`,
@@ -9778,7 +9778,7 @@ QUnit.module("Views", (hooks) => {
             arch: `
                 <form>
                     <field name="p">
-                        <tree><field name="display_name"/></tree>
+                        <tree open_on_click="1"><field name="display_name"/></tree>
                         <form>
                             <field name="display_name"/>
                             <field name="foo" attrs="{'readonly': [['display_name', '=', 'readonly']]}"/>

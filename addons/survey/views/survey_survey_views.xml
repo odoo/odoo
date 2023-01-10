@@ -66,7 +66,7 @@
                     <notebook>
                         <page string="Questions" name="questions">
                             <field name="question_and_page_ids" nolabel="1" widget="question_page_one2many" mode="tree,kanban" context="{'default_survey_id': active_id}">
-                                <tree decoration-bf="is_page">
+                                <tree decoration-bf="is_page" open_on_click="1">
                                     <field name="sequence" widget="handle"/>
                                     <field name="title" widget="survey_description_page"/>
                                     <field name="background_image" invisible="1"/>
