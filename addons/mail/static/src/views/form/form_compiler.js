@@ -86,7 +86,7 @@ export class MailFormCompiler extends ViewCompiler {
         const chatterContainerHookXml = res.querySelector(".o_FormRenderer_chatterContainer");
         if (chatterContainerHookXml) {
             setAttributes(chatterContainerHookXml, {
-                "t-if": `!this.hasAttachmentViewer() and this.uiService.size >= ${SIZES.XXL}`,
+                "t-if": `!__comp__.hasAttachmentViewer() and __comp__.uiService.size >= ${SIZES.XXL}`,
                 "t-attf-class": "o-aside",
             });
             const chatterContainerXml = chatterContainerHookXml.querySelector("ChatterContainer");
@@ -99,7 +99,7 @@ export class MailFormCompiler extends ViewCompiler {
         const attachmentViewHookXml = res.querySelector(".o_attachment_preview");
         if (attachmentViewHookXml) {
             setAttributes(attachmentViewHookXml, {
-                "t-if": `this.hasAttachmentViewer()`,
+                "t-if": `__comp__.hasAttachmentViewer()`,
             });
         }
         return res;
@@ -112,7 +112,7 @@ export class MailFormCompiler extends ViewCompiler {
             let compiledChild = this.compileNode(child, params, false);
             compiledChild = this.applyInvisible(invisible, compiledChild, {
                 ...params,
-                recordExpr: "this.model.root",
+                recordExpr: "__comp__.model.root",
             });
             append(compiledRoot, compiledChild);
         }
@@ -122,16 +122,16 @@ export class MailFormCompiler extends ViewCompiler {
     compileChatter(node) {
         return compileChatter(node, {
             chatter: "chatter",
-            threadId: "this.model.root.resId or undefined",
-            threadModel: "this.model.root.resModel",
-            webRecord: "this.model.root",
+            threadId: "__comp__.model.root.resId or undefined",
+            threadModel: "__comp__.model.root.resModel",
+            webRecord: "__comp__.model.root",
         });
     }
 
     compileAttachmentPreview(node) {
         return compileAttachmentPreview(node, {
-            threadId: "this.model.root.resId or undefined",
-            threadModel: "this.model.root.resModel",
+            threadId: "__comp__.model.root.resId or undefined",
+            threadModel: "__comp__.model.root.resModel",
         });
     }
 }
@@ -140,10 +140,10 @@ registry.category("form_compilers").add("chatter_compiler", {
     selector: "div.oe_chatter",
     fn: (node) =>
         compileChatter(node, {
-            chatter: "this.props.chatter",
-            threadId: "this.props.record.resId or undefined",
-            threadModel: "this.props.record.resModel",
-            webRecord: "this.props.record",
+            chatter: "__comp__.props.chatter",
+            threadId: "__comp__.props.record.resId or undefined",
+            threadModel: "__comp__.props.record.resModel",
+            webRecord: "__comp__.props.record",
         }),
 });
 
@@ -151,8 +151,8 @@ registry.category("form_compilers").add("attachment_preview_compiler", {
     selector: "div.o_attachment_preview",
     fn: (node) =>
         compileAttachmentPreview(node, {
-            threadId: "this.props.record.resId or undefined",
-            threadModel: "this.props.record.resModel",
+            threadId: "__comp__.props.record.resId or undefined",
+            threadModel: "__comp__.props.record.resModel",
         }),
 });
 
@@ -183,7 +183,7 @@ patch(FormCompiler.prototype, "mail", {
             const sheetBgChatterContainerHookXml = chatterContainerHookXml.cloneNode(true);
             sheetBgChatterContainerHookXml.classList.add("o-isInFormSheetBg");
             setAttributes(sheetBgChatterContainerHookXml, {
-                "t-if": `this.props.hasAttachmentViewer`,
+                "t-if": `__comp__.props.hasAttachmentViewer`,
             });
             append(formSheetBgXml, sheetBgChatterContainerHookXml);
             const sheetBgChatterContainerXml = sheetBgChatterContainerHookXml.querySelector(
@@ -195,7 +195,7 @@ patch(FormCompiler.prototype, "mail", {
         }
         // after sheet bg (standard position, below form)
         setAttributes(chatterContainerHookXml, {
-            "t-if": `!this.props.hasAttachmentViewer and this.uiService.size < ${SIZES.XXL}`,
+            "t-if": `!__comp__.props.hasAttachmentViewer and __comp__.uiService.size < ${SIZES.XXL}`,
         });
         append(parentXml, chatterContainerHookXml);
         return res;

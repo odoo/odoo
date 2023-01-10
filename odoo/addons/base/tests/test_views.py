@@ -3,6 +3,7 @@
 import ast
 import json
 import logging
+import re
 import time
 
 from functools import partial
@@ -16,7 +17,7 @@ from odoo.exceptions import AccessError, ValidationError
 from odoo.tests import common, tagged
 from odoo.tools import get_cache_key_counter, mute_logger, view_validation
 from odoo.addons.base.models.ir_ui_view import (
-    transfer_field_to_modifiers, transfer_node_to_modifiers, simplify_modifiers,
+    transfer_field_to_modifiers, transfer_node_to_modifiers, simplify_modifiers, COMP_REGEX
 )
 
 _logger = logging.getLogger(__name__)
@@ -3401,6 +3402,17 @@ Forbidden attribute used in arch (t-att-data-tooltip)."""
 Forbidden attribute used in arch (t-attf-data-tooltip-template)."""
         )
 
+    @mute_logger('odoo.addons.base.models.ir_ui_view')
+    def test_forbidden_use_of___comp___in_kanban(self):
+        arch = "<kanban><templates><t t-name='kanban-box'>%s</t></templates></kanban>"
+        self.assertInvalid(
+            arch % '<t t-esc="__comp__.props.resId"/>',
+            """Error while validating view near:
+
+<kanban __validate__="1"><templates><t t-name="kanban-box"><t t-esc="__comp__.props.resId"/></t></templates></kanban>
+Forbidden use of `__comp__` in arch."""
+        )
+
 
 @tagged('post_install', '-at_install')
 class TestDebugger(common.TransactionCase):
@@ -4147,3 +4159,25 @@ class TestRenderAllViews(common.TransactionCase):
 
         _logger.info('Rendered %d views as %s using (best of 5) %ss',
             count, self.env.user.name, elapsed)
+
+
+class CompRegexTest(common.TransactionCase):
+    def test_comp_regex(self):
+        self.assertIsNone(re.search(COMP_REGEX, ""))
+        self.assertIsNone(re.search(COMP_REGEX, "__comp__2"))
+        self.assertIsNone(re.search(COMP_REGEX, "__comp___that"))
+        self.assertIsNone(re.search(COMP_REGEX, "a__comp__"))
+
+        self.assertIsNotNone(re.search(COMP_REGEX, "__comp__"))
+        self.assertIsNotNone(re.search(COMP_REGEX, "__comp__ "))
+        self.assertIsNotNone(re.search(COMP_REGEX, " __comp__ "))
+        self.assertIsNotNone(re.search(COMP_REGEX, "__comp__.props"))
+        self.assertIsNotNone(re.search(COMP_REGEX, "__comp__ .props"))
+        self.assertIsNotNone(re.search(COMP_REGEX, "__comp__['props']"))
+        self.assertIsNotNone(re.search(COMP_REGEX, "__comp__ ['props']"))
+        self.assertIsNotNone(re.search(COMP_REGEX, "__comp__[\"props\"]"))
+        self.assertIsNotNone(re.search(COMP_REGEX, "__comp__ [\"props\"]"))
+        self.assertIsNotNone(re.search(COMP_REGEX, "    __comp__     [\"props\"]    "))
+        self.assertIsNotNone(re.search(COMP_REGEX, "record ? __comp__ : false"))
+        self.assertIsNotNone(re.search(COMP_REGEX, "!__comp__.props.resId"))
+        self.assertIsNotNone(re.search(COMP_REGEX, "{{ __comp__ }}"))

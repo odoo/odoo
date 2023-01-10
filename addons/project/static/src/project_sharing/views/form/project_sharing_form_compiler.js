@@ -40,7 +40,7 @@ export class ProjectSharingChatterCompiler extends ViewCompiler {
         const chatterContainerHookXml = res.querySelector(".o_FormRenderer_chatterContainer");
         if (chatterContainerHookXml) {
             setAttributes(chatterContainerHookXml, {
-                "t-if": `this.uiService.size >= ${SIZES.XXL}`,
+                "t-if": `__comp__.uiService.size >= ${SIZES.XXL}`,
             });
             chatterContainerHookXml.classList.add('overflow-x-hidden', 'overflow-y-auto', 'o-aside', 'h-100');
         }
@@ -54,7 +54,7 @@ export class ProjectSharingChatterCompiler extends ViewCompiler {
             let compiledChild = this.compileNode(child, params, false);
             compiledChild = this.applyInvisible(invisible, compiledChild, {
                 ...params,
-                recordExpr: "this.model.root",
+                recordExpr: "__comp__.model.root",
             });
             append(compiledRoot, compiledChild);
         }
@@ -63,9 +63,9 @@ export class ProjectSharingChatterCompiler extends ViewCompiler {
 
     compileChatter(node) {
         return compileChatter(node, {
-            resId: 'this.model.root.resId or undefined',
-            resModel: 'this.model.root.resModel',
-            projectSharingId: 'this.model.root.context.active_id',
+            resId: '__comp__.model.root.resId or undefined',
+            resModel: '__comp__.model.root.resModel',
+            projectSharingId: '__comp__.model.root.context.active_id',
         });
     }
 }
@@ -74,9 +74,9 @@ registry.category("form_compilers").add("portal_chatter_compiler", {
     selector: "div.oe_chatter",
     fn: (node) =>
         compileChatter(node, {
-            resId: "this.props.record.resId or undefined",
-            resModel: "this.props.record.resModel",
-            projectSharingId: "this.props.record.context.active_id",
+            resId: "__comp__.props.record.resId or undefined",
+            resModel: "__comp__.props.record.resModel",
+            projectSharingId: "__comp__.props.record.context.active_id",
         }),
 });
 
@@ -97,7 +97,7 @@ patch(FormCompiler.prototype, 'project_sharing_chatter', {
         }
         // after sheet bg (standard position, below form)
         setAttributes(chatterContainerHookXml, {
-            't-if': `this.uiService.size < ${SIZES.XXL}`,
+            't-if': `__comp__.uiService.size < ${SIZES.XXL}`,
         });
         append(parentXml, chatterContainerHookXml);
         return res;

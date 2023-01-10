@@ -304,6 +304,7 @@ export class KanbanRecord extends Component {
             selection_mode: this.props.forceGlobalClick,
             user_context: this.user.context,
             widget: this.widget,
+            __comp__: Object.assign(Object.create(this), { this: this }),
         };
     }
 }
