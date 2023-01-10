@@ -563,12 +563,6 @@ class StockMove(models.Model):
         res['bom_line_id'] = self.bom_line_id.id
         return res
 
-    def _get_mto_procurement_date(self):
-        date = super()._get_mto_procurement_date()
-        if 'manufacture' in self.product_id._get_rules_from_location(self.location_id).mapped('action'):
-            date -= relativedelta(days=self.company_id.manufacturing_lead)
-        return date
-
     def action_open_reference(self):
         res = super().action_open_reference()
         source = self.production_id or self.raw_material_production_id

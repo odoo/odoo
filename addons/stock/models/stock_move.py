@@ -1382,9 +1382,12 @@ Please change the quantity done or the rounding precision of your unit of measur
             elif self.rule_id.group_propagation_option == 'none':
                 group_id = False
         product_id = self.product_id.with_context(lang=self._get_lang())
+        date = self._get_mto_procurement_date()
+        if self.location_id.warehouse_id and self.location_id.warehouse_id.lot_stock_id.parent_path in self.location_id.parent_path:
+            date = self.product_id._get_date_with_security_lead_days(self.date, self.location_id)
         return {
             'product_description_variants': self.description_picking and self.description_picking.replace(product_id._get_description(self.picking_type_id), ''),
-            'date_planned': self._get_mto_procurement_date(),
+            'date_planned': date,
             'date_deadline': self.date_deadline,
             'move_dest_ids': self,
             'group_id': group_id,
