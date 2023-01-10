@@ -23,4 +23,11 @@
     .o_preview_questions_choice {
         line-height: 1rem;
     }
+
+    .o_survey_question_validation_parameters {
+        @extend .oe_inline;
+        > div, input.o_survey_question_validation_inline {
+            width: 45% !important;
+        }
+    }
 }

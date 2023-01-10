@@ -65,7 +65,7 @@
                     </group>
                     <notebook>
                         <page string="Questions" name="questions">
-                            <field name="question_and_page_ids" nolabel="1" widget="question_page_one2many" mode="tree,kanban" context="{'default_survey_id': active_id, 'default_questions_selection': questions_selection}">
+                            <field name="question_and_page_ids" nolabel="1" widget="question_page_one2many" mode="tree,kanban" context="{'default_survey_id': active_id}">
                                 <tree decoration-bf="is_page">
                                     <field name="sequence" widget="handle"/>
                                     <field name="title" widget="survey_description_page"/>
@@ -76,11 +76,14 @@
                                     <field name="suggested_answer_ids" invisible="1"/>
                                     <field name="matrix_row_ids" invisible="1"/>
                                     <field name="survey_id" invisible="1"/>
-                                    <field name="triggering_question_id" invisible="1"/>
                                     <field name="random_questions_count"
                                         attrs="{'column_invisible': [('parent.questions_selection', '=', 'all')], 'invisible': [('is_page', '=', False)]}"/>
-                                    <button disabled="disabled" icon="fa-code-fork" attrs="{'invisible': [('triggering_question_id', '=', False)]}"
-                                        title="This question depends on another question's answer." class="icon_rotates"/>
+                                    <field name="is_conditional" invisible="1"/>
+                                    <field name="triggering_question_id" invisible="1"/>
+                                    <field name="triggering_answer_id" invisible="1"/>
+                                    <field name="is_placed_before_trigger" invisible="1"/>
+                                    <field name="allowed_triggering_question_ids" invisible="1"/>
+                                    <widget name="survey_question_trigger" options="{'isSurveyForm': True}"/>
                                     <control>
                                         <create name="add_question_control" string="Add a question"/>
                                         <create name="add_section_control" string="Add a section" context="{'default_is_page': True, 'default_questions_selection': 'all'}"/>
