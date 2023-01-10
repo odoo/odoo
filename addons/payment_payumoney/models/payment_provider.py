@@ -17,7 +17,7 @@ class PaymentProvider(models.Model):
         string="Merchant Salt", required_if_provider='payumoney', groups='base.group_system')
 
     def _get_supported_currencies(self):
-        """ Override of `payment` to return EUR as the only supported currency. """
+        """ Override of `payment` to return INR as the only supported currency. """
         supported_currencies = super()._get_supported_currencies()
         if self.code == 'payumoney':
             supported_currencies = supported_currencies.filtered(lambda c: c.name == 'INR')
