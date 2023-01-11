@@ -2,6 +2,7 @@
 
 import { registry, Widget } from "web.public.widget";
 import { _t } from "web.core";
+import { updateCartNavBar } from "./utils";
 
 /**
  * Interface for widgets to implement to be able to use
@@ -14,6 +15,7 @@ export const WebsiteSaleCartButtonParent = {
     cartButtonAdditionalSelector: undefined,
     custom_events: {
         get_product_info: "getProductInfo",
+        on_product_added: "onProductAdded",
     },
 
     start() {
@@ -49,6 +51,14 @@ export const WebsiteSaleCartButtonParent = {
     async getProductInfo(ev) {
         throw new Error("not implemented by parent");
     },
+
+    /**
+     * Called after the call to add the product to the cart.
+     *
+     * @param {Object} ev.data.data Data returned by the cart update route.
+     * @param {Object} ev.data.productInfo Data used by the cart update route.
+     */
+    async onProductAdded(ev) {},
 };
 
 /**
@@ -105,11 +115,21 @@ export const OwnedWebsiteSaleCartButton = Widget.extend({
         if (!productInfo.product_id) {
             throw new Error(_t("The button does not have enough information to be able to add the product to cart."));
         }
-        if (!productInfo.add_qty) {
+        if (!productInfo.hasOwnProperty("add_qty")) {
             productInfo.add_qty = 1;
         }
         // TODO: impl
         console.log(productInfo);
+
+        const data = await this._rpc({
+            route: "/shop/cart/update_json",
+            params: productInfo,
+        });
+        sessionStorage.setItem("website_sale_cart_quantity", data.cart_quantity);
+        this.trigger_up("on_product_added", {
+            data,
+            productInfo,
+        });
     },
 });
 

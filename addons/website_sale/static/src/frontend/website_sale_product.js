@@ -1,6 +1,7 @@
 /** @odoo-module **/
 
 import { registry, Widget } from "web.public.widget";
+import { animateClone, updateCartNavBar } from "./utils";
 import { WebsiteSaleOptionsWithCartButton } from "./website_sale_options";
 
 /**
@@ -12,6 +13,7 @@ export const WebsiteSaleProduct = Widget.extend({
     custom_events: {
         combination_change: "onCombinationChange",
         get_combination_info_params: "onRequestCombinationInfoParams",
+        on_product_added: "onProductAdded",
     },
 
     start() {
@@ -28,7 +30,6 @@ export const WebsiteSaleProduct = Widget.extend({
      * Called by the option manager when the combination has to be reloaded.
      */
     onCombinationChange(ev) {
-        console.log("product page detected combination info change", ev.data.info);
         this.getProductImageContainer().classList.toggle(
             "css_not_available",
             !ev.data.combinationData.is_combination_possible
@@ -42,6 +43,7 @@ export const WebsiteSaleProduct = Widget.extend({
         //TODO: is this necessary?
     },
 
+    // PRODUCT IMAGE
     getProductImageLayout: function () {
         return this.el.querySelector("#product_detail_main").dataset.image_layout;
     },
@@ -56,6 +58,26 @@ export const WebsiteSaleProduct = Widget.extend({
     },
     getProductImageContainer: function () {
         return this.el.querySelector(this.getProductImageContainerSelector());
+    },
+
+    // BUSINESS LOGIC
+    async onProductAdded(ev) {
+        if (this.getProductImageWidth() === "none") {
+            return;
+        }
+        const data = ev.data.data;
+        if (
+            data.cart_quantity &&
+            data.cart_quantity !== parseInt(document.querySelector(".my_cart_quantity")?.textContent)
+        ) {
+            await animateClone(
+                $(document.querySelector("header .o_wsale_my_cart")),
+                $(this.getProductImageContainer()),
+                25,
+                40
+            );
+            updateCartNavBar(data);
+        }
     },
 });
 registry.WebsiteSaleProduct = WebsiteSaleProduct;
