@@ -163,6 +163,15 @@ class PosOrder(models.Model):
         return fields
 
     @api.model
+    def _get_domain_for_draft_orders(self, table_id):
+        """ Get the domain to search for draft orders on a table.
+        :param table_id: Id of a table.
+        :type table_id: int.
+        "returns: list -- list of tuples that represents a domain.
+        """
+        return [("state", "=", "draft"), ("table_id", "=", table_id)]
+
+    @api.model
     def get_table_draft_orders(self, table_id):
         """Generate an object of all draft orders for the given table.
 
@@ -175,7 +184,7 @@ class PosOrder(models.Model):
         """
         self = self.with_context(prefetch_fields=False)
         table_orders = self.search_read(
-                domain=[('state', '=', 'draft'), ('table_id', '=', table_id)],
+                domain=self._get_domain_for_draft_orders(table_id),
                 fields=self._get_fields_for_draft_order())
 
         self._get_order_lines(table_orders)
