@@ -34,14 +34,16 @@ class Employee(models.Model):
 
     def _create_future_public_holidays_timesheets(self, employees):
         lines_vals = []
+        today = fields.Datetime.today()
+        global_leaves_wo_calendar = self.env['resource.calendar.leaves'].search([('calendar_id', '=', False), ('date_from', '>=', today)])
         for employee in employees:
             if not employee.active:
                 continue
             # First we look for the global time off that are already planned after today
-            global_leaves = employee.resource_calendar_id.global_leave_ids.filtered(lambda l: l.date_from >= fields.Datetime.today())
+            global_leaves = employee.resource_calendar_id.global_leave_ids.filtered(lambda l: l.date_from >= today) + global_leaves_wo_calendar
             work_hours_data = global_leaves._work_time_per_day()
             for global_time_off in global_leaves:
-                for index, (day_date, work_hours_count) in enumerate(work_hours_data[global_time_off.id]):
+                for index, (day_date, work_hours_count) in enumerate(work_hours_data[employee.resource_calendar_id.id][global_time_off.id]):
                     lines_vals.append(
                         global_time_off._timesheet_prepare_line_values(
                             index,
