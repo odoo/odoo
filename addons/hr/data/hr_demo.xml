@@ -7,6 +7,23 @@
                 (3, ref('hr.group_hr_manager'))]"/>
         </record>
 
+        <!-- Resource Calendar -->
+        <record id="resource_calendar_std_20h" model="resource.calendar">
+            <field name="name">Standard 20 hours/week</field>
+            <field name="company_id" eval="False"/>
+            <field name="hours_per_day">4.0</field>
+            <field name="attendance_ids"
+                eval="[(5, 0, 0),
+                    (0, 0, {'name': 'Monday Morning', 'dayofweek': '0', 'hour_from': 8, 'hour_to': 12, 'day_period': 'morning'}),
+                    (0, 0, {'name': 'Tuesday Morning', 'dayofweek': '1', 'hour_from': 8, 'hour_to': 12, 'day_period': 'morning'}),
+                    (0, 0, {'name': 'Wednesday Morning', 'dayofweek': '2', 'hour_from': 8, 'hour_to': 12, 'day_period': 'morning'}),
+                    (0, 0, {'name': 'Thursday Morning', 'dayofweek': '3', 'hour_from': 8, 'hour_to': 12, 'day_period': 'morning'}),
+                    (0, 0, {'name': 'Friday Morning', 'dayofweek': '4', 'hour_from': 8, 'hour_to': 12, 'day_period': 'morning'})
+                ]"
+            />
+            <field name="full_time_required_hours">20</field>
+        </record>
+
         <!--Department-->
         <record id="dep_management" model="hr.department">
             <field name="name">Management</field>
@@ -197,6 +214,11 @@ If you have development competencies, we can propose you specific traineeships</
         <record id="employee_category_5" model="hr.employee.category">
             <field name="name">Consultant</field>
             <field name="color" eval="4"/>
+        </record>
+
+        <record id="employee_category_6" model="hr.employee.category">
+            <field name="name">Standard 20 hours/week</field>
+            <field name="color" eval="3"/>
         </record>
 
     <!--Employees-->
@@ -453,12 +475,13 @@ If you have development competencies, we can propose you specific traineeships</
             <field name="parent_id" ref="employee_vad"/>
             <field name="job_id" ref="hr.job_consultant"/>
             <field name="job_title">Consultant</field>
-            <field name="category_ids" eval="[Command.set([ref('employee_category_4'), ref('employee_category_5')])]"/>
+            <field name="category_ids" eval="[Command.set([ref('employee_category_4'), ref('employee_category_5'), ref('employee_category_6')])]"/>
             <field name="work_location_id" ref="work_location_1"/>
             <field name="work_phone">(555)-707-8451</field>
             <field name="work_contact_id" ref="hr.work_contact_jth"/>
             <field name="image_1920" type="base64" file="hr/static/img/employee_jth-image.jpg"/>
             <field name="create_date">2010-01-01 00:00:00</field>
+            <field name="resource_calendar_id" ref="resource_calendar_std_20h"/>
         </record>
 
         <record id="work_contact_mit" model="res.partner">
