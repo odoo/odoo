@@ -45,9 +45,10 @@ class TestPaymentProvider(PaymentCommon):
         """ Test that the maximum amount has no effect on the provider's compatibility when it is
         set to 0. """
         self.provider.maximum_amount = 0.
+        currency = self.provider.main_currency_id.id
 
         compatible_providers = self.env['payment.provider']._get_compatible_providers(
-            self.company.id, self.partner.id, self.amount, currency_id=self.env.company.currency_id.id,
+            self.company.id, self.partner.id, self.amount, currency_id=currency
         )
         self.assertIn(self.provider, compatible_providers)
 
@@ -55,9 +56,10 @@ class TestPaymentProvider(PaymentCommon):
         """ Test that a provider is compatible when the payment amount is less than the maximum
         amount. """
         self.provider.maximum_amount = self.amount + 10.0
+        currency = self.provider.main_currency_id.id
 
         compatible_providers = self.env['payment.provider']._get_compatible_providers(
-            self.company.id, self.partner.id, self.amount, currency_id=self.env.company.currency_id.id,
+            self.company.id, self.partner.id, self.amount, currency_id=currency
         )
         self.assertIn(self.provider, compatible_providers)
 
@@ -65,9 +67,10 @@ class TestPaymentProvider(PaymentCommon):
         """ Test that a provider is not compatible when the payment amount is more than the maximum
         amount. """
         self.provider.maximum_amount = self.amount - 10.0
+        currency = self.provider.main_currency_id.id
 
         compatible_providers = self.env['payment.provider']._get_compatible_providers(
-            self.company.id, self.partner.id, self.amount, currency_id=self.env.company.currency_id.id,
+            self.company.id, self.partner.id, self.amount, currency_id=currency
         )
         self.assertNotIn(self.provider, compatible_providers)
 
