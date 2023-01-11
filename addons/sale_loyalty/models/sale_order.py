@@ -146,7 +146,7 @@ class SaleOrder(models.Model):
             'points_cost': cost,
             'reward_identifier_code': _generate_random_reward_code(),
             'product_uom': product.uom_id.id,
-            'sequence': max(self.order_line.filtered(lambda x: not x.is_reward_line).mapped('sequence')) + 1,
+            'sequence': max(self.order_line.filtered(lambda x: not x.is_reward_line).mapped('sequence'), default=10) + 1,
             'tax_id': [(Command.CLEAR, 0, 0)] + [(Command.LINK, tax.id, False) for tax in taxes]
         }]
 
@@ -281,7 +281,7 @@ class SaleOrder(models.Model):
         discountable = 0
         discountable_per_tax = defaultdict(int)
         reward_applies_on = reward.discount_applicability
-        sequence = max(self.order_line.filtered(lambda x: not x.is_reward_line).mapped('sequence')) + 1
+        sequence = max(self.order_line.filtered(lambda x: not x.is_reward_line).mapped('sequence'), default=10) + 1
         if reward_applies_on == 'order':
             discountable, discountable_per_tax = self._discountable_order(reward)
         elif reward_applies_on == 'specific':
