@@ -31,6 +31,12 @@
                 Post Entries
             </button>
         </xpath>
+
+        <xpath expr="//button[hasclass('o_button_upload_expense')]" position="after">
+            <button t-if="displayPayment()" class="d-none d-md-block btn btn-secondary" t-on-click="() => this.onClick('action_register_payment')">
+                Register Payment
+            </button>
+        </xpath>
     </t>
 
     <t t-name="hr_expense.ListRenderer" t-inherit="web.ListRenderer" t-inherit-mode="primary" owl="1">

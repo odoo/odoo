@@ -56,6 +56,7 @@ class HrExpenseSplitWizard(models.TransientModel):
             'type': 'ir.actions.act_window',
             'res_model': 'hr.expense',
             'name': _('Split Expenses'),
+            'views': [[False, "form"]],
             'view_mode': 'tree,form',
             'target': 'current',
             'context': {'search_default_my_expenses': 1, 'search_default_no_report': 1},
