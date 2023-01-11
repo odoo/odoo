@@ -64,7 +64,7 @@
                 <field name="company_id" groups="base.group_multi_company" optional="show"/>
                 <field name="calendar_id" optional="show" />
                 <field name="tz" optional="hide" />
-                <field name="resource_type" optional="show" />
+                <field name="resource_type" optional="hide" />
                 <field name="time_efficiency"/>
             </tree>
         </field>
@@ -277,6 +277,12 @@
                         <button name="%(resource_resource_action_from_calendar)d" type="action"
                                 string="Work Resources" icon="fa-cogs"
                                 class="oe_stat_button"
+                                context="{'search_default_material': 1}"
+                                groups="base.group_user"/>
+                        <button name="%(resource_resource_action_from_calendar)d" type="action"
+                                string="Employees" icon="fa-users"
+                                class="oe_stat_button"
+                                context="{'search_default_human': 1}"
                                 groups="base.group_user"/>
                     </div>
                     <h1>

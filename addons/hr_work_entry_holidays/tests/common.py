@@ -47,7 +47,6 @@ class TestWorkEntryHolidaysBase(TestWorkEntryBase):
                 (0, 0, {'name': 'Friday Evening', 'dayofweek': '4', 'hour_from': 13, 'hour_to': 16, 'day_period': 'afternoon'})
             ]
         })
-        cls.calendar_35h._onchange_hours_per_day()  # update hours/day
         cls.calendar_40h = cls.env['resource.calendar'].create({'name': 'Default calendar'})
 
         # This contract ends at the 15th of the month

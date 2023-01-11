@@ -211,7 +211,7 @@ class ResourceCalendar(models.Model):
         compute='_compute_global_leave_ids', store=True, readonly=False,
         domain=[('resource_id', '=', False)], copy=True,
     )
-    hours_per_day = fields.Float("Average Hour per Day", default=HOURS_PER_DAY,
+    hours_per_day = fields.Float("Average Hour per Day", store=True, compute="_compute_hours_per_day", digits=(2, 2),
                                  help="Average hours per day a resource is supposed to work with this calendar.")
     tz = fields.Selection(
         _tz_get, string='Timezone', required=True,
@@ -221,13 +221,18 @@ class ResourceCalendar(models.Model):
     two_weeks_calendar = fields.Boolean(string="Calendar in 2 weeks mode")
     two_weeks_explanation = fields.Char('Explanation', compute="_compute_two_weeks_explanation")
 
+    @api.depends('attendance_ids', 'attendance_ids.hour_from', 'attendance_ids.hour_to', 'two_weeks_calendar')
+    def _compute_hours_per_day(self):
+        for calendar in self:
+            attendances = calendar._get_global_attendances()
+            calendar.hours_per_day = calendar._get_hours_per_day(attendances)
+
     @api.depends('company_id')
     def _compute_attendance_ids(self):
         for calendar in self.filtered(lambda c: not c._origin or c._origin.company_id != c.company_id):
             company_calendar = calendar.company_id.resource_calendar_id
             calendar.update({
                 'two_weeks_calendar': company_calendar.two_weeks_calendar,
-                'hours_per_day': company_calendar.hours_per_day,
                 'tz': company_calendar.tz,
                 'attendance_ids': [(5, 0, 0)] + [
                     (0, 0, attendance._copy_attendance_vals()) for attendance in company_calendar.attendance_ids if not attendance.resource_id]
@@ -278,7 +283,7 @@ class ResourceCalendar(models.Model):
             not attendance.date_from and not attendance.date_to
             and not attendance.resource_id and not attendance.display_type)
 
-    def _compute_hours_per_day(self, attendances):
+    def _get_hours_per_day(self, attendances):
         if not attendances:
             return 0
 
@@ -293,11 +298,6 @@ class ResourceCalendar(models.Model):
             number_of_days = len(set(attendances.mapped('dayofweek')))
 
         return float_round(hour_count / float(number_of_days), precision_digits=2)
-
-    @api.onchange('attendance_ids', 'two_weeks_calendar')
-    def _onchange_hours_per_day(self):
-        attendances = self._get_global_attendances()
-        self.hours_per_day = self._compute_hours_per_day(attendances)
 
     def switch_calendar_type(self):
         if not self.two_weeks_calendar:
@@ -338,7 +338,6 @@ class ResourceCalendar(models.Model):
             self.two_weeks_calendar = False
             self.attendance_ids.unlink()
             self.attendance_ids = self.default_get('attendance_ids')['attendance_ids']
-        self._onchange_hours_per_day()
 
     @api.onchange('attendance_ids')
     def _onchange_attendance_ids(self):

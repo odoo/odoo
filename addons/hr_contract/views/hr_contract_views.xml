@@ -8,6 +8,9 @@
             <field name="priority" eval="70" />
             <field name="arch" type="xml">
                 <data>
+                    <xpath expr="//sheet" position="inside">
+                        <field name="contract_warning" invisible="1"/>
+                    </xpath>
                     <xpath expr="//page[@name='hr_settings']//field[@name='employee_type']" position="after">
                         <field name="first_contract_date"
                                attrs="{'invisible' : ['|', ('employee_type', 'not in', ['employee', 'student']), ('first_contract_date', '=', False)]}"
@@ -25,6 +28,9 @@
                                 attrs="{'invisible': [('calendar_mismatch', '=', False)]}"/>
                         </div>
                     </xpath>
+                    <field name="resource_calendar_id" position="attributes">
+                        <attribute name="attrs">{'readonly': [('contract_warning', '=', False)]}</attribute>
+                    </field>
                 </data>
             </field>
         </record>
@@ -45,6 +51,7 @@
                             icon="fa-book"
                             type="object"
                             groups="hr_contract.group_hr_contract_manager"
+                            context="{'default_employee_id': id}"
                             attrs="{'invisible' : [('employee_type', 'not in', ['employee', 'student', 'trainee'])]}">
                             <div attrs="{'invisible' : [('first_contract_date', '=', False)]}" class="o_stat_info">
                                 <span class="o_stat_text text-success" attrs="{'invisible' : [('contract_warning', '=', True)]}" title="In Contract Since"> In Contract Since</span>
