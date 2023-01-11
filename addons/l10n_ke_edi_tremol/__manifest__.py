@@ -21,7 +21,7 @@
     ],
     'assets': {
         'web.assets_backend': [
-            'l10n_ke_edi_tremol/static/src/js/send_invoice.js',
+            'l10n_ke_edi_tremol/static/src/components/*',
         ],
     },
 }
