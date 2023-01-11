@@ -16,6 +16,7 @@ const BaseSettingsModel = BasicModel.extend({
                 // we remove here the res_id, because the record should still be
                 // considered new.  We want the web client to always perform a
                 // onchange to fetch the settings data.
+                this.localData[recordID].res_ids = [this.localData[recordID].res_id];
                 delete this.localData[recordID].res_id;
             }
             return result;
