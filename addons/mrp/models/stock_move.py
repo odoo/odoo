@@ -231,12 +231,6 @@ class StockMove(models.Model):
             mo = self.raw_material_production_id
             self._update_quantity_done(mo)
 
-    @api.onchange('quantity_done')
-    def _onchange_quantity_done(self):
-        if self.raw_material_production_id and not self.manual_consumption and \
-           self.should_consume_qty != self.quantity_done:
-            self.manual_consumption = True
-
     @api.model
     def default_get(self, fields_list):
         defaults = super(StockMove, self).default_get(fields_list)
