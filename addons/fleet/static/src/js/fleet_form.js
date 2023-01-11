@@ -9,6 +9,7 @@ export class FleetFormController extends FormController {
     /**
      * @override
      **/
+<<<<<<< HEAD
     getStaticActionMenuItems() {
         const menuItems = super.getStaticActionMenuItems();
         menuItems.archive.callback = () => {
@@ -18,6 +19,39 @@ export class FleetFormController extends FormController {
                 ),
                 confirm: () => this.model.root.archive(),
                 cancel: () => {},
+||||||| parent of 1c70b6107bb (temp)
+    getActionMenuItems() {
+        if (this.model.root.isInEdition) {
+            return {};
+        }
+
+        const menuItems = super.getActionMenuItems();
+        const archiveAction = menuItems.other.find((item) => item.key === "archive");
+        if (archiveAction) {
+            archiveAction.callback = () => {
+                const dialogProps = {
+                    body: this.env._t(
+                        "Every service and contract of this vehicle will be considered as archived. Are you sure that you want to archive this record?"
+                    ),
+                    confirm: () => this.model.root.archive(),
+                    cancel: () => {},
+                };
+                this.dialogService.add(ConfirmationDialog, dialogProps);
+=======
+    getActionMenuItems() {
+        const menuItems = super.getActionMenuItems();
+        const archiveAction = menuItems.other.find((item) => item.key === "archive");
+        if (archiveAction) {
+            archiveAction.callback = () => {
+                const dialogProps = {
+                    body: this.env._t(
+                        "Every service and contract of this vehicle will be considered as archived. Are you sure that you want to archive this record?"
+                    ),
+                    confirm: () => this.model.root.archive(),
+                    cancel: () => {},
+                };
+                this.dialogService.add(ConfirmationDialog, dialogProps);
+>>>>>>> 1c70b6107bb (temp)
             };
             this.dialogService.add(ConfirmationDialog, dialogProps);
         };
