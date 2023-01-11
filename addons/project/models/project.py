@@ -1857,7 +1857,7 @@ class Task(models.Model):
             project = self.env['project.project'].browse(project_id)
             if project.analytic_account_id:
                 vals['analytic_account_id'] = project.analytic_account_id.id
-        else:
+        elif 'default_user_ids' not in self.env.context:
             user_ids = vals.get('user_ids', [])
             user_ids.append(Command.link(self.env.user.id))
             vals['user_ids'] = user_ids
@@ -2012,6 +2012,7 @@ class Task(models.Model):
             ctx = {
                 key: value for key, value in self.env.context.items()
                 if key == 'default_project_id' \
+                    or key == 'default_user_ids' and value is False \
                     or not key.startswith('default_') \
                     or key[8:] in self.SELF_WRITABLE_FIELDS
             }
