@@ -425,6 +425,9 @@ var SnippetEditor = Widget.extend({
         if (this.$target.parent('.row').length) {
             return _t("Column");
         }
+        if (this.$target.is('.btn')) {
+            return _t("Button");
+        }
         return _t("Block");
     },
     /**
@@ -2392,6 +2395,11 @@ var SnippetsMenu = Widget.extend({
         for (const customTabPaneEl of $html.find('#snippet_custom_body .tab-pane')) {
             customTabPaneEl.removeAttribute('id');
         }
+
+        // TODO: remove this (?) or find a way to catch the unremovable parts of
+        // snippets using the new _getUnremovableElements method.
+        // Force oe_unremovable on non-removable parts of snippets
+        // $html.find(this.options.unremovableElementsSelector).addClass('oe_unremovable');
 
         // Add the computed template and make elements draggable
         this.$el.html($html);
