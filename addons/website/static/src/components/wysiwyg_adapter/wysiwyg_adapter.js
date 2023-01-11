@@ -377,8 +377,8 @@ export class WysiwygAdapterComponent extends ComponentAdapter {
     _getReadOnlyAreas() {
         return [];
     }
-    _getUnremovableElements () {
-        return this.$editable[0].querySelectorAll("#top_menu a:not(.oe_unremovable)");
+    _getUnremovableElements() {
+        return [];
     }
     /**
      * This method provides support for the legacy event system.
