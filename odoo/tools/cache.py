@@ -4,7 +4,7 @@
 # decorator makes wrappers that have the same API as their wrapped function
 from collections import Counter, defaultdict
 from decorator import decorator
-from inspect import signature
+from inspect import signature, Parameter
 import logging
 
 unsafe_eval = eval
@@ -64,7 +64,13 @@ class ormcache(object):
         """ Determine the function that computes a cache key from arguments. """
         if self.skiparg is None:
             # build a string that represents function code and evaluate it
-            args = str(signature(self.method))[1:-1]
+            args = ', '.join(
+                # remove annotations because lambdas can't be type-annotated,
+                # and defaults because they are redundant (defaults are present
+                # in the wrapper function itself)
+                str(params.replace(annotation=Parameter.empty, default=Parameter.empty))
+                for params in signature(self.method).parameters.values()
+            )
             if self.args:
                 code = "lambda %s: (%s,)" % (args, ", ".join(self.args))
             else:
@@ -114,7 +120,10 @@ class ormcache_context(ormcache):
         assert self.skiparg is None, "ormcache_context() no longer supports skiparg"
         # build a string that represents function code and evaluate it
         sign = signature(self.method)
-        args = str(sign)[1:-1]
+        args = ', '.join(
+            str(params.replace(annotation=Parameter.empty, default=Parameter.empty))
+            for params in sign.parameters.values()
+        )
         cont_expr = "(context or {})" if 'context' in sign.parameters else "self._context"
         keys_expr = "tuple(%s.get(k) for k in %r)" % (cont_expr, self.keys)
         if self.args:
@@ -143,7 +152,10 @@ class ormcache_multi(ormcache):
 
         # key_multi computes the extra element added to the key
         sign = signature(self.method)
-        args = str(sign)[1:-1]
+        args = ', '.join(
+            str(params.replace(annotation=Parameter.empty, default=Parameter.empty))
+            for params in sign.parameters.values()
+        )
         code_multi = "lambda %s: %s" % (args, self.multi)
         self.key_multi = unsafe_eval(code_multi)
 

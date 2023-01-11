@@ -1999,7 +1999,7 @@ class IrModelData(models.Model):
     # NEW V8 API
     @api.model
     @tools.ormcache('xmlid')
-    def _xmlid_lookup(self, xmlid):
+    def _xmlid_lookup(self, xmlid: str) -> tuple:
         """Low level xmlid lookup
         Return (id, res_model, res_id) or raise ValueError if not found
         """
