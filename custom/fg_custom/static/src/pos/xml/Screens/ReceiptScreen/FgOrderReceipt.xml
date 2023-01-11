@@ -99,15 +99,16 @@
                 <div class="date_and_time" style="font-size: 75%;">
                     <div style="margin-top: 2%;overflow: hidden;">========================================================</div>
                     <div style="width:100%;">
-                        <span class="pos-receipt-left-align" style="width:60%">
-                            <t t-esc="receipt.date.localestring or receipt.date.validation_date"/>
-                        </span>
-                        <span class="pos-receipt-right-align" style="width:20%">
-                            TRNL 01
-                        </span>
-                        <span class="pos-receipt-right-align" style="width:20%">
-                            CSHR #01
-                        </span>
+                        <div>
+                            <span class="pos-receipt-left-align" style="width:60%">
+                                <t t-esc="receipt.date.localestring or receipt.date.validation_date"/>
+                            </span>
+                        </div>
+                        <div>
+                            <span class="pos-receipt-left-align" style="width:60%">
+                                 <span class="pos-receipt-left-align"><b>Cashier:  </b> <t t-esc="receipt.cashier"/></span>
+                            </span>
+                        </div>
                     </div>
                     <div style="margin-bottom: 2%;overflow: hidden;">========================================================</div>
                 </div>
@@ -117,6 +118,13 @@
                 </div>
                 <div t-if="!receipt.pos_refunded_id" class="sale_invoice" style="font-size: 75%;">
                     <span  class="pos-receipt-left-align"><b>SI# </b> <t t-esc="receipt.pos_si_trans_reference"/></span>
+                </div>
+                <div t-if="receipt.pos_refunded_id" class="sale_invoice" style="font-size: 75%;">
+                    <span  class="pos-receipt-left-align"><b>Reference SI# </b> <t t-esc="receipt.pos_refunded_id"/></span>
+                </div>
+
+                <div t-if="receipt.pos_refunded_id" class="sale_invoice" style="font-size: 75%;">
+                    <span  class="pos-receipt-left-align"><b>Refund # </b> <t t-esc="receipt.pos_refund_si_reference"/></span>
                 </div>
 
                 <div class="orderlines" style="margin-top: 4%;font-size: 75%;">
@@ -272,14 +280,6 @@
 <!--                        <span class="pos-receipt-right-align"><t t-esc="env.pos.format_currency_no_symbol(receipt.total_tax)"/></span>-->
 
                     </div>
-                </div>
-
-                <div t-if="receipt.pos_refunded_id" class="sale_invoice" style="font-size: 75%;">
-                    <span  class="pos-receipt-left-align"><b>Reference SI# </b> <t t-esc="receipt.pos_refunded_id"/></span>
-                </div>
-
-                <div t-if="receipt.pos_refunded_id" class="sale_invoice" style="font-size: 75%;">
-                    <span  class="pos-receipt-left-align"><b>Refund SI# </b> <t t-esc="receipt.pos_refund_si_reference"/></span>
                 </div>
 
                 <div t-if="m_t_d > 0" class="total_discount" style="margin-top: 8%;font-size: 75%;">
