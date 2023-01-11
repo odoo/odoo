@@ -378,7 +378,13 @@ export class WysiwygAdapterComponent extends ComponentAdapter {
         return [];
     }
     _getUnremovableElements () {
-        return this.$editable[0].querySelectorAll("#top_menu a:not(.oe_unremovable)");
+        // TODO adapt in master: this was added as a fix to target some elements
+        // to be unremovable. This fix had to be reverted but to keep things
+        // stable, this still had to return the same thing: a NodeList. This
+        // code here seems the only (?) way to create a static empty NodeList.
+        // In master, this should return an array as it seems intended by the
+        // library caller anyway.
+        return document.querySelectorAll('.a:not(.a)');
     }
     /**
      * This method provides support for the legacy event system.
