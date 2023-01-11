@@ -2068,6 +2068,37 @@ class TestComposerResultsMassStatus(TestMailComposer):
                 )
         self.assertEqual(len(self._mails), 1, 'Should have sent 1 email, and skipped an excluded email.')
 
+        # test exclusion list bypass
+        composer_form = Form(self.env['mail.compose.message'].with_context(
+            self._get_web_context(test_records, add_web=True,
+                                  default_template_id=self.template.id,
+                                  default_use_exclusion_list=False)
+        ))
+        composer = composer_form.save()
+        with self.mock_mail_gateway(mail_unlink_sent=False), self.mock_mail_app():
+            composer._action_send_mail()
+
+        for record, expected_state, expected_ft in zip(
+            test_records,
+            ['sent', 'sent'],
+            [False, False]
+        ):
+            with self.subTest(record=record, expected_state=expected_state, expected_ft=expected_ft):
+                self.assertMailMail(
+                    record.customer_id, expected_state,
+                    # author is current user, email_from is coming from template (user_id of record)
+                    author=self.user_employee.partner_id,
+                    fields_values={
+                        'email_from': self.user_employee_2.email_formatted,
+                        'failure_reason': False,
+                        'failure_type': expected_ft,
+                    },
+                    email_values={
+                        'email_from': self.user_employee_2.email_formatted,
+                    }
+                )
+        self.assertEqual(len(self._mails), 2, 'Should have sent 2 emails, even to excluded email.')
+
     @users('employee')
     @mute_logger('odoo.tests', 'odoo.addons.mail.models.mail_mail', 'odoo.models.unlink')
     def test_mailing_duplicates_document_based(self):

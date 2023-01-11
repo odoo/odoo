@@ -195,6 +195,7 @@ class MailComposer(models.TransientModel):
         help="In comment mode: if set, postpone notifications sending. "
              "In mass mail mode: if sent, send emails after that date. "
              "This date is considered as being in UTC timezone.")
+    use_exclusion_list = fields.Boolean('Check Exclusion List', default=True)
 
     @api.constrains('res_ids')
     def _check_res_ids(self):
@@ -961,6 +962,8 @@ class MailComposer(models.TransientModel):
 
     def _get_blacklist_record_ids(self, mail_values_dict):
         blacklisted_rec_ids = set()
+        if not self.use_exclusion_list:
+            return blacklisted_rec_ids
         if self.composition_mode == 'mass_mail' and issubclass(type(self.env[self.model]), self.pool['mail.thread.blacklist']):
             self.env['mail.blacklist'].flush_model(['email', 'active'])
             self._cr.execute("SELECT email FROM mail_blacklist WHERE active=true")
