@@ -31,7 +31,6 @@ class TestResource(TestContractCommon):
                 (0, 0, {'name': 'Friday Evening', 'dayofweek': '4', 'hour_from': 13, 'hour_to': 16, 'day_period': 'afternoon'})
             ],
         })
-        cls.calendar_35h._onchange_hours_per_day()  # update hours/day
 
         cls.contract_cdd = cls.env['hr.contract'].create({
             'date_start': Date.to_date('2021-09-01'),
