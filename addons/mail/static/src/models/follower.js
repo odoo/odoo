@@ -169,8 +169,11 @@ Model({
                 const hasWriteAccess = this.followedThread
                     ? this.followedThread.hasWriteAccess
                     : false;
-                return this.messaging.currentPartner === this.partner
+                const hasReadAccess = this.followedThread
                     ? this.followedThread.hasReadAccess
+                    : false;
+                return this.messaging.currentPartner === this.partner
+                    ? hasReadAccess
                     : hasWriteAccess;
             },
         }),
