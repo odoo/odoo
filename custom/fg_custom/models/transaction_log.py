@@ -12,9 +12,10 @@ class TransactionLog(models.Model):
                                    ('sales', 'Sales'),
                                    ('refund', 'Refund'),
                                    ('item_creation', 'Item creation'),
+                                   ('item_updates', 'Item updates'),
                                    ('customer_creation', 'Customer creation'),
                                    ('customer_updates', 'Customer updates'),
-                                   ('inventory_price_discount', 'Update of inventory, prices, discount'),
+                                   ('inventory_quantity', 'Update Inventory Quantity'),
                                    ('reprint_receipt', 'Reprint of Receipt'),
                                    ('xreport_generation', 'X Report Generation'),
                                    ('zreport_generation', 'Z Report Generation'),
@@ -74,6 +75,28 @@ class ProductProductLog(models.Model):
             self.env['transaction.log'].sudo().create_transaction_log('item_creation', 'product.product', i.id)
         return res
 
+    # def write(self, values):
+    #     res = super(ProductProductLog, self).write(values)
+    #     if self and res and values:
+    #         self.env['transaction.log'].sudo().create_transaction_log('item_updates', 'product.product', self[0].id)
+    #     return res
+
+class ProductTemplateLog(models.Model):
+    _inherit = 'product.template'
+
+    # @api.model
+    # def create(self, values):
+    #     res = super(ProductTemplateLog, self).create(values)
+    #     for i in res:
+    #         self.env['transaction.log'].sudo().create_transaction_log('item_creation', 'product.template', i.id)
+    #     return res
+
+    def write(self, values):
+        res = super(ProductTemplateLog, self).write(values)
+        if self and res and values:
+            self.env['transaction.log'].sudo().create_transaction_log('item_updates', 'product.template', self[0].id)
+        return res
+
 class ResPartnerLog(models.Model):
     _inherit = "res.partner"
 
@@ -95,9 +118,11 @@ class CouponProgramLog(models.Model):
 
     fg_discount_type = fields.Selection([('is_pwd_discount', 'PWD Discount'), ('is_senior_discount', 'Senior Discount')], string="FG Discount Type")
 
+class StockQuantLog(models.Model):
+    _inherit = "stock.quant"
+
     def write(self, values):
-        res = super(CouponProgramLog, self).write(values)
-        if self and res:
-            if 'reward_type' in values or 'rule_min_quantity' in values or 'rule_minimum_amount' in values or 'discount_fixed_amount' in values or 'discount_type' in values:
-                self.env['transaction.log'].sudo().create_transaction_log('inventory_price_discount', 'pos.session', self[0].id)
+        res = super(StockQuantLog, self).write(values)
+        if self and res and values and values.get('inventory_quantity', False):
+            self.env['transaction.log'].sudo().create_transaction_log('inventory_quantity', 'stock.quant', self[0].id)
         return res
