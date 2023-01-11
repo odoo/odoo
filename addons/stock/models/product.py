@@ -909,11 +909,10 @@ class ProductTemplate(models.Model):
     def action_update_quantity_on_hand(self):
         advanced_option_groups = [
             'stock.group_stock_multi_locations',
-            'stock.group_production_lot',
             'stock.group_tracking_owner',
-            'product.group_tracking_lot'
+            'stock.group_tracking_lot'
         ]
-        if (self.env.user.user_has_groups(','.join(advanced_option_groups))):
+        if (self.env.user.user_has_groups(','.join(advanced_option_groups))) or self.tracking != 'none':
             return self.action_open_quants()
         else:
             default_product_id = self.env.context.get('default_product_id', len(self.product_variant_ids) == 1 and self.product_variant_id.id)
