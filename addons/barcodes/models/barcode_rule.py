@@ -9,7 +9,7 @@ class BarcodeRule(models.Model):
     _description = 'Barcode Rule'
     _order = 'sequence asc, id'
 
-    name = fields.Char(string='Rule Name', size=32, required=True, help='An internal identification for this barcode nomenclature rule')
+    name = fields.Char(string='Rule Name', required=True, help='An internal identification for this barcode nomenclature rule')
     barcode_nomenclature_id = fields.Many2one('barcode.nomenclature', string='Barcode Nomenclature')
     sequence = fields.Integer(string='Sequence', help='Used to order rules such that rules with a smaller sequence match first')
     encoding = fields.Selection(
