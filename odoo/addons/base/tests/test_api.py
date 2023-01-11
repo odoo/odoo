@@ -1,8 +1,10 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+import types
 
 from odoo import api, models, Command
 from odoo.addons.base.tests.common import SavepointCaseWithUserDemo
+from odoo.models import convert_pgerror_constraint
 from odoo.tools import mute_logger, unique, lazy
 from odoo.exceptions import AccessError
 
@@ -689,6 +691,21 @@ class TestAPI(SavepointCaseWithUserDemo):
             with self.assertQueries([]):
                 _ = byfn['host'].name
 
+    def test_pgerror_constraint_conversion(self):
+        fake_model = types.SimpleNamespace(
+            _sql_constraints=[
+                ('x'*60, '', "an error message"),
+            ]
+        )
+        error = types.SimpleNamespace(diag=types.SimpleNamespace(
+            table_name="a_table",
+            constraint_name=("a_table_" + 'x' * 60)[:63],
+        ))
+
+        self.assertEqual(
+            convert_pgerror_constraint(fake_model, None, None, error),
+            {'message': 'an error message'},
+        )
 
 class TestExternalAPI(SavepointCaseWithUserDemo):
 
