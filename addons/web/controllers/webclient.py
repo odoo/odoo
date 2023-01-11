@@ -120,13 +120,9 @@ class WebClient(http.Controller):
     def test_suite(self, mod=None, **kwargs):
         return request.render('web.qunit_suite')
 
-    @http.route('/web/tests/mobile', type='http', auth="none")
+    @http.route('/web/tests/mobile', type='http', auth="user")
     def test_mobile_suite(self, mod=None, **kwargs):
         return request.render('web.qunit_mobile_suite')
-
-    @http.route('/web/benchmarks', type='http', auth="none")
-    def benchmarks(self, mod=None, **kwargs):
-        return request.render('web.benchmark_suite')
 
     @http.route('/web/bundle/<string:bundle_name>', auth="public", methods=["GET"])
     def bundle(self, bundle_name, **bundle_params):
