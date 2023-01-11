@@ -44,7 +44,7 @@
                         <field name="id" invisible='1'/>
                         <field name="company_id" invisible="1"/>
                         <group name="group_product">
-                            <field name="product_id"  required='True' attrs="{'readonly': [('id', '!=', False)]}"/>
+                            <field name="product_id" attrs="{'readonly': [('id', '!=', False)]}"/>
                         </group>
                         <group name="qty">
                             <label for="qty" string="Contained quantity"/>
@@ -75,7 +75,7 @@
     <record model="ir.actions.act_window" id="action_packaging_view">
         <field name="name">Product Packagings</field>
         <field name="res_model">product.packaging</field>
-        <field name="domain">[('product_id', '!=', False)]</field>
+        <field name="domain">[]</field>
         <field name="view_ids" eval="[(5, 0, 0),
             (0, 0, {'view_mode': 'tree', 'view_id': ref('product_packaging_tree_view')}),
             (0, 0, {'view_mode': 'form', 'view_id': ref('product_packaging_form_view')})]"/>
