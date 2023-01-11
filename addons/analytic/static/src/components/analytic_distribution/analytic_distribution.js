@@ -208,7 +208,7 @@ export class AnalyticDistribution extends Component {
             domain.push(['root_plan_id', '=', this.activeGroup]);
         }
 
-        const records = await this.fetchAnalyticAccounts([...domain, ["name", "ilike", request]], 7);
+        const records = await this.fetchAnalyticAccounts([...domain, '|', ["name", "ilike", request], ['code', 'ilike', request]], 7);
 
         let options = records.map((result) => ({
             value: result.id,
