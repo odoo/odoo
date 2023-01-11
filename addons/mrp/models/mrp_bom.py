@@ -418,7 +418,8 @@ class MrpBomLine(models.Model):
 
     @api.depends('product_id', 'tracking', 'operation_id')
     def _compute_manual_consumption(self):
-        self.filtered(lambda m: m.tracking != 'none' or m.operation_id).manual_consumption = True
+        for line in self:
+            line.manual_consumption = (line.tracking != 'none' or line.operation_id)
 
     @api.depends('tracking', 'operation_id')
     def _compute_manual_consumption_readonly(self):
