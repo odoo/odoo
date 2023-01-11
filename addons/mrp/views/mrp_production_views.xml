@@ -341,12 +341,11 @@
                                     <button type="object" name="action_product_forecast_report" title="Forecast Report" icon="fa-area-chart" attrs="{'column_invisible': [('parent.state', '!=', 'draft')], 'invisible': [('forecast_availability', '&lt;', 0)]}"/>
                                     <button type="object" name="action_product_forecast_report" title="Forecast Report" icon="fa-area-chart text-danger" attrs="{'column_invisible': [('parent.state', '!=', 'draft')], 'invisible': [('forecast_availability', '&gt;=', 0)]}"/>
                                     <field name="forecast_availability" string="Reserved" attrs="{'column_invisible': [('parent.state', 'in', ('draft', 'done'))]}" widget="forecast_widget"/>
-                                    <field name="quantity_done" string="Consumed" class="o_manual_consumption"
-                                        decoration-bf="not manual_consumption"
+                                    <field name="quantity_done" string="Consumed"
                                         decoration-success="not is_done and (quantity_done - should_consume_qty == 0)"
                                         decoration-warning="not is_done and (quantity_done - should_consume_qty &gt; 0.0001)"
                                         attrs="{'column_invisible': [('parent.state', '=', 'draft')], 'readonly': [('has_tracking', '!=','none')]}"
-                                        force_save="1"/>
+                                        force_save="1" widget="mrp_consumed"/>
                                     <field name="manual_consumption" invisible="1" force_save="1"/>
                                     <field name="show_details_visible" invisible="1"/>
                                     <field name="lot_ids" widget="many2many_tags"

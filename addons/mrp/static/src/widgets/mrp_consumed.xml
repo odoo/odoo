@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="mrp.Consumed" t-inherit="web.FloatField" t-inherit-mode="primary" owl="1">
+        <xpath expr="//span[@t-if='props.readonly']" position="attributes">
+            <attribute name="t-ref">readonly</attribute>
+        </xpath>
+    </t>
+</templates>
