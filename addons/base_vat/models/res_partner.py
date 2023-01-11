@@ -61,6 +61,7 @@ _ref_vat = {
     'mx': 'MXGODE561231GR8 or GODE561231GR8',
     'nl': 'NL123456782B90',
     'no': 'NO123456785',
+    'nz': '49-098-576 or 49098576',
     'pe': '10XXXXXXXXY or 20XXXXXXXXY or 15XXXXXXXXY or 16XXXXXXXXY or 17XXXXXXXXY',
     'ph': '123-456-789-01234',
     'pl': 'PL1234567883',
@@ -596,6 +597,15 @@ class ResPartner(models.Model):
         if not check_func:
             vat = vat.replace(" ", "")
             return len(vat) == 11 and vat.isdigit()
+        return check_func(vat)
+
+    def check_vat_nz(self, vat):
+        '''
+        The New Zealand equivalent of a VAT number is an IRD number (GST number is another name for this).
+        IRD/GST numbers must legally must be displayed on all tax invoices.
+        https://arthurdejong.org/python-stdnum/doc/1.13/stdnum.nz.ird#module-stdnum.nz.ird
+        '''
+        check_func = stdnum.util.get_cc_module('nz', 'ird').is_valid
         return check_func(vat)
 
     def format_vat_eu(self, vat):
