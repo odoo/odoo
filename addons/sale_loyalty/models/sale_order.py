@@ -229,6 +229,7 @@ class SaleOrder(models.Model):
                     continue
                 discount_lines[line.reward_identifier_code] |= line
 
+        order_lines -= self.order_line.filtered("reward_id")
         cheapest_line = False
         for lines in discount_lines.values():
             line_reward = lines.reward_id
@@ -252,12 +253,19 @@ class SaleOrder(models.Model):
                 # Fixed prices are per tax
                 discounted_amounts = {line.tax_id: abs(line.price_total) for line in lines}
                 for line in itertools.chain(non_common_lines, common_lines):
-                    discounted_amount = discounted_amounts[line.tax_id]
+                    # For gift card and eWallet programs we have no tax but we can consume the amount completely
+                    if lines.reward_id.program_id.is_payment_program:
+                        discounted_amount = discounted_amounts[lines.tax_id]
+                    else:
+                        discounted_amount = discounted_amounts[line.tax_id]
                     if discounted_amount == 0:
                         continue
                     remaining = remaining_amount_per_line[line]
                     consumed = min(remaining, discounted_amount)
-                    discounted_amounts[line.tax_id] -= consumed
+                    if lines.reward_id.program_id.is_payment_program:
+                        discounted_amounts[lines.tax_id] -= consumed
+                    else:
+                        discounted_amounts[line.tax_id] -= consumed
                     remaining_amount_per_line[line] -= consumed
 
         discountable = 0
@@ -310,7 +318,7 @@ class SaleOrder(models.Model):
             converted_discount = self.currency_id._convert(min(max_discount, discountable), reward.currency_id, self.company_id, fields.Date.today())
             point_cost = converted_discount / reward.discount
         # Gift cards and eWallets are considered gift cards and should not have any taxes
-        if reward.program_id.program_type in ('ewallet', 'gift_card'):
+        if reward.program_id.is_payment_program:
             return [{
                 'name': reward.description,
                 'product_id': reward.discount_line_product_id.id,
