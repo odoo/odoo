@@ -681,7 +681,8 @@
                             </td>
                             <td style="width:40%">
                                 <p>
-                                    <t t-esc="cash_register_balance_start" t-options='{"widget": "float", "precision": 2}'/>
+<!--                                    <t t-esc="cash_register_balance_start" t-options='{"widget": "float", "precision": 2}'/>-->
+                                    <t t-esc="OPEN_READING" t-options='{"widget": "float", "precision": 2}'/>
                                     <t t-esc="company.currency_id.name"/>
                                 </p>
                             </td>
@@ -696,8 +697,23 @@
                             </td>
                             <td style="width:40%">
                                 <p>
-                                    <t t-esc="cash_register_balance_end_real" t-options='{"widget": "float", "precision": 2}'/>
+<!--                                    <t t-esc="cash_register_balance_end_real" t-options='{"widget": "float", "precision": 2}'/>-->
+                                    <t t-esc="OPEN_READING + CLOSE_READING" t-options='{"widget": "float", "precision": 2}'/>
                                     <t t-esc="company.currency_id.name"/>
+                                </p>
+                            </td>
+                            <td>
+                            </td>
+                        </tr>
+                        <tr t-if="company.is_reset_open_reading">
+                            <td style="width:28%">
+                                <div class="left_content" style="text-align: left;font-size: 15px;">
+                                    <p>RESET COUNTER:</p>
+                                </div>
+                            </td>
+                            <td style="width:40%">
+                                <p>
+                                    <t t-esc="company.reset_counter"/>
                                 </p>
                             </td>
                             <td>

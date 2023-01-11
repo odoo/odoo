@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 # sample import below
 
+from . import res_config_settings
 from . import FgPosOrder
 from . import FgCustomerMaster
 from . import FgOrderImport

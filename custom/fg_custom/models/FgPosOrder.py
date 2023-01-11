@@ -13,6 +13,8 @@ class POSSession(models.Model):
     def name_get(self):
         return [(role.id, '%s (%s)' % (role.name,role.config_id.name)) for role in self]
 
+    is_reset_zreport = fields.Boolean(string='Is Reset on Z Report', default=False)
+
 class PosPaymentInherit(models.Model):
     _inherit = "pos.payment"
     _description = "inherit pos.payment"
