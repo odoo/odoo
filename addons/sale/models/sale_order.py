@@ -246,6 +246,7 @@ class SaleOrder(models.Model):
         compute='_compute_authorized_transaction_ids',
         copy=False,
         compute_sudo=True)
+    amount_paid = fields.Float(compute='_compute_amount_paid')
 
     # UTMs - enforcing the fact that we want to 'set null' when relation is unlinked
     campaign_id = fields.Many2one(ondelete='set null')
@@ -554,6 +555,14 @@ class SaleOrder(models.Model):
     def _compute_authorized_transaction_ids(self):
         for trans in self:
             trans.authorized_transaction_ids = trans.transaction_ids.filtered(lambda t: t.state == 'authorized')
+
+    @api.depends('transaction_ids')
+    def _compute_amount_paid(self):
+        """ Sum of the amount paid through all transactions for this SO. """
+        for order in self:
+            order.amount_paid = sum(
+                tx.amount for tx in order.transaction_ids if tx.state in ('authorized', 'done')
+            )
 
     def _compute_amount_undiscounted(self):
         for order in self:
@@ -908,22 +917,47 @@ class SaleOrder(models.Model):
                     order._create_analytic_account()
 
     def _send_order_confirmation_mail(self):
-        if not self:
+        """ Send a mail to the SO customer to inform them that their order has been confirmed.
+
+        :return: None
+        """
+        for order in self:
+            mail_template = self._get_confirmation_template()
+            order._send_order_notification_mail(mail_template)
+
+    def _send_payment_succeeded_for_order_mail(self):
+        """ Send a mail to the SO customer to inform them that a payment has been initiated.
+
+        :return: None
+        """
+        mail_template = self.env.ref(
+            'sale.mail_template_sale_payment_executed', raise_if_not_found=False
+        )
+        for order in self:
+            order._send_order_notification_mail(mail_template)
+
+    def _send_order_notification_mail(self, mail_template):
+        """ Send a mail to the customer
+
+        Note: self.ensure_one()
+
+        :param mail.template mail_template: the template used to generate the mail
+        :return: None
+        """
+        self.ensure_one()
+
+        if not mail_template:
             return
 
         if self.env.su:
             # sending mail in sudo was meant for it being sent from superuser
             self = self.with_user(SUPERUSER_ID)
 
-        for sale_order in self:
-            mail_template = sale_order._get_confirmation_template()
-            if not mail_template:
-                continue
-            sale_order.with_context(force_send=True).message_post_with_source(
-                mail_template,
-                email_layout_xmlid='mail.mail_notification_layout_with_responsible_signature',
-                subtype_xmlid='mail.mt_comment',
-            )
+        self.with_context(force_send=True).message_post_with_source(
+            mail_template,
+            email_layout_xmlid='mail.mail_notification_layout_with_responsible_signature',
+            subtype_xmlid='mail.mt_comment',
+        )
 
     def action_done(self):
         for order in self:
@@ -1430,12 +1464,14 @@ class SaleOrder(models.Model):
 
     def _get_default_payment_link_values(self):
         self.ensure_one()
+        amount = self.amount_total - self.amount_paid
         return {
             'description': self.name,
-            'amount': self.amount_total - sum(self.invoice_ids.filtered(lambda x: x.state != 'cancel' and x.invoice_line_ids.sale_line_ids.order_id == self).mapped('amount_total')),
             'currency_id': self.currency_id.id,
             'partner_id': self.partner_id.id,
-            'amount_max': self.amount_total,
+            'amount': amount,
+            'amount_max': amount,
+            'amount_paid': self.amount_paid,
         }
 
     # PORTAL #
