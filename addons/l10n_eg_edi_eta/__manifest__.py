@@ -9,7 +9,7 @@
        Special thanks to Plementus <info@plementus.com> for their help in developing this module.
     """,
     'website': 'https://www.odoo.com',
-    'category': 'account',
+    'category': 'Accounting/Localizations/EDI',
     'version': '0.1',
     'license': 'LGPL-3',
     'depends': ['account_edi', 'l10n_eg'],

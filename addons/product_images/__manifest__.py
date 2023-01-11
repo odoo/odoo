@@ -11,7 +11,7 @@ This module integrates with the Google Custom Search API to set images on produc
 barcode.
     """,
     'license': 'LGPL-3',
-    'category': 'Technical',
+    'category': 'Hidden',
     'depends': ['product'],
     'data': [
         'data/ir_cron_data.xml',

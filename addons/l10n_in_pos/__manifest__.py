@@ -6,7 +6,7 @@
     'icon': '/l10n_in/static/description/icon.png',
     'version': '1.0',
     'description': """GST Point of Sale""",
-    'category': 'Accounting/Localizations/Point of Sale',
+    'category': 'Sales/Point of Sale',
     'depends': [
         'l10n_in',
         'point_of_sale'

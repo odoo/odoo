@@ -3,7 +3,7 @@
 {
     'name': 'Mass Mail Tests',
     'version': '1.0',
-    'category': 'Hidden',
+    'category': 'Hidden/Tests',
     'sequence': 8765,
     'summary': 'Mass Mail Tests: feature and performance tests for mass mailing',
     'description': """This module contains tests related to mass mailing. Those

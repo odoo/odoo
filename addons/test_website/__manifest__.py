@@ -4,7 +4,7 @@
 {
     'name': 'Website Test',
     'version': '1.0',
-    'category': 'Hidden',
+    'category': 'Hidden/Tests',
     'sequence': 9876,
     'summary': 'Website Test, mainly for module install/uninstall tests',
     'description': """This module contains tests related to website. Those are

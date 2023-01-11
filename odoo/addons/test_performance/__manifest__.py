@@ -2,7 +2,7 @@
 {
     'name': "Test Performance",
     'version': "1.0",
-    'category': "Hidden",
+    'category': 'Hidden/Tests',
     'depends': ['base'],
     'data': [
         'security/ir.model.access.csv',

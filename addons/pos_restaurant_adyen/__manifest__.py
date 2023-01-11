@@ -4,7 +4,7 @@
 {
     'name': 'POS Restaurant Adyen',
     'version': '1.0',
-    'category': 'Point of Sale',
+    'category': 'Sales/Point of Sale',
     'sequence': 6,
     'summary': 'Adds American style tipping to Adyen',
     'depends': ['pos_adyen', 'pos_restaurant', 'payment_adyen'],

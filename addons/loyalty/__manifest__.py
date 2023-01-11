@@ -3,7 +3,7 @@
 {
     'name': 'Coupons & Loyalty',
     'summary': "Use discounts, gift card, eWallets and loyalty programs in different sales channels",
-    'category': 'Sales',
+    'category': 'Sales/Sales',
     'version': '1.0',
     'depends': ['product'],
     'data': [

@@ -5,6 +5,7 @@
     'name': "Website Mail Group",
     'summary': "Add a website snippet for the mail groups.",
     'version': '1.0',
+    'category': 'Productivity/Discuss',
     'depends': ['mail_group', 'website'],
     'auto_install': True,
     'data': [

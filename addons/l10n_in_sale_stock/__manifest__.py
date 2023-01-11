@@ -16,7 +16,7 @@
     """,
 
     'website': "https://www.odoo.com",
-    'category': 'Accounting/Localizations/Sale',
+    'category': 'Sales/Sales',
     'version': '0.1',
 
     'depends': ['l10n_in_sale', 'l10n_in_stock'],

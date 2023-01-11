@@ -3,7 +3,7 @@
 {
     'name': 'United Arab Emirates - Point of Sale',
     'author': 'Odoo PS',
-    'category': 'Accounting/Localizations/Point of Sale',
+    'category': 'Sales/Point of Sale',
     'description': """
 United Arab Emirates POS Localization
 =======================================================

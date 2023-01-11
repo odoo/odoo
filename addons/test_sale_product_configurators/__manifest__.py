@@ -4,7 +4,7 @@
 {
     'name': "Sale Product Configurators Tests",
     'summary': "Test Suite for Sale Product Configurator",
-    'category': "Hidden",
+    'category': 'Hidden/Tests',
     'depends': [
         'event_sale',
         'sale_management',

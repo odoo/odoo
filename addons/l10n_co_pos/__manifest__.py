@@ -6,7 +6,7 @@
     'icon': '/l10n_co/static/description/icon.png',
     'version': '1.0',
     'description': """Colombian - Point of Sale""",
-    'category': 'Accounting/Localizations/Point of Sale',
+    'category': 'Sales/Point of Sale',
     'auto_install': True,
     'depends': [
         'l10n_co',

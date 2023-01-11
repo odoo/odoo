@@ -4,7 +4,7 @@
 {
     'name': 'Test - Base Automation',
     'version': '1.0',
-    'category': 'Hidden',
+    'category': 'Hidden/Tests',
     'sequence': 9877,
     'summary': 'Base Automation Tests: Ensure Flow Robustness',
     'description': """This module contains tests related to base automation. Those are

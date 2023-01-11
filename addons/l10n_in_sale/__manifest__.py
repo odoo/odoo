@@ -6,7 +6,7 @@
     'icon': '/l10n_in/static/description/icon.png',
     'version': '1.0',
     'description': """GST Sale Report""",
-    'category': 'Accounting/Localizations/Sale',
+    'category': 'Sales/Sales',
     'depends': [
         'l10n_in',
         'sale',

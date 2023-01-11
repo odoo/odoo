@@ -2,7 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 {
     'name': 'Tests flow of API keys',
-    'category': 'Tools',
+    'category': 'Hidden/Tests',
     'depends': ['web_tour'],
     'assets': {
         'web.assets_tests': [

@@ -4,7 +4,7 @@
 {
     'name': 'Purchase and Subcontracting Management',
     'version': '0.1',
-    'category': 'Manufacturing/Purchase',
+    'category': 'Inventory/Purchase',
     'description': """
         This bridge module adds some smart buttons between Purchase and Subcontracting
     """,

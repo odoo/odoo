@@ -3,7 +3,7 @@
 {
     'name': 'Coupons & Loyalty - Delivery',
     'summary': "Add a free shipping option to your rewards",
-    'category': 'Sales',
+    'category': 'Sales/Sales',
     'version': '1.0',
     'depends': ['loyalty', 'delivery'],
     'data': [
