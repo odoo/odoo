@@ -28,7 +28,8 @@
                 <field name="code" invisible="1"/>
                 <sheet>
                     <!-- === Stat Buttons === -->
-                    <div class="oe_button_box" name="button_box">
+                    <div class="oe_button_box" name="button_box"
+                         attrs="{'invisible': [('module_state', '!=', 'installed')]}">
                         <button name="action_toggle_is_published"
                                 attrs="{'invisible': [('is_published', '=', False)]}"
                                 class="oe_stat_button"
@@ -48,9 +49,10 @@
                             </div>
                         </button>
                     </div>
-                    <field name="image_128" widget="image" class="oe_avatar"/>
-                    <widget name="web_ribbon" title="Disabled" bg_color="bg-danger" attrs="{'invisible': [('state', '!=', 'disabled')]}"/>
-                    <widget name="web_ribbon" title="Test Mode" bg_color="bg-warning" attrs="{'invisible': [('state', '!=', 'test')]}"/>
+                    <field name="image_128" widget="image" class="oe_avatar"
+                           attrs="{'readonly': [('module_state', '!=', 'installed')]}"/>
+                    <widget name="web_ribbon" title="Disabled" bg_color="bg-danger" attrs="{'invisible': ['|', ('module_state', '!=', 'installed'), ('state', '!=', 'disabled')]}"/>
+                    <widget name="web_ribbon" title="Test Mode" bg_color="bg-warning" attrs="{'invisible': ['|', ('module_state', '!=', 'installed'), ('state', '!=', 'test')]}"/>
                     <div class="oe_title">
                         <h1><field name="name" placeholder="Name"/></h1>
                         <div attrs="{'invisible': ['|', ('module_state', '=', 'installed'), ('module_id', '=', False)]}">
@@ -63,9 +65,9 @@
                         Please use the <em>Duplicate</em> action instead.
                     </div>
                     <group>
-                        <group name="payment_state">
-                            <field name="code" groups="base.group_no_one" attrs="{'readonly': [('id', '!=', False)], 'invisible': [('module_id', '!=', False), ('module_state', '!=', 'installed')]}"/>
-                            <field name="state" widget="radio" attrs="{'invisible': [('module_state', '=', 'uninstalled')]}"/>
+                        <group name="payment_state" attrs="{'invisible': [('module_state', 'not in', ('installed', False))]}">
+                            <field name="code" groups="base.group_no_one" attrs="{'readonly': [('id', '!=', False)]}"/>
+                            <field name="state" widget="radio"/>
                             <field name="company_id" groups="base.group_multi_company" options='{"no_open":True}'/>
                         </group>
                     </group>
