@@ -240,6 +240,60 @@
             <field name="auto_delete" eval="True"/>
         </record>
 
+        <record id="mail_template_sale_payment_executed" model="mail.template">
+            <field name="name">Sales: Payment Done</field>
+            <field name="model_id" ref="sale.model_sale_order"/>
+            <field name="subject">{{ object.company_id.name }} {{ (object.get_portal_last_transaction().state == 'pending') and 'Pending Order' or 'Order' }} (Ref {{ object.name or 'n/a' }})</field>
+            <field name="email_from">{{ (object.user_id.email_formatted or user.email_formatted) }}</field>
+            <field name="partner_to">{{ object.partner_id.id }}</field>
+            <field name="description">Sent to customers when a payment is received but doesn't immediately confirm their order</field>
+            <field name="body_html" type="html">
+<div style="margin: 0px; padding: 0px;">
+    <p style="margin: 0px; padding: 0px; font-size: 12px;">
+        <t t-set="transaction_sudo" t-value="object.get_portal_last_transaction()"/>
+        Hello,
+        <br/><br/>
+        A payment with reference
+        <span style="font-weight:bold;" t-out="transaction_sudo.reference or ''">SOOO49</span>
+        amounting
+        <span style="font-weight:bold;" t-out="format_amount(transaction_sudo.amount, object.currency_id) or ''">$ 10.00</span>
+        for your order
+        <span style="font-weight:bold;" t-out="object.name or ''">S00049</span>
+        <t t-if="transaction_sudo and transaction_sudo.state == 'pending'">
+            is pending.
+            <br/>
+            <t t-if="object.currency_id.compare_amounts(object.amount_paid + transaction_sudo.amount, object.amount_total) >= 1 and object.state in ('draft', 'sent')">
+                Your order will be confirmed once the payment is confirmed.
+            </t>
+            <t t-else="">
+                Once confirmed it will remain
+                <span style="font-weight:bold;" t-out="format_amount(object.amount_total - object.amount_paid - transaction_sudo.amount, object.currency_id) or ''">$ 10.00</span>
+                to pay.
+            </t>
+        </t>
+        <t t-else="">
+            has been confirmed.
+            <br/>
+            It remains <span style="font-weight:bold;" t-out="format_amount(object.amount_total - object.amount_paid, object.currency_id) or ''">$ 10.00</span>
+            to be paid.
+        </t>
+        <br/><br/>
+        Thank you for your trust!
+        <br/>
+        Do not hesitate to contact us if you have any questions.
+        <t t-if="not is_html_empty(object.user_id.signature)">
+            <br/><br/>
+            <t t-out="object.user_id.signature or ''">--<br/>Mitchell Admin</t>
+        </t>
+        <br/><br/>
+    </p>
+</div>
+            </field>
+            <field name="report_template_ids" eval="[(4, ref('sale.action_report_saleorder'))]"/>
+            <field name="lang">{{ object.partner_id.lang }}</field>
+            <field name="auto_delete" eval="True"/>
+        </record>
+
         <record id="sale.mail_template_sale_cancellation" model="mail.template">
             <field name="name">Sales: Order Cancellation</field>
             <field name="model_id" ref="sale.model_sale_order"/>
