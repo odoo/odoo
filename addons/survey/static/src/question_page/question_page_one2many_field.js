@@ -2,11 +2,30 @@
 
 import { QuestionPageListRenderer } from "./question_page_list_renderer";
 import { registry } from "@web/core/registry";
-import { useOpenX2ManyRecord, useX2ManyCrud } from "@web/views/fields/relational_utils";
+import { useOpenX2ManyRecord, useX2ManyCrud, X2ManyFieldDialog } from "@web/views/fields/relational_utils";
+import { patch } from '@web/core/utils/patch';
 import { useService } from "@web/core/utils/hooks";
 import { X2ManyField } from "@web/views/fields/x2many/x2many_field";
 
 const { useSubEnv } = owl;
+
+patch(X2ManyFieldDialog.prototype, 'survey_question_chaining_with_validation', {
+    /**
+     * Re-enable buttons after our error is thrown because blocking normal
+     * behavior is required to not close the dialog and stay in edition but
+     * the buttons are required to try and save again after changing form data.
+     *
+     * @override
+     */
+    async saveAndNew() {
+        const res = this._super(...arguments);
+        if (this.record.resModel === 'survey.question') {
+            const btns = this.modalRef.el.querySelectorAll(".modal-footer button"); // see XManyFieldDialog.disableButtons
+            this.enableButtons(btns);
+        }
+        return res;
+    }
+});
 
 class QuestionPageOneToManyField extends X2ManyField {
     setup() {
@@ -95,7 +114,7 @@ class QuestionPageOneToManyField extends X2ManyField {
             }
         );
         // Prevent closing the question form view
-        return Promise.reject("Impossible to save survey, see error notification.");
+        throw error;
     }
 }
 QuestionPageOneToManyField.components = {
