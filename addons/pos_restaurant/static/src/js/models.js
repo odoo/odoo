@@ -369,6 +369,7 @@ patch(Order.prototype, "pos_restaurant.Order", {
         if (this.pos.config.module_pos_restaurant) {
             if (this.pos.config.iface_floorplan) {
                 this.tableId = json.table_id;
+                this.validation_date = moment.utc(json.creation_date).local().toDate();
             }
             this.customerCount = json.customer_count;
         }
