@@ -600,9 +600,9 @@ export class OdooEditor extends EventTarget {
         this.addDomListener(this.editable, 'paste', this._onPaste);
         this.addDomListener(this.editable, 'dragstart', this._onDragStart);
         this.addDomListener(this.editable, 'drop', this._onDrop);
+        this.addDomListener(this.editable, 'copy', this._onClipboardCopy);
+        this.addDomListener(this.editable, 'cut', this._onClipboardCut);
 
-        this.addDomListener(this.document, 'copy', this._onClipboardCopy);
-        this.addDomListener(this.document, 'cut', this._onClipboardCut);
         this.addDomListener(this.document, 'selectionchange', this._onSelectionChange);
         this.addDomListener(this.document, 'selectionchange', this._handleCommandHint);
         this.addDomListener(this.document, 'keydown', this._onDocumentKeydown);
