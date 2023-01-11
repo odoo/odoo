@@ -24,6 +24,8 @@ odoo.define('fg_custom.FgPosReceipt', function (require) {
     const { Gui } = require('point_of_sale.Gui');
     const { float_is_zero,round_decimals } = require('web.utils');
     const dp = new concurrency.DropPrevious();
+    var core = require('web.core');
+    var _t = core._t;
     var super_ordermodel = models.Order.prototype;
 
     class CouponCode {
@@ -109,15 +111,28 @@ odoo.define('fg_custom.FgPosReceipt', function (require) {
             } else if (promoProgram) {
                 const customer = this.get_client();
                 if(!customer){
-                    Gui.showNotification('This order not available customer, first set custom.');
+//                    Gui.showNotification('This order not available customer, first set custom.');
+                    Gui.showPopup('ErrorPopup', {
+                        title: _t("Set customer"),
+                        body: _t("This order not available customer, first set custom"),
+                    });
+                    return;
                 }
                 if(promoProgram.fg_discount_type){
                     if(promoProgram.fg_discount_type == 'is_pwd_discount' && !customer.x_pwd_id){
-                        Gui.showNotification('PWD ID not set on customer, first set custom.');
+//                        Gui.showNotification('PWD ID not set on customer, first set custom.');
+                        Gui.showPopup('ErrorPopup', {
+                            title: _t("Set Discount"),
+                            body: _t("PWD ID not set on customer, first set custom."),
+                        });
                         return;
                     }
                     if(promoProgram.fg_discount_type == 'is_senior_discount' && !customer.x_senior_id){
-                        Gui.showNotification('Senior ID not set on customer, first set custom.');
+//                        Gui.showNotification('Senior ID not set on customer, first set custom.');
+                        Gui.showPopup('ErrorPopup', {
+                            title: _t("Set Discount"),
+                            body: _t("Senior ID not set on customer, first set custom."),
+                        });
                         return;
                     }
                 }

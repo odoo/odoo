@@ -38,6 +38,18 @@ class FgZReport(models.AbstractModel):
         refund_start_end_order_list = [] #refund si
         total_entry_encoding = 0
 
+        company_id = self.env.company
+        if company_id.is_reset_open_reading:
+            CLOSE_session_ids = self.env['pos.session'].search([('id', 'not in', session_ids.ids), ('is_reset_zreport', '=', False), ('state', '=', 'closed')])
+        else:
+            CLOSE_session_ids = self.env['pos.session'].search([('id', 'not in', session_ids.ids), ('state', '=', 'closed')])
+        OPEN_READING = sum(CLOSE_session_ids.mapped('total_payments_amount'))
+        if company_id.is_reset_open_reading and company_id.reset_open_reading_amount > 0 and OPEN_READING >= company_id.reset_open_reading_amount:
+            OPEN_READING = 0
+            company_id.reset_counter = company_id.reset_counter + 1
+            CLOSE_session_ids.is_reset_zreport = True
+        CLOSE_READING = sum(session_ids.mapped('total_payments_amount'))
+
         asc_start_end_order_id = self.env['pos.order'].search([('session_id', 'in', session_ids.ids),('pos_trans_reference', '!=', False)], limit=1, order='pos_trans_reference asc')
         desc_start_end_order_id = self.env['pos.order'].search([('session_id', 'in', session_ids.ids),('pos_trans_reference', '!=', False)], limit=1, order='pos_trans_reference desc')
 
@@ -176,6 +188,8 @@ class FgZReport(models.AbstractModel):
                 'refund_start_end_order_list': refund_start_end_order_list,
                 'cash_register_balance_start': cash_register_balance_start,
                 'cash_register_balance_end_real': cash_register_balance_end_real,
+                'OPEN_READING': OPEN_READING,
+                'CLOSE_READING': CLOSE_READING,
                 'stop_at': localized_dt.strftime('%m/%d/%Y'), 'stop_time': localized_dt.strftime('%H:%M:%S'),
                 'total_amt': total_amt,
                 'total_qty': int(total_qty),

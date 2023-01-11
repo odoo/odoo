@@ -10,6 +10,7 @@
     'depends': ['product', 'account', 'point_of_sale', 'base', 'sale', 'pos_coupon'],
     'data': [
         'security/groups.xml',
+        'views/res_config_settings_views.xml',
         'views/FgOrderDetails.xml',
         'views/FgImportOrders.xml',
         'views/FgMessageWizard.xml',
