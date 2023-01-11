@@ -464,11 +464,7 @@ class TestPointOfSaleHttpCommon(odoo.tests.HttpCase):
 
         # Change the default sale pricelist of customers,
         # so the js tests can expect deterministically this pricelist when selecting a customer.
-        env['ir.property']._set_default(
-            "property_product_pricelist",
-            "res.partner",
-            public_pricelist,
-        )
+        env['ir.property']._set_default("property_product_pricelist", "res.partner", public_pricelist, main_company)
 
 
 @odoo.tests.tagged('post_install', '-at_install')
