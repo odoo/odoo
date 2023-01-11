@@ -7,10 +7,10 @@ class ProductTemplate(models.Model):
     _inherit = "product.template"
 
     l10n_ke_hsn_code = fields.Char(
-        string='HSN code',
-        help="Product code needed in case of not 16%. ",
+        string='KRA Item Code',
+        help='Product code needed when not 16% VAT rated. ',
     )
     l10n_ke_hsn_name = fields.Char(
-        string='HSN description',
-        help="Product code description needed in case of not 16%. ",
+        string='KRA Item Description',
+        help='Product code description needed when not 16% VAT rated. ',
     )
