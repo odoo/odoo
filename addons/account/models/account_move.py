@@ -4961,6 +4961,8 @@ class AccountMoveLine(models.Model):
                                 % line.account_id.display_name)
             if line.move_id.state != 'posted':
                 raise UserError(_('You can only reconcile posted entries.'))
+            if line.statement_line_id and line.journal_id.type in ('bank', 'cash') and line.journal_id.suspense_account_id and line.journal_id.suspense_account_id == line.account_id:
+                raise UserError(_('You cannot reconcile line with suspense account.'))
             if company is None:
                 company = line.company_id
             elif line.company_id != company:
