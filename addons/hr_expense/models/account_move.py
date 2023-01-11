@@ -19,6 +19,7 @@ class AccountMove(models.Model):
             'type': 'ir.actions.act_window',
             'view_type': 'form',
             'view_mode': 'form',
+            'views': [(False, 'form')],
             'res_model': 'hr.expense.sheet',
             'res_id': self.expense_sheet_id.id
         }

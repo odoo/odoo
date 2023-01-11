@@ -433,6 +433,7 @@ class HrExpense(models.Model):
         return {
             'type': 'ir.actions.act_window',
             'view_mode': 'form',
+            'views': [[False, "form"]],
             'res_model': 'hr.expense.sheet',
             'target': 'current',
             'res_id': self.sheet_id.id
@@ -559,6 +560,7 @@ class HrExpense(models.Model):
             'name': _('Expense split'),
             'type': 'ir.actions.act_window',
             'view_mode': 'form',
+            'views': [[False, "form"]],
             'res_model': 'hr.expense.split.wizard',
             'res_id': wizard.id,
             'target': 'new',
@@ -1117,6 +1119,7 @@ class HrExpenseSheet(models.Model):
             'name': _('Expenses'),
             'type': 'ir.actions.act_window',
             'view_mode': 'list,form',
+            'views': [[False, "list"], [False, "form"]],
             'res_model': 'hr.expense',
             'domain': [('id', 'in', self.expense_line_ids.ids)],
         }
@@ -1128,6 +1131,7 @@ class HrExpenseSheet(models.Model):
             'type': 'ir.actions.act_window',
             'view_type': 'form',
             'view_mode': 'form',
+            'views': [[False, "form"]],
             'res_model': 'account.move',
             'res_id': self.account_move_id.id
         }
@@ -1268,6 +1272,7 @@ class HrExpenseSheet(models.Model):
             'name': _('Register Payment'),
             'res_model': 'account.payment.register',
             'view_mode': 'form',
+            'views': [[False, "form"]],
             'context': {
                 'active_model': 'account.move',
                 'active_ids': self.account_move_id.ids,

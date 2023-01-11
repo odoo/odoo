@@ -24,8 +24,8 @@ export class ExpenseListController extends ListController {
         this.isExpenseSheet = this.model.rootParams.resModel === "hr.expense.sheet";
 
         onWillStart(async () => {
-            this.is_expense_team_approver = await this.user.hasGroup("hr_expense.group_hr_expense_team_approver");
-            this.is_account_invoicing = await this.user.hasGroup("account.group_account_invoice");
+            this.userIsExpenseTeamApprover = await this.user.hasGroup("hr_expense.group_hr_expense_team_approver");
+            this.userIsAccountInvoicing = await this.user.hasGroup("account.group_account_invoice");
         });
     }
 
@@ -36,19 +36,33 @@ export class ExpenseListController extends ListController {
 
     displayApprove() {
         const records = this.model.root.selection;
-        return this.is_expense_team_approver && records.length && records.every(record => record.data.state === 'submit') && this.isExpenseSheet;
+        return this.userIsExpenseTeamApprover && records.length && records.every(record => record.data.state === 'submit') && this.isExpenseSheet;
     }
 
     displayPost() {
         const records = this.model.root.selection;
-        return this.is_account_invoicing && records.length && records.every(record => record.data.state === 'approve') && this.isExpenseSheet;
+        return this.userIsAccountInvoicing && records.length && records.every(record => record.data.state === 'approve') && this.isExpenseSheet;
+    }
+
+    displayPayment() {
+        const records = this.model.root.selection;
+        return this.userIsAccountInvoicing && records.length && records.every(record => record.data.state === 'post' && record.data.payment_state === 'not_paid') && this.isExpenseSheet;
     }
 
     async onClick (action) {
         const records = this.model.root.selection;
         const recordIds = records.map((a) => a.resId);
         const model = this.model.rootParams.resModel;
-        await this.orm.call(model, action, [recordIds]);
+        const res = await this.orm.call(model, action, [recordIds]);
+        await this.actionService.doAction(res, {
+            additionalContext: {
+                dont_redirect_to_payments: 1,
+            },
+            onClose: async () => {
+                await this.model.root.load();
+                this.render(true);
+            }
+        });
         // sgv note: we tried this.model.notify(); and does not work
         await this.model.root.load();
         this.render(true);
