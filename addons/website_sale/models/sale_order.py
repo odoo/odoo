@@ -104,6 +104,24 @@ class SaleOrder(models.Model):
             return abandoned_domain
         return expression.distribute_not(['!'] + abandoned_domain)  # negative domain
 
+    def _cart_update_order_line(self, product_id, quantity, order_line, **kwargs):
+        self.ensure_one()
+
+        if order_line and quantity <= 0:
+            # Remove zero or negative lines
+            order_line.unlink()
+            order_line = self.env['sale.order.line']
+        elif order_line:
+            # Update existing line
+            update_values = self._prepare_order_line_update_values(order_line, quantity, **kwargs)
+            if update_values:
+                self._update_cart_line_values(order_line, update_values)
+        elif quantity >= 0:
+            # Create new line
+            order_line_values = self._prepare_order_line_values(product_id, quantity, **kwargs)
+            order_line = self.env['sale.order.line'].sudo().create(order_line_values)
+        return order_line
+
     def _cart_update_pricelist(self, pricelist_id=None, update_pricelist=False):
         self.ensure_one()
 
@@ -173,19 +191,7 @@ class SaleOrder(models.Model):
             # the requested quantity update.
             warning = ''
 
-        if order_line and quantity <= 0:
-            # Remove zero or negative lines
-            order_line.unlink()
-            order_line = self.env['sale.order.line']
-        elif order_line:
-            # Update existing line
-            update_values = self._prepare_order_line_update_values(order_line, quantity, **kwargs)
-            if update_values:
-                self._update_cart_line_values(order_line, update_values)
-        elif quantity >= 0:
-            # Create new line
-            order_line_values = self._prepare_order_line_values(product_id, quantity, **kwargs)
-            order_line = self.env['sale.order.line'].sudo().create(order_line_values)
+        order_line = self._cart_update_order_line(product_id, quantity, order_line, **kwargs)
 
         return {
             'line_id': order_line.id,
