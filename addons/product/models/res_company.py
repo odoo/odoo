@@ -1,11 +1,18 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import api, models, _
+from odoo import api, fields, models, _
 
 
 class ResCompany(models.Model):
     _inherit = "res.company"
+
+    default_weight_uom_id = fields.Many2one('uom.uom', string='Weight unit of measure', domain=lambda self: [('category_id', '=', self.env.ref('uom.product_uom_categ_kgm').id)],
+                                            default=lambda self: self.env.ref('uom.product_uom_kgm'))
+    default_volume_uom_id = fields.Many2one('uom.uom', string='Volume unit of measure', domain=lambda self: [('category_id', '=', self.env.ref('uom.product_uom_categ_vol').id)],
+                                            default=lambda self: self.env.ref('uom.product_uom_cubic_meter'))
+    default_dimension_uom_id = fields.Many2one('uom.uom', string='Dimension unit of measure', domain=lambda self: [('category_id', '=', self.env.ref('uom.uom_categ_length').id)],
+                                               default=lambda self: self.env.ref('uom.product_uom_millimeter'))
 
     @api.model_create_multi
     def create(self, vals_list):

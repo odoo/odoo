@@ -8,18 +8,14 @@ from odoo.osv import expression
 class StockPickingType(models.Model):
     _inherit = "stock.picking.type"
 
-    def _get_default_weight_uom(self):
-        return self.env['product.template']._get_weight_uom_name_from_ir_config_parameter()
-
     batch_group_by_carrier = fields.Boolean('Carrier', help="Automatically group batches by carriers")
     batch_max_weight = fields.Integer("Maximum weight per batch",
                                       help="A transfer will not be automatically added to batches that will exceed this weight if the transfer is added to it.\n"
                                            "Leave this value as '0' if no weight limit.")
-    weight_uom_name = fields.Char(string='Weight unit of measure label', compute='_compute_weight_uom_name', readonly=True, default=_get_default_weight_uom)
+    weight_uom_id = fields.Many2one('uom.uom', string='Weight unit of measure', compute='_compute_weight_uom_id')
 
-    def _compute_weight_uom_name(self):
-        for picking_type in self:
-            picking_type.weight_uom_name = self.env['product.template']._get_weight_uom_name_from_ir_config_parameter()
+    def _compute_weight_uom_id(self):
+        self.weight_uom_id = self.env.company.default_weight_uom_id
 
     @api.model
     def _get_batch_group_by_keys(self):

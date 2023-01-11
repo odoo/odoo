@@ -8,6 +8,9 @@ from odoo.exceptions import UserError
 class SaleOrder(models.Model):
     _inherit = 'sale.order'
 
+    def _get_default_weight_uom_id(self):
+        return self.env.company.default_weight_uom_id
+
     carrier_id = fields.Many2one('delivery.carrier', string="Delivery Method", domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]", help="Fill this field if you plan to invoice the shipping based on picking.")
     delivery_message = fields.Char(readonly=True, copy=False)
     delivery_rating_success = fields.Boolean(copy=False)
@@ -15,6 +18,10 @@ class SaleOrder(models.Model):
     recompute_delivery_price = fields.Boolean('Delivery cost should be recomputed')
     is_all_service = fields.Boolean("Service Product", compute="_compute_is_service_products")
     shipping_weight = fields.Float("Shipping Weight", compute="_compute_shipping_weight", store=True, readonly=False)
+    weight_uom_id = fields.Many2one('uom.uom', string='Weight unit of measure', default=_get_default_weight_uom_id, compute='_compute_weight_uom_id')
+
+    def _compute_weight_uom_id(self):
+        self.weight_uom_id = self._get_default_weight_uom_id()
 
     @api.depends('order_line')
     def _compute_is_service_products(self):
@@ -150,14 +157,20 @@ class SaleOrder(models.Model):
         for order in self:
             order.shipping_weight = order._get_estimated_weight()
 
-    def _get_estimated_weight(self):
+    def _get_estimated_weight(self, target_weight_uom_id=False):
+        ''' Gets the total estimated weight of SO by getting weight for each orderline and converting
+            it to targert weight if given.
+            Returns the sum of order line converted weight
+        '''
         self.ensure_one()
         if self.delivery_set:
             return self.shipping_weight
-        weight = 0.0
+        total_weight = 0.0
         for order_line in self.order_line.filtered(lambda l: l.product_id.type in ['product', 'consu'] and not l.is_delivery and not l.display_type):
-            weight += order_line.product_qty * order_line.product_id.weight
-        return weight
+            weight = order_line.product_qty * order_line.product_id.weight
+            total_weight += order_line.product_id.weight_uom_id._compute_quantity(weight, target_weight_uom_id or self.weight_uom_id)
+
+        return total_weight
 
 
 class SaleOrderLine(models.Model):

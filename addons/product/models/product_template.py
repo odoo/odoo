@@ -34,6 +34,12 @@ class ProductTemplate(models.Model):
             category_ids = categories._search([], order=order, access_rights_uid=SUPERUSER_ID)
         return categories.browse(category_ids)
 
+    def _get_default_product_weight_uom_id(self):
+        return self.env.company.default_weight_uom_id
+
+    def _get_default_product_volume_uom_id(self):
+        return self.env.company.default_volume_uom_id
+
     name = fields.Char('Name', index='trigram', required=True, translate=True)
     sequence = fields.Integer('Sequence', default=1, help='Gives the sequence order when displaying a product list')
     description = fields.Html(
@@ -80,11 +86,16 @@ class ProductTemplate(models.Model):
 
     volume = fields.Float(
         'Volume', compute='_compute_volume', inverse='_set_volume', digits='Volume', store=True)
-    volume_uom_name = fields.Char(string='Volume unit of measure label', compute='_compute_volume_uom_name')
+    volume_uom_id = fields.Many2one('uom.uom', string='Volume unit of measure', compute='_compute_volume_uom_id',
+                                    default=_get_default_product_volume_uom_id, inverse='_set_volume_uom_id', store=True,
+                                    domain=lambda self: [('category_id', '=', self.env.ref('uom.product_uom_categ_vol').id)])
     weight = fields.Float(
         'Weight', compute='_compute_weight', digits='Stock Weight',
         inverse='_set_weight', store=True)
-    weight_uom_name = fields.Char(string='Weight unit of measure label', compute='_compute_weight_uom_name')
+    weight_uom_id = fields.Many2one('uom.uom', string='Weight unit of measure', compute='_compute_weight_uom_id',
+                                    inverse='_set_weight_uom_id', default=_get_default_product_weight_uom_id, store=True,
+                                    domain=lambda self: [('category_id', '=', self.env.ref('uom.product_uom_categ_kgm').id)])
+    weight_uom_name = fields.Char(string='Weight unit of measure label', related='weight_uom_id.display_name')
 
     sale_ok = fields.Boolean('Can be Sold', default=True)
     purchase_ok = fields.Boolean('Can be Purchased', default=True)
@@ -140,6 +151,11 @@ class ProductTemplate(models.Model):
     ], default='0', string="Favorite")
 
     product_tag_ids = fields.Many2many('product.tag', 'product_tag_product_template_rel', string='Product Tags')
+
+    _sql_constraints = [
+        ('weight_uom_check', 'CHECK(weight_uom_id IS NOT NULL OR weight = 0)', 'Weight Unit of measure must be provided with product weight.'),
+        ('volume_uom_check', 'CHECK(volume_uom_id IS NOT NULL OR volume = 0)', 'Volume Unit of measure must be provided with product volume.')
+    ]
 
     def _compute_item_count(self):
         for template in self:
@@ -232,15 +248,29 @@ class ProductTemplate(models.Model):
     def _compute_volume(self):
         self._compute_template_field_from_variant_field('volume')
 
+    @api.depends('product_variant_ids.volume_uom_id')
+    def _compute_volume_uom_id(self):
+        self._compute_template_field_from_variant_field('volume_uom_id', default=self._get_default_product_volume_uom_id())
+
     def _set_volume(self):
         self._set_product_variant_field('volume')
+
+    def _set_volume_uom_id(self):
+        self._set_product_variant_field('volume_uom_id')
 
     @api.depends('product_variant_ids.weight')
     def _compute_weight(self):
         self._compute_template_field_from_variant_field('weight')
 
+    @api.depends('product_variant_ids.weight_uom_id')
+    def _compute_weight_uom_id(self):
+        self._compute_template_field_from_variant_field('weight_uom_id', default=self._get_default_product_weight_uom_id())
+
     def _set_weight(self):
         self._set_product_variant_field('weight')
+
+    def _set_weight_uom_id(self):
+        self._set_product_variant_field('weight_uom_id')
 
     def _compute_is_product_variant(self):
         self.is_product_variant = False
@@ -257,63 +287,6 @@ class ProductTemplate(models.Model):
 
     def _set_barcode(self):
         self._set_product_variant_field('barcode')
-
-    @api.model
-    def _get_weight_uom_id_from_ir_config_parameter(self):
-        """ Get the unit of measure to interpret the `weight` field. By default, we considerer
-        that weights are expressed in kilograms. Users can configure to express them in pounds
-        by adding an ir.config_parameter record with "product.product_weight_in_lbs" as key
-        and "1" as value.
-        """
-        product_weight_in_lbs_param = self.env['ir.config_parameter'].sudo().get_param('product.weight_in_lbs')
-        if product_weight_in_lbs_param == '1':
-            return self.env.ref('uom.product_uom_lb')
-        else:
-            return self.env.ref('uom.product_uom_kgm')
-
-    @api.model
-    def _get_length_uom_id_from_ir_config_parameter(self):
-        """ Get the unit of measure to interpret the `length`, 'width', 'height' field.
-        By default, we considerer that length are expressed in millimeters. Users can configure
-        to express them in feet by adding an ir.config_parameter record with "product.volume_in_cubic_feet"
-        as key and "1" as value.
-        """
-        product_length_in_feet_param = self.env['ir.config_parameter'].sudo().get_param('product.volume_in_cubic_feet')
-        if product_length_in_feet_param == '1':
-            return self.env.ref('uom.product_uom_foot')
-        else:
-            return self.env.ref('uom.product_uom_millimeter')
-
-    @api.model
-    def _get_volume_uom_id_from_ir_config_parameter(self):
-        """ Get the unit of measure to interpret the `volume` field. By default, we consider
-        that volumes are expressed in cubic meters. Users can configure to express them in cubic feet
-        by adding an ir.config_parameter record with "product.volume_in_cubic_feet" as key
-        and "1" as value.
-        """
-        product_length_in_feet_param = self.env['ir.config_parameter'].sudo().get_param('product.volume_in_cubic_feet')
-        if product_length_in_feet_param == '1':
-            return self.env.ref('uom.product_uom_cubic_foot')
-        else:
-            return self.env.ref('uom.product_uom_cubic_meter')
-
-    @api.model
-    def _get_weight_uom_name_from_ir_config_parameter(self):
-        return self._get_weight_uom_id_from_ir_config_parameter().display_name
-
-    @api.model
-    def _get_length_uom_name_from_ir_config_parameter(self):
-        return self._get_length_uom_id_from_ir_config_parameter().display_name
-
-    @api.model
-    def _get_volume_uom_name_from_ir_config_parameter(self):
-        return self._get_volume_uom_id_from_ir_config_parameter().display_name
-
-    def _compute_weight_uom_name(self):
-        self.weight_uom_name = self._get_weight_uom_name_from_ir_config_parameter()
-
-    def _compute_volume_uom_name(self):
-        self.volume_uom_name = self._get_volume_uom_name_from_ir_config_parameter()
 
     @api.depends('product_variant_ids.product_tmpl_id')
     def _compute_product_variant_count(self):

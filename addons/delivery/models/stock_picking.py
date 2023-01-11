@@ -26,10 +26,11 @@ class StockQuantPackage(models.Model):
             for res_group in res_groups:
                 product_id = self.env['product.product'].browse(res_group['product_id'][0])
                 product_uom_id = self.env['uom.uom'].browse(res_group['product_uom_id'][0])
-                package_weights[res_group['result_package_id'][0]] += (
+                package_id = self.env['stock.quant.package'].browse(res_group['result_package_id'][0])
+                package_weights[package_id.id] += (
                     res_group['__count']
                     * product_uom_id._compute_quantity(res_group['qty_done'], product_id.uom_id)
-                    * product_id.weight
+                    * product_id.weight_uom_id._compute_quantity(product_id.weight, package_id.weight_uom_id)
                 )
         for package in self:
             weight = package.package_type_id.base_weight or 0.0
@@ -37,27 +38,19 @@ class StockQuantPackage(models.Model):
                 package.weight = weight + package_weights[package.id]
             else:
                 for quant in package.quant_ids:
-                    weight += quant.quantity * quant.product_id.weight
+                    weight += quant.quantity * quant.product_id.weight_uom_id._compute_quantity(
+                        quant.product_id.weight, package.weight_uom_id)
                 package.weight = weight
-
-    def _get_default_weight_uom(self):
-        return self.env['product.template']._get_weight_uom_name_from_ir_config_parameter()
-
-    def _compute_weight_uom_name(self):
-        for package in self:
-            package.weight_uom_name = self.env['product.template']._get_weight_uom_name_from_ir_config_parameter()
 
     def _compute_weight_is_kg(self):
         self.weight_is_kg = False
-        uom_id = self.env['product.template']._get_weight_uom_id_from_ir_config_parameter()
-        if uom_id == self.env.ref('uom.product_uom_kgm'):
+        if self.weight_uom_id == self.env.ref('uom.product_uom_kgm'):
             self.weight_is_kg = True
-        self.weight_uom_rounding = uom_id.rounding
 
     weight = fields.Float(compute='_compute_weight', digits='Stock Weight', help="Total weight of all the products contained in the package.")
-    weight_uom_name = fields.Char(string='Weight unit of measure label', compute='_compute_weight_uom_name', readonly=True, default=_get_default_weight_uom)
+    weight_uom_id = fields.Many2one(related='package_type_id.weight_uom_id', string='Weight unit of measure label', readonly=True)
     weight_is_kg = fields.Boolean("Technical field indicating whether weight uom is kg or not (i.e. lb)", compute="_compute_weight_is_kg")
-    weight_uom_rounding = fields.Float("Technical field indicating weight's number of decimal places", compute="_compute_weight_is_kg")
+    weight_uom_rounding = fields.Float("Technical field indicating weight's number of decimal places", related="weight_uom_id.rounding")
     shipping_weight = fields.Float(string='Shipping Weight', help="Total weight of the package.")
 
 
@@ -94,7 +87,7 @@ class StockPicking(models.Model):
                         packs.add(move_line.result_package_id.id)
             package.package_ids = list(packs)
 
-    @api.depends('move_line_ids', 'move_line_ids.result_package_id', 'move_line_ids.product_uom_id', 'move_line_ids.qty_done')
+    @api.depends('move_line_ids', 'move_line_ids.result_package_id', 'move_line_ids.product_uom_id', 'move_line_ids.qty_done', 'weight_uom_id')
     def _compute_bulk_weight(self):
         picking_weights = defaultdict(float)
         # Ordering by qty_done prevents the default ordering by groupby fields that can inject multiple Left Joins in the resulting query.
@@ -110,7 +103,7 @@ class StockPicking(models.Model):
             picking_weights[res_group['picking_id'][0]] += (
                 res_group['__count']
                 * product_uom_id._compute_quantity(res_group['qty_done'], product_id.uom_id)
-                * product_id.weight
+                * product_id.weight_uom_id._compute_quantity(product_id.weight, self.weight_uom_id)
             )
         for picking in self:
             picking.weight_bulk = picking_weights[picking.id]
@@ -119,14 +112,11 @@ class StockPicking(models.Model):
     def _compute_shipping_weight(self):
         for picking in self:
             # if shipping weight is not assigned => default to calculated product weight
-            picking.shipping_weight = picking.weight_bulk + sum([pack.shipping_weight or pack.weight for pack in picking.package_ids])
+            picking.shipping_weight = picking.weight_bulk + sum([pack.weight_uom_id._compute_quantity(
+                                                                pack.shipping_weight or pack.weight, picking.weight_uom_id) for pack in picking.package_ids.with_context(picking_id=picking.id)])
 
-    def _get_default_weight_uom(self):
-        return self.env['product.template']._get_weight_uom_name_from_ir_config_parameter()
-
-    def _compute_weight_uom_name(self):
-        for package in self:
-            package.weight_uom_name = self.env['product.template']._get_weight_uom_name_from_ir_config_parameter()
+    def _compute_weight_uom_id(self):
+        self.weight_uom_id = self.env.company.default_weight_uom_id
 
     carrier_price = fields.Float(string="Shipping Cost")
     delivery_type = fields.Selection(related='carrier_id.delivery_type', readonly=True)
@@ -134,7 +124,7 @@ class StockPicking(models.Model):
     weight = fields.Float(compute='_cal_weight', digits='Stock Weight', store=True, help="Total weight of the products in the picking.", compute_sudo=True)
     carrier_tracking_ref = fields.Char(string='Tracking Reference', copy=False)
     carrier_tracking_url = fields.Char(string='Tracking URL', compute='_compute_carrier_tracking_url')
-    weight_uom_name = fields.Char(string='Weight unit of measure label', compute='_compute_weight_uom_name', readonly=True, default=_get_default_weight_uom)
+    weight_uom_id = fields.Many2one('uom.uom', string='Weight unit of measure', compute='_compute_weight_uom_id')
     package_ids = fields.Many2many('stock.quant.package', compute='_compute_packages', string='Packages')
     weight_bulk = fields.Float('Bulk Weight', compute='_compute_bulk_weight', help="Total weight of products which are not in a package.")
     shipping_weight = fields.Float("Weight for Shipping", compute='_compute_shipping_weight',
@@ -170,10 +160,12 @@ class StockPicking(models.Model):
         except (ValueError, TypeError):
             return False
 
-    @api.depends('move_ids')
+    @api.depends('move_ids', 'weight_uom_id')
     def _cal_weight(self):
         for picking in self:
-            picking.weight = sum(move.weight for move in picking.move_ids if move.state != 'cancel')
+            # move weight is in product weight uom, need to convert it to picking weight uom
+            picking.weight = sum(move.product_id.weight_uom_id._compute_quantity(move.weight, picking.weight_uom_id)
+                                 for move in picking.move_ids if move.state != 'cancel')
 
     def _send_confirmation_email(self):
         for pick in self:
@@ -302,12 +294,17 @@ class StockPicking(models.Model):
             picking.message_post(body=msg)
             picking.carrier_tracking_ref = False
 
-    def _get_estimated_weight(self):
+    def _get_estimated_weight(self, target_weight_uom_id=False):
+        ''' Gets the total estimated weight of picking by getting weight for each move and converting
+            it to targert weight if given.
+            Returns the sum of each move converted weight
+        '''
         self.ensure_one()
-        weight = 0.0
+        total_weight = 0.0
         for move in self.move_ids:
-            weight += move.product_qty * move.product_id.weight
-        return weight
+            weight = move.product_qty * move.product_id.weight
+            total_weight = move.product_id.weight_uom_id._compute_quantity(weight, target_weight_uom_id or self.weight_uom_id)
+        return total_weight
 
     def _should_generate_commercial_invoice(self):
         self.ensure_one()

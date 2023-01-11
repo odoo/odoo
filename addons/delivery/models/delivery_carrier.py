@@ -46,7 +46,8 @@ class DeliveryCarrier(models.Model):
     debug_logging = fields.Boolean('Debug logging', help="Log requests in order to ease debugging")
     company_id = fields.Many2one('res.company', string='Company', related='product_id.company_id', store=True, readonly=False)
     product_id = fields.Many2one('product.product', string='Delivery Product', required=True, ondelete='restrict')
-
+    weight_uom_id = fields.Many2one('uom.uom', string='Weight UoM to convert to when sending weight to carrier', compute='_compute_weight_uom_id')
+    dimension_uom_id = fields.Many2one('uom.uom', string='Dimension UoM to convert to when sending dimensions to carrier', compute='_compute_dimension_uom_id')
     invoice_policy = fields.Selection([
         ('estimated', 'Estimated cost'),
         ('real', 'Real cost')
@@ -83,6 +84,16 @@ class DeliveryCarrier(models.Model):
         ('shipping_insurance_is_percentage', 'CHECK(shipping_insurance >= 0 AND shipping_insurance <= 100)', "The shipping insurance must be a percentage between 0 and 100."),
     ]
 
+    # override with each new carrier to set desired weight uom depending on delivery type
+    @api.depends('delivery_type')
+    def _compute_weight_uom_id(self):
+        self.weight_uom_id = self.env.ref('uom.product_uom_kgm')
+
+    # override with each new carrier to set desired dimension uom depending on delivery type
+    @api.depends('delivery_type')
+    def _compute_dimension_uom_id(self):
+        self.dimension_uom_id = self.env.ref('uom.product_uom_millimeter')
+
     @api.depends('delivery_type')
     def _compute_can_generate_return(self):
         for carrier in self:
@@ -92,6 +103,26 @@ class DeliveryCarrier(models.Model):
     def _compute_supports_shipping_insurance(self):
         for carrier in self:
             carrier.supports_shipping_insurance = False
+
+    def convert_weight(self, weight, weight_uom_id):
+        """Converts given weight in given uom to carrier uom
+
+        :param weight: weight to convert
+        :param weight_uom_id: uom to convert from
+        :return: converted weight in carrier uom
+        """
+        self.ensure_one()
+        return weight_uom_id._compute_quantity(weight, self.weight_uom_id, round=False)
+
+    def convert_dimension(self, dimension, dimension_uom_id):
+        """Converts given dimension in given uom to carrier uom
+
+        :param dimension: dimension to convert
+        :param dimension_uom_id: uom to convert from
+        :return: converted dimension in carrier uom
+        """
+        self.ensure_one()
+        return dimension_uom_id._compute_quantity(dimension, self.dimension_uom_id, round=False)
 
     def toggle_prod_environment(self):
         for c in self:
@@ -321,16 +352,15 @@ class DeliveryCarrier(models.Model):
     # -------------------------------- #
 
     def _get_packages_from_order(self, order, default_package_type):
+        self.ensure_one()
         packages = []
-
         total_cost = 0
         for line in order.order_line.filtered(lambda line: not line.is_delivery and not line.display_type):
             total_cost += self._product_price_to_company_currency(line.product_qty, line.product_id, order.company_id)
-
-        total_weight = order._get_estimated_weight() + default_package_type.base_weight
+        package_type_base_weight = default_package_type.weight_uom_id._compute_quantity(default_package_type.base_weight, self.weight_uom_id)
+        total_weight = order._get_estimated_weight(self.weight_uom_id) + package_type_base_weight
         if total_weight == 0.0:
-            weight_uom_name = self.env['product.template']._get_weight_uom_name_from_ir_config_parameter()
-            raise UserError(_("The package cannot be created because the total weight of the products in the picking is 0.0 %s") % (weight_uom_name))
+            raise UserError(_("The package cannot be created because the total weight of the products in the picking is 0.0 %s") % (self.weight_uom_id.display_name))
         # If max weight == 0 => division by 0. If this happens, we want to have
         # more in the max weight than in the total weight, so that it only
         # creates ONE package with everything.
@@ -341,15 +371,18 @@ class DeliveryCarrier(models.Model):
         package_weights = [max_weight] * total_full_packages + ([last_package_weight] if last_package_weight else [])
         partial_cost = total_cost / len(package_weights)  # separate the cost uniformly
         for weight in package_weights:
+            if default_package_type.weight_uom_id:
+                weight = self.weight_uom_id._compute_quantity(weight, default_package_type.weight_uom_id)
             packages.append(DeliveryPackage(None, weight, default_package_type, total_cost=partial_cost, currency=order.company_id.currency_id, order=order))
         return packages
 
     def _get_packages_from_picking(self, picking, default_package_type):
+        self.ensure_one()
         packages = []
 
         if picking.is_return_picking:
             commodities = self._get_commodities_from_stock_move_lines(picking.move_line_ids)
-            weight = picking._get_estimated_weight() + default_package_type.base_weight
+            weight = picking._get_estimated_weight(default_package_type.weight_uom_id) + default_package_type.base_weight
             packages.append(DeliveryPackage(commodities, weight, default_package_type, currency=picking.company_id.currency_id, picking=picking))
             return packages
 
@@ -368,10 +401,10 @@ class DeliveryCarrier(models.Model):
             package_total_cost = 0.0
             for move_line in picking.move_line_ids:
                 package_total_cost += self._product_price_to_company_currency(move_line.qty_done, move_line.product_id, picking.company_id)
-            packages.append(DeliveryPackage(commodities, picking.weight_bulk, default_package_type, name='Bulk Content', total_cost=package_total_cost, currency=picking.company_id.currency_id, picking=picking))
+            weight = picking.weight_uom_id._compute_quantity(picking.weight_bulk, default_package_type.weight_uom_id) if default_package_type.weight_uom_id else picking.weight_bulk
+            packages.append(DeliveryPackage(commodities, weight, default_package_type, name='Bulk Content', total_cost=package_total_cost, currency=picking.company_id.currency_id, picking=picking))
         elif not packages:
-            raise UserError(_("The package cannot be created because the total weight of the products in the picking is 0.0 %s") % (picking.weight_uom_name))
-
+            raise UserError(_("The package cannot be created because the total weight of the products in the picking is 0.0 %s") % (picking.weight_uom_id.display_name))
         return packages
 
     def _get_commodities_from_order(self, order):
