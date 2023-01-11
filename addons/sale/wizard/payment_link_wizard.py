@@ -3,12 +3,27 @@
 
 from werkzeug import urls
 
-from odoo import api, models
+from odoo import api, fields, models
 
 
 class PaymentLinkWizard(models.TransientModel):
     _inherit = 'payment.link.wizard'
     _description = 'Generate Sales Payment Link'
+
+    amount_paid = fields.Monetary(string="Already Paid", readonly=True)
+    show_confirmation_message = fields.Boolean(compute='_compute_show_confirmation_message')
+
+    @api.depends('amount')
+    def _compute_show_confirmation_message(self):
+        for wizard in self:
+            is_quotation = False
+            if wizard.res_model == 'sale.order':
+                sale_order = self.env['sale.order'].sudo().browse(wizard.res_id)
+                is_quotation = sale_order and sale_order.state in ('draft', 'sent')
+
+            wizard.show_confirmation_message = (
+                wizard.amount_max and wizard.amount == wizard.amount_max and is_quotation
+            )
 
     def _get_payment_provider_available(self, res_model, res_id, **kwargs):
         """ Select and return the providers matching the criteria.

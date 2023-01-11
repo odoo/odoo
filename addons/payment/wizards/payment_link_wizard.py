@@ -4,7 +4,6 @@ from werkzeug import urls
 
 from odoo import _, api, fields, models
 from odoo.exceptions import ValidationError
-from odoo.tools import float_compare
 
 from odoo.addons.payment import utils as payment_utils
 
@@ -54,13 +53,18 @@ class PaymentLinkWizard(models.TransientModel):
         default='all',
         required=True,
     )
+    warning_message = fields.Char(compute='_compute_warning_message')
 
-    @api.onchange('amount', 'description')
-    def _onchange_amount(self):
-        if float_compare(self.amount_max, self.amount, precision_rounding=self.currency_id.rounding or 0.01) == -1:
-            raise ValidationError(_("Please set an amount smaller than %s.", self.amount_max))
-        if self.amount <= 0:
-            raise ValidationError(_("The value of the payment amount must be positive."))
+    @api.depends('amount', 'amount_max')
+    def _compute_warning_message(self):
+        self.warning_message = ''
+        for wizard in self:
+            if wizard.amount_max <= 0:
+                wizard.warning_message = _("There is nothing to be paid.")
+            elif wizard.amount <= 0:
+                wizard.warning_message = _("Please set a positive amount.")
+            elif wizard.amount > wizard.amount_max:
+                wizard.warning_message = _("Please set an amount lower than %s.", wizard.amount_max)
 
     @api.depends('res_model', 'res_id')
     def _compute_company_id(self):
