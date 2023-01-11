@@ -261,7 +261,10 @@ class ResPartner(models.Model):
         else:
             company = self.env.company
 
-        vat_label = company.country_id.vat_label if company.country_id else "Tax ID"
+        vat_label = _("VAT")
+        if country_code and company.country_id and country_code == company.country_id.code.lower():
+            vat_label = company.country_id.vat_label
+
         expected_format = _ref_vat.get(country_code, "'CC##' (CC=Country Code, ##=VAT Number)")
 
         # Catch use case where the record label is about the public user (name: False)
