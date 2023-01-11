@@ -503,7 +503,7 @@ export class KanbanDynamicGroupList extends DynamicGroupList {
                 promises.push(targetGroup.toggle());
             } else {
                 // Record can be loaded along with the group metadata
-                promises.push(record.load());
+                promises.push(this.loadMovedRecord(record));
             }
 
             await Promise.all(promises);
@@ -517,6 +517,13 @@ export class KanbanDynamicGroupList extends DynamicGroupList {
         }
 
         this.model.transaction.commit(dataRecordId);
+    }
+
+    /**
+     * @param {Record} record
+     */
+    async loadMovedRecord(record) {
+        await record.load();
     }
 
     // ------------------------------------------------------------------------

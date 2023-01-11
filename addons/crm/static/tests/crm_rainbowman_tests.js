@@ -1,13 +1,15 @@
 /** @odoo-module **/
 
 import "@crm/../tests/mock_server";
-import { makeView, setupViewRegistries } from "@web/../tests/views/helpers";
 import {
     click,
     clickSave,
     dragAndDrop,
     getFixture,
+    makeDeferred,
+    nextTick,
 } from '@web/../tests/helpers/utils';
+import { makeView, setupViewRegistries } from "@web/../tests/views/helpers";
 import testUtils from 'web.test_utils';
 const find = testUtils.dom.find;
 
@@ -300,5 +302,56 @@ QUnit.module('Crm Rainbowman Triggers', {
 
         await dragAndDrop(target.querySelector('.o_kanban_group:nth-of-type(1)'), target.querySelector('.o_kanban_group:nth-of-type(2)'));
         assert.verifySteps([]); // Should never pass by the rpc
+    });
+
+    QUnit.test("quickly drag & drop record accross groups", async function (assert) {
+        assert.expect(8);
+
+        let def;
+        await makeView({
+            ...this.testKanbanView,
+            async mockRPC(_route, { method }) {
+                if (["write", "get_rainbowman_message"].includes(method)) {
+                    assert.step(method);
+                    if (method === "write") {
+                        await def;
+                    }
+                }
+            },
+        });
+
+        def = makeDeferred();
+
+        const getLeadColumn = (leadText) => {
+            const leads = target.querySelectorAll(".o_kanban_record");
+            const lead = [...leads].find((l) => l.innerText === leadText);
+            const column = lead.closest(".o_kanban_group");
+            return column.querySelector(".o_kanban_header").innerText;
+        };
+
+        assert.strictEqual(getLeadColumn("Lead 1"), "Start");
+
+        // Move "Lead 1" at start of "Middle"
+        await dragAndDrop(
+            ".o_kanban_group .o_kanban_record",
+            ".o_kanban_group:nth-child(2) .o_kanban_record"
+        );
+
+        assert.strictEqual(getLeadColumn("Lead 1"), "Middle");
+
+        // Try to move "Lead 1" at start of "Won"
+        await dragAndDrop(
+            ".o_kanban_group:nth-child(2) .o_kanban_record",
+            ".o_kanban_group:nth-child(3) .o_kanban_record"
+        );
+
+        assert.strictEqual(getLeadColumn("Lead 1"), "Middle");
+        assert.verifySteps(["write"]);
+
+        def.resolve();
+        await nextTick();
+
+        assert.strictEqual(getLeadColumn("Lead 1"), "Middle");
+        assert.verifySteps(["get_rainbowman_message"]);
     });
 });
