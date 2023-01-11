@@ -145,9 +145,10 @@
         <field name="department_id" model="hr.department"
             eval="obj().env.ref('hr.employee_jth').department_id.id"/>
         <field eval="4200.0" name="wage"/>
-        <field name="state">draft</field>
+        <field name="state">open</field>
         <field name="kanban_state">normal</field>
         <field name="hr_responsible_id" ref="base.user_admin"/>
+        <field name="resource_calendar_id" ref="hr.resource_calendar_std_20h"/>
     </record>
 
     <record id="hr_contract_chs" model="hr.contract">
