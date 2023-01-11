@@ -293,7 +293,7 @@ var VariantMixin = {
 
         var variantsValuesSelectors = [
             'input.js_variant_change:checked',
-            'select.js_variant_change'
+            'select.js_variant_change > option:selected'
         ];
         _.each($container.find(variantsValuesSelectors.join(', ')), function (el) {
             values.push(+$(el).val());

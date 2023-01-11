@@ -28,8 +28,8 @@ class ProductTemplate(models.Model):
         for product in self:
             product.has_configurable_attributes = (
                 any(attribute.create_variant == 'dynamic' for attribute in product.attribute_line_ids.attribute_id)
-                or any(len(attribute_line_id.value_ids) >= 2 for attribute_line_id in product.attribute_line_ids)
-                or any(attribute_value.is_custom for attribute_value in product.attribute_line_ids.value_ids)
+                or any(len(attribute_line_id.value_ids) >= 2 and attribute_line_id.attribute_id.create_variant != "info" for attribute_line_id in product.attribute_line_ids)
+                or any(attribute_value.is_custom and attribute_value.attribute_id.create_variant != "info" for attribute_value in product.attribute_line_ids.value_ids)
             )
 
     def get_single_product_variant(self):

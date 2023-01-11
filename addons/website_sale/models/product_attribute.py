@@ -25,7 +25,7 @@ class ProductTemplateAttributeLine(models.Model):
         The returned attributes are ordered as they appear in `self`, so based
         on the order of the attribute lines.
         """
-        single_value_lines = self.filtered(lambda ptal: len(ptal.value_ids) == 1)
+        single_value_lines = self.filtered(lambda ptal: len(ptal.value_ids) == 1 or ptal.attribute_id.create_variant == 'info')
         single_value_attributes = OrderedDict([(pa, self.env['product.template.attribute.line']) for pa in single_value_lines.attribute_id])
         for ptal in single_value_lines:
             single_value_attributes[ptal.attribute_id] |= ptal

@@ -1002,7 +1002,9 @@
                                             <td>
                                                 <span t-field="attribute.name"/>:
                                                 <t t-foreach="single_value_attributes[attribute]" t-as="ptal">
-                                                    <span t-field="ptal.product_template_value_ids._only_active().name"/><t t-if="not ptal_last">, </t>
+                                                    <t t-foreach="ptal.product_template_value_ids._only_active()" t-as="ptav">
+                                                        <t t-if="ptav_last and not ptav_first"> and </t><t t-else=""> </t><span t-field="ptav.name"/><t t-if="not ptav_last and ptav_index != ptav_size-2">, </t>
+                                                    </t>
                                                 </t>
                                             </td>
                                         </tr>

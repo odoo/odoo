@@ -158,7 +158,7 @@ class ProductTemplateAttributeValue(models.Model):
         return self.filtered(lambda ptav: ptav.ptav_active)
 
     def _without_no_variant_attributes(self):
-        return self.filtered(lambda ptav: ptav.attribute_id.create_variant != 'no_variant')
+        return self.filtered(lambda ptav: ptav.attribute_id.create_variant != 'no_variant' and ptav.attribute_id.create_variant != 'info')
 
     def _ids2str(self):
         return ','.join([str(i) for i in sorted(self.ids)])

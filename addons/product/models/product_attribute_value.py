@@ -99,4 +99,4 @@ class ProductAttributeValue(models.Model):
                 ))
 
     def _without_no_variant_attributes(self):
-        return self.filtered(lambda pav: pav.attribute_id.create_variant != 'no_variant')
+        return self.filtered(lambda pav: pav.attribute_id.create_variant != 'no_variant' and pav.create_variant != 'info')

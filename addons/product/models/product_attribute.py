@@ -17,6 +17,7 @@ class ProductAttribute(models.Model):
             ('always', 'Instantly'),
             ('dynamic', 'Dynamically'),
             ('no_variant', 'Never (option)'),
+            ('info', 'Never (info)'),
         ],
         default='always',
         string="Variants Creation Mode",
@@ -64,7 +65,7 @@ class ProductAttribute(models.Model):
             pa.with_context(active_test=False).product_tmpl_ids = pa.attribute_line_ids.product_tmpl_id
 
     def _without_no_variant_attributes(self):
-        return self.filtered(lambda pa: pa.create_variant != 'no_variant')
+        return self.filtered(lambda pa: pa.create_variant != 'no_variant' and pa.create_variant != 'info')
 
     def write(self, vals):
         """Override to make sure attribute type can't be changed if it's used on

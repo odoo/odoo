@@ -165,7 +165,7 @@ class ProductTemplate(models.Model):
         - It has any attribute line with at least 2 attribute values configured
         """
         for product in self:
-            product.has_configurable_attributes = product.has_dynamic_attributes() or any(len(ptal.value_ids) >= 2 for ptal in product.attribute_line_ids)
+            product.has_configurable_attributes = product.has_dynamic_attributes() or any(len(ptal.value_ids) >= 2 and ptal.attribute_id.create_variant != "info" for ptal in product.attribute_line_ids)
 
     @api.depends('product_variant_ids')
     def _compute_product_variant_id(self):
@@ -621,7 +621,12 @@ class ProductTemplate(models.Model):
         variants_to_unlink = Product
 
         for tmpl_id in self:
-            lines_without_no_variants = tmpl_id.valid_product_template_attribute_line_ids._without_no_variant_attributes()
+            ## All the values that are selected ! (carrefour, delhaize, bio, vegan)
+            ## --> On doit filtrer en fonction si l'attribut est info alors on doit pas réellment le considérer pour la création de variant
+            ## --> Intéressant de faire comme signle value, c'ets à dire ne pas créer de variant mais mettre la valeur sur tous les variants existants
+            lines_variants = tmpl_id.valid_product_template_attribute_line_ids
+            lines_without_no_variants = lines_variants._without_no_variant_attributes()
+            info_value_lines = lines_variants.filtered(lambda ptal: ptal.attribute_id.create_variant == 'info')
 
             all_variants = tmpl_id.with_context(active_test=False).product_variant_ids.sorted(lambda p: (p.active, -p.id))
 
@@ -660,6 +665,7 @@ class ProductTemplate(models.Model):
                 ])
                 # For each possible variant, create if it doesn't exist yet.
                 for combination_tuple in all_combinations:
+                    combination_tuple = (*combination_tuple, *info_value_lines.product_template_value_ids._only_active())
                     combination = self.env['product.template.attribute.value'].concat(*combination_tuple)
                     is_combination_possible = tmpl_id._is_combination_possible_by_config(combination, ignore_no_variant=True)
                     if not is_combination_possible:
@@ -889,12 +895,13 @@ class ProductTemplate(models.Model):
         attribute_lines = self.valid_product_template_attribute_line_ids
 
         if ignore_no_variant:
-            attribute_lines = attribute_lines._without_no_variant_attributes()
+            attribute_lines = attribute_lines._without_no_variant_attributes() + attribute_lines.filtered(lambda ptal: ptal.attribute_id.create_variant == 'info')
 
-        if len(combination) != len(attribute_lines):
-            # number of attribute values passed is different than the
-            # configuration of attributes on the template
-            return False
+        ## NO SURE THAT IT IS STILL RElEVANT --> MAKES THE CODE IMPOSSIBLE OF COURSE
+        # if len(combination) != len(attribute_lines):
+        #     # number of attribute values passed is different than the
+        #     # configuration of attributes on the template
+        #     return False
 
         if attribute_lines != combination.attribute_line_id:
             # combination has different attributes than the ones configured on the template
@@ -981,7 +988,8 @@ class ProductTemplate(models.Model):
         :rtype: recordset `product.product`
         """
         self.ensure_one()
-        filtered_combination = combination._without_no_variant_attributes()
+        attributes_info = self.attribute_line_ids.filtered(lambda ptal: ptal.attribute_id.create_variant == 'info')
+        filtered_combination = combination._without_no_variant_attributes() + attributes_info.product_template_value_ids
         return self.env['product.product'].browse(self._get_variant_id_for_combination(filtered_combination))
 
     def _create_product_variant(self, combination, log_warning=False):
@@ -1009,6 +1017,7 @@ class ProductTemplate(models.Model):
         self.ensure_one()
 
         Product = self.env['product.product']
+        attributes_info = self.attribute_line_ids.filtered(lambda ptal: ptal.attribute_id.create_variant == 'info')
 
         product_variant = self._get_variant_for_combination(combination)
         if product_variant:
@@ -1028,7 +1037,7 @@ class ProductTemplate(models.Model):
 
         return Product.sudo().create({
             'product_tmpl_id': self.id,
-            'product_template_attribute_value_ids': [(6, 0, combination._without_no_variant_attributes().ids)]
+            'product_template_attribute_value_ids': [(6, 0, combination._without_no_variant_attributes().ids + attributes_info.product_template_value_ids.ids)]
         })
 
     def _create_first_product_variant(self, log_warning=False):
@@ -1166,6 +1175,7 @@ class ProductTemplate(models.Model):
             else:
                 # else we go to the next line
                 line_index += 1
+
 
     def _get_possible_combinations(self, parent_combination=None, necessary_values=None):
         """Generator returning combinations that are possible, following the

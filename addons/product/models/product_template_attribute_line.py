@@ -247,7 +247,7 @@ class ProductTemplateAttributeLine(models.Model):
         self.product_tmpl_id._create_variant_ids()
 
     def _without_no_variant_attributes(self):
-        return self.filtered(lambda ptal: ptal.attribute_id.create_variant != 'no_variant')
+        return self.filtered(lambda ptal: ptal.attribute_id.create_variant != 'no_variant' and ptal.attribute_id.create_variant != 'info')
 
     def action_open_attribute_values(self):
         return {

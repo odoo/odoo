@@ -36,21 +36,17 @@
                                                     </th>
                                                 </tr>
                                             </t>
-                                            <tr t-foreach="categories[category].filtered(lambda l: len(l.value_ids) > 1)" t-as="ptal">
+                                            <tr t-foreach="categories[category]" t-as="ptal">
                                                 <td class="w-25"><span t-field="ptal.attribute_id.name"/></td>
                                                 <td class="w-75 text-muted">
-                                                    <t t-foreach="ptal.value_ids" t-as="pav">
-                                                        <span t-field="pav.name"/><t t-if="not pav_last"> or</t>
+                                                <t t-foreach="ptal.value_ids" t-as="pav">
+                                                    <t t-if="pav.attribute_id.create_variant == 'info'">
+                                                        <t t-if="pav_last and not pav_first"> and </t><span t-field="pav.name"/><t t-if="not pav_last and pav_index != pav_size-2">, </t>
                                                     </t>
-                                                </td>
-                                            </tr>
-                                            <t t-set="single_value_attributes" t-value="categories[category]._prepare_single_value_for_display()"/>
-                                            <tr t-foreach="single_value_attributes" t-as="attribute">
-                                                <td class="w-25"><span t-field="attribute.name"/></td>
-                                                <td class="w-75 text-muted">
-                                                    <t t-foreach="single_value_attributes[attribute]" t-as="ptal">
-                                                        <span t-field="ptal.product_template_value_ids._only_active().name"/><t t-if="not ptal_last">, </t>
+                                                    <t t-else="">
+                                                        <t t-if="pav_last and not pav_first"> or </t><span t-field="pav.name"/><t t-if="not pav_last and pav_index != pav_size-2">, </t>
                                                     </t>
+                                                </t>
                                                 </td>
                                             </tr>
                                         </table>
