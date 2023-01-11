@@ -6,6 +6,7 @@ import { registry } from '@web/core/registry';
 import { session } from '@web/session';
 import { isIosApp } from '@web/core/browser/feature_detection';
 import { WORKER_VERSION } from "@bus/workers/websocket_worker";
+import legacySession from "web.session";
 
 const { EventBus } = owl;
 
@@ -28,8 +29,17 @@ export const busService = {
             multiTab.removeSharedValue('last_notification_id');
         }
         const bus = new EventBus();
+        let workerURL = `${legacySession.prefix}/bus/websocket_worker_bundle?v=${WORKER_VERSION}`;
+        if (legacySession.prefix !== window.origin) {
+            // Bus service is loaded from a different origin than the bundle
+            // URL. The Worker expects an URL from this origin, give it a base64
+            // URL that will then load the bundle via "importScripts" which
+            // allows cross origin.
+            const source = `importScripts("${workerURL}");`;
+            workerURL = 'data:application/javascript;base64,' + window.btoa(source);
+        }
         const workerClass = 'SharedWorker' in window && !isIosApp() ? browser.SharedWorker : browser.Worker;
-        const worker = new workerClass(`/bus/websocket_worker_bundle?v=${WORKER_VERSION}`, {
+        const worker = new workerClass(workerURL, {
             name: 'SharedWorker' in window && !isIosApp() ? 'odoo:websocket_shared_worker' : 'odoo:websocket_worker',
         });
         worker.addEventListener("error", (e) => {
@@ -94,6 +104,7 @@ export const busService = {
                 uid = false;
             }
             send('initialize_connection', {
+                websocketURL: `${legacySession.prefix.replace("http", "ws")}/websocket`,
                 debug: odoo.debug,
                 lastNotificationId: multiTab.getSharedValue('last_notification_id', 0),
                 uid,
