@@ -14,7 +14,6 @@ class TestContractCalendars(TestContractCommon):
         cls.employee.resource_calendar_id = cls.calendar_richard
 
         cls.calendar_35h = cls.env['resource.calendar'].create({'name': '35h calendar'})
-        cls.calendar_35h._onchange_hours_per_day()  # update hours/day
 
         cls.contract_cdd = cls.env['hr.contract'].create({
             'date_end': Date.to_date('2015-11-15'),
