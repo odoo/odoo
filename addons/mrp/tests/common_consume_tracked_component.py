@@ -1,7 +1,7 @@
 import copy
 
 from odoo.exceptions import UserError
-from odoo.tests import common, Form
+from odoo.tests import common
 
 class TestConsumeTrackedComponentCommon(common.TransactionCase):
 
@@ -196,6 +196,7 @@ class TestConsumeTrackedComponentCommon(common.TransactionCase):
 
         isSerial = tracking == 'serial'
         isAvailable = all(move.state == 'assigned' for move in mrp_productions.move_raw_ids)
+        isComponentTracking = any(move.has_tracking != 'none' for move in mrp_productions.move_raw_ids)
 
         countOk = True
         length = len(mrp_productions)
@@ -220,4 +221,13 @@ class TestConsumeTrackedComponentCommon(common.TransactionCase):
             i += 1
 
         if isAvailable:
-            mrp_productions[i].button_mark_done()
+            error = False
+            try:
+                mrp_productions[i].button_mark_done()
+            except UserError:
+                error = True
+
+            if isComponentTracking and not mrp_productions[i].picking_type_id.use_auto_consume_components_lots:
+                self.assertTrue(error, "Immediate Production shall raise an error when tracked product are not provided.")
+            else:
+                self.assertFalse(error, "Immediate Production shall not raise an error.")

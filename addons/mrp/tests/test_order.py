@@ -1496,18 +1496,22 @@ class TestMrpOrder(TestMrpCommon):
         self.assertEqual(mo.move_finished_ids.quantity_done, 1)
 
     def test_immediate_validate_2(self):
-        """ In a production with a single available move raw, clicking on mark as done after filling quantity
-        for a stock move only will trigger an error as qty_producing is left to 0."""
+        """ In a production non-tracked components, clicking on mark as done after filling quantity for a move be
+        processed as immediate production. The manual filling quantity will be kept."""
         mo, bom, p_final, p1, p2 = self.generate_mo(qty_final=1, qty_base_1=1, qty_base_2=1)
         self.env['stock.quant']._update_available_quantity(p1, self.stock_location_components, 5.0)
         self.env['stock.quant']._update_available_quantity(p2, self.stock_location_components, 5.0)
         mo.action_assign()
         details_operation_form = Form(mo.move_raw_ids[0], view=self.env.ref('stock.view_stock_move_operations'))
         with details_operation_form.move_line_ids.new() as ml:
-            ml.qty_done = 1
+            ml.qty_done = 2
         details_operation_form.save()
-        with self.assertRaises(UserError):
-            res_dict = mo.button_mark_done()
+        mo.move_raw_ids.filtered('quantity_done').manual_consumption = True  # this should be set automatically in front end
+        mo.button_mark_done()
+        self.assertEqual(mo.move_raw_ids.mapped('state'), ['done', 'done'])
+        self.assertEqual(mo.move_raw_ids.mapped('quantity_done'), [2, 1])
+        self.assertEqual(mo.move_finished_ids.state, 'done')
+        self.assertEqual(mo.move_finished_ids.quantity_done, 1)
 
     def test_immediate_validate_3(self):
         """ In a production with a serial number tracked product. Check that the immediate production only creates
@@ -1752,6 +1756,9 @@ class TestMrpOrder(TestMrpCommon):
         we do not create a new move line due to extra reserved quantity
         caused by decimal rounding conversions.
         """
+
+        picking_type = self.env['stock.picking.type'].search([('code', '=', 'mrp_operation')])[0]
+        picking_type.use_auto_consume_components_lots = True
 
         # the overall decimal accuracy is set to 3 digits
         precision = self.env.ref('product.decimal_product_uom')
