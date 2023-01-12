@@ -17,7 +17,7 @@
                 </div>
             </td>
             <td t-if="!env.isMobile">
-                <t t-esc="shortAddress" />
+                <t t-esc="props.partner.address" />
             </td>
             <td class="partner-line-email" t-if="!env.isMobile">
                 <div t-if="props.partner.phone">
