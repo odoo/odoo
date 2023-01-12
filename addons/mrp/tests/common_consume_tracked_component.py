@@ -2,6 +2,7 @@ import copy
 
 from odoo.exceptions import UserError
 from odoo.tests import common, Form
+from odoo.tools import float_is_zero
 
 class TestConsumeTrackedComponentCommon(common.TransactionCase):
 
@@ -226,8 +227,13 @@ class TestConsumeTrackedComponentCommon(common.TransactionCase):
                 .with_context(**mark_done_action['context'])
                 ).save()
             error = False
+            has_zero_tracked_component = not mrp_productions[i].picking_type_id.use_auto_consume_components_lots and \
+                any(m.state not in ['done', 'cancel'] and m.has_tracking != 'none' and float_is_zero(m.quantity_done, m.product_uom.rounding) for m in mrp_productions[i].move_raw_ids)
             try:
                 immediate_production_wizard.process()
             except UserError:
                 error = True
-            self.assertFalse(error, "Immediate Production Wizard shall not raise an error.")
+            if has_zero_tracked_component:
+                self.assertTrue(error, "Immediate Production Wizard shall raise an error.")
+            else:
+                self.assertFalse(error, "Immediate Production Wizard shall not raise an error.")
