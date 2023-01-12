@@ -17,7 +17,15 @@
                 <separator/>
                 <filter string="Active Employee" name="active_employee" domain="[('active_employee','=',True)]"/>
                 <separator/>
+<<<<<<< HEAD
                 <filter name="year" date="date_from" default_period="this_year" string="Current Year"/>
+||||||| parent of aa71bcef1d2 (temp)
+                <filter name="year" string="Current Year"
+                    domain="[('holiday_status_id.active', '=', True)]" help="Active Time Off"/>
+=======
+                <filter name="year" string="Current Year"
+                    domain="[('holiday_status_id.active', '=', True)]" date="date_from" default_period="this_year" help="Active Time Off"/>
+>>>>>>> aa71bcef1d2 (temp)
                 <separator/>
                 <filter string="My Requests" name="my_leaves" domain="[('employee_id.user_id', '=', uid)]"/>
                 <filter string="Archived" name="archived" domain="[('active', '=', False)]"/>
