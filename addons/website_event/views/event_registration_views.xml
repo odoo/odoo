@@ -31,7 +31,7 @@
                                 <field name="value_answer_id"
                                     attrs="{'invisible': [('question_type', '!=', 'simple_choice')]}"
                                     domain="[('question_id', '=', question_id)]" options="{'no_create': True}"/>
-                                <field name="value_text_box" attrs="{'invisible': [('question_type', '!=', 'text_box')]}" />
+                                <field name="value_text_box" attrs="{'invisible': [('question_type', '=', 'simple_choice')]}" />
                             </tree>
                         </field>
                     </page>

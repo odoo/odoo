@@ -91,22 +91,22 @@ var registerSteps = [{
     run: 'click',
 }, {
     content: "Fill attendees details",
-    trigger: 'form[id="attendee_registration"] .btn:contains("Continue")',
+    trigger: 'form[id="attendee_registration"] .btn[type=submit]',
     run: function () {
-        $("input[name='1-name']").val("Raoulette Poiluchette");
-        $("input[name='1-phone']").val("0456112233");
-        $("input[name='1-email']").val("raoulette@example.com");
-        $("select[name*='question_answer-1']").val($("select[name*='question_answer-1'] option:contains('Consumers')").val());
-        $("input[name='2-name']").val("Michel Tractopelle");
-        $("input[name='2-phone']").val("0456332211");
-        $("input[name='2-email']").val("michel@example.com");
-        $("select[name*='question_answer-2']").val($("select[name*='question_answer-1'] option:contains('Research')").val());
-        $("textarea[name*='question_answer']").text("An unicorn told me about you. I ate it afterwards.");
+        $("input[name*='1-name']").val("Raoulette Poiluchette");
+        $("input[name*='1-phone']").val("0456112233");
+        $("input[name*='1-email']").val("raoulette@example.com");
+        $("select[name*='1-simple_choice']").val($("select[name*='1-simple_choice'] option:contains('Consumers')").val());
+        $("input[name*='2-name']").val("Michel Tractopelle");
+        $("input[name*='2-phone']").val("0456332211");
+        $("input[name*='2-email']").val("michel@example.com");
+        $("select[name*='2-simple_choice']").val($("select[name*='1-simple_choice'] option:contains('Research')").val());
+        $("textarea[name*='text_box']").text("An unicorn told me about you. I ate it afterwards.");
     },
 }, {
     content: "Validate attendees details",
-    extra_trigger: "input[name='1-name'], input[name='2-name'], input[name='3-name']",
-    trigger: 'button:contains("Continue")',
+    extra_trigger: "input[name*='1-name'], input[name*='2-name'], input[name*='3-name']",
+    trigger: 'button[type=submit]',
     run: 'click',
 }, {
     trigger: 'div.o_wereg_confirmed_attendees span:contains("Raoulette Poiluchette")',

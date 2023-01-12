@@ -18,17 +18,17 @@
         },
         {
             content: "Fill attendees details",
-            trigger: 'form[id="attendee_registration"] .btn:contains("Continue")',
+            trigger: 'form[id="attendee_registration"] .btn[type=submit]',
             run: function () {
-                $("input[name='1-name']").val("Great Name");
-                $("input[name='1-phone']").val("111 111");
-                $("input[name='1-email']").val("great@name.com");
+                $("input[name*='1-name']").val("Great Name");
+                $("input[name*='1-phone']").val("111 111");
+                $("input[name*='1-email']").val("great@name.com");
             },
         },
         {
             content: "Validate attendees details",
-            extra_trigger: "input[name='1-name'], input[name='2-name']",
-            trigger: 'button:contains("Continue")',
+            extra_trigger: "input[name*='1-name'], input[name*='2-name']",
+            trigger: 'button[type=submit]',
         },
         ...getPriceListChecksSteps({
             pricelistName: "EUR With Discount Included",

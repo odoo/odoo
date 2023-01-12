@@ -25,10 +25,10 @@ registry.category("web_tour.tours").add('test_tickets_questions', {
     trigger: 'div:contains("Ticket #1").modal-body input[name*="phone"]',
     run: 'text +32499123456'
 }, {
-    trigger: 'div:contains("Ticket #1").modal-body select[name*="question_answer"]',
+    trigger: 'div:contains("Ticket #1").modal-body select[name*="1-simple_choice"]',
     run: 'text Vegetarian'
 }, {
-    trigger: 'div:contains("Ticket #1").modal-body textarea[name*="question_answer"]',
+    trigger: 'div:contains("Ticket #1").modal-body textarea[name*="1-text_box"]',
     run: 'text Fish and Nuts'
 }, {
     trigger: 'div:contains("Ticket #2").modal-body input[name*="name"]',
@@ -37,13 +37,16 @@ registry.category("web_tour.tours").add('test_tickets_questions', {
     trigger: 'div:contains("Ticket #2").modal-body input[name*="email"]',
     run: 'text attendee-b@gmail.com'
 }, {
-    trigger: 'div:contains("Ticket #2").modal-body select[name*="question_answer"]',
+    trigger: 'div:contains("Ticket #2").modal-body input[name*="company_name"]',
+    run: 'text My Company'
+}, {
+    trigger: 'div:contains("Ticket #2").modal-body select[name*="2-simple_choice"]',
     run: 'text Pastafarian'
 }, {
-    trigger: 'div.o_wevent_registration_question_global select[name*="question_answer"]',
+    trigger: 'div.o_wevent_registration_question_global select[name*="0-simple_choice"]',
     run: 'text A friend'
 }, {
-    trigger: 'button:contains("Continue")',
+    trigger: 'button[type=submit]',
     run: 'click'
 }, {
     // The tour stops too early and the registration fails if we don't wait the confirmation.
