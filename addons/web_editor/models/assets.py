@@ -71,8 +71,8 @@ class Assets(models.AbstractModel):
                 'mimetype': (file_type == 'js' and 'text/javascript' or 'text/scss'),
                 'datas': datas,
                 'url': custom_url,
+                **self._save_asset_attachment_hook(),
             }
-            new_attach.update(self._save_asset_hook())
             self.env["ir.attachment"].create(new_attach)
 
             # Create an asset with the new attachment
@@ -216,10 +216,21 @@ class Assets(models.AbstractModel):
         return self.env['ir.asset'].search([('path', 'like', url)])
 
     @api.model
+    def _save_asset_attachment_hook(self):
+        """
+        Returns the additional values to use to write the DB on customized
+        ir.attachment creation.
+
+        Returns:
+            dict
+        """
+        return {}
+
+    @api.model
     def _save_asset_hook(self):
         """
         Returns the additional values to use to write the DB on customized
-        attachment and asset creation.
+        ir.asset creation.
 
         Returns:
             dict
