@@ -12,6 +12,8 @@ class TestRepairTraceability(TestMrpCommon):
         Test that removing a tracked component with a repair does not block the flow of using that component in another
         bom
         """
+        picking_type = self.env['stock.picking.type'].search([('code', '=', 'mrp_operation')])[0]
+        picking_type.use_auto_consume_components_lots = True
         product_to_repair = self.env['product.product'].create({
             'name': 'product first serial to act repair',
             'tracking': 'serial',
@@ -92,6 +94,9 @@ class TestRepairTraceability(TestMrpCommon):
             mo.action_assign()
             mo.button_mark_done()
             return mo
+
+        picking_type = self.env['stock.picking.type'].search([('code', '=', 'mrp_operation')])[0]
+        picking_type.use_auto_consume_components_lots = True
 
         stock_location = self.env.ref('stock.stock_location_stock')
 
