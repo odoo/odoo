@@ -125,11 +125,15 @@ export function makeLegacySessionService(legacyEnv, session) {
             function mapContext() {
                 return Object.assign({}, env.services.user.context);
             }
+            function setContext(update) {
+                env.services.user.updateContext(update);
+            }
             Object.defineProperty(legacyEnv.session, "userContext", {
                 get: () => mapContext(),
             });
             Object.defineProperty(session, "user_context", {
                 get: () => mapContext(),
+                set: (update) => setContext(update),
             });
         },
     };
