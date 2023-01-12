@@ -68,7 +68,7 @@
                                     <span t-field="line.name"/>
                                 </td>
                                 <td name="td_taxes">
-                                    <span t-esc="', '.join(map(lambda x: x.name, line.taxes_id))"/>
+                                    <span t-esc="', '.join(map(lambda x: x.description or x.name, line.taxes_id))"/>
                                 </td>
                                 <td class="text-center">
                                     <span t-field="line.date_planned"/>
