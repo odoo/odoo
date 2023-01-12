@@ -112,7 +112,7 @@ class TestRunnerLoggingCommon(TransactionCase):
             value = self._clean_message(value)
         if value != expected:
             if key != 'msg':
-                self._log_error(f"Key `{key}` => `{value}` is not equal to `{expected}` \n {log_record['str']}")
+                self._log_error(f"Key `{key}` => `{value}` is not equal to `{expected}`")
             else:
                 diff = '\n'.join(difflib.ndiff(value.splitlines(), expected.splitlines()))
                 self._log_error(f"Key `{key}` did not matched expected:\n{diff}")
