@@ -29,7 +29,7 @@ class StockMove(models.Model):
     def _get_price_unit(self):
         """ Returns the unit price for the move"""
         self.ensure_one()
-        if not self.purchase_line_id or not self.product_id.id:
+        if self.origin_returned_move_id or not self.purchase_line_id or not self.product_id.id:
             return super(StockMove, self)._get_price_unit()
         price_unit_prec = self.env['decimal.precision'].precision_get('Product Price')
         line = self.purchase_line_id
