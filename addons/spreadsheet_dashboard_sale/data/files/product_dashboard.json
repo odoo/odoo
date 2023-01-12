@@ -47,17 +47,17 @@
             "cells": {
                 "A7": {
                     "style": 1,
-                    "content": "[Best Sellers by Revenue](odoo://view/{\"viewType\":\"graph\",\"action\":{\"domain\":[],\"context\":{\"group_by\":[\"product_id\"],\"graph_measure\":\"price_subtotal\",\"graph_mode\":\"bar\",\"graph_groupbys\":[\"product_id\"]},\"modelName\":\"sale.report\",\"views\":[[false,\"graph\"],[false,\"pivot\"],[false,\"search\"]]},\"threshold\":0,\"name\":\"Best Sellers by Revenue\"})",
+                    "content": "[Best Sellers by Revenue](odoo://view/{\"viewType\":\"graph\",\"action\":{\"domain\":[[\"state\", \"not in\", [\"draft\", \"sent\", \"cancel\"]]],\"context\":{\"group_by\":[\"product_id\"],\"graph_measure\":\"price_subtotal\",\"graph_mode\":\"bar\",\"graph_groupbys\":[\"product_id\"]},\"modelName\":\"sale.report\",\"views\":[[false,\"graph\"],[false,\"pivot\"],[false,\"search\"]]},\"threshold\":0,\"name\":\"Best Sellers by Revenue\"})",
                     "border": 1
                 },
                 "A24": {
                     "style": 1,
-                    "content": "[Best Sellers by Units Sold](odoo://view/{\"viewType\":\"graph\",\"action\":{\"domain\":[],\"context\":{\"group_by\":[\"product_id\"],\"graph_measure\":\"__count\",\"graph_mode\":\"bar\",\"graph_groupbys\":[\"product_id\"]},\"modelName\":\"sale.report\",\"views\":[[false,\"graph\"],[false,\"pivot\"],[false,\"search\"]]},\"threshold\":0,\"name\":\"Sales Analysis\"})",
+                    "content": "[Best Sellers by Units Sold](odoo://view/{\"viewType\":\"graph\",\"action\":{\"domain\":[[\"state\", \"not in\", [\"draft\", \"sent\", \"cancel\"]]],\"context\":{\"group_by\":[\"product_id\"],\"graph_measure\":\"__count\",\"graph_mode\":\"bar\",\"graph_groupbys\":[\"product_id\"]},\"modelName\":\"sale.report\",\"views\":[[false,\"graph\"],[false,\"pivot\"],[false,\"search\"]]},\"threshold\":0,\"name\":\"Sales Analysis\"})",
                     "border": 1
                 },
                 "A41": {
                     "style": 1,
-                    "content": "[Best Selling Products](odoo://view/{\"viewType\":\"pivot\",\"action\":{\"domain\":[],\"context\":{\"group_by\":[\"product_id\"],\"pivot_measures\":[\"__count\",\"price_subtotal\"],\"pivot_column_groupby\":[],\"pivot_row_groupby\":[\"product_id\"]},\"modelName\":\"sale.report\",\"views\":[[false,\"graph\"],[false,\"pivot\"],[false,\"search\"]]},\"threshold\":0,\"name\":\"Sales Analysis\"})",
+                    "content": "[Best Selling Products](odoo://view/{\"viewType\":\"pivot\",\"action\":{\"domain\":[[\"state\", \"not in\", [\"draft\", \"sent\", \"cancel\"]]],\"context\":{\"group_by\":[\"product_id\"],\"pivot_measures\":[\"__count\",\"price_subtotal\"],\"pivot_column_groupby\":[],\"pivot_row_groupby\":[\"product_id\"]},\"modelName\":\"sale.report\",\"views\":[[false,\"graph\"],[false,\"pivot\"],[false,\"search\"]]},\"threshold\":0,\"name\":\"Sales Analysis\"})",
                     "border": 1
                 },
                 "A42": {
@@ -201,7 +201,7 @@
                 },
                 "E41": {
                     "style": 1,
-                    "content": "[Best Selling Categories](odoo://view/{\"viewType\":\"pivot\",\"action\":{\"domain\":[],\"context\":{\"group_by\":[\"categ_id\"],\"pivot_measures\":[\"__count\",\"price_subtotal\"],\"pivot_column_groupby\":[],\"pivot_row_groupby\":[\"categ_id\"]},\"modelName\":\"sale.report\",\"views\":[[false,\"graph\"],[false,\"pivot\"],[false,\"search\"]]},\"threshold\":0,\"name\":\"Sales Analysis\"})",
+                    "content": "[Best Selling Categories](odoo://view/{\"viewType\":\"pivot\",\"action\":{\"domain\":[[\"state\", \"not in\", [\"draft\", \"sent\", \"cancel\"]]],\"context\":{\"group_by\":[\"categ_id\"],\"pivot_measures\":[\"__count\",\"price_subtotal\"],\"pivot_column_groupby\":[],\"pivot_row_groupby\":[\"categ_id\"]},\"modelName\":\"sale.report\",\"views\":[[false,\"graph\"],[false,\"pivot\"],[false,\"search\"]]},\"threshold\":0,\"name\":\"Sales Analysis\"})",
                     "border": 1
                 },
                 "E42": {
@@ -464,7 +464,15 @@
                                 "group_by_no_leaf": 1,
                                 "group_by": []
                             },
-                            "domain": [],
+                            "domain": [[
+                                "state",
+                                "not in",
+                                [
+                                    "draft",
+                                    "sent",
+                                    "cancel"
+                                ]
+                            ]],
                             "groupBy": [
                                 "product_id"
                             ],
@@ -500,7 +508,15 @@
                                 "group_by_no_leaf": 1,
                                 "group_by": []
                             },
-                            "domain": [],
+                            "domain": [[
+                                "state",
+                                "not in",
+                                [
+                                    "draft",
+                                    "sent",
+                                    "cancel"
+                                ]
+                            ]],
                             "groupBy": [
                                 "product_id"
                             ],
@@ -690,7 +706,15 @@
                 "group_by_no_leaf": 1,
                 "group_by": []
             },
-            "domain": [],
+            "domain": [[
+                "state",
+                "not in",
+                [
+                    "draft",
+                    "sent",
+                    "cancel"
+                ]
+            ]],
             "id": "1",
             "measures": [
                 {
@@ -723,7 +747,15 @@
                 "group_by_no_leaf": 1,
                 "group_by": []
             },
-            "domain": [],
+            "domain": [[
+                "state",
+                "not in",
+                [
+                    "draft",
+                    "sent",
+                    "cancel"
+                ]
+            ]],
             "id": "2",
             "measures": [
                 {
