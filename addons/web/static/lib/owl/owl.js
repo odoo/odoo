@@ -1745,6 +1745,11 @@
 
     // Special key to subscribe to, to be notified of key creation/deletion
     const KEYCHANGES = Symbol("Key changes");
+    // Used to specify the absence of a callback, can be used as WeakMap key but
+    // should only be used as a sentinel value and never called.
+    const NO_CALLBACK = () => {
+        throw new Error("Called NO_CALLBACK. Owl is broken, please report this to the maintainers.");
+    };
     const objectToString = Object.prototype.toString;
     const objectHasOwnProperty = Object.prototype.hasOwnProperty;
     const SUPPORTED_RAW_TYPES = new Set(["Object", "Array", "Set", "Map", "WeakMap"]);
@@ -1814,6 +1819,9 @@
      * @param callback the function to call when the key changes
      */
     function observeTargetKey(target, key, callback) {
+        if (callback === NO_CALLBACK) {
+            return;
+        }
         if (!targetToKeysToCallbacks.get(target)) {
             targetToKeysToCallbacks.set(target, new Map());
         }
@@ -1867,8 +1875,11 @@
             if (!observedKeys) {
                 continue;
             }
-            for (const callbacks of observedKeys.values()) {
+            for (const [key, callbacks] of observedKeys.entries()) {
                 callbacks.delete(callback);
+                if (!callbacks.size) {
+                    observedKeys.delete(key);
+                }
             }
         }
         targetsToClear.clear();
@@ -1913,7 +1924,7 @@
      *  reactive has changed
      * @returns a proxy that tracks changes to it
      */
-    function reactive(target, callback = () => { }) {
+    function reactive(target, callback = NO_CALLBACK) {
         if (!canBeMadeReactive(target)) {
             throw new OwlError(`Cannot make the given value reactive`);
         }
@@ -5871,9 +5882,9 @@ See https://github.com/odoo/owl/blob/${hash}/doc/reference/app.md#configuration 
     Object.defineProperty(exports, '__esModule', { value: true });
 
 
-    __info__.version = '2.0.4';
-    __info__.date = '2023-01-23T11:21:36.696Z';
-    __info__.hash = 'c30678f';
+    __info__.version = '2.0.5';
+    __info__.date = '2023-01-27T14:29:31.753Z';
+    __info__.hash = 'ea5d2be';
     __info__.url = 'https://github.com/odoo/owl';
 
 
