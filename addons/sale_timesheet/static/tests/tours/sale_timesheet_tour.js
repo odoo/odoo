@@ -13,21 +13,21 @@ tour.register('sale_timesheet_tour', {
     content: 'Click on CREATE button to create a quotation with service products.',
 }, {
     trigger: 'div[name="partner_id"] input',
-    content: 'Add the customer for this quotation (e.g. Brandon Freeman)',
-    run: 'text Brandon Freeman',
+    content: 'Add the customer for this quotation (e.g. Jean Jacques)',
+    run: 'text Jean Jacques',
 }, {
-    trigger: 'div[name="partner_id"] ul > li:first-child > a:contains(Freeman)',
+    trigger: 'div[name="partner_id"] ul > li:first-child > a:contains(Jean Jacques)',
     content: 'Select the first item on the autocomplete dropdown',
 },
 {
     trigger: 'td.o_field_x2many_list_row_add > a:first-child',
     content: 'Click on "Add a product" to add a new product. We will add a service product.',
 }, {
-    trigger: '.o_field_html[name="product_id"], .o_field_widget[name="product_template_id"] input',
-    content: Markup('Select a prepaid service product <i>(e.g. Service Product (Prepaid Hours))</i>'),
-    run: 'text Service Product (Prepaid Hours)',
+    trigger: 'div[name="product_template_id"] input',
+    content: Markup('Select a prepaid service product <i>(e.g. Test Service Prepaid)</i>'),
+    run: 'text Test Service Prepaid',
 }, {
-    trigger: 'ul.ui-autocomplete a:contains(Service Product (Prepaid Hours))',
+    trigger: 'div[name="product_template_id"] ul.ui-autocomplete a:contains(Test)',
     content: 'Select the prepaid service product in the autocomplete dropdown',
 }, {
     trigger: 'div[name="product_uom_qty"] input',
@@ -43,8 +43,8 @@ tour.register('sale_timesheet_tour', {
     content: 'Add a new project.',
 }, {
     trigger: '.o_field_widget.o_project_name input',
-    content: 'Select your project name (e.g. Project for Freeman)',
-    run: 'text Project for Freeman',
+    content: 'Select your project name (e.g. Project for Jean Jacques)',
+    run: 'text Project for Jean Jacques',
 }, {
     trigger: 'button[name="action_view_tasks"]',
     content: 'Click on Create button to create and enter to this newest project.',
@@ -68,10 +68,10 @@ tour.register('sale_timesheet_tour', {
     position: 'bottom',
 }, {
     trigger: 'div[name="partner_id"] input',
-    content: Markup('Select the customer of your Sales Order <i>(e.g. Brandon Freeman)</i>. Since we have a Sales Order for this customer with a prepaid service product which the remaining hours to deliver is greater than 0, the Sales Order Item in the task should be contain the Sales Order Item containing this prepaid service product.'),
-    run: 'text Brandon Freeman',
+    content: Markup('Select the customer of your Sales Order <i>(e.g. Jean Jacques)</i>. Since we have a Sales Order for this customer with a prepaid service product which the remaining hours to deliver is greater than 0, the Sales Order Item in the task should be contain the Sales Order Item containing this prepaid service product.'),
+    run: 'text Jean Jacques',
 }, {
-    trigger: 'div[name="partner_id"] ul > li:first-child > a:contains(Freeman)',
+    trigger: 'div[name="partner_id"] ul > li:first-child > a:contains(Jean Jacques)',
     content: 'Select the customer in the autocomplete dropdown.',
 }, {
     trigger: 'a.nav-link:contains(Timesheets)',
@@ -85,16 +85,11 @@ tour.register('sale_timesheet_tour', {
     content: 'Enter one hour for this timesheet',
     run: 'text 1',
 }, {
-    trigger: 'i.o_optional_columns_dropdown_toggle',
+    trigger: 'div.o_optional_columns_dropdown > button',
     content: 'The so_line field should be hidden by default. We check if it is the case by adding this field in the timesheet list view',
 }, {
-    trigger: 'input[name="so_line"]',
+    trigger: 'div.o_optional_columns_dropdown input[name="so_line"]',
     content: 'Check the so_line field to display the column on the list view.',
-    run: function (actions) {
-        if (!this.$anchor.prop('checked')) {
-            actions.click(this.$anchor);
-        }
-    },
 }, {
     trigger: 'button[name="action_view_so"]',
     content: 'Click on this stat button to see the SO linked to the SOL of the task.',
@@ -139,10 +134,10 @@ tour.register('sale_timesheet_tour', {
     }
 }, {
     trigger: 'div[name="partner_id"] input',
-    content: Markup('Add the customer for this project to select an SO and SOL for this customer <i>(e.g. Brandon Freeman)</i>.'),
-    run: 'text Brandon Freeman',
+    content: Markup('Add the customer for this project to select an SO and SOL for this customer <i>(e.g. Jean Jacques)</i>.'),
+    run: 'text Jean Jacques',
 }, {
-    trigger: 'div[name="partner_id"] ul > li:first-child > a:contains(Freeman)',
+    trigger: 'div[name="partner_id"] ul > li:first-child > a:contains(Jean Jacques)',
     content: 'Select the customer in the autocomplete dropdown',
 }, {
     trigger: 'a.nav-link[name="billing_employee_rate"]',
@@ -181,18 +176,17 @@ tour.register('sale_timesheet_tour', {
     trigger: '.dropdown-item[data-menu-xmlid="project.menu_main_pm"]',
     content: 'Select Project main menu',
 }, {
-    trigger: '.oe_kanban_global_click :contains("Project for Freeman") button.o_dropdown_kanban',
+    trigger: '.oe_kanban_global_click :contains("Project for Jean Jacques") button.o_dropdown_kanban',
     content: 'Open the project dropdown',
 }, {
-    trigger: '.o_kanban_record:contains("Project for Freeman") .dropdown-menu a:contains("Settings")',
+    trigger: '.o_kanban_record:contains("Project for Jean Jacques") .dropdown-menu a:contains("Settings")',
     content: 'Start editing the project',
-    // timer: 300,
 }, {
     trigger: 'div[name="partner_id"] input',
-    content: Markup('Add the customer for this project to select an SO and SOL for this customer <i>(e.g. Brandon Freeman)</i>.'),
-    run: 'text Brandon Freeman',
+    content: Markup('Add the customer for this project to select an SO and SOL for this customer <i>(e.g. Jean Jacques)</i>.'),
+    run: 'text Jean Jacques',
 }, {
-    trigger: 'div[name="partner_id"] ul > li:first-child > a:contains(Freeman)',
+    trigger: 'div[name="partner_id"] ul > li:first-child > a:contains(Jean Jacques)',
     content: 'Select the customer in the autocomplete dropdown',
 }, {
     trigger: 'a.nav-link[name="billing_employee_rate"]',
@@ -209,7 +203,7 @@ tour.register('sale_timesheet_tour', {
     trigger: '.o_back_button',
     content: 'Go back to the kanban view the project created',
 }, {
-    trigger: '.oe_kanban_global_click :contains("Project for Freeman")',
+    trigger: '.oe_kanban_global_click :contains("Project for Jean Jacques")',
     content: 'Open the project',
 }, {
     trigger: ".o_project_updates_breadcrumb",
@@ -219,7 +213,7 @@ tour.register('sale_timesheet_tour', {
     content: 'Check the user sees Sales section',
     run: function () {},
 }, {
-    trigger: ".o_rightpanel_section[name='sales'] .o_rightpanel_data:contains('Prepaid Hours')",
+    trigger: ".o_rightpanel_section[name='sales'] .o_rightpanel_data:contains('Test Service Prepaid')",
     content: 'Check the user sees a line in the Sales section',
     // timer: 300,
     run: function () {},
@@ -272,8 +266,8 @@ tour.register('sale_timesheet_tour', {
     content: "Sold title must be in description in description",
     run: function () {},
     }, {
-    trigger: ".o_field_widget[name=description] td:contains('Prepaid Hours')",
-    content: "Prepaid Hours title must be in description",
+    trigger: ".o_field_widget[name=description] td:contains('Test Service Prepaid')",
+    content: "Test Service Prepaid title must be in description",
     run: function () {},
 }, {
     trigger: ".o_field_widget[name=description] h3:contains('Profitability')",

@@ -11,6 +11,7 @@ class TestUi(HttpCase):
     def setUpClass(cls):
         super().setUpClass()
 
+        cls.env['res.partner'].create({'name': 'Jean Jacques'})
         service_category_id = cls.env['product.category'].create({
             'name': 'Services',
             'parent_id': cls.env.ref('product.product_category_1').id,
@@ -18,7 +19,7 @@ class TestUi(HttpCase):
 
         uom_hour_id = cls.env.ref('uom.product_uom_hour').id
         cls.prepaid_service_product = cls.env['product.product'].create({
-            'name': 'Service Product (Prepaid Hours)',
+            'name': 'Test Service Prepaid',
             'categ_id': service_category_id,
             'type': 'service',
             'list_price': 250.00,
@@ -35,4 +36,4 @@ class TestUi(HttpCase):
             .execute()
 
     def test_ui(self):
-        self.start_tour('/web', 'sale_timesheet_tour', login='admin', timeout=100)
+        self.start_tour('/web', 'sale_timesheet_tour', login='admin')
