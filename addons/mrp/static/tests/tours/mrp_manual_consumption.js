@@ -3,7 +3,7 @@
 import tour from 'web_tour.tour';
 
 
-tour.register('test_mrp_manual_consumption_2', {test: true}, [
+tour.register('test_mrp_manual_consumption', {test: true}, [
     {
         trigger: 'div[name=move_raw_ids] td[name="quantity_done"]:last:contains("5.00")',
         run: () => {},
@@ -66,4 +66,5 @@ tour.register('test_mrp_manual_consumption_2', {test: true}, [
         extra_trigger: '.o_technical_modal',
         run: 'click',
     },
+    ...tour.stepUtils.saveForm(),
 ]);
