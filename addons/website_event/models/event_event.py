@@ -2,7 +2,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from ast import literal_eval
-from collections import defaultdict
 from dateutil.relativedelta import relativedelta
 import json
 import werkzeug.urls
@@ -35,6 +34,9 @@ class Event(models.Model):
             'resize_class': 'cover_auto'
         })
         return res
+
+    def _default_question_ids(self):
+        return self.env['event.type']._default_question_ids()
 
     # description
     subtitle = fields.Char('Event Subtitle', translate=True)
@@ -219,7 +221,7 @@ class Event(models.Model):
             questions_tokeep_ids = []
         for event in self:
             if not event.event_type_id and not event.question_ids:
-                event.question_ids = False
+                event.question_ids = self._default_question_ids()
                 continue
 
             if questions_tokeep_ids:

@@ -34,6 +34,8 @@ class EventRegistration(models.Model):
     email = fields.Char(string='Email', compute='_compute_email', readonly=False, store=True, tracking=11)
     phone = fields.Char(string='Phone', compute='_compute_phone', readonly=False, store=True, tracking=12)
     mobile = fields.Char(string='Mobile', compute='_compute_mobile', readonly=False, store=True, tracking=13)
+    company_name = fields.Char(
+        string='Company Name', compute='_compute_company_name', readonly=False, store=True, tracking=14)
     # organization
     date_closed = fields.Datetime(
         string='Attended Date', compute='_compute_date_closed',
@@ -85,6 +87,15 @@ class EventRegistration(models.Model):
                     registration.partner_id,
                     fnames=['mobile']
                 ).get('mobile') or False
+
+    @api.depends('partner_id')
+    def _compute_company_name(self):
+        for registration in self:
+            if not registration.company_name and registration.partner_id:
+                registration.company_name = registration._synchronize_partner_values(
+                    registration.partner_id,
+                    fnames=['company_name']
+                ).get('company_name') or False
 
     @api.depends('state')
     def _compute_date_closed(self):

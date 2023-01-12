@@ -48,6 +48,18 @@ class TestUi(HttpCaseWithUserDemo):
             })],
             'website_published': True,
             'question_ids': [(0, 0, {
+                'title': 'Name',
+                'question_type': 'name',
+            }), (0, 0, {
+                'title': 'Email',
+                'question_type': 'email',
+            }), (0, 0, {
+                'title': 'Phone',
+                'question_type': 'phone',
+            }), (0, 0, {
+                'title': 'Company Name',
+                'question_type': 'company_name',
+            }), (0, 0, {
                 'title': 'Meal Type',
                 'question_type': 'simple_choice',
                 'answer_ids': [
@@ -81,12 +93,13 @@ class TestUi(HttpCaseWithUserDemo):
         self.assertEqual(first_registration.name, 'Attendee A')
         self.assertEqual(first_registration.phone, '+32499123456')
         self.assertEqual(second_registration.name, 'Attendee B')
+        self.assertEqual(second_registration.company_name, 'My Company')
 
         event_questions = registrations.mapped('event_id.question_ids')
-        self.assertEqual(len(event_questions), 3)
+        self.assertEqual(len(event_questions), 7)
 
         first_registration_answers = first_registration.registration_answer_ids
-        self.assertEqual(len(first_registration_answers), 3)
+        self.assertEqual(len(first_registration_answers), 6)
 
         self.assertEqual(first_registration_answers.filtered(
             lambda answer: answer.question_id.title == 'Meal Type'
@@ -101,7 +114,7 @@ class TestUi(HttpCaseWithUserDemo):
         ).value_answer_id.name, 'A friend')
 
         second_registration_answers = second_registration.registration_answer_ids
-        self.assertEqual(len(second_registration_answers), 2)
+        self.assertEqual(len(second_registration_answers), 5)
 
         self.assertEqual(second_registration_answers.filtered(
             lambda answer: answer.question_id.title == 'Meal Type'
