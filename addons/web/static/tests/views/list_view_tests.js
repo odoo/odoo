@@ -11856,6 +11856,38 @@ QUnit.module("Views", (hooks) => {
         ]);
     });
 
+    QUnit.test("grouped list with dynamic expand attribute (eval true)", async function (assert) {
+        await makeView({
+            type: "list",
+            resModel: "foo",
+            serverData,
+            arch: `<tree expand="context.get('expand', False)"><field name="foo"/></tree>`,
+            context: {
+                expand: true,
+            },
+            groupBy: ["bar"],
+        });
+
+        assert.containsN(target, ".o_group_header", 2);
+        assert.containsN(target, ".o_data_row", 4);
+    });
+
+    QUnit.test("grouped list with dynamic expand attribute (eval false)", async function (assert) {
+        await makeView({
+            type: "list",
+            resModel: "foo",
+            serverData,
+            arch: `<tree expand="context.get('expand', False)"><field name="foo"/></tree>`,
+            context: {
+                expand: false,
+            },
+            groupBy: ["bar"],
+        });
+
+        assert.containsN(target, ".o_group_header", 2);
+        assert.containsNone(target, ".o_data_row");
+    });
+
     QUnit.test("grouped list (two levels) with expand attribute", async function (assert) {
         // the expand attribute only opens the first level groups
         await makeView({
