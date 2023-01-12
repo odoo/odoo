@@ -57,7 +57,14 @@ options.registry.TableOfContent = options.Class.extend({
             $el.attr('id', id);
             $el[0].dataset.anchor = 'true';
         });
-        $nav.find('a:first').addClass('active');
+        const tocAnchorEl = this.$target[0].querySelector('a.table_of_content_link');
+        if (!tocAnchorEl) {
+            // destroy public widget and remove the ToC since there are no more
+            // child elements.
+            this.trigger_up('remove_snippet', {$snippet: this.$target});
+        } else {
+            $nav.find('a:first').addClass('active');
+        }
     },
 });
 
