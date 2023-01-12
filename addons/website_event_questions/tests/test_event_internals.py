@@ -44,16 +44,26 @@ class TestEventData(TestEventQuestionCommon):
             'date_begin': FieldsDatetime.to_string(datetime.today() + timedelta(days=1)),
             'date_end': FieldsDatetime.to_string(datetime.today() + timedelta(days=15)),
         })
+        ticket_id_1 = self.env['event.event.ticket'].create([{
+            'name': 'Regular',
+            'event_id': event.id,
+            'seats_max': 200,
+        }])
+        ticket_id_2 = self.env['event.event.ticket'].create([{
+            'name': 'VIP',
+            'event_id': event.id,
+            'seats_max': 200,
+        }])
 
         form_details = {
             '1-name': 'Pixis',
             '1-email': 'pixis@gmail.com',
             '1-phone': '+32444444444',
-            '1-event_ticket_id': '2',
+            '1-event_ticket_id': ticket_id_1.id,
             '2-name': 'Geluchat',
             '2-email': 'geluchat@gmail.com',
             '2-phone': '+32777777777',
-            '2-event_ticket_id': '3',
+            '2-event_ticket_id': ticket_id_2.id,
             'question_answer-1-%s' % self.event_question_1.id: '5',
             'question_answer-2-%s' % self.event_question_1.id: '9',
             'question_answer-0-%s' % self.event_question_2.id: '7',
@@ -64,12 +74,12 @@ class TestEventData(TestEventQuestionCommon):
             registrations = WebsiteEvent()._process_attendees_form(event, form_details)
 
         self.assertEqual(registrations, [
-            {'name': 'Pixis', 'email': 'pixis@gmail.com', 'phone': '+32444444444', 'event_ticket_id': 2,
+            {'name': 'Pixis', 'email': 'pixis@gmail.com', 'phone': '+32444444444', 'event_ticket_id': ticket_id_1.id,
             'registration_answer_ids': [
                 (0, 0, {'question_id': self.event_question_1.id, 'value_answer_id': 5}),
                 (0, 0, {'question_id': self.event_question_2.id, 'value_answer_id': 7}),
                 (0, 0, {'question_id': self.event_question_3.id, 'value_text_box': 'Free Text'})]},
-            {'name': 'Geluchat', 'email': 'geluchat@gmail.com', 'phone': '+32777777777', 'event_ticket_id': 3,
+            {'name': 'Geluchat', 'email': 'geluchat@gmail.com', 'phone': '+32777777777', 'event_ticket_id': ticket_id_2.id,
             'registration_answer_ids': [
                 (0, 0, {'question_id': self.event_question_1.id, 'value_answer_id': 9}),
                 (0, 0, {'question_id': self.event_question_2.id, 'value_answer_id': 7}),
