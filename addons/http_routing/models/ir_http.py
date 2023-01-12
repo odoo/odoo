@@ -149,10 +149,12 @@ def url_lang(path_or_uri, lang_code=None):
     # relative URL with either a path or a force_lang
     if url and not url.netloc and not url.scheme and (url.path or force_lang):
         location = werkzeug.urls.url_join(request.httprequest.path, location)
-        lang_url_codes = [url_code for _, url_code, *_ in Lang.get_available()]
         lang_code = pycompat.to_text(lang_code or request.context['lang'])
-        lang_url_code = Lang._lang_code_to_urlcode(lang_code)
-        lang_url_code = lang_url_code if lang_url_code in lang_url_codes else lang_code
+        # Lang.get_available() = languages on the current website OR all lang in DB if no website
+        available_langs = Lang.get_available()
+        lang_url_codes = [lang[1] for lang in available_langs]
+        matching_url_codes = next((url_code for code, url_code, *_ in available_langs if lang_code == code), None)
+        lang_url_code = matching_url_codes or lang_code
         if (len(lang_url_codes) > 1 or force_lang) and is_multilang_url(location, lang_url_codes):
             loc, sep, qs = location.partition('?')
             ps = loc.split(u'/')

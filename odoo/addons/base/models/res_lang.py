@@ -257,14 +257,6 @@ class Lang(models.Model):
         return self._get_cached_values()[field]
 
     @api.model
-    @tools.ormcache('code')
-    def _lang_code_to_urlcode(self, code):
-        for c, urlc, name, *_ in self.get_available():
-            if c == code:
-                return urlc
-        return self._lang_get(code).url_code
-
-    @api.model
     @tools.ormcache()
     def get_installed(self):
         """ Return the installed languages as a list of (code, name) sorted by name. """
