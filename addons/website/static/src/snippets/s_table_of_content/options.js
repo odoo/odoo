@@ -78,6 +78,16 @@ options.registry.TableOfContent = options.Class.extend({
      * @private
      */
     _generateNav: function (ev) {
+        const blockTextContent = this.$target[0].textContent.replaceAll('\n', '').trim();
+        if (blockTextContent === '') {
+            // destroy public widget and remove the ToC since there are no more
+            // child elements, before doing so the observer needs to be
+            // disconnected else observer observe mutation and _generateNav
+            // gets called even after there's no more ToC.
+            this.observer.disconnect();
+            this.trigger_up('remove_snippet', {$snippet: this.$target});
+            return;
+        }
         this.options.wysiwyg && this.options.wysiwyg.odooEditor.unbreakableStepUnactive();
         const headingsEls = this.$target.find(this.targetedElements).toArray()
             .filter(el => !el.closest('.o_snippet_desktop_invisible'));
