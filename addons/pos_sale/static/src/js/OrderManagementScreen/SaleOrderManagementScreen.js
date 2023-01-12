@@ -240,9 +240,15 @@ export class SaleOrderManagementScreen extends ControlButtonsMixin(IndependentTo
                             total: lines[i].price_total,
                         };
                     }
-                    const down_payment_product = this.env.pos.db.get_product_by_id(
+                    let down_payment_product = this.env.pos.db.get_product_by_id(
                         this.env.pos.config.down_payment_product_id[0]
                     );
+                    if (!down_payment_product) {
+                        await this.env.pos._addProducts([this.env.pos.config.down_payment_product_id[0]]);
+                        down_payment_product = this.env.pos.db.get_product_by_id(
+                            this.env.pos.config.down_payment_product_id[0]
+                        );
+                    }
                     const down_payment_tax =
                         this.env.pos.taxes_by_id[down_payment_product.taxes_id] || false;
                     let down_payment;
