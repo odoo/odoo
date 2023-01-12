@@ -34,7 +34,7 @@ class AccountAccount(models.Model):
                 account_unaffected_earnings = self.browse(res['ids'])
                 raise ValidationError(_('You cannot have more than one account with "Current Year Earnings" as type. (accounts: %s)', [a.code for a in account_unaffected_earnings]))
 
-    name = fields.Char(string="Account Name", required=True, index='trigram', tracking=True)
+    name = fields.Char(string="Account Name", required=True, index='trigram', tracking=True, overrides={'l10n_multilang': fields.Char(translate=True)})
     currency_id = fields.Many2one('res.currency', string='Account Currency', tracking=True,
         help="Forces all journal items in this account to have a specific currency (i.e. bank journals). If no currency is set, entries can use any currency.")
     code = fields.Char(size=64, required=True, tracking=True)
@@ -785,7 +785,7 @@ class AccountGroup(models.Model):
 
     parent_id = fields.Many2one('account.group', index=True, ondelete='cascade', readonly=True)
     parent_path = fields.Char(index=True, unaccent=False)
-    name = fields.Char(required=True)
+    name = fields.Char(required=True, overrides={'l10n_multilang': fields.Char(translate=True)})
     code_prefix_start = fields.Char()
     code_prefix_end = fields.Char()
     company_id = fields.Many2one('res.company', required=True, readonly=True, default=lambda self: self.env.company)

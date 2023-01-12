@@ -20,7 +20,7 @@ class AccountFiscalPosition(models.Model):
     _order = 'sequence'
 
     sequence = fields.Integer()
-    name = fields.Char(string='Fiscal Position', required=True)
+    name = fields.Char(string='Fiscal Position', required=True, overrides={'l10n_multilang': fields.Char(translate=True)})
     active = fields.Boolean(default=True,
         help="By unchecking the active field, you may hide a fiscal position without deleting it.")
     company_id = fields.Many2one(

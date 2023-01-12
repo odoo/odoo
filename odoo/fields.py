@@ -27,7 +27,7 @@ from difflib import get_close_matches
 from hashlib import sha256
 
 from .tools import (
-    float_repr, float_round, float_compare, float_is_zero, html_sanitize, human_size,
+    float_repr, float_round, float_compare, float_is_zero, frozendict, html_sanitize, human_size,
     pg_varchar, ustr, OrderedSet, pycompat, sql, date_utils, unique,
     image_process, merge_sequences, SQL_ORDER_BY_TYPE, is_list_of, has_list_types,
 )
@@ -307,6 +307,8 @@ class Field(MetaField('DummyField', (object,), {})):
 
     default_export_compatible = False   # whether the field must be exported by default in an import-compatible export
     exportable = True
+
+    overrides = frozendict()            # {module_name: field}
 
     def __init__(self, string=Default, **kwargs):
         kwargs['string'] = string

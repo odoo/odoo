@@ -2763,6 +2763,14 @@ class BaseModel(metaclass=MetaModel):
                 for field in klass._field_definitions:
                     definitions[field.name].append(field)
         for name, fields_ in definitions.items():
+            # obscure feature, to be removed later: this is useful to deal with
+            # inconsistent column types; it supports fields that are not
+            # translated yet but are translated in the database because of a
+            # module that will be loaded later
+            if cls.pool._graph:
+                for module, override in fields_[0].overrides.items():
+                    if module not in cls.pool._init_modules and module in cls.pool._graph:
+                        fields_.append(override)
             if len(fields_) == 1 and fields_[0]._direct and fields_[0].model_name == cls._name:
                 cls._fields[name] = fields_[0]
             else:

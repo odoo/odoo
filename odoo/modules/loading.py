@@ -417,6 +417,9 @@ def load_modules(registry, force_demo=False, status=None, update_module=False):
             _logger.critical('module base cannot be loaded! (hint: verify addons-path)')
             raise ImportError('Module `base` cannot be loaded! (hint: verify addons-path)')
 
+        # this is needed for the field.overrides trick
+        registry._graph = graph
+
         # processed_modules: for cleanup step after install
         # loaded_modules: to avoid double loading
         report = registry._assertion_report
@@ -484,6 +487,7 @@ def load_modules(registry, force_demo=False, status=None, update_module=False):
                     loaded_modules, update_module, models_to_check)
 
         registry.loaded = True
+        registry._graph = None
         registry.setup_models(cr)
 
         # check that all installed modules have been loaded by the registry

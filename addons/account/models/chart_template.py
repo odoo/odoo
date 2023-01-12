@@ -189,7 +189,7 @@ class AccountGroupTemplate(models.Model):
     _order = 'code_prefix_start'
 
     parent_id = fields.Many2one('account.group.template', ondelete='cascade')
-    name = fields.Char(required=True)
+    name = fields.Char(required=True, overrides={'l10n_multilang': fields.Char(translate=True)})
     code_prefix_start = fields.Char()
     code_prefix_end = fields.Char()
     chart_template_id = fields.Many2one('account.chart.template', string='Chart Template', required=True)
@@ -201,7 +201,7 @@ class AccountAccountTemplate(models.Model):
     _description = 'Templates for Accounts'
     _order = "code"
 
-    name = fields.Char(required=True)
+    name = fields.Char(required=True, overrides={'l10n_multilang': fields.Char(translate=True)})
     currency_id = fields.Many2one('res.currency', string='Account Currency', help="Forces all moves for this account to have this secondary currency.")
     code = fields.Char(size=64, required=True)
     account_type = fields.Selection(
@@ -263,7 +263,7 @@ class AccountChartTemplate(models.Model):
     _name = "account.chart.template"
     _description = "Account Chart Template"
 
-    name = fields.Char(required=True)
+    name = fields.Char(required=True, overrides={'l10n_multilang': fields.Char(translate=True)})
     parent_id = fields.Many2one('account.chart.template', string='Parent Chart Template')
     code_digits = fields.Integer(string='# of Digits', required=True, default=6, help="No. of Digits to use for account code")
     visible = fields.Boolean(string='Can be Visible?', default=True,
@@ -1074,7 +1074,7 @@ class AccountTaxTemplate(models.Model):
 
     chart_template_id = fields.Many2one('account.chart.template', string='Chart Template', required=True)
 
-    name = fields.Char(string='Tax Name', required=True)
+    name = fields.Char(string='Tax Name', required=True, overrides={'l10n_multilang': fields.Char(translate=True)})
     type_tax_use = fields.Selection(TYPE_TAX_USE, string='Tax Type', required=True, default="sale",
         help="Determines where the tax is selectable. Note : 'None' means a tax can't be used by itself, however it can still be used in a group.")
     tax_scope = fields.Selection([('service', 'Service'), ('consu', 'Consumable')], help="Restrict the use of taxes to a type of product.")
@@ -1085,7 +1085,7 @@ class AccountTaxTemplate(models.Model):
     sequence = fields.Integer(required=True, default=1,
         help="The sequence field is used to define order in which the tax lines are applied.")
     amount = fields.Float(required=True, digits=(16, 4), default=0)
-    description = fields.Char(string='Display on Invoices')
+    description = fields.Char(string='Display on Invoices', overrides={'l10n_multilang': fields.Char(translate=True)})
     price_include = fields.Boolean(string='Included in Price', default=False,
         help="Check this if the price you use on the product and invoices includes this tax.")
     include_base_amount = fields.Boolean(string='Affect Subsequent Taxes', default=False,
@@ -1487,11 +1487,11 @@ class AccountFiscalPositionTemplate(models.Model):
     _description = 'Template for Fiscal Position'
 
     sequence = fields.Integer()
-    name = fields.Char(string='Fiscal Position Template', required=True)
+    name = fields.Char(string='Fiscal Position Template', required=True, overrides={'l10n_multilang': fields.Char(translate=True)})
     chart_template_id = fields.Many2one('account.chart.template', string='Chart Template', required=True)
     account_ids = fields.One2many('account.fiscal.position.account.template', 'position_id', string='Account Mapping')
     tax_ids = fields.One2many('account.fiscal.position.tax.template', 'position_id', string='Tax Mapping')
-    note = fields.Text(string='Notes')
+    note = fields.Text(string='Notes', overrides={'l10n_multilang': fields.Text(translate=True)})
     auto_apply = fields.Boolean(string='Detect Automatically', help="Apply automatically this fiscal position.")
     vat_required = fields.Boolean(string='VAT required', help="Apply only if partner has a VAT number.")
     country_id = fields.Many2one('res.country', string='Country',
