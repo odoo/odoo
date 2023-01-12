@@ -34,7 +34,7 @@ export const WEBSOCKET_CLOSE_CODES = Object.freeze({
 });
 // Should be incremented on every worker update in order to force
 // update of the worker in browser cache.
-export const WORKER_VERSION = '1.0.0';
+export const WORKER_VERSION = '1.0.1';
 
 /**
  * This class regroups the logic necessary in order for the
@@ -44,8 +44,8 @@ export const WORKER_VERSION = '1.0.0';
  * for SharedWorker and this class implements it.
  */
 export class WebsocketWorker {
-    constructor(websocketURL) {
-        this.websocketURL = websocketURL;
+    constructor() {
+        this.websocketURL = "";
         this.currentUID = null;
         this.isWaitingForNewUID = true;
         this.channelsByClient = new Map();
@@ -200,12 +200,14 @@ export class WebsocketWorker {
      * given client.
      * @param {Number} [param0.lastNotificationId] Last notification id
      * known by the client.
+     * @param {String} [param0.websocketURL] URL of the websocket endpoint.
      * @param {Number|false|undefined} [param0.uid] Current user id
      *     - Number: user is logged whether on the frontend/backend.
      *     - false: user is not logged.
      *     - undefined: not available (e.g. livechat support page)
      */
-    _initializeConnection(client, { debug, lastNotificationId, uid }) {
+    _initializeConnection(client, { debug, lastNotificationId, uid, websocketURL }) {
+        this.websocketURL = websocketURL;
         this.lastNotificationId = lastNotificationId;
         this.debugModeByClient[client] = debug;
         this.isDebug = Object.values(this.debugModeByClient).some(debugValue => debugValue !== '');

@@ -33,7 +33,10 @@ class IrActionsReport(models.Model):
                     writer = OdooPdfFileWriter()
                     writer.cloneReaderDocumentRoot(reader)
                     for edi_document in to_embed:
-                        edi_document.edi_format_id._prepare_invoice_report(writer, edi_document)
+                        # The attachements on the edi documents are only system readable
+                        # because they don't have res_id and res_model, here we are sure that
+                        # the user has access to the invoice and edi document
+                        edi_document.edi_format_id._prepare_invoice_report(writer, edi_document.sudo())
 
                     # Replace the current content.
                     pdf_stream.close()

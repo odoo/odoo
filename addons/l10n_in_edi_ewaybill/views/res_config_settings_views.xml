@@ -16,16 +16,17 @@
                                 Setup E-Waybill Service for this company
                             </div>
                             <div class="content-group">
-                                <div class="mt16 row">
-                                    <label for="l10n_in_edi_ewaybill_username" string="Username" class="col-3 col-lg-3 o_light_label"/>
-                                    <field name="l10n_in_edi_ewaybill_username"  nolabel="1"/>
-                                    <label for="l10n_in_edi_ewaybill_password" string="Password" class="col-3 col-lg-3 o_light_label" />
-                                    <field name="l10n_in_edi_ewaybill_password" password="True" nolabel="1"/>
-                                    <label for="l10n_in_edi_production_env" string="Production Environment" class="col-3 col-lg-3 o_light_label"/>
-                                    <field name="l10n_in_edi_production_env" nolabel="1"/>
-                                    <div class="text-muted">
-                                        Only check if you are in production.
-                                    </div>
+                                <div class="row mt16">
+                                    <label for="l10n_in_edi_ewaybill_username" class="col-lg-4 o_light_label" string="Username"/>
+                                    <field name="l10n_in_edi_ewaybill_username"/>
+                                </div>
+                                <div class="row">
+                                    <label for="l10n_in_edi_ewaybill_password" class="col-lg-4 o_light_label" string="Password"/>
+                                    <field name="l10n_in_edi_ewaybill_password" password="True"/>
+                                </div>
+                                <div class="row">
+                                    <label for="l10n_in_edi_production_env" class="col-lg-4 o_light_label" string="Production Environment"/>
+                                    <field name="l10n_in_edi_production_env"/>
                                 </div>
                             </div>
                             <div class='mt8'>

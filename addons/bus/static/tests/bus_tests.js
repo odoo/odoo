@@ -13,6 +13,7 @@ const { registry } = require("@web/core/registry");
 const { session } = require('@web/session');
 const { makeDeferred, nextTick, patchWithCleanup } = require("@web/../tests/helpers/utils");
 const { makeTestEnv } = require('@web/../tests/helpers/mock_env');
+const legacySession = require('web.session');
 
 QUnit.module('Bus', {
     beforeEach: function () {
@@ -460,6 +461,26 @@ QUnit.module('Bus', {
             'disconnect',
             'connect',
         ]);
+    });
+
+    QUnit.test("WebSocket connects with URL corresponding to session prefix", async function (assert) {
+        patchWebsocketWorkerWithCleanup();
+        const origin = "http://random-website.com";
+        patchWithCleanup(legacySession, {
+            prefix: origin,
+        });
+        const websocketCreatedDeferred = makeDeferred();
+        patchWithCleanup(window, {
+            WebSocket: function (url) {
+                assert.step(url);
+                websocketCreatedDeferred.resolve();
+                return new EventTarget();
+            },
+        }, { pure: true });
+        const env = await makeTestEnv();
+        env.services["bus_service"].start();
+        await websocketCreatedDeferred;
+        assert.verifySteps([`${origin.replace("http", "ws")}/websocket`]);
     });
 });
 });
