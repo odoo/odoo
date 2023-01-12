@@ -239,9 +239,28 @@ class MailMail(models.Model):
         except Exception:
             _logger.exception("Failed processing mail queue")
 
-        # Remove all the <mail.mail> marked as "to delete"
-        self.env['mail.mail'].sudo().search([('to_delete', '=', True)]).unlink()
+        # Remove the <mail.mail> sent marked as "to delete"
+        self.env['mail.mail'].sudo().search(
+            [('to_delete', '=', True), ('id', 'in', ids)]
+        ).with_context(mail_gc_cron=True).unlink()
         return res
+
+    @api.autovacuum
+    def _gc_mail_mail(self):
+        """Clean the <mail.mail> marked as "to delete"."""
+        # <mail.mail> can technically be creating when looping, only remove
+        # the <mail.mail> marked as to delete before the loop starts
+        to_delete = self.env['mail.mail'].sudo().search_count([('to_delete', '=', True)])
+
+        _logger.info('Will remove %i <mail.mail>.', to_delete)
+
+        for __ in range(to_delete // 1000 + 1):
+            mails = self.env['mail.mail'].sudo().search(
+                [('to_delete', '=', True)], order="id ASC", limit=1000)
+            if not mails:
+                break
+            mails.with_context(mail_gc_cron=True).unlink()
+            self._cr.commit()
 
     def _postprocess_sent_message(self, success_pids, failure_reason=False, failure_type=None):
         """Perform any post-processing necessary after sending ``mail``
