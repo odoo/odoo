@@ -69,14 +69,6 @@ class MailComposer(models.TransientModel):
         if 'create_uid' in fields_list and 'create_uid' not in result:
             result['create_uid'] = self.env.uid
 
-        # batch post mode by default use queues for notifications
-        if 'force_send' in fields_list and 'force_send' not in result:
-            result['force_send'] = (
-                result.get('composition_mode') != 'comment' or
-                (not result.get('res_domain') and
-                len(self._parse_res_ids(result.get('res_ids') or [])) <= 1)
-            )
-
         return {
             fname: result[fname]
             for fname in result if fname in fields_list
@@ -168,7 +160,8 @@ class MailComposer(models.TransientModel):
         compute="_compute_auto_delete_keep_log", readonly=False, store=True,
         help='Keep a copy of the email content if emails are removed (mass mailing only)')
     force_send = fields.Boolean(
-        'Send mailing or notifications directly')
+        'Send mailing or notifications directly',
+        compute='_compute_force_send', readonly=False, store=True)
     mail_server_id = fields.Many2one(
         'ir.mail_server', string='Outgoing mail server',
         compute='_compute_mail_server_id', readonly=False, store=True)
@@ -485,6 +478,15 @@ class MailComposer(models.TransientModel):
         )
         toreset.auto_delete_keep_log = False
         (self - toreset).auto_delete_keep_log = True
+
+    @api.depends('composition_mode', 'model', 'res_domain', 'res_ids')
+    def _compute_force_send(self):
+        """ It is set to True in mass mailing mode (send directly by default)
+        and in monorecord comment mode (send notifications right now). Batch
+        comment delays notification to use the email queue. """
+        for composer in self:
+            composer.force_send = (composer.composition_mode == 'mass_mail' or
+                                   not composer.composition_batch)
 
     @api.depends('template_id')
     def _compute_mail_server_id(self):
