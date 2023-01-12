@@ -5684,12 +5684,24 @@ X[]
                     stepFunction: async editor => insertText(editor, '`'),
                     contentAfter: '<p>\u200B<code class="o_inline_code">ab</code>\u200B[]cd</p>',
                 });
+                // BACKWARDS
+                await testEditor(BasicEditor, {
+                    contentBefore: '<p>[]ab`cd</p>',
+                    stepFunction: async editor => insertText(editor, '`'),
+                    contentAfter: '<p>\u200B<code class="o_inline_code">[]ab</code>cd</p>',
+                });
             });
             it('should convert text into inline code (middle)', async () => {
                 await testEditor(BasicEditor, {
                     contentBefore: '<p>ab`cd[]ef</p>',
                     stepFunction: async editor => insertText(editor, '`'),
                     contentAfter: '<p>ab<code class="o_inline_code">cd</code>\u200B[]ef</p>',
+                });
+                // BACKWARDS
+                await testEditor(BasicEditor, {
+                    contentBefore: '<p>ab[]cd`ef</p>',
+                    stepFunction: async editor => insertText(editor, '`'),
+                    contentAfter: '<p>ab<code class="o_inline_code">[]cd</code>ef</p>',
                 });
             });
             it('should convert text into inline code (end)', async () => {
@@ -5698,12 +5710,25 @@ X[]
                     stepFunction: async editor => insertText(editor, '`'),
                     contentAfter: '<p>ab<code class="o_inline_code">cd</code>\u200B[]</p>',
                 });
+                // BACKWARDS
+                await testEditor(BasicEditor, {
+                    contentBefore: '<p>ab[]cd`</p>',
+                    stepFunction: async editor => insertText(editor, '`'),
+                    contentAfter: '<p>ab<code class="o_inline_code">[]cd</code></p>',
+                });
             });
-            it('should convert text into inline code and leave an earlier and a later backtick alone', async () => {
+            it('should convert text into inline code, with parasite backticks', async () => {
                 await testEditor(BasicEditor, {
                     contentBefore: '<p>a`b`cd[]e`f</p>',
                     stepFunction: async editor => insertText(editor, '`'),
+                    // The closest PREVIOUS backtick is prioritary
                     contentAfter: '<p>a`b<code class="o_inline_code">cd</code>\u200B[]e`f</p>',
+                });
+                await testEditor(BasicEditor, {
+                    contentBefore: '<p>ab[]cd`e`f</p>',
+                    stepFunction: async editor => insertText(editor, '`'),
+                    // If there is no previous backtick, use the closest NEXT backtick.
+                    contentAfter: '<p>ab<code class="o_inline_code">[]cd</code>e`f</p>',
                 });
             });
             it('should not convert text into inline code when traversing HTMLElements', async () => {
@@ -5758,6 +5783,7 @@ X[]
                 });
             });
             it('should convert text into inline code even when the other backtick is in a separate text node', async () => {
+                // BACKTICK IS PREVIOUS SIBLING
                 await testEditor(BasicEditor, {
                     contentBefore: '<p>ab[]c</p>',
                     stepFunction: async editor => {
@@ -5765,6 +5791,15 @@ X[]
                         insertText(editor, '`');
                     },
                     contentAfter: '<p>\u200B<code class="o_inline_code">ab</code>\u200B[]c</p>',
+                });
+                // BACKTICK IS NEXT SIBLING
+                await testEditor(BasicEditor, {
+                    contentBefore: '<p>ab[]c</p>',
+                    stepFunction: async editor => {
+                        editor.document.getSelection().anchorNode.after(document.createTextNode('`'));
+                        insertText(editor, '`');
+                    },
+                    contentAfter: '<p>ab<code class="o_inline_code">[]c</code></p>',
                 });
             });
         });
