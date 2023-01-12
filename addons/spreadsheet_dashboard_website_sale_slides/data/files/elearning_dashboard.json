@@ -753,6 +753,14 @@
                     "product_id.channel_ids",
                     "!=",
                     false
+                ], [
+                    "state",
+                    "not in",
+                    [
+                        "draft",
+                        "sent",
+                        "cancel"
+                    ]
                 ]
             ],
             "id": "10",
@@ -782,6 +790,14 @@
                     "product_id.channel_ids",
                     "!=",
                     false
+                ], [
+                    "state",
+                    "not in",
+                    [
+                        "draft",
+                        "sent",
+                        "cancel"
+                    ]
                 ]
             ],
             "id": "11",
