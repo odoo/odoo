@@ -3199,9 +3199,8 @@ export class OdooEditor extends EventTarget {
                     }
                     sibling = textNode.nextSibling;
                     while (sibling && sibling.nodeType === Node.TEXT_NODE) {
-                        sibling.textContent =+ textNode.textContent;
-                        textNode.remove();
-                        textNode = sibling;
+                        textNode.textContent += sibling.textContent;
+                        sibling.remove();
                         sibling = textNode.nextSibling;
                     }
                     setSelection(textNode, offset);
