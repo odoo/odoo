@@ -40,7 +40,7 @@ export async function createModelWithDataSource(params = {}) {
     const model = new Model(params.spreadsheetData, {
         custom: {
             env,
-            dataSources: new DataSources(env.services.orm.silent),
+            dataSources: new DataSources(env.services.orm),
         },
     });
     setupDataSourceEvaluation(model);

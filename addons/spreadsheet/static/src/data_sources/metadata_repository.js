@@ -39,7 +39,7 @@ const { EventBus } = owl;
 export class MetadataRepository extends EventBus {
     constructor(orm) {
         super();
-        this.orm = orm.silent;
+        this.orm = orm;
 
         this.serverData = new ServerData(this.orm, {
             whenDataIsFetched: () => this.trigger("labels-fetched"),
