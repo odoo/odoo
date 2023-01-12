@@ -19,6 +19,8 @@
 
     .o_list_view &  {
         --ListRenderer-table-padding-h: #{$o-horizontal-padding};
+        // So the scrollbar does not stay below the thead in Safari
+        transform: translate3d(0,0,0);
     }
 
     .o_list_table {
