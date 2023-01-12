@@ -10,6 +10,7 @@ from operator import itemgetter
 
 from odoo import api, fields, models, tools, _
 from odoo.exceptions import UserError, ValidationError
+from odoo.tools.misc import partition
 
 _logger = logging.getLogger(__name__)
 
@@ -208,60 +209,73 @@ class Lang(models.Model):
                 partner.write({'lang': lang_code})
         return True
 
-    @tools.ormcache('code')
+    @api.model
+    def _field_names_to_cache(self):
+        return [f.name for f in self._fields.values() if f.store and f.column_type]
+
+    @tools.ormcache()
+    def _all_data_lang(self):
+        field_store_names = self._field_names_to_cache()
+        self.flush_model(field_store_names)
+        self.env.cr.execute(f"SELECT {', '.join(field_store_names)} FROM res_lang ORDER BY name")
+        vals_list = [
+            {
+                field_name: field_value
+                for field_name, field_value in zip(field_store_names, record_values)
+            }
+            for record_values in self.env.cr.fetchall()
+        ]
+        return {
+            'installed': [vals['id'] for vals in vals_list if vals['active']],
+            'by_id': {vals['id']: vals for vals in vals_list},
+            'by_code': {vals['code']: vals for vals in vals_list},
+            'by_url_code': {vals['url_code']: vals for vals in vals_list},
+        }
+
+    def _read(self, field_names):
+        set_field_names_to_cache = set(self._field_names_to_cache())
+        field_names_to_cache, field_names = partition(lambda f: f in set_field_names_to_cache, field_names)
+
+        # Mimic _read but lang data coming from the ormcache.
+        if field_names_to_cache:
+            vals_by_id = self._all_data_lang()['by_id']
+            langs = self.browse(list(vals_by_id))
+
+            for field_name in field_names_to_cache:
+                langs_values = [vals[field_name] for vals in vals_by_id.values()]
+                self.env.cache.insert_missing(langs, self._fields[field_name], langs_values)
+
+        if field_names:
+            super()._read(field_names)
+
     def _lang_get_id(self, code):
-        return self.with_context(active_test=True).search([('code', '=', code)]).id
+        data = self._all_data_lang()['by_code']
+        return data[code]['id'] if code in data and data[code]['active'] else False
 
-    @tools.ormcache('code')
-    def _lang_get_direction(self, code):
-        return self.with_context(active_test=True).search([('code', '=', code)]).direction
-
-    @tools.ormcache('url_code')
     def _lang_get_code(self, url_code):
-        return self.with_context(active_test=True).search([('url_code', '=', url_code)]).code or url_code
+        data = self._all_data_lang()['by_url_code']
+        return data[url_code]['code'] if url_code in data and data[url_code]['active'] else url_code
 
     def _lang_get(self, code):
         """ Return the language using this code if it is active """
         return self.browse(self._lang_get_id(code))
 
-    @tools.ormcache('self.code', 'monetary')
-    def _data_get(self, monetary=False):
-        thousands_sep = self.thousands_sep or ''
-        decimal_point = self.decimal_point
-        grouping = self.grouping
-        return grouping, thousands_sep, decimal_point
-
     @api.model
-    @tools.ormcache()
     def get_available(self):
         """ Return the available languages as a list of (code, url_code, name,
             active) sorted by name.
         """
-        langs = self.with_context(active_test=False).search([])
+        langs = self.browse(self._all_data_lang()['by_id'])
         return langs.get_sorted()
 
     def get_sorted(self):
-        return sorted([(lang.code, lang.url_code, lang.name, lang.active, lang.flag_image_url) for lang in self], key=itemgetter(2))
-
-    @tools.ormcache('self.id')
-    def _get_cached_values(self):
-        self.ensure_one()
-        return {
-            'id': self.id,
-            'code': self.code,
-            'url_code': self.url_code,
-            'name': self.name,
-        }
-
-    def _get_cached(self, field):
-        return self._get_cached_values()[field]
+        return [(lang.code, lang.url_code, lang.name, lang.active, lang.flag_image_url) for lang in self.sorted("name")]
 
     @api.model
-    @tools.ormcache()
     def get_installed(self):
         """ Return the installed languages as a list of (code, name) sorted by name. """
-        langs = self.with_context(active_test=True).search([])
-        return sorted([(lang.code, lang.name) for lang in langs], key=itemgetter(1))
+        langs = self.browse(self._all_data_lang()['installed'])
+        return [(lang.code, lang.name) for lang in langs]
 
     def toggle_active(self):
         super().toggle_active()
@@ -321,17 +335,16 @@ class Lang(models.Model):
 
         # floats and decimal ints need special action!
         if grouping:
-            lang_grouping, thousands_sep, decimal_point = self._data_get(monetary)
-            eval_lang_grouping = ast.literal_eval(lang_grouping)
+            eval_lang_grouping = ast.literal_eval(self.grouping)
 
             if percent[-1] in 'eEfFgG':
                 parts = formatted.split('.')
-                parts[0] = intersperse(parts[0], eval_lang_grouping, thousands_sep)[0]
+                parts[0] = intersperse(parts[0], eval_lang_grouping, self.thousands_sep or '')[0]
 
-                formatted = decimal_point.join(parts)
+                formatted = self.decimal_point.join(parts)
 
             elif percent[-1] in 'diu':
-                formatted = intersperse(formatted, eval_lang_grouping, thousands_sep)[0]
+                formatted = intersperse(formatted, eval_lang_grouping, self.thousands_sep or '')[0]
 
         return formatted
 

@@ -920,6 +920,10 @@ class Website(models.Model):
         website_id = self._get_current_website_id(domain_name, fallback=fallback)
         return self.browse(website_id)
 
+    @tools.ormcache('self.id')
+    def _get_available_langs(self):
+        return self.language_ids.get_sorted()
+
     @tools.cache('domain_name', 'fallback')
     @api.model
     def _get_current_website_id(self, domain_name, fallback=True):
