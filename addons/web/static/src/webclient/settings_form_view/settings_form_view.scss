@@ -195,6 +195,10 @@
                    max-width: map-get($grid-breakpoints, lg); // Provide a maximum container size to ensure readability
                    @include o-base-settings-horizontal-padding(0);
                    margin-bottom: 24px;
+
+                   .o_form_label + .fa, .o_form_label + .o_doc_link {
+                        margin-left: map-get($spacers, 2);
+                   }
                }
            }
 
