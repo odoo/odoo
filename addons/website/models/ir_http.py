@@ -265,13 +265,22 @@ class Http(models.AbstractModel):
     @classmethod
     def _serve_page(cls):
         req_page = request.httprequest.path
-        page_domain = [('url', '=', req_page)] + request.website.website_domain()
 
-        published_domain = page_domain
+        def _search_page(comparator='='):
+            page_domain = [('url', comparator, req_page)] + request.website.website_domain()
+            return request.env['website.page'].sudo().search(page_domain, order='website_id asc', limit=1)
+
         # specific page first
-        page = request.env['website.page'].sudo().search(published_domain, order='website_id asc', limit=1)
+        page = _search_page()
 
-        # redirect withtout trailing /
+        # case insensitive search
+        if not page:
+            page = _search_page('=ilike')
+            if page:
+                logger.info("Page %r not found, redirecting to existing page %r", req_page, page.url)
+                return request.redirect(page.url)
+
+        # redirect without trailing /
         if not page and req_page != "/" and req_page.endswith("/"):
             # mimick `_postprocess_args()` redirect
             path = request.httprequest.path[:-1]
