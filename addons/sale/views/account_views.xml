@@ -39,7 +39,7 @@
                         name="utm_link"
                         groups="base.group_no_one"
                         attrs="{'invisible': [('move_type', 'not in', ('out_invoice', 'out_refund'))]}">
-                    <field name="campaign_id"/>
+                    <field name="campaign_id" options="{'create_name_field': 'title', 'always_reload': True}"/>
                     <field name="medium_id"/>
                     <field name="source_id"/>
                 </group>
