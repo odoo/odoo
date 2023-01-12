@@ -99,10 +99,8 @@
                         <group name="pricelist_rule_method">
                             <field name="compute_price" string="Computation" widget="radio"/>
                         </group>
-                        <div>
-                            <div class="alert alert-info" role="alert" groups="uom.group_uom">
-                                The computed price is expressed in the default Unit of Measure of the product.
-                            </div>
+                        <div class="alert alert-info" role="alert" groups="uom.group_uom">
+                            The computed price is expressed in the default Unit of Measure of the product.
                         </div>
                     </group>
                     <group name="pricelist_rule_base" groups="product.group_sale_pricelist">
@@ -132,11 +130,9 @@
                                 <field name="price_max_margin" string="Max. Margin" class="oe_inline" widget="monetary" nolabel="1"/>
                             </div>
                         </group>
-                        <group>
-                            <div class="alert alert-info" role="alert" style="white-space: pre;" attrs="{'invisible':[('compute_price', '!=', 'formula')]}">
-                                <field name="rule_tip"/>
-                            </div>
-                        </group>
+                        <div class="alert alert-info" role="alert" style="white-space: pre;" attrs="{'invisible': [('compute_price', '!=', 'formula')]}">
+                            <field name="rule_tip"/>
+                        </div>
                     </group>
 
                     <group string="Conditions">
