@@ -428,30 +428,6 @@ class AccountBankStatementLine(models.Model):
             })
         return bank_account
 
-    def _get_amounts_with_currencies(self):
-        """
-        Returns the line amount in company, journal and foreign currencies
-        """
-        self.ensure_one()
-
-        company_currency = self.journal_id.company_id.currency_id
-        journal_currency = self.journal_id.currency_id or company_currency
-        foreign_currency = self.foreign_currency_id or journal_currency or company_currency
-
-        journal_amount = self.amount
-        if foreign_currency == journal_currency:
-            transaction_amount = journal_amount
-        else:
-            transaction_amount = self.amount_currency
-        if journal_currency == company_currency:
-            company_amount = journal_amount
-        elif foreign_currency == company_currency:
-            company_amount = transaction_amount
-        else:
-            company_amount = journal_currency._convert(journal_amount, company_currency,
-                                                       self.journal_id.company_id, self.date)
-        return company_amount, company_currency, journal_amount, journal_currency, transaction_amount, foreign_currency
-
     def _get_default_amls_matching_domain(self):
         return [
             # Base domain.
@@ -489,6 +465,35 @@ class AccountBankStatementLine(models.Model):
         if not statement.is_complete:
             return statement
 
+    def _get_accounting_amounts_and_currencies(self):
+        """ Retrieve the transaction amount, journal amount and the company amount with their corresponding currencies
+        from the journal entry linked to the statement line.
+        All returned amounts will be positive for an inbound transaction, negative for an outbound one.
+
+        :return: (
+            transaction_amount, transaction_currency,
+            journal_amount, journal_currency,
+            company_amount, company_currency,
+        )
+        """
+        self.ensure_one()
+        liquidity_line, suspense_line, other_lines = self._seek_for_lines()
+        if suspense_line and not other_lines:
+            transaction_amount = -suspense_line.amount_currency
+            transaction_currency = suspense_line.currency_id
+        else:
+            # In case of to_check or partial reconciliation, we can't trust the suspense line.
+            transaction_amount = self.amount_currency if self.foreign_currency_id else self.amount
+            transaction_currency = self.foreign_currency_id or liquidity_line.currency_id
+        return (
+            transaction_amount,
+            transaction_currency,
+            liquidity_line.amount_currency,
+            liquidity_line.currency_id,
+            liquidity_line.balance,
+            liquidity_line.company_currency_id,
+        )
+
     def _prepare_counterpart_amounts_using_st_line_rate(self, currency, balance, amount_currency):
         """ Convert the amounts passed as parameters to the statement line currency using the rates provided by the
         bank. The computed amounts are the one that could be set on the statement line as a counterpart journal item
@@ -504,13 +509,14 @@ class AccountBankStatementLine(models.Model):
             * amount_currency:  The amount to consider expressed in statement line's foreign currency.
         """
         self.ensure_one()
-        company_amount, company_currency, journal_amount, journal_currency, transaction_amount, foreign_currency \
-            = self._get_amounts_with_currencies()
+
+        transaction_amount, transaction_currency, journal_amount, journal_currency, company_amount, company_currency \
+            = self._get_accounting_amounts_and_currencies()
 
         rate_journal2foreign_curr = journal_amount and abs(transaction_amount) / abs(journal_amount)
         rate_comp2journal_curr = company_amount and abs(journal_amount) / abs(company_amount)
 
-        if currency == foreign_currency:
+        if currency == transaction_currency:
             trans_amount_currency = amount_currency
             if rate_journal2foreign_curr:
                 journ_amount_currency = journal_currency.round(trans_amount_currency / rate_journal2foreign_curr)
@@ -521,14 +527,14 @@ class AccountBankStatementLine(models.Model):
             else:
                 new_balance = 0.0
         elif currency == journal_currency:
-            trans_amount_currency = foreign_currency.round(amount_currency * rate_journal2foreign_curr)
+            trans_amount_currency = transaction_currency.round(amount_currency * rate_journal2foreign_curr)
             if rate_comp2journal_curr:
                 new_balance = company_currency.round(amount_currency / rate_comp2journal_curr)
             else:
                 new_balance = 0.0
         else:
             journ_amount_currency = journal_currency.round(balance * rate_comp2journal_curr)
-            trans_amount_currency = foreign_currency.round(journ_amount_currency * rate_journal2foreign_curr)
+            trans_amount_currency = transaction_currency.round(journ_amount_currency * rate_journal2foreign_curr)
             new_balance = balance
 
         return {
@@ -552,8 +558,22 @@ class AccountBankStatementLine(models.Model):
                 self.journal_id.display_name,
             ))
 
-        company_amount, _company_currency, journal_amount, journal_currency, transaction_amount, foreign_currency \
-            = self._get_amounts_with_currencies()
+        company_currency = self.journal_id.company_id.currency_id
+        journal_currency = self.journal_id.currency_id or company_currency
+        foreign_currency = self.foreign_currency_id or journal_currency or company_currency
+
+        journal_amount = self.amount
+        if foreign_currency == journal_currency:
+            transaction_amount = journal_amount
+        else:
+            transaction_amount = self.amount_currency
+        if journal_currency == company_currency:
+            company_amount = journal_amount
+        elif foreign_currency == company_currency:
+            company_amount = transaction_amount
+        else:
+            company_amount = journal_currency\
+                ._convert(journal_amount, company_currency, self.journal_id.company_id, self.date)
 
         liquidity_line_vals = {
             'name': self.payment_ref,
