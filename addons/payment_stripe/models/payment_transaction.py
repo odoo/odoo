@@ -138,7 +138,7 @@ class PaymentTransaction(models.Model):
                 'description': f'Odoo Partner: {self.partner_id.name} (id: {self.partner_id.id})',
                 'email': self.partner_email or None,
                 'name': self.partner_name,
-                'phone': self.partner_phone or None,
+                'phone': self.partner_phone and self.partner_phone[:20] or None,
             }
         )
         return customer
