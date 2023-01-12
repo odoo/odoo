@@ -9,13 +9,13 @@ from odoo import models, fields, api, _
 from odoo.tools import html_escape
 from odoo.exceptions import AccessError
 from odoo.addons.iap import jsonrpc
+from odoo.addons.l10n_in_edi.models.account_edi_format import DEFAULT_IAP_ENDPOINT, DEFAULT_IAP_TEST_ENDPOINT
+
 from .error_codes import ERROR_CODES
+
 import logging
 
 _logger = logging.getLogger(__name__)
-
-DEFAULT_IAP_ENDPOINT = "https://l10n-in-edi.api.odoo.com"
-DEFAULT_IAP_TEST_ENDPOINT = "https://l10n-in-edi-demo.api.odoo.com"
 
 
 class AccountEdiFormat(models.Model):
