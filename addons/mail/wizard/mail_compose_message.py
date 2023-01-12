@@ -128,7 +128,7 @@ class MailComposer(models.TransientModel):
              "message, comment for other messages such as user replies")
     subtype_id = fields.Many2one(
         'mail.message.subtype', 'Subtype', ondelete='set null',
-        default=lambda self: self.env['ir.model.data']._xmlid_to_res_id('mail.mt_comment'))
+        compute="_compute_subtype_id", readonly=False, store=True)
     subtype_is_log = fields.Boolean('Is a log', compute='_compute_subtype_is_log')
     mail_activity_type_id = fields.Many2one('mail.activity.type', 'Mail Activity Type', ondelete='set null')
     # destination
@@ -383,6 +383,15 @@ class MailComposer(models.TransientModel):
             res_ids = composer._evaluate_res_ids()
             if composer.model and len(res_ids) == 1:
                 composer.record_name = self.env[composer.model].browse(res_ids).display_name
+
+    @api.depends('composition_mode')
+    def _compute_subtype_id(self):
+        """ Computation defaults from composition mode. Subtype is not used in
+        mass mail mode, and is comment for comment mode. """
+        comment_composers = self.filtered(lambda comp: comp.composition_mode == 'comment')
+        if comment_composers:
+            comment_composers.subtype_id = self.env['ir.model.data']._xmlid_to_res_id('mail.mt_comment')
+        (self - comment_composers).subtype_id = False
 
     @api.depends('subtype_id')
     def _compute_subtype_is_log(self):
