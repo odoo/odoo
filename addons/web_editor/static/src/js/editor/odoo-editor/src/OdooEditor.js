@@ -3185,7 +3185,7 @@ export class OdooEditor extends EventTarget {
                 }
                 if (ev.data === '`' && !closestElement(selection.anchorNode, 'code')) {
                     // We just inserted a backtick, check if there was another
-                    // one before.
+                    // one in the text.
                     const range = getDeepRange(this.editable);
                     let textNode = range.startContainer;
                     let offset = range.startOffset;
@@ -3204,16 +3204,30 @@ export class OdooEditor extends EventTarget {
                         sibling = textNode.nextSibling;
                     }
                     setSelection(textNode, offset);
-                    const textHasOpeningTick = /`.*`/.test(textNode.textContent);
-                    if (textHasOpeningTick) {
+                    const textHasTwoTicks = /`.*`/.test(textNode.textContent);
+                    if (textHasTwoTicks) {
                         this.historyStep();
-                        if (offset !== textNode.textContent.length) {
-                            splitTextNode(textNode, offset);
-                            textNode = textNode.previousSibling;
+                        const insertedBacktickIndex = offset - 1;
+                        const textBeforeInsertedBacktick = textNode.textContent.substring(0, insertedBacktickIndex - 1);
+                        let startOffset, endOffset;
+                        const isClosingForward = textBeforeInsertedBacktick.includes('`');
+                        if (isClosingForward) {
+                            // There is a backtick before the new backtick.
+                            startOffset = textBeforeInsertedBacktick.lastIndexOf('`');
+                            endOffset = insertedBacktickIndex;
+                        } else {
+                            // There is a backtick after the new backtick.
+                            const textAfterInsertedBacktick = textNode.textContent.substring(offset);
+                            startOffset = insertedBacktickIndex;
+                            endOffset = offset + textAfterInsertedBacktick.indexOf('`');
                         }
-                        const openingTickOffset = textNode.textContent.substring(0, textNode.textContent.length - 1).lastIndexOf('`');
-                        if (openingTickOffset) {
-                            splitTextNode(textNode, openingTickOffset);
+                        // Split around the backticks if needed so text starts
+                        // and ends with a backtick.
+                        if (endOffset && endOffset < textNode.textContent.length) {
+                            splitTextNode(textNode, endOffset + 1, DIRECTIONS.LEFT);
+                        }
+                        if (startOffset) {
+                            splitTextNode(textNode, startOffset);
                         }
                         // Remove ticks.
                         textNode.textContent = textNode.textContent.substring(1, textNode.textContent.length - 1);
@@ -3225,9 +3239,13 @@ export class OdooEditor extends EventTarget {
                         if (!codeElement.previousSibling || codeElement.previousSibling.nodeType !== Node.TEXT_NODE) {
                             codeElement.before(document.createTextNode('\u200B'));
                         }
-                        // Move selection out of code element.
-                        codeElement.after(document.createTextNode('\u200B'));
-                        setSelection(codeElement.nextSibling, 1);
+                        if (isClosingForward) {
+                            // Move selection out of code element.
+                            codeElement.after(document.createTextNode('\u200B'));
+                            setSelection(codeElement.nextSibling, 1);
+                        } else {
+                            setSelection(codeElement.firstChild, 0);
+                        }
                     }
                 }
                 this.historyStep();
