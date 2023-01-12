@@ -27,6 +27,9 @@
         'web.assets_qweb': [
             'pos_gift_card/static/src/xml/**/*',
         ],
+        'web.assets_tests': [
+            'pos_gift_card/static/src/js/tours/**/*',
+        ],
     },
     'license': 'LGPL-3',
 }
