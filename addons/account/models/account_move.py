@@ -1168,6 +1168,10 @@ class AccountMove(models.Model):
                             handle_price_include=False,
                         ))
                 move.tax_totals = self.env['account.tax']._prepare_tax_totals(**kwargs)
+                rounding_line = move.line_ids.filtered(lambda l: l.display_type == 'rounding')
+                if rounding_line:
+                    amount_total_rounded = move.tax_totals['amount_total'] - rounding_line.balance
+                    move.tax_totals['formatted_amount_total_rounded'] = formatLang(self.env, amount_total_rounded, currency_obj=move.currency_id) or ''
             else:
                 # Non-invoice moves don't support that field (because of multicurrency: all lines of the invoice share the same currency)
                 move.tax_totals = None
@@ -1418,7 +1422,7 @@ class AccountMove(models.Model):
     def _compute_display_qr_code(self):
         for record in self:
             record.display_qr_code = (
-                record.move_type in ('out_invoice', 'out_receipt')
+                record.move_type in ('out_invoice', 'out_receipt', 'in_invoice', 'in_receipt')
                 and record.company_id.qr_code
             )
 
@@ -3044,6 +3048,10 @@ class AccountMove(models.Model):
         if not reconciled_lines:
             return {}
 
+        self.env['account.partial.reconcile'].flush_model([
+            'credit_amount_currency', 'credit_move_id', 'debit_amount_currency',
+            'debit_move_id', 'exchange_move_id',
+        ])
         query = '''
             SELECT
                 part.id,
@@ -3080,6 +3088,7 @@ class AccountMove(models.Model):
                 exchange_move_ids.add(values['exchange_move_id'])
 
         if exchange_move_ids:
+            self.env['account.move.line'].flush_model(['move_id'])
             query = '''
                 SELECT
                     part.id,
@@ -3373,10 +3382,6 @@ class AccountMove(models.Model):
             'views': [(False, 'form')],
             'res_model': res_model,
             'res_id': res_id,
-            'context': {
-                'create': False,
-                'delete': False,
-            },
             'target': 'current',
         }
 

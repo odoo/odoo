@@ -124,6 +124,19 @@ class TestHrEmployee(TestHrCommon):
         self.assertTrue(emp_sub_sub.member_of_department)
         self.assertFalse(emp_other.member_of_department)
         self.assertFalse(emp_parent.member_of_department)
+        employees = emp + emp_sub + emp_sub_sub + emp_other + emp_parent
+        self.assertEqual(
+            employees.filtered_domain(employees._search_part_of_department('=', True)),
+            emp + emp_sub + emp_sub_sub)
+        self.assertEqual(
+            employees.filtered_domain(employees._search_part_of_department('!=', False)),
+            emp + emp_sub + emp_sub_sub)
+        self.assertEqual(
+            employees.filtered_domain(employees._search_part_of_department('=', False)),
+            emp_other + emp_parent)
+        self.assertEqual(
+            employees.filtered_domain(employees._search_part_of_department('!=', True)),
+            emp_other + emp_parent)
 
     def test_employee_create_from_user(self):
         employee = self.env['hr.employee'].create({

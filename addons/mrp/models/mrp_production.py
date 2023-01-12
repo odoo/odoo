@@ -266,7 +266,7 @@ class MrpProduction(models.Model):
         for production in self:
             production.mrp_production_backorder_count = len(production.procurement_group_id.mrp_production_ids)
 
-    @api.depends('company_id')
+    @api.depends('company_id', 'bom_id')
     def _compute_picking_type_id(self):
         domain = [
             ('code', '=', 'mrp_operation'),
@@ -275,6 +275,9 @@ class MrpProduction(models.Model):
         picking_types = self.env['stock.picking.type'].search_read(domain, ['company_id'], load=False, limit=1)
         picking_type_by_company = {pt['company_id']: pt['id'] for pt in picking_types}
         for mo in self:
+            if mo.bom_id and mo.bom_id.picking_type_id:
+                mo.picking_type_id = mo.bom_id.picking_type_id
+                continue
             if mo.picking_type_id and mo.picking_type_id.company_id == mo.company_id:
                 continue
             mo.picking_type_id = picking_type_by_company.get(mo.company_id.id, False)
@@ -1056,7 +1059,7 @@ class MrpProduction(models.Model):
                     new_qty = min(new_qty, move.reserved_availability)
 
             move.move_line_ids.filtered(lambda ml: ml.state not in ('done', 'cancel')).qty_done = 0
-            move.move_line_ids = move._set_quantity_done_prepare_vals(new_qty)
+            move._set_quantity_done(new_qty)
 
     def _update_raw_moves(self, factor):
         self.ensure_one()

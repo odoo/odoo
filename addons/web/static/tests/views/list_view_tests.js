@@ -23,6 +23,7 @@ import {
     clickOpenedDropdownItem,
     clickOpenM2ODropdown,
     clickSave,
+    drag,
     dragAndDrop,
     editInput,
     editSelect,
@@ -632,6 +633,26 @@ QUnit.module("Views", (hooks) => {
             'button.btn.btn-danger.o_yeah:contains("Danger") i.fa.fa-exclamation'
         );
         assert.containsNone(target, "button.btn.btn-link.btn-danger");
+    });
+
+    QUnit.test("list view with disabled button", async function (assert) {
+        await makeView({
+            type: "list",
+            resModel: "foo",
+            serverData,
+            arch: `
+                <tree>
+                    <button name="a" icon="fa-coffee"/>
+                    <button name="b" icon="fa-car" disabled="disabled"/>
+                </tree>`,
+        });
+
+        assert.ok(
+            Array.from(target.querySelectorAll("button[name='a']")).every((btn) => !btn.disabled)
+        );
+        assert.ok(
+            Array.from(target.querySelectorAll("button[name='b']")).every((btn) => btn.disabled)
+        );
     });
 
     QUnit.test("list view: action button in controlPanel basic rendering", async function (assert) {
@@ -14415,6 +14436,59 @@ QUnit.module("Views", (hooks) => {
         );
     });
 
+    QUnit.test("list: column: resize, reorder, resize again", async function (assert) {
+        serverData.models.foo.fields.foo.sortable = true;
+        serverData.models.foo.fields.int_field.sortable = true;
+        await makeView({
+            type: "list",
+            resModel: "foo",
+            serverData,
+            arch: `
+                <tree>
+                    <field name="foo"/>
+                    <field name="int_field"/>
+                </tree>`,
+        });
+
+        // pointer doesn't perfectly match the resized th.
+        const PIXEL_TOLERANCE = 3;
+        const assertAlmostEqual = (v1, v2) => Math.abs(v1 - v2) <= PIXEL_TOLERANCE;
+
+        // 1. Resize column foo to middle of column int_field.
+        const originalWidths = [...target.querySelectorAll(".o_list_table th")].map(
+            (th) => th.offsetWidth
+        );
+        const th2 = target.querySelector("th:nth-child(2)");
+        const th3 = target.querySelector("th:nth-child(3)");
+        const resizeHandle = th2.querySelector(".o_resize");
+
+        await dragAndDrop(resizeHandle, th3);
+
+        const widthsAfterResize = [...target.querySelectorAll(".o_list_table th")].map(
+            (th) => th.offsetWidth
+        );
+
+        assert.strictEqual(widthsAfterResize[0], originalWidths[0]);
+        assertAlmostEqual(widthsAfterResize[1], originalWidths[1] + originalWidths[2] / 2);
+
+        // 2. Reorder column foo.
+        await click(th2);
+        const widthsAfterReorder = [...target.querySelectorAll(".o_list_table th")].map(
+            (th) => th.offsetWidth
+        );
+
+        assert.strictEqual(widthsAfterResize[0], widthsAfterReorder[0]);
+        assert.strictEqual(widthsAfterResize[1], widthsAfterReorder[1]);
+
+        // 3. Resize again, this time check sizes while dragging and after drop.
+        const drop = drag(resizeHandle, th3);
+        assertAlmostEqual(th2.offsetWidth, widthsAfterReorder[1] + widthsAfterReorder[2] / 2);
+
+        drop();
+        await nextTick();
+        assertAlmostEqual(th2.offsetWidth, widthsAfterReorder[1] + widthsAfterReorder[2] / 2);
+    });
+
     QUnit.test("editable list: resize column headers", async function (assert) {
         await makeView({
             type: "list",
@@ -14905,7 +14979,8 @@ QUnit.module("Views", (hooks) => {
 
         await click(target.querySelector(".o_data_cell"));
         await editInput(target, '.o_data_cell [name="foo"] input', "");
-        await doAction(webClient, 2);
+        doAction(webClient, 2);
+        await nextTick();
         assert.deepEqual(
             [...target.querySelectorAll(".o_data_cell")].map((el) => el.textContent),
             ["", "blip", "gnap", "blip"]
@@ -16126,5 +16201,32 @@ QUnit.module("Views", (hooks) => {
         await click(target, ".o_data_row:nth-child(1) td.o_list_many2one");
         await click(target, ".o_field_many2one_selection .o-autocomplete--input");
         assert.verifySteps(["name_search"]);
+    });
+
+    QUnit.test("ungrouped list, apply filter, decrease limit", async function (assert) {
+        await makeView({
+            type: "list",
+            resModel: "foo",
+            serverData,
+            arch: `<tree limit="4"><field name="foo"/></tree>`,
+            searchViewArch: `
+                <search>
+                    <filter name="my_filter" string="My Filter" domain="[('id', '>', 1)]"/>
+                </search>`,
+        });
+
+        assert.containsN(target, ".o_data_row", 4);
+
+        // apply the filter to trigger a reload of datapoints
+        await toggleFilterMenu(target);
+        await toggleMenuItem(target, "My Filter");
+
+        assert.containsN(target, ".o_data_row", 3);
+
+        // edit the pager with a smaller limit
+        await click(target.querySelector(".o_pager_value"));
+        await editInput(target, ".o_pager_value", "1-2");
+
+        assert.containsN(target, ".o_data_row", 2);
     });
 });

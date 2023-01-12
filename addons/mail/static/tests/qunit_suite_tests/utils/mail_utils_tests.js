@@ -34,6 +34,37 @@ QUnit.test('add_link utility function', function (assert) {
     });
 });
 
+QUnit.test('addLink: utility function and special entities', function (assert) {
+    assert.expect(8);
+
+    var testInputs = {
+        // textContent not unescaped
+        '<p>https://example.com/?&amp;currency_id</p>':
+        '<p><a target="_blank" rel="noreferrer noopener" href="https://example.com/?&amp;currency_id">https://example.com/?&amp;currency_id</a></p>',
+        // entities not unescaped
+        '&amp; &amp;amp; &gt; &lt;': '&amp; &amp;amp; &gt; &lt;',
+        // > and " not linkified since they are not in URL regex
+        '<p>https://example.com/&gt;</p>':
+        '<p><a target="_blank" rel="noreferrer noopener" href="https://example.com/">https://example.com/</a>&gt;</p>',
+        '<p>https://example.com/"hello"&gt;</p>':
+        '<p><a target="_blank" rel="noreferrer noopener" href="https://example.com/">https://example.com/</a>"hello"&gt;</p>',
+        // & and ' linkified since they are in URL regex
+        '<p>https://example.com/&amp;hello</p>':
+        '<p><a target="_blank" rel="noreferrer noopener" href="https://example.com/&amp;hello">https://example.com/&amp;hello</a></p>',
+        '<p>https://example.com/\'yeah\'</p>':
+        '<p><a target="_blank" rel="noreferrer noopener" href="https://example.com/\'yeah\'">https://example.com/\'yeah\'</a></p>',
+        // normal character should not be escaped
+        ':\'(': ':\'(',
+        // special character in smileys should be escaped
+        '&lt;3': '&lt;3',
+    };
+
+    _.each(testInputs, function (result, content) {
+        var output = utils.parseAndTransform(content, utils.addLink);
+        assert.strictEqual(output, result);
+    });
+});
+
 QUnit.test('addLink: linkify inside text node (1 occurrence)', function (assert) {
     assert.expect(5);
 

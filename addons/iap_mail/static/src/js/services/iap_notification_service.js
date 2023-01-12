@@ -18,6 +18,7 @@ export const iapNotificationService = {
                 }
             }
         });
+        bus_service.start();
 
         /**
          * Displays the IAP success notification on user's screen

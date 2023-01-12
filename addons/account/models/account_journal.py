@@ -85,7 +85,7 @@ class AccountJournal(models.Model):
         comodel_name='account.account', check_company=True, copy=False, ondelete='restrict',
         string='Default Account',
         domain="[('deprecated', '=', False), ('company_id', '=', company_id),"
-               "'|', ('account_type', '=', default_account_type), ('account_type', 'not in', ('asset_receivable', 'liability_payable'))]")
+               "('account_type', '=', default_account_type), ('account_type', 'not in', ('asset_receivable', 'liability_payable'))]")
     suspense_account_id = fields.Many2one(
         comodel_name='account.account', check_company=True, ondelete='restrict', readonly=False, store=True,
         compute='_compute_suspense_account_id',
@@ -699,7 +699,6 @@ class AccountJournal(models.Model):
         invoices = self.env['account.move']
         with invoices._disable_discount_precision():
             for attachment in attachments:
-                attachment.write({'res_model': 'mail.compose.message'})
                 decoders = self.env['account.move']._get_create_document_from_attachment_decoders()
                 invoice = False
                 for decoder in sorted(decoders, key=lambda d: d[0]):
@@ -709,6 +708,7 @@ class AccountJournal(models.Model):
                 if not invoice:
                     invoice = self.env['account.move'].create({})
                 invoice.with_context(no_new_invoice=True).message_post(attachment_ids=[attachment.id])
+                attachment.write({'res_model': 'account.move', 'res_id': invoice.id})
                 invoices += invoice
         return invoices
 

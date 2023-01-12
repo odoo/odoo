@@ -21,140 +21,6 @@
 
     var owl__namespace = /*#__PURE__*/_interopNamespace(owl);
 
-    /**
-     * Registry
-     *
-     * The Registry class is basically just a mapping from a string key to an object.
-     * It is really not much more than an object. It is however useful for the
-     * following reasons:
-     *
-     * 1. it let us react and execute code when someone add something to the registry
-     *   (for example, the FunctionRegistry subclass this for this purpose)
-     * 2. it throws an error when the get operation fails
-     * 3. it provides a chained API to add items to the registry.
-     */
-    class Registry {
-        constructor() {
-            this.content = {};
-        }
-        /**
-         * Add an item to the registry
-         *
-         * Note that this also returns the registry, so another add method call can
-         * be chained
-         */
-        add(key, value) {
-            this.content[key] = value;
-            return this;
-        }
-        /**
-         * Get an item from the registry
-         */
-        get(key) {
-            /**
-             * Note: key in {} is ~12 times slower than {}[key].
-             * So, we check the absence of key only when the direct access returns
-             * a falsy value. It's done to ensure that the registry can contains falsy values
-             */
-            const content = this.content[key];
-            if (!content) {
-                if (!(key in this.content)) {
-                    throw new Error(`Cannot find ${key} in this registry!`);
-                }
-            }
-            return content;
-        }
-        /**
-         * Check if the key is already in the registry
-         */
-        contains(key) {
-            return key in this.content;
-        }
-        /**
-         * Get a list of all elements in the registry
-         */
-        getAll() {
-            return Object.values(this.content);
-        }
-        /**
-         * Get a list of all keys in the registry
-         */
-        getKeys() {
-            return Object.keys(this.content);
-        }
-        /**
-         * Remove an item from the registry
-         */
-        remove(key) {
-            delete this.content[key];
-        }
-    }
-
-    /**
-     * This registry is intended to map a cell content (raw string) to
-     * an instance of a cell.
-     */
-    const chartRegistry = new Registry();
-    const chartComponentRegistry = new Registry();
-
-    class ChartJsComponent extends owl.Component {
-        constructor() {
-            super(...arguments);
-            this.canvas = owl.useRef("graphContainer");
-        }
-        get background() {
-            return this.chartRuntime.background;
-        }
-        get canvasStyle() {
-            return `background-color: ${this.background}`;
-        }
-        get chartRuntime() {
-            const runtime = this.env.model.getters.getChartRuntime(this.props.figure.id);
-            if (!("chartJsConfig" in runtime)) {
-                throw new Error("Unsupported chart runtime");
-            }
-            return runtime;
-        }
-        setup() {
-            owl.onMounted(() => {
-                const runtime = this.chartRuntime;
-                this.createChart(runtime.chartJsConfig);
-            });
-            owl.onPatched(() => {
-                var _a, _b, _c, _d;
-                const chartData = this.chartRuntime.chartJsConfig;
-                if (chartData.data && chartData.data.datasets) {
-                    this.chart.data = chartData.data;
-                    if ((_a = chartData.options) === null || _a === void 0 ? void 0 : _a.title) {
-                        this.chart.config.options.title = chartData.options.title;
-                    }
-                    if (chartData.options && "valueLabel" in chartData.options) {
-                        if ((_b = chartData.options) === null || _b === void 0 ? void 0 : _b.valueLabel) {
-                            this.chart.config.options.valueLabel =
-                                chartData.options.valueLabel;
-                        }
-                    }
-                }
-                else {
-                    this.chart.data.datasets = undefined;
-                }
-                this.chart.config.options.legend = (_c = chartData.options) === null || _c === void 0 ? void 0 : _c.legend;
-                this.chart.config.options.scales = (_d = chartData.options) === null || _d === void 0 ? void 0 : _d.scales;
-                this.chart.update({ duration: 0 });
-            });
-        }
-        createChart(chartData) {
-            const canvas = this.canvas.el;
-            const ctx = canvas.getContext("2d");
-            this.chart = new window.Chart(ctx, chartData);
-        }
-    }
-    ChartJsComponent.template = "o-spreadsheet-ChartJsComponent";
-    chartComponentRegistry.add("line", ChartJsComponent);
-    chartComponentRegistry.add("bar", ChartJsComponent);
-    chartComponentRegistry.add("pie", ChartJsComponent);
-    chartComponentRegistry.add("gauge", ChartJsComponent);
-
     /*
      * usage: every string should be translated either with _lt if they are registered with a registry at
      *  the load of the app or with Spreadsheet._t in the templates. Spreadsheet._t is exposed in the
@@ -2851,6 +2717,149 @@
         }
         return set;
     }
+
+    /**
+     * Registry
+     *
+     * The Registry class is basically just a mapping from a string key to an object.
+     * It is really not much more than an object. It is however useful for the
+     * following reasons:
+     *
+     * 1. it let us react and execute code when someone add something to the registry
+     *   (for example, the FunctionRegistry subclass this for this purpose)
+     * 2. it throws an error when the get operation fails
+     * 3. it provides a chained API to add items to the registry.
+     */
+    class Registry {
+        constructor() {
+            this.content = {};
+        }
+        /**
+         * Add an item to the registry
+         *
+         * Note that this also returns the registry, so another add method call can
+         * be chained
+         */
+        add(key, value) {
+            this.content[key] = value;
+            return this;
+        }
+        /**
+         * Get an item from the registry
+         */
+        get(key) {
+            /**
+             * Note: key in {} is ~12 times slower than {}[key].
+             * So, we check the absence of key only when the direct access returns
+             * a falsy value. It's done to ensure that the registry can contains falsy values
+             */
+            const content = this.content[key];
+            if (!content) {
+                if (!(key in this.content)) {
+                    throw new Error(`Cannot find ${key} in this registry!`);
+                }
+            }
+            return content;
+        }
+        /**
+         * Check if the key is already in the registry
+         */
+        contains(key) {
+            return key in this.content;
+        }
+        /**
+         * Get a list of all elements in the registry
+         */
+        getAll() {
+            return Object.values(this.content);
+        }
+        /**
+         * Get a list of all keys in the registry
+         */
+        getKeys() {
+            return Object.keys(this.content);
+        }
+        /**
+         * Remove an item from the registry
+         */
+        remove(key) {
+            delete this.content[key];
+        }
+    }
+
+    /**
+     * This registry is intended to map a cell content (raw string) to
+     * an instance of a cell.
+     */
+    const chartRegistry = new Registry();
+    const chartComponentRegistry = new Registry();
+
+    class ChartJsComponent extends owl.Component {
+        constructor() {
+            super(...arguments);
+            this.canvas = owl.useRef("graphContainer");
+        }
+        get background() {
+            return this.chartRuntime.background;
+        }
+        get canvasStyle() {
+            return `background-color: ${this.background}`;
+        }
+        get chartRuntime() {
+            const runtime = this.env.model.getters.getChartRuntime(this.props.figure.id);
+            if (!("chartJsConfig" in runtime)) {
+                throw new Error("Unsupported chart runtime");
+            }
+            return runtime;
+        }
+        setup() {
+            owl.onMounted(() => {
+                const runtime = this.chartRuntime;
+                this.createChart(runtime.chartJsConfig);
+            });
+            let previousRuntime = this.chartRuntime;
+            owl.onPatched(() => {
+                const chartRuntime = this.chartRuntime;
+                if (deepEquals(previousRuntime, chartRuntime)) {
+                    return;
+                }
+                this.updateChartJs(chartRuntime);
+                previousRuntime = chartRuntime;
+            });
+        }
+        createChart(chartData) {
+            const canvas = this.canvas.el;
+            const ctx = canvas.getContext("2d");
+            this.chart = new window.Chart(ctx, chartData);
+        }
+        updateChartJs(chartRuntime) {
+            var _a, _b, _c, _d;
+            const chartData = chartRuntime.chartJsConfig;
+            if (chartData.data && chartData.data.datasets) {
+                this.chart.data = chartData.data;
+                if ((_a = chartData.options) === null || _a === void 0 ? void 0 : _a.title) {
+                    this.chart.config.options.title = chartData.options.title;
+                }
+                if (chartData.options && "valueLabel" in chartData.options) {
+                    if ((_b = chartData.options) === null || _b === void 0 ? void 0 : _b.valueLabel) {
+                        this.chart.config.options.valueLabel =
+                            chartData.options.valueLabel;
+                    }
+                }
+            }
+            else {
+                this.chart.data.datasets = undefined;
+            }
+            this.chart.config.options.legend = (_c = chartData.options) === null || _c === void 0 ? void 0 : _c.legend;
+            this.chart.config.options.scales = (_d = chartData.options) === null || _d === void 0 ? void 0 : _d.scales;
+            this.chart.update({ duration: 0 });
+        }
+    }
+    ChartJsComponent.template = "o-spreadsheet-ChartJsComponent";
+    chartComponentRegistry.add("line", ChartJsComponent);
+    chartComponentRegistry.add("bar", ChartJsComponent);
+    chartComponentRegistry.add("pie", ChartJsComponent);
+    chartComponentRegistry.add("gauge", ChartJsComponent);
 
     /**
      * An AutofillModifierImplementation is used to describe how to handle a
@@ -19267,7 +19276,9 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
             const zone = positionToZone({ col: this.col, row: this.row });
             this.selection.capture(this, { cell: { col: this.col, row: this.row }, zone }, {
                 handleEvent: this.handleEvent.bind(this),
-                release: () => (this.mode = "inactive"),
+                release: () => {
+                    this.stopEdition();
+                },
             });
         }
         stopEdition() {
@@ -21201,6 +21212,9 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
                 this.startMovement(ev);
                 return;
             }
+            if (this.env.model.getters.getEditionMode() === "editing") {
+                this.env.model.selection.getBackToDefault();
+            }
             this.startSelection(ev, index);
         }
         startMovement(ev) {
@@ -22399,8 +22413,7 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
             const lastZone = zones[zones.length - 1];
             let type = "CELL";
             if (!isInside(col, row, lastZone)) {
-                this.env.model.dispatch("UNFOCUS_SELECTION_INPUT");
-                this.env.model.dispatch("STOP_EDITION");
+                this.env.model.selection.getBackToDefault();
                 this.env.model.selection.selectCell(col, row);
             }
             else {
@@ -32502,19 +32515,14 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
             let filterBorder = undefined;
             for (let filters of this.getters.getFilterTables(sheetId)) {
                 const zone = filters.zone;
-                // The borders should be at the edges of the visible zone of the filter
-                const colsRange = range(zone.left, zone.right + 1);
-                const rowsRange = range(zone.top, zone.bottom + 1);
-                const visibleLeft = this.getters.findVisibleHeader(sheetId, "COL", colsRange);
-                const visibleRight = this.getters.findVisibleHeader(sheetId, "COL", colsRange.reverse());
-                const visibleTop = this.getters.findVisibleHeader(sheetId, "ROW", rowsRange);
-                const visibleBottom = this.getters.findVisibleHeader(sheetId, "ROW", rowsRange.reverse());
                 if (isInside(col, row, zone)) {
+                    // The borders should be at the edges of the visible zone of the filter
+                    const visibleZone = this.intersectZoneWithViewport(sheetId, zone);
                     filterBorder = {
-                        top: row === visibleTop ? DEFAULT_FILTER_BORDER_DESC : undefined,
-                        bottom: row === visibleBottom ? DEFAULT_FILTER_BORDER_DESC : undefined,
-                        left: col === visibleLeft ? DEFAULT_FILTER_BORDER_DESC : undefined,
-                        right: col === visibleRight ? DEFAULT_FILTER_BORDER_DESC : undefined,
+                        top: row === visibleZone.top ? DEFAULT_FILTER_BORDER_DESC : undefined,
+                        bottom: row === visibleZone.bottom ? DEFAULT_FILTER_BORDER_DESC : undefined,
+                        left: col === visibleZone.left ? DEFAULT_FILTER_BORDER_DESC : undefined,
+                        right: col === visibleZone.right ? DEFAULT_FILTER_BORDER_DESC : undefined,
                     };
                 }
             }
@@ -32554,6 +32562,16 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
             var _a, _b;
             const id = this.getters.getFilterId(sheetId, col, row);
             return Boolean(id && ((_b = (_a = this.filterValues[sheetId]) === null || _a === void 0 ? void 0 : _a[id]) === null || _b === void 0 ? void 0 : _b.length));
+        }
+        intersectZoneWithViewport(sheetId, zone) {
+            const colsRange = range(zone.left, zone.right + 1);
+            const rowsRange = range(zone.top, zone.bottom + 1);
+            return {
+                left: this.getters.findVisibleHeader(sheetId, "COL", colsRange),
+                right: this.getters.findVisibleHeader(sheetId, "COL", colsRange.reverse()),
+                top: this.getters.findVisibleHeader(sheetId, "ROW", rowsRange),
+                bottom: this.getters.findVisibleHeader(sheetId, "ROW", rowsRange.reverse()),
+            };
         }
         updateFilter({ col, row, values, sheetId }) {
             const id = this.getters.getFilterId(sheetId, col, row);
@@ -39384,7 +39402,7 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
             let sheetName = "";
             let prefixSheet = false;
             if (sheetXC.includes("!")) {
-                [sheetName, sheetXC] = sheetXC.split("!");
+                [sheetXC, sheetName] = sheetXC.split("!").reverse();
                 if (sheetName) {
                     prefixSheet = true;
                 }
@@ -39591,6 +39609,17 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
             this.mainSubscription = this.defaultSubscription;
         }
         /**
+         * Release whichever subscription in charge and get back to the default subscription
+         */
+        getBackToDefault() {
+            var _a, _b, _c;
+            if (this.mainSubscription === this.defaultSubscription) {
+                return;
+            }
+            (_c = (_a = this.mainSubscription) === null || _a === void 0 ? void 0 : (_b = _a.callbacks).release) === null || _c === void 0 ? void 0 : _c.call(_b);
+            this.mainSubscription = this.defaultSubscription;
+        }
+        /**
          * Check if you are currently the main stream consumer
          */
         isListening(owner) {
@@ -39652,6 +39681,9 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
                 this.stream.release(owner);
                 this.anchor = this.defaultAnchor;
             }
+        }
+        getBackToDefault() {
+            this.stream.getBackToDefault();
         }
         /**
          * Select a new anchor
@@ -42100,8 +42132,8 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
     Object.defineProperty(exports, '__esModule', { value: true });
 
     exports.__info__.version = '2.0.0';
-    exports.__info__.date = '2022-12-22T13:54:13.937Z';
-    exports.__info__.hash = 'd2940f6';
+    exports.__info__.date = '2023-01-04T17:30:44.594Z';
+    exports.__info__.hash = 'bcf70ba';
 
 })(this.o_spreadsheet = this.o_spreadsheet || {}, owl);
 //# sourceMappingURL=o_spreadsheet.js.map

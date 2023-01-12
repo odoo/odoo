@@ -128,6 +128,32 @@ QUnit.module("spreadsheet > Metadata Repository", {}, () => {
     });
 
     QUnit.test(
+        "Assigning a result after triggering the request should not crash",
+        async function (assert) {
+            const orm = {
+                silent: {
+                    call: async (model, method, args) => {
+                        const ids = args[0];
+                        assert.step(`${method}-${model}-[${ids.join(",")}]`);
+                        return ids.map((id) => [id, id.toString()]);
+                    },
+                },
+            };
+
+            const metadataRepository = new MetadataRepository(orm);
+
+            assert.throws(() => metadataRepository.getRecordDisplayName("A", 1));
+            assert.verifySteps([]);
+            metadataRepository.setDisplayName("A", 1, "test");
+            assert.strictEqual(metadataRepository.getRecordDisplayName("A", 1), "test");
+
+            await nextTick();
+            assert.verifySteps(["name_get-A-[1]"]);
+            assert.strictEqual(metadataRepository.getRecordDisplayName("A", 1), "1");
+        }
+    );
+
+    QUnit.test(
         "Name_get will retry with one id by request in case of failure",
         async function (assert) {
             const orm = {

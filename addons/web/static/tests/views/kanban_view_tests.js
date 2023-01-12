@@ -41,6 +41,7 @@ import { DynamicRecordList } from "@web/views/relational_model";
 import { ViewButton } from "@web/views/view_button/view_button";
 
 import { Component, onWillRender, xml } from "@odoo/owl";
+import { SampleServer } from "@web/views/sample_server";
 
 const serviceRegistry = registry.category("services");
 const viewWidgetRegistry = registry.category("view_widgets");
@@ -7953,7 +7954,7 @@ QUnit.module("Views", (hooks) => {
             3,
             "there should now be 3 records in the column"
         );
-        assert.verifySteps(["2 - 0", "2 - 0", "2 - 2"], "the records should be correctly fetched");
+        assert.verifySteps(["2 - 0", "2 - 0", "4 - 0"], "the records should be correctly fetched");
         assert.deepEqual(getCardTexts(1), ["1", "2", "3"]);
 
         // reload
@@ -7966,12 +7967,10 @@ QUnit.module("Views", (hooks) => {
             "there should still be 3 records in the column after reload"
         );
         assert.deepEqual(getCardTexts(1), ["1", "2", "3"]);
-        assert.verifySteps(["2 - 0", "3 - 0"]);
+        assert.verifySteps(["2 - 0", "4 - 0"]);
     });
 
     QUnit.test("load more records in column with x2many", async (assert) => {
-        assert.expect(10);
-
         serverData.models.partner.records[0].category_ids = [7];
         serverData.models.partner.records[1].category_ids = [];
         serverData.models.partner.records[2].category_ids = [6];
@@ -7995,28 +7994,22 @@ QUnit.module("Views", (hooks) => {
             limit: 2,
             async mockRPC(_route, { args, kwargs, model, method }) {
                 if (model === "category" && method === "read") {
-                    assert.step(String(args[0]));
+                    assert.step(`read ${String(args[0])}`);
                 } else if (method === "web_search_read") {
-                    const { limit, offset } = kwargs;
-                    if (limit) {
-                        assert.strictEqual(limit, 2);
-                    }
-                    if (offset) {
-                        assert.strictEqual(offset, 2);
-                    }
+                    assert.step(`web_search_read ${kwargs.limit}-${kwargs.offset}`);
                 }
             },
         });
 
         assert.containsN(getColumn(1), ".o_kanban_record", 2);
 
-        assert.verifySteps(["7"], "only the appearing category should be fetched");
+        assert.verifySteps(["web_search_read 2-0", "web_search_read 2-0", "read 7"]);
 
         // load more
         await loadMore(1);
 
         assert.containsN(getColumn(1), ".o_kanban_record", 3);
-        assert.verifySteps(["6"], "the other categories should not be fetched");
+        assert.verifySteps(["web_search_read 4-0", "read 7,6"]);
     });
 
     QUnit.test("update buttons after column creation", async (assert) => {
@@ -12242,4 +12235,65 @@ QUnit.module("Views", (hooks) => {
             );
         }
     );
+
+    QUnit.test("sample server: _mockWebReadGroup API", async (assert) => {
+        serverData.models.partner.records = [];
+
+        patchWithCleanup(SampleServer.prototype, {
+            async _mockWebReadGroup() {
+                const result = await this._super(...arguments);
+                const { "date:month": dateValue } = result.groups[0];
+                assert.strictEqual(dateValue, "December 2022");
+                return result;
+            },
+        });
+
+        await makeView({
+            arch: `
+                <kanban sample="1">
+                    <templates>
+                        <div t-name="kanban-box">
+                            <field name="display_name"/>
+                        </div>
+                    </templates>
+                </kanban>`,
+            serverData,
+            groupBy: ["date:month"],
+            resModel: "partner",
+            type: "kanban",
+            noContentHelp: "No content helper",
+            mockRPC(_, args) {
+                if (args.method === "web_read_group") {
+                    return {
+                        groups: [
+                            {
+                                date_count: 0,
+                                state: false,
+                                "date:month": "December 2022",
+                                __range: {
+                                    "date:month": {
+                                        from: "2022-12-01",
+                                        to: "2023-01-01",
+                                    },
+                                },
+                                __domain: [
+                                    ["date", ">=", "2022-12-01"],
+                                    ["date", "<", "2023-01-01"],
+                                ],
+                            },
+                        ],
+                        length: 1,
+                    };
+                }
+            },
+        });
+
+        assert.containsOnce(target, ".o_kanban_view .o_view_sample_data");
+        assert.containsOnce(target, ".o_kanban_group");
+        assert.strictEqual(
+            target.querySelector(".o_kanban_group .o_column_title").textContent,
+            "December 2022"
+        );
+        assert.containsN(target, ".o_kanban_group .o_kanban_record", 16);
+    });
 });

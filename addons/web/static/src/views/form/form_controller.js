@@ -180,7 +180,9 @@ export class FormController extends Component {
         this.fieldsToTranslate = useState(fieldsToTranslate || {});
         const activeNotebookPages = { ...state.activeNotebookPages };
         this.onNotebookPageChange = (notebookId, page) => {
-            activeNotebookPages[notebookId] = page;
+            if (page) {
+                activeNotebookPages[notebookId] = page;
+            }
         };
 
         useSetupView({

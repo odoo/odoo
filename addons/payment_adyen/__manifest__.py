@@ -20,7 +20,6 @@
     'assets': {
         'web.assets_frontend': [
             'payment_adyen/static/src/js/payment_form.js',
-            'payment_adyen/static/src/scss/dropin.scss',
         ],
     },
     'license': 'LGPL-3',

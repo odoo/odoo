@@ -752,6 +752,7 @@
                                     <field name="product_id"/>
                                     <field name="name"/>
                                     <field name="description" optional="hide"/>
+                                    <field name="employee_id" invisible="1"/>
                                     <field name="state" invisible="1"/>
                                     <field name="attachment_number" invisible="1"/>
                                     <button name="action_get_attachment_view" type="object" icon="fa-paperclip" aria-label="View Attachments" title="View Attachments" class="float-end pe-0" readonly="True" attrs="{'invisible': [('attachment_number', '=', 0)]}"/>

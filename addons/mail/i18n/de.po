@@ -5,9 +5,11 @@
 # Translators:
 # Wolfgang Taferner, 2022
 # Friederike Fasterling-Nesselbosch, 2022
-# Michael Hofer, 2022
 # Chris Egal <sodaswed@web.de>, 2022
 # Martin Trigaux, 2022
+# Mr Tob, 2022
+# Michael Hofer, 2022
+# Thomas, 2023
 # 
 msgid ""
 msgstr ""
@@ -15,7 +17,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-10-10 10:22+0000\n"
 "PO-Revision-Date: 2022-09-22 05:53+0000\n"
-"Last-Translator: Martin Trigaux, 2022\n"
+"Last-Translator: Thomas, 2023\n"
 "Language-Team: German (https://www.transifex.com/odoo/teams/41243/de/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -39,6 +41,8 @@ msgid ""
 "            </p>\n"
 "        "
 msgstr ""
+"\n"
+"<p class=\"o_view_nocontent_smiling_face\">Hinzufügen von Adressen zur Berechtigungsliste</p><p>  Um Sie vor Spam und Antwortschleifen zu schützen, blockiert Odoo automatisch E-Mails E-Mails, die an Ihrem Gateway ankommen, ab einer bestimmten Anzahl von E-Mails %ipro Minuten%i. Wenn es Adressen gibt, von denen Sie sehr häufig Nachrichten erhalten möchten, können Sie diese unten hinzufügen, und Odoo wird sie dann weiterleiten.</p>"
 
 #. module: mail
 #. odoo-python
@@ -66,7 +70,7 @@ msgstr "\"%s\" erfordert Zugang zum Mikrofon"
 #: code:addons/mail/static/src/models/channel_member_list_category_view.js:0
 #, python-format
 msgid "%(categoryText)s - %(memberCount)s"
-msgstr ""
+msgstr "%(categoryText)s - %(memberCount)s"
 
 #. module: mail
 #. odoo-python
@@ -84,7 +88,7 @@ msgstr ""
 #: code:addons/mail/static/src/models/notification_request_view.js:0
 #, python-format
 msgid "%(odoobotName)s has a request"
-msgstr ""
+msgstr "%(odoobotName)shat ein Anliegen"
 
 #. module: mail
 #. odoo-python
@@ -107,7 +111,7 @@ msgstr "%(user_name)s hat Sie eingeladen ein neues Dokument zu beobachten."
 #: code:addons/mail/models/ir_mail_server.py:0
 #, python-format
 msgid "%s (Email Template)"
-msgstr ""
+msgstr "%s(E-Mail-Vorlage)"
 
 #. module: mail
 #. odoo-python
@@ -121,14 +125,14 @@ msgstr "%s (Kopie)"
 #: code:addons/mail/static/src/models/messaging_notification_handler.js:0
 #, python-format
 msgid "%s Message"
-msgstr ""
+msgstr "%s Nachricht"
 
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/models/messaging_notification_handler.js:0
 #, python-format
 msgid "%s Messages"
-msgstr ""
+msgstr "%sNachrichten"
 
 #. module: mail
 #. odoo-javascript
@@ -164,14 +168,14 @@ msgstr "%s erstellt"
 #: code:addons/mail/static/src/models/activity_list_view_item.js:0
 #, python-format
 msgid "%s days overdue"
-msgstr ""
+msgstr "%s überfällige Tage"
 
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/models/activity_view.js:0
 #, python-format
 msgid "%s days overdue:"
-msgstr ""
+msgstr "%s Tage überfällig:"
 
 #. module: mail
 #. odoo-javascript
@@ -800,7 +804,7 @@ msgstr "<span class=\"o_form_label\">Benutzerdefinierte ICE-Server-Liste</span>"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.res_config_settings_view_form
 msgid "<span class=\"o_form_label\">Email Templates</span>"
-msgstr ""
+msgstr "<span class=\"o_form_label\">E-Mail Vorlagen</span>"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.email_template_form
@@ -827,6 +831,9 @@ msgid ""
 "'=', False), ('composition_mode', '=', 'mass_mail')]}\">Followers of the "
 "document and</span>"
 msgstr ""
+"<span name=\"document_followers_text\" attrs=\"{'invisible':['|', ('model', "
+"'=', False), ('composition_mode', '=', 'mass_mail')]}\">Abonnenten des "
+"Dokuments und</span>"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.res_config_settings_view_form
@@ -1854,7 +1861,7 @@ msgstr ""
 #: code:addons/mail/static/src/models_data/emoji_data.js:0
 #, python-format
 msgid "Blu-ray"
-msgstr ""
+msgstr "Blu-ray"
 
 #. module: mail
 #. odoo-javascript
@@ -2782,7 +2789,7 @@ msgstr ""
 #: code:addons/mail/static/src/models_data/emoji_data.js:0
 #, python-format
 msgid "DVD"
-msgstr ""
+msgstr "DVD"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_mail__date
@@ -3555,7 +3562,7 @@ msgstr "Aktivieren der Auftragsverfolgung"
 #: code:addons/mail/static/src/components/call_settings_menu/call_settings_menu.xml:0
 #, python-format
 msgid "Enable Push-to-talk"
-msgstr ""
+msgstr "Push-to-talk aktivieren"
 
 #. module: mail
 #. odoo-javascript
@@ -4061,7 +4068,7 @@ msgstr ""
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.res_config_settings_view_form
 msgid "Gmail Credentials"
-msgstr ""
+msgstr "G-Mail Zugangsdaten"
 
 #. module: mail
 #. odoo-python
@@ -4213,7 +4220,7 @@ msgstr "hat einen Fehler"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_res_config_settings__primary_color
 msgid "Header Color"
-msgstr "Überfschriftsfarbe"
+msgstr "Überschriftsfarbe"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_mail__headers
@@ -4755,7 +4762,7 @@ msgstr "Einladungs-Link"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_channel__invitation_url
 msgid "Invitation URL"
-msgstr ""
+msgstr "Einladungs-Link"
 
 #. module: mail
 #. odoo-python
@@ -8898,7 +8905,7 @@ msgstr ""
 #: code:addons/mail/static/src/models_data/emoji_data.js:0
 #, python-format
 msgid "T-shirt"
-msgstr ""
+msgstr "T-Shirt"
 
 #. module: mail
 #. odoo-javascript
@@ -8992,7 +8999,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:mail.field_mail_template__template_fs
 #: model:ir.model.fields,field_description:mail.field_template_reset_mixin__template_fs
 msgid "Template Filename"
-msgstr ""
+msgstr "Dateiname der Vorlage"
 
 #. module: mail
 #: model:ir.actions.act_window,name:mail.mail_template_preview_action
@@ -9012,7 +9019,7 @@ msgstr ""
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_template__description
 msgid "Template description"
-msgstr ""
+msgstr "Beschreibung der Vorlage"
 
 #. module: mail
 #. odoo-python
@@ -10040,7 +10047,7 @@ msgstr ""
 #: code:addons/mail/static/src/models_data/emoji_data.js:0
 #, python-format
 msgid "VHS"
-msgstr ""
+msgstr "VHS"
 
 #. module: mail
 #. odoo-javascript
@@ -10256,7 +10263,7 @@ msgstr "Falscher Vorgangsname (%s)"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.view_mail_form
 msgid "YYYY-MM-DD HH:MM:SS"
-msgstr ""
+msgstr "DD.MM.YYYY HH:MM:SS"
 
 #. module: mail
 #. odoo-javascript
@@ -10414,7 +10421,7 @@ msgstr ""
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.view_mail_form
 msgid "You do not have access to"
-msgstr ""
+msgstr "Sie haben keinen Zugriff auf"
 
 #. module: mail
 #. odoo-python
@@ -10784,7 +10791,7 @@ msgstr ""
 #: code:addons/mail/static/src/models_data/emoji_data.js:0
 #, python-format
 msgid "airplane"
-msgstr ""
+msgstr "Flugzeug"
 
 #. module: mail
 #. odoo-javascript
@@ -10997,7 +11004,7 @@ msgstr ""
 #: code:addons/mail/static/src/models_data/emoji_data.js:0
 #, python-format
 msgid "ant"
-msgstr ""
+msgstr "Ameise"
 
 #. module: mail
 #. odoo-javascript
@@ -11020,7 +11027,7 @@ msgstr ""
 #: code:addons/mail/static/src/models_data/emoji_data.js:0
 #, python-format
 msgid "anticlockwise"
-msgstr ""
+msgstr "Gegen den Uhrzeigersinn"
 
 #. module: mail
 #. odoo-javascript
@@ -11042,7 +11049,7 @@ msgstr ""
 #: code:addons/mail/static/src/models_data/emoji_data.js:0
 #, python-format
 msgid "ape"
-msgstr ""
+msgstr "Affe"
 
 #. module: mail
 #. odoo-javascript
@@ -11059,7 +11066,7 @@ msgstr ""
 #: code:addons/mail/static/src/models_data/emoji_data.js:0
 #, python-format
 msgid "apple"
-msgstr ""
+msgstr "Apfel"
 
 #. module: mail
 #. odoo-javascript
@@ -11148,7 +11155,7 @@ msgstr ""
 #: code:addons/mail/static/src/models_data/emoji_data.js:0
 #, python-format
 msgid "arrow"
-msgstr ""
+msgstr "Pfeil"
 
 #. module: mail
 #. odoo-javascript

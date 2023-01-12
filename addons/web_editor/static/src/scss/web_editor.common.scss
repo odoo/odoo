@@ -77,6 +77,7 @@
     @include print-variable('o-md-container-max-width', map-get($container-max-widths, md));
     @include print-variable('o-we-content-to-translate-color', $o-we-content-to-translate-color);
     @include print-variable('o-we-translated-content-color', $o-we-translated-content-color);
+    @include print-variable('o-system-fonts', $o-system-fonts);
 }
 
 html, body {
@@ -891,10 +892,11 @@ section, .oe_img_bg, [data-oe-shape-data] {
     -webkit-text-fill-color: transparent;
 
     // FIXME (or wait for a fix in Chrome): the code below is needed to make
-    // animated text work with gradient background on Chrome. But the side
-    // effect is that text node wrapping by a span (e.g. bold, italic) no longer
-    // have the "gradient crossing all the text" on it but its own gradient.
-    * {
+    // animated text work with gradient background on Chrome. It is not based
+    // on ".text-gradient *" only to avoid a side effect that makes text nodes
+    // wrapped in a span (e.g. bold, italic) no longer have the "gradient
+    // crossing the whole text" on them but their own gradient.
+    .o_animated_text, .o_animated_text *, &.o_animated_text * {
         background-image: inherit;
         -webkit-background-clip: inherit;
         -webkit-text-fill-color: inherit;
