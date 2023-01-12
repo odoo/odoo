@@ -5727,6 +5727,46 @@ X[]
                     contentAfter: '<p>a<code class="o_inline_code">b`cd`[]e</code>f</p>',
                 });
             });
+            it('should convert text into inline code even when text nodes are split', async () => {
+                // BEFORE
+                await testEditor(BasicEditor, {
+                    contentBefore: '<p>b`c[]d</p>',
+                    stepFunction: async editor => {
+                        editor.document.getSelection().anchorNode.before(document.createTextNode('a'));
+                        insertText(editor, '`');
+                    },
+                    contentAfter: '<p>ab<code class="o_inline_code">c</code>\u200B[]d</p>',
+                });
+                // AFTER
+                await testEditor(BasicEditor, {
+                    contentBefore: '<p>a`b[]c</p>',
+                    stepFunction: async editor => {
+                        editor.document.getSelection().anchorNode.after(document.createTextNode('d'));
+                        insertText(editor, '`');
+                    },
+                    contentAfter: '<p>a<code class="o_inline_code">b</code>\u200B[]cd</p>',
+                });
+                // BOTH
+                await testEditor(BasicEditor, {
+                    contentBefore: '<p>b`c[]d</p>',
+                    stepFunction: async editor => {
+                        editor.document.getSelection().anchorNode.before(document.createTextNode('a'));
+                        editor.document.getSelection().anchorNode.after(document.createTextNode('e'));
+                        insertText(editor, '`');
+                    },
+                    contentAfter: '<p>ab<code class="o_inline_code">c</code>\u200B[]de</p>',
+                });
+            });
+            it('should convert text into inline code even when the other backtick is in a separate text node', async () => {
+                await testEditor(BasicEditor, {
+                    contentBefore: '<p>ab[]c</p>',
+                    stepFunction: async editor => {
+                        editor.document.getSelection().anchorNode.before(document.createTextNode('`'));
+                        insertText(editor, '`');
+                    },
+                    contentAfter: '<p>\u200B<code class="o_inline_code">ab</code>\u200B[]c</p>',
+                });
+            });
         });
     });
 
