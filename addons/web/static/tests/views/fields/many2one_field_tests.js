@@ -3222,6 +3222,43 @@ QUnit.module("Fields", (hooks) => {
         assert.containsNone(target, ".modal", "should not display the create modal");
     });
 
+    QUnit.test("create_name_field option on a many2one", async function (assert) {
+        // when the 'create_name_field' option is set, the value entered in the
+        // many2one input should be used to populate this specified field,
+        // instead of the generic 'name' field.
+        serverData.views = {
+            "partner,false,form": `
+            <form>
+                <field name="foo" />
+            </form>`,
+        };
+
+        await makeView({
+            type: "form",
+            resModel: "partner",
+            serverData,
+            arch: `
+                <form>
+                    <sheet>
+                        <field name="trululu" options="{'create_name_field': 'foo'}" />
+                    </sheet>
+                </form>`,
+        });
+
+        const input = target.querySelector(".o_field_widget[name=trululu] input");
+        input.value = "yz";
+        await triggerEvent(input, null, "input");
+        await click(target, ".o_field_widget[name=trululu] input");
+        await selectDropdownItem(target, "trululu", "Create and edit...");
+
+        assert.strictEqual(
+            target.querySelector(".o_field_widget[name=foo] input").value,
+            "yz"
+        );
+
+        await clickDiscard(target.querySelector(".modal"));
+    });
+
     QUnit.test("propagate can_create onto the search popup", async function (assert) {
         serverData.models.product.records = [
             { id: 1, name: "Tromblon1" },
