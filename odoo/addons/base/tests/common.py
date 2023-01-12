@@ -30,6 +30,7 @@ class BaseCommon(TransactionCase):
         cls.partner = cls.env['res.partner'].create({
             'name': 'Test Partner',
         })
+        cls.currency = cls.env.company.currency_id
 
     @classmethod
     def _enable_currency(cls, currency_code):
