@@ -343,7 +343,7 @@ class TestComposerForm(TestMailComposer):
         self.assertEqual(sorted(literal_eval(composer_form.res_ids)), sorted(self.test_records.ids))
         self.assertFalse(composer_form.scheduled_date)
         self.assertFalse(composer_form.subject, 'MailComposer: mass mode should have void default subject if no template')
-        self.assertEqual(composer_form.subtype_id, self.env.ref('mail.mt_comment'))
+        self.assertFalse(composer_form.subtype_id, 'MailComposer: subtype is not used in mail mode')
         self.assertFalse(composer_form.subtype_is_log, 'MailComposer: subtype is log has no meaning in mail mode')
 
     @users('employee')
@@ -372,7 +372,7 @@ class TestComposerForm(TestMailComposer):
         self.assertEqual(composer_form.scheduled_date, self.template.scheduled_date)
         self.assertEqual(composer_form.subject, self.template.subject,
                          'MailComposer: mass mode should have template raw subject if template')
-        self.assertEqual(composer_form.subtype_id, self.env.ref('mail.mt_comment'))
+        self.assertFalse(composer_form.subtype_id, 'MailComposer: subtype is not used in mail mode')
         self.assertFalse(composer_form.subtype_is_log, 'MailComposer: subtype is log has no meaning in mail mode')
 
     @users('employee')
@@ -405,7 +405,7 @@ class TestComposerForm(TestMailComposer):
         self.assertEqual(composer_form.scheduled_date, self.template.scheduled_date)
         self.assertEqual(composer_form.subject, self.template.subject,
                          'MailComposer: mass mode should have template raw subject if template')
-        self.assertEqual(composer_form.subtype_id, self.env.ref('mail.mt_comment'))
+        self.assertFalse(composer_form.subtype_id, 'MailComposer: subtype is not used in mail mode')
         self.assertFalse(composer_form.subtype_is_log, 'MailComposer: subtype is log has no meaning in mail mode')
 
     @users('employee')
@@ -436,7 +436,7 @@ class TestComposerForm(TestMailComposer):
         self.assertEqual(composer_form.scheduled_date, self.template.scheduled_date)
         self.assertEqual(composer_form.subject, self.template.subject,
                          'MailComposer: mass mode should have template raw subject if template')
-        self.assertEqual(composer_form.subtype_id, self.env.ref('mail.mt_comment'))
+        self.assertFalse(composer_form.subtype_id, 'MailComposer: subtype is not used in mail mode')
         self.assertFalse(composer_form.subtype_is_log, 'MailComposer: subtype is log has no meaning in mail mode')
 
 
@@ -654,18 +654,17 @@ class TestComposerInternals(TestMailComposer):
                 if composition_mode == 'comment':
                     self.assertTrue(composer.auto_delete, 'By default, remove notification emails')
                     self.assertFalse(composer.auto_delete_keep_log, 'Not used in comment mode')
+                    self.assertEqual(composer.subtype_id, self.env.ref('mail.mt_comment'))
                 else:
                     self.assertFalse(composer.auto_delete, 'By default, keep mailing emails')
                     self.assertFalse(composer.auto_delete_keep_log, 'Emails are not unlinked, logs are already kept')
+                    self.assertFalse(composer.subtype_id)
                 self.assertTrue(composer.email_add_signature)
                 self.assertEqual(composer.email_layout_xmlid, 'mail.test_layout')
                 self.assertEqual(composer.message_type, 'comment')
-                self.assertEqual(composer.subtype_id, self.env.ref('mail.mt_comment'))
 
                 # changing template should update its content
                 composer.write({'template_id': self.template.id})
-                # currently onchange necessary
-                composer._onchange_template_id_wrapper()
 
                 # values come from template
                 if composition_mode == 'comment':
@@ -681,7 +680,7 @@ class TestComposerInternals(TestMailComposer):
                     self.assertTrue(composer.email_add_signature, 'TODO: should be False as template negates this config')
                     self.assertEqual(composer.email_layout_xmlid, 'mail.test_layout')
                     self.assertEqual(composer.message_type, 'comment')
-                    self.assertEqual(composer.subtype_id, self.env.ref('mail.mt_comment'))
+                    self.assertFalse(composer.subtype_id)
 
                 # manual update
                 composer.write({
@@ -695,8 +694,6 @@ class TestComposerInternals(TestMailComposer):
                 # update with template with void values: void value is forced for
                 # booleans, cannot distinguish
                 composer.write({'template_id': template_falsy.id})
-                # currently onchange necessary
-                composer._onchange_template_id_wrapper()
 
                 if composition_mode == 'comment':
                     self.assertFalse(composer.auto_delete)
