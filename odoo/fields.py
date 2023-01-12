@@ -4643,7 +4643,7 @@ class One2many(Generic[_T], _RelationalMulti[_T]):
         return records
 
 
-class Many2many(_RelationalMulti):
+class Many2many(Generic[_T], _RelationalMulti[_T]):
     """ Many2many field; the value of such a field is the recordset.
 
     :param comodel_name: name of the target model (string)
