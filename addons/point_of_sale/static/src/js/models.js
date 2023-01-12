@@ -1788,7 +1788,7 @@ exports.Product = Backbone.Model.extend({
     // product.pricelist.item records are loaded with a search_read
     // and were automatically sorted based on their _order by the
     // ORM. After that they are added in this order to the pricelists.
-    get_price: function(pricelist, quantity, price_extra){
+    get_price: function(pricelist, quantity, price_extra, parent_pricelist){
         var self = this;
         var date = moment();
 
@@ -1812,21 +1812,25 @@ exports.Product = Backbone.Model.extend({
             return (! item.product_tmpl_id || item.product_tmpl_id[0] === self.product_tmpl_id) &&
                    (! item.product_id || item.product_id[0] === self.id) &&
                    (! item.categ_id || _.contains(category_ids, item.categ_id[0])) &&
+                   (! item.min_quantity || quantity >= item.min_quantity) &&
                    (! item.date_start || moment.utc(item.date_start).isSameOrBefore(date)) &&
                    (! item.date_end || moment.utc(item.date_end).isSameOrAfter(date));
         });
+        if (pricelist_items.length === 0 && parent_pricelist !== undefined) {
+            return false;
+        }
 
         var price = self.lst_price;
         if (price_extra){
             price += price_extra;
         }
         _.find(pricelist_items, function (rule) {
-            if (rule.min_quantity && quantity < rule.min_quantity) {
-                return false;
-            }
-
             if (rule.base === 'pricelist') {
-                price = self.get_price(rule.base_pricelist, quantity);
+                var sub_price = self.get_price(rule.base_pricelist, quantity, 0, pricelist);
+                if (sub_price === false) {
+                    return false;
+                }
+                price = sub_price;
             } else if (rule.base === 'standard_price') {
                 price = self.standard_price;
             }

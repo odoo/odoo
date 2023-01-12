@@ -212,7 +212,9 @@ class Pricelist(models.Model):
                         continue
 
                 if rule.base == 'pricelist' and rule.base_pricelist_id:
-                    price = rule.base_pricelist_id._compute_price_rule([(product, qty, partner)], date, uom_id)[product.id][0]  # TDE: 0 = price, 1 = rule
+                    price, sub_suitable_rule = rule.base_pricelist_id._compute_price_rule([(product, qty, partner)], date, uom_id)[product.id]
+                    if not sub_suitable_rule:
+                        continue
                     src_currency = rule.base_pricelist_id.currency_id
                 else:
                     # if base option is public price take sale price else cost price of product
