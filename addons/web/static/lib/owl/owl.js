@@ -4018,7 +4018,15 @@
                 const fullExpression = `${bExprId}[${exprId}]`;
                 let idx;
                 if (specialInitTargetAttr) {
-                    idx = block.insertData(`${fullExpression} === '${attrs[targetAttr]}'`, "attr");
+                    let targetExpr = targetAttr in attrs && `'${attrs[targetAttr]}'`;
+                    if (!targetExpr && ast.attrs) {
+                        // look at the dynamic attribute counterpart
+                        const dynamicTgExpr = ast.attrs[`t-att-${targetAttr}`];
+                        if (dynamicTgExpr) {
+                            targetExpr = compileExpr(dynamicTgExpr);
+                        }
+                    }
+                    idx = block.insertData(`${fullExpression} === ${targetExpr}`, "attr");
                     attrs[`block-attribute-${idx}`] = specialInitTargetAttr;
                 }
                 else if (hasDynamicChildren) {
@@ -5556,12 +5564,16 @@
 This is not suitable for production use.
 See https://github.com/odoo/owl/blob/${hash}/doc/reference/app.md#configuration for more information.`;
     };
+    window.__OWL_DEVTOOLS__ || (window.__OWL_DEVTOOLS__ = {
+        apps: new Set(),
+    });
     class App extends TemplateSet {
         constructor(Root, config = {}) {
             super(config);
             this.scheduler = new Scheduler();
             this.root = null;
             this.Root = Root;
+            window.__OWL_DEVTOOLS__.apps.add(this);
             if (config.test) {
                 this.dev = true;
             }
@@ -5618,6 +5630,7 @@ See https://github.com/odoo/owl/blob/${hash}/doc/reference/app.md#configuration 
                 this.scheduler.flush();
                 this.root.destroy();
             }
+            window.__OWL_DEVTOOLS__.apps.delete(this);
         }
         createComponent(name, isStatic, hasSlotsProp, hasDynamicPropList, hasNoProp) {
             const isDynamic = !isStatic;
@@ -5858,9 +5871,9 @@ See https://github.com/odoo/owl/blob/${hash}/doc/reference/app.md#configuration 
     Object.defineProperty(exports, '__esModule', { value: true });
 
 
-    __info__.version = '2.0.3';
-    __info__.date = '2023-01-12T15:32:52.837Z';
-    __info__.hash = '316eb06';
+    __info__.version = '2.0.4';
+    __info__.date = '2023-01-23T11:21:36.696Z';
+    __info__.hash = 'c30678f';
     __info__.url = 'https://github.com/odoo/owl';
 
 
