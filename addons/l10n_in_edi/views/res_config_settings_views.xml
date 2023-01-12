@@ -14,6 +14,7 @@
         <field name="model">res.config.settings</field>
         <field name="inherit_id" ref="account.res_config_settings_view_form"/>
         <field name="arch" type="xml">
+<<<<<<< HEAD
             <app name="account" position="inside">
                 <block title="Indian Electronic Invoicing" name="l10n_in_edi_iap" attrs="{'invisible': [('country_code', '!=', 'IN')]}">
                     <setting id="gsp_setting" string="Setup E-invoice" help="Check the documentation to get credentials" documentation="/applications/finance/accounting/fiscal_localizations/localizations/india.html" company_dependent="1">
@@ -21,6 +22,27 @@
                             <div class="mt16 row">
                                 <label for="l10n_in_edi_username" string="Username" class="col-3 col-lg-3 o_light_label"/>
                                 <field name="l10n_in_edi_username"  nolabel="1"/>
+||||||| parent of e56e0f240ad (temp)
+            <div data-key="account" position="inside">
+                <h2 attrs="{'invisible': [('country_code', '!=', 'IN')]}">Indian Electronic Invoicing</h2>
+                <div class='row mt16 o_settings_container' name="l10n_in_edi_iap" attrs="{'invisible': [('country_code', '!=', 'IN')]}">
+                    <div class="col-12 col-lg-6 o_setting_box" id="gsp_setting">
+                        <div class="o_setting_right_pane">
+                            <t class="o_form_label">Setup E-invoice</t>
+                            <span class="fa fa-lg fa-building-o" title="Values set here are company-specific." aria-label="Values set here are company-specific." groups="base.group_multi_company" role="img"/>
+                            <div class="text-muted">
+                                Check the <a href="https://www.odoo.com/documentation/15.0/applications/finance/accounting/fiscal_localizations/localizations/india.html">documentation</a> to get credentials
+=======
+            <div data-key="account" position="inside">
+                <h2 attrs="{'invisible': [('country_code', '!=', 'IN')]}">Indian Electronic Invoicing</h2>
+                <div class='row mt16 o_settings_container' name="l10n_in_edi_iap" attrs="{'invisible': [('country_code', '!=', 'IN')]}">
+                    <div class="col-12 col-lg-6 o_setting_box" id="gsp_setting">
+                        <div class="o_setting_right_pane">
+                            <t class="o_form_label">Setup E-invoice</t>
+                            <span class="fa fa-lg fa-building-o" title="Values set here are company-specific." aria-label="Values set here are company-specific." groups="base.group_multi_company" role="img"/>
+                            <div class="text-muted">
+                                Check the <a href="https://www.odoo.com/documentation/16.0/applications/finance/accounting/fiscal_localizations/localizations/india.html">documentation</a> to get credentials
+>>>>>>> e56e0f240ad (temp)
                             </div>
                             <div class="row">
                                 <label for="l10n_in_edi_password" string="Password" class="col-3 col-lg-3 o_light_label" />
