@@ -244,6 +244,11 @@ class Website(models.Model):
             if not website:
                 raise UserError(_('You must keep at least one website.'))
 
+        self._remove_attachments_on_website_unlink()
+
+        return super().unlink()
+
+    def _remove_attachments_on_website_unlink(self):
         # Do not delete invoices, delete what's strictly necessary
         attachments_to_unlink = self.env['ir.attachment'].search([
             ('website_id', 'in', self.ids),
@@ -253,7 +258,6 @@ class Website(models.Model):
             ('url', 'ilike', '.assets\\_'),
         ])
         attachments_to_unlink.unlink()
-        return super(Website, self).unlink()
 
     def create_and_redirect_to_theme(self):
         self._force()
