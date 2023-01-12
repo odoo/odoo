@@ -124,6 +124,40 @@ class TestAccountEarlyPaymentDiscount(AccountTestInvoicingCommon):
             {'amount_currency': 900.0},
         ])
 
+    def test_register_discounted_payment_on_single_invoice_with_fixed_tax(self):
+        self.company_data['company'].early_pay_discount_computation = 'included'
+        fixed_tax = self.env['account.tax'].create({
+            'name': 'Test 0.05',
+            'amount_type': 'fixed',
+            'amount': 0.05,
+        })
+
+        inv = self.env['account.move'].create({
+            'move_type': 'in_invoice',
+            'partner_id': self.partner_a.id,
+            'invoice_date': '2019-01-01',
+            'date': '2019-01-01',
+            'invoice_line_ids': [Command.create({
+                'name': 'line',
+                'price_unit': 1500.0,
+                'tax_ids': [Command.set(self.product_a.taxes_id.ids + fixed_tax.ids)]
+            })],
+            'invoice_payment_term_id': self.early_pay_10_percents_10_days.id,
+        })
+        inv.action_post()
+        active_ids = inv.ids
+        payments = self.env['account.payment.register'].with_context(active_model='account.move', active_ids=active_ids).create({
+            'payment_date': '2017-01-01',
+        })._create_payments()
+
+        self.assertTrue(payments.is_reconciled)
+        self.assertRecordValues(payments.line_ids.sorted('balance'), [
+            {'amount_currency': -1552.55},
+            {'amount_currency': -150.0},
+            {'amount_currency': -22.5},
+            {'amount_currency': 1725.05},
+        ])
+
     def test_register_discounted_payment_on_single_invoice_with_tax(self):
         self.company_data['company'].early_pay_discount_computation = 'included'
         inv_1500_10_percents_discount_tax_incl_15_percents_tax = self.env['account.move'].create({
