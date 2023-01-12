@@ -61,7 +61,7 @@ class BaseMailAccountPerformance(AccountTestInvoicingCommon, MailCommon):
                        ])
             ],
             'login': 'user_account',
-            'name': 'Ernest Employee',
+            'name': 'Ernest Employee Account',
             'notification_type': 'inbox',
             'signature': '--\nErnest',
         })
@@ -77,7 +77,7 @@ class BaseMailAccountPerformance(AccountTestInvoicingCommon, MailCommon):
                        ])
             ],
             'login': 'user_account_other',
-            'name': 'Eglantine Employee',
+            'name': 'Eglantine Employee AccountOther',
             'notification_type': 'inbox',
             'signature': '--\nEglantine',
         })
@@ -133,6 +133,19 @@ class BaseMailAccountPerformance(AccountTestInvoicingCommon, MailCommon):
 @tagged('mail_performance', 'account_performance', 'post_install_l10n', 'post_install', '-at_install')
 class TestAccountComposerPerformance(BaseMailAccountPerformance):
     """ Test performance of custom composer for moves. """
+
+    def test_assert_initial_values(self):
+        """ Test initial values to ease understanding of results and notifications """
+        for move in self.test_account_moves:
+            with self.subTest(move=move):
+                self.assertEqual(
+                    move.invoice_user_id,
+                    self.user_account_other,
+                )
+                self.assertEqual(
+                    move.message_partner_ids,
+                    self.user_accountman.partner_id,
+                )
 
     @users('user_account')
     @warmup
