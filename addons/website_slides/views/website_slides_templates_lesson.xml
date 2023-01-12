@@ -373,7 +373,7 @@
                 </t>
                 <t t-else="">
                     <t t-set="enable_slide_comments" t-value="1"/>
-                    <t t-if="not slide.channel_id.can_comment and slide.channel_id.can_access_channel"><p>Earn more Karma to leave a comment.</p></t>
+                    <t t-if="not slide.channel_id.can_comment and can_access_channel"><p>Earn more Karma to leave a comment.</p></t>
                 </t>
                 <t t-if="enable_slide_comments" t-call="portal.message_thread">
                     <t t-set="object" t-value="slide"/>
