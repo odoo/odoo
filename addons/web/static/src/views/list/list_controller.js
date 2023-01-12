@@ -2,6 +2,7 @@
 
 import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 import { download } from "@web/core/network/download";
+import { evaluateExpr } from "@web/core/py_js/py";
 import { useService } from "@web/core/utils/hooks";
 import { omit } from "@web/core/utils/objects";
 import { sprintf } from "@web/core/utils/strings";
@@ -37,6 +38,7 @@ export class ListController extends Component {
         this.activeActions = this.archInfo.activeActions;
         const fields = this.props.fields;
         const { rootState } = this.props.state || {};
+        const { defaultGroupBy, rawExpand } = this.archInfo;
         this.model = useModel(this.props.Model, {
             resModel: this.props.resModel,
             fields,
@@ -47,8 +49,8 @@ export class ListController extends Component {
             groupByInfo: this.archInfo.groupBy.fields,
             limit: this.archInfo.limit || this.props.limit,
             defaultOrder: this.archInfo.defaultOrder,
-            defaultGroupBy: this.props.searchMenuTypes.includes("groupBy") && this.props.archInfo.defaultGroupBy,
-            expand: this.archInfo.expand,
+            defaultGroupBy: this.props.searchMenuTypes.includes("groupBy") ? defaultGroupBy : false,
+            expand: rawExpand ? evaluateExpr(rawExpand, this.props.context) : false,
             groupsLimit: this.archInfo.groupsLimit,
             multiEdit: this.multiEdit,
             rootState,

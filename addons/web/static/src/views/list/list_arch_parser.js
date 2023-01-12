@@ -203,7 +203,7 @@ export class ListArchParser extends XMLParser {
                 treeAttr.groupsLimit = groupsLimitAttr && parseInt(groupsLimitAttr, 10);
 
                 treeAttr.noOpen = archParseBoolean(node.getAttribute("no_open") || "");
-                treeAttr.expand = archParseBoolean(xmlDoc.getAttribute("expand") || "");
+                treeAttr.rawExpand = xmlDoc.getAttribute("expand");
                 treeAttr.decorations = getDecoration(xmlDoc);
 
                 treeAttr.defaultGroupBy = xmlDoc.getAttribute("default_group_by");
