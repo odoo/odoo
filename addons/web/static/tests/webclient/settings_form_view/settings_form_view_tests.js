@@ -15,6 +15,8 @@ import { createWebClient, doAction } from "@web/../tests/webclient/helpers";
 import { registry } from "@web/core/registry";
 import { SettingsFormCompiler } from "@web/webclient/settings_form_view/settings_form_compiler";
 import { registerCleanup } from "../../helpers/cleanup";
+import { makeFakeLocalizationService } from "@web/../tests/helpers/mock_services";
+import { session } from "@web/session";
 
 let target;
 let serverData;
@@ -468,6 +470,91 @@ QUnit.module("SettingsFormView", (hooks) => {
             ]);
         }
     );
+
+    QUnit.test("resIds should contains only 1 id", async function (assert) {
+        assert.expect(1);
+
+        serverData.models["res.config.settings"].fields.foo_text = {
+            string: "Foo",
+            type: "char",
+            default: "My little Foo Value",
+            translate: true,
+            searchable: true,
+            trim: true,
+        };
+        registry
+            .category("services")
+            .add("localization", makeFakeLocalizationService({ multiLang: true }), {
+                force: true,
+            });
+        patchWithCleanup(session.user_context, {
+            lang: "en_US",
+        });
+
+        await makeView({
+            type: "form",
+            resModel: "res.config.settings",
+            serverData,
+            arch: `
+                <form string="Settings" class="oe_form_configuration o_base_settings" js_class="base_settings">
+                    <div class="o_setting_container">
+                        <div class="settings">
+                            <div class="app_settings_block" string="CRM" data-key="crm">
+                                <div class="row mt16 o_settings_container">
+                                    <div class="col-12 col-lg-6 o_setting_box">
+                                        <div class="o_setting_right_pane">
+                                            <label for="Foo Text"/>
+                                            <div class="content-group">
+                                                <div class="mt16">
+                                                    <field name="foo_text"/>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </form>`,
+            mockRPC(route, { args, method, model }) {
+                if (route === "/web/dataset/call_kw/res.lang/get_installed") {
+                    return Promise.resolve([
+                        ["en_US", "English"],
+                        ["fr_BE", "French (Belgium)"],
+                    ]);
+                }
+                if (route === "/web/dataset/call_kw/res.config.settings/get_field_translations") {
+                    return Promise.resolve([
+                        [
+                            {
+                                lang: "en_US",
+                                source: "My little Foo Value",
+                                value: "My little Foo Value",
+                            },
+                            {
+                                lang: "fr_BE",
+                                source: "My little Foo Value",
+                                value: "Valeur de mon petit Foo",
+                            },
+                        ],
+                        {
+                            translation_type: "char",
+                            translation_show_source: true,
+                        },
+                    ]);
+                }
+                if (route === "/web/dataset/call_button" && method === "execute") {
+                    assert.deepEqual(args, [[2]]);
+                    return true;
+                }
+            },
+        });
+
+        await click(target.querySelector(".o_field_char .btn.o_field_translate")); // Transalte
+        await click(target.querySelector(".modal-footer .btn-primary")); // Warning dialog (OK)
+        await click(target.querySelectorAll(".modal-footer .btn")[1]); // Discard
+        await click(target.querySelector(".o_form_button_save")); // Save Settings
+    });
 
     QUnit.test("settings views does not read existing id when reload", async function (assert) {
         serverData.actions = {
