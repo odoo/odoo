@@ -99,3 +99,10 @@ class AccountJournal(models.Model):
                 default_payment_method_line_id=payment_method_line.id,
             ),
         }
+
+    @api.model
+    def _get_reusable_payment_methods(self):
+        """ We are able to have multiple times Checks payment method in a journal """
+        res = super()._get_reusable_payment_methods()
+        res.add("check_printing")
+        return res
