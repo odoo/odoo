@@ -72,19 +72,18 @@ class ResUsers(models.Model):
             visitor_pre_authenticate_sudo = request.env['website.visitor']._get_visitor_from_request()
         uid = super(ResUsers, cls).authenticate(db, login, password, user_agent_env)
         if uid and visitor_pre_authenticate_sudo:
-            with cls.pool.cursor() as cr:
-                env = api.Environment(cr, uid, {})
-                user_partner = env.user.partner_id
-                visitor_current_user_sudo = env['website.visitor'].sudo().search([
-                    ('partner_id', '=', user_partner.id)
-                ], limit=1)
-                if visitor_current_user_sudo:
-                    # A visitor exists for the logged in user, link public
-                    # visitor records to it.
-                    if visitor_pre_authenticate_sudo != visitor_current_user_sudo:
-                        visitor_pre_authenticate_sudo._merge_visitor(visitor_current_user_sudo)
-                    visitor_current_user_sudo._update_visitor_last_visit()
-                else:
-                    visitor_pre_authenticate_sudo.access_token = user_partner.id
-                    visitor_pre_authenticate_sudo._update_visitor_last_visit()
+            env = api.Environment(request.env.cr, uid, {})
+            user_partner = env.user.partner_id
+            visitor_current_user_sudo = env['website.visitor'].sudo().search([
+                ('partner_id', '=', user_partner.id)
+            ], limit=1)
+            if visitor_current_user_sudo:
+                # A visitor exists for the logged in user, link public
+                # visitor records to it.
+                if visitor_pre_authenticate_sudo != visitor_current_user_sudo:
+                    visitor_pre_authenticate_sudo._merge_visitor(visitor_current_user_sudo)
+                visitor_current_user_sudo._update_visitor_last_visit()
+            else:
+                visitor_pre_authenticate_sudo.access_token = user_partner.id
+                visitor_pre_authenticate_sudo._update_visitor_last_visit()
         return uid
