@@ -104,6 +104,31 @@ class TestEmailParsing(TestMailCommon):
 
         self.assertEqual(res['bounced_msg_id'], [msg_id], "Message-Id is not extracted from Text/RFC822-Headers attachment")
 
+    def test_message_parse_extract_bounce_rfc822_headers_qp(self):
+        # Incoming bounce for unexisting Outlook address
+        # bounce back sometimes with a Content-Type `text/rfc822-headers`
+        # and Content-Type-Encoding `quoted-printable`
+        partner = self.env['res.partner'].create({
+            'name':'Mitchelle Admine',
+            'email':'rdesfrdgtfdrfesd@outlook.com'
+        })
+        message = self.env['mail.message'].create({
+            'message_id' : '<368396033905967.1673346177.695352554321289-openerp-11-sale.order@eupp00>'
+        })
+        incoming_bounce = self.format(
+            test_mail_data.MAIL_BOUNCE_QP_RFC822_HEADERS,
+            email_from='MAILER-DAEMON@mailserver.odoo.com (Mail Delivery System)',
+            email_to='bounce@xxx.odoo.com',
+            delivered_to='bounce@xxx.odoo.com'
+        )
+
+        msg_dict = {}
+        msg = self.env['mail.thread']._message_parse_extract_bounce(self.from_string(incoming_bounce), msg_dict)
+        self.assertEqual(msg['bounced_email'], partner.email, "The sender email should be correctly parsed")
+        self.assertEqual(msg['bounced_partner'], partner, "A partner with this email should exist")
+        self.assertEqual(msg['bounced_msg_id'][0], message.message_id, "The sender message-id should correctly parsed")
+        self.assertEqual(msg['bounced_message'], message, "An existing message with this message_id should exist")
+
     def test_message_parse_plaintext(self):
         """ Incoming email in plaintext should be stored as html """
         mail = self.format(test_mail_data.MAIL_TEMPLATE_PLAINTEXT, email_from='"Sylvie Lelitre" <test.sylvie.lelitre@agrolait.com>', to='generic@test.com')
