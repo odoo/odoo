@@ -12,4 +12,4 @@ class EventRegistration(models.Model):
     registration_answer_ids = fields.One2many('event.registration.answer', 'registration_id', string='Attendee Answers')
 
     def _get_website_registration_allowed_fields(self):
-        return {'name', 'phone', 'email', 'mobile', 'event_id', 'partner_id', 'event_ticket_id'}
+        return {'name', 'phone', 'email', 'mobile', 'company_name', 'event_id', 'partner_id', 'event_ticket_id'}

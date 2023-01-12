@@ -128,7 +128,7 @@ class TestEventPerformance(EventPerformanceCase):
         has_social = 'social_menu' in self.env['event.event']  # otherwise view may crash in enterprise
 
         # no type, website
-        with freeze_time(self.reference_now), self.assertQueryCount(event_user=449):  # tef 398 / com 399
+        with freeze_time(self.reference_now), self.assertQueryCount(event_user=429):  # tef 379 / com 380
             self.env.cr._now = self.reference_now  # force create_date to check schedulers
             # Require for `website_menu` to be visible
             # <div name="event_menu_configuration" groups="base.group_no_one">

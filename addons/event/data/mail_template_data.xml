@@ -11,7 +11,7 @@
             <field name="description">Sent automatically to someone after they registered to an event</field>
             <field name="body_html" type="html">
 <div>
-    Dear <t t-out="object.name or ''">Oscar Morgan</t>,<br/>
+    Dear <t t-out="object.name or 'Guest'"/>,<br/>
     Thank you for your inquiry.<br/>
     Here is your badge for the event <t t-out="object.event_id.name or ''">OpenWood Collection Online Reveal</t>.<br/>
     If you have any questions, please let us know.
@@ -50,7 +50,7 @@
                 <tr><td valign="middle">
                     <span style="font-size: 10px;">Your registration</span><br/>
                     <span style="font-size: 20px; font-weight: bold;">
-                        <t t-out="object.name or ''">Oscar Morgan</t>
+                        <t t-out="object.name or 'Guest'"/>
                     </span>
                 </td><td valign="middle" align="right">
                     <t t-if="is_online">
@@ -75,7 +75,7 @@
             <table width="590" border="0" cellpadding="0" cellspacing="0" style="min-width: 590px; background-color: white; padding: 0px 8px 0px 8px; border-collapse:separate;">
                 <tr><td valign="top" style="font-size: 14px;">
                     <div>
-                        Hello <t t-out="object.name or ''">Oscar Morgan</t>,<br/>
+                        Hello <t t-out="object.name or 'Guest'"/>,<br/>
                         We are happy to confirm your registration to the event
                         <t t-if="is_online">
                             <a t-att-href="object.event_id.website_url" style="color:#875A7B;text-decoration:none;" t-out="object.event_id.name or ''">OpenWood Collection Online Reveal</a>
@@ -83,7 +83,7 @@
                         <t t-else="">
                             <strong t-out="object.event_id.name or ''">OpenWood Collection Online Reveal</strong>
                         </t>
-                        for attendee <t t-out="object.name or ''">Oscar Morgan</t>.
+                        for attendee <t t-out="object.name or 'Guest'"/>.
                     </div>
                     <div>
                         <br />
@@ -282,7 +282,7 @@
             <table width="590" border="0" cellpadding="0" cellspacing="0" style="min-width: 590px; background-color: white; padding: 0px 8px 0px 8px; border-collapse:separate;">
                 <tr><td valign="middle">
                     <span style="font-size: 10px;">Your registration</span><br/>
-                    <span style="font-size: 20px; font-weight: bold;" t-out="object.name or ''">Oscar Morgan</span>
+                    <span style="font-size: 20px; font-weight: bold;" t-out="object.name or 'Guest'"/>
                 </td><td valign="middle" align="right">
                     <t t-if="is_online">
                         <a t-attf-href="{{ object.event_id.website_url }}"
@@ -306,7 +306,7 @@
             <table width="590" border="0" cellpadding="0" cellspacing="0" style="min-width: 590px; background-color: white; padding: 0px 8px 0px 8px; border-collapse:separate;">
                 <tr><td valign="top" style="font-size: 14px;">
                     <div>
-                        Hello <t t-out="object.name or ''">Oscar Morgan</t>,<br/>
+                        Hello <t t-out="object.name or 'Guest'"/>,<br/>
                         We are excited to remind you that the event
                         <t t-if="is_online">
                             <a t-att-href="object.event_id.website_url" style="color:#875A7B;text-decoration:none;" t-out="object.event_id.name or ''">OpenWood Collection Online Reveal</a>

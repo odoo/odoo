@@ -39,7 +39,8 @@
                             <field name="question_type" string="Type" />
                             <field name="answer_ids" widget="many2many_tags"
                                 attrs="{'invisible': [('question_type', '!=', 'simple_choice')]}" />
-                            <button name="action_view_question_answers" type="object" class="p-0" icon="fa-bar-chart pe-1" string="Stats" title="Answer Breakdown"/>
+                            <button name="action_view_question_answers" type="object" class="p-0" icon="fa-bar-chart pe-1" string="Stats"
+                                    title="Answer Breakdown" attrs="{'invisible': [('question_type', 'not in', ['simple_choice', 'text_box'])]}"/>
                         </tree>
                         <!-- Need to repeat the whole tree form here to be able to create answers properly
                             Without this, the sub-fields of answer_ids are unknown to the web framework.
@@ -50,7 +51,7 @@
                                 <group>
                                     <group>
                                         <field name="is_mandatory_answer"/>
-                                        <field name="question_type" widget="radio" options="{'horizontal': true}"/>
+                                        <field name="question_type" widget="radio"/>
                                     </group>
                                     <group>
                                         <field name="once_per_order"/>

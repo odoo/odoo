@@ -14,7 +14,12 @@ class EventQuestion(models.Model):
     title = fields.Char(required=True, translate=True)
     question_type = fields.Selection([
         ('simple_choice', 'Selection'),
-        ('text_box', 'Text Input')], default='simple_choice', string="Question Type", required=True)
+        ('text_box', 'Text Input'),
+        ('name', 'Name'),
+        ('email', 'Email'),
+        ('phone', 'Phone'),
+        ('company_name', 'Company'),
+    ], default='simple_choice', string="Question Type", required=True)
     event_type_id = fields.Many2one('event.type', 'Event Type', ondelete='cascade')
     event_id = fields.Many2one('event.event', 'Event', ondelete='cascade')
     answer_ids = fields.One2many('event.question.answer', 'question_id', "Answers", copy=True)

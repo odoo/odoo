@@ -88,7 +88,13 @@
                 <span class="fa fa-sign-in"/>
             </a>
         </t>
-        <t t-else="">$0</t>
+        <t t-else="">
+            <t t-set="has_paying_ticket" t-value="any(ticket.get('price', 0) > 0 for ticket in tickets)"/>
+            <button t-if="availability_check" type="submit" class="btn btn-primary">
+                <span t-if="has_paying_ticket">Go to Payment</span>
+                <span t-else="">Confirm Registration</span>
+            </button>
+        </t>
     </xpath>
 </template>
 
