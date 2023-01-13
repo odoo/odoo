@@ -19,7 +19,9 @@ This module applies to companies based in Algeria.
         'data/account_tax_data.xml',
         'data/account_fiscal_position_template_data.xml',
         'data/account_chart_template_configuration_data.xml',
-        'report/account_move_report.xml',
+    ],
+    'demo': [
+        'demo/demo_company.xml',
     ],
     'license': 'LGPL-3',
 }
