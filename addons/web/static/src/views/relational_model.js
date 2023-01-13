@@ -1884,6 +1884,12 @@ export class DynamicRecordList extends DynamicList {
         };
     }
 
+    get evalContext() {
+        return {
+            ...this.context,
+        };
+    }
+
     get quickCreateRecord() {
         return this.records.find((r) => r.isInQuickCreation);
     }

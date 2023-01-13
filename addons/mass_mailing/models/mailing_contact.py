@@ -187,7 +187,12 @@ class MassMailingContact(models.Model):
 
     def action_import(self):
         action = self.env["ir.actions.actions"]._for_xml_id("mass_mailing.mailing_contact_import_action")
-        action['context'] = self.env.context
+        context = self.env.context.copy()
+        action['context'] = context
+        if (not context.get('default_mailing_list_ids') and context.get('from_mailing_list_ids')):
+            action['context'].update({
+                'default_mailing_list_ids': context.get('from_mailing_list_ids'),
+            })
 
         return action
 
