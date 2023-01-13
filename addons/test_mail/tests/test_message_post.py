@@ -1619,15 +1619,11 @@ class TestMessagePostLang(TestMailCommon, TestRecipients):
             self.assertTrue(customer_email)
             body = customer_email['body']
             # check content
-            # self.assertIn(f'SpanishBody for {record.name}', body,
-            #               'Body based on template should be translated')
-            self.assertIn(f'EnglishBody for {record.name}', body,
-                          'Fixme: Body based on template should be translated')
+            self.assertIn(f'SpanishBody for {record.name}', body,
+                          'Body based on template should be translated')
             # check subject
-            # self.assertEqual(f'SpanishSubject for {record.name}', customer_email['subject'],
-            #                  'Subject based on template should be translated')
-            self.assertEqual(f'EnglishSubject for {record.name}', customer_email['subject'],
-                             'Fixme: Subject based on template should be translated')
+            self.assertEqual(f'SpanishSubject for {record.name}', customer_email['subject'],
+                             'Subject based on template should be translated')
 
     @users('employee')
     @mute_logger('odoo.addons.mail.models.mail_mail')
