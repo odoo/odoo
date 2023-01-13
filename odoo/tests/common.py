@@ -41,7 +41,7 @@ from contextlib import contextmanager, ExitStack
 from datetime import datetime, date
 from dateutil.relativedelta import relativedelta
 from itertools import zip_longest as izip_longest
-from unittest.mock import patch
+from unittest.mock import patch, _patch
 from xmlrpc import client as xmlrpclib
 
 import requests
@@ -269,6 +269,15 @@ class BaseCase(case.TestCase, metaclass=MetaCase):
                 super().run(result)
             if not failure:
                 break
+
+    @classmethod
+    def setUpClass(cls):
+        def check_remaining_patchers():
+            for patcher in _patch._active_patches:
+                _logger.warning("A patcher was remaining active at the end of %s, disabling it...", cls.__name__)
+                patcher.stop()
+        cls.addClassCleanup(check_remaining_patchers)
+        super().setUpClass()
 
     def cursor(self):
         return self.registry.cursor()
