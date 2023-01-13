@@ -2092,7 +2092,7 @@ class AccountMove(models.Model):
                 # Only invoice-like and journal entries in "auto tax mode" are synced
                 tax_container['records'] = container['records'].filtered(lambda m: (m.is_invoice(True) or m.line_ids.tax_ids and not m.tax_cash_basis_origin_move_id))
                 invoice_container['records'] = container['records'].filtered(lambda m: m.is_invoice(True))
-                misc_container['records'] = container['records'].filtered(lambda m: m.move_type == 'entry' and not m.tax_cash_basis_origin_move_id)
+                misc_container['records'] = container['records'].filtered(lambda m: m.is_entry() and not m.tax_cash_basis_origin_move_id)
 
             tax_container, invoice_container, misc_container = ({} for __ in range(3))
             update_containers()
@@ -3671,6 +3671,9 @@ class AccountMove(models.Model):
 
     def is_invoice(self, include_receipts=False):
         return self.is_sale_document(include_receipts) or self.is_purchase_document(include_receipts)
+
+    def is_entry(self):
+        return self.move_type == 'entry'
 
     @api.model
     def get_sale_types(self, include_receipts=False):

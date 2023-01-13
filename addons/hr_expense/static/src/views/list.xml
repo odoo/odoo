@@ -21,7 +21,7 @@
         </xpath>
 
         <xpath expr="//button[hasclass('o_button_upload_expense')]" position="after">
-            <button t-if="displayApprove()" class="d-none d-md-block btn btn-secondary" t-on-click="() => this.onClick('approve_expense_sheets')">
+            <button t-if="displayApprove()" class="d-none d-md-block btn btn-secondary" t-on-click="() => this.onClick('action_approve_expense_sheets')">
                 Approve Report
             </button>
         </xpath>

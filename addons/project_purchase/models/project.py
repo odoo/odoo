@@ -134,7 +134,7 @@ class Project(models.Model):
                 **pol,
                 'invoice_lines': self.env['purchase.order.line'].browse(pol['id']).invoice_lines,  # One2Many cannot be queried, they are not columns
             } for pol in self._cr.dictfetchall()]
-            purchase_order_line_invoice_line_ids = []
+            purchase_order_line_invoice_line_ids = self._get_already_included_profitability_invoice_line_ids()
             if purchase_order_line_read:
                 amount_invoiced = amount_to_invoice = 0.0
                 purchase_order_line_ids = []

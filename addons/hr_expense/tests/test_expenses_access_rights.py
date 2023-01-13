@@ -59,12 +59,12 @@ class TestExpensesAccessRights(TestExpenseCommon):
         # The expense employee is not able to approve itself the expense sheet.
 
         with self.assertRaises(UserError):
-            expense_sheet.with_user(self.expense_user_employee).approve_expense_sheets()
+            expense_sheet.with_user(self.expense_user_employee).action_approve_expense_sheets()
         self.assertRecordValues(expense_sheet, [{'state': 'submit'}])
 
         # An expense manager is required for this step.
 
-        expense_sheet.with_user(self.expense_user_manager).approve_expense_sheets()
+        expense_sheet.with_user(self.expense_user_manager).action_approve_expense_sheets()
         self.assertRecordValues(expense_sheet, [{'state': 'approve'}])
 
         # An expense manager is not able to create the journal entry.
@@ -108,10 +108,11 @@ class TestExpensesAccessRights(TestExpenseCommon):
         # The expense employee is not able to refuse itself the expense sheet.
 
         with self.assertRaises(UserError):
-            expense_sheet.with_user(self.expense_user_employee).refuse_sheet('')
+            expense_sheet.with_user(self.expense_user_employee).action_refuse_expense_sheets()
         self.assertRecordValues(expense_sheet, [{'state': 'submit'}])
 
         # An expense manager is required for this step.
 
-        expense_sheet.with_user(self.expense_user_manager).refuse_sheet('')
+        expense_sheet.with_user(self.expense_user_manager).action_refuse_expense_sheets()
+        expense_sheet.with_user(self.expense_user_manager)._do_refuse('failed')
         self.assertRecordValues(expense_sheet, [{'state': 'cancel'}])

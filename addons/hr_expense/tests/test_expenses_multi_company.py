@@ -12,6 +12,8 @@ class TestExpenseMultiCompany(TestExpenseCommon):
         self.expense_employee.company_id = self.company_data_2['company']
 
         # The expense employee is able to a create an expense sheet for company_2.
+        # product_a needs a standard_price in company_2
+        self.product_a.with_context(allowed_company_ids=self.company_data_2['company'].ids).standard_price = 100
 
         expense_sheet = self.env['hr.expense.sheet']\
             .with_user(self.expense_user_employee)\
@@ -44,14 +46,14 @@ class TestExpenseMultiCompany(TestExpenseCommon):
             expense_sheet\
                 .with_user(self.expense_user_manager)\
                 .with_context(allowed_company_ids=self.company_data['company'].ids)\
-                .approve_expense_sheets()
+                .action_approve_expense_sheets()
 
         # An expense manager is able to approve with access to company_2.
 
         expense_sheet\
             .with_user(self.expense_user_manager)\
             .with_context(allowed_company_ids=self.company_data_2['company'].ids)\
-            .approve_expense_sheets()
+            .action_approve_expense_sheets()
 
         # An expense manager having accounting access rights is not able to create the journal entry without access
         # to company_2.
@@ -106,11 +108,11 @@ class TestExpenseMultiCompany(TestExpenseCommon):
             expense_sheet\
                 .with_user(self.expense_user_manager)\
                 .with_context(allowed_company_ids=self.company_data['company'].ids)\
-                .refuse_sheet('')
+                ._do_refuse('failed')
 
         # An expense manager is able to approve with access to company_2.
 
         expense_sheet\
             .with_user(self.expense_user_manager)\
             .with_context(allowed_company_ids=self.company_data_2['company'].ids)\
-            .refuse_sheet('')
+            ._do_refuse('failed')

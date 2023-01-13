@@ -50,7 +50,7 @@
                     </header>
                     <field name="company_id" invisible="1"/>
                     <field name="company_currency_id" invisible="1"/>
-                    <field name="attachment_number" invisible="True"/>
+                    <field name="attachment_number" invisible="1"/>
                     <field name="date" optional="show"/>
                     <field name="product_id" optional="hide"/>
                     <field name="name"/>
@@ -531,8 +531,8 @@
                             </group>
                             <group string="Accounting">
                                 <field name="property_account_expense_id" groups="account.group_account_readonly"/>
-                                <field name="supplier_taxes_id" widget="many2many_tags" 
-                                       context="{'default_type_tax_use':'purchase', 'default_price_include': 1}" 
+                                <field name="supplier_taxes_id" widget="many2many_tags"
+                                       context="{'default_type_tax_use':'purchase', 'default_price_include': 1}"
                                        options="{'no_quick_create': True}"/>
                             </group>
                         </group>
@@ -632,6 +632,7 @@
                     <field name="journal_id" optional="hide"/>
                     <field name="state" optional="show" decoration-info="state == 'draft'" decoration-success="state in ['submit', 'approve', 'post', 'done']" decoration-danger="state == 'cancel'" widget="badge"/>
                     <field name="payment_state" optional="show" decoration-info="payment_state in ('partial','in_payment')" decoration-success="payment_state == 'paid'" decoration-danger="payment_state in ('reversed','not_paid')" widget="badge"/>
+                    <field name="payment_mode" optional="hide"/>
                 </tree>
             </field>
         </record>
@@ -660,8 +661,13 @@
                 <field name="can_approve" invisible="1"/>
                 <field name="company_id" invisible="1"/>
                  <header>
-                    <button name="action_submit_sheet" states="draft" string="Submit to Manager" type="object" class="oe_highlight o_expense_sheet_submit" data-hotkey="l"/>
-                    <button name="approve_expense_sheets"
+                    <button name="action_submit_sheet"
+                            string="Submit to Manager"
+                            attrs="{'invisible': [('state', '!=', 'draft')]}"
+                            type="object"
+                            class="oe_highlight o_expense_sheet_submit"
+                            data-hotkey="l"/>
+                    <button name="action_approve_expense_sheets"
                             string="Approve"
                             type="object"
                             data-hotkey="v"
@@ -676,21 +682,30 @@
                             attrs="{'invisible': [('state', '!=', 'approve')]}"
                             groups="account.group_account_invoice"/>
                     <button name="action_register_payment"
+                            string="Register Payment"
                             type="object"
                             data-hotkey="w"
                             class="oe_highlight o_expense_sheet_pay"
-                            attrs="{'invisible': [('state', '!=', 'post')]}"
                             context="{'dont_redirect_to_payments': True}"
-                            string="Register Payment"
+                            attrs="{'invisible': ['|', ('payment_state', 'in', ('paid', 'in_payment')), ('state', 'not in', ('post', 'done'))]}"
                             groups="account.group_account_invoice"/>
-                    <button name="action_unpost"
+                    <button name="action_refuse_expense_sheets"
+                            string="Refuse"
+                            attrs="{'invisible': [('state', 'not in', ('submit', 'approve'))]}"
+                            type="object"
+                            groups="hr_expense.group_hr_expense_team_approver"
+                            data-hotkey="x"/>
+                    <button name="action_reset_approval_expense_sheets"
+                            string="Reset to Draft"
+                            type="object"
+                            attrs="{'invisible': ['|', ('can_reset', '=', False), ('state', 'not in', ('submit', 'cancel', 'approve'))]}"
+                            data-hotkey="q"/>
+                    <button name="action_reset_expense_sheets"
+                            string="Reset to Draft"
                             type="object"
                             data-hotkey="c"
                             attrs="{'invisible': [('state', '!=', 'post')]}"
-                            string="Cancel"
                             groups="account.group_account_readonly,account.group_account_invoice"/>
-                    <button name="%(hr_expense.hr_expense_refuse_wizard_action)d" states="submit,approve" context="{'hr_expense_refuse_model':'hr.expense.sheet'}" string="Refuse" type="action" groups="hr_expense.group_hr_expense_team_approver" data-hotkey="x" />
-                    <button name="reset_expense_sheets" string="Reset to Draft" type="object" attrs="{'invisible': ['|', ('can_reset', '=', False), ('state', 'not in', ['submit', 'cancel', 'approve'])]}" data-hotkey="q"/>
                     <field name="state" widget="statusbar" statusbar_visible="draft,submit,approve,post,done" force_save="1"/>
                 </header>
                 <sheet>
@@ -700,11 +715,11 @@
                             icon="fa-file-text-o"
                             type="object"
                             attrs="{'invisible': ['|', ('state', 'not in', ['post', 'done']), ('account_move_id', '=', False)]}"
-                            groups="account.group_account_user,account.group_account_readonly">
+                            groups="account.group_account_invoice">
                             Journal Entry
                         </button>
                         <field name="account_move_id" invisible="1"/>
-                        <button name="action_get_expense_view"
+                        <button name="action_open_expense_view"
                             class="oe_stat_button"
                             icon="fa-file-text-o"
                             type="object"
@@ -713,8 +728,7 @@
                         </button>
                     </div>
                     <field name="payment_state" invisible="True"/>
-                    <widget name="web_ribbon" title="Posted" bg_color="bg-success" attrs="{'invisible': ['|', ('payment_state', '!=', 'paid'), ('payment_mode', '==', 'own_account')]}"/>
-                    <widget name="web_ribbon" title="Paid" bg_color="bg-success" attrs="{'invisible': ['|', ('payment_state', '!=', 'paid'), ('payment_mode', '==', 'company_account')]}"/>
+                    <widget name="web_ribbon" title="Paid" bg_color="bg-success" attrs="{'invisible': [('payment_state', '!=', 'paid')]}"/>
                     <widget name="web_ribbon" title="Partial" bg_color="bg-info" attrs="{'invisible': [('payment_state', '!=', 'partial')]}"/>
                     <widget name="web_ribbon" title="In Payment" attrs="{'invisible': [('payment_state', '!=', 'in_payment')]}"/>
                     <div class="oe_title">
@@ -727,8 +741,12 @@
                         <group name="employee_details">
                             <field name="employee_id" context="{'default_company_id': company_id}" widget="many2one_avatar_employee"/>
                             <field name="payment_mode"/>
-                            <field name="journal_id" groups="account.group_account_invoice,account.group_account_readonly" options="{'no_open': True, 'no_create': True}" attrs="{'invisible': [('payment_mode', '!=', 'own_account')]}" context="{'default_company_id': company_id}"/>
-                            <field name="bank_journal_id" groups="account.group_account_invoice,account.group_account_readonly" options="{'no_open': True, 'no_create': True}" attrs="{'invisible': [('payment_mode', '!=', 'company_account')]}" context="{'default_company_id': company_id}"/>
+                            <field name="employee_journal_id" groups="account.group_account_invoice,account.group_account_readonly" options="{'no_open': True, 'no_create': True}" attrs="{'invisible': [('payment_mode', '!=', 'own_account')]}" context="{'default_company_id': company_id}"/>
+                            <field name="selectable_payment_method_line_ids" invisible="1"/>
+                            <field name="payment_method_line_id"
+                                   context="{'show_payment_journal_id': 1}"
+                                   options="{'no_open': True, 'no_create': True}"
+                                   attrs="{'invisible': [('payment_mode', '!=', 'company_account')], 'required': [('payment_mode', '=', 'company_account')], 'readonly': [('state', 'in', ('done', 'post'))]}"/>
                             <field name="address_id" invisible="1" context="{'default_company_id': company_id}"/>
                             <field name="department_id" invisible="1" context="{'default_company_id': company_id}"/>
                         </group>
@@ -747,10 +765,10 @@
                                     mode="tree,kanban"
                                     domain="[('state', '=', 'draft'), ('employee_id', '=', employee_id), ('company_id', '=', company_id)]"
                                     options="{'reload_on_button': True}"
-                                    context="{'form_view_ref' : 'hr_expense.hr_expense_view_form_without_header', 'default_company_id': company_id, 'default_employee_id': employee_id}" 
+                                    context="{'form_view_ref' : 'hr_expense.hr_expense_view_form_without_header', 'default_company_id': company_id, 'default_employee_id': employee_id}"
                                     attrs="{'readonly': [('is_editable', '=', False)]}"
                                     force_save="1">
-                                <tree decoration-danger="is_refused" editable="bottom" class="o_expense_line_list">
+                                <tree editable="bottom" class="o_expense_line_list">
                                     <field name="date" optional="show"/>
                                     <field name="product_id"/>
                                     <field name="name"/>
@@ -776,7 +794,6 @@
                                     <field name="amount_tax_company" optional="hide" readonly="True"/>
                                     <field name="company_currency_id" invisible="1"/>
                                     <field name="total_amount_company" optional="show" groups="base.group_multi_currency" readonly="True"/>
-                                    <field name="is_refused" invisible="True"/>
                                 </tree>
                             </field>
                             <field name="currency_id" invisible="1"/>
@@ -1042,7 +1059,6 @@
             <field name="view_mode">graph,pivot,tree,kanban,form</field>
             <field name="search_view_id" ref="hr_expense_sheet_view_search"/>
             <field name="domain">[]</field>
-            <field name="context">{}</field>
             <field name="help" type="html">
               <p class="o_view_nocontent_smiling_face">
                 Create a new expense report

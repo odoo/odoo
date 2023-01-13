@@ -20,5 +20,17 @@
             <field name="description">Expense report paid</field>
             <field name="default" eval="True"/>
         </record>
+        <record id="mt_expense_reset" model="mail.message.subtype">
+            <field name="name">Draft</field>
+            <field name="res_model">hr.expense.sheet</field>
+            <field name="default" eval="True"/>
+            <field name="description">Expense report reset to Draft</field>
+        </record>
+        <record id="mt_expense_entry_delete" model="mail.message.subtype">
+            <field name="name">Journal Entry Deleted</field>
+            <field name="res_model">hr.expense.sheet</field>
+            <field name="default" eval="True"/>
+            <field name="description">Journal entry deleted</field>
+        </record>
     </data>
 </odoo>

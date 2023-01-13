@@ -54,15 +54,17 @@ export class ExpenseListController extends ListController {
         const recordIds = records.map((a) => a.resId);
         const model = this.model.rootParams.resModel;
         const res = await this.orm.call(model, action, [recordIds]);
-        await this.actionService.doAction(res, {
-            additionalContext: {
-                dont_redirect_to_payments: 1,
-            },
-            onClose: async () => {
-                await this.model.root.load();
-                this.render(true);
-            }
-        });
+        if (res) {
+            await this.actionService.doAction(res, {
+                additionalContext: {
+                    dont_redirect_to_payments: 1,
+                },
+                onClose: async () => {
+                    await this.model.root.load();
+                    this.render(true);
+                }
+            });
+        }
         // sgv note: we tried this.model.notify(); and does not work
         await this.model.root.load();
         this.render(true);
