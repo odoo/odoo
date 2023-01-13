@@ -409,20 +409,31 @@ export function deserializeDateTime(value) {
     return DateTime.fromSQL(value, { zone: "utc", numberingSystem: "latn" }).setZone("default");
 }
 
+const dateCache = new WeakMap();
 /**
  * Returns a serialized string representing the given date.
  * @param {DateTime} value DateTime object, its timezone does not matter
  * @returns {string} serialized date, ready to be sent to the server
  */
 export function serializeDate(value) {
-    return value.toFormat(SERVER_DATE_FORMAT, { numberingSystem: "latn" });
+    if (!dateCache.has(value)) {
+        dateCache.set(value, value.toFormat(SERVER_DATE_FORMAT, { numberingSystem: "latn" }));
+    }
+    return dateCache.get(value);
 }
 
+const dateTimeCache = new WeakMap();
 /**
  * Returns a serialized string representing the given datetime.
  * @param {DateTime} value DateTime object, its timezone does not matter
  * @returns {string} serialized datetime, ready to be sent to the server
  */
 export function serializeDateTime(value) {
-    return value.setZone("utc").toFormat(SERVER_DATETIME_FORMAT, { numberingSystem: "latn" });
+    if (!dateTimeCache.has(value)) {
+        dateTimeCache.set(
+            value,
+            value.setZone("utc").toFormat(SERVER_DATETIME_FORMAT, { numberingSystem: "latn" })
+        );
+    }
+    return dateTimeCache.get(value);
 }
