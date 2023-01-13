@@ -8,7 +8,6 @@ from odoo.exceptions import ValidationError, RedirectWarning
 class AccountMove(models.Model):
     _inherit = "account.move"
 
-    amount_total_words = fields.Char("Total (In Words)", compute="_compute_amount_total_words")
     l10n_in_gst_treatment = fields.Selection([
             ('regular', 'Registered Business - Regular'),
             ('composition', 'Registered Business - Composition'),
