@@ -91,33 +91,6 @@
            display: flex;
            flex-flow: row wrap;
            width: 100%;
-
-           .o_settings_title, .o_setting_search {
-               flex: 1 0 auto;
-               width: map-get($o-extra-grid-breakpoints, vsm) / 2;
-           }
-
-           .o_setting_search {
-               position: relative;
-
-               .searchInput {
-                   border: 0px;
-                   max-width: 400px;
-                   border-bottom: 1px solid $border-color;
-                   box-shadow: none;
-               }
-
-               .searchIcon {
-                   @include o-position-absolute($right: 0);
-                   color: map-get($grays, '700');
-               }
-
-               &:focus-within {
-                   .searchInput {
-                       border-bottom-color: $primary;
-                   }
-               }
-           }
        }
 
        .o_form_statusbar {
