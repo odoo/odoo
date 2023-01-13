@@ -28,7 +28,7 @@
                             </div>
                             <div class="content-group mt16">
                                 <field
-                                    name="pos_down_payment_product_id"
+                                    name="pos_down_payment_product_id" class="w-75"
                                     domain="[('type', '=', 'service'), '|', ('company_id', '=', company_id), ('company_id', '=', False)]"
                                     context="{'default_detailed_type': 'service', 'default_taxes_id': False }"
                                 />

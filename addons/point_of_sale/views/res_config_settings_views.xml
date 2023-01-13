@@ -152,7 +152,7 @@
                                             Default sales tax for products
                                         </div>
                                         <div class="content-group mt16">
-                                            <field name="sale_tax_id" colspan="4" nolabel="1" domain="[('type_tax_use', 'in', ('sale', 'all')), ('company_id', '=', company_id)]"/>
+                                            <field name="sale_tax_id" colspan="4" class="w-75" nolabel="1" domain="[('type_tax_use', 'in', ('sale', 'all')), ('company_id', '=', company_id)]"/>
                                         </div>
                                     </div>
                                     <div class="mt8">
@@ -170,7 +170,7 @@
                                             Intermediary account used for unidentified customers.
                                         </div>
                                         <div class="content-group mt16">
-                                            <field name="account_default_pos_receivable_account_id" colspan="4" nolabel="1" domain="[('reconcile', '=', True), ('account_type', '=', 'asset_receivable'), ('company_id', '=', company_id)]"/>
+                                            <field name="account_default_pos_receivable_account_id" colspan="4" class="w-75" nolabel="1" domain="[('reconcile', '=', True), ('account_type', '=', 'asset_receivable'), ('company_id', '=', company_id)]"/>
                                         </div>
                                     </div>
                                 </div>
@@ -375,7 +375,7 @@
                                         Generation of your order references
                                     </div>
                                     <div class="content-group mt16">
-                                        <field name="pos_sequence_id" readonly="1"/>
+                                        <field name="pos_sequence_id" class="w-75" readonly="1"/>
                                     </div>
                                 </div>
                             </div>
@@ -607,7 +607,7 @@
                                         Used to record product pickings. Products are consumed from its default source location.
                                     </div>
                                     <div class="content-group mt16">
-                                        <field name="pos_picking_type_id" domain="[('company_id', '=', company_id)]" attrs="{'required': [('pos_config_id', '!=', False)]}"/>
+                                        <field name="pos_picking_type_id" class="w-75" domain="[('company_id', '=', company_id)]" attrs="{'required': [('pos_config_id', '!=', False)]}"/>
                                     </div>
                                 </div>
                             </div>
