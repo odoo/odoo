@@ -1531,9 +1531,7 @@ class TestComposerResultsComment(TestMailComposer, CronMixinCase):
                     # Then each recipient receives its own outging email. See
                     # 'assertMailMail' for more details.
 
-                    # TDE FIXME: lang not supported in batch mode, translations
-                    # are fetched on composer-side, not template-side
-                    if exp_lang == 'es_ES' and not batch:
+                    if exp_lang == 'es_ES':
                         exp_body = f'SpanishBody for {test_record.name}'
                         exp_subject = f'SpanishSubject for {test_record.name}'
                     else:
@@ -1940,11 +1938,7 @@ class TestComposerResultsMass(TestMailComposer):
                     # message copy is kept
                     message = record.message_ids[0]
 
-                    # Translations are currently not really supported as they
-                    # are fetched composer side. As it is a wizard people use
-                    # and discard they are not translated. Only templates are
-                    # translated as they are master data.
-                    if False and exp_lang == 'es_ES':  # remove False when improving support
+                    if exp_lang == 'es_ES':
                         exp_body = f'SpanishBody for {record.name}'
                         exp_subject = f'SpanishSubject for {record.name}'
                     else:
@@ -1988,7 +1982,7 @@ class TestComposerResultsMass(TestMailComposer):
                     # Hence no translations.
                     self.assertEqual(
                         email['body'],
-                        f'<p>TemplateBody {record.name}</p>'
+                        f'<p>{exp_body}</p>'
                     )
                     # exp_layout_content_en = 'English Layout for Ticket-like model'
                     # exp_layout_content_es = 'Spanish Layout para Spanish Model Description'

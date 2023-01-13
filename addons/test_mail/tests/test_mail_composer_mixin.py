@@ -138,11 +138,10 @@ class TestMailComposerMixin(TestMailCommon, TestRecipients):
 
         # ask for dynamic language computation
         subject = composer._render_field('subject', source.ids, compute_lang=True)[source.id]
-        self.assertEqual(subject, f'EnglishSubject for {source.name}',
-                         'Fixme: translations are not done, as taking composer translations and not template one')
+        self.assertEqual(subject, f'SpanishSubject for {source.name}',
+                         'Translation comes from the template, as both values equal')
         body = composer._render_field('body', source.ids, compute_lang=True)[source.id]
-        self.assertEqual(body, f'<p>EnglishBody for {source.name}</p>',
-                         'Fixme: translations are not done, as taking composer translations and not template one'
-        )
+        self.assertEqual(body, f'<p>SpanishBody for {source.name}</p>',
+                         'Translation comes from the template, as both values equal')
         description = composer._render_field('description', source.ids)[source.id]
         self.assertEqual(description, f'<p>Description for {source.name}</p>')
