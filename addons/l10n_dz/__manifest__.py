@@ -23,5 +23,8 @@ This module applies to companies based in Algeria.
     'demo': [
         'demo/demo_company.xml',
     ],
+    'demo': [
+        'demo/demo_company.xml',
+    ],
     'license': 'LGPL-3',
 }

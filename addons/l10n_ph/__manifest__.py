@@ -30,6 +30,9 @@
         "views/res_partner_views.xml",
         "security/ir.model.access.csv",
     ],
+    "demo": [
+        "demo/demo_company.xml",
+    ],
     "license": "LGPL-3",
     "icon": "/base/static/img/country_flags/ph.png",
 }
