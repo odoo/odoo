@@ -897,6 +897,43 @@ QUnit.module("Views", (hooks) => {
     );
 
     QUnit.test(
+        "list view: give a context dependent on the current context to a header button",
+        async function (assert) {
+            const list = await makeView({
+                type: "list",
+                resModel: "foo",
+                serverData,
+                arch: `
+                <tree>
+                    <header>
+                        <button name="toDo" type="object" string="toDo" display="always" context="{'b': context.get('a')}"/>
+                    </header>
+                    <field name="foo" />
+                </tree>`,
+                context: {
+                    a: "yop",
+                },
+            });
+
+            patchWithCleanup(list.env.services.action, {
+                doActionButton: (action) => {
+                    assert.step("doActionButton");
+                    assert.deepEqual(action.buttonContext, {
+                        active_domain: [],
+                        active_ids: [],
+                        active_model: "foo",
+                        b: "yop",
+                    });
+                },
+            });
+
+            const cpButtons = getButtons(target)[0];
+            await click(cpButtons.querySelectorAll("button")[1]);
+            assert.verifySteps(["doActionButton"]);
+        }
+    );
+
+    QUnit.test(
         "list view: action button executes action on click: buttons are disabled and re-enabled",
         async function (assert) {
             const executeActionDef = makeDeferred();
