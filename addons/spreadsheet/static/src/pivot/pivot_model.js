@@ -556,7 +556,13 @@ export class SpreadsheetPivotModel extends PivotModel {
             } else {
                 value = parsePivotFormulaFieldValue(field, groupValue);
             }
-            if (this._isCol(field)) {
+            if(this._isCol(field) && this._isRow(field)){
+                if(cols.length % 2 == 0){  // cols first
+                    cols.push(value);
+                }else {
+                    rows.push(value);
+                }
+            } else if (this._isCol(field)) {
                 cols.push(value);
             } else if (this._isRow(field)) {
                 rows.push(value);

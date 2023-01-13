@@ -501,13 +501,24 @@ QUnit.module("spreadsheet > pivot plugin", {}, () => {
     });
 
     QUnit.test("Verify pivot measures are correctly computed :)", async function (assert) {
-        assert.expect(4);
-
         const { model } = await createSpreadsheetWithPivot();
         assert.equal(getCellValue(model, "B4"), 11);
         assert.equal(getCellValue(model, "C3"), 15);
         assert.equal(getCellValue(model, "D4"), 10);
         assert.equal(getCellValue(model, "E4"), 95);
+    });
+
+    QUnit.test("Verify pivot measures of sum type are correctly computed when grouped by the same field", async function (assert) {
+        const { model } = await createSpreadsheetWithPivot({
+            arch: /*xml*/ `
+                <pivot>
+                    <field name="id" type="col"/>
+                    <field name="id" type="row"/>
+                    <field name="foo" type="measure"/>
+                </pivot>`,
+        });
+        assert.equal(getCellValue(model, "B3"), 12);
+        assert.equal(getCellValue(model, "C4"), 1);
     });
 
     QUnit.test("can import/export sorted pivot", async (assert) => {
