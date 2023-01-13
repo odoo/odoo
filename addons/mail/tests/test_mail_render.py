@@ -138,6 +138,7 @@ class TestMailRenderCommon(common.MailCommon):
             signature='--\nErnest'
         )
         cls.user_rendering_restricted.groups_id -= cls.env.ref('mail.group_mail_template_editor')
+        cls.user_employee.groups_id += cls.env.ref('mail.group_mail_template_editor')
 
 
 @tagged('mail_render')
