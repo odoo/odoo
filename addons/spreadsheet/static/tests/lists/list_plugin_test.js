@@ -16,6 +16,7 @@ import {
 } from "../utils/getters";
 import { createSpreadsheetWithList } from "../utils/list";
 import { registry } from "@web/core/registry";
+import { RPCError } from "@web/core/network/rpc_service";
 
 QUnit.module("spreadsheet > list plugin", {}, () => {
     QUnit.test("List export", async (assert) => {
@@ -506,4 +507,43 @@ QUnit.module("spreadsheet > list plugin", {}, () => {
             },
         });
     });
+
+    QUnit.test(
+        "Load list spreadsheet with models that cannot be accessed",
+        async function (assert) {
+            let hasAccessRights = true;
+            const { model } = await createSpreadsheetWithList({
+                mockRPC: async function (route, args) {
+                    if (
+                        args.model === "partner" &&
+                        args.method === "search_read" &&
+                        !hasAccessRights
+                    ) {
+                        const error = new RPCError();
+                        error.data = { message: "ya done!" };
+                        throw error;
+                    }
+                },
+            });
+            let headerCell;
+            let cell;
+            await waitForDataSourcesLoaded(model);
+            headerCell = getEvaluatedCell(model, "A3");
+            cell = getEvaluatedCell(model, "C3");
+
+            assert.equal(headerCell.value, 1);
+            assert.equal(cell.value, 42669);
+
+            hasAccessRights = false;
+            model.dispatch("REFRESH_ODOO_LIST", { listId: "1" });
+            await waitForDataSourcesLoaded(model);
+            headerCell = getEvaluatedCell(model, "A3");
+            cell = getEvaluatedCell(model, "C3");
+
+            assert.equal(headerCell.value, "#ERROR");
+            assert.equal(headerCell.error.message, "ya done!");
+            assert.equal(cell.value, "#ERROR");
+            assert.equal(cell.error.message, "ya done!");
+        }
+    );
 });
