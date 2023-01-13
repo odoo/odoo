@@ -56,6 +56,7 @@ import {
     isVoidElement,
     cleanZWS,
     isZWS,
+    setTagName,
 } from './utils/utils.js';
 import { editorCommands } from './commands/commands.js';
 import { Powerbox } from './powerbox/Powerbox.js';
@@ -149,7 +150,7 @@ export const CLIPBOARD_WHITELISTS = {
         /^fa/,
     ],
     attributes: ['class', 'href', 'src'],
-    styledTags: ['SPAN', 'B', 'STRONG', 'I', 'S', 'U', 'FONT'],
+    styledTags: ['SPAN', 'B', 'STRONG', 'I', 'EM', 'S', 'U', 'FONT'],
     styles: {
         'text-decoration': { defaultValues: ['', 'none'] },
         'font-weight': { defaultValues: ['', '400'] },
@@ -1426,8 +1427,14 @@ export class OdooEditor extends EventTarget {
         const doJoin =
             closestBlock(start) !== closestBlock(range.commonAncestorContainer) ||
             closestBlock(end) !== closestBlock(range.commonAncestorContainer) ;
-        let next = nextLeaf(end, this.editable);
+        let next;
         const splitEndTd = closestElement(end, 'td') && end.nextSibling;
+        const startFullySelected = start.textContent === start.wholeText;
+        const endFullySelected = end.textContent === end.wholeText;
+        const endNodeName = end.parentNode.nodeName;
+        if (!endFullySelected || (endFullySelected && CLIPBOARD_WHITELISTS.styledTags.includes(endNodeName))) {
+            next = nextLeaf(end, this.editable);
+        }
         const contents = range.extractContents();
         setSelection(start, nodeSize(start));
         range = getDeepRange(this.editable, { sel });
@@ -1485,6 +1492,14 @@ export class OdooEditor extends EventTarget {
         // Ensure empty blocks be given a <br> child.
         if (start) {
             fillEmpty(closestBlock(start));
+            // Update the tag of start according to the tag of end.
+            if (contents.firstChild && contents.firstChild.textContent && startFullySelected && !endIsStart) {
+                start = setTagName(closestBlock(start), endNodeName);
+                // The content of start and end has been removed, hence we must reset the selection
+                // so that cursor stays in the right position.
+                setSelection(start, nodeSize(start));
+                range = getDeepRange(this.editable, { sel });
+            }
         }
         fillEmpty(closestBlock(range.endContainer));
         // Ensure trailing space remains visible.

@@ -1100,6 +1100,16 @@ X[]
                     stepFunction: deleteForward,
                     contentAfter: '<h1>ab []gh</h1>',
                 });
+                await testEditor(BasicEditor, {
+                    contentBefore: '<h1>[abc</h1><p>d]ef</p>',
+                    stepFunction: deleteForward,
+                    contentAfter: '<p>[]ef</p>',
+                });
+                await testEditor(BasicEditor, {
+                    contentBefore: '<h1>[abc</h1><p>def]</p><p>ghi</p>',
+                    stepFunction: deleteForward,
+                    contentAfter: '<p>[]<br></p><p>ghi</p>',
+                });
                 // // Backward selection
                 await testEditor(BasicEditor, {
                     contentBefore: '<h1>ab ]cd</h1><p>ef[gh</p>',
@@ -1112,23 +1122,33 @@ X[]
                 await testEditor(BasicEditor, {
                     contentBefore: '<h1><b>[abcd</b></h1><p>ef]gh</p>',
                     stepFunction: deleteForward,
-                    contentAfter: '<h1>[]gh</h1>',
+                    contentAfter: '<p>[]gh</p>',
                 });
                 await testEditor(BasicEditor, {
                     contentBefore: '<h1>[<b>abcd</b></h1><p>ef]gh</p>',
                     stepFunction: deleteForward,
-                    contentAfter: '<h1>[]gh</h1>',
+                    contentAfter: '<p>[]gh</p>',
                 });
                 // Backward selection
                 await testEditor(BasicEditor, {
                     contentBefore: '<h1><b>]abcd</b></h1><p>ef[gh</p>',
                     stepFunction: deleteForward,
-                    contentAfter: '<h1>[]gh</h1>',
+                    contentAfter: '<p>[]gh</p>',
                 });
                 await testEditor(BasicEditor, {
                     contentBefore: '<h1>]<b>abcd</b></h1><p>ef[gh</p>',
                     stepFunction: deleteForward,
-                    contentAfter: '<h1>[]gh</h1>',
+                    contentAfter: '<p>[]gh</p>',
+                });
+                await testEditor(BasicEditor, {
+                    contentBefore: '<h1>]<b>abcd</b></h1><h2>ef[gh</h2>',
+                    stepFunction: deleteForward,
+                    contentAfter: '<h2>[]gh</h2>',
+                });
+                await testEditor(BasicEditor, {
+                    contentBefore: '<p>]<b>abcd</b></p><h3>ef[gh</h3>',
+                    stepFunction: deleteForward,
+                    contentAfter: '<h3>[]gh</h3>',
                 });
             });
             it('should not break unbreakables', async () => {
@@ -2351,23 +2371,23 @@ X[]
                 await testEditor(BasicEditor, {
                     contentBefore: '<h1><b>[abcd</b></h1><p>ef]gh</p>',
                     stepFunction: deleteBackward,
-                    contentAfter: '<h1>[]gh</h1>',
+                    contentAfter: '<p>[]gh</p>',
                 });
                 await testEditor(BasicEditor, {
                     contentBefore: '<h1>[<b>abcd</b></h1><p>ef]gh</p>',
                     stepFunction: deleteBackward,
-                    contentAfter: '<h1>[]gh</h1>',
+                    contentAfter: '<p>[]gh</p>',
                 });
                 // Backward selection
                 await testEditor(BasicEditor, {
                     contentBefore: '<h1><b>]abcd</b></h1><p>ef[gh</p>',
                     stepFunction: deleteBackward,
-                    contentAfter: '<h1>[]gh</h1>',
+                    contentAfter: '<p>[]gh</p>',
                 });
                 await testEditor(BasicEditor, {
                     contentBefore: '<h1>]<b>abcd</b></h1><p>ef[gh</p>',
                     stepFunction: deleteBackward,
-                    contentAfter: '<h1>[]gh</h1>',
+                    contentAfter: '<p>[]gh</p>',
                 });
             });
             it('should delete a heading (triple click backspace)', async () => {
