@@ -3,6 +3,7 @@
 import { nextTick } from "@web/../tests/helpers/utils";
 import { LoadableDataSource } from "@spreadsheet/data_sources/data_source";
 import { Deferred } from "@web/core/utils/concurrency";
+import { RPCError } from "@web/core/network/rpc_service";
 
 QUnit.module("spreadsheet data source", {}, () => {
     QUnit.test(
@@ -43,4 +44,31 @@ QUnit.module("spreadsheet data source", {}, () => {
             assert.strictEqual(dataSource.isReady(), true);
         }
     );
+
+    QUnit.test("Datasources handle errors thrown at _load", async (assert) => {
+        class TestDataSource extends LoadableDataSource {
+            constructor() {
+                super(...arguments);
+                this.data = null;
+            }
+            async _load() {
+                this.data = await this._orm.call();
+            }
+        }
+
+        const dataSource = new TestDataSource({
+            notify: () => {},
+            orm: {
+                call: () => {
+                    const error = new RPCError();
+                    error.data = { message: "Ya done!" };
+                    throw error;
+                },
+            },
+        });
+        await dataSource.load();
+        assert.ok(dataSource._isFullyLoaded);
+        assert.notOk(dataSource._isValid);
+        assert.equal(dataSource._loadErrorMessage, "Ya done!");
+    });
 });
