@@ -51,12 +51,12 @@ tour.register('google_analytics_view_item', {
 
 tour.register('google_analytics_add_to_cart', {
     test: true,
-    url: '/shop?search=Acoustic Bloc Screens',
+    url: '/shop?search=Storage Box',
 },
 [
     {
-        content: "select Acoustic Bloc Screens",
-        trigger: '.oe_product_cart a:contains("Acoustic Bloc Screens")',
+        content: "select Storage Box",
+        trigger: '.oe_product_cart a:contains("Storage Box")',
     },
     {
         content: "click add to cart button on product page",

@@ -1,7 +1,6 @@
 odoo.define('website_sale_coupon.test', function (require) {
 'use strict';
 
-require("website_sale.tour");
 var tour = require("web_tour.tour");
 var ajax = require('web.ajax');
 const tourUtils = require('website_sale.tour_utils');

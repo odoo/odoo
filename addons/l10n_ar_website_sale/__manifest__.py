@@ -21,4 +21,9 @@
     'auto_install': True,
     'application': False,
     'license': 'LGPL-3',
+    'assets': {
+        'web.assets_tests': [
+            'l10n_ar_website_sale/static/tests/**/*',
+        ],
+    },
 }
