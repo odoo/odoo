@@ -27,7 +27,7 @@ class TestProjectHrExpenseProfitabilityCommon(TestExpenseCommon):
             'No data should be found since the sheet is not approved yet.',
         )
 
-        expense_sheet.approve_expense_sheets()
+        expense_sheet.action_approve_expense_sheets()
         self.assertEqual(expense_sheet.state, 'approve')
         return expense_sheet
 
@@ -65,7 +65,7 @@ class TestProjectHrExpenseProfitability(TestProjectProfitabilityCommon, TestProj
             },
         )
 
-        expense_sheet.refuse_sheet('Test cancel expense')
+        expense_sheet._do_refuse('Test cancel expense')
         self.assertDictEqual(
             self.project._get_profitability_items(False),
             self.project_profitability_items_empty,
