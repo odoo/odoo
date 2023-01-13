@@ -3008,10 +3008,13 @@ class BaseModel(metaclass=MetaModel):
         The main difference comes from the extra function ``digest``, which may
         be used to make identifiers for old terms.
 
-        :param dict translations: if the field has ``translate=True``, it should be a dictionary
-            like ``{lang: new_value}``; if ``translate`` is a callable, it should be like
-            ``{lang: {old_term: new_term}}``, or ``{lang: {digest(old_term): new_term}}`` when
-            ``digest`` is a callable
+        :param dict translations:
+            if the field has ``translate=True``, it should be a dictionary like ``{lang: new_value}``
+                new_value: str: the new translation for lang
+                new_value: False: void the current translation for lang and fallback to current en_US value
+            if ``translate`` is a callable, it should be like
+            ``{lang: {old_term: new_term}}``, or ``{lang: {digest(old_term): new_term}}`` when ``digest`` is callable
+                new_value: str: the new translation of old_term for lang
         :param digest: an optional digest function for the old_term
         """
         self.ensure_one()
@@ -3025,25 +3028,36 @@ class BaseModel(metaclass=MetaModel):
             # a non-related non-stored computed field cannot be translated, even if it has inverse function
             return False
 
+        # Strictly speaking, a translated related/computed field cannot be stored
+        # because the compute function only support one language
+        # `not field.store` is a redundant logic.
+        # But some developers store translated related fields.
+        # In these cases, only all translations of the first stored translation field will be updated
+        # For other stored related translated field, the translation for the flush language will be updated
+        if field.related and not field.store:
+            related_path, field_name = field.related.rsplit(".", 1)
+            return self.mapped(related_path)._update_field_translations(field_name, translations, digest)
+        self.check_access_rights('write')
+        self.check_field_access_rights('write', [field_name])
+        self.check_access_rule('write')
+
         if field.translate is True:
-            for lang, translation in translations.items():
-                if translation is not None:
-                    self.with_context(lang=lang)[field_name] = translation
+            # falsy values (except emtpy str) are used to void the corresponding translation
+            if any(translation and not isinstance(translation, str) for translation in translations.values()):
+                raise UserError(_("Translations for model translated fields only accept falsy values and str"))
+            value_en = translations.get('en_US', True)
+            if not value_en and value_en != '':
+                translations.pop('en_US')
+            translations = {
+                lang: translation if isinstance(translation, str) else None
+                for lang, translation in translations.items()
+            }
+            self.invalidate_recordset([field_name])
+            self._cr.execute(f'''
+                UPDATE {self._table} SET {field_name} = jsonb_strip_nulls({field_name} || %s) WHERE id = %s
+            ''', (Json(translations), self.id))
+            self.modified([field_name])
         else:
-            # Strictly speaking, a translated related/computed field cannot be stored
-            # because the compute function only support one language
-            # `not field.store` is a redundant logic.
-            # But some developers store translated related fields.
-            # In these cases, only all translations of the first stored translation field will be updated
-            # For other stored related translated field, the translation for the flush language will be updated
-            if field.related and not field.store:
-                related_path, field_name = field.related.rsplit(".", 1)
-                return self.mapped(related_path)._update_field_translations(field_name, translations, digest)
-
-            self.check_access_rights('write')
-            self.check_field_access_rights('write', [field_name])
-            self.check_access_rule('write')
-
             # Note:
             # update terms in 'en_US' will not change its value other translated values
             # record_en = Model_en.create({'html': '<div>English 1</div><div>English 2<div/>'

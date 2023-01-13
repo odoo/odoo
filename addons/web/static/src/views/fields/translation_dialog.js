@@ -74,10 +74,10 @@ export class TranslationDialog extends Component {
                     if (!translations[term.lang]) {
                         translations[term.lang] = {};
                     }
-                    const source = term.value ? term.value : term.source;
-                    translations[term.lang][source] = updatedTermValue;
+                    const oldTermValue = term.value ? term.value : term.source;
+                    translations[term.lang][oldTermValue] = updatedTermValue || term.source;
                 } else {
-                    translations[term.lang] = updatedTermValue;
+                    translations[term.lang] = updatedTermValue || false;
                 }
             }
         });
