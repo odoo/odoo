@@ -1,6 +1,6 @@
 /** @odoo-module */
 import tour from 'web_tour.tour';
-const today = moment();
+const today = luxon.DateTime.now();
 
 tour.register('crm_forecast', {
     test: true,
@@ -39,7 +39,7 @@ tour.register('crm_forecast', {
     }, {
         trigger: "div[name=date_deadline] input",
         content: "complete expected closing",
-        run: `text ${today.format("MM/DD/YYYY")}`,
+        run: `text ${today.toFormat("MM/dd/yyyy")}`,
     }, {
         trigger: "div[name=date_deadline] input",
         content: "click to make the datepicker disappear",
@@ -68,7 +68,7 @@ tour.register('crm_forecast', {
         trigger: ".o_field_widget[name=date_deadline] input",
         content: "complete expected closing",
         run: function (actions) {
-            actions.text(`text ${moment(today).add(5, 'months').startOf('month').subtract(1, 'days').format("MM/DD/YYYY")}`, this.$anchor);
+            actions.text(`text ${today.plus({months: 5}).startOf('month').minus({days: 1}).toFormat("MM/dd/yyyy")}`, this.$anchor);
             this.$anchor[0].dispatchEvent(new KeyboardEvent("keydown", { bubbles: true, key: "Escape" }));
         },
     }, {
