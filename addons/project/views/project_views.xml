@@ -1617,10 +1617,10 @@
                     <field name="project_id"/>
                     <templates>
                         <div class="justify-content-between" t-name="activity-box">
-                            <field name="user_ids" widget="many2many_avatar_user"/>
-                            <div class="text-end">
+                            <field name="user_ids" widget="many2many_avatar_user" class="col-6"/>
+                            <div class="text-end col-6">
                                 <span t-att-title="record.name.value">
-                                    <field name="name" display="full"/>
+                                    <field name="name" display="full" class="text-truncate"/>
                                 </span>
                                 <span t-att-title="record.project_id.value">
                                     <field t-if="record.project_id.value" name="project_id" muted="1" display="full"/>
