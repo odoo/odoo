@@ -12,7 +12,7 @@
                     <t t-else="">, <t t-esc="startTime"/></t>
                 </t>
             </div>
-            <span t-if="!isTimeHidden" class="fc-time"/>
+            <span t-if="!isTimeHidden" class="fc-time" t-esc="startTime" />
         </div>
     </t>
 </templates>
