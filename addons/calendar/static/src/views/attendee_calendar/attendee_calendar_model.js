@@ -168,7 +168,7 @@ export class AttendeeCalendarModel extends CalendarModel {
                 [[id], recurrenceUpdate],
             );
         }
-        await this.model.load();
+        await this.load();
     }
 }
 AttendeeCalendarModel.services = [...CalendarModel.services, "dialog", "orm"];
