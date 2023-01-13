@@ -1886,8 +1886,13 @@ class AccountMove(models.Model):
         # Skip posted moves.
         for invoice in (x for x in container['records'] if x.state != 'posted'):
 
-            # Unlink tax lines if all tax tags have been removed.
+            # Unlink tax lines if all taxes have been removed.
             if not invoice.line_ids.tax_ids:
+                # if there isn't any tax but there remains a tax_line_id, it means we are currently in the process of
+                # removing the taxes from the entry. Thus, we want the automatic balancing to happen in order  to have
+                # a smooth process for tax deletion
+                if not invoice.line_ids.filtered('tax_line_id'):
+                    continue
                 invoice.line_ids.filtered('tax_line_id').unlink()
 
             # Set the balancing line's balance and amount_currency to zero,
