@@ -365,7 +365,7 @@ class MailTestComposerMixin(models.Model):
 
 class MailTestComposerSource(models.Model):
     """ A simple model on which invites are sent. """
-    _description = 'Invite-like Wizard'
+    _description = 'Invite-like Source'
     _name = 'mail.test.composer.source'
     _inherit = ['mail.thread.blacklist']
     _primary_email = 'email_from'

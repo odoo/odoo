@@ -81,9 +81,13 @@ class MailComposer(models.TransientModel):
         ])
 
     # content
-    subject = fields.Char('Subject', compute='_compute_subject', readonly=False, store=True)
+    subject = fields.Char(
+        'Subject',
+        compute='_compute_subject', readonly=False, store=True)
     body = fields.Html(
-        'Contents', render_engine='qweb', render_options={'post_process': True}, sanitize_style=True,
+        'Contents',
+        render_engine='qweb', render_options={'post_process': True},
+        sanitize_style=True,
         compute='_compute_body', readonly=False, store=True)
     parent_id = fields.Many2one(
         'mail.message', 'Parent Message', ondelete='set null')
@@ -857,9 +861,10 @@ class MailComposer(models.TransientModel):
         RecordsModel = self.env[self.model].with_prefetch(res_ids)
         email_mode = self.composition_mode == 'mass_mail'
 
-        subjects = self._render_field('subject', res_ids)
+        subjects = self._render_field('subject', res_ids, compute_lang=True)
+        # We want to preserve comments in emails so as to keep mso conditionals
         bodies = self._render_field(
-            'body', res_ids,
+            'body', res_ids, compute_lang=True,
             # We want to preserve comments in emails so as to keep mso conditionals
             options={'preserve_comments': email_mode},
         )
