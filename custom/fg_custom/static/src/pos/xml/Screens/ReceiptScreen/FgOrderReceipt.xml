@@ -505,7 +505,7 @@
                         <span t-esc="line.product_name" class="pos-receipt-left-align"/>
                         <div class="responsive-price">
                             <span t-esc="line.quantity" style="margin-right: 3%;margin-left: 15%;" class="pos-receipt-left-align"/> @
-                            <span t-esc="env.pos.format_currency_no_symbol(line.price)" style="margin-left: 3%;" class="price_display pos-receipt-left-align"/>
+                            <span t-esc="env.pos.format_currency_no_symbol(line.price_with_tax_before_discount)" style="margin-left: 3%;" class="price_display pos-receipt-left-align"/>
                             <t t-set="price_discount" t-value="line.price_with_tax_before_discount - line.price_with_tax" class="price_display pos-receipt-left-align"/>
                             <span class="price_display pos-receipt-right-align"><t t-esc="env.pos.format_currency_no_symbol(line.price_with_tax + price_discount)"/>
                                 <t t-set="is_non_zero_vat" t-value="''"/>
