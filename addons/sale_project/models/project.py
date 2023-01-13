@@ -403,6 +403,16 @@ class Project(models.Model):
             'total': {'to_invoice': total_to_invoice, 'invoiced': total_invoiced},
         }
 
+    def _get_revenues_items_from_invoices_domain(self, domain=None):
+        if domain is None:
+            domain = []
+        return expression.AND([
+            domain,
+            [('move_id.move_type', 'in', self.env['account.move'].get_sale_types()),
+            ('parent_state', 'in', ['draft', 'posted']),
+            ('price_subtotal', '>', 0)],
+        ])
+
     def _get_revenues_items_from_invoices(self, excluded_move_line_ids=None):
         """
         Get all revenues items from invoices, and put them into their own
@@ -416,12 +426,9 @@ class Project(models.Model):
         """
         if excluded_move_line_ids is None:
             excluded_move_line_ids = []
-        query = self.env['account.move.line'].sudo()._search([
-            ('move_id.move_type', 'in', ['out_invoice', 'out_refund']),
-            ('parent_state', 'in', ['draft', 'posted']),
-            ('price_subtotal', '>', 0),
-            ('id', 'not in', excluded_move_line_ids),
-        ])
+        query = self.env['account.move.line'].sudo()._search(
+            self._get_revenues_items_from_invoices_domain([('id', 'not in', excluded_move_line_ids)]),
+        )
         query.add_where('account_move_line.analytic_distribution ? %s', [str(self.analytic_account_id.id)])
         # account_move_line__move_id is the alias of the joined table account_move in the query
         # we can use it, because of the "move_id.move_type" clause in the domain of the query, which generates the join
