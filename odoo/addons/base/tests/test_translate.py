@@ -8,7 +8,7 @@ from psycopg2 import IntegrityError
 from psycopg2.extras import Json
 import io
 
-from odoo.exceptions import AccessError, ValidationError
+from odoo.exceptions import UserError
 from odoo.tools import sql
 from odoo.tools.translate import quote, unquote, xml_translate, html_translate, TranslationImporter
 from odoo.tests.common import TransactionCase, BaseCase, new_test_user, tagged
@@ -686,6 +686,43 @@ class TestTranslationWrite(TransactionCase):
         group.with_context(lang='fr_FR').comment = 'French comment 2'
         self.assertEqual(group.with_context(lang='fr_FR').comment, 'French comment 2')
         self.assertEqual(group.with_context(lang='en_US').comment, 'French comment')
+
+    def test_update_field_translations(self):
+        self.env['res.lang']._activate_lang('fr_FR')
+        categoryEN = self.category.with_context(lang='en_US')
+        categoryFR = self.category.with_context(lang='fr_FR')
+
+        self.category.update_field_translations('name', {'en_US': 'English Name', 'fr_FR': 'French Name'})
+        self.assertEqual(categoryEN.name, 'English Name')
+        self.assertEqual(categoryFR.name, 'French Name')
+
+        # void fr_FR translation and fallback to en_US
+        self.category.update_field_translations('name', {'fr_FR': False})
+        self.assertEqual(categoryEN.name, 'English Name')
+        self.assertEqual(categoryFR.name, 'English Name')
+
+        categoryEN.name = 'English Name 2'
+        self.assertEqual(categoryEN.name, 'English Name 2')
+        self.assertEqual(categoryFR.name, 'English Name 2')
+
+        # cannot void en_US
+        self.category.update_field_translations('name', {'en_US': 'English Name', 'fr_FR': 'French Name'})
+        self.category.update_field_translations('name', {'en_US': False})
+        self.assertEqual(categoryEN.name, 'English Name')
+        self.assertEqual(categoryFR.name, 'French Name')
+
+        # empty str is a valid translation
+        self.category.update_field_translations('name', {'fr_FR': ''})
+        self.assertEqual(categoryEN.name, 'English Name')
+        self.assertEqual(categoryFR.name, '')
+
+        self.category.update_field_translations('name', {'en_US': '', 'fr_FR': 'French Name'})
+        self.assertEqual(categoryEN.name, '')
+        self.assertEqual(categoryFR.name, 'French Name')
+
+        # raise error when the translations are in the form for model_terms translated fields
+        with self.assertRaises(UserError):
+            self.category.update_field_translations('name', {'fr_FR': {'English Name': 'French Name'}})
 
     def test_field_selection(self):
         """ Test translations of field selections. """
