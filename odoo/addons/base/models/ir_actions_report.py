@@ -388,6 +388,29 @@ class IrActionsReport(models.Model):
 
         return bodies, res_ids, header, footer, specific_paperformat_args
 
+    def _get_web_assets_attachment(self, base_url, path, query):
+        env = werkzeug.test.EnvironBuilder(path, base_url, query).get_environ()
+        routing_map = self.env['ir.http'].routing_map().bind_to_environ(env)
+
+        _, params = routing_map.match(path)
+        res_id, filename, extra = (
+            params.get('id'),
+            params.get('filename'),
+            params.get('extra'),
+        )
+
+        # See also web/controllers/binary.py content_assets()
+        if res_id:
+            return self.env['ir.attachment'].sudo().browse(int(res_id)).exists()
+        if extra:
+            domain = [('url', '=like', f"/web/assets/%/{extra}/{filename}")]
+        else:
+            domain = [
+                ('url', '=like', f"/web/assets/%/{filename}"),
+                ('url', 'not like', f"/web/assets/%/%/{filename}")
+            ]
+        return self.env['ir.attachment'].sudo().search(domain, limit=1)
+
     def _inline_assets(self, document):
         """
         Find and replace urls to local assets (css/js/img) by data urls
@@ -418,6 +441,12 @@ class IrActionsReport(models.Model):
 
             # Request the document right away using this same worker
             response = wsgi_client.get(f'{url.path}?{url.query}', follow_redirects=True)
+            if response.status_code == 404 and url.path.startswith('/web/assets'):
+                attachment = self._get_web_assets_attachment(base_url, url.path, url.query)
+                if attachment:
+                    response = werkzeug.wrappers.Response(
+                        attachment.raw, status=200, mimetype=attachment.mimetype
+                    )
             if response.status_code not in (200, 204):
                 if config['test_enable']:
                     # wkhtmltopdf would make an extra http request to

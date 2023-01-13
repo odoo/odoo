@@ -89,6 +89,7 @@ class Binary(http.Controller):
         '/web/assets/<int:id>-<string:unique>/<path:extra>/<string:filename>'], type='http', auth="public")
     # pylint: disable=redefined-builtin,invalid-name
     def content_assets(self, id=None, filename=None, unique=False, extra=None, nocache=False):
+        # See also base/models/ir_actions_report.py _get_web_assets_attachment
         if not id:
             if extra:
                 domain = [('url', '=like', f'/web/assets/%/{extra}/{filename}')]
