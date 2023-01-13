@@ -319,9 +319,9 @@ QUnit.module("Fields", (hooks) => {
                     if (call_get_field_translations === 1) {
                         return Promise.resolve([
                             [
-                                { lang: "en_US", source: "yop", value: "english value" },
-                                { lang: "fr_BE", source: "yop", value: "valeur français" },
-                                { lang: "es_ES", source: "yop", value: "" },
+                                { lang: "en_US", source: "english value", value: "english value" },
+                                { lang: "fr_BE", source: "english value", value: "valeur français" },
+                                { lang: "es_ES", source: "english value", value: "english value" },
                             ],
                             { translation_type: "char", translation_show_source: false },
                         ]);
@@ -330,8 +330,8 @@ QUnit.module("Fields", (hooks) => {
                 if (route === "/web/dataset/call_kw/partner/update_field_translations") {
                     assert.deepEqual(
                         args[2],
-                        { en_US: "english value", es_ES: "" },
-                        "the new translation value should be written"
+                        { en_US: "english value", es_ES: false },
+                        "the new translation value should be written and the value false voids the translation"
                     );
                     return Promise.resolve(null);
                 }
@@ -401,8 +401,8 @@ QUnit.module("Fields", (hooks) => {
         );
         assert.strictEqual(
             translations[2].value,
-            "",
-            "Spanish translation should be an empty string"
+            "english value",
+            "Spanish translation should fallback to the English translation"
         );
     });
 
