@@ -118,7 +118,7 @@ class TestProjectSaleExpenseProfitability(TestProjectProfitabilityCommon, TestPr
             {'id': 'expenses', 'sequence': expense_sequence, 'billed': -280.0, 'to_bill': 0.0},
         )
 
-        expense_sheet.refuse_sheet('Test Cancel Expense')
+        expense_sheet._do_refuse('Test Cancel Expense')
         expense_profitability = self.project._get_expenses_profitability_items(False)
         self.assertDictEqual(
             expense_profitability.get('revenues', {}),

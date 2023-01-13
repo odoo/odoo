@@ -28,45 +28,42 @@ class AccountMove(models.Model):
     def is_purchase_document(self, include_receipts=False):
         return bool(self.expense_sheet_id and include_receipts) or super().is_purchase_document(include_receipts)
 
+    def is_entry(self):
+        if self.expense_sheet_id:
+            return False
+        return super().is_entry()
+
     # Expenses can be written on journal other than purchase, hence don't include them in the constraint check
     def _check_journal_move_type(self):
         return super(AccountMove, self.filtered(lambda x: not x.expense_sheet_id))._check_journal_move_type()
 
     def _creation_message(self):
-        if self.line_ids.expense_id:
-            return _("Expense entry Created")
+        if self.expense_sheet_id:
+            return _("Expense entry created from: %s", self.expense_sheet_id._get_html_link())
         return super()._creation_message()
-
-    @api.depends('expense_sheet_id.payment_mode')
-    def _compute_payment_state(self):
-        company_paid = self.filtered(lambda m: m.expense_sheet_id.payment_mode == 'company_account')
-        for move in company_paid:
-            move.payment_state = move._get_invoice_in_payment_state()
-        super(AccountMove, self - company_paid)._compute_payment_state()
 
     @api.depends('expense_sheet_id')
     def _compute_needed_terms(self):
         # EXTENDS account
-        # The needed terms need to be computed for journal entries, depending on the expense and the currency
-        # since one expense sheet can contain multiple currencies.
         super()._compute_needed_terms()
         for move in self:
             if move.expense_sheet_id:
-                move.needed_terms = {}
-                agg = defaultdict(lambda: {'company': 0.0, 'foreign': 0.0})
-                for line in move.line_ids:
-                    if line.display_type != 'payment_term':
-                        agg[line.expense_id]['company'] += line.balance
-                        agg[line.expense_id]['foreign'] += line.amount_currency
-                for expense in move.line_ids.expense_id:
-                    move.needed_terms[frozendict({
-                        'move_id': move.id,
-                        'date_maturity': expense.sheet_id.accounting_date or expense.date or fields.Date.context_today(expense),
-                        'expense_id': expense.id,
-                    })] = {
-                        'balance': -agg[expense]['company'],
-                        'amount_currency': -agg[expense]['foreign'],
-                        'name': '',
-                        'currency_id': expense.currency_id.id,
-                        'account_id': expense._get_expense_account_destination(),
+                move.needed_terms = {
+                    frozendict(
+                        {
+                            "move_id": move.id,
+                            "date_maturity": move.expense_sheet_id.accounting_date
+                            or fields.Date.context_today(move.expense_sheet_id),
+                        }
+                    ): {
+                        "balance": -sum(move.line_ids.mapped("balance")),
+                        "name": "",
+                        "account_id": move.expense_sheet_id._get_expense_account_destination(),
                     }
+                }
+
+    def _reverse_moves(self, default_values_list=None, cancel=False):
+        if self.expense_sheet_id:
+            self.expense_sheet_id = False
+            self.ref = False # else, when restarting the expense flow we get duplicate issue on vendor.bill
+        return super()._reverse_moves(default_values_list=default_values_list, cancel=cancel)

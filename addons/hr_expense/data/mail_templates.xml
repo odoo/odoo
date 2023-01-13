@@ -2,7 +2,7 @@
 <odoo>
     <data noupdate="1">
         <template id="hr_expense_template_refuse_reason">
-            <p>Your Expense <t t-if="is_sheet">Report </t><t t-esc="name"/> has been refused</p>
+            <p>Your Expense Report <t t-esc="name"/> has been refused</p>
             <ul class="o_timeline_tracking_value_list">
                 <li>Reason : <t t-esc="reason"/></li>
             </ul>

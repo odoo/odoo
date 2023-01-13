@@ -8,22 +8,11 @@ from odoo.tools.misc import frozendict
 class AccountMoveLine(models.Model):
     _inherit = "account.move.line"
 
-    expense_id = fields.Many2one('hr.expense', string='Expense', copy=False)
+    expense_id = fields.Many2one('hr.expense', string='Expense', copy=True) # copy=True, else we don't know price is tax incl.
 
     @api.constrains('account_id', 'display_type')
     def _check_payable_receivable(self):
-        super(AccountMoveLine, self.filtered(lambda line: not line.expense_id or line.expense_id.payment_mode != 'company_account'))._check_payable_receivable()
-
-    def reconcile(self):
-        # OVERRIDE
-        not_paid_expenses = self.expense_id.filtered(lambda expense: expense.state != 'done')
-        res = super().reconcile()
-        # Do not update expense or expense sheet states when reversing journal entries
-        not_paid_expense_sheets = not_paid_expenses.sheet_id.filtered(lambda sheet: sheet.account_move_id.payment_state != 'reversed')
-        paid_expenses = not_paid_expenses.filtered(lambda expense: expense.currency_id.is_zero(expense.amount_residual))
-        paid_expenses.write({'state': 'done'})
-        not_paid_expense_sheets.filtered(lambda sheet: all(expense.state == 'done' for expense in sheet.expense_line_ids)).set_to_paid()
-        return res
+        super(AccountMoveLine, self.filtered(lambda line: line.move_id.expense_sheet_id.payment_mode != 'company_account'))._check_payable_receivable()
 
     def _get_attachment_domains(self):
         attachment_domains = super(AccountMoveLine, self)._get_attachment_domains()
@@ -59,7 +48,7 @@ class AccountMoveLine(models.Model):
 
     def _convert_to_tax_base_line_dict(self):
         result = super()._convert_to_tax_base_line_dict()
-        if self.move_id.expense_sheet_id:
+        if self.expense_id:
             result.setdefault('extra_context', {})
             result['extra_context']['force_price_include'] = True
         return result
