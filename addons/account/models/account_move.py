@@ -2407,11 +2407,6 @@ class AccountMove(models.Model):
                 where_string += " AND move_type IN ('out_refund', 'in_refund') "
             else:
                 where_string += " AND move_type NOT IN ('out_refund', 'in_refund') "
-        elif self.journal_id.payment_sequence:
-            if is_payment:
-                where_string += " AND payment_id IS NOT NULL "
-            else:
-                where_string += " AND payment_id IS NULL "
 
         return where_string, param
 
