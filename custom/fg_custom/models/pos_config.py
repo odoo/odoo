@@ -6,13 +6,13 @@ class FgPosConfig(models.Model):
     _inherit = "pos.config"
 
     def use_coupon_code(self, code, creation_date, partner_id, reserved_program_ids):
-        if not partner_id:
-            return {
-                "successful": False,
-                "payload": {
-                    "error_message": _("This order not available customer, first set custom.")
-                },
-            }
+        # if not partner_id:
+        #     return {
+        #         "successful": False,
+        #         "payload": {
+        #             "error_message": _("This order not available customer, first set custom.")
+        #         },
+        #     }
         coupon_to_check = self.env["coupon.coupon"].search(
             [("code", "=", code), ("program_id", "in", self.program_ids.ids)]
         )
