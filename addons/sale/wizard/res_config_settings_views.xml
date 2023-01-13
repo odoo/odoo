@@ -136,6 +136,10 @@
                             <field name="module_sale_amazon" widget="upgrade_boolean"/>
                             <div class="content-group" name="amazon_connector" attrs="{'invisible': [('module_sale_amazon', '=', False)]}"/>
                         </setting>
+                        <setting id="ebay_connector" documentation="/applications/sales/sales/ebay_connector/setup.html" help="The eBay integrator gives you the opportunity to manage your Odoo's products on eBay">
+                            <field name="module_sale_ebay" widget="upgrade_boolean"/>
+                            <div class="content-group" name="ebay_connector" attrs="{'invisible': [('module_sale_ebay', '=', False)]}"/>
+                        </setting>
                     </block>
                     <div id="sale_ebay"/>
                 </app>

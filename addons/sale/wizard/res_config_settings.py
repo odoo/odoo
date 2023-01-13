@@ -79,6 +79,7 @@ class ResConfigSettings(models.TransientModel):
     module_sale_amazon = fields.Boolean("Amazon Sync")
     module_sale_loyalty = fields.Boolean("Coupons & Loyalty")
     module_sale_margin = fields.Boolean("Margins")
+    module_sale_ebay = fields.Boolean("eBay Connector")
 
     #=== ONCHANGE METHODS ===#
 
