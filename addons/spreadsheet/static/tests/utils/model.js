@@ -13,6 +13,7 @@ const { Model } = spreadsheet;
 
 /**
  * @typedef {import("@spreadsheet/../tests/utils/data").ServerData} ServerData
+ * @typedef {import("@spreadsheet/o_spreadsheet/o_spreadsheet").Model} Model
  */
 
 export function setupDataSourceEvaluation(model) {
