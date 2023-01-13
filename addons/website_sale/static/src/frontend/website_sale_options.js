@@ -244,10 +244,19 @@ export const WebsiteSaleOptions = Widget.extend({
         this.el.querySelectorAll("input.js_variant_change:checked, select.js_variant_change").forEach((el) => {
             combination.push(parseInt(el.value));
         });
+        const productCustomAttributeValues = [];
+        this.el.querySelectorAll(".variant_custom_value").forEach((el) =>{
+            productCustomAttributeValues.push({
+                custom_product_template_attribute_value_id: el.dataset.custom_product_template_attribute_value_id,
+                attribute_value_name: el.dataset.attribute_value_name,
+                custom_value: el.value,
+            });
+        });
         return {
             product_template_id: parseInt(this.getInput("product_template_id").value),
             product_id: parseInt(this.getInput("product_id").value),
             combination,
+            product_custom_attribute_values: JSON.stringify(productCustomAttributeValues),
             add_qty: this.getCurrentQuantity(),
         };
     },
@@ -264,11 +273,52 @@ export const WebsiteSaleOptions = Widget.extend({
     },
 
     /**
-     *
+     * Called when changing the variant configuration.
      */
     onChangeVariant(ev) {
-        console.log("Changed variant");
-        this.throttledOnChangeOptions();
+        // No need to trigger if we change a custom value.
+        if (!ev.target.classList.contains("variant_custom_value")) {
+            this.throttledOnChangeOptions();
+        }
+        this.handleCustomInput(ev.target);
+    },
+
+    /**
+     * Add/remove a custom text input if the variant value is custom and checked/unchecked.
+     */
+    handleCustomInput(variantInput) {
+        let variantContainer;
+        let customInput;
+        if (variantInput.matches("input[type=radio]") && variantInput.checked) {
+            variantContainer = variantInput.closest("ul")?.closest("li");
+            customInput = variantInput;
+        } else if (variantInput.matches("select")) {
+            variantContainer = variantInput.cloest("li");
+            customInput = variantInput.querySelector(`option[value='${variantInput.value}']`);
+        }
+        if (!variantContainer) {
+            return;
+        }
+        if (customInput && customInput.dataset.is_custom === "True") {
+            const attributeValueId = customInput.dataset.value_id;
+            const attributeValueName = customInput.dataset.value_name;
+            const customTextInput = variantContainer.querySelector(".variant_custom_value");
+            if (!customTextInput || customTextInput.dataset.custom_product_template_attribute_value_id !== attributeValueId) {
+                // Create new input.
+                customTextInput?.remove();
+                const newCustomTextInput = document.createElement("input");
+                newCustomTextInput.type = "text";
+                newCustomTextInput.placeholder = attributeValueName;
+                newCustomTextInput.dataset.custom_product_template_attribute_value_id = attributeValueId;
+                newCustomTextInput.dataset.attribute_value_name = attributeValueName;
+                newCustomTextInput.classList.add("custom_value_radio",  "variant_custom_value", "form-control", "mt-2");
+                variantContainer.appendChild(newCustomTextInput);
+                newCustomTextInput.focus();
+            }
+        } else {
+            // Remove old input, input is not checked.
+            variantContainer.querySelector(".variant_custom_value")?.remove();
+        }
     },
 
     /**
@@ -417,6 +467,8 @@ export const WebsiteSaleOptionsWithCartButton = WebsiteSaleOptions.extend(Websit
             await this.combinationDataPromise;
         }
         const configuration = this.getCurrentConfiguration();
+        // We probably don't need the cart lines to be rendered.
+        configuration.display = false;
         ev.data.resolve(configuration);
     },
 });
