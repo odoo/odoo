@@ -1,10 +1,15 @@
 /** @odoo-module **/
 
 import { registry } from "@web/core/registry";
+import {
+    serializeDate,
+    serializeDateTime,
+} from "@web/core/l10n/dates";
 
 /**
- * Configuration depending on the granularity:
- * @param {function} startOf function to get the start moment of the period from a moment
+ * Configuration depending on the granularity, using Luxon DateTime objects:
+ * @param {function} startOf function to get a DateTime at the beginning of a period
+ *                           from another DateTime.
  * @param {int} cycle amount of 'granularity' periods constituting a cycle. The cycle duration
  *                    is arbitrary for each granularity:
  * cycle    ---    granularity
@@ -15,57 +20,40 @@ import { registry } from "@web/core/registry";
  * 1 year          month
  * 1 year          quarter
  * 1 year          year    # we are not using a greater time period in Odoo (yet)
- * @param {int} cyclePos function to get the position (index) in the cycle from a moment.
- *                       {1} is the first index. {+1} is used for functions which have an index
+ * @param {int} cyclePos function to get the position (index) in the cycle from a DateTime.
+ *                       {1} is the first index. {+1} is used for properties which have an index
  *                       starting from 0, to standardize between granularities.
  */
 export const GRANULARITY_TABLE = {
     hour: {
         startOf: (x) => x.startOf("hour"),
         cycle: 24,
-        cyclePos: (x) => x.hour() + 1,
+        cyclePos: (x) => x.hour + 1,
     },
     day: {
         startOf: (x) => x.startOf("day"),
         cycle: 7,
-        cyclePos: (x) => x.isoWeekday(),
+        cyclePos: (x) => x.weekday,
     },
     week: {
-        startOf: (x) => x.startOf("isoWeek"),
+        startOf: (x) => x.startOf("week"),
         cycle: 1,
         cyclePos: (x) => 1,
     },
     month: {
         startOf: (x) => x.startOf("month"),
         cycle: 12,
-        cyclePos: (x) => x.month() + 1,
+        cyclePos: (x) => x.month,
     },
     quarter: {
         startOf: (x) => x.startOf("quarter"),
         cycle: 4,
-        cyclePos: (x) => x.quarter(),
+        cyclePos: (x) => x.quarter,
     },
     year: {
         startOf: (x) => x.startOf("year"),
         cycle: 1,
         cyclePos: (x) => 1,
-    },
-};
-
-/**
- * configuration depending on the time type:
- * @param {string} format moment format to display this type as a string
- * @param {string} minGranularity granularity of the smallest time interval used in Odoo for this
- *                                type
- */
-export const FIELD_TYPE_TABLE = {
-    date: {
-        format: "YYYY-MM-DD",
-        minGranularity: "day",
-    },
-    datetime: {
-        format: "YYYY-MM-DD HH:mm:ss",
-        minGranularity: "second",
     },
 };
 
@@ -102,15 +90,19 @@ export class FillTemporalPeriod {
         this._computeEnd();
     }
     /**
-     * Compute the moment for the start of the period containing "now"
+     * Compute this.start: the DateTime for the start of the period containing
+     * the current time ("now").
+     * i.e. 2020-10-01 13:43:17 -> the current "hour" DateTime started at:
+     *      2020-10-01 13:00:00
      *
      * @private
      */
     _computeStart() {
-        this.start = GRANULARITY_TABLE[this.granularity].startOf(moment());
+        this.start = GRANULARITY_TABLE[this.granularity].startOf(luxon.DateTime.now());
     }
     /**
-     * Compute the moment for the end of the fill_temporal period. This bound is exclusive.
+     * Compute this.end: the DateTime for the end of the fill_temporal period.
+     * This bound is exclusive.
      * The fill_temporal period is the number of [granularity] from [start] to the end of the
      * [cycle] reached after adding [minGroups]
      * i.e. we are in october 2020 :
@@ -125,51 +117,49 @@ export class FillTemporalPeriod {
     _computeEnd() {
         const cycle = GRANULARITY_TABLE[this.granularity].cycle;
         const cyclePos = GRANULARITY_TABLE[this.granularity].cyclePos(this.start);
-        /**
-         * fillTemporalPeriod formula explanation :
-         * We want to know how many steps need to be taken from the current position until the end
-         * of the cycle reached after guaranteeing minGroups positions. Let's call this cycle (C).
-         *
-         * (1) compute the steps needed to reach the last position of the current cycle, from the
-         *     current position:
-         *     {cycle - cyclePos}
-         *
-         * (2) ignore {minGroups - 1} steps from the position reached in (1). Now, the current
-         *     position is somewhere in (C). One step from minGroups is reserved to reach the first
-         *     position after (C), hence {-1}
-         *
-         * (3) compute the additional steps needed to reach the last position of (C), from the
-         *     position reached in (2):
-         *     {cycle - (minGroups - 1) % cycle}
-         *
-         * (4) combine (1) and (3), the sum should not be greater than a full cycle (-> truncate):
-         *     {(2 * cycle - (minGroups - 1) % cycle - cyclePos) % cycle}
-         *
-         * (5) add minGroups!
-         */
+        // fillTemporalPeriod formula explanation :
+        // We want to know how many steps need to be taken from the current position until the end
+        // of the cycle reached after guaranteeing minGroups positions. Let's call this cycle (C).
+        //
+        // (1) compute the steps needed to reach the last position of the current cycle, from the
+        //     current position:
+        //     {cycle - cyclePos}
+        //
+        // (2) ignore {minGroups - 1} steps from the position reached in (1). Now, the current
+        //     position is somewhere in (C). One step from minGroups is reserved to reach the first
+        //     position after (C), hence {-1}
+        //
+        // (3) compute the additional steps needed to reach the last position of (C), from the
+        //     position reached in (2):
+        //     {cycle - (minGroups - 1) % cycle}
+        //
+        // (4) combine (1) and (3), the sum should not be greater than a full cycle (-> truncate):
+        //     {(2 * cycle - (minGroups - 1) % cycle - cyclePos) % cycle}
+        //
+        // (5) add minGroups!
         const fillTemporalPeriod = ((2 * cycle - ((this.minGroups - 1) % cycle) - cyclePos) % cycle) + this.minGroups;
-        this.end = moment(this.start).add(fillTemporalPeriod, `${this.granularity}s`);
+        this.end = this.start.plus({[`${this.granularity}s`]: fillTemporalPeriod});
         this.computedEnd = true;
     }
     /**
      * The server needs a date/time in UTC, but we don't want a day shift in case
      * of dates, even if the date is not in UTC
      *
-     * @param {moment} bound the moment to be formatted (this.start or this.end)
+     * @param {DateTime} bound the DateTime to be formatted (this.start or this.end)
      */
     _getFormattedServerDate(bound) {
-        if (bound.isUTC() || this.field.type === "date") {
-            return bound.format(FIELD_TYPE_TABLE[this.field.type].format);
+        if (this.field.type === "date") {
+            return serializeDate(bound);
         } else {
-            return moment.utc(bound).format(FIELD_TYPE_TABLE[this.field.type].format);
+            return serializeDateTime(bound);
         }
     }
     /**
      * @param {Object} configuration
      * @param {Array[]} [domain]
-     * @param {boolean} [forceStartBound=true] whether this.start moment must be used as a domain
+     * @param {boolean} [forceStartBound=true] whether this.start DateTime must be used as a domain
      *                                         constraint to limit read_group results or not
-     * @param {boolean} [forceEndBound=true] whether this.end moment must be used as a domain
+     * @param {boolean} [forceEndBound=true] whether this.end DateTime must be used as a domain
      *                                       constraint to limit read_group results or not
      * @returns {Array[]} new domain
      */
@@ -210,9 +200,9 @@ export class FillTemporalPeriod {
             fillTemporal.fill_from = this._getFormattedServerDate(this.start);
         }
         if (forceFillingTo) {
-            fillTemporal.fill_to = this._getFormattedServerDate(
-                moment(this.end).subtract(1, FIELD_TYPE_TABLE[this.field.type].minGranularity)
-            );
+            // smallest time interval used in Odoo for the current date type
+            const minGranularity = this.field.type === "date" ? "days" : "seconds";
+            fillTemporal.fill_to = this._getFormattedServerDate(this.end.minus({[minGranularity]: 1}));
         }
         context = { ...context, fill_temporal: fillTemporal };
         return context;
@@ -225,29 +215,29 @@ export class FillTemporalPeriod {
         this.minGroups = minGroups || 1;
     }
     /**
-     * sets the end of the period to the desired moment. It must be greater
+     * sets the end of the period to the desired DateTime. It must be greater
      * than start. Changes the default behavior of getContext forceFillingTo
      * (becomes true instead of false)
      *
-     * @param {moment} end
+     * @param {DateTime} end
      */
     setEnd(end) {
-        this.end = moment.max(this.start, end);
+        this.end = luxon.DateTime.max(this.start, end);
         this.computedEnd = false;
     }
     /**
-     * sets the start of the period to the desired moment. It must be smaller than end
+     * sets the start of the period to the desired DateTime. It must be smaller than end
      *
-     * @param {moment} start
+     * @param {DateTime} start
      */
     setStart(start) {
-        this.start = moment.min(this.end, start);
+        this.start = luxon.DateTime.min(this.end, start);
     }
     /**
      * Adds one "granularity" period to [this.end], to expand the current fill_temporal period
      */
     expand() {
-        this.setEnd(this.end.add(1, `${this.granularity}s`));
+        this.setEnd(this.end.plus({[`${this.granularity}s`]: 1}));
     }
 }
 
