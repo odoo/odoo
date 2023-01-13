@@ -93,7 +93,7 @@ class ProviderGrid(models.Model):
                 continue
             if line.is_delivery:
                 total_delivery += line.price_total
-            if not line.product_id or line.is_delivery:
+            if not line._is_eligible_for_total():
                 continue
             if line.product_id.type == "service":
                 continue
