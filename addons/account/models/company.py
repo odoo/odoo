@@ -102,6 +102,7 @@ class ResCompany(models.Model):
 
     invoice_is_email = fields.Boolean('Email by default', default=True)
     invoice_is_print = fields.Boolean('Print by default', default=True)
+    display_invoice_amount_total_words = fields.Boolean(string='Total amount of invoice in letters')
     account_use_credit_limit = fields.Boolean(
         string='Sales Credit Limit', help='Enable the use of credit limit on partners.')
 

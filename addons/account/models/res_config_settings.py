@@ -133,6 +133,11 @@ class ResConfigSettings(models.TransientModel):
                                      readonly=False)
     terms_type = fields.Selection(
         related='company_id.terms_type', readonly=False)
+    display_invoice_amount_total_words = fields.Boolean(
+        string="Total amount of invoice in letters",
+        related='company_id.display_invoice_amount_total_words',
+        readonly=False
+    )
     preview_ready = fields.Boolean(string="Display preview button", compute='_compute_terms_preview')
 
     use_invoice_terms = fields.Boolean(
