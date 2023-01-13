@@ -37,7 +37,7 @@ function supportItem(env) {
 
 class ShortcutsFooterComponent extends Component {
     setup() {
-        this.runShortcutKey = isMacOS() ? "ALT + CONTROL" : "ALT";
+        this.runShortcutKey = isMacOS() ? "CONTROL" : "ALT";
     }
 }
 ShortcutsFooterComponent.template = "web.UserMenu.ShortcutsFooterComponent";
