@@ -16,6 +16,7 @@ import {
 } from "@spreadsheet/../tests/utils/model";
 import { makeDeferred, nextTick, patchWithCleanup } from "@web/../tests/helpers/utils";
 import { session } from "@web/session";
+import { RPCError } from "@web/core/network/rpc_service";
 
 QUnit.module("spreadsheet > pivot plugin", {}, () => {
     QUnit.test("can select a Pivot from cell formula", async function (assert) {
@@ -715,4 +716,42 @@ QUnit.module("spreadsheet > pivot plugin", {}, () => {
         assert.deepEqual(model.getters.getPivotFieldMatching("1", filter.id), undefined);
         assert.deepEqual(model.getters.getPivotDataSource("1").getComputedDomain(), []);
     });
+
+    QUnit.test(
+        "Load pivot spreadsheet with models that cannot be accessed",
+        async function (assert) {
+            let hasAccessRights = true;
+            const { model } = await createSpreadsheetWithPivot({
+                mockRPC: async function (route, args) {
+                    if (
+                        args.model === "partner" &&
+                        args.method === "read_group" &&
+                        !hasAccessRights
+                    ) {
+                        const error = new RPCError();
+                        error.data = { message: "ya done!" };
+                        throw error;
+                    }
+                },
+            });
+            let headerCell;
+            let cell;
+            
+            await waitForDataSourcesLoaded(model);
+            headerCell = getEvaluatedCell(model, "A3");
+            cell = getEvaluatedCell(model, "C3");
+            assert.equal(headerCell.value, "No");
+            assert.equal(cell.value, 15);
+
+            hasAccessRights = false;
+            model.dispatch("REFRESH_PIVOT", { id: "1" });
+            await waitForDataSourcesLoaded(model);
+            headerCell = getEvaluatedCell(model, "A3");
+            cell = getEvaluatedCell(model, "C3");
+            assert.equal(headerCell.value, "#ERROR");
+            assert.equal(headerCell.error.message, "ya done!");
+            assert.equal(cell.value, "#ERROR");
+            assert.equal(cell.error.message, "ya done!");
+        }
+    );
 });
