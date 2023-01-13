@@ -105,6 +105,12 @@ You could use this simplified accounting in case you work with an (external) acc
             'account/static/tests/helpers/*.js',
             'account/static/tests/*.js',
         ],
+        'web.report_assets_common': [
+            'account/static/src/css/report_invoice.css',
+        ],
+        'web.report_assets_pdf': [
+            'account/static/src/css/report_invoice.css',
+        ],
     },
     'license': 'LGPL-3',
 }
