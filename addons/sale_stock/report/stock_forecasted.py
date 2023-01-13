@@ -7,8 +7,8 @@ from odoo import models
 class StockForecasted(models.AbstractModel):
     _inherit = 'stock.forecasted_product_product'
 
-    def _prepare_report_line(self, quantity, move_out=None, move_in=None, replenishment_filled=True, product=False, reserved_move=False, in_transit=False):
-        line = super()._prepare_report_line(quantity, move_out, move_in, replenishment_filled, product, reserved_move, in_transit)
+    def _prepare_report_line(self, quantity, move_out=None, move_in=None, replenishment_filled=True, product=False, reserved_move=False, in_transit=False, read=True):
+        line = super()._prepare_report_line(quantity, move_out, move_in, replenishment_filled, product, reserved_move, in_transit, read)
 
         if not move_out or not move_out.picking_id or not move_out.picking_id.sale_id:
             return line
@@ -21,8 +21,8 @@ class StockForecasted(models.AbstractModel):
                 'sale_id' : {
                     'id' : picking.sale_id.id,
                     'amount_untaxed' : picking.sale_id.amount_untaxed,
-                    'currency_id' : picking.sale_id.currency_id.read(fields=['id', 'name'])[0],
-                    'partner_id' : picking.sale_id.partner_id.read(fields=['id', 'name'])[0],
+                    'currency_id' : picking.sale_id.currency_id.read(fields=['id', 'name'])[0] if read else picking.sale_id.currency_id,
+                    'partner_id' : picking.sale_id.partner_id.read(fields=['id', 'name'])[0] if read else picking.sale_id.partner_id,
                 }
             }
         })
