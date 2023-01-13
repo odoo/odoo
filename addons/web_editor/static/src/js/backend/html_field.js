@@ -628,6 +628,7 @@ HtmlField.extractProps = ({ attrs, field }) => {
             iframeCssAssets: attrs.options.cssEdit,
             iframeHtmlClass: attrs.iframeHtmlClass,
             snippets: attrs.options.snippets,
+            allowCommandImage: Boolean(attrs.options.allowCommandImage),
             allowCommandVideo: Boolean(attrs.options.allowCommandVideo) && (!field.sanitize || !field.sanitize_tags),
             mediaModalParams: {
                 noVideos: 'noVideos' in attrs.options ? attrs.options.noVideos : true,

@@ -14,6 +14,7 @@ export class KanbanAnimatedNumber extends Component {
             const { value: from } = this.props;
             const { value: to, duration } = nextProps;
             if (!this.constructor.enableAnimations || !duration || to <= from) {
+                browser.cancelAnimationFrame(this.handle);
                 this.state.value = to;
                 return;
             }

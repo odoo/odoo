@@ -12508,4 +12508,57 @@ QUnit.module("Fields", (hooks) => {
 
         assert.containsOnce(target, ".modal .o_data_row td[name=display_name]");
     });
+
+    QUnit.test("field in list but not in fetched form", async function (assert) {
+        serverData.models.partner.fields.o2m = {
+            type: "one2many",
+            relation: "partner_type",
+            relation_field: "p_id",
+        };
+        serverData.models.partner_type.onchanges = {
+            display_name: (rec) => {
+                if (rec.display_name === "changed") {
+                    rec.color = 5;
+                }
+            },
+        };
+
+        serverData.models.partner_type.fields.p_id = { type: "many2one", relation: "partner" };
+        serverData.views = {
+            "partner_type,false,form": `<form><field name="display_name" /></form>`,
+        };
+
+        await makeView({
+            type: "form",
+            resModel: "partner",
+            serverData,
+            arch: `
+                <form>
+                    <field name="o2m">
+                        <tree>
+                            <field name="display_name"/>
+                            <field name="color" />
+                        </tree>
+                    </field>
+                </form>`,
+            mockRPC(route, args) {
+                assert.step(`${args.method}: ${args.model}`);
+            },
+        });
+
+        assert.verifySteps(["get_views: partner", "onchange: partner"]);
+        await click(target, ".o_field_x2many_list_row_add a");
+        assert.verifySteps(["get_views: partner_type", "onchange: partner_type"]);
+        await editInput(
+            target.querySelector(".modal"),
+            ".o_field_widget[name='display_name'] input",
+            "changed"
+        );
+        assert.verifySteps(["onchange: partner_type"]);
+        await click(target.querySelector(".modal .o_form_button_save"));
+        assert.strictEqual(target.querySelector(".o_data_row").textContent, "changed5");
+        await click(target, ".o_form_button_save");
+        assert.verifySteps(["create: partner", "read: partner", "read: partner_type"]);
+        assert.strictEqual(target.querySelector(".o_data_row").textContent, "changed5");
+    });
 });

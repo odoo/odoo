@@ -66,6 +66,9 @@ export class MrpTimer extends Component {
     }
 
     get durationFormatted() {
+        if(this.props.value!=this.state.duration && this.props.record && !this.readonly){
+            this.state.duration=this.props.value
+        }
         return formatMinutes(this.state.duration);
     }
 
