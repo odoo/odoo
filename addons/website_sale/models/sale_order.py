@@ -385,7 +385,7 @@ class SaleOrder(models.Model):
         """ After sending recovery cart emails, update orders to avoid sending
         it again. """
         if self.env.context.get('website_sale_send_recovery_email'):
-            self.filtered([
+            self.filtered_domain([
                 ('cart_recovery_email_sent', '=', False),
                 ('is_abandoned_cart', '=', True)
             ]).cart_recovery_email_sent = True
