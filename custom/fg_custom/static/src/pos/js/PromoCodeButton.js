@@ -8,14 +8,14 @@ odoo.define('fg_custom.PromoCodeButton', function(require) {
         class extends PromoCodeButton {
             async onClick() {
                 const currentClient = this.env.pos.get_order().get_client();
-                if (currentClient) {
-                }else{
-                    this.showPopup('ErrorPopup', {
-                        title: this.env._t("Set customer"),
-                        body: this.env._t("This order not available customer, first set custom"),
-                    });
-                    return;
-                }
+//                if (currentClient) {
+//                }else{
+//                    this.showPopup('ErrorPopup', {
+//                        title: this.env._t("Set customer"),
+//                        body: this.env._t("This order not available customer, first set custom"),
+//                    });
+//                    return;
+//                }
                 await super.onClick();
             }
         };
