@@ -245,18 +245,37 @@ export const WebsiteSaleOptions = Widget.extend({
             combination.push(parseInt(el.value));
         });
         const productCustomAttributeValues = [];
-        this.el.querySelectorAll(".variant_custom_value").forEach((el) =>{
+        this.el.querySelectorAll(".variant_custom_value").forEach((el) => {
             productCustomAttributeValues.push({
                 custom_product_template_attribute_value_id: el.dataset.custom_product_template_attribute_value_id,
                 attribute_value_name: el.dataset.attribute_value_name,
                 custom_value: el.value,
             });
         });
+        const noVariantAttributeValues = [];
+        this.el
+            .querySelectorAll("input.no_variant.js_variant_change:checked, select.no_variant.js_variant_change")
+            .forEach((el) => {
+                const singleNoCustom = el.dataset.is_single && !el.dataset.is_custom;
+                if (el.matches("select")) {
+                    el = el.querySelector(`option[value='${singleNoCustom.value}']`);
+                }
+                if (el && !singleNoCustom) {
+                    noVariantAttributeValues.push({
+                        custom_product_template_attribute_value_id: el.dataset.value_id,
+                        attribute_value_name: el.data.value_name,
+                        value: el.value,
+                        attribute_name: el.dataset.attribute_name,
+                        is_custom: el.dataset.is_custom,
+                    });
+                }
+            });
         return {
             product_template_id: parseInt(this.getInput("product_template_id").value),
             product_id: parseInt(this.getInput("product_id").value),
             combination,
             product_custom_attribute_values: JSON.stringify(productCustomAttributeValues),
+            no_variant_attribute_values: JSON.stringify(noVariantAttributeValues),
             add_qty: this.getCurrentQuantity(),
         };
     },
@@ -303,7 +322,10 @@ export const WebsiteSaleOptions = Widget.extend({
             const attributeValueId = customInput.dataset.value_id;
             const attributeValueName = customInput.dataset.value_name;
             const customTextInput = variantContainer.querySelector(".variant_custom_value");
-            if (!customTextInput || customTextInput.dataset.custom_product_template_attribute_value_id !== attributeValueId) {
+            if (
+                !customTextInput ||
+                customTextInput.dataset.custom_product_template_attribute_value_id !== attributeValueId
+            ) {
                 // Create new input.
                 customTextInput?.remove();
                 const newCustomTextInput = document.createElement("input");
@@ -311,7 +333,7 @@ export const WebsiteSaleOptions = Widget.extend({
                 newCustomTextInput.placeholder = attributeValueName;
                 newCustomTextInput.dataset.custom_product_template_attribute_value_id = attributeValueId;
                 newCustomTextInput.dataset.attribute_value_name = attributeValueName;
-                newCustomTextInput.classList.add("custom_value_radio",  "variant_custom_value", "form-control", "mt-2");
+                newCustomTextInput.classList.add("custom_value_radio", "variant_custom_value", "form-control", "mt-2");
                 variantContainer.appendChild(newCustomTextInput);
                 newCustomTextInput.focus();
             }
