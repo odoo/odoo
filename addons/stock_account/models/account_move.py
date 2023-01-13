@@ -78,6 +78,8 @@ class AccountMove(models.Model):
         for layer in stock_valuation_layers:
             description = f"{layer.account_move_line_id.move_id.display_name} - {layer.product_id.display_name}"
             layer.description = description
+            if layer.product_id.valuation != 'real_time':
+                continue
             layer.account_move_id.ref = description
             layer.account_move_id.line_ids.write({'name': description})
 
