@@ -555,6 +555,8 @@ class Product(models.Model):
             'route_ids': route_ids,
             'warehouse_id': location.get_warehouse()
         })
+        if rule in seen_rules:
+            raise UserError(_("Invalid rule's configuration, the following rule causes an endless loop: %s", rule.display_name))
         if not rule:
             return seen_rules
         if rule.procure_method == 'make_to_stock' or rule.action not in ('pull_push', 'pull'):
