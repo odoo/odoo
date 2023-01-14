@@ -4,7 +4,7 @@
 # 
 # Translators:
 # Martin Trigaux, 2022
-# Cécile Collart <cco@odoo.com>, 2022
+# Jolien De Paepe, 2023
 # 
 msgid ""
 msgstr ""
@@ -12,7 +12,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-09-20 09:01+0000\n"
 "PO-Revision-Date: 2022-09-22 05:45+0000\n"
-"Last-Translator: Cécile Collart <cco@odoo.com>, 2022\n"
+"Last-Translator: Jolien De Paepe, 2023\n"
 "Language-Team: French (https://www.transifex.com/odoo/teams/41243/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -65,42 +65,38 @@ msgstr ""
 #: code:addons/base_vat/models/res_partner.py:0
 #, python-format
 msgid ""
-"The VAT number [%(wrong_vat)s] does not seem to be valid. \n"
+"The %(vat_label)s number [%(wrong_vat)s] does not seem to be valid. \n"
 "Note: the expected format is %(expected_format)s"
 msgstr ""
-"Le numéro de TVA [%(wrong_vat)s] ne semble pas valide.\n"
+
+#. module: base_vat
+#: code:addons/base_vat/models/res_partner.py:0
+#, python-format
+msgid ""
+"The %(vat_label)s number [%(wrong_vat)s] either failed the VIES VAT "
+"validation check or did not respect the expected format %(expected_format)s."
+msgstr ""
+
+#. module: base_vat
+#: code:addons/base_vat/models/res_partner.py:0
+#, python-format
+msgid ""
+"The %(vat_label)s number [%(wrong_vat)s] for %(record_label)s does not seem to be valid. \n"
+"Note: the expected format is %(expected_format)s"
+msgstr ""
+"Le numéro %(vat_label)s [%(wrong_vat)s] pour %(record_label)s ne semble pas être valide. \n"
 "Remarque : le format attendu est %(expected_format)s"
 
 #. module: base_vat
 #: code:addons/base_vat/models/res_partner.py:0
 #, python-format
 msgid ""
-"The VAT number [%(wrong_vat)s] either failed the VIES VAT validation check "
-"or did not respect the expected format %(expected_format)s."
-msgstr ""
-"Le numéro de TVA [%(wrong_vat)s] a échoué au contrôle de validation de la "
-"TVA VIES ou n'a pas respecté le format attendu %(expected_format)s."
-
-#. module: base_vat
-#: code:addons/base_vat/models/res_partner.py:0
-#, python-format
-msgid ""
-"The VAT number [%(wrong_vat)s] for %(record_label)s does not seem to be valid. \n"
-"Note: the expected format is %(expected_format)s"
-msgstr ""
-"Le numéro de TVA [%(wrong_vat)s] pour %(record_label)s ne semble pas être valide. \n"
-"Note : le format attendu est %(expected_format)s"
-
-#. module: base_vat
-#: code:addons/base_vat/models/res_partner.py:0
-#, python-format
-msgid ""
-"The VAT number [%(wrong_vat)s] for %(record_label)s either failed the VIES "
-"VAT validation check or did not respect the expected format "
+"The %(vat_label)s number [%(wrong_vat)s] for %(record_label)s either failed "
+"the VIES VAT validation check or did not respect the expected format "
 "%(expected_format)s."
 msgstr ""
-"Le numéro de TVA [%(wrong_vat)s] de %(record_label)s a soit échoué au "
-"contrôle de validation de la TVA de VIES, soit ne respecte pas le format "
+"Le numéro %(vat_label)s [%(wrong_vat)s] pour %(record_label)s a soit échoué "
+"au contrôle de validation de la TVA de VIES, soit ne respecte pas le format "
 "attendu %(expected_format)s."
 
 #. module: base_vat

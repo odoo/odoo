@@ -96,7 +96,7 @@ msgstr "%d aasta eest"
 #: code:addons/web/static/src/core/file_upload/file_upload_service.js:0
 #, python-format
 msgid "%s Files"
-msgstr ""
+msgstr "%s failid"
 
 #. module: web
 #. odoo-javascript
@@ -110,7 +110,7 @@ msgstr "%s päeva eest"
 #: code:addons/web/static/src/views/fields/formatters.js:0
 #, python-format
 msgid "%s records"
-msgstr ""
+msgstr "%s kirjed"
 
 #. module: web
 #. odoo-javascript
@@ -124,7 +124,7 @@ msgstr "'%s' ei ole korrektne kuupäev"
 #: code:addons/web/static/src/core/l10n/dates.js:0
 #, python-format
 msgid "'%s' is not a correct date or datetime"
-msgstr ""
+msgstr "'%s' ei ole õige kuupäev või kellaaeg"
 
 #. module: web
 #. odoo-javascript
@@ -159,28 +159,28 @@ msgstr "'%s' ei ole korrektne täisarv"
 #: code:addons/web/static/src/legacy/js/fields/field_utils.js:0
 #, python-format
 msgid "'%s' is not a correct monetary field"
-msgstr ""
+msgstr "'%s' ei ole õige rahaväli"
 
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/legacy/js/core/time.js:0
 #, python-format
 msgid "'%s' is not convertible to date, datetime nor time"
-msgstr ""
+msgstr "'%s' ei ole teisendatav kuupäevaks, päevaks või kellaajaks"
 
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/legacy/js/views/basic/basic_model.js:0
 #, python-format
 msgid "'%s' is unsynchronized with '%s'."
-msgstr ""
+msgstr "'%s' ei ole sünkroniseeritud '%s'."
 
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/core/file_upload/file_upload_progress_record.js:0
 #, python-format
 msgid "(%s/%sMB)"
-msgstr ""
+msgstr "(%s/%sMB)"
 
 #. module: web
 #. odoo-javascript
@@ -194,7 +194,7 @@ msgstr "(Community Edition)"
 #: code:addons/web/static/src/core/debug/debug_menu_items.xml:0
 #, python-format
 msgid "(change)"
-msgstr ""
+msgstr "(muuda)"
 
 #. module: web
 #. odoo-javascript
@@ -208,14 +208,14 @@ msgstr "(loendus)"
 #: code:addons/web/static/src/core/debug/debug_menu_items.xml:0
 #, python-format
 msgid "(create)"
-msgstr ""
+msgstr "(loo)"
 
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/webclient/burger_menu/mobile_switch_company_menu/mobile_switch_company_menu.xml:0
 #, python-format
 msgid "(current)"
-msgstr ""
+msgstr "(praegune)"
 
 #. module: web
 #. odoo-javascript
@@ -223,7 +223,7 @@ msgstr ""
 #: code:addons/web/static/src/search/search_bar/search_bar.js:0
 #, python-format
 msgid "(no result)"
-msgstr ""
+msgstr "(tulemused puuduvad)"
 
 #. module: web
 #. odoo-javascript
@@ -238,7 +238,7 @@ msgstr "(ei ole rida)"
 #: code:addons/web/static/src/legacy/xml/base.xml:0
 #, python-format
 msgid "(nolabel)"
-msgstr ""
+msgstr "(silt puudub)"
 
 #. module: web
 #. odoo-javascript
@@ -250,23 +250,27 @@ msgid ""
 "                        font-style: normal;\n"
 "                    }"
 msgstr ""
+") format(\"woff\");\n"
+"                        font-weight: normal;\n"
+"                        font-style: normal;\n"
+"                    }"
 
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/webclient/user_menu/user_menu_items.xml:0
 #, python-format
 msgid "+ KEY"
-msgstr ""
+msgstr "+ VÕTI"
 
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.report_invoice_wizard_preview
 msgid "07/08/2020"
-msgstr ""
+msgstr "07/08/2020"
 
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.report_invoice_wizard_preview
 msgid "08/07/2020"
-msgstr ""
+msgstr "08/07/2020"
 
 #. module: web
 #. odoo-javascript
@@ -274,12 +278,12 @@ msgstr ""
 #: code:addons/web/static/src/views/fields/formatters.js:0
 #, python-format
 msgid "1 record"
-msgstr ""
+msgstr "1 kirje"
 
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.report_invoice_wizard_preview
 msgid "<span class=\"text-nowrap\">$ 2,887.50</span>"
-msgstr ""
+msgstr "<span class=\"text-nowrap\">$ 2,887.50</span>"
 
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.report_invoice_wizard_preview
@@ -287,6 +291,8 @@ msgid ""
 "<span class=\"text-nowrap\">$ <span class=\"oe_currency_value\">\n"
 "                                                       22,137.50</span></span>"
 msgstr ""
+"<span class=\"text-nowrap\">$ <span class=\"oe_currency_value\">\n"
+"                                                       22,137.50</span></span>"
 
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.report_invoice_wizard_preview
@@ -319,7 +325,7 @@ msgstr "<span class=\"text-nowrap\">2,350.00</span>"
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.report_invoice_wizard_preview
 msgid "<span class=\"text-nowrap\">Tax 15%</span>"
-msgstr ""
+msgstr "<span class=\"text-nowrap\">Tulumaks 15%</span>"
 
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.report_invoice_wizard_preview
@@ -327,16 +333,18 @@ msgid ""
 "<span class=\"w-100 o_force_ltr\" itemprop=\"streetAddress\">77 Santa Barbara\n"
 "                                                   Rd<br/>Pleasant Hill CA 94523<br/>United States</span>"
 msgstr ""
+"<span class=\"w-100 o_force_ltr\" itemprop=\"streetAddress\">77 Santa Barbara\n"
+"                                                   Rd<br/>Pleasant Hill CA 94523<br/>United States</span>"
 
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.report_invoice_wizard_preview
 msgid "<span id=\"line_tax_ids\">15.00%</span>"
-msgstr ""
+msgstr "<span id=\"line_tax_ids\">15.00%</span>"
 
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.report_invoice_wizard_preview
 msgid "<span itemprop=\"name\">Deco Addict</span>"
-msgstr ""
+msgstr "<span itemprop=\"name\">Deco Addict</span>"
 
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.report_invoice_wizard_preview
@@ -346,7 +354,7 @@ msgstr "<span>$ <span class=\"oe_currency_value\">19,250.00</span></span>"
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.report_invoice_wizard_preview
 msgid "<span>5.000</span>"
-msgstr ""
+msgstr "<span>5.000</span>"
 
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.report_invoice_wizard_preview
@@ -364,11 +372,13 @@ msgid ""
 "<span>Invoice</span>\n"
 "                           <span>INV/2020/07/0003</span>"
 msgstr ""
+"<span>Müügiarve</span>\n"
+"                           <span>INV/2020/07/0003</span>"
 
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.report_invoice_wizard_preview
 msgid "<span>Payment terms: 30 Days</span>"
-msgstr ""
+msgstr "<span>Maksetingimused: 30 päeva</span>"
 
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.report_invoice_wizard_preview
@@ -391,6 +401,8 @@ msgid ""
 "<span>[FURN_8220] Four Person Desk<br/>\n"
 "                                       Four person modern office workstation</span>"
 msgstr ""
+"<span>[FURN_8220] Four Person Desk<br/>\n"
+"                                       Neljakohaline kaasaegne kontorilaud</span>"
 
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.report_invoice_wizard_preview
@@ -398,6 +410,8 @@ msgid ""
 "<span>[FURN_8999] Three-Seat Sofa<br/>\n"
 "                                       Three Seater Sofa with Lounger in Steel Grey Colour</span>"
 msgstr ""
+"<span>[FURN_8999] Three-Seat Sofa<br/>\n"
+"                                     Halli värvi kolmekohaline diivan</span>"
 
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.report_invoice_wizard_preview
@@ -424,14 +438,14 @@ msgstr "<strong>Kokku</strong>"
 #: code:addons/web/static/src/core/domain_selector/domain_selector_operators.js:0
 #, python-format
 msgid "=ilike"
-msgstr ""
+msgstr "=mullemeeldib"
 
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/core/domain_selector/domain_selector_operators.js:0
 #, python-format
 msgid "=like"
-msgstr ""
+msgstr "=meeldib"
 
 #. module: web
 #. odoo-javascript
@@ -442,13 +456,16 @@ msgid ""
 "                        font-family: \"font\";\n"
 "                        src: url(data:font/ttf;base64,"
 msgstr ""
+"@font-face {\n"
+"                        font-family: \"font\";\n"
+"                        src: url(data:font/ttf;base64,"
 
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/search/favorite_menu/custom_favorite_item.js:0
 #, python-format
 msgid "A filter with same name already exists."
-msgstr ""
+msgstr "Sama nimega filter on juba olemas."
 
 #. module: web
 #. odoo-javascript
@@ -456,7 +473,7 @@ msgstr ""
 #: code:addons/web/static/src/search/favorite_menu/custom_favorite_item.js:0
 #, python-format
 msgid "A name for your favorite filter is required."
-msgstr ""
+msgstr "Lemmikfiltri nimi peab olema määratud."
 
 #. module: web
 #. odoo-javascript
@@ -479,7 +496,7 @@ msgstr "KÕIK"
 #: code:addons/web/static/src/webclient/user_menu/user_menu_items.xml:0
 #, python-format
 msgid "ALT"
-msgstr ""
+msgstr "ALT"
 
 #. module: web
 #. odoo-javascript
@@ -514,7 +531,7 @@ msgstr "Ligipääs kõigile Enterprise rakendustele"
 #: code:addons/web/static/src/views/fields/ace/ace_field.js:0
 #, python-format
 msgid "Ace Editor"
-msgstr ""
+msgstr "Ace redaktor"
 
 #. module: web
 #. odoo-javascript
@@ -558,7 +575,7 @@ msgstr ""
 #: code:addons/web/static/src/core/debug/debug_providers.js:0
 #, python-format
 msgid "Activate debug mode (with assets)"
-msgstr ""
+msgstr "Aktiveeri debug režiim (koos viidetega)"
 
 #. module: web
 #. odoo-javascript
@@ -612,14 +629,14 @@ msgstr "Lisa kohandatud grupp"
 #: code:addons/web/static/src/views/fields/properties/properties_field.xml:0
 #, python-format
 msgid "Add a Property"
-msgstr ""
+msgstr "Lisa omadus"
 
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/views/fields/properties/property_definition_selection.xml:0
 #, python-format
 msgid "Add a Value"
-msgstr ""
+msgstr "Lisa väärtus"
 
 #. module: web
 #. odoo-javascript
@@ -691,7 +708,7 @@ msgstr "Lisa sõlm"
 #: code:addons/web/static/src/core/debug/profiling/profiling_item.xml:0
 #, python-format
 msgid "Add qweb directive context"
-msgstr ""
+msgstr "Lisa qwebi direktiivi kontekst"
 
 #. module: web
 #. odoo-javascript
@@ -701,7 +718,7 @@ msgstr ""
 #: code:addons/web/static/src/legacy/xml/base.xml:0
 #, python-format
 msgid "Add tag"
-msgstr ""
+msgstr "Lisa silt"
 
 #. module: web
 #. odoo-javascript
@@ -722,14 +739,14 @@ msgstr "Lisa:"
 #: code:addons/web/static/src/views/fields/x2many/x2many_field.js:0
 #, python-format
 msgid "Add: %s"
-msgstr ""
+msgstr "Lisa: %s"
 
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/legacy/js/components/action_menus.js:0
 #, python-format
 msgid "Additionnal actions"
-msgstr ""
+msgstr "Täiendavad tegevused"
 
 #. module: web
 #. odoo-javascript
@@ -737,7 +754,7 @@ msgstr ""
 #: code:addons/web/static/src/legacy/js/views/signature_dialog.js:0
 #, python-format
 msgid "Adopt & Sign"
-msgstr ""
+msgstr "Lisa & Kirjuta alla"
 
 #. module: web
 #. odoo-javascript
@@ -790,7 +807,7 @@ msgstr "Kõik kasutajad"
 #: code:addons/web/static/src/views/list/list_confirmation_dialog.xml:0
 #, python-format
 msgid "Among the"
-msgstr ""
+msgstr "hulgas"
 
 #. module: web
 #. odoo-javascript
@@ -984,7 +1001,7 @@ msgstr "Kasvav"
 #: code:addons/web/static/src/views/fields/many2many_binary/many2many_binary_field.xml:0
 #, python-format
 msgid "Attach"
-msgstr ""
+msgstr "Lisa"
 
 #. module: web
 #. odoo-javascript
@@ -999,7 +1016,7 @@ msgstr "Manus"
 #: code:addons/web/static/src/views/fields/attachment_image/attachment_image_field.js:0
 #, python-format
 msgid "Attachment Image"
-msgstr ""
+msgstr "Manustatud pilt"
 
 #. module: web
 #. odoo-javascript
@@ -1016,7 +1033,7 @@ msgstr "Automaatne"
 #: code:addons/web/static/src/views/view_dialogs/export_data_dialog.xml:0
 #, python-format
 msgid "Available fields"
-msgstr "Saadval väljad"
+msgstr "Saadaval väljad"
 
 #. module: web
 #. odoo-javascript
@@ -1070,7 +1087,7 @@ msgstr "Alus"
 #: code:addons/web/static/src/core/debug/debug_menu_items.js:0
 #, python-format
 msgid "Become Superuser"
-msgstr ""
+msgstr "Hakka superkasutajaks"
 
 #. module: web
 #. odoo-python
@@ -1089,14 +1106,14 @@ msgstr ""
 #: code:addons/web/static/src/views/fields/signature/signature_field.xml:0
 #, python-format
 msgid "Binary file"
-msgstr ""
+msgstr "Binaarne fail"
 
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/webclient/settings_form_view/fields/upgrade_dialog.xml:0
 #, python-format
 msgid "Bugfixes guarantee"
-msgstr ""
+msgstr "Veaparanduste garantii"
 
 #. module: web
 #. odoo-javascript
@@ -1137,35 +1154,35 @@ msgstr ""
 #: code:addons/web/static/src/views/fields/formatters.js:0
 #, python-format
 msgid "Bytes"
-msgstr ""
+msgstr "Baidid"
 
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/legacy/js/core/utils.js:0
 #, python-format
 msgid "Bytes|Kb|Mb|Gb|Tb|Pb|Eb|Zb|Yb"
-msgstr ""
+msgstr "Bytes|Kb|Mb|Gb|Tb|Pb|Eb|Zb|Yb"
 
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/search/control_panel/control_panel.xml:0
 #, python-format
 msgid "CLEAR"
-msgstr ""
+msgstr "TÜHJENDA"
 
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/core/commands/command_palette.xml:0
 #, python-format
 msgid "CMD"
-msgstr ""
+msgstr "CMD"
 
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/core/commands/command_palette.xml:0
 #, python-format
 msgid "CTRL"
-msgstr ""
+msgstr "CTRL"
 
 #. module: web
 #. odoo-javascript
@@ -1204,14 +1221,14 @@ msgstr "Tühista"
 #: code:addons/web/static/src/core/file_upload/file_upload_progress_bar.xml:0
 #, python-format
 msgid "Cancel Upload"
-msgstr ""
+msgstr "Tühista üleslaadimine"
 
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/legacy/js/views/kanban/kanban_record.js:0
 #, python-format
 msgid "Card color: %s"
-msgstr ""
+msgstr "Kaardi värv: %s"
 
 #. module: web
 #. odoo-javascript
@@ -1230,7 +1247,7 @@ msgstr "Muuda vaikimisi:"
 #: code:addons/web/static/src/views/graph/graph_controller.xml:0
 #, python-format
 msgid "Change graph"
-msgstr ""
+msgstr "Muuda graafikut"
 
 #. module: web
 #. odoo-javascript
@@ -1248,7 +1265,7 @@ msgstr "Märkekast"
 #: code:addons/web/static/src/views/fields/many2many_checkboxes/many2many_checkboxes_field.js:0
 #, python-format
 msgid "Checkboxes"
-msgstr ""
+msgstr "Märkekastid"
 
 #. module: web
 #. odoo-javascript
@@ -1263,14 +1280,14 @@ msgstr "Vali"
 #: code:addons/web/static/src/legacy/xml/base.xml:0
 #, python-format
 msgid "Choose File"
-msgstr ""
+msgstr "Vali fail"
 
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/core/debug/debug_menu.js:0
 #, python-format
 msgid "Choose a debug command..."
-msgstr ""
+msgstr "Vali debug käsk"
 
 #. module: web
 #. odoo-javascript
@@ -1284,6 +1301,7 @@ msgstr ""
 #: code:addons/web/static/src/views/fields/binary/binary_field.xml:0
 #: code:addons/web/static/src/views/fields/image/image_field.xml:0
 #: code:addons/web/static/src/views/fields/pdf_viewer/pdf_viewer_field.xml:0
+#: code:addons/web/static/src/views/view_dialogs/select_create_dialog.xml:0
 #, python-format
 msgid "Clear"
 msgstr "Tühjenda"
@@ -1329,7 +1347,7 @@ msgstr "Sulge"
 #: code:addons/web/static/src/webclient/burger_menu/burger_menu.xml:0
 #, python-format
 msgid "Close menu"
-msgstr ""
+msgstr "Sulge menüü"
 
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.view_base_document_layout
@@ -1342,7 +1360,7 @@ msgstr "Värvid"
 #: code:addons/web/static/src/views/kanban/kanban_renderer.js:0
 #, python-format
 msgid "Column %s"
-msgstr ""
+msgstr "Veerg %s"
 
 #. module: web
 #. odoo-javascript
@@ -1361,7 +1379,7 @@ msgstr "Ettevõte"
 #: model:ir.model.fields,field_description:web.field_base_document_layout__company_details
 #: model_terms:ir.ui.view,arch_db:web.view_base_document_layout
 msgid "Company Details"
-msgstr ""
+msgstr "Ettevõtte detailid"
 
 #. module: web
 #: model:ir.model,name:web.model_base_document_layout
@@ -1425,14 +1443,14 @@ msgstr "Kinnitus"
 #: code:addons/web/static/src/core/errors/error_handlers.js:0
 #, python-format
 msgid "Connection lost. Trying to reconnect..."
-msgstr ""
+msgstr "Ühendus on katkenud.. Proovime uuesti ühendada..."
 
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/core/errors/error_handlers.js:0
 #, python-format
 msgid "Connection restored. You are back online."
-msgstr ""
+msgstr "Ühendus on taastatud.. Olete tagasi online'is."
 
 #. module: web
 #. odoo-javascript
@@ -1490,14 +1508,14 @@ msgstr ""
 #: code:addons/web/static/src/views/fields/copy_clipboard/copy_clipboard_field.js:0
 #, python-format
 msgid "Copy Text to Clipboard"
-msgstr ""
+msgstr "Kopeeri tekst lõikelauale"
 
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/views/fields/copy_clipboard/copy_clipboard_field.js:0
 #, python-format
 msgid "Copy URL to Clipboard"
-msgstr ""
+msgstr "Kopeeri URL lõikelauale"
 
 #. module: web
 #. odoo-javascript
@@ -1520,21 +1538,21 @@ msgstr "Kopeerida lõikelauale"
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.frontend_layout
 msgid "Copyright &amp;copy;"
-msgstr ""
+msgstr "Kasutajaõigused &amp;copy;"
 
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/webclient/settings_form_view/widgets/res_config_edition.xml:0
 #, python-format
 msgid "Copyright © 2004"
-msgstr ""
+msgstr "Kasutajaõigused © 2004"
 
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/legacy/js/core/ajax.js:0
 #, python-format
 msgid "Could not connect to the server"
-msgstr ""
+msgstr "Ei saanud serveriga ühendust"
 
 #. module: web
 #. odoo-javascript
@@ -1544,14 +1562,14 @@ msgstr ""
 #: code:addons/web/static/src/views/fields/signature/signature_field.js:0
 #, python-format
 msgid "Could not display the selected image"
-msgstr ""
+msgstr "Ei saa kuvada valitud pilti"
 
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/views/fields/pdf_viewer/pdf_viewer_field.js:0
 #, python-format
 msgid "Could not display the selected pdf"
-msgstr ""
+msgstr "Ei saa kuvada valitud PDF'i"
 
 #. module: web
 #. odoo-javascript
@@ -1559,14 +1577,14 @@ msgstr ""
 #: code:addons/web/static/src/views/fields/image_url/image_url_field.js:0
 #, python-format
 msgid "Could not display the specified image url."
-msgstr ""
+msgstr "Ei saa kuvada valitud pildi URL."
 
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/legacy/js/core/utils.js:0
 #, python-format
 msgid "Could not serialize XML"
-msgstr ""
+msgstr "Ei saa serialiseerida XML'i"
 
 #. module: web
 #. odoo-javascript
@@ -1583,7 +1601,7 @@ msgstr ""
 #: code:addons/web/static/src/webclient/barcode/barcode_scanner.js:0
 #, python-format
 msgid "Could not start scanning. "
-msgstr ""
+msgstr "Skaneerimist ei saanud alustada."
 
 #. module: web
 #. odoo-javascript
@@ -1635,7 +1653,7 @@ msgstr "Loo"
 #: code:addons/web/static/src/views/fields/relational_utils.js:0
 #, python-format
 msgid "Create \"%s\""
-msgstr ""
+msgstr "Loo \"%s\""
 
 #. module: web
 #. odoo-javascript
@@ -1650,7 +1668,7 @@ msgstr "Loo \"<strong>%s</strong>\""
 #: code:addons/web/static/src/views/fields/relational_utils.js:0
 #, python-format
 msgid "Create %s"
-msgstr ""
+msgstr "Loo %s"
 
 #. module: web
 #. odoo-javascript
@@ -1664,7 +1682,7 @@ msgstr "Loo ja muuda..."
 #: code:addons/web/static/src/views/fields/relational_utils.js:0
 #, python-format
 msgid "Create and edit..."
-msgstr ""
+msgstr "Loo ja muuda..."
 
 #. module: web
 #. odoo-javascript
@@ -1674,14 +1692,14 @@ msgstr ""
 #: code:addons/web/static/src/views/fields/x2many/x2many_field.xml:0
 #, python-format
 msgid "Create record"
-msgstr ""
+msgstr "Loo kirje"
 
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/legacy/js/fields/relational_fields.js:0
 #, python-format
 msgid "Create: %s"
-msgstr ""
+msgstr "Loo: %s"
 
 #. module: web
 #: model:ir.model.fields,field_description:web.field_base_document_layout__create_uid
@@ -1712,7 +1730,7 @@ msgstr "Looja kasutaja:"
 #: code:addons/web/static/src/views/graph/graph_controller.xml:0
 #, python-format
 msgid "Cumulative"
-msgstr ""
+msgstr "Kumulatiivne"
 
 #. module: web
 #. odoo-javascript
@@ -1725,7 +1743,7 @@ msgstr "Praegune olek"
 #. module: web
 #: model:ir.model.fields,field_description:web.field_base_document_layout__custom_colors
 msgid "Custom Colors"
-msgstr ""
+msgstr "Kohandatud värvid"
 
 #. module: web
 #. odoo-javascript
@@ -1735,7 +1753,7 @@ msgstr ""
 #: code:addons/web/static/src/legacy/xml/base.xml:0
 #, python-format
 msgid "Dark blue"
-msgstr ""
+msgstr "Tumesinine"
 
 #. module: web
 #. odoo-javascript
@@ -1745,7 +1763,7 @@ msgstr ""
 #: code:addons/web/static/src/legacy/xml/base.xml:0
 #, python-format
 msgid "Dark purple"
-msgstr ""
+msgstr "Tumelilla"
 
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.login
@@ -1784,7 +1802,7 @@ msgstr "Päev"
 #: code:addons/web/static/src/core/debug/debug_providers.js:0
 #, python-format
 msgid "Deactivate debug mode"
-msgstr ""
+msgstr "Deaktiveeri debug režiim"
 
 #. module: web
 #. odoo-javascript
@@ -1798,7 +1816,7 @@ msgstr "Deaktiveeri arendusrežiim"
 #: code:addons/web/static/src/core/debug/debug_menu.js:0
 #, python-format
 msgid "Debug tools..."
-msgstr ""
+msgstr "Debug tööriistad.."
 
 #. module: web
 #. odoo-javascript
@@ -1820,7 +1838,7 @@ msgstr "Vaikimisi"
 #: code:addons/web/static/src/views/fields/properties/property_definition.xml:0
 #, python-format
 msgid "Default State"
-msgstr ""
+msgstr "Vaikimisi olek"
 
 #. module: web
 #. odoo-javascript
@@ -1836,6 +1854,7 @@ msgstr "Vaikeväärtus"
 #, python-format
 msgid "Default text is used when no values are set"
 msgstr ""
+"Vaikimisi teksti kasutatakse ainult sel juhul kui väärtusi pole määratud"
 
 #. module: web
 #. odoo-javascript
@@ -1885,7 +1904,7 @@ msgstr "Kustuta"
 #: code:addons/web/static/src/views/fields/properties/properties_field.js:0
 #, python-format
 msgid "Delete Property Field"
-msgstr ""
+msgstr "Kustuta seade väljad"
 
 #. module: web
 #. odoo-javascript
@@ -1893,7 +1912,7 @@ msgstr ""
 #: code:addons/web/static/src/search/favorite_menu/favorite_menu.xml:0
 #, python-format
 msgid "Delete item"
-msgstr ""
+msgstr "Kustuta üksus"
 
 #. module: web
 #. odoo-javascript
@@ -1910,14 +1929,14 @@ msgstr "Kustuta sõlm"
 #: code:addons/web/static/src/views/list/list_renderer.xml:0
 #, python-format
 msgid "Delete row"
-msgstr ""
+msgstr "Kustuta rida"
 
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/legacy/js/views/list/list_editable_renderer.js:0
 #, python-format
 msgid "Delete row "
-msgstr ""
+msgstr "Kustuta rida"
 
 #. module: web
 #. odoo-javascript
@@ -1957,7 +1976,7 @@ msgstr "Loobu"
 #: code:addons/web/static/src/views/form/form_status_indicator/form_status_indicator.xml:0
 #, python-format
 msgid "Discard changes"
-msgstr ""
+msgstr "Loobu muudatustest"
 
 #. module: web
 #. odoo-javascript
@@ -1965,7 +1984,7 @@ msgstr ""
 #: code:addons/web/static/src/legacy/xml/base.xml:0
 #, python-format
 msgid "Discard record"
-msgstr ""
+msgstr "Loobu kirjest"
 
 #. module: web
 #: model:ir.model.fields,field_description:web.field_base_document_layout__display_name
@@ -1977,7 +1996,7 @@ msgstr "Näidatav nimi"
 #: code:addons/web/static/src/core/file_upload/file_upload_progress_bar.js:0
 #, python-format
 msgid "Do you really want to cancel the upload of %s?"
-msgstr ""
+msgstr "Kas soovite tõesti %s üleslaadimist tühistada? "
 
 #. module: web
 #. odoo-javascript
@@ -2020,21 +2039,21 @@ msgstr "Domeen"
 #: code:addons/web/static/src/legacy/xml/base.xml:0
 #, python-format
 msgid "Domain node"
-msgstr ""
+msgstr "Domeeni sõlm"
 
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/legacy/js/widgets/domain_selector.js:0
 #, python-format
 msgid "Domain not properly formed"
-msgstr ""
+msgstr "Domeen ei ole korrektse vorminguga"
 
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/legacy/js/widgets/domain_selector.js:0
 #, python-format
 msgid "Domain not supported"
-msgstr ""
+msgstr "Domeenit ei toetata"
 
 #. module: web
 #. odoo-javascript
@@ -2049,7 +2068,7 @@ msgstr "Domeen:"
 #: code:addons/web/static/src/core/ui/block_ui.js:0
 #, python-format
 msgid "Don't leave yet,"
-msgstr ""
+msgstr "Ära veel lahku,"
 
 #. module: web
 #. odoo-javascript
@@ -2070,7 +2089,7 @@ msgstr "Laadige alla"
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.view_base_document_layout
 msgid "Download PDF Preview"
-msgstr ""
+msgstr "Lae alla PDF eelvaade"
 
 #. module: web
 #. odoo-javascript
@@ -2088,7 +2107,7 @@ msgstr "Lae alla xlsx"
 #: code:addons/web/static/src/legacy/xml/name_and_signature.xml:0
 #, python-format
 msgid "Draw"
-msgstr ""
+msgstr "Joonista"
 
 #. module: web
 #. odoo-javascript
@@ -2148,7 +2167,7 @@ msgstr "Muuda tingimusi"
 #: code:addons/web/static/src/views/debug_items.js:0
 #, python-format
 msgid "Edit SearchView"
-msgstr ""
+msgstr "Muuda otsinguvaadet"
 
 #. module: web
 #. odoo-javascript
@@ -2163,21 +2182,21 @@ msgstr "Muuda etappi"
 #: code:addons/web/static/src/views/debug_items.js:0
 #, python-format
 msgid "Edit View: "
-msgstr ""
+msgstr "Muuda vaadet:"
 
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/legacy/xml/base.xml:0
 #, python-format
 msgid "Edit record"
-msgstr ""
+msgstr "Muuda kirje"
 
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/views/kanban/kanban_renderer.js:0
 #, python-format
 msgid "Edit: %s"
-msgstr ""
+msgstr "Muuda: %s"
 
 #. module: web
 #. odoo-javascript
@@ -2194,14 +2213,14 @@ msgstr "E-post"
 #: code:addons/web/static/src/webclient/settings_form_view/widgets/res_config_invite_users.js:0
 #, python-format
 msgid "Empty email address"
-msgstr ""
+msgstr "Tühi meiliaadress"
 
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/core/debug/profiling/profiling_item.xml:0
 #, python-format
 msgid "Enable profiling"
-msgstr ""
+msgstr "Luba profileerimine"
 
 #. module: web
 #. odoo-javascript
@@ -2215,7 +2234,7 @@ msgstr "Sisesta e-posti aadress"
 #: code:addons/web/static/src/webclient/settings_form_view/highlight_text/form_label_highlight_text.xml:0
 #, python-format
 msgid "Enterprise"
-msgstr ""
+msgstr "Ettevõtte"
 
 #. module: web
 #. odoo-javascript
@@ -2322,7 +2341,7 @@ msgstr "Välislink"
 #: code:addons/web/static/src/search/search_panel/search_panel.xml:0
 #, python-format
 msgid "FILTER"
-msgstr ""
+msgstr "FILTER"
 
 #. module: web
 #. odoo-javascript
@@ -2445,7 +2464,7 @@ msgstr "Jälgitud"
 #: code:addons/web/static/src/core/model_field_selector/model_field_selector.xml:0
 #, python-format
 msgid "Followed-by"
-msgstr ""
+msgstr "Jälgitud"
 
 #. module: web
 #: model:ir.model.fields,field_description:web.field_base_document_layout__font
@@ -2457,7 +2476,7 @@ msgstr "Font"
 #: code:addons/web/static/src/views/fields/font_selection/font_selection_field.js:0
 #, python-format
 msgid "Font Selection"
-msgstr ""
+msgstr "Fondi valik"
 
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.view_base_document_layout
@@ -2505,7 +2524,7 @@ msgstr "Reede"
 #: code:addons/web/static/src/core/colorlist/colorlist.js:0
 #, python-format
 msgid "Fuchsia"
-msgstr ""
+msgstr "Fuksia"
 
 #. module: web
 #. odoo-javascript
@@ -2522,14 +2541,14 @@ msgstr "Täielik nimi"
 #: code:addons/web/static/src/legacy/xml/base.xml:0
 #, python-format
 msgid "Fushia"
-msgstr ""
+msgstr "Fushia"
 
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/webclient/settings_form_view/widgets/res_config_edition.xml:0
 #, python-format
 msgid "GNU LGPL Licensed"
-msgstr ""
+msgstr "GNU LGPL litsentsitud"
 
 #. module: web
 #. odoo-javascript
@@ -2537,7 +2556,7 @@ msgstr ""
 #: code:addons/web/static/src/views/debug_items.js:0
 #, python-format
 msgid "Get View"
-msgstr ""
+msgstr "Hangi vaade"
 
 #. module: web
 #. odoo-javascript
@@ -2551,7 +2570,7 @@ msgstr ""
 #: code:addons/web/static/src/views/fields/url/url_field.xml:0
 #, python-format
 msgid "Go to URL"
-msgstr ""
+msgstr "Mine URL'ile"
 
 #. module: web
 #. odoo-javascript
@@ -2588,33 +2607,35 @@ msgstr "HTTP Routing"
 #: code:addons/web/static/src/views/fields/handle/handle_field.js:0
 #, python-format
 msgid "Handle"
-msgstr ""
+msgstr "Käsitle"
 
 #. module: web
 #: model:ir.model.fields,help:web.field_base_document_layout__company_details
 msgid "Header text displayed at the top of all reports."
 msgstr ""
+"84%match\n"
+"Päise tekst kuvatakse kõigi aruannete ülaosas."
 
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/legacy/xml/base.xml:0
 #, python-format
 msgid "Hide in Kanban"
-msgstr ""
+msgstr "Peida Kanban olekus"
 
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/views/fields/many2many_tags/many2many_tags_field.xml:0
 #, python-format
 msgid "Hide in kanban"
-msgstr ""
+msgstr "Peida kanban olekus"
 
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/legacy/xml/base.xml:0
 #, python-format
 msgid "Hit DOWN to navigate to the list below"
-msgstr ""
+msgstr "Vajutage ALLA allolevasse loendisse navigeerimiseks"
 
 #. module: web
 #. odoo-javascript
@@ -2622,21 +2643,21 @@ msgstr ""
 #: code:addons/web/static/src/legacy/xml/base.xml:0
 #, python-format
 msgid "Hit ENTER to"
-msgstr ""
+msgstr "Vajuta SISESTA"
 
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/legacy/xml/base.xml:0
 #, python-format
 msgid "Hit ENTER to CREATE"
-msgstr ""
+msgstr "Vajuta SISESTA, et luua"
 
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/legacy/xml/base.xml:0
 #, python-format
 msgid "Hit ENTER to SAVE"
-msgstr ""
+msgstr "Vajuta SISESTA, et salvestada"
 
 #. module: web
 #. odoo-javascript
@@ -2723,7 +2744,7 @@ msgstr "Täisarv"
 #: code:addons/web/static/src/views/fields/properties/property_value.xml:0
 #, python-format
 msgid "Internal link"
-msgstr ""
+msgstr "Sisemine link"
 
 #. module: web
 #. odoo-javascript
@@ -2847,7 +2868,7 @@ msgstr "Kanban"
 #: code:addons/web/static/src/views/kanban/kanban_column_examples_dialog.js:0
 #, python-format
 msgid "Kanban Examples"
-msgstr ""
+msgstr "Kanban näited.."
 
 #. module: web
 #. odoo-javascript
@@ -2863,7 +2884,7 @@ msgstr ""
 #: code:addons/web/static/src/views/fields/state_selection/state_selection_field.js:0
 #, python-format
 msgid "Label Selection"
-msgstr ""
+msgstr "Sildi selektsioon"
 
 #. module: web
 #. odoo-python
@@ -2926,7 +2947,7 @@ msgstr "Lahku arendaja tööriistadest"
 #: code:addons/web/static/src/legacy/xml/base.xml:0
 #, python-format
 msgid "Light blue"
-msgstr ""
+msgstr "Helesinine"
 
 #. module: web
 #. odoo-javascript
@@ -2986,7 +3007,7 @@ msgstr "Laadimine"
 #: code:addons/web/static/src/legacy/xml/base.xml:0
 #, python-format
 msgid "Loading, please wait..."
-msgstr ""
+msgstr "Laeb, palun oota..."
 
 #. module: web
 #. odoo-javascript
@@ -3010,7 +3031,7 @@ msgstr "Sisene"
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.login
 msgid "Log in as superuser"
-msgstr ""
+msgstr "Logi sisse superkasutajana"
 
 #. module: web
 #. odoo-javascript
@@ -3033,12 +3054,12 @@ msgstr "Logo"
 #. module: web
 #: model:ir.model.fields,field_description:web.field_base_document_layout__logo_primary_color
 msgid "Logo Primary Color"
-msgstr ""
+msgstr "Logo põhivärv"
 
 #. module: web
 #: model:ir.model.fields,field_description:web.field_base_document_layout__logo_secondary_color
 msgid "Logo Secondary Color"
-msgstr ""
+msgstr "Logo sekundaarne värv"
 
 #. module: web
 #. odoo-javascript
@@ -3069,7 +3090,7 @@ msgstr "Peamised tegevused"
 #: code:addons/web/static/src/views/debug_items.js:0
 #, python-format
 msgid "Manage Attachments"
-msgstr ""
+msgstr "Halda manuseid"
 
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.login_layout
@@ -3088,7 +3109,7 @@ msgstr "Halda filtreid"
 #: code:addons/web/static/src/views/fields/many2one_barcode/many2one_barcode_field.js:0
 #, python-format
 msgid "Many2OneBarcode"
-msgstr ""
+msgstr "Many2OneBarcode"
 
 #. module: web
 #. odoo-javascript
@@ -3155,7 +3176,7 @@ msgstr "Näitajad"
 #: code:addons/web/static/src/legacy/xml/base.xml:0
 #, python-format
 msgid "Medium blue"
-msgstr ""
+msgstr "Keskmine sinine"
 
 #. module: web
 #. odoo-javascript
@@ -3169,7 +3190,7 @@ msgstr "Kohtumise teema"
 #: code:addons/web/static/src/views/calendar/quick_create/calendar_quick_create.xml:0
 #, python-format
 msgid "Meeting Subject:"
-msgstr ""
+msgstr "Koosoleku teema:"
 
 #. module: web
 #. odoo-javascript
@@ -3213,7 +3234,7 @@ msgstr "Mudel"
 #: code:addons/web/static/src/webclient/actions/debug_items.js:0
 #, python-format
 msgid "Model Record Rules"
-msgstr ""
+msgstr "Mudeli salvestusreeglid"
 
 #. module: web
 #. odoo-javascript
@@ -3277,7 +3298,7 @@ msgstr "Veel"
 #: code:addons/web/static/src/views/fields/statusbar/statusbar_field.js:0
 #, python-format
 msgid "Move to %s..."
-msgstr ""
+msgstr "Liigu %s..."
 
 #. module: web
 #. odoo-javascript
@@ -3314,7 +3335,7 @@ msgstr "Uus"
 #: code:addons/web/static/src/legacy/js/fields/relational_fields.js:0
 #, python-format
 msgid "New %s"
-msgstr ""
+msgstr "Uus %s"
 
 #. module: web
 #. odoo-javascript
@@ -3329,7 +3350,7 @@ msgstr "Uus üritus"
 #: code:addons/web/static/src/views/fields/properties/properties_field.xml:0
 #, python-format
 msgid "New Property"
-msgstr ""
+msgstr "Uus omadus"
 
 #. module: web
 #. odoo-javascript
@@ -3353,14 +3374,14 @@ msgstr "Uus mall"
 #: code:addons/web/static/src/views/fields/relational_utils.js:0
 #, python-format
 msgid "New:"
-msgstr ""
+msgstr "Uus:"
 
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/views/fields/many2one/many2one_field.js:0
 #, python-format
 msgid "New: %s"
-msgstr ""
+msgstr "Uus: %s"
 
 #. module: web
 #. odoo-javascript
@@ -3398,7 +3419,7 @@ msgstr "Ei"
 #: code:addons/web/static/src/views/fields/properties/property_value.xml:0
 #, python-format
 msgid "No Access"
-msgstr ""
+msgstr "Ligipääs puudub"
 
 #. module: web
 #. odoo-javascript
@@ -3420,14 +3441,14 @@ msgstr ""
 #: code:addons/web/static/src/legacy/js/fields/basic_fields.js:0
 #, python-format
 msgid "No color"
-msgstr ""
+msgstr "Värv puudub"
 
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/core/commands/default_providers.js:0
 #, python-format
 msgid "No command found"
-msgstr ""
+msgstr "Käsk ei ole leitud."
 
 #. module: web
 #. odoo-javascript
@@ -3448,14 +3469,14 @@ msgstr "Pole andmeid, mida näidata"
 #: code:addons/web/static/src/core/debug/debug_menu.js:0
 #, python-format
 msgid "No debug command found"
-msgstr ""
+msgstr "Debug käsk ei ole leitud."
 
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/webclient/barcode/barcode_scanner.js:0
 #, python-format
 msgid "No device can be found."
-msgstr ""
+msgstr "Ühtegi seadet ei leitud."
 
 #. module: web
 #. odoo-javascript
@@ -3463,14 +3484,14 @@ msgstr ""
 #: code:addons/web/static/src/views/view_dialogs/export_data_dialog.xml:0
 #, python-format
 msgid "No match found."
-msgstr ""
+msgstr "Ühtegi vastet ei leitud."
 
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/webclient/menus/menu_providers.js:0
 #, python-format
 msgid "No menu found"
-msgstr ""
+msgstr "Menüüd ei leitud"
 
 #. module: web
 #. odoo-javascript
@@ -3513,14 +3534,14 @@ msgstr "Tulemusi ei leitud"
 #: code:addons/web/static/src/views/relational_model.js:0
 #, python-format
 msgid "No valid record to save"
-msgstr ""
+msgstr "Ühtegi kehtivat kirjet salvestamiseks ei leitud. "
 
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/webclient/actions/action_service.js:0
 #, python-format
 msgid "No view of type '%s' could be found in the current action."
-msgstr ""
+msgstr "Ühtegi vaadet tüübile '%s' ei ole leitud praeguse tegevuse ajal. "
 
 #. module: web
 #. odoo-javascript
@@ -3545,7 +3566,7 @@ msgstr "Pole"
 #: code:addons/web/models/models.py:0
 #, python-format
 msgid "Not Set"
-msgstr ""
+msgstr "Pole määratud"
 
 #. module: web
 #. odoo-javascript
@@ -3553,7 +3574,7 @@ msgstr ""
 #: code:addons/web/static/src/views/fields/statusbar/statusbar_field.xml:0
 #, python-format
 msgid "Not active state"
-msgstr ""
+msgstr "Ei ole aktiivne olek"
 
 #. module: web
 #. odoo-javascript
@@ -3561,7 +3582,7 @@ msgstr ""
 #: code:addons/web/static/src/views/fields/statusbar/statusbar_field.xml:0
 #, python-format
 msgid "Not active state, click to change it"
-msgstr ""
+msgstr "Ei ole aktiivne olek, klõpsake muutmiseks "
 
 #. module: web
 #. odoo-javascript
@@ -3609,7 +3630,7 @@ msgstr "Odoo viga"
 #: code:addons/web/static/src/core/errors/error_dialogs.js:0
 #, python-format
 msgid "Odoo Network Error"
-msgstr ""
+msgstr "Odoo võrgu viga"
 
 #. module: web
 #. odoo-javascript
@@ -3623,7 +3644,7 @@ msgstr "Odoo S.A."
 #: code:addons/web/static/src/core/errors/error_dialogs.js:0
 #, python-format
 msgid "Odoo Server Error"
-msgstr ""
+msgstr "Odoo serveri viga"
 
 #. module: web
 #. odoo-javascript
@@ -3646,7 +3667,7 @@ msgstr "Odoo hoiatus"
 #: code:addons/web/static/src/webclient/barcode/barcode_scanner.js:0
 #, python-format
 msgid "Odoo needs your authorization first."
-msgstr ""
+msgstr "Odoo vajab teie luba."
 
 #. module: web
 #. odoo-javascript
@@ -3656,6 +3677,7 @@ msgstr ""
 msgid ""
 "Of the %d records selected, only the first %d have been archived/unarchived."
 msgstr ""
+"Valitud kirjetest %d, on ainult esimene %d arhiveeritud/arhiveerimata."
 
 #. module: web
 #. odoo-javascript
@@ -3707,6 +3729,8 @@ msgstr "One2many"
 msgid ""
 "Only employees can access this database. Please contact the administrator."
 msgstr ""
+"Ainult töötajad saavad sellele andmebaasile ligi. Palun kontakteeru "
+"administraatoriga."
 
 #. module: web
 #. odoo-javascript
@@ -3778,21 +3802,21 @@ msgstr "Avatud: "
 #: code:addons/web/static/src/views/fields/relational_utils.js:0
 #, python-format
 msgid "Open: %s"
-msgstr ""
+msgstr "Avatud: %s"
 
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/views/fields/properties/property_definition_selection.xml:0
 #, python-format
 msgid "Option Name"
-msgstr ""
+msgstr "Valiku nimi"
 
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/legacy/js/views/list/list_renderer.js:0
 #, python-format
 msgid "Optional columns"
-msgstr ""
+msgstr "Valikulised veerud"
 
 #. module: web
 #. odoo-javascript
@@ -3818,7 +3842,7 @@ msgstr "Muu"
 #: code:addons/web/static/src/views/fields/pdf_viewer/pdf_viewer_field.js:0
 #, python-format
 msgid "PDF Viewer"
-msgstr ""
+msgstr "PDF'i vaataja"
 
 #. module: web
 #. odoo-javascript
@@ -3859,7 +3883,7 @@ msgstr "Lehekülg: <span class=\"page\"/> / <span class=\"topage\"/>st"
 #: code:addons/web/static/src/legacy/xml/base.xml:0
 #, python-format
 msgid "Pager"
-msgstr ""
+msgstr "Pager"
 
 #. module: web
 #: model:ir.model.fields,field_description:web.field_base_document_layout__paperformat_id
@@ -3888,7 +3912,7 @@ msgstr "Ootel kutsed:"
 #: code:addons/web/static/src/views/fields/percent_pie/percent_pie_field.js:0
 #, python-format
 msgid "PercentPie"
-msgstr ""
+msgstr "Sekordi protsent"
 
 #. module: web
 #. odoo-javascript
@@ -3903,7 +3927,7 @@ msgstr "Protsent"
 #: code:addons/web/static/src/legacy/js/fields/basic_fields.js:0
 #, python-format
 msgid "Percentage Pie"
-msgstr ""
+msgstr "Protsentuaalne sekord"
 
 #. module: web
 #. odoo-javascript
@@ -3919,7 +3943,7 @@ msgstr "Telefon"
 #: code:addons/web/static/src/legacy/js/widgets/colorpicker.js:0
 #, python-format
 msgid "Pick a color"
-msgstr ""
+msgstr "Vali värv"
 
 #. module: web
 #. odoo-javascript
@@ -3953,7 +3977,7 @@ msgstr "Pivoo"
 #: code:addons/web/controllers/pivot.py:0
 #, python-format
 msgid "Pivot %(title)s (%(model_name)s)"
-msgstr ""
+msgstr "Pivot %(title)s (%(model_name)s)"
 
 #. module: web
 #. odoo-javascript
@@ -3961,14 +3985,14 @@ msgstr ""
 #: code:addons/web/static/src/views/pivot/pivot_controller.xml:0
 #, python-format
 msgid "Pivot settings"
-msgstr ""
+msgstr "Pivot seaded"
 
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/core/ui/block_ui.js:0
 #, python-format
 msgid "Please be patient."
-msgstr ""
+msgstr "Palun ole kannatlik."
 
 #. module: web
 #. odoo-javascript
@@ -3990,7 +4014,7 @@ msgstr ""
 #: code:addons/web/static/src/legacy/js/fields/basic_fields.js:0
 #, python-format
 msgid "Please enter a numerical value"
-msgstr ""
+msgstr "Sisesta numbriline väärtus"
 
 #. module: web
 #. odoo-javascript
@@ -4005,7 +4029,7 @@ msgstr "Palun sisesta salvestatud välja listi nimi"
 #: code:addons/web/static/src/legacy/js/widgets/attach_document.js:0
 #, python-format
 msgid "Please save before attaching a file"
-msgstr ""
+msgstr "Palun salvesta enne faili manustamist"
 
 #. module: web
 #. odoo-javascript
@@ -4045,13 +4069,15 @@ msgid ""
 "Please use the following communication for your payment : <b><span>\n"
 "                           INV/2020/07/0003</span></b>"
 msgstr ""
+"Palun märkige ülekande selgitusse arve number: <b><span>\n"
+"                           INV/2020/07/0003</span></b>"
 
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/views/fields/many2one/many2one_field.js:0
 #, python-format
 msgid "Please, scan again !"
-msgstr ""
+msgstr "Palun skaneeri uuesti !"
 
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.brand_promotion_message
@@ -4088,7 +4114,7 @@ msgstr "Sisemise aruande eelvaade"
 #. module: web
 #: model:ir.model.fields,field_description:web.field_base_document_layout__preview_logo
 msgid "Preview logo"
-msgstr ""
+msgstr "Logo eelvaade"
 
 #. module: web
 #. odoo-javascript
@@ -4124,7 +4150,7 @@ msgstr "Eelmine aasta"
 #: code:addons/web/static/src/legacy/xml/base.xml:0
 #, python-format
 msgid "Previous menu"
-msgstr ""
+msgstr "Eelmine menüü"
 
 #. module: web
 #. odoo-javascript
@@ -4154,7 +4180,7 @@ msgstr "Prindi"
 #: code:addons/web/static/src/legacy/js/components/action_menus.js:0
 #, python-format
 msgid "Printing options"
-msgstr ""
+msgstr "Printimise valikud"
 
 #. module: web
 #. odoo-javascript
@@ -4170,7 +4196,7 @@ msgstr "Prioriteet"
 #: code:addons/web/static/src/core/file_upload/file_upload_progress_record.js:0
 #, python-format
 msgid "Processing..."
-msgstr ""
+msgstr "Töötlemises.."
 
 #. module: web
 #. odoo-javascript
@@ -4192,14 +4218,14 @@ msgstr "Seaded"
 #: code:addons/web/static/src/views/fields/properties/properties_field.js:0
 #, python-format
 msgid "Property %s"
-msgstr ""
+msgstr "Omadus %s"
 
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/views/fields/properties/property_definition.xml:0
 #, python-format
 msgid "Property Name"
-msgstr ""
+msgstr "Omaduse nimi"
 
 #. module: web
 #. odoo-javascript
@@ -4217,7 +4243,7 @@ msgstr "Lilla"
 #: code:addons/web/static/src/search/utils/dates.js:0
 #, python-format
 msgid "Q1"
-msgstr ""
+msgstr "Q1"
 
 #. module: web
 #. odoo-javascript
@@ -4225,7 +4251,7 @@ msgstr ""
 #: code:addons/web/static/src/search/utils/dates.js:0
 #, python-format
 msgid "Q2"
-msgstr ""
+msgstr "Q2"
 
 #. module: web
 #. odoo-javascript
@@ -4233,7 +4259,7 @@ msgstr ""
 #: code:addons/web/static/src/search/utils/dates.js:0
 #, python-format
 msgid "Q3"
-msgstr ""
+msgstr "Q3"
 
 #. module: web
 #. odoo-javascript
@@ -4241,7 +4267,7 @@ msgstr ""
 #: code:addons/web/static/src/search/utils/dates.js:0
 #, python-format
 msgid "Q4"
-msgstr ""
+msgstr "Q4"
 
 #. module: web
 #: model:ir.model.fields.selection,name:web.selection__ir_actions_act_window_view__view_mode__qweb
@@ -4264,7 +4290,7 @@ msgstr "Kvartal"
 #: code:addons/web/static/src/views/kanban/kanban_renderer.xml:0
 #, python-format
 msgid "Quick add"
-msgstr ""
+msgstr "Kiire lisamine"
 
 #. module: web
 #. odoo-javascript
@@ -4286,14 +4312,14 @@ msgstr "Qweb Pildi Väli"
 #: code:addons/web/static/src/legacy/xml/colorpicker.xml:0
 #, python-format
 msgid "RGB"
-msgstr ""
+msgstr "RGB"
 
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/legacy/xml/colorpicker.xml:0
 #, python-format
 msgid "RGBA"
-msgstr ""
+msgstr "RGBA"
 
 #. module: web
 #. odoo-javascript
@@ -4308,14 +4334,14 @@ msgstr "Ringidega valikud"
 #: code:addons/web/static/src/core/debug/profiling/profiling_item.xml:0
 #, python-format
 msgid "Record qweb"
-msgstr ""
+msgstr "qweb kirje"
 
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/core/debug/profiling/profiling_item.xml:0
 #, python-format
 msgid "Record sql"
-msgstr ""
+msgstr "sql kirje"
 
 #. module: web
 #. odoo-javascript
@@ -4329,7 +4355,7 @@ msgstr ""
 #: code:addons/web/static/src/core/debug/profiling/profiling_item.xml:0
 #, python-format
 msgid "Recording..."
-msgstr ""
+msgstr "Salvestamine..."
 
 #. module: web
 #. odoo-javascript
@@ -4380,7 +4406,7 @@ msgstr "Seos pole lubatud"
 #: code:addons/web/static/src/legacy/xml/base.xml:0
 #, python-format
 msgid "Relation to follow"
-msgstr ""
+msgstr "Seos, mida jälgida"
 
 #. module: web
 #. odoo-javascript
@@ -4395,7 +4421,7 @@ msgstr "Seos:"
 #: code:addons/web/static/src/views/fields/x2many/x2many_field.js:0
 #, python-format
 msgid "Relational table"
-msgstr ""
+msgstr "Relatsioon'i tabel"
 
 #. module: web
 #. odoo-javascript
@@ -4433,7 +4459,7 @@ msgstr "Eemalda kaanepilt"
 #: code:addons/web/static/src/views/fields/properties/property_definition_selection.xml:0
 #, python-format
 msgid "Remove Property"
-msgstr ""
+msgstr "Eemalda omadus"
 
 #. module: web
 #. odoo-javascript
@@ -4441,7 +4467,7 @@ msgstr ""
 #: code:addons/web/static/src/views/view_dialogs/export_data_dialog.js:0
 #, python-format
 msgid "Remove field"
-msgstr ""
+msgstr "Eemalda väli"
 
 #. module: web
 #. odoo-javascript
@@ -4458,7 +4484,7 @@ msgstr "Eemalda lemmikutest"
 #: code:addons/web/static/src/legacy/xml/base.xml:0
 #, python-format
 msgid "Remove tag"
-msgstr ""
+msgstr "Eemalda silt"
 
 #. module: web
 #. odoo-javascript
@@ -4488,7 +4514,7 @@ msgstr "Aruande paigutus"
 #. module: web
 #: model:ir.actions.report,name:web.action_report_layout_preview
 msgid "Report Layout Preview"
-msgstr ""
+msgstr "Aruande paigutuse eelvaade"
 
 #. module: web
 #. odoo-javascript
@@ -4496,12 +4522,12 @@ msgstr ""
 #: code:addons/web/static/src/public/error_notifications.js:0
 #, python-format
 msgid "Request timeout"
-msgstr ""
+msgstr "Päring on aegunud"
 
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.view_base_document_layout
 msgid "Reset to logo colors"
-msgstr ""
+msgstr "Lähtesta logo värvidele"
 
 #. module: web
 #. odoo-javascript
@@ -4516,7 +4542,7 @@ msgstr ""
 #: code:addons/web/static/src/webclient/debug_items.js:0
 #, python-format
 msgid "Run JS Mobile Tests"
-msgstr ""
+msgstr "Käivita JS mobiilne test"
 
 #. module: web
 #. odoo-javascript
@@ -4524,7 +4550,7 @@ msgstr ""
 #: code:addons/web/static/src/webclient/debug_items.js:0
 #, python-format
 msgid "Run JS Tests"
-msgstr ""
+msgstr "Käivita JS test"
 
 #. module: web
 #. odoo-javascript
@@ -4532,7 +4558,7 @@ msgstr ""
 #: code:addons/web/static/src/search/search_panel/search_panel.xml:0
 #, python-format
 msgid "SEE RESULT"
-msgstr ""
+msgstr "VAATA TULEMUSI"
 
 #. module: web
 #. odoo-javascript
@@ -4550,7 +4576,7 @@ msgstr "ALLKIRI"
 #: code:addons/web/static/src/legacy/xml/base.xml:0
 #, python-format
 msgid "Salmon pink"
-msgstr ""
+msgstr "Roosa"
 
 #. module: web
 #. odoo-javascript
@@ -4609,7 +4635,7 @@ msgstr "Salvesta nimega :"
 #: code:addons/web/static/src/views/view_dialogs/export_data_dialog.xml:0
 #, python-format
 msgid "Save as:"
-msgstr ""
+msgstr "Salvesta nimega:"
 
 #. module: web
 #. odoo-javascript
@@ -4630,7 +4656,7 @@ msgstr "Salvesta vaikimisi"
 #: code:addons/web/static/src/views/form/form_status_indicator/form_status_indicator.xml:0
 #, python-format
 msgid "Save manually"
-msgstr ""
+msgstr "Salvesta manuaalselt"
 
 #. module: web
 #. odoo-javascript
@@ -4638,7 +4664,7 @@ msgstr ""
 #: code:addons/web/static/src/legacy/xml/base.xml:0
 #, python-format
 msgid "Save record"
-msgstr ""
+msgstr "Salvesta kirje"
 
 #. module: web
 #. odoo-javascript
@@ -4646,7 +4672,7 @@ msgstr ""
 #: code:addons/web/static/src/views/fields/many2one/many2one_field.xml:0
 #, python-format
 msgid "Scan barcode"
-msgstr ""
+msgstr "Skaneeri triipkood"
 
 #. module: web
 #. odoo-javascript
@@ -4675,35 +4701,35 @@ msgstr "Otsi veel..."
 #: code:addons/web/static/src/core/model_selector/model_selector.js:0
 #, python-format
 msgid "Search a Model..."
-msgstr ""
+msgstr "Otsi mudelit..."
 
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/legacy/xml/base.xml:0
 #, python-format
 msgid "Search a field..."
-msgstr ""
+msgstr "Otsi väli..."
 
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/core/commands/default_providers.js:0
 #, python-format
 msgid "Search for a command..."
-msgstr ""
+msgstr "Otsi käsku..."
 
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/webclient/menus/menu_providers.js:0
 #, python-format
 msgid "Search for a menu..."
-msgstr ""
+msgstr "Otsi menüüd..."
 
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/legacy/xml/base.xml:0
 #, python-format
 msgid "Search for records"
-msgstr ""
+msgstr "Otsi kirjeid.."
 
 #. module: web
 #. odoo-javascript
@@ -4729,7 +4755,7 @@ msgstr "Otsing..."
 #: code:addons/web/static/src/views/fields/relational_utils.js:0
 #, python-format
 msgid "Search: %s"
-msgstr ""
+msgstr "Otsi: %s"
 
 #. module: web
 #: model:ir.model.fields,field_description:web.field_base_document_layout__secondary_color
@@ -4773,13 +4799,15 @@ msgid ""
 "Select <i class=\"fa fa-database\" role=\"img\" aria-label=\"Database\" "
 "title=\"Database\"/>"
 msgstr ""
+"Vali <i class=\"fa fa-database\" role=\"img\" aria-label=\"Database\" "
+"title=\"Database\"/>"
 
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/views/fields/properties/property_definition_selection.xml:0
 #, python-format
 msgid "Select Default"
-msgstr ""
+msgstr "Vali vaikimisi"
 
 #. module: web
 #. odoo-javascript
@@ -4817,14 +4845,14 @@ msgstr "Vali kõik"
 #: code:addons/web/static/src/views/view_dialogs/export_data_dialog.xml:0
 #, python-format
 msgid "Select field"
-msgstr ""
+msgstr "Vali väli"
 
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/views/fields/relational_utils.js:0
 #, python-format
 msgid "Select records"
-msgstr ""
+msgstr "Vali kirje"
 
 #. module: web
 #. odoo-javascript
@@ -4881,14 +4909,14 @@ msgstr "Määra kaanepilt"
 #: code:addons/web/static/src/legacy/js/fields/basic_fields.js:0
 #, python-format
 msgid "Set a kanban state..."
-msgstr ""
+msgstr "Seadista kanbani olek..."
 
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/legacy/js/fields/basic_fields.js:0
 #, python-format
 msgid "Set a priority..."
-msgstr ""
+msgstr "Määra prioriteet..."
 
 #. module: web
 #. odoo-javascript
@@ -4896,7 +4924,7 @@ msgstr ""
 #: code:addons/web/static/src/views/fields/timezone_mismatch/timezone_mismatch_field.js:0
 #, python-format
 msgid "Set a timezone on your user"
-msgstr ""
+msgstr "Määra ajavöönd enda kasutajale"
 
 #. module: web
 #. odoo-javascript
@@ -4904,7 +4932,7 @@ msgstr ""
 #: code:addons/web/static/src/views/fields/state_selection/state_selection_field.js:0
 #, python-format
 msgid "Set kanban state..."
-msgstr ""
+msgstr "Seadista kanbani olek..."
 
 #. module: web
 #. odoo-javascript
@@ -4912,7 +4940,7 @@ msgstr ""
 #: code:addons/web/static/src/views/fields/priority/priority_field.js:0
 #, python-format
 msgid "Set priority..."
-msgstr ""
+msgstr "Määra prioriteet..."
 
 #. module: web
 #. odoo-javascript
@@ -4940,7 +4968,7 @@ msgstr "Jaga kõigi kasutajatega"
 #: code:addons/web/static/src/views/view_dialogs/export_data_dialog.xml:0
 #, python-format
 msgid "Show sub-fields"
-msgstr ""
+msgstr "Näita alamväli"
 
 #. module: web
 #. odoo-javascript
@@ -4985,7 +5013,7 @@ msgstr "Midagi kohutavat juhtus"
 #: code:addons/web/static/src/views/graph/graph_controller.xml:0
 #, python-format
 msgid "Sort graph"
-msgstr ""
+msgstr "Sorteeri graafikud"
 
 #. module: web
 #. odoo-javascript
@@ -5019,7 +5047,7 @@ msgstr "Alustage kirjutamist..."
 #: code:addons/web/static/src/views/fields/stat_info/stat_info_field.js:0
 #, python-format
 msgid "Stat Info"
-msgstr ""
+msgstr "Statistika teave"
 
 #. module: web
 #. odoo-javascript
@@ -5033,14 +5061,14 @@ msgstr "Staatus"
 #: code:addons/web/static/src/webclient/settings_form_view/settings_confirmation_dialog.xml:0
 #, python-format
 msgid "Stay Here"
-msgstr ""
+msgstr "Jää siia"
 
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/views/form/form_error_dialog/form_error_dialog.xml:0
 #, python-format
 msgid "Stay here"
-msgstr ""
+msgstr "Jää siia"
 
 #. module: web
 #. odoo-javascript
@@ -5099,7 +5127,7 @@ msgstr "Süntaksi viga"
 #: code:addons/web/static/src/webclient/user_menu/user_menu_items.xml:0
 #, python-format
 msgid "TIP"
-msgstr ""
+msgstr "VIHJE"
 
 #. module: web
 #. odoo-javascript
@@ -5116,7 +5144,7 @@ msgstr "Sildid"
 #: code:addons/web/static/src/core/ui/block_ui.js:0
 #, python-format
 msgid "Take a minute to get a coffee,"
-msgstr ""
+msgstr "Võta hetk, et juua kohvi,"
 
 #. module: web
 #. odoo-javascript
@@ -5170,7 +5198,7 @@ msgstr ""
 #: code:addons/web/static/src/legacy/js/fields/basic_fields.js:0
 #, python-format
 msgid "The field is empty, there's nothing to save."
-msgstr ""
+msgstr "Väli on tühi. Midagi pole salvestada!"
 
 #. module: web
 #. odoo-javascript
@@ -5214,7 +5242,7 @@ msgstr ""
 #: code:addons/web/static/src/views/kanban/kanban_cover_image_dialog.xml:0
 #, python-format
 msgid "There is no available image to be set as cover."
-msgstr ""
+msgstr "Ühtegi pilti pole kaanepildiks valida."
 
 #. module: web
 #. odoo-javascript
@@ -5228,12 +5256,12 @@ msgstr "Faili üleslaadimisel esines tõrge"
 #: code:addons/web/static/src/views/fields/file_handler.js:0
 #, python-format
 msgid "There was a problem while uploading your file."
-msgstr ""
+msgstr "Faili üleslaadimisel esines tõrge."
 
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.neutralize_banner
 msgid "This database is neutralized."
-msgstr ""
+msgstr "Andmebaas on neutraliseeritud."
 
 #. module: web
 #. odoo-javascript
@@ -5255,21 +5283,21 @@ msgstr ""
 #: code:addons/web/static/src/legacy/js/widgets/domain_selector.js:0
 #, python-format
 msgid "This domain is not supported."
-msgstr ""
+msgstr "Seda domeenit ei toetata."
 
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/views/fields/properties/properties_field.js:0
 #, python-format
 msgid "This field is already first"
-msgstr ""
+msgstr "See väli on juba esimene"
 
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/views/fields/properties/properties_field.js:0
 #, python-format
 msgid "This field is already last"
-msgstr ""
+msgstr "See väli on juba viimane"
 
 #. module: web
 #. odoo-javascript
@@ -5277,7 +5305,7 @@ msgstr ""
 #: code:addons/web/static/src/legacy/xml/name_and_signature.xml:0
 #, python-format
 msgid "This file is invalid. Please select an image."
-msgstr ""
+msgstr "Antud fail on vigane. Palun valige pilt!"
 
 #. module: web
 #. odoo-javascript
@@ -5303,7 +5331,7 @@ msgstr "See on sisemise aruande näidis."
 #: code:addons/web/static/src/views/fields/properties/property_tags.js:0
 #, python-format
 msgid "This tag is already available"
-msgstr ""
+msgstr "See silt on juba saadaval"
 
 #. module: web
 #. odoo-javascript
@@ -5363,7 +5391,7 @@ msgstr "Lülitage ümber"
 #: code:addons/web/static/src/webclient/burger_menu/burger_menu.xml:0
 #, python-format
 msgid "Toggle menu"
-msgstr ""
+msgstr "Toggle menüü"
 
 #. module: web
 #. odoo-javascript
@@ -5378,7 +5406,7 @@ msgstr "Homme"
 #: code:addons/web/models/models.py:0
 #, python-format
 msgid "Too many items to display."
-msgstr ""
+msgstr "Liiga palju üksusi kuvamiseks. "
 
 #. module: web
 #. odoo-javascript
@@ -5396,7 +5424,7 @@ msgstr "Kokku"
 #: code:addons/web/static/src/views/fields/translation_dialog.js:0
 #, python-format
 msgid "Translate: %s"
-msgstr ""
+msgstr "Tõlgi: %s"
 
 #. module: web
 #. odoo-javascript
@@ -5426,7 +5454,7 @@ msgstr "Teisipäev"
 #: code:addons/web/static/src/core/model_field_selector/model_field_selector_popover.xml:0
 #, python-format
 msgid "Type a default text or press ENTER"
-msgstr ""
+msgstr "Sisesta vaikimisi tekst või vajuta ENTER"
 
 #. module: web
 #. odoo-javascript
@@ -5434,7 +5462,7 @@ msgstr ""
 #: code:addons/web/static/src/legacy/xml/name_and_signature.xml:0
 #, python-format
 msgid "Type your name to sign"
-msgstr ""
+msgstr "Allkirjastamiseks sisesta enda nimi"
 
 #. module: web
 #. odoo-javascript
@@ -5465,7 +5493,7 @@ msgstr ""
 #: code:addons/web/static/src/views/form/form_status_indicator/form_status_indicator.xml:0
 #, python-format
 msgid "Unable to save"
-msgstr ""
+msgstr "Ei saa salvestada"
 
 #. module: web
 #. odoo-javascript
@@ -5490,21 +5518,21 @@ msgstr "Võta kõik arhiivist välja"
 #: code:addons/web/static/src/core/errors/error_service.js:0
 #, python-format
 msgid "Uncaught CORS Error"
-msgstr ""
+msgstr "Tabamata CORS-i viga"
 
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/core/errors/error_service.js:0
 #, python-format
 msgid "Uncaught Javascript Error"
-msgstr ""
+msgstr "Tabamata Javascript'i viga"
 
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/core/errors/error_service.js:0
 #, python-format
 msgid "Uncaught Promise"
-msgstr ""
+msgstr "Tabamata lubadus"
 
 #. module: web
 #. odoo-javascript
@@ -5551,7 +5579,7 @@ msgstr "Tundmatu mittesõnaline tüüp "
 #: code:addons/web/static/src/legacy/js/views/list/list_editable_renderer.js:0
 #, python-format
 msgid "Unlink row "
-msgstr ""
+msgstr "Tühista rea linkimine"
 
 #. module: web
 #. odoo-javascript
@@ -5676,7 +5704,7 @@ msgstr "Üleslaadimine..."
 #: code:addons/web/static/src/core/file_upload/file_upload_progress_record.js:0
 #, python-format
 msgid "Uploading... (%s%)"
-msgstr ""
+msgstr "Üleslaadimine... (%s%)"
 
 #. module: web
 #. odoo-javascript
@@ -5684,7 +5712,7 @@ msgstr ""
 #: code:addons/web/static/src/views/kanban/kanban_column_quick_create.js:0
 #, python-format
 msgid "Use This For My Kanban"
-msgstr ""
+msgstr "Kasuta seda minu Kanbani jaoks"
 
 #. module: web
 #. odoo-javascript
@@ -5727,14 +5755,14 @@ msgstr "Väärtused"
 #: code:addons/web/static/src/views/form/form_label.js:0
 #, python-format
 msgid "Values set here are company-specific."
-msgstr ""
+msgstr "Seatud väärtused on ettevõttepõhised."
 
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/views/pivot/pivot_model.js:0
 #, python-format
 msgid "Variation"
-msgstr ""
+msgstr "Variatsioon"
 
 #. module: web
 #. odoo-javascript
@@ -5748,7 +5776,7 @@ msgstr "Ava %s"
 #: code:addons/web/static/src/webclient/actions/debug_items.js:0
 #, python-format
 msgid "View Access Rights"
-msgstr ""
+msgstr "Vaata ligipääsuõigusi"
 
 #. module: web
 #. odoo-javascript
@@ -5762,7 +5790,7 @@ msgstr "Vaata välju"
 #: code:addons/web/static/src/views/fields/properties/property_definition.xml:0
 #, python-format
 msgid "View In Kanban"
-msgstr ""
+msgstr "Vaata Kanban vaates"
 
 #. module: web
 #. odoo-javascript
@@ -5779,7 +5807,7 @@ msgstr "Vaata metaandmeid"
 #: code:addons/web/static/src/webclient/actions/debug_items.js:0
 #, python-format
 msgid "View Record Rules"
-msgstr ""
+msgstr "Vaata kirje reeglid"
 
 #. module: web
 #: model:ir.model.fields,field_description:web.field_ir_actions_act_window_view__view_mode
@@ -5791,7 +5819,7 @@ msgstr "Vaate tüüp"
 #: code:addons/web/static/src/legacy/xml/base.xml:0
 #, python-format
 msgid "View switcher"
-msgstr ""
+msgstr "Vaata muudatusi"
 
 #. module: web
 #. odoo-javascript
@@ -5813,17 +5841,17 @@ msgstr "Hoiatus"
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.benchmark_suite
 msgid "Web Benchmarks"
-msgstr ""
+msgstr "Veebi võrdlusnäitajad"
 
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.qunit_mobile_suite
 msgid "Web Mobile Tests"
-msgstr ""
+msgstr "Veebi mobiilsed testid"
 
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.qunit_suite
 msgid "Web Tests"
-msgstr ""
+msgstr "Veebi testid"
 
 #. module: web
 #: model:ir.model.fields,field_description:web.field_base_document_layout__website
@@ -5867,7 +5895,7 @@ msgstr "Vidin:"
 #: code:addons/web/static/src/webclient/settings_form_view/settings_form_controller.js:0
 #, python-format
 msgid "Would you like to save your changes?"
-msgstr ""
+msgstr "Kas soovite enda muudatused salvestada?"
 
 #. module: web
 #. odoo-javascript
@@ -5936,7 +5964,7 @@ msgstr "Eile"
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.login_successful
 msgid "You are logged in."
-msgstr ""
+msgstr "Olete sisse logitud."
 
 #. module: web
 #. odoo-python
@@ -5957,14 +5985,14 @@ msgstr ""
 #: code:addons/web/static/src/views/fields/properties/property_definition.js:0
 #, python-format
 msgid "You do not have access to the model \"%s\"."
-msgstr ""
+msgstr "Teil ei ole ligipääsu mudeli \"%s\" jaoks."
 
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/core/ui/block_ui.js:0
 #, python-format
 msgid "You may not believe it,"
-msgstr ""
+msgstr "Sa ei pruugi seda uskuda,"
 
 #. module: web
 #. odoo-javascript
@@ -5983,6 +6011,7 @@ msgid ""
 "You need to save this new record before editing the translation. Do you want"
 " to proceed?"
 msgstr ""
+"Antud kirje peab olema salvestatud enne tõlke muutmist. Kas soovid jätkata?"
 
 #. module: web
 #. odoo-javascript
@@ -6025,7 +6054,7 @@ msgstr ""
 #: code:addons/web/static/src/legacy/js/views/kanban/kanban_record.js:0
 #, python-format
 msgid "[No widget %s]"
-msgstr ""
+msgstr "[Vidinat pole %s]"
 
 #. module: web
 #. odoo-javascript
@@ -6091,7 +6120,7 @@ msgstr "kõik kirjed"
 #: code:addons/web/static/src/core/domain_selector/domain_selector_branch_operator.xml:0
 #, python-format
 msgid "any"
-msgstr ""
+msgstr "vähemalt üks"
 
 #. module: web
 #. odoo-javascript
@@ -6099,7 +6128,7 @@ msgstr ""
 #: code:addons/web/static/src/views/list/list_confirmation_dialog.xml:0
 #, python-format
 msgid "are valid for this update."
-msgstr ""
+msgstr "kehtib antud uuenduse jaoks."
 
 #. module: web
 #. odoo-javascript
@@ -6107,28 +6136,28 @@ msgstr ""
 #: code:addons/web/static/src/views/fields/many2one/many2one_field.xml:0
 #, python-format
 msgid "as a new"
-msgstr ""
+msgstr "uue "
 
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/legacy/xml/base.xml:0
 #, python-format
 msgid "at:"
-msgstr ""
+msgstr "kell"
 
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/core/ui/block_ui.js:0
 #, python-format
 msgid "because it's loading..."
-msgstr ""
+msgstr "kuna endiselt laen..."
 
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/core/ui/block_ui.js:0
 #, python-format
 msgid "but the application is actually loading..."
-msgstr ""
+msgstr "aga rakendus endiselt laeb..."
 
 #. module: web
 #. odoo-javascript
@@ -6167,7 +6196,7 @@ msgstr "päeva pärast"
 #: code:addons/web/static/src/views/fields/remaining_days/remaining_days_field.xml:0
 #, python-format
 msgid "days ago"
-msgstr ""
+msgstr "päeva tagasi"
 
 #. module: web
 #. odoo-javascript
@@ -6190,26 +6219,26 @@ msgstr "ei sisalda"
 #: code:addons/web/static/src/core/network/download.js:0
 #, python-format
 msgid "downloading..."
-msgstr ""
+msgstr "allalaadimine..."
 
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.view_base_document_layout
 msgid "e.g. Global Business Solutions"
-msgstr ""
+msgstr "nt. Globaalsed ärilahendused"
 
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/views/view_dialogs/export_data_dialog.xml:0
 #, python-format
 msgid "expandText"
-msgstr ""
+msgstr "expandText"
 
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/legacy/xml/base.xml:0
 #, python-format
 msgid "for:"
-msgstr ""
+msgstr "jaoks:"
 
 #. module: web
 #. odoo-javascript
@@ -6233,7 +6262,7 @@ msgstr "suurem kui või võrdne"
 #: code:addons/web/static/src/legacy/xml/colorpicker.xml:0
 #, python-format
 msgid "hex"
-msgstr ""
+msgstr "hex"
 
 #. module: web
 #. odoo-javascript
@@ -6277,7 +6306,7 @@ msgstr "on"
 #: code:addons/web/static/src/search/filter_menu/custom_filter_item.js:0
 #, python-format
 msgid "is No"
-msgstr ""
+msgstr "on \"Ei\""
 
 #. module: web
 #. odoo-javascript
@@ -6285,7 +6314,7 @@ msgstr ""
 #: code:addons/web/static/src/search/filter_menu/custom_filter_item.js:0
 #, python-format
 msgid "is Yes"
-msgstr ""
+msgstr "on \"Jah\""
 
 #. module: web
 #. odoo-javascript
@@ -6305,7 +6334,7 @@ msgstr "on pärast"
 #: code:addons/web/static/src/search/filter_menu/custom_filter_item.js:0
 #, python-format
 msgid "is after or equal to"
-msgstr ""
+msgstr "kas pärast või võrdne"
 
 #. module: web
 #. odoo-javascript
@@ -6325,7 +6354,7 @@ msgstr "on enne"
 #: code:addons/web/static/src/search/filter_menu/custom_filter_item.js:0
 #, python-format
 msgid "is before or equal to"
-msgstr ""
+msgstr "on enne või võrdne"
 
 #. module: web
 #. odoo-javascript
@@ -6426,7 +6455,7 @@ msgstr "on määratud"
 #: code:addons/web/static/src/core/ui/block_ui.js:0
 #, python-format
 msgid "it's still loading..."
-msgstr ""
+msgstr "ikka laen..."
 
 #. module: web
 #. odoo-javascript
@@ -6434,7 +6463,7 @@ msgstr ""
 #: code:addons/web/static/src/views/fields/formatters.js:0
 #, python-format
 msgid "kMGTPE"
-msgstr ""
+msgstr "kMGTPE"
 
 #. module: web
 #. odoo-javascript
@@ -6466,14 +6495,14 @@ msgstr "väiksem kui või võrdne"
 #: code:addons/web/static/src/core/domain_selector/domain_selector_operators.js:0
 #, python-format
 msgid "like"
-msgstr ""
+msgstr "meeldib"
 
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/webclient/menus/menu_providers.js:0
 #, python-format
 msgid "menus"
-msgstr ""
+msgstr "menüüd"
 
 #. module: web
 #. odoo-javascript
@@ -6503,14 +6532,14 @@ msgstr "rohkem"
 #: code:addons/web/static/src/core/debug/profiling/profiling_qweb.xml:0
 #, python-format
 msgid "ms"
-msgstr ""
+msgstr "ms"
 
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/core/commands/default_providers.js:0
 #, python-format
 msgid "no description provided"
-msgstr ""
+msgstr "kirjeldust ei ole"
 
 #. module: web
 #. odoo-javascript
@@ -6541,7 +6570,7 @@ msgstr "ei ole"
 #: code:addons/web/static/src/core/domain_selector/domain_selector_operators.js:0
 #, python-format
 msgid "not like"
-msgstr ""
+msgstr "ei meeldi"
 
 #. module: web
 #. odoo-javascript
@@ -6572,7 +6601,7 @@ msgstr "järgmistest:"
 #: code:addons/web/static/src/webclient/user_menu/user_menu_items.xml:0
 #, python-format
 msgid "on any screen to show shortcut overlays and"
-msgstr ""
+msgstr "mis tahes ekraanil kuvatakse otsetee kattuvust ja"
 
 #. module: web
 #. odoo-javascript
@@ -6600,7 +6629,7 @@ msgstr "ülem"
 #: code:addons/web/static/src/core/debug/profiling/profiling_qweb.xml:0
 #, python-format
 msgid "query"
-msgstr ""
+msgstr "päring"
 
 #. module: web
 #. odoo-javascript
@@ -6634,7 +6663,7 @@ msgstr "ülejäänud)"
 #: code:addons/web/static/src/search/search_bar/search_bar.xml:0
 #, python-format
 msgid "search"
-msgstr ""
+msgstr "otsi"
 
 #. module: web
 #. odoo-javascript
@@ -6675,32 +6704,32 @@ msgstr "määratud (tõene)"
 #: code:addons/web/static/src/core/commands/command_palette.xml:0
 #, python-format
 msgid "to open in new tab"
-msgstr ""
+msgstr "uuel vahelehel avamiseks"
 
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/core/commands/command_palette.xml:0
 #, python-format
 msgid "to open,"
-msgstr ""
+msgstr "avamiseks"
 
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/webclient/user_menu/user_menu_items.xml:0
 #, python-format
 msgid "to trigger a shortcut."
-msgstr ""
+msgstr "otsetee käivitamiseks."
 
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/legacy/xml/base.xml:0
 #, python-format
 msgid "type a default text or press ENTER"
-msgstr ""
+msgstr "sisesta vaikimisi tekst või vajuta ENTER"
 
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/webclient/user_menu/user_menu_items.xml:0
 #, python-format
 msgid "— press"
-msgstr ""
+msgstr "— vajuta"
