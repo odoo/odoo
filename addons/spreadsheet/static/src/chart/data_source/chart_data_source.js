@@ -39,6 +39,9 @@ export default class ChartDataSource extends OdooViewsDataSource {
             this.load();
             return { datasets: [], labels: [] };
         }
+        if (!this._isValid) {
+            return { datasets: [], labels: [] };
+        }
         return this._model.data;
     }
 }

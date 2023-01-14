@@ -451,9 +451,9 @@ class AccountEdiFormat(models.Model):
         if invoices.l10n_in_mode in ("2", "3", "4"):
             json_payload.update({
                 "transMode": invoices.l10n_in_mode,
-                "transDocNo": invoices.l10n_in_transporter_doc_no or "",
-                "transDocDate": invoices.l10n_in_transporter_doc_date and
-                    invoices.l10n_in_transporter_doc_date.strftime("%d/%m/%Y") or "",
+                "transDocNo": invoices.l10n_in_transportation_doc_no or "",
+                "transDocDate": invoices.l10n_in_transportation_doc_date and
+                    invoices.l10n_in_transportation_doc_date.strftime("%d/%m/%Y") or "",
             })
         if invoices.l10n_in_mode == "1":
             json_payload.update({
@@ -520,10 +520,10 @@ class AccountEdiFormat(models.Model):
     @api.model
     def _l10n_in_edi_ewaybill_no_config_response(self):
         return {"error": [{
-            "code": "000",
+            "code": "0",
             "message": _(
-                "A username and password still needs to be set or it's wrong for the E-waybill(IN). "
-                "It needs to be added and verify in the Settings."
+                "Unable to send E-waybill."
+                "Create an API user in NIC portal, and set it using the top menu: Configuration > Settings."
             )}
         ]}
 
@@ -554,7 +554,7 @@ class AccountEdiFormat(models.Model):
         endpoint = self.env["ir.config_parameter"].sudo().get_param("l10n_in_edi_ewaybill.endpoint", default_endpoint)
         url = "%s%s" % (endpoint, url_path)
         try:
-            return jsonrpc(url, params=params, timeout=25)
+            return jsonrpc(url, params=params, timeout=70)
         except AccessError as e:
             _logger.warning("Connection error: %s", e.args[0])
             return {

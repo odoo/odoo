@@ -3,7 +3,8 @@
 /**
  * @typedef {import("@spreadsheet/data_sources/metadata_repository").Field} Field
  * @typedef {import("./global_filters_core_plugin").GlobalFilter} GlobalFilter
- *
+ * @typedef {import("./global_filters_core_plugin").FieldMatching} FieldMatching
+ 
  */
 
 import { _t } from "@web/core/l10n/translation";
@@ -324,14 +325,14 @@ export default class GlobalFiltersUIPlugin extends spreadsheet.UIPlugin {
      * @param {GlobalFilter} filter
      * @param {FieldMatching} fieldMatching
      *
-     * @returns {Domain|undefined}
+     * @returns {Domain}
      */
     _getDateDomain(filter, fieldMatching) {
-        if (!this.isGlobalFilterActive(filter.id)) {
-            return undefined;
-        }
         let granularity;
         const value = this.getGlobalFilterValue(filter.id);
+        if (!value || !fieldMatching.chain) {
+            return new Domain();
+        }
         const field = fieldMatching.chain;
         const type = fieldMatching.type;
         const offset = fieldMatching.offset || 0;
@@ -380,12 +381,12 @@ export default class GlobalFiltersUIPlugin extends spreadsheet.UIPlugin {
      * @param {GlobalFilter} filter
      * @param {FieldMatching} fieldMatching
      *
-     * @returns {Domain|undefined}
+     * @returns {Domain}
      */
     _getTextDomain(filter, fieldMatching) {
         const value = this.getGlobalFilterValue(filter.id);
         if (!value || !fieldMatching.chain) {
-            return undefined;
+            return new Domain();
         }
         const field = fieldMatching.chain;
         return new Domain([[field, "ilike", value]]);
@@ -399,12 +400,12 @@ export default class GlobalFiltersUIPlugin extends spreadsheet.UIPlugin {
      * @param {GlobalFilter} filter
      * @param {FieldMatching} fieldMatching
      *
-     * @returns {Domain|undefined}
+     * @returns {Domain}
      */
     _getRelationDomain(filter, fieldMatching) {
         const values = this.getGlobalFilterValue(filter.id);
         if (!values || values.length === 0 || !fieldMatching.chain) {
-            return undefined;
+            return new Domain();
         }
         const field = fieldMatching.chain;
         return new Domain([[field, "in", values]]);

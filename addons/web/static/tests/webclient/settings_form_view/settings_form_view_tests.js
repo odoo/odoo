@@ -635,6 +635,70 @@ QUnit.module("SettingsFormView", (hooks) => {
         ]);
     });
 
+    QUnit.test(
+        "settings views ask for confirmation when leaving if dirty",
+        async function (assert) {
+            serverData.actions = {
+                1: {
+                    id: 1,
+                    name: "Settings view",
+                    res_model: "res.config.settings",
+                    type: "ir.actions.act_window",
+                    views: [[1, "form"]],
+                },
+                4: {
+                    id: 4,
+                    name: "Other action",
+                    res_model: "task",
+                    type: "ir.actions.act_window",
+                    views: [["view_ref", "form"]],
+                },
+            };
+
+            serverData.views = {
+                "res.config.settings,1,form": `
+                    <form string="Settings" js_class="base_settings">
+                        <div class="settings">
+                            <div class="app_settings_block" string="CRM" data-key="crm">
+                                <div class="row mt16 o_settings_container">
+                                    <div class="col-12 col-lg-6 o_setting_box">
+                                        <div class="o_setting_left_pane">
+                                            <field name="foo"/>
+                                        </div>
+                                        <div class="o_setting_right_pane">
+                                            <span class="o_form_label">Foo</span>
+                                            <div class="text-muted">this is foo</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </form>`,
+                "res.config.settings,false,search": `<search/>`,
+                "task,view_ref,form": `
+                        <form>
+                            <field name="display_name"/>
+                        </form>`,
+                "task,false,search": "<search></search>",
+            };
+
+            const webClient = await createWebClient({ serverData });
+            await doAction(webClient, 1);
+
+            const action = doAction(webClient, 4);
+            await nextTick();
+            assert.containsNone(target, ".modal", "do not open modal if there is no change");
+            await action;
+
+            await doAction(webClient, 1);
+            await click(target, ".o_field_boolean input");
+            doAction(webClient, 4);
+            await nextTick();
+            assert.containsOnce(target, ".modal", "open modal if there is change");
+            assert.strictEqual(target.querySelector(".modal-title").textContent, "Unsaved changes");
+        }
+    );
+
     QUnit.test("Auto save: don't save on closing tab/browser", async function (assert) {
         assert.expect(3);
 

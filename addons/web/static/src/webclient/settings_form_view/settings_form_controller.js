@@ -32,9 +32,6 @@ export class SettingsFormController extends formView.Controller {
             () => [this.searchState.value]
         );
         useEffect(() => {
-            if (this.env.__beforeLeave__) {
-                this.env.__beforeLeave__.remove(this);
-            }
             if (this.env.__getLocalState__) {
                 this.env.__getLocalState__.remove(this);
             }
@@ -50,43 +47,25 @@ export class SettingsFormController extends formView.Controller {
         if (clickParams.name === "cancel") {
             return true;
         }
-        let _continue = true;
         if (
             this.model.root.isDirty &&
             !["execute"].includes(clickParams.name) &&
             !clickParams.noSaveDialog
         ) {
-            const message = this.env._t("Would you like to save your changes?");
-            await new Promise((resolve) => {
-                this.dialogService.add(SettingsConfirmationDialog, {
-                    body: message,
-                    confirm: async () => {
-                        await this._save();
-                        // It doesn't make sense to do the action of the button
-                        // as the res.config.settings `execute` method will trigger a reload.
-                        _continue = false;
-                        resolve();
-                    },
-                    cancel: async () => {
-                        await this.model.root.discard();
-                        await this.model.root.save({ stayInEdition: true });
-                        _continue = true;
-                        resolve();
-                    },
-                    stayHere: () => {
-                        _continue = false;
-                        resolve();
-                    },
-                });
-            });
+            return this._confirmSave();
         } else {
-            _continue = await this.model.root.save({ stayInEdition: true });
+            return this.model.root.save({ stayInEdition: true });
         }
-        return _continue;
     }
 
     displayName() {
         return this.env._t("Settings");
+    }
+
+    beforeLeave() {
+        if (this.model.root.isDirty) {
+            return this._confirmSave();
+        }
     }
 
     //This is needed to avoid the auto save when unload
@@ -120,6 +99,33 @@ export class SettingsFormController extends formView.Controller {
             getResParams: () =>
                 pick(this.model.root, "context", "evalContext", "resModel", "resId", "resIds"),
         });
+    }
+
+    async _confirmSave() {
+        let _continue = true;
+        await new Promise((resolve) => {
+            this.dialogService.add(SettingsConfirmationDialog, {
+                body: this.env._t("Would you like to save your changes?"),
+                confirm: async () => {
+                    await this._save();
+                    // It doesn't make sense to do the action of the button
+                    // as the res.config.settings `execute` method will trigger a reload.
+                    _continue = false;
+                    resolve();
+                },
+                cancel: async () => {
+                    await this.model.root.discard();
+                    await this.model.root.save({ stayInEdition: true });
+                    _continue = true;
+                    resolve();
+                },
+                stayHere: () => {
+                    _continue = false;
+                    resolve();
+                },
+            });
+        });
+        return _continue;
     }
 }
 

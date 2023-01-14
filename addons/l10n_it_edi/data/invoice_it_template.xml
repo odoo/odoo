@@ -119,8 +119,7 @@
                     <IdPaese t-esc="buyer.country_id.code"/>
                     <IdCodice t-esc="'0000000'"/>
                 </IdFiscaleIVA>
-                <CodiceFiscale t-if="not buyer.vat and buyer.l10n_it_codice_fiscale" t-esc="normalize_codice_fiscale(buyer.l10n_it_codice_fiscale)"/>
-                <CodiceFiscale t-elif="not buyer.vat and not buyer.l10n_it_codice_fiscale" t-esc="99999999999"/>
+                <CodiceFiscale t-if="buyer.l10n_it_codice_fiscale" t-esc="normalize_codice_fiscale(buyer.l10n_it_codice_fiscale)"/>
                 <Anagrafica>
                     <t t-if="buyer_is_company">
                         <Denominazione t-esc="format_alphanumeric(buyer.display_name[:80])"/>

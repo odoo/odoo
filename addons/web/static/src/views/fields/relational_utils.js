@@ -537,7 +537,10 @@ async function getFormViewInfo({ list, activeField, viewService, userService, en
             views: [[false, "form"]],
         });
         const archInfo = new FormArchParser().parse(views.form.arch, relatedModels, comodel);
-        formViewInfo = { ...archInfo, fields }; // should be good to memorize this on activeField
+        // Fields that need to be defined are the ones in the form view, this is natural,
+        // plus the ones that the list record has, that is, present in either the list arch or the kanban arch
+        // of the one2many field
+        formViewInfo = { ...archInfo, fields: { ...list.fields, ...fields } }; // should be good to memorize this on activeField
     }
 
     await loadSubViews(
