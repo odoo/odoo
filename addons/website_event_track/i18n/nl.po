@@ -3,9 +3,9 @@
 # 	* website_event_track
 # 
 # Translators:
-# Martin Trigaux, 2022
 # Erwin van der Ploeg <erwin@odooexperts.nl>, 2022
-# Jolien De Paepe, 2022
+# Martin Trigaux, 2022
+# Jolien De Paepe, 2023
 # 
 msgid ""
 msgstr ""
@@ -13,7 +13,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-10-04 09:26+0000\n"
 "PO-Revision-Date: 2022-09-22 05:56+0000\n"
-"Last-Translator: Jolien De Paepe, 2022\n"
+"Last-Translator: Jolien De Paepe, 2023\n"
 "Language-Team: Dutch (https://www.transifex.com/odoo/teams/41243/nl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -25,13 +25,13 @@ msgstr ""
 #: code:addons/website_event_track/models/website.py:0
 #, python-format
 msgid "\"Events App Name\" field is required."
-msgstr "\"Events App Name\" veld is verplicht."
+msgstr "\"Evenementen App naam\" veld is verplicht."
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__wishlist_visitor_count
 #: model:ir.model.fields,field_description:website_event_track.field_website_visitor__event_track_wishlisted_count
 msgid "# Wishlisted"
-msgstr "# Wensenlijst"
+msgstr "# op verlanglijst"
 
 #. module: website_event_track
 #: code:addons/website_event_track/models/event_track.py:0
@@ -55,7 +55,7 @@ msgstr "%s Evenementen"
 #: code:addons/website_event_track/controllers/webmanifest.py:0
 #, python-format
 msgid "%s Online Events Application"
-msgstr "%s Aanvraag voor online evenementen."
+msgstr "%s Aanvraag voor online evenementen"
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.tracks_display_list
@@ -80,12 +80,12 @@ msgstr "<b>Contactgegevens</b>"
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_track_template_new
 msgid "<b>Mail</b>:"
-msgstr "<b>E-Mail</b>:"
+msgstr "<b>E-mail</b>:"
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_track_template_new
 msgid "<b>Phone</b>:"
-msgstr "<b>Telefoon</b>:"
+msgstr "<b>Telefoonnummer</b>:"
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_track_template_new
@@ -95,12 +95,12 @@ msgstr "<b>Voorgesteld door</b>:"
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_track_template_new
 msgid "<b>Speaker Biography</b>:"
-msgstr "<b>Spreker biografie</b>:"
+msgstr "<b>Biografie spreker</b>:"
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_track_proposal
 msgid "<b>Speaker Profile</b>"
-msgstr "<b>Spreker profiel</b>"
+msgstr "<b>Profiel spreker</b>"
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_track_proposal
@@ -137,14 +137,14 @@ msgstr ""
 "    Beste <t t-out=\"object.partner_id.name or object.partner_name or ''\">Brandon Freeman</t><br/>\n"
 "    We zijn blij je te kunnen mededelen dat je voorstel <t t-out=\"object.name or ''\">What This Event Is All About</t> is geaccepteerd en bevestigd voor het evenement <t t-out=\"object.event_id.name or ''\">OpenWood Collection Online Reveal</t>.\n"
 "    <br/>\n"
-"    Meer details vind je hier:\n"
+"    Je vindt meer details hier:\n"
 "    <div style=\"margin: 16px 0px 16px 0px;\">\n"
 "        <a t-attf-href=\"/event/{{ object.event_id.id }}/track/{{ object.id }}\" style=\"padding: 8px 16px 8px 16px; font-size: 14px; color: #FFFFFF; text-decoration: none !important; background-color: #875A7B; border: 0px solid #875A7B; border-radius:3px\">\n"
 "            Bekijk presentatie\n"
 "        </a>\n"
 "    </div>\n"
 "    <br/><br/>\n"
-"    Dank je,\n"
+"    Hartelijk dank,\n"
 "    <t t-if=\"user.signature\">\n"
 "        <br/>\n"
 "        <t t-out=\"user.signature or ''\">--<br/>Mitchell Admin</t>\n"
@@ -208,7 +208,7 @@ msgid ""
 "<span class=\"o_wetrack_proposal_label_content\">Talk Introduction</span>\n"
 "                                            <span>*</span>"
 msgstr ""
-"<span class=\"o_wetrack_proposal_label_content\">Overleg introductie</span>\n"
+"<span class=\"o_wetrack_proposal_label_content\">Presentatie introductie</span>\n"
 "                                            <span>*</span>"
 
 #. module: website_event_track
@@ -274,7 +274,7 @@ msgid ""
 "<strong>Regular Talks</strong>. These are standard talks with slides,\n"
 "                                    alocated in slots of 60 minutes."
 msgstr ""
-"<strong>Reguliere presentaties</strong>. Dit zijn standaard presentaties met dia-slides,\n"
+"<strong>Reguliere presentaties</strong>. Dit zijn standaard presentaties met dia's,\n"
 "toegewezen in blokken van 60 minuten."
 
 #. module: website_event_track
@@ -325,7 +325,7 @@ msgstr "Activiteitsfase"
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__activity_type_icon
 msgid "Activity Type Icon"
-msgstr "Activiteitensoort icoon"
+msgstr "Activiteitstype icoon"
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_track_stage_view_form
@@ -357,7 +357,7 @@ msgstr ""
 #. module: website_event_track
 #: model:event.track,name:website_event_track.event_track19
 msgid "Advanced lead management : tips and tricks from the fields"
-msgstr "Geavanceerd lead management: Tips en Tricks vanuit het veld"
+msgstr "Geavanceerd lead management: Tips en Tricks vanuit de velden"
 
 #. module: website_event_track
 #: model:event.track,name:website_event_track.event_track13
@@ -378,7 +378,7 @@ msgstr "Alle presentaties"
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_event_view_form
 msgid "Allow Track Proposals"
-msgstr "Trackvoorstellen toestaan."
+msgstr "Trackvoorstellen toestaan"
 
 #. module: website_event_track
 #. openerp-web
@@ -400,7 +400,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__wishlisted_by_default
 #: model_terms:ir.ui.view,arch_db:website_event_track.view_event_track_search
 msgid "Always Wishlisted"
-msgstr "Altijd op de wensenlijst"
+msgstr "Altijd op het verlanglijstje"
 
 #. module: website_event_track
 #: model:event.track.stage,name:website_event_track.event_track_stage2
@@ -412,7 +412,7 @@ msgstr "Aangekondigd"
 #: code:addons/website_event_track/static/src/xml/event_track_proposal_templates.xml:0
 #, python-format
 msgid "Application"
-msgstr "Applicatie"
+msgstr "Toepassing"
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.view_event_track_search
@@ -437,9 +437,9 @@ msgid ""
 "    wood crates."
 msgstr ""
 "Zoals je misschien al eerder hebt gehoord, is het maken van je eigen meubels eigenlijk niet zo moeilijk of ingewikkeld als je denkt.\n"
-"      Sommige projecten zijn zelfs zo eenvoudig dat iedereen ze met succes kan voltooien. Bijvoorbeeld om er een schattig krukje van te maken.\n"
-"      Een oude band is een fluitje van een cent en als je een salontafel nodig hebt, zet je er gemakkelijk een in elkaar\n"
-"       gemaakt van houten kratten."
+"      In feite zijn sommige projecten zo gemakkelijk dat iedereen ze met succes zou kunnen voltooien. Bijvoorbeeld, een leuk krukje maken van een oude band \n"
+"      is een fluitje van een cent en als je een salontafel nodig hebt, kan je die gemakkelijk in elkaar zetten met \n"
+"       behulp van houten kratten."
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__message_attachment_count
@@ -459,7 +459,7 @@ msgstr "Beschikbare track labels"
 #. module: website_event_track
 #: model_terms:event.track,description:website_event_track.event_7_track_18
 msgid "Bandy clamp hack"
-msgstr "Bandy klem hack"
+msgstr "Bandy clamp hack"
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__partner_biography
@@ -548,12 +548,12 @@ msgstr "Reserveer je plaatsen voor de beste presentaties."
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.tracks_display_list
 msgid "Book your talks"
-msgstr "Boek je presentaties."
+msgstr "Boek je presentaties"
 
 #. module: website_event_track
 #: model:event.track,name:website_event_track.event_7_track_14
 msgid "Building a DIY cabin from the ground up"
-msgstr "Een doe-het-zelf-hut bouwen vanaf punt nul."
+msgstr "Een doe-het-zelf-hut vanaf de grond opbouwen"
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__website_cta_url
@@ -573,7 +573,7 @@ msgstr "Knop verschijnt"
 #. module: website_event_track
 #: model:ir.model.fields,help:website_event_track.field_event_track__is_website_cta_live
 msgid "CTA button is available"
-msgstr "Call-to-action knop is beschikbaar."
+msgstr "Call-to-action knop is beschikbaar"
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_track_proposal
@@ -686,12 +686,12 @@ msgstr "Details contactpersoon"
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__contact_email
 #, python-format
 msgid "Contact Email"
-msgstr "E-mail adres contactpersoon"
+msgstr "E-mailadres contactpersoon"
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__contact_phone
 msgid "Contact Phone"
-msgstr "Contact telefoon"
+msgstr "Telefoonnummer contactpersoon"
 
 #. module: website_event_track
 #: model:ir.model.fields,help:website_event_track.field_event_track__contact_email
@@ -701,17 +701,17 @@ msgstr "E-mailadres voor contact is privé en wordt intern gebruikt"
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_track_proposal_contact_details
 msgid "Contact me through a different email/phone"
-msgstr "Neem contact met mij op via een ander e-mailadres/telefoon"
+msgstr "Neem contact met mij op via een ander e-mailadres/telefoonnummer"
 
 #. module: website_event_track
 #: model:ir.model.fields,help:website_event_track.field_event_track__partner_id
 msgid "Contact of the track, may be different from speaker."
-msgstr "Contact van de track, kan afwijken van de spreker."
+msgstr "Contactpersoon van de track, kan afwijken van de spreker."
 
 #. module: website_event_track
 #: model:ir.model.fields,help:website_event_track.field_event_track__contact_phone
 msgid "Contact phone is private and used internally"
-msgstr "Contacttelefoon is privé en wordt intern gebruikt"
+msgstr "Telefoonnummer contactpersoon is privé en wordt intern gebruikt"
 
 #. module: website_event_track
 #: model_terms:ir.actions.act_window,help:website_event_track.action_event_track
@@ -727,7 +727,7 @@ msgstr "Een tracklocatie maken"
 #. module: website_event_track
 #: model_terms:ir.actions.act_window,help:website_event_track.action_event_track_tag
 msgid "Create a Track Tag"
-msgstr "Een tracktag maken"
+msgstr "Een tracklabel maken"
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__create_uid
@@ -772,7 +772,7 @@ msgstr "Samenvatting van dag 2"
 #. module: website_event_track
 #: model:event.track,name:website_event_track.event_7_track_8
 msgid "Dealing with OpenWood Furniture"
-msgstr "Omgaan met OpenWood-meubels."
+msgstr "Omgaan met OpenWood-meubels"
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_track_stage_view_form
@@ -793,9 +793,9 @@ msgid ""
 "            You will use these stages in order to track the progress in\n"
 "            solving an event track."
 msgstr ""
-"Definieer de stappen die zullen worden gebruikt in de gebeurtenis van het\n"
-"            maken van de track, tot het sluiten van de track.\n"
-"            Je gebruikt deze fasen om de voortgang in\n"
+"Definieer de stappen die zullen worden gebruikt in het evenement van het\n"
+"            maken van de track, tot het afsluiten van de track.\n"
+"            Je gebruikt deze stappen om de voortgang te volgen in\n"
 "            het oplossen van een evenementtrack."
 
 #. module: website_event_track
@@ -818,12 +818,12 @@ msgstr "Beschrijving van de partner (naam, functie en bedrijfsnaam)"
 #. module: website_event_track
 #: model:event.track,name:website_event_track.event_track25
 msgid "Design contest (entire afternoon)"
-msgstr "Ontwerp wedstrijd (volledige middag)"
+msgstr "Designwedstrijd (volledige middag)"
 
 #. module: website_event_track
 #: model:event.track,name:website_event_track.event_track24
 msgid "Design contest (entire day)"
-msgstr "Ontwerp wedstrijd (volledige dag)"
+msgstr "Designwedstrijd (volledige dag)"
 
 #. module: website_event_track
 #: model:event.track,name:website_event_track.event_track6
@@ -843,7 +843,7 @@ msgstr "Ontdek ons nieuwe design team"
 #: model:ir.model.fields,field_description:website_event_track.field_event_track_tag_category__display_name
 #: model:ir.model.fields,field_description:website_event_track.field_event_track_visitor__display_name
 msgid "Display Name"
-msgstr "Schermnaam"
+msgstr "Weergavenaam"
 
 #. module: website_event_track
 #: model:ir.model.fields,help:website_event_track.field_event_track__website_cta
@@ -861,7 +861,7 @@ msgstr "Gereed"
 #. module: website_event_track
 #: model_terms:event.track,description:website_event_track.event_7_track_18
 msgid "Dowel Hack"
-msgstr "Deuvel Hack"
+msgstr "Deuvelverbinding hack"
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.view_event_track_kanban
@@ -900,7 +900,7 @@ msgstr "E-mailsjabloon"
 #: code:addons/website_event_track/static/src/js/event_track_reminder.js:0
 #, python-format
 msgid "Error"
-msgstr "Fout"
+msgstr "Foutmelding"
 
 #. module: website_event_track
 #: model:ir.model,name:website_event_track.model_event_event
@@ -983,7 +983,7 @@ msgstr "Evenementen tracks menu's"
 #. module: website_event_track
 #: model:event.track,name:website_event_track.event_7_track_21
 msgid "Event Wrapup"
-msgstr "Samenvatting van het evenement."
+msgstr "Samenvatting van het evenement"
 
 #. module: website_event_track
 #: model:mail.template,name:website_event_track.mail_template_data_track_confirmation
@@ -994,7 +994,7 @@ msgstr "Evenement: Track bevestiging"
 #: model:ir.model.fields,field_description:website_event_track.field_res_config_settings__events_app_name
 #: model:ir.model.fields,field_description:website_event_track.field_website__events_app_name
 msgid "Events App Name"
-msgstr "Naam van de evenementen-app"
+msgstr "Evenementen App naam"
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.res_config_settings_view_form
@@ -1018,12 +1018,12 @@ msgstr "Favorieten"
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.agenda_topbar
 msgid "Filter Tracks..."
-msgstr "Filter op tracks..."
+msgstr "Filteren op tracks..."
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.snippet_options
 msgid "Filter by Tags"
-msgstr "Filter op labels"
+msgstr "Filteren op labels"
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.tracks_display_list
@@ -1033,7 +1033,7 @@ msgstr "Klaar"
 #. module: website_event_track
 #: model:event.track,name:website_event_track.event_7_track_2
 msgid "First Day Wrapup"
-msgstr "Samenvatting van de eerste dag."
+msgstr "Samenvatting van de eerste dag"
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track_stage__fold
@@ -1058,7 +1058,7 @@ msgstr "Font awesome icoon bijv. fa-tasks"
 #. module: website_event_track
 #: model:event.track.tag.category,name:website_event_track.event_track_tag_category_2
 msgid "Format"
-msgstr "Formatteer"
+msgstr "Formatteren"
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track_stage__is_fully_accessible
@@ -1073,7 +1073,7 @@ msgstr "Toekomstige activiteiten"
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.registration_complete
 msgid "Get prepared and"
-msgstr "Bereidt je voor en"
+msgstr "Bereid je voor en"
 
 #. module: website_event_track
 #: model_terms:event.track,description:website_event_track.event_7_track_18
@@ -1104,7 +1104,7 @@ msgstr "Grijs kanban label"
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_track_visitor_view_search
 #: model_terms:ir.ui.view,arch_db:website_event_track.view_event_track_search
 msgid "Group By"
-msgstr "Groepeer op"
+msgstr "Groeperen op"
 
 #. module: website_event_track
 #: model:event.track,name:website_event_track.event_7_track_l3_11
@@ -1129,12 +1129,12 @@ msgstr "Hoogste"
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.pwa_offline
 msgid "Home page"
-msgstr "Home page"
+msgstr "Startpagina"
 
 #. module: website_event_track
 #: model:event.track,name:website_event_track.event_track21
 msgid "House of World Cultures"
-msgstr "House of World Cultures"
+msgstr "Hause der Kulturen der Welt"
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_track_proposal_contact_details
@@ -1151,7 +1151,7 @@ msgstr ""
 #. module: website_event_track
 #: model:event.track,name:website_event_track.event_track15
 msgid "How to communicate with your community"
-msgstr "Hoe met je community communiceren"
+msgstr "Hoe communiceren met je community"
 
 #. module: website_event_track
 #: model:event.track,name:website_event_track.event_track1
@@ -1328,7 +1328,7 @@ msgstr "In"
 #: model:event.track.stage,legend_normal:website_event_track.event_track_stage5
 #, python-format
 msgid "In Progress"
-msgstr "In behandeling"
+msgstr "In uitvoering"
 
 #. module: website_event_track
 #: model_terms:event.track,description:website_event_track.event_7_track_15
@@ -1353,7 +1353,7 @@ msgstr "Installeren"
 #: code:addons/website_event_track/static/src/xml/website_event_pwa.xml:0
 #, python-format
 msgid "Install Application"
-msgstr "Installeer de applicatie."
+msgstr "Installeer de applicatie"
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.view_event_track_form
@@ -1368,7 +1368,7 @@ msgstr "Introductie"
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__is_website_cta_live
 msgid "Is CTA Live"
-msgstr "Is live call-to-action."
+msgstr "Is live call-to-action"
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__message_is_follower
@@ -1453,7 +1453,7 @@ msgstr "Kanban status label"
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__legend_done
 msgid "Kanban Valid Explanation"
-msgstr "Kanban valide uitleg"
+msgstr "Kanban geldige uitleg"
 
 #. module: website_event_track
 #: model:event.track,name:website_event_track.event_track23
@@ -1513,7 +1513,7 @@ msgstr "Minder meubels is meer meubels"
 #. module: website_event_track
 #: model:event.track,name:website_event_track.event_7_track_4
 msgid "Life at Home Around the World: William’s Story"
-msgstr "thuisleven over de hele wereld: William’s verhaal"
+msgstr "Life at Home Around the World: William’s Story"
 
 #. module: website_event_track
 #: model_terms:event.track,description:website_event_track.event_7_track_19
@@ -1521,8 +1521,8 @@ msgid ""
 "Link to Q&amp;A here! The time has come to hide those old block walls. Love "
 "simple and transformation type projects like this! :)-"
 msgstr ""
-"Link hier naar Q&amp;A! Het is tijd om die oude blokmuren te verbergen. Houd"
-" van eenvoudige en transformatie-achtige projecten zoals deze! :) -"
+"Link hier naar Q&amp;A! De tijd is gekomen om die oude blokmuren te "
+"verbergen. Hou van eenvoudige en transformatie projecten zoals deze! :) -"
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.agenda_main_track
@@ -1539,12 +1539,12 @@ msgstr "Nu live"
 #. module: website_event_track
 #: model:event.track,name:website_event_track.event_7_track_l3_10
 msgid "Live Testimonial"
-msgstr "Live testimonial"
+msgstr "Live getuigenis"
 
 #. module: website_event_track
 #: model:event.track,name:website_event_track.event_7_track_25
 msgid "Live Testimonials"
-msgstr "Live testimonials"
+msgstr "Live getuigenissen"
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__location_id
@@ -1556,12 +1556,12 @@ msgstr "Locatie"
 #. module: website_event_track
 #: model:event.track,name:website_event_track.event_7_track_13
 msgid "Log House Building"
-msgstr "Houthuis"
+msgstr "Bouw van houten woningen"
 
 #. module: website_event_track
 #: model:event.track,name:website_event_track.event_7_track_15
 msgid "Logs to lumber"
-msgstr "Hout om te timmeren"
+msgstr "Stammen tot timmerhout"
 
 #. module: website_event_track
 #: model:ir.model.fields.selection,name:website_event_track.selection__event_track__priority__0
@@ -1576,7 +1576,7 @@ msgstr "Lunch"
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__website_cta
 msgid "Magic Button"
-msgstr "Magische knoppen"
+msgstr "Magische knop"
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__message_main_attachment_id
@@ -1586,7 +1586,7 @@ msgstr "Hoofdbijlage"
 #. module: website_event_track
 #: model_terms:event.track,description:website_event_track.event_7_track_18
 msgid "Making a center marking gauge"
-msgstr "Een middenmarkeringsmaat maken."
+msgstr "Een middenmarkeringsmeter maken"
 
 #. module: website_event_track
 #: model_terms:ir.actions.act_window,help:website_event_track.action_event_track_location
@@ -1625,12 +1625,12 @@ msgstr "Minimaal maar efficiënt design"
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__website_cta_start_remaining
 msgid "Minutes before CTA starts"
-msgstr "minuten voordat de call-to-action start"
+msgstr "Minuten voordat de call-to-action begint"
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__track_start_remaining
 msgid "Minutes before track starts"
-msgstr "Minuten voordat het nummer begint"
+msgstr "Minuten voordat de track begint"
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__track_start_relative
@@ -1655,12 +1655,12 @@ msgstr "Mijn activiteit deadline"
 #. module: website_event_track
 #: model:event.track,name:website_event_track.event_track27
 msgid "My Company global presentation"
-msgstr "Mijn bedrijfspresentatie"
+msgstr "Algemene presentatie van Mijn Bedrijf"
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.view_event_track_search
 msgid "My Tracks"
-msgstr "Mijn sessies"
+msgstr "Mijn tracks"
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__partner_name
@@ -1673,7 +1673,7 @@ msgstr "Naam"
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.res_config_settings_view_form
 msgid "Name of your website's Events Progressive Web Application"
-msgstr "Naam van de evenementen Progressive Web Application van je website."
+msgstr "Naam van de evenementen Progressive Web Application van je website"
 
 #. module: website_event_track
 #: model:event.track,name:website_event_track.event_track20
@@ -1688,7 +1688,7 @@ msgstr "Nieuwe track"
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__activity_calendar_event_id
 msgid "Next Activity Calendar Event"
-msgstr "Volgende activiteitenafspraak"
+msgstr "Volgende activiteit Kalender Evenement"
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__activity_date_deadline
@@ -1698,12 +1698,12 @@ msgstr "Volgende activiteit deadline"
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__activity_summary
 msgid "Next Activity Summary"
-msgstr "Omschrijving volgende actie"
+msgstr "Volgende activiteit overzicht"
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__activity_type_id
 msgid "Next Activity Type"
-msgstr "Volgende activiteit type"
+msgstr "Volgende activiteitstype"
 
 #. module: website_event_track
 #: model_terms:ir.actions.act_window,help:website_event_track.event_track_visitor_action
@@ -1715,7 +1715,7 @@ msgstr "Nog geen trackbezoekers!"
 #: code:addons/website_event_track/static/src/js/website_event_track_proposal_form_tags.js:0
 #, python-format
 msgid "No results found"
-msgstr "geen resultaten gevonden"
+msgstr "Geen resultaten gevonden"
 
 #. module: website_event_track
 #: model_terms:ir.actions.act_window,help:website_event_track.event_track_action_from_visitor
@@ -1741,7 +1741,7 @@ msgstr "Aantal acties"
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__message_has_error_counter
 msgid "Number of errors"
-msgstr "Aantal fouten"
+msgstr "Aantal foutmeldingen"
 
 #. module: website_event_track
 #: model:ir.model.fields,help:website_event_track.field_event_track__message_needaction_counter
@@ -1797,14 +1797,14 @@ msgstr ""
 #: code:addons/website_event_track/static/src/js/website_event_track_proposal_form.js:0
 #, python-format
 msgid "Please enter either a contact email address or a contact phone number."
-msgstr "Voer een e-mailadres voor contact of een telefoonnummer in."
+msgstr "Voer een e-mailadres of een telefoonnummer voor de contactpersoon in."
 
 #. module: website_event_track
 #. openerp-web
 #: code:addons/website_event_track/static/src/js/website_event_track_proposal_form.js:0
 #, python-format
 msgid "Please fill out the form correctly."
-msgstr "Graag het formulier correct in te vullen."
+msgstr "Vul het formulier correct in."
 
 #. module: website_event_track
 #: model:event.track,name:website_event_track.event_track3
@@ -1840,7 +1840,7 @@ msgstr ""
 #. module: website_event_track
 #: model:event.track.stage,name:website_event_track.event_track_stage0
 msgid "Proposal"
-msgstr "Offerte"
+msgstr "Voorstel"
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_track_proposal
@@ -1958,12 +1958,12 @@ msgstr "Relatieve tijd vergeleken met het starten van een track (seconden)"
 #. module: website_event_track
 #: model:ir.model.fields,help:website_event_track.field_event_track__website_cta_start_remaining
 msgid "Remaining time before CTA starts (seconds)"
-msgstr "Resterende tijd voordat Call to action start (seconden)"
+msgstr "Resterende tijd voordat Call to action begint (seconden)"
 
 #. module: website_event_track
 #: model:ir.model.fields,help:website_event_track.field_event_track__track_start_remaining
 msgid "Remaining time before track starts (seconds)"
-msgstr "Resterende tijd voordat track start (seconden)"
+msgstr "Resterende tijd voordat de track begint (seconden)"
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__user_id
@@ -1979,17 +1979,17 @@ msgstr "Verantwoordelijke gebruiker"
 #. module: website_event_track
 #: model:event.track,name:website_event_track.event_7_track_23
 msgid "Restoring Old Woodworking Tools"
-msgstr "Oude houtbewerkingsgereedschappen herstellen"
+msgstr "Restaureren van oud houtbewerkingsgereedschap"
 
 #. module: website_event_track
 #: model_terms:event.track,description:website_event_track.event_7_track_23
 msgid "Restoring old woodworking tools"
-msgstr "Herstel van oud houtbewerkingsgereedschap"
+msgstr "Restaureren van oud houtbewerkingsgereedschap"
 
 #. module: website_event_track
 #: model_terms:event.track,description:website_event_track.event_7_track_18
 msgid "Right angle clamp jig"
-msgstr "Haakse klemmal"
+msgstr "Hoekklem"
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__is_seo_optimized
@@ -2010,7 +2010,7 @@ msgstr "Plan een aantal tracks om te beginnen"
 #. module: website_event_track
 #: model:event.track,name:website_event_track.event_7_track_6
 msgid "Securing your Lumber during transport"
-msgstr "Je hout beveiligen tijdens transport."
+msgstr "Je hout beveiligen tijdens transport"
 
 #. module: website_event_track
 #. openerp-web
@@ -2058,7 +2058,7 @@ msgstr "Toon alle records welke een actiedatum voor vandaag hebben"
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_event_view_form
 msgid "Showcase Tracks"
-msgstr "Showcase tracks"
+msgstr "Tracks presenteren"
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.view_event_track_form
@@ -2068,7 +2068,7 @@ msgstr "Spreker"
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.view_event_track_form
 msgid "Speaker Bio"
-msgstr "Spreker bio"
+msgstr "Biografie spreker"
 
 #. module: website_event_track
 #: code:addons/website_event_track/models/event_track.py:0
@@ -2087,7 +2087,7 @@ msgid ""
 "Speaker email is used for public display and may vary from contact email"
 msgstr ""
 "Het e-mailadres van de spreker wordt gebruikt voor openbare weergave en kan "
-"verschillen van het e-mailadres voor contact"
+"verschillen van het e-mailadres van de contactpersoon"
 
 #. module: website_event_track
 #: model:ir.model.fields,help:website_event_track.field_event_track__partner_name
@@ -2101,8 +2101,8 @@ msgstr ""
 msgid ""
 "Speaker phone is used for public display and may vary from contact phone"
 msgstr ""
-"Luidsprekertelefoon wordt gebruikt voor openbare weergave en kan variëren "
-"van contacttelefoon"
+"Het telefoonnummer van de spreker wordt gebruikt voor openbare weergave en "
+"kan variëren van het telefoonnummer van de contactpersoon"
 
 #. module: website_event_track
 #: code:addons/website_event_track/models/event_track.py:0
@@ -2152,7 +2152,7 @@ msgstr ""
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_track_proposal
 msgid "Submission Agreement"
-msgstr "Overeenkomst inzending"
+msgstr "Submission Agreement"
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_track_proposal
@@ -2162,7 +2162,7 @@ msgstr "Voorstel indienen"
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__partner_tag_line
 msgid "Tag Line"
-msgstr "Slagan"
+msgstr "Labelregel"
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track_tag__name
@@ -2185,28 +2185,28 @@ msgstr "Labels"
 #: code:addons/website_event_track/models/event_event.py:0
 #, python-format
 msgid "Talk Proposals"
-msgstr "Presentatie voorstel"
+msgstr "Presentatie voorstellen"
 
 #. module: website_event_track
 #. openerp-web
 #: code:addons/website_event_track/static/src/js/event_track_reminder.js:0
 #, python-format
 msgid "Talk added to your Favorites"
-msgstr "Presentatie toegevoegd aan je favorieten."
+msgstr "Presentatie toegevoegd aan je favorieten"
 
 #. module: website_event_track
 #. openerp-web
 #: code:addons/website_event_track/static/src/js/event_track_reminder.js:0
 #, python-format
 msgid "Talk already in your Favorites"
-msgstr "Presentatie al in je favorieten."
+msgstr "Presentatie al in je favorieten"
 
 #. module: website_event_track
 #. openerp-web
 #: code:addons/website_event_track/static/src/js/event_track_reminder.js:0
 #, python-format
 msgid "Talk removed from your Favorites"
-msgstr "Presentatie verwijderd uit je favorieten."
+msgstr "Presentatie verwijderd uit je favorieten"
 
 #. module: website_event_track
 #: code:addons/website_event_track/models/event_event.py:0
@@ -2218,25 +2218,24 @@ msgstr "Presentaties"
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_track_proposal
 msgid "Talks Types"
-msgstr "Presentatie soorten"
+msgstr "Presentatietypes"
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_track_stage_view_form
 msgid "Task in progress. Click to block or set as done."
-msgstr "Taak in bewerking. Klik op blokkeer of zet op gereed."
+msgstr "Taak in uitvoering. Klik om te blokkeren of markeer als gereed."
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_track_stage_view_form
 msgid "Task is blocked. Click to unblock or set as done."
-msgstr ""
-"Taak is geblokkeerd. Klik om blokkering ongedaan te maken of zet op gereed."
+msgstr "Taak is geblokkeerd. Klik om te deblokkeren of markeer als gereed."
 
 #. module: website_event_track
 #. openerp-web
 #: code:addons/website_event_track/static/src/xml/event_track_proposal_templates.xml:0
 #, python-format
 msgid "Thank you for your proposal."
-msgstr "Bedankt voor je voorstel."
+msgstr "Hartelijk dank voor je voorstel."
 
 #. module: website_event_track
 #: model:ir.model.fields,help:website_event_track.field_event_track__website_url
@@ -2270,7 +2269,7 @@ msgid ""
 "There are several variants of wood is available in the world but we are talking about most expensive\n"
 "    ones in the world and keeping to the point we have arranged ten most expensive wood."
 msgstr ""
-"Er zijn verschillende varianten van hout verkrijgbaar in de wereld maar we hebben het over de duurste\n"
+"Er zijn verschillende varianten van hout verkrijgbaar in de wereld, maar we hebben het over de duurste houtsoort\n"
 "die in de wereld en door ons bij het punt te houden, hebben we de tien duurste houtsoorten geregeld."
 
 #. module: website_event_track
@@ -2293,8 +2292,8 @@ msgid ""
 "This field holds the image used as mobile app icon on the website (PNG "
 "format)."
 msgstr ""
-"Dit veld bevat de afbeelding die wordt gebruikt als pictogram van de mobiele"
-" app op de website (PNG-formaat)."
+"Dit veld bevat de afbeelding die wordt gebruikt als icoon van de mobiele app"
+" op de website (PNG-formaat)."
 
 #. module: website_event_track
 #: model:ir.model.fields,help:website_event_track.field_res_config_settings__events_app_name
@@ -2323,7 +2322,7 @@ msgstr ""
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_track_stage_view_form
 msgid "This step is done. Click to block or set in progress."
-msgstr "Deze stap is gedaan. Klik op blokkeer of zet op gereed."
+msgstr "Deze stap is gedaan. Klik om te blokkeren of markeer als gereed."
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_track_content
@@ -2352,12 +2351,12 @@ msgstr "Activiteiten van vandaag"
 #. module: website_event_track
 #: model:event.track,name:website_event_track.event_7_track_22
 msgid "Tools for the Woodworking Beginner"
-msgstr "Hulpmiddelen voor de beginnende houtbewerker."
+msgstr "Hulpmiddelen voor de beginnende houtbewerker"
 
 #. module: website_event_track
 #: model:event.track,name:website_event_track.event_7_track_5
 msgid "Top 10 Most Expensive Wood in the World"
-msgstr "Top 10 duurste hout ter wereld"
+msgstr "Top 10 duurste houtsoorten ter wereld"
 
 #. module: website_event_track
 #: model_terms:event.track,description:website_event_track.event_7_track_5
@@ -2365,30 +2364,30 @@ msgid ""
 "Top most expensive wood in the world is quite interesting topic and several people may be surprised\n"
 "    that there are hundreds of wood types exist around the globe following different properties and use."
 msgstr ""
-"Het duurste hout ter wereld is een behoorlijk interessant onderwerp en verschillende mensen zullen misschien verrast zijn\n"
-"dat er over de hele wereld honderden houtsoorten bestaan, met verschillende eigenschappen en gebruik."
+"Het duurste houtsoort ter wereld is een behoorlijk interessant onderwerp en verschillende mensen zullen misschien verrast zijn\n"
+"dat er over de hele wereld honderden houtsoorten bestaan, met verschillende eigenschappen en gebruiken."
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track_visitor__track_id
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_track_visitor_view_search
 #: model_terms:ir.ui.view,arch_db:website_event_track.view_event_track_form
 msgid "Track"
-msgstr "Volg"
+msgstr "Track"
 
 #. module: website_event_track
 #: model:ir.model,name:website_event_track.model_event_track_visitor
 msgid "Track / Visitor Link"
-msgstr "Track-/bezoekerslink"
+msgstr "Track / Bezoekerslink"
 
 #. module: website_event_track
 #: model:mail.message.subtype,name:website_event_track.mt_track_blocked
 msgid "Track Blocked"
-msgstr "Volg geblokkeerd"
+msgstr "Geblokkeerde track"
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_event__track_count
 msgid "Track Count"
-msgstr "Volg teller"
+msgstr "Aantal tracks"
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__date
@@ -2398,7 +2397,7 @@ msgstr "Track datum"
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__date_end
 msgid "Track End Date"
-msgstr "Einddatum paralellsessie"
+msgstr "Einddatum track"
 
 #. module: website_event_track
 #: model:ir.ui.menu,name:website_event_track.menu_event_track_location
@@ -2418,7 +2417,7 @@ msgstr "Track gereed"
 #. module: website_event_track
 #: model:mail.message.subtype,description:website_event_track.mt_track_ready
 msgid "Track Ready for Next Stage"
-msgstr "Sessie klaar voor volgende fase"
+msgstr "Track klaar voor volgende fase"
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_track_stage_view_form
@@ -2432,18 +2431,18 @@ msgstr "Track fase"
 #: model:ir.ui.menu,name:website_event_track.event_track_stage_menu
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_track_stage_view_search
 msgid "Track Stages"
-msgstr "Volg fases"
+msgstr "Track fases"
 
 #. module: website_event_track
 #: model:ir.actions.act_window,name:website_event_track.event_track_tag_category_action
 #: model:ir.ui.menu,name:website_event_track.event_track_tag_category_menu
 msgid "Track Tag Categories"
-msgstr "Track tagcategorieën"
+msgstr "Track labelcategorieën"
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_track_tag_category_view_form
 msgid "Track Tag Category"
-msgstr "Track tagcategorie"
+msgstr "Track labelcategorie"
 
 #. module: website_event_track
 #: model:ir.actions.act_window,name:website_event_track.action_event_track_tag
@@ -2455,12 +2454,12 @@ msgstr "Track labels"
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_track_tag_category_view_list
 msgid "Track Tags Category"
-msgstr "Track tagscategorie"
+msgstr "Track labelcategorie"
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_track_visitor_view_form
 msgid "Track Visitor"
-msgstr "Volg bezoeker"
+msgstr "Track bezoeker"
 
 #. module: website_event_track
 #: model:ir.actions.act_window,name:website_event_track.event_track_visitor_action
@@ -2470,7 +2469,7 @@ msgstr "Volg bezoeker"
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_track_visitor_view_list
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_track_visitor_view_search
 msgid "Track Visitors"
-msgstr "Bezoekers volgen"
+msgstr "Track bezoekers"
 
 #. module: website_event_track
 #: model_terms:ir.actions.act_window,help:website_event_track.event_track_visitor_action
@@ -2478,18 +2477,18 @@ msgid ""
 "Track Visitors store statistics on your events, including how many times "
 "tracks have been wishlisted."
 msgstr ""
-"Trackbezoekers slaan statistieken op over je evenementen, inclusief hoe vaak"
-" tracks op de verlanglijst zijn geplaatst."
+"Track bezoekers slaat statistieken op over je evenementen, inclusief hoe "
+"vaak tracks op de verlanglijst zijn geplaatst."
 
 #. module: website_event_track
 #: model:mail.message.subtype,description:website_event_track.mt_track_blocked
 msgid "Track blocked"
-msgstr "Volg geblokkeerd"
+msgstr "Geblokkeerde track"
 
 #. module: website_event_track
 #: model:ir.model.fields,help:website_event_track.field_event_track__duration
 msgid "Track duration in hours."
-msgstr "Volg duur in uren."
+msgstr "Duur track in uren."
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_event__track_ids
@@ -2525,7 +2524,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:website_event_track.field_event_event__website_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_type__website_track
 msgid "Tracks on Website"
-msgstr "Traceer op website"
+msgstr "Tracks op website"
 
 #. module: website_event_track
 #: model:ir.model.fields,help:website_event_track.field_event_track__activity_exception_decoration
@@ -2551,9 +2550,9 @@ msgid ""
 "    ingenuity along with a couple boards, a sturdy strap and a few screws are all I use to easily haul\n"
 "    long boards from the lumberyard to the Next Level Carpentry shop or jobsite."
 msgstr ""
-"Gebruik deze eenvoudige stappen om gemakkelijk LANG hout te vervoeren in een pick-uptruck met korte bak. Een dosis timmerman\n"
-"vindingrijkheid samen met een paar planken, een stevige riem en een paar schroeven zijn alles wat ik gebruik om gemakkelijk te vervoeren\n"
-"lange planken van de houtzagerij naar de Next Level Timmerwerkplaats of bouwplaats."
+"Gebruik deze eenvoudige stappen om gemakkelijk LANG hout te vervoeren in een pick-uptruck met korte bak. Een dosis timmermansvindingrijkheid\n"
+"samen met een paar planken, een stevige riem en een paar schroeven zijn alles wat ik gebruik om gemakkelijk lange planken te vervoeren\n"
+"van de houtzagerij naar de Next Level Carpentry winkel of werkplaats."
 
 #. module: website_event_track
 #: model_terms:event.track,description:website_event_track.event_7_track_6
@@ -2561,13 +2560,13 @@ msgid ""
 "Using a unique wrapping method for a tie down strap (NOT Bungee cords!!!) allows lumber to be\n"
 "    cinched securely WITHOUT the need to tie and untie tricky or complicated knots."
 msgstr ""
-"Door een unieke wikkelmethode te gebruiken voor een spanband (GEEN elastische koorden !!!), kan er hout worden gemaakt\n"
-"veilig vastgemaakt ZONDER de noodzaak om lastige of gecompliceerde knopen te knopen en los te maken."
+"Door een unieke wikkelmethode te gebruiken voor een spanband (GEEN elastische koorden !!!), kan hout veilig worden\n"
+"vastgemaakt ZONDER lastige of gecompliceerde knopen te moeten knopen en losmaken."
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.view_event_track_kanban
 msgid "View Track"
-msgstr "Bekijk track"
+msgstr "Track bekijken"
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track_stage__is_visible_in_agenda
@@ -2588,12 +2587,12 @@ msgstr "Bezoeker"
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__wishlist_visitor_ids
 msgid "Visitor Wishlist"
-msgstr "Bezoekers wensenlijst"
+msgstr "Bezoeker erlanglijst"
 
 #. module: website_event_track
 #: model:ir.actions.act_window,name:website_event_track.website_visitor_action_from_track
 msgid "Visitors Wishlist"
-msgstr "Bezoeker wensenlijst"
+msgstr "Bezoekers verlanglijst"
 
 #. module: website_event_track
 #: model:event.track,name:website_event_track.event_7_track_l3_1
@@ -2604,7 +2603,7 @@ msgstr "Stem van de klant"
 #: model_terms:ir.actions.act_window,help:website_event_track.website_visitor_action_from_track
 msgid "Wait for visitors to add this track to their list of favorites"
 msgstr ""
-"Wacht tot bezoekers dit nummer aan hun lijst met favorieten hebben "
+"Wacht tot bezoekers deze track aan hun lijst met favorieten hebben "
 "toegevoegd"
 
 #. module: website_event_track
@@ -2631,13 +2630,13 @@ msgid ""
 "                            audience, it will be considered for\n"
 "                            inclusion in the programme."
 msgstr ""
-"We accepteren een breed scala aan:\n"
+"We accepteren een breed scala aan\n"
 "                            presentaties, van rapportages over academische en\n"
 "                            commerciële projecten tot tutorials en case\n"
-"                            studies. Zolang de presentatie is\n"
-"                            interessant en mogelijk nuttig voor de\n"
-"                            publiek, er zal rekening mee worden gehouden\n"
-"                            opname in het programma."
+"                            studies. Zolang de presentatie\n"
+"                            interessant en mogelijk nuttig is voor het\n"
+"                            publiek, kan het in het programma\n"
+"                            worden opgenomen."
 
 #. module: website_event_track
 #. openerp-web
@@ -2689,7 +2688,7 @@ msgstr "Website bezoeker"
 #. module: website_event_track
 #: model:ir.model.fields,help:website_event_track.field_event_track__website_message_ids
 msgid "Website communication history"
-msgstr "Website communicatie geschiedenis"
+msgstr "Website gespreksgeschiedenis"
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__website_meta_description
@@ -2699,7 +2698,7 @@ msgstr "Website meta omschrijving"
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__website_meta_keywords
 msgid "Website meta keywords"
-msgstr "Website meta keywords"
+msgstr "Website meta trefwoorden"
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__website_meta_title
@@ -2719,7 +2718,7 @@ msgstr "Welkom bij dag 2"
 #. module: website_event_track
 #: model:event.track,name:website_event_track.event_7_track_1
 msgid "What This Event Is All About"
-msgstr "Waar dit evenement over gaat."
+msgstr "Waar dit evenement over gaat"
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_track_proposal
@@ -2738,7 +2737,7 @@ msgstr ""
 #. module: website_event_track
 #: model:event.track,name:website_event_track.event_7_track_l3_2
 msgid "Who's OpenWood anyway ?"
-msgstr "Wie is er eigenlijk OpenWood?"
+msgstr "Waar staat OpenWood eigenlijk voor?"
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.view_event_track_form
@@ -2759,14 +2758,14 @@ msgstr "Verlanglijsten"
 #. module: website_event_track
 #: model:event.track,name:website_event_track.event_7_track_7
 msgid "Woodworking: How I got started!"
-msgstr "Houtbewerking: hoe ik begon!"
+msgstr "Houtbewerking: Mijn debuut!"
 
 #. module: website_event_track
 #. openerp-web
 #: code:addons/website_event_track/static/src/js/website_event_track_proposal_form.js:0
 #, python-format
 msgid "You cannot access this page."
-msgstr "Je heeft geen toegang tot deze pagina."
+msgstr "Je hebt geen toegang tot deze pagina."
 
 #. module: website_event_track
 #. openerp-web
@@ -2776,8 +2775,8 @@ msgid ""
 "You have to enable push notifications to get reminders for your favorite "
 "tracks."
 msgstr ""
-"Je moet pushmeldingen inschakelen om herinneringen voor je favoriete nummers"
-" te krijgen."
+"Je moet pushmeldingen inschakelen om herinneringen voor je favoriete tracks "
+"te krijgen."
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.pwa_offline
@@ -2829,7 +2828,7 @@ msgstr "uren"
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.view_event_track_form
 msgid "minutes after track starts"
-msgstr "minuten nadat het nummer begint"
+msgstr "minuten nadat de track begint"
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.registration_complete
@@ -2840,7 +2839,7 @@ msgstr "registreer je nu voor je favoriete presentaties."
 #: model_terms:ir.ui.view,arch_db:website_event_track.agenda_online
 #: model_terms:ir.ui.view,arch_db:website_event_track.tracks_main
 msgid "search."
-msgstr "zoek."
+msgstr "zoekopdracht."
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_track_content

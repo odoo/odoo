@@ -18,14 +18,14 @@
 # Sandra Franch <sandra.franch@upc.edu>, 2022
 # marcescu, 2022
 # Carles Antoli <carlesantoli@hotmail.com>, 2022
-# Josep Anton Belchi, 2022
+# jabelchi, 2022
 # Quim - eccit <quim@eccit.com>, 2022
 # Martin Trigaux, 2022
 # Cristian Cruz, 2022
 # Guspy12, 2022
 # CristianCruzParra, 2022
-# Ivan Espinola, 2022
 # Farouk Jabiri, 2022
+# Ivan Espinola, 2023
 # Óscar Fonseca <tecnico@extreme-micro.com>, 2023
 # 
 msgid ""
@@ -723,7 +723,7 @@ msgstr "<span class=\"flex-grow-1\">/ Mes</span>"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "<span class=\"o_form_label\">Down Payments</span>"
-msgstr "<span class=\"o_form_label\">Abonaments</span>"
+msgstr "<span class=\"o_form_label\">Bestretes</span>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
@@ -1350,7 +1350,7 @@ msgstr "Empresa"
 #: code:addons/sale/static/src/js/tours/sale.js:0
 #, python-format
 msgid "Complete your company's data"
-msgstr ""
+msgstr "Completeu les dades de la vostra empresa"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -1644,7 +1644,7 @@ msgstr "Data:"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_advance_payment_inv__deduct_down_payments
 msgid "Deduct down payments"
-msgstr "Deduir pagaments a compte"
+msgstr "Deduir les bestretes"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -1817,29 +1817,29 @@ msgstr "Fet"
 #: code:addons/sale/wizard/sale_make_invoice_advance.py:0
 #, python-format
 msgid "Down Payment"
-msgstr "Dipòsit "
+msgstr "Bestreta"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_advance_payment_inv__amount
 msgid "Down Payment Amount"
-msgstr "Quantitat de Dipòsit "
+msgstr "Quantitat de la bestreta"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_advance_payment_inv__fixed_amount
 msgid "Down Payment Amount (Fixed)"
-msgstr "Import del pagament a compte (fix)"
+msgstr "Import de la bestreta (fixe)"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_advance_payment_inv__product_id
 msgid "Down Payment Product"
-msgstr "Producte en Dipòsit "
+msgstr "Producte de la bestreta"
 
 #. module: sale
 #. odoo-python
 #: code:addons/sale/wizard/sale_make_invoice_advance.py:0
 #, python-format
 msgid "Down Payment: %s (Draft)"
-msgstr "Pagament: %s (esborrany)"
+msgstr "Bestreta: %s (esborrany)"
 
 #. module: sale
 #. odoo-python
@@ -1847,31 +1847,31 @@ msgstr "Pagament: %s (esborrany)"
 #: code:addons/sale/wizard/sale_make_invoice_advance.py:0
 #, python-format
 msgid "Down Payments"
-msgstr "Dipòsits"
+msgstr "Bestretes"
 
 #. module: sale
 #. odoo-python
 #: code:addons/sale/wizard/sale_make_invoice_advance.py:0
 #, python-format
 msgid "Down payment"
-msgstr "Pagament de baixada"
+msgstr "Bestreta"
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__sale_advance_payment_inv__advance_payment_method__fixed
 msgid "Down payment (fixed amount)"
-msgstr "Dipòsit (Quantitat fixa) "
+msgstr "Bestreta (quantitat fixa) "
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__sale_advance_payment_inv__advance_payment_method__percentage
 msgid "Down payment (percentage)"
-msgstr "Dipòsit (percentatge) "
+msgstr "Bestreta (percentatge) "
 
 #. module: sale
 #. odoo-python
 #: code:addons/sale/wizard/sale_make_invoice_advance.py:0
 #, python-format
 msgid "Down payment of %s%%"
-msgstr "Dipòsit de %s%%"
+msgstr "Bestreta de %s%%"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order_line__is_downpayment
@@ -1879,8 +1879,8 @@ msgid ""
 "Down payments are made when creating invoices from a sales order. They are "
 "not copied when duplicating a sales order."
 msgstr ""
-"Els Dipòsits es fan quan es creen factures des de comanda. No es copien quan"
-" es duplica una comanda existent."
+"Les bestretes es fan quan es creen factures a partir d'una comanda. No es "
+"copien quan es duplica una comanda existent."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
@@ -2102,7 +2102,7 @@ msgstr "Ha canviat la llista de preus"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_advance_payment_inv__has_down_payments
 msgid "Has down payments"
-msgstr "Té pagaments a compte"
+msgstr "Inclou bestretes"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
@@ -2364,7 +2364,7 @@ msgstr "Adreça de facturació i d'enviament:"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_account_move_line__is_downpayment
 msgid "Is Downpayment"
-msgstr "És pagament endarrerit"
+msgstr "És una bestreta"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_cancel__is_mail_template_editor
@@ -2384,7 +2384,7 @@ msgstr "És seguidor"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__is_downpayment
 msgid "Is a down payment"
-msgstr "És un dipòsit"
+msgstr "És una bestreta"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__is_expense
@@ -3239,7 +3239,7 @@ msgstr ""
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Product used for down payments"
-msgstr "Producte usat per dipòsit"
+msgstr "Producte usat per les bestretes"
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.product_template_action
@@ -4327,8 +4327,8 @@ msgid ""
 "The product used to invoice a down payment should be of type 'Service'. "
 "Please use another product or update this product."
 msgstr ""
-"El producte utilitzat per a facturar una entrega a compte ha de ser de tipus"
-" 'Servei'. Si us plau utilitzeu un altre producte o actualitzeu-lo."
+"El producte utilitzat per a facturar una bestreta ha de ser de tipus "
+"'Servei'. Si us plau utilitzeu un altre producte o actualitzeu-lo."
 
 #. module: sale
 #. odoo-python
@@ -4339,9 +4339,9 @@ msgid ""
 "to \"Ordered quantities\". Please update your deposit product to be able to "
 "create a deposit invoice."
 msgstr ""
-"El producte utilitzat per facturar un pagament endarrerit hauria de tenir un"
-" conjunt de polítiques de factures a \"quants ordenades\". Actualitzeu el "
-"producte de dipòsit per poder crear una factura de dipòsit."
+"El producte utilitzat per facturar una bestreta hauria de tenir la política "
+"de facturació en \"Quantitats demanades\". Si us plau, actualitzeu el "
+"producte de bestreta per poder crear una factura."
 
 #. module: sale
 #. odoo-python
@@ -4357,7 +4357,7 @@ msgstr "Els paràmetres proporcionats no són vàlids"
 #: code:addons/sale/wizard/sale_make_invoice_advance.py:0
 #, python-format
 msgid "The value of the down payment amount must be positive."
-msgstr "El valor de l'entrega a compte ha de ser positiu."
+msgstr "El valor de la bestreta ha de ser positiu."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.portal_my_orders
