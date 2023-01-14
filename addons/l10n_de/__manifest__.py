@@ -23,6 +23,7 @@ German accounting chart and localization.
         'views/account_view.xml',
         'report/din5008_report.xml',
         'data/report_layout.xml',
+        'data/res.country.state.csv',
     ],
     'license': 'LGPL-3',
 }
