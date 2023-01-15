@@ -13,9 +13,9 @@
 # Mandy Choy <mnc@odoo.com>, 2021
 # dott.dev <dottdot.dev@gmail.com>, 2021
 # Gerard Chen <gerardpublico@gmail.com>, 2021
-# Benson <Benson.Dr@Gmail.com>, 2022
 # 敬雲 林 <chingyun@yuanchih-consult.com>, 2022
 # Martin Trigaux, 2022
+# Benson <Benson.Dr@Gmail.com>, 2023
 # 
 msgid ""
 msgstr ""
@@ -23,7 +23,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-09-02 08:11+0000\n"
 "PO-Revision-Date: 2016-08-05 12:55+0000\n"
-"Last-Translator: Martin Trigaux, 2022\n"
+"Last-Translator: Benson <Benson.Dr@Gmail.com>, 2023\n"
 "Language-Team: Chinese (Taiwan) (https://www.transifex.com/odoo/teams/41243/zh_TW/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -78,7 +78,7 @@ msgstr ""
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid " The %(lock_type)s lock date is set on %(lock_date)s."
-msgstr ""
+msgstr " %(lock_type)s 鎖定日期設定為 %(lock_date)s."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment__reconciled_bills_count
@@ -121,7 +121,7 @@ msgstr "%(action)s 用於日記帳 %(journal)s"
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid "%(amount)s due %(date)s"
-msgstr ""
+msgstr "%(amount)s 到期 %(date)s"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_automatic_entry_wizard_form
@@ -186,6 +186,8 @@ msgid ""
 "%s has reached its Credit Limit of : %s\n"
 "Total amount due "
 msgstr ""
+"%s 已達到其信用額度: %s\n"
+"應付總額 "
 
 #. module: account
 #: code:addons/account/models/sequence_mixin.py:0
@@ -197,7 +199,7 @@ msgstr "%s 不是儲存的欄位"
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid "(including this document) "
-msgstr ""
+msgstr "(包括此文件) "
 
 #. module: account
 #: model:ir.actions.report,print_report_name:account.account_invoices
@@ -229,7 +231,7 @@ msgstr "-> 檢視已部分核銷分錄"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_partner_property_form
 msgid ". Please make sure that this is a wanted behavior."
-msgstr ""
+msgstr ". 請確保這是必須的行為."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
@@ -324,6 +326,37 @@ msgid ""
 "</div>\n"
 "            "
 msgstr ""
+"<div style=\"margin: 0px; padding: 0px;\">\n"
+"    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"        尊敬的\n"
+"        <t t-if=\"object.partner_id.parent_id\">\n"
+"            <t t-out=\"object.partner_id.name or ''\">Brandon Freeman</t> (<t t-out=\"object.partner_id.parent_id.name or ''\">Azure Interior</t>),\n"
+"        </t>\n"
+"        <t t-else=\"\">\n"
+"            <t t-out=\"object.partner_id.name or ''\">Brandon Freeman</t>,\n"
+"        </t>\n"
+"        <br/><br/>\n"
+"        這是你的\n"
+"        <t t-if=\"object.name\">\n"
+"            折讓單 <span style=\"font-weight:bold;\" t-out=\"object.name or ''\">RINV/2021/05/0001</span>\n"
+"        </t>\n"
+"        <t t-else=\"\">\n"
+"            折讓單\n"
+"        </t>\n"
+"        <t t-if=\"object.invoice_origin\">\n"
+"            (參考: <t t-out=\"object.invoice_origin or ''\">SUB003</t>)\n"
+"        </t>\n"
+"        總額為 <span style=\"font-weight:bold;\" t-out=\"format_amount(object.amount_total, object.currency_id) or ''\">$ 143,750.00</span>\n"
+"        從 <t t-out=\"object.company_id.name or ''\">公司</t>.\n"
+"        <br/><br/>\n"
+"        如果您有任何問題，請隨時與我們聯繫.\n"
+"        <t t-if=\"not is_html_empty(object.invoice_user_id.signature)\">\n"
+"            <br/><br/>\n"
+"            <t t-out=\"object.invoice_user_id.signature or ''\">--<br/>Mitchell Admin</t>\n"
+"        </t>\n"
+"    </p>\n"
+"</div>\n"
+"            "
 
 #. module: account
 #: model:mail.template,body_html:account.email_template_edi_invoice
@@ -370,6 +403,47 @@ msgid ""
 "</div>\n"
 "            "
 msgstr ""
+"<div style=\"margin: 0px; padding: 0px;\">\n"
+"    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"        尊敬的\n"
+"        <t t-if=\"object.partner_id.parent_id\">\n"
+"            <t t-out=\"object.partner_id.name or ''\">Brandon Freeman</t> (<t t-out=\"object.partner_id.parent_id.name or ''\">Azure Interior</t>),\n"
+"        </t>\n"
+"        <t t-else=\"\">\n"
+"            <t t-out=\"object.partner_id.name or ''\">Brandon Freeman</t>,\n"
+"        </t>\n"
+"        <br/><br/>\n"
+"        這是你的\n"
+"        <t t-if=\"object.name\">\n"
+"            應收憑單 <span style=\"font-weight:bold;\" t-out=\"object.name or ''\">INV/2021/05/0005</span>\n"
+"        </t>\n"
+"        <t t-else=\"\">\n"
+"            應收憑單\n"
+"        </t>\n"
+"        <t t-if=\"object.invoice_origin\">\n"
+"            (供參考: <t t-out=\"object.invoice_origin or ''\">SUB003</t>)\n"
+"        </t>\n"
+"        總額為 <span style=\"font-weight:bold;\" t-out=\"format_amount(object.amount_total, object.currency_id) or ''\">$ 143,750.00</span>\n"
+"        從 <t t-out=\"object.company_id.name or ''\">公司</t>.\n"
+"        <t t-if=\"object.payment_state in ('paid', 'in_payment')\">\n"
+"            此應收憑單已支付.\n"
+"        </t>\n"
+"        <t t-else=\"\">\n"
+"            請儘早匯款.\n"
+"            <t t-if=\"object.payment_reference\">\n"
+"                <br/><br/>\n"
+"                請使用以下通訊方式進行付款: <span style=\"font-weight:bold;\" t-out=\"object.payment_reference or ''\">INV/2021/05/0005</span>.\n"
+"            </t>\n"
+"        </t>\n"
+"        <br/><br/>\n"
+"        如果您有任何問題，請隨時與我們聯繫.\n"
+"        <t t-if=\"not is_html_empty(object.invoice_user_id.signature)\">\n"
+"            <br/><br/>\n"
+"            <t t-out=\"object.invoice_user_id.signature or ''\">--<br/>Mitchell Admin</t>\n"
+"        </t>\n"
+"    </p>\n"
+"</div>\n"
+"            "
 
 #. module: account
 #: model:mail.template,body_html:account.mail_template_data_payment_receipt
@@ -391,6 +465,22 @@ msgid ""
 "    </p>\n"
 "</div>\n"
 msgstr ""
+"<div style=\"margin: 0px; padding: 0px;\">\n"
+"    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"        尊敬的 <t t-out=\"object.partner_id.name or ''\">Azure Interior</t><br/><br/>\n"
+"        謝謝您的付款.\n"
+"        這是您的付款收據 <span style=\"font-weight:bold;\" t-out=\"(object.name or '').replace('/','-') or ''\">BNK1-2021-05-0002</span> 總額\n"
+"        為 <span style=\"font-weight:bold;\" t-out=\"format_amount(object.amount, object.currency_id) or ''\">$ 10.00</span> 從 <t t-out=\"object.company_id.name or ''\">公司</t>.\n"
+"        <br/><br/>\n"
+"        如果您有任何問題，請隨時與我們聯繫.\n"
+"        <br/><br/>\n"
+"        最好的祝福,\n"
+"        <t t-if=\"not is_html_empty(user.signature)\">\n"
+"            <br/><br/>\n"
+"            <t t-out=\"user.signature or ''\">--<br/>Mitchell Admin</t>\n"
+"        </t>\n"
+"    </p>\n"
+"</div>\n"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.portal_my_home_menu_invoice
@@ -589,6 +679,8 @@ msgid ""
 "specific.\" aria-label=\"Values set here are company-specific.\" "
 "role=\"img\"/>"
 msgstr ""
+"<span class=\"fa fa-lg fa-building-o\" title=\"此處設定的值是特定於公司的.\" aria-"
+"label=\"此處設定的值是特定於公司的.\" role=\"img\"/>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -682,6 +774,8 @@ msgid ""
 "<span class=\"o_form_label\">Fiscal Country</span>\n"
 "                                    <span class=\"fa fa-lg fa-building-o\" title=\"Values set here are company-specific.\" role=\"img\" aria-label=\"Values set here are company-specific.\" groups=\"base.group_multi_company\"/>"
 msgstr ""
+"<span class=\"o_form_label\">財政國家</span>\n"
+"                                    <span class=\"fa fa-lg fa-building-o\" title=\"此處設定的值是特定於公司的.\" aria-label=\"此處設定的值是特定於公司的.\" groups=\"base.group_multi_company\" role=\"img\"/>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -757,7 +851,7 @@ msgstr "<span class=\"o_stat_text\">已開立應收憑單</span>"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_form
 msgid "<span class=\"o_stat_text\">Journal Entry</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">日記帳分錄</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
@@ -905,7 +999,7 @@ msgstr "<span>金額</span>"
 #: model_terms:ir.ui.view,arch_db:account.bill_preview
 #: model_terms:ir.ui.view,arch_db:account.report_payment_receipt_document
 msgid "<span>Amount In Currency</span>"
-msgstr ""
+msgstr "<span>幣別金額</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.bill_preview
@@ -1034,7 +1128,7 @@ msgstr "<strong>到期金額</strong>"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
 msgid "<strong>Credit Note Date:</strong>"
-msgstr ""
+msgstr "<strong>折讓單日期:</strong>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
@@ -1197,7 +1291,7 @@ msgstr ""
 #. module: account
 #: model:ir.model.constraint,message:account.constraint_account_journal_group_uniq_name
 msgid "A journal group name must be unique per company."
-msgstr ""
+msgstr "每個公司的日記帳組名稱必須是唯一的."
 
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.action_account_journal_form
@@ -1207,6 +1301,12 @@ msgid ""
 msgstr ""
 "日記帳用來記錄日常業務活動\n"
 "                的交易事項會計資料."
+
+#. module: account
+#: code:addons/account/models/account_move.py:0
+#, python-format
+msgid "A line of this move is using a deprecated account, you cannot post it."
+msgstr "此傳票的一個明細正在使用已棄用的科目，您無法過帳它."
 
 #. module: account
 #: code:addons/account/models/account_payment.py:0
@@ -1242,7 +1342,7 @@ msgstr ""
 #: code:addons/account/models/account_payment.py:0
 #, python-format
 msgid "A second payment has been created: %s"
-msgstr ""
+msgstr "已建立第二筆付款: %s"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_form
@@ -1762,6 +1862,8 @@ msgid ""
 "Accrual entry created on %(date)s: %(accrual_entry)s.                    And"
 " its reverse entry: %(reverse_entry)s."
 msgstr ""
+"在 %(date)s 建立的應計分錄: %(accrual_entry)s.                    及其撤消分錄: "
+"%(reverse_entry)s."
 
 #. module: account
 #: code:addons/account/wizard/accrued_orders.py:0
@@ -2019,6 +2121,8 @@ msgid ""
 "cancelling {percent:.2f}%% of {amount}</li><li>%(link0)s postponing it to "
 "{new_date}</li></ul>"
 msgstr ""
+"已為此應收憑單建立調整分錄: <ul><li>%(link1)s 取消 {percent:.2f}%% 的 "
+"{amount}</li><li>%(link0)s 將其推遲到 {new_date} </li></ul>"
 
 #. module: account
 #: code:addons/account/wizard/account_automatic_entry_wizard.py:0
@@ -2034,7 +2138,7 @@ msgstr "調整分錄"
 msgid ""
 "Adjusting Entry for {link}: {percent:.2f}% of {amount} recognized on "
 "{new_date}"
-msgstr ""
+msgstr "調整分錄給 {link}: {percent:.2f}% 的 {amount} 認可於 {new_date}"
 
 #. module: account
 #: code:addons/account/wizard/account_automatic_entry_wizard.py:0
@@ -2047,7 +2151,7 @@ msgstr ""
 #, python-format
 msgid ""
 "Adjusting Entry {link}: {percent:.2f}% of {amount} recognized from {date}"
-msgstr ""
+msgstr "調整分錄 {link}: {percent:.2f}% 的 {amount} 從 {date} 確認"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_tax_adjustments_wizard__adjustment_type
@@ -2224,7 +2328,7 @@ msgstr ""
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Allows you to use Storno accounting."
-msgstr ""
+msgstr "允許您使用 Storno 會計."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -2744,7 +2848,7 @@ msgstr "可用日記帳"
 #: model:ir.model.fields,field_description:account.field_account_payment__available_partner_bank_ids
 #: model:ir.model.fields,field_description:account.field_account_payment_register__available_partner_bank_ids
 msgid "Available Partner Bank"
-msgstr ""
+msgstr "可用合作夥伴銀行"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal__available_payment_method_ids
@@ -3471,6 +3575,12 @@ msgid "Cash Statement"
 msgstr "現金對帳單"
 
 #. module: account
+#: code:addons/account/models/account_move.py:0
+#, python-format
+msgid "Cash basis rounding difference"
+msgstr "現金收付捨入差異"
+
+#. module: account
 #: code:addons/account/models/chart_template.py:0
 #, python-format
 msgid "Cash basis transition account"
@@ -3847,7 +3957,7 @@ msgstr "公司"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_form
 msgid "Company Bank Account"
-msgstr ""
+msgstr "公司銀行賬戶"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_fiscal_position__company_country_id
@@ -3875,7 +3985,7 @@ msgstr "公司文件格式"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__is_storno
 msgid "Company Storno Accounting"
-msgstr ""
+msgstr "公司Storno會計"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__has_chart_of_accounts
@@ -4457,7 +4567,7 @@ msgstr "信用額度"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_partner_property_form
 msgid "Credit Limits"
-msgstr ""
+msgstr "信用額度上限"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_reversal__refund_method
@@ -4512,7 +4622,7 @@ msgstr "和這個日記帳項目匹配的貸方日記帳項目."
 #: model:ir.model.fields,help:account.field_res_partner__credit_limit
 #: model:ir.model.fields,help:account.field_res_users__credit_limit
 msgid "Credit limit specific to this partner."
-msgstr ""
+msgstr "該合作夥伴特定的信用額度."
 
 #. module: account
 #: model:mail.template,name:account.email_template_edi_credit_note
@@ -4946,7 +5056,7 @@ msgstr "預設項目"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__account_default_credit_limit
 msgid "Default Credit Limit"
-msgstr ""
+msgstr "預設信用額度"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_journal_form
@@ -5454,7 +5564,7 @@ msgstr "下載"
 msgid ""
 "Downpayments posted on this account will be considered by the Tax Closing "
 "Entry."
-msgstr ""
+msgstr "稅務結算分錄將考慮在此科目上過帳的預付款."
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_invoice_report__state__draft
@@ -5571,7 +5681,7 @@ msgstr "複製"
 #: model:ir.model.fields,field_description:account.field_res_partner__duplicated_bank_account_partners_count
 #: model:ir.model.fields,field_description:account.field_res_users__duplicated_bank_account_partners_count
 msgid "Duplicated Bank Account Partners Count"
-msgstr ""
+msgstr "重複的銀行帳戶合作夥伴計數"
 
 #. module: account
 #: code:addons/account/models/account_move.py:0
@@ -5625,7 +5735,7 @@ msgstr "電子郵件"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_send__email_add_signature
 msgid "Email Add Signature"
-msgstr ""
+msgstr "電子郵件及簽署"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal__alias_id
@@ -5637,7 +5747,7 @@ msgstr "郵箱別名"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_send__email_layout_xmlid
 msgid "Email Notification Layout"
-msgstr ""
+msgstr "電子郵件通知布局"
 
 #. module: account
 #: model:ir.model,name:account.model_mail_thread
@@ -5660,7 +5770,7 @@ msgstr "預設電子郵件"
 #: model:ir.model.fields,help:account.field_res_company__account_use_credit_limit
 #: model:ir.model.fields,help:account.field_res_config_settings__account_use_credit_limit
 msgid "Enable the use of credit limit on partners."
-msgstr ""
+msgstr "啟用對合作夥伴的信用額度."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_cashbox__end_bank_stmt_ids
@@ -5769,7 +5879,7 @@ msgstr "權益"
 msgid ""
 "Error when reading the original PDF for: %r.\n"
 "Please make sure the file is valid."
-msgstr ""
+msgstr "讀取原始 PDF 時出錯: %r.請確保檔案是有效的."
 
 #. module: account
 #: code:addons/account/models/res_config_settings.py:0
@@ -5953,7 +6063,7 @@ msgstr "財務會計標籤"
 #. module: account
 #: model:account.account.tag,name:account.account_tag_financing
 msgid "Financing Activities"
-msgstr ""
+msgstr "財務會計科目活動"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model_partner_mapping__payment_ref_regex
@@ -5999,7 +6109,7 @@ msgstr "財政國家"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__account_fiscal_country_id
 msgid "Fiscal Country Code"
-msgstr ""
+msgstr "財政國家代碼"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_partner_property_form
@@ -6237,17 +6347,17 @@ msgstr ""
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_line_filter
 msgid "From Non Trade Receivable accounts"
-msgstr ""
+msgstr "來自非貿易應收賬款科目"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_line_filter
 msgid "From Trade Payable accounts"
-msgstr ""
+msgstr "來自貿易應付賬款科目"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_line_filter
 msgid "From Trade Receivable accounts"
-msgstr ""
+msgstr "來自貿易應付賬款科目"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_reconcile_model_line__amount_type__regex
@@ -6456,7 +6566,7 @@ msgstr "有已核銷分錄"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal__has_sequence_holes
 msgid "Has Sequence Holes"
-msgstr ""
+msgstr "有序列孔"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_partner__has_unreconciled_entries
@@ -6677,6 +6787,8 @@ msgid ""
 "If set, this account will belong to Non Trade Receivable/Payable in reports and filters.\n"
 "If not, this account will belong to Trade Receivable/Payable in reports and filters."
 msgstr ""
+"如果設定，此科目將屬於報表和篩選器中的非貿易應收/應付賬款.\n"
+"如果不設定，此科目將屬於報表和篩選器中的貿易應收/應付賬款."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_tax_group__preceding_subtotal
@@ -7129,7 +7241,7 @@ msgstr "反轉標籤"
 #. module: account
 #: model:account.account.tag,name:account.account_tag_investing
 msgid "Investing & Extraordinary Activities"
-msgstr ""
+msgstr "投資與特別活動"
 
 #. module: account
 #: code:addons/account/models/account_move.py:0
@@ -7295,7 +7407,7 @@ msgstr "應收憑單和折讓單分配應匹配 (相同的百分比，相同的�
 msgid ""
 "Invoice and credit note repartition should have at least one tax repartition"
 " line."
-msgstr ""
+msgstr "應收憑單和折讓單重新分配應至少有一個稅金重新分配明細."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__invoice_line_ids
@@ -7506,7 +7618,7 @@ msgstr "捨入明細"
 #: model:ir.model.fields,field_description:account.field_account_move__is_storno
 #: model:ir.model.fields,field_description:account.field_account_payment__is_storno
 msgid "Is Storno"
-msgstr ""
+msgstr "是Storno"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement__is_valid_balance_start
@@ -7683,7 +7795,7 @@ msgstr "會計分錄日期"
 #: code:addons/account/static/src/xml/account_payment.xml:0
 #, python-format
 msgid "Journal Entry Info"
-msgstr ""
+msgstr "日記帳分錄資訊"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_print_journal__sort_selection__move_name
@@ -7715,7 +7827,7 @@ msgstr "日記帳項目"
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid "Journal Item %s updated"
-msgstr ""
+msgstr "日記帳項目 %s 已更新"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment_register__writeoff_label
@@ -7814,7 +7926,7 @@ msgstr "在日記帳中建立分錄."
 #: code:addons/account/static/src/xml/account_payment.xml:0
 #, python-format
 msgid "Journal:"
-msgstr ""
+msgstr "日記帳:"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_account_journal_form
@@ -7840,7 +7952,7 @@ msgstr "日計帳可用性"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company__period_lock_date
 msgid "Journals Entries Lock Date"
-msgstr ""
+msgstr "日記帳分錄鎖定日期"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal__json_activity_data
@@ -8347,7 +8459,7 @@ msgstr "MISC"
 #: model:ir.model.fields,field_description:account.field_account_move__made_sequence_hole
 #: model:ir.model.fields,field_description:account.field_account_payment__made_sequence_hole
 msgid "Made Sequence Hole"
-msgstr ""
+msgstr "製作序列孔"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_send__mail_activity_type_id
@@ -8920,17 +9032,17 @@ msgstr "用於項目代碼的位數"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account__non_trade
 msgid "Non Trade"
-msgstr ""
+msgstr "非交易"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_line_filter
 msgid "Non Trade Payable"
-msgstr ""
+msgstr "非交易應付款"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_line_filter
 msgid "Non Trade Receivable"
-msgstr ""
+msgstr "非交易應收款"
 
 #. module: account
 #: model:account.account.type,name:account.data_account_type_non_current_assets
@@ -9239,7 +9351,7 @@ msgstr "應收憑單準備好後，按確認."
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_partner_property_form
 msgid "One or more Bank Accounts set on this partner are also used by other"
-msgstr ""
+msgstr "此合作夥伴設定的一個或多個銀行賬戶也被其他人使用"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model__match_partner_category_ids
@@ -9390,7 +9502,7 @@ msgstr "此項目的期初借方值."
 #. module: account
 #: model:account.account.tag,name:account.account_tag_operating
 msgid "Operating Activities"
-msgstr ""
+msgstr "營運活動"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_reconcile_model_form
@@ -9763,7 +9875,7 @@ msgstr "客戶合約"
 #: model:ir.model.fields,field_description:account.field_account_move__partner_credit_warning
 #: model:ir.model.fields,field_description:account.field_account_payment__partner_credit_warning
 msgid "Partner Credit Warning"
-msgstr ""
+msgstr "合作夥伴信用警告"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model_template__match_partner
@@ -9780,7 +9892,7 @@ msgstr "合作夥伴分類帳"
 #: model:ir.model.fields,field_description:account.field_res_partner__use_partner_credit_limit
 #: model:ir.model.fields,field_description:account.field_res_users__use_partner_credit_limit
 msgid "Partner Limit"
-msgstr ""
+msgstr "合作夥伴限額"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_reconcile_model_form
@@ -10157,6 +10269,17 @@ msgstr "請檢查銀行對帳單中的 '日記帳'"
 #, python-format
 msgid "Please check that the field 'Transfer Account' is set on the company."
 msgstr "請檢查公司中設定的 '轉帳項目' 欄位."
+
+#. module: account
+#: code:addons/account/models/chart_template.py:0
+#, python-format
+msgid ""
+"Please check these taxes. They might be outdated. We did not update them. "
+"Indeed, they do not exactly match the taxes of the original version of the "
+"localization module.<br/>You might want to archive or adapt them.<br/><ul>"
+msgstr ""
+"請檢查這些稅費. 它們可能已經過時了. 我們並沒有更新它. "
+"事實上，它們與本地化模組原始版本的稅金並不完全匹配.<br/>您可能想要封存歸檔或調整它們.<br/><ul>"
 
 #. module: account
 #: code:addons/account/models/account_payment.py:0
@@ -10614,7 +10737,7 @@ msgstr "重新開始序列"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_tax__real_amount
 msgid "Real amount to apply"
-msgstr ""
+msgstr "實際申請金額"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_reversal__reason
@@ -11288,7 +11411,7 @@ msgstr "銷售"
 #: model:ir.model.fields,field_description:account.field_res_company__account_use_credit_limit
 #: model:ir.model.fields,field_description:account.field_res_config_settings__account_use_credit_limit
 msgid "Sales Credit Limit"
-msgstr ""
+msgstr "銷售信用額度"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_move__move_type__out_receipt
@@ -11872,7 +11995,7 @@ msgstr "顯示會計功能 - 唯讀"
 #: model:ir.model.fields,field_description:account.field_res_partner__show_credit_limit
 #: model:ir.model.fields,field_description:account.field_res_users__show_credit_limit
 msgid "Show Credit Limit"
-msgstr ""
+msgstr "顯示信用額度"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model__show_decimal_separator
@@ -12223,13 +12346,13 @@ msgstr "步驟已完成!"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Storno Accounting"
-msgstr ""
+msgstr "Storno 會計"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company__account_storno
 #: model:ir.model.fields,field_description:account.field_res_config_settings__account_storno
 msgid "Storno accounting"
-msgstr ""
+msgstr "Storno 會計"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__string_to_hash
@@ -12618,14 +12741,14 @@ msgstr "稅款往來帳戶(應收)"
 msgid ""
 "Tax current account used as a counterpart to the Tax Closing Entry when in "
 "favor of the authorities."
-msgstr ""
+msgstr "當有利於當局時，稅收往來科目用作稅收結算分錄的對應方."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_tax_group__property_tax_receivable_account_id
 msgid ""
 "Tax current account used as a counterpart to the Tax Closing Entry when in "
 "favor of the company."
-msgstr ""
+msgstr "當有利於公司時，稅務往來科目用作稅務結算分錄的對應方."
 
 #. module: account
 #: model:res.groups,name:account.group_show_line_subtotals_tax_excluded
@@ -13455,13 +13578,13 @@ msgstr ""
 #: code:addons/account/wizard/account_automatic_entry_wizard.py:0
 #, python-format
 msgid "The date of some related entries is protected by a lock date"
-msgstr ""
+msgstr "一些相關分錄的日期受鎖定日期保護"
 
 #. module: account
 #: code:addons/account/wizard/account_automatic_entry_wizard.py:0
 #, python-format
 msgid "The date selected is protected by a lock date"
-msgstr ""
+msgstr "所選日期受鎖定日期保護"
 
 #. module: account
 #: code:addons/account/models/account_payment_term.py:0
@@ -13765,7 +13888,7 @@ msgstr "此明細的上層稅務報表"
 #: code:addons/account/models/partner.py:0
 #, python-format
 msgid "The partner cannot be deleted because it is used in Accounting"
-msgstr ""
+msgstr "無法刪除合作夥伴，因為它已在會計中使用"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_res_partner__has_unreconciled_entries
@@ -14278,7 +14401,7 @@ msgid ""
 "This entry contains one or more taxes that are incompatible with your fiscal"
 " country. Check company fiscal country in the settings and tax country in "
 "taxes configuration."
-msgstr ""
+msgstr "此分錄包含一種或多種與您的財政國家不相容的稅務. 檢查設定中的公司財政國家和稅收設定中的稅收國家."
 
 #. module: account
 #: code:addons/account/models/account_move.py:0
@@ -14286,7 +14409,7 @@ msgstr ""
 msgid ""
 "This entry contains taxes that are not compatible with your fiscal position."
 " Check the country set in fiscal position and in your tax configuration."
-msgstr ""
+msgstr "此分錄包含與您的財務狀況不相容的稅務. 檢查在財政狀況和稅金設定中設定的國家."
 
 #. module: account
 #: code:addons/account/models/account_move.py:0
@@ -14332,7 +14455,7 @@ msgstr "這是會計儀表版"
 msgid ""
 "This is the default credit limit that will be used on partners that do not "
 "have a specific limit on them."
-msgstr ""
+msgstr "這是預設的信用額度，將用於沒有特定限制的合作夥伴."
 
 #. module: account
 #: code:addons/account/models/account_journal.py:0
@@ -14398,7 +14521,7 @@ msgstr ""
 #: code:addons/account/models/account_payment.py:0
 #, python-format
 msgid "This payment has been created from %s"
-msgstr ""
+msgstr "此付款已從 %s 建立"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_res_partner__property_supplier_payment_term_id
@@ -14665,7 +14788,7 @@ msgstr "轉帳"
 msgid ""
 "Trigger alerts when creating Invoices and Sales Orders for Partners with a "
 "Total Receivable amount exceeding a limit."
-msgstr ""
+msgstr "為應收總額超過限制的合作夥伴建立應收憑單和銷售訂單時觸發警報."
 
 #. module: account
 #: code:addons/account/wizard/account_tour_upload_bill.py:0
@@ -14894,7 +15017,7 @@ msgstr "使用特定的日記帳"
 #: model:ir.model.fields,field_description:account.field_account_chart_template__use_storno_accounting
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Use Storno accounting"
-msgstr ""
+msgstr "使用Storno會計"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_send__use_active_domain
@@ -15015,7 +15138,7 @@ msgstr ""
 msgid ""
 "Utility field to express whether the journal item is subject to storno "
 "accounting"
-msgstr ""
+msgstr "表示日記帳項目是否受 storno 會計約束的實用工具欄位"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_fiscal_position__vat_required
@@ -15547,7 +15670,7 @@ msgstr "如果沒有至少一個應收/應付明細，您將無法打開付款�
 msgid ""
 "You can't provide a foreign currency without specifying an amount in 'Amount"
 " in Currency' field."
-msgstr ""
+msgstr "如果沒有在'貨幣金額'欄位中指定金額，您無法提供外幣."
 
 #. module: account
 #: code:addons/account/models/account_bank_statement.py:0
@@ -15803,7 +15926,7 @@ msgstr "您無法刪除/停用為客戶或供應商設定的項目 %s."
 msgid ""
 "You cannot remove/deactivate the accounts \"%s\" which are set on a tax "
 "repartition line."
-msgstr ""
+msgstr "您不能刪除/停用在稅金重新分配明細上設定的科目\"%s\"."
 
 #. module: account
 #: code:addons/account/models/account_account.py:0
@@ -15811,7 +15934,7 @@ msgstr ""
 msgid ""
 "You cannot remove/deactivate the accounts \"%s\" which are set on the "
 "account mapping of a fiscal position."
-msgstr ""
+msgstr "您不能刪除/停用在財務狀況的科目對應上設定的科目\"%s\"."
 
 #. module: account
 #: code:addons/account/models/account_move.py:0
@@ -15953,6 +16076,12 @@ msgstr "您應該在公司設定中設定\"匯率虧損項目\"，以自動管�
 #: model_terms:ir.ui.view,arch_db:account.account_default_terms_and_conditions
 msgid "You should update this document to reflect your T&amp;C."
 msgstr "您應該更新此文件以反映您的 T&amp;C."
+
+#. module: account
+#: code:addons/account/models/chart_template.py:0
+#, python-format
+msgid "Your taxes have been updated !"
+msgstr "您的稅費已更新!"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_position_form
@@ -16103,7 +16232,7 @@ msgstr "例如. 庫存"
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
 msgid ""
 "for this customer. You can allocate them to mark this credit note as paid."
-msgstr ""
+msgstr "對此客戶. 您可以分配它們以將此折讓單標記為已付款."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
@@ -16119,7 +16248,7 @@ msgstr "對於這個供應商. 您可以分配它們以將此帳單標記為已�
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
 msgid ""
 "for this vendor. You can allocate them to mark this credit note as paid."
-msgstr ""
+msgstr "對此供應商. 您可以分配它們以將此折讓單標記為已付款."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_position_form
@@ -16197,7 +16326,7 @@ msgstr "在"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
 msgid "outstanding credits"
-msgstr ""
+msgstr "未結貸方"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
@@ -16227,7 +16356,7 @@ msgstr "保留要求支付固定利息的權利，相當於剩餘到期金額的
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid "tax"
-msgstr ""
+msgstr "稅金"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_move_line__tax_group_id
@@ -16277,7 +16406,7 @@ msgstr "承諾在約定的時間範圍內，盡最大努力在適當的時候提
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid "user"
-msgstr ""
+msgstr "使用者"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_default_terms_and_conditions

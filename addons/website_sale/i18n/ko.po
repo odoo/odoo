@@ -8,7 +8,7 @@
 # JH CHOI <hwangtog@gmail.com>, 2022
 # Linkup <link-up@naver.com>, 2022
 # Martin Trigaux, 2022
-# Sarah Park, 2022
+# Sarah Park, 2023
 # 
 msgid ""
 msgstr ""
@@ -16,7 +16,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-09-02 08:11+0000\n"
 "PO-Revision-Date: 2016-08-05 13:14+0000\n"
-"Last-Translator: Sarah Park, 2022\n"
+"Last-Translator: Sarah Park, 2023\n"
 "Language-Team: Korean (https://www.transifex.com/odoo/teams/41243/ko/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -37,12 +37,12 @@ msgstr "#{'Unfold' if c.id in category.parents_and_self.ids else 'Fold'}"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.product
 msgid "%s review"
-msgstr ""
+msgstr "%s 리뷰"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.product
 msgid "%s reviews"
-msgstr ""
+msgstr "%s 리뷰"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.address_on_payment
@@ -53,12 +53,12 @@ msgstr "&amp; 선적"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.products
 msgid "'. Showing results for '"
-msgstr ""
+msgstr "'. 다음에 대한 결과 표시 중 '"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.products_categories
 msgid "<b>Categories</b>"
-msgstr ""
+msgstr "<b>카테고리</b>"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.payment_confirmation_status
@@ -130,7 +130,7 @@ msgstr ""
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.payment_footer
 msgid "<i class=\"fa fa-chevron-left\"/> Return to Cart"
-msgstr ""
+msgstr "<i class=\"fa fa-chevron-left\"/> 장바구니로 돌아가기"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.address_on_payment
@@ -179,6 +179,8 @@ msgid ""
 " not allowed once document(s) have been issued for your account. Please "
 "contact us directly for this operation.</small>"
 msgstr ""
+"<small class=\"form-text text-muted\">계정 관련된 문서 발급이 완료된 이후에는 회사 이름 또는 VAT "
+"번호를 변경할 수 없습니다. 관련된 내용은 직접 연락주시기 바랍니다. </small>"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.products_attributes
@@ -259,7 +261,7 @@ msgstr ""
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
 msgid "<span class=\"o_form_label\">Assignment</span>"
-msgstr ""
+msgstr "<span class=\"o_form_label\">배정</span>"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
@@ -424,6 +426,48 @@ msgid ""
 "</table>\n"
 "            "
 msgstr ""
+"<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"padding: 0px; background-color: white; color: #454748; border-collapse:separate;\">\n"
+"<tbody>\n"
+"    <!-- CONTENT -->\n"
+"    <tr>\n"
+"        <td align=\"center\" style=\"min-width: 590px;\">\n"
+"            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"min-width: 590px; background-color: white; padding: 0px 0px 0px 0px; border-collapse:separate;\">\n"
+"                <tr><td valign=\"top\" style=\"font-size: 13px;\">\n"
+"                    <h1 style=\"color:#A9A9A9;\">장바구니에 담겨 있는 상품이 있습니다.</h1>\n"
+"                    결제 단계를 진행하시겠습니까?<br/><br/>\n"
+"                    <t t-if=\"object.order_line\">\n"
+"                        <t t-foreach=\"object.website_order_line\" t-as=\"line\">\n"
+"                            <hr/>\n"
+"                            <table width=\"100%\">\n"
+"                                <tr>\n"
+"                                    <td style=\"padding: 10px; width:150px;\">\n"
+"                                        <img t-attf-src=\"/web/image/product.product/{{ line.product_id.id }}/image_128\" style=\"width: 100px; height: 100px; object-fit: contain;\" alt=\"Product image\"/>\n"
+"                                    </td>\n"
+"                                    <td>\n"
+"                                        <strong t-out=\"line.product_id.display_name or ''\">[FURN_7800] 책상 세트</strong><br/><t t-out=\"line.name or ''\">[FURN_7800] 책상 세트 책상 세트, 검정-갈색: 의자 + 책상 + 서랍.</t>\n"
+"                                    </td>\n"
+"                                    <td width=\"100px\" align=\"right\">\n"
+"                                        <t t-out=\"int(line.product_uom_qty) or ''\">10000</t> <t t-out=\"line.product_uom.name or ''\">개</t>\n"
+"                                    </td>\n"
+"                                </tr>\n"
+"                            </table>\n"
+"                        </t>\n"
+"                        <hr/>\n"
+"                    </t>\n"
+"                    <div style=\"text-align: center; padding: 16px 0px 16px 0px; font-size: 14px;\">\n"
+"                        <a t-attf-href=\"{{ object.get_base_url() }}/shop/cart?access_token={{ object.access_token }}\" target=\"_blank\" style=\"background-color: #875A7B; padding: 8px 16px 8px 16px; text-decoration: none; color: #fff; border-radius: 5px; font-size:13px;\">\n"
+"                            주문으로 돌아가기\n"
+"                        </a>\n"
+"                    </div>\n"
+"                    <t t-set=\"company\" t-value=\"object.company_id or object.user_id.company_id or user.company_id\"/>\n"
+"                    <div style=\"text-align: center;\"><strong>저희 <t t-out=\"company.name or ''\">My Company (San Francisco)</t> 제품을 이용해주셔서 감사합니다!</strong></div>\n"
+"                </td></tr>\n"
+"            </table>\n"
+"        </td>\n"
+"    </tr>\n"
+"</tbody>\n"
+"</table>\n"
+"            "
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.product_custom_text
@@ -539,24 +583,24 @@ msgstr ""
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
 msgid "Add a customizable form during checkout (after address)"
-msgstr ""
+msgstr "결제 중 사용자에 맞추어 변경 가능한 양식 추가 (주소란 뒤)"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
 msgid ""
 "Add a reference price per UoM on products (i.e $/kg), in addition to the "
 "sale price"
-msgstr ""
+msgstr "판매가 외에 제품의 UoM당 참조 가격 (예: $/kg)이 추가됩니다."
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
 msgid "Add a strikethrough price, as a comparison"
-msgstr ""
+msgstr "비교용으로 취소 가격을 추가하십시오."
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
 msgid "Add download link for customers at the end of checkout"
-msgstr ""
+msgstr "결제 마지막 단계에서 고객용 다운로드 링크 추가"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.cart_lines
@@ -611,7 +655,7 @@ msgstr "구매자가 제품 속성을 기반으로 제품을 비교할 수 있�
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
 msgid "Allow signed-in users to save product in a wishlist"
-msgstr ""
+msgstr "사용자가 로그인 후 위시리스트에 제품을 저장하도록 허용"
 
 #. module: website_sale
 #: model:ir.model.fields,help:website_sale.field_product_pricelist__selectable
@@ -649,7 +693,7 @@ msgstr ""
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
 msgid "Assignment of online orders"
-msgstr ""
+msgstr "온라인 주문 배정"
 
 #. module: website_sale
 #: model:ir.ui.menu,name:website_sale.menu_product_attribute_action
@@ -742,6 +786,8 @@ msgid ""
 "purchase amount, period). Rewards can be discounts (% or amount) or free "
 "products."
 msgstr ""
+"쿠폰, 프로모션, 기프트 카드, 적립 제도 등 다양한 종류의 프로그램으로 매출을 높이십시오. 특정 조건 (제품, 고객, 최소 구매 금액,"
+" 기간)을 설정할 수 있습니다. 리워드는 할인 (% 또는 금액) 또는 무료 제품으로 증정이 가능합니다."
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
@@ -762,7 +808,7 @@ msgstr "상표"
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_res_config_settings__enabled_buy_now_button
 msgid "Buy Now"
-msgstr ""
+msgstr "지금 구입하기"
 
 #. module: website_sale
 #. openerp-web
@@ -1002,7 +1048,7 @@ msgstr "설정 구성"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
 msgid "Configure Form"
-msgstr ""
+msgstr "양식 설정"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
@@ -1136,7 +1182,7 @@ msgstr ""
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
 msgid "DHL Express Connector"
-msgstr ""
+msgstr "DHL 익스프레스 배송업체"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
@@ -1249,7 +1295,7 @@ msgstr "표시명"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
 msgid "Display Product Prices"
-msgstr ""
+msgstr "제품 가격 표시"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
@@ -1569,7 +1615,7 @@ msgstr ""
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
 msgid "Instant checkout, instead of adding to cart"
-msgstr ""
+msgstr "장바구니 추가 없이 즉시 결제"
 
 #. module: website_sale
 #: code:addons/website_sale/controllers/main.py:0
@@ -1733,7 +1779,7 @@ msgstr "목록"
 msgid ""
 "Manage pricelists to apply specific prices per country, customer, products, "
 "etc"
-msgstr ""
+msgstr "가격표를 관리하여 국가, 고객, 제품 등에 특정 가격을 적용합니다."
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
@@ -1918,7 +1964,7 @@ msgstr "<b>저장</b>을 클릭하면 상품이 업데이트됩니다."
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
 msgid "One product might have different attributes (size, color, ...)"
-msgstr ""
+msgstr "하나의 제품에 다른 속성 (크기, 색상 등)을 설정할 수 있습니다."
 
 #. module: website_sale
 #: model:ir.ui.menu,name:website_sale.menu_report_sales
@@ -2213,7 +2259,7 @@ msgstr "가격표"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
 msgid "Prices displayed on your eCommerce"
-msgstr ""
+msgstr "이커머스에서 표시되는 가격"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.confirmation
@@ -2298,7 +2344,7 @@ msgstr "상품 일반 범주"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
 msgid "Product Reference Price"
-msgstr ""
+msgstr "제품 참조 가격"
 
 #. module: website_sale
 #: model:ir.model,name:website_sale.model_product_tag
@@ -2825,7 +2871,7 @@ msgstr "쇼핑 - 결제"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
 msgid "Shop - Checkout Process"
-msgstr ""
+msgstr "쇼핑하기 - 결제 단계"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.confirmation
@@ -2835,7 +2881,7 @@ msgstr "쇼핑 - 확인"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
 msgid "Shop - Products"
-msgstr ""
+msgstr "쇼핑하기 - 제품 안내"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.payment
@@ -3438,7 +3484,7 @@ msgstr "이 영업 팀을 사용하는 웹사이트"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
 msgid "What should be done on \"Add to Cart\"?"
-msgstr ""
+msgstr "\"장바구니에 추가하기\" 에서 수행되는 작업은 무엇인가요?"
 
 #. module: website_sale
 #: code:addons/website_sale/models/website_snippet_filter.py:0

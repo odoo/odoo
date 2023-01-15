@@ -26,11 +26,11 @@
 # hish, 2021
 # Батмөнх Ганбат <batmunkh2522@gmail.com>, 2021
 # Батболд <batbold.ts@gmail.com>, 2021
-# Sanjaajamts Badamjunai <b.sanjaajamtsfc@gmail.com>, 2021
 # nurbakhit nurka <nurbakhit@bumanit.mn>, 2022
 # Bayarkhuu Bataa, 2022
 # Martin Trigaux, 2022
 # Baskhuu Lodoikhuu <baskhuujacara@gmail.com>, 2022
+# Sanjaajamts Badamjunai <b.sanjaajamtsfc@gmail.com>, 2023
 # 
 msgid ""
 msgstr ""
@@ -38,7 +38,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-09-02 08:11+0000\n"
 "PO-Revision-Date: 2016-08-05 12:55+0000\n"
-"Last-Translator: Baskhuu Lodoikhuu <baskhuujacara@gmail.com>, 2022\n"
+"Last-Translator: Sanjaajamts Badamjunai <b.sanjaajamtsfc@gmail.com>, 2023\n"
 "Language-Team: Mongolian (https://www.transifex.com/odoo/teams/41243/mn/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -10349,6 +10349,15 @@ msgid "Please check that the field 'Transfer Account' is set on the company."
 msgstr "'Шилжүүлэх Данс' талбар компани дээр тохируулсан эсэхийг шалга."
 
 #. module: account
+#: code:addons/account/models/chart_template.py:0
+#, python-format
+msgid ""
+"Please check these taxes. They might be outdated. We did not update them. "
+"Indeed, they do not exactly match the taxes of the original version of the "
+"localization module.<br/>You might want to archive or adapt them.<br/><ul>"
+msgstr ""
+
+#. module: account
 #: code:addons/account/models/account_payment.py:0
 #, python-format
 msgid "Please define a payment method line on your payment."
@@ -15681,6 +15690,7 @@ msgid ""
 "You can only change the period/account for items that are not yet "
 "reconciled."
 msgstr ""
+"Та зөвхөн тулгагдаагүй бичлэгүүдийн огноо эсвэл дансыг солих боломжтой."
 
 #. module: account
 #: code:addons/account/wizard/account_automatic_entry_wizard.py:0
@@ -16270,6 +16280,12 @@ msgstr ""
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_default_terms_and_conditions
 msgid "You should update this document to reflect your T&amp;C."
+msgstr ""
+
+#. module: account
+#: code:addons/account/models/chart_template.py:0
+#, python-format
+msgid "Your taxes have been updated !"
 msgstr ""
 
 #. module: account

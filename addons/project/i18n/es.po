@@ -42,14 +42,13 @@
 # David Sanchez <david.sanchez@jarsa.com.mx>, 2020
 # Pablo Rojas <rojaspablo88@gmail.com>, 2020
 # Paulina Rodriguez <pauli.rodriguez.c@gmail.com>, 2020
-# Pedro M. Baeza <pedro.baeza@tecnativa.com>, 2021
 # Antonio Trueba, 2021
 # Daniela Cervantes <dace@odoo.com>, 2021
 # Rick Hunter <rick.hunter.ec@gmail.com>, 2021
 # Jon Perez <jop@odoo.com>, 2021
 # Braulio D. López Vázquez <bdl@odoo.com>, 2021
 # Jairo Llopis <yajo.sk8@gmail.com>, 2021
-# Josep Anton Belchi, 2021
+# jabelchi, 2021
 # David Ramia, 2022
 # ma fo, 2022
 # marcescu, 2022
@@ -57,6 +56,7 @@
 # Soluntec <abraham@soluntec.es>, 2022
 # Cristian Salamea <ovnicraft@gmail.com>, 2022
 # Leonardo J. Caballero G. <leonardocaballero@gmail.com>, 2022
+# Pedro M. Baeza <pedro.baeza@tecnativa.com>, 2023
 # 
 msgid ""
 msgstr ""
@@ -64,7 +64,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-09-02 08:11+0000\n"
 "PO-Revision-Date: 2016-08-05 13:08+0000\n"
-"Last-Translator: Leonardo J. Caballero G. <leonardocaballero@gmail.com>, 2022\n"
+"Last-Translator: Pedro M. Baeza <pedro.baeza@tecnativa.com>, 2023\n"
 "Language-Team: Spanish (https://www.transifex.com/odoo/teams/41243/es/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -460,11 +460,14 @@ msgid ""
 "                            <i class=\"fa fa-fw o_button_icon fa-meh-o text-warning\" attrs=\"{'invisible': ['|', ('rating_avg', '&lt;', 2.33), ('rating_avg', '&gt;=', 3.66)]}\" title=\"Okay\"/>\n"
 "                            <i class=\"fa fa-fw o_button_icon fa-frown-o text-danger\" attrs=\"{'invisible': [('rating_avg', '&gt;=', 2.33)]}\" title=\"Dissatisfied\"/>"
 msgstr ""
+"<i class=\"fa fa-fw o_button_icon fa-smile-o text-success\" attrs=\"{'invisible': [('rating_avg', '&lt;', 3.66)]}\" title=\"Satisfecho\"/>\n"
+"                            <i class=\"fa fa-fw o_button_icon fa-meh-o text-warning\" attrs=\"{'invisible': ['|', ('rating_avg', '&lt;', 2.33), ('rating_avg', '&gt;=', 3.66)]}\" title=\"Bien\"/>\n"
+"                            <i class=\"fa fa-fw o_button_icon fa-frown-o text-danger\" attrs=\"{'invisible': [('rating_avg', '&gt;=', 2.33)]}\" title=\"Inconforme\"/>"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_task_view_activity
 msgid "<i class=\"fa fa-lock\"/> Private"
-msgstr ""
+msgstr "<i class=\"fa fa-lock\"/> Privado"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.edit_project
@@ -603,7 +606,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:project.project_sharing_project_task_view_form
 #: model_terms:ir.ui.view,arch_db:project.view_task_form2
 msgid "<span class=\"o_stat_text\">Sub-tasks</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">Subtareas</span>"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_form2
@@ -715,7 +718,7 @@ msgstr ""
 #. module: project
 #: model:ir.model.constraint,message:project.constraint_project_tags_name_uniq
 msgid "A tag with the same name already exists."
-msgstr ""
+msgstr "Ya existe una etiqueta con el mismo nombre."
 
 #. module: project
 #: model:ir.model.constraint,message:project.constraint_project_task_user_rel_project_personal_stage_unique
@@ -948,12 +951,15 @@ msgid ""
 "Analyze how quickly your team is completing your project's tasks and check "
 "if everything is progressing according to plan."
 msgstr ""
+"Analice la rapidez con la que su equipo está terminando las tareas de su "
+"proyecto y compruebe que todo avanza según lo previsto."
 
 #. module: project
 #: model_terms:ir.actions.act_window,help:project.action_project_task_user_tree
 msgid ""
 "Analyze the progress of your projects and the performance of your employees."
 msgstr ""
+"Analice el progreso de sus proyectos y el rendimiento de sus empleados."
 
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_task__repeat_month__april
@@ -998,6 +1004,8 @@ msgstr "Archivado"
 #, python-format
 msgid "Archived tasks cannot be recurring. Please unarchive the task first."
 msgstr ""
+"Las tareas archivadas no pueden ser recurrentes. Es necesario desarchivar la"
+" tarea primero."
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_task_type_delete_confirmation_wizard
@@ -1154,25 +1162,25 @@ msgstr "Calificación promedio"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__rating_avg_percentage
 msgid "Average Rating (%)"
-msgstr ""
+msgstr "Calificación promedio (%)"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_kanban
 #: model_terms:ir.ui.view,arch_db:project.view_task_kanban
 msgid "Average Rating: Dissatisfied"
-msgstr ""
+msgstr "Calificación promedio: Inconforme"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_kanban
 #: model_terms:ir.ui.view,arch_db:project.view_task_kanban
 msgid "Average Rating: Okay"
-msgstr ""
+msgstr "Calificación promedio: Bien"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_kanban
 #: model_terms:ir.ui.view,arch_db:project.view_task_kanban
 msgid "Average Rating: Satisfied"
-msgstr ""
+msgstr "Valoración promedio: Satisfecho"
 
 #. module: project
 #. openerp-web
