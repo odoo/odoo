@@ -179,7 +179,7 @@ QUnit.module("Web Components", (hooks) => {
     });
 
     QUnit.test(
-        "Clear button calls 'onSelect' with null value and appears only when value is null",
+        "Clear button calls 'onSelect' with null value and appears only when value is not null",
         async (assert) => {
             class Parent extends Component {
                 setup() {
@@ -211,6 +211,40 @@ QUnit.module("Web Components", (hooks) => {
             await click(target.querySelector(".o_select_menu_toggler_clear"));
             assert.verifySteps(["Cleared"]);
             assert.containsNone(target, ".o_select_menu_toggler_clear");
+        }
+    );
+
+    QUnit.test(
+        "When the \"required\" props is set to true, the clear button is not shown",
+        async (assert) => {
+            class Parent extends Component {
+                setup() {
+                    this.state = useState({ value: null });
+                    this.choices = [
+                        { label: "Hello", value: "hello" },
+                        { label: "World", value: "world" },
+                    ];
+                }
+                setValue(newValue) {
+                    this.state.value = newValue;
+                }
+            }
+            Parent.components = { SelectMenu };
+            Parent.template = xml`
+            <SelectMenu
+                required="true"
+                choices="choices"
+                value="state.value"
+            />
+        `;
+
+            const parent = await mount(Parent, target, { env });
+            assert.containsNone(target, ".o_select_menu_toggler_clear", 'When the value is not set, there is no "clear" button');
+
+            parent.setValue("hello");
+            await nextTick();
+            assert.strictEqual(getValue(), "Hello");
+            assert.containsNone(target, ".o_select_menu_toggler_clear", 'When the value is set, there is no "clear" button');
         }
     );
 

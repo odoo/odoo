@@ -3,6 +3,7 @@
 
     <t t-name="web.DomainSelectorDialog" owl="1">
         <Dialog title="dialogTitle">
+            <div t-if="props.text" class="mb-3" t-out="props.text"/>
             <DomainSelector t-props="domainSelectorProps" />
             <t t-set-slot="footer">
                 <t t-if="props.readonly">
