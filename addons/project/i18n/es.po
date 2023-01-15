@@ -5,6 +5,7 @@
 # Translators:
 # Martin Trigaux, 2022
 # Leonardo J. Caballero G. <leonardocaballero@gmail.com>, 2022
+# Pedro M. Baeza <pedro.baeza@tecnativa.com>, 2023
 # 
 msgid ""
 msgstr ""
@@ -12,7 +13,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-03-15 12:05+0000\n"
 "PO-Revision-Date: 2022-06-17 09:53+0000\n"
-"Last-Translator: Leonardo J. Caballero G. <leonardocaballero@gmail.com>, 2022\n"
+"Last-Translator: Pedro M. Baeza <pedro.baeza@tecnativa.com>, 2023\n"
 "Language-Team: Spanish (https://www.transifex.com/odoo/teams/41243/es/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -450,11 +451,14 @@ msgid ""
 "                            <i class=\"fa fa-fw o_button_icon fa-meh-o text-warning\" attrs=\"{'invisible': ['|', ('rating_avg', '&lt;', 2.33), ('rating_avg', '&gt;=', 3.66)]}\" title=\"Okay\"/>\n"
 "                            <i class=\"fa fa-fw o_button_icon fa-frown-o text-danger\" attrs=\"{'invisible': [('rating_avg', '&gt;=', 2.33)]}\" title=\"Dissatisfied\"/>"
 msgstr ""
+"<i class=\"fa fa-fw o_button_icon fa-smile-o text-success\" attrs=\"{'invisible': [('rating_avg', '&lt;', 3.66)]}\" title=\"Satisfecho\"/>\n"
+"                            <i class=\"fa fa-fw o_button_icon fa-meh-o text-warning\" attrs=\"{'invisible': ['|', ('rating_avg', '&lt;', 2.33), ('rating_avg', '&gt;=', 3.66)]}\" title=\"Bien\"/>\n"
+"                            <i class=\"fa fa-fw o_button_icon fa-frown-o text-danger\" attrs=\"{'invisible': [('rating_avg', '&gt;=', 2.33)]}\" title=\"Inconforme\"/>"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_task_view_activity
 msgid "<i class=\"fa fa-lock\"/> Private"
-msgstr ""
+msgstr "<i class=\"fa fa-lock\"/> Privado"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.edit_project
@@ -585,7 +589,7 @@ msgstr ""
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_form2
 msgid "<span class=\"o_stat_text\">Sub-tasks</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">Subtareas</span>"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_form2
@@ -984,6 +988,8 @@ msgstr "Archivado"
 #, python-format
 msgid "Archived tasks cannot be recurring. Please unarchive the task first."
 msgstr ""
+"Las tareas archivadas no pueden ser recurrentes. Es necesario desarchivar la"
+" tarea primero."
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_task_type_delete_confirmation_wizard
@@ -1140,25 +1146,25 @@ msgstr "Calificación promedio"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__rating_avg_percentage
 msgid "Average Rating (%)"
-msgstr ""
+msgstr "Calificación promedio (%)"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_kanban
 #: model_terms:ir.ui.view,arch_db:project.view_task_kanban
 msgid "Average Rating: Dissatisfied"
-msgstr ""
+msgstr "Calificación promedio: Inconforme"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_kanban
 #: model_terms:ir.ui.view,arch_db:project.view_task_kanban
 msgid "Average Rating: Okay"
-msgstr ""
+msgstr "Calificación promedio: Bien"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_kanban
 #: model_terms:ir.ui.view,arch_db:project.view_task_kanban
 msgid "Average Rating: Satisfied"
-msgstr ""
+msgstr "Valoración promedio: Satisfecho"
 
 #. module: project
 #. openerp-web

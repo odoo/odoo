@@ -4,6 +4,7 @@
 # 
 # Translators:
 # Martin Trigaux, 2022
+# Benson <Benson.Dr@Gmail.com>, 2023
 # 
 msgid ""
 msgstr ""
@@ -11,7 +12,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-04-19 09:19+0000\n"
 "PO-Revision-Date: 2022-06-17 09:52+0000\n"
-"Last-Translator: Martin Trigaux, 2022\n"
+"Last-Translator: Benson <Benson.Dr@Gmail.com>, 2023\n"
 "Language-Team: Chinese (Taiwan) (https://www.transifex.com/odoo/teams/41243/zh_TW/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -259,7 +260,7 @@ msgstr "<span class=\"o_stat_text\">來源工單 MO</span>"
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
 msgid "<span class=\"o_stat_text\">Unbuilds</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">拆解</span>"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.report_mrp_bom
@@ -525,7 +526,7 @@ msgstr "分配"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_res_config_settings__group_mrp_reception_report
 msgid "Allocation Report for Manufacturing Orders"
-msgstr ""
+msgstr "製造訂單的分配報告"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.res_config_settings_view_form
@@ -604,7 +605,7 @@ msgstr "批准"
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_routing_workcenter_bom_tree_view
 msgid "Archive Operation"
-msgstr ""
+msgstr "歸檔製程"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_bom_form_view
@@ -1086,7 +1087,7 @@ msgstr "組件"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__components_availability
 msgid "Component Status"
-msgstr ""
+msgstr "物料狀態"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_report_product_product_replenishment
@@ -1572,7 +1573,7 @@ msgstr "顯示名稱"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__show_serial_mass_produce
 msgid "Display the serial mass produce wizard action"
-msgstr ""
+msgstr "顯示序列批量生產引導製程"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__show_lot_ids
@@ -1846,7 +1847,7 @@ msgstr "強制"
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
 msgid "Forecast Report"
-msgstr ""
+msgstr "預測報表"
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_stock_move__product_virtual_available
@@ -2229,7 +2230,7 @@ msgstr "已經解除阻塞."
 msgid ""
 "It is not possible to unplan one single Work Order. You should unplan the "
 "Manufacturing Order instead in order to unplan all the linked operations."
-msgstr ""
+msgstr "不可能取消計劃一個單一的工單. 您應該取消計劃製造訂單,而不是取消計劃所有鏈接的製程."
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__is_planned
@@ -2368,7 +2369,7 @@ msgstr "MO工單延遲或組件延遲交貨"
 msgid ""
 "Latest component availability status for this MO. If green, then the MO's "
 "readiness status is ready, as per BOM configuration."
-msgstr ""
+msgstr "此 MO 的最新物料可用性狀態. 如果為綠色,則根據 BOM 配置,MO 的就緒狀態為就緒."
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workorder__leave_id
@@ -2474,12 +2475,12 @@ msgstr "%s 建立的工單 MO"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__reservation_state
 msgid "MO Readiness"
-msgstr ""
+msgstr "MO 準備就緒"
 
 #. module: mrp
 #: model:ir.actions.client,name:mrp.mrp_reception_action
 msgid "MRP Reception Report"
-msgstr ""
+msgstr "MRP 接收報告"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_res_config_settings__group_mrp_routings
@@ -2511,7 +2512,7 @@ msgstr "接單生產"
 msgid ""
 "Make sure enough quantities of these components are reserved to do the "
 "production:\n"
-msgstr ""
+msgstr "確保保留足夠數量的這些物料來進行生產:\n"
 
 #. module: mrp
 #: model:res.groups,name:mrp.group_mrp_routings
@@ -2691,6 +2692,9 @@ msgid ""
 "            * Ready: The material is available to start the production.\n"
 "            * Waiting: The material is not available to start the production.\n"
 msgstr ""
+"根據物料清單設定, 此 MO 的製造準備情況:\n"
+"            * 準備就緒: 材料可用於開始生產.\n"
+"            * 等待中: 材料無法開始生產.\n"
 
 #. module: mrp
 #: model:ir.actions.server,name:mrp.action_production_order_mark_done
@@ -2788,7 +2792,7 @@ msgstr "Mrp：製造生產計數"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_assign_serial__multiple_lot_components_names
 msgid "Multiple Lot Components Names"
-msgstr ""
+msgstr "多批次物料名稱"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__my_activity_date_deadline
@@ -2936,11 +2940,20 @@ msgid ""
 "of Materials, which means that operations can still be planned on it/them. "
 "To prevent this, deletion of the work center is recommended instead."
 msgstr ""
+"注意!! 已歸檔的工作中心: '%s' 仍然鏈接到啟用的物料清單, 這意味著仍然可以在其上計劃製程. 為防止這種情況, 建議改為刪除工作中心."
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.view_assign_serial_numbers_production
 msgid "Note that components"
-msgstr ""
+msgstr "註記那些物料"
+
+#. module: mrp
+#: code:addons/mrp/models/product.py:0 code:addons/mrp/models/product.py:0
+#, python-format
+msgid ""
+"Note that product(s): '%s' is/are still linked to active Bill of Materials, "
+"which means that the product can still be used on it/them."
+msgstr "注意!! 產品: '%s' 仍然鏈接到有效的物料清單, 這意味著該產品仍可用於它/它們."
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom__message_needaction_counter
@@ -2967,7 +2980,7 @@ msgstr "製造訂單的數量"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__unbuild_count
 msgid "Number of Unbuilds"
-msgstr ""
+msgstr "拆解的數量"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom__message_has_error_counter
@@ -3050,18 +3063,18 @@ msgstr "手上"
 #, python-format
 msgid ""
 "Only manufacturing orders in either a draft or confirmed state can be %s."
-msgstr ""
+msgstr "只有草稿或確認狀態的製造訂單才可以 %s."
 
 #. module: mrp
 #: code:addons/mrp/models/mrp_production.py:0
 #, python-format
 msgid "Only manufacturing orders with a Bill of Materials can be %s."
-msgstr ""
+msgstr "只有帶有物料清單的製造訂單才可以 %s."
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_workorder_tree_editable_view
 msgid "Open Work Order"
-msgstr ""
+msgstr "打開工單"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_routing_workcenter__name
@@ -3595,7 +3608,7 @@ msgstr "生產開始延遲"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production_split_multi__production_ids
 msgid "Productions To Split"
-msgstr ""
+msgstr "拆分的製程"
 
 #. module: mrp
 #: model:ir.model.fields.selection,name:mrp.selection__mrp_workcenter_productivity_loss_type__loss_type__productive
@@ -4028,7 +4041,7 @@ msgstr "設置時間"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__show_allocation
 msgid "Show Allocation"
-msgstr ""
+msgstr "顯示分配"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_assign_serial__show_apply
@@ -4048,7 +4061,7 @@ msgstr "顯示物料清單列"
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
 msgid "Show Details"
-msgstr ""
+msgstr "顯示詳細資訊"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__show_final_lots
@@ -4149,40 +4162,40 @@ msgstr "拆分"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production_split__counter
 msgid "Split #"
-msgstr ""
+msgstr "拆分 #"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production_split__production_detailed_vals_ids
 msgid "Split Details"
-msgstr ""
+msgstr "拆分詳情"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production_split_line__mrp_production_split_id
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_production_split_form
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_production_split_multi_form
 msgid "Split Production"
-msgstr ""
+msgstr "拆分製程"
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_mrp_production_split_line
 msgid "Split Production Detail"
-msgstr ""
+msgstr "拆分製程詳情"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production_split__production_split_multi_id
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_production_split_multi_form
 msgid "Split Productions"
-msgstr ""
+msgstr "拆分的製程"
 
 #. module: mrp
 #: model:ir.actions.act_window,name:mrp.action_mrp_production_split
 msgid "Split production"
-msgstr ""
+msgstr "拆分製程"
 
 #. module: mrp
 #: model:ir.actions.act_window,name:mrp.action_mrp_production_split_multi
 msgid "Split productions"
-msgstr ""
+msgstr "拆分的製程"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_production_filter
@@ -4340,7 +4353,7 @@ msgstr "技術領域的訂單移動"
 msgid ""
 "Technical Field used to decide whether the button \"Allocation\" should be "
 "displayed."
-msgstr ""
+msgstr "技術欄位 用於決定是否顯示\"分配\"按鈕."
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_workorder__is_user_working
@@ -4424,7 +4437,7 @@ msgstr "您選擇的計量單位跟產品表單的計量單位的類別不同。
 #: code:addons/mrp/models/mrp_workcenter.py:0
 #, python-format
 msgid "The Workorder (%s) cannot be started twice!"
-msgstr ""
+msgstr "工單 (%s) 無法重複啟動!"
 
 #. module: mrp
 #: code:addons/mrp/models/mrp_bom.py:0
@@ -4444,7 +4457,7 @@ msgstr "容量必須嚴格為正數。"
 #: code:addons/mrp/models/mrp_production.py:0
 #, python-format
 msgid "The component %s should not be the same as the product to produce."
-msgstr ""
+msgstr "物料 %s 不應與要生產的產品相同."
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_document__res_model
@@ -4499,7 +4512,7 @@ msgid ""
 "The product has already been used at least once, editing its structure may "
 "lead to undesirable behaviours. You should rather archive the product and "
 "create a new one with a new bill of materials."
-msgstr ""
+msgstr "該產品已經至少使用過一次, 編輯其結構可能會導致不良效果. 您應該歸檔產品並使用新的材料清單建立一個新產品."
 
 #. module: mrp
 #: code:addons/mrp/models/mrp_production.py:0
@@ -4635,7 +4648,7 @@ msgstr ""
 #: code:addons/mrp/models/mrp_production.py:0
 #, python-format
 msgid "This production has been merge in %s"
-msgstr ""
+msgstr "此製程已在 %s 中合併"
 
 #. module: mrp
 #: code:addons/mrp/models/stock_rule.py:0
@@ -4863,7 +4876,7 @@ msgstr "記錄的異常活動的類型。"
 #: code:addons/mrp/models/mrp_production.py:0
 #, python-format
 msgid "Unable to split with more than the quantity to produce."
-msgstr ""
+msgstr "無法拆分超過生產數量."
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_workorder_tree_editable_view
@@ -4907,12 +4920,12 @@ msgstr "拆解: %s"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__unbuild_ids
 msgid "Unbuilds"
-msgstr ""
+msgstr "拆解"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_production_filter
 msgid "Unbuilt"
-msgstr ""
+msgstr "拆解"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.report_mrp_bom_line
@@ -5023,7 +5036,7 @@ msgstr "網址"
 #. module: mrp
 #: model:res.groups,name:mrp.group_mrp_reception_report
 msgid "Use Reception Report with Manufacturing Orders"
-msgstr ""
+msgstr "將接收報告與製造訂單一起使用"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.product_product_form_view_bom_button
@@ -5203,12 +5216,12 @@ msgstr "在警告/嚴格消耗情況下的嚮導，並且更多組件已用於MO
 #. module: mrp
 #: model:ir.model,name:mrp.model_mrp_production_split_multi
 msgid "Wizard to Split Multiple Productions"
-msgstr ""
+msgstr "拆分多個製程的引導"
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_mrp_production_split
 msgid "Wizard to Split a Production"
-msgstr ""
+msgstr "拆分製程引導"
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_mrp_production_backorder
@@ -5474,7 +5487,7 @@ msgstr ""
 #, python-format
 msgid ""
 "You can only merge manufacturing orders of identical products with same BoM."
-msgstr ""
+msgstr "您只能合併具有相同物料清單的相同產品的製造訂單."
 
 #. module: mrp
 #: code:addons/mrp/models/mrp_production.py:0
@@ -5482,19 +5495,19 @@ msgstr ""
 msgid ""
 "You can only merge manufacturing orders with no additional components or by-"
 "products."
-msgstr ""
+msgstr "您只能合併沒有附加物料或副產品的製造訂單."
 
 #. module: mrp
 #: code:addons/mrp/models/mrp_production.py:0
 #, python-format
 msgid "You can only merge manufacturing with the same operation type"
-msgstr ""
+msgstr "您只能合併具有相同製程類型的製造"
 
 #. module: mrp
 #: code:addons/mrp/models/mrp_production.py:0
 #, python-format
 msgid "You can only merge manufacturing with the same state."
-msgstr ""
+msgstr "您只能合併具有相同狀態的製造."
 
 #. module: mrp
 #: code:addons/mrp/models/mrp_workorder.py:0
@@ -5616,7 +5629,7 @@ msgstr "您必須指明至少一個組件消耗的非零數量"
 #: code:addons/mrp/models/mrp_production.py:0
 #, python-format
 msgid "You need at least two production orders to merge them."
-msgstr ""
+msgstr "您至少需要兩個生產工單才能合併它們."
 
 #. module: mrp
 #: code:addons/mrp/models/mrp_workorder.py:0
@@ -5715,6 +5728,8 @@ msgid ""
 "have multiple lot reservations.<br/>\n"
 "                        Do you want to confirm anyway ?"
 msgstr ""
+"有多個批次預訂.<br/>\n"
+"                        還是要確認嗎?"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_routing_workcenter_form_view
