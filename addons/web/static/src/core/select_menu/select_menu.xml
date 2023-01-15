@@ -5,7 +5,7 @@
         <Dropdown
             class="`o_select_menu border w-100 rounded-2 overflow-hidden ${props.class || ''}`"
             togglerClass="`o_select_menu_toggler d-flex flex-row align-items-center flex-nowrap btn btn-secondary w-100 bg-light ${props.togglerClass || ''}`"
-            menuClass="'o_select_menu_menu pt-0'"
+            menuClass="`o_select_menu_menu${props.searchable ? ' pt-0' : ''}`"
             position="'bottom-fit'"
             beforeOpen.bind="filterOptions"
             onOpened.bind="onOpened"
@@ -23,7 +23,7 @@
                     <i class="fa fa-caret-down"></i>
                 </span>
             </t>
-            <div class="o_select_menu_input p-2 position-sticky top-0 start-0" t-ref="inputContainerRef">
+            <div t-if="props.searchable" class="o_select_menu_input p-2 position-sticky top-0 start-0" t-ref="inputContainerRef">
                 <input
                     type="text"
                     class="form-control"
