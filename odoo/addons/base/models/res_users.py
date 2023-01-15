@@ -2054,7 +2054,7 @@ class APIKeyDescription(models.TransientModel):
         return {
             'type': 'ir.actions.act_window',
             'res_model': 'res.users.apikeys.show',
-            'name': 'API Key Ready',
+            'name': _('API Key Ready'),
             'views': [(False, 'form')],
             'target': 'new',
             'context': {
