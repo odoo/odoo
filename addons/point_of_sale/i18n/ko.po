@@ -13,7 +13,7 @@
 # JH CHOI <hwangtog@gmail.com>, 2021
 # Linkup <link-up@naver.com>, 2021
 # Heesoo Choi, 2021
-# Sarah Park, 2022
+# Sarah Park, 2023
 # 
 msgid ""
 msgstr ""
@@ -21,7 +21,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-12-10 07:16+0000\n"
 "PO-Revision-Date: 2021-09-14 12:24+0000\n"
-"Last-Translator: Sarah Park, 2022\n"
+"Last-Translator: Sarah Park, 2023\n"
 "Language-Team: Korean (https://www.transifex.com/odoo/teams/41243/ko/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -186,7 +186,7 @@ msgstr "<span class=\"oe_inline\"><b>미리보기 화면 통과</b></span>"
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_config_kanban
 msgid "<span>Last Closing Cash Balance</span>"
-msgstr ""
+msgstr "<span>최근 마감 시재</span>"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_config_kanban
@@ -1219,7 +1219,7 @@ msgstr ""
 #: code:addons/point_of_sale/static/src/js/Popups/ClosePosPopup.js:0
 #, python-format
 msgid "Closing session error"
-msgstr ""
+msgstr "세션 마감 오류"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_bill__value
@@ -1597,7 +1597,7 @@ msgstr "고객 청구서"
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order_line__customer_note
 #, python-format
 msgid "Customer Note"
-msgstr ""
+msgstr "고객 관련 메모"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__iface_orderline_customer_notes
@@ -2247,7 +2247,7 @@ msgstr "부정확한 산업용 터치 스크린"
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_form_pos_close_session_wizard
 #, python-format
 msgid "Force Close Session"
-msgstr ""
+msgstr "세션 강제 종료"
 
 #. module: point_of_sale
 #. openerp-web
@@ -2696,7 +2696,7 @@ msgstr "청구서 발행됨"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order__is_refunded
 msgid "Is Refunded"
-msgstr ""
+msgstr "환불되었습니다"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order__is_total_cost_computed
@@ -3240,7 +3240,7 @@ msgstr "신문 걸이대"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session__activity_calendar_event_id
 msgid "Next Activity Calendar Event"
-msgstr ""
+msgstr "다음 활동 캘린더 행사"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session__activity_date_deadline
@@ -3423,7 +3423,7 @@ msgstr "읽지 않은 메시지 수"
 #: code:addons/point_of_sale/static/src/xml/Popups/CashOpeningPopup.xml:0
 #, python-format
 msgid "OPENING CASH CONTROL"
-msgstr ""
+msgstr "시재 시작 금액 관리"
 
 #. module: point_of_sale
 #. openerp-web
@@ -3545,7 +3545,7 @@ msgstr "세션 열기"
 #: code:addons/point_of_sale/static/src/xml/Popups/CashOpeningPopup.xml:0
 #, python-format
 msgid "Open session"
-msgstr ""
+msgstr "자료 생성"
 
 #. module: point_of_sale
 #. openerp-web
@@ -3601,7 +3601,7 @@ msgstr ""
 #: code:addons/point_of_sale/static/src/xml/Popups/CashOpeningPopup.xml:0
 #, python-format
 msgid "Opening cash"
-msgstr ""
+msgstr "시작 금액"
 
 #. module: point_of_sale
 #: model:ir.actions.act_window,name:point_of_sale.account_cashbox_line_action
@@ -4344,7 +4344,7 @@ msgstr "점포판매시스템 제품 분류"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_stock_picking__pos_session_id
 msgid "Pos Session"
-msgstr ""
+msgstr "POS 세션"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__pos_session_duration
@@ -6789,6 +6789,12 @@ msgid ""
 msgstr ""
 
 #. module: point_of_sale
+#: code:addons/point_of_sale/models/pos_config.py:0
+#, python-format
+msgid "You can only have one cash payment method."
+msgstr ""
+
+#. module: point_of_sale
 #: code:addons/point_of_sale/models/account_bank_statement.py:0
 #, python-format
 msgid ""
@@ -7031,7 +7037,7 @@ msgstr "노트"
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_config_kanban
 msgid "open sessions"
-msgstr ""
+msgstr "자료 생성"
 
 #. module: point_of_sale
 #. openerp-web

@@ -10,6 +10,7 @@
 # Linkup <link-up@naver.com>, 2021
 # Link Up링크업 <linkup.way@gmail.com>, 2021
 # Heesoo Choi, 2021
+# Sarah Park, 2023
 # 
 msgid ""
 msgstr ""
@@ -17,7 +18,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-01-24 08:19+0000\n"
 "PO-Revision-Date: 2021-09-14 12:24+0000\n"
-"Last-Translator: Heesoo Choi, 2021\n"
+"Last-Translator: Sarah Park, 2023\n"
 "Language-Team: Korean (https://www.transifex.com/odoo/teams/41243/ko/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -2806,7 +2807,7 @@ msgstr "다음 활동"
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__activity_calendar_event_id
 #: model:ir.model.fields,field_description:mrp.field_mrp_unbuild__activity_calendar_event_id
 msgid "Next Activity Calendar Event"
-msgstr ""
+msgstr "다음 활동 캘린더 행사"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__activity_date_deadline
@@ -2914,6 +2915,14 @@ msgid ""
 "Note that archived work center(s): '%s' is/are still linked to active Bill "
 "of Materials, which means that operations can still be planned on it/them. "
 "To prevent this, deletion of the work center is recommended instead."
+msgstr ""
+
+#. module: mrp
+#: code:addons/mrp/models/product.py:0 code:addons/mrp/models/product.py:0
+#, python-format
+msgid ""
+"Note that product(s): '%s' is/are still linked to active Bill of Materials, "
+"which means that the product can still be used on it/them."
 msgstr ""
 
 #. module: mrp
@@ -3345,7 +3354,7 @@ msgstr "인쇄"
 #: code:addons/mrp/static/src/xml/mrp.xml:0
 #, python-format
 msgid "Print All Variants"
-msgstr ""
+msgstr "전체 세부선택사항 인쇄"
 
 #. module: mrp
 #. openerp-web
@@ -3447,7 +3456,7 @@ msgstr "상품 가격"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_move__product_virtual_available
 msgid "Product Forecasted Quantity"
-msgstr ""
+msgstr "품목 예상 수량"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_res_config_settings__module_mrp_plm
@@ -3468,7 +3477,7 @@ msgstr "품목 이동 (재고 이동 상세)"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_move__product_qty_available
 msgid "Product On Hand Quantity"
-msgstr ""
+msgstr "보유 수량"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.view_production_graph

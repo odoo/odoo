@@ -10,6 +10,7 @@
 # Martin Trigaux, 2021
 # JH CHOI <hwangtog@gmail.com>, 2021
 # Heesoo Choi, 2021
+# Sarah Park, 2023
 # 
 msgid ""
 msgstr ""
@@ -17,7 +18,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-10-05 10:53+0000\n"
 "PO-Revision-Date: 2021-09-14 12:22+0000\n"
-"Last-Translator: Heesoo Choi, 2021\n"
+"Last-Translator: Sarah Park, 2023\n"
 "Language-Team: Korean (https://www.transifex.com/odoo/teams/41243/ko/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -151,7 +152,7 @@ msgstr "%s 휴가 : %.2f시간"
 #: code:addons/hr_holidays/models/hr_leave.py:0
 #, python-format
 msgid "%s: Time Off"
-msgstr ""
+msgstr "%s: 휴가"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.report_holidayssummary
@@ -2485,7 +2486,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__activity_calendar_event_id
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_allocation__activity_calendar_event_id
 msgid "Next Activity Calendar Event"
-msgstr ""
+msgstr "다음 활동 캘린더 행사"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__activity_date_deadline
@@ -3249,6 +3250,15 @@ msgstr ""
 "아울러 검증을 기다리는 휴가도 확인해 주십시오."
 
 #. module: hr_holidays
+#: code:addons/hr_holidays/models/hr_leave.py:0
+#, python-format
+msgid ""
+"\n"
+"The employees that lack allocation days are:\n"
+"%s"
+msgstr ""
+
+#. module: hr_holidays
 #: model:ir.model.constraint,message:hr_holidays.constraint_hr_leave_date_check2
 msgid "The start date must be anterior to the end date."
 msgstr "시작일은 종료일보다 앞서야 합니다."
@@ -3940,6 +3950,13 @@ msgid "You cannot delete an allocation request which is in %s state."
 msgstr "%s 상태에 있는 할당 요청은 삭제할 수 없습니다."
 
 #. module: hr_holidays
+#: code:addons/hr_holidays/models/hr_leave_allocation.py:0
+#, python-format
+msgid ""
+"You cannot delete an allocation request which has some validated leaves."
+msgstr ""
+
+#. module: hr_holidays
 #: code:addons/hr_holidays/models/hr_leave.py:0
 #, python-format
 msgid ""
@@ -3958,6 +3975,20 @@ msgstr ""
 #: code:addons/hr_holidays/models/hr_leave.py:0
 #, python-format
 msgid ""
+"You have several allocations for those type and period.\n"
+"Please split your request to fit in their number of days."
+msgstr ""
+
+#. module: hr_holidays
+#: code:addons/hr_holidays/models/hr_leave.py:0
+#, python-format
+msgid "You must be %s\\'s Manager to approve this leave"
+msgstr ""
+
+#. module: hr_holidays
+#: code:addons/hr_holidays/models/hr_leave.py:0
+#, python-format
+msgid ""
 "You must be either %s's manager or Time off Manager to approve this leave"
 msgstr ""
 
@@ -3969,6 +4000,8 @@ msgid ""
 msgstr "이 휴가를 승인하려면 %s의 관리자이거나 휴가 관리자여야 합니다."
 
 #. module: hr_holidays
+#. module: hr_holidays
+#: code:addons/hr_holidays/models/hr_leave_allocation.py:0
 #: model:ir.model.constraint,message:hr_holidays.constraint_hr_leave_accrual_level_added_value_greater_than_zero
 msgid "You must give a rate greater than 0 in accrual plan levels."
 msgstr ""

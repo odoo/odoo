@@ -3,9 +3,9 @@
 # 	* account
 # 
 # Translators:
-# Benson <Benson.Dr@Gmail.com>, 2022
 # 敬雲 林 <chingyun@yuanchih-consult.com>, 2022
 # Martin Trigaux, 2022
+# Benson <Benson.Dr@Gmail.com>, 2023
 # 
 msgid ""
 msgstr ""
@@ -13,7 +13,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-02-18 09:52+0000\n"
 "PO-Revision-Date: 2021-09-14 12:18+0000\n"
-"Last-Translator: Martin Trigaux, 2022\n"
+"Last-Translator: Benson <Benson.Dr@Gmail.com>, 2023\n"
 "Language-Team: Chinese (Taiwan) (https://www.transifex.com/odoo/teams/41243/zh_TW/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -50,7 +50,7 @@ msgstr ""
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid " The %(lock_type)s lock date is set on %(lock_date)s."
-msgstr ""
+msgstr " %(lock_type)s 鎖定日期設定為 %(lock_date)s."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment__reconciled_bills_count
@@ -740,7 +740,7 @@ msgstr "<span class=\"o_stat_text\">已開立應收憑單</span>"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_form
 msgid "<span class=\"o_stat_text\">Journal Entry</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">日記帳分錄</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
@@ -890,7 +890,7 @@ msgstr "<span>金額</span>"
 #: model_terms:ir.ui.view,arch_db:account.bill_preview
 #: model_terms:ir.ui.view,arch_db:account.report_payment_receipt_document
 msgid "<span>Amount In Currency</span>"
-msgstr ""
+msgstr "<span>幣別金額</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.bill_preview
@@ -1024,7 +1024,7 @@ msgstr "<strong>公司:</strong>"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
 msgid "<strong>Credit Note Date:</strong>"
-msgstr ""
+msgstr "<strong>折讓單日期:</strong>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
@@ -1201,6 +1201,12 @@ msgid ""
 msgstr ""
 "日記帳用來記錄日常業務活動\n"
 "                的交易事項會計資料."
+
+#. module: account
+#: code:addons/account/models/account_move.py:0
+#, python-format
+msgid "A line of this move is using a deprecated account, you cannot post it."
+msgstr "此傳票的一個明細正在使用已棄用的科目，您無法過帳它."
 
 #. module: account
 #: code:addons/account/models/account_payment.py:0
@@ -2739,7 +2745,7 @@ msgstr "可用日記帳"
 #: model:ir.model.fields,field_description:account.field_account_payment__available_partner_bank_ids
 #: model:ir.model.fields,field_description:account.field_account_payment_register__available_partner_bank_ids
 msgid "Available Partner Bank"
-msgstr ""
+msgstr "可用合作夥伴銀行"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal__available_payment_method_ids
@@ -3857,7 +3863,7 @@ msgstr "公司"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_form
 msgid "Company Bank Account"
-msgstr ""
+msgstr "公司銀行賬戶"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_fiscal_position__company_country_id
@@ -7171,7 +7177,7 @@ msgstr "應收憑單和折讓單分發應分別包含一個明細作為基礎."
 msgid ""
 "Invoice and credit note repartition should have at least one tax repartition"
 " line."
-msgstr ""
+msgstr "應收憑單和折讓單重新分配應至少有一個稅金重新分配明細."
 
 #. module: account
 #: code:addons/account/models/account_tax.py:0
@@ -7565,7 +7571,7 @@ msgstr "會計分錄日期"
 #: code:addons/account/static/src/xml/account_payment.xml:0
 #, python-format
 msgid "Journal Entry Info"
-msgstr ""
+msgstr "日記帳分錄資訊"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_print_journal__sort_selection__move_name
@@ -7691,7 +7697,7 @@ msgstr "在日記帳中建立分錄."
 #: code:addons/account/static/src/xml/account_payment.xml:0
 #, python-format
 msgid "Journal:"
-msgstr ""
+msgstr "日記帳:"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_account_journal_form
@@ -10016,6 +10022,17 @@ msgstr "請檢查銀行對帳單中的 '日記帳'"
 #, python-format
 msgid "Please check that the field 'Transfer Account' is set on the company."
 msgstr "請檢查公司中設定的 '轉帳項目' 欄位."
+
+#. module: account
+#: code:addons/account/models/chart_template.py:0
+#, python-format
+msgid ""
+"Please check these taxes. They might be outdated. We did not update them. "
+"Indeed, they do not exactly match the taxes of the original version of the "
+"localization module.<br/>You might want to archive or adapt them.<br/><ul>"
+msgstr ""
+"請檢查這些稅費. 它們可能已經過時了. 我們並沒有更新它. "
+"事實上，它們與本地化模組原始版本的稅金並不完全匹配.<br/>您可能想要封存歸檔或調整它們.<br/><ul>"
 
 #. module: account
 #: code:addons/account/models/account_payment.py:0
@@ -13298,13 +13315,13 @@ msgstr ""
 #: code:addons/account/wizard/account_automatic_entry_wizard.py:0
 #, python-format
 msgid "The date of some related entries is protected by a lock date"
-msgstr ""
+msgstr "一些相關分錄的日期受鎖定日期保護"
 
 #. module: account
 #: code:addons/account/wizard/account_automatic_entry_wizard.py:0
 #, python-format
 msgid "The date selected is protected by a lock date"
-msgstr ""
+msgstr "所選日期受鎖定日期保護"
 
 #. module: account
 #: code:addons/account/models/account_payment_term.py:0
@@ -14117,7 +14134,7 @@ msgid ""
 "This entry contains one or more taxes that are incompatible with your fiscal"
 " country. Check company fiscal country in the settings and tax country in "
 "taxes configuration."
-msgstr ""
+msgstr "此分錄包含一種或多種與您的財政國家不相容的稅務. 檢查設定中的公司財政國家和稅收設定中的稅收國家."
 
 #. module: account
 #: code:addons/account/models/account_move.py:0
@@ -14142,7 +14159,7 @@ msgstr ""
 msgid ""
 "This entry contains taxes that are not compatible with your fiscal position."
 " Check the country set in fiscal position and in your tax configuration."
-msgstr ""
+msgstr "此分錄包含與您的財務狀況不相容的稅務. 檢查在財政狀況和稅金設定中設定的國家."
 
 #. module: account
 #: code:addons/account/wizard/account_automatic_entry_wizard.py:0
@@ -14260,6 +14277,14 @@ msgid ""
 "This payment term will be used instead of the default one for sales orders "
 "and customer invoices"
 msgstr "對於銷售訂單和客戶應收憑單而言，該付款期限將代替預設期限"
+
+#. module: account
+#: code:addons/account/models/product.py:0
+#, python-format
+msgid ""
+"This product is already being used in posted Journal Entries.\n"
+"If you want to change its Unit of Measure, please archive this product and create a new one."
+msgstr ""
 
 #. module: account
 #: code:addons/account/models/account_reconcile_model.py:0
@@ -15768,6 +15793,12 @@ msgid "You should update this document to reflect your T&amp;C."
 msgstr "您應該更新此文件以反映您的 T&amp;C."
 
 #. module: account
+#: code:addons/account/models/chart_template.py:0
+#, python-format
+msgid "Your taxes have been updated !"
+msgstr "您的稅費已更新!"
+
+#. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_position_form
 msgid "Zip Range"
 msgstr "郵編範圍"
@@ -15916,7 +15947,7 @@ msgstr "例如. 庫存"
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
 msgid ""
 "for this customer. You can allocate them to mark this credit note as paid."
-msgstr ""
+msgstr "對此客戶. 您可以分配它們以將此折讓單標記為已付款."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
@@ -15932,7 +15963,7 @@ msgstr "對於這個供應商. 您可以分配它們以將此帳單標記為已�
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
 msgid ""
 "for this vendor. You can allocate them to mark this credit note as paid."
-msgstr ""
+msgstr "對此供應商. 您可以分配它們以將此折讓單標記為已付款."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_position_form
@@ -16010,7 +16041,7 @@ msgstr "在"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
 msgid "outstanding credits"
-msgstr ""
+msgstr "未結貸方"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
@@ -16040,7 +16071,7 @@ msgstr "保留要求支付固定利息的權利，相當於剩餘到期金額的
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid "tax"
-msgstr ""
+msgstr "稅金"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_move_line__tax_group_id
@@ -16061,6 +16092,14 @@ msgstr "目標日記帳"
 #: model_terms:ir.ui.view,arch_db:account.view_partner_property_form
 msgid "the parent company"
 msgstr "上級公司"
+
+#. module: account
+#: code:addons/account/models/account_move.py:0
+#, python-format
+msgid ""
+"The Unit of Measure (UoM) '%s' you have selected for product '%s', is "
+"incompatible with its category : %s."
+msgstr ""
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_analytic_default_kanban
@@ -16090,7 +16129,7 @@ msgstr "承諾在約定的時間範圍內，盡最大努力在適當的時候提
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid "user"
-msgstr ""
+msgstr "使用者"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_default_terms_and_conditions

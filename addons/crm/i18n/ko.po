@@ -10,6 +10,7 @@
 # Seongseok Shin <shinss61@hotmail.com>, 2021
 # Heesoo Choi, 2021
 # jay Lee, 2022
+# Sarah Park, 2023
 # 
 msgid ""
 msgstr ""
@@ -17,7 +18,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-10-05 10:53+0000\n"
 "PO-Revision-Date: 2021-09-14 12:21+0000\n"
-"Last-Translator: jay Lee, 2022\n"
+"Last-Translator: Sarah Park, 2023\n"
 "Language-Team: Korean (https://www.transifex.com/odoo/teams/41243/ko/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -258,6 +259,11 @@ msgid ""
 "                                        specified otherwise.\n"
 "                                    </span>"
 msgstr ""
+"<span>규칙에 따라 주기적으로 영업제안을 배정합니다.</span><br/>\n"
+"                                    <span attrs=\"{'invisible': [('crm_use_auto_assignment', '=', False)]}\">\n"
+"                                        별도 지정하지 않는 한 해당 내용이 전체 영업팀에\n"
+"                                        적용됩니다.\n"
+"                                    </span>"
 
 #. module: crm
 #: model:mail.template,body_html:crm.mail_template_demo_crm_lead
@@ -594,7 +600,7 @@ msgstr "보관됨"
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.res_config_settings_view_form
 msgid "Assign Documentation"
-msgstr ""
+msgstr "할당 관련 문서"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.sales_team_form_view_in_crm
@@ -609,7 +615,7 @@ msgstr "영업 기회 배정"
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.res_config_settings_view_form
 msgid "Assign salespersons into multiple Sales Teams."
-msgstr ""
+msgstr "다른 영업팀으로 영업직원들을 배정합니다."
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.view_crm_lead2opportunity_partner_mass
@@ -2221,7 +2227,7 @@ msgstr ""
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_res_config_settings__is_membership_multi
 msgid "Multi Teams"
-msgstr ""
+msgstr "다중 팀 배정"
 
 #. module: crm
 #: model:ir.actions.act_window,name:crm.crm_lead_action_my_activities
@@ -2285,7 +2291,7 @@ msgstr "신규 영업기회"
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__activity_calendar_event_id
 msgid "Next Activity Calendar Event"
-msgstr ""
+msgstr "다음 활동 캘린더 행사"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__activity_date_deadline
@@ -2923,7 +2929,7 @@ msgstr "복원"
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_res_config_settings__crm_use_auto_assignment
 msgid "Rule-Based Assignment"
-msgstr ""
+msgstr "배정 규칙"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.res_config_settings_view_form
@@ -3291,7 +3297,7 @@ msgstr "거래 마감 확률은 0 %에서 100 % 사이여야 합니다!"
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.res_config_settings_view_form
 msgid "The success rate is computed based on"
-msgstr ""
+msgstr "성공률은 다음을 기준으로 계산됩니다: "
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_pls_update_view_form
@@ -3520,12 +3526,12 @@ msgstr "예정된 마감"
 #: model:ir.actions.act_window,name:crm.crm_lead_pls_update_action
 #: model_terms:ir.ui.view,arch_db:crm.res_config_settings_view_form
 msgid "Update Probabilities"
-msgstr ""
+msgstr "성공률 업데이트"
 
 #. module: crm
 #: model:ir.model,name:crm.model_crm_lead_pls_update
 msgid "Update the probabilities"
-msgstr ""
+msgstr "성공률 업데이트"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_utm_campaign__use_leads
@@ -3775,7 +3781,7 @@ msgstr "예 : https://www.odoo.com"
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.res_config_settings_view_form
 msgid "for the leads created as of the"
-msgstr ""
+msgstr "영업제안 생성 기준일:"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_stage__team_count

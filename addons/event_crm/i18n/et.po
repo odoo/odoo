@@ -14,6 +14,7 @@
 # Eneli Õigus <enelioigus@gmail.com>, 2022
 # Algo Kärp <algokarp@gmail.com>, 2022
 # Martin Trigaux, 2022
+# Anna, 2023
 # 
 msgid ""
 msgstr ""
@@ -21,7 +22,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-09-14 10:28+0000\n"
 "PO-Revision-Date: 2021-09-14 12:21+0000\n"
-"Last-Translator: Martin Trigaux, 2022\n"
+"Last-Translator: Anna, 2023\n"
 "Language-Team: Estonian (https://www.transifex.com/odoo/teams/41243/et/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -180,7 +181,7 @@ msgstr "Sündmuste kategooriad"
 #. module: event_crm
 #: model:ir.model,name:event_crm.model_event_lead_rule
 msgid "Event Lead Rules"
-msgstr ""
+msgstr "Sündmuse müügivihje reeglid"
 
 #. module: event_crm
 #: model:ir.model,name:event_crm.model_event_registration
@@ -195,7 +196,7 @@ msgstr "Ürituste registreerimine"
 #. module: event_crm
 #: model:ir.model.fields,help:event_crm.field_crm_lead__event_id
 msgid "Event triggering the rule that created this lead"
-msgstr ""
+msgstr "Sündmus käivitas reegli, mis lõi selle müügivihje"
 
 #. module: event_crm
 #: model:ir.model.fields,help:event_crm.field_event_lead_rule__event_registration_filter
@@ -219,7 +220,7 @@ msgstr ""
 #. module: event_crm
 #: model_terms:ir.ui.view,arch_db:event_crm.event_lead_rule_view_form
 msgid "For any of these Events"
-msgstr ""
+msgstr "Kõigi nende sündmuste jaoks"
 
 #. module: event_crm
 #: model:ir.model.fields,field_description:event_crm.field_event_lead_rule__id
@@ -229,7 +230,7 @@ msgstr "ID"
 #. module: event_crm
 #: model_terms:ir.ui.view,arch_db:event_crm.event_lead_rule_view_form
 msgid "If the Attendees meet these Conditions"
-msgstr ""
+msgstr "Kui osalejad vastavad nendele tingimustele"
 
 #. module: event_crm
 #: model:ir.model.fields,field_description:event_crm.field_event_lead_rule____last_update
@@ -254,12 +255,12 @@ msgstr "Müügivihje"
 #. module: event_crm
 #: model_terms:ir.ui.view,arch_db:event_crm.event_lead_rule_view_tree
 msgid "Lead Creation Type"
-msgstr ""
+msgstr "Müügivihje loomise tüüp"
 
 #. module: event_crm
 #: model_terms:ir.ui.view,arch_db:event_crm.event_lead_rule_view_form
 msgid "Lead Default Values"
-msgstr ""
+msgstr "Müügivihje vaikeväärtused"
 
 #. module: event_crm
 #: model:ir.ui.menu,name:event_crm.event_lead_rule_menu
@@ -275,7 +276,7 @@ msgstr "Müügivihje genereerimise reegel"
 #. module: event_crm
 #: model_terms:ir.ui.view,arch_db:event_crm.event_lead_rule_view_tree
 msgid "Lead Generation Rules"
-msgstr ""
+msgstr "Müügivihje genereerimise reegel"
 
 #. module: event_crm
 #: model:ir.model.fields,field_description:event_crm.field_event_lead_rule__lead_type
@@ -303,7 +304,7 @@ msgstr ""
 #. module: event_crm
 #: model:ir.model.fields,help:event_crm.field_event_event__lead_ids
 msgid "Leads generated from this event"
-msgstr ""
+msgstr "Sellest sündmusest genereeritud müügivihjed"
 
 #. module: event_crm
 #: model_terms:ir.ui.view,arch_db:event_crm.event_lead_rule_view_search
@@ -350,6 +351,8 @@ msgid ""
 "Per Attendee : A Lead is created for each Attendee (B2C).\n"
 "Per Order : A single Lead is created per Ticket Batch/Sale Order (B2B)"
 msgstr ""
+"Osaleja kohta : Müügivihje luuakse iga osaleja jaoks (B2C).\n"
+"Tellimuse kohta : Müügivihje luuakse iga pileti/müügitellimuse kohta. (B2B)"
 
 #. module: event_crm
 #: model:ir.model.fields.selection,name:event_crm.selection__event_lead_rule__lead_creation_basis__order
@@ -364,12 +367,12 @@ msgstr "Registreerimise reegel"
 #. module: event_crm
 #: model:ir.model.fields,field_description:event_crm.field_event_lead_rule__event_registration_filter
 msgid "Registrations Domain"
-msgstr ""
+msgstr "Registreerimise domeen"
 
 #. module: event_crm
 #: model:ir.model.fields,help:event_crm.field_crm_lead__registration_ids
 msgid "Registrations triggering the rule that created this lead"
-msgstr ""
+msgstr "Registreerimine käivitab reegli, mis lõi selle müügivihje"
 
 #. module: event_crm
 #: model:ir.model.fields,help:event_crm.field_event_lead_rule__company_id
@@ -386,7 +389,7 @@ msgstr "Reegli nimi"
 #. module: event_crm
 #: model:event.lead.rule,name:event_crm.event_lead_rule_0
 msgid "Rule on @example.com"
-msgstr ""
+msgstr "Reegel @example.com"
 
 #. module: event_crm
 #: model:ir.model.fields,help:event_crm.field_crm_lead__event_lead_rule_id
@@ -411,7 +414,7 @@ msgstr "Otsi müügivihjete loomise reegleid"
 #. module: event_crm
 #: model:ir.model.fields,field_description:event_crm.field_crm_lead__event_id
 msgid "Source Event"
-msgstr ""
+msgstr "Sündmuse allikas"
 
 #. module: event_crm
 #: model:ir.model.fields,field_description:event_crm.field_crm_lead__registration_ids
@@ -448,4 +451,4 @@ msgstr "Millal"
 #. module: event_crm
 #: model_terms:ir.ui.view,arch_db:event_crm.event_lead_rule_view_form
 msgid "e.g. B2B Fairs"
-msgstr ""
+msgstr "nt. B2B messid"

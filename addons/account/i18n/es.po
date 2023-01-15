@@ -17,8 +17,8 @@
 # Martin Trigaux, 2022
 # Leonardo J. Caballero G. <leonardocaballero@gmail.com>, 2022
 # Juan José Scarafía <scarafia.juanjose@gmail.com>, 2022
-# Pedro M. Baeza <pedro.baeza@tecnativa.com>, 2022
 # Camille Dantinne <cmd@odoo.com>, 2022
+# Pedro M. Baeza <pedro.baeza@tecnativa.com>, 2023
 # 
 msgid ""
 msgstr ""
@@ -26,7 +26,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-02-18 09:52+0000\n"
 "PO-Revision-Date: 2021-09-14 12:18+0000\n"
-"Last-Translator: Camille Dantinne <cmd@odoo.com>, 2022\n"
+"Last-Translator: Pedro M. Baeza <pedro.baeza@tecnativa.com>, 2023\n"
 "Language-Team: Spanish (https://www.transifex.com/odoo/teams/41243/es/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -10550,7 +10550,7 @@ msgstr "Contabilizar la diferencia en"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.validate_account_move_view
 msgid "Post Journal Entries"
-msgstr "Validar asientos"
+msgstr "Publicar asientos"
 
 #. module: account
 #: model:ir.actions.server,name:account.action_account_confirm_payments
@@ -10586,7 +10586,7 @@ msgstr "Solo asientos publicados"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_filter
 msgid "Posted Journal Entries"
-msgstr "Asientos validados"
+msgstr "Asientos publicados"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_line_filter
@@ -17086,6 +17086,14 @@ msgstr "el diario destino"
 #: model_terms:ir.ui.view,arch_db:account.view_partner_property_form
 msgid "the parent company"
 msgstr "la empresa matriz"
+
+#. module: account
+#: code:addons/account/models/account_move.py:0
+#, python-format
+msgid ""
+"The Unit of Measure (UoM) '%s' you have selected for product '%s', is "
+"incompatible with its category : %s."
+msgstr ""
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_analytic_default_kanban

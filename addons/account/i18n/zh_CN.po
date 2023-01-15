@@ -8,7 +8,6 @@
 # xu aaron, 2021
 # wei zhou, 2021
 # 深圳市耀影科技有限公司_QQ1006399173, 2021
-# Benson <Benson.Dr@Gmail.com>, 2022
 # Tony Peng <umingpeng@gmail.com>, 2022
 # 智能科技奇客罗方 <alanljj@gmail.com>, 2022
 # 山西清水欧度(QQ:54773801) <54773801@qq.com>, 2022
@@ -18,7 +17,8 @@
 # keecome <7017511@qq.com>, 2022
 # Martin Trigaux, 2022
 # Seeboy, 2022
-# Jeffery CHEN <jeffery9@gmail.com>, 2022
+# Jeffery CHEN Fan <jeffery9@gmail.com>, 2022
+# Benson <Benson.Dr@Gmail.com>, 2023
 # 
 msgid ""
 msgstr ""
@@ -26,7 +26,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-02-18 09:52+0000\n"
 "PO-Revision-Date: 2021-09-14 12:18+0000\n"
-"Last-Translator: Jeffery CHEN <jeffery9@gmail.com>, 2022\n"
+"Last-Translator: Benson <Benson.Dr@Gmail.com>, 2023\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -1241,6 +1241,12 @@ msgid ""
 msgstr ""
 "日记账用来记录日常业务活动\n"
 "                的交易事项会计数据."
+
+#. module: account
+#: code:addons/account/models/account_move.py:0
+#, python-format
+msgid "A line of this move is using a deprecated account, you cannot post it."
+msgstr "此凭证的一个明细正在使用已弃用的科目，您不能过帐它."
 
 #. module: account
 #: code:addons/account/models/account_payment.py:0
@@ -10059,6 +10065,17 @@ msgid "Please check that the field 'Transfer Account' is set on the company."
 msgstr "请检查公司中设置的 '转账账户' 字段"
 
 #. module: account
+#: code:addons/account/models/chart_template.py:0
+#, python-format
+msgid ""
+"Please check these taxes. They might be outdated. We did not update them. "
+"Indeed, they do not exactly match the taxes of the original version of the "
+"localization module.<br/>You might want to archive or adapt them.<br/><ul>"
+msgstr ""
+"请检查这些税费. 它们可能已经过时了. 我们并没有更新它. "
+"事实上，它们与本地化模块原始版本的税金并不完全匹配.<br/>您可能想要封存归档或调整它们.<br/><ul>"
+
+#. module: account
 #: code:addons/account/models/account_payment.py:0
 #, python-format
 msgid "Please define a payment method line on your payment."
@@ -14305,6 +14322,14 @@ msgid ""
 msgstr "对于销售订单和客户结算单而言，该付款条件将代替默认期限"
 
 #. module: account
+#: code:addons/account/models/product.py:0
+#, python-format
+msgid ""
+"This product is already being used in posted Journal Entries.\n"
+"If you want to change its Unit of Measure, please archive this product and create a new one."
+msgstr ""
+
+#. module: account
 #: code:addons/account/models/account_reconcile_model.py:0
 #, python-format
 msgid "This reconciliation model has created no entry so far"
@@ -15809,6 +15834,12 @@ msgid "You should update this document to reflect your T&amp;C."
 msgstr "您应该更新此文档以反映您的T &amp; C。"
 
 #. module: account
+#: code:addons/account/models/chart_template.py:0
+#, python-format
+msgid "Your taxes have been updated !"
+msgstr "您的税费已更新!"
+
+#. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_position_form
 msgid "Zip Range"
 msgstr "邮编范围"
@@ -16102,6 +16133,14 @@ msgstr "目的日记账"
 #: model_terms:ir.ui.view,arch_db:account.view_partner_property_form
 msgid "the parent company"
 msgstr "上级公司"
+
+#. module: account
+#: code:addons/account/models/account_move.py:0
+#, python-format
+msgid ""
+"The Unit of Measure (UoM) '%s' you have selected for product '%s', is "
+"incompatible with its category : %s."
+msgstr ""
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_analytic_default_kanban

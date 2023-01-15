@@ -19,6 +19,7 @@
 # Arma Gedonsky <armagedonsky@hot.ee>, 2022
 # Leaanika Randmets, 2022
 # Jana Jaakson, 2022
+# Anna, 2023
 # 
 msgid ""
 msgstr ""
@@ -26,7 +27,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-01-24 08:19+0000\n"
 "PO-Revision-Date: 2021-09-14 12:25+0000\n"
-"Last-Translator: Jana Jaakson, 2022\n"
+"Last-Translator: Anna, 2023\n"
 "Language-Team: Estonian (https://www.transifex.com/odoo/teams/41243/et/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -109,23 +110,23 @@ msgstr ""
 #: code:addons/project/models/project.py:0
 #, python-format
 msgid "(+ %(child_count)s tasks)"
-msgstr ""
+msgstr "(+ %(child_count)s ülesanded)"
 
 #. module: project
 #: code:addons/project/models/project.py:0
 #, python-format
 msgid "(+ 1 task)"
-msgstr ""
+msgstr "(+ 1 ülesanne)"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.milestone_deadline
 msgid "(due"
-msgstr ""
+msgstr "(tähtaeg"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_update_default_description
 msgid "(last project update),"
-msgstr ""
+msgstr "(viimane projekti uuendus),"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.milestone_deadline
@@ -386,6 +387,8 @@ msgid ""
 "<i class=\"fa fa-long-arrow-right mx-2 oe_edit_only\" aria-label=\"Arrow icon\" title=\"Arrow\"/>\n"
 "                                <i class=\"fa fa-long-arrow-right mx-2 oe_read_only\" aria-label=\"Arrow icon\" title=\"Arrow\" attrs=\"{'invisible': [('date_start', '=', False), ('date', '=', False)]}\"/>"
 msgstr ""
+"<i class=\"fa fa-long-arrow-right mx-2 oe_edit_only\" aria-label=\"Arrow icon\" title=\"Arrow\"/>\n"
+"                                <i class=\"fa fa-long-arrow-right mx-2 oe_read_only\" aria-label=\"Arrow icon\" title=\"Arrow\" attrs=\"{'invisible': [('date_start', '=', False), ('date', '=', False)]}\"/>"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_kanban
@@ -400,6 +403,8 @@ msgid ""
 "<i class=\"fa fa-warning\" title=\"Customer disabled on projects\"/><b> "
 "Customer Ratings</b> are disabled on the following project(s) : <br/>"
 msgstr ""
+"<i class=\"fa fa-warning\" title=\"Customer disabled on projects\"/><b> "
+"Klientide hinnangud</b> on keelatud järgmistes projektides: : <br/>"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_form2
@@ -412,7 +417,7 @@ msgstr ""
 #: code:addons/project/models/project.py:0
 #, python-format
 msgid "<p><em>Number of tasks: %(tasks_count)s</em></p>"
-msgstr ""
+msgstr "<p><em>Ülesannete arv: %(tasks_count)s</em></p>"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.portal_my_task
@@ -499,7 +504,7 @@ msgstr ""
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_form2
 msgid "<span class=\"o_stat_text\">in Recurrence</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">kordumises</span>"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.edit_project
@@ -739,7 +744,7 @@ msgstr "Administraator"
 #: code:addons/project/static/src/js/project_task_kanban_examples.js:0
 #, python-format
 msgid "Agile Scrum"
-msgstr ""
+msgstr "Agile Scrum"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__alias_id
@@ -1538,7 +1543,7 @@ msgstr "Kuupäev"
 #: model:ir.model.fields.selection,name:project.selection__project_task__repeat_on_year__day
 #: model:ir.model.fields.selection,name:project.selection__project_task_recurrence__repeat_on_year__day
 msgid "Day of the Year"
-msgstr ""
+msgstr "päeval aastas"
 
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_task__repeat_unit__day
@@ -5234,12 +5239,6 @@ msgstr ""
 #. module: project
 #: code:addons/project/models/project.py:0
 #, python-format
-msgid "You cannot %s %s fields in task."
-msgstr ""
-
-#. module: project
-#: code:addons/project/models/project.py:0
-#, python-format
 msgid ""
 "You cannot archive recurring tasks. Please disable the recurrence first."
 msgstr ""
@@ -5294,6 +5293,20 @@ msgid ""
 msgstr ""
 "Te ei saa kustutada ülesandeid sisaldavaid etappe. Kõigepealt peaksite "
 "kustutama etappides sisalduvad ülesanded."
+
+#. module: project
+#. odoo-python
+#: code:addons/project/models/project.py:0
+#, python-format
+msgid "You cannot read %s fields in task."
+msgstr ""
+
+#. module: project
+#. odoo-python
+#: code:addons/project/models/project.py:0
+#, python-format
+msgid "You cannot write on %s fields in task."
+msgstr ""
 
 #. module: project
 #: code:addons/project/models/project.py:0
@@ -5389,4 +5402,4 @@ msgstr "tõene"
 #. module: project
 #: model:mail.template,subject:project.rating_project_request_email_template
 msgid "{{ object.project_id.company_id.name }}: Satisfaction Survey"
-msgstr ""
+msgstr "{{ object.project_id.company_id.name }}: Rahulolu-uuring"

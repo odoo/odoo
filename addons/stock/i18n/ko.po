@@ -13,6 +13,7 @@
 # Linkup <link-up@naver.com>, 2021
 # Heesoo Choi, 2021
 # Martin Trigaux, 2022
+# Sarah Park, 2023
 # 
 msgid ""
 msgstr ""
@@ -20,7 +21,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-11-16 13:18+0000\n"
 "PO-Revision-Date: 2021-09-14 12:26+0000\n"
-"Last-Translator: Martin Trigaux, 2022\n"
+"Last-Translator: Sarah Park, 2023\n"
 "Language-Team: Korean (https://www.transifex.com/odoo/teams/41243/ko/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -572,7 +573,7 @@ msgstr "<strong>최소 수량 : </strong>"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_inventory
 msgid "<strong>On hand Quantity</strong>"
-msgstr ""
+msgstr "<strong>On Hand Quantity</strong>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_delivery_document
@@ -1321,6 +1322,12 @@ msgid "Change to a better name"
 msgstr "더 나은 이름으로 변경하십시오"
 
 #. module: stock
+#: code:addons/stock/models/stock_quant.py:0
+#, python-format
+msgid "Changing %s is restricted, you can't do this operation."
+msgstr ""
+
+#. module: stock
 #: code:addons/stock/models/product_strategy.py:0
 #: code:addons/stock/models/stock_location.py:0
 #: code:addons/stock/models/stock_orderpoint.py:0
@@ -1881,7 +1888,7 @@ msgstr ""
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_config_settings__module_delivery_dhl
 msgid "DHL Express Connector"
-msgstr ""
+msgstr "DHL 익스프레스 배송업체"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_report_stock_quantity__date
@@ -4426,7 +4433,7 @@ msgstr "신규 이송"
 #: model:ir.model.fields,field_description:stock.field_stock_picking__activity_calendar_event_id
 #: model:ir.model.fields,field_description:stock.field_stock_production_lot__activity_calendar_event_id
 msgid "Next Activity Calendar Event"
-msgstr ""
+msgstr "다음 활동 캘린더 행사"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking__activity_date_deadline
@@ -8742,6 +8749,12 @@ msgstr ""
 "재고 이동시 현재 예약된 품목의 유형을 변경할 수 없습니다. 유형을 변경해야 하는 경우 먼저 재고 이동을 예약 해제해야합니다."
 
 #. module: stock
+#: code:addons/stock/models/product.py:0
+#, python-format
+msgid "You can not change the type of a product that was already used."
+msgstr ""
+
+#. module: stock
 #: code:addons/stock/models/stock_move_line.py:0
 #, python-format
 msgid ""
@@ -9191,7 +9204,7 @@ msgstr ""
 #. module: stock
 #: model:mail.template,report_name:stock.mail_template_data_delivery_confirmation
 msgid "{{ (object.name or '').replace('/','_') }}"
-msgstr ""
+msgstr "{{ (object.name or '').replace('/','_') }}"
 
 #. module: stock
 #: model:mail.template,subject:stock.mail_template_data_delivery_confirmation

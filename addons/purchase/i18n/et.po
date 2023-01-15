@@ -18,6 +18,7 @@
 # Rivo Zängov <eraser@eraser.ee>, 2022
 # Leaanika Randmets, 2022
 # Jana Jaakson, 2023
+# Anna, 2023
 # 
 msgid ""
 msgstr ""
@@ -25,7 +26,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-11-16 13:18+0000\n"
 "PO-Revision-Date: 2021-09-14 12:25+0000\n"
-"Last-Translator: Jana Jaakson, 2023\n"
+"Last-Translator: Anna, 2023\n"
 "Language-Team: Estonian (https://www.transifex.com/odoo/teams/41243/et/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -61,18 +62,19 @@ msgstr "Ridade arv"
 #, python-format
 msgid "%(product)s from %(original_receipt_date)s to %(new_receipt_date)s"
 msgstr ""
+"%(product)s alates %(original_receipt_date)s kuni %(new_receipt_date)s"
 
 #. module: purchase
 #: code:addons/purchase/models/purchase.py:0
 #, python-format
 msgid "%s confirmed the receipt will take place on %s."
-msgstr ""
+msgstr "%s kinnitatud, kättesaamine on %s."
 
 #. module: purchase
 #: code:addons/purchase/models/purchase.py:0
 #, python-format
 msgid "%s modified receipt dates for the following products:"
-msgstr ""
+msgstr "%s muudetud järgmiste toodete kättesaamise kuupäevasid:"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.mail_notification_confirm
@@ -198,6 +200,8 @@ msgid ""
 "<i class=\"fa fa-fw fa-check\" role=\"img\" aria-label=\"Done\" "
 "title=\"Done\"/><span class=\"d-none d-md-inline\"> Done</span>"
 msgstr ""
+"<i class=\"fa fa-fw fa-check\" role=\"img\" aria-label=\"Done\" "
+"title=\"Done\"/><span class=\"d-none d-md-inline\"> Tehtud</span>"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_portal_content
@@ -215,6 +219,8 @@ msgid ""
 "<i class=\"fa fa-fw fa-credit-card\" role=\"img\" aria-label=\"Purchases\" "
 "title=\"Purchases\"/>"
 msgstr ""
+"<i class=\"fa fa-fw fa-credit-card\" role=\"img\" aria-label=\"Purchases\" "
+"title=\"Purchases\"/>"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.portal_my_purchase_orders
@@ -223,6 +229,9 @@ msgid ""
 "Bill\" title=\"Waiting for Bill\"/><span class=\"d-none d-md-inline\"> "
 "Waiting for Bill</span>"
 msgstr ""
+"<i class=\"fa fa-fw fa-file-text\" role=\"img\" aria-label=\"Waiting for "
+"Bill\" title=\"Waiting for Bill\"/><span class=\"d-none d-md-inline\"> Arve "
+"ootel</span>"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.portal_my_purchase_orders
@@ -230,6 +239,8 @@ msgid ""
 "<i class=\"fa fa-fw fa-remove\" role=\"img\" aria-label=\"Cancelled\" "
 "title=\"Cancelled\"/><span class=\"d-none d-md-inline\"> Cancelled</span>"
 msgstr ""
+"<i class=\"fa fa-fw fa-remove\" role=\"img\" aria-label=\"Cancelled\" "
+"title=\"Cancelled\"/><span class=\"d-none d-md-inline\"> Tühistatud</span>"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.portal_my_purchase_order
@@ -242,6 +253,8 @@ msgid ""
 "<span class=\"d-none d-md-inline\">Confirmation Date</span>\n"
 "                          <span class=\"d-block d-md-none\">Confirmation</span>"
 msgstr ""
+"<span class=\"d-none d-md-inline\">Kinnitamise kuupäev</span>\n"
+"                          <span class=\"d-block d-md-none\">Kinnitus</span>"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.portal_my_purchase_orders
@@ -249,6 +262,8 @@ msgid ""
 "<span class=\"d-none d-md-inline\">Purchase Order #</span>\n"
 "                          <span class=\"d-block d-md-none\">Ref.</span>"
 msgstr ""
+"<span class=\"d-none d-md-inline\">Ostutellimus #</span>\n"
+"                          <span class=\"d-block d-md-none\">Viide</span>"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.portal_my_purchase_rfqs
@@ -256,6 +271,8 @@ msgid ""
 "<span class=\"d-none d-md-inline\">Request for Quotation #</span>\n"
 "                        <span class=\"d-block d-md-none\">Ref.</span>"
 msgstr ""
+"<span class=\"d-none d-md-inline\">Hinnapäring #</span>\n"
+"                        <span class=\"d-block d-md-none\">Viide.</span>"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.res_config_settings_view_form_purchase
@@ -309,6 +326,8 @@ msgid ""
 "<span groups=\"account.group_show_line_subtotals_tax_excluded\">Amount</span>\n"
 "                              <span groups=\"account.group_show_line_subtotals_tax_included\">Total Price</span>"
 msgstr ""
+"<span groups=\"account.group_show_line_subtotals_tax_excluded\">Summa</span>\n"
+"                              <span groups=\"account.group_show_line_subtotals_tax_included\">Hind kokku</span>"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.view_partner_property_form
@@ -488,7 +507,7 @@ msgstr ""
 #. module: purchase
 #: model:ir.actions.act_window,name:purchase.action_accrued_expense_entry
 msgid "Accrued Expense Entry"
-msgstr ""
+msgstr "Kogunenud kulu kanne"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__message_needaction
@@ -1788,7 +1807,7 @@ msgstr "Muu info"
 #: model:mail.template,report_name:purchase.email_template_edi_purchase_done
 #: model:mail.template,report_name:purchase.email_template_edi_purchase_reminder
 msgid "PO_{{ (object.name or '').replace('/','_') }}"
-msgstr ""
+msgstr "Ostutellimus_{{ (object.name or '').replace('/','_') }}"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line__product_packaging_id
@@ -2122,7 +2141,7 @@ msgstr "Ostutellimused, mis sisaldavad arveldamata ridu."
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.res_config_settings_view_form_purchase
 msgid "Purchase products by multiple of unit # per package"
-msgstr ""
+msgstr "Osta mitu toodet ühes pakendis"
 
 #. module: purchase
 #: model:ir.actions.server,name:purchase.purchase_send_reminder_mail_ir_actions_server
@@ -2239,7 +2258,7 @@ msgstr "Hinnapäring saadetud"
 #. module: purchase
 #: model:mail.template,report_name:purchase.email_template_edi_purchase
 msgid "RFQ_{{ (object.name or '').replace('/','_') }}"
-msgstr ""
+msgstr "Hinnapäring_{{ (object.name or '').replace('/','_') }}"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.view_purchase_order_filter
