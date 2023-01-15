@@ -10,8 +10,8 @@
 # Marc Tormo i Bochaca <mtbochaca@gmail.com>, 2022
 # Susanna Pujol, 2022
 # Lluís Dalmau <lluis.dalmau@guifi.net>, 2022
-# Jesus Ramoneda <chusamo@gmail.com>, 2022
 # Arnau Ros, 2022
+# Jesus Ramoneda <chusamo@gmail.com>, 2022
 # Josep Sànchez <papapep@gmx.com>, 2022
 # Sandra Franch <sandra.franch@upc.edu>, 2022
 # oscaryuu, 2022
@@ -27,10 +27,11 @@
 # Jonatan Gk, 2022
 # Harcogourmet, 2022
 # Martin Trigaux, 2022
-# Josep Anton Belchi, 2022
+# jabelchi, 2022
 # ericrolo, 2022
 # Guspy12, 2022
 # Farouk Jabiri, 2022
+# Ivan Espinola, 2023
 # Óscar Fonseca <tecnico@extreme-micro.com>, 2023
 # 
 msgid ""
@@ -684,6 +685,8 @@ msgid ""
 "<span attrs=\"{'invisible': [('reconciled_invoices_type', '!=', 'invoice')]}\"> Invoice</span>\n"
 "                                        <span attrs=\"{'invisible': [('reconciled_invoices_type', '=', 'invoice')]}\"> Credit Note</span>"
 msgstr ""
+"<span attrs=\"{'invisible': [('reconciledinvoicestype', '!=', 'invoice')]}\"> Factura</span>\n"
+"                                        <span attrs=\"{'invisible': [('reconciledinvoicestype', '=', 'invoice')]}\"> Nota de crèdit</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_reconcile_model_form
@@ -691,6 +694,9 @@ msgid ""
 "<span attrs=\"{'invisible': [('rule_type', '!=', 'invoice_matching')]}\" "
 "class=\"o_form_label o_td_label\">Match Invoice/bill with</span>"
 msgstr ""
+"<span attrs=\"{'invisible': [('ruletype', '!=', 'invoice_matching')]}\" "
+"class=\"o_form_label o_td_label\">Coincideix amb la factura/mil·li "
+"amb</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.portal_my_invoices
@@ -886,7 +892,7 @@ msgstr ""
 msgid "<span class=\"o_form_label\">Post Exchange difference entries in:</span>"
 msgstr ""
 "<span class=\"o_form_label\">Publica les entrades  de la diferència de canvi"
-" a:</span>a:</span>"
+" a:</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -1053,7 +1059,7 @@ msgstr "<span> (DR)</span>"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_form
 msgid "<span> Bill</span>"
-msgstr ""
+msgstr "<span> Bill</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_position_form
@@ -1068,7 +1074,7 @@ msgstr "<span> A </span>"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_form
 msgid "<span> Transaction</span>"
-msgstr ""
+msgstr "<span> Transacció</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.bill_preview
@@ -3543,12 +3549,12 @@ msgstr "CUST"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_send__can_edit_body
 msgid "Can Edit Body"
-msgstr "Pot editar el cos del email"
+msgstr "Pot modificar el cos del email"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment_register__can_edit_wizard
 msgid "Can Edit Wizard"
-msgstr "Pot editar l'assistent"
+msgstr "Pot modificar l'assistent"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment_register__can_group_payments
@@ -5074,7 +5080,7 @@ msgstr "Pagaments al Client"
 #: model:ir.model.fields,help:account.field_account_move__access_url
 #: model:ir.model.fields,help:account.field_account_payment__access_url
 msgid "Customer Portal URL"
-msgstr "URL del portal dels clients"
+msgstr "L'URL del portal dels clients"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_partner__customer_rank
@@ -5505,12 +5511,12 @@ msgstr "Adreça d'enviament de la factura actual."
 #. module: account
 #: model:account.account.tag,name:account.demo_ceo_wages_account
 msgid "Demo CEO Wages Account"
-msgstr "Compte del CEO de Demo"
+msgstr "Compte del CEO de prova"
 
 #. module: account
 #: model:account.account.tag,name:account.demo_capital_account
 msgid "Demo Capital Account"
-msgstr "Compte de Demo Capital"
+msgstr "Compte de prova Capital"
 
 #. module: account
 #: model:account.account.tag,name:account.demo_sale_of_land_account
@@ -5520,7 +5526,7 @@ msgstr "Demo Sale of Land Account"
 #. module: account
 #: model:account.account.tag,name:account.demo_stock_account
 msgid "Demo Stock Account"
-msgstr "Compte d'estoc de demostració"
+msgstr "Compte d'estoc de prova"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account__deprecated
@@ -5831,7 +5837,7 @@ msgstr "Distribució de Factures de Devolució"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_tax_form
 msgid "Distribution for Refunds"
-msgstr ""
+msgstr "Distribució de reemborsaments"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_tax__refund_repartition_line_ids
@@ -5915,7 +5921,7 @@ msgid ""
 "Downpayments posted on this account will be considered by the Tax Closing "
 "Entry."
 msgstr ""
-"Les partides registrades en aquest compte seran considerades per a "
+"Les bestretes en aquest compte comptable seran considerades per a "
 "l'assentament de tancament d'impostos."
 
 #. module: account
@@ -6119,7 +6125,7 @@ msgstr "Descompte de pagament anticipat concedit per aquesta línia"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_line_tree
 msgid "Edit"
-msgstr "Edita"
+msgstr "Modificar"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_bank_statement_line__tax_totals
@@ -6771,7 +6777,7 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,help:account.field_account_payment_term_line__value_amount
 msgid "For percent enter a ratio between 0-100."
-msgstr "Per el percentatge, introduïu un rati entre 0 i 100."
+msgstr "Per el percentatge, introduïu un rati entre 0-100."
 
 #. module: account
 #. odoo-python
@@ -7145,7 +7151,7 @@ msgstr "PDF de resultats d'integritat hash"
 #: model:ir.model.fields,field_description:account.field_account_move__hide_post_button
 #: model:ir.model.fields,field_description:account.field_account_payment__hide_post_button
 msgid "Hide Post Button"
-msgstr "Amaga el botó d'entrada"
+msgstr "Amaga el botó de publicació"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_tax__hide_tax_exigibility
@@ -9778,8 +9784,8 @@ msgid ""
 "No users can edit journal entries related to a tax prior and inclusive of "
 "this date."
 msgstr ""
-"Cap usuari pot editar entrades de diari relacionades amb un impost previ i "
-"incloent aquesta data."
+"Cap usuari pot modificar entrades de diari relacionades amb un impost previ "
+"i incloent aquesta data."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_res_company__fiscalyear_lock_date
@@ -9787,7 +9793,7 @@ msgid ""
 "No users, including Advisers, can edit accounts prior to and inclusive of "
 "this date. Use it for fiscal year locking for example."
 msgstr ""
-"Cap usuari, inclòs Assessors, poden editar comptes abans de i en aquesta "
+"Cap usuari, inclòs Assessors, poden modificar comptes abans de i en aquesta "
 "data. Utilitza-la, per exemple, per bloquejar un any fiscal."
 
 #. module: account
@@ -10111,8 +10117,8 @@ msgid ""
 "Once everything is set, you are good to continue. You will be able to edit "
 "this later in the <b>Customers</b> menu."
 msgstr ""
-"Un cop tot estigui preparat, estàs bé per continuar. Podreu editar-ho més "
-"endavant al menú <b>Clients</b>."
+"Un cop tot estigui preparat, estàs bé per continuar. Podreu modificar-ho més"
+" endavant al menú <b>Clients</b>."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -10122,7 +10128,7 @@ msgid ""
 msgstr ""
 "Una vegada instal·lat, configureu els «Fonts bancaris» a «Importació de "
 "fitxers» als paràmetres del compte bancari. Això afegeix un botó per a "
-"importar des del quadre comptable."
+"importar des del tauler comptable."
 
 #. module: account
 #. odoo-javascript
@@ -10203,8 +10209,8 @@ msgid ""
 "of this date. Use it for period locking inside an open fiscal year, for "
 "example."
 msgstr ""
-"Només els usuaris amb el rol 'Assessor' poden editar comptes abans de i en "
-"aquesta data. Utilitzi'l per bloquejar un període dins d'un any fiscal "
+"Només els usuaris amb el rol 'Assessor' poden modificar comptes abans de i "
+"en aquesta data. Utilitzi'l per bloquejar un període dins d'un any fiscal "
 "obert, per exemple."
 
 #. module: account
@@ -11098,6 +11104,10 @@ msgid ""
 "Indeed, they do not exactly match the taxes of the original version of the "
 "localization module.<br/>You might want to archive or adapt them.<br/><ul>"
 msgstr ""
+"Si us plau, comproveu aquests impostos. Podrien estar desfasats. No els hem "
+"actualitzat. De fet, no coincideixen exactament amb els impostos de la "
+"versió original del mòdul de localització.<br/>És possible que vulgueu "
+"arxivar-los o adaptar-los.<br/><ul>"
 
 #. module: account
 #. odoo-python
@@ -11169,12 +11179,12 @@ msgstr "Compte possible PoS"
 #: model:ir.model.fields,field_description:account.field_account_move__access_url
 #: model:ir.model.fields,field_description:account.field_account_payment__access_url
 msgid "Portal Access URL"
-msgstr "URL del portal d'accés"
+msgstr "L'URL del portal d'accés"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
 msgid "Post"
-msgstr "Publicar"
+msgstr "Publicació"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
@@ -11478,7 +11488,7 @@ msgstr "Importar QIF"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment__qr_code
 msgid "QR Code URL"
-msgstr "URL del codi QR"
+msgstr "L'URL del codi QR"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -11512,7 +11522,7 @@ msgstr "Mode d'edició ràpid"
 #: model:ir.model.fields,field_description:account.field_account_move__quick_encoding_vals
 #: model:ir.model.fields,field_description:account.field_account_payment__quick_encoding_vals
 msgid "Quick Encoding Vals"
-msgstr ""
+msgstr "Vals de codificació ràpida"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company__quick_edit_mode
@@ -14158,7 +14168,7 @@ msgstr ""
 #: model:ir.model.fields,help:account.field_account_move__invoice_origin
 #: model:ir.model.fields,help:account.field_account_payment__invoice_origin
 msgid "The document(s) that generated the invoice."
-msgstr "El(s) document(s) que ha(n) generat la factura."
+msgstr "Els document(s) que han generat la factura."
 
 #. module: account
 #. odoo-python
@@ -15284,8 +15294,8 @@ msgstr ""
 #: model_terms:digest.tip,tip_description:account.digest_tip_account_0
 msgid "Tip: No need to print, put in an envelop and post your invoices"
 msgstr ""
-"Consell: No cal imprimir, posar en una envelop i publicar els vostres "
-"invoices"
+"Consell: No cal imprimir, posar en una envelop i publicar les vostres "
+"factures"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_automatic_entry_wizard__destination_account_id
@@ -16703,7 +16713,7 @@ msgid ""
 "You cannot edit the following fields due to restrict mode being activated on"
 " the journal: %s."
 msgstr ""
-"No podeu editar els camps següents degut a restringir el mode que s' "
+"No podeu modificar els camps següents degut a restringir el mode que s' "
 "activarà en el diari: %s."
 
 #. module: account
@@ -16714,7 +16724,7 @@ msgid ""
 "You cannot edit the journal of an account move if it already has a sequence "
 "number assigned."
 msgstr ""
-"No podeu editar el diari d'un moviment comptable si ja té un número de "
+"No podeu modificar el diari d'un moviment comptable si ja té un número de "
 "seqüència assignat."
 
 #. module: account
@@ -16724,7 +16734,7 @@ msgstr ""
 msgid ""
 "You cannot edit the journal of an account move if it has been posted once."
 msgstr ""
-"No podeu editar el diari d' un moviment de comptes si s' ha publicat una "
+"No podeu modificar el diari d' un moviment de comptes si s' ha publicat una "
 "vegada."
 
 #. module: account
@@ -17030,7 +17040,7 @@ msgstr ""
 #: code:addons/account/models/chart_template.py:0
 #, python-format
 msgid "Your taxes have been updated !"
-msgstr ""
+msgstr "S'han actualitzat els vostres impostos!"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_position_form
