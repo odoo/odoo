@@ -13,6 +13,7 @@
 # Link Up링크업 <linkup.way@gmail.com>, 2019
 # Linkup <link-up@naver.com>, 2020
 # JH CHOI <hwangtog@gmail.com>, 2021
+# Sarah Park, 2023
 # 
 msgid ""
 msgstr ""
@@ -20,7 +21,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-04-27 09:21+0000\n"
 "PO-Revision-Date: 2019-08-26 09:14+0000\n"
-"Last-Translator: JH CHOI <hwangtog@gmail.com>, 2021\n"
+"Last-Translator: Sarah Park, 2023\n"
 "Language-Team: Korean (https://www.transifex.com/odoo/teams/41243/ko/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -1604,7 +1605,7 @@ msgstr "고객 위치"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_config_settings__module_delivery_dhl
 msgid "DHL Express Connector"
-msgstr ""
+msgstr "DHL 익스프레스 배송업체"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_report_stock_quantity__date
@@ -6076,13 +6077,9 @@ msgstr "품목"
 #, python-format
 msgid ""
 "The quantity done for the product \"%s\" doesn't respect the rounding "
-"precision                                   defined on the unit of measure "
-"\"%s\". Please change the quantity done or the"
-"                                   rounding precision of your unit of "
-"measure."
+"precision defined on the unit of measure \"%s\". Please change the quantity "
+"done or the rounding precision of your unit of measure."
 msgstr ""
-"제품 \"%s\"에 대해 수행된 수량 단위 \"%s\"에 정의된 반올림 정밀도를 고려하지 않습니다. 수행된 수량이나 단위의 반올림 정도를"
-" 변경해 주십시오."
 
 #. module: stock
 #: code:addons/stock/models/stock_move.py:0
@@ -7140,6 +7137,12 @@ msgid ""
 "stock move."
 msgstr ""
 "재고 이동시 현재 예약된 품목의 유형을 변경할 수 없습니다. 유형을 변경해야 하는 경우 먼저 재고 이동을 예약 해제해야합니다."
+
+#. module: stock
+#: code:addons/stock/models/product.py:0
+#, python-format
+msgid "You can not change the type of a product that was already used."
+msgstr ""
 
 #. module: stock
 #: code:addons/stock/models/stock_move_line.py:0

@@ -10,8 +10,8 @@
 # Martin Trigaux, 2019
 # 敬雲 林 <chingyun@yuanchih-consult.com>, 2020
 # zhengwei wu <wzw15199@gmail.com>, 2020
-# Benson White <Benson.Dr@Gmail.com>, 2021
 # Jack N <j.a.ckqueli.neb.a.net.mp@gmail.com>, 2021
+# Benson <Benson.Dr@Gmail.com>, 2023
 # 
 msgid ""
 msgstr ""
@@ -19,7 +19,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-12-05 12:32+0000\n"
 "PO-Revision-Date: 2019-08-26 09:12+0000\n"
-"Last-Translator: Jack N <j.a.ckqueli.neb.a.net.mp@gmail.com>, 2021\n"
+"Last-Translator: Benson <Benson.Dr@Gmail.com>, 2023\n"
 "Language-Team: Chinese (Taiwan) (https://www.transifex.com/odoo/teams/41243/zh_TW/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -1871,6 +1871,14 @@ msgstr "目前使用者正在工作嗎？"
 #, python-format
 msgid "It has already been unblocked."
 msgstr "已經解除阻塞"
+
+#. module: mrp
+#: code:addons/mrp/models/mrp_workorder.py:0
+#, python-format
+msgid ""
+"It is not possible to unplan one single Work Order. You should unplan the "
+"Manufacturing Order instead in order to unplan all the linked operations."
+msgstr "不可能取消計劃一個單一的工單. 您應該取消計劃製造訂單,而不是取消計劃所有鏈接的製程."
 
 #. module: mrp
 #: model:ir.model.fields.selection,name:mrp.selection__mrp_bom__type__phantom
@@ -3881,6 +3889,15 @@ msgid ""
 msgstr "工作訂單的計畫結束日期不能早于計畫開始日期，請更正此日期以保存工作訂單。"
 
 #. module: mrp
+#: code:addons/mrp/models/mrp_bom.py:0
+#, python-format
+msgid ""
+"The product has already been used at least once, editing its structure may "
+"lead to undesirable behaviours. You should rather archive the product and "
+"create a new one with a new bill of materials."
+msgstr "該產品已經至少使用過一次, 編輯其結構可能會導致不良效果. 您應該歸檔產品並使用新的材料清單建立一個新產品."
+
+#. module: mrp
 #: code:addons/mrp/wizard/mrp_product_produce.py:0
 #, python-format
 msgid "The production order for '%s' has no quantity specified."
@@ -3910,6 +3927,14 @@ msgid ""
 "create work orders afterwards which alters the execution of the "
 "manufacturing order."
 msgstr "途程包含所有使用的工作中心以及使用的時間。 這將在之後創建工作訂單，這會改變製造訂單的執行。"
+
+#. module: mrp
+#: code:addons/mrp/models/mrp_unbuild.py:0
+#, python-format
+msgid ""
+"The selected serial number does not correspond to the one used in the "
+"manufacturing order, please select another one."
+msgstr ""
 
 #. module: mrp
 #: code:addons/mrp/models/mrp_bom.py:0
