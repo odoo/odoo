@@ -53,6 +53,7 @@ DomainSelectorDialog.props = {
     defaultLeafValue: { type: Array, optional: true },
     initialValue: { type: String, optional: true },
     onSelected: { type: Function, optional: true },
+    text: { type: String, optional: true },
 };
 DomainSelectorDialog.defaultProps = {
     initialValue: "",
