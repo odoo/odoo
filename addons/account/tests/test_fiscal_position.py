@@ -22,7 +22,9 @@ class TestFiscalPosition(common.TransactionCase):
         cls.be = be = cls.env.ref('base.be')
         cls.fr = fr = cls.env.ref('base.fr')
         cls.mx = mx = cls.env.ref('base.mx')
-        cls.eu = eu = cls.env.ref('base.europe')
+        cls.eu = cls.env.ref('base.europe')
+        cls.nl = cls.env.ref('base.nl')
+        cls.us = cls.env.ref('base.us')
         cls.state_fr = cls.env['res.country.state'].create(dict(
                                            name="State",
                                            code="ST",
@@ -154,3 +156,114 @@ class TestFiscalPosition(common.TransactionCase):
         mapped_taxes = self.fp2m.map_tax(self.src_tax)
 
         self.assertEqual(mapped_taxes, self.dst1_tax | self.dst2_tax)
+
+    def test_30_fp_delivery_address(self):
+        # Make sure the billing company is from Belgium (within the EU)
+        self.env.company.vat = 'BE0477472701'
+        self.env.company.country_id = self.be
+
+        # Reset any existing FP
+        self.env['account.fiscal.position'].search([]).auto_apply = False
+
+        # Create the fiscal positions
+        fp_be_nat = self.env['account.fiscal.position'].create({
+            'name': 'Régime National',
+            'auto_apply': True,
+            'country_id': self.be.id,
+            'vat_required': True,
+            'sequence': 10,
+        })
+        fp_eu_priv = self.env['account.fiscal.position'].create({
+            'name': 'EU privé',
+            'auto_apply': True,
+            'country_group_id': self.eu.id,
+            'vat_required': False,
+            'sequence': 20,
+        })
+        fp_eu_intra = self.env['account.fiscal.position'].create({
+            'name': 'Régime Intra-Communautaire',
+            'auto_apply': True,
+            'country_group_id': self.eu.id,
+            'vat_required': True,
+            'sequence': 30,
+        })
+        fp_eu_extra = self.env['account.fiscal.position'].create({
+            'name': 'Régime Extra-Communautaire',
+            'auto_apply': True,
+            'vat_required': False,
+            'sequence': 40,
+        })
+
+        # Create the partners
+        partner_be_vat = self.env['res.partner'].create({
+            'name': 'BE VAT',
+            'vat': 'BE0477472701',
+            'country_id': self.be.id,
+        })
+        partner_nl_vat = self.env['res.partner'].create({
+            'name': 'NL VAT',
+            'vat': 'NL123456782B90',
+            'country_id': self.nl.id,
+        })
+        partner_nl_no_vat = self.env['res.partner'].create({
+            'name': 'NL NO VAT',
+            'country_id': self.nl.id,
+        })
+        partner_us_no_vat = self.env['res.partner'].create({
+            'name': 'US NO VAT',
+            'country_id': self.us.id,
+        })
+
+        # Case : 1
+        # Billing (VAT/country) : BE/BE
+        # Delivery (VAT/country) : NL/NL
+        # Expected FP : Régime National
+        self.assertEqual(
+            self.env['account.fiscal.position'].get_fiscal_position(partner_be_vat.id, partner_nl_vat.id),
+            fp_be_nat
+        )
+
+        # Case : 2
+        # Billing (VAT/country) : NL/NL
+        # Delivery (VAT/country) : BE/BE
+        # Expected FP : Régime National
+        self.assertEqual(
+            self.env['account.fiscal.position'].get_fiscal_position(partner_nl_vat.id, partner_be_vat.id),
+            fp_be_nat
+        )
+
+        # Case : 3
+        # Billing (VAT/country) : BE/BE
+        # Delivery (VAT/country) : None/NL
+        # Expected FP : Régime National
+        self.assertEqual(
+            self.env['account.fiscal.position'].get_fiscal_position(partner_be_vat.id, partner_nl_no_vat.id),
+            fp_be_nat
+        )
+
+        # Case : 4
+        # Billing (VAT/country) : NL/NL
+        # Delivery (VAT/country) : NL/NL
+        # Expected FP : Régime Intra-Communautaire
+        self.assertEqual(
+            self.env['account.fiscal.position'].get_fiscal_position(partner_nl_vat.id, partner_nl_vat.id),
+            fp_eu_intra
+        )
+
+        # Case : 5
+        # Billing (VAT/country) : None/NL
+        # Delivery (VAT/country) : None/NL
+        # Expected FP : EU privé
+        self.assertEqual(
+            self.env['account.fiscal.position'].get_fiscal_position(partner_nl_no_vat.id, partner_nl_no_vat.id),
+            fp_eu_priv
+        )
+
+        # Case : 6
+        # Billing (VAT/country) : None/US
+        # Delivery (VAT/country) : None/US
+        # Expected FP : Régime Extra-Communautaire
+        self.assertEqual(
+            self.env['account.fiscal.position'].get_fiscal_position(partner_us_no_vat.id, partner_us_no_vat.id),
+            fp_eu_extra
+        )

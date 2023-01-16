@@ -55,7 +55,7 @@ SUPPORTED_CURRENCIES = {
     'BGN': '975',
     'EUR': '978',
     'UAH': '980',
-    'PLN': '996',
+    'PLN': '985',
     'BRL': '986',
 }
 

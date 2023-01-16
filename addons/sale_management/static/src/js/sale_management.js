@@ -16,7 +16,6 @@ publicWidget.registry.SaleUpdateLineButton = publicWidget.Widget.extend({
     async start() {
         await this._super(...arguments);
         this.orderDetail = this.$el.find('table#sales_order_table').data();
-        this.elems = this._getUpdatableElements();
     },
     /**
      * Process the change in line quantity
@@ -54,13 +53,7 @@ publicWidget.registry.SaleUpdateLineButton = publicWidget.Widget.extend({
             'unlink': $target.data('unlink'),
             'access_token': self.orderDetail.token
         }).then((data) => {
-            var $saleTemplate = $(data['sale_template']);
-            if ($saleTemplate.length && data['unlink']) {
-                self.$('#portal_sale_content').html($saleTemplate);
-                self.elems = self._getUpdatableElements();
-            }
-            self._updateOrderLineValues($target.closest('tr'), data);
-            self._updateOrderValues(data);
+            window.location.reload()
         });
     },
     /**
@@ -80,11 +73,7 @@ publicWidget.registry.SaleUpdateLineButton = publicWidget.Widget.extend({
             route: "/my/orders/" + self.orderDetail.orderId + "/add_option/" + $target.data('optionId'),
             params: {access_token: self.orderDetail.token}
         }).then((data) => {
-            if (data) {
-                self.$('#portal_sale_content').html($(data['sale_template']));
-                self.elems = self._getUpdatableElements();
-                self._updateOrderValues(data);
-            }
+            window.location.reload();
         });
     },
     /**
@@ -102,81 +91,5 @@ publicWidget.registry.SaleUpdateLineButton = publicWidget.Widget.extend({
             params: params,
         });
     },
-    /**
-     * Processes data from the server to update the orderline UI
-     *
-     * @private
-     * @param {Element} $orderLine: orderline element to update
-     * @param {Object} data: contains order and line updated values
-     */
-    _updateOrderLineValues($orderLine, data) {
-        let linePriceTotal = data.order_line_price_total,
-            linePriceSubTotal = data.order_line_price_subtotal,
-            $linePriceTotal = $orderLine.find('.oe_order_line_price_total .oe_currency_value'),
-            $linePriceSubTotal = $orderLine.find('.oe_order_line_price_subtotal .oe_currency_value');
-
-        if (!$linePriceTotal.length && !$linePriceSubTotal.length) {
-            $linePriceTotal = $linePriceSubTotal = $orderLine.find('.oe_currency_value').last();
-        }
-
-        $orderLine.find('.js_quantity').val(data.order_line_product_uom_qty);
-        if ($linePriceTotal.length && linePriceTotal !== undefined) {
-            $linePriceTotal.text(linePriceTotal);
-        }
-        if ($linePriceSubTotal.length && linePriceSubTotal !== undefined) {
-            $linePriceSubTotal.text(linePriceSubTotal);
-        }
-    },
-    /**
-     * Processes data from the server to update the UI
-     *
-     * @private
-     * @param {Object} data: contains order and line updated values
-     */
-    _updateOrderValues(data) {
-        let orderAmountTotal = data.order_amount_total,
-            orderAmountUntaxed = data.order_amount_untaxed,
-            orderAmountUndiscounted = data.order_amount_undiscounted,
-            $orderTotalsTable = $(data.order_totals_table);
-        if (orderAmountUntaxed !== undefined) {
-            this.elems.$orderAmountUntaxed.text(orderAmountUntaxed);
-        }
-
-        if (orderAmountTotal !== undefined) {
-            this.elems.$orderAmountTotal.text(orderAmountTotal);
-        }
-
-        if (orderAmountUndiscounted !== undefined) {
-            this.elems.$orderAmountUndiscounted.text(orderAmountUndiscounted);
-        }
-        if ($orderTotalsTable.length) {
-            this.elems.$orderTotalsTable.find('table').replaceWith($orderTotalsTable);
-        }
-    },
-    /**
-     * Locate in the DOM the elements to update
-     * Mostly for compatibility, when the module has not been upgraded
-     * In that case, we need to fall back to some other elements
-     *
-     * @private
-     * @return {Object}: Jquery elements to update
-     */
-    _getUpdatableElements() {
-        let $orderAmountUntaxed = $('[data-id="total_untaxed"]').find('span, b'),
-            $orderAmountTotal = $('[data-id="total_amount"]').find('span, b'),
-            $orderAmountUndiscounted = $('[data-id="amount_undiscounted"]').find('span, b');
-
-        if (!$orderAmountUntaxed.length) {
-            $orderAmountUntaxed = $orderAmountTotal.eq(1);
-            $orderAmountTotal = $orderAmountTotal.eq(0).add($orderAmountTotal.eq(2));
-        }
-
-        return {
-            $orderAmountUntaxed: $orderAmountUntaxed,
-            $orderAmountTotal: $orderAmountTotal,
-            $orderTotalsTable: $('#total'),
-            $orderAmountUndiscounted: $orderAmountUndiscounted,
-        };
-    }
 });
 });

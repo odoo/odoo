@@ -1,10 +1,10 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-
+import base64
 import functools
-import logging
-
 import json
+import logging
+import os
 
 import werkzeug.urls
 import werkzeug.utils
@@ -65,6 +65,7 @@ class OAuthLogin(Home):
                 redirect_uri=return_url,
                 scope=provider['scope'],
                 state=json.dumps(state),
+                # nonce=base64.urlsafe_b64encode(os.urandom(16)),
             )
             provider['auth_link'] = "%s?%s" % (provider['auth_endpoint'], werkzeug.urls.url_encode(params))
         return providers

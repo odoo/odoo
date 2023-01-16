@@ -22,28 +22,24 @@ class ResConfigSettings(models.TransientModel):
     def set_values(self):
         # Ensure that settings on existing projects match the above fields
         projects = self.env["project.project"].search([])
-        global_features = {  # key: config_flag, value: project_flag
-            "group_project_rating": "rating_active",
-            "group_project_recurring_tasks": "allow_recurring_tasks",
-        }
-        basic_project_features = {
-            "group_subtask_project": "allow_subtasks",
-            "group_project_task_dependencies": "allow_task_dependencies",
-        }
-        config_feature_vals = {config_flag: self[config_flag]
-                               for config_flag in global_features.keys() | basic_project_features.keys()}
+        basic_projects = projects.filtered_domain(self._get_basic_project_domain())
 
-        def update_projects(projects, features):
-            for (config_flag, project_flag) in features.items():
-                config_flag_global = "project." + config_flag
-                config_feature_enabled = config_feature_vals[config_flag]
-                if self.user_has_groups(config_flag_global) != config_feature_enabled:
+        features = {
+            # key: (config_flag, is_global), value: project_flag
+            ("group_project_rating", True): "rating_active",
+            ("group_project_recurring_tasks", True): "allow_recurring_tasks",
+            ("group_subtask_project", False): "allow_subtasks",
+            ("group_project_task_dependencies", False): "allow_task_dependencies",
+        }
+
+        for (config_flag, is_global), project_flag in features.items():
+            config_flag_global = f"project.{config_flag}"
+            config_feature_enabled = self[config_flag]
+            if self.user_has_groups(config_flag_global) != config_feature_enabled:
+                if config_feature_enabled and not is_global:
+                    basic_projects[project_flag] = config_feature_enabled
+                else:
                     projects[project_flag] = config_feature_enabled
-
-        # update for all projects
-        update_projects(projects, global_features)
-        # update for basic projects
-        update_projects(projects.filtered_domain(self._get_basic_project_domain()), basic_project_features)
 
         # Hide the task dependency changes subtype when the dependency setting is disabled
         task_dep_change_subtype_id = self.env.ref('project.mt_task_dependency_change')

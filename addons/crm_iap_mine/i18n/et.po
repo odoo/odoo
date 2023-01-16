@@ -1,0 +1,842 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* crm_iap_mine
+# 
+# Translators:
+# Andre Roomet <andreroomet@gmail.com>, 2022
+# Egon Raamat <egon@avalah.ee>, 2022
+# Eneli Õigus <enelioigus@gmail.com>, 2022
+# Maidu Targama <m.targama@gmail.com>, 2022
+# Piia Paurson <piia@avalah.ee>, 2022
+# Arma Gedonsky <armagedonsky@hot.ee>, 2022
+# Triine Aavik <triine@avalah.ee>, 2022
+# Rivo Zängov <eraser@eraser.ee>, 2022
+# Martin Trigaux, 2022
+# Martin Aavastik <martin@avalah.ee>, 2022
+# Algo Kärp <algokarp@gmail.com>, 2022
+# Leaanika Randmets, 2022
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server saas~14.5\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2021-09-14 10:28+0000\n"
+"PO-Revision-Date: 2021-09-14 12:21+0000\n"
+"Last-Translator: Leaanika Randmets, 2022\n"
+"Language-Team: Estonian (https://www.transifex.com/odoo/teams/41243/et/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: et\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#. module: crm_iap_mine
+#: code:addons/crm_iap_mine/models/crm_iap_lead_mining_request.py:0
+#, python-format
+msgid "%d credits will be consumed to find %d companies."
+msgstr "%dkrediiti tarbitakse %d ettevõtte leidmiseks"
+
+#. module: crm_iap_mine
+#: model_terms:ir.ui.view,arch_db:crm_iap_mine.enrich_company
+msgid "<b>Contacts</b>"
+msgstr "<b>Kontaktid</b>"
+
+#. module: crm_iap_mine
+#: model:mail.template,body_html:crm_iap_mine.lead_generation_no_credits
+msgid ""
+"<div style=\"margin: 0px; padding: 0px;\">\n"
+"    <p>Dear,</p>\n"
+"    <p>There are no more credits on your IAP Lead Generation account.<br/>\n"
+"    You can charge your IAP Lead Generation account in the settings of the CRM app.<br/></p>\n"
+"    <p>Best regards,</p>\n"
+"    <p>Odoo S.A.</p>\n"
+"</div>"
+msgstr ""
+"<div style=\"margin: 0px; padding: 0px;\">\n"
+"    <p>Lugupeetud,</p>\n"
+"    <p>Teie IAP müügivihjete täiendamise kontol ei ole piisavalt punkte.<br/>\n"
+"    Punkte on võimalik lisada CRMi seadete alt.<br/></p>\n"
+"    <p>Parimate soovidega,</p>\n"
+"    <p>Odoo S.A.</p>\n"
+"</div>"
+
+#. module: crm_iap_mine
+#: model_terms:ir.ui.view,arch_db:crm_iap_mine.crm_iap_lead_mining_request_view_form
+msgid ""
+"<span attrs=\"{'invisible': [('error_type', '!=', 'no_result')]}\">Your "
+"request did not return any result (no credits were used). Try removing some "
+"filters.</span>"
+msgstr ""
+"<span attrs=\"{'invisible': [('error_type', '!=', 'no_result')]}\">Teie "
+"taotlus ei andnud ühtegi tulemust. Proovige mõned filtride eemaldada.</span>"
+
+#. module: crm_iap_mine
+#: model_terms:ir.ui.view,arch_db:crm_iap_mine.crm_iap_lead_mining_request_view_form
+msgid "<span class=\"col-md-6\">Extra contacts per Company</span>"
+msgstr "<span class=\"col-md-6\">Lisakontaktid ettevõtte kohta</span>"
+
+#. module: crm_iap_mine
+#: model_terms:ir.ui.view,arch_db:crm_iap_mine.crm_iap_lead_mining_request_view_form
+msgid "<span class=\"o_stat_text\">Leads</span>"
+msgstr "<span class=\"o_stat_text\">Müügivihjed</span>"
+
+#. module: crm_iap_mine
+#: model_terms:ir.ui.view,arch_db:crm_iap_mine.crm_iap_lead_mining_request_view_form
+msgid "<span class=\"o_stat_text\">Opportunities</span>"
+msgstr "<span class=\"o_stat_text\">Müügivõimalused</span>"
+
+#. module: crm_iap_mine
+#: model:crm.iap.lead.industry,name:crm_iap_mine.crm_iap_mine_industry_238
+msgid "Automobiles & Components"
+msgstr "Autod ja varuosad"
+
+#. module: crm_iap_mine
+#: model:ir.model.fields,field_description:crm_iap_mine.field_crm_iap_lead_mining_request__available_state_ids
+msgid "Available State"
+msgstr "Saadaval olek"
+
+#. module: crm_iap_mine
+#: model:crm.iap.lead.industry,name:crm_iap_mine.crm_iap_mine_industry_69_157
+msgid "Banks & Insurance"
+msgstr "Pangad ja kindlustus"
+
+#. module: crm_iap_mine
+#: model_terms:ir.ui.view,arch_db:crm_iap_mine.crm_iap_lead_mining_request_view_form
+msgid "Buy credits."
+msgstr "Osta punkte."
+
+#. module: crm_iap_mine
+#: model:crm.iap.lead.role,name:crm_iap_mine.crm_iap_mine_role_1
+msgid "CEO"
+msgstr "Tegevdirektor"
+
+#. module: crm_iap_mine
+#: model:ir.model,name:crm_iap_mine.model_crm_iap_lead_industry
+msgid "CRM IAP Lead Industry"
+msgstr "CRM IAP vihjete tööstus"
+
+#. module: crm_iap_mine
+#: model:ir.model,name:crm_iap_mine.model_crm_iap_lead_mining_request
+msgid "CRM Lead Mining Request"
+msgstr "CRM Müügivihje genereerimise taotlus"
+
+#. module: crm_iap_mine
+#: model_terms:ir.ui.view,arch_db:crm_iap_mine.crm_iap_lead_mining_request_view_form
+msgid "Cancel"
+msgstr "Tühista"
+
+#. module: crm_iap_mine
+#: model:crm.iap.lead.industry,name:crm_iap_mine.crm_iap_mine_industry_162
+msgid "Capital Goods"
+msgstr "Kapitalikaubad"
+
+#. module: crm_iap_mine
+#: model:ir.model.fields,field_description:crm_iap_mine.field_crm_iap_lead_industry__color
+#: model:ir.model.fields,field_description:crm_iap_mine.field_crm_iap_lead_role__color
+msgid "Color Index"
+msgstr "Värvikood"
+
+#. module: crm_iap_mine
+#: model:crm.iap.lead.industry,name:crm_iap_mine.crm_iap_mine_industry_163
+msgid "Commercial & Professional Services"
+msgstr "Äri- ja kutseteenused"
+
+#. module: crm_iap_mine
+#: model:ir.model.fields.selection,name:crm_iap_mine.selection__crm_iap_lead_mining_request__search_type__companies
+msgid "Companies"
+msgstr "Ettevõtted"
+
+#. module: crm_iap_mine
+#: model:ir.model.fields.selection,name:crm_iap_mine.selection__crm_iap_lead_mining_request__search_type__people
+msgid "Companies and their Contacts"
+msgstr "Ettevõtted ja nende kontaktid"
+
+#. module: crm_iap_mine
+#: model:ir.model.fields,field_description:crm_iap_mine.field_crm_iap_lead_mining_request__company_size_max
+msgid "Company Size Max"
+msgstr "Ettevõtte maksimaalne suurus"
+
+#. module: crm_iap_mine
+#: model:crm.iap.lead.industry,name:crm_iap_mine.crm_iap_mine_industry_167
+msgid "Construction Materials"
+msgstr "Ehitusmaterjalid"
+
+#. module: crm_iap_mine
+#: model:crm.iap.lead.industry,name:crm_iap_mine.crm_iap_mine_industry_30_155
+msgid "Consumer Discretionary"
+msgstr "Tarbija oma äranägemisel"
+
+#. module: crm_iap_mine
+#: model:crm.iap.lead.industry,name:crm_iap_mine.crm_iap_mine_industry_239
+msgid "Consumer Durables & Apparel"
+msgstr "Tarbekaubad ja rõivad"
+
+#. module: crm_iap_mine
+#: model:crm.iap.lead.industry,name:crm_iap_mine.crm_iap_mine_industry_150_151
+msgid "Consumer Services"
+msgstr "Tarbeteenused"
+
+#. module: crm_iap_mine
+#: model:crm.iap.lead.industry,name:crm_iap_mine.crm_iap_mine_industry_33
+msgid "Consumer Staples"
+msgstr "Tarbeklambrid"
+
+#. module: crm_iap_mine
+#: model:ir.model.fields,field_description:crm_iap_mine.field_crm_iap_lead_mining_request__country_ids
+msgid "Countries"
+msgstr "Riigid"
+
+#. module: crm_iap_mine
+#: code:addons/crm_iap_mine/models/crm_iap_lead_mining_request.py:0
+#, python-format
+msgid "Create a Lead Mining Request"
+msgstr "Loo müügivihje genereerimise taotlus"
+
+#. module: crm_iap_mine
+#: model:ir.model.fields,field_description:crm_iap_mine.field_crm_iap_lead_helpers__create_uid
+#: model:ir.model.fields,field_description:crm_iap_mine.field_crm_iap_lead_industry__create_uid
+#: model:ir.model.fields,field_description:crm_iap_mine.field_crm_iap_lead_mining_request__create_uid
+#: model:ir.model.fields,field_description:crm_iap_mine.field_crm_iap_lead_role__create_uid
+#: model:ir.model.fields,field_description:crm_iap_mine.field_crm_iap_lead_seniority__create_uid
+msgid "Created by"
+msgstr "Loonud"
+
+#. module: crm_iap_mine
+#: model:ir.model.fields,field_description:crm_iap_mine.field_crm_iap_lead_helpers__create_date
+#: model:ir.model.fields,field_description:crm_iap_mine.field_crm_iap_lead_industry__create_date
+#: model:ir.model.fields,field_description:crm_iap_mine.field_crm_iap_lead_mining_request__create_date
+#: model:ir.model.fields,field_description:crm_iap_mine.field_crm_iap_lead_role__create_date
+#: model:ir.model.fields,field_description:crm_iap_mine.field_crm_iap_lead_seniority__create_date
+msgid "Created on"
+msgstr "Loomise kuupäev"
+
+#. module: crm_iap_mine
+#: model_terms:ir.ui.view,arch_db:crm_iap_mine.crm_iap_lead_mining_request_view_form
+msgid "Default Tags"
+msgstr "Vaikesildid"
+
+#. module: crm_iap_mine
+#: model:ir.model.fields,field_description:crm_iap_mine.field_crm_iap_lead_mining_request__display_lead_label
+msgid "Display Lead Label"
+msgstr "Kuva müügivihje silt"
+
+#. module: crm_iap_mine
+#: model:ir.model.fields,field_description:crm_iap_mine.field_crm_iap_lead_helpers__display_name
+#: model:ir.model.fields,field_description:crm_iap_mine.field_crm_iap_lead_industry__display_name
+#: model:ir.model.fields,field_description:crm_iap_mine.field_crm_iap_lead_mining_request__display_name
+#: model:ir.model.fields,field_description:crm_iap_mine.field_crm_iap_lead_role__display_name
+#: model:ir.model.fields,field_description:crm_iap_mine.field_crm_iap_lead_seniority__display_name
+msgid "Display Name"
+msgstr "Näidatav nimi"
+
+#. module: crm_iap_mine
+#: model:crm.iap.lead.industry,name:crm_iap_mine.crm_iap_mine_industry_158_159
+msgid "Diversified Financials & Financial Services"
+msgstr "Mitmekesine finants ja finantsteenused"
+
+#. module: crm_iap_mine
+#: model:ir.model.fields.selection,name:crm_iap_mine.selection__crm_iap_lead_mining_request__state__done
+#: model_terms:ir.ui.view,arch_db:crm_iap_mine.crm_iap_lead_mining_request_view_search
+msgid "Done"
+msgstr "Tehtud"
+
+#. module: crm_iap_mine
+#: model:ir.model.fields.selection,name:crm_iap_mine.selection__crm_iap_lead_mining_request__state__draft
+#: model_terms:ir.ui.view,arch_db:crm_iap_mine.crm_iap_lead_mining_request_view_search
+msgid "Draft"
+msgstr "Mustand"
+
+#. module: crm_iap_mine
+#: model_terms:ir.ui.view,arch_db:crm_iap_mine.enrich_company
+msgid "Email"
+msgstr "E-post"
+
+#. module: crm_iap_mine
+#: model:crm.iap.lead.industry,name:crm_iap_mine.crm_iap_mine_industry_138_156
+msgid "Energy & Utilities "
+msgstr "Energia ja kommunaalteenused"
+
+#. module: crm_iap_mine
+#: model:ir.model.fields.selection,name:crm_iap_mine.selection__crm_iap_lead_mining_request__state__error
+#: model_terms:ir.ui.view,arch_db:crm_iap_mine.crm_iap_lead_mining_request_view_search
+msgid "Error"
+msgstr "Viga"
+
+#. module: crm_iap_mine
+#: model:ir.model.fields,field_description:crm_iap_mine.field_crm_iap_lead_mining_request__error_type
+msgid "Error Type"
+msgstr "Vea tüüp"
+
+#. module: crm_iap_mine
+#: model:ir.model.fields,field_description:crm_iap_mine.field_crm_iap_lead_mining_request__contact_filter_type
+msgid "Filter on"
+msgstr "Filtreeri"
+
+#. module: crm_iap_mine
+#: model:ir.model.fields,field_description:crm_iap_mine.field_crm_iap_lead_mining_request__filter_on_size
+msgid "Filter on Size"
+msgstr "Filtreeri vastavalt suurusele"
+
+#. module: crm_iap_mine
+#: model:crm.iap.lead.industry,name:crm_iap_mine.crm_iap_mine_industry_153_154
+msgid "Food, Beverage & Tobacco"
+msgstr "Toit, jook ja tubakas"
+
+#. module: crm_iap_mine
+#: model_terms:ir.ui.view,arch_db:crm_iap_mine.crm_iap_lead_mining_request_view_form
+msgid "From"
+msgstr "Kellelt?"
+
+#. module: crm_iap_mine
+#. openerp-web
+#: code:addons/crm_iap_mine/models/crm_iap_lead_mining_request.py:0
+#: code:addons/crm_iap_mine/static/src/xml/leads_tree_generate_leads_views.xml:0
+#: model_terms:ir.ui.view,arch_db:crm_iap_mine.crm_iap_lead_mining_request_view_form
+#, python-format
+msgid "Generate Leads"
+msgstr "Loo müügivihjed"
+
+#. module: crm_iap_mine
+#: code:addons/crm_iap_mine/models/crm_iap_lead_mining_request.py:0
+#, python-format
+msgid "Generate new leads based on their country, industry, size, etc."
+msgstr "Loo uusi müügivihjeid riigi, valdkonna, suuruse jne alusel."
+
+#. module: crm_iap_mine
+#: model:ir.model.fields,field_description:crm_iap_mine.field_crm_iap_lead_mining_request__lead_ids
+msgid "Generated Lead / Opportunity"
+msgstr "Genereeritud müügivihje/võimalus"
+
+#. module: crm_iap_mine
+#: model_terms:ir.ui.view,arch_db:crm_iap_mine.crm_iap_lead_mining_request_view_search
+msgid "Group By"
+msgstr "Grupeeri"
+
+#. module: crm_iap_mine
+#: model:crm.iap.lead.industry,name:crm_iap_mine.crm_iap_mine_industry_160
+msgid "Health Care Equipment & Services"
+msgstr "Tervishoiu seadmed ja teenused"
+
+#. module: crm_iap_mine
+#: model:ir.model,name:crm_iap_mine.model_crm_iap_lead_helpers
+msgid "Helper methods for crm_iap_mine modules"
+msgstr "Abivõimalused crm_iap_mine moodulile"
+
+#. module: crm_iap_mine
+#: model:mail.template,name:crm_iap_mine.lead_generation_no_credits
+#: model:mail.template,subject:crm_iap_mine.lead_generation_no_credits
+msgid "IAP Lead Generation Notification"
+msgstr "IAP müügivihje loomise teade"
+
+#. module: crm_iap_mine
+#: model:ir.model.fields,field_description:crm_iap_mine.field_crm_iap_lead_helpers__id
+#: model:ir.model.fields,field_description:crm_iap_mine.field_crm_iap_lead_industry__id
+#: model:ir.model.fields,field_description:crm_iap_mine.field_crm_iap_lead_mining_request__id
+#: model:ir.model.fields,field_description:crm_iap_mine.field_crm_iap_lead_role__id
+#: model:ir.model.fields,field_description:crm_iap_mine.field_crm_iap_lead_seniority__id
+msgid "ID"
+msgstr "ID"
+
+#. module: crm_iap_mine
+#: model:crm.iap.lead.industry,name:crm_iap_mine.crm_iap_mine_industry_168
+msgid "Independent Power and Renewable Electricity Producers"
+msgstr "Sõltumatud elektri- ja taastuvenergia tootjad"
+
+#. module: crm_iap_mine
+#: model:ir.model.fields,field_description:crm_iap_mine.field_crm_iap_lead_mining_request__industry_ids
+msgid "Industries"
+msgstr "Valdkonnad"
+
+#. module: crm_iap_mine
+#: model:ir.model.fields,field_description:crm_iap_mine.field_crm_iap_lead_industry__name
+msgid "Industry"
+msgstr "Valdkond"
+
+#. module: crm_iap_mine
+#: model:ir.model.constraint,message:crm_iap_mine.constraint_crm_iap_lead_industry_name_uniq
+msgid "Industry name already exists!"
+msgstr "Valdkonna nimi on juba olemas!"
+
+#. module: crm_iap_mine
+#: model:ir.model.fields.selection,name:crm_iap_mine.selection__crm_iap_lead_mining_request__error_type__credits
+msgid "Insufficient Credits"
+msgstr "Pole piisavalt krediiti"
+
+#. module: crm_iap_mine
+#: model:ir.model.fields,field_description:crm_iap_mine.field_crm_iap_lead_helpers____last_update
+#: model:ir.model.fields,field_description:crm_iap_mine.field_crm_iap_lead_industry____last_update
+#: model:ir.model.fields,field_description:crm_iap_mine.field_crm_iap_lead_mining_request____last_update
+#: model:ir.model.fields,field_description:crm_iap_mine.field_crm_iap_lead_role____last_update
+#: model:ir.model.fields,field_description:crm_iap_mine.field_crm_iap_lead_seniority____last_update
+msgid "Last Modified on"
+msgstr "Viimati muudetud"
+
+#. module: crm_iap_mine
+#: model:ir.model.fields,field_description:crm_iap_mine.field_crm_iap_lead_helpers__write_uid
+#: model:ir.model.fields,field_description:crm_iap_mine.field_crm_iap_lead_industry__write_uid
+#: model:ir.model.fields,field_description:crm_iap_mine.field_crm_iap_lead_mining_request__write_uid
+#: model:ir.model.fields,field_description:crm_iap_mine.field_crm_iap_lead_role__write_uid
+#: model:ir.model.fields,field_description:crm_iap_mine.field_crm_iap_lead_seniority__write_uid
+msgid "Last Updated by"
+msgstr "Viimati uuendas"
+
+#. module: crm_iap_mine
+#: model:ir.model.fields,field_description:crm_iap_mine.field_crm_iap_lead_helpers__write_date
+#: model:ir.model.fields,field_description:crm_iap_mine.field_crm_iap_lead_industry__write_date
+#: model:ir.model.fields,field_description:crm_iap_mine.field_crm_iap_lead_mining_request__write_date
+#: model:ir.model.fields,field_description:crm_iap_mine.field_crm_iap_lead_role__write_date
+#: model:ir.model.fields,field_description:crm_iap_mine.field_crm_iap_lead_seniority__write_date
+msgid "Last Updated on"
+msgstr "Viimati uuendatud"
+
+#. module: crm_iap_mine
+#: model:ir.model.fields,field_description:crm_iap_mine.field_crm_iap_lead_mining_request__lead_contacts_credits
+msgid "Lead Contacts Credits"
+msgstr "Müügivihje kontakti krediit"
+
+#. module: crm_iap_mine
+#: model:ir.model.fields,field_description:crm_iap_mine.field_crm_iap_lead_mining_request__lead_credits
+msgid "Lead Credits"
+msgstr "Müügivihje krediit"
+
+#. module: crm_iap_mine
+#: model:ir.ui.menu,name:crm_iap_mine.crm_menu_lead_generation
+msgid "Lead Generation"
+msgstr "Müügivihje loomine"
+
+#. module: crm_iap_mine
+#: model:ir.model.fields,field_description:crm_iap_mine.field_crm_lead__lead_mining_request_id
+#: model_terms:ir.ui.view,arch_db:crm_iap_mine.crm_iap_lead_mining_request_view_search
+msgid "Lead Mining Request"
+msgstr "Müügivihje genereerimise taotlus"
+
+#. module: crm_iap_mine
+#: model:ir.actions.act_window,name:crm_iap_mine.crm_iap_lead_mining_request_action
+#: model:ir.ui.menu,name:crm_iap_mine.crm_iap_lead_mining_request_menu_action
+msgid "Lead Mining Requests"
+msgstr "Müügivihje genereerimise taotlused"
+
+#. module: crm_iap_mine
+#: model:ir.model.fields,field_description:crm_iap_mine.field_crm_iap_lead_mining_request__lead_total_credits
+msgid "Lead Total Credits"
+msgstr "Müügivihje kogukrediit"
+
+#. module: crm_iap_mine
+#: model:ir.model,name:crm_iap_mine.model_crm_lead
+msgid "Lead/Opportunity"
+msgstr "Müügivihje/võimalus"
+
+#. module: crm_iap_mine
+#: model:ir.model.fields.selection,name:crm_iap_mine.selection__crm_iap_lead_mining_request__lead_type__lead
+#: model_terms:ir.ui.view,arch_db:crm_iap_mine.crm_iap_lead_mining_request_view_search
+msgid "Leads"
+msgstr "Müügivihjed"
+
+#. module: crm_iap_mine
+#: model:ir.model.fields,help:crm_iap_mine.field_crm_iap_lead_mining_request__available_state_ids
+msgid "List of available states based on selected countries"
+msgstr ""
+
+#. module: crm_iap_mine
+#. openerp-web
+#: code:addons/crm_iap_mine/static/src/js/tours/crm_iap_lead.js:0
+#, python-format
+msgid ""
+"Looking for more opportunities ?<br>Try the <b>Lead Generation</b> tool."
+msgstr ""
+"Otsite rohkem võimalusi ?<br>Proovige <b>Müügivihje loomise</b> tööriista."
+
+#. module: crm_iap_mine
+#: model:crm.iap.lead.industry,name:crm_iap_mine.crm_iap_mine_industry_148
+msgid "Materials"
+msgstr "Materjalid"
+
+#. module: crm_iap_mine
+#: model:crm.iap.lead.industry,name:crm_iap_mine.crm_iap_mine_industry_86
+msgid "Media"
+msgstr "Meedia"
+
+#. module: crm_iap_mine
+#: model:ir.model.fields,field_description:crm_iap_mine.field_crm_iap_lead_seniority__name
+#: model_terms:ir.ui.view,arch_db:crm_iap_mine.enrich_company
+msgid "Name"
+msgstr "Nimi"
+
+#. module: crm_iap_mine
+#: model:ir.model.constraint,message:crm_iap_mine.constraint_crm_iap_lead_seniority_name_uniq
+msgid "Name already exists!"
+msgstr "Nimi on juba olemas!"
+
+#. module: crm_iap_mine
+#: code:addons/crm_iap_mine/models/crm_iap_lead_mining_request.py:0
+#: code:addons/crm_iap_mine/models/crm_iap_lead_mining_request.py:0
+#: code:addons/crm_iap_mine/models/crm_iap_lead_mining_request.py:0
+#: code:addons/crm_iap_mine/models/crm_iap_lead_mining_request.py:0
+#, python-format
+msgid "New"
+msgstr "Uus"
+
+#. module: crm_iap_mine
+#: model:ir.model.fields.selection,name:crm_iap_mine.selection__crm_iap_lead_mining_request__error_type__no_result
+msgid "No Result"
+msgstr "Tulemust pole"
+
+#. module: crm_iap_mine
+#. openerp-web
+#: code:addons/crm_iap_mine/static/src/js/tours/crm_iap_lead.js:0
+#, python-format
+msgid "Now, just let the magic happen!"
+msgstr "Nüüd laske lihtsalt imedel juhtuda!"
+
+#. module: crm_iap_mine
+#: model:ir.model.fields,field_description:crm_iap_mine.field_crm_iap_lead_mining_request__contact_number
+msgid "Number of Contacts"
+msgstr "Kontaktide arv"
+
+#. module: crm_iap_mine
+#: model:ir.model.fields,field_description:crm_iap_mine.field_crm_iap_lead_mining_request__lead_count
+msgid "Number of Generated Leads"
+msgstr "Genereeritud müügivihjete arv"
+
+#. module: crm_iap_mine
+#: model:ir.model.fields,field_description:crm_iap_mine.field_crm_iap_lead_mining_request__lead_number
+#: model_terms:ir.ui.view,arch_db:crm_iap_mine.crm_iap_lead_mining_request_view_tree
+msgid "Number of Leads"
+msgstr "Müügivihjete arv"
+
+#. module: crm_iap_mine
+#: model:ir.model.fields.selection,name:crm_iap_mine.selection__crm_iap_lead_mining_request__lead_type__opportunity
+#: model_terms:ir.ui.view,arch_db:crm_iap_mine.crm_iap_lead_mining_request_view_search
+msgid "Opportunities"
+msgstr "Võimalused"
+
+#. module: crm_iap_mine
+#: code:addons/crm_iap_mine/models/crm_iap_lead_mining_request.py:0
+#, python-format
+msgid "Opportunity created by Odoo Lead Generation"
+msgstr "Müügivõimalus on loodud Odoo Müügivihjete genereerimise kaudu"
+
+#. module: crm_iap_mine
+#: model:ir.model.fields,field_description:crm_iap_mine.field_crm_iap_lead_mining_request__role_ids
+msgid "Other Roles"
+msgstr "Teised rollid"
+
+#. module: crm_iap_mine
+#: model:ir.model,name:crm_iap_mine.model_crm_iap_lead_role
+msgid "People Role"
+msgstr "Inimeste roll"
+
+#. module: crm_iap_mine
+#: model:ir.model,name:crm_iap_mine.model_crm_iap_lead_seniority
+msgid "People Seniority"
+msgstr "Inimeste staaž"
+
+#. module: crm_iap_mine
+#: model:crm.iap.lead.industry,name:crm_iap_mine.crm_iap_mine_industry_161
+msgid "Pharmaceuticals, Biotechnology & Life Sciences"
+msgstr "Farmaatsiatooted, biotehnoloogia ja bioteadused"
+
+#. module: crm_iap_mine
+#: model_terms:ir.ui.view,arch_db:crm_iap_mine.enrich_company
+msgid "Phone"
+msgstr "Telefon"
+
+#. module: crm_iap_mine
+#: model:ir.model.fields,field_description:crm_iap_mine.field_crm_iap_lead_mining_request__preferred_role_id
+msgid "Preferred Role"
+msgstr "Eelistatud roll"
+
+#. module: crm_iap_mine
+#: model:crm.iap.lead.industry,name:crm_iap_mine.crm_iap_mine_industry_114
+msgid "Real Estate"
+msgstr "Kinnisvara"
+
+#. module: crm_iap_mine
+#: model:ir.model.fields,field_description:crm_iap_mine.field_crm_iap_lead_mining_request__name
+msgid "Request Number"
+msgstr "Taotluse number"
+
+#. module: crm_iap_mine
+#: model:crm.iap.lead.industry,name:crm_iap_mine.crm_iap_mine_industry_152
+msgid "Retailing"
+msgstr "Jaemüük"
+
+#. module: crm_iap_mine
+#: model_terms:ir.ui.view,arch_db:crm_iap_mine.crm_iap_lead_mining_request_view_form
+msgid "Retry"
+msgstr "Proovi uuesti"
+
+#. module: crm_iap_mine
+#: model:ir.model.fields,field_description:crm_iap_mine.field_crm_iap_lead_industry__reveal_ids
+#: model:ir.model.fields,field_description:crm_iap_mine.field_crm_iap_lead_role__reveal_id
+#: model:ir.model.fields,field_description:crm_iap_mine.field_crm_iap_lead_seniority__reveal_id
+msgid "Reveal"
+msgstr "Ilmuta"
+
+#. module: crm_iap_mine
+#: model:ir.model.fields.selection,name:crm_iap_mine.selection__crm_iap_lead_mining_request__contact_filter_type__role
+msgid "Role"
+msgstr "Roll"
+
+#. module: crm_iap_mine
+#: model:ir.model.fields,field_description:crm_iap_mine.field_crm_iap_lead_role__name
+msgid "Role Name"
+msgstr "Rolli nimi"
+
+#. module: crm_iap_mine
+#: model:ir.model.constraint,message:crm_iap_mine.constraint_crm_iap_lead_role_name_uniq
+msgid "Role name already exists!"
+msgstr "Rolli nimi juba eksisteerib!"
+
+#. module: crm_iap_mine
+#: model:ir.model.fields,field_description:crm_iap_mine.field_crm_iap_lead_mining_request__team_id
+#: model_terms:ir.ui.view,arch_db:crm_iap_mine.crm_iap_lead_mining_request_view_search
+msgid "Sales Team"
+msgstr "Müügi meeskond"
+
+#. module: crm_iap_mine
+#: model:ir.model.fields,field_description:crm_iap_mine.field_crm_iap_lead_mining_request__user_id
+#: model_terms:ir.ui.view,arch_db:crm_iap_mine.crm_iap_lead_mining_request_view_search
+msgid "Salesperson"
+msgstr "Müügiesindaja"
+
+#. module: crm_iap_mine
+#: model:ir.model.fields,field_description:crm_iap_mine.field_crm_iap_lead_mining_request__seniority_id
+#: model:ir.model.fields.selection,name:crm_iap_mine.selection__crm_iap_lead_mining_request__contact_filter_type__seniority
+msgid "Seniority"
+msgstr "Staaž"
+
+#. module: crm_iap_mine
+#: model:ir.model.fields,field_description:crm_iap_mine.field_crm_iap_lead_industry__sequence
+msgid "Sequence"
+msgstr "Järjestus"
+
+#. module: crm_iap_mine
+#: model:ir.model.fields,field_description:crm_iap_mine.field_crm_iap_lead_mining_request__company_size_min
+msgid "Size"
+msgstr "Suurus"
+
+#. module: crm_iap_mine
+#: model:crm.iap.lead.industry,name:crm_iap_mine.crm_iap_mine_industry_165
+msgid "Software & Services"
+msgstr "Tarkvara ja teenused"
+
+#. module: crm_iap_mine
+#: model:ir.model.fields,field_description:crm_iap_mine.field_crm_iap_lead_mining_request__state_ids
+msgid "States"
+msgstr "Maakonnad"
+
+#. module: crm_iap_mine
+#: model:ir.model.fields,field_description:crm_iap_mine.field_crm_iap_lead_mining_request__state
+msgid "Status"
+msgstr "Staatus"
+
+#. module: crm_iap_mine
+#: model_terms:ir.ui.view,arch_db:crm_iap_mine.crm_iap_lead_mining_request_view_form
+msgid "Submit"
+msgstr "Esita"
+
+#. module: crm_iap_mine
+#: model:ir.model.fields,field_description:crm_iap_mine.field_crm_iap_lead_mining_request__tag_ids
+msgid "Tags"
+msgstr "Sildid"
+
+#. module: crm_iap_mine
+#: model:ir.model.fields,field_description:crm_iap_mine.field_crm_iap_lead_mining_request__search_type
+msgid "Target"
+msgstr "Eesmärk"
+
+#. module: crm_iap_mine
+#: model:crm.iap.lead.industry,name:crm_iap_mine.crm_iap_mine_industry_166
+msgid "Technology Hardware & Equipment"
+msgstr "Tehnoloogia riistvara ja seadmed"
+
+#. module: crm_iap_mine
+#: model:crm.iap.lead.industry,name:crm_iap_mine.crm_iap_mine_industry_149
+msgid "Telecommunication Services"
+msgstr "Telekommunikatsiooni teenused"
+
+#. module: crm_iap_mine
+#: model:ir.model.fields,help:crm_iap_mine.field_crm_iap_lead_industry__reveal_ids
+msgid "The list of reveal_ids for this industry, separated with ','"
+msgstr ""
+
+#. module: crm_iap_mine
+#: code:addons/crm_iap_mine/models/crm_iap_lead_mining_request.py:0
+#, python-format
+msgid "This makes a total of %d credits for this request."
+msgstr "See teeb selle päringu eest kokku %d krediiti."
+
+#. module: crm_iap_mine
+#: model:crm.iap.lead.industry,name:crm_iap_mine.crm_iap_mine_industry_136
+msgid "Transportation"
+msgstr "Transport"
+
+#. module: crm_iap_mine
+#: model:ir.model.fields,field_description:crm_iap_mine.field_crm_iap_lead_mining_request__lead_type
+#: model_terms:ir.ui.view,arch_db:crm_iap_mine.crm_iap_lead_mining_request_view_search
+msgid "Type"
+msgstr "Tüüp"
+
+#. module: crm_iap_mine
+#: code:addons/crm_iap_mine/models/crm_iap_lead_mining_request.py:0
+#, python-format
+msgid ""
+"Up to %d additional credits will be consumed to identify %d contacts per "
+"company."
+msgstr ""
+"Kuni %d täiendavat krediiti kulub, et tuvastada %d kontakte ettevõtte kohta."
+" "
+
+#. module: crm_iap_mine
+#: model_terms:ir.ui.view,arch_db:crm_iap_mine.crm_iap_lead_mining_request_view_form
+msgid "What do you need ?"
+msgstr "Mida sa vajad?"
+
+#. module: crm_iap_mine
+#. openerp-web
+#: code:addons/crm_iap_mine/static/src/js/tours/crm_iap_lead.js:0
+#, python-format
+msgid "Which Industry do you want to target?"
+msgstr "Millist tööstusharu soovite sihtida?"
+
+#. module: crm_iap_mine
+#: model_terms:ir.ui.view,arch_db:crm_iap_mine.crm_iap_lead_mining_request_view_form
+msgid "You do not have enough credits to submit this request."
+msgstr "Pole piisavalt krediiti, et seda taotlust esitada. "
+
+#. module: crm_iap_mine
+#: code:addons/crm_iap_mine/models/crm_iap_lead_mining_request.py:0
+#, python-format
+msgid "Your request could not be executed: %s"
+msgstr "Teie taotlust ei saanud täita: %s"
+
+#. module: crm_iap_mine
+#: model:crm.iap.lead.role,name:crm_iap_mine.crm_iap_mine_role_2
+msgid "communications"
+msgstr "kommunikatsioon"
+
+#. module: crm_iap_mine
+#: model:crm.iap.lead.role,name:crm_iap_mine.crm_iap_mine_role_3
+msgid "consulting"
+msgstr "konsultatsioon"
+
+#. module: crm_iap_mine
+#: model:crm.iap.lead.role,name:crm_iap_mine.crm_iap_mine_role_4
+msgid "customer_service"
+msgstr "kasutajatugi"
+
+#. module: crm_iap_mine
+#: model:crm.iap.lead.seniority,name:crm_iap_mine.crm_iap_mine_seniority_1
+msgid "director"
+msgstr "direktor"
+
+#. module: crm_iap_mine
+#: model:crm.iap.lead.role,name:crm_iap_mine.crm_iap_mine_role_5
+msgid "education"
+msgstr "haridus"
+
+#. module: crm_iap_mine
+#: model_terms:ir.ui.view,arch_db:crm_iap_mine.crm_iap_lead_mining_request_view_form
+msgid "employees"
+msgstr "töötajad"
+
+#. module: crm_iap_mine
+#: model:crm.iap.lead.role,name:crm_iap_mine.crm_iap_mine_role_6
+msgid "engineering"
+msgstr "tehnika"
+
+#. module: crm_iap_mine
+#: model:crm.iap.lead.seniority,name:crm_iap_mine.crm_iap_mine_seniority_2
+msgid "executive"
+msgstr "juhataja"
+
+#. module: crm_iap_mine
+#: model:crm.iap.lead.role,name:crm_iap_mine.crm_iap_mine_role_7
+msgid "finance"
+msgstr "finants"
+
+#. module: crm_iap_mine
+#: model:crm.iap.lead.role,name:crm_iap_mine.crm_iap_mine_role_8
+msgid "founder"
+msgstr "asutaja"
+
+#. module: crm_iap_mine
+#: model:crm.iap.lead.role,name:crm_iap_mine.crm_iap_mine_role_9
+msgid "health_professional"
+msgstr "tervise_spetsialist"
+
+#. module: crm_iap_mine
+#: model:crm.iap.lead.role,name:crm_iap_mine.crm_iap_mine_role_10
+msgid "human_resources"
+msgstr "inimressursid"
+
+#. module: crm_iap_mine
+#: model:crm.iap.lead.role,name:crm_iap_mine.crm_iap_mine_role_11
+msgid "information_technology"
+msgstr "infotehnoloogia"
+
+#. module: crm_iap_mine
+#: model:crm.iap.lead.role,name:crm_iap_mine.crm_iap_mine_role_12
+msgid "legal"
+msgstr "seaduslik"
+
+#. module: crm_iap_mine
+#: model:crm.iap.lead.seniority,name:crm_iap_mine.crm_iap_mine_seniority_3
+msgid "manager"
+msgstr "juhataja"
+
+#. module: crm_iap_mine
+#: model:crm.iap.lead.role,name:crm_iap_mine.crm_iap_mine_role_13
+msgid "marketing"
+msgstr "turundus"
+
+#. module: crm_iap_mine
+#: model:crm.iap.lead.role,name:crm_iap_mine.crm_iap_mine_role_14
+msgid "operations"
+msgstr "tegevused"
+
+#. module: crm_iap_mine
+#: model:crm.iap.lead.role,name:crm_iap_mine.crm_iap_mine_role_15
+msgid "owner"
+msgstr "omanik"
+
+#. module: crm_iap_mine
+#: model:crm.iap.lead.role,name:crm_iap_mine.crm_iap_mine_role_16
+msgid "president"
+msgstr "president"
+
+#. module: crm_iap_mine
+#: model:crm.iap.lead.role,name:crm_iap_mine.crm_iap_mine_role_17
+msgid "product"
+msgstr "toode"
+
+#. module: crm_iap_mine
+#: model:crm.iap.lead.role,name:crm_iap_mine.crm_iap_mine_role_18
+msgid "public_relations"
+msgstr "avalikud suhted"
+
+#. module: crm_iap_mine
+#: model:crm.iap.lead.role,name:crm_iap_mine.crm_iap_mine_role_19
+msgid "real_estate"
+msgstr "kinnisvara"
+
+#. module: crm_iap_mine
+#: model:crm.iap.lead.role,name:crm_iap_mine.crm_iap_mine_role_20
+msgid "recruiting"
+msgstr "värbamine"
+
+#. module: crm_iap_mine
+#: model:crm.iap.lead.role,name:crm_iap_mine.crm_iap_mine_role_21
+msgid "research"
+msgstr "uuringud"
+
+#. module: crm_iap_mine
+#: model:crm.iap.lead.role,name:crm_iap_mine.crm_iap_mine_role_22
+msgid "sale"
+msgstr "müük"
+
+#. module: crm_iap_mine
+#: model_terms:ir.ui.view,arch_db:crm_iap_mine.crm_iap_lead_mining_request_view_form
+msgid "to"
+msgstr "kuni"

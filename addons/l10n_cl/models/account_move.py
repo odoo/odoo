@@ -20,19 +20,26 @@ class AccountMove(models.Model):
                 self.journal_id.l10n_latam_use_documents:
             return super()._get_l10n_latam_documents_domain()
         if self.journal_id.type == 'sale':
-            domain = [('country_id.code', '=', "CL"), ('internal_type', '!=', 'invoice_in')]
+            domain = [('country_id.code', '=', 'CL')]
+            if self.move_type in ['in_invoice', 'out_invoice']:
+                domain += [('internal_type', 'in', ['invoice', 'debit_note', 'invoice_in'])]
+            elif self.move_type in ['in_refund', 'out_refund']:
+                domain += [('internal_type', '=', 'credit_note')]
             if self.company_id.partner_id.l10n_cl_sii_taxpayer_type == '1':
                 domain += [('code', '!=', '71')]  # Companies with VAT Affected doesn't have "Boleta de honorarios Electrónica"
             return domain
+        if self.move_type == 'in_refund':
+            internal_types_domain = ('internal_type', '=', 'credit_note')
+        else:
+            internal_types_domain = ('internal_type', 'in', ['invoice', 'debit_note', 'invoice_in'])
         domain = [
             ('country_id.code', '=', 'CL'),
-            ('internal_type', 'in', ['invoice', 'debit_note', 'credit_note', 'invoice_in'])]
+            internal_types_domain,
+        ]
         if self.partner_id.l10n_cl_sii_taxpayer_type == '1' and self.partner_id_vat != '60805000-0':
             domain += [('code', 'not in', ['39', '70', '71', '914', '911'])]
         elif self.partner_id.l10n_cl_sii_taxpayer_type == '1' and self.partner_id_vat == '60805000-0':
             domain += [('code', 'not in', ['39', '70', '71'])]
-            if self.move_type == 'in_invoice':
-                domain += [('internal_type', '!=', 'credit_note')]
         elif self.partner_id.l10n_cl_sii_taxpayer_type == '2':
             domain += [('code', 'in', ['70', '71', '56', '61'])]
         elif self.partner_id.l10n_cl_sii_taxpayer_type == '3':
@@ -99,7 +106,7 @@ class AccountMove(models.Model):
     def _get_starting_sequence(self):
         """ If use documents then will create a new starting sequence using the document type code prefix and the
         journal document number with a 6 padding number """
-        if self.journal_id.l10n_latam_use_documents and self.env.company.account_fiscal_country_id.code == "CL":
+        if self.journal_id.l10n_latam_use_documents and self.company_id.account_fiscal_country_id.code == "CL":
             if self.l10n_latam_document_type_id:
                 return self._l10n_cl_get_formatted_sequence()
         return super()._get_starting_sequence()

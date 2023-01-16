@@ -33,7 +33,7 @@
         </record>
         <record id="afpttn_intracom_7" model="account.fiscal.position.tax.template">
             <field name="position_id" ref="fiscal_position_template_3"/>
-            <field name="tax_src_id" ref="attn_VAT-OUT-21-L"/>
+            <field name="tax_src_id" ref="attn_VAT-OUT-21-S"/>
             <field name="tax_dest_id" ref="attn_VAT-OUT-00-EU-S"/>
         </record>
         <record id="afpttn_intracom_8" model="account.fiscal.position.tax.template">
@@ -151,6 +151,11 @@
             <field name="tax_src_id" ref="attn_VAT-OUT-12-L"/>
             <field name="tax_dest_id" ref="attn_VAT-OUT-00-ROW"/>
         </record>
+        <record id="afpttn_extracom_7" model="account.fiscal.position.tax.template">
+            <field name="position_id" ref="fiscal_position_template_2"/>
+            <field name="tax_src_id" ref="attn_VAT-OUT-21-S"/>
+            <field name="tax_dest_id" ref="attn_VAT-OUT-00-ROW"/>
+        </record>
         <record id="afpttn_extracom_8" model="account.fiscal.position.tax.template">
             <field name="position_id" ref="fiscal_position_template_2"/>
             <field name="tax_src_id" ref="attn_VAT-OUT-21-L"/>
@@ -244,6 +249,11 @@
         <record id="afpttn_cocontractant_6" model="account.fiscal.position.tax.template">
             <field name="position_id" ref="fiscal_position_template_4"/>
             <field name="tax_src_id" ref="attn_VAT-OUT-12-L"/>
+            <field name="tax_dest_id" ref="attn_VAT-OUT-00-CC"/>
+        </record>
+        <record id="afpttn_cocontractant_7" model="account.fiscal.position.tax.template">
+            <field name="position_id" ref="fiscal_position_template_4"/>
+            <field name="tax_src_id" ref="attn_VAT-OUT-21-S"/>
             <field name="tax_dest_id" ref="attn_VAT-OUT-00-CC"/>
         </record>
         <record id="afpttn_cocontractant_8" model="account.fiscal.position.tax.template">

@@ -173,9 +173,24 @@ class User(models.Model):
         # Note: limit the `sudo` to the only action of "editing own profile" action in order to
         # avoid breaking `groups` mecanism on res.users form view.
         profile_view = self.env.ref("hr.res_users_view_form_profile")
+        original_user = self.env.user
         if profile_view and view_id == profile_view.id:
             self = self.with_user(SUPERUSER_ID)
-        return super(User, self).fields_view_get(view_id=view_id, view_type=view_type, toolbar=toolbar, submenu=submenu)
+        result = super(User, self).fields_view_get(view_id=view_id, view_type=view_type, toolbar=toolbar, submenu=submenu)
+        # Due to using the SUPERUSER the result will contain action that the user may not have access too
+        # here we filter out actions that requires special implicit rights to avoid having unusable actions
+        # in the dropdown menu.
+        if toolbar and self.env.user != original_user:
+            self = self.with_user(original_user.id)
+            if not self.user_has_groups("base.group_erp_manager"):
+                change_password_action = self.env.ref("base.change_password_wizard_action")
+                result['toolbar']['action'] = [act for act in result['toolbar']['action'] if act['id'] != change_password_action.id]
+        return result
+
+    def _get_employee_fields_to_sync(self):
+        """Get values to sync to the related employee when the User is changed.
+        """
+        return ['name', 'email', 'image_1920', 'tz']
 
     def write(self, vals):
         """
@@ -196,8 +211,9 @@ class User(models.Model):
         result = super(User, self).write(vals)
 
         employee_values = {}
-        for fname in [f for f in ['name', 'email', 'image_1920', 'tz'] if f in vals]:
+        for fname in [f for f in self._get_employee_fields_to_sync() if f in vals]:
             employee_values[fname] = vals[fname]
+
         if employee_values:
             if 'email' in employee_values:
                 employee_values['work_email'] = employee_values.pop('email')

@@ -4,7 +4,6 @@
 from collections import OrderedDict
 from dateutil.relativedelta import relativedelta
 from operator import itemgetter
-from datetime import datetime
 
 from odoo import fields, http, _
 from odoo.http import request
@@ -137,11 +136,13 @@ class TimesheetCustomerPortal(CustomerPortal):
             timesheets = Timesheet_sudo.search(domain, order=orderby, limit=_items_per_page, offset=pager['offset'])
             if field:
                 if groupby == 'date':
-                    time_data = Timesheet_sudo.read_group(domain, ['date', 'unit_amount:sum'], ['date:day'])
-                    mapped_time = dict([(datetime.strptime(m['date:day'], '%d %b %Y').date(), m['unit_amount']) for m in time_data])
-                    grouped_timesheets = [(Timesheet_sudo.concat(*g), mapped_time[k]) for k, g in groupbyelem(timesheets, itemgetter('date'))]
+                    raw_timesheets_group = Timesheet_sudo.read_group(
+                        domain, ["unit_amount:sum", "ids:array_agg(id)"], ["date:day"]
+                    )
+                    grouped_timesheets = [(Timesheet_sudo.browse(group["ids"]), group["unit_amount"]) for group in raw_timesheets_group]
+
                 else:
-                    time_data = time_data = Timesheet_sudo.read_group(domain, [field, 'unit_amount:sum'], [field])
+                    time_data = Timesheet_sudo.read_group(domain, [field, 'unit_amount:sum'], [field])
                     mapped_time = dict([(m[field][0] if m[field] else False, m['unit_amount']) for m in time_data])
                     grouped_timesheets = [(Timesheet_sudo.concat(*g), mapped_time[k.id]) for k, g in groupbyelem(timesheets, itemgetter(field))]
                 return timesheets, grouped_timesheets

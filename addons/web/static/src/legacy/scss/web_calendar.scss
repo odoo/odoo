@@ -341,6 +341,7 @@ $o-cw-filter-avatar-size: 20px;
                 }
 
                 .fc-time:not(:empty) {
+                    /*rtl:ignore*/
                     padding-right: 0.5em;
                 }
 
@@ -707,6 +708,7 @@ $o-cw-filter-avatar-size: 20px;
                 &.o_beside_avatar {
                     @include size($o-cw-filter-avatar-size);
                     border-radius: 2px;
+                    object-fit: cover;
                 }
             }
 

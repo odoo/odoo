@@ -13,12 +13,15 @@
 # Martin Wilderoth <martin.wilderoth@linserv.se>, 2021
 # Peter Wickenberg <peter@wickenberg.nu>, 2021
 # Fredrik Arvas <fredrik.arvas@vertel.se>, 2021
-# STefan Rundgren <stefanrundgren@cellglas.com>, 2021
+# 3eec91a23d05c632ffac786ac42b81b8_b6fff7b <8985b7bc57db860af29969457dbb51b3_1018915>, 2021
 # Martin Trigaux, 2021
 # Anders Wallenquist <anders.wallenquist@vertel.se>, 2021
 # Chrille Hedberg <hedberg.chrille@gmail.com>, 2021
-# Kim Asplund <kim.asplund@gmail.com>, 2021
-# Simon S, 2021
+# Simon S, 2022
+# Mikael Åkerberg <mikael.akerberg@mariaakerberg.com>, 2022
+# Daniel Löfgren, 2022
+# Kim Asplund <kim.asplund@gmail.com>, 2022
+# Claes-Johan Dahlin, 2022
 # 
 msgid ""
 msgstr ""
@@ -26,7 +29,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-10-05 10:53+0000\n"
 "PO-Revision-Date: 2021-09-14 12:22+0000\n"
-"Last-Translator: Simon S, 2021\n"
+"Last-Translator: Claes-Johan Dahlin, 2022\n"
 "Language-Team: Swedish (https://www.transifex.com/odoo/teams/41243/sv/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -165,7 +168,7 @@ msgstr ""
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.report_holidayssummary
 msgid "&gt;"
-msgstr ""
+msgstr "&gt;"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.report_holidayssummary
@@ -253,13 +256,13 @@ msgstr "23:30"
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave__request_hour_from__0
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave__request_hour_to__0
 msgid "12:00 AM"
-msgstr "12:00"
+msgstr "00:00"
 
 #. module: hr_holidays
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave__request_hour_from__12
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave__request_hour_to__12
 msgid "12:00 PM"
-msgstr "0:00"
+msgstr "12:00"
 
 #. module: hr_holidays
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave__request_hour_from__0_5
@@ -307,7 +310,7 @@ msgstr "02:00"
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave__request_hour_from__14
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave__request_hour_to__14
 msgid "2:00 PM"
-msgstr "14:0"
+msgstr "14:00"
 
 #. module: hr_holidays
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave__request_hour_from__2_5
@@ -349,7 +352,7 @@ msgstr "15:30"
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave__request_hour_from__4
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave__request_hour_to__4
 msgid "4:00 AM"
-msgstr "04:0"
+msgstr "04:00"
 
 #. module: hr_holidays
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave__request_hour_from__16
@@ -445,7 +448,7 @@ msgstr "19:30"
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave__request_hour_from__8
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave__request_hour_to__8
 msgid "8:00 AM"
-msgstr "08:0"
+msgstr "08:00"
 
 #. module: hr_holidays
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave__request_hour_from__20
@@ -3062,7 +3065,7 @@ msgstr ""
 #. module: hr_holidays
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave_type__allocation_validation_type__set
 msgid "Set by Time Off Officer"
-msgstr ""
+msgstr "Ställs in av frånvaroansvarig"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.view_hr_holidays_filter
@@ -3196,7 +3199,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_allocation__type_request_unit
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_type__request_unit
 msgid "Take Time Off in"
-msgstr ""
+msgstr "Var frånvarande i"
 
 #. module: hr_holidays
 #. openerp-web
@@ -3265,6 +3268,15 @@ msgstr ""
 msgid ""
 "The number of remaining time off is not sufficient for this time off type.\n"
 "Please also check the time off waiting for validation."
+msgstr ""
+
+#. module: hr_holidays
+#: code:addons/hr_holidays/models/hr_leave.py:0
+#, python-format
+msgid ""
+"\n"
+"The employees that lack allocation days are:\n"
+"%s"
 msgstr ""
 
 #. module: hr_holidays
@@ -3488,7 +3500,7 @@ msgstr ""
 #. module: hr_holidays
 #: model:mail.activity.type,name:hr_holidays.mail_act_leave_second_approval
 msgid "Time Off Second Approve"
-msgstr ""
+msgstr "Andra frånvarogodkännandet"
 
 #. module: hr_holidays
 #: model:ir.actions.act_window,name:hr_holidays.action_hr_holidays_summary_employee
@@ -3778,7 +3790,7 @@ msgstr ""
 #: code:addons/hr_holidays/static/src/components/partner_im_status_icon/partner_im_status_icon.xml:0
 #, python-format
 msgid "User is online"
-msgstr ""
+msgstr "Användaren är online"
 
 #. module: hr_holidays
 #. openerp-web
@@ -3949,6 +3961,13 @@ msgid "You cannot delete an allocation request which is in %s state."
 msgstr ""
 
 #. module: hr_holidays
+#: code:addons/hr_holidays/models/hr_leave_allocation.py:0
+#, python-format
+msgid ""
+"You cannot delete an allocation request which has some validated leaves."
+msgstr ""
+
+#. module: hr_holidays
 #: code:addons/hr_holidays/models/hr_leave.py:0
 #, python-format
 msgid ""
@@ -3967,6 +3986,20 @@ msgstr ""
 #: code:addons/hr_holidays/models/hr_leave.py:0
 #, python-format
 msgid ""
+"You have several allocations for those type and period.\n"
+"Please split your request to fit in their number of days."
+msgstr ""
+
+#. module: hr_holidays
+#: code:addons/hr_holidays/models/hr_leave.py:0
+#, python-format
+msgid "You must be %s\\'s Manager to approve this leave"
+msgstr ""
+
+#. module: hr_holidays
+#: code:addons/hr_holidays/models/hr_leave.py:0
+#, python-format
+msgid ""
 "You must be either %s's manager or Time off Manager to approve this leave"
 msgstr ""
 
@@ -3978,6 +4011,8 @@ msgid ""
 msgstr ""
 
 #. module: hr_holidays
+#. module: hr_holidays
+#: code:addons/hr_holidays/models/hr_leave_allocation.py:0
 #: model:ir.model.constraint,message:hr_holidays.constraint_hr_leave_accrual_level_added_value_greater_than_zero
 msgid "You must give a rate greater than 0 in accrual plan levels."
 msgstr ""
@@ -4021,7 +4056,7 @@ msgstr ""
 #. module: hr_holidays
 #: model:ir.ui.menu,name:hr_holidays.menu_hr_available_holidays_report_tree
 msgid "by Employee"
-msgstr "per anställd"
+msgstr "Per anställd"
 
 #. module: hr_holidays
 #: model:ir.ui.menu,name:hr_holidays.menu_hr_holidays_report_employee_time_off

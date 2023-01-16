@@ -76,6 +76,32 @@ class TestSelfAccessProfile(TestHrCommon):
         # Compare both
         self.assertEqual(full_fields.keys(), fields.keys(), "View fields should not depend on user's groups")
 
+    def test_access_my_profile_toolbar(self):
+        """ A simple user shouldn't have the possibilities to see the 'Change Password' action"""
+        james = new_test_user(self.env, login='jam', groups='base.group_user', name='Simple employee', email='jam@example.com')
+        james = james.with_user(james)
+        self.env['hr.employee'].create({
+            'name': 'James',
+            'user_id': james.id,
+        })
+        view = self.env.ref('hr.res_users_view_form_profile')
+        available_actions = james.fields_view_get(view_id=view.id, toolbar=True)['toolbar']['action']
+        change_password_action = self.env.ref("base.change_password_wizard_action")
+
+        self.assertFalse(any(x['id'] == change_password_action.id for x in available_actions))
+
+        """ An ERP manager should have the possibilities to see the 'Change Password' """
+        john = new_test_user(self.env, login='joh', groups='base.group_erp_manager', name='ERP Manager', email='joh@example.com')
+        john = john.with_user(john)
+        self.env['hr.employee'].create({
+            'name': 'John',
+            'user_id': john.id,
+        })
+        view = self.env.ref('hr.res_users_view_form_profile')
+        available_actions = john.fields_view_get(view_id=view.id, toolbar=True)['toolbar']['action']
+        self.assertTrue(any(x['id'] == change_password_action.id for x in available_actions))
+
+
 class TestSelfAccessRights(TestHrCommon):
 
     def setUp(self):

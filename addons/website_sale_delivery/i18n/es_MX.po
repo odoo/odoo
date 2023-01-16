@@ -4,7 +4,7 @@
 # 
 # Translators:
 # Martin Trigaux, 2021
-# Lucia Pacheco <lpo@odoo.com>, 2021
+# Lucia Pacheco <lpo@odoo.com>, 2022
 # 
 msgid ""
 msgstr ""
@@ -12,13 +12,13 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-07-12 07:50+0000\n"
 "PO-Revision-Date: 2021-09-14 12:29+0000\n"
-"Last-Translator: Lucia Pacheco <lpo@odoo.com>, 2021\n"
+"Last-Translator: Lucia Pacheco <lpo@odoo.com>, 2022\n"
 "Language-Team: Spanish (Mexico) (https://www.transifex.com/odoo/teams/41243/es_MX/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: es_MX\n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"Plural-Forms: nplurals=3; plural=n == 1 ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;\n"
 
 #. module: website_sale_delivery
 #: model_terms:ir.ui.view,arch_db:website_sale_delivery.payment_delivery
@@ -120,6 +120,16 @@ msgid ""
 msgstr ""
 "Parece que eligió un método de entrega que no es compatible con su "
 "dirección. Por favor, actualice la página e inténtelo de nuevo."
+
+#. module: website_sale_delivery
+#: code:addons/website_sale_delivery/controllers/main.py:0
+#, python-format
+msgid ""
+"It seems that there is already a transaction for your order, you can not "
+"change the delivery method anymore"
+msgstr ""
+"Parece que ya hay una transacción para su orden, ya no se puede cambiar el "
+"método de entrega"
 
 #. module: website_sale_delivery
 #: code:addons/website_sale_delivery/controllers/main.py:0

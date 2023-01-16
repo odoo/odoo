@@ -23,7 +23,7 @@ const viewRegistry = registry.category("views");
 
 /** @typedef {number|false} ActionId */
 /** @typedef {Object} ActionDescription */
-/** @typedef {"current" | "fullscreen" | "new" | "self" | "inline"} ActionMode */
+/** @typedef {"current" | "fullscreen" | "new" | "main" | "self" | "inline"} ActionMode */
 /** @typedef {string} ActionTag */
 /** @typedef {string} ActionXMLId */
 /** @typedef {Object} Context */
@@ -297,6 +297,12 @@ function makeActionManager(env) {
                 const storedAction = browser.sessionStorage.getItem("current_action");
                 const lastAction = JSON.parse(storedAction || "{}");
                 if (lastAction.res_model === state.model) {
+                    if (lastAction.context) {
+                        // If this method is called because of a company switch, the
+                        // stored allowed_company_ids is incorrect.
+                        // (Fix will be improved in master)
+                        delete lastAction.context.allowed_company_ids;
+                    }
                     actionRequest = lastAction;
                     options.viewType = state.view_type;
                 }
@@ -429,8 +435,8 @@ function makeActionManager(env) {
             }
         }
 
-        if (context.active_id || context.active_ids || context.search_disable_custom_filters) {
-            viewProps.activateFavorite = false; // not sure --> check logic
+        if (context.search_disable_custom_filters) {
+            viewProps.activateFavorite = false;
         }
 
         // view specific
@@ -523,15 +529,19 @@ function makeActionManager(env) {
             reject = _rej;
         });
         const action = controller.action;
-
-        // Compute breadcrumbs
         const index = _computeStackIndex(options);
         const controllerArray = [controller];
         if (options.lazyController) {
             controllerArray.unshift(options.lazyController);
         }
         const nextStack = controllerStack.slice(0, index).concat(controllerArray);
-        controller.config.breadcrumbs = _getBreadcrumbs(nextStack.slice(0, -1));
+
+        // Compute breadcrumbs
+        if (action.target === "new") {
+            controller.config.breadcrumbs = [];
+        } else {
+            controller.config.breadcrumbs = _getBreadcrumbs(nextStack.slice(0, -1));
+        }
         if (controller.Component.isLegacy) {
             controller.props.breadcrumbs = controller.config.breadcrumbs;
         }
@@ -1103,6 +1113,7 @@ function makeActionManager(env) {
         const actionProm = _loadAction(actionRequest, options.additionalContext);
         let action = await keepLast.add(actionProm);
         action = _preprocessAction(action, options.additionalContext);
+        options.clearBreadcrumbs = action.target === "main" || options.clearBreadcrumbs;
         switch (action.type) {
             case "ir.actions.act_url":
                 return _executeActURLAction(action, options);
@@ -1219,6 +1230,11 @@ function makeActionManager(env) {
      * @returns {Promise<Number>}
      */
     async function switchView(viewType, props = {}) {
+        if (dialog) {
+            // we don't want to switch view when there's a dialog open, as we would
+            // not switch in the correct action (action in background != dialog action)
+            return;
+        }
         const controller = controllerStack[controllerStack.length - 1];
         const view = _getView(viewType);
         if (!view) {
@@ -1229,6 +1245,7 @@ function makeActionManager(env) {
                 )
             );
         }
+        await keepLast.add(Promise.resolve());
         const newController = controller.action.controllers[viewType] || {
             jsId: `controller_${++id}`,
             Component: view.isLegacy ? view : View,
@@ -1278,6 +1295,7 @@ function makeActionManager(env) {
      * @param {string} jsId
      */
     async function restore(jsId) {
+        await keepLast.add(Promise.resolve());
         let index;
         if (!jsId) {
             index = controllerStack.length - 2;

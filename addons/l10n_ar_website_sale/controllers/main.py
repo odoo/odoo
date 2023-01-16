@@ -41,6 +41,8 @@ class L10nARWebsiteSale(WebsiteSale):
         # Identification type and AFIP Responsibility Combination
         if request.website.sudo().company_id.country_id.code == "AR":
             if mode[1] == 'billing':
+                if error and any(field in error for field in ['l10n_latam_identification_type_id', 'l10n_ar_afip_responsibility_type_id']):
+                    return error, error_message
                 id_type_id = data.get("l10n_latam_identification_type_id")
                 afip_resp_id = data.get("l10n_ar_afip_responsibility_type_id")
 

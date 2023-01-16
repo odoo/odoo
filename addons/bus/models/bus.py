@@ -6,6 +6,7 @@ import random
 import select
 import threading
 import time
+from psycopg2 import InterfaceError
 
 import odoo
 import odoo.service.server as servermod
@@ -84,8 +85,6 @@ class ImBus(models.Model):
 
     @api.model
     def _poll(self, channels, last=0, options=None):
-        if options is None:
-            options = {}
         # first poll return the notification in the 'buffer'
         if last == 0:
             timeout_ago = datetime.datetime.utcnow()-datetime.timedelta(seconds=TIMEOUT)
@@ -108,10 +107,11 @@ class ImBus(models.Model):
 #----------------------------------------------------------
 # Dispatcher
 #----------------------------------------------------------
-class ImDispatch(object):
+class ImDispatch:
     def __init__(self):
         self.channels = {}
         self.started = False
+        self.Event = None
 
     def poll(self, dbname, channels, last, options=None, timeout=None):
         channels = [channel_with_db(dbname, channel) for channel in channels]
@@ -126,7 +126,7 @@ class ImDispatch(object):
             current = threading.current_thread()
             current._daemonic = True
             # rename the thread to avoid tests waiting for a longpolling
-            current.setName("openerp.longpolling.request.%s" % current.ident)
+            current.name = f"openerp.longpolling.request.{current.ident}"
 
         registry = odoo.registry(dbname)
 
@@ -171,7 +171,7 @@ class ImDispatch(object):
             conn = cr._cnx
             cr.execute("listen imbus")
             cr.commit();
-            while True:
+            while not stop_event.is_set():
                 if select.select([conn], [], [], TIMEOUT) == ([], [], []):
                     pass
                 else:
@@ -196,31 +196,33 @@ class ImDispatch(object):
                 event.set()
 
     def run(self):
-        while True:
+        while not stop_event.is_set():
             try:
                 self.loop()
-            except Exception as e:
+            except Exception as exc:
+                if isinstance(exc, InterfaceError) and stop_event.is_set():
+                    continue
                 _logger.exception("Bus.loop error, sleep and retry")
                 time.sleep(TIMEOUT)
 
     def start(self):
         if odoo.evented:
             # gevent mode
-            import gevent
+            import gevent.event  # pylint: disable=import-outside-toplevel
             self.Event = gevent.event.Event
             gevent.spawn(self.run)
         else:
             # threaded mode
             self.Event = threading.Event
-            t = threading.Thread(name="%s.Bus" % __name__, target=self.run)
-            t.daemon = True
-            t.start()
+            threading.Thread(name=f"{__name__}.Bus", target=self.run, daemon=True).start()
         self.started = True
         return self
 
 dispatch = None
+stop_event = threading.Event()
 if not odoo.multi_process or odoo.evented:
     # We only use the event dispatcher in threaded and gevent mode
     dispatch = ImDispatch()
     if servermod.server:
+        servermod.server.on_stop(stop_event.set)
         servermod.server.on_stop(dispatch.wakeup_workers)

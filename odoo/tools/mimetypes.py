@@ -106,7 +106,7 @@ def _check_olecf(data):
 
 def _check_svg(data):
     """This simply checks the existence of the opening and ending SVG tags"""
-    if b'<svg' in data and b'/svg>' in data:
+    if b'<svg' in data and b'/svg' in data:
         return 'image/svg+xml'
 
 
@@ -123,7 +123,7 @@ _mime_mappings = (
     _Entry('image/png', [b'\x89PNG\r\n\x1A\n'], []),
     _Entry('image/gif', [b'GIF87a', b'GIF89a'], []),
     _Entry('image/bmp', [b'BM'], []),
-    _Entry('image/svg+xml', [b'<'], [
+    _Entry('application/xml', [b'<'], [
         _check_svg,
     ]),
     _Entry('image/x-icon', [b'\x00\x00\x01\x00'], []),
@@ -180,7 +180,7 @@ if magic:
         _guesser = ms.buffer
 
     def guess_mimetype(bin_data, default=None):
-        mimetype = _guesser(bin_data)
+        mimetype = _guesser(bin_data[:1024])
         # upgrade incorrect mimetype to official one, fixed upstream
         # https://github.com/file/file/commit/1a08bb5c235700ba623ffa6f3c95938fe295b262
         if mimetype == 'image/svg':
@@ -190,8 +190,20 @@ else:
     guess_mimetype = _odoo_guess_mimetype
 
 
+
 def neuter_mimetype(mimetype, user):
     wrong_type = 'ht' in mimetype or 'xml' in mimetype or 'svg' in mimetype
     if wrong_type and not user._is_system():
         return 'text/plain'
     return mimetype
+
+
+def get_extension(filename):
+    """ Return the extension the current filename based on the heuristic that
+    ext is less than or equal to 10 chars and is alphanumeric.
+
+    :param str filename: filename to try and guess a extension for
+    :returns: detected extension or ``
+    """
+    ext = '.' in filename and filename.split('.')[-1]
+    return ext and len(ext) <= 10 and ext.isalnum() and '.' + ext.lower() or ''

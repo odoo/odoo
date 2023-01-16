@@ -7,6 +7,7 @@
 # Quim - eccit <quim@eccit.com>, 2021
 # Manel Fernandez Ramirez <manelfera@outlook.com>, 2021
 # jabelchi, 2021
+# marcescu, 2022
 # 
 msgid ""
 msgstr ""
@@ -14,7 +15,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-09-14 10:29+0000\n"
 "PO-Revision-Date: 2021-09-14 12:25+0000\n"
-"Last-Translator: jabelchi, 2021\n"
+"Last-Translator: marcescu, 2022\n"
 "Language-Team: Catalan (https://www.transifex.com/odoo/teams/41243/ca/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -41,6 +42,9 @@ msgid ""
 "the time off %s. If you don't want a timesheet, you should leave the "
 "internal project and task empty."
 msgstr ""
+"Tant el projecte intern com la tasca són necessaris per generar un full de "
+"temps per al temps desactivat%s. Si no vols un full d'hores, hauries de "
+"deixar buit el projecte intern i la tasca."
 
 #. module: project_timesheet_holidays
 #: model:ir.model,name:project_timesheet_holidays.model_res_company
@@ -56,6 +60,8 @@ msgstr "Ajustos de configuració"
 #: model:ir.model.fields,help:project_timesheet_holidays.field_res_config_settings__internal_project_id
 msgid "Default project value for timesheet generated from time off type."
 msgstr ""
+"Valor predeterminat del projecte per al full de temps generat des del tipus "
+"de temps desactivat."
 
 #. module: project_timesheet_holidays
 #: model:ir.model,name:project_timesheet_holidays.model_hr_employee
@@ -70,7 +76,7 @@ msgstr "Genera full d'hores"
 #. module: project_timesheet_holidays
 #: model:ir.model.fields,field_description:project_timesheet_holidays.field_account_analytic_line__global_leave_id
 msgid "Global Time Off"
-msgstr ""
+msgstr "Temps global desactivat"
 
 #. module: project_timesheet_holidays
 #: model:ir.model.fields,help:project_timesheet_holidays.field_hr_leave_type__timesheet_generate
@@ -78,6 +84,8 @@ msgid ""
 "If checked, when validating a time off, timesheet will be generated in the "
 "Vacation Project of the company."
 msgstr ""
+"Si es marca, quan es validi un temps lliure, es generarà un full d'hores en "
+"el Projecte Vacation de l'empresa."
 
 #. module: project_timesheet_holidays
 #: code:addons/project_timesheet_holidays/models/res_company.py:0
@@ -105,7 +113,7 @@ msgstr "Projecte"
 #. module: project_timesheet_holidays
 #: model:ir.model,name:project_timesheet_holidays.model_resource_calendar_leaves
 msgid "Resource Time Off Detail"
-msgstr ""
+msgstr "Detall del temps lliure dels recursos"
 
 #. module: project_timesheet_holidays
 #: model:ir.model.fields,field_description:project_timesheet_holidays.field_hr_leave_type__timesheet_task_id
@@ -119,6 +127,8 @@ msgid ""
 "The project will contain the timesheet generated when a time off is "
 "validated."
 msgstr ""
+"El projecte contindrà el full d'hores generat quan es validi un temps "
+"desactivat."
 
 #. module: project_timesheet_holidays
 #: code:addons/project_timesheet_holidays/models/res_company.py:0
@@ -133,18 +143,18 @@ msgstr "Absències"
 #: code:addons/project_timesheet_holidays/models/resource_calendar_leaves.py:0
 #, python-format
 msgid "Time Off (%s/%s)"
-msgstr ""
+msgstr "Temps desactivat (%s/%s)"
 
 #. module: project_timesheet_holidays
 #: model:ir.model.fields,field_description:project_timesheet_holidays.field_res_company__leave_timesheet_task_id
 #: model:ir.model.fields,field_description:project_timesheet_holidays.field_res_config_settings__leave_timesheet_task_id
 msgid "Time Off Task"
-msgstr ""
+msgstr "Temps de la tasca desactivada"
 
 #. module: project_timesheet_holidays
 #: model:ir.model,name:project_timesheet_holidays.model_hr_leave_type
 msgid "Time Off Type"
-msgstr ""
+msgstr "Tipus de temps desactivat"
 
 #. module: project_timesheet_holidays
 #: model_terms:ir.ui.view,arch_db:project_timesheet_holidays.hr_holiday_status_view_form_inherit
@@ -158,3 +168,5 @@ msgid ""
 "You cannot delete timesheets linked to time off. Please, cancel the time off"
 " instead."
 msgstr ""
+"No podeu suprimir fulls d'hora enllaçats a temps desactivat. Si us plau, "
+"cancel·li el temps lliure."

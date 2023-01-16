@@ -3,7 +3,9 @@
 # 	* website_slides_forum
 # 
 # Translators:
-# Martin Trigaux, 2021
+# Martin Trigaux, 2022
+# francois lange, 2022
+# Cécile Collart <cco@odoo.com>, 2022
 # 
 msgid ""
 msgstr ""
@@ -11,13 +13,13 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-09-14 10:29+0000\n"
 "PO-Revision-Date: 2021-09-14 12:29+0000\n"
-"Last-Translator: Martin Trigaux, 2021\n"
+"Last-Translator: Cécile Collart <cco@odoo.com>, 2022\n"
 "Language-Team: French (https://www.transifex.com/odoo/teams/41243/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: fr\n"
-"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+"Plural-Forms: nplurals=3; plural=(n == 0 || n == 1) ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;\n"
 
 #. module: website_slides_forum
 #: model_terms:forum.forum,faq:website_slides_forum.forum_forum_demo_channel_0
@@ -133,25 +135,26 @@ msgstr ""
 #: model_terms:forum.forum,faq:website_slides_forum.forum_forum_demo_channel_0
 #: model_terms:forum.forum,faq:website_slides_forum.forum_forum_demo_channel_2
 msgid "<b>What kinds of questions can I ask here?</b>"
-msgstr ""
+msgstr "<b>Quel genre de questions puis-je poser ici ?</b> "
 
 #. module: website_slides_forum
 #: model_terms:forum.forum,faq:website_slides_forum.forum_forum_demo_channel_0
 #: model_terms:forum.forum,faq:website_slides_forum.forum_forum_demo_channel_2
 msgid "<b>What should I avoid in my answers?</b>"
-msgstr ""
+msgstr "<b>Que dois-je éviter de mettre dans mes réponses ?</b>"
 
 #. module: website_slides_forum
 #: model_terms:forum.forum,faq:website_slides_forum.forum_forum_demo_channel_0
 #: model_terms:forum.forum,faq:website_slides_forum.forum_forum_demo_channel_2
 msgid "<b>What should I avoid in my questions?</b>"
-msgstr ""
+msgstr "<b>Que dois-je éviter de mettre dans mes questions ?</b>"
 
 #. module: website_slides_forum
 #: model_terms:forum.forum,faq:website_slides_forum.forum_forum_demo_channel_0
 #: model_terms:forum.forum,faq:website_slides_forum.forum_forum_demo_channel_2
 msgid "<b>Why can other people edit my questions/answers?</b>"
 msgstr ""
+"<b>Pourquoi d'autres personnes peuvent modifier mes questions/réponses ?</b>"
 
 #. module: website_slides_forum
 #: model_terms:ir.ui.view,arch_db:website_slides_forum.slide_fullscreen
@@ -225,7 +228,7 @@ msgstr "Description"
 #. module: website_slides_forum
 #: model:ir.model.fields,help:website_slides_forum.field_forum_forum__slide_channel_ids
 msgid "Edit the course linked to this forum on the course form."
-msgstr ""
+msgstr "Éditez le cours lié a ce forum sur le formulaire de cours."
 
 #. module: website_slides_forum
 #: model_terms:forum.forum,faq:website_slides_forum.forum_forum_demo_channel_0
@@ -265,7 +268,7 @@ msgstr "Messages du forum"
 #: model:ir.model.fields,help:website_slides_forum.field_forum_forum__visibility
 msgid ""
 "Forum linked to a Course, the visibility is the one applied on the course."
-msgstr ""
+msgstr "Forum lié à un Cours, la visibilité est celle appliquée sur le cours."
 
 #. module: website_slides_forum
 #: model:ir.ui.menu,name:website_slides_forum.website_slides_menu_forum_forum
@@ -276,7 +279,7 @@ msgstr "Forums"
 #: model_terms:forum.forum,faq:website_slides_forum.forum_forum_demo_channel_0
 #: model_terms:forum.forum,faq:website_slides_forum.forum_forum_demo_channel_2
 msgid "Here a table with the privileges and the karma level"
-msgstr ""
+msgstr "Voici un tableau avec les privilèges et le niveau de karma"
 
 #. module: website_slides_forum
 #: model_terms:forum.forum,welcome_message:website_slides_forum.forum_forum_demo_channel_0
@@ -289,6 +292,7 @@ msgstr "Masquer l'intro"
 #: model_terms:forum.forum,faq:website_slides_forum.forum_forum_demo_channel_2
 msgid "If this approach is not for you, please respect the community."
 msgstr ""
+"Si cette approche n'est pas pour vous, veuillez respecter la communauté."
 
 #. module: website_slides_forum
 #: model_terms:forum.forum,faq:website_slides_forum.forum_forum_demo_channel_0
@@ -325,7 +329,7 @@ msgstr "Nombre de postes du forum actifs"
 #. module: website_slides_forum
 #: model:ir.model.constraint,message:website_slides_forum.constraint_slide_channel_forum_uniq
 msgid "Only one course per forum!"
-msgstr "Seulement un cours par forum!"
+msgstr "Seulement un cours par forum !"
 
 #. module: website_slides_forum
 #: model:ir.ui.menu,name:website_slides_forum.website_slides_menu_forum_post
@@ -417,7 +421,7 @@ msgstr "Visibilité"
 #: model_terms:forum.forum,welcome_message:website_slides_forum.forum_forum_demo_channel_0
 #: model_terms:forum.forum,welcome_message:website_slides_forum.forum_forum_demo_channel_2
 msgid "Welcome!"
-msgstr "Bienvenue!"
+msgstr "Bienvenue !"
 
 #. module: website_slides_forum
 #: model_terms:forum.forum,faq:website_slides_forum.forum_forum_demo_channel_0
@@ -468,7 +472,7 @@ msgstr "Forums eLearning"
 #: model_terms:forum.forum,faq:website_slides_forum.forum_forum_demo_channel_0
 #: model_terms:forum.forum,faq:website_slides_forum.forum_forum_demo_channel_2
 msgid "every answer is equally valid: “What’s your favorite ______?”"
-msgstr "chaque réponse est valable: \"Quel est votre _______ préféré?\""
+msgstr "chaque réponse est valable: \"Quel est votre _______ préféré ?\""
 
 #. module: website_slides_forum
 #: model_terms:forum.forum,faq:website_slides_forum.forum_forum_demo_channel_0
@@ -493,7 +497,7 @@ msgstr "Comment installer Odoo pour une infrastructure spécifique,"
 #: model_terms:forum.forum,faq:website_slides_forum.forum_forum_demo_channel_0
 #: model_terms:forum.forum,faq:website_slides_forum.forum_forum_demo_channel_2
 msgid "it is a rant disguised as a question: “______ sucks, am I right?”"
-msgstr "C'est une critique déguisée en question: \"_____ est nul, pas vrai?\""
+msgstr "C'est une critique déguisée en question: \"_____ est nul, pas vrai ?\""
 
 #. module: website_slides_forum
 #: model_terms:forum.forum,faq:website_slides_forum.forum_forum_demo_channel_0

@@ -21,7 +21,7 @@ from odoo import api, http, models, tools, SUPERUSER_ID
 from odoo.exceptions import AccessDenied, AccessError, MissingError
 from odoo.http import request, content_disposition, Response
 from odoo.tools import consteq, pycompat
-from odoo.tools.mimetypes import guess_mimetype
+from odoo.tools.mimetypes import get_extension, guess_mimetype
 from odoo.modules.module import get_resource_path, get_module_path
 
 from odoo.http import ALLOWED_DEBUG_MODES
@@ -394,15 +394,17 @@ class IrHttp(models.AbstractModel):
                 filehash = record['checksum']
 
         if not content:
-            content = record[field] or ''
+            try:
+                content = record[field] or ''
+            except AccessError:
+                # `record[field]` may not be readable for current user -> 404
+                content = ''
 
         # filename
-        default_filename = False
         if not filename:
             if filename_field in record:
                 filename = record[filename_field]
             if not filename:
-                default_filename = True
                 filename = "%s-%s-%s" % (record._name, record.id, field)
 
         if not mimetype:
@@ -413,8 +415,8 @@ class IrHttp(models.AbstractModel):
             mimetype = guess_mimetype(decoded_content, default=default_mimetype)
 
         # extension
-        _, existing_extension = os.path.splitext(filename)
-        if not existing_extension or default_filename:
+        has_extension = get_extension(filename) or mimetypes.guess_type(filename)[0]
+        if not has_extension:
             extension = mimetypes.guess_extension(mimetype)
             if extension:
                 filename = "%s%s" % (filename, extension)
@@ -473,7 +475,8 @@ class IrHttp(models.AbstractModel):
         content, headers, status = None, [], None
 
         if record._name == 'ir.attachment':
-            status, content, filename, mimetype, filehash = self._binary_ir_attachment_redirect_content(record, default_mimetype=default_mimetype)
+            status, content, default_filename, mimetype, filehash = self._binary_ir_attachment_redirect_content(record, default_mimetype=default_mimetype)
+            filename = filename or default_filename
         if not content:
             status, content, filename, mimetype, filehash = self._binary_record_content(
                 record, field=field, filename=filename, filename_field=filename_field,

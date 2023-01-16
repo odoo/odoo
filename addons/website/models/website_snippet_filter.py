@@ -18,7 +18,7 @@ class WebsiteSnippetFilter(models.Model):
     _description = 'Website Snippet Filter'
     _order = 'name ASC'
 
-    name = fields.Char(required=True)
+    name = fields.Char(required=True, translate=True)
     action_server_id = fields.Many2one('ir.actions.server', 'Server Action', ondelete='cascade')
     field_names = fields.Char(help="A list of comma-separated field names", required=True)
     filter_id = fields.Many2one('ir.filters', 'Filter', ondelete='cascade')
@@ -82,12 +82,24 @@ class WebsiteSnippetFilter(models.Model):
         """Gets the data and returns it the right format for render."""
         self.ensure_one()
 
-        limit = limit and min(limit, self.limit) or self.limit
+        # TODO adapt in master: the "limit" field is there to prevent loading
+        # an arbitrary number of records asked by the client side. It was
+        # however set to 6 for a blog post filter, probably thinking it was a
+        # default limit and not a max limit. That means that configuring a
+        # higher limit via the editor (which allows up to 16) was not working.
+        # As a stable fix, this was made to bypass the max limit if it is under
+        # 16, and only for newly configured snippets.
+        max_limit = max(self.limit, 16) if self.env.context.get('_bugfix_force_minimum_max_limit_to_16') else self.limit
+        limit = limit and min(limit, max_limit) or max_limit
+
         if self.filter_id:
             filter_sudo = self.filter_id.sudo()
             domain = filter_sudo._get_eval_domain()
             if 'website_id' in self.env[filter_sudo.model_id]:
                 domain = expression.AND([domain, self.env['website'].get_current_website().website_domain()])
+            if 'company_id' in self.env[filter_sudo.model_id]:
+                website = self.env['website'].get_current_website()
+                domain = expression.AND([domain, [('company_id', 'in', [False, website.company_id.id])]])
             if 'is_published' in self.env[filter_sudo.model_id]:
                 domain = expression.AND([domain, [('is_published', '=', True)]])
             if search_domain:

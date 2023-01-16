@@ -41,3 +41,9 @@ class PurchaseOrder(models.Model):
                 if not l10n_in_gst_treatment:
                     l10n_in_gst_treatment = order.partner_id.vat and 'regular' or 'consumer'
                 order.l10n_in_gst_treatment = l10n_in_gst_treatment
+
+    def _prepare_invoice(self):
+        invoice_vals = super()._prepare_invoice()
+        if self.l10n_in_journal_id:
+            invoice_vals.update({'journal_id': self.l10n_in_journal_id.id})
+        return invoice_vals

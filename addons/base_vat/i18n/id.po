@@ -2,12 +2,21 @@
 # This file contains the translation of the following modules:
 # 	* base_vat
 # 
+# Translators:
+# Abdul Munif Hanafi <amunifhanafi@gmail.com>, 2022
+# Muhammad Syarif <mhdsyarif.ms@gmail.com>, 2022
+# William Surya Permana <zarambie_game@yahoo.com>, 2022
+# Altela Eleviansyah Pramardhika <altela_pramardhika@yahoo.com>, 2022
+# pnyet <david@zeromail.us>, 2022
+# Ryanto The <ry.the77@gmail.com>, 2022
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~14.5\n"
+"Project-Id-Version: Odoo Server 15.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-09-14 10:28+0000\n"
+"POT-Creation-Date: 2022-01-24 08:19+0000\n"
 "PO-Revision-Date: 2021-09-14 12:21+0000\n"
+"Last-Translator: Ryanto The <ry.the77@gmail.com>, 2022\n"
 "Language-Team: Indonesian (https://www.transifex.com/odoo/teams/41243/id/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -22,6 +31,9 @@ msgid ""
 "specific.\" aria-label=\"Values set here are company-specific.\" "
 "groups=\"base.group_multi_company\" role=\"img\"/>"
 msgstr ""
+"<span class=\"fa fa-lg fa-building-o\" title=\"Values set here are company-"
+"specific.\" aria-label=\"Values set here are company-specific.\" "
+"groups=\"base.group_multi_company\" role=\"img\"/>"
 
 #. module: base_vat
 #: model_terms:ir.ui.view,arch_db:base_vat.view_partner_form
@@ -31,22 +43,22 @@ msgstr ""
 #. module: base_vat
 #: model:ir.model,name:base_vat.model_res_company
 msgid "Companies"
-msgstr ""
+msgstr "Perusahaan"
 
 #. module: base_vat
 #: model:ir.model,name:base_vat.model_res_config_settings
 msgid "Config Settings"
-msgstr ""
+msgstr "Pengaturan Konfigurasi"
 
 #. module: base_vat
 #: model:ir.model,name:base_vat.model_res_partner
 msgid "Contact"
-msgstr ""
+msgstr "Kontak"
 
 #. module: base_vat
 #: model:ir.model,name:base_vat.model_account_fiscal_position
 msgid "Fiscal Position"
-msgstr ""
+msgstr "Posisi Fiskal"
 
 #. module: base_vat
 #: model_terms:ir.ui.view,arch_db:base_vat.res_config_settings_view_form
@@ -62,6 +74,16 @@ msgid ""
 "The Tax Identification Number. Complete it if the contact is subjected to "
 "government taxes. Used in some legal statements."
 msgstr ""
+"Nomor Pokok Wajib Pajak. Diisi jika perusahaan merupakan Pengusaha Kena "
+"Pajak (PKP)."
+
+#. module: base_vat
+#: code:addons/base_vat/models/res_partner.py:0
+#, python-format
+msgid ""
+"The VAT number [%(wrong_vat)s] for %(record_label)s does not seem to be valid. \n"
+"Note: the expected format is %(expected_format)s"
+msgstr ""
 
 #. module: base_vat
 #: code:addons/base_vat/models/res_partner.py:0
@@ -70,14 +92,6 @@ msgid ""
 "The VAT number [%(wrong_vat)s] for %(record_label)s either failed the VIES "
 "VAT validation check or did not respect the expected format "
 "%(expected_format)s."
-msgstr ""
-
-#. module: base_vat
-#: code:addons/base_vat/models/res_partner.py:0
-#, python-format
-msgid ""
-"The VAT number [%(wrong_vat)s] for %(record_label)s does not seem to be valid. \n"
-"Note: the expected format is %(expected_format)s"
 msgstr ""
 
 #. module: base_vat
@@ -92,7 +106,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:base_vat.company_form_vat
 #: model_terms:ir.ui.view,arch_db:base_vat.view_partner_form
 msgid "VAT"
-msgstr ""
+msgstr "PPN"
 
 #. module: base_vat
 #: model:ir.model.fields,field_description:base_vat.field_res_partner__vat

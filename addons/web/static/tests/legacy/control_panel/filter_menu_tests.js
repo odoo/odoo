@@ -42,8 +42,6 @@ odoo.define('web.filter_menu_tests', function (require) {
         });
 
         QUnit.test('simple rendering with a single filter', async function (assert) {
-            assert.expect(3);
-
             const arch = `
                 <search>
                     <filter string="Foo" name="foo" domain="[]"/>
@@ -56,6 +54,8 @@ odoo.define('web.filter_menu_tests', function (require) {
 
             await cpHelpers.toggleFilterMenu(controlPanel);
             assert.containsOnce(controlPanel, '.o_menu_item');
+            assert.containsOnce(controlPanel, ".o_menu_item[role=menuitemcheckbox]");
+            assert.deepEqual(controlPanel.el.querySelector(".o_menu_item").ariaChecked, "false");
             assert.containsOnce(controlPanel, '.dropdown-divider');
             assert.containsOnce(controlPanel, 'div.o_add_custom_filter_menu');
 
@@ -81,7 +81,7 @@ odoo.define('web.filter_menu_tests', function (require) {
         });
 
         QUnit.test('toggle a "simple" filter in filter menu works', async function (assert) {
-            assert.expect(9);
+            assert.expect(12);
 
             const domains = [
                 [['foo', '=', 'qsdf']],
@@ -105,7 +105,10 @@ odoo.define('web.filter_menu_tests', function (require) {
             assert.deepEqual(cpHelpers.getFacetTexts(controlPanel), []);
 
             assert.notOk(cpHelpers.isItemSelected(controlPanel, 0));
+            assert.containsOnce(controlPanel, ".o_menu_item[role=menuitemcheckbox]");
+            assert.deepEqual(controlPanel.el.querySelector(".o_menu_item").ariaChecked, "false");
             await cpHelpers.toggleMenuItem(controlPanel, "Foo");
+            assert.deepEqual(controlPanel.el.querySelector(".o_menu_item").ariaChecked, "true");
 
             assert.deepEqual(cpHelpers.getFacetTexts(controlPanel), ['Foo']);
             assert.containsOnce(controlPanel.el.querySelector('.o_searchview .o_searchview_facet'),

@@ -69,25 +69,40 @@ class MailTemplate(models.Model):
                                         help="Sidebar action to make this template available on records "
                                              "of the related document model")
 
+    # access
+    can_write = fields.Boolean(compute='_compute_can_write',
+                               help='The current user can edit the template.')
+
     # Overrides of mail.render.mixin
     @api.depends('model')
     def _compute_render_model(self):
         for template in self:
             template.render_model = template.model
 
+    @api.depends_context('uid')
+    def _compute_can_write(self):
+        writable_templates = self._filter_access_rules('write')
+        for template in self:
+            template.can_write = template in writable_templates
+
     # ------------------------------------------------------------
     # CRUD
     # ------------------------------------------------------------
 
-    @api.model
-    def create(self, values):
-        result = super().create(values)
+    def _fix_attachment_ownership(self):
+        for record in self:
+            record.attachment_ids.write({'res_model': record._name, 'res_id': record.id})
+        return self
 
-        # fix attachment ownership
-        if result.attachment_ids:
-            result.attachment_ids.write({'res_model': self._name, 'res_id': result.id})
+    @api.model_create_multi
+    def create(self, values_list):
+        return super().create(values_list)\
+            ._fix_attachment_ownership()
 
-        return result
+    def write(self, vals):
+        super().write(vals)
+        self._fix_attachment_ownership()
+        return True
 
     def unlink(self):
         self.unlink_action()

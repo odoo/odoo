@@ -81,7 +81,7 @@ QUnit.module('core', {}, function () {
     });
 
     QUnit.test("domain <=> condition", function (assert) {
-        assert.expect(3);
+        assert.expect(4);
 
         var domain = [
             '|',
@@ -99,6 +99,9 @@ QUnit.module('core', {}, function () {
         assert.deepEqual(Domain.prototype.conditionToDomain(
             'doc and toto is None or not tata'),
             ['|', '&', ['doc', '!=', false], ['toto', '=', null], ['tata', '=', false]]);
+        assert.deepEqual(Domain.prototype.conditionToDomain(
+            `field in ("foo", "bar") and display_name in ['boo','far']`),
+            ['&', ['field', 'in', ['foo', 'bar']], ['display_name', 'in', ['boo', 'far']]]);
     });
 
     QUnit.test("condition 'a field is set' does not convert to a domain", function (assert) {
@@ -144,7 +147,7 @@ QUnit.module('core', {}, function () {
     });
 
     QUnit.test("arrayToString", function (assert) {
-        assert.expect(7);
+        assert.expect(14);
 
         const arrayToString = Domain.prototype.arrayToString;
 
@@ -155,8 +158,18 @@ QUnit.module('core', {}, function () {
         assert.strictEqual(arrayToString([['name', '=', 'null']]), '[["name","=","null"]]');
         assert.strictEqual(arrayToString([['name', '=', 'false']]), '[["name","=","false"]]');
         assert.strictEqual(arrayToString([['name', '=', 'true']]), '[["name","=","true"]]');
+        assert.strictEqual(arrayToString([['name', 'in', [true, false]]]), '[["name","in",[True,False]]]');
+        assert.strictEqual(arrayToString([['name', 'in', [null]]]), '[["name","in",[None]]]');
 
+        assert.strictEqual(arrayToString([['name', 'in', ["foo", "bar"]]]), '[["name","in",["foo","bar"]]]');
+        assert.strictEqual(arrayToString([['name', 'in', [1, 2]]]), '[["name","in",[1,2]]]');
         assert.strictEqual(arrayToString(), '[]');
+
+        assert.strictEqual(arrayToString(['&', ['name', '=', 'foo'], ['type', '=', 'bar']]), '["&",["name","=","foo"],["type","=","bar"]]');
+        assert.strictEqual(arrayToString(['|', ['name', '=', 'foo'], ['type', '=', 'bar']]), '["|",["name","=","foo"],["type","=","bar"]]');
+
+        // string domains are not processed
+        assert.strictEqual(arrayToString('[["name", "ilike", "foo"]]'), '[["name", "ilike", "foo"]]');
     });
 
     QUnit.test("like, =like, ilike and =ilike", function (assert) {

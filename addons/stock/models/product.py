@@ -11,6 +11,7 @@ from odoo.exceptions import UserError
 from odoo.osv import expression
 from odoo.tools import float_is_zero
 from odoo.tools.float_utils import float_round
+from odoo.tools.mail import html2plaintext, is_html_empty
 
 OPERATORS = {
     '<': py_operator.lt,
@@ -233,7 +234,7 @@ class Product(models.Model):
         """
         self.ensure_one()
         picking_code = picking_type_id.code
-        description = self.description or self.name
+        description = html2plaintext(self.description) if not is_html_empty(self.description) else self.name
         if picking_code == 'incoming':
             return self.description_pickingin or description
         if picking_code == 'outgoing':
@@ -256,7 +257,7 @@ class Product(models.Model):
                 if isinstance(item, int):
                     ids.add(item)
                 else:
-                    domain = expression.OR([[('name', 'ilike', item)], domain])
+                    domain = expression.OR([[(self.env[model]._rec_name, 'ilike', item)], domain])
             if domain:
                 ids |= set(self.env[model].search(domain).ids)
             return ids
@@ -574,6 +575,8 @@ class Product(models.Model):
         owner_id = self.env['res.partner'].browse(owner_id)
         to_uom = self.env['uom.uom'].browse(to_uom)
         quants = self.env['stock.quant']._gather(product_id, location_id, lot_id=lot_id, package_id=package_id, owner_id=owner_id, strict=True)
+        if lot_id:
+            quants = quants.filtered(lambda q: q.lot_id == lot_id)
         theoretical_quantity = sum([quant.quantity for quant in quants])
         if to_uom and product_id.uom_id != to_uom:
             theoretical_quantity = product_id.uom_id._compute_quantity(theoretical_quantity, to_uom)
@@ -621,6 +624,10 @@ class Product(models.Model):
         lines = self.env['stock.production.lot'].read_group(domain, ['product_id'], ['product_id'])
         linked_product_ids = [group['product_id'][0] for group in lines]
         return super(Product, self - self.browse(linked_product_ids))._filter_to_unlink()
+
+    @api.model
+    def _count_returned_sn_products(self, sn_lot):
+        return 0
 
 
 class ProductTemplate(models.Model):
@@ -717,7 +724,7 @@ class ProductTemplate(models.Model):
 
     def _compute_quantities_dict(self):
         variants_available = {
-            p['id']: p for p in self.product_variant_ids.read(['qty_available', 'virtual_available', 'incoming_qty', 'outgoing_qty'])
+            p['id']: p for p in self.product_variant_ids._origin.read(['qty_available', 'virtual_available', 'incoming_qty', 'outgoing_qty'])
         }
         prod_available = {}
         for template in self:
@@ -725,7 +732,7 @@ class ProductTemplate(models.Model):
             virtual_available = 0
             incoming_qty = 0
             outgoing_qty = 0
-            for p in template.product_variant_ids:
+            for p in template.product_variant_ids._origin:
                 qty_available += variants_available[p.id]["qty_available"]
                 virtual_available += variants_available[p.id]["virtual_available"]
                 incoming_qty += variants_available[p.id]["incoming_qty"]
@@ -856,11 +863,17 @@ class ProductTemplate(models.Model):
         if 'type' in vals and vals['type'] != 'product' and sum(self.mapped('nbr_reordering_rules')) != 0:
             raise UserError(_('You still have some active reordering rules on this product. Please archive or delete them first.'))
         if any('type' in vals and vals['type'] != prod_tmpl.type for prod_tmpl in self):
-            existing_move_lines = self.env['stock.move.line'].search([
+            existing_done_move_lines = self.env['stock.move.line'].sudo().search([
+                ('product_id', 'in', self.mapped('product_variant_ids').ids),
+                ('state', '=', 'done'),
+            ], limit=1)
+            if existing_done_move_lines:
+                raise UserError(_("You can not change the type of a product that was already used."))
+            existing_reserved_move_lines = self.env['stock.move.line'].search([
                 ('product_id', 'in', self.mapped('product_variant_ids').ids),
                 ('state', 'in', ['partially_available', 'assigned']),
             ])
-            if existing_move_lines:
+            if existing_reserved_move_lines:
                 raise UserError(_("You can not change the type of a product that is currently reserved on a stock move. If you need to change the type, you should first unreserve the stock move."))
         if 'type' in vals and vals['type'] != 'product' and any(p.type == 'product' and not float_is_zero(p.qty_available, precision_rounding=p.uom_id.rounding) for p in self):
             raise UserError(_("Available quantity should be set to zero before changing type"))
@@ -972,7 +985,13 @@ class ProductCategory(models.Model):
         domain=[('product_categ_selectable', '=', True)])
     removal_strategy_id = fields.Many2one(
         'product.removal', 'Force Removal Strategy',
-        help="Set a specific removal strategy that will be used regardless of the source location for this product category")
+        help="Set a specific removal strategy that will be used regardless of the source location for this product category.\n\n"
+             "FIFO: products/lots that were stocked first will be moved out first.\n"
+             "LIFO: products/lots that were stocked last will be moved out first.\n"
+             "Closet location: products/lots closest to the target location will be moved out first.\n"
+             "FEFO: products/lots with the closest removal date will be moved out first "
+             "(the availability of this method depends on the \"Expiration Dates\" setting)."
+    )
     total_route_ids = fields.Many2many(
         'stock.location.route', string='Total routes', compute='_compute_total_route_ids',
         readonly=True)

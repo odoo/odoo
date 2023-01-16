@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 from datetime import timedelta, time
-from odoo import fields, models
+from odoo import fields, models, _, api
 from odoo.tools.float_utils import float_round
 
 
@@ -34,6 +34,14 @@ class ProductProduct(models.Model):
             product.sales_count = float_round(r.get(product.id, 0), precision_rounding=product.uom_id.rounding)
         return r
 
+    @api.onchange('type')
+    def _onchange_type(self):
+        if self._origin and self.sales_count > 0:
+            return {'warning': {
+                'title': _("Warning"),
+                'message': _("You cannot change the product's type because it is already used in sales orders.")
+            }}
+
     def action_view_sales(self):
         action = self.env["ir.actions.actions"]._for_xml_id("sale.report_all_channels_sales_action")
         action['domain'] = [('product_id', 'in', self.ids)]
@@ -42,7 +50,7 @@ class ProductProduct(models.Model):
             'active_id': self._context.get('active_id'),
             'search_default_Sales': 1,
             'active_model': 'sale.report',
-            'time_ranges': {'field': 'date', 'range': 'last_365_days'},
+            'search_default_filter_order_date': 1,
         }
         return action
 

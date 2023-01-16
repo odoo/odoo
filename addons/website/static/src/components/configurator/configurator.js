@@ -1,5 +1,6 @@
 /** @odoo-module **/
 
+import concurrency from 'web.concurrency';
 import rpc from 'web.rpc';
 import utils from 'web.utils';
 import weUtils from 'web_editor.utils';
@@ -65,7 +66,7 @@ const SESSION_STORAGE_ITEM_NAME = 'websiteConfigurator' + session.website_id;
 
 class SkipButton extends Component {
     async skip() {
-        await skipConfigurator();
+        await skipConfigurator(Component.env.services);
     }
 }
 
@@ -318,7 +319,7 @@ class PaletteSelectionScreen extends Component {
             img = await svgToPNG(img);
         }
         img = img.split(',')[1];
-        const [color1, color2] = await rpc.query({
+        const [color1, color2] = await this.rpc({
             model: 'base.document.layout',
             method: 'extract_image_primary_secondary_colors',
             args: [img],
@@ -338,7 +339,7 @@ Object.assign(PaletteSelectionScreen, {
     template: 'website.Configurator.PaletteSelectionScreen',
 });
 
-class FeaturesSelectionScreen extends Component {
+export class FeaturesSelectionScreen extends Component {
     constructor() {
         super(...arguments);
         this.state = useStore((state) => state);
@@ -356,7 +357,7 @@ class FeaturesSelectionScreen extends Component {
             industry_id: industryId,
             palette: this.state.selectedPalette
         };
-        const themes = await rpc.query({
+        const themes = await this.rpc({
             model: 'website',
             method: 'configurator_recommended_themes',
             kwargs: params,
@@ -468,6 +469,12 @@ const actions = {
         state.selectedType = id;
     },
     selectWebsitePurpose({state}, id) {
+        // Keep track or the former selection in order to be able to keep
+        // the auto-advance navigation scheme while being able to use the
+        // browser's back and forward buttons.
+        if (!id && state.selectedPurpose) {
+            state.formerSelectedPurpose = state.selectedPurpose;
+        }
         Object.values(state.features).filter((feature) => feature.module_state !== 'installed').forEach((feature) => {
             // need to check id, since we set to undefined in mount() to avoid the auto next screen on back button
             feature.selected |= id && feature.website_config_preselection.includes(WEBSITE_PURPOSES[id].name);
@@ -522,10 +529,10 @@ const actions = {
     }
 };
 
-async function getInitialState() {
+async function getInitialState(services) {
 
     // Load values from python and iap
-    var results = await rpc.query({
+    var results = await services.rpc({
         model: 'website',
         method: 'configurator_init',
     });
@@ -559,7 +566,7 @@ async function getInitialState() {
                 industry_id: localState.selectedIndustry.id,
                 palette: localState.selectedPalette
             };
-            themes = await rpc.query({
+            themes = await services.rpc({
                 model: 'website',
                 method: 'configurator_recommended_themes',
                 kwargs: params,
@@ -588,6 +595,7 @@ async function getInitialState() {
     return Object.assign(r, {
         selectedType: undefined,
         selectedPurpose: undefined,
+        formerSelectedPurpose: undefined,
         selectedIndustry: undefined,
         selectedPalette: undefined,
         recommendedPalette: undefined,
@@ -599,8 +607,8 @@ async function getInitialState() {
     });
 }
 
-async function skipConfigurator() {
-    await rpc.query({
+async function skipConfigurator(services) {
+    await services.rpc({
         model: 'website',
         method: 'configurator_skip',
     });
@@ -617,6 +625,25 @@ async function applyConfigurator(self, themeName) {
         self.env.router.navigate({to: 'CONFIGURATOR_PALETTE_SELECTION_SCREEN'});
         return;
     }
+
+    async function attemptConfiguratorApply(data, retryCount = 0) {
+        try {
+            return await self.rpc({
+                model: 'website',
+                method: 'configurator_apply',
+                kwargs: data,
+            });
+        } catch (error) {
+            // Wait a bit before retrying or allowing manual retry.
+            await concurrency.delay(5000);
+            if (retryCount < 3) {
+                return attemptConfiguratorApply(data, retryCount + 1);
+            }
+            document.querySelector('.o_theme_install_loader_container').remove();
+            throw error;
+        }
+    }
+
     if (themeName !== undefined) {
         $('body').append(self.env.loader);
         const selectedFeatures = Object.values(self.state.features).filter((feature) => feature.selected).map((feature) => feature.id);
@@ -635,15 +662,13 @@ async function applyConfigurator(self, themeName) {
             industry_id: self.state.selectedIndustry.id,
             selected_palette: selectedPalette,
             theme_name: themeName,
-            website_purpose: WEBSITE_PURPOSES[self.state.selectedPurpose].name,
+            website_purpose: WEBSITE_PURPOSES[
+                self.state.selectedPurpose || self.state.formerSelectedPurpose
+            ].name,
             website_type: WEBSITE_TYPES[self.state.selectedType].name,
             logo_attachment_id: self.state.logoAttachmentId,
         };
-        const resp = await rpc.query({
-            model: 'website',
-            method: 'configurator_apply',
-            kwargs: {...data},
-        });
+        const resp = await attemptConfiguratorApply(data);
         window.sessionStorage.removeItem(SESSION_STORAGE_ITEM_NAME);
         window.location = resp.url;
     }
@@ -653,12 +678,14 @@ async function makeEnvironment() {
     const env = {};
     const router = new Router(env, ROUTES);
     await router.start();
-    const state = await getInitialState();
+    const services = Component.env.services;
+    const state = await getInitialState(services);
     const store = new Store({state, actions, getters});
     store.on("update", null, () => {
         const newState = {
             selectedType: store.state.selectedType,
             selectedPurpose: store.state.selectedPurpose,
+            formerSelectedPurpose: store.state.formerSelectedPurpose,
             selectedIndustry: store.state.selectedIndustry,
             selectedPalette: store.state.selectedPalette,
             recommendedPalette: store.state.recommendedPalette,
@@ -679,14 +706,13 @@ async function makeEnvironment() {
     env.loader = qweb.renderToString('website.ThemePreview.Loader', {
         showTips: true
     });
-    const services = Component.env.services;
     return Object.assign(env, {router, store, qweb, services});
 }
 
 async function setup() {
     const env = await makeEnvironment();
     if (!env.store.state.industries) {
-        await skipConfigurator();
+        await skipConfigurator(env.services);
     } else {
         mount(App, {target: document.body, env});
     }

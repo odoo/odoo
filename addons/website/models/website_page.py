@@ -221,8 +221,8 @@ class Page(models.Model):
         self.ensure_one()
         return self.view_id.get_website_meta()
 
-    @staticmethod
-    def _get_cached_blacklist():
+    @classmethod
+    def _get_cached_blacklist(cls):
         return ('data-snippet="s_website_form"', 'data-no-page-cache=', )
 
     def _can_be_cached(self, response):
@@ -265,7 +265,7 @@ class Page(models.Model):
         fetch_fields = ['id', 'name', 'url']
         mapping = {
             'name': {'name': 'name', 'type': 'text', 'match': True},
-            'website_url': {'name': 'url', 'type': 'text'},
+            'website_url': {'name': 'url', 'type': 'text', 'truncate': False},
         }
         if with_description:
             search_fields.append('arch_db')

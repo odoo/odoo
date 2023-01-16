@@ -90,11 +90,13 @@ class TestOutOfOfficePerformance(TestHrHolidaysCommon, TransactionCaseWithUserDe
     @users('__system__', 'demo')
     @warmup
     def test_leave_im_status_performance_user_leave_offline(self):
+        self.leave.write({'state': 'validate'})
         with self.assertQueryCount(__system__=2, demo=2):
             self.assertEqual(self.hr_user.im_status, 'leave_offline')
 
     @users('__system__', 'demo')
     @warmup
     def test_leave_im_status_performance_partner_leave_offline(self):
+        self.leave.write({'state': 'validate'})
         with self.assertQueryCount(__system__=2, demo=2):
             self.assertEqual(self.hr_partner.im_status, 'leave_offline')

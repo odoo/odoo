@@ -63,7 +63,8 @@ def _auto_install_l10n(env):
             module_list.append('l10n_sa_invoice')
 
         module_ids = env['ir.module.module'].search([('name', 'in', module_list), ('state', '=', 'uninstalled')])
-        module_ids.sudo().button_install()
+        if module_ids:
+            module_ids.sudo().button_install()
 
 def _account_post_init(cr, registry):
     env = api.Environment(cr, SUPERUSER_ID, {})

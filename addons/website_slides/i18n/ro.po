@@ -6,10 +6,10 @@
 # sharkutz <sharkutz4life@yahoo.com>, 2021
 # Martin Trigaux, 2021
 # Fekete Mihai <mihai.fekete@forestandbiomass.ro>, 2021
-# Dorin Hongu <dhongu@gmail.com>, 2021
-# Cozmin Candea <office@terrabit.ro>, 2021
 # Foldi Robert <foldirobert@nexterp.ro>, 2021
 # Hongu Cosmin <cosmin513@gmail.com>, 2021
+# Cozmin Candea <office@terrabit.ro>, 2023
+# Dorin Hongu <dhongu@gmail.com>, 2023
 # 
 msgid ""
 msgstr ""
@@ -17,7 +17,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-10-05 10:53+0000\n"
 "PO-Revision-Date: 2021-09-14 12:29+0000\n"
-"Last-Translator: Hongu Cosmin <cosmin513@gmail.com>, 2021\n"
+"Last-Translator: Dorin Hongu <dhongu@gmail.com>, 2023\n"
 "Language-Team: Romanian (https://www.transifex.com/odoo/teams/41243/ro/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -58,7 +58,7 @@ msgstr "&amp;nbsp;"
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.courses_all
 msgid "'. Showing results for '"
-msgstr ""
+msgstr "'. Afișare rezultate pentru '"
 
 #. module: website_slides
 #. openerp-web
@@ -129,6 +129,13 @@ msgid ""
 "</div>\n"
 "            "
 msgstr ""
+"<div style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"        Bună ziua<br/><br/>\n"
+"        Ați fost invitat să vă alăturați unui nou curs: <t t-out=\"object.channel_id.name or ''\">Basics of Gardening</t>.\n"
+"    </p>\n"
+"</div>\n"
+"            "
 
 #. module: website_slides
 #: model:mail.template,body_html:website_slides.mail_template_channel_completed
@@ -154,6 +161,26 @@ msgid ""
 "                </div>\n"
 "            "
 msgstr ""
+"<div style=\"margin: 0px; padding: 0px;\">\n"
+"                    <div style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"                        <p style=\"margin: 0px;\">Bună ziua <t t-out=\"object.partner_id.name or ''\">Brandon Freeman</t>,</p><br/>\n"
+"                        <p><b>Felicitari!</b></p>\n"
+"                        <p>Ați terminat cursul <b t-out=\"object.channel_id.name or ''\">Basics of Gardening</b></p>\n"
+"                        <p>Verificați alte cursuri disponibile.</p><br/>\n"
+"\n"
+"                        <div style=\"padding: 16px 8px 16px 8px; text-align: center;\">\n"
+"                            <a href=\"/slides/all\" style=\"background-color: #875a7b; padding: 8px 16px 8px 16px; text-decoration: none; color: #fff; border-radius: 5px;\">\n"
+"                                Explorează cursuri\n"
+"                            </a>\n"
+"                        </div>\n"
+"                        Bucurați-vă de conținutul exclusiv!\n"
+"                        <t t-if=\"object.channel_id.user_id.signature\">\n"
+"                            <br/>\n"
+"                            <t t-out=\"object.channel_id.user_id.signature or ''\">--<br/>Mitchell Admin</t>\n"
+"                        </t>\n"
+"                    </div>\n"
+"                </div>\n"
+"            "
 
 #. module: website_slides
 #: model:mail.template,body_html:website_slides.slide_template_shared
@@ -711,7 +738,7 @@ msgstr "<span class=\"p-2\">Conținut curs</span>"
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.user_quickkarma_card
 msgid "<span class=\"text-500 mx-2\">•</span>"
-msgstr ""
+msgstr "<span class=\"text-500 mx-2\">•</span>"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_content_detailed
@@ -834,7 +861,7 @@ msgstr "<span>XP</span>"
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_share_modal_header
 msgid "<span>×</span>"
-msgstr ""
+msgstr "<span>×</span>"
 
 #. module: website_slides
 #. openerp-web
@@ -862,6 +889,8 @@ msgid ""
 "A good course has a structure. Pick a name for your first section and click "
 "<b>Save</b> to create it."
 msgstr ""
+"Un curs bun are o structură. Alege un nume pentru prima secțiune și apasă "
+"<b>Salvează</b> pentru a o crea."
 
 #. module: website_slides
 #: model:slide.slide,name:website_slides.slide_slide_demo_1_4
@@ -1264,7 +1293,7 @@ msgstr "Sigur doriți să arhivați acest slide?"
 #: code:addons/website_slides/static/src/xml/slide_management.xml:0
 #, python-format
 msgid "Are you sure you want to delete this category ?"
-msgstr ""
+msgstr "Sunteți sigur că doriți să ștergeți această categorie?"
 
 #. module: website_slides
 #. openerp-web
@@ -1311,7 +1340,7 @@ msgstr "Participanți"
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel__members_done_count
 msgid "Attendees Done Count"
-msgstr ""
+msgstr "Număr Participanți Terminați"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel__members_count
@@ -1364,7 +1393,7 @@ msgstr "Poate Comenta"
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel_invite__can_edit_body
 msgid "Can Edit Body"
-msgstr ""
+msgstr "Poate edita corpul"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel__can_publish
@@ -1504,7 +1533,7 @@ msgstr "Canale"
 #. module: website_slides
 #: model:slide.tag,name:website_slides.slide_tag_demo_cheatsheet
 msgid "CheatSheet"
-msgstr ""
+msgstr "CheatSheet"
 
 #. module: website_slides
 #. openerp-web
@@ -1701,7 +1730,7 @@ msgstr "Finalizat"
 #: model:mail.template,name:website_slides.mail_template_channel_completed
 #, python-format
 msgid "Completed Course"
-msgstr ""
+msgstr "Curs Finalizat"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_res_partner__slide_channel_completed_ids
@@ -1951,7 +1980,7 @@ msgstr "Număr Curs"
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_channel_tag_group_view_form
 msgid "Course Group Name"
-msgstr ""
+msgstr "Nume Grup Curs"
 
 #. module: website_slides
 #: model:ir.actions.act_window,name:website_slides.slide_channel_tag_group_action
@@ -1962,7 +1991,7 @@ msgstr "Curs Grupuri"
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_channel_partner_view_tree
 msgid "Course Name"
-msgstr ""
+msgstr "Nume Curs"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_channel_tag_view_form
@@ -1978,7 +2007,7 @@ msgstr "Grup de etichete de curs"
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_channel_tag_group_view_search
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_channel_tag_group_view_tree
 msgid "Course Tag Groups"
-msgstr ""
+msgstr "Grupuri de etichete de curs"
 
 #. module: website_slides
 #: model:ir.actions.act_window,name:website_slides.slide_channel_tag_action
@@ -2018,7 +2047,7 @@ msgstr "Tip Curs"
 #: code:addons/website_slides/models/slide_slide.py:0
 #, python-format
 msgid "Course: %s"
-msgstr ""
+msgstr "Curs: %s"
 
 #. module: website_slides
 #: code:addons/website_slides/models/website.py:0
@@ -2127,12 +2156,12 @@ msgstr "Mobilă DIY"
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_searchbar_input_snippet_options
 msgid "Date (new to old)"
-msgstr ""
+msgstr "Data (nou la vechi)"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_searchbar_input_snippet_options
 msgid "Date (old to new)"
-msgstr ""
+msgstr "Data (vechi la nou)"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel_invite__null_value
@@ -2158,7 +2187,7 @@ msgstr "Șterge"
 #: model_terms:ir.ui.view,arch_db:website_slides.course_slides_list
 #, python-format
 msgid "Delete Category"
-msgstr ""
+msgstr "Șterge categoria"
 
 #. module: website_slides
 #. openerp-web
@@ -2262,12 +2291,12 @@ msgstr "Afișare comandă"
 #. module: website_slides
 #: model:slide.question,question:website_slides.slide_slide_demo_2_0_question_0
 msgid "Do you make beams out of lemon trees ?"
-msgstr ""
+msgstr "Faceți bare din copaci de lămâie ?"
 
 #. module: website_slides
 #: model:slide.question,question:website_slides.slide_slide_demo_2_0_question_1
 msgid "Do you make lemons out of beams ?"
-msgstr ""
+msgstr "Faceți lămâi din bare ?"
 
 #. module: website_slides
 #. openerp-web
@@ -2362,7 +2391,7 @@ msgstr "Efectuat !"
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_question__done_count
 msgid "Done Count"
-msgstr ""
+msgstr "Număr efectuat"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.embed_slide
@@ -2377,12 +2406,12 @@ msgstr "Descărcați conținut"
 #. module: website_slides
 #: model:slide.slide,name:website_slides.slide_slide_demo_4_10
 msgid "Drawing 1"
-msgstr ""
+msgstr "Desen 1"
 
 #. module: website_slides
 #: model:slide.slide,name:website_slides.slide_slide_demo_4_11
 msgid "Drawing 2"
-msgstr ""
+msgstr "Desen 2"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_channel_view_kanban
@@ -2482,7 +2511,7 @@ msgstr "Politica de înscriere"
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_channel_partner_view_tree
 msgid "Enrolled On"
-msgstr ""
+msgstr "Înscrieți pe"
 
 #. module: website_slides
 #. openerp-web
@@ -2579,7 +2608,7 @@ msgstr "Fișierul este prea mare. Dimensiunea fișierului nu poate depăși 25 M
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.course_slides_cards
 msgid "Filter &amp; order"
-msgstr ""
+msgstr "Filtrare și ordonare"
 
 #. module: website_slides
 #: model:ir.model.fields,help:website_slides.field_slide_channel_invite__copyvalue
@@ -2655,12 +2684,14 @@ msgstr "Pictogramă minunată pentru font, de ex. fa-sarcini"
 #: model:slide.slide,name:website_slides.slide_slide_demo_4_0
 #: model_terms:slide.slide,html_content:website_slides.slide_slide_demo_4_0
 msgid "Foreword"
-msgstr ""
+msgstr "Prefață"
 
 #. module: website_slides
 #: model_terms:slide.slide,description:website_slides.slide_slide_demo_4_0
 msgid "Foreword for this documentation: how to use it, main attention points"
 msgstr ""
+"Prefață pentru această documentație: cum să o utilizați, punctele principale"
+" de atenție"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_res_config_settings__module_website_slides_forum
@@ -2690,7 +2721,7 @@ msgstr "Specificații Tehnice Mobilier"
 #. module: website_slides
 #: model_terms:slide.slide,description:website_slides.slide_slide_demo_4_12
 msgid "GLork"
-msgstr ""
+msgstr "GLork"
 
 #. module: website_slides
 #: model:ir.model,name:website_slides.model_gamification_challenge
@@ -2808,7 +2839,7 @@ msgstr "Mai departe!"
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel__has_message
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide__has_message
 msgid "Has Message"
-msgstr ""
+msgstr "Are mesaj"
 
 #. module: website_slides
 #: model_terms:slide.slide,description:website_slides.slide_slide_demo_0_3
@@ -2830,7 +2861,7 @@ msgstr "Gradinarit la domiciliu"
 #. module: website_slides
 #: model:slide.slide,name:website_slides.slide_slide_demo_5_2
 msgid "How To Build a HIGH QUALITY Dining Table with LIMITED TOOLS"
-msgstr ""
+msgstr "Cum să construiți o masă de masă de CALITATE cu UNELTE LIMITATE"
 
 #. module: website_slides
 #: model:slide.slide,name:website_slides.slide_slide_demo_0_3
@@ -3113,7 +3144,7 @@ msgstr "Este finalizat"
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel_invite__is_mail_template_editor
 msgid "Is Editor"
-msgstr ""
+msgstr "Este Editor"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel__message_is_follower
@@ -3198,12 +3229,12 @@ msgstr "Doar câteva elemente de bază despre eficiența energetică."
 #. module: website_slides
 #: model_terms:slide.slide,description:website_slides.slide_slide_demo_1_1
 msgid "Just some basics Interesting Tree Facts."
-msgstr ""
+msgstr "Doar câteva elemente de bază despre copaci interesante."
 
 #. module: website_slides
 #: model_terms:slide.slide,description:website_slides.slide_slide_demo_1_0
 msgid "Just some basics Tree Infographic."
-msgstr ""
+msgstr "Doar câteva elemente de bază despre infograficul copacilor."
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.view_slide_channel_form
@@ -3262,7 +3293,7 @@ msgstr "Limba"
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_channel_partner_view_tree
 msgid "Last Action On"
-msgstr ""
+msgstr "Ultima acțiune pe"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_answer____last_update
@@ -3373,7 +3404,7 @@ msgstr "Lecție"
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_content_detailed
 msgid "Lesson Nav"
-msgstr ""
+msgstr "Navigare lecție"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel__karma_gen_slide_vote
@@ -3423,7 +3454,7 @@ msgstr "Atașament principal"
 #. module: website_slides
 #: model:slide.slide,name:website_slides.slide_slide_demo_2_0
 msgid "Main Trees Categories"
-msgstr ""
+msgstr "Categorii principale de arbori"
 
 #. module: website_slides
 #: model:res.groups,name:website_slides.group_website_slides_manager
@@ -3500,7 +3531,7 @@ msgstr "Metode"
 #. module: website_slides
 #: model:slide.slide,name:website_slides.slide_slide_demo_0_2
 msgid "Mighty Carrots"
-msgstr ""
+msgstr "Morcovi puternici"
 
 #. module: website_slides
 #: model_terms:slide.slide,description:website_slides.slide_slide_demo_2_1
@@ -3527,12 +3558,12 @@ msgstr "Minute"
 #: code:addons/website_slides/controllers/main.py:0
 #, python-format
 msgid "Missing \"Tag Group\" for creating a new \"Tag\"."
-msgstr ""
+msgstr "Lipsește \"Grup etichetă\" pentru crearea unei noi \"Etichete\"."
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.course_nav
 msgid "Mobile sub-nav"
-msgstr ""
+msgstr "Sub-nav mobil"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.course_sidebar
@@ -3561,7 +3592,7 @@ msgstr "Cel mai popular curs"
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel__my_activity_date_deadline
 msgid "My Activity Deadline"
-msgstr ""
+msgstr "Data limită a activității mele"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.courses_all
@@ -3584,7 +3615,7 @@ msgstr "Nume"
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.course_nav
 msgid "Nav"
-msgstr ""
+msgstr "Nav"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.course_slides_list_slide
@@ -3635,7 +3666,7 @@ msgstr "Înainte"
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel__activity_calendar_event_id
 msgid "Next Activity Calendar Event"
-msgstr ""
+msgstr "Următoarea activitate din calendar"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel__activity_date_deadline
@@ -3718,7 +3749,7 @@ msgstr "Nicio prezentare valabilă."
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.courses_all
 msgid "No results found for '"
-msgstr ""
+msgstr "Nu sunt rezultate pentru '"
 
 #. module: website_slides
 #: model:ir.model.fields.selection,name:website_slides.selection__slide_channel__promote_strategy__none
@@ -3859,6 +3890,10 @@ msgid ""
 "a placeholder expression that provides the appropriate language, e.g. {{ "
 "object.partner_id.lang }}."
 msgstr ""
+"Limba de traducere opțională (cod ISO) pentru a selecta când se trimite un "
+"e-mail. Dacă nu este setat, versiunea engleză va fi folosită. Aceasta ar "
+"trebui să fie de obicei o expresie rezervată care oferă limba potrivită, de "
+"exemplu {{ object.partner_id.lang }}."
 
 #. module: website_slides
 #: model:ir.model.fields,help:website_slides.field_slide_channel_invite__null_value
@@ -3979,7 +4014,7 @@ msgstr "Vă rugăm să completați în acest câmp"
 #: code:addons/website_slides/wizard/slide_channel_invite.py:0
 #, python-format
 msgid "Please select at least one recipient."
-msgstr ""
+msgstr "Vă rugăm să selectați cel puțin un destinatar."
 
 #. module: website_slides
 #: model:gamification.badge,name:website_slides.badge_data_course
@@ -4054,7 +4089,7 @@ msgstr "Vizualizări publice"
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_searchbar_input_snippet_options
 msgid "Publication Date"
-msgstr ""
+msgstr "Data publicării"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide__date_published
@@ -4251,7 +4286,7 @@ msgstr "Eliminați acest răspuns"
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel_invite__render_model
 msgid "Rendering Model"
-msgstr ""
+msgstr "Model de redare"
 
 #. module: website_slides
 #: model:ir.ui.menu,name:website_slides.website_slides_menu_report
@@ -4353,7 +4388,7 @@ msgstr "Opinii"
 #: code:addons/website_slides/static/src/js/portal_chatter.js:0
 #, python-format
 msgid "Reviews (%d)"
-msgstr ""
+msgstr "Opinii (%d)"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide__quiz_fourth_attempt_reward
@@ -4473,6 +4508,12 @@ msgstr "Numele secțiunii"
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel__access_token
 msgid "Security Token"
 msgstr "Security Token"
+
+#. module: website_slides
+#: code:addons/website_slides/models/res_users.py:0
+#, python-format
+msgid "See our eLearning"
+msgstr "Vedeți eLearning-ul nostru"
 
 #. module: website_slides
 #. openerp-web
@@ -4657,6 +4698,8 @@ msgid ""
 "Skill up and have an impact! Your business career starts here.<br/>Time to "
 "start a course."
 msgstr ""
+"Dezvoltați-vă abilitățile și aveți un impact! Cariera dvs. de afaceri începe"
+" aici. <br/> Este timpul să începeți un curs."
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide_link__slide_id
@@ -4880,6 +4923,9 @@ msgid ""
 "kanban or front-end, to distinguish internal tags from public categorization"
 " tags"
 msgstr ""
+"Culoarea etichetei utilizată atât în backend cât și în website. Fără culoare"
+" înseamnă că nu se afișează în kanban sau în față, pentru a distinge "
+"etichetele interne de etichetele de publicare"
 
 #. module: website_slides
 #. openerp-web
@@ -4910,13 +4956,13 @@ msgstr "Îngrijirea copacilor"
 #. module: website_slides
 #: model:slide.slide,name:website_slides.slide_category_demo_4_1
 msgid "Technical Drawings"
-msgstr ""
+msgstr "Desene tehnice"
 
 #. module: website_slides
 #: model_terms:slide.slide,description:website_slides.slide_slide_demo_4_10
 #: model_terms:slide.slide,description:website_slides.slide_slide_demo_4_11
 msgid "Technical drawing"
-msgstr ""
+msgstr "Desen tehnic"
 
 #. module: website_slides
 #: model:slide.slide,name:website_slides.slide_category_demo_5_2
@@ -5160,7 +5206,7 @@ msgstr "Aspect de formare"
 #. module: website_slides
 #: model:slide.slide,name:website_slides.slide_slide_demo_1_0
 msgid "Tree Infographic"
-msgstr ""
+msgstr "Infografic Arbore"
 
 #. module: website_slides
 #: model:slide.slide,name:website_slides.slide_slide_demo_2_2
@@ -5534,6 +5580,8 @@ msgid ""
 "Which wood type is best for my solid wood furniture? That's the question we "
 "help you answer in this video !"
 msgstr ""
+"Care este cel mai bun tip de lemn pentru mobilierul meu din lemn masiv? "
+"Aceasta este întrebarea pe care o ajutăm să o răspundeți în acest videoclip!"
 
 #. module: website_slides
 #. openerp-web
@@ -5564,7 +5612,7 @@ msgstr "Caracteristicile Lemnului"
 #. module: website_slides
 #: model:slide.slide,name:website_slides.slide_slide_demo_4_1
 msgid "Wood Types"
-msgstr ""
+msgstr "Tipuri de lemn"
 
 #. module: website_slides
 #: model:slide.slide,name:website_slides.slide_category_demo_3_0
@@ -5712,7 +5760,7 @@ msgstr "Ați votat deja pentru această lecție"
 #. module: website_slides
 #: model:mail.template,subject:website_slides.mail_template_slide_channel_invite
 msgid "You have been invited to join {{ object.channel_id.name }}"
-msgstr ""
+msgstr "Ați fost invitat să vă alăturați {{ object.channel_id.name }}"
 
 #. module: website_slides
 #: code:addons/website_slides/models/slide_channel.py:0
@@ -5818,7 +5866,7 @@ msgstr "realizat"
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.course_nav
 msgid "breadcrumb"
-msgstr ""
+msgstr "breadcrumb"
 
 #. module: website_slides
 #. openerp-web
@@ -5831,7 +5879,7 @@ msgstr "prin email."
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.view_slide_channel_form
 msgid "e.g. Computer Science for kids"
-msgstr ""
+msgstr "de ex. Științe computaționale pentru copii"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.view_slide_slide_form
@@ -5858,7 +5906,7 @@ msgstr ""
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_channel_tag_group_view_form
 msgid "e.g. Your Level"
-msgstr ""
+msgstr "de ex. Nivelul tău"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.view_slide_slide_form

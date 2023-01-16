@@ -3,23 +3,23 @@
 # 	* mrp_subcontracting
 # 
 # Translators:
-# Martin Trigaux, 2021
 # Cécile Collart <cco@odoo.com>, 2021
-# Braulio D. López Vázquez <bdl@odoo.com>, 2021
+# Martin Trigaux, 2022
+# Braulio D. López Vázquez <bdl@odoo.com>, 2022
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 15.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-11-16 13:19+0000\n"
+"POT-Creation-Date: 2022-01-24 08:20+0000\n"
 "PO-Revision-Date: 2021-09-14 12:24+0000\n"
-"Last-Translator: Braulio D. López Vázquez <bdl@odoo.com>, 2021\n"
+"Last-Translator: Braulio D. López Vázquez <bdl@odoo.com>, 2022\n"
 "Language-Team: Spanish (Mexico) (https://www.transifex.com/odoo/teams/41243/es_MX/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: es_MX\n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"Plural-Forms: nplurals=3; plural=n == 1 ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;\n"
 
 #. module: mrp_subcontracting
 #: model:ir.model,name:mrp_subcontracting.model_report_mrp_report_bom_structure
@@ -39,7 +39,7 @@ msgstr "Tipo de LdM"
 #. module: mrp_subcontracting
 #: model_terms:ir.ui.view,arch_db:mrp_subcontracting.mrp_subcontracting_product_template_search_view
 msgid "Can be Subcontracted"
-msgstr "Puede ser subcontratado"
+msgstr "Se puede subcontratar"
 
 #. module: mrp_subcontracting
 #: model:ir.model.fields,help:mrp_subcontracting.field_product_supplierinfo__is_subcontractor
@@ -404,3 +404,13 @@ msgstr "Debe ingresar un número de serie para %s"
 #, python-format
 msgid "You must enter a serial number for each line of %s"
 msgstr "Debe ingresar un número de serie para cada línea de %s"
+
+#. module: mrp_subcontracting
+#: code:addons/mrp_subcontracting/models/mrp_production.py:0
+#, python-format
+msgid ""
+"You must indicate a non-zero amount consumed for at least one of your "
+"components"
+msgstr ""
+"Debe indicar una cantidad consumida diferente de cero para al menos uno de "
+"sus componentes"

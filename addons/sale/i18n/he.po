@@ -3,7 +3,7 @@
 # 	* sale
 # 
 # Translators:
-# hed shefetr <hed@laylinetech.com>, 2021
+# hed shefer <hed@laylinetech.com>, 2021
 # Adi Sharashov <Adi@laylinetech.com>, 2021
 # Ofir Blum <ofir.blum@gmail.com>, 2021
 # yotam linder <linder@laylinetech.com>, 2021
@@ -12,22 +12,26 @@
 # שהאב חוסיין <shhab89@gmail.com>, 2021
 # Martin Trigaux, 2021
 # ExcaliberX <excaliberx@gmail.com>, 2021
-# Yihya Hugirat <hugirat@gmail.com>, 2021
 # דודי מלכה <Dudimalka6@gmail.com>, 2021
 # ZVI BLONDER <ZVIBLONDER@gmail.com>, 2021
 # Amit Spilman <amit@laylinetech.com>, 2021
-# yotam katzuni, 2021
-# Lilach Gilliam <lilach.gilliam@gmail.com>, 2021
 # david danilov, 2021
 # Jonathan Spier, 2021
+# Yihya Hugirat <hugirat@gmail.com>, 2022
+# Netta Waizer, 2022
+# MichaelHadar, 2022
+# Roy Sayag, 2022
+# Lilach Gilliam <lilach.gilliam@gmail.com>, 2022
+# NoaFarkash, 2022
+# Ha Ketem <haketem@gmail.com>, 2022
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 15.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-11-16 13:19+0000\n"
+"POT-Creation-Date: 2022-01-24 08:20+0000\n"
 "PO-Revision-Date: 2021-09-14 12:26+0000\n"
-"Last-Translator: Jonathan Spier, 2021\n"
+"Last-Translator: Ha Ketem <haketem@gmail.com>, 2022\n"
 "Language-Team: Hebrew (https://www.transifex.com/odoo/teams/41243/he/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -40,7 +44,7 @@ msgstr ""
 #: code:addons/sale/static/src/js/sale.js:0
 #, python-format
 msgid " / Month"
-msgstr ""
+msgstr "/ חודש אחד"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_payment_acquirer_onboarding_wizard___data_fetched
@@ -50,7 +54,7 @@ msgstr "הנתונים נאספו"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_crm_team__sale_order_count
 msgid "# Sale Orders"
-msgstr ""
+msgstr "# הזמנות לקוח"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_report__nbr
@@ -93,14 +97,14 @@ msgstr "160X80 ס\"מ, עם רגליים גדולות."
 #, python-format
 msgid ""
 "<b>Send the quote</b> to yourself and check what the customer will receive."
-msgstr "שלח לעצמך את הצעת המחיר ובדוק מה הלקוח יקבל."
+msgstr "<b>שלח</b> לעצמך את הצעת המחיר ובדוק מה הלקוח יקבל."
 
 #. module: sale
 #. openerp-web
 #: code:addons/sale/static/src/js/tours/sale.js:0
 #, python-format
 msgid "<b>Set a price</b>."
-msgstr "קבע.י מחיר"
+msgstr "<b>קבע.י מחיר</b>"
 
 #. module: sale
 #: model:mail.template,body_html:sale.mail_template_sale_confirmation
@@ -277,6 +281,177 @@ msgid ""
 "</t>\n"
 "</div>"
 msgstr ""
+"<div style=\"margin: 0px; padding: 0px;\">\n"
+"<p style=\"box-sizing:border-box;margin: 0px; padding: 0px; font-size: 12px;\">\n"
+"שלום,\n"
+"<br><br>\n"
+"<t t-set=\"transaction\" t-value=\"object.get_portal_last_transaction()\" data-oe-t-inline=\"true\"></t>\n"
+"הזמנתך <strong t-out=\"object.name or ''\" style=\"box-sizing:border-box;font-weight:500;\">S00049</strong> על סך <strong t-out=\"format_amount(object.amount_total, object.currency_id) or ''\" style=\"box-sizing:border-box;font-weight:500;\">$ 10.00</strong>\n"
+"<t t-if=\"object.state == 'sale' or (transaction and transaction.state in ('done', 'authorized'))\" data-oe-t-group-active=\"true\">\n"
+"אושרה בהצלחה.<br>\n"
+"תודה שבחרת בנו!\n"
+"</t>\n"
+"<t t-elif=\"transaction and transaction.state == 'pending'\">\n"
+"ממתינה. היא תאושר בקבלת התשלום.\n"
+"<t t-if=\"object.reference\" data-oe-t-group-active=\"true\">\n"
+"מזהה התשלום שלך הינו <strong t-out=\"object.reference or ''\" style=\"box-sizing:border-box;font-weight:500;\"></strong>.\n"
+"</t>\n"
+"</t>\n"
+"<br><br>\n"
+"אל תהסס\\י ליצור עמנו קשר במידה ויש לך שאלות.\n"
+"<br><br>\n"
+"</p>\n"
+"<t t-if=\"hasattr(object, 'website_id') and object.website_id\" data-oe-t-group-active=\"true\">\n"
+"<div style=\"margin: 0px; padding: 0px;\">\n"
+"<table width=\"100%\" style=\"box-sizing:border-box;color: #454748; font-size: 12px; border-collapse: collapse;\">\n"
+"<tbody><tr style=\"border-bottom: 2px solid #dee2e6;\">\n"
+"<td style=\"width: 150px;\"><strong style=\"box-sizing:border-box;font-weight:500;\">מוצרים</strong></td>\n"
+"<td></td>\n"
+"<td width=\"15%\" align=\"center\"><strong style=\"box-sizing:border-box;font-weight:500;\">כמות</strong></td>\n"
+"<td width=\"20%\" align=\"right\"><strong style=\"box-sizing:border-box;font-weight:500;\">\n"
+"<t t-if=\"object.user_id.has_group('account.group_show_line_subtotals_tax_excluded')\" data-oe-t-group-active=\"true\">\n"
+"לפני מע\"מ\n"
+"</t>\n"
+"<t t-else=\"\">\n"
+"כולל מע\"מ\n"
+"</t>\n"
+"</strong></td>\n"
+"</tr>\n"
+"</tbody></table>\n"
+"<t t-foreach=\"object.order_line\" t-as=\"line\">\n"
+"<t t-if=\"(not hasattr(line, 'is_delivery') or not line.is_delivery) and line.display_type in ['line_section', 'line_note']\" data-oe-t-group-active=\"true\">\n"
+"<t t-set=\"loop_cycle_number\" t-value=\"0\" data-oe-t-inline=\"true\"></t><t t-set=\"loop_cycle_number\" t-value=\"loop_cycle_number + 1\" data-oe-t-inline=\"true\"></t><table width=\"100%\" style=\"box-sizing:border-box;color: #454748; font-size: 12px; border-collapse: collapse;\">\n"
+"\n"
+"<tbody><tr t-att-style=\"'background-color: #f2f2f2' if loop_cycle_number % 2 == 0 else 'background-color: #ffffff'\">\n"
+"\n"
+"<td colspan=\"4\">\n"
+"<t t-if=\"line.display_type == 'line_section'\" data-oe-t-group-active=\"true\">\n"
+"<strong t-out=\"line.name or ''\" style=\"box-sizing:border-box;font-weight:500;\">Taking care of Trees Course</strong>\n"
+"</t>\n"
+"<t t-elif=\"line.display_type == 'line_note'\">\n"
+"<i t-out=\"line.name or ''\">Taking care of Trees Course</i>\n"
+"</t>\n"
+"</td>\n"
+"</tr>\n"
+"</tbody></table>\n"
+"</t>\n"
+"<t t-elif=\"(not hasattr(line, 'is_delivery') or not line.is_delivery)\">\n"
+"<t t-set=\"loop_cycle_number\" t-value=\"0\" data-oe-t-inline=\"true\"></t><t t-set=\"loop_cycle_number\" t-value=\"loop_cycle_number + 1\" data-oe-t-inline=\"true\"></t><table width=\"100%\" style=\"box-sizing:border-box;color: #454748; font-size: 12px; border-collapse: collapse;\">\n"
+"\n"
+"<tbody><tr t-att-style=\"'background-color: #f2f2f2' if loop_cycle_number % 2 == 0 else 'background-color: #ffffff'\">\n"
+"\n"
+"<td style=\"width: 150px;\">\n"
+"<img t-attf-src=\"/web/image/product.product/{{ line.product_id.id }}/image_128\" style=\"border-style:none;box-sizing:border-box;vertical-align:middle;width: 64px; height: 64px; object-fit: contain;\" alt=\"Product image\" width=\"64px\" height=\"64\">\n"
+"</td>\n"
+"<td align=\"left\" t-out=\"line.product_id.name or ''\"> Taking care of Trees Course</td>\n"
+"<td width=\"15%\" align=\"center\" t-out=\"line.product_uom_qty or ''\">1</td>\n"
+"<td width=\"20%\" align=\"right\"><strong style=\"box-sizing:border-box;font-weight:500;\">\n"
+"<t t-if=\"object.user_id.has_group('account.group_show_line_subtotals_tax_excluded')\" data-oe-t-group-active=\"true\">\n"
+"<t t-out=\"format_amount(line.price_reduce_taxexcl, object.currency_id) or ''\" data-oe-t-inline=\"true\">$ 10.00</t>\n"
+"</t>\n"
+"<t t-else=\"\">\n"
+"<t t-out=\"format_amount(line.price_reduce_taxinc, object.currency_id) or ''\" data-oe-t-inline=\"true\">$ 10.00</t>\n"
+"</t>\n"
+"</strong></td>\n"
+"</tr>\n"
+"</tbody></table>\n"
+"</t>\n"
+"</t>\n"
+"</div>\n"
+"<div style=\"margin: 0px; padding: 0px;\" t-if=\"hasattr(object, 'carrier_id') and object.carrier_id\" data-oe-t-group-active=\"true\">\n"
+"<table width=\"100%\" style=\"box-sizing:border-box;-webkit-border-vertical-spacing:4px;-webkit-border-horizontal-spacing:0px;border-collapse:collapse;color: #454748; font-size: 12px; border-spacing: 0px 4px;\" align=\"right\">\n"
+"<tbody><tr>\n"
+"<td style=\"width: 60%\"></td>\n"
+"<td style=\"width: 30%; border-top: 1px solid #dee2e6;\" align=\"right\"><strong style=\"box-sizing:border-box;font-weight:500;\">משלוח:</strong></td>\n"
+"<td style=\"width: 10%; border-top: 1px solid #dee2e6;\" align=\"right\" t-out=\"format_amount(object.amount_delivery, object.currency_id) or ''\">$ 0.00</td>\n"
+"</tr>\n"
+"<tr>\n"
+"<td style=\"width: 60%\"></td>\n"
+"<td style=\"width: 30%;\" align=\"right\"><strong style=\"box-sizing:border-box;font-weight:500;\">סכום ביניים:</strong></td>\n"
+"<td style=\"width: 10%;\" align=\"right\" t-out=\"format_amount(object.amount_untaxed, object.currency_id) or ''\">$ 10.00</td>\n"
+"</tr>\n"
+"</tbody></table>\n"
+"</div>\n"
+"<div style=\"margin: 0px; padding: 0px;\" t-else=\"\">\n"
+"<table width=\"100%\" style=\"box-sizing:border-box;-webkit-border-vertical-spacing:4px;-webkit-border-horizontal-spacing:0px;border-collapse:collapse;color: #454748; font-size: 12px; border-spacing: 0px 4px;\" align=\"right\">\n"
+"<tbody><tr>\n"
+"<td style=\"width: 60%\"></td>\n"
+"<td style=\"width: 30%; border-top: 1px solid #dee2e6;\" align=\"right\"><strong style=\"box-sizing:border-box;font-weight:500;\">SubTotal:</strong></td>\n"
+"<td style=\"width: 10%; border-top: 1px solid #dee2e6;\" align=\"right\" t-out=\"format_amount(object.amount_untaxed, object.currency_id) or ''\">$ 10.00</td>\n"
+"</tr>\n"
+"</tbody></table>\n"
+"</div>\n"
+"<div style=\"margin: 0px; padding: 0px;\">\n"
+"<table width=\"100%\" style=\"box-sizing:border-box;-webkit-border-vertical-spacing:4px;-webkit-border-horizontal-spacing:0px;border-collapse:collapse;color: #454748; font-size: 12px; border-spacing: 0px 4px;\" align=\"right\">\n"
+"<tbody><tr>\n"
+"<td style=\"width: 60%\"></td>\n"
+"<td style=\"width: 30%;\" align=\"right\"><strong style=\"box-sizing:border-box;font-weight:500;\">מיסים:</strong></td>\n"
+"<td style=\"width: 10%;\" align=\"right\" t-out=\"format_amount(object.amount_tax, object.currency_id) or ''\">$ 0.00</td>\n"
+"</tr>\n"
+"<tr>\n"
+"<td style=\"width: 60%\"></td>\n"
+"<td style=\"width: 30%; border-top: 1px solid #dee2e6;\" align=\"right\"><strong style=\"box-sizing:border-box;font-weight:500;\">סה\"כ:</strong></td>\n"
+"<td style=\"width: 10%; border-top: 1px solid #dee2e6;\" align=\"right\" t-out=\"format_amount(object.amount_total, object.currency_id) or ''\">$ 10.00</td>\n"
+"</tr>\n"
+"</tbody></table>\n"
+"</div>\n"
+"<div t-if=\"object.partner_invoice_id\" style=\"margin: 0px; padding: 0px;\" data-oe-t-group-active=\"true\">\n"
+"<table width=\"100%\" style=\"box-sizing:border-box;border-collapse:collapse;color: #454748; font-size: 12px;\">\n"
+"<tbody><tr>\n"
+"<td style=\"padding-top: 10px;\">\n"
+"<strong style=\"box-sizing:border-box;font-weight:500;\">כתובת לחיוב:</strong>\n"
+"<t t-out=\"object.partner_invoice_id.street or ''\" data-oe-t-inline=\"true\">1201 S Figueroa St</t>\n"
+"<t t-out=\"object.partner_invoice_id.city or ''\" data-oe-t-inline=\"true\">Los Angeles</t>\n"
+"<t t-out=\"object.partner_invoice_id.state_id.name or ''\" data-oe-t-inline=\"true\">California</t>\n"
+"<t t-out=\"object.partner_invoice_id.zip or ''\" data-oe-t-inline=\"true\">90015</t>\n"
+"<t t-out=\"object.partner_invoice_id.country_id.name or ''\" data-oe-t-inline=\"true\">United States</t>\n"
+"</td>\n"
+"</tr>\n"
+"<tr>\n"
+"<td>\n"
+"<strong style=\"box-sizing:border-box;font-weight:500;\">אמצעי תשלום:</strong>\n"
+"<t t-if=\"transaction.token_id\" data-oe-t-group-active=\"true\">\n"
+"<t t-out=\"transaction.token_id.name or ''\" data-oe-t-inline=\"true\"></t>\n"
+"</t>\n"
+"<t t-else=\"\">\n"
+"<t t-out=\"transaction.acquirer_id.sudo().name or ''\" data-oe-t-inline=\"true\"></t>\n"
+"</t>\n"
+"(<t t-out=\"format_amount(transaction.amount, object.currency_id) or ''\" data-oe-t-inline=\"true\">$ 10.00</t>)\n"
+"</td>\n"
+"</tr>\n"
+"</tbody></table>\n"
+"</div>\n"
+"<div t-if=\"object.partner_shipping_id and not object.only_services\" style=\"margin: 0px; padding: 0px;\" data-oe-t-group-active=\"true\">\n"
+"<table width=\"100%\" style=\"box-sizing:border-box;border-collapse:collapse;color: #454748; font-size: 12px;\">\n"
+"<tbody><tr>\n"
+"<td>\n"
+"<br>\n"
+"<strong style=\"box-sizing:border-box;font-weight:500;\">כתובת למשלוח:</strong>\n"
+"<t t-out=\"object.partner_shipping_id.street or ''\" data-oe-t-inline=\"true\">1201 S Figueroa St</t>\n"
+"<t t-out=\"object.partner_shipping_id.city or ''\" data-oe-t-inline=\"true\">Los Angeles</t>\n"
+"<t t-out=\"object.partner_shipping_id.state_id.name or ''\" data-oe-t-inline=\"true\">California</t>\n"
+"<t t-out=\"object.partner_shipping_id.zip or ''\" data-oe-t-inline=\"true\">90015</t>\n"
+"<t t-out=\"object.partner_shipping_id.country_id.name or ''\" data-oe-t-inline=\"true\">United States</t>\n"
+"</td>\n"
+"</tr>\n"
+"</tbody></table>\n"
+"<table t-if=\"hasattr(object, 'carrier_id') and object.carrier_id\" width=\"100%\" style=\"box-sizing:border-box;border-collapse:collapse;color: #454748; font-size: 12px;\" data-oe-t-group-active=\"true\">\n"
+"<tbody><tr>\n"
+"<td>\n"
+"<strong style=\"box-sizing:border-box;font-weight:500;\">סוג משלוח:</strong>\n"
+"<t t-out=\"object.carrier_id.name or ''\" data-oe-t-inline=\"true\"></t>\n"
+"<t t-if=\"object.carrier_id.fixed_price == 0.0\" data-oe-t-group-active=\"true\">\n"
+"(Free)\n"
+"</t>\n"
+"<t t-else=\"\">\n"
+"(<t t-out=\"format_amount(object.carrier_id.fixed_price, object.currency_id) or ''\" data-oe-t-inline=\"true\">$ 10.00</t>)\n"
+"</t>\n"
+"</td>\n"
+"</tr>\n"
+"</tbody></table>\n"
+"</div>\n"
+"</t>\n"
+"</div>"
 
 #. module: sale
 #: model:mail.template,body_html:sale.email_template_edi_sale
@@ -308,6 +483,31 @@ msgid ""
 "</div>\n"
 "            "
 msgstr ""
+"<div style=\"margin: 0px; padding: 0px;\">\n"
+"    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"        % set doc_name = 'quotation' if object.state in ('draft', 'sent') else 'order'\n"
+"        שלום,\n"
+"        <br/><br/>\n"
+"        חשבונית\n"
+"        % if ctx.get('proforma'):\n"
+"            פרו פורמה שלך עבור ${doc_name} <strong>${object.name}</strong>\n"
+"            % if object.origin:\n"
+"                (עם מזהה: ${object.origin} )\n"
+"            % endif\n"
+"            בסכום שלך <strong>${format_amount(object.amount_total, object.pricelist_id.currency_id)}</strong> זמינה.\n"
+"        % else:\n"
+"            ${שם מסמך} <strong>${object.name}</strong>\n"
+"            % if object.origin:\n"
+"                (עם מזהה: ${object.origin} )\n"
+"            % endif\n"
+"            בסכום של <strong>${format_amount(object.amount_total, object.pricelist_id.currency_id)}</strong> מוכן לבדיקה.\n"
+"        % endif\n"
+"        <br/><br/>\n"
+"        אל תהסס לפנות אלינו אם יש לך שאלות.\n"
+"        <br/>\n"
+"    </p>\n"
+"</div>\n"
+"            "
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
@@ -376,7 +576,7 @@ msgstr "<i class=\"fa fa-times\"/> דחה"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
 msgid "<small><b class=\"text-muted\">This offer expires on</b></small>"
-msgstr "תוקף ההצעה הזה יפוג בתאריך"
+msgstr "<small><b class=\"text-muted\">תוקף ההצעה הזה יפוג בתאריך</b></small>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
@@ -389,6 +589,8 @@ msgid ""
 "<span attrs=\"{'invisible': [('advance_payment_method', '!=', "
 "'percentage')]}\" class=\"oe_inline\">%</span>"
 msgstr ""
+"<span attrs=\"{'invisible': [('advance_payment_method', '!=', "
+"'percentage')]}\" class=\"oe_inline\">%</span>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.portal_my_orders
@@ -447,7 +649,7 @@ msgstr "<span class=\"o_stat_text\">נמכר</span>"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.crm_team_salesteams_view_form
 msgid "<span class=\"oe_read_only\">/ Month</span>"
-msgstr ""
+msgstr "<span class=\"oe_read_only\"> /חודש</span>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
@@ -464,8 +666,8 @@ msgid ""
 "<span groups=\"account.group_show_line_subtotals_tax_excluded\">Amount</span>\n"
 "                            <span groups=\"account.group_show_line_subtotals_tax_included\">Total Price</span>"
 msgstr ""
-"סכום מחיר\n"
-" כולל"
+"<span groups=\"account.group_show_line_subtotals_tax_excluded\">סכום מחיר</span>\n"
+" <span groups=\"account.group_show_line_subtotals_tax_included\">כולל</span>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
@@ -766,6 +968,8 @@ msgid ""
 "An order is to upsell when delivered quantities are above initially\n"
 "                ordered quantities, and the invoicing policy is based on ordered quantities."
 msgstr ""
+"הזמנה היא מסוג Upsell כאשר הכמויות שנמסרו גבוהות מהכמויות שהוזמנו בהתחלה, "
+"ומדיניות החשבוניות מבוססת על כמויות שהוזמנו."
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_report_all_channels_sales__analytic_account_id
@@ -816,6 +1020,8 @@ msgid ""
 "As an example, if you sell pre-paid hours of services, Odoo recommends you\n"
 "                to sell extra hours when all ordered hours have been consumed."
 msgstr ""
+"כדוגמה, אם אתה מוכר שעות שירותים בתשלום מראש, אודו ממליצה לך למכור שעות "
+"נוספות כאשר כל השעות שהוזמנו נצרכו."
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__product_template__expense_policy__cost
@@ -908,7 +1114,7 @@ msgstr "בטל"
 #: code:addons/sale/models/sale_order.py:0
 #, python-format
 msgid "Cancel Sales Order"
-msgstr ""
+msgstr "בטל הזמנת לקוח"
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__sale_order__state__cancel
@@ -1157,8 +1363,8 @@ msgstr ""
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__sale_payment_acquirer_onboarding_wizard__payment_method__stripe
-msgid "Credit card (via Stripe)"
-msgstr "כרטיס אשראי (דרך Stripe)"
+msgid "Credit & Debit card (via Stripe)"
+msgstr ""
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_advance_payment_inv__currency_id
@@ -1271,12 +1477,12 @@ msgstr "התאם אישית את מראה הצעות המחיר שלך."
 #: code:addons/sale/static/src/js/tours/sale.js:0
 #, python-format
 msgid "Customize your quotes and orders."
-msgstr ""
+msgstr "התאם אישית את הצעות המחיר וההזמנות שלך."
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__module_delivery_dhl
 msgid "DHL Express Connector"
-msgstr ""
+msgstr "DHL Expressחיבור ל"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_product_search
@@ -1353,7 +1559,7 @@ msgstr "כמות שנשלחה"
 #: code:addons/sale/models/sale_order_line.py:0
 #, python-format
 msgid "Delivered Quantity: %s"
-msgstr ""
+msgstr "כמות שנשלחה %s"
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__product_template__invoice_policy__delivery
@@ -1457,7 +1663,7 @@ msgstr "סוג תצוגה"
 #: code:addons/sale/static/src/js/sale_order_view.js:0
 #, python-format
 msgid "Do you want to apply this discount to all order lines?"
-msgstr ""
+msgstr "האם ברצונך להחיל הנחה זו על כל מרכיבי (שורות) ההזמנה?"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -1485,7 +1691,7 @@ msgstr "סכום המקדמה"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_advance_payment_inv__fixed_amount
 msgid "Down Payment Amount (Fixed)"
-msgstr ""
+msgstr "סכום מקדמה (קבוע)"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_advance_payment_inv__product_id
@@ -1502,7 +1708,13 @@ msgstr "מקדמה: %s"
 #: code:addons/sale/models/sale_order.py:0
 #, python-format
 msgid "Down Payments"
-msgstr ""
+msgstr "מקדמות"
+
+#. module: sale
+#: code:addons/sale/wizard/sale_make_invoice_advance.py:0
+#, python-format
+msgid "Down payment"
+msgstr "מקדמה"
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__sale_advance_payment_inv__advance_payment_method__fixed
@@ -1542,7 +1754,7 @@ msgstr "טיוטת הצעת מחיר"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_cancel_view_form
 msgid "Draft invoices for this order will be cancelled."
-msgstr ""
+msgstr "טיוטת חשבוניות עבור הזמנה זו תבוטל."
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__module_delivery_easypost
@@ -1581,7 +1793,7 @@ msgstr "דוא\"ל שנשלח ללקוח ברגע ששילם על ההזמנה."
 #: model_terms:product.product,website_description:sale.product_product_4e
 #: model_terms:product.product,website_description:sale.product_product_4f
 msgid "Ergonomic"
-msgstr ""
+msgstr "ארגונומי"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__expected_date
@@ -1631,7 +1843,7 @@ msgstr "ערכים נוספים"
 #: code:addons/sale/models/sale_order_line.py:0
 #, python-format
 msgid "Extra line with %s"
-msgstr ""
+msgstr "שורת נוספת עם %s "
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__module_delivery_fedex
@@ -1726,7 +1938,7 @@ msgstr "קבל אזהרות בהזמנות על מוצרים או לקוחות"
 #: code:addons/sale/static/src/js/tours/sale.js:0
 #, python-format
 msgid "Good job, let's continue."
-msgstr ""
+msgstr "כל הכבוד, בואו נמשיך."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -1810,7 +2022,7 @@ msgstr ""
 #. module: sale
 #: model:ir.model.fields,help:sale.field_product_packaging__sales
 msgid "If true, the packaging can be used for sales orders"
-msgstr ""
+msgstr "אם זה נכון, ניתן להשתמש באריזה להזמנות מכירה"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order__pricelist_id
@@ -1864,7 +2076,7 @@ msgstr "כתובת לחשבונית"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_cancel__display_invoice_alert
 msgid "Invoice Alert"
-msgstr ""
+msgstr "התראת חשבונית"
 
 #. module: sale
 #: model:mail.message.subtype,name:sale.mt_salesteam_invoice_confirmed
@@ -1905,7 +2117,7 @@ msgstr "סטטוס חשבונית"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.product_template_sale_form_view
 msgid "Invoice after delivery, based on quantities delivered, not ordered."
-msgstr ""
+msgstr "חשבונית לאחר משלוח, לפי כמויות שנמסרו, לא אלו שהוזמנו."
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_crm_team__invoiced
@@ -1941,7 +2153,7 @@ msgstr "כמות שחויבה"
 #: code:addons/sale/models/sale_order_line.py:0
 #, python-format
 msgid "Invoiced Quantity: %s"
-msgstr ""
+msgstr "כמות שחויבה: %s"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_crm_team__invoiced
@@ -2114,7 +2326,7 @@ msgstr "אפשר ללקוחות שלך להתחבר כדי לראות את המ�
 #: code:addons/sale/static/src/js/tours/sale.js:0
 #, python-format
 msgid "Let's send the quote."
-msgstr ""
+msgstr "בוא נשלח את הצעת המחיר."
 
 #. module: sale
 #. openerp-web
@@ -2127,7 +2339,7 @@ msgstr "בוא נשמור לעת עתה את החתימה האלקטרונית."
 #: model_terms:product.product,website_description:sale.product_product_4e
 #: model_terms:product.product,website_description:sale.product_product_4f
 msgid "Locally handmade"
-msgstr ""
+msgstr "ייצור מקומי"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_sales_order_auto_done_setting
@@ -2152,13 +2364,14 @@ msgid ""
 "Looking for a custom bamboo stain to match existing furniture? Contact us "
 "for a quote."
 msgstr ""
+"מחפשים כתם במבוק בהתאמה אישית לריהוט הקיים? צור איתנו קשר לקבלת הצעת מחיר."
 
 #. module: sale
 #. openerp-web
 #: code:addons/sale/static/src/js/tours/sale.js:0
 #, python-format
 msgid "Looks good. Let's continue."
-msgstr ""
+msgstr "נראה טוב, בואו נמשיך."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.onboarding_quotation_layout_step
@@ -2264,7 +2477,7 @@ msgstr "שיטה לעדכון הכמות שנשלחה"
 #. module: sale
 #: model:ir.model.constraint,message:sale.constraint_sale_order_line_accountable_required_fields
 msgid "Missing required fields on accountable sale order line."
-msgstr "Missing required fields on accountable sale order line."
+msgstr "חסרים שדות חובה בשורת הזמנת מכירה."
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__my_activity_date_deadline
@@ -2349,7 +2562,7 @@ msgstr "לא נמצאו הזמנות לחיוב"
 #. module: sale
 #: model_terms:ir.actions.act_window,help:sale.action_orders_upselling
 msgid "No orders to upsell found."
-msgstr ""
+msgstr "לא נמצאו הזמנות ל Upsell"
 
 #. module: sale
 #. openerp-web
@@ -2382,7 +2595,7 @@ msgstr "אין מה לחייב"
 #: code:addons/sale/static/src/js/tours/sale.js:0
 #, python-format
 msgid "Now, we'll create a sample quote."
-msgstr ""
+msgstr "עכשיו, ניצור הצעת מחיר לדוגמא."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_tree
@@ -2510,7 +2723,7 @@ msgstr "מס' הזמנה"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_onboarding_order_confirmation_step
 msgid "Order Confirmation"
-msgstr ""
+msgstr "אישור הזמנה "
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_advance_payment_inv__count
@@ -2571,7 +2784,7 @@ msgstr "הזמנה לחיוב"
 #: code:addons/sale/models/sale_order_line.py:0
 #, python-format
 msgid "Ordered Quantity: %(old_qty)s -> %(new_qty)s"
-msgstr ""
+msgstr "כמות שהוזמנה: %(old_qty)s -> %(new_qty)s"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_product_product__invoice_policy
@@ -2737,7 +2950,7 @@ msgstr "כתובת גישה לפורטל"
 msgid ""
 "Press a button and watch your desk glide effortlessly from sitting to "
 "standing height in seconds."
-msgstr ""
+msgstr "לחץ על כפתור וצפה במחשב שלך גולש ללא מאמץ מישיבה לגובה עמידה בשניות."
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__price_reduce
@@ -2864,7 +3077,7 @@ msgstr "וריאנטים של מוצר"
 #: code:addons/sale/models/sale_order.py:0
 #, python-format
 msgid "Product prices have been recomputed according to pricelist <b>%s<b> "
-msgstr ""
+msgstr "מחירי המוצרים חושבו מחדש בהתאם למחירון <b>%s<b> "
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -3065,6 +3278,11 @@ msgid "Reference of the document that generated this sales order request."
 msgstr "מזהה למסמך שייצר בקשה להזמנת לקוח זו."
 
 #. module: sale
+#: model:ir.model,name:sale.model_account_payment_register
+msgid "Register Payment"
+msgstr "רשום תשלום"
+
+#. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__sale_advance_payment_inv__advance_payment_method__delivered
 msgid "Regular invoice"
 msgstr "חשבונית רגילה"
@@ -3170,7 +3388,7 @@ msgstr "אזהרות בהזמנת לקוח"
 #. module: sale
 #: model:ir.model,name:sale.model_sale_payment_acquirer_onboarding_wizard
 msgid "Sale Payment acquire onboarding wizard"
-msgstr "Sale Payment acquire onboarding wizard"
+msgstr "אשף תהליך תשלום"
 
 #. module: sale
 #: model:utm.source,name:sale.utm_source_sale_order_0
@@ -3185,7 +3403,7 @@ msgstr "אזהרות מכירה"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_company__sale_onboarding_payment_method
 msgid "Sale onboarding selected payment method"
-msgstr "Sale onboarding selected payment method"
+msgstr "אנא בחר אמצעי תשלום."
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_product_packaging__sales
@@ -3201,7 +3419,7 @@ msgstr "מכירות"
 #. module: sale
 #: model:ir.model,name:sale.model_sale_advance_payment_inv
 msgid "Sales Advance Payment Invoice"
-msgstr "Sales Advance Payment Invoice"
+msgstr "חשבונית מכירה מראש"
 
 #. module: sale
 #: code:addons/sale/models/crm_team.py:0
@@ -3286,12 +3504,12 @@ msgstr "שורות הזמנת לקוח הקשורות להזמנת לקוח של
 #: model_terms:ir.ui.view,arch_db:sale.transaction_form_inherit_sale
 #, python-format
 msgid "Sales Order(s)"
-msgstr "הזמנות לקוח"
+msgstr "הזמנה(ות) לקוח"
 
 #. module: sale
 #: model:mail.template,name:sale.mail_template_sale_confirmation
 msgid "Sales Order: Confirmation Email"
-msgstr ""
+msgstr "הזמנת לקוח: דוא\"ל אישור"
 
 #. module: sale
 #: model:mail.template,name:sale.email_template_edi_sale
@@ -3629,22 +3847,22 @@ msgstr "שלב"
 #: code:addons/sale/static/src/js/tours/sale.js:0
 #, python-format
 msgid "Start by checking your company's data."
-msgstr ""
+msgstr "התחל בבדיקת הנתונים של החברה שלך."
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_company__sale_onboarding_order_confirmation_state
 msgid "State of the onboarding confirmation order step"
-msgstr "State of the onboarding confirmation order step"
+msgstr "מצב שלב אישור רישום הזמנה"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_company__sale_onboarding_sample_quotation_state
 msgid "State of the onboarding sample quotation step"
-msgstr "State of the onboarding sample quotation step"
+msgstr "מצב שלב אישור רישום הצעת מחיר"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_company__sale_quotation_onboarding_state
 msgid "State of the sale onboarding panel"
-msgstr "State of the sale onboarding panel"
+msgstr "מצב תהליך ההטמעה של המכירה"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__state
@@ -3689,12 +3907,12 @@ msgstr "סיכום ביניים"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_report_view_tree
 msgid "Sum of Total"
-msgstr ""
+msgstr "סך סכומי הביניים"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_report_view_tree
 msgid "Sum of Untaxed Total"
-msgstr ""
+msgstr "סכום כולל ללא מע\"מ"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__tag_ids
@@ -3705,7 +3923,7 @@ msgstr "תגיות"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__tax_country_id
 msgid "Tax Country"
-msgstr ""
+msgstr "מס לפי ארץ"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_tree
@@ -3755,7 +3973,7 @@ msgstr "שדה טכני למטרת חווית משתמש."
 msgid ""
 "Technical field to filter the available taxes depending on the fiscal "
 "country and fiscal position."
-msgstr ""
+msgstr "שדה טכני לסינון המסים הקיימים לפי מדינה פיסקלית ומצב פיסקלי."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
@@ -3775,7 +3993,7 @@ msgstr "פורמט תנאים והגדרות"
 #: code:addons/sale/models/sale_order.py:0
 #, python-format
 msgid "Terms & Conditions: %s"
-msgstr ""
+msgstr "תנאים והגבלות: %s"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
@@ -3977,6 +4195,12 @@ msgid ""
 "- You should deliver your products before invoicing them: Click on the \"truck\" icon (top-right of your screen) and follow instructions.\n"
 "- You should modify the invoicing policy of your product: Open the product, go to the \"Sales\" tab and modify invoicing policy from \"delivered quantities\" to \"ordered quantities\". For Services, you should modify the Service Invoicing Policy to 'Prepaid'."
 msgstr ""
+"לא ניתן לייצר חשבונית!\n"
+"\n"
+"הסיבות להתנהגות זו יכולות להיות:\n"
+"- אתה צריך לספק את המוצרים שלך לפני שאתה נותן להם חשבונית: לחץ על סמל \"משאית\" (בפינה השמאלית העליונה של המסך שלך) ופעל לפי ההוראות.\n"
+"- עליך לשנות את מדיניות החשבוניות של המוצר שלך: פתח את המוצר, עבור ללשונית \"מכירות\" ושנה את מדיניות החשבוניות מ\"כמויות שנמסרו\" ל\"כמויות שהוזמנו\". \n"
+"עבור שירותים, עליך לשנות את מדיניות חשבוניות השירות ל'תשלום מראש'."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -4072,7 +4296,7 @@ msgstr ""
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid "This will update all unit prices based on the currently set pricelist."
-msgstr ""
+msgstr "פעולה זו תעדכן את כל מחירי היחידות בהתבסס על המחירון שנקבע כעת."
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__sale_order__invoice_status__to_invoice
@@ -4091,7 +4315,7 @@ msgstr "כמות לחיוב"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_view_search_inherit_sale
 msgid "To Upsell"
-msgstr "מכירה"
+msgstr "שדרוג מכירה"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -4274,7 +4498,7 @@ msgstr "יחידת מידה"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid "Update Prices"
-msgstr ""
+msgstr "עדכון מחירים"
 
 #. module: sale
 #: code:addons/sale/models/sale_order.py:0
@@ -4351,6 +4575,8 @@ msgid ""
 "We pay special attention to detail, which is why our desks are of a superior"
 " quality."
 msgstr ""
+"אנו מקדישים תשומת לב מיוחדת לפרטים, וזו הסיבה ששולחנות הכתיבה שלנו הם באיכות"
+" מעולה."
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__website_message_ids
@@ -4367,7 +4593,7 @@ msgstr "היסטורית התקשרויות מאתר האינטרנט"
 #: code:addons/sale/static/src/js/tours/sale.js:0
 #, python-format
 msgid "Write a company name to create one, or see suggestions."
-msgstr ""
+msgstr "כתוב שם חברה כדי ליצור אחד, או ראה המלצות."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.product_template_sale_form_view
@@ -4411,6 +4637,16 @@ msgid ""
 msgstr ""
 "באפשרותך לקבוע כאן את סוג התקשורת שיופיע בהזמנות לקוח. התקשורת תינתן ללקוח "
 "כאשר יבחר את אמצעי התשלום."
+
+#. module: sale
+#: code:addons/sale/models/product_product.py:0
+#: code:addons/sale/models/product_template.py:0
+#, python-format
+msgid ""
+"You cannot change the product's type because it is already used in sales "
+"orders."
+msgstr ""
+"לא ניתן לשנות את סוג המוצר מכיוון שהוא כבר בשימוש בהזמנות מכירה קיימות."
 
 #. module: sale
 #: code:addons/sale/models/sale_order_line.py:0
@@ -4463,6 +4699,15 @@ msgid ""
 "Your quotation contains products from company %(product_company)s whereas your quotation belongs to company %(quote_company)s. \n"
 " Please change the company of your quotation or remove the products from other companies (%(bad_products)s)."
 msgstr ""
+"הצעת המחיר מכילה מוצרים של חברת  %(product_company)s ואילו הצעת המחיר שייכת לחברה %(quote_company)s. \n"
+"אנא שנה את החברה בהצעת המחיר או הסר את המוצרים מחברות אחרות  (%(bad_products)s)."
+
+#. module: sale
+#: model:ir.actions.server,name:sale.send_invoice_cron_ir_actions_server
+#: model:ir.cron,cron_name:sale.send_invoice_cron
+#: model:ir.cron,name:sale.send_invoice_cron
+msgid "automatic invoicing: send ready invoice"
+msgstr "חשבונית אוטומטית: שלח חשבונית מוכנה"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__module_delivery_bpost
@@ -4499,6 +4744,9 @@ msgid ""
 "== 'pending') and 'Pending Order' or 'Order' }} (Ref {{ object.name or 'n/a'"
 " }})"
 msgstr ""
+"{{ object.company_id.name }} {{ (object.get_portal_last_transaction().state "
+"== 'ממתין') ו-'הזמנה בהמתנה' או 'הזמנה' }} (ע\"פ {{ object.name or 'n/a' } "
+"})"
 
 #. module: sale
 #: model:mail.template,subject:sale.email_template_edi_sale
@@ -4507,3 +4755,6 @@ msgid ""
 "(ctx.get('proforma') and 'Proforma' or 'Quotation') or 'Order' }} (Ref {{ "
 "object.name or 'n/a' }})"
 msgstr ""
+"{{ object.company_id.name }} {{ object.state in ('טיוטה, 'שלח') "
+"ו-(ctx.get('proforma') and 'Proforma' או 'Quotation') or 'Order' }} ( Ref {{"
+" object.name or 'n/a' }})"

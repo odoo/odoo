@@ -4,7 +4,8 @@
 # 
 # Translators:
 # Martin Trigaux, 2021
-# Friederike Fasterling-Nesselbosch, 2021
+# Sergio Zanchetta <primes2h@gmail.com>, 2022
+# Friederike Fasterling-Nesselbosch, 2022
 # 
 msgid ""
 msgstr ""
@@ -12,13 +13,13 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-11-16 13:18+0000\n"
 "PO-Revision-Date: 2021-09-14 12:25+0000\n"
-"Last-Translator: Friederike Fasterling-Nesselbosch, 2021\n"
+"Last-Translator: Friederike Fasterling-Nesselbosch, 2022\n"
 "Language-Team: Italian (https://www.transifex.com/odoo/teams/41243/it/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: it\n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"Plural-Forms: nplurals=3; plural=n == 1 ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;\n"
 
 #. module: purchase_stock
 #: model_terms:ir.ui.view,arch_db:purchase_stock.purchase_order_view_form_inherit
@@ -39,6 +40,8 @@ msgid ""
 "<span attrs=\"{'invisible': [('on_time_rate', '&gt;=', 0)]}\">No On-time "
 "Delivery Data</span>"
 msgstr ""
+"<span attrs=\"{'invisible': [('on_time_rate', '&gt;=', "
+"0)]}\">Nessun'informazione sulle consegne puntuali</span>"
 
 #. module: purchase_stock
 #: model_terms:ir.ui.view,arch_db:purchase_stock.res_config_settings_view_form_stock
@@ -230,7 +233,7 @@ msgstr "Movimenti a valle"
 #. module: purchase_stock
 #: model:ir.model.fields,field_description:purchase_stock.field_res_config_settings__module_stock_dropshipping
 msgid "Dropshipping"
-msgstr "Consegna diretta"
+msgstr "Spedizione diretta"
 
 #. module: purchase_stock
 #: model:ir.model.fields,field_description:purchase_stock.field_purchase_order__effective_date
@@ -242,7 +245,7 @@ msgstr "Data effettiva"
 #. module: purchase_stock
 #: model_terms:ir.ui.view,arch_db:purchase_stock.vendor_delay_report_filter
 msgid "Effective Date Last Year"
-msgstr ""
+msgstr "Data effettiva ultimo anno"
 
 #. module: purchase_stock
 #: model_terms:ir.ui.view,arch_db:purchase_stock.exception_on_po
@@ -262,6 +265,9 @@ msgid ""
 " with the location (%s) of the reordering rule (%s). Change the operation "
 "type or cancel the request for quotation."
 msgstr ""
+"Per il prodotto %s, il magazzino del tipo di operazione (%s) è in contrasto "
+"con l'ubicazione (%s) della regola di riordino (%s). Cambiare il tipo di "
+"operazione o annullare la richiesta di preventivo."
 
 #. module: purchase_stock
 #: model:ir.model.fields,field_description:purchase_stock.field_purchase_order_line__forecasted_issue
@@ -290,7 +296,7 @@ msgstr "ID"
 #. module: purchase_stock
 #: model:ir.model.fields,field_description:purchase_stock.field_purchase_order__incoming_picking_count
 msgid "Incoming Shipment count"
-msgstr ""
+msgstr "Conteggio spedizioni in entrata"
 
 #. module: purchase_stock
 #: model_terms:ir.ui.view,arch_db:purchase_stock.purchase_order_view_form_inherit
@@ -464,7 +470,7 @@ msgstr "Categoria prodotto"
 #: model:ir.model.fields,field_description:purchase_stock.field_stock_replenishment_info__supplierinfo_id
 #: model:ir.model.fields,field_description:purchase_stock.field_stock_warehouse_orderpoint__supplier_id
 msgid "Product Supplier"
-msgstr ""
+msgstr "Fornitore del prodotto"
 
 #. module: purchase_stock
 #: model:ir.model,name:purchase_stock.model_product_template
@@ -474,7 +480,7 @@ msgstr "Modello prodotto"
 #. module: purchase_stock
 #: model:ir.model.fields,field_description:purchase_stock.field_purchase_order_line__propagate_cancel
 msgid "Propagate cancellation"
-msgstr ""
+msgstr "Propagare annullamento"
 
 #. module: purchase_stock
 #: model:ir.model.fields,field_description:purchase_stock.field_res_partner__purchase_line_ids
@@ -520,7 +526,7 @@ msgstr "Numero ordini di acquisto"
 #. module: purchase_stock
 #: model_terms:ir.ui.view,arch_db:purchase_stock.purchase_order_view_form_inherit
 msgid "Receipt"
-msgstr "Ricezione"
+msgstr "Ricevuta"
 
 #. module: purchase_stock
 #: model_terms:ir.ui.view,arch_db:purchase_stock.purchase_order_view_form_inherit
@@ -576,6 +582,8 @@ msgid ""
 "Schedule automatically generated request for quotations earlier to avoid "
 "delays"
 msgstr ""
+"Programma in anticipo le richieste di preventivo generate automaticamente "
+"per evitare ritardi"
 
 #. module: purchase_stock
 #: model_terms:ir.ui.view,arch_db:purchase_stock.product_supplierinfo_replenishment_tree_view
@@ -637,7 +645,7 @@ msgstr "Info fornitori"
 #: model:ir.model.fields,help:purchase_stock.field_purchase_order__default_location_dest_id_usage
 msgid "Technical field used to display the Drop Ship Address"
 msgstr ""
-"Campo tecnico utilizzato per visualizzare l'indirizzo di consegna diretta"
+"Campo tecnico utilizzato per visualizzare l'indirizzo di Spedizione diretta"
 
 #. module: purchase_stock
 #: model:ir.model.fields,help:purchase_stock.field_product_product__purchase_order_line_ids
@@ -668,6 +676,10 @@ msgid ""
 " %s (no vendor defined, minimum quantity not reached, dates not valid, ...)."
 " Go on the product form and complete the list of vendors."
 msgstr ""
+"Nessun prezzo fornitore corrispondente per generare l'ordine di acquisto del"
+" prodotto %s (nessun fornitore specificato, quantità minima non raggiunta, "
+"date non valide ecc...). Andare nella scheda prodotto e completare l'elenco "
+"dei fornitori."
 
 #. module: purchase_stock
 #: model_terms:ir.ui.view,arch_db:purchase_stock.res_config_settings_view_form_purchase
@@ -678,8 +690,8 @@ msgid ""
 "on-demand flow. The requested delivery address will be the customer delivery"
 " address and not your warehouse."
 msgstr ""
-"Aggiunge un percorso di consegna diretta da applicare ai prodotti, per "
-"richiedere ai fornitori di consegnare ai clienti. Un prodotto a consegna "
+"Aggiunge un percorso di Spedizione diretta da applicare ai prodotti, per "
+"richiedere ai fornitori di consegnare ai clienti. Un prodotto a Spedizione "
 "diretta genera una richiesta di preventivo per l'acquisto dopo la conferma "
 "dell'ordine di vendita. L'indirizzo di consegna richiesto corrisponde a "
 "quello del cliente e non al magazzino."
@@ -778,10 +790,9 @@ msgstr ""
 #, python-format
 msgid ""
 "When products are needed in <b>%s</b>, <br/> a request for quotation is "
-"created to fulfill the need."
+"created to fulfill the need.<br/>Note: This rule will be used in combination"
+" with the rules<br/>of the reception route(s)"
 msgstr ""
-"Quando sono necessari prodotti in <b>%s</b>, <br/> viene creata una "
-"richiesta di preventivo per soddisfare l'esigenza."
 
 #. module: purchase_stock
 #: code:addons/purchase_stock/models/purchase.py:0

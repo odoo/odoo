@@ -23,7 +23,7 @@ class SaleOrder(models.Model):
     def _compute_amount_total_without_delivery(self):
         self.ensure_one()
         delivery_cost = sum([l.price_total for l in self.order_line if l.is_delivery])
-        return self.amount_total - delivery_cost
+        return self.env['delivery.carrier']._compute_currency(self, self.amount_total - delivery_cost, 'pricelist_to_company')
 
     @api.depends('order_line')
     def _compute_delivery_state(self):
@@ -36,6 +36,11 @@ class SaleOrder(models.Model):
         delivery_line = self.order_line.filtered('is_delivery')
         if delivery_line:
             self.recompute_delivery_price = True
+
+    def _get_update_prices_lines(self):
+        """ Exclude delivery lines from price list recomputation based on product instead of carrier """
+        lines = super()._get_update_prices_lines()
+        return lines.filtered(lambda line: not line.is_delivery)
 
     def _remove_delivery_line(self):
         delivery_lines = self.env['sale.order.line'].search([('order_id', 'in', self.ids), ('is_delivery', '=', True)])
@@ -86,8 +91,10 @@ class SaleOrder(models.Model):
 
     def _create_delivery_line(self, carrier, price_unit):
         SaleOrderLine = self.env['sale.order.line']
+        context = {}
         if self.partner_id:
             # set delivery detail in the customer language
+            context['lang'] = self.partner_id.lang
             carrier = carrier.with_context(lang=self.partner_id.lang)
 
         # Apply fiscal position
@@ -97,12 +104,12 @@ class SaleOrder(models.Model):
             taxes_ids = self.fiscal_position_id.map_tax(taxes).ids
 
         # Create the sales order line
-        carrier_with_partner_lang = carrier.with_context(lang=self.partner_id.lang)
-        if carrier_with_partner_lang.product_id.description_sale:
-            so_description = '%s: %s' % (carrier_with_partner_lang.name,
-                                        carrier_with_partner_lang.product_id.description_sale)
+
+        if carrier.product_id.description_sale:
+            so_description = '%s: %s' % (carrier.name,
+                                        carrier.product_id.description_sale)
         else:
-            so_description = carrier_with_partner_lang.name
+            so_description = carrier.name
         values = {
             'order_id': self.id,
             'name': so_description,
@@ -122,6 +129,7 @@ class SaleOrder(models.Model):
         if self.order_line:
             values['sequence'] = self.order_line[-1].sequence + 1
         sol = SaleOrderLine.sudo().create(values)
+        del context
         return sol
 
     def _format_currency_amount(self, amount):
@@ -138,7 +146,7 @@ class SaleOrder(models.Model):
         for order in self:
             if order.invoice_status in ['no', 'invoiced']:
                 continue
-            order_lines = order.order_line.filtered(lambda x: not x.is_delivery and not x.is_downpayment and not x.display_type)
+            order_lines = order.order_line.filtered(lambda x: not x.is_delivery and not x.is_downpayment and not x.display_type and x.invoice_status != 'invoiced')
             if all(line.product_id.invoice_policy == 'delivery' and line.invoice_status == 'no' for line in order_lines):
                 order.invoice_status = 'no'
 

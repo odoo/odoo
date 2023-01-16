@@ -12,9 +12,9 @@ class ContractType(models.Model):
 
 class HrPayrollStructureType(models.Model):
     _name = 'hr.payroll.structure.type'
-    _description = 'Contract Type'
+    _description = 'Salary Structure Type'
 
-    name = fields.Char('Contract Type')
+    name = fields.Char('Salary Structure Type')
     default_resource_calendar_id = fields.Many2one(
         'resource.calendar', 'Default Working Hours',
         default=lambda self: self.env.company.resource_calendar_id)

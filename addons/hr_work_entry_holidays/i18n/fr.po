@@ -4,8 +4,8 @@
 # 
 # Translators:
 # Martin Trigaux, 2021
-# Cécile Collart <cco@odoo.com>, 2021
 # Geoffrey_GMF <gmf@odoo.com>, 2021
+# Tivisse <yti@odoo.com>, 2022
 # 
 msgid ""
 msgstr ""
@@ -13,13 +13,13 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-09-14 10:28+0000\n"
 "PO-Revision-Date: 2021-09-14 12:23+0000\n"
-"Last-Translator: Geoffrey_GMF <gmf@odoo.com>, 2021\n"
+"Last-Translator: Tivisse <yti@odoo.com>, 2022\n"
 "Language-Team: French (https://www.transifex.com/odoo/teams/41243/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: fr\n"
-"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+"Plural-Forms: nplurals=3; plural=(n == 0 || n == 1) ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;\n"
 
 #. module: hr_work_entry_holidays
 #: code:addons/hr_work_entry_holidays/models/hr_leave.py:0
@@ -30,8 +30,26 @@ msgstr "%s: Congés"
 #. module: hr_work_entry_holidays
 #: code:addons/hr_work_entry_holidays/models/hr_leave.py:0
 #, python-format
-msgid "A leave cannot be set across multiple contracts."
-msgstr "Un congé ne peut pas être défini pour plusieurs contrats."
+msgid ""
+"A leave cannot be set across multiple contracts with different working schedules.\n"
+"\n"
+"Please create one time off for each contract.\n"
+"\n"
+"Time off:\n"
+"%s\n"
+"\n"
+"Contracts:\n"
+"%s"
+msgstr ""
+"Un congé ne peut être défini sur plusieurs contrats à des régimes horaires différents.\n"
+"\n"
+"Veuillez créer 1 congé pour chaque contrat.\n"
+"\n"
+"Congé:\n"
+"%s\n"
+"\n"
+"Contrats:\n"
+"%s"
 
 #. module: hr_work_entry_holidays
 #: model:ir.model,name:hr_work_entry_holidays.model_hr_contract
@@ -44,6 +62,8 @@ msgid ""
 "Every new time off type in this list will be reported as select work entry "
 "in payslip."
 msgstr ""
+"Chaque nouveau type de congé dans cette liste sera signalé comme une entrée "
+"de travail sélectionnée dans la fiche de paie."
 
 #. module: hr_work_entry_holidays
 #: model:ir.model,name:hr_work_entry_holidays.model_hr_work_entry
@@ -85,6 +105,8 @@ msgid ""
 "There is no employee set on the time off. Please make sure you're logged in "
 "the correct company."
 msgstr ""
+"Il n'y a pas d'employé sur le congé. Assurez vous que vous êtes connecté "
+"dans la bonne société."
 
 #. module: hr_work_entry_holidays
 #: model:ir.model,name:hr_work_entry_holidays.model_hr_leave

@@ -264,7 +264,7 @@ def translate_xml_node(node, callback, parse, serialize):
 
         # translate the attributes of the node
         for key, val in node.attrib.items():
-            if val and key in TRANSLATED_ATTRS and TRANSLATED_ATTRS[key](node):
+            if nonspace(val) and key in TRANSLATED_ATTRS and TRANSLATED_ATTRS[key](node):
                 node.set(key, callback(val.strip()) or val)
 
     process(node)
@@ -357,7 +357,7 @@ class GettextAlias(object):
 
     def _get_db(self):
         # find current DB based on thread/worker db name (see netsvc)
-        db_name = getattr(threading.currentThread(), 'dbname', None)
+        db_name = getattr(threading.current_thread(), 'dbname', None)
         if db_name:
             return odoo.sql_db.db_connect(db_name)
 

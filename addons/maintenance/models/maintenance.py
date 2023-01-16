@@ -345,6 +345,10 @@ class MaintenanceRequest(models.Model):
             request._add_followers()
         if request.equipment_id and not request.maintenance_team_id:
             request.maintenance_team_id = request.equipment_id.maintenance_team_id
+        if not request.stage_id.done:
+            request.close_date = False
+        elif request.stage_id.done and not request.close_date:
+            request.close_date = fields.Date.today()
         request.activity_update()
         return request
 
@@ -358,7 +362,9 @@ class MaintenanceRequest(models.Model):
             self._add_followers()
         if 'stage_id' in vals:
             self.filtered(lambda m: m.stage_id.done).write({'close_date': fields.Date.today()})
+            self.filtered(lambda m: not m.stage_id.done).write({'close_date': False})
             self.activity_feedback(['maintenance.mail_act_maintenance_request'])
+            self.activity_update()
         if vals.get('user_id') or vals.get('schedule_date'):
             self.activity_update()
         if vals.get('equipment_id'):
@@ -428,12 +434,12 @@ class MaintenanceTeam(models.Model):
     @api.depends('request_ids.stage_id.done')
     def _compute_todo_requests(self):
         for team in self:
-            team.todo_request_ids = team.request_ids.filtered(lambda e: e.stage_id.done==False)
+            team.todo_request_ids = self.env['maintenance.request'].search([('maintenance_team_id', '=', team.id), ('stage_id.done', '=', False)])
             team.todo_request_count = len(team.todo_request_ids)
-            team.todo_request_count_date = len(team.todo_request_ids.filtered(lambda e: e.schedule_date != False))
-            team.todo_request_count_high_priority = len(team.todo_request_ids.filtered(lambda e: e.priority == '3'))
-            team.todo_request_count_block = len(team.todo_request_ids.filtered(lambda e: e.kanban_state == 'blocked'))
-            team.todo_request_count_unscheduled = len(team.todo_request_ids.filtered(lambda e: not e.schedule_date))
+            team.todo_request_count_date = self.env['maintenance.request'].search_count([('maintenance_team_id', '=', team.id), ('schedule_date', '!=', False)])
+            team.todo_request_count_high_priority = self.env['maintenance.request'].search_count([('maintenance_team_id', '=', team.id), ('priority', '=', '3')])
+            team.todo_request_count_block = self.env['maintenance.request'].search_count([('maintenance_team_id', '=', team.id), ('kanban_state', '=', 'blocked')])
+            team.todo_request_count_unscheduled = self.env['maintenance.request'].search_count([('maintenance_team_id', '=', team.id), ('schedule_date', '=', False)])
 
     @api.depends('equipment_ids')
     def _compute_equipment(self):

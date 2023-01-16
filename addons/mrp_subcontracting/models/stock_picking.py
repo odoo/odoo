@@ -12,6 +12,13 @@ from dateutil.relativedelta import relativedelta
 class StockPicking(models.Model):
     _inherit = 'stock.picking'
 
+    # override existing field domains to prevent suboncontracting production lines from showing in Detailed Operations tab
+    move_line_nosuggest_ids = fields.One2many(
+        domain=['&', '|', ('location_dest_id.usage', '!=', 'production'), ('move_id.picking_code', '!=', 'outgoing'),
+                     '|', ('product_qty', '=', 0.0), '&', ('product_qty', '!=', 0.0), ('qty_done', '!=', 0.0)])
+    move_line_ids_without_package = fields.One2many(
+        domain=['&', '|', ('location_dest_id.usage', '!=', 'production'), ('move_id.picking_code', '!=', 'outgoing'),
+                     '|', ('package_level_id', '=', False), ('picking_type_entire_packs', '=', False)])
     display_action_record_components = fields.Selection(
         [('hide', 'Hide'), ('facultative', 'Facultative'), ('mandatory', 'Mandatory')],
         compute='_compute_display_action_record_components')
@@ -39,9 +46,14 @@ class StockPicking(models.Model):
         for move in self.move_lines.filtered(lambda move: move.is_subcontract):
             # Auto set qty_producing/lot_producing_id of MO wasn't recorded
             # manually (if the flexible + record_component or has tracked component)
-            if any(production._has_been_recorded() for production in move._get_subcontract_production()):
+            productions = move._get_subcontract_production()
+            recorded_productions = productions.filtered(lambda p: p._has_been_recorded())
+            recorded_qty = sum(recorded_productions.mapped('qty_producing'))
+            sm_done_qty = sum(productions._get_subcontract_move().mapped('quantity_done'))
+            rounding = self.env['decimal.precision'].precision_get('Product Unit of Measure')
+            if float_compare(recorded_qty, sm_done_qty, precision_digits=rounding) >= 0:
                 continue
-            production = move._get_subcontract_production()
+            production = productions - recorded_productions
             if not production:
                 continue
             if len(production) > 1:
@@ -70,6 +82,9 @@ class StockPicking(models.Model):
 
         for picking in self:
             productions_to_done = picking._get_subcontract_production()._subcontracting_filter_to_done()
+            if not productions_to_done:
+                continue
+            productions_to_done = productions_to_done.sudo()
             production_ids_backorder = []
             if not self.env.context.get('cancel_backorder'):
                 production_ids_backorder = productions_to_done.filtered(lambda mo: mo.state == "progress").ids
@@ -133,6 +148,9 @@ class StockPicking(models.Model):
     def _subcontracted_produce(self, subcontract_details):
         self.ensure_one()
         for move, bom in subcontract_details:
+            if float_compare(move.product_qty, 0, precision_rounding=move.product_uom.rounding) <= 0:
+                # If a subcontracted amount is decreased, don't create a MO that would be for a negative value.
+                continue
             mo = self.env['mrp.production'].with_company(move.company_id).create(self._prepare_subcontract_mo_vals(move, bom))
             self.env['stock.move'].create(mo._get_moves_raw_values())
             self.env['stock.move'].create(mo._get_moves_finished_values())

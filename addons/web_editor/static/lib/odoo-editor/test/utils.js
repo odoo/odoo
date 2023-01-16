@@ -1,8 +1,11 @@
 import { OdooEditor } from '../src/OdooEditor.js';
 import { sanitize } from '../src/utils/sanitize.js';
-import { insertText as insertTextSel } from '../src/utils/utils.js';
+import {
+    closestElement,
+    insertText as insertTextSel,
+} from '../src/utils/utils.js';
 
-const Direction = {
+export const Direction = {
     BACKWARD: 'BACKWARD',
     FORWARD: 'FORWARD',
 };
@@ -135,35 +138,6 @@ export function parseMultipleTextualSelection(testContainer) {
 }
 
 /**
- * Insert in the DOM:
- * - `SELECTION_ANCHOR_CHAR` in place for the selection start
- * - `SELECTION_FOCUS_CHAR` in place for the selection end
- *
- * This is used in the function `testEditor`.
- */
-export function renderMultipleTextualSelection() {
-    const selection = document.getSelection();
-    if (selection.rangeCount === 0) {
-        return;
-    }
-
-    const anchor = targetDeepest(selection.anchorNode, selection.anchorOffset);
-    const focus = targetDeepest(selection.focusNode, selection.focusOffset);
-
-    // If the range characters have to be inserted within the same parent and
-    // the anchor range character has to be before the focus range character,
-    // the focus offset needs to be adapted to account for the first insertion.
-    const [anchorNode, anchorOffset] = anchor;
-    const [focusNode, baseFocusOffset] = focus;
-    let focusOffset = baseFocusOffset;
-    if (anchorNode === focusNode && anchorOffset <= focusOffset) {
-        focusOffset++;
-    }
-    insertCharsAt('[', ...anchor);
-    insertCharsAt(']', focusNode, focusOffset);
-}
-
-/**
  * Set a range in the DOM.
  *
  * @param selection
@@ -183,7 +157,9 @@ export function setTestSelection(selection, doc = document) {
     try {
         domSelection.extend(selection.focusNode, selection.focusOffset);
     } catch (e) {
-        // Firefox yells not happy when setting selection on elem with contentEditable=false.
+        // Firefox throws NS_ERROR_FAILURE when setting selection on element
+        // with contentEditable=false for no valid reason since non-editable
+        // content are selectable by the user anyway.
     }
 }
 
@@ -285,9 +261,27 @@ export function renderTextualSelection() {
     insertCharsAt(']', focusNode, focusOffset);
 }
 
-export async function testEditor(Editor = OdooEditor, spec) {
+/**
+ * Return a more readable test error messages
+ */
+export function customErrorMessage(assertLocation, value, expected) {
+    const zws = '//zws//';
+    value = value.replaceAll('\u200B', zws);
+    expected = expected.replaceAll('\u200B', zws);
+
+    return `[${assertLocation}]\nactual  : '${value}'\nexpected: '${expected}'\n\nStackTrace `;
+}
+
+export async function testEditor(Editor = OdooEditor, spec, options = {}) {
     const testNode = document.createElement('div');
+    document.querySelector('#editor-test-container').innerHTML = '';
     document.querySelector('#editor-test-container').appendChild(testNode);
+    let styleTag;
+    if (spec.styleContent) {
+        styleTag = document.createElement('style');
+        styleTag.textContent = spec.styleContent;
+        document.querySelector('#editor-test-container').appendChild(styleTag);
+    }
 
     // Add the content to edit and remove the "[]" markers *before* initializing
     // the editor as otherwise those would genererate mutations the editor would
@@ -295,46 +289,71 @@ export async function testEditor(Editor = OdooEditor, spec) {
     testNode.innerHTML = spec.contentBefore;
     const selection = parseTextualSelection(testNode);
 
-    const editor = new Editor(testNode, { toSanitize: false });
+    const editor = new Editor(testNode, Object.assign({ toSanitize: false }, options));
     editor.keyboardType = 'PHYSICAL';
+    editor.testMode = true;
     if (selection) {
         setTestSelection(selection);
         editor._recordHistorySelection();
     } else {
         document.getSelection().removeAllRanges();
     }
+    editor.observerUnactive('beforeUnitTests');
 
     // we have to sanitize after having put the cursor
     sanitize(editor.editable);
 
-    let firefoxExecCommandError = false;
-    if (spec.stepFunction) {
-        try {
-            await spec.stepFunction(editor);
-        } catch (err) {
-            if (typeof err === 'object' && err.name === 'NS_ERROR_FAILURE') {
-                firefoxExecCommandError = true;
-            } else {
-                throw err;
-            }
+    if (spec.contentBeforeEdit) {
+        renderTextualSelection();
+        const beforeEditValue = testNode.innerHTML;
+        window.chai.expect(beforeEditValue).to.be.equal(
+            spec.contentBeforeEdit,
+            customErrorMessage('contentBeforeEdit', beforeEditValue, spec.contentBeforeEdit));
+        const selection = parseTextualSelection(testNode);
+        if (selection) {
+            setTestSelection(selection);
         }
     }
 
+    if (spec.stepFunction) {
+        editor.observerActive('beforeUnitTests');
+        await spec.stepFunction(editor);
+        editor.observerUnactive('afterUnitTests');
+    }
+
+    if (spec.contentAfterEdit) {
+        renderTextualSelection();
+        const afterEditValue = testNode.innerHTML;
+        window.chai.expect(afterEditValue).to.be.equal(
+            spec.contentAfterEdit,
+            customErrorMessage('contentAfterEdit', afterEditValue, spec.contentAfterEdit));
+        const selection = parseTextualSelection(testNode);
+        if (selection) {
+            setTestSelection(selection);
+        }
+    }
+
+    await editor.clean();
     // Same as above: disconnect mutation observers and other things, otherwise
     // reading the "[]" markers would broke the test.
-    editor.destroy();
+    await editor.destroy();
 
-    if (spec.contentAfter && !firefoxExecCommandError) {
+    if (spec.contentAfter) {
         renderTextualSelection();
-        const value = testNode.innerHTML;
-        window.chai.expect(value).to.be.equal(spec.contentAfter);
-    }
-    testNode.remove();
 
-    if (firefoxExecCommandError) {
-        // FIXME
-        throw new Error('Firefox was not able to test this case because of an execCommand error');
+        // remove all check-ids (checklists, stars)
+        if (spec.removeCheckIds) {
+            for (const li of document.querySelectorAll('#editor-test-container li[id^=checklist-id-')) {
+                li.removeAttribute('id');
+            }
+        }
+
+        const value = testNode.innerHTML;
+        window.chai.expect(value).to.be.equal(
+            spec.contentAfter,
+            customErrorMessage('contentAfter', value, spec.contentAfter));
     }
+    await testNode.remove();
 }
 
 /**
@@ -382,6 +401,7 @@ export async function click(el, options) {
             bubbles: true,
             clientX: pos.left + 1,
             clientY: pos.top + 1,
+            view: el.ownerDocument.defaultView,
         },
         options,
     );
@@ -393,12 +413,30 @@ export async function click(el, options) {
     await nextTickFrame();
 }
 
+export async function keydown(editable, key, shiftKey) {
+    const ev = new KeyboardEvent('keydown', { key, shiftKey: !!shiftKey });
+    editable.dispatchEvent(ev);
+    await nextTickFrame();
+}
+
 export async function deleteForward(editor) {
     editor.execCommand('oDeleteForward');
 }
 
 export async function deleteBackward(editor) {
     editor.execCommand('oDeleteBackward');
+}
+
+export async function deleteBackwardMobile(editor) {
+    // Some mobile keyboard use input event to trigger delete.
+    // This is a way to simulate this behavior.
+    const inputEvent = new InputEvent('input', {
+        inputType: 'deleteContentBackward',
+        data: null,
+        bubbles: true,
+        cancelable: false,
+    });
+    editor._onInput(inputEvent);
 }
 
 export async function insertParagraphBreak(editor) {
@@ -440,10 +478,41 @@ export async function createLink(editor, content) {
 }
 
 export async function insertText(editor, text) {
-    const sel = document.getSelection();
-    insertTextSel(sel, text);
-    sel.collapseToEnd();
-    editor.historyStep();
+    // Create and dispatch events to mock text insertion. Unfortunatly, the
+    // events will be flagged `isTrusted: false` by the browser, requiring
+    // the editor to detect them since they would not trigger the default
+    // browser behavior otherwise.
+    for (const char of text) {
+        // KeyDownEvent is required to trigger deleteRange.
+        const keyDownEvent = new KeyboardEvent('keydown', {
+            key: char,
+            bubbles: true,
+            cancelable: true,
+        });
+        editor.editable.dispatchEvent(keyDownEvent);
+        // KeyPressEvent is not required but is triggered like in the browser.
+        const keyPressEvent = new KeyboardEvent('keypress', {
+            key: char,
+            bubbles: true,
+            cancelable: true,
+        });
+        editor.editable.dispatchEvent(keyPressEvent);
+        // InputEvent is required to simulate the insert text.
+        const inputEvent = new InputEvent('input', {
+            inputType: 'insertText',
+            data: char,
+            bubbles: true,
+            cancelable: true,
+        });
+        editor.editable.dispatchEvent(inputEvent);
+        // KeyUpEvent is not required but is triggered like the browser would.
+        const keyUpEvent = new KeyboardEvent('keyup', {
+            key: char,
+            bubbles: true,
+            cancelable: true,
+        });
+        editor.editable.dispatchEvent(keyUpEvent);
+    }
 }
 
 export function undo(editor) {
@@ -452,6 +521,83 @@ export function undo(editor) {
 
 export function redo(editor) {
     editor.historyRedo();
+}
+
+/**
+ * The class exists because the original `InputEvent` does not allow to override
+ * its inputType property.
+ */
+class SimulatedInputEvent extends InputEvent {
+    constructor(type, eventInitDict) {
+        super(type, eventInitDict);
+        this.eventInitDict = eventInitDict;
+    }
+    get inputType() {
+        return this.eventInitDict.inputType;
+    }
+}
+function getEventConstructor(win, type) {
+    const eventTypes = {
+        'pointer': win.MouseEvent,
+        'contextmenu': win.MouseEvent,
+        'select': win.MouseEvent,
+        'wheel': win.MouseEvent,
+        'click': win.MouseEvent,
+        'dblclick': win.MouseEvent,
+        'mousedown': win.MouseEvent,
+        'mouseenter': win.MouseEvent,
+        'mouseleave': win.MouseEvent,
+        'mousemove': win.MouseEvent,
+        'mouseout': win.MouseEvent,
+        'mouseover': win.MouseEvent,
+        'mouseup': win.MouseEvent,
+        'compositionstart': win.CompositionEvent,
+        'compositionend': win.CompositionEvent,
+        'compositionupdate': win.CompositionEvent,
+        'input': SimulatedInputEvent,
+        'beforeinput': SimulatedInputEvent,
+        'keydown': win.KeyboardEvent,
+        'keypress': win.KeyboardEvent,
+        'keyup': win.KeyboardEvent,
+        'dragstart': win.DragEvent,
+        'dragend': win.DragEvent,
+        'drop': win.DragEvent,
+        'beforecut': win.ClipboardEvent,
+        'cut': win.ClipboardEvent,
+        'paste': win.ClipboardEvent,
+        'touchstart': win.TouchEvent,
+        'touchend': win.TouchEvent,
+    };
+    if (!eventTypes[type]) {
+        throw new Error('The event "' + type + '" is not implemented for the tests.');
+    }
+    return eventTypes[type];
+}
+
+export function triggerEvent(
+    el,
+    eventName,
+    options,
+) {
+    const currentElement = closestElement(el);
+    options = Object.assign(
+        {
+            view: el.ownerDocument.defaultView,
+            bubbles: true,
+            composed: true,
+            cancelable: true,
+            isTrusted: true,
+        },
+        options,
+    );
+    const EventClass = getEventConstructor(el.ownerDocument.defaultView, eventName);
+    if (EventClass.name === 'ClipboardEvent' && !('clipboardData' in options)) {
+        throw new Error('ClipboardEvent must have clipboardData in options');
+    }
+    const ev = new EventClass(eventName, options);
+
+    currentElement.dispatchEvent(ev);
+    return ev;
 }
 
 export class BasicEditor extends OdooEditor {}

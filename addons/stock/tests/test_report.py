@@ -977,7 +977,7 @@ class TestReports(TestReportsCommon):
         receipt.action_confirm()
 
         # Test compute _compute_forecast_information
-        self.assertEqual(delivery.move_lines.forecast_availability, 0.0)
+        self.assertEqual(delivery.move_lines.forecast_availability, -100.0)
         self.assertEqual(delivery2.move_lines.forecast_availability, 200)
         self.assertFalse(delivery.move_lines.forecast_expected_date)
         self.assertEqual(delivery2.move_lines.forecast_expected_date, receipt.move_lines.date)
@@ -1209,7 +1209,7 @@ class TestReports(TestReportsCommon):
         self.assertEqual(lines[3]['document_out'].id, delivery_manual.id)
 
         all_delivery = delivery_by_date | delivery_at_confirm | delivery_by_date_priority | delivery_manual
-        self.assertEqual(all_delivery.move_lines.mapped("forecast_availability"), [0, 0, 0, 0])
+        self.assertEqual(all_delivery.move_lines.mapped("forecast_availability"), [-3.0, -3.0, -3.0, -3.0])
 
         # Creation of one receipt to fulfill the 2 first deliveries delivery_by_date and delivery_at_confirm
         receipt_form = Form(self.env['stock.picking'])
@@ -1222,7 +1222,7 @@ class TestReports(TestReportsCommon):
         receipt1 = receipt_form.save()
         receipt1.action_confirm()
 
-        self.assertEqual(all_delivery.move_lines.mapped("forecast_availability"), [3, 3, 0, 0])
+        self.assertEqual(all_delivery.move_lines.mapped("forecast_availability"), [3, 3, -3.0, -3.0])
 
     def test_report_reception_1_one_receipt(self):
         """ Create 2 deliveries and 1 receipt where some of the products being received
@@ -1565,3 +1565,78 @@ class TestReports(TestReportsCommon):
         self.assertEqual(mto_move.product_uom_qty, incoming_qty, "Move quantities should be unchanged")
         self.assertEqual(mto_move.procure_method, 'make_to_stock', "Procure method not correctly reset")
         self.assertEqual(mto_move.state, 'confirmed', "Move state not correctly reset (to non-MTO state)")
+
+    def test_report_reception_6_backorders(self):
+        """ Check the complicated use case with backorder when:
+        1. Incoming qty is greater than outgoing qty needed to be assigned + total outgoing qty is assigned
+        2. Smaller qty is completed + backorder is made for rest
+        3. Backorder qty (which is still assigned) is unassigned + re-assigned
+        """
+        incoming_qty = 10
+        outgoing_qty = 8
+        orig_incoming_qty_done = 4
+
+        delivery_form = Form(self.env['stock.picking'].with_context(
+            force_detailed_view=True
+        ), view='stock.view_picking_form')
+        delivery_form.partner_id = self.partner
+        delivery_form.picking_type_id = self.picking_type_out
+        with delivery_form.move_ids_without_package.new() as move_line:
+            move_line.product_id = self.product
+            move_line.product_uom_qty = outgoing_qty
+        delivery = delivery_form.save()
+        delivery.action_confirm()
+
+        # Create receipt w/greater qty than needed delivery qty
+        receipt_form = Form(self.env['stock.picking'].with_context(
+            force_detailed_view=True
+        ), view='stock.view_picking_form')
+        receipt_form.partner_id = self.partner
+        receipt_form.picking_type_id = self.picking_type_in
+        with receipt_form.move_ids_without_package.new() as move_line:
+            move_line.product_id = self.product
+            move_line.product_uom_qty = incoming_qty
+        receipt = receipt_form.save()
+        receipt.action_confirm()
+
+        report = self.env['report.stock.report_reception']
+        report.action_assign(delivery.move_ids_without_package.ids, [outgoing_qty], receipt.move_ids_without_package.ids)
+        self.assertEqual(receipt.move_ids_without_package.move_dest_ids.ids, delivery.move_ids_without_package.ids, "Link between receipt and delivery moves should have been made")
+
+        for move in receipt.move_lines:
+            move.quantity_done = orig_incoming_qty_done
+        res_dict = receipt.button_validate()
+        backorder_wizard = Form(self.env[res_dict['res_model']].with_context(res_dict['context'])).save()
+        backorder_wizard.process()
+        backorder = self.env['stock.picking'].search([('backorder_id', '=', receipt.id)])
+
+        # Check backorder assigned quantities
+        self.assertEqual(receipt.move_ids_without_package.move_dest_ids, backorder.move_ids_without_package.move_dest_ids, "Backorder should have copied link to delivery move")
+        report_values = report._get_report_values(docids=[backorder.id])
+        sources_to_lines = report_values['sources_to_lines']
+        all_lines = list(sources_to_lines.values())[0]
+        self.assertEqual(len(all_lines), 1, "The report has wrong number of outgoing moves.")
+        # we expect that the report won't know about original receipt done amount, so it will show outgoing_qty as assigned
+        # (rather than the remaining amount that isn't reserved). This can change if the report becomes more sophisticated
+        self.assertEqual(all_lines[0]['quantity'], incoming_qty - orig_incoming_qty_done, "The report doesn't have the correct qty assigned.")
+
+        # Unassign the amount we expect to see in the report + check split correctly happens
+        report.action_unassign(delivery.move_ids_without_package.ids, outgoing_qty, backorder.move_ids_without_package.ids)
+        self.assertEqual(len(delivery.move_ids_without_package), 2, "The delivery should have split its reserved qty from the original move")
+        reserved_move = receipt.move_ids_without_package.move_dest_ids
+        self.assertEqual(len(reserved_move), 1, "Move w/reserved qty should have full demand reserved")
+        self.assertEqual(reserved_move.state, 'assigned', "Move w/reserved qty should have full demand reserved")
+        self.assertEqual(reserved_move.product_uom_qty, orig_incoming_qty_done, "Done amount in original receipt should be amount demanded/reserved in delivery still with a link")
+        report_values = report._get_report_values(docids=[backorder.id])
+        sources_to_lines = report_values['sources_to_lines']
+        all_lines = list(sources_to_lines.values())[0]
+        self.assertEqual(len(all_lines), 1, "The report should only contain the remaining non-reserved move")
+        self.assertEqual(all_lines[0]['quantity'], outgoing_qty - orig_incoming_qty_done, "The report doesn't have the correct qty to assign")
+
+        # Re-assign the remaining delivery amount and check that everything reserves correctly in the end
+        report.action_assign((delivery.move_ids_without_package - reserved_move).ids, [outgoing_qty - orig_incoming_qty_done], backorder.move_ids_without_package.ids)
+        for move in backorder.move_lines:
+            move.quantity_done = incoming_qty - orig_incoming_qty_done
+        backorder.button_validate()
+        for move in delivery.move_ids_without_package:
+            self.assertEqual(move.state, 'assigned', "All delivery moves should be fully reserved now")

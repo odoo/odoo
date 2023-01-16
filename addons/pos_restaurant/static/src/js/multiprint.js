@@ -87,7 +87,7 @@ models.Orderline = models.Orderline.extend({
         json.mp_skip  = this.mp_skip;
         return json;
     },
-    set_quantity: function(quantity) {
+    set_quantity: function(quantity, keep_price) {
         if (this.pos.config.iface_printers && quantity !== this.quantity && this.printable()) {
             this.mp_dirty = true;
         }
@@ -135,13 +135,16 @@ models.Order = models.Order.extend({
             var qty  = Number(line.get_quantity());
             var note = line.get_note();
             var product_id = line.get_product().id;
-            var product_resume = product_id in resume ? resume[product_id] : {
+            var product_name = line.get_full_product_name();
+            var p_key = product_id + " - " + product_name;
+            var product_resume = p_key in resume ? resume[p_key] : {
+                pid: product_id,
                 product_name_wrapped: line.generate_wrapped_product_name(),
                 qties: {},
             };
             if (note in product_resume['qties']) product_resume['qties'][note] += qty;
             else product_resume['qties'][note] = qty;
-            resume[product_id] = product_resume;
+            resume[p_key] = product_resume;
         });
         return resume;
     },
@@ -151,6 +154,13 @@ models.Order = models.Order.extend({
             line.set_dirty(false);
         });
         this.trigger('change',this);
+        // We sync if the caller is not the current order.
+        // Otherwise, cached "changes" fields (mp_dirty, saved_resume)
+        // will be invalidated without reaching the server
+        const isTheCurrentOrder = this.pos.get_order() && this.pos.get_order().uid === this.uid;
+        if (!isTheCurrentOrder && this.server_id) {
+            this.pos.sync_from_server(null, [this], [this.uid]);
+        }
     },
     computeChanges: function(categories){
         var current_res = this.build_line_resume();
@@ -158,13 +168,14 @@ models.Order = models.Order.extend({
         var json        = this.export_as_JSON();
         var add = [];
         var rem = [];
-        var pid, note;
+        var p_key, note;
 
-        for (pid in current_res) {
-            for (note in current_res[pid]['qties']) {
-                var curr = current_res[pid];
-                var old  = old_res[pid] || {};
-                var found = pid in old_res && note in old_res[pid]['qties'];
+        for (p_key in current_res) {
+            for (note in current_res[p_key]['qties']) {
+                var curr = current_res[p_key];
+                var old  = old_res[p_key] || {};
+                var pid = curr.pid;
+                var found = p_key in old_res && note in old_res[p_key]['qties'];
 
                 if (!found) {
                     add.push({
@@ -194,11 +205,12 @@ models.Order = models.Order.extend({
             }
         }
 
-        for (pid in old_res) {
-            for (note in old_res[pid]['qties']) {
-                var found = pid in current_res && note in current_res[pid]['qties'];
+        for (p_key in old_res) {
+            for (note in old_res[p_key]['qties']) {
+                var found = p_key in current_res && note in current_res[p_key]['qties'];
                 if (!found) {
-                    var old = old_res[pid];
+                    var old = old_res[p_key];
+                    var pid = old.pid;
                     rem.push({
                         'id':       pid,
                         'name':     this.pos.db.get_product_by_id(pid).display_name,

@@ -104,16 +104,14 @@ class SaleOrder(models.Model):
             action = {'type': 'ir.actions.act_window_close'}
         return action
 
-    def _create_invoices(self, grouped=False, final=False, start_date=None, end_date=None):
-        """ Override the _create_invoice method in sale.order model in sale module
-            Add new parameter in this method, to invoice sale.order with a date. This date is used in sale_make_invoice_advance_inv into this module.
-            :param start_date: the start date of the period
-            :param end_date: the end date of the period
-            :return {account.move}: the invoices created
+    def _create_invoices(self, grouped=False, final=False, date=None):
+        """Link timesheets to the created invoices. Date interval is injected in the
+        context in sale_make_invoice_advance_inv wizard.
         """
-        moves = super(SaleOrder, self)._create_invoices(grouped, final)
-        moves._link_timesheets_to_invoice(start_date, end_date)
+        moves = super()._create_invoices(grouped=grouped, final=final, date=date)
+        moves._link_timesheets_to_invoice(self.env.context.get("timesheet_start_date"), self.env.context.get("timesheet_end_date"))
         return moves
+
 
 class SaleOrderLine(models.Model):
     _inherit = "sale.order.line"
@@ -233,10 +231,15 @@ class SaleOrderLine(models.Model):
 
     def _convert_qty_company_hours(self, dest_company):
         company_time_uom_id = dest_company.project_time_mode_id
-        if self.product_uom.id != company_time_uom_id.id and self.product_uom.category_id.id == company_time_uom_id.category_id.id:
-            planned_hours = self.product_uom._compute_quantity(self.product_uom_qty, company_time_uom_id)
-        else:
-            planned_hours = self.product_uom_qty
+        planned_hours = 0.0
+        product_uom = self.product_uom
+        if product_uom == self.env.ref('uom.product_uom_unit'):
+            product_uom = self.env.ref('uom.product_uom_hour')
+        if product_uom.category_id == company_time_uom_id.category_id:
+            if product_uom != company_time_uom_id:
+                planned_hours = product_uom._compute_quantity(self.product_uom_qty, company_time_uom_id)
+            else:
+                planned_hours = self.product_uom_qty
         return planned_hours
 
     def _timesheet_create_project(self):
@@ -278,4 +281,10 @@ class SaleOrderLine(models.Model):
         mapping = lines_by_timesheet.sudo()._get_delivered_quantity_by_analytic(domain)
 
         for line in lines_by_timesheet:
-            line.qty_to_invoice = mapping.get(line.id, 0.0)
+            qty_to_invoice = mapping.get(line.id, 0.0)
+            if qty_to_invoice:
+                line.qty_to_invoice = qty_to_invoice
+            else:
+                prev_inv_status = line.invoice_status
+                line.qty_to_invoice = qty_to_invoice
+                line.invoice_status = prev_inv_status

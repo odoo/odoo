@@ -3,10 +3,10 @@
     <!-- onboarding step -->
     <template id="onboarding_payment_acquirer_step">
         <t t-call="base.onboarding_step">
-            <t t-set="title">Payment Method</t>
-            <t t-set="description">Choose your default customer payment method.</t>
-            <t t-set="btn_text">Set payments</t>
-            <t t-set="done_text">Payment method set!</t>
+            <t t-set="title">Online Payments</t>
+            <t t-set="description">Enable credit &amp; debit card payments supported by Stripe</t>
+            <t t-set="btn_text">Activate Stripe</t>
+            <t t-set="done_text">Online payments enabled</t>
             <t t-set="method" t-value="'action_open_payment_onboarding_payment_acquirer'" />
             <t t-set="model" t-value="'res.company'" />
             <t t-set="state" t-value="state.get('payment_acquirer_onboarding_state')" />
@@ -42,12 +42,10 @@
                                     </a>
                                 </p>
                             </div>
-                            <div attrs="{'invisible': [('payment_method', '!=', 'stripe')]}">
+                            <div invisible="1">
                                 <group>
-                                    <field name="stripe_secret_key" password="True"
-                                       attrs="{'required': [('payment_method', '=', 'stripe')]}" />
-                                    <field name="stripe_publishable_key" password="True"
-                                       attrs="{'required': [('payment_method', '=', 'stripe')]}" />
+                                    <field name="stripe_secret_key" password="True"/>
+                                    <field name="stripe_publishable_key" password="True"/>
                                 </group>
                                 <p>
                                     <a href="https://dashboard.stripe.com/account/apikeys" target="_blank">

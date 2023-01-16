@@ -34,12 +34,15 @@ class Web_Editor(http.Controller):
         '/web_editor/font_to_img/<icon>',
         '/web_editor/font_to_img/<icon>/<color>',
         '/web_editor/font_to_img/<icon>/<color>/<int:size>',
+        '/web_editor/font_to_img/<icon>/<color>/<int:width>x<int:height>',
         '/web_editor/font_to_img/<icon>/<color>/<int:size>/<int:alpha>',
+        '/web_editor/font_to_img/<icon>/<color>/<int:width>x<int:height>/<int:alpha>',
         '/web_editor/font_to_img/<icon>/<color>/<bg>',
         '/web_editor/font_to_img/<icon>/<color>/<bg>/<int:size>',
-        '/web_editor/font_to_img/<icon>/<color>/<bg>/<int:size>/<int:alpha>',
+        '/web_editor/font_to_img/<icon>/<color>/<bg>/<int:width>x<int:height>',
+        '/web_editor/font_to_img/<icon>/<color>/<bg>/<int:width>x<int:height>/<int:alpha>',
         ], type='http', auth="none")
-    def export_icon_to_png(self, icon, color='#000', bg=None, size=100, alpha=255, font='/web/static/lib/fontawesome/fonts/fontawesome-webfont.ttf'):
+    def export_icon_to_png(self, icon, color='#000', bg=None, size=100, alpha=255, font='/web/static/lib/fontawesome/fonts/fontawesome-webfont.ttf', width=None, height=None):
         """ This method converts an unicode character to an image (using Font
             Awesome font by default) and is used only for mass mailing because
             custom fonts are not supported in mail.
@@ -49,14 +52,20 @@ class Web_Editor(http.Controller):
             :param size : Pixels in integer
             :param alpha : transparency of the image from 0 to 255
             :param font : font path
+            :param width : Pixels in integer
+            :param height : Pixels in integer
 
             :returns PNG image converted from given font
         """
+        size = max(width, height, 1) if width else size
+        width = width or size
+        height = height or size
         # Make sure we have at least size=1
-        size = max(1, min(size, 512))
+        width = max(1, min(width, 512))
+        height = max(1, min(height, 512))
         # Initialize font
-        addons_path = http.addons_manifest['web']['addons_path']
-        font_obj = ImageFont.truetype(addons_path + font, size)
+        with tools.file_open(font.lstrip('/'), 'rb') as f:
+            font_obj = ImageFont.truetype(f, size)
 
         # if received character is not a number, keep old behaviour (icon is character)
         icon = chr(int(icon)) if icon.isdigit() else icon
@@ -67,7 +76,7 @@ class Web_Editor(http.Controller):
             bg = ','.join(bg.split(',')[:-1])+')'
 
         # Determine the dimensions of the icon
-        image = Image.new("RGBA", (size, size), color=(0, 0, 0, 0))
+        image = Image.new("RGBA", (width, height), color)
         draw = ImageDraw.Draw(image)
 
         boxw, boxh = draw.textsize(icon, font=font_obj)
@@ -77,7 +86,7 @@ class Web_Editor(http.Controller):
         # Create an alpha mask
         imagemask = Image.new("L", (boxw, boxh), 0)
         drawmask = ImageDraw.Draw(imagemask)
-        drawmask.text((-left, -top), icon, font=font_obj, fill=alpha)
+        drawmask.text((-left, -top), icon, font=font_obj, fill=255)
 
         # Create a solid color image and apply the mask
         if color.startswith('rgba'):
@@ -87,7 +96,7 @@ class Web_Editor(http.Controller):
         iconimage.putalpha(imagemask)
 
         # Create output image
-        outimage = Image.new("RGBA", (boxw, size), bg or (0, 0, 0, 0))
+        outimage = Image.new("RGBA", (boxw, height), bg or (0, 0, 0, 0))
         outimage.paste(iconimage, (left, top), iconimage)
 
         # output image
@@ -117,7 +126,17 @@ class Web_Editor(http.Controller):
 
         li = htmlelem.find(".//li[@id='checklist-id-" + str(checklistId) + "']")
 
-        if not li or not self._update_checklist_recursive(li, checked, children=True, ancestors=True):
+        if li is None:
+            return value
+
+        classname = li.get('class', '')
+        if ('o_checked' in classname) != checked:
+            if checked:
+                classname = '%s o_checked' % classname
+            else:
+                classname = re.sub(r"\s?o_checked\s?", '', classname)
+            li.set('class', classname)
+        else:
             return value
 
         value = etree.tostring(htmlelem[0][0], encoding='utf-8', method='html')[5:-6]
@@ -125,57 +144,8 @@ class Web_Editor(http.Controller):
 
         return value
 
-    def _update_checklist_recursive (self, li, checked, children=False, ancestors=False):
-        if 'checklist-id-' not in li.get('id', ''):
-            return False
-
-        classname = li.get('class', '')
-        if ('o_checked' in classname) == checked:
-            return False
-
-        # check / uncheck
-        if checked:
-            classname = '%s o_checked' % classname
-        else:
-            classname = re.sub(r"\s?o_checked\s?", '', classname)
-        li.set('class', classname)
-
-        # propagate to children
-        if children:
-            node = li.getnext()
-            ul = None
-            if node is not None:
-                if node.tag == 'ul':
-                    ul = node
-                if node.tag == 'li' and len(node.getchildren()) == 1 and node.getchildren()[0].tag == 'ul':
-                    ul = node.getchildren()[0]
-
-            if ul is not None:
-                for child in ul.getchildren():
-                    if child.tag == 'li':
-                        self._update_checklist_recursive(child, checked, children=True)
-
-        # propagate to ancestors
-        if ancestors:
-            allSelected = True
-            ul = li.getparent()
-            if ul.tag == 'li':
-                ul = ul.getparent()
-
-            for child in ul.getchildren():
-                if child.tag == 'li' and 'checklist-id' in child.get('id', '') and 'o_checked' not in child.get('class', ''):
-                    allSelected = False
-
-            node = ul.getprevious()
-            if node is None:
-                node = ul.getparent().getprevious()
-            if node is not None and node.tag == 'li':
-                self._update_checklist_recursive(node, allSelected, ancestors=True)
-
-        return True
-
     @http.route('/web_editor/attachment/add_data', type='json', auth='user', methods=['POST'], website=True)
-    def add_data(self, name, data, is_image, quality=0, width=0, height=0, res_id=False, res_model='ir.ui.view', **kwargs):
+    def add_data(self, name, data, is_image, quality=0, width=0, height=0, res_id=False, res_model='ir.ui.view', generate_access_token=False, **kwargs):
         if is_image:
             format_error_msg = _("Uploaded image's format is not supported. Try with: %s", ', '.join(SUPPORTED_IMAGE_EXTENSIONS))
             try:
@@ -191,7 +161,7 @@ class Web_Editor(http.Controller):
                 return {'error': e.args[0]}
 
         self._clean_context()
-        attachment = self._attachment_create(name=name, data=data, res_id=res_id, res_model=res_model)
+        attachment = self._attachment_create(name=name, data=data, res_id=res_id, res_model=res_model, generate_access_token=generate_access_token)
         return attachment._get_media_info()
 
     @http.route('/web_editor/attachment/add_url', type='json', auth='user', methods=['POST'], website=True)
@@ -263,7 +233,7 @@ class Web_Editor(http.Controller):
             'original': (attachment.original_id or attachment).read(['id', 'image_src', 'mimetype'])[0],
         }
 
-    def _attachment_create(self, name='', data=False, url=False, res_id=False, res_model='ir.ui.view'):
+    def _attachment_create(self, name='', data=False, url=False, res_id=False, res_model='ir.ui.view', generate_access_token=False):
         """Create and return a new attachment."""
         if name.lower().endswith('.bmp'):
             # Avoid mismatch between content type and mimetype, see commit msg
@@ -295,6 +265,9 @@ class Web_Editor(http.Controller):
             raise UserError(_("You need to specify either data or url to create an attachment."))
 
         attachment = request.env['ir.attachment'].create(attachment_data)
+        if generate_access_token:
+            attachment.generate_access_token()
+
         return attachment
 
     def _clean_context(self):
@@ -334,7 +307,7 @@ class Web_Editor(http.Controller):
             dict: views, scss, js
         """
         # Related views must be fetched if the user wants the views and/or the style
-        views = request.env["ir.ui.view"].get_related_views(key, bundles=bundles)
+        views = request.env["ir.ui.view"].with_context(no_primary_children=True, __views_get_original_hierarchy=[]).get_related_views(key, bundles=bundles)
         views = views.read(['name', 'id', 'key', 'xml_id', 'arch', 'active', 'inherit_id'])
 
         scss_files_data_by_bundle = []
@@ -598,7 +571,15 @@ class Web_Editor(http.Controller):
                     or attachment.type != 'binary'
                     or not attachment.public
                     or not attachment.url.startswith(request.httprequest.path)):
-                raise werkzeug.exceptions.NotFound()
+                # Fallback to URL lookup to allow using shapes that were
+                # imported from data files.
+                attachment = request.env['ir.attachment'].sudo().search([
+                    ('type', '=', 'binary'),
+                    ('public', '=', True),
+                    ('url', '=', request.httprequest.path),
+                ], limit=1)
+                if not attachment:
+                    raise werkzeug.exceptions.NotFound()
             svg = b64decode(attachment.datas).decode('utf-8')
         else:
             svg = self._get_shape_svg(module, 'shapes', filename)

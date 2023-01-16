@@ -3,6 +3,7 @@
 
 from odoo import api, fields, models, _
 from odoo.exceptions import UserError
+from odoo.osv.expression import AND
 from odoo.tools.float_utils import float_compare, float_is_zero, float_round
 
 class StockPickingBatch(models.Model):
@@ -75,9 +76,10 @@ class StockPickingBatch(models.Model):
                 domain_states.append('draft')
             domain = [
                 ('company_id', '=', batch.company_id.id),
-                ('immediate_transfer', '=', False),
                 ('state', 'in', domain_states),
             ]
+            if not batch.is_wave:
+                domain = AND([domain, [('immediate_transfer', '=', False)]])
             if batch.picking_type_id:
                 domain += [('picking_type_id', '=', batch.picking_type_id.id)]
             batch.allowed_picking_ids = self.env['stock.picking'].search(domain)
@@ -107,7 +109,7 @@ class StockPickingBatch(models.Model):
         batchs = self.filtered(lambda batch: batch.state not in ['cancel', 'done'])
         for batch in batchs:
             if not batch.picking_ids:
-                return
+                continue
             # Cancels automatically the batch picking if all its transfers are cancelled.
             if all(picking.state == 'cancel' for picking in batch.picking_ids):
                 batch.state = 'cancel'
@@ -117,7 +119,8 @@ class StockPickingBatch(models.Model):
 
     @api.depends('picking_ids', 'picking_ids.scheduled_date')
     def _compute_scheduled_date(self):
-        self.scheduled_date = min(self.picking_ids.filtered('scheduled_date').mapped('scheduled_date'), default=False)
+        for rec in self:
+            rec.scheduled_date = min(rec.picking_ids.filtered('scheduled_date').mapped('scheduled_date'), default=False)
 
     @api.onchange('scheduled_date')
     def onchange_scheduled_date(self):
@@ -147,6 +150,8 @@ class StockPickingBatch(models.Model):
 
     def write(self, vals):
         res = super().write(vals)
+        if not self.picking_ids:
+            self.filtered(lambda b: b.state == 'in_progress').action_cancel()
         if vals.get('picking_type_id'):
             self._sanity_check()
         if vals.get('picking_ids'):
@@ -186,7 +191,6 @@ class StockPickingBatch(models.Model):
         return True
 
     def action_cancel(self):
-        self.ensure_one()
         self.state = 'cancel'
         self.picking_ids = False
         return True
@@ -247,9 +251,9 @@ class StockPickingBatch(models.Model):
                                      precision_rounding=ml.product_uom_id.rounding) > 0 and float_compare(ml.qty_done, 0.0,
                                      precision_rounding=ml.product_uom_id.rounding) == 0)
             if move_line_ids:
-                res = self.picking_ids[0]._pre_put_in_pack_hook(move_line_ids)
+                res = move_line_ids.picking_id[0]._pre_put_in_pack_hook(move_line_ids)
                 if not res:
-                    res = self.picking_ids[0]._put_in_pack(move_line_ids, False)
+                    res = move_line_ids.picking_id[0]._put_in_pack(move_line_ids, False)
                 return res
             else:
                 raise UserError(_("Please add 'Done' quantities to the batch picking to create a new pack."))

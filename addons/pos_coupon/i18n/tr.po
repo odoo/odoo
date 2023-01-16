@@ -11,6 +11,7 @@
 # Tugay Hatıl <tugayh@projetgrup.com>, 2021
 # Martin Trigaux, 2021
 # Murat Kaplan <muratk@projetgrup.com>, 2021
+# Ertuğrul Güreş <ertugrulg@projetgrup.com>, 2022
 # 
 msgid ""
 msgstr ""
@@ -18,7 +19,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-10-08 06:19+0000\n"
 "PO-Revision-Date: 2021-09-14 12:24+0000\n"
-"Last-Translator: Murat Kaplan <muratk@projetgrup.com>, 2021\n"
+"Last-Translator: Ertuğrul Güreş <ertugrulg@projetgrup.com>, 2022\n"
 "Language-Team: Turkish (https://www.transifex.com/odoo/teams/41243/tr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -29,7 +30,7 @@ msgstr ""
 #. module: pos_coupon
 #: model:coupon.program,name:pos_coupon.15_pc_on_next_order
 msgid "15% on next order"
-msgstr ""
+msgstr "%15 sonraki siparişte"
 
 #. module: pos_coupon
 #: model:mail.template,body_html:pos_coupon.mail_coupon_template
@@ -120,13 +121,70 @@ msgid ""
 "</tbody></table>\n"
 "            "
 msgstr ""
+"<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" style=\"width:100%; "
+"margin:0px auto;\"><tbody><tr><td valign=\"top\" style=\"text-align: center;"
+" font-size: 14px;\"><t t-if=\"object.partner_id.name\">Tebrikler<t "
+"t-out=\"object.partner_id.name or ''\"> Brandon Freeman</t> ,<br/></t> İşte "
+"ödülünüz<t t-out=\"object.program_id.company_id.name or ''\"> Şirketin</t> "
+".<br/><t t-if=\"object.program_id.reward_type == 'discount'\"><t "
+"t-if=\"object.program_id.discount_type == 'fixed_amount'\"> <span "
+"style=\"font-size: 50px; color: #875A7B; font-weight: bold;\" t-out=\"'%s' %"
+" format_amount(object.program_id.discount_fixed_amount, "
+"object.program_id.currency_id) or ''\">10.0 $</span><br/> <strong "
+"style=\"font-size: 24px;\">bir sonraki siparişinizde "
+"kapalı</strong><br/></t><t t-else=\"\"><t "
+"t-out=\"object.program_id.discount_percentage or ''\"> <span style=\"font-"
+"size: 50px; color: #875A7B; font-weight: bold;\">10.0</span></t> <span "
+"style=\"font-size: 50px; color: #875A7B; font-weight: bold;\">%</span><t "
+"t-if=\"object.program_id.discount_apply_on == 'specific_products'\"><br/><t "
+"t-if=\"len(object.program_id.discount_specific_product_ids) != 1\"><t "
+"t-set=\"display_specific_products\" t-value=\"True\"/> <strong style=\"font-"
+"size: 24px;\">bazı ürünlerde*</strong></t><t t-else=\"\"> <strong "
+"style=\"font-size: 24px;\" t-out=\"'on %s' % "
+"object.program_id.discount_specific_product_ids.name or ''\">Sandalye zemin "
+"koruması</strong></t></t><t t-elif=\"object.program_id.discount_apply_on == "
+"'cheapest_product'\"><br/> <strong style=\"font-size: 24px;\">en ucuz "
+"üründe</strong></t><t t-else=\"\"><br/> <strong style=\"font-size: "
+"24px;\">bir sonraki siparişinizde kapalı</strong></t><br/></t></t><t "
+"t-elif=\"object.program_id.reward_type == 'product'\"> <span style=\"font-"
+"size: 36px; color: #875A7B; font-weight: bold;\" t-out=\"'get %s free %s' % "
+"(object.program_id.reward_product_quantity, "
+"object.program_id.reward_product_id.name) or ''\">Sandalye zemin "
+"koruması</span><br/> <strong style=\"font-size: 24px;\">bir sonraki "
+"siparişinizde</strong><br/></t><t t-elif=\"object.program_id.reward_type == "
+"'free_shipping'\"> <span style=\"font-size: 36px; color: #875A7B; font-"
+"weight: bold;\">ücretsiz gönderim al</span><br/> <strong style=\"font-size: "
+"24px;\">bir sonraki siparişinizde</strong><br/></t></td></tr><tr "
+"style=\"margin-top: 16px\"><td valign=\"top\" style=\"text-align: center; "
+"font-size: 14px;\"> Bu promosyon kodunu kullan<t "
+"t-if=\"object.expiration_date\"> önceki<t t-out=\"object.expiration_date or "
+"''\"> 2021-06-05</t></t><p style=\"margin-top: 16px;\"> <strong "
+"style=\"padding: 16px 8px 16px 8px; border-radius: 3px; background-color: "
+"#F1F1F1;\" t-out=\"object.code or ''\">13996301932606901095</strong></p><t "
+"t-if=\"object.program_id.rule_min_quantity not in [0, 1]\"> <span "
+"style=\"font-size: 14px;\">Minimum satın alma</span><t "
+"t-out=\"object.program_id.rule_min_quantity or ''\"> <span style=\"font-"
+"size: 14px;\">10</span></t> <span style=\"font-size: 14px;\">Ürün:% "
+"s</span><br/></t><t t-if=\"object.program_id.rule_minimum_amount != 0.00\"> "
+"<span style=\"font-size: 14px;\">Yukarıdaki satın alma için "
+"geçerlidir</span><t t-out=\"object.program_id.company_id.currency_id.symbol "
+"or ''\"> <span style=\"font-size: 14px;\">$</span></t><t t-out=\"'%0.2f' % "
+"float(object.program_id.rule_minimum_amount) or ''\"> <span style=\"font-"
+"size: 14px;\">10.00</span></t><br/></t><t "
+"t-if=\"display_specific_products\"> <span>*Aşağıdaki ürünler için "
+"geçerlidir:</span><t t-out=\"', "
+"'.join(object.program_id.discount_specific_product_ids.mapped('name')) or "
+"''\"> <span>Ofis Koltuğu Siyah</span></t><br/></t><br/> Teşekkürler,<t "
+"t-if=\"object.source_pos_order_id.user_id.signature\"><br/><t "
+"t-out=\"object.source_pos_order_id.user_id.signature or ''\"> --<br/> "
+"Mitchell Admin</t></t></td></tr></tbody></table> "
 
 #. module: pos_coupon
 #: code:addons/pos_coupon/models/coupon.py:0
 #, python-format
 msgid ""
 "A coupon from the same program has already been reserved for this order."
-msgstr ""
+msgstr "Bu sipariş için aynı programdan bir kupon zaten rezerve edildi."
 
 #. module: pos_coupon
 #: model:ir.model.fields,help:pos_coupon.field_coupon_program__promo_barcode
@@ -134,30 +192,32 @@ msgid ""
 "A technical field used as an alternative to the promo_code. This is "
 "automatically generated when promo_code is changed."
 msgstr ""
+"promo_code alternatif olarak kullanılan teknik bir alan. Bu, promo_code "
+"değiştirildiğinde otomatik olarak oluşturulur."
 
 #. module: pos_coupon
 #. openerp-web
 #: code:addons/pos_coupon/static/src/xml/ActivePrograms.xml:0
 #, python-format
 msgid "Active Programs"
-msgstr ""
+msgstr "Aktif Programlar"
 
 #. module: pos_coupon
 #: model:ir.model.fields,field_description:pos_coupon.field_pos_order__applied_program_ids
 msgid "Applied Programs"
-msgstr ""
+msgstr "Uygulamalı Programlar"
 
 #. module: pos_coupon
 #: model:ir.model.fields,field_description:pos_coupon.field_coupon_coupon__pos_order_id
 msgid "Applied on PoS Order"
-msgstr ""
+msgstr "PoS Siparişinde Uygulanır"
 
 #. module: pos_coupon
 #. openerp-web
 #: code:addons/pos_coupon/static/src/js/ProductScreen.js:0
 #, python-format
 msgid "Are you sure you want to deactivate %s in this order?"
-msgstr ""
+msgstr "%s'yi bu sırayla devre dışı bırakmak istediğinizden emin misiniz?"
 
 #. module: pos_coupon
 #. openerp-web
@@ -175,7 +235,7 @@ msgstr "Barkod kuralı"
 #. module: pos_coupon
 #: model:ir.model.fields,field_description:pos_coupon.field_pos_order__used_coupon_ids
 msgid "Consumed Coupons"
-msgstr ""
+msgstr "Tüketilen Kuponlar"
 
 #. module: pos_coupon
 #: model:ir.model,name:pos_coupon.model_coupon_coupon
@@ -189,7 +249,7 @@ msgstr "Kupon"
 #: code:addons/pos_coupon/static/src/xml/OrderReceipt.xml:0
 #, python-format
 msgid "Coupon Codes"
-msgstr ""
+msgstr "Kupon Kodları"
 
 #. module: pos_coupon
 #: model:ir.model,name:pos_coupon.model_coupon_program
@@ -206,7 +266,7 @@ msgstr "Kupon Kampanyaları"
 #. module: pos_coupon
 #: model:ir.model.fields,help:pos_coupon.field_pos_order_line__coupon_id
 msgid "Coupon that generated this reward."
-msgstr ""
+msgstr "Bu ödülü oluşturan kupon."
 
 #. module: pos_coupon
 #: model:ir.model.fields,field_description:pos_coupon.field_pos_config__use_coupon_programs
@@ -216,26 +276,27 @@ msgstr "Kuponlar & Promosyonlar"
 #. module: pos_coupon
 #: model:ir.model.fields,field_description:pos_coupon.field_pos_config__program_ids
 msgid "Coupons and Promotions"
-msgstr ""
+msgstr "Kuponlar ve Promosyonlar"
 
 #. module: pos_coupon
 #. openerp-web
 #: code:addons/pos_coupon/static/src/js/ProductScreen.js:0
 #, python-format
 msgid "Deactivating program"
-msgstr ""
+msgstr "Programı devre dışı bırakma"
 
 #. module: pos_coupon
 #: model_terms:ir.ui.view,arch_db:pos_coupon.pos_coupon_pos_config_view_form
 msgid "Define the coupon and promotion programs you can use in this PoS."
 msgstr ""
+"Bu PoS'ta kullanabileceğiniz kupon ve promosyon programlarını tanımlayın."
 
 #. module: pos_coupon
 #. openerp-web
 #: code:addons/pos_coupon/static/src/xml/ControlButtons/PromoCodeButton.xml:0
 #, python-format
 msgid "Enter Code"
-msgstr ""
+msgstr "Kodu girin"
 
 #. module: pos_coupon
 #. openerp-web
@@ -249,6 +310,8 @@ msgstr "Promosyon veya Kupon Kodu Girin"
 msgid ""
 "Flag indicating that this order line is a result of coupon/promo program."
 msgstr ""
+"Bu sipariş satırının kupon/promosyon programının bir sonucu olduğunu "
+"gösteren bayrak."
 
 #. module: pos_coupon
 #: model:ir.model.fields,field_description:pos_coupon.field_pos_order__generated_coupon_ids
@@ -258,7 +321,7 @@ msgstr "Oluşturulmuş Kuponlar"
 #. module: pos_coupon
 #: model:ir.model.fields,field_description:pos_coupon.field_pos_order_line__is_program_reward
 msgid "Is reward line"
-msgstr ""
+msgstr "Ödül satırı"
 
 #. module: pos_coupon
 #. openerp-web
@@ -270,22 +333,22 @@ msgstr "Hayır"
 #. module: pos_coupon
 #: model:ir.model.fields,help:pos_coupon.field_coupon_program__pos_order_line_ids
 msgid "Order lines where this program is applied."
-msgstr ""
+msgstr "Bu programın uygulandığı sipariş satırları."
 
 #. module: pos_coupon
 #: model:ir.model.fields,field_description:pos_coupon.field_coupon_program__pos_order_count
 msgid "PoS Order Count"
-msgstr ""
+msgstr "PoS Sipariş Sayısı"
 
 #. module: pos_coupon
 #: model:ir.model.fields,field_description:pos_coupon.field_coupon_program__pos_order_line_ids
 msgid "PoS Order Lines"
-msgstr ""
+msgstr "PoS Sipariş Satırları"
 
 #. module: pos_coupon
 #: model:ir.model.fields,field_description:pos_coupon.field_coupon_coupon__source_pos_order_id
 msgid "PoS Order Reference"
-msgstr ""
+msgstr "PoS Sipariş Referansı"
 
 #. module: pos_coupon
 #: code:addons/pos_coupon/models/coupon_program.py:0
@@ -297,17 +360,17 @@ msgstr "POS Siparişleri"
 #: model_terms:ir.ui.view,arch_db:pos_coupon.pos_coupon_program_view_coupon_program_form
 #: model_terms:ir.ui.view,arch_db:pos_coupon.pos_coupon_program_view_promo_program_form
 msgid "PoS Sales"
-msgstr ""
+msgstr "POS Satışları"
 
 #. module: pos_coupon
 #: model:ir.model.fields,help:pos_coupon.field_coupon_coupon__pos_order_id
 msgid "PoS order where this coupon is consumed/booked."
-msgstr ""
+msgstr "Bu kuponun tüketildiği/rezerve edildiği PoS siparişi."
 
 #. module: pos_coupon
 #: model:ir.model.fields,help:pos_coupon.field_coupon_coupon__source_pos_order_id
 msgid "PoS order where this coupon is generated."
-msgstr ""
+msgstr "Bu kuponun oluşturulduğu PoS siparişi."
 
 #. module: pos_coupon
 #: model:ir.model,name:pos_coupon.model_pos_config
@@ -343,12 +406,12 @@ msgstr "Program"
 #: code:addons/pos_coupon/models/pos_config.py:0
 #, python-format
 msgid "Program: %(name)s (%(type)s), Reward Product: `%(reward_product)s`"
-msgstr ""
+msgstr "Program: %(name)s (%(type)s), Ödül Ürün: `%(reward_product)s`"
 
 #. module: pos_coupon
 #: model_terms:ir.ui.view,arch_db:pos_coupon.pos_coupon_pos_config_view_form
 msgid "Promotion & coupon programs to use."
-msgstr ""
+msgstr "Kullanılacak promosyon ve kupon programları."
 
 #. module: pos_coupon
 #: model:ir.model.fields,field_description:pos_coupon.field_pos_config__promo_program_ids
@@ -360,14 +423,14 @@ msgstr "Promosyon Kampanyaları"
 #. module: pos_coupon
 #: model:ir.model.fields,help:pos_coupon.field_pos_order_line__program_id
 msgid "Promotion/Coupon Program where this reward line is based."
-msgstr ""
+msgstr "Bu ödül satırının dayandığı Promosyon/Kupon Programı."
 
 #. module: pos_coupon
 #. openerp-web
 #: code:addons/pos_coupon/static/src/xml/ControlButtons/ResetProgramsButton.xml:0
 #, python-format
 msgid "Reset Programs"
-msgstr ""
+msgstr "Programları Sıfırla"
 
 #. module: pos_coupon
 #: model:ir.model.fields,help:pos_coupon.field_pos_order__applied_program_ids
@@ -375,27 +438,29 @@ msgid ""
 "Technical field. This is set when the order is validated. We normally get "
 "this value thru the `program_id` of the reward lines."
 msgstr ""
+"Teknik alan. Bu, sipariş onaylandığında ayarlanır. Normalde bu değeri ödül "
+"satırlarının \"program_id\"sinden alırız."
 
 #. module: pos_coupon
 #: model:ir.model.fields,help:pos_coupon.field_coupon_program__pos_order_ids
 msgid "The PoS orders where this program is applied."
-msgstr ""
+msgstr "Bu programın uygulandığı PoS siparişleri."
 
 #. module: pos_coupon
 #: model:ir.model.fields,help:pos_coupon.field_coupon_program__valid_partner_ids
 msgid "These are the partners that can avail this program."
-msgstr ""
+msgstr "Bunlar, bu programdan yararlanabilecek ortaklardır."
 
 #. module: pos_coupon
 #: model:ir.model.fields,help:pos_coupon.field_coupon_program__valid_product_ids
 msgid "These are the products that are valid in this program."
-msgstr ""
+msgstr "Bunlar bu programda geçerli olan ürünlerdir."
 
 #. module: pos_coupon
 #: code:addons/pos_coupon/models/pos_config.py:0
 #, python-format
 msgid "This coupon is invalid (%s)."
-msgstr ""
+msgstr "Bu kupon geçersiz (%s)."
 
 #. module: pos_coupon
 #: code:addons/pos_coupon/models/pos_config.py:0
@@ -404,6 +469,8 @@ msgid ""
 "To continue, make the following reward products to be available in Point of "
 "Sale."
 msgstr ""
+"Devam etmek için, aşağıdaki ödül ürünlerini Satış Noktası'nda kullanılabilir"
+" hale getirin."
 
 #. module: pos_coupon
 #: model:ir.model.fields,field_description:pos_coupon.field_barcode_rule__type
@@ -413,17 +480,17 @@ msgstr "Tür"
 #. module: pos_coupon
 #: model:ir.model.fields,help:pos_coupon.field_pos_config__use_coupon_programs
 msgid "Use coupon and promotion programs in this PoS configuration."
-msgstr ""
+msgstr "Bu PoS yapılandırmasında kupon ve promosyon programlarını kullanın."
 
 #. module: pos_coupon
 #: model:ir.model.fields,field_description:pos_coupon.field_coupon_program__valid_partner_ids
 msgid "Valid Partner"
-msgstr ""
+msgstr "Geçerli İş Ortağı"
 
 #. module: pos_coupon
 #: model:ir.model.fields,field_description:pos_coupon.field_coupon_program__valid_product_ids
 msgid "Valid Product"
-msgstr ""
+msgstr "Geçerli Ürün"
 
 #. module: pos_coupon
 #. openerp-web
@@ -447,16 +514,16 @@ msgstr "Kupon Kodunuz"
 #. module: pos_coupon
 #: model:mail.template,subject:pos_coupon.mail_coupon_template
 msgid "Your reward coupon from {{ object.program_id.company_id.name }} "
-msgstr ""
+msgstr "{{ object.program_id.company_id.name }} adresinden ödül kuponunuz "
 
 #. module: pos_coupon
 #: model:mail.template,name:pos_coupon.mail_coupon_template
 msgid "[POS] Coupon: Send by Email"
-msgstr ""
+msgstr "[POS] Kuponu: E-posta ile Gönder"
 
 #. module: pos_coupon
 #. openerp-web
 #: code:addons/pos_coupon/static/src/xml/OrderReceipt.xml:0
 #, python-format
 msgid "no expiration"
-msgstr ""
+msgstr "bitiş süresi yok"

@@ -105,10 +105,12 @@ export class MessageList extends Component {
             switch (hint.type) {
                 case 'change-of-thread-cache':
                 case 'member-list-hidden':
+                case 'adjust-scroll':
                     // thread just became visible, the goal is to restore its
                     // saved position if it exists or scroll to the end
                     this._adjustScrollFromModel();
                     break;
+                case 'message-posted':
                 case 'message-received':
                 case 'messages-loaded':
                 case 'new-messages-loaded':

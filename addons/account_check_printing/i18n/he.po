@@ -9,7 +9,9 @@
 # שהאב חוסיין <shhab89@gmail.com>, 2021
 # ZVI BLONDER <ZVIBLONDER@gmail.com>, 2021
 # Amit Spilman <amit@laylinetech.com>, 2021
-# Lilach Gilliam <lilach.gilliam@gmail.com>, 2021
+# Sagi Ahiel, 2022
+# Lilach Gilliam <lilach.gilliam@gmail.com>, 2022
+# Ha Ketem <haketem@gmail.com>, 2022
 # 
 msgid ""
 msgstr ""
@@ -17,7 +19,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-09-14 10:28+0000\n"
 "PO-Revision-Date: 2021-09-14 12:19+0000\n"
-"Last-Translator: Lilach Gilliam <lilach.gilliam@gmail.com>, 2021\n"
+"Last-Translator: Ha Ketem <haketem@gmail.com>, 2022\n"
 "Language-Team: Hebrew (https://www.transifex.com/odoo/teams/41243/he/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -29,7 +31,7 @@ msgstr ""
 #: code:addons/account_check_printing/models/account_journal.py:0
 #, python-format
 msgid " : Check Number Sequence"
-msgstr " : מספר שיק"
+msgstr "הרצף המספרי של שיקים"
 
 #. module: account_check_printing
 #: model:ir.model.fields,help:account_check_printing.field_res_company__account_check_printing_margin_left
@@ -41,7 +43,7 @@ msgstr " : מספר שיק"
 msgid ""
 "Adjust the margins of generated checks to make it fit your printer's "
 "settings."
-msgstr ""
+msgstr "הגדירו שוליים לצ'ק שיופס כדי שיתאים להגדרות המדפסת."
 
 #. module: account_check_printing
 #: model:ir.model.fields,field_description:account_check_printing.field_account_payment__check_amount_in_words
@@ -57,7 +59,7 @@ msgstr "בטל"
 #: model:ir.model.fields,field_description:account_check_printing.field_res_company__account_check_printing_layout
 #: model:ir.model.fields,field_description:account_check_printing.field_res_config_settings__account_check_printing_layout
 msgid "Check Layout"
-msgstr ""
+msgstr "בדיקת פריסה"
 
 #. module: account_check_printing
 #: model:ir.model.fields,field_description:account_check_printing.field_res_company__account_check_printing_margin_left
@@ -95,7 +97,7 @@ msgstr "שוליים עליונים של שיק"
 #: code:addons/account_check_printing/models/account_payment.py:0
 #, python-format
 msgid "Check numbers can only consist of digits"
-msgstr ""
+msgstr "מספרי צ'ק חייבים להיות בספרות בלבד"
 
 #. module: account_check_printing
 #: model:ir.model.fields,help:account_check_printing.field_account_journal__check_manual_sequencing
@@ -226,7 +228,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:account_check_printing.field_res_company__account_check_printing_multi_stub
 #: model:ir.model.fields,field_description:account_check_printing.field_res_config_settings__account_check_printing_multi_stub
 msgid "Multi-Pages Check Stub"
-msgstr ""
+msgstr "פנקס צ'קים עם ספח."
 
 #. module: account_check_printing
 #: model:ir.model.fields,field_description:account_check_printing.field_account_journal__check_next_number
@@ -269,7 +271,7 @@ msgstr "תשלומים"
 msgid ""
 "Payments to print as a checks must have 'Check' selected as payment method "
 "and not have already been reconciled"
-msgstr ""
+msgstr "כדי להדפיס צ'קים צריך לסמן 'צ'ק' כאמצעי תשלום בהוצאה שטרם עברה התאמה."
 
 #. module: account_check_printing
 #: model_terms:ir.ui.view,arch_db:account_check_printing.print_pre_numbered_checks_view
@@ -283,7 +285,7 @@ msgstr "בבקשה להקליד את מספר השיק המודפס שאתה ר�
 #: model:ir.model.fields,field_description:account_check_printing.field_account_move__preferred_payment_method_id
 #: model:ir.model.fields,field_description:account_check_printing.field_account_payment__preferred_payment_method_id
 msgid "Preferred Payment Method"
-msgstr ""
+msgstr "שיטת תשלום"
 
 #. module: account_check_printing
 #: model:ir.model.fields,help:account_check_printing.field_res_partner__property_payment_method_id
@@ -293,6 +295,9 @@ msgid ""
 "vendor bills by preferred payment method to register payments in mass. Use "
 "cases: create bank files for batch wires, check runs."
 msgstr ""
+"אמצעי תשלום מועדף כשמשלמים לספק זה. נשתמש בזה כדי לסנן חשבוניות ספקים ולרשום"
+" הוצאות מרובות אוטומטית. שימושים אפשריים: יצירת קבצים להעברות מרובות, הדפסת "
+"צ'קים."
 
 #. module: account_check_printing
 #: model_terms:ir.ui.view,arch_db:account_check_printing.print_pre_numbered_checks_view
@@ -340,6 +345,8 @@ msgid ""
 "Select the format corresponding to the check paper you will be printing your checks on.\n"
 "In order to disable the printing feature, select 'None'."
 msgstr ""
+"בחירת פורמט שמתאים לנייר עליו יודפסו הצ'קים .\n"
+"כדי להשבית את אפשרות ההדפסה בחרו 'ללא'."
 
 #. module: account_check_printing
 #: model_terms:ir.ui.view,arch_db:account_check_printing.view_account_payment_form_inherited
@@ -358,6 +365,8 @@ msgid ""
 "Something went wrong with Check Layout, please select another layout in "
 "Invoicing/Accounting Settings and try again."
 msgstr ""
+"משהו השתבש בפריסת הצ'ק, נא להשתמש בפריסה אחרת תחת חשבוניות/הגדרות חשבונאיות "
+"ונסו שוב."
 
 #. module: account_check_printing
 #: code:addons/account_check_printing/models/account_payment.py:0
@@ -366,6 +375,8 @@ msgid ""
 "The following numbers are already used:\n"
 "%s"
 msgstr ""
+"המספרים האלה כבר בשימוש:\n"
+"%s"
 
 #. module: account_check_printing
 #: code:addons/account_check_printing/models/account_journal.py:0
@@ -394,6 +405,8 @@ msgid ""
 "This option allows you to print check details (stub) on multiple pages if "
 "they don't fit on a single page."
 msgstr ""
+"האפשרות הזו מאפשרת להדפיס פרטי צ'ק (ספח) במספר דפים, אם הפרטים לא נכנסים "
+"בעמוד אחד."
 
 #. module: account_check_printing
 #: model:ir.model.fields,help:account_check_printing.field_res_company__account_check_printing_date_label
@@ -417,7 +430,7 @@ msgstr "הורד סימון כנשלח"
 #. module: account_check_printing
 #: model_terms:ir.ui.view,arch_db:account_check_printing.view_account_payment_form_inherited
 msgid "Void Check"
-msgstr ""
+msgstr "צ'ק מבוטל"
 
 #. module: account_check_printing
 #: code:addons/account_check_printing/models/account_payment.py:0
@@ -426,3 +439,5 @@ msgid ""
 "You have to choose a check layout. For this, go in Invoicing/Accounting "
 "Settings, search for 'Checks layout' and set one."
 msgstr ""
+"יש לבחור בפריסת צ'ק. עושים את זה תחת חשבוניות / הגדרות חשבונאיות, חפשו "
+"'פריסת צ'ק' והגדירו תצורה."

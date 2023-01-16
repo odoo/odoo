@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+from datetime import datetime, timedelta
 
 from odoo.addons.mrp.tests.common import TestMrpCommon
 from odoo.tests import Form
@@ -77,6 +78,61 @@ class TestMrpProductionBackorder(TestMrpCommon):
         self.assertEqual(mo_backorder.product_qty, 3)
         self.assertEqual(sum(mo_backorder.move_raw_ids.filtered(lambda m: m.product_id.id == product_to_use_1.id).mapped("product_uom_qty")), 9)
         self.assertEqual(mo_backorder.reserve_visible, False)  # the reservation of the first MO should've been moved here
+
+    def test_backorder_and_orderpoint(self):
+        """ Same as test_no_tracking_2, except one of components also has an orderpoint (i.e. reordering rule)
+        and not enough components are in stock (i.e. so orderpoint is triggered)."""
+        production, _, product_to_build, product_to_use_1, product_to_use_2 = self.generate_mo(qty_final=4, qty_base_1=1)
+
+        # Make some stock and reserve
+        for product in production.move_raw_ids.product_id:
+            self.env['stock.quant'].with_context(inventory_mode=True).create({
+                'product_id': product.id,
+                'inventory_quantity': 1,
+                'location_id': production.location_src_id.id,
+            })
+        production.action_assign()
+
+        self.env['stock.warehouse.orderpoint'].create({
+            'name': 'product_to_use_1 RR',
+            'location_id': production.location_src_id.id,
+            'product_id': product_to_use_1.id,
+            'product_min_qty': 1,
+            'product_max_qty': 5,
+        })
+
+        self.env['mrp.bom'].create({
+            'product_id': product_to_use_1.id,
+            'product_tmpl_id': product_to_use_1.product_tmpl_id.id,
+            'product_uom_id': product_to_use_1.uom_id.id,
+            'product_qty': 1.0,
+            'type': 'normal',
+            'consumption': 'flexible',
+            'bom_line_ids': [
+                (0, 0, {'product_id': product_to_use_2.id, 'product_qty': 1.0})
+            ]})
+        product_to_use_1.write({'route_ids': [(4, self.ref('mrp.route_warehouse0_manufacture'))]})
+
+        mo_form = Form(production)
+        mo_form.qty_producing = 1
+        production = mo_form.save()
+
+        action = production.button_mark_done()
+        backorder = Form(self.env['mrp.production.backorder'].with_context(**action['context']))
+        backorder.save().action_backorder()
+
+        # Two related MO, orig + backorder, in same the procurement group
+        mos = self.env['mrp.production'].search([
+            ('product_id', '=', product_to_build.id),
+        ])
+        self.assertEqual(len(mos), 2, "Backorder was not created.")
+        self.assertEqual(len(production.procurement_group_id.mrp_production_ids), 2, "MO backorder not linked to original MO")
+
+        # Orderpoint MO is NOT part of procurement group
+        mo_orderpoint = self.env['mrp.production'].search([
+            ('product_id', '=', product_to_use_1.id),
+        ])
+        self.assertEqual(len(mo_orderpoint.procurement_group_id.mrp_production_ids), 1, "Reordering rule MO incorrectly linked to other MOs")
 
     def test_no_tracking_pbm_1(self):
         """Create a MO for 4 product. Produce 1. The backorder button should
@@ -358,6 +414,81 @@ class TestMrpProductionBackorder(TestMrpCommon):
         backorder_ids = production.procurement_group_id.mrp_production_ids[1]
         self.assertEqual(production.name.split('-')[0], backorder_ids.name.split('-')[0])
         self.assertEqual(int(production.name.split('-')[1]) + 1, int(backorder_ids.name.split('-')[1]))
+
+    def test_reservation_method_w_mo(self):
+        """ Create a MO for 2 units, Produce 1 and create a backorder.
+        The MO and the backorder should be assigned according to the reservation method
+        defined in the default manufacturing operation type
+        """
+        def create_mo(date_planned_start=False):
+            mo_form = Form(self.env['mrp.production'])
+            mo_form.product_id = self.bom_1.product_id
+            mo_form.bom_id = self.bom_1
+            mo_form.product_qty = 2
+            if date_planned_start:
+                mo_form.date_planned_start = date_planned_start
+            mo = mo_form.save()
+            mo.action_confirm()
+            return mo
+
+        def produce_one(mo):
+            mo_form = Form(mo)
+            mo_form.qty_producing = 1
+            mo = mo_form.save()
+            action = mo.button_mark_done()
+            backorder = Form(self.env['mrp.production.backorder'].with_context(**action['context']))
+            backorder.save().action_backorder()
+            return mo.procurement_group_id.mrp_production_ids[-1]
+
+        # Make some stock and reserve
+        for product in self.bom_1.bom_line_ids.product_id:
+            product.type = 'product'
+            self.env['stock.quant'].with_context(inventory_mode=True).create({
+                'product_id': product.id,
+                'inventory_quantity': 100,
+                'location_id': self.stock_location.id,
+            })._apply_inventory()
+
+        default_picking_type_id = self.env['mrp.production']._get_default_picking_type()
+        default_picking_type = self.env['stock.picking.type'].browse(default_picking_type_id)
+
+        # make sure generated MO will auto-assign
+        default_picking_type.reservation_method = 'at_confirm'
+        production = create_mo()
+        self.assertEqual(production.state, 'confirmed')
+        self.assertEqual(production.reserve_visible, False)
+        # check whether the backorder follows the same scenario as the original MO
+        backorder = produce_one(production)
+        self.assertEqual(backorder.state, 'confirmed')
+        self.assertEqual(backorder.reserve_visible, False)
+
+        # make sure generated MO will does not auto-assign
+        default_picking_type.reservation_method = 'manual'
+        production = create_mo()
+        self.assertEqual(production.state, 'confirmed')
+        self.assertEqual(production.reserve_visible, True)
+        backorder = produce_one(production)
+        self.assertEqual(backorder.state, 'confirmed')
+        self.assertEqual(backorder.reserve_visible, True)
+
+        # make sure generated MO auto-assigns according to scheduled date
+        default_picking_type.reservation_method = 'by_date'
+        default_picking_type.reservation_days_before = 2
+        # too early for scheduled date => don't auto-assign
+        production = create_mo(datetime.now() + timedelta(days=10))
+        self.assertEqual(production.state, 'confirmed')
+        self.assertEqual(production.reserve_visible, True)
+        backorder = produce_one(production)
+        self.assertEqual(backorder.state, 'confirmed')
+        self.assertEqual(backorder.reserve_visible, True)
+
+        # within scheduled date + reservation days before => auto-assign
+        production = create_mo()
+        self.assertEqual(production.state, 'confirmed')
+        self.assertEqual(production.reserve_visible, False)
+        backorder = produce_one(production)
+        self.assertEqual(backorder.state, 'confirmed')
+        self.assertEqual(backorder.reserve_visible, False)
 
 
 class TestMrpWorkorderBackorder(TransactionCase):

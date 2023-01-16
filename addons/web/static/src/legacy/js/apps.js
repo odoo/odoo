@@ -36,7 +36,7 @@ var Apps = AbstractAction.extend({
                 };
             });
             var ts = new Date().getTime();
-            i.src = _.str.sprintf('%s/web/static/img/sep-a.gif?%s', client.origin, ts);
+            i.src = _.str.sprintf('%s/web/static/src/img/sep-a.gif?%s', client.origin, ts);
             return def;
         };
         if (apps_client) {
@@ -152,7 +152,7 @@ var Apps = AbstractAction.extend({
                     route: '/web/action/load',
                     params: {action_id: self.failback_action_id},
                 }).then(function(action) {
-                    return self.do_action(action);
+                    return self.do_action(action, {clear_breadcrumbs: true});
                 }).then(reject, reject);
             });
         });

@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import fields, models, _
+from odoo import fields, models, _lt
 
 class Project(models.Model):
     _inherit = 'project.project'
@@ -17,7 +17,7 @@ class Project(models.Model):
         if self.user_has_groups('account.group_account_readonly'):
             buttons.append({
                 'icon': 'pencil-square-o',
-                'text': _('Invoices'),
+                'text': _lt('Invoices'),
                 'number': self.invoice_count,
                 'action_type': 'object',
                 'action': 'action_open_project_invoices',

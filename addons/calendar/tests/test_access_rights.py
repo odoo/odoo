@@ -5,54 +5,82 @@ from datetime import datetime
 
 from odoo.tests.common import TransactionCase, new_test_user
 from odoo.exceptions import AccessError
+from odoo.tools import mute_logger
 
 
 class TestAccessRights(TransactionCase):
 
     @classmethod
+    @mute_logger('odoo.tests', 'odoo.addons.auth_signup.models.res_users')
     def setUpClass(cls):
         super().setUpClass()
         cls.john = new_test_user(cls.env, login='john', groups='base.group_user')
         cls.raoul = new_test_user(cls.env, login='raoul', groups='base.group_user')
+        cls.george = new_test_user(cls.env, login='george', groups='base.group_user')
         cls.portal = new_test_user(cls.env, login='pot', groups='base.group_portal')
 
     def create_event(self, user, **values):
-        return self.env['calendar.event'].with_user(user).create(dict({
+        return self.env['calendar.event'].with_user(user).create({
             'name': 'Event',
             'start': datetime(2020, 2, 2, 8, 0),
             'stop': datetime(2020, 2, 2, 18, 0),
             'user_id': user.id,
-        }, **values))
+            'partner_ids': [(4, self.george.partner_id.id, 0)],
+            **values
+        })
 
     def read_event(self, user, events, field):
         data = events.with_user(user).read([field])
         if len(events) == 1:
             return data[0][field]
-        mapped_data = {record['id']: record for record in data}
-        # Keep the same order
-        return [mapped_data[eid][field] for eid in events.ids]
+        return [r[field] for r in data]
 
-    def test_private_read_name(self):
+    # don't spam logs with ACL failures from portal
+    @mute_logger('odoo.addons.base.models.ir_rule')
+    def test_privacy(self):
         event = self.create_event(
             self.john,
             privacy='private',
             name='my private event',
+            location='in the Sky'
         )
-        self.assertEqual(self.read_event(self.john, event, 'name'), 'my private event', "Owner should be able to read the event")
-        self.assertEqual(self.read_event(self.raoul, event, 'name'), 'Busy', "Private value should be obfuscated")
-        with self.assertRaises(AccessError):
-            self.read_event(self.portal, event, 'name')
-
-    def test_private_other_field(self):
-        event = self.create_event(
-            self.john,
-            privacy='private',
-            location='in the Sky',
-        )
-        self.assertEqual(self.read_event(self.john, event, 'location'), 'in the Sky', "Owner should be able to read the event")
-        self.assertEqual(self.read_event(self.raoul, event, 'location'), False, "Private value should be obfuscated")
-        with self.assertRaises(AccessError):
-            self.read_event(self.portal, event, 'location')
+        for user, field, expect, error in [
+            # public field, any employee can read
+            (self.john, 'privacy', 'private', None),
+            (self.george, 'privacy', 'private', None),
+            (self.raoul, 'privacy', 'private', None),
+            (self.portal, 'privacy', None, AccessError),
+            # substituted private field, only owner and invitees can read, other
+            # employees get substitution
+            (self.john, 'name', 'my private event', None),
+            (self.george, 'name', 'my private event', None),
+            (self.raoul, 'name', 'Busy', None),
+            (self.portal, 'name', None, AccessError),
+            # computed from private field
+            (self.john, 'display_name', 'my private event', None),
+            (self.george, 'display_name', 'my private event', None),
+            (self.raoul, 'display_name', 'Busy', None),
+            (self.portal, 'display_name', None, AccessError),
+            # non-substituted private field, only owner and invitees can read,
+            # other employees get an empty field
+            (self.john, 'location', 'in the Sky', None),
+            (self.george, 'location', 'in the Sky', None),
+            (self.raoul, 'location', False, None),
+            (self.portal, 'location', None, AccessError),
+            # non-substituted sequence field
+            (self.john, 'partner_ids', self.george.partner_id, None),
+            (self.george, 'partner_ids', self.george.partner_id, None),
+            (self.raoul, 'partner_ids', self.env['res.partner'], None),
+            (self.portal, 'partner_ids', None, AccessError),
+        ]:
+            event.invalidate_cache()
+            with self.subTest("private read", user=user.display_name, field=field, error=error):
+                e = event.with_user(user)
+                if error:
+                    with self.assertRaises(error):
+                        _ = e[field]
+                else:
+                    self.assertEqual(e[field], expect)
 
     def test_private_and_public(self):
         private = self.create_event(

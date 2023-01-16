@@ -12,15 +12,17 @@
 # Sandra Franch <sandra.franch@upc.edu>, 2021
 # Manel Fernandez Ramirez <manelfera@outlook.com>, 2021
 # Arnau Ros, 2021
-# jabelchi, 2021
+# Harcogourmet, 2022
+# marcescu, 2022
+# jabelchi, 2022
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 15.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-10-05 10:54+0000\n"
+"POT-Creation-Date: 2021-11-16 16:40+0000\n"
 "PO-Revision-Date: 2021-09-14 12:21+0000\n"
-"Last-Translator: jabelchi, 2021\n"
+"Last-Translator: jabelchi, 2022\n"
 "Language-Team: Catalan (https://www.transifex.com/odoo/teams/41243/ca/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -32,12 +34,12 @@ msgstr ""
 #: model:ir.model.fields,field_description:event.field_res_partner__event_count
 #: model:ir.model.fields,field_description:event.field_res_users__event_count
 msgid "# Events"
-msgstr ""
+msgstr "# Esdeveniments"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_mail__mail_count_done
 msgid "# Sent"
-msgstr ""
+msgstr "# Enviat"
 
 #. module: event
 #: code:addons/event/models/event_event.py:0
@@ -51,11 +53,13 @@ msgid ""
 "'Foldable Badge - %s - %s' % ((object.event_id.name or "
 "'Event').replace('/',''), object.name.replace('/',''))"
 msgstr ""
+"Insígnia portàtil - %s - %s' % ((object.event_id.name or "
+"'Event').replace('/',''), object.name.replace('/',''))"
 
 #. module: event
 #: model:ir.actions.report,print_report_name:event.action_report_event_event_foldable_badge
 msgid "'Foldable Badge - %s' % (object.name or 'Event').replace('/','')"
-msgstr ""
+msgstr "'Insígnia portàtil - %s' % (object.name or 'Event').replace('/','')"
 
 #. module: event
 #: model:ir.actions.report,print_report_name:event.action_report_event_registration_full_page_ticket
@@ -63,31 +67,34 @@ msgid ""
 "'Full Page Ticket - %s - %s' % ((object.event_id.name or "
 "'Event').replace('/',''), object.name.replace('/',''))"
 msgstr ""
+"'Ticket de pàgina complet - %s - %s' % ((object.event_id.name or "
+"'Event').replace('/',''), object.name.replace('/',''))"
 
 #. module: event
 #: model:ir.actions.report,print_report_name:event.action_report_event_event_full_page_ticket
 msgid "'Full Page Ticket - %s' % (object.name or 'Event').replace('/','')"
 msgstr ""
+"'Ticket de pàgina complet - %s' % (object.name or 'Event').replace('/','')"
 
 #. module: event
 #: model:event.tag,name:event.event_tag_category_1_tag_2
 msgid "10-14"
-msgstr ""
+msgstr "10-14"
 
 #. module: event
 #: model:event.tag,name:event.event_tag_category_1_tag_3
 msgid "15-18"
-msgstr ""
+msgstr "15-18"
 
 #. module: event
 #: model:event.tag,name:event.event_tag_category_1_tag_4
 msgid "18+"
-msgstr ""
+msgstr "18+"
 
 #. module: event
 #: model:event.tag,name:event.event_tag_category_1_tag_1
 msgid "5-10"
-msgstr ""
+msgstr "5-10"
 
 #. module: event
 #: model_terms:event.event,description:event.event_0
@@ -95,6 +102,8 @@ msgid ""
 "<b>Business Room</b> - To discuss implementation methodologies, best sales "
 "practices, etc."
 msgstr ""
+"<b>Sala de negocis</b> - Per discutir metodologies d'implementació, millors "
+"pràctiques de vendes, etc."
 
 #. module: event
 #: model_terms:event.event,description:event.event_0
@@ -102,6 +111,8 @@ msgid ""
 "<b>Technical Rooms</b> - One dedicated to advanced Odoo developers, one for "
 "new developers."
 msgstr ""
+"<b>Sales tècniques</b> - Un dedicat als desenvolupadors avançats d'Odoo, un "
+"per a nous desenvolupadors."
 
 #. module: event
 #: model_terms:event.event,description:event.event_0
@@ -109,6 +120,9 @@ msgid ""
 "<b>The Design Fair is preceded by 2 days of Training Sessions for "
 "experts!</b><br> We propose 3 different training sessions, 2 days each."
 msgstr ""
+"<b>La Fira de Disseny està precedida per dos dies de sessions d'entrenament "
+"per a experts!</b><br> Proposem 3 sessions de formació diferents, 2 dies "
+"cadascuna."
 
 #. module: event
 #: model_terms:event.event,description:event.event_0
@@ -117,6 +131,9 @@ msgid ""
 "more time for thematical meetings, conferences, workshops and tutorial "
 "sessions in the afternoon."
 msgstr ""
+"<b>Les sessions plenàries del matí seran més curtes</b> I donarem més temps "
+"per a les reunions temàtiques, conferències, tallers i sessions "
+"d'aprenentatge a la tarda."
 
 #. module: event
 #: model_terms:event.event,description:event.event_0
@@ -127,11 +144,16 @@ msgid ""
 "contribute, there is a free ticket, therefore, catering and access to "
 "evening events aren't included."
 msgstr ""
+"<b>Tot l'esdeveniment està obert al públic!</b> <br>Demanem una quota de "
+"participació de 49,50€ per a les despeses dels 3 dies (cafès, servei "
+"d'àpats, begudes i un sorprenent concert i festa de la cervesa).<br> Per als"
+" quals no vulguin contribuir, hi ha una entrada gratuïta, per la qual cosa "
+"el servei d'àpats i l'accés als esdeveniments nocturns no estan inclosos."
 
 #. module: event
 #: model_terms:event.event,description:event.event_0
 msgid "<b>Workshop Room</b> - Mainly for developers."
-msgstr ""
+msgstr "<b>Sala del taller</b> - Principalment per als desenvolupadors."
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.res_config_settings_view_form
@@ -139,6 +161,8 @@ msgid ""
 "<br/>\n"
 "                                            <span class=\"text-muted\">Air your tracks online through a Youtube integration</span>"
 msgstr ""
+"<br/>\n"
+"                                            <span class=\"text-muted\">Aviseu les vostres pistes en línia a través d'una integració de Youtube</span>"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.res_config_settings_view_form
@@ -146,6 +170,8 @@ msgid ""
 "<br/>\n"
 "                                            <span class=\"text-muted\">Share a quiz to your attendees once a track is over</span>"
 msgstr ""
+"<br/>\n"
+"                                            <span class=\"text-muted\">Comparteix un qüestionari als assistents una vegada que hagi acabat la pista</span>"
 
 #. module: event
 #: model:mail.template,body_html:event.event_registration_mail_template_badge
@@ -163,6 +189,18 @@ msgid ""
 "    </t>\n"
 "</div>"
 msgstr ""
+"<div>\n"
+"    Estimat <t t-out=\"object.name or ''\">Oscar Morgan</t>,<br/>\n"
+"    Gràcies per la seva recerca.<br/>\n"
+"    Aquesta és la vostra insígnia per a l'esdeveniment <t t-out=\"object.event_id.name or ''\">Presentació en línia de la col·lecció OpenWood</t>.<br/>\n"
+"   Si té alguna pregunta, faci-nos saber.\n"
+"    <br/><br/>\n"
+"    Gràcies,\n"
+"    <t t-if=\"object.event_id.user_id.signature\">\n"
+"        <br/>\n"
+"        <t t-out=\"object.event_id.user_id.signature or ''\">--<br/>Mitchell Admin</t>\n"
+"    </t>\n"
+"</div>"
 
 #. module: event
 #: model_terms:event.event,description:event.event_0
@@ -173,11 +211,16 @@ msgid ""
 "community module, a case study, methodology feedback, technical, etc. Each "
 "presentation must be in English.</em>"
 msgstr ""
+"<em>Si desea hacer una presentación, envíe su propuesta de tema lo antes "
+"posible para su aprobación al Sr. Famke Jenssens en ngh (a) yourcompany "
+"(dot) com. Les presentacions haurien de ser, per exemple, una presentació "
+"d'un mòdul comunitari, un estudi de casos, retroalimentació de metodologia, "
+"tècnica, etc. Cada presentació ha de ser en anglès.</em>"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_kanban
 msgid "<i class=\"fa fa-arrow-right o_event_fontsize_09\" title=\"End date\"/>"
-msgstr ""
+msgstr "<i class=\"fa fa-arrow-right o_event_fontsize_09\" title=\"End date\"/>"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_registration_view_kanban
@@ -185,6 +228,8 @@ msgid ""
 "<i class=\"fa fa-check fa-3x\" role=\"img\" aria-label=\"Confirm button\" "
 "title=\"Confirm Registration\"/>"
 msgstr ""
+"<i class=\"fa fa-check fa-3x\" role=\"img\" aria-label=\"Confirm button\" "
+"title=\"Confirm Registration\"/>"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_registration_view_kanban
@@ -192,6 +237,8 @@ msgid ""
 "<i class=\"fa fa-check\" role=\"img\" aria-label=\"Confirm button\" "
 "title=\"Confirm Registration\"/>"
 msgstr ""
+"<i class=\"fa fa-check\" role=\"img\" aria-label=\"Confirm button\" "
+"title=\"Confirm Registration\"/>"
 
 #. module: event
 #: model_terms:event.event,description:event.event_0
@@ -199,11 +246,13 @@ msgid ""
 "<i class=\"fa fa-info-circle mr-2\"></i>This event and all the conferences "
 "are in <b>English</b>!"
 msgstr ""
+"<i class=\"fa fa-info-circle mr-2\"></i>Aquest esdeveniment i totes les "
+"conferències estan <b>Anglès</b>!"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_kanban
 msgid "<i class=\"fa fa-level-up fa-rotate-90\" title=\"Confirmed\"/>"
-msgstr ""
+msgstr "<i class=\"fa fa-level-up fa-rotate-90\" title=\"Confirmed\"/>"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_event_view_form_quick_create
@@ -212,11 +261,13 @@ msgid ""
 "<i class=\"fa fa-long-arrow-right mx-2\" aria-label=\"Arrow icon\" "
 "title=\"Arrow\"/>"
 msgstr ""
+"<i class=\"fa fa-long-arrow-right mx-2\" aria-label=\"Arrow icon\" "
+"title=\"Arrow\"/>"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_kanban
 msgid "<i class=\"fa fa-map-marker\" title=\"Location\"/>"
-msgstr ""
+msgstr "<i class=\"fa fa-map-marker\" title=\"Location\"/>"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_registration_view_kanban
@@ -242,6 +293,8 @@ msgid ""
 "<span class=\"badge badge-secondary o_wevent_badge float-"
 "right\">SPEAKER</span>"
 msgstr ""
+"<span class=\"badge badge-secondary o_wevent_badge float-"
+"right\">ALTAVEU</span>"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.res_config_settings_view_form
@@ -258,12 +311,14 @@ msgid ""
 "<span class=\"text-muted\" states=\"done\">Attended</span>\n"
 "                                    <span class=\"text-muted\" states=\"cancel\">Canceled</span>"
 msgstr ""
+"<span class=\"text-muted\" states=\"done\">Va assistir</span>\n"
+"                                    <span class=\"text-muted\" states=\"cancel\">Cancel·lat</span>"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_report_template_foldable_badge
 #: model_terms:ir.ui.view,arch_db:event.event_report_template_full_page_ticket
 msgid "<span>John Doe</span>"
-msgstr ""
+msgstr "<span>John Doe</span>"
 
 #. module: event
 #: model:mail.template,body_html:event.event_reminder
@@ -473,6 +528,210 @@ msgid ""
 "</table>\n"
 "            "
 msgstr ""
+"<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" style=\"padding-top: 16px; background-color: #F1F1F1; font-family:Verdana, Arial,sans-serif; color: #454748; width: 100%; border-collapse:separate;\"><tr><td align=\"center\">\n"
+"<t t-set=\"date_begin\" t-value=\"format_datetime(object.event_id.date_begin, tz='UTC', dt_format=&quot;yyyyMMdd'T'HHmmss'Z'&quot;)\"/>\n"
+"<t t-set=\"date_end\" t-value=\"format_datetime(object.event_id.date_end, tz='UTC', dt_format=&quot;yyyyMMdd'T'HHmmss'Z'&quot;)\"/>\n"
+"<t t-set=\"is_online\" t-value=\"'is_published' in object.event_id and object.event_id.is_published\"/>\n"
+"<t t-set=\"event_organizer\" t-value=\"object.event_id.organizer_id\"/>\n"
+"<t t-set=\"event_address\" t-value=\"object.event_id.address_id\"/>\n"
+"<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"padding: 16px; background-color: white; color: #454748; border-collapse:separate;\">\n"
+"<tbody>\n"
+"    <!-- CAPÇALERA -->\n"
+"    <tr>\n"
+"        <td align=\"center\" style=\"min-width: 590px;\">\n"
+"            <table width=\"590\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\" style=\"min-width: 590px; background-color: white; padding: 0px 8px 0px 8px; border-collapse:separate;\">\n"
+"                <tr><td valign=\"middle\">\n"
+"                    <span style=\"font-size: 10px;\">El vostre registre</span><br/>\n"
+"                    <span style=\"font-size: 20px; font-weight: bold;\" t-out=\"object.name or ''\">Oscar Morgan</span>\n"
+"                </td><td valign=\"middle\" align=\"right\">\n"
+"                    <t t-if=\"is_online\">\n"
+"                        <a t-attf-href=\"{{ object.event_id.website_url }}\" style=\"padding: 8px 12px; font-size: 12px; color: #FFFFFF; text-decoration: none !important; font-weight: 400; background-color: #875A7B; border: 0px solid #875A7B; border-radius:3px\">\n"
+"                            Visualitza l'esdeveniment\n"
+"                        </a>\n"
+"                    </t>\n"
+"                    <t t-else=\"\">\n"
+"                        <img t-att-src=\"'/logo.png?company=%s' % object.company_id.id\" style=\"padding: 0px; margin: 0px; height: auto; width: 80px;\" t-att-alt=\"'%s' % object.company_id.name\"/>\n"
+"                    </t>\n"
+"                </td></tr>\n"
+"                <tr><td colspan=\"2\" style=\"text-align:center;\">\n"
+"                  <hr width=\"100%\" style=\"background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0; margin:16px 0px 16px 0px;\"/>\n"
+"                </td></tr>\n"
+"            </table>\n"
+"        </td>\n"
+"    </tr>\n"
+"    <!-- DESCRIPCIÓ DE L'ESDEVENIMENT -->\n"
+"    <tr>\n"
+"        <td align=\"center\" style=\"min-width: 590px;\">\n"
+"            <table width=\"590\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\" style=\"min-width: 590px; background-color: white; padding: 0px 8px 0px 8px; border-collapse:separate;\">\n"
+"                <tr><td valign=\"top\" style=\"font-size: 14px;\">\n"
+"                    <div>\n"
+"                        Hola <t t-out=\"object.name or ''\">Oscar Morgan</t>,<br/>\n"
+"                        Estem excitats a recordar-los que l'esdeveniment\n"
+"                        <t t-if=\"is_online\">\n"
+"                            <a t-att-href=\"object.event_id.website_url\" style=\"color:#875A7B;text-decoration:none;\" t-out=\"object.event_id.name or ''\">Presentació en línia de la col·lecció OpenWood</a>\n"
+"                        </t>\n"
+"                        <t t-else=\"\">\n"
+"                            <strong t-out=\"object.event_id.name or ''\">Presentació en línia de la col·lecció OpenWood</strong>\n"
+"                        </t>\n"
+"                       està començant <strong t-out=\"object.get_date_range_str() or ''\">avui</strong>.\n"
+"                    </div>\n"
+"                    <div>\n"
+"                        <br/>\n"
+"                        <strong>Afegeix aquest esdeveniment al teu calendari</strong>\n"
+"                        <a t-attf-href=\"https://www.google.com/calendar/render?action=TEMPLATE&amp;text={{ object.event_id.name }}&amp;dates={{ date_begin }}/{{ date_end }}&amp;location={{ location }}\" style=\"padding:3px 5px;border:1px solid #875A7B;color:#875A7B;text-decoration:none;border-radius:3px;\" target=\"new\"><img src=\"/web_editor/font_to_img/61525/rgb(135,90,123)/16\" style=\"vertical-align:middle;\" height=\"16\" alt=\"\"/> Google</a>\n"
+"                        <a t-attf-href=\"/event/{{ slug(object.event_id) }}/ics\" style=\"padding:3px 5px;border:1px solid #875A7B;color:#875A7B;text-decoration:none;border-radius:3px;\"><img src=\"/web_editor/font_to_img/61525/rgb(135,90,123)/16\" style=\"vertical-align:middle;\" height=\"16\" alt=\"\"/> iCal/Outlook</a>\n"
+"                        <a t-attf-href=\"https://calendar.yahoo.com/?v=60&amp;view=d&amp;type=20&amp;title={{ object.event_id.name }}&amp;in_loc={{ location }}&amp;st={{ format_datetime(object.event_id.date_begin, tz='UTC', dt_format='yyyyMMdd\\'T\\'HHmmss') }}&amp;et={{ format_datetime(object.event_id.date_end, tz='UTC', dt_format='yyyyMMdd\\'T\\'HHmmss') }}\" style=\"padding:3px 5px;border:1px solid #875A7B;color:#875A7B;text-decoration:none;border-radius:3px;\" target=\"new\">\n"
+"                            <img src=\"/web_editor/font_to_img/61525/rgb(135,90,123)/16\" style=\"vertical-align:middle;\" height=\"16\" alt=\"\"/> Yahoo\n"
+"                        </a>\n"
+"                        <br/><br/>\n"
+"                    </div>\n"
+"                    <div>\n"
+"                        Confirmem el seu registre i esperem conèixer-lo aquí,<br/>\n"
+"                        <span style=\"color: #454748;\">\n"
+"                        -- <br/>\n"
+"                        <t t-if=\"event_organizer\">\n"
+"                            <t t-out=\"event_organizer.name or ''\">La seva Empresa</t>\n"
+"                        </t>\n"
+"                        <t t-else=\"\">\n"
+"                            La <t t-out=\"object.event_id.name or ''\">Presentació en línia de la col·lecció OpenWood</t> Equip\n"
+"                        </t>\n"
+"                        </span>\n"
+"                    </div>\n"
+"                </td></tr>\n"
+"                <tr><td style=\"text-align:center;\">\n"
+"                  <hr width=\"100%\" style=\"background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0; margin: 16px 0px 16px 0px;\"/>\n"
+"                </td></tr>\n"
+"            </table>\n"
+"        </td>\n"
+"    </tr>\n"
+"    <!-- DETALLS -->\n"
+"    <tr>\n"
+"        <td align=\"center\" style=\"min-width: 590px;\">\n"
+"            <table width=\"590\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\" style=\"min-width: 590px; background-color: white; padding: 0px 8px 0px 8px; border-collapse:separate;\">\n"
+"                <tr><td valign=\"top\" style=\"font-size: 14px;\">\n"
+"                    <table style=\"width:100%;\">\n"
+"                        <tr>\n"
+"                            <td style=\"vertical-align:top;\">\n"
+"                                <img src=\"/web_editor/font_to_img/61555/rgb(81,81,102)/34\" style=\"padding:4px;max-width:inherit;\" height=\"34\" alt=\"\"/>\n"
+"                            </td>\n"
+"                            <td style=\"padding: 0px 10px 0px 10px;width:50%;line-height:20px;vertical-align:top;\">\n"
+"                                <div><strong>De</strong> <t t-out=\"object.event_id.date_begin_located or ''\">4 de maig de 2021, 7:00:00 AM</t></div>\n"
+"                                <div><strong>A</strong> <t t-out=\"object.event_id.date_end_located or ''\">6 de maig de 2021, 5:00:00 PM</t></div>\n"
+"                                <div style=\"font-size:12px;color:#9e9e9e\"><i><strong>TZ</strong> <t t-out=\"object.event_id.date_tz or ''\">Europa/Brussel·les</t></i></div>\n"
+"                            </td>\n"
+"                            <td style=\"vertical-align:top;\">\n"
+"                                <t t-if=\"event_address\">\n"
+"                                    <img src=\"/web_editor/font_to_img/61505/rgb(81,81,102)/34\" style=\"padding:4px;max-width:inherit;\" height=\"34\" alt=\"\"/>\n"
+"                                </t>\n"
+"                            </td>\n"
+"                            <td style=\"padding: 0px 10px 0px 10px;width:50%;vertical-align:top;\">\n"
+"                                <t t-if=\"event_address\">\n"
+"                                    <t t-set=\"location\" t-value=\"''\"/>\n"
+"                                    <t t-if=\"object.event_id.address_id.name\">\n"
+"                                        <div t-out=\"object.event_id.address_id.name or ''\">Teksa SpA</div>\n"
+"                                    </t>\n"
+"                                    <t t-if=\"object.event_id.address_id.street\">\n"
+"                                        <div t-out=\"object.event_id.address_id.street or ''\">Puerto Madero 9710</div>\n"
+"                                        <t t-set=\"location\" t-value=\"object.event_id.address_id.street\"/>\n"
+"                                    </t>\n"
+"                                    <t t-if=\"object.event_id.address_id.street2\">\n"
+"                                        <div t-out=\"object.event_id.address_id.street2 or ''\">Of A15, Santiago (RM)</div>\n"
+"                                        <t t-set=\"location\" t-value=\"'%s, %s' % (location, object.event_id.address_id.street2)\"/>\n"
+"                                    </t>\n"
+"                                    <div>\n"
+"                                    <t t-if=\"object.event_id.address_id.city\">\n"
+"                                        <t t-out=\"object.event_id.address_id.city or ''\">Pudahuel</t>,\n"
+"                                        <t t-set=\"location\" t-value=\"'%s, %s' % (location, object.event_id.address_id.city)\"/>\n"
+"                                    </t>\n"
+"                                    <t t-if=\"object.event_id.address_id.state_id.name\">\n"
+"                                        <t t-out=\"object.event_id.address_id.state_id.name or ''\">C1</t>,\n"
+"                                        <t t-set=\"location\" t-value=\"'%s, %s' % (location, object.event_id.address_id.state_id.name)\"/>\n"
+"                                    </t>\n"
+"                                    <t t-if=\"object.event_id.address_id.zip\">\n"
+"                                        <t t-out=\"object.event_id.address_id.zip or ''\">98450</t>\n"
+"                                        <t t-set=\"location\" t-value=\"'%s, %s' % (location, object.event_id.address_id.zip)\"/>\n"
+"                                    </t>\n"
+"                                    </div>\n"
+"                                    <t t-if=\"object.event_id.address_id.country_id.name\">\n"
+"                                        <div t-out=\"object.event_id.address_id.country_id.name or ''\">Argentina</div>\n"
+"                                        <t t-set=\"location\" t-value=\"'%s, %s' % (location, object.event_id.address_id.country_id.name)\"/>\n"
+"                                    </t>\n"
+"                                </t>\n"
+"                            </td>\n"
+"                        </tr>\n"
+"                    </table>\n"
+"                </td></tr>\n"
+"                <tr><td style=\"text-align:center;\">\n"
+"                    <t t-if=\"event_organizer\">\n"
+"                        <hr width=\"100%\" style=\"background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0; margin: 16px 0px 16px 0px;\"/>\n"
+"                    </t>\n"
+"                </td></tr>\n"
+"\n"
+"                <tr><td valign=\"top\" style=\"font-size: 14px;\">\n"
+"                    <!-- ORGANITZADOR DE CONTACTES-->\n"
+"                    <t t-if=\"event_organizer\">\n"
+"                        <div>\n"
+"                            <span style=\"font-weight:300;margin:10px 0px\">Preguntes sobre aquest esdeveniment?</span>\n"
+"                            <div>Poseu-vos en contacte amb l'organitzador:</div>\n"
+"                            <ul>\n"
+"                                <li t-out=\"event_organizer.name or ''\">La seva Empresa</li>\n"
+"                                <t t-if=\"event_organizer.email\">\n"
+"                                    <li>Correu: <a t-attf-href=\"mailto:{{ event_organizer.email }}\" style=\"text-decoration:none;color:#875A7B;\" t-out=\"event_organizer.email or ''\"/></li>\n"
+"                                </t>\n"
+"                                <t t-if=\"event_organizer.phone\">\n"
+"                                    <li>Telèfon: <t t-out=\"event_organizer.phone or ''\"/></li>\n"
+"                                </t>\n"
+"                            </ul>\n"
+"                        </div>\n"
+"                    </t>\n"
+"                </td></tr>\n"
+"                <tr><td style=\"text-align:center;\">\n"
+"                    <!-- SEPARACIÓ DE L'ORGANITZADOR DEL CONTACTE -->\n"
+"                    <hr t-if=\"is_online or event_address\" width=\"100%\" style=\"background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0; margin: 16px 0px 16px 0px;\"/>\n"
+"                </td></tr>\n"
+"\n"
+"                <tr><td valign=\"top\" style=\"font-size: 14px;\">\n"
+"                    <!-- PWA MARKGETING -->\n"
+"                    <div t-if=\"is_online\">\n"
+"                        <strong>Obtingueu la millor experiència mòbil.</strong>\n"
+"                        <a href=\"/event\">Instal·la la nostra aplicació mòbil</a>\n"
+"                    </div>\n"
+"                </td></tr>\n"
+"                <tr><td style=\"text-align:center;\">\n"
+"                    <!-- SEPARACIÓ DE MARCATGE PWA-->\n"
+"                    <hr t-if=\"is_online and event_address\" width=\"100%\" style=\"background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0; margin: 16px 0px 16px 0px;\"/>\n"
+"                </td></tr>\n"
+"\n"
+"                <tr><td valign=\"top\" style=\"font-size: 14px;\">\n"
+"                    <!-- ENLLAÇ DE GOOGLE MAPS-->\n"
+"                    <table t-if=\"event_address\" style=\"width:100%;\"><tr><td>\n"
+"                        <div>\n"
+"                            <a t-attf-href=\"https://maps.google.com/maps?q={{ location }}\" target=\"new\">\n"
+"                                <img t-attf-src=\"http://maps.googleapis.com/maps/api/staticmap?autoscale=1&amp;size=598x200&amp;maptype=roadmap&amp;format=png&amp;visual_refresh=true&amp;markers=size:mid%7Ccolor:0xa5117d%7Clabel:%7C{{ location }}\" style=\"vertical-align:bottom; width: 100%;\" alt=\"Google Maps\"/>\n"
+"                            </a>\n"
+"                        </div>\n"
+"                    </td></tr></table>\n"
+"                </td></tr>\n"
+"            </table>\n"
+"        </td>\n"
+"    </tr>\n"
+"</tbody>\n"
+"</table>\n"
+"</td></tr>\n"
+"<!-- PEU DE PÀGINA PER -->\n"
+"<tr><td align=\"center\" style=\"min-width: 590px;\">\n"
+"    <table t-if=\"object.company_id\" width=\"590\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\" style=\"min-width: 590px; background-color: #F1F1F1; color: #454748; padding: 8px; border-collapse:separate;\">\n"
+"      <tr><td style=\"text-align: center; font-size: 14px;\">\n"
+"        Enviat per <a target=\"_blank\" t-attf-href=\"{{ object.company_id.website }}\" style=\"color: #875A7B;\" t-out=\"object.company_id.name or ''\">La vostra empresa</a>\n"
+"        <t t-if=\"'website_url' in object.event_id and object.event_id.website_url\">\n"
+"            <br/>\n"
+"           Descobreixi<a href=\"/event\" style=\"color:#875A7B;\">tots els nostres esdeveniments</a>.\n"
+"        </t>\n"
+"      </td></tr>\n"
+"    </table>\n"
+"</td></tr>\n"
+"</table>\n"
+"            "
 
 #. module: event
 #: model:mail.template,body_html:event.event_subscription
@@ -694,13 +953,229 @@ msgid ""
 "</table>\n"
 "            "
 msgstr ""
+"<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" style=\"padding-top: 16px; background-color: #F1F1F1; font-family:Verdana, Arial,sans-serif; color: #454748; width: 100%; border-collapse:separate;\"><tr><td align=\"center\">\n"
+"<t t-set=\"date_begin\" t-value=\"format_datetime(object.event_id.date_begin, tz='UTC', dt_format=&quot;yyyyMMdd'T'HHmmss'Z'&quot;)\"/>\n"
+"<t t-set=\"date_end\" t-value=\"format_datetime(object.event_id.date_end, tz='UTC', dt_format=&quot;yyyyMMdd'T'HHmmss'Z'&quot;)\"/>\n"
+"<t t-set=\"is_online\" t-value=\"'is_published' in object.event_id and object.event_id.is_published\"/>\n"
+"<t t-set=\"event_organizer\" t-value=\"object.event_id.organizer_id\"/>\n"
+"<t t-set=\"event_address\" t-value=\"object.event_id.address_id\"/>\n"
+"<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"padding: 16px; background-color: white; color: #454748; border-collapse:separate;\">\n"
+"<tbody>\n"
+"    <!-- CAPÇALERA -->\n"
+"    <tr>\n"
+"        <td align=\"center\" style=\"min-width: 590px;\">\n"
+"            <table width=\"590\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\" style=\"min-width: 590px; background-color: white; padding: 0px 8px 0px 8px; border-collapse:separate;\">\n"
+"                <tr><td valign=\"middle\">\n"
+"                    <span style=\"font-size: 10px;\">El vostre registre</span><br/>\n"
+"                    <span style=\"font-size: 20px; font-weight: bold;\">\n"
+"                        <t t-out=\"object.name or ''\">Oscar Morgan</t>\n"
+"                    </span>\n"
+"                </td><td valign=\"middle\" align=\"right\">\n"
+"                    <t t-if=\"is_online\">\n"
+"                        <a t-att-href=\"object.event_id.website_url\" style=\"padding: 8px 12px; font-size: 12px; color: #FFFFFF; text-decoration: none !important; font-weight: 400; background-color: #875A7B; border: 0px solid #875A7B; border-radius:3px\">\n"
+"                            Visualitza l'esdeveniment\n"
+"                        </a>\n"
+"                    </t>\n"
+"                    <t t-else=\"\">\n"
+"                        <img t-att-src=\"'/logo.png?company=%s' % object.company_id.id\" style=\"padding: 0px; margin: 0px; height: auto; width: 80px;\" t-att-alt=\"'%s' % object.company_id.name\"/>\n"
+"                    </t>\n"
+"                </td></tr>\n"
+"                <tr><td colspan=\"2\" style=\"text-align:center;\">\n"
+"                  <hr width=\"100%\" style=\"background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0; margin:16px 0px 16px 0px;\"/>\n"
+"                </td></tr>\n"
+"            </table>\n"
+"        </td>\n"
+"    </tr>\n"
+"    <!-- DESCRIPCIÓ DE L'ESDEVENIMENT -->\n"
+"    <tr>\n"
+"        <td align=\"center\" style=\"min-width: 590px;\">\n"
+"            <table width=\"590\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\" style=\"min-width: 590px; background-color: white; padding: 0px 8px 0px 8px; border-collapse:separate;\">\n"
+"                <tr><td valign=\"top\" style=\"font-size: 14px;\">\n"
+"                    <div>\n"
+"                        Hola <t t-out=\"object.name or ''\">Oscar Morgan</t>,<br/>\n"
+"                        Ens complau confirmar el vostre registre a l'esdeveniment\n"
+"                        <t t-if=\"is_online\">\n"
+"                            <a t-att-href=\"object.event_id.website_url\" style=\"color:#875A7B;text-decoration:none;\" t-out=\"object.event_id.name or ''\">Presentació en línia de la col·lecció OpenWood</a>\n"
+"                        </t>\n"
+"                        <t t-else=\"\">\n"
+"                            <strong t-out=\"object.event_id.name or ''\">Presentació en línia de la col·lecció OpenWood</strong>\n"
+"                        </t>\n"
+"                        per a l'assistent <t t-out=\"object.name or ''\">Oscar Morgan</t>.\n"
+"                    </div>\n"
+"                    <div>\n"
+"                        <br/>\n"
+"                        <strong>Afegeix aquest esdeveniment al teu calendari</strong>\n"
+"                        <a t-attf-href=\"https://www.google.com/calendar/render?action=TEMPLATE&amp;text={{ object.event_id.name }}&amp;dates={{ date_begin }}/{{ date_end }}&amp;location={{ location }}\" style=\"padding:3px 5px;border:1px solid #875A7B;color:#875A7B;text-decoration:none;border-radius:3px;\" target=\"new\"><img src=\"/web_editor/font_to_img/61525/rgb(135,90,123)/16\" style=\"vertical-align:middle;\" height=\"16\" alt=\"\"/> Google</a>\n"
+"                        <a t-attf-href=\"/event/{{ slug(object.event_id) }}/ics\" style=\"padding:3px 5px;border:1px solid #875A7B;color:#875A7B;text-decoration:none;border-radius:3px;\"><img src=\"/web_editor/font_to_img/61525/rgb(135,90,123)/16\" style=\"vertical-align:middle;\" height=\"16\" alt=\"\"/> iCal/Outlook</a>\n"
+"                        <a t-attf-href=\"https://calendar.yahoo.com/?v=60&amp;view=d&amp;type=20&amp;title={{ object.event_id.name }}&amp;in_loc={{ location }}&amp;st={{ format_datetime(object.event_id.date_begin, tz='UTC', dt_format='yyyyMMdd\\'T\\'HHmmss') }}&amp;et={{ format_datetime(object.event_id.date_end, tz='UTC', dt_format='yyyyMMdd\\'T\\'HHmmss') }}\" style=\"padding:3px 5px;border:1px solid #875A7B;color:#875A7B;text-decoration:none;border-radius:3px;\" target=\"new\">\n"
+"                            <img src=\"/web_editor/font_to_img/61525/rgb(135,90,123)/16\" style=\"vertical-align:middle;\" height=\"16\" alt=\"\"/> Yahoo\n"
+"                        </a>\n"
+"                        <br/><br/>\n"
+"                    </div>\n"
+"                    <div>\n"
+"                        Fins aviat,<br/>\n"
+"                        <span style=\"color: #454748;\">\n"
+"                        -- <br/>\n"
+"                        <t t-if=\"event_organizer\">\n"
+"                            <t t-out=\"event_organizer.name or ''\">YourCompany</t>\n"
+"                        </t>\n"
+"                        <t t-else=\"\">\n"
+"                            El <t t-out=\"object.event_id.name or ''\">Presentació en línia de la col·lecció OpenWood</t> Equip\n"
+"                        </t>\n"
+"                        </span>\n"
+"                    </div>\n"
+"                </td></tr>\n"
+"                <tr><td style=\"text-align:center;\">\n"
+"                  <hr width=\"100%\" style=\"background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0; margin: 16px 0px 16px 0px;\"/>\n"
+"                </td></tr>\n"
+"            </table>\n"
+"        </td>\n"
+"    </tr>\n"
+"    <!-- DETALLS -->\n"
+"    <tr>\n"
+"        <td align=\"center\" style=\"min-width: 590px;\">\n"
+"            <table width=\"590\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\" style=\"min-width: 590px; background-color: white; padding: 0px 8px 0px 8px; border-collapse:separate;\">\n"
+"                <tr><td valign=\"top\" style=\"font-size: 14px;\">\n"
+"                    <table style=\"width:100%;\">\n"
+"                        <tr>\n"
+"                            <td style=\"vertical-align:top;\">\n"
+"                                <img src=\"/web_editor/font_to_img/61555/rgb(81,81,102)/34\" style=\"padding:4px;max-width:inherit;\" height=\"34\" alt=\"\"/>\n"
+"                            </td>\n"
+"                            <td style=\"padding: 0px 10px 0px 10px;width:50%;line-height:20px;vertical-align:top;\">\n"
+"                                <div><strong>De</strong> <t t-out=\"object.event_id.date_begin_located or ''\">Maig 4, 2021, 7:00:00 AM</t></div>\n"
+"                                <div><strong>To</strong> <t t-out=\"object.event_id.date_end_located or ''\">Maig 6, 2021, 5:00:00 PM</t></div>\n"
+"                                <div style=\"font-size:12px;color:#9e9e9e\"><i><strong>TZ</strong> <t t-out=\"object.event_id.date_tz or ''\">Europa/Brussel·les</t></i></div>\n"
+"                            </td>\n"
+"                            <td style=\"vertical-align:top;\">\n"
+"                                <t t-if=\"event_address\">\n"
+"                                    <img src=\"/web_editor/font_to_img/61505/rgb(81,81,102)/34\" style=\"padding:4px;max-width:inherit;\" height=\"34\" alt=\"\"/>\n"
+"                                </t>\n"
+"                            </td>\n"
+"                            <td style=\"padding: 0px 10px 0px 10px;width:50%;vertical-align:top;\">\n"
+"                                <t t-if=\"event_address\">\n"
+"                                    <t t-set=\"location\" t-value=\"''\"/>\n"
+"                                    <t t-if=\"object.event_id.address_id.name\">\n"
+"                                        <div t-out=\"object.event_id.address_id.name or ''\">Teksa SpA</div>\n"
+"                                    </t>\n"
+"                                    <t t-if=\"object.event_id.address_id.street\">\n"
+"                                        <div t-out=\"object.event_id.address_id.street or ''\">Puerto Madero 9710</div>\n"
+"                                        <t t-set=\"location\" t-value=\"object.event_id.address_id.street\"/>\n"
+"                                    </t>\n"
+"                                    <t t-if=\"object.event_id.address_id.street2\">\n"
+"                                        <div t-out=\"object.event_id.address_id.street2 or ''\">Of A15, Santiago (RM)</div>\n"
+"                                        <t t-set=\"location\" t-value=\"'%s, %s' % (location, object.event_id.address_id.street2)\"/>\n"
+"                                    </t>\n"
+"                                    <div>\n"
+"                                    <t t-if=\"object.event_id.address_id.city\">\n"
+"                                        <t t-out=\"object.event_id.address_id.city or ''\">Pudahuel</t>,\n"
+"                                        <t t-set=\"location\" t-value=\"'%s, %s' % (location, object.event_id.address_id.city)\"/>\n"
+"                                    </t>\n"
+"                                    <t t-if=\"object.event_id.address_id.state_id.name\">\n"
+"                                        <t t-out=\"object.event_id.address_id.state_id.name or ''\">C1</t>,\n"
+"                                        <t t-set=\"location\" t-value=\"'%s, %s' % (location, object.event_id.address_id.state_id.name)\"/>\n"
+"                                    </t>\n"
+"                                    <t t-if=\"object.event_id.address_id.zip\">\n"
+"                                        <t t-out=\"object.event_id.address_id.zip or ''\">98450</t>\n"
+"                                        <t t-set=\"location\" t-value=\"'%s, %s' % (location, object.event_id.address_id.zip)\"/>\n"
+"                                    </t>\n"
+"                                    </div>\n"
+"                                    <t t-if=\"object.event_id.address_id.country_id.name\">\n"
+"                                        <div t-out=\"object.event_id.address_id.country_id.name or ''\">Argentina</div>\n"
+"                                        <t t-set=\"location\" t-value=\"'%s, %s' % (location, object.event_id.address_id.country_id.name)\"/>\n"
+"                                    </t>\n"
+"                                </t>\n"
+"                            </td>\n"
+"                        </tr>\n"
+"                    </table>\n"
+"                </td></tr>\n"
+"                <tr><td style=\"text-align:center;\">\n"
+"                    <t t-if=\"event_organizer\">\n"
+"                        <hr width=\"100%\" style=\"background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0; margin: 16px 0px 16px 0px;\"/>\n"
+"                    </t>\n"
+"                </td></tr>\n"
+"\n"
+"                <tr><td valign=\"top\" style=\"font-size: 14px;\">\n"
+"                    <!-- CONTACTE ORGANITZADOR -->\n"
+"                    <t t-if=\"event_organizer\">\n"
+"                        <div>\n"
+"                            <span style=\"font-weight:300;margin:10px 0px\">¿Preguntes sobre aquest esdeveniment?</span>\n"
+"                            <div>Poseu-vos en contacte amb l'organitzador:</div>\n"
+"                            <ul>\n"
+"                                <li><t t-out=\"event_organizer.name or ''\">YourCompany</t></li>\n"
+"                                <t t-if=\"event_organizer.email\">\n"
+"                                    <li>Correu: <a t-attf-href=\"mailto:{{ event_organizer.email }}\" style=\"text-decoration:none;color:#875A7B;\" t-out=\"event_organizer.email or ''\">info@yourcompany.com</a></li>\n"
+"                                </t>\n"
+"                                <t t-if=\"event_organizer.phone\">\n"
+"                                    <li>Telèfon: <t t-out=\"event_organizer.phone or ''\">+1 650-123-4567</t></li>\n"
+"                                </t>\n"
+"                            </ul>\n"
+"                        </div>\n"
+"                    </t>\n"
+"                </td></tr>\n"
+"                <tr><td style=\"text-align:center;\">\n"
+"                    <!-- SEPARACIÓ DE L'ORGANITZADOR DEL CONTACTE-->\n"
+"                    <t t-if=\"is_online or event_address\">\n"
+"                        <hr width=\"100%\" style=\"background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0; margin: 16px 0px 16px 0px;\"/>\n"
+"                    </t>\n"
+"                </td></tr>\n"
+"\n"
+"                <tr><td valign=\"top\" style=\"font-size: 14px;\">\n"
+"                    <!-- PWA MARKGETING -->\n"
+"                    <t t-if=\"is_online\">\n"
+"                        <div>\n"
+"                            <strong>Obtenir la millor experiència mòbil.</strong>\n"
+"                            <a href=\"/event\">Instal·la la nostra aplicació mòbil</a>\n"
+"                        </div>\n"
+"                    </t>\n"
+"                </td></tr>\n"
+"                <tr><td style=\"text-align:center;\">\n"
+"                    <!-- SEPARACIÓ DE MARCATGE PWA->\n"
+"                    <t t-if=\"is_online and event_address\">\n"
+"                        <hr width=\"100%\" style=\"background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0; margin: 16px 0px 16px 0px;\"/>\n"
+"                    </t>\n"
+"                </td></tr>\n"
+"\n"
+"                <tr><td valign=\"top\" style=\"font-size: 14px;\">\n"
+"                    <!-- ENLLAÇ DE GOOGLE MAPS -->\n"
+"                    <t t-if=\"event_address\">\n"
+"                        <table style=\"width:100%;\"><tr><td>\n"
+"                            <div>\n"
+"                                <a t-attf-href=\"https://maps.google.com/maps?q={{ location }}\" target=\"new\">\n"
+"                                    <img t-attf-src=\"http://maps.googleapis.com/maps/api/staticmap?autoscale=1&amp;size=598x200&amp;maptype=roadmap&amp;format=png&amp;visual_refresh=true&amp;markers=size:mid%7Ccolor:0xa5117d%7Clabel:%7C{{ location }}\" style=\"vertical-align:bottom; width: 100%;\" alt=\"Google Maps\"/>\n"
+"                                </a>\n"
+"                            </div>\n"
+"                        </td></tr></table>\n"
+"                    </t>\n"
+"                </td></tr>\n"
+"            </table>\n"
+"        </td>\n"
+"    </tr>\n"
+"</tbody>\n"
+"</table>\n"
+"</td></tr>\n"
+"<!-- PEU DE PÀGINA PER -->\n"
+"<tr><td align=\"center\" style=\"min-width: 590px;\">\n"
+"    <t t-if=\"object.company_id\">\n"
+"        <table width=\"590\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\" style=\"min-width: 590px; background-color: #F1F1F1; color: #454748; padding: 8px; border-collapse:separate;\">\n"
+"        <tr><td style=\"text-align: center; font-size: 14px;\">\n"
+"            Enviat per <a target=\"_blank\" t-attf-href=\"{{ object.company_id.website }}\" style=\"color: #875A7B;\" t-out=\"object.company_id.name or ''\">YourCompany</a>\n"
+"            <t t-if=\"is_online\">\n"
+"                <br/>\n"
+"                Discover <a href=\"/event\" style=\"color:#875A7B;\">tots els nostres esdeveniments</a>.\n"
+"            </t>\n"
+"        </td></tr>\n"
+"        </table>\n"
+"    </t>\n"
+"</td></tr>\n"
+"</table>\n"
+"            "
 
 #. module: event
 #: model:ir.model.fields,help:event.field_event_event_ticket__description
 #: model:ir.model.fields,help:event.field_event_type_ticket__description
 msgid ""
 "A description of the ticket that you want to communicate to your customers."
-msgstr ""
+msgstr "Una descripció de l'entrada que vol comunicar als seus clients."
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__message_needaction
@@ -760,7 +1235,7 @@ msgstr ""
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_form
 msgid "Add a note..."
-msgstr ""
+msgstr "Afegeix una nota..."
 
 #. module: event
 #: model:res.groups,name:event.group_event_manager
@@ -770,7 +1245,7 @@ msgstr "Administrador"
 #. module: event
 #: model:ir.model.fields,field_description:event.field_res_config_settings__module_website_event_exhibitor
 msgid "Advanced Sponsors"
-msgstr ""
+msgstr "Patrocinadors avançats"
 
 #. module: event
 #: model:ir.model.fields.selection,name:event.selection__event_mail__interval_type__after_sub
@@ -787,12 +1262,12 @@ msgstr "Després de l'esdeveniment"
 #. module: event
 #: model:event.tag.category,name:event.event_tag_category_1
 msgid "Age"
-msgstr ""
+msgstr "Edat"
 
 #. module: event
 #: model:event.event,name:event.event_6
 msgid "An unpublished event"
-msgstr ""
+msgstr "Un esdeveniment no publicat"
 
 #. module: event
 #: model_terms:event.event,description:event.event_7
@@ -800,11 +1275,13 @@ msgid ""
 "And this time, we go fully ONLINE! Meet us in our live streams from the comfort of your house.<br>\n"
 "        Special discount codes will be handed out during the various streams, make sure to be there on time."
 msgstr ""
+"I aquesta vegada, anem totalment EN LÍNIA! Troba'ns en les nostres transmissions en viu des de la comoditat de la teva casa.<br>\n"
+"        Es repartiran codis de descompte especials durant els diferents fluxos, assegura't d'arribar a temps."
 
 #. module: event
 #: model:event.stage,name:event.event_stage_announced
 msgid "Announced"
-msgstr ""
+msgstr "Anunciat"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_search
@@ -817,6 +1294,8 @@ msgid ""
 "Around one hundred ballons will simultaneously take flight and turn the sky "
 "into a beautiful canvas of colours."
 msgstr ""
+"Al voltant d'un centenar de balons simultàniament prenen el vol i "
+"converteixen el cel en un bonic llenç de colors."
 
 #. module: event
 #: model_terms:res.partner,website_description:event.res_partner_event_1
@@ -824,7 +1303,7 @@ msgstr ""
 #: model_terms:res.partner,website_description:event.res_partner_event_3
 #: model_terms:res.partner,website_description:event.res_partner_event_4
 msgid "As a team, we are happy to contribute to this event."
-msgstr ""
+msgstr "Com a equip, ens complau contribuir a aquest esdeveniment."
 
 #. module: event
 #: model_terms:event.event,description:event.event_2
@@ -834,6 +1313,11 @@ msgid ""
 "founded TinyERP. This was the first phase of OpenERP which would later "
 "became Odoo, the most installed open-source business software worldwide."
 msgstr ""
+"Als 13 anys, John DOE ja estava començant a desenvolupar les seves primeres "
+"aplicacions empresarials per a clients. Després de dominar l'enginyeria "
+"civil, va fundar TinyERP. Aquesta va ser la primera fase de OpenERP que "
+"després es convertiria en Odoo, el programari empresarial de codi obert més "
+"instal·lat a tot el món."
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__message_attachment_count
@@ -887,12 +1371,14 @@ msgid ""
 "Autoconfirm Registrations. Registrations will automatically be confirmed "
 "upon creation."
 msgstr ""
+"Autoconfirma els registres. Els registres es confirmaran automàticament "
+"després de la creació."
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__auto_confirm
 #: model_terms:ir.ui.view,arch_db:event.view_event_type_form
 msgid "Autoconfirmation"
-msgstr ""
+msgstr "Autoconfirmació"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_type__auto_confirm
@@ -911,6 +1397,8 @@ msgid ""
 "Bands like Bar Fighters, Led Slippers and Link Floyd will offer you the show"
 " of the century during our three day event."
 msgstr ""
+"Bandes com Bar Fighters, Led Slippers i Link Floyd us oferiran l'espectacle "
+"del segle durant el nostre esdeveniment de tres dies."
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_res_config_settings__module_event_barcode
@@ -949,28 +1437,30 @@ msgid ""
 "Bloem brings honesty and seriousness to wood industry while helping "
 "customers deal with trees, flowers and fungi."
 msgstr ""
+"Bloem aporta honestedat i serietat a la indústria fustera mentre ajuda els "
+"clients a tractar amb arbres, flors i fongs."
 
 #. module: event
 #: model:event.stage,name:event.event_stage_booked
 msgid "Booked"
-msgstr ""
+msgstr "Reservat"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_report_template_full_page_ticket
 msgid "Booked By"
-msgstr ""
+msgstr "Reservat Per"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_registration__partner_id
 #: model_terms:ir.ui.view,arch_db:event.event_registration_view_kanban
 msgid "Booked by"
-msgstr ""
+msgstr "Reservat per"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_res_config_settings__module_event_booth
 #: model_terms:ir.ui.view,arch_db:event.res_config_settings_view_form
 msgid "Booth Management"
-msgstr ""
+msgstr "Gestió de cabines"
 
 #. module: event
 #: model:event.event,subtitle:event.event_5
@@ -978,11 +1468,13 @@ msgid ""
 "Bring your outdoor field hockey season to the next level by taking the field"
 " at this 9th annual Field Hockey tournament."
 msgstr ""
+"Porta la teva temporada d'hoquei sobre gespa al següent nivell sortint al "
+"camp en aquest 9è torneig anual d'hoquei sobre gespa."
 
 #. module: event
 #: model:event.event,name:event.event_4
 msgid "Business workshops"
-msgstr ""
+msgstr "Tallers de negocis"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_registration__utm_campaign_id
@@ -1016,6 +1508,8 @@ msgid ""
 "Chamber Works reserves the right to cancel, re-name or re-locate the event "
 "or change the dates on which it is held."
 msgstr ""
+"Les obres de cambra es reserven el dret de cancel·lar, reanomenar o reubicar"
+" l'esdeveniment o canviar les dates en què es celebra."
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_tag__color
@@ -1028,7 +1522,7 @@ msgstr "Índex de color"
 #: model_terms:res.partner,website_description:event.res_partner_event_3
 #: model_terms:res.partner,website_description:event.res_partner_event_4
 msgid "Come see us live, we hope to meet you !"
-msgstr ""
+msgstr "¡Vingui a veure'ns en directe, esperem conèixer-li!"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_form
@@ -1039,12 +1533,12 @@ msgstr "Comunicació"
 #. module: event
 #: model:ir.model.fields,help:event.field_event_mail__mail_registration_ids
 msgid "Communication related to event registrations"
-msgstr ""
+msgstr "Comunicació relacionada amb els registres d'esdeveniments"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.res_config_settings_view_form
 msgid "Community Chat Rooms"
-msgstr ""
+msgstr "Sales de xat de la comunitat"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__company_id
@@ -1075,7 +1569,7 @@ msgstr "Conferencia per arquitectes"
 #. module: event
 #: model_terms:event.event,description:event.event_0
 msgid "Conferences, workshops and trainings will be organized in 6 rooms:"
-msgstr ""
+msgstr "Conferències, tallers i entrenaments s'organitzaran en 6 habitacions:"
 
 #. module: event
 #: model:ir.model,name:event.model_res_config_settings
@@ -1124,27 +1618,27 @@ msgstr "País"
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.res_config_settings_view_form
 msgid "Create Booths and manage their reservations"
-msgstr ""
+msgstr "Crea estands i gestiona les seves reserves"
 
 #. module: event
 #: model_terms:ir.actions.act_window,help:event.action_event_view
 msgid "Create an Event"
-msgstr ""
+msgstr "Crea un esdeveniment"
 
 #. module: event
 #: model_terms:ir.actions.act_window,help:event.event_stage_action
 msgid "Create an Event Stage"
-msgstr ""
+msgstr "Crear un escenari d'esdeveniments"
 
 #. module: event
 #: model_terms:ir.actions.act_window,help:event.event_tag_category_action_tree
 msgid "Create an Event Tag Category"
-msgstr ""
+msgstr "Crea una categoria d'etiqueta d'esdeveniment"
 
 #. module: event
 #: model_terms:ir.actions.act_window,help:event.action_event_type
 msgid "Create an Event Template"
-msgstr ""
+msgstr "Crea una plantilla d'esdeveniment"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__create_uid
@@ -1179,7 +1673,7 @@ msgstr "Creat el"
 #. module: event
 #: model:event.tag,name:event.event_tag_category_2_tag_1
 msgid "Culture"
-msgstr ""
+msgstr "Cultura"
 
 #. module: event
 #: code:addons/event/models/event_registration.py:0
@@ -1213,6 +1707,9 @@ msgid ""
 "you will not be able to sell tickets anymore. Set 0 to ignore this rule set "
 "as unlimited."
 msgstr ""
+"Defineix el nombre de tiquets disponibles. Si teniu massa registres ja no "
+"podreu vendre bitllets. Establiu 0 per ignorar aquest conjunt de regles com "
+"a il·limitades."
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__description
@@ -1230,6 +1727,7 @@ msgstr "Fira de disseny de Los Angeles"
 #: model:event.event,subtitle:event.event_4
 msgid "Discover how to grow a sustainable business with our experts."
 msgstr ""
+"Descobreix com desenvolupar un negoci sostenible amb els nostres experts."
 
 #. module: event
 #: model_terms:res.partner,website_description:event.res_partner_event_1
@@ -1242,7 +1740,7 @@ msgstr "Descobreix més"
 #. module: event
 #: model:ir.model.fields,field_description:event.field_res_config_settings__module_website_event_meet
 msgid "Discussion Rooms"
-msgstr ""
+msgstr "Sales de discussió"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__display_name
@@ -1263,6 +1761,8 @@ msgstr "Nom a mostrar"
 #: model_terms:ir.ui.view,arch_db:event.res_config_settings_view_form
 msgid "Display Sponsors and Exhibitors on your event pages"
 msgstr ""
+"Mostra els Patrocinadors i els Exhibitors a les vostres pàgines "
+"d'esdeveniment"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_mail__sequence
@@ -1307,17 +1807,19 @@ msgstr "Data final establerta"
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_stage__pipe_end
 msgid "End Stage"
-msgstr ""
+msgstr "Etapa final"
 
 #. module: event
 #: model:event.stage,name:event.event_stage_done
 msgid "Ended"
-msgstr ""
+msgstr "Finalitzat"
 
 #. module: event
 #: model:event.event,subtitle:event.event_2
 msgid "Enhance your architectural business and improve professional skills."
 msgstr ""
+"Potenciï el seu negoci d'arquitectura i millori les seves habilitats "
+"professionals."
 
 #. module: event
 #: model:ir.model,name:event.model_event_event
@@ -1348,7 +1850,7 @@ msgstr "Categoria d'esdeveniment"
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_tag_view_form
 msgid "Event Category Tag"
-msgstr ""
+msgstr "Etiqueta de categoria d'esdeveniment"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_registration__event_end_date
@@ -1358,7 +1860,7 @@ msgstr "Data final de l'esdeveniment"
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.res_config_settings_view_form
 msgid "Event Gamification"
-msgstr ""
+msgstr "Gamificació d'esdeveniments"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_registration_form
@@ -1410,17 +1912,29 @@ msgid ""
 "  - or the responsible of the event,\n"
 "  - or the last writer of the template.\n"
 msgstr ""
+"Programador d'esdeveniments per:\n"
+"  - Esdeveniment: %(event_name)s (%(event_id)s)\n"
+"- Programat: %(date)s\n"
+"  - Plantilla: %(template_name)s (%(template_id)s)\n"
+"\n"
+"Ha fallat amb l'error:\n"
+"  - %(error)s\n"
+"\n"
+"Vostè rep aquest correu electrònic perquè ho és:\n"
+" - l'organitzador de l'esdeveniment,\n"
+"  - o el responsable de l'esdeveniment,\n"
+"  - o l'últim escriptor de la plantilla.\n"
 
 #. module: event
 #: model:ir.model,name:event.model_event_stage
 msgid "Event Stage"
-msgstr ""
+msgstr "Escenari de l'esdeveniment"
 
 #. module: event
 #: model:ir.actions.act_window,name:event.event_stage_action
 #: model:ir.ui.menu,name:event.event_stage_menu
 msgid "Event Stages"
-msgstr ""
+msgstr "Escenaris de l'esdeveniment"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_registration__event_begin_date
@@ -1431,19 +1945,19 @@ msgstr "Data d'inici esdeveniment"
 #. module: event
 #: model:ir.model,name:event.model_event_tag
 msgid "Event Tag"
-msgstr ""
+msgstr "Etiqueta de l'esdeveniment"
 
 #. module: event
 #: model:ir.model,name:event.model_event_tag_category
 msgid "Event Tag Category"
-msgstr ""
+msgstr "Categoria de l'etiqueta de l'esdeveniment"
 
 #. module: event
 #: model:ir.actions.act_window,name:event.event_tag_category_action_tree
 #: model:ir.ui.menu,name:event.menu_event_category
 #: model_terms:ir.ui.view,arch_db:event.event_tag_view_tree
 msgid "Event Tags Categories"
-msgstr ""
+msgstr "Categories d'etiquetes d'esdeveniments"
 
 #. module: event
 #: model:ir.model,name:event.model_event_type
@@ -1451,25 +1965,25 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:event.view_event_type_form
 #: model_terms:ir.ui.view,arch_db:event.view_event_type_tree
 msgid "Event Template"
-msgstr ""
+msgstr "Plantilla d'esdeveniment"
 
 #. module: event
 #: model:ir.model,name:event.model_event_type_ticket
 #: model_terms:ir.ui.view,arch_db:event.event_type_ticket_view_form_from_type
 msgid "Event Template Ticket"
-msgstr ""
+msgstr "Tiquet de plantilla d'esdeveniment"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_type_ticket_view_tree_from_type
 msgid "Event Template Tickets"
-msgstr ""
+msgstr "Tiquets de plantilla d'esdeveniment"
 
 #. module: event
 #: model:ir.actions.act_window,name:event.action_event_type
 #: model:ir.ui.menu,name:event.menu_event_type
 #: model_terms:ir.ui.view,arch_db:event.event_type_view_search
 msgid "Event Templates"
-msgstr ""
+msgstr "Plantilles d'esdeveniment"
 
 #. module: event
 #: model_terms:ir.actions.act_window,help:event.action_event_type
@@ -1478,18 +1992,21 @@ msgid ""
 "                    usually based on the types of events you organize (e.g. \"Workshop\",\n"
 "                    \"Roadshow\", \"Online Webinar\", etc)."
 msgstr ""
+"Plantilles d'esdeveniments combinen configuracions que utilitzeu sovint i són\n"
+"                    normalment basat en els tipus d'esdeveniments que organitzeu (p. ex. \"Treballador\"\n"
+"                    \"Roadshow\", \"Online Webinar\", etc)."
 
 #. module: event
 #: model:ir.model,name:event.model_event_event_ticket
 #: model:ir.model.fields,field_description:event.field_event_event__event_ticket_ids
 #: model:ir.model.fields,field_description:event.field_event_registration__event_ticket_id
 msgid "Event Ticket"
-msgstr ""
+msgstr "Tiquet d'esdeveniment"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_report_template_full_page_ticket
 msgid "Event Ticket For"
-msgstr ""
+msgstr "Tiquet d'esdeveniment per"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_type_mail__event_type_id
@@ -1499,7 +2016,7 @@ msgstr "Tipus d'esdeveniment"
 #. module: event
 #: model:ir.actions.act_window,name:event.event_registration_action_tree
 msgid "Event registrations"
-msgstr ""
+msgstr "Registres d'esdeveniments"
 
 #. module: event
 #: model_terms:ir.actions.act_window,help:event.event_stage_action
@@ -1507,11 +2024,13 @@ msgid ""
 "Event stages are used to track the progress of an Event from its origin "
 "until its conclusion."
 msgstr ""
+"Les etapes de l'esdeveniment s'utilitzen per seguir el progrés d'un "
+"esdeveniment des del seu origen fins a la seva conclusió."
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_event_ticket_form_view
 msgid "Event's Ticket"
-msgstr ""
+msgstr "Tiquet de l'esdeveniment"
 
 #. module: event
 #: model:ir.actions.server,name:event.event_mail_scheduler_ir_actions_server
@@ -1523,17 +2042,17 @@ msgstr "Programador de correus d'esdeveniments"
 #. module: event
 #: model:mail.template,name:event.event_subscription
 msgid "Event: Registration"
-msgstr ""
+msgstr "Esdeveniment: Registre"
 
 #. module: event
 #: model:mail.template,name:event.event_registration_mail_template_badge
 msgid "Event: Registration Badge"
-msgstr ""
+msgstr "Esdeveniment: Insígnia de registre"
 
 #. module: event
 #: model:mail.template,name:event.event_reminder
 msgid "Event: Reminder"
-msgstr ""
+msgstr "Esdeveniment: Recordatori"
 
 #. module: event
 #: model:ir.actions.act_window,name:event.action_event_view
@@ -1563,7 +2082,7 @@ msgstr "Programadors de correus d'esdeveniments"
 #: model_terms:ir.ui.view,arch_db:event.event_stage_view_form
 #: model_terms:ir.ui.view,arch_db:event.event_stage_view_tree
 msgid "Events Stage"
-msgstr ""
+msgstr "Escenari d'esdeveniments"
 
 #. module: event
 #: model:ir.model.fields,help:event.field_event_type__auto_confirm
@@ -1580,6 +2099,9 @@ msgid ""
 "Events will automatically be moved into this stage when they are finished. "
 "The event moved into this stage will automatically be set as green."
 msgstr ""
+"Els esdeveniments es mouran automàticament en aquesta etapa quan acabin. "
+"L'esdeveniment que s'ha mogut a aquesta etapa s'establirà automàticament com"
+" a verd."
 
 #. module: event
 #: model_terms:event.event,description:event.event_0
@@ -1589,6 +2111,10 @@ msgid ""
 "of future versions, achievements of the software, workshops, training "
 "sessions, etc...."
 msgstr ""
+"Cada any convidem a la nostra comunitat, als nostres socis i usuaris finals "
+"al fet que vinguin i ens coneguin! És l'esdeveniment ideal per reunir-se i "
+"presentar noves característiques, full de ruta de versions futures, èxits "
+"del programari, tallers, sessions de formació, etc."
 
 #. module: event
 #: model_terms:event.event,description:event.event_4
@@ -1598,6 +2124,8 @@ msgid ""
 "Every year we invite our community, partners and end-users to come and meet us! It's the ideal event to get together and present new features, roadmap of future versions, achievements of the software, workshops, training sessions, etc....\n"
 "            This event is also an opportunity to showcase our partners' case studies, methodology or developments. Be there and see directly from the source the features of the new version!"
 msgstr ""
+"Cada any convidem a la nostra comunitat, als nostres socis i usuaris finals al fet que vinguin i ens coneguin! És l'esdeveniment ideal per reunir-se i presentar noves característiques, full de ruta de versions futures, èxits del programari, tallers, sessions de formació, etc.\n"
+"           Aquest esdeveniment també és una oportunitat per a mostrar els estudis de cas, la metodologia o els desenvolupaments dels nostres socis. Sigues aquí i veure directament des de la font les característiques de la nova versió!"
 
 #. module: event
 #: model:event.type,name:event.event_type_0
@@ -1612,7 +2140,7 @@ msgstr "Previst"
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_tree
 msgid "Expected Attendees"
-msgstr ""
+msgstr "Assistents esperats"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_kanban
@@ -1622,23 +2150,24 @@ msgstr "Assistents prevists"
 #. module: event
 #: model:event.event,subtitle:event.event_3
 msgid "Experience live music, local food and beverages."
-msgstr ""
+msgstr "Experimenta música en viu, menjar local i begudes."
 
 #. module: event
 #: model:ir.actions.report,name:event.action_report_event_registration_foldable_badge
 msgid "Foldable Badge"
-msgstr ""
+msgstr "Insígnia plegable"
 
 #. module: event
 #: model:mail.template,report_name:event.event_registration_mail_template_badge
 msgid ""
 "Foldable Badge - {{ (object.event_id.name or 'Event').replace('/','_') }}"
 msgstr ""
+"Insígnia plegable - {{ (object.event_id.name or 'Event').replace('/','_') }}"
 
 #. module: event
 #: model:ir.actions.report,name:event.action_report_event_event_foldable_badge
 msgid "Foldable Badge Example"
-msgstr ""
+msgstr "Exemple d'insígnia plegable"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_stage__fold
@@ -1685,13 +2214,15 @@ msgstr ""
 #. module: event
 #: model:event.event.ticket,description:event.event_0_ticket_1
 msgid "For only 10, you gain access to catering. Yum yum."
-msgstr ""
+msgstr "Per només 10, tens accés al servei d'àpats. Yum yum."
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.res_config_settings_view_form
 msgid ""
 "Foster interactions between attendees by creating virtual conference rooms"
 msgstr ""
+"Fomentar les interaccions entre els assistents mitjançant la creació de "
+"sales de conferències virtuals"
 
 #. module: event
 #: model:event.event.ticket,name:event.event_0_ticket_0
@@ -1701,12 +2232,12 @@ msgstr "Lliure"
 #. module: event
 #: model:event.event.ticket,description:event.event_0_ticket_0
 msgid "Free entrance, no food !"
-msgstr ""
+msgstr "¡Entrada lliure, sense menjar!"
 
 #. module: event
 #: model:event.stage,description:event.event_stage_new
 msgid "Freshly created"
-msgstr ""
+msgstr "Acabat de crear"
 
 #. module: event
 #: model_terms:ir.actions.act_window,help:event.action_registration
@@ -1714,27 +2245,31 @@ msgid ""
 "From this dashboard you can report, analyze and detect trends regarding your"
 " event registrations."
 msgstr ""
+"Des d'aquest tauler de control es poden informar, analitzar i detectar "
+"tendències relatives als registres d'esdeveniments."
 
 #. module: event
 #: model:ir.actions.report,name:event.action_report_event_registration_full_page_ticket
 msgid "Full Page Ticket"
-msgstr ""
+msgstr "Tiquet de pàgina completa"
 
 #. module: event
 #: model:mail.template,report_name:event.event_subscription
 msgid ""
 "Full Page Ticket - {{ (object.event_id.name or 'Event').replace('/','') }}"
 msgstr ""
+"Tiquet de pàgina completa - {{ (object.event_id.name or "
+"'Event').replace('/','') }}"
 
 #. module: event
 #: model:ir.actions.report,name:event.action_report_event_event_full_page_ticket
 msgid "Full Page Ticket Example"
-msgstr ""
+msgstr "Tiquet de pàgina completa Exemple"
 
 #. module: event
 #: model:event.stage,description:event.event_stage_done
 msgid "Fully ended"
-msgstr ""
+msgstr "Totalment acabat"
 
 #. module: event
 #: model_terms:event.event,description:event.event_2
@@ -1750,39 +2285,39 @@ msgstr "Activitats futures"
 #. module: event
 #: model:event.event.ticket,name:event.event_4_ticket_0
 msgid "General Admission"
-msgstr ""
+msgstr "Admissió general"
 
 #. module: event
 #: model:event.event,subtitle:event.event_0
 msgid "Get Inspired • Stay Connected • Have Fun"
-msgstr ""
+msgstr "Inspirar-se • Estar connectat • Divertir-se"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_mail__mail_state
 msgid "Global communication Status"
-msgstr ""
+msgstr "Estat de la comunicació global"
 
 #. module: event
 #: model:event.event,name:event.event_1
 msgid "Great Reno Ballon Race"
-msgstr ""
+msgstr "Gran carrera de pilota de Ren"
 
 #. module: event
 #. openerp-web
 #: code:addons/event/static/src/js/tours/event_tour.js:0
 #, python-format
 msgid "Great! Now all you have to do is wait for your attendees to show up!"
-msgstr ""
+msgstr "Genial. Ara només has d'esperar que apareguin els teus assistents."
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_stage__legend_done
 msgid "Green Kanban Label"
-msgstr ""
+msgstr "Etiqueta kanban verda"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_stage__legend_normal
 msgid "Grey Kanban Label"
-msgstr ""
+msgstr "Etiqueta kanban grisa"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_search
@@ -1796,7 +2331,7 @@ msgstr "Agrupar per"
 #: model_terms:res.partner,website_description:event.res_partner_event_3
 #: model_terms:res.partner,website_description:event.res_partner_event_4
 msgid "Happy to be Sponsor"
-msgstr ""
+msgstr "Feliç de ser Patrocinador"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__has_message
@@ -1814,12 +2349,12 @@ msgstr ""
 #. module: event
 #: model_terms:event.event,description:event.event_3
 msgid "Here it is, the 12th edition of our Live Musical Festival !"
-msgstr ""
+msgstr "¡Ja és aquí la 12a edició del nostre Festival Musical en Viu!"
 
 #. module: event
 #: model:event.event,name:event.event_5
 msgid "Hockey Tournament"
-msgstr ""
+msgstr "Torneig d'hoquei"
 
 #. module: event
 #: model:ir.model.fields.selection,name:event.selection__event_mail__interval_unit__hours
@@ -1830,22 +2365,22 @@ msgstr "Hores"
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_report_template_foldable_badge
 msgid "How to Fold (1)"
-msgstr ""
+msgstr "Com doblegar (1)"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_report_template_foldable_badge
 msgid "How to Fold (2)"
-msgstr ""
+msgstr "Com doblegar (2)"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_report_template_foldable_badge
 msgid "How to Fold (3)"
-msgstr ""
+msgstr "Com doblegar (3)"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_report_template_foldable_badge
 msgid "How to Fold (4)"
-msgstr ""
+msgstr "Com doblegar (4)"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__id
@@ -1896,11 +2431,13 @@ msgstr "Si està marcat, alguns missatges tenen un error d'entrega."
 msgid ""
 "If ticketing is used, contains the earliest starting sale date of tickets."
 msgstr ""
+"Si s'utilitza la venda d'entrades, conté la data més primerenca d'inici de "
+"la venda d'entrades."
 
 #. module: event
 #: model_terms:event.event,ticket_instructions:event.event_0
 msgid "If you don't have this ticket, you will <b>not</b> be allowed entry!"
-msgstr ""
+msgstr "Si no tens aquest bitllet, <b>no</b> se li permeti l'entrada!"
 
 #. module: event
 #: model_terms:event.event,description:event.event_5
@@ -1908,6 +2445,8 @@ msgid ""
 "If you don't know anything about Hockey, this is a great introduction to this wonderful sport as you will will be able to see some training process and also have some time\n"
 "                to chat with experienced players and trainers once the tournament is over !"
 msgstr ""
+"Si no saps res d'Hoquei, és una gran introducció a aquest meravellós esportja que podrà veure algun procés de formació i també tindrà una mica de temps\n"
+"               xatejar amb jugadors experimentats i entrenadors una vegada que el torneig hagi acabat!"
 
 #. module: event
 #: model:ir.model.fields.selection,name:event.selection__event_mail__interval_unit__now
@@ -1918,7 +2457,7 @@ msgstr "Immediatament"
 #. module: event
 #: model_terms:event.event,ticket_instructions:event.event_0
 msgid "Important ticket information"
-msgstr ""
+msgstr "Informació important del tiquet"
 
 #. module: event
 #: code:addons/event/models/event_stage.py:0
@@ -1955,22 +2494,22 @@ msgstr "Introducció, CRM, gestió de vendes"
 #: code:addons/event/models/event_registration.py:0
 #, python-format
 msgid "Invalid event / ticket choice"
-msgstr ""
+msgstr "Esdeveniment / elecció del tiquet no vàlid"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event_ticket__sale_available
 msgid "Is Available"
-msgstr ""
+msgstr "Està disponible"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event_ticket__is_expired
 msgid "Is Expired"
-msgstr ""
+msgstr "Està caducat"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__is_finished
 msgid "Is Finished"
-msgstr ""
+msgstr "S'ha acabat"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__message_is_follower
@@ -1981,12 +2520,12 @@ msgstr "És seguidor"
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__is_one_day
 msgid "Is One Day"
-msgstr ""
+msgstr "És un dia"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__is_ongoing
 msgid "Is Ongoing"
-msgstr ""
+msgstr "Està en curs"
 
 #. module: event
 #: model:ir.model.fields,help:event.field_event_type__seats_max
@@ -1997,24 +2536,25 @@ msgstr ""
 #. module: event
 #: model_terms:event.event,description:event.event_2
 msgid "John DOE"
-msgstr ""
+msgstr "John DOE"
 
 #. module: event
 #: model_terms:event.event,description:event.event_1
 msgid "Join us for the greatest ballon race of all times !"
 msgstr ""
+"¡Uniu-vos a nosaltres per la millor cursa de globus de totes les vegades!"
 
 #. module: event
 #: model_terms:event.event,description:event.event_4
 #: model_terms:event.event,description:event.event_6
 #: model_terms:ir.ui.view,arch_db:event.event_default_descripton
 msgid "Join us for this 24 hours Event"
-msgstr ""
+msgstr "Uniu-vos a nosaltres per aquest esdeveniment de 24 hores"
 
 #. module: event
 #: model_terms:event.event,description:event.event_0
 msgid "Join us for this 3-day Event"
-msgstr ""
+msgstr "Uniu-vos a nosaltres per aquest esdeveniment de 3 dies"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__legend_blocked
@@ -2034,7 +2574,7 @@ msgstr "Estat kanban"
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__kanban_state_label
 msgid "Kanban State Label"
-msgstr ""
+msgstr "Etiqueta de l'estat de Kanban"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__legend_done
@@ -2097,13 +2637,13 @@ msgstr "Activitats endarrerides"
 #: code:addons/event/static/src/js/tours/event_tour.js:0
 #, python-format
 msgid "Let's create your first <b>event</b>."
-msgstr ""
+msgstr "Crearem el teu primer <b>esdeveniment</b>."
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_form
 #: model_terms:ir.ui.view,arch_db:event.view_event_type_form
 msgid "Limit Registrations"
-msgstr ""
+msgstr "Limita els registres"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_type__has_seats_limitation
@@ -2113,17 +2653,17 @@ msgstr "Seients limitats"
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.res_config_settings_view_form
 msgid "Live Broadcast"
-msgstr ""
+msgstr "Difusió en viu"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_res_config_settings__module_website_event_track_live
 msgid "Live Mode"
-msgstr ""
+msgstr "Mode en directe en viu"
 
 #. module: event
 #: model:event.event,name:event.event_3
 msgid "Live Music Festival"
-msgstr ""
+msgstr "Festival de música en viu"
 
 #. module: event
 #: model:ir.model.fields.selection,name:event.selection__event_mail__notification_type__mail
@@ -2176,7 +2716,7 @@ msgstr "Gestionar &amp; publicar un horari amb les pistes"
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_registration_tree
 msgid "Mark as Attending"
-msgstr ""
+msgstr "Marca com a pendent"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_registration_form
@@ -2186,7 +2726,7 @@ msgstr "Màrqueting"
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_event_ticket_view_tree_from_event
 msgid "Maximum"
-msgstr ""
+msgstr "Màxim"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__seats_limited
@@ -2208,7 +2748,7 @@ msgstr "Registres màxims"
 #: model:ir.model.fields,field_description:event.field_event_type_ticket__seats_max
 #: model_terms:ir.ui.view,arch_db:event.view_event_tree
 msgid "Maximum Seats"
-msgstr ""
+msgstr "Seients màxims"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_registration__utm_medium_id
@@ -2241,7 +2781,7 @@ msgstr "Mesos"
 #. module: event
 #: model:event.tag,name:event.event_tag_category_2_tag_2
 msgid "Music"
-msgstr ""
+msgstr "Música"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__my_activity_date_deadline
@@ -2271,7 +2811,7 @@ msgstr "Nou"
 #: model:ir.model.fields,field_description:event.field_event_event__activity_calendar_event_id
 #: model:ir.model.fields,field_description:event.field_event_registration__activity_calendar_event_id
 msgid "Next Activity Calendar Event"
-msgstr ""
+msgstr "Proper esdeveniment del calendari d'activitats"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__activity_date_deadline
@@ -2294,30 +2834,30 @@ msgstr "Tipus de la següent activitat"
 #. module: event
 #: model_terms:ir.actions.act_window,help:event.event_registration_action
 msgid "No Attendees expected yet!"
-msgstr ""
+msgstr "¡Encara no s'esperen assistents!"
 
 #. module: event
 #: model_terms:ir.actions.act_window,help:event.act_event_registration_from_event
 #: model_terms:ir.actions.act_window,help:event.action_registration
 msgid "No Attendees yet!"
-msgstr ""
+msgstr "¡Encara no hi ha assistents!"
 
 #. module: event
 #: model_terms:ir.actions.act_window,help:event.event_event_action_pivot
 msgid "No Event data yet!"
-msgstr ""
+msgstr "Encara no hi ha dades de l'esdeveniment!"
 
 #. module: event
 #: code:addons/event/models/event_registration.py:0
 #, python-format
 msgid "No more available seats for this ticket"
-msgstr ""
+msgstr "No hi ha més seients disponibles per a aquest tiquet"
 
 #. module: event
 #: code:addons/event/models/event_ticket.py:0
 #, python-format
 msgid "No more available seats for this ticket."
-msgstr ""
+msgstr "No hi ha més seients disponibles per a aquest tiquet"
 
 #. module: event
 #: code:addons/event/models/event_event.py:0
@@ -2353,7 +2893,7 @@ msgstr "Notes"
 #. module: event
 #: model_terms:ir.actions.act_window,help:event.action_event_mail
 msgid "Nothing Scheduled yet!"
-msgstr ""
+msgstr "¡Encara no hi ha res programat!"
 
 #. module: event
 #. openerp-web
@@ -2361,6 +2901,8 @@ msgstr ""
 #, python-format
 msgid "Now that your event is ready, click here to move it to another stage."
 msgstr ""
+"Ara que el teu esdeveniment està llest, fes clic aquí per moure'l a una "
+"altra etapa."
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__message_needaction_counter
@@ -2417,11 +2959,13 @@ msgstr "Objectius"
 #: model_terms:event.event,description:event.event_3
 msgid "Once again we assembled the most legendary bands in Rock history."
 msgstr ""
+"Una vegada més vam reunir les bandes més llegendàries de la història de "
+"Rock."
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_registration_search
 msgid "Ongoing Events"
-msgstr ""
+msgstr "Esdeveniments en curs"
 
 #. module: event
 #: model:event.tag,name:event.event_tag_category_3_tag_1
@@ -2431,7 +2975,7 @@ msgstr "En línia"
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.res_config_settings_view_form
 msgid "Online Exhibitors"
-msgstr ""
+msgstr "Exhibitors en línia"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_res_config_settings__module_website_event_sale
@@ -2444,11 +2988,13 @@ msgid ""
 "OpenElec Applications reserves the right to cancel, re-name or re-locate the"
 " event or change the dates on which it is held."
 msgstr ""
+"OpenElec Applications es reserva el dret a cancel·lar, reanomenar o reubicar"
+" l'esdeveniment o canviar les dates en què es celebra."
 
 #. module: event
 #: model:event.event,name:event.event_7
 msgid "OpenWood Collection Online Reveal"
-msgstr ""
+msgstr "Presentació en línia de la col·lecció OpenWood"
 
 #. module: event
 #: model:res.partner,website_short_description:event.res_partner_event_2
@@ -2456,6 +3002,8 @@ msgid ""
 "OpenWood brings honesty and seriousness to wood industry while helping "
 "customers deal with trees, flowers and fungi."
 msgstr ""
+"OpenWood aporta honestedat i serietat a la indústria fustera mentre ajuda "
+"els clients a tractar amb arbres, flors i fongs."
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__organizer_id
@@ -2468,6 +3016,8 @@ msgid ""
 "Our newest collection will be revealed online! Interact with us on our live "
 "streams!"
 msgstr ""
+"La nostra nova col·lecció serà revelada en línia. Interactui amb nosaltres "
+"en les nostres transmissions en directe."
 
 #. module: event
 #: model:ir.model.fields,help:event.field_event_event__legend_blocked
@@ -2476,6 +3026,8 @@ msgid ""
 "Override the default value displayed for the blocked state for kanban "
 "selection."
 msgstr ""
+"Sobreescriu el valor per defecte mostrat per a l'estat bloquejat per a la "
+"selecció kanban."
 
 #. module: event
 #: model:ir.model.fields,help:event.field_event_event__legend_done
@@ -2484,6 +3036,8 @@ msgid ""
 "Override the default value displayed for the done state for kanban "
 "selection."
 msgstr ""
+"Sobreescriu el valor per defecte mostrat per a l'estat fet per a la selecció"
+" kanban."
 
 #. module: event
 #: model:ir.model.fields,help:event.field_event_event__legend_normal
@@ -2492,6 +3046,8 @@ msgid ""
 "Override the default value displayed for the normal state for kanban "
 "selection."
 msgstr ""
+"Sobreescriu el valor per defecte mostrat per a l'estat normal per a la "
+"selecció kanban."
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_registration_search
@@ -2513,6 +3069,8 @@ msgstr "Telèfon"
 msgid ""
 "Please come <b>at least</b> 30 minutes before the beginning of the event."
 msgstr ""
+"Si us plau <b>com a mínim</b> 30 minuts abans del començament de "
+"l'esdeveniment."
 
 #. module: event
 #: model_terms:event.event,description:event.event_2
@@ -2538,7 +3096,7 @@ msgstr "Punt de venda (PDV), introducció a la personalització de respostes."
 #. module: event
 #: model:ir.model.fields,field_description:event.field_res_config_settings__module_website_event_track_quiz
 msgid "Quiz on Tracks"
-msgstr ""
+msgstr "Qüestionari en les pistes"
 
 #. module: event
 #: code:addons/event/models/event_stage.py:0
@@ -2557,7 +3115,7 @@ msgstr ""
 #: model:event.stage,legend_done:event.event_stage_new
 #, python-format
 msgid "Ready for Next Stage"
-msgstr ""
+msgstr "Preparat per propera etapa"
 
 #. module: event
 #. openerp-web
@@ -2566,11 +3124,12 @@ msgstr ""
 #, python-format
 msgid "Ready to <b>organize events</b> in a few minutes? Let's get started!"
 msgstr ""
+"Llegit a <b>organitzar esdeveniments</b> ¿d'aquí uns minuts? ¡Comencem!"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_stage__legend_blocked
 msgid "Red Kanban Label"
-msgstr ""
+msgstr "Etiqueta vermella de Kanban"
 
 #. module: event
 #: code:addons/event/models/event_ticket.py:0
@@ -2594,12 +3153,12 @@ msgstr "Data del registre"
 #. module: event
 #: model:res.groups,name:event.group_event_registration_desk
 msgid "Registration Desk"
-msgstr ""
+msgstr "Taulell d'inscripció"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event_ticket__end_sale_datetime
 msgid "Registration End"
-msgstr ""
+msgstr "Final del registre"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_registration_search
@@ -2619,7 +3178,7 @@ msgstr "Registre de correus electrònics"
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event_ticket__start_sale_datetime
 msgid "Registration Start"
-msgstr ""
+msgstr "Inici del registre"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_res_config_settings__module_website_event_questions
@@ -2630,7 +3189,7 @@ msgstr "Registre d'enquesta"
 #: code:addons/event/models/event_ticket.py:0
 #, python-format
 msgid "Registration for %s"
-msgstr ""
+msgstr "Registre per %s"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_mail_form
@@ -2640,7 +3199,7 @@ msgstr "Registrament de correu electrònic"
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__event_registrations_open
 msgid "Registration open"
-msgstr ""
+msgstr "Registre obert"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event_ticket__registration_ids
@@ -2655,11 +3214,15 @@ msgid ""
 "- there are seats available on event\n"
 "- the tickets are sellable (if ticketing is used)"
 msgstr ""
+"Els registres estan oberts si:\n"
+"- l'esdeveniment no ha finalitzat\n"
+"- hi ha seients disponibles a l'esdeveniment\n"
+"- les entrades són vendibles (si s'utilitza la venda d'entrades)"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__event_registrations_started
 msgid "Registrations started"
-msgstr ""
+msgstr "Registres iniciats"
 
 #. module: event
 #: model:ir.ui.menu,name:event.menu_reporting_events
@@ -2708,7 +3271,7 @@ msgstr "Programació i rutes"
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_mail__scheduled_date
 msgid "Schedule Date"
-msgstr ""
+msgstr "Data de la planificació"
 
 #. module: event
 #: model_terms:ir.actions.act_window,help:event.action_event_view
@@ -2716,6 +3279,8 @@ msgid ""
 "Schedule and organize your events: handle registrations, send automated "
 "confirmation emails, sell tickets, etc."
 msgstr ""
+"Programi i organitzi els seus esdeveniments: gestioni les inscripcions, "
+"enviï correus electrònics de confirmació automàtics, vengui entrades, etc."
 
 #. module: event
 #: model:ir.model.fields.selection,name:event.selection__event_mail__mail_state__scheduled
@@ -2730,18 +3295,18 @@ msgstr "Temps programat"
 #. module: event
 #: model_terms:event.event,description:event.event_5
 msgid "Seasoned Hockey Fans and curious people, this tournament is for you !"
-msgstr ""
+msgstr "Fans d'hoquei i gent curiosa, aquest torneig és per a tu!"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event_ticket__seats_limited
 #: model:ir.model.fields,field_description:event.field_event_type_ticket__seats_limited
 msgid "Seats Limit"
-msgstr ""
+msgstr "Seients límit"
 
 #. module: event
 #: model:event.type,name:event.event_type_data_ticket
 msgid "Sell Online"
-msgstr ""
+msgstr "Venda en línia"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.res_config_settings_view_form
@@ -2796,6 +3361,8 @@ msgid ""
 "Shangai Pterocarpus Furniture brings honesty and seriousness to wood "
 "industry while helping customers deal with trees, flowers and fungi."
 msgstr ""
+"Shangai Pterocarpus Furniture aporta honestedat i serietat a la indústria "
+"fustera, mentre que ajuda els clients a tractar amb arbres, flors i fongs."
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_search
@@ -2818,7 +3385,7 @@ msgstr "Text original"
 #: model:event.tag,name:event.event_tag_category_2_tag_3
 #: model:event.type,name:event.event_type_2
 msgid "Sport"
-msgstr ""
+msgstr "Esport"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__stage_id
@@ -2839,7 +3406,7 @@ msgstr "Nom de la fase"
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_stage__description
 msgid "Stage description"
-msgstr ""
+msgstr "Descripció de l'escenari"
 
 #. module: event
 #: model:event.event.ticket,name:event.event_0_ticket_1
@@ -2863,7 +3430,7 @@ msgstr "Data d'inici establerta"
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__start_sale_datetime
 msgid "Start sale date"
-msgstr ""
+msgstr "Data d'inici de venda"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_registration__state
@@ -2891,6 +3458,9 @@ msgid ""
 "Tag color. No color means no display in kanban or front-end, to distinguish "
 "internal tags from public categorization tags."
 msgstr ""
+"Color de l'etiqueta. Sense color significa que no es mostra en kanban o "
+"front-end, per a distingir les etiquetes internes de les etiquetes de "
+"categorització pública."
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__tag_ids
@@ -2903,12 +3473,13 @@ msgstr "Etiquetes"
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_stage_view_form
 msgid "Task in progress. Click to block or set as done."
-msgstr ""
+msgstr "Tasca en curs. Feu clic per blocar o establir com s'ha fet."
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_stage_view_form
 msgid "Task is blocked. Click to unblock or set as done."
 msgstr ""
+"La tasca està bloquejada. Feu clic per desbloquejar o establir com s'ha fet."
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__event_type_id
@@ -2923,7 +3494,7 @@ msgstr "Plantilla"
 #: model:ir.model.fields,field_description:event.field_event_mail__template_model_id
 #: model:ir.model.fields,field_description:event.field_event_type_mail__template_model_id
 msgid "Template Model"
-msgstr ""
+msgstr "Model de plantilla"
 
 #. module: event
 #: model:event.event,subtitle:event.event_1
@@ -2931,6 +3502,8 @@ msgid ""
 "The Great Reno Balloon Race is the world's largest free hot-air ballooning "
 "event."
 msgstr ""
+"La Gran Reno Balloon Race és l'esdeveniment de globus d'aire calent més gran"
+" del món."
 
 #. module: event
 #: model_terms:event.event,description:event.event_5
@@ -2938,6 +3511,8 @@ msgid ""
 "The best Hockey teams of the country will compete for the national Hockey "
 "trophy."
 msgstr ""
+"Els millors equips d'hoquei del país competiran pel trofeu nacional "
+"d'hoquei."
 
 #. module: event
 #: model_terms:event.event,description:event.event_1
@@ -2945,6 +3520,8 @@ msgid ""
 "The best aeronauts of the world will gather on this event to offer you the "
 "most spectacular show."
 msgstr ""
+"Els millors aeronàutics del món es reuniran en aquest esdeveniment per "
+"oferir-vos l'espectacle més espectacular."
 
 #. module: event
 #: code:addons/event/models/event_event.py:0
@@ -2955,12 +3532,12 @@ msgstr "La data de tancament no pot ser anterior a la d'inici"
 #. module: event
 #: model:event.stage,description:event.event_stage_cancelled
 msgid "The event has been cancelled"
-msgstr ""
+msgstr "L'esdeveniment s'ha cancel·lat"
 
 #. module: event
 #: model:event.stage,description:event.event_stage_announced
 msgid "The event has been publicly announced"
-msgstr ""
+msgstr "L'esdeveniment s'ha anunciat públicament"
 
 #. module: event
 #: model:ir.model.fields,help:event.field_event_event__event_registrations_sold_out
@@ -2968,6 +3545,9 @@ msgid ""
 "The event is sold out if no more seats are available on event. If ticketing "
 "is used and all tickets are sold out, the event will be sold out."
 msgstr ""
+"L'esdeveniment està esgotat si no hi ha més seients disponibles en "
+"l'esdeveniment. Si s'utilitza la venda d'entrades i s'esgoten totes, "
+"l'esdeveniment estarà esgotat."
 
 #. module: event
 #: model_terms:event.event,description:event.event_7
@@ -2975,6 +3555,7 @@ msgid ""
 "The finest OpenWood furnitures are coming to your house in a brand new "
 "collection"
 msgstr ""
+"Els millors mobles d'OpenWood venen a casa teva en una col·lecció nova"
 
 #. module: event
 #: code:addons/event/models/event_ticket.py:0
@@ -2983,22 +3564,25 @@ msgid ""
 "The following tickets cannot be deleted while they have one or more registrations linked to them:\n"
 "- %s"
 msgstr ""
+"Els següents bitllets no poden ser eliminats mentre tenen un o més registres enllaçats a ells:\n"
+"- %s"
 
 #. module: event
 #: model:event.stage,description:event.event_stage_booked
 msgid "The place has been reserved"
-msgstr ""
+msgstr "El lloc ha estat reservat"
 
 #. module: event
 #: model_terms:event.event,description:event.event_1
 msgid "The safety of our attendees and our aeronauts comes first !"
 msgstr ""
+"La seguretat dels nostres assistents i dels nostres aeronautas és el primer."
 
 #. module: event
 #: code:addons/event/models/event_ticket.py:0
 #, python-format
 msgid "The stop date cannot be earlier than the start date."
-msgstr ""
+msgstr "La data de parada no pot ser anterior a la data d'inici."
 
 #. module: event
 #: model_terms:event.event,description:event.event_0
@@ -3007,6 +3591,9 @@ msgid ""
 "methodology or developments. Be there and see directly from the source the "
 "features of the version 12!"
 msgstr ""
+"Aquest esdeveniment també és una oportunitat per a mostrar els estudis de "
+"cas, la metodologia o els desenvolupaments dels nostres socis. Aneu aquí i "
+"veieu directament des de la font les característiques de la versió 12!"
 
 #. module: event
 #: model_terms:event.event,description:event.event_7
@@ -3014,12 +3601,14 @@ msgid ""
 "This event is fully online and FREE, if you have paid for tickets, you should get a refund.<br>\n"
 "        It will require a good Internet connection to get the best video quality."
 msgstr ""
+"Aquest esdeveniment està totalment en línia i és gratuït, si s'ha pagat per bitllets, s'hauria d'obtenir un reemborsament.<br>\n"
+"        Necessitarà una bona connexió a Internet per a obtenir la millor qualitat de vídeo."
 
 #. module: event
 #: model:ir.model.fields,help:event.field_event_event__ticket_instructions
 #: model:ir.model.fields,help:event.field_event_type__ticket_instructions
 msgid "This information will be printed on your tickets."
-msgstr ""
+msgstr "Aquesta informació s'imprimirà als teus tiquets."
 
 #. module: event
 #. openerp-web
@@ -3027,6 +3616,7 @@ msgstr ""
 #, python-format
 msgid "This is the <b>name</b> your guests will see when registering."
 msgstr ""
+"Això és el <b>nom</b> els vostres convidats ho veuran en registrar-se."
 
 #. module: event
 #: model_terms:event.event,description:event.event_1
@@ -3034,6 +3624,8 @@ msgid ""
 "This is the perfect place for spending a nice day with your family, we "
 "guarantee you will be leaving with beautiful everlasting memories !"
 msgstr ""
+"Aquest és el lloc perfecte per passar un bon dia amb la teva família, "
+"garantim que sortiràs amb bonics records perennes!"
 
 #. module: event
 #: model_terms:event.event,description:event.event_3
@@ -3041,18 +3633,21 @@ msgid ""
 "This is the perfect place for spending a nice time with your friends while "
 "listening to some of the most iconic rock songs of all times!"
 msgstr ""
+"Aquest és el lloc perfecte per passar un bon temps amb els vostres amics "
+"mentre escolteu algunes de les cançons de rock més icòniques de tots els "
+"temps!"
 
 #. module: event
 #: code:addons/event/models/event_event.py:0
 #: code:addons/event/models/event_event.py:0
 #, python-format
 msgid "This operator is not supported"
-msgstr ""
+msgstr "Aquest operador no és compatible"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_stage_view_form
 msgid "This step is done. Click to block or set in progress."
-msgstr ""
+msgstr "Aquest pas està fet. Faci clic per a bloquejar o posar en marxa."
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_event_ticket_view_form_from_event
@@ -3062,18 +3657,14 @@ msgstr "Tiquet"
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_type_form
 msgid "Ticket Extra Instructions"
-msgstr ""
+msgstr "Instruccions extres del tiquet"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__ticket_instructions
 #: model:ir.model.fields,field_description:event.field_event_type__ticket_instructions
-msgid "Ticket Instructions"
-msgstr ""
-
-#. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_form
-msgid "Ticket Intructions"
-msgstr ""
+msgid "Ticket Instructions"
+msgstr "Instruccions del tiquet"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_event_ticket_form_view
@@ -3089,6 +3680,8 @@ msgid ""
 "Ticket types allow you to distinguish your attendees. Let's <b>create</b> a "
 "new one."
 msgstr ""
+"Els tipus de tiquets us permeten distingir els assistents. Anem <b>crear</b>"
+" un de nou."
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_type__event_type_ticket_ids
@@ -3103,6 +3696,7 @@ msgstr "Tiquets"
 #: model_terms:event.event,ticket_instructions:event.event_0
 msgid "Tickets can be printed or scanned directly from your phone."
 msgstr ""
+"Els tiquets es poden imprimir o escanejar directament des del telèfon."
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__date_tz
@@ -3125,7 +3719,7 @@ msgstr "Total"
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_form
 msgid "Total Registrations for this Event"
-msgstr ""
+msgstr "Total d'inscripcions per a aquest esdeveniment"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_res_config_settings__module_website_event_track
@@ -3143,6 +3737,8 @@ msgid ""
 "Tree Dealers brings honesty and seriousness to wood industry while helping "
 "customers deal with trees, flowers and fungi."
 msgstr ""
+"Tree Dealers aporta honestedat i serietat al sector de la fusta al mateix "
+"temps que ajuda als clients a ocupar-se dels arbres, les flors i els fongs."
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_type_mail__interval_type
@@ -3181,7 +3777,7 @@ msgstr "Reserves de places no confirmades"
 #: model:ir.model.fields,field_description:event.field_event_event_ticket__seats_unconfirmed
 #: model_terms:ir.ui.view,arch_db:event.view_event_tree
 msgid "Unconfirmed Seats"
-msgstr ""
+msgstr "Valors no confirmats"
 
 #. module: event
 #: model_terms:ir.actions.act_window,help:event.action_event_mail
@@ -3189,6 +3785,8 @@ msgid ""
 "Under this technical menu you will find all scheduled communication related "
 "to your events."
 msgstr ""
+"En aquest menú tècnic trobareu totes les comunicacions programades "
+"relacionades amb els esdeveniments."
 
 #. module: event
 #: model_terms:event.event,description:event.event_2
@@ -3229,6 +3827,8 @@ msgstr "Propers/En curs"
 #: model_terms:ir.actions.act_window,help:event.event_tag_category_action_tree
 msgid "Use Event Tag Categories to classify and organize your event tags."
 msgstr ""
+"Utilitzeu les categories d'etiquetes d'esdeveniment per classificar i "
+"organitzar les etiquetes d'esdeveniment."
 
 #. module: event
 #. openerp-web
@@ -3236,16 +3836,19 @@ msgstr ""
 #, python-format
 msgid "Use the <b>breadcrumbs</b> to go back to your kanban overview."
 msgstr ""
+"Utilitza el<b>fil d'Ariadna</b> per tornar a la vista general del kanban."
 
 #. module: event
 #: model_terms:ir.actions.act_window,help:event.event_event_action_pivot
 msgid "Use this report to compare or aggregate event performances."
 msgstr ""
+"Utilitzeu aquest informe per comparar o agregar les actuacions "
+"d'esdeveniments."
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event_ticket__seats_used
 msgid "Used Seats"
-msgstr ""
+msgstr "Seients usats"
 
 #. module: event
 #: model:res.groups,name:event.group_event_user
@@ -3258,19 +3861,19 @@ msgstr "Usuari"
 #: model:event.event.ticket,name:event.event_3_ticket_1
 #: model:event.event.ticket,name:event.event_7_ticket_2
 msgid "VIP"
-msgstr ""
+msgstr "VIP"
 
 #. module: event
 #: code:addons/event/models/event_event.py:0
 #: code:addons/event/models/event_event.py:0
 #, python-format
 msgid "Value should be True or False (not %s)"
-msgstr ""
+msgstr "El valor ha de ser cert o fals (no %s)"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__address_id
 msgid "Venue"
-msgstr ""
+msgstr "Lloc"
 
 #. module: event
 #: code:addons/event/models/event_mail.py:0
@@ -3286,6 +3889,8 @@ msgid ""
 "Wait until Attendees register to your Event or create their registrations "
 "manually."
 msgstr ""
+"Espereu fins que els assistents es registrin a l'esdeveniment o creeu els "
+"seus registres manualment."
 
 #. module: event
 #: model_terms:event.event,description:event.event_2
@@ -3301,6 +3906,8 @@ msgid ""
 "We reserve the right to cancel, re-name or re-locate the event or change the"
 " dates on which it is held in case the weather fails us."
 msgstr ""
+"Ens reservem el dret a cancel·lar, reanomenar o reubicar l'esdeveniment o "
+"canviar les dates en les quals se celebra en cas que el temps ens falli."
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__website_message_ids
@@ -3323,7 +3930,7 @@ msgstr "Setmanes"
 #. module: event
 #: model_terms:event.event,description:event.event_0
 msgid "What's new?"
-msgstr ""
+msgstr "¿Què és nou?"
 
 #. module: event
 #. openerp-web
@@ -3333,16 +3940,18 @@ msgid ""
 "When will your event take place? <b>Select</b> the start and end dates "
 "<b>and click Apply</b>."
 msgstr ""
+"¿Quan tindrà lloc el seu esdeveniment? <b>Selecciona</b> les dates d'inici i"
+" final<b>i feu clic a Aplicar</b>."
 
 #. module: event
 #: model:ir.model.fields,help:event.field_event_event__is_ongoing
 msgid "Whether event has begun"
-msgstr ""
+msgstr "Si l'esdeveniment ha començat"
 
 #. module: event
 #: model:event.event.ticket,description:event.event_0_ticket_2
 msgid "You are truly among the best."
-msgstr ""
+msgstr "Realment estàs entre els millors."
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_stage_view_form
@@ -3359,32 +3968,34 @@ msgid ""
 "You can define here labels that will be displayed for the state instead\n"
 "                            of the default labels in the kanban view."
 msgstr ""
+"Aquí podeu definir les etiquetes que es mostraran per a l'estat\n"
+"                          de les etiquetes predeterminades a la vista kanban."
 
 #. module: event
 #: model:mail.template,subject:event.event_registration_mail_template_badge
 msgid "Your badge for {{ object.event_id.name }}"
-msgstr ""
+msgstr "La vostra insígnia per {{object.event.id.name }}"
 
 #. module: event
 #: model:mail.template,subject:event.event_subscription
 msgid "Your registration at {{ object.event_id.name }}"
-msgstr ""
+msgstr "El vostre registre a {{object.event.id.name }}"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_event_view_form_quick_create
 #: model_terms:ir.ui.view,arch_db:event.view_event_form
 msgid "e.g. Conference for Architects"
-msgstr ""
+msgstr "ex. Conferència per a Arquitectes"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_type_form
 msgid "e.g. Online Conferences"
-msgstr ""
+msgstr "p. ex. Conferències en línia"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_event_ticket_form_view
 msgid "e.g. VIP Ticket"
-msgstr ""
+msgstr "p. ex. tiquet VIP"
 
 #. module: event
 #: model_terms:event.event,description:event.event_2
@@ -3394,7 +4005,7 @@ msgstr "events@odoo.com"
 #. module: event
 #: model_terms:event.event,description:event.event_7
 msgid "events@penwood.example.com"
-msgstr ""
+msgstr "events@penwood.example.com"
 
 #. module: event
 #: model_terms:event.event,description:event.event_0
@@ -3402,7 +4013,7 @@ msgstr ""
 #: model_terms:event.event,description:event.event_3
 #: model_terms:event.event,description:event.event_5
 msgid "events@yourcompany.com"
-msgstr ""
+msgstr "events@yourcompany.com"
 
 #. module: event
 #: code:addons/event/models/event_registration.py:0
@@ -3426,7 +4037,7 @@ msgstr "Setmana següent"
 #: code:addons/event/models/event_registration.py:0
 #, python-format
 msgid "on %(date)s"
-msgstr ""
+msgstr "en %(date)s"
 
 #. module: event
 #: model:ir.model.fields,help:event.field_event_event__event_registrations_started
@@ -3434,11 +4045,13 @@ msgid ""
 "registrations have started if the current datetime is after the earliest "
 "starting date of tickets."
 msgstr ""
+"les inscripcions han començat si la data actual és posterior a la data més "
+"primerenca d'inici de les entrades."
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_event_ticket_view_kanban_from_event
 msgid "reserved +"
-msgstr ""
+msgstr "reservat +"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_form
@@ -3461,9 +4074,9 @@ msgstr "demà"
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_event_ticket_view_kanban_from_event
 msgid "unconfirmed"
-msgstr ""
+msgstr "no confirmat"
 
 #. module: event
 #: model:mail.template,subject:event.event_reminder
 msgid "{{ object.event_id.name }}: {{ object.get_date_range_str() }}"
-msgstr ""
+msgstr "{{ object.event_id.name }}: {{ object.get_date_range_str() }}"

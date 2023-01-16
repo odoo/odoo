@@ -4,6 +4,7 @@
 # 
 # Translators:
 # Martin Trigaux, 2021
+# Malaz Abuidris <msea@odoo.com>, 2022
 # 
 msgid ""
 msgstr ""
@@ -11,7 +12,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-07-12 07:50+0000\n"
 "PO-Revision-Date: 2021-09-14 12:26+0000\n"
-"Last-Translator: Martin Trigaux, 2021\n"
+"Last-Translator: Malaz Abuidris <msea@odoo.com>, 2022\n"
 "Language-Team: Arabic (https://www.transifex.com/odoo/teams/41243/ar/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -23,7 +24,7 @@ msgstr ""
 #: code:addons/snailmail_account/wizard/account_invoice_send.py:0
 #, python-format
 msgid "%s of the selected invoice(s) had an invalid address and were not sent"
-msgstr ""
+msgstr "%s فاتورة (فواتير) محددة كان لها عنوان غير صالح ولم يتم إرسالها "
 
 #. module: snailmail_account
 #: model_terms:ir.ui.view,arch_db:snailmail_account.account_invoice_send_inherit_account_wizard_form
@@ -31,6 +32,8 @@ msgid ""
 "<i class=\"fa fa-info-circle\" role=\"img\" aria-label=\"Warning\" title=\"Make sure you have enough Stamps on your account.\"/>\n"
 "                                )"
 msgstr ""
+"<i class=\"fa fa-info-circle\" role=\"img\" aria-label=\"Warning\" title=\"تأكد من أنك تملك طوابع كافية في حسابك. \"/>\n"
+"                                )"
 
 #. module: snailmail_account
 #: model_terms:ir.ui.view,arch_db:snailmail_account.res_config_settings_view_form
@@ -48,6 +51,9 @@ msgid ""
 "                                    Some customer addresses are incomplete.\n"
 "                                </span>"
 msgstr ""
+"<span class=\"text-danger\">\n"
+"                                    بعض عناوين العملاء غير مكتملة.\n"
+"                                </span>"
 
 #. module: snailmail_account
 #: model_terms:ir.ui.view,arch_db:snailmail_account.account_invoice_send_inherit_account_wizard_form
@@ -55,6 +61,8 @@ msgid ""
 "<span class=\"text-muted\" attrs=\"{'invisible': [('invalid_addresses', '!=', 0)]}\"> to: </span>\n"
 "                                <span class=\"text-danger\" attrs=\"{'invisible': [('invalid_addresses', '=', 0)]}\"> The customer's address is incomplete: </span>"
 msgstr ""
+"<span class=\"text-muted\" attrs=\"{'invisible': [('invalid_addresses', '!=', 0)]}\"> إلى: </span>\n"
+"                                <span class=\"text-danger\" attrs=\"{'invisible': [('invalid_addresses', '=', 0)]}\"> عنوان العميل غير مكتمل: </span>"
 
 #. module: snailmail_account
 #: model:ir.model,name:snailmail_account.model_account_invoice_send
@@ -67,16 +75,17 @@ msgid ""
 "Allows to send the document by Snailmail (conventional posting delivery "
 "service)"
 msgstr ""
+"يتيح لك إرسال المستند عن طريق البريد العادي (خدمة توصيل البريد التقليدية) "
 
 #. module: snailmail_account
 #: model:ir.model,name:snailmail_account.model_res_company
 msgid "Companies"
-msgstr "شركات"
+msgstr "الشركات "
 
 #. module: snailmail_account
 #: model:ir.model,name:snailmail_account.model_res_config_settings
 msgid "Config Settings"
-msgstr "ضبط الاعدادات"
+msgstr "تهيئة الإعدادات "
 
 #. module: snailmail_account
 #: model_terms:ir.ui.view,arch_db:snailmail_account.account_invoice_send_inherit_account_wizard_form
@@ -96,7 +105,7 @@ msgstr "أنشئ في"
 #. module: snailmail_account
 #: model:ir.model.fields,field_description:snailmail_account.field_snailmail_confirm_invoice__display_name
 msgid "Display Name"
-msgstr "الاسم المعروض"
+msgstr "اسم العرض "
 
 #. module: snailmail_account
 #: model:ir.model.fields,field_description:snailmail_account.field_snailmail_confirm_invoice__id
@@ -109,28 +118,28 @@ msgstr "المُعرف"
 #: model:ir.model.fields,field_description:snailmail_account.field_account_invoice_send__invalid_partner_ids
 #, python-format
 msgid "Invalid Addresses"
-msgstr ""
+msgstr "العناوين غير صالحة "
 
 #. module: snailmail_account
 #: model:ir.model.fields,field_description:snailmail_account.field_account_invoice_send__invalid_addresses
 msgid "Invalid Addresses Count"
-msgstr ""
+msgstr "عدد العناوين غير الصالحة "
 
 #. module: snailmail_account
 #: model:ir.model.fields,field_description:snailmail_account.field_account_invoice_send__invalid_invoices
 msgid "Invalid Invoices Count"
-msgstr ""
+msgstr "عدد الفواتير غير الصالحة "
 
 #. module: snailmail_account
 #: code:addons/snailmail_account/wizard/account_invoice_send.py:0
 #, python-format
 msgid "Invoice"
-msgstr "فاتورة"
+msgstr "الفاتورة "
 
 #. module: snailmail_account
 #: model:ir.model.fields,field_description:snailmail_account.field_snailmail_confirm_invoice__invoice_send_id
 msgid "Invoice Send"
-msgstr ""
+msgstr "إرسال الفاتورة "
 
 #. module: snailmail_account
 #: model:ir.model.fields,field_description:snailmail_account.field_snailmail_confirm_invoice____last_update
@@ -150,7 +159,7 @@ msgstr "آخر تحديث في"
 #. module: snailmail_account
 #: model:ir.model.fields,field_description:snailmail_account.field_snailmail_confirm_invoice__model_name
 msgid "Model Name"
-msgstr "اسم الكائن"
+msgstr "اسم النموذج "
 
 #. module: snailmail_account
 #: model:ir.model.fields,field_description:snailmail_account.field_account_invoice_send__partner_id
@@ -162,12 +171,12 @@ msgstr "الشريك"
 #: model:ir.model.fields,field_description:snailmail_account.field_res_company__invoice_is_snailmail
 #: model:ir.model.fields,field_description:snailmail_account.field_res_config_settings__invoice_is_snailmail
 msgid "Send by Post"
-msgstr "إرساله بريديًا"
+msgstr "الإرسال عبر البريد "
 
 #. module: snailmail_account
 #: model:ir.model,name:snailmail_account.model_snailmail_confirm_invoice
 msgid "Snailmail Confirm Invoice"
-msgstr ""
+msgstr "فاتورة تأكيد البريد العادي "
 
 #. module: snailmail_account
 #: model:ir.model.fields,field_description:snailmail_account.field_account_invoice_send__snailmail_cost
@@ -178,4 +187,4 @@ msgstr "الطوابع البريدية"
 #: code:addons/snailmail_account/wizard/account_invoice_send.py:0
 #, python-format
 msgid "You cannot send an invoice which has no partner assigned."
-msgstr ""
+msgstr "لا يمكنك إرسال فاتورة ليس لها شريك معين. "

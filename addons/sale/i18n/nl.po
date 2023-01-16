@@ -3,16 +3,16 @@
 # 	* sale
 # 
 # Translators:
-# Martin Trigaux, 2021
-# Erwin van der Ploeg <erwin@odooexperts.nl>, 2021
+# Martin Trigaux, 2022
+# Erwin van der Ploeg <erwin@odooexperts.nl>, 2022
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 15.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-11-16 13:19+0000\n"
+"POT-Creation-Date: 2022-01-24 08:20+0000\n"
 "PO-Revision-Date: 2021-09-14 12:26+0000\n"
-"Last-Translator: Erwin van der Ploeg <erwin@odooexperts.nl>, 2021\n"
+"Last-Translator: Erwin van der Ploeg <erwin@odooexperts.nl>, 2022\n"
 "Language-Team: Dutch (https://www.transifex.com/odoo/teams/41243/nl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -466,7 +466,7 @@ msgid ""
 msgstr ""
 "<div style=\"margin: 0px; padding: 0px;\">\n"
 "    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
-"        <t t-set=\"doc_name\" t-value=\"'quotation' if object.state in ('draft', 'sent') else 'order'\"/>\n"
+"        <t t-set=\"doc_name\" t-value=\"'offerte' if object.state in ('draft', 'sent') else 'orderbevestiging'\"/>\n"
 "        Hallo,\n"
 "        <br/><br/>\n"
 "        Je\n"
@@ -792,7 +792,7 @@ msgstr "<strong>Deze offerte is geannuleerd.</strong>"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
 msgid "<strong>Your Reference:</strong>"
-msgstr "<strong>Jouw referentie:</strong>"
+msgstr "<strong>Klantreferentie:</strong>"
 
 #. module: sale
 #: model:ir.model.constraint,message:sale.constraint_sale_order_date_order_conditional_required
@@ -1366,8 +1366,8 @@ msgstr ""
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__sale_payment_acquirer_onboarding_wizard__payment_method__stripe
-msgid "Credit card (via Stripe)"
-msgstr "Credit card (via Stripe)"
+msgid "Credit & Debit card (via Stripe)"
+msgstr "Creditcard en betaalpas (via Stripe)"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_advance_payment_inv__currency_id
@@ -1713,6 +1713,12 @@ msgstr "Aanbetaling: %s"
 #, python-format
 msgid "Down Payments"
 msgstr "Aanbetalingen"
+
+#. module: sale
+#: code:addons/sale/wizard/sale_make_invoice_advance.py:0
+#, python-format
+msgid "Down payment"
+msgstr "Aanbetaling"
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__sale_advance_payment_inv__advance_payment_method__fixed
@@ -3259,7 +3265,7 @@ msgstr "Offertes &amp; Orders"
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_order_report_quotation_salesteam
 msgid "Quotations Analysis"
-msgstr "Offerte analyse"
+msgstr "Offerteanalyse"
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.act_res_partner_2_sale_order
@@ -3295,6 +3301,11 @@ msgstr "Referentie"
 msgid "Reference of the document that generated this sales order request."
 msgstr ""
 "Referentie van het document dat deze verkooporder aanvraag genereerde."
+
+#. module: sale
+#: model:ir.model,name:sale.model_account_payment_register
+msgid "Register Payment"
+msgstr "Betaling registreren"
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__sale_advance_payment_inv__advance_payment_method__delivered
@@ -4119,7 +4130,7 @@ msgid ""
 "The invoice is marked as paid and the payment is registered in the payment journal defined in the configuration of the payment acquirer.\n"
 "This mode is advised if you issue the final invoice at the order and not after the delivery."
 msgstr ""
-"De factuur wordt automatisch gegenereerd en is beschikbaar in het klantportal wanneer de transactie wordt bevestigd door de betalingsprovider.\n"
+"De factuur wordt automatisch gegenereerd en is beschikbaar in het klantportaal wanneer de transactie wordt bevestigd door de betalingsprovider.\n"
 "De factuur is gemarkeerd als betaald en de betaling is geregistreerd in het betalingsdagboek dat is gedefinieerd in de configuratie van de betalingsprovider.\n"
 "Deze modus wordt aanbevolen als je de eindfactuur bij de order verstrekt en niet na de levering."
 
@@ -4198,8 +4209,8 @@ msgid ""
 msgstr ""
 "Het product dat gebruikt wordt voor een aanbetaling moet een "
 "facturatiebeleid hebben dat ingesteld is op \"bestelde hoeveelheden\".  "
-"Graag je aanbetaling product bijwerken zodat jij een aanbetalingsfactuur "
-"kunt aanmaken."
+"Graag je aanbetaling product bijwerken zodat je een aanbetalingsfactuur kunt"
+" aanmaken."
 
 #. module: sale
 #: code:addons/sale/controllers/portal.py:0
@@ -4470,7 +4481,7 @@ msgstr "USPS connector"
 #. module: sale
 #: model:ir.model,name:sale.model_utm_campaign
 msgid "UTM Campaign"
-msgstr "UTM-campagne"
+msgstr "UTM Campagne"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__price_unit
@@ -4534,18 +4545,18 @@ msgstr "Excl. BTW"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_report__untaxed_amount_invoiced
 msgid "Untaxed Amount Invoiced"
-msgstr "Onbelast bedrag gefactureerd"
+msgstr "Totaal excl. BTW gefactureerd"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__untaxed_amount_to_invoice
 #: model:ir.model.fields,field_description:sale.field_sale_report__untaxed_amount_to_invoice
 msgid "Untaxed Amount To Invoice"
-msgstr "Onbelast bedrag om te factureren"
+msgstr "Totaal excl. BTW te factureren"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__untaxed_amount_invoiced
 msgid "Untaxed Invoiced Amount"
-msgstr "Factuurbedrag exclusief BTW"
+msgstr "Totaal excl. BTW gefactureerd"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_report__price_subtotal
@@ -4582,7 +4593,7 @@ msgstr "Geldig tot"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
 msgid "Validate Order"
-msgstr "Valideer order"
+msgstr "Bevestig order"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -4703,6 +4714,17 @@ msgstr ""
 "betalingsmethodewordt gekozen."
 
 #. module: sale
+#: code:addons/sale/models/product_product.py:0
+#: code:addons/sale/models/product_template.py:0
+#, python-format
+msgid ""
+"You cannot change the product's type because it is already used in sales "
+"orders."
+msgstr ""
+"Je kunt het type product niet meer wijzigen omdat het al in verkooporders "
+"wordt gebruikt."
+
+#. module: sale
 #: code:addons/sale/models/sale_order_line.py:0
 #, python-format
 msgid ""
@@ -4758,6 +4780,13 @@ msgstr ""
 "Jouw offerte bevat producten van het bedrijf %(product_company)s terwijl je "
 "offerte bij het bedrijf %(quote_company)s behoort. Wijzig het bedrijf van je"
 " offerte of verwijder de producten van andere bedrijven (%(bad_products)s)."
+
+#. module: sale
+#: model:ir.actions.server,name:sale.send_invoice_cron_ir_actions_server
+#: model:ir.cron,cron_name:sale.send_invoice_cron
+#: model:ir.cron,name:sale.send_invoice_cron
+msgid "automatic invoicing: send ready invoice"
+msgstr "Automatische facturering: verzend factuur die gereed is"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__module_delivery_bpost

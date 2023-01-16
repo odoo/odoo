@@ -2,6 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import Command
+from odoo.osv import expression
 from odoo.exceptions import AccessError
 from odoo.tests import tagged
 from odoo.tests.common import Form
@@ -17,7 +18,7 @@ class TestProjectSharingCommon(TestProjectCommon):
 
         project_sharing_stages_vals_list = [
             (0, 0, {'name': 'To Do', 'sequence': 1}),
-            (0, 0, {'name': 'Done', 'sequence': 10}),
+            (0, 0, {'name': 'Done', 'sequence': 10, 'fold': True, 'rating_template_id': cls.env.ref('project.rating_project_request_email_template').id}),
         ]
 
         cls.partner_portal = cls.env['res.partner'].create({
@@ -125,7 +126,7 @@ class TestProjectSharing(TestProjectSharingCommon):
             task = form.save()
             self.assertEqual(task.name, 'Test')
             self.assertEqual(task.project_id, self.project_portal)
-            self.assertEqual(task.portal_user_names, self.user_portal.name)
+            self.assertFalse(task.portal_user_names)
             # 3.1) Try to change the project of the new task with this user.
             with self.assertRaises(AssertionError, msg="Should not accept the portal user changes the project of the task."):
                 form.project_id = self.project_cows
@@ -140,6 +141,8 @@ class TestProjectSharing(TestProjectSharingCommon):
             2) Give the 'comment' access mode to a portal user in a project and try to edit task with this user.
             3) Give the 'edit' access mode to a portal user in a project and try to create task with this user.
             3.1) Try to change the project of the new task with this user.
+            3.2) Create a sub-task
+            3.3) Create a second sub-task
         """
         # 1) Give the 'read' access mode to a portal user in a project and try to create task with this user.
         with self.assertRaises(AccessError, msg="Should not accept the portal user create a task in the project when he has not the edit access right."):
@@ -176,8 +179,24 @@ class TestProjectSharing(TestProjectSharingCommon):
                     subtask_form.display_project_id = self.project_portal
         self.assertEqual(task.child_ids.name, 'Test Subtask')
         self.assertEqual(task.child_ids.project_id, self.project_cows)
-        self.assertEqual(task.child_ids.portal_user_names, self.user_portal.name)
-        self.assertEqual(task.child_ids.user_ids, self.user_portal)
+        self.assertFalse(task.child_ids.portal_user_names, 'by default no user should be assigned to a subtask created by the portal user.')
+        self.assertFalse(task.child_ids.user_ids, 'No user should be assigned to the new subtask.')
+
+        task2 = self.env['project.task'] \
+            .with_context({
+                'tracking_disable': True,
+                'default_project_id': self.project_cows.id,
+                'default_user_ids': [Command.set(self.user_portal.ids)],
+            }) \
+            .with_user(self.user_portal) \
+            .create({'name': 'Test'})
+        self.assertFalse(task2.portal_user_names, 'the portal user should not be assigned when the portal user creates a task into the project shared.')
+
+        # 3.3) Create a second sub-task
+        with self.get_project_sharing_form_view(task, self.user_portal) as form:
+            with form.child_ids.new() as subtask_form:
+                subtask_form.name = 'Test Subtask'
+        self.assertEqual(len(task.child_ids), 2, 'Check 2 subtasks has correctly been created by the user portal.')
 
     def test_portal_user_cannot_see_all_assignees(self):
         """ Test when the portal sees a task he cannot see all the assignees.
@@ -208,3 +227,70 @@ class TestProjectSharing(TestProjectSharingCommon):
         self.assertFalse(self.task_cow.with_user(self.user_portal).user_ids, 'the portal user should see no assigness in the task.')
         task_portal_read = self.task_cow.with_user(self.user_portal).read(['portal_user_names'])
         self.assertEqual(self.task_cow.portal_user_names, task_portal_read[0]['portal_user_names'], 'the portal user should see assignees name in the task via the `portal_user_names` field.')
+
+    def test_portal_user_can_change_stage_with_rating(self):
+        """ Test portal user can change the stage of task to a stage with rating template email
+
+            The user should be able to change the stage and the email should be sent as expected
+            if a email template is set in `rating_template_id` field in the new stage.
+        """
+        self.project_portal.write({
+            'rating_active': True,
+            'rating_status': 'stage',
+            'collaborator_ids': [
+                Command.create({'partner_id': self.user_portal.partner_id.id}),
+            ],
+        })
+        self.task_portal.with_user(self.user_portal).write({'stage_id': self.project_portal.type_ids[-1].id})
+
+    def test_orm_method_with_true_false_domain(self):
+        """ Test orm method overriden in project for project sharing works with TRUE_LEAF/FALSE_LEAF
+
+            Test Case
+            =========
+            1) Share a project in edit mode for portal user
+            2) Search the portal task contained in the project shared by using a domain with TRUE_LEAF
+            3) Check the task is found with the `search` method
+            4) filter the task with `TRUE_DOMAIN` and check if the task is always returned by `filtered_domain` method
+            5) filter the task with `FALSE_DOMAIN` and check if no task is returned by `filtered_domain` method
+            6) Search the task with `FALSE_LEAF` and check no task is found with `search` method
+            7) Call `read_group` method with `TRUE_LEAF` in the domain and check if the task is found
+            8) Call `read_group` method with `FALSE_LEAF` in the domain and check if no task is found
+        """
+        domain = [('id', '=', self.task_portal.id)]
+        self.project_portal.write({
+            'collaborator_ids': [Command.create({
+                'partner_id': self.user_portal.partner_id.id,
+            })],
+        })
+        task = self.env['project.task'].with_user(self.user_portal).search(
+            expression.AND([
+                expression.TRUE_DOMAIN,
+                domain,
+            ])
+        )
+        self.assertTrue(task, 'The task should be found.')
+        self.assertEqual(task, task.filtered_domain(expression.TRUE_DOMAIN), 'The task found should be kept since the domain is truly')
+        self.assertFalse(task.filtered_domain(expression.FALSE_DOMAIN), 'The task should not be found since the domain is falsy')
+        task = self.env['project.task'].with_user(self.user_portal).search(
+            expression.AND([
+                expression.FALSE_DOMAIN,
+                domain,
+            ]),
+        )
+        self.assertFalse(task, 'No task should be found since the domain contained a falsy tuple.')
+
+        task_read_group = self.env['project.task'].read_group(
+            expression.AND([expression.TRUE_DOMAIN, domain]),
+            ['id'],
+            [],
+        )
+        self.assertEqual(task_read_group[0]['__count'], 1, 'The task should be found with the read_group method containing a truly tuple.')
+        self.assertEqual(task_read_group[0]['id'], self.task_portal.id, 'The task should be found with the read_group method containing a truly tuple.')
+
+        task_read_group = self.env['project.task'].read_group(
+            expression.AND([expression.FALSE_DOMAIN, domain]),
+            ['id'],
+            [],
+        )
+        self.assertFalse(task_read_group[0]['__count'], 'No result should found with the read_group since the domain is falsy.')

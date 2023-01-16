@@ -133,6 +133,7 @@
             'mail/static/src/main.js',
         ],
         'mail.assets_discuss_public_test_tours': [
+            'mail/static/tests/tours/discuss_public_tour.js',
             'mail/static/tests/tours/mail_channel_as_guest_tour.js',
         ],
         'web.assets_tests': [

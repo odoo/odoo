@@ -25,6 +25,10 @@ class IrModule(models.Model):
 
     imported = fields.Boolean(string="Imported Module")
 
+    def _get_modules_to_load_domain(self):
+        # imported modules are not expected to be loaded as regular modules
+        return super()._get_modules_to_load_domain() + [('imported', '=', False)]
+
     @api.depends('name')
     def _get_latest_version(self):
         imported_modules = self.filtered(lambda m: m.imported and m.latest_version)
@@ -100,11 +104,17 @@ class IrModule(models.Model):
                         type='binary',
                         datas=data,
                     )
-                    attachment = IrAttachment.search([('url', '=', url_path), ('type', '=', 'binary'), ('res_model', '=', 'ir.ui.view')])
+                    attachment = IrAttachment.sudo().search([('url', '=', url_path), ('type', '=', 'binary'), ('res_model', '=', 'ir.ui.view')])
                     if attachment:
                         attachment.write(values)
                     else:
-                        IrAttachment.create(values)
+                        attachment = IrAttachment.create(values)
+                        self.env['ir.model.data'].create({
+                            'name': f"attachment_{url_path}".replace('.', '_'),
+                            'model': 'ir.attachment',
+                            'module': module,
+                            'res_id': attachment.id,
+                        })
 
         IrAsset = self.env['ir.asset']
         assets_vals = []
@@ -139,7 +149,7 @@ class IrModule(models.Model):
         # Create new assets and attach 'ir.model.data' records to them
         created_assets = IrAsset.create(assets_to_create)
         self.env['ir.model.data'].create([{
-            'name': f"{asset['bundle']}.{asset['path']}",
+            'name': f"{asset['bundle']}_{asset['path']}".replace(".", "_"),
             'model': 'ir.asset',
             'module': module,
             'res_id': asset.id,

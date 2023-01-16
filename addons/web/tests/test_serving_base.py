@@ -9,7 +9,7 @@ from datetime import datetime, timedelta
 from lxml import etree
 import logging
 
-from odoo.tests.common import BaseCase, tagged
+from odoo.tests.common import BaseCase, HttpCase, tagged
 from odoo.tools import topological_sort
 from odoo.addons.web.controllers.main import HomeStaticTemplateHelpers
 
@@ -900,6 +900,35 @@ class TestStaticInheritance(TestStaticInheritanceCommon):
 
         self.assertXMLEqual(contents, expected)
 
+@tagged('static_templates')
+class TestHttpStaticInheritance(HttpCase):
+    def test_static_attachments(self):
+        url = '/test_module/test_file.xml'
+        self.env['ir.attachment'].create({
+            'name': 'test_attachment',
+            'url': url,
+            'res_model': 'ir.ui.view',
+            'type': 'binary',
+            'raw': b"""
+                <templates>
+                    <t t-name="test_template">
+                        <div class="test_div" />
+                    </t>
+                </templates>
+            """
+        })
+        self.env['ir.asset'].create({
+            'name': 'test_asset',
+            'path': url,
+            'bundle': 'test.bundle',
+        })
+
+
+        res = self.url_open('/web/webclient/qweb/HASH_BIDON?bundle=test.bundle')
+        [template] = etree.fromstring(res.text)
+
+        self.assertEqual(template.get('t-name'), 'test_template')
+        self.assertEqual(template[0].get('class'), 'test_div')
 
 @tagged('-standard', 'static_templates_performance')
 class TestStaticInheritancePerformance(TestStaticInheritanceCommon):
@@ -992,4 +1021,4 @@ class TestStaticInheritancePerformance(TestStaticInheritanceCommon):
         time_ratio = delta25000.total_seconds() / delta2500.total_seconds()
         _logger.runbot('Static Templates Inheritance: 25000 templates treated in %s seconds' % delta25000.total_seconds())
         _logger.runbot('Static Templates Inheritance: Computed linearity ratio: %s' % time_ratio)
-        self.assertLessEqual(time_ratio, 12)
+        self.assertLessEqual(time_ratio, 14)

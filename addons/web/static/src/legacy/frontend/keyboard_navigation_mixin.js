@@ -37,10 +37,13 @@ odoo.define('web.KeyboardNavigationMixin', function (require) {
          * @param {boolean} [options.autoAccessKeys=true]
          *      Whether accesskeys should be created automatically for buttons
          *      without them in the page.
+         * @param {boolean} [options.skipRenderOverlay=false]
+         *      Whether the accesskeys overlay rendering must be skipped.
          */
         init: function (options) {
             this.options = Object.assign({
                 autoAccessKeys: true,
+                skipRenderOverlay: false,
             }, options);
             this._areAccessKeyVisible = false;
             this.BrowserDetection = new BrowserDetection();
@@ -70,6 +73,9 @@ odoo.define('web.KeyboardNavigationMixin', function (require) {
          * @private
          */
         _addAccessKeyOverlays: function () {
+            if (this.options.skipRenderOverlay) {
+                return;
+            }
             var accesskeyElements = $(document).find('[accesskey]').filter(':visible');
             _.each(accesskeyElements, function (elem) {
                 var overlay = $(_.str.sprintf("<div class='o_web_accesskey_overlay'>%s</div>", $(elem).attr('accesskey').toUpperCase()));
@@ -247,6 +253,9 @@ odoo.define('web.KeyboardNavigationMixin', function (require) {
          */
         _onKeyUp: function (keyUpEvent) {
             if ((keyUpEvent.altKey || keyUpEvent.key === 'Alt') && !keyUpEvent.ctrlKey) {
+                if (this.options.skipRenderOverlay) {
+                    return;
+                }
                 this._hideAccessKeyOverlay();
                 if (keyUpEvent.preventDefault) keyUpEvent.preventDefault(); else keyUpEvent.returnValue = false;
                 if (keyUpEvent.stopPropagation) keyUpEvent.stopPropagation();

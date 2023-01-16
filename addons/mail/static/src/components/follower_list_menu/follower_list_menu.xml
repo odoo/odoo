@@ -4,8 +4,8 @@
     <t t-name="mail.FollowerListMenu" owl="1">
         <div class="o_FollowerListMenu" t-on-keydown="_onKeydown">
             <div class="o_FollowerListMenu_followers" t-ref="dropdown">
-                <button class="o_FollowerListMenu_buttonFollowers btn btn-link" t-att-disabled="props.isDisabled" t-on-click="_onClickFollowersButton" title="Show Followers">
-                    <i class="fa fa-user"/>
+                <button class="o_FollowerListMenu_buttonFollowers btn btn-link" t-att-disabled="props.isDisabled" title="Show Followers" t-att-aria-expanded="state.isDropdownOpen ? 'true' : 'false'" t-on-click="_onClickFollowersButton">
+                    <i class="fa fa-user" role="img" aria-label="Followers"/>
                     <span class="o_FollowerListMenu_buttonFollowersCount pl-1" t-esc="thread.followers.length"/>
                 </button>
 
@@ -23,6 +23,7 @@
                                     class="o_FollowerMenu_follower dropdown-item"
                                     followerLocalId="follower.localId"
                                     t-on-click="_onClickFollower"
+                                    t-on-o-hide-follower-list-menu="_hide"
                                 />
                             </t>
                         </t>

@@ -86,3 +86,7 @@ class Product(models.Model):
     def _is_sold_out(self):
         combination_info = self.with_context(website_sale_stock_get_quantity=True).product_tmpl_id._get_combination_info(product_id=self.id)
         return combination_info['product_type'] == 'product' and combination_info['free_qty'] <= 0
+
+    def _is_add_to_cart_allowed(self):
+        self.ensure_one()
+        return self.user_has_groups('base.group_system') or (self.active and self.sale_ok and self.website_published)

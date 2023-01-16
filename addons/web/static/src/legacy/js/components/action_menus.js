@@ -22,6 +22,16 @@ odoo.define('web.ActionMenus', function (require) {
      * @extends Component
      */
     class ActionMenus extends Component {
+        setup() {
+            this.actionButtonStrings = {
+                title: this.env._t("Action"),
+                hotkey: this.env._t("Additional actions"),
+            };
+            this.printButtonStrings = {
+                title: this.env._t("Print"),
+                hotkey: this.env._t("Printing options"),
+            };
+        }
 
         async willStart() {
             this.actionItems = await this._setActionItems(this.props);

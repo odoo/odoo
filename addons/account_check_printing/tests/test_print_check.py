@@ -2,6 +2,7 @@
 from odoo.addons.account.tests.common import AccountTestInvoicingCommon
 from odoo.addons.account_check_printing.models.account_payment import INV_LINES_PER_STUB
 from odoo.tests import tagged
+from odoo.tools.misc import NON_BREAKING_SPACE
 
 import math
 
@@ -124,8 +125,35 @@ class TestPrintCheck(AccountTestInvoicingCommon):
         self.assertEqual(stub_pages, [[{
             'due_date': '01/01/2016',
             'number': invoice.name,
-            'amount_total': '$ 100.00',
-            'amount_residual': '$ 50.00',
-            'amount_paid': '150.000 ☺',
+            'amount_total': f'${NON_BREAKING_SPACE}100.00',
+            'amount_residual': f'${NON_BREAKING_SPACE}50.00',
+            'amount_paid': f'150.000{NON_BREAKING_SPACE}☺',
             'currency': invoice.currency_id,
         }]])
+
+    def test_in_invoice_check_manual_sequencing_with_multiple_payments(self):
+        """
+           Test the check generation for vendor bills with multiple payments.
+        """
+        nb_invoices_to_test = INV_LINES_PER_STUB + 1
+
+        self.company_data['default_journal_bank'].write({
+            'check_manual_sequencing': True,
+            'check_next_number': '11111',
+        })
+
+        in_invoices = self.env['account.move'].create([{
+            'move_type': 'in_invoice',
+            'partner_id': self.partner_a.id,
+            'date': '2017-01-01',
+            'invoice_date': '2017-01-01',
+            'invoice_line_ids': [(0, 0, {'product_id': self.product_a.id, 'price_unit': 100.0})]
+        } for i in range(nb_invoices_to_test)])
+        in_invoices.action_post()
+
+        payments = self.env['account.payment.register'].with_context(active_model='account.move', active_ids=in_invoices.ids).create({
+            'group_payment': False,
+            'payment_method_line_id': self.payment_method_line_check.id,
+        })._create_payments()
+
+        self.assertEqual(set(payments.mapped('check_number')), {str(x) for x in range(11111, 11111 + nb_invoices_to_test)})

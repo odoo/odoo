@@ -369,3 +369,18 @@ export function parse(tokens) {
     }
     throw new ParserError("Missing token");
 }
+
+/**
+ * @param {any[]} args
+ * @param {string[]} spec
+ * @returns {{[name: string]: any}}
+ */
+export function parseArgs(args, spec) {
+    const last = args[args.length - 1];
+    const unnamedArgs = typeof last === "object" ? args.slice(0, -1) : args;
+    const kwargs = typeof last === "object" ? last : {};
+    for (let [index, val] of unnamedArgs.entries()) {
+        kwargs[spec[index]] = val;
+    }
+    return kwargs;
+}

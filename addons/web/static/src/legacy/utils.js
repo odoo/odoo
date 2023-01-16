@@ -141,6 +141,14 @@ export function mapLegacyEnvToWowlEnv(legacyEnv, wowlEnv) {
         let rejection;
         const prom = new Promise((resolve, reject) => {
             const [route, params, settings = {}] = args;
+            // Add user context in kwargs if there are kwargs
+            if (params && params.kwargs) {
+                params.kwargs.context = Object.assign(
+                    {},
+                    legacyEnv.session.user_context,
+                    params.kwargs.context,
+                );
+            }
             const jsonrpc = wowlEnv.services.rpc(route, params, {
                 silent: settings.shadow,
                 xhr: settings.xhr,

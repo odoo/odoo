@@ -23,8 +23,8 @@
             <pivot string="Attendance" disable_linking="1">
                 <field name="employee_id" type="row"/>
                 <field name="check_in" type="col"/>
-                <field name="worked_hours" type="measure"/>
-                <field name="overtime_hours" type="measure"/>
+                <field name="worked_hours" type="measure" widget="float_time"/>
+                <field name="overtime_hours" type="measure" widget="float_time"/>
             </pivot>
         </field>
     </record>

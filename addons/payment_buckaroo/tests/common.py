@@ -11,7 +11,7 @@ class BuckarooCommon(PaymentCommon):
 
         cls.buckaroo = cls._prepare_acquirer('buckaroo', update_values={
             'buckaroo_website_key': 'dummy',
-            'buckaroo_secret_key': 'dummy',
+            'buckaroo_secret_key': 'test_key_123',
         })
 
         # Override defaults

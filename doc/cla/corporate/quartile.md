@@ -13,6 +13,5 @@ List of contributors:
 Yoshi Tashiro tashiro@quartile.co https://github.com/yostashiro
 Ryoko Tsuda ryoko@quartile.co https://github.com/Ryoko04
 Ai Kakurai ai@quartile.co https://github.com/kakurai8
-Tomohiro Abe tomohiro@quartile.co https://github.com/TomohiroAbe-Quartile
-Takahiro Yabe yabe@quartile.co https://github.com/tack-yabeQuartile
-Takuya Tokunaga tokunaga@quartile.co https://github.com/takuyatokunaga
+Tatsuki Kanda kanda@quartile.co https://github.com/kanda999
+Aung Ko Ko Lin lin@quartile.co https://github.com/AungKoKoLin1997

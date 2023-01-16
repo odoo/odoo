@@ -324,6 +324,10 @@ class Module(models.Model):
         self.clear_caches()
         return super(Module, self).unlink()
 
+    def _get_modules_to_load_domain(self):
+        """ Domain to retrieve the modules that should be loaded by the registry. """
+        return [('state', '=', 'installed')]
+
     @staticmethod
     def _check_python_external_dependency(pydep):
         try:
@@ -342,7 +346,6 @@ class Module(models.Model):
         except Exception as e:
             _logger.warning("get_distribution(%s) failed: %s", pydep, e)
             raise Exception('Error finding python library %s' % (pydep,))
-
 
     @staticmethod
     def _check_external_dependencies(terp):
@@ -578,7 +581,7 @@ class Module(models.Model):
         }
 
     def _button_immediate_function(self, function):
-        if getattr(threading.currentThread(), 'testing', False):
+        if getattr(threading.current_thread(), 'testing', False):
             raise RuntimeError(
                 "Module operations inside tests are not transactional and thus forbidden.\n"
                 "If you really need to perform module operations to test a specific behavior, it "
@@ -626,8 +629,9 @@ class Module(models.Model):
 
     @assert_log_admin_access
     def button_uninstall(self):
-        if 'base' in self.mapped('name'):
-            raise UserError(_("The `base` module cannot be uninstalled"))
+        un_installable_modules = set(odoo.conf.server_wide_modules) & set(self.mapped('name'))
+        if un_installable_modules:
+            raise UserError(_("Those modules cannot be uninstalled: %s", ', '.join(un_installable_modules)))
         if any(state not in ('installed', 'to upgrade') for state in self.mapped('state')):
             raise UserError(_(
                 "One or more of the selected modules have already been uninstalled, if you "
@@ -669,6 +673,16 @@ class Module(models.Model):
         self.update_list()
 
         todo = list(self)
+        if 'base' in self.mapped('name'):
+            # If an installed module is only present in the dependency graph through
+            # a new, uninstalled dependency, it will not have been selected yet.
+            # An update of 'base' should also update these modules, and as a consequence,
+            # install the new dependency.
+            todo.extend(self.search([
+                ('state', '=', 'installed'),
+                ('name', '!=', 'studio_customization'),
+                ('id', 'not in', self.ids),
+            ]))
         i = 0
         while i < len(todo):
             module = todo[i]

@@ -34,6 +34,8 @@ class Http(models.AbstractModel):
             default=128 * 1024 * 1024,  # 128MiB
         ))
         mods = odoo.conf.server_wide_modules or []
+        if request.db:
+            mods = list(request.registry._init_modules) + mods
         lang = user_context.get("lang")
         translation_hash = request.env['ir.translation'].sudo().get_web_translations_hash(mods, lang)
         session_info = {
@@ -67,8 +69,6 @@ class Http(models.AbstractModel):
             # but is still included in some other calls (e.g. '/web/session/authenticate')
             # to avoid access errors and unnecessary information, it is only included for users
             # with access to the backend ('internal'-type users)
-            if request.db:
-                mods = list(request.registry._init_modules) + mods
             qweb_checksum = HomeStaticTemplateHelpers.get_qweb_templates_checksum(debug=request.session.debug, bundle="web.assets_qweb")
             menus = request.env['ir.ui.menu'].load_menus(request.session.debug)
             ordered_menus = {str(k): v for k, v in menus.items()}

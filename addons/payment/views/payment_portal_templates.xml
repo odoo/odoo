@@ -6,7 +6,7 @@
         <xpath expr="//div[hasclass('o_portal_my_details')]" position="inside">
             <t t-set="partner" t-value="request.env.user.partner_id"/>
             <t t-set="acquirers_allowing_tokenization"
-               t-value="request.env['payment.acquirer'].sudo()._get_compatible_acquirers(request.env.company.id, partner.id, allow_tokenization=True, is_validation=True)"/>
+               t-value="request.env['payment.acquirer'].sudo()._get_compatible_acquirers(request.env.company.id, partner.id, force_tokenization=True, is_validation=True)"/>
             <t t-set="existing_tokens" t-value="partner.payment_token_ids + partner.commercial_partner_id.sudo().payment_token_ids"/>
             <!-- Only show the link if a token can be created or if one already exists -->
             <div t-if="acquirers_allowing_tokenization or existing_tokens"
@@ -127,13 +127,7 @@
                     <div class="row">
                         <div class="col-lg-6">
                             <div>
-                                <!-- message is the content of either the HTML field describing the
-                                transaction state computed while processing feedback data, or the
-                                HTML field associated with the transaction state, defined on the
-                                acquirer.  -->
-                                <div t-attf-class="alert alert-#{status}"
-                                     t-out="message"
-                                     role="status"/>
+                                <t t-call="payment.transaction_status"/>
                                 <div class="form-group row">
                                     <label for="form_partner_name" class="col-md-3 col-form-label">
                                         From

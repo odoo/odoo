@@ -10,10 +10,11 @@
 # Trần Hà <tranthuha13590@gmail.com>, 2021
 # Martin Trigaux, 2021
 # fanha99 <fanha99@hotmail.com>, 2021
-# thanhnguyen.icsc <thanhnguyen.icsc@gmail.com>, 2021
+# Nancy Momoland <thanhnguyen.icsc@gmail.com>, 2021
 # Duy BQ <duybq86@gmail.com>, 2021
 # Dung Nguyen Thi <dungnt@trobz.com>, 2021
-# Vo Thanh Thuy, 2021
+# Thin Tran <trvathin@gmail.com>, 2022
+# Vo Thanh Thuy, 2022
 # 
 msgid ""
 msgstr ""
@@ -21,7 +22,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-11-16 13:19+0000\n"
 "PO-Revision-Date: 2021-09-14 12:25+0000\n"
-"Last-Translator: Vo Thanh Thuy, 2021\n"
+"Last-Translator: Vo Thanh Thuy, 2022\n"
 "Language-Team: Vietnamese (https://www.transifex.com/odoo/teams/41243/vi/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -168,12 +169,12 @@ msgstr "<span class=\"o_stat_text\"> Sản phẩm</span>"
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_attribute_view_form
 msgid "<span class=\"o_stat_text\">Related Products</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">Sản phẩm tương tự</span>"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_pricelist_item_form_view
 msgid "<span>%</span>"
-msgstr ""
+msgstr "<span>%</span>"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_variant_easy_edit_view
@@ -435,7 +436,7 @@ msgstr "Thuộc tính"
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_template_only_form_view
 msgid "Attributes & Variants"
-msgstr ""
+msgstr "Thuộc tính & Biến thể"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_pricelist_view
@@ -1348,14 +1349,10 @@ msgstr "Mẫu import bảng giá nhà cung cấp"
 #: model:ir.model.fields,help:product.field_product_template__standard_price
 msgid ""
 "In Standard Price & AVCO: value of the product (automatically computed in AVCO).\n"
-"        In FIFO: value of the last unit that left the stock (automatically computed).\n"
+"        In FIFO: value of the next unit that will leave the stock (automatically computed).\n"
 "        Used to value the product when the purchase cost is not known (e.g. inventory adjustment).\n"
 "        Used to compute margins on sale orders."
 msgstr ""
-"Trong Giá chuẩn & AVCO: giá trị của sản phẩm (được tính tự động trong AVCO).\n"
-"        Trong FIFO: giá trị của đơn vị cuối cùng còn lại trong kho (được tính tự động).\n"
-"        Được sử dụng để định giá sản phẩm khi không biết chi phí mua hàng (ví dụ: điều chỉnh hàng tồn kho).\n"
-"        Được sử dụng để tính toán lợi nhuận trên các đơn đặt hàng."
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_template_attribute_value_view_search
@@ -2719,6 +2716,15 @@ msgid "This comes from the product form."
 msgstr "Lấy từ form sản phẩm."
 
 #. module: product
+#: code:addons/product/models/product_template.py:0
+#, python-format
+msgid ""
+"This configuration of product attributes, values, and exclusions would lead "
+"to no possible variant. Please archive or delete your product directly if "
+"intended."
+msgstr ""
+
+#. module: product
 #: model:ir.model.fields,help:product.field_product_product__price_extra
 msgid "This is the sum of the extra price of all attributes"
 msgstr "Đây là tổng giá cộng thêm của tất cả các thuộc tính"
@@ -3286,6 +3292,14 @@ msgstr ""
 msgid ""
 "You cannot move the attribute %s from the product %s to the product %s."
 msgstr "Bạn không thể di chuyển thuộc tính %s từ sản phạm %s đến sản phạm %s."
+
+#. module: product
+#: code:addons/product/models/product_pricelist.py:0
+#, python-format
+msgid ""
+"You cannot disable a pricelist rule, please delete it or archive its "
+"pricelist instead."
+msgstr ""
 
 #. module: product
 #: code:addons/product/models/product_attribute.py:0

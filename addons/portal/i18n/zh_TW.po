@@ -3,7 +3,9 @@
 # 	* portal
 # 
 # Translators:
-# 敬雲 林 <chingyun@yuanchih-consult.com>, 2021
+# Benson <Benson.Dr@Gmail.com>, 2022
+# 敬雲 林 <chingyun@yuanchih-consult.com>, 2022
+# Martin Trigaux, 2022
 # 
 msgid ""
 msgstr ""
@@ -11,7 +13,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-10-05 10:55+0000\n"
 "PO-Revision-Date: 2021-09-14 12:24+0000\n"
-"Last-Translator: 敬雲 林 <chingyun@yuanchih-consult.com>, 2021\n"
+"Last-Translator: Martin Trigaux, 2022\n"
 "Language-Team: Chinese (Taiwan) (https://www.transifex.com/odoo/teams/41243/zh_TW/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -58,6 +60,11 @@ msgstr "<i class=\"fa fa-pencil mx-1\"/>編輯安全設定"
 #: model_terms:ir.ui.view,arch_db:portal.portal_layout
 msgid "<i class=\"fa fa-pencil\"/> Edit"
 msgstr "<i class=\"fa fa-pencil\"/> 編輯"
+
+#. module: portal
+#: model_terms:ir.ui.view,arch_db:portal.portal_my_security
+msgid "<i title=\"Documentation\" class=\"fa fa-fw o_button_icon fa-info-circle\"/>"
+msgstr "<i title=\"系統使用說明\" class=\"fa fa-fw o_button_icon fa-info-circle\"/>"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_details
@@ -174,6 +181,13 @@ msgstr ""
 
 #. module: portal
 #. openerp-web
+#: code:addons/portal/static/src/js/portal.js:0
+#, python-format
+msgid "API Key Ready"
+msgstr ""
+
+#. module: portal
+#. openerp-web
 #: code:addons/portal/static/src/js/portal_signature.js:0
 #, python-format
 msgid "Accept & Sign"
@@ -211,6 +225,11 @@ msgstr "添加連絡人以共用文件..。"
 #: model:ir.model.fields,help:portal.field_portal_share__note
 msgid "Add extra content to display in the email"
 msgstr "添加額外內容以顯示在電子郵件中"
+
+#. module: portal
+#: model_terms:ir.ui.view,arch_db:portal.portal_my_security
+msgid "Added On"
+msgstr "加入於"
 
 #. module: portal
 #: code:addons/portal/controllers/mail.py:0
@@ -274,8 +293,11 @@ msgid "Click here to see your document."
 msgstr "點選此處查看您的文件。"
 
 #. module: portal
+#. openerp-web
+#: code:addons/portal/static/src/js/portal.js:0
 #: model_terms:ir.ui.view,arch_db:portal.portal_back_in_edit_mode
 #: model_terms:ir.ui.view,arch_db:portal.wizard_view
+#, python-format
 msgid "Close"
 msgstr "關閉"
 
@@ -283,6 +305,18 @@ msgstr "關閉"
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_details
 msgid "Company Name"
 msgstr "公司名稱"
+
+#. module: portal
+#: model:ir.model,name:portal.model_res_config_settings
+msgid "Config Settings"
+msgstr "配置設定"
+
+#. module: portal
+#. openerp-web
+#: code:addons/portal/static/src/js/portal.js:0
+#, python-format
+msgid "Confirm"
+msgstr "確認"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_details
@@ -366,6 +400,11 @@ msgid ""
 msgstr "當前僅限內部員工使用，點選更改使其可供查看此文檔的所有人使用。"
 
 #. module: portal
+#: model:ir.model.fields,field_description:portal.field_res_config_settings__portal_allow_api_keys
+msgid "Customer API Keys"
+msgstr ""
+
+#. module: portal
 #: model:ir.model.fields,help:portal.field_portal_mixin__access_url
 msgid "Customer Portal URL"
 msgstr "客戶網站入口網址"
@@ -383,10 +422,27 @@ msgid "Delete"
 msgstr "刪除"
 
 #. module: portal
+#: model_terms:ir.ui.view,arch_db:portal.portal_my_security
+msgid "Description"
+msgstr "說明"
+
+#. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_breadcrumbs
 #: model_terms:ir.ui.view,arch_db:portal.portal_layout
 msgid "Details"
 msgstr "詳細資訊"
+
+#. module: portal
+#: model_terms:ir.ui.view,arch_db:portal.portal_my_security
+msgid "Developer API Keys"
+msgstr "開發者 API 密鑰"
+
+#. module: portal
+#. openerp-web
+#: code:addons/portal/static/src/js/portal.js:0
+#, python-format
+msgid "Discard"
+msgstr "取消"
 
 #. module: portal
 #: model:ir.model.fields,field_description:portal.field_portal_share__display_name
@@ -436,6 +492,13 @@ msgstr "僅限員工"
 #. openerp-web
 #: code:addons/portal/static/src/xml/portal_security.xml:0
 #, python-format
+msgid "Enter a description of and purpose for the key."
+msgstr "輸入密鑰的描述和用途."
+
+#. module: portal
+#. openerp-web
+#: code:addons/portal/static/src/xml/portal_security.xml:0
+#, python-format
 msgid "Forgot password?"
 msgstr "忘記密碼？"
 
@@ -461,6 +524,15 @@ msgid "HTTP Routing"
 msgstr "HTTP 路由"
 
 #. module: portal
+#. openerp-web
+#: code:addons/portal/static/src/xml/portal_security.xml:0
+#, python-format
+msgid ""
+"Here is your new API key, use it instead of a password for RPC access.\n"
+"                Your login is still necessary for interactive usage."
+msgstr ""
+
+#. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_breadcrumbs
 msgid "Home"
 msgstr "首頁"
@@ -473,9 +545,30 @@ msgid "ID"
 msgstr "ID"
 
 #. module: portal
+#. openerp-web
+#: code:addons/portal/static/src/xml/portal_security.xml:0
+#, python-format
+msgid "Important:"
+msgstr ""
+
+#. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.wizard_view
 msgid "Internal User"
 msgstr "內部使用者"
+
+#. module: portal
+#. openerp-web
+#: code:addons/portal/static/src/xml/portal_chatter.xml:0
+#, python-format
+msgid "Internal Note"
+msgstr "內部備註"
+
+#. module: portal
+#. openerp-web
+#: code:addons/portal/static/src/xml/portal_chatter.xml:0
+#, python-format
+msgid "Internal notes are only displayed to internal users."
+msgstr ""
 
 #. module: portal
 #: code:addons/portal/controllers/portal.py:0
@@ -503,6 +596,15 @@ msgstr "為內部使用者"
 #: model:ir.model.fields,field_description:portal.field_portal_wizard_user__is_portal
 msgid "Is Portal"
 msgstr "發送報價以測試客戶網站登入介面"
+
+#. module: portal
+#. openerp-web
+#: code:addons/portal/static/src/xml/portal_security.xml:0
+#, python-format
+msgid ""
+"It is very important that this description be clear\n"
+"                and complete,"
+msgstr ""
 
 #. module: portal
 #: model:ir.model.fields,field_description:portal.field_portal_share____last_update
@@ -538,6 +640,11 @@ msgid "Leave a comment"
 msgstr "留下評論"
 
 #. module: portal
+#: model_terms:ir.ui.view,arch_db:portal.res_config_settings_view_form
+msgid "Let your customers create developer API keys"
+msgstr ""
+
+#. module: portal
 #: model:ir.model.fields,field_description:portal.field_portal_share__share_link
 msgid "Link"
 msgstr "連結"
@@ -571,6 +678,21 @@ msgid "Name"
 msgstr "名稱"
 
 #. module: portal
+#. openerp-web
+#: code:addons/portal/static/src/xml/portal_security.xml:0
+#, python-format
+msgid "Name your key"
+msgstr "命名您的密鑰"
+
+#. module: portal
+#. openerp-web
+#: code:addons/portal/static/src/js/portal.js:0
+#: model_terms:ir.ui.view,arch_db:portal.portal_my_security
+#, python-format
+msgid "New API Key"
+msgstr "新 API 密鑰"
+
+#. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_security
 msgid "New Password:"
 msgstr "新密碼:"
@@ -593,6 +715,12 @@ msgstr "備註"
 #: model_terms:ir.ui.view,arch_db:portal.portal_record_sidebar
 msgid "Odoo Logo"
 msgstr "Odoo 徽標"
+
+#. module: portal
+#: code:addons/portal/models/res_users_apikeys_description.py:0
+#, python-format
+msgid "Only internal and portal users can create API keys"
+msgstr ""
 
 #. module: portal
 #. openerp-web
@@ -714,6 +842,11 @@ msgstr "相關的單據模型"
 #: model_terms:ir.ui.view,arch_db:portal.wizard_view
 msgid "Revoke Access"
 msgstr "收回使用權限"
+
+#. module: portal
+#: model_terms:ir.ui.view,arch_db:portal.portal_my_security
+msgid "Scope"
+msgstr "作用範圍"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_searchbar
@@ -849,6 +982,13 @@ msgstr "聯絡人“%s”的電子郵件地址與現有用戶 (%s) 相同。"
 msgid ""
 "The document does not exist or you do not have the rights to access it."
 msgstr "附件不存在，或者您沒有存取該文檔的許可權。"
+
+#. module: portal
+#. openerp-web
+#: code:addons/portal/static/src/xml/portal_security.xml:0
+#, python-format
+msgid "The key cannot be retrieved later and provides"
+msgstr ""
 
 #. module: portal
 #: code:addons/portal/controllers/portal.py:0
@@ -1027,6 +1167,13 @@ msgid "Website communication history"
 msgstr "網站溝通記錄"
 
 #. module: portal
+#. openerp-web
+#: code:addons/portal/static/src/xml/portal_security.xml:0
+#, python-format
+msgid "What's this key for?"
+msgstr "這個密鑰(密碼)用於?"
+
+#. module: portal
 #: model:ir.model.fields,field_description:portal.field_portal_wizard_user__wizard_id
 msgid "Wizard"
 msgstr "嚮導"
@@ -1037,6 +1184,13 @@ msgstr "嚮導"
 #, python-format
 msgid "Write a message..."
 msgstr "寫訊息..."
+
+#. module: portal
+#. openerp-web
+#: code:addons/portal/static/src/xml/portal_security.xml:0
+#, python-format
+msgid "Write down your key"
+msgstr "寫下您的密鑰(密碼)"
 
 #. module: portal
 #: code:addons/portal/wizard/portal_share.py:0
@@ -1107,6 +1261,22 @@ msgstr "評語"
 
 #. module: portal
 #. openerp-web
+#: code:addons/portal/static/src/xml/portal_security.xml:0
+#, python-format
+msgid "full access"
+msgstr ""
+
+#. module: portal
+#. openerp-web
+#: code:addons/portal/static/src/xml/portal_security.xml:0
+#, python-format
+msgid ""
+"it will be the only way to\n"
+"                identify the key once created"
+msgstr ""
+
+#. module: portal
+#. openerp-web
 #: code:addons/portal/static/src/xml/portal_chatter.xml:0
 #, python-format
 msgid "logged in"
@@ -1123,6 +1293,11 @@ msgid "password"
 msgstr "密碼"
 
 #. module: portal
+#: model:ir.model,name:portal.model_res_users_apikeys_description
+msgid "res.users.apikeys.description"
+msgstr "res.users.apikeys.description"
+
+#. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_details
 msgid "select..."
 msgstr "請選擇……"
@@ -1133,3 +1308,10 @@ msgstr "請選擇……"
 #, python-format
 msgid "to post a comment."
 msgstr "張貼評論。"
+
+#. module: portal
+#. openerp-web
+#: code:addons/portal/static/src/xml/portal_security.xml:0
+#, python-format
+msgid "to your user account, it is very important to store it securely."
+msgstr ""

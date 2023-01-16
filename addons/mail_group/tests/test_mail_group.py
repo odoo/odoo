@@ -61,6 +61,11 @@ class TestMailGroup(TestMailListCommon):
             'mail_group_id': self.test_group.id,
         })
 
+        self.env['mail.group.member'].create({
+            'email': "Alice",
+            'mail_group_id': self.test_group.id,
+        })
+
         member = self.test_group._find_member(email)
         self.assertEqual(member, member_1, 'When no partner is provided, return the member without partner in priority')
 
@@ -77,6 +82,10 @@ class TestMailGroup(TestMailListCommon):
         member_1.unlink()
         member = self.test_group._find_member(email, partner_2.id)
         self.assertFalse(member, 'Should not return any member because the only one with the same email has a different partner')
+
+        member = self.test_group._find_member('', None)
+        self.assertEqual(member, None, 'When no email nor partner is provided, return nobody')
+
 
     def test_find_member_for_alias(self):
         """Test the matching of a mail_group.members, when 2 users have the same partner email, and

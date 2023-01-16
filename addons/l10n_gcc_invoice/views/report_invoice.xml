@@ -16,7 +16,15 @@
     </template>
 
     <template id="arabic_english_invoice">
-        <t t-call="l10n_gcc_invoice.external_layout_standard">
+        <t t-call="web.external_layout">
+            <t t-set="o" t-value="o.with_context(lang=lang)" />
+            <t t-set="forced_vat" t-value="o.fiscal_position_id.foreign_vat"/> <!-- So that it appears in the footer of the report instead of the company VAT if it's set -->
+            <t t-set="address">
+                <address t-field="o.partner_id" t-options='{"widget": "contact", "fields": ["address", "name"], "no_marker": True}' style="text-align: right"/>
+                <div t-if="o.partner_id.vat" class="mt16" style="text-align: right">
+                    <t t-if="o.company_id.account_fiscal_country_id.vat_label" t-esc="o.company_id.account_fiscal_country_id.vat_label" id="inv_tax_id_label"/>
+                    <t t-else="">Tax ID</t>: <span t-field="o.partner_id.vat"/></div>
+            </t>
 
             <t t-set="o_sec" t-value="o.with_context(lang='ar_001')"/>
             <t t-set="o" t-value="o.with_context(lang='en_US')"/>
@@ -44,7 +52,7 @@
                                 Vendor Bill
                             </span>
                         </div>
-                        <div class="col-4">
+                        <div class="col-4 text-center">
                             <span t-if="o.name != '/'" t-field="o.name"/>
                         </div>
                         <div class="col-4" style="text-align:right">
@@ -254,17 +262,26 @@
                             <tr t-att-class="'bg-200 font-weight-bold o_line_section' if line.display_type == 'line_section' else 'font-italic o_line_note' if line.display_type == 'line_note' else ''">
                                 <t t-if="not line.display_type" name="account_invoice_line_accountable">
                                     <td name="account_invoice_line_name">
-                                        <t t-set="translation_name" t-value="line.with_context(lang='ar_001').product_id.name"/>
                                         <t t-if="line.product_id">
-                                            <span t-field="line.product_id.name" t-options="{'widget': 'text'}"/>
-                                            <t t-if="line.product_id.name != translation_name">
+                                            <t t-set="arabic_name" t-value="line.with_context(lang='ar_001').product_id.display_name"/>
+                                            <t t-set="english_name" t-value="line.with_context(lang='en_US').product_id.display_name"/>
+
+                                            <span t-field="line.product_id.display_name"
+                                                t-options="{'widget': 'text'}"/>
+
+                                            <t t-if="arabic_name != english_name">
                                                 <br/>
                                                 <span t-field="line.with_context(lang='ar_001').product_id.name"
-                                                      t-options="{'widget': 'text'}"/>
+                                                    style="text:right"
+                                                    t-options="{'widget': 'text'}"/>
+                                            </t>
+
+                                            <t t-if="line.name != english_name and line.name != arabic_name">
+                                                <br/>
+                                                <span t-field="line.name" t-options="{'widget': 'text'}"/>
                                             </t>
                                         </t>
-                                        <t t-if="line.name and line.name != line.product_id.name and line.name != translation_name">
-                                            <t t-if="line.product_id"><br/></t>
+                                        <t t-else="">
                                             <span t-field="line.name" t-options="{'widget': 'text'}"/>
                                         </t>
                                     </td>
@@ -474,103 +491,4 @@
             </div>
         </t>
     </template>
-
-    <template id="external_layout_standard">
-        <t t-if="not company">
-            <!-- Multicompany -->
-            <t t-if="company_id">
-                <t t-set="company" t-value="company_id"/>
-            </t>
-            <t t-elif="o and 'company_id' in o and o.company_id.sudo()">
-                <t t-set="company" t-value="o.company_id.sudo()"/>
-            </t>
-            <t t-else="else">
-                <t t-set="company" t-value="res_company"/>
-            </t>
-        </t>
-
-        <t t-set="company" t-value="company.with_context(lang='en_US')"/>
-
-        <div t-attf-class="header o_company_#{company.id}_layout" t-att-style="report_header_style">
-            <div class="row">
-                <div class="col-3 mb4">
-                    <img t-if="company.logo" t-att-src="image_data_uri(company.logo)" style="max-height: 45px;"
-                         alt="Logo"/>
-                </div>
-                <div class="col-9 text-right" style="margin-top:22px;" t-field="company.report_header" name="moto"/>
-            </div>
-            <div t-if="company.logo or company.report_header" class="row zero_min_height">
-                <div class="col-12">
-                    <div style="border-bottom: 1px solid black;"/>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-4" name="company_address">
-                    <div t-field="company.partner_id"
-                         t-options='{"widget": "contact", "fields": ["address", "name"], "no_marker": true}'
-                    />
-                    <p t-if="company.partner_id.vat">
-                        <t t-out="o.company_id.account_fiscal_country_id.vat_label or 'Tax ID'"/>:
-                        <span t-field="company.partner_id.vat"/>
-                    </p>
-                </div>
-                <div class="col-4" name="qr_code"/>
-                <div class="col-4" name="company_address" dir="rtl" style="text-align:right">
-                </div>
-            </div>
-        </div>
-
-        <div t-attf-class="article o_report_layout_standard o_company_#{company.id}_layout"
-             t-att-data-oe-model="o and o._name" t-att-data-oe-id="o and o.id"
-             t-att-data-oe-lang="o and o.env.context.get('lang')">
-            <div class="pt-5">
-                <t t-set="address">
-                    <address t-field="o.partner_id" t-options='{"widget": "contact", "fields": ["address", "name"], "no_marker": True}' class="mb-0"/>
-                    <p t-if="o.partner_id.vat">
-                        <t t-out="o.company_id.account_fiscal_country_id.vat_label or 'Tax ID'"/>:
-                        <span t-field="o.partner_id.vat"/>
-                    </p>
-                </t>
-                <t t-call="web.address_layout"/>
-            </div>
-            <t t-out="0"/>
-        </div>
-
-        <div t-attf-class="footer o_standard_footer o_company_#{company.id}_layout">
-            <div class="text-center" style="border-top: 1px solid black;">
-                <ul class="list-inline mb4">
-
-                    <li t-if="company.phone" class="list-inline-item d-inline">
-                        <span class="o_force_ltr" t-field="company.phone"/>
-                    </li>
-                    <li t-if="company.email" class="list-inline-item d-inline">
-                        <span t-field="company.email"/>
-                    </li>
-                    <li t-if="company.website" class="list-inline-item d-inline">
-                        <span t-field="company.website"/>
-                    </li>
-                    <li t-if="company.vat" class="list-inline-item d-inline"><t
-                            t-out="company.country_id.vat_label or 'Tax ID'"/>:
-                        <span t-field="company.vat"/>
-                    </li>
-                </ul>
-
-                <div t-if="report_type == 'pdf'" class="text-muted">
-                    <div class="row">
-                        <div class="col-6 text-right">
-                            Page/صفحة:
-                        </div>
-                        <div class="col-6 text-left pl-0">
-                            <span class="page"/>
-                            /
-                            <span class="topage"/>
-                        </div>
-                    </div>
-
-                </div>
-            </div>
-        </div>
-    </template>
-
-
 </odoo>

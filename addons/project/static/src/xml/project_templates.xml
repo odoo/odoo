@@ -27,10 +27,12 @@
     </div>
 
     <t t-name="project.ProjectRightPanel" owl="1">
-        <div class="o_rightpanel">
+        <div t-if="project_id" class="o_rightpanel">
             <t t-call="project.StatButtonsSection"/>
             <t t-call="project.MilestoneSection"/>
         </div>
+        <!-- If this is called from notif, multiples updates but no specific project -->
+        <div t-else=""/>
     </t>
 
     <t t-name="project.StatButtonsSection" owl="1">

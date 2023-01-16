@@ -9,26 +9,28 @@
 # Martin Trigaux, 2021
 # Ricardo Martins <ricardo.nbs.martins@gmail.com>, 2021
 # Vitor Fernandes <vmlf01@gmail.com>, 2021
-# Manuela Silva <mmsrs@sky.com>, 2021
 # Pedro Castro Silva <pedrocs@exo.pt>, 2021
 # Nuno Silva <nuno.silva@arxi.pt>, 2021
 # Reinaldo Ramos <reinaldo.ramos@arxi.pt>, 2021
 # Diogo Fonseca <dsf@thinkopensolutions.pt>, 2021
 # Pedro Filipe <pedro2.10@hotmail.com>, 2021
+# Luís Freitas, 2022
+# Manuela Silva <mmsrs@sky.com>, 2022
+# Luiz Fernando <lfpsgs@outlook.com>, 2022
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 15.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-10-05 10:54+0000\n"
+"POT-Creation-Date: 2022-01-24 08:20+0000\n"
 "PO-Revision-Date: 2021-09-14 12:27+0000\n"
-"Last-Translator: Pedro Filipe <pedro2.10@hotmail.com>, 2021\n"
+"Last-Translator: Luiz Fernando <lfpsgs@outlook.com>, 2022\n"
 "Language-Team: Portuguese (https://www.transifex.com/odoo/teams/41243/pt/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: pt\n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"Plural-Forms: nplurals=3; plural=(n == 0 || n == 1) ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;\n"
 
 #. module: web
 #. openerp-web
@@ -294,7 +296,7 @@ msgstr ""
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.report_invoice_wizard_preview
 msgid "<span>Amount</span>"
-msgstr ""
+msgstr "Montante"
 
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.report_invoice_wizard_preview
@@ -420,6 +422,13 @@ msgstr "Erro de Acesso"
 #, python-format
 msgid "Access to all Enterprise Apps"
 msgstr "Aceder a todas as Aplicações de Empresa"
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/legacy/xml/base.xml:0
+#, python-format
+msgid "Action"
+msgstr "Ação"
 
 #. module: web
 #. openerp-web
@@ -570,6 +579,13 @@ msgstr "Adicionar aos Favoritos"
 
 #. module: web
 #. openerp-web
+#: code:addons/web/static/src/legacy/xml/base.xml:0
+#, python-format
+msgid "Additional actions"
+msgstr ""
+
+#. module: web
+#. openerp-web
 #: code:addons/web/static/src/legacy/js/fields/relational_fields.js:0
 #, python-format
 msgid "Add: "
@@ -678,6 +694,7 @@ msgstr ""
 
 #. module: web
 #. openerp-web
+#: code:addons/web/static/src/legacy/js/fields/basic_fields.js:0
 #: code:addons/web/static/src/search/filter_menu/custom_filter_item.xml:0
 #: code:addons/web/static/src/search/group_by_menu/custom_group_by_item.xml:0
 #, python-format
@@ -951,6 +968,7 @@ msgstr "A vista de calendário não tem definido o atributo 'date_start'."
 #: code:addons/web/static/src/core/errors/error_dialogs.xml:0
 #: code:addons/web/static/src/legacy/js/core/dialog.js:0
 #: code:addons/web/static/src/legacy/js/core/dialog.js:0
+#: code:addons/web/static/src/legacy/js/fields/basic_fields.js:0
 #: code:addons/web/static/src/legacy/js/fields/upgrade_fields.js:0
 #: code:addons/web/static/src/legacy/js/views/calendar/calendar_quick_create.js:0
 #: code:addons/web/static/src/legacy/js/views/kanban/kanban_column.js:0
@@ -1362,7 +1380,7 @@ msgstr "Criar e Editar..."
 #: code:addons/web/static/src/legacy/xml/kanban.xml:0
 #, python-format
 msgid "Create record"
-msgstr ""
+msgstr "Criar registro"
 
 #. module: web
 #. openerp-web
@@ -2370,6 +2388,8 @@ msgstr "Carregar mais... ("
 
 #. module: web
 #. openerp-web
+#: code:addons/web/static/src/legacy/xml/base.xml:0
+#: code:addons/web/static/src/legacy/xml/base.xml:0
 #: code:addons/web/static/src/webclient/loading_indicator/loading_indicator.xml:0
 #, python-format
 msgid "Loading"
@@ -2636,8 +2656,8 @@ msgstr "Texto Múltiplas Linhas"
 #. openerp-web
 #: code:addons/web/static/src/webclient/user_menu/user_menu_items.js:0
 #, python-format
-msgid "My Odoo.com.account"
-msgstr ""
+msgid "My Odoo.com account"
+msgstr "A minha conta de Odoo.com"
 
 #. module: web
 #. openerp-web
@@ -2781,6 +2801,7 @@ msgstr ""
 #. module: web
 #. openerp-web
 #: code:addons/web/static/src/legacy/js/fields/field_utils.js:0
+#: code:addons/web/static/src/legacy/js/fields/relational_fields.js:0
 #, python-format
 msgid "No records"
 msgstr "Sem registos"
@@ -2798,13 +2819,6 @@ msgstr ""
 #, python-format
 msgid "No results found"
 msgstr ""
-
-#. module: web
-#. openerp-web
-#: code:addons/web/static/src/legacy/js/fields/relational_fields.js:0
-#, python-format
-msgid "No results to show..."
-msgstr "Não há resultados a mostrar..."
 
 #. module: web
 #: code:addons/web/controllers/main.py:0
@@ -3399,6 +3413,13 @@ msgstr "Imprimir"
 
 #. module: web
 #. openerp-web
+#: code:addons/web/static/src/legacy/xml/report.xml:0
+#, python-format
+msgid "Printing options"
+msgstr ""
+
+#. module: web
+#. openerp-web
 #: code:addons/web/static/src/legacy/js/fields/basic_fields.js:0
 #, python-format
 msgid "Priority"
@@ -3545,6 +3566,14 @@ msgstr ""
 #, python-format
 msgid "Red"
 msgstr "Vermelho"
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/legacy/xml/base.xml:0
+#: code:addons/web/static/src/legacy/xml/base.xml:0
+#, python-format
+msgid "Refresh"
+msgstr ""
 
 #. module: web
 #. openerp-web
@@ -4828,6 +4857,12 @@ msgstr "Sim"
 #, python-format
 msgid "Yesterday"
 msgstr "Ontem"
+
+#. module: web
+#: code:addons/web/controllers/main.py:0
+#, python-format
+msgid "You are not allowed to upload an attachment here."
+msgstr ""
 
 #. module: web
 #. openerp-web

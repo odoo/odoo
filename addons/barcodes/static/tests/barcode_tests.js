@@ -89,6 +89,44 @@ QUnit.test('Button with barcode_trigger', async function (assert) {
     form.destroy();
 });
 
+QUnit.test('Two buttons with same barcode_trigger and the same string and action', async function (assert) {
+    assert.expect(2);
+
+    var form = await createView({
+        View: FormView,
+        model: 'product',
+        data: this.data,
+        arch: '<form>' +
+                '<header>' +
+                    '<button name="do_something" string="Validate" type="object" invisible="0" barcode_trigger="doit"/>' +
+                    '<button name="do_something" string="Validate" type="object" invisible="1" barcode_trigger="doit"/>' +
+                '</header>' +
+            '</form>',
+        res_id: 2,
+
+        services: {
+            notification: {
+                notify: function (params) {
+                    assert.step(params.type);
+                }
+            },
+        },
+        intercepts: {
+            execute_action: function (event) {
+                assert.strictEqual(event.data.action_data.name, 'do_something',
+                    "do_something method call verified");
+            },
+        },
+    });
+
+    // O-BTN.doit should call execute_action as the first button is visible
+    _.each(['O','-','B','T','N','.','d','o','i','t','Enter'], triggerKeypressEvent);
+    await testUtils.nextTick();
+    assert.verifySteps([], "no warning should be displayed");
+
+    form.destroy();
+});
+
 QUnit.test('edit, save and cancel buttons', async function (assert) {
     assert.expect(6);
 

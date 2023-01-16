@@ -378,3 +378,76 @@ class StockGenerate(TransactionCase):
             self.assertEqual(move_line.lot_name, filtered_value_list.pop(0))
         for move_line in (move.move_line_ids - move.move_line_nosuggest_ids):
             self.assertEqual(move_line.lot_name, False)
+
+    def test_generate_with_putaway_02(self):
+        """
+        Suppose a tracked-by-USN product P
+        Sub locations in WH/Stock + Storage Category
+        The Storage Category adds a capacity constraint (max 1 x P / Location)
+        - Plan a receipt with 2 x P
+        - Receive 4 x P
+        -> The test ensures that the destination locations are correct
+        """
+        stock_location = self.warehouse.lot_stock_id
+        self.env.user.write({'groups_id': [(4, self.env.ref('stock.group_stock_storage_categories').id)]})
+        self.env.user.write({'groups_id': [(4, self.env.ref('stock.group_stock_multi_locations').id)]})
+
+        # max 1 x product_serial
+        stor_category = self.env['stock.storage.category'].create({
+            'name': 'Super Storage Category',
+            'product_capacity_ids': [(0, 0, {
+                'product_id': self.product_serial.id,
+                'quantity': 1,
+            })]
+        })
+
+        # 5 sub locations with the storage category
+        # (the last one should never be used)
+        sub_loc_01, sub_loc_02, sub_loc_03, sub_loc_04, dummy = self.env['stock.location'].create([{
+            'name': 'Sub Location %s' % i,
+            'usage': 'internal',
+            'location_id': stock_location.id,
+            'storage_category_id': stor_category.id,
+        } for i in [1, 2, 3, 4, 5]])
+
+        self.env['stock.putaway.rule'].create({
+            'location_in_id': stock_location.id,
+            'location_out_id': stock_location.id,
+            'product_id': self.product_serial.id,
+            'storage_category_id': stor_category.id,
+        })
+
+        # Receive 1 x P
+        receipt_picking = self.env['stock.picking'].create({
+            'picking_type_id': self.warehouse.in_type_id.id,
+            'location_id': self.env.ref('stock.stock_location_suppliers').id,
+            'location_dest_id': stock_location.id,
+        })
+        move = self.env['stock.move'].create({
+            'name': self.product_serial.name,
+            'product_id': self.product_serial.id,
+            'product_uom': self.product_serial.uom_id.id,
+            'product_uom_qty': 2.0,
+            'picking_id': receipt_picking.id,
+            'location_id': receipt_picking.location_id.id,
+            'location_dest_id': receipt_picking.location_dest_id.id,
+        })
+        receipt_picking.action_confirm()
+
+        self.assertEqual(move.move_line_ids[0].location_dest_id, sub_loc_01)
+        self.assertEqual(move.move_line_ids[1].location_dest_id, sub_loc_02)
+
+        form_wizard = Form(self.env['stock.assign.serial'].with_context(
+            default_move_id=move.id,
+            default_next_serial_number='001',
+            default_next_serial_count=4,
+        ))
+        wiz = form_wizard.save()
+        wiz.generate_serial_numbers()
+
+        self.assertRecordValues(move.move_line_ids, [
+            {'qty_done': 1, 'lot_name': '001', 'location_dest_id': sub_loc_01.id},
+            {'qty_done': 1, 'lot_name': '002', 'location_dest_id': sub_loc_02.id},
+            {'qty_done': 1, 'lot_name': '003', 'location_dest_id': sub_loc_03.id},
+            {'qty_done': 1, 'lot_name': '004', 'location_dest_id': sub_loc_04.id},
+        ])

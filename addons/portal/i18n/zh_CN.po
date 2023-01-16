@@ -3,10 +3,11 @@
 # 	* portal
 # 
 # Translators:
-# Martin Trigaux, 2021
-# Jeffery CHEN <jeffery9@gmail.com>, 2021
 # 黎伟杰 <674416404@qq.com>, 2021
 # 深圳市耀影科技有限公司_QQ1006399173, 2021
+# Martin Trigaux, 2022
+# 山西清水欧度(QQ:54773801) <54773801@qq.com>, 2022
+# Jeffery CHEN <jeffery9@gmail.com>, 2022
 # 
 msgid ""
 msgstr ""
@@ -14,7 +15,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-10-05 10:55+0000\n"
 "PO-Revision-Date: 2021-09-14 12:24+0000\n"
-"Last-Translator: 深圳市耀影科技有限公司_QQ1006399173, 2021\n"
+"Last-Translator: Jeffery CHEN <jeffery9@gmail.com>, 2022\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -27,7 +28,7 @@ msgstr ""
 #: code:addons/portal/static/src/js/portal_sidebar.js:0
 #, python-format
 msgid "%1d days overdue"
-msgstr ""
+msgstr "逾期%1d天"
 
 #. module: portal
 #: code:addons/portal/controllers/portal.py:0
@@ -45,14 +46,12 @@ msgstr "<i class=\"fa fa-arrow-right mr-1\"/>返回编辑模式"
 msgid ""
 "<i class=\"fa fa-chevron-left\" role=\"img\" aria-label=\"Previous\" "
 "title=\"Previous\"/>"
-msgstr ""
-"<i class=\"fa fa-chevron-left\" role=\"img\" aria-label=\"Previous\" "
-"title=\"Previous\"/>"
+msgstr "<i class=\"fa fa-chevron-left\" role=\"img\" aria-label=\"前一\" title=\"前一\"/>"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.record_pager
 msgid "<i class=\"fa fa-chevron-right\" role=\"img\" aria-label=\"Next\" title=\"Next\"/>"
-msgstr "<i class=\"fa fa-chevron-right\" role=\"img\" aria-label=\"Next\" title=\"Next\"/>"
+msgstr "<i class=\"fa fa-chevron-right\" role=\"img\" aria-label=\"下一\" title=\"下一\"/>"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_layout
@@ -65,12 +64,19 @@ msgid "<i class=\"fa fa-pencil\"/> Edit"
 msgstr "<i class=\"fa fa-pencil\"/> 编辑"
 
 #. module: portal
+#: model_terms:ir.ui.view,arch_db:portal.portal_my_security
+msgid "<i title=\"Documentation\" class=\"fa fa-fw o_button_icon fa-info-circle\"/>"
+msgstr "<i title=\"Documentation\" class=\"fa fa-fw o_button_icon fa-info-circle\"/>"
+
+#. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_details
 msgid ""
 "<small class=\"form-text text-muted\">Changing company name or VAT number is"
 " not allowed once document(s) have been issued for your account. <br/>Please"
 " contact us directly for this operation.</small>"
 msgstr ""
+"<small class=\"form-text text-"
+"muted\">一旦为您的账户签发了文件，就不允许更改公司名称或增值税号码。<br/>，请直接与我们联系这项操作。</small>"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_searchbar
@@ -174,6 +180,91 @@ msgid ""
 "</table>\n"
 "            "
 msgstr ""
+"<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" style=\"padding-top: 16px; background-color: #F1F1F1; font-family:Verdana, Arial,sans-serif; color: #454748; width: 100%; border-collapse:separate;\"><tr><td align=\"center\">\n"
+"<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"padding: 16px; background-color: white; color: #454748; border-collapse:separate;\">\n"
+"<tbody>\n"
+"    <!-- HEADER -->\n"
+"    <tr>\n"
+"        <td align=\"center\" style=\"min-width: 590px;\">\n"
+"            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"min-width: 590px; background-color: white; padding: 0px 8px 0px 8px; border-collapse:separate;\">\n"
+"                <tr><td valign=\"middle\">\n"
+"                    <span style=\"font-size: 10px;\">您的账户</span><br/>\n"
+"                    <span style=\"font-size: 20px; font-weight: bold;\" t-out=\"object.user_id.name or ''\">马克演示</span>\n"
+"                </td><td valign=\"middle\" align=\"right\">\n"
+"                    <img t-attf-src=\"/logo.png?company={{ object.user_id.company_id.id }}\" style=\"padding: 0px; margin: 0px; height: auto; width: 80px;\" t-att-alt=\"object.user_id.company_id.name\"/>\n"
+"                </td></tr>\n"
+"                <tr><td colspan=\"2\" style=\"text-align:center;\">\n"
+"                  <hr width=\"100%\" style=\"background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0; margin:16px 0px 16px 0px;\"/>\n"
+"                </td></tr>\n"
+"            </table>\n"
+"        </td>\n"
+"    </tr>\n"
+"    <!-- CONTENT -->\n"
+"    <tr>\n"
+"        <td align=\"center\" style=\"min-width: 590px;\">\n"
+"            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"min-width: 590px; background-color: white; padding: 0px 8px 0px 8px; border-collapse:separate;\">\n"
+"                <tr><td valign=\"top\" style=\"font-size: 13px;\">\n"
+"                    <div>\n"
+"                        亲爱的<t t-out=\"object.user_id.name or ''\">Marc Demo</t>。<br/> <br/>\n"
+"                        欢迎来到<t t-out=\"object.user_id.company_id.name\">YourCompany</t>'s Portal!<br/><br/>\n"
+"                        我们已经为您创建了一个账户，登录名如下：<t t-out=\"object.user_id.login\">Demo</t><br/><br/>\n"
+"                        请点击下面的按钮，选择密码并激活您的账户。\n"
+"                        <div style=\"margin: 16px 0px 16px 0px; text-align: center;\">\n"
+"                            <a t-att-href=\"object.user_id.signup_url\" style=\"display: inline-block; padding: 10px; text-decoration: none; font-size: 12px; background-color: #875A7B; color: #fff; border-radius: 5px;\">\n"
+"                                <strong>激活账户</strong>\n"
+"                            </a>\n"
+"                            <a href=\"/web/login\" style=\"display: inline-block; padding: 10px; text-decoration: none; font-size: 12px;\">\n"
+"                                <strong>登录</strong>\n"
+"                            </a>\n"
+"                        </div>\n"
+"                       <t t-out=\"object.wizard_id.welcome_message or ''\">欢迎来到我们公司的门户网站。</t>\n"
+"                    </div>\n"
+"                </td></tr>\n"
+"                <tr><td style=\"text-align:center;\">\n"
+"                  <hr width=\"100%\" style=\"background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0; margin: 16px 0px 16px 0px;\"/>\n"
+"                </td></tr>\n"
+"            </table>\n"
+"        </td>\n"
+"    </tr>\n"
+"    <!-- FOOTER -->\n"
+"    <tr>\n"
+"        <td align=\"center\" style=\"min-width: 590px;\">\n"
+"            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"min-width: 590px; background-color: white; font-size: 11px; padding: 0px 8px 0px 8px; border-collapse:separate;\">\n"
+"                <tr><td valign=\"middle\" align=\"left\">\n"
+"                    <t t-out=\"object.user_id.company_id.name or ''\">您的公司</t>\n"
+"                </td></tr>\n"
+"                <tr><td valign=\"middle\" align=\"left\" style=\"opacity: 0.7;\">\n"
+"                    <t t-out=\"object.user_id.company_id.phone or ''\">+1 650-123-4567</t>\n"
+"                    <t t-if=\"object.user_id.company_id.email\">\n"
+"                        |<a t-attf-href=\"'mailto:%s' % {{ object.user_id.company_id.email }}\" style=\"text-decoration:none; color: #454748;\" t-out=\"object.user_id.company_id.email or ''\">info@yourcompany.com</a>\n"
+"                    </t>\n"
+"                    <t t-if=\"object.user_id.company_id.website\">\n"
+"                        |<a t-attf-href=\"'%s' % {{ object.user_id.company_id.website }}\" style=\"text-decoration:none; color: #454748;\" t-out=\"object.user_id.company_id.website or ''\">http://www.example.com</a>\n"
+"                    </t>\n"
+"                </td></tr>\n"
+"            </table>\n"
+"        </td>\n"
+"    </tr>\n"
+"</tbody>\n"
+"</table>\n"
+"</td></tr>\n"
+"<!-- POWERED BY -->\n"
+"<tr><td align=\"center\" style=\"min-width: 590px;\">\n"
+"    <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"min-width: 590px; background-color: #F1F1F1; color: #454748; padding: 8px; border-collapse:separate;\">\n"
+"      <tr><td style=\"text-align: center; font-size: 13px;\">\n"
+"        由<a target=\"_blank\" href=\"https://www.odoo.com?utm_source=db&amp;utm_medium=portalinvite\" style=\"color: #875A7B;\">Odoo</a>提供技术提供\n"
+"      </td></tr>\n"
+"    </table>\n"
+"</td></tr>\n"
+"</table>\n"
+"            "
+
+#. module: portal
+#. openerp-web
+#: code:addons/portal/static/src/js/portal.js:0
+#, python-format
+msgid "API Key Ready"
+msgstr "API 密钥就绪"
 
 #. module: portal
 #. openerp-web
@@ -196,7 +287,7 @@ msgstr "帐户安全"
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_share_wizard
 msgid "Add a note"
-msgstr "新建便签"
+msgstr "新建笔记"
 
 #. module: portal
 #. openerp-web
@@ -208,7 +299,7 @@ msgstr "添加附件"
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_share_wizard
 msgid "Add contacts to share the document..."
-msgstr "添加联系人来共享文档…"
+msgstr "添加联系人来共享此文档…"
 
 #. module: portal
 #: model:ir.model.fields,help:portal.field_portal_share__note
@@ -216,17 +307,22 @@ msgid "Add extra content to display in the email"
 msgstr "添加额外内容以显示在EMail中"
 
 #. module: portal
+#: model_terms:ir.ui.view,arch_db:portal.portal_my_security
+msgid "Added On"
+msgstr "已添加"
+
+#. module: portal
 #: code:addons/portal/controllers/mail.py:0
 #, python-format
 msgid "An access token must be provided for each attachment."
-msgstr ""
+msgstr "必须为每个附件提供一个访问令牌。"
 
 #. module: portal
 #. openerp-web
 #: code:addons/portal/static/src/xml/portal_chatter.xml:0
 #, python-format
 msgid "Avatar"
-msgstr "头像"
+msgstr "形象"
 
 #. module: portal
 #. openerp-web
@@ -255,14 +351,14 @@ msgstr "一旦您的账户开具发票，不可更改增值税号码。如需要
 msgid ""
 "Changing company name is not allowed once document(s) have been issued for "
 "your account. Please contact us directly for this operation."
-msgstr ""
+msgstr "为您的帐户签发文件后，不允许更改公司名称。请直接联系我们进行此操作。"
 
 #. module: portal
 #. openerp-web
 #: code:addons/portal/static/src/js/portal.js:0
 #, python-format
 msgid "Check failed"
-msgstr ""
+msgstr "检查失败"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_details
@@ -277,8 +373,11 @@ msgid "Click here to see your document."
 msgstr "单击此处查看您的文档。"
 
 #. module: portal
+#. openerp-web
+#: code:addons/portal/static/src/js/portal.js:0
 #: model_terms:ir.ui.view,arch_db:portal.portal_back_in_edit_mode
 #: model_terms:ir.ui.view,arch_db:portal.wizard_view
+#, python-format
 msgid "Close"
 msgstr "关闭"
 
@@ -286,6 +385,18 @@ msgstr "关闭"
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_details
 msgid "Company Name"
 msgstr "公司名称"
+
+#. module: portal
+#: model:ir.model,name:portal.model_res_config_settings
+msgid "Config Settings"
+msgstr "配置设置"
+
+#. module: portal
+#. openerp-web
+#: code:addons/portal/static/src/js/portal.js:0
+#, python-format
+msgid "Confirm"
+msgstr "确认"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_details
@@ -324,7 +435,7 @@ msgstr "联系人"
 #: code:addons/portal/static/src/js/portal_composer.js:0
 #, python-format
 msgid "Could not save file <strong>%s</strong>"
-msgstr ""
+msgstr "无法保存文件 <strong>%s</strong>"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_details
@@ -357,7 +468,7 @@ msgstr "创建时间"
 msgid ""
 "Currently available to everyone viewing this document, click to restrict to "
 "internal employees."
-msgstr ""
+msgstr "目前每个人都可以视图此文件，点击限制内部员工使用。"
 
 #. module: portal
 #. openerp-web
@@ -366,7 +477,12 @@ msgstr ""
 msgid ""
 "Currently restricted to internal employees, click to make it available to "
 "everyone viewing this document."
-msgstr ""
+msgstr "目前仅限于内部员工使用，点击可使每个人都能视图此文件。"
+
+#. module: portal
+#: model:ir.model.fields,field_description:portal.field_res_config_settings__portal_allow_api_keys
+msgid "Customer API Keys"
+msgstr "客户 API 密钥"
 
 #. module: portal
 #: model:ir.model.fields,help:portal.field_portal_mixin__access_url
@@ -386,10 +502,27 @@ msgid "Delete"
 msgstr "删除"
 
 #. module: portal
+#: model_terms:ir.ui.view,arch_db:portal.portal_my_security
+msgid "Description"
+msgstr "描述"
+
+#. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_breadcrumbs
 #: model_terms:ir.ui.view,arch_db:portal.portal_layout
 msgid "Details"
 msgstr "细节"
+
+#. module: portal
+#: model_terms:ir.ui.view,arch_db:portal.portal_my_security
+msgid "Developer API Keys"
+msgstr "开发者 API 密钥"
+
+#. module: portal
+#. openerp-web
+#: code:addons/portal/static/src/js/portal.js:0
+#, python-format
+msgid "Discard"
+msgstr "丢弃"
 
 #. module: portal
 #: model:ir.model.fields,field_description:portal.field_portal_share__display_name
@@ -408,7 +541,7 @@ msgstr "文档"
 #: code:addons/portal/static/src/js/portal_sidebar.js:0
 #, python-format
 msgid "Due in %1d days"
-msgstr ""
+msgstr "在%1d天内到期"
 
 #. module: portal
 #. openerp-web
@@ -433,7 +566,14 @@ msgstr "邮件主题"
 #: code:addons/portal/static/src/xml/portal_chatter.xml:0
 #, python-format
 msgid "Employees Only"
-msgstr ""
+msgstr "仅限员工"
+
+#. module: portal
+#. openerp-web
+#: code:addons/portal/static/src/xml/portal_security.xml:0
+#, python-format
+msgid "Enter a description of and purpose for the key."
+msgstr "输入密钥的描述和用途."
 
 #. module: portal
 #. openerp-web
@@ -445,7 +585,7 @@ msgstr "忘记密码？"
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.wizard_view
 msgid "Grant Access"
-msgstr ""
+msgstr "授予访问权限"
 
 #. module: portal
 #: model:ir.model,name:portal.model_portal_wizard
@@ -464,6 +604,17 @@ msgid "HTTP Routing"
 msgstr "HTTP 路由"
 
 #. module: portal
+#. openerp-web
+#: code:addons/portal/static/src/xml/portal_security.xml:0
+#, python-format
+msgid ""
+"Here is your new API key, use it instead of a password for RPC access.\n"
+"                Your login is still necessary for interactive usage."
+msgstr ""
+"这是您的新 API 密钥，使用它代替密码进行 RPC 访问.\n"
+"                            您的登录仍然是交互式使用所必需的."
+
+#. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_breadcrumbs
 msgid "Home"
 msgstr "首页"
@@ -476,9 +627,30 @@ msgid "ID"
 msgstr "ID"
 
 #. module: portal
+#. openerp-web
+#: code:addons/portal/static/src/xml/portal_security.xml:0
+#, python-format
+msgid "Important:"
+msgstr "重要提示:"
+
+#. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.wizard_view
 msgid "Internal User"
 msgstr "内部用户"
+
+#. module: portal
+#. openerp-web
+#: code:addons/portal/static/src/xml/portal_chatter.xml:0
+#, python-format
+msgid "Internal Note"
+msgstr "内部说明"
+
+#. module: portal
+#. openerp-web
+#: code:addons/portal/static/src/xml/portal_chatter.xml:0
+#, python-format
+msgid "Internal notes are only displayed to internal users."
+msgstr "内部注释仅向内部用户显示."
 
 #. module: portal
 #: code:addons/portal/controllers/portal.py:0
@@ -500,12 +672,23 @@ msgstr "邀请消息"
 #. module: portal
 #: model:ir.model.fields,field_description:portal.field_portal_wizard_user__is_internal
 msgid "Is Internal"
-msgstr ""
+msgstr "是内部"
 
 #. module: portal
 #: model:ir.model.fields,field_description:portal.field_portal_wizard_user__is_portal
 msgid "Is Portal"
+msgstr "是门户"
+
+#. module: portal
+#. openerp-web
+#: code:addons/portal/static/src/xml/portal_security.xml:0
+#, python-format
+msgid ""
+"It is very important that this description be clear\n"
+"                and complete,"
 msgstr ""
+"明确此描述非常重要\n"
+"                并完成,"
 
 #. module: portal
 #: model:ir.model.fields,field_description:portal.field_portal_share____last_update
@@ -531,7 +714,7 @@ msgstr "最后更新时间"
 #. module: portal
 #: model:ir.model.fields,field_description:portal.field_portal_wizard_user__login_date
 msgid "Latest Authentication"
-msgstr ""
+msgstr "最新认证"
 
 #. module: portal
 #. openerp-web
@@ -539,6 +722,11 @@ msgstr ""
 #, python-format
 msgid "Leave a comment"
 msgstr "留下评论"
+
+#. module: portal
+#: model_terms:ir.ui.view,arch_db:portal.res_config_settings_view_form
+msgid "Let your customers create developer API keys"
+msgstr "让您的客户创建开发人员 API 密钥"
 
 #. module: portal
 #: model:ir.model.fields,field_description:portal.field_portal_share__share_link
@@ -561,7 +749,7 @@ msgstr "消息"
 msgid ""
 "Model %(model_name)s does not support token signature, as it does not have "
 "%(field_name)s field."
-msgstr ""
+msgstr "模型%(model_name)s不支持token签名，因为它没有%(field_name)s字段。"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.my_account_link
@@ -572,6 +760,21 @@ msgstr "我的账号"
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_details
 msgid "Name"
 msgstr "名称"
+
+#. module: portal
+#. openerp-web
+#: code:addons/portal/static/src/xml/portal_security.xml:0
+#, python-format
+msgid "Name your key"
+msgstr "命名您的密钥"
+
+#. module: portal
+#. openerp-web
+#: code:addons/portal/static/src/js/portal.js:0
+#: model_terms:ir.ui.view,arch_db:portal.portal_my_security
+#, python-format
+msgid "New API Key"
+msgstr "新 API 密钥"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_security
@@ -590,12 +793,18 @@ msgstr "下一页"
 #. module: portal
 #: model:ir.model.fields,field_description:portal.field_portal_share__note
 msgid "Note"
-msgstr "便签"
+msgstr "笔记"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_record_sidebar
 msgid "Odoo Logo"
 msgstr "Odoo 徽标"
+
+#. module: portal
+#: code:addons/portal/models/res_users_apikeys_description.py:0
+#, python-format
+msgid "Only internal and portal users can create API keys"
+msgstr "只有内部用户和门户用户才能创建 API 密钥"
 
 #. module: portal
 #. openerp-web
@@ -612,12 +821,12 @@ msgstr "合作伙伴"
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_security
 msgid "Password Updated!"
-msgstr ""
+msgstr "密码已更新！"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_security
 msgid "Password:"
-msgstr ""
+msgstr "密码："
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_details
@@ -661,12 +870,12 @@ msgstr "门户用户配置"
 #. module: portal
 #: model:mail.template,name:portal.mail_template_data_portal_welcome
 msgid "Portal: User Invite"
-msgstr ""
+msgstr "门户:用户邀请"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_record_sidebar
 msgid "Powered by"
-msgstr "技术支持"
+msgstr "技术提供"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.pager
@@ -691,7 +900,7 @@ msgstr "已在 %s 上发布"
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.wizard_view
 msgid "Re-Invite"
-msgstr ""
+msgstr "邀请"
 
 #. module: portal
 #: model:ir.model.fields,field_description:portal.field_portal_share__partner_ids
@@ -701,7 +910,7 @@ msgstr "收件人"
 #. module: portal
 #: model:ir.model.fields,field_description:portal.field_portal_share__resource_ref
 msgid "Related Document"
-msgstr ""
+msgstr "相关文档"
 
 #. module: portal
 #: model:ir.model.fields,field_description:portal.field_portal_share__res_id
@@ -716,7 +925,12 @@ msgstr "相关的单据模型"
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.wizard_view
 msgid "Revoke Access"
-msgstr ""
+msgstr "取消访问"
+
+#. module: portal
+#: model_terms:ir.ui.view,arch_db:portal.portal_my_security
+msgid "Scope"
+msgstr "作用范围"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_searchbar
@@ -782,7 +996,7 @@ msgstr "登录"
 msgid ""
 "Some fields are required. Please make sure to write a message or attach a "
 "document"
-msgstr ""
+msgstr "有些字段是必须的。请务必写下信息或附上文件"
 
 #. module: portal
 #: code:addons/portal/controllers/portal.py:0
@@ -825,33 +1039,40 @@ msgstr "附件 %s 不可以删除，因为其状态为 等待处理。"
 #, python-format
 msgid ""
 "The attachment %s does not exist or you do not have the rights to access it."
-msgstr ""
+msgstr "附件%s不存在或者您没有权限访问它。"
 
 #. module: portal
 #: code:addons/portal/controllers/portal.py:0
 #, python-format
 msgid ""
 "The attachment does not exist or you do not have the rights to access it."
-msgstr ""
+msgstr "该附件不存在，或者您没有权利访问它。"
 
 #. module: portal
 #: code:addons/portal/wizard/portal_wizard.py:0
 #, python-format
 msgid "The contact \"%s\" does not have a valid email."
-msgstr ""
+msgstr "联系人\"%s\"没有一个有效的电子邮件。"
 
 #. module: portal
 #: code:addons/portal/wizard/portal_wizard.py:0
 #, python-format
 msgid "The contact \"%s\" has the same email has an existing user (%s)."
-msgstr ""
+msgstr "联系人\"%s\"的电子邮件与现有用户（%s）相同。"
 
 #. module: portal
 #: code:addons/portal/controllers/portal.py:0
 #, python-format
 msgid ""
 "The document does not exist or you do not have the rights to access it."
-msgstr ""
+msgstr "该文档不存在或您无权访问。"
+
+#. module: portal
+#. openerp-web
+#: code:addons/portal/static/src/xml/portal_security.xml:0
+#, python-format
+msgid "The key cannot be retrieved later and provides"
+msgstr "以后无法检索密钥，并提供"
 
 #. module: portal
 #: code:addons/portal/controllers/portal.py:0
@@ -864,19 +1085,19 @@ msgstr "新密码与确认密码必须相同。"
 #, python-format
 msgid ""
 "The old password you provided is incorrect, your password was not changed."
-msgstr "你提供的原密码是错误的，密码没有改变。"
+msgstr "您提供的原密码是错误的，密码没有改变。"
 
 #. module: portal
 #: code:addons/portal/wizard/portal_wizard.py:0
 #, python-format
 msgid "The partner \"%s\" already has the portal access."
-msgstr ""
+msgstr "伙伴\"%s\"已经拥有门户访问权。"
 
 #. module: portal
 #: code:addons/portal/wizard/portal_wizard.py:0
 #, python-format
 msgid "The partner \"%s\" has no portal access."
-msgstr ""
+msgstr "伙伴\"%s\"没有门户访问权。"
 
 #. module: portal
 #: code:addons/portal/wizard/portal_wizard.py:0
@@ -884,7 +1105,7 @@ msgstr ""
 msgid ""
 "The template \"Portal: new user\" not found for sending email to the portal "
 "user."
-msgstr ""
+msgstr "没有找到用于向门户用户发送电子邮件的模板 \"门户：新用户\"。"
 
 #. module: portal
 #. openerp-web
@@ -909,13 +1130,13 @@ msgstr "这是客户门户的预览。"
 msgid ""
 "This partner is linked to an internal User and already has access to the "
 "Portal."
-msgstr ""
+msgstr "这个合作伙伴与一个内部用户相联系，并且已经有了进入门户网站的权限。"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.wizard_view
 msgid ""
 "This text is included at the end of the email sent to new portal users."
-msgstr ""
+msgstr "这段文字包括在发给新的门户用户的电子邮件的末尾。"
 
 #. module: portal
 #: model:ir.model.fields,help:portal.field_portal_wizard__welcome_message
@@ -950,7 +1171,7 @@ msgstr "验证新密码："
 #. module: portal
 #: model:ir.model,name:portal.model_ir_ui_view
 msgid "View"
-msgstr "查看"
+msgstr "视图"
 
 #. module: portal
 #. openerp-web
@@ -1030,6 +1251,13 @@ msgid "Website communication history"
 msgstr "网上沟通记录"
 
 #. module: portal
+#. openerp-web
+#: code:addons/portal/static/src/xml/portal_security.xml:0
+#, python-format
+msgid "What's this key for?"
+msgstr "这个密钥(口令)用于?"
+
+#. module: portal
 #: model:ir.model.fields,field_description:portal.field_portal_wizard_user__wizard_id
 msgid "Wizard"
 msgstr "向导"
@@ -1042,6 +1270,13 @@ msgid "Write a message..."
 msgstr "写点什么呢。。。"
 
 #. module: portal
+#. openerp-web
+#: code:addons/portal/static/src/xml/portal_security.xml:0
+#, python-format
+msgid "Write down your key"
+msgstr "写下您的密钥(口令)"
+
+#. module: portal
 #: code:addons/portal/wizard/portal_share.py:0
 #: code:addons/portal/wizard/portal_share.py:0
 #, python-format
@@ -1052,7 +1287,7 @@ msgstr "您被邀请访问  %s"
 #: code:addons/portal/controllers/portal.py:0
 #, python-format
 msgid "You cannot leave any password empty."
-msgstr "你不能让任何密码为空。"
+msgstr "您不能让任何密码为空。"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_share_template
@@ -1070,12 +1305,12 @@ msgstr "您应该"
 #: code:addons/portal/wizard/portal_wizard.py:0
 #, python-format
 msgid "You should first grant the portal access to the partner \"%s\"."
-msgstr ""
+msgstr "您应该首先授予合作伙伴\"%s\"的门户权限。"
 
 #. module: portal
 #: model:mail.template,subject:portal.mail_template_data_portal_welcome
 msgid "Your account at {{ object.user_id.company_id.name }}"
-msgstr ""
+msgstr "您在{{ object.user_id.company_id.name }}的账户。"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_contact
@@ -1092,7 +1327,7 @@ msgstr "邮政代码"
 #: code:addons/portal/static/src/xml/portal_chatter.xml:0
 #, python-format
 msgid "avatar"
-msgstr "头像"
+msgstr "形象"
 
 #. module: portal
 #. openerp-web
@@ -1110,6 +1345,24 @@ msgstr "评论"
 
 #. module: portal
 #. openerp-web
+#: code:addons/portal/static/src/xml/portal_security.xml:0
+#, python-format
+msgid "full access"
+msgstr "完全访问"
+
+#. module: portal
+#. openerp-web
+#: code:addons/portal/static/src/xml/portal_security.xml:0
+#, python-format
+msgid ""
+"it will be the only way to\n"
+"                identify the key once created"
+msgstr ""
+"这将是唯一的途径\n"
+"                创建密钥后识别密钥"
+
+#. module: portal
+#. openerp-web
 #: code:addons/portal/static/src/xml/portal_chatter.xml:0
 #, python-format
 msgid "logged in"
@@ -1123,7 +1376,12 @@ msgstr "odoo"
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_security
 msgid "password"
-msgstr ""
+msgstr "密码"
+
+#. module: portal
+#: model:ir.model,name:portal.model_res_users_apikeys_description
+msgid "res.users.apikeys.description"
+msgstr "res.users.apikeys.description"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_details
@@ -1135,4 +1393,11 @@ msgstr "请选择..."
 #: code:addons/portal/static/src/xml/portal_chatter.xml:0
 #, python-format
 msgid "to post a comment."
-msgstr "评论"
+msgstr "发表评论。"
+
+#. module: portal
+#. openerp-web
+#: code:addons/portal/static/src/xml/portal_security.xml:0
+#, python-format
+msgid "to your user account, it is very important to store it securely."
+msgstr "对于您的用户帐户，安全地存储它非常重要。"

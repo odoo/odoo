@@ -55,7 +55,7 @@ odoo.define('pos_discount.DiscountButton', function(require) {
             var discount = - pc / 100.0 * base_to_discount;
 
             if( discount < 0 ){
-                order.add_product(product, {
+                await order.add_product(product, {
                     price: discount,
                     lst_price: discount,
                     extras: {

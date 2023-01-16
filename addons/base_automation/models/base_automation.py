@@ -230,7 +230,7 @@ class BaseAutomation(models.Model):
             e.context['exception_class'] = 'base_automation'
             e.context['base_automation'] = {
                 'id': self.id,
-                'name': self.name,
+                'name': self.sudo().name,
             }
 
     def _process(self, records, domain_post=None):
@@ -256,7 +256,8 @@ class BaseAutomation(models.Model):
             records.write(values)
 
         # execute server actions
-        if self.action_server_id:
+        action_server = self.action_server_id
+        if action_server:
             for record in records:
                 # we process the action if any watched field has been modified
                 if self._check_trigger_fields(record):
@@ -267,7 +268,7 @@ class BaseAutomation(models.Model):
                         'domain_post': domain_post,
                     }
                     try:
-                        self.action_server_id.sudo().with_context(**ctx).run()
+                        action_server.sudo().with_context(**ctx).run()
                     except Exception as e:
                         self._add_postmortem_action(e)
                         raise e
@@ -341,7 +342,7 @@ class BaseAutomation(models.Model):
                     for old_vals in (records.read(list(vals)) if vals else [])
                 }
                 # call original method
-                write.origin(records, vals, **kw)
+                write.origin(self.with_env(actions.env), vals, **kw)
                 # check postconditions, and execute actions on the records that satisfy them
                 for action in actions.with_context(old_values=old_values):
                     records, domain_post = action._filter_post_export_domain(pre[action])

@@ -67,6 +67,7 @@ export class CommandPalette extends Component {
     setup() {
         this.keyId = 1;
         this.keepLast = new KeepLast();
+        this._sessionId = CommandPalette.lastSessionId++;
         this.DefaultCommandItem = DefaultCommandItem;
         this.activeElement = useService("ui").activeElement;
         const onDebouncedSearchInput = debounce.apply(this, [this.onSearchInput, 200]);
@@ -78,9 +79,15 @@ export class CommandPalette extends Component {
 
         useAutofocus();
 
-        useHotkey("Enter", () => this.executeSelectedCommand());
-        useHotkey("ArrowUp", () => this.selectCommandAndScrollTo("PREV"), { allowRepeat: true });
-        useHotkey("ArrowDown", () => this.selectCommandAndScrollTo("NEXT"), { allowRepeat: true });
+        useHotkey("Enter", () => this.executeSelectedCommand(), { bypassEditableProtection: true });
+        useHotkey("ArrowUp", () => this.selectCommandAndScrollTo("PREV"), {
+            bypassEditableProtection: true,
+            allowRepeat: true,
+        });
+        useHotkey("ArrowDown", () => this.selectCommandAndScrollTo("NEXT"), {
+            bypassEditableProtection: true,
+            allowRepeat: true,
+        });
 
         /**
          * @type {{ commands: CommandItem[],
@@ -139,6 +146,7 @@ export class CommandPalette extends Component {
         this.setCommands(namespace, {
             activeElement: this.activeElement,
             searchValue: "",
+            sessionId: this._sessionId,
         });
         this.state.searchValue = namespace === "default" ? "" : namespace;
     }
@@ -261,7 +269,9 @@ export class CommandPalette extends Component {
         await this.setCommands(namespace, {
             searchValue,
             activeElement: this.activeElement,
+            sessionId: this._sessionId,
         });
     }
 }
+CommandPalette.lastSessionId = 0;
 CommandPalette.template = "web.CommandPalette";

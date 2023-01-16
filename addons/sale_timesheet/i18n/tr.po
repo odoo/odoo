@@ -4,18 +4,17 @@
 # 
 # Translators:
 # Güven YILMAZ <guvenyilmaz@outlook.com.tr>, 2021
-# Ugur Yilmaz <ugurlu2001@hotmail.com>, 2021
 # Murat Durmuş <muratd@projetgrup.com>, 2021
 # Ozlem Cikrikci <ozlemc@eskayazilim.com.tr>, 2021
 # Ediz Duman <neps1192@gmail.com>, 2021
 # Ayhan KIZILTAN <akiziltan76@hotmail.com>, 2021
 # Martin Trigaux, 2021
 # Levent Karakaş <levent@mektup.at>, 2021
-# Ertuğrul Güreş <ertugrulg@projetgrup.com>, 2021
 # Umur Akın <umura@projetgrup.com>, 2021
-# Tugay Hatıl <tugayh@projetgrup.com>, 2021
 # Murat Kaplan <muratk@projetgrup.com>, 2021
 # abc Def <hdogan1974@gmail.com>, 2021
+# Ertuğrul Güreş <ertugrulg@projetgrup.com>, 2022
+# Tugay Hatıl <tugayh@projetgrup.com>, 2022
 # 
 msgid ""
 msgstr ""
@@ -23,7 +22,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-10-05 10:54+0000\n"
 "PO-Revision-Date: 2021-09-14 12:26+0000\n"
-"Last-Translator: abc Def <hdogan1974@gmail.com>, 2021\n"
+"Last-Translator: Tugay Hatıl <tugayh@projetgrup.com>, 2022\n"
 "Language-Team: Turkish (https://www.transifex.com/odoo/teams/41243/tr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -48,10 +47,10 @@ msgid ""
 msgstr ""
 "\n"
 "                <p class=\"o_view_nocontent_smiling_face\">\n"
-"                    Zaman Çizelgesi Kayıtları\n"
+"                    Çalışma Çizelgesi Kayıtları\n"
 "                </p><p>\n"
 "                    Her gün projeye göre çalışma saatlerinizi kaydedebilir ve izleyebilirsiniz. \n"
-"Bir proje için harcanan her zaman bir maliyet haline gelir \n"
+"Bir proje için harcanan her çalışma bir maliyet haline gelir \n"
 "ve gerekirse müşterilere yeniden faturalandırılabilir.\n"
 "                </p>\n"
 "            "
@@ -67,6 +66,8 @@ msgid ""
 "% of timesheets that are billable compared to the total number of timesheets"
 " linked to the AA of the project, rounded to the unit."
 msgstr ""
+"Projenin AA'sına bağlı toplam çalışma çizelgesi sayısına kıyasla "
+"faturalandırılabilir çalışma çizelgelerinin yüzdesi, birime yuvarlanır."
 
 #. module: sale_timesheet
 #: code:addons/sale_timesheet/wizard/project_create_sale_order.py:0
@@ -77,17 +78,18 @@ msgstr "%(amount)s %(label)s yeni Satış Siparişine eklenecektir."
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.project_update_default_description
 msgid ", for a revenue of"
-msgstr ""
+msgstr ", bir gelir için"
 
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.project_update_default_description
 msgid ", leading to a"
-msgstr ""
+msgstr ", yol açan bir"
 
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.portal_my_timesheets_inherit
 msgid "<em class=\"font-weight-normal text-muted\">Timesheets for Invoice:</em>"
 msgstr ""
+"<em class=\"font-weight-normal text-muted\">Fatura Çalışma Çizelgeleri:</em>"
 
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.portal_my_timesheets_inherit
@@ -95,12 +97,16 @@ msgid ""
 "<em class=\"font-weight-normal text-muted\">Timesheets for sales order "
 "item:</em>"
 msgstr ""
+"<em class=\"font-weight-normal text-muted\">Satış Siparişi Öğesi için "
+"çalışma çizelgeleri</em>"
 
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.portal_my_timesheets_inherit
 msgid ""
 "<em class=\"font-weight-normal text-muted\">Timesheets for sales order:</em>"
 msgstr ""
+"<em class=\"font-weight-normal text-muted\">Satış Siparişi için çalışma "
+"çizelgeleri</em>"
 
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.sale_advance_payment_inv_timesheet_view_form
@@ -123,6 +129,9 @@ msgid ""
 "                        Billable Time\n"
 "                        </span>"
 msgstr ""
+"<span class=\"o_stat_text\">\n"
+"                        Faturalandırılabilir Zaman\n"
+"                        </span>"
 
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.account_invoice_view_form_inherit_sale_timesheet
@@ -133,32 +142,32 @@ msgstr "<span class=\"o_stat_text\">Kaydedilmiş</span>"
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.portal_my_task_inherit
 msgid "<strong>Invoiced:</strong>"
-msgstr ""
+msgstr "<strong>Faturalanan:</strong>"
 
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.portal_my_task_inherit
 msgid "<strong>Invoices:</strong>"
-msgstr ""
+msgstr "<strong>Faturalar:</strong>"
 
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.portal_my_task_inherit
 msgid "<strong>Sales Order:</strong>"
-msgstr ""
+msgstr "<strong>Satış Siparişi:</strong>"
 
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.portal_my_task_inherit
 msgid "<strong>To invoice:</strong>"
-msgstr ""
+msgstr "<strong>Faturalanacak:</strong>"
 
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.project_update_default_description
 msgid "<u>Profitability</u>"
-msgstr ""
+msgstr "<u>Karlılık</u>"
 
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.project_update_default_description
 msgid "<u>Sold</u>"
-msgstr ""
+msgstr "<u>Satıldı</u>"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,help:sale_timesheet.field_sale_order_line__qty_delivered_method
@@ -172,13 +181,13 @@ msgstr ""
 "Ürün konfigürasyonuna göre, teslim edilen miktar otomatik olarak mekanizma ile hesaplanabilir :\n"
 "  - Manuel: Miktar,satırında manüel olarak ayarlanır\n"
 "  - Analitik Harcamalardan: Miktar, kaydedilen harcamalardan elde edilen miktardır\n"
-"  - Zaman Çizelgesi: Miktar, bu satış hattına bağlı görevlerde kaydedilen saatlerin toplamıdır\n"
+"  - Çalışma Çizelgesi: Miktar, bu satış hattına bağlı görevlerde kaydedilen saatlerin toplamıdır\n"
 "  - Stok Hareketi: Miktar onaylanmış seçimlerden geliyor\n"
 
 #. module: sale_timesheet
 #: model:project.project,name:sale_timesheet.project_support
 msgid "After-Sales Services"
-msgstr ""
+msgstr "Satış Sonrası Servisi"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,help:sale_timesheet.field_project_profitability_report__other_revenues
@@ -186,6 +195,8 @@ msgid ""
 "All revenues that are not from timesheets and that are linked to the "
 "analytic account of the project."
 msgstr ""
+"Zaman çizelgelerinden olmayan ve projenin analitik hesabıyla bağlantılı tüm "
+"gelirler."
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_profitability_report__amount_untaxed_invoiced
@@ -195,17 +206,17 @@ msgstr "Faturalanan tutar"
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_profitability_report__expense_amount_untaxed_invoiced
 msgid "Amount Re-invoiced"
-msgstr ""
+msgstr "Tutar Yeniden Faturalandırıldı"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_profitability_report__amount_untaxed_to_invoice
 msgid "Amount to Invoice"
-msgstr ""
+msgstr "Fatura tutarı"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_profitability_report__expense_amount_untaxed_to_invoice
 msgid "Amount to Re-invoice"
-msgstr ""
+msgstr "Yeniden faturalandırılacak tutar"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_create_invoice__amount_to_invoice
@@ -246,12 +257,12 @@ msgstr "En az bir satır doldurulmalıdır."
 #. module: sale_timesheet
 #: model:ir.model.fields.selection,name:sale_timesheet.selection__product_template__service_policy__delivered_manual
 msgid "Based on Milestones"
-msgstr ""
+msgstr "Kilometre Taşlarına Dayalı"
 
 #. module: sale_timesheet
 #: model:ir.model.fields.selection,name:sale_timesheet.selection__product_template__service_policy__delivered_timesheet
 msgid "Based on Timesheets"
-msgstr ""
+msgstr "Çalışma Çizelgelerine Göre"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_project__allow_billable
@@ -262,7 +273,7 @@ msgstr "Faturalandırılabilir"
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_project__billable_percentage
 msgid "Billable Percentage"
-msgstr ""
+msgstr "Faturalandırılabilir Yüzde"
 
 #. module: sale_timesheet
 #: code:addons/sale_timesheet/models/project.py:0
@@ -290,7 +301,7 @@ msgstr "Sabit Fiyatla Faturalanan"
 #: model:ir.model.fields.selection,name:sale_timesheet.selection__account_analytic_line__timesheet_invoice_type__billable_time
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.timesheet_view_search
 msgid "Billed on Timesheets"
-msgstr "Zaman Çizelgesinden Faturalanan"
+msgstr "Çalışma Çizelgesinden Faturalanan"
 
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.res_config_settings_view_form
@@ -473,12 +484,12 @@ msgstr "Tarih"
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.portal_my_timesheets_inherit
 msgid "Days Ordered,"
-msgstr ""
+msgstr "Sipariş Edilen Günler"
 
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.portal_my_timesheets_inherit
 msgid "Days Remaining)"
-msgstr ""
+msgstr "Kalan günler)"
 
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.project_project_view_form
@@ -493,7 +504,7 @@ msgstr "Varsayılan Hizmet"
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_project__display_create_order
 msgid "Display Create Order"
-msgstr ""
+msgstr "Sipariş Oluştur"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_create_invoice__display_name
@@ -521,12 +532,12 @@ msgstr "Personel"
 #. module: sale_timesheet
 #: model:ir.model.fields.selection,name:sale_timesheet.selection__project_project__pricing_type__employee_rate
 msgid "Employee rate"
-msgstr ""
+msgstr "çalışan oranı"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,help:sale_timesheet.field_project_create_sale_order_line__employee_id
 msgid "Employee that has timesheets on the project."
-msgstr "Projede zaman çizelgesi olan çalışan."
+msgstr "Projede çalışma çizelgesi olan çalışan."
 
 #. module: sale_timesheet
 #: model:ir.model.fields,help:sale_timesheet.field_project_project__sale_line_employee_ids
@@ -535,7 +546,7 @@ msgid ""
 " Defines to which sales order item an employee's timesheet entry will be linked.By extension, it defines the rate at which an employee's time on the project is billed."
 msgstr ""
 "Çalışan / Satış Siparişi Eşleme:\n"
-"  Bir çalışanın zaman çizelgesi girişine hangi satış siparişi öğesinin bağlanacağını tanımlar. Bir çalışanın projedeki süresinin faturalanma oranını tanımlar."
+"  Bir çalışanın çalışma çizelgesi girişine hangi satış siparişi öğesinin bağlanacağını tanımlar. Bir çalışanın projedeki süresinin faturalanma oranını tanımlar."
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_sale_advance_payment_inv__date_end_invoice_timesheet
@@ -555,12 +566,12 @@ msgstr "Grupla"
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_sale_order_line__has_displayed_warning_upsell
 msgid "Has Displayed Warning Upsell"
-msgstr ""
+msgstr "Uyarı Satışı Görüntülendi"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_task__has_multi_sol
 msgid "Has Multi Sol"
-msgstr ""
+msgstr "Has Multi Sol"
 
 #. module: sale_timesheet
 #: model:product.product,uom_name:sale_timesheet.product_service_deliver_timesheet_1
@@ -608,7 +619,7 @@ msgstr "Fatura"
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_res_config_settings__invoice_policy
 msgid "Invoice Policy"
-msgstr ""
+msgstr "Faturalama Kuralı"
 
 #. module: sale_timesheet
 #: code:addons/sale_timesheet/models/product.py:0
@@ -617,6 +628,8 @@ msgid ""
 "Invoice based on timesheets (delivered quantity) on projects or tasks you'll"
 " create later on."
 msgstr ""
+"Daha sonra oluşturacağınız projeler veya görevlerle ilgili çalışma "
+"çizelgelerine (teslimat miktarı) dayalı fatura."
 
 #. module: sale_timesheet
 #: code:addons/sale_timesheet/models/product.py:0
@@ -625,6 +638,9 @@ msgid ""
 "Invoice based on timesheets (delivered quantity), and create a project for "
 "the order with a task for each sales order line to track the time spent."
 msgstr ""
+"Çalışma çizelgelerine (teslimat edilen miktar) dayalı faturala ve harcanan "
+"zamanı izlemek adına her sipariş siparişi satırı için bir görev her sipariş "
+"için de bir proje oluşturun."
 
 #. module: sale_timesheet
 #: code:addons/sale_timesheet/models/product.py:0
@@ -633,6 +649,8 @@ msgid ""
 "Invoice based on timesheets (delivered quantity), and create a task in an "
 "existing project to track the time spent."
 msgstr ""
+"Çalışma çizelgelerine (teslimat edilen miktar) dayalı faturala ve harcanan "
+"zamanı izlemek adına mevcut bir projede bir görev oluşturun."
 
 #. module: sale_timesheet
 #: code:addons/sale_timesheet/models/product.py:0
@@ -641,22 +659,24 @@ msgid ""
 "Invoice based on timesheets (delivered quantity), and create an empty "
 "project for the order to track the time spent."
 msgstr ""
+"Çalışma çizelgelerine dayalı faturala (teslimat miktarı) ve harcanan zamanı "
+"izlemek adına sipariş için boş bir proje oluşturun."
 
 #. module: sale_timesheet
 #: model:ir.model.fields,help:sale_timesheet.field_account_analytic_line__timesheet_invoice_id
 msgid "Invoice created from the timesheet"
-msgstr "Zaman çizelgesinden oluşturulan fatura"
+msgstr "Çalışma çizelgesinden oluşturulan fatura"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,help:sale_timesheet.field_project_project__allow_billable
 #: model:ir.model.fields,help:sale_timesheet.field_project_task__allow_billable
 msgid "Invoice your time and material from tasks."
-msgstr ""
+msgstr "Zamanınızı ve malzemenizi görevlerden faturalandırın."
 
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.project_project_view_form
 msgid "Invoice your time and material to customers"
-msgstr ""
+msgstr "Zamanınızı ve malzemenizi müşterilere fatura edin"
 
 #. module: sale_timesheet
 #: code:addons/sale_timesheet/models/project.py:0
@@ -677,12 +697,12 @@ msgstr "Faturalama Kuralı"
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_sale_advance_payment_inv__invoicing_timesheet_enabled
 msgid "Invoicing Timesheet Enabled"
-msgstr "Faturalama Zaman Çizelgesi Etkin"
+msgstr "Faturalama Çalışma Çizelgesi Etkin"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_sale_line_employee_map__is_cost_changed
 msgid "Is Cost Manually Changed"
-msgstr ""
+msgstr "Maliyet Manuel Olarak Değiştirildi mi"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_task__is_project_map_empty
@@ -692,7 +712,7 @@ msgstr "Proje haritası boş mu?"
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_account_analytic_line__is_so_line_edited
 msgid "Is Sales Order Item Manually Edited"
-msgstr ""
+msgstr "Satış Siparişi Kalemi Manuel Olarak Düzenleniyor mu"
 
 #. module: sale_timesheet
 #: model:ir.model,name:sale_timesheet.model_account_move
@@ -708,7 +728,7 @@ msgstr "Yevmiye Kalemi"
 #: model:product.product,name:sale_timesheet.product_service_deliver_timesheet_2
 #: model:product.template,name:sale_timesheet.product_service_deliver_timesheet_2_product_template
 msgid "Junior Architect (Invoice on Timesheets)"
-msgstr "Genç Mimar (Zaman Çizelgeleri Faturası)"
+msgstr "Genç Mimar (Çalışma Çizelgeleri Faturası)"
 
 #. module: sale_timesheet
 #: model:product.product,name:sale_timesheet.product_service_deliver_manual
@@ -755,7 +775,7 @@ msgid ""
 "Create a task and track hours: Create a task on the sales order validation and track the work hours."
 msgstr ""
 "Siparişte Miktarları Elle Belirle: Faturayı oluştururken, analitik hesap oluşturmadan, elle belirlenmiş miktarları kullan\n"
-"Sözleşmelerde Zaman Çizelgesi: Zaman çizelgesine girilmiş olan saatlere göre faturalandırma yap.\n"
+"Sözleşmelerde Çalışma Çizelgesi: Çalışma çizelgesine girilmiş olan saatlere göre faturalandırma yap.\n"
 "Görev oluştur ve süreyi izle: Müşteri siparişi doğrulaması hakkında bir görev oluşturun ve çalışma saatlerini izleyin."
 
 #. module: sale_timesheet
@@ -788,7 +808,7 @@ msgstr "Fonksiyonel veya teknik yardıma gerek"
 #. module: sale_timesheet
 #: model_terms:ir.actions.act_window,help:sale_timesheet.action_timesheet_from_invoice
 msgid "No activities found"
-msgstr ""
+msgstr "Etkinlik bulunamadı"
 
 #. module: sale_timesheet
 #: model_terms:ir.actions.act_window,help:sale_timesheet.timesheet_action_billing_report
@@ -810,7 +830,7 @@ msgstr "Faturalandırılamayan Görevler"
 #: model:ir.model.fields,field_description:sale_timesheet.field_account_move__timesheet_count
 #: model:ir.model.fields,field_description:sale_timesheet.field_account_payment__timesheet_count
 msgid "Number of timesheets"
-msgstr "Zaman çizelgesi sayısı"
+msgstr "Çalışma çizelgesi sayısı"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,help:sale_timesheet.field_sale_advance_payment_inv__date_end_invoice_timesheet
@@ -822,6 +842,10 @@ msgid ""
 "yet invoiced (and validated, if applicable) will be invoiced without "
 "distinction."
 msgstr ""
+"Yalnızca bu döneme ait henüz faturalandırılmamış (ve varsa doğrulanmış) "
+"çalışma çizelgeleri faturalandırılacaktır. Dönem belirtilmemişse, henüz "
+"faturalandırılmamış (ve varsa doğrulanmış) tüm çalışma çizelgeleri ayrım "
+"yapılmaksızın faturalandırılacaktır."
 
 #. module: sale_timesheet
 #: code:addons/sale_timesheet/models/project.py:0
@@ -837,7 +861,7 @@ msgstr "Sipariş Referansı"
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.portal_my_timesheets_inherit
 msgid "Ordered,"
-msgstr ""
+msgstr "Sipariş edildi"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_profitability_report__expense_cost
@@ -858,6 +882,8 @@ msgid ""
 "Percentage of time delivered compared to the prepaid amount that must be "
 "reached for the upselling opportunity activity to be triggered."
 msgstr ""
+"Yukarı yönlü satış fırsatı aktivitesinin tetiklenmesi için ulaşılması "
+"gereken ön ödeme tutarına kıyasla teslim edilen sürenin oranı."
 
 #. module: sale_timesheet
 #. openerp-web
@@ -869,7 +895,7 @@ msgstr "Planlanan"
 #. module: sale_timesheet
 #: model:ir.model.fields.selection,name:sale_timesheet.selection__product_template__service_policy__ordered_timesheet
 msgid "Prepaid/Fixed Price"
-msgstr ""
+msgstr "Ön Ödemeli/Sabit Fiyat"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_project__pricing_type
@@ -894,8 +920,8 @@ msgid ""
 "Product of the sales order item. Must be a service invoiced based on "
 "timesheets on tasks."
 msgstr ""
-"Müşteri sipariş kalemi ürünü. Görevlerin zaman çizelgelerine dayalı olarak "
-"faturalandırılan bir hizmet olmalıdır."
+"Müşteri sipariş kalemi ürünü. Görevlerin çalışma çizelgelerine dayalı olarak"
+" faturalandırılan bir hizmet olmalıdır."
 
 #. module: sale_timesheet
 #. openerp-web
@@ -970,7 +996,7 @@ msgstr "Satış siparişinin oluşturduğu proje"
 #. module: sale_timesheet
 #: model:ir.model.fields.selection,name:sale_timesheet.selection__project_project__pricing_type__fixed_rate
 msgid "Project rate"
-msgstr ""
+msgstr "proje oranı"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,help:sale_timesheet.field_project_create_invoice__project_id
@@ -1003,18 +1029,18 @@ msgstr "Kalan"
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.project_sharing_inherit_project_task_view_form
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.project_task_view_form_inherit_sale_timesheet
 msgid "Remaining Days on SO"
-msgstr ""
+msgstr "SO'da Kalan Günler"
 
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.portal_timesheet_table_inherit
 msgid "Remaining Days on SO:"
-msgstr ""
+msgstr "SO'da Kalan Günler"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_task__remaining_hours_available
 #: model:ir.model.fields,field_description:sale_timesheet.field_sale_order_line__remaining_hours_available
 msgid "Remaining Hours Available"
-msgstr ""
+msgstr "Kalan Uygun Saatler"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_task__remaining_hours_so
@@ -1022,17 +1048,17 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.project_sharing_inherit_project_task_view_form
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.project_task_view_form_inherit_sale_timesheet
 msgid "Remaining Hours on SO"
-msgstr ""
+msgstr "SO'da Kalan Saatler"
 
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.portal_timesheet_table_inherit
 msgid "Remaining Hours on SO:"
-msgstr ""
+msgstr "SO'da Kalan Saatler:"
 
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.portal_my_timesheets_inherit
 msgid "Remaining)"
-msgstr ""
+msgstr "Kalan"
 
 #. module: sale_timesheet
 #: code:addons/sale_timesheet/models/project.py:0
@@ -1045,6 +1071,8 @@ msgstr "Gelirler"
 msgid ""
 "Review your timesheets by billing type and make sure your time is billable."
 msgstr ""
+"Faturalandırma türüne göre çalışma çizelgelerinizi inceleyin ve "
+"çalışmalarınızın faturalandırılabilir olduğundan emin olun."
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_profitability_report__sale_order_id
@@ -1054,7 +1082,7 @@ msgstr "Satış Siparişi"
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_task__so_analytic_account_id
 msgid "Sale Order Analytic Account"
-msgstr ""
+msgstr "Satış Siparişi Analitik Hesap"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_sale_line_employee_map__sale_line_id
@@ -1113,6 +1141,8 @@ msgid ""
 "Sales order lines define milestones of the project to invoice by setting the"
 " delivered quantity."
 msgstr ""
+"Satış siparişi satırları, teslim edilen miktarı ayarlayarak faturalanacak "
+"projenin kilometre taşlarını tanımlar."
 
 #. module: sale_timesheet
 #: code:addons/sale_timesheet/models/product.py:0
@@ -1122,6 +1152,9 @@ msgid ""
 " delivered quantity. Create a project for the order with a task for each "
 "sales order line to track the time spent."
 msgstr ""
+"Satış siparişi satırları, teslim edilen miktarı ayarlayarak faturalanacak "
+"projenin kilometre taşlarını tanımlar. Harcanan zamanı izlemek için her "
+"satış siparişi satırı için bir görev sipariş için de bir proje oluşturun."
 
 #. module: sale_timesheet
 #: code:addons/sale_timesheet/models/product.py:0
@@ -1131,6 +1164,9 @@ msgid ""
 " delivered quantity. Create a task in an existing project to track the time "
 "spent."
 msgstr ""
+"Satış siparişi satırları, teslim edilen miktarı ayarlayarak faturalanacak "
+"projenin kilometre taşlarını tanımlar. Harcanan zamanı izlemek için mevcut "
+"bir projede bir görev oluşturun."
 
 #. module: sale_timesheet
 #: code:addons/sale_timesheet/models/product.py:0
@@ -1140,6 +1176,9 @@ msgid ""
 " delivered quantity. Create an empty project for the order to track the time"
 " spent."
 msgstr ""
+"Satış siparişi satırları, teslim edilen miktarı ayarlayarak faturalanacak "
+"projenin kilometre taşlarını tanımlar. Harcanan zamanı izlemek adına sipariş"
+" için boş bir proje oluşturun."
 
 #. module: sale_timesheet
 #: model:ir.model.fields,help:sale_timesheet.field_project_task__sale_order_id
@@ -1150,19 +1189,19 @@ msgstr "Görevin bağlı olduğu satış siparişi."
 #: code:addons/sale_timesheet/controllers/portal.py:0
 #, python-format
 msgid "Search in Invoice"
-msgstr ""
+msgstr "Faturada Ara"
 
 #. module: sale_timesheet
 #: code:addons/sale_timesheet/controllers/portal.py:0
 #, python-format
 msgid "Search in Sales Order"
-msgstr ""
+msgstr "Satış Siparişinde Ara"
 
 #. module: sale_timesheet
 #: code:addons/sale_timesheet/controllers/portal.py:0
 #, python-format
 msgid "Search in Sales Order Item"
-msgstr ""
+msgstr "Satış Siparişi Öğelerinde Ara"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,help:sale_timesheet.field_project_project__timesheet_product_id
@@ -1210,7 +1249,7 @@ msgstr "Hizmet satın ve harcanan zamanı faturalandır"
 #: model:product.product,name:sale_timesheet.product_service_deliver_timesheet_1
 #: model:product.template,name:sale_timesheet.product_service_deliver_timesheet_1_product_template
 msgid "Senior Architect (Invoice on Timesheets)"
-msgstr "Kıdemli Mimar (Zaman Çizelgeleri Faturası)"
+msgstr "Kıdemli Mimar (Çalışma Çizelgeleri Faturası)"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_create_sale_order_line__product_id
@@ -1227,19 +1266,19 @@ msgstr "Hizmet Faturalama Kuralı"
 #. module: sale_timesheet
 #: model:ir.model.fields.selection,name:sale_timesheet.selection__account_analytic_line__timesheet_invoice_type__service_revenues
 msgid "Service Revenues"
-msgstr ""
+msgstr "Hizmet Gelirleri"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_product_product__service_upsell_threshold_ratio
 #: model:ir.model.fields,field_description:sale_timesheet.field_product_template__service_upsell_threshold_ratio
 msgid "Service Upsell Threshold Ratio"
-msgstr ""
+msgstr "Hizmet Üst Satış Eşik Oranı"
 
 #. module: sale_timesheet
 #: model:product.product,name:sale_timesheet.time_product
 #: model:product.template,name:sale_timesheet.time_product_product_template
 msgid "Service on Timesheet"
-msgstr "Zaman Çizelgesinde Hizmet"
+msgstr "Çalışma Çizelgesinde Hizmet"
 
 #. module: sale_timesheet
 #: model:ir.actions.act_window,name:sale_timesheet.product_template_action_default_services
@@ -1262,22 +1301,22 @@ msgstr "Başlama Tarihi"
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.project_profitability_report_view_tree
 msgid "Sum of Amount Invoiced"
-msgstr ""
+msgstr "Faturalanan Tutar Toplamı"
 
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.project_profitability_report_view_tree
 msgid "Sum of Amount to Invoice"
-msgstr ""
+msgstr "Faturalanacak Tutar Toplamı"
 
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.project_profitability_report_view_tree
 msgid "Sum of Margin"
-msgstr ""
+msgstr "Marj Toplamı"
 
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.project_profitability_report_view_tree
 msgid "Sum of Timesheet Cost"
-msgstr ""
+msgstr "Çalışma Çizelgesi Maliyeti Toplamı"
 
 #. module: sale_timesheet
 #: model:ir.model,name:sale_timesheet.model_project_task
@@ -1294,7 +1333,7 @@ msgstr "Görev Tekrarı"
 #. module: sale_timesheet
 #: model:ir.model.fields.selection,name:sale_timesheet.selection__project_project__pricing_type__task_rate
 msgid "Task rate"
-msgstr ""
+msgstr "Görev oranı"
 
 #. module: sale_timesheet
 #: model:project.project,label_tasks:sale_timesheet.project_support
@@ -1311,6 +1350,8 @@ msgid ""
 "The %s product is required by the Timesheets app and cannot be archived nor "
 "deleted."
 msgstr ""
+"%s ürünü, Çalışma Çizelgeleri uygulaması tarafından gereklidir ve "
+"arşivlenemez veya silinemez."
 
 #. module: sale_timesheet
 #: code:addons/sale_timesheet/wizard/project_create_sale_order.py:0
@@ -1319,7 +1360,7 @@ msgid ""
 "The Sales Order cannot be created because you did not enter some employees that entered timesheets on this project. Please list all the relevant employees before creating the Sales Order.\n"
 "Missing employee(s): %s"
 msgstr ""
-"Satış siparişi oluşturulamıyor çünkü bu projede zaman çizelgeleri giren bazı personelleri girmediniz. Satış siparişini oluşturmadan önce lütfen tüm ilgili personelleri listeleyin.\n"
+"Satış siparişi oluşturulamıyor çünkü bu projede çalışma çizelgeleri giren bazı personelleri girmediniz. Satış siparişini oluşturmadan önce lütfen tüm ilgili personelleri listeleyin.\n"
 "Eksik personeller: %s"
 
 #. module: sale_timesheet
@@ -1330,13 +1371,13 @@ msgstr "Satış siparişi ile ilişkili analitik hesap"
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.project_update_default_description
 msgid "The cost of the project is now at"
-msgstr ""
+msgstr "Projenin şu anda maliyeti"
 
 #. module: sale_timesheet
 #: code:addons/sale_timesheet/wizard/project_create_sale_order.py:0
 #, python-format
 msgid "The project has already a sale order."
-msgstr ""
+msgstr "Projede zaten bir satış siparişi var."
 
 #. module: sale_timesheet
 #: code:addons/sale_timesheet/wizard/project_create_sale_order.py:0
@@ -1351,8 +1392,8 @@ msgid ""
 "The sales order cannot be created because some timesheets of this project "
 "are already linked to another sales order."
 msgstr ""
-"Satış siparişi oluşturulamıyor çünkü bu projenin zaman çizelgeleri başka bir"
-" satış siparişine bağlı."
+"Satış siparişi oluşturulamıyor çünkü bu projenin çalışma çizelgeleri başka "
+"bir satış siparişine bağlı."
 
 #. module: sale_timesheet
 #: code:addons/sale_timesheet/wizard/project_create_invoice.py:0
@@ -1372,6 +1413,13 @@ msgid ""
 "senior consultants would deliver the same service (= consultancy), but at a "
 "different rate because of their level of seniority."
 msgstr ""
+"Farklı hizmetleri farklı müşterilere farklı oranlarda faturalandırmak "
+"istiyorsanız, görev oranı mükemmeldir. Bir hizmeti, onu yapan çalışandan "
+"bağımsız olarak çalışılan saat veya gün başına sabit bir ücret üzerinden "
+"faturalandırırsanız, sabit ücret mükemmeldir. Çalışanlarınız aynı hizmeti "
+"farklı bir oranda veriyorsa, çalışan oranı tercih edilir. Örneğin, ast ve "
+"kıdemli danışmanlar aynı hizmeti (= danışmanlık) sunacaklardır, ancak kıdem "
+"seviyeleri nedeniyle farklı bir oranda gerçekleşecektir."
 
 #. module: sale_timesheet
 #: model:ir.model.fields,help:sale_timesheet.field_project_sale_line_employee_map__cost
@@ -1379,6 +1427,8 @@ msgid ""
 "This cost overrides the employee's default timesheet cost in employee's HR "
 "Settings"
 msgstr ""
+"Bu maliyet, çalışanın İK Ayarlarında çalışanın varsayılan çalışma çizelgesi "
+"maliyetini geçersiz kılar"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,help:sale_timesheet.field_account_bank_statement_line__timesheet_encode_uom_id
@@ -1389,7 +1439,7 @@ msgid ""
 "This will set the unit of measure used to encode timesheet. This will simply provide tools\n"
 "        and widgets to help the encoding. All reporting will still be expressed in hours (default value)."
 msgstr ""
-"Bu, zaman çizelgesini kodlamak için kullanılan ölçü birimini ayarlar. Bu sadece araçlar sağlayacaktır\n"
+"Bu, çalışma çizelgesini kodlamak için kullanılan ölçü birimini ayarlar. Bu sadece araçlar sağlayacaktır\n"
 "        ve kodlamaya yardımcı olacak araçlar. Tüm raporlar yine de saat cinsinden ifade edilir (varsayılan değer)."
 
 #. module: sale_timesheet
@@ -1408,22 +1458,22 @@ msgstr "Zaman bazlı hizmetler"
 #: model:ir.actions.act_window,name:sale_timesheet.timesheet_action_plan_pivot
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.timesheet_view_pivot_revenue
 msgid "Timesheet"
-msgstr "Zaman Çizelgesi"
+msgstr "Çalışma Çizelgesi"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_profitability_report__timesheet_cost
 msgid "Timesheet Cost"
-msgstr "Zaman Çizelgesi Maliyeti"
+msgstr "Çalışma Çizelgesi Maliyeti"
 
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.view_hr_timesheet_line_pivot_billing_rate
 msgid "Timesheet Costs"
-msgstr "Zaman Çizelgesi Maliyetleri"
+msgstr "Çalışma Çizelgesi Maliyetleri"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_profitability_report__timesheet_unit_amount
 msgid "Timesheet Duration"
-msgstr "Zaman Çizelge Süresi"
+msgstr "Çalışma Çizelge Süresi"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_account_bank_statement_line__timesheet_encode_uom_id
@@ -1431,18 +1481,18 @@ msgstr "Zaman Çizelge Süresi"
 #: model:ir.model.fields,field_description:sale_timesheet.field_account_payment__timesheet_encode_uom_id
 #: model:ir.model.fields,field_description:sale_timesheet.field_sale_order__timesheet_encode_uom_id
 msgid "Timesheet Encoding Unit"
-msgstr "Zaman Çizelgesi Kodlama Birimi"
+msgstr "Çalışma Çizelgesi Kodlama Birimi"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_project__timesheet_product_id
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_task__timesheet_product_id
 msgid "Timesheet Product"
-msgstr "Zaman Çizelgesi Ürünü"
+msgstr "Çalışma Çizelgesi Ürünü"
 
 #. module: sale_timesheet
 #: model:ir.model.fields.selection,name:sale_timesheet.selection__account_analytic_line__timesheet_invoice_type__timesheet_revenues
 msgid "Timesheet Revenues"
-msgstr ""
+msgstr "Zaman Çizelgesi Gelirleri"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_account_bank_statement_line__timesheet_total_duration
@@ -1450,17 +1500,17 @@ msgstr ""
 #: model:ir.model.fields,field_description:sale_timesheet.field_account_payment__timesheet_total_duration
 #: model:ir.model.fields,field_description:sale_timesheet.field_sale_order__timesheet_total_duration
 msgid "Timesheet Total Duration"
-msgstr "Zaman Çizelgesi Toplam Süresi"
+msgstr "Çalışma Çizelgesi Toplam Süresi"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_sale_order__timesheet_count
 msgid "Timesheet activities"
-msgstr "Zaman Çizelgesi aktiviteler"
+msgstr "Çalışma Çizelgesi aktiviteler"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_sale_order__timesheet_ids
 msgid "Timesheet activities associated to this sale"
-msgstr "Zaman çizelgesi etkinlikleri bu satışla birleştirildi."
+msgstr "Çalışma çizelgesi etkinlikleri bu satışla birleştirildi."
 
 #. module: sale_timesheet
 #: code:addons/sale_timesheet/models/account_move.py:0
@@ -1473,38 +1523,38 @@ msgstr "Zaman çizelgesi etkinlikleri bu satışla birleştirildi."
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.view_hr_timesheet_line_pivot_billing_rate
 #, python-format
 msgid "Timesheets"
-msgstr "Zaman Çizelgeleri"
+msgstr "Çalışma Çizelgeleri"
 
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.sale_advance_payment_inv_timesheet_view_form
 msgid "Timesheets Period"
-msgstr "Zaman Çizelge Dönemi"
+msgstr "Çalışma Çizelge Dönemi"
 
 #. module: sale_timesheet
 #: model:ir.actions.act_window,name:sale_timesheet.timesheet_action_billing_report
 msgid "Timesheets by Billing Type"
-msgstr ""
+msgstr "Fatura Türüne Göre Çalışma Çizelgeleri"
 
 #. module: sale_timesheet
 #: code:addons/sale_timesheet/models/project.py:0
 #, python-format
 msgid "Timesheets of %s"
-msgstr " %s zaman çizelgesi"
+msgstr " %s çalışma çizelgesi"
 
 #. module: sale_timesheet
 #: model:ir.model.fields.selection,name:sale_timesheet.selection__product_template__service_type__timesheet
 msgid "Timesheets on project (one fare per SO/Project)"
-msgstr "Projedeki zaman çizelgesi (Satış Siparişi/Proje başına bir ücret)"
+msgstr "Projedeki çalışma çizelgesi (Satış Siparişi/Proje başına bir ücret)"
 
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.res_config_settings_view_form
 msgid "Timesheets taken into account when invoicing your time"
-msgstr ""
+msgstr "Zamanınızı faturalarken dikkate alınan çalışma çizelgeleri"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,help:sale_timesheet.field_res_config_settings__invoice_policy
 msgid "Timesheets taken when invoicing time spent"
-msgstr ""
+msgstr "Faturalama yapılırken alınan çalışma çizelgeleri"
 
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.project_update_default_description
@@ -1516,7 +1566,7 @@ msgstr "Toplam"
 #: code:addons/sale_timesheet/static/src/xml/sale_project_templates.xml:0
 #, python-format
 msgid "Total Sold"
-msgstr ""
+msgstr "Toplam Satılan"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,help:sale_timesheet.field_project_create_invoice__amount_to_invoice
@@ -1536,6 +1586,7 @@ msgid ""
 "Total recorded duration, expressed in the encoding UoM, and rounded to the "
 "unit"
 msgstr ""
+"Kodlama ölçü biriminde ifade edilen ve birime yuvarlanan toplam kayıtlı süre"
 
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.portal_my_timesheets_inherit
@@ -1578,23 +1629,23 @@ msgstr "Birim"
 #: code:addons/sale_timesheet/models/project.py:0
 #, python-format
 msgid "Value does not exist in the pricing type"
-msgstr ""
+msgstr "Fiyatlandırma türünde değer yok"
 
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.portal_invoice_page_inherit
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.sale_order_portal_content_inherit
 msgid "View Timesheets"
-msgstr ""
+msgstr "Çalışma Çizelgelerini Görüntüle"
 
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.view_product_timesheet_form
 msgid "Warn the salesperson for an upsell when work done exceeds"
-msgstr ""
+msgstr "Yapılan iş aşıldığında satış görevlisini bir ek satış için uyarın"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_project__warning_employee_rate
 msgid "Warning Employee Rate"
-msgstr ""
+msgstr "Uyarı Çalışan Oranı"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_create_sale_order_line__wizard_id
@@ -1615,6 +1666,8 @@ msgid ""
 "You cannot link a billable project to a sales order item that comes from an "
 "expense or a vendor bill."
 msgstr ""
+"Faturalandırılabilir bir projeyi, bir gider veya satıcı faturasından gelen "
+"bir satış siparişi kalemine bağlayamazsınız."
 
 #. module: sale_timesheet
 #: code:addons/sale_timesheet/models/project.py:0
@@ -1623,18 +1676,21 @@ msgid ""
 "You cannot link a billable project to a sales order item that is not a "
 "service."
 msgstr ""
+"Faturalandırılabilir bir projeyi hizmet olmayan bir satış siparişi kalemine "
+"bağlayamazsınız."
 
 #. module: sale_timesheet
 #: code:addons/sale_timesheet/models/account.py:0
 #, python-format
 msgid "You cannot modify timesheets that are already invoiced."
 msgstr ""
+"Halihazırda faturalanmış olan çalışma çizelgelerini değiştiremezsiniz."
 
 #. module: sale_timesheet
 #: code:addons/sale_timesheet/models/account.py:0
 #, python-format
 msgid "You cannot remove a timesheet that has already been invoiced."
-msgstr "Zaten faturalanmış bir zaman çizelgesini kaldıramazsınız."
+msgstr "Zaten faturalanmış bir çalışma çizelgesini kaldıramazsınız."
 
 #. module: sale_timesheet
 #: code:addons/sale_timesheet/models/sale_order.py:0
@@ -1658,9 +1714,9 @@ msgstr "saat"
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.project_update_default_description
 msgid "margin ("
-msgstr ""
+msgstr "marj ("
 
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.view_product_timesheet_form
 msgid "of hours sold. ("
-msgstr ""
+msgstr "satılan saat. ("

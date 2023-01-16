@@ -39,9 +39,12 @@ class IrAttachment(models.Model):
     def _delete_and_notify(self):
         for attachment in self:
             if attachment.res_model == 'mail.channel' and attachment.res_id:
-                self.env['bus.bus']._sendone(self.env['mail.channel'].browse(attachment.res_id), 'ir.attachment/delete', {
-                    'id': attachment.id,
-                })
+                target = self.env['mail.channel'].browse(attachment.res_id)
+            else:
+                target = self.env.user.partner_id
+            self.env['bus.bus']._sendone(target, 'ir.attachment/delete', {
+                'id': attachment.id,
+            })
         self.unlink()
 
     def _attachment_format(self, commands=False):
@@ -55,6 +58,9 @@ class IrAttachment(models.Model):
                 'name': attachment.name,
                 'mimetype': 'application/octet-stream' if safari and attachment.mimetype and 'video' in attachment.mimetype else attachment.mimetype,
             }
+            if attachment.res_id and issubclass(self.pool[attachment.res_model], self.pool['mail.thread']):
+                main_attachment = self.env[attachment.res_model].sudo().browse(attachment.res_id).message_main_attachment_id
+                res['is_main'] = attachment == main_attachment
             if commands:
                 res['originThread'] = [('insert', {
                     'id': attachment.res_id,

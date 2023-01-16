@@ -125,7 +125,7 @@ class Digest(models.Model):
             digest.next_run_date = digest._get_next_run_date()
 
     def _action_send_to_user(self, user, tips_count=1, consum_tips=True):
-        rendered_body = self.env['mail.render.mixin']._render_template(
+        rendered_body = self.env['mail.render.mixin'].with_context(preserve_comments=True)._render_template(
             'digest.digest_mail_main',
             'digest.digest',
             self.ids,
@@ -158,7 +158,11 @@ class Digest(models.Model):
         mail_values = {
             'auto_delete': True,
             'author_id': self.env.user.partner_id.id,
-            'email_from': self.company_id.partner_id.email_formatted if self.company_id else self.env.user.email_formatted,
+            'email_from': (
+                self.company_id.partner_id.email_formatted
+                or self.env.user.email_formatted
+                or self.env.ref('base.user_root').email_formatted
+            ),
             'email_to': user.email_formatted,
             'body_html': full_mail,
             'state': 'outgoing',
@@ -254,7 +258,7 @@ class Digest(models.Model):
             '|', ('group_id', 'in', user.groups_id.ids), ('group_id', '=', False)
         ], limit=tips_count)
         tip_descriptions = [
-            self.env['mail.render.mixin'].sudo()._render_template(tools.html_sanitize(tip.tip_description), 'digest.tip', tip.ids, post_process=True, engine="qweb")[tip.id]
+            tools.html_sanitize(self.env['mail.render.mixin'].sudo()._render_template(tip.tip_description, 'digest.tip', tip.ids, post_process=True, engine="qweb")[tip.id])
             for tip in tips
         ]
         if consumed:

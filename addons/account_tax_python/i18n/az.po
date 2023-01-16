@@ -1,19 +1,38 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# * account_tax_python
+# 	* account_tax_python
+# 
+# Translators:
+# Jumshud Sultanov <cumshud@gmail.com>, 2022
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.5\n"
+"Project-Id-Version: Odoo Server saas~14.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-09-18 09:49+0000\n"
-"PO-Revision-Date: 2018-08-24 09:15+0000\n"
+"POT-Creation-Date: 2021-07-12 07:50+0000\n"
+"PO-Revision-Date: 2021-09-14 12:20+0000\n"
+"Last-Translator: Jumshud Sultanov <cumshud@gmail.com>, 2022\n"
 "Language-Team: Azerbaijani (https://www.transifex.com/odoo/teams/41243/az/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: az\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#. module: account_tax_python
+#: model:ir.model.fields,help:account_tax_python.field_account_tax__amount_type
+msgid ""
+"\n"
+"    - Group of Taxes: The tax is a set of sub taxes.\n"
+"    - Fixed: The tax amount stays the same whatever the price.\n"
+"    - Percentage of Price: The tax amount is a % of the price:\n"
+"        e.g 100 * (1 + 10%) = 110 (not price included)\n"
+"        e.g 110 / (1 + 10%) = 100 (price included)\n"
+"    - Percentage of Price Tax Included: The tax amount is a division of the price:\n"
+"        e.g 180 / (1 - 10%) = 200 (not price included)\n"
+"        e.g 200 * (1 - 10%) = 180 (price included)\n"
+"        "
+msgstr ""
 
 #. module: account_tax_python
 #: model:ir.model.fields,field_description:account_tax_python.field_account_tax__python_applicable
@@ -70,47 +89,23 @@ msgid ""
 msgstr ""
 
 #. module: account_tax_python
-#: selection:account.tax,amount_type:0
-#: selection:account.tax.template,amount_type:0
-msgid "Fixed"
-msgstr ""
-
-#. module: account_tax_python
-#: selection:account.tax,amount_type:0
-#: selection:account.tax.template,amount_type:0
-msgid "Group of Taxes"
-msgstr ""
-
-#. module: account_tax_python
-#: selection:account.tax,amount_type:0
-#: selection:account.tax.template,amount_type:0
-msgid "Percentage of Price"
-msgstr ""
-
-#. module: account_tax_python
-#: selection:account.tax,amount_type:0
-#: selection:account.tax.template,amount_type:0
-msgid "Percentage of Price Tax Included"
-msgstr ""
-
-#. module: account_tax_python
-#: selection:account.tax,amount_type:0
-#: selection:account.tax.template,amount_type:0
 #: model:ir.model.fields,field_description:account_tax_python.field_account_tax__python_compute
 #: model:ir.model.fields,field_description:account_tax_python.field_account_tax_template__python_compute
+#: model:ir.model.fields.selection,name:account_tax_python.selection__account_tax__amount_type__code
+#: model:ir.model.fields.selection,name:account_tax_python.selection__account_tax_template__amount_type__code
 msgid "Python Code"
-msgstr ""
+msgstr "Piton Kodu"
 
 #. module: account_tax_python
 #: model:ir.model,name:account_tax_python.model_account_tax
 msgid "Tax"
-msgstr ""
+msgstr "Vergi"
 
 #. module: account_tax_python
 #: model:ir.model.fields,field_description:account_tax_python.field_account_tax__amount_type
 #: model:ir.model.fields,field_description:account_tax_python.field_account_tax_template__amount_type
 msgid "Tax Computation"
-msgstr ""
+msgstr "Vergi hesablanması"
 
 #. module: account_tax_python
 #: model:ir.model,name:account_tax_python.model_account_tax_template

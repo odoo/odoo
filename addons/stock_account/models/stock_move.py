@@ -45,7 +45,9 @@ class StockMove(models.Model):
         precision = self.env['decimal.precision'].precision_get('Product Price')
         # If the move is a return, use the original move's price unit.
         if self.origin_returned_move_id and self.origin_returned_move_id.sudo().stock_valuation_layer_ids:
-            price_unit = self.origin_returned_move_id.sudo().stock_valuation_layer_ids[-1].unit_cost
+            layers = self.origin_returned_move_id.sudo().stock_valuation_layer_ids
+            quantity = sum(layers.mapped("quantity"))
+            return layers.currency_id.round(sum(layers.mapped("value")) / quantity) if not float_is_zero(quantity, precision_rounding=layers.uom_id.rounding) else 0
         return price_unit if not float_is_zero(price_unit, precision) or self._should_force_price_unit() else self.product_id.standard_price
 
     @api.model
@@ -259,6 +261,9 @@ class StockMove(models.Model):
         valued_moves['in'].product_price_update_before_done()
 
         res = super(StockMove, self)._action_done(cancel_backorder=cancel_backorder)
+
+        # '_action_done' might have deleted some exploded stock moves
+        valued_moves = {value_type: moves.exists() for value_type, moves in valued_moves.items()}
 
         # '_action_done' might have created an extra move to be valued
         for move in res - self:
@@ -529,7 +534,7 @@ class StockMove(models.Model):
         if self.product_id.type != 'product':
             # no stock valuation for consumable products
             return am_vals
-        if self.restrict_partner_id:
+        if self.restrict_partner_id and self.restrict_partner_id != self.company_id.partner_id:
             # if the move isn't owned by the company, we don't make any valuation
             return am_vals
 

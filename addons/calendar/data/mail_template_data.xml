@@ -22,7 +22,7 @@
         Hello <t t-out="object.common_name or ''">Wood Corner</t>,<br/><br/>
 
         <t t-if="is_online and target_customer">
-            Your appointment <strong t-out="object.event_id.appointment_type_id.name or ''">Schedule a Demo</strong> with <t t-out="object.event_id.user_id.name or ''">Ready Mat</t> has been booked.
+            Your appointment <strong t-out="object.event_id.appointment_type_id.name or ''">Schedule a Demo</strong> <t t-if="object.event_id.appointment_type_id.category != 'custom'"> with <t t-out="object.event_id.user_id.name or ''">Ready Mat</t></t> has been booked.
         </t>
         <t t-elif="is_online and target_responsible">
             <t t-if="customer">
@@ -369,7 +369,7 @@
     <t t-set="target_responsible = object.partner_id == object.partner_id" />
     <t t-set="target_customer = object.partner_id == customer" />
     <t t-set="recurrent = object.recurrence_id and not ctx.get('calendar_template_ignore_recurrence'" />
-    <t t-set="mail_tz = ctx.get('mail_tz')" />
+    <t t-set="mail_tz" t-value="object._get_mail_tz() or ctx.get('mail_tz')" />
     <div>
         <table border="0" cellpadding="0" cellspacing="0">
             <tr>
@@ -402,18 +402,9 @@
                         <strong>Details of the event</strong>
                     </p>
                     <ul>
-                        <t t-if="not is_online and object.display_description">
-                            <li>Description: <t t-out="object.description or ''" /></li>
-                        </t>
-                        <t t-elif="is_online and object.description">
-                            <t t-set="splitted_description" t-value="object.description_to_html_lines()" />
+                        <t t-if="not is_html_empty(object.description)">
                             <li>Description:
-                                <ul>
-                                    <t t-foreach="splitted_description" t-as="description_line">
-                                        <li t-out="description_line or ''"></li>
-                                    </t>
-                                </ul>
-                            </li>
+                            <t t-out="object.description">Internal meeting for discussion for new pricing for product and services.</t></li>
                         </t>
                         <t t-if="object.videocall_location">
                             <li>Meeting URL:

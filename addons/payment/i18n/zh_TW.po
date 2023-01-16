@@ -4,15 +4,15 @@
 # 
 # Translators:
 # Martin Trigaux, 2021
-# 敬雲 林 <chingyun@yuanchih-consult.com>, 2021
+# 敬雲 林 <chingyun@yuanchih-consult.com>, 2022
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 15.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-12-21 12:49+0000\n"
+"POT-Creation-Date: 2022-01-24 08:20+0000\n"
 "PO-Revision-Date: 2021-09-14 12:24+0000\n"
-"Last-Translator: 敬雲 林 <chingyun@yuanchih-consult.com>, 2021\n"
+"Last-Translator: 敬雲 林 <chingyun@yuanchih-consult.com>, 2022\n"
 "Language-Team: Chinese (Taiwan) (https://www.transifex.com/odoo/teams/41243/zh_TW/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -189,19 +189,9 @@ msgid "Account"
 msgstr "帳戶"
 
 #. module: payment
-#: model_terms:payment.acquirer,pending_msg:payment.payment_acquirer_transfer
-msgid "Account Holder:"
-msgstr ""
-
-#. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer_onboarding_wizard__acc_number
 msgid "Account Number"
 msgstr "帳戶號碼"
-
-#. module: payment
-#: model_terms:payment.acquirer,pending_msg:payment.payment_acquirer_transfer
-msgid "Account Number:"
-msgstr ""
 
 #. module: payment
 #: code:addons/payment/models/account_payment_method.py:0
@@ -239,6 +229,11 @@ msgstr "支付方式列表"
 #: model_terms:ir.ui.view,arch_db:payment.payment_acquirer_kanban
 msgid "Activate"
 msgstr "啟動"
+
+#. module: payment
+#: model_terms:ir.ui.view,arch_db:payment.onboarding_payment_acquirer_step
+msgid "Activate Stripe"
+msgstr ""
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_token__active
@@ -361,14 +356,14 @@ msgid "Bank"
 msgstr "銀行"
 
 #. module: payment
+#: model_terms:payment.acquirer,pending_msg:payment.payment_acquirer_transfer
+msgid "Bank Accounts"
+msgstr "銀行帳戶"
+
+#. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer_onboarding_wizard__journal_name
 msgid "Bank Name"
 msgstr "銀行名稱"
-
-#. module: payment
-#: model_terms:payment.acquirer,pending_msg:payment.payment_acquirer_transfer
-msgid "Bank:"
-msgstr ""
 
 #. module: payment
 #: model:payment.acquirer,name:payment.payment_acquirer_buckaroo
@@ -459,11 +454,6 @@ msgid "Choose a payment method"
 msgstr "選擇付款方式"
 
 #. module: payment
-#: model_terms:ir.ui.view,arch_db:payment.onboarding_payment_acquirer_step
-msgid "Choose your default customer payment method."
-msgstr "選擇客戶預設之付款方式"
-
-#. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__partner_city
 #: model_terms:ir.ui.view,arch_db:payment.payment_transaction_form
 msgid "City"
@@ -491,6 +481,11 @@ msgstr "代號"
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer__color
 msgid "Color"
 msgstr "顏色"
+
+#. module: payment
+#: model_terms:payment.acquirer,pending_msg:payment.payment_acquirer_transfer
+msgid "Communication"
+msgstr "溝通歷程"
 
 #. module: payment
 #: model:ir.model,name:payment.model_res_company
@@ -599,6 +594,11 @@ msgid "Credentials"
 msgstr "授權認證"
 
 #. module: payment
+#: model:payment.acquirer,display_as:payment.payment_acquirer_stripe
+msgid "Credit & Debit Card"
+msgstr ""
+
+#. module: payment
 #: model:payment.acquirer,display_as:payment.payment_acquirer_adyen
 msgid "Credit Card (powered by Adyen)"
 msgstr "Credit Card (powered by Adyen)"
@@ -637,11 +637,6 @@ msgstr "Credit Card (powered by PayUmoney)"
 #: model:payment.acquirer,display_as:payment.payment_acquirer_sips
 msgid "Credit Card (powered by Sips)"
 msgstr "Credit Card (powered by Sips)"
-
-#. module: payment
-#: model:payment.acquirer,display_as:payment.payment_acquirer_stripe
-msgid "Credit Card (powered by Stripe)"
-msgstr "Credit Card (powered by Stripe)"
 
 #. module: payment
 #: model:ir.model.fields.selection,name:payment.selection__payment_acquirer_onboarding_wizard__payment_method__stripe
@@ -729,6 +724,11 @@ msgstr "草稿"
 #: model_terms:ir.ui.view,arch_db:payment.payment_acquirer_onboarding_wizard_form
 msgid "Email"
 msgstr "Email"
+
+#. module: payment
+#: model_terms:ir.ui.view,arch_db:payment.onboarding_payment_acquirer_step
+msgid "Enable credit &amp; debit card payments supported by Stripe"
+msgstr ""
 
 #. module: payment
 #: model:ir.model.fields.selection,name:payment.selection__payment_acquirer__state__enabled
@@ -1157,6 +1157,11 @@ msgid "Ok"
 msgstr "確定"
 
 #. module: payment
+#: model_terms:ir.ui.view,arch_db:payment.onboarding_payment_acquirer_step
+msgid "Online Payments"
+msgstr ""
+
+#. module: payment
 #: model:ir.model.fields.selection,name:payment.selection__payment_transaction__operation__online_direct
 msgid "Online direct payment"
 msgstr "線上直接支付"
@@ -1170,6 +1175,11 @@ msgstr "密鑰線上支付"
 #: model:ir.model.fields.selection,name:payment.selection__payment_transaction__operation__online_redirect
 msgid "Online payment with redirection"
 msgstr "帶重定向的線上支付"
+
+#. module: payment
+#: model_terms:ir.ui.view,arch_db:payment.onboarding_payment_acquirer_step
+msgid "Online payments enabled"
+msgstr ""
 
 #. module: payment
 #: code:addons/payment/wizards/payment_acquirer_onboarding_wizard.py:0
@@ -1324,7 +1334,6 @@ msgstr "付款連結"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer_onboarding_wizard__payment_method
-#: model_terms:ir.ui.view,arch_db:payment.onboarding_payment_acquirer_step
 msgid "Payment Method"
 msgstr "付款方法"
 
@@ -1399,11 +1408,6 @@ msgid "Payment acquirer selected"
 msgstr ""
 
 #. module: payment
-#: model_terms:ir.ui.view,arch_db:payment.onboarding_payment_acquirer_step
-msgid "Payment method set!"
-msgstr "付款方式已設定！"
-
-#. module: payment
 #: model:ir.model,name:payment.model_account_payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_token_form
 msgid "Payments"
@@ -1444,11 +1448,6 @@ msgid "Phone"
 msgstr "電話"
 
 #. module: payment
-#: model_terms:payment.acquirer,pending_msg:payment.payment_acquirer_transfer
-msgid "Please make a payment to:"
-msgstr ""
-
-#. module: payment
 #. openerp-web
 #: code:addons/payment/static/src/js/payment_form_mixin.js:0
 #, python-format
@@ -1467,6 +1466,16 @@ msgstr "請僅選擇一種付款方式。"
 #, python-format
 msgid "Please set an amount smaller than %s."
 msgstr "請設置小於 %s 的金額。"
+
+#. module: payment
+#: model_terms:payment.acquirer,pending_msg:payment.payment_acquirer_transfer
+msgid "Please use the following transfer details"
+msgstr "請使用以下轉帳詳細資訊"
+
+#. module: payment
+#: model_terms:payment.acquirer,pending_msg:payment.payment_acquirer_transfer
+msgid "Please use the order name as communication reference."
+msgstr "請使用訂單名稱作為備註參考。"
 
 #. module: payment
 #. openerp-web
@@ -1627,11 +1636,6 @@ msgstr "伺服器錯誤"
 #, python-format
 msgid "Server error:"
 msgstr "伺服器錯誤:"
-
-#. module: payment
-#: model_terms:ir.ui.view,arch_db:payment.onboarding_payment_acquirer_step
-msgid "Set payments"
-msgstr "設定付款"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer__show_allow_tokenization
@@ -2200,12 +2204,6 @@ msgstr ""
 #, python-format
 msgid "You cannot delete a view that is used by a payment acquirer."
 msgstr "您不能刪除付款服務商使用的視圖。"
-
-#. module: payment
-#: code:addons/payment/wizards/payment_acquirer_onboarding_wizard.py:0
-#, python-format
-msgid "You have to set a journal for your payment acquirer %s."
-msgstr "您必須為付款獲取者 %s 設置日誌。"
 
 #. module: payment
 #. openerp-web

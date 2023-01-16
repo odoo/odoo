@@ -131,6 +131,15 @@ class DeliveryCarrier(models.Model):
     def onchange_countries(self):
         self.state_ids = [(6, 0, self.state_ids.filtered(lambda state: state.id in self.country_ids.mapped('state_ids').ids).ids)]
 
+    def _get_delivery_type(self):
+        """Return the delivery type.
+
+        This method needs to be overridden by a delivery carrier module if the delivery type is not
+        stored on the field `delivery_type`.
+        """
+        self.ensure_one()
+        return self.delivery_type
+        
     # -------------------------- #
     # API for external providers #
     # -------------------------- #
@@ -148,6 +157,17 @@ class DeliveryCarrier(models.Model):
         self.ensure_one()
         if hasattr(self, '%s_rate_shipment' % self.delivery_type):
             res = getattr(self, '%s_rate_shipment' % self.delivery_type)(order)
+            # apply fiscal position
+            company = self.company_id or order.company_id or self.env.company
+            res['price'] = self.product_id._get_tax_included_unit_price(
+                company,
+                company.currency_id,
+                order.date_order,
+                'sale',
+                fiscal_position=order.fiscal_position_id,
+                product_price_unit=res['price'],
+                product_currency=company.currency_id
+            )
             # apply margin on computed price
             res['price'] = float(res['price']) * (1.0 + (self.margin / 100.0))
             # save the real price in case a free_over rule overide it to 0
@@ -256,10 +276,7 @@ class DeliveryCarrier(models.Model):
                     'price': 0.0,
                     'error_message': _('Error: this delivery method is not available for this address.'),
                     'warning_message': False}
-        price = self.fixed_price
-        company = self.company_id or order.company_id or self.env.company
-        if company.currency_id and company.currency_id != order.currency_id:
-            price = company.currency_id._convert(price, order.currency_id, company, fields.Date.today())
+        price = order.pricelist_id.get_product_price(self.product_id, 1.0, order.partner_id)
         return {'success': True,
                 'price': price,
                 'error_message': False,

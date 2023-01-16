@@ -6,9 +6,9 @@
 # Martin Trigaux, 2021
 # Levent Karakaş <levent@mektup.at>, 2021
 # Murat Kaplan <muratk@projetgrup.com>, 2021
-# Ertuğrul Güreş <ertugrulg@projetgrup.com>, 2021
 # Umur Akın <umura@projetgrup.com>, 2021
 # abc Def <hdogan1974@gmail.com>, 2021
+# Ertuğrul Güreş <ertugrulg@projetgrup.com>, 2022
 # 
 msgid ""
 msgstr ""
@@ -16,7 +16,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-07-12 07:50+0000\n"
 "PO-Revision-Date: 2021-09-14 12:20+0000\n"
-"Last-Translator: abc Def <hdogan1974@gmail.com>, 2021\n"
+"Last-Translator: Ertuğrul Güreş <ertugrulg@projetgrup.com>, 2022\n"
 "Language-Team: Turkish (https://www.transifex.com/odoo/teams/41243/tr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -40,6 +40,18 @@ msgid ""
 "        (|(mail=%s)(uid=%s))\n"
 "    "
 msgstr ""
+"    LDAP veritabanındaki kullanıcı hesaplarını aramak için kullanılan filtre. Dize gösteriminde rasgele bir LDAP filtresidir. Herhangi bir '%s' yer tutucusu, kullanıcı tarafından sağlanan oturum açma (tanımlayıcı) ile değiştirilecektir, filtre bu tür en az bir yer tutucu içermelidir.\n"
+"\n"
+"Filtre tam olarak bir (1) sonuçla sonuçlanmalıdır, aksi takdirde oturum açma geçersiz sayılır.\n"
+"\n"
+"Örnek (gerçek özellikler LDAP sunucusuna ve kuruluma bağlıdır):\n"
+"\n"
+"(&(objectCategory=person)(objectClass=user)(sAMAccountName=%s))\n"
+"\n"
+"veya\n"
+"\n"
+"(| (mail=%s) (uid=%s))\n"
+"    "
 
 #. module: auth_ldap
 #: model:ir.model.fields,help:auth_ldap.field_res_company_ldap__create_user
@@ -91,6 +103,8 @@ msgid ""
 "DN of the user search scope: all descendants of this base will be searched "
 "for users."
 msgstr ""
+"Kullanıcı arama kapsamının DN'si: bu tabanın tüm alt öğeleri kullanıcılar "
+"için aranacaktır."
 
 #. module: auth_ldap
 #: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap__display_name
@@ -190,7 +204,7 @@ msgid ""
 " attempts will fail."
 msgstr ""
 "LDAP sunucuya bağlanırken güvenli TLS/SSL bağlantı iste. Bu opsiyon için "
-"sunucuda STARTTLS açık  olmalıdır, aksi durumda bağlantı kurulamaz."
+"sunucuda STARTTLS açık olmalıdır, aksi durumda bağlantı kurulamaz."
 
 #. module: auth_ldap
 #: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap__sequence

@@ -3,16 +3,16 @@
 # 	* base_geolocalize
 # 
 # Translators:
-# Martin Trigaux, 2019
-# Marius Stedjan <marius@stedjan.com>, 2019
+# Martin Trigaux, 2022
+# Marius Stedjan <marius@stedjan.com>, 2022
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~12.4\n"
+"Project-Id-Version: Odoo Server saas~14.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-08-12 11:32+0000\n"
-"PO-Revision-Date: 2019-08-26 09:09+0000\n"
-"Last-Translator: Marius Stedjan <marius@stedjan.com>, 2019\n"
+"POT-Creation-Date: 2021-09-14 10:28+0000\n"
+"PO-Revision-Date: 2021-09-14 12:20+0000\n"
+"Last-Translator: Marius Stedjan <marius@stedjan.com>, 2022\n"
 "Language-Team: Norwegian Bokmål (https://www.transifex.com/odoo/teams/41243/nb/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -22,18 +22,25 @@ msgstr ""
 
 #. module: base_geolocalize
 #: model_terms:ir.ui.view,arch_db:base_geolocalize.view_crm_partner_geo_form
-msgid "<span class=\"oe_inline\"> ( On  </span>"
-msgstr "<span class=\"oe_inline\"> ( På </span>"
+msgid "(refresh)"
+msgstr ""
 
 #. module: base_geolocalize
 #: model_terms:ir.ui.view,arch_db:base_geolocalize.view_crm_partner_geo_form
-msgid "<span> : Lat : </span>"
-msgstr "<span> : Breddegrad : </span>"
+msgid ""
+"<br/>\n"
+"                                    <span attrs=\"{'invisible': [('date_localization', '=', False)]}\">Updated on: </span>"
+msgstr ""
 
 #. module: base_geolocalize
 #: model_terms:ir.ui.view,arch_db:base_geolocalize.view_crm_partner_geo_form
-msgid "<span> ;  Long:  </span>"
-msgstr "<span> : Lengdegrad : </span>"
+msgid "<span>, Long: </span>"
+msgstr ""
+
+#. module: base_geolocalize
+#: model_terms:ir.ui.view,arch_db:base_geolocalize.view_crm_partner_geo_form
+msgid "<span>Lat : </span>"
+msgstr ""
 
 #. module: base_geolocalize
 #: model:ir.model.fields,field_description:base_geolocalize.field_res_config_settings__geoloc_provider_id
@@ -41,7 +48,7 @@ msgid "API"
 msgstr "API"
 
 #. module: base_geolocalize
-#: code:addons/base_geolocalize/models/base_geocoder.py:104
+#: code:addons/base_geolocalize/models/base_geocoder.py:0
 #, python-format
 msgid ""
 "API key for GeoCoding (Places) required.\n"
@@ -56,7 +63,7 @@ msgstr ""
 #. module: base_geolocalize
 #: model:ir.model,name:base_geolocalize.model_res_config_settings
 msgid "Config Settings"
-msgstr "Konfigurasjonsinnstillinger"
+msgstr "Innstillinger"
 
 #. module: base_geolocalize
 #: model:ir.model,name:base_geolocalize.model_res_partner
@@ -75,12 +82,11 @@ msgstr "Opprettet"
 
 #. module: base_geolocalize
 #: model:ir.model.fields,field_description:base_geolocalize.field_base_geo_provider__display_name
-#: model:ir.model.fields,field_description:base_geolocalize.field_base_geocoder__display_name
 msgid "Display Name"
 msgstr "Visningsnavn"
 
 #. module: base_geolocalize
-#: code:addons/base_geolocalize/models/base_geocoder.py:156
+#: code:addons/base_geolocalize/models/base_geocoder.py:0
 #, python-format
 msgid "Error with geolocation server:"
 msgstr ""
@@ -91,14 +97,14 @@ msgid "Geo Coder"
 msgstr ""
 
 #. module: base_geolocalize
-#: model:ir.model,name:base_geolocalize.model_base_geo_provider
-msgid "Geo Provider"
+#: model_terms:ir.ui.view,arch_db:base_geolocalize.view_crm_partner_geo_form
+msgid "Geo Location"
 msgstr ""
 
 #. module: base_geolocalize
-#: model_terms:ir.ui.view,arch_db:base_geolocalize.view_crm_partner_geo_form
-msgid "Geolocate"
-msgstr "Geolokaliser"
+#: model:ir.model,name:base_geolocalize.model_base_geo_provider
+msgid "Geo Provider"
+msgstr ""
 
 #. module: base_geolocalize
 #: model_terms:ir.ui.view,arch_db:base_geolocalize.view_crm_partner_geo_form
@@ -118,7 +124,6 @@ msgstr ""
 
 #. module: base_geolocalize
 #: model:ir.model.fields,field_description:base_geolocalize.field_base_geo_provider__id
-#: model:ir.model.fields,field_description:base_geolocalize.field_base_geocoder__id
 msgid "ID"
 msgstr "ID"
 
@@ -129,7 +134,6 @@ msgstr ""
 
 #. module: base_geolocalize
 #: model:ir.model.fields,field_description:base_geolocalize.field_base_geo_provider____last_update
-#: model:ir.model.fields,field_description:base_geolocalize.field_base_geocoder____last_update
 msgid "Last Modified on"
 msgstr "Sist endret"
 
@@ -150,11 +154,11 @@ msgstr "Navn"
 
 #. module: base_geolocalize
 #: model_terms:ir.ui.view,arch_db:base_geolocalize.view_crm_partner_geo_form
-msgid "Partner Assignation"
-msgstr "Tilknyttet partner"
+msgid "Partner Assignment"
+msgstr ""
 
 #. module: base_geolocalize
-#: code:addons/base_geolocalize/models/base_geocoder.py:69
+#: code:addons/base_geolocalize/models/base_geocoder.py:0
 #, python-format
 msgid "Provider %s is not implemented for geolocation service."
 msgstr ""
@@ -166,7 +170,7 @@ msgid "Tech Name"
 msgstr ""
 
 #. module: base_geolocalize
-#: code:addons/base_geolocalize/models/base_geocoder.py:123
+#: code:addons/base_geolocalize/models/base_geocoder.py:0
 #, python-format
 msgid ""
 "Unable to geolocate, received the error:\n"

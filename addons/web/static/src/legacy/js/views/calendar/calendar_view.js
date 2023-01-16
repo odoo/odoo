@@ -103,7 +103,6 @@ var CalendarView = AbstractView.extend({
                         'fieldName': fieldName,
                         'filters': [],
                         'check_all': {},
-                        'filters': [],
                     };
                     filters[fieldName].avatar_field = child.attrs.avatar_field;
                     filters[fieldName].avatar_model = fields[fieldName].relation;

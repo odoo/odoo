@@ -8,6 +8,8 @@
 # Nadir Gazioglu <nadirgazioglu@gmail.com>, 2021
 # Metin Akın <aknmetin@gmail.com>, 2021
 # Murat Durmuş <muratd@projetgrup.com>, 2021
+# Tugay Hatıl <tugayh@projetgrup.com>, 2022
+# Ertuğrul Güreş <ertugrulg@projetgrup.com>, 2022
 # 
 msgid ""
 msgstr ""
@@ -15,7 +17,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-09-14 10:29+0000\n"
 "PO-Revision-Date: 2021-09-14 12:27+0000\n"
-"Last-Translator: Murat Durmuş <muratd@projetgrup.com>, 2021\n"
+"Last-Translator: Ertuğrul Güreş <ertugrulg@projetgrup.com>, 2022\n"
 "Language-Team: Turkish (https://www.transifex.com/odoo/teams/41243/tr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -29,6 +31,8 @@ msgid ""
 "<i class=\"fa fa-exclamation-triangle\"/>\n"
 "                                    <span>Sorry, several booths are now sold out. Please change your choices before validating again.</span>"
 msgstr ""
+"<i j=\"0/\">\n"
+"                                    <span>Üzgünüz, birkaç stand artık tükendi. Lütfen tekrar doğrulamadan önce seçimlerinizi değiştirin.</span></i>"
 
 #. module: website_event_booth
 #: model_terms:ir.ui.view,arch_db:website_event_booth.event_booth_layout
@@ -36,16 +40,18 @@ msgid ""
 "<i class=\"fa fa-gear mr-1\" role=\"img\" aria-label=\"Configure\" "
 "title=\"Configure event booths\"/><em>Configure Booths</em>"
 msgstr ""
+"<i class=\"fa fa-gear mr-1\" role=\"img\" aria-label=\"Configure\" "
+"title=\"Configure event booths\"/><em>Standları Yapılandır</em>"
 
 #. module: website_event_booth
 #: model_terms:ir.ui.view,arch_db:website_event_booth.event_booth_registration
 msgid "<span class=\"text-nowrap\">Sold Out</span>"
-msgstr ""
+msgstr "<span class=\"text-nowrap\">Tükendi</span>"
 
 #. module: website_event_booth
 #: model_terms:ir.ui.view,arch_db:website_event_booth.event_booth_registration
 msgid "<span>Book my Booths</span>"
-msgstr ""
+msgstr "<span>Standlarımı ayırtın</span>"
 
 #. module: website_event_booth
 #: model_terms:ir.ui.view,arch_db:website_event_booth.event_booth_registration_details
@@ -53,6 +59,8 @@ msgid ""
 "<span>Email</span>\n"
 "                            <span> *</span>"
 msgstr ""
+"<span>E-posta</span>\n"
+"                            <span> *</span>"
 
 #. module: website_event_booth
 #: model_terms:ir.ui.view,arch_db:website_event_booth.event_booth_registration_details
@@ -60,6 +68,8 @@ msgid ""
 "<span>Name</span>\n"
 "                            <span> *</span>"
 msgstr ""
+"<span for=\"contact_name\">İsim</span>\n"
+"                    <span>*</span>"
 
 #. module: website_event_booth
 #: model_terms:ir.ui.view,arch_db:website_event_booth.event_booth_layout
@@ -67,53 +77,55 @@ msgid ""
 "<span>This event is finished. It's no longer possible to book a "
 "booth.</span>"
 msgstr ""
+"<span>Bu etkinlik bitti. Artık stand rezervasyonu yapmak mümkün "
+"değil.</span>"
 
 #. module: website_event_booth
 #: model_terms:ir.ui.view,arch_db:website_event_booth.event_booth_registration_details
 msgid "<strong>Contact Details</strong>"
-msgstr ""
+msgstr "<strong>İrtibat Bilgileri</strong>"
 
 #. module: website_event_booth
 #: model_terms:ir.ui.view,arch_db:website_event_booth.event_booth_registration_details
 msgid "Book my Booths"
-msgstr ""
+msgstr "Standlarımı ayırtın"
 
 #. module: website_event_booth
 #: model_terms:ir.ui.view,arch_db:website_event_booth.event_type_view_form
 msgid "Booth Menu Item"
-msgstr ""
+msgstr "Stand Menü Öğesi"
 
 #. module: website_event_booth
 #: model:ir.model.fields,field_description:website_event_booth.field_event_event__booth_menu
 msgid "Booth Register"
-msgstr ""
+msgstr "Stand Kayıt"
 
 #. module: website_event_booth
 #: model_terms:ir.ui.view,arch_db:website_event_booth.event_booth_registration_complete
 msgid "Booth Registration completed!"
-msgstr ""
+msgstr "Stand Kayıtları Tamamlandı!"
 
 #. module: website_event_booth
 #: code:addons/website_event_booth/controllers/event_booth.py:0
 #, python-format
 msgid "Booth registration failed. Please try again."
-msgstr ""
+msgstr "Stand kaydı başarısız oldu. Lütfen tekrar deneyin."
 
 #. module: website_event_booth
 #: model_terms:ir.ui.view,arch_db:website_event_booth.event_booth_registration
 msgid "Booths"
-msgstr ""
+msgstr "Standlar"
 
 #. module: website_event_booth
 #: model:ir.model.fields,field_description:website_event_booth.field_event_type__booth_menu
 msgid "Booths on Website"
-msgstr ""
+msgstr "Web Sitesindeki Standlar"
 
 #. module: website_event_booth
 #: code:addons/website_event_booth/controllers/event_booth.py:0
 #, python-format
 msgid "Booths should belong to the same category."
-msgstr ""
+msgstr "Standlar aynı kategoriye ait olmalıdır."
 
 #. module: website_event_booth
 #: model_terms:ir.ui.view,arch_db:website_event_booth.event_booth_registration
@@ -128,12 +140,12 @@ msgstr "Etkinlik"
 #. module: website_event_booth
 #: model:ir.model.fields.selection,name:website_event_booth.selection__website_event_menu__menu_type__booth
 msgid "Event Booth Menus"
-msgstr ""
+msgstr "Etkinlik Standı Menüleri"
 
 #. module: website_event_booth
 #: model:ir.model.fields,field_description:website_event_booth.field_event_event__booth_menu_ids
 msgid "Event Booths Menus"
-msgstr ""
+msgstr "Etkinlik Standları Menüleri"
 
 #. module: website_event_booth
 #: model:ir.model,name:website_event_booth.model_event_type
@@ -143,14 +155,14 @@ msgstr "Etkinlik Şablonu"
 #. module: website_event_booth
 #: model:ir.model.fields,field_description:website_event_booth.field_event_event__exhibition_map
 msgid "Exhibition Map"
-msgstr ""
+msgstr "Sergi Haritası"
 
 #. module: website_event_booth
 #: code:addons/website_event_booth/models/event_event.py:0
 #: model_terms:ir.ui.view,arch_db:website_event_booth.event_booth_layout
 #, python-format
 msgid "Get A Booth"
-msgstr ""
+msgstr "Bir Stand Edinin"
 
 #. module: website_event_booth
 #: model:ir.model.fields,field_description:website_event_booth.field_website_event_menu__menu_type
@@ -170,17 +182,17 @@ msgstr "Telefon"
 #. module: website_event_booth
 #: model_terms:ir.ui.view,arch_db:website_event_booth.event_booth_registration
 msgid "Sorry, all the booths are sold out."
-msgstr ""
+msgstr "Üzgünüz, tüm stantlar tükendi."
 
 #. module: website_event_booth
 #: model_terms:ir.ui.view,arch_db:website_event_booth.event_booth_layout
 msgid "This event is not open to exhibitors registration,"
-msgstr ""
+msgstr "Bu etkinlik katılımcı kayıtlarına açık değildir,"
 
 #. module: website_event_booth
 #: model_terms:ir.ui.view,arch_db:website_event_booth.event_booth_registration
 msgid "View Floor Plan"
-msgstr ""
+msgstr "Kat Planını Görüntüle"
 
 #. module: website_event_booth
 #: model:ir.model,name:website_event_booth.model_website_event_menu
@@ -190,24 +202,24 @@ msgstr "Web Sitesi Etkinlik Menüsü"
 #. module: website_event_booth
 #: model_terms:ir.ui.view,arch_db:website_event_booth.event_booth_layout
 msgid "check our"
-msgstr ""
+msgstr "kontrol et"
 
 #. module: website_event_booth
 #: model_terms:ir.ui.view,arch_db:website_event_booth.event_booth_layout
 msgid "for this event."
-msgstr ""
+msgstr "bu etkinlik için."
 
 #. module: website_event_booth
 #: model_terms:ir.ui.view,arch_db:website_event_booth.event_booth_registration
 msgid "if you have any question."
-msgstr ""
+msgstr "herhangi bir sorun varmı."
 
 #. module: website_event_booth
 #: model_terms:ir.ui.view,arch_db:website_event_booth.event_booth_layout
 msgid "list of future events"
-msgstr ""
+msgstr "gelecekteki etkinliklerin listesi"
 
 #. module: website_event_booth
 #: model_terms:ir.ui.view,arch_db:website_event_booth.event_booth_layout
 msgid "you can"
-msgstr ""
+msgstr "yapabilirsin"

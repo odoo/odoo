@@ -89,12 +89,26 @@ class StockPutawayRule(models.Model):
         if not child_location_count or not self.location_out_id:
             self.location_out_id = self.location_in_id
 
+    @api.model_create_multi
+    def create(self, vals_list):
+        rules = super().create(vals_list)
+        rules._enable_show_reserved()
+        return rules
+
     def write(self, vals):
         if 'company_id' in vals:
             for rule in self:
                 if rule.company_id.id != vals['company_id']:
                     raise UserError(_("Changing the company of this record is forbidden at this point, you should rather archive it and create a new one."))
+        self._enable_show_reserved()
         return super(StockPutawayRule, self).write(vals)
+
+    def _enable_show_reserved(self):
+        out_locations = self.location_out_id
+        if out_locations:
+            self.env['stock.picking.type'].with_context(active_test=False)\
+                .search([('default_location_dest_id', 'in', out_locations.ids)])\
+                .write({'show_reserved': True})
 
     def _get_putaway_location(self, product, quantity=0, package=None, packaging=None, qty_by_location=None):
         # find package type on package or packaging

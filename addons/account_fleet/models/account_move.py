@@ -17,13 +17,7 @@ class AccountMove(models.Model):
         not_posted_before = self.filtered(lambda r: not r.posted_before)
         posted = super()._post(soft)  # We need the move name to be set, but we also need to know which move are posted for the first time.
         for line in (not_posted_before & posted).line_ids.filtered(lambda ml: ml.vehicle_id and ml.move_id.move_type == 'in_invoice'):
-            val = {
-                'service_type_id': vendor_bill_service.id,
-                'vehicle_id': line.vehicle_id.id,
-                'amount': line.price_subtotal,
-                'vendor_id': line.partner_id.id,
-                'description': line.name,
-            }
+            val = line._prepare_fleet_log_service()
             log = _('Service Vendor Bill: <a href=# data-oe-model=account.move data-oe-id={move_id}>{move_name}</a>').format(
                 move_id=line.move_id.id,
                 move_name=line.move_id.name,
@@ -45,3 +39,13 @@ class AccountMoveLine(models.Model):
 
     def _compute_need_vehicle(self):
         self.need_vehicle = False
+
+    def _prepare_fleet_log_service(self):
+        vendor_bill_service = self.env.ref('account_fleet.data_fleet_service_type_vendor_bill', raise_if_not_found=False)
+        return {
+            'service_type_id': vendor_bill_service.id,
+            'vehicle_id': self.vehicle_id.id,
+            'amount': self.price_subtotal,
+            'vendor_id': self.partner_id.id,
+            'description': self.name,
+        }

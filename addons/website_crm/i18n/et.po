@@ -1,22 +1,21 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# * website_crm
+# 	* website_crm
 # 
 # Translators:
-# Rivo Zängov <eraser@eraser.ee>, 2018
-# Martin Trigaux, 2018
-# Arma Gedonsky <armagedonsky@hot.ee>, 2018
-# Egon Raamat <egon@avalah.ee>, 2018
-# Eneli Õigus <enelioigus@gmail.com>, 2018
-# Martin Aavastik <martin@avalah.ee>, 2018
+# Arma Gedonsky <armagedonsky@hot.ee>, 2022
+# Andre Roomet <andreroomet@gmail.com>, 2022
+# Triine Aavik <triine@avalah.ee>, 2022
+# Algo Kärp <algokarp@gmail.com>, 2022
+# Eneli Õigus <enelioigus@gmail.com>, 2022
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.5\n"
+"Project-Id-Version: Odoo Server saas~14.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-09-21 13:17+0000\n"
-"PO-Revision-Date: 2018-08-24 09:33+0000\n"
-"Last-Translator: Martin Aavastik <martin@avalah.ee>, 2018\n"
+"POT-Creation-Date: 2021-07-12 07:50+0000\n"
+"PO-Revision-Date: 2021-09-14 12:27+0000\n"
+"Last-Translator: Eneli Õigus <enelioigus@gmail.com>, 2022\n"
 "Language-Team: Estonian (https://www.transifex.com/odoo/teams/41243/et/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -25,10 +24,63 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: website_crm
-#: model_terms:ir.ui.view,arch_db:website_crm.contactus_thanks_ir_ui_view
-#: model_terms:website.page,arch_db:website_crm.contactus_thanks
-msgid "&amp;times;"
-msgstr "&amp;korda;"
+#: model:ir.model.fields,field_description:website_crm.field_website_visitor__lead_count
+msgid "# Leads"
+msgstr "# Müügivihjed"
+
+#. module: website_crm
+#: model:ir.model.fields,field_description:website_crm.field_crm_lead__visitor_page_count
+msgid "# Page Views"
+msgstr "Lehe vaatamiste arv"
+
+#. module: website_crm
+#: model_terms:ir.ui.view,arch_db:website_crm.res_config_settings_view_form
+msgid "<span class=\"o_form_label\">Contact Form</span>"
+msgstr "<span class=\"o_form_label\">Kontaktivorm</span>"
+
+#. module: website_crm
+#: model_terms:ir.ui.view,arch_db:website_crm.contactus_form
+msgid ""
+"<span class=\"s_website_form_label_content\">Email</span>\n"
+"                                                <span class=\"s_website_form_mark\"> *</span>"
+msgstr ""
+"<span class=\"s_website_form_label_content\">E-kiri</span>\n"
+"                                                <span class=\"s_website_form_mark\"> *</span>"
+
+#. module: website_crm
+#: model_terms:ir.ui.view,arch_db:website_crm.contactus_form
+msgid "<span class=\"s_website_form_label_content\">Phone Number</span>"
+msgstr "<span class=\"s_website_form_label_content\">Telefoninumber</span>"
+
+#. module: website_crm
+#: model_terms:ir.ui.view,arch_db:website_crm.contactus_form
+msgid ""
+"<span class=\"s_website_form_label_content\">Subject</span>\n"
+"                                                <span class=\"s_website_form_mark\"> *</span>"
+msgstr ""
+
+#. module: website_crm
+#: model_terms:ir.ui.view,arch_db:website_crm.contactus_form
+msgid "<span class=\"s_website_form_label_content\">Your Company</span>"
+msgstr "<span class=\"s_website_form_label_content\">Teie ettevõte</span>"
+
+#. module: website_crm
+#: model_terms:ir.ui.view,arch_db:website_crm.contactus_form
+msgid ""
+"<span class=\"s_website_form_label_content\">Your Name</span>\n"
+"                                                <span class=\"s_website_form_mark\"> *</span>"
+msgstr ""
+"<span class=\"s_website_form_label_content\">Teie nimi</span>\n"
+"                                                <span class=\"s_website_form_mark\"> *</span>"
+
+#. module: website_crm
+#: model_terms:ir.ui.view,arch_db:website_crm.contactus_form
+msgid ""
+"<span class=\"s_website_form_label_content\">Your Question</span>\n"
+"                                                <span class=\"s_website_form_mark\"> *</span>"
+msgstr ""
+"<span class=\"s_website_form_label_content\">Teie küsimus</span>\n"
+"                                                <span class=\"s_website_form_mark\"> *</span>"
 
 #. module: website_crm
 #: model_terms:ir.ui.view,arch_db:website_crm.res_config_settings_view_form
@@ -36,19 +88,28 @@ msgid "Add a contact form in the"
 msgstr "Lisa kontaktivorm"
 
 #. module: website_crm
+#. openerp-web
+#: code:addons/website_crm/static/src/js/website_crm_editor.js:0
+#, python-format
+msgid "Assign leads/opportunities to a sales team."
+msgstr "Määra vihjeid/võimalusi müügimeeskonnale."
+
+#. module: website_crm
+#. openerp-web
+#: code:addons/website_crm/static/src/js/website_crm_editor.js:0
+#, python-format
+msgid "Assign leads/opportunities to a salesperson."
+msgstr "Määra vihjeid/võimalusi müügiinimesele."
+
+#. module: website_crm
 #: model_terms:ir.ui.view,arch_db:website_crm.res_config_settings_view_form
 msgid "Communication"
-msgstr "Suhtlus"
+msgstr "Selgitus"
 
 #. module: website_crm
 #: model:ir.model,name:website_crm.model_res_config_settings
 msgid "Config Settings"
-msgstr ""
-
-#. module: website_crm
-#: model_terms:ir.ui.view,arch_db:website_crm.res_config_settings_view_form
-msgid "Contact Form"
-msgstr "Kontaktivorm"
+msgstr "Seadistused"
 
 #. module: website_crm
 #: model_terms:ir.ui.view,arch_db:website_crm.res_config_settings_view_form
@@ -64,12 +125,12 @@ msgstr "Vaikimisi müügimeeskond"
 #: model:ir.model.fields,help:website_crm.field_res_config_settings__crm_default_team_id
 #: model:ir.model.fields,help:website_crm.field_website__crm_default_team_id
 msgid "Default Sales Team for new leads created through the Contact Us form."
-msgstr ""
+msgstr "Vaikimisi müügitiim luuakse Võtke meiega ühendust vormi kaudu."
 
 #. module: website_crm
 #: model:ir.model.fields,field_description:website_crm.field_website__crm_default_team_id
 msgid "Default Sales Teams"
-msgstr ""
+msgstr "Vaikimisi müügimeeskonnad"
 
 #. module: website_crm
 #: model:ir.model.fields,field_description:website_crm.field_res_config_settings__crm_default_user_id
@@ -86,14 +147,22 @@ msgstr ""
 "kontaktivormi."
 
 #. module: website_crm
-#: model_terms:ir.ui.view,arch_db:website_crm.contactus_form
-msgid "Email"
-msgstr "E-mail"
-
-#. module: website_crm
 #: model:ir.model,name:website_crm.model_crm_lead
 msgid "Lead/Opportunity"
 msgstr "Müügivihje/võimalus"
+
+#. module: website_crm
+#: model:ir.actions.act_window,name:website_crm.website_visitor_crm_lead_action
+#: model:ir.model.fields,field_description:website_crm.field_website_visitor__lead_ids
+#: model_terms:ir.ui.view,arch_db:website_crm.website_visitor_view_form
+#: model_terms:ir.ui.view,arch_db:website_crm.website_visitor_view_search
+msgid "Leads"
+msgstr "Müügivihjed"
+
+#. module: website_crm
+#: model_terms:ir.ui.view,arch_db:website_crm.website_visitor_view_kanban
+msgid "Leads/Opportunities"
+msgstr "Müügivihjed/võimalused"
 
 #. module: website_crm
 #: model_terms:ir.ui.view,arch_db:website_crm.res_config_settings_view_form
@@ -101,9 +170,14 @@ msgid "New messages are managed as leads or opportunities in your CRM app."
 msgstr "Uusi sõnumeid hallatakse kui müügivihjeid või võimalusi CRM moodulis."
 
 #. module: website_crm
-#: model_terms:ir.ui.view,arch_db:website_crm.contactus_form
-msgid "Phone Number"
-msgstr "Telefoninumber"
+#: model_terms:ir.actions.act_window,help:website_crm.website_visitor_crm_lead_action
+msgid "No lead linked for this visitor"
+msgstr "Selle külastajaga puudub seotud vihje"
+
+#. module: website_crm
+#: model_terms:ir.ui.view,arch_db:website_crm.crm_lead_view_form
+msgid "Page views"
+msgstr "Lehe vaated"
 
 #. module: website_crm
 #: model_terms:ir.ui.view,arch_db:website_crm.res_config_settings_view_form
@@ -111,38 +185,34 @@ msgid ""
 "Please set a Sales Team for the website. Otherwise you can't follow related "
 "events."
 msgstr ""
+"Palun määrake veebilehele müügimeeskond. Vastasel juhul ei saa te seotud "
+"sündmuseid jälgida."
 
 #. module: website_crm
+#. openerp-web
+#: code:addons/website_crm/static/src/js/website_crm_editor.js:0
 #: model_terms:ir.ui.view,arch_db:website_crm.res_config_settings_view_form
+#, python-format
 msgid "Sales Team"
 msgstr "Müügi meeskond"
 
 #. module: website_crm
+#. openerp-web
+#: code:addons/website_crm/static/src/js/website_crm_editor.js:0
 #: model_terms:ir.ui.view,arch_db:website_crm.res_config_settings_view_form
+#, python-format
 msgid "Salesperson"
 msgstr "Müügiesindaja"
 
 #. module: website_crm
 #: model_terms:ir.ui.view,arch_db:website_crm.contactus_form
-msgid "Send"
-msgstr "Saada"
+msgid "Submit"
+msgstr "Esita"
 
 #. module: website_crm
-#: model_terms:ir.ui.view,arch_db:website_crm.contactus_form
-msgid "Subject"
-msgstr "Teema"
-
-#. module: website_crm
-#: model_terms:ir.ui.view,arch_db:website_crm.contactus_thanks_ir_ui_view
-#: model_terms:website.page,arch_db:website_crm.contactus_thanks
-msgid "Thanks!"
-msgstr "Aitäh!"
-
-#. module: website_crm
-#: model_terms:ir.ui.view,arch_db:website_crm.contactus_thanks_ir_ui_view
-#: model_terms:website.page,arch_db:website_crm.contactus_thanks
-msgid "We will get back to you shortly."
-msgstr "Me võtame teiega peatselt ühendust."
+#: model:ir.model.fields,field_description:website_crm.field_crm_lead__visitor_ids
+msgid "Web Visitors"
+msgstr "Veebikülastajad"
 
 #. module: website_crm
 #: model:ir.model,name:website_crm.model_website
@@ -155,25 +225,9 @@ msgid "Website Contact Form"
 msgstr "Veebilehe kontaktivorm"
 
 #. module: website_crm
-#: model_terms:ir.ui.view,arch_db:website_crm.contactus_form
-msgid "Your Company"
-msgstr "Sinu ettevõte"
-
-#. module: website_crm
-#: model_terms:ir.ui.view,arch_db:website_crm.contactus_form
-msgid "Your Name"
-msgstr "Sinu nimi"
-
-#. module: website_crm
-#: model_terms:ir.ui.view,arch_db:website_crm.contactus_form
-msgid "Your Question"
-msgstr "Sinu küsimus"
-
-#. module: website_crm
-#: model_terms:ir.ui.view,arch_db:website_crm.contactus_thanks_ir_ui_view
-#: model_terms:website.page,arch_db:website_crm.contactus_thanks
-msgid "Your message has been sent successfully."
-msgstr "Teie sõnum on edukalt saadetud."
+#: model:ir.model,name:website_crm.model_website_visitor
+msgid "Website Visitor"
+msgstr "Veebilehe Külastaja"
 
 #. module: website_crm
 #: model_terms:ir.ui.view,arch_db:website_crm.res_config_settings_view_form

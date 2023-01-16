@@ -68,7 +68,11 @@ Wysiwyg.include({
             // Then toggle the clicked one
             toggleDropdown($toggle)
                 .then(dispose)
-                .then(() => this._toggleMegaMenu($toggle[0]))
+                .then(() => {
+                    if (!this.options.enableTranslation) {
+                        this._toggleMegaMenu($toggle[0]);
+                    }
+                })
                 .then(() => this.odooEditor.observerActive());
         });
 
@@ -118,6 +122,13 @@ Wysiwyg.include({
         var resID = parseInt(el.dataset.resId);
         if (!resModel || !resID) {
             throw new Error('There should be a model and id associated to the cover');
+        }
+
+        // The cover might be dirty for another reason than cover properties
+        // values only (like an editable text inside). In that case, do not
+        // update the cover properties values.
+        if (!('coverClass' in el.dataset)) {
+            return;
         }
 
         this.__savedCovers = this.__savedCovers || {};

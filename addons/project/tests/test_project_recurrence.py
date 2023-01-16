@@ -437,6 +437,87 @@ class TestProjectrecurrence(TransactionCase):
         self.assertEqual(dates[3], datetime(2020, 4, 25))
         self.assertEqual(dates[4], datetime(2020, 5, 23))
 
+        dates = self.env['project.task.recurrence']._get_next_recurring_dates(
+            date_start=datetime(2020, 1, 10),
+            repeat_interval=6, # twice a year
+            repeat_unit='month',
+            repeat_type='until',
+            repeat_until=datetime(2021, 1, 11),
+            repeat_on_month='date',
+            repeat_on_year=False,
+            weekdays=[TH(+1)],
+            repeat_day='3', # the 3rd of the month
+            repeat_week=False,
+            repeat_month=False,
+            count=1)
+
+        self.assertEqual(len(dates), 2)
+        self.assertEqual(dates[0], datetime(2020, 7, 3))
+        self.assertEqual(dates[1], datetime(2021, 1, 3))
+
+        # Should generate a date at the last day of the current month
+        dates = self.env['project.task.recurrence']._get_next_recurring_dates(
+            date_start=date(2022, 2, 26),
+            repeat_interval=1,
+            repeat_unit='month',
+            repeat_type='until',
+            repeat_until=date(2022, 2, 28),
+            repeat_on_month='date',
+            repeat_on_year=False,
+            weekdays=False,
+            repeat_day=31,
+            repeat_week=False,
+            repeat_month=False,
+            count=5)
+
+        self.assertEqual(len(dates), 1)
+        self.assertEqual(dates[0], date(2022, 2, 28))
+
+        dates = self.env['project.task.recurrence']._get_next_recurring_dates(
+            date_start=date(2022, 11, 26),
+            repeat_interval=3,
+            repeat_unit='month',
+            repeat_type='until',
+            repeat_until=date(2024, 2, 29),
+            repeat_on_month='date',
+            repeat_on_year=False,
+            weekdays=False,
+            repeat_day=25,
+            repeat_week=False,
+            repeat_month=False,
+            count=5)
+
+        self.assertEqual(len(dates), 5)
+        self.assertEqual(dates[0], date(2023, 2, 25))
+        self.assertEqual(dates[1], date(2023, 5, 25))
+        self.assertEqual(dates[2], date(2023, 8, 25))
+        self.assertEqual(dates[3], date(2023, 11, 25))
+        self.assertEqual(dates[4], date(2024, 2, 25))
+
+        # Use the exact same parameters than the previous test but with a repeat_day that is not passed yet
+        # So we generate an additional date in the current month
+        dates = self.env['project.task.recurrence']._get_next_recurring_dates(
+            date_start=date(2022, 11, 26),
+            repeat_interval=3,
+            repeat_unit='month',
+            repeat_type='until',
+            repeat_until=date(2024, 2, 29),
+            repeat_on_month='date',
+            repeat_on_year=False,
+            weekdays=False,
+            repeat_day=31,
+            repeat_week=False,
+            repeat_month=False,
+            count=5)
+
+        self.assertEqual(len(dates), 6)
+        self.assertEqual(dates[0], date(2022, 11, 30))
+        self.assertEqual(dates[1], date(2023, 2, 28))
+        self.assertEqual(dates[2], date(2023, 5, 31))
+        self.assertEqual(dates[3], date(2023, 8, 31))
+        self.assertEqual(dates[4], date(2023, 11, 30))
+        self.assertEqual(dates[5], date(2024, 2, 29))
+
     def test_recurrence_next_dates_year(self):
         dates = self.env['project.task.recurrence']._get_next_recurring_dates(
             date_start=date(2020, 12, 1),

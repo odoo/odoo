@@ -12,6 +12,12 @@ class TestUBL(AccountEdiTestCommon):
     def setUpClass(cls, chart_template_ref='l10n_nl.l10nnl_chart_template', edi_format_ref='l10n_nl_edi.edi_nlcius_1'):
         super().setUpClass(chart_template_ref=chart_template_ref, edi_format_ref=edi_format_ref)
 
+        if cls.env['ir.module.module'].search(
+            [('name', '=', 'account_edi_ubl_cii'), ('state', '=', 'installed')],
+            limit=1,
+        ):
+            cls.skipTest(cls, "NLCIUS Tests skipped because account_edi_ubl_cii is installed.")
+
         cls.company_data['company'].partner_id.write({
             'street': 'Archefstraat 42',
             'zip': '1000',

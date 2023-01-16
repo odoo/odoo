@@ -248,3 +248,52 @@ class TestPurchase(AccountTestInvoicingCommon):
 
         self.assertEqual(po.order_line[0].price_unit, 200)
         self.assertEqual(po.order_line[1].price_unit, 1200)
+
+    def test_on_change_quantity_description(self):
+        """
+        When a user changes the quantity of a product in a purchase order it
+        should not change the description if the descritpion was changed by
+        the user before
+        """
+        self.env.user.write({'company_id': self.company_data['company'].id})
+
+        po = Form(self.env['purchase.order'])
+        po.partner_id = self.partner_a
+        with po.order_line.new() as pol:
+            pol.product_id = self.product_a
+            pol.product_qty = 1
+
+        pol.name = "New custom description"
+        pol.product_qty += 1
+        self.assertEqual(pol.name, "New custom description")
+
+    def test_tax_totals(self):
+        """ This test ensures the tax amount is correctly computed"""
+
+        self.env.company.tax_calculation_rounding_method = 'round_globally'
+        tax_21_excl = self.env['account.tax'].create({
+            'name': "21 exclude",
+            'amount': '21.00',
+            'amount_type': 'percent',
+            'price_include': False,
+        })
+
+        po_form = Form(self.env['purchase.order'])
+        po_form.partner_id = self.partner_a
+        with po_form.order_line.new() as po_line:
+            po_line.product_id = self.product_a
+            po_line.product_qty = 1.0
+            po_line.price_unit = 10.74
+            po_line.taxes_id.clear()
+            po_line.taxes_id.add(tax_21_excl)
+        with po_form.order_line.new() as po_line:
+            po_line.product_id = self.product_a
+            po_line.product_qty = 2.0
+            po_line.price_unit = 0.83
+            po_line.taxes_id.clear()
+            po_line.taxes_id.add(tax_21_excl)
+        po = po_form.save()
+
+        self.assertEqual(po.amount_tax, 2.60)
+        self.assertEqual(po.amount_total, 15.00)
+        self.assertEqual(po.amount_untaxed, 12.40)

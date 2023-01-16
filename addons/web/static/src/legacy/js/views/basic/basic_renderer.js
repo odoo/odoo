@@ -42,6 +42,7 @@ var BasicRenderer = AbstractRenderer.extend(WidgetAdapterMixin, {
         // This attribute lets us know if there is a handle widget on a field,
         // and on which field it is set.
         this.handleField = null;
+        this.viewEditable = params.viewEditable;
     },
     /**
      * @override
@@ -434,6 +435,7 @@ var BasicRenderer = AbstractRenderer.extend(WidgetAdapterMixin, {
      */
     _getTooltipOptions: function (widget) {
         return {
+            template: '<div class="tooltip tooltip-field-info" role="tooltip"><div class="arrow"></div><div class="tooltip-inner"></div></div>',
             title: function () {
                 let help = widget.attrs.help || widget.field.help || '';
                 if (session.display_switch_company_menu && widget.field.company_dependent) {
@@ -735,7 +737,7 @@ var BasicRenderer = AbstractRenderer.extend(WidgetAdapterMixin, {
             // Distinct readonly from renderer and readonly from modifier,
             // renderer can be readonly while modifier not.
             // This is needed as modifiers are set after first render
-            hasReadonlyModifier: modifiers.readonly,
+            hasReadonlyModifier: modifiers.readonly || this.viewEditable === false,
             mode: modifiers.readonly ? 'readonly' : mode,
             viewType: this.viewType,
         };
@@ -774,6 +776,9 @@ var BasicRenderer = AbstractRenderer.extend(WidgetAdapterMixin, {
         // associated to new widget)
         var self = this;
         def.then(function () {
+            if(!widget.$el){
+                return;
+            }
             // when the caller of renderFieldWidget uses something like
             // this.renderFieldWidget(...).addClass(...), the class is added on
             // the temporary div and not on the actual element that will be

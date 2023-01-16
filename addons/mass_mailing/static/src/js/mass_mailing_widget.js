@@ -35,11 +35,6 @@ var MassMailingFieldHtml = FieldHtml.extend({
         if (!this.nodeOptions.snippets) {
             this.nodeOptions.snippets = 'mass_mailing.email_designer_snippets';
         }
-
-        // All the code related to this __extraAssetsForIframe variable is an
-        // ugly hack to restore mass mailing options in stable versions. The
-        // whole logic has to be refactored as soon as possible...
-        this.__extraAssetsForIframe = [{jsLibs: []}];
     },
 
     //--------------------------------------------------------------------------
@@ -65,14 +60,15 @@ var MassMailingFieldHtml = FieldHtml.extend({
         }
 
         var $editable = this.wysiwyg.getEditable();
-        if (this.wysiwyg.snippetsMenu) {
-            await this.wysiwyg.snippetsMenu.cleanForSave();
-        }
-        return this.wysiwyg.saveModifiedImages(this.$content).then(function () {
+        await this.wysiwyg.cleanForSave();
+        return this.wysiwyg.saveModifiedImages(this.$content).then(async function () {
             self._isDirty = self.wysiwyg.isDirty();
-            self._doAction();
+            await self._doAction();
 
-            convertInline.toInline($editable, self.cssRules);
+            const $editorEnable = $editable.closest('.editor_enable');
+            $editorEnable.removeClass('editor_enable');
+            convertInline.toInline($editable, self.cssRules, self.wysiwyg.$iframe);
+            $editorEnable.addClass('editor_enable');
 
             self.trigger_up('field_changed', {
                 dataPointID: self.dataPointID,
@@ -106,6 +102,18 @@ var MassMailingFieldHtml = FieldHtml.extend({
     //--------------------------------------------------------------------------
 
     /**
+     * Adds automatic editor messages on drag&drop zone elements.
+     *
+     * @private
+     */
+     _addEditorMessages: function () {
+        const $editable = this.wysiwyg.getEditable().find('.o_editable');
+        this.$editorMessageElements = $editable
+            .not('[data-editor-message]')
+            .attr('data-editor-message', _t('DRAG BUILDING BLOCKS HERE'));
+        $editable.filter(':empty').attr('contenteditable', false);
+    },
+    /**
      * @override
      */
      _createWysiwygIntance: async function () {
@@ -115,10 +123,7 @@ var MassMailingFieldHtml = FieldHtml.extend({
         this.$content.find('.o_layout').addBack().data('name', 'Mailing');
         // We don't want to drop snippets directly within the wysiwyg.
         this.$content.removeClass('o_editable');
-        // Force compute CSS rules even without the style-inline node option.
-        if (this.mode === 'edit' && !this.cssRules) {
-            this.cssRules = convertInline.getCSSRules(this.wysiwyg.getEditable()[0].ownerDocument);
-        }
+        this.wysiwyg.getEditable().find('img').attr('loading', '');
     },
     /**
      * Returns true if the editable area is empty.
@@ -165,7 +170,7 @@ var MassMailingFieldHtml = FieldHtml.extend({
         if (_t.database.multi_lang && this.record.fields[fieldName].translate && this.res_id) {
             return $('<button>', {
                     type: 'button',
-                    'class': 'o_field_translate fa fa-globe btn btn-link',
+                    'class': 'o_field_translate fa fa-globe btn btn-primary',
                 })
                 .on('click', this._onTranslate.bind(this));
         }
@@ -241,10 +246,11 @@ var MassMailingFieldHtml = FieldHtml.extend({
         }
         this.switchThemeLast = themeParams;
 
+        this.$lastContent = this.$content.find('.o_mail_wrapper_td').contents();
+
         this.$content.closest('body').removeClass(this._allClasses).addClass(themeParams.className);
 
         const old_layout = this.$content.find('.o_layout')[0];
-        const $old_layout = $(old_layout);
 
         var $new_wrapper;
         var $newWrapperContent;
@@ -286,6 +292,7 @@ var MassMailingFieldHtml = FieldHtml.extend({
         }
         this.wysiwyg.trigger('reload_snippet_dropzones');
         this.trigger_up('iframe_updated', { $iframe: this.wysiwyg.$iframe });
+        this.wysiwyg.odooEditor.historyStep(true);
     },
 
     /**
@@ -294,8 +301,6 @@ var MassMailingFieldHtml = FieldHtml.extend({
      */
     _toggleCodeView: function ($codeview) {
         this._super(...arguments);
-        const isFullWidth = !!$(window.top.document).find('.o_mass_mailing_form_full_width')[0];
-        $codeview.css('height', isFullWidth ? $(window).height() : '');
         if ($codeview.hasClass('d-none')) {
             this.trigger_up('iframe_updated', { $iframe: this.wysiwyg.$iframe });
         }
@@ -307,7 +312,10 @@ var MassMailingFieldHtml = FieldHtml.extend({
     _getWysiwygOptions: function () {
         const options = this._super.apply(this, arguments);
         options.resizable = false;
-        if (!this._wysiwygSnippetsActive) {
+        options.defaultDataForLinkTools = { isNewWindow: true };
+        if (this._wysiwygSnippetsActive) {
+            options.wysiwygAlias = 'mass_mailing.wysiwyg';
+        } else {
             delete options.snippets;
         }
         return options;
@@ -321,6 +329,9 @@ var MassMailingFieldHtml = FieldHtml.extend({
      * @override
      */
     _onLoadWysiwyg: function () {
+        // Let the global hotkey manager know about our iframe.
+        this.call('hotkey', 'registerIframe', this.wysiwyg.$iframe[0]);
+
         if (this.snippetsLoaded) {
             this._onSnippetsLoaded(this.snippetsLoaded);
         }
@@ -467,7 +478,11 @@ var MassMailingFieldHtml = FieldHtml.extend({
             self._switchThemes(themeParams);
         });
         $themeSelector.on("mouseleave", ".dropdown-item", function (e) {
-            self._switchThemes(selectedTheme);
+            if (self.$lastContent) {
+                self._switchThemes(Object.assign({}, selectedTheme, {template: self.$lastContent}));
+            } else {
+                self._switchThemes(selectedTheme);
+            }
         });
         $themeSelector.on("click", '[data-toggle="dropdown"]', function (e) {
             var $menu = $themeSelector.find('.dropdown-menu');
@@ -490,6 +505,9 @@ var MassMailingFieldHtml = FieldHtml.extend({
             // Notify form view
             $themeSelector.find('.dropdown-item.selected').removeClass('selected');
             $themeSelector.find('.dropdown-item:eq(' + themesParams.indexOf(selectedTheme) + ')').addClass('selected');
+
+            // Invalidate previous content.
+            self.$lastContent = undefined;
         };
 
         $themeSelector.on("click", ".dropdown-item", selectTheme);
@@ -511,6 +529,7 @@ var MassMailingFieldHtml = FieldHtml.extend({
             }
 
             selectTheme(e);
+            this._addEditorMessages();
             // Wait the next tick because some mutation have to be processed by
             // the Odoo editor before resetting the history.
             setTimeout(() => {

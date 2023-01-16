@@ -130,7 +130,7 @@ class HrEmployeeBase(models.AbstractModel):
             employee.leave_date_from = leave_data.get(employee.id, {}).get('leave_date_from')
             employee.leave_date_to = leave_data.get(employee.id, {}).get('leave_date_to')
             employee.current_leave_state = leave_data.get(employee.id, {}).get('current_leave_state')
-            employee.is_absent = leave_data.get(employee.id) and leave_data.get(employee.id, {}).get('current_leave_state') not in ['cancel', 'refuse', 'draft']
+            employee.is_absent = leave_data.get(employee.id) and leave_data.get(employee.id, {}).get('current_leave_state') in ['validate']
 
     @api.depends('parent_id')
     def _compute_leave_manager(self):
@@ -231,16 +231,12 @@ class HrEmployee(models.Model):
         return super()._get_user_m2o_to_empty_on_archived_employees() + ['leave_manager_id']
 
     def action_time_off_dashboard(self):
-        domain = []
-        if self.env.context.get('active_ids'):
-            domain = [('employee_id', 'in', self.env.context.get('active_ids', []))]
-
         return {
             'name': _('Time Off Dashboard'),
             'type': 'ir.actions.act_window',
             'res_model': 'hr.leave',
             'views': [[self.env.ref('hr_holidays.hr_leave_employee_view_dashboard').id, 'calendar']],
-            'domain': domain,
+            'domain': [('employee_id', 'in', self.ids)],
             'context': {
                 'employee_id': self.ids,
             },

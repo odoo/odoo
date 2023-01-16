@@ -54,7 +54,7 @@ class BaseModel(models.AbstractModel):
                 tracking = self.env['mail.tracking.value'].create_tracking_values(initial_value, new_value, col_name, col_info, tracking_sequence, self._name)
                 if tracking:
                     if tracking['field_type'] == 'monetary':
-                        tracking['currency_id'] = getattr(self, col_info.get('currency_field', ''), self.company_id.currency_id).id
+                        tracking['currency_id'] = self[col_info['currency_field']].id
                     tracking_value_ids.append([0, 0, tracking])
                 changes.add(col_name)
 
@@ -147,17 +147,47 @@ class BaseModel(models.AbstractModel):
                 if catchall:
                     result_email.update(dict((rid, '%s@%s' % (catchall, alias_domain)) for rid in left_ids))
 
-            # compute name of reply-to - TDE tocheck: quotes and stuff like that
-            company_name = company.name if company else self.env.company.name
             for res_id in result_email:
-                name = '%s%s%s' % (company_name, ' ' if doc_names.get(res_id) else '', doc_names.get(res_id, ''))
-                result[res_id] = tools.formataddr((name, result_email[res_id]))
+                result[res_id] = self._notify_get_reply_to_formatted_email(
+                    result_email[res_id],
+                    doc_names.get(res_id) or '',
+                    company or self.env.company
+                )
 
         left_ids = set(_res_ids) - set(result_email)
         if left_ids:
             result.update(dict((res_id, default) for res_id in left_ids))
 
         return result
+
+    def _notify_get_reply_to_formatted_email(self, record_email, record_name, company):
+        """ Compute formatted email for reply_to and try to avoid refold issue
+        with python that splits the reply-to over multiple lines. It is due to
+        a bad management of quotes (missing quotes after refold). This appears
+        therefore only when having quotes (aka not simple names, and not when
+        being unicode encoded).
+
+        To avoid that issue when formataddr would return more than 78 chars we
+        return a simplified name/email to try to stay under 78 chars. If not
+        possible we return only the email and skip the formataddr which causes
+        the issue in python. We do not use hacks like crop the name part as
+        encoding and quoting would be error prone.
+        """
+        # address itself is too long for 78 chars limit: return only email
+        if len(record_email) >= 78:
+            return record_email
+
+        company_name = company.name if company else self.env.company.name
+
+        # try company_name + record_name, or record_name alone (or company_name alone)
+        name = f"{company_name} {record_name}" if record_name else company_name
+
+        formatted_email = tools.formataddr((name, record_email))
+        if len(formatted_email) > 78:
+            formatted_email = tools.formataddr((record_name or company_name, record_email))
+        if len(formatted_email) > 78:
+            formatted_email = record_email
+        return formatted_email
 
     # ------------------------------------------------------------
     # ALIAS MANAGEMENT

@@ -9,6 +9,7 @@ from werkzeug.exceptions import Forbidden
 
 from odoo import http, tools, _
 from odoo.addons.iap.tools import iap_tools
+from odoo.exceptions import AccessError
 from odoo.http import request
 
 _logger = logging.getLogger(__name__)
@@ -144,7 +145,7 @@ class MailPluginController(http.Controller):
             return {'error': _('You need to specify at least the partner_id or the name and the email')}
 
         if partner_id:
-            partner = request.env['res.partner'].browse(partner_id)
+            partner = request.env['res.partner'].browse(partner_id).exists()
             return self._get_contact_data(partner)
 
         normalized_email = tools.email_normalize(email)
@@ -168,7 +169,10 @@ class MailPluginController(http.Controller):
                 'enrichment_info': None,
             }
             company = self._find_existing_company(normalized_email)
-            if not company:  # create and enrich company
+
+            can_create_partner = request.env['res.partner'].check_access_rights('create', raise_exception=False)
+
+            if not company and can_create_partner:  # create and enrich company
                 company, enrichment_info = self._create_company_from_iap(normalized_email)
                 response['partner']['enrichment_info'] = enrichment_info
             response['partner']['company'] = self._get_company_data(company)
@@ -184,11 +188,10 @@ class MailPluginController(http.Controller):
         search on.
         The method returns an array containing the dicts of the matched contacts.
         """
-
         normalized_email = tools.email_normalize(search_term)
 
         if normalized_email:
-            filter_domain = [('email_normalized', '=', search_term)]
+            filter_domain = [('email_normalized', 'ilike', search_term)]
         else:
             filter_domain = ['|', '|', ('display_name', 'ilike', search_term), ('ref', '=', search_term),
                              ('email', 'ilike', search_term)]
@@ -259,6 +262,10 @@ class MailPluginController(http.Controller):
         Returns enrichment data for a given domain, in case an error happens the response will
         contain an enrichment_info key explaining what went wrong
         """
+        if domain in iap_tools._MAIL_DOMAIN_BLACKLIST:
+            # Can not enrich the provider domain names (gmail.com; outlook.com, etc)
+            return {'enrichment_info': {'type': 'missing_data'}}
+
         enriched_data = {}
         try:
             response = request.env['iap.enrich.api']._request_enrich({domain: domain})  # The key doesn't matter
@@ -367,8 +374,20 @@ class MailPluginController(http.Controller):
         partner_values['title'] = partner.function
         partner_values['enrichment_info'] = None
 
-        return partner_values
+        try:
+            partner.check_access_rights('write')
+            partner.check_access_rule('write')
+            partner_values['can_write_on_partner'] = True
+        except AccessError:
+            partner_values['can_write_on_partner'] = False
 
+        if not partner_values['name']:
+            # Always ensure that the partner has a name
+            name, email = request.env['res.partner']._parse_partner_name(
+                partner_values['email'])
+            partner_values['name'] = name or email
+
+        return partner_values
 
     def _get_contact_data(self, partner):
         """
@@ -388,7 +407,9 @@ class MailPluginController(http.Controller):
 
         return {
             'partner': partner_response,
-            'user_companies': request.env['res.users'].browse(request.uid).company_ids.ids
+            'user_companies': request.env.user.company_ids.ids,
+            'can_create_partner': request.env['res.partner'].check_access_rights(
+                'create', raise_exception=False),
         }
 
     def _mail_content_logging_models_whitelist(self):

@@ -8,6 +8,7 @@
 # sharkutz <sharkutz4life@yahoo.com>, 2021
 # Foldi Robert <foldirobert@nexterp.ro>, 2021
 # Hongu Cosmin <cosmin513@gmail.com>, 2021
+# Claudia Baisan, 2023
 # 
 msgid ""
 msgstr ""
@@ -15,7 +16,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-09-14 10:28+0000\n"
 "PO-Revision-Date: 2021-09-14 12:20+0000\n"
-"Last-Translator: Hongu Cosmin <cosmin513@gmail.com>, 2021\n"
+"Last-Translator: Claudia Baisan, 2023\n"
 "Language-Team: Romanian (https://www.transifex.com/odoo/teams/41243/ro/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -27,18 +28,18 @@ msgstr ""
 #: code:addons/auth_totp/controllers/home.py:0
 #, python-format
 msgid "%(browser)s on %(platform)s"
-msgstr ""
+msgstr "%(browser)s pe %(platform)s"
 
 #. module: auth_totp
 #: model:ir.model,name:auth_totp.model_auth_totp_wizard
 msgid "2-Factor Setup Wizard"
-msgstr ""
+msgstr "Asistent de configurare a autentificării cu doi factori"
 
 #. module: auth_totp
 #: code:addons/auth_totp/wizard/auth_totp_wizard.py:0
 #, python-format
 msgid "2-Factor authentication is now enabled."
-msgstr ""
+msgstr "2-Factor authentication is now enabled."
 
 #. module: auth_totp
 #: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_field
@@ -47,6 +48,8 @@ msgid ""
 "<span attrs=\"{'invisible': [('totp_enabled', '=', False)]}\" class=\"text-"
 "muted\">Your account is protected!</span>"
 msgstr ""
+"<span attrs=\"{'invisible': [('totp_enabled', '=', False)]}\" class=\"text-"
+"muted\">Contul dvs. este protejat!</span>"
 
 #. module: auth_totp
 #: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_wizard
@@ -54,6 +57,8 @@ msgid ""
 "<span class=\"d-md-none d-block\">Or install an authenticator app</span>\n"
 "                                        <span class=\"d-none d-md-block\">Install an authenticator app on your mobile device</span>"
 msgstr ""
+"<span class=\"d-md-none d-block\">Sau instalați o aplicație de autentificare</span>\n"
+"                                        <span class=\"d-none d-md-block\">Instalați o aplicație de autentificare pe dispozitivul mobil</span>"
 
 #. module: auth_totp
 #: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_wizard
@@ -61,6 +66,8 @@ msgid ""
 "<span class=\"d-none d-md-block\">When requested to do so, scan the barcode below</span>\n"
 "                                    <span class=\"d-block d-md-none\">When requested to do so, copy the key below</span>"
 msgstr ""
+"<span class=\"d-none d-md-block\">Când vă este solicitat, scanati codul de bare de mai jos</span>\n"
+"                                    <span class=\"d-block d-md-none\">Când vă este solicitat, copiați cheia de mai jos</span>"
 
 #. module: auth_totp
 #: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_wizard
@@ -68,6 +75,8 @@ msgid ""
 "<span class=\"text-muted\">Popular ones include Authy, Google Authenticator "
 "or the Microsoft Authenticator.</span>"
 msgstr ""
+"<span class=\"text-muted\">Cele mai populare includ Authy, Google "
+"Authenticator sau Microsoft Authenticator.</span>"
 
 #. module: auth_totp
 #: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_form
@@ -82,7 +91,7 @@ msgstr "Activează"
 #. module: auth_totp
 #: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_form
 msgid "Added On"
-msgstr ""
+msgstr "Adăugat la"
 
 #. module: auth_totp
 #: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_form
@@ -94,17 +103,17 @@ msgstr ""
 #. module: auth_totp
 #: model_terms:ir.ui.view,arch_db:auth_totp.auth_totp_form
 msgid "Authentication Code"
-msgstr ""
+msgstr "Cod de autentificare"
 
 #. module: auth_totp
 #: model:ir.model,name:auth_totp.model_auth_totp_device
 msgid "Authentication Device"
-msgstr ""
+msgstr "Dispozitiv de autentificare"
 
 #. module: auth_totp
 #: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_wizard
 msgid "Authenticator App Setup"
-msgstr ""
+msgstr "Configurarea aplicației de autentificare"
 
 #. module: auth_totp
 #: model_terms:ir.ui.view,arch_db:auth_totp.auth_totp_form
@@ -116,12 +125,13 @@ msgstr "Anulează"
 #. module: auth_totp
 #: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_wizard
 msgid "Cannot scan it?"
-msgstr ""
+msgstr "Nu-l puteți scana?"
 
 #. module: auth_totp
 #: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_wizard
 msgid "Click on this link to open your authenticator app"
 msgstr ""
+"Faceți clic pe acest link pentru a deschide aplicația de autentificare"
 
 #. module: auth_totp
 #: model:ir.model.fields,field_description:auth_totp.field_auth_totp_wizard__create_uid
@@ -152,12 +162,12 @@ msgstr "Nume dispozitiv"
 #: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_field
 #: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_form
 msgid "Disable 2FA"
-msgstr ""
+msgstr "Dezactivați 2FA"
 
 #. module: auth_totp
 #: model:ir.actions.server,name:auth_totp.action_disable_totp
 msgid "Disable two-factor authentication"
-msgstr ""
+msgstr "Dezactivați autentificarea cu doi factori"
 
 #. module: auth_totp
 #: model:ir.model.fields,field_description:auth_totp.field_auth_totp_device__display_name
@@ -168,18 +178,18 @@ msgstr "Nume afișat"
 #. module: auth_totp
 #: model_terms:ir.ui.view,arch_db:auth_totp.auth_totp_form
 msgid "Don't ask again on this device"
-msgstr ""
+msgstr "Nu mai intrebați pe acest dispozitiv"
 
 #. module: auth_totp
 #: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_field
 #: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_form
 msgid "Enable 2FA"
-msgstr ""
+msgstr "Activați 2FA"
 
 #. module: auth_totp
 #: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_wizard
 msgid "Enter your six-digit code below"
-msgstr ""
+msgstr "Introduceți codul de șase cifre de mai jos"
 
 #. module: auth_totp
 #: model:ir.model,name:auth_totp.model_ir_http
@@ -196,7 +206,7 @@ msgstr "ID"
 #: code:addons/auth_totp/controllers/home.py:0
 #, python-format
 msgid "Invalid authentication code format."
-msgstr ""
+msgstr "Format de cod de autentificare nevalid."
 
 #. module: auth_totp
 #: model:ir.model.fields,field_description:auth_totp.field_auth_totp_device____last_update
@@ -229,7 +239,7 @@ msgstr "Autentificare"
 #. module: auth_totp
 #: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_wizard
 msgid "Look for an \"Add an account\" button"
-msgstr ""
+msgstr "Căutați un buton \"Adăugați un cont\""
 
 #. module: auth_totp
 #: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_wizard
@@ -244,7 +254,7 @@ msgstr "În Google Store"
 #. module: auth_totp
 #: model:ir.model.fields,field_description:auth_totp.field_auth_totp_wizard__qrcode
 msgid "Qrcode"
-msgstr ""
+msgstr "Cod QR"
 
 #. module: auth_totp
 #: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_form
@@ -254,7 +264,7 @@ msgstr "Revocare"
 #. module: auth_totp
 #: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_form
 msgid "Revoke All"
-msgstr ""
+msgstr "Revocați tot"
 
 #. module: auth_totp
 #: model:ir.model.fields,field_description:auth_totp.field_auth_totp_device__scope
@@ -270,7 +280,7 @@ msgstr "Secret"
 #: code:addons/auth_totp/wizard/auth_totp_wizard.py:0
 #, python-format
 msgid "The verification code should only contain numbers"
-msgstr ""
+msgstr "Codul de verificare ar trebui să conțină doar numere"
 
 #. module: auth_totp
 #: model_terms:ir.ui.view,arch_db:auth_totp.auth_totp_form
@@ -278,11 +288,13 @@ msgid ""
 "To login, enter below the six-digit authentication code provided by your Authenticator app.\n"
 "                        <br/>"
 msgstr ""
+"Pentru a vă autentifica, introduceți mai jos codul de autentificare de șase cifre furnizat de aplicația Authenticator.\n"
+"                        <br/>"
 
 #. module: auth_totp
 #: model:ir.model.fields,field_description:auth_totp.field_res_users__totp_secret
 msgid "Totp Secret"
-msgstr ""
+msgstr "Totp Secret"
 
 #. module: auth_totp
 #: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_form
@@ -293,20 +305,20 @@ msgstr ""
 #: model:ir.model.fields,field_description:auth_totp.field_res_users__totp_trusted_device_ids
 #: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_form
 msgid "Trusted Devices"
-msgstr ""
+msgstr "Dispozitive de încredere"
 
 #. module: auth_totp
 #: code:addons/auth_totp/models/res_users.py:0
 #, python-format
 msgid "Two-Factor Authentication Activation"
-msgstr ""
+msgstr "Activarea autentificării cu doi factori"
 
 #. module: auth_totp
 #: model_terms:ir.ui.view,arch_db:auth_totp.auth_totp_form
 #: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_field
 #: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_form
 msgid "Two-factor Authentication"
-msgstr ""
+msgstr "Autentificare cu doi factori"
 
 #. module: auth_totp
 #: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_form
@@ -315,6 +327,9 @@ msgid ""
 "                                The first one is done with your password and the second one with a code you get from a dedicated mobile app.\n"
 "                                Popular ones include Authy, Google Authenticator or the Microsoft Authenticator."
 msgstr ""
+"Autentificarea cu doi factori (\"2FA\") este un sistem de autentificare dublă.\n"
+"                                Primul este realizat cu parola dvs. și al doilea cu un cod pe care îl obțineți dintr-o aplicație mobilă dedicată.\n"
+"                                Cele mai populare includ Authy, Google Authenticator sau Microsoft Authenticator."
 
 #. module: auth_totp
 #: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_field
@@ -332,30 +347,32 @@ msgstr "Autentificare cu doi factori"
 #. module: auth_totp
 #: model_terms:ir.ui.view,arch_db:auth_totp.res_users_view_search
 msgid "Two-factor authentication Disabled"
-msgstr ""
+msgstr "Autentificarea cu doi factori dezactivată"
 
 #. module: auth_totp
 #: model_terms:ir.ui.view,arch_db:auth_totp.res_users_view_search
 msgid "Two-factor authentication Enabled"
-msgstr ""
+msgstr "Autentificarea cu doi factori activată"
 
 #. module: auth_totp
 #: code:addons/auth_totp/models/res_users.py:0
 #, python-format
 msgid "Two-factor authentication already enabled"
-msgstr ""
+msgstr "Autentificarea cu doi factori este deja activată"
 
 #. module: auth_totp
 #: code:addons/auth_totp/models/res_users.py:0
 #, python-format
 msgid "Two-factor authentication can only be enabled for yourself"
-msgstr ""
+msgstr "Autentificarea cu doi factori poate fi activată doar pentru dvs."
 
 #. module: auth_totp
 #: code:addons/auth_totp/models/res_users.py:0
 #, python-format
 msgid "Two-factor authentication disabled for the following user(s): %s"
 msgstr ""
+"Autentificarea cu doi factori a fost dezactivată pentru următorii "
+"utilizatori: %s"
 
 #. module: auth_totp
 #: model:ir.model.fields,field_description:auth_totp.field_auth_totp_wizard__url
@@ -380,14 +397,14 @@ msgid "Verification Code"
 msgstr "Cod de verificare"
 
 #. module: auth_totp
-#: code:addons/auth_totp/controllers/home.py:0
+#: code:addons/auth_totp/models/res_users.py:0
 #: code:addons/auth_totp/wizard/auth_totp_wizard.py:0
 #, python-format
 msgid "Verification failed, please double-check the 6-digit code"
-msgstr ""
+msgstr "Verificarea a eșuat, vă rugăm să verificați codul de 6 cifre"
 
 #. module: auth_totp
 #: model_terms:ir.ui.view,arch_db:auth_totp.auth_totp_form
 #: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_wizard
 msgid "e.g. 123456"
-msgstr ""
+msgstr "de ex. 123456"

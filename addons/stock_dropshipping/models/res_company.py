@@ -91,6 +91,8 @@ class ResCompany(models.Model):
                 ('default_location_src_id.usage', '=', 'supplier'),
                 ('default_location_dest_id.usage', '=', 'customer'),
             ], limit=1, order='sequence')
+            if not dropship_picking_type:
+                continue
             dropship_vals.append({
                 'name': '%s → %s' % (supplier_location.name, customer_location.name),
                 'action': 'buy',

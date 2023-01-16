@@ -1,13 +1,14 @@
 /** @odoo-module **/
 
 import { makeFakeLocalizationService } from "@web/../tests/helpers/mock_services";
-import { click, makeDeferred, nextTick, triggerEvent } from "@web/../tests/helpers/utils";
+import { click, makeDeferred, nextTick, patchDate, triggerEvent } from "@web/../tests/helpers/utils";
 import {
     editFavoriteName,
     saveFavorite,
     setupControlPanelFavoriteMenuRegistry,
     setupControlPanelServiceRegistry,
     switchView,
+    toggleComparisonMenu,
     toggleFavoriteMenu,
     toggleFilterMenu,
     toggleGroupByMenu,
@@ -151,19 +152,21 @@ QUnit.module("Views", (hooks) => {
                 foo: {
                     fields: {
                         id: { string: "Id", type: "integer" },
-                        foo: { string: "Foo", type: "integer", store: true, group_operator: "sum" },
-                        bar: { string: "bar", type: "boolean", store: true },
+                        foo: { string: "Foo", type: "integer", store: true, group_operator: "sum", sortable: true },
+                        bar: { string: "bar", type: "boolean", store: true, sortable: true },
                         product_id: {
                             string: "Product",
                             type: "many2one",
                             relation: "product",
                             store: true,
+                            sortable: true
                         },
                         color_id: {
                             string: "Color",
                             type: "many2one",
                             relation: "color",
                             store: true,
+                            sortable: true
                         },
                         date: { string: "Date", type: "date", store: true, sortable: true },
                         revenue: {
@@ -171,6 +174,7 @@ QUnit.module("Views", (hooks) => {
                             type: "float",
                             store: true,
                             group_operator: "sum",
+                            sortable: true
                         },
                     },
                     records: [
@@ -3508,6 +3512,163 @@ QUnit.module("Views", (hooks) => {
                     );
                 }
             },
+        });
+    });
+
+    QUnit.test('fake data in line chart', async function (assert) {
+        assert.expect(1);
+
+        patchDate(2020, 4, 19, 1, 0, 0);
+
+        serverData.models.foo.records = [];
+
+        const graph = await makeView({
+            type: "graph",
+            resModel: "foo",
+            serverData,
+            context: { search_default_date_filter: 1, },
+            arch: `
+                <graph type="line">
+                    <field name="date"/>
+                </graph>
+            `,
+            searchViewArch:`
+                <search>
+                    <filter name="date_filter" domain="[]" date="date" default_period="third_quarter"/>
+                </search>
+            `,
+        });
+
+        await toggleComparisonMenu(graph);
+        await toggleMenuItem(graph, 'Date: Previous period');
+
+        checkLabels(assert, graph, ['', '']);
+    });
+
+    QUnit.test('no filling color for period of comparison', async function (assert) {
+        assert.expect(1);
+
+        patchDate(2020, 4, 19, 1, 0, 0);
+
+        serverData.models.foo.records.forEach((r) => {
+            if (r.date) {
+                r.date = r.date.replace(/\d\d\d\d/, "2019");
+            }
+        });
+
+        const graph = await makeView({
+            type: "graph",
+            resModel: "foo",
+            serverData,
+            context: { search_default_date_filter: 1, },
+            arch: `
+                <graph type="line">
+                    <field name="product_id"/>
+                </graph>
+            `,
+            searchViewArch: `
+                <search>
+                    <filter name="date_filter" domain="[]" date="date" default_period="this_year"/>
+                </search>
+            `,
+        });
+
+        await toggleComparisonMenu(graph);
+        await toggleMenuItem(graph, 'Date: Previous period');
+
+        checkDatasets(assert, graph, "backgroundColor", {
+            "backgroundColor": undefined,
+        });
+    });
+
+    QUnit.test("group by a non stored, sortable field", async function (assert) {
+        assert.expect(1);
+        // When a field is non-stored but sortable it's inherited
+        // from a stored field, so it can be sortable
+        serverData.models.foo.fields.date.store = false;
+        const graph = await makeView({
+            serverData,
+            type: "graph",
+            resModel: "foo",
+            groupBy: ["date:month"],
+            arch: `<graph type="line"/>`,
+            config: {
+                views: [[false, "search"]],
+            },
+        });
+        checkLabels(assert, graph, ["January 2016", "March 2016", "May 2016", "April 2016"]);
+    });
+
+    QUnit.test("graph_groupbys should be also used after first load", async function (assert) {
+        const graph = await makeView({
+            serverData,
+            type: "graph",
+            resModel: "foo",
+            groupBy: ["date:quarter"],
+            arch: `<graph/>`,
+            irFilters: [
+                {
+                    user_id: [2, "Mitchell Admin"],
+                    name: "Favorite",
+                    id: 1,
+                    context: `{
+                        "group_by": [],
+                        "graph_measure": "revenue",
+                        "graph_mode": "bar",
+                        "graph_groupbys": ["color_id"],
+                    }`,
+                    sort: "[]",
+                    domain: "",
+                    is_default: false,
+                    model_id: "foo",
+                    action_id: false,
+                },
+            ],
+        });
+
+        checkModeIs(assert, graph, "bar");
+        checkLabels(assert, graph, ["Q1 2016", "Q2 2016", "Undefined"]);
+        checkLegend(assert, graph, "Count");
+
+        await toggleFavoriteMenu(graph);
+        await toggleMenuItem(graph, "Favorite");
+
+        checkModeIs(assert, graph, "bar");
+        checkLabels(assert, graph, ["Undefined", "red"]);
+        checkLegend(assert, graph, "Revenue");
+    });
+
+    QUnit.test("order='desc' on arch", async function (assert) {
+        const graph = await makeView({
+            serverData,
+            type: "graph",
+            resModel: "foo",
+            arch: `
+                <graph order="desc">
+                    <field name="date"/>
+                </graph>
+            `,
+        });
+        checkDatasets(assert, graph, ["data", "label"], {
+            data: [2, 2, 2, 1, 1],
+            label: "Count",
+        });
+    });
+
+    QUnit.test("order='asc' on arch", async function (assert) {
+        const graph = await makeView({
+            serverData,
+            type: "graph",
+            resModel: "foo",
+            arch: `
+                <graph order="asc">
+                    <field name="date"/>
+                </graph>
+            `,
+        });
+        checkDatasets(assert, graph, ["data", "label"], {
+            data: [1, 1, 2, 2, 2],
+            label: "Count",
         });
     });
 });

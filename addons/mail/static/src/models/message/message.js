@@ -112,7 +112,10 @@ function factory(dependencies) {
                 }
             }
             if ('partner_ids' in data && this.messaging.currentPartner) {
-                data2.isCurrentPartnerMentioned = data.partner_ids.includes(this.messaging.currentPartner.id);
+                data2.recipients = insertAndReplace(data.partner_ids.map(partner_id => ({ id: partner_id })));
+            }
+            if ('recipients' in data) {
+                data2.recipients = insertAndReplace(data.recipients);
             }
             if ('starred_partner_ids' in data && this.messaging.currentPartner) {
                 data2.isStarred = data.starred_partner_ids.includes(this.messaging.currentPartner.id);
@@ -457,6 +460,14 @@ function factory(dependencies) {
         }
 
         /**
+         * @private
+         * @returns {boolean}
+         */
+        _computeIsCurrentPartnerMentioned() {
+            return this.recipients.includes(this.messaging.currentPartner);
+        }
+
+        /**
          * The method does not attempt to cover all possible cases of empty
          * messages, but mostly those that happen with a standard flow. Indeed
          * it is preferable to be defensive and show an empty message sometimes
@@ -524,6 +535,20 @@ function factory(dependencies) {
                 }
             }
             return false;
+        }
+
+        /**
+         * @private
+         * @returns {string}
+         */
+        _computeMessageTypeText() {
+            if (this.message_type === 'notification') {
+                return this.env._t("System notification");
+            }
+            if (!this.is_discussion && !this.is_notification) {
+                return this.env._t("Note");
+            }
+            return this.env._t("Message");
         }
 
         /**
@@ -747,6 +772,7 @@ function factory(dependencies) {
          * Determine whether the current partner is mentioned.
          */
         isCurrentPartnerMentioned: attr({
+            compute: '_computeIsCurrentPartnerMentioned',
             default: false,
         }),
         /**
@@ -761,6 +787,9 @@ function factory(dependencies) {
          */
         isStarred: attr({
             default: false,
+        }),
+        messageTypeText: attr({
+            compute: '_computeMessageTypeText',
         }),
         /**
          * Groups of reactions per content allowing to know the number of
@@ -809,6 +838,7 @@ function factory(dependencies) {
             compute: '_computePrettyBody',
             default: "",
         }),
+        recipients: many2many('mail.partner'),
         subject: attr(),
         subtype_description: attr(),
         subtype_id: attr(),

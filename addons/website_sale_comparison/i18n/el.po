@@ -1,18 +1,19 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# * website_sale_comparison
+# 	* website_sale_comparison
 # 
 # Translators:
-# Martin Trigaux, 2018
-# Kostas Goutoudis <goutoudis@gmail.com>, 2018
-# George Tarasidis <george_tarasidis@yahoo.com>, 2018
+# Kostas Goutoudis <goutoudis@gmail.com>, 2022
+# George Tarasidis <george_tarasidis@yahoo.com>, 2022
+# Martin Trigaux, 2022
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 12.0\n"
+"Project-Id-Version: Odoo Server saas~14.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-10-08 06:49+0000\n"
-"PO-Revision-Date: 2018-10-08 06:49+0000\n"
-"Last-Translator: George Tarasidis <george_tarasidis@yahoo.com>, 2018\n"
+"POT-Creation-Date: 2021-09-14 10:29+0000\n"
+"PO-Revision-Date: 2021-09-14 12:28+0000\n"
+"Last-Translator: Martin Trigaux, 2022\n"
 "Language-Team: Greek (https://www.transifex.com/odoo/teams/41243/el/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -31,14 +32,31 @@ msgid "308 g"
 msgstr "308 γρ"
 
 #. module: website_sale_comparison
+#: model_terms:ir.ui.view,arch_db:website_sale_comparison.product_compare
+msgid ""
+"<i class=\"fa fa-chevron-circle-down o_product_comparison_collpase\" "
+"role=\"img\" aria-label=\"Collapse\" title=\"Collapse\"/>"
+msgstr ""
+
+#. module: website_sale_comparison
 #: model_terms:ir.ui.view,arch_db:website_sale_comparison.recommended_product
 msgid "<i class=\"fa fa-exchange\"/> Compare"
 msgstr "<i class=\"fa fa-exchange\"/> Σύγκριση"
 
 #. module: website_sale_comparison
 #: model_terms:ir.ui.view,arch_db:website_sale_comparison.product_compare
-msgid "<i class=\"fa fa-shopping-cart\"/>&amp;nbsp;Add to Cart"
-msgstr "<i class=\"fa fa-shopping-cart\"/>&amp;nbsp;Προσθήκη στο καλάθι"
+msgid "<i class=\"fa fa-shopping-cart mr-2\"/>Add to Cart"
+msgstr ""
+
+#. module: website_sale_comparison
+#: model_terms:ir.ui.view,arch_db:website_sale_comparison.product_product
+msgid "<i class=\"fa fa-trash\" role=\"img\" aria-label=\"Remove\"/>"
+msgstr ""
+
+#. module: website_sale_comparison
+#: model_terms:ir.ui.view,arch_db:website_sale_comparison.add_to_compare_button
+msgid "<span class=\"fa fa-exchange mr-2\"/>Add to compare"
+msgstr ""
 
 #. module: website_sale_comparison
 #: model_terms:ir.ui.view,arch_db:website_sale_comparison.recommended_product
@@ -49,6 +67,11 @@ msgstr "<span class=\"h3\">Προτεινόμενες εναλλακτικές �
 #: model_terms:ir.ui.view,arch_db:website_sale_comparison.product_compare
 msgid "<strong>Price:</strong>"
 msgstr "<strong>Τιμή:</strong>"
+
+#. module: website_sale_comparison
+#: model_terms:ir.ui.view,arch_db:website_sale_comparison.product_compare
+msgid "<strong>x</strong>"
+msgstr ""
 
 #. module: website_sale_comparison
 #: model:product.attribute.value,name:website_sale_comparison.product_attribute_value_1
@@ -62,11 +85,6 @@ msgid "Attribute Categories"
 msgstr "Κατηγορίες Χαρακτηριστικών"
 
 #. module: website_sale_comparison
-#: model:product.attribute,name:website_sale_comparison.product_attribute_1
-msgid "Brand"
-msgstr "Μάρκα"
-
-#. module: website_sale_comparison
 #: model:ir.model.fields,field_description:website_sale_comparison.field_product_attribute__category_id
 msgid "Category"
 msgstr "Κατηγορία"
@@ -78,17 +96,17 @@ msgstr "Όνομα Κατηγορίας"
 
 #. module: website_sale_comparison
 #. openerp-web
-#: code:addons/website_sale_comparison/static/src/xml/comparison.xml:8
-#: code:addons/website_sale_comparison/static/src/xml/comparison.xml:20
+#: code:addons/website_sale_comparison/static/src/xml/comparison.xml:0
+#: code:addons/website_sale_comparison/static/src/xml/comparison.xml:0
 #: model_terms:ir.ui.view,arch_db:website_sale_comparison.add_to_compare
-#: model_terms:ir.ui.view,arch_db:website_sale_comparison.product_add_to_compare
+#: model_terms:ir.ui.view,arch_db:website_sale_comparison.add_to_compare_button
 #, python-format
 msgid "Compare"
 msgstr "Σύγκριση"
 
 #. module: website_sale_comparison
 #. openerp-web
-#: code:addons/website_sale_comparison/static/src/js/website_sale_comparison.js:51
+#: code:addons/website_sale_comparison/static/src/js/website_sale_comparison.js:0
 #: model_terms:ir.ui.view,arch_db:website_sale_comparison.product_compare
 #, python-format
 msgid "Compare Products"
@@ -106,6 +124,7 @@ msgstr "Δημιουργήθηκε στις"
 
 #. module: website_sale_comparison
 #: model:product.attribute,name:website_sale_comparison.product_attribute_8
+#: model:product.attribute.category,name:website_sale_comparison.product_attribute_category_2
 msgid "Dimensions"
 msgstr "Διαστάσεις"
 
@@ -113,6 +132,16 @@ msgstr "Διαστάσεις"
 #: model:ir.model.fields,field_description:website_sale_comparison.field_product_attribute_category__display_name
 msgid "Display Name"
 msgstr "Εμφάνιση Ονόματος"
+
+#. module: website_sale_comparison
+#: model:product.attribute.category,name:website_sale_comparison.product_attribute_category_duration
+msgid "Duration"
+msgstr "Διάρκεια"
+
+#. module: website_sale_comparison
+#: model:product.attribute.category,name:website_sale_comparison.product_attribute_category_general_features
+msgid "General Features"
+msgstr ""
 
 #. module: website_sale_comparison
 #: model:ir.model.fields,field_description:website_sale_comparison.field_product_attribute_category__id
@@ -136,7 +165,9 @@ msgstr "Τελευταία Ενημέρωση στις"
 
 #. module: website_sale_comparison
 #. openerp-web
-#: code:addons/website_sale_comparison/static/src/xml/comparison.xml:7
+#: code:addons/website_sale_comparison/static/src/xml/comparison.xml:0
+#: code:addons/website_sale_comparison/static/src/xml/comparison.xml:0
+#: model:ir.model,name:website_sale_comparison.model_product_product
 #, python-format
 msgid "Product"
 msgstr "Είδος"
@@ -153,14 +184,19 @@ msgid "Product Attribute Category"
 msgstr "Κατηγορία Χαρακτηριστικών Είδους"
 
 #. module: website_sale_comparison
-#: model:ir.model,name:website_sale_comparison.model_product_template
-msgid "Product Template"
-msgstr "Πρότυπο Είδους "
+#: model:ir.model,name:website_sale_comparison.model_product_template_attribute_line
+msgid "Product Template Attribute Line"
+msgstr ""
 
 #. module: website_sale_comparison
 #: model_terms:ir.ui.view,arch_db:website_sale_comparison.product_compare
 #: model_terms:ir.ui.view,arch_db:website_sale_comparison.product_product
 msgid "Product image"
+msgstr ""
+
+#. module: website_sale_comparison
+#: model:ir.model.fields,field_description:website_sale_comparison.field_product_attribute_category__attribute_ids
+msgid "Related Attributes"
 msgstr ""
 
 #. module: website_sale_comparison
@@ -189,19 +225,19 @@ msgstr "Συγκριτής Καταστήματος"
 
 #. module: website_sale_comparison
 #: model_terms:ir.ui.view,arch_db:website_sale_comparison.product_attributes_body
-msgid "Specifications for"
-msgstr "Προδιαγραφές για"
+msgid "Specifications"
+msgstr ""
 
 #. module: website_sale_comparison
-#: code:addons/website_sale_comparison/controllers/main.py:23
-#: code:addons/website_sale_comparison/models/website_sale_comparison.py:30
-#, python-format
+#: model_terms:ir.ui.view,arch_db:website_sale_comparison.product_attributes_body
+#: model_terms:ir.ui.view,arch_db:website_sale_comparison.product_compare
 msgid "Uncategorized"
 msgstr "Μη κατηγοριοποιημένη"
 
 #. module: website_sale_comparison
 #. openerp-web
-#: code:addons/website_sale_comparison/static/src/xml/comparison.xml:15
+#: code:addons/website_sale_comparison/static/src/xml/comparison.xml:0
+#: code:addons/website_sale_comparison/static/src/xml/comparison.xml:0
 #, python-format
 msgid "Warning"
 msgstr "Προσοχή"
@@ -213,7 +249,7 @@ msgstr "Βάρος"
 
 #. module: website_sale_comparison
 #. openerp-web
-#: code:addons/website_sale_comparison/static/src/xml/comparison.xml:15
+#: code:addons/website_sale_comparison/static/src/xml/comparison.xml:0
 #, python-format
 msgid "You can compare max 4 products."
 msgstr "Μπορείτε να συγκρίνετε μέχρι 4 είδη."

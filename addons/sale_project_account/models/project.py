@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import fields, models, _
+from odoo import fields, models, _, _lt
 
 class Project(models.Model):
     _inherit = 'project.project'
@@ -13,7 +13,12 @@ class Project(models.Model):
     # ----------------------------
 
     def action_open_project_vendor_bills(self):
-        vendor_bills = self.env['account.move'].search([('line_ids.analytic_account_id', '!=', False), ('line_ids.analytic_account_id', 'in', self.analytic_account_id.ids), ('move_type', '=', 'in_invoice')])
+        purchase_types = self.env['account.move'].get_purchase_types()
+        vendor_bills = self.env['account.move'].search([
+            ('line_ids.analytic_account_id', '!=', False),
+            ('line_ids.analytic_account_id', 'in', self.analytic_account_id.ids),
+            ('move_type', 'in', purchase_types),
+        ])
         action_window = {
             'name': _('Vendor Bills'),
             'type': 'ir.actions.act_window',
@@ -38,7 +43,7 @@ class Project(models.Model):
         if self.user_has_groups('account.group_account_readonly'):
             buttons.append({
                 'icon': 'pencil-square-o',
-                'text': _('Vendor Bills'),
+                'text': _lt('Vendor Bills'),
                 'number': self.vendor_bill_count,
                 'action_type': 'object',
                 'action': 'action_open_project_vendor_bills',

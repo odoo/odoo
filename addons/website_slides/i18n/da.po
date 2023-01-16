@@ -5,7 +5,7 @@
 # Translators:
 # Martin Trigaux, 2021
 # Sanne Kristensen <sanne@vkdata.dk>, 2021
-# Mads Søndergaard, 2021
+# Mads Søndergaard, 2022
 # 
 msgid ""
 msgstr ""
@@ -13,7 +13,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-10-05 10:53+0000\n"
 "PO-Revision-Date: 2021-09-14 12:29+0000\n"
-"Last-Translator: Mads Søndergaard, 2021\n"
+"Last-Translator: Mads Søndergaard, 2022\n"
 "Language-Team: Danish (https://www.transifex.com/odoo/teams/41243/da/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -54,7 +54,7 @@ msgstr "&amp;nbsp;"
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.courses_all
 msgid "'. Showing results for '"
-msgstr ""
+msgstr "'. Viser resultater for '"
 
 #. module: website_slides
 #. openerp-web
@@ -3706,7 +3706,7 @@ msgstr "Ingen præsentation tilgængelig."
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.courses_all
 msgid "No results found for '"
-msgstr ""
+msgstr "Ingen resultater fundet for '"
 
 #. module: website_slides
 #: model:ir.model.fields.selection,name:website_slides.selection__slide_channel__promote_strategy__none
@@ -3847,6 +3847,10 @@ msgid ""
 "a placeholder expression that provides the appropriate language, e.g. {{ "
 "object.partner_id.lang }}."
 msgstr ""
+"Valgfri oversættelses sprog (ISO kode) til valg ved afsending af en email. "
+"Hvis ikke angivet, vil den engelske udgave blive anvendt. Dette bør "
+"normaltvis være et pladsholder-udtryk der angiver det passende sprog, f.eks."
+" {{ object.partner_id.lang }}."
 
 #. module: website_slides
 #: model:ir.model.fields,help:website_slides.field_slide_channel_invite__null_value
@@ -4456,6 +4460,12 @@ msgstr "Sektion navn"
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel__access_token
 msgid "Security Token"
 msgstr "Sikkerheds Token"
+
+#. module: website_slides
+#: code:addons/website_slides/models/res_users.py:0
+#, python-format
+msgid "See our eLearning"
+msgstr ""
 
 #. module: website_slides
 #. openerp-web

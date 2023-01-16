@@ -3,13 +3,13 @@
 # 	* base_import
 # 
 # Translators:
-# Vo Thanh Thuy, 2021
 # Martin Trigaux, 2021
 # fanha99 <fanha99@hotmail.com>, 2021
-# thanhnguyen.icsc <thanhnguyen.icsc@gmail.com>, 2021
+# Nancy Momoland <thanhnguyen.icsc@gmail.com>, 2021
 # Duy BQ <duybq86@gmail.com>, 2021
 # Trinh Tran Thi Phuong <trinhttp@trobz.com>, 2021
 # Trần Hà <tranthuha13590@gmail.com>, 2021
+# Vo Thanh Thuy, 2022
 # 
 msgid ""
 msgstr ""
@@ -17,7 +17,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-11-16 13:19+0000\n"
 "PO-Revision-Date: 2021-09-14 12:20+0000\n"
-"Last-Translator: Trần Hà <tranthuha13590@gmail.com>, 2021\n"
+"Last-Translator: Vo Thanh Thuy, 2022\n"
 "Language-Team: Vietnamese (https://www.transifex.com/odoo/teams/41243/vi/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -31,7 +31,7 @@ msgstr ""
 #: code:addons/base_import/static/src/legacy/js/import_action.js:0
 #, python-format
 msgid "%d records successfully imported"
-msgstr "%d dữ liệu đã được import vào thành công"
+msgstr "%d hồ sơ đã được nhập vào thành công"
 
 #. module: base_import
 #. openerp-web
@@ -41,8 +41,8 @@ msgid ""
 "A single column was found in the file, this often means the file separator "
 "is incorrect"
 msgstr ""
-"Chỉ có một cột được tìm thấy trong tập tin. Điều này thường do lỗi separator"
-" trong tập tin"
+"Chỉ có một cột được tìm thấy trong tệp. Điều này thường có nghĩa là dấu tách"
+" tệp không chính xác."
 
 #. module: base_import
 #. openerp-web
@@ -63,7 +63,7 @@ msgstr "Nâng cao"
 #: code:addons/base_import/static/src/legacy/xml/base_import.xml:0
 #, python-format
 msgid "Allow matching with subfields"
-msgstr ""
+msgstr "Cho phép khớp với trường phụ"
 
 #. module: base_import
 #. openerp-web
@@ -75,32 +75,32 @@ msgid ""
 " transient. If the issue still occurs, try to split the file rather than "
 "import it at once."
 msgstr ""
-"Đã xảy ra sự cố không xác định trong quá trình nạp tập tin (có thể bị mất "
-"kết nối, vượt quá giới hạn dữ liệu hoặc vượt quá giới hạn bộ nhớ). Vui lòng "
-"thử lại trong trường hợp vấn đề là nhất thời. Nếu sự cố vẫn xảy ra, hãy thử "
-"chia nhỏ tệp thay vì nhập cùng một lúc."
+"Đã xảy ra sự cố không xác định trong quá trình nhập (có thể do mất kết nối, "
+"vượt quá giới hạn dữ liệu hoặc vượt quá giới hạn bộ nhớ). Vui lòng thử lại "
+"trong trường hợp sự cố chỉ là nhất thời. Nếu sự cố vẫn xảy ra, hãy tách tệp "
+"thay vì nhập cùng một lúc."
 
 #. module: base_import
 #: model:ir.model,name:base_import.model_base
 msgid "Base"
-msgstr "Cơ bản"
+msgstr "Cơ sở"
 
 #. module: base_import
 #: model:ir.model,name:base_import.model_base_import_import
 msgid "Base Import"
-msgstr "Base Import"
+msgstr "Nhập cơ sở"
 
 #. module: base_import
 #: model:ir.model,name:base_import.model_base_import_mapping
 msgid "Base Import Mapping"
-msgstr "Import khớp cơ bản"
+msgstr "Sơ đồ nhập cơ sở"
 
 #. module: base_import
 #. openerp-web
 #: code:addons/base_import/static/src/legacy/xml/base_import.xml:0
 #, python-format
 msgid "Batch Import"
-msgstr ""
+msgstr "Nhập hàng loạt"
 
 #. module: base_import
 #. openerp-web
@@ -121,21 +121,19 @@ msgstr "Hủy"
 #: code:addons/base_import/static/src/legacy/xml/base_import.xml:0
 #, python-format
 msgid "Click 'Resume' to proceed with the import, resuming at line"
-msgstr "Nhấp vào 'Tiếp tục' để tiếp tục nhập, tiếp tục tại dòng"
+msgstr "Bấm vào 'Tiếp tục' để tiếp tục nhập, tiếp tục tại dòng"
 
 #. module: base_import
 #: code:addons/base_import/models/base_import.py:0
 #, python-format
 msgid "Column %s contains incorrect values (value: %s)"
-msgstr ""
-"Cột %s chứa giá trị không hợp lệ (giá trị: %s không đáp ứng định dạng ngày "
-"tháng"
+msgstr "Cột %s chứa giá trị không hợp lệ (giá trị: %s)"
 
 #. module: base_import
 #: code:addons/base_import/models/base_import.py:0
 #, python-format
 msgid "Column %s contains incorrect values. Error in line %d: %s"
-msgstr "Cột %s chứa giá trị không hợp lệ. Lỗi ở dòng %d: %s)"
+msgstr "Cột %s chứa giá trị không hợp lệ. Lỗi ở dòng %d: %s"
 
 #. module: base_import
 #: model:ir.model.fields,field_description:base_import.field_base_import_mapping__column_name
@@ -164,7 +162,7 @@ msgid ""
 "Could not retrieve URL: %(url)s [%(field_name)s: L%(line_number)d]: "
 "%(error)s"
 msgstr ""
-"Không thể truy cập đường dẫn: %(url)s [%(field_name)s: L%(line_number)d]: "
+"Không thể truy xuất URL: %(url)s [%(field_name)s: L%(line_number)d]: "
 "%(error)s"
 
 #. module: base_import
@@ -172,7 +170,7 @@ msgstr ""
 #: code:addons/base_import/static/src/legacy/xml/base_import.xml:0
 #, python-format
 msgid "Create new values"
-msgstr ""
+msgstr "Tạo giá trị mới"
 
 #. module: base_import
 #: model:ir.model.fields,field_description:base_import.field_base_import_import__create_uid
@@ -234,7 +232,7 @@ msgstr "ID Cơ sở dữ liệu"
 #: code:addons/base_import/static/src/legacy/js/import_action.js:0
 #, python-format
 msgid "Date Format:"
-msgstr "Định dạng Ngày:"
+msgstr "Định dạng ngày:"
 
 #. module: base_import
 #. openerp-web
@@ -248,7 +246,7 @@ msgstr "Định dạng thời gian:"
 #: code:addons/base_import/static/src/legacy/js/import_action.js:0
 #, python-format
 msgid "Decimal Separator:"
-msgstr "Dấu phân cách Thập phân:"
+msgstr "Dấu thập phân:"
 
 #. module: base_import
 #: model:ir.model.fields,field_description:base_import.field_base_import_import__display_name
@@ -293,7 +291,7 @@ msgstr "Tải xuống"
 #: code:addons/base_import/static/src/legacy/xml/base_import.xml:0
 #, python-format
 msgid "Download Template"
-msgstr ""
+msgstr "Mẫu tải về"
 
 #. module: base_import
 #: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_complex__dt
@@ -318,7 +316,7 @@ msgstr "Lỗi xử lý Ngày [%s:L%d]: %s"
 #: code:addons/base_import/static/src/legacy/xml/base_import.xml:0
 #, python-format
 msgid "Estimated time left:"
-msgstr ""
+msgstr "Thời gian còn lại ước tính:"
 
 #. module: base_import
 #. openerp-web
@@ -332,7 +330,7 @@ msgstr "Mọi thứ dường như hợp lệ."
 #: code:addons/base_import/static/src/legacy/xml/base_import.xml:0
 #, python-format
 msgid "Excel files are recommended as formatting is automatic."
-msgstr ""
+msgstr "Khuyên dùng tệp Excel vì định dạng tự động."
 
 #. module: base_import
 #: code:addons/base_import/models/base_import.py:0
@@ -349,7 +347,7 @@ msgstr "Tên trường"
 #. module: base_import
 #: model:ir.model.fields,field_description:base_import.field_base_import_import__file
 msgid "File"
-msgstr "Tập tin"
+msgstr "Tệp"
 
 #. module: base_import
 #. openerp-web
@@ -359,24 +357,24 @@ msgstr "Tập tin"
 #: code:addons/base_import/static/src/legacy/xml/base_import.xml:0
 #, python-format
 msgid "File Column"
-msgstr ""
+msgstr "Cột tệp"
 
 #. module: base_import
 #: model:ir.model.fields,field_description:base_import.field_base_import_import__file_name
 msgid "File Name"
-msgstr "Tên tập tin"
+msgstr "Tên tệp"
 
 #. module: base_import
 #: model:ir.model.fields,field_description:base_import.field_base_import_import__file_type
 msgid "File Type"
-msgstr "Kiểu Tập tin"
+msgstr "Kiểu tệp"
 
 #. module: base_import
 #: code:addons/base_import/models/base_import.py:0
 #: code:addons/base_import/models/base_import.py:0
 #, python-format
 msgid "File size exceeds configured maximum (%s bytes)"
-msgstr "Tập tin vượt quá dung lượng tối đa (%s bytes)"
+msgstr "Tệp vượt quá dung lượng tối đã đã định cấu hình (%s byte)"
 
 #. module: base_import
 #: model:ir.model.fields,help:base_import.field_base_import_import__file
@@ -388,7 +386,7 @@ msgstr "Tập tin để kiểm tra và/hoặc nhập, raw binary (không phải 
 #: code:addons/base_import/static/src/legacy/xml/base_import.xml:0
 #, python-format
 msgid "Finalizing current batch before interrupting..."
-msgstr ""
+msgstr "Đang hoàn thiện đợt hiện tại trước khi ngắt..."
 
 #. module: base_import
 #. openerp-web
@@ -402,7 +400,7 @@ msgstr "Đối với tài liệu dạng CSV, bạn cần chọn đúng dấu ph�
 #: code:addons/base_import/static/src/legacy/xml/base_import.xml:0
 #, python-format
 msgid "Formatting"
-msgstr ""
+msgstr "Định dạng"
 
 #. module: base_import
 #: code:addons/base_import/models/base_import.py:0
@@ -419,7 +417,7 @@ msgstr ""
 #: code:addons/base_import/static/src/legacy/xml/base_import.xml:0
 #, python-format
 msgid "Go to Import FAQ"
-msgstr ""
+msgstr "Đi tới nhập câu hỏi thường gặp"
 
 #. module: base_import
 #. openerp-web
@@ -433,7 +431,7 @@ msgstr "Trợ giúp"
 #: code:addons/base_import/static/src/legacy/xml/base_import.xml:0
 #, python-format
 msgid "Here is the start of the file we could not import:"
-msgstr "Đây là đầu của tập tin mà chúng ta không thể nhập:"
+msgstr "Đây là phần bắt đầu của tệp mà chúng tôi không thể nhập:"
 
 #. module: base_import
 #: model:ir.model.fields,field_description:base_import.field_base_import_import__id
@@ -466,6 +464,10 @@ msgid ""
 "                    field corresponding to the column. This makes imports\n"
 "                    simpler especially when the file has many columns."
 msgstr ""
+"Nếu tệp có chứa\n"
+"                    tên cột, Odoo có thể thử tự động phát hiện\n"
+"                    trường tương ứng với cột. Việc này giúp nhập\n"
+"                    dễ dàng hơn đặc biệt khi tệp có nhiều cột."
 
 #. module: base_import
 #. openerp-web
@@ -483,7 +485,7 @@ msgstr ""
 #, python-format
 msgid ""
 "Image size excessive, imported images must be smaller than 42 million pixel"
-msgstr ""
+msgstr "Kích cỡ ảnh quá lớn, ảnh được nhập phải nhỏ hơn 42 triệu pixel."
 
 #. module: base_import
 #. openerp-web
@@ -497,34 +499,34 @@ msgstr "Nhập"
 #: code:addons/base_import/static/src/legacy/xml/base_import.xml:0
 #, python-format
 msgid "Import FAQ"
-msgstr "Nhập FAQ"
+msgstr "Nhập câu hỏi thường gặp"
 
 #. module: base_import
 #. openerp-web
 #: code:addons/base_import/static/src/legacy/js/import_action.js:0
 #, python-format
 msgid "Import a File"
-msgstr "Import một tập tin"
+msgstr "Import một tệp"
 
 #. module: base_import
 #: code:addons/base_import/models/base_import.py:0
 #, python-format
 msgid "Import file has no content or is corrupt"
-msgstr ""
+msgstr "Tệp nhập không có nội dung hoặc bị hỏng"
 
 #. module: base_import
 #. openerp-web
 #: code:addons/base_import/static/src/legacy/xml/base_import.xml:0
 #, python-format
 msgid "Import preview failed due to:"
-msgstr "Xem trước nội dung nhập không thành công do:"
+msgstr "Xem trước nội dung nhập thất bại do:"
 
 #. module: base_import
 #. openerp-web
 #: code:addons/base_import/static/src/import_records/import_records.xml:0
 #, python-format
 msgid "Import records"
-msgstr "Import dữ liệu"
+msgstr "Nhập hồ sơ"
 
 #. module: base_import
 #. openerp-web
@@ -536,22 +538,22 @@ msgid ""
 "records per file)."
 msgstr ""
 "Đã hết thời gian nhập. Hãy thử lại. Nếu bạn vẫn gặp phải sự cố này, tệp có "
-"thể quá lớn so với cấu hình của hệ thống, hãy thử tách nó (nhập ít bản ghi "
-"hơn cho mỗi tệp)."
+"thể quá lớn so với cấu hình của hệ thống, hãy thử tách (nhập ít hồ sơ hơn "
+"cho mỗi tệp)."
 
 #. module: base_import
 #. openerp-web
 #: code:addons/base_import/static/src/legacy/xml/base_import.xml:0
 #, python-format
 msgid "Imported file"
-msgstr ""
+msgstr "Tệp đã nhập"
 
 #. module: base_import
 #. openerp-web
 #: code:addons/base_import/static/src/legacy/js/import_action.js:0
 #, python-format
 msgid "Importing"
-msgstr ""
+msgstr "Đang nhập"
 
 #. module: base_import
 #: code:addons/base_import/models/base_import.py:0
@@ -634,14 +636,14 @@ msgstr "Cập nhật lần cuối vào"
 #: code:addons/base_import/static/src/legacy/js/import_action.js:0
 #, python-format
 msgid "Load File"
-msgstr "Nạp tập tin"
+msgstr "Tải tệp"
 
 #. module: base_import
 #. openerp-web
 #: code:addons/base_import/static/src/legacy/js/import_action.js:0
 #, python-format
 msgid "Loading file..."
-msgstr ""
+msgstr "Đang tải tệp..."
 
 #. module: base_import
 #. openerp-web
@@ -649,14 +651,14 @@ msgstr ""
 #: model:ir.model.fields,field_description:base_import.field_base_import_import__res_model
 #, python-format
 msgid "Model"
-msgstr "Đối tượng"
+msgstr "Mô hình"
 
 #. module: base_import
 #. openerp-web
 #: code:addons/base_import/static/src/legacy/xml/base_import.xml:0
 #, python-format
 msgid "Multiple errors occurred"
-msgstr ""
+msgstr "Đã xảy ra nhiều lỗi"
 
 #. module: base_import
 #. openerp-web
@@ -686,38 +688,38 @@ msgstr "Không có dấu phân cách"
 #: code:addons/base_import/static/src/legacy/xml/base_import.xml:0
 #, python-format
 msgid "No matching records found for"
-msgstr ""
+msgstr "Không tìm thấy hồ sơ khớp cho"
 
 #. module: base_import
 #. openerp-web
 #: code:addons/base_import/static/src/legacy/xml/base_import.xml:0
 #, python-format
 msgid "No matching records found for the following"
-msgstr ""
+msgstr "Không tìm thấy hồ sơ khớp cho"
 
 #. module: base_import
 #. openerp-web
 #: code:addons/base_import/static/src/legacy/xml/base_import.xml:0
 #, python-format
 msgid "Odoo Field"
-msgstr ""
+msgstr "Trường Odoo"
 
 #. module: base_import
 #: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_preview__othervalue
 msgid "Other Variable"
-msgstr "Các Biến khác"
+msgstr "Các biến khác"
 
 #. module: base_import
 #: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_o2m_child__parent_id
 msgid "Parent"
-msgstr "Cha"
+msgstr "Chính"
 
 #. module: base_import
 #. openerp-web
 #: code:addons/base_import/static/src/legacy/xml/base_import.xml:0
 #, python-format
 msgid "Prevent import"
-msgstr ""
+msgstr "Ngăn chặn nhập "
 
 #. module: base_import
 #. openerp-web
@@ -731,7 +733,7 @@ msgstr "Xem trước"
 #: code:addons/base_import/static/src/legacy/js/import_action.js:0
 #, python-format
 msgid "Relation Fields"
-msgstr "Các trường Quan hệ"
+msgstr "Các trường quan hệ"
 
 #. module: base_import
 #: model:ir.model.fields,field_description:base_import.field_base_import_mapping__res_model
@@ -750,7 +752,7 @@ msgstr "Tiếp tục"
 #: code:addons/base_import/static/src/legacy/js/import_action.js:0
 #, python-format
 msgid "Search for a field..."
-msgstr ""
+msgstr "Tìm kiếm trường..."
 
 #. module: base_import
 #. openerp-web
@@ -786,47 +788,47 @@ msgstr "Phân cách:"
 #: code:addons/base_import/static/src/legacy/xml/base_import.xml:0
 #, python-format
 msgid "Set to:"
-msgstr ""
+msgstr "Đặt là:"
 
 #. module: base_import
 #. openerp-web
 #: code:addons/base_import/static/src/legacy/xml/base_import.xml:0
 #, python-format
 msgid "Set to: False"
-msgstr ""
+msgstr "Đặt là: Sai"
 
 #. module: base_import
 #. openerp-web
 #: code:addons/base_import/static/src/legacy/xml/base_import.xml:0
 #, python-format
 msgid "Set to: True"
-msgstr ""
+msgstr "Đặt là: Đúng"
 
 #. module: base_import
 #. openerp-web
 #: code:addons/base_import/static/src/legacy/xml/base_import.xml:0
 #, python-format
 msgid "Set value as empty"
-msgstr ""
+msgstr "Đặt giá trị là trống"
 
 #. module: base_import
 #. openerp-web
 #: code:addons/base_import/static/src/legacy/xml/base_import.xml:0
 #, python-format
 msgid "Sheet:"
-msgstr ""
+msgstr "Bảng tính:"
 
 #. module: base_import
 #. openerp-web
 #: code:addons/base_import/static/src/legacy/xml/base_import.xml:0
 #, python-format
 msgid "Skip record"
-msgstr ""
+msgstr "Bỏ qua hồ sơ"
 
 #. module: base_import
 #: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_preview__somevalue
 msgid "Some Value"
-msgstr "Một vài Giá trị"
+msgstr "Một vài giá trị"
 
 #. module: base_import
 #. openerp-web
@@ -840,7 +842,7 @@ msgstr "Dấu cách"
 #: code:addons/base_import/static/src/legacy/js/import_action.js:0
 #, python-format
 msgid "Standard Fields"
-msgstr ""
+msgstr "Trường tiêu chuẩn"
 
 #. module: base_import
 #. openerp-web
@@ -854,28 +856,28 @@ msgstr "Bắt đầu tại dòng"
 #: code:addons/base_import/static/src/legacy/xml/base_import.xml:0
 #, python-format
 msgid "Stop Import"
-msgstr ""
+msgstr "Dừng nhập"
 
 #. module: base_import
 #. openerp-web
 #: code:addons/base_import/static/src/legacy/js/import_action.js:0
 #, python-format
 msgid "Suggested Fields"
-msgstr ""
+msgstr "Trường được gợi ý"
 
 #. module: base_import
 #. openerp-web
 #: code:addons/base_import/static/src/legacy/js/import_action.js:0
 #, python-format
 msgid "Tab"
-msgstr "Chuyển hướng"
+msgstr "Tab"
 
 #. module: base_import
 #. openerp-web
 #: code:addons/base_import/static/src/legacy/xml/base_import.xml:0
 #, python-format
 msgid "Test"
-msgstr "Kiểm thử"
+msgstr "Kiểm tra"
 
 #. module: base_import
 #. openerp-web
@@ -887,37 +889,37 @@ msgstr "Kiểm tra"
 #. module: base_import
 #: model:ir.model,name:base_import.model_base_import_tests_models_preview
 msgid "Tests : Base Import Model Preview"
-msgstr "Tests : Base Import Model Xem trước"
+msgstr "Kiểm tra : Xem trước mô hình nhập cơ sở"
 
 #. module: base_import
 #: model:ir.model,name:base_import.model_base_import_tests_models_char
 msgid "Tests : Base Import Model, Character"
-msgstr "Tests : Base Import Model, Character"
+msgstr "Kiểm tra : Mô hình nhập cơ sở, ký tự"
 
 #. module: base_import
 #: model:ir.model,name:base_import.model_base_import_tests_models_char_noreadonly
 msgid "Tests : Base Import Model, Character No readonly"
-msgstr "Tests : Base Import Model, Character No readonly"
+msgstr "Kiểm tra : Mô hình nhập cơ sở, ký tự không chỉ đọc"
 
 #. module: base_import
 #: model:ir.model,name:base_import.model_base_import_tests_models_char_readonly
 msgid "Tests : Base Import Model, Character readonly"
-msgstr "Tests : Base Import Model, Character chỉ cho xem"
+msgstr "Kiểm tra : Mô hình nhập cơ sở, ký tự chỉ đọc"
 
 #. module: base_import
 #: model:ir.model,name:base_import.model_base_import_tests_models_char_required
 msgid "Tests : Base Import Model, Character required"
-msgstr "Tests : Base Import Model, Character bắt buộc"
+msgstr "Kiểm tra : Mô hình nhập cơ sở, ký tự bắt buộc"
 
 #. module: base_import
 #: model:ir.model,name:base_import.model_base_import_tests_models_char_states
 msgid "Tests : Base Import Model, Character states"
-msgstr "Tests : Base Import Model, Character states"
+msgstr "Kiểm tra : Mô hình nhập cơ sở, ký tự trạng thái"
 
 #. module: base_import
 #: model:ir.model,name:base_import.model_base_import_tests_models_char_stillreadonly
 msgid "Tests : Base Import Model, Character still readonly"
-msgstr "Tests : Base Import Model, Character still readonly"
+msgstr "Kiểm tra : Mô hình nhập cơ sở, ký tự vẫn chỉ đọc"
 
 #. module: base_import
 #: model:ir.model,name:base_import.model_base_import_tests_models_m2o
@@ -971,28 +973,28 @@ msgstr "Dấu phân cách văn bản:"
 #: code:addons/base_import/static/src/legacy/js/import_action.js:0
 #, python-format
 msgid "The file contains blocking errors (see below)"
-msgstr ""
+msgstr "Tệp chứa lỗi đang chặn (xem dưới đây)"
 
 #. module: base_import
 #. openerp-web
 #: code:addons/base_import/static/src/legacy/js/import_action.js:0
 #, python-format
 msgid "The file contains non-blocking warnings (see below)"
-msgstr ""
+msgstr "Tệp chứa cảnh báo không chặn (xem dưới đây)"
 
 #. module: base_import
 #. openerp-web
 #: code:addons/base_import/static/src/legacy/xml/base_import.xml:0
 #, python-format
 msgid "The file will be imported by batches"
-msgstr ""
+msgstr "Tệp sẽ được nhập theo đợt"
 
 #. module: base_import
 #. openerp-web
 #: code:addons/base_import/static/src/legacy/xml/base_import.xml:0
 #, python-format
 msgid "This column will be concatenated in field"
-msgstr ""
+msgstr "Cột này sẽ được nối trong trường"
 
 #. module: base_import
 #. openerp-web
@@ -1013,21 +1015,21 @@ msgstr "Phân cách phần nghìn:"
 #: code:addons/base_import/static/src/legacy/xml/base_import.xml:0
 #, python-format
 msgid "To import multiple values, separate them by a comma"
-msgstr ""
+msgstr "Để nhập nhiều giá trị, hãy phân cách chúng bằng dấu phẩy"
 
 #. module: base_import
 #. openerp-web
 #: code:addons/base_import/static/src/legacy/js/import_action.js:0
 #, python-format
 msgid "To import, select a field..."
-msgstr ""
+msgstr "Để nhập, chọn một trường..."
 
 #. module: base_import
 #. openerp-web
 #: code:addons/base_import/static/src/legacy/xml/base_import.xml:0
 #, python-format
 msgid "Track history during import"
-msgstr "Truy xuất lịch sử trong quá trình import"
+msgstr "Theo dõi lịch sử trong quá trình nhập"
 
 #. module: base_import
 #. openerp-web
@@ -1041,7 +1043,7 @@ msgstr "Loại"
 #, python-format
 msgid "Unable to load \"{extension}\" file: requires Python module \"{modname}\""
 msgstr ""
-"Không thể nạp tập tin \"{extension}\": bắt buộc phải có Python module "
+"Không thể tải tệp \"{extension}\": bắt buộc phải có mô-đun Python "
 "\"{modname}\""
 
 #. module: base_import
@@ -1050,8 +1052,8 @@ msgstr ""
 msgid ""
 "Unsupported file format \"{}\", import only supports CSV, ODS, XLS and XLSX"
 msgstr ""
-"Định dạng tập tin không được hỗ trợ \"{}\", import chỉ hỗ trợ các tập tin "
-"CSV, ODS, XLS và XLSX"
+"Định dạng tệp không được hỗ trợ \"{}\", nhập chỉ hỗ trợ các tệp CSV, ODS, "
+"XLS và XLSX"
 
 #. module: base_import
 #. openerp-web
@@ -1065,21 +1067,21 @@ msgstr "Không có tiêu đề"
 #: code:addons/base_import/static/src/legacy/xml/base_import.xml:0
 #, python-format
 msgid "Upload File"
-msgstr ""
+msgstr "Tải lên tệp"
 
 #. module: base_import
 #. openerp-web
 #: code:addons/base_import/static/src/legacy/xml/base_import.xml:0
 #, python-format
 msgid "Upload an Excel or CSV file to import"
-msgstr ""
+msgstr "Tải lên tệp Excel hoặc CSV để nhập"
 
 #. module: base_import
 #. openerp-web
 #: code:addons/base_import/static/src/legacy/xml/base_import.xml:0
 #, python-format
 msgid "Use first row as header"
-msgstr ""
+msgstr "Dùng dòng đầu làm tiêu đề"
 
 #. module: base_import
 #: model:ir.model,name:base_import.model_res_users
@@ -1115,14 +1117,14 @@ msgstr "Value2"
 msgid ""
 "Warning: ignores the labels line, empty lines and lines composed only of "
 "empty cells"
-msgstr ""
+msgstr "Cảnh báo: bỏ qua dòng nhãn, dòng trống và dòng chỉ chứa các ô trống"
 
 #. module: base_import
 #. openerp-web
 #: code:addons/base_import/static/src/legacy/xml/base_import.xml:0
 #, python-format
 msgid "When a value cannot be matched:"
-msgstr ""
+msgstr "Khi giá trị không thể khớp:"
 
 #. module: base_import
 #: code:addons/base_import/models/base_import.py:0
@@ -1131,8 +1133,8 @@ msgid ""
 "You can not import images via URL, check with your administrator or support "
 "for the reason."
 msgstr ""
-"Không thể nạp hình ảnh thông qua URL, liên hệ với quản trị hoặc người hỗ trợ"
-" để biết được nguyên nhân."
+"Không thể nhập hình ảnh thông qua URL, liên hệ với quản trị viên hoặc người "
+"hỗ trợ để biết được nguyên nhân."
 
 #. module: base_import
 #. openerp-web
@@ -1146,28 +1148,28 @@ msgstr ""
 #: code:addons/base_import/models/base_import.py:0
 #, python-format
 msgid "You must configure at least one field to import"
-msgstr "Bạn phải cấu hình ít nhất một trường để import"
+msgstr "Bạn phải cấu hình ít nhất một trường để nhập"
 
 #. module: base_import
 #. openerp-web
 #: code:addons/base_import/static/src/legacy/xml/base_import.xml:0
 #, python-format
 msgid "at multiple rows"
-msgstr ""
+msgstr "ở nhiều dòng"
 
 #. module: base_import
 #. openerp-web
 #: code:addons/base_import/static/src/legacy/xml/base_import.xml:0
 #, python-format
 msgid "at row"
-msgstr ""
+msgstr "ở dòng"
 
 #. module: base_import
 #. openerp-web
 #: code:addons/base_import/static/src/legacy/xml/base_import.xml:0
 #, python-format
 msgid "batch"
-msgstr ""
+msgstr "đợt"
 
 #. module: base_import
 #. openerp-web
@@ -1175,7 +1177,7 @@ msgstr ""
 #: code:addons/base_import/static/src/legacy/xml/base_import.xml:0
 #, python-format
 msgid "in field"
-msgstr ""
+msgstr "trong trường"
 
 #. module: base_import
 #. openerp-web

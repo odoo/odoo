@@ -64,6 +64,7 @@ var MediaWidget = Widget.extend({
 
 var SearchableMediaWidget = MediaWidget.extend({
     events: _.extend({}, MediaWidget.prototype.events || {}, {
+        'keydown .o_we_search': '_onSearchKeydown',
         'input .o_we_search': '_onSearchInput',
     }),
 
@@ -107,9 +108,26 @@ var SearchableMediaWidget = MediaWidget.extend({
     /**
      * @private
      */
+    _onSearchKeydown: function (ev) {
+        // If the template contains a form that has only one input, the enter
+        // will reload the page as the html 2.0 specify this behavior.
+        if (ev.originalEvent && (ev.originalEvent.code === "Enter" || ev.originalEvent.key === "Enter")) {
+            ev.preventDefault();
+        }
+    },
+    /**
+     * @private
+     */
     _onSearchInput: function (ev) {
         this.attachments = [];
-        this.search($(ev.currentTarget).val() || '').then(() => this._renderThumbnails());
+        // Disable user interactions with attachments while updating results.
+        this.$('.o_we_existing_attachments').css('pointer-events', 'none');
+        this.search($(ev.currentTarget).val() || "")
+            .then(() => this._renderThumbnails())
+            .then(() => {
+                // Re-enable user interactions after updating results.
+                this.$(".o_we_existing_attachments").css("pointer-events", "");
+            });
         this.hasSearched = true;
     },
 });
@@ -601,9 +619,11 @@ var FileWidget = SearchableMediaWidget.extend({
                         'is_image': this.widgetType === 'image',
                         'width': 0,
                         'quality': 0,
+                        'generate_access_token': true,
                     }
                 }, index);
                 if (!attachment.error) {
+                    this.trigger_up('wysiwyg_attachment', attachment);
                     this._handleNewAttachment(attachment);
                 }
             });
@@ -1015,7 +1035,7 @@ var ImageWidget = FileWidget.extend({
      */
     _clear: function (type) {
         // Not calling _super: we don't want to call the document widget's _clear method on images
-        var allImgClasses = /(^|\s+)(img|img-\S*|o_we_custom_image|rounded-circle|rounded|thumbnail|shadow)(?=\s|$)/g;
+        var allImgClasses = /(^|\s+)(img|img-\S*|o_we_custom_image|rounded-circle|rounded|thumbnail|shadow|w-25|w-50|w-75|w-100|o_modified_image_to_save)(?=\s|$)/g;
         this.media.className = this.media.className && this.media.className.replace(allImgClasses, ' ');
     },
 });
@@ -1100,12 +1120,27 @@ var IconWidget = SearchableMediaWidget.extend({
     /**
      * @override
      */
-    save: function () {
+    save: async function () {
         var style = this.$media.attr('style') || '';
         var iconFont = this._getFont(this.selectedIcon) || {base: 'fa', font: ''};
         if (!this.$media.is('span, i')) {
             var $span = $('<span/>');
-            $span.data(this.$media.data());
+            if (this.$media.length) {
+                // Make sure jquery data() is clean by signaling the removal
+                // (e.g. website wants to remove SnippetEditor references from
+                // the data).
+                // TODO make sure copying the data is in fact useful at all, but
+                // in stable it did not feel safe to remove anyway.
+                //
+                // Note: done with an array of promises filled by the event
+                // handler instead of a Promise created here to be resolved by
+                // the event handler as the event handler does not necessarily
+                // exists (in simple HTML fields for example).
+                const data = { proms: [] };
+                this.$media.trigger('before_replace_target', data);
+                await Promise.all(data.proms);
+                $span.data(this.$media.data());
+            }
             this.$media = $span;
             this.media = this.$media[0];
             style = style.replace(/\s*width:[^;]+/, '');
@@ -1149,7 +1184,7 @@ var IconWidget = SearchableMediaWidget.extend({
      * @override
      */
     _clear: function () {
-        var allFaClasses = /(^|\s)(fa|(text-|bg-|fa-)\S*|rounded-circle|rounded|thumbnail|shadow)(?=\s|$)/g;
+        var allFaClasses = /(^|\s)(fa|(text-|bg-|fa-)\S*|rounded-circle|rounded|thumbnail|img-thumbnail|shadow)(?=\s|$)/g;
         this.media.className = this.media.className && this.media.className.replace(allFaClasses, ' ');
     },
     /**
@@ -1506,7 +1541,13 @@ var VideoWidget = MediaWidget.extend({
             const fullscreen = options.hide_fullscreen ? '&fs=0' : '';
             const ytLoop = loop ? loop + `&playlist=${matches.youtube[2]}` : '';
             const logo = options.hide_yt_logo ? '&modestbranding=1' : '';
-            embedURL = `//www.youtube${matches.youtube[1] || ''}.com/embed/${matches.youtube[2]}${autoplay}&rel=0${ytLoop}${controls}${fullscreen}${logo}`;
+            // The youtube js api is needed for autoplay on mobile. Note: this
+            // was added as a fix, old customers may have autoplay videos
+            // without this, which will make their video autoplay on desktop
+            // but not in mobile (so no behavior change was done in stable,
+            // this should not be migrated).
+            const enablejsapi = options.autoplay ? '&enablejsapi=1' : '';
+            embedURL = `//www.youtube${matches.youtube[1] || ''}.com/embed/${matches.youtube[2]}${autoplay}${enablejsapi}&rel=0${ytLoop}${controls}${fullscreen}${logo}`;
             type = 'youtube';
         } else if (matches.instagram && matches.instagram[2].length) {
             embedURL = `//www.instagram.com/p/${matches.instagram[2]}/embed/`;
@@ -1515,8 +1556,9 @@ var VideoWidget = MediaWidget.extend({
             embedURL = `${matches.vine[0]}/embed/simple`;
             type = 'vine';
         } else if (matches.vimeo && matches.vimeo[3].length) {
-            const vimeoAutoplay = autoplay.replace('mute', 'muted');
-            embedURL = `//player.vimeo.com/video/${matches.vimeo[3]}${vimeoAutoplay}${loop}`;
+            const vimeoAutoplay = autoplay.replace('mute', 'muted')
+                .replace('autoplay=1', 'autoplay=1&autopause=0');
+            embedURL = `//player.vimeo.com/video/${matches.vimeo[3]}${vimeoAutoplay}${loop}${controls}`;
             type = 'vimeo';
         } else if (matches.dailymotion && matches.dailymotion[2].length) {
             const videoId = matches.dailymotion[2].replace('video/', '');

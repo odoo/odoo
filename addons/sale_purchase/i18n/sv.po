@@ -5,8 +5,8 @@
 # Translators:
 # Martin Trigaux, 2021
 # Chrille Hedberg <hedberg.chrille@gmail.com>, 2021
-# Simon S, 2021
 # Kim Asplund <kim.asplund@gmail.com>, 2021
+# Simon S, 2022
 # 
 msgid ""
 msgstr ""
@@ -14,7 +14,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-09-14 10:29+0000\n"
 "PO-Revision-Date: 2021-09-14 12:26+0000\n"
-"Last-Translator: Kim Asplund <kim.asplund@gmail.com>, 2021\n"
+"Last-Translator: Simon S, 2022\n"
 "Language-Team: Swedish (https://www.transifex.com/odoo/teams/41243/sv/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -45,20 +45,20 @@ msgstr ""
 #. module: sale_purchase
 #: model_terms:ir.ui.view,arch_db:sale_purchase.exception_sale_on_purchase_cancellation
 msgid "Exception(s) occurred on the purchase order(s):"
-msgstr ""
+msgstr "Undantag uppstod på inköpsorder:"
 
 #. module: sale_purchase
 #: model_terms:ir.ui.view,arch_db:sale_purchase.exception_purchase_on_sale_cancellation
 #: model_terms:ir.ui.view,arch_db:sale_purchase.exception_purchase_on_sale_quantity_decreased
 msgid "Exception(s) occurred on the sale order(s):"
-msgstr ""
+msgstr "Undantag uppstod på kundorder:"
 
 #. module: sale_purchase
 #: model_terms:ir.ui.view,arch_db:sale_purchase.exception_purchase_on_sale_cancellation
 #: model_terms:ir.ui.view,arch_db:sale_purchase.exception_purchase_on_sale_quantity_decreased
 #: model_terms:ir.ui.view,arch_db:sale_purchase.exception_sale_on_purchase_cancellation
 msgid "Exception(s):"
-msgstr ""
+msgstr "Undantag:"
 
 #. module: sale_purchase
 #: model:ir.model.fields,field_description:sale_purchase.field_sale_order_line__purchase_line_ids
@@ -73,11 +73,14 @@ msgid ""
 "automatically created to buy the product. Tip: don't forget to set a vendor "
 "on the product."
 msgstr ""
+"Om ikryssad: varje gång den här produkten säljs via en säljorder kommer en "
+"offertförfrågan för att köpa produkten automatiskt att skapas. Tips: glöm "
+"inte att ställa in en leverantör på produkten.  "
 
 #. module: sale_purchase
 #: model_terms:ir.ui.view,arch_db:sale_purchase.exception_purchase_on_sale_quantity_decreased
 msgid "Manual actions may be needed."
-msgstr ""
+msgstr "Manuella åtgärder kan behövas."
 
 #. module: sale_purchase
 #: model:ir.model.fields,field_description:sale_purchase.field_sale_order__purchase_order_count
@@ -98,7 +101,7 @@ msgstr ""
 #: code:addons/sale_purchase/models/sale_order.py:0
 #, python-format
 msgid "Ordered quantity decreased!"
-msgstr ""
+msgstr "Orderkvantitet minskad!"
 
 #. module: sale_purchase
 #: model:ir.model.fields,field_description:sale_purchase.field_purchase_order_line__sale_line_id
@@ -185,6 +188,8 @@ msgid ""
 "You are decreasing the ordered quantity! Do not forget to manually update "
 "the purchase order if needed."
 msgstr ""
+"Du minskar den beställda kvantiteten! Glöm inte att manuellt uppdatera "
+"inköpsordern om det behövs."
 
 #. module: sale_purchase
 #: model_terms:ir.ui.view,arch_db:sale_purchase.exception_purchase_on_sale_cancellation
@@ -202,4 +207,4 @@ msgstr ""
 #. module: sale_purchase
 #: model_terms:ir.ui.view,arch_db:sale_purchase.exception_purchase_on_sale_quantity_decreased
 msgid "ordered instead of"
-msgstr ""
+msgstr "beställd istället för"

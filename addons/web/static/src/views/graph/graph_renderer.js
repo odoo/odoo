@@ -344,7 +344,7 @@ export class GraphRenderer extends Component {
             dataset.pointBackgroundColor = dataset.borderColor;
             dataset.pointBorderColor = "rgba(0,0,0,0.2)";
         }
-        if (data.datasets.length === 1) {
+        if (data.datasets.length === 1 && data.datasets[0].originIndex === 0) {
             const dataset = data.datasets[0];
             dataset.fill = "origin";
             dataset.backgroundColor = hexToRGBA(getColor(0), 0.4);
@@ -421,6 +421,7 @@ export class GraphRenderer extends Component {
                 display: Boolean(groupBy.length && displayScaleLabels),
                 labelString: groupBy.length ? fields[groupBy[0].fieldName].string : "",
             },
+            ticks: { callback: (value) => shortenLabel(value) },
         };
         const yAxe = {
             type: "linear",

@@ -1,5 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from unittest.mock import patch
+
 from freezegun import freeze_time
 
 from odoo.tests import tagged
@@ -27,6 +29,8 @@ class TestFlows(PaymentCommon, PaymentHttpCommon):
         for key, val in tx_context.items():
             if key in route_values:
                 self.assertEqual(val, route_values[key])
+
+        self.assertIn(self.acquirer.id, tx_context['acquirer_ids'])
 
         # Route values are taken from tx_context result of /pay route to correctly simulate the flow
         route_values = {
@@ -91,6 +95,9 @@ class TestFlows(PaymentCommon, PaymentHttpCommon):
     def test_10_direct_checkout_public(self):
         # No authentication needed, automatic fallback on public user
         self.user = self.public_user
+        # Make sure the company considered in payment/pay
+        # doesn't fall back on the public user main company (not the test one)
+        self.partner.company_id = self.env.company.id
         self._test_flow('direct')
 
     def test_11_direct_checkout_portal(self):
@@ -106,8 +113,10 @@ class TestFlows(PaymentCommon, PaymentHttpCommon):
         self._test_flow('direct')
 
     def test_20_redirect_checkout_public(self):
-        self.partner = self.default_partner
-        self.user = self.env.ref('base.public_user')
+        self.user = self.public_user
+        # Make sure the company considered in payment/pay
+        # doesn't fall back on the public user main company (not the test one)
+        self.partner.company_id = self.env.company.id
         self._test_flow('redirect')
 
     def test_21_redirect_checkout_portal(self):
@@ -223,7 +232,7 @@ class TestFlows(PaymentCommon, PaymentHttpCommon):
         response = self.portal_pay(**route_values)
         self.assertTrue(response.url.startswith(self._build_url('/web/login?redirect=')))
 
-        # Pay without a partner specified (but loggged) --> pay with the partner of current user.
+        # Pay without a partner specified (but logged) --> pay with the partner of current user.
         self.authenticate(self.portal_user.login, self.portal_user.login)
         tx_context = self.get_tx_checkout_context(**route_values)
         self.assertEqual(tx_context['partner_id'], self.portal_partner.id)
@@ -237,7 +246,7 @@ class TestFlows(PaymentCommon, PaymentHttpCommon):
         response = self.portal_pay(**route_values)
         self.assertTrue(response.url.startswith(self._build_url('/web/login?redirect=')))
 
-        # Pay without a partner specified (but loggged) --> pay with the partner of current user.
+        # Pay without a partner specified (but logged) --> pay with the partner of current user.
         self.authenticate(self.portal_user.login, self.portal_user.login)
         tx_context = self.get_tx_checkout_context(**route_values)
         self.assertEqual(tx_context['partner_id'], self.portal_partner.id)
@@ -265,34 +274,12 @@ class TestFlows(PaymentCommon, PaymentHttpCommon):
 
     def test_invoice_payment_flow(self):
         """Test the payment of an invoice through the payment/pay route"""
-        # Create a dummy invoice
-        account = self.env['account.account'].search([('company_id', '=', self.env.company.id)], limit=1)
-        invoice = self.env['account.move'].create({
-            'move_type': 'entry',
-            'date': '2019-01-01',
-            'line_ids': [
-                (0, 0, {
-                    'account_id': account.id,
-                    'currency_id': self.currency_euro.id,
-                    'debit': 100.0,
-                    'credit': 0.0,
-                    'amount_currency': 200.0,
-                }),
-                (0, 0, {
-                    'account_id': account.id,
-                    'currency_id': self.currency_euro.id,
-                    'debit': 0.0,
-                    'credit': 100.0,
-                    'amount_currency': -200.0,
-                }),
-            ],
-        })
 
         # Pay for this invoice (no impact even if amounts do not match)
         route_values = self._prepare_pay_values()
-        route_values['invoice_id'] = invoice.id
+        route_values['invoice_id'] = self.invoice.id
         tx_context = self.get_tx_checkout_context(**route_values)
-        self.assertEqual(tx_context['invoice_id'], invoice.id)
+        self.assertEqual(tx_context['invoice_id'], self.invoice.id)
 
         # payment/transaction
         route_values = {
@@ -318,8 +305,8 @@ class TestFlows(PaymentCommon, PaymentHttpCommon):
         # Note: strangely, the check
         # self.assertEqual(tx_sudo.invoice_ids, invoice)
         # doesn't work, and cache invalidation doesn't work either.
-        invoice.invalidate_cache(['transaction_ids'])
-        self.assertEqual(invoice.transaction_ids, tx_sudo)
+        self.invoice.invalidate_cache(['transaction_ids'])
+        self.assertEqual(self.invoice.transaction_ids, tx_sudo)
 
     def test_transaction_wrong_flow(self):
         transaction_values = self._prepare_pay_values()
@@ -347,3 +334,45 @@ class TestFlows(PaymentCommon, PaymentHttpCommon):
         self.assertIn(
             "odoo.exceptions.ValidationError: The access token is invalid.",
             response.text)
+
+    @mute_logger('odoo.addons.payment.models.payment_transaction')
+    def test_direct_payment_triggers_no_payment_request(self):
+        self.authenticate(self.portal_user.login, self.portal_user.login)
+        self.partner = self.portal_partner
+        self.user = self.portal_user
+        with patch(
+            'odoo.addons.payment.models.payment_transaction.PaymentTransaction'
+            '._send_payment_request'
+        ) as patched:
+            self.portal_transaction(
+                **self._prepare_transaction_values(self.acquirer.id, 'direct')
+            )
+            self.assertEqual(patched.call_count, 0)
+
+    @mute_logger('odoo.addons.payment.models.payment_transaction')
+    def test_payment_with_redirect_triggers_no_payment_request(self):
+        self.authenticate(self.portal_user.login, self.portal_user.login)
+        self.partner = self.portal_partner
+        self.user = self.portal_user
+        with patch(
+            'odoo.addons.payment.models.payment_transaction.PaymentTransaction'
+            '._send_payment_request'
+        ) as patched:
+            self.portal_transaction(
+                **self._prepare_transaction_values(self.acquirer.id, 'redirect')
+            )
+            self.assertEqual(patched.call_count, 0)
+
+    @mute_logger('odoo.addons.payment.models.payment_transaction')
+    def test_payment_by_token_triggers_exactly_one_payment_request(self):
+        self.authenticate(self.portal_user.login, self.portal_user.login)
+        self.partner = self.portal_partner
+        self.user = self.portal_user
+        with patch(
+            'odoo.addons.payment.models.payment_transaction.PaymentTransaction'
+            '._send_payment_request'
+        ) as patched:
+            self.portal_transaction(
+                **self._prepare_transaction_values(self.create_token().id, 'token')
+            )
+            self.assertEqual(patched.call_count, 1)

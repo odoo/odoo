@@ -3,7 +3,7 @@
 
 from odoo import api, fields, models, _
 from odoo.exceptions import UserError
-from odoo.tools import float_is_zero, float_repr
+from odoo.tools import float_is_zero, float_repr, float_round, float_compare
 from odoo.exceptions import ValidationError
 from collections import defaultdict
 
@@ -117,7 +117,7 @@ class ProductProduct(models.Model):
         if self.env.context.get('to_date'):
             to_date = fields.Datetime.to_datetime(self.env.context['to_date'])
             domain.append(('create_date', '<=', to_date))
-        groups = self.env['stock.valuation.layer'].read_group(domain, ['value:sum', 'quantity:sum'], ['product_id'])
+        groups = self.env['stock.valuation.layer'].read_group(domain, ['value:sum', 'quantity:sum'], ['product_id'], orderby='id')
         products = self.browse()
         for group in groups:
             product = self.browse(group['product_id'][0])
@@ -156,9 +156,11 @@ class ProductProduct(models.Model):
         :rtype: dict
         """
         self.ensure_one()
+        company_id = self.env.context.get('force_company', self.env.company.id)
+        company = self.env['res.company'].browse(company_id)
         vals = {
             'product_id': self.id,
-            'value': unit_cost * quantity,
+            'value': company.currency_id.round(unit_cost * quantity),
             'unit_cost': unit_cost,
             'quantity': quantity,
         }
@@ -175,11 +177,14 @@ class ProductProduct(models.Model):
         :rtype: dict
         """
         self.ensure_one()
+        company_id = self.env.context.get('force_company', self.env.company.id)
+        company = self.env['res.company'].browse(company_id)
+        currency = company.currency_id
         # Quantity is negative for out valuation layers.
         quantity = -1 * quantity
         vals = {
             'product_id': self.id,
-            'value': quantity * self.standard_price,
+            'value': currency.round(quantity * self.standard_price),
             'unit_cost': self.standard_price,
             'quantity': quantity,
         }
@@ -188,7 +193,6 @@ class ProductProduct(models.Model):
             vals['remaining_qty'] = fifo_vals.get('remaining_qty')
             # In case of AVCO, fix rounding issue of standard price when needed.
             if self.cost_method == 'average':
-                currency = self.env.company.currency_id
                 rounding_error = currency.round(self.standard_price * self.quantity_svl - self.value_svl)
                 if rounding_error:
                     # If it is bigger than the (smallest number of the currency * quantity) / 2,
@@ -221,9 +225,11 @@ class ProductProduct(models.Model):
             if product.cost_method not in ('standard', 'average'):
                 continue
             quantity_svl = product.sudo().quantity_svl
-            if float_is_zero(quantity_svl, precision_rounding=product.uom_id.rounding):
+            if float_compare(quantity_svl, 0.0, precision_rounding=product.uom_id.rounding) <= 0:
                 continue
-            diff = new_price - product.standard_price
+            digits = self.env['decimal.precision'].precision_get('Product Price')
+            rounded_new_price = float_round(new_price, precision_digits=digits)
+            diff = rounded_new_price - product.standard_price
             value = company_id.currency_id.round(quantity_svl * diff)
             if company_id.currency_id.is_zero(value):
                 continue
@@ -231,7 +237,7 @@ class ProductProduct(models.Model):
             svl_vals = {
                 'company_id': company_id.id,
                 'product_id': product.id,
-                'description': _('Product value manually modified (from %s to %s)') % (product.standard_price, new_price),
+                'description': _('Product value manually modified (from %s to %s)') % (product.standard_price, rounded_new_price),
                 'value': value,
                 'quantity': 0,
             }
@@ -661,13 +667,16 @@ class ProductProduct(models.Model):
         if not qty_to_invoice:
             return 0
 
+        # if True, consider the incoming moves
+        is_returned = self.env.context.get('is_returned', False)
+
         returned_quantities = defaultdict(float)
         for move in stock_moves:
             if move.origin_returned_move_id:
                 returned_quantities[move.origin_returned_move_id.id] += abs(sum(move.sudo().stock_valuation_layer_ids.mapped('quantity')))
         candidates = stock_moves\
             .sudo()\
-            .filtered(lambda m: not (m.origin_returned_move_id and sum(m.stock_valuation_layer_ids.mapped('quantity')) >= 0))\
+            .filtered(lambda m: is_returned == bool(m.origin_returned_move_id and sum(m.stock_valuation_layer_ids.mapped('quantity')) >= 0))\
             .mapped('stock_valuation_layer_ids')\
             .sorted()
         qty_to_take_on_candidates = qty_to_invoice
@@ -752,7 +761,7 @@ class ProductCategory(models.Model):
                 raise ValidationError(_('The Stock Input and/or Output accounts cannot be the same as the Stock Valuation account.'))
 
     @api.onchange('property_cost_method')
-    def onchange_property_valuation(self):
+    def onchange_property_cost(self):
         if not self._origin:
             # don't display the warning when creating a product category
             return
@@ -775,8 +784,23 @@ class ProductCategory(models.Model):
             new_cost_method = vals.get('property_cost_method')
             new_valuation = vals.get('property_valuation')
 
-
             for product_category in self:
+                property_stock_fields = ['property_stock_account_input_categ_id', 'property_stock_account_output_categ_id', 'property_stock_valuation_account_id']
+                if 'property_valuation' in vals and vals['property_valuation'] == 'manual_periodic' and product_category.property_valuation != 'manual_periodic':
+                    for stock_property in property_stock_fields:
+                        vals[stock_property] = False
+                elif 'property_valuation' in vals and vals['property_valuation'] == 'real_time' and product_category.property_valuation != 'real_time':
+                    company_id = self.env.company
+                    for stock_property in property_stock_fields:
+                        vals[stock_property] = vals.get(stock_property, False) or company_id[stock_property]
+                elif product_category.property_valuation == 'manual_periodic':
+                    for stock_property in property_stock_fields:
+                        if stock_property in vals:
+                            vals.pop(stock_property)
+                else:
+                    for stock_property in property_stock_fields:
+                        if stock_property in vals and vals[stock_property] is False:
+                            vals.pop(stock_property)
                 valuation_impacted = False
                 if new_cost_method and new_cost_method != product_category.property_cost_method:
                     valuation_impacted = True
@@ -816,3 +840,31 @@ class ProductCategory(models.Model):
             account_moves = self.env['account.move'].sudo().create(move_vals_list)
             account_moves._post()
         return res
+
+
+    @api.model
+    def create(self, vals):
+        if 'property_valuation' not in vals or vals['property_valuation'] == 'manual_periodic':
+            vals['property_stock_account_input_categ_id'] = False
+            vals['property_stock_account_output_categ_id'] = False
+            vals['property_stock_valuation_account_id'] = False
+        if 'property_valuation' in vals and vals['property_valuation'] == 'real_time':
+            company_id = self.env.company
+            vals['property_stock_account_input_categ_id'] = vals.get('property_stock_account_input_categ_id', False) or company_id.property_stock_account_input_categ_id
+            vals['property_stock_account_output_categ_id'] = vals.get('property_stock_account_output_categ_id', False) or company_id.property_stock_account_output_categ_id
+            vals['property_stock_valuation_account_id'] = vals.get('property_stock_valuation_account_id', False) or company_id.property_stock_valuation_account_id
+
+        return super().create(vals)
+
+    @api.onchange('property_valuation')
+    def onchange_property_valuation(self):
+        # Remove or set the account stock properties if necessary
+        if self.property_valuation == 'manual_periodic':
+            self.property_stock_account_input_categ_id = False
+            self.property_stock_account_output_categ_id = False
+            self.property_stock_valuation_account_id = False
+        if self.property_valuation == 'real_time':
+            company_id = self.env.company
+            self.property_stock_account_input_categ_id = company_id.property_stock_account_input_categ_id
+            self.property_stock_account_output_categ_id = company_id.property_stock_account_output_categ_id
+            self.property_stock_valuation_account_id = company_id.property_stock_valuation_account_id

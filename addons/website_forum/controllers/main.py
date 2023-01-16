@@ -16,7 +16,10 @@ from odoo.addons.website.models.ir_http import sitemap_qs2dom
 from odoo.addons.website_profile.controllers.main import WebsiteProfile
 from odoo.addons.portal.controllers.portal import _build_url_w_params
 
+from odoo.exceptions import UserError
 from odoo.http import request
+from odoo.osv import expression
+
 
 _logger = logging.getLogger(__name__)
 
@@ -96,8 +99,9 @@ class WebsiteForum(WebsiteProfile):
             # check that sorting is valid
             # retro-compatibily for V8 and google links
             try:
+                sorting = werkzeug.urls.url_unquote_plus(sorting)
                 Post._generate_order_by(sorting, None)
-            except ValueError:
+            except (UserError, ValueError):
                 sorting = False
 
         if not sorting:
@@ -167,8 +171,14 @@ class WebsiteForum(WebsiteProfile):
 
     @http.route('/forum/get_tags', type='http', auth="public", methods=['GET'], website=True, sitemap=False)
     def tag_read(self, query='', limit=25, **post):
+        # TODO: In master always check the forum_id domain part and add forum_id
+        #       as required method param, not in **post
+        forum_id = post.get('forum_id')
+        domain = [('name', '=ilike', (query or '') + "%")]
+        if forum_id:
+            domain = expression.AND([domain, [('forum_id', '=', int(forum_id))]])
         data = request.env['forum.tag'].search_read(
-            domain=[('name', '=ilike', (query or '') + "%")],
+            domain=domain,
             fields=['id', 'name'],
             limit=int(limit),
         )

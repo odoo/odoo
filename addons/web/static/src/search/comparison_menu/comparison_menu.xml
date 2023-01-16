@@ -11,6 +11,7 @@
                 <DropdownItem
                     class="o_menu_item"
                     t-att-class="{ selected: item.isActive }"
+                    checked="item.isActive"
                     payload="{ itemId: item.id }"
                     parentClosingMode="'none'"
                     t-esc="item.description"

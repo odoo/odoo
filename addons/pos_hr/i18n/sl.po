@@ -1,0 +1,145 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* pos_hr
+# 
+# Translators:
+# Matjaz Mozetic <m.mozetic@matmoz.si>, 2022
+# Martin Trigaux, 2022
+# Jasmina Macur <jasmina@hbs.si>, 2022
+# Tadej Lupšina <tadej@hbs.si>, 2022
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server saas~14.4\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2021-07-12 07:50+0000\n"
+"PO-Revision-Date: 2021-09-14 12:25+0000\n"
+"Last-Translator: Tadej Lupšina <tadej@hbs.si>, 2022\n"
+"Language-Team: Slovenian (https://www.transifex.com/odoo/teams/41243/sl/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: sl\n"
+"Plural-Forms: nplurals=4; plural=(n%100==1 ? 0 : n%100==2 ? 1 : n%100==3 || n%100==4 ? 2 : 3);\n"
+
+#. module: pos_hr
+#: model_terms:ir.ui.view,arch_db:pos_hr.pos_config_form_view_inherit
+msgid "<span class=\"o_form_label oe_edit_only\">Allowed Employees </span>"
+msgstr "<span class=\"o_form_label oe_edit_only\">Dovoljeni zaposleni </span>"
+
+#. module: pos_hr
+#: model:ir.model.fields,field_description:pos_hr.field_pos_order__cashier
+#: model_terms:ir.ui.view,arch_db:pos_hr.pos_order_form_inherit
+#: model_terms:ir.ui.view,arch_db:pos_hr.pos_order_list_select_inherit
+msgid "Cashier"
+msgstr "Prodajalec"
+
+#. module: pos_hr
+#. openerp-web
+#: code:addons/pos_hr/static/src/js/useSelectEmployee.js:0
+#, python-format
+msgid "Change Cashier"
+msgstr "Spremeni prodajalca"
+
+#. module: pos_hr
+#: model:ir.model,name:pos_hr.model_hr_employee
+#: model:ir.model.fields,field_description:pos_hr.field_pos_order__employee_id
+#: model:ir.model.fields,field_description:pos_hr.field_report_pos_order__employee_id
+#: model_terms:ir.ui.view,arch_db:pos_hr.view_report_pos_order_search_inherit
+msgid "Employee"
+msgstr "Kader"
+
+#. module: pos_hr
+#: code:addons/pos_hr/models/hr_employee.py:0
+#, python-format
+msgid "Employee: %s - PoS Config(s): %s \n"
+msgstr ""
+
+#. module: pos_hr
+#: model:ir.model.fields,field_description:pos_hr.field_pos_config__employee_ids
+msgid "Employees with access"
+msgstr ""
+
+#. module: pos_hr
+#: model:ir.model.fields,help:pos_hr.field_pos_config__employee_ids
+msgid "If left empty, all employees can log in to the PoS session"
+msgstr ""
+
+#. module: pos_hr
+#. openerp-web
+#: code:addons/pos_hr/static/src/js/useSelectEmployee.js:0
+#, python-format
+msgid "Incorrect Password"
+msgstr ""
+
+#. module: pos_hr
+#. openerp-web
+#: code:addons/pos_hr/static/src/xml/LoginScreen.xml:0
+#, python-format
+msgid "Log in to"
+msgstr "Prijava v"
+
+#. module: pos_hr
+#. openerp-web
+#: code:addons/pos_hr/static/src/js/useSelectEmployee.js:0
+#, python-format
+msgid "Password ?"
+msgstr "Geslo ?"
+
+#. module: pos_hr
+#: model:ir.model.fields,help:pos_hr.field_pos_order__employee_id
+msgid ""
+"Person who uses the cash register. It can be a reliever, a student or an "
+"interim employee."
+msgstr ""
+
+#. module: pos_hr
+#: model:ir.model,name:pos_hr.model_pos_config
+msgid "Point of Sale Configuration"
+msgstr "Nastavitve POS-blagajne"
+
+#. module: pos_hr
+#: model:ir.model,name:pos_hr.model_pos_order
+msgid "Point of Sale Orders"
+msgstr "Naročila POS"
+
+#. module: pos_hr
+#: model:ir.model,name:pos_hr.model_report_pos_order
+msgid "Point of Sale Orders Report"
+msgstr ""
+
+#. module: pos_hr
+#. openerp-web
+#: code:addons/pos_hr/static/src/xml/LoginScreen.xml:0
+#, python-format
+msgid "Scan your badge"
+msgstr "Skenirajte svojo značko"
+
+#. module: pos_hr
+#. openerp-web
+#: code:addons/pos_hr/static/src/xml/LoginScreen.xml:0
+#, python-format
+msgid "Select Cashier"
+msgstr "Izberi prodajalca"
+
+#. module: pos_hr
+#: code:addons/pos_hr/models/hr_employee.py:0
+#, python-format
+msgid ""
+"You cannot delete an employee that may be used in an active PoS session, "
+"close the session(s) first: \n"
+msgstr ""
+
+#. module: pos_hr
+#. openerp-web
+#: code:addons/pos_hr/static/src/xml/LoginScreen.xml:0
+#, python-format
+msgid "or"
+msgstr "ali"
+
+#. module: pos_hr
+#. openerp-web
+#: code:addons/pos_hr/static/src/xml/CashierName.xml:0
+#, python-format
+msgid "selectCashier"
+msgstr ""

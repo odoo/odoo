@@ -91,7 +91,9 @@ class EventEvent(models.Model):
         return self.env['event.stage'].search([], limit=1)
 
     def _default_description(self):
-        return self.env['ir.ui.view']._render_template('event.event_default_descripton')
+        # avoid template branding with rendering_bundle=True
+        return self.env['ir.ui.view'].with_context(rendering_bundle=True) \
+            ._render_template('event.event_default_descripton')
 
     def _default_event_mail_ids(self):
         return self.env['event.type']._default_event_mail_type_ids()

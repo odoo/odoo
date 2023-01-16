@@ -1,6 +1,9 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from collections import defaultdict
+from datetime import timedelta
+
 from odoo import api, fields, models, _
 from odoo.exceptions import ValidationError
 from odoo.tools import float_round
@@ -79,3 +82,26 @@ class HRLeave(models.Model):
         res = super().action_refuse()
         self.sudo().overtime_id.unlink()
         return res
+
+    def _validate_leave_request(self):
+        super()._validate_leave_request()
+        self._update_leaves_overtime()
+
+    def _remove_resource_leave(self):
+        res = super()._remove_resource_leave()
+        self._update_leaves_overtime()
+        return res
+
+    def _update_leaves_overtime(self):
+        employee_dates = defaultdict(set)
+        for leave in self:
+            if leave.employee_id and leave.employee_company_id.hr_attendance_overtime:
+                for d in range((leave.date_to - leave.date_from).days + 1):
+                    employee_dates[leave.employee_id].add(self.env['hr.attendance']._get_day_start_and_day(leave.employee_id, leave.date_from + timedelta(days=d)))
+        if employee_dates:
+            self.env['hr.attendance']._update_overtime(employee_dates)
+
+    def unlink(self):
+        # TODO master change to ondelete
+        self.sudo().overtime_id.unlink()
+        return super().unlink()

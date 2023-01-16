@@ -1,0 +1,192 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* gift_card
+# 
+# Translators:
+# digitouch UAB <digitouchagencyeur@gmail.com>, 2022
+# Denis Knotko <denis_knotko@yahoo.com>, 2022
+# Arunas V. <arunas@devoro.com>, 2022
+# UAB "Draugiški sprendimai" <transifex@draugiskisprendimai.lt>, 2022
+# Linas Versada <linaskrisiukenas@gmail.com>, 2022
+# Martin Trigaux, 2022
+# Ramunė ViaLaurea <ramune.vialaurea@gmail.com>, 2022
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server saas~14.5\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2021-09-14 10:28+0000\n"
+"PO-Revision-Date: 2021-09-14 12:22+0000\n"
+"Last-Translator: Ramunė ViaLaurea <ramune.vialaurea@gmail.com>, 2022\n"
+"Language-Team: Lithuanian (https://www.transifex.com/odoo/teams/41243/lt/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: lt\n"
+"Plural-Forms: nplurals=4; plural=(n % 10 == 1 && (n % 100 > 19 || n % 100 < 11) ? 0 : (n % 10 >= 2 && n % 10 <=9) && (n % 100 > 19 || n % 100 < 11) ? 1 : n % 1 != 0 ? 2: 3);\n"
+
+#. module: gift_card
+#: model:ir.model.fields,help:gift_card.field_product_product__detailed_type
+#: model:ir.model.fields,help:gift_card.field_product_template__detailed_type
+msgid ""
+"A storable product is a product for which you manage stock. The Inventory app has to be installed.\n"
+"A consumable product is a product for which stock is not managed.\n"
+"A service is a non-material product you provide."
+msgstr ""
+"Kaupiamas produktas yra produktas, kuriam valdote atsargas. Inventoriaus programa turi būti įdiegta.\n"
+"Vartojamas produktas yra produktas, kuriam nėra valdomos atsargos.\n"
+"Paslauga yra nematerialus produktas, kurį suteikiate."
+
+#. module: gift_card
+#: model:ir.model.fields,field_description:gift_card.field_gift_card__balance
+msgid "Balance"
+msgstr "Balansas"
+
+#. module: gift_card
+#: model:ir.model.fields,field_description:gift_card.field_gift_card__code
+msgid "Code"
+msgstr "Kodas"
+
+#. module: gift_card
+#: model:ir.model.fields,field_description:gift_card.field_gift_card__company_id
+msgid "Company"
+msgstr "Įmonė"
+
+#. module: gift_card
+#: model:ir.model.fields,field_description:gift_card.field_gift_card__create_uid
+msgid "Created by"
+msgstr "Sukūrė"
+
+#. module: gift_card
+#: model:ir.model.fields,field_description:gift_card.field_gift_card__create_date
+msgid "Created on"
+msgstr "Sukurta"
+
+#. module: gift_card
+#: model:ir.model.fields,field_description:gift_card.field_gift_card__currency_id
+msgid "Currency"
+msgstr "Valiuta"
+
+#. module: gift_card
+#: code:addons/gift_card/models/product.py:0
+#, python-format
+msgid "Deleting the Gift Card Pay product is not allowed."
+msgstr "Dovanų kortelės mokėjimo produktą ištrinti neleidžiama."
+
+#. module: gift_card
+#: model:ir.model.fields,field_description:gift_card.field_gift_card__display_name
+msgid "Display Name"
+msgstr "Rodomas pavadinimas"
+
+#. module: gift_card
+#: model:ir.model.fields.selection,name:gift_card.selection__gift_card__state__expired
+msgid "Expired"
+msgstr "Negalioja"
+
+#. module: gift_card
+#: model:ir.model.fields,field_description:gift_card.field_gift_card__expired_date
+msgid "Expired Date"
+msgstr "Galiojimo data"
+
+#. module: gift_card
+#: code:addons/gift_card/models/gift_card.py:0
+#, python-format
+msgid "Gift #%s"
+msgstr "Dovana #%s"
+
+#. module: gift_card
+#: model:ir.model,name:gift_card.model_gift_card
+#: model:ir.model.fields.selection,name:gift_card.selection__product_template__detailed_type__gift
+#: model:product.product,name:gift_card.gift_card_product_50
+#: model:product.product,name:gift_card.pay_with_gift_card_product
+#: model:product.template,name:gift_card.gift_card_product_50_product_template
+#: model:product.template,name:gift_card.pay_with_gift_card_product_product_template
+#: model_terms:ir.ui.view,arch_db:gift_card.gift_card_view_search
+#: model_terms:ir.ui.view,arch_db:gift_card.gift_card_view_tree
+msgid "Gift Card"
+msgstr "Dovanų kortelė"
+
+#. module: gift_card
+#: model:ir.actions.act_window,name:gift_card.gift_card_action
+msgid "Gift Cards"
+msgstr "Dovanų kortelės"
+
+#. module: gift_card
+#: model:ir.model.fields,field_description:gift_card.field_gift_card__id
+msgid "ID"
+msgstr "ID"
+
+#. module: gift_card
+#: model:ir.model.fields,help:gift_card.field_gift_card__partner_id
+msgid "If empty, all users can use it"
+msgstr "Jei tuščia, gali naudoti visi vartotojai"
+
+#. module: gift_card
+#: model:ir.model.fields,field_description:gift_card.field_gift_card__initial_amount
+msgid "Initial Amount"
+msgstr "Pradinė suma"
+
+#. module: gift_card
+#: model:ir.model.fields,field_description:gift_card.field_gift_card____last_update
+msgid "Last Modified on"
+msgstr "Paskutinį kartą keista"
+
+#. module: gift_card
+#: model:ir.model.fields,field_description:gift_card.field_gift_card__write_uid
+msgid "Last Updated by"
+msgstr "Paskutinį kartą atnaujino"
+
+#. module: gift_card
+#: model:ir.model.fields,field_description:gift_card.field_gift_card__write_date
+msgid "Last Updated on"
+msgstr "Paskutinį kartą atnaujinta"
+
+#. module: gift_card
+#: model:ir.model.fields,field_description:gift_card.field_gift_card__name
+msgid "Name"
+msgstr "Pavadinimas"
+
+#. module: gift_card
+#: model:ir.model.fields,field_description:gift_card.field_gift_card__partner_id
+msgid "Partner"
+msgstr "Partneris"
+
+#. module: gift_card
+#: model:ir.model,name:gift_card.model_product_template
+msgid "Product Template"
+msgstr "Produkto šablonas"
+
+#. module: gift_card
+#: model:ir.model.fields,field_description:gift_card.field_product_product__detailed_type
+#: model:ir.model.fields,field_description:gift_card.field_product_template__detailed_type
+msgid "Product Type"
+msgstr "Produkto tipas"
+
+#. module: gift_card
+#: model:ir.model.fields,field_description:gift_card.field_gift_card__state
+msgid "State"
+msgstr "Būsena"
+
+#. module: gift_card
+#: model:ir.model.constraint,message:gift_card.constraint_gift_card_unique_gift_card_code
+msgid "The gift card code must be unique."
+msgstr "Dovanų kortelės kodas privalo būti unikalus."
+
+#. module: gift_card
+#: model:ir.model.constraint,message:gift_card.constraint_gift_card_check_amount
+msgid "The initial amount must be positive."
+msgstr "Pradinė suma privalo būti teigiama."
+
+#. module: gift_card
+#: model:product.product,uom_name:gift_card.gift_card_product_50
+#: model:product.product,uom_name:gift_card.pay_with_gift_card_product
+#: model:product.template,uom_name:gift_card.gift_card_product_50_product_template
+#: model:product.template,uom_name:gift_card.pay_with_gift_card_product_product_template
+msgid "Units"
+msgstr "Vienetai"
+
+#. module: gift_card
+#: model:ir.model.fields.selection,name:gift_card.selection__gift_card__state__valid
+#: model_terms:ir.ui.view,arch_db:gift_card.gift_card_view_search
+msgid "Valid"
+msgstr "Galioja"

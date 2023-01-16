@@ -192,6 +192,10 @@ class Field(MetaField('DummyField', (object,), {})):
         to bypass access rights (by default ``True`` for stored fields, ``False``
         for non stored fields)
 
+    :param bool recursive: whether the field has recursive dependencies (the field
+        ``X`` has a dependency like ``parent_id.X``); declaring a field recursive
+        must be explicit to guarantee that recomputation is correct
+
     :param str inverse: name of a method that inverses the field (optional)
 
     :param str search: name of a method that implement search on the field (optional)
@@ -245,7 +249,7 @@ class Field(MetaField('DummyField', (object,), {})):
 
     string = None                       # field label
     help = None                         # field tooltip
-    invisible = False             # whether the field is invisible
+    invisible = False                   # whether the field is invisible
     readonly = False                    # whether the field is readonly
     required = False                    # whether the field is required
     states = None                       # set readonly and required depending on state
@@ -1083,7 +1087,7 @@ class Field(MetaField('DummyField', (object,), {})):
                     recs._fetch_field(self)
                 except AccessError:
                     record._fetch_field(self)
-                if not env.cache.contains(record, self) and not record.exists():
+                if not env.cache.contains(record, self):
                     raise MissingError("\n".join([
                         _("Record does not exist or has been deleted."),
                         _("(Record: %s, User: %s)") % (record, env.uid),
@@ -1489,17 +1493,21 @@ class Monetary(Field):
 
     def convert_to_column(self, value, record, values=None, validate=True):
         # retrieve currency from values or record
-        currency_field = self.get_currency_field(record)
-        if values and currency_field in values:
-            field = record._fields[currency_field]
-            currency = field.convert_to_cache(values[currency_field], record, validate)
-            currency = field.convert_to_record(currency, record)
+        currency_field_name = self.get_currency_field(record)
+        currency_field = record._fields[currency_field_name]
+        if values and currency_field_name in values:
+            dummy = record.new({currency_field_name: values[currency_field_name]})
+            currency = dummy[currency_field_name]
+        elif values and currency_field.related and currency_field.related.split('.')[0] in values:
+            related_field_name = currency_field.related.split('.')[0]
+            dummy = record.new({related_field_name: values[related_field_name]})
+            currency = dummy[currency_field_name]
         else:
             # Note: this is wrong if 'record' is several records with different
             # currencies, which is functional nonsense and should not happen
             # BEWARE: do not prefetch other fields, because 'value' may be in
             # cache, and would be overridden by the value read from database!
-            currency = record[:1].with_context(prefetch_fields=False)[currency_field]
+            currency = record[:1].with_context(prefetch_fields=False)[currency_field_name]
 
         value = float(value or 0.0)
         if currency:
@@ -2258,7 +2266,7 @@ class Image(Binary):
     :param int max_height: the maximum height of the image (default: ``0``, no limit)
     :param bool verify_resolution: whether the image resolution should be verified
         to ensure it doesn't go over the maximum image resolution (default: ``True``).
-        See :class:`odoo.tools.image.ImageProcess` for maximum image resolution (default: ``45e6``).
+        See :class:`odoo.tools.image.ImageProcess` for maximum image resolution (default: ``50e6``).
 
     .. note::
 
@@ -2547,7 +2555,7 @@ class Reference(Selection):
     """ Pseudo-relational field (no FK in database).
 
     The field value is stored as a :class:`string <str>` following the pattern
-    ``"res_model.res_id"`` in database.
+    ``"res_model,res_id"`` in database.
     """
     type = 'reference'
 
@@ -3644,7 +3652,7 @@ class Many2many(_RelationalMulti):
     column2 = None                      # column of table referring to comodel
     auto_join = False                   # whether joins are generated upon search
     limit = None                        # optional limit to use upon read
-    ondelete = None                     # optional ondelete for the column2 fkey
+    ondelete = 'cascade'                # optional ondelete for the column2 fkey
 
     def __init__(self, comodel_name=Default, relation=Default, column1=Default,
                  column2=Default, string=Default, **kwargs):
@@ -3659,17 +3667,15 @@ class Many2many(_RelationalMulti):
 
     def setup_nonrelated(self, model):
         super().setup_nonrelated(model)
-        # 3 cases:
-        # 1) The ondelete attribute is not defined, we assign it a sensible default
-        # 2) The ondelete attribute is defined and its definition makes sense
-        # 3) The ondelete attribute is explicitly defined as 'set null' for a m2m,
+        # 2 cases:
+        # 1) The ondelete attribute is defined and its definition makes sense
+        # 2) The ondelete attribute is explicitly defined as 'set null' for a m2m,
         #    this is considered a programming error.
-        self.ondelete = self.ondelete or 'cascade'
-        if self.ondelete == 'set null':
+        if self.ondelete not in ('cascade', 'restrict'):
             raise ValueError(
                 "The m2m field %s of model %s declares its ondelete policy "
-                "as being 'set null'. Only 'restrict' and 'cascade' make sense."
-                % (self.name, model._name)
+                "as being %r. Only 'restrict' and 'cascade' make sense."
+                % (self.name, model._name, self.ondelete)
             )
         if self.store:
             if not (self.relation and self.column1 and self.column2):
@@ -3736,6 +3742,8 @@ class Many2many(_RelationalMulti):
             """.format(rel=self.relation, id1=self.column1, id2=self.column2)
             cr.execute(query, ['RELATION BETWEEN %s AND %s' % (model._table, comodel._table)])
             _schema.debug("Create table %r: m2m relation between %r and %r", self.relation, model._table, comodel._table)
+            model.pool.post_init(self.update_db_foreign_keys, model)
+            return True
 
         model.pool.post_init(self.update_db_foreign_keys, model)
 
@@ -3792,13 +3800,14 @@ class Many2many(_RelationalMulti):
         if not records_commands_list:
             return
 
-        comodel = records_commands_list[0][0].env[self.comodel_name].with_context(**self.context)
-        cr = records_commands_list[0][0].env.cr
+        model = records_commands_list[0][0].browse()
+        comodel = model.env[self.comodel_name].with_context(**self.context)
+        cr = model.env.cr
 
         # determine old and new relation {x: ys}
         set = OrderedSet
-        ids = {rid for recs, cs in records_commands_list for rid in recs.ids}
-        records = records_commands_list[0][0].browse(ids)
+        ids = set(rid for recs, cs in records_commands_list for rid in recs.ids)
+        records = model.browse(ids)
 
         if self.store:
             # Using `record[self.name]` generates 2 SQL queries when the value
@@ -3809,13 +3818,9 @@ class Many2many(_RelationalMulti):
             if missing_ids:
                 self.read(records.browse(missing_ids))
 
+        # determine new relation {x: ys}
         old_relation = {record.id: set(record[self.name]._ids) for record in records}
         new_relation = {x: set(ys) for x, ys in old_relation.items()}
-
-        # determine new relation {x: ys}
-        new_relation = defaultdict(set)
-        for x, ys in old_relation.items():
-            new_relation[x] = set(ys)
 
         # operations on new relation
         def relation_add(xs, y):

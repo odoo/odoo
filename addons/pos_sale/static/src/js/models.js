@@ -22,6 +22,17 @@ models.load_models([{
 
 models.load_fields("product.product", ["invoice_policy", "type"]);
 
+const super_order_model = models.Order.prototype;
+models.Order = models.Order.extend({
+    //@override
+    _reduce_total_discount_callback: function(sum, orderLine) {
+        if (this.pos.config.down_payment_product_id[0] === orderLine.product.id) {
+            return sum;
+        }
+        return super_order_model._reduce_total_discount_callback.apply(this, arguments);
+    },
+})
+
 var super_order_line_model = models.Orderline.prototype;
 models.Orderline = models.Orderline.extend({
   initialize: function (attributes, options) {

@@ -574,20 +574,8 @@ class QWeb(object):
         return ''.join(code)
 
     def _compile_expr(self, expr, raise_on_missing=False):
-        """Transform string coming into a python instruction in textual form by
-        adding the namepaces for the dynamic values.
-        This method tokenize the string and call ``_compile_expr_tokens``
-        method.
-        """
-        readable = io.BytesIO(expr.strip().encode('utf-8'))
-        try:
-            tokens = list(tokenize.tokenize(readable.readline))
-        except tokenize.TokenError:
-            raise ValueError(f"Can not compile expression: {expr}")
-
-        expression = self._compile_expr_tokens(tokens, self._allowed_keyword + list(self._available_objects.keys()), raise_on_missing=raise_on_missing)
-
-        return f"({expression})"
+        """This method must be overridden by <ir.qweb> in order to compile the template."""
+        raise NotImplementedError("Templates should use the ir.qweb compile method")
 
     def _compile_bool(self, attr, default=False):
         """Convert the statements as a boolean."""
@@ -951,7 +939,10 @@ class QWeb(object):
         body = []
         if el.getchildren():
             for item in el:
-                if not isinstance(item, etree._Comment):
+                if isinstance(item, etree._Comment):
+                    if self.env.context.get('preserve_comments'):
+                        self._appendText("<!--%s-->" % item.text, options)
+                else:
                     body.extend(self._compile_node(item, options, indent))
                 # comments can also contains tail text
                 if item.tail is not None:
@@ -974,7 +965,7 @@ class QWeb(object):
         return compiled
 
     def _compile_directive_elif(self, el, options, indent):
-        """Compile `t-eif` expressions into a python code as a list of strings.
+        """Compile `t-elif` expressions into a python code as a list of strings.
 
         This method is linked with the `t-if` directive.
         The code will contain the compiled code of the element (without `else`
@@ -1196,7 +1187,8 @@ class QWeb(object):
         code_options = self._compile_directive(el, options, 'options', indent) or [self._indent("t_field_t_options = {}", indent)]
         code.extend(code_options)
         code.append(self._indent(f"attrs, content, force_display = self._get_field({self._compile_expr(record, raise_on_missing=True)}, {repr(field_name)}, {repr(expression)}, {repr(tagName)}, t_field_t_options, compile_options, values)", indent))
-        code.append(self._indent("content = self._compile_to_str(content)", indent))
+        code.append(self._indent("if content is not None and content is not False:", indent))
+        code.append(self._indent("content = self._compile_to_str(content)", indent + 1))
         code.extend(self._compile_widget_value(el, options, indent))
         return code
 
@@ -1231,7 +1223,7 @@ class QWeb(object):
         else:
             content = (self._compile_tag_open(el, options, indent + 1, not without_attributes) +
                 self._compile_tag_close(el, options) +
-                self._flushText(options, indent + 2))
+                self._flushText(options, indent + 1))
             if content:
                 code.append(self._indent("elif force_display:", indent))
                 code.extend(content)

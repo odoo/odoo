@@ -206,6 +206,7 @@ class StockWarehouseOrderpoint(models.Model):
         return action
 
     def action_replenish(self):
+        now = datetime.now()
         try:
             self._procure_orderpoint_confirm(company_id=self.env.company)
         except UserError as e:
@@ -221,7 +222,7 @@ class StockWarehouseOrderpoint(models.Model):
             }, _('Edit Product'))
         notification = False
         if len(self) == 1:
-            notification = self._get_replenishment_order_notification()
+            notification = self.with_context(written_after=now)._get_replenishment_order_notification()
         # Forced to call compute quantity because we don't have a link.
         self._compute_qty()
         self.filtered(lambda o: o.create_uid.id == SUPERUSER_ID and o.qty_to_order <= 0.0 and o.trigger == 'manual').unlink()
@@ -231,7 +232,8 @@ class StockWarehouseOrderpoint(models.Model):
         self.trigger = 'auto'
         return self.action_replenish()
 
-    @api.depends('product_id', 'location_id', 'product_id.stock_move_ids', 'product_id.stock_move_ids.state', 'product_id.stock_move_ids.product_uom_qty')
+    @api.depends('product_id', 'location_id', 'product_id.stock_move_ids', 'product_id.stock_move_ids.state',
+                 'product_id.stock_move_ids.date', 'product_id.stock_move_ids.product_uom_qty')
     def _compute_qty(self):
         orderpoints_contexts = defaultdict(lambda: self.env['stock.warehouse.orderpoint'])
         for orderpoint in self:
@@ -240,7 +242,7 @@ class StockWarehouseOrderpoint(models.Model):
                 orderpoint.qty_forecast = False
                 continue
             orderpoint_context = orderpoint._get_product_context()
-            product_context = frozendict({**self.env.context, **orderpoint_context})
+            product_context = frozendict({**orderpoint_context})
             orderpoints_contexts[product_context] |= orderpoint
         for orderpoint_context, orderpoints_by_context in orderpoints_contexts.items():
             products_qty = {
@@ -329,7 +331,7 @@ class StockWarehouseOrderpoint(models.Model):
         qty_by_product_warehouse = self.env['report.stock.quantity'].read_group(
             [('date', '=', to_date), ('state', '=', 'forecast')],
             ['product_id', 'product_qty', 'warehouse_id'],
-            ['product_id', 'warehouse_id'], lazy=False)
+            ['product_id', 'warehouse_id'], orderby="id", lazy=False)
         for group in qty_by_product_warehouse:
             warehouse_id = group.get('warehouse_id') and group['warehouse_id'][0]
             if group['product_qty'] >= 0.0 or not warehouse_id:
@@ -392,7 +394,7 @@ class StockWarehouseOrderpoint(models.Model):
         to_refill = {k: v for k, v in to_refill.items() if float_compare(
             v, 0.0, precision_digits=rounding) < 0.0}
 
-        lot_stock_id_by_warehouse = self.env['stock.warehouse'].search_read([
+        lot_stock_id_by_warehouse = self.env['stock.warehouse'].with_context(active_test=False).search_read([
             ('id', 'in', [g[1] for g in to_refill.keys()])
         ], ['lot_stock_id'])
         lot_stock_id_by_warehouse = {w['id']: w['lot_stock_id'][0] for w in lot_stock_id_by_warehouse}
@@ -424,7 +426,10 @@ class StockWarehouseOrderpoint(models.Model):
 
         orderpoints = self.env['stock.warehouse.orderpoint'].with_user(SUPERUSER_ID).create(orderpoint_values_list)
         for orderpoint in orderpoints:
-            orderpoint.route_id = orderpoint.product_id.route_ids[:1] or orderpoint._set_default_route_id()
+            orderpoint_wh = orderpoint.location_id.warehouse_id
+            orderpoint.route_id = next((r for r in orderpoint.product_id.route_ids if not r.supplied_wh_id or r.supplied_wh_id == orderpoint_wh), orderpoint.route_id)
+            if not orderpoint.route_id:
+                orderpoint._set_default_route_id()
             orderpoint.qty_multiple = orderpoint._get_qty_multiple_to_order()
         return action
 
@@ -439,6 +444,20 @@ class StockWarehouseOrderpoint(models.Model):
         }
 
     def _get_replenishment_order_notification(self):
+        self.ensure_one()
+        domain = [('orderpoint_id', 'in', self.ids)]
+        if self.env.context.get('written_after'):
+            domain = expression.AND([domain, [('write_date', '>', self.env.context.get('written_after'))]])
+        move = self.env['stock.move'].search(domain, limit=1)
+        if move.picking_id:
+            return {
+                'type': 'ir.actions.client',
+                'tag': 'display_notification',
+                'params': {
+                    'title': _('The inter-warehouse transfers have been generated'),
+                    'sticky': False,
+                }
+            }
         return False
 
     def _quantity_in_progress(self):
@@ -543,8 +562,10 @@ class StockWarehouseOrderpoint(models.Model):
                     )
 
             if use_new_cursor:
-                cr.commit()
-                cr.close()
+                try:
+                    cr.commit()
+                finally:
+                    cr.close()
                 _logger.info("A batch of %d orderpoints is processed and committed", len(orderpoints_batch_ids))
 
         return {}

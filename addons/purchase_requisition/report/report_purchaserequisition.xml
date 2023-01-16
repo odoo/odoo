@@ -8,11 +8,11 @@
                 <div class="page">
                     <div class="oe_structure"/>
 
-                    <h2>Call for Tenders <span t-field="o.name"/></h2>
+                    <h2><span t-out="o.type_id.name"/> <span t-field="o.name"/></h2>
 
                     <div class="row mt32 mb32">
                         <div class="col-3">
-                            <strong>Call for Tender Reference:</strong><br/>
+                            <strong><span t-out="o.type_id.name"/> Reference:</strong><br/>
                             <span t-field="o.name"/>
                         </div>
                         <div class="col-3">
@@ -20,8 +20,8 @@
                             <span t-field="o.ordering_date"/>
                         </div>
                         <div class="col-3">
-                            <strong>Selection Type:</strong><br/>
-                            <span t-esc="o.type_id.name">Multiple Requisitions</span>
+                            <strong>Agreement Deadline:</strong><br/>
+                            <span t-field="o.date_end"/>
                         </div>
                         <div class="col-3">
                             <strong>Source:</strong><br/>
@@ -39,6 +39,7 @@
                                     <th class="text-center" groups="uom.group_uom">
                                         <strong>Product UoM</strong>
                                     </th>
+                                    <th t-if="o.type_id == env.ref('purchase_requisition.type_single')">Price Unit</th>
                                     <th class="text-right"><strong>Scheduled Date</strong></th>
                                 </tr>
                             </thead>
@@ -53,9 +54,12 @@
                                     </td>
                                     <t>
                                         <td class="text-center" groups="uom.group_uom">
-                                            <span t-field="line_ids.product_uom_id.category_id.name"/>
+                                            <span t-field="line_ids.product_uom_id.name"/>
                                         </td>
                                     </t>
+                                    <td t-if="o.type_id == env.ref('purchase_requisition.type_single')">
+                                        <span t-field="line_ids.price_unit" t-options='{"widget": "monetary", "display_currency": line_ids.requisition_id.currency_id}'/>
+                                    </td>
                                     <td class="text-right">
                                         <span t-field="line_ids.schedule_date"/>
                                     </td>
@@ -89,6 +93,8 @@
                             </tbody>
                         </table>
                     </t>
+
+                    <div t-if="o.description" t-out="o.description"/>
 
                     <div class="oe_structure"/>
                 </div>

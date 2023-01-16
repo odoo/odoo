@@ -6,7 +6,7 @@ from odoo import api, fields, models, tools, SUPERUSER_ID, _
 from odoo.exceptions import UserError, AccessError
 from odoo.tools.safe_eval import safe_eval, time
 from odoo.tools.misc import find_in_path
-from odoo.tools import config, is_html_empty
+from odoo.tools import config, is_html_empty, parse_version
 from odoo.sql_db import TestCursor
 from odoo.http import request
 from odoo.osv.expression import NEGATIVE_TERM_OPERATORS, FALSE_DOMAIN
@@ -23,7 +23,6 @@ import json
 
 from lxml import etree
 from contextlib import closing
-from distutils.version import LooseVersion
 from reportlab.graphics.barcode import createBarcodeDrawing
 from PyPDF2 import PdfFileWriter, PdfFileReader, utils
 from collections import OrderedDict
@@ -65,12 +64,12 @@ else:
     match = re.search(b'([0-9.]+)', out)
     if match:
         version = match.group(0).decode('ascii')
-        if LooseVersion(version) < LooseVersion('0.12.0'):
+        if parse_version(version) < parse_version('0.12.0'):
             _logger.info('Upgrade Wkhtmltopdf to (at least) 0.12.0')
             wkhtmltopdf_state = 'upgrade'
         else:
             wkhtmltopdf_state = 'ok'
-        if LooseVersion(version) >= LooseVersion('0.12.2'):
+        if parse_version(version) >= parse_version('0.12.2'):
             wkhtmltopdf_dpi_zoom_ratio = True
 
         if config['workers'] == 1:
@@ -378,15 +377,20 @@ class IrActionsReport(models.Model):
             footer_node.append(node)
 
         # Retrieve bodies
+        layout_sections = None
         for node in root.xpath(match_klass.format('article')):
             layout_with_lang = layout
-            # set context language to body language
             if node.get('data-oe-lang'):
+                # context language to body language
                 layout_with_lang = layout_with_lang.with_context(lang=node.get('data-oe-lang'))
+                # set header/lang to body lang prioritizing current user language
+                if not layout_sections or node.get('data-oe-lang') == self.env.lang:
+                    layout_sections = layout_with_lang
             body = layout_with_lang._render({
                 'subst': False,
                 'body': Markup(lxml.html.tostring(node, encoding='unicode')),
-                'base_url': base_url
+                'base_url': base_url,
+                'report_xml_id': self.xml_id
             })
             bodies.append(body)
             if node.get('data-oe-model') == self.model:
@@ -405,12 +409,12 @@ class IrActionsReport(models.Model):
             if attribute[0].startswith('data-report-'):
                 specific_paperformat_args[attribute[0]] = attribute[1]
 
-        header = layout._render({
+        header = (layout_sections or layout)._render({
             'subst': True,
             'body': Markup(lxml.html.tostring(header_node, encoding='unicode')),
             'base_url': base_url
         })
-        footer = layout._render({
+        footer = (layout_sections or layout)._render({
             'subst': True,
             'body': Markup(lxml.html.tostring(footer_node, encoding='unicode')),
             'base_url': base_url
@@ -518,7 +522,75 @@ class IrActionsReport(models.Model):
         return report_obj.with_context(context).sudo().search(conditions, limit=1)
 
     @api.model
-    def barcode(self, barcode_type, value, width=600, height=100, humanreadable=0, quiet=1, mask=None):
+    def get_barcode_check_digit(self, numeric_barcode):
+        """ Computes and returns the barcode check digit. The used algorithm
+        follows the GTIN specifications and can be used by all compatible
+        barcode nomenclature, like as EAN-8, EAN-12 (UPC-A) or EAN-13.
+
+        https://www.gs1.org/sites/default/files/docs/barcodes/GS1_General_Specifications.pdf
+        https://www.gs1.org/services/how-calculate-check-digit-manually
+
+        :param numeric_barcode: the barcode to verify/recompute the check digit
+        :type numeric_barcode: str
+        :return: the number corresponding to the right check digit
+        :rtype: int
+        """
+        # Multiply value of each position by
+        # N1  N2  N3  N4  N5  N6  N7  N8  N9  N10 N11 N12 N13 N14 N15 N16 N17 N18
+        # x3  X1  x3  x1  x3  x1  x3  x1  x3  x1  x3  x1  x3  x1  x3  x1  x3  CHECKSUM
+        oddsum = evensum = 0
+        code = numeric_barcode[-2::-1]  # Remove the check digit and reverse the barcode.
+        # The CHECKSUM digit is removed because it will be recomputed and it must not interfer with
+        # the computation. Also, the barcode is inverted, so the barcode length doesn't matter.
+        # Otherwise, the digits' group (even or odd) could be different according to the barcode length.
+        for i, digit in enumerate(code):
+            if i % 2 == 0:
+                evensum += int(digit)
+            else:
+                oddsum += int(digit)
+        total = evensum * 3 + oddsum
+        return (10 - total % 10) % 10
+
+    @api.model
+    def check_barcode_encoding(self, barcode, encoding):
+        """ Checks if the given barcode is correctly encoded.
+
+        :return: True if the barcode string is encoded with the provided encoding.
+        :rtype: bool
+        """
+        if encoding == "any":
+            return True
+        barcode_sizes = {
+            'ean8': 8,
+            'ean13': 13,
+            'upca': 12,
+        }
+        barcode_size = barcode_sizes[encoding]
+        return (encoding != 'ean13' or barcode[0] != '0') \
+               and len(barcode) == barcode_size \
+               and re.match(r"^\d+$", barcode) \
+               and self.get_barcode_check_digit(barcode) == int(barcode[-1])
+
+    @api.model
+    def barcode(self, barcode_type, value, **kwargs):
+        defaults = {
+            'width': (600, int),
+            'height': (100, int),
+            'humanreadable': (False, lambda x: bool(int(x))),
+            'quiet': (True, lambda x: bool(int(x))),
+            'mask': (None, lambda x: x),
+            'barBorder': (4, int),
+            # The QR code can have different layouts depending on the Error Correction Level
+            # See: https://en.wikipedia.org/wiki/QR_code#Error_correction
+            # Level 'L' – up to 7% damage   (default)
+            # Level 'M' – up to 15% damage  (i.e. required by l10n_ch QR bill)
+            # Level 'Q' – up to 25% damage
+            # Level 'H' – up to 30% damage
+            'barLevel': ('L', lambda x: x in ('L', 'M', 'Q', 'H') and x or 'L'),
+        }
+        kwargs = {k: validator(kwargs.get(k, v)) for k, (v, validator) in defaults.items()}
+        kwargs['humanReadable'] = kwargs.pop('humanreadable')
+
         if barcode_type == 'UPCA' and len(value) in (11, 12, 13):
             barcode_type = 'EAN13'
             if len(value) in (11, 12):
@@ -526,34 +598,39 @@ class IrActionsReport(models.Model):
         elif barcode_type == 'auto':
             symbology_guess = {8: 'EAN8', 13: 'EAN13'}
             barcode_type = symbology_guess.get(len(value), 'Code128')
-        try:
-            width, height, humanreadable, quiet = int(width), int(height), bool(int(humanreadable)), bool(int(quiet))
+        elif barcode_type == 'QR':
             # for `QR` type, `quiet` is not supported. And is simply ignored.
             # But we can use `barBorder` to get a similar behaviour.
-            bar_border = 4
-            if barcode_type == 'QR' and quiet:
-                bar_border = 0
+            if kwargs['quiet']:
+                kwargs['barBorder'] = 0
 
-            barcode = createBarcodeDrawing(
-                barcode_type, value=value, format='png', width=width, height=height,
-                humanReadable=humanreadable, quiet=quiet, barBorder=bar_border
-            )
+        if barcode_type in ('EAN8', 'EAN13') and not self.check_barcode_encoding(value, barcode_type.lower()):
+            # If the barcode does not respect the encoding specifications, convert its type into Code128.
+            # Otherwise, the report-lab method may return a barcode different from its value. For instance,
+            # if the barcode type is EAN-8 and the value 11111111, the report-lab method will take the first
+            # seven digits and will compute the check digit, which gives: 11111115 -> the barcode does not
+            # match the expected value.
+            barcode_type = 'Code128'
+
+        try:
+            barcode = createBarcodeDrawing(barcode_type, value=value, format='png', **kwargs)
 
             # If a mask is asked and it is available, call its function to
             # post-process the generated QR-code image
-            if mask:
+            if kwargs['mask']:
                 available_masks = self.get_available_barcode_masks()
-                mask_to_apply = available_masks.get(mask)
+                mask_to_apply = available_masks.get(kwargs['mask'])
                 if mask_to_apply:
-                    mask_to_apply(width, height, barcode)
+                    mask_to_apply(kwargs['width'], kwargs['height'], barcode)
 
             return barcode.asString('png')
         except (ValueError, AttributeError):
             if barcode_type == 'Code128':
                 raise ValueError("Cannot convert into barcode.")
+            elif barcode_type == 'QR':
+                raise ValueError("Cannot convert into QR code.")
             else:
-                return self.barcode('Code128', value, width=width, height=height,
-                    humanreadable=humanreadable, quiet=quiet)
+                return self.barcode('Code128', value, **kwargs)
 
     @api.model
     def get_available_barcode_masks(self):
@@ -593,7 +670,7 @@ class IrActionsReport(models.Model):
             time=time,
             context_timestamp=lambda t: fields.Datetime.context_timestamp(self.with_context(tz=user.tz), t),
             user=user,
-            res_company=user.company_id,
+            res_company=self.env.company,
             website=website,
             web_base_url=self.env['ir.config_parameter'].sudo().get_param('web.base.url', default=''),
         )
@@ -655,8 +732,8 @@ class IrActionsReport(models.Model):
                     # the top level heading in /Outlines.
                     reader = PdfFileReader(pdf_content_stream)
                     root = reader.trailer['/Root']
+                    outlines_pages = []
                     if '/Outlines' in root and '/First' in root['/Outlines']:
-                        outlines_pages = []
                         node = root['/Outlines']['/First']
                         while True:
                             outlines_pages.append(root['/Dests'][node['/Dest']][0])
@@ -664,10 +741,9 @@ class IrActionsReport(models.Model):
                                 break
                             node = node['/Next']
                         outlines_pages = sorted(set(outlines_pages))
-                        # There should be only one top-level heading by document
-                        assert len(outlines_pages) == len(res_ids)
-                        # There should be a top-level heading on first page
-                        assert outlines_pages[0] == 0
+                    # There should be only one top-level heading by document
+                    # There should be a top-level heading on first page
+                    if len(outlines_pages) == len(res_ids) and outlines_pages[0] == 0:
                         for i, num in enumerate(outlines_pages):
                             to = outlines_pages[i + 1] if i + 1 < len(outlines_pages) else reader.numPages
                             attachment_writer = PdfFileWriter()
@@ -684,7 +760,9 @@ class IrActionsReport(models.Model):
                             streams.append(stream)
                         close_streams([pdf_content_stream])
                     else:
-                        # If no outlines available, do not save each record
+                        # We can not generate separate attachments because the outlines
+                        # do not reveal where the splitting points should be in the pdf.
+                        _logger.info('The PDF report can not be saved as attachment.')
                         streams.append(pdf_content_stream)
 
         # If attachment_use is checked, the records already having an existing attachment
@@ -925,12 +1003,14 @@ class IrActionsReport(models.Model):
 
         discard_logo_check = self.env.context.get('discard_logo_check')
         if self.env.is_admin() and not self.env.company.external_report_layout_id and config and not discard_logo_check:
-            action = self.env["ir.actions.actions"]._for_xml_id("web.action_base_document_layout_configurator")
-            ctx = action.get('context')
-            py_ctx = json.loads(ctx) if ctx else {}
-            report_action['close_on_report_download'] = True
-            py_ctx['report_action'] = report_action
-            action['context'] = py_ctx
-            return action
+            return self._action_configure_external_report_layout(report_action)
 
         return report_action
+
+    def _action_configure_external_report_layout(self, report_action):
+        action = self.env["ir.actions.actions"]._for_xml_id("web.action_base_document_layout_configurator")
+        py_ctx = json.loads(action.get('context', {}))
+        report_action['close_on_report_download'] = True
+        py_ctx['report_action'] = report_action
+        action['context'] = py_ctx
+        return action

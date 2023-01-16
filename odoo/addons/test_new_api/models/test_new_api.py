@@ -18,6 +18,7 @@ class Category(models.Model):
     color = fields.Integer('Color Index')
     parent = fields.Many2one('test_new_api.category', ondelete='cascade')
     parent_path = fields.Char(index=True)
+    depth = fields.Integer(compute="_compute_depth")
     root_categ = fields.Many2one(_name, compute='_compute_root_categ')
     display_name = fields.Char(compute='_compute_display_name', recursive=True,
                                inverse='_inverse_display_name')
@@ -44,6 +45,11 @@ class Category(models.Model):
             while current.parent:
                 current = current.parent
             cat.root_categ = current
+
+    @api.depends('parent_path')
+    def _compute_depth(self):
+        for cat in self:
+            cat.depth = cat.parent_path.count('/') - 1
 
     def _inverse_display_name(self):
         for cat in self:
@@ -837,6 +843,7 @@ class MonetaryRelated(models.Model):
     monetary_id = fields.Many2one('test_new_api.monetary_base')
     currency_id = fields.Many2one('res.currency', related='monetary_id.base_currency_id')
     amount = fields.Monetary(related='monetary_id.amount')
+    total = fields.Monetary()
 
 
 class MonetaryCustom(models.Model):
@@ -1393,3 +1400,40 @@ class TriggerRight(models.Model):
     def _compute_left_size(self):
         for record in self:
             record.left_size = len(record.left_ids)
+
+
+class Crew(models.Model):
+    _name = 'test_new_api.crew'
+    _description = 'All yaaaaaarrrrr by ship'
+    _table = 'test_new_api_crew'
+
+    # this actually represents the union of two relations pirate/ship and
+    # prisoner/ship, where some of the many2one fields can be NULL
+    pirate_id = fields.Many2one('test_new_api.pirate')
+    prisoner_id = fields.Many2one('test_new_api.prisoner')
+    ship_id = fields.Many2one('test_new_api.ship')
+
+
+class Ship(models.Model):
+    _name = 'test_new_api.ship'
+    _description = 'Yaaaarrr machine'
+
+    name = fields.Char('Name')
+    pirate_ids = fields.Many2many('test_new_api.pirate', 'test_new_api_crew', 'ship_id', 'pirate_id')
+    prisoner_ids = fields.Many2many('test_new_api.prisoner', 'test_new_api_crew', 'ship_id', 'prisoner_id')
+
+
+class Pirate(models.Model):
+    _name = 'test_new_api.pirate'
+    _description = 'Yaaarrr'
+
+    name = fields.Char('Name')
+    ship_ids = fields.Many2many('test_new_api.ship', 'test_new_api_crew', 'pirate_id', 'ship_id')
+
+
+class Prisoner(models.Model):
+    _name = 'test_new_api.prisoner'
+    _description = 'Yaaarrr minions'
+
+    name = fields.Char('Name')
+    ship_ids = fields.Many2many('test_new_api.ship', 'test_new_api_crew', 'prisoner_id', 'ship_id')

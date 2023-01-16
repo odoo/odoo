@@ -8,10 +8,6 @@ weWidgets.LinkTools.include({
     xmlDependencies: (weWidgets.LinkTools.prototype.xmlDependencies || []).concat(
         ['/website/static/src/xml/website.editor.xml']
     ),
-    events: _.extend({}, weWidgets.LinkTools.prototype.events || {}, {
-        'click we-selection-items[name="link_anchor"] we-button': '_onAnchorChange',
-        'input input[name="url"]': '_onURLInput',
-    }),
     custom_events: _.extend({}, weWidgets.LinkTools.prototype.custom_events || {}, {
         website_url_chosen: '_onAutocompleteClose',
     }),
@@ -33,12 +29,12 @@ weWidgets.LinkTools.include({
         var def = await this._super.apply(this, arguments);
         const options = {
             position: {
-                collision: 'flip fit',
+                collision: 'flip flipfit',
             },
             classes: {
                 "ui-autocomplete": 'o_website_ui_autocomplete'
             },
-        }
+        };
         wUtils.autocompleteWithPages(this, this.$('input[name="url"]'), options);
         this._adaptPageAnchor();
         return def;
@@ -85,10 +81,12 @@ weWidgets.LinkTools.include({
         this._onURLInput();
     },
     /**
+     * @todo this should not be an event handler anymore in master
      * @private
+     * @param {Event} ev
      */
-    _onAnchorChange: function () {
-        const anchorValue = this.$('[name="link_anchor"] we-button.active').data('value');
+    _onAnchorChange: function (ev) {
+        const anchorValue = $(ev.currentTarget).data('value');
         const $urlInput = this.$('[name="url"]');
         let urlInputValue = $urlInput.val();
         if (urlInputValue.indexOf('#') > -1) {
@@ -102,6 +100,16 @@ weWidgets.LinkTools.include({
     _onURLInput: function () {
         this._super.apply(this, arguments);
         this._adaptPageAnchor();
+    },
+    /**
+     * @override
+     * @param {Event} ev
+     */
+    _onPickSelectOption(ev) {
+        if (ev.currentTarget.closest('[name="link_anchor"]')) {
+            this._onAnchorChange(ev);
+        }
+        this._super(...arguments);
     },
 });
 });

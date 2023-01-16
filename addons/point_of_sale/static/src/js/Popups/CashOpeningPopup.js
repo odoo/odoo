@@ -47,6 +47,9 @@ odoo.define('point_of_sale.CashOpeningPopup', function(require) {
         handleInputChange() {
             this.manualInputCashCount = true;
             this.state.notes = "";
+            if (typeof(this.state.openingCash) !== "number") {
+                this.state.openingCash = 0;
+            }
         }
     }
 

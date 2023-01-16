@@ -24,7 +24,8 @@ class AccountPayment(models.Model):
     # == Display purpose fields ==
     suitable_payment_token_ids = fields.Many2many(
         comodel_name='payment.token',
-        compute='_compute_suitable_payment_token_ids'
+        compute='_compute_suitable_payment_token_ids',
+        compute_sudo=True,
     )
     use_electronic_payment_method = fields.Boolean(
         compute='_compute_use_electronic_payment_method',
@@ -44,7 +45,8 @@ class AccountPayment(models.Model):
 
     def _compute_amount_available_for_refund(self):
         for payment in self:
-            if payment.payment_transaction_id.sudo().acquirer_id.support_refund:
+            tx_sudo = payment.payment_transaction_id.sudo()
+            if tx_sudo.acquirer_id.support_refund and tx_sudo.operation != 'refund':
                 # Only consider refund transactions that are confirmed by summing the amounts of
                 # payments linked to such refund transactions. Indeed, should a refund transaction
                 # be stuck forever in a transient state (due to webhook failure, for example), the

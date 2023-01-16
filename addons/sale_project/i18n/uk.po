@@ -4,7 +4,7 @@
 # 
 # Translators:
 # Martin Trigaux, 2021
-# Alina Lisnenko <alinasemeniuk1@gmail.com>, 2021
+# Alina Lisnenko <alinasemeniuk1@gmail.com>, 2022
 # 
 msgid ""
 msgstr ""
@@ -12,7 +12,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-10-05 10:54+0000\n"
 "PO-Revision-Date: 2021-09-14 12:26+0000\n"
-"Last-Translator: Alina Lisnenko <alinasemeniuk1@gmail.com>, 2021\n"
+"Last-Translator: Alina Lisnenko <alinasemeniuk1@gmail.com>, 2022\n"
 "Language-Team: Ukrainian (https://www.transifex.com/odoo/teams/41243/uk/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -29,7 +29,7 @@ msgstr "Створити рахунок"
 #: model:ir.model.fields,field_description:sale_project.field_product_product__service_tracking
 #: model:ir.model.fields,field_description:sale_project.field_product_template__service_tracking
 msgid "Create on Order"
-msgstr ""
+msgstr "Створити замовлення"
 
 #. module: sale_project
 #: model:ir.model.fields,field_description:sale_project.field_sale_order__visible_project
@@ -49,7 +49,7 @@ msgstr "Створене завдання"
 #. module: sale_project
 #: model:ir.model.fields,field_description:sale_project.field_project_project__has_any_so_to_invoice
 msgid "Has SO to Invoice"
-msgstr ""
+msgstr "Є SO для виставлення рахунку"
 
 #. module: sale_project
 #: code:addons/sale_project/models/product.py:0
@@ -58,6 +58,8 @@ msgid ""
 "Invoice as soon as this service is sold, and create a task in an existing "
 "project to track the time spent."
 msgstr ""
+"Виставляйте рахунок, щойно ця послуга буде продана, і створіть завдання в "
+"існуючому проекті, щоб відстежувати витрачений час."
 
 #. module: sale_project
 #: code:addons/sale_project/models/product.py:0
@@ -67,6 +69,9 @@ msgid ""
 "project for the order with a task for each sales order line to track the "
 "time spent."
 msgstr ""
+"Виставляйте рахунки із замовленими обсягами, щойно ця послуга буде продана, "
+"і створюйте проект для замовлення із завданням для кожного рядка замовлення "
+"на продаж, щоб відстежувати витрачений час."
 
 #. module: sale_project
 #: code:addons/sale_project/models/product.py:0
@@ -75,12 +80,17 @@ msgid ""
 "Invoice ordered quantities as soon as this service is sold, and create an "
 "empty project for the order to track the time spent."
 msgstr ""
+"Виставляйте рахунки з замовленими кількостями, як тільки ця послуга буде "
+"продана, і створюйте для замовлення порожній проект, щоб відстежувати "
+"витрачений час."
 
 #. module: sale_project
 #: code:addons/sale_project/models/product.py:0
 #, python-format
 msgid "Invoice ordered quantities as soon as this service is sold."
 msgstr ""
+"Виставляйте рахунок-фактуру замовленої кількості, як тільки ця послуга буде "
+"продана."
 
 #. module: sale_project
 #: model:ir.model.fields,field_description:sale_project.field_sale_order_line__is_service
@@ -106,7 +116,7 @@ msgstr "Нічого"
 #. module: sale_project
 #: model:ir.model.fields,field_description:sale_project.field_sale_order__project_count
 msgid "Number of Projects"
-msgstr ""
+msgstr "Кількість проектів"
 
 #. module: sale_project
 #: model:ir.model.fields,field_description:sale_project.field_project_task__invoice_count
@@ -121,7 +131,7 @@ msgid ""
 "         'In sale order's project': Will use the sale order's configured project if defined or fallback to         creating a new project based on the selected template."
 msgstr ""
 "Під час підтвердження замовлення на продаж цей товар може генерувати проект та/або завдання. З них ви можете відстежувати продану послугу.\n"
-"         'У проекті замовлення на продаж': Буде використовуватися налаштований проект замовлення на продаж, якщо визначено або  резервно скопійовано на створення нового проекту на основі вибраного шаблону."
+"         'У проекті замовлення на продаж': Буде використовуватися налаштований проект замовлення на продаж, якщо визначено або резервно скопійовано на створення нового проекту на основі вибраного шаблону."
 
 #. module: sale_project
 #: model:ir.model,name:sale_project.model_product_product
@@ -145,7 +155,7 @@ msgstr "Проект"
 #. module: sale_project
 #: model:ir.model.fields.selection,name:sale_project.selection__product_template__service_tracking__task_in_project
 msgid "Project & Task"
-msgstr ""
+msgstr "Проект та завдання"
 
 #. module: sale_project
 #: model:ir.model.fields,field_description:sale_project.field_product_product__project_template_id
@@ -199,7 +209,7 @@ msgstr "Замовлення на продаж"
 #. module: sale_project
 #: model_terms:ir.ui.view,arch_db:sale_project.project_sharing_inherit_project_task_view_search
 msgid "Sales Order Id"
-msgstr ""
+msgstr "Id замовлення на продаж"
 
 #. module: sale_project
 #: code:addons/sale_project/controllers/portal.py:0
@@ -218,6 +228,8 @@ msgid ""
 "Sales Order Item to which the time spent on this task will be added, in "
 "order to be invoiced to your customer."
 msgstr ""
+"Позиція замовлення на продаж, до якої буде додано час, витрачений на "
+"виконання цього завдання, для виставлення рахунку-фактури вашому клієнту."
 
 #. module: sale_project
 #: model:ir.model,name:sale_project.model_sale_order_line
@@ -262,19 +274,19 @@ msgstr "Замовлення на продаж, із яким пов'язане 
 #: code:addons/sale_project/controllers/portal.py:0
 #, python-format
 msgid "Search in Invoice"
-msgstr ""
+msgstr "Пошук у рахунку"
 
 #. module: sale_project
 #: code:addons/sale_project/controllers/portal.py:0
 #, python-format
 msgid "Search in Sales Order"
-msgstr ""
+msgstr "Пошук у замовленні на продаж"
 
 #. module: sale_project
 #: code:addons/sale_project/controllers/portal.py:0
 #, python-format
 msgid "Search in Sales Order Item"
-msgstr ""
+msgstr "Пошук в елементі замовлення на продаж"
 
 #. module: sale_project
 #: model:ir.model.fields,help:sale_project.field_product_product__project_id
@@ -378,7 +390,7 @@ msgstr ""
 #: code:addons/sale_project/models/project.py:0
 #, python-format
 msgid "There is nothing to invoice in this project."
-msgstr ""
+msgstr "У цьому проекті немає нічого для виставлення у рахунку."
 
 #. module: sale_project
 #: code:addons/sale_project/models/sale_order.py:0
@@ -418,9 +430,9 @@ msgstr ""
 #. module: sale_project
 #: model_terms:ir.ui.view,arch_db:sale_project.portal_tasks_list_inherit
 msgid "for sale order item:"
-msgstr ""
+msgstr "дря рядка замовлення на продаж:"
 
 #. module: sale_project
 #: model_terms:ir.ui.view,arch_db:sale_project.portal_tasks_list_inherit
 msgid "for sale order:"
-msgstr ""
+msgstr "для замовлення на продаж:"

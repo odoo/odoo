@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 15.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-11-16 13:18+0000\n"
-"PO-Revision-Date: 2021-11-16 13:18+0000\n"
+"POT-Creation-Date: 2022-01-24 08:19+0000\n"
+"PO-Revision-Date: 2022-01-24 08:19+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -424,13 +424,6 @@ msgstr ""
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.edit_project
 msgid ""
-"<span class=\"font-weight-bold oe_read_only\" attrs=\"{'invisible':  [('alias_name', '=', False)]}\">Create tasks by sending an email to </span>\n"
-"                                        <span class=\"font-weight-bold oe_edit_only\">Create tasks by sending an email to </span>"
-msgstr ""
-
-#. module: project
-#: model_terms:ir.ui.view,arch_db:project.edit_project
-msgid ""
 "<span class=\"o_stat_text\">\n"
 "                                    Collaborators\n"
 "                                </span>"
@@ -473,6 +466,14 @@ msgstr ""
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_form2
 msgid "<span class=\"o_stat_text\">in Recurrence</span>"
+msgstr ""
+
+#. module: project
+#: model_terms:ir.ui.view,arch_db:project.edit_project
+msgid ""
+"<span class=\"oe_read_only\" attrs=\"{'invisible': [('alias_name', '!=', False)]}\">Create tasks by sending an email to </span>\n"
+"                                        <span class=\"font-weight-bold oe_read_only\" attrs=\"{'invisible': [('alias_name', '=', False)]}\">Create tasks by sending an email to </span>\n"
+"                                        <span class=\"font-weight-bold oe_edit_only\">Create tasks by sending an email to </span>"
 msgstr ""
 
 #. module: project
@@ -562,6 +563,14 @@ msgid ""
 msgstr ""
 
 #. module: project
+#: code:addons/project/models/project.py:0
+#, python-format
+msgid ""
+"A personal stage cannot be linked to a project because it is only visible to"
+" its corresponding user."
+msgstr ""
+
+#. module: project
 #: model:ir.model.constraint,message:project.constraint_project_task_user_rel_project_personal_stage_unique
 msgid "A task can only have a single personal stage per user."
 msgstr ""
@@ -642,6 +651,7 @@ msgid "Add Milestone"
 msgstr ""
 
 #. module: project
+#: model_terms:ir.ui.view,arch_db:project.personal_task_type_edit
 #: model_terms:ir.ui.view,arch_db:project.task_type_edit
 msgid "Add a description..."
 msgstr ""
@@ -810,6 +820,7 @@ msgstr ""
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.edit_project
+#: model_terms:ir.ui.view,arch_db:project.personal_task_type_edit
 #: model_terms:ir.ui.view,arch_db:project.project_project_stage_view_form
 #: model_terms:ir.ui.view,arch_db:project.project_project_stage_view_search
 #: model_terms:ir.ui.view,arch_db:project.project_sharing_project_task_view_form
@@ -852,6 +863,16 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:project.project_sharing_project_task_view_form
 #: model_terms:ir.ui.view,arch_db:project.view_task_form2
 msgid "Assign to Me"
+msgstr ""
+
+#. module: project
+#: model_terms:ir.ui.view,help:project.project_sharing_project_task_view_kanban
+msgid " assignee"
+msgstr ""
+
+#. module: project
+#: model_terms:ir.ui.view,help:project.project_sharing_project_task_view_kanban
+msgid " assignees"
 msgstr ""
 
 #. module: project
@@ -985,6 +1006,9 @@ msgstr ""
 #: model:project.task,legend_blocked:project.project_task_25
 #: model:project.task,legend_blocked:project.project_task_26
 #: model:project.task,legend_blocked:project.project_task_3
+#: model:project.task,legend_blocked:project.project_task_30
+#: model:project.task,legend_blocked:project.project_task_31
+#: model:project.task,legend_blocked:project.project_task_32
 #: model:project.task,legend_blocked:project.project_task_33
 #: model:project.task,legend_blocked:project.project_task_8
 #: model:project.task,legend_blocked:project.project_task_9
@@ -1043,9 +1067,9 @@ msgstr ""
 #: model:project.task,legend_done:project.project_task_27
 #: model:project.task,legend_done:project.project_task_28
 #: model:project.task,legend_done:project.project_task_29
-#: model:project.task,legend_done:project.project_task_30
-#: model:project.task,legend_done:project.project_task_31
-#: model:project.task,legend_done:project.project_task_32
+#: model:project.task,legend_done:project.project_task_34
+#: model:project.task,legend_done:project.project_task_35
+#: model:project.task,legend_done:project.project_task_36
 #: model:project.task,legend_done:project.project_task_4
 #: model:project.task,legend_done:project.project_task_5
 #: model:project.task,legend_done:project.project_task_6
@@ -1517,11 +1541,20 @@ msgstr ""
 #: model:ir.model.fields,help:project.field_project_project__privacy_visibility
 #: model:ir.model.fields,help:project.field_project_task__project_privacy_visibility
 msgid ""
-"Defines the visibility of the tasks of the project:\n"
-"- Invited employees: employees may only see the followed project and tasks.\n"
-"- All employees: employees may see all project and tasks.\n"
-"- Invited portal users and all employees: employees may see everything.   Invited portal users may see project and tasks followed by.\n"
-"   them or by someone of their company."
+"People to whom this project and its tasks will be visible.\n"
+"\n"
+"- Invited internal users: when following a project, internal users will get access to all of its tasks without distinction. Otherwise, they will only get access to the specific tasks they are following.\n"
+" A user with the project > administrator access right level can still access this project and its tasks, even if they are not explicitly part of the followers.\n"
+"\n"
+"- All internal users: all internal users can access the project and all of its tasks without distinction.\n"
+"\n"
+"- Invited portal users and all internal users: all internal users can access the project and all of its tasks without distinction.\n"
+"When following a project, portal users will get access to all of its tasks without distinction. Otherwise, they will only get access to the specific tasks they are following.\n"
+"\n"
+"When a project is shared in read-only, the portal user is redirected to their portal. They can view the tasks, but not edit them.\n"
+"When a project is shared in edit, the portal user is redirected to the kanban and list views of the tasks. They can modify a selected number of fields on the tasks.\n"
+"\n"
+"In any case, an internal user with no project access rights can still access a task, provided that they are given the corresponding URL (and that they are part of the followers if the project is private)."
 msgstr ""
 
 #. module: project
@@ -1710,6 +1743,13 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:project.view_project_kanban
 #: model_terms:ir.ui.view,arch_db:project.view_task_kanban
 msgid "Edit"
+msgstr ""
+
+#. module: project
+#. openerp-web
+#: code:addons/project/static/src/js/project_kanban.js:0
+#, python-format
+msgid "Edit Personal Stage"
 msgstr ""
 
 #. module: project
@@ -2170,6 +2210,9 @@ msgstr ""
 #: model:project.task,legend_normal:project.project_task_31
 #: model:project.task,legend_normal:project.project_task_32
 #: model:project.task,legend_normal:project.project_task_33
+#: model:project.task,legend_normal:project.project_task_34
+#: model:project.task,legend_normal:project.project_task_35
+#: model:project.task,legend_normal:project.project_task_36
 #: model:project.task,legend_normal:project.project_task_4
 #: model:project.task,legend_normal:project.project_task_5
 #: model:project.task,legend_normal:project.project_task_6
@@ -2738,9 +2781,9 @@ msgstr ""
 #: model:project.task,legend_blocked:project.project_task_27
 #: model:project.task,legend_blocked:project.project_task_28
 #: model:project.task,legend_blocked:project.project_task_29
-#: model:project.task,legend_blocked:project.project_task_30
-#: model:project.task,legend_blocked:project.project_task_31
-#: model:project.task,legend_blocked:project.project_task_32
+#: model:project.task,legend_blocked:project.project_task_34
+#: model:project.task,legend_blocked:project.project_task_35
+#: model:project.task,legend_blocked:project.project_task_36
 #: model:project.task,legend_blocked:project.project_task_4
 #: model:project.task,legend_blocked:project.project_task_5
 #: model:project.task,legend_blocked:project.project_task_6
@@ -3058,9 +3101,7 @@ msgid "Open"
 msgstr ""
 
 #. module: project
-#: code:addons/project/models/project.py:0
 #: model:ir.model.fields,field_description:project.field_digest_digest__kpi_project_task_opened
-#, python-format
 msgid "Open Tasks"
 msgstr ""
 
@@ -3623,6 +3664,9 @@ msgstr ""
 #: model:project.task,legend_done:project.project_task_25
 #: model:project.task,legend_done:project.project_task_26
 #: model:project.task,legend_done:project.project_task_3
+#: model:project.task,legend_done:project.project_task_30
+#: model:project.task,legend_done:project.project_task_31
+#: model:project.task,legend_done:project.project_task_32
 #: model:project.task,legend_done:project.project_task_33
 #: model:project.task,legend_done:project.project_task_8
 #: model:project.task,legend_done:project.project_task_9
@@ -4336,6 +4380,7 @@ msgstr ""
 
 #. module: project
 #: model:ir.model,name:project.model_project_task_type
+#: model_terms:ir.ui.view,arch_db:project.personal_task_type_edit
 #: model_terms:ir.ui.view,arch_db:project.task_type_edit
 #: model_terms:ir.ui.view,arch_db:project.task_type_tree
 msgid "Task Stage"
@@ -4838,12 +4883,6 @@ msgid "Update"
 msgstr ""
 
 #. module: project
-#: code:addons/project/models/project.py:0
-#, python-format
-msgid "Updated (Last 30 Days)"
-msgstr ""
-
-#. module: project
 #. openerp-web
 #: code:addons/project/static/src/js/project_task_kanban_examples.js:0
 #, python-format
@@ -5063,12 +5102,6 @@ msgstr ""
 #. module: project
 #: code:addons/project/models/project.py:0
 #, python-format
-msgid "You cannot %s %s fields in task."
-msgstr ""
-
-#. module: project
-#: code:addons/project/models/project.py:0
-#, python-format
 msgid ""
 "You cannot archive recurring tasks. Please disable the recurrence first."
 msgstr ""
@@ -5117,6 +5150,20 @@ msgid ""
 msgstr ""
 
 #. module: project
+#. odoo-python
+#: code:addons/project/models/project.py:0
+#, python-format
+msgid "You cannot read %s fields in task."
+msgstr ""
+
+#. module: project
+#. odoo-python
+#: code:addons/project/models/project.py:0
+#, python-format
+msgid "You cannot write on %s fields in task."
+msgstr ""
+
+#. module: project
 #: code:addons/project/models/project.py:0
 #, python-format
 msgid "You have been assigned to %s"
@@ -5131,6 +5178,14 @@ msgstr ""
 #: code:addons/project/models/project.py:0
 #, python-format
 msgid "You have not write access of %s field."
+msgstr ""
+
+#. module: project
+#: code:addons/project/models/project.py:0
+#, python-format
+msgid ""
+"You should at least have one personal stage. Create a new stage to which the"
+" tasks can be transferred after this one is deleted."
 msgstr ""
 
 #. module: project

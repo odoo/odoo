@@ -4,6 +4,7 @@
 # 
 # Translators:
 # Martin Ondrejka <martin.ondrejka@anuva.eu>, 2021
+# Martin Trigaux, 2022
 # 
 msgid ""
 msgstr ""
@@ -11,7 +12,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-07-12 07:50+0000\n"
 "PO-Revision-Date: 2021-09-14 12:20+0000\n"
-"Last-Translator: Martin Ondrejka <martin.ondrejka@anuva.eu>, 2021\n"
+"Last-Translator: Martin Trigaux, 2022\n"
 "Language-Team: Slovak (https://www.transifex.com/odoo/teams/41243/sk/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -48,7 +49,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:account_tax_python.field_account_tax__python_applicable
 #: model:ir.model.fields,field_description:account_tax_python.field_account_tax_template__python_applicable
 msgid "Applicable Code"
-msgstr ""
+msgstr "Použiteľný kód"
 
 #. module: account_tax_python
 #: model:ir.model.fields,help:account_tax_python.field_account_tax__python_compute
@@ -62,6 +63,15 @@ msgid ""
 ":param product: product.product recordset singleton or None\n"
 ":param partner: res.partner recordset singleton or None"
 msgstr ""
+"Vypočítajte sumu dane nastavením premennej \"výsledok\".\n"
+"\n"
+"\n"
+":param base_amount: float, aktuálna suma na ktorú sa aplikuje daň\n"
+":param price_unit: float\n"
+":param quantity: float\n"
+":param company: res. spoločnosť záznam singleton\n"
+":param product: product.product záznam singleton alebo None\n"
+":param partner: res.partner záznam singleton alebo None"
 
 #. module: account_tax_python
 #: model:ir.model.fields,help:account_tax_python.field_account_tax_template__python_compute
@@ -74,6 +84,13 @@ msgid ""
 ":param product: product.product recordset singleton or None\n"
 ":param partner: res.partner recordset singleton or None"
 msgstr ""
+"Vypočítajte sumu dane nastavením premennej \"výsledok\".\n"
+"\n"
+":param base_amount: float, aktuálna suma na ktorú sa aplikuje daň\n"
+":param price_unit: float\n"
+":param quantity: float\n"
+":param product: product.product záznam singleton alebo None\n"
+":param partner: res.partner záznam singleton alebo None"
 
 #. module: account_tax_python
 #: model:ir.model.fields,help:account_tax_python.field_account_tax__python_applicable
@@ -86,6 +103,13 @@ msgid ""
 ":param product: product.product recordset singleton or None\n"
 ":param partner: res.partner recordset singleton or None"
 msgstr ""
+"Vypočítajte sumu dane nastavením premennej \"výsledok\" na Pravda alebo Nepravda.\n"
+"\n"
+":param price_unit: float\n"
+":param quantity: float\n"
+":param company: res. spoločnosť záznam singleton\n"
+":param product: product.product záznam singleton alebo None\n"
+":param partner: res.partner záznam singleton alebo None"
 
 #. module: account_tax_python
 #: model:ir.model.fields,help:account_tax_python.field_account_tax_template__python_applicable
@@ -97,6 +121,12 @@ msgid ""
 ":param product: product.product recordset singleton or None\n"
 ":param partner: res.partner recordset singleton or None"
 msgstr ""
+"Vypočítajte sumu dane nastavením premennej \"výsledok\" na Pravda alebo Nepravda.\n"
+"\n"
+":param price_unit: float \n"
+":param quantity: float\n"
+":param product: product.product záznam singleton alebo None\n"
+":param partner: res.partner záznam singleton alebo None"
 
 #. module: account_tax_python
 #: model:ir.model.fields,field_description:account_tax_python.field_account_tax__python_compute
@@ -104,20 +134,20 @@ msgstr ""
 #: model:ir.model.fields.selection,name:account_tax_python.selection__account_tax__amount_type__code
 #: model:ir.model.fields.selection,name:account_tax_python.selection__account_tax_template__amount_type__code
 msgid "Python Code"
-msgstr ""
+msgstr "Kód Pyton"
 
 #. module: account_tax_python
 #: model:ir.model,name:account_tax_python.model_account_tax
 msgid "Tax"
-msgstr ""
+msgstr "Daň"
 
 #. module: account_tax_python
 #: model:ir.model.fields,field_description:account_tax_python.field_account_tax__amount_type
 #: model:ir.model.fields,field_description:account_tax_python.field_account_tax_template__amount_type
 msgid "Tax Computation"
-msgstr ""
+msgstr "Výpočet dane"
 
 #. module: account_tax_python
 #: model:ir.model,name:account_tax_python.model_account_tax_template
 msgid "Templates for Taxes"
-msgstr ""
+msgstr "Šablóny pre dane"

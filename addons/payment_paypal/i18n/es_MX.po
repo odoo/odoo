@@ -5,7 +5,7 @@
 # Translators:
 # Martin Trigaux, 2021
 # Braulio D. López Vázquez <bdl@odoo.com>, 2021
-# Lucia Pacheco <lpo@odoo.com>, 2021
+# Lucia Pacheco <lpo@odoo.com>, 2022
 # 
 msgid ""
 msgstr ""
@@ -13,13 +13,13 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-07-12 07:49+0000\n"
 "PO-Revision-Date: 2021-09-14 12:24+0000\n"
-"Last-Translator: Lucia Pacheco <lpo@odoo.com>, 2021\n"
+"Last-Translator: Lucia Pacheco <lpo@odoo.com>, 2022\n"
 "Language-Team: Spanish (Mexico) (https://www.transifex.com/odoo/teams/41243/es_MX/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: es_MX\n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"Plural-Forms: nplurals=3; plural=n == 1 ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;\n"
 
 #. module: payment_paypal
 #: model_terms:ir.ui.view,arch_db:payment_paypal.mail_template_paypal_invite_user_to_configure
@@ -56,7 +56,7 @@ msgstr ""
 "                <br/><br/>\n"
 "                Recibió un pago a través de PayPal.<br/>\n"
 "                Siga las instrucciones dadas por PayPal para crear su cuenta.<br/>\n"
-"                Luego, ayúdenos a completar sus credenciales de Paypal en Odoo.<br/><br/>"
+"                Cuando termine, ayúdenos a completar sus credenciales de Paypal en Odoo.<br/><br/>"
 
 #. module: payment_paypal
 #: model_terms:ir.ui.view,arch_db:payment_paypal.payment_acquirer_form
@@ -165,7 +165,8 @@ msgstr ""
 #. module: payment_paypal
 #: model:ir.model.fields,help:payment_paypal.field_payment_transaction__paypal_type
 msgid "This has no use in Odoo except for debugging."
-msgstr "Esto no tiene ninguna utilidad en Odoo, excepto para el debug."
+msgstr ""
+"Esto no tiene ninguna utilidad en Odoo, excepto para la solución de bugs."
 
 #. module: payment_paypal
 #: model:ir.model.fields,field_description:payment_paypal.field_payment_acquirer__paypal_use_ipn

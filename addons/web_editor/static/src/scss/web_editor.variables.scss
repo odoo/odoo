@@ -187,6 +187,8 @@ $o-we-sidebar-content-field-toggle-control-height: $o-we-sidebar-content-field-t
 $o-we-sidebar-content-field-toggle-control-bg: $o-we-fg-lighter !default;
 $o-we-sidebar-content-field-toggle-control-shadow: 0 2px 3px 0 $o-we-bg-darkest !default;
 
+$o-we-technical-modal-zindex: 2001;
+
 //------------------------------------------------------------------------------
 // Preview component Mixins
 //------------------------------------------------------------------------------
@@ -594,6 +596,7 @@ $o-color-extras-nesting-selector: '&, .o_colored_level &';
     @if type-of($-related-color) == 'number' {
         // This is a preset to be applied, just extend it. This should probably
         // be avoided and use the class in XML if possible.
+        @extend .o_cc;
         @extend .o_cc#{$-related-color};
     } @else {
         @include o-bg-color(o-color($-related-color), $with-extras: $with-extras, $background: $background, $important: false);

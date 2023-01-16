@@ -24,14 +24,26 @@ export function useComponentToModel({ fieldName, modelName, propNameAsRecordLoca
     }
     onWillUpdateProps(nextProps => {
         const currentRecord = modelManager.models[modelName].get(component.props[propNameAsRecordLocalId]);
-        if (currentRecord) {
+        const nextRecord = modelManager.models[modelName].get(nextProps[propNameAsRecordLocalId]);
+        if (currentRecord && currentRecord !== nextRecord) {
             currentRecord.update({ [fieldName]: clear() });
         }
-        const nextRecord = modelManager.models[modelName].get(nextProps[propNameAsRecordLocalId]);
         if (nextRecord) {
             nextRecord.update({ [fieldName]: component });
         }
     });
+    const __render = component.__render;
+    component.__render = fiber => {
+        const record = modelManager.models[modelName].get(component.props[propNameAsRecordLocalId]);
+        if (record && !record[fieldName]) {
+            // When the record is deleted then created again, its
+            // localId can be the same. In this scenario, the Component
+            // would not call setup neither willUpdateprops. Therefore,
+            // we need to set the component for this new record.
+            record.update({ [fieldName]: component });
+        }
+        __render.call(component, fiber);
+    };
     const __destroy = component.__destroy;
     component.__destroy = parent => {
         const record = modelManager.models[modelName].get(component.props[propNameAsRecordLocalId]);

@@ -130,6 +130,7 @@
                         <field name="partner_ids" widget="many2manyattendee"
                             placeholder="Select attendees..."
                             context="{'force_email':True}"
+                            domain="[('type','!=','private')]"
                             class="oe_inline o_calendar_attendees"
                         />
                         <div name="send_buttons" class="sm-2">
@@ -162,8 +163,9 @@
                                     <field name="categ_ids" widget="many2many_tags" options="{'color_field': 'color', 'no_create_edit': True}"/>
                                 </group>
                             </group>
-                            <label for="description"/>
-                            <field name="description"/>
+                            <group>
+                                <field name="description"/>
+                            </group>
                         </page>
                         <page name="page_options" string="Options">
                             <group>
@@ -215,7 +217,7 @@
 
                         <page name="page_invitations" string="Invitations" groups="base.group_no_one">
                             <button name="action_sendmail" type="object" string="Send Invitations" icon="fa-envelope" class="oe_link"/>
-                            <field name="attendee_ids" widget="one2many" mode="tree,kanban">
+                            <field name="attendee_ids" widget="one2many" mode="tree,kanban" readonly="1">
                                 <tree string="Invitation details" editable="top" create="false" delete="false">
                                     <field name="partner_id" />
                                     <field name="email" widget="email"/>
@@ -419,6 +421,7 @@
         groups="base.group_no_one"/>
 
     <!-- called in js from '/js/base_calendar.js' -->
+    <!-- TODO: remove in master -->
     <record id="action_calendar_event_notify" model="ir.actions.act_window">
         <field name="name">Meetings</field>
         <field name="res_model">calendar.event</field>

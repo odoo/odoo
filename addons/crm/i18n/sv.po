@@ -3,7 +3,7 @@
 # 	* crm
 # 
 # Translators:
-# STefan Rundgren <stefanrundgren@cellglas.com>, 2021
+# 3eec91a23d05c632ffac786ac42b81b8_b6fff7b <8985b7bc57db860af29969457dbb51b3_1018915>, 2021
 # Lisa <lisa.oskoma@vertel.se>, 2021
 # Kristoffer Grundström <lovaren@gmail.com>, 2021
 # Anders Wallenquist <anders.wallenquist@vertel.se>, 2021
@@ -20,6 +20,7 @@
 # Kim Asplund <kim.asplund@gmail.com>, 2021
 # Chrille Hedberg <hedberg.chrille@gmail.com>, 2021
 # Martin Trigaux, 2021
+# Mikael Åkerberg <mikael.akerberg@mariaakerberg.com>, 2022
 # 
 msgid ""
 msgstr ""
@@ -27,7 +28,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-10-05 10:53+0000\n"
 "PO-Revision-Date: 2021-09-14 12:21+0000\n"
-"Last-Translator: Martin Trigaux, 2021\n"
+"Last-Translator: Mikael Åkerberg <mikael.akerberg@mariaakerberg.com>, 2022\n"
 "Language-Team: Swedish (https://www.transifex.com/odoo/teams/41243/sv/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -685,7 +686,7 @@ msgstr "CRM återkommande intäkter"
 #. module: crm
 #: model:ir.model,name:crm.model_crm_stage
 msgid "CRM Stages"
-msgstr "CRM steg"
+msgstr "CRM etapper"
 
 #. module: crm
 #: model:ir.actions.server,name:crm.ir_cron_crm_lead_assign_ir_actions_server
@@ -1298,7 +1299,7 @@ msgid ""
 "Enter here the internal requirements for this stage (ex: Offer sent to "
 "customer). It will appear as a tooltip over the stage's name."
 msgstr ""
-"Ange de interna kraven för detta steg (t.ex. offert sänd till kund). Det "
+"Ange de interna kraven för denna etapp (t.ex. offert sänd till kund). Det "
 "visas som verktygstips över stegets namn."
 
 #. module: crm
@@ -1469,7 +1470,7 @@ msgstr "Orsak till förlust"
 #: model_terms:ir.ui.view,arch_db:crm.crm_stage_form
 msgid "Give your team the requirements to move an opportunity to this stage."
 msgstr ""
-"Ge ditt team förutsättningarna för att flytta en möjlighet till detta steg."
+"Ge ditt team förutsättningarna för att flytta en möjlighet till denna etapp."
 
 #. module: crm
 #: code:addons/crm/models/crm_lead.py:0 code:addons/crm/models/crm_lead.py:0
@@ -1716,7 +1717,7 @@ msgstr "Senast redigerad"
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__date_last_stage_update
 msgid "Last Stage Update"
-msgstr "Senaste steguppdatering"
+msgstr "Senaste etappuppdatering"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead2opportunity_partner__write_uid
@@ -2562,7 +2563,7 @@ msgstr "Möjlighet återställd"
 #. module: crm
 #: model:mail.message.subtype,name:crm.mt_salesteam_lead_stage
 msgid "Opportunity Stage Changed"
-msgstr "Steg för möjlighet ändrad"
+msgstr "Etapp för möjlighet ändrad"
 
 #. module: crm
 #: model:mail.message.subtype,name:crm.mt_lead_won
@@ -2641,7 +2642,7 @@ msgstr "Parent Model"
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_team__alias_parent_thread_id
 msgid "Parent Record Thread ID"
-msgstr ""
+msgstr "Överordnad post tråd ID"
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_team__alias_parent_model_id
@@ -2650,6 +2651,9 @@ msgid ""
 " necessarily the model given by alias_model_id (example: project "
 "(parent_model) and task (model))"
 msgstr ""
+"Överordnad modell innehåller alias. Modellen som innehåller aliasreferensen "
+"är inte nödvändigtvis den modell som ges av alias_model_id (exempel: projekt"
+" (parent_model) och aktivitet (modell))"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__partner_email_update
@@ -2743,6 +2747,10 @@ msgid ""
 "- partners: only authenticated partners\n"
 "- followers: only followers of the related document or members of following channels\n"
 msgstr ""
+"Princip för att publicera ett meddelande på dokumentet med hjälp av mailgateway.\n"
+"- alla: alla kan posta\n"
+"- partner: endast autentiserade partner\n"
+"- följare: endast följare av det relaterade dokumentet eller medlemmar av följande kanaler\n"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__duplicate_lead_ids
@@ -3090,34 +3098,34 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:crm.view_crm_case_opportunities_filter
 #, python-format
 msgid "Stage"
-msgstr "Steg"
+msgstr "Etapp"
 
 #. module: crm
 #: model:mail.message.subtype,name:crm.mt_lead_stage
 msgid "Stage Changed"
-msgstr "Steg ändrat"
+msgstr "Ändrad etapp"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_stage__name
 msgid "Stage Name"
-msgstr "Namn på steg"
+msgstr "Namn på etapp"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_stage_search
 msgid "Stage Search"
-msgstr "Sök steg"
+msgstr "Sök etapp"
 
 #. module: crm
 #: model:mail.message.subtype,description:crm.mt_lead_stage
 msgid "Stage changed"
-msgstr "Steg ändrat"
+msgstr "Etapp ändrat"
 
 #. module: crm
 #: model:ir.actions.act_window,name:crm.crm_stage_action
 #: model:ir.ui.menu,name:crm.menu_crm_lead_stage_act
 #: model_terms:ir.ui.view,arch_db:crm.crm_stage_tree
 msgid "Stages"
-msgstr "Steg"
+msgstr "Etapper"
 
 #. module: crm
 #: model_terms:ir.actions.act_window,help:crm.crm_stage_action
@@ -3574,7 +3582,7 @@ msgstr "Används för att logga in i systemet"
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_stage__sequence
 msgid "Used to order stages. Lower is better."
-msgstr "Används för att sortera steg. Lägre är bättre."
+msgstr "Används för att sortera etapper. Lägre är bättre."
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__user_company_ids

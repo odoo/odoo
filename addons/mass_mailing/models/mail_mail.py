@@ -36,7 +36,7 @@ class MailMail(models.Model):
         body = super(MailMail, self)._send_prepare_body()
 
         if self.mailing_id and body and self.mailing_trace_ids:
-            for match in re.findall(tools.URL_REGEX, self.body_html):
+            for match in set(re.findall(tools.URL_REGEX, self.body_html)):
                 href = match[0]
                 url = match[1]
 

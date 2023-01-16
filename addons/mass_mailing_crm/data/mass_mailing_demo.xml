@@ -58,7 +58,7 @@
                 </t>
                 <t t-if="object.company_id.website">
                 |
-                    <a href="'%s' % object.company_id.website" style="text-decoration:none; color: #999999;">
+                    <a t-att-href="'%s' % object.company_id.website" style="text-decoration:none; color: #999999;">
                         <t t-out="object.company_id.website" />
                     </a>
                 </t>

@@ -6,11 +6,12 @@ import odoo.tests
 from datetime import timedelta
 
 from odoo.addons.base.tests.common import HttpCaseWithUserDemo
+from odoo.addons.website_event_sale.tests.common import TestWebsiteEventSaleCommon
 from odoo.fields import Datetime
 
 
 @odoo.tests.common.tagged('post_install', '-at_install')
-class TestUi(HttpCaseWithUserDemo):
+class TestUi(HttpCaseWithUserDemo, TestWebsiteEventSaleCommon):
 
     def setUp(self):
         super().setUp()
@@ -37,8 +38,27 @@ class TestUi(HttpCaseWithUserDemo):
             'price': 1500.0,
         }])
 
+        self.event_3 = self.env['event.event'].create({
+            'name': 'Last ticket test',
+            'user_id': self.env.ref('base.user_admin').id,
+            'date_begin': (Datetime.today() + timedelta(days=5)).strftime('%Y-%m-%d 07:00:00'),
+            'date_end': (Datetime.today() + timedelta(days=5)).strftime('%Y-%m-%d 16:30:00'),
+            'website_published': True,
+        })
+
+        self.env['event.event.ticket'].create([{
+            'name': 'VIP',
+            'event_id': self.event_3.id,
+            'product_id': self.env.ref('event_sale.product_product_event').id,
+            'end_sale_datetime': (Datetime.today() + timedelta(90)).strftime('%Y-%m-%d'),
+            'price': 1500.0,
+            'seats_max': 2,
+        }])
+
+
         # flush event to ensure having tickets available in the tests
         self.event_2.flush()
+        self.event_3.flush()
 
         (self.env.ref('base.partner_admin') + self.partner_demo).write({
             'street': '215 Vine St',
@@ -65,4 +85,9 @@ class TestUi(HttpCaseWithUserDemo):
     def test_demo(self):
         self.start_tour("/", 'event_buy_tickets', login="demo")
 
+    def test_buy_last_ticket(self):
+        self.start_tour("/", 'event_buy_last_ticket')
+
+    def test_pricelists_different_currencies(self):
+        self.start_tour("/", 'event_sale_pricelists_different_currencies')
     # TO DO - add public test with new address when convert to web.tour format.

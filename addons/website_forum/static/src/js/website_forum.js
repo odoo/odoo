@@ -6,6 +6,7 @@ var core = require('web.core');
 var wysiwygLoader = require('web_editor.loader');
 var publicWidget = require('web.public.widget');
 var session = require('web.session');
+var { Markup } = require('web.utils');
 var qweb = core.qweb;
 
 var _t = core._t;
@@ -13,6 +14,9 @@ var _t = core._t;
 publicWidget.registry.websiteForum = publicWidget.Widget.extend({
     selector: '.website_forum',
     xmlDependencies: [
+        // TODO Move the toolbar template out of the website_forum_templates
+        // file in master, as explained by the comment in the creation dialog
+        // widget.
         '/web_editor/static/src/xml/editor.xml',
         '/website_forum/static/src/xml/website_forum_templates.xml',
         '/website_forum/static/src/xml/website_forum_share_templates.xml',
@@ -91,6 +95,7 @@ publicWidget.registry.websiteForum = publicWidget.Widget.extend({
                     return {
                         query: term,
                         limit: 50,
+                        forum_id: $('#wrapwrap').data('forum_id'),
                     };
                 },
                 results: function (data) {
@@ -250,10 +255,9 @@ publicWidget.registry.websiteForum = publicWidget.Widget.extend({
             // translation, to fix in the appropriate version
             notifOptions.message = `${karma} ${_t("karma is required to perform this action. ")}`;
             if (forumID) {
-                notifOptions.messageIsHtml = true;
-                const linkLabel = _.escape(_t("Read the guidelines to know how to gain karma."));
-                notifOptions.message = `
-                    ${_.escape(notifOptions.message)}<br/>
+                const linkLabel = _t("Read the guidelines to know how to gain karma.");
+                notifOptions.message = Markup`
+                    ${notifOptions.message}<br/>
                     <a class="alert-link" href="/forum/${forumID}/faq">${linkLabel}</a>
                 `;
             }
@@ -355,7 +359,7 @@ publicWidget.registry.websiteForum = publicWidget.Widget.extend({
                 } else if (data.error === 'anonymous_user') {
                     message = _t('Sorry you must be logged to vote');
                 }
-                this.displayNotification({
+                self.displayNotification({
                     message: message,
                     title: _t("Access Denied"),
                     sticky: false,

@@ -275,23 +275,7 @@ function factory(dependencies) {
             if (this.messaging.currentPartner) {
                 composer.thread.unregisterCurrentPartnerIsTyping({ immediateNotify: true });
             }
-            const escapedAndCompactContent = escapeAndCompactTextContent(composer.textInputContent);
-            let body = escapedAndCompactContent.replace(/&nbsp;/g, ' ').trim();
-            // This message will be received from the mail composer as html content
-            // subtype but the urls will not be linkified. If the mail composer
-            // takes the responsibility to linkify the urls we end up with double
-            // linkification a bit everywhere. Ideally we want to keep the content
-            // as text internally and only make html enrichment at display time but
-            // the current design makes this quite hard to do.
-            body = this._generateMentionsLinks(body);
-            body = parseAndTransform(body, addLink);
-            body = this._generateEmojisOnHtml(body);
-            const postData = {
-                attachment_ids: composer.attachments.map(attachment => attachment.id),
-                body,
-                message_type: 'comment',
-                partner_ids: composer.recipients.map(partner => partner.id),
-            };
+            const postData = this._getMessageData();
             const params = {
                 'post_data': postData,
                 'thread_id': composer.thread.id,
@@ -314,6 +298,7 @@ function factory(dependencies) {
                 if (this.threadView && this.threadView.replyingToMessageView && this.threadView.thread !== this.messaging.inbox) {
                     postData.parent_id = this.threadView.replyingToMessageView.message.id;
                 }
+                const chatter = this.chatter;
                 const { threadView = {} } = this;
                 const { thread: chatterThread } = this.chatter || {};
                 const { thread: threadViewThread } = threadView;
@@ -327,12 +312,18 @@ function factory(dependencies) {
                 for (const threadView of message.originThread.threadViews) {
                     // Reset auto scroll to be able to see the newly posted message.
                     threadView.update({ hasAutoScrollOnMessageReceived: true });
+                    threadView.addComponentHint('message-posted', { message });
+                }
+                if (chatter && chatter.exists() && chatter.component) {
+                    chatter.component.trigger('o-message-posted');
                 }
                 if (chatterThread) {
                     if (this.exists()) {
                         this.delete();
                     }
                     if (chatterThread.exists()) {
+                        // Load new messages to fetch potential new messages from other users (useful due to lack of auto-sync in chatter).
+                        chatterThread.loadNewMessages();
                         chatterThread.refreshFollowers();
                         chatterThread.fetchAndUpdateSuggestedRecipients();
                     }
@@ -524,6 +515,14 @@ function factory(dependencies) {
                 return unlinkAll();
             }
             return unlink(this.mainSuggestedRecords);
+        }
+
+        /**
+         * @private
+         * @return {boolean}
+         */
+        _computeHasDropZone() {
+            return true;
         }
 
         /**
@@ -730,6 +729,32 @@ function factory(dependencies) {
         }
 
         /**
+         * Gather data for message post.
+         *
+         * @private
+         * @returns {Object}
+         */
+        _getMessageData() {
+            const escapedAndCompactContent = escapeAndCompactTextContent(this.composer.textInputContent);
+            let body = escapedAndCompactContent.replace(/&nbsp;/g, ' ').trim();
+            // This message will be received from the mail composer as html content
+            // subtype but the urls will not be linkified. If the mail composer
+            // takes the responsibility to linkify the urls we end up with double
+            // linkification a bit everywhere. Ideally we want to keep the content
+            // as text internally and only make html enrichment at display time but
+            // the current design makes this quite hard to do.
+            body = this._generateMentionsLinks(body);
+            body = parseAndTransform(body, addLink);
+            body = this._generateEmojisOnHtml(body);
+            return {
+                attachment_ids: this.composer.attachments.map(attachment => attachment.id),
+                body,
+                message_type: 'comment',
+                partner_ids: this.composer.recipients.map(partner => partner.id),
+            };
+        }
+
+        /**
          * Handles change of this composer. Useful to reset the state of the
          * composer text input.
          */
@@ -810,7 +835,7 @@ function factory(dependencies) {
                 }
                 const Model = this.messaging.models[this.suggestionModelName];
                 const searchTerm = this.suggestionSearchTerm;
-                await this.async(() => Model.fetchSuggestions(searchTerm, { thread: this.composer.activeThread }));
+                await Model.fetchSuggestions(searchTerm, { thread: this.composer.activeThread });
                 if (!this.exists()) {
                     return;
                 }
@@ -912,6 +937,9 @@ function factory(dependencies) {
          */
         extraSuggestedRecords: many2many('mail.model', {
             compute: '_computeExtraSuggestedRecords',
+        }),
+        hasDropZone: attr({
+            compute: '_computeHasDropZone',
         }),
         hasFocus: attr({
             default: false,

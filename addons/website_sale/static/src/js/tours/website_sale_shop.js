@@ -7,9 +7,10 @@ odoo.define("website_sale.tour_shop", function (require) {
     // return the steps, used for backend and frontend
 
     return [{
-        trigger: "#new-content-menu > a",
+        trigger: "body:has(#o_new_content_menu_choices.o_hidden) #new-content-menu > a",
         content: _t("Let's create your first product."),
         extra_trigger: ".js_sale",
+        consumeVisibleOnly: true,
         position: "bottom",
     }, {
         trigger: "a[data-action=new_product]",
@@ -18,7 +19,7 @@ odoo.define("website_sale.tour_shop", function (require) {
     }, {
         trigger: ".modal-dialog #editor_new_product input[type=text]",
         content: _t("Enter a name for your new product"),
-        position: "right",
+        position: "left",
     }, {
         trigger: ".modal-footer button.btn-primary.btn-continue",
         content: Markup(_t("Click on <em>Continue</em> to create the product.")),
@@ -44,6 +45,7 @@ odoo.define("website_sale.tour_shop", function (require) {
         run: function (actions) {
             actions.auto(".modal-footer .btn-secondary");
         },
+        auto: true,
     }, {
         trigger: "button.o_we_add_snippet_btn",
         auto: true,

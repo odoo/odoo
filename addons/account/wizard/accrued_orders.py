@@ -157,7 +157,8 @@ class AccruedExpenseRevenue(models.TransientModel):
                     o.order_line.with_context(accrual_entry_date=self.date)._compute_untaxed_amount_invoiced()
                     o.order_line.with_context(accrual_entry_date=self.date)._get_to_invoice_qty()
                 lines = o.order_line.filtered(
-                    lambda l: fields.Float.compare(
+                    lambda l: l.display_type not in ['line_section', 'line_note'] and
+                    fields.Float.compare(
                         l.qty_to_invoice,
                         0,
                         precision_rounding=l.product_uom.rounding,

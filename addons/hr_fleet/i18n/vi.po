@@ -7,14 +7,15 @@
 # Duy BQ <duybq86@gmail.com>, 2021
 # Dung Nguyen Thi <dungnt@trobz.com>, 2021
 # Trần Hà <tranthuha13590@gmail.com>, 2021
+# Vo Thanh Thuy, 2022
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~14.5\n"
+"Project-Id-Version: Odoo Server 15.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-09-14 10:28+0000\n"
+"POT-Creation-Date: 2022-01-24 08:19+0000\n"
 "PO-Revision-Date: 2021-09-14 12:22+0000\n"
-"Last-Translator: Trần Hà <tranthuha13590@gmail.com>, 2021\n"
+"Last-Translator: Vo Thanh Thuy, 2022\n"
 "Language-Team: Vietnamese (https://www.transifex.com/odoo/teams/41243/vi/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -26,17 +27,17 @@ msgstr ""
 #: code:addons/hr_fleet/controllers/main.py:0
 #, python-format
 msgid "%(car_name)s (driven from: %(date_start)s to %(date_end)s)"
-msgstr "%(car_name)s (driven from: %(date_start)s to %(date_end)s)"
+msgstr "%(car_name)s (được lái từ: %(date_start)s tới %(date_end)s)"
 
 #. module: hr_fleet
 #: model_terms:ir.ui.view,arch_db:hr_fleet.fleet_vehicle_view_form_inherit_hr
 msgid "<span class=\"o_stat_text\">Employee</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">Nhân viên</span>"
 
 #. module: hr_fleet
 #: model_terms:ir.ui.view,arch_db:hr_fleet.view_employee_form
 msgid "Application Settings"
-msgstr ""
+msgstr "Cài đặt ứng dụng"
 
 #. module: hr_fleet
 #: model_terms:ir.ui.view,arch_db:hr_fleet.fleet_vehicle_assignation_log_view_list
@@ -47,13 +48,13 @@ msgstr "Tệp đính kèm"
 #: code:addons/hr_fleet/models/employee.py:0
 #, python-format
 msgid "Cannot remove address from employees with linked cars."
-msgstr ""
+msgstr "Không thể xóa địa chỉ của nhân viên có ô tô được liên kết."
 
 #. module: hr_fleet
 #: model:ir.model.fields,field_description:hr_fleet.field_hr_employee__employee_cars_count
 #: model:ir.model.fields,field_description:hr_fleet.field_res_users__employee_cars_count
 msgid "Cars"
-msgstr "Cars"
+msgstr "Ô tô"
 
 #. module: hr_fleet
 #: model_terms:ir.ui.view,arch_db:hr_fleet.res_users_view_form_preferences
@@ -69,7 +70,7 @@ msgstr "Xe công ty"
 #. module: hr_fleet
 #: model_terms:ir.ui.view,arch_db:hr_fleet.fleet_vehicle_view_search_inherit_hr
 msgid "Current Driver (Employee)"
-msgstr ""
+msgstr "Tài xế hiện tại (Nhân viên)"
 
 #. module: hr_fleet
 #: model:ir.model,name:hr_fleet.model_hr_departure_wizard
@@ -89,12 +90,12 @@ msgstr "Tài xế"
 #: model:ir.model.fields,field_description:hr_fleet.field_fleet_vehicle_odometer__driver_employee_id
 #: model_terms:ir.ui.view,arch_db:hr_fleet.fleet_vehicle_log_services_view_form_inherit_hr
 msgid "Driver (Employee)"
-msgstr ""
+msgstr "Tài xế (Nhân viên)"
 
 #. module: hr_fleet
 #: model:ir.model,name:hr_fleet.model_fleet_vehicle_assignation_log
 msgid "Drivers history on a vehicle"
-msgstr "Lịch sử tài xế của một phương tiện"
+msgstr "Lịch sử tài xế của phương tiện"
 
 #. module: hr_fleet
 #: model:ir.model,name:hr_fleet.model_hr_employee
@@ -105,7 +106,7 @@ msgstr "Nhân viên"
 #. module: hr_fleet
 #: model:ir.model.fields,field_description:hr_fleet.field_fleet_vehicle__driver_employee_name
 msgid "Employee Name"
-msgstr "Tên Nhân viên"
+msgstr "Tên nhân viên"
 
 #. module: hr_fleet
 #: model_terms:ir.ui.view,arch_db:hr_fleet.view_employee_form
@@ -116,7 +117,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:hr_fleet.field_fleet_vehicle__future_driver_employee_id
 #: model_terms:ir.ui.view,arch_db:hr_fleet.fleet_vehicle_view_search_inherit_hr
 msgid "Future Driver (Employee)"
-msgstr ""
+msgstr "Tài xế tương lai (Nhân viên)"
 
 #. module: hr_fleet
 #: model_terms:ir.ui.view,arch_db:hr_fleet.view_employee_filter
@@ -133,12 +134,12 @@ msgstr "Mobility Card"
 #. module: hr_fleet
 #: model:ir.model.fields,field_description:hr_fleet.field_fleet_vehicle_assignation_log__attachment_number
 msgid "Number of Attachments"
-msgstr "Số lượng đính kèm"
+msgstr "Số tệp đính kèm"
 
 #. module: hr_fleet
 #: model:ir.model,name:hr_fleet.model_fleet_vehicle_odometer
 msgid "Odometer log for a vehicle"
-msgstr "Nhật ký công tơ mét cho từng phương tiện"
+msgstr "Nhật ký công tơ mét cho phương tiện"
 
 #. module: hr_fleet
 #: model:ir.model,name:hr_fleet.model_hr_employee_public
@@ -149,7 +150,7 @@ msgstr "Public Employee"
 #: code:addons/hr_fleet/models/fleet_vehicle.py:0
 #, python-format
 msgid "Related Employee"
-msgstr ""
+msgstr "Nhân viên liên quan"
 
 #. module: hr_fleet
 #: model:ir.model.fields,field_description:hr_fleet.field_hr_departure_wizard__release_campany_car
@@ -164,7 +165,13 @@ msgstr ""
 #. module: hr_fleet
 #: model:ir.model,name:hr_fleet.model_fleet_vehicle_log_services
 msgid "Services for vehicles"
-msgstr "Các dịch vụ cho phương tiện"
+msgstr "Dịch vụ cho phương tiện"
+
+#. module: hr_fleet
+#: code:addons/hr_fleet/controllers/main.py:0
+#, python-format
+msgid "There is no pdf attached to generate a claim report."
+msgstr ""
 
 #. module: hr_fleet
 #: model_terms:ir.ui.view,arch_db:hr_fleet.res_users_view_form_preferences
@@ -173,13 +180,8 @@ msgid ""
 "This report will contain only PDF files. If you want all documents, please "
 "go on vehicle page. Do you want to proceed?"
 msgstr ""
-"This report will contain only PDF files. If you want all documents, please "
-"go on vehicle page. Do you want to proceed?"
-
-#. module: hr_fleet
-#: code:addons/hr_fleet/controllers/main.py:0
-msgid "There is no pdf attached to generate a claim report."
-msgstr ""
+"Báo cáo này chỉ chứa tệp PDF. Nếu bạn muốn tất cả tài liệu, vui lòng đi tới "
+"trang phương tiện. Bạn có muốn tiếp tục không?"
 
 #. module: hr_fleet
 #: model:ir.model,name:hr_fleet.model_res_users
@@ -194,9 +196,9 @@ msgstr "Phương tiện"
 #. module: hr_fleet
 #: model:ir.model,name:hr_fleet.model_fleet_vehicle_log_contract
 msgid "Vehicle Contract"
-msgstr "Vehicle Contract"
+msgstr "Hợp đồng phương tiện"
 
 #. module: hr_fleet
 #: model:ir.model.fields,field_description:hr_fleet.field_hr_employee__car_ids
 msgid "Vehicles (private)"
-msgstr ""
+msgstr "Phương tiện (tư nhân)"

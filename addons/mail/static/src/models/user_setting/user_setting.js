@@ -17,6 +17,8 @@ function factory(dependencies) {
             const res = super._created(...arguments);
             this._timeoutIds = {};
             this._loadLocalSettings();
+            this._onStorage = this._onStorage.bind(this);
+            browser.addEventListener('storage', this._onStorage);
             return res;
         }
 
@@ -24,6 +26,7 @@ function factory(dependencies) {
          * @override
          */
         _willDelete() {
+            browser.removeEventListener('storage', this._onStorage);
             for (const timeoutId of Object.values(this._timeoutIds)) {
                 browser.clearTimeout(timeoutId);
             }
@@ -227,13 +230,10 @@ function factory(dependencies) {
             const audioInputDeviceId = this.env.services.local_storage.getItem(
                 "mail_user_setting_audio_input_device_id"
             );
-            const voiceActivationThreshold = parseFloat(voiceActivationThresholdString);
-            if (voiceActivationThreshold > 0) {
-                this.update({
-                    voiceActivationThreshold,
-                    audioInputDeviceId,
-                });
-            }
+            this.update({
+                voiceActivationThreshold: voiceActivationThresholdString ? parseFloat(voiceActivationThresholdString) : undefined,
+                audioInputDeviceId: audioInputDeviceId || undefined,
+            });
         }
 
         /**
@@ -254,6 +254,17 @@ function factory(dependencies) {
                     { shadow: true },
                 ));
             }, 2000, 'globalSettings');
+        }
+
+        /**
+         * @private
+         * @param {Event} ev
+         */
+        async _onStorage(ev) {
+            if (ev.key === 'mail_user_setting_voice_threshold') {
+                this.update({ voiceActivationThreshold: ev.newValue });
+                await this.messaging.rtc.updateVoiceActivation();
+            }
         }
 
     }

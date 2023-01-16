@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo.tests.common import TransactionCase
+from odoo.tests.common import TransactionCase, users
 
 
 class TestSaleProject(TransactionCase):
@@ -81,14 +81,17 @@ class TestSaleProject(TransactionCase):
             'project_id': False,
         })
 
+        # Create partner
+        cls.partner = cls.env['res.partner'].create({'name': "Mur en béton"})
+
     def test_sale_order_with_project_task(self):
+        SaleOrder = self.env['sale.order'].with_context(tracking_disable=True)
         SaleOrderLine = self.env['sale.order.line'].with_context(tracking_disable=True)
 
-        partner = self.env['res.partner'].create({'name': "Mur en béton"})
-        sale_order = self.env['sale.order'].with_context(tracking_disable=True).create({
-            'partner_id': partner.id,
-            'partner_invoice_id': partner.id,
-            'partner_shipping_id': partner.id,
+        sale_order = SaleOrder.create({
+            'partner_id': self.partner.id,
+            'partner_invoice_id': self.partner.id,
+            'partner_shipping_id': self.partner.id,
         })
         so_line_order_no_task = SaleOrderLine.create({
             'name': self.product_order_service1.name,
@@ -139,3 +142,74 @@ class TestSaleProject(TransactionCase):
         # service_tracking 'project_only'
         self.assertFalse(so_line_order_only_project.task_id, "Task should not be created")
         self.assertTrue(so_line_order_only_project.project_id, "Sales order line should be linked to newly created project")
+
+        self.assertEqual(self.project_global._get_sale_order_items(), self.project_global.sale_line_id | self.project_global.tasks.sale_line_id, 'The _get_sale_order_items should returns all the SOLs linked to the project and its active tasks.')
+
+        sale_order_2 = SaleOrder.create({
+            'partner_id': self.partner.id,
+            'partner_invoice_id': self.partner.id,
+            'partner_shipping_id': self.partner.id,
+        })
+        sale_line_1_order_2 = SaleOrderLine.create({
+            'product_id': self.product_order_service1.id,
+            'product_uom_qty': 10,
+            'product_uom': self.product_order_service1.uom_id.id,
+            'price_unit': self.product_order_service1.list_price,
+            'order_id': sale_order_2.id,
+        })
+        task = self.env['project.task'].create({
+            'name': 'Task',
+            'sale_line_id': sale_line_1_order_2.id,
+            'project_id': self.project_global.id,
+        })
+        self.assertEqual(task.sale_line_id, sale_line_1_order_2)
+        self.assertIn(task.sale_line_id, self.project_global._get_sale_order_items())
+        self.assertEqual(self.project_global._get_sale_orders(), sale_order | sale_order_2)
+
+    def test_sol_product_type_update(self):
+        sale_order = self.env['sale.order'].with_context(tracking_disable=True).create({
+            'partner_id': self.partner.id,
+            'partner_invoice_id': self.partner.id,
+            'partner_shipping_id': self.partner.id,
+        })
+        self.product_order_service3.type = 'consu'
+        sale_order_line = self.env['sale.order.line'].create({
+            'order_id': sale_order.id,
+            'name': self.product_order_service3.name,
+            'product_id': self.product_order_service3.id,
+            'product_uom_qty': 5,
+            'product_uom': self.product_order_service3.uom_id.id,
+            'price_unit': self.product_order_service3.list_price
+        })
+        self.assertFalse(sale_order_line.is_service, "As the product is consumable, the SOL should not be a service")
+
+        self.product_order_service3.type = 'service'
+        self.assertTrue(sale_order_line.is_service, "As the product is a service, the SOL should be a service")
+
+    @users('demo')
+    def test_cancel_so_linked_to_project(self):
+        """ Test that cancelling a SO linked to a project will not raise an error """
+        # Ensure user don't have edit right access to the project
+        group_sale_manager = self.env.ref('sales_team.group_sale_manager')
+        group_project_user = self.env.ref('project.group_project_user')
+        self.env.user.write({'groups_id': [(6, 0, [group_sale_manager.id, group_project_user.id])]})
+
+        sale_order = self.env['sale.order'].with_context(tracking_disable=True).create({
+            'partner_id': self.partner.id,
+            'partner_invoice_id': self.partner.id,
+            'partner_shipping_id': self.partner.id,
+            'project_id': self.project_global.id,
+        })
+        sale_order_line = self.env['sale.order.line'].create({
+            'name': self.product_order_service2.name,
+            'product_id': self.product_order_service2.id,
+            'order_id': sale_order.id,
+        })
+        self.assertFalse(self.project_global.tasks.sale_line_id, "The project tasks should not be linked to the SOL")
+
+        sale_order.action_confirm()
+        self.assertEqual(self.project_global.tasks.sale_line_id.id, sale_order_line.id, "The project tasks should be linked to the SOL from the SO")
+
+        self.project_global.sale_line_id = sale_order_line
+        sale_order.action_cancel()
+        self.assertFalse(self.project_global.sale_line_id, "The project should not be linked to the SOL anymore")

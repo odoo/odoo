@@ -230,11 +230,11 @@ var HtmlPage = Class.extend(mixins.PropertiesMixin, {
         return window.location.origin + window.location.pathname;
     },
     title: function () {
-        return $('title').text().trim();
+        return $('head title').text().trim();
     },
     changeTitle: function (title) {
         // TODO create tag if missing
-        $('title').text(title.trim() || this.defaultTitle);
+        $('head title').text(title.trim() || this.defaultTitle);
         this.trigger('title-changed', title);
     },
     description: function () {
@@ -423,9 +423,9 @@ var MetaTitleDescription = Widget.extend({
     _seoNameChanged: function () {
         var self = this;
         // don't use _, because we need to keep trailing whitespace during edition
-        const slugified = this.$seoName.val().toString().toLowerCase()
+        const slugified = this.$seoName.val().toString().trim().normalize('NFKD').toLowerCase()
             .replace(/\s+/g, '-')           // Replace spaces with -
-            .replace(/[^\w\-]+/g, '-')      // Remove all non-word chars
+            .replace(/[^\w\-]+/g, '')       // Remove all non-word chars
             .replace(/\-\-+/g, '-');        // Replace multiple - with single -
         this.$seoName.val(slugified);
         self._renderPreview();

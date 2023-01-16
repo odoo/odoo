@@ -2,9 +2,11 @@
 from __future__ import print_function
 from textwrap import dedent
 import copy
+import io
 import logging
 import re
 import markupsafe
+import tokenize
 from lxml import html, etree
 
 from odoo import api, models, tools
@@ -376,6 +378,55 @@ class IrQWeb(models.AbstractModel, QWeb):
 
         :param expr: string
         """
-        namespace_expr = super()._compile_expr(expr, raise_on_missing=raise_on_missing)
+        readable = io.BytesIO(expr.strip().encode('utf-8'))
+        try:
+            tokens = list(tokenize.tokenize(readable.readline))
+        except tokenize.TokenError:
+            raise ValueError(f"Cannot compile expression: {expr}")
+
+        namespace_expr = self._compile_expr_tokens(tokens, self._allowed_keyword + list(self._available_objects.keys()), raise_on_missing=raise_on_missing)
+
         assert_valid_codeobj(_SAFE_QWEB_OPCODES, compile(namespace_expr, '<>', 'eval'), expr)
         return namespace_expr
+
+
+def render(template_name, values, load, **options):
+    """ Rendering of a qweb template without database and outside the registry.
+    (Widget, field, or asset rendering is not implemented.)
+    :param (string|int) template_name: template identifier
+    :param dict values: template values to be used for rendering
+    :param def load: function like `load(template_name, options)` which
+        returns an etree from the given template name (from initial rendering
+        or template `t-call`).
+    :param options: used to compile the template (the dict available for the
+        rendering is frozen)
+    :returns: bytes marked as markup-safe (decode to :class:`markupsafe.Markup`
+                instead of `str`)
+    :rtype: MarkupSafe
+    """
+    class MockPool:
+        db_name = None
+        _Registry__cache = {}
+
+    class MockIrQWeb(IrQWeb):
+        _register = False               # not visible in real registry
+
+        pool = MockPool()
+
+        def _get_field(self, *args):
+            raise NotImplementedError("Fields are not allowed in this rendering mode. Please use \"env['ir.qweb']._render\" method")
+
+        def _get_widget(self, *args):
+            raise NotImplementedError("Widgets are not allowed in this rendering mode. Please use \"env['ir.qweb']._render\" method")
+
+        def _get_asset_nodes(self, *args):
+            raise NotImplementedError("Assets are not allowed in this rendering mode. Please use \"env['ir.qweb']._render\" method")
+
+    class MockEnv(dict):
+        def __init__(self):
+            super().__init__()
+            self.context = {}
+
+    renderer = object.__new__(MockIrQWeb)
+    renderer.env = MockEnv()
+    return renderer._render(template_name, values, load=load, **options)

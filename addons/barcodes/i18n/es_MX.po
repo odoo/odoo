@@ -4,7 +4,7 @@
 # 
 # Translators:
 # Martin Trigaux, 2021
-# Braulio D. López Vázquez <bdl@odoo.com>, 2021
+# Braulio D. López Vázquez <bdl@odoo.com>, 2022
 # 
 msgid ""
 msgstr ""
@@ -12,13 +12,13 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-07-12 07:50+0000\n"
 "PO-Revision-Date: 2021-09-14 12:20+0000\n"
-"Last-Translator: Braulio D. López Vázquez <bdl@odoo.com>, 2021\n"
+"Last-Translator: Braulio D. López Vázquez <bdl@odoo.com>, 2022\n"
 "Language-Team: Spanish (Mexico) (https://www.transifex.com/odoo/teams/41243/es_MX/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: es_MX\n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"Plural-Forms: nplurals=3; plural=n == 1 ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;\n"
 
 #. module: barcodes
 #: code:addons/barcodes/models/barcode_rule.py:0
@@ -35,7 +35,7 @@ msgid ""
 "                                pattern. The pattern syntax is that of regular expression, and a barcode is matched\n"
 "                                if the regular expression matches a prefix of the barcode."
 msgstr ""
-"Las <i>nomenclaturas de códigos de barras</i> definen cómo se reconocen y categorízan los códigos de barras.\n"
+"Las <i>nomenclaturas de códigos de barras</i> definen cómo se reconocen y categorizan los códigos de barras.\n"
 "                                Cuando se escanea un código de barras, se asocia a la <i>primera</i> regla con un patrón\n"
 "                                coincidente. La sintaxis del patrón es la de una expresión regular, y un código de barras se empareja\n"
 "                                si la expresión regular coincide con el prefijo de un código de barras."
@@ -85,7 +85,7 @@ msgstr "Cualquiera"
 #. module: barcodes
 #: model:ir.model,name:barcodes.model_barcodes_barcode_events_mixin
 msgid "Barcode Event Mixin"
-msgstr "Evento Mixin en el código de barras"
+msgstr "Mixin de eventos de código de barras"
 
 #. module: barcodes
 #: model:ir.model,name:barcodes.model_barcode_nomenclature
@@ -93,13 +93,13 @@ msgstr "Evento Mixin en el código de barras"
 #: model:ir.model.fields,field_description:barcodes.field_barcode_rule__barcode_nomenclature_id
 #: model_terms:ir.ui.view,arch_db:barcodes.view_barcode_nomenclature_form
 msgid "Barcode Nomenclature"
-msgstr "Nomenclatura del código de barras"
+msgstr "Nomenclatura de códigos de barras"
 
 #. module: barcodes
 #: model:ir.actions.act_window,name:barcodes.action_barcode_nomenclature_form
 #: model_terms:ir.ui.view,arch_db:barcodes.view_barcode_nomenclature_tree
 msgid "Barcode Nomenclatures"
-msgstr "Nomenclaturas del código de barras"
+msgstr "Nomenclaturas de códigos de barras"
 
 #. module: barcodes
 #: model:ir.model.fields,field_description:barcodes.field_barcode_rule__pattern
@@ -110,7 +110,7 @@ msgstr "Patrón de código de barras"
 #: model:ir.model,name:barcodes.model_barcode_rule
 #: model_terms:ir.ui.view,arch_db:barcodes.view_barcode_rule_form
 msgid "Barcode Rule"
-msgstr "Regla del código de barras"
+msgstr "Regla de código de barras"
 
 #. module: barcodes
 #: model:ir.model.fields,field_description:barcodes.field_barcodes_barcode_events_mixin___barcode_scanned
@@ -183,7 +183,7 @@ msgstr "Enrutamiento HTTP "
 #: model:ir.model.fields,field_description:barcodes.field_barcode_nomenclature__id
 #: model:ir.model.fields,field_description:barcodes.field_barcode_rule__id
 msgid "ID"
-msgstr "Identificación"
+msgstr "ID"
 
 #. module: barcodes
 #: model:ir.model.fields,field_description:barcodes.field_barcode_nomenclature____last_update
@@ -329,8 +329,8 @@ msgid ""
 "This rule will apply only if the barcode is encoded with the specified "
 "encoding"
 msgstr ""
-"Esta regla solo aplicará si el código de barras está codificado con la "
-"codificación especificada"
+"Esta regla solo aplicará si el código de barras tiene la codificación "
+"especificada"
 
 #. module: barcodes
 #: model:ir.model.fields,field_description:barcodes.field_barcode_rule__type
@@ -344,7 +344,7 @@ msgid ""
 "setting determines if a UPC/EAN barcode should be automatically converted in"
 " one way or another when trying to match a rule with the other encoding."
 msgstr ""
-"Los códigos UPC se pueden convertir a EAN al utilizar cero como su prefjio. "
+"Los códigos UPC se pueden convertir a EAN al utilizar cero como su prefijo. "
 "Este ajuste determina si un código de barras UPC/EAN se debe convertir "
 "automáticamente en uno u otro sentido al buscar una coincidencia de regla "
 "con la otra codificación."

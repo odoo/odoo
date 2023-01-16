@@ -52,7 +52,16 @@ class MailPluginController(mail_plugin.MailPluginController):
         return leads
 
     def _get_contact_data(self, partner):
+        """
+        Return the leads key only if the current user can create leads. So, if he can not
+        create leads, the section won't be visible on the addin side (like if the CRM
+        module was not installed on the database).
+        """
         contact_values = super(MailPluginController, self)._get_contact_data(partner)
+
+        if not request.env['crm.lead'].check_access_rights('create', raise_exception=False):
+            return contact_values
+
         if not partner:
             contact_values['leads'] = []
         else:
@@ -60,7 +69,13 @@ class MailPluginController(mail_plugin.MailPluginController):
         return contact_values
 
     def _mail_content_logging_models_whitelist(self):
-        return super(MailPluginController, self)._mail_content_logging_models_whitelist() + ['crm.lead']
+        models_whitelist = super(MailPluginController, self)._mail_content_logging_models_whitelist()
+        if not request.env['crm.lead'].check_access_rights('create', raise_exception=False):
+            return models_whitelist
+        return models_whitelist + ['crm.lead']
 
     def _translation_modules_whitelist(self):
-        return super(MailPluginController, self)._translation_modules_whitelist() + ['crm_mail_plugin']
+        modules_whitelist = super(MailPluginController, self)._translation_modules_whitelist()
+        if not request.env['crm.lead'].check_access_rights('create', raise_exception=False):
+            return modules_whitelist
+        return modules_whitelist + ['crm_mail_plugin']

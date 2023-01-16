@@ -244,6 +244,7 @@ odoo.define('point_of_sale.Chrome', function(require) {
         }
         __closeTempScreen() {
             this.tempScreen.isShown = false;
+            this.tempScreen.name = null;
         }
         __showScreen({ detail: { name, props = {} } }) {
             const component = this.constructor.components[name];
@@ -538,6 +539,9 @@ odoo.define('point_of_sale.Chrome', function(require) {
                 });
                 console.error('Unknown error. Unable to show information about this error.', errorToHandle);
             }
+        }
+        _shouldResetIdleTimer() {
+            return true;
         }
     }
     Chrome.template = 'Chrome';

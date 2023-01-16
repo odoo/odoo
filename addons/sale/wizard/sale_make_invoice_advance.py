@@ -97,7 +97,7 @@ class SaleAdvancePaymentInv(models.TransientModel):
                 'tax_ids': [(6, 0, so_line.tax_id.ids)],
                 'sale_line_ids': [(6, 0, [so_line.id])],
                 'analytic_tag_ids': [(6, 0, so_line.analytic_tag_ids.ids)],
-                'analytic_account_id': order.analytic_account_id.id or False,
+                'analytic_account_id': order.analytic_account_id.id if not so_line.display_type and order.analytic_account_id.id else False,
             })],
         }
 
@@ -106,7 +106,10 @@ class SaleAdvancePaymentInv(models.TransientModel):
     def _get_advance_details(self, order):
         context = {'lang': order.partner_id.lang}
         if self.advance_payment_method == 'percentage':
-            amount = order.amount_untaxed * self.amount / 100
+            if all(self.product_id.taxes_id.mapped('price_include')):
+                amount = order.amount_total * self.amount / 100
+            else:
+                amount = order.amount_untaxed * self.amount / 100
             name = _("Down payment of %s%%") % (self.amount)
         else:
             amount = self.fixed_amount
@@ -186,7 +189,7 @@ class SaleAdvancePaymentInv(models.TransientModel):
 
     def _prepare_deposit_product(self):
         return {
-            'name': 'Down payment',
+            'name': _('Down payment'),
             'type': 'service',
             'invoice_policy': 'order',
             'property_account_income_id': self.deposit_account_id.id,

@@ -4,6 +4,7 @@
 # 
 # Translators:
 # Martin Trigaux, 2021
+# Friederike Fasterling-Nesselbosch, 2022
 # 
 msgid ""
 msgstr ""
@@ -11,7 +12,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-07-12 07:50+0000\n"
 "PO-Revision-Date: 2021-09-14 12:20+0000\n"
-"Last-Translator: Martin Trigaux, 2021\n"
+"Last-Translator: Friederike Fasterling-Nesselbosch, 2022\n"
 "Language-Team: German (https://www.transifex.com/odoo/teams/41243/de/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -35,6 +36,17 @@ msgid ""
 "        (|(mail=%s)(uid=%s))\n"
 "    "
 msgstr ""
+"Filter für die Suche nach Benutzerkonten in der LDAP-Datenbank. Es ist ein beliebiger LDAP-Filter in String-Darstellung. Jeder `%s` Platzhalter wird durch die vom Benutzer angegebene Anmeldung (Kennung) ersetzt, der Filter sollte mindestens einen solchen Platzhalter enthalten.\n"
+"\n"
+"Der Filter muss genau ein (1) Ergebnis liefern, andernfalls wird die Anmeldung als ungültig betrachtet.\n"
+"\n"
+"Beispiel (die tatsächlichen Attribute hängen vom LDAP-Server und der Einrichtung ab):\n"
+"\n"
+"(&(objectCategory=person)(objectClass=user)(sAMAccountName=%s))\n"
+"\n"
+"oder\n"
+"\n"
+"(|(mail=%s)(uid=%s))"
 
 #. module: auth_ldap
 #: model:ir.model.fields,help:auth_ldap.field_res_company_ldap__create_user
@@ -86,6 +98,8 @@ msgid ""
 "DN of the user search scope: all descendants of this base will be searched "
 "for users."
 msgstr ""
+"DN des Benutzersuchbereichs: alle untergeordneten Ebenen dieser Basis werden"
+" nach Benutzern durchsucht."
 
 #. module: auth_ldap
 #: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap__display_name

@@ -441,14 +441,47 @@ QUnit.module("Search", (hooks) => {
         }
     );
 
-    QUnit.test("custom filter datetime with equal operator", async function (assert) {
-        assert.expect(4);
+    QUnit.test("custom filter date with equal operator", async function (assert) {
+        assert.expect(2);
 
         const originalZoneName = luxon.Settings.defaultZoneName;
         luxon.Settings.defaultZoneName = new luxon.FixedOffsetZone.instance(-240);
         registerCleanup(() => {
             luxon.Settings.defaultZoneName = originalZoneName;
         });
+
+        patchDate(2017, 1, 22, 12, 30, 0);
+
+        const controlPanel = await makeWithSearch({
+            serverData,
+            resModel: "foo",
+            Component: ControlPanel,
+            searchViewId: false,
+            searchMenuTypes: ["filter"],
+        });
+
+        await toggleFilterMenu(controlPanel);
+        await toggleAddCustomFilter(controlPanel);
+
+        await editConditionField(controlPanel, 0, "date_field");
+        await editConditionOperator(controlPanel, 0, "=");
+        await editConditionValue(controlPanel, 0, "01/01/2017");
+        await applyFilter(controlPanel);
+
+        assert.deepEqual(getFacetTexts(controlPanel), ['A date is equal to "01/01/2017"']);
+        assert.deepEqual(getDomain(controlPanel), [["date_field", "=", "2017-01-01"]]);
+    });
+
+    QUnit.test("custom filter datetime with equal operator", async function (assert) {
+        assert.expect(5);
+
+        const originalZoneName = luxon.Settings.defaultZoneName;
+        luxon.Settings.defaultZoneName = new luxon.FixedOffsetZone.instance(-240);
+        registerCleanup(() => {
+            luxon.Settings.defaultZoneName = originalZoneName;
+        });
+
+        patchDate(2017, 1, 22, 12, 30, 0);
 
         const controlPanel = await makeWithSearch({
             serverData,
@@ -470,6 +503,12 @@ QUnit.module("Search", (hooks) => {
         assert.strictEqual(
             controlPanel.el.querySelector(".o_generator_menu_operator").value,
             "between"
+        );
+        assert.deepEqual(
+            [...controlPanel.el.querySelectorAll(".o_generator_menu_value input")].map(
+                (v) => v.value
+            ),
+            ["02/22/2017 00:00:00", "02/22/2017 23:59:59"]
         );
 
         await editConditionOperator(controlPanel, 0, "=");
@@ -489,13 +528,15 @@ QUnit.module("Search", (hooks) => {
     });
 
     QUnit.test("custom filter datetime between operator", async function (assert) {
-        assert.expect(4);
+        assert.expect(5);
 
         const originalZoneName = luxon.Settings.defaultZoneName;
         luxon.Settings.defaultZoneName = new luxon.FixedOffsetZone.instance(-240);
         registerCleanup(() => {
             luxon.Settings.defaultZoneName = originalZoneName;
         });
+
+        patchDate(2017, 1, 22, 12, 30, 0);
 
         const controlPanel = await makeWithSearch({
             serverData,
@@ -516,6 +557,12 @@ QUnit.module("Search", (hooks) => {
         assert.strictEqual(
             controlPanel.el.querySelector(".o_generator_menu_operator").value,
             "between"
+        );
+        assert.deepEqual(
+            [...controlPanel.el.querySelectorAll(".o_generator_menu_value input")].map(
+                (v) => v.value
+            ),
+            ["02/22/2017 00:00:00", "02/22/2017 23:59:59"]
         );
 
         await editConditionValue(controlPanel, 0, "02/22/2017 11:00:00", 0); // in TZ

@@ -13,14 +13,14 @@
 # Sanjaajamts Badamjunai <b.sanjaajamtsfc@gmail.com>, 2021
 # Munkhbaatar g <muuguu17@gmail.com>, 2021
 # tumenjargal hadbaatar <tumenjargal7903@gmail.com>, 2021
-# Baskhuu Lodoikhuu <baskhuujacara@gmail.com>, 2021
 # Martin Trigaux, 2021
 # Ganbaatar Buriad <Ganbaatar@asterisk-tech.mn>, 2021
 # Baasansuren Sharavsuren <baasansuren@bumanit.mn>, 2021
 # tserendavaa tsogtoo <tseegii011929@gmail.com>, 2021
 # Uuganbayar Batbaatar <uuganaaub33@gmail.com>, 2021
 # Nasanochir L, 2021
-# Bayarkhuu Bataa, 2021
+# Baskhuu Lodoikhuu <baskhuujacara@gmail.com>, 2022
+# Bayarkhuu Bataa, 2022
 # 
 msgid ""
 msgstr ""
@@ -28,7 +28,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-10-05 10:53+0000\n"
 "PO-Revision-Date: 2021-09-14 12:22+0000\n"
-"Last-Translator: Bayarkhuu Bataa, 2021\n"
+"Last-Translator: Bayarkhuu Bataa, 2022\n"
 "Language-Team: Mongolian (https://www.transifex.com/odoo/teams/41243/mn/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -167,7 +167,7 @@ msgstr ""
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.report_holidayssummary
 msgid "&gt;"
-msgstr ""
+msgstr "&gt;"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.report_holidayssummary
@@ -622,6 +622,9 @@ msgid ""
 "                                    From\n"
 "                                </span>"
 msgstr ""
+"<span class=\"oe_inline\" attrs=\"{'invisible': ['|', ('request_unit_half', '=', True), ('request_unit_hours', '=', True)]}\">\n"
+"                                    Эхлэх\n"
+"                                </span>"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_view_form
@@ -1882,7 +1885,7 @@ msgstr "Хагас өдөр"
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__has_message
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_allocation__has_message
 msgid "Has Message"
-msgstr ""
+msgstr "Мессежтэй"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_type__has_valid_allocation
@@ -3084,7 +3087,7 @@ msgstr ""
 #: model:mail.message.subtype,description:hr_holidays.mt_leave_sick
 #: model:mail.message.subtype,name:hr_holidays.mt_leave_sick
 msgid "Sick Time Off"
-msgstr "Өвчтэй чөлөө"
+msgstr "Өвчний чөлөө"
 
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave_accrual_plan__time_off_type_id
@@ -3263,6 +3266,8 @@ msgid ""
 "The following employees are not supposed to work during that period:\n"
 " %s"
 msgstr ""
+"Дараах ажилчид уг хугацааны мөчлөгт ажиллах хуваарьгүй байна:\n"
+" %s"
 
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave_accrual_level__added_value
@@ -3280,6 +3285,15 @@ msgid ""
 msgstr ""
 "Энэ чөлөөний төрөлд хүсэлт үүсгэхэд чөлөөний үлдэгдэл хүрэлцэхгүй байна.\n"
 "Чөлөөний үлдэгдэл болон хянагдаж буй төлөвтэй чөлөөний хүсэлтүүдээ шалгана уу."
+
+#. module: hr_holidays
+#: code:addons/hr_holidays/models/hr_leave.py:0
+#, python-format
+msgid ""
+"\n"
+"The employees that lack allocation days are:\n"
+"%s"
+msgstr ""
 
 #. module: hr_holidays
 #: model:ir.model.constraint,message:hr_holidays.constraint_hr_leave_date_check2
@@ -3439,7 +3453,7 @@ msgstr "Чөлөөний хувиарлалт"
 #: model:ir.actions.act_window,name:hr_holidays.hr_leave_action_action_department
 #, python-format
 msgid "Time Off Analysis"
-msgstr "Чөлөөнийй шинжилгээ"
+msgstr "Чөлөөний шинжилгээ"
 
 #. module: hr_holidays
 #: model:mail.activity.type,name:hr_holidays.mail_act_leave_approval
@@ -3949,7 +3963,7 @@ msgstr "Тийм"
 #: code:addons/hr_holidays/models/hr_leave.py:0
 #, python-format
 msgid "You can not have 2 time off that overlaps on the same day."
-msgstr ""
+msgstr "Нэг өдөр 2 чөлөө давхардаж болохгүй."
 
 #. module: hr_holidays
 #: code:addons/hr_holidays/models/hr_leave.py:0
@@ -3957,7 +3971,7 @@ msgstr ""
 msgid ""
 "You can not set 2 time off that overlaps on the same day for the same "
 "employee."
-msgstr ""
+msgstr "Тухайн ажилтны хувьд нэг өдөр 2 чөлөө давхардаж болохгүй."
 
 #. module: hr_holidays
 #: model:ir.model.constraint,message:hr_holidays.constraint_hr_leave_accrual_level_start_count_check
@@ -3983,6 +3997,13 @@ msgid "You cannot delete an allocation request which is in %s state."
 msgstr ""
 
 #. module: hr_holidays
+#: code:addons/hr_holidays/models/hr_leave_allocation.py:0
+#, python-format
+msgid ""
+"You cannot delete an allocation request which has some validated leaves."
+msgstr ""
+
+#. module: hr_holidays
 #: code:addons/hr_holidays/models/hr_leave.py:0
 #, python-format
 msgid ""
@@ -3995,6 +4016,20 @@ msgstr ""
 #, python-format
 msgid ""
 "You don't have the rights to apply second approval on a time off request"
+msgstr ""
+
+#. module: hr_holidays
+#: code:addons/hr_holidays/models/hr_leave.py:0
+#, python-format
+msgid ""
+"You have several allocations for those type and period.\n"
+"Please split your request to fit in their number of days."
+msgstr ""
+
+#. module: hr_holidays
+#: code:addons/hr_holidays/models/hr_leave.py:0
+#, python-format
+msgid "You must be %s\\'s Manager to approve this leave"
 msgstr ""
 
 #. module: hr_holidays
@@ -4014,6 +4049,8 @@ msgstr ""
 "эрхтэй байх ёстой"
 
 #. module: hr_holidays
+#. module: hr_holidays
+#: code:addons/hr_holidays/models/hr_leave_allocation.py:0
 #: model:ir.model.constraint,message:hr_holidays.constraint_hr_leave_accrual_level_added_value_greater_than_zero
 msgid "You must give a rate greater than 0 in accrual plan levels."
 msgstr ""

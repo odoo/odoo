@@ -88,6 +88,52 @@ class TestSlidesManagement(slides_common.SlidesCase):
                 for mail in created_mails)
         )
 
+    def test_mail_completed_with_different_templates(self):
+        """ When the completion email is generated, it must take into account different templates. """
+
+        mail_template = self.env['mail.template'].create({
+            'model_id': self.env['ir.model']._get('slide.channel.partner').id, 
+            'name': 'test template',
+            'partner_to': '{{ object.partner_id.id }}',
+            'body_html': '<p>TestBodyTemplate2</p>',
+            'subject': 'ATestSubject'
+        })
+        channel_2 = self.env['slide.channel'].create({
+            'name': 'Test Course 2',
+            'slide_ids': [(0, 0, {
+                'name': 'Test Slide 2'
+            })],
+            'completed_template_id': mail_template.id
+        })
+        self.channel.completed_template_id.body_html = '<p>TestBodyTemplate</p>'
+
+        all_channels = self.channel | channel_2 
+        all_channels.sudo()._action_add_members(self.user_officer.partner_id)
+
+        with self.mock_mail_gateway():
+            self.env['slide.slide.partner'].create([
+                {'channel_id': self.channel.id,
+                'completed': True,
+                'partner_id': self.user_officer.partner_id.id,
+                'slide_id': slide.id,
+                }
+                for slide in all_channels.slide_content_ids
+            ])
+        slide_created_mails = self._new_mails.filtered(lambda m: m.model == 'slide.channel.partner')
+        # 2 mails should be generated from two different templates:
+        # the default template and the new one
+        self.assertEqual(len(slide_created_mails), 2)
+
+        self.assertEqual(
+            slide_created_mails.mapped('body'),
+            ['<p>TestBodyTemplate</p>', '<p>TestBodyTemplate2</p>']
+        )
+
+        self.assertEqual(
+            slide_created_mails.mapped('subject'),
+            ['Congratulation! You completed %s' % self.channel.name, 'ATestSubject']
+        )
+
 
 class TestSequencing(slides_common.SlidesCase):
 

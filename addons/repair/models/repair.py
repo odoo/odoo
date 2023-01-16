@@ -132,7 +132,8 @@ class Repair(models.Model):
         for order in self:
             total = sum(operation.price_subtotal for operation in order.operations)
             total += sum(fee.price_subtotal for fee in order.fees_lines)
-            order.amount_untaxed = order.pricelist_id.currency_id.round(total)
+            currency = order.pricelist_id.currency_id or self.env.company.currency_id
+            order.amount_untaxed = currency.round(total)
 
     @api.depends('operations.price_unit', 'operations.product_uom_qty', 'operations.product_id',
                  'fees_lines.price_unit', 'fees_lines.product_uom_qty', 'fees_lines.product_id',
@@ -140,14 +141,15 @@ class Repair(models.Model):
     def _amount_tax(self):
         for order in self:
             val = 0.0
+            currency = order.pricelist_id.currency_id or self.env.company.currency_id
             for operation in order.operations:
                 if operation.tax_id:
-                    tax_calculate = operation.tax_id.compute_all(operation.price_unit, order.pricelist_id.currency_id, operation.product_uom_qty, operation.product_id, order.partner_id)
+                    tax_calculate = operation.tax_id.compute_all(operation.price_unit, currency, operation.product_uom_qty, operation.product_id, order.partner_id)
                     for c in tax_calculate['taxes']:
                         val += c['amount']
             for fee in order.fees_lines:
                 if fee.tax_id:
-                    tax_calculate = fee.tax_id.compute_all(fee.price_unit, order.pricelist_id.currency_id, fee.product_uom_qty, fee.product_id, order.partner_id)
+                    tax_calculate = fee.tax_id.compute_all(fee.price_unit, currency, fee.product_uom_qty, fee.product_id, order.partner_id)
                     for c in tax_calculate['taxes']:
                         val += c['amount']
             order.amount_tax = val
@@ -155,7 +157,8 @@ class Repair(models.Model):
     @api.depends('amount_untaxed', 'amount_tax')
     def _amount_total(self):
         for order in self:
-            order.amount_total = order.pricelist_id.currency_id.round(order.amount_untaxed + order.amount_tax)
+            currency = order.pricelist_id.currency_id or self.env.company.currency_id
+            order.amount_total = currency.round(order.amount_untaxed + order.amount_tax)
 
     _sql_constraints = [
         ('name', 'unique (name)', 'The name of the Repair Order must be unique!'),
@@ -375,7 +378,7 @@ class Repair(models.Model):
                 else:
                     name = operation.name
 
-                account = operation.product_id.product_tmpl_id._get_product_accounts()['income']
+                account = operation.product_id.product_tmpl_id.get_product_accounts(fiscal_pos=fpos)['income']
                 if not account:
                     raise UserError(_('No account defined for product "%s".', operation.product_id.name))
 
@@ -417,7 +420,7 @@ class Repair(models.Model):
                 if not fee.product_id:
                     raise UserError(_('No product defined on fees.'))
 
-                account = fee.product_id.product_tmpl_id._get_product_accounts()['income']
+                account = fee.product_id.product_tmpl_id.get_product_accounts(fiscal_pos=fpos)['income']
                 if not account:
                     raise UserError(_('No account defined for product "%s".', fee.product_id.name))
 

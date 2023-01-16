@@ -25,6 +25,16 @@ const getContextGroubBy = (context) => {
     }
 };
 
+function reduceType(type) {
+    if (type === "dateFilter") {
+        return "filter";
+    }
+    if (type === "dateGroupBy") {
+        return "groupBy";
+    }
+    return type;
+}
+
 export class SearchArchParser extends XMLParser {
     constructor(searchViewDescription, searchDefaults = {}, searchPanelDefaults = {}) {
         super();
@@ -86,7 +96,7 @@ export class SearchArchParser extends XMLParser {
 
     pushGroup(tag = null) {
         if (this.currentGroup.length) {
-            if (this.currentTag && ["groupBy", "dateGroupBy"].includes(this.currentTag)) {
+            if (this.currentTag === "groupBy") {
                 this.pregroupOfGroupBys.push(...this.currentGroup);
             } else {
                 this.preSearchItems.push(this.currentGroup);
@@ -152,7 +162,7 @@ export class SearchArchParser extends XMLParser {
                     preField.defaultAutocompleteValue.label = option[1];
                 } else if (fieldType === "many2one") {
                     this.labels.push((orm) => {
-                        orm.call(relation, "name_get", [value], { context }).then((results) => {
+                        return orm.call(relation, "name_get", [value], { context }).then((results) => {
                             preField.defaultAutocompleteValue.label = results[0][1];
                         });
                     });
@@ -189,8 +199,8 @@ export class SearchArchParser extends XMLParser {
                 preSearchItem.context = context;
             }
         }
-        if (preSearchItem.type !== this.currentTag) {
-            this.pushGroup(preSearchItem.type);
+        if (reduceType(preSearchItem.type) !== this.currentTag) {
+            this.pushGroup(reduceType(preSearchItem.type));
         }
         if (preSearchItem.type === "filter") {
             if (node.hasAttribute("date")) {

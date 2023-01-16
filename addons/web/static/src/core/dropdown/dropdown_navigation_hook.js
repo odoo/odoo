@@ -115,6 +115,7 @@ export function useDropdownNavigation() {
                 }
                 // Make myself active
                 navTarget.classList.add(ACTIVE_MENU_ELEMENT_CLASS);
+                navTarget.focus();
             };
 
             /** @type {MenuElement} */
@@ -201,7 +202,16 @@ export function useDropdownNavigation() {
 
     // Set up keyboard navigation ----------------------------------------------
     const hotkeyService = useService("hotkey");
-    const closeSubDropdown = comp.hasParentDropdown ? comp.close : () => {};
+    const closeAndRefocus = () => {
+        const toFocus =
+            comp.props.toggler === "parent"
+                ? comp.el.parentElement
+                : comp.el.querySelector(":scope > .dropdown-toggle");
+        comp.close().then(() => {
+            toFocus.focus();
+        });
+    };
+    const closeSubDropdown = comp.hasParentDropdown ? closeAndRefocus : () => {};
     const openSubDropdown = () => {
         const menuElement = getActiveMenuElement();
         // Active menu element is a sub dropdown
@@ -230,7 +240,7 @@ export function useDropdownNavigation() {
         arrowleft: localization.direction === "rtl" ? openSubDropdown : closeSubDropdown,
         arrowright: localization.direction === "rtl" ? closeSubDropdown : openSubDropdown,
         enter: selectActiveMenuElement,
-        escape: comp.close,
+        escape: closeAndRefocus,
     };
     useEffect(
         (open) => {

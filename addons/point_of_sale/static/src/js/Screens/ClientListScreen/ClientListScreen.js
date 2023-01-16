@@ -5,6 +5,8 @@ odoo.define('point_of_sale.ClientListScreen', function(require) {
     const PosComponent = require('point_of_sale.PosComponent');
     const Registries = require('point_of_sale.Registries');
     const { useListener } = require('web.custom_hooks');
+    const { isConnectionError } = require('point_of_sale.utils');
+    const { useAsyncLockedMethod } = require('point_of_sale.custom_hooks');
 
     /**
      * Render this screen using `showTempScreen` to select client.
@@ -24,9 +26,10 @@ odoo.define('point_of_sale.ClientListScreen', function(require) {
     class ClientListScreen extends PosComponent {
         constructor() {
             super(...arguments);
+            this.lockedSaveChanges = useAsyncLockedMethod(this.saveChanges);
             useListener('click-save', () => this.env.bus.trigger('save-customer'));
             useListener('click-edit', () => this.editClient());
-            useListener('save-changes', this.saveChanges);
+            useListener('save-changes', this.lockedSaveChanges);
 
             // We are not using useState here because the object
             // passed to useState converts the object and its contents
@@ -98,7 +101,6 @@ odoo.define('point_of_sale.ClientListScreen', function(require) {
         // We declare this event handler as a debounce function in
         // order to lower its trigger rate.
         async updateClientList(event) {
-            var newClientList = await this.getNewClient();
             this.state.query = event.target.value;
             const clients = this.clients;
             if (event.code === 'Enter' && clients.length === 1) {
@@ -162,7 +164,7 @@ odoo.define('point_of_sale.ClientListScreen', function(require) {
                 this.state.detailIsShown = false;
                 this.render();
             } catch (error) {
-                if (error.message.code < 0) {
+                if (isConnectionError(error)) {
                     await this.showPopup('OfflineErrorPopup', {
                         title: this.env._t('Offline'),
                         body: this.env._t('Unable to save changes.'),
@@ -189,7 +191,11 @@ odoo.define('point_of_sale.ClientListScreen', function(require) {
         async getNewClient() {
             var domain = [];
             if(this.state.query) {
-                domain = [["name", "ilike", this.state.query + "%"]];
+                domain = [
+                    '|',
+                    ["display_name", "ilike", this.state.query],
+                    ["email", "ilike", this.state.query],
+                    ];
             }
             var fields = _.find(this.env.pos.models, function(model){ return model.label === 'load_partners'; }).fields;
             var result = await this.rpc({

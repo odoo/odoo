@@ -35,11 +35,47 @@ options.registry.mailing_list_subscribe = options.Class.extend({
             });
         }
     },
+    /**
+     * @override
+     */
+    cleanForSave() {
+        const previewClasses = ['o_disable_preview', 'o_enable_preview'];
+        this.$target[0].querySelector('.js_subscribe_btn').classList.remove(...previewClasses);
+        this.$target[0].querySelector('.js_subscribed_btn').classList.remove(...previewClasses);
+    },
+
+    //--------------------------------------------------------------------------
+    // Options
+    //--------------------------------------------------------------------------
+
+    /**
+     * @see this.selectClass for parameters
+     */
+    toggleThanksButton(previewMode, widgetValue, params) {
+        const subscribeBtnEl = this.$target[0].querySelector('.js_subscribe_btn');
+        const thanksBtnEl = this.$target[0].querySelector('.js_subscribed_btn');
+
+        thanksBtnEl.classList.toggle('o_disable_preview', !widgetValue);
+        thanksBtnEl.classList.toggle('o_enable_preview', widgetValue);
+        subscribeBtnEl.classList.toggle('o_enable_preview', !widgetValue);
+        subscribeBtnEl.classList.toggle('o_disable_preview', widgetValue);
+    },
 
     //--------------------------------------------------------------------------
     // Private
     //--------------------------------------------------------------------------
 
+    /**
+     * @override
+     */
+    _computeWidgetState(methodName, params) {
+        if (methodName !== 'toggleThanksButton') {
+            return this._super(...arguments);
+        }
+        const subscribeBtnEl = this.$target[0].querySelector('.js_subscribe_btn');
+        return subscribeBtnEl && subscribeBtnEl.classList.contains('o_disable_preview') ?
+            'true' : '';
+    },
     /**
      * @override
      */
@@ -59,6 +95,11 @@ options.registry.mailing_list_subscribe = options.Class.extend({
                 selectEl.appendChild(button);
             }
         }
+        const checkboxEl = document.createElement('we-checkbox');
+        checkboxEl.setAttribute('string', _t("Display Thanks Button"));
+        checkboxEl.dataset.toggleThanksButton = 'true';
+        checkboxEl.dataset.noPreview = 'true';
+        uiFragment.appendChild(checkboxEl);
     },
 });
 

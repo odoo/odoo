@@ -16,12 +16,13 @@
 # Veikko Väätäjä <veikko.vaataja@gmail.com>, 2021
 # Timo Koukkari <ti.ko@netikka.fi>, 2021
 # Sari Mäyrä <sari.mayra@sv-oy.fi>, 2021
-# Johanna Valkonen <johanna@vividi.fi>, 2021
+# Johanna Valkonen <miujohanna@gmail.com>, 2021
 # Mikko Virtanen <mikko.virtanen2013@gmail.com>, 2021
 # Martin Trigaux, 2021
 # Tuomo Aura <tuomo.aura@web-veistamo.fi>, 2021
-# Jarmo Kortetjärvi <jarmo.kortetjarvi@gmail.com>, 2021
 # Antti Oksman <antti.oksman@web-veistamo.fi>, 2021
+# Joakim Weckman, 2022
+# Jarmo Kortetjärvi <jarmo.kortetjarvi@gmail.com>, 2022
 # 
 msgid ""
 msgstr ""
@@ -29,7 +30,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-09-14 10:28+0000\n"
 "PO-Revision-Date: 2021-09-14 12:22+0000\n"
-"Last-Translator: Antti Oksman <antti.oksman@web-veistamo.fi>, 2021\n"
+"Last-Translator: Jarmo Kortetjärvi <jarmo.kortetjarvi@gmail.com>, 2022\n"
 "Language-Team: Finnish (https://www.transifex.com/odoo/teams/41243/fi/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -1018,12 +1019,6 @@ msgid "Fuel Used by the vehicle"
 msgstr "Ajoneuvon käyttämä polttoaine"
 
 #. module: fleet
-#: model:ir.model.fields.selection,name:fleet.selection__fleet_vehicle__fuel_type__full_hybrid_gasoline
-#: model:ir.model.fields.selection,name:fleet.selection__fleet_vehicle_model__default_fuel_type__full_hybrid_gasoline
-msgid "Full Hybrid Gasoline"
-msgstr ""
-
-#. module: fleet
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_log_contract_view_search
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_view_search
 msgid "Future Activities"
@@ -1111,8 +1106,14 @@ msgstr ""
 #. module: fleet
 #: model:ir.model.fields.selection,name:fleet.selection__fleet_vehicle__fuel_type__hybrid
 #: model:ir.model.fields.selection,name:fleet.selection__fleet_vehicle_model__default_fuel_type__hybrid
-msgid "Hybrid"
-msgstr "Hybridi"
+msgid "Hybrid Diesel"
+msgstr ""
+
+#. module: fleet
+#: model:ir.model.fields.selection,name:fleet.selection__fleet_vehicle__fuel_type__full_hybrid_gasoline
+#: model:ir.model.fields.selection,name:fleet.selection__fleet_vehicle_model__default_fuel_type__full_hybrid_gasoline
+msgid "Hybrid Gasoline"
+msgstr ""
 
 #. module: fleet
 #: model:ir.model.fields.selection,name:fleet.selection__fleet_vehicle__fuel_type__hydrogen
@@ -1837,7 +1838,7 @@ msgstr "Varaa"
 #. module: fleet
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_log_contract_view_form
 msgid "Reset To Draft"
-msgstr ""
+msgstr "Palauta luonnokseksi"
 
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__residual_value
@@ -2502,7 +2503,7 @@ msgstr "km"
 #. module: fleet
 #: model:ir.model.fields.selection,name:fleet.selection__fleet_vehicle__odometer_unit__miles
 msgid "mi"
-msgstr ""
+msgstr "mailia"
 
 #. module: fleet
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_view_form
