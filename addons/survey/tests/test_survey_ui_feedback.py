@@ -1,7 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import odoo.tests
-
+from odoo import Command
 from odoo.addons.base.tests.common import HttpCaseWithUserDemo
 
 
@@ -150,7 +150,6 @@ class TestUiFeedback(HttpCaseWithUserDemo):
             ],
         })
 
-
     def test_01_admin_survey_tour(self):
         access_token = self.survey_feedback.access_token
         self.start_tour("/survey/start/%s" % access_token, 'test_survey', login="admin")
@@ -187,41 +186,27 @@ class TestUiFeedback(HttpCaseWithUserDemo):
                     'sequence': 1,
                     'question_type': 'simple_choice',
                     'suggested_answer_ids': [
-                        (0, 0, {
-                            'value': 'Answer 1',
-                            'sequence': 1,
-                        }), (0, 0, {
-                            'value': 'Answer 2',
-                            'sequence': 2,
-                        }),
+                        Command.create({'value': 'Answer 1'}),
+                        Command.create({'value': 'Answer 2'}),
+                        Command.create({'value': 'Answer 3'}),
                     ],
                     'constr_mandatory': True,
-                }), (0, 0, {
+                }), Command.create({
                     'title': 'Q2',
                     'sequence': 2,
                     'question_type': 'simple_choice',
                     'suggested_answer_ids': [
-                        (0, 0, {
-                            'value': 'Answer 1',
-                            'sequence': 1,
-                        }), (0, 0, {
-                            'value': 'Answer 2',
-                            'sequence': 2,
-                        })
+                        Command.create({'value': 'Answer 1'}),
+                        Command.create({'value': 'Answer 2'}),
                     ],
                     'constr_mandatory': True,
-                }), (0, 0, {
+                }), Command.create({
                     'title': 'Q3',
                     'sequence': 3,
                     'question_type': 'simple_choice',
                     'suggested_answer_ids': [
-                        (0, 0, {
-                            'value': 'Answer 1',
-                            'sequence': 1,
-                        }), (0, 0, {
-                            'value': 'Answer 2',
-                            'sequence': 2,
-                        })
+                        Command.create({'value': 'Answer 1'}),
+                        Command.create({'value': 'Answer 2'}),
                     ],
                     'constr_mandatory': True,
                 }),
@@ -230,23 +215,79 @@ class TestUiFeedback(HttpCaseWithUserDemo):
 
         q1 = survey_with_triggers.question_ids.filtered(lambda q: q.title == 'Q1')
         q1_a1 = q1.suggested_answer_ids.filtered(lambda a: a.value == 'Answer 1')
+        q1_a3 = q1.suggested_answer_ids.filtered(lambda a: a.value == 'Answer 3')
+
         q2 = survey_with_triggers.question_ids.filtered(lambda q: q.title == 'Q2')
         q2_a1 = q2.suggested_answer_ids.filtered(lambda a: a.value == 'Answer 1')
+
         q3 = survey_with_triggers.question_ids.filtered(lambda q: q.title == 'Q3')
 
-        q2.write({
-            'is_conditional': True,
-            'triggering_question_id': q1,
-            'triggering_answer_id': q1_a1,
-        })
-        q3.write({
-            'is_conditional': True,
-            'triggering_question_id': q2,
-            'triggering_answer_id': q2_a1,
-        })
+        q2.triggering_answer_ids = q1_a1
+        q3.triggering_answer_ids = q1_a3 | q2_a1
 
         access_token = survey_with_triggers.access_token
         self.start_tour("/survey/start/%s" % access_token, 'test_survey_chained_conditional_questions')
+
+    def test_05_public_survey_with_trigger_on_different_page(self):
+        """Check that conditional questions are shown when triggered from a different page too."""
+        survey_with_trigger_on_different_page = self.env['survey.survey'].create({
+            'title': 'Survey With Trigger on a different page',
+            'access_token': '1cb935bd-2399-4ed1-9e10-c649318fb4dc',
+            'access_mode': 'public',
+            'users_can_go_back': True,
+            'questions_layout': 'page_per_section',
+            'description': "<p>Test survey with conditional questions triggered from a previous section</p>",
+            'question_and_page_ids': [
+                Command.create({
+                    'title': 'Section 1',
+                    'is_page': True,
+                    'sequence': 1,
+                    'question_type': False,
+                }), Command.create({
+                    'title': 'Q1',
+                    'sequence': 2,
+                    'question_type': 'simple_choice',
+                    'suggested_answer_ids': [
+                        Command.create({'value': 'Answer 1'}),
+                        Command.create({'value': 'Answer 2'}),
+                        Command.create({'value': 'Answer 3'}),
+                    ],
+                    'constr_mandatory': False,
+                }), Command.create({
+                    'title': 'Section 2',
+                    'is_page': True,
+                    'sequence': 3,
+                    'question_type': False,
+                }), Command.create({
+                    'title': 'Q2',
+                    'sequence': 4,
+                    'question_type': 'simple_choice',
+                    'suggested_answer_ids': [
+                        Command.create({'value': 'Answer 1'}),
+                        Command.create({'value': 'Answer 2'}),
+                    ],
+                    'constr_mandatory': False,
+                }), Command.create({
+                    'title': 'Q3',
+                    'sequence': 3,
+                    'question_type': 'numerical_box',
+                    'constr_mandatory': False,
+                }),
+            ]
+        })
+
+        q1 = survey_with_trigger_on_different_page.question_ids.filtered(lambda q: q.title == 'Q1')
+        q1_a1 = q1.suggested_answer_ids.filtered(lambda a: a.value == 'Answer 1')
+
+        q2 = survey_with_trigger_on_different_page.question_ids.filtered(lambda q: q.title == 'Q2')
+        q2_a1 = q2.suggested_answer_ids.filtered(lambda a: a.value == 'Answer 1')
+
+        q3 = survey_with_trigger_on_different_page.question_ids.filtered(lambda q: q.title == 'Q3')
+
+        q3.triggering_answer_ids = q1_a1 | q2_a1
+
+        access_token = survey_with_trigger_on_different_page.access_token
+        self.start_tour("/survey/start/%s" % access_token, 'test_survey_conditional_question_on_different_page')
 
     def test_06_survey_prefill(self):
         access_token = self.survey_feedback.access_token
