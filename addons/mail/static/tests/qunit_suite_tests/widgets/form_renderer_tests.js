@@ -435,13 +435,13 @@ QUnit.module("mail", {}, function () {
             });
             const views = {
                 "res.partner,false,form": `<form string="Partners">
-                <sheet>
-                    <field name="name"/>
-                </sheet>
-                <div class="oe_chatter">
-                    <field name="message_ids"/>
-                </div>
-            </form>`,
+                    <sheet>
+                        <field name="name"/>
+                    </sheet>
+                    <div class="oe_chatter">
+                        <field name="message_ids"/>
+                    </div>
+                </form>`,
             };
             const { afterEvent, openFormView } = await start({
                 serverData: { views },
@@ -479,71 +479,54 @@ QUnit.module("mail", {}, function () {
             );
         });
 
-        QUnit.test("chatter should become enabled when creation done", async function (assert) {
-            assert.expect(10);
-
+        QUnit.test("post message on draft record", async function (assert) {
             const views = {
-                "res.partner,false,form": `<form string="Partners">
-                <sheet>
-                    <field name="name"/>
-                </sheet>
-                <div class="oe_chatter">
-                    <field name="message_ids"/>
-                </div>
-            </form>`,
+                "res.partner,false,form": `
+                    <form string="Partners">
+                        <sheet>
+                            <field name="name"/>
+                        </sheet>
+                        <div class="oe_chatter">
+                            <field name="message_ids"/>
+                        </div>
+                    </form>`,
             };
-            const { click, openView } = await start({
+            const { click, insertText, openView } = await start({
                 serverData: { views },
             });
             await openView({
                 res_model: "res.partner",
                 views: [[false, "form"]],
             });
-            assert.containsOnce(document.body, ".o_Chatter", "there should be a chatter");
-            assert.containsOnce(
-                document.body,
-                ".o_ChatterTopbar_buttonSendMessage",
-                "there should be a send message button"
-            );
-            assert.containsOnce(
-                document.body,
-                ".o_ChatterTopbar_buttonLogNote",
-                "there should be a log note button"
-            );
-            assert.containsOnce(
-                document.body,
-                ".o_ChatterTopbar_buttonLogNote",
-                "there should be an attachments button"
-            );
-            assert.ok(
-                document.querySelector(`.o_ChatterTopbar_buttonSendMessage`).disabled,
-                "send message button should be disabled"
-            );
-            assert.ok(
-                document.querySelector(`.o_ChatterTopbar_buttonLogNote`).disabled,
-                "log note button should be disabled"
-            );
-            assert.ok(
-                document.querySelector(`.o_ChatterTopbar_buttonAddAttachments`).disabled,
-                "attachments button should be disabled"
-            );
-
-            document.querySelectorAll(".o_field_char")[0].focus();
-            document.execCommand("insertText", false, "hello");
-            await click(".o_form_button_save");
-            assert.notOk(
-                document.querySelector(`.o_ChatterTopbar_buttonSendMessage`).disabled,
-                "send message button should now be enabled"
-            );
-            assert.notOk(
-                document.querySelector(`.o_ChatterTopbar_buttonLogNote`).disabled,
-                "log note button should now be enabled"
-            );
-            assert.notOk(
-                document.querySelector(`.o_ChatterTopbar_buttonAddAttachments`).disabled,
-                "attachments button should now be enabled"
+            await click(".o_ChatterTopbar_buttonSendMessage");
+            await insertText(".o_ComposerTextInputView_textarea", "Test");
+            await click(".o_ComposerView_buttonSend");
+            assert.containsOnce(document.body, ".o_MessageView");
+            assert.strictEqual(
+                document.querySelector(".o_MessageView_prettyBody").textContent,
+                "Test"
             );
         });
+
+        QUnit.test(
+            "schedule activities on draft record should prompt with scheduling an activity (proceed with action)",
+            async function (assert) {
+                const views = {
+                    "res.partner,false,form": `<form string="Partners">
+                        <sheet>
+                            <field name="name"/>
+                        </sheet>
+                        <div class="oe_chatter">
+                            <field name="activity_ids"/>
+                        </div>
+                    </form>`,
+                };
+                const { click, openView } = await start({ serverData: { views } });
+                await openView({ res_model: "res.partner", views: [[false, "form"]] });
+                await click(".o_ChatterTopbar_buttonScheduleActivity");
+                assert.containsOnce(document.body, ".o_dialog:contains(Schedule Activity)");
+            }
+        );
 
         QUnit.test(
             "read more/less links are not duplicated when switching from read to edit mode",

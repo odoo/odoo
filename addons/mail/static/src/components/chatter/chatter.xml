@@ -18,7 +18,7 @@
                                     'btn-odoo': !composerView,
                                     'btn-light': composerView and composerView.composer.isLog,
                                 }"
-                                t-att-disabled="!hasWriteAccess"
+                                t-att-disabled="!isTemporary and !hasWriteAccess"
                                 data-hotkey="m"
                                 t-on-click="onClickSendMessage"
                             >
@@ -30,7 +30,7 @@
                                     'o-active btn-odoo': composerView and composerView.composer.isLog,
                                     'btn-light': composerView and !composerView.composer.isLog or !composerView,
                                 }"
-                                t-att-disabled="!hasWriteAccess"
+                                t-att-disabled="!isTemporary and !hasWriteAccess"
                                 t-on-click="onClickLogNote"
                                 data-hotkey="shift+m"
                             >
@@ -42,7 +42,7 @@
                                 'border-start ps-2': hasActivities,
                             }"
                         >
-                            <button t-if="hasActivities" class="o_ChatterTopbar_button o_ChatterTopbar_buttonScheduleActivity btn btn-light text-nowrap" type="button" t-att-disabled="!hasWriteAccess" t-on-click="onClickScheduleActivity" data-hotkey="shift+a">
+                            <button t-if="hasActivities" class="o_ChatterTopbar_button o_ChatterTopbar_buttonScheduleActivity btn btn-light text-nowrap" type="button" t-att-disabled="!isTemporary and !hasWriteAccess" t-on-click="onClickScheduleActivity" data-hotkey="shift+a">
                                 <i class="fa fa-clock-o me-1"/>
                                 <span>Activities</span>
                             </button>
@@ -52,11 +52,11 @@
                                 }"
                             />
                             <div class="o_ChatterTopbar_rightSection flex-grow-1 flex-shrink-0 justify-content-end d-flex">
-                                <button t-if="thread.allAttachments.length === 0" class="o_ChatterTopbar_button o_ChatterTopbar_buttonAddAttachments btn btn-light btn-primary" type="button" t-att-disabled="!hasWriteAccess" t-on-click="onClickButtonAddAttachments" >
+                                <button t-if="thread.allAttachments.length === 0" class="o_ChatterTopbar_button o_ChatterTopbar_buttonAddAttachments btn btn-light btn-primary" type="button" t-att-disabled="!isTemporary and !hasWriteAccess" t-on-click="onClickButtonAddAttachments" >
                                     <i class="fa fa-paperclip fa-lg me-1" role="img" aria-label="Attachments"/>
                                     <i t-if="isShowingAttachmentsLoading" class="o_ChatterTopbar_buttonAttachmentsCountLoader fa fa-circle-o-notch fa-spin" aria-label="Attachment counter loading..."/>
                                 </button>
-                                <button t-if="thread.allAttachments.length > 0" class="o_ChatterTopbar_button o_ChatterTopbar_buttonToggleAttachments btn btn-light btn-primary" type="button" t-att-disabled="!hasReadAccess" t-att-aria-expanded="attachmentBoxView ? 'true' : 'false'" t-on-click="onClickButtonToggleAttachments">
+                                <button t-if="thread.allAttachments.length > 0" class="o_ChatterTopbar_button o_ChatterTopbar_buttonToggleAttachments btn btn-light btn-primary" type="button" t-att-disabled="!isTemporary and !hasReadAccess" t-att-aria-expanded="attachmentBoxView ? 'true' : 'false'" t-on-click="onClickButtonToggleAttachments">
                                     <i class="fa fa-paperclip fa-lg me-1" role="img" aria-label="Attachments"/>
                                     <span t-if="!isShowingAttachmentsLoading" class="o_ChatterTopbar_buttonCount o_ChatterTopbar_buttonAttachmentsCount" t-esc="attachmentButtonText"/>
                                     <i t-if="isShowingAttachmentsLoading" class="o_ChatterTopbar_buttonAttachmentsCountLoader fa fa-circle-o-notch fa-spin" aria-label="Attachment counter loading..."/>
@@ -113,7 +113,7 @@
                             className="'o_attachmentBox_attachmentList'"
                             record="attachmentList"
                         />
-                        <button class="o_AttachmentBoxView_buttonAdd btn btn-link" type="button" t-on-click="onClickButtonAddAttachments" t-att-disabled="!hasWriteAccess">
+                        <button class="o_AttachmentBoxView_buttonAdd btn btn-link" type="button" t-on-click="onClickButtonAddAttachments" t-att-disabled="!isTemporary and !hasWriteAccess">
                             <i class="fa fa-plus-square"/>
                             Attach files
                         </button>
