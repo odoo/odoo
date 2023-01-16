@@ -205,6 +205,23 @@ class TestSMSComposerComment(TestSMSCommon, TestSMSRecipients):
         self.assertNoSMS()
         self.assertSMSIapSent(self.random_numbers_san, self._test_body)
 
+    def test_composer_sending_with_no_number_field(self):
+        test_record = self.env['mail.test.sms.partner'].create({'name': 'Test'})
+        sms_composer = self.env['sms.composer'].create({
+            'body': self._test_body,
+            'composition_mode': 'comment',
+            'mass_force_send': False,
+            'mass_keep_log': True,
+            'number_field_name': False,
+            'numbers': False,
+            'recipient_single_number_itf': self.random_numbers_san[0],
+            'res_id': test_record.id,
+            'res_model': 'mail.test.sms.partner'
+        })
+        with self.mockSMSGateway():
+            sms_composer._action_send_sms()
+        self.assertSMSNotification([{'number': self.random_numbers_san[0]}], self._test_body)
+
 
 class TestSMSComposerBatch(TestSMSCommon):
     @classmethod

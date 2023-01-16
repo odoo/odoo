@@ -1006,12 +1006,13 @@ class AccountMoveLine(models.Model):
             for percentages in percentages_to_apply:
                 percentage = percentages['discount_percentage'] / 100
                 line_percentage = percentages['term_percentage']
+                taxes = line.tax_ids.filtered(lambda t: t.amount_type != 'fixed')
                 epd_needed_vals = epd_needed.setdefault(
                     frozendict({
                         'move_id': line.move_id.id,
                         'account_id': line.account_id.id,
                         'analytic_distribution': line.analytic_distribution,
-                        'tax_ids': [Command.set(line.tax_ids.ids)],
+                        'tax_ids': [Command.set(taxes.ids)],
                         'tax_tag_ids': [Command.set(line.tax_tag_ids.ids)],
                         'display_type': 'epd',
                     }),
@@ -1189,6 +1190,18 @@ class AccountMoveLine(models.Model):
             if line.move_id.is_purchase_document(include_receipts=True):
                 if (line.display_type == 'payment_term') ^ (account_type == 'liability_payable'):
                     raise UserError(_("Any journal item on a payable account must have a due date and vice versa."))
+
+    @api.constrains('product_uom_id')
+    def _check_product_uom_category_id(self):
+        for line in self:
+            if line.product_uom_id and line.product_id and line.product_uom_id.category_id != line.product_id.product_tmpl_id.uom_id.category_id:
+                raise UserError(_(
+                    "The Unit of Measure (UoM) '%s' you have selected for product '%s', "
+                    "is incompatible with its category : %s.",
+                    line.product_uom_id.name,
+                    line.product_id.name,
+                    line.product_id.product_tmpl_id.uom_id.category_id.name
+                ))
 
     def _affect_tax_report(self):
         self.ensure_one()

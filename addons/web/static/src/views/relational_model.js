@@ -2471,9 +2471,15 @@ export class DynamicGroupList extends DynamicList {
                     }
                 }
             }
-            const previousGroup = this.groups.find(
-                (g) => !g.deleted && g.value === groupParams.value
-            );
+            const groupValue = groupParams.__rawValue;
+            const previousGroup = this.groups.find((g) => {
+                if (g.deleted) {
+                    return false;
+                }
+                return Array.isArray(g.__rawValue) && Array.isArray(groupValue)
+                    ? g.__rawValue[0] === groupValue[0]
+                    : g.__rawValue === groupValue;
+            });
             const state = previousGroup ? previousGroup.exportState() : {};
             return [groupParams, state];
         });
