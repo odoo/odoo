@@ -180,14 +180,14 @@ odoo.define('hr_holidays.employee.dashboard.views', function(require) {
                 'second': 0
             });
             date_from.subtract(this.getSession().getTZOffset(date_from), 'minutes');
-            date_from = date_from.format('YYYY-MM-DD HH:mm:ss');
+            date_from = date_from.locale('en').format('YYYY-MM-DD HH:mm:ss');
             let date_to = moment().set({
                 'hour': 23,
                 'minute': 59,
                 'second': 59
             });
             date_to.subtract(this.getSession().getTZOffset(date_to), 'minutes');
-            date_to = date_to.format('YYYY-MM-DD HH:mm:ss');
+            date_to = date_to.locale('en').format('YYYY-MM-DD HH:mm:ss');
             return {
                 'default_date_from': date_from,
                 'default_date_to': date_to,
