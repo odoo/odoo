@@ -6498,6 +6498,27 @@ QUnit.module("Views", (hooks) => {
         assert.ok(document.activeElement.dataset.name === "foo");
     });
 
+    QUnit.test("empty list with sample data: group by date", async (assert) => {
+        await makeView({
+            type: "list",
+            arch: `
+                <tree sample="1">
+                    <field name="date"/>
+                </tree>`,
+            serverData,
+            domain: Domain.FALSE.toList(),
+            resModel: "foo",
+            groupBy: ["date:day"],
+        });
+
+        assert.containsOnce(target, ".o_list_view .o_view_sample_data");
+        const groupHeaders = [...target.querySelectorAll(".o_group_header")];
+        assert.ok(groupHeaders.length);
+
+        await click(target.querySelector(".o_group_has_content.o_group_header"));
+        assert.containsN(target, ".o_data_row", 4);
+    });
+
     QUnit.test("non empty list with sample data", async function (assert) {
         await makeView({
             type: "list",
