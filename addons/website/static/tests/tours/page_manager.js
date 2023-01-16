@@ -23,7 +23,7 @@ const deleteSelectedPage = [
         trigger: '.modal-content footer button.btn-primary',
     }
 ];
-const homePage = 'tr:contains("Home"):has(td[name="website_id"]:empty)';
+const homePage = 'tr:contains("Home")';
 
 wTourUtils.registerWebsitePreviewTour('website_page_manager', {
     test: true,
