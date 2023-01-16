@@ -536,20 +536,21 @@ class SurveyUserInput(models.Model):
                    that is the next in sequence and that is either not triggered by another question's answer, or that
                    is triggered by an already selected answer.
          To do all this, we need to return:
-            - list of all selected answers: [answer_id1, answer_id2, ...] (for survey reloading, otherwise, this list is
-              updated at client side)
+            - triggering_answers_by_question: dict -> for a given question, the answers that triggers it
+                Used mainly to ease template rendering
             - triggered_questions_by_answer: dict -> for a given answer, list of questions triggered by this answer;
                 Used mainly for dynamic show/hide behaviour at client side
-            - triggering_answer_by_question: dict -> for a given question, the answer that triggers it
-                Used mainly to ease template rendering
+            - list of all selected answers: [answer_id1, answer_id2, ...] (for survey reloading, otherwise, this list is
+              updated at client side)
         """
-        triggering_answer_by_question, triggered_questions_by_answer = {}, {}
+        triggering_answers_by_question = {}
+        triggered_questions_by_answer = {}
         # Ignore conditional configuration if randomised questions selection
         if self.survey_id.questions_selection != 'random':
-            triggering_answer_by_question, triggered_questions_by_answer = self.survey_id._get_conditional_maps()
+            triggering_answers_by_question, triggered_questions_by_answer = self.survey_id._get_conditional_maps()
         selected_answers = self._get_selected_suggested_answers()
 
-        return triggering_answer_by_question, triggered_questions_by_answer, selected_answers
+        return triggering_answers_by_question, triggered_questions_by_answer, selected_answers
 
     def _get_selected_suggested_answers(self):
         """
@@ -585,14 +586,13 @@ class SurveyUserInput(models.Model):
         answers_to_delete.unlink()
 
     def _get_inactive_conditional_questions(self):
-        triggering_answer_by_question, triggered_questions_by_answer, selected_answers = self._get_conditional_values()
+        triggering_answers_by_question, _, selected_answers = self._get_conditional_values()
 
         # get questions that should not be answered
         inactive_questions = self.env['survey.question']
-        for answer in triggered_questions_by_answer.keys():
-            if answer not in selected_answers:
-                for question in triggered_questions_by_answer[answer]:
-                    inactive_questions |= question
+        for question, triggering_answers in triggering_answers_by_question.items():
+            if triggering_answers and not triggering_answers & selected_answers:
+                inactive_questions |= question
         return inactive_questions
 
     def _get_print_questions(self):

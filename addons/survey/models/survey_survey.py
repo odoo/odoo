@@ -4,6 +4,8 @@
 import json
 import random
 import uuid
+from collections import defaultdict
+
 import werkzeug
 
 from odoo import api, exceptions, fields, models, _
@@ -253,12 +255,12 @@ class Survey(models.Model):
             survey.question_ids = survey.question_and_page_ids - survey.page_ids
             survey.question_count = len(survey.question_ids)
 
-    @api.depends('question_and_page_ids.is_conditional', 'users_login_required', 'access_mode')
+    @api.depends('question_and_page_ids.triggering_answer_ids', 'users_login_required', 'access_mode')
     def _compute_is_attempts_limited(self):
         for survey in self:
             if not survey.is_attempts_limited or \
                (survey.access_mode == 'public' and not survey.users_login_required) or \
-               any(question.is_conditional for question in survey.question_and_page_ids):
+               any(question.triggering_answer_ids for question in survey.question_and_page_ids):
                 survey.is_attempts_limited = False
 
     @api.depends('session_start_time', 'user_input_ids')
@@ -310,10 +312,10 @@ class Survey(models.Model):
             survey.session_show_leaderboard = survey.scoring_type != 'no_scoring' and \
                 any(question.save_as_nickname for question in survey.question_and_page_ids)
 
-    @api.depends('question_and_page_ids.is_conditional')
+    @api.depends('question_and_page_ids.triggering_answer_ids')
     def _compute_has_conditional_questions(self):
         for survey in self:
-            survey.has_conditional_questions = any(question.is_conditional for question in survey.question_and_page_ids)
+            survey.has_conditional_questions = any(question.triggering_answer_ids for question in survey.question_and_page_ids)
 
     @api.depends('scoring_type')
     def _compute_certification(self):
@@ -381,14 +383,14 @@ class Survey(models.Model):
 
     @api.returns('self', lambda value: value.id)
     def copy(self, default=None):
-        """ Correctly copy the 'triggering_question_id' and 'triggering_answer_id' fields from the original
-        to the clone.
-        This needs to be done in post-processing to make sure we get references to the newly created
-        answers/questions from the copy instead of references to the answers/questions of the original.
-        This implementation assumes that the order of created questions/answers will be kept between
+        """Correctly copy the 'triggering_answer_ids' field from the original to the clone.
+
+        This needs to be done in post-processing to make sure we get references to the newly
+        created answers from the copy instead of references to the answers of the original.
+        This implementation assumes that the order of created answers will be kept between
         the original and the clone, using 'zip()' to match the records between the two.
 
-        Note that when question_ids is provided in the default parameter, it falls back to the
+        Note that when `question_ids` is provided in the default parameter, it falls back to the
         standard copy, meaning that triggering logic will not be maintained.
         """
         self.ensure_one()
@@ -396,23 +398,18 @@ class Survey(models.Model):
         if default and 'question_ids' in default:
             return clone
 
-        src_questions = self.question_ids
-        dst_questions = clone.question_ids.sorted()
+        cloned_question_ids = clone.question_ids.sorted()
 
-        questions_map = {src.id: dst.id for src, dst in zip(src_questions, dst_questions)}
         answers_map = {
             src_answer.id: dst_answer.id
             for src, dst
-            in zip(src_questions, dst_questions)
+            in zip(self.question_ids, cloned_question_ids)
             for src_answer, dst_answer
             in zip(src.suggested_answer_ids, dst.suggested_answer_ids.sorted())
         }
-
-        for src, dst in zip(src_questions, dst_questions):
-            if src.is_conditional:
-                dst.is_conditional = True
-                dst.triggering_question_id = questions_map.get(src.triggering_question_id.id)
-                dst.triggering_answer_id = answers_map.get(src.triggering_answer_id.id)
+        for src, dst in zip(self.question_ids, cloned_question_ids):
+            if src.triggering_answer_ids:
+                dst.triggering_answer_ids = [answers_map[src_answer_id.id] for src_answer_id in src.triggering_answer_ids]
         return clone
 
     def copy_data(self, default=None):
@@ -615,22 +612,31 @@ class Survey(models.Model):
         return result
 
     def _get_pages_and_questions_to_show(self):
-        """
-        :return: survey.question recordset excluding invalid conditional questions and pages without description
-        """
+        """Filter question_and_pages_ids to include only valid pages and questions.
 
+        Pages are invalid if they have no description. Questions are invalid if
+        they are conditional and all their triggers are invalid.
+        Triggers are invalid if they:
+          - Are a page (not a question)
+          - Have the wrong question type (`simple_choice` and `multiple_choice` are supported)
+          - Are misplaced (positioned after the conditional question)
+          - They are themselves conditional and were found invalid
+        """
         self.ensure_one()
         invalid_questions = self.env['survey.question']
         questions_and_valid_pages = self.question_and_page_ids.filtered(
             lambda question: not question.is_page or not is_html_empty(question.description))
-        for question in questions_and_valid_pages.filtered(lambda q: q.is_conditional).sorted():
-            trigger = question.triggering_question_id
-            if (trigger in invalid_questions
-                    or trigger.is_page
-                    or trigger.question_type not in ['simple_choice', 'multiple_choice']
-                    or not trigger.suggested_answer_ids
-                    or trigger.sequence > question.sequence
-                    or (trigger.sequence == question.sequence and trigger.id > question.id)):
+
+        for question in questions_and_valid_pages.filtered(lambda q: q.triggering_answer_ids).sorted():
+            for trigger in question.triggering_question_ids:
+                if (trigger not in invalid_questions
+                        and not trigger.is_page
+                        and trigger.question_type in ['simple_choice', 'multiple_choice']
+                        and (trigger.sequence < question.sequence
+                             or (trigger.sequence == question.sequence and trigger.id < question.id))):
+                    break
+            else:
+                # No valid trigger found
                 invalid_questions |= question
         return questions_and_valid_pages - invalid_questions
 
@@ -674,7 +680,7 @@ class Survey(models.Model):
             return Question
 
         # Conditional Questions Management
-        triggering_answer_by_question, triggered_questions_by_answer, selected_answers = user_input._get_conditional_values()
+        triggering_answers_by_question, _, selected_answers = user_input._get_conditional_values()
         inactive_questions = user_input._get_inactive_conditional_questions()
         if survey.questions_layout == 'page_per_question':
             question_candidates = pages_or_questions[0:current_page_index] if go_back \
@@ -687,8 +693,8 @@ class Survey(models.Model):
                     if contains_active_question or is_description_section:
                         return question
                 else:
-                    triggering_answer = triggering_answer_by_question.get(question)
-                    if not triggering_answer or triggering_answer in selected_answers:
+                    triggering_answers = triggering_answers_by_question.get(question)
+                    if not triggering_answers or triggering_answers & selected_answers:
                         # question is visible because not conditioned or conditioned by a selected answer
                         return question
         elif survey.questions_layout == 'page_per_section':
@@ -726,7 +732,7 @@ class Survey(models.Model):
         next_page_or_question_candidates = pages_or_questions[current_page_index + 1:]
         if next_page_or_question_candidates:
             inactive_questions = user_input._get_inactive_conditional_questions()
-            triggering_answer_by_question, triggered_questions_by_answer, selected_answers = user_input._get_conditional_values()
+            _, triggered_questions_by_answer, _ = user_input._get_conditional_values()
             if self.questions_layout == 'page_per_question':
                 next_active_question = any(next_question not in inactive_questions for next_question in next_page_or_question_candidates)
                 is_triggering_question = any(triggering_answer in triggered_questions_by_answer.keys() for triggering_answer in page_or_question.suggested_answer_ids)
@@ -794,17 +800,15 @@ class Survey(models.Model):
     # ------------------------------------------------------------
 
     def _get_conditional_maps(self):
-        triggering_answer_by_question = {}
-        triggered_questions_by_answer = {}
+        triggering_answers_by_question = defaultdict(lambda: self.env['survey.question.answer'])
+        triggered_questions_by_answer = defaultdict(lambda: self.env['survey.question'])
         for question in self.question_ids:
-            triggering_answer_by_question[question] = question.is_conditional and question.triggering_answer_id
+            triggering_answers_by_question[question] |= question.triggering_answer_ids
 
-            if question.is_conditional:
-                if question.triggering_answer_id in triggered_questions_by_answer:
-                    triggered_questions_by_answer[question.triggering_answer_id] |= question
-                else:
-                    triggered_questions_by_answer[question.triggering_answer_id] = question
-        return triggering_answer_by_question, triggered_questions_by_answer
+            for triggering_answer_id in question.triggering_answer_ids:
+                triggered_questions_by_answer[triggering_answer_id] |= question
+
+        return triggering_answers_by_question, triggered_questions_by_answer
 
     # ------------------------------------------------------------
     # SESSIONS MANAGEMENT

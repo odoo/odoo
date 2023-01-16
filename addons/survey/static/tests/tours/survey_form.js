@@ -35,26 +35,17 @@ registry.category("web_tour.tours").add('survey_tour_test_survey_form_triggers',
         in_modal: true,
     },
     ...addTwoAnswers(),
-    ...toggleIsConditional(),
+    ...changeTab("options"),
     {
-        content: "Set a trigger question for the first question",
-        trigger: ".o_field_widget[name=triggering_question_id] input",
+        content: "Set a trigger for the first question",
+        trigger: ".o_field_widget[name=triggering_answer_ids] input",
         run: "click",
         in_modal: true,
     }, {
-        content: "Set the first question as trigger",
-        trigger: 'ul.ui-autocomplete a:contains("Question 1")',
+        content: "Set the first question's first answer as trigger",
+        trigger: 'ul.ui-autocomplete a:contains("Question 1 : Answer A")',
         run: 'click',
         in_modal: true,
-    }, {
-        content: "Set a trigger answer for first question",
-        trigger: ".modal-content .o_field_widget[name=triggering_answer_id] input",
-        run: "click",
-        in_modal: true,
-    }, {
-        content: "Set the first answer as trigger",
-        trigger: 'ul.ui-autocomplete a:contains("Answer A")',
-        run: 'click',
     },
     ...changeTab("answers"),
     ...saveAndNew(),
@@ -65,38 +56,27 @@ registry.category("web_tour.tours").add('survey_tour_test_survey_form_triggers',
         in_modal: true,
     },
     ...addTwoAnswers(),
-    ...toggleIsConditional(),
+    ...changeTab("options"),
     {
-        content: "Set a trigger question for the second question",
-        trigger: ".o_field_widget[name=triggering_question_id] input",
+        content: "Set a trigger for the second question",
+        trigger: ".o_field_widget[name=triggering_answer_ids] input",
         run: "click",
         in_modal: true,
     }, {
-        content: "Set the second question as trigger",
-        trigger: 'ul.ui-autocomplete a:contains("Question 2")',
+        content: "Set the second question's second answer as trigger",
+        trigger: 'ul.ui-autocomplete a:contains("Question 2 : Answer B")',
         run: 'click',
         in_modal: true,
-    }, {
-        content: "Set a trigger answer for second question",
-        trigger: ".modal-content .o_field_widget[name=triggering_answer_id] input",
-        run: "click",
-        in_modal: true,
-    }, {
-        content: "Set the second answer as trigger",
-        trigger: 'ul.ui-autocomplete a:contains("Answer B")',
-        run: 'click',
     },
-    ...changeTab("answers"),
     ...stepUtils.saveForm(),
-    // Q2 and Q3 should have fa-fork icons. Assumes that the Trigger widget's column is 2 places after the title's.
     {
         content: "Check that Question 2 has 'normal' trigger icon",
         trigger: "tr:contains('Question 2') button i.fa-code-fork",
-        run: () => {}, // it's a check
+        isCheck: true,
     }, {
         content: "Check that Question 3 has 'normal' trigger icon",
         trigger: "tr:contains('Question 3') button i.fa-code-fork",
-        run: () => {}, // it's a check
+        isCheck: true,
     }, {
         content: "Move Question 3 above its trigger (Question 2)",
         trigger: "tr.o_data_row:nth-child(3) td[name=sequence]",
@@ -104,81 +84,107 @@ registry.category("web_tour.tours").add('survey_tour_test_survey_form_triggers',
     }, {
         content: "Check that Question 3 has 'warning' trigger icon",
         trigger: "tr:contains('Question 3') button i.fa-exclamation-triangle",
-        run: () => {}, // it's a check
+        isCheck: true,
     }, {
         content: "Open that question to check the server's misplacement evaluation agrees",
-        trigger: "tr.o_data_row td[data-tooltip='Question 3']",
+        trigger: "tr.o_data_row td:contains('Question 3')",
         run: "click",
     }, {
         content: "Check that an alert is shown",
-        trigger: ".o_form_sheet_bg div:first-child.alert-warning:contains('positioned before its trigger')",
+        trigger: ".o_form_sheet_bg div:first-child.alert-warning:contains('positioned before some or all of its triggers')",
         in_modal: true,
     },
     ...changeTab("options"),
     {
-        content: "Change trigger question",
-        trigger: ".o_field_widget[name=triggering_question_id] input",
+        content: "Remove invalid trigger",
+        trigger: ".o_field_widget[name=triggering_answer_ids] span:contains('Question 2') a.o_delete",
         run: "click",
-        in_modal: true,
-    }, {
-        content: "Set the first question as trigger instead",
-        trigger: 'ul.ui-autocomplete a:contains("Question 1")',
-        run: 'click',
         in_modal: true,
     }, {
         content: "Check that the alert is gone",
         trigger: `.o_form_sheet_bg div:first-child:not(.alert-warning).o_form_sheet`,
         in_modal: true,
-        run: () => {}, // it's a check
+        isCheck: true,
     }, {
-        content: "Change the trigger answer as well",
-        trigger: ".modal-content .o_field_widget[name=triggering_answer_id] input",
+        content: "Choose a new valid trigger",
+        trigger: ".o_field_widget[name=triggering_answer_ids] input",
         run: "click",
         in_modal: true,
     }, {
-        content: "Set the second answer as trigger, then",
-        trigger: 'ul.ui-autocomplete a:contains("Answer B")',
+        content: "Set the first question's second answer as trigger, then",
+        trigger: 'ul.ui-autocomplete a:contains("Question 1 : Answer B")',
         run: 'click',
     },
     ...stepUtils.saveForm(),
-     {
+    {
         content: "Check that Question 3 has its 'normal' trigger icon back",
         trigger: "tr:contains('Question 3') button i.fa-code-fork",
-        run: () => {}, // it's a check
+        isCheck: true,
     }, {
         content: "Move Question 3 back below Question 2",
         trigger: "tr.o_data_row:nth-child(2) td[name=sequence]",
         run: "drag_and_drop_native div[name=question_and_page_ids] table tbody tr:nth-child(3)",
     }, {
         content: "Open that question again",
-        trigger: "tr.o_data_row td[data-tooltip='Question 3']",
+        trigger: "tr.o_data_row td:contains('Question 3')",
         run: "click",
     },
     ...changeTab("options"),
     {
-        content: "Change trigger to confirm we can now use Question 2 again",
-        trigger: ".modal-content .o_field_widget[name=triggering_question_id] input",
+        content: "Add a second trigger to confirm we can now use Question 2 again",
+        trigger: ".modal-content .o_field_widget[name=triggering_answer_ids] input",
         run: "click",
         in_modal: true,
     }, {
-        content: "Question 2 is allowed as trigger again",
-        trigger: '.modal-content ul.ui-autocomplete a:contains("Question 2")',
-        in_modal: true,
-    }, {
-        content: "Change the trigger answer back as well",
-        trigger: ".modal-content .o_field_widget[name=triggering_answer_id] input",
-        run: "text A",
-        in_modal: true,
-    }, {
-        content: "Set the second answer as trigger, then",
-        trigger: '.modal-content ul.ui-autocomplete a:contains("Answer B")',
+        content: "Add the second question's second answer as trigger, then",
+        trigger: '.modal-content ul.ui-autocomplete a:contains("Question 2 : Answer B")',
         run: "click",
     },
     ...stepUtils.saveForm(),
+    // Move question 1 below question 3,
+    {
+        content: "Move Question 1 back below Question 3",
+        trigger: "tr.o_data_row:nth-child(1) td[name=sequence]",
+        run: "drag_and_drop_native div[name=question_and_page_ids] table tbody tr:nth-child(3)",
+    }, {
+        content: "Check that Question 3 has 'warning' trigger icon",
+        trigger: "tr:contains('Question 3') button i.fa-exclamation-triangle",
+        isCheck: true,
+    }, {
+        content: "Open that question again",
+        trigger: "tr.o_data_row td:contains('Question 3')",
+        run: "click",
+    }, {
+        content: "Check that an alert is shown also when only one trigger is misplaced",
+        trigger: ".o_form_sheet_bg div:first-child.alert-warning:contains('positioned before some or all of its triggers')",
+        in_modal: true,
+    },
+    ...changeTab("options"),
+    {
+        content: "Remove temporarily used trigger",
+        trigger: ".o_field_widget[name=triggering_answer_ids] span:contains('Question 1') a.o_delete",
+        run: "click",
+        in_modal: true,
+    }, {
+        content: "Check that the alert is gone in this case too",
+        trigger: `.o_form_sheet_bg div:first-child:not(.alert-warning).o_form_sheet`,
+        in_modal: true,
+        isCheck: true,
+    },
+    ...stepUtils.saveForm(),
+    {
+        content: "Check that Question 3 has its 'normal' trigger icon back",
+        trigger: "tr:contains('Question 3') button i.fa-code-fork",
+        isCheck: true,
+    }, {
+        content: "Move Question 1 back above Question 2",
+        trigger: "tr.o_data_row:nth-child(3) td[name=sequence]",
+        run: "drag_and_drop_native div[name=question_and_page_ids] table tbody tr:nth-child(1)",
+    },
     // Deleting trigger answers or whole question gracefully remove the trigger automatically
     {
         content: "Open Question 2 again",
-        trigger: "tr.o_data_row td[data-tooltip='Question 2']",
+        trigger: "tr.o_data_row td:contains('Question 2')",
         run: "click",
     }, {
         content: "Delete Answer B",
@@ -189,11 +195,11 @@ registry.category("web_tour.tours").add('survey_tour_test_survey_form_triggers',
         content: "Check that Question 3 no longer has a trigger icon",
         trigger: "div[name=question_and_page_ids] tr:contains('Question 3') div.o_widget_survey_question_trigger:not(:has(button))",
         allowInvisible: true,
-        run: () => {}, // it's a check
+        isCheck: true,
     }, {
         content: "Check that Question 2 however still has a trigger icon",
         trigger: "tr:contains('Question 2') button i.fa-code-fork",
-        run: () => {}, // it's a check
+        isCheck: true,
     }, {
         content: "Delete Question 1",
         trigger: "tr:contains('Question 1') button[name=delete]",
@@ -202,14 +208,14 @@ registry.category("web_tour.tours").add('survey_tour_test_survey_form_triggers',
         content: "Check that now Question 2 too does no longer have a trigger icon",
         trigger: "tr:contains('Question 2') div.o_widget_survey_question_trigger:not(:has(button))",
         allowInvisible: true,
-        run: () => {}, // it's a check
+        isCheck: true,
     }, {
         content: 'Go back to Kanban View',
         trigger: '[data-menu-xmlid="survey.menu_survey_form"]',
     }, {
         content: "Check that we arrived on the kanban view",
         trigger: ".o-kanban-button-new",
-        run: () => {}, // it's a check
+        isCheck: true,
     }
 ]});
 
@@ -246,22 +252,11 @@ function saveAndNew() {
             // suggested_answer_ids required even though in_modal is specified...
             trigger: "div[name=suggested_answer_ids] .o_list_table tbody tr:first-child:not(.o_data_row)", // empty answers list
             in_modal: true,
-            run: () => {}, // it's a check
+            isCheck: true,
         }
     ];
 }
 
-function toggleIsConditional() {
-    return [
-        ...changeTab("options"),
-        {
-            content: "Toggle is_conditional",
-            trigger: "div[name=is_conditional] input",
-            in_modal: true,
-            run: "click",
-        }
-    ];
-}
 
 function changeTab(tabName) {
     // Currently, .modal-content is required even though "in_modal"
@@ -274,7 +269,7 @@ function changeTab(tabName) {
             content: `Wait for tab ${tabName} tab`,
             trigger: `.modal-content a[name=${tabName}].nav-link.active`,
             in_modal: true,
-            run: () => {}, // it's a check
+            isCheck: true,
         }
     ];
 }

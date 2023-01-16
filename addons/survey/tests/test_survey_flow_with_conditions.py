@@ -41,7 +41,7 @@ class TestSurveyFlowWithConditions(common.TestSurveyCommon, HttpCase):
                 page_0, 'Question 2', 'simple_choice',
                 sequence=2,
                 constr_mandatory=True, constr_error_msg='Please select an answer', survey_id=survey.id,
-                is_conditional=True, triggering_question_id=q01.id, triggering_answer_id=q01.suggested_answer_ids.filtered(lambda q: q.is_correct).id,
+                triggering_answer_ids=q01.suggested_answer_ids.filtered(lambda q: q.is_correct),
                 labels=[
                     {'value': 'Answer 1'},
                     {'value': 'Answer 2', 'is_correct': True, 'answer_score': 1.0},
@@ -60,11 +60,13 @@ class TestSurveyFlowWithConditions(common.TestSurveyCommon, HttpCase):
                     {'value': 'Answer 4', 'is_correct': True, 'answer_score': 1.0}
                 ])
 
+            q03_suggested_answers_triggering_q04 = q03.suggested_answer_ids.filtered(lambda q: q.is_correct)
+
             self._add_question(  # q04
                 page_0, 'Question 4', 'simple_choice',
                 sequence=2,
                 constr_mandatory=True, constr_error_msg='Please select an answer', survey_id=survey.id,
-                is_conditional=True, triggering_question_id=q03.id, triggering_answer_id=q03.suggested_answer_ids.filtered(lambda q: q.is_correct).id,
+                triggering_answer_ids=q03_suggested_answers_triggering_q04,
                 labels=[
                     {'value': 'Answer 1'},
                     {'value': 'Answer 2', 'is_correct': True, 'answer_score': 1.0},
@@ -87,7 +89,23 @@ class TestSurveyFlowWithConditions(common.TestSurveyCommon, HttpCase):
                 page_0, 'Question 6', 'simple_choice',
                 sequence=2,
                 constr_mandatory=True, constr_error_msg='Please select an answer', survey_id=survey.id,
-                is_conditional=True, triggering_question_id=q05.id, triggering_answer_id=q05.suggested_answer_ids.filtered(lambda q: q.is_correct).id,
+                triggering_answer_ids=q05.suggested_answer_ids.filtered(lambda q: q.is_correct),
+                labels=[
+                    {'value': 'Answer 1'},
+                    {'value': 'Answer 2', 'is_correct': True, 'answer_score': 1.0},
+                    {'value': 'Answer 3'},
+                    {'value': 'Answer 4'}
+                ])
+
+            q03_suggested_answers_triggering_q07 = q03.suggested_answer_ids - q03_suggested_answers_triggering_q04
+            # Make sure to have a case with multiple possible triggers.
+            self.assertGreater(len(q03_suggested_answers_triggering_q07), 1)
+
+            q07 = self._add_question(
+                page_0, 'Question 7', 'simple_choice',
+                sequence=2,
+                constr_mandatory=True, constr_error_msg='Please select an answer', survey_id=survey.id,
+                triggering_answer_ids=q03_suggested_answers_triggering_q07,
                 labels=[
                     {'value': 'Answer 1'},
                     {'value': 'Answer 2', 'is_correct': True, 'answer_score': 1.0},
@@ -101,6 +119,7 @@ class TestSurveyFlowWithConditions(common.TestSurveyCommon, HttpCase):
         # -> this should have generated a new user_input with a token
         user_inputs = self.env['survey.user_input'].search([('survey_id', '=', survey.id)])
         self.assertEqual(len(user_inputs), 1)
+        self.assertEqual(len(user_inputs.predefined_question_ids), 7)
         answer_token = user_inputs.access_token
 
         # User begins survey with first page
@@ -117,10 +136,12 @@ class TestSurveyFlowWithConditions(common.TestSurveyCommon, HttpCase):
             q03: q03.suggested_answer_ids[0],  # Wrong
             q05: q05.suggested_answer_ids[3],  # Right
             q06: q06.suggested_answer_ids[2],  # Wrong
+            q07: q07.suggested_answer_ids[1],  # Right
         }
 
         self._answer_page(page_0, answers, answer_token, csrf_token)
+        self.assertEqual(len(user_inputs.predefined_question_ids), 6, "q04 should have been removed as not triggered.")
 
         user_inputs.invalidate_recordset()
-        self.assertEqual(round(user_inputs.scoring_percentage), 60, "Three right answers out of five (the fourth one is still hidden)")
+        self.assertEqual(round(user_inputs.scoring_percentage), 67, "Four right answers out of six questions asked.")
         self.assertFalse(user_inputs.scoring_success)

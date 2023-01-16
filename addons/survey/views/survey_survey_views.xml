@@ -77,11 +77,8 @@
                                     <field name="random_questions_count"
                                         column_invisible="parent.questions_selection == 'all'"
                                         invisible="not is_page"/>
-                                    <field name="is_conditional" column_invisible="True"/>
-                                    <field name="triggering_question_id" column_invisible="True"/>
-                                    <field name="triggering_answer_id" column_invisible="True"/>
-                                    <field name="is_placed_before_trigger" column_invisible="True"/>
-                                    <field name="allowed_triggering_question_ids" column_invisible="True"/>
+                                    <field name="triggering_question_ids" column_invisible="True"/>
+                                    <field name="triggering_answer_ids" column_invisible="True" widget="many2many_tags"/> <!-- widget to fetch display_name -->
                                     <widget name="survey_question_trigger"/>
                                     <button name="copy" type="object" icon="fa-clone" title="Duplicate Question"/>
                                     <control>
