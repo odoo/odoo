@@ -1,14 +1,15 @@
 /** @odoo-module */
 
-import PosComponent from "@point_of_sale/js/PosComponent";
-import Registries from "@point_of_sale/js/Registries";
+import { PosComponent } from "@point_of_sale/js/PosComponent";
 import { format } from "web.field_utils";
 import { round_precision as round_pr } from "web.utils";
 
 /**
  * @props {pos.order.line} line
  */
-class OrderlineDetails extends PosComponent {
+export class OrderlineDetails extends PosComponent {
+    static template = "OrderlineDetails";
+
     get line() {
         const line = this.props.line;
         const formatQty = (line) => {
@@ -72,8 +73,3 @@ class OrderlineDetails extends PosComponent {
         return _.str.sprintf(this.env._t("To Refund: %s"), this.getFormattedToRefundQty());
     }
 }
-OrderlineDetails.template = "OrderlineDetails";
-
-Registries.Component.add(OrderlineDetails);
-
-export default OrderlineDetails;

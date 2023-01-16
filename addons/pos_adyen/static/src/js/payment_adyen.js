@@ -2,12 +2,13 @@
 
 import core from "web.core";
 import rpc from "web.rpc";
-import PaymentInterface from "@point_of_sale/js/payment";
+import { PaymentInterface } from "@point_of_sale/js/payment";
 import { Gui } from "@point_of_sale/js/Gui";
+import { ErrorPopup } from "@point_of_sale/js/Popups/ErrorPopup";
 
 var _t = core._t;
 
-var PaymentAdyen = PaymentInterface.extend({
+export const PaymentAdyen = PaymentInterface.extend({
     send_payment_request: function (cid) {
         this._super.apply(this, arguments);
         this._reset_state();
@@ -365,11 +366,9 @@ var PaymentAdyen = PaymentInterface.extend({
         if (!title) {
             title = _t("Adyen Error");
         }
-        Gui.showPopup("ErrorPopup", {
+        Gui.showPopup(ErrorPopup, {
             title: title,
             body: msg,
         });
     },
 });
-
-export default PaymentAdyen;

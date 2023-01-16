@@ -1,11 +1,14 @@
 /** @odoo-module */
 
-import AbstractAwaitablePopup from "@point_of_sale/js/Popups/AbstractAwaitablePopup";
-import Registries from "@point_of_sale/js/Registries";
+import { AbstractAwaitablePopup } from "@point_of_sale/js/Popups/AbstractAwaitablePopup";
+import { MoneyDetailsPopup } from "./MoneyDetailsPopup";
 
 const { useState } = owl;
 
-class CashOpeningPopup extends AbstractAwaitablePopup {
+export class CashOpeningPopup extends AbstractAwaitablePopup {
+    static template = "CashOpeningPopup";
+    static defaultProps = { cancelKey: false };
+
     setup() {
         super.setup();
         this.manualInputCashCount = null;
@@ -27,7 +30,7 @@ class CashOpeningPopup extends AbstractAwaitablePopup {
         super.confirm();
     }
     async openDetailsPopup() {
-        const { confirmed, payload } = await this.showPopup("MoneyDetailsPopup", {
+        const { confirmed, payload } = await this.showPopup(MoneyDetailsPopup, {
             moneyDetails: this.moneyDetails,
             total: this.manualInputCashCount ? 0 : this.state.openingCash,
         });
@@ -50,9 +53,3 @@ class CashOpeningPopup extends AbstractAwaitablePopup {
         }
     }
 }
-
-CashOpeningPopup.template = "CashOpeningPopup";
-CashOpeningPopup.defaultProps = { cancelKey: false };
-Registries.Component.add(CashOpeningPopup);
-
-export default CashOpeningPopup;

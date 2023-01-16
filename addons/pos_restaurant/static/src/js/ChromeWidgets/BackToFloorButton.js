@@ -1,10 +1,11 @@
 /** @odoo-module */
 
 import { usePos } from "@point_of_sale/app/pos_store";
-import PosComponent from "@point_of_sale/js/PosComponent";
-import Registries from "@point_of_sale/js/Registries";
+import { PosComponent } from "@point_of_sale/js/PosComponent";
 
-class BackToFloorButton extends PosComponent {
+export class BackToFloorButton extends PosComponent {
+    static template = "BackToFloorButton";
+
     setup() {
         super.setup();
         this.pos = usePos();
@@ -22,8 +23,3 @@ class BackToFloorButton extends PosComponent {
         this.showScreen("FloorScreen", { floor: this.floor });
     }
 }
-BackToFloorButton.template = "BackToFloorButton";
-
-Registries.Component.add(BackToFloorButton);
-
-export default BackToFloorButton;

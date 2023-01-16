@@ -1,10 +1,13 @@
 /** @odoo-module */
 
 import { useListener } from "@web/core/utils/hooks";
-import PosComponent from "@point_of_sale/js/PosComponent";
-import Registries from "@point_of_sale/js/Registries";
+import { PosComponent } from "@point_of_sale/js/PosComponent";
+import { ErrorPopup } from "@point_of_sale/js/Popups/ErrorPopup";
+import { ConfirmPopup } from "@point_of_sale/js/Popups/ConfirmPopup";
 
-class InvoiceButton extends PosComponent {
+export class InvoiceButton extends PosComponent {
+    static template = "InvoiceButton";
+
     setup() {
         super.setup();
         useListener("click", this._onClick);
@@ -42,7 +45,7 @@ class InvoiceButton extends PosComponent {
                 throw error;
             } else {
                 // NOTE: error here is most probably undefined
-                this.showPopup("ErrorPopup", {
+                this.showPopup(ErrorPopup, {
                     title: this.env._t("Network Error"),
                     body: this.env._t("Unable to download invoice."),
                 });
@@ -66,7 +69,7 @@ class InvoiceButton extends PosComponent {
         // Part 1: Handle missing partner.
         // Write to pos.order the selected partner.
         if (!order.get_partner()) {
-            const { confirmed: confirmedPopup } = await this.showPopup("ConfirmPopup", {
+            const { confirmed: confirmedPopup } = await this.showPopup(ConfirmPopup, {
                 title: this.env._t("Need customer to invoice"),
                 body: this.env._t("Do you want to open the customer list to select customer?"),
             });
@@ -115,7 +118,3 @@ class InvoiceButton extends PosComponent {
         }
     }
 }
-InvoiceButton.template = "InvoiceButton";
-Registries.Component.add(InvoiceButton);
-
-export default InvoiceButton;

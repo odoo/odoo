@@ -16,7 +16,6 @@
         'point_of_sale.assets': [
             'pos_six/static/lib/six_timapi/timapi.js',
             'pos_six/static/src/js/BalanceButton.js',
-            'pos_six/static/src/js/Chrome.js',
             'pos_six/static/src/js/models.js',
             'pos_six/static/src/js/payment_six.js',
             'pos_six/static/src/xml/**/*',

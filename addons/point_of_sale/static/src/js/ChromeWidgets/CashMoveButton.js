@@ -1,18 +1,21 @@
 /** @odoo-module */
 
-import PosComponent from "@point_of_sale/js/PosComponent";
-import Registries from "@point_of_sale/js/Registries";
-import { _t } from "web.core";
+import { PosComponent } from "@point_of_sale/js/PosComponent";
+import { _lt } from "web.core";
 import { renderToString } from "@web/core/utils/render";
+import { CashMovePopup } from "../Popups/CashMovePopup";
+import { ErrorPopup } from "../Popups/ErrorPopup";
 
 const TRANSLATED_CASH_MOVE_TYPE = {
-    in: _t("in"),
-    out: _t("out"),
+    in: _lt("in"),
+    out: _lt("out"),
 };
 
-class CashMoveButton extends PosComponent {
+export class CashMoveButton extends PosComponent {
+    static template = "point_of_sale.CashMoveButton";
+
     async onClick() {
-        const { confirmed, payload } = await this.showPopup("CashMovePopup");
+        const { confirmed, payload } = await this.showPopup(CashMovePopup);
         if (!confirmed) {
             return;
         }
@@ -37,7 +40,7 @@ class CashMoveButton extends PosComponent {
             });
             const printResult = await this.env.proxy.printer.print_receipt(renderedReceipt);
             if (!printResult.successful) {
-                this.showPopup("ErrorPopup", {
+                this.showPopup(ErrorPopup, {
                     title: printResult.message.title,
                     body: printResult.message.body,
                 });
@@ -55,8 +58,3 @@ class CashMoveButton extends PosComponent {
         return result;
     }
 }
-CashMoveButton.template = "point_of_sale.CashMoveButton";
-
-Registries.Component.add(CashMoveButton);
-
-export default CashMoveButton;

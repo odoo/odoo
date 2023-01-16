@@ -1,10 +1,13 @@
 /** @odoo-module **/
 
-import PosComponent from "@point_of_sale/js/PosComponent";
-import ProductScreen from "@point_of_sale/js/Screens/ProductScreen/ProductScreen";
-import Registries from "@point_of_sale/js/Registries";
+import { PosComponent } from "@point_of_sale/js/PosComponent";
+import { ProductScreen } from "@point_of_sale/js/Screens/ProductScreen/ProductScreen";
+import { SelectionPopup } from "@point_of_sale/js/Popups/SelectionPopup";
+import { ErrorPopup } from "@point_of_sale/js/Popups/ErrorPopup";
 
 export class eWalletButton extends PosComponent {
+    static template = "point_of_sale.eWalletButton";
+
     _getEWalletRewards(order) {
         const claimableRewards = order.getClaimableRewards();
         const eWalletRewards = claimableRewards.filter(
@@ -25,7 +28,7 @@ export class eWalletButton extends PosComponent {
             if (eWalletPrograms.length == 1) {
                 selectedProgram = eWalletPrograms[0];
             } else {
-                const { confirmed, payload } = await this.showPopup("SelectionPopup", {
+                const { confirmed, payload } = await this.showPopup(SelectionPopup, {
                     title: this.env._t("Refund with eWallet"),
                     list: eWalletPrograms.map((program) => ({
                         id: program.id,
@@ -52,7 +55,7 @@ export class eWalletButton extends PosComponent {
             if (eWalletRewards.length == 1) {
                 eWalletReward = eWalletRewards[0];
             } else {
-                const { confirmed, payload } = await this.showPopup("SelectionPopup", {
+                const { confirmed, payload } = await this.showPopup(SelectionPopup, {
                     title: this.env._t("Use eWallet to pay"),
                     list: eWalletRewards.map(({ reward, coupon_id }) => ({
                         id: reward.id,
@@ -72,7 +75,7 @@ export class eWalletButton extends PosComponent {
                 );
                 if (result !== true) {
                     // Returned an error
-                    this.showPopup("ErrorPopup", {
+                    this.showPopup(ErrorPopup, {
                         title: this.env._t("Error"),
                         body: result,
                     });
@@ -94,7 +97,6 @@ export class eWalletButton extends PosComponent {
         }
     }
 }
-eWalletButton.template = "point_of_sale.eWalletButton";
 
 ProductScreen.addControlButton({
     component: eWalletButton,
@@ -102,5 +104,3 @@ ProductScreen.addControlButton({
         return this.env.pos.programs.filter((p) => p.program_type == "ewallet").length > 0;
     },
 });
-
-Registries.Component.add(eWalletButton);

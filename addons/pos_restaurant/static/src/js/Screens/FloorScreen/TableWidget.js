@@ -1,7 +1,6 @@
 /** @odoo-module */
 
-import PosComponent from "@point_of_sale/js/PosComponent";
-import Registries from "@point_of_sale/js/Registries";
+import { PosComponent } from "@point_of_sale/js/PosComponent";
 
 /**
  * props: {
@@ -9,7 +8,9 @@ import Registries from "@point_of_sale/js/Registries";
  *  table: table object,
  * }
  */
-class TableWidget extends PosComponent {
+export class TableWidget extends PosComponent {
+    static template = "TableWidget";
+
     setup() {
         owl.onMounted(this.onMounted);
     }
@@ -77,8 +78,3 @@ class TableWidget extends PosComponent {
         return hasChangesCount ? { printing: true } : hasSkippedCount ? { skipped: true } : {};
     }
 }
-TableWidget.template = "TableWidget";
-
-Registries.Component.add(TableWidget);
-
-export default TableWidget;

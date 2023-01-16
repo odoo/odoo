@@ -1,25 +1,20 @@
 /** @odoo-module */
-import SaleOrderManagementScreen from "@pos_sale/js/OrderManagementScreen/SaleOrderManagementScreen";
-import Registries from "@point_of_sale/js/Registries";
+import { SaleOrderManagementScreen } from "@pos_sale/js/OrderManagementScreen/SaleOrderManagementScreen";
 import { useListener } from "@web/core/utils/hooks";
+import { registry } from "@web/core/registry";
 
 const { useState } = owl;
 
-const MobileSaleOrderManagementScreen = (SaleOrderManagementScreen) => {
-    class MobileSaleOrderManagementScreen extends SaleOrderManagementScreen {
-        setup() {
-            super.setup();
-            useListener("click-order", this._onShowDetails);
-            this.mobileState = useState({ showDetails: false });
-        }
-        _onShowDetails() {
-            this.mobileState.showDetails = true;
-        }
+export class MobileSaleOrderManagementScreen extends SaleOrderManagementScreen {
+    static template = "MobileSaleOrderManagementScreen";
+    setup() {
+        super.setup();
+        useListener("click-order", this._onShowDetails);
+        this.mobileState = useState({ showDetails: false });
     }
-    MobileSaleOrderManagementScreen.template = "MobileSaleOrderManagementScreen";
-    return MobileSaleOrderManagementScreen;
-};
+    _onShowDetails() {
+        this.mobileState.showDetails = true;
+    }
+}
 
-Registries.Component.addByExtending(MobileSaleOrderManagementScreen, SaleOrderManagementScreen);
-
-export default MobileSaleOrderManagementScreen;
+registry.category("pos_screens").add("MobileSaleOrderManagementScreen", MobileSaleOrderManagementScreen);

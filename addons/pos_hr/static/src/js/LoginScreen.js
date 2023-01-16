@@ -1,41 +1,44 @@
 /** @odoo-module */
 
-import PosComponent from "@point_of_sale/js/PosComponent";
-import Registries from "@point_of_sale/js/Registries";
-import SelectCashierMixin from "@pos_hr/js/SelectCashierMixin";
+import { PosComponent } from "@point_of_sale/js/PosComponent";
+import { SelectCashierMixin } from "@pos_hr/js/SelectCashierMixin";
 import { useBarcodeReader } from "@point_of_sale/js/custom_hooks";
+import { registry } from "@web/core/registry";
+import { patch } from "@web/core/utils/patch";
 
-class LoginScreen extends SelectCashierMixin(PosComponent) {
+export class LoginScreen extends PosComponent {
+    static template = "LoginScreen";
+}
+// FIXME stop this double patch once the mixin is converted to a hook.
+patch(LoginScreen.prototype, "pos_hr.LoginScreen SelectCashierMixin", SelectCashierMixin);
+patch(LoginScreen.prototype, "pos_hr.LoginScreen methods", {
     setup() {
-        super.setup();
+        this._super(...arguments);
         useBarcodeReader({ cashier: this.barcodeCashierAction }, true);
-    }
+    },
     async selectCashier() {
-        if (await super.selectCashier()) {
+        if (await this._super()) {
             this.back();
         }
-    }
+    },
     async barcodeCashierAction(code) {
-        if (await super.barcodeCashierAction(code)) {
+        if (await this._super(code)) {
             this.back();
         }
-    }
+    },
     back() {
         this.props.resolve({ confirmed: false, payload: false });
         this.trigger("close-temp-screen");
         this.env.pos.hasLoggedIn = true;
         this.env.posbus.trigger("start-cash-control");
-    }
+    },
     confirm() {
         this.props.resolve({ confirmed: true, payload: true });
         this.trigger("close-temp-screen");
-    }
+    },
     get shopName() {
         return this.env.pos.config.name;
-    }
-}
-LoginScreen.template = "LoginScreen";
+    },
+});
 
-Registries.Component.add(LoginScreen);
-
-export default LoginScreen;
+registry.category("pos_screens").add("LoginScreen", LoginScreen);

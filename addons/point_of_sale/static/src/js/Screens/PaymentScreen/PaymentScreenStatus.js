@@ -1,9 +1,10 @@
 /** @odoo-module */
 
-import PosComponent from "@point_of_sale/js/PosComponent";
-import Registries from "@point_of_sale/js/Registries";
+import { PosComponent } from "@point_of_sale/js/PosComponent";
 
-class PaymentScreenStatus extends PosComponent {
+export class PaymentScreenStatus extends PosComponent {
+    static template = "PaymentScreenStatus";
+
     get changeText() {
         return this.env.pos.format_currency(this.props.order.get_change());
     }
@@ -18,8 +19,3 @@ class PaymentScreenStatus extends PosComponent {
         );
     }
 }
-PaymentScreenStatus.template = "PaymentScreenStatus";
-
-Registries.Component.add(PaymentScreenStatus);
-
-export default PaymentScreenStatus;

@@ -1,11 +1,15 @@
 /** @odoo-module */
 
-import PosComponent from "@point_of_sale/js/PosComponent";
-import Registries from "@point_of_sale/js/Registries";
+import { PosComponent } from "@point_of_sale/js/PosComponent";
+
+import { WrappedProductNameLines } from "./WrappedProductNameLines";
 
 const { onWillUpdateProps } = owl;
 
-class OrderReceipt extends PosComponent {
+export class OrderReceipt extends PosComponent {
+    static components = { WrappedProductNameLines };
+    static template = "OrderReceipt";
+
     setup() {
         super.setup();
         this._receiptEnv = this.props.order.getOrderReceiptEnv();
@@ -41,8 +45,3 @@ class OrderReceipt extends PosComponent {
         );
     }
 }
-OrderReceipt.template = "OrderReceipt";
-
-Registries.Component.add(OrderReceipt);
-
-export default OrderReceipt;

@@ -1,8 +1,8 @@
 /** @odoo-module */
 
-import PosComponent from "@point_of_sale/js/PosComponent";
-import ProductScreen from "@point_of_sale/js/Screens/ProductScreen/ProductScreen";
-import Registries from "@point_of_sale/js/Registries";
+import { PosComponent } from "@point_of_sale/js/PosComponent";
+import { ProductScreen } from "@point_of_sale/js/Screens/ProductScreen/ProductScreen";
+import { ErrorPopup } from "@point_of_sale/js/Popups/ErrorPopup";
 
 /**
  * IMPROVEMENT: Perhaps this class is quite complicated for its worth.
@@ -10,7 +10,9 @@ import Registries from "@point_of_sale/js/Registries";
  * Also, the current order changes when the selectedOrder in pos is changed.
  * After setting new current order, we update the listeners.
  */
-class SubmitOrderButton extends PosComponent {
+export class SubmitOrderButton extends PosComponent {
+    static template = "SubmitOrderButton";
+
     setup() {
         super.setup();
         this.clicked = false; //mutex, we don't want to be able to spam the printers
@@ -25,7 +27,7 @@ class SubmitOrderButton extends PosComponent {
                     if (isPrintSuccessful) {
                         order.updatePrintedResume();
                     } else {
-                        this.showPopup("ErrorPopup", {
+                        this.showPopup(ErrorPopup, {
                             title: this.env._t("Printing failed"),
                             body: this.env._t("Failed in printing the changes in the order"),
                         });
@@ -51,7 +53,6 @@ class SubmitOrderButton extends PosComponent {
         };
     }
 }
-SubmitOrderButton.template = "SubmitOrderButton";
 
 ProductScreen.addControlButton({
     component: SubmitOrderButton,
@@ -59,7 +60,3 @@ ProductScreen.addControlButton({
         return this.env.pos.config.module_pos_restaurant && this.env.pos.unwatched.printers.length;
     },
 });
-
-Registries.Component.add(SubmitOrderButton);
-
-export default SubmitOrderButton;

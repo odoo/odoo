@@ -1,6 +1,6 @@
 /** @odoo-module */
 
-import PaymentStripe from "@pos_stripe/js/payment_stripe";
+import { PaymentStripe } from "@pos_stripe/js/payment_stripe";
 
 PaymentStripe.include({
     captureAfterPayment: async function (processPayment, line) {

@@ -1,11 +1,13 @@
 /** @odoo-module */
 
-import PosComponent from "@point_of_sale/js/PosComponent";
-import ProductScreen from "@point_of_sale/js/Screens/ProductScreen/ProductScreen";
+import { PosComponent } from "@point_of_sale/js/PosComponent";
+import { ProductScreen } from "@point_of_sale/js/Screens/ProductScreen/ProductScreen";
 import { useListener } from "@web/core/utils/hooks";
-import Registries from "@point_of_sale/js/Registries";
+import { SelectionPopup } from "@point_of_sale/js/Popups/SelectionPopup";
 
-class SetPricelistButton extends PosComponent {
+export class SetPricelistButton extends PosComponent {
+    static template = "SetPricelistButton";
+
     setup() {
         super.setup();
         useListener("click", this.onClick);
@@ -24,21 +26,21 @@ class SetPricelistButton extends PosComponent {
         const selectionList = this.env.pos.pricelists.map((pricelist) => ({
             id: pricelist.id,
             label: pricelist.name,
-            isSelected: this.currentOrder.pricelist
-                        && pricelist.id === this.currentOrder.pricelist.id,
+            isSelected:
+                this.currentOrder.pricelist && pricelist.id === this.currentOrder.pricelist.id,
             item: pricelist,
         }));
 
         if (!this.env.pos.default_pricelist) {
             selectionList.push({
                 id: null,
-                label: this.env._t('Default Price'),
+                label: this.env._t("Default Price"),
                 isSelected: !this.currentOrder.pricelist,
                 item: null,
-            })
+            });
         }
 
-        const { confirmed, payload: selectedPricelist } = await this.showPopup("SelectionPopup", {
+        const { confirmed, payload: selectedPricelist } = await this.showPopup(SelectionPopup, {
             title: this.env._t("Select the pricelist"),
             list: selectionList,
         });
@@ -48,7 +50,6 @@ class SetPricelistButton extends PosComponent {
         }
     }
 }
-SetPricelistButton.template = "SetPricelistButton";
 
 ProductScreen.addControlButton({
     component: SetPricelistButton,
@@ -56,7 +57,3 @@ ProductScreen.addControlButton({
         return this.env.pos.config.use_pricelist && this.env.pos.pricelists.length > 0;
     },
 });
-
-Registries.Component.add(SetPricelistButton);
-
-export default SetPricelistButton;

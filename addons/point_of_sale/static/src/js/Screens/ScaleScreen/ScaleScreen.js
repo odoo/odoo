@@ -1,12 +1,14 @@
 /** @odoo-module */
 
-import PosComponent from "@point_of_sale/js/PosComponent";
+import { PosComponent } from "@point_of_sale/js/PosComponent";
 import { round_precision as round_pr } from "web.utils";
-import Registries from "@point_of_sale/js/Registries";
+import { registry } from "@web/core/registry";
 
 const { onMounted, onWillUnmount, useExternalListener, useState } = owl;
 
-class ScaleScreen extends PosComponent {
+export class ScaleScreen extends PosComponent {
+    static template = "ScaleScreen";
+
     /**
      * @param {Object} props
      * @param {Object} props.product The product to weight.
@@ -95,8 +97,5 @@ class ScaleScreen extends PosComponent {
             : "";
     }
 }
-ScaleScreen.template = "ScaleScreen";
 
-Registries.Component.add(ScaleScreen);
-
-export default ScaleScreen;
+registry.category("pos_screens").add("ScaleScreen", ScaleScreen);

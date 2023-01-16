@@ -1,7 +1,6 @@
 /** @odoo-module */
 
-import AbstractAwaitablePopup from "@point_of_sale/js/Popups/AbstractAwaitablePopup";
-import Registries from "@point_of_sale/js/Registries";
+import { AbstractAwaitablePopup } from "@point_of_sale/js/Popups/AbstractAwaitablePopup";
 
 /**
  * Props:
@@ -9,7 +8,10 @@ import Registries from "@point_of_sale/js/Registries";
  *      info: {object of data}
  *  }
  */
-class ProductInfoPopup extends AbstractAwaitablePopup {
+export class ProductInfoPopup extends AbstractAwaitablePopup {
+    static template = "ProductInfoPopup";
+    static defaultProps = { confirmKey: false };
+
     setup() {
         super.setup();
         Object.assign(this, this.props.info);
@@ -25,7 +27,3 @@ class ProductInfoPopup extends AbstractAwaitablePopup {
         return isAccessibleToEveryUser || isCashierManager;
     }
 }
-
-ProductInfoPopup.template = "ProductInfoPopup";
-ProductInfoPopup.defaultProps = { confirmKey: false };
-Registries.Component.add(ProductInfoPopup);

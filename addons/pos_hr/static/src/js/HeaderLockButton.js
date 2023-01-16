@@ -1,11 +1,12 @@
 /** @odoo-module */
 
-import PosComponent from "@point_of_sale/js/PosComponent";
-import Registries from "@point_of_sale/js/Registries";
+import { PosComponent } from "@point_of_sale/js/PosComponent";
 
 const { useState } = owl;
 
-class HeaderLockButton extends PosComponent {
+export class HeaderLockButton extends PosComponent {
+    static template = "HeaderLockButton";
+
     setup() {
         super.setup();
         this.state = useState({ isUnlockIcon: true, title: "Unlocked" });
@@ -19,8 +20,3 @@ class HeaderLockButton extends PosComponent {
         this.state.title = isMouseOver ? "Lock" : "Unlocked";
     }
 }
-HeaderLockButton.template = "HeaderLockButton";
-
-Registries.Component.add(HeaderLockButton);
-
-export default HeaderLockButton;

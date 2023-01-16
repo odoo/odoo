@@ -1,12 +1,15 @@
 /** @odoo-module */
 
-import PosComponent from "@point_of_sale/js/PosComponent";
-import Registries from "@point_of_sale/js/Registries";
+import { PosComponent } from "@point_of_sale/js/PosComponent";
+import { OrderlineDetails } from "./OrderlineDetails";
 
 /**
  * @props {models.Order} order
  */
-class OrderDetails extends PosComponent {
+export class OrderDetails extends PosComponent {
+    static components = { OrderlineDetails };
+    static template = "OrderDetails";
+
     get order() {
         return this.props.order;
     }
@@ -20,8 +23,3 @@ class OrderDetails extends PosComponent {
         return this.env.pos.format_currency(this.order ? this.order.get_total_tax() : 0);
     }
 }
-OrderDetails.template = "OrderDetails";
-
-Registries.Component.add(OrderDetails);
-
-export default OrderDetails;

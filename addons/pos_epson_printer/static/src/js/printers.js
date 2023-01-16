@@ -49,7 +49,7 @@ class EpsonPrintResultGenerator extends PrintResultGenerator {
     }
 }
 
-var EpsonPrinter = core.Class.extend(PrinterMixin, {
+export const EpsonPrinter = core.Class.extend(PrinterMixin, {
     init(ip, pos) {
         PrinterMixin.init.call(this, pos);
         var url = window.location.protocol + "//" + ip;
@@ -167,5 +167,3 @@ var EpsonPrinter = core.Class.extend(PrinterMixin, {
         return $(res).find("response").attr("success") === "true";
     },
 });
-
-export default EpsonPrinter;

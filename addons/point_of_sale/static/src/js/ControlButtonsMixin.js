@@ -1,6 +1,6 @@
 /** @odoo-module */
 
-import Registries from "@point_of_sale/js/Registries";
+/** @typedef {import("@odoo/owl").Component} Component */
 
 /**
  * Component that has this mixin allows the use of `addControlButton`.
@@ -9,7 +9,7 @@ import Registries from "@point_of_sale/js/Registries";
  * control buttons can then be rendered in the Component.
  * @param {Function} x superclass
  */
-const ControlButtonsMixin = (x) => {
+export const ControlButtonsMixin = (x) => {
     const controlButtonsToPosition = [];
     const sortedControlButtons = [];
 
@@ -19,15 +19,13 @@ const ControlButtonsMixin = (x) => {
                 .filter((cb) => {
                     return cb.condition ? cb.condition.bind(this)() : true;
                 })
-                .map((cb) =>
-                    Object.assign({}, cb, { component: Registries.Component.get(cb.component) })
-                );
+                .map((cb) => Object.assign({}, cb, { component: cb.component }));
         }
     }
     /**
      * @param {Object} controlButton
-     * @param {Function} controlButton.component
-     *      Base class that is added in the Registries.Component.
+     * @param {new (...args: any[]) => Component} controlButton.component the
+     *      component class
      * @param {Function} controlButton.condition zero argument function that is bound
      *      to the instance of ProductScreen, such that `this.env.pos` can be used
      *      inside the function.
@@ -103,5 +101,3 @@ const ControlButtonsMixin = (x) => {
     };
     return Extended;
 };
-
-export default ControlButtonsMixin;

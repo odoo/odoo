@@ -5,7 +5,7 @@ import core from "web.core";
 /**
  * Implement this interface to support a new payment method in the POS:
  *
- import var PaymentInterface from "@point_of_sale/js/payment";
+ import const PaymentInterface from "@point_of_sale/js/payment";
  * var MyPayment = PaymentInterface.extend({
  *     ...
  * })
@@ -22,7 +22,7 @@ import core from "web.core";
  * by overriding the loader_params of the models in the back end
  * in the `pos.session` model
  */
-var PaymentInterface = core.Class.extend({
+export const PaymentInterface = core.Class.extend({
     init: function (pos, payment_method) {
         this.pos = pos;
         this.payment_method = payment_method;
@@ -89,5 +89,3 @@ var PaymentInterface = core.Class.extend({
      */
     close: function () {},
 });
-
-export default PaymentInterface;

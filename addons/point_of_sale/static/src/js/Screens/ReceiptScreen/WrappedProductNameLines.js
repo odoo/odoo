@@ -1,11 +1,7 @@
 /** @odoo-module */
 
-import PosComponent from "@point_of_sale/js/PosComponent";
-import Registries from "@point_of_sale/js/Registries";
+import { PosComponent } from "@point_of_sale/js/PosComponent";
 
-class WrappedProductNameLines extends PosComponent {}
-WrappedProductNameLines.template = "WrappedProductNameLines";
-
-Registries.Component.add(WrappedProductNameLines);
-
-export default WrappedProductNameLines;
+export class WrappedProductNameLines extends PosComponent {
+    static template = "WrappedProductNameLines";
+}

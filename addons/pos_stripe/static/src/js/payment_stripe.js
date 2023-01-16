@@ -3,15 +3,16 @@
 
 import core from "web.core";
 import rpc from "web.rpc";
-import PaymentInterface from "@point_of_sale/js/payment";
+import { PaymentInterface } from "@point_of_sale/js/payment";
 import { Gui } from "@point_of_sale/js/Gui";
+import { ErrorPopup } from "@point_of_sale/js/Popups/ErrorPopup";
 
 const _t = core._t;
 
-const PaymentStripe = PaymentInterface.extend({
+export const PaymentStripe = PaymentInterface.extend({
     init: function (pos, payment_method) {
         this._super(...arguments);
-        this.terminal = StripeTerminal.create({
+        this.terminal = new StripeTerminal({
             onFetchConnectionToken: this.stripeFetchConnectionToken.bind(this),
             onUnexpectedReaderDisconnect: this.stripeUnexpectedDisconnect.bind(this),
         });
@@ -142,7 +143,7 @@ const PaymentStripe = PaymentInterface.extend({
     captureAfterPayment: async function (processPayment, line) {
         const capturePayment = await this.capturePayment(processPayment.paymentIntent.id);
         if (capturePayment.charges)
-            line.card_type = capturePayment.charges.data[0].payment_method_details.card_present.brand;
+            {line.card_type = capturePayment.charges.data[0].payment_method_details.card_present.brand;}
         line.transaction_id = capturePayment.id;
     },
 
@@ -239,11 +240,9 @@ const PaymentStripe = PaymentInterface.extend({
         if (!title) {
             title = _t("Stripe Error");
         }
-        Gui.showPopup("ErrorPopup", {
+        Gui.showPopup(ErrorPopup, {
             title: title,
             body: msg,
         });
     },
 });
-
-export default PaymentStripe;

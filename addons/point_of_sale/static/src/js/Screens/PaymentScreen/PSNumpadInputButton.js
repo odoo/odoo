@@ -1,15 +1,11 @@
 /** @odoo-module */
 
-import PosComponent from "@point_of_sale/js/PosComponent";
-import Registries from "@point_of_sale/js/Registries";
+import { PosComponent } from "@point_of_sale/js/PosComponent";
 
-class PSNumpadInputButton extends PosComponent {
+export class PSNumpadInputButton extends PosComponent {
+    static template = "PSNumpadInputButton";
+
     get _class() {
         return this.props.changeClassTo || "input-button number-char";
     }
 }
-PSNumpadInputButton.template = "PSNumpadInputButton";
-
-Registries.Component.add(PSNumpadInputButton);
-
-export default PSNumpadInputButton;
