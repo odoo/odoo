@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="sale_loyalty.SelectRewardRadioField" owl="1" t-inherit="web.RadioField" t-inherit-mode="primary">
+        <xpath expr="//label" position="after">
+            <div t-if="item[2]">Available Points: <span t-out="item[2]"/></div>
+            <div t-if="item[3]">Cost: <span t-out="item[3]"/></div>
+        </xpath>
+    </t>
+</templates>

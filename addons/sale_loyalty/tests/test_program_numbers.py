@@ -1656,3 +1656,61 @@ class TestSaleCouponProgramNumbers(TestSaleCouponNumbersCommon):
 
         self.assertEqual(len(order.order_line), 2, 'Promotion should add 1 line')
         self.assertEqual(order.amount_total, 5, '10$ - 5$(discount) = 5$(total) ')
+
+    def test_loyalty_points_changes(self):
+        self.env['loyalty.program'].create([
+            {
+                'name': 'Discount Loyalty Program',
+                'program_type': 'loyalty',
+                'trigger': 'auto',
+                'applies_on': 'both',
+                'rule_ids': [(0, 0, {
+                    'reward_point_mode': 'money',
+                    'reward_point_amount': 10,
+                })],
+                'reward_ids': [(0, 0, {
+                    'discount': 5,
+                    'required_points': 200,
+                })],
+            },
+            {
+                'name': 'Free Product Loyalty Program',
+                'program_type': 'loyalty',
+                'trigger': 'auto',
+                'applies_on': 'both',
+                'rule_ids': [(0, 0, {
+                    'reward_point_mode': 'money',
+                    'reward_point_amount': 1,
+                })],
+                'reward_ids': [(0, 0, {
+                    'reward_type': 'product',
+                    'reward_product_id': self.conferenceChair.id,
+                    'reward_product_qty': 1,
+                    'required_points': 100,
+                })],
+            }
+        ])
+
+        order = self.empty_order
+        self.env['sale.order.line'].create({
+            'product_id': self.largeMeetingTable.id,
+            'name': 'Large Cabinet',
+            'product_uom_qty': 1.0,
+            'order_id': order.id,
+        })
+        order._update_programs_and_rewards()
+        claimable_rewards = order._get_claimable_rewards()
+        self.assertEqual(len(claimable_rewards), 2, 'Should have two claimable reward, one for each program')
+        coupon = next(iter(claimable_rewards))
+        reward = claimable_rewards[coupon]
+        order._apply_program_reward(reward, coupon)
+        order.action_confirm()
+        reward_order_line = order.order_line.filtered(lambda l: l.coupon_id == coupon)
+        loyalty_points_changes = order._get_loyalty_points()
+        for updated_coupon in loyalty_points_changes:
+            if updated_coupon.id == coupon.id:
+                self.assertEqual(loyalty_points_changes[updated_coupon]['spent'], reward_order_line.points_cost,
+                                 'Spent points should be equal to point cost of the reward line')
+            coupon_point = order.coupon_point_ids.filtered(lambda c: c.coupon_id == updated_coupon)
+            self.assertEqual(loyalty_points_changes[updated_coupon]['won'], coupon_point.points,
+                             'Won points should be equal to points of the coupon points line')

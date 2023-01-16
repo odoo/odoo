@@ -52,3 +52,20 @@ class SaleLoyaltyRewardWizard(models.TransientModel):
             raise ValidationError(_('Coupon not found while trying to add the following reward: %s', self.selected_reward_id.description))
         self.order_id._apply_program_reward(self.selected_reward_id, coupon, product=self.selected_product_id)
         return True
+
+    @api.model
+    def get_reward_info(self, order_id):
+        self.order_id = order_id
+        order = self.env['sale.order'].browse(order_id)
+        coupon_rewards = order._get_claimable_rewards()
+        reward_info = []
+        for coupon, rewards in coupon_rewards.items():
+            if coupon.program_type == 'loyalty':
+                for reward in rewards:
+                    points = order._get_real_points_for_coupon(coupon)
+                    cost = reward.required_points
+                    reward_infos = order._get_reward_line_values(reward, coupon)
+                    if reward_infos and reward_infos[0]:
+                        cost = reward_infos[0].get('points_cost')
+                    reward_info.append([reward.id, reward.display_name, points, cost, coupon.id])
+        return reward_info

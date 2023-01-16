@@ -16,7 +16,7 @@
                         </a>
                         <label for="selected_reward_id" string="Choose your reward:" colspan="2"
                             attrs="{'invisible': [('reward_ids', '=', [])]}"/>
-                        <field name="selected_reward_id" widget="radio" colspan="2" nolabel="1"
+                        <field name="selected_reward_id" widget="select_reward_radio" colspan="2" nolabel="1"
                             attrs="{'invisible': [('reward_ids', '=', [])]}"/>
                         <label for="selected_product_id" string="Choose a product:" colspan="2"
                             attrs="{'invisible': [('multi_product_reward', '=', False)]}"/>
