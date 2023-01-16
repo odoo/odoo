@@ -382,7 +382,7 @@ const Wysiwyg = Widget.extend({
                     })();
                 }
                 $target.focus();
-                if ($target.closest('#wrapwrap, .iframe-editor-wrapper').length) {
+                if ($target.closest('#wrapwrap').length) {
                     this.toggleLinkTools({
                         forceOpen: true,
                         link: $target[0],
