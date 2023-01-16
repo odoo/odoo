@@ -28,7 +28,7 @@ const TableOfContent = publicWidget.Widget.extend({
             extraMenuUpdateCallbacks.splice(indexCallback, 1);
         }
         this.$el.css('top', '');
-        this.$el.find('.s_table_of_content_navbar').css('top', '');
+        this.$el.find('.s_table_of_content_navbar').css({top: '', maxHeight: ''});
         this._super(...arguments);
     },
 
@@ -51,6 +51,7 @@ const TableOfContent = publicWidget.Widget.extend({
         this.$el.css('top', isHorizontalNavbar ? position : '');
         this.$el.find('.s_table_of_content_navbar').css('top', isHorizontalNavbar ? '' : position + 20);
         position += isHorizontalNavbar ? this.$el.outerHeight() : 0;
+        this.$el.find('.s_table_of_content_navbar').css('maxHeight', isHorizontalNavbar ? '' : `calc(100vh - ${position + 40}px)`);
         if (this.previousPosition !== position) {
             new ScrollSpy(this.$scrollingElement, {
                 target: this.$el.find('.s_table_of_content_navbar'),
