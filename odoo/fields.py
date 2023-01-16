@@ -27,9 +27,10 @@ from difflib import get_close_matches
 from hashlib import sha256
 
 from .tools import (
-    float_repr, float_round, float_compare, float_is_zero, html_sanitize, human_size,
+    float_repr, float_round, float_compare, float_is_zero, human_size,
     pg_varchar, ustr, OrderedSet, pycompat, sql, date_utils, unique,
     image_process, merge_sequences, SQL_ORDER_BY_TYPE, is_list_of, has_list_types,
+    html_normalize, html_sanitize,
 )
 from .tools import DEFAULT_SERVER_DATE_FORMAT as DATE_FORMAT
 from .tools import DEFAULT_SERVER_DATETIME_FORMAT as DATETIME_FORMAT
@@ -1985,14 +1986,13 @@ class Html(_String):
 
             original_value = record[self.name]
             if original_value:
+                # Note that sanitize also normalize
                 original_value_sanitized = html_sanitize(original_value, **sanitize_vals)
-
-                def get_parsed(val):
-                    return etree.tostring(html.fromstring(val))
+                original_value_normalized = html_normalize(original_value)
 
                 if (
                     not original_value_sanitized  # sanitizer could empty it
-                    or get_parsed(original_value) != get_parsed(original_value_sanitized)
+                    or original_value_normalized != original_value_sanitized
                 ):
                     # The field contains element(s) that would be removed if
                     # sanitized. It means that someone who was part of a group
