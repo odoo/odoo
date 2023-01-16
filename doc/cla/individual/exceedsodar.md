@@ -1,4 +1,4 @@
-Madagascar, 16/01/2023
+Madagascar, 2023-01-16
 
 I hereby agree to the terms of the Odoo Individual Contributor License
 Agreement v1.0.
