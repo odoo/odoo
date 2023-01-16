@@ -3045,7 +3045,23 @@ class TestHtmlField(common.TransactionCase):
         })
         record = self.env['test_new_api.mixed'].create({})
 
-        # 1. Test main use case: prevent restricted user to wipe non restricted
+        # 1. Test normalize case: diff due to normalize should not prevent the
+        #    changes
+        val = '<blockquote>Something</blockquote>'
+        normalized_val = '<blockquote data-o-mail-quote-node="1" data-o-mail-quote="1">Something</blockquote>'
+        write_vals = {'comment5': val}
+
+        record.with_user(internal_user).write(write_vals)
+        self.assertEqual(record.comment5, normalized_val,
+                         "should be normalized (not in groups)")
+        record.with_user(bypass_user).write(write_vals)
+        self.assertEqual(record.comment5, val,
+                         "should not be normalized (has group)")
+        record.with_user(internal_user).write(write_vals)
+        self.assertEqual(record.comment5, normalized_val,
+                         "should be normalized (not in groups) despite admin previous diff")
+
+        # 2. Test main use case: prevent restricted user to wipe non restricted
         #    user previous change
         val = '<script></script>'
         write_vals = {'comment5': val}
@@ -3061,7 +3077,7 @@ class TestHtmlField(common.TransactionCase):
             # other user that bypassed the sanitize)
             record.with_user(internal_user).write(write_vals)
 
-        # 2. Make sure field compare in `_convert` is working as expected with
+        # 3. Make sure field compare in `_convert` is working as expected with
         #    special content / format
         val = '<span  attr1 ="att1"   attr2=\'attr2\'>é@&nbsp;</span><p><span/></p>'
         write_vals = {'comment5': val}
@@ -3077,6 +3093,13 @@ class TestHtmlField(common.TransactionCase):
         record.with_user(bypass_user).write(write_vals)
         # Next write shouldn't raise a sanitize right error
         record.with_user(internal_user).write(write_vals)
+
+        # 4. Ensure our exception handling is fine
+        val = '<!-- I am a comment -->'
+        write_vals = {'comment5': val}
+        record.with_user(internal_user).write(write_vals)
+        self.assertEqual(record.comment5, '',
+                         "should be sanitized (not in groups)")
 
 
 class TestMagicFields(common.TransactionCase):
