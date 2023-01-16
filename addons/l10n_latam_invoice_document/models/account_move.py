@@ -199,7 +199,7 @@ class AccountMove(models.Model):
                 document_types = document_types.filtered(lambda x: x.internal_type not in ['debit_note', 'invoice'])
             elif invoice_type in ['out_invoice', 'in_invoice']:
                 document_types = document_types.filtered(lambda x: x.internal_type not in ['credit_note'])
-            if rec.debit_origin_id:
+            if rec.debit_origin_id or self.env.context.get('internal_type') == 'debit_note':
                 document_types = document_types.filtered(lambda x: x.internal_type == 'debit_note')
             rec.l10n_latam_document_type_id = document_types and document_types[0].id
 
