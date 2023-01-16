@@ -1,6 +1,6 @@
 /** @odoo-module */
 
-import PosComponent from "@point_of_sale/js/PosComponent";
+import { PosComponent } from "@point_of_sale/js/PosComponent";
 import { useBus } from "@web/core/utils/hooks";
 
 /**
@@ -22,13 +22,13 @@ import { useBus } from "@web/core/utils/hooks";
  * The concrete popup can now be instantiated and be awaited for
  * the user's response like so:
  * ```js
- * const { confirmed, payload } = await this.showPopup('ConcretePopup');
+ * const { confirmed, payload } = await this.showPopup(ConcretePopup);
  * // based on the implementation above,
  * // if confirmed, payload = 'result'
  * //    otherwise, payload = null
  * ```
  */
-class AbstractAwaitablePopup extends PosComponent {
+export class AbstractAwaitablePopup extends PosComponent {
     setup() {
         super.setup();
         if (this.props.confirmKey) {
@@ -58,5 +58,3 @@ class AbstractAwaitablePopup extends PosComponent {
         return null;
     }
 }
-
-export default AbstractAwaitablePopup;

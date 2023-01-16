@@ -1,12 +1,19 @@
 /** @odoo-module */
 
-import AbstractAwaitablePopup from "@point_of_sale/js/Popups/AbstractAwaitablePopup";
-import Registries from "@point_of_sale/js/Registries";
+import { AbstractAwaitablePopup } from "@point_of_sale/js/Popups/AbstractAwaitablePopup";
 import { _lt } from "@web/core/l10n/translation";
 
 const { useState } = owl;
 
-class PaymentTransactionPopup extends AbstractAwaitablePopup {
+export class PaymentTransactionPopup extends AbstractAwaitablePopup {
+    static template = "PaymentTransactionPopup";
+    static defaultProps = {
+        confirmText: _lt("Ok"),
+        title: _lt("Online Payment"),
+        body: "",
+        cancelKey: false,
+    };
+
     setup() {
         super.setup();
         this.state = useState({ message: "", confirmButtonIsShown: false });
@@ -26,14 +33,3 @@ class PaymentTransactionPopup extends AbstractAwaitablePopup {
             });
     }
 }
-PaymentTransactionPopup.template = "PaymentTransactionPopup";
-PaymentTransactionPopup.defaultProps = {
-    confirmText: _lt("Ok"),
-    title: _lt("Online Payment"),
-    body: "",
-    cancelKey: false,
-};
-
-Registries.Component.add(PaymentTransactionPopup);
-
-export default PaymentTransactionPopup;

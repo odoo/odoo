@@ -1,9 +1,8 @@
 /** @odoo-module */
 
 import { useAutofocus, useListener } from "@web/core/utils/hooks";
-import PosComponent from "@point_of_sale/js/PosComponent";
-import Registries from "@point_of_sale/js/Registries";
-import SaleOrderFetcher from "@pos_sale/js/OrderManagementScreen/SaleOrderFetcher";
+import { PosComponent } from "@point_of_sale/js/PosComponent";
+import { saleOrderFetcher } from "@pos_sale/js/OrderManagementScreen/SaleOrderFetcher";
 import { orderManagement } from "@point_of_sale/js/PosContext";
 
 const { useState } = owl;
@@ -26,7 +25,9 @@ const SEARCH_FIELDS = ["name", "partner_id.display_name", "date_order"];
  * @emits next-page
  * @emits search
  */
-class SaleOrderManagementControlPanel extends PosComponent {
+export class SaleOrderManagementControlPanel extends PosComponent {
+    static template = "SaleOrderManagementControlPanel";
+
     setup() {
         super.setup();
         this.orderManagementContext = useState(orderManagement);
@@ -37,7 +38,7 @@ class SaleOrderManagementControlPanel extends PosComponent {
         if (currentPartner) {
             this.orderManagementContext.searchString = currentPartner.name;
         }
-        SaleOrderFetcher.setSearchDomain(this._computeDomain());
+        saleOrderFetcher.setSearchDomain(this._computeDomain());
     }
     onInputKeydown(event) {
         if (event.key === "Enter") {
@@ -45,11 +46,11 @@ class SaleOrderManagementControlPanel extends PosComponent {
         }
     }
     get showPageControls() {
-        return SaleOrderFetcher.lastPage > 1;
+        return saleOrderFetcher.lastPage > 1;
     }
     get pageNumber() {
-        const currentPage = SaleOrderFetcher.currentPage;
-        const lastPage = SaleOrderFetcher.lastPage;
+        const currentPage = saleOrderFetcher.currentPage;
+        const lastPage = saleOrderFetcher.lastPage;
         return isNaN(lastPage) ? "" : `(${currentPage}/${lastPage})`;
     }
     get validSearchTags() {
@@ -127,8 +128,3 @@ class SaleOrderManagementControlPanel extends PosComponent {
         this.onInputKeydown({ key: "Enter" });
     }
 }
-SaleOrderManagementControlPanel.template = "SaleOrderManagementControlPanel";
-
-Registries.Component.add(SaleOrderManagementControlPanel);
-
-export default SaleOrderManagementControlPanel;

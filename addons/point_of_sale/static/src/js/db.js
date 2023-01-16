@@ -18,7 +18,7 @@ import utils from "web.utils";
  */
 const CACHE = {};
 
-var PosDB = core.Class.extend({
+export const PosDB = core.Class.extend({
     name: "openerp_pos_db", //the prefix of the localstorage data
     limit: 100, // the maximum number of results returned by a search
     init: function (options) {
@@ -583,5 +583,3 @@ var PosDB = core.Class.extend({
         this.save("unpaid_orders_to_remove", to_remove);
     },
 });
-
-export default PosDB;

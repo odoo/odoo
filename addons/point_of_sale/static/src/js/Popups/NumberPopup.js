@@ -2,15 +2,27 @@
 import core from "web.core";
 var _t = core._t;
 
-import AbstractAwaitablePopup from "@point_of_sale/js/Popups/AbstractAwaitablePopup";
-import NumberBuffer from "@point_of_sale/js/Misc/NumberBuffer";
+import { AbstractAwaitablePopup } from "@point_of_sale/js/Popups/AbstractAwaitablePopup";
+import { numberBuffer } from "@point_of_sale/js/Misc/NumberBuffer";
 import { useListener } from "@web/core/utils/hooks";
-import Registries from "@point_of_sale/js/Registries";
+
+import { Draggable } from "../Misc/Draggable";
 
 const { useState } = owl;
 
-// formerly NumberPopupWidget
-class NumberPopup extends AbstractAwaitablePopup {
+export class NumberPopup extends AbstractAwaitablePopup {
+    static components = { Draggable };
+    static template = "NumberPopup";
+    static defaultProps = {
+        confirmText: _t("Confirm"),
+        cancelText: _t("Discard"),
+        title: _t("Confirm ?"),
+        body: "",
+        cheap: false,
+        startingValue: null,
+        isPassword: false,
+    };
+
     /**
      * @param {Object} props
      * @param {Boolean} props.isPassword Show password popup.
@@ -32,7 +44,7 @@ class NumberPopup extends AbstractAwaitablePopup {
                 .replace(".", this.decimalSeparator);
         }
         this.state = useState({ buffer: startingBuffer, toStartOver: this.props.isInputSelected });
-        NumberBuffer.use({
+        numberBuffer.use({
             nonKeyboardInputEvent: "numpad-click-input",
             triggerAtEnter: "accept-input",
             triggerAtEscape: "close-this-popup",
@@ -53,7 +65,7 @@ class NumberPopup extends AbstractAwaitablePopup {
         }
     }
     confirm(event) {
-        if (NumberBuffer.get()) {
+        if (numberBuffer.get()) {
             super.confirm();
         }
     }
@@ -61,20 +73,6 @@ class NumberPopup extends AbstractAwaitablePopup {
         this.trigger("numpad-click-input", { key });
     }
     getPayload() {
-        return NumberBuffer.get();
+        return numberBuffer.get();
     }
 }
-NumberPopup.template = "NumberPopup";
-NumberPopup.defaultProps = {
-    confirmText: _t("Confirm"),
-    cancelText: _t("Discard"),
-    title: _t("Confirm ?"),
-    body: "",
-    cheap: false,
-    startingValue: null,
-    isPassword: false,
-};
-
-Registries.Component.add(NumberPopup);
-
-export default NumberPopup;

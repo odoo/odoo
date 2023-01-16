@@ -1,6 +1,6 @@
 /** @odoo-module */
 
-import PaymentAdyen from "@pos_adyen/js/payment_adyen";
+import { PaymentAdyen } from "@pos_adyen/js/payment_adyen";
 
 PaymentAdyen.include({
     _adyen_pay_data: function () {

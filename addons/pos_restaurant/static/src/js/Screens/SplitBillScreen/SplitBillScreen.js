@@ -1,13 +1,18 @@
 /** @odoo-module */
 
-import PosComponent from "@point_of_sale/js/PosComponent";
+import { PosComponent } from "@point_of_sale/js/PosComponent";
 import { useListener } from "@web/core/utils/hooks";
 import { Order } from "@point_of_sale/js/models";
-import Registries from "@point_of_sale/js/Registries";
+
+import { SplitOrderline } from "./SplitOrderline";
+import { registry } from "@web/core/registry";
 
 const { useState, onMounted } = owl;
 
-class SplitBillScreen extends PosComponent {
+export class SplitBillScreen extends PosComponent {
+    static template = "SplitBillScreen";
+    static components = { SplitOrderline };
+
     setup() {
         super.setup();
         useListener("click-line", this.onClickLine);
@@ -19,7 +24,7 @@ class SplitBillScreen extends PosComponent {
             // Should create the new order outside of the constructor because
             // sequence_number of pos_session is modified. which will trigger
             // rerendering which will rerender this screen and will be infinite loop.
-            this.newOrder = Order.create(
+            this.newOrder = new Order(
                 {},
                 {
                     pos: this.env.pos,
@@ -190,8 +195,5 @@ class SplitBillScreen extends PosComponent {
         }
     }
 }
-SplitBillScreen.template = "SplitBillScreen";
 
-Registries.Component.add(SplitBillScreen);
-
-export default SplitBillScreen;
+registry.category("pos_screens").add("SplitBillScreen", SplitBillScreen);

@@ -43,6 +43,7 @@ export const configureGui = ({ component }) => {
     ]);
 };
 
+export class GuiNotReadyError extends Error {}
 /**
  * Import this and consume like so: `Gui.showPopup(<PopupName>, <props>)`.
  * Like you would call `showPopup` in a component.
@@ -57,5 +58,6 @@ export const Gui = new Proxy(config, {
         if (availableMethods.has(key) && isMounted) {
             return component[key].bind(component);
         }
+        throw new GuiNotReadyError(`Attempted get ${key} on Gui when Chrome is not yet mounted.`);
     },
 });

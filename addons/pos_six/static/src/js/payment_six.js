@@ -3,7 +3,8 @@
 
 import { Gui } from "@point_of_sale/js/Gui";
 import core from "web.core";
-import PaymentInterface from "@point_of_sale/js/payment";
+import { PaymentInterface } from "@point_of_sale/js/payment";
+import { ErrorPopup } from "@point_of_sale/js/Popups/ErrorPopup";
 
 var _t = core._t;
 
@@ -15,7 +16,7 @@ window.onTimApiPublishLogRecord = function (record) {
     }
 };
 
-var PaymentSix = PaymentInterface.extend({
+export const PaymentSix = PaymentInterface.extend({
     //--------------------------------------------------------------------------
     // Public
     //--------------------------------------------------------------------------
@@ -118,7 +119,7 @@ var PaymentSix = PaymentInterface.extend({
 
         if (event.exception) {
             if (event.exception.resultCode !== timapi.constants.ResultCode.apiCancelEcr) {
-                Gui.showPopup("ErrorPopup", {
+                Gui.showPopup(ErrorPopup, {
                     title: _t("Transaction was not processed correctly"),
                     body: event.exception.errorText,
                 });
@@ -141,7 +142,7 @@ var PaymentSix = PaymentInterface.extend({
 
     _onBalanceComplete: function (event, data) {
         if (event.exception) {
-            Gui.showPopup("ErrorPopup", {
+            Gui.showPopup(ErrorPopup, {
                 title: _t("Balance Failed"),
                 body: _t("The balance operation failed."),
             });
@@ -183,5 +184,3 @@ var PaymentSix = PaymentInterface.extend({
         });
     },
 });
-
-export default PaymentSix;

@@ -1,11 +1,12 @@
 /** @odoo-module */
 
-import PosComponent from "@point_of_sale/js/PosComponent";
-import ProductScreen from "@point_of_sale/js/Screens/ProductScreen/ProductScreen";
+import { PosComponent } from "@point_of_sale/js/PosComponent";
+import { ProductScreen } from "@point_of_sale/js/Screens/ProductScreen/ProductScreen";
 import { useListener } from "@web/core/utils/hooks";
-import Registries from "@point_of_sale/js/Registries";
 
-class SplitBillButton extends PosComponent {
+export class SplitBillButton extends PosComponent {
+    static template = "SplitBillButton";
+
     setup() {
         super.setup();
         useListener("click", this.onClick);
@@ -22,7 +23,6 @@ class SplitBillButton extends PosComponent {
         this.showScreen("SplitBillScreen");
     }
 }
-SplitBillButton.template = "SplitBillButton";
 
 ProductScreen.addControlButton({
     component: SplitBillButton,
@@ -30,7 +30,3 @@ ProductScreen.addControlButton({
         return this.env.pos.config.iface_splitbill;
     },
 });
-
-Registries.Component.add(SplitBillButton);
-
-export default SplitBillButton;

@@ -3,17 +3,29 @@
 import { sprintf } from "web.utils";
 import { parse } from "web.field_utils";
 import { useListener } from "@web/core/utils/hooks";
-import ControlButtonsMixin from "@point_of_sale/js/ControlButtonsMixin";
-import NumberBuffer from "@point_of_sale/js/Misc/NumberBuffer";
-import Registries from "@point_of_sale/js/Registries";
-import SaleOrderFetcher from "@pos_sale/js/OrderManagementScreen/SaleOrderFetcher";
-import IndependentToOrderScreen from "@point_of_sale/js/Misc/IndependentToOrderScreen";
+import { registry } from "@web/core/registry";
+import { ControlButtonsMixin } from "@point_of_sale/js/ControlButtonsMixin";
+import { numberBuffer } from "@point_of_sale/js/Misc/NumberBuffer";
+import { saleOrderFetcher } from "@pos_sale/js/OrderManagementScreen/SaleOrderFetcher";
+import { IndependentToOrderScreen } from "@point_of_sale/js/Misc/IndependentToOrderScreen";
 import { orderManagement } from "@point_of_sale/js/PosContext";
 import { Orderline } from "@point_of_sale/js/models";
 
+import { SelectionPopup } from "@point_of_sale/js/Popups/SelectionPopup";
+import { ErrorPopup } from "@point_of_sale/js/Popups/ErrorPopup";
+import { ConfirmPopup } from "@point_of_sale/js/Popups/ConfirmPopup";
+import { NumberPopup } from "@point_of_sale/js/Popups/NumberPopup";
+
+import { SaleOrderList } from "./SaleOrderList";
+import { SaleOrderManagementControlPanel } from "./SaleOrderManagementControlPanel";
+
 const { onMounted, onWillUnmount, useState } = owl;
 
-class SaleOrderManagementScreen extends ControlButtonsMixin(IndependentToOrderScreen) {
+export class SaleOrderManagementScreen extends ControlButtonsMixin(IndependentToOrderScreen) {
+    static components = { SaleOrderList, SaleOrderManagementControlPanel };
+    static template = "SaleOrderManagementScreen";
+    static hideOrderSelector = true;
+
     setup() {
         super.setup();
         useListener("close-screen", this.close);
@@ -22,14 +34,14 @@ class SaleOrderManagementScreen extends ControlButtonsMixin(IndependentToOrderSc
         useListener("prev-page", this._onPrevPage);
         useListener("search", this._onSearch);
 
-        SaleOrderFetcher.setComponent(this);
+        saleOrderFetcher.setComponent(this);
         this.orderManagementContext = useState(orderManagement);
 
         onMounted(this.onMounted);
         onWillUnmount(this.onWillUnmount);
     }
     onMounted() {
-        SaleOrderFetcher.on("update", this, this.render);
+        saleOrderFetcher.on("update", this, this.render);
 
         // calculate how many can fit in the screen.
         // It is based on the height of the header element.
@@ -41,41 +53,41 @@ class SaleOrderManagementScreen extends ControlButtonsMixin(IndependentToOrderSc
             (flexContainer.offsetHeight - cpEl.offsetHeight - headerEl.offsetHeight) /
                 headerEl.offsetHeight
         );
-        SaleOrderFetcher.setNPerPage(val);
+        saleOrderFetcher.setNPerPage(val);
 
         // Fetch the order after mounting so that order management screen
         // is shown while fetching.
-        setTimeout(() => SaleOrderFetcher.fetch(), 0);
+        setTimeout(() => saleOrderFetcher.fetch(), 0);
     }
     onWillUnmount() {
-        SaleOrderFetcher.off("update", this);
+        saleOrderFetcher.off("update", this);
     }
     get selectedPartner() {
         const order = this.orderManagementContext.selectedOrder;
         return order ? order.get_partner() : null;
     }
     get orders() {
-        return SaleOrderFetcher.get();
+        return saleOrderFetcher.get();
     }
     async _setNumpadMode(event) {
         const { mode } = event.detail;
         this.numpadMode = mode;
-        NumberBuffer.reset();
+        numberBuffer.reset();
     }
     _onNextPage() {
-        SaleOrderFetcher.nextPage();
+        saleOrderFetcher.nextPage();
     }
     _onPrevPage() {
-        SaleOrderFetcher.prevPage();
+        saleOrderFetcher.prevPage();
     }
     _onSearch({ detail: domain }) {
-        SaleOrderFetcher.setSearchDomain(domain);
-        SaleOrderFetcher.setPage(1);
-        SaleOrderFetcher.fetch();
+        saleOrderFetcher.setSearchDomain(domain);
+        saleOrderFetcher.setPage(1);
+        saleOrderFetcher.fetch();
     }
     async _onClickSaleOrder(event) {
         const clickedOrder = event.detail;
-        const { confirmed, payload: selectedOption } = await this.showPopup("SelectionPopup", {
+        const { confirmed, payload: selectedOption } = await this.showPopup(SelectionPopup, {
             title: this.env._t("What do you want to do?"),
             list: [
                 { id: "0", label: this.env._t("Apply a down payment"), item: false },
@@ -86,7 +98,7 @@ class SaleOrderManagementScreen extends ControlButtonsMixin(IndependentToOrderSc
         if (confirmed) {
             const currentPOSOrder = this.env.pos.get_order();
             const sale_order = await this._getSaleOrder(clickedOrder.id);
-            clickedOrder.shipping_date = sale_order.shipping_date
+            clickedOrder.shipping_date = sale_order.shipping_date;
             try {
                 await this.env.pos.load_new_partners();
             } catch {
@@ -104,7 +116,7 @@ class SaleOrderManagementScreen extends ControlButtonsMixin(IndependentToOrderSc
                         this.env._t("There was a problem in loading the %s customer."),
                         sale_order.partner_id[1]
                     );
-                    await this.showPopup("ErrorPopup", { title, body });
+                    await this.showPopup(ErrorPopup, { title, body });
                 }
                 currentPOSOrder.set_partner(
                     this.env.pos.db.get_partner_by_id(sale_order.partner_id[0])
@@ -134,7 +146,7 @@ class SaleOrderManagementScreen extends ControlButtonsMixin(IndependentToOrderSc
                     .filter((line) => !this.env.pos.db.get_product_by_id(line.product_id[0]))
                     .map((line) => line.product_id[0]);
                 if (product_to_add_in_pos.length) {
-                    const { confirmed } = await this.showPopup("ConfirmPopup", {
+                    const { confirmed } = await this.showPopup(ConfirmPopup, {
                         title: this.env._t("Products not available in POS"),
                         body: this.env._t(
                             "Some of the products in your Sale Order are not available in POS, do you want to import them?"
@@ -165,7 +177,7 @@ class SaleOrderManagementScreen extends ControlButtonsMixin(IndependentToOrderSc
                         continue;
                     }
 
-                    const new_line = Orderline.create(
+                    const new_line = new Orderline(
                         {},
                         {
                             pos: this.env.pos,
@@ -190,7 +202,7 @@ class SaleOrderManagementScreen extends ControlButtonsMixin(IndependentToOrderSc
                         // Ask once when `useLoadedLots` is undefined, then reuse it's value on the succeeding lines.
                         const { confirmed } =
                             useLoadedLots === undefined
-                                ? await this.showPopup("ConfirmPopup", {
+                                ? await this.showPopup(ConfirmPopup, {
                                       title: this.env._t("SN/Lots Loading"),
                                       body: this.env._t(
                                           "Do you want to load the SN/Lots linked to the Sales Order?"
@@ -242,7 +254,7 @@ class SaleOrderManagementScreen extends ControlButtonsMixin(IndependentToOrderSc
                         down_payment = sale_order.amount_total;
                     }
 
-                    const { confirmed, payload } = await this.showPopup("NumberPopup", {
+                    const { confirmed, payload } = await this.showPopup(NumberPopup, {
                         title: sprintf(
                             this.env._t("Percentage of %s"),
                             this.env.pos.format_currency(sale_order.amount_total)
@@ -253,7 +265,7 @@ class SaleOrderManagementScreen extends ControlButtonsMixin(IndependentToOrderSc
                         down_payment = (down_payment * parse.float(payload)) / 100;
                     }
 
-                    const new_line = Orderline.create(
+                    const new_line = new Orderline(
                         {},
                         {
                             pos: this.env.pos,
@@ -273,7 +285,7 @@ class SaleOrderManagementScreen extends ControlButtonsMixin(IndependentToOrderSc
                         "It seems that you didn't configure a down payment product in your point of sale.\
                         You can go to your point of sale configuration to choose one."
                     );
-                    await this.showPopup("ErrorPopup", { title, body });
+                    await this.showPopup(ErrorPopup, { title, body });
                 }
             }
 
@@ -302,15 +314,12 @@ class SaleOrderManagementScreen extends ControlButtonsMixin(IndependentToOrderSc
 
         const sale_lines = await this._getSOLines(sale_order[0].order_line);
         sale_order[0].order_line = sale_lines;
-        
+
         const picking_id = await this.rpc({
-            model: 'stock.picking',
-            method: 'read',
-            args: [
-                [sale_order[0].picking_ids[0]],
-                ['scheduled_date'],
-            ],
-          });
+            model: "stock.picking",
+            method: "read",
+            args: [[sale_order[0].picking_ids[0]], ["scheduled_date"]],
+        });
         sale_order[0].shipping_date = picking_id[0].scheduled_date;
 
         return sale_order[0];
@@ -326,9 +335,5 @@ class SaleOrderManagementScreen extends ControlButtonsMixin(IndependentToOrderSc
         return so_lines;
     }
 }
-SaleOrderManagementScreen.template = "SaleOrderManagementScreen";
-SaleOrderManagementScreen.hideOrderSelector = true;
 
-Registries.Component.add(SaleOrderManagementScreen);
-
-export default SaleOrderManagementScreen;
+registry.category("pos_screens").add("SaleOrderManagementScreen", SaleOrderManagementScreen);

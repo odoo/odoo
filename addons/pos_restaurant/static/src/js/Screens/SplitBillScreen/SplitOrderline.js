@@ -1,10 +1,11 @@
 /** @odoo-module */
 
 import { useListener } from "@web/core/utils/hooks";
-import PosComponent from "@point_of_sale/js/PosComponent";
-import Registries from "@point_of_sale/js/Registries";
+import { PosComponent } from "@point_of_sale/js/PosComponent";
 
-class SplitOrderline extends PosComponent {
+export class SplitOrderline extends PosComponent {
+    static template = "SplitOrderline";
+
     setup() {
         super.setup();
         useListener("click", this.onClick);
@@ -16,8 +17,3 @@ class SplitOrderline extends PosComponent {
         this.trigger("click-line", this.props.line);
     }
 }
-SplitOrderline.template = "SplitOrderline";
-
-Registries.Component.add(SplitOrderline);
-
-export default SplitOrderline;

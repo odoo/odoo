@@ -1,7 +1,6 @@
 /** @odoo-module */
 
-import PosComponent from "@point_of_sale/js/PosComponent";
-import Registries from "@point_of_sale/js/Registries";
+import { PosComponent } from "@point_of_sale/js/PosComponent";
 
 /**
  * @prop {'quantity' | 'price' | 'discount'} activeMode
@@ -10,7 +9,13 @@ import Registries from "@point_of_sale/js/Registries";
  * @event set-numpad-mode - triggered when mode button is clicked
  * @event numpad-click-input - triggered when numpad button is clicked
  */
-class NumpadWidget extends PosComponent {
+export class NumpadWidget extends PosComponent {
+    static template = "NumpadWidget";
+    static defaultProps = {
+        disabledModes: [],
+        disableSign: false,
+    };
+
     get hasPriceControlRights() {
         return (
             this.env.pos.cashierHasPriceControlRights() &&
@@ -38,12 +43,3 @@ class NumpadWidget extends PosComponent {
         return this.env._t.database.parameters.decimal_point;
     }
 }
-NumpadWidget.template = "NumpadWidget";
-NumpadWidget.defaultProps = {
-    disabledModes: [],
-    disableSign: false,
-};
-
-Registries.Component.add(NumpadWidget);
-
-export default NumpadWidget;

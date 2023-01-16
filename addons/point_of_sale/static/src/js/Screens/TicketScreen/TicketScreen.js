@@ -1,15 +1,44 @@
 /** @odoo-module */
 
 import { Order } from "@point_of_sale/js/models";
-import Registries from "@point_of_sale/js/Registries";
-import IndependentToOrderScreen from "@point_of_sale/js/Misc/IndependentToOrderScreen";
-import NumberBuffer from "@point_of_sale/js/Misc/NumberBuffer";
+import { IndependentToOrderScreen } from "@point_of_sale/js/Misc/IndependentToOrderScreen";
+import { numberBuffer } from "@point_of_sale/js/Misc/NumberBuffer";
+import { registry } from "@web/core/registry";
 import { useListener } from "@web/core/utils/hooks";
 import { parse } from "web.field_utils";
 
+import { ErrorPopup } from "@point_of_sale/js/Popups/ErrorPopup";
+import { ConfirmPopup } from "@point_of_sale/js/Popups/ConfirmPopup";
+
+import { ActionpadWidget } from "../ProductScreen/ActionpadWidget";
+import { InvoiceButton } from "../TicketScreen/ControlButtons/InvoiceButton";
+import { NumpadWidget } from "../ProductScreen/NumpadWidget";
+import { OrderDetails } from "../TicketScreen/OrderDetails";
+import { ReprintReceiptButton } from "./ControlButtons/ReprintReceiptButton";
+import { SearchBar } from "../../Misc/SearchBar";
+
 const { onMounted, onWillUnmount, useState } = owl;
 
-class TicketScreen extends IndependentToOrderScreen {
+export class TicketScreen extends IndependentToOrderScreen {
+    static template = "TicketScreen";
+    static components = {
+        ActionpadWidget,
+        InvoiceButton,
+        NumpadWidget,
+        OrderDetails,
+        ReprintReceiptButton,
+        SearchBar,
+    };
+    static defaultProps = {
+        destinationOrder: null,
+        // When passed as true, it will use the saved _state.ui as default
+        // value when this component is reinstantiated.
+        // After setting the default value, the _state.ui will be overridden
+        // by the passed props.ui if there is any.
+        reuseSavedUIState: false,
+        ui: {},
+    };
+
     setup() {
         super.setup();
         useListener("close-screen", this._onCloseScreen);
@@ -25,7 +54,7 @@ class TicketScreen extends IndependentToOrderScreen {
         useListener("click-refund-order-uid", this._onClickRefundOrderUid);
         useListener("update-selected-orderline", this._onUpdateSelectedOrderline);
         useListener("do-refund", this._onDoRefund);
-        NumberBuffer.use({
+        numberBuffer.use({
             nonKeyboardInputEvent: "numpad-click-input",
             triggerAtInput: "update-selected-orderline",
         });
@@ -89,7 +118,7 @@ class TicketScreen extends IndependentToOrderScreen {
                     this._state.ui.selectedOrderlineIds[clickedOrder.backendId] = firstLine.id;
                 }
             }
-            NumberBuffer.reset();
+            numberBuffer.reset();
         } else {
             this._setOrder(clickedOrder);
         }
@@ -111,7 +140,7 @@ class TicketScreen extends IndependentToOrderScreen {
             ["ProductScreen", "PaymentScreen"].includes(screen.name) &&
             order.get_orderlines().length > 0
         ) {
-            const { confirmed } = await this.showPopup("ConfirmPopup", {
+            const { confirmed } = await this.showPopup(ConfirmPopup, {
                 title: this.env._t("Existing orderlines"),
                 body: _.str.sprintf(
                     this.env._t(
@@ -151,7 +180,7 @@ class TicketScreen extends IndependentToOrderScreen {
     _onClickOrderline({ detail: orderline }) {
         const order = this.getSelectedSyncedOrder();
         this._state.ui.selectedOrderlineIds[order.backendId] = orderline.id;
-        NumberBuffer.reset();
+        numberBuffer.reset();
     }
     _onClickRefundOrderUid({ detail: orderUid }) {
         // Open the refund order.
@@ -164,24 +193,24 @@ class TicketScreen extends IndependentToOrderScreen {
         const buffer = detail.buffer;
         const order = this.getSelectedSyncedOrder();
         if (!order) {
-            return NumberBuffer.reset();
+            return numberBuffer.reset();
         }
 
         const selectedOrderlineId = this.getSelectedOrderlineId();
         const orderline = order.orderlines.find((line) => line.id == selectedOrderlineId);
         if (!orderline) {
-            return NumberBuffer.reset();
+            return numberBuffer.reset();
         }
 
         const toRefundDetail = this._getToRefundDetail(orderline);
         // When already linked to an order, do not modify the to refund quantity.
         if (toRefundDetail.destinationOrderUid) {
-            return NumberBuffer.reset();
+            return numberBuffer.reset();
         }
 
         const refundableQty = toRefundDetail.orderline.qty - toRefundDetail.orderline.refundedQty;
         if (refundableQty <= 0) {
-            return NumberBuffer.reset();
+            return numberBuffer.reset();
         }
 
         if (buffer == null || buffer == "") {
@@ -189,8 +218,8 @@ class TicketScreen extends IndependentToOrderScreen {
         } else {
             const quantity = Math.abs(parse.float(buffer));
             if (quantity > refundableQty) {
-                NumberBuffer.reset();
-                this.showPopup("ErrorPopup", {
+                numberBuffer.reset();
+                this.showPopup(ErrorPopup, {
                     title: this.env._t("Maximum Exceeded"),
                     body: _.str.sprintf(
                         this.env._t(
@@ -665,7 +694,7 @@ class TicketScreen extends IndependentToOrderScreen {
             // Cache these fetched orders so that next time, no need to fetch
             // them again, unless invalidated. See `_onInvoiceOrder`.
             fetchedOrders.forEach((order) => {
-                this._state.syncedOrders.cache[order.id] = Order.create(
+                this._state.syncedOrders.cache[order.id] = new Order(
                     {},
                     { pos: this.env.pos, json: order }
                 );
@@ -687,17 +716,5 @@ class TicketScreen extends IndependentToOrderScreen {
     //#endregion
     //#endregion
 }
-TicketScreen.template = "TicketScreen";
-TicketScreen.defaultProps = {
-    destinationOrder: null,
-    // When passed as true, it will use the saved _state.ui as default
-    // value when this component is reinstantiated.
-    // After setting the default value, the _state.ui will be overridden
-    // by the passed props.ui if there is any.
-    reuseSavedUIState: false,
-    ui: {},
-};
 
-Registries.Component.add(TicketScreen);
-
-export default TicketScreen;
+registry.category("pos_screens").add("TicketScreen", TicketScreen);

@@ -1,15 +1,25 @@
 /** @odoo-module */
 
-import AbstractAwaitablePopup from "@point_of_sale/js/Popups/AbstractAwaitablePopup";
-import Registries from "@point_of_sale/js/Registries";
+import { AbstractAwaitablePopup } from "@point_of_sale/js/Popups/AbstractAwaitablePopup";
 import { _lt } from "@web/core/l10n/translation";
+
+import { Draggable } from "../Misc/Draggable";
 
 const { onMounted, useRef, useState } = owl;
 
 // formerly TextAreaPopupWidget
 // IMPROVEMENT: This code is very similar to TextInputPopup.
 //      Combining them would reduce the code.
-class TextAreaPopup extends AbstractAwaitablePopup {
+export class TextAreaPopup extends AbstractAwaitablePopup {
+    static components = { Draggable };
+    static template = "TextAreaPopup";
+    static defaultProps = {
+        confirmText: _lt("Add"),
+        cancelText: _lt("Discard"),
+        title: "",
+        body: "",
+    };
+
     /**
      * @param {Object} props
      * @param {string} props.startingValue
@@ -27,14 +37,3 @@ class TextAreaPopup extends AbstractAwaitablePopup {
         return this.state.inputValue;
     }
 }
-TextAreaPopup.template = "TextAreaPopup";
-TextAreaPopup.defaultProps = {
-    confirmText: _lt("Add"),
-    cancelText: _lt("Discard"),
-    title: "",
-    body: "",
-};
-
-Registries.Component.add(TextAreaPopup);
-
-export default TextAreaPopup;

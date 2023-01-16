@@ -1,10 +1,13 @@
 /** @odoo-module */
 
-import PosComponent from "@point_of_sale/js/PosComponent";
-import Registries from "@point_of_sale/js/Registries";
+import { PosComponent } from "@point_of_sale/js/PosComponent";
 
+import { registry } from "@web/core/registry";
 import { debounce } from "@web/core/utils/timing";
 import { useListener } from "@web/core/utils/hooks";
+
+import { PartnerLine } from "./PartnerLine";
+import { PartnerDetailsEdit } from "./PartnerDetailsEdit";
 
 const { onWillUnmount, useRef } = owl;
 
@@ -23,7 +26,10 @@ const { onWillUnmount, useRef } = owl;
  *
  * @props partner - originally selected partner
  */
-class PartnerListScreen extends PosComponent {
+export class PartnerListScreen extends PosComponent {
+    static components = { PartnerDetailsEdit, PartnerLine };
+    static template = "PartnerListScreen";
+
     setup() {
         super.setup();
         useListener("click-save", () => this.env.bus.trigger("save-partner"));
@@ -196,8 +202,5 @@ class PartnerListScreen extends PosComponent {
         return result;
     }
 }
-PartnerListScreen.template = "PartnerListScreen";
 
-Registries.Component.add(PartnerListScreen);
-
-export default PartnerListScreen;
+registry.category("pos_screens").add("PartnerListScreen", PartnerListScreen);

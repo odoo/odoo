@@ -124,4 +124,4 @@ class SaleOrderFetcher extends EventBus {
     }
 }
 
-export default new SaleOrderFetcher();
+export const saleOrderFetcher = new SaleOrderFetcher();

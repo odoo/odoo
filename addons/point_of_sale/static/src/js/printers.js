@@ -4,6 +4,7 @@
 import Session from "web.Session";
 import core from "web.core";
 import { Gui } from "@point_of_sale/js/Gui";
+import { ErrorPopup } from "./Popups/ErrorPopup";
 var _t = core._t;
 
 // IMPROVEMENT: This is too much. We can get away from this class.
@@ -114,7 +115,7 @@ export const PrinterMixin = {
 
     _onIoTActionResult: function (data) {
         if (this.pos && (data === false || data.result === false)) {
-            Gui.showPopup("ErrorPopup", {
+            Gui.showPopup(ErrorPopup, {
                 title: _t("Connection to the printer failed"),
                 body: _t("Please check if the printer is still connected."),
             });
@@ -123,7 +124,7 @@ export const PrinterMixin = {
 
     _onIoTActionFail: function () {
         if (this.pos) {
-            Gui.showPopup("ErrorPopup", {
+            Gui.showPopup(ErrorPopup, {
                 title: _t("Connection to IoT Box failed"),
                 body: _t("Please check if the IoT Box is still connected."),
             });

@@ -1,18 +1,20 @@
 /** @odoo-module **/
 
-import PosComponent from "@point_of_sale/js/PosComponent";
-import ProductScreen from "@point_of_sale/js/Screens/ProductScreen/ProductScreen";
-import Registries from "@point_of_sale/js/Registries";
+import { PosComponent } from "@point_of_sale/js/PosComponent";
+import { ProductScreen } from "@point_of_sale/js/Screens/ProductScreen/ProductScreen";
 import { useListener } from "@web/core/utils/hooks";
+import { TextInputPopup } from "@point_of_sale/js/Popups/TextInputPopup";
 
 export class PromoCodeButton extends PosComponent {
+    static template = "PromoCodeButton";
+
     setup() {
         super.setup();
         useListener("click", this.onClick);
     }
 
     async onClick() {
-        let { confirmed, payload: code } = await this.showPopup("TextInputPopup", {
+        let { confirmed, payload: code } = await this.showPopup(TextInputPopup, {
             title: this.env._t("Enter Code"),
             startingValue: "",
             placeholder: this.env._t("Gift card or Discount code"),
@@ -26,8 +28,6 @@ export class PromoCodeButton extends PosComponent {
     }
 }
 
-PromoCodeButton.template = "PromoCodeButton";
-
 ProductScreen.addControlButton({
     component: PromoCodeButton,
     condition: function () {
@@ -36,5 +36,3 @@ ProductScreen.addControlButton({
         );
     },
 });
-
-Registries.Component.add(PromoCodeButton);

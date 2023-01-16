@@ -1,9 +1,10 @@
 /** @odoo-module */
 
-import AbstractAwaitablePopup from "@point_of_sale/js/Popups/AbstractAwaitablePopup";
-import Registries from "@point_of_sale/js/Registries";
+import { AbstractAwaitablePopup } from "@point_of_sale/js/Popups/AbstractAwaitablePopup";
 import { useAutoFocusToLast } from "@point_of_sale/js/custom_hooks";
 import { _lt } from "@web/core/l10n/translation";
+
+import { EditListInput } from "./EditListInput";
 
 const { useState } = owl;
 
@@ -25,7 +26,7 @@ const { useState } = owl;
  *
  *   // supply the items to the popup and wait for user's response
  *   // when user pressed `confirm` in the popup, the changes he made will be returned by the showPopup function.
- *   const { confirmed, payload: newNames } = await this.showPopup('EditListPopup', {
+ *   const { confirmed, payload: newNames } = await this.showPopup(EditListPopup, {
  *     title: "Can you confirm this item?",
  *     array: names })
  *
@@ -39,7 +40,16 @@ const { useState } = owl;
  *   }
  * ```
  */
-class EditListPopup extends AbstractAwaitablePopup {
+export class EditListPopup extends AbstractAwaitablePopup {
+    static components = { EditListInput };
+    static template = "EditListPopup";
+    static defaultProps = {
+        confirmText: _lt("Add"),
+        cancelText: _lt("Discard"),
+        array: [],
+        isSingleItem: false,
+    };
+
     /**
      * @param {String} title required title of popup
      * @param {Array} [props.array=[]] the array of { id, text } to be edited or an array of strings
@@ -104,14 +114,3 @@ class EditListPopup extends AbstractAwaitablePopup {
         };
     }
 }
-EditListPopup.template = "EditListPopup";
-EditListPopup.defaultProps = {
-    confirmText: _lt("Add"),
-    cancelText: _lt("Discard"),
-    array: [],
-    isSingleItem: false,
-};
-
-Registries.Component.add(EditListPopup);
-
-export default EditListPopup;

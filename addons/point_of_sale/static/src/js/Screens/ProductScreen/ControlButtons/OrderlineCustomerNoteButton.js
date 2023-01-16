@@ -1,11 +1,13 @@
 /** @odoo-module */
 
-import PosComponent from "@point_of_sale/js/PosComponent";
-import ProductScreen from "@point_of_sale/js/Screens/ProductScreen/ProductScreen";
+import { PosComponent } from "@point_of_sale/js/PosComponent";
+import { ProductScreen } from "@point_of_sale/js/Screens/ProductScreen/ProductScreen";
 import { useListener } from "@web/core/utils/hooks";
-import Registries from "@point_of_sale/js/Registries";
+import { TextAreaPopup } from "@point_of_sale/js/Popups/TextAreaPopup";
 
-class OrderlineCustomerNoteButton extends PosComponent {
+export class OrderlineCustomerNoteButton extends PosComponent {
+    static template = "OrderlineCustomerNoteButton";
+
     setup() {
         super.setup();
         useListener("click", this.onClick);
@@ -16,7 +18,7 @@ class OrderlineCustomerNoteButton extends PosComponent {
             return;
         }
 
-        const { confirmed, payload: inputNote } = await this.showPopup("TextAreaPopup", {
+        const { confirmed, payload: inputNote } = await this.showPopup(TextAreaPopup, {
             startingValue: selectedOrderline.get_customer_note(),
             title: this.env._t("Add Customer Note"),
         });
@@ -26,12 +28,7 @@ class OrderlineCustomerNoteButton extends PosComponent {
         }
     }
 }
-OrderlineCustomerNoteButton.template = "OrderlineCustomerNoteButton";
 
 ProductScreen.addControlButton({
     component: OrderlineCustomerNoteButton,
 });
-
-Registries.Component.add(OrderlineCustomerNoteButton);
-
-export default OrderlineCustomerNoteButton;

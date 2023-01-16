@@ -1,6 +1,6 @@
 /** @odoo-module */
 
-import PaymentInterface from "@point_of_sale/js/payment";
+import { PaymentInterface } from "@point_of_sale/js/payment";
 
 PaymentInterface.include({
     /**

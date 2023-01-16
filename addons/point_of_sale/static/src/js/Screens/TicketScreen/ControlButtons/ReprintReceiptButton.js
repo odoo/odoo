@@ -1,10 +1,11 @@
 /** @odoo-module */
 
 import { useListener } from "@web/core/utils/hooks";
-import PosComponent from "@point_of_sale/js/PosComponent";
-import Registries from "@point_of_sale/js/Registries";
+import { PosComponent } from "@point_of_sale/js/PosComponent";
 
-class ReprintReceiptButton extends PosComponent {
+export class ReprintReceiptButton extends PosComponent {
+    static template = "ReprintReceiptButton";
+
     setup() {
         super.setup();
         useListener("click", this._onClick);
@@ -16,7 +17,3 @@ class ReprintReceiptButton extends PosComponent {
         this.showScreen("ReprintReceiptScreen", { order: this.props.order });
     }
 }
-ReprintReceiptButton.template = "ReprintReceiptButton";
-Registries.Component.add(ReprintReceiptButton);
-
-export default ReprintReceiptButton;

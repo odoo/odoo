@@ -1,12 +1,14 @@
 /** @odoo-module */
 
 import { parse } from "web.field_utils";
-import NumberBuffer from "@point_of_sale/js/Misc/NumberBuffer";
-import PosComponent from "@point_of_sale/js/PosComponent";
+import { numberBuffer } from "@point_of_sale/js/Misc/NumberBuffer";
+import { PosComponent } from "@point_of_sale/js/PosComponent";
 import { usePos } from "@point_of_sale/app/pos_store";
 import { registry } from "@web/core/registry";
 import { Transition } from "@web/core/transition";
-import Draggable from "@point_of_sale/js/Misc/Draggable";
+import { Draggable } from "@point_of_sale/js/Misc/Draggable";
+import { ConfirmPopup } from "@point_of_sale/js/Popups/ConfirmPopup";
+import { OrderImportPopup } from "@point_of_sale/js/Popups/OrderImportPopup";
 
 const { onMounted, onWillUnmount, useRef, useState } = owl;
 
@@ -21,7 +23,7 @@ export class DebugWidget extends PosComponent {
             weightInput: "",
             isPaidOrdersReady: false,
             isUnpaidOrdersReady: false,
-            buffer: NumberBuffer.get(),
+            buffer: numberBuffer.get(),
         });
 
         // NOTE: Perhaps this can still be improved.
@@ -50,11 +52,11 @@ export class DebugWidget extends PosComponent {
         }
 
         onMounted(() => {
-            NumberBuffer.on("buffer-update", this, this._onBufferUpdate);
+            numberBuffer.on("buffer-update", this, this._onBufferUpdate);
         });
 
         onWillUnmount(() => {
-            NumberBuffer.off("buffer-update", this, this._onBufferUpdate);
+            numberBuffer.off("buffer-update", this, this._onBufferUpdate);
         });
     }
     toggleWidget() {
@@ -81,7 +83,7 @@ export class DebugWidget extends PosComponent {
         await this.env.barcode_reader.scan(ean);
     }
     async deleteOrders() {
-        const { confirmed } = await this.showPopup("ConfirmPopup", {
+        const { confirmed } = await this.showPopup(ConfirmPopup, {
             title: this.env._t("Delete Paid Orders ?"),
             body: this.env._t(
                 "This operation will permanently destroy all paid orders from the local storage. You will lose all the data. This operation cannot be undone."
@@ -93,7 +95,7 @@ export class DebugWidget extends PosComponent {
         }
     }
     async deleteUnpaidOrders() {
-        const { confirmed } = await this.showPopup("ConfirmPopup", {
+        const { confirmed } = await this.showPopup(ConfirmPopup, {
             title: this.env._t("Delete Unpaid Orders ?"),
             body: this.env._t(
                 "This operation will destroy all unpaid orders in the browser. You will lose all the unsaved data and exit the point of sale. This operation cannot be undone."
@@ -147,7 +149,7 @@ export class DebugWidget extends PosComponent {
         const file = event.target.files[0];
         if (file) {
             const report = this.env.pos.import_orders(await file.text());
-            await this.showPopup("OrderImportPopup", { report });
+            await this.showPopup(OrderImportPopup, { report });
         }
     }
     refreshDisplay() {

@@ -1,12 +1,24 @@
 /** @odoo-module */
 
-import PosComponent from "@point_of_sale/js/PosComponent";
-import Registries from "@point_of_sale/js/Registries";
+import { PosComponent } from "@point_of_sale/js/PosComponent";
 import { debounce } from "@web/core/utils/timing";
+import { registry } from "@web/core/registry";
+
+import { TextInputPopup } from "@point_of_sale/js/Popups/TextInputPopup";
+import { NumberPopup } from "@point_of_sale/js/Popups/NumberPopup";
+import { ConfirmPopup } from "@point_of_sale/js/Popups/ConfirmPopup";
+
+import { EditableTable } from "./EditableTable";
+import { EditBar } from "./EditBar";
+import { TableWidget } from "./TableWidget";
 
 const { onPatched, onMounted, onWillUnmount, useRef, useState } = owl;
 
-class FloorScreen extends PosComponent {
+export class FloorScreen extends PosComponent {
+    static components = { EditableTable, EditBar, TableWidget };
+    static template = "FloorScreen";
+    static hideOrderSelector = true;
+
     /**
      * @param {Object} props
      * @param {Object} props.floor
@@ -219,7 +231,7 @@ class FloorScreen extends PosComponent {
         if (!selectedTable) {
             return;
         }
-        const { confirmed, payload: newName } = await this.showPopup("TextInputPopup", {
+        const { confirmed, payload: newName } = await this.showPopup(TextInputPopup, {
             startingValue: selectedTable.name,
             title: this.env._t("Table Name ?"),
         });
@@ -236,7 +248,7 @@ class FloorScreen extends PosComponent {
         if (!selectedTable) {
             return;
         }
-        const { confirmed, payload: inputNumber } = await this.showPopup("NumberPopup", {
+        const { confirmed, payload: inputNumber } = await this.showPopup(NumberPopup, {
             startingValue: selectedTable.seats,
             cheap: true,
             title: this.env._t("Number of Seats ?"),
@@ -277,7 +289,7 @@ class FloorScreen extends PosComponent {
         if (!this.selectedTable) {
             return;
         }
-        const { confirmed } = await this.showPopup("ConfirmPopup", {
+        const { confirmed } = await this.showPopup(ConfirmPopup, {
             title: this.env._t("Are you sure ?"),
             body: this.env._t("Removing a table cannot be undone"),
         });
@@ -306,9 +318,5 @@ class FloorScreen extends PosComponent {
         this.env.pos.TICKET_SCREEN_STATE.syncedOrders.cache = {};
     }
 }
-FloorScreen.template = "FloorScreen";
-FloorScreen.hideOrderSelector = true;
 
-Registries.Component.add(FloorScreen);
-
-export default FloorScreen;
+registry.category("pos_screens").add("FloorScreen", FloorScreen);

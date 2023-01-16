@@ -8,7 +8,7 @@ var Mutex = concurrency.Mutex;
 // is set-up to act like  a keyboard. Use connect() and disconnect() to activate
 // and deactivate the barcode reader. Use set_action_callbacks to tell it
 // what to do when it reads a barcode.
-var BarcodeReader = core.Class.extend({
+export const BarcodeReader = core.Class.extend({
     actions: ["product", "cashier", "client"],
 
     init: function (attributes) {
@@ -163,5 +163,3 @@ var BarcodeReader = core.Class.extend({
         this.remote_scanning = false;
     },
 });
-
-export default BarcodeReader;

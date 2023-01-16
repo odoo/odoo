@@ -1,13 +1,17 @@
 /** @odoo-module */
 
-import PosComponent from "@point_of_sale/js/PosComponent";
-import Registries from "@point_of_sale/js/Registries";
+import { PosComponent } from "@point_of_sale/js/PosComponent";
 import { debounce } from "@web/core/utils/timing";
 import { usePos } from "@point_of_sale/app/pos_store";
 
+import { CategoryButton } from "./CategoryButton";
+
 import { onMounted, onWillUnmount, useState } from "@odoo/owl";
 
-class ProductsWidgetControlPanel extends PosComponent {
+export class ProductsWidgetControlPanel extends PosComponent {
+    static components = { CategoryButton };
+    static template = "ProductsWidgetControlPanel";
+
     setup() {
         super.setup();
         this.pos = usePos();
@@ -88,8 +92,3 @@ class ProductsWidgetControlPanel extends PosComponent {
         return ProductIds;
     }
 }
-ProductsWidgetControlPanel.template = "ProductsWidgetControlPanel";
-
-Registries.Component.add(ProductsWidgetControlPanel);
-
-export default ProductsWidgetControlPanel;

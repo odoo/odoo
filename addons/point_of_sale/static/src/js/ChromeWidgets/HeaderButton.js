@@ -1,18 +1,15 @@
 /** @odoo-module */
 
-import PosComponent from "@point_of_sale/js/PosComponent";
-import Registries from "@point_of_sale/js/Registries";
+import { PosComponent } from "@point_of_sale/js/PosComponent";
+import { ClosePosPopup } from "../Popups/ClosePosPopup";
 
 // Previously HeaderButtonWidget
 // This is the close session button
-class HeaderButton extends PosComponent {
+export class HeaderButton extends PosComponent {
+    static template = "HeaderButton";
+
     async onClick() {
         const info = await this.env.pos.getClosePosInfo();
-        this.showPopup("ClosePosPopup", { info: info, keepBehind: true });
+        this.showPopup(ClosePosPopup, { info: info, keepBehind: true });
     }
 }
-HeaderButton.template = "HeaderButton";
-
-Registries.Component.add(HeaderButton);
-
-export default HeaderButton;

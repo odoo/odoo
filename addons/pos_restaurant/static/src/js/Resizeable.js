@@ -1,12 +1,13 @@
 /** @odoo-module */
 
 import { useListener } from "@web/core/utils/hooks";
-import PosComponent from "@point_of_sale/js/PosComponent";
-import Registries from "@point_of_sale/js/Registries";
+import { PosComponent } from "@point_of_sale/js/PosComponent";
 
 const { onMounted, useExternalListener } = owl;
 
-class Resizeable extends PosComponent {
+export class Resizeable extends PosComponent {
+    static template = "Resizeable";
+
     setup() {
         super.setup();
         useExternalListener(document, "mousemove", this.resizeN);
@@ -322,8 +323,3 @@ class Resizeable extends PosComponent {
         this.trigger("resize-end", { size, loc });
     }
 }
-Resizeable.template = "Resizeable";
-
-Registries.Component.add(Resizeable);
-
-export default Resizeable;

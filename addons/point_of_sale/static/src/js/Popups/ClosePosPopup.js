@@ -1,12 +1,19 @@
 /** @odoo-module */
 
-import AbstractAwaitablePopup from "@point_of_sale/js/Popups/AbstractAwaitablePopup";
-import Registries from "@point_of_sale/js/Registries";
+import { AbstractAwaitablePopup } from "@point_of_sale/js/Popups/AbstractAwaitablePopup";
 import { identifyError } from "@point_of_sale/app/error_handlers/error_handlers";
 import { ConnectionLostError } from "@web/core/network/rpc_service";
+import { SaleDetailsButton } from "../ChromeWidgets/SaleDetailsButton";
+import { ConfirmPopup } from "./ConfirmPopup";
+import { ErrorPopup } from "./ErrorPopup";
+import { MoneyDetailsPopup } from "./MoneyDetailsPopup";
+
 const { useState } = owl;
 
-class ClosePosPopup extends AbstractAwaitablePopup {
+export class ClosePosPopup extends AbstractAwaitablePopup {
+    static components = { SaleDetailsButton };
+    static template = "ClosePosPopup";
+
     setup() {
         super.setup();
         this.manualInputCashCount = false;
@@ -24,7 +31,7 @@ class ClosePosPopup extends AbstractAwaitablePopup {
         if (!this.cashControl || !this.hasDifference()) {
             this.closeSession();
         } else if (this.hasUserAuthority()) {
-            const { confirmed } = await this.showPopup("ConfirmPopup", {
+            const { confirmed } = await this.showPopup(ConfirmPopup, {
                 title: this.env._t("Payments Difference"),
                 body: this.env._t(
                     "Do you want to accept payments difference and post a profit/loss journal entry?"
@@ -34,7 +41,7 @@ class ClosePosPopup extends AbstractAwaitablePopup {
                 this.closeSession();
             }
         } else {
-            await this.showPopup("ConfirmPopup", {
+            await this.showPopup(ConfirmPopup, {
                 title: this.env._t("Payments Difference"),
                 body: _.str.sprintf(
                     this.env._t(
@@ -54,7 +61,7 @@ class ClosePosPopup extends AbstractAwaitablePopup {
         }
     }
     async openDetailsPopup() {
-        const { confirmed, payload } = await this.showPopup("MoneyDetailsPopup", {
+        const { confirmed, payload } = await this.showPopup(MoneyDetailsPopup, {
             moneyDetails: this.moneyDetails,
             total: this.manualInputCashCount
                 ? 0
@@ -175,7 +182,7 @@ class ClosePosPopup extends AbstractAwaitablePopup {
                     throw error;
                 } else {
                     // FIXME POSREF: why are we catching errors here but not anywhere else in this method?
-                    await this.showPopup("ErrorPopup", {
+                    await this.showPopup(ErrorPopup, {
                         title: this.env._t("Closing session error"),
                         body: this.env._t(
                             "An error has occurred when trying to close the session.\n" +
@@ -210,8 +217,3 @@ class ClosePosPopup extends AbstractAwaitablePopup {
         return pm.type == "bank" && pm.number !== 0;
     }
 }
-
-ClosePosPopup.template = "ClosePosPopup";
-Registries.Component.add(ClosePosPopup);
-
-export default ClosePosPopup;

@@ -1,8 +1,9 @@
 /** @odoo-module */
 
 import { useListener } from "@web/core/utils/hooks";
-import PosComponent from "@point_of_sale/js/PosComponent";
-import Registries from "@point_of_sale/js/Registries";
+import { PosComponent } from "@point_of_sale/js/PosComponent";
+
+import { SaleOrderRow } from "./SaleOrderRow";
 
 const { useState } = owl;
 
@@ -10,7 +11,10 @@ const { useState } = owl;
  * @props {models.Order} [initHighlightedOrder] initially highligted order
  * @props {Array<models.Order>} orders
  */
-class SaleOrderList extends PosComponent {
+export class SaleOrderList extends PosComponent {
+    static components = { SaleOrderRow };
+    static template = "SaleOrderList";
+
     setup() {
         super.setup();
         useListener("click-order", this._onClickOrder);
@@ -23,8 +27,3 @@ class SaleOrderList extends PosComponent {
         this.state.highlightedOrder = order;
     }
 }
-SaleOrderList.template = "SaleOrderList";
-
-Registries.Component.add(SaleOrderList);
-
-export default SaleOrderList;

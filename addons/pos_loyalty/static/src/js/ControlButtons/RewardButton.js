@@ -1,12 +1,14 @@
 /** @odoo-module **/
 
 import { Gui } from "@point_of_sale/js/Gui";
-import PosComponent from "@point_of_sale/js/PosComponent";
-import ProductScreen from "@point_of_sale/js/Screens/ProductScreen/ProductScreen";
-import Registries from "@point_of_sale/js/Registries";
+import { PosComponent } from "@point_of_sale/js/PosComponent";
+import { ProductScreen } from "@point_of_sale/js/Screens/ProductScreen/ProductScreen";
 import { useListener } from "@web/core/utils/hooks";
+import { SelectionPopup } from "@point_of_sale/js/Popups/SelectionPopup";
 
 export class RewardButton extends PosComponent {
+    static template = "RewardButton";
+
     setup() {
         super.setup();
         useListener("click", this.onClick);
@@ -68,7 +70,7 @@ export class RewardButton extends PosComponent {
                 label: this.env.pos.db.get_product_by_id(product_id).display_name,
                 item: product_id,
             }));
-            const { confirmed, payload: selectedProduct } = await this.showPopup("SelectionPopup", {
+            const { confirmed, payload: selectedProduct } = await this.showPopup(SelectionPopup, {
                 title: this.env._t("Please select a product for this reward"),
                 list: productsList,
             });
@@ -112,7 +114,7 @@ export class RewardButton extends PosComponent {
                 label: reward.reward.description,
                 item: reward,
             }));
-            const { confirmed, payload: selectedReward } = await this.showPopup("SelectionPopup", {
+            const { confirmed, payload: selectedReward } = await this.showPopup(SelectionPopup, {
                 title: this.env._t("Please select a reward"),
                 list: rewardsList,
             });
@@ -128,13 +130,9 @@ export class RewardButton extends PosComponent {
     }
 }
 
-RewardButton.template = "RewardButton";
-
 ProductScreen.addControlButton({
     component: RewardButton,
     condition: function () {
         return this.env.pos.programs.length > 0;
     },
 });
-
-Registries.Component.add(RewardButton);

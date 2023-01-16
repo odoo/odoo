@@ -1,12 +1,17 @@
 /** @odoo-module */
 
 import { useListener } from "@web/core/utils/hooks";
-import PosComponent from "@point_of_sale/js/PosComponent";
-import Registries from "@point_of_sale/js/Registries";
+import { PosComponent } from "@point_of_sale/js/PosComponent";
+
+import { Draggable } from "@point_of_sale/js/Misc/Draggable";
+import { Resizeable } from "../../Resizeable";
 
 const { onMounted, onPatched } = owl;
 
-class EditableTable extends PosComponent {
+export class EditableTable extends PosComponent {
+    static template = "EditableTable";
+    static components = { Draggable, Resizeable };
+
     setup() {
         super.setup();
         useListener("resize-end", this._onResizeEnd);
@@ -52,8 +57,3 @@ class EditableTable extends PosComponent {
         this.props.onSaveTable(this.props.table);
     }
 }
-EditableTable.template = "EditableTable";
-
-Registries.Component.add(EditableTable);
-
-export default EditableTable;

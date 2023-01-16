@@ -1,11 +1,12 @@
 /** @odoo-module */
 
-import PosComponent from "@point_of_sale/js/PosComponent";
-import Registries from "@point_of_sale/js/Registries";
+import { PosComponent } from "@point_of_sale/js/PosComponent";
 
 const { useState } = owl;
 
-class CustomerFacingDisplayButton extends PosComponent {
+export class CustomerFacingDisplayButton extends PosComponent {
+    static template = "CustomerFacingDisplayButton";
+
     setup() {
         super.setup();
         this.local =
@@ -101,8 +102,3 @@ class CustomerFacingDisplayButton extends PosComponent {
         loop();
     }
 }
-CustomerFacingDisplayButton.template = "CustomerFacingDisplayButton";
-
-Registries.Component.add(CustomerFacingDisplayButton);
-
-export default CustomerFacingDisplayButton;

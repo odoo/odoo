@@ -1,7 +1,6 @@
 /** @odoo-module */
 
-import Registries from "@point_of_sale/js/Registries";
-import PosComponent from "@point_of_sale/js/PosComponent";
+import { PosComponent } from "@point_of_sale/js/PosComponent";
 import { useBus } from "@web/core/utils/hooks";
 
 /**
@@ -25,7 +24,10 @@ import { useBus } from "@web/core/utils/hooks";
  * @typedef {{ id: number, resolve: Function, keepBehind?: boolean, cancelKey?: string, confirmKey?: string }} BasePopupProps
  * @typedef {{ name: string, component: AbstractAwaitablePopup, props: BasePopupProps, key: string }} Popup
  */
-class PosPopupController extends PosComponent {
+export class PosPopupController extends PosComponent {
+    static template = "point_of_sale.PosPopupController";
+    static components = {};
+
     setup() {
         super.setup();
         useBus(this.env.posbus, "show-popup", this._showPopup);
@@ -33,24 +35,33 @@ class PosPopupController extends PosComponent {
         owl.useExternalListener(window, "keyup", this._onWindowKeyup);
         this.popups = owl.useState([]);
     }
+    /**
+     * A popup can be cancelled/confirmed with 'Escape'/'Enter' key by default.
+     * Also, if it's not the top popup, it is hidden from the view.
+     * This can be overridden by the default props of the popop component
+     * and the props used in requesting to show the popup.
+     *
+     * @param {AbstractAwaitablePopup} popupComponent
+     * @param {Object} props
+     * @returns {BasePopupProps}
+     */
     _showPopup(event) {
-        let { id, name, props, resolve } = event.detail;
+        let { id, component, props, resolve } = event.detail;
         props = Object.assign(props || {}, { id, resolve });
-        const component = this.constructor.components[name];
-        if (!component) {
-            throw new Error(
-                `'${name}' is not found. Make sure the file is loaded and the component is properly registered using 'Registries.Component.add'.`
-            );
-        }
         if (component.dontShow) {
             resolve();
             return;
         }
         this.popups.push({
-            name,
             component,
-            props: this._constructPopupProps(component, props),
-            key: `${name}-${id}`,
+            props: {
+                keepBehind: false,
+                cancelKey: "Escape",
+                confirmKey: "Enter",
+                // FIXME POSREF assigning the default props by hand defeats the point of default props
+                ...component.defaultProps,
+                ...props,
+            },
         });
     }
     _closePopup(event) {
@@ -77,28 +88,6 @@ class PosPopupController extends PosComponent {
         }
     }
     /**
-     * A popup can be cancelled/confirmed with 'Escape'/'Enter' key by default.
-     * Also, if it's not the top popup, it is hidden from the view.
-     * This can be overridden by the default props of the popop component
-     * and the props used in requesting to show the popup.
-     *
-     * @param {AbstractAwaitablePopup} popupComponent
-     * @param {Object} props
-     * @returns {BasePopupProps}
-     */
-    _constructPopupProps(popupComponent, props) {
-        const defaultProps = popupComponent.defaultProps || {};
-        return Object.assign(
-            {
-                keepBehind: false,
-                cancelKey: "Escape",
-                confirmKey: "Enter",
-            },
-            defaultProps,
-            props
-        );
-    }
-    /**
      * @returns {boolean} Hide the element of this component when this returns false.
      */
     isShown() {
@@ -120,7 +109,3 @@ class PosPopupController extends PosComponent {
         return this.topPopup === popup || popup.props.keepBehind;
     }
 }
-PosPopupController.template = "point_of_sale.PosPopupController";
-Registries.Component.add(PosPopupController);
-
-export default PosPopupController;
