@@ -1,9 +1,10 @@
 /** @odoo-module */
 
-import PosComponent from "@point_of_sale/js/PosComponent";
-import Registries from "@point_of_sale/js/Registries";
+import { PosComponent } from "@point_of_sale/js/PosComponent";
 
-class Orderline extends PosComponent {
+export class Orderline extends PosComponent {
+    static template = "Orderline";
+
     selectLine() {
         this.trigger("select-line", { orderline: this.props.line });
     }
@@ -19,8 +20,3 @@ class Orderline extends PosComponent {
         return this.props.line.get_customer_note();
     }
 }
-Orderline.template = "Orderline";
-
-Registries.Component.add(Orderline);
-
-export default Orderline;

@@ -1,12 +1,13 @@
 /** @odoo-module */
 
 import { useListener } from "@web/core/utils/hooks";
-import PosComponent from "@point_of_sale/js/PosComponent";
-import Registries from "@point_of_sale/js/Registries";
+import { PosComponent } from "@point_of_sale/js/PosComponent";
 
 const { onMounted } = owl;
 
-class Notification extends PosComponent {
+export class Notification extends PosComponent {
+    static template = "Notification";
+
     setup() {
         super.setup();
         useListener("click", this.closeNotification);
@@ -18,8 +19,3 @@ class Notification extends PosComponent {
         });
     }
 }
-Notification.template = "Notification";
-
-Registries.Component.add(Notification);
-
-export default Notification;

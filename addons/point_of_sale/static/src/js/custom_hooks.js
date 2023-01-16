@@ -1,4 +1,9 @@
 /** @odoo-module */
+import { OfflineErrorPopup } from "./Popups/OfflineErrorPopup";
+import { ConfirmPopup } from "./Popups/ConfirmPopup";
+import { ErrorTracebackPopup } from "./Popups/ErrorTracebackPopup";
+import { ErrorPopup } from "./Popups/ErrorPopup";
+
 const { onMounted, onPatched, onWillUnmount, useComponent } = owl;
 
 /**
@@ -13,7 +18,7 @@ export function useErrorHandlers() {
     component._handlePushOrderError = async function (error) {
         // This error handler receives `error` equivalent to `error.message` of the rpc error.
         if (error.message === "Backend Invoice") {
-            await this.showPopup("ConfirmPopup", {
+            await this.showPopup(ConfirmPopup, {
                 title: this.env._t("Please print the invoice from the backend"),
                 body:
                     this.env._t(
@@ -26,10 +31,10 @@ export function useErrorHandlers() {
             const body = this.env._t(
                 "Check the internet connection then try to sync again by clicking on the red wifi button (upper right of the screen)."
             );
-            await this.showPopup("OfflineErrorPopup", { title, body });
+            await this.showPopup(OfflineErrorPopup, { title, body });
         } else if (error.code === 200) {
             // OpenERP Server Errors
-            await this.showPopup("ErrorTracebackPopup", {
+            await this.showPopup(ErrorTracebackPopup, {
                 title: error.data.message || this.env._t("Server Error"),
                 body:
                     error.data.debug ||
@@ -37,7 +42,7 @@ export function useErrorHandlers() {
             });
         } else if (error.code === 700) {
             // Sweden Fiscal module errors
-            await this.showPopup("ErrorPopup", {
+            await this.showPopup(ErrorPopup, {
                 title: this.env._t("Fiscal data module error"),
                 body:
                     error.data.error.status ||
@@ -53,13 +58,13 @@ export function useErrorHandlers() {
             } else {
                 bodyMessage = "Fiscal data module is not on.";
             }
-            await this.showPopup("ErrorPopup", {
+            await this.showPopup(ErrorPopup, {
                 title: this.env._t("Fiscal data module error"),
                 body: bodyMessage,
             });
         } else {
             // ???
-            await this.showPopup("ErrorPopup", {
+            await this.showPopup(ErrorPopup, {
                 title: this.env._t("Unknown Error"),
                 body: this.env._t(
                     "The order could not be sent to the server due to an unknown error"

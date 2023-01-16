@@ -1,6 +1,6 @@
 /** @odoo-module */
 
-import NumberBuffer from "@point_of_sale/js/Misc/NumberBuffer";
+import { numberBuffer } from "@point_of_sale/js/Misc/NumberBuffer";
 import makeTestEnvironment from "web.test_env";
 import testUtils from "web.test_utils";
 import { mount } from "@web/../tests/helpers/utils";
@@ -20,15 +20,15 @@ QUnit.test("simple fast inputs with capture in between", async function (assert)
     class Root extends LegacyComponent {
         setup() {
             this.state = useState({ buffer: "" });
-            NumberBuffer.activate();
-            NumberBuffer.use({
+            numberBuffer.activate();
+            numberBuffer.use({
                 nonKeyboardInputEvent: "numpad-click-input",
                 state: this.state,
             });
         }
         resetBuffer() {
-            NumberBuffer.capture();
-            NumberBuffer.reset();
+            numberBuffer.capture();
+            numberBuffer.reset();
         }
         onClickOne() {
             this.trigger("numpad-click-input", { key: "1" });

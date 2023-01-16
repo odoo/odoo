@@ -1,53 +1,47 @@
 /** @odoo-module */
 
-import PosPopupController from "@point_of_sale/js/Popups/PosPopupController";
-import AbstractAwaitablePopup from "@point_of_sale/js/Popups/AbstractAwaitablePopup";
-import PosComponent from "@point_of_sale/js/PosComponent";
+import { PosPopupController } from "@point_of_sale/js/Popups/PosPopupController";
+import { AbstractAwaitablePopup } from "@point_of_sale/js/Popups/AbstractAwaitablePopup";
+import { PosComponent } from "@point_of_sale/js/PosComponent";
 import makeTestEnvironment from "web.test_env";
 import testUtils from "web.test_utils";
-import Registries from "@point_of_sale/js/Registries";
 import { mount } from "@web/../tests/helpers/utils";
 
 const { EventBus, useSubEnv, xml } = owl;
 
-QUnit.module("unit tests for PosPopupController", {
-    before() {
-        Registries.Component.freeze();
+// Note that we are creating new popups here to decouple this test from the pos app.
+class CustomPopup1 extends AbstractAwaitablePopup {}
+CustomPopup1.template = xml/* html */ `
+    <div class="popup custom-popup-1">
+        <footer>
+            <div class="confirm" t-on-click="confirm">
+                Yes
+            </div>
+            <div class="cancel" t-on-click="cancel">
+                No
+            </div>
+        </footer>
+    </div>
+`;
 
-        // Note that we are creating new popups here to decouple this test from the pos app.
-        class CustomPopup1 extends AbstractAwaitablePopup {}
-        CustomPopup1.template = xml/* html */ `
-                <div class="popup custom-popup-1">
-                    <footer>
-                        <div class="confirm" t-on-click="confirm">
-                            Yes
-                        </div>
-                        <div class="cancel" t-on-click="cancel">
-                            No
-                        </div>
-                    </footer>
-                </div>
-            `;
+class CustomPopup2 extends AbstractAwaitablePopup {}
+CustomPopup2.template = xml/* html */ `
+    <div class="popup custom-popup-2">
+        <footer>
+            <div class="confirm" t-on-click="confirm">
+                Okay
+            </div>
+        </footer>
+    </div>
+`;
 
-        class CustomPopup2 extends AbstractAwaitablePopup {}
-        CustomPopup2.template = xml/* html */ `
-                <div class="popup custom-popup-2">
-                    <footer>
-                        <div class="confirm" t-on-click="confirm">
-                            Okay
-                        </div>
-                    </footer>
-                </div>
-            `;
-
-        PosPopupController.components = { CustomPopup1, CustomPopup2 };
-    },
-});
+QUnit.module("unit tests for PosPopupController");
 
 QUnit.test("allow multiple popups at the same time", async function (assert) {
     assert.expect(12);
 
     class Root extends PosComponent {
+        static components = { PosPopupController };
         setup() {
             super.setup();
             useSubEnv({
@@ -66,7 +60,7 @@ QUnit.test("allow multiple popups at the same time", async function (assert) {
     const root = await mount(Root, testUtils.prepareTarget());
 
     // Check 1 popup
-    let popup1Promise = root.showPopup("CustomPopup1", {});
+    let popup1Promise = root.showPopup(CustomPopup1, {});
     await testUtils.nextTick();
     assert.strictEqual(root.el.querySelectorAll(".popup").length, 1);
     testUtils.dom.click(root.el.querySelector(".modal-dialog .custom-popup-1 .confirm"));
@@ -76,13 +70,13 @@ QUnit.test("allow multiple popups at the same time", async function (assert) {
     assert.strictEqual(root.el.querySelectorAll(".popup").length, 0);
 
     // Check multiple popups
-    popup1Promise = root.showPopup("CustomPopup1", {});
+    popup1Promise = root.showPopup(CustomPopup1, {});
     await testUtils.nextTick();
 
     // Check if the first popup is shown.
     assert.strictEqual(root.el.querySelectorAll(".popup").length, 1);
 
-    const popup2Promise = root.showPopup("CustomPopup2", {});
+    const popup2Promise = root.showPopup(CustomPopup2, {});
     await testUtils.nextTick();
 
     // Check for the second popup.
@@ -100,8 +94,8 @@ QUnit.test("allow multiple popups at the same time", async function (assert) {
     assert.strictEqual(root.el.querySelectorAll(".modal-dialog .custom-popup-2").length, 0);
 
     // popup 1 should not be hidden
-    const CustomPopup1 = root.el.querySelector(".modal-dialog");
-    assert.strictEqual(![...CustomPopup1.classList].includes("oe_hidden"), true);
+    const customPopup1 = root.el.querySelector(".modal-dialog");
+    assert.strictEqual(![...customPopup1.classList].includes("oe_hidden"), true);
     testUtils.dom.click(root.el.querySelector(".modal-dialog .custom-popup-1 .cancel"));
     await testUtils.nextTick();
 
@@ -118,6 +112,7 @@ QUnit.test("pressing cancel/confirm key should only close the top popup", async 
     assert.expect(6);
 
     class Root extends PosComponent {
+        static components = { PosPopupController };
         setup() {
             super.setup();
             useSubEnv({
@@ -135,14 +130,14 @@ QUnit.test("pressing cancel/confirm key should only close the top popup", async 
 
     const root = await mount(Root, testUtils.prepareTarget());
 
-    const popup1Promise = root.showPopup("CustomPopup1", {
+    const popup1Promise = root.showPopup(CustomPopup1, {
         confirmKey: "Enter",
         cancelKey: "Escape",
     });
     await testUtils.nextTick();
     assert.strictEqual(root.el.querySelectorAll(".popup").length, 1);
 
-    const popup2Promise = root.showPopup("CustomPopup2", {
+    const popup2Promise = root.showPopup(CustomPopup2, {
         confirmKey: "Enter",
         cancelKey: "Escape",
     });

@@ -1,16 +1,39 @@
 /** @odoo-module */
 
-import PosComponent from "@point_of_sale/js/PosComponent";
-import ControlButtonsMixin from "@point_of_sale/js/ControlButtonsMixin";
-import NumberBuffer from "@point_of_sale/js/Misc/NumberBuffer";
+import { PosComponent } from "@point_of_sale/js/PosComponent";
+import { ControlButtonsMixin } from "@point_of_sale/js/ControlButtonsMixin";
+import { numberBuffer } from "@point_of_sale/js/Misc/NumberBuffer";
+import { registry } from "@web/core/registry";
 import { useListener } from "@web/core/utils/hooks";
-import Registries from "@point_of_sale/js/Registries";
 import { useBarcodeReader } from "@point_of_sale/js/custom_hooks";
 import { parse } from "web.field_utils";
 
+import { ProductConfiguratorPopup } from "@point_of_sale/js/Popups/ProductConfiguratorPopup";
+import { EditListPopup } from "@point_of_sale/js/Popups/EditListPopup";
+import { NumberPopup } from "@point_of_sale/js/Popups/NumberPopup";
+import { ErrorPopup } from "@point_of_sale/js/Popups/ErrorPopup";
+import { ErrorBarcodePopup } from "@point_of_sale/js/Popups/ErrorBarcodePopup";
+import { ConfirmPopup } from "@point_of_sale/js/Popups/ConfirmPopup";
+import { ControlButtonPopup } from "@point_of_sale/js/Popups/ControlButtonPopup";
+
+import { ActionpadWidget } from "./ActionpadWidget";
+import { MobileOrderWidget } from "../../Misc/MobileOrderWidget";
+import { NumpadWidget } from "./NumpadWidget";
+import { OrderWidget } from "./OrderWidget";
+import { ProductsWidget } from "./ProductsWidget";
+
 const { onMounted, useState } = owl;
 
-class ProductScreen extends ControlButtonsMixin(PosComponent) {
+export class ProductScreen extends ControlButtonsMixin(PosComponent) {
+    static template = "ProductScreen";
+    static components = {
+        ActionpadWidget,
+        MobileOrderWidget,
+        NumpadWidget,
+        OrderWidget,
+        ProductsWidget,
+    };
+
     setup() {
         super.setup();
         useListener("update-selected-orderline", this._updateSelectedOrderline);
@@ -27,16 +50,16 @@ class ProductScreen extends ControlButtonsMixin(PosComponent) {
             discount: this._barcodeDiscountAction,
             error: this._barcodeErrorAction,
         });
-        NumberBuffer.use({
+        numberBuffer.use({
             nonKeyboardInputEvent: "numpad-click-input",
             triggerAtInput: "update-selected-orderline",
             useWithBarcode: true,
         });
         onMounted(this.onMounted);
-        // Call `reset` when the `onMounted` callback in `NumberBuffer.use` is done.
+        // Call `reset` when the `onMounted` callback in `numberBuffer.use` is done.
         // We don't do this in the `mounted` lifecycle method because it is called before
         // the callbacks in `onMounted` hook.
-        onMounted(() => NumberBuffer.reset());
+        onMounted(() => numberBuffer.reset());
         this.state = useState({
             mobile_pane: this.props.mobile_pane || "right",
         });
@@ -67,7 +90,7 @@ class ProductScreen extends ControlButtonsMixin(PosComponent) {
                 product.attribute_line_ids,
                 (id) => this.env.pos.attributes_by_ptal_id[id]
             ).filter((attr) => attr !== undefined);
-            const { confirmed, payload } = await this.showPopup("ProductConfiguratorPopup", {
+            const { confirmed, payload } = await this.showPopup(ProductConfiguratorPopup, {
                 product: product,
                 attributes: attributes,
             });
@@ -100,7 +123,7 @@ class ProductScreen extends ControlButtonsMixin(PosComponent) {
                     packLotLinesToEdit = [];
                 }
             }
-            const { confirmed, payload } = await this.showPopup("EditListPopup", {
+            const { confirmed, payload } = await this.showPopup(EditListPopup, {
                 title: this.env._t("Lot/Serial Number(s) Required"),
                 name: product.display_name,
                 isSingleItem: isAllowOnlyOneLot,
@@ -161,16 +184,16 @@ class ProductScreen extends ControlButtonsMixin(PosComponent) {
         }
         // Add the product after having the extra information.
         await this._addProduct(product, options);
-        NumberBuffer.reset();
+        numberBuffer.reset();
     }
     _setNumpadMode(event) {
         const { mode } = event.detail;
-        NumberBuffer.capture();
-        NumberBuffer.reset();
+        numberBuffer.capture();
+        numberBuffer.reset();
         this.env.pos.numpadMode = mode;
     }
     _selectLine() {
-        NumberBuffer.reset();
+        numberBuffer.reset();
     }
     async _updateSelectedOrderline(event) {
         if (this.env.pos.numpadMode === "quantity" && this.env.pos.disallowLineQuantityChange()) {
@@ -187,7 +210,7 @@ class ProductScreen extends ControlButtonsMixin(PosComponent) {
                 .get_quantity();
 
             if (selectedLine.noDecrease) {
-                this.showPopup("ErrorPopup", {
+                this.showPopup(ErrorPopup, {
                     title: this.env._t("Invalid action"),
                     body: this.env._t("You are not allowed to change this quantity"),
                 });
@@ -206,7 +229,7 @@ class ProductScreen extends ControlButtonsMixin(PosComponent) {
             const val = buffer === null ? "remove" : buffer;
             this._setValue(val);
             if (val == "remove") {
-                NumberBuffer.reset();
+                numberBuffer.reset();
                 this.env.pos.numpadMode = "quantity";
             }
         }
@@ -216,7 +239,7 @@ class ProductScreen extends ControlButtonsMixin(PosComponent) {
             if (this.env.pos.numpadMode === "quantity") {
                 const result = this.currentOrder.get_selected_orderline().set_quantity(val);
                 if (!result) {
-                    NumberBuffer.reset();
+                    numberBuffer.reset();
                 }
             } else if (this.env.pos.numpadMode === "discount") {
                 this.currentOrder.get_selected_orderline().set_discount(val);
@@ -296,7 +319,7 @@ class ProductScreen extends ControlButtonsMixin(PosComponent) {
     // Why? Because once we start declaring barcode actions in different
     // screens, these methods will also be declared over and over.
     _barcodeErrorAction(code) {
-        this.showPopup("ErrorBarcodePopup", { code: this._codeRepr(code) });
+        this.showPopup(ErrorBarcodePopup, { code: this._codeRepr(code) });
     }
     _codeRepr(code) {
         if (code.code.length > 32) {
@@ -306,7 +329,7 @@ class ProductScreen extends ControlButtonsMixin(PosComponent) {
         }
     }
     async _displayAllControlPopup() {
-        await this.showPopup("ControlButtonPopup", {
+        await this.showPopup(ControlButtonPopup, {
             controlButtons: this.controlButtons,
         });
     }
@@ -316,7 +339,7 @@ class ProductScreen extends ControlButtonsMixin(PosComponent) {
      */
     async _onScaleNotAvailable() {}
     async _showDecreaseQuantityPopup() {
-        const { confirmed, payload: inputNumber } = await this.showPopup("NumberPopup", {
+        const { confirmed, payload: inputNumber } = await this.showPopup(NumberPopup, {
             startingValue: 0,
             title: this.env._t("Set the new quantity"),
         });
@@ -347,7 +370,7 @@ class ProductScreen extends ControlButtonsMixin(PosComponent) {
         // IMPROVEMENT: This code snippet is very similar to selectPartner of PaymentScreen.
         const currentPartner = this.currentOrder.get_partner();
         if (currentPartner && this.currentOrder.getHasRefundLines()) {
-            this.showPopup("ErrorPopup", {
+            this.showPopup(ErrorPopup, {
                 title: this.env._t("Can't change customer"),
                 body: _.str.sprintf(
                     this.env._t(
@@ -377,7 +400,7 @@ class ProductScreen extends ControlButtonsMixin(PosComponent) {
             (this.env.pos.picking_type.use_create_lots ||
                 this.env.pos.picking_type.use_existing_lots)
         ) {
-            const { confirmed } = await this.showPopup("ConfirmPopup", {
+            const { confirmed } = await this.showPopup(ConfirmPopup, {
                 title: this.env._t("Some Serial/Lot Numbers are missing"),
                 body: this.env._t(
                     "You are trying to sell products with serial/lot numbers, but some of them are not set.\nWould you like to proceed anyway?"
@@ -396,8 +419,5 @@ class ProductScreen extends ControlButtonsMixin(PosComponent) {
         this.state.mobile_pane = this.state.mobile_pane === "left" ? "right" : "left";
     }
 }
-ProductScreen.template = "ProductScreen";
 
-Registries.Component.add(ProductScreen);
-
-export default ProductScreen;
+registry.category("pos_screens").add("ProductScreen", ProductScreen);

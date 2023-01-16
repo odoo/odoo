@@ -1,13 +1,18 @@
 /** @odoo-module */
 
-import PosComponent from "@point_of_sale/js/PosComponent";
+import { PosComponent } from "@point_of_sale/js/PosComponent";
 import { useListener } from "@web/core/utils/hooks";
-import Registries from "@point_of_sale/js/Registries";
 import { usePos } from "@point_of_sale/app/pos_store";
+
+import { ProductItem } from "./ProductItem";
+import { ProductsWidgetControlPanel } from "./ProductsWidgetControlPanel";
 
 const { useState } = owl;
 
-class ProductsWidget extends PosComponent {
+export class ProductsWidget extends PosComponent {
+    static components = { ProductItem, ProductsWidgetControlPanel };
+    static template = "ProductsWidget";
+
     /**
      * @param {Object} props
      * @param {number?} props.startCategoryId
@@ -78,8 +83,3 @@ class ProductsWidget extends PosComponent {
         this.trigger("switch-category", 0);
     }
 }
-ProductsWidget.template = "ProductsWidget";
-
-Registries.Component.add(ProductsWidget);
-
-export default ProductsWidget;

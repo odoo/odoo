@@ -1,8 +1,7 @@
 /** @odoo-module */
 
 import { useListener } from "@web/core/utils/hooks";
-import PosComponent from "@point_of_sale/js/PosComponent";
-import Registries from "@point_of_sale/js/Registries";
+import { PosComponent } from "@point_of_sale/js/PosComponent";
 
 const { onMounted, useExternalListener } = owl;
 
@@ -28,7 +27,9 @@ const { onMounted, useExternalListener } = owl;
  *
  * @trigger 'drag-end' when dragging ended with payload `{ loc: { top, left } }`
  */
-class Draggable extends PosComponent {
+export class Draggable extends PosComponent {
+    static template = "Draggable";
+
     setup() {
         super.setup();
         this.isDragging = false;
@@ -137,8 +138,3 @@ class Draggable extends PosComponent {
         return posTop;
     }
 }
-Draggable.template = "Draggable";
-
-Registries.Component.add(Draggable);
-
-export default Draggable;

@@ -1,11 +1,20 @@
 /** @odoo-module */
 
-import AbstractAwaitablePopup from "@point_of_sale/js/Popups/AbstractAwaitablePopup";
-import Registries from "@point_of_sale/js/Registries";
+import { AbstractAwaitablePopup } from "@point_of_sale/js/Popups/AbstractAwaitablePopup";
 import { _lt } from "@web/core/l10n/translation";
 
+import { Draggable } from "../Misc/Draggable";
+
 // formerly OrderImportPopupWidget
-class OrderImportPopup extends AbstractAwaitablePopup {
+export class OrderImportPopup extends AbstractAwaitablePopup {
+    static components = { Draggable };
+    static template = "OrderImportPopup";
+    static defaultProps = {
+        confirmText: _lt("Ok"),
+        cancelKey: false,
+        body: "",
+    };
+
     get unpaidSkipped() {
         return (
             (this.props.report.unpaid_skipped_existing || 0) +
@@ -14,13 +23,3 @@ class OrderImportPopup extends AbstractAwaitablePopup {
     }
     getPayload() {}
 }
-OrderImportPopup.template = "OrderImportPopup";
-OrderImportPopup.defaultProps = {
-    confirmText: _lt("Ok"),
-    cancelKey: false,
-    body: "",
-};
-
-Registries.Component.add(OrderImportPopup);
-
-export default OrderImportPopup;

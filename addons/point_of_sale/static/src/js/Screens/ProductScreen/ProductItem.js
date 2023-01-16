@@ -1,9 +1,10 @@
 /** @odoo-module */
 
-import PosComponent from "@point_of_sale/js/PosComponent";
-import Registries from "@point_of_sale/js/Registries";
+import { PosComponent } from "@point_of_sale/js/PosComponent";
 
-class ProductItem extends PosComponent {
+export class ProductItem extends PosComponent {
+    static template = "ProductItem";
+
     /**
      * For accessibility, pressing <space> should be like clicking the product.
      * <enter> is not considered because it conflicts with the barcode.
@@ -40,8 +41,3 @@ class ProductItem extends PosComponent {
         }
     }
 }
-ProductItem.template = "ProductItem";
-
-Registries.Component.add(ProductItem);
-
-export default ProductItem;

@@ -1,13 +1,16 @@
 /** @odoo-module */
 
-import Registries from "@point_of_sale/js/Registries";
-import PosComponent from "@point_of_sale/js/PosComponent";
+import { PosComponent } from "@point_of_sale/js/PosComponent";
 import { parse } from "web.field_utils";
 import { renderToString } from "@web/core/utils/render";
+import { registry } from "@web/core/registry";
+import { ErrorPopup } from "@point_of_sale/js/Popups/ErrorPopup";
+import { ConfirmPopup } from "@point_of_sale/js/Popups/ConfirmPopup";
 
 const { onMounted } = owl;
 
-class TipScreen extends PosComponent {
+export class TipScreen extends PosComponent {
+    static template = "pos_restaurant.TipScreen";
     static showBackToFloorButton = true;
     setup() {
         super.setup();
@@ -44,7 +47,7 @@ class TipScreen extends PosComponent {
         const serverId = this.env.pos.validated_orders_name_server_id_map[order.name];
 
         if (!serverId) {
-            this.showPopup("ErrorPopup", {
+            this.showPopup(ErrorPopup, {
                 title: this.env._t("Unsynced order"),
                 body: this.env._t(
                     "This order is not yet synced to server. Make sure it is synced then try again."
@@ -64,7 +67,7 @@ class TipScreen extends PosComponent {
         }
 
         if (amount > 0.25 * this.totalAmount) {
-            const { confirmed } = await this.showPopup("ConfirmPopup", {
+            const { confirmed } = await this.showPopup(ConfirmPopup, {
                 title: "Are you sure?",
                 body: `${this.env.pos.format_currency(
                     amount
@@ -136,7 +139,7 @@ class TipScreen extends PosComponent {
     async _printIoT(receipt) {
         const printResult = await this.env.proxy.printer.print_receipt(receipt);
         if (!printResult.successful) {
-            await this.showPopup("ErrorPopup", {
+            await this.showPopup(ErrorPopup, {
                 title: printResult.message.title,
                 body: printResult.message.body,
             });
@@ -148,7 +151,7 @@ class TipScreen extends PosComponent {
             $(this.el).find(".pos-receipt-container").html(receipt);
             window.print();
         } catch {
-            await this.showPopup("ErrorPopup", {
+            await this.showPopup(ErrorPopup, {
                 title: this.env._t("Printing is not supported on some browsers"),
                 body: this.env._t(
                     "Printing is not supported on some browsers due to no default printing protocol " +
@@ -158,8 +161,5 @@ class TipScreen extends PosComponent {
         }
     }
 }
-TipScreen.template = "pos_restaurant.TipScreen";
 
-Registries.Component.add(TipScreen);
-
-export default TipScreen;
+registry.category("pos_screens").add("TipScreen", TipScreen);

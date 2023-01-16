@@ -4,7 +4,8 @@ import { LegacyComponent } from "@web/legacy/legacy_component";
 
 let nextId = 0;
 
-class PosComponent extends LegacyComponent {
+export class PosComponent extends LegacyComponent {
+    static components = {};
     /**
      * This function is available to all Components that inherit this class.
      * The goal of this function is to show an awaitable dialog (popup) that
@@ -13,10 +14,7 @@ class PosComponent extends LegacyComponent {
      *
      * ```
      * async getUserName() {
-     *   const userResponse = await this.showPopup(
-     *     'TextInputPopup',
-     *     { title: 'What is your name?' }
-     *   );
+     *   const userResponse = await this.showPopup(TextInputPopup, { title: 'What is your name?' });
      *   // at this point, the TextInputPopup is displayed. Depending on how the popup is defined,
      *   // say the input contains the name, the result of the interaction with the user is
      *   // saved in `userResponse`.
@@ -27,9 +25,9 @@ class PosComponent extends LegacyComponent {
      * @param {String} name Name of the popup component
      * @param {Object} props Object that will be used to render to popup
      */
-    showPopup(name, props) {
+    showPopup(component, props) {
         return new Promise((resolve) => {
-            this.env.posbus.trigger("show-popup", { name, props, resolve, id: nextId++ });
+            this.env.posbus.trigger("show-popup", { component, props, resolve, id: nextId++ });
         });
     }
     showTempScreen(name, props) {
@@ -61,5 +59,3 @@ class PosComponent extends LegacyComponent {
         this.trigger("close-notification");
     }
 }
-
-export default PosComponent;

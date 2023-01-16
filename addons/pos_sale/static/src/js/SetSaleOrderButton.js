@@ -1,12 +1,13 @@
 /** @odoo-module */
 
-import PosComponent from "@point_of_sale/js/PosComponent";
-import ProductScreen from "@point_of_sale/js/Screens/ProductScreen/ProductScreen";
+import { PosComponent } from "@point_of_sale/js/PosComponent";
+import { ProductScreen } from "@point_of_sale/js/Screens/ProductScreen/ProductScreen";
 import { useListener } from "@web/core/utils/hooks";
-import Registries from "@point_of_sale/js/Registries";
 import { Gui } from "@point_of_sale/js/Gui";
 
-class SetSaleOrderButton extends PosComponent {
+export class SetSaleOrderButton extends PosComponent {
+    static template = "SetSaleOrderButton";
+
     setup() {
         super.setup();
         useListener("click", this.onClick);
@@ -33,7 +34,6 @@ class SetSaleOrderButton extends PosComponent {
         Gui.showScreen(screen);
     }
 }
-SetSaleOrderButton.template = "SetSaleOrderButton";
 
 ProductScreen.addControlButton({
     component: SetSaleOrderButton,
@@ -41,7 +41,3 @@ ProductScreen.addControlButton({
         return true;
     },
 });
-
-Registries.Component.add(SetSaleOrderButton);
-
-export default SetSaleOrderButton;

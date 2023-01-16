@@ -1,11 +1,12 @@
 /** @odoo-module */
 
-import PosComponent from "@point_of_sale/js/PosComponent";
-import ProductScreen from "@point_of_sale/js/Screens/ProductScreen/ProductScreen";
+import { PosComponent } from "@point_of_sale/js/PosComponent";
+import { ProductScreen } from "@point_of_sale/js/Screens/ProductScreen/ProductScreen";
 import { useListener } from "@web/core/utils/hooks";
-import Registries from "@point_of_sale/js/Registries";
 
-class PrintBillButton extends PosComponent {
+export class PrintBillButton extends PosComponent {
+    static template = "PrintBillButton";
+
     setup() {
         super.setup();
         useListener("click", this.onClick);
@@ -18,7 +19,6 @@ class PrintBillButton extends PosComponent {
         this.showTempScreen("BillScreen");
     }
 }
-PrintBillButton.template = "PrintBillButton";
 
 ProductScreen.addControlButton({
     component: PrintBillButton,
@@ -26,7 +26,3 @@ ProductScreen.addControlButton({
         return this.env.pos.config.iface_printbill;
     },
 });
-
-Registries.Component.add(PrintBillButton);
-
-export default PrintBillButton;

@@ -1,15 +1,11 @@
 /** @odoo-module */
 
-import PosComponent from "@point_of_sale/js/PosComponent";
-import Registries from "@point_of_sale/js/Registries";
+import { PosComponent } from "@point_of_sale/js/PosComponent";
 
-class SyncNotification extends PosComponent {
+export class SyncNotification extends PosComponent {
+    static template = "SyncNotification";
+
     onClick() {
         this.env.pos.push_orders(null, { show_error: true });
     }
 }
-SyncNotification.template = "SyncNotification";
-
-Registries.Component.add(SyncNotification);
-
-export default SyncNotification;

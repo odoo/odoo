@@ -1,9 +1,10 @@
 /** @odoo-module */
 
-import PosComponent from "@point_of_sale/js/PosComponent";
-import Registries from "@point_of_sale/js/Registries";
+import { PosComponent } from "@point_of_sale/js/PosComponent";
 
-class PaymentScreenPaymentLines extends PosComponent {
+export class PaymentScreenPaymentLines extends PosComponent {
+    static template = "PaymentScreenPaymentLines";
+
     formatLineAmount(paymentline) {
         return this.env.pos.format_currency_no_symbol(paymentline.get_amount());
     }
@@ -14,8 +15,3 @@ class PaymentScreenPaymentLines extends PosComponent {
         return {};
     }
 }
-PaymentScreenPaymentLines.template = "PaymentScreenPaymentLines";
-
-Registries.Component.add(PaymentScreenPaymentLines);
-
-export default PaymentScreenPaymentLines;

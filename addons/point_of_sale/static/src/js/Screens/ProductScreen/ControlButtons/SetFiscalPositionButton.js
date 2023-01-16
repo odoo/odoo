@@ -1,11 +1,13 @@
 /** @odoo-module */
 
-import PosComponent from "@point_of_sale/js/PosComponent";
-import ProductScreen from "@point_of_sale/js/Screens/ProductScreen/ProductScreen";
+import { PosComponent } from "@point_of_sale/js/PosComponent";
+import { ProductScreen } from "@point_of_sale/js/Screens/ProductScreen/ProductScreen";
 import { useListener } from "@web/core/utils/hooks";
-import Registries from "@point_of_sale/js/Registries";
+import { SelectionPopup } from "@point_of_sale/js/Popups/SelectionPopup";
 
-class SetFiscalPositionButton extends PosComponent {
+export class SetFiscalPositionButton extends PosComponent {
+    static template = "SetFiscalPositionButton";
+
     setup() {
         super.setup();
         useListener("click", this.onClick);
@@ -38,7 +40,7 @@ class SetFiscalPositionButton extends PosComponent {
             });
         }
         const { confirmed, payload: selectedFiscalPosition } = await this.showPopup(
-            "SelectionPopup",
+            SelectionPopup,
             {
                 title: this.env._t("Select Fiscal Position"),
                 list: fiscalPosList,
@@ -54,7 +56,6 @@ class SetFiscalPositionButton extends PosComponent {
         }
     }
 }
-SetFiscalPositionButton.template = "SetFiscalPositionButton";
 
 ProductScreen.addControlButton({
     component: SetFiscalPositionButton,
@@ -63,7 +64,3 @@ ProductScreen.addControlButton({
     },
     position: ["before", "SetPricelistButton"],
 });
-
-Registries.Component.add(SetFiscalPositionButton);
-
-export default SetFiscalPositionButton;

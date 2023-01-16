@@ -1,34 +1,8 @@
 /** @odoo-module */
-import PosComponent from "@point_of_sale/js/PosComponent";
-import AbstractAwaitablePopup from "@point_of_sale/js/Popups/AbstractAwaitablePopup";
-import Registries from "@point_of_sale/js/Registries";
+import { PosComponent } from "@point_of_sale/js/PosComponent";
+import { AbstractAwaitablePopup } from "@point_of_sale/js/Popups/AbstractAwaitablePopup";
 
 const { useState, useSubEnv } = owl;
-
-export class ProductConfiguratorPopup extends AbstractAwaitablePopup {
-    setup() {
-        super.setup();
-        useSubEnv({ attribute_components: [] });
-    }
-
-    getPayload() {
-        var selected_attributes = [];
-        var price_extra = 0.0;
-
-        this.env.attribute_components.forEach((attribute_component) => {
-            const { value, extra } = attribute_component.getValue();
-            selected_attributes.push(value);
-            price_extra += extra;
-        });
-
-        return {
-            selected_attributes,
-            price_extra,
-        };
-    }
-}
-ProductConfiguratorPopup.template = "ProductConfiguratorPopup";
-Registries.Component.add(ProductConfiguratorPopup);
 
 export class BaseProductAttribute extends PosComponent {
     setup() {
@@ -60,6 +34,8 @@ export class BaseProductAttribute extends PosComponent {
 }
 
 export class RadioProductAttribute extends BaseProductAttribute {
+    static template = "RadioProductAttribute";
+
     setup() {
         super.setup();
         owl.onMounted(this.onMounted);
@@ -72,13 +48,41 @@ export class RadioProductAttribute extends BaseProductAttribute {
         $(this.el).find('input[type="radio"]:first').prop("checked", true);
     }
 }
-RadioProductAttribute.template = "RadioProductAttribute";
-Registries.Component.add(RadioProductAttribute);
 
-export class SelectProductAttribute extends BaseProductAttribute {}
-SelectProductAttribute.template = "SelectProductAttribute";
-Registries.Component.add(SelectProductAttribute);
+export class SelectProductAttribute extends BaseProductAttribute {
+    static template = "SelectProductAttribute";
+}
 
-export class ColorProductAttribute extends BaseProductAttribute {}
-ColorProductAttribute.template = "ColorProductAttribute";
-Registries.Component.add(ColorProductAttribute);
+export class ColorProductAttribute extends BaseProductAttribute {
+    static template = "ColorProductAttribute";
+}
+
+export class ProductConfiguratorPopup extends AbstractAwaitablePopup {
+    static template = "ProductConfiguratorPopup";
+    static components = {
+        RadioProductAttribute,
+        SelectProductAttribute,
+        ColorProductAttribute
+    };
+
+    setup() {
+        super.setup();
+        useSubEnv({ attribute_components: [] });
+    }
+
+    getPayload() {
+        var selected_attributes = [];
+        var price_extra = 0.0;
+
+        this.env.attribute_components.forEach((attribute_component) => {
+            const { value, extra } = attribute_component.getValue();
+            selected_attributes.push(value);
+            price_extra += extra;
+        });
+
+        return {
+            selected_attributes,
+            price_extra,
+        };
+    }
+}

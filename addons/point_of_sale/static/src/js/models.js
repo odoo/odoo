@@ -1,7 +1,7 @@
 /** @odoo-module */
 /* global waitForWebfonts */
 
-import PosDB from "@point_of_sale/js/db";
+import { PosDB } from "@point_of_sale/js/db";
 import config from "web.config";
 import core from "web.core";
 import field_utils from "web.field_utils";
@@ -9,13 +9,13 @@ import time from "web.time";
 import utils from "web.utils";
 import { Gui } from "@point_of_sale/js/Gui";
 import { batched, uuidv4 } from "@point_of_sale/js/utils";
+import { ErrorPopup } from "./Popups/ErrorPopup";
 
 var QWeb = core.qweb;
 var _t = core._t;
 var round_di = utils.round_decimals;
 var round_pr = utils.round_precision;
 
-import Registries from "@point_of_sale/js/Registries";
 const { markRaw, reactive } = owl;
 
 // Container of the product images fetched during rendering
@@ -60,7 +60,11 @@ class PosModel {
      * don't want this default calculation of cid.
      * @param {Object?} defaultObj its props copied to this instance.
      */
-    constructor(defaultObj) {
+    constructor() {
+        this.setup(...arguments);
+    }
+    // To be used by Model patches to patch constructor
+    setup(defaultObj) {
         defaultObj = defaultObj || {};
         if (!defaultObj.cid) {
             defaultObj.cid = this._getCID(defaultObj);
@@ -84,8 +88,8 @@ class PosModel {
 }
 
 export class PosGlobalState extends PosModel {
-    constructor(obj) {
-        super(obj);
+    setup() {
+        super.setup(...arguments);
 
         this.db = new PosDB(); // a local database used to search trough products and categories & store pending orders
         this.debug = config.isDebug(); //debug mode
@@ -240,7 +244,7 @@ export class PosGlobalState extends PosModel {
             productTemplateMap[product.product_tmpl_id[0]] = (
                 productTemplateMap[product.product_tmpl_id[0]] || []
             ).concat(product);
-            return Product.create(product);
+            return new Product(product);
         });
 
         for (const pricelist of this.pricelists) {
@@ -405,7 +409,7 @@ export class PosGlobalState extends PosModel {
         if (json) {
             options.json = json;
         }
-        return this.makeOrderReactive(Order.create({}, options));
+        return this.makeOrderReactive(new Order({}, options));
     }
     makeOrderReactive(order) {
         const batchedCallback = batched(() => {
@@ -1425,7 +1429,6 @@ export class PosGlobalState extends PosModel {
     }
 }
 PosGlobalState.prototype.electronic_payment_interfaces = {};
-Registries.Model.add(PosGlobalState);
 
 /**
  * Call this function to map your PaymentInterface implementation to
@@ -1497,7 +1500,7 @@ export class Product extends PosModel {
 
         var pricelist_items = [];
         if (pricelist) {
-            var pricelist_items = _.filter(
+            pricelist_items = _.filter(
                 self.applicablePricelistItems[pricelist.id],
                 function (item) {
                 return (
@@ -1578,7 +1581,6 @@ export class Product extends PosModel {
         }
     }
 }
-Registries.Model.add(Product);
 
 var orderline_id = 1;
 
@@ -1586,8 +1588,8 @@ var orderline_id = 1;
 // An orderline contains a product, its quantity, its price, discount. etc.
 // An Order contains zero or more Orderlines.
 export class Orderline extends PosModel {
-    constructor(obj, options) {
-        super(obj);
+    setup(_defaultObj, options) {
+        super.setup(...arguments);
         this.pos = options.pos;
         this.order = options.order;
         this.price_manually_set = options.price_manually_set || false;
@@ -1637,7 +1639,7 @@ export class Orderline extends PosModel {
         var pack_lot_lines = json.pack_lot_ids;
         for (var i = 0; i < pack_lot_lines.length; i++) {
             var packlotline = pack_lot_lines[i][2];
-            var pack_lot_line = Packlotline.create(
+            var pack_lot_line = new Packlotline(
                 {},
                 { json: _.extend({...packlotline}, { order_line: this }) }
             );
@@ -1649,7 +1651,7 @@ export class Orderline extends PosModel {
         this.refunded_orderline_id = json.refunded_orderline_id;
     }
     clone() {
-        var orderline = Orderline.create(
+        var orderline = new Orderline(
             {},
             {
                 pos: this.pos,
@@ -1712,7 +1714,7 @@ export class Orderline extends PosModel {
         // Create new pack lot lines.
         let newPackLotLine;
         for (const newLotLine of newPackLotLines) {
-            newPackLotLine = Packlotline.create({}, { order_line: this });
+            newPackLotLine = new Packlotline({}, { order_line: this });
             newPackLotLine.lot_name = newLotLine.lot_name;
             this.pack_lot_lines.add(newPackLotLine);
         }
@@ -1779,7 +1781,7 @@ export class Orderline extends PosModel {
                 const maxQtyToRefund =
                     toRefundDetail.orderline.qty - toRefundDetail.orderline.refundedQty;
                 if (quant > 0) {
-                    Gui.showPopup("ErrorPopup", {
+                    Gui.showPopup(ErrorPopup, {
                         title: _t("Positive quantity not allowed"),
                         body: _t(
                             "Only a negative quantity is allowed for this refund line. Click on +/- to modify the quantity to be refunded."
@@ -1791,7 +1793,7 @@ export class Orderline extends PosModel {
                 } else if (-quant <= maxQtyToRefund) {
                     toRefundDetail.qty = -quant;
                 } else {
-                    Gui.showPopup("ErrorPopup", {
+                    Gui.showPopup(ErrorPopup, {
                         title: _t("Greater than allowed"),
                         body: _.str.sprintf(
                             _t(
@@ -2308,11 +2310,10 @@ export class Orderline extends PosModel {
         return this.product.standard_price * this.quantity;
     }
 }
-Registries.Model.add(Orderline);
 
 export class Packlotline extends PosModel {
-    constructor(obj, options) {
-        super(obj);
+    setup(_defaultObj, options) {
+        super.setup(...arguments);
         this.lot_name = null;
         this.order_line = options.order_line;
         if (options.json) {
@@ -2340,12 +2341,11 @@ export class Packlotline extends PosModel {
         };
     }
 }
-Registries.Model.add(Packlotline);
 
 // Every Paymentline contains a cashregister and an amount of money.
 export class Payment extends PosModel {
-    constructor(obj, options) {
-        super(obj);
+    setup(obj, options) {
+        super.setup(...arguments);
         this.pos = options.pos;
         this.order = options.order;
         this.amount = 0;
@@ -2475,15 +2475,14 @@ export class Payment extends PosModel {
         return Boolean(this.get_payment_status());
     }
 }
-Registries.Model.add(Payment);
 
 // An order more or less represents the content of a customer's shopping cart (the OrderLines)
 // plus the associated payment information (the Paymentlines)
 // there is always an active ('selected') order in the Pos, a new one is created
 // automaticaly once an order is completed and sent to the server.
 export class Order extends PosModel {
-    constructor(obj, options) {
-        super(obj);
+    setup(_defaultObj, options) {
+        super.setup(...arguments);
         var self = this;
         options = options || {};
 
@@ -2606,7 +2605,7 @@ export class Order extends PosModel {
             var orderline = orderlines[i][2];
             if (this.pos.db.get_product_by_id(orderline.product_id)) {
                 this.add_orderline(
-                    Orderline.create({}, { pos: this.pos, order: this, json: orderline })
+                    new Orderline({}, { pos: this.pos, order: this, json: orderline })
                 );
             }
         }
@@ -2614,7 +2613,7 @@ export class Order extends PosModel {
         var paymentlines = json.statement_ids;
         for (i = 0; i < paymentlines.length; i++) {
             var paymentline = paymentlines[i][2];
-            var newpaymentline = Payment.create(
+            var newpaymentline = new Payment(
                 {},
                 { pos: this.pos, order: this, json: paymentline }
             );
@@ -2990,7 +2989,7 @@ export class Order extends PosModel {
         }
         this.assert_editable();
         options = options || {};
-        var line = Orderline.create({}, { pos: this.pos, order: this, product: product });
+        var line = new Orderline({}, { pos: this.pos, order: this, product: product });
         this.fix_tax_included_price(line);
 
         this.set_orderline_options(line, options);
@@ -3097,7 +3096,7 @@ export class Order extends PosModel {
         if (this.electronic_payment_in_progress()) {
             return false;
         } else {
-            var newPaymentline = Payment.create(
+            var newPaymentline = new Payment(
                 {},
                 { order: this, payment_method: payment_method, pos: this.pos }
             );
@@ -3617,4 +3616,3 @@ export class Order extends PosModel {
         }
     }
 }
-Registries.Model.add(Order);

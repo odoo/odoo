@@ -1,7 +1,6 @@
 /** @odoo-module */
 
-import PosComponent from "@point_of_sale/js/PosComponent";
-import Registries from "@point_of_sale/js/Registries";
+import { PosComponent } from "@point_of_sale/js/PosComponent";
 
 /**
  * props {
@@ -10,7 +9,9 @@ import Registries from "@point_of_sale/js/Registries";
  *     item: object,
  * }
  */
-class EditListInput extends PosComponent {
+export class EditListInput extends PosComponent {
+    static template = "EditListInput";
+
     onKeyup(event) {
         if (event.key === "Enter" && event.target.value.trim() !== "") {
             this.props.createNewItem();
@@ -20,8 +21,3 @@ class EditListInput extends PosComponent {
         this.props.onInputChange(this.props.item._id, event.target.value);
     }
 }
-EditListInput.template = "EditListInput";
-
-Registries.Component.add(EditListInput);
-
-export default EditListInput;

@@ -1,11 +1,13 @@
 /** @odoo-module */
 
-import PosComponent from "@point_of_sale/js/PosComponent";
-import ProductScreen from "@point_of_sale/js/Screens/ProductScreen/ProductScreen";
+import { PosComponent } from "@point_of_sale/js/PosComponent";
+import { ProductScreen } from "@point_of_sale/js/Screens/ProductScreen/ProductScreen";
 import { useListener } from "@web/core/utils/hooks";
-import Registries from "@point_of_sale/js/Registries";
+import { ProductInfoPopup } from "@point_of_sale/js/Popups/ProductInfoPopup";
 
-class ProductInfoButton extends PosComponent {
+export class ProductInfoButton extends PosComponent {
+    static template = "ProductInfoButton";
+
     setup() {
         super.setup();
         useListener("click", this.onClick);
@@ -16,17 +18,12 @@ class ProductInfoButton extends PosComponent {
             const product = orderline.get_product();
             const quantity = orderline.get_quantity();
             const info = await this.env.pos.getProductInfo(product, quantity);
-            this.showPopup("ProductInfoPopup", { info: info, product: product });
+            this.showPopup(ProductInfoPopup, { info: info, product: product });
         }
     }
 }
-ProductInfoButton.template = "ProductInfoButton";
 
 ProductScreen.addControlButton({
     component: ProductInfoButton,
     position: ["before", "SetFiscalPositionButton"],
 });
-
-Registries.Component.add(ProductInfoButton);
-
-export default ProductInfoButton;

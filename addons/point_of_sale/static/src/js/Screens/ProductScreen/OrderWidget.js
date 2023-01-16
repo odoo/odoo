@@ -1,12 +1,18 @@
 /** @odoo-module */
 
 import { useListener } from "@web/core/utils/hooks";
-import PosComponent from "@point_of_sale/js/PosComponent";
-import Registries from "@point_of_sale/js/Registries";
+import { PosComponent } from "@point_of_sale/js/PosComponent";
+import { EditListPopup } from "@point_of_sale/js/Popups/EditListPopup";
+
+import { Orderline } from "./Orderline";
+import { OrderSummary } from "./OrderSummary";
 
 const { useEffect, useRef } = owl;
 
-class OrderWidget extends PosComponent {
+export class OrderWidget extends PosComponent {
+    static components = { Orderline, OrderSummary };
+    static template = "OrderWidget";
+
     setup() {
         super.setup();
         useListener("select-line", this._selectLine);
@@ -42,7 +48,7 @@ class OrderWidget extends PosComponent {
         const orderline = event.detail.orderline;
         const isAllowOnlyOneLot = orderline.product.isAllowOnlyOneLot();
         const packLotLinesToEdit = orderline.getPackLotLinesToEdit(isAllowOnlyOneLot);
-        const { confirmed, payload } = await this.showPopup("EditListPopup", {
+        const { confirmed, payload } = await this.showPopup(EditListPopup, {
             title: this.env._t("Lot/Serial Number(s) Required"),
             name: orderline.product.display_name,
             isSingleItem: isAllowOnlyOneLot,
@@ -62,8 +68,3 @@ class OrderWidget extends PosComponent {
         this.order.select_orderline(event.detail.orderline);
     }
 }
-OrderWidget.template = "OrderWidget";
-
-Registries.Component.add(OrderWidget);
-
-export default OrderWidget;

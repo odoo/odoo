@@ -1,7 +1,8 @@
 /** @odoo-module */
 
-import PosComponent from "@point_of_sale/js/PosComponent";
-import Registries from "@point_of_sale/js/Registries";
+import { PosComponent } from "@point_of_sale/js/PosComponent";
+import { ConfirmPopup } from "../Popups/ConfirmPopup";
+import { ErrorPopup } from "../Popups/ErrorPopup";
 
 const { useRef } = owl;
 
@@ -11,7 +12,7 @@ const { useRef } = owl;
  * `order-receipt` in the template of the Component that extends
  * this abstract component.
  */
-class AbstractReceiptScreen extends PosComponent {
+export class AbstractReceiptScreen extends PosComponent {
     setup() {
         super.setup();
         this.orderReceipt = useRef("order-receipt");
@@ -24,7 +25,7 @@ class AbstractReceiptScreen extends PosComponent {
             if (printResult.successful) {
                 return true;
             } else {
-                const { confirmed } = await this.showPopup("ConfirmPopup", {
+                const { confirmed } = await this.showPopup(ConfirmPopup, {
                     title: printResult.message.title,
                     body: "Do you want to print using the web printer?",
                 });
@@ -45,7 +46,7 @@ class AbstractReceiptScreen extends PosComponent {
             window.print();
             return true;
         } catch {
-            await this.showPopup("ErrorPopup", {
+            await this.showPopup(ErrorPopup, {
                 title: this.env._t("Printing is not supported on some browsers"),
                 body: this.env._t(
                     "Printing is not supported on some browsers due to no default printing protocol " +
@@ -56,7 +57,3 @@ class AbstractReceiptScreen extends PosComponent {
         }
     }
 }
-
-Registries.Component.add(AbstractReceiptScreen);
-
-export default AbstractReceiptScreen;

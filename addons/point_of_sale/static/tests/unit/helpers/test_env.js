@@ -8,7 +8,7 @@
  */
 
 import makeTestEnvironment from "web.test_env";
-import env from "@point_of_sale/js/pos_env";
+import { pos_env as env} from "@point_of_sale/js/pos_env";
 import { PosGlobalState } from "@point_of_sale/js/models";
 
 // eslint-disable-next-line no-undef
@@ -18,9 +18,9 @@ const cleanup = require("@web/../tests/helpers/cleanup");
 // sensitive to load order. STOP DOING THIS ASAP.
 cleanup.registerCleanup = () => {};
 
-const makePosTestEnv = env.session.is_bound
+export const makePosTestEnv = env.session.is_bound
     .then(() => {
-        const pos = PosGlobalState.create({ env });
+        const pos = new PosGlobalState({ env });
         return pos.load_server_data().then(() => pos);
     })
     .then((pos) => {
@@ -34,5 +34,3 @@ const makePosTestEnv = env.session.is_bound
             return makeTestEnvironment(env, providedRPC);
         };
     });
-
-export default makePosTestEnv;

@@ -3,10 +3,9 @@
 import { loadCSS } from "@web/core/assets";
 import { useListener, useBus, useService } from "@web/core/utils/hooks";
 import BarcodeParser from "barcodes.BarcodeParser";
-import PosComponent from "@point_of_sale/js/PosComponent";
-import NumberBuffer from "@point_of_sale/js/Misc/NumberBuffer";
-import Registries from "@point_of_sale/js/Registries";
-import IndependentToOrderScreen from "@point_of_sale/js/Misc/IndependentToOrderScreen";
+import { PosComponent } from "@point_of_sale/js/PosComponent";
+import { numberBuffer } from "@point_of_sale/js/Misc/NumberBuffer";
+import { IndependentToOrderScreen } from "@point_of_sale/js/Misc/IndependentToOrderScreen";
 import { batched } from "@point_of_sale/js/utils";
 import { debounce } from "@web/core/utils/timing";
 import { Transition } from "@web/core/transition";
@@ -15,11 +14,17 @@ import { WithEnv } from "@web/core/utils/components";
 import { Navbar } from "@point_of_sale/app/navbar/navbar";
 
 // ChromeAdapter imports
-import ProductScreen from "@point_of_sale/js/Screens/ProductScreen/ProductScreen";
+import { ProductScreen } from "@point_of_sale/js/Screens/ProductScreen/ProductScreen";
 import { PosGlobalState } from "@point_of_sale/js/models";
 import { configureGui } from "@point_of_sale/js/Gui";
 import { registry } from "@web/core/registry";
-import env from "@point_of_sale/js/pos_env";
+import { pos_env as env } from "@point_of_sale/js/pos_env";
+
+import { Notification } from "./Notification";
+import { PosPopupController } from "./Popups/PosPopupController";
+import { ErrorTracebackPopup } from "./Popups/ErrorTracebackPopup";
+import { CashOpeningPopup } from "./Popups/CashOpeningPopup";
+import { ConfirmPopup } from "./Popups/ConfirmPopup";
 
 import {
     onMounted,
@@ -36,6 +41,7 @@ import { usePos } from "@point_of_sale/app/pos_store";
  * Chrome is the root component of the PoS App.
  */
 export class Chrome extends PosComponent {
+    static template = "Chrome"; // FIXME POSREF namespace templates
     setup() {
         // BEGIN ChromeAdapter
         ProductScreen.sortControlButtons();
@@ -43,7 +49,7 @@ export class Chrome extends PosComponent {
 
         // Instantiate PosGlobalState here to ensure that every extension
         // (or class overloads) is taken into consideration.
-        const pos = PosGlobalState.create({ env: markRaw(env) });
+        const pos = new PosGlobalState({ env: markRaw(env) });
 
         this.batchedCustomerDisplayRender = batched(() => {
             reactivePos.send_current_order_to_customer_facing_display();
@@ -95,7 +101,7 @@ export class Chrome extends PosComponent {
         useListener("close-notification", this._onCloseNotification);
         useListener("connect-to-proxy", this.connect_to_proxy);
         useBus(this.env.posbus, "start-cash-control", this.openCashControl);
-        NumberBuffer.activate();
+        numberBuffer.activate();
 
         this.state = usePos();
 
@@ -207,7 +213,7 @@ export class Chrome extends PosComponent {
                 }
             }
 
-            return this.showPopup("ErrorTracebackPopup", { title, body, exitButtonIsShown: true });
+            return this.showPopup(ErrorTracebackPopup, { title, body, exitButtonIsShown: true });
         }
         registry.category("main_components").add("BlockUI", BlockUiFromRegistry);
 
@@ -239,10 +245,13 @@ export class Chrome extends PosComponent {
 
     setupBarcodeParser() {
         if (!this.env.pos.company.nomenclature_id) {
-            const errorMessage = this.env._t("The barcode nomenclature setting is not configured. " +
-                "Make sure to configure it on your Point of Sale configuration settings");
-            throw new Error(this.env._t("Missing barcode nomenclature"), { cause: { message: errorMessage } });
-
+            const errorMessage = this.env._t(
+                "The barcode nomenclature setting is not configured. " +
+                    "Make sure to configure it on your Point of Sale configuration settings"
+            );
+            throw new Error(this.env._t("Missing barcode nomenclature"), {
+                cause: { message: errorMessage },
+            });
         }
         const barcode_parser = new BarcodeParser({
             nomenclature_id: this.env.pos.company.nomenclature_id,
@@ -292,7 +301,7 @@ export class Chrome extends PosComponent {
 
     openCashControl() {
         if (this.shouldShowCashControl()) {
-            this.showPopup("CashOpeningPopup", { keepBehind: true });
+            this.showPopup(CashOpeningPopup, { keepBehind: true });
         }
     }
 
@@ -315,7 +324,7 @@ export class Chrome extends PosComponent {
         const { name, props, resolve } = event.detail;
         this.state.tempScreen = {
             name,
-            component: this.constructor.components[name],
+            component: registry.category("pos_screens").get(name),
             props: { ...props, resolve },
         };
     }
@@ -323,7 +332,7 @@ export class Chrome extends PosComponent {
         this.state.tempScreen = null;
     }
     __showScreen({ detail: { name, props = {} } }) {
-        const component = this.constructor.components[name];
+        const component = registry.category("pos_screens").get(name);
         // 1. Set the information of the screen to display.
         this.mainScreen.name = name;
         this.mainScreen.component = component;
@@ -383,7 +392,7 @@ export class Chrome extends PosComponent {
                               "not close the session before the issue " +
                               "has been resolved."
                       );
-                const { confirmed } = await this.showPopup("ConfirmPopup", {
+                const { confirmed } = await this.showPopup(ConfirmPopup, {
                     title: this.env._t("Offline Orders"),
                     body: reason,
                 });
@@ -486,7 +495,6 @@ export class Chrome extends PosComponent {
         return this.env.pos && this.env.pos.config && this.env.pos.config.cash_control;
     }
 }
-Chrome.template = "Chrome";
 Object.defineProperty(Chrome, "components", {
     get() {
         return Object.assign(
@@ -495,12 +503,10 @@ Object.defineProperty(Chrome, "components", {
                 MainComponentsContainer,
                 WithEnv,
                 Navbar,
+                PosPopupController,
+                Notification,
             },
             PosComponent.components
         );
     },
 });
-
-Registries.Component.add(Chrome);
-
-export default Chrome;

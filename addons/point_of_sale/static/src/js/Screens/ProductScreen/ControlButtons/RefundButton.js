@@ -1,11 +1,12 @@
 /** @odoo-module */
 
-import PosComponent from "@point_of_sale/js/PosComponent";
-import ProductScreen from "@point_of_sale/js/Screens/ProductScreen/ProductScreen";
-import Registries from "@point_of_sale/js/Registries";
+import { PosComponent } from "@point_of_sale/js/PosComponent";
+import { ProductScreen } from "@point_of_sale/js/Screens/ProductScreen/ProductScreen";
 import { useListener } from "@web/core/utils/hooks";
 
-class RefundButton extends PosComponent {
+export class RefundButton extends PosComponent {
+    static template = "point_of_sale.RefundButton";
+
     setup() {
         super.setup();
         useListener("click", this._onClick);
@@ -19,7 +20,6 @@ class RefundButton extends PosComponent {
         });
     }
 }
-RefundButton.template = "point_of_sale.RefundButton";
 
 ProductScreen.addControlButton({
     component: RefundButton,
@@ -27,7 +27,3 @@ ProductScreen.addControlButton({
         return true;
     },
 });
-
-Registries.Component.add(RefundButton);
-
-export default RefundButton;

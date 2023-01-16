@@ -1,13 +1,24 @@
 /** @odoo-module */
 
-import AbstractAwaitablePopup from "@point_of_sale/js/Popups/AbstractAwaitablePopup";
-import Registries from "@point_of_sale/js/Registries";
+import { AbstractAwaitablePopup } from "@point_of_sale/js/Popups/AbstractAwaitablePopup";
 import { _lt } from "@web/core/l10n/translation";
+
+import { Draggable } from "../Misc/Draggable";
 
 const { useState } = owl;
 
 // formerly SelectionPopupWidget
-class SelectionPopup extends AbstractAwaitablePopup {
+export class SelectionPopup extends AbstractAwaitablePopup {
+    static components = { Draggable };
+    static template = "SelectionPopup";
+    static defaultProps = {
+        cancelText: _lt("Cancel"),
+        title: _lt("Select"),
+        body: "",
+        list: [],
+        confirmKey: false,
+    };
+
     /**
      * Value of the `item` key of the selected element in the Selection
      * Array is the payload of this popup.
@@ -43,15 +54,3 @@ class SelectionPopup extends AbstractAwaitablePopup {
         return selected && selected.item;
     }
 }
-SelectionPopup.template = "SelectionPopup";
-SelectionPopup.defaultProps = {
-    cancelText: _lt("Cancel"),
-    title: _lt("Select"),
-    body: "",
-    list: [],
-    confirmKey: false,
-};
-
-Registries.Component.add(SelectionPopup);
-
-export default SelectionPopup;

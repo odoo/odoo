@@ -1,8 +1,7 @@
 /** @odoo-module */
 
 import { useAutofocus, useListener } from "@web/core/utils/hooks";
-import PosComponent from "@point_of_sale/js/PosComponent";
-import Registries from "@point_of_sale/js/Registries";
+import { PosComponent } from "@point_of_sale/js/PosComponent";
 
 const { useExternalListener, useState } = owl;
 
@@ -29,7 +28,9 @@ const { useExternalListener, useState } = owl;
  * NOTE: The payload of the emitted event is accessible via the `detail`
  * field of the event.
  */
-class SearchBar extends PosComponent {
+export class SearchBar extends PosComponent {
+    static template = "point_of_sale.SearchBar";
+
     setup() {
         super.setup();
         useAutofocus();
@@ -108,7 +109,3 @@ class SearchBar extends PosComponent {
         this.state.showSearchFields = false;
     }
 }
-SearchBar.template = "point_of_sale.SearchBar";
-Registries.Component.add(SearchBar);
-
-export default SearchBar;

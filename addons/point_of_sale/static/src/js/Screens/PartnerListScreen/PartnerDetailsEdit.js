@@ -2,12 +2,14 @@
 
 import { _t } from "web.core";
 import { getDataURLFromFile } from "web.utils";
-import PosComponent from "@point_of_sale/js/PosComponent";
-import Registries from "@point_of_sale/js/Registries";
+import { PosComponent } from "@point_of_sale/js/PosComponent";
+import { ErrorPopup } from "@point_of_sale/js/Popups/ErrorPopup";
 
 const { onMounted, onWillUnmount } = owl;
 
-class PartnerDetailsEdit extends PosComponent {
+export class PartnerDetailsEdit extends PosComponent {
+    static template = "PartnerDetailsEdit";
+
     setup() {
         super.setup();
         this.intFields = ["country_id", "state_id", "property_product_pricelist"];
@@ -56,7 +58,7 @@ class PartnerDetailsEdit extends PosComponent {
             }
         }
         if ((!this.props.partner.name && !processedChanges.name) || processedChanges.name === "") {
-            return this.showPopup("ErrorPopup", {
+            return this.showPopup(ErrorPopup, {
                 title: _t("A Customer Name Is Required"),
             });
         }
@@ -66,7 +68,7 @@ class PartnerDetailsEdit extends PosComponent {
     async uploadImage(event) {
         const file = event.target.files[0];
         if (!file.type.match(/image.*/)) {
-            await this.showPopup("ErrorPopup", {
+            await this.showPopup(ErrorPopup, {
                 title: this.env._t("Unsupported File Format"),
                 body: this.env._t(
                     "Only web-compatible Image formats such as .png or .jpeg are supported."
@@ -114,7 +116,7 @@ class PartnerDetailsEdit extends PosComponent {
             const img = new Image();
             img.addEventListener("load", () => resolve(img));
             img.addEventListener("error", () => {
-                this.showPopup("ErrorPopup", {
+                this.showPopup(ErrorPopup, {
                     title: this.env._t("Loading Image Error"),
                     body: this.env._t("Encountered error when loading image. Please try again."),
                 });
@@ -124,8 +126,3 @@ class PartnerDetailsEdit extends PosComponent {
         });
     }
 }
-PartnerDetailsEdit.template = "PartnerDetailsEdit";
-
-Registries.Component.add(PartnerDetailsEdit);
-
-export default PartnerDetailsEdit;

@@ -1,7 +1,6 @@
 /** @odoo-module */
 
-import PosComponent from "@point_of_sale/js/PosComponent";
-import Registries from "@point_of_sale/js/Registries";
+import { PosComponent } from "@point_of_sale/js/PosComponent";
 import utils from "web.utils";
 
 /**
@@ -9,7 +8,9 @@ import utils from "web.utils";
  * @props columns
  * @emits click-order
  */
-class SaleOrderRow extends PosComponent {
+export class SaleOrderRow extends PosComponent {
+    static template = "SaleOrderRow";
+
     get order() {
         return this.props.order;
     }
@@ -69,8 +70,3 @@ class SaleOrderRow extends PosComponent {
         return salesman ? salesman[1] : null;
     }
 }
-SaleOrderRow.template = "SaleOrderRow";
-
-Registries.Component.add(SaleOrderRow);
-
-export default SaleOrderRow;

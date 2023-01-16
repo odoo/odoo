@@ -317,4 +317,4 @@ class NumberBuffer extends EventBus {
     }
 }
 
-export default new NumberBuffer();
+export const numberBuffer = new NumberBuffer();
