@@ -359,6 +359,7 @@ export class Chrome extends PosComponent {
             window.location = "/web#action=point_of_sale.action_client_pos_menu";
         }
 
+<<<<<<< HEAD
         if (this.env.pos.db.get_orders().length) {
             // If there are orders in the db left unsynced, we try to sync.
             // If sync successful, close without asking.
@@ -386,6 +387,509 @@ export class Chrome extends PosComponent {
                 const { confirmed } = await this.showPopup("ConfirmPopup", {
                     title: this.env._t("Offline Orders"),
                     body: reason,
+||||||| parent of 2196955bb9b (temp)
+        openCashControl() {
+            if (this.shouldShowCashControl()) {
+                this.showPopup('CashOpeningPopup');
+            }
+        }
+
+        shouldShowCashControl() {
+            return this.env.pos.config.cash_control && this.env.pos.pos_session.state == 'opening_control';
+        }
+
+        // EVENT HANDLERS //
+
+        _showStartScreen() {
+            const { name, props } = this.startScreen;
+            this.showScreen(name, props);
+        }
+        _getSavedScreen(order) {
+            return order.get_screen_data();
+        }
+        __showTempScreen(event) {
+            const { name, props, resolve } = event.detail;
+            this.tempScreen.isShown = true;
+            this.tempScreen.name = name;
+            this.tempScreen.component = this.constructor.components[name];
+            this.tempScreenProps = Object.assign({}, props, { resolve });
+        }
+        __closeTempScreen() {
+            this.tempScreen.isShown = false;
+            this.tempScreen.name = null;
+        }
+        __showScreen({ detail: { name, props = {} } }) {
+            const component = this.constructor.components[name];
+            // 1. Set the information of the screen to display.
+            this.mainScreen.name = name;
+            this.mainScreen.component = component;
+            this.mainScreenProps = props;
+
+            // 2. Save the screen to the order.
+            //  - This screen is shown when the order is selected.
+            if (!(component.prototype instanceof IndependentToOrderScreen) && name !== "ReprintReceiptScreen") {
+                this._setScreenData(name, props);
+            }
+        }
+        /**
+         * Set the latest screen to the current order. This is done so that
+         * when the order is selected again, the ui returns to the latest screen
+         * saved in the order.
+         *
+         * @param {string} name Screen name
+         * @param {Object} props props for the Screen component
+         */
+        _setScreenData(name, props) {
+            const order = this.env.pos.get_order();
+            if (order) {
+                order.set_screen_data({ name, props });
+            }
+        }
+        async _closePos() {
+            // If pos is not properly loaded, we just go back to /web without
+            // doing anything in the order data.
+            if (!this.env.pos || this.env.pos.db.get_orders().length === 0) {
+                window.location = '/web#action=point_of_sale.action_client_pos_menu';
+            }
+
+            if (this.env.pos.db.get_orders().length) {
+                // If there are orders in the db left unsynced, we try to sync.
+                // If sync successful, close without asking.
+                // Otherwise, ask again saying that some orders are not yet synced.
+                try {
+                    await this.env.pos.push_orders();
+                    window.location = '/web#action=point_of_sale.action_client_pos_menu';
+                } catch (error) {
+                    console.warn(error);
+                    const reason = this.env.pos.failed
+                        ? this.env._t(
+                              'Some orders could not be submitted to ' +
+                                  'the server due to configuration errors. ' +
+                                  'You can exit the Point of Sale, but do ' +
+                                  'not close the session before the issue ' +
+                                  'has been resolved.'
+                          )
+                        : this.env._t(
+                              'Some orders could not be submitted to ' +
+                                  'the server due to internet connection issues. ' +
+                                  'You can exit the Point of Sale, but do ' +
+                                  'not close the session before the issue ' +
+                                  'has been resolved.'
+                          );
+                    const { confirmed } = await this.showPopup('ConfirmPopup', {
+                        title: this.env._t('Offline Orders'),
+                        body: reason,
+                    });
+                    if (confirmed) {
+                        this.state.uiState = 'CLOSING';
+                        this.state.loadingSkipButtonIsShown = false;
+                        window.location = '/web#action=point_of_sale.action_client_pos_menu';
+                    }
+                }
+            }
+        }
+        _toggleDebugWidget() {
+            this.state.debugWidgetIsShown = !this.state.debugWidgetIsShown;
+        }
+        _toggleMobileSearchBar({ detail: isSearchBarEnabled }) {
+            if (isSearchBarEnabled !== null) {
+                this.state.mobileSearchBarIsShown = isSearchBarEnabled;
+            } else {
+                this.state.mobileSearchBarIsShown = !this.state.mobileSearchBarIsShown;
+            }
+        }
+        _onPlaySound({ detail: name }) {
+            let src;
+            if (name === 'error') {
+                src = "/point_of_sale/static/src/sounds/error.wav";
+            } else if (name === 'bell') {
+                src = "/point_of_sale/static/src/sounds/bell.wav";
+            }
+            this.state.sound.src = src;
+        }
+        _onSetSyncStatus({ detail: { status, pending }}) {
+            this.env.pos.synch.status = status;
+            this.env.pos.synch.pending = pending;
+        }
+        _onShowNotification({ detail: { message, duration } }) {
+            this.state.notification.isShown = true;
+            this.state.notification.message = message;
+            this.state.notification.duration = duration;
+        }
+        _onCloseNotification() {
+            this.state.notification.isShown = false;
+        }
+        /**
+         * Save `env.pos.toRefundLines` in localStorage on beforeunload - closing the
+         * browser, reloading or going to other page.
+         */
+        _onBeforeUnload() {
+            this.env.pos.db.save('TO_REFUND_LINES', this.env.pos.toRefundLines);
+        }
+
+        get isTicketScreenShown() {
+            return this.mainScreen.name === 'TicketScreen';
+        }
+
+        // MISC METHODS //
+        _preloadImages() {
+            for (let product of this.env.pos.db.get_product_by_category(0)) {
+                const image = new Image();
+                image.src = `/web/image?model=product.product&field=image_128&id=${product.id}&unique=${product.write_date}`;
+            }
+            for (let category of Object.values(this.env.pos.db.category_by_id)) {
+                if (category.id == 0) continue;
+                const image = new Image();
+                image.src = `/web/image?model=pos.category&field=image_128&id=${category.id}&unique=${category.write_date}`;
+            }
+            const staticImages = ['backspace.png', 'bc-arrow-big.png'];
+            for (let imageName of staticImages) {
+                const image = new Image();
+                image.src = `/point_of_sale/static/src/img/${imageName}`;
+            }
+        }
+
+        _buildChrome() {
+            if ($.browser.chrome) {
+                var chrome_version = $.browser.version.split('.')[0];
+                if (parseInt(chrome_version, 10) >= 50) {
+                    loadCSS('/point_of_sale/static/src/css/chrome50.css');
+                }
+            }
+
+            if (this.env.pos.config.iface_big_scrollbars) {
+                this.state.hasBigScrollBars = true;
+            }
+
+            this._disableBackspaceBack();
+        }
+        // prevent backspace from performing a 'back' navigation
+        _disableBackspaceBack() {
+            $(document).on('keydown', function (e) {
+                if (e.which === 8 && !$(e.target).is('input, textarea')) {
+                    e.preventDefault();
+                }
+            });
+        }
+        _closeOtherTabs() {
+            localStorage['message'] = '';
+            localStorage['message'] = JSON.stringify({
+                message: 'close_tabs',
+                session: this.env.pos.pos_session.id,
+            });
+
+            window.addEventListener(
+                'storage',
+                (event) => {
+                    if (event.key === 'message' && event.newValue) {
+                        const msg = JSON.parse(event.newValue);
+                        if (
+                            msg.message === 'close_tabs' &&
+                            msg.session == this.env.pos.pos_session.id
+                        ) {
+                            console.info(
+                                'POS / Session opened in another window. EXITING POS'
+                            );
+                            this._closePos();
+                        }
+                    }
+                },
+                false
+            );
+        }
+        showCashMoveButton() {
+            return this.env.pos && this.env.pos.config && this.env.pos.config.cash_control;
+        }
+
+        // UNEXPECTED ERROR HANDLING //
+
+        /**
+         * This method is used to handle unexpected errors. It is registered to
+         * the `error_handlers` service when this component is properly mounted.
+         * See `onMounted` hook of the `ChromeAdapter` component.
+         * @param {*} env
+         * @param {UncaughtClientError | UncaughtPromiseError} error
+         * @param {*} originalError
+         * @returns {boolean}
+         */
+        errorHandler(env, error, originalError) {
+            if (!env.pos) return false;
+            const errorToHandle = identifyError(originalError);
+            // Assume that the unhandled falsey rejections can be ignored.
+            if (errorToHandle) {
+                this._errorHandler(error, errorToHandle);
+            }
+            return true;
+        }
+
+        _errorHandler(error, errorToHandle) {
+            if (errorToHandle instanceof RPCError) {
+                const { message, data } = errorToHandle;
+                if (odooExceptionTitleMap.has(errorToHandle.exceptionName)) {
+                    const title = odooExceptionTitleMap.get(errorToHandle.exceptionName).toString();
+                    this.showPopup('ErrorPopup', { title, body: data.message });
+                } else {
+                    this.showPopup('ErrorTracebackPopup', {
+                        title: message,
+                        body: data.message + '\n' + data.debug + '\n',
+                    });
+                }
+            } else if (errorToHandle instanceof ConnectionLostError) {
+                this.showPopup('OfflineErrorPopup', {
+                    title: this.env._t('Connection is lost'),
+                    body: this.env._t('Check the internet connection then try again.'),
+=======
+        openCashControl() {
+            if (this.shouldShowCashControl()) {
+                this.showPopup('CashOpeningPopup');
+            }
+        }
+
+        shouldShowCashControl() {
+            return this.env.pos.config.cash_control && this.env.pos.pos_session.state == 'opening_control';
+        }
+
+        // EVENT HANDLERS //
+
+        _showStartScreen() {
+            const { name, props } = this.startScreen;
+            this.showScreen(name, props);
+        }
+        _getSavedScreen(order) {
+            return order.get_screen_data();
+        }
+        __showTempScreen(event) {
+            const { name, props, resolve } = event.detail;
+            this.tempScreen.isShown = true;
+            this.tempScreen.name = name;
+            this.tempScreen.component = this.constructor.components[name];
+            this.tempScreenProps = Object.assign({}, props, { resolve });
+        }
+        __closeTempScreen() {
+            this.tempScreen.isShown = false;
+            this.tempScreen.name = null;
+        }
+        __showScreen({ detail: { name, props = {} } }) {
+            const component = this.constructor.components[name];
+            // 1. Set the information of the screen to display.
+            this.mainScreen.name = name;
+            this.mainScreen.component = component;
+            this.mainScreenProps = props;
+
+            // 2. Save the screen to the order.
+            //  - This screen is shown when the order is selected.
+            if (!(component.prototype instanceof IndependentToOrderScreen) && name !== "ReprintReceiptScreen") {
+                this._setScreenData(name, props);
+            }
+        }
+        /**
+         * Set the latest screen to the current order. This is done so that
+         * when the order is selected again, the ui returns to the latest screen
+         * saved in the order.
+         *
+         * @param {string} name Screen name
+         * @param {Object} props props for the Screen component
+         */
+        _setScreenData(name, props) {
+            const order = this.env.pos.get_order();
+            if (order) {
+                order.set_screen_data({ name, props });
+            }
+        }
+        async _closePos() {
+            // If pos is not properly loaded, we just go back to /web without
+            // doing anything in the order data.
+            if (!this.env.pos || this.env.pos.db.get_orders().length === 0) {
+                window.location = '/web#action=point_of_sale.action_client_pos_menu';
+            }
+
+            if (this.env.pos.db.get_orders().length) {
+                // If there are orders in the db left unsynced, we try to sync.
+                // If sync successful, close without asking.
+                // Otherwise, ask again saying that some orders are not yet synced.
+                try {
+                    await this.env.pos.push_orders();
+                    window.location = '/web#action=point_of_sale.action_client_pos_menu';
+                } catch (error) {
+                    console.warn(error);
+                    const reason = this.env.pos.failed
+                        ? this.env._t(
+                              'Some orders could not be submitted to ' +
+                                  'the server due to configuration errors. ' +
+                                  'You can exit the Point of Sale, but do ' +
+                                  'not close the session before the issue ' +
+                                  'has been resolved.'
+                          )
+                        : this.env._t(
+                              'Some orders could not be submitted to ' +
+                                  'the server due to internet connection issues. ' +
+                                  'You can exit the Point of Sale, but do ' +
+                                  'not close the session before the issue ' +
+                                  'has been resolved.'
+                          );
+                    const { confirmed } = await this.showPopup('ConfirmPopup', {
+                        title: this.env._t('Offline Orders'),
+                        body: reason,
+                    });
+                    if (confirmed) {
+                        this.state.uiState = 'CLOSING';
+                        this.state.loadingSkipButtonIsShown = false;
+                        window.location = '/web#action=point_of_sale.action_client_pos_menu';
+                    }
+                }
+            }
+        }
+        _toggleDebugWidget() {
+            this.state.debugWidgetIsShown = !this.state.debugWidgetIsShown;
+        }
+        _toggleMobileSearchBar({ detail: isSearchBarEnabled }) {
+            if (isSearchBarEnabled !== null) {
+                this.state.mobileSearchBarIsShown = isSearchBarEnabled;
+            } else {
+                this.state.mobileSearchBarIsShown = !this.state.mobileSearchBarIsShown;
+            }
+        }
+        _onPlaySound({ detail: name }) {
+            let src;
+            if (name === 'error') {
+                src = "/point_of_sale/static/src/sounds/error.wav";
+            } else if (name === 'bell') {
+                src = "/point_of_sale/static/src/sounds/bell.wav";
+            }
+            this.state.sound.src = src;
+        }
+        _onSetSyncStatus({ detail: { status, pending }}) {
+            this.env.pos.synch.status = status;
+            this.env.pos.synch.pending = pending;
+        }
+        _onShowNotification({ detail: { message, duration } }) {
+            this.state.notification.isShown = true;
+            this.state.notification.message = message;
+            this.state.notification.duration = duration;
+        }
+        _onCloseNotification() {
+            this.state.notification.isShown = false;
+        }
+        /**
+         * Save `env.pos.toRefundLines` in localStorage on beforeunload - closing the
+         * browser, reloading or going to other page.
+         */
+        _onBeforeUnload() {
+            this.env.pos.db.save('TO_REFUND_LINES', this.env.pos.toRefundLines);
+        }
+
+        get isTicketScreenShown() {
+            return this.mainScreen.name === 'TicketScreen';
+        }
+
+        // MISC METHODS //
+        _preloadImages() {
+            for (let product of this.env.pos.db.get_product_by_category(0)) {
+                const image = new Image();
+                image.src = `/web/image?model=product.product&field=image_128&id=${product.id}&unique=${product.__last_update}`;
+            }
+            for (let category of Object.values(this.env.pos.db.category_by_id)) {
+                if (category.id == 0) continue;
+                const image = new Image();
+                image.src = `/web/image?model=pos.category&field=image_128&id=${category.id}&unique=${category.write_date}`;
+            }
+            const staticImages = ['backspace.png', 'bc-arrow-big.png'];
+            for (let imageName of staticImages) {
+                const image = new Image();
+                image.src = `/point_of_sale/static/src/img/${imageName}`;
+            }
+        }
+
+        _buildChrome() {
+            if ($.browser.chrome) {
+                var chrome_version = $.browser.version.split('.')[0];
+                if (parseInt(chrome_version, 10) >= 50) {
+                    loadCSS('/point_of_sale/static/src/css/chrome50.css');
+                }
+            }
+
+            if (this.env.pos.config.iface_big_scrollbars) {
+                this.state.hasBigScrollBars = true;
+            }
+
+            this._disableBackspaceBack();
+        }
+        // prevent backspace from performing a 'back' navigation
+        _disableBackspaceBack() {
+            $(document).on('keydown', function (e) {
+                if (e.which === 8 && !$(e.target).is('input, textarea')) {
+                    e.preventDefault();
+                }
+            });
+        }
+        _closeOtherTabs() {
+            localStorage['message'] = '';
+            localStorage['message'] = JSON.stringify({
+                message: 'close_tabs',
+                session: this.env.pos.pos_session.id,
+            });
+
+            window.addEventListener(
+                'storage',
+                (event) => {
+                    if (event.key === 'message' && event.newValue) {
+                        const msg = JSON.parse(event.newValue);
+                        if (
+                            msg.message === 'close_tabs' &&
+                            msg.session == this.env.pos.pos_session.id
+                        ) {
+                            console.info(
+                                'POS / Session opened in another window. EXITING POS'
+                            );
+                            this._closePos();
+                        }
+                    }
+                },
+                false
+            );
+        }
+        showCashMoveButton() {
+            return this.env.pos && this.env.pos.config && this.env.pos.config.cash_control;
+        }
+
+        // UNEXPECTED ERROR HANDLING //
+
+        /**
+         * This method is used to handle unexpected errors. It is registered to
+         * the `error_handlers` service when this component is properly mounted.
+         * See `onMounted` hook of the `ChromeAdapter` component.
+         * @param {*} env
+         * @param {UncaughtClientError | UncaughtPromiseError} error
+         * @param {*} originalError
+         * @returns {boolean}
+         */
+        errorHandler(env, error, originalError) {
+            if (!env.pos) return false;
+            const errorToHandle = identifyError(originalError);
+            // Assume that the unhandled falsey rejections can be ignored.
+            if (errorToHandle) {
+                this._errorHandler(error, errorToHandle);
+            }
+            return true;
+        }
+
+        _errorHandler(error, errorToHandle) {
+            if (errorToHandle instanceof RPCError) {
+                const { message, data } = errorToHandle;
+                if (odooExceptionTitleMap.has(errorToHandle.exceptionName)) {
+                    const title = odooExceptionTitleMap.get(errorToHandle.exceptionName).toString();
+                    this.showPopup('ErrorPopup', { title, body: data.message });
+                } else {
+                    this.showPopup('ErrorTracebackPopup', {
+                        title: message,
+                        body: data.message + '\n' + data.debug + '\n',
+                    });
+                }
+            } else if (errorToHandle instanceof ConnectionLostError) {
+                this.showPopup('OfflineErrorPopup', {
+                    title: this.env._t('Connection is lost'),
+                    body: this.env._t('Check the internet connection then try again.'),
+>>>>>>> 2196955bb9b (temp)
                 });
                 if (confirmed) {
                     // FIXME POSREF setting the location prevents the next render, the loading screen never shows
