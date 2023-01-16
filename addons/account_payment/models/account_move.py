@@ -38,6 +38,22 @@ class AccountMove(models.Model):
                 ).mapped('amount')
             )
 
+    def _has_to_be_paid(self):
+        self.ensure_one()
+        transactions = self.transaction_ids.filtered(lambda tx: tx.state in ('authorized', 'done'))
+        return bool(
+            (
+                self.amount_residual
+                # FIXME someplace we check amount_residual and some other amount_paid < amount_total
+                # what is the correct heuristic to check ?
+                or not transactions
+            )
+            and self.state == 'posted'
+            and self.payment_state in ('not_paid', 'partial')
+            and self.amount_total
+            and self.move_type == 'out_invoice'
+        )
+
     def get_portal_last_transaction(self):
         self.ensure_one()
         return self.with_context(active_test=False).transaction_ids._get_last()
