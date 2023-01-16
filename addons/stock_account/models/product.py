@@ -429,7 +429,7 @@ class ProductProduct(models.Model):
                     break
 
             # Get the estimated value we will correct.
-            remaining_value_before_vacuum = svl_to_vacuum.unit_cost * qty_taken_on_candidates
+            remaining_value_before_vacuum = (svl_to_vacuum.value / svl_to_vacuum.quantity) * qty_taken_on_candidates
             new_remaining_qty = svl_to_vacuum.remaining_qty + qty_taken_on_candidates
             corrected_value = remaining_value_before_vacuum - tmp_value
             svl_to_vacuum.write({

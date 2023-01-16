@@ -553,6 +553,25 @@ class TestStockValuationAVCO(TestStockValuationCommon):
         self.assertEqual(self.product1.quantity_svl, 10)
         self.assertEqual(self.product1.standard_price, 2)
 
+    def test_inv_adj_from_neg_to_pos(self):
+        self.env.ref('product.decimal_price').digits = 4
+        self.env.company.currency_id.rounding = 0.01
+
+        self.product1.standard_price = 0.001
+
+        # Switch into inventory mode, set the quantity to -20000 and then to 3000
+        quant = self.env['stock.quant'].with_context(inventory_mode=True).create({
+            'product_id': self.product1.id,
+            'location_id': self.stock_location.id,
+            'inventory_quantity': -20000,
+        })
+        quant.write({
+            'inventory_quantity': 3000,
+        })
+
+        self.assertEqual(self.product1.quantity_svl, 3000)
+        self.assertEqual(self.product1.value_svl, 3)
+
 
 class TestStockValuationFIFO(TestStockValuationCommon):
     def setUp(self):
