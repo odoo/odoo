@@ -21,6 +21,14 @@ const MassMailingWysiwyg = Wysiwyg.extend({
         return res;
     },
 
+    toggleLinkTools(options) {
+        this._super({
+            ...options,
+            // Always open the dialog for the basic theme as it has no sidebar.
+            forceDialog: options.forceDialog || this.$iframeBody.find('.o_basic_theme').length
+        });
+    },
+
     //--------------------------------------------------------------------------
     // Private
     //--------------------------------------------------------------------------
