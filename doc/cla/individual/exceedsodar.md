@@ -8,4 +8,4 @@ declaration.
 
 Signed,
 
-Rado Harilala radoharilala.a@gmail.com https://github.com/exceedsodar
+Rado Harilala A. radoharilala.a@gmail.com https://github.com/exceedsodar
