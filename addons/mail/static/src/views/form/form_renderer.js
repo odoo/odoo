@@ -11,6 +11,7 @@ patch(FormRenderer.prototype, "mail", {
         return {
             ...this._super(),
             hasAttachmentViewerInArch: this.props.hasAttachmentViewerInArch,
+            saveButtonClicked: this.props.saveButtonClicked,
         };
     },
 });
@@ -20,6 +21,7 @@ patch(FormRenderer.props, "mail", {
     // Template props : added by the FormCompiler
     hasAttachmentViewer: { type: Boolean, optional: true },
     chatter: { type: Object, optional: true },
+    saveButtonClicked: { type: Function, optional: true },
 });
 
 Object.assign(FormRenderer.components, {
