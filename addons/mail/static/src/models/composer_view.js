@@ -223,7 +223,16 @@ registerModel({
         /**
          * Called when clicking on "expand" button.
          */
-        onClickFullComposer() {
+        async onClickFullComposer() {
+            if (this.chatter && this.chatter.isTemporary) {
+                const chatter = this.chatter;
+                const saved = await this.chatter.doSaveRecord();
+                if (!saved) {
+                    return;
+                }
+                chatter.composerView.openFullComposer();
+                return;
+            }
             this.openFullComposer();
         },
         /**
@@ -642,6 +651,15 @@ registerModel({
          * currently uploading or if there is no text content and no attachments.
          */
         async sendMessage() {
+            if (this.chatter && this.chatter.isTemporary) {
+                const chatter = this.chatter;
+                const saved = await this.chatter.doSaveRecord();
+                if (!saved) {
+                    return;
+                }
+                chatter.composerView.sendMessage();
+                return;
+            }
             if (!this.composer.canPostMessage) {
                 if (this.composer.hasUploadingAttachment) {
                     this.messaging.notify({
