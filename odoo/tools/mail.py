@@ -14,7 +14,7 @@ from urllib.parse import urlparse
 
 import idna
 import markupsafe
-from lxml import etree
+from lxml import etree, html
 from lxml.html import clean
 from werkzeug import urls
 
@@ -74,10 +74,6 @@ class _Cleaner(clean.Cleaner):
     sanitize_style = False
 
     def __call__(self, doc):
-        # perform quote detection before cleaning and class removal
-        for el in doc.iter(tag=etree.Element):
-            tag_quote(el)
-
         super(_Cleaner, self).__call__(doc)
 
         # if we keep attributes but still remove classes
@@ -178,68 +174,110 @@ def tag_quote(el):
         el.set('data-o-mail-quote', '1')
 
 
-def html_sanitize(src, silent=True, sanitize_tags=True, sanitize_attributes=False, sanitize_style=False, sanitize_form=True, strip_style=False, strip_classes=False):
+def html_normalize(src, filter_callback=None):
+    """ Normalize `src` for storage as an html field value.
+
+    The string is parsed as an html tag soup, made valid, then decorated for
+    "email quote" detection, and prepared for an optional filtering.
+    The filtering step (e.g. sanitization) should be performed by the
+    `filter_callback` function (to avoid multiple parsing operations, and
+    normalize the result).
+
+    :param src: the html string to normalize
+    :param filter_callback: optional callable taking a single `etree._Element`
+        document parameter, to be called during normalization in order to
+        filter the output document
+    """
+
     if not src:
         return src
+
     src = ustr(src, errors='replace')
     # html: remove encoding attribute inside tags
     doctype = re.compile(r'(<[^>]*\s)(encoding=(["\'][^"\']*?["\']|[^\s\n\r>]+)(\s[^>]*|/)?>)', re.IGNORECASE | re.DOTALL)
     src = doctype.sub(u"", src)
 
-    logger = logging.getLogger(__name__ + '.html_sanitize')
-
-    kwargs = {
-        'page_structure': True,
-        'style': strip_style,              # True = remove style tags/attrs
-        'sanitize_style': sanitize_style,  # True = sanitize styling
-        'forms': sanitize_form,            # True = remove form tags
-        'remove_unknown_tags': False,
-        'comments': False,
-        'processing_instructions': False
-    }
-    if sanitize_tags:
-        kwargs.update(SANITIZE_TAGS)
-
-    if sanitize_attributes:  # We keep all attributes in order to keep "style"
-        if strip_classes:
-            current_safe_attrs = safe_attrs - frozenset(['class'])
-        else:
-            current_safe_attrs = safe_attrs
-        kwargs.update({
-            'safe_attrs_only': True,
-            'safe_attrs': current_safe_attrs,
-        })
-    else:
-        kwargs.update({
-            'safe_attrs_only': False,  # keep oe-data attributes + style
-            'strip_classes': strip_classes,  # remove classes, even when keeping other attributes
-        })
-
     try:
-        # some corner cases make the parser crash (such as <SCRIPT/XSS SRC=\"http://ha.ckers.org/xss.js\"></SCRIPT> in test_mail)
-        cleaner = _Cleaner(**kwargs)
-        cleaned = cleaner.clean_html(src)
-        assert isinstance(cleaned, str)
-        # html considerations so real html content match database value
-        cleaned = cleaned.replace(u'\xa0', u'&nbsp;')
+        doc = html.fromstring(src)
     except etree.ParserError as e:
+        # HTML comment only string, whitespace only..
         if 'empty' in str(e):
             return u""
+        raise
+
+    # perform quote detection before cleaning and class removal
+    if doc is not None:
+        for el in doc.iter(tag=etree.Element):
+            tag_quote(el)
+
+    if filter_callback:
+        doc = filter_callback(doc)
+
+    src = html.tostring(doc, encoding='unicode')
+
+    # this is ugly, but lxml/etree tostring want to put everything in a
+    # 'div' that breaks the editor -> remove that
+    if src.startswith('<div>') and src.endswith('</div>'):
+        src = src[5:-6]
+
+    # html considerations so real html content match database value
+    src = src.replace(u'\xa0', u'&nbsp;')
+
+    return src
+
+
+def html_sanitize(src, silent=True, sanitize_tags=True, sanitize_attributes=False, sanitize_style=False, sanitize_form=True, strip_style=False, strip_classes=False):
+    if not src:
+        return src
+
+    logger = logging.getLogger(__name__ + '.html_sanitize')
+
+    def sanitize_handler(doc):
+        kwargs = {
+            'page_structure': True,
+            'style': strip_style,              # True = remove style tags/attrs
+            'sanitize_style': sanitize_style,  # True = sanitize styling
+            'forms': sanitize_form,            # True = remove form tags
+            'remove_unknown_tags': False,
+            'comments': False,
+            'processing_instructions': False
+        }
+        if sanitize_tags:
+            kwargs.update(SANITIZE_TAGS)
+
+        if sanitize_attributes:  # We keep all attributes in order to keep "style"
+            if strip_classes:
+                current_safe_attrs = safe_attrs - frozenset(['class'])
+            else:
+                current_safe_attrs = safe_attrs
+            kwargs.update({
+                'safe_attrs_only': True,
+                'safe_attrs': current_safe_attrs,
+            })
+        else:
+            kwargs.update({
+                'safe_attrs_only': False,  # keep oe-data attributes + style
+                'strip_classes': strip_classes,  # remove classes, even when keeping other attributes
+            })
+
+        cleaner = _Cleaner(**kwargs)
+        cleaner(doc)
+        return doc
+
+    try:
+        sanitized = html_normalize(src, filter_callback=sanitize_handler)
+    except etree.ParserError:
         if not silent:
             raise
         logger.warning(u'ParserError obtained when sanitizing %r', src, exc_info=True)
-        cleaned = u'<p>ParserError when sanitizing</p>'
+        sanitized = '<p>ParserError when sanitizing</p>'
     except Exception:
         if not silent:
             raise
         logger.warning(u'unknown error obtained when sanitizing %r', src, exc_info=True)
-        cleaned = u'<p>Unknown error when sanitizing</p>'
+        sanitized = '<p>Unknown error when sanitizing</p>'
 
-    # this is ugly, but lxml/etree tostring want to put everything in a 'div' that breaks the editor -> remove that
-    if cleaned.startswith(u'<div>') and cleaned.endswith(u'</div>'):
-        cleaned = cleaned[5:-6]
-
-    return markupsafe.Markup(cleaned)
+    return markupsafe.Markup(sanitized)
 
 # ----------------------------------------------------------
 # HTML/Text management
