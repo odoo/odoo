@@ -19,6 +19,7 @@
                         <field name="date_to"/>
                         <field name="test_file"/>
                         <field name="export_type" attrs="{'invisible': [('test_file', '=', False)]}"/>
+                        <field name="excluded_journal_ids" widget="many2many_tags" options="{'no_create': True}"/>
                     </group>
                 </page>
                 <page string="Technical Info" name="technical_info">
