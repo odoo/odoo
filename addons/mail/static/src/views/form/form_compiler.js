@@ -50,6 +50,7 @@ function compileChatter(node, params) {
         threadId: params.threadId,
         threadModel: params.threadModel,
         webRecord: params.webRecord,
+        saveRecord: "() => __comp__.saveButtonClicked and __comp__.saveButtonClicked()",
     });
     const chatterContainerHookXml = createElement("div");
     chatterContainerHookXml.classList.add("o_FormRenderer_chatterContainer");
@@ -169,6 +170,7 @@ patch(FormCompiler.prototype, "mail", {
             hasExternalBorder: "true",
             hasMessageListScrollAdjust: "false",
             isInFormSheetBg: "false",
+            saveRecord: "__comp__.props.saveButtonClicked",
         });
         if (chatterContainerHookXml.parentNode.classList.contains("o_form_sheet")) {
             return res; // if chatter is inside sheet, keep it there

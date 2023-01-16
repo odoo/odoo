@@ -465,6 +465,7 @@ export class FormController extends Component {
             this.fieldsToTranslate[record.resId] = this.fieldsToTranslate.false;
             delete this.fieldsToTranslate.false;
         }
+        return saved;
     }
 
     async discard() {

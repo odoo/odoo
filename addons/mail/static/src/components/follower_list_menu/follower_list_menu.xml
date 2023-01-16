@@ -4,7 +4,7 @@
     <t t-name="mail.FollowerListMenuView" owl="1">
         <div class="o_FollowerListMenuView position-relative d-flex" t-attf-class="{{ className }}" t-on-keydown="onKeydown" t-ref="root">
             <div class="o_FollowerListMenuView_followers d-flex" t-ref="dropdown">
-                <button class="o_FollowerListMenuView_buttonFollowers o_ChatterTopbar_button btn btn-light" t-att-disabled="isDisabled" t-att-aria-expanded="isDropdownOpen ? 'true' : 'false'" t-on-click="onClickFollowersButton" aria-label="Show Followers">
+                <button class="o_FollowerListMenuView_buttonFollowers o_ChatterTopbar_button btn btn-light" t-att-disabled="!chatterOwner.isTemporary and isDisabled" t-att-aria-expanded="isDropdownOpen ? 'true' : 'false'" t-on-click="onClickFollowersButton" aria-label="Show Followers">
                     <i class="fa fa-user-o" role="img"/>
                     <span class="o_FollowerListMenuView_buttonFollowersCount ps-1" t-esc="followerViews.length"/>
                 </button>

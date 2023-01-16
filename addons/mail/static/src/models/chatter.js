@@ -2,6 +2,7 @@
 
 import { useComponentToModel } from "@mail/component_hooks/use_component_to_model";
 import { attr, clear, insert, link, many, one, Model } from "@mail/model";
+import { makeDeferred } from "@mail/utils/deferred";
 
 const getThreadNextTemporaryId = (function () {
     let tmpId = 0;
@@ -32,6 +33,43 @@ Model({
                 this.composerView.update({ doFocus: true });
             }
         },
+        async doSaveRecord() {
+            const saved = await this.saveRecord();
+            if (!saved) {
+                return saved;
+            }
+            let composerData = null;
+            if (this.composerView) {
+                const {
+                    attachments,
+                    isLog,
+                    rawMentionedChannels,
+                    rawMentionedPartners,
+                    textInputContent,
+                    textInputCursorEnd,
+                    textInputCursorStart,
+                    textInputSelectionDirection,
+                } = this.composerView.composer;
+                composerData = {
+                    attachments,
+                    isLog,
+                    rawMentionedChannels,
+                    rawMentionedPartners,
+                    textInputContent,
+                    textInputCursorEnd,
+                    textInputCursorStart,
+                    textInputSelectionDirection,
+                };
+            }
+            // Wait for next render from chatter_container,
+            // So that it changes to composer of new thread
+            this.update({
+                createNewRecordComposerData: composerData,
+                createNewRecordDeferred: composerData ? makeDeferred() : null,
+            });
+            await this.createNewRecordDeferred;
+            return saved;
+        },
         onAttachmentsLoadingTimeout() {
             this.update({
                 attachmentsLoaderTimer: clear(),
@@ -48,13 +86,25 @@ Model({
         /**
          * Handles click on the attach button.
          */
-        onClickButtonAddAttachments() {
+        async onClickButtonAddAttachments() {
+            if (this.isTemporary) {
+                const saved = await this.doSaveRecord();
+                if (!saved) {
+                    return;
+                }
+            }
             this.fileUploader.openBrowserFileUploader();
         },
         /**
          * Handles click on the attachments button.
          */
-        onClickButtonToggleAttachments() {
+        async onClickButtonToggleAttachments() {
+            if (this.isTemporary) {
+                const saved = await this.doSaveRecord();
+                if (!saved) {
+                    return;
+                }
+            }
             this.update({ hasAttachmentBox: this.hasAttachmentBox ? clear() : true });
             if (this.hasAttachmentBox) {
                 this.scrollPanelRef.el.scrollTop = 0;
@@ -71,9 +121,15 @@ Model({
         /**
          * @param {MouseEvent} ev
          */
-        onClickFollow(ev) {
-            if (!this.exists() || !this.thread) {
+        async onClickFollow(ev) {
+            if (!this.exists()) {
                 return;
+            }
+            if (this.isTemporary) {
+                const saved = await this.doSaveRecord();
+                if (!saved || this.thread.isCurrentPartnerFollowing) {
+                    return;
+                }
             }
             this.thread.follow();
         },
@@ -95,6 +151,12 @@ Model({
          * @param {MouseEvent} ev
          */
         async onClickScheduleActivity(ev) {
+            if (this.isTemporary) {
+                const saved = await this.doSaveRecord();
+                if (!saved) {
+                    return;
+                }
+            }
             await this.messaging.openActivityForm({ thread: this.thread });
             if (this.exists()) {
                 this.reloadParentView();
@@ -264,6 +326,22 @@ Model({
                     }),
                 });
                 this.thread.cache.update({ temporaryMessages: link(message) });
+            }
+            // continuation of saving new record: restore composer state
+            if (this.createNewRecordComposerData) {
+                this.update({
+                    composerView: {
+                        composer: {
+                            ...this.createNewRecordComposerData,
+                            thread: this.thread,
+                        },
+                    },
+                });
+                this.createNewRecordDeferred.resolve();
+                this.update({
+                    createNewRecordComposerData: clear(),
+                    createNewRecordDeferred: clear(),
+                });
             }
         },
         /**
@@ -460,7 +538,7 @@ Model({
         isAttachmentBoxVisibleInitially: attr({ default: false }),
         isFollowButtonDisabled: attr({
             compute() {
-                return !this.hasReadAccess;
+                return !this.isTemporary && !this.hasReadAccess;
             },
         }),
         isInFormSheetBg: attr({ default: false }),
@@ -473,6 +551,12 @@ Model({
         isShowingAttachmentsLoading: attr({ default: false }),
         isUnfollowButtonHighlighted: attr({ default: false }),
         scrollPanelRef: attr({ ref: "scrollPanel" }),
+        isTemporary: attr({
+            compute() {
+                return Boolean(!this.thread || this.thread.isTemporary);
+            },
+        }),
+        saveRecord: attr(),
         /**
          * Determines whether the view should reload after file changed in this chatter,
          * such as from a file upload.
@@ -529,6 +613,8 @@ Model({
             required: true,
         }),
         webRecord: attr(),
+        createNewRecordComposerData: attr(),
+        createNewRecordDeferred: attr(),
     },
     onChanges: [
         {
