@@ -10,6 +10,10 @@
                     Invoices will be created in draft so that you can review
                     them before validation.
                 </p>
+                <field name="display_draft_invoice_warning" invisible="1"/>
+                <p class="alert alert-warning" role="alert" attrs="{'invisible': [('display_draft_invoice_warning', '=', False)]}">
+                    The new invoice will deduct draft invoices linked to this sale order.
+                </p>
                 <group>
                     <field name="sale_order_ids" invisible="1"/>
                     <field name="has_down_payments" invisible="1"/>

@@ -69,6 +69,9 @@ class SaleAdvancePaymentInv(models.TransientModel):
         domain=[('type_tax_use', '=', 'sale')],
         help="Taxes used for deposits")
 
+    # UI
+    display_draft_invoice_warning = fields.Boolean(compute="_compute_display_draft_invoice_warning")
+
     #=== COMPUTE METHODS ===#
 
     @api.depends('sale_order_ids')
@@ -105,6 +108,14 @@ class SaleAdvancePaymentInv(models.TransientModel):
         for wizard in self:
             if wizard.count == 1:
                 wizard.product_id = wizard.company_id.sale_down_payment_product_id
+
+    @api.depends('sale_order_ids', 'advance_payment_method', 'deduct_down_payments')
+    def _compute_display_draft_invoice_warning(self):
+        for wizard in self:
+            wizard.display_draft_invoice_warning = (
+                wizard.advance_payment_method == 'delivered' and
+                any(aml.parent_state == 'draft' for aml in wizard.sale_order_ids.order_line.invoice_lines)
+            )
 
     #=== ONCHANGE METHODS ===#
 
