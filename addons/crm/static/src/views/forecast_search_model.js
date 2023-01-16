@@ -28,34 +28,22 @@ export class ForecastSearchModel extends SearchModel {
     /**
      * @override
      */
-    _getDomain(params = {}) {
-        const domain = super._getDomain(...arguments);
-        const forecastField = this.globalContext.forecast_field;
-        if (!forecastField) {
-            return domain;
+    _getSearchItemDomain(activeItem) {
+        let domain = super._getSearchItemDomain(activeItem);
+        const { searchItemId } = activeItem;
+        const searchItem = this.searchItems[searchItemId];
+        const context = makeContext([searchItem.context || {}]);
+        if (context.forecast_filter) {
+            const forecastField = this.globalContext.forecast_field;
+            const forecastStart = this._getForecastStart(forecastField);
+            const forecastDomain = [
+                "|",
+                [forecastField, "=", false],
+                [forecastField, ">=", forecastStart],
+            ];
+            domain = Domain.and([domain, forecastDomain]);
         }
-        let forecastFilter = false;
-        for (const queryElem of this.query) {
-            const searchItem = this.searchItems[queryElem.searchItemId];
-            if (searchItem.type === "filter") {
-                const context = makeContext([searchItem.context || {}]);
-                if (context.forecast_filter) {
-                    forecastFilter = true;
-                    break;
-                }
-            }
-        }
-        if (!forecastFilter) {
-            return domain;
-        }
-        const forecastStart = this._getForecastStart(forecastField);
-        const forecastDomain = [
-            "|",
-            [forecastField, "=", false],
-            [forecastField, ">=", forecastStart],
-        ];
-        const fullDomain = Domain.and([domain, forecastDomain]);
-        return params.raw ? fullDomain : fullDomain.toList();
+        return domain;
     }
 
     /**
