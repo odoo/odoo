@@ -1078,7 +1078,7 @@ class SaleOrder(models.Model):
         invoice_vals_list = []
         invoice_item_sequence = 0 # Incremental sequencing to keep the lines order on the invoice.
         for order in self:
-            order = order.with_company(order.company_id)
+            order = order.with_company(order.company_id).with_context(lang=order.partner_invoice_id.lang)
 
             invoice_vals = order._prepare_invoice()
             invoiceable_lines = order._get_invoiceable_lines(final)
