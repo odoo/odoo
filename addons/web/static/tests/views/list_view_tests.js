@@ -15402,6 +15402,49 @@ QUnit.module("Views", (hooks) => {
     });
 
     QUnit.test(
+        "open groups are kept when leaving and coming back (grouped by date)",
+        async (assert) => {
+            serverData.models.foo.fields.date.default = "2022-10-10";
+            serverData.views = {
+                "foo,false,list": `<tree><field name="foo"/></tree>`,
+                "foo,false,search": "<search/>",
+                "foo,false,form": "<form/>",
+            };
+            const webClient = await createWebClient({ serverData });
+            await doAction(webClient, {
+                name: "Partners",
+                res_model: "foo",
+                type: "ir.actions.act_window",
+                views: [
+                    [false, "list"],
+                    [false, "form"],
+                ],
+                context: {
+                    group_by: ["date"],
+                },
+            });
+
+            assert.containsOnce(target, ".o_list_view");
+            assert.containsN(target, ".o_group_header", 2);
+            assert.containsNone(target, ".o_group_open");
+            assert.containsNone(target, ".o_data_row");
+
+            // unfold the second group
+            await click(target.querySelectorAll(".o_group_header")[1]);
+            assert.containsOnce(target, ".o_group_open");
+            assert.containsN(target, ".o_data_row", 3);
+
+            // open a record and go back
+            await click(target.querySelector(".o_data_cell"));
+            assert.containsOnce(target, ".o_form_view");
+            await click(target.querySelector(".breadcrumb-item a"));
+
+            assert.containsOnce(target, ".o_group_open");
+            assert.containsN(target, ".o_data_row", 3);
+        }
+    );
+
+    QUnit.test(
         "go to the next page after leaving and coming back to a grouped list view",
         async (assert) => {
             serverData.views = {
