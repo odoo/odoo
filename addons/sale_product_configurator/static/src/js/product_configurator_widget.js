@@ -105,6 +105,7 @@ ProductConfiguratorWidget.include({
                 onSuccess: function () {
                     // Leave edit mode of one2many list.
                     unselectRow();
+                    self.trigger_up('set_dirty', {dataPointID: self.dataPointID});
                 }
             });
         } else if (!self._isConfigurableLine() && self._isConfigurableProduct()) {
