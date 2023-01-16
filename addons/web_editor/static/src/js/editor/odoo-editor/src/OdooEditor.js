@@ -3467,6 +3467,17 @@ export class OdooEditor extends EventTarget {
             return;
         }
 
+        let appliedCustomSelection = false;
+        if (selection.rangeCount && selection.getRangeAt(0)) {
+            appliedCustomSelection = this._handleSelectionInTable();
+            if (this.options.onCollaborativeSelectionChange) {
+                this.options.onCollaborativeSelectionChange(this.getCurrentCollaborativeSelection());
+            }
+        }
+        if (!appliedCustomSelection) {
+            this._updateToolbar(!selection.isCollapsed && this.isSelectionInEditable(selection));
+        }
+
         if (
             !this.editable.contains(selection.anchorNode) &&
             !this.editable.contains(selection.focusNode)
@@ -3497,16 +3508,6 @@ export class OdooEditor extends EventTarget {
 
         if (this._currentMouseState === 'mouseup') {
             this._fixFontAwesomeSelection();
-        }
-        let appliedCustomSelection = false;
-        if (selection.rangeCount && selection.getRangeAt(0)) {
-            appliedCustomSelection = this._handleSelectionInTable();
-            if (this.options.onCollaborativeSelectionChange) {
-                this.options.onCollaborativeSelectionChange(this.getCurrentCollaborativeSelection());
-            }
-        }
-        if (!appliedCustomSelection) {
-            this._updateToolbar(!selection.isCollapsed && this.isSelectionInEditable(selection));
         }
     }
 
