@@ -745,6 +745,27 @@ QUnit.module("Search", (hooks) => {
         ]);
     });
 
+    QUnit.test("process a dynamic filter with a isDefault key to false", async function (assert) {
+        const model = await makeSearchModel({
+            serverData,
+            dynamicFilters: [
+                {
+                    description: "Quick search",
+                    domain: [],
+                    is_default: false,
+                },
+            ],
+        });
+        assert.deepEqual(sanitizeSearchItems(model), [
+            {
+                description: "Quick search",
+                domain: [],
+                isDefault: false,
+                type: "filter",
+            },
+        ]);
+    });
+
     QUnit.test("toggle a filter", async function (assert) {
         assert.expect(1);
         assert.expect(3);
