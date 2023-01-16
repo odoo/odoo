@@ -195,6 +195,12 @@
 
            .app_settings_header {
                @include o-base-settings-horizontal-padding(0);
+
+               @include media-breakpoint-down(md) {
+                  .content-group .flex-nowrap {
+                     flex-wrap: wrap !important;
+                  }
+               }
            }
 
            .highlighter {
