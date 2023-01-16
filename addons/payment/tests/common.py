@@ -79,7 +79,9 @@ class PaymentCommon(BaseCommon):
             'is_published': True,
             'allow_tokenization': True,
             'redirect_form_view_id': redirect_form.id,
-            'available_currency_ids': [Command.set((cls.currency_euro + cls.currency_usd).ids)],
+            'available_currency_ids': [Command.set(
+                (cls.currency_euro + cls.currency_usd + cls.env.company.currency_id).ids
+            )],
         })
 
         cls.provider = cls.dummy_provider
