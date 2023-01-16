@@ -188,10 +188,6 @@ def html_sanitize(src, silent=True, sanitize_tags=True, sanitize_attributes=Fals
 
     logger = logging.getLogger(__name__ + '.html_sanitize')
 
-    # html encode mako tags <% ... %> to decode them later and keep them alive, otherwise they are stripped by the cleaner
-    src = src.replace(u'<%', misc.html_escape(u'<%'))
-    src = src.replace(u'%>', misc.html_escape(u'%>'))
-
     kwargs = {
         'page_structure': True,
         'style': strip_style,              # True = remove style tags/attrs
