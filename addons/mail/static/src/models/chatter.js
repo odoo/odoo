@@ -3,6 +3,7 @@
 import { registerModel } from '@mail/model/model_core';
 import { attr, one } from '@mail/model/model_field';
 import { clear, insert, link } from '@mail/model/model_field_command';
+import { makeDeferred } from '@mail/utils/deferred';
 
 const getThreadNextTemporaryId = (function () {
     let tmpId = 0;
@@ -28,6 +29,43 @@ registerModel({
                 this.composerView.update({ doFocus: true });
             }
         },
+        async doSaveRecord() {
+            const saved = await this.saveRecord();
+            if (!saved) {
+                return saved;
+            }
+            let composerData = null;
+            if (this.composerView) {
+                const {
+                    attachments,
+                    isLog,
+                    rawMentionedChannels,
+                    rawMentionedPartners,
+                    textInputContent,
+                    textInputCursorEnd,
+                    textInputCursorStart,
+                    textInputSelectionDirection,
+                } = this.composerView.composer;
+                composerData = {
+                    attachments,
+                    isLog,
+                    rawMentionedChannels,
+                    rawMentionedPartners,
+                    textInputContent,
+                    textInputCursorEnd,
+                    textInputCursorStart,
+                    textInputSelectionDirection,
+                };
+            }
+            // Wait for next render from chatter_container,
+            // So that it changes to composer of new thread
+            this.update({
+                createNewRecordComposerData: composerData,
+                createNewRecordDeferred: makeDeferred(),
+            });
+            await this.createNewRecordDeferred;
+            return saved;
+        },
         onAttachmentsLoadingTimeout() {
             this.update({
                 attachmentsLoaderTimer: clear(),
@@ -37,13 +75,25 @@ registerModel({
         /**
          * Handles click on the attach button.
          */
-        onClickButtonAddAttachments() {
+        async onClickButtonAddAttachments() {
+            if (this.isTemporary) {
+                const saved = await this.doSaveRecord();
+                if (!saved) {
+                    return;
+                }
+            }
             this.fileUploader.openBrowserFileUploader();
         },
         /**
          * Handles click on the attachments button.
          */
-        onClickButtonToggleAttachments() {
+        async onClickButtonToggleAttachments() {
+            if (this.isTemporary) {
+                const saved = await this.doSaveRecord();
+                if (!saved) {
+                    return;
+                }
+            }
             this.update({ attachmentBoxView: this.attachmentBoxView ? clear() : {} });
             if (this.attachmentBoxView) {
                 this.scrollPanelRef.el.scrollTop = 0;
@@ -75,6 +125,12 @@ registerModel({
          * @param {MouseEvent} ev
          */
         async onClickScheduleActivity(ev) {
+            if (this.isTemporary) {
+                const saved = await this.doSaveRecord();
+                if (!saved) {
+                    return;
+                }
+            }
             await this.messaging.openActivityForm({ thread: this.thread });
             if (this.exists()) {
                 this.reloadParentView();
@@ -212,6 +268,22 @@ registerModel({
                     }),
                 });
                 this.thread.cache.update({ temporaryMessages: link(message) });
+            }
+            // continuation of saving new record: restore composer state
+            if (this.createNewRecordComposerData) {
+                this.update({
+                    composerView: {
+                        composer: {
+                            ...this.createNewRecordComposerData,
+                            thread: this.thread,
+                        },
+                    },
+                });
+                this.createNewRecordDeferred.resolve();
+                this.update({
+                    createNewRecordComposerData: clear(),
+                    createNewRecordDeferred: clear(),
+                });
             }
         },
         /**
@@ -389,6 +461,12 @@ registerModel({
         isShowingAttachmentsLoading: attr({
             default: false,
         }),
+        isTemporary: attr({
+            compute() {
+                return Boolean(!this.thread || this.thread.isTemporary);
+            },
+        }),
+        saveRecord: attr(),
         scrollPanelRef: attr(),
         /**
          * Determines whether the view should reload after file changed in this chatter,
@@ -446,6 +524,8 @@ registerModel({
             required: true,
         }),
         webRecord: attr(),
+        createNewRecordComposerData: attr(),
+        createNewRecordDeferred: attr(),
     },
     onChanges: [
         {

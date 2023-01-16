@@ -167,6 +167,10 @@ Object.assign(ChatterContainer, {
         webRecord: {
             type: Object,
             optional: true,
+        },
+        saveRecord: {
+            type: Function,
+            optional: true,
         }
     },
     template: 'mail.ChatterContainer',
