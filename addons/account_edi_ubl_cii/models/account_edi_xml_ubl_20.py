@@ -501,7 +501,7 @@ class AccountEdiXmlUBL20(models.AbstractModel):
             narration += note_node.text + "\n"
 
         payment_terms_node = tree.find('./{*}PaymentTerms/{*}Note')  # e.g. 'Payment within 10 days, 2% discount'
-        if payment_terms_node is not None:
+        if payment_terms_node is not None and payment_terms_node.text:
             narration += payment_terms_node.text + "\n"
 
         invoice.narration = narration
@@ -515,14 +515,14 @@ class AccountEdiXmlUBL20(models.AbstractModel):
         # ==== invoice_date ====
 
         invoice_date_node = tree.find('./{*}IssueDate')
-        if invoice_date_node is not None:
+        if invoice_date_node is not None and invoice_date_node.text:
             invoice.invoice_date = invoice_date_node.text
 
         # ==== invoice_date_due ====
 
         for xpath in ('./{*}DueDate', './/{*}PaymentDueDate'):
             invoice_date_due_node = tree.find(xpath)
-            if invoice_date_due_node is not None:
+            if invoice_date_due_node is not None and invoice_date_due_node.text:
                 invoice.invoice_date_due = invoice_date_due_node.text
                 break
 
