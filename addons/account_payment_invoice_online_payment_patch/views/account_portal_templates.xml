@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+
+    <template id="portal_my_invoices_payment" inherit_id="account_payment.portal_my_invoices_payment">
+        <xpath expr="//t[@t-foreach='invoices']/tr/td[count(t)=2]/t[@t-set='pending_manual_txs']/following-sibling::a[i]" position="attributes">
+            <attribute name="t-if">
+                invoice._has_to_be_paid()
+            </attribute>
+        </xpath>
+        <xpath expr="//t[@t-foreach='invoices']/tr/td[hasclass('tx_status')]" position="replace">
+            <td class="tx_status text-center">
+                <t t-if="last_tx">
+                    <!-- c/p of account_payment -->
+                    <t t-if="invoice.state == 'posted' and invoice.payment_state in ('not_paid', 'partial') and (last_tx.state not in ['pending', 'authorized', 'done', 'cancel'] or (last_tx.state == 'pending' and last_tx.provider_code in ('none', 'custom')))">
+                        <span class="badge rounded-pill text-bg-info"><i class="fa fa-fw fa-clock-o"></i><span class="d-none d-md-inline"> Waiting for Payment</span></span>
+                    </t>
+                    <t t-if="invoice.state == 'posted' and last_tx.state == 'authorized'">
+                        <span class="badge rounded-pill text-bg-primary"><i class="fa fa-fw fa-check"/><span class="d-none d-md-inline"> Authorized</span></span>
+                    </t>
+                    <t t-if="invoice.state == 'posted' and last_tx.state == 'pending' and last_tx.provider_code not in ('none', 'custom')">
+                        <span class="badge rounded-pill text-bg-warning"><span class="d-none d-md-inline"> Pending</span></span>
+                    </t>
+                    <t t-if="invoice.state == 'posted' and invoice.payment_state in ('paid', 'in_payment') or last_tx.state == 'done'">
+                        <span class="badge rounded-pill text-bg-success"><i class="fa fa-fw fa-check"></i><span class="d-none d-md-inline"> Paid</span></span>
+                    </t>
+                </t>
+                <t t-else="">
+                    <!-- c/p of account -->
+                    <t t-if="invoice.state == 'posted' and invoice.payment_state not in ('in_payment', 'paid', 'reversed')">
+                        <span class="badge rounded-pill text-bg-info"><i class="fa fa-fw fa-clock-o" aria-label="Opened" title="Opened" role="img"></i><span class="d-none d-md-inline"> Waiting for Payment</span></span>
+                    </t>
+                    <t t-if="invoice.state == 'posted' and invoice.payment_state in ('paid', 'in_payment')">
+                        <span class="badge rounded-pill text-bg-success"><i class="fa fa-fw fa-check" aria-label="Paid" title="Paid" role="img"></i><span class="d-none d-md-inline"> Paid</span></span>
+                    </t>
+                    <t t-if="invoice.state == 'posted' and invoice.payment_state == 'reversed'">
+                        <span class="badge rounded-pill text-bg-success"><i class="fa fa-fw fa-check" aria-label="Reversed" title="Reversed" role="img"></i><span class="d-none d-md-inline"> Reversed</span></span>
+                    </t>
+                    <t t-if="invoice.state == 'cancel'">
+                        <span class="badge rounded-pill text-bg-warning"><i class="fa fa-fw fa-remove" aria-label="Cancelled" title="Cancelled" role="img"></i><span class="d-none d-md-inline"> Cancelled</span></span>
+                    </t>
+                </t>
+            </td>
+        </xpath>
+    </template>
+
+    <template id="portal_invoice_page_inherit_payment" inherit_id="account_payment.portal_invoice_page_inherit_payment">
+        <xpath expr="//div[@id='portal_pay']" position="attributes">
+            <attribute name="t-if">
+                invoice._has_to_be_paid()
+            </attribute>
+        </xpath>
+        <xpath expr="//t[@t-call='portal.portal_record_sidebar']//div[hasclass('d-grid')]//a[starts-with(@href, '#')][i]" position="attributes">
+            <attribute name="t-if">
+                invoice._has_to_be_paid()
+            </attribute>
+        </xpath>
+    </template>
+
+</odoo>
