@@ -23,7 +23,7 @@ const TableOfContent = publicWidget.Widget.extend({
      */
     destroy() {
         this.$target.css('top', '');
-        this.$target.find('.s_table_of_content_navbar').css('top', '');
+        this.$target.find('.s_table_of_content_navbar').css({top: '', maxHeight: ''});
         this._super(...arguments);
     },
 
@@ -42,8 +42,10 @@ const TableOfContent = publicWidget.Widget.extend({
         this.$target.css('top', isHorizontalNavbar ? position : '');
         this.$target.find('.s_table_of_content_navbar').css('top', isHorizontalNavbar ? '' : position + 20);
         const $mainNavBar = $('#oe_main_menu_navbar');
-        position += $mainNavBar.length ? $mainNavBar.outerHeight() : 0;
+        const mainNavBarHidden = document.body.classList.contains('o_fullscreen') || this.editableMode;
+        position += !mainNavBarHidden && $mainNavBar.length ? $mainNavBar.outerHeight() : 0;
         position += isHorizontalNavbar ? this.$target.outerHeight() : 0;
+        this.$target.find('.s_table_of_content_navbar').css('maxHeight', isHorizontalNavbar ? '' : `calc(100vh - ${position + 40}px)`);
         if (this.previousPosition !== position) {
             // The scrollSpy must be destroyed before calling it again.
             // Otherwise the call has no effect.
