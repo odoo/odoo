@@ -572,7 +572,7 @@ class SaleOrderLine(models.Model):
                     # otherwise it's a surcharge which shouldn't be shown to the customer
                     line.discount = discount
 
-    def _convert_to_tax_base_line_dict(self):
+    def _convert_to_tax_base_line_dict(self, **kwargs):
         """ Convert the current record to a dictionary in order to use the generic taxes computation method
         defined on account.tax.
 
@@ -589,6 +589,7 @@ class SaleOrderLine(models.Model):
             quantity=self.product_uom_qty,
             discount=self.discount,
             price_subtotal=self.price_subtotal,
+            **kwargs,
         )
 
     @api.depends('product_uom_qty', 'discount', 'price_unit', 'tax_id')
