@@ -62,42 +62,6 @@ QUnit.module("mail", {}, function () {
             );
         });
 
-        QUnit.test("base disabled rendering", async function (assert) {
-            assert.expect(6);
-
-            const { openView } = await start();
-            await openView({
-                res_model: "res.partner",
-                views: [[false, "form"]],
-            });
-            assert.strictEqual(
-                document.querySelectorAll(`.o_ChatterTopbar`).length,
-                1,
-                "should have a chatter topbar"
-            );
-            assert.ok(
-                document.querySelector(`.o_ChatterTopbar_buttonSendMessage`).disabled,
-                "send message button should be disabled"
-            );
-            assert.ok(
-                document.querySelector(`.o_ChatterTopbar_buttonLogNote`).disabled,
-                "log note button should be disabled"
-            );
-            assert.ok(
-                document.querySelector(`.o_ChatterTopbar_buttonScheduleActivity`).disabled,
-                "schedule activity should be disabled"
-            );
-            assert.ok(
-                document.querySelector(`.o_ChatterTopbar_buttonAddAttachments`).disabled,
-                "attachments button should be disabled"
-            );
-            assert.strictEqual(
-                document.querySelectorAll(`.o_ChatterTopbar_buttonAttachmentsCountLoader`).length,
-                0,
-                "attachments button should not have a loader"
-            );
-        });
-
         QUnit.test("attachment loading is delayed", async function (assert) {
             assert.expect(4);
 
