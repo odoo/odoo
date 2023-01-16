@@ -9,7 +9,7 @@
             <form string="Survey Question" create="false" class="o_survey_question_view_form">
                 <field name="is_placed_before_trigger" invisible="1"/>
                 <div class="alert alert-warning mb-0 text-center" role="alert" invisible="not is_placed_before_trigger">
-                    ⚠️ This question is positioned before its trigger and will be skipped.
+                    ⚠️ This question is positioned before some or all of its triggers and could be skipped.
                 </div>
                 <field name="is_page" invisible="1"/>
                 <field name="page_id" invisible="1" required="False"/>
@@ -217,19 +217,16 @@
                                     <field name='comment_count_as_answer'
                                         invisible="question_type not in ['simple_choice', 'multiple_choice', 'matrix'] or not comments_allowed"/>
                                 </group>
-                                <group string="Layout">
+                                <group string="Conditional display">
                                     <p class="text-muted" colspan="2" invisible="questions_selection == 'all'">
                                         Conditional display is not available when questions are randomly picked.
                                     </p>
-                                    <field name="is_conditional" invisible="questions_selection == 'random'"/>
                                     <field name="allowed_triggering_question_ids" invisible="1"/>
-                                    <field name="triggering_question_id"  options="{'no_create_edit': True, 'no_open': True, 'no_create': True}"
-                                           domain="[('id', 'in', allowed_triggering_question_ids)]" placeholder="Pick a previous multiple-choice question"
-                                           invisible="questions_selection == 'random' or not is_conditional"
-                                           required="is_conditional"/>
-                                    <field name="triggering_answer_id" options="{'no_open': True, 'no_create': True}"
-                                        invisible="questions_selection == 'random' or not triggering_question_id"
-                                        required="is_conditional"/>
+                                    <field name="triggering_answer_ids" widget="many2many_tags" options="{'no_open': True, 'no_create': True}"
+                                           domain="[('question_id', 'in', allowed_triggering_question_ids)]"
+                                           invisible="questions_selection == 'random'"
+                                           placeholder="Optional previous answers required"
+                                    />
                                 </group>
                             </group>
                             <group>
@@ -304,11 +301,10 @@
         <field name="name">survey.question.answer.view.tree</field>
         <field name="model">survey.question.answer</field>
         <field name="arch" type="xml">
-            <tree string="Survey Label" create="false">
+            <tree string="Survey Label" create="false" default_order="question_id">
                 <field name="sequence" widget="handle"/>
                 <field name="question_id"/>
-                <field name="matrix_question_id"/>
-                <field name="value"/>
+                <field name="value" string="Answer"/>
                 <field name="answer_score" groups="base.group_no_one"/>
             </tree>
         </field>
