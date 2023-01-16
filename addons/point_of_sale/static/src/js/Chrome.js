@@ -395,7 +395,7 @@ odoo.define('point_of_sale.Chrome', function(require) {
         _preloadImages() {
             for (let product of this.env.pos.db.get_product_by_category(0)) {
                 const image = new Image();
-                image.src = `/web/image?model=product.product&field=image_128&id=${product.id}&unique=${product.write_date}`;
+                image.src = `/web/image?model=product.product&field=image_128&id=${product.id}&unique=${product.__last_update}`;
             }
             for (let category of Object.values(this.env.pos.db.category_by_id)) {
                 if (category.id == 0) continue;
