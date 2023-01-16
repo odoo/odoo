@@ -414,7 +414,7 @@ class StockMove(models.Model):
             # Falsy in FIFO but since it's an estimation we don't require exact correct cost. Otherwise
             # we would have to recompute all the analytic estimation at each out.
             amount = - unit_amount * self.product_id.standard_price
-        elif self.product_id.valuation == 'real_time':
+        elif self.product_id.valuation == 'real_time' and not self._ignore_automatic_valuation():
             accounts_data = self.product_id.product_tmpl_id.get_product_accounts()
             account_valuation = accounts_data.get('stock_valuation', False)
             analytic_line_vals = self.stock_valuation_layer_ids.account_move_id.line_ids.filtered(
@@ -431,6 +431,9 @@ class StockMove(models.Model):
         elif amount:
             return self._generate_analytic_lines_data(
                 unit_amount, amount)
+
+    def _ignore_automatic_valuation(self):
+        return False
 
     def _generate_analytic_lines_data(self, unit_amount, amount):
         self.ensure_one()
