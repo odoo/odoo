@@ -1985,21 +1985,26 @@ class Html(_String):
 
             original_value = record[self.name]
             if original_value:
-                initial_value_sanitized = html_sanitize(original_value, **sanitize_vals)
+                original_value_sanitized = html_sanitize(original_value, **sanitize_vals)
 
                 def get_parsed(val):
                     return etree.tostring(html.fromstring(val))
 
-                # could have been emptied by the sanitizer
                 if (
-                    not initial_value_sanitized
-                    or get_parsed(original_value) != get_parsed(initial_value_sanitized)
+                    not original_value_sanitized  # sanitizer could empty it
+                    or get_parsed(original_value) != get_parsed(original_value_sanitized)
                 ):
                     # The field contains element(s) that would be removed if
                     # sanitized. It means that someone who was part of a group
                     # allowing to bypass the sanitation saved that field
                     # previously.
-                    raise UserError(_("Someone with escalated rights previously modified this field (%s %s), you are therefore not able to modify it yourself.", record._description, self.string))
+                    raise UserError(_(
+                        "The field value you're saving (%s %s) includes content that is "
+                        "restricted for security reasons. It is possible that someone "
+                        "with higher privileges previously modified it, and you are therefore "
+                        "not able to modify it yourself while preserving the content.",
+                        record._description, self.string,
+                    ))
 
         return html_sanitize(value, **sanitize_vals)
 
