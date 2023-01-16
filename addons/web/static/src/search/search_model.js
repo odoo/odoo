@@ -1122,7 +1122,7 @@ export class SearchModel extends EventBus {
                 groupNumber: this.nextGroupNumber,
                 description: filter.description,
                 domain: filter.domain,
-                isDefault: true,
+                isDefault: "is_default" in filter ? filter.is_default : true,
                 type: "filter",
             };
         });
