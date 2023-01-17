@@ -183,7 +183,6 @@ class AlarmManager(models.AbstractModel):
         for alarm in alarms:
             alarm_attendees = attendees.filtered(lambda attendee: attendee.event_id.id in events_by_alarm[alarm.id])
             alarm_attendees.with_context(
-                mail_notify_force_send=True,
                 calendar_template_ignore_recurrence=True
             )._send_mail_to_attendees(
                 alarm.mail_template_id,

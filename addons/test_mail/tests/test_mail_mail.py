@@ -11,7 +11,7 @@ from OpenSSL.SSL import Error as SSLError
 from socket import gaierror, timeout
 from unittest.mock import call, patch
 
-from odoo import api, Command, tools
+from odoo import api, Command
 from odoo.addons.base.models.ir_mail_server import MailDeliveryException
 from odoo.addons.test_mail.tests.common import TestMailCommon
 from odoo.exceptions import AccessError
@@ -127,6 +127,35 @@ class TestMailMail(TestMailCommon):
             self.assertEqual(len(mail.sudo().unrestricted_attachment_ids), 0)
 
     @mute_logger('odoo.addons.mail.models.mail_mail')
+    def test_mail_mail_headers(self):
+        """ Test headers management when set on outgoing mail. """
+        # mail without thread-enabled record
+        base_values = {
+            'body_html': '<p>Test</p>',
+            'email_to': 'test@example.com',
+            'headers': {'foo': 'bar'},
+        }
+
+        for headers, expected in [
+            ({'foo': 'bar'}, {'foo': 'bar'}),
+            ("{'foo': 'bar'}", {'foo': 'bar'}),
+            ("{'foo': 'bar', 'baz': '3+2'}", {'foo': 'bar', 'baz': '3+2'}),
+            (['not_a_dict'], {}),
+            ('alsonotadict', {}),
+            ("['not_a_dict']", {}),
+            ("{'invaliddict'}", {}),
+        ]:
+            with self.subTest(headers=headers, expected=expected):
+                mail = self.env['mail.mail'].create([
+                    dict(base_values, headers=headers)
+                ])
+                with self.mock_mail_gateway():
+                    mail.send()
+                for key, value in expected.items():
+                    self.assertIn(key, self._mails[0]['headers'])
+                    self.assertEqual(self._mails[0]['headers'][key], value)
+
+    @mute_logger('odoo.addons.mail.models.mail_mail')
     def test_mail_mail_recipients(self):
         """ Partner_ids is a field used from mail_message, but not from mail_mail. """
         mail = self.env['mail.mail'].sudo().create({
@@ -166,9 +195,10 @@ class TestMailMail(TestMailCommon):
         self.assertSentEmail(mail.env.user.partner_id,
                              ['test.rec.1@example.com', '"Raoul" <test.rec.2@example.com>'],
                              email_cc=['test.cc.1@example.com', 'test.cc.2@example.com'])
-        # Mail: currently cc are put as copy of all sent emails (aka spam)
+        # don't put CCs as copy of each outgoing email, only the first one (and never
+        # with partner based recipients as those may receive specific links)
         self.assertSentEmail(mail.env.user.partner_id, [self.user_employee.email_formatted],
-                             email_cc=['test.cc.1@example.com', 'test.cc.2@example.com'])
+                             email_cc=[])
         self.assertEqual(len(self._mails), 2)
 
     @mute_logger('odoo.addons.mail.models.mail_mail')

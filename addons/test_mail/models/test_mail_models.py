@@ -14,6 +14,21 @@ class MailTestSimple(models.Model):
     name = fields.Char()
     email_from = fields.Char()
 
+    def _message_compute_subject(self):
+        """ To ease mocks """
+        _a = super()._message_compute_subject()
+        return _a
+
+    def _notify_by_email_get_final_mail_values(self, *args, **kwargs):
+        """ To ease mocks """
+        _a = super()._notify_by_email_get_final_mail_values(*args, **kwargs)
+        return _a
+
+    def _notify_by_email_get_headers(self):
+        headers = super()._notify_by_email_get_headers()
+        headers['X-Custom'] = 'Done'
+        return headers
+
 
 class MailTestGateway(models.Model):
     """ A very simple model only inheriting from mail.thread to test pure mass
@@ -105,6 +120,7 @@ class MailTestTicket(models.Model):
     _description = 'Ticket-like model'
     _name = 'mail.test.ticket'
     _inherit = ['mail.thread']
+    _primary_email = 'email_from'
 
     name = fields.Char()
     email_from = fields.Char(tracking=True)
@@ -143,9 +159,21 @@ class MailTestTicket(models.Model):
         res = super(MailTestTicket, self)._track_template(changes)
         record = self[0]
         if 'customer_id' in changes and record.mail_template:
-            res['customer_id'] = (record.mail_template, {'composition_mode': 'mass_mail'})
+            res['customer_id'] = (
+                record.mail_template,
+                {
+                    'composition_mode': 'mass_mail',
+                    'subtype_id': self.env['ir.model.data']._xmlid_to_res_id('mail.mt_note'),
+                }
+            )
         elif 'datetime' in changes:
-            res['datetime'] = ('test_mail.mail_test_ticket_tracking_view', {'composition_mode': 'mass_mail'})
+            res['datetime'] = (
+                'test_mail.mail_test_ticket_tracking_view',
+                {
+                    'composition_mode': 'mass_mail',
+                    'subtype_id': self.env['ir.model.data']._xmlid_to_res_id('mail.mt_note'),
+                }
+            )
         return res
 
     def _creation_subtype(self):
@@ -160,6 +188,29 @@ class MailTestTicket(models.Model):
         return super(MailTestTicket, self)._track_subtype(init_values)
 
 
+
+class MailTestTicketEL(models.Model):
+    """ Just mail.test.ticket, but exclusion-list enabled. Kept as different
+    model to avoid messing with existing tests, notably performance, and ease
+    backward comparison. """
+    _description = 'Ticket-like model with exclusion list'
+    _name = 'mail.test.ticket.el'
+    _inherit = [
+        'mail.test.ticket',
+        'mail.thread.blacklist',
+    ]
+    _primary_email = 'email_from'
+
+    email_from = fields.Char(
+        'Email',
+        compute='_compute_email_from', readonly=False, store=True)
+
+    @api.depends('customer_id')
+    def _compute_email_from(self):
+        for ticket in self.filtered(lambda r: r.customer_id and not r.email_from):
+            ticket.email_from = ticket.customer_id.email_formatted
+
+
 class MailTestTicketMC(models.Model):
     """ Just mail.test.ticket, but multi company. Kept as different model to
     avoid messing with existing tests, notably performance, and ease backward
@@ -167,6 +218,7 @@ class MailTestTicketMC(models.Model):
     _description = 'Ticket-like model'
     _name = 'mail.test.ticket.mc'
     _inherit = ['mail.test.ticket']
+    _primary_email = 'email_from'
 
     company_id = fields.Many2one('res.company', 'Company', default=lambda self: self.env.company)
     container_id = fields.Many2one('mail.test.container.mc', tracking=True)
@@ -258,6 +310,7 @@ class MailTestComposerSource(models.Model):
         'Email',
         compute='_compute_email_from', readonly=False, store=True)
 
+    @api.depends('customer_id')
     def _compute_email_from(self):
         for source in self.filtered(lambda r: r.customer_id and not r.email_from):
             source.email_from = source.customer_id.email_formatted

@@ -251,9 +251,11 @@ class PurchaseOrder(models.Model):
                 # Get following pickings (created by push rules) to confirm them as well.
                 forward_pickings = self.env['stock.picking']._get_impacted_pickings(moves)
                 (pickings | forward_pickings).action_confirm()
-                picking.message_post_with_view('mail.message_origin_link',
-                    values={'self': picking, 'origin': order},
-                    subtype_id=self.env.ref('mail.mt_note').id)
+                picking.message_post_with_source(
+                    'mail.message_origin_link',
+                    render_values={'self': picking, 'origin': order},
+                    subtype_xmlid='mail.mt_note',
+                )
         return True
 
     def _add_picking_info(self, activity):

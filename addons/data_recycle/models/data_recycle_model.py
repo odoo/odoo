@@ -172,20 +172,24 @@ class DataRecycleModel(models.Model):
             ('recycle_model_id', '=', self.id),
             ('create_date', '>=', last_date)
         ])
-
-        if records_count:
-            partner_ids = self.notify_user_ids.partner_id.ids
+        partner_ids = self.notify_user_ids.partner_id.ids if records_count else []
+        if partner_ids:
             menu_id = self.env.ref('data_recycle.menu_data_cleaning_root').id
-            kwargs = {
-                'body': self.env['ir.qweb']._render('data_recycle.notification', {
-                    'records_count': records_count,
-                    'res_model_label': self.res_model_id.name,
-                    'recycle_model_id': self.id,
-                    'menu_id': menu_id
-                }),
-                'partner_ids': partner_ids,
-            }
-            self.env['mail.thread'].with_context(mail_notify_author=True).message_notify(**kwargs)
+            self.env['mail.thread'].with_context(mail_notify_author=True).message_notify(
+                body=self.env['ir.qweb']._render(
+                    'data_recycle.notification',
+                    {
+                        'records_count': records_count,
+                        'res_model_label': self.res_model_id.name,
+                        'recycle_model_id': self.id,
+                        'menu_id': menu_id
+                    }
+                ),
+                model=self._name,
+                partner_ids=partner_ids,
+                res_id=self.id,
+                subject=_('Data to Recycle'),
+            )
 
     def write(self, vals):
         if 'active' in vals and not vals['active']:

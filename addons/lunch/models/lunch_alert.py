@@ -2,7 +2,7 @@
 import pytz
 import logging
 
-from odoo import api, fields, models
+from odoo import api, fields, models, _
 from odoo.osv import expression
 
 from .lunch_supplier import float_to_time
@@ -194,5 +194,6 @@ class LunchAlert(models.Model):
         if partners:
             self.env['mail.thread'].message_notify(
                 body=self.message,
-                partner_ids=partners.ids
+                partner_ids=partners.ids,
+                subject=_('Your Lunch Order'),
             )
