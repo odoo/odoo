@@ -2544,7 +2544,7 @@ class AccountMove(models.Model):
         for that partner as the default one, otherwise the default of the journal.
         """
         self.ensure_one()
-        if not self.quick_edit_total_amount:
+        if not self.quick_edit_mode or not self.quick_edit_total_amount:
             return False
         count, account_id, tax_ids = self._get_frequent_account_and_taxes(
             self.company_id.id,

@@ -142,7 +142,7 @@ class AccountMove(models.Model):
         if self.currency_id == self.company_id.currency_id:
             currency_rate = 1
         else:
-            currency_rate = abs(self.invoice_line_ids[0].balance / self.invoice_line_ids[0].price_subtotal)
+            currency_rate = abs(lines[0].balance / lines[0].price_subtotal)
 
         discount_dict = {line.id: line.discount for line in lines if line.price_total > 0}
         for line in lines:
