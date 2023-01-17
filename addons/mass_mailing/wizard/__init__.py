@@ -2,6 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from . import mail_compose_message
+from . import mail_server_configurator
 from . import mailing_contact_import
 from . import mailing_contact_to_list
 from . import mailing_list_merge

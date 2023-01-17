@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="mail_server_configurator_view_form" model="ir.ui.view">
+        <field name="name">mail.server.configurator.form</field>
+        <field name="model">mail.server.configurator</field>
+        <field name="inherit_id" ref="mail.mail_server_configurator_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='is_default']" position="after">
+                <field name="is_mass_mailing_default" widget="boolean_toggle"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>

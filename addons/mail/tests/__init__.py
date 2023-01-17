@@ -12,6 +12,7 @@ from . import test_mail_message
 from . import test_mail_message_translate
 from . import test_mail_presence
 from . import test_mail_render
+from . import test_mail_server_configurator
 from . import test_mail_template
 from . import test_mail_tools
 from . import test_res_partner
