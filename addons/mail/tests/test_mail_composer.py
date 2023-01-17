@@ -84,7 +84,7 @@ class TestMailComposerForm(TestMailComposer):
         form = Form(self.env['mail.compose.message'].with_context({
             'default_partner_ids': partner_classic.ids,
             'default_model': test_record._name,
-            'default_res_id': test_record.id,
+            'default_res_ids': test_record.ids,
         }))
         form.body = '<p>Hello</p>'
         self.assertEqual(
@@ -116,7 +116,7 @@ class TestMailComposerForm(TestMailComposer):
         form = Form(self.env['mail.compose.message'].with_context({
             'default_partner_ids': (partner_private + partner_classic).ids,
             'default_model': test_record._name,
-            'default_res_id': test_record.id,
+            'default_res_ids': test_record.ids,
         }))
         form.body = '<p>Hello</p>'
         self.assertEqual(
@@ -156,7 +156,7 @@ class TestMailComposerForm(TestMailComposer):
             _form = Form(self.env['mail.compose.message'].with_context({
                 'default_partner_ids': (self.partner_private + partner_classic).ids,
                 'default_model': test_record._name,
-                'default_res_id': test_record.id,
+                'default_res_ids': test_record.ids,
             }))
 
     @mute_logger('odoo.addons.mail.models.mail_mail')
@@ -177,7 +177,7 @@ class TestMailComposerForm(TestMailComposer):
 
         form = Form(self.env['mail.compose.message'].with_context({
             'default_model': test_record._name,
-            'default_res_id': test_record.id,
+            'default_res_ids': test_record.ids,
             'default_template_id': template.id,
         }))
 
@@ -229,7 +229,7 @@ class TestMailComposerRendering(TestMailComposer):
             'subject': 'MSO FTW',
         })
 
-        values = mail_compose_message.get_mail_values(self.partner_employee.ids)
+        values = mail_compose_message._prepare_mail_values(self.partner_employee.ids)
 
         self.assertIn(
             self.body_html,
@@ -254,7 +254,7 @@ class TestMailComposerRendering(TestMailComposer):
         with self.mock_mail_gateway(mail_unlink_sent=True):
             composer._action_send_mail()
 
-        values = composer.get_mail_values(self.partner_employee.ids)
+        values = composer._prepare_mail_values(self.partner_employee.ids)
 
         self.assertIn(
             self.body_html,

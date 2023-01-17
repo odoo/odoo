@@ -635,7 +635,7 @@ class MailThread(models.AbstractModel):
         :param dict changes: mapping {record_id: (changed_field_names, tracking_value_ids)}
             containing existing records only
         """
-        if not changes:
+        if not self or not changes:
             return True
         # Clean the context to get rid of residual default_* keys
         # that could cause issues afterward during the mail.message
@@ -644,15 +644,18 @@ class MailThread(models.AbstractModel):
         # its creation, but could refer to wrong parent message id,
         # leading to a traceback in case the related message_id
         # doesn't exist
-        self = self.with_context(clean_context(self._context))
+        cleaned_self = self.with_context(clean_context(self._context))._fallback_lang()
         templates = self._track_template(changes)
+        default_composition_mode = 'mass_mail' if len(self) != 1 else 'comment'
         for _field_name, (template, post_kwargs) in templates.items():
             if not template:
                 continue
-            if isinstance(template, str):
-                self._fallback_lang().message_post_with_view(template, **post_kwargs)
+
+            composition_mode = post_kwargs.pop('composition_mode', default_composition_mode)
+            if composition_mode == 'mass_mail':
+                cleaned_self.message_mail_with_source(template, **post_kwargs)
             else:
-                self._fallback_lang().message_post_with_template(template.id, **post_kwargs)
+                cleaned_self.message_post_with_source(template, **post_kwargs)
         return True
 
     def _track_template(self, changes):
@@ -1813,6 +1816,8 @@ class MailThread(models.AbstractModel):
         :param int author_id: optional ID of partner record being the author. See
             ``_message_compute_author`` that uses it to make email_from / author_id coherent;
         :param int parent_id: handle thread formation
+        :param str subtype_xmlid: optional xml id of a mail.message.subtype to
+          fetch, will force value of subtype_id;
         :param int subtype_id: subtype_id of the message, used mainly for followers
             notification mechanism;
         :param list(int) partner_ids: partner_ids to notify in addition to partners
@@ -1821,36 +1826,61 @@ class MailThread(models.AbstractModel):
             tuples in the form ``(name,content)`` or ``(name,content, info)`` where content
             is NOT base64 encoded;
         :param list attachment_ids: list of existing attachments to link to this message
-            -Should only be set by chatter
-            -Attachment object attached to mail.compose.message(0) will be attached
-                to the related document.
+            Should not be a list of commands. Attachment records attached to mail
+            composer will be attached to the related document.
 
         Extra keyword arguments will be used either
           * as default column values for the new mail.message record if they match
             mail.message fields;
-          * propagated to notification methods;
+          * propagated to notification methods if not;
 
         :return record: newly create mail.message
         """
         self.ensure_one()  # should always be posted on a record, use message_notify if no record
-        # split message additional values from notify additional values
-        msg_kwargs = dict((key, val) for key, val in kwargs.items() if key in self.env['mail.message']._fields)
-        notif_kwargs = dict((key, val) for key, val in kwargs.items() if key not in msg_kwargs)
 
         # preliminary value safety check
-        partner_ids = set(partner_ids or [])
-        if self._name == 'mail.thread' or not self.id or message_type == 'user_notification':
-            raise ValueError(_('Posting a message should be done on a business document. Use message_notify to send a notification to an user.'))
-        if 'channel_ids' in kwargs:
-            raise ValueError(_("Posting a message with channels as listeners is not supported since Odoo 14.3+. Please update code accordingly."))
-        if 'model' in msg_kwargs or 'res_id' in msg_kwargs:
-            raise ValueError(_("message_post does not support model and res_id parameters anymore. Please call message_post on record."))
-        if 'subtype' in kwargs:
-            raise ValueError(_("message_post does not support subtype parameter anymore. Please give a valid subtype_id or subtype_xmlid value instead."))
-        if any(not isinstance(pc_id, int) for pc_id in partner_ids):
-            raise ValueError(_('message_post partner_ids and must be integer list, not commands.'))
+        self._raise_for_invalid_parameters(
+            set(kwargs.keys()),
+            forbidden_names={'model', 'res_id', 'subtype'}
+        )
+        if self._name == 'mail.thread' or not self.id:
+            raise ValueError(_("Posting a message should be done on a business document. Use message_notify to send a notification to an user."))
+        if message_type == 'user_notification':
+            raise ValueError(_("Use message_notify to send a notification to an user."))
+        if attachments:
+            # attachments should be a list (or tuples) of 3-elements list (or tuple)
+            format_error = not tools.is_list_of(attachments, list) and not tools.is_list_of(attachments, tuple)
+            if not format_error:
+                format_error = not all(len(attachment) in {2, 3} for attachment in attachments)
+            if format_error:
+                raise ValueError(
+                    _('Posting a message should receive attachments as a list of list or tuples (received %(aids)s)',
+                      aids=repr(attachment_ids),
+                     )
+                )
+        if attachment_ids and not tools.is_list_of(attachment_ids, int):
+            raise ValueError(
+                _('Posting a message should receive attachments records as a list of IDs (received %(aids)s)',
+                  aids=repr(attachment_ids),
+                 )
+            )
+        attachment_ids = list(attachment_ids or [])
+        if partner_ids and not tools.is_list_of(partner_ids, int):
+            raise ValueError(
+                _('Posting a message should receive partners as a list of IDs (received %(pids)s)',
+                  pids=repr(partner_ids),
+                 )
+            )
+        partner_ids = list(partner_ids or [])
 
-        self = self._fallback_lang() # add lang to context immediately since it will be useful in various flows latter.
+        # split message additional values from notify additional values
+        msg_kwargs = {key: val for key, val in kwargs.items()
+                      if key in self.env['mail.message']._fields}
+        notif_kwargs = {key: val for key, val in kwargs.items()
+                        if key not in msg_kwargs}
+
+        # Add lang to context immediately since it will be useful in various flows later
+        self = self._fallback_lang()
 
         # Find the message's author
         if self.env.user._is_public() and 'guest' in self.env.context:
@@ -1884,23 +1914,18 @@ class MailThread(models.AbstractModel):
             'res_id': self.id,
             # content
             'body': body,
-            'subject': subject or False,
             'message_type': message_type,
             'parent_id': self._message_compute_parent_id(parent_id),
+            'subject': subject or False,
             'subtype_id': subtype_id,
             # recipients
             'partner_ids': partner_ids,
         })
 
-        attachments = attachments or []
-        attachment_ids = attachment_ids or []
-        attachement_values = self._process_attachments_for_post(attachments, attachment_ids, msg_values)
-        msg_values.update(attachement_values)  # attachement_ids, [body]
-
-        new_message = self._message_create(msg_values)
-
-        # Set main attachment field if necessary
-        self._message_set_main_attachment_id(msg_values['attachment_ids'])
+        msg_values.update(
+            self._process_attachments_for_post(attachments, attachment_ids, msg_values)
+        )  # attachement_ids, body
+        new_message = self._message_create([msg_values])
 
         if msg_values['author_id'] and msg_values['message_type'] != 'notification' and not self._context.get('mail_create_nosubscribe'):
             if self.env['res.partner'].browse(msg_values['author_id']).active:  # we dont want to add odoobot/inactive as a follower
@@ -1910,25 +1935,31 @@ class MailThread(models.AbstractModel):
         self._notify_thread(new_message, msg_values, **notif_kwargs)
         return new_message
 
-    def _message_set_main_attachment_id(self, attachment_ids):  # todo move this out of mail.thread
-        if not self._abstract and attachment_ids and not self.message_main_attachment_id:
-            all_attachments = self.env['ir.attachment'].browse([attachment_tuple[1] for attachment_tuple in attachment_ids])
-            prioritary_attachments = all_attachments.filtered(lambda x: x.mimetype.endswith('pdf')) \
-                                     or all_attachments.filtered(lambda x: x.mimetype.startswith('image')) \
-                                     or all_attachments
-            self.sudo().with_context(tracking_disable=True).write({'message_main_attachment_id': prioritary_attachments[0].id})
-
-    def _message_post_after_hook(self, message, msg_vals):
+    def _message_post_after_hook(self, message, msg_values):
         """ Hook to add custom behavior after having posted the message. Both
         message and computed value are given, to try to lessen query count by
         using already-computed values instead of having to rebrowse things. """
-        return
+        # Set main attachment field if necessary
+        self._message_set_main_attachment_id([
+            attachment_command[1]
+            for attachment_command in (msg_values['attachment_ids'] or [])
+        ])
 
     def _message_mail_after_hook(self, mails):
         """ Hook to add custom behavior after having sent an mass mailing.
 
         :param mail.mail mails: mail.mail records about to be sent"""
         return
+
+    def _message_set_main_attachment_id(self, attachment_ids):
+        if self._name == 'mail.thread':
+            return
+        if attachment_ids and not self.message_main_attachment_id:
+            all_attachments = self.env['ir.attachment'].browse(attachment_ids)
+            prioritary_attachments = all_attachments.filtered(lambda x: x.mimetype.endswith('pdf')) \
+                                     or all_attachments.filtered(lambda x: x.mimetype.startswith('image')) \
+                                     or all_attachments
+            self.sudo().with_context(tracking_disable=True).message_main_attachment_id = prioritary_attachments[0].id
 
     def _process_attachments_for_post(self, attachments, attachment_ids, message_values):
         """ Preprocess attachments for MailTread.message_post() or MailMail.create().
@@ -2071,95 +2102,257 @@ class MailThread(models.AbstractModel):
     # MESSAGE POST API / WRAPPERS
     # ------------------------------------------------------------
 
-    def _message_compose_with_view(self, views_or_xmlid, message_log=False, **kwargs):
-        """ Helper method to send a mail / post a message / log a note using
-        a view_id to render using the ir.qweb engine. This method is stand
-        alone, because there is nothing in template and composer that allows
-        to handle views in batch. This method should probably disappear when
-        templates handle ir ui views. """
-        values = kwargs.pop('values', None) or dict()
-        try:
-            from odoo.addons.http_routing.models.ir_http import slug
-            values['slug'] = slug
-        except ImportError:
-            values['slug'] = lambda self: self.id
-        view_ref = views_or_xmlid.id if isinstance(views_or_xmlid, models.BaseModel) else views_or_xmlid
+    def message_mail_with_source(self, source_ref, render_values=None,
+                                 message_type='notification',
+                                 auto_commit=False,
+                                 **kwargs):
+        """ Send a mass mail on self, using an external source to render part
+        of the content. It can be either a 'mail.template', either a view used
+        to render the body using QWeb.
 
-        messages_as_sudo = self.env['mail.message']
-        for record in self:
-            values['object'] = record
-            rendered_template = self.env['ir.qweb']._render(view_ref, values, minimal_qcontext=True, raise_if_not_found=False)
-            if not rendered_template:
-                continue
-            if message_log:
-                messages_as_sudo += record._message_log(body=rendered_template, **kwargs)
-            else:
-                kwargs['body'] = rendered_template
-                # a bit complicated to handle, to be improved soon in master
-                _mails_as_sudo, _messages_as_sudo = record.message_post_with_template(False, **kwargs)
-                if _messages_as_sudo:
-                    messages_as_sudo += _messages_as_sudo
+        SPOILER: this method currently calls a composer in a loop when using
+        a view even if it is suboptimal. This is due to current composer
+        implementation.. This will be cleaned soon to  optimize mass mailing
+        through mail.thread and lessen usage of composer itself.
 
-        return messages_as_sudo
+        Default values
+          * subtype_id: will be False, forced by composer in mass mode;
 
-    def message_post_with_view(self, views_or_xmlid, **kwargs):
-        """ Helper method to send a mail / post a message using a view_id """
-        return self._message_compose_with_view(views_or_xmlid, **kwargs)
+        :param record/str source_ref: reference to a source for rendering.
+          It can be one of
+            * a MailTemplate record. It will be used to render the various
+              message values (body, subject, recipients, ...). It should behave
+              like using the mail composer with a template;
+            * an IrUIView record. It will be used to render the content
+              (body). Other fields are left to the caller and/or default values
+              computation;
+            * an XmlID of a MailTemplate or of an IrUiView: see above;
+        :param dict render_values: additional rendering values for qweb context;
 
-    def message_post_with_template(self, template_id, email_layout_xmlid=None, auto_commit=False, **kwargs):
-        """ Helper method to send a mail with a template
-            :param template_id : the id of the template to render to create the body of the message
-            :param **kwargs : parameter to create a mail.compose.message woaerd (which inherit from mail.message)
+        :param str message_type: one of 'notification' or 'comment';
+        :param bool auto_commit: auto commit after each batch of emails sent
+          (see ``MailComposer._action_send_mail()``);
+        :param dict kwargs: additional values given to the 'mail.compose.message'
+          creation;
+
+        :return: created mail.mail records, as sudo
         """
-        # Get composition mode, or force it according to the number of record in self
-        if not kwargs.get('composition_mode'):
-            kwargs['composition_mode'] = 'comment' if len(self.ids) == 1 else 'mass_mail'
-        if not kwargs.get('message_type'):
-            kwargs['message_type'] = 'notification'
-        res_id = kwargs.get('res_id', self.ids and self.ids[0] or 0)
-        res_ids = kwargs.get('res_id') and [kwargs['res_id']] or self.ids
+        template, view = self._get_source_from_ref(source_ref)
 
-        # Create the composer
-        composer = self.env['mail.compose.message'].with_context(
-            active_id=res_id,
-            active_ids=res_ids,
-            active_model=kwargs.get('model', self._name),
-            default_composition_mode=kwargs['composition_mode'],
-            default_email_layout_xmlid=email_layout_xmlid,
-            default_model=kwargs.get('model', self._name),
-            default_res_id=res_id,
-            default_template_id=template_id,
-        ).create(kwargs)
-        # Simulate the onchange (like trigger in form the view) only
-        # when having a template in single-email mode
-        if template_id:
-            update_values = composer._onchange_template_id(template_id, kwargs['composition_mode'], self._name, res_id)['value']
-            composer.write(update_values)
-        return composer._action_send_mail(auto_commit=auto_commit)
+        # preliminary value safety check
+        self._raise_for_invalid_parameters(
+            set(kwargs.keys()),
+            forbidden_names={'body', 'composition_mode', 'model', 'res_id', 'values'}
+        )
 
+        # with a view, render bodies in batch (template is managed by composer)
+        bodies = self.env['mail.render.mixin']._render_template_qweb_view(
+            view,
+            self._name,
+            self.ids,
+            add_context=render_values,
+        ) if view else {}
+
+        # Prepare composer values for creation
+        composer_values = {
+            'composition_mode': 'mass_mail',
+            'message_type': message_type,
+            # subtype is not really used in mass mail mode as it is used mainly
+            # when posting, but keep it in case it is used in post send
+            'subtype_id': kwargs.pop('subtype_id', False) or self.env['ir.model.data']._xmlid_to_res_id('mail.mt_note'),
+            **kwargs,
+        }
+        composer_ctx = {
+            'default_composition_mode': 'mass_mail',
+            'default_model': self._name,
+            'default_template_id': template.id if template else False,
+        }
+
+        mails_su = self.env['mail.mail'].sudo()
+        for subset in [self] if template else self:
+            composer_ctx['default_res_ids'] = subset.ids
+            if not template:
+                composer_values['body'] = bodies[subset.id]
+
+            composer = self.env['mail.compose.message'].with_context(
+                **composer_ctx
+            ).create(composer_values)
+            # Simulate the onchange (like trigger in form the view) only
+            # when having a template in single-email mode
+            if template:
+                update_values = composer._onchange_template_id(
+                    template.id,
+                    'mass_mail',
+                    self._name,
+                    subset.ids,
+                )['value']
+                composer.write(update_values)
+
+            mails_as_sudo, _messages_as_sudo = composer._action_send_mail(auto_commit=auto_commit)
+            mails_su += mails_as_sudo
+        return mails_su
+
+    def message_post_with_source(self, source_ref, render_values=None,
+                                 message_type='notification',
+                                 subtype_xmlid=False, subtype_id=False,
+                                 **kwargs):
+        """ Post a message on each record of self, using a view to render the
+        body using QWeb.
+
+        Default values
+          * subtype_id: if not given, fallback on ``note`` to be consistent
+            with what message_post does;
+
+        :param record/str source_ref: reference to a source for rendering.
+          It can be one of
+            * a MailTemplate record. It will be used to render the various
+              message values (body, subject, recipients, ...). It should behave
+              like using the mail composer with a template;
+            * an IrUIView record. It will be used to render the content
+              (body). Other fields are left to the caller and/or default values
+              computation;
+            * an XmlID of a MailTemplate or of an IrUiView: see above
+        :param dict render_values: additional rendering values for qweb context;
+
+        :param str message_type: one of 'notification' or 'comment';
+        :param str subtype_xmlid: optional xml id of a mail.message.subtype to
+          fetch, will force value of subtype_id;
+        :param int subtype_id: subtype_id of the message, used mainly for followers
+            notification mechanism;
+        :param dict kwargs: additional values given to the 'mail.compose.message'
+          creation;
+
+        :return: posted mail.message records
+        """
+        template, view = self._get_source_from_ref(source_ref)
+
+        # preliminary value safety check
+        self._raise_for_invalid_parameters(
+            set(kwargs.keys()),
+            forbidden_names={'body', 'composition_mode', 'model', 'res_id', 'values'}
+        )
+
+        # with a view, render bodies in batch (template is managed by composer)
+        bodies = self.env['mail.render.mixin']._render_template_qweb_view(
+            view,
+            self._name,
+            self.ids,
+            add_context=render_values,
+        ) if view else {}
+
+        # Prepare composer values for creation
+        if subtype_xmlid:
+            subtype_id = self.env['ir.model.data']._xmlid_to_res_id(subtype_xmlid)
+        if not subtype_id:
+            subtype_id = self.env['ir.model.data']._xmlid_to_res_id('mail.mt_note')
+
+        messages = self.env['mail.message']
+        for record in self:
+            if template:
+                composer = self.env['mail.compose.message'].with_context(
+                    default_composition_mode='comment',
+                    default_model=self._name,
+                    default_res_ids=record.ids,
+                    default_template_id=template.id,
+                ).create({
+                    'message_type': message_type,
+                    'subtype_id': subtype_id,
+                    **kwargs,
+                })
+
+                # Simulate the onchange (like trigger in form the view) to do the
+                # rendering in mono-record mode
+                update_values = composer._onchange_template_id(
+                    template.id,
+                    'comment',
+                    self._name,
+                    record.ids,
+                )['value']
+                composer.write(update_values)
+                _mails_as_sudo, messages_as_sudo = composer._action_send_mail()
+                messages += messages_as_sudo
+            else:
+                messages += record.message_post(
+                    body=bodies[record.id],
+                    message_type=message_type,
+                    subtype_id=subtype_id,
+                    **kwargs
+                )
+        return messages
+
+    @api.returns('mail.message', lambda value: value.id)
     def message_notify(self, *,
-                       partner_ids=False, parent_id=False, model=False, res_id=False,
-                       author_id=None, email_from=None, body='', subject=False, **kwargs):
-        """ Shortcut allowing to notify partners of messages that shouldn't be
-        displayed on a document. It pushes notifications on inbox or by email depending
-        on the user configuration, like other notifications. """
+                       body='', subject=False,
+                       author_id=None, email_from=None,
+                       model=False, res_id=False,
+                       subtype_xmlid=None, subtype_id=False, partner_ids=False,
+                       **kwargs):
+        """ Shortcut allowing to notify partners of messages that should not be
+        displayed on a document. It pushes notifications on inbox or by email
+        depending on the user configuration, like other notifications.
+
+        Default values
+          * subtype_id: if not given, fallback on ``note`` to be consistent
+            with what message_post does;
+
+        :param str body: body of the message, usually raw HTML that will
+          be sanitized
+        :param str subject: subject of the message
+        :param int author_id: optional ID of partner record being the author. See
+          ``_message_compute_author`` that uses it to make email_from / author_id coherent;
+        :param str email_from: from address of the author. See ``_message_compute_author``
+          that uses it to make email_from / author_id coherent;
+        :param str model: when invoked on MailThread directly, this method
+          allows to push a notification on a given record (allows to notify
+          on not thread-enabled records);
+        :param int res_id: defines the record in combination with model;
+        :param str subtype_xmlid: optional xml id of a mail.message.subtype to
+          fetch, will force value of subtype_id;
+        :param int subtype_id: subtype_id of the message, used mainly for followers
+          notification mechanism;
+        :param list(int) partner_ids: partner_ids to notify in addition to partners
+          computed based on subtype / followers matching;
+
+        Extra keyword arguments will be used either
+          * as default column values for the new mail.message record if they match
+            mail.message fields;
+          * propagated to notification methods if not;
+
+        :return: posted mail.message records
+        """
         if self:
             self.ensure_one()
-        # split message additional values from notify additional values
-        msg_kwargs = dict((key, val) for key, val in kwargs.items() if key in self.env['mail.message']._fields)
-        notif_kwargs = dict((key, val) for key, val in kwargs.items() if key not in msg_kwargs)
-
-        author_id, email_from = self._message_compute_author(author_id, email_from, raise_on_email=True)
-
         if not partner_ids:
             _logger.warning('Message notify called without recipient_ids, skipping')
             return self.env['mail.message']
 
+        # preliminary value safety check
+        self._raise_for_invalid_parameters(
+            set(kwargs.keys()),
+            forbidden_names={'message_id', 'message_type', 'parent_id'}
+        )
+        if not tools.is_list_of(partner_ids, int):
+            raise ValueError(
+                _('Notification should receive partners given as a list of IDs (received %(pids)s)',
+                  pids=repr(partner_ids),
+                 )
+            )
+
+        # split message additional values from notify additional values
+        msg_kwargs = {key: val for key, val in kwargs.items() if key in self.env['mail.message']._fields}
+        notif_kwargs = {key: val for key, val in kwargs.items() if key not in msg_kwargs}
+
+        author_id, email_from = self._message_compute_author(author_id, email_from, raise_on_email=True)
+
         # allow to link a notification to a document that does not inherit from
-        # MailThread by supporting model / res_id
-        if not (model and res_id):  # both value should be set or none should be set (record)
-            model = False
-            res_id = False
+        # MailThread by supporting model / res_id, but then both value should be set
+        if not model or not res_id:
+            model, res_id = False, False
+
+        if subtype_xmlid:
+            subtype_id = self.env['ir.model.data']._xmlid_to_res_id(subtype_xmlid)
+        if not subtype_id:
+            subtype_id = self.env['ir.model.data']._xmlid_to_res_id('mail.mt_note')
 
         msg_values = {
             # author
@@ -2173,68 +2366,91 @@ class MailThread(models.AbstractModel):
             'body': body,
             'is_internal': True,
             'message_type': 'user_notification',
-            'parent_id': parent_id,
             'subject': subject,
+            'subtype_id': subtype_id,
             # recipients
             'message_id': tools.generate_tracking_message_id('message-notify'),
             'partner_ids': partner_ids,
+            # notification
+            'email_add_signature': True,
         }
         msg_values.update(msg_kwargs)
         # add default-like values afterwards, to avoid useless queries
-        if 'subtype_id' not in msg_values:
-            msg_values['subtype_id'] = self.env['ir.model.data']._xmlid_to_res_id('mail.mt_note')
         if 'reply_to' not in msg_values:
             msg_values['reply_to'] = self._notify_get_reply_to(default=email_from)[self.id if self else False]
-        if 'email_add_signature' not in msg_values:
-            msg_values['email_add_signature'] = True
 
-        new_message = self._message_create(msg_values)
-        self._notify_thread(new_message, msg_values, **notif_kwargs)
+        new_message = self._message_create([msg_values])
+        self._fallback_lang()._notify_thread(new_message, msg_values, **notif_kwargs)
         return new_message
 
-    def _message_log_with_view(self, views_or_xmlid, **kwargs):
-        """ Helper method to log a note using a view_id without notifying followers. """
-        return self._message_compose_with_view(views_or_xmlid, message_log=True, **kwargs)
+    def _message_log_with_view(self, view_ref, render_values=None,
+                               message_type='notification', **kwargs):
+        """ Log a message on each record of self, using a view to render the
+        body using QWeb.
 
-    def _message_log(self, *, body='', author_id=None, email_from=None, subject=False, message_type='notification', **kwargs):
-        """ Shortcut allowing to post note on a document. It does not perform
-        any notification and pre-computes some values to have a short code
+        :param str/int/record view_ref: source QWeb template. It should be an
+          XmlID allowing to fetch an ``ir.ui.view``, or an ID of a view or
+          an ``ir.ui.view`` record;
+        :param dict render_values: additional rendering values for qweb context;
+        :param str message_type: one of 'notification' or 'comment';
+        :param kwargs: additional values propagated to ``_message_log``;
+
+        :return: posted mail.message records (as sudo)
+        """
+        self._raise_for_invalid_parameters(
+            set(kwargs.keys()),
+            forbidden_names={'body', 'bodies'}
+        )
+
+        # with a view, render bodies in batch (template is managed by composer)
+        bodies = self.env['mail.render.mixin']._render_template_qweb_view(
+            view_ref,
+            self._name,
+            self.ids,
+            add_context=render_values,
+        )
+
+        return self._message_log_batch(
+            bodies=bodies,
+            message_type=message_type,
+            **kwargs
+        )
+
+    def _message_log(self, *,
+                     body='', subject=False,
+                     author_id=None, email_from=None,
+                     message_type='notification',
+                     attachment_ids=False, tracking_value_ids=False):
+        """ Shortcut allowing to post note on a document. See ``_message_log_batch``
+        for more details. """
+        self.ensure_one()
+
+        return self._message_log_batch(
+            {self.id: body}, subject=subject,
+            author_id=author_id, email_from=email_from,
+            message_type=message_type,
+            attachment_ids=attachment_ids, tracking_value_ids=tracking_value_ids
+        )
+
+    def _message_log_batch(self, bodies, subject=False,
+                           author_id=None, email_from=None,
+                           message_type='notification',
+                           attachment_ids=False, tracking_value_ids=False):
+        """ Shortcut allowing to post notes on a batch of documents. It does not
+        perform any notification and pre-computes some values to have a short code
         as optimized as possible. This method is private as it does not check
         access rights and perform the message creation as sudo to speedup
         the log process. This method should be called within methods where
-        access rights are already granted to avoid privilege escalation. """
-        self.ensure_one()
-        author_id, email_from = self._message_compute_author(author_id, email_from, raise_on_email=False)
+        access rights are already granted to avoid privilege escalation.
 
-        msg_values = {
-            # author
-            'author_id': author_id,
-            'email_from': email_from,
-            # document
-            'model': kwargs.get('model', self._name),
-            'record_name': False,
-            'res_id': self.ids[0] if self.ids else False,
-            # content
-            'body': body,
-            'is_internal': True,
-            'message_type': message_type,
-            'subject': subject,
-            'subtype_id': self.env['ir.model.data']._xmlid_to_res_id('mail.mt_note'),
-            # recipients
-            'email_add_signature': False,  # False as no notification -> no need to compute signature
-            'message_id': tools.generate_tracking_message_id('message-notify'),  # why? this is all but a notify
-            'reply_to': self.env['mail.thread']._notify_get_reply_to(default=email_from)[False],
-        }
-        msg_values.update(kwargs)
+        :param bodies: dict {record_id: body}
 
-        return self.sudo()._message_create(msg_values)
-
-    def _message_log_batch(self, bodies, author_id=None, email_from=None, subject=False, message_type='notification'):
-        """ Shortcut allowing to post notes on a batch of documents. It achieve the
-        same purpose as _message_log, done in batch to speedup quick note log.
-
-          :param bodies: dict {record_id: body}
+        :return: created messages (as sudo)
         """
+        # protect against side-effect prone usage
+        if len(self) > 1 and (attachment_ids or tracking_value_ids):
+            raise ValueError(_('Batch log cannot support attachments or tracking values on more than 1 document'))
+
         author_id, email_from = self._message_compute_author(author_id, email_from, raise_on_email=False)
 
         base_message_values = {
@@ -2245,15 +2461,18 @@ class MailThread(models.AbstractModel):
             'model': self._name,
             'record_name': False,
             # content
+            'attachment_ids': attachment_ids,
             'message_type': message_type,
             'is_internal': True,
             'subject': subject,
             'subtype_id': self.env['ir.model.data']._xmlid_to_res_id('mail.mt_note'),
+            'tracking_value_ids': tracking_value_ids,
             # recipients
-            'email_add_signature': False,
+            'email_add_signature': False,  # False as no notification -> no need to compute signature
             'message_id': tools.generate_tracking_message_id('message-notify'),  # why? this is all but a notify
             'reply_to': self.env['mail.thread']._notify_get_reply_to(default=email_from)[False],
         }
+
         values_list = [dict(base_message_values,
                             res_id=record.id,
                             body=bodies.get(record.id, ''))
@@ -2321,17 +2540,24 @@ class MailThread(models.AbstractModel):
         return parent_id
 
     def _message_compute_subject(self):
-        """Overridable method to get the default subject for a message related to this record.
+        """ Get the default subject for a message posted in this record's
+        discussion thread.
 
-        :return str:
-        """
+        :return str: default subject """
         self.ensure_one()
         return self.name_get()[0][1]
 
     def _message_create(self, values_list):
-        if not isinstance(values_list, (list)):
-            values_list = [values_list]
+        """ Low-level helper to create mail.message records. It is mainly used
+        to hide the cleanup of given values, for mail gateway or helpers."""
         create_values_list = []
+
+        # preliminary value safety check
+        self._raise_for_invalid_parameters(
+            {key for values in values_list for key in values.keys()},
+            restricting_names=self._get_message_create_valid_field_names()
+        )
+
         for values in values_list:
             create_values = dict(values)
             # Avoid warnings about non-existing fields
@@ -2345,6 +2571,131 @@ class MailThread(models.AbstractModel):
         return self.env['mail.message'].with_context(
             clean_context(self.env.context)
         ).create(create_values_list)
+
+    def _get_message_create_valid_field_names(self):
+        """ Some fields should not be given when creating a mail.message from
+        mail.thread main API methods (in addition to some API specific check).
+        Those fields are generally used through UI or dedicated methods. We
+        therefore give an allowed field names list. """
+        return {
+            'attachment_ids',
+            'author_guest_id',
+            'author_id',
+            'body',
+            'create_date',  # anyway limited to admins
+            'date',
+            'email_add_signature',
+            'email_from',
+            'email_layout_xmlid',
+            'is_internal',
+            'mail_activity_type_id',
+            'mail_server_id',
+            'message_id',
+            'message_type',
+            'model',
+            'parent_id',
+            'partner_ids',
+            'record_name',
+            'reply_to',
+            'reply_to_force_new',
+            'res_id',
+            'subject',
+            'subtype_id',
+            'tracking_value_ids',
+        }
+
+    def _get_source_from_ref(self, source_ref):
+        """ From a source_reference, return either a mail template, either
+        an ir ui view.
+
+        :return tuple(template, view): one is a recordset (may be void if
+          source_ref is a void recordset, or a singleton), the other one is
+          False. Always only one is set, as source is either a template,
+          either a view.
+        """
+        template, view = False, False
+        if isinstance(source_ref, models.BaseModel):
+            if source_ref._name == 'mail.template':
+                template = source_ref
+            elif source_ref._name == 'ir.ui.view':
+                view = source_ref
+            else:
+                raise ValueError(
+                    _('Invalid template or view source record %(svalue)s, is %(model)s instead',
+                       svalue=source_ref,
+                       model=source_ref._name,
+                    ))
+            if not template and not view:
+                raise ValueError(
+                    _('Mailing or posting with a source should not be called with an empty %(source_type)s',
+                      source_type=_('template') if template is not False else _('view'))
+                )
+        elif isinstance(source_ref, str):
+            try:
+                res_model, res_id = self.env['ir.model.data']._xmlid_to_res_model_res_id(
+                    source_ref,
+                    raise_if_not_found=True
+                )
+            except ValueError as e:
+                raise ValueError(
+                    _('Invalid template or view source Xml ID %(source_ref)s does not exist anymore',
+                      source_ref=source_ref)
+                ) from e
+            if res_model == 'mail.template':
+                template = self.env['mail.template'].browse(res_id)
+            elif res_model == 'ir.ui.view':
+                view = self.env['ir.ui.view'].browse(res_id)
+            else:
+                raise ValueError(
+                    _('Invalid template or view source reference %(svalue)s, is %(model)s instead',
+                       svalue=source_ref,
+                       model=res_model,
+                    ))
+        else:
+            raise ValueError(
+                _('Invalid template or view source %(svalue)s (type %(stype)s), should be a record or an XMLID',
+                  svalue=source_ref,
+                  stype=type(source_ref),
+                ))
+        return template, view
+
+    def _get_notify_valid_parameters(self):
+        """ Several parameters exist for notification methods as business
+        flows often want to customize the standard notification experience.
+        In order to ease coding kwargs are frequently used. This method
+        acts like a filter, allowing to spot parameters that are not
+        supported. """
+        return {
+            'force_email_company',
+            'force_email_lang',
+            'force_send',
+            'mail_auto_delete',
+            'model_description',
+            'resend_existing',
+            'scheduled_date',
+            'send_after_commit',
+            'skip_existing',
+            'subtitles',
+        }
+
+    def _raise_for_invalid_parameters(self, parameter_names, forbidden_names=None, restricting_names=None):
+        """ Helper to warn about invalid parameters (or fields).
+
+        :param set parameter_names: a set of parameter names;
+        :param set forbidden_names: set of parameter name that should not be
+          present in parameter_names;
+        :param set restricting_names: set of parameters restricting given
+          parameter_names, parameters not belonging to this list are rejected;
+        """
+        if forbidden_names:
+            conflicting_names = parameter_names & forbidden_names
+        elif restricting_names:
+            conflicting_names = parameter_names - restricting_names
+        if conflicting_names:
+            raise ValueError(
+                _('Those values are not supported when posting or notifying: %(param_names)s',
+                  param_names=', '.join(conflicting_names))
+            )
 
     # ------------------------------------------------------
     # NOTIFICATION API
@@ -2418,6 +2769,10 @@ class MailThread(models.AbstractModel):
         """
         # add lang to context immediately since it will be useful in various rendering later
         self = self._fallback_lang()
+        self._raise_for_invalid_parameters(
+            set(kwargs.keys()),
+            restricting_names=self._get_notify_valid_parameters()
+        )
 
         msg_vals = msg_vals if msg_vals else {}
         recipients_data = self._notify_get_recipients(message, msg_vals, **kwargs)
@@ -2690,11 +3045,12 @@ class MailThread(models.AbstractModel):
         lang = False
         if force_email_lang:
             lang = force_email_lang
-        elif {'default_template_id', 'default_model', 'default_res_id'} <= self.env.context.keys():
+        elif {'default_template_id', 'default_model', 'default_res_ids'} <= self.env.context.keys():
             # TDE FIXME: this whole brol should be cleaned !
+            res_ids = self.env['mail.compose.message']._parse_res_ids(self.env.context['default_res_ids'])
             template = self.env['mail.template'].browse(self.env.context['default_template_id'])
-            if template and template.lang:
-                lang = template._render_lang([self.env.context['default_res_id']])[self.env.context['default_res_id']]
+            if res_ids and template and template.lang:
+                lang = template._render_lang(res_ids)[res_ids[0]]
         if not lang:
             lang = self.env.context.get('lang')
 
@@ -2748,17 +3104,14 @@ class MailThread(models.AbstractModel):
         to notify (mail_message_id and its fields), server, references, subject.
         """
         mail_subject = message.subject
-        if not message.subject:
-            thread = self
-            if not thread and message.model:
-                thread = self.env[message.model].browse(message.res_id)
-            if not thread:
-                mail_subject = message.record_name
-            else:
-                mail_subject = thread._message_compute_subject()
+        if not mail_subject and self:
+            mail_subject = self._message_compute_subject()
+        if not mail_subject:
+            mail_subject = message.record_name
+        if mail_subject:
+            # replace new lines by spaces to conform to email headers requirements
+            mail_subject = ' '.join(mail_subject.splitlines())
 
-        # Replace new lines by spaces to conform to email headers requirements
-        mail_subject = ' '.join((mail_subject or '').splitlines())
         # compute references: set references to the parent and add current message just to
         # have a fallback in case replies mess with Messsage-Id in the In-Reply-To (e.g. amazon
         # SES SMTP may replace Message-Id and In-Reply-To refers an internal ID not stored in Odoo)

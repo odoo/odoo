@@ -81,7 +81,7 @@ class MailBlackList(models.Model):
             if message:
                 record.with_context(mail_create_nosubscribe=True).message_post(
                     body=message,
-                    subtype_id=self.env.ref('mail.mt_note').id,
+                    subtype_xmlid='mail.mt_note',
                 )
         return record
 
@@ -97,7 +97,7 @@ class MailBlackList(models.Model):
             if message:
                 record.with_context(mail_create_nosubscribe=True).message_post(
                     body=message,
-                    subtype_id=self.env.ref('mail.mt_note').id,
+                    subtype_xmlid='mail.mt_note',
                 )
         return record
 

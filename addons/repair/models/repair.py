@@ -332,8 +332,7 @@ class Repair(models.Model):
         template_id = self.env.ref('repair.mail_template_repair_quotation').id
         ctx = {
             'default_model': 'repair.order',
-            'default_res_id': self.id,
-            'default_use_template': bool(template_id),
+            'default_res_ids': self.ids,
             'default_template_id': template_id,
             'default_composition_mode': 'comment',
             'default_email_layout_xmlid': 'mail.mail_notification_light',

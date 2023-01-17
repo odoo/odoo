@@ -1,14 +1,17 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-
+from markupsafe import Markup
 from unittest.mock import patch
+
 import email.policy
 import email.message
 import re
 import threading
 
 from odoo.addons.base.models.ir_mail_server import extract_rfc2822_addresses
+from odoo.addons.base.models.ir_qweb_fields import nl2br_enclose
+from odoo.tests import tagged
 from odoo.tests.common import BaseCase, TransactionCase
 from odoo.tools import (
     is_html_empty, html_to_inner_content, html_sanitize, append_content_to_html, plaintext2html,
@@ -20,6 +23,7 @@ from odoo.tools import (
 from . import test_mail_examples
 
 
+@tagged('mail_sanitize')
 class TestSanitizer(BaseCase):
     """ Test the html sanitizer that filters html to remove unwanted attributes """
 
@@ -292,6 +296,7 @@ class TestSanitizer(BaseCase):
     #         self.assertNotIn(ext, new_html)
 
 
+@tagged('mail_sanitize')
 class TestHtmlTools(BaseCase):
     """ Test some of our generic utility functions about html """
 
@@ -355,6 +360,30 @@ class TestHtmlTools(BaseCase):
         ]
         for content in valid_html_samples:
             self.assertFalse(is_html_empty(content))
+
+    def test_nl2br_enclose(self):
+        """ Test formatting of nl2br when using Markup: consider new <br> tags
+        as trusted without validating the whole input content. """
+        source_all = [
+            'coucou',
+            '<p>coucou</p>',
+            'coucou\ncoucou',
+            'coucou\n\ncoucou',
+            '<p>coucou\ncoucou\n\nzbouip</p>\n',
+        ]
+        expected_all = [
+            Markup('<div>coucou</div>'),
+            Markup('<div>&lt;p&gt;coucou&lt;/p&gt;</div>'),
+            Markup('<div>coucou<br>\ncoucou</div>'),
+            Markup('<div>coucou<br>\n<br>\ncoucou</div>'),
+            Markup('<div>&lt;p&gt;coucou<br>\ncoucou<br>\n<br>\nzbouip&lt;/p&gt;<br>\n</div>'),
+        ]
+        for source, expected in zip(source_all, expected_all):
+            with self.subTest(source=source, expected=expected):
+                self.assertEqual(
+                    nl2br_enclose(source, "div"),
+                    expected,
+                )
 
     def test_prepend_html_content(self):
         body = """

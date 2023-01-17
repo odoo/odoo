@@ -1561,14 +1561,14 @@ class Lead(models.Model):
     def _merge_log_summary(self, merged_followers, opportunities_tail):
         """Log the merge message on the lead."""
         self.ensure_one()
-        self.message_post_with_view(
+        self.message_post_with_source(
             "crm.crm_lead_merge_summary",
-            values={
+            render_values={
                 "merged_followers": merged_followers,
                 "opportunities": opportunities_tail,
                 "is_html_empty": is_html_empty,
             },
-            subtype_id=self.env.ref('mail.mt_note').id,
+            subtype_xmlid='mail.mt_note',
         )
 
     def _format_properties(self):

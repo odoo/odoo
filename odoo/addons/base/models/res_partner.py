@@ -820,7 +820,11 @@ class Partner(models.Model):
 
         Otherwise: default, everything is set as the name. Starting from 13.3
         returned email will be normalized to have a coherent encoding.
-         """
+
+        :return: name, email (normalized if possible)
+        """
+        if not text or not text.strip():
+            return '', ''
         name, email = '', ''
         split_results = tools.email_split_tuples(text)
         if split_results:

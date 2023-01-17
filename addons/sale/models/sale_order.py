@@ -713,8 +713,7 @@ class SaleOrder(models.Model):
             lang = mail_template._render_lang(self.ids)[self.id]
         ctx = {
             'default_model': 'sale.order',
-            'default_res_id': self.id,
-            'default_use_template': bool(mail_template),
+            'default_res_ids': self.ids,
             'default_template_id': mail_template.id if mail_template else None,
             'default_composition_mode': 'comment',
             'mark_so_as_sent': True,
@@ -842,10 +841,10 @@ class SaleOrder(models.Model):
             mail_template = sale_order._get_confirmation_template()
             if not mail_template:
                 continue
-            sale_order.with_context(force_send=True).message_post_with_template(
-                mail_template.id,
-                composition_mode='comment',
+            sale_order.with_context(force_send=True).message_post_with_source(
+                mail_template,
                 email_layout_xmlid='mail.mail_notification_layout_with_responsible_signature',
+                subtype_xmlid='mail.mt_comment',
             )
 
     def action_done(self):
@@ -877,7 +876,6 @@ class SaleOrder(models.Model):
             if template.lang:
                 lang = template._render_lang(self.ids)[self.id]
             ctx = {
-                'default_use_template': bool(template_id),
                 'default_template_id': template_id,
                 'default_order_id': self.id,
                 'mark_so_as_canceled': True,
@@ -1181,10 +1179,11 @@ class SaleOrder(models.Model):
         if final:
             moves.sudo().filtered(lambda m: m.amount_total < 0).action_switch_move_type()
         for move in moves:
-            move.message_post_with_view(
+            move.message_post_with_source(
                 'mail.message_origin_link',
-                values={'self': move, 'origin': move.line_ids.sale_line_ids.order_id},
-                subtype_id=self.env['ir.model.data']._xmlid_to_res_id('mail.mt_note'))
+                render_values={'self': move, 'origin': move.line_ids.sale_line_ids.order_id},
+                subtype_xmlid='mail.mt_note',
+            )
         return moves
 
     # MAIL #

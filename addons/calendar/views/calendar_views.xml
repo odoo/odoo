@@ -73,7 +73,7 @@
         <field name="arch" type="xml">
             <tree string="Meetings" sample="1" multi_edit="1">
                 <header>
-                    <button name="action_open_composer" type="object" context="{'composition_mode':'mass_mail'}"
+                    <button name="action_open_composer" type="object" context="{'default_composition_mode':'mass_mail'}"
                             string="Send Mail"/>
                 </header>
                 <field name="name" string="Subject" decoration-bf="1" attrs="{'readonly':[('recurrency','=',True)]}"/>

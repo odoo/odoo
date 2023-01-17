@@ -150,7 +150,7 @@ class TestTracking(TestMailCommon):
 
         def patched_message_track_post_template(*args, **kwargs):
             if args[0]._name == "mail.test.track":
-                args[0].message_post_with_template(template.id)
+                args[0].message_post_with_source(template)
             return True
 
         with patch('odoo.addons.mail.models.mail_thread.MailThread._message_track_post_template', patched_message_track_post_template):
