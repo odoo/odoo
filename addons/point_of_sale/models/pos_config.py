@@ -28,13 +28,17 @@ class PosConfig(models.Model):
     def _default_payment_methods(self):
         """ Should only default to payment methods that are compatible to this config's company and currency.
         """
-        return self.env['pos.payment.method'].search([
+        domain = [
             ('split_transactions', '=', False),
             ('company_id', '=', self.env.company.id),
             '|',
                 ('journal_id', '=', False),
                 ('journal_id.currency_id', 'in', (False, self.env.company.currency_id.id)),
-        ])
+        ]
+        non_cash_pm = self.env['pos.payment.method'].search(domain + [('is_cash_count', '=', False)])
+        available_cash_pm = self.env['pos.payment.method'].search(domain + [('is_cash_count', '=', True),
+                                                                            ('config_ids', '=', False)], limit=1)
+        return non_cash_pm | available_cash_pm
 
     def _get_group_pos_manager(self):
         return self.env.ref('point_of_sale.group_pos_manager')
