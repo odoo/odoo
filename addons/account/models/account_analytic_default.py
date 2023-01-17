@@ -31,38 +31,54 @@ class AccountAnalyticDefault(models.Model):
             raise ValidationError(_('An analytic default requires an analytic account or an analytic tag used for analytic distribution.'))
 
     @api.model
-    def account_get(self, product_id=None, partner_id=None, account_id=None, user_id=None, date=None, company_id=None):
+    def account_get(self, **kwargs):
+        domain = self._account_get_build_domain(**kwargs)
+        best_index, best_account = -1, self.env['account.analytic.default']
+        for account in self.search(domain):
+            index = account._account_get_evaluate_index()
+            if index > best_index:
+                best_index, best_account = index, account
+        return best_account
+
+    @api.model
+    def _account_get_build_domain(self, **kwargs):
         domain = []
+        product_id = kwargs.get('product_id')
         if product_id:
             domain += ['|', ('product_id', '=', product_id)]
         domain += [('product_id', '=', False)]
+        partner_id = kwargs.get('partner_id')
         if partner_id:
             domain += ['|', ('partner_id', '=', partner_id)]
         domain += [('partner_id', '=', False)]
+        account_id = kwargs.get('account_id')
         if account_id:
             domain += ['|', ('account_id', '=', account_id)]
         domain += [('account_id', '=', False)]
+        company_id = kwargs.get('company_id')
         if company_id:
             domain += ['|', ('company_id', '=', company_id)]
         domain += [('company_id', '=', False)]
+        user_id = kwargs.get('user_id')
         if user_id:
             domain += ['|', ('user_id', '=', user_id)]
         domain += [('user_id', '=', False)]
+        date = kwargs.get('date')
         if date:
             domain += ['|', ('date_start', '<=', date), ('date_start', '=', False)]
             domain += ['|', ('date_stop', '>=', date), ('date_stop', '=', False)]
-        best_index = -1
-        res = self.env['account.analytic.default']
-        for rec in self.search(domain):
-            index = 0
-            if rec.product_id: index += 1
-            if rec.partner_id: index += 1
-            if rec.account_id: index += 1
-            if rec.company_id: index += 1
-            if rec.user_id: index += 1
-            if rec.date_start: index += 1
-            if rec.date_stop: index += 1
-            if index > best_index:
-                res = rec
-                best_index = index
-        return res
+        return domain
+
+    def _account_get_evaluate_index(self):
+        self.ensure_one()
+        return sum(
+            [
+                bool(self.product_id),
+                bool(self.partner_id),
+                bool(self.account_id),
+                bool(self.company_id),
+                bool(self.user_id),
+                bool(self.date_start),
+                bool(self.date_stop),
+            ]
+        )

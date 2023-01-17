@@ -246,26 +246,23 @@ class PurchaseRequisitionLine(models.Model):
     @api.depends('product_id', 'schedule_date')
     def _compute_account_analytic_id(self):
         for line in self:
-            default_analytic_account = line.env['account.analytic.default'].sudo().account_get(
-                product_id=line.product_id.id,
-                partner_id=line.requisition_id.vendor_id.id,
-                user_id=line.env.uid,
-                date=line.schedule_date,
-                company_id=line.company_id.id,
-            )
+            default_analytic_account = line.env['account.analytic.default'].sudo().account_get(**line._build_account_get_kwargs())
             line.account_analytic_id = default_analytic_account.analytic_id
 
     @api.depends('product_id', 'schedule_date')
     def _compute_analytic_tag_ids(self):
         for line in self:
-            default_analytic_account = line.env['account.analytic.default'].sudo().account_get(
-                product_id=line.product_id.id,
-                partner_id=line.requisition_id.vendor_id.id,
-                user_id=line.env.uid,
-                date=line.schedule_date,
-                company_id=line.company_id.id,
-            )
+            default_analytic_account = line.env['account.analytic.default'].sudo().account_get(**line._build_account_get_kwargs())
             line.analytic_tag_ids = default_analytic_account.analytic_tag_ids
+
+    def _build_account_get_kwargs(self):
+        return dict(
+            product_id=self.product_id.id,
+            partner_id=self.requisition_id.vendor_id.id,
+            user_id=self.env.uid,
+            date=self.schedule_date,
+            company_id=self.company_id.id,
+        )
 
     @api.onchange('product_id')
     def _onchange_product_id(self):

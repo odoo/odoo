@@ -1097,27 +1097,24 @@ class PurchaseOrderLine(models.Model):
     def _compute_account_analytic_id(self):
         for rec in self:
             if not rec.display_type:
-                default_analytic_account = rec.env['account.analytic.default'].sudo().account_get(
-                    product_id=rec.product_id.id,
-                    partner_id=rec.order_id.partner_id.id,
-                    user_id=rec.env.uid,
-                    date=rec.date_order,
-                    company_id=rec.company_id.id,
-                )
+                default_analytic_account = rec.env['account.analytic.default'].sudo().account_get(**rec._build_account_get_kwargs())
                 rec.account_analytic_id = default_analytic_account.analytic_id
 
     @api.depends('product_id', 'date_order')
     def _compute_analytic_tag_ids(self):
         for rec in self:
             if not rec.display_type:
-                default_analytic_account = rec.env['account.analytic.default'].sudo().account_get(
-                    product_id=rec.product_id.id,
-                    partner_id=rec.order_id.partner_id.id,
-                    user_id=rec.env.uid,
-                    date=rec.date_order,
-                    company_id=rec.company_id.id,
-                )
+                default_analytic_account = rec.env['account.analytic.default'].sudo().account_get(**rec._build_account_get_kwargs())
                 rec.analytic_tag_ids = default_analytic_account.analytic_tag_ids
+
+    def _build_account_get_kwargs(self):
+        return dict(
+            product_id=self.product_id.id,
+            partner_id=self.order_id.partner_id.id,
+            user_id=self.env.uid,
+            date=self.date_order,
+            company_id=self.company_id.id,
+        )
 
     @api.onchange('product_id')
     def onchange_product_id(self):

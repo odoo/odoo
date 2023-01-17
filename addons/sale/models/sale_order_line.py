@@ -522,14 +522,17 @@ class SaleOrderLine(models.Model):
     def _compute_analytic_tag_ids(self):
         for line in self:
             if not line.display_type and line.state == 'draft':
-                default_analytic_account = line.env['account.analytic.default'].sudo().account_get(
-                    product_id=line.product_id.id,
-                    partner_id=line.order_id.partner_id.id,
-                    user_id=self.env.uid,
-                    date=line.order_id.date_order,
-                    company_id=line.company_id.id,
-                )
+                default_analytic_account = line.env['account.analytic.default'].sudo().account_get(**line._build_account_get_kwargs())
                 line.analytic_tag_ids = default_analytic_account.analytic_tag_ids
+
+    def _build_account_get_kwargs(self):
+        return dict(
+            product_id=self.product_id.id,
+            partner_id=self.order_id.partner_id.id,
+            user_id=self.env.uid,
+            date=self.order_id.date_order,
+            company_id=self.company_id.id,
+        )
 
     def _get_invoice_line_sequence(self, new=0, old=0):
         """

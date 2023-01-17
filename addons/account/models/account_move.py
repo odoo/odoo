@@ -3958,14 +3958,7 @@ class AccountMoveLine(models.Model):
     def _compute_analytic_account_id(self):
         for record in self:
             if not record.exclude_from_invoice_tab or not record.move_id.is_invoice(include_receipts=True):
-                rec = self.env['account.analytic.default'].account_get(
-                    product_id=record.product_id.id,
-                    partner_id=record.partner_id.commercial_partner_id.id or record.move_id.partner_id.commercial_partner_id.id,
-                    account_id=record.account_id.id,
-                    user_id=record.env.uid,
-                    date=record.date,
-                    company_id=record.move_id.company_id.id
-                )
+                rec = self.env['account.analytic.default'].account_get(**record._build_account_get_kwargs())
                 if rec:
                     record.analytic_account_id = rec.analytic_id
 
@@ -3973,16 +3966,19 @@ class AccountMoveLine(models.Model):
     def _compute_analytic_tag_ids(self):
         for record in self:
             if not record.exclude_from_invoice_tab or not record.move_id.is_invoice(include_receipts=True):
-                rec = self.env['account.analytic.default'].account_get(
-                    product_id=record.product_id.id,
-                    partner_id=record.partner_id.commercial_partner_id.id or record.move_id.partner_id.commercial_partner_id.id,
-                    account_id=record.account_id.id,
-                    user_id=record.env.uid,
-                    date=record.date,
-                    company_id=record.move_id.company_id.id
-                )
+                rec = self.env['account.analytic.default'].account_get(**record._build_account_get_kwargs())
                 if rec:
                     record.analytic_tag_ids = rec.analytic_tag_ids
+
+    def _build_account_get_kwargs(self):
+        return dict(
+            product_id=self.product_id.id,
+            partner_id=self.partner_id.commercial_partner_id.id or self.move_id.partner_id.commercial_partner_id.id,
+            account_id=self.account_id.id,
+            user_id=self.env.uid,
+            date=self.date,
+            company_id=self.move_id.company_id.id
+        )
 
     def _get_price_total_and_subtotal(self, price_unit=None, quantity=None, discount=None, currency=None, product=None, partner=None, taxes=None, move_type=None):
         self.ensure_one()

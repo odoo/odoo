@@ -379,13 +379,16 @@ class SaleOrder(models.Model):
     def _compute_analytic_account_id(self):
         for order in self:
             if not order.analytic_account_id:
-                default_analytic_account = order.env['account.analytic.default'].sudo().account_get(
-                    partner_id=order.partner_id.id,
-                    user_id=order.env.uid,
-                    date=order.date_order,
-                    company_id=order.company_id.id,
-                )
+                default_analytic_account = order.env['account.analytic.default'].sudo().account_get(**order._build_account_get_kwargs())
                 order.analytic_account_id = default_analytic_account.analytic_id
+
+    def _build_account_get_kwargs(self):
+        return dict(
+            partner_id=self.partner_id.id,
+            user_id=self.env.uid,
+            date=self.date_order,
+            company_id=self.company_id.id,
+        )
 
     @api.ondelete(at_uninstall=False)
     def _unlink_except_draft_or_cancel(self):
