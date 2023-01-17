@@ -3,7 +3,7 @@
 import { makeDeferred } from "@mail/utils/deferred";
 import { start, startServer } from "@mail/../tests/helpers/test_utils";
 
-import { patchWithCleanup } from "@web/../tests/helpers/utils";
+import { editInput, patchWithCleanup } from "@web/../tests/helpers/utils";
 
 QUnit.module("mail", {}, function () {
     QUnit.module("components", {}, function () {
@@ -271,6 +271,49 @@ QUnit.module("mail", {}, function () {
                 ".o_DialogManager_dialog",
                 "follower subtype dialog should be closed after clicking on close button"
             );
+        });
+
+        QUnit.test('remove a follower in a dirty form view', async function (assert) {
+            const pyEnv = await startServer();
+            const [threadId, partnerId] = pyEnv['res.partner'].create([{}, {}]);
+            pyEnv['mail.followers'].create({
+                is_active: true,
+                partner_id: partnerId,
+                res_id: threadId,
+                res_model: 'res.partner',
+            });
+            const { click, openView } = await start({
+                async mockRPC(route, args) {
+                    if (args.method === 'read') {
+                        assert.step(`read ${args.args[0][0]}`);
+                    }
+                },
+            });
+            await openView({
+                res_id: threadId,
+                res_model: 'res.partner',
+                views: [[false, 'form']],
+            });
+            assert.strictEqual(
+                document.body.querySelector(".o_FollowerListMenuView_buttonFollowersCount").innerText,
+                "1"
+            );
+            assert.verifySteps([`read ${threadId}`]);
+
+            await editInput(document.body, ".o_field_char[name=name] input", "some value");
+            await click('.o_FollowerListMenuView_buttonFollowers');
+            assert.containsOnce(document.body, ".o_FollowerListMenuView_dropdown .o_FollowerView");
+
+            await click('.o_FollowerListMenuView_dropdown .o_FollowerView .o_FollowerView_removeButton');
+            assert.strictEqual(
+                document.body.querySelector(".o_FollowerListMenuView_buttonFollowersCount").innerText,
+                "0"
+            );
+            assert.strictEqual(
+                document.body.querySelector(".o_field_char[name=name] input").value,
+                "some value"
+            );
+            assert.verifySteps([`read ${threadId}`]);
         });
     });
 });
