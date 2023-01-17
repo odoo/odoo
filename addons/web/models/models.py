@@ -94,6 +94,7 @@ class Base(models.AbstractModel):
         if not groups:
             length = 0
         elif limit and len(groups) == limit:
+            self.read_count()
             # We need to fetch all groups to know the total number
             # this cannot be done all at once to avoid MemoryError
             length = limit
@@ -119,7 +120,7 @@ class Base(models.AbstractModel):
 
         :returns: array of groups
         """
-        groups = self.read_group(domain, fields, groupby, offset=offset, limit=limit,
+        groups = self.read_group(domain, ['display_name'], groupby, offset=offset, limit=limit,
                                  orderby=orderby, lazy=lazy)
 
         if expand and len(groupby) == 1:
