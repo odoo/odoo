@@ -144,6 +144,9 @@ function migrate4to5(data) {
                 data.pivots[id].fieldMatching = {};
             }
             data.pivots[id].fieldMatching[filter.id] = { chain: fm.field, type: fm.type };
+            if ("offset" in fm) {
+                data.pivots[id].fieldMatching[filter.id].offset = fm.offset;
+            }
         }
         delete filter.pivotFields;
 
@@ -156,6 +159,9 @@ function migrate4to5(data) {
                 data.lists[id].fieldMatching = {};
             }
             data.lists[id].fieldMatching[filter.id] = { chain: fm.field, type: fm.type };
+            if ("offset" in fm) {
+                data.lists[id].fieldMatching[filter.id].offset = fm.offset;
+            }
         }
         delete filter.listFields;
 
@@ -178,6 +184,9 @@ function migrate4to5(data) {
                 figure.data.fieldMatching = {};
             }
             figure.data.fieldMatching[filter.id] = { chain: fm.field, type: fm.type };
+            if ("offset" in fm) {
+                figure.data.fieldMatching[filter.id].offset = fm.offset;
+            }
         }
         delete filter.graphFields;
     }
