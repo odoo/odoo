@@ -10,11 +10,32 @@ class TestFrontend(odoo.tests.HttpCase):
         self.env = self.env(user=self.env.ref('base.user_admin'))
         account_obj = self.env['account.account']
 
+        account_receivable = account_obj.create({'code': 'X1012',
+                                                 'name': 'Account Receivable - Test',
+                                                 'account_type': 'asset_receivable',
+                                                 'reconcile': True})
+
         printer = self.env['restaurant.printer'].create({
             'name': 'Kitchen Printer',
             'proxy_ip': 'localhost',
         })
         drinks_category = self.env['pos.category'].create({'name': 'Drinks'})
+
+        main_company = self.env.ref('base.main_company')
+
+        second_cash_journal = self.env['account.journal'].create({
+            'name': 'Cash 2',
+            'code': 'CSH2',
+            'type': 'cash',
+            'company_id': main_company.id
+            })
+
+        self.env['pos.payment.method'].create({
+            'name': 'Cash 2',
+            'split_transactions': False,
+            'receivable_account_id': account_receivable.id,
+            'journal_id': second_cash_journal.id,
+        })
 
         pos_config = self.env['pos.config'].create({
             'name': 'Bar',
@@ -76,13 +97,6 @@ class TestFrontend(odoo.tests.HttpCase):
             'position_h': 100,
             'position_v': 250,
         })
-
-        main_company = self.env.ref('base.main_company')
-
-        account_receivable = account_obj.create({'code': 'X1012',
-                                                 'name': 'Account Receivable - Test',
-                                                 'account_type': 'asset_receivable',
-                                                 'reconcile': True})
 
         self.env['ir.property']._set_default(
             'property_account_receivable_id',
