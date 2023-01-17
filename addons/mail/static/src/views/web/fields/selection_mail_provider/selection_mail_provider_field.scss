@@ -1,0 +1,15 @@
+.o_selection_mail_provider {
+    .card {
+        width: 120px;
+        background-color: $list-group-bg;
+        cursor: pointer;
+        user-select: none;
+
+        &:hover, &:focus {
+            background-color: $list-group-hover-bg;
+        }
+        &.selected {
+            border: 1px solid map-get($theme-colors, 'primary');
+        }
+    }
+}
