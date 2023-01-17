@@ -11,7 +11,6 @@ import {
     moveNodes,
     preserveCursor,
     isFontAwesome,
-    isMediaElement,
     getDeepRange,
     isUnbreakable,
     isEditorTab,
