@@ -5,7 +5,7 @@ from collections import defaultdict
 
 from odoo import api, fields, models, _
 from odoo.exceptions import UserError
-from odoo.tools import float_is_zero, OrderedSet
+from odoo.tools import float_is_zero, float_round, OrderedSet
 
 import logging
 _logger = logging.getLogger(__name__)
@@ -48,7 +48,7 @@ class StockMove(models.Model):
             layers = self.origin_returned_move_id.sudo().stock_valuation_layer_ids
             layers |= layers.stock_valuation_layer_ids
             quantity = sum(layers.mapped("quantity"))
-            return layers.currency_id.round(sum(layers.mapped("value")) / quantity) if not float_is_zero(quantity, precision_rounding=layers.uom_id.rounding) else 0
+            return float_round(sum(layers.mapped("value")) / quantity, precision_digits=precision) if not float_is_zero(quantity, precision_rounding=layers.uom_id.rounding) else 0
         return price_unit if not float_is_zero(price_unit, precision) or self._should_force_price_unit() else self.product_id.standard_price
 
     @api.model
