@@ -1208,6 +1208,103 @@ class TestComposerResultsComment(TestMailComposer):
         self.assertTrue(all(attach not in message.attachment_ids for attach in attachs), 'Should have copied attachments')
 
 
+
+@tagged('mail_composer', 'mail_blacklist')
+class TestComposerResultsCommentStatus(TestMailComposer):
+    """ Test cases involving blacklist, opt-out, state management, ... specific
+    class to avoid bloating the base comment-based composer tests. """
+
+    @classmethod
+    def setUpClass(cls):
+        """ Test data: 4 records with a customer set, then some additional
+        records based on emails, duplicates, ...
+
+        Record0: partner is blacklisted
+        Record1: Record4 has the same email (but no customer set)
+        Record5 and Record6 have same email (notlinked to any customer)
+        """
+        super(TestComposerResultsCommentStatus, cls).setUpClass()
+
+        # ensure employee can create partners, necessary for templates
+        cls.user_employee.write({
+            'groups_id': [(4, cls.env.ref('base.group_partner_manager').id)],
+        })
+
+        # add 2 new records with customers
+        cls.test_records, cls.test_partners = cls._create_records_for_batch(
+            'mail.test.ticket.el', 4,
+            additional_values={'user_id': cls.user_employee_2.id},
+            prefix='el_'
+        )
+        # create bl / optout / duplicates, see docstring
+        cls.env['mail.blacklist']._add(
+            cls.test_partners[0].email_formatted
+        )
+        cls.test_records += cls.env[cls.test_records._name].create([
+            {
+                'email_from': cls.test_records[1].email_from,
+                'name': 'Email of Record2',
+                'user_id': cls.user_employee_2.id,
+            },
+            {
+                'email_from': 'test.duplicate@test.example.com',
+                'name': 'Dupe email (first)',
+                'user_id': cls.user_employee_2.id,
+            },
+            {
+                'email_from': 'test.duplicate@test.example.com',
+                'name': 'Dupe email (second)',
+                'user_id': cls.user_employee_2.id,
+            },
+        ])
+        cls.template.write({
+            'auto_delete': False,
+            'model_id': cls.env['ir.model']._get_id(cls.test_records._name),
+        })
+
+    def test_initial_data(self):
+        """ Ensure class initial data to ease understanding """
+        self.assertFalse(self.template.auto_delete)
+
+        self.assertEqual(len(self.test_records), 7)
+        self.assertEqual(self.test_records.user_id, self.user_employee_2)
+        self.assertEqual(self.test_records.message_partner_ids, self.partner_employee_2)
+        self.assertEqual(self.test_records[1].email_from, self.test_records[4].email_from)
+        self.assertEqual(self.test_records[5].email_from, self.test_records[6].email_from)
+
+        self.assertEqual(len(self.test_partners), 4)
+        self.assertTrue(self.test_partners[0].is_blacklisted)
+
+    @users('employee')
+    @mute_logger('odoo.tests', 'odoo.addons.mail.models.mail_mail', 'odoo.models.unlink')
+    def test_comment_blacklist(self):
+        """ Tests a document-based comment with the excluded emails. It is
+        currently bypassed, as we consider posting bypasses the exclusion list.
+        """
+        test_record = self.test_records[0].with_env(self.env)
+        composer_form = Form(self.env['mail.compose.message'].with_context(
+            self._get_web_context(test_record, add_web=True,
+                                  default_template_id=self.template.id)
+        ))
+        composer = composer_form.save()
+        with self.mock_mail_gateway(mail_unlink_sent=False), self.mock_mail_app():
+            composer._action_send_mail()
+
+        # one mail to the customer, one mail to the follower
+        message = test_record.message_ids[0]
+        for recipient in test_record.customer_id + self.partner_employee_2:
+            with self.subTest(recipient=recipient):
+                self.assertMailMail(
+                    recipient, 'sent',
+                    mail_message=message,
+                    author=self.partner_employee,  # author != email_from (template sets only email_from)
+                    email_values={
+                        'email_from': self.user_employee_2.email_formatted,  # set by template
+                    },
+                )
+        self.assertEqual(len(self._mails), 2, 'Should have sent 2 emails, skipping the exclusion list')
+
+
 @tagged('mail_composer')
 class TestComposerResultsMass(TestMailComposer):
 
@@ -1277,35 +1374,6 @@ class TestComposerResultsMass(TestMailComposer):
         self.assertFalse(self._new_mails.exists(), 'Should have deleted mail.mail records')
         self.assertEqual(len(self._new_msgs), 2, 'Should have created 1 mail.mail per record')
         self.assertFalse(self._new_msgs.exists(), 'Should have deleted mail.message records')
-
-    @users('employee')
-    @mute_logger('odoo.tests', 'odoo.addons.mail.models.mail_mail', 'odoo.models.unlink')
-    def test_mail_composer_document_based(self):
-        """ Tests a document-based mass mailing with the same address mails
-        This should be allowed and not considered as duplicate in this context
-        """
-        self.test_records.write({
-            'customer_id': False,
-            'email_from': 'duplicate.email@test.example.com',
-        })
-        self.template.write({
-            'auto_delete': False,  # keep sent emails to check content
-            'email_to': '{{ object.email_from }}',
-            'partner_to': '',
-        })
-        # launch composer in mass mode
-        composer_form = Form(self.env['mail.compose.message'].with_context(
-            self._get_web_context(self.test_records, add_web=True,
-                                  default_template_id=self.template.id)
-        ))
-        composer = composer_form.save()
-        with self.mock_mail_gateway(mail_unlink_sent=False), self.mock_mail_app():
-            composer.with_context(mailing_document_based=False)._action_send_mail()
-        self.assertEqual(len(self._mails), 1, 'Should have sent 1 email, and skipped a duplicate.')
-
-        with self.mock_mail_gateway(mail_unlink_sent=False), self.mock_mail_app():
-            composer.with_context(mailing_document_based=True)._action_send_mail()
-        self.assertEqual(len(self._mails), 2, 'Should have sent 2 emails.')
 
     @users('employee')
     @mute_logger('odoo.models.unlink', 'odoo.addons.mail.models.mail_mail')
@@ -1579,3 +1647,166 @@ class TestComposerResultsMass(TestMailComposer):
                                     )),
                                 },
                                )
+
+@tagged('mail_composer', 'mail_blacklist')
+class TestComposerResultsMassStatus(TestMailComposer):
+    """ Test cases involving blacklist, opt-out, state management, ... specific
+    class to avoid bloating the base mailing-based composer tests. """
+
+    @classmethod
+    def setUpClass(cls):
+        """ Test data: 4 records with a customer set, then some additional
+        records based on emails, duplicates, ...
+
+        Record0: partner is blacklisted
+        Record1: Record4 has the same email (but no customer set)
+        Record5 and Record6 have same email (notlinked to any customer)
+        """
+        super(TestComposerResultsMassStatus, cls).setUpClass()
+
+        # ensure employee can create partners, necessary for templates
+        cls.user_employee.write({
+            'groups_id': [(4, cls.env.ref('base.group_partner_manager').id)],
+        })
+
+        # add 2 new records with customers
+        cls.test_records, cls.test_partners = cls._create_records_for_batch(
+            'mail.test.ticket.el', 4,
+            additional_values={'user_id': cls.user_employee_2.id},
+            prefix='el_'
+        )
+        # create bl / optout / duplicates, see docstring
+        cls.env['mail.blacklist']._add(
+            cls.test_partners[0].email_formatted
+        )
+        cls.test_records += cls.env[cls.test_records._name].create([
+            {
+                'email_from': cls.test_records[1].email_from,
+                'name': 'Email of Record2',
+                'user_id': cls.user_employee_2.id,
+            },
+            {
+                'email_from': 'test.duplicate@test.example.com',
+                'name': 'Dupe email (first)',
+                'user_id': cls.user_employee_2.id,
+            },
+            {
+                'email_from': 'test.duplicate@test.example.com',
+                'name': 'Dupe email (second)',
+                'user_id': cls.user_employee_2.id,
+            },
+        ])
+        cls.template.write({
+            'model_id': cls.env['ir.model']._get_id(cls.test_records._name),
+        })
+
+    def test_initial_data(self):
+        """ Ensure class initial data to ease understanding """
+        self.assertTrue(self.template.auto_delete)
+
+        self.assertEqual(len(self.test_records), 7)
+        self.assertEqual(self.test_records.user_id, self.user_employee_2)
+        self.assertEqual(self.test_records.message_partner_ids, self.partner_employee_2)
+        self.assertEqual(self.test_records[1].email_from, self.test_records[4].email_from)
+        self.assertEqual(self.test_records[5].email_from, self.test_records[6].email_from)
+
+        self.assertEqual(len(self.test_partners), 4)
+        self.assertTrue(self.test_partners[0].is_blacklisted)
+
+    @users('employee')
+    @mute_logger('odoo.tests', 'odoo.addons.mail.models.mail_mail', 'odoo.models.unlink')
+    def test_mailing_blacklist_mixin(self):
+        """ Tests a document-based mass mailing with excluded emails. Their emails
+        are canceled if the model inherits from the blacklist mixin. """
+        test_records = self.test_records[:2].with_env(self.env)
+        composer_form = Form(self.env['mail.compose.message'].with_context(
+            self._get_web_context(test_records, add_web=True,
+                                  default_template_id=self.template.id)
+        ))
+        composer = composer_form.save()
+        with self.mock_mail_gateway(mail_unlink_sent=False), self.mock_mail_app():
+            composer._action_send_mail()
+
+        for record, expected_state, expected_ft in zip(
+            test_records,
+            ['cancel', 'sent'],
+            ['mail_bl', False]
+        ):
+            with self.subTest(record=record, expected_state=expected_state, expected_ft=expected_ft):
+                self.assertMailMail(
+                    record.customer_id, expected_state,
+                    # author is current user, email_from is coming from template (user_id of record)
+                    author=self.user_employee.partner_id,
+                    fields_values={
+                        'email_from': self.user_employee_2.email_formatted,
+                        'failure_reason': False,
+                        'failure_type': expected_ft,
+                    },
+                    email_values={
+                        'email_from': self.user_employee_2.email_formatted,
+                    }
+                )
+        self.assertEqual(len(self._mails), 1, 'Should have sent 1 email, and skipped an excluded email.')
+
+    @users('employee')
+    @mute_logger('odoo.tests', 'odoo.addons.mail.models.mail_mail', 'odoo.models.unlink')
+    def test_mailing_duplicates_document_based(self):
+        """ Tests a document-based mass mailing with the same address mails
+        This should be allowed and not considered as duplicate in this context
+        """
+        test_records = self.test_records.with_env(self.env)
+        composer_form = Form(self.env['mail.compose.message'].with_context(
+            self._get_web_context(test_records, add_web=True,
+                                  default_template_id=self.template.id)
+        ))
+        composer = composer_form.save()
+
+        # by default duplicates are canceled
+        with self.mock_mail_gateway(mail_unlink_sent=False), self.mock_mail_app():
+            composer._action_send_mail()
+
+        for record, expected_state, expected_ft in zip(
+            test_records,
+            ['cancel', 'sent', 'sent', 'sent', 'cancel', 'sent', 'cancel'],
+            ['mail_bl', False, False, False, 'mail_dup', False, 'mail_dup']
+        ):
+            with self.subTest(record=record, expected_state=expected_state, expected_ft=expected_ft):
+                self.assertMailMailWRecord(
+                    record, record.customer_id, expected_state,
+                    # author is current user, email_from is coming from template (user_id of record)
+                    author=self.user_employee.partner_id,
+                    fields_values={
+                        'email_from': self.user_employee_2.email_formatted,
+                        'failure_reason': False,
+                        'failure_type': expected_ft,
+                    },
+                    email_values={
+                        'email_from': self.user_employee_2.email_formatted,
+                    }
+                )
+        self.assertEqual(len(self._mails), 4, 'Should have sent 4 emails, and skipped an excluded and 2 duplicate emails.')
+
+        # magic context key allowing to send duplicates when necessary
+        with self.mock_mail_gateway(mail_unlink_sent=False), self.mock_mail_app():
+            composer.with_context(mailing_document_based=True)._action_send_mail()
+
+        for record, expected_state, expected_ft in zip(
+            test_records,
+            ['cancel', 'sent', 'sent', 'sent', 'sent', 'sent', 'sent'],
+            ['mail_bl', False, False, False, False, False, False]
+        ):
+            with self.subTest(record=record, expected_state=expected_state, expected_ft=expected_ft):
+                self.assertMailMailWRecord(
+                    record, record.customer_id, expected_state,
+                    # author is current user, email_from is coming from template (user_id of record)
+                    author=self.user_employee.partner_id,
+                    fields_values={
+                        'email_from': self.user_employee_2.email_formatted,
+                        'failure_reason': False,
+                        'failure_type': expected_ft,
+                    },
+                    email_values={
+                        'email_from': self.user_employee_2.email_formatted,
+                    }
+                )
+        self.assertEqual(len(self._mails), 6, 'Should have sent 6 emails, and skipped an excluded email')
