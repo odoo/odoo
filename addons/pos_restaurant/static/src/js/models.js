@@ -16,6 +16,7 @@ patch(PosGlobalState.prototype, "pos_restaurant.PosGlobalState", {
         this.ordersToUpdateSet = new Set(); // used to know which orders need to be sent to the back end when syncing
         this.transferredOrdersSet = new Set(); // used to know which orders has been transferred but not sent to the back end yet
         this.loadingOrderState = false; // used to prevent orders fetched to be put in the update set during the reactive change
+        this.printers_category_ids_set = new Set();
     },
     //@override
     async _processData(loadedData) {
@@ -69,10 +70,16 @@ patch(PosGlobalState.prototype, "pos_restaurant.PosGlobalState", {
         this.ordersToUpdateSet.add(order);
         return order;
     },
+    isInterfacePrinter() {
+        return this.env.pos.config.iface_printers;
+    },
+    addSubmitOrderButton() {
+        return this.config.module_pos_restaurant && this.unwatched.printers.length;
+    },
     //@override
     createReactiveOrder(json) {
         let reactiveOrder = this._super(...arguments);
-        if (this.config.iface_printers) {
+        if (this.isInterfacePrinter()) {
             const updateOrderChanges = () => {
                 if (reactiveOrder.get_screen_data().name === "ProductScreen") {
                     reactiveOrder.updateChangesToPrint();
@@ -92,7 +99,6 @@ patch(PosGlobalState.prototype, "pos_restaurant.PosGlobalState", {
     _loadRestaurantPrinter(printers) {
         this.unwatched.printers = [];
         // list of product categories that belong to one or more order printer
-        this.printers_category_ids_set = new Set();
         for (const printerConfig of printers) {
             const printer = this.create_printer(printerConfig);
             printer.config = printerConfig;
@@ -150,9 +156,7 @@ patch(PosGlobalState.prototype, "pos_restaurant.PosGlobalState", {
     },
     // created this hook for modularity
     _updateTableOrder(ordersResponseData, tableOrders) {
-        const order = tableOrders.find(
-            (order) => order.name === ordersResponseData.pos_reference
-        );
+        const order = tableOrders.find((order) => order.name === ordersResponseData.pos_reference);
         order.server_id = ordersResponseData.id;
         return order;
     },
@@ -315,16 +319,12 @@ patch(PosGlobalState.prototype, "pos_restaurant.PosGlobalState", {
         if (url.indexOf("//") < 0) {
             url = window.location.protocol + "//" + url;
         }
-        if (
-            url.indexOf(":", url.indexOf("//") + 2) < 0 &&
-            window.location.protocol !== "https:"
-        ) {
+        if (url.indexOf(":", url.indexOf("//") + 2) < 0 && window.location.protocol !== "https:") {
             url = url + ":8069";
         }
         return new Printer(url, this);
     },
 });
-
 
 // New orders are now associated with the current table, if any.
 patch(Order.prototype, "pos_restaurant.Order", {
@@ -336,7 +336,7 @@ patch(Order.prototype, "pos_restaurant.Order", {
             }
             this.customerCount = this.customerCount || 1;
         }
-        if (this.pos.config.iface_printers) {
+        if (this.pos.isInterfacePrinter()) {
             // printedResume will store the previous state of the orderlines (when there were no skip), it will
             // store all the orderlines even if the product are not printable. This way, when we add a new category in
             // the printers, the already added products of the newly added category are not printed.
@@ -356,7 +356,7 @@ patch(Order.prototype, "pos_restaurant.Order", {
             }
             json.customer_count = this.customerCount;
         }
-        if (this.pos.config.iface_printers) {
+        if (this.pos.isInterfacePrinter()) {
             json.multiprint_resume = JSON.stringify(this.printedResume);
             // so that it can be stored in local storage and be used when loading the pos in the floorscreen
             json.printing_changes = JSON.stringify(this.printingChanges);
@@ -373,7 +373,7 @@ patch(Order.prototype, "pos_restaurant.Order", {
             }
             this.customerCount = json.customer_count;
         }
-        if (this.pos.config.iface_printers) {
+        if (this.pos.isInterfacePrinter()) {
             this.printedResume = json.multiprint_resume && JSON.parse(json.multiprint_resume);
             this.printingChanges = json.printing_changes && JSON.parse(json.printing_changes);
         }
@@ -580,7 +580,7 @@ patch(Orderline.prototype, "pos_restaurant.Orderline", {
     setup() {
         this._super(...arguments);
         this.note = this.note || "";
-        if (this.pos.config.iface_printers) {
+        if (this.pos.isInterfacePrinter()) {
             this.uuid = this.uuid || uuidv4();
             // mp dirty is true if this orderline has changed since the last kitchen print
             this.mp_dirty = false;
@@ -596,9 +596,7 @@ patch(Orderline.prototype, "pos_restaurant.Orderline", {
         if (orderline.get_note() !== this.get_note()) {
             return false;
         } else {
-            return (
-                !this.mp_skip && !orderline.mp_skip && this._super(...arguments)
-            );
+            return !this.mp_skip && !orderline.mp_skip && this._super(...arguments);
         }
     },
     //@override
@@ -611,7 +609,7 @@ patch(Orderline.prototype, "pos_restaurant.Orderline", {
     export_as_JSON() {
         const json = this._super(...arguments);
         json.note = this.note;
-        if (this.pos.config.iface_printers) {
+        if (this.pos.isInterfacePrinter()) {
             json.uuid = this.uuid;
             json.mp_skip = this.mp_skip;
         }
@@ -621,7 +619,7 @@ patch(Orderline.prototype, "pos_restaurant.Orderline", {
     init_from_JSON(json) {
         this._super(...arguments);
         this.note = json.note;
-        if (this.pos.config.iface_printers) {
+        if (this.pos.isInterfacePrinter()) {
             this.uuid = json.uuid;
             this.mp_skip = json.mp_skip;
         }

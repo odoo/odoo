@@ -12,7 +12,7 @@ from odoo import api, fields, models
 class PosOrderLine(models.Model):
     _inherit = 'pos.order.line'
 
-    note = fields.Char('Internal Note added by the waiter.')
+    note = fields.Char('Kitchen Note added by the waiter.')
     uuid = fields.Char(string='Uuid', readonly=True, copy=False)
     mp_skip = fields.Boolean('Skip line when sending ticket to kitchen printers.')
 
