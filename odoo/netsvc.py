@@ -146,6 +146,8 @@ def init_logger():
         # recordsets are both sequence and set so trigger warning despite no issue
         # Only applies to 3.9 as it was fixed in 3.10 see https://bugs.python.org/issue42470
         warnings.filterwarnings('ignore', r'^Sampling from a set', category=DeprecationWarning, module='odoo')
+    # https://github.com/urllib3/urllib3/issues/2680
+    warnings.filterwarnings('ignore', r'^\'urllib3.contrib.pyopenssl\' module is deprecated.+', category=DeprecationWarning)
     # ignore a bunch of warnings we can't really fix ourselves
     for module in [
         'babel.util', # deprecated parser module, no release yet
