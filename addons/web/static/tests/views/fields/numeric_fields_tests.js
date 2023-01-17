@@ -2,7 +2,13 @@
 
 import { makeFakeLocalizationService } from "@web/../tests/helpers/mock_services";
 import { registry } from "@web/core/registry";
-import { click, getFixture, nextTick, patchWithCleanup } from "@web/../tests/helpers/utils";
+import {
+    click,
+    getFixture,
+    nextTick,
+    patchWithCleanup,
+    triggerEvent,
+} from "@web/../tests/helpers/utils";
 import { makeView, setupViewRegistries } from "@web/../tests/views/helpers";
 import { localization } from "@web/core/l10n/localization";
 import { useNumpadDecimal } from "@web/views/fields/numpad_decimal_hook";
@@ -374,4 +380,18 @@ QUnit.module("Fields", (hooks) => {
             await testInputElements(target.querySelectorAll("main > input"));
         }
     );
+
+    QUnit.test("select all content on focus", async function (assert) {
+        await makeView({
+            type: "form",
+            resModel: "partner",
+            serverData,
+            arch: `<form><field name="monetary"/></form>`,
+        });
+
+        const input = target.querySelector(".o_field_widget[name='monetary'] input");
+        await triggerEvent(input, null, "focus");
+        assert.strictEqual(input.selectionStart, 0);
+        assert.strictEqual(input.selectionEnd, 4);
+    });
 });
