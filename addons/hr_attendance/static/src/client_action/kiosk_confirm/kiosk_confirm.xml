@@ -1,0 +1,65 @@
+
+
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+<t t-name="hr_attendance.UserBadge" owl="1">
+    <div class="o_hr_attendance_user_badge o_home_menu_background d-flex align-items-end justify-content-center flex-grow-1 pt-5 pt-md-4 bg-odoo">
+        <img class="img rounded-circle mb-n5" t-attf-src="/web/image?model=hr.employee.public&amp;field=avatar_128&amp;id=#{userId}" t-att-title="userName" height="80" t-att-alt="userName"/>
+    </div>
+</t>
+
+<t t-name="hr_attendance.KioskConfirm" owl="1">
+    <CardLayout>
+
+        <button class="o_hr_attendance_back_button btn btn-block btn-secondary btn-lg d-block d-md-none py-5">
+            <i class="fa fa-chevron-left me-2"/> Go back
+        </button>
+
+        <t t-if="employeeId" t-call="hr_attendance.UserBadge">
+            <t t-set="userId" t-value="employeeId"/>
+            <t t-set="userName" t-value="employeeName"/>
+        </t>
+
+        <button t-on-click="() => this.onClickBack()" class="o_hr_attendance_back_button o_hr_attendance_back_button_md btn btn-secondary d-none d-md-inline-flex align-items-center position-absolute top-0 start-0 rounded-circle">
+            <i class="fa fa-2x fa-fw fa-chevron-left me-1" role="img" aria-label="Go back" title="Go back"/>
+        </button>
+
+        <div t-if="employeeId" class="flex-grow-1">
+            <h1 class="mt-5 mb8" t-esc="employeeName"/>
+            <h3 class="mt8 mb24"><t t-if="!checkedIn">Welcome!</t><t t-else="">Want to check out?</t></h3>
+            <h4 class="mt0 mb0 text-muted" t-if="checkedIn">Today's work hours: <span t-esc="employeeHoursToday"/></h4>
+
+            <CheckInOut t-if="!use_pin" checkedIn="checkedIn" employeeId="employeeId" nextAction="nextAction"/>
+
+            <t t-else="">
+                <h3 class="mt-4 mb0 text-muted">Please enter your PIN to <b t-if="checkedIn">check out</b><b t-else="">check in</b></h3>
+                <div class="row">
+                    <div class="col-md-8 offset-md-2 o_hr_attendance_pin_pad">
+                        <div class="row g-0" >
+                            <div class="col-12 mb8 mt8">
+                                <input t-att-value="state.codePin" class="o_hr_attendance_PINbox border-0 bg-white fs-1 text-center" type="password" disabled="true"/>
+                            </div>
+                        </div>
+                        <div class="row g-0">
+                            <t t-foreach="padButtons" t-as="btn" t-key="btn[0]">
+                                <div class="col-4 p-1">
+                                    <a href="#" t-on-click="() => this.onClickPadButton(btn[0])" t-attf-class="o_hr_attendance_PINbox_button btn {{btn[1]? btn[1] : 'btn-secondary border'}} btn-block btn-lg d-flex align-items-center justify-content-center">
+                                        <t t-esc="btn[0]"/>
+                                    </a>
+                                </div>
+                            </t>
+                        </div>
+                    </div>
+                </div>
+            </t>
+        </div>
+        <div t-else="" class="alert alert-danger mx-3" role="alert">
+            <h4 class="alert-heading">Error: could not find corresponding employee.</h4>
+            <p>Please return to the main menu.</p>
+        </div>
+        <a role="button" class="oe_attendance_sign_in_out" aria-label="Sign out" title="Sign out"/>
+    </CardLayout>
+</t>
+
+</templates>

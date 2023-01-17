@@ -1,16 +1,7 @@
 
-.o_hr_attendance_kiosk_mode, .o_hr_attendance_clock {
+.o_hr_attendance_kiosk_mode {
     @include media-breakpoint-down(md) {
         width: 100%;
-    }
-}
-
-.o_hr_attendance_clock {
-    position: relative;
-    display: none;
-
-    @include media-breakpoint-up(md) {
-        @include o-position-absolute(0, 0); // Fine-tuned by margin classes
     }
 }
 
