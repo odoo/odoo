@@ -1728,11 +1728,15 @@ class PosSession(models.Model):
         # Add the 'sum_repartition_factor' as needed in the compute_all
         # Note that the factor = factor_percent/100
         groups = self.env['account.tax.repartition.line'].read_group(
-            domain=[('invoice_tax_id', 'in', tuple([t['id'] for t in taxes])), ('repartition_type', '=', 'tax')],
+            domain=[
+                ('tax_id', 'in', tuple([t['id'] for t in taxes])),
+                ('document_type', '=', 'invoice'),
+                ('repartition_type', '=', 'tax'),
+            ],
             fields=["factor_percent:sum"],
-            groupby=["invoice_tax_id"],
+            groupby=["tax_id"],
         )
-        tax_id_to_factor_sum = {g['invoice_tax_id'][0]: g['factor_percent']/100 for g in groups}
+        tax_id_to_factor_sum = {g['tax_id'][0]: g['factor_percent']/100 for g in groups}
         for tax in taxes:
             tax['sum_repartition_factor'] = tax_id_to_factor_sum[tax['id']]
 

@@ -89,16 +89,18 @@ class Company(models.Model):
 
     def _get_repartition_lines_oss(self):
         self.ensure_one()
-        defaults = self.env['account.tax'].with_company(self).default_get(['invoice_repartition_line_ids', 'refund_repartition_line_ids'])
+        defaults = self.env['account.tax'].with_company(self).default_get(['repartition_line_ids'])
         oss_account, oss_tags = self._get_oss_account(), self._get_oss_tags()
-        base_line, tax_line, vals = 0, 1, 2
-        for doc_type in 'invoice', 'refund':
-            if oss_account:
-                defaults[f'{doc_type}_repartition_line_ids'][tax_line][vals]['account_id'] = oss_account.id
-            if oss_tags:
-                defaults[f'{doc_type}_repartition_line_ids'][base_line][vals]['tag_ids'] += [Command.link(tag.id) for tag in oss_tags[f'{doc_type}_base_tag']]
-                defaults[f'{doc_type}_repartition_line_ids'][tax_line][vals]['tag_ids'] += [Command.link(tag.id) for tag in oss_tags[f'{doc_type}_tax_tag']]
-        return defaults['invoice_repartition_line_ids'], defaults['refund_repartition_line_ids']
+        invoice_base_line, invoice_tax_line, refund_base_line, refund_tax_line, vals = 0, 1, 2, 3, 2
+        if oss_account:
+            defaults['repartition_line_ids'][invoice_tax_line][vals]['account_id'] = oss_account.id
+            defaults['repartition_line_ids'][refund_tax_line][vals]['account_id'] = oss_account.id
+        if oss_tags:
+            defaults['repartition_line_ids'][invoice_base_line][vals]['tag_ids'] += [Command.link(tag.id) for tag in oss_tags['invoice_base_tag']]
+            defaults['repartition_line_ids'][invoice_tax_line][vals]['tag_ids'] += [Command.link(tag.id) for tag in oss_tags['invoice_tax_tag']]
+            defaults['repartition_line_ids'][refund_base_line][vals]['tag_ids'] += [Command.link(tag.id) for tag in oss_tags['refund_base_tag']]
+            defaults['repartition_line_ids'][refund_tax_line][vals]['tag_ids'] += [Command.link(tag.id) for tag in oss_tags['refund_tax_tag']]
+        return defaults['repartition_line_ids'][0:2], defaults['repartition_line_ids'][2:4]
 
     def _get_oss_account(self):
         self.ensure_one()
