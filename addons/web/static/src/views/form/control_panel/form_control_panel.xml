@@ -3,8 +3,8 @@
 
     <t t-name="web.FormControlPanel" owl="1">
         <div class="o_control_panel" t-ref="root">
-            <div t-if="display['top']" class="o_cp_top">
-                <div class="o_cp_top_left d-flex flex-grow-1 align-items-center">
+            <div t-if="display['top']" class="o_cp_top" t-att-class="{ 'flex-wrap': env.isSmall }">
+                <div class="o_cp_top_left d-flex flex-grow-1 align-items-center" t-att-class="{ 'w-100': env.isSmall }">
                     <t t-if="display['top-left']">
                         <t t-slot="control-panel-breadcrumb">
                             <t t-if="env.isSmall">

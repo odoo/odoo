@@ -175,3 +175,12 @@ class TestTimesheetGlobalTimeOff(common.TransactionCase):
         # The standard calendar is for 8 hours/day from 8 to 12 and from 13 to 17.
         # So we need to check that the timesheets don't have more than 8 hours per day.
         self.assertEqual(leave_task.effective_hours, 80)
+
+    def test_search_is_timeoff_task(self):
+        """ Test the search method on is_timeoff_task
+        with and without any hr.leave.type with timesheet_task_id defined"""
+        leaves_types_with_task_id = self.env['hr.leave.type'].search([('timesheet_task_id', '!=', False)])
+        self.env['project.task'].search([('is_timeoff_task', '!=', False)])
+
+        leaves_types_with_task_id.write({'timesheet_task_id': False})
+        self.env['project.task'].search([('is_timeoff_task', '!=', False)])
