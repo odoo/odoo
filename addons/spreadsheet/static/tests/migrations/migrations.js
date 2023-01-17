@@ -226,6 +226,72 @@ QUnit.test("fieldMatchings are moved from filters to their respective datasource
     });
 });
 
+QUnit.test("fieldMatchings offsets are correctly preserved after migration", (assert) => {
+    const data = {
+        globalFilters: [
+            {
+                id: "Filter",
+                label: "MyFilter1",
+                type: "relation",
+                listFields: {
+                    1: {
+                        field: "parent_id",
+                        type: "date",
+                        offset: "-1",
+                    },
+                },
+                pivotFields: {
+                    1: {
+                        field: "parent_id",
+                        type: "date",
+                        offset: "-1",
+                    },
+                },
+                graphFields: {
+                    fig1: {
+                        field: "parent_id",
+                        type: "date",
+                        offset: "-1",
+                    },
+                },
+            },
+        ],
+        pivots: {
+            1: {
+                name: "Name",
+            },
+        },
+        lists: {
+            1: {
+                name: "Name",
+            },
+        },
+        sheets: [
+            {
+                figures: [
+                    {
+                        id: "fig1",
+                        tag: "chart",
+                        data: {
+                            type: "odoo_bar",
+                        },
+                    },
+                ],
+            },
+        ],
+    };
+    const migratedData = migrate(data);
+    assert.deepEqual(migratedData.pivots["1"].fieldMatching, {
+        Filter: { chain: "parent_id", type: "date", offset: "-1" },
+    });
+    assert.deepEqual(migratedData.lists["1"].fieldMatching, {
+        Filter: { chain: "parent_id", type: "date", offset: "-1" },
+    });
+    assert.deepEqual(migratedData.sheets[0].figures[0].data.fieldMatching, {
+        Filter: { chain: "parent_id", type: "date", offset: "-1" },
+    });
+});
+
 QUnit.test("Odoo version is exported", (assert) => {
     const model = new Model();
     assert.strictEqual(model.exportData().odooVersion, ODOO_VERSION);
