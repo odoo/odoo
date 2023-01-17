@@ -1606,7 +1606,7 @@ QUnit.module("Fields", (hooks) => {
         }
         Comp.components = { Record, Field };
         Comp.template = owl.xml`
-            <Record resModel="'coucou'" fields="fields" fieldNames="['partner_id']" initialValues="values" mode="'edit'" t-slot-scope="scope">
+            <Record resModel="'coucou'" fields="fields" fieldNames="['partner_id']" values="values" mode="'edit'" t-slot-scope="scope">
                 <Field name="'partner_id'" record="scope.record" canOpen="false" />
             </Record>
         `;

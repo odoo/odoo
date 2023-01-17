@@ -3512,7 +3512,6 @@ export class RelationalModel extends Model {
             this.rootParams.expand = params.expand;
             this.rootParams.groupsLimit = params.groupsLimit;
         }
-        this.initialValues = params.initialValues;
 
         // this.db = Object.create(null);
         this.root = null;
@@ -3555,7 +3554,8 @@ export class RelationalModel extends Model {
             : this.initialRootState;
 
         const newRoot = this.createDataPoint(this.rootType, rootParams, state);
-        await this.keepLast.add(newRoot.load({ values: this.initialValues }));
+        const values = params.values;
+        await this.keepLast.add(newRoot.load({ values }));
         this.root = newRoot;
         this.rootParams = rootParams;
         this.notify();

@@ -17,13 +17,17 @@ class _Record extends Component {
             rootType: "record",
             activeFields: this.getActiveFields(),
             mode: this.props.info.mode === "edit" ? "edit" : undefined,
-            initialValues: this.props.info.initialValues,
         });
         onWillUpdateProps(async (nextProps) => {
-            await this.model.load({
-                resId: nextProps.info.resId,
-                mode: nextProps.info.mode,
-            });
+            const { resId, resModel } = this.props.info;
+            const { resId: nextResId, resModel: nextResModel } = nextProps.info;
+            if (nextResId !== resId || nextResModel !== resModel) {
+                await this.model.load({
+                    resId: nextResId,
+                    mode: nextResModel,
+                    ...nextProps,
+                });
+            }
         });
 
         if (this.props.info.onRecordChanged) {
@@ -54,7 +58,7 @@ class _Record extends Component {
     }
 }
 _Record.template = xml`<t t-slot="default" record="model.root"/>`;
-_Record.props = ["slots", "info", "fields"];
+_Record.props = ["slots", "info", "fields", "values?"];
 
 export class Record extends Component {
     setup() {
@@ -73,7 +77,7 @@ export class Record extends Component {
         }
     }
 }
-Record.template = xml`<_Record fields="fields" slots="props.slots" info="props" />`;
+Record.template = xml`<_Record fields="fields" slots="props.slots" values="props.values" info="props" />`;
 Record.components = { _Record };
 Record.props = [
     "slots",
@@ -83,6 +87,6 @@ Record.props = [
     "fields?",
     "resId?",
     "mode?",
-    "initialValues?",
+    "values?",
     "onRecordChanged?",
 ];

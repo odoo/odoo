@@ -119,15 +119,8 @@ function arraytoMap(array) {
  * @param {Object} target
  */
 function execute(op, source, target) {
-    const {
-        query,
-        nextId,
-        nextGroupId,
-        nextGroupNumber,
-        searchItems,
-        searchPanelInfo,
-        sections,
-    } = source;
+    const { query, nextId, nextGroupId, nextGroupNumber, searchItems, searchPanelInfo, sections } =
+        source;
 
     target.nextGroupId = nextGroupId;
     target.nextGroupNumber = nextGroupNumber;
@@ -178,6 +171,10 @@ export class SearchModel extends EventBus {
         this.comparisonOptions = getComparisonOptions();
         this.intervalOptions = getIntervalOptions();
         this.optionGenerators = getPeriodOptions(this.referenceMoment);
+        this.searchKey = 0;
+        this.addEventListener("update", () => {
+            this.searchKey++;
+        });
     }
 
     /**
@@ -713,9 +710,11 @@ export class SearchModel extends EventBus {
             return searchItem.comparison;
         }
         const { dateFilterId, comparisonOptionId } = searchItem;
-        const { fieldName, fieldType, description: dateFilterDescription } = this.searchItems[
-            dateFilterId
-        ];
+        const {
+            fieldName,
+            fieldType,
+            description: dateFilterDescription,
+        } = this.searchItems[dateFilterId];
         const selectedGeneratorIds = this._getSelectedGeneratorIds(dateFilterId);
         // compute range and range description
         const { domain: range, description: rangeDescription } = constructDateDomain(
@@ -725,16 +724,14 @@ export class SearchModel extends EventBus {
             selectedGeneratorIds
         );
         // compute comparisonRange and comparisonRange description
-        const {
-            domain: comparisonRange,
-            description: comparisonRangeDescription,
-        } = constructDateDomain(
-            this.referenceMoment,
-            fieldName,
-            fieldType,
-            selectedGeneratorIds,
-            comparisonOptionId
-        );
+        const { domain: comparisonRange, description: comparisonRangeDescription } =
+            constructDateDomain(
+                this.referenceMoment,
+                fieldName,
+                fieldType,
+                selectedGeneratorIds,
+                comparisonOptionId
+            );
         return {
             comparisonId: comparisonOptionId,
             fieldName,
