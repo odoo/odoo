@@ -59,6 +59,6 @@ export class SubmitOrderButton extends Component {
 ProductScreen.addControlButton({
     component: SubmitOrderButton,
     condition: function () {
-        return this.env.pos.config.module_pos_restaurant && this.env.pos.unwatched.printers.length;
+        return this.env.pos.addSubmitOrderButton();
     },
 });
