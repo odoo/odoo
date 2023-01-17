@@ -51,4 +51,5 @@ class SaleLoyaltyRewardWizard(models.TransientModel):
         if not selected_coupon:
             raise ValidationError(_('Coupon not found while trying to add the following reward: %s', self.selected_reward_id.description))
         self.order_id._apply_program_reward(self.selected_reward_id, coupon, product=self.selected_product_id)
+        self.order_id._update_programs_and_rewards()
         return True
