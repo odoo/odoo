@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 15.5alpha1\n"
+"Project-Id-Version: Odoo Server saas~16.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-09-20 09:02+0000\n"
-"PO-Revision-Date: 2022-09-20 09:02+0000\n"
+"POT-Creation-Date: 2023-01-17 08:01+0000\n"
+"PO-Revision-Date: 2023-01-17 08:01+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -16,21 +16,21 @@ msgstr ""
 "Plural-Forms: \n"
 
 #. module: spreadsheet_dashboard
-#. openerp-web
+#. odoo-javascript
 #: code:addons/spreadsheet_dashboard/static/src/bundle/dashboard_action/dashboard_action.xml:0
 #, python-format
 msgid "An error occured while loading the dashboard"
 msgstr ""
 
 #. module: spreadsheet_dashboard
-#. openerp-web
+#. odoo-javascript
 #: code:addons/spreadsheet_dashboard/static/src/bundle/dashboard_action/mobile_search_panel/mobile_search_panel.xml:0
 #, python-format
 msgid "BACK"
 msgstr ""
 
 #. module: spreadsheet_dashboard
-#. openerp-web
+#. odoo-javascript
 #: code:addons/spreadsheet_dashboard/static/src/bundle/dashboard_action/mobile_search_panel/mobile_search_panel.js:0
 #, python-format
 msgid "Choose a dashboard...."
@@ -85,6 +85,11 @@ msgid "Display Name"
 msgstr ""
 
 #. module: spreadsheet_dashboard
+#: model:spreadsheet.dashboard.group,name:spreadsheet_dashboard.spreadsheet_dashboard_group_finance
+msgid "Finance"
+msgstr ""
+
+#. module: spreadsheet_dashboard
 #: model:ir.model.fields,field_description:spreadsheet_dashboard.field_spreadsheet_dashboard__group_ids
 msgid "Group"
 msgstr ""
@@ -95,15 +100,14 @@ msgid "Group of dashboards"
 msgstr ""
 
 #. module: spreadsheet_dashboard
-#: model:ir.model.fields,field_description:spreadsheet_dashboard.field_spreadsheet_dashboard__id
-#: model:ir.model.fields,field_description:spreadsheet_dashboard.field_spreadsheet_dashboard_group__id
-msgid "ID"
+#: model:spreadsheet.dashboard.group,name:spreadsheet_dashboard.spreadsheet_dashboard_group_hr
+msgid "Human Resources"
 msgstr ""
 
 #. module: spreadsheet_dashboard
-#: model:ir.model.fields,field_description:spreadsheet_dashboard.field_spreadsheet_dashboard____last_update
-#: model:ir.model.fields,field_description:spreadsheet_dashboard.field_spreadsheet_dashboard_group____last_update
-msgid "Last Modified on"
+#: model:ir.model.fields,field_description:spreadsheet_dashboard.field_spreadsheet_dashboard__id
+#: model:ir.model.fields,field_description:spreadsheet_dashboard.field_spreadsheet_dashboard_group__id
+msgid "ID"
 msgstr ""
 
 #. module: spreadsheet_dashboard
@@ -119,10 +123,15 @@ msgid "Last Updated on"
 msgstr ""
 
 #. module: spreadsheet_dashboard
-#. openerp-web
+#. odoo-javascript
 #: code:addons/spreadsheet_dashboard/static/src/bundle/dashboard_action/dashboard_action.xml:0
 #, python-format
 msgid "Loading..."
+msgstr ""
+
+#. module: spreadsheet_dashboard
+#: model:spreadsheet.dashboard.group,name:spreadsheet_dashboard.spreadsheet_dashboard_group_logistics
+msgid "Logistics"
 msgstr ""
 
 #. module: spreadsheet_dashboard
@@ -132,14 +141,14 @@ msgid "Name"
 msgstr ""
 
 #. module: spreadsheet_dashboard
-#. openerp-web
+#. odoo-javascript
 #: code:addons/spreadsheet_dashboard/static/src/bundle/dashboard_action/dashboard_action.xml:0
 #, python-format
 msgid "No available dashboard"
 msgstr ""
 
 #. module: spreadsheet_dashboard
-#. openerp-web
+#. odoo-javascript
 #: code:addons/spreadsheet_dashboard/static/src/bundle/dashboard_action/mobile_figure_container/mobile_figure_container.xml:0
 #, python-format
 msgid ""
@@ -148,34 +157,24 @@ msgid ""
 msgstr ""
 
 #. module: spreadsheet_dashboard
+#: model:spreadsheet.dashboard.group,name:spreadsheet_dashboard.spreadsheet_dashboard_group_project
+msgid "Project"
+msgstr ""
+
+#. module: spreadsheet_dashboard
 #: model:ir.model.fields,field_description:spreadsheet_dashboard.field_spreadsheet_dashboard__raw
 msgid "Raw"
 msgstr ""
 
 #. module: spreadsheet_dashboard
-#. openerp-web
-#: code:addons/spreadsheet_dashboard/static/src/bundle/list/index.js:0
-#, python-format
-msgid "See record"
-msgstr ""
-
-#. module: spreadsheet_dashboard
-#. openerp-web
-#: code:addons/spreadsheet_dashboard/static/src/bundle/pivot/index.js:0
-#, python-format
-msgid "See records"
+#: model:spreadsheet.dashboard.group,name:spreadsheet_dashboard.spreadsheet_dashboard_group_sales
+msgid "Sales"
 msgstr ""
 
 #. module: spreadsheet_dashboard
 #: model:ir.model.fields,field_description:spreadsheet_dashboard.field_spreadsheet_dashboard__sequence
 #: model:ir.model.fields,field_description:spreadsheet_dashboard.field_spreadsheet_dashboard_group__sequence
 msgid "Sequence"
-msgstr ""
-
-#. module: spreadsheet_dashboard
-#: code:addons/spreadsheet_dashboard/models/spreadsheet_dashboard.py:0
-#, python-format
-msgid "Sheet1"
 msgstr ""
 
 #. module: spreadsheet_dashboard
@@ -191,4 +190,9 @@ msgstr ""
 #. module: spreadsheet_dashboard
 #: model:ir.model.fields,field_description:spreadsheet_dashboard.field_spreadsheet_dashboard__thumbnail
 msgid "Thumbnail"
+msgstr ""
+
+#. module: spreadsheet_dashboard
+#: model:spreadsheet.dashboard.group,name:spreadsheet_dashboard.spreadsheet_dashboard_group_website
+msgid "Website"
 msgstr ""
