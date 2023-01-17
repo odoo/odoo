@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 15.5alpha1\n"
+"Project-Id-Version: Odoo Server saas~16.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-09-20 09:02+0000\n"
-"PO-Revision-Date: 2022-09-20 09:02+0000\n"
+"POT-Creation-Date: 2023-01-17 10:54+0000\n"
+"PO-Revision-Date: 2023-01-17 10:54+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -31,6 +31,7 @@ msgid "<b>Reference:</b>"
 msgstr ""
 
 #. module: payment
+#. odoo-python
 #: code:addons/payment/wizards/payment_onboarding_wizard.py:0
 #, python-format
 msgid ""
@@ -119,6 +120,7 @@ msgid "<strong>Warning</strong> You must be logged in to pay."
 msgstr ""
 
 #. module: payment
+#. odoo-python
 #: code:addons/payment/models/payment_transaction.py:0
 #, python-format
 msgid ""
@@ -127,12 +129,14 @@ msgid ""
 msgstr ""
 
 #. module: payment
+#. odoo-python
 #: code:addons/payment/models/payment_token.py:0
 #, python-format
 msgid "A token cannot be unarchived once it has been archived."
 msgstr ""
 
 #. module: payment
+#. odoo-python
 #: code:addons/payment/models/payment_transaction.py:0
 #, python-format
 msgid ""
@@ -140,6 +144,7 @@ msgid ""
 msgstr ""
 
 #. module: payment
+#. odoo-python
 #: code:addons/payment/models/payment_transaction.py:0
 #, python-format
 msgid ""
@@ -148,6 +153,7 @@ msgid ""
 msgstr ""
 
 #. module: payment
+#. odoo-python
 #: code:addons/payment/models/payment_transaction.py:0
 #, python-format
 msgid ""
@@ -156,6 +162,7 @@ msgid ""
 msgstr ""
 
 #. module: payment
+#. odoo-python
 #: code:addons/payment/wizards/payment_onboarding_wizard.py:0
 #, python-format
 msgid "Account"
@@ -226,7 +233,7 @@ msgid "Amount Max"
 msgstr ""
 
 #. module: payment
-#. openerp-web
+#. odoo-javascript
 #: code:addons/payment/static/src/xml/payment_post_processing.xml:0
 #, python-format
 msgid "An error occurred during the processing of this payment."
@@ -249,7 +256,7 @@ msgid "Archived"
 msgstr ""
 
 #. module: payment
-#. openerp-web
+#. odoo-javascript
 #: code:addons/payment/static/src/js/manage_form.js:0
 #, python-format
 msgid "Are you sure you want to delete this payment method?"
@@ -288,6 +295,7 @@ msgid "Availability"
 msgstr ""
 
 #. module: payment
+#. odoo-python
 #: code:addons/payment/wizards/payment_onboarding_wizard.py:0
 #, python-format
 msgid "Bank"
@@ -329,7 +337,7 @@ msgid "Callback Record ID"
 msgstr ""
 
 #. module: payment
-#. openerp-web
+#. odoo-javascript
 #: code:addons/payment/static/src/js/manage_form.js:0
 #: model_terms:ir.ui.view,arch_db:payment.payment_provider_onboarding_wizard_form
 #, python-format
@@ -347,7 +355,7 @@ msgid "Canceled Message"
 msgstr ""
 
 #. module: payment
-#. openerp-web
+#. odoo-javascript
 #: code:addons/payment/static/src/xml/payment_post_processing.xml:0
 #, python-format
 msgid "Cancelled payments"
@@ -388,7 +396,7 @@ msgid "City"
 msgstr ""
 
 #. module: payment
-#. openerp-web
+#. odoo-javascript
 #: code:addons/payment/static/src/xml/payment_post_processing.xml:0
 #, python-format
 msgid "Click here to be redirected to the confirmation page."
@@ -433,7 +441,7 @@ msgid "Configuration"
 msgstr ""
 
 #. module: payment
-#. openerp-web
+#. odoo-javascript
 #: code:addons/payment/static/src/js/manage_form.js:0
 #, python-format
 msgid "Confirm Deletion"
@@ -476,11 +484,6 @@ msgid "Create a new payment provider"
 msgstr ""
 
 #. module: payment
-#: model_terms:ir.actions.act_window,help:payment.action_payment_token
-msgid "Create a new payment token"
-msgstr ""
-
-#. module: payment
 #: model_terms:ir.actions.act_window,help:payment.action_payment_icon
 msgid "Create a payment icon"
 msgstr ""
@@ -506,6 +509,7 @@ msgid "Created on"
 msgstr ""
 
 #. module: payment
+#. odoo-python
 #: code:addons/payment/models/payment_transaction.py:0
 #, python-format
 msgid "Creating a transaction from an archived token is forbidden."
@@ -559,6 +563,11 @@ msgstr ""
 #. module: payment
 #: model:payment.provider,display_as:payment.payment_provider_sips
 msgid "Credit Card (powered by Sips)"
+msgstr ""
+
+#. module: payment
+#: model:ir.model.fields,field_description:payment.field_payment_provider__available_currency_ids
+msgid "Currencies"
 msgstr ""
 
 #. module: payment
@@ -658,7 +667,8 @@ msgid "Error"
 msgstr ""
 
 #. module: payment
-#. openerp-web
+#. odoo-python
+#. odoo-javascript
 #: code:addons/payment/models/payment_transaction.py:0
 #: code:addons/payment/static/src/js/payment_form_mixin.js:0
 #, python-format
@@ -723,6 +733,11 @@ msgid "Generate Sales Payment Link"
 msgstr ""
 
 #. module: payment
+#: model_terms:ir.ui.view,arch_db:payment.payment_link_wizard_view_form
+msgid "Generate and Copy Payment Link"
+msgstr ""
+
+#. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_provider_search
 #: model_terms:ir.ui.view,arch_db:payment.payment_token_search
 #: model_terms:ir.ui.view,arch_db:payment.payment_transaction_search
@@ -783,7 +798,7 @@ msgid "If not defined, the provider name will be used."
 msgstr ""
 
 #. module: payment
-#. openerp-web
+#. odoo-javascript
 #: code:addons/payment/static/src/xml/payment_post_processing.xml:0
 #, python-format
 msgid "If the payment hasn't been confirmed you can contact us."
@@ -836,7 +851,7 @@ msgid "Installed"
 msgstr ""
 
 #. module: payment
-#. openerp-web
+#. odoo-javascript
 #: code:addons/payment/static/src/xml/payment_post_processing.xml:0
 #, python-format
 msgid "Internal server error"
@@ -848,7 +863,7 @@ msgid "Is Post-processed"
 msgstr ""
 
 #. module: payment
-#. openerp-web
+#. odoo-javascript
 #: code:addons/payment/static/src/js/manage_form.js:0
 #, python-format
 msgid "It is currently linked to the following documents:"
@@ -867,16 +882,6 @@ msgstr ""
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__partner_lang
 msgid "Language"
-msgstr ""
-
-#. module: payment
-#: model:ir.model.fields,field_description:payment.field_payment_icon____last_update
-#: model:ir.model.fields,field_description:payment.field_payment_link_wizard____last_update
-#: model:ir.model.fields,field_description:payment.field_payment_provider____last_update
-#: model:ir.model.fields,field_description:payment.field_payment_provider_onboarding_wizard____last_update
-#: model:ir.model.fields,field_description:payment.field_payment_token____last_update
-#: model:ir.model.fields,field_description:payment.field_payment_transaction____last_update
-msgid "Last Modified on"
 msgstr ""
 
 #. module: payment
@@ -905,6 +910,7 @@ msgid "Last Updated on"
 msgstr ""
 
 #. module: payment
+#. odoo-python
 #: code:addons/payment/models/payment_transaction.py:0
 #, python-format
 msgid ""
@@ -964,7 +970,7 @@ msgid "Mollie"
 msgstr ""
 
 #. module: payment
-#. openerp-web
+#. odoo-javascript
 #: code:addons/payment/static/src/js/payment_form_mixin.js:0
 #, python-format
 msgid "Multiple payment options selected"
@@ -984,6 +990,7 @@ msgid "No Provider Set"
 msgstr ""
 
 #. module: payment
+#. odoo-python
 #: code:addons/payment/wizards/payment_onboarding_wizard.py:0
 #, python-format
 msgid ""
@@ -992,14 +999,14 @@ msgid ""
 msgstr ""
 
 #. module: payment
-#. openerp-web
+#. odoo-javascript
 #: code:addons/payment/static/src/xml/payment_post_processing.xml:0
 #, python-format
 msgid "No payment has been processed."
 msgstr ""
 
 #. module: payment
-#. openerp-web
+#. odoo-javascript
 #: code:addons/payment/static/src/js/payment_form_mixin.js:0
 #, python-format
 msgid "No payment option selected"
@@ -1026,7 +1033,7 @@ msgid "Offline payment by token"
 msgstr ""
 
 #. module: payment
-#. openerp-web
+#. odoo-javascript
 #: code:addons/payment/static/src/js/payment_form_mixin.js:0
 #: model_terms:ir.ui.view,arch_db:payment.verified_token_checkmark
 #, python-format
@@ -1049,24 +1056,28 @@ msgid "Online payment with redirection"
 msgstr ""
 
 #. module: payment
+#. odoo-python
 #: code:addons/payment/wizards/payment_onboarding_wizard.py:0
 #, python-format
 msgid "Only administrators can access this data."
 msgstr ""
 
 #. module: payment
+#. odoo-python
 #: code:addons/payment/models/payment_transaction.py:0
 #, python-format
 msgid "Only authorized transactions can be captured."
 msgstr ""
 
 #. module: payment
+#. odoo-python
 #: code:addons/payment/models/payment_transaction.py:0
 #, python-format
 msgid "Only authorized transactions can be voided."
 msgstr ""
 
 #. module: payment
+#. odoo-python
 #: code:addons/payment/models/payment_transaction.py:0
 #, python-format
 msgid "Only confirmed transactions can be refunded."
@@ -1220,6 +1231,7 @@ msgid "Payment Transactions Linked To Token"
 msgstr ""
 
 #. module: payment
+#. odoo-python
 #: code:addons/payment/models/payment_token.py:0
 #, python-format
 msgid "Payment details saved on %(date)s"
@@ -1241,14 +1253,14 @@ msgid "Payments"
 msgstr ""
 
 #. module: payment
-#. openerp-web
+#. odoo-javascript
 #: code:addons/payment/static/src/xml/payment_post_processing.xml:0
 #, python-format
 msgid "Payments failed"
 msgstr ""
 
 #. module: payment
-#. openerp-web
+#. odoo-javascript
 #: code:addons/payment/static/src/xml/payment_post_processing.xml:0
 #, python-format
 msgid "Payments received"
@@ -1275,27 +1287,33 @@ msgid "Phone"
 msgstr ""
 
 #. module: payment
-#. openerp-web
+#. odoo-javascript
 #: code:addons/payment/static/src/js/payment_form_mixin.js:0
 #, python-format
 msgid "Please select a payment option."
 msgstr ""
 
 #. module: payment
-#. openerp-web
+#. odoo-javascript
 #: code:addons/payment/static/src/js/payment_form_mixin.js:0
 #, python-format
 msgid "Please select only one payment option."
 msgstr ""
 
 #. module: payment
+#. odoo-python
 #: code:addons/payment/wizards/payment_link_wizard.py:0
 #, python-format
 msgid "Please set an amount smaller than %s."
 msgstr ""
 
 #. module: payment
-#. openerp-web
+#: model_terms:ir.ui.view,arch_db:payment.company_mismatch_warning
+msgid "Please switch to company"
+msgstr ""
+
+#. module: payment
+#. odoo-javascript
 #: code:addons/payment/static/src/xml/payment_post_processing.xml:0
 #, python-format
 msgid "Please wait ..."
@@ -1307,6 +1325,7 @@ msgid "Processed by"
 msgstr ""
 
 #. module: payment
+#: model:ir.model.fields,field_description:payment.field_payment_token__provider_id
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__provider_id
 #: model_terms:ir.ui.view,arch_db:payment.payment_provider_search
 #: model_terms:ir.ui.view,arch_db:payment.payment_token_search
@@ -1342,13 +1361,14 @@ msgid "Razorpay"
 msgstr ""
 
 #. module: payment
-#. openerp-web
+#. odoo-javascript
 #: code:addons/payment/static/src/xml/payment_post_processing.xml:0
 #, python-format
 msgid "Reason:"
 msgstr ""
 
 #. module: payment
+#. odoo-python
 #: code:addons/payment/models/payment_transaction.py:0
 #, python-format
 msgid "Reason: %s"
@@ -1371,6 +1391,7 @@ msgid "Reference must be unique!"
 msgstr ""
 
 #. module: payment
+#. odoo-python
 #: code:addons/payment/models/payment_transaction.py:0
 #: model:ir.model.fields.selection,name:payment.selection__payment_transaction__operation__refund
 #, python-format
@@ -1418,6 +1439,11 @@ msgid "Select countries. Leave empty to make available everywhere."
 msgstr ""
 
 #. module: payment
+#: model_terms:ir.ui.view,arch_db:payment.payment_provider_form
+msgid "Select currencies. Leave empty not to restrict any."
+msgstr ""
+
+#. module: payment
 #: model:ir.model.fields,field_description:payment.field_res_company__payment_onboarding_payment_method
 msgid "Selected onboarding payment method"
 msgstr ""
@@ -1429,7 +1455,7 @@ msgid "Sequence"
 msgstr ""
 
 #. module: payment
-#. openerp-web
+#. odoo-javascript
 #: code:addons/payment/static/src/js/manage_form.js:0
 #: code:addons/payment/static/src/js/manage_form.js:0
 #: code:addons/payment/static/src/js/manage_form.js:0
@@ -1439,7 +1465,7 @@ msgid "Server Error"
 msgstr ""
 
 #. module: payment
-#. openerp-web
+#. odoo-javascript
 #: code:addons/payment/static/src/xml/payment_post_processing.xml:0
 #, python-format
 msgid "Server error:"
@@ -1539,6 +1565,12 @@ msgid "Test Mode"
 msgstr ""
 
 #. module: payment
+#: model_terms:ir.ui.view,arch_db:payment.test_token_badge
+msgid "Test Token"
+msgstr ""
+
+#. module: payment
+#. odoo-python
 #: code:addons/payment/controllers/portal.py:0
 #, python-format
 msgid "The access token is invalid."
@@ -1572,11 +1604,19 @@ msgid ""
 msgstr ""
 
 #. module: payment
+#: model:ir.model.fields,help:payment.field_payment_provider__available_currency_ids
+msgid ""
+"The currencies available with this payment provider. Leave empty not to "
+"restrict any."
+msgstr ""
+
+#. module: payment
 #: model:ir.model.fields,help:payment.field_payment_transaction__fees
 msgid "The fees amount; set by the system as it depends on the provider"
 msgstr ""
 
 #. module: payment
+#. odoo-python
 #: code:addons/payment/models/payment_provider.py:0
 #, python-format
 msgid "The following fields must be filled: %s"
@@ -1633,6 +1673,7 @@ msgid "The message displayed to explain and help the payment process"
 msgstr ""
 
 #. module: payment
+#. odoo-python
 #: code:addons/payment/controllers/portal.py:0
 #, python-format
 msgid ""
@@ -1692,6 +1733,7 @@ msgid ""
 msgstr ""
 
 #. module: payment
+#. odoo-python
 #: code:addons/payment/models/payment_transaction.py:0
 #, python-format
 msgid ""
@@ -1700,6 +1742,7 @@ msgid ""
 msgstr ""
 
 #. module: payment
+#. odoo-python
 #: code:addons/payment/models/payment_transaction.py:0
 #, python-format
 msgid ""
@@ -1708,6 +1751,7 @@ msgid ""
 msgstr ""
 
 #. module: payment
+#. odoo-python
 #: code:addons/payment/models/payment_transaction.py:0
 #, python-format
 msgid ""
@@ -1716,6 +1760,7 @@ msgid ""
 msgstr ""
 
 #. module: payment
+#. odoo-python
 #: code:addons/payment/wizards/payment_link_wizard.py:0
 #, python-format
 msgid "The value of the payment amount must be positive."
@@ -1727,11 +1772,17 @@ msgid "There are no transactions to show"
 msgstr ""
 
 #. module: payment
+#: model_terms:ir.actions.act_window,help:payment.action_payment_token
+msgid "There is no token created yet."
+msgstr ""
+
+#. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.pay
 msgid "There is nothing to pay."
 msgstr ""
 
 #. module: payment
+#. odoo-python
 #: code:addons/payment/models/payment_provider.py:0
 #, python-format
 msgid ""
@@ -1765,8 +1816,8 @@ msgstr ""
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_link_wizard_view_form
 msgid ""
-"This partner has no email, which may cause issues with some payment "
-"providers. Setting an email for this partner is advised."
+"This partner has no email, which may cause issues with some payment providers.\n"
+"                     Setting an email for this partner is advised."
 msgstr ""
 
 #. module: payment
@@ -1780,7 +1831,7 @@ msgid "This payment method has not been verified by our system."
 msgstr ""
 
 #. module: payment
-#. openerp-web
+#. odoo-javascript
 #: code:addons/payment/static/src/xml/payment_post_processing.xml:0
 #, python-format
 msgid "This transaction has been cancelled."
@@ -1797,6 +1848,7 @@ msgid "Tokenization Supported"
 msgstr ""
 
 #. module: payment
+#. odoo-python
 #: code:addons/payment/models/payment_transaction.py:0
 #, python-format
 msgid ""
@@ -1810,7 +1862,7 @@ msgid "Type of Refund Supported"
 msgstr ""
 
 #. module: payment
-#. openerp-web
+#. odoo-javascript
 #: code:addons/payment/static/src/xml/payment_post_processing.xml:0
 #, python-format
 msgid "Unable to contact the Odoo server."
@@ -1836,10 +1888,11 @@ msgstr ""
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_provider__fees_dom_var
-msgid "Variable domestic fees (in percents)"
+msgid "Variable domestic fees"
 msgstr ""
 
 #. module: payment
+#. odoo-python
 #: code:addons/payment/models/payment_provider.py:0
 #, python-format
 msgid "Variable fees must always be positive and below 100%."
@@ -1847,7 +1900,7 @@ msgstr ""
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_provider__fees_int_var
-msgid "Variable international fees (in percents)"
+msgid "Variable international fees"
 msgstr ""
 
 #. module: payment
@@ -1861,27 +1914,28 @@ msgid "Void Transaction"
 msgstr ""
 
 #. module: payment
-#. openerp-web
+#. odoo-javascript
 #: code:addons/payment/static/src/xml/payment_post_processing.xml:0
 #, python-format
 msgid "Waiting for payment"
 msgstr ""
 
 #. module: payment
+#. odoo-python
 #: code:addons/payment/models/payment_provider.py:0
 #, python-format
 msgid "Warning"
 msgstr ""
 
 #. module: payment
-#. openerp-web
+#. odoo-javascript
 #: code:addons/payment/static/src/js/manage_form.js:0
 #, python-format
 msgid "Warning!"
 msgstr ""
 
 #. module: payment
-#. openerp-web
+#. odoo-javascript
 #: code:addons/payment/static/src/js/manage_form.js:0
 #: code:addons/payment/static/src/js/manage_form.js:0
 #, python-format
@@ -1889,35 +1943,35 @@ msgid "We are not able to delete your payment method."
 msgstr ""
 
 #. module: payment
-#. openerp-web
+#. odoo-javascript
 #: code:addons/payment/static/src/xml/payment_post_processing.xml:0
 #, python-format
 msgid "We are not able to find your payment, but don't worry."
 msgstr ""
 
 #. module: payment
-#. openerp-web
+#. odoo-javascript
 #: code:addons/payment/static/src/js/payment_form_mixin.js:0
 #, python-format
 msgid "We are not able to process your payment."
 msgstr ""
 
 #. module: payment
-#. openerp-web
+#. odoo-javascript
 #: code:addons/payment/static/src/js/manage_form.js:0
 #, python-format
 msgid "We are not able to save your payment method."
 msgstr ""
 
 #. module: payment
-#. openerp-web
+#. odoo-javascript
 #: code:addons/payment/static/src/js/post_processing.js:0
 #, python-format
 msgid "We are processing your payment, please wait ..."
 msgstr ""
 
 #. module: payment
-#. openerp-web
+#. odoo-javascript
 #: code:addons/payment/static/src/xml/payment_post_processing.xml:0
 #, python-format
 msgid "We are waiting for the payment provider to confirm the payment."
@@ -1948,60 +2002,63 @@ msgid "Wire Transfer"
 msgstr ""
 
 #. module: payment
-#. openerp-web
+#. odoo-javascript
 #: code:addons/payment/static/src/xml/payment_post_processing.xml:0
 #, python-format
 msgid "You can click here to be redirected to the confirmation page."
 msgstr ""
 
 #. module: payment
+#. odoo-python
 #: code:addons/payment/models/payment_provider.py:0
 #, python-format
 msgid "You cannot publish a disabled provider."
 msgstr ""
 
 #. module: payment
+#. odoo-python
 #: code:addons/payment/controllers/portal.py:0
 #, python-format
 msgid "You do not have access to this payment token."
 msgstr ""
 
 #. module: payment
-#. openerp-web
+#. odoo-javascript
 #: code:addons/payment/static/src/xml/payment_post_processing.xml:0
 #, python-format
 msgid "You should receive an email confirming your payment in a few minutes."
 msgstr ""
 
 #. module: payment
-#. openerp-web
+#. odoo-javascript
 #: code:addons/payment/static/src/xml/payment_post_processing.xml:0
 #, python-format
 msgid "You will be notified when the payment is confirmed."
 msgstr ""
 
 #. module: payment
-#. openerp-web
+#. odoo-javascript
 #: code:addons/payment/static/src/xml/payment_post_processing.xml:0
 #, python-format
 msgid "You will be notified when the payment is fully confirmed."
 msgstr ""
 
 #. module: payment
-#. openerp-web
+#. odoo-javascript
 #: code:addons/payment/static/src/xml/payment_post_processing.xml:0
 #, python-format
 msgid "Your order has been processed."
 msgstr ""
 
 #. module: payment
-#. openerp-web
+#. odoo-javascript
 #: code:addons/payment/static/src/xml/payment_post_processing.xml:0
 #, python-format
 msgid "Your order is being processed, please wait ..."
 msgstr ""
 
 #. module: payment
+#. odoo-python
 #: code:addons/payment/models/payment_provider.py:0
 #: model_terms:payment.provider,auth_msg:payment.payment_provider_adyen
 #: model_terms:payment.provider,auth_msg:payment.payment_provider_aps
@@ -2023,6 +2080,7 @@ msgid "Your payment has been authorized."
 msgstr ""
 
 #. module: payment
+#. odoo-python
 #: code:addons/payment/models/payment_provider.py:0
 #: model_terms:payment.provider,cancel_msg:payment.payment_provider_adyen
 #: model_terms:payment.provider,cancel_msg:payment.payment_provider_aps
@@ -2044,13 +2102,14 @@ msgid "Your payment has been cancelled."
 msgstr ""
 
 #. module: payment
-#. openerp-web
+#. odoo-javascript
 #: code:addons/payment/static/src/xml/payment_post_processing.xml:0
 #, python-format
 msgid "Your payment has been received but need to be confirmed manually."
 msgstr ""
 
 #. module: payment
+#. odoo-python
 #: code:addons/payment/models/payment_provider.py:0
 #: model_terms:payment.provider,pending_msg:payment.payment_provider_adyen
 #: model_terms:payment.provider,pending_msg:payment.payment_provider_aps
@@ -2072,6 +2131,7 @@ msgid ""
 msgstr ""
 
 #. module: payment
+#. odoo-python
 #: code:addons/payment/models/payment_provider.py:0
 #: model_terms:payment.provider,done_msg:payment.payment_provider_adyen
 #: model_terms:payment.provider,done_msg:payment.payment_provider_aps
@@ -2098,7 +2158,7 @@ msgid "Your payment has not been processed yet."
 msgstr ""
 
 #. module: payment
-#. openerp-web
+#. odoo-javascript
 #: code:addons/payment/static/src/xml/payment_post_processing.xml:0
 #, python-format
 msgid "Your payment is in pending state."
@@ -2126,8 +2186,6 @@ msgstr ""
 
 #. module: payment
 #: model:ir.actions.server,name:payment.cron_post_process_payment_tx_ir_actions_server
-#: model:ir.cron,cron_name:payment.cron_post_process_payment_tx
-#: model:ir.cron,name:payment.cron_post_process_payment_tx
 msgid "payment: post-process transactions"
 msgstr ""
 
@@ -2135,11 +2193,6 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:payment.payment_provider_kanban
 #: model_terms:ir.ui.view,arch_db:payment.payment_provider_search
 msgid "provider"
-msgstr ""
-
-#. module: payment
-#: model:ir.model.fields,field_description:payment.field_payment_token__provider_id
-msgid "provider Account"
 msgstr ""
 
 #. module: payment
@@ -2158,14 +2211,13 @@ msgid "success"
 msgstr ""
 
 #. module: payment
-#: model_terms:ir.ui.view,arch_db:payment.transaction_status
-msgid "warning"
+#: model_terms:ir.ui.view,arch_db:payment.company_mismatch_warning
+msgid ""
+"to make this\n"
+"                    payment."
 msgstr ""
 
 #. module: payment
-#: code:addons/payment/models/account_journal.py:0
-#, python-format
-msgid ""
-"You must first deactivate a payment provider before deleting its journal.\n"
-"Linked providers: %s"
+#: model_terms:ir.ui.view,arch_db:payment.transaction_status
+msgid "warning"
 msgstr ""
