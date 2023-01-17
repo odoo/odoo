@@ -65,7 +65,7 @@ class EscposDriver(Thread):
 
                 return False
 
-        printers = usb.core.find(find_all=True, custom_match=FindUsbClass(7))
+        printers = list(usb.core.find(find_all=True, custom_match=FindUsbClass(7)))
 
         # if no printers are found after this step we will take the
         # first epson or star device we can find.
