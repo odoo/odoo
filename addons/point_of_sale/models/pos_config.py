@@ -26,7 +26,11 @@ class PosConfig(models.Model):
         return self.env['account.journal'].search([('type', '=', 'sale'), ('company_id', '=', self.env.company.id)], limit=1)
 
     def _default_payment_methods(self):
-        return self.env['pos.payment.method'].search([('split_transactions', '=', False), ('company_id', '=', self.env.company.id)])
+        domain = [('split_transactions', '=', False), ('company_id', '=', self.env.company.id)]
+        non_cash_pm = self.env['pos.payment.method'].search(domain + [('is_cash_count', '=', False)])
+        available_cash_pm = self.env['pos.payment.method'].search(domain + [('is_cash_count', '=', True),
+                                                                            ('config_ids', '=', False)], limit=1)
+        return non_cash_pm | available_cash_pm
 
     def _default_pricelist(self):
         return self.env['product.pricelist'].search([('company_id', 'in', (False, self.env.company.id)), ('currency_id', '=', self.env.company.currency_id.id)], limit=1)
