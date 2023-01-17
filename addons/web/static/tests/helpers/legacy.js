@@ -28,10 +28,9 @@ odoo.define("web.test_legacy", async (require) => {
     const session = require("web.session");
     await session.is_bound; // await for templates from server
 
-    const FormView = require("web.FormView");
     const ListView = require("web.ListView");
     const viewRegistry = require("web.view_registry");
-    viewRegistry.add("legacy_form", FormView).add("legacy_list", ListView);
+    viewRegistry.add("legacy_list", ListView);
 
     return { legacyProm: session.is_bound };
 });

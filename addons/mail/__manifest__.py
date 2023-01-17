@@ -202,8 +202,6 @@ For more specific needs, you may also assign custom-defined actions
             'mail/static/src/views/**/*.xml',
             'mail/static/src/views/**/*.scss',
             'mail/static/src/webclient/commands/*.js',
-            'mail/static/src/widgets/*/*.js',
-            'mail/static/src/widgets/*/*.scss',
 
             # Don't include dark mode files in light mode
             ('remove', 'mail/static/src/components/*/*.dark.scss'),

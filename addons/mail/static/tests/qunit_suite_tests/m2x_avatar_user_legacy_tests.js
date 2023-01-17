@@ -14,7 +14,12 @@ import core from "web.core";
 import session from "web.session";
 import makeTestEnvironment from "web.test_env";
 import { dom, nextTick } from "web.test_utils";
+import FormView from "web.FormView";
+import viewRegistry from "web.view_registry";
 
+// legacy_form has been removed from registry, but this test suite requires
+// it for now. This is just a workaround until we can remove this file as well.
+viewRegistry.add("legacy_form", FormView);
 let target;
 
 QUnit.module("mail", {}, function () {
