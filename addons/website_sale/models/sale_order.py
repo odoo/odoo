@@ -147,18 +147,6 @@ class SaleOrder(models.Model):
                 pu = price
         else:
             pu = product.price
-            if order.pricelist_id and order.partner_id:
-                order_line = order._cart_find_product_line(product.id, force_search=True)
-                if order_line:
-                    pu = product._get_tax_included_unit_price(
-                        self.company_id,
-                        order.currency_id,
-                        order.date_order,
-                        'sale',
-                        fiscal_position=order.fiscal_position_id,
-                        product_price_unit=product.price,
-                        product_currency=order.currency_id
-                    )
 
         return {
             'product_id': product_id,
