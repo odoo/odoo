@@ -24,7 +24,7 @@ from odoo.addons.calendar.models.calendar_recurrence import (
 )
 from odoo.tools.translate import _
 from odoo.tools.misc import get_lang
-from odoo.tools import pycompat, html2plaintext, is_html_empty, single_email_re
+from odoo.tools import pycompat, html_to_plaintext, is_html_empty, single_email_re
 from odoo.exceptions import UserError, ValidationError
 
 _logger = logging.getLogger(__name__)
@@ -1137,7 +1137,7 @@ class Meeting(models.Model):
                     # convert_online_event_desc_to_text method for correct data formatting in external calendars
                     event.add('description').value = self.convert_online_event_desc_to_text(meeting.description)
                 else:
-                    event.add('description').value = html2plaintext(meeting.description)
+                    event.add('description').value = html_to_plaintext(meeting.description)
             if meeting.location:
                 event.add('location').value = meeting.location
             if meeting.rrule:
@@ -1175,20 +1175,17 @@ class Meeting(models.Model):
 
     def convert_online_event_desc_to_text(self, description):
         """
+        todo: update this
         We can sync the calendar events with google calendar, iCal and Outlook, and we
         also pass the event description along with other data. This description needs
         to be in plaintext to be displayed properly in above platforms. Because online
         events have fixed format for the description, this method removes some specific
         html tags, and converts it into readable plaintext (to be used in external
-        calendars). Note that for regular (offline) events, we simply use the standard
-        `html2plaintext` method instead.
+        calendars). Note that for regular (offline) events, we'll use the
+        `html_to_formatted_plaintext` method instead.
         """
-        desc_str = str(description)
-        tags_to_replace = ["<ul>", "</ul>", "<li>"]
-        for tag in tags_to_replace:
-            desc_str = desc_str.replace(tag, "")
-        desc_str = desc_str.replace("</li>", "<br/>")
-        return html2plaintext(desc_str)
+
+        return html_to_plaintext(description)
 
     @api.model
     def _get_display_time(self, start, stop, zduration, zallday):

@@ -8,7 +8,7 @@ from dateutil.relativedelta import relativedelta
 from odoo.tests.common import new_test_user
 from odoo.addons.google_calendar.tests.test_sync_common import TestSyncGoogle, patch_api
 from odoo.addons.google_calendar.utils.google_calendar import GoogleEvent
-from odoo.tools import html2plaintext
+from odoo.tools import html_to_plaintext
 from odoo import Command
 
 class TestSyncGoogle2Odoo(TestSyncGoogle):
@@ -64,7 +64,7 @@ class TestSyncGoogle2Odoo(TestSyncGoogle):
         self.assertTrue(event, "It should have created an event")
         self.assertEqual(event.name, values.get('summary'))
         self.assertFalse(event.allday)
-        self.assertEqual(html2plaintext(event.description), values.get('description'))
+        self.assertEqual(html_to_plaintext(event.description), values.get('description'))
         self.assertEqual(event.start, datetime(2020, 1, 13, 15, 55))
         self.assertEqual(event.stop, datetime(2020, 1, 13, 18, 55))
         admin_attendee = event.attendee_ids.filtered(lambda e: e.email == self.public_partner.email)

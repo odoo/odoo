@@ -18,8 +18,8 @@
                             <tr>
                                 <td><t t-esc="snln_line['product_name']"/></td>
                                 <td class="text-end">
-                                    <t t-esc="snln_line['quantity']"/>
-                                    <t t-esc="snln_line['uom_name']" groups="uom.group_uom"/>
+                                    <span><t t-esc="snln_line['quantity']"/></span>
+                                    <span><t t-esc="snln_line['uom_name']" groups="uom.group_uom"/></span>
                                 </td>
                                 <td class="text-end"><t t-esc="snln_line['lot_name']"/></td>
                             </tr>

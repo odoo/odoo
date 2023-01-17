@@ -2,6 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from . import _monkeypatches
+from . import _html2text
 from . import appdirs
 from . import cloc
 from . import pdf

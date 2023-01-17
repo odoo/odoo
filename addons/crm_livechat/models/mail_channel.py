@@ -2,7 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import models, _
-from odoo.tools import html2plaintext
+from odoo.tools import html_to_plaintext
 
 
 class MailChannel(models.Model):
@@ -39,7 +39,7 @@ class MailChannel(models.Model):
 
         utm_source = self.env.ref('crm_livechat.utm_source_livechat', raise_if_not_found=False)
         return self.env['crm.lead'].create({
-            'name': html2plaintext(key[5:]),
+            'name': html_to_plaintext(key[5:]),
             'partner_id': customers[0].id if customers else False,
             'user_id': False,
             'team_id': False,

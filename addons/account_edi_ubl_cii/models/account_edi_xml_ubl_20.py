@@ -2,7 +2,7 @@
 
 from odoo import models, _
 from odoo.osv import expression
-from odoo.tools import html2plaintext, cleanup_xml_node
+from odoo.tools import html_to_formatted_plaintext, cleanup_xml_node
 from lxml import etree
 
 
@@ -394,7 +394,7 @@ class AccountEdiXmlUBL20(models.AbstractModel):
                 'id': invoice.name,
                 'issue_date': invoice.invoice_date,
                 'due_date': invoice.invoice_date_due,
-                'note_vals': [html2plaintext(invoice.narration)] if invoice.narration else [],
+                'note_vals': [html_to_formatted_plaintext(invoice.narration)] if invoice.narration else [],
                 'order_reference': invoice.invoice_origin,
                 'accounting_supplier_party_vals': {
                     'party_vals': self._get_partner_party_vals(supplier, role='supplier'),

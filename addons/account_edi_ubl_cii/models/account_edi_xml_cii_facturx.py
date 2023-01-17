@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 from odoo import models, _
-from odoo.tools import DEFAULT_SERVER_DATE_FORMAT, float_repr, is_html_empty, html2plaintext, cleanup_xml_node
+from odoo.tools import cleanup_xml_node, DEFAULT_SERVER_DATE_FORMAT, float_repr, \
+    html_to_formatted_plaintext, is_html_empty
 from lxml import etree
 
 from datetime import datetime
@@ -109,7 +110,7 @@ class AccountEdiXmlCII(models.AbstractModel):
             'id': invoice.name,
             'type_code': '380' if invoice.move_type == 'out_invoice' else '381',
             'issue_date_time': invoice.invoice_date,
-            'included_note': html2plaintext(invoice.narration) if invoice.narration else "",
+            'included_note': html_to_formatted_plaintext(invoice.narration) if invoice.narration else '',
         }
 
     def _export_invoice_vals(self, invoice):

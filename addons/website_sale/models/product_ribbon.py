@@ -9,7 +9,8 @@ class ProductRibbon(models.Model):
     _description = 'Product ribbon'
 
     def name_get(self):
-        return [(ribbon.id, '%s (#%d)' % (tools.html2plaintext(ribbon.html), ribbon.id)) for ribbon in self]
+        return [(ribbon.id, f'{tools.html_to_plaintext(ribbon.html)} (#{ribbon.id})')
+                for ribbon in self]
 
     html = fields.Html(string='Ribbon html', required=True, translate=True, sanitize=False)
     bg_color = fields.Char(string='Ribbon background color', required=False)

@@ -5,7 +5,7 @@ from odoo import _, api, models, fields
 from odoo.exceptions import ValidationError
 from odoo.fields import Command
 from odoo.osv import expression
-from odoo.tools import html2plaintext, is_html_empty, email_normalize, plaintext2html
+from odoo.tools import html_to_plaintext, is_html_empty, email_normalize, plaintext2html
 
 from collections import defaultdict
 from markupsafe import Markup
@@ -284,7 +284,7 @@ class ChatbotScriptStep(models.Model):
 
         self.ensure_one()
 
-        user_text_answer = html2plaintext(message_body)
+        user_text_answer = html_to_plaintext(message_body)
         if self.step_type == 'question_email' and not email_normalize(user_text_answer):
             # if this error is raised, display an error message but do not go to next step
             raise ValidationError(_('"%s" is not a valid email.', user_text_answer))

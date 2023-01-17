@@ -1047,7 +1047,7 @@ class Message(models.Model):
         Default `max_char` is the longest known mail client preview length (Outlook 2013)."""
         self.ensure_one()
 
-        plaintext_ct = tools.html_to_inner_content(self.body)
+        plaintext_ct = tools.html_to_plaintext(self.body)
         return textwrap.shorten(plaintext_ct, max_char) if max_char else plaintext_ct
 
     @api.model

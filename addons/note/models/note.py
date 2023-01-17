@@ -4,7 +4,7 @@
 from random import randint
 
 from odoo import api, fields, models, _
-from odoo.tools import html2plaintext
+from odoo.tools import html_to_plaintext
 
 
 class Stage(models.Model):
@@ -68,7 +68,7 @@ class Note(models.Model):
         for note in self:
             if note.name:
                 continue
-            text = html2plaintext(note.memo) if note.memo else ''
+            text = html_to_plaintext(note.memo)
             note.name = text.strip().replace('*', '').split("\n")[0]
 
     def _compute_stage_id(self):

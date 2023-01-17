@@ -336,7 +336,7 @@ class MailMail(models.Model):
         """
         self.ensure_one()
         body = self._send_prepare_body()
-        body_alternative = tools.html2plaintext(body)
+        body_alternative = tools.html_to_formatted_plaintext(body)
         if partner:
             email_to = [tools.formataddr((partner.name or 'False', partner.email or 'False'))]
         else:

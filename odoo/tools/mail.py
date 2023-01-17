@@ -10,6 +10,7 @@ import socket
 import threading
 import time
 from email.utils import getaddresses
+from html import unescape
 from urllib.parse import urlparse
 
 import idna
@@ -18,9 +19,9 @@ from lxml import etree
 from lxml.html import clean
 from werkzeug import urls
 
-import odoo
 from odoo.loglevels import ustr
 from odoo.tools import misc
+from odoo.tools._html2text import _html2plaintext
 
 _logger = logging.getLogger(__name__)
 
@@ -299,83 +300,62 @@ def html_keep_url(text):
     return final
 
 
-def html_to_inner_content(html):
-    """Returns unformatted text after removing html tags and excessive whitespace from a
-    string/Markup. Passed strings will first be sanitized.
+def html_to_plaintext(html, keep_newlines=False, skip_sanitation=False):
     """
-    if is_html_empty(html):
+    Returns unformatted text after removing html tags and excessive whitespace from a
+    html string/Markup.
+
+    :param str|markupsafe.Markup html: Text/Markup to process
+    :param keep_newlines: Set True to preserve `\n` characters
+    :param skip_sanitation: Set True to skip string sanitation
+    :rtype: str
+    """
+    return _html_to_text(html, convert_entities=True, formatted=False, keep_newlines=keep_newlines,
+                         skip_sanitation=skip_sanitation)
+
+
+def html_to_formatted_plaintext(html, skip_sanitation=False, **kwargs):
+    """
+    Returns formatted text from an html string/Markup with markdown-like markup.
+
+    :param str|markupsafe.Markup html: Text/Markup to process
+    :param skip_sanitation: Set True to skip string sanitation
+    :param kwargs: additional formatting options available when formatted=True.
+      See _html2text.HTML2Text
+    :rtype: str
+    """
+    return _html_to_text(html, formatted=True, skip_sanitation=skip_sanitation, **kwargs)
+
+
+def _html_to_text(html, convert_entities=False, formatted=False, keep_newlines=False,
+                  skip_sanitation=False, **kwargs):
+    # Exclude non-string-like falsy cases first as `ustr` converts them.
+    if not html:
         return ''
-    if not isinstance(html, markupsafe.Markup):
-        html = html_sanitize(html)
-    processed = re.sub(HTML_NEWLINES_REGEX, ' ', html)
-    processed = re.sub(HTML_TAGS_REGEX, '', processed)
-    processed = re.sub(r' {2,}|\t', ' ', processed)
-    processed = processed.strip()
-    return processed
-
-
-def html2plaintext(html, body_id=None, encoding='utf-8'):
-    """ From an HTML text, convert the HTML to plain text.
-    If @param body_id is provided then this is the tag where the
-    body (not necessarily <body>) starts.
-    """
-    ## (c) Fry-IT, www.fry-it.com, 2007
-    ## <peter@fry-it.com>
-    ## download here: http://www.peterbe.com/plog/html2plaintext
 
     html = ustr(html)
 
-    if not html.strip():
+    if is_html_empty(html):
         return ''
 
+    if not isinstance(html, markupsafe.Markup) and not skip_sanitation:
+        html = html_sanitize(html)
+
     tree = etree.fromstring(html, parser=etree.HTMLParser())
-
-    if body_id is not None:
-        source = tree.xpath('//*[@id=%s]' % (body_id,))
+    root = tree.xpath('//body')[0]
+    if formatted:
+        html = ustr(etree.tostring(tree, encoding='unicode'))
+        processed = _html2plaintext(html, **kwargs)
     else:
-        source = tree.xpath('//body')
-    if len(source):
-        tree = source[0]
+        processed = etree.tostring(root, encoding=str)
+        processed = re.sub(HTML_NEWLINES_REGEX, '\n' if keep_newlines else ' ', processed)
+        processed = re.sub(HTML_TAGS_REGEX, '', processed)
+        processed = re.sub(r' {2,}|\t', ' ', processed)
+    if convert_entities:
+        processed = unescape(processed)
+    processed = processed.strip()
+    return processed
 
-    url_index = []
-    i = 0
-    for link in tree.findall('.//a'):
-        url = link.get('href')
-        if url:
-            i += 1
-            link.tag = 'span'
-            link.text = '%s [%s]' % (link.text, i)
-            url_index.append(url)
-
-    html = ustr(etree.tostring(tree, encoding=encoding))
-    # \r char is converted into &#13;, must remove it
-    html = html.replace('&#13;', '')
-
-    html = html.replace('<strong>', '*').replace('</strong>', '*')
-    html = html.replace('<b>', '*').replace('</b>', '*')
-    html = html.replace('<h3>', '*').replace('</h3>', '*')
-    html = html.replace('<h2>', '**').replace('</h2>', '**')
-    html = html.replace('<h1>', '**').replace('</h1>', '**')
-    html = html.replace('<em>', '/').replace('</em>', '/')
-    html = html.replace('<tr>', '\n')
-    html = html.replace('</p>', '\n')
-    html = re.sub('<br\s*/?>', '\n', html)
-    html = re.sub('<.*?>', ' ', html)
-    html = html.replace(' ' * 2, ' ')
-    html = html.replace('&gt;', '>')
-    html = html.replace('&lt;', '<')
-    html = html.replace('&amp;', '&')
-
-    # strip all lines
-    html = '\n'.join([x.strip() for x in html.splitlines()])
-    html = html.replace('\n' * 2, '\n')
-
-    for i, url in enumerate(url_index):
-        if i == 0:
-            html += '\n\n'
-        html += ustr('[%s] %s\n') % (i + 1, url)
-
-    return html.strip()
 
 def plaintext2html(text, container_tag=None):
     r"""Convert plaintext into html. Content of the text is escaped to manage
@@ -409,8 +389,10 @@ def plaintext2html(text, container_tag=None):
     final += text[idx:] + '</p>'
 
     # 5. container
-    if container_tag: # FIXME: validate that container_tag is just a simple tag?
-        final = '<%s>%s</%s>' % (container_tag, final, container_tag)
+    if container_tag:
+        if not re.match(r'^[a-zA-Z]+$', container_tag):
+            raise ValueError('`container_tag` should be a simple tag.')
+        final = f'<{container_tag}>{final}</{container_tag}>'
     return markupsafe.Markup(final)
 
 def append_content_to_html(html, content, plaintext=True, preserve=False, container_tag=None):

@@ -3,7 +3,7 @@
 
 from odoo.api import Environment
 import odoo.tests
-from odoo.tools import html2plaintext
+from odoo.tools import html_to_formatted_plaintext
 
 @odoo.tests.tagged('post_install', '-at_install')
 class TestWebsiteHrRecruitmentForm(odoo.tests.HttpCase):
@@ -28,12 +28,12 @@ class TestWebsiteHrRecruitmentForm(odoo.tests.HttpCase):
         self.assertEqual(guru_applicant.partner_name, 'John Smith')
         self.assertEqual(guru_applicant.email_from, 'john@smith.com')
         self.assertEqual(guru_applicant.partner_mobile, '118.218')
-        self.assertEqual(html2plaintext(guru_applicant.description), '### [GURU] HR RECRUITMENT TEST DATA ###')
+        self.assertEqual(html_to_formatted_plaintext(guru_applicant.description), '### [GURU] HR RECRUITMENT TEST DATA ###')
         self.assertEqual(guru_applicant.job_id, job_guru)
 
         internship_applicant = capt.records[1]
         self.assertEqual(internship_applicant.partner_name, 'Jack Doe')
         self.assertEqual(internship_applicant.email_from, 'jack@doe.com')
         self.assertEqual(internship_applicant.partner_mobile, '118.712')
-        self.assertEqual(html2plaintext(internship_applicant.description), '### HR [INTERN] RECRUITMENT TEST DATA ###')
+        self.assertEqual(html_to_formatted_plaintext(internship_applicant.description), '### HR [INTERN] RECRUITMENT TEST DATA ###')
         self.assertEqual(internship_applicant.job_id, job_intern)

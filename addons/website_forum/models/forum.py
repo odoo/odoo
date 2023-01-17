@@ -413,7 +413,7 @@ class Post(models.Model):
     @api.depends('content')
     def _get_plain_content(self):
         for post in self:
-            post.plain_content = tools.html2plaintext(post.content)[0:500] if post.content else False
+            post.plain_content = tools.html_to_formatted_plaintext(post.content)[0:500] if post.content else False
 
     @api.depends('vote_count', 'forum_id.relevancy_post_vote', 'forum_id.relevancy_time_decay')
     def _compute_relevancy(self):
