@@ -55,4 +55,4 @@ function formSaveErrorHandler(env, error, originalError) {
         return true;
     }
 }
-errorHandlerRegistry.add("formSaveErrorHandler", formSaveErrorHandler, { sequence: 1 });
+errorHandlerRegistry.add("formSaveErrorHandler", formSaveErrorHandler);
