@@ -69,6 +69,7 @@ class KanbanGroup extends Group {
         /** @type {ProgressBar[]} */
         this.progressBars = this._generateProgressBars();
         this.progressValue = markRaw(state.progressValue || { active: null });
+        this.list.domain = this.getProgressBarDomain();
         this.tooltip = [];
 
         this.model.transaction.register({
