@@ -374,7 +374,7 @@ export class Record extends DataPoint {
         return this._invalidFields.has(fieldName);
     }
 
-    async load(params = {}) {
+    async load(params = {}, options = {}) {
         if (!this.__bm_handle__) {
             this.__bm_handle__ = await this.model.__bm__.load({
                 ...this.__bm_load_params__,
@@ -383,6 +383,7 @@ export class Record extends DataPoint {
         } else {
             this.__bm_handle__ = await this.model.__bm__.reload(this.__bm_handle__, {
                 viewType: this.__viewType,
+                keepChanges: !!options.keepChanges,
             });
         }
         this.__syncData();
