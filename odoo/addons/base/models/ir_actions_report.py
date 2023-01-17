@@ -23,13 +23,17 @@ import json
 from lxml import etree
 from contextlib import closing
 from reportlab.graphics.barcode import createBarcodeDrawing
-from PyPDF2 import PdfFileWriter, PdfFileReader, utils
+from PyPDF2 import PdfFileWriter, PdfFileReader
 from collections import OrderedDict
 from collections.abc import Iterable
 from PIL import Image, ImageFile
 # Allow truncated images
 ImageFile.LOAD_TRUNCATED_IMAGES = True
 
+try:
+    from PyPDF2.errors import PdfReadError
+except ImportError:
+    from PyPDF2.utils import PdfReadError
 
 _logger = logging.getLogger(__name__)
 
@@ -783,7 +787,7 @@ class IrActionsReport(models.Model):
         else:
             try:
                 result = self._merge_pdfs(streams)
-            except utils.PdfReadError:
+            except PdfReadError:
                 raise UserError(_("One of the documents you are trying to merge is encrypted"))
 
         # We have to close the streams after PdfFileWriter's call to write()
@@ -800,7 +804,7 @@ class IrActionsReport(models.Model):
                 reader = PdfFileReader(stream)
                 writer.appendPagesFromReader(reader)
                 writer.write(result_stream)
-            except (utils.PdfReadError, TypeError, ValueError):
+            except (PdfReadError, TypeError, ValueError):
                 unreadable_streams.append(stream)
 
         return unreadable_streams
