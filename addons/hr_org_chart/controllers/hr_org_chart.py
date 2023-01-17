@@ -61,7 +61,7 @@ class HrOrgChartController(http.Controller):
 
         # compute employee data for org chart
         ancestors, current = request.env['hr.employee.public'].sudo(), employee.sudo()
-        while current.parent_id and len(ancestors) < self._managers_level+1:
+        while current.parent_id and len(ancestors) < self._managers_level+1 and current != current.parent_id:
             ancestors += current.parent_id
             current = current.parent_id
 
@@ -73,7 +73,7 @@ class HrOrgChartController(http.Controller):
                 if idx < self._managers_level
             ],
             managers_more=len(ancestors) > self._managers_level,
-            children=[self._prepare_employee_data(child) for child in employee.child_ids],
+            children=[self._prepare_employee_data(child) for child in employee.child_ids if child != employee],
         )
         values['managers'].reverse()
         return values

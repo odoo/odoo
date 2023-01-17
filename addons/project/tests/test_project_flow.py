@@ -95,6 +95,23 @@ class TestProjectFlow(TestProjectCommon):
         self.assertEqual(task.project_id.id, self.project_goats.id, 'project_task: incorrect project')
         self.assertEqual(task.stage_id.sequence, 1, "project_task: should have a stage with sequence=1")
 
+    @mute_logger('odoo.addons.mail.mail_thread')
+    def test_portal_visibility(self):
+        # change portal visibility to the project and add Portal user as invited
+        self.project_goats.write({
+            'privacy_visibility': 'portal',
+            'allowed_portal_user_ids': [self.user_portal.id],
+        })
+
+        # Do: incoming mail from an internal user on an alias creates a new task 'Rabbits'
+        task = self.format_and_process(
+            EMAIL_TPL, to='project+goats@mydomain.com, valid.lelitre@agrolait.com', cc='valid.other@gmail.com',
+            email_from='%s' % self.user_projectmanager.email,
+            subject='Rabbits', msg_id='<1198923581.41972151344608186760.JavaMail@agrolait.com>',
+            target_model='project.task')
+
+        self.assertIn(self.user_portal, task.allowed_user_ids, 'Task should be visible for Portal User')
+
     def test_subtask_process(self):
         """
         Check subtask mecanism and change it from project.

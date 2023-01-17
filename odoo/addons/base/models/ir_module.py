@@ -320,6 +320,10 @@ class Module(models.Model):
         self.clear_caches()
         return super(Module, self).unlink()
 
+    def _get_modules_to_load_domain(self):
+        """ Domain to retrieve the modules that should be loaded by the registry. """
+        return [('state', '=', 'installed')]
+
     @staticmethod
     def _check_python_external_dependency(pydep):
         try:
@@ -338,7 +342,6 @@ class Module(models.Model):
         except Exception as e:
             _logger.warning("get_distribution(%s) failed: %s", pydep, e)
             raise Exception('Error finding python library %s' % (pydep,))
-
 
     @staticmethod
     def _check_external_dependencies(terp):
@@ -618,8 +621,9 @@ class Module(models.Model):
 
     @assert_log_admin_access
     def button_uninstall(self):
-        if 'base' in self.mapped('name'):
-            raise UserError(_("The `base` module cannot be uninstalled"))
+        un_installable_modules = set(odoo.conf.server_wide_modules) & set(self.mapped('name'))
+        if un_installable_modules:
+            raise UserError(_("Those modules cannot be uninstalled: %s", ', '.join(un_installable_modules)))
         if any(state not in ('installed', 'to upgrade') for state in self.mapped('state')):
             raise UserError(_(
                 "One or more of the selected modules have already been uninstalled, if you "
@@ -661,6 +665,16 @@ class Module(models.Model):
         self.update_list()
 
         todo = list(self)
+        if 'base' in self.mapped('name'):
+            # If an installed module is only present in the dependency graph through
+            # a new, uninstalled dependency, it will not have been selected yet.
+            # An update of 'base' should also update these modules, and as a consequence,
+            # install the new dependency.
+            todo.extend(self.search([
+                ('state', '=', 'installed'),
+                ('name', '!=', 'studio_customization'),
+                ('id', 'not in', self.ids),
+            ]))
         i = 0
         while i < len(todo):
             module = todo[i]
@@ -962,7 +976,6 @@ class Module(models.Model):
                     [('id', 'not in', excluded_category_ids)],
                 ])
 
-            Module = self.env['ir.module.module']
             records = self.env['ir.module.category'].search_read(domain, ['display_name'], order="sequence")
 
             values_range = OrderedDict()
@@ -975,7 +988,7 @@ class Module(models.Model):
                         kwargs.get('filter_domain', []),
                         [('category_id', 'child_of', record_id), ('category_id', 'not in', excluded_category_ids)]
                     ])
-                    record['__count'] = Module.search_count(model_domain)
+                    record['__count'] = self.env['ir.module.module'].search_count(model_domain)
                 values_range[record_id] = record
 
             return {

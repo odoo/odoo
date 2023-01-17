@@ -17,9 +17,10 @@
 # ljsrzc007 <ljsrzc007@gmail.com>, 2020
 # Melvin Liu <betien@msn.cn>, 2020
 # Daniel Yang <daniel.yang.zhenyu@gmail.com>, 2021
-# Jeffery CHEN <jeffery9@gmail.com>, 2021
+# Jeffery CHEN Fan <jeffery9@gmail.com>, 2021
 # liAnGjiA <liangjia@qq.com>, 2021
 # Felix Yang <felixyangsh@aliyun.com>, 2021
+# 山西清水欧度(QQ:54773801) <54773801@qq.com>, 2022
 # 
 msgid ""
 msgstr ""
@@ -27,7 +28,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-11-27 14:12+0000\n"
 "PO-Revision-Date: 2020-09-07 08:17+0000\n"
-"Last-Translator: Felix Yang <felixyangsh@aliyun.com>, 2021\n"
+"Last-Translator: 山西清水欧度(QQ:54773801) <54773801@qq.com>, 2022\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -76,6 +77,8 @@ msgid ""
 "specific.\" aria-label=\"Values set here are company-specific.\" "
 "groups=\"base.group_multi_company\"/>"
 msgstr ""
+"<span class=\"fa fa-lg fa-building-o\" title=\"此处设定的值特定于公司\" aria-"
+"label=\"此处设定的值特定于公司\" groups=\"base.group_multi_company\"/>"
 
 #. module: purchase_stock
 #: model_terms:ir.ui.view,arch_db:purchase_stock.res_config_settings_view_form_stock
@@ -132,11 +135,12 @@ msgid ""
 "average value, therefore only use this as an aggregated value with "
 "group_operator=avg"
 msgstr ""
+"预期和有效收货日期之间的时间。由于时间需要计算，每条记录都会显示相同的平均值，因此只能将其作为一个汇总值，group_operator=avg"
 
 #. module: purchase_stock
 #: model:ir.model.fields,field_description:purchase_stock.field_purchase_report__avg_receipt_delay
 msgid "Average Receipt Delay"
-msgstr ""
+msgstr "平均收货延迟"
 
 #. module: purchase_stock
 #: code:addons/purchase_stock/models/stock.py:0
@@ -165,7 +169,7 @@ msgstr "公司"
 #. module: purchase_stock
 #: model:ir.model.fields,help:purchase_stock.field_purchase_order__effective_date
 msgid "Completion date of the first receipt order."
-msgstr ""
+msgstr "第一张收货单的完成日期。"
 
 #. module: purchase_stock
 #: model:ir.model,name:purchase_stock.model_res_config_settings
@@ -294,21 +298,21 @@ msgid ""
 "For the product %s, the warehouse of the operation type (%s) is inconsistent"
 " with the location (%s) of the reordering rule (%s). Change the operation "
 "type or cancel the request for quotation."
-msgstr ""
+msgstr "对于产品%s，操作类型（%s）的仓库与重新排序规则（%s）的位置（%s）不一致。改变操作类型或取消报价请求。"
 
 #. module: purchase_stock
 #. openerp-web
 #: code:addons/purchase_stock/static/src/js/tours/purchase_stock.js:0
 #, python-format
 msgid "Generate the draft vendor bill."
-msgstr ""
+msgstr "生成供应商草稿账单。"
 
 #. module: purchase_stock
 #. openerp-web
 #: code:addons/purchase_stock/static/src/js/tours/purchase_stock.js:0
 #, python-format
 msgid "Go back to the purchase order to generate the vendor bill."
-msgstr ""
+msgstr "返回采购订单生成供应商账单。"
 
 #. module: purchase_stock
 #: model:ir.model.fields,field_description:purchase_stock.field_account_move__id
@@ -443,7 +447,7 @@ msgstr "还没有数据耶"
 msgid ""
 "Odoo is not able to generate the anglo saxon entries. The total valuation of"
 " %s is zero."
-msgstr ""
+msgstr "Odoo不能生成 anglo saxon 条目。%s 的总估值为零。"
 
 #. module: purchase_stock
 #: model_terms:ir.ui.view,arch_db:purchase_stock.vendor_delay_report_view_graph
@@ -486,7 +490,7 @@ msgstr "订货点"
 msgid ""
 "Over the past 12 months; the number of products received on time divided by "
 "the number of ordered products."
-msgstr ""
+msgstr "在过去12个月里；按时收到的产品数量除以订购的产品数量。"
 
 #. module: purchase_stock
 #: model:ir.model.fields,field_description:purchase_stock.field_purchase_order__picking_count
@@ -498,7 +502,7 @@ msgstr "拣货个数"
 #: code:addons/purchase_stock/static/src/js/tours/purchase_stock.js:0
 #, python-format
 msgid "Process all the receipt quantities."
-msgstr ""
+msgstr "处理所有的收据数量。"
 
 #. module: purchase_stock
 #: model:ir.model.fields,field_description:purchase_stock.field_purchase_order__group_id
@@ -530,7 +534,7 @@ msgstr "传导取消"
 #: model:ir.model.fields,field_description:purchase_stock.field_res_partner__purchase_line_ids
 #: model:ir.model.fields,field_description:purchase_stock.field_res_users__purchase_line_ids
 msgid "Purchase Lines"
-msgstr ""
+msgstr "采购明细"
 
 #. module: purchase_stock
 #: model:ir.model,name:purchase_stock.model_purchase_order
@@ -560,7 +564,7 @@ msgstr "采购报告"
 #: code:addons/purchase_stock/models/stock_rule.py:0
 #, python-format
 msgid "Purchase Security Lead Time"
-msgstr ""
+msgstr "采购安全前置时间"
 
 #. module: purchase_stock
 #: model:ir.model.fields,field_description:purchase_stock.field_stock_production_lot__purchase_order_count
@@ -582,7 +586,7 @@ msgstr "接收产品"
 #: code:addons/purchase_stock/static/src/js/tours/purchase_stock.js:0
 #, python-format
 msgid "Receive the ordered products."
-msgstr ""
+msgstr "收到订购的产品。"
 
 #. module: purchase_stock
 #: model:ir.model.fields,field_description:purchase_stock.field_purchase_order_line__qty_received_method
@@ -629,7 +633,7 @@ msgstr "为了避免延误，尽早安排接收"
 #. module: purchase_stock
 #: model:ir.model.fields,field_description:purchase_stock.field_stock_warehouse_orderpoint__show_supplier
 msgid "Show supplier column"
-msgstr ""
+msgstr "显示供应商栏"
 
 #. module: purchase_stock
 #: model:ir.model,name:purchase_stock.model_stock_move
@@ -679,7 +683,7 @@ msgstr "已生成以下补货订单"
 msgid ""
 "The quantities on your purchase order indicate less than billed. You should "
 "ask for a refund."
-msgstr ""
+msgstr "您的采购订单上的数量表明少于账单。你应该要求退款。"
 
 #. module: purchase_stock
 #: code:addons/purchase_stock/models/stock_rule.py:0
@@ -730,7 +734,7 @@ msgstr "不能取消采购订单 %s因为有些收货已经完成。"
 #: code:addons/purchase_stock/static/src/js/tours/purchase_stock.js:0
 #, python-format
 msgid "Validate the receipt of all ordered products."
-msgstr ""
+msgstr "验证所有订购产品的收据。"
 
 #. module: purchase_stock
 #: model:ir.model.fields,field_description:purchase_stock.field_stock_warehouse_orderpoint__supplier_id
@@ -741,7 +745,7 @@ msgstr "供应商"
 #. module: purchase_stock
 #: model:ir.model,name:purchase_stock.model_vendor_delay_report
 msgid "Vendor Delay Report"
-msgstr ""
+msgstr "供应商延迟报告"
 
 #. module: purchase_stock
 #: code:addons/purchase_stock/models/stock_rule.py:0
@@ -770,8 +774,9 @@ msgstr "已购买产品后能够发运到此仓库。"
 #, python-format
 msgid ""
 "When products are needed in <b>%s</b>, <br/> a request for quotation is "
-"created to fulfill the need."
-msgstr "当需要产品在<b>%s</b>时，<br/>为了满足需求而创建报价请求。"
+"created to fulfill the need.<br/>Note: This rule will be used in combination"
+" with the rules<br/>of the reception route(s)"
+msgstr ""
 
 #. module: purchase_stock
 #: code:addons/purchase_stock/models/purchase.py:0

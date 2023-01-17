@@ -9,6 +9,7 @@
 # Manel Fernandez Ramirez <manelfera@outlook.com>, 2020
 # M Palau <mpalau@tda.ad>, 2020
 # jabelchi, 2021
+# marcescu, 2022
 # 
 msgid ""
 msgstr ""
@@ -16,7 +17,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-11-27 15:29+0000\n"
 "PO-Revision-Date: 2020-09-07 08:16+0000\n"
-"Last-Translator: jabelchi, 2021\n"
+"Last-Translator: marcescu, 2022\n"
 "Language-Team: Catalan (https://www.transifex.com/odoo/teams/41243/ca/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -40,7 +41,7 @@ msgstr "Compte"
 #. module: pos_adyen
 #: model_terms:ir.ui.view,arch_db:pos_adyen.pos_config_view_form
 msgid "Add tip through payment terminal (Adyen)"
-msgstr ""
+msgstr "Afegeix un consell a través del terminal de pagament (Adyen)"
 
 #. module: pos_adyen
 #: model_terms:ir.ui.view,arch_db:pos_adyen.adyen_store_view_form
@@ -50,7 +51,7 @@ msgstr "Adreça"
 #. module: pos_adyen
 #: model:ir.model.fields,field_description:pos_adyen.field_pos_payment_method__adyen_api_key
 msgid "Adyen API key"
-msgstr ""
+msgstr "Clau de l'API de l'Adyen"
 
 #. module: pos_adyen
 #: model:ir.actions.server,name:pos_adyen.action_pos_adyen_account
@@ -67,17 +68,17 @@ msgstr ""
 #: code:addons/pos_adyen/static/src/js/payment_adyen.js:0
 #, python-format
 msgid "Adyen Error"
-msgstr ""
+msgstr "Error de l'Adyen"
 
 #. module: pos_adyen
 #: model:ir.model.fields,field_description:pos_adyen.field_pos_payment_method__adyen_latest_diagnosis
 msgid "Adyen Latest Diagnosis"
-msgstr ""
+msgstr "Últim diagnòstic d'Adyen"
 
 #. module: pos_adyen
 #: model:ir.model.fields,field_description:pos_adyen.field_pos_payment_method__adyen_latest_response
 msgid "Adyen Latest Response"
-msgstr ""
+msgstr "Última resposta d'Adyen"
 
 #. module: pos_adyen
 #: model:ir.model.fields,field_description:pos_adyen.field_pos_payment_method__adyen_payout_id
@@ -97,12 +98,12 @@ msgstr ""
 #. module: pos_adyen
 #: model:ir.model.fields,field_description:pos_adyen.field_pos_payment_method__adyen_terminal_identifier
 msgid "Adyen Terminal Identifier"
-msgstr ""
+msgstr "Identificador de terminal Adyen"
 
 #. module: pos_adyen
 #: model:ir.model.fields,field_description:pos_adyen.field_pos_payment_method__adyen_test_mode
 msgid "Adyen Test Mode"
-msgstr ""
+msgstr "Mode de prova de l'Adyen"
 
 #. module: pos_adyen
 #: model:ir.model,name:pos_adyen.model_adyen_account
@@ -129,7 +130,7 @@ msgstr ""
 #. module: pos_adyen
 #: model:ir.model.fields,field_description:pos_adyen.field_pos_config__adyen_ask_customer_for_tip
 msgid "Ask Customers For Tip"
-msgstr ""
+msgstr "Demanar consell als clients"
 
 #. module: pos_adyen
 #. openerp-web
@@ -137,6 +138,7 @@ msgstr ""
 #, python-format
 msgid "Authentication failed. Please check your Adyen credentials."
 msgstr ""
+"Ha fallat l'autenticació. Comproveu les vostres credencials de l'Adyen."
 
 #. module: pos_adyen
 #: model:ir.model.fields,field_description:pos_adyen.field_adyen_store__city
@@ -234,7 +236,7 @@ msgstr "Última actualització el"
 #: code:addons/pos_adyen/static/src/js/payment_adyen.js:0
 #, python-format
 msgid "Message from Adyen: %s"
-msgstr ""
+msgstr "Missatge d'Adyen: %s"
 
 #. module: pos_adyen
 #: model:ir.model.fields,field_description:pos_adyen.field_adyen_store__name
@@ -262,6 +264,8 @@ msgstr "Número de telèfon"
 msgid ""
 "Please configure a tip product for POS %s to support tipping with Adyen."
 msgstr ""
+"Si us plau configureu un producte de consell per al POS %s to support "
+"tipping with Adyen."
 
 #. module: pos_adyen
 #: code:addons/pos_adyen/models/adyen_account.py:0
@@ -282,7 +286,7 @@ msgstr "Mètodes de pagament de punt de venda"
 #. module: pos_adyen
 #: model:ir.model.fields,help:pos_adyen.field_pos_config__adyen_ask_customer_for_tip
 msgid "Prompt the customer to tip."
-msgstr ""
+msgstr "Demana al client que l'apunti."
 
 #. module: pos_adyen
 #: model:ir.model.fields,field_description:pos_adyen.field_adyen_store__store_reference
@@ -292,7 +296,7 @@ msgstr "Referència"
 #. module: pos_adyen
 #: model:ir.model.fields,help:pos_adyen.field_pos_payment_method__adyen_test_mode
 msgid "Run transactions in the test environment."
-msgstr ""
+msgstr "Executa les operacions en l'entorn de prova."
 
 #. module: pos_adyen
 #: model:ir.model.fields,field_description:pos_adyen.field_adyen_store__state_id
@@ -328,11 +332,13 @@ msgid ""
 "Technical field used to buffer the latest asynchronous notification from "
 "Adyen."
 msgstr ""
+"Camp tècnic utilitzat per a contenir l'última notificació asíncrona d'Adyen."
 
 #. module: pos_adyen
 #: model:ir.model.fields,help:pos_adyen.field_pos_payment_method__adyen_latest_diagnosis
 msgid "Technical field used to determine if the terminal is still connected."
 msgstr ""
+"Camp tècnic utilitzat per determinar si el terminal encara està connectat."
 
 #. module: pos_adyen
 #: model:ir.model.fields,field_description:pos_adyen.field_adyen_account__terminal_ids
@@ -343,7 +349,7 @@ msgstr ""
 #: code:addons/pos_adyen/models/pos_payment_method.py:0
 #, python-format
 msgid "Terminal %s is already used on payment method %s."
-msgstr ""
+msgstr "Terminal %s ja s'utilitza en el mètode de pagament%s."
 
 #. module: pos_adyen
 #: model:ir.model.fields,field_description:pos_adyen.field_adyen_terminal__terminal_uuid
@@ -367,6 +373,8 @@ msgid ""
 "The connection to your payment terminal failed. Please check if it is still "
 "connected to the internet."
 msgstr ""
+"La connexió amb el vostre terminal de pagament ha fallat. Si us plau "
+"comproveu si encara està connectat a Internet."
 
 #. module: pos_adyen
 #: model:ir.model.fields,help:pos_adyen.field_adyen_store__state_code
@@ -384,6 +392,8 @@ msgid ""
 "Used when connecting to Adyen: https://docs.adyen.com/user-management/how-"
 "to-get-the-api-key/#description"
 msgstr ""
+"Utilitzat en connectar amb Adyen: https://docs.adyen.com/user-"
+"management/how-to-get-the-api-key/iondescription"
 
 #. module: pos_adyen
 #: model:ir.model.fields,field_description:pos_adyen.field_adyen_store__zip
@@ -394,4 +404,4 @@ msgstr "C.P."
 #. module: pos_adyen
 #: model:ir.model.fields,help:pos_adyen.field_pos_payment_method__adyen_terminal_identifier
 msgid "[Terminal model]-[Serial number], for example: P400Plus-123456789"
-msgstr ""
+msgstr "[Model de terminal]-[Nombre de sèrie], per exemple P400Plus-123456789"

@@ -103,14 +103,17 @@
             </t>
         </t>
 
-        <t t-if="request and request.is_frontend_multilang and website">
+        <!-- `alternate`/`canonical` mainly useful to crawlers/bots/SEO tools, which test the website as public user -->
+        <t t-if="request and request.is_frontend_multilang and website and website.is_public_user()">
             <t t-set="alternate_languages" t-value="website._get_alternate_languages(canonical_params=canonical_params)"/>
             <t t-foreach="alternate_languages" t-as="lg">
                 <link rel="alternate" t-att-hreflang="lg['hreflang']" t-att-href="lg['href']"/>
             </t>
         </t>
-        <link t-if="request and website" rel="canonical" t-att-href="website._get_canonical_url(canonical_params=canonical_params)"/>
-
+        <link t-if="request and website and website.is_public_user()" rel="canonical" t-att-href="website._get_canonical_url(canonical_params=canonical_params)"/>
+        <!-- TODO: Once we have style in DB, add this preconnect only if a
+        google font is actually used. Note that if no font is used, the
+        preconnect is actually not connecting to the google servers. -->
         <link rel="preconnect" href="https://fonts.gstatic.com/" crossorigin=""/>
     </xpath>
 
@@ -1807,8 +1810,7 @@
 <template id="language_selector_add_language">
     <a t-attf-class="o_add_language d-none #{dropdown and 'd-sm-block dropdown-item' or 'd-sm-inline-block list-inline-item'}"
        groups="website.group_website_publisher"
-       t-attf-href="/web#action=base.action_view_base_language_install&amp;website_id=#{website.id if website else ''}&amp;url_return=#{url_return}">
-        <t t-set="url_return" t-value="quote_plus(url_for('', '[lang]') + '?' + keep_query())"/>
+       t-attf-href="/web#action=base.action_view_base_language_install&amp;website_id=#{website.id if website else ''}&amp;url_return=#{quote_plus(url_for('', '[lang]') + '?' + keep_query())}">
         <i class="fa fa-plus-circle"/>
         Add a language...
     </a>

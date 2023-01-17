@@ -81,6 +81,9 @@ class StockLandedCost(models.Model):
 
     @api.depends('company_id')
     def _compute_allowed_picking_ids(self):
+        # Backport of f329de26: allowed_picking_ids is useless, view_stock_landed_cost_form no longer uses it,
+        # the field and its compute are kept since this is a stable version. Still, this compute has been made
+        # more resilient to MemoryErrors.
         valued_picking_ids_per_company = defaultdict(list)
         if self.company_id:
             self.env.cr.execute("""SELECT sm.picking_id, sm.company_id
@@ -91,7 +94,10 @@ class StockLandedCost(models.Model):
             for res in self.env.cr.fetchall():
                 valued_picking_ids_per_company[res[1]].append(res[0])
         for cost in self:
-            cost.allowed_picking_ids = valued_picking_ids_per_company[cost.company_id.id]
+            n = 5000
+            cost.allowed_picking_ids = valued_picking_ids_per_company[cost.company_id.id][:n]
+            for ids_chunk in tools.split_every(n, valued_picking_ids_per_company[cost.company_id.id][n:]):
+                cost.allowed_picking_ids = [(4, id_) for id_ in ids_chunk]
 
     @api.onchange('target_model')
     def _onchange_target_model(self):
@@ -197,7 +203,7 @@ class StockLandedCost(models.Model):
                 for product in cost.cost_lines.product_id:
                     accounts = product.product_tmpl_id.get_product_accounts()
                     input_account = accounts['stock_input']
-                    all_amls.filtered(lambda aml: aml.account_id == input_account and not aml.full_reconcile_id).reconcile()
+                    all_amls.filtered(lambda aml: aml.account_id == input_account and not aml.reconciled).reconcile()
 
         return True
 

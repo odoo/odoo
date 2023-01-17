@@ -3,6 +3,7 @@
 
 from odoo import api, models
 from odoo.exceptions import AccessError
+from odoo.http import request
 
 class IrAttachment(models.Model):
     _inherit = 'ir.attachment'
@@ -34,3 +35,30 @@ class IrAttachment(models.Model):
                     related_record.message_main_attachment_id = self
                 except AccessError:
                     pass
+
+    def _attachment_format(self, commands=False):
+        safari = request and request.httprequest.user_agent and request.httprequest.user_agent.browser == 'safari'
+        res_list = []
+        for attachment in self:
+            res = {
+                'checksum': attachment.checksum,
+                'id': attachment.id,
+                'filename': attachment.name,
+                'name': attachment.name,
+                'mimetype': 'application/octet-stream' if safari and attachment.mimetype and 'video' in attachment.mimetype else attachment.mimetype,
+            }
+            if attachment.res_id and issubclass(self.pool[attachment.res_model], self.pool['mail.thread']):
+                main_attachment = self.env[attachment.res_model].sudo().browse(attachment.res_id).message_main_attachment_id
+                res['is_main'] = attachment == main_attachment
+            if commands:
+                res['originThread'] = [('insert', {
+                    'id': attachment.res_id,
+                    'model': attachment.res_model,
+                })]
+            else:
+                res.update({
+                    'res_id': attachment.res_id,
+                    'res_model': attachment.res_model,
+                })
+            res_list.append(res)
+        return res_list

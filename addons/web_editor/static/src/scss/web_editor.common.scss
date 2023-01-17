@@ -466,10 +466,6 @@ a.o_underline {
     }
 }
 
-.ace_editor > .ace_gutter {
-    display: block !important; // display even with aria-hidden
-}
-
 .o_ace_select2_dropdown {
     width: auto !important;
     padding-top: 4px;
@@ -537,11 +533,11 @@ a.o_underline {
     // modal select media
     .o_technical_modal.o_web_editor_dialog {
         // see template 'web_editor.FieldTextHtml.fullscreen'
-        z-index: 2001;
+        z-index: $o-we-technical-modal-zindex;
 
         > .o_select_media_dialog {
             max-width: inherit !important;
-            z-index: 2001;
+            z-index: $o-we-technical-modal-zindex;
 
             .modal-dialog, .model-content {
                 height: 100%;
@@ -652,6 +648,9 @@ blockquote {
                     color: $dropdown-link-disabled-color !important;
                 }
             }
+        }
+        .dropdown-menu .dropdown-item-text .text-muted {
+            color: $text-muted !important;
         }
     }
 }

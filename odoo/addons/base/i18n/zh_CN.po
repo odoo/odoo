@@ -43,7 +43,6 @@
 # Gary Wei <Gary.wei@elico-corp.com>, 2020
 # fausthuang, 2020
 # xiaobin wu <bd5dml@gmail.com>, 2020
-# 山西清水欧度(QQ:54773801) <54773801@qq.com>, 2020
 # Eddie Lim <bhweelim@yahoo.com>, 2020
 # 老窦 北京 <2662059195@qq.com>, 2020
 # keecome <7017511@qq.com>, 2020
@@ -63,7 +62,10 @@
 # 卓忆科技 <zhanghao@jointd.com>, 2021
 # liAnGjiA <liangjia@qq.com>, 2021
 # Chris H, 2021
-# Jeffery CHEN <jeffery9@gmail.com>, 2021
+# Jeffery CHEN Fan <jeffery9@gmail.com>, 2021
+# Benson <Benson.Dr@Gmail.com>, 2022
+# 山西清水欧度(QQ:54773801) <54773801@qq.com>, 2022
+# Raymond Yu <cl_yu@hotmail.com>, 2022
 # 
 msgid ""
 msgstr ""
@@ -71,7 +73,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-11-27 13:50+0000\n"
 "PO-Revision-Date: 2020-09-07 08:09+0000\n"
-"Last-Translator: Jeffery CHEN <jeffery9@gmail.com>, 2021\n"
+"Last-Translator: Raymond Yu <cl_yu@hotmail.com>, 2022\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -9694,6 +9696,14 @@ msgid ""
 "                                <b attrs=\"{'invisible': ['&amp;', ('parent_id', '!=', False), ('type', '!=', False)]}\">Address</b>\n"
 "                            </span>"
 msgstr ""
+"<span class=\"o_form_label o_td_label\" name=\"address_name\">\n"
+"                                 <b attrs=\"{'invisible': ['|', ('parent_id', '=', False), ('type', '!=', 'contact')]}\">公司地址</b>\n"
+"                                 <b attrs=\"{'invisible': ['|', ('parent_id', '=', False), ('type', '!=', 'invoice')]}\">发票地址</b>\n"
+"                                 <b attrs=\"{'invisible': ['|', ('parent_id', '=', False), ('type', '!=', 'delivery')]}\">派送地址</b>\n"
+"                                 <b attrs=\"{'invisible': ['|', ('parent_id', '=', False), ('type', '!=', 'other')]}\">其他地址</b>\n"
+"                                 <b attrs=\"{'invisible': ['|', ('parent_id', '=', False), ('type', '!=', 'private')]}\">私人地址</b>\n"
+"                                 <b attrs=\"{'invisible': ['&amp;', ('parent_id', '!=', False), ('type', '!=', False)]}\">地址</b>\n"
+"                             </span>"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_base_module_update
@@ -18838,7 +18848,7 @@ msgstr "动作定义中使用了无效的模型名称 %r。"
 #: code:addons/base/models/ir_actions.py:611
 #, python-format
 msgid "many2many fields cannot be evaluated by reference"
-msgstr ""
+msgstr "many2许多字段不能通过引用进行评估"
 
 #. module: base
 #: code:addons/template_inheritance.py:0
@@ -19216,8 +19226,8 @@ msgstr "LGPL 第3版"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_lt_reports
-msgid "LT - Accounting Reports"
-msgstr "LT - 会计报表"
+msgid "Lithuania - Accounting Reports"
+msgstr ""
 
 #. module: base
 #: code:addons/base/models/ir_ui_view.py:0
@@ -24941,7 +24951,7 @@ msgstr "工资单本地化"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_hr_payroll_edit_lines
 msgid "Payroll: Edit lines - Recompute work entries"
-msgstr ""
+msgstr "工资单: 编辑行-计算机工作条目"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_payment_payulatam
@@ -25135,7 +25145,7 @@ msgstr "葡萄牙 - 会计"
 #. module: base
 #: model:ir.module.module,summary:base.module_l10n_be_hr_payroll_posted_employee
 msgid "Posted Employee"
-msgstr ""
+msgstr "派驻员工"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_model_constraint__definition
@@ -28486,8 +28496,8 @@ msgstr "模块`%s`现在可能不能使用，请稍后再试。"
 #. module: base
 #: code:addons/base/models/ir_module.py:0
 #, python-format
-msgid "The `base` module cannot be uninstalled"
-msgstr "`base` 模块不能卸载"
+msgid "Those modules cannot be uninstalled: %s"
+msgstr ""
 
 #. module: base
 #: model:ir.model.fields,help:base.field_res_partner_category__active
@@ -29095,6 +29105,9 @@ msgid ""
 "present in a separate module as it contains models used only to perform\n"
 "tests independently to functional aspects of other models."
 msgstr ""
+"此模块包含与基本自动化相关的测试. 这些是\n"
+"存在于单独的模块中，因为它包含仅用于执行的模型\n"
+"独立测试其它模型的功能方面."
 
 #. module: base
 #: model:ir.module.module,description:base.module_test_mail
@@ -29103,6 +29116,9 @@ msgid ""
 "present in a separate module as it contains models used only to perform\n"
 "tests independently to functional aspects of other models. "
 msgstr ""
+"该模块包含与邮件相关的测试. 这些是\n"
+"存在于单独的模块中，因为它包含仅用于执行的模型\n"
+"独立测试其它模型的功能方面. "
 
 #. module: base
 #: model:ir.module.module,description:base.module_test_mail_enterprise
@@ -29113,6 +29129,11 @@ msgid ""
 "modules build on mail (sms, snailmail, mail_enterprise) are set as dependencies\n"
 "in order to test the whole mail codebase. "
 msgstr ""
+"该模块包含与邮件相关的测试. 这些是\n"
+"存在于单独的模块中，因为它包含仅用于执行的模型\n"
+"独立测试其它模型的功能方面. 此外，大多数\n"
+"基于邮件构建的模块(sms、snailmail、mail_enterprise）被设置为依赖项目\n"
+"为了测试整个邮件代码库. "
 
 #. module: base
 #: model:ir.module.module,description:base.module_test_mass_mailing
@@ -29121,6 +29142,9 @@ msgid ""
 "are present in a separate module to use specific test models defined in\n"
 "test_mail. "
 msgstr ""
+"该模块包含与群发邮件相关的测试. 那些\n"
+"存在于单独的模块中以使用\n"
+"中定义的特定测试模型测试邮件. "
 
 #. module: base
 #: model:ir.module.module,description:base.module_test_web_grid
@@ -29129,6 +29153,9 @@ msgid ""
 "present in a separate module as it contains models used only to perform\n"
 "tests independently to functional aspects of other models. "
 msgstr ""
+"此模块包含与 Web 网格查看相关的测试.  那些是\n"
+"存在于一个单独的模块中，因为它包含仅用于执行的模型\n"
+"独立于其它模型的功能方面进行测试. "
 
 #. module: base
 #: model:ir.module.module,description:base.module_test_timer
@@ -29137,6 +29164,9 @@ msgid ""
 "present in a separate module as it contains models used only to perform\n"
 "tests independently to functional aspects of other models. "
 msgstr ""
+"该模块包含与计时器相关的测试. 那些是\n"
+"存在于一个单独的模块中，因为它包含仅用于执行的模型\n"
+"独立于其它模型的功能方面进行测试. "
 
 #. module: base
 #: model:ir.module.module,description:base.module_test_mail_full
@@ -29146,6 +29176,10 @@ msgid ""
 "contains models used only to perform tests independently to functional aspects of\n"
 "real applications. "
 msgstr ""
+"该模块包含与各种邮件功能相关的测试\n"
+"和邮件相关的子模块. 这些测试存在于一个单独的模块中，因为它\n"
+"包含仅用于独立于功能方面执行测试的模型\n"
+"实际应用. "
 
 #. module: base
 #: model:ir.module.module,description:base.module_test_web_cohort
@@ -29154,6 +29188,9 @@ msgid ""
 "present in a separate module as it contains models used only to perform\n"
 "tests independently to functional aspects of other models. "
 msgstr ""
+"该模块包含与网络队列相关的测试. 那些是\n"
+"存在于一个单独的模块中，因为它包含仅用于执行的模型\n"
+"独立于其它模型的功能方面进行测试. "
 
 #. module: base
 #: model:ir.module.module,description:base.module_test_website
@@ -29164,13 +29201,18 @@ msgid ""
 "dependencies. Neither we want to add in website module some routes, views and\n"
 "models which only purpose is to run tests."
 msgstr ""
+"该模块包含与网站相关的测试. 那些是\n"
+"在我们测试模块安装/卸载/升级时出现在一个单独的模块中\n"
+"而且我们不想每次都重新装入网站模块，包括它是可能的\n"
+"依赖关系。 我们也不想在网站模块中增加一些路线、查看和\n"
+"唯一目的是执行测试的模型."
 
 #. module: base
 #: model:ir.module.module,description:base.module_sale_subscription_timesheet
 msgid ""
 "This module ensure that data (such as analytic accounts) defined on the sale"
 " order via timesheet app are correctly set also on subscriptions"
-msgstr ""
+msgstr "此模块确保通过时间表应用程序在销售订单上定义的数据(例如分析帐户)也在订阅上正确设置"
 
 #. module: base
 #: model:ir.module.module,description:base.module_sale_subscription_taxcloud
@@ -29196,6 +29238,8 @@ msgid ""
 "This module helps analyzing and organizing event tracks.\n"
 "For that purpose it adds a gantt view on event tracks."
 msgstr ""
+"该模块有助于分析和组织事件轨迹.\n"
+"为此，它在事件轨道上增加了甘特图."
 
 #. module: base
 #: model:ir.module.module,description:base.module_event_enterprise
@@ -31984,3 +32028,9 @@ msgstr "是"
 #: model:res.country,name:base.ax
 msgid "Åland Islands"
 msgstr "阿兰群岛"
+
+#. module: base
+#: code:addons/base/models/res_currency.py:0
+#, python-format
+msgid "This currency is set on a company and therefore must be active."
+msgstr ""

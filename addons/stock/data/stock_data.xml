@@ -104,11 +104,10 @@ for move_line in move_lines:
         move_lines_to_unreserve.append(move_line.id)
         move_line_to_recompute_ids.append(move_line.id)
 
-if len(move_lines_to_unreserve) &gt; 0:
-    env.cr.execute("""
-            UPDATE stock_move_line SET product_uom_qty = 0, product_qty = 0 WHERE id in %s ;
-        """
-                   % (tuple(move_lines_to_unreserve), ))
+if len(move_lines_to_unreserve) > 1:
+    env.cr.execute(""" UPDATE stock_move_line SET product_uom_qty = 0, product_qty = 0 WHERE id in %s ;""" % (tuple(move_lines_to_unreserve), ))
+elif len(move_lines_to_unreserve) == 1:
+    env.cr.execute(""" UPDATE stock_move_line SET product_uom_qty = 0, product_qty = 0 WHERE id = %s ;""" % (move_lines_to_unreserve[0]))
 
 if logging:
     env['ir.logging'].sudo().create({

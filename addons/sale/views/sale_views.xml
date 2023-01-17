@@ -564,6 +564,7 @@
                                         widget="many2many_tags"
                                         options="{'no_create': True}"
                                         domain="[('type_tax_use','=','sale'),('company_id','=',parent.company_id)]"
+                                        context="{'active_test': True}"
                                         attrs="{'readonly': [('qty_invoiced', '&gt;', 0)]}"
                                         optional="show"
                                     />
@@ -661,7 +662,7 @@
                         <page string="Other Info" name="other_information">
                             <group>
                                 <group name="sales_person" string="Sales">
-                                    <field name="user_id" domain="[('share', '=', False)]" widget="many2one_avatar_user"/>
+                                    <field name="user_id" widget="many2one_avatar_user"/>
                                     <field name="team_id" kanban_view_ref="%(sales_team.crm_team_view_kanban)s" options="{'no_create': True}"/>
                                     <field name="company_id" options="{'no_create': True}" groups="base.group_multi_company"/>
                                     <field name="require_signature"/>
@@ -1215,9 +1216,6 @@
                               groups="sale.group_delivery_invoice_address"
                               attrs="{'invisible': [('move_type', 'not in', ('out_invoice', 'out_refund', 'out_receipt'))]}"/>
                    </xpath>
-                    <xpath expr="//field[@name='invoice_line_ids']//field[@name='discount']" position="attributes">
-                        <attribute name="groups">product.group_discount_per_so_line</attribute>
-                    </xpath>
                     <xpath expr="//group[@name='sale_info_group']/field[@name='invoice_user_id']" position="after">
                         <field name="team_id" kanban_view_ref="%(sales_team.crm_team_view_kanban)s"/>
                     </xpath>

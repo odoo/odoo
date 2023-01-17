@@ -60,6 +60,7 @@ _ref_vat = {
     'nl': 'NL123456782B90',
     'no': 'NO123456785',
     'pe': '10XXXXXXXXY or 20XXXXXXXXY or 15XXXXXXXXY or 16XXXXXXXXY or 17XXXXXXXXY',
+    'ph': '123-456-789-01234',
     'pl': 'PL1234567883',
     'pt': 'PT123456789',
     'ro': 'RO1234567897',
@@ -149,14 +150,15 @@ class ResPartner(models.Model):
         # This is for API pushes from external platforms where you have no control over VAT numbers.
         if self.env.context.get('no_vat_validation'):
             return
+        partners_with_vat = self.filtered('vat')
+        if not partners_with_vat:
+            return
         if self.env.context.get('company_id'):
             company = self.env['res.company'].browse(self.env.context['company_id'])
         else:
             company = self.env.company
         eu_countries = self.env.ref('base.europe').country_ids
-        for partner in self:
-            if not partner.vat:
-                continue
+        for partner in partners_with_vat:
             is_eu_country = partner.commercial_partner_id.country_id in eu_countries
             if company.vat_check_vies and is_eu_country and partner.is_company:
                 # force full VIES online check
@@ -532,9 +534,18 @@ class ResPartner(models.Model):
             return len(vat) == 11 and vat.isdigit()
         return check_func(vat)
 
+    def format_vat_eu(self, vat):
+        # Foreign companies that trade with non-enterprises in the EU
+        # may have a VATIN starting with "EU" instead of a country code.
+        return vat
+
     def format_vat_ch(self, vat):
         stdnum_vat_format = getattr(stdnum.util.get_cc_module('ch', 'vat'), 'format', None)
         return stdnum_vat_format('CH' + vat)[2:] if stdnum_vat_format else vat
+
+    def format_vat_sm(self, vat):
+        stdnum_vat_format = stdnum.util.get_cc_module('sm', 'vat').compact
+        return stdnum_vat_format('SM' + vat)[2:]
 
     def _fix_vat_number(self, vat, country_id):
         code = self.env['res.country'].browse(country_id).code if country_id else False

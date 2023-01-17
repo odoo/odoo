@@ -66,7 +66,7 @@ class StockRule(models.Model):
 
     def _get_custom_move_fields(self):
         fields = super(StockRule, self)._get_custom_move_fields()
-        fields += ['sale_line_id', 'partner_id']
+        fields += ['sale_line_id', 'partner_id', 'sequence']
         return fields
 
 
@@ -104,6 +104,7 @@ class StockPicking(models.Model):
                 'product_id': product.id,
                 'product_uom_qty': 0,
                 'qty_delivered': move.quantity_done,
+                'product_uom': move.product_uom.id,
             }
             if product.invoice_policy == 'delivery':
                 # Check if there is already a SO line for this product to get
@@ -161,6 +162,13 @@ class StockPicking(models.Model):
         self._log_activity(_render_note_exception_quantity, documents)
 
         return super(StockPicking, self)._log_less_quantities_than_expected(moves)
+
+    def _needs_automatic_assign(self):
+        self.ensure_one()
+        if self.sale_id:
+            return False
+        return super()._needs_automatic_assign()
+
 
 class ProductionLot(models.Model):
     _inherit = 'stock.production.lot'

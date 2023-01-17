@@ -16,12 +16,15 @@
 # Martin Trigaux, 2021
 # Robert Frykelius <robert.frykelius@linserv.se>, 2021
 # Jakob Krabbe <jakob.krabbe@vertel.se>, 2021
-# STefan Rundgren <stefanrundgren@cellglas.com>, 2021
-# Kim Asplund <kim.asplund@gmail.com>, 2021
+# 3eec91a23d05c632ffac786ac42b81b8_b6fff7b <8985b7bc57db860af29969457dbb51b3_1018915>, 2021
 # Anders Wallenquist <anders.wallenquist@vertel.se>, 2021
 # Victor Ekström, 2021
-# Chrille Hedberg <hedberg.chrille@gmail.com>, 2021
+# Chrille Hedberg <hedberg.chrille@gmail.com>, 2022
+# emavertel, 2022
 # Simon S, 2022
+# Kim Asplund <kim.asplund@gmail.com>, 2022
+# Robin Calvin, 2022
+# Mikael Åkerberg <mikael.akerberg@mariaakerberg.com>, 2023
 # 
 msgid ""
 msgstr ""
@@ -29,7 +32,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-11-27 13:50+0000\n"
 "PO-Revision-Date: 2020-09-07 08:09+0000\n"
-"Last-Translator: Simon S, 2022\n"
+"Last-Translator: Mikael Åkerberg <mikael.akerberg@mariaakerberg.com>, 2023\n"
 "Language-Team: Swedish (https://www.transifex.com/odoo/teams/41243/sv/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -5144,6 +5147,14 @@ msgid ""
 "* Equipments related to workcenters\n"
 "* MTBF, MTTR, ...\n"
 msgstr ""
+"\n"
+"Underhåll i MRP\n"
+"===================\n"
+"* Förebyggande kontra korrigerande underhåll\n"
+"* Definiera olika steg för dina underhållsförfrågningar\n"
+"* Planera underhållsförfrågningar (även återkommande förebyggande)\n"
+"* Utrustning relaterad till produktionsgrupper\n"
+"* MTBF, MTTR, ...\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_website_twitter_wall
@@ -5587,6 +5598,13 @@ msgid ""
 "associated to every resource. It also manages the leaves of every resource.\n"
 "    "
 msgstr ""
+"\n"
+"Modul för resurshantering.\n"
+"=================================\n"
+"\n"
+"En resurs representerar något som kan schemaläggas (en utveckling på en uppgift eller en\n"
+"produktionsgrupp för tillverkningsorder). Den här modulen hanterar en resurskalender\n"
+"kopplat till varje resurs. Den hanterar också bladen på varje resurs."
 
 #. module: base
 #: model:ir.module.module,description:base.module_website_mail
@@ -9389,6 +9407,8 @@ msgid ""
 "<strong>This operation will permanently erase all data currently stored by "
 "the modules!</strong>"
 msgstr ""
+"<strong>Den här åtgärden kommer att permanent radera all data som för "
+"närvarande är lagrad i modulerna!</strong>"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.report_irmodeloverview
@@ -10210,7 +10230,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,summary:base.module_crm_sms
 msgid "Add SMS capabilities to CRM"
-msgstr ""
+msgstr "Lägger till SMS-funktioner i CRM"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_transifex
@@ -10593,7 +10613,7 @@ msgstr "Eftermarknadstjänster"
 #. module: base
 #: model:res.partner.industry,name:base.res_partner_industry_A
 msgid "Agriculture"
-msgstr ""
+msgstr "Jordbruk"
 
 #. module: base
 #: model:res.country,name:base.al
@@ -10683,7 +10703,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,summary:base.module_website_mail_channel
 msgid "Allow visitors to join public mail channels"
-msgstr ""
+msgstr "Tillåt besökare att ansluta sig till offentliga e-postkanaler"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_odoo_referral
@@ -10819,7 +10839,7 @@ msgstr ""
 #: code:addons/base/models/res_partner.py:0
 #, python-format
 msgid "An email is required for find_or_create to work"
-msgstr ""
+msgstr "En e-postadress krävs för find_or_create ska fungera"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_analytic
@@ -11631,6 +11651,8 @@ msgid ""
 "Be aware that editing the architecture of a standard view is not advised, since the changes will be overwritten during future module updates.<br/>\n"
 "                        We recommend applying modifications to standard views through inherited views or customization with Odoo Studio."
 msgstr ""
+"Observera att redigering av arkitekturen för en standard-vy inte rekommenderas pga att ändringarna kommer att skrivas över under framtida moduluppdateringar.<br/>\n"
+"                        Vi rekommenderar applicering av modifieringar av standard-vyer genom ärvda vyer eller anpassning med Odoo Studio."
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__res_country__name_position__before
@@ -12036,12 +12058,12 @@ msgstr "CRM gamification"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_crm_livechat
 msgid "CRM Livechat"
-msgstr "CRM Livechat"
+msgstr "CRM livechat"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_crm_enterprise
 msgid "CRM enterprise"
-msgstr "CRM Enterprise"
+msgstr "CRM enterprise"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_social_crm
@@ -12669,7 +12691,7 @@ msgstr "Comoros"
 #: model_terms:ir.ui.view,arch_db:base.view_company_tree
 #: model_terms:ir.ui.view,arch_db:base.view_res_partner_filter
 msgid "Companies"
-msgstr "Företag"
+msgstr "Bolag"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_users_form
@@ -12696,7 +12718,7 @@ msgstr "Antal företag"
 #: model_terms:ir.ui.view,arch_db:base.view_users_search
 #, python-format
 msgid "Company"
-msgstr "Företag"
+msgstr "Bolag"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.onboarding_company_step
@@ -14192,6 +14214,8 @@ msgid ""
 "Design great quotation templates with building blocks to significantly boost"
 " your success rate."
 msgstr ""
+"Designa fantastiska offertmallar med hjälp av byggblock för att avsevärt öka"
+" er framgång. "
 
 #. module: base
 #: model:ir.module.module,summary:base.module_mass_mailing_sms
@@ -14534,7 +14558,7 @@ msgstr "Djibouti"
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.onboarding_container
 msgid "Do you want to remove this configuration panel?"
-msgstr ""
+msgstr "Vill du ta bort den här konfigurationspanelen?"
 
 #. module: base
 #: model:res.partner.title,name:base.res_partner_title_doctor
@@ -15058,6 +15082,10 @@ msgid ""
 "* Traceability report\n"
 "* Cost Structure report (mrp_account)"
 msgstr ""
+"Företragspåbyggnad för MRP\n"
+"* Arbetsorderplanering. Kontrollera planering efter Gantt-vyer grupperade efter produktionsorder/produktionsgrupp\n"
+"* Spårbarhetsrapport\n"
+"* Kostnadsstrukturrapport (mrp_account)"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_contacts_enterprise
@@ -15072,7 +15100,7 @@ msgstr ""
 #. module: base
 #: model:res.partner.industry,name:base.res_partner_industry_R
 msgid "Entertainment"
-msgstr ""
+msgstr "Underhållning"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_pos_epson_printer_restaurant
@@ -16347,7 +16375,7 @@ msgstr ""
 #: model:ir.ui.menu,name:base.menu_wizard_update_translations
 #: model_terms:ir.ui.view,arch_db:base.wizard_update_translations
 msgid "Generate Missing Terms"
-msgstr ""
+msgstr "Generera Saknad Terminologi"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.form_res_users_key_description
@@ -16741,7 +16769,7 @@ msgstr ""
 #: model_terms:res.partner,website_description:base.res_partner_3
 #: model_terms:res.partner,website_description:base.res_partner_4
 msgid "Happy to be Sponsor"
-msgstr ""
+msgstr "Glad att vara Sponsor"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_hw_escpos
@@ -16829,7 +16857,7 @@ msgstr "Support för rabattkupong"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_helpdesk_stock
 msgid "Helpdesk Stock"
-msgstr ""
+msgstr "Kundtjänst Lager"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_helpdesk_timesheet
@@ -17110,7 +17138,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_iap_crm
 msgid "IAP / CRM"
-msgstr ""
+msgstr "IAP / CRM"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_iap_mail
@@ -17374,6 +17402,8 @@ msgid ""
 "If specified, this action will be opened at log on for this user, in "
 "addition to the standard menu."
 msgstr ""
+"Om angiven öppnas den här åtgärden vid inloggning för den här användaren, "
+"utöver standardmenyn."
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_ui_view__groups_id
@@ -17413,6 +17443,9 @@ msgid ""
 "If you enable this option, existing translations (including custom ones) "
 "will be overwritten and replaced by those in this file"
 msgstr ""
+"Om du aktiverar det här alternativet kommer befintliga översättningar "
+"(inklusive anpassade översättningar) att skrivas över och ersättas av "
+"översättningarna i den här filen."
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_ui_menu__groups_id
@@ -17441,7 +17474,7 @@ msgstr ""
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_base_module_upgrade
 msgid "If you wish to cancel the process, press the cancel button below"
-msgstr ""
+msgstr "Om du vill avbryta processen, klicka på avbryt-knappen nedan"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_image_mixin__image_1920
@@ -17495,7 +17528,7 @@ msgstr ""
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_base_module_upgrade
 msgid "Impacted Apps"
-msgstr ""
+msgstr "Påverkade appar"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_base_module_uninstall__model_ids
@@ -17694,7 +17727,7 @@ msgstr "Individuell"
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_res_partner_filter
 msgid "Individuals"
-msgstr ""
+msgstr "Individer"
 
 #. module: base
 #: model:res.country,name:base.id
@@ -18435,7 +18468,7 @@ msgstr ""
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_lt_reports
-msgid "LT - Accounting Reports"
+msgid "Lithuania - Accounting Reports"
 msgstr ""
 
 #. module: base
@@ -18449,7 +18482,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,summary:base.module_stock_landed_costs
 msgid "Landed Costs"
-msgstr ""
+msgstr "Totala kostnader"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_mrp_landed_costs
@@ -18809,7 +18842,7 @@ msgstr "Senaste version"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_users__login_date
 msgid "Latest authentication"
-msgstr ""
+msgstr "Senaste autentisering"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__res_company__font__lato
@@ -19016,7 +19049,7 @@ msgstr "Länkspårning"
 #. module: base
 #: model:ir.module.module,summary:base.module_voip_crm
 msgid "Link between voip and crm"
-msgstr ""
+msgstr "Länk mellan VOIP och CRM"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_pos_hr
@@ -19088,7 +19121,7 @@ msgstr "Ladda en översättning"
 #. module: base
 #: model:ir.actions.act_window,name:base.demo_force_install_action
 msgid "Load demo data"
-msgstr ""
+msgstr "Ladda demodata"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_lang__code
@@ -19973,7 +20006,7 @@ msgstr "Saknar vyarkitektur."
 #. module: base
 #: model:res.partner.title,name:base.res_partner_title_mister
 msgid "Mister"
-msgstr ""
+msgstr "Herr"
 
 #. module: base
 #: code:addons/base/models/ir_qweb_fields.py:0
@@ -20299,7 +20332,7 @@ msgstr "Mozambique"
 #. module: base
 #: model:res.partner.title,shortcut:base.res_partner_title_mister
 msgid "Mr."
-msgstr ""
+msgstr "Herr"
 
 #. module: base
 #: model:res.partner.title,shortcut:base.res_partner_title_madam
@@ -23015,7 +23048,7 @@ msgstr ""
 #. module: base
 #: model:res.partner.industry,name:base.res_partner_industry_S
 msgid "Other Services"
-msgstr " andra tjänster"
+msgstr " Andra tjänster"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_model_form
@@ -23271,7 +23304,7 @@ msgstr "Partner"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_partner_autocomplete
 msgid "Partner Autocomplete"
-msgstr "Autokomplettering av partner"
+msgstr "Autokomplettering av kontakter"
 
 #. module: base
 #: model:ir.model,name:base.model_res_partner_category
@@ -24630,7 +24663,7 @@ msgstr ""
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.onboarding_container
 msgid "Remove Configuration Tips"
-msgstr ""
+msgstr "Ta bort konfigurationstips"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_server_action_form
@@ -24718,7 +24751,7 @@ msgstr "Rapportlayout"
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.act_report_xml_search_view
 msgid "Report Model"
-msgstr ""
+msgstr "Rapportmodell"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_actions_report__report_type
@@ -25006,7 +25039,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_crm_sms
 msgid "SMS in CRM"
-msgstr ""
+msgstr "SMS i CRM"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_event_sms
@@ -26955,8 +26988,8 @@ msgstr ""
 #. module: base
 #: code:addons/base/models/ir_module.py:0
 #, python-format
-msgid "The `base` module cannot be uninstalled"
-msgstr "Modulen 'base' kan inte avinstalleras"
+msgid "Those modules cannot be uninstalled: %s"
+msgstr ""
 
 #. module: base
 #: model:ir.model.fields,help:base.field_res_partner_category__active
@@ -27607,9 +27640,8 @@ msgid ""
 "This module ensure that data (such as analytic accounts) defined on the sale"
 " order via timesheet app are correctly set also on subscriptions"
 msgstr ""
-"Den här modulen säkerställer att data (t.ex. analytiska konton) som "
-"definierats i ordern via tidrapporten är korrekt inställda även i "
-"prenumerationer"
+"Den här modulen säkerställer att data (t.ex. objektkonton) som definierats i"
+" ordern via tidrapporten är korrekt inställda även i prenumerationer"
 
 #. module: base
 #: model:ir.module.module,description:base.module_sale_subscription_taxcloud
@@ -28733,7 +28765,7 @@ msgstr "Användardefinierade standarder"
 #: model:ir.actions.act_window,name:base.actions_ir_filters_view
 #: model:ir.ui.menu,name:base.menu_ir_filters
 msgid "User-defined Filters"
-msgstr "Användarvänliga filter"
+msgstr "Användardefinierade filter"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_point_of_sale
@@ -28778,7 +28810,7 @@ msgstr "Användare"
 #. module: base
 #: model:ir.ui.menu,name:base.menu_users
 msgid "Users & Companies"
-msgstr "Användare & företag"
+msgstr "Användare & bolag"
 
 #. module: base
 #: model:ir.model,name:base.model_res_users_log
@@ -29569,7 +29601,7 @@ msgstr "Du bjuder in en ny användare."
 msgid ""
 "You are not allowed to access '%(document_kind)s' (%(document_model)s) "
 "records."
-msgstr ""
+msgstr "Du har inte åtkomst till %(document_kind)s (%(document_model)s). "
 
 #. module: base
 #: code:addons/base/models/ir_model.py:0
@@ -29578,6 +29610,7 @@ msgid ""
 "You are not allowed to create '%(document_kind)s' (%(document_model)s) "
 "records."
 msgstr ""
+"Du har inte rättigheter att skapa %(document_kind)s (%(document_model)s)."
 
 #. module: base
 #: code:addons/base/models/ir_model.py:0
@@ -29586,6 +29619,7 @@ msgid ""
 "You are not allowed to delete '%(document_kind)s' (%(document_model)s) "
 "records."
 msgstr ""
+"Du har inte rättigheter att radera %(document_kind)s (%(document_model)s)."
 
 #. module: base
 #: code:addons/base/models/ir_model.py:0
@@ -29594,12 +29628,13 @@ msgid ""
 "You are not allowed to modify '%(document_kind)s' (%(document_model)s) "
 "records."
 msgstr ""
+"Du har inte rättigheter att ändra %(document_kind)s (%(document_model)s)."
 
 #. module: base
 #: code:addons/base/models/ir_module.py:0
 #, python-format
 msgid "You are trying to install incompatible modules in category \"%s\":"
-msgstr ""
+msgstr "Du försöker installera inkompatibla moduler i kategorin %s:"
 
 #. module: base
 #: code:addons/base/models/ir_module.py:0
@@ -29607,6 +29642,7 @@ msgstr ""
 msgid ""
 "You are trying to remove a module that is installed or will be installed."
 msgstr ""
+"Du försöker radera en modul som är installerad eller kommer att installeras."
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_users_form
@@ -29619,6 +29655,8 @@ msgid ""
 "You can either upload a file from your computer or copy/paste an internet "
 "link to your file."
 msgstr ""
+"Du kan antingen ladda upp en fil från din dator eller ange en URL till din "
+"fil."
 
 #. module: base
 #: model_terms:ir.actions.act_window,help:base.action_country_state
@@ -29626,6 +29664,8 @@ msgid ""
 "You can manage the different federal states you are working on from here. "
 "Each state is attached to one country."
 msgstr ""
+"Du kan hantera olika stater, provinser eller län härifrån. Varje stat, "
+"provins eller län är kopplat till ett land."
 
 #. module: base
 #: code:addons/base/models/res_partner.py:0
@@ -29644,6 +29684,8 @@ msgstr "Du kan inte ha två användare med samma inloggningsnamn!"
 msgid ""
 "You can not remove API keys unless they're yours or you are a system user"
 msgstr ""
+"Du kan inte ta bort API-nycklar såvida de inte är dina eller du är en "
+"systemanvändare"
 
 #. module: base
 #: code:addons/base/models/res_users.py:0
@@ -29967,7 +30009,7 @@ msgstr "t.ex. herr"
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_partner_form
 msgid "e.g. Mr."
-msgstr "t.ex. herr."
+msgstr "t.ex. Herr"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_partner_form
@@ -30401,3 +30443,9 @@ msgstr "ja"
 #: model:res.country,name:base.ax
 msgid "Åland Islands"
 msgstr "Åland"
+
+#. module: base
+#: code:addons/base/models/res_currency.py:0
+#, python-format
+msgid "This currency is set on a company and therefore must be active."
+msgstr ""

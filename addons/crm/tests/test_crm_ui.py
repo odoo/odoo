@@ -22,3 +22,74 @@ class TestUi(odoo.tests.HttpCase):
                 ])]
         })
         self.start_tour("/web", 'crm_rainbowman', login="temp_crm_user")
+
+    def test_email_and_phone_propagation_edit_save(self):
+        """Test the propagation of the email / phone on the partner.
+
+        If the partner has no email but the lead has one, it should be propagated
+        if we edit and save the lead form.
+        """
+        self.env['crm.lead'].search([]).unlink()
+        user_admin = self.env['res.users'].search([('login', '=', 'admin')])
+
+        partner = self.env['res.partner'].create({'name': 'Test Partner'})
+        lead = self.env['crm.lead'].create({
+            'name': 'Test Lead Propagation',
+            'type': 'opportunity',
+            'user_id': user_admin.id,
+            'partner_id': partner.id,
+            'email_from': 'test@example.com',
+            'phone': '+32 494 44 44 44',
+        })
+        partner.email = False
+        partner.phone = False
+
+        # Check initial state
+        self.assertFalse(partner.email)
+        self.assertFalse(partner.phone)
+        self.assertEqual(lead.email_from, 'test@example.com')
+        self.assertEqual(lead.phone, '+32 494 44 44 44')
+
+        self.assertTrue(lead.ribbon_message)
+
+        self.start_tour('/web', 'crm_email_and_phone_propagation_edit_save', login='admin')
+
+        self.assertEqual(lead.email_from, 'test@example.com', 'Should not have changed the lead email')
+        self.assertEqual(lead.phone, '+32 494 44 44 44', 'Should not have changed the lead phone')
+        self.assertEqual(partner.email, 'test@example.com', 'Should have propagated the lead email on the partner')
+        self.assertEqual(partner.phone, '+32 494 44 44 44', 'Should have propagated the lead phone on the partner')
+
+    def test_email_and_phone_propagation_remove_email_and_phone(self):
+        """Test the propagation of the email / phone on the partner.
+
+        If we remove the email and phone on the lead, it should be removed on the
+        partner. This test check that we correctly detect field values changes in JS
+        (aka undefined VS falsy).
+        """
+        self.env['crm.lead'].search([]).unlink()
+        user_admin = self.env['res.users'].search([('login', '=', 'admin')])
+
+        partner = self.env['res.partner'].create({'name': 'Test Partner'})
+        lead = self.env['crm.lead'].create({
+            'name': 'Test Lead Propagation',
+            'type': 'opportunity',
+            'user_id': user_admin.id,
+            'partner_id': partner.id,
+            'email_from': 'test@example.com',
+            'phone': '+32 494 44 44 44',
+        })
+
+        # Check initial state
+        self.assertEqual(partner.email, 'test@example.com')
+        self.assertEqual(lead.phone, '+32 494 44 44 44')
+        self.assertEqual(lead.email_from, 'test@example.com')
+        self.assertEqual(lead.phone, '+32 494 44 44 44')
+
+        self.assertFalse(lead.ribbon_message)
+
+        self.start_tour('/web', 'crm_email_and_phone_propagation_remove_email_and_phone', login='admin')
+
+        self.assertFalse(lead.email_from, 'Should have removed the email')
+        self.assertFalse(lead.phone, 'Should have removed the phone')
+        self.assertFalse(partner.email, 'Should have removed the email')
+        self.assertFalse(partner.phone, 'Should have removed the phone')

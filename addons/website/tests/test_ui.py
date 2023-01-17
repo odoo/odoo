@@ -96,14 +96,24 @@ class TestUiHtmlEditor(odoo.tests.HttpCase):
         self.assertEqual(len(specific_page.inherit_children_ids.filtered(lambda v: 'oe_structure' in v.name)), 1, "oe_structure view should have been created on the specific tree")
 
     def test_html_editor_scss(self):
+        self.env.ref('base.user_demo').write({
+            'groups_id': [(6, 0, [
+                self.env.ref('base.group_user').id,
+                self.env.ref('website.group_website_designer').id
+            ])]
+        })
         self.start_tour("/", 'test_html_editor_scss', login='admin')
+
 
 @odoo.tests.tagged('-at_install', 'post_install')
 class TestUiTranslate(odoo.tests.HttpCase):
     def test_admin_tour_rte_translator(self):
-        fr_BE = self.env.ref('base.lang_fr_BE')
-        fr_BE.active = True
-        self.env.ref('website.default_website').language_ids |= fr_BE
+        self.env['res.lang'].create({
+            'name': 'Parseltongue',
+            'code': 'pa_GB',
+            'iso_code': 'pa_GB',
+            'url_code': 'pa_GB',
+        })
         self.start_tour("/", 'rte_translator', login='admin', timeout=120)
 
 

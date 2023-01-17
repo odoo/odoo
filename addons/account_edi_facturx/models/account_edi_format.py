@@ -3,7 +3,7 @@
 from odoo import api, models, fields, tools, _
 from odoo.tools import DEFAULT_SERVER_DATE_FORMAT, float_repr, str2bool
 from odoo.tests.common import Form
-from odoo.exceptions import UserError
+from odoo.exceptions import RedirectWarning, UserError
 
 from datetime import datetime
 from lxml import etree
@@ -26,13 +26,13 @@ class AccountEdiFormat(models.Model):
     def _is_compatible_with_journal(self, journal):
         self.ensure_one()
         res = super()._is_compatible_with_journal(journal)
-        if self.code != 'facturx_1_0_05':
+        if self.code != 'facturx_1_0_05' or self._is_account_edi_ubl_cii_available():
             return res
         return journal.type == 'sale'
 
     def _post_invoice_edi(self, invoices, test_mode=False):
         self.ensure_one()
-        if self.code != 'facturx_1_0_05':
+        if self.code != 'facturx_1_0_05' or self._is_account_edi_ubl_cii_available():
             return super()._post_invoice_edi(invoices, test_mode=test_mode)
         res = {}
         for invoice in invoices:
@@ -53,12 +53,12 @@ class AccountEdiFormat(models.Model):
 
     def _prepare_invoice_report(self, pdf_writer, edi_document):
         self.ensure_one()
-        if self.code != 'facturx_1_0_05':
+        if self.code != 'facturx_1_0_05' or self._is_account_edi_ubl_cii_available():
             return super()._prepare_invoice_report(pdf_writer, edi_document)
         if not edi_document.attachment_id:
             return
 
-        pdf_writer.embed_odoo_attachment(edi_document.attachment_id, subtype='application/xml')
+        pdf_writer.embed_odoo_attachment(edi_document.attachment_id, subtype='text/xml')
         if not pdf_writer.is_pdfa and str2bool(self.env['ir.config_parameter'].sudo().get_param('edi.use_pdfa', 'False')):
             try:
                 pdf_writer.convert_to_pdfa()
@@ -80,23 +80,50 @@ class AccountEdiFormat(models.Model):
 
         def format_monetary(number, currency):
             # Format the monetary values to avoid trailing decimals (e.g. 90.85000000000001).
+            if currency.is_zero(number):  # Ensure that we never return -0.0
+                number = 0.0
             return float_repr(number, currency.decimal_places)
 
         self.ensure_one()
         # Create file content.
+        seller_siret = 'siret' in invoice.company_id._fields and invoice.company_id.siret or invoice.company_id.company_registry
+        buyer_siret = 'siret' in invoice.commercial_partner_id._fields and invoice.commercial_partner_id.siret
         template_values = {
             'record': invoice,
             'format_date': format_date,
             'format_monetary': format_monetary,
             'invoice_line_values': [],
+            'seller_specified_legal_organization': seller_siret,
+            'buyer_specified_legal_organization': buyer_siret,
+            # Chorus PRO fields
+            'buyer_reference': 'buyer_reference' in invoice._fields and invoice.buyer_reference or '',
+            'contract_reference': 'contract_reference' in invoice._fields and invoice.contract_reference or '',
+            'purchase_order_reference': 'purchase_order_reference' in invoice._fields and invoice.purchase_order_reference or '',
         }
-
         # Tax lines.
-        aggregated_taxes_details = {line.tax_line_id.id: {
-            'line': line,
-            'tax_amount': -line.amount_currency if line.currency_id else -line.balance,
-            'tax_base_amount': 0.0,
-        } for line in invoice.line_ids.filtered('tax_line_id')}
+        # The old system was making one total "line" per tax in the xml, by using the tax_line_id.
+        # The new one is making one total "line" for each tax category and rate group.
+        aggregated_taxes_details = invoice._prepare_edi_tax_details(
+            grouping_key_generator=lambda tax_values: {
+                'unece_tax_category_code': tax_values['tax_id']._get_unece_category_code(invoice.commercial_partner_id, invoice.company_id),
+                'amount': tax_values['tax_id'].amount
+            }
+        )['tax_details']
+
+        balance_multiplicator = -1 if invoice.is_inbound() else 1
+        # Map the new keys from the backported _prepare_edi_tax_details into the old ones for compatibility with the old
+        # template. Also apply the multiplication here for consistency between the old and new template.
+        for tax_detail in aggregated_taxes_details.values():
+            tax_detail['tax_base_amount'] = balance_multiplicator * tax_detail['base_amount_currency']
+            tax_detail['tax_amount'] = balance_multiplicator * tax_detail['tax_amount_currency']
+
+            # The old template would get the amount from a tax line given to it, while
+            # the new one would get the amount from the dictionary returned by _prepare_edi_tax_details directly.
+            # As the line was only used to get the tax amount, giving it any line with the same amount will give a correct
+            # result even if the tax line doesn't make much sense as this is a total that is not linked to a specific tax.
+            # I don't have a solution for 0% taxes, we will give an empty line that will allow to render the xml, but it
+            # won't be completely correct. (The RateApplicablePercent will be missing for that line)
+            tax_detail['line'] = invoice.line_ids.filtered(lambda l: l.tax_line_id and l.tax_line_id.amount == tax_detail['amount'])[:1]
 
         # Invoice lines.
         for i, line in enumerate(invoice.invoice_line_ids.filtered(lambda l: not l.display_type)):
@@ -110,23 +137,29 @@ class AccountEdiFormat(models.Model):
                 is_refund=line.move_id.move_type in ('in_refund', 'out_refund'),
             )
 
+            if line.discount == 100.0:
+                gross_price_subtotal = line.currency_id.round(line.price_unit * line.quantity)
+            else:
+                gross_price_subtotal = line.currency_id.round(line.price_subtotal / (1 - (line.discount / 100.0)))
             line_template_values = {
                 'line': line,
                 'index': i + 1,
                 'tax_details': [],
                 'net_price_subtotal': taxes_res['total_excluded'],
+                'price_discount_unit': (gross_price_subtotal - line.price_subtotal) / line.quantity if line.quantity else 0.0,
+                'unece_uom_code': line.product_id.product_tmpl_id.uom_id._get_unece_code(),
+                'gross_price_total_unit': line._prepare_edi_vals_to_export()['gross_price_total_unit']
             }
 
             for tax_res in taxes_res['taxes']:
                 tax = self.env['account.tax'].browse(tax_res['id'])
+                tax_category_code = tax._get_unece_category_code(invoice.commercial_partner_id, invoice.company_id)
                 line_template_values['tax_details'].append({
                     'tax': tax,
                     'tax_amount': tax_res['amount'],
                     'tax_base_amount': tax_res['base'],
+                    'unece_tax_category_code': tax_category_code,
                 })
-
-                if tax.id in aggregated_taxes_details:
-                    aggregated_taxes_details[tax.id]['tax_base_amount'] += tax_res['base']
 
             template_values['invoice_line_values'].append(line_template_values)
 
@@ -143,15 +176,15 @@ class AccountEdiFormat(models.Model):
     def _is_facturx(self, filename, tree):
         return self.code == 'facturx_1_0_05' and tree.tag == '{urn:un:unece:uncefact:data:standard:CrossIndustryInvoice:100}CrossIndustryInvoice'
 
-    def _create_invoice_from_xml_tree(self, filename, tree):
+    def _create_invoice_from_xml_tree(self, filename, tree, journal=None):
         self.ensure_one()
-        if self._is_facturx(filename, tree):
+        if self._is_facturx(filename, tree) and not self._is_account_edi_ubl_cii_available():
             return self._import_facturx(tree, self.env['account.move'])
-        return super()._create_invoice_from_xml_tree(filename, tree)
+        return super()._create_invoice_from_xml_tree(filename, tree, journal=journal)
 
     def _update_invoice_from_xml_tree(self, filename, tree, invoice):
         self.ensure_one()
-        if self._is_facturx(filename, tree):
+        if self._is_facturx(filename, tree) and not self._is_account_edi_ubl_cii_available():
             return self._import_facturx(tree, invoice)
         return super()._update_invoice_from_xml_tree(filename, tree, invoice)
 
@@ -210,8 +243,7 @@ class AccountEdiFormat(models.Model):
         invoice.move_type = default_move_type
 
         # self could be a single record (editing) or be empty (new).
-        with Form(invoice.with_context(default_move_type=default_move_type,
-                                       account_predictive_bills_disable_prediction=True)) as invoice_form:
+        with Form(invoice.with_context(default_move_type=default_move_type)) as invoice_form:
             self_ctx = self.with_company(invoice.company_id)
 
             # Partner (first step to avoid warning 'Warning! You must first select a partner.').
@@ -237,19 +269,34 @@ class AccountEdiFormat(models.Model):
             if elements:
                 invoice_form.narration = elements[0].text
 
-            # Total amount.
-            elements = tree.xpath('//ram:GrandTotalAmount', namespaces=tree.nsmap)
+            # Get currency string for new invoices, or invoices coming from outside
+            elements = tree.xpath('//ram:InvoiceCurrencyCode', namespaces=tree.nsmap)
             if elements:
-
-                # Currency.
-                if elements[0].attrib.get('currencyID'):
+                currency_str = elements[0].text
+            # Fallback for old invoices from odoo where the InvoiceCurrencyCode was not present
+            else:
+                elements = tree.xpath('//ram:TaxTotalAmount', namespaces=tree.nsmap)
+                if elements:
                     currency_str = elements[0].attrib['currencyID']
-                    currency = self.env.ref('base.%s' % currency_str.upper(), raise_if_not_found=False)
-                    if currency != self.env.company.currency_id and currency.active:
-                        invoice_form.currency_id = currency
 
-                    # Store xml total amount.
-                    amount_total_import = total_amount * refund_sign
+            currency = self.env.ref('base.%s' % currency_str.upper(), raise_if_not_found=False)
+            if currency and not currency.active:
+                error_msg = _('The currency (%s) of the document you are uploading is not active in this database.\n'
+                              'Please activate it before trying again to import.', currency.name)
+                error_action = {
+                    'view_mode': 'form',
+                    'res_model': 'res.currency',
+                    'type': 'ir.actions.act_window',
+                    'target': 'new',
+                    'res_id': currency.id,
+                    'views': [[False, 'form']]
+                }
+                raise RedirectWarning(error_msg, error_action, _('Display the currency'))
+            if currency != self.env.company.currency_id and currency.active:
+                invoice_form.currency_id = currency
+
+            # Store xml total amount.
+            amount_total_import = total_amount * refund_sign
 
             # Date.
             elements = tree.xpath('//rsm:ExchangedDocument/ram:IssueDateTime/udt:DateTimeString', namespaces=tree.nsmap)
@@ -278,13 +325,14 @@ class AccountEdiFormat(models.Model):
 
                         # Product.
                         name = _find_value('.//ram:SpecifiedTradeProduct/ram:Name', element)
-                        if name:
-                            invoice_line_form.name = name
                         invoice_line_form.product_id = self_ctx._retrieve_product(
                             default_code=_find_value('.//ram:SpecifiedTradeProduct/ram:SellerAssignedID', element),
                             name=_find_value('.//ram:SpecifiedTradeProduct/ram:Name', element),
                             barcode=_find_value('.//ram:SpecifiedTradeProduct/ram:GlobalID', element)
                         )
+                        # force original line description instead of the one copied from product's Sales Description
+                        if name:
+                            invoice_line_form.name = name
 
                         # Quantity.
                         line_elements = element.xpath('.//ram:SpecifiedLineTradeDelivery/ram:BilledQuantity', namespaces=tree.nsmap)
@@ -299,6 +347,24 @@ class AccountEdiFormat(models.Model):
                                 invoice_line_form.price_unit = float(line_elements[0].text) / float(quantity_elements[0].text)
                             else:
                                 invoice_line_form.price_unit = float(line_elements[0].text)
+                            # For Gross price, we need to check if a discount must be taken into account
+                            discount_elements = element.xpath('.//ram:AppliedTradeAllowanceCharge',
+                                                          namespaces=tree.nsmap)
+                            if discount_elements:
+                                discount_percent_elements = element.xpath(
+                                    './/ram:AppliedTradeAllowanceCharge/ram:CalculationPercent', namespaces=tree.nsmap)
+                                if discount_percent_elements:
+                                    invoice_line_form.discount = float(discount_percent_elements[0].text)
+                                else:
+                                    # if discount not available, it will be computed from the gross and net prices.
+                                    net_price_elements = element.xpath('.//ram:NetPriceProductTradePrice/ram:ChargeAmount',
+                                                                  namespaces=tree.nsmap)
+                                    if net_price_elements:
+                                        quantity_elements = element.xpath(
+                                            './/ram:NetPriceProductTradePrice/ram:BasisQuantity', namespaces=tree.nsmap)
+                                        net_unit_price = float(net_price_elements[0].text) / float(quantity_elements[0].text) \
+                                            if quantity_elements else float(net_price_elements[0].text)
+                                        invoice_line_form.discount = (invoice_line_form.price_unit - net_unit_price) / invoice_line_form.price_unit * 100.0
                         else:
                             line_elements = element.xpath('.//ram:NetPriceProductTradePrice/ram:ChargeAmount', namespaces=tree.nsmap)
                             if line_elements:
@@ -307,10 +373,6 @@ class AccountEdiFormat(models.Model):
                                     invoice_line_form.price_unit = float(line_elements[0].text) / float(quantity_elements[0].text)
                                 else:
                                     invoice_line_form.price_unit = float(line_elements[0].text)
-                        # Discount.
-                        line_elements = element.xpath('.//ram:AppliedTradeAllowanceCharge/ram:CalculationPercent', namespaces=tree.nsmap)
-                        if line_elements:
-                            invoice_line_form.discount = float(line_elements[0].text)
 
                         # Taxes
                         tax_element = element.xpath('.//ram:SpecifiedLineTradeSettlement/ram:ApplicableTradeTax/ram:RateApplicablePercent', namespaces=tree.nsmap)

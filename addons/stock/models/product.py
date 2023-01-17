@@ -224,7 +224,7 @@ class Product(models.Model):
                 if isinstance(item, int):
                     ids.add(item)
                 else:
-                    domain = expression.OR([[('name', 'ilike', item)], domain])
+                    domain = expression.OR([[(self.env[model]._rec_name, 'ilike', item)], domain])
             if domain:
                 ids |= set(self.env[model].search(domain).ids)
             return ids
@@ -555,6 +555,8 @@ class Product(models.Model):
             'route_ids': route_ids,
             'warehouse_id': location.get_warehouse()
         })
+        if rule in seen_rules:
+            raise UserError(_("Invalid rule's configuration, the following rule causes an endless loop: %s", rule.display_name))
         if not rule:
             return seen_rules
         if rule.procure_method == 'make_to_stock' or rule.action not in ('pull_push', 'pull'):
@@ -635,6 +637,12 @@ class ProductTemplate(models.Model):
     route_from_categ_ids = fields.Many2many(
         relation="stock.location.route", string="Category Routes",
         related='categ_id.total_route_ids', readonly=False, related_sudo=False)
+    show_on_hand_qty_status_button = fields.Boolean(compute='_compute_show_on_hand_qty_status_button')
+
+    @api.depends('type')
+    def _compute_show_on_hand_qty_status_button(self):
+        for template in self:
+            template.show_on_hand_qty_status_button = template.type == 'product'
 
     @api.depends('type')
     def _compute_has_available_route_ids(self):
@@ -762,11 +770,17 @@ class ProductTemplate(models.Model):
         if 'type' in vals and vals['type'] != 'product' and sum(self.mapped('nbr_reordering_rules')) != 0:
             raise UserError(_('You still have some active reordering rules on this product. Please archive or delete them first.'))
         if any('type' in vals and vals['type'] != prod_tmpl.type for prod_tmpl in self):
-            existing_move_lines = self.env['stock.move.line'].search([
+            existing_done_move_lines = self.env['stock.move.line'].sudo().search([
+                ('product_id', 'in', self.mapped('product_variant_ids').ids),
+                ('state', '=', 'done'),
+            ], limit=1)
+            if existing_done_move_lines:
+                raise UserError(_("You can not change the type of a product that was already used."))
+            existing_reserved_move_lines = self.env['stock.move.line'].search([
                 ('product_id', 'in', self.mapped('product_variant_ids').ids),
                 ('state', 'in', ['partially_available', 'assigned']),
             ])
-            if existing_move_lines:
+            if existing_reserved_move_lines:
                 raise UserError(_("You can not change the type of a product that is currently reserved on a stock move. If you need to change the type, you should first unreserve the stock move."))
         if 'type' in vals and vals['type'] != 'product' and any(p.type == 'product' and not float_is_zero(p.qty_available, precision_rounding=p.uom_id.rounding) for p in self):
             raise UserError(_("Available quantity should be set to zero before changing type"))

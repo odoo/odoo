@@ -2,10 +2,12 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 from . import test_attachment
 from . import test_auth_signup_uninvited
+from . import test_automatic_editor
 from . import test_base_url
 from . import test_converter
 from . import test_crawl
 from . import test_get_current_website
+from . import test_http_endpoint
 from . import test_lang_url
 from . import test_menu
 from . import test_page

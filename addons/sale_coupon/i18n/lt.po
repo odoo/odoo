@@ -8,6 +8,7 @@
 # Audrius Palenskis <audrius.palenskis@gmail.com>, 2021
 # Linas Versada <linaskrisiukenas@gmail.com>, 2021
 # Jonas Zinkevicius <jozi@odoo.com>, 2021
+# Ramunė ViaLaurea <ramune.vialaurea@gmail.com>, 2022
 # 
 msgid ""
 msgstr ""
@@ -15,7 +16,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-09-01 07:29+0000\n"
 "PO-Revision-Date: 2020-09-07 08:18+0000\n"
-"Last-Translator: Jonas Zinkevicius <jozi@odoo.com>, 2021\n"
+"Last-Translator: Ramunė ViaLaurea <ramune.vialaurea@gmail.com>, 2022\n"
 "Language-Team: Lithuanian (https://www.transifex.com/odoo/teams/41243/lt/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -70,14 +71,14 @@ msgstr "Taikyti"
 #. module: sale_coupon
 #: model_terms:ir.ui.view,arch_db:sale_coupon.sale_coupon_apply_code_view_form
 msgid "Apply coupon"
-msgstr ""
+msgstr "Pritaikyti kuponą"
 
 #. module: sale_coupon
 #: code:addons/sale_coupon/models/coupon.py:0
 #: code:addons/sale_coupon/models/coupon_program.py:0
 #, python-format
 msgid "At least one of the required conditions is not met to get the reward!"
-msgstr ""
+msgstr "Netenkinama viena iš būtinų sąlygų, kad gauti šią dovaną"
 
 #. module: sale_coupon
 #: model_terms:ir.ui.view,arch_db:sale_coupon.sale_coupon_apply_code_view_form
@@ -121,13 +122,15 @@ msgstr "Sukurta"
 #, python-format
 msgid "Discount: %(program)s - On product with following taxes: %(taxes)s"
 msgstr ""
+"Nuolaida pagal: %(program)s - taikoma produktams su šiais mokesčiais: "
+"%(taxes)s"
 
 #. module: sale_coupon
 #: code:addons/sale_coupon/models/sale_order.py:0
 #: code:addons/sale_coupon/models/sale_order.py:0
 #, python-format
 msgid "Discount: %s"
-msgstr ""
+msgstr "Nuolaida %s"
 
 #. module: sale_coupon
 #: model:ir.model.fields,field_description:sale_coupon.field_coupon_coupon__display_name
@@ -141,25 +144,25 @@ msgstr "Rodomas pavadinimas"
 #. module: sale_coupon
 #: model:ir.actions.act_window,name:sale_coupon.sale_coupon_apply_code_action
 msgid "Enter Promotion or Coupon Code"
-msgstr ""
+msgstr "Įveskite akcijos ar kupono kodą"
 
 #. module: sale_coupon
 #: code:addons/sale_coupon/models/sale_order.py:0
 #, python-format
 msgid "Free Product"
-msgstr ""
+msgstr "Nemokamas produktas"
 
 #. module: sale_coupon
 #: code:addons/sale_coupon/models/coupon.py:0
 #, python-format
 msgid "Global discounts are not cumulable."
-msgstr ""
+msgstr "Bendros nuolaidos nesumuojamos"
 
 #. module: sale_coupon
 #: code:addons/sale_coupon/models/coupon_program.py:0
 #, python-format
 msgid "Global discounts are not cumulative."
-msgstr ""
+msgstr "Bendra nuolaida nėra kaupiama"
 
 #. module: sale_coupon
 #: model:ir.model.fields,field_description:sale_coupon.field_coupon_coupon__id
@@ -174,7 +177,7 @@ msgstr "ID"
 #: code:addons/sale_coupon/models/coupon.py:0
 #, python-format
 msgid "Invalid partner."
-msgstr ""
+msgstr "Neteisingas partneris"
 
 #. module: sale_coupon
 #: model:ir.model.fields,field_description:sale_coupon.field_sale_order_line__is_reward_line
@@ -203,7 +206,7 @@ msgstr "Paskutinį kartą atnaujinta"
 #. module: sale_coupon
 #: model:ir.model.fields,field_description:sale_coupon.field_sale_order__generated_coupon_ids
 msgid "Offered Coupons"
-msgstr ""
+msgstr "Siūlomi kuponai"
 
 #. module: sale_coupon
 #: model:ir.model.fields,field_description:sale_coupon.field_coupon_program__order_count
@@ -236,7 +239,7 @@ msgstr "Nuolaidos kodas netinkamas"
 #. module: sale_coupon
 #: model:ir.model.fields,field_description:sale_coupon.field_sale_order__promo_code
 msgid "Promotion Code"
-msgstr ""
+msgstr "Akcijos kodas"
 
 #. module: sale_coupon
 #: model:ir.ui.menu,name:sale_coupon.menu_promotion_type_config
@@ -248,17 +251,17 @@ msgstr "Nuolaidų programos"
 #: code:addons/sale_coupon/models/coupon_program.py:0
 #, python-format
 msgid "Promotionals codes are not cumulative."
-msgstr ""
+msgstr "Akcijos kodas nėra kaupiamas"
 
 #. module: sale_coupon
 #: model_terms:ir.ui.view,arch_db:sale_coupon.sale_order_view_form
 msgid "Promotions"
-msgstr ""
+msgstr "Akcijos"
 
 #. module: sale_coupon
 #: model:ir.model.fields,field_description:sale_coupon.field_sale_order__reward_amount
 msgid "Reward Amount"
-msgstr ""
+msgstr "Atlygio suma"
 
 #. module: sale_coupon
 #: model_terms:ir.ui.view,arch_db:sale_coupon.sale_coupon_program_view_coupon_program_form
@@ -292,14 +295,14 @@ msgstr "Pardavimų užsakymai"
 #: code:addons/sale_coupon/models/coupon.py:0
 #, python-format
 msgid "The coupon program for %s is in draft or closed state"
-msgstr ""
+msgstr "Kuponas pagal programą %s, kuri yra juodraščio arba uždarytos būsenos"
 
 #. module: sale_coupon
 #: code:addons/sale_coupon/models/coupon.py:0
 #: code:addons/sale_coupon/models/coupon_program.py:0
 #, python-format
 msgid "The customer doesn't have access to this reward."
-msgstr ""
+msgstr "Klientas neturi prieigos prie šio skatinimo"
 
 #. module: sale_coupon
 #: code:addons/sale_coupon/models/coupon_program.py:0
@@ -342,19 +345,19 @@ msgstr ""
 #: code:addons/sale_coupon/models/coupon.py:0
 #, python-format
 msgid "This coupon has already been used (%s)."
-msgstr ""
+msgstr "Kuponas jau buvo panaudotas (%s)"
 
 #. module: sale_coupon
 #: code:addons/sale_coupon/models/coupon.py:0
 #, python-format
 msgid "This coupon has been cancelled (%s)."
-msgstr ""
+msgstr "Kuponas buvo atšauktas (%s)"
 
 #. module: sale_coupon
 #: code:addons/sale_coupon/models/coupon.py:0
 #, python-format
 msgid "This coupon is expired (%s)."
-msgstr ""
+msgstr "Šis kuponas yra pasibaigęs (%s)"
 
 #. module: sale_coupon
 #: code:addons/sale_coupon/wizard/sale_coupon_apply_code.py:0

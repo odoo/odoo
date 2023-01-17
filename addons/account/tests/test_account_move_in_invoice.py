@@ -7,6 +7,7 @@ from odoo.tests import tagged
 from odoo import fields
 from odoo.exceptions import UserError, ValidationError
 
+from collections import defaultdict
 
 @tagged('post_install', '-at_install')
 class TestAccountMoveInInvoiceOnchanges(AccountTestInvoicingCommon):
@@ -1842,3 +1843,185 @@ class TestAccountMoveInInvoiceOnchanges(AccountTestInvoicingCommon):
             {'amount_currency': 96.0,   'debit': 48.0,  'credit': 0.0,      'account_id': self.product_line_vals_2['account_id'],   'reconciled': False},
             {'amount_currency': -96.0,  'debit': 0.0,   'credit': 48.0,     'account_id': wizard.expense_accrual_account.id,        'reconciled': True},
         ])
+
+    def test_in_invoice_reverse_caba(self):
+        tax_waiting_account = self.env['account.account'].create({
+            'name': 'TAX_WAIT',
+            'code': 'TWAIT',
+            'user_type_id': self.env.ref('account.data_account_type_current_liabilities').id,
+            'reconcile': True,
+            'company_id': self.company_data['company'].id,
+        })
+        tax_final_account = self.env['account.account'].create({
+            'name': 'TAX_TO_DEDUCT',
+            'code': 'TDEDUCT',
+            'user_type_id': self.env.ref('account.data_account_type_current_assets').id,
+            'company_id': self.company_data['company'].id,
+        })
+        tax_base_amount_account = self.env['account.account'].create({
+            'name': 'TAX_BASE',
+            'code': 'TBASE',
+            'user_type_id': self.env.ref('account.data_account_type_current_assets').id,
+            'company_id': self.company_data['company'].id,
+        })
+        self.env.company.account_cash_basis_base_account_id = tax_base_amount_account
+        self.env.company.tax_exigibility = True
+        tax_tags = defaultdict(dict)
+        for line_type, repartition_type in [(l, r) for l in ('invoice', 'refund') for r in ('base', 'tax')]:
+            tax_tags[line_type][repartition_type] = self.env['account.account.tag'].create({
+                'name': '%s %s tag' % (line_type, repartition_type),
+                'applicability': 'taxes',
+                'country_id': self.env.ref('base.us').id,
+            })
+        tax = self.env['account.tax'].create({
+            'name': 'cash basis 10%',
+            'type_tax_use': 'purchase',
+            'amount': 10,
+            'tax_exigibility': 'on_payment',
+            'cash_basis_transition_account_id': tax_waiting_account.id,
+            'invoice_repartition_line_ids': [
+                (0, 0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'base',
+                    'tag_ids': [(6, 0, tax_tags['invoice']['base'].ids)],
+                }),
+                (0, 0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'tax',
+                    'account_id': tax_final_account.id,
+                    'tag_ids': [(6, 0, tax_tags['invoice']['tax'].ids)],
+                }),
+            ],
+            'refund_repartition_line_ids': [
+                (0, 0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'base',
+                    'tag_ids': [(6, 0, tax_tags['refund']['base'].ids)],
+                }),
+                (0, 0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'tax',
+                    'account_id': tax_final_account.id,
+                    'tag_ids': [(6, 0, tax_tags['refund']['tax'].ids)],
+                }),
+            ],
+        })
+        # create invoice
+        move_form = Form(self.env['account.move'].with_context(default_move_type='in_invoice'))
+        move_form.partner_id = self.partner_a
+        move_form.invoice_date = fields.Date.from_string('2017-01-01')
+        with move_form.invoice_line_ids.new() as line_form:
+            line_form.product_id = self.product_a
+            line_form.tax_ids.clear()
+            line_form.tax_ids.add(tax)
+        invoice = move_form.save()
+        invoice.action_post()
+        # make payment
+        self.env['account.payment.register'].with_context(active_model='account.move', active_ids=invoice.ids).create({
+            'payment_date': invoice.date,
+        })._create_payments()
+        # check caba move
+        partial_rec = invoice.mapped('line_ids.matched_debit_ids')
+        caba_move = self.env['account.move'].search([('tax_cash_basis_rec_id', '=', partial_rec.id)])
+        expected_values = [
+            {
+                'tax_line_id': False,
+                'tax_repartition_line_id': False,
+                'tax_ids': [],
+                'tax_tag_ids': [],
+                'account_id': tax_base_amount_account.id,
+                'debit': 0.0,
+                'credit': 800.0,
+            },
+            {
+                'tax_line_id': False,
+                'tax_repartition_line_id': False,
+                'tax_ids': tax.ids,
+                'tax_tag_ids': tax_tags['invoice']['base'].ids,
+                'account_id': tax_base_amount_account.id,
+                'debit': 800.0,
+                'credit': 0.0,
+            },
+            {
+                'tax_line_id': False,
+                'tax_repartition_line_id': False,
+                'tax_ids': [],
+                'tax_tag_ids': [],
+                'account_id': tax_waiting_account.id,
+                'debit': 0.0,
+                'credit': 80.0,
+            },
+            {
+                'tax_line_id': tax.id,
+                'tax_repartition_line_id': tax.invoice_repartition_line_ids.filtered(lambda x: x.repartition_type == 'tax').id,
+                'tax_ids': [],
+                'tax_tag_ids': tax_tags['invoice']['tax'].ids,
+                'account_id': tax_final_account.id,
+                'debit': 80.0,
+                'credit': 0.0,
+            },
+        ]
+        self.assertRecordValues(caba_move.line_ids, expected_values)
+        # unreconcile
+        credit_aml = invoice.line_ids.filtered('credit')
+        credit_aml.remove_move_reconcile()
+        # check caba move reverse is same as caba move with only debit/credit inverted
+        reversed_caba_move = self.env['account.move'].search([('reversed_entry_id', '=', caba_move.id)])
+        for value in expected_values:
+            value.update({
+                'debit': value['credit'],
+                'credit': value['debit'],
+            })
+        self.assertRecordValues(reversed_caba_move.line_ids, expected_values)
+
+    def test_in_invoice_line_tax_line_delete(self):
+        with Form(self.invoice) as invoice_form:
+            lines_count = len(invoice_form.line_ids)
+            with invoice_form.line_ids.edit(0) as line_form:
+                tax = line_form.tax_line_id
+            invoice_form.line_ids.remove(0)
+            # check that the tax line is recreated
+            self.assertEqual(len(invoice_form.line_ids), lines_count)
+
+        # Assert the tax line is recreated for the tax
+        self.assertIn(tax, self.invoice.line_ids.tax_line_id)
+
+    def test_bill_amount_should_be_editable(self):
+        tax0 = self.env['account.tax'].create({
+            'name': 'test_tax_0',
+            'amount_type': 'percent',
+            'amount': 0.0,
+            'type_tax_use': 'purchase',
+        })
+        invoice_form = Form(self.env['account.move'].with_context(default_move_type='in_invoice'))
+        invoice_form.partner_id = self.partner_a
+        # Both 15% default tax and 0% tax, will have only one tax line for the 15%
+        with invoice_form.invoice_line_ids.new() as line:
+            line.name = 'test_line_1'
+            line.account_id = self.company_data['default_account_expense']
+            line.tax_ids.add(tax0)
+            line.price_unit = 200.0
+        # only the default 15% tax is set
+        with invoice_form.invoice_line_ids.new() as line:
+            line.name = 'test_line_2'
+            line.account_id = self.company_data['default_account_expense']
+            line.price_unit = 100.0
+        # no tax because of zero price
+        with invoice_form.invoice_line_ids.new() as line:
+            line.name = 'test_line_3'
+            line.account_id = self.company_data['default_account_expense']
+            line.price_unit = 0.0
+
+        invoice = invoice_form.save()
+
+        # mimic the behavior editing taxes with `tax_group_widget`
+        with invoice_form:
+            with invoice_form.line_ids.edit(0) as tax_line_form:
+                tax_line_form.debit = 500.0
+
+        # make sure taxes are not recompute
+        self.assertRecordValues(invoice.line_ids.filtered(lambda line: line.tax_line_id),
+                                [{
+                                    'debit': 500,
+                                    'tax_line_id': self.company_data['default_tax_purchase'].id,
+                                }])

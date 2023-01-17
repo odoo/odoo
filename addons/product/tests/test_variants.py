@@ -3,6 +3,7 @@
 
 import base64
 from collections import OrderedDict
+from datetime import datetime, timedelta
 import io
 import unittest.mock
 
@@ -211,6 +212,31 @@ class TestVariants(common.TestProductCommon):
         self.assertEqual(template_copy.name, 'Test Copy (copy)')
         self.assertEqual(variant_copy.name, 'Test Copy (copy) (copy)')
         self.assertEqual(len(variant_copy.product_variant_ids), 2)
+
+    def test_dynamic_variants_copy(self):
+        self.color_attr = self.env['product.attribute'].create({'name': 'Color', 'create_variant': 'dynamic'})
+        self.color_attr_value_r = self.env['product.attribute.value'].create({'name': 'Red', 'attribute_id': self.color_attr.id})
+        self.color_attr_value_b = self.env['product.attribute.value'].create({'name': 'Blue', 'attribute_id': self.color_attr.id})
+
+        # test copy of variant with dynamic attribute
+        template_dyn = self.env['product.template'].create({
+            'name': 'Test Dynamical',
+            'attribute_line_ids': [(0, 0, {
+                'attribute_id': self.color_attr.id,
+                'value_ids': [(4, self.color_attr_value_r.id), (4, self.color_attr_value_b.id)],
+            })]
+        })
+
+        self.assertEqual(len(template_dyn.product_variant_ids), 0)
+        self.assertEqual(template_dyn.name, 'Test Dynamical')
+
+        variant_dyn = template_dyn._create_product_variant(template_dyn._get_first_possible_combination())
+        self.assertEqual(len(template_dyn.product_variant_ids), 1)
+
+        variant_dyn_copy = variant_dyn.copy()
+        template_dyn_copy = variant_dyn_copy.product_tmpl_id
+        self.assertEqual(len(template_dyn_copy.product_variant_ids), 1)
+        self.assertEqual(template_dyn_copy.name, 'Test Dynamical (copy)')
 
     def test_standard_price(self):
         """ Ensure template values are correctly (re)computed depending on the context """
@@ -624,6 +650,20 @@ class TestVariantsImages(common.TestProductCommon):
         """Check that on variant, the image used is the image_variant_1920 if set,
         and defaults to the template image otherwise.
         """
+        # Pretend setup happened in an older transaction by updating on the SQL layer and making sure it gets reloaded
+        # Using _write() instead of write() because write() only allows updating log access fields at boot time
+        before = datetime.now() - timedelta(hours=1)
+        self.template._write({
+            'create_date': before,
+            'write_date': before,
+        })
+        self.variants._write({
+            'create_date': before,
+            'write_date': before,
+        })
+        self.template.invalidate_cache(['create_date', 'write_date'], self.template.ids)
+        self.variants.invalidate_cache(['create_date', 'write_date'], self.variants.ids)
+
         f = io.BytesIO()
         Image.new('RGB', (800, 500), '#000000').save(f, 'PNG')
         f.seek(0)
@@ -633,8 +673,11 @@ class TestVariantsImages(common.TestProductCommon):
         self.assertEqual(len(set(images)), 4)
 
         variant_no_image = self.variants[0]
+        old_last_update = variant_no_image['__last_update']
         self.assertFalse(variant_no_image.image_1920)
         self.template.image_1920 = image_black
+        self.template.write({'write_date': datetime.now()})
+        new_last_update = variant_no_image['__last_update']
 
         # the first has no image variant, all the others do
         self.assertFalse(variant_no_image.image_variant_1920)
@@ -644,6 +687,9 @@ class TestVariantsImages(common.TestProductCommon):
         self.assertEqual(variant_no_image.image_1920, self.template.image_1920)
         # having changed the template image should not have changed these
         self.assertEqual(images[1:], self.variants.mapped('image_1920')[1:])
+
+        # last update changed for the variant without image
+        self.assertLess(old_last_update, new_last_update)
 
     def test_update_images_with_archived_variants(self):
         """Update images after variants have been archived"""
@@ -1230,3 +1276,108 @@ class TestVariantWrite(TransactionCase):
             product.write({'name': 'Bar', 'description': 'Bar'})
             self.assertEqual(product.name, 'Bar')
             self.assertEqual(product.description, 'Bar')
+
+
+class TestVariantsExclusion(common.TestProductCommon):
+    def setUp(self):
+        res = super(TestVariantsExclusion, self).setUp()
+        self.smartphone = self.env['product.template'].create({
+            'name': 'Smartphone',
+        })
+
+        self.size_attr = self.env['product.attribute'].create({'name': 'Size'})
+        self.size_attr_value_s = self.env['product.attribute.value'].create({'name': 'S', 'attribute_id': self.size_attr.id})
+        self.size_attr_value_xl = self.env['product.attribute.value'].create({'name': 'XL', 'attribute_id': self.size_attr.id})
+
+        self.storage_attr = self.env['product.attribute'].create({'name': 'Storage'})
+        self.storage_attr_value_128 = self.env['product.attribute.value'].create({'name': '128', 'attribute_id': self.storage_attr.id})
+        self.storage_attr_value_256 = self.env['product.attribute.value'].create({'name': '256', 'attribute_id': self.storage_attr.id})
+
+        # add attributes to product
+        self.smartphone_size_attribute_lines = self.env['product.template.attribute.line'].create({
+            'product_tmpl_id': self.smartphone.id,
+            'attribute_id': self.size_attr.id,
+            'value_ids': [(6, 0, [self.size_attr_value_s.id, self.size_attr_value_xl.id])],
+        })
+
+        self.smartphone_storage_attribute_lines = self.env['product.template.attribute.line'].create({
+            'product_tmpl_id': self.smartphone.id,
+            'attribute_id': self.storage_attr.id,
+            'value_ids': [(6, 0, [self.storage_attr_value_128.id, self.storage_attr_value_256.id])],
+        })
+
+        def get_ptav(model, att):
+            return model.valid_product_template_attribute_line_ids.filtered(
+                lambda l: l.attribute_id == att.attribute_id
+            ).product_template_value_ids.filtered(
+                lambda v: v.product_attribute_value_id == att
+            )
+        self.smartphone_s = get_ptav(self.smartphone, self.size_attr_value_s)
+        self.smartphone_256 = get_ptav(self.smartphone, self.storage_attr_value_256)
+        self.smartphone_128 = get_ptav(self.smartphone, self.storage_attr_value_128)
+        return res
+
+    def test_variants_1_exclusion(self):
+        # Create one exclusion for Smartphone S
+        self.smartphone_s.write({
+            'exclude_for': [(0, 0, {
+                'product_tmpl_id': self.smartphone.id,
+                'value_ids': [(6, 0, [self.smartphone_256.id])]
+            })]
+        })
+        self.assertEqual(len(self.smartphone.product_variant_ids), 3, 'With exclusion {s: [256]}, the smartphone should have 3 active different variants')
+
+        # Delete exclusion
+        self.smartphone_s.write({
+            'exclude_for': [(2, self.smartphone_s.exclude_for.id, 0)]
+        })
+        self.assertEqual(len(self.smartphone.product_variant_ids), 4, 'With no exclusion, the smartphone should have 4 active different variants')
+
+    def test_variants_2_exclusions_same_line(self):
+        # Create two exclusions for Smartphone S on the same line
+        self.smartphone_s.write({
+            'exclude_for': [(0, 0, {
+                'product_tmpl_id': self.smartphone.id,
+                'value_ids': [(6, 0, [self.smartphone_128.id, self.smartphone_256.id])]
+            })]
+        })
+        self.assertEqual(len(self.smartphone.product_variant_ids), 2, 'With exclusion {s: [128, 256]}, the smartphone should have 2 active different variants')
+
+        # Delete one exclusion of the line
+        self.smartphone_s.write({
+            'exclude_for': [(1, self.smartphone_s.exclude_for.id, {
+                'product_tmpl_id': self.smartphone.id,
+                'value_ids': [(6, 0, [self.smartphone_128.id])]
+            })]
+        })
+        self.assertEqual(len(self.smartphone.product_variant_ids), 3, 'With exclusion {s: [128]}, the smartphone should have 3 active different variants')
+
+        # Delete exclusion
+        self.smartphone_s.write({
+            'exclude_for': [(2, self.smartphone_s.exclude_for.id, 0)]
+        })
+        self.assertEqual(len(self.smartphone.product_variant_ids), 4, 'With no exclusion, the smartphone should have 4 active different variants')
+
+    def test_variants_2_exclusions_different_lines(self):
+        # add 1 exclusion
+        self.smartphone_s.write({
+            'exclude_for': [(0, 0, {
+                'product_tmpl_id': self.smartphone.id,
+                'value_ids': [(6, 0, [self.smartphone_128.id])]
+            })]
+        })
+
+        # add 1 exclusion on a different line
+        self.smartphone_s.write({
+            'exclude_for': [(0, 0, {
+                'product_tmpl_id': self.smartphone.id,
+                'value_ids': [(6, 0, [self.smartphone_256.id])]
+            })]
+        })
+        self.assertEqual(len(self.smartphone.product_variant_ids), 2, 'With exclusion {s: [128, 256]}, the smartphone should have 2 active different variants')
+
+        # delete one exclusion line
+        self.smartphone_s.write({
+            'exclude_for': [(2, self.smartphone_s.exclude_for.ids[0], 0)]
+        })
+        self.assertEqual(len(self.smartphone.product_variant_ids), 3, 'With one exclusion, the smartphone should have 3 active different variants')

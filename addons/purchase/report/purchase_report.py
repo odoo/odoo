@@ -66,7 +66,6 @@ class PurchaseReport(models.Model):
 
     def _select(self):
         select_str = """
-            WITH currency_rate as (%s)
                 SELECT
                     po.id as order_id,
                     min(l.id) as id,
@@ -101,7 +100,7 @@ class PurchaseReport(models.Model):
                          then sum(l.product_qty / line_uom.factor * product_uom.factor) - sum(l.qty_invoiced / line_uom.factor * product_uom.factor)
                          else sum(l.qty_received / line_uom.factor * product_uom.factor) - sum(l.qty_invoiced / line_uom.factor * product_uom.factor)
                     end as qty_to_be_billed
-        """ % self.env['res.currency']._select_companies_rates()
+        """
         return select_str
 
     def _from(self):
@@ -115,10 +114,6 @@ class PurchaseReport(models.Model):
                 left join uom_uom line_uom on (line_uom.id=l.product_uom)
                 left join uom_uom product_uom on (product_uom.id=t.uom_id)
                 left join account_analytic_account analytic_account on (l.account_analytic_id = analytic_account.id)
-                left join currency_rate cr on (cr.currency_id = po.currency_id and
-                    cr.company_id = po.company_id and
-                    cr.date_start <= coalesce(po.date_order, now()) and
-                    (cr.date_end is null or cr.date_end > coalesce(po.date_order, now())))
                 left join {currency_table} ON currency_table.company_id = po.company_id
         """.format(
             currency_table=self.env['res.currency']._get_query_currency_table({'multi_company': True, 'date': {'date_to': fields.Date.today()}}),

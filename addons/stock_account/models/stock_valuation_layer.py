@@ -28,7 +28,7 @@ class StockValuationLayer(models.Model):
     stock_valuation_layer_id = fields.Many2one('stock.valuation.layer', 'Linked To', readonly=True, check_company=True)
     stock_valuation_layer_ids = fields.One2many('stock.valuation.layer', 'stock_valuation_layer_id')
     stock_move_id = fields.Many2one('stock.move', 'Stock Move', readonly=True, check_company=True, index=True)
-    account_move_id = fields.Many2one('account.move', 'Journal Entry', readonly=True, check_company=True)
+    account_move_id = fields.Many2one('account.move', 'Journal Entry', readonly=True, check_company=True, index=True)
 
     def init(self):
         tools.create_index(

@@ -7,9 +7,10 @@ odoo.define("website_sale.tour_shop", function (require) {
     // return the steps, used for backend and frontend
 
     return [{
-        trigger: "#new-content-menu > a",
+        trigger: "body:has(#o_new_content_menu_choices.o_hidden) #new-content-menu > a",
         content: _t("Let's create your first product."),
         extra_trigger: ".js_sale",
+        consumeVisibleOnly: true,
         position: "bottom",
     }, {
         trigger: "a[data-action=new_product]",

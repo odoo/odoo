@@ -28,7 +28,7 @@
                         <span class="o_ThreadPreview_name" t-att-class="{ 'o-mobile': env.messaging.device.isMobile, 'o-muted': thread.localMessageUnreadCounter === 0 }">
                             <t t-esc="thread.displayName"/>
                         </span>
-                        <t t-if="thread.localMessageUnreadCounter > 0">
+                        <t t-if="thread.displayCounter > 0">
                             <span class="o_ThreadPreview_counter" t-att-class="{ 'o-muted': thread.localMessageUnreadCounter === 0 }">
                                 (<t t-esc="thread.localMessageUnreadCounter"/>)
                             </span>

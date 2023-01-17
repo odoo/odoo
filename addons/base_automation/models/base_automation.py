@@ -342,7 +342,7 @@ class BaseAutomation(models.Model):
                     for old_vals in (records.read(list(vals)) if vals else [])
                 }
                 # call original method
-                write.origin(records, vals, **kw)
+                write.origin(self.with_env(actions.env), vals, **kw)
                 # check postconditions, and execute actions on the records that satisfy them
                 for action in actions.with_context(old_values=old_values):
                     records, domain_post = action._filter_post_export_domain(pre[action])

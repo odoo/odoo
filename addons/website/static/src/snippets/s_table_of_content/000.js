@@ -13,6 +13,8 @@ const TableOfContent = publicWidget.Widget.extend({
      */
     async start() {
         await this._super(...arguments);
+        this.$scrollingElement = $().getScrollingElement();
+        this.previousPosition = -1;
         this._updateTableOfContentNavbarPosition();
         extraMenuUpdateCallbacks.push(this._updateTableOfContentNavbarPosition.bind(this));
     },
@@ -42,7 +44,18 @@ const TableOfContent = publicWidget.Widget.extend({
         const $mainNavBar = $('#oe_main_menu_navbar');
         position += $mainNavBar.length ? $mainNavBar.outerHeight() : 0;
         position += isHorizontalNavbar ? this.$target.outerHeight() : 0;
-        $().getScrollingElement().scrollspy({target: '.s_table_of_content_navbar', method: 'offset', offset: position + 100, alwaysKeepFirstActive: true});
+        if (this.previousPosition !== position) {
+            // The scrollSpy must be destroyed before calling it again.
+            // Otherwise the call has no effect.
+            this.$scrollingElement.scrollspy('dispose');
+            this.$scrollingElement.scrollspy({
+                target: '.s_table_of_content_navbar',
+                method: 'offset',
+                offset: position + 100,
+                alwaysKeepFirstActive: true,
+            });
+            this.previousPosition = position;
+        }
     },
 });
 

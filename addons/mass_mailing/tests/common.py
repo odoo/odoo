@@ -189,26 +189,37 @@ class MassMailCase(MailCase, MockLinkTracker):
             raise AssertionError('url %s not found in mailing %s for record %s' % (click_label, mailing, record))
 
     @classmethod
-    def _create_bounce_trace(cls, mailing, record, dt=None):
-        if 'email_normalized' in record:
-            trace_email = record.email_normalized
-        elif 'email_from' in record:
-            trace_email = record.email_from
-        else:
-            trace_email = record.email
+    def _create_bounce_trace(cls, mailing, records, dt=None):
         if dt is None:
             dt = datetime.datetime.now() - datetime.timedelta(days=1)
+        return cls._create_traces(mailing, records, bounced=dt)
+
+    @classmethod
+    def _create_sent_traces(cls, mailing, records, dt=None):
+        if dt is None:
+            dt = datetime.datetime.now() - datetime.timedelta(days=1)
+        return cls._create_traces(mailing, records, sent=dt)
+
+    @classmethod
+    def _create_traces(cls, mailing, records, **values):
+        if 'email_normalized' in records:
+            fname = 'email_normalized'
+        elif 'email_from' in records:
+            fname = 'email_from'
+        else:
+            fname = 'email'
         randomized = random.random()
-        trace = cls.env['mailing.trace'].create({
-            'mass_mailing_id': mailing.id,
-            'model': record._name,
-            'res_id': record.id,
-            'bounced': dt,
-            # TDE FIXME: improve this with a mail-enabled heuristics
-            'email': trace_email,
-            'message_id': '<%5f@gilbert.boitempomils>' % randomized,
-        })
-        return trace
+        traces = cls.env['mailing.trace'].create([
+            dict({'mass_mailing_id': mailing.id,
+                  'model': record._name,
+                  'res_id': record.id,
+                  # TDE FIXME: improve this with a mail-enabled heuristics
+                  'email': record[fname],
+                  'message_id': '<%5f@gilbert.boitempomils>' % randomized,
+                 }, **values)
+            for record in records
+        ])
+        return traces
 
 
 class MassMailCommon(MailCommon, MassMailCase):

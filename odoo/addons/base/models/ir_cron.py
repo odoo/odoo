@@ -320,5 +320,10 @@ class ir_cron(models.Model):
 
     @api.model
     def toggle(self, model, domain):
+        # Prevent deactivated cron jobs from being re-enabled through side effects on
+        # neutralized databases.
+        if self.env['ir.config_parameter'].sudo().get_param('database.is_neutralized'):
+            return True
+
         active = bool(self.env[model].search_count(domain))
         return self.try_write({'active': active})

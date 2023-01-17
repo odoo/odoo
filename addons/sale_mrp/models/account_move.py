@@ -11,10 +11,8 @@ class AccountMoveLine(models.Model):
 
         so_line = self.sale_line_ids and self.sale_line_ids[-1] or False
         if so_line:
-            bom = (so_line.product_id.variant_bom_ids or so_line.product_id.product_tmpl_id.bom_ids).filtered(
-                lambda b: not b.company_id or b.company_id == so_line.company_id
-            )[:1]
-            if bom and bom.type == 'phantom':
+            bom = self.env['mrp.bom']._bom_find(product=so_line.product_id, company_id=so_line.company_id.id, bom_type='phantom')[:1]
+            if bom:
                 is_line_reversing = bool(self.move_id.reversed_entry_id)
                 qty_to_invoice = self.product_uom_id._compute_quantity(self.quantity, self.product_id.uom_id)
                 posted_invoice_lines = so_line.invoice_lines.filtered(lambda l: l.move_id.state == 'posted' and bool(l.move_id.reversed_entry_id) == is_line_reversing)

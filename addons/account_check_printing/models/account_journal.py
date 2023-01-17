@@ -77,12 +77,6 @@ class AccountJournal(models.Model):
             rec._create_check_sequence()
         return rec
 
-    @api.returns('self', lambda value: value.id)
-    def copy(self, default=None):
-        rec = super(AccountJournal, self).copy(default)
-        rec._create_check_sequence()
-        return rec
-
     def _create_check_sequence(self):
         """ Create a check sequence for the journal """
         for journal in self:

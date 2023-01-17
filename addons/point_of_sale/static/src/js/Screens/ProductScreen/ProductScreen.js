@@ -239,11 +239,7 @@ odoo.define('point_of_sale.ProductScreen', function(require) {
             if (partner) {
                 if (this.currentOrder.get_client() !== partner) {
                     this.currentOrder.set_client(partner);
-                    this.currentOrder.set_pricelist(
-                        _.findWhere(this.env.pos.pricelists, {
-                            id: partner.property_product_pricelist[0],
-                        }) || this.env.pos.default_pricelist
-                    );
+                    this.currentOrder.updatePricelist(partner);
                 }
                 return true;
             }
@@ -279,23 +275,23 @@ odoo.define('point_of_sale.ProductScreen', function(require) {
                 startingValue: 0,
                 title: this.env._t('Set the new quantity'),
             });
-            let newQuantity = inputNumber !== "" ? parse.float(inputNumber) : null;
-            if (confirmed && newQuantity !== null) {
-                let order = this.env.pos.get_order();
-                let selectedLine = this.env.pos.get_order().get_selected_orderline();
-                let currentQuantity = selectedLine.get_quantity()
-                if(selectedLine.is_last_line() && currentQuantity === 1 && newQuantity < currentQuantity)
-                    selectedLine.set_quantity(newQuantity);
-                else if(newQuantity >= currentQuantity)
-                    selectedLine.set_quantity(newQuantity);
-                else {
-                    let newLine = selectedLine.clone();
-                    let decreasedQuantity = currentQuantity - newQuantity
-                    newLine.order = order;
+            if(!confirmed)
+                return;
+            let newQuantity = parse.float(inputNumber);
+            let order = this.env.pos.get_order();
+            let selectedLine = this.env.pos.get_order().get_selected_orderline();
+            let currentQuantity = selectedLine.get_quantity()
+            if(selectedLine.is_last_line() && currentQuantity === 1 && newQuantity < currentQuantity)
+                selectedLine.set_quantity(newQuantity);
+            else if(newQuantity >= currentQuantity)
+                selectedLine.set_quantity(newQuantity);
+            else {
+                let newLine = selectedLine.clone();
+                let decreasedQuantity = currentQuantity - newQuantity
+                newLine.order = order;
 
-                    newLine.set_quantity( - decreasedQuantity, true);
-                    order.add_orderline(newLine);
-                }
+                newLine.set_quantity( - decreasedQuantity, true);
+                order.add_orderline(newLine);
             }
         }
         async _onClickCustomer() {
@@ -310,8 +306,20 @@ odoo.define('point_of_sale.ProductScreen', function(require) {
                 this.currentOrder.updatePricelist(newClient);
             }
         }
-        _onClickPay() {
-            this.showScreen('PaymentScreen');
+        async _onClickPay() {
+            if (this.env.pos.get_order().orderlines.any(line => line.get_product().tracking !== 'none' && !line.has_valid_product_lot() && (this.env.pos.picking_type.use_create_lots || this.env.pos.picking_type.use_existing_lots))) {
+                const { confirmed } = await this.showPopup('ConfirmPopup', {
+                    title: this.env._t('Some Serial/Lot Numbers are missing'),
+                    body: this.env._t('You are trying to sell products with serial/lot numbers, but some of them are not set.\nWould you like to proceed anyway?'),
+                    confirmText: this.env._t('Yes'),
+                    cancelText: this.env._t('No')
+                });
+                if (confirmed) {
+                    this.showScreen('PaymentScreen');
+                }
+            } else {
+                this.showScreen('PaymentScreen');
+            }
         }
         switchPane() {
             if (this.mobile_pane === "left") {

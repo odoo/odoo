@@ -187,7 +187,7 @@ class TestLeaveRequests(TestHrHolidaysCommon):
     @mute_logger('odoo.models.unlink', 'odoo.addons.mail.models.mail_mail')
     def test_employee_is_absent(self):
         """ Only the concerned employee should be considered absent """
-        self.env['hr.leave'].with_user(self.user_employee_id).create({
+        user_employee_leave = self.env['hr.leave'].with_user(self.user_employee_id).create({
             'name': 'Hol11',
             'employee_id': self.employee_emp_id,
             'holiday_status_id': self.holidays_type_1.id,
@@ -196,6 +196,13 @@ class TestLeaveRequests(TestHrHolidaysCommon):
             'number_of_days': 2,
         })
         (self.employee_emp | self.employee_hrmanager).mapped('is_absent')  # compute in batch
+        self.assertFalse(self.employee_emp.is_absent, "He should not be considered absent")
+        self.assertFalse(self.employee_hrmanager.is_absent, "He should not be considered absent")
+
+        user_employee_leave.sudo().write({
+            'state': 'validate',
+        })
+        (self.employee_emp | self.employee_hrmanager)._compute_leave_status()
         self.assertTrue(self.employee_emp.is_absent, "He should be considered absent")
         self.assertFalse(self.employee_hrmanager.is_absent, "He should not be considered absent")
 
@@ -438,3 +445,24 @@ class TestLeaveRequests(TestHrHolidaysCommon):
         local_date_to = datetime(2019, 1, 8, 19, 0, 0)
         for tz in timezones_to_test:
             self._test_leave_with_tz(tz, local_date_from, local_date_to, 6)
+
+    def test_leave_with_public_holiday_other_company(self):
+        other_company = self.env['res.company'].create({
+            'name': 'Test Company',
+        })
+        # Create a public holiday for the second company
+        p_leave = self.env['resource.calendar.leaves'].create({
+            'date_from': datetime(2022, 3, 11),
+            'date_to': datetime(2022, 3, 11, 23, 59, 59),
+        })
+        p_leave.company_id = other_company
+
+        leave = self.env['hr.leave'].with_user(self.user_employee_id).create({
+            'name': 'Holiday Request',
+            'holiday_type': 'employee',
+            'employee_id': self.employee_emp.id,
+            'holiday_status_id': self.holidays_type_1.id,
+            'date_from': datetime(2022, 3, 11),
+            'date_to': datetime(2022, 3, 11, 23, 59, 59),
+        })
+        self.assertEqual(leave.number_of_days, 1)

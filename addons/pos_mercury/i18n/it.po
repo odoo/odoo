@@ -3,8 +3,7 @@
 # 	* pos_mercury
 # 
 # Translators:
-# Paolo Valier, 2020
-# Sergio Zanchetta <primes2h@gmail.com>, 2021
+# Sergio Zanchetta <primes2h@gmail.com>, 2022
 # Friederike Fasterling-Nesselbosch, 2022
 # 
 msgid ""
@@ -65,7 +64,7 @@ msgstr "Regola codice a barre"
 #: code:addons/pos_mercury/static/src/xml/OrderReceipt.xml:0
 #, python-format
 msgid "CARDHOLDER WILL PAY CARD ISSUER"
-msgstr ""
+msgstr "IL TITOLARE DELLA CARTA PAGHERÀ L'EMITTENTE DELLA CARTA"
 
 #. module: pos_mercury
 #: model:ir.model.fields,field_description:pos_mercury.field_pos_payment__mercury_card_brand
@@ -154,6 +153,9 @@ msgid ""
 "                                (without having pressed anything else) will charge the full amount of the order to\n"
 "                                the card."
 msgstr ""
+"Per gestire rapidamente gli ordini: strisciare una carta di credito nella schermata di pagamento\n"
+"(senza aver premuto nient'altro) addebiterà l'intero importo dell'ordine\n"
+"sulla carta."
 
 #. module: pos_mercury
 #. openerp-web
@@ -183,8 +185,8 @@ msgstr "ID"
 #: model:ir.model.fields,help:pos_mercury.field_pos_mercury_configuration__merchant_id
 msgid "ID of the merchant to authenticate him on the payment provider server"
 msgstr ""
-"ID del commerciante che permette l'autenticazione sul server del fornitore "
-"di pagamento"
+"ID del commerciante che ne consente l'autenticazione sul server del "
+"fornitore di pagamento"
 
 #. module: pos_mercury
 #: model_terms:ir.ui.view,arch_db:pos_mercury.view_pos_mercury_configuration_form
@@ -252,7 +254,7 @@ msgstr "Nessuna configurazione Vantiv associata al metodo di pagamento."
 #: code:addons/pos_mercury/models/pos_mercury_transaction.py:0
 #, python-format
 msgid "No opened point of sale session for user %s found."
-msgstr "Nessuna sessione aperta dell'utente %s trovata per il punto vendita."
+msgstr "Nessuna sessione aperta del punto vendita trovata per l'utente %s."
 
 #. module: pos_mercury
 #. openerp-web
@@ -281,14 +283,14 @@ msgstr "Errore Odoo durante l'elaborazione della transazione."
 #: code:addons/pos_mercury/static/src/js/PaymentScreen.js:0
 #, python-format
 msgid "Partially approved"
-msgstr "Parzialmente approvato"
+msgstr "Parzialmente approvata"
 
 #. module: pos_mercury
 #: model:ir.model.fields,help:pos_mercury.field_pos_mercury_configuration__merchant_pwd
 msgid ""
 "Password of the merchant to authenticate him on the payment provider server"
 msgstr ""
-"Password del commerciante che permette l'autenticazione sul server del "
+"Password del commerciante che ne consente l'autenticazione sul server del "
 "fornitore di pagamento"
 
 #. module: pos_mercury
@@ -301,7 +303,7 @@ msgstr "Paga con:"
 #. module: pos_mercury
 #: model:ir.model.fields,help:pos_mercury.field_pos_payment__mercury_record_no
 msgid "Payment record number from Vantiv Pay"
-msgstr ""
+msgstr "Numero di registrazione del pagamento di Vantiv Pay"
 
 #. module: pos_mercury
 #: model:ir.model.fields,help:pos_mercury.field_pos_payment__mercury_ref_no
@@ -431,6 +433,10 @@ msgid ""
 "                                just like on any other payment line. Whenever the payment line is set up, a card\n"
 "                                can be swiped through the card reader device."
 msgstr ""
+"Utilizzare l'integrazione Vantiv nel punto vendita è facile: basta premere il\n"
+"metodo di pagamento associato. Dopo di che l'importo può essere regolato (ad esempio per il cashback)\n"
+"proprio come su qualsiasi altra linea di pagamento. Ogni volta che la linea di pagamento è impostata, una carta\n"
+"può essere strisciata attraverso il dispositivo di lettura della carta."
 
 #. module: pos_mercury
 #: model_terms:ir.ui.view,arch_db:pos_mercury.res_config_settings_view_form_inherit_pos_mercury
@@ -456,7 +462,7 @@ msgstr "Numero fattura Vantiv"
 #. module: pos_mercury
 #: model:ir.model.fields,field_description:pos_mercury.field_pos_payment__mercury_record_no
 msgid "Vantiv record number"
-msgstr ""
+msgstr "Numero di registrazione Vantiv"
 
 #. module: pos_mercury
 #: model:ir.model.fields,field_description:pos_mercury.field_pos_payment__mercury_ref_no

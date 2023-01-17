@@ -34,7 +34,7 @@
                                         <br/>
                                         <h3>Contrôle des données du point de vente</h3>
                                         <br/>
-                                        <t t-if="data['result'] != 'None' and data['msg_alert'] == 'None'">
+                                        <t t-if="data['result'] != 'None' and data['corrupted_orders'] == 'None'">
                                             <h5>
                                                 Toutes les ventes effectuées via le Point de Vente
                                                 sont bien dans la chaîne de hachage.
@@ -74,6 +74,14 @@
                                             </tbody>
                                         </table>
                                     </div>
+                                </div>
+                                <div>
+                                    <t t-if="data['corrupted_orders'] != 'None'">
+                                        <h5>
+                                            Données corrompues sur la commande du point de vente:
+                                        </h5>
+                                        <span t-esc="data['corrupted_orders']"/> <br/>
+                                    </t>
                                 </div>
                                 <div class="row" id="hash_last_div">
                                     <div class="col-12" id="hash_chain_compliant">

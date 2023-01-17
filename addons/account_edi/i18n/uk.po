@@ -3,9 +3,9 @@
 # 	* account_edi
 # 
 # Translators:
-# Martin Trigaux, 2020
 # Bohdan Lisnenko, 2020
-# Alina Lisnenko <alinasemeniuk1@gmail.com>, 2021
+# Martin Trigaux, 2022
+# Alina Lisnenko <alinasemeniuk1@gmail.com>, 2022
 # 
 msgid ""
 msgstr ""
@@ -13,7 +13,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-11-27 14:12+0000\n"
 "PO-Revision-Date: 2020-09-07 08:09+0000\n"
-"Last-Translator: Alina Lisnenko <alinasemeniuk1@gmail.com>, 2021\n"
+"Last-Translator: Alina Lisnenko <alinasemeniuk1@gmail.com>, 2022\n"
 "Language-Team: Ukrainian (https://www.transifex.com/odoo/teams/41243/uk/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -91,6 +91,12 @@ msgid "Display Name"
 msgstr "Відобразити назву"
 
 #. module: account_edi
+#: model_terms:ir.ui.view,arch_db:account_edi.view_move_form_inherit
+#: model_terms:ir.ui.view,arch_db:account_edi.view_payment_form_inherit
+msgid "Download"
+msgstr "Завантажити"
+
+#. module: account_edi
 #: model:ir.actions.server,name:account_edi.ir_cron_edi_network_ir_actions_server
 #: model:ir.cron,cron_name:account_edi.ir_cron_edi_network
 #: model:ir.cron,name:account_edi.ir_cron_edi_network
@@ -112,6 +118,11 @@ msgstr "Формат EDI"
 #: model:ir.model.fields,help:account_edi.field_account_journal__compatible_edi_ids
 msgid "EDI format that support moves in this journal"
 msgstr "Формат EDI, що підтримує переміщення у цьому журналі"
+
+#. module: account_edi
+#: model:ir.model.fields,field_description:account_edi.field_account_edi_document__edi_content
+msgid "Edi Content"
+msgstr "Вміст Edi"
 
 #. module: account_edi
 #: model:ir.model.fields,field_description:account_edi.field_account_bank_statement_line__edi_document_ids
@@ -184,18 +195,6 @@ msgid "Error"
 msgstr "Помилка"
 
 #. module: account_edi
-#: code:addons/account_edi/models/account_edi_document.py:0
-#, python-format
-msgid "Error when cancelling the journal entry."
-msgstr "Помилка при скасуванні запису журналу."
-
-#. module: account_edi
-#: code:addons/account_edi/models/account_edi_document.py:0
-#, python-format
-msgid "Error when processing the journal entry."
-msgstr "Помилка при обробці запису журналу."
-
-#. module: account_edi
 #: model:ir.model.fields,field_description:account_edi.field_account_edi_document__edi_format_name
 msgid "Format Name"
 msgstr "Назва формату"
@@ -220,6 +219,18 @@ msgstr "Скільки EDI у помилці для цього переміще�
 #: model:ir.model.fields,field_description:account_edi.field_mail_template__id
 msgid "ID"
 msgstr "ID"
+
+#. module: account_edi
+#: code:addons/account_edi/models/account_move.py:0
+#, python-format
+msgid ""
+"Invalid invoice configuration:\n"
+"\n"
+"%s"
+msgstr ""
+"Недійсне налаштування рахунку:\n"
+"\n"
+"%s"
 
 #. module: account_edi
 #: model:ir.model,name:account_edi.model_account_journal
@@ -317,14 +328,6 @@ msgid "State"
 msgstr "Статус"
 
 #. module: account_edi
-#: model:ir.model.fields,help:account_edi_extended.field_account_edi_document__error
-msgid ""
-"The text of the last error that happened during Electronic Invoice "
-"operation."
-msgstr ""
-"Текст останньої помилки, що виникла під час операції електронного рахунку."
-
-#. module: account_edi
 #: model:ir.model.fields,help:account_edi.field_account_bank_statement_line__edi_web_services_to_process
 #: model:ir.model.fields,help:account_edi.field_account_move__edi_web_services_to_process
 #: model:ir.model.fields,help:account_edi.field_account_payment__edi_web_services_to_process
@@ -359,9 +362,23 @@ msgid "The payment will be sent asynchronously to :"
 msgstr "Платіж буде надіслано асинхронно до:"
 
 #. module: account_edi
+#: model:ir.model.fields,help:account_edi.field_account_edi_document__error
+msgid ""
+"The text of the last error that happened during Electronic Invoice "
+"operation."
+msgstr ""
+"Текст останньої помилки, що виникла під час операції електронного рахунку."
+
+#. module: account_edi
 #: model:ir.model.constraint,message:account_edi.constraint_account_edi_format_unique_code
 msgid "This code already exists"
 msgstr "Цей код вже існує"
+
+#. module: account_edi
+#: code:addons/account_edi/models/account_edi_document.py:0
+#, python-format
+msgid "This document is being sent by another process already. "
+msgstr "Цей документ уже надсилається іншим процесом."
 
 #. module: account_edi
 #: model:ir.model.fields.selection,name:account_edi.selection__account_edi_document__state__to_cancel

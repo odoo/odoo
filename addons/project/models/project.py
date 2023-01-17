@@ -2,12 +2,12 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import ast
-from datetime import timedelta, datetime
+from collections import defaultdict
+from datetime import timedelta
 from random import randint
 
 from odoo import api, fields, models, tools, SUPERUSER_ID, _
-from odoo.exceptions import UserError, AccessError, ValidationError, RedirectWarning
-from odoo.tools.misc import format_date, get_lang
+from odoo.exceptions import UserError, ValidationError
 from odoo.osv.expression import OR
 
 from .project_task_recurrence import DAYS, WEEKS
@@ -200,12 +200,13 @@ class Project(models.Model):
         ],
         string='Visibility', required=True,
         default='portal',
-        help="Defines the visibility of the tasks of the project:\n"
-                "- Invited internal users: employees may only see the followed project and tasks.\n"
-                "- All internal users: employees may see all project and tasks.\n"
-                "- Invited portal and all internal users: employees may see everything."
-                "   Portal users may see project and tasks followed by\n"
-                "   them or by someone of their company.")
+        help="People to whom this project and its tasks will be visible.\n\n"
+            "- Invited internal users: when following a project, internal users will get access to all of its tasks without distinction. "
+            "Otherwise, they will only get access to the specific tasks they are following.\n "
+            "A user with the project > administrator access right level can still access this project and its tasks, even if they are not explicitly part of the followers.\n\n"
+            "- All internal users: all internal users can access the project and all of its tasks without distinction.\n\n"
+            "- Invited portal users and all internal users: all internal users can access the project and all of its tasks without distinction.\n"
+            "When following a project, portal users will get access to all of its tasks without distinction. Otherwise, they will only get access to the specific tasks they are following.")
 
     allowed_user_ids = fields.Many2many('res.users', compute='_compute_allowed_users', inverse='_inverse_allowed_user')
     allowed_internal_user_ids = fields.Many2many('res.users', 'project_allowed_internal_users_rel',
@@ -1006,7 +1007,7 @@ class Task(models.Model):
         if partner_ids:
             new_allowed_users = self.env['res.partner'].browse(partner_ids).user_ids.filtered('share')
             tasks = self.filtered(lambda task: task.project_id.privacy_visibility == 'portal')
-            tasks.sudo().write({'allowed_user_ids': [(4, user.id) for user in new_allowed_users]})
+            tasks.sudo().allowed_user_ids |= new_allowed_users
         return res
 
     # ----------------------------------------
@@ -1093,6 +1094,18 @@ class Task(models.Model):
         for task in tasks:
             if task.project_id.privacy_visibility == 'portal':
                 task._portal_ensure_token()
+        return tasks
+
+    def _load_records_create(self, values):
+        tasks = super()._load_records_create(values)
+        stage_ids_per_project = defaultdict(list)
+        for task in tasks:
+            if task.stage_id and task.stage_id not in task.project_id.type_ids and task.stage_id.id not in stage_ids_per_project[task.project_id]:
+                stage_ids_per_project[task.project_id].append(task.stage_id.id)
+
+        for project, stage_ids in stage_ids_per_project.items():
+            project.write({'type_ids': [(4, stage_id) for stage_id in stage_ids]})
+
         return tasks
 
     def write(self, vals):

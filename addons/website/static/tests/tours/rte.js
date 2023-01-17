@@ -13,19 +13,35 @@ var ready = Promise.all([domReady, session.is_bound, ajax.loadXML()]);
 
 tour.register('rte_translator', {
     test: true,
-    url: '/fr_BE',
+    url: '/',
     wait_for: ready,
 }, [{
-    content : "click language dropdown",
+    content: "click language dropdown",
+    trigger: '.js_language_selector .dropdown-toggle',
+}, {
+    content: "click on Add a language",
+    trigger: 'a.o_add_language',
+}, {
+    content: "select Parseltongue",
+    trigger: 'select[name="lang"]',
+    run: 'text "pa_GB"',
+}, {
+    content: "load Parseltongue",
+    trigger: '.modal-footer button:first',
+    extra_trigger: '.modal select[name="lang"]:propValueContains(pa_GB)',
+}, {
+    content : "click language dropdown (2)",
     trigger : '.js_language_selector .dropdown-toggle',
+    timeout: 60000,
 }, {
     content: "go to english version",
     trigger: '.js_language_selector a[data-url_code="en"]',
-    extra_trigger: 'html[lang*="fr"]',
+    extra_trigger: 'html[lang*="pa-GB"]',
 }, {
     content: "Open new page menu",
-    trigger: '#new-content-menu > a',
+    trigger: "body:has(#o_new_content_menu_choices.o_hidden) #new-content-menu > a",
     extra_trigger: 'a[data-action="edit"]',
+    consumeVisibleOnly: true,
 }, {
     content: "click on new page",
     trigger: 'a[data-action="new_page"]',
@@ -56,12 +72,12 @@ tour.register('rte_translator', {
     trigger: 'button[data-action=save]',
     extra_trigger: '#wrap p:first b',
 }, {
-    content : "click language dropdown",
+    content : "click language dropdown (3)",
     trigger : '.js_language_selector .dropdown-toggle',
     extra_trigger: 'body:not(.o_wait_reload):not(:has(.note-editor)) a[data-action="edit"]',
 }, {
-    content: "click on french version",
-    trigger: '.js_language_selector a[data-url_code="fr_BE"]',
+    content: "click on Parseltongue version",
+    trigger: '.js_language_selector a[data-url_code="pa_GB"]',
     extra_trigger: 'html[lang*="en"]:not(:has(button[data-action=save]))',
 }, {
     content: "translate",
@@ -76,7 +92,7 @@ tour.register('rte_translator', {
     content: "translate text",
     trigger: '#wrap p font:first',
     run: function (action_helper) {
-        action_helper.text('translated french text');
+        action_helper.text('translated Parseltongue text');
         Wysiwyg.setRange(this.$anchor.contents()[0], 22);
         this.$anchor.trigger($.Event( "keyup", {key: '_', keyCode: 95}));
         this.$anchor.trigger('input');
@@ -94,22 +110,22 @@ tour.register('rte_translator', {
 }, {
     content: "click on input",
     trigger: '#wrap input:first',
-    extra_trigger: '#wrap .o_dirty font:first:contains(translated french text)',
+    extra_trigger: '#wrap .o_dirty font:first:contains(translated Parseltongue text)',
     run: 'click',
 }, {
     content: "translate placeholder",
     trigger: 'input:first',
-    run: 'text test french placeholder',
+    run: 'text test Parseltongue placeholder',
 }, {
     content: "close modal",
     trigger: '.modal-footer .btn-primary',
-    extra_trigger: '.modal input:propValue(test french placeholder)',
+    extra_trigger: '.modal input:propValue(test Parseltongue placeholder)',
 }, {
     content: "save translation",
     trigger: 'button[data-action=save]',
 }, {
     content: "check: content is translated",
-    trigger: '#wrap p font:first:contains(translated french text)',
+    trigger: '#wrap p font:first:contains(translated Parseltongue text)',
     extra_trigger: 'body:not(.o_wait_reload):not(:has(.note-editor)) a[data-action="edit_master"]',
     run: function () {}, // it's a check
 }, {
@@ -119,13 +135,13 @@ tour.register('rte_translator', {
 
 }, {
     content: "check: placeholder translation",
-    trigger: 'input[placeholder="test french placeholder"]',
+    trigger: 'input[placeholder="test Parseltongue placeholder"]',
     run: function () {}, // it's a check
 
 }, {
     content: "open language selector",
     trigger: '.js_language_selector button:first',
-    extra_trigger: 'html[lang*="fr"]:not(:has(#wrap p span))',
+    extra_trigger: 'html[lang*="pa-GB"]:not(:has(#wrap p span))',
 }, {
     content: "return to english version",
     trigger: '.js_language_selector a[data-url_code="en"]',
@@ -157,19 +173,19 @@ tour.register('rte_translator', {
     extra_trigger: '#wrap.o_dirty p u',
 
     }, {
-    content : "click language dropdown",
+    content : "click language dropdown (4)",
     trigger : '.js_language_selector .dropdown-toggle',
     extra_trigger: 'body:not(.o_wait_reload):not(:has(.note-editor)) a[data-action="edit"]',
 }, {
-    content: "return in french",
-    trigger : 'html[lang="en-US"] .js_language_selector .js_change_lang[data-url_code="fr_BE"]',
+    content: "return in Parseltongue",
+    trigger : 'html[lang="en-US"] .js_language_selector .js_change_lang[data-url_code="pa_GB"]',
 }, {
     content: "check bis: content is translated",
-    trigger: '#wrap p font:first:contains(translated french text)',
-    extra_trigger: 'html[lang*="fr"] body:not(:has(button[data-action=save]))',
+    trigger: '#wrap p font:first:contains(translated Parseltongue text)',
+    extra_trigger: 'html[lang*="pa-GB"] body:not(:has(button[data-action=save]))',
 }, {
     content: "check bis: placeholder translation",
-    trigger: 'input[placeholder="test french placeholder"]',
+    trigger: 'input[placeholder="test Parseltongue placeholder"]',
 }, {
     content: "Open customize menu",
     trigger: "#customize-menu > .dropdown-toggle",

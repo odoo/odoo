@@ -112,9 +112,12 @@ class ResPartner(models.Model):
             except Exception as error:
                 raise ValidationError(repr(error))
 
-    @api.model
     def _get_id_number_sanitize(self):
-        """ Sanitize the identification number. Return the digits/integer value of the identification number """
+        """ Sanitize the identification number. Return the digits/integer value of the identification number
+        If not vat number defined return 0 """
+        self.ensure_one()
+        if not self.vat:
+            return 0
         if self.l10n_latam_identification_type_id.l10n_ar_afip_code in ['80', '86']:
             # Compact is the number clean up, remove all separators leave only digits
             res = int(stdnum.ar.cuit.compact(self.vat))

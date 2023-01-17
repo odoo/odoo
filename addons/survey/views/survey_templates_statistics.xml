@@ -365,7 +365,7 @@
                                 <span t-esc="choice_data['row'].value"></span>
                             </td>
                             <td class="survey_answer" t-foreach="choice_data['columns']" t-as="column_data">
-                                <span t-esc="round(column_data['count'] * 100.0/ (len(question_data['answer_line_done_ids']) or 1), 2)"></span> %
+                                <span t-esc="round(column_data['count'] * 100.0/ (len(question_data['answer_input_done_ids']) or 1), 2)"></span> %
                                 <span class="badge badge-primary" t-esc="column_data['count']"></span>
                                 <i class="fa fa-filter text-primary survey_filter"
                                     t-att-data-question_id="question.id"

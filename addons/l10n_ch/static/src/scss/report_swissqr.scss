@@ -8,24 +8,24 @@
     src: url('../font/LiberationSans-Regular.woff') format('woff');
 }
 
-
-body {
-    padding: 0!important;
+body.l10n_ch_qr, body[data-oe-report="l10n_ch.l10n_ch_qr_report"] {
+    padding: 0;
 
     /* Disable custom bakground */
     .o_report_layout_background {
         background: none;
         min-height: 0;
     }
+}
 
-    .swissqr_title, .swissqr_page_title {
-        position: absolute;
-        padding: 15px;
-        padding-top: 200px;
-    }
+.swissqr_title, .swissqr_page_title {
+    position: absolute;
+    padding: 15px;
+    padding-top: 150px;
+}
 
-    .swissqr_content {
-        position: static;
+.swissqr_content {
+    position: relative;
 
         /* Old QR Bill code, to be superseded by the swissqr_content_v2 class below
         -------------------------------------------------------------------------- */
@@ -152,7 +152,6 @@ body {
                 float: left;
             }
         }
-    }
 }
 
 .swissqr_content_v2 {

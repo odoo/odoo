@@ -10,7 +10,7 @@ from odoo.addons.test_mail.models.test_mail_models import MailTestTicket
 from odoo.addons.test_mail.tests.common import TestMailCommon, TestRecipients
 from odoo.tests import tagged
 from odoo.tests.common import users, Form
-from odoo.tools import mute_logger
+from odoo.tools import mute_logger, formataddr
 
 @tagged('mail_composer')
 class TestMailComposer(TestMailCommon, TestRecipients):
@@ -542,6 +542,7 @@ class TestComposerResultsComment(TestMailComposer):
                                   default_template_id=self.template.id)
         ))
         composer = composer_form.save()
+        self.assertFalse(composer.no_auto_thread, 'Mail: thread-enabled models should use auto thread by default')
         with self.mock_mail_gateway(mail_unlink_sent=False), self.mock_mail_app():
             composer.send_mail()
 
@@ -625,6 +626,7 @@ class TestComposerResultsMass(TestMailComposer):
                                   default_template_id=self.template.id)
         ))
         composer = composer_form.save()
+        self.assertFalse(composer.no_auto_thread, 'Mail: thread-enabled models should use auto thread by default')
         with self.mock_mail_gateway(mail_unlink_sent=True):
             composer.send_mail()
 
@@ -698,7 +700,6 @@ class TestComposerResultsMass(TestMailComposer):
             [mail for mail in self._mails if '%s-%s' % (record.id, record._name) in mail['message_id']]
             for record in self.test_records
         ]
-        _mails_record2 = [mail for mail in self._mails if '%s-%s' % (self.test_records[1].id, self.test_records._name) in mail['message_id']]
 
         for record, _mails in zip(self.test_records, _mails_records):
             # message copy is kept
@@ -711,14 +712,60 @@ class TestComposerResultsMass(TestMailComposer):
                                 mail_message=message,
                                 author=self.partner_employee,
                                 email_values={
+                                    'attachments_info': [
+                                        {'name': '00.txt', 'raw': b'Att00', 'type': 'text/plain'},
+                                        {'name': '01.txt', 'raw': b'Att01', 'type': 'text/plain'},
+                                        {'name': 'TestReport for %s.html' % record.name, 'type': 'text/plain'},
+                                    ],
                                     'body_content': 'TemplateBody %s' % record.name,
+                                    'email_from': self.partner_employee.email_formatted,
+                                    'reply_to': formataddr((
+                                        f'{self.env.user.company_id.name} {record.name}',
+                                        f'{self.alias_catchall}@{self.alias_domain}'
+                                    )),
                                     'subject': 'TemplateSubject %s' % record.name,
-                                    # 'attachments': [
-                                    #     ('00.txt', b'Att00', 'text/plain'),
-                                    #     ('01.txt', b'Att01', 'text/plain'),
-                                    #     ('report.test_mail.mail_test_ticket_test_template.html', b'My second attachment', 'text/plain')
-                                    # ]
-                                }
+                                },
+                                fields_values={
+                                    'email_from': self.partner_employee.email_formatted,
+                                    'reply_to': formataddr((
+                                        f'{self.env.user.company_id.name} {record.name}',
+                                        f'{self.alias_catchall}@{self.alias_domain}'
+                                    )),
+                                },
+                               )
+
+        # test without catchall filling reply-to
+        composer_form = Form(self.env['mail.compose.message'].with_context(
+            self._get_web_context(self.test_records, add_web=True,
+                                  default_template_id=self.template.id)
+        ))
+        composer = composer_form.save()
+        with self.mock_mail_gateway(mail_unlink_sent=True):
+            # remove alias so that _notify_get_reply_to will return the default value instead of alias
+            self.env['ir.config_parameter'].sudo().set_param("mail.catchall.domain", None)
+            composer.send_mail()
+
+        # hack to use assertEmails: filtering on from/to only is not sufficient to distinguish emails
+        _mails_records = [
+            [mail for mail in self._mails if '%s-%s' % (record.id, record._name) in mail['message_id']]
+            for record in self.test_records
+        ]
+
+        for record, _mails in zip(self.test_records, _mails_records):
+            # template is sent only to partners (email_to are transformed)
+            self._mails = _mails
+            self.assertMailMail(record.customer_id + new_partners + self.partner_admin,
+                                'sent',
+                                mail_message=record.message_ids[0],
+                                author=self.partner_employee,
+                                email_values={
+                                    'email_from': self.partner_employee.email_formatted,
+                                    'reply_to': self.partner_employee.email_formatted,
+                                },
+                                fields_values={
+                                    'email_from': self.partner_employee.email_formatted,
+                                    'reply_to': self.partner_employee.email_formatted,
+                                },
                                )
 
     @users('employee')
@@ -777,6 +824,44 @@ class TestComposerResultsMass(TestMailComposer):
 
             # template is sent directly using customer field
             self.assertSentEmail(self.partner_employee, record.customer_id)
+
+    @users('employee')
+    @mute_logger('odoo.models.unlink', 'odoo.addons.mail.models.mail_mail')
+    def test_mail_composer_wtpl_no_auto_thread(self):
+        """ Test no auto thread behavior, notably with reply-to. """
+        # launch composer in mass mode
+        composer_form = Form(self.env['mail.compose.message'].with_context(
+            self._get_web_context(self.test_records, add_web=True,
+                                  default_template_id=self.template.id)
+        ))
+        composer_form.no_auto_thread = True
+        composer_form.reply_to = "${('\"' + object.name + '\" <%s>' % 'dynamic.reply.to@test.com') | safe}"
+        composer = composer_form.save()
+        with self.mock_mail_gateway(mail_unlink_sent=False):
+            composer.send_mail()
+
+        for record in self.test_records:
+            self.assertMailMail(record.customer_id,
+                                'sent',
+                                mail_message=record.message_ids[0],
+                                author=self.partner_employee,
+                                email_values={
+                                    'body_content': 'TemplateBody %s' % record.name,
+                                    'email_from': self.partner_employee.email_formatted,
+                                    'reply_to': formataddr((
+                                        f'{record.name}',
+                                        'dynamic.reply.to@test.com'
+                                    )),
+                                    'subject': 'TemplateSubject %s' % record.name,
+                                },
+                                fields_values={
+                                    'email_from': self.partner_employee.email_formatted,
+                                    'reply_to': formataddr((
+                                        f'{record.name}',
+                                        'dynamic.reply.to@test.com'
+                                    )),
+                                },
+                               )
 
     @users('employee')
     @mute_logger('odoo.models.unlink', 'odoo.addons.mail.models.mail_mail')

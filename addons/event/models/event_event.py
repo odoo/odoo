@@ -103,7 +103,9 @@ class EventEvent(models.Model):
         return event_stages[0] if event_stages else False
 
     def _default_description(self):
-        return self.env['ir.ui.view']._render_template('event.event_default_descripton')
+        # avoid template branding with rendering_bundle=True
+        return self.env['ir.ui.view'].with_context(rendering_bundle=True) \
+            ._render_template('event.event_default_descripton')
 
     name = fields.Char(string='Event', translate=True, required=True)
     note = fields.Text(string='Note')

@@ -11,9 +11,10 @@
 # Stefan Stieranka <stieranka@itec.sk>, 2020
 # gebri <gebri@inmail.sk>, 2020
 # karolína schusterová <karolina.schusterova@vdp.sk>, 2020
-# Damian Brencic <brencicdamian12313@gmail.com>, 2021
 # Rastislav Brencic <rastislav.brencic@azet.sk>, 2021
 # Jan Prokop, 2021
+# Damian Brencic <brencicdamian12313@gmail.com>, 2022
+# Viktor Dicer, 2022
 # 
 msgid ""
 msgstr ""
@@ -21,7 +22,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-08-16 09:00+0000\n"
 "PO-Revision-Date: 2020-09-07 08:19+0000\n"
-"Last-Translator: Jan Prokop, 2021\n"
+"Last-Translator: Viktor Dicer, 2022\n"
 "Language-Team: Slovak (https://www.transifex.com/odoo/teams/41243/sk/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -3859,7 +3860,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:stock.field_stock_picking__my_activity_date_deadline
 #: model:ir.model.fields,field_description:stock.field_stock_production_lot__my_activity_date_deadline
 msgid "My Activity Deadline"
-msgstr ""
+msgstr "Termín mojej aktivity"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_internal_search
@@ -3964,7 +3965,7 @@ msgstr "Žiadna operácia na tejto šarži."
 #. module: stock
 #: model_terms:ir.actions.act_window,help:stock.product_template_action_product
 msgid "No product found. Let's create one!"
-msgstr ""
+msgstr "Nenašli sa žiadne produkty. Vytvorte nový!"
 
 #. module: stock
 #: code:addons/stock/wizard/stock_picking_return.py:0
@@ -6629,14 +6630,9 @@ msgstr ""
 #, python-format
 msgid ""
 "The quantity done for the product \"%s\" doesn't respect the rounding "
-"precision                                   defined on the unit of measure "
-"\"%s\". Please change the quantity done or the"
-"                                   rounding precision of your unit of "
-"measure."
+"precision defined on the unit of measure \"%s\". Please change the quantity "
+"done or the rounding precision of your unit of measure."
 msgstr ""
-"Hotové množstvo produktu \"%s\" nerešpektuje presnosť zaokrúhlenia "
-"definovanú pre mernú jednotku \"%s\". Zmeňte prosím hotové množstvo alebo "
-"presnosť zaokrúhľovania mernej jednotky."
 
 #. module: stock
 #: code:addons/stock/models/stock_move.py:0
@@ -8060,6 +8056,15 @@ msgstr ""
 #: code:addons/stock/models/stock_picking.py:0
 #, python-format
 msgid "You need to supply a Lot/Serial number for products %s."
+msgstr ""
+
+#. module: stock
+#: code:addons/stock/models/stock_picking.py:0
+#, python-format
+msgid ""
+"You should not use a planned internal transfer to move some products between"
+" two warehouses. Instead, use an immediate internal transfer or the resupply"
+" route."
 msgstr ""
 
 #. module: stock

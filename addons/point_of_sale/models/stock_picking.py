@@ -6,6 +6,7 @@ from odoo.exceptions import UserError, ValidationError
 from odoo.tools import float_is_zero, float_compare
 
 from itertools import groupby
+from collections import defaultdict
 
 class StockPicking(models.Model):
     _inherit='stock.picking'
@@ -83,81 +84,112 @@ class StockPicking(models.Model):
             'company_id': self.company_id.id,
         }
 
+    @api.model
+    def _create_move_lines_for_pos_order(self, moves, set_quantity_done_on_move=False):
+        moves._action_assign()
+        for move_line in moves.move_line_ids:
+            move_line.qty_done = move_line.product_uom_qty
+        mls_vals = []
+        moves_to_set = set()
+        for move in moves:
+            if float_compare(move.product_uom_qty, move.quantity_done, precision_rounding=move.product_uom.rounding) > 0:
+                remaining_qty = move.product_uom_qty - move.quantity_done
+                mls_vals.append(dict(move._prepare_move_line_vals(), qty_done=remaining_qty))
+                moves_to_set.add(move.id)
+        self.env['stock.move.line'].create(mls_vals)
+        if set_quantity_done_on_move:
+            for move in self.env['stock.move'].browse(moves_to_set):
+                move.quantity_done = move.product_uom_qty
+
+    def _create_production_lots_for_pos_order(self, lines):
+        ''' Search for existing lots and create missing ones.
+
+            :param lines: pos order lines with pack lot ids.
+            :type lines: pos.order.line recordset.
+
+            :return stock.production.lot recordset.
+        '''
+        self.ensure_one()
+        valid_lots = self.env['stock.production.lot']
+        if self.picking_type_id.use_existing_lots:
+            lots = lines.pack_lot_ids.filtered(lambda l: l.lot_name)
+            lots_data = set(lots.mapped(lambda l: (l.product_id.id, l.lot_name)))
+            existing_lots = self.env['stock.production.lot'].search([
+                ('company_id', '=', self.company_id.id),
+                ('product_id', 'in', lines.mapped('product_id').ids),
+                ('name', 'in', lots.mapped('lot_name')),
+            ])
+            # The previous search may return (product_id.id, lot_name) combinations that have no matching in lines.pack_lot_ids.
+            for lot in existing_lots:
+                if (lot.product_id.id, lot.name) in lots_data:
+                    valid_lots |= lot
+                    lots_data.remove((lot.product_id.id, lot.name))
+
+            if self.picking_type_id.use_create_lots:
+                missing_lot_values = []
+                for lot_product_id, lot_name in lots_data:
+                    missing_lot_values.append({'company_id': self.company_id.id, 'product_id': lot_product_id, 'name': lot_name})
+                valid_lots |= self.env['stock.production.lot'].create(missing_lot_values)
+        return valid_lots
+
     def _create_move_from_pos_order_lines(self, lines):
         self.ensure_one()
         lines_by_product = groupby(sorted(lines, key=lambda l: l.product_id.id), key=lambda l: l.product_id.id)
-        for product, lines in lines_by_product:
-            order_lines = self.env['pos.order.line'].concat(*lines)
-            first_line = order_lines[0]
-            current_move = self.env['stock.move'].create(
-                self._prepare_stock_move_vals(first_line, order_lines)
-            )
-            confirmed_moves = current_move._action_confirm()
-            for move in confirmed_moves:
-                if first_line.product_id == move.product_id and first_line.product_id.tracking != 'none':
-                    if self.picking_type_id.use_existing_lots or self.picking_type_id.use_create_lots:
-                        for line in order_lines:
-                            sum_of_lots = 0
-                            for lot in line.pack_lot_ids.filtered(lambda l: l.lot_name):
-                                if line.product_id.tracking == 'serial':
-                                    qty = 1
-                                else:
-                                    qty = abs(line.qty)
-                                ml_vals = move._prepare_move_line_vals()
-                                ml_vals.update({'qty_done':qty})
-                                if self.picking_type_id.use_existing_lots:
-                                    existing_lot = self.env['stock.production.lot'].search([
-                                        ('company_id', '=', self.company_id.id),
-                                        ('product_id', '=', line.product_id.id),
-                                        ('name', '=', lot.lot_name)
-                                    ])
-                                    if not existing_lot and self.picking_type_id.use_create_lots:
-                                        existing_lot = self.env['stock.production.lot'].create({
-                                            'company_id': self.company_id.id,
-                                            'product_id': line.product_id.id,
-                                            'name': lot.lot_name,
-                                        })
-                                    quant = existing_lot.quant_ids.filtered(lambda q: q.quantity > 0.0 and q.location_id.parent_path.startswith(move.location_id.parent_path))[-1:]
-                                    ml_vals.update({
-                                        'lot_id': existing_lot.id,
-                                        'location_id': quant.location_id.id or move.location_id.id
-                                    })
-                                else:
-                                    ml_vals.update({
-                                        'lot_name': lot.lot_name,
-                                    })
-                                self.env['stock.move.line'].create(ml_vals)
-                                sum_of_lots += qty
-                            if abs(line.qty) != sum_of_lots:
-                                difference_qty = abs(line.qty) - sum_of_lots
-                                ml_vals = current_move._prepare_move_line_vals()
-                                if line.product_id.tracking == 'serial':
-                                    ml_vals.update({'qty_done': 1})
-                                    for i in range(int(difference_qty)):
-                                        self.env['stock.move.line'].create(ml_vals)
-                                else:
-                                    ml_vals.update({'qty_done': difference_qty})
-                                    self.env['stock.move.line'].create(ml_vals)
-                    else:
-                        move._action_assign()
-                        for move_line in move.move_line_ids:
-                            move_line.qty_done = move_line.product_uom_qty
-                        if float_compare(move.product_uom_qty, move.quantity_done, precision_rounding=move.product_uom.rounding) > 0:
-                            remaining_qty = move.product_uom_qty - move.quantity_done
-                            ml_vals = move._prepare_move_line_vals()
-                            ml_vals.update({'qty_done':remaining_qty})
-                            self.env['stock.move.line'].create(ml_vals)
-
-                else:
-                    move._action_assign()
-                    for move_line in move.move_line_ids:
-                        move_line.qty_done = move_line.product_uom_qty
-                    if float_compare(move.product_uom_qty, move.quantity_done, precision_rounding=move.product_uom.rounding) > 0:
-                        remaining_qty = move.product_uom_qty - move.quantity_done
-                        ml_vals = move._prepare_move_line_vals()
-                        ml_vals.update({'qty_done':remaining_qty})
-                        self.env['stock.move.line'].create(ml_vals)
-                    move.quantity_done = move.product_uom_qty
+        move_vals = []
+        lines_data = defaultdict(dict)
+        for product_id, olines in lines_by_product:
+            order_lines = self.env['pos.order.line'].concat(*olines)
+            move_vals.append(self._prepare_stock_move_vals(order_lines[0], order_lines))
+            lines_data[product_id].update({'order_lines': order_lines})
+        moves = self.env['stock.move'].create(move_vals)
+        for move in moves:
+            lines_data[move.product_id.id].update({'move': move})
+        confirmed_moves = moves._action_confirm()
+        # Confirmed moves with product_id not in lines. This can happen e.g. when product_id has a phantom-type bom.
+        confirmed_moves_to_assign = confirmed_moves.filtered(lambda m: m.product_id.id not in lines_data or m.product_id.tracking == 'none')
+        self._create_move_lines_for_pos_order(confirmed_moves_to_assign, set_quantity_done_on_move=True)
+        confirmed_moves_remaining = confirmed_moves - confirmed_moves_to_assign
+        if self.picking_type_id.use_existing_lots or self.picking_type_id.use_create_lots:
+            existing_lots = self._create_production_lots_for_pos_order(lines)
+            move_lines_to_create = []
+            for move in confirmed_moves_remaining:
+                for line in lines_data[move.product_id.id]['order_lines']:
+                    sum_of_lots = 0
+                    for lot in line.pack_lot_ids.filtered(lambda l: l.lot_name):
+                        if line.product_id.tracking == 'serial':
+                            qty = 1
+                        else:
+                            qty = abs(line.qty)
+                        ml_vals = dict(move._prepare_move_line_vals(), qty_done=qty)
+                        if existing_lots:
+                            existing_lot = existing_lots.filtered_domain([('product_id', '=', line.product_id.id), ('name', '=', lot.lot_name)])
+                            quant = self.env['stock.quant']
+                            if existing_lot:
+                                quant = self.env['stock.quant'].search(
+                                    [('lot_id', '=', existing_lot.id), ('quantity', '>', '0.0'), ('location_id', 'child_of', move.location_id.id)],
+                                    order='id desc',
+                                    limit=1
+                                )
+                            ml_vals.update({
+                                'lot_id': existing_lot.id,
+                                'location_id': quant.location_id.id or move.location_id.id
+                            })
+                        else:
+                            ml_vals.update({'lot_name': lot.lot_name})
+                        move_lines_to_create.append(ml_vals)
+                        sum_of_lots += qty
+                    if abs(line.qty) != sum_of_lots:
+                        difference_qty = abs(line.qty) - sum_of_lots
+                        ml_vals = lines_data[move.product_id.id]['move']._prepare_move_line_vals()
+                        if line.product_id.tracking == 'serial':
+                            ml_vals.update({'qty_done': 1})
+                            move_lines_to_create.extend([ml_vals for i in range(int(difference_qty))])
+                        else:
+                            ml_vals.update({'qty_done': difference_qty})
+                            move_lines_to_create.append(ml_vals)
+            self.env['stock.move.line'].create(move_lines_to_create)
+        else:
+            self._create_move_lines_for_pos_order(confirmed_moves_remaining)
 
     def _send_confirmation_email(self):
         # Avoid sending Mail/SMS for POS deliveries

@@ -637,3 +637,80 @@ class TestReorderingRule(SavepointCase):
             [("product_id", "=", product.id)])
         self.assertTrue(po_line)
         self.assertEqual("[A] product TEST", po_line.name)
+
+    def test_multi_locations_and_reordering_rule(self):
+        """
+        Suppose two orderpoints for the same product, each one to a different location
+        If the user triggers each orderpoint separately, it should still produce two
+        different purchase order lines (one for each orderpoint)
+        """
+        warehouse = self.env['stock.warehouse'].search([('company_id', '=', self.env.user.id)], limit=1)
+        stock_location = warehouse.lot_stock_id
+        sub_location = self.env['stock.location'].create({'name': 'subloc_1', 'location_id': stock_location.id})
+
+        orderpoint_form = Form(self.env['stock.warehouse.orderpoint'])
+        orderpoint_form.warehouse_id = warehouse
+        orderpoint_form.location_id = stock_location
+        orderpoint_form.product_id = self.product_01
+        orderpoint_form.product_min_qty = 1
+        orderpoint_form.product_max_qty = 1
+        stock_op = orderpoint_form.save()
+
+        orderpoint_form = Form(self.env['stock.warehouse.orderpoint'])
+        orderpoint_form.warehouse_id = warehouse
+        orderpoint_form.location_id = sub_location
+        orderpoint_form.product_id = self.product_01
+        orderpoint_form.product_min_qty = 2
+        orderpoint_form.product_max_qty = 2
+        sub_op = orderpoint_form.save()
+
+        stock_op.action_replenish()
+        sub_op.action_replenish()
+
+        po = self.env['purchase.order'].search([('partner_id', '=', self.partner.id)])
+        self.assertRecordValues(po.order_line, [
+            {'product_id': self.product_01.id, 'product_qty': 1.0, 'orderpoint_id': stock_op.id},
+            {'product_id': self.product_01.id, 'product_qty': 2.0, 'orderpoint_id': sub_op.id},
+        ])
+
+        po.button_confirm()
+        picking = po.picking_ids
+        action = picking.button_validate()
+        wizard = Form(self.env[(action.get('res_model'))].with_context(action['context'])).save()
+        wizard.process()
+
+        self.assertRecordValues(picking.move_line_ids, [
+            {'product_id': self.product_01.id, 'qty_done': 1.0, 'state': 'done', 'location_dest_id': stock_location.id},
+            {'product_id': self.product_01.id, 'qty_done': 2.0, 'state': 'done', 'location_dest_id': sub_location.id},
+        ])
+
+    def test_change_of_scheduled_date(self):
+        """
+        A user creates a delivery, an orderpoint is created. Its forecast
+        quantity becomes -1 and the quantity to order is 1. Then the user
+        postpones the scheduled date of the delivery. The quantities of the
+        orderpoint should be reset to zero.
+        """
+        delivery_form = Form(self.env['stock.picking'])
+        delivery_form.partner_id = self.partner
+        delivery_form.picking_type_id = self.env.ref('stock.picking_type_out')
+        with delivery_form.move_ids_without_package.new() as move:
+            move.product_id = self.product_01
+            move.product_uom_qty = 1
+        delivery = delivery_form.save()
+        delivery.action_confirm()
+
+        self.env['report.stock.quantity'].flush()
+        self.env['stock.warehouse.orderpoint']._get_orderpoint_action()
+
+        orderpoint = self.env['stock.warehouse.orderpoint'].search([('product_id', '=', self.product_01.id)])
+        self.assertRecordValues(orderpoint, [
+            {'qty_forecast': -1, 'qty_to_order': 1},
+        ])
+
+        delivery.scheduled_date += td(days=7)
+        orderpoint.invalidate_cache(fnames=['qty_forecast', 'qty_to_order'], ids=orderpoint.ids)
+
+        self.assertRecordValues(orderpoint, [
+            {'qty_forecast': 0, 'qty_to_order': 0},
+        ])

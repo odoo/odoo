@@ -23,5 +23,8 @@
            'data/account_tax_data.xml',
            'data/account_chart_template_configure_data.xml',
            ],
+    'demo': [
+        'demo/demo_company.xml',
+    ],
     'license': 'LGPL-3',
 }

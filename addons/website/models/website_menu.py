@@ -2,8 +2,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import werkzeug.exceptions
+import werkzeug.urls
 
 from odoo import api, fields, models
+from odoo.http import request
 from odoo.tools.translate import html_translate
 
 
@@ -179,11 +181,20 @@ class Menu(models.Model):
                 replace_id(mid, new_menu.id)
         for menu in data['data']:
             menu_id = self.browse(menu['id'])
-            # if the url match a website.page, set the m2o relation
-            # except if the menu url is '#', meaning it will be used as a menu container, most likely for a dropdown
-            if menu['url'] == '#':
+            # Check if the url match a website.page (to set the m2o relation),
+            # except if the menu url contains '#', we then unset the page_id
+            if '#' in menu['url']:
+                # Multiple case possible
+                # 1. `#` => menu container (dropdown, ..)
+                # 2. `#anchor` => anchor on current page
+                # 3. `/url#something` => valid internal URL
+                # 4. https://google.com#smth => valid external URL
                 if menu_id.page_id:
                     menu_id.page_id = None
+                if request and menu['url'].startswith('#') and len(menu['url']) > 1:
+                    # Working on case 2.: prefix anchor with referer URL
+                    referer_url = werkzeug.urls.url_parse(request.httprequest.headers.get('Referer', '')).path
+                    menu['url'] = referer_url + menu['url']
             else:
                 domain = self.env["website"].website_domain(website_id) + [
                     "|",

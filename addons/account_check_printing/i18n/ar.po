@@ -11,6 +11,7 @@
 # hoxhe Aits <hoxhe0@gmail.com>, 2020
 # Mohammed Albasha <m.albasha.ma@gmail.com>, 2020
 # Osama Ahmaro <osamaahmaro@gmail.com>, 2020
+# Malaz Abuidris <msea@odoo.com>, 2022
 # 
 msgid ""
 msgstr ""
@@ -18,7 +19,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-09-01 07:28+0000\n"
 "PO-Revision-Date: 2020-09-07 08:09+0000\n"
-"Last-Translator: Osama Ahmaro <osamaahmaro@gmail.com>, 2020\n"
+"Last-Translator: Malaz Abuidris <msea@odoo.com>, 2022\n"
 "Language-Team: Arabic (https://www.transifex.com/odoo/teams/41243/ar/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -101,7 +102,7 @@ msgstr "الهامش العلوي للشيك"
 #: code:addons/account_check_printing/models/account_payment.py:0
 #, python-format
 msgid "Check numbers can only consist of digits"
-msgstr ""
+msgstr "تتكون أرقام الشيكات من أرقام فقط "
 
 #. module: account_check_printing
 #: model:ir.model.fields,help:account_check_printing.field_account_journal__check_manual_sequencing
@@ -254,7 +255,7 @@ msgstr "رقم الشيك التالي"
 #: code:addons/account_check_printing/wizard/print_prenumbered_checks.py:0
 #, python-format
 msgid "Next Check Number should only contains numbers."
-msgstr ""
+msgstr "يجب أن يحتوي رقم الشيك التالي على أرقام فقط. "
 
 #. module: account_check_printing
 #: model:ir.model.fields.selection,name:account_check_printing.selection__res_company__account_check_printing_layout__disabled
@@ -294,7 +295,7 @@ msgstr "برجاء إدخال رقم أول شيك مطبوع مسبقًا تو�
 #: model:ir.model.fields,field_description:account_check_printing.field_account_move__preferred_payment_method_id
 #: model:ir.model.fields,field_description:account_check_printing.field_account_payment__preferred_payment_method_id
 msgid "Preferred Payment Method"
-msgstr ""
+msgstr "طريقة الدفع المفضلة "
 
 #. module: account_check_printing
 #: model:ir.model.fields,help:account_check_printing.field_res_partner__property_payment_method_id
@@ -304,6 +305,10 @@ msgid ""
 "vendor bills by preferred payment method to register payments in mass. Use "
 "cases: create bank files for batch wires, check runs."
 msgstr ""
+"طريقة الدفع المفضلة عند الدفع لهذا لمورد. يُستخدَم ذلك لتصفية فواتير "
+"الموردين حسب طريقة الدفع المفضلة لتسجيل المدفوعات دفعة واحدة. حالات "
+"الاستخدام: إنشاء ملفات بنكية لشبكات الاتصال السلكية بين الوحدات المصرفية "
+"وطباعة الشيكات. "
 
 #. module: account_check_printing
 #: model_terms:ir.ui.view,arch_db:account_check_printing.print_pre_numbered_checks_view
@@ -366,6 +371,8 @@ msgid ""
 "Something went wrong with Check Layout, please select another layout in "
 "Invoicing/Accounting Settings and try again."
 msgstr ""
+"لقد وقع خطأ في مخطط الشيك. الرجاء اختيار مخطط آخر في إعدادات "
+"الفوترة/المحاسبة ثم حاول مجدداً. "
 
 #. module: account_check_printing
 #: model:ir.model.fields,help:account_check_printing.field_account_journal__check_printing_payment_method_selected
@@ -381,6 +388,8 @@ msgid ""
 "The following numbers are already used:\n"
 "%s"
 msgstr ""
+"الأرقام التالية مستخدَمة بالفعل:\n"
+"%s"
 
 #. module: account_check_printing
 #: code:addons/account_check_printing/models/account_journal.py:0
@@ -419,6 +428,8 @@ msgid ""
 "This option allows you to print the date label on the check as per CPA.\n"
 "Disable this if your pre-printed check includes the date label."
 msgstr ""
+"يتيح لك هذا الخيار طباعة بطاقة التاريخ على الشيك وفقاً لحكم المحاسب القانوني المعتمد. \n"
+"قم بإلغاء التفعيل إذا تضمن الشيك الخاص بك المطبوع مسبقاً علامة التاريخ. "
 
 #. module: account_check_printing
 #: model_terms:ir.ui.view,arch_db:account_check_printing.print_pre_numbered_checks_view
@@ -434,7 +445,7 @@ msgstr "إزالة تحديد الرسالة كمُرسلة"
 #. module: account_check_printing
 #: model_terms:ir.ui.view,arch_db:account_check_printing.view_account_payment_form_inherited
 msgid "Void Check"
-msgstr ""
+msgstr "إبطال الشيك "
 
 #. module: account_check_printing
 #: code:addons/account_check_printing/models/account_payment.py:0
@@ -443,3 +454,5 @@ msgid ""
 "You have to choose a check layout. For this, go in Invoicing/Accounting "
 "Settings, search for 'Checks layout' and set one."
 msgstr ""
+"عليك اختيار مخطط للشيك. لفعل ذلك، اذهب إلى إعدادات الفوترة/المحاسبة، ثم ابحث"
+" عن 'مخططات الشيكات' وقم بتعيين واحد. "

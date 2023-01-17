@@ -13,7 +13,7 @@
 # Tommi Rintala <tommi.rintala@gmail.com>, 2020
 # Jussi Lehto <jussi@gulfeo.com>, 2020
 # Mikko Närjänen <mikko.narjanen@web-veistamo.fi>, 2020
-# Johanna Valkonen <johanna@vividi.fi>, 2020
+# Johanna Valkonen <miujohanna@gmail.com>, 2020
 # Veikko Väätäjä <veikko.vaataja@gmail.com>, 2020
 # Tuomas Lyyra <tuomas.lyyra@legenda.fi>, 2020
 # Simo Suurla <simo@suurla.fi>, 2020
@@ -28,8 +28,8 @@
 # Tuomo Aura <tuomo.aura@web-veistamo.fi>, 2020
 # Mikko Salmela <salmemik@gmail.com>, 2021
 # Kim Asplund <kim.asplund@gmail.com>, 2021
-# Jarmo Kortetjärvi <jarmo.kortetjarvi@gmail.com>, 2021
 # Miika Nissi <miika.nissi@tawasta.fi>, 2022
+# Jarmo Kortetjärvi <jarmo.kortetjarvi@gmail.com>, 2022
 # 
 msgid ""
 msgstr ""
@@ -37,7 +37,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-01-07 14:40+0000\n"
 "PO-Revision-Date: 2020-09-07 08:20+0000\n"
-"Last-Translator: Miika Nissi <miika.nissi@tawasta.fi>, 2022\n"
+"Last-Translator: Jarmo Kortetjärvi <jarmo.kortetjarvi@gmail.com>, 2022\n"
 "Language-Team: Finnish (https://www.transifex.com/odoo/teams/41243/fi/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -69,18 +69,22 @@ msgstr "\"URL kohde\" ei voi olla tyhjä."
 #, python-format
 msgid "\"URL to\" cannot contain parameter %s which is not used in \"URL from\"."
 msgstr ""
+"\"URL kohde\" ei voi sisältää parametria %s, jota ei käytetä kohdassa \"URL "
+"lähde\"."
 
 #. module: website
 #: code:addons/website/models/website_rewrite.py:0
 #, python-format
 msgid "\"URL to\" is invalid: %s"
-msgstr ""
+msgstr "\"URL kohde\" on virheellinen: %s"
 
 #. module: website
 #: code:addons/website/models/website_rewrite.py:0
 #, python-format
 msgid "\"URL to\" must contain parameter %s used in \"URL from\"."
 msgstr ""
+"\"URL kohteen\" pitää sisältää parametri %s, jota käytetään kohdassa \"URL "
+"lähde\"."
 
 #. module: website
 #: code:addons/website/models/website_rewrite.py:0
@@ -188,7 +192,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:website.template_header_sidebar_oe_structure_header_sidebar_1
 #: model_terms:ir.ui.view,arch_db:website.template_header_vertical_oe_structure_header_vertical_2
 msgid "+1 (650) 555-0111"
-msgstr ""
+msgstr "+1 (650) 555-0111"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.show_website_info
@@ -877,6 +881,8 @@ msgid ""
 "<span class=\"o_footer_copyright_name mr-2\">Copyright &amp;copy; Company "
 "name</span>"
 msgstr ""
+"<span class=\"o_footer_copyright_name mr-2\">Copyright &amp;copy; Yrityksen "
+"nimi</span>"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.res_config_settings_view_form
@@ -1991,7 +1997,7 @@ msgstr "Tarkista konfiguraatiosi."
 #: code:addons/website/static/src/js/editor/snippets.editor.js:0
 #, python-format
 msgid "Check your connection and try again"
-msgstr ""
+msgstr "Tarkista yhteys ja yritä uudelleen"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_product_catalog
@@ -2396,6 +2402,7 @@ msgstr "Lähtölaskenta on ohi - ilotulitus"
 #. module: website
 #: code:addons/website/models/website.py:0
 #: model:ir.filters,name:website.dynamic_snippet_country_filter
+#: model:website.snippet.filter,name:website.dynamic_snippet_data_source_country
 #, python-format
 msgid "Countries"
 msgstr "Maat"
@@ -2862,7 +2869,7 @@ msgstr "Löydä kaikki ominaisuudet"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_image_text
 msgid "Discover more"
-msgstr "Löydä lisää"
+msgstr "Lue lisää"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
@@ -2890,7 +2897,7 @@ msgstr "Näytä"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_rating_options
 msgid "Display Inline"
-msgstr ""
+msgstr "Näytä upotettuna"
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_base_language_install__display_name
@@ -2937,7 +2944,7 @@ msgstr "Näyttönimi"
 #: model:ir.model.fields,help:website.field_website__cookies_bar
 #: model_terms:ir.ui.view,arch_db:website.res_config_settings_view_form
 msgid "Display a customizable cookies bar on your website."
-msgstr ""
+msgstr "Näytä mukautettava evästepalkki verkkosivustollasi."
 
 #. module: website
 #: code:addons/website/models/ir_qweb_fields.py:0
@@ -2973,7 +2980,7 @@ msgstr "Näytä tämä verkkosivu kun kävijä tulee tähän verkkotunnukseen"
 #: code:addons/website/static/src/js/backend/res_config_settings.js:0
 #, python-format
 msgid "Do not activate"
-msgstr ""
+msgstr "Älä aktivoi"
 
 #. module: website
 #. openerp-web
@@ -3011,12 +3018,12 @@ msgstr "Muista päivittää kaikki linkit jotka viittaavat tähän sivuun."
 #: code:addons/website/static/src/js/theme_preview_kanban.js:0
 #, python-format
 msgid "Don't worry, you can switch later."
-msgstr ""
+msgstr "Älä huoli, voit vaihtaa myöhemmin."
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_image_gallery_options
 msgid "Dots"
-msgstr ""
+msgstr "Pisteet"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options_border_line_widgets
@@ -3036,7 +3043,7 @@ msgstr "Tuplaklikkaa ikonia korvataksesi sen valitsemallasi ikonilla."
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_chart_options
 msgid "Doughnut"
-msgstr ""
+msgstr "Donitsi"
 
 #. module: website
 #. openerp-web
@@ -3044,7 +3051,7 @@ msgstr ""
 #, python-format
 msgid ""
 "Drag the <b>%s</b> building block and drop it at the bottom of the page."
-msgstr ""
+msgstr "Vedä <b>%s</b> rakennuspalikka ja pudota se sivun alareunaan."
 
 #. module: website
 #. openerp-web
@@ -3084,12 +3091,12 @@ msgstr "Kopioi"
 #: code:addons/website/static/src/js/menu/content.js:0
 #, python-format
 msgid "Duplicate Page"
-msgstr ""
+msgstr "Kopioi sivu"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_process_steps
 msgid "Duplicate blocks <br/>to add more steps."
-msgstr ""
+msgstr "Kopioi palikat <br/>lisätäksesi lisää vaiheita."
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_features_grid
@@ -3107,6 +3114,8 @@ msgid ""
 "Easily design your own Odoo templates thanks to clean HTML\n"
 "                            structure and bootstrap CSS."
 msgstr ""
+"Suunnittele helposti omia Odoo-mallejasi siistin HTML\n"
+"                            rakenteen ja bootstrap CSS:n avulla."
 
 #. module: website
 #. openerp-web
@@ -3169,7 +3178,7 @@ msgstr "Muokkaa Analytics Client ID:tä"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.res_config_settings_view_form
 msgid "Edit robots.txt"
-msgstr ""
+msgstr "Muokkaa robots.txt tiedostoa"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.page_404
@@ -3190,7 +3199,7 @@ msgstr "Muokkaa valikkoa"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options_background_options
 msgid "Edit video"
-msgstr ""
+msgstr "Muokkaa videota"
 
 #. module: website
 #: model:res.groups,name:website.group_website_designer
@@ -3201,7 +3210,7 @@ msgstr "Muokkaaja ja suunnittelija"
 #: code:addons/website/models/website_snippet_filter.py:0
 #, python-format
 msgid "Either action_server_id or filter_id must be provided."
-msgstr ""
+msgstr "Joko action_server_id tai filter_id on annettava."
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_website_visitor__email
@@ -3224,14 +3233,14 @@ msgstr "Sähköpostituki"
 #: code:addons/website/models/website_snippet_filter.py:0
 #, python-format
 msgid "Empty field name in %r"
-msgstr ""
+msgstr "Tyhjä kentän nimi %r:ssä"
 
 #. module: website
 #. openerp-web
 #: code:addons/website/static/src/xml/website.editor.xml:0
 #, python-format
 msgid "Enable billing on your Google Project"
-msgstr ""
+msgstr "Ota laskutus käyttöön Google-projektissasi"
 
 #. module: website
 #. openerp-web
@@ -3247,11 +3256,12 @@ msgstr "Syötä API-avain"
 msgid ""
 "Enter code that will be added before the </body> of every page of your site."
 msgstr ""
+"Anna koodi, joka lisätään sivustosi jokaiselle sivulle </body> tagin eteen."
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
 msgid "Enter code that will be added into every page of your site"
-msgstr ""
+msgstr "Anna koodi, joka lisätään sivustosi jokaiselle sivulle"
 
 #. module: website
 #. openerp-web
@@ -3260,6 +3270,7 @@ msgstr ""
 msgid ""
 "Enter code that will be added into the <head> of every page of your site."
 msgstr ""
+"Anna koodi, joka lisätään sivustosi jokaiselle sivulle <head> tagin sisään."
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.bs_debug_view
@@ -3308,6 +3319,8 @@ msgid ""
 "Explain the benefits you offer. <br/>Don't write about products or services "
 "here, write about solutions."
 msgstr ""
+"Selitä tarjoamasi edut. <br/>Älä kirjoita tänne tuotteista tai palveluista, "
+"kirjoita ratkaisuista."
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.template_footer_links
@@ -3320,6 +3333,8 @@ msgid ""
 "Expression (tuple) to evaluate the cached key. \n"
 "E.g.: \"(request.params.get(\"currency\"), )\""
 msgstr ""
+"Ilmaisu (tuple) välimuistissa olevan avaimen laskemiseksi. \n"
+"Esim.: \"(request.params.get(\"currency\"), )\""
 
 #. module: website
 #: model:ir.model.fields.selection,name:website.selection__theme_ir_ui_view__mode__extension
@@ -3381,7 +3396,7 @@ msgstr "Asennus epäonnistui: \"%s\""
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_product_catalog
 msgid "Farm Friendly Chicken Supreme"
-msgstr ""
+msgstr "Maatilaystävällinen kanakastike"
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_res_config_settings__favicon
@@ -3417,7 +3432,7 @@ msgstr "Ominaisuudet"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_dynamic_snippet_options_template
 msgid "Fetched elements"
-msgstr ""
+msgstr "Haetut elementit"
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_website_snippet_filter__field_names
@@ -3430,11 +3445,13 @@ msgid ""
 "File from where the view originates.\n"
 "                                                          Useful to (hard) reset broken views or to read arch from file in dev-xml mode."
 msgstr ""
+"Tiedosto, josta näkymä on peräisin.\n"
+"                                                          Hyödyllinen (kova) nollaamaan rikkoutuneita näkymiä tai lukemaan kaaria tiedostosta dev-xml-tilassa."
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_product_catalog
 msgid "Filet Mignon 8oz"
-msgstr ""
+msgstr "Filet Mignon 225g"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
@@ -3475,7 +3492,7 @@ msgstr "Ensimmäinen yhteys"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_showcase
 msgid "First feature"
-msgstr ""
+msgstr "Ensimmäinen ominaisuus"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_features_grid
@@ -3507,12 +3524,12 @@ msgstr "Kiinteä"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
 msgid "Flag"
-msgstr ""
+msgstr "Lippu"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
 msgid "Flag and Text"
-msgstr ""
+msgstr "Lippu ja teksti"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_google_map_options
@@ -3574,7 +3591,7 @@ msgstr "Alatunniste näkyvissä"
 #: code:addons/website/static/src/xml/website.res_config_settings.xml:0
 #, python-format
 msgid "For session cookies, authentification and analytics*,"
-msgstr ""
+msgstr "Istuntoevästeisiin, todennuksiin ja analytiikkaan*,"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.res_config_settings_view_form
@@ -3604,11 +3621,14 @@ msgid ""
 "                                to keep his hands full by participating in the development of the software,\n"
 "                                marketing, and customer experience strategies."
 msgstr ""
+"Perustaja ja päävisionääri Tony on yrityksen liikkeellepaneva voima. Hän rakastaa\n"
+"                                pitää kätensä täynnä osallistumalla ohjelmiston kehittämiseen,\n"
+"                                markkinointiin ja asiakaskokemusstrategiointiin."
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
 msgid "Framed"
-msgstr ""
+msgstr "Kehystetty"
 
 #. module: website
 #: model:ir.model.fields.selection,name:website.selection__website__auth_signup_uninvited__b2c
@@ -3618,7 +3638,7 @@ msgstr "Vapaa rekisteröityminen"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_facebook_page_options
 msgid "Friends' Faces"
-msgstr ""
+msgstr "Ystävien kasvot"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_popup_options
@@ -3649,7 +3669,7 @@ msgstr "Täysi leveys"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_process_steps
 msgid "Get Delivered"
-msgstr ""
+msgstr "Saa toimitettuna"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_comparisons
@@ -3665,7 +3685,7 @@ msgstr "Hanki pääsy kaikkiin moduuleihin ja ominaisuuksiin"
 #: model_terms:ir.ui.view,arch_db:website.template_footer_links
 #: model_terms:ir.ui.view,arch_db:website.template_footer_minimalist
 msgid "Get in touch"
-msgstr ""
+msgstr "Ota yhteyttä"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.res_config_settings_view_form
@@ -3718,7 +3738,7 @@ msgstr "Siirry verkkosivustolle"
 #: code:addons/website/static/src/js/tours/tour_utils.js:0
 #, python-format
 msgid "Go to the Options tab"
-msgstr ""
+msgstr "Siirry Asetukset-välilehteen"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_carousel
@@ -3727,13 +3747,16 @@ msgid ""
 "customers. Simple words communicate better than big words and pompous "
 "language."
 msgstr ""
+"Hyvä tekstisuunnittelu alkaa ymmärtämällä, kuinka tuotteesi tai palvelusi "
+"auttaa asiakkaitasi. Yksinkertaiset sanat viestivät paremmin kuin pitkät "
+"sanat ja mahtipontinen kieliasu."
 
 #. module: website
 #. openerp-web
 #: code:addons/website/static/src/js/tours/tour_utils.js:0
 #, python-format
 msgid "Good job! It's time to <b>Save</b> your work."
-msgstr ""
+msgstr "Hyvää työtä! On aika <b>Tallentaa</b> työsi."
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_res_config_settings__has_google_analytics
@@ -3759,6 +3782,9 @@ msgid ""
 "Google Analytics initialization failed. Maybe this domain is not whitelisted"
 " in your Google Analytics project for this client ID."
 msgstr ""
+"Google Analyticsin alustus epäonnistui. Ehkä tätä verkkotunnusta ei ole "
+"lisätty sallittujen luetteloon Google Analytics -projektissasi tälle "
+"asiakastunnukselle."
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_res_config_settings__google_management_client_id
@@ -3777,19 +3803,19 @@ msgstr "Google Client Secret"
 #: code:addons/website/static/src/xml/website.editor.xml:0
 #, python-format
 msgid "Google Font address"
-msgstr ""
+msgstr "Google-fontin osoite"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
 msgid "Google Map"
-msgstr ""
+msgstr "Google kartta"
 
 #. module: website
 #. openerp-web
 #: code:addons/website/static/src/js/editor/snippets.editor.js:0
 #, python-format
 msgid "Google Map API Key"
-msgstr ""
+msgstr "Google kartan API-avain"
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_res_config_settings__has_google_maps
@@ -3808,13 +3834,13 @@ msgstr "Google Maps API Key"
 #: model:ir.model.fields,field_description:website.field_res_config_settings__google_search_console
 #: model:ir.model.fields,field_description:website.field_website__google_search_console
 msgid "Google Search Console"
-msgstr ""
+msgstr "Google Search Console"
 
 #. module: website
 #: model:ir.model.fields,help:website.field_res_config_settings__google_search_console
 #: model:ir.model.fields,help:website.field_website__google_search_console
 msgid "Google key, or Enable to access first reply"
-msgstr ""
+msgstr "Google avain, tai ota käyttöön päästäksesi ensimmäiseen vastaukseen"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_features_grid
@@ -3829,6 +3855,10 @@ msgid ""
 " story will sound fake and lack emotion. No one will be interested. Write "
 "for one person. If it’s genuine for the one, it’s genuine for the rest."
 msgstr ""
+"Hienot tarinat <b>sopivat kaikille</b>, vaikka ne olisi kirjoitettu <b>vain "
+"yhdelle henkilölle</b>. Jos yrität kirjoittaa laajalle yleisölle, tarinasi "
+"kuulostaa valheelta ja siitä puuttuu tunteita. Ketään ei kiinnosta. Kirjoita"
+" yhdelle henkilölle. Jos se on aito yhdelle, se on aito muille."
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_text_block
@@ -3839,6 +3869,11 @@ msgid ""
 "small quirks like word choices or phrases. Write from your point of view, "
 "not from someone else's experience."
 msgstr ""
+"Hienoilla tarinoilla on <b>persoonallisuus</b>. Harkitse hienon tarinan "
+"kertomista, joka luo persoonallisuutta. Persoonallisen tarinan "
+"kirjoittaminen potentiaalisille asiakkaille auttaa suhteiden luomisessa. "
+"Tämä näkyy pienissä omituisuuksissa, kuten sanavalinnoissa tai lauseissa. "
+"Kirjoita omasta näkökulmastasi, älä jonkun muun kokemuksesta."
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_image_gallery_options
@@ -3876,13 +3911,13 @@ msgstr "H2"
 #: model_terms:ir.ui.view,arch_db:website.color_combinations_debug_view
 #: model_terms:website.page,arch_db:website.color_combinations_debug_page
 msgid "H4 Card title"
-msgstr ""
+msgstr "H4 kortin otsikko"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.color_combinations_debug_view
 #: model_terms:website.page,arch_db:website.color_combinations_debug_page
 msgid "H5 Card subtitle"
-msgstr ""
+msgstr "H5 kortin alaotsikko"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.user_navbar
@@ -3902,17 +3937,17 @@ msgstr "Puoli näyttöä"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
 msgid "Half screen"
-msgstr ""
+msgstr "Puoli näyttöä"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
 msgid "Hamburger Full"
-msgstr ""
+msgstr "Hampurilainen täynnä"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
 msgid "Hamburger Type"
-msgstr ""
+msgstr "Hampurilaisen tyyppi"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
@@ -3924,7 +3959,7 @@ msgstr "Hampurilaisvalikko"
 #: code:addons/website/static/src/snippets/s_countdown/000.xml:0
 #, python-format
 msgid "Happy Odoo Anniversary!"
-msgstr ""
+msgstr "Hyvää Odoon vuosipäivää!"
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_website__has_social_default_image
@@ -6063,7 +6098,7 @@ msgstr "Uudelleenohjaa vanha URL"
 #: code:addons/website/static/src/js/editor/snippets.options.js:0
 #, python-format
 msgid "Redirect to URL in a new tab"
-msgstr ""
+msgstr "Uudelleenohjaa URL-osoitteeseen uudessa välilehdessä"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.view_rewrite_search
@@ -6320,7 +6355,7 @@ msgstr "Tallenna ja kopioi"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
 msgid "Save the block to use it elsewhere"
-msgstr ""
+msgstr "Tallenna palikka käyttääksesi sitä muualla"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_rating_options
@@ -7315,6 +7350,12 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:website.s_popup_options
 msgid "This page"
 msgstr "Tämä sivu"
+
+#. module: website
+#: code:addons/website/models/website_visitor.py:0
+#, python-format
+msgid "This operator is not supported"
+msgstr ""
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.page_404

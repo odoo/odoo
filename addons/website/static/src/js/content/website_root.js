@@ -23,6 +23,7 @@ var WebsiteRoot = publicRootData.PublicRoot.extend(KeyboardNavigationMixin, {
         'gmap_api_key_request': '_onGMapAPIKeyRequest',
         'ready_to_clean_for_save': '_onWidgetsStopRequest',
         'seo_object_request': '_onSeoObjectRequest',
+        'will_remove_snippet': '_onWidgetsStopRequest',
     }),
 
     /**
@@ -33,6 +34,19 @@ var WebsiteRoot = publicRootData.PublicRoot.extend(KeyboardNavigationMixin, {
         KeyboardNavigationMixin.init.call(this, {
             autoAccessKeys: false,
         });
+
+        // Special case for Safari browser: padding on wrapwrap is added by the
+        // layout option (boxed, etc), but it also receives a border on top of
+        // it to simulate an addition of padding. That padding is added with
+        // the "sidebar" header template to combine both options/effects.
+        // Sadly, the border hack is not working on safari, the menu is somehow
+        // broken and its content is not visible.
+        // This class will be used in scss to instead add the border size to the
+        // padding directly on Safari when "sidebar" menu is enabled.
+        if (/^((?!chrome|android).)*safari/i.test(navigator.userAgent) && document.querySelector('#wrapwrap')) {
+            document.querySelector('#wrapwrap').classList.add('o_safari_browser');
+        }
+
         return this._super(...arguments);
     },
     /**
@@ -293,7 +307,7 @@ var WebsiteRoot = publicRootData.PublicRoot.extend(KeyboardNavigationMixin, {
             },
         })
         .then(function (result) {
-            $data.toggleClass("css_unpublished css_published");
+            $data.toggleClass("css_published", result).toggleClass("css_unpublished", !result);
             $data.find('input').prop("checked", result);
             $data.parents("[data-publish]").attr("data-publish", +result ? 'on' : 'off');
             if (result) {

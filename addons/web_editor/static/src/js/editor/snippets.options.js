@@ -77,7 +77,16 @@ function _buildElement(tagName, title, options) {
  */
 function _buildTitleElement(title) {
     const titleEl = document.createElement('we-title');
-    titleEl.textContent = title;
+    // As a stable fix, to not touch XML templates and break existing
+    // translations, the ⌙ character is automatically replaced by └ which makes
+    // more sense for the usecase and should work properly in all browsers. The
+    // ⌙ character is actually rendered mirrored on Windows 11 Chrome (and
+    // others) as the font used for those unicode characters is left to the
+    // browser. We could force a font of our own but it's probably not worth it.
+    // TODO a better solution with a SVG or CSS solution has to be done in
+    // master. That would unify the look of the symbol across all browsers and
+    // also prevent special characters to be placed in translations.
+    titleEl.textContent = title.replace(/⌙/g, '└');
     return titleEl;
 }
 /**
@@ -1380,7 +1389,23 @@ const ColorpickerUserValueWidget = SelectUserValueWidget.extend({
             } else if (weUtils.isColorCombinationName(this._value)) {
                 this.colorPreviewEl.classList.add('o_cc', `o_cc${this._value}`);
             } else {
-                this.colorPreviewEl.classList.add(`bg-${this._value}`);
+                // Checking if the className actually exists seems overkill but
+                // it is actually needed to prevent a crash. As an example, if a
+                // colorpicker widget is linked to a SnippetOption instance's
+                // `selectStyle` method designed to handle the "border-color"
+                // property of an element, the value received can be split if
+                // the item uses different colors for its top/right/bottom/left
+                // borders. For instance, you could receive "red blue" if the
+                // item as red top and bottom borders and blue left and right
+                // borders, in which case you would reach this `else` and try to
+                // add the class "bg-red blue" which would crash because of the
+                // space inside). In that case, we simply do not show any color.
+                // We could choose to handle this split-value case specifically
+                // but it was decided that this is enough for the moment.
+                const className = `bg-${this._value}`;
+                if (classes.includes(className)) {
+                    this.colorPreviewEl.classList.add(className);
+                }
             }
         }
     },
@@ -1733,6 +1758,8 @@ const RangeUserValueWidget = UnitUserValueWidget.extend({
         this.input.setAttribute('max', max);
         this.input.setAttribute('step', step);
         this.containerEl.appendChild(this.input);
+
+        this._onInputChange = _.debounce(this._onInputChange, 100);
     },
 
     //--------------------------------------------------------------------------
@@ -2076,6 +2103,13 @@ const SnippetOptionWidget = Widget.extend({
      * @param {boolean} previewMode - @see this.selectClass
      * @param {string} widgetValue
      * @param {Object} params
+     * @param {string} [params.forceStyle] if undefined, the method will not
+     *      set the inline style (and thus even remove it) if the item would
+     *      already have the given style without it (thanks to a CSS rule for
+     *      example). If defined (as a string), it acts as the "priority" param
+     *      of @see CSSStyleDeclaration.setProperty: it should be 'important' to
+     *      set the style as important or '' otherwise. Note that if forceStyle
+     *      is undefined, the style is always set as important when applied.
      * @returns {Promise|undefined}
      */
     selectStyle: function (previewMode, widgetValue, params) {
@@ -2170,8 +2204,11 @@ const SnippetOptionWidget = Widget.extend({
         hasUserValue = applyCSS.call(this, cssProps[0], values.join(' '), styles) || hasUserValue;
 
         function applyCSS(cssProp, cssValue, styles) {
-            if (!weUtils.areCssValuesEqual(styles[cssProp], cssValue, cssProp, this.$target[0])) {
-                this.$target[0].style.setProperty(cssProp, cssValue, 'important');
+            const forceStyle = (typeof params.forceStyle !== 'undefined');
+            if (forceStyle
+                    || !weUtils.areCssValuesEqual(styles[cssProp], cssValue, cssProp, this.$target[0])) {
+                const priority = forceStyle ? params.forceStyle : 'important';
+                this.$target[0].style.setProperty(cssProp, cssValue, priority);
                 return true;
             }
             return false;
@@ -4023,7 +4060,7 @@ registry.BackgroundShape = SnippetOptionWidget.extend({
         const insertShapeContainer = newContainer => {
             const shapeContainer = target.querySelector(':scope > .o_we_shape');
             if (shapeContainer) {
-                shapeContainer.remove();
+                this._removeShapeEl(shapeContainer);
             }
             if (newContainer) {
                 const preShapeLayerElement = this._getLastPreShapeLayerElement();
@@ -4105,6 +4142,13 @@ registry.BackgroundShape = SnippetOptionWidget.extend({
             this.prevShapeContainer = shapeContainer.cloneNode(true);
             this.prevShape = target.dataset.oeShapeData;
         }
+    },
+    /**
+     * @private
+     * @param {HTMLElement} shapeEl
+     */
+    _removeShapeEl(shapeEl) {
+        shapeEl.remove();
     },
     /**
      * Overwrites shape properties with the specified data.
@@ -4213,7 +4257,12 @@ registry.BackgroundShape = SnippetOptionWidget.extend({
                 shapeToSelect = possibleShapes.find((shape, i) => {
                     return possibleShapes[i - 1] === previousShape;
                 });
-            } else {
+            }
+            // If there is no previous sibling, if the previous sibling had the
+            // last shape selected or if the previous shape could not be found
+            // in the possible shapes, default to the first shape. ([0] being no
+            // shapes selected.)
+            if (!shapeToSelect) {
                 shapeToSelect = possibleShapes[1];
             }
             return this._handlePreviewState(false, () => ({shape: shapeToSelect}));
@@ -4844,6 +4893,20 @@ registry.SnippetSave = SnippetOptionWidget.extend({
             }).open();
             dialog.on('closed', this, () => resolve());
         });
+    },
+
+    //--------------------------------------------------------------------------
+    // Private
+    //--------------------------------------------------------------------------
+
+    /**
+     * TODO adapt in master, this option should only be instantiated for real
+     * snippets in the first place.
+     *
+     * @override
+     */
+    _computeVisibility() {
+        return this.$target[0].hasAttribute('data-snippet');
     },
 });
 

@@ -86,7 +86,8 @@ class ProductPricelist(models.Model):
 
     def _check_website_pricelist(self):
         for website in self.env['website'].search([]):
-            if not website.pricelist_ids:
+            # sudo() to be able to read pricelists/website from another company
+            if not website.sudo().pricelist_ids:
                 raise UserError(_("With this action, '%s' website would not have any pricelist available.") % (website.name))
 
     def _is_available_on_website(self, website_id):
@@ -316,18 +317,6 @@ class ProductTemplate(models.Model):
 
         return combination_info
 
-    def _create_first_product_variant(self, log_warning=False):
-        """Create if necessary and possible and return the first product
-        variant for this template.
-
-        :param log_warning: whether a warning should be logged on fail
-        :type log_warning: bool
-
-        :return: the first product variant or none
-        :rtype: recordset of `product.product`
-        """
-        return self._create_product_variant(self._get_first_possible_combination(), log_warning)
-
     def _get_image_holder(self):
         """Returns the holder of the image to use as default representation.
         If the product template has an image it is the product template,
@@ -477,3 +466,7 @@ class Product(models.Model):
         # [1:] to remove the main image from the template, we only display
         # the template extra images here
         return variant_images + self.product_tmpl_id._get_images()[1:]
+
+    def _is_add_to_cart_allowed(self):
+        self.ensure_one()
+        return self.user_has_groups('base.group_system') or (self.sale_ok and self.website_published)

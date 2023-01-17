@@ -299,6 +299,13 @@ msgid "Amount Max"
 msgstr "최대 금액"
 
 #. module: payment
+#: code:addons/payment/models/account_journal.py:0
+#, python-format
+msgid ""
+"An acquirer is using this journal. Only bank and cash types are allowed."
+msgstr ""
+
+#. module: payment
 #: code:addons/payment/controllers/portal.py:0
 #, python-format
 msgid "An error occured during the processing of this payment"
@@ -969,12 +976,6 @@ msgstr "내부 서버 오류"
 #, python-format
 msgid "Invalid token found! Token acquirer %s != %s"
 msgstr "잘못된 토큰을 찾았습니다! 토큰 매입사 %s != %s"
-
-#. module: payment
-#: code:addons/payment/models/account_invoice.py:0
-#, python-format
-msgid "Invalid token found! Token partner %s != %s"
-msgstr "잘못된 토큰을 찾았습니다! 토큰 협력사 %s != %s"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.transaction_form
@@ -1772,6 +1773,14 @@ msgstr "%s 거래는 %s와 %s 사이의 거래로 다음 오류 메시지와 함
 #, python-format
 msgid "The transaction %s with %s for %s is pending."
 msgstr "%s 거래는 %s와 %s 사이의 거래로 보류중입니다."
+
+#. module: payment
+#: code:addons/payment/models/account_invoice.py:0
+#, python-format
+msgid ""
+"The transaction was aborted because you are not the customer of this "
+"invoice. Log in as %s to be able to use this payment method."
+msgstr ""
 
 #. module: payment
 #: code:addons/payment/wizards/payment_link_wizard.py:0

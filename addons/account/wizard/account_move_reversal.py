@@ -28,6 +28,7 @@ class AccountMoveReversal(models.TransientModel):
         help='Choose how you want to credit this invoice. You cannot "modify" nor "cancel" if the invoice is already reconciled.')
     journal_id = fields.Many2one('account.journal', string='Use Specific Journal', help='If empty, uses the journal of the journal entry to be reversed.', check_company=True)
     company_id = fields.Many2one('res.company', required=True, readonly=True)
+    country_code = fields.Char(related='company_id.country_id.code')
 
     # computed fields
     residual = fields.Monetary(compute="_compute_from_moves")

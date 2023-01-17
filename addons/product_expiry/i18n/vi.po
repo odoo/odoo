@@ -6,10 +6,11 @@
 # Martin Trigaux, 2020
 # fanha99 <fanha99@hotmail.com>, 2020
 # Nancy Momoland <thanhnguyen.icsc@gmail.com>, 2020
-# Duy BQ <duybq86@gmail.com>, 2020
 # Trinh Tran Thi Phuong <trinhttp@trobz.com>, 2020
 # Dung Nguyen Thi <dungnt@trobz.com>, 2020
 # Trần Hà <tranthuha13590@gmail.com>, 2021
+# Nguyễn Văn Sang, 2022
+# Duy BQ <duybq86@gmail.com>, 2022
 # 
 msgid ""
 msgstr ""
@@ -17,7 +18,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-09-01 07:29+0000\n"
 "PO-Revision-Date: 2020-09-07 08:17+0000\n"
-"Last-Translator: Trần Hà <tranthuha13590@gmail.com>, 2021\n"
+"Last-Translator: Duy BQ <duybq86@gmail.com>, 2022\n"
 "Language-Team: Vietnamese (https://www.transifex.com/odoo/teams/41243/vi/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -53,13 +54,13 @@ msgstr "Đã đến  ngày cảnh báo"
 #: model:ir.model.fields,field_description:product_expiry.field_product_product__alert_time
 #: model:ir.model.fields,field_description:product_expiry.field_product_template__alert_time
 msgid "Alert Time"
-msgstr "Alert Time"
+msgstr "Thời gian cảnh báo"
 
 #. module: product_expiry
 #: model:ir.model.fields,field_description:product_expiry.field_product_product__use_time
 #: model:ir.model.fields,field_description:product_expiry.field_product_template__use_time
 msgid "Best Before Time"
-msgstr "Best Before Time"
+msgstr "Tốt nhất trước thời điểm"
 
 #. module: product_expiry
 #: model:ir.model.fields,field_description:product_expiry.field_stock_production_lot__use_date
@@ -69,7 +70,7 @@ msgstr "Tốt nhất trước Ngày"
 #. module: product_expiry
 #: model_terms:ir.ui.view,arch_db:product_expiry.report_lot_label_expiry
 msgid "Best before:"
-msgstr "Best before:"
+msgstr "Tốt nhất trước:"
 
 #. module: product_expiry
 #: model:ir.model,name:product_expiry.model_res_config_settings
@@ -84,7 +85,7 @@ msgstr "Xác nhận"
 #. module: product_expiry
 #: model:ir.model,name:product_expiry.model_expiry_picking_confirmation
 msgid "Confirm Expiry"
-msgstr "Confirm Expiry"
+msgstr "Xác nhận hạn dùng"
 
 #. module: product_expiry
 #: code:addons/product_expiry/models/stock_picking.py:0
@@ -130,7 +131,7 @@ msgstr "Huỷ bỏ"
 #. module: product_expiry
 #: model:ir.model.fields,field_description:product_expiry.field_res_config_settings__group_expiry_date_on_delivery_slip
 msgid "Display Expiration Dates on Delivery Slips"
-msgstr "Display Expiration Dates on Delivery Slips"
+msgstr "Hiển thị Ngày hết hạn trên Phiếu giao hàng"
 
 #. module: product_expiry
 #: model:ir.model.fields,field_description:product_expiry.field_expiry_picking_confirmation__display_name
@@ -166,22 +167,22 @@ msgstr "Ngày hết hạn"
 #: model:ir.model.fields,field_description:product_expiry.field_product_product__expiration_time
 #: model:ir.model.fields,field_description:product_expiry.field_product_template__expiration_time
 msgid "Expiration Time"
-msgstr "Expiration Time"
+msgstr "Thời gian hết hạn"
 
 #. module: product_expiry
 #: model_terms:ir.ui.view,arch_db:product_expiry.res_config_settings_view_form_stock
 msgid "Expiration dates will appear on the delivery slip"
-msgstr "Expiration dates will appear on the delivery slip"
+msgstr "Ngày hết hạn sẽ xuất hiện trên phiếu giao hàng"
 
 #. module: product_expiry
 #: model_terms:ir.ui.view,arch_db:product_expiry.confirm_expiry_view
 msgid "Expired Lot(s)"
-msgstr "Expired Lot(s)"
+msgstr "(Các) lô hết hạn"
 
 #. module: product_expiry
 #: model:ir.model.fields,field_description:product_expiry.field_stock_production_lot__product_expiry_reminded
 msgid "Expiry has been reminded"
-msgstr "Expiry has been reminded"
+msgstr "Hết hạn đã được nhắc nhở"
 
 #. module: product_expiry
 #: model:ir.model.fields,field_description:product_expiry.field_expiry_picking_confirmation__id
@@ -200,7 +201,7 @@ msgstr "ID"
 #. module: product_expiry
 #: model:res.groups,name:product_expiry.group_expiry_date_on_delivery_slip
 msgid "Include expiration dates on delivery slip"
-msgstr "Include expiration dates on delivery slip"
+msgstr "Ghi ngày hết hạn vào phiếu giao hàng"
 
 #. module: product_expiry
 #: model:ir.model.fields,field_description:product_expiry.field_expiry_picking_confirmation____last_update
@@ -332,12 +333,12 @@ msgstr "Ngày Loại bỏ"
 #: model:ir.model.fields,field_description:product_expiry.field_product_product__removal_time
 #: model:ir.model.fields,field_description:product_expiry.field_product_template__removal_time
 msgid "Removal Time"
-msgstr "Removal Time"
+msgstr "Thời gian loại bỏ"
 
 #. module: product_expiry
 #: model:ir.model.fields,field_description:product_expiry.field_expiry_picking_confirmation__show_lots
 msgid "Show Lots"
-msgstr "Show Lots"
+msgstr "Hiển thị lô hàng"
 
 #. module: product_expiry
 #: model:ir.model,name:product_expiry.model_stock_move
@@ -381,8 +382,8 @@ msgid ""
 "This is the date on which the goods with this Serial Number start "
 "deteriorating, without being dangerous yet."
 msgstr ""
-"Đây là ngày mà hàng hoá với số sê-ri này bắt đầu xấu đi nhưng chưa trở nên "
-"nguy hiểm."
+"Đây là ngày mà sản phẩm với số sê-ri này có thể bắt đầu hư hỏng nhưng chưa "
+"trở nên nguy hiểm."
 
 #. module: product_expiry
 #: model:ir.model,name:product_expiry.model_stock_picking

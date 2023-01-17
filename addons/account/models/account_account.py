@@ -198,12 +198,14 @@ class AccountAccount(models.Model):
         self._cr.execute('''
             SELECT journal.id
             FROM account_journal journal
-            WHERE journal.payment_credit_account_id in %(credit_account)s
-            OR journal.payment_debit_account_id in %(debit_account)s ;
-        ''', {
-            'credit_account': tuple(accounts.ids),
-            'debit_account': tuple(accounts.ids)
-        })
+            WHERE (
+                journal.payment_credit_account_id IN %(accounts)s
+                AND journal.payment_credit_account_id != journal.default_account_id
+                ) OR (
+                journal.payment_debit_account_id IN %(accounts)s
+                AND journal.payment_debit_account_id != journal.default_account_id
+            )
+        ''', {'accounts': tuple(accounts.ids)})
 
         rows = self._cr.fetchall()
         if rows:

@@ -677,6 +677,7 @@
                             <tree decoration-danger="is_refused" editable="bottom">
                                 <field name="date" optional="show"/>
                                 <field name="name"/>
+                                <field name="employee_id" invisible="1"/>
                                 <field name="state" invisible="1"/>
                                 <field name="reference" optional="hide"/>
                                 <field name="analytic_account_id" optional="show" domain="['|', ('company_id', '=', parent.company_id), ('company_id', '=', False)]" groups="analytic.group_analytic_accounting"/>

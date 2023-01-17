@@ -147,12 +147,7 @@ class Message extends Component {
      * @returns {string}
      */
     get avatar() {
-        if (
-            this.message.author &&
-            this.message.author === this.env.messaging.partnerRoot
-        ) {
-            return '/mail/static/src/img/odoobot.png';
-        } else if (this.message.author) {
+        if (this.message.author) {
             // TODO FIXME for public user this might not be accessible. task-2223236
             // we should probably use the correspondig attachment id + access token
             // or create a dedicated route to get message image, checking the access right of the message

@@ -3,7 +3,7 @@ import base64
 import datetime
 import logging
 import time
-from hashlib import sha1
+from hashlib import new as hashnew
 from pprint import pformat
 from unicodedata import normalize
 
@@ -31,8 +31,8 @@ class PaymentAcquirerOgone(models.Model):
     ogone_pspid = fields.Char('PSPID', required_if_provider='ogone', groups='base.group_user')
     ogone_userid = fields.Char('API User ID', required_if_provider='ogone', groups='base.group_user')
     ogone_password = fields.Char('API User Password', required_if_provider='ogone', groups='base.group_user')
-    ogone_shakey_in = fields.Char('SHA Key IN', size=32, required_if_provider='ogone', groups='base.group_user')
-    ogone_shakey_out = fields.Char('SHA Key OUT', size=32, required_if_provider='ogone', groups='base.group_user')
+    ogone_shakey_in = fields.Char('SHA Key IN', required_if_provider='ogone', groups='base.group_user')
+    ogone_shakey_out = fields.Char('SHA Key OUT', required_if_provider='ogone', groups='base.group_user')
     ogone_alias_usage = fields.Char('Alias Usage', default="Allow saving my payment data",
                                     help="If you want to use Ogone Aliases, this default "
                                     "Alias Usage will be presented to the customer as the "
@@ -154,8 +154,14 @@ class PaymentAcquirerOgone(models.Model):
         items = sorted((k.upper(), v) for k, v in values.items())
         sign = ''.join('%s=%s%s' % (k, v, key) for k, v in items if v and filter_key(k))
         sign = sign.encode("utf-8")
-        shasign = sha1(sign).hexdigest()
-        return shasign
+
+        hash_function = self.env['ir.config_parameter'].sudo().get_param('payment_ogone.hash_function')
+        if not hash_function or hash_function.lower() not in ['sha1', 'sha256', 'sha512']:
+            hash_function = 'sha1'
+
+        shasign = hashnew(hash_function)
+        shasign.update(sign)
+        return shasign.hexdigest()
 
     def ogone_form_generate_values(self, values):
         base_url = self.get_base_url()

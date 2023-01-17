@@ -11,9 +11,11 @@
 # Gilles Mangin <gilles.mangin@phidias.fr>, 2020
 # Pauline Thiry <pth@odoo.com>, 2020
 # Martin Trigaux, 2020
-# Anthony Chaussin <chaussin.anthony@gmail.com>, 2021
-# Alexandra Jubert <aju@odoo.com>, 2021
-# Cécile Collart <cco@odoo.com>, 2021
+# anthony chaussin <chaussin.anthony@gmail.com>, 2021
+# Alexandra Jubert, 2021
+# Grégory Schreiner <gregory@mokatourisme.fr>, 2022
+# Cécile Collart <cco@odoo.com>, 2022
+# Jolien De Paepe, 2022
 # 
 msgid ""
 msgstr ""
@@ -21,13 +23,13 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-02-25 10:23+0000\n"
 "PO-Revision-Date: 2020-09-07 08:22+0000\n"
-"Last-Translator: Cécile Collart <cco@odoo.com>, 2021\n"
+"Last-Translator: Jolien De Paepe, 2022\n"
 "Language-Team: French (https://www.transifex.com/odoo/teams/41243/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: fr\n"
-"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+"Plural-Forms: nplurals=3; plural=(n == 0 || n == 1) ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;\n"
 
 #. module: website_mass_mailing
 #: model_terms:ir.ui.view,arch_db:website_mass_mailing.newsletter_subscribe_options
@@ -38,7 +40,7 @@ msgstr ", .o_newsletter_popup"
 #: code:addons/website_mass_mailing/models/mailing_list.py:0
 #, python-format
 msgid "<p>Thanks for subscribing!</p>"
-msgstr ""
+msgstr "<p>Merci pour votre inscription !</p>"
 
 #. module: website_mass_mailing
 #. openerp-web
@@ -57,7 +59,7 @@ msgstr "Ajouter un pop d'abonnement à la lettre d'information"
 #. module: website_mass_mailing
 #: model_terms:ir.ui.view,arch_db:website_mass_mailing.s_newsletter_subscribe_popup_content
 msgid "Always <b>First</b>."
-msgstr ""
+msgstr "Toujours <b>Premier</b>."
 
 #. module: website_mass_mailing
 #: model_terms:ir.ui.view,arch_db:website_mass_mailing.s_newsletter_block
@@ -68,12 +70,16 @@ msgstr "Toujours le premier."
 #: model_terms:ir.ui.view,arch_db:website_mass_mailing.s_newsletter_block
 msgid "Be the first to find out all the latest news, products, and trends."
 msgstr ""
+"Soyez les premiers à découvrir nos dernières actualités, produits et "
+"tendances."
 
 #. module: website_mass_mailing
 #: model_terms:ir.ui.view,arch_db:website_mass_mailing.s_newsletter_subscribe_popup_content
 msgid ""
 "Be the first to find out all the latest news,<br/> products, and trends."
 msgstr ""
+"Soyez le premier à découvrir toutes les dernières nouvelles, <br/>produits "
+"et tendances."
 
 #. module: website_mass_mailing
 #: model_terms:ir.ui.view,arch_db:website_mass_mailing.newsletter_subscribe_options
@@ -124,12 +130,21 @@ msgstr "Nom affiché"
 
 #. module: website_mass_mailing
 #. openerp-web
+#: code:addons/website_mass_mailing/static/src/js/website_mass_mailing.editor.js:0
+#, python-format
+msgid "Display Thanks Button"
+msgstr "Afficher le bouton de remerciement"
+
+#. module: website_mass_mailing
+#. openerp-web
 #: code:addons/website_mass_mailing/static/src/js/website_mass_mailing.js:0
 #, python-format
 msgid ""
 "Do you want to install Google reCAPTCHA to secure your newsletter "
 "subscriptions?"
 msgstr ""
+"Voulez-vous installer Google reCAPTCHA pour sécuriser vos inscriptions à la "
+"newsletter ?"
 
 #. module: website_mass_mailing
 #. openerp-web
@@ -147,6 +162,8 @@ msgid ""
 "Google reCAPTCHA is now installed! You can configure it from your website "
 "settings."
 msgstr ""
+"Google reCAPTCHA est à présent installé ! Vous pouvez le configurer depuis "
+"les paramètres de votre site web."
 
 #. module: website_mass_mailing
 #: model:ir.model.fields,field_description:website_mass_mailing.field_mailing_list__id
@@ -160,7 +177,7 @@ msgstr "ID"
 #: code:addons/website_mass_mailing/static/src/js/website_mass_mailing.js:0
 #, python-format
 msgid "Install now"
-msgstr ""
+msgstr "Installer maintenant"
 
 #. module: website_mass_mailing
 #: model:ir.model.fields,field_description:website_mass_mailing.field_mailing_list____last_update
@@ -266,7 +283,7 @@ msgstr ""
 #: code:addons/website_mass_mailing/static/src/js/website_mass_mailing.js:0
 #, python-format
 msgid "Website settings"
-msgstr ""
+msgstr "Paramètres du site web"
 
 #. module: website_mass_mailing
 #: model_terms:ir.ui.view,arch_db:website_mass_mailing.s_newsletter_subscribe_form

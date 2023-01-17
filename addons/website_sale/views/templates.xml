@@ -535,6 +535,7 @@
                 <form class="js_attributes mb-2" method="get">
                     <input t-if="category" type="hidden" name="category" t-att-value="category.id" />
                     <input type="hidden" name="search" t-att-value="search" />
+                    <input type="hidden" name="order" t-att-value="order"/>
                     <ul class="nav nav-pills flex-column">
                         <t t-foreach="attributes" t-as="a">
                             <li t-if="a.value_ids and len(a.value_ids) &gt; 1" class="nav-item">
@@ -630,8 +631,10 @@
                             <t t-call="website_sale.shop_product_carousel"/>
                         </div>
                         <div class="col-md-6 col-xl-4" id="product_details">
+                            <t t-set="base_url" t-value="product.get_base_url()"/>
                             <h1 itemprop="name" t-field="product.name">Product Name</h1>
-                            <span itemprop="url" style="display:none;" t-esc="product.website_url"/>
+                            <span itemprop="url" style="display:none;" t-esc="base_url + product.website_url"/>
+                            <span itemprop="image" style="display:none;" t-esc="base_url + website.image_url(product, 'image_1920')" />
                             <form t-if="product._is_add_to_cart_possible()" action="/shop/cart/update" method="POST">
                                 <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()" />
                                 <div class="js_product js_main_product">
@@ -1138,7 +1141,7 @@
         </t>
     </template>
 
-    <template id="suggested_products_list" inherit_id="website_sale.cart_lines" customize_show="True" name="Alternative Products in my cart">
+    <template id="suggested_products_list" inherit_id="website_sale.cart_lines" customize_show="True" name="Accessory Products in my cart">
         <xpath expr="//table[@id='cart_products']" position="after">
             <h5 class='text-muted js_cart_lines' t-if="suggested_products">Suggested Accessories:</h5>
             <table t-if="suggested_products" id="suggested_products" class="js_cart_lines table table-striped table-sm">
@@ -1876,7 +1879,7 @@
                             <div t-if="product_image._name == 'product.image' and product_image.embed_code" class="d-flex align-items-center justify-content-center h-100 embed-responsive embed-responsive-16by9">
                                 <t t-raw="product_image.embed_code"/>
                             </div>
-                            <div  t-else="" t-field="product_image.image_1920" class="d-flex align-items-center justify-content-center h-100" t-options='{"widget": "image", "preview_image": "image_1024", "class": "product_detail_img mh-100", "alt-field": "name", "zoom": product_image.can_image_1024_be_zoomed and "image_1920", "itemprop": "image"}'/>
+                            <div  t-else="" t-field="product_image.image_1920" class="d-flex align-items-center justify-content-center h-100" t-options='{"widget": "image", "preview_image": "image_1024", "class": "product_detail_img mh-100", "alt-field": "name", "zoom": product_image.can_image_1024_be_zoomed and "image_1920"}'/>
                         </div>
                     </t>
                 </div>
@@ -1911,7 +1914,7 @@
                     <field name="shop_extra_field_ids" context="{'default_website_id': active_id}">
                         <tree editable="bottom">
                             <field name="sequence" widget="handle"/>
-                            <field name="field_id"/>
+                            <field name="field_id" required="1"/>
                         </tree>
                     </field>
                 </page>

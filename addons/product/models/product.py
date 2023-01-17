@@ -112,7 +112,7 @@ class ProductProduct(models.Model):
         digits='Product Price',
         groups="base.group_user",
         help="""In Standard Price & AVCO: value of the product (automatically computed in AVCO).
-        In FIFO: value of the last unit that left the stock (automatically computed).
+        In FIFO: value of the next unit that will leave the stock (automatically computed).
         Used to value the product when the purchase cost is not known (e.g. inventory adjustment).
         Used to compute margins on sale orders.""")
     volume = fields.Float('Volume', digits='Volume')
@@ -174,6 +174,15 @@ class ProductProduct(models.Model):
                 record.product_tmpl_id.image_1920 = record.image_1920
             else:
                 record.image_variant_1920 = record.image_1920
+
+    @api.depends("create_date", "write_date", "product_tmpl_id.create_date", "product_tmpl_id.write_date")
+    def compute_concurrency_field_with_access(self):
+        # Intentionally not calling super() to involve all fields explicitly
+        for record in self:
+            record[self.CONCURRENCY_CHECK_FIELD] = max(filter(None, (
+                record.product_tmpl_id.write_date or record.product_tmpl_id.create_date,
+                record.write_date or record.create_date or fields.Datetime.now(),
+            )))
 
     def _compute_image_1024(self):
         """Get the image from the template if no image is set on the variant."""
@@ -415,7 +424,12 @@ class ProductProduct(models.Model):
         For convenience the template is copied instead and its first variant is
         returned.
         """
-        return self.product_tmpl_id.copy(default=default).product_variant_id
+        # copy variant is disabled in https://github.com/odoo/odoo/pull/38303
+        # this returns the first possible combination of variant to make it
+        # works for now, need to be fixed to return product_variant_id if it's
+        # possible in the future
+        template = self.product_tmpl_id.copy(default=default)
+        return template.product_variant_id or template._create_first_product_variant()
 
     @api.model
     def _search(self, args, offset=0, limit=None, order=None, count=False, access_rights_uid=None):
@@ -718,7 +732,7 @@ class ProductPackaging(models.Model):
     name = fields.Char('Package Type', required=True)
     sequence = fields.Integer('Sequence', default=1, help="The first in the sequence is the default one.")
     product_id = fields.Many2one('product.product', string='Product', check_company=True)
-    qty = fields.Float('Contained Quantity', help="Quantity of products contained in the packaging.")
+    qty = fields.Float('Contained Quantity', digits='Product Unit of Measure', help="Quantity of products contained in the packaging.")
     barcode = fields.Char('Barcode', copy=False, help="Barcode used for packaging identification. Scan this packaging barcode from a transfer in the Barcode app to move all the contained units")
     product_uom_id = fields.Many2one('uom.uom', related='product_id.uom_id', readonly=True)
     company_id = fields.Many2one('res.company', 'Company', index=True)
@@ -777,3 +791,9 @@ class SupplierInfo(models.Model):
             'label': _('Import Template for Vendor Pricelists'),
             'template': '/product/static/xls/product_supplierinfo.xls'
         }]
+
+    @api.constrains('product_id', 'product_tmpl_id')
+    def _check_product_variant(self):
+        for supplier in self:
+            if supplier.product_id and supplier.product_tmpl_id and supplier.product_id.product_tmpl_id != supplier.product_tmpl_id:
+                raise ValidationError(_('The product variant must be a variant of the product template.'))

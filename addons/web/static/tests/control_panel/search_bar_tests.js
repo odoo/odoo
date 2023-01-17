@@ -265,6 +265,43 @@ odoo.define('web.search_bar_tests', function (require) {
             actionManager.destroy();
         });
 
+        QUnit.test('autocomplete input is trimmed', async function (assert) {
+            assert.expect(3);
+
+            let searchReadCount = 0;
+            const actionManager = await createActionManager({
+                actions: this.actions,
+                archs: this.archs,
+                data: this.data,
+                async mockRPC(route, args) {
+                    if (route === '/web/dataset/search_read') {
+                        switch (searchReadCount) {
+                            case 0:
+                                // Done on loading
+                                break;
+                            case 1:
+                                assert.deepEqual(args.domain, [["foo", "ilike", "a"]]);
+                                break;
+                        }
+                        searchReadCount++;
+                    }
+                    return this._super(...arguments);
+                },
+            });
+            await actionManager.doAction(1);
+
+            const searchInput = actionManager.el.querySelector('.o_searchview_input');
+            await testUtils.fields.editInput(searchInput, 'a ');
+            assert.containsN(actionManager, '.o_searchview_autocomplete li', 2,
+                "there should be 2 result for 'a' in search bar autocomplete");
+
+            await testUtils.dom.triggerEvent(searchInput, 'keydown', {key: 'Enter'});
+            assert.strictEqual(actionManager.el.querySelector('.o_searchview_input_container .o_facet_values').innerText.trim(),
+                "a", "There should be a field facet with label 'a'");
+
+            actionManager.destroy();
+        });
+
         QUnit.test('select an autocomplete field with `context` key', async function (assert) {
             assert.expect(9);
 

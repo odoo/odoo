@@ -7,14 +7,14 @@
 # SebastianoPistore <SebastianoPistore.info@protonmail.ch>, 2020
 # ginfriz <ginfriz84@hotmail.it>, 2020
 # David Minneci <david@numeko.it>, 2020
-# maiolif <maiolif@mgftools.com>, 2020
+# neveroils <maiolif@mgftools.com>, 2020
 # Simone Bernini <simone@aperturelabs.it>, 2020
-# Massimo Bianchi <bianchi.massimo@gmail.com>, 2020
-# Martin Trigaux, 2020
 # Manuela Feliciani <mfeliciani@alice.it>, 2020
 # Léonie Bouchat <lbo@odoo.com>, 2020
 # Paolo Valier, 2020
-# Sergio Zanchetta <primes2h@gmail.com>, 2021
+# Friederike Fasterling-Nesselbosch, 2022
+# Martin Trigaux, 2022
+# Sergio Zanchetta <primes2h@gmail.com>, 2022
 # 
 msgid ""
 msgstr ""
@@ -22,13 +22,13 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-11-27 14:12+0000\n"
 "PO-Revision-Date: 2020-09-07 08:16+0000\n"
-"Last-Translator: Sergio Zanchetta <primes2h@gmail.com>, 2021\n"
+"Last-Translator: Sergio Zanchetta <primes2h@gmail.com>, 2022\n"
 "Language-Team: Italian (https://www.transifex.com/odoo/teams/41243/it/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: it\n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"Plural-Forms: nplurals=3; plural=n == 1 ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;\n"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__product_variant_count
@@ -139,7 +139,7 @@ msgid ""
 msgstr ""
 "<span attrs=\"{'invisible':[('base', '!=', 'list_price')]}\">Prezzo di vendita  -  </span>\n"
 "                              <span attrs=\"{'invisible':[('base', '!=', 'standard_price')]}\">Costo  -  </span>\n"
-"                              <span attrs=\"{'invisible':[('base', '!=', 'pricelist')]}\">Altro elenco prezzi  -  </span>"
+"                              <span attrs=\"{'invisible':[('base', '!=', 'pricelist')]}\">Altro listino prezzi  -  </span>"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_category_form_view
@@ -327,7 +327,7 @@ msgstr "Applicata a"
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_pricelist_item__applied_on
 msgid "Apply On"
-msgstr "Applica a"
+msgstr "Applicare a"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_pricelist_item_view_search
@@ -424,9 +424,9 @@ msgid ""
 "Barcode used for packaging identification. Scan this packaging barcode from "
 "a transfer in the Barcode app to move all the contained units"
 msgstr ""
-"Codice a barre utilizzato per l'identificazione dell'imballaggio. "
-"Nell'applicazione, per movimentare tutte le unità contenute "
-"nell'imballaggio, acquisire il codice da un trasferimento"
+"Codice a barre utilizzato per l'identificazione dell'imballaggio. Scansiona "
+"questo codice a barre dell'imballaggio da un trasferimento nell'applicazione"
+" Codice a barre per spostare tutte le unità contenute"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_pricelist_item__base
@@ -918,7 +918,7 @@ msgid ""
 "Ending datetime for the pricelist item validation\n"
 "The displayed value depends on the timezone set in your preferences."
 msgstr ""
-"Data e ora finale per la convalida articolo dell'elenco prezzi\n"
+"Data e ora finale per la convalida articolo del listino prezzi\n"
 "Il valore visualizzato dipende dal fuso orario impostato nelle preferenze."
 
 #. module: product
@@ -957,19 +957,19 @@ msgstr "Lavagna portablocco"
 #: model:ir.model.fields,field_description:product.field_product_product__message_follower_ids
 #: model:ir.model.fields,field_description:product.field_product_template__message_follower_ids
 msgid "Followers"
-msgstr "Chi sta seguendo"
+msgstr "Seguito da"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__message_channel_ids
 #: model:ir.model.fields,field_description:product.field_product_template__message_channel_ids
 msgid "Followers (Channels)"
-msgstr "Chi sta seguendo (canali)"
+msgstr "Seguito da (canali)"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__message_partner_ids
 #: model:ir.model.fields,field_description:product.field_product_template__message_partner_ids
 msgid "Followers (Partners)"
-msgstr "Chi sta seguendo (partner)"
+msgstr "Seguito da (partner)"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_product__activity_type_icon
@@ -1195,14 +1195,14 @@ msgstr "Importa modello per listini prezzi fornitore"
 #: model:ir.model.fields,help:product.field_product_template__standard_price
 msgid ""
 "In Standard Price & AVCO: value of the product (automatically computed in AVCO).\n"
-"        In FIFO: value of the last unit that left the stock (automatically computed).\n"
+"        In FIFO: value of the next unit that will leave the stock (automatically computed).\n"
 "        Used to value the product when the purchase cost is not known (e.g. inventory adjustment).\n"
 "        Used to compute margins on sale orders."
 msgstr ""
-"Con prezzo standard e CMP: valore del prodotto (con CMP è calcolato automaticamente).\n"
-"        Con FIFO: valore dell'ultima unità che lascia la giacenza (calcolato automaticamente).\n"
-"        Utilizzato per dare un valore al prodotto quando il costo di acquisto non è noto (es. rettifica di inventario).\n"
-"        Utilizzato per calcolare i margini negli ordini di vendita."
+"Con prezzo standard e CMP: valore del prodotto (calcolato automaticamente con CMP).\n"
+"        Con FIFO: valore della prossima unità che esce dalla giacenza (calcolato automaticamente).\n"
+"        Utilizzato per dare un valore al prodotto quando il costo di acquisto non è conosciuto (es. rettifica di inventario).\n"
+"        Utilizzato per calcolare i margini sugli ordini di vendita."
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_template_attribute_value_view_search
@@ -1406,7 +1406,7 @@ msgstr "Gestione imballaggio del prodotto"
 #. module: product
 #: model:res.groups,name:product.group_product_variant
 msgid "Manage Product Variants"
-msgstr "Gestire varianti di prodotto"
+msgstr "Gestione varianti di prodotto"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_pricelist_item_form_view
@@ -1752,7 +1752,7 @@ msgstr "Nome listino prezzi"
 #: model:ir.model,name:product.model_report_product_report_pricelist
 #, python-format
 msgid "Pricelist Report"
-msgstr "Resoconto elenco prezzi"
+msgstr "Resoconto listino prezzi"
 
 #. module: product
 #: model:ir.model,name:product.model_product_pricelist_item
@@ -2151,7 +2151,7 @@ msgstr "Prezzo di vendita"
 #. module: product
 #: model:ir.model.fields.selection,name:product.selection__product_attribute__display_type__select
 msgid "Select"
-msgstr "Selezione a discesa"
+msgstr "Selezione"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_product__categ_id
@@ -2265,7 +2265,7 @@ msgid ""
 "Starting datetime for the pricelist item validation\n"
 "The displayed value depends on the timezone set in your preferences."
 msgstr ""
-"Data e ora iniziale per la convalida articolo dell'elenco prezzi\n"
+"Data e ora iniziale per la convalida articolo del listino prezzi\n"
 "Il valore visualizzato dipende dal fuso orario impostato nelle preferenze."
 
 #. module: product
@@ -2393,7 +2393,7 @@ msgstr ""
 #. module: product
 #: model:ir.model.fields,help:product.field_product_supplierinfo__price
 msgid "The price to purchase a product"
-msgstr "Il prezzo di acquisto di un prodotto"
+msgstr "Prezzo di acquisto di un prodotto"
 
 #. module: product
 #: code:addons/product/models/product_template.py:0
@@ -2401,6 +2401,12 @@ msgstr "Il prezzo di acquisto di un prodotto"
 msgid "The product template is archived so no combination is possible."
 msgstr ""
 "Il modello prodotto è archiviato, non è possibile alcuna combinazione."
+
+#. module: product
+#: code:addons/product/models/product.py:0
+#, python-format
+msgid "The product variant must be a variant of the product template."
+msgstr ""
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_supplierinfo__min_qty
@@ -2450,6 +2456,18 @@ msgstr "Nessuna combinazione possibile rimasta."
 #: model:ir.model.fields,help:product.field_product_supplierinfo__product_uom
 msgid "This comes from the product form."
 msgstr "Proviene dalla scheda prodotto."
+
+#. module: product
+#: code:addons/product/models/product_template.py:0
+#, python-format
+msgid ""
+"This configuration of product attributes, values, and exclusions would lead "
+"to no possible variant. Please archive or delete your product directly if "
+"intended."
+msgstr ""
+"Questa configurazione di attributi, valori ed esclusioni per il prodotto "
+"porterebbe a nessuna variante possibile. Se intenzionale, archiviare o "
+"eliminare direttamente il prodotto."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_product__price_extra
@@ -2961,12 +2979,16 @@ msgid ""
 "%s\n"
 "If the value has been associated to a product in the past, you will not be able to delete it."
 msgstr ""
+"Impossibile eliminare il valore %s, è utilizzato nei seguenti prodotti:\n"
+"%s\n"
+"Se in passato il valore è stato associato al prodotto, non è possibile eliminarlo."
 
 #. module: product
 #: code:addons/product/models/product_attribute.py:0
 #, python-format
 msgid "You cannot delete value %s because it was used in some products."
 msgstr ""
+"Impossibile eliminare il valore %s, è stato utilizzato in alcuni prodotti."
 
 #. module: product
 #: code:addons/product/models/product_pricelist.py:0
@@ -2993,6 +3015,16 @@ msgstr ""
 msgid ""
 "You cannot move the attribute %s from the product %s to the product %s."
 msgstr "Impossibile spostare l'attributo %s dal prodotto %s al prodotto %s."
+
+#. module: product
+#: code:addons/product/models/product_pricelist.py:0
+#, python-format
+msgid ""
+"You cannot disable a pricelist rule, please delete it or archive its "
+"pricelist instead."
+msgstr ""
+"Non puoi disattivare una regola del listino, cancellala o archivia invece il"
+" suo listino."
 
 #. module: product
 #: code:addons/product/models/product_attribute.py:0

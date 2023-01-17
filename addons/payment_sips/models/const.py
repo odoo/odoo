@@ -58,6 +58,6 @@ SIPS_SUPPORTED_CURRENCIES = {
     'BGN': Currency('975', 2),
     'EUR': Currency('978', 2),
     'UAH': Currency('980', 2),
-    'PLN': Currency('996', 2),
+    'PLN': Currency('985', 2),
     'BRL': Currency('986', 2),
 }

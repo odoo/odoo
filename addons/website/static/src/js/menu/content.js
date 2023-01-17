@@ -131,8 +131,20 @@ var PagePropertiesDialog = weWidgets.Dialog.extend({
             });
             dep_text = dep_text.join(', ');
             self.$('#dependencies_redirect').html(qweb.render('website.show_page_dependencies', { dependencies: dependencies, dep_text: dep_text }));
-            self.$('#dependencies_redirect [data-toggle="popover"]').popover({
-                container: 'body',
+            self.$('a.o_dependencies_redirect_link').on('click', () => {
+                self.$('.o_dependencies_redirect_list_popover').popover({
+                    html: true,
+                    title: _t('Dependencies'),
+                    boundary: 'viewport',
+                    placement: 'right',
+                    trigger: 'focus',
+                    content: () => {
+                        return qweb.render('website.get_tooltip_dependencies', {
+                            dependencies: dependencies,
+                        });
+                    },
+                    template: qweb.render('website.page_dependencies_popover'),
+                }).popover('toggle');
             });
         }));
 
@@ -1102,11 +1114,13 @@ function _clonePage(pageId) {
             title: _t("Duplicate Page"),
             $content: $(qweb.render('website.duplicate_page_action_dialog')),
             confirm_callback: function () {
-                var new_page_name =  this.$('#page_name').val();
                 return self._rpc({
                     model: 'website.page',
                     method: 'clone_page',
-                    args: [pageId, new_page_name],
+                    args: [
+                        pageId,
+                        this.$('#page_name').val(),
+                    ],
                 }).then(function (path) {
                     window.location.href = path;
                 }).guardedCatch(reject);
