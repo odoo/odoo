@@ -50,7 +50,7 @@ class MicrosoftOutlookMixin(models.AbstractModel):
                 'redirect_uri': url_join(base_url, '/microsoft_outlook/confirm'),
                 'response_mode': 'query',
                 # offline_access is needed to have the refresh_token
-                'scope': f'offline_access {self._OUTLOOK_SCOPE}',
+                'scope': f'offline_access https://outlook.office.com/User.read {self._OUTLOOK_SCOPE}',
                 'state': json.dumps({
                     'model': record._name,
                     'id': record.id,
@@ -67,7 +67,7 @@ class MicrosoftOutlookMixin(models.AbstractModel):
         """
         self.ensure_one()
 
-        if not self.env.user.has_group('base.group_system'):
+        if not self.env.is_admin():
             raise AccessError(_('Only the administrator can link an Outlook mail server.'))
 
         email = tools.email_normalize(self[self._email_field])
@@ -120,6 +120,7 @@ class MicrosoftOutlookMixin(models.AbstractModel):
         return {
             'type': 'ir.actions.act_url',
             'url': microsoft_outlook_uri,
+            'target': 'self',
         }
 
     def _fetch_outlook_refresh_token(self, authorization_code):
@@ -172,7 +173,7 @@ class MicrosoftOutlookMixin(models.AbstractModel):
             data={
                 'client_id': microsoft_outlook_client_id,
                 'client_secret': microsoft_outlook_client_secret,
-                'scope': f'offline_access {self._OUTLOOK_SCOPE}',
+                'scope': f'offline_access https://outlook.office.com/User.read {self._OUTLOOK_SCOPE}',
                 'redirect_uri': url_join(base_url, '/microsoft_outlook/confirm'),
                 'grant_type': grant_type,
                 **values,

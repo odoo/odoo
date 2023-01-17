@@ -4,6 +4,7 @@ from collections import defaultdict
 import contextlib
 
 from odoo import _, api, Command, fields, models, modules, tools
+from odoo.exceptions import UserError
 from odoo.http import request
 from odoo.tools import email_normalize
 from odoo.addons.mail.tools.discuss import Store
@@ -36,6 +37,27 @@ class ResUsers(models.Model):
     presence_ids = fields.One2many("mail.presence", "user_id", groups="base.group_system")
     # sudo: res.users - can access presence of accessible user
     im_status = fields.Char("IM Status", compute="_compute_im_status", compute_sudo=True)
+
+    outgoing_mail_server_id = fields.Many2one(
+        "ir.mail_server",
+        "Outgoing Mail Server",
+        compute='_compute_outgoing_mail_server_id',
+        groups='base.group_user',
+    )
+    outgoing_mail_server_type = fields.Selection(
+        [('default', 'Default')],
+        "Outgoing Mail Server Type",
+        compute='_compute_outgoing_mail_server_id',
+        readonly=False,
+        required=True,
+        default='default',
+        groups='base.group_user',
+    )
+    has_external_mail_server = fields.Boolean(compute='_compute_has_external_mail_server')
+
+    def _compute_has_external_mail_server(self):
+        self.has_external_mail_server = self.env['ir.config_parameter'].sudo().get_param(
+            'base_setup.default_external_email_server')
 
     _notification_type = models.Constraint(
         "CHECK (notification_type = 'email' OR NOT share)",
@@ -79,6 +101,22 @@ class ResUsers(models.Model):
     def _compute_can_edit_role(self):
         self.can_edit_role = self.env["res.role"].sudo(False).has_access("write")
 
+    @api.depends("email")
+    def _compute_outgoing_mail_server_id(self):
+        mail_servers = self.env['ir.mail_server'].sudo().search(fields.Domain.AND([
+            [('from_filter', 'ilike', '_@_')],
+            fields.Domain.OR([[('from_filter', '=', user.email), ('owner_id', '=', user._origin.id)] for user in self]),
+        ]))
+        mail_servers = {m.owner_id: m for m in mail_servers}
+        for user in self:
+            server = mail_servers.get(user) or self.env['ir.mail_server']
+            user.outgoing_mail_server_id = server.id
+            user.outgoing_mail_server_type = self._get_personal_server_type(server)
+
+    @api.model
+    def _get_personal_server_type(self, smtp_server):
+        return 'default'
+
     # ------------------------------------------------------------
     # CRUD
     # ------------------------------------------------------------
@@ -89,11 +127,14 @@ class ResUsers(models.Model):
             "can_edit_role",
             "notification_type",
             "role_ids",
+            "has_external_mail_server",
+            "outgoing_mail_server_id",
+            "outgoing_mail_server_type",
         ]
 
     @property
     def SELF_WRITEABLE_FIELDS(self):
-        return super().SELF_WRITEABLE_FIELDS + ['notification_type']
+        return super().SELF_WRITEABLE_FIELDS + ['notification_type', 'outgoing_mail_server_type']
 
     @api.model_create_multi
     def create(self, vals_list):
@@ -445,3 +486,111 @@ class ResUsers(models.Model):
             if model_name == 'mail.activity':
                 user_activities[model_name]['activity_ids'] = activities.ids
         return list(user_activities.values())
+
+    # ------------------------------------------------------------
+    # Mail Servers
+    # ------------------------------------------------------------
+
+    @api.autovacuum
+    def _gc_personal_mail_servers(self):
+        """In case the user change its email, we need to delete the old personal servers."""
+        servers = self.env['ir.mail_server'] \
+            .with_context(active_test=False) \
+            .search([('owner_id', '!=', False)])
+        for server in servers:
+            if server.owner_id.outgoing_mail_server_id != server or not server.active:
+                server.unlink()
+
+    @api.model
+    def _get_mail_server_values(self, server_type):
+        return {}
+
+    @api.model
+    def action_setup_outgoing_mail_server(self, server_type):
+        """Configure the outgoing mail servers."""
+        user = self.env.user
+        if not user.has_external_mail_server:
+            raise UserError(_('You are not allowed to create personal mail server.'))
+
+        if not user.has_group('base.group_user'):
+            raise UserError(_('Only internal user can configure personal mail server.'))
+
+        if server_type == 'default':
+            # Use the default server
+            server = user.outgoing_mail_server_id.sudo()
+            if server:
+                server.unlink()
+
+            return {
+                "type": "ir.actions.client",
+                "tag": "display_notification",
+                "params": {
+                    "message": _("Switching back to the default server."),
+                    "type": "warning",
+                },
+            }
+
+        email = user.email
+        if not email or not email_normalize(email):
+            raise UserError(_("Please set your email before connecting to Gmail."))
+
+        normalized_email = tools.email_normalize(email)
+        if (
+            not normalized_email
+            or "@" not in normalized_email
+            # Be sure it's well parsed by `ir.mail_server`
+            or self.env["ir.mail_server"]._parse_from_filter(normalized_email)
+            != [normalized_email]
+        ):
+            raise UserError(_("Wrong email address %s.", email))
+
+        if (
+            server_type == user.outgoing_mail_server_type
+            and user.outgoing_mail_server_id.from_filter == normalized_email
+            and user.outgoing_mail_server_id.smtp_user == normalized_email
+        ):
+            # Re-connect the account
+            return self._get_mail_server_setup_end_action(user.outgoing_mail_server_id)
+
+        values = {
+            # Will be un-archived once logged in
+            # Archived personal server will be deleted in GC CRON
+            # to clean pending connection that didn't finish
+            "active": False,
+            "name": _("%s's outgoing email", user.name),
+            "smtp_user": normalized_email,
+            "smtp_pass": False,
+            "from_filter": normalized_email,
+            "smtp_port": 587,
+            "smtp_encryption": "starttls",
+            "owner_id": user.id,
+            **self._get_mail_server_values(server_type),
+        }
+        smtp_server = self.env["ir.mail_server"].sudo().create(values)
+        return self._get_mail_server_setup_end_action(smtp_server)
+
+    @api.model
+    def action_test_outgoing_mail_server(self):
+        user = self.env.user
+        if not user.has_external_mail_server:
+            raise UserError(_('You are not allowed to test personal mail server.'))
+
+        if not user.has_group('base.group_user'):
+            raise UserError(_('Only internal user can configure personal mail server.'))
+
+        server_sudo = user.outgoing_mail_server_id.sudo()
+        if not server_sudo:
+            raise UserError(_('No mail server configured'))
+        server_sudo.test_smtp_connection()
+        return {
+            'type': 'ir.actions.client',
+            'tag': 'display_notification',
+            'params': {
+                'message': _('Connection Test Successful!'),
+                'type': 'success',
+            },
+        }
+
+    @api.model
+    def _get_mail_server_setup_end_action(self, smtp_server):
+        raise NotImplementedError()
