@@ -48,6 +48,10 @@ def update_taxes_from_templates(cr, chart_template_xmlid):
             xml_id = old_tax.get_xml_id().get(old_tax.id)
             if xml_id:
                 _remove_xml_id(xml_id)
+
+        if not template_vals.get('country_id') and template.tax_group_id:
+            template_vals['country_id'] = template.tax_group_id.country_id.id
+
         chart_template.create_record_with_xmlid(company, template, "account.tax", template_vals)
 
     def _update_tax_from_template(template, tax):
