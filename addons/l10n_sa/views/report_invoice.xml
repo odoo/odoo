@@ -4,6 +4,7 @@
     <template id="arabic_english_invoice" inherit_id="l10n_gcc_invoice.arabic_english_invoice">
         <xpath expr="//div[@name='due_date']" position="after">
             <div class="row" t-if="o.l10n_sa_delivery_date" name="delivery_date">
+                <div class="col-6"></div>
                 <div class="col-2">
                     <strong style="white-space:nowrap">Delivery Date:
                     </strong>
