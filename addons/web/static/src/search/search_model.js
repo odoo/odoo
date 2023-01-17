@@ -215,7 +215,7 @@ export class SearchModel extends EventBus {
         const { comparison, context, domain, groupBy, hideCustomGroupBy, orderBy } = config;
 
         this.globalComparison = comparison;
-        this.globalContext = toRaw(context || {});
+        this.globalContext = toRaw(Object.assign({}, context));
         this.globalDomain = domain || [];
         this.globalGroupBy = groupBy || [];
         this.globalOrderBy = orderBy || [];
@@ -383,7 +383,7 @@ export class SearchModel extends EventBus {
 
         const { comparison, context, domain, groupBy, orderBy } = config;
 
-        this.globalContext = context || {};
+        this.globalContext = Object.assign({}, context);
         this.globalDomain = domain || [];
         this.globalComparison = comparison;
         this.globalGroupBy = groupBy || [];
