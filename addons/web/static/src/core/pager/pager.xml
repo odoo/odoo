@@ -12,7 +12,7 @@
                 </t>
                 <span> / </span>
                 <t t-if="props.updateTotal">
-                    <span class="o_pager_limit o_pager_limit_fetch" t-on-click.stop="props.updateTotal"><t t-esc="props.total"/>+</span>
+                    <span class="o_pager_limit o_pager_limit_fetch" t-att-class="{ 'disabled': state.isDisabled }" t-on-click.stop="updateTotal"><t t-esc="props.total"/>+</span>
                 </t>
                 <t t-else="">
                     <span class="o_pager_limit" t-esc="props.total"/>

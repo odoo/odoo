@@ -113,6 +113,14 @@ export class Pager extends Component {
         this.state.isEditing = false;
     }
 
+    async updateTotal() {
+        if (!this.state.isDisabled) {
+            this.state.isDisabled = true;
+            await this.props.updateTotal();
+            this.state.isDisabled = false;
+        }
+    }
+
     /**
      * @param {MouseEvent} ev
      */
