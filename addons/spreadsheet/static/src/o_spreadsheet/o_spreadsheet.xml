@@ -1,4 +1,33 @@
 <odoo>
+  <t t-name="o-spreadsheet-Ripple" owl="1">
+    <div
+      class="o-ripple-container position-relative"
+      t-att-class="props.class"
+      t-on-click="onClick">
+      <div class="position-absolute" t-att-style="getStyle()">
+        <t t-foreach="state.ripples" t-as="ripple" t-key="ripple.id">
+          <RippleEffect t-props="getRippleEffectProps(ripple.id)"/>
+        </t>
+      </div>
+      <div t-ref="childContainer">
+        <t t-slot="default"/>
+      </div>
+    </div>
+  </t>
+
+  <t t-name="o-spreadsheet-RippleEffect" owl="1">
+    <div
+      class="position-absolute h-100 w-100"
+      t-att-class="{ 'overflow-hidden': !props.allowOverflow }">
+      <div
+        class="o-ripple position-relative pe-none"
+        t-ref="ripple"
+        t-att-style="rippleStyle"
+        t-on-animationend="onAnimationEnd"
+      />
+    </div>
+  </t>
+
   <t t-name="o-spreadsheet-Autofill" owl="1">
     <div
       class="o-autofill"
@@ -15,57 +44,136 @@
 
   <t t-name="o-spreadsheet-BottomBar" owl="1">
     <div
-      class="o-spreadsheet-bottom-bar o-two-columns"
+      class="o-spreadsheet-bottom-bar o-two-columns d-flex align-items-center overflow-hidden"
       t-on-click="props.onClick"
-      t-ref="bottomBar">
-      <div
-        class="o-sheet-item o-add-sheet"
-        t-att-class="{'disabled': env.model.getters.isReadonly()}"
-        t-on-click="addSheet">
-        <t t-call="o-spreadsheet-Icon.PLUS"/>
-      </div>
-      <div class="o-sheet-item o-list-sheets" t-on-click="listSheets">
-        <t t-call="o-spreadsheet-Icon.LIST"/>
-      </div>
-      <div class="o-all-sheets flex-shrink-0 me-3">
-        <t t-foreach="getVisibleSheets()" t-as="sheet" t-key="sheet.id">
-          <div
-            class="o-sheet-item o-sheet"
-            t-on-click="(ev) => this.activateSheet(sheet.id, ev)"
-            t-on-contextmenu.prevent="(ev) => this.onContextMenu(sheet.id, ev)"
-            t-att-title="sheet.name"
-            t-att-data-id="sheet.id"
-            t-att-class="{active: sheet.id === env.model.getters.getActiveSheetId()}">
-            <span
-              class="o-sheet-name"
-              t-esc="sheet.name"
-              t-on-dblclick="(ev) => this.onDblClick(sheet.id, ev)"
+      t-ref="bottomBar"
+      t-on-contextmenu.prevent="">
+      <Ripple>
+        <div
+          class="o-sheet-item o-add-sheet position-relative me-2 p-1"
+          t-att-class="{'disabled': env.model.getters.isReadonly()}"
+          t-on-click="clickAddSheet">
+          <t t-call="o-spreadsheet-Icon.PLUS"/>
+        </div>
+      </Ripple>
+      <Ripple>
+        <div
+          class="o-sheet-item o-list-sheets position-relative me-2 p-1"
+          t-on-click="clickListSheets">
+          <t t-call="o-spreadsheet-Icon.LIST"/>
+        </div>
+      </Ripple>
+      <div class="o-all-sheets position-relative flex-shrink-0 d-flex h-100 me-3">
+        <div
+          class="o-bottom-bar-fade-in position-absolute h-100 w-100 pe-none"
+          t-if="state.isSheetListScrollableLeft"
+        />
+        <div
+          class="o-sheet-list d-flex w-100 overflow-hidden"
+          t-ref="sheetList"
+          t-on-wheel="onWheel"
+          t-on-scroll="onScroll">
+          <t t-foreach="getVisibleSheets()" t-as="sheet" t-key="sheet.id">
+            <BottomBarSheet
+              sheetId="sheet.id"
+              openContextMenu="(registry, ev) => this.onSheetContextMenu(sheet.id, registry, ev)"
             />
-            <span class="o-sheet-icon" t-on-click.stop="(ev) => this.onIconClick(sheet.id, ev)">
-              <t t-call="o-spreadsheet-Icon.TRIANGLE_DOWN"/>
-            </span>
+          </t>
+        </div>
+        <div
+          class="o-bottom-bar-fade-out position-absolute h-100 w-100 pe-none"
+          t-if="state.isSheetListScrollableRight"
+        />
+      </div>
+      <div
+        class="o-bottom-bar-arrows d-flex h-100 me-5 align-items-center"
+        t-if="state.isSheetListScrollableLeft || state.isSheetListScrollableRight">
+        <Ripple
+          ignoreClickPosition="true"
+          width="20"
+          height="20"
+          offsetX="1"
+          allowOverflow="true"
+          enabled="state.isSheetListScrollableLeft">
+          <div
+            class="o-bottom-bar-arrow o-bottom-bar-arrow-left d-flex align-items-center me-2"
+            t-att-class="{'o-disabled': !state.isSheetListScrollableLeft}"
+            t-on-click="onArrowLeft">
+            <t t-call="o-spreadsheet-Icon.CARET_LEFT"/>
           </div>
-        </t>
+        </Ripple>
+        <Ripple
+          ignoreClickPosition="true"
+          width="20"
+          height="20"
+          offsetX="-1"
+          allowOverflow="true"
+          enabled="state.isSheetListScrollableRight">
+          <div
+            class="o-bottom-bar-arrow o-bottom-bar-arrow-right d-flex align-items-center me-4"
+            t-att-class="{'o-disabled': !state.isSheetListScrollableRight}"
+            t-on-click="onArrowRight">
+            <t t-call="o-spreadsheet-Icon.CARET_RIGHT"/>
+          </div>
+        </Ripple>
       </div>
 
-      <t t-set="selectedStatistic" t-value="getSelectedStatistic()"/>
-      <div
-        t-if="selectedStatistic !== undefined"
-        class="o-selection-statistic text-truncate"
-        t-on-click="listSelectionStatistics">
-        <t t-esc="selectedStatistic"/>
-        <span>
-          <t t-call="o-spreadsheet-Icon.TRIANGLE_DOWN"/>
-        </span>
-      </div>
+      <BottomBarStatistic
+        openContextMenu="(x, y, registry) => this.openContextMenu(x, y, 'listSelectionStatistics', registry)"
+      />
 
       <Menu
         t-if="menuState.isOpen"
         position="menuState.position"
         menuItems="menuState.menuItems"
-        onClose="() => this.menuState.isOpen=false"
+        maxHeight="menuMaxHeight"
+        onClose="() => this.closeMenu()"
       />
     </div>
+  </t>
+
+  <t t-name="o-spreadsheet-BottomBarSheet" owl="1">
+    <Ripple>
+      <div
+        class="o-sheet position-relative d-flex align-items-center user-select-none text-nowrap "
+        t-on-click="() => this.clickSheet()"
+        t-on-contextmenu.prevent="(ev) => this.onContextMenu(ev)"
+        t-ref="sheetDiv"
+        t-att-title="sheetName"
+        t-att-data-id="props.sheetId"
+        t-att-class="{active: isSheetActive}">
+        <span
+          class="o-sheet-name"
+          t-att-class="{'o-sheet-name-editable': state.isEditing }"
+          t-ref="sheetNameSpan"
+          t-esc="sheetName"
+          t-on-click="(ev) => this.onClickSheetName(ev)"
+          t-on-dblclick="() => this.onDblClick()"
+          t-on-focusout="() => this.onFocusOut()"
+          t-on-keydown="(ev) => this.onKeyDown(ev)"
+          t-att-contenteditable="state.isEditing.toString()"
+        />
+        <span
+          class="o-sheet-icon position-relative ms-1"
+          t-on-click.stop="(ev) => this.onIconClick(ev)">
+          <t t-call="o-spreadsheet-Icon.TRIANGLE_DOWN"/>
+        </span>
+      </div>
+    </Ripple>
+  </t>
+
+  <t t-name="o-spreadsheet-BottomBarStatisic" owl="1">
+    <t t-set="selectedStatistic" t-value="getSelectedStatistic()"/>
+    <Ripple class="'ms-auto'" t-if="selectedStatistic !== undefined">
+      <div
+        class="o-selection-statistic position-relative text-truncate user-select-none me-4 bg-white rounded shadow"
+        t-on-click="listSelectionStatistics">
+        <t t-esc="selectedStatistic"/>
+        <span class="ms-2">
+          <t t-call="o-spreadsheet-Icon.TRIANGLE_DOWN"/>
+        </span>
+      </div>
+    </Ripple>
   </t>
 
   <t t-name="o-spreadsheet-ClientTag" owl="1">
@@ -484,7 +592,7 @@
     <Menu
       t-if="menuState.isOpen"
       position="menuState.position"
-      menuItems="menuState.menuItems"
+      menuItems="menuItems"
       onClose="() => this.menuState.isOpen=false"
     />
   </t>
@@ -1222,6 +1330,20 @@
       />
     </svg>
   </t>
+  <t t-name="o-spreadsheet-Icon.CARET_RIGHT" owl="1">
+    <svg class="o-icon caret-right" viewBox="0 0 192 512">
+      <path
+        d="M0 384.662V127.338c0-17.818 21.543-26.741 34.142-14.142l128.662 128.662c7.81 7.81 7.81 20.474 0 28.284L34.142 398.804C21.543 411.404 0 402.48 0 384.662z"
+      />
+    </svg>
+  </t>
+  <t t-name="o-spreadsheet-Icon.CARET_LEFT" owl="1">
+    <svg class="o-icon caret-left" viewBox="0 0 192 512">
+      <path
+        d="M192 127.338v257.324c0 17.818-21.543 26.741-34.142 14.142L29.196 270.142c-7.81-7.81-7.81-20.474 0-28.284l128.662-128.662c12.599-12.6 34.142-3.676 34.142 14.142z"
+      />
+    </svg>
+  </t>
 
   <t t-name="o-spreadsheet-Icon.TRASH" owl="1">
     <svg class="o-cf-icon trash" viewBox="0 0 448 512">
@@ -1465,7 +1587,7 @@
 
   <t t-name="o-spreadsheet-Menu" owl="1">
     <Popover
-      t-if="props.menuItems.length"
+      t-if="visibleMenuItems.length"
       anchorRect="popover.anchorRect"
       positioning="popover.positioning"
       verticalOffset="popover.verticalOffset"
@@ -1479,7 +1601,7 @@
         t-on-wheel.stop=""
         t-on-click.stop=""
         t-on-contextmenu.prevent="">
-        <t t-foreach="props.menuItems" t-as="menuItem" t-key="menuItem.id">
+        <t t-foreach="visibleMenuItems" t-as="menuItem" t-key="menuItem.id">
           <t t-set="isMenuRoot" t-value="isRoot(menuItem)"/>
           <t t-set="isMenuEnabled" t-value="isEnabled(menuItem)"/>
           <div
@@ -1492,9 +1614,9 @@
             t-att-style="getColor(menuItem)">
             <span class="o-menu-item-name" t-esc="getName(menuItem)"/>
             <span
-              t-if="getDescription(menuItem)"
+              t-if="menuItem.description"
               class="o-menu-item-description"
-              t-esc="getDescription(menuItem)"
+              t-esc="menuItem.description"
             />
             <t t-if="isMenuRoot">
               <span t-call="o-spreadsheet-Icon.TRIANGLE_RIGHT"/>
@@ -1511,6 +1633,7 @@
         position="subMenuPosition"
         menuItems="subMenu.menuItems"
         depth="props.depth + 1"
+        maxHeight="props.maxHeight"
         onMenuClicked="props.onMenuClicked"
         onClose="() => this.close()"
       />

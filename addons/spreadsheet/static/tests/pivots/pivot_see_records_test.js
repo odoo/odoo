@@ -2,6 +2,7 @@
 import { nextTick } from "@web/../tests/helpers/utils";
 
 import { selectCell } from "@spreadsheet/../tests/utils/commands";
+import { doMenuAction } from "@spreadsheet/../tests/utils/ui";
 import { createSpreadsheetWithPivot } from "@spreadsheet/../tests/utils/pivot";
 
 import spreadsheet from "@spreadsheet/o_spreadsheet/o_spreadsheet_extended";
@@ -41,8 +42,7 @@ QUnit.test("Can open see records on headers col", async function (assert) {
     const { env, model } = await createSpreadsheetWithPivot();
     selectCell(model, "B1");
     await nextTick();
-    const root = cellMenuRegistry.getAll().find((item) => item.id === "pivot_see_records");
-    await root.action(env);
+    await doMenuAction(cellMenuRegistry, ["pivot_see_records"], env);
     assert.verifySteps(["doAction"]);
 });
 
@@ -63,8 +63,7 @@ QUnit.test("Can open see records on headers row", async function (assert) {
     const { env, model } = await createSpreadsheetWithPivot();
     selectCell(model, "A3");
     await nextTick();
-    const root = cellMenuRegistry.getAll().find((item) => item.id === "pivot_see_records");
-    await root.action(env);
+    await doMenuAction(cellMenuRegistry, ["pivot_see_records"], env);
     assert.verifySteps(["doAction"]);
 });
 
@@ -85,8 +84,6 @@ QUnit.test("Can open see records on measure headers", async function (assert) {
     const { env, model } = await createSpreadsheetWithPivot();
     selectCell(model, "B2");
     await nextTick();
-    const root = cellMenuRegistry.getAll().find((item) => item.id === "pivot_see_records");
-    await root.action(env);
+    await doMenuAction(cellMenuRegistry, ["pivot_see_records"], env);
     assert.verifySteps(["doAction"]);
 });
-
