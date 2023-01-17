@@ -3018,6 +3018,16 @@
             .join(separator);
         return str ? "\n" + str + "\n" : "";
     }
+    function getElementMargins(el) {
+        const style = window.getComputedStyle(el);
+        const margins = {
+            top: parseInt(style.marginTop, 10) || 0,
+            bottom: parseInt(style.marginBottom, 10) || 0,
+            left: parseInt(style.marginLeft, 10) || 0,
+            right: parseInt(style.marginRight, 10) || 0,
+        };
+        return margins;
+    }
 
     /* Sizes of boxes containing the texts, in percentage of the Chart size */
     const TITLE_FONT_SIZE = 18;
@@ -5411,22 +5421,34 @@
     chartComponentRegistry.add("gauge", ChartJsComponent);
     chartComponentRegistry.add("scorecard", ScorecardChart$1);
 
-    const DEFAULT_MENU_ITEM = (key) => ({
-        isVisible: () => true,
-        isEnabled: () => true,
-        isReadonlyAllowed: false,
-        description: "",
-        action: false,
-        children: [],
-        separator: false,
-        icon: false,
-        id: key,
-    });
-    function createFullMenuItem(key, value) {
-        return Object.assign({}, DEFAULT_MENU_ITEM(key), value);
+    function createMenu(menuItems) {
+        return menuItems.map(createMenuItem).sort((a, b) => a.sequence - b.sequence);
     }
-    function isMenuItem(value) {
-        return typeof value !== "function";
+    const uuidGenerator$1 = new UuidGenerator();
+    function createMenuItem(item) {
+        const name = item.name;
+        const children = item.children;
+        return {
+            id: item.id || uuidGenerator$1.uuidv4(),
+            name: typeof name === "function" ? name : () => name,
+            isVisible: item.isVisible ? item.isVisible : () => true,
+            isEnabled: item.isEnabled ? item.isEnabled : () => true,
+            action: item.action,
+            children: children
+                ? (env) => {
+                    return children
+                        .map((child) => (typeof child === "function" ? child(env) : child))
+                        .flat()
+                        .map(createMenuItem);
+                }
+                : () => [],
+            isReadonlyAllowed: item.isReadonlyAllowed || false,
+            separator: item.separator || false,
+            icon: item.icon,
+            description: item.description || "",
+            textColor: item.textColor,
+            sequence: item.sequence || 0,
+        };
     }
     /**
      * The class Registry is extended in order to add the function addChild
@@ -5437,7 +5459,10 @@
          * @override
          */
         add(key, value) {
-            this.content[key] = createFullMenuItem(key, value);
+            if (value.id === undefined) {
+                value.id = key;
+            }
+            this.content[key] = value;
             return this;
         }
         /**
@@ -5446,31 +5471,32 @@
          * @param value Subitem to add
          */
         addChild(key, path, value) {
+            if (typeof value !== "function" && value.id === undefined) {
+                value.id = key;
+            }
             const root = path.splice(0, 1)[0];
             let node = this.content[root];
             if (!node) {
                 throw new Error(`Path ${root + ":" + path.join(":")} not found`);
             }
             for (let p of path) {
-                node = node.children.filter(isMenuItem).find((elt) => elt.id === p);
+                const children = node.children;
+                if (!children || typeof children === "function") {
+                    throw new Error(`${p} is either not a node or it's dynamically computed`);
+                }
+                node = children.find((elt) => elt.id === p);
                 if (!node) {
                     throw new Error(`Path ${root + ":" + path.join(":")} not found`);
                 }
             }
-            if (typeof value !== "function") {
-                node.children.push(createFullMenuItem(key, value));
+            if (!node.children) {
+                node.children = [];
             }
-            else {
-                node.children.push(value);
-            }
+            node.children.push(value);
             return this;
         }
-        /**
-         * Get a list of all elements in the registry, ordered by sequence
-         * @override
-         */
-        getAll() {
-            return super.getAll().sort((a, b) => a.sequence - b.sequence);
+        getMenuItems() {
+            return createMenu(this.getAll());
         }
     }
 
@@ -5547,28 +5573,6 @@
         return container;
     }
 
-    function getMenuChildren(node, env) {
-        const children = [];
-        for (const child of node.children) {
-            if (typeof child === "function") {
-                children.push(...child(env));
-            }
-            else {
-                children.push(child);
-            }
-        }
-        return children.sort((a, b) => a.sequence - b.sequence);
-    }
-    function getMenuName(node, env) {
-        if (typeof node.name === "function") {
-            return node.name(env);
-        }
-        return node.name;
-    }
-    function getMenuDescription(node) {
-        return node.description ? node.description : "";
-    }
-
     /**
      * Return true if the event was triggered from
      * a child element.
@@ -5583,6 +5587,15 @@
             return { top, left };
         }
         throw new Error("Can't find spreadsheet position");
+    }
+    function getBoundingRectAsPOJO(el) {
+        const rect = el.getBoundingClientRect();
+        return {
+            x: rect.x,
+            y: rect.y,
+            width: rect.width,
+            height: rect.height,
+        };
     }
 
     /**
@@ -5896,19 +5909,23 @@
                 }
             });
         }
+        get visibleMenuItems() {
+            return this.props.menuItems.filter((x) => x.isVisible(this.env));
+        }
         get subMenuPosition() {
             const position = Object.assign({}, this.subMenu.position);
             position.y -= this.subMenu.scrollOffset || 0;
             return position;
         }
         get menuHeight() {
-            const menuItems = this.props.menuItems;
+            const menuItems = this.visibleMenuItems;
             let menuItemsHeight = this.getMenuItemsHeight(menuItems);
             // We don't display separator at the end of a menu
             if (menuItems[menuItems.length - 1].separator) {
                 menuItemsHeight -= MENU_SEPARATOR_HEIGHT;
             }
-            return 2 * MENU_VERTICAL_PADDING + menuItemsHeight;
+            const menuHeight = 2 * MENU_VERTICAL_PADDING + menuItemsHeight;
+            return this.props.maxHeight ? Math.min(menuHeight, this.props.maxHeight) : menuHeight;
         }
         get popover() {
             const isRoot = this.props.depth === 1;
@@ -5927,10 +5944,10 @@
             return menu.textColor ? `color: ${menu.textColor}` : undefined;
         }
         async activateMenu(menu) {
-            var _a, _b;
-            const result = await menu.action(this.env);
+            var _a, _b, _c;
+            const result = await ((_a = menu.action) === null || _a === void 0 ? void 0 : _a.call(menu, this.env));
             this.close();
-            (_b = (_a = this.props).onMenuClicked) === null || _b === void 0 ? void 0 : _b.call(_a, { detail: result });
+            (_c = (_b = this.props).onMenuClicked) === null || _c === void 0 ? void 0 : _c.call(_b, { detail: result });
         }
         close() {
             this.closeSubMenu();
@@ -5941,7 +5958,7 @@
          * and the menu item at a given index.
          */
         subMenuVerticalPosition(menuIndex) {
-            const menusAbove = this.props.menuItems.slice(0, menuIndex);
+            const menusAbove = this.visibleMenuItems.slice(0, menuIndex);
             return this.position.y + this.getMenuItemsHeight(menusAbove) + MENU_VERTICAL_PADDING;
         }
         onClick(ev) {
@@ -5965,10 +5982,7 @@
             return MENU_ITEM_HEIGHT * menuItems.length + MENU_SEPARATOR_HEIGHT * numberOfSeparators;
         }
         getName(menu) {
-            return getMenuName(menu, this.env);
-        }
-        getDescription(menu) {
-            return getMenuDescription(menu);
+            return menu.name(this.env);
         }
         isRoot(menu) {
             return !menu.action;
@@ -5992,7 +6006,7 @@
                 x: this.position.x + MENU_WIDTH,
                 y: y - (this.subMenu.scrollOffset || 0),
             };
-            this.subMenu.menuItems = getMenuChildren(menu, this.env).filter((item) => !item.isVisible || item.isVisible(this.env));
+            this.subMenu.menuItems = menu.children(this.env);
             this.subMenu.isOpen = true;
             this.subMenu.parentMenu = menu;
         }
@@ -6034,6 +6048,7 @@
         position: Object,
         menuItems: Array,
         depth: { type: Number, optional: true },
+        maxHeight: { type: Number, optional: true },
         onClose: Function,
         onMenuClicked: { type: Function, optional: true },
     };
@@ -6118,7 +6133,7 @@
         openContextMenu(position) {
             const registry = this.getMenuItemRegistry();
             this.menuState.isOpen = true;
-            this.menuState.menuItems = registry.getAll().filter((x) => x.isVisible(this.env));
+            this.menuState.menuItems = registry.getMenuItems();
             this.menuState.position = position;
         }
         get chartComponent() {
@@ -17308,9 +17323,13 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
                     description,
                 };
             });
-            values = values
-                .filter((t) => t.text.toUpperCase().startsWith(searchTerm.toUpperCase()))
-                .sort((l, r) => (l.text < r.text ? -1 : l.text > r.text ? 1 : 0));
+            if (searchTerm) {
+                values = fuzzyLookup(searchTerm, values, (t) => t.text);
+            }
+            else {
+                // alphabetical order
+                values = values.sort((a, b) => a.text.localeCompare(b.text));
+            }
             this.autoCompleteState.values = values.slice(0, 10);
             this.autoCompleteState.selectedIndex = 0;
         }
@@ -18570,9 +18589,9 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
         const sheets = env.model.getters
             .getSheetIds()
             .map((sheetId) => env.model.getters.getSheet(sheetId));
-        return sheets.map((sheet, i) => createFullMenuItem(sheet.id, {
+        return sheets.map((sheet) => ({
+            id: sheet.id,
             name: sheet.name,
-            sequence: i,
             action: () => markdownLink(sheet.name, buildSheetLink(sheet.id)),
         }));
     });
@@ -18659,7 +18678,7 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
     class LinkEditor extends owl.Component {
         constructor() {
             super(...arguments);
-            this.menuItems = linkMenuRegistry.getAll();
+            this.menuItems = linkMenuRegistry.getMenuItems();
             this.link = owl.useState(this.defaultState);
             this.menu = owl.useState({
                 isOpen: false,
@@ -18778,60 +18797,61 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
     class ImageFigure extends owl.Component {
         constructor() {
             super(...arguments);
-            this.menuState = owl.useState({ isOpen: false, position: null, menuItems: [] });
+            this.menuState = owl.useState({
+                isOpen: false,
+                position: null,
+            });
             this.imageContainerRef = owl.useRef("o-image");
             this.menuButtonRef = owl.useRef("menuButton");
             this.menuButtonPosition = useAbsolutePosition(this.menuButtonRef);
             this.position = useAbsolutePosition(this.imageContainerRef);
-        }
-        getMenuItemRegistry() {
-            const registry = new MenuItemRegistry();
-            registry.add("copy", {
-                name: _lt("Copy"),
-                description: "Ctrl+C",
-                sequence: 1,
-                action: async () => {
-                    this.env.model.dispatch("SELECT_FIGURE", { id: this.figureId });
-                    this.env.model.dispatch("COPY");
-                    await this.env.clipboard.clear();
+            this.menuItems = createMenu([
+                {
+                    id: "copy",
+                    name: _lt("Copy"),
+                    description: "Ctrl+C",
+                    action: async () => {
+                        this.env.model.dispatch("SELECT_FIGURE", { id: this.figureId });
+                        this.env.model.dispatch("COPY");
+                        await this.env.clipboard.clear();
+                    },
                 },
-            });
-            registry.add("cut", {
-                name: _lt("Cut"),
-                description: "Ctrl+X",
-                sequence: 2,
-                action: async () => {
-                    this.env.model.dispatch("SELECT_FIGURE", { id: this.figureId });
-                    this.env.model.dispatch("CUT");
-                    await this.env.clipboard.clear();
+                {
+                    id: "cut",
+                    name: _lt("Cut"),
+                    description: "Ctrl+X",
+                    action: async () => {
+                        this.env.model.dispatch("SELECT_FIGURE", { id: this.figureId });
+                        this.env.model.dispatch("CUT");
+                        await this.env.clipboard.clear();
+                    },
                 },
-            });
-            registry.add("reset_size", {
-                name: _lt("Reset size"),
-                sequence: 3,
-                action: () => {
-                    const size = this.env.model.getters.getImageSize(this.figureId);
-                    const { height, width } = getMaxFigureSize(this.env.model.getters, size);
-                    this.env.model.dispatch("UPDATE_FIGURE", {
-                        sheetId: this.env.model.getters.getActiveSheetId(),
-                        id: this.figureId,
-                        height,
-                        width,
-                    });
+                {
+                    id: "reset_size",
+                    name: _lt("Reset size"),
+                    action: () => {
+                        const size = this.env.model.getters.getImageSize(this.figureId);
+                        const { height, width } = getMaxFigureSize(this.env.model.getters, size);
+                        this.env.model.dispatch("UPDATE_FIGURE", {
+                            sheetId: this.env.model.getters.getActiveSheetId(),
+                            id: this.figureId,
+                            height,
+                            width,
+                        });
+                    },
                 },
-            });
-            registry.add("delete", {
-                name: _lt("Delete image"),
-                description: "delete",
-                sequence: 5,
-                action: () => {
-                    this.env.model.dispatch("DELETE_FIGURE", {
-                        sheetId: this.env.model.getters.getActiveSheetId(),
-                        id: this.figureId,
-                    });
+                {
+                    id: "delete",
+                    name: _lt("Delete image"),
+                    description: "delete",
+                    action: () => {
+                        this.env.model.dispatch("DELETE_FIGURE", {
+                            sheetId: this.env.model.getters.getActiveSheetId(),
+                            id: this.figureId,
+                        });
+                    },
                 },
-            });
-            return registry;
+            ]);
         }
         onContextMenu(ev) {
             const position = {
@@ -18848,9 +18868,7 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
             this.openContextMenu(position);
         }
         openContextMenu(position) {
-            const registry = this.getMenuItemRegistry();
             this.menuState.isOpen = true;
-            this.menuState.menuItems = registry.getAll().filter((x) => x.isVisible(this.env));
             this.menuState.position = position;
         }
         // ---------------------------------------------------------------------------
@@ -18976,93 +18994,70 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
         ];
     }
 
-    function interactiveRenameSheet(env, sheetId, errorText) {
-        const placeholder = env.model.getters.getSheetName(sheetId);
-        const title = _lt("Rename Sheet");
-        const callback = (name) => {
-            if (name === null || name === placeholder) {
-                return;
-            }
-            if (name === "") {
-                interactiveRenameSheet(env, sheetId, _lt("The sheet name cannot be empty."));
-            }
-            const result = env.model.dispatch("RENAME_SHEET", { sheetId, name });
-            if (!result.isSuccessful) {
-                if (result.reasons.includes(10 /* CommandResult.DuplicatedSheetName */)) {
-                    interactiveRenameSheet(env, sheetId, _lt("A sheet with the name %s already exists. Please select another name.", name));
-                }
-                if (result.reasons.includes(12 /* CommandResult.ForbiddenCharactersInSheetName */)) {
-                    interactiveRenameSheet(env, sheetId, _lt("Some used characters are not allowed in a sheet name (Forbidden characters are %s).", FORBIDDEN_SHEET_CHARS.join(" ")));
-                }
-            }
-        };
-        env.editText(title, callback, {
-            placeholder: placeholder,
-            error: errorText,
+    function getSheetMenuRegistry(args) {
+        const sheetMenuRegistry = new MenuItemRegistry();
+        sheetMenuRegistry
+            .add("delete", {
+            name: _lt("Delete"),
+            sequence: 10,
+            isVisible: (env) => {
+                return env.model.getters.getSheetIds().length > 1;
+            },
+            action: (env) => env.askConfirmation(_lt("Are you sure you want to delete this sheet ?"), () => {
+                env.model.dispatch("DELETE_SHEET", { sheetId: env.model.getters.getActiveSheetId() });
+            }),
+        })
+            .add("duplicate", {
+            name: _lt("Duplicate"),
+            sequence: 20,
+            action: (env) => {
+                const sheetIdFrom = env.model.getters.getActiveSheetId();
+                const sheetIdTo = env.model.uuidGenerator.uuidv4();
+                env.model.dispatch("DUPLICATE_SHEET", {
+                    sheetId: sheetIdFrom,
+                    sheetIdTo,
+                });
+                env.model.dispatch("ACTIVATE_SHEET", { sheetIdFrom, sheetIdTo });
+            },
+        })
+            .add("rename", {
+            name: _lt("Rename"),
+            sequence: 30,
+            action: () => args.renameSheetCallback(),
+        })
+            .add("move_right", {
+            name: _lt("Move right"),
+            sequence: 40,
+            isVisible: (env) => {
+                const sheetId = env.model.getters.getActiveSheetId();
+                const sheetIds = env.model.getters.getVisibleSheetIds();
+                return sheetIds.indexOf(sheetId) !== sheetIds.length - 1;
+            },
+            action: (env) => env.model.dispatch("MOVE_SHEET", {
+                sheetId: env.model.getters.getActiveSheetId(),
+                direction: "right",
+            }),
+        })
+            .add("move_left", {
+            name: _lt("Move left"),
+            sequence: 50,
+            isVisible: (env) => {
+                const sheetId = env.model.getters.getActiveSheetId();
+                return env.model.getters.getVisibleSheetIds()[0] !== sheetId;
+            },
+            action: (env) => env.model.dispatch("MOVE_SHEET", {
+                sheetId: env.model.getters.getActiveSheetId(),
+                direction: "left",
+            }),
+        })
+            .add("hide_sheet", {
+            name: _lt("Hide sheet"),
+            sequence: 60,
+            isVisible: (env) => env.model.getters.getVisibleSheetIds().length !== 1,
+            action: (env) => env.model.dispatch("HIDE_SHEET", { sheetId: env.model.getters.getActiveSheetId() }),
         });
+        return sheetMenuRegistry;
     }
-
-    const sheetMenuRegistry = new MenuItemRegistry();
-    sheetMenuRegistry
-        .add("delete", {
-        name: _lt("Delete"),
-        sequence: 10,
-        isVisible: (env) => {
-            return env.model.getters.getSheetIds().length > 1;
-        },
-        action: (env) => env.askConfirmation(_lt("Are you sure you want to delete this sheet ?"), () => {
-            env.model.dispatch("DELETE_SHEET", { sheetId: env.model.getters.getActiveSheetId() });
-        }),
-    })
-        .add("duplicate", {
-        name: _lt("Duplicate"),
-        sequence: 20,
-        action: (env) => {
-            const sheetIdFrom = env.model.getters.getActiveSheetId();
-            const sheetIdTo = env.model.uuidGenerator.uuidv4();
-            env.model.dispatch("DUPLICATE_SHEET", {
-                sheetId: sheetIdFrom,
-                sheetIdTo,
-            });
-            env.model.dispatch("ACTIVATE_SHEET", { sheetIdFrom, sheetIdTo });
-        },
-    })
-        .add("rename", {
-        name: _lt("Rename"),
-        sequence: 30,
-        action: (env) => interactiveRenameSheet(env, env.model.getters.getActiveSheetId()),
-    })
-        .add("move_right", {
-        name: _lt("Move right"),
-        sequence: 40,
-        isVisible: (env) => {
-            const sheetId = env.model.getters.getActiveSheetId();
-            const sheetIds = env.model.getters.getVisibleSheetIds();
-            return sheetIds.indexOf(sheetId) !== sheetIds.length - 1;
-        },
-        action: (env) => env.model.dispatch("MOVE_SHEET", {
-            sheetId: env.model.getters.getActiveSheetId(),
-            direction: "right",
-        }),
-    })
-        .add("move_left", {
-        name: _lt("Move left"),
-        sequence: 50,
-        isVisible: (env) => {
-            const sheetId = env.model.getters.getActiveSheetId();
-            return env.model.getters.getVisibleSheetIds()[0] !== sheetId;
-        },
-        action: (env) => env.model.dispatch("MOVE_SHEET", {
-            sheetId: env.model.getters.getActiveSheetId(),
-            direction: "left",
-        }),
-    })
-        .add("hide_sheet", {
-        name: _lt("Hide sheet"),
-        sequence: 60,
-        isVisible: (env) => env.model.getters.getVisibleSheetIds().length !== 1,
-        action: (env) => env.model.dispatch("HIDE_SHEET", { sheetId: env.model.getters.getActiveSheetId() }),
-    });
 
     function interactiveFreezeColumnsRows(env, dimension, base) {
         const sheetId = env.model.getters.getActiveSheetId();
@@ -23645,9 +23640,7 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
             }
             this.menuState.isOpen = true;
             this.menuState.position = { x, y };
-            this.menuState.menuItems = registries$1[type]
-                .getAll()
-                .filter((item) => !item.isVisible || item.isVisible(this.env));
+            this.menuState.menuItems = registries$1[type].getMenuItems();
         }
         copy(cut, ev) {
             if (!this.gridEl.contains(document.activeElement)) {
@@ -38364,184 +38357,380 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
         }
     }
 
+    const RIPPLE_KEY_FRAMES = [
+        { transform: "scale(0)" },
+        { transform: "scale(0.8)", offset: 0.33 },
+        { opacity: "0", transform: "scale(1)", offset: 1 },
+    ];
+    css /* scss */ `
+  .o-ripple {
+    z-index: 1;
+  }
+`;
+    class RippleEffect extends owl.Component {
+        constructor() {
+            super(...arguments);
+            this.rippleRef = owl.useRef("ripple");
+        }
+        setup() {
+            let animation = undefined;
+            owl.onMounted(() => {
+                const rippleEl = this.rippleRef.el;
+                if (!rippleEl || !rippleEl.animate)
+                    return;
+                animation = rippleEl.animate(RIPPLE_KEY_FRAMES, {
+                    duration: this.props.duration,
+                    easing: "ease-out",
+                });
+                animation.addEventListener("finish", this.props.onAnimationEnd);
+            });
+            owl.onWillUnmount(() => {
+                animation === null || animation === void 0 ? void 0 : animation.removeEventListener("finish", this.props.onAnimationEnd);
+            });
+        }
+        get rippleStyle() {
+            const { x, y, width, height } = this.props;
+            const offsetX = this.props.offsetX || 0;
+            const offsetY = this.props.offsetY || 0;
+            return cssPropertiesToCss({
+                transform: "scale(0)",
+                left: x,
+                top: y,
+                "margin-left": `${-width / 2 + offsetX}px`,
+                "margin-top": `${-height / 2 + offsetY}px`,
+                width: `${width}px`,
+                height: `${height}px`,
+                background: this.props.color,
+                "border-radius": "100%",
+                opacity: `${this.props.opacity}`,
+            });
+        }
+    }
+    RippleEffect.template = "o-spreadsheet-RippleEffect";
+    RippleEffect.props = {
+        x: String,
+        y: String,
+        color: String,
+        opacity: Number,
+        duration: Number,
+        width: Number,
+        height: Number,
+        offsetY: Number,
+        offsetX: Number,
+        allowOverflow: Boolean,
+        onAnimationEnd: Function,
+    };
+    class Ripple extends owl.Component {
+        constructor() {
+            super(...arguments);
+            this.childContainer = owl.useRef("childContainer");
+            this.state = owl.useState({ ripples: [] });
+            this.currentId = 1;
+        }
+        onClick(ev) {
+            if (!this.props.enabled)
+                return;
+            const containerEl = this.childContainer.el;
+            if (!containerEl)
+                return;
+            const rect = this.getRippleChildRectInfo();
+            const { x, y, width, height } = rect;
+            const maxDim = Math.max(width, height);
+            const rippleRect = {
+                x: ev.clientX - x,
+                y: ev.clientY - y,
+                width: this.props.width || maxDim * 2.85,
+                height: this.props.height || maxDim * 2.85,
+            };
+            this.state.ripples.push({ rippleRect, id: this.currentId++ });
+        }
+        getStyle() {
+            const containerEl = this.childContainer.el;
+            if (!containerEl || containerEl.childElementCount !== 1 || !containerEl.firstElementChild) {
+                return "";
+            }
+            const rect = this.getRippleChildRectInfo();
+            return cssPropertiesToCss({
+                top: rect.marginTop + "px",
+                left: rect.marginLeft + "px",
+                width: rect.width + "px",
+                height: rect.height + "px",
+            });
+        }
+        getRippleChildRectInfo() {
+            const el = this.childContainer.el;
+            if (!el)
+                throw new Error("No child container element found");
+            if (el.childElementCount !== 1 || !el.firstElementChild) {
+                const boundingRect = getBoundingRectAsPOJO(el);
+                return { ...boundingRect, marginLeft: 0, marginTop: 0 };
+            }
+            const childEl = el.firstElementChild;
+            const margins = getElementMargins(childEl);
+            const boundingRect = getBoundingRectAsPOJO(childEl);
+            return {
+                ...boundingRect,
+                marginLeft: margins.left,
+                marginTop: margins.top,
+            };
+        }
+        removeRipple(id) {
+            const index = this.state.ripples.findIndex((r) => r.id === id);
+            if (index === -1)
+                return;
+            this.state.ripples.splice(index, 1);
+        }
+        getRippleEffectProps(id) {
+            var _a;
+            const rect = (_a = this.state.ripples.find((r) => r.id === id)) === null || _a === void 0 ? void 0 : _a.rippleRect;
+            if (!rect)
+                throw new Error("Cannot find a ripple with the id " + id);
+            return {
+                color: this.props.color,
+                opacity: this.props.opacity,
+                duration: this.props.duration,
+                x: this.props.ignoreClickPosition ? "50%" : rect.x + "px",
+                y: this.props.ignoreClickPosition ? "50%" : rect.y + "px",
+                width: rect.width,
+                height: rect.height,
+                offsetX: this.props.offsetX || 0,
+                offsetY: this.props.offsetY || 0,
+                allowOverflow: this.props.allowOverflow || false,
+                onAnimationEnd: () => this.removeRipple(id),
+            };
+        }
+    }
+    Ripple.template = "o-spreadsheet-Ripple";
+    Ripple.components = { RippleEffect };
+    Ripple.defaultProps = {
+        color: "#aaaaaa",
+        opacity: 0.4,
+        duration: 800,
+        enabled: true,
+        onAnimationEnd: () => { },
+        class: "",
+    };
+    Ripple.props = {
+        color: { type: String, optional: true },
+        opacity: { type: Number, optional: true },
+        duration: { type: Number, optional: true },
+        ignoreClickPosition: { type: Boolean, optional: true },
+        width: { type: Number, optional: true },
+        height: { type: Number, optional: true },
+        offsetY: { type: Number, optional: true },
+        offsetX: { type: Number, optional: true },
+        allowOverflow: { type: Boolean, optional: true },
+        enabled: { type: Boolean, optional: true },
+        onAnimationEnd: { type: Function, optional: true },
+        slots: Object,
+        class: { type: String, optional: true },
+    };
+
+    function interactiveRenameSheet(env, sheetId, name, errorCallback) {
+        const originalSheetName = env.model.getters.getSheetName(sheetId);
+        if (name === null || name === originalSheetName)
+            return;
+        const result = env.model.dispatch("RENAME_SHEET", { sheetId, name });
+        if (result.reasons.includes(9 /* CommandResult.MissingSheetName */)) {
+            env.raiseError(_lt("The sheet name cannot be empty."), errorCallback);
+        }
+        else if (result.reasons.includes(10 /* CommandResult.DuplicatedSheetName */)) {
+            env.raiseError(_lt("A sheet with the name %s already exists. Please select another name.", name), errorCallback);
+        }
+        else if (result.reasons.includes(12 /* CommandResult.ForbiddenCharactersInSheetName */)) {
+            env.raiseError(_lt("Some used characters are not allowed in a sheet name (Forbidden characters are %s).", FORBIDDEN_SHEET_CHARS.join(" ")), errorCallback);
+        }
+    }
+
+    css /* scss */ `
+  .o-sheet {
+    color: #666;
+    padding: 0 15px;
+    padding-right: 10px;
+    height: ${BOTTOMBAR_HEIGHT}px;
+    border-left: 1px solid #c1c1c1;
+    cursor: pointer;
+    &:hover {
+      background-color: rgba(0, 0, 0, 0.08);
+    }
+
+    &.active {
+      color: #484;
+      background-color: #ffffff;
+      box-shadow: 0 1px 3px 1px rgba(60, 64, 67, 0.15);
+    }
+
+    .o-sheet-icon {
+      z-index: 1;
+
+      &:hover {
+        background-color: rgba(0, 0, 0, 0.08);
+      }
+    }
+
+    .o-sheet-name {
+      outline: none;
+      padding: 2px 4px;
+
+      &.o-sheet-name-editable {
+        border-radius: 2px;
+        border: 2px solid mediumblue;
+        /* negative margins so nothing moves when the border is added */
+        margin-left: -2px;
+        margin-right: -2px;
+      }
+    }
+  }
+`;
+    class BottomBarSheet extends owl.Component {
+        constructor() {
+            super(...arguments);
+            this.state = owl.useState({ isEditing: false });
+            this.sheetDivRef = owl.useRef("sheetDiv");
+            this.sheetNameRef = owl.useRef("sheetNameSpan");
+            this.editionState = "initializing";
+        }
+        setup() {
+            owl.onMounted(() => {
+                if (this.isSheetActive) {
+                    this.scrollToSheet();
+                }
+            });
+            owl.onPatched(() => {
+                if (this.sheetNameRef.el && this.state.isEditing && this.editionState === "initializing") {
+                    this.editionState = "editing";
+                    this.focusInputAndSelectContent();
+                }
+            });
+        }
+        focusInputAndSelectContent() {
+            var _a;
+            if (!this.state.isEditing || !this.sheetNameRef.el)
+                return;
+            this.sheetNameRef.el.focus();
+            const selection = window.getSelection();
+            if (selection && this.sheetNameRef.el.firstChild) {
+                selection.setBaseAndExtent(this.sheetNameRef.el.firstChild, 0, this.sheetNameRef.el.firstChild, ((_a = this.sheetNameRef.el.textContent) === null || _a === void 0 ? void 0 : _a.length) || 0);
+            }
+        }
+        scrollToSheet() {
+            var _a, _b;
+            (_b = (_a = this.sheetDivRef.el) === null || _a === void 0 ? void 0 : _a.scrollIntoView) === null || _b === void 0 ? void 0 : _b.call(_a);
+        }
+        onFocusOut() {
+            if (this.state.isEditing && this.editionState !== "initializing") {
+                this.stopEdition();
+            }
+        }
+        clickSheet() {
+            this.activateSheet();
+        }
+        activateSheet() {
+            this.env.model.dispatch("ACTIVATE_SHEET", {
+                sheetIdFrom: this.env.model.getters.getActiveSheetId(),
+                sheetIdTo: this.props.sheetId,
+            });
+            this.scrollToSheet();
+        }
+        onDblClick() {
+            this.startEdition();
+        }
+        onKeyDown(ev) {
+            if (!this.state.isEditing)
+                return;
+            if (ev.key === "Enter") {
+                ev.preventDefault();
+                this.stopEdition();
+            }
+            if (ev.key === "Escape") {
+                this.cancelEdition();
+            }
+        }
+        onClickSheetName(ev) {
+            if (this.state.isEditing)
+                ev.stopPropagation();
+        }
+        startEdition() {
+            this.state.isEditing = true;
+            this.editionState = "initializing";
+        }
+        stopEdition() {
+            var _a;
+            if (!this.state.isEditing)
+                return;
+            this.state.isEditing = false;
+            this.editionState = "initializing";
+            (_a = this.sheetNameRef.el) === null || _a === void 0 ? void 0 : _a.blur();
+            const inputValue = this.getInputContent() || "";
+            interactiveRenameSheet(this.env, this.props.sheetId, inputValue, () => this.startEdition());
+        }
+        cancelEdition() {
+            var _a;
+            this.state.isEditing = false;
+            this.editionState = "initializing";
+            (_a = this.sheetNameRef.el) === null || _a === void 0 ? void 0 : _a.blur();
+            this.setInputContent(this.sheetName);
+        }
+        onIconClick(ev) {
+            if (!this.isSheetActive) {
+                this.activateSheet();
+            }
+            this.props.openContextMenu(this.contextMenuRegistry, ev);
+        }
+        onContextMenu(ev) {
+            if (!this.isSheetActive) {
+                this.activateSheet();
+            }
+            this.props.openContextMenu(this.contextMenuRegistry, ev);
+        }
+        getInputContent() {
+            var _a;
+            return (_a = this.sheetNameRef.el) === null || _a === void 0 ? void 0 : _a.textContent;
+        }
+        setInputContent(content) {
+            if (this.sheetNameRef.el)
+                this.sheetNameRef.el.textContent = content;
+        }
+        get contextMenuRegistry() {
+            return getSheetMenuRegistry({
+                renameSheetCallback: () => {
+                    this.scrollToSheet();
+                    this.startEdition();
+                },
+            });
+        }
+        get isSheetActive() {
+            return this.env.model.getters.getActiveSheetId() === this.props.sheetId;
+        }
+        get sheetName() {
+            return this.env.model.getters.getSheetName(this.props.sheetId);
+        }
+    }
+    BottomBarSheet.template = "o-spreadsheet-BottomBarSheet";
+    BottomBarSheet.components = { Ripple };
+    BottomBarSheet.props = {
+        sheetId: String,
+        openContextMenu: Function,
+    };
+
     // -----------------------------------------------------------------------------
     // SpreadSheet
     // -----------------------------------------------------------------------------
     css /* scss */ `
-  .o-spreadsheet-bottom-bar {
-    background-color: ${BACKGROUND_GRAY_COLOR};
-    padding-left: ${HEADER_WIDTH}px;
-    display: flex;
-    align-items: center;
-    font-size: 15px;
-    border-top: 1px solid lightgrey;
-    overflow: hidden;
-
-    .o-add-sheet,
-    .o-list-sheets {
-      margin-right: 5px;
-    }
-
-    .o-add-sheet.disabled {
-      cursor: not-allowed;
-    }
-
-    .o-sheet-item {
-      display: flex;
-      align-items: center;
-      padding: 5px;
-      cursor: pointer;
-      &:hover {
-        background-color: rgba(0, 0, 0, 0.08);
-      }
-    }
-
-    .o-all-sheets {
-      display: flex;
-      align-items: center;
-      max-width: 80%;
-      overflow: hidden;
-    }
-
-    .o-sheet {
-      color: #666;
-      padding: 0 15px;
-      padding-right: 10px;
-      height: ${BOTTOMBAR_HEIGHT}px;
-      line-height: ${BOTTOMBAR_HEIGHT}px;
-      user-select: none;
-      white-space: nowrap;
-      border-left: 1px solid #c1c1c1;
-
-      &:last-child {
-        border-right: 1px solid #c1c1c1;
-      }
-
-      &.active {
-        color: #484;
-        background-color: #ffffff;
-        box-shadow: 0 1px 3px 1px rgba(60, 64, 67, 0.15);
-      }
-
-      .o-sheet-icon {
-        margin-left: 5px;
-
-        &:hover {
-          background-color: rgba(0, 0, 0, 0.08);
-        }
-      }
-    }
-
-    .o-selection-statistic {
-      background-color: #ffffff;
-      margin-left: auto;
-      font-size: 14px;
-      margin-right: 20px;
-      padding: 4px 8px;
-      color: #333;
-      border-radius: 3px;
-      box-shadow: 0 1px 3px 1px rgba(60, 64, 67, 0.15);
-      user-select: none;
-      cursor: pointer;
-      &:hover {
-        background-color: rgba(0, 0, 0, 0.08);
-      }
-    }
-
-    .fade-enter-active {
-      transition: opacity 0.5s;
-    }
-
-    .fade-enter {
-      opacity: 0;
+  .o-selection-statistic {
+    margin-right: 20px;
+    padding: 4px 4px 4px 8px;
+    color: #333;
+    cursor: pointer;
+    &:hover {
+      background-color: rgba(0, 0, 0, 0.08) !important;
     }
   }
 `;
-    class BottomBar extends owl.Component {
+    class BottomBarStatistic extends owl.Component {
         constructor() {
             super(...arguments);
-            this.bottomBarRef = owl.useRef("bottomBar");
-            this.menuState = owl.useState({ isOpen: false, position: null, menuItems: [] });
             this.selectedStatisticFn = "";
-        }
-        setup() {
-            owl.onMounted(() => this.focusSheet());
-            owl.onPatched(() => this.focusSheet());
-        }
-        focusSheet() {
-            const div = this.bottomBarRef.el.querySelector(`[data-id="${this.env.model.getters.getActiveSheetId()}"]`);
-            if (div && div.scrollIntoView) {
-                div.scrollIntoView();
-            }
-        }
-        addSheet() {
-            const activeSheetId = this.env.model.getters.getActiveSheetId();
-            const position = this.env.model.getters.getSheetIds().findIndex((sheetId) => sheetId === activeSheetId) + 1;
-            const sheetId = this.env.model.uuidGenerator.uuidv4();
-            const name = this.env.model.getters.getNextSheetName(this.env._t("Sheet"));
-            this.env.model.dispatch("CREATE_SHEET", { sheetId, position, name });
-            this.env.model.dispatch("ACTIVATE_SHEET", { sheetIdFrom: activeSheetId, sheetIdTo: sheetId });
-        }
-        getVisibleSheets() {
-            return this.env.model.getters
-                .getVisibleSheetIds()
-                .map((sheetId) => this.env.model.getters.getSheet(sheetId));
-        }
-        listSheets(ev) {
-            const registry = new MenuItemRegistry();
-            const from = this.env.model.getters.getActiveSheetId();
-            let i = 0;
-            for (const sheetId of this.env.model.getters.getSheetIds()) {
-                const sheet = this.env.model.getters.getSheet(sheetId);
-                registry.add(sheetId, {
-                    name: sheet.name,
-                    sequence: i,
-                    isReadonlyAllowed: true,
-                    textColor: sheet.isVisible ? undefined : "grey",
-                    action: (env) => {
-                        env.model.dispatch("ACTIVATE_SHEET", { sheetIdFrom: from, sheetIdTo: sheetId });
-                    },
-                });
-                i++;
-            }
-            const target = ev.currentTarget;
-            const { top, left } = target.getBoundingClientRect();
-            this.openContextMenu(left, top, registry);
-        }
-        activateSheet(name) {
-            this.env.model.dispatch("ACTIVATE_SHEET", {
-                sheetIdFrom: this.env.model.getters.getActiveSheetId(),
-                sheetIdTo: name,
-            });
-        }
-        onDblClick(sheetId) {
-            interactiveRenameSheet(this.env, sheetId);
-        }
-        openContextMenu(x, y, registry) {
-            this.menuState.isOpen = true;
-            this.menuState.menuItems = registry.getAll().filter((x) => x.isVisible(this.env));
-            this.menuState.position = { x, y };
-        }
-        onIconClick(sheet, ev) {
-            if (this.env.model.getters.getActiveSheetId() !== sheet) {
-                this.activateSheet(sheet);
-            }
-            if (this.menuState.isOpen) {
-                this.menuState.isOpen = false;
-            }
-            else {
-                const target = ev.currentTarget.parentElement;
-                const { top, left } = target.getBoundingClientRect();
-                this.openContextMenu(left, top, sheetMenuRegistry);
-            }
-        }
-        onContextMenu(sheet, ev) {
-            if (this.env.model.getters.getActiveSheetId() !== sheet) {
-                this.activateSheet(sheet);
-            }
-            const target = ev.currentTarget;
-            const { top, left } = target.getBoundingClientRect();
-            this.openContextMenu(left, top, sheetMenuRegistry);
         }
         getSelectedStatistic() {
             const statisticFnResults = this.env.model.getters.getStatisticFnResults();
@@ -38570,14 +38759,213 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
             }
             const target = ev.currentTarget;
             const { top, left, width } = target.getBoundingClientRect();
-            this.openContextMenu(left + width, top, registry);
+            this.props.openContextMenu(left + width, top, registry);
         }
         getComposedFnName(fnName, fnValue) {
             return fnName + ": " + (fnValue !== undefined ? formatValue(fnValue) : "__");
         }
     }
+    BottomBarStatistic.template = "o-spreadsheet-BottomBarStatisic";
+    BottomBarStatistic.components = { Ripple };
+    BottomBarStatistic.props = {
+        openContextMenu: Function,
+    };
+
+    // -----------------------------------------------------------------------------
+    // SpreadSheet
+    // -----------------------------------------------------------------------------
+    const MENU_MAX_HEIGHT = 250;
+    css /* scss */ `
+  .o-spreadsheet-bottom-bar {
+    background-color: ${BACKGROUND_GRAY_COLOR};
+    padding-left: ${HEADER_WIDTH}px;
+    font-size: 15px;
+    border-top: 1px solid lightgrey;
+
+    .o-add-sheet.disabled {
+      cursor: not-allowed;
+    }
+
+    .o-sheet-item {
+      cursor: pointer;
+      &:hover {
+        background-color: rgba(0, 0, 0, 0.08);
+      }
+    }
+
+    .o-all-sheets {
+      max-width: 70%;
+
+      .o-bottom-bar-fade-out {
+        background-image: linear-gradient(-90deg, #cfcfcf, transparent 1%);
+      }
+
+      .o-bottom-bar-fade-in {
+        background-image: linear-gradient(90deg, #cfcfcf, transparent 1%);
+      }
+
+      &:after {
+        content: "";
+        border-right: 1px solid #c1c1c1;
+        height: 100%;
+      }
+    }
+
+    .o-bottom-bar-arrows {
+      .o-bottom-bar-arrow {
+        cursor: pointer;
+        &.o-disabled {
+          opacity: 0.4;
+          cursor: default;
+        }
+        &:hover:not([class*="o-disabled"]) {
+          .o-icon {
+            opacity: 0.9;
+          }
+        }
+
+        .o-icon {
+          height: 18px;
+          width: 18px;
+        }
+      }
+    }
+  }
+`;
+    class BottomBar extends owl.Component {
+        constructor() {
+            super(...arguments);
+            this.bottomBarRef = owl.useRef("bottomBar");
+            this.sheetListRef = owl.useRef("sheetList");
+            this.targetScroll = undefined;
+            this.state = owl.useState({
+                isSheetListScrollableLeft: false,
+                isSheetListScrollableRight: false,
+            });
+            this.menuMaxHeight = MENU_MAX_HEIGHT;
+            this.menuState = owl.useState({
+                isOpen: false,
+                menuId: undefined,
+                position: null,
+                menuItems: [],
+            });
+        }
+        setup() {
+            owl.onWillUpdateProps(() => {
+                this.updateScrollState();
+            });
+        }
+        clickAddSheet(ev) {
+            const activeSheetId = this.env.model.getters.getActiveSheetId();
+            const position = this.env.model.getters.getSheetIds().findIndex((sheetId) => sheetId === activeSheetId) + 1;
+            const sheetId = this.env.model.uuidGenerator.uuidv4();
+            const name = this.env.model.getters.getNextSheetName(this.env._t("Sheet"));
+            this.env.model.dispatch("CREATE_SHEET", { sheetId, position, name });
+            this.env.model.dispatch("ACTIVATE_SHEET", { sheetIdFrom: activeSheetId, sheetIdTo: sheetId });
+        }
+        getVisibleSheets() {
+            return this.env.model.getters
+                .getVisibleSheetIds()
+                .map((sheetId) => this.env.model.getters.getSheet(sheetId));
+        }
+        clickListSheets(ev) {
+            const registry = new MenuItemRegistry();
+            const from = this.env.model.getters.getActiveSheetId();
+            let i = 0;
+            for (const sheetId of this.env.model.getters.getSheetIds()) {
+                const sheet = this.env.model.getters.getSheet(sheetId);
+                registry.add(sheetId, {
+                    name: sheet.name,
+                    sequence: i,
+                    isReadonlyAllowed: true,
+                    textColor: sheet.isVisible ? undefined : "grey",
+                    action: (env) => {
+                        env.model.dispatch("ACTIVATE_SHEET", { sheetIdFrom: from, sheetIdTo: sheetId });
+                    },
+                });
+                i++;
+            }
+            const target = ev.currentTarget;
+            const { left } = target.getBoundingClientRect();
+            const top = this.bottomBarRef.el.getBoundingClientRect().top;
+            this.openContextMenu(left, top, "listSheets", registry);
+        }
+        openContextMenu(x, y, menuId, registry) {
+            this.menuState.isOpen = true;
+            this.menuState.menuId = menuId;
+            this.menuState.menuItems = registry.getMenuItems();
+            this.menuState.position = { x, y };
+        }
+        onSheetContextMenu(sheet, registry, ev) {
+            const target = ev.currentTarget;
+            const { top, left } = target.getBoundingClientRect();
+            if (this.menuState.isOpen && this.menuState.menuId === sheet) {
+                this.closeMenu();
+                return;
+            }
+            this.openContextMenu(left, top, sheet, registry);
+        }
+        closeMenu() {
+            this.menuState.isOpen = false;
+            this.menuState.menuId = undefined;
+            this.menuState.menuItems = [];
+            this.menuState.position = null;
+        }
+        onWheel(ev) {
+            this.targetScroll = undefined;
+            const target = ev.currentTarget;
+            target.scrollLeft += ev.deltaY * 0.5;
+        }
+        onScroll() {
+            this.updateScrollState();
+            if (this.targetScroll === this.sheetListCurrentScroll) {
+                this.targetScroll = undefined;
+            }
+        }
+        onArrowLeft(ev) {
+            if (!this.state.isSheetListScrollableLeft)
+                return;
+            if (!this.targetScroll)
+                this.targetScroll = this.sheetListCurrentScroll;
+            const newScroll = this.targetScroll - this.sheetListWidth;
+            this.scrollSheetListTo(Math.max(0, newScroll));
+        }
+        onArrowRight(ev) {
+            if (!this.state.isSheetListScrollableRight)
+                return;
+            if (!this.targetScroll)
+                this.targetScroll = this.sheetListCurrentScroll;
+            const newScroll = this.targetScroll + this.sheetListWidth;
+            this.scrollSheetListTo(Math.min(this.sheetListMaxScroll, newScroll));
+        }
+        updateScrollState() {
+            this.state.isSheetListScrollableLeft = this.sheetListCurrentScroll > 0;
+            this.state.isSheetListScrollableRight = this.sheetListCurrentScroll < this.sheetListMaxScroll;
+        }
+        scrollSheetListTo(scroll) {
+            if (!this.sheetListRef.el)
+                return;
+            this.targetScroll = scroll;
+            this.sheetListRef.el.scrollTo({ top: 0, left: scroll, behavior: "smooth" });
+        }
+        get sheetListCurrentScroll() {
+            if (!this.sheetListRef.el)
+                return 0;
+            return this.sheetListRef.el.scrollLeft;
+        }
+        get sheetListWidth() {
+            if (!this.sheetListRef.el)
+                return 0;
+            return this.sheetListRef.el.clientWidth;
+        }
+        get sheetListMaxScroll() {
+            if (!this.sheetListRef.el)
+                return 0;
+            return this.sheetListRef.el.scrollWidth - this.sheetListRef.el.clientWidth;
+        }
+    }
     BottomBar.template = "o-spreadsheet-BottomBar";
-    BottomBar.components = { Menu };
+    BottomBar.components = { Menu, Ripple, BottomBarSheet, BottomBarStatistic };
     BottomBar.props = {
         onClick: Function,
     };
@@ -39312,7 +39700,7 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
             const { left, top, height } = ev.target.getBoundingClientRect();
             this.state.menuState.isOpen = true;
             this.state.menuState.position = { x: left, y: top + height };
-            this.state.menuState.menuItems = getMenuChildren(menu, this.env).filter((item) => !item.isVisible || item.isVisible(this.env));
+            this.state.menuState.menuItems = menu.children(this.env);
             this.state.menuState.parentMenu = menu;
             this.isSelectingMenu = true;
             this.openedEl = ev.target;
@@ -39354,12 +39742,10 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
             this.style.align = this.style.align || cell.defaultAlign;
             this.fillColor = this.style.fillColor || "#ffffff";
             this.textColor = this.style.textColor || "#000000";
-            this.menus = topbarMenuRegistry
-                .getAll()
-                .filter((item) => !item.isVisible || item.isVisible(this.env));
+            this.menus = topbarMenuRegistry.getMenuItems();
         }
         getMenuName(menu) {
-            return getMenuName(menu, this.env);
+            return menu.name(this.env);
         }
         toggleMerge() {
             if (this.cannotMerge) {
@@ -43537,7 +43923,6 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
         rowMenuRegistry,
         sidePanelRegistry,
         figureRegistry,
-        sheetMenuRegistry,
         chartSidePanelComponentRegistry,
         chartComponentRegistry,
         chartRegistry,
@@ -43559,7 +43944,6 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
         toZone,
         toCartesian,
         numberToLetters,
-        createFullMenuItem,
         UuidGenerator,
         formatValue,
         computeTextWidth,
@@ -43568,7 +43952,6 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
         createEmptyExcelSheet,
         getDefaultChartJsRuntime,
         chartFontColor,
-        getMenuChildren,
         ChartColors,
         EvaluationError,
         CellErrorLevel,
@@ -43638,8 +44021,8 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
     Object.defineProperty(exports, '__esModule', { value: true });
 
     exports.__info__.version = '2.0.0';
-    exports.__info__.date = '2023-01-13T12:31:29.023Z';
-    exports.__info__.hash = 'dcff089';
+    exports.__info__.date = '2023-01-17T14:55:32.207Z';
+    exports.__info__.hash = '35b1263';
 
 })(this.o_spreadsheet = this.o_spreadsheet || {}, owl);
 //# sourceMappingURL=o_spreadsheet.js.map
