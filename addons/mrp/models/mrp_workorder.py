@@ -784,6 +784,18 @@ class MrpWorkorder(models.Model):
             res[wo1].append(wo2)
         return res
 
+    def _get_operation_values(self):
+        self.ensure_one()
+        ratio = 1 / self.qty_production
+        if self.operation_id.bom_id:
+            ratio = self.production_id._get_ratio_between_mo_and_bom_quantities(self.operation_id.bom_id)
+        return {
+            'company_id': self.company_id.id,
+            'name': self.name,
+            'time_cycle_manual': self.duration_expected * ratio,
+            'workcenter_id': self.workcenter_id.id,
+        }
+
     def _prepare_timeline_vals(self, duration, date_start, date_end=False):
         # Need a loss in case of the real time exceeding the expected
         if not self.duration_expected or duration <= self.duration_expected:

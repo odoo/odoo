@@ -242,7 +242,13 @@
                             <label for="bom_id" name="bom_label"/>
                             <div class='o_row' name="bom_div">
                                 <field name="bom_id"
-                                    context="{'default_product_tmpl_id': product_tmpl_id}" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+                                    context="{'default_product_tmpl_id': product_tmpl_id}"
+                                    attrs="{'readonly': [('state', '!=', 'draft')], 'invisible': [('state', '!=', 'draft'), ('bom_id', '=', False)]}"/>
+                                <button name="action_generate_bom" type="object" icon="fa-plus"
+                                    title="Generate a new BoM from this Manufacturing Order" groups="mrp.group_mrp_manager"
+                                    attrs="{'invisible': ['|', '|', ('bom_id', '!=', False), ('product_id', '=', False), ('move_raw_ids', '=', [])]}">
+                                    <span class="ms-2">Generate BOM</span>
+                                </button>
                             </div>
                             <label for="lot_producing_id" attrs="{'invisible': ['|', ('state', '=', 'draft'), ('product_tracking', 'in', ('none', False))]}"/>
                             <div class="o_row" attrs="{'invisible': ['|', ('state', '=', 'draft'), ('product_tracking', 'in', ('none', False))]}">
