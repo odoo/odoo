@@ -145,9 +145,10 @@ registerModel({
          * @param {Object} [param0={}]
          * @param {string[]} [fieldNames]
          */
-        reloadParentView({ fieldNames } = {}) {
+        async reloadParentView({ fieldNames } = {}) {
             if (this.webRecord) {
-                this.webRecord.model.load({ resId: this.threadId });
+                await this.webRecord.model.root.load({ resId: this.threadId }, { keepChanges: true });
+                this.webRecord.model.notify();
                 return;
             }
             if (this.component) {
