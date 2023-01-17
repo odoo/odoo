@@ -6,7 +6,7 @@ import Registries from "@point_of_sale/js/Registries";
 const PosHrPaymentScreen = (PaymentScreen_) =>
     class extends PaymentScreen_ {
         async _finalizeValidation() {
-            this.currentOrder.employee = this.env.pos.get_cashier();
+            this.currentOrder.cashier = this.env.pos.get_cashier();
             await super._finalizeValidation();
         }
     };
