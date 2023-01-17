@@ -362,7 +362,7 @@ export function formatMonetary(value, options = {}) {
         currencyId = Array.isArray(dataValue) ? dataValue[0] : dataValue;
     }
     const currency = session.currencies[currencyId];
-    const digits = (currency && currency.digits) || options.digits;
+    const digits = options.digits || (currency && currency.digits);
 
     let formattedValue;
     if (options.humanReadable) {
@@ -448,7 +448,7 @@ export function formatText(value) {
 }
 
 export function formatJson(value) {
-    return value && JSON.stringify(value) || "";
+    return (value && JSON.stringify(value)) || "";
 }
 
 registry
