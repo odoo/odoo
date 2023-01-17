@@ -1,98 +1,122 @@
-odoo.define('account.section_and_note_tests', function (require) {
-"use strict";
+/** @odoo-module **/
 
-var FormView = require('web.FormView');
-var testUtils = require('web.test_utils');
-var createView = testUtils.createView;
+import {
+    click,
+    dragAndDrop,
+    getNodesTextContent,
+    getFixture,
+} from "@web/../tests/helpers/utils";
+import { makeView, setupViewRegistries } from "@web/../tests/views/helpers";
 
-QUnit.module('section_and_note', {
-    beforeEach: function () {
-        this.data = {
-            invoice: {
-                fields: {
-                    invoice_line_ids: {
-                        string: "Lines",
-                        type: 'one2many',
-                        relation: 'invoice_line',
-                        relation_field: 'invoice_id'
+let serverData;
+let target;
+
+QUnit.module('section_and_note', (hooks) => {
+    hooks.beforeEach(() => {
+        target = getFixture();
+        serverData = {
+            models: {
+                invoice: {
+                    fields: {
+                        invoice_line_ids: {
+                            string: "Lines",
+                            type: 'one2many',
+                            relation: 'invoice_line',
+                            relation_field: 'invoice_id'
+                        },
                     },
+                    records: [
+                        {id: 1, invoice_line_ids: [1, 2, 3]},
+                    ],
                 },
-                records: [
-                    {id: 1, invoice_line_ids: [1, 2]},
-                ],
-            },
-            invoice_line: {
-                fields: {
-                    display_type: {
-                        string: 'Type',
-                        type: 'selection',
-                        selection: [['line_section', "Section"], ['line_note', "Note"]]
+                invoice_line: {
+                    fields: {
+                        sequence: { string: "sequence", type: "integer", sortable: true },
+                        display_type: {
+                            string: 'Type',
+                            type: 'selection',
+                            selection: [['line_section', "Section"], ['line_note', "Note"]]
+                        },
+                        invoice_id: {
+                            string: "Invoice",
+                            type: 'many2one',
+                            relation: 'invoice'
+                        },
+                        name: {
+                            string: "Name",
+                            type: 'text'
+                        },
+                        price: {
+                            string: "Price",
+                            type: 'monetary',
+                        }
                     },
-                    invoice_id: {
-                        string: "Invoice",
-                        type: 'many2one',
-                        relation: 'invoice'
-                    },
-                    name: {
-                        string: "Name",
-                        type: 'text'
-                    },
+                    records: [
+                        {id: 1, display_type: false, invoice_id: 1, name: 'product\n2 lines', price: 123.45},
+                        {id: 2, display_type: 'line_section', invoice_id: 1, name: 'section'},
+                        {id: 3, display_type: 'line_note', invoice_id: 1, name: 'note'},
+                    ]
                 },
-                records: [
-                    {id: 1, display_type: false, invoice_id: 1, name: 'product\n2 lines'},
-                    {id: 2, display_type: 'line_section', invoice_id: 1, name: 'section'},
-                ]
             },
         };
-    },
-}, function () {
-    QUnit.test('correct display of section and note fields', async function (assert) {
-        assert.expect(5);
-        var form = await createView({
-            View: FormView,
-            model: 'invoice',
-            data: this.data,
-            arch: '<form>' +
-                    '<field name="invoice_line_ids" widget="section_and_note_one2many"/>' +
-                '</form>',
-            archs: {
-                'invoice_line,false,list': '<tree editable="bottom">' +
-                    '<field name="display_type" invisible="1"/>' +
-                    '<field name="name" widget="section_and_note_text"/>' +
-                '</tree>',
-            },
-            res_id: 1,
+        setupViewRegistries();
+    });
+
+    QUnit.test('correct display of section and note fields', async (assert) => {
+        assert.expect(9);
+        await makeView({
+            type: 'form',
+            resModel: 'invoice',
+            serverData,
+            arch: `
+                <form>
+                    <field name="invoice_line_ids" widget="section_and_note_one2many">
+                        <tree editable="bottom">
+                            <field name="sequence" widget="handle"/>
+                            <field name="display_type" invisible="1"/>
+                            <field name="name" widget="section_and_note_text"/>
+                            <field name="price"/>
+                        </tree>
+                    </field>
+                </form>`,
+            resId: 1,
         });
 
-        assert.hasClass(form.$('[name="invoice_line_ids"] table'), 'o_section_and_note_list_view');
+        assert.hasClass(target.querySelector('[name="invoice_line_ids"] table'), 'o_section_and_note_list_view');
 
-        // section should be displayed correctly
-        var $tr0 = form.$('tr.o_data_row:eq(0)');
-
-        assert.doesNotHaveClass($tr0, 'o_is_line_section',
+        // product should be displayed correctly
+        assert.doesNotHaveClass(target.querySelector('tr.o_data_row:nth-child(1'), 'o_is_line_section',
             "should not have a section class");
 
-        var $tr1 = form.$('tr.o_data_row:eq(1)');
-
-        assert.hasClass($tr1, 'o_is_line_section',
+        // section should be displayed correctly
+        const section_line = target.querySelector('tr.o_data_row:nth-child(2)');
+        const section_cell = section_line.querySelector('td.o_section_and_note_text_cell');
+        assert.hasClass(section_line, 'o_is_line_section',
             "should have a section class");
+        assert.hasAttrValue(section_cell, 'colspan', '2')
 
-        // enter edit mode
-        await testUtils.form.clickEdit(form);
+        // note should be displayed correctly
+        const note_line = target.querySelector('tr.o_data_row:nth-child(3)');
+        const note_cell = note_line.querySelector('td.o_section_and_note_text_cell');
+        assert.hasClass(note_line, 'o_is_line_note',
+            "should have a note class");
+        assert.hasAttrValue(note_cell, 'colspan', '2')
 
-        // editing line should be textarea
-        $tr0 = form.$('tr.o_data_row:eq(0)');
-        await testUtils.dom.click($tr0.find('td.o_data_cell'));
-        assert.containsOnce($tr0, 'td.o_data_cell textarea[name="name"]',
-            "editing line should be textarea");
+        // editing note line should be textarea
+        await click(note_cell);
+        assert.containsOnce(note_line, 'td.o_section_and_note_text_cell div[name="name"] textarea',
+            "note line should be textarea");
 
-        // editing section should be input
-        $tr1 = form.$('tr.o_data_row:eq(1)');
-        await testUtils.dom.click($tr1.find('td.o_data_cell'));
-        assert.containsOnce($tr1, 'td.o_data_cell input[name="name"]',
-            "editing section should be input");
+        // editing section line should be input
+        await click(section_cell);
+        assert.containsOnce(section_line, 'td.o_section_and_note_text_cell div[name="name"] input',
+            "section line should be input");
 
-        form.destroy();
+        // Drag and drop the second line in first position
+        await dragAndDrop("tbody tr:nth-child(2) .o_row_handle", "tbody tr:nth-child(1)");
+        assert.deepEqual(
+            getNodesTextContent(target.querySelectorAll(".o_data_cell.o_list_text")),
+            ["section", "product\n2 lines", "note"]
+        );
     });
-});
 });
