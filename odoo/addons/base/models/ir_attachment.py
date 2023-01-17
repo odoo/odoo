@@ -104,8 +104,8 @@ class IrAttachment(models.Model):
         try:
             with open(full_path, 'rb') as f:
                 return f.read()
-        except (IOError, OSError):
-            _logger.info("_read_file reading %s", full_path, exc_info=True)
+        except (IOError, OSError) as exc:
+            _logger.info("_read_file could not read %s: %s", full_path, exc)
         return b''
 
     @api.model
@@ -117,8 +117,8 @@ class IrAttachment(models.Model):
                     fp.write(bin_value)
                 # add fname to checklist, in case the transaction aborts
                 self._mark_for_gc(fname)
-            except IOError:
-                _logger.info("_file_write writing %s", full_path, exc_info=True)
+            except IOError as exc:
+                _logger.info("_file_write could not write %s: %s", full_path, exc)
         return fname
 
     @api.model
@@ -184,8 +184,8 @@ class IrAttachment(models.Model):
                         os.unlink(self._full_path(fname))
                         _logger.debug("_file_gc unlinked %s", self._full_path(fname))
                         removed += 1
-                    except (OSError, IOError):
-                        _logger.info("_file_gc could not unlink %s", self._full_path(fname), exc_info=True)
+                    except (OSError, IOError) as exc:
+                        _logger.info("_file_gc could not unlink %s: %s", self._full_path(fname), exc)
                 with tools.ignore(OSError):
                     os.unlink(filepath)
 
