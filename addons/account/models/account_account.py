@@ -365,9 +365,7 @@ class AccountAccount(models.Model):
     def _compute_related_taxes_amount(self):
         for record in self:
             record.related_taxes_amount = self.env['account.tax'].search_count([
-                '|',
-                ('invoice_repartition_line_ids.account_id', '=', record.id),
-                ('refund_repartition_line_ids.account_id', '=', record.id),
+                ('repartition_line_ids.account_id', '=', record.id),
             ])
 
     def _compute_opening_debit_credit(self):
@@ -753,9 +751,7 @@ class AccountAccount(models.Model):
 
     def action_open_related_taxes(self):
         related_taxes_ids = self.env['account.tax'].search([
-            '|',
-            ('invoice_repartition_line_ids.account_id', '=', self.id),
-            ('refund_repartition_line_ids.account_id', '=', self.id),
+            ('repartition_line_ids.account_id', '=', self.id),
         ]).ids
         return {
             'type': 'ir.actions.act_window',
