@@ -56,7 +56,8 @@
                                             required="smtp_authentication != 'cli'"/>
                                     </group>
                                     <group>
-                                        <field name="smtp_user" invisible="smtp_authentication == 'certificate'" force_save="1"/>
+                                        <label for="smtp_user" string="Username" invisible="smtp_authentication == 'certificate'"/>
+                                        <field name="smtp_user" invisible="smtp_authentication == 'certificate'" force_save="1" nolabel="1"/>
                                         <field name="smtp_pass" invisible="smtp_authentication != 'login'" password="True" force_save="1"/>
                                         <field name="smtp_ssl_certificate" invisible="smtp_authentication != 'certificate'" force_save="1"/>
                                         <field name="smtp_ssl_private_key" invisible="smtp_authentication != 'certificate'" force_save="1"/>

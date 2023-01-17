@@ -69,7 +69,7 @@ class GoogleGmailMixin(models.AbstractModel):
         """
         self.ensure_one()
 
-        if not self.env.user.has_group('base.group_system'):
+        if not self.env.is_admin():
             raise AccessError(_('Only the administrator can link a Gmail mail server.'))
 
         email = tools.email_normalize(self[self._email_field])
@@ -121,6 +121,7 @@ class GoogleGmailMixin(models.AbstractModel):
         return {
             'type': 'ir.actions.act_url',
             'url': google_gmail_uri,
+            'target': 'self',
         }
 
     def _fetch_gmail_refresh_token(self, authorization_code):

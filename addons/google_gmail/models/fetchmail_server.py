@@ -2,6 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import _, api, fields, models
+from odoo.exceptions import UserError
 
 
 class FetchmailServer(models.Model):
@@ -17,6 +18,12 @@ class FetchmailServer(models.Model):
             'You will be redirected to the Gmail login page where you will '
             'need to accept the permission.')
         super(FetchmailServer, self - gmail_servers)._compute_server_type_info()
+
+    @api.constrains('server_type', 'is_ssl')
+    def _check_use_google_gmail_service(self):
+        for server in self:
+            if server.server_type == 'gmail' and not server.is_ssl:
+                raise UserError(_('SSL is required for server “%s”.', server.name))
 
     @api.onchange('server_type', 'is_ssl', 'object_id')
     def onchange_server_type(self):
