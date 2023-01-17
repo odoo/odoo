@@ -2637,4 +2637,77 @@ QUnit.module("ActionManager", (hooks) => {
 
         assert.containsOnce(target, ".o_pivot_view .o_view_sample_data");
     });
+
+    QUnit.test("click on breadcrumb of a deleted record", async function (assert) {
+        serviceRegistry.add("error", errorService);
+        // In tests we catch unhandledrejection of promises rejected with something that isn't an
+        // error (see tests/qunit.js). In this scenario, with the legacy basic_model, the promise
+        // is rejected with undefined, so without the following lines, we can't reproduce the issue,
+        // which was that the error handlers were executed in a wrong order, and one of them crashed.
+        const windowUnhandledReject = window.onunhandledrejection;
+        window.onunhandledrejection = null;
+        registerCleanup(() => {
+            window.onunhandledrejection = windowUnhandledReject;
+        });
+
+        const handler = (ev) => {
+            // need to preventDefault to remove error from console (so python test pass)
+            ev.preventDefault();
+        };
+        window.addEventListener("unhandledrejection", handler);
+        registerCleanup(() => window.removeEventListener("unhandledrejection", handler));
+        patchWithCleanup(QUnit, {
+            onUnhandledRejection: () => {},
+        });
+
+        serverData.views["partner,false,form"] = `
+            <form>
+                <button type="action" name="3" string="Open Action 3" class="my_btn"/>
+            </form>`;
+
+        const webClient = await createWebClient({ serverData });
+        await doAction(webClient, 3);
+        assert.containsOnce(target, ".o_list_view");
+
+        await click(target.querySelector(".o_data_row .o_data_cell"));
+        assert.containsOnce(target, ".o_form_view");
+
+        await click(target.querySelector(".my_btn"));
+        assert.containsOnce(target, ".o_list_view");
+
+        await click(target.querySelector(".o_data_row .o_data_cell"));
+        assert.containsOnce(target, ".o_form_view");
+        assert.deepEqual(getNodesTextContent(target.querySelectorAll(".breadcrumb-item")), [
+            "Partners",
+            "First record",
+            "Partners",
+            "First record",
+        ]);
+
+        // open action menu and delete
+        await cpHelpers.toggleActionMenu(target);
+        await cpHelpers.toggleMenuItem(target, "Delete");
+        assert.containsOnce(target, ".o_dialog");
+
+        // confirm
+        await click(target.querySelector(".o_dialog .modal-footer .btn-primary"));
+        assert.containsOnce(target, ".o_form_view");
+        assert.deepEqual(getNodesTextContent(target.querySelectorAll(".breadcrumb-item")), [
+            "Partners",
+            "First record",
+            "Partners",
+            "Second record",
+        ]);
+
+        // click on "First record" in breadcrumbs, which doesn't exist anymore
+        await click(target.querySelectorAll(".breadcrumb-item a")[1]);
+        await nextTick();
+        assert.containsOnce(target, ".o_form_view");
+        assert.deepEqual(getNodesTextContent(target.querySelectorAll(".breadcrumb-item")), [
+            "Partners",
+            "First record",
+            "Partners",
+            "Second record",
+        ]);
+    });
 });
