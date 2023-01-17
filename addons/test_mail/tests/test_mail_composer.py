@@ -49,7 +49,7 @@ class TestMailComposer(TestMailCommon, TestRecipients):
         })
         cls.test_records, cls.test_partners = cls._create_records_for_batch(
             'mail.test.ticket', 2,
-            additional_values={'user_id': cls.user_employee_2.id}
+            additional_values={'user_id': cls.user_employee_2.id},
         )
 
         cls.test_report = cls.env['ir.actions.report'].create({
