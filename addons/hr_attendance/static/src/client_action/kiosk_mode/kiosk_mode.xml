@@ -1,0 +1,33 @@
+
+
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+<t t-name="hr_attendance.KioskMode" owl="1">
+    <CardLayout kioskModeClasses="'o_barcode_main pt-5'">
+        <h2 class="mb-2"><small>Welcome to</small> <t t-esc="companyName"/></h2>
+        <img t-att-src="companyImageUrl" alt="Company Logo" class="o_hr_attendance_kiosk_company_image align-self-center img img-fluid mb-3" width="200"/>
+        <div class="o_hr_attendance_kiosk_welcome_row d-flex flex-column pb-5">
+            <div class="col-md-5 mt-5 mb-5 mb-md-0 align-self-center" t-if="kioskMode != 'manual'">
+                <BarcodeScanner t-if="barcodeSource !== 'scanner'" onBarcodeScanned="(ev) => this.onBarcodeScanned(ev)" barcodeSource="barcodeSource"/>
+                <div t-else="" class="o_barcode_mobile_container">
+                    <img src="/barcodes/static/img/barcode.png" alt="Barcode"/>
+                    <span class="o_barcode_laser"/>
+                </div>
+                <h6 class="mt-2 text-muted">Scan your badge</h6>
+            </div>
+            <div class="mt-5 align-self-end" t-if="kioskMode == 'barcode_manual'">
+                <button class="o_hr_attendance_button_employees btn btn-link" t-on-click="() => this.onClickAttendanceEmployees()">
+                    Identify Manually
+                </button>
+            </div>
+            <div class="mt-5 align-self-center" t-if="kioskMode == 'manual'">
+                <button class="o_hr_attendance_button_employees btn btn-primary px-5 py-3 mt-4 mb-2" t-on-click="() => this.onClickAttendanceEmployees()">
+                    <span class="fs-2">Identify Manually</span>
+                </button>
+            </div>
+        </div>
+    </CardLayout>
+</t>
+
+</templates>
