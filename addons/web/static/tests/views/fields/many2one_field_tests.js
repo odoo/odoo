@@ -1,13 +1,7 @@
 /** @odoo-module **/
 
-import { browser } from "@web/core/browser/browser";
-import { errorService } from "@web/core/errors/error_service";
-import { RPCError } from "@web/core/network/rpc_service";
-import { registry } from "@web/core/registry";
-import { session } from "@web/session";
-import { Field } from "@web/views/fields/field";
-import { Record } from "@web/views/record";
 import { registerCleanup } from "@web/../tests/helpers/cleanup";
+import { makeTestEnv } from "@web/../tests/helpers/mock_env";
 import {
     addRow,
     click,
@@ -32,6 +26,7 @@ import {
 import {
     applyFilter,
     editSearch,
+    getFacetTexts,
     toggleAddCustomFilter,
     toggleFilterMenu,
     toggleGroupByMenu,
@@ -39,8 +34,14 @@ import {
     validateSearch,
 } from "@web/../tests/search/helpers";
 import { makeView, setupViewRegistries } from "@web/../tests/views/helpers";
-import { makeTestEnv } from "@web/../tests/helpers/mock_env";
 import { createWebClient, doAction } from "@web/../tests/webclient/helpers";
+import { browser } from "@web/core/browser/browser";
+import { errorService } from "@web/core/errors/error_service";
+import { RPCError } from "@web/core/network/rpc_service";
+import { registry } from "@web/core/registry";
+import { session } from "@web/session";
+import { Field } from "@web/views/fields/field";
+import { Record } from "@web/views/record";
 
 const serviceRegistry = registry.category("services");
 
@@ -647,6 +648,55 @@ QUnit.module("Fields", (hooks) => {
 
         assert.strictEqual($("tr.o_data_row").length, 0, "should display 0 records");
     });
+
+    QUnit.test(
+        "many2ones: Open the selection dialog several times using the 'Search More...' button with a context containing 'search_default_...'",
+        async function (assert) {
+            for (let i = 5; i < 11; i++) {
+                serverData.models.partner.records.push({ id: i, display_name: `Partner ${i}` });
+            }
+            serverData.models.partner.fields.display_name.searchable = true;
+            serverData.views = {
+                "partner,false,search": `
+                <search>
+                    <field name="display_name" />
+                </search>`,
+                "partner,false,list": `
+                <tree>
+                    <field name="display_name" />
+                </tree>`,
+            };
+
+            await makeView({
+                type: "form",
+                resModel: "partner",
+                resId: 1,
+                serverData,
+                arch: `
+                <form>
+                    <sheet>
+                        <group>
+                            <field name="trululu" context="{ 'search_default_display_name': 'Partner 10'}"/>
+                        </group>
+                    </sheet>
+                </form>`,
+            });
+
+            await selectDropdownItem(target, "trululu", "Search More...");
+
+            let modal = target.querySelector(".modal");
+            assert.containsOnce(modal, ".o_data_row", "should display 1 records");
+            assert.deepEqual(getFacetTexts(modal), ["Displayed name\nPartner 10"]);
+
+            await click(modal, ".btn-close");
+            assert.containsNone(modal, ".modal");
+
+            await selectDropdownItem(target, "trululu", "Search More...");
+            modal = target.querySelector(".modal");
+            assert.containsOnce(modal, ".o_data_row", "should display 1 records");
+            assert.deepEqual(getFacetTexts(modal), ["Displayed name\nPartner 10"]);
+        }
+    );
 
     QUnit.test(
         "many2ones in list views: create in dialog keeps the input",
