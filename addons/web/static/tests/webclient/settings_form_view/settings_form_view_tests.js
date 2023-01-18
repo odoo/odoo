@@ -74,7 +74,7 @@ QUnit.module("SettingsFormView", (hooks) => {
                     <app string="CRM" name="crm">
                         <setting type="header" string="Foo">
                             <field name="foo" title="Foo?."/>
-                            <button name="nameAction" type="object" string="Button" class="col-auto btn-link ms-2 text-nowrap" style="line-height: 0.5;"/>
+                            <button name="nameAction" type="object" string="Button" class="btn btn-link"/>
                         </setting>
                         <block title="Title of group Bar">
                             <setting help="this is bar" documentation="/applications/technical/web/settings/this_is_a_test.html">
@@ -137,7 +137,7 @@ QUnit.module("SettingsFormView", (hooks) => {
         );
         assert.containsOnce(
             target,
-            ".app_settings_block:not(.d-none) .app_settings_header .o_setting_box"
+            ".app_settings_block:not(.d-none) .app_settings_header"
         );
         const docLinks = [...target.querySelectorAll(".o_setting_box a")];
         assert.strictEqual(docLinks.length, 2);
@@ -159,7 +159,7 @@ QUnit.module("SettingsFormView", (hooks) => {
         );
         assert.containsNone(
             target,
-            ".app_settings_block:not(.d-none) .app_settings_header .o_setting_box"
+            ".app_settings_block:not(.d-none) .app_settings_header"
         );
 
         await editSearch(target, "b");
@@ -184,7 +184,7 @@ QUnit.module("SettingsFormView", (hooks) => {
         );
         assert.containsOnce(
             target,
-            ".app_settings_block:not(.d-none) .app_settings_header .o_setting_box"
+            ".app_settings_block:not(.d-none) .app_settings_header"
         );
 
         await editSearch(target, "Big");
@@ -203,7 +203,7 @@ QUnit.module("SettingsFormView", (hooks) => {
         );
         assert.containsOnce(
             target,
-            ".app_settings_block:not(.d-none) .app_settings_header .o_setting_box"
+            ".app_settings_block:not(.d-none) .app_settings_header"
         );
 
         await editSearch(target, "Manage Us");
@@ -222,7 +222,7 @@ QUnit.module("SettingsFormView", (hooks) => {
         );
         assert.containsOnce(
             target,
-            ".app_settings_block:not(.d-none) .app_settings_header .o_setting_box"
+            ".app_settings_block:not(.d-none) .app_settings_header"
         );
 
         await editSearch(target, "group Bar");
@@ -236,7 +236,7 @@ QUnit.module("SettingsFormView", (hooks) => {
         );
         assert.containsOnce(
             target,
-            ".app_settings_block:not(.d-none) .app_settings_header .o_setting_box"
+            ".app_settings_block:not(.d-none) .app_settings_header"
         );
 
         await editSearch(target, "different");
@@ -250,7 +250,7 @@ QUnit.module("SettingsFormView", (hooks) => {
         );
         assert.containsOnce(
             target,
-            ".app_settings_block:not(.d-none) .app_settings_header .o_setting_box"
+            ".app_settings_block:not(.d-none) .app_settings_header"
         );
 
         await editSearch(target, "bx");
@@ -262,7 +262,7 @@ QUnit.module("SettingsFormView", (hooks) => {
         );
         assert.containsNone(
             target,
-            ".app_settings_block:not(.d-none) .app_settings_header .o_setting_box"
+            ".app_settings_block:not(.d-none) .app_settings_header"
         );
 
         await editSearch(target, "Fo");
@@ -281,7 +281,7 @@ QUnit.module("SettingsFormView", (hooks) => {
         );
         assert.containsOnce(
             target,
-            ".app_settings_block:not(.d-none) .app_settings_header .o_setting_box"
+            ".app_settings_block:not(.d-none) .app_settings_header"
         );
 
         await editSearch(target, "Hide");
@@ -300,7 +300,7 @@ QUnit.module("SettingsFormView", (hooks) => {
         );
         assert.containsNone(
             target,
-            ".app_settings_block:not(.d-none) .app_settings_header .o_setting_box"
+            ".app_settings_block:not(.d-none) .app_settings_header"
         );
     });
 
