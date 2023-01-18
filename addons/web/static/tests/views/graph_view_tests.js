@@ -30,6 +30,8 @@ import { getBorderWhite, DEFAULT_BG, getColors, hexToRGBA } from "@web/core/colo
 import { GraphArchParser } from "@web/views/graph/graph_arch_parser";
 import { patchWithCleanup } from "../helpers/utils";
 import { fakeCookieService } from "@web/../tests/helpers/mock_services";
+import { Domain } from "@web/core/domain";
+import { SampleServer } from "@web/views/sample_server";
 
 const serviceRegistry = registry.category("services");
 
@@ -4083,4 +4085,23 @@ QUnit.module("Views", (hooks) => {
         assert.verifySteps(["/mybody/isacage"]);
         assert.containsOnce(target, ".setmybodyfree");
     });
+
+    QUnit.test(
+        "In the middle of a year, a graph view grouped by a date field with granularity 'year' should have a single group of SampleServer.MAIN_RECORDSET_SIZE records",
+        async function (assert) {
+            patchDate(2023, 5, 15, 8, 0, 0);
+            const graph = await makeView({
+                serverData,
+                type: "graph",
+                resModel: "foo",
+                arch: `
+                <graph sample="1">
+                    <field name="date" interval="year"/>
+                </graph>
+            `,
+                domain: Domain.FALSE.toList(),
+            });
+            checkDatasets(assert, graph, ["data"], { data: [SampleServer.MAIN_RECORDSET_SIZE] });
+        }
+    );
 });
