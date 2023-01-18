@@ -48,7 +48,6 @@ class ProjectTaskRecurrence(models.Model):
             'name',
             'parent_id',
             'partner_id',
-            'partner_phone',
             'planned_hours',
             'project_id',
             'project_privacy_visibility',

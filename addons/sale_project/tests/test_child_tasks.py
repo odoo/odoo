@@ -47,7 +47,7 @@ class TestNestedTaskUpdate(TransactionCase):
         self.assertEqual(parent.partner_id, self.project.partner_id, "The partner set on the parent task should the one set on the project linked")
         self.assertFalse(child.project_id, "The project set on the subtask should be False by default")
         self.assertFalse(child.allow_billable, "The subtask should not be billable as it is parent task since no project is set")
-        self.assertEqual(child.partner_id, parent.partner_id, "The partner set on the subtask should be the one of its parent task")
+        self.assertFalse(child.partner_id, "Subtask with no project should not have partner")
 
     def test_creating_subtask_user_id_on_parent_dont_go_on_child(self):
         parent = self.env['project.task'].create({'name': 'parent', 'user_ids': [(4, self.user.id)]})
@@ -56,12 +56,12 @@ class TestNestedTaskUpdate(TransactionCase):
 
     def test_creating_subtask_partner_id_on_parent_goes_on_child(self):
         parent = self.env['project.task'].create({'name': 'parent', 'partner_id': self.user.partner_id.id, 'project_id': self.project.id})
-        child = self.env['project.task'].create({'name': 'child', 'parent_id': parent.id})
+        child = self.env['project.task'].create({'name': 'child', 'parent_id': parent.id, 'project_id': self.project.id})
         child._compute_partner_id()  # the compute will be triggered since the user set the parent_id.
         self.assertEqual(child.partner_id, self.user.partner_id)
 
         # Another case, it is the parent as a default value
-        child = self.env['project.task'].with_context(default_parent_id=parent.id).create({'name': 'child'})
+        child = self.env['project.task'].with_context(default_parent_id=parent.id, default_project_id=self.project.id).create({'name': 'child'})
         self.assertEqual(child.partner_id, self.user.partner_id)
 
     def test_creating_subtask_sale_line_id_on_parent_goes_on_child_if_same_partner_in_values(self):
@@ -157,10 +157,10 @@ class TestNestedTaskUpdate(TransactionCase):
         self.assertFalse(child.user_ids)
 
     def test_linking_partner_id_on_parent_write_on_child(self):
-        parent = self.env['project.task'].create({'name': 'parent', 'partner_id': self.user.partner_id.id})
+        parent = self.env['project.task'].create({'name': 'parent', 'partner_id': self.user.partner_id.id, 'project_id': self.project.id})
         child = self.env['project.task'].create({'name': 'child', 'partner_id': False})
         self.assertFalse(child.partner_id)
-        child.write({'parent_id': parent.id})
+        child.write({'parent_id': parent.id, 'project_id': self.project.id})
         self.assertEqual(child.partner_id, self.user.partner_id)
 
     def test_linking_sale_line_id_on_parent_write_on_child_if_same_partner(self):

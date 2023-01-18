@@ -179,10 +179,6 @@ class Task(models.Model):
         string='Customer', recursive=True, tracking=True,
         compute='_compute_partner_id', store=True, readonly=False,
         domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]")
-    partner_phone = fields.Char(
-        compute='_compute_partner_phone', inverse='_inverse_partner_phone',
-        string="Phone", readonly=False, store=True, copy=False)
-    partner_city = fields.Char(related='partner_id.city', readonly=False)
     email_cc = fields.Char(help='Email addresses that were in the CC of the incoming emails from this task and that are not currently linked to an existing customer.')
     company_id = fields.Many2one(
         'res.company', string='Company', compute='_compute_company_id', store=True, readonly=False, recursive=True,
@@ -468,17 +464,6 @@ class Task(models.Model):
             }
             for task in tasks_with_dependency:
                 task.dependent_tasks_count = dependent_tasks_count_dict.get(task.id, 0)
-
-    @api.depends('partner_id.phone')
-    def _compute_partner_phone(self):
-        for task in self:
-            if task.partner_phone != task.partner_id.phone:
-                task.partner_phone = task.partner_id.phone
-
-    def _inverse_partner_phone(self):
-        for task in self:
-            if task.partner_id and task.partner_phone != task.partner_id.phone:
-                task.partner_id.phone = task.partner_phone
 
     @api.constrains('parent_id')
     def _check_parent_id(self):

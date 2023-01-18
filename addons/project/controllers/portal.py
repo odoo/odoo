@@ -33,7 +33,7 @@ class ProjectCustomerPortal(CustomerPortal):
         domain = [('project_id', '=', project.id)]
         # pager
         url = "/my/projects/%s" % project.id
-        values = self._prepare_tasks_values(page, date_begin, date_end, sortby, search, search_in, groupby, url, domain, su=bool(access_token))
+        values = self._prepare_tasks_values(page, date_begin, date_end, sortby, search, search_in, groupby, url, domain, su=bool(access_token), project=project)
         pager = portal_pager(**values['pager'])
 
         values.update(
@@ -264,11 +264,10 @@ class ProjectCustomerPortal(CustomerPortal):
 
         return values
 
-    def _task_get_searchbar_sortings(self, milestones_allowed):
+    def _task_get_searchbar_sortings(self, milestones_allowed, project=False):
         values = {
             'date': {'label': _('Newest'), 'order': 'create_date desc', 'sequence': 1},
             'name': {'label': _('Title'), 'order': 'name', 'sequence': 2},
-            'project': {'label': _('Project'), 'order': 'project_id, stage_id', 'sequence': 3},
             'users': {'label': _('Assignees'), 'order': 'user_ids', 'sequence': 4},
             'stage': {'label': _('Stage'), 'order': 'stage_id, project_id', 'sequence': 5},
             'status': {'label': _('Status'), 'order': 'state', 'sequence': 6},
@@ -276,19 +275,22 @@ class ProjectCustomerPortal(CustomerPortal):
             'date_deadline': {'label': _('Deadline'), 'order': 'date_deadline asc', 'sequence': 9},
             'update': {'label': _('Last Stage Update'), 'order': 'date_last_stage_update desc', 'sequence': 11},
         }
+        if not project:
+            values['project'] = {'label': _('Project'), 'order': 'project_id, stage_id', 'sequence': 3}
         if milestones_allowed:
             values['milestone'] = {'label': _('Milestone'), 'order': 'milestone_id', 'sequence': 7}
         return values
 
-    def _task_get_searchbar_groupby(self, milestones_allowed):
+    def _task_get_searchbar_groupby(self, milestones_allowed, project=False):
         values = {
             'none': {'input': 'none', 'label': _('None'), 'order': 1},
-            'project': {'input': 'project', 'label': _('Project'), 'order': 2},
             'stage': {'input': 'stage', 'label': _('Stage'), 'order': 4},
             'status': {'input': 'status', 'label': _('Status'), 'order': 5},
             'priority': {'input': 'priority', 'label': _('Priority'), 'order': 7},
             'customer': {'input': 'customer', 'label': _('Customer'), 'order': 10},
         }
+        if not project:
+            values['project'] = {'input': 'project', 'label': _('Project'), 'order': 2}
         if milestones_allowed:
             values['milestone'] = {'input': 'milestone', 'label': _('Milestone'), 'order': 6}
         return dict(sorted(values.items(), key=lambda item: item[1]["order"]))
@@ -310,18 +312,20 @@ class ProjectCustomerPortal(CustomerPortal):
             return order
         return '%s, %s' % (field_name, order)
 
-    def _task_get_searchbar_inputs(self, milestones_allowed):
+    def _task_get_searchbar_inputs(self, milestones_allowed, project=False):
         values = {
             'all': {'input': 'all', 'label': _('Search in All'), 'order': 1},
             'content': {'input': 'content', 'label': Markup(_('Search <span class="nolabel"> (in Content)</span>')), 'order': 1},
             'ref': {'input': 'ref', 'label': _('Search in Ref'), 'order': 1},
-            'project': {'input': 'project', 'label': _('Search in Project'), 'order': 2},
             'users': {'input': 'users', 'label': _('Search in Assignees'), 'order': 3},
             'stage': {'input': 'stage', 'label': _('Search in Stages'), 'order': 4},
             'status': {'input': 'status', 'label': _('Search in Status'), 'order': 5},
             'priority': {'input': 'priority', 'label': _('Search in Priority'), 'order': 7},
+            'customer': {'input': 'customer', 'label': _('Search in Customer'), 'order': 10},
             'message': {'input': 'message', 'label': _('Search in Messages'), 'order': 11},
         }
+        if not project:
+            values['project'] = {'input': 'project', 'label': _('Search in Project'), 'order': 2}
         if milestones_allowed:
             values['milestone'] = {'input': 'milestone', 'label': _('Search in Milestone'), 'order': 6}
 
@@ -354,16 +358,16 @@ class ProjectCustomerPortal(CustomerPortal):
             search_domain.append([('state', 'ilike', state_dict.get(search, search))])
         return OR(search_domain)
 
-    def _prepare_tasks_values(self, page, date_begin, date_end, sortby, search, search_in, groupby, url="/my/tasks", domain=None, su=False):
+    def _prepare_tasks_values(self, page, date_begin, date_end, sortby, search, search_in, groupby, url="/my/tasks", domain=None, su=False, project=False):
         values = self._prepare_portal_layout_values()
 
         Task = request.env['project.task']
         milestone_domain = AND([domain, [('allow_milestones', '=', 'True')]])
         milestones_allowed = Task.sudo().search_count(milestone_domain, limit=1) == 1
-        searchbar_sortings = dict(sorted(self._task_get_searchbar_sortings(milestones_allowed).items(),
+        searchbar_sortings = dict(sorted(self._task_get_searchbar_sortings(milestones_allowed, project).items(),
                                          key=lambda item: item[1]["sequence"]))
-        searchbar_inputs = self._task_get_searchbar_inputs(milestones_allowed)
-        searchbar_groupby = self._task_get_searchbar_groupby(milestones_allowed)
+        searchbar_inputs = self._task_get_searchbar_inputs(milestones_allowed, project)
+        searchbar_groupby = self._task_get_searchbar_groupby(milestones_allowed, project)
 
         if not domain:
             domain = []
@@ -379,6 +383,8 @@ class ProjectCustomerPortal(CustomerPortal):
         # default group by value
         if not groupby or (groupby == 'milestone' and not milestones_allowed):
             groupby = 'project'
+        if project:
+            groupby = 'stage'
 
         if date_begin and date_end:
             domain += [('create_date', '>', date_begin), ('create_date', '<=', date_end)]

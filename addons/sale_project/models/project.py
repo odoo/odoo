@@ -27,12 +27,17 @@ class Project(models.Model):
     has_any_so_with_nothing_to_invoice = fields.Boolean('Has a SO with an invoice status of No', compute='_compute_has_any_so_with_nothing_to_invoice')
     invoice_count = fields.Integer(related='analytic_account_id.invoice_count', groups='account.group_account_readonly')
     vendor_bill_count = fields.Integer(related='analytic_account_id.vendor_bill_count', groups='account.group_account_readonly')
+    partner_id = fields.Many2one(compute="_compute_partner_id", store=True, readonly=False)
 
     @api.model
     def _map_tasks_default_valeus(self, task, project):
         defaults = super()._map_tasks_default_valeus(task, project)
         defaults['sale_line_id'] = False
         return defaults
+
+    @api.depends('allow_billable')
+    def _compute_partner_id(self):
+        self.filtered(lambda project: not project.allow_billable).partner_id = False
 
     @api.depends('partner_id')
     def _compute_sale_line_id(self):
@@ -537,6 +542,18 @@ class Project(models.Model):
             })
         return buttons
 
+    # ---------------------------------------------------
+    # Actions
+    # ---------------------------------------------------
+
+    def _get_hide_partner(self):
+        return not self.allow_billable
+
+    def action_view_tasks(self):
+        action = super().action_view_tasks()
+        action['context']['hide_partner'] = self._get_hide_partner()
+        return action
+
     def action_open_project_vendor_bills(self):
         query = self.env['account.move.line']._search([('move_id.move_type', 'in', ['in_invoice', 'in_refund'])])
         query.add_where('analytic_distribution ? %s', [str(self.analytic_account_id.id)])
@@ -562,6 +579,7 @@ class Project(models.Model):
         action = super().action_project_sharing()
         action['context'].update({
             'sale_show_partner_name': True,
+            'hide_partner': self._get_hide_partner(),
         })
         return action
 
@@ -604,6 +622,12 @@ class ProjectTask(models.Model):
             if sale_order_id and not task.partner_id:
                 task.partner_id = sale_order_id.partner_id
             task.sale_order_id = sale_order_id
+
+    @api.depends('allow_billable')
+    def _compute_partner_id(self):
+        billable_task = self.filtered('allow_billable')
+        (self - billable_task).partner_id = False
+        super(ProjectTask, billable_task)._compute_partner_id()
 
     @api.depends('partner_id.commercial_partner_id', 'sale_line_id.order_partner_id', 'parent_id.sale_line_id', 'project_id.sale_line_id', 'milestone_id.sale_line_id', 'allow_billable')
     def _compute_sale_line(self):

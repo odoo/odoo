@@ -163,12 +163,14 @@ class Project(models.Model):
 
     @api.depends('sale_line_employee_ids.sale_line_id', 'sale_line_id')
     def _compute_partner_id(self):
-        for project in self:
+        billable_projects = self.filtered('allow_billable')
+        for project in billable_projects:
             if project.partner_id:
                 continue
             if project.allow_billable and project.allow_timesheets and project.pricing_type != 'task_rate':
                 sol = project.sale_line_id or project.sale_line_employee_ids.sale_line_id[:1]
                 project.partner_id = sol.order_partner_id
+        super(Project, self - billable_projects)._compute_partner_id()
 
     @api.depends('partner_id')
     def _compute_sale_line_id(self):
