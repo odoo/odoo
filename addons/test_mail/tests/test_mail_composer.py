@@ -310,7 +310,7 @@ class TestComposerForm(TestMailComposer):
         self.assertFalse(composer_form.scheduled_date)
         self.assertFalse(composer_form.subject, 'MailComposer: mass mode should have void default subject if no template')
         self.assertEqual(composer_form.subtype_id, self.env.ref('mail.mt_comment'))
-        self.assertFalse(composer_form.subtype_is_log)
+        self.assertFalse(composer_form.subtype_is_log, 'MailComposer: subtype is log has no meaning in mail mode')
 
     @users('employee')
     def test_mail_composer_mass_wtpl(self):
@@ -337,7 +337,7 @@ class TestComposerForm(TestMailComposer):
         self.assertEqual(composer_form.subject, self.template.subject,
                          'MailComposer: mass mode should have template raw subject if template')
         self.assertEqual(composer_form.subtype_id, self.env.ref('mail.mt_comment'))
-        self.assertFalse(composer_form.subtype_is_log)
+        self.assertFalse(composer_form.subtype_is_log, 'MailComposer: subtype is log has no meaning in mail mode')
 
     @users('employee')
     def test_mail_composer_mass_wtpl_norecords(self):
@@ -368,7 +368,7 @@ class TestComposerForm(TestMailComposer):
         self.assertEqual(composer_form.subject, self.template.subject,
                          'MailComposer: mass mode should have template raw subject if template')
         self.assertEqual(composer_form.subtype_id, self.env.ref('mail.mt_comment'))
-        self.assertFalse(composer_form.subtype_is_log)
+        self.assertFalse(composer_form.subtype_is_log, 'MailComposer: subtype is log has no meaning in mail mode')
 
 
 @tagged('mail_composer')
