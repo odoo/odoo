@@ -550,4 +550,51 @@ QUnit.module("Fields", (hooks) => {
         );
         await click(target, "#o_command_2");
     });
+
+    QUnit.test("smart actions are unavailable if readonly", async function (assert) {
+        await makeView({
+            serverData,
+            type: "form",
+            resModel: "partner",
+            arch: `
+                    <form>
+                        <header>
+                            <field name="trululu" widget="statusbar" readonly="1"/>
+                        </header>
+                    </form>`,
+            resId: 1,
+        });
+
+        assert.containsOnce(target, ".o_field_widget");
+
+        triggerHotkey("control+k");
+        await nextTick();
+        const moveStages = [...target.querySelectorAll(".o_command")].map((el) => el.textContent);
+        assert.notOk(moveStages.includes("Move to Trululu...ALT + SHIFT + X"));
+        assert.notOk(moveStages.includes("Move to next...ALT + X"));
+    });
+
+    QUnit.test("hotkeys are unavailable if readonly", async function (assert) {
+        await makeView({
+            serverData,
+            type: "form",
+            resModel: "partner",
+            arch: `
+                    <form>
+                        <header>
+                            <field name="trululu" widget="statusbar" readonly="1"/>
+                        </header>
+                    </form>`,
+            resId: 1,
+        });
+
+        assert.containsOnce(target, ".o_field_widget");
+        triggerHotkey("alt+shift+x"); // Move to stage...
+        await nextTick();
+        assert.containsNone(target, ".modal", "command palette should not open");
+
+        triggerHotkey("alt+x"); // Move to next
+        await nextTick();
+        assert.containsNone(target, ".modal", "command palette should not open");
+    });
 });
