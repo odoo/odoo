@@ -8,5 +8,6 @@ from . import account_chart_template
 from . import account_invoice
 from . import account_edi_document
 from . import account_edi_format
+from . import account_edi_proxy_user
 from . import ddt
 from . import ir_attachment

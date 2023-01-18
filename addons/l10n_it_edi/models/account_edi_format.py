@@ -294,11 +294,9 @@ class AccountEdiFormat(models.Model):
         '''
         proxy_users = self.env['account_edi_proxy_client.user'].search([('edi_format_id', '=', self.env.ref('l10n_it_edi.edi_fatturaPA').id)])
 
-        if proxy_users._get_demo_state() == 'demo':
-            return
-
         for proxy_user in proxy_users:
             company = proxy_user.company_id
+
             try:
                 res = proxy_user._make_request(proxy_user._get_server_url() + '/api/l10n_it_edi/1/in/RicezioneInvoice',
                                                params={'recipient_codice_fiscale': company.l10n_it_codice_fiscale})
@@ -783,8 +781,7 @@ class AccountEdiFormat(models.Model):
         else:
             content = self.env['ir.qweb']._render('l10n_it_edi.account_invoice_it_simplified_FatturaPA_export', template_values)
             invoice.message_post(body=_(
-                "A simplified invoice was created instead of an ordinary one. This is because the invoice \
-                is a domestic invoice with a total amount of less than or equal to 400€ and the customer's address is incomplete."
+                "This document has been sent as a Simplified invoice, as the total amount is up to 400€ and the customer's address is incomplete."
             ))
         return content
 
@@ -826,8 +823,8 @@ class AccountEdiFormat(models.Model):
 
             if invoice._is_commercial_partner_pa():
                 invoice.message_post(
-                    body=(_("Invoices for PA are not managed by Odoo, you can download the document and send it on your own."))
-                )
+                    body=(_('Invoices for Public Administration partners are not managed by Odoo,'
+                            ' you can download the document and send it on your own.')))
                 to_return[invoice] = {'attachment': attachment, 'success': True}
             else:
                 to_send[filename] = {
@@ -835,14 +832,8 @@ class AccountEdiFormat(models.Model):
                     'data': {'filename': filename, 'xml': base64.b64encode(xml.encode()).decode()}}
 
         company = invoices.company_id
-        proxy_user = self._get_proxy_user(company)
-        if not proxy_user:  # proxy user should exist, because there is a check in _check_move_configuration
-            return {invoice: {
-                'error': _("You must accept the terms and conditions in the settings to use FatturaPA."),
-                'blocking_level': 'error'} for invoice in invoices}
-
-        responses = {}
-        if proxy_user._get_demo_state() == 'demo':
+        proxy_user = company.l10n_it_edi_proxy_user
+        if not proxy_user:
             responses = {i['data']['filename']: {'id_transaction': 'demo'} for i in to_send.values()}
         else:
             try:
@@ -856,7 +847,7 @@ class AccountEdiFormat(models.Model):
             if 'id_transaction' in response:
                 invoice.l10n_it_edi_transaction = response['id_transaction']
                 to_return[invoice].update({
-                    'error': _('The invoice was sent to FatturaPA, but we are still awaiting a response. Click the link above to check for an update.'),
+                    'error': _('The document was sent to the Exchange System, we are now waiting for it to be accepted or refused.'),
                     'blocking_level': 'info'})
         return to_return
 
@@ -867,21 +858,17 @@ class AccountEdiFormat(models.Model):
         to_return = {}
         company = invoices.company_id
 
-        proxy_user = self._get_proxy_user(company)
-        if not proxy_user:  # proxy user should exist, because there is a check in _check_move_configuration
-            return {invoice: {
-                'error': _("You must accept the terms and conditions in the settings to use FatturaPA."),
-                'blocking_level': 'error'} for invoice in invoices}
-
-        if proxy_user._get_demo_state() == 'demo':
+        proxy_user = company.l10n_it_edi_proxy_user
+        if not proxy_user:
             # simulate success and bypass ack
             return {invoice: {'attachment': invoice.l10n_it_edi_attachment_id} for invoice in invoices}
-        else:
-            try:
-                responses = proxy_user._make_request(proxy_user._get_server_url() + '/api/l10n_it_edi/1/in/TrasmissioneFatture',
-                                                    params={'ids_transaction': list(to_check.keys())})
-            except AccountEdiProxyError as e:
-                return {invoice: {'error': e.message, 'blocking_level': 'error'} for invoice in invoices}
+
+        server_url = proxy_user._get_server_url()
+        try:
+            responses = proxy_user._make_request(f'{server_url}/api/l10n_it_edi/1/in/TrasmissioneFatture',
+                                                params={'ids_transaction': list(to_check.keys())})
+        except AccountEdiProxyError as e:
+            return {invoice: {'error': e.message, 'blocking_level': 'error'} for invoice in invoices}
 
         proxy_acks = []
         for id_transaction, response in responses.items():
@@ -893,7 +880,7 @@ class AccountEdiFormat(models.Model):
             state = response['state']
             if state == 'awaiting_outcome':
                 to_return[invoice] = {
-                    'error': _('The invoice was sent to FatturaPA, but we are still awaiting a response. Click the link above to check for an update.'),
+                    'error': _('The invoice was sent to FatturaPA, but we are still awaiting a response.'),
                     'blocking_level': 'info'}
 
             elif state == 'not_found':
@@ -903,7 +890,9 @@ class AccountEdiFormat(models.Model):
 
             elif state == 'ricevutaConsegna':
                 if invoice._is_commercial_partner_pa():
-                    to_return[invoice] = {'error': _('The invoice has been succesfully transmitted. The addressee has 15 days to accept or reject it.')}
+                    to_return[invoice] = {'error': _(
+                        'The invoice has been succesfully transmitted to the Exchange System.'
+                        ' The Public Administration partner has 15 days to accept or reject it.')}
                 else:
                     to_return[invoice] = {'attachment': invoice.l10n_it_edi_attachment_id, 'success': True}
                 proxy_acks.append(id_transaction)
@@ -911,31 +900,25 @@ class AccountEdiFormat(models.Model):
             elif state == 'notificaMancataConsegna':
                 if invoice._is_commercial_partner_pa():
                     to_return[invoice] = {'error': _(
-                        'The invoice has been issued, but the delivery to the Public Administration'
-                        ' has failed. The Exchange System will contact them to report the problem'
-                        ' and request that they provide a solution.'
-                        ' During the following 10 days, the Exchange System will try to forward the'
-                        ' FatturaPA file to the Public Administration in question again.'
-                        ' Should this also fail, the System will notify Odoo of the failed delivery,'
-                        ' and you will be required to send the invoice to the Administration'
-                        ' through another channel, outside of the Exchange System.')}
+                        'This document has been correctly sent to the Exchange System.'
+                        ' The Public Administration partner could not be contacted'
+                        ' by the Exchange System to receive the document digitally,'
+                        ' so remember to send it also by e-mail or post.'
+                        ' The Exchange System will anyway try to reach the partner'
+                        ' again for 10 days.')}
                 else:
                     to_return[invoice] = {'success': True, 'attachment': invoice.l10n_it_edi_attachment_id}
                     invoice._message_log(body=_(
-                        'The invoice has been issued, but the delivery to the Addressee has'
-                        ' failed. You will be required to send a courtesy copy of the invoice'
-                        ' to your customer through another channel, outside of the Exchange'
-                        ' System, and promptly notify him that the original is deposited'
-                        ' in his personal area on the portal "Invoices and Fees" of the'
-                        ' Revenue Agency.'))
+                        'This document has been correctly sent to the Exchange System.'
+                        ' The partner has not signed up to the Exchange System to receive'
+                        ' documents digitally, so remember to send this also by e-mail or post.'))
                 proxy_acks.append(id_transaction)
 
             elif state == 'NotificaDecorrenzaTermini':
                 # This condition is part of the Public Administration flow
                 invoice._message_log(body=_(
-                    'The invoice has been correctly issued. The Public Administration recipient'
-                    ' had 15 days to either accept or refused this document, but they did not reply,'
-                    ' so from now on we consider it accepted.'))
+                    'The invoice has been correctly issued. The Public Administration partner'
+                    ' did not actively refuse it for 15 days, so it\'s considered accepted.'))
                 to_return[invoice] = {'attachment': invoice.l10n_it_edi_attachment_id, 'success': True}
                 proxy_acks.append(id_transaction)
 
@@ -960,11 +943,10 @@ class AccountEdiFormat(models.Model):
                     if '00404' in error_codes:
                         idx = error_codes.index('00404')
                         invoice.message_post(body=_(
-                            'This invoice number had already been submitted to the SdI, so it is'
-                            ' set as Sent. Please verify that the system is correctly configured,'
-                            ' because the correct flow does not need to send the same invoice'
-                            ' twice for any reason.\n'
-                            ' Original message from the SDI: %s', errors[idx]))
+                            'This invoice number had already been sent to the Exchange System.'
+                            ' Please verify that it\'s not a duplicate, as you shouldn\t be requested'
+                            ' to send the same document twice.\n'
+                            ' Original message from the Exchange System: %s', errors[idx]))
                         to_return[invoice] = {'attachment': invoice.l10n_it_edi_attachment_id, 'success': True}
                     else:
                         # Add helpful text if duplicated filename error
@@ -992,7 +974,7 @@ class AccountEdiFormat(models.Model):
                                         params={'transaction_ids': proxy_acks})
             except AccountEdiProxyError as e:
                 # Will be ignored and acked again next time.
-                _logger.error('Error while acking file to SdiCoop: %s', e)
+                _logger.error('Error while acking file to the Proxy Server: %s', e)
 
         return to_return
 
@@ -1014,15 +996,6 @@ class AccountEdiFormat(models.Model):
     # -------------------------------------------------------------------------
     # Proxy methods
     # -------------------------------------------------------------------------
-
-    def _get_proxy_identification(self, company):
-        if self.code != 'fattura_pa':
-            return super()._get_proxy_identification()
-
-        if not company.l10n_it_codice_fiscale:
-            raise UserError(_('Please fill your codice fiscale to be able to receive invoices from FatturaPA'))
-
-        return self.env['res.partner']._l10n_it_normalize_codice_fiscale(company.l10n_it_codice_fiscale)
 
     def _l10n_it_edi_upload(self, files, proxy_user):
         '''Upload files to fatturapa.

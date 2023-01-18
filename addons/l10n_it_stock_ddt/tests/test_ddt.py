@@ -31,10 +31,7 @@ class TestDDT(TestSaleCommon):
             'vat': 'IT12345670124'
         })
 
-        settings = cls.env['res.config.settings'].create({})
-        if hasattr(settings, 'button_create_proxy_user'):
-            # Needed when `l10n_it_edi_sdiscoop` is installed
-            settings.button_create_proxy_user()
+        cls.env['res.config.settings'].create({}).l10n_it_edi_register_user = True
 
 
     def test_ddt_flow(self):

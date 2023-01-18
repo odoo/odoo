@@ -2,7 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, fields, models, _
-from odoo.exceptions import ValidationError
+from odoo.exceptions import UserError, ValidationError
 
 TAX_SYSTEM = [
     ("RF01", "[RF01] Ordinario"),
@@ -70,6 +70,9 @@ class ResCompany(models.Model):
         Italy")
     l10n_it_tax_representative_partner_id = fields.Many2one('res.partner', string='Tax representative partner')
 
+    # Proxy User
+    l10n_it_edi_proxy_user = fields.Many2one('account_edi_proxy_client.user')
+
     @api.constrains('l10n_it_has_eco_index',
                     'l10n_it_eco_index_office',
                     'l10n_it_eco_index_number',
@@ -107,3 +110,22 @@ class ResCompany(models.Model):
                 raise ValidationError(_("Your tax representative partner must have a tax number."))
             if not record.l10n_it_tax_representative_partner_id.country_id:
                 raise ValidationError(_("Your tax representative partner must have a country."))
+
+    def _set_l10n_it_edi_proxy_user(self, edi_operating_mode):
+        # In Demo mode we use no proxy user
+        if edi_operating_mode == 'demo':
+            self.l10n_it_edi_proxy_user = False
+            return
+
+        # Check if the user already exists
+        existing_proxy_user = self._get_proxy_users('fattura_pa', edi_operating_mode)
+        if existing_proxy_user:
+            self.l10n_it_edi_proxy_user = existing_proxy_user
+            return
+
+        # If not, create a new proxy user and assign it
+        ProxyUser = self.env['account_edi_proxy_client.user']
+        edi_identification = ProxyUser._retrieve_edi_identification('fattura_pa', self)
+        if not edi_identification:
+            raise UserError(_("Cannot define an EDI format ID for the company %s (id=%s)", self.name, self.id))
+        self.l10n_it_edi_proxy_user = ProxyUser._register_proxy_user(self, self.env.ref('l10n_it_edi.edi_fatturaPA'), edi_identification, edi_operating_mode)

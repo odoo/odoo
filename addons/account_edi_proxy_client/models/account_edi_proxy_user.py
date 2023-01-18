@@ -1,3 +1,6 @@
+# -*- coding:utf-8 -*-
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
+
 from odoo import models, fields, _
 from odoo.exceptions import UserError
 from .account_edi_proxy_auth import OdooEdiProxyAuth
@@ -18,8 +21,6 @@ import logging
 _logger = logging.getLogger(__name__)
 
 
-DEFAULT_SERVER_URL = 'https://l10n-it-edi.api.odoo.com'
-DEFAULT_TEST_SERVER_URL = 'https://iap-services-test.odoo.com'
 TIMEOUT = 30
 
 
@@ -50,18 +51,24 @@ class AccountEdiProxyClientUser(models.Model):
     edi_identification = fields.Char(required=True, help="The unique id that identifies this user for on the edi format, typically the vat")
     private_key = fields.Binary(required=True, attachment=False, groups="base.group_system", help="The key to encrypt all the user's data")
     refresh_token = fields.Char(groups="base.group_system")
+    edi_operating_mode = fields.Selection(selection=[('test', 'Test (Experimental)'), ('prod', 'Official')], string='E-invoicing operating mode', required=True, readonly=True, default='test')
 
     _sql_constraints = [
         ('unique_id_client', 'unique(id_client)', 'This id_client is already used on another user.'),
-        ('unique_edi_identification_per_for', 'unique(edi_identification, edi_format_id)', 'This edi identification is already assigned to a user'),
+        ('unique_edi_identification_per_for', 'unique(edi_identification, edi_format_id, edi_operating_mode)', 'This edi identification is already assigned to a user'),
     ]
 
-    def _get_demo_state(self):
-        demo_state = self.env['ir.config_parameter'].sudo().get_param('account_edi_proxy_client.demo', False)
-        return 'prod' if demo_state in ['prod', False] else 'test' if demo_state == 'test' else 'demo'
+    def _retrieve_edi_identification(self, company):
+        """ The unique id that identifies this user for on the edi format, typically the vat
+            To be overridden by submodules.
+        """
+        return False
 
-    def _get_server_url(self):
-        return DEFAULT_TEST_SERVER_URL if self._get_demo_state() == 'test' else self.env['ir.config_parameter'].sudo().get_param('account_edi_proxy_client.edi_server_url', DEFAULT_SERVER_URL)
+    def _get_server_url(self, edi_operating_mode=False):
+        """ Return the base server URL for each operating mode.
+            To be overridden by submodules.
+        """
+        return False
 
     def _make_request(self, url, params=False):
         ''' Make a request to proxy and handle the generic elements of the reponse (errors, new refresh token).
@@ -72,10 +79,6 @@ class AccountEdiProxyClientUser(models.Model):
             'params': params or {},
             'id': uuid.uuid4().hex,
         }
-
-        if self._get_demo_state() == 'demo':
-            # Last barrier : in case the demo mode is not handled by the caller, we block access.
-            raise Exception("Can't access the proxy in demo mode")
 
         try:
             response = requests.post(
@@ -109,7 +112,7 @@ class AccountEdiProxyClientUser(models.Model):
 
         return response['result']
 
-    def _register_proxy_user(self, company, edi_format, edi_identification):
+    def _register_proxy_user(self, company, edi_format, edi_identification, edi_operating_mode):
         ''' Generate the public_key/private_key that will be used to encrypt the file, send a request to the proxy
         to register the user with the public key and create the user with the private key.
 
@@ -117,6 +120,7 @@ class AccountEdiProxyClientUser(models.Model):
         :param edi_identification: The unique ID that identifies this user on this edi network and to which the files will be addressed.
                                    Typically the vat.
         '''
+        server_url = self._get_server_url(edi_operating_mode)
         # public_exponent=65537 is a default value that should be used most of the time, as per the documentation of cryptography.
         # key_size=2048 is considered a reasonable default key size, as per the documentation of cryptography.
         # see https://cryptography.io/en/latest/hazmat/primitives/asymmetric/rsa/
@@ -135,29 +139,28 @@ class AccountEdiProxyClientUser(models.Model):
             encoding=serialization.Encoding.PEM,
             format=serialization.PublicFormat.SubjectPublicKeyInfo
         )
-        if self._get_demo_state() == 'demo':
-            # simulate registration
-            response = {'id_client': f'demo{company.id}', 'refresh_token': 'demo'}
-        else:
-            try:
-                # b64encode returns a bytestring, we need it as a string
-                response = self._make_request(self._get_server_url() + '/iap/account_edi/1/create_user', params={
-                    'dbuuid': company.env['ir.config_parameter'].get_param('database.uuid'),
-                    'company_id': company.id,
-                    'edi_format_code': edi_format.code,
-                    'edi_identification': edi_identification,
-                    'public_key': base64.b64encode(public_pem).decode()
-                })
-            except AccountEdiProxyError as e:
-                raise UserError(e.message)
-            if 'error' in response:
-                raise UserError(response['error'])
 
-        self.create({
+        try:
+            # b64encode returns a bytestring, we need it as a string
+            response = self._make_request(f'{server_url}/iap/account_edi/1/create_user', params={
+                'dbuuid': company.env['ir.config_parameter'].get_param('database.uuid'),
+                'company_id': company.id,
+                'edi_format_code': edi_format.code,
+                'edi_identification': edi_identification,
+                'edi_operating_mode': edi_operating_mode,
+                'public_key': base64.b64encode(public_pem).decode()
+            })
+        except AccountEdiProxyError as e:
+            raise UserError(e.message)
+        if 'error' in response:
+            raise UserError(response['error'])
+
+        return self.create({
             'id_client': response['id_client'],
             'company_id': company.id,
             'edi_format_id': edi_format.id,
             'edi_identification': edi_identification,
+            'edi_operating_mode': edi_operating_mode,
             'private_key': base64.b64encode(private_pem),
             'refresh_token': response['refresh_token'],
         })
@@ -169,6 +172,7 @@ class AccountEdiProxyClientUser(models.Model):
         that multiple database use the same credentials. When receiving an error for an expired refresh_token,
         This method makes a request to get a new refresh token.
         '''
+        server_url = self._get_server_url()
         try:
             with self.env.cr.savepoint(flush=False):
                 self.env.cr.execute('SELECT * FROM account_edi_proxy_client_user WHERE id IN %s FOR UPDATE NOWAIT', [tuple(self.ids)])
@@ -176,12 +180,14 @@ class AccountEdiProxyClientUser(models.Model):
             if e.pgcode == '55P03':
                 return
             raise e
-        response = self._make_request(self._get_server_url() + '/iap/account_edi/1/renew_token')
+
+        response = self._make_request(f'{server_url}/iap/account_edi/1/renew_token')
+        # can happen if the database was duplicated and the refresh_token was refreshed by the other database.
+        # we don't want two database to be able to query the proxy with the same user
+        # because it could lead to not inconsistent data.
         if 'error' in response:
-            # can happen if the database was duplicated and the refresh_token was refreshed by the other database.
-            # we don't want two database to be able to query the proxy with the same user
-            # because it could lead to not inconsistent data.
             _logger.error(response['error'])
+
         self.sudo().refresh_token = response['refresh_token']
 
     def _decrypt_data(self, data, symmetric_key):
