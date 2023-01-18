@@ -5,15 +5,26 @@
     --ListRenderer-thead-padding-v: #{$table-cell-padding-y * 1.25};
     --ListRenderer-thead-bg-color: #{$gray-200};
     --ListRenderer-thead-border-end-color: #{$border-color};
+    --ListRenderer-thead-shadow: linear-gradient(180deg, rgba(0, 0, 0, 0.08), transparent);
 
     // sticky header on desktop
     @include media-breakpoint-up(md) {
         height: 100%;
+
         .o_list_table thead {
-            position: sticky;
-            top: 0;
+            @include o-position-sticky(0);
             z-index: 1;
-            box-shadow: 0px 3px 3px rgba(0,0,0,0.2);
+
+            &:after {
+                @include o-position-absolute($left: 0, $right: 0);
+                height: map-get($spacers, 3);
+                border-top: $border-width solid $border-color;
+                background-image: var(--ListRenderer-thead-shadow);
+                transform: translateY(-#{$border-width}); // Compensate rendering misplacement
+                -moz-transform: translateY(0); // Firefox doesn't need rendering adjustments
+                pointer-events: none;
+                content: '';
+            }
         }
     }
 
