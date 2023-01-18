@@ -155,6 +155,11 @@ export class Many2XAutocomplete extends Component {
             onRecordSaved: (record) => {
                 return update([record.data]);
             },
+            onRecordDiscarded: () => {
+                if (!isToMany) {
+                    this.props.update(false);
+                }
+            },
             fieldString,
             onClose: () => {
                 const autoCompleteInput = this.autoCompleteContainer.el.querySelector("input");
@@ -350,6 +355,7 @@ Many2XAutocomplete.defaultProps = {
 export function useOpenMany2XRecord({
     resModel,
     onRecordSaved,
+    onRecordDiscarded,
     fieldString,
     activeActions,
     isToMany,
@@ -392,6 +398,7 @@ export function useOpenMany2XRecord({
                 resModel: model,
                 viewId,
                 onRecordSaved,
+                onRecordDiscarded,
                 isToMany,
             },
             {
