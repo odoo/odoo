@@ -332,7 +332,7 @@ class Registry(Mapping):
                                     model_name, ", ".join(field.name for field in fields))
         return computed
 
-    def get_trigger_tree(self, fields: list, select=bool):
+    def get_trigger_tree(self, fields: list, select=bool) -> "TriggerTree":
         """ Return the trigger tree to traverse when ``fields`` have been modified.
         The function ``select`` is called on every field to determine which fields
         should be kept in the tree nodes.  This enables to discard some unnecessary
@@ -343,22 +343,18 @@ class Registry(Mapping):
             for field in fields
             if field in self._field_triggers
         ]
-        if not trees:
-            return {}
-        return merge_trigger_trees(trees, select)
+        return TriggerTree.merge(trees, select)
 
     def get_dependent_fields(self, field):
         """ Return an iterable on the fields that depend on ``field``. """
         if field not in self._field_triggers:
             return ()
 
-        def traverse(tree):
-            for key, val in tree.items():
-                if key is None:
-                    yield from val
-                else:
-                    yield from traverse(val)
-        return traverse(self.get_field_trigger_tree(field))
+        return (
+            dependent
+            for tree in self.get_field_trigger_tree(field).depth_first()
+            for dependent in tree.root
+        )
 
     def _discard_fields(self, fields: list):
         """ Discard the given fields from the registry's internal data structures. """
@@ -371,7 +367,7 @@ class Registry(Mapping):
         # discard fields from field inverses
         self.field_inverses.discard_keys_and_values(fields)
 
-    def get_field_trigger_tree(self, field):
+    def get_field_trigger_tree(self, field) -> "TriggerTree":
         """ Return the trigger tree of a field by computing it from the transitive
         closure of field triggers.
         """
@@ -383,7 +379,7 @@ class Registry(Mapping):
         triggers = self._field_triggers
 
         if field not in triggers:
-            return {}
+            return TriggerTree()
 
         def transitive_triggers(field, prefix=(), seen=()):
             if field in seen or field not in triggers:
@@ -406,18 +402,15 @@ class Registry(Mapping):
                     return concat(seq1[:-1], seq2[1:])
             return seq1 + seq2
 
-        def Tree():
-            return defaultdict(Tree)
-
-        tree = Tree()
+        tree = TriggerTree()
         for path, targets in transitive_triggers(field):
             current = tree
             for label in path:
-                current = current[label]
-            if None in current:
-                current[None].update(targets)
+                current = current.increase(label)
+            if current.root:
+                current.root.update(targets)
             else:
-                current[None] = OrderedSet(targets)
+                current.root = OrderedSet(targets)
 
         self._field_trigger_trees[field] = tree
 
@@ -865,30 +858,68 @@ class DummyRLock(object):
         self.release()
 
 
-def merge_trigger_trees(trees: list, select=bool) -> dict:
-    """ Merge trigger trees list into a final tree. The function ``select`` is
-    called on every field to determine which fields should be kept in the tree
-    nodes. This enables to discard some fields from the tree nodes.
+class TriggerTree(dict):
+    """ The triggers of a field F is a tree that contains the fields that
+    depend on F, together with the fields to inverse to find out which records
+    to recompute.
+
+    For instance, assume that G depends on F, H depends on X.F, I depends on
+    W.X.F, and J depends on Y.F. The triggers of F will be the tree:
+
+                                 [G]
+                               X/   \\Y
+                             [H]     [J]
+                           W/
+                         [I]
+
+    This tree provides perfect support for the trigger mechanism:
+    when F is # modified on records,
+     - mark G to recompute on records,
+     - mark H to recompute on inverse(X, records),
+     - mark I to recompute on inverse(W, inverse(X, records)),
+     - mark J to recompute on inverse(Y, records).
     """
-    result_tree = {}                        # the resulting tree
-    root_fields = OrderedSet()              # the fields in the root node
-    subtrees_to_merge = defaultdict(list)   # the subtrees to merge grouped by key
+    __slots__ = ['root']
 
-    for tree in trees:
-        for key, val in tree.items():
-            if key is None:
-                root_fields.update(val)
-            else:
-                subtrees_to_merge[key].append(val)
+    # pylint: disable=keyword-arg-before-vararg
+    def __init__(self, root=(), *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.root = root
 
-    # the root node contains the collected fields for which select is true
-    root_node = [field for field in root_fields if select(field)]
-    if root_node:
-        result_tree[None] = root_node
+    def __bool__(self):
+        return bool(self.root or len(self))
 
-    for key, subtrees in subtrees_to_merge.items():
-        subtree = merge_trigger_trees(subtrees, select)
-        if subtree:
-            result_tree[key] = subtree
+    def increase(self, key):
+        try:
+            return self[key]
+        except KeyError:
+            subtree = self[key] = TriggerTree()
+            return subtree
 
-    return result_tree
+    def depth_first(self):
+        yield self
+        for subtree in self.values():
+            yield from subtree.depth_first()
+
+    @classmethod
+    def merge(cls, trees: list, select=bool) -> "TriggerTree":
+        """ Merge trigger trees into a single tree. The function ``select`` is
+        called on every field to determine which fields should be kept in the
+        tree nodes. This enables to discard some fields from the tree nodes.
+        """
+        root_fields = OrderedSet()              # fields in the root node
+        subtrees_to_merge = defaultdict(list)   # subtrees to merge grouped by key
+
+        for tree in trees:
+            root_fields.update(tree.root)
+            for label, subtree in tree.items():
+                subtrees_to_merge[label].append(subtree)
+
+        # the root node contains the collected fields for which select is true
+        result = cls([field for field in root_fields if select(field)])
+        for label, subtrees in subtrees_to_merge.items():
+            subtree = cls.merge(subtrees, select)
+            if subtree:
+                result[label] = subtree
+
+        return result
