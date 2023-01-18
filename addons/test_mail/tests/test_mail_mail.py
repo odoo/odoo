@@ -779,7 +779,8 @@ class TestMailMailRace(common.TransactionCase):
                     # In practice, the update will wait the end of the send() transaction and set the notif as bounce, as expeced
                     cr.execute("UPDATE mail_notification SET notification_status='bounce' WHERE id = %s", [notif.id])
             return message['Message-Id']
-        self.env['ir.mail_server']._patch_method('send_email', send_email)
+
+        self.patch(self.registry['ir.mail_server'], 'send_email', send_email)
 
         mail.send()
 
@@ -787,7 +788,6 @@ class TestMailMailRace(common.TransactionCase):
         self.assertEqual(notif.notification_status, 'sent')
 
         # some cleaning since we commited the cr
-        self.env['ir.mail_server']._revert_method('send_email')
 
         notif.unlink()
         mail.unlink()
