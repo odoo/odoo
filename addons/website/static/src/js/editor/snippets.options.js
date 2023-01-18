@@ -1959,6 +1959,15 @@ options.registry.HeaderNavbar = options.Class.extend({
     //--------------------------------------------------------------------------
 
     /**
+     * @override
+     */
+    async start() {
+        await this._super(...arguments);
+        // TODO Remove in master.
+        const signInOptionEl = this.el.querySelector('[data-customize-website-views="portal.user_sign_in"]');
+        signInOptionEl.dataset.noPreview = 'true';
+    },
+    /**
      * @private
      */
     async updateUI() {

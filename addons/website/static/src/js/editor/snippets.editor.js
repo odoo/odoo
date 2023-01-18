@@ -3,6 +3,7 @@ odoo.define('website.snippet.editor', function (require) {
 
 const {qweb, _t, _lt} = require('web.core');
 const Dialog = require('web.Dialog');
+const publicWidget = require('web.public.widget');
 const weSnippetEditor = require('web_editor.snippet.editor');
 const wSnippetOptions = require('website.editor.snippets.options');
 
@@ -267,5 +268,84 @@ weSnippetEditor.Editor.include({
         '.s_parallax_bg',
         '.o_bg_video_container',
     ].join(','),
+});
+
+// Edit mode customizations of public widgets.
+
+publicWidget.registry.hoverableDropdown.include({
+    /**
+     * @override
+     */
+    start() {
+        if (this.editableMode) {
+            this._onPageClick = this._onPageClick.bind(this);
+            this.el.closest('#wrapwrap').addEventListener('click', this._onPageClick, {capture: true});
+        }
+        return this._super.apply(this, arguments);
+    },
+    /**
+     * @override
+     */
+    destroy() {
+        if (this.editableMode) {
+            this.el.closest('#wrapwrap').removeEventListener('click', this._onPageClick, {capture: true});
+        }
+        return this._super.apply(this, arguments);
+    },
+
+    //--------------------------------------------------------------------------
+    // Private
+    //--------------------------------------------------------------------------
+    
+    /**
+     * Hides all opened dropdowns.
+     *
+     * @private
+     */
+    _hideDropdowns() {
+        for (const toggleEl of this.el.querySelectorAll('.dropdown.show .dropdown-toggle')) {
+            $(toggleEl).dropdown('hide');
+        }
+    },
+
+    //--------------------------------------------------------------------------
+    // Handlers
+    //--------------------------------------------------------------------------
+
+    /**
+     * Called when the page is clicked anywhere.
+     * Closes the shown dropdown if the click is outside of it.
+     *
+     * @private
+     * @param {Event} ev
+     */
+    _onPageClick(ev) {
+        if (ev.target.closest('.dropdown.show')) {
+            return;
+        }
+        this._hideDropdowns();
+    },
+    /**
+     * @override
+     */
+    _onMouseEnter(ev) {
+        if (this.editableMode) {
+            // Do not handle hover if another dropdown is opened.
+            if (this.el.querySelector('.dropdown.show')) {
+                return;
+            }
+        }
+        this._super(...arguments);
+    },
+    /**
+     * @override
+     */
+    _onMouseLeave(ev) {
+        if (this.editableMode) {
+            // Cancel handling from view mode.
+            return;
+        }
+        this._super(...arguments);
+    },
 });
 });
