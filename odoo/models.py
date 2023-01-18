@@ -3827,7 +3827,6 @@ class BaseModel(metaclass=MetaModel):
             parent_records._parent_store_update()
 
     @api.model_create_multi
-    @api.returns('self', lambda value: value.id)
     def create(self, vals_list):
         """ create(vals_list) -> records
 
@@ -5007,44 +5006,6 @@ class BaseModel(metaclass=MetaModel):
 
     def _unregister_hook(self):
         """ Clean up what `~._register_hook` has done. """
-
-    @classmethod
-    def _patch_method(cls, name, method):
-        """ Monkey-patch a method for all instances of this model. This replaces
-            the method called ``name`` by ``method`` in the given class.
-            The original method is then accessible via ``method.origin``, and it
-            can be restored with :meth:`~._revert_method`.
-
-            Example::
-
-                def do_write(self, values):
-                    # do stuff, and call the original method
-                    return do_write.origin(self, values)
-
-                # patch method write of model
-                model._patch_method('write', do_write)
-
-                # this will call do_write
-                records = model.search([...])
-                records.write(...)
-
-                # restore the original method
-                model._revert_method('write')
-        """
-        origin = getattr(cls, name)
-        method.origin = origin
-        # propagate decorators from origin to method, and apply api decorator
-        wrapped = api.propagate(origin, method)
-        wrapped.origin = origin
-        setattr(cls, name, wrapped)
-
-    @classmethod
-    def _revert_method(cls, name):
-        """ Revert the original method called ``name`` in the given class.
-            See :meth:`~._patch_method`.
-        """
-        method = getattr(cls, name)
-        setattr(cls, name, method.origin)
 
     #
     # Instance creation
