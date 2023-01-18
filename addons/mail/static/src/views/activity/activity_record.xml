@@ -3,7 +3,7 @@
 
 <t t-name="mail.ActivityRecord" owl="1">
     <td class="o_activity_record p-3 cursor-pointer" t-on-click="() => this.props.openRecord(this.props.record)">
-        <t t-call="{{ recordTemplate }}" t-call-context="getRenderingContext()"/>
+        <t t-call="{{ recordTemplate }}" t-call-context="this.getRenderingContext()"/>
     </td>
 </t>
 

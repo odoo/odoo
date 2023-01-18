@@ -9,7 +9,7 @@
         t-att-tabindex="props.record.model.useSampleModel ? -1 : 0"
         t-on-click="onGlobalClick"
         t-ref="root">
-            <t t-call="{{ templates[this.constructor.KANBAN_BOX_ATTRIBUTE] }}" t-call-context="renderingContext"/>
+            <t t-call="{{ templates[this.constructor.KANBAN_BOX_ATTRIBUTE] }}" t-call-context="this.renderingContext"/>
             <t t-call="{{ this.constructor.menuTemplate }}"/>
         </div>
     </t>

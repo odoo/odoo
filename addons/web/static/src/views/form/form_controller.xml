@@ -66,16 +66,15 @@
 
     <!--
         Used in FormRenderer
-        Note: `props` is only accessible through `this` as we call the compiled template with
-        `t-call-context="{}"`
+        Note: `props` is only accessible through `this` as we call the compiled template a restricted context (t-call-context)
     -->
     <t t-name="web.TranslateAlert" owl="1">
         <div class="alert alert-info alert-dismissible" role="alertdialog">
             Please update translations of :
-            <t t-foreach="Array.from(this.props.translateAlert.fields)" t-as="field" t-key="field.name">
+            <t t-foreach="Array.from(props.translateAlert.fields)" t-as="field" t-key="field.name">
                 <strong><a class="o_field_translate" t-att-name="field.name" href="#"><t t-esc="field.string"/><t t-if="!field_last">, </t></a></strong>
             </t>
-            <button t-on-click="this.props.translateAlert.close" type="button" class="btn-close" aria-label="Close"></button>
+            <button t-on-click="props.translateAlert.close" type="button" class="btn-close" aria-label="Close"></button>
         </div>
     </t>
 </templates>
