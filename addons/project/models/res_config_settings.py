@@ -54,9 +54,14 @@ class ResConfigSettings(models.TransientModel):
         # Hide the task dependency changes subtype when the dependency setting is disabled
         task_dep_change_subtype_id = self.env.ref('project.mt_task_dependency_change')
         project_task_dep_change_subtype_id = self.env.ref('project.mt_project_task_dependency_change')
+        task_waiting_subtype_id = self.env.ref('project.mt_task_waiting')
+        project_task_waiting_subtype_id = self.env.ref('project.mt_project_task_waiting')
         if task_dep_change_subtype_id.hidden != (not self['group_project_task_dependencies']):
             task_dep_change_subtype_id.hidden = not self['group_project_task_dependencies']
             project_task_dep_change_subtype_id.hidden = not self['group_project_task_dependencies']
+        if task_waiting_subtype_id.hidden != (not self['group_project_task_dependencies']):
+            task_waiting_subtype_id.hidden = not self['group_project_task_dependencies']
+            project_task_waiting_subtype_id.hidden = not self['group_project_task_dependencies']
         # Hide Project Stage Changed mail subtype according to the settings
         project_stage_change_mail_type = self.env.ref('project.mt_project_stage_change')
         if project_stage_change_mail_type.hidden == self['group_project_stages']:

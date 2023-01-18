@@ -26,3 +26,4 @@ from . import test_task_follow
 from . import test_task_tracking
 from . import test_project_report
 from . import test_project_task_quick_create
+from . import test_task_state

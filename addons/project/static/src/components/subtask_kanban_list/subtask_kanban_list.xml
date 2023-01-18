@@ -7,11 +7,11 @@
             <div class="subtask_list">
                 <t t-foreach="data.record.data.child_ids.records" t-as="subTask" t-key="subTask.resId">
                     <div class="subtask_list_row">
-                        <Field name="'kanban_state'"
+                        <Field name="'state'"
                                class="`subtask_state_widget_col d-flex justify-content-center align-items-center`"
                                record="subTask"
-                               fieldInfo="subTask.fields.kanban_state"
-                               type="'state_selection'"/>
+                               fieldInfo="subTask.fields.state"
+                               type="'project_task_state_selection'"/>
                         <a class="subtask_name_col"
                            t-att-title="subTask.data.display_name"
                            style="color: inherit;"
