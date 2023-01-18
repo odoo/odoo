@@ -8309,13 +8309,13 @@ registry.GalleryHandler = SnippetOptionWidget.extend({
     //--------------------------------------------------------------------------
 
     /**
-     * Handles reodering of items.
+     * Handles reordering of items.
      *
      * @override
      */
     notify(name, data) {
         this._super(...arguments);
-        if (name === "reoder_items") {
+        if (name === "reorder_items") {
             const itemsEls = this._getItemsGallery();
             const oldPosition = itemsEls.indexOf(data.itemEl);
             if (oldPosition === 0 && data.position === "prev") {
