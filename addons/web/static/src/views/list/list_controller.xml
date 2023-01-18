@@ -32,7 +32,7 @@
     </t>
 
     <t t-name="web.ListView.Buttons" owl="1">
-        <div class="o_list_buttons d-flex" role="toolbar" aria-label="Main actions">
+        <div class="o_list_buttons d-flex flex-wrap" role="toolbar" aria-label="Main actions">
             <t t-if="props.showButtons">
                 <t t-if="model.root.editedRecord">
                     <button type="button" class="btn btn-primary o_list_button_save" data-hotkey="s" t-on-click.stop="onClickSave">
@@ -71,21 +71,16 @@
     </t>
 
     <t t-name="web.ListView.Selection" owl="1">
-        <div class="o_list_selection_box alert alert-info d-inline-flex align-items-center ps-0 px-lg-2 py-0 mb-0 ms-0 ms-md-2" role="alert">
-            <t t-if="env.isSmall">
-                <button class="btn btn-link py-0 o_discard_selection" t-on-click="discardSelection">
-                    <span class="fa-2x">&#215;</span>
-                </button>
-            </t>
-            <span t-if="isDomainSelected">All <span class="font-monospace" t-esc="nbTotal"/> selected</span>
+        <div class="o_list_selection_box alert alert-info d-inline-flex align-items-center p-1" role="alert">
+            <span t-if="isDomainSelected" class="p-1">All <t t-esc="nbTotal"/> selected</span>
             <t t-else="">
-                <span class="font-monospace me-1" t-esc="nbSelected"/> selected
-                <a t-if="isPageSelected and nbTotal > nbSelected" href="#" class="o_list_select_domain ms-2 btn btn-sm btn-info px-2 py-1 border-0 fw-normal" t-on-click="onSelectDomain">
-                    <i class="fa fa-arrow-right"/> Select all <span class="font-monospace" t-esc="nbTotal"/>
+                <span class="me-1" t-esc="nbSelected"/> selected
+                <a t-if="isPageSelected and nbTotal > nbSelected" href="#" class="o_list_select_domain ms-2 btn btn-sm btn-info p-1 border-0 fw-normal" t-on-click="onSelectDomain">
+                    <i class="fa fa-fw fa-arrow-right"/> Select all <span t-esc="nbTotal"/>
                 </a>
             </t>
-            <a t-if="nbSelected > 1" href="#" class="o_list_unselect_all ms-2 btn btn-sm btn-info px-2 py-1 border-0 fw-normal" t-on-click="onUnselectAll">
-                Unselect all
+            <a t-if="nbSelected > 1" href="#" class="o_list_unselect_all ms-2 btn btn-sm btn-info p-1 border-0 fw-normal" t-att-class="{'btn-link': env.isSmall}" t-on-click="onUnselectAll">
+                <i class="fa fa-fw fa-times"/><t t-if="!env.isSmall"> Unselect all</t>
             </a>
         </div>
     </t>
