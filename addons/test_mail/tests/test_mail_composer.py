@@ -570,51 +570,62 @@ class TestComposerInternals(TestMailComposer):
                 self.assertEqual(composer.composition_mode, composition_mode)
                 self.assertEqual(composer.email_from, self.env.user.email_formatted)
 
-                # author values reset email (FIXME: currently not synchronized)
+                # author update should reset email (FIXME: currently not synchronized)
                 composer.write({'author_id': self.partner_1})
                 self.assertEqual(composer.author_id, self.partner_1)
-                self.assertEqual(composer.email_from, self.env.user.email_formatted)
+                self.assertEqual(composer.email_from, self.env.user.email_formatted,
+                                 'MailComposer: TODO: author / email_from are not synchronized')
                 # self.assertEqual(composer.email_from, self.partner_1.email_formatted)
 
                 # changing template should update its email_from
-                composer.write({'template_id': self.template.id, 'author_id': self.env.user.partner_id})
+                composer.write({'template_id': self.template.id})
                 # currently onchange necessary
                 composer._onchange_template_id_wrapper()
-                self.assertEqual(composer.author_id, self.env.user.partner_id,
-                                 'MailComposer: should take value given by user')
+
                 if composition_mode == 'comment' and not batch:
+                    self.assertEqual(composer.author_id, self.partner_1,
+                                     'MailComposer: TODO: should try to synchronize with email_from')
                     self.assertEqual(composer.email_from, self.test_record.user_id.email_formatted,
                                      f'MailComposer: should take email_from rendered from template ({composition_mode}-{batch})')
                 else:
+                    self.assertEqual(composer.author_id, self.partner_1,
+                                     'MailComposer: TODO: email_from is raw, what to do with it ?')
                     self.assertEqual(composer.email_from, self.template.email_from,
                                      f'MailComposer: should take email_from raw from template ({composition_mode}-{batch})')
 
                 # manual values are kept over template values
                 composer.write({'email_from': self.test_from})
-                self.assertEqual(composer.author_id, self.env.user.partner_id)
-                self.assertEqual(composer.email_from, self.test_from)
+                self.assertEqual(composer.author_id, self.partner_1)
+                self.assertEqual(composer.email_from, self.test_from,
+                                 'MailComposer: TODO: author / email_from are not synchronized')
 
                 # update with template with void values: void value is not forced in
                 # rendering mode as well as when copying template values
                 composer.write({'template_id': template_void.id})
                 # currently onchange necessary
                 composer._onchange_template_id_wrapper()
+
                 if composition_mode == 'comment' and not batch:
-                    self.assertEqual(composer.author_id, self.env.user.partner_id)
+                    self.assertEqual(composer.author_id, self.partner_1,
+                                     'MailComposer: TODO: author / email_from are not synchronized')
                     self.assertEqual(composer.email_from, self.test_from)
                 else:
-                    self.assertEqual(composer.author_id, self.env.user.partner_id)
+                    self.assertEqual(composer.author_id, self.partner_1,
+                                     'MailComposer: TODO: author / email_from are not synchronized')
                     self.assertEqual(composer.email_from, self.test_from)
 
                 # reset template: values are reset due to call to default_get
                 composer.write({'template_id': False})
                 # currently onchange necessary
                 composer._onchange_template_id_wrapper()
+
                 if composition_mode == 'comment' and not batch:
-                    self.assertEqual(composer.author_id, self.env.user.partner_id)
+                    self.assertEqual(composer.author_id, self.partner_1,
+                                     'MailComposer: TODO: author / email_from are not synchronized')
                     self.assertEqual(composer.email_from, self.env.user.email_formatted)
                 else:
-                    self.assertEqual(composer.author_id, self.env.user.partner_id)
+                    self.assertEqual(composer.author_id, self.partner_1,
+                                     'MailComposer: TODO: author / email_from are not synchronized')
                     self.assertEqual(composer.email_from, self.env.user.email_formatted)
 
     @users('employee')
@@ -1397,6 +1408,18 @@ class TestComposerResultsComment(TestMailComposer, CronMixinCase):
                 # open a composer and run it in comment mode
                 composer_form = Form(self.env['mail.compose.message'].with_context(ctx))
                 composer = composer_form.save()
+
+                # ensure some parameters used afterwards
+                if batch:
+                    author = self.env.user.partner_id
+                    self.assertEqual(composer.author_id, author,
+                                     'Author cannot be synchronized with a raw email_from')
+                    self.assertEqual(composer.email_from, self.template.email_from)
+                else:
+                    author = self.env.user.partner_id
+                    self.assertEqual(composer.author_id, author,
+                                     'Author cannot be synchronized with a raw email_from')
+                    self.assertEqual(composer.email_from, self.partner_employee_2.email_formatted)
                 self.assertFalse(composer.reply_to_force_new, 'Mail: thread-enabled models should use auto thread by default')
 
                 # due to scheduled_date, cron for sending notification will be used
@@ -1469,7 +1492,7 @@ class TestComposerResultsComment(TestMailComposer, CronMixinCase):
                     message = test_record.message_ids[0]
                     self.assertMailMail(self.partner_employee_2, 'sent',
                                         mail_message=message,
-                                        author=self.partner_employee,  # author != email_from (template sets only email_from)
+                                        author=author,  # author != email_from (template sets only email_from)
                                         email_values={
                                             'body_content': f'TemplateBody {test_record.name}',
                                             'email_from': test_record.user_id.email_formatted,  # set by template
@@ -1487,7 +1510,7 @@ class TestComposerResultsComment(TestMailComposer, CronMixinCase):
                                        )
                     self.assertMailMail(test_record.customer_id + new_partners, 'sent',
                                         mail_message=message,
-                                        author=self.partner_employee,  # author != email_from (template sets only email_from)
+                                        author=author,  # author != email_from (template sets only email_from)
                                         email_values={
                                             'body_content': f'TemplateBody {test_record.name}',
                                             'email_from': test_record.user_id.email_formatted,  # set by template
@@ -1762,6 +1785,12 @@ class TestComposerResultsMass(TestMailComposer):
                                   default_template_id=self.template.id)
         ))
         composer = composer_form.save()
+        # ensure some parameters used afterwards
+        author = self.env.user.partner_id
+        self.assertEqual(composer.author_id, author,
+                         'Author cannot be synchronized with a raw email_from')
+        self.assertEqual(composer.email_from, self.template.email_from)
+
         with self.mock_mail_gateway(mail_unlink_sent=False), \
              freeze_time(self.reference_now):
             composer._action_send_mail()
@@ -1798,7 +1827,7 @@ class TestComposerResultsMass(TestMailComposer):
             self.assertMailMail(record.customer_id + new_partners + self.partner_admin,
                                 'sent',
                                 mail_message=message,
-                                author=self.partner_employee,
+                                author=author,
                                 email_values={
                                     'attachments_info': [
                                         {'name': 'AttFileName_00.txt', 'raw': b'AttContent_00', 'type': 'text/plain'},
@@ -1843,7 +1872,7 @@ class TestComposerResultsMass(TestMailComposer):
             self.assertMailMail(record.customer_id + new_partners + self.partner_admin,
                                 'sent',
                                 mail_message=record.message_ids[0],
-                                author=self.partner_employee,
+                                author=author,
                                 email_values={
                                     'email_from': self.partner_employee_2.email_formatted,
                                     'reply_to': self.partner_employee_2.email_formatted,
