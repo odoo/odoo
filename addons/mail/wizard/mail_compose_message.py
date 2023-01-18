@@ -228,9 +228,12 @@ class MailComposer(models.TransientModel):
 
     @api.depends('subtype_id')
     def _compute_subtype_is_log(self):
+        """ In comment mode, tells whether the subtype is a note. Subtype has
+        no use in email mode, and this field will be False. """
         note_id = self.env['ir.model.data']._xmlid_to_res_id('mail.mt_note')
-        for composer in self:
-            composer.subtype_is_log = not composer.subtype_id or composer.subtype_id.id == note_id
+        self.subtype_is_log = False
+        for composer in self.filtered('subtype_id'):
+            composer.subtype_is_log = composer.subtype_id.id == note_id
 
     @api.depends('reply_to_force_new')
     def _compute_reply_to_mode(self):
