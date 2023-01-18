@@ -9,25 +9,25 @@
                 <div invisible="smtp_authentication != 'gmail'"
                     class="d-flex flex-row align-items-center" colspan="8"
                     groups="base.group_system">
-                    <span invisible="smtp_authentication != 'gmail' or not google_gmail_refresh_token"
+                    <span invisible="smtp_authentication != 'gmail' or not google_gmail_token_id"
                         class="badge text-bg-success">
                         Gmail Token Valid
                     </span>
                     <button type="object"
                         name="open_google_gmail_uri" class="btn-link px-0"
-                        invisible="not google_gmail_uri or smtp_authentication != 'gmail' or google_gmail_refresh_token">
+                        invisible="not is_google_gmail_configured or smtp_authentication != 'gmail' or google_gmail_token_id">
                         <i class="oi oi-arrow-right"/>
                         Connect your Gmail account
                     </button>
                     <button type="object"
                         name="open_google_gmail_uri" class="btn-link px-0 ms-2"
-                        invisible="not google_gmail_uri or smtp_authentication != 'gmail' or not google_gmail_refresh_token">
+                        invisible="not is_google_gmail_configured or smtp_authentication != 'gmail' or not google_gmail_token_id">
                         <i class="fa fa-cog" title="Edit Settings"/>
                     </button>
                     <button class="alert alert-warning d-block mt-2 text-start"
                         icon="oi-arrow-right" type="action" role="alert"
                         name="%(base.res_config_setting_act_window)d"
-                        invisible="smtp_authentication != 'gmail' or google_gmail_uri">
+                        invisible="is_google_gmail_configured or smtp_authentication != 'gmail'">
                         Setup your Gmail API credentials in the general settings to link a Gmail account.
                     </button>
                 </div>
