@@ -140,7 +140,7 @@ class AccountInvoiceSend(models.TransientModel):
         # basically self.body (which could be manually edited) extracts self.template_id,
         # which is then not translated for each customer.
         if self.composition_mode == 'mass_mail' and self.template_id:
-            active_ids = self.env.context.get('active_ids', self.res_id)
+            active_ids = self.env.context.get('active_ids', self.res_ids)
             active_records = self.env[self.model].browse(active_ids)
             langs = active_records.mapped('partner_id.lang')
             default_lang = get_lang(self.env)
