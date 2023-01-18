@@ -14,6 +14,18 @@ options.registry.gallery = options.Class.extend({
      */
     start: function () {
         var self = this;
+        // TODO In master: define distinct classes.
+        // Differentiate both instances of this class: we want to avoid
+        // registering the same event listener twice.
+        this.hasAddImages = this.el.querySelector("we-button[data-add-images]");
+
+        if (!this.hasAddImages) {
+            const containerEl = this.$target[0].querySelector(":scope > .container, :scope > .container-fluid, :scope > .o_container_small");
+            if (containerEl.querySelector(":scope > *:not(div)")) {
+                self.mode(null, self.getMode());
+            }
+            return this._super.apply(this, arguments);
+        }
 
         // Make sure image previews are updated if images are changed
         this.$target.on('image_changed.gallery', 'img', function (ev) {
@@ -40,11 +52,6 @@ options.registry.gallery = options.Class.extend({
                 });
             }
         });
-
-        const $container = this.$('> .container, > .container-fluid, > .o_container_small');
-        if ($container.find('> *:not(div)').length) {
-            self.mode(null, self.getMode());
-        }
 
         return this._super.apply(this, arguments);
     },
@@ -319,6 +326,13 @@ options.registry.gallery = options.Class.extend({
      */
     notify: function (name, data) {
         this._super(...arguments);
+        // TODO Remove in master.
+        if (!this.hasAddImages) {
+            // In stable, the widget is instanciated twice. We do not want
+            // operations, especially moves, to be performed twice.
+            // We therefore ignore the requests from one of the instances.
+            return;
+        }
         if (name === 'image_removed') {
             data.$image.remove(); // Force the removal of the image before reset
             this.mode('reset', this.getMode());
