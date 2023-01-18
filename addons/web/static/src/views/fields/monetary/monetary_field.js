@@ -56,6 +56,7 @@ export class MonetaryField extends Component {
         return formatMonetary(this.props.value, {
             digits: this.currencyDigits,
             currencyId: this.currencyId,
+            useOptionDigits: this.props.fieldDigits,
             noSymbol: !this.props.readonly || this.props.hideSymbol,
         });
     }
@@ -67,6 +68,7 @@ MonetaryField.props = {
     currencyField: { type: String, optional: true },
     inputType: { type: String, optional: true },
     digits: { type: Array, optional: true },
+    fieldDigits: { type: Boolean, optional: true },
     hideSymbol: { type: Boolean, optional: true },
     placeholder: { type: String, optional: true },
 };
@@ -78,11 +80,12 @@ MonetaryField.defaultProps = {
 MonetaryField.supportedTypes = ["monetary", "float"];
 MonetaryField.displayName = _lt("Monetary");
 
-MonetaryField.extractProps = ({ attrs }) => {
+MonetaryField.extractProps = ({ field, attrs }) => {
     return {
         currencyField: attrs.options.currency_field,
         inputType: attrs.type,
-        digits: [16, 2], // FIXME WOWL
+        digits: attrs.options.field_digits && field.digits,
+        fieldDigits: Boolean(attrs.options.field_digits),
         hideSymbol: attrs.options.no_symbol,
         placeholder: attrs.placeholder,
     };

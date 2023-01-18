@@ -337,12 +337,13 @@ export function formatX2many(value) {
  *   on "currency_id".
  * @param {Object} [options.data] a mapping of field names to field values,
  *   required with options.currencyField
- * @param {boolean} [options.noSymbol] this currency has not a sympbol
+ * @param {boolean} [options.noSymbol] this currency has not a symbol
  * @param {boolean} [options.humanReadable] if true, large numbers are formatted
  *   to a human readable format.
  * @param {[number, number]} [options.digits] the number of digits that should
  *   be used, instead of the default digits precision in the field.  The first
  *   number is always ignored (legacy constraint)
+ * @param {boolean} [options.useOptionDigits] when set, always use `options.digits`
  * @returns {string}
  */
 export function formatMonetary(value, options = {}) {
@@ -362,7 +363,9 @@ export function formatMonetary(value, options = {}) {
         currencyId = Array.isArray(dataValue) ? dataValue[0] : dataValue;
     }
     const currency = session.currencies[currencyId];
-    const digits = (currency && currency.digits) || options.digits;
+    const digits = options.useOptionDigits
+        ? options.digits
+        : (currency && currency.digits) || options.digits;
 
     let formattedValue;
     if (options.humanReadable) {

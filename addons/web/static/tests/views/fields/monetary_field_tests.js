@@ -1029,4 +1029,27 @@ QUnit.module("Fields", (hooks) => {
             "The input should be preceded by a span containing the currency symbol."
         );
     });
+
+    QUnit.test("monetary field with decimal precision", async (assert) => {
+        serverData.models.partner.fields.monetary_field.digits = [16, 4];
+        serverData.models.partner.records.find((e) => e.id === 6).monetary_field = 1.234567;
+
+        await makeView({
+            type: "form",
+            resModel: "partner",
+            serverData,
+            arch: `
+                <form>
+                    <field name="monetary_field" options="{'field_digits': True}"/>
+                    <field name="currency_id" invisible="1"/>
+                </form>`,
+            resId: 6,
+        });
+
+        assert.strictEqual(
+            target.querySelector(".o_field_widget[name=monetary_field] input").value,
+            "1.2346",
+            "The field digits should be used"
+        );
+    });
 });
