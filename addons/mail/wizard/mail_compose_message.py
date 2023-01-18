@@ -149,6 +149,7 @@ class MailComposer(models.TransientModel):
     composition_batch = fields.Boolean(
         'Batch composition', compute='_compute_composition_batch')  # more than 1 record (raw source)
     model = fields.Char('Related Document Model')
+    model_is_thread = fields.Boolean('Thread-Enabled', compute='_compute_model_is_thread')
     res_ids = fields.Text('Related Document IDs')
     res_domain = fields.Text('Active domain')
     res_domain_user_id = fields.Many2one(
@@ -226,6 +227,13 @@ class MailComposer(models.TransientModel):
                 continue
             res_ids = composer._evaluate_res_ids()
             composer.composition_batch = len(res_ids) > 1 if res_ids else False
+
+    @api.depends('model')
+    def _compute_model_is_thread(self):
+        """ Determine if model is thread enabled. """
+        for composer in self:
+            model = self.env['ir.model']._get(composer.model)
+            composer.model_is_thread = model.is_mail_thread
 
     @api.depends('subtype_id')
     def _compute_subtype_is_log(self):
