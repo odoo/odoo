@@ -166,6 +166,7 @@ tour.register('survey_tour_test_survey_form_triggers', {
     }, {
         content: "Change the trigger answer back as well",
         trigger: ".modal-content .o_field_widget[name=triggering_answer_id] input",
+        run: "text A",
         in_modal: true,
     }, {
         content: "Set the second answer as trigger, then",
