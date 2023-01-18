@@ -23,6 +23,26 @@ class HrEmployee(models.Model):
         for employee in self:
             employee.has_timesheet = result.get(employee.id, False)
 
+    def name_get(self):
+        res = super().name_get()
+        allowed_company_ids = self.env.context.get('allowed_company_ids', [])
+        if len(allowed_company_ids) <= 1:
+            return res
+
+        name_mapping = dict(res)
+        employees_count_per_user = {
+            res['user_id'][0]: res['user_id_count']
+            for res in self.env['hr.employee'].sudo()._read_group(
+                [('user_id', 'in', self.user_id.ids), ('company_id', 'in', allowed_company_ids)],
+                ['user_id'],
+                ['user_id'],
+            )
+        }
+        for employee in self:
+            if employees_count_per_user.get(employee.user_id.id, 0) > 1:
+                name_mapping[employee.id] = f'{name_mapping[employee.id]} - {employee.company_id.name}'
+        return list(name_mapping.items())
+
     def action_unlink_wizard(self):
         wizard = self.env['hr.employee.delete.wizard'].create({
             'employee_ids': self.ids,
