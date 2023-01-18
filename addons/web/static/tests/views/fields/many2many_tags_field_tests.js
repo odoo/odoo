@@ -5,6 +5,7 @@ import { browser } from "@web/core/browser/browser";
 import { Many2ManyTagsField } from "@web/views/fields/many2many_tags/many2many_tags_field";
 import {
     click,
+    clickDiscard,
     clickDropdown,
     clickOpenedDropdownItem,
     clickSave,
@@ -1688,6 +1689,34 @@ QUnit.module("Fields", (hooks) => {
         assert.containsOnce(target, ".o_tag");
         assert.strictEqual(target.querySelector(".o_tag").innerText, "new tag");
     });
+
+    QUnit.test(
+        "Many2ManyTagsField keep the linked records after discard of the quick create dialog",
+        async (assert) => {
+            serverData.views = {
+                "partner_type,false,form": `<form><field name="name"/><field name="color"/></form>`,
+            };
+            await makeView({
+                type: "form",
+                resModel: "partner",
+                serverData,
+                arch: `
+                <form>
+                    <field name="timmy" widget="many2many_tags" options="{'no_quick_create': 1}"/>
+                </form>`,
+            });
+
+            assert.containsNone(target, ".o_tag");
+            await editInput(target, ".o_field_many2many_tags .o-autocomplete--input", "new tag");
+            await clickOpenedDropdownItem(target, "timmy", "Create and edit...");
+            await click(target.querySelector(".modal .o_form_button_save"));
+            assert.containsOnce(target, ".o_tag");
+            await editInput(target, ".o_field_many2many_tags .o-autocomplete--input", "tago");
+            await clickOpenedDropdownItem(target, "timmy", "Create and edit...");
+            await clickDiscard(target.querySelector(".modal"));
+            assert.containsOnce(target, ".o_tag");
+        }
+    );
 
     QUnit.test("Many2ManyTagsField with option 'no_create' set to true", async (assert) => {
         await makeView({
