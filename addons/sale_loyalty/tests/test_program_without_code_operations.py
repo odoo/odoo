@@ -2,6 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo.addons.sale_loyalty.tests.common import TestSaleCouponCommon
+from odoo import Command
 
 
 class TestProgramWithoutCodeOperations(TestSaleCouponCommon):
@@ -62,3 +63,78 @@ class TestProgramWithoutCodeOperations(TestSaleCouponCommon):
         self._claim_reward(order, self.immediate_promotion_program)
         self.assertEqual(len(order.order_line.ids), 1, "The promo reward should have been removed as the rules are not matched anymore")
         self.assertEqual(order.order_line.product_id.id, self.product_B.id, "The wrong line has been removed")
+
+    def test_several_promotion_application(self):
+        """
+        Check the behaviour of a promotion program application
+        when adding it several times within the same order.
+        """
+
+        coupon_program = self.env['loyalty.program'].create([{
+            'name': 'Coupon Program',
+            'program_type': 'coupons',
+            'trigger': 'auto',
+            'applies_on': 'both',
+            'rule_ids': [Command.create({
+                    'reward_point_mode': 'unit',
+                })],
+            'reward_ids': [Command.create({
+                    'reward_type': 'discount',
+                    'discount': 10.0,
+                    'discount_applicability': 'specific',
+                })],
+        }])
+
+        order = self.env['sale.order'].create({
+            'partner_id': self.steve.id,
+            'order_line': [Command.create({
+                    'product_id': self.product_A.id,
+                })]
+        })
+
+        self.assertEqual(order.amount_total, 115)
+        self.assertEqual(len(order.order_line), 1)
+        self.assertEqual(order.reward_amount, 0.0)
+
+        order._update_programs_and_rewards()
+        self._claim_reward(order, coupon_program)
+
+        self.assertEqual(order.amount_total, 103.5)
+        self.assertEqual(len(order.order_line), 2)
+        self.assertEqual(order.reward_amount, -10.0)
+
+        sale_order_line = self.env['sale.order.line'].create({
+            'order_id': order.id,
+            'product_id': self.product_A.id,
+        })
+
+        order._update_programs_and_rewards()
+        self._claim_reward(order, coupon_program)
+
+        self.assertEqual(order.amount_total, 207.0)
+        self.assertEqual(len(order.order_line), 3)
+        self.assertEqual(order.reward_amount, -20.0)
+
+        order.write({
+            'order_line': [Command.create({
+                    'product_id': self.product_A.id,
+                })]
+        })
+
+        order._update_programs_and_rewards()
+        self._claim_reward(order, coupon_program)
+
+        self.assertEqual(order.amount_total, 310.50)
+        self.assertEqual(len(order.order_line), 4)
+        self.assertEqual(order.reward_amount, -30.0)
+
+        sale_order_line.write({
+            'product_uom_qty': 4,
+        })
+
+        order._update_programs_and_rewards()
+        self._claim_reward(order, coupon_program)
+
+        self.assertEqual(order.amount_total, 621.0)
+        self.assertEqual(len(order.order_line), 4)
+        self.assertEqual(order.reward_amount, -60.0)

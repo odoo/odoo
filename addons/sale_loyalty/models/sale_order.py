@@ -545,6 +545,9 @@ class SaleOrder(models.Model):
         self.ensure_one()
         # Use the old lines before creating new ones. These should already be in a 'reset' state.
         old_reward_lines = kwargs.get('old_lines', self.env['sale.order.line'])
+        if not old_reward_lines:
+            # The reward line to be removed are those that concern the coupon to be applied.
+            old_reward_lines = self.order_line.filtered(lambda line: line.is_reward_line and line.coupon_id == coupon)
         if reward.is_global_discount:
             global_discount_reward_lines = self._get_applied_global_discount_lines()
             global_discount_reward = global_discount_reward_lines.reward_id
