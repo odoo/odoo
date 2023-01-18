@@ -1520,8 +1520,6 @@
             <field name="arch" type="xml">
                 <tree position="attributes">
                     <attribute name="multi_edit">1</attribute>
-                    <attribute name="js_class">project_task_list</attribute>
-                    <attribute name="default_group_by">stage_id</attribute>
                 </tree>
                 <field name="date_deadline" position="after">
                     <field name="activity_ids" string="Next Activity" widget="list_activity" optional="show"/>
@@ -1535,6 +1533,9 @@
                 <tree position="inside">
                     <field name="recurrence_id" invisible="1" />
                 </tree>
+                <xpath expr="//field[@name='partner_id']" position="after">
+                    <field name="parent_id" optional="hide" attrs="{'invisible': [('allow_subtasks', '=', False)]}" groups="base.group_no_one"/>
+                </xpath>
             </field>
         </record>
 
@@ -1546,7 +1547,10 @@
             <field name="mode">primary</field>
             <field name="priority">2</field>
             <field name="arch" type="xml">
-                <tree position="inside"/>
+                <tree position="attributes">
+                    <attribute name="js_class">project_task_list</attribute>
+                    <attribute name="default_group_by">stage_id</attribute>
+                </tree>
             </field>
         </record>
 
@@ -1678,18 +1682,6 @@
             <field name="inherit_id" ref="view_task_tree2"/>
             <field name="mode">primary</field>
             <field name="arch" type="xml">
-                <field name="stage_id" position="replace">
-                    <field name="stage_display" optional="show" string="Stage"/>
-                </field>
-            </field>
-        </record>
-
-        <record id="open_view_all_tasks_list_view" model="ir.ui.view">
-            <field name="name">open.view.all.tasks.list.view</field>
-            <field name="model">project.task</field>
-            <field name="inherit_id" ref="view_task_tree2"/>
-            <field name="mode">primary</field>
-            <field name="arch" type="xml">
                 <tree position="attributes">
                     <attribute name="default_group_by">personal_stage_type_ids</attribute>
                 </tree>
@@ -1783,7 +1775,7 @@
             <field name="sequence" eval="10"/>
             <field name="view_mode">tree</field>
             <field name="act_window_id" ref="action_view_all_task"/>
-            <field name="view_id" ref="open_view_my_tasks_list_view"/>
+            <field name="view_id" ref="open_view_all_tasks_list_view"/>
         </record>
         <record id="open_view_all_task_list_kanban" model="ir.actions.act_window.view">
             <field name="sequence" eval="20"/>
