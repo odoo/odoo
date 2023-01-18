@@ -210,7 +210,7 @@ class MailComposer(models.TransientModel):
         for composer in self:
             composer._evaluate_res_domain()
 
-    @api.depends('res_ids')
+    @api.depends('res_domain', 'res_ids')
     def _compute_composition_batch(self):
         """ Determine if batch mode is activated:
 
