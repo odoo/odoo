@@ -26,14 +26,14 @@ class AccountMoveSendBase(AccountTestInvoicingCommon, MailCommon):
         cls.company_main.invoice_is_print = False
         cls.move_template = cls.env['mail.template'].create({
             'auto_delete': True,
-            'body_html': '<p>TemplateBody for <t t-out="object.name"></t><t t-out="object.invoice_user_id.signature or \'\'"></t></p>',
+            'body_html': '<p>TemplateBody for <t t-out="object.display_name"></t><t t-out="object.invoice_user_id.signature or \'\'"></t></p>',
             'description': 'Sent to customers with their invoices in attachment',
             'email_from': "{{ (object.invoice_user_id.email_formatted or user.email_formatted) }}",
             'mail_server_id': cls.mail_server_global.id,
             'model_id': cls.env['ir.model']._get_id('account.move'),
             'name': "Invoice: Test Sending",
             'partner_to': "{{ object.partner_id.id }}",
-            'subject': "{{ object.company_id.name }} Invoice (Ref {{ object.name or 'n/a' }})",
+            'subject': "{{ object.company_id.name }} Invoice (Ref {{ object.display_name or 'n/a' }})",
             'report_template_ids': [(4, cls.env.ref('account.account_invoices').id)],
             'lang': "{{ object.partner_id.lang }}",
         })

@@ -6,6 +6,8 @@
         <field name="reason">Mercadería defectuosa</field>
         <field name="refund_method">refund</field>
         <field name="move_ids" eval="[(4, ref('demo_invoice_3'), 0)]"/>
+        <!-- TODO delete once sequences are implemented -->
+        <field name="l10n_latam_document_number">0001-01234566</field>
         <field name="journal_id" model="account.journal" eval="obj().env.ref('l10n_ar.demo_invoice_3').journal_id"/>
         <field name="date" eval="time.strftime('%Y-%m')+'-01'"/>
     </record>
@@ -17,6 +19,8 @@
         <field name="reason">Venta cancelada</field>
         <field name="refund_method">cancel</field>
         <field name="move_ids" eval="[(4, ref('demo_invoice_4'), 0)]"/>
+        <!-- TODO delete once sequences are implemented -->
+        <field name="l10n_latam_document_number">0001-01234566</field>
         <field name="journal_id" model="account.journal" eval="obj().env.ref('l10n_ar.demo_invoice_4').journal_id"/>
         <field name="date" eval="time.strftime('%Y-%m')+'-01'"/>
     </record>
@@ -28,6 +32,8 @@
         <field name="reason">Venta cancelada</field>
         <field name="refund_method">cancel</field>
         <field name="move_ids" eval="[(4, ref('demo_invoice_16'), 0)]"/>
+        <!-- TODO delete once sequences are implemented -->
+        <field name="l10n_latam_document_number">0001-01234566</field>
         <field name="journal_id" model="account.journal" eval="obj().env.ref('l10n_ar.demo_invoice_16').journal_id"/>
         <field name="date" eval="time.strftime('%Y-%m')+'-01'"/>
     </record>

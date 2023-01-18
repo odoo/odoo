@@ -1,10 +1,12 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from collections import defaultdict
+from textwrap import shorten
 
 from odoo import models, fields, api, _
 from odoo.exceptions import UserError, ValidationError
 from odoo.tools.sql import column_exists, create_column, drop_index, index_exists
+from odoo.tools import format_date
 
 
 class AccountMove(models.Model):
@@ -66,6 +68,12 @@ class AccountMove(models.Model):
     l10n_latam_document_type_id = fields.Many2one(
         'l10n_latam.document.type', string='Document Type', readonly=False, auto_join=True, index='btree_not_null',
         states={'posted': [('readonly', True)]}, compute='_compute_l10n_latam_document_type', store=True)
+    # TODO rename this field?
+    # this fields represents the stored value of the document number without the prefix.
+    # for simplcity on migration anf proof of concept with do this way.
+    # somewhow this field replace usage of actual account.move.name field
+    l10n_latam_full_document_number = fields.Char(
+        string='Document Number (full)', readonly=True, states={'draft': [('readonly', False)]})
     l10n_latam_document_number = fields.Char(
         compute='_compute_l10n_latam_document_number', inverse='_inverse_l10n_latam_document_number',
         string='Document Number', readonly=True, states={'draft': [('readonly', False)]})
@@ -73,23 +81,23 @@ class AccountMove(models.Model):
     l10n_latam_manual_document_number = fields.Boolean(compute='_compute_l10n_latam_manual_document_number', string='Manual Number')
     l10n_latam_document_type_id_code = fields.Char(related='l10n_latam_document_type_id.code', string='Doc Type')
 
-    @api.depends('l10n_latam_document_type_id')
-    def _compute_name(self):
-        """ Change the way that the use_document moves name is computed:
+    # @api.depends('l10n_latam_document_type_id')
+    # def _compute_name(self):
+    #     """ Change the way that the use_document moves name is computed:
 
-        * If move use document but does not have document type selected then name = '/' to do not show the name.
-        * If move use document and are numbered manually do not compute name at all (will be set manually)
-        * If move use document and is in draft state and has not been posted before we restart name to '/' (this is
-           when we change the document type) """
-        without_doc_type = self.filtered(lambda x: x.journal_id.l10n_latam_use_documents and not x.l10n_latam_document_type_id)
-        manual_documents = self.filtered(lambda x: x.journal_id.l10n_latam_use_documents and x.l10n_latam_manual_document_number)
-        (without_doc_type + manual_documents.filtered(lambda x: not x.name or x.name and x.state == 'draft' and not x.posted_before)).name = '/'
-        # we need to group moves by document type as _compute_name will apply the same name prefix of the first record to the others
-        group_by_document_type = defaultdict(self.env['account.move'].browse)
-        for move in (self - without_doc_type - manual_documents):
-            group_by_document_type[move.l10n_latam_document_type_id.id] += move
-        for group in group_by_document_type.values():
-            super(AccountMove, group)._compute_name()
+    #     * If move use document but does not have document type selected then name = '/' to do not show the name.
+    #     * If move use document and are numbered manually do not compute name at all (will be set manually)
+    #     * If move use document and is in draft state and has not been posted before we restart name to '/' (this is
+    #        when we change the document type) """
+    #     without_doc_type = self.filtered(lambda x: x.journal_id.l10n_latam_use_documents and not x.l10n_latam_document_type_id)
+    #     manual_documents = self.filtered(lambda x: x.journal_id.l10n_latam_use_documents and x.l10n_latam_manual_document_number)
+    #     (without_doc_type + manual_documents.filtered(lambda x: not x.name or x.name and x.state == 'draft' and not x.posted_before)).name = '/'
+    #     # we need to group moves by document type as _compute_name will apply the same name prefix of the first record to the others
+    #     group_by_document_type = defaultdict(self.env['account.move'].browse)
+    #     for move in (self - without_doc_type - manual_documents):
+    #         group_by_document_type[move.l10n_latam_document_type_id.id] += move
+    #     for group in group_by_document_type.values():
+    #         super(AccountMove, group)._compute_name()
 
     @api.depends('l10n_latam_document_type_id', 'journal_id')
     def _compute_l10n_latam_manual_document_number(self):
@@ -101,13 +109,15 @@ class AccountMove(models.Model):
         remaining.l10n_latam_manual_document_number = False
 
     def _is_manual_document_number(self):
-        return self.journal_id.type == 'purchase'
+        return True
+        # TODO when we implement sequence restore this behaviour
+        # return self.journal_id.type == 'purchase'
 
-    @api.depends('name')
+    @api.depends('l10n_latam_full_document_number')
     def _compute_l10n_latam_document_number(self):
-        recs_with_name = self.filtered(lambda x: x.name != '/')
+        recs_with_name = self.filtered(lambda x: x.l10n_latam_full_document_number)
         for rec in recs_with_name:
-            name = rec.name
+            name = rec.l10n_latam_full_document_number
             doc_code_prefix = rec.l10n_latam_document_type_id.doc_code_prefix
             if doc_code_prefix and name:
                 name = name.split(" ", 1)[-1]
@@ -119,46 +129,45 @@ class AccountMove(models.Model):
     def _inverse_l10n_latam_document_number(self):
         for rec in self.filtered(lambda x: x.l10n_latam_document_type_id):
             if not rec.l10n_latam_document_number:
-                rec.name = '/'
+                rec.l10n_latam_full_document_number = False
             else:
                 l10n_latam_document_number = rec.l10n_latam_document_type_id._format_document_number(rec.l10n_latam_document_number)
                 if rec.l10n_latam_document_number != l10n_latam_document_number:
                     rec.l10n_latam_document_number = l10n_latam_document_number
-                rec.name = "%s %s" % (rec.l10n_latam_document_type_id.doc_code_prefix, l10n_latam_document_number)
+                rec.l10n_latam_full_document_number = "%s %s" % (rec.l10n_latam_document_type_id.doc_code_prefix, l10n_latam_document_number)
 
-    @api.onchange('l10n_latam_document_type_id')
-    def _onchange_l10n_latam_document_type_id(self):
-        # if we change document or journal and we are in draft and not posted, we clean number so that is recomputed
-        if (self.journal_id.l10n_latam_use_documents and self.l10n_latam_document_type_id
-              and not self.l10n_latam_manual_document_number and self.state == 'draft' and not self.posted_before):
-            self.name = '/'
-            self._compute_name()
+    # @api.onchange('l10n_latam_document_type_id')
+    # def _onchange_l10n_latam_document_type_id(self):
+    #     # if we change document or journal and we are in draft and not posted, we clean number so that is recomputed
+    #     if (self.journal_id.l10n_latam_use_documents and self.l10n_latam_document_type_id
+    #           and not self.l10n_latam_manual_document_number and self.state == 'draft' and not self.posted_before):
+    #         self.name = '/'
+    #         self._compute_name()
 
-    @api.depends('journal_id', 'l10n_latam_document_type_id')
-    def _compute_highest_name(self):
-        manual_records = self.filtered('l10n_latam_manual_document_number')
-        manual_records.highest_name = ''
-        super(AccountMove, self - manual_records)._compute_highest_name()
+    # @api.depends('journal_id', 'l10n_latam_document_type_id')
+    # def _compute_highest_name(self):
+    #     manual_records = self.filtered('l10n_latam_manual_document_number')
+    #     manual_records.highest_name = ''
+    #     super(AccountMove, self - manual_records)._compute_highest_name()
 
-    @api.model
-    def _deduce_sequence_number_reset(self, name):
-        if self.l10n_latam_use_documents:
-            return 'never'
-        return super(AccountMove, self)._deduce_sequence_number_reset(name)
+    # @api.model
+    # def _deduce_sequence_number_reset(self, name):
+    #     if self.l10n_latam_use_documents:
+    #         return 'never'
+    #     return super(AccountMove, self)._deduce_sequence_number_reset(name)
 
-    def _get_starting_sequence(self):
-        if self.journal_id.l10n_latam_use_documents:
-            if self.l10n_latam_document_type_id:
-                return "%s 00000000" % (self.l10n_latam_document_type_id.doc_code_prefix)
-            # There was no pattern found, propose one
-            return ""
+    # def _get_starting_sequence(self):
+    #     if self.journal_id.l10n_latam_use_documents:
+    #         if self.l10n_latam_document_type_id:
+    #             return "%s 00000000" % (self.l10n_latam_document_type_id.doc_code_prefix)
+    #         # There was no pattern found, propose one
+    #         return ""
 
-        return super(AccountMove, self)._get_starting_sequence()
+    #     return super(AccountMove, self)._get_starting_sequence()
 
     def _post(self, soft=True):
-        for rec in self.filtered(lambda x: x.l10n_latam_use_documents and (not x.name or x.name == '/')):
-            if rec.move_type in ('in_receipt', 'out_receipt'):
-                raise UserError(_('We do not accept the usage of document types on receipts yet. '))
+        for rec in self.filtered(lambda x: x.move_type in ('in_receipt', 'out_receipt') and x.l10n_latam_use_documents):
+            raise UserError(_('We do not accept the usage of document types on receipts yet. '))
         return super()._post(soft)
 
     @api.constrains('state', 'l10n_latam_document_type_id')
@@ -218,3 +227,36 @@ class AccountMove(models.Model):
             if rec.debit_origin_id:
                 document_types = document_types.filtered(lambda x: x.internal_type == 'debit_note')
             rec.l10n_latam_document_type_id = document_types and document_types[0].id
+
+    # super method is not using anymore? maybe remove this and super?
+    def _get_invoice_reference_odoo_invoice(self):
+        if not self.l10n_latam_use_documents:
+            return super()._get_invoice_reference_odoo_invoice()
+        return self.l10n_latam_full_document_number
+
+    def _get_move_display_name(self, show_ref=False):
+        if not self.l10n_latam_use_documents:
+            return super()._get_move_display_name(show_ref=show_ref)
+        self.ensure_one()
+        name = ''
+        if self.state == 'draft':
+            name += {
+                'out_invoice': _('Draft Invoice'),
+                'out_refund': _('Draft Credit Note'),
+                'in_invoice': _('Draft Bill'),
+                'in_refund': _('Draft Vendor Credit Note'),
+                'out_receipt': _('Draft Sales Receipt'),
+                'in_receipt': _('Draft Purchase Receipt'),
+                'entry': _('Draft Entry'),
+            }[self.move_type]
+            name += ' '
+        if not self.l10n_latam_full_document_number:
+            name += '(* %s)' % str(self.id)
+        else:
+            name += self.l10n_latam_full_document_number
+            if self.env.context.get('input_full_display_name'):
+                if self.partner_id:
+                    name += f', {self.partner_id.name}'
+                if self.date:
+                    name += f', {format_date(self.env, self.date)}'
+        return name + (f" ({shorten(self.ref, width=50)})" if show_ref and self.ref else '')

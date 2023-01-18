@@ -10,7 +10,7 @@
             <field name="model_id" ref="account.model_account_move"/>
             <field name="email_from">{{ (object.invoice_user_id.email_formatted or user.email_formatted) }}</field>
             <field name="partner_to">{{ object.partner_id.id }}</field>
-            <field name="subject">{{ object.company_id.name }} Invoice (Ref {{ object.name or 'n/a' }})</field>
+            <field name="subject">{{ object.company_id.name }} Invoice (Ref {{ object.display_name or 'n/a' }})</field>
             <field name="description">Sent to customers with their invoices in attachment</field>
             <field name="body_html" type="html">
 <div style="margin: 0px; padding: 0px;">
@@ -24,8 +24,8 @@
         </t>
         <br /><br />
         Here is your
-        <t t-if="object.name">
-            invoice <span style="font-weight:bold;" t-out="object.name or ''">INV/2021/05/0005</span>
+        <t t-if="object.display_name">
+            invoice <span style="font-weight:bold;" t-out="object.display_name or ''">INV/2021/05/0005</span>
         </t>
         <t t-else="">
             invoice
@@ -93,7 +93,7 @@
             <field name="model_id" ref="account.model_account_move"/>
             <field name="email_from">{{ (object.invoice_user_id.email_formatted or user.email_formatted) }}</field>
             <field name="partner_to">{{ object.partner_id.id }}</field>
-            <field name="subject">{{ object.company_id.name }} Credit Note (Ref {{ object.name or 'n/a' }})</field>
+            <field name="subject">{{ object.company_id.name }} Credit Note (Ref {{ object.display_name or 'n/a' }})</field>
             <field name="description">Sent to customers with the credit note in attachment</field>
             <field name="body_html" type="html">
 <div style="margin: 0px; padding: 0px;">
@@ -107,8 +107,8 @@
         </t>
         <br /><br />
         Here is your
-        <t t-if="object.name">
-            credit note <span style="font-weight:bold;" t-out="object.name or ''">RINV/2021/05/0001</span>
+        <t t-if="object.display_name">
+            credit note <span style="font-weight:bold;" t-out="object.display_name or ''">RINV/2021/05/0001</span>
         </t>
         <t t-else="">
             credit note

@@ -223,49 +223,51 @@ class AccountMove(models.Model):
             })
         return super()._reverse_moves(default_values_list=default_values_list, cancel=cancel)
 
-    @api.onchange('l10n_latam_document_type_id', 'l10n_latam_document_number')
-    def _inverse_l10n_latam_document_number(self):
-        super()._inverse_l10n_latam_document_number()
+    # TODO when implementing sequence for document_number check if we need this (is the user still able to change pos
+    # number on first invoice??)
+    # @api.onchange('l10n_latam_document_type_id', 'l10n_latam_document_number')
+    # def _inverse_l10n_latam_document_number(self):
+    #     super()._inverse_l10n_latam_document_number()
 
-        to_review = self.filtered(lambda x: (
-            x.journal_id.l10n_ar_is_pos
-            and x.l10n_latam_document_type_id
-            and x.l10n_latam_document_number
-            and (x.l10n_latam_manual_document_number or not x.highest_name)
-            and x.l10n_latam_document_type_id.country_id.code == 'AR'
-        ))
-        for rec in to_review:
-            number = rec.l10n_latam_document_type_id._format_document_number(rec.l10n_latam_document_number)
-            current_pos = int(number.split("-")[0])
-            if current_pos != rec.journal_id.l10n_ar_afip_pos_number:
-                invoices = self.search([('journal_id', '=', rec.journal_id.id), ('posted_before', '=', True)], limit=1)
-                # If there is no posted before invoices the user can change the POS number (x.l10n_latam_document_number)
-                if (not invoices):
-                    rec.journal_id.l10n_ar_afip_pos_number = current_pos
-                    rec.journal_id._onchange_set_short_name()
-                # If not, avoid that the user change the POS number
-                else:
-                    raise UserError(_('The document number can not be changed for this journal, you can only modify'
-                                      ' the POS number if there is not posted (or posted before) invoices'))
+    #     to_review = self.filtered(lambda x: (
+    #         x.journal_id.l10n_ar_is_pos
+    #         and x.l10n_latam_document_type_id
+    #         and x.l10n_latam_document_number
+    #         and (x.l10n_latam_manual_document_number or not x.highest_name)
+    #         and x.l10n_latam_document_type_id.country_id.code == 'AR'
+    #     ))
+    #     for rec in to_review:
+    #         number = rec.l10n_latam_document_type_id._format_document_number(rec.l10n_latam_document_number)
+    #         current_pos = int(number.split("-")[0])
+    #         if current_pos != rec.journal_id.l10n_ar_afip_pos_number:
+    #             invoices = self.search([('journal_id', '=', rec.journal_id.id), ('posted_before', '=', True)], limit=1)
+    #             # If there is no posted before invoices the user can change the POS number (x.l10n_latam_document_number)
+    #             if (not invoices):
+    #                 rec.journal_id.l10n_ar_afip_pos_number = current_pos
+    #                 rec.journal_id._onchange_set_short_name()
+    #             # If not, avoid that the user change the POS number
+    #             else:
+    #                 raise UserError(_('The document number can not be changed for this journal, you can only modify'
+    #                                   ' the POS number if there is not posted (or posted before) invoices'))
 
     def _get_formatted_sequence(self, number=0):
         return "%s %05d-%08d" % (self.l10n_latam_document_type_id.doc_code_prefix,
                                  self.journal_id.l10n_ar_afip_pos_number, number)
 
-    def _get_starting_sequence(self):
-        """ If use documents then will create a new starting sequence using the document type code prefix and the
-        journal document number with a 8 padding number """
-        if self.journal_id.l10n_latam_use_documents and self.company_id.account_fiscal_country_id.code == "AR":
-            if self.l10n_latam_document_type_id:
-                return self._get_formatted_sequence()
-        return super()._get_starting_sequence()
+    # def _get_starting_sequence(self):
+    #     """ If use documents then will create a new starting sequence using the document type code prefix and the
+    #     journal document number with a 8 padding number """
+    #     if self.journal_id.l10n_latam_use_documents and self.company_id.account_fiscal_country_id.code == "AR":
+    #         if self.l10n_latam_document_type_id:
+    #             return self._get_formatted_sequence()
+    #     return super()._get_starting_sequence()
 
-    def _get_last_sequence_domain(self, relaxed=False):
-        where_string, param = super(AccountMove, self)._get_last_sequence_domain(relaxed)
-        if self.company_id.account_fiscal_country_id.code == "AR" and self.l10n_latam_use_documents:
-            where_string += " AND l10n_latam_document_type_id = %(l10n_latam_document_type_id)s"
-            param['l10n_latam_document_type_id'] = self.l10n_latam_document_type_id.id or 0
-        return where_string, param
+    # def _get_last_sequence_domain(self, relaxed=False):
+    #     where_string, param = super(AccountMove, self)._get_last_sequence_domain(relaxed)
+    #     if self.company_id.account_fiscal_country_id.code == "AR" and self.l10n_latam_use_documents:
+    #         where_string += " AND l10n_latam_document_type_id = %(l10n_latam_document_type_id)s"
+    #         param['l10n_latam_document_type_id'] = self.l10n_latam_document_type_id.id or 0
+    #     return where_string, param
 
     def _l10n_ar_get_amounts(self, company_currency=False):
         """ Method used to prepare data to present amounts and taxes related amounts when creating an

@@ -6,6 +6,13 @@
         <field name="model">account.move</field>
         <field name="inherit_id" ref="account.view_account_invoice_filter"/>
         <field name="arch" type="xml">
+            <field name="name" string="Invoice"
+                    filter_domain="[
+                        '|', '|' , '|', '|', '|',
+                        ('name', 'ilike', self), ('l10n_latam_full_document_number', 'ilike', self),
+                        ('invoice_origin', 'ilike', self),
+                        ('ref', 'ilike', self), ('payment_reference', 'ilike', self),
+                        ('partner_id', 'child_of', self)]"/>
             <field name="partner_id" position="after">
                 <field name="l10n_latam_document_type_id"/>
             </field>
@@ -50,13 +57,17 @@
                             'readonly': [('posted_before', '=', True), ('state', '!=', 'draft')]}"/>
             </xpath>
 
-            <!-- on latam_documents we use document_number to set name -->
-            <field name="name" position="attributes">
-                <attribute name="attrs">{'invisible':[('name', '=', '/'), ('posted_before', '=', False), ('quick_edit_mode', '=', False)],
-                                         'readonly': ['|', ('state', '!=', 'draft'), ('l10n_latam_use_documents', '=', True)]}</attribute>
-                <attribute name="force_save">1</attribute>
-            </field>
+        </field>
+    </record>
 
+    <record id="view_invoice_tree" model="ir.ui.view">
+        <field name="name">account.invoice.tree</field>
+        <field name="model">account.move</field>
+        <field name="inherit_id" ref="account.view_invoice_tree"/>
+        <field name="arch" type="xml">
+            <field name="name" position="after">
+                <field name="l10n_latam_full_document_number" position="after" optional="show"/>
+            </field>
         </field>
     </record>
 
