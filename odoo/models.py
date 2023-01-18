@@ -6025,14 +6025,11 @@ class BaseModel(metaclass=MetaModel):
             return
 
         # first yield what to compute
-        for field in tree.get(None, ()):
+        for field in tree.root:
             yield field, self, create
 
         # then traverse dependencies backwards, and proceed recursively
         for field, subtree in tree.items():
-            if field is None:
-                continue
-
             if create and field.type in ('many2one', 'many2one_reference'):
                 # upon creation, no other record has a reference to self
                 continue
