@@ -3,9 +3,27 @@ odoo.define('fg_custom.FgTicketScreen', function (require) {
 
     const TicketScreen = require('point_of_sale.TicketScreen');
     const Registries = require('point_of_sale.Registries');
+    const { useListener, useAutofocus } = require('web.custom_hooks');
 
     const FgTicketScreen = (TicketScreen) =>
         class extends TicketScreen {
+            constructor() {
+                super(...arguments);
+                useListener('print-all-order-receipt', this._onAllReceiptButton);
+            }
+
+            _onAllReceiptButton() {
+                var order_list = this.getFilteredOrderList();
+                if (order_list.length == 0) {
+                    return;
+                }
+                this.showScreen('ReprintAllReceiptScreen', { orders: order_list });
+            }
+
+            shouldShowAllOrderReceiptButton() {
+                return this._state.ui.filter == 'SYNCED';
+            }
+
             _getSearchFields() {
                 const fields = {
                 SI_NUMBER: {
