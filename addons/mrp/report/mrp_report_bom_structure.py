@@ -177,7 +177,7 @@ class ReportBomStructure(models.AbstractModel):
             'quantity_available': quantities_info.get('free_qty', 0),
             'quantity_on_hand': quantities_info.get('on_hand_qty', 0),
             'base_bom_line_qty': bom_line.product_qty if bom_line else False,  # bom_line isn't defined only for the top-level product
-            'name': product.display_name,
+            'name': product.display_name or bom.product_tmpl_id.display_name,
             'uom': bom.product_uom_id if bom else product.uom_id,
             'uom_name': bom.product_uom_id.name if bom else product.uom_id.name,
             'route_type': route_info.get('route_type', ''),
@@ -188,7 +188,7 @@ class ReportBomStructure(models.AbstractModel):
             'currency_id': company.currency_id.id,
             'product': product,
             'product_id': product.id,
-            'link_id': product.id if product.product_variant_count > 1 else product.product_tmpl_id.id,
+            'link_id': (product.id if product.product_variant_count > 1 else product.product_tmpl_id.id) or bom.product_tmpl_id.id,
             'link_model': 'product.product' if product.product_variant_count > 1 else 'product.template',
             'code': bom and bom.display_name or '',
             'prod_cost': prod_cost,
@@ -209,7 +209,7 @@ class ReportBomStructure(models.AbstractModel):
         components = []
         for component_index, line in enumerate(bom.bom_line_ids):
             new_index = f"{index}{component_index}"
-            if line._skip_bom_line(product):
+            if product and line._skip_bom_line(product):
                 continue
             line_quantity = (current_quantity / (bom.product_qty or 1.0)) * line.product_qty
             if line.child_bom_id:
