@@ -212,8 +212,13 @@ class ProductTemplate(models.Model):
             (field name must be identical between product.product & product.template models)
         """
         for template in self:
-            if len(template.product_variant_ids) == 1:
+            count = len(template.product_variant_ids)
+            if count == 1:
                 template.product_variant_ids[fname] = template[fname]
+            elif count == 0:
+                archived_variants = self.with_context(active_test=False).product_variant_ids
+                if len(archived_variants) == 1:
+                    archived_variants[fname] = template[fname]
 
     @api.depends_context('company')
     @api.depends('product_variant_ids.standard_price')
