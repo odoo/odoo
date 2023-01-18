@@ -4539,7 +4539,8 @@ registry.sizing = SnippetOptionWidget.extend({
                 const isGridHandle = handleEl.classList.contains('o_grid_handle');
                 handleEl.classList.toggle('d-none', isGrid ^ isGridHandle);
                 // Disabling the resize if we are in mobile view.
-                handleEl.classList.toggle('readonly', isMobileView && isGridHandle);
+                const isHorizontalSizing = handleEl.matches('.e, .w');
+                handleEl.classList.toggle('readonly', isMobileView && (isHorizontalSizing || isGridHandle));
             }
 
             // Hiding the move handle in mobile view so we can't drag the
