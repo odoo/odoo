@@ -2,6 +2,9 @@
 <templates id="FgTicketScreen" xml:space="preserve">
     <t t-extend="TicketScreen" t-name="TicketScreen" t-inherit="point_of_sale.TicketScreen" t-inherit-mode="extension"
        owl="1">
+        <xpath expr="//div[@class='buttons']" position="inside" >
+             <button t-if="shouldShowAllOrderReceiptButton()" class="highlight" t-on-click="trigger('print-all-order-receipt')">Print All Order Receipt</button>
+         </xpath>
          <xpath expr="//div[@class='orders']" position="replace" >
             <div class="orders">
                         <t t-set="_filteredOrderList" t-value="getFilteredOrderList()" />

@@ -39,6 +39,7 @@ class FgZReport(models.AbstractModel):
         total_entry_encoding = 0
 
         company_id = self.env.company
+        company_id.z_counter = company_id.z_counter + 1
         if company_id.is_reset_open_reading:
             CLOSE_session_ids = self.env['pos.session'].search([('id', 'not in', session_ids.ids), ('is_reset_zreport', '=', False), ('state', '=', 'closed')])
         else:
