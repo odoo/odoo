@@ -11,7 +11,7 @@ class Partner(models.Model):
     # NOT A REAL PROPERTY !!!!
     property_product_pricelist = fields.Many2one(
         'product.pricelist', 'Pricelist', compute='_compute_product_pricelist',
-        inverse="_inverse_product_pricelist", company_dependent=False,
+        inverse="_inverse_product_pricelist", company_dependent=False, copy=True,
         domain=lambda self: [('company_id', 'in', (self.env.company.id, False))],
         help="This pricelist will be used, instead of the default one, for sales to the current partner")
 
