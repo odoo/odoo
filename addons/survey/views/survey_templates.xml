@@ -298,6 +298,7 @@
     <template id="question_container" name="Survey: question container">
         <t t-set="display_question"
            t-value="survey.questions_layout == 'page_per_question'
+                    or survey.questions_selection == 'random'
                     or (survey.questions_layout == 'one_page' and not question.is_conditional)
                     or (survey.questions_layout == 'page_per_section' and (not question.is_conditional or triggering_answer_by_question[question.id] in selected_answers))"/>
 
