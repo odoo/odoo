@@ -8,139 +8,25 @@ import options from "web_editor.snippets.options";
 var _t = core._t;
 var qweb = core.qweb;
 
-options.registry.gallery = options.registry.CarouselHandler.extend({
-    /**
-     * @override
-     */
-    start: function () {
-        var self = this;
-
-        // Make sure image previews are updated if images are changed
-        this.$target.on('image_changed.gallery', 'img', function (ev) {
-            var $img = $(ev.currentTarget);
-            var index = self.$target.find('.carousel-item.active').index();
-            self.$('.carousel:first li[data-bs-target]:eq(' + index + ')')
-                .css('background-image', 'url(' + $img.attr('src') + ')');
-        });
-
-        // When the snippet is empty, an edition button is the default content
-        // TODO find a nicer way to do that to have editor style
-        this.$target.on('click.gallery', '.o_add_images', function (e) {
-            e.stopImmediatePropagation();
-            self.addImages(false);
-        });
-
-        this.$target.on('dropped.gallery', 'img', function (ev) {
-            self.mode(null, self.getMode());
-            if (!ev.target.height) {
-                $(ev.target).one('load', function () {
-                    setTimeout(function () {
-                        self.trigger_up('cover_update');
-                    });
-                });
-            }
-        });
-
-        const $container = this.$('> .container, > .container-fluid, > .o_container_small');
-        if ($container.find('> *:not(div)').length) {
-            self.mode(null, self.getMode());
-        }
-
-        return this._super.apply(this, arguments);
-    },
-    /**
-     * @override
-     */
-    onBuilt: function () {
-        if (this.$target.find('.o_add_images').length) {
-            this.addImages(false);
-        }
-        // TODO should consider the async parts
-        this._adaptNavigationIDs();
-    },
-    /**
-     * @override
-     */
-    onClone: function () {
-        this._adaptNavigationIDs();
-    },
-    /**
-     * @override
-     */
-    cleanForSave: function () {
-        if (this.$target.hasClass('slideshow')) {
-            this.$target.removeAttr('style');
-        }
-    },
-    /**
-     * @override
-     */
-    destroy() {
-        this._super(...arguments);
-        this.$target.off('.gallery');
-    },
+/**
+ * This class provides layout methods for interacting with the ImageGallery
+ * snippet. It is used by all options that need the layout to be recomputed.
+ * This is typically the case when adding/removing/moving images, changing the
+ * layout mode and changing the number of columns.
+ */
+options.registry.GalleryLayout = options.registry.CarouselHandler.extend({
 
     //--------------------------------------------------------------------------
-    // Options
+    // Private
     //--------------------------------------------------------------------------
 
-    /**
-     * Allows to select images to add as part of the snippet.
-     *
-     * @see this.selectClass for parameters
-     */
-    addImages: function (previewMode) {
-        const $images = this.$('img');
-        var $container = this.$('> .container, > .container-fluid, > .o_container_small');
-        const lastImage = this._getImages().at(-1);
-        let index = lastImage ? this._getIndex(lastImage) : -1;
-        const dialog = new ComponentWrapper(this, MediaDialogWrapper, {
-            multiImages: true,
-            onlyImages: true,
-            save: images => {
-                let $newImageToSelect;
-                for (const image of images) {
-                    const $img = $('<img/>', {
-                        class: $images.length > 0 ? $images[0].className : 'img img-fluid d-block ',
-                        src: image.src,
-                        'data-index': ++index,
-                        alt: image.alt || '',
-                        'data-name': _t('Image'),
-                        style: $images.length > 0 ? $images[0].style.cssText : '',
-                    }).appendTo($container);
-                    if (!$newImageToSelect) {
-                        $newImageToSelect = $img;
-                    }
-                }
-                if (images.length > 0) {
-                    this.mode('reset', this.getMode());
-                    this.trigger_up('cover_update');
-                    // Triggers the re-rendering of the thumbnail
-                    $newImageToSelect.trigger('image_changed');
-
-                }
-            },
-        });
-        dialog.mount(this.el);
-    },
-    /**
-     * Allows to change the number of columns when displaying images with a
-     * grid-like layout.
-     *
-     * @see this.selectClass for parameters
-     */
-    columns: function (previewMode, widgetValue, params) {
-        const nbColumns = parseInt(widgetValue || '1');
-        this.$target.attr('data-columns', nbColumns);
-
-        this.mode(previewMode, this.getMode(), {}); // TODO improve
-    },
     /**
      * Get the image target's layout mode (slideshow, masonry, grid or nomode).
      *
+     * @private
      * @returns {String('slideshow'|'masonry'|'grid'|'nomode')}
      */
-    getMode: function () {
+    _getMode() {
         var mode = 'slideshow';
         if (this.$target.hasClass('o_masonry')) {
             mode = 'masonry';
@@ -155,9 +41,11 @@ options.registry.gallery = options.registry.CarouselHandler.extend({
     },
     /**
      * Displays the images with the "grid" layout.
+     *
+     * @private
      */
-    grid: function () {
-        var imgs = this._getImages();
+    _grid() {
+        const imgs = this._getItemsGallery();
         var $row = $('<div/>', {class: 'row s_nb_column_fixed'});
         var columns = this._getColumns();
         var colClass = 'col-lg-' + (12 / columns);
@@ -176,10 +64,12 @@ options.registry.gallery = options.registry.CarouselHandler.extend({
     },
     /**
      * Displays the images with the "masonry" layout.
+     *
+     * @private
      */
-    masonry: function () {
+    _masonry() {
         var self = this;
-        var imgs = this._getImages();
+        const imgs = this._getItemsGallery();
         var columns = this._getColumns();
         var colClass = 'col-lg-' + (12 / columns);
         var cols = [];
@@ -218,14 +108,15 @@ options.registry.gallery = options.registry.CarouselHandler.extend({
     /**
      * Allows to change the images layout. @see grid, masonry, nomode, slideshow
      *
-     * @see this.selectClass for parameters
+     * @private
+     * @param {string} modeName
      */
-    mode: function (previewMode, widgetValue, params) {
-        widgetValue = widgetValue || 'slideshow'; // FIXME should not be needed
+    _setMode(modeName) {
+        modeName = modeName || 'slideshow'; // FIXME should not be needed
         this.$target.css('height', '');
         this.$target
             .removeClass('o_nomode o_masonry o_grid o_slideshow')
-            .addClass('o_' + widgetValue);
+            .addClass('o_' + modeName);
         // Used to prevent the editor's "unbreakable protection mechanism" from
         // restoring Image Wall adaptations (images removed > new images added
         // to the container & layout updates) when adding new images to the
@@ -233,16 +124,18 @@ options.registry.gallery = options.registry.CarouselHandler.extend({
         if (this.options.wysiwyg) {
             this.options.wysiwyg.odooEditor.unbreakableStepUnactive();
         }
-        this[widgetValue]();
+        this[`_${modeName}`]();
         this.trigger_up('cover_update');
         this._refreshPublicWidgets();
     },
     /**
      * Displays the images with the standard layout: floating images.
+     *
+     * @private
      */
-    nomode: function () {
+    _nomode() {
         var $row = $('<div/>', {class: 'row s_nb_column_fixed'});
-        var imgs = this._getImages();
+        const imgs = this._getItemsGallery();
 
         this._replaceContent($row);
 
@@ -256,30 +149,12 @@ options.registry.gallery = options.registry.CarouselHandler.extend({
         });
     },
     /**
-     * Allows to remove all images. Restores the snippet to the way it was when
-     * it was added in the page.
-     *
-     * @see this.selectClass for parameters
-     */
-    removeAllImages: function (previewMode) {
-        var $addImg = $('<div>', {
-            class: 'alert alert-info css_non_editable_mode_hidden text-center',
-        });
-        var $text = $('<span>', {
-            class: 'o_add_images',
-            style: 'cursor: pointer;',
-            text: _t(" Add Images"),
-        });
-        var $icon = $('<i>', {
-            class: ' fa fa-plus-circle',
-        });
-        this._replaceContent($addImg.append($icon).append($text));
-    },
-    /**
      * Displays the images with a "slideshow" layout.
+     *
+     * @private
      */
-    slideshow: function () {
-        const imageEls = this._getImages();
+    _slideshow() {
+        const imageEls = this._getItemsGallery();
         const images = Array.from(imageEls).map((img) => ({
             // Use getAttribute to get the attribute value otherwise .src
             // returns the absolute url.
@@ -307,86 +182,12 @@ options.registry.gallery = options.registry.CarouselHandler.extend({
         this.$target.off('slide.bs.carousel').off('slid.bs.carousel');
         this.$('li.fa').off('click');
     },
-
-    //--------------------------------------------------------------------------
-    // Public
-    //--------------------------------------------------------------------------
-
-    /**
-     * Handles image removals and image index updates.
-     *
-     * @override
-     */
-    notify: function (name, data) {
-        this._super(...arguments);
-        if (name === 'image_removed') {
-            data.$image.remove(); // Force the removal of the image before reset
-            this.mode('reset', this.getMode());
-        }
-    },
-
-    //--------------------------------------------------------------------------
-    // Private
-    //--------------------------------------------------------------------------
-
-    /**
-     * @private
-     */
-    _adaptNavigationIDs: function () {
-        var uuid = new Date().getTime();
-        this.$target.find('.carousel').attr('id', 'slideshow_' + uuid);
-        this.$target.find('[data-bs-slide], [data-bs-slide-to]').toArray().forEach((el) => {
-            var $el = $(el);
-            if ($el.attr('data-bs-target')) {
-                $el.attr('data-bs-target', '#slideshow_' + uuid);
-            } else if ($el.attr('href')) {
-                $el.attr('href', '#slideshow_' + uuid);
-            }
-        });
-    },
     /**
      * @override
      */
-    _computeWidgetState: function (methodName, params) {
-        switch (methodName) {
-            case 'mode': {
-                let activeModeName = 'slideshow';
-                for (const modeName of params.possibleValues) {
-                    if (this.$target.hasClass(`o_${modeName}`)) {
-                        activeModeName = modeName;
-                        break;
-                    }
-                }
-                this.activeMode = activeModeName;
-                return activeModeName;
-            }
-            case 'columns': {
-                return `${this._getColumns()}`;
-            }
-        }
-        return this._super(...arguments);
-    },
-    /**
-     * @private
-     */
-    async _computeWidgetVisibility(widgetName, params) {
-        if (widgetName === 'slideshow_mode_opt') {
-            return false;
-        }
-        return this._super(...arguments);
-    },
-    /**
-     * Returns the images, sorted by index.
-     *
-     * @private
-     * @returns {DOMElement[]}
-     */
-    _getImages: function () {
-        var imgs = this.$('img').get();
-        var self = this;
-        imgs.sort(function (a, b) {
-            return self._getIndex(a) - self._getIndex(b);
-        });
+    _getItemsGallery() {
+        const imgs = this.$('img').get();
+        imgs.sort((a, b) => this._getIndex(a) - this._getIndex(b));
         return imgs;
     },
     /**
@@ -415,8 +216,8 @@ options.registry.gallery = options.registry.CarouselHandler.extend({
         itemsEls.forEach((img, index) => {
             img.dataset.index = index;
         });
-        const currentMode = this.getMode();
-        this.mode("reset", currentMode);
+        const currentMode = this._getMode();
+        this._relayout();
         if (currentMode === "slideshow") {
             this._updateIndicatorAndActivateSnippet(newItemPosition);
         } else {
@@ -439,10 +240,254 @@ options.registry.gallery = options.registry.CarouselHandler.extend({
         return $container;
     },
     /**
+     * Redraws the current layout.
+     *
+     * @private
+     */
+    _relayout() {
+        this._setMode(this._getMode());
+    },
+});
+
+options.registry.gallery = options.registry.GalleryLayout.extend({
+    /**
      * @override
      */
-    _getItemsGallery() {
-        return this._getImages();
+    start() {
+        const containerEl = this.$target[0].querySelector(":scope > .container, :scope > .container-fluid, :scope > .o_container_small");
+        if (containerEl.querySelector(":scope > *:not(div)")) {
+            this._relayout();
+        }
+        return this._super.apply(this, arguments);
+    },
+    /**
+     * @override
+     */
+    cleanForSave() {
+        if (this.$target.hasClass('slideshow')) {
+            this.$target.removeAttr('style');
+        }
+    },
+
+    //--------------------------------------------------------------------------
+    // Options
+    //--------------------------------------------------------------------------
+
+    /**
+     * Allows to change the number of columns when displaying images with a
+     * grid-like layout.
+     *
+     * @see this.selectClass for parameters
+     */
+    columns(previewMode, widgetValue, params) {
+        const nbColumns = parseInt(widgetValue || '1');
+        this.$target.attr('data-columns', nbColumns);
+
+        this._relayout();
+    },
+    /**
+     * Allows to change the images layout. @see grid, masonry, nomode, slideshow
+     *
+     * @see this.selectClass for parameters
+     */
+    mode(previewMode, widgetValue, params) {
+        this._setMode(widgetValue);
+    },
+
+    //--------------------------------------------------------------------------
+    // Private
+    //--------------------------------------------------------------------------
+
+    /**
+     * @override
+     */
+    _computeWidgetState(methodName, params) {
+        switch (methodName) {
+            case 'mode': {
+                let activeModeName = 'slideshow';
+                for (const modeName of params.possibleValues) {
+                    if (this.$target.hasClass(`o_${modeName}`)) {
+                        activeModeName = modeName;
+                        break;
+                    }
+                }
+                this.activeMode = activeModeName;
+                return activeModeName;
+            }
+            case 'columns': {
+                return `${this._getColumns()}`;
+            }
+        }
+        return this._super(...arguments);
+    },
+    /**
+     * @private
+     */
+    async _computeWidgetVisibility(widgetName, params) {
+        if (widgetName === 'slideshow_mode_opt') {
+            return false;
+        }
+        return this._super(...arguments);
+    },
+});
+
+options.registry.GalleryImageList = options.registry.GalleryLayout.extend({
+    /**
+     * @override
+     */
+    start() {
+        // Make sure image previews are updated if images are changed
+        this.$target.on('image_changed.gallery', 'img', ev => {
+            const $img = $(ev.currentTarget);
+            const index = this.$target.find('.carousel-item.active').index();
+            this.$('.carousel:first li[data-bs-target]:eq(' + index + ')')
+                .css('background-image', 'url(' + $img.attr('src') + ')');
+        });
+
+        // When the snippet is empty, an edition button is the default content
+        // TODO find a nicer way to do that to have editor style
+        this.$target.on('click.gallery', '.o_add_images', ev => {
+            ev.stopImmediatePropagation();
+            this.addImages(false);
+        });
+
+        this.$target.on('dropped.gallery', 'img', ev => {
+            this._relayout();
+            if (!ev.target.height) {
+                $(ev.target).one('load', () => {
+                    setTimeout(() => {
+                        this.trigger_up('cover_update');
+                    });
+                });
+            }
+        });
+
+        return this._super.apply(this, arguments);
+    },
+    /**
+     * @override
+     */
+    onBuilt() {
+        this._super(...arguments);
+        if (this.$target.find('.o_add_images').length) {
+            this.addImages(false);
+        }
+        // TODO should consider the async parts
+        this._adaptNavigationIDs();
+    },
+    /**
+     * @override
+     */
+    onClone() {
+        this._adaptNavigationIDs();
+    },
+    /**
+     * @override
+     */
+    destroy() {
+        this._super(...arguments);
+        this.$target.off('.gallery');
+    },
+
+    //--------------------------------------------------------------------------
+    // Options
+    //--------------------------------------------------------------------------
+
+    /**
+     * Allows to select images to add as part of the snippet.
+     *
+     * @see this.selectClass for parameters
+     */
+    addImages(previewMode) {
+        const $images = this.$('img');
+        const $container = this.$('> .container, > .container-fluid, > .o_container_small');
+        const lastImage = this._getItemsGallery().at(-1);
+        let index = lastImage ? this._getIndex(lastImage) : -1;
+        const dialog = new ComponentWrapper(this, MediaDialogWrapper, {
+            multiImages: true,
+            onlyImages: true,
+            save: images => {
+                let $newImageToSelect;
+                for (const image of images) {
+                    const $img = $('<img/>', {
+                        class: $images.length > 0 ? $images[0].className : 'img img-fluid d-block ',
+                        src: image.src,
+                        'data-index': ++index,
+                        alt: image.alt || '',
+                        'data-name': _t('Image'),
+                        style: $images.length > 0 ? $images[0].style.cssText : '',
+                    }).appendTo($container);
+                    if (!$newImageToSelect) {
+                        $newImageToSelect = $img;
+                    }
+                }
+                if (images.length > 0) {
+                    this._relayout();
+                    this.trigger_up('cover_update');
+                    // Triggers the re-rendering of the thumbnail
+                    $newImageToSelect.trigger('image_changed');
+
+                }
+            },
+        });
+        dialog.mount(this.el);
+    },
+    /**
+     * Allows to remove all images. Restores the snippet to the way it was when
+     * it was added in the page.
+     *
+     * @see this.selectClass for parameters
+     */
+    removeAllImages(previewMode) {
+        const $addImg = $('<div>', {
+            class: 'alert alert-info css_non_editable_mode_hidden text-center',
+        });
+        const $text = $('<span>', {
+            class: 'o_add_images',
+            style: 'cursor: pointer;',
+            text: _t(" Add Images"),
+        });
+        const $icon = $('<i>', {
+            class: ' fa fa-plus-circle',
+        });
+        this._replaceContent($addImg.append($icon).append($text));
+    },
+
+    //--------------------------------------------------------------------------
+    // Public
+    //--------------------------------------------------------------------------
+
+    /**
+     * Handles image removals and image index updates.
+     *
+     * @override
+     */
+    notify(name, data) {
+        this._super(...arguments);
+        if (name === 'image_removed') {
+            data.$image.remove(); // Force the removal of the image before reset
+            this._relayout();
+        }
+    },
+
+    //--------------------------------------------------------------------------
+    // Private
+    //--------------------------------------------------------------------------
+
+    /**
+     * @private
+     */
+    _adaptNavigationIDs() {
+        const uuid = new Date().getTime();
+        this.$target.find('.carousel').attr('id', 'slideshow_' + uuid);
+        this.$target.find('[data-bs-slide], [data-bs-slide-to]').toArray().forEach((el) => {
+            const $el = $(el);
+            if ($el.attr('data-bs-target')) {
+                $el.attr('data-bs-target', '#slideshow_' + uuid);
+            } else if ($el.attr('href')) {
+                $el.attr('href', '#slideshow_' + uuid);
+            }
+        });
     },
 });
 
@@ -454,7 +499,7 @@ options.registry.gallery_img = options.Class.extend({
      */
     onRemove: function () {
         this.trigger_up('option_update', {
-            optionName: 'gallery',
+            optionName: 'GalleryImageList',
             name: 'image_removed',
             data: {
                 $image: this.$target,

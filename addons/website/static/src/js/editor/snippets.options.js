@@ -3929,11 +3929,11 @@ options.registry.GalleryElement = options.Class.extend({
      */
     position(previewMode, widgetValue, params) {
         const optionName = this.$target[0].classList.contains("carousel-item") ? "Carousel"
-            : "gallery";
+            : "GalleryImageList";
         const itemEl = this.$target[0];
         this.trigger_up("option_update", {
             optionName: optionName,
-            name: "reoder_items",
+            name: "reorder_items",
             data: {
                 itemEl: itemEl,
                 position: widgetValue,
