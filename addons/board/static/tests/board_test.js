@@ -1,6 +1,7 @@
 /** @odoo-module **/
 
 import { BoardAction } from "@board/board_action";
+import { fakeCookieService } from "@web/../tests/helpers/mock_services";
 import { click, dragAndDrop, getFixture, patchWithCleanup } from "@web/../tests/helpers/utils";
 import { makeView, setupViewRegistries } from "@web/../tests/views/helpers";
 import { registry } from "@web/core/registry";
@@ -719,5 +720,40 @@ QUnit.module("Board", (hooks) => {
         await click(document.querySelector(".o_pivot_view .o_pivot_cell_value"));
 
         assert.verifySteps(["do action"]);
+    });
+
+    QUnit.test("graphs in dashboard aren't squashed", async function (assert) {
+        registry.category("services").add("cookie", fakeCookieService);
+
+        serverData.views["partner,4,graph"] =
+            '<graph><field name="int_field" type="measure"/></graph>';
+
+        await makeView({
+            serverData,
+            type: "form",
+            resModel: "board",
+            arch: `
+                <form string="My Dashboard" js_class="board">
+                    <board style="2-1">
+                        <column>
+                            <action string="ABC" name="51"></action>
+                        </column>
+                    </board>
+                </form>`,
+            mockRPC(route, args) {
+                if (route === "/web/action/load") {
+                    return Promise.resolve({
+                        res_model: "partner",
+                        views: [[4, "graph"]],
+                    });
+                }
+            },
+        });
+
+        assert.containsOnce(target, ".o-dashboard-action .o_graph_renderer");
+        assert.strictEqual(
+            target.querySelector(".o-dashboard-action .o_graph_renderer canvas").offsetHeight,
+            300
+        );
     });
 });
