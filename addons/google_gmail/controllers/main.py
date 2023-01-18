@@ -35,6 +35,7 @@ class GoogleGmailController(http.Controller):
             model_name = state['model']
             rec_id = state['id']
             csrf_token = state['csrf_token']
+            email = state['email']
         except Exception:
             _logger.error('Google Gmail: Wrong state value %r.', state)
             raise Forbidden()
@@ -53,17 +54,19 @@ class GoogleGmailController(http.Controller):
             _logger.error('Google Gmail: Wrong CSRF token during Gmail authentication.')
             raise Forbidden()
 
+        GmailToken = request.env['google.gmail.token']
+
         try:
-            refresh_token, access_token, expiration = record._fetch_gmail_refresh_token(code)
+            refresh_token, access_token, expiration = GmailToken._fetch_gmail_refresh_token(code)
         except UserError:
             return _('An error occur during the authentication process.')
 
-        record.write({
+        # update existing token or create a new one
+        GmailToken._search_or_create(email, {
             'google_gmail_access_token': access_token,
             'google_gmail_access_token_expiration': expiration,
-            'google_gmail_authorization_code': code,
             'google_gmail_refresh_token': refresh_token,
         })
 
-        url = f'/odoo/{model_name}/{rec_id}'
-        return request.redirect(url)
+        # redirect to the record form view
+        return request.redirect(f'/odoo/{model_name}/{rec_id}')

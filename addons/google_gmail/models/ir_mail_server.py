@@ -12,18 +12,20 @@ class IrMail_Server(models.Model):
 
     _name = 'ir.mail_server'
     _inherit = ['ir.mail_server', 'google.gmail.mixin']
+    _email_field = 'smtp_user'
+    _server_type_field = 'smtp_authentication'
 
     smtp_authentication = fields.Selection(
         selection_add=[('gmail', 'Gmail OAuth Authentication')],
         ondelete={'gmail': 'set default'})
 
     def _compute_smtp_authentication_info(self):
-        gmail_servers = self.filtered(lambda server: server.smtp_authentication == 'gmail')
+        gmail_servers, normal_servers = self._split_gmail_servers()
         gmail_servers.smtp_authentication_info = _(
             'Connect your Gmail account with the OAuth Authentication process.  \n'
             'By default, only a user with a matching email address will be able to use this server. '
             'To extend its use, you should set a "mail.default.from" system parameter.')
-        super(IrMail_Server, self - gmail_servers)._compute_smtp_authentication_info()
+        super(IrMail_Server, normal_servers)._compute_smtp_authentication_info()
 
     @api.onchange('smtp_encryption')
     def _onchange_encryption(self):
@@ -39,10 +41,7 @@ class IrMail_Server(models.Model):
             self.smtp_encryption = 'starttls'
             self.smtp_port = 587
         else:
-            self.google_gmail_authorization_code = False
-            self.google_gmail_refresh_token = False
-            self.google_gmail_access_token = False
-            self.google_gmail_access_token_expiration = False
+            self.google_gmail_token_id = False
 
     @api.onchange('smtp_user', 'smtp_authentication')
     def _on_change_smtp_user_gmail(self):
@@ -71,7 +70,9 @@ class IrMail_Server(models.Model):
 
     def _smtp_login(self, connection, smtp_user, smtp_password):
         if len(self) == 1 and self.smtp_authentication == 'gmail':
-            auth_string = self._generate_oauth2_string(smtp_user, self.google_gmail_refresh_token)
+            if not self.google_gmail_token_id:
+                raise UserError(_('Please login to your Gmail account.'))
+            auth_string = self.google_gmail_token_id._generate_oauth2_string()
             oauth_param = base64.b64encode(auth_string.encode()).decode()
             connection.ehlo()
             connection.docmd('AUTH', f'XOAUTH2 {oauth_param}')

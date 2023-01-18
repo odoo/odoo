@@ -3,7 +3,7 @@
 
 {
     "name": "Google Gmail",
-    "version": "1.2",
+    "version": "1.3",
     "category": "Hidden",
     "description": "Gmail support for incoming / outgoing mail servers",
     "depends": [
@@ -13,13 +13,9 @@
         "views/fetchmail_server_views.xml",
         "views/ir_mail_server_views.xml",
         "views/res_config_settings_views.xml",
+        "security/ir.model.access.csv",
     ],
     "auto_install": True,
     "author": "Odoo S.A.",
     "license": "LGPL-3",
-    "assets": {
-        "web.assets_backend": [
-            "google_gmail/static/src/scss/google_gmail.scss",
-        ]
-    },
 }
