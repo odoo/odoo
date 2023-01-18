@@ -4,7 +4,7 @@ from odoo.exceptions import UserError
 from odoo.tools.misc import get_lang
 
 
-class AccountMoveSend(models.TransientModel):
+class AccountMoveSend(models.Model):
     _name = 'account.move.send'
     _description = "Account Move Send"
 
@@ -14,8 +14,11 @@ class AccountMoveSend(models.TransientModel):
         selection=[
             ('invoice_single', "Invoice Single"),
             ('invoice_multi', "Invoice Multi"),
+            ('done', "Done"),
         ],
         compute='_compute_mode',
+        readonly=False,
+        store=True,
     )
     button_name = fields.Char(compute='_compute_button_name')
 
@@ -70,24 +73,16 @@ class AccountMoveSend(models.TransientModel):
         store=True,
         readonly=False,
     )
-
-    allow_pdf_needed = fields.Boolean(
-        compute='_compute_allow_pdf_needed',
-        store=True,
-        readonly=False,
-    )
-    pdf_needed = fields.Boolean(default=True)
-    pdf_needed_message = fields.Text(compute='_compute_pdf_needed_message')
     mail_attachments_widget = fields.Json(
         compute='_compute_mail_attachments_widget',
         store=True,
         readonly=False,
     )
 
-    def _get_mail_default_field_value_from_template(self, move, field, **kwargs):
-        self.ensure_one()
-        return self.mail_template_id._origin\
-            .with_context(lang=self.mail_lang)\
+    @api.model
+    def _get_mail_default_field_value_from_template(self, mail_template, lang, move, field, **kwargs):
+        return mail_template\
+            .with_context(lang=lang)\
             ._render_field(field, move.ids, **kwargs)[move._origin.id]
 
     @api.model
@@ -111,7 +106,7 @@ class AccountMoveSend(models.TransientModel):
     # -------------------------------------------------------------------------
 
     @api.model
-    def _get_mode_from_moves(self, moves):
+    def _get_default_mode_from_moves(self, moves):
         self.ensure_one()
         if all(x.is_invoice(include_receipts=True) for x in moves):
             return 'invoice_single' if len(moves) == 1 else 'invoice_multi'
@@ -121,9 +116,9 @@ class AccountMoveSend(models.TransientModel):
     def _compute_mode(self):
         for wizard in self:
             if wizard.move_ids:
-                wizard.mode = wizard._get_mode_from_moves(wizard.move_ids)
+                wizard.mode = wizard._get_default_mode_from_moves(wizard.move_ids)
             else:
-                raise UserError(_("You can only send invoices."))
+                wizard.mode = 'done'
 
     @api.depends('enable_download', 'download', 'enable_send_mail', 'send_mail')
     def _compute_button_name(self):
@@ -174,77 +169,79 @@ class AccountMoveSend(models.TransientModel):
         for wizard in self:
             wizard.send_mail = wizard.company_id.invoice_is_email and not wizard.send_mail_readonly
 
+    @api.model
+    def _get_default_lang(self, mail_template):
+        if mail_template:
+            return mail_template._render_lang([0])[0]
+        else:
+            return get_lang(self.env).code
+
     @api.depends('mail_template_id')
     def _compute_mail_lang(self):
         for wizard in self:
-            if wizard.mail_template_id:
-                wizard.mail_lang = wizard.mail_template_id._render_lang([0])[0]
-            else:
-                wizard.mail_lang = get_lang(self.env).code
+            wizard.mail_lang = wizard._get_default_lang(wizard.mail_template_id)
 
-    def _get_invoice_mail_partner_ids(self, invoice):
+    @api.model
+    def _get_default_mail_partners(self, mail_template, lang, move):
         self.ensure_one()
-        template = self.mail_template_id
-        partners = self.env['res.partner'].with_company(invoice.company_id)
-        if template.email_to:
-            for mail_data in tools.email_split(template.email_to):
+        partners = self.env['res.partner'].with_company(move.company_id)
+        if mail_template.email_to:
+            for mail_data in tools.email_split(mail_template.email_to):
                 partners |= partners.find_or_create(mail_data)
-        if template.email_cc:
-            for mail_data in tools.email_split(template.email_cc):
+        if mail_template.email_cc:
+            for mail_data in tools.email_split(mail_template.email_cc):
                 partners |= partners.find_or_create(mail_data)
-        if template.partner_to:
-            partner_to = self._get_mail_default_field_value_from_template(invoice, 'partner_to')
+        if mail_template.partner_to:
+            partner_to = self._get_mail_default_field_value_from_template(mail_template, lang, move, 'partner_to')
             partner_ids = [int(pid) for pid in partner_to.split(',') if pid]
             partners |= self.env['res.partner'].sudo().browse(partner_ids).exists()
         return partners
 
-    @api.depends('company_id', 'mail_template_id')
+    @api.depends('mail_template_id', 'mail_lang')
     def _compute_mail_partner_ids(self):
         for wizard in self:
-            template = wizard.mail_template_id
-            if template and wizard.mode == 'invoice_single':
-                wizard.mail_partner_ids = wizard._get_invoice_mail_partner_ids(wizard.move_ids)
+            if wizard.mail_template_id and wizard.mode == 'invoice_single':
+                wizard.mail_partner_ids = wizard._get_default_mail_partners(wizard.mail_template_id, wizard.mail_lang, wizard.move_ids)
             else:
                 wizard.mail_partner_ids = []
 
-    def _get_invoice_mail_subject(self, invoice):
-        self.ensure_one()
-        return self._get_mail_default_field_value_from_template(invoice, 'subject')
+    @api.model
+    def _get_default_mail_subject(self, mail_template, lang, move):
+        return self._get_mail_default_field_value_from_template(mail_template, lang, move, 'subject')
 
     @api.depends('mail_template_id', 'mail_lang')
     def _compute_mail_subject(self):
         for wizard in self:
             if wizard.mail_template_id and wizard.mode == 'invoice_single':
-                wizard.mail_subject = wizard._get_invoice_mail_subject(wizard.move_ids)
+                wizard.mail_subject = wizard._get_default_mail_subject(wizard.mail_template_id, wizard.mail_lang, wizard.move_ids)
             else:
                 wizard.mail_subject = None
 
-    def _get_invoice_mail_body(self, invoice):
-        self.ensure_one()
-        return self._get_mail_default_field_value_from_template(invoice, 'body_html', options={'post_process': True})
+    @api.model
+    def _get_default_mail_body(self, mail_template, lang, move):
+        return self._get_mail_default_field_value_from_template(mail_template, lang, move, 'body_html', options={'post_process': True})
 
     @api.depends('mail_template_id', 'mail_lang')
     def _compute_mail_body(self):
         for wizard in self:
             if wizard.mail_template_id and wizard.mode == 'invoice_single':
-                wizard.mail_body = wizard._get_invoice_mail_body(wizard.move_ids)
+                wizard.mail_body = wizard._get_default_mail_body(wizard.mail_template_id, wizard.mail_lang, wizard.move_ids)
             else:
                 wizard.mail_body = None
 
-    def _get_invoice_mail_attachments_data(self, invoice):
-        self.ensure_one()
+    @api.model
+    def _get_default_mail_attachments_data(self, mail_template, move):
         results = []
-        report = self.mail_template_id.report_template
 
-        if report and invoice.pdf_report_id:
-            attachment = invoice.pdf_report_id
+        if self._get_default_mode_from_moves(move) == 'invoice_single' and move.pdf_report_id:
+            attachment = move.pdf_report_id
             results.append({
                 'id': attachment.id,
                 'name': attachment.name,
                 'mimetype': attachment.mimetype,
             })
 
-        for attachment in self.mail_template_id.attachment_ids:
+        for attachment in mail_template.attachment_ids:
             results.append({
                 'id': attachment.id,
                 'name': attachment.name,
@@ -257,85 +254,68 @@ class AccountMoveSend(models.TransientModel):
     def _compute_mail_attachments_widget(self):
         for wizard in self:
             if wizard.mode == 'invoice_single':
-                wizard.mail_attachments_widget = wizard._get_invoice_mail_attachments_data(wizard.move_ids)
+                wizard.mail_attachments_widget = wizard\
+                    ._get_default_mail_attachments_data(wizard.mail_template_id, wizard.move_ids)
             else:
                 wizard.mail_attachments_widget = []
-
-    @api.depends('move_ids')
-    def _compute_allow_pdf_needed(self):
-        for wizard in self:
-            wizard.allow_pdf_needed = wizard.mode in ('invoice_single', 'invoice_multi') and \
-                                      any(not x.pdf_report_id and x.state == 'posted' for x in wizard.move_ids)
-
-    def _get_invoice_pdf_messages(self):
-        self.ensure_one()
-        return [_("Generate the invoice PDF document")]
-
-    @api.depends('move_ids')
-    def _compute_pdf_needed_message(self):
-        for wizard in self:
-            if wizard.mode in ('invoice_single', 'invoice_multi'):
-                wizard.pdf_needed_message = "".join(wizard._get_invoice_pdf_messages())
-            else:
-                wizard.pdf_needed_message = None
 
     # -------------------------------------------------------------------------
     # BUSINESS ACTIONS
     # -------------------------------------------------------------------------
 
-    def _generate_pdf_reports(self):
-        """ Generate the PDF report for the moves passed as parameter. """
-        if self.mode != 'invoice_single' or self.move_ids.pdf_report_id or self.move_ids.state != 'posted':
-            return
+    @api.model
+    def _need_pdf_report(self, move):
+        return not move.pdf_report_id and move.state == 'posted'
 
-        move = self.move_ids._origin
-        results = move._generate_default_invoice_pdf_report()
+    def _prepare_pdf_report(self, move):
+        self.ensure_one()
+        content, _report_format = self.env['ir.actions.report']\
+            ._render('account.account_invoices_without_payment', move.ids)
+        filename = f"{move.name.replace('/', '_')}.pdf"
+        return {
+            'content': content,
+            'filename': filename,
+            'pdf': True,
+        }
 
-        move.pdf_report_id = self.env['ir.attachment'].create({
-            'name': results['filename'],
-            'raw': results['content'],
+    def _prepare_pdf_report_failed(self, move, prepared_data):
+        self.ensure_one()
+
+    @api.model
+    def _generate_pdf_report(self, move, prepared_data):
+        """ Generate the PDF report for the moves passed as parameter.
+
+        :param move: A journal entry.
+        """
+        return self.env['ir.attachment'].create({
+            'name': prepared_data['filename'],
+            'raw': prepared_data['content'],
             'res_model': move._name,
-            'res_id': move._origin.id,
+            'res_id': move.id,
         })
 
-    def _send_mail(self):
+    @api.model
+    def _send_mail(self, mail_template, lang, move, **kwargs):
         """ Send the journal entries passed as parameter by mail. """
-        if self.mode != 'invoice_single':
-            return
+        partner_ids = kwargs.get('partner_ids', [])
 
-        subtype_id = self.env['ir.model.data']._xmlid_to_res_id('mail.mt_comment')
-        for move in self.move_ids._origin:
-            attachment_ids = set(
-                attachment_vals['id']
-                for attachment_vals in self.mail_attachments_widget or []
+        move\
+            .with_context(
+                no_new_invoice=True,
+                mail_notify_author=self.env.user.partner_id.id in partner_ids,
+                mailing_document_based=True)\
+            .message_post(
+                message_type='comment',
+                **kwargs,
+                **{
+                    'email_layout_xmlid': 'mail.mail_notification_layout_with_responsible_signature',
+                    'email_add_signature': not mail_template,
+                    'mail_auto_delete': mail_template.auto_delete,
+                    'mail_server_id': mail_template.mail_server_id.id,
+                    'reply_to_force_new': False,
+                },
             )
-            attachment_ids.add(move.pdf_report_id.id)
-
-            partners = self.mail_partner_ids
-            email_from = self._get_mail_default_field_value_from_template(move, 'email_from')
-
-            move\
-                .with_context(
-                    no_new_invoice=True,
-                    mail_notify_author=self.env.user.partner_id in partners or False,
-                    mailing_document_based=True)\
-                .message_post(
-                    body=self.mail_body or '',
-                    subject=self.mail_subject,
-                    message_type='comment',
-                    email_from=email_from,
-                    subtype_id=subtype_id,
-                    partner_ids=partners.ids,
-                    attachment_ids=list(attachment_ids),
-                    **{
-                        'email_layout_xmlid': 'mail.mail_notification_layout_with_responsible_signature',
-                        'email_add_signature': not self.mail_template_id,
-                        'mail_auto_delete': self.mail_template_id.auto_delete,
-                        'mail_server_id': self.mail_template_id._origin.mail_server_id.id,
-                        'reply_to_force_new': False,
-                    },
-                )
-            move.is_move_sent = True
+        move.is_move_sent = True
 
     def _download(self):
         """ Download the PDF. """
@@ -348,21 +328,50 @@ class AccountMoveSend(models.TransientModel):
             'close_on_report_download': True,
         }
 
-    def action_send_and_print(self):
+    def action_send_and_print(self, from_cron=False):
         self.ensure_one()
 
-        pdf_needed = self.allow_pdf_needed and self.pdf_needed
         send_mail = self.enable_send_mail and self.send_mail
         download = self.enable_download and self.download
 
+        subtype = self.env.ref('mail.mt_comment')
+        mail_template = self.mail_template_id
+        mail_lang = self.mail_lang
         if self.mode == 'invoice_single':
+            move = self.move_ids
+
             # Ensure the invoice report is generated.
-            if pdf_needed:
-                self._generate_pdf_reports()
+            if self._need_pdf_report(move):
+                prepared_data = self._prepare_pdf_report(move)
+                if prepared_data['pdf']:
+                    move.pdf_report_id = self._generate_pdf_report(move, prepared_data)
+                else:
+                    self._prepare_pdf_report_failed(move, prepared_data)
 
             # Send mail.
             if send_mail:
-                self._send_mail()
+                attachment_ids = set(
+                    attachment_vals['id']
+                    for attachment_vals in self.mail_attachments_widget or []
+                )
+                attachment_ids.add(move.pdf_report_id.id)
+
+                email_from = self\
+                    ._get_mail_default_field_value_from_template(mail_template, mail_lang, move, 'email_from')
+
+                partners = self.mail_partner_ids
+
+                self._send_mail(
+                    mail_template,
+                    mail_lang,
+                    move,
+                    body=self.mail_body,
+                    subject=self.mail_subject,
+                    email_from=email_from,
+                    subtype_id=subtype.id,
+                    partner_ids=partners.ids,
+                    attachment_ids=list(attachment_ids),
+                )
 
             # Download.
             if download:
@@ -370,16 +379,50 @@ class AccountMoveSend(models.TransientModel):
                 if action:
                     return action
 
-        elif self.mode == 'invoice_multi':
+            self.mode = 'done'
+
+        elif from_cron:
             for move in self.move_ids:
-                move.async_data_to_process = {
-                    'pdf_needed': pdf_needed,
-                    'send_mail': send_mail,
-                    'download': download,
-                    'mail_template_id': self.mail_template_id._origin.id,
-                    'move_ids': [Command.set(move.ids)],
-                }
-            self.env.ref('account.ir_cron_account_move_send')._trigger()
+
+                # Ensure the invoice report is generated.
+                if self._need_pdf_report(move):
+                    prepared_data = self._prepare_pdf_report(move)
+                    if prepared_data['pdf']:
+                        move.pdf_report_id = self._generate_pdf_report(move, prepared_data)
+
+                # Send mail.
+                if send_mail:
+                    attachment_ids = set(
+                        attachment_vals['id']
+                        for attachment_vals in self._get_default_mail_attachments_data(mail_template, move)
+                    )
+                    attachment_ids.add(move.pdf_report_id.id)
+
+                    email_from = self._get_mail_default_field_value_from_template(
+                        mail_template,
+                        mail_lang,
+                        move,
+                        'email_from',
+                    )
+
+                    partners = self._get_default_mail_partners(mail_template, mail_lang, move)
+                    body = self._get_default_mail_body(mail_template, mail_lang, move)
+                    subject = self._get_default_mail_subject(mail_template, mail_lang, move)
+
+                    self._send_mail(
+                        mail_template,
+                        mail_lang,
+                        move,
+                        body=body,
+                        subject=subject,
+                        email_from=email_from,
+                        subtype_id=subtype.id,
+                        partner_ids=partners.ids,
+                        attachment_ids=list(attachment_ids),
+                    )
+            self.mode = 'done'
+
+        self.env.ref('account.ir_cron_account_move_send')._trigger()
 
         return {'type': 'ir.actions.act_window_close'}
 

@@ -17,7 +17,6 @@
                 <field name="send_mail_readonly" invisible="1"/>
                 <field name="display_mail_composer" invisible="1"/>
                 <field name="mail_lang" invisible="1"/>
-                <field name="allow_pdf_needed" invisible="1"/>
 
                 <!-- Options -->
                 <div name="option_download"
@@ -58,10 +57,6 @@
                            class="oe-bordered-editor"
                            options="{'style-inline': true}"
                            attrs="{'invisible': [('display_mail_composer', '=', False)]}"/>
-                    <group attrs="{'invisible': [('allow_pdf_needed', '=', False)]}">
-                        <field name="pdf_needed" nolabel="1"/>
-                        <field name="pdf_needed_message" nolabel="1"/>
-                    </group>
                     <group>
                         <group attrs="{'invisible': [('display_mail_composer', '=', False)]}">
                             <field name="mail_attachments_widget"

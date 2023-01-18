@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="account_move_send_form" model="ir.ui.view">
+        <field name="name">account.move.send.form</field>
+        <field name="model">account.move.send</field>
+        <field name="inherit_id" ref="account.account_move_send_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//div[@name='option_download']" position="after">
+                <field name="enable_ubl_cii_xml" invisible="1"/>
+
+                <div name="option_ubl_cii_xml"
+                     attrs="{'invisible': [('enable_ubl_cii_xml', '=', False)]}">
+                    <field name="ubl_cii_xml"/>
+                    <b><label for="ubl_cii_xml"/></b>
+                </div>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

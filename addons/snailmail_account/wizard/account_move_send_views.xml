@@ -6,7 +6,7 @@
         <field name="model">account.move.send</field>
         <field name="inherit_id" ref="account.account_move_send_form"/>
         <field name="arch" type="xml">
-            <xpath expr="//div[@name='option_download']" position='after'>
+            <xpath expr="//div[@name='option_download']" position="after">
                 <field name="enable_send_by_post" invisible="1"/>
 
                 <div name="option_send_by_post"

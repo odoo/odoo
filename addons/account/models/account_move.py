@@ -522,7 +522,6 @@ class AccountMove(models.Model):
         string="PDF report",
         copy=False,
     )
-    async_data_to_process = fields.Json()
 
     # === Display purpose fields === #
     # used to have a dynamic domain on journal / taxes in the form view.
@@ -2729,22 +2728,6 @@ class AccountMove(models.Model):
         return values
 
     # -------------------------------------------------------------------------
-    # INVOICE REPORT
-    # -------------------------------------------------------------------------
-
-    def _generate_default_invoice_pdf_report(self):
-        self.ensure_one()
-
-        content, _report_format = self.env['ir.actions.report']._render(
-            'account.account_invoices_without_payment',
-            self.ids,
-        )
-        return {
-            'filename': f"{self.name.replace('/', '_')}.pdf",
-            'content': content,
-        }
-
-    # -------------------------------------------------------------------------
     # BUSINESS METHODS
     # -------------------------------------------------------------------------
 
@@ -3623,20 +3606,20 @@ class AccountMove(models.Model):
             self.env.ref('account.ir_cron_auto_post_draft_entry')._trigger()
 
     @api.model
-    def _cron_send_async_data_to_process(self, job_count=None):
+    def _cron_account_move_send(self, job_count=None):
+        # Clean already processed wizards.
+        self.env['account.move.send'].search([('mode', '=', 'done')]).unlink()
+
+        # Process.
         limit = job_count + 1 if job_count else None
-        moves = self.search([('async_data_to_process', '!=', False), ('state', '=', 'posted')], limit=limit)
+        to_process = self.env['account.move.send'].search([('mode', '!=', 'done')], limit=limit)
 
-        need_retrigger = job_count and len(moves) > job_count
+        need_retrigger = job_count and len(to_process) > job_count
         if job_count:
-            moves = moves[:job_count]
+            to_process = to_process[:job_count]
 
-        for move in moves:
-            wizard = self.env['account.move.send']\
-                .with_context(active_ids=move.ids)\
-                .new(move.async_data_to_process)
-            wizard.action_send_and_print()
-            move.async_data_to_process = None
+        for wizard in to_process:
+            wizard.action_send_and_print(from_cron=True)
 
         if need_retrigger:
             self.env.ref('account.ir_cron_account_move_send')._trigger()

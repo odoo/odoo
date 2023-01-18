@@ -3,7 +3,7 @@
 from odoo import api, fields, models, _
 
 
-class AccountMoveSend(models.TransientModel):
+class AccountMoveSend(models.Model):
     _inherit = 'account.move.send'
 
     enable_send_by_post = fields.Boolean(compute='_compute_enable_send_by_post')
@@ -50,27 +50,34 @@ class AccountMoveSend(models.TransientModel):
     # BUSINESS ACTIONS
     # -------------------------------------------------------------------------
 
-    def action_send_and_print(self):
+    @api.model
+    def _prepare_snailmail_letter_values(self, move):
+        return {
+            'partner_id': move.partner_id.id,
+            'model': 'account.move',
+            'res_id': move.id,
+            'user_id': self.env.user.id,
+            'company_id': move.company_id.id,
+            'attachment_id': move.pdf_report_id.id,
+        }
+
+    def action_send_and_print(self, from_cron=False):
         # EXTENDS 'account'
-        res = super().action_send_and_print()
+        results = super().action_send_and_print(from_cron=from_cron)
 
         send_by_post = self.enable_send_by_post and self.send_by_post
 
-        moves = self.move_ids._origin
-
         if send_by_post:
             if self.mode == 'invoice_single':
-                letter = self.env['snailmail.letter'].create({
-                    'partner_id': moves.partner_id.id,
-                    'model': 'account.move',
-                    'res_id': moves.id,
-                    'user_id': self.env.user.id,
-                    'company_id': moves.company_id.id,
-                    'attachment_id': moves.pdf_report_id.id,
-                })
-                letter._snailmail_print(immediate=False)
-            elif self.mode == 'invoice_multi':
-                for move in moves:
-                    move.async_data_to_process['send_by_post'] = send_by_post
+                self.env['snailmail.letter']\
+                    .create(self._prepare_snailmail_letter_values(self.move_ids))\
+                    ._snailmail_print(immediate=False)
+            elif from_cron and self.mode == 'invoice_multi':
+                self.env['snailmail.letter']\
+                    .create([
+                        self._prepare_snailmail_letter_values(move)
+                        for move in self.move_ids
+                    ])\
+                    ._snailmail_print(immediate=False)
 
-        return res
+        return results
