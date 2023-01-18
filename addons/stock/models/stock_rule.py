@@ -354,6 +354,9 @@ class StockRule(models.Model):
         :rtype: tuple[int, list[str, str]]
         """
         delay = sum(self.filtered(lambda r: r.action in ['pull', 'pull_push']).mapped('delay'))
+        global_visibility_days = self.env['ir.config_parameter'].sudo().get_param('stock.visibility_days')
+        if global_visibility_days:
+            delay += int(global_visibility_days)
         if self.env.context.get('bypass_delay_description'):
             delay_description = []
         else:
@@ -362,6 +365,8 @@ class StockRule(models.Model):
                 for rule in self
                 if rule.action in ['pull', 'pull_push'] and rule.delay
             ]
+        if global_visibility_days:
+            delay_description.append((_('Global Visibility Days'), _('+ %d day(s)') % int(global_visibility_days)))
         return delay, delay_description
 
 
