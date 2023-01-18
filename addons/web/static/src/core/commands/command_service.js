@@ -176,6 +176,7 @@ export const commandService = {
                 registration.removeHotkey = hotkeyService.add(registration.hotkey, action, {
                     activeElement: registration.activeElement,
                     global: registration.global,
+                    validate: registration.isAvailable,
                 });
             }
 
