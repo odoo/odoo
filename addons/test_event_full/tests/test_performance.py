@@ -52,7 +52,7 @@ class TestEventPerformance(EventPerformanceCase):
         batch_size = 20
 
         # simple without type involved + website
-        with freeze_time(self.reference_now), self.assertQueryCount(event_user=3236):  # tef 3173 / com 3172
+        with freeze_time(self.reference_now), self.assertQueryCount(event_user=3377):  # tef 3275 / com 3274
             self.env.cr._now = self.reference_now  # force create_date to check schedulers
             event_values = [
                 dict(self.event_base_vals,
@@ -60,7 +60,7 @@ class TestEventPerformance(EventPerformanceCase):
                     )
                 for x in range(batch_size)
             ]
-            self.env['event.event'].create(event_values)
+            self.env['event.event'].with_context(lang='en_US').create(event_values)
 
     @users('event_user')
     @warmup
@@ -89,7 +89,7 @@ class TestEventPerformance(EventPerformanceCase):
         event_type = self.env['event.type'].browse(self.test_event_type.ids)
 
         # complex with type + website
-        with freeze_time(self.reference_now), self.assertQueryCount(event_user=3340):  # tef 3277 / com 3276
+        with freeze_time(self.reference_now), self.assertQueryCount(event_user=3481):  # tef 3379 / com 3378
             self.env.cr._now = self.reference_now  # force create_date to check schedulers
             event_values = [
                 dict(self.event_base_vals,
@@ -97,7 +97,7 @@ class TestEventPerformance(EventPerformanceCase):
                     )
                 for x in range(batch_size)
             ]
-            self.env['event.event'].create(event_values)
+            self.env['event.event'].with_context(lang='en_US').create(event_values)
 
 
     @users('event_user')
@@ -128,7 +128,7 @@ class TestEventPerformance(EventPerformanceCase):
         has_social = 'social_menu' in self.env['event.event']  # otherwise view may crash in enterprise
 
         # no type, website
-        with freeze_time(self.reference_now), self.assertQueryCount(event_user=427):  # tef 379 / com 380
+        with freeze_time(self.reference_now), self.assertQueryCount(event_user=447):  # tef 379 / com 427
             self.env.cr._now = self.reference_now  # force create_date to check schedulers
             # Require for `website_menu` to be visible
             # <div name="event_menu_configuration" groups="base.group_no_one">
@@ -150,7 +150,7 @@ class TestEventPerformance(EventPerformanceCase):
         has_social = 'social_menu' in self.env['event.event']  # otherwise view may crash in enterprise
 
         # type and website
-        with freeze_time(self.reference_now), self.assertQueryCount(event_user=450):  # tef 402 / com 408
+        with freeze_time(self.reference_now), self.assertQueryCount(event_user=470):  # tef 402 / com 450
             self.env.cr._now = self.reference_now  # force create_date to check schedulers
             # Require for `website_menu` to be visible
             # <div name="event_menu_configuration" groups="base.group_no_one">
@@ -181,13 +181,13 @@ class TestEventPerformance(EventPerformanceCase):
     def test_event_create_single_notype_website(self):
         """ Test a single event creation """
         # simple without type involved + website
-        with freeze_time(self.reference_now), self.assertQueryCount(event_user=234):  # tef 228 / com 227
+        with freeze_time(self.reference_now), self.assertQueryCount(event_user=242):  # tef 228 / com 234
             self.env.cr._now = self.reference_now  # force create_date to check schedulers
             event_values = dict(
                 self.event_base_vals,
                 website_menu=True
             )
-            self.env['event.event'].create([event_values])
+            self.env['event.event'].with_context(lang='en_US').create([event_values])
 
     @users('event_user')
     @warmup
@@ -212,13 +212,13 @@ class TestEventPerformance(EventPerformanceCase):
         event_type = self.env['event.type'].browse(self.test_event_type.ids)
 
         # complex with type + website
-        with freeze_time(self.reference_now), self.assertQueryCount(event_user=262):  # tef 256 / com 255
+        with freeze_time(self.reference_now), self.assertQueryCount(event_user=271):  # tef 256 / com 262
             self.env.cr._now = self.reference_now  # force create_date to check schedulers
             event_values = dict(
                 self.event_base_vals,
                 event_type_id=event_type.id,
             )
-            self.env['event.event'].create([event_values])
+            self.env['event.event'].with_context(lang='en_US').create([event_values])
 
 
 @tagged('event_performance', 'registration_performance', 'post_install', '-at_install')
