@@ -447,7 +447,14 @@ export class SampleServer {
         const groups = arrayGroupBy(records, (record) => {
             const vals = {};
             for (const gb of normalizedGroupBys) {
-                vals[gb.fieldName] = record[gb.fieldName];
+                const { fieldName, type } = gb;
+                let value;
+                if (["date", "datetime"].includes(type)) {
+                    value = this._formatValue(record[fieldName], gb);
+                } else {
+                    value = record[fieldName];
+                }
+                vals[fieldName] = value;
             }
             return JSON.stringify(vals);
         });
