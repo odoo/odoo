@@ -693,14 +693,18 @@ class Users(models.Model):
             for name, key in name_to_key.items()
         }
 
-        # ensure the lang is installed, it case it isn't fallback on
-        # the request lang or the first installed lang.
+        # ensure lang is set and available
+        # context > request > company > english > any lang installed
         langs = [code for code, _ in self.env['res.lang'].get_installed()]
         lang = context.get('lang')
         if lang not in langs:
-            lang = request.default_lang() if request else None
+            lang = request.best_lang if request else None
             if lang not in langs:
-                lang = langs[0]
+                lang = self.env.user.company_id.partner_id.lang
+                if lang not in langs:
+                    lang = DEFAULT_LANG
+                    if lang not in langs:
+                        lang = langs[0] if langs else DEFAULT_LANG
         context['lang'] = lang
 
         # ensure uid is set
