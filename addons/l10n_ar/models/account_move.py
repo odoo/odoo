@@ -36,8 +36,12 @@ class AccountMove(models.Model):
 
     def _is_manual_document_number(self):
         res = super()._is_manual_document_number()
-        # when issuer is supplier de numbering works opposite (supplier numerate invoices, customer encode bill)
-        if self.journal_id._l10n_ar_journal_issuer_is_supplier():
+        # NOTE: There is a corner case where 2 sales documents can have the same number for the same DOC from a different vendor,
+        # in that case, the user can create a new Sales Liquido Producto Journal
+
+        # When issuer is supplie the numbering works opposite (supplier enumerate the invoices, and the customer encode the bill)
+        if self.l10n_latam_use_documents and ((self.journal_id.type == 'sale' and not self.journal_id.l10n_ar_is_pos) or (
+           self.journal_id.type == 'purchase' and self.journal_id.l10n_ar_is_pos)):
             return not res
         return res
 

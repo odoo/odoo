@@ -103,10 +103,7 @@ class AccountJournal(models.Model):
             '23', '24', '25', '26', '27', '28', '33', '43', '45', '46', '48', '58', '60', '61', '150', '151', '157',
             '158', '161', '162', '164', '166', '167', '171', '172', '180', '182', '186', '188', '332']
         codes = []
-        if self.type == 'sale' and not self.l10n_ar_is_pos:
-            codes = codes_issuer_is_supplier
-        elif self.type == 'purchase' and afip_pos_system in ['II_IM', 'RLI_RLM']:
-            # manual / online invoices
+        if (self.type == 'sale' and not self.l10n_ar_is_pos) or (self.type == 'purchase' and afip_pos_system in ['II_IM', 'RLI_RLM']):
             codes = codes_issuer_is_supplier
         elif self.type == 'purchase' and afip_pos_system == 'RAW_MAW':
             # electronic invoices (wsfev1) (intersection between available docs on ws and codes_issuer_is_supplier)
@@ -146,7 +143,7 @@ class AccountJournal(models.Model):
             self.l10n_ar_afip_pos_system not in ['II_IM', 'RLI_RLM', 'RAW_MAW'])
         if journals:
             raise ValidationError("\n".join([_(
-                "You cant'use pos system %s on a purchase journal (id %s)"
+                "The pos system %s can not be used on a purchase journal (id %s)"
                 ) % (x.l10n_ar_afip_pos_system, x.id) for x in journals]))
 
     @api.constrains('l10n_ar_afip_pos_number')
@@ -165,9 +162,3 @@ class AccountJournal(models.Model):
         """
         if self.type == 'sale' and self.l10n_ar_afip_pos_number:
             self.code = "%05i" % self.l10n_ar_afip_pos_number
-
-    def _l10n_ar_journal_issuer_is_supplier(self):
-        self.ensure_one()
-        return self.l10n_latam_use_documents and (
-            (self.type == 'sale' and not self.l10n_ar_is_pos) or
-            (self.type == 'purchase' and self.l10n_ar_is_pos))
