@@ -175,7 +175,7 @@
                             <field name="company_id" invisible="1" />
                             <field name="is_closed" invisible="1" />
                             <field name="allow_subtasks" invisible="1" />
-                            <field name="partner_id" options="{'no_open': True, 'no_create': True, 'no_edit': True}"/>
+                            <field name="partner_id" options="{'no_open': True, 'no_create': True, 'no_edit': True}" attrs="{'invisible': [('project_id', '=', False)]}"/>
                             <field name="date_deadline" attrs="{'invisible': [('is_closed', '=', True)]}"/>
                         </group>
                     </group>
@@ -198,7 +198,7 @@
                                         attrs="{'invisible': [('allow_milestones', '=', False)], 'column_invisible': [('parent.allow_milestones', '=', False)]}"
                                     />
                                     <field name="company_id" invisible="1"/>
-                                    <field name="partner_id" options="{'no_open': True, 'no_create': True, 'no_edit': True}" optional="hide"/>
+                                    <field name="partner_id" options="{'no_open': True, 'no_create': True, 'no_edit': True}" optional="hide" attrs="{'invisible': [('project_id', '=', False)]}"/>
                                     <field name="user_ids" invisible="1" />
                                     <field name="portal_user_names" string="Assignees" optional="show"/>
                                     <field name="date_deadline" attrs="{'invisible': [('is_closed', '=', True)]}" optional="show"/>
