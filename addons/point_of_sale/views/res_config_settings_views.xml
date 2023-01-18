@@ -20,8 +20,8 @@
 
                 <app data-string="Point of sale" string="Point of Sale" name="point_of_sale" groups="point_of_sale.group_pos_manager">
                     <setting type="header" string="Point of Sale">
-                        <field name="pos_config_id" class="col" options="{'no_open': True, 'no_create': True}" title="Settings on this page will apply to this point of sale."/>
-                        <button name="action_pos_config_create_new" type="object" string="+ New Shop" class="col btn-link ms-2 text-nowrap" style="line-height: 0.5;"/>
+                        <field name="pos_config_id" options="{'no_open': True, 'no_create': True}" title="Settings on this page will apply to this point of sale."/>
+                        <button name="action_pos_config_create_new" type="object" string="+ New Shop" class="btn btn-link"/>
                     </setting>
 
                     <div class="o_view_nocontent" attrs="{'invisible': [('pos_config_id', '!=', False)]}">
