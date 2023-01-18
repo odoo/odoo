@@ -583,10 +583,26 @@ class Survey(models.Model):
             if self.questions_selection == 'random' and not self.session_state:
                 result = user_input.predefined_question_ids
             else:
-                result = self.question_and_page_ids.filtered(
-                    lambda question: not question.is_page or not is_html_empty(question.description))
+                result = self._remove_invalid_conditional_questions()
 
         return result
+
+    @api.model
+    def _get_pages_and_questions_to_show(self):
+        """
+        :return: survey.question recordset excluding invalid conditional questions and pages without description
+        """
+
+        questions_and_valid_pages = self.question_and_page_ids.filtered(
+            lambda question: not question.is_page or not is_html_empty(question.description))
+        invalid_questions = self.env['survey.question']
+
+        for question in questions_and_valid_pages.filtered(lambda q: q.is_conditional).sorted():
+            if (question.is_placed_before_trigger
+                    or question.triggering_question_id in invalid_questions):
+                invalid_questions |= question
+
+        return questions_and_valid_pages - invalid_questions
 
     def _get_next_page_or_question(self, user_input, page_or_question_id, go_back=False):
         """ Generalized logic to retrieve the next question or page to show on the survey.

@@ -339,3 +339,50 @@ class TestSurveyInternals(common.TestSurveyCommon):
         self.assertEqual(not_veggie_question.is_conditional, False)
         self.assertEqual(not_veggie_question.triggering_question_id.id, False)
         self.assertEqual(not_veggie_question.triggering_answer_id.id, False)
+
+    def test_get_pages_and_questions_to_show(self):
+        """ Tests the method `_get_pages_and_questions_to_show`. This method takes a
+            recordset of question.question from a survey.survey and returns a recordset without
+            invalid conditional questions and pages without description """
+
+        survey = self.env.ref('survey.survey_feedback')
+        invalid_records = self.env['survey.question']
+        page_without_description = self.env['survey.question'].create({
+            'title': 'no desc',
+            'survey_id': survey.id,
+            'sequence': 99,
+            'question_type': False,
+            'is_page': True,
+            'description': False,
+        })
+        question_and_page_ids = survey.question_and_page_ids
+
+        # Only the empty page is an invalid record
+        invalid_records |= page_without_description
+        self.assertEqual(question_and_page_ids - invalid_records, survey._get_pages_and_questions_to_show())
+
+        # Valid conditional question
+        p2_q1 = self.env.ref('survey.survey_feedback_p2_q1')
+        p2_q1.write({
+            'is_conditional': True,
+            'triggering_question_id': self.env.ref('survey.survey_feedback_p1_q3'),
+            'triggering_answer_id': self.env.ref('survey.survey_feedback_p1_q3_sug1'),
+        })
+        self.assertEqual(question_and_page_ids - invalid_records, survey._get_pages_and_questions_to_show())
+
+        # Invalid conditional question
+        p2_q1.sequence = 0
+        p2_q1.invalidate_recordset()
+        invalid_records |= p2_q1
+        self.assertEqual(question_and_page_ids - invalid_records, survey._get_pages_and_questions_to_show())
+
+        # Question is placed after trigger but trigger is an invalid question
+        p1_q3 = self.env.ref('survey.survey_feedback_p1_q3')
+        p1_q3.write({
+            'is_conditional': True,
+            'triggering_question_id': p2_q1,
+            'triggering_answer_id': self.env.ref('survey.survey_feedback_p2_q1_sug1'),
+        })
+        p1_q3.invalidate_recordset()
+        invalid_records |= p1_q3
+        self.assertEqual(question_and_page_ids - invalid_records, survey._get_pages_and_questions_to_show())
