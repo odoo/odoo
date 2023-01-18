@@ -95,16 +95,11 @@ export class Dropdown extends Component {
 
         // Set up toggler and positioning --------------------------------------
         /** @type {string} **/
-        let position =
+        const position =
             this.props.position || (this.parentDropdown ? "right-start" : "bottom-start");
-        let [direction, variant = "middle"] = position.split("-");
-        if (localization.direction === "rtl") {
-            if (["bottom", "top"].includes(direction)) {
-                variant = variant === "start" ? "end" : "start";
-            } else {
-                direction = direction === "left" ? "right" : "left";
-            }
-            position = [direction, variant].join("-");
+        let [direction] = position.split("-");
+        if (["left", "right"].includes(direction) && localization.direction === "rtl") {
+            direction = direction === "left" ? "right" : "left";
         }
         const positioningOptions = {
             popper: "menuRef",
