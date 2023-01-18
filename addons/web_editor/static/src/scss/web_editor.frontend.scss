@@ -44,6 +44,10 @@
 .o_we_shape {
     @extend %o-we-background-layer;
 
+    &.o_we_animated {
+        will-change: transform;
+    }
+
     // Default map to use to map shape file colors to color combination
     // background colors.
     $default-color-to-cc-bg-map: (
