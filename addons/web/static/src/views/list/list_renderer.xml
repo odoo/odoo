@@ -26,15 +26,17 @@
                                 t-on-mouseleave="ev => this.onHoverSortColumn(ev, column)"
                                 t-on-mouseup="onColumnTitleMouseUp"
                                 t-on-click="() => this.onClickSortColumn(column)"
-                                t-on-keydown.synthetic="(ev) => this.onCellKeydown(ev)"  t-att-data-tooltip-template="isDebugMode ? 'web.FieldTooltip' : false" t-att-data-tooltip-info="isDebugMode ? makeTooltip(column) : false"
+                                t-on-keydown.synthetic="(ev) => this.onCellKeydown(ev)"
+                                t-att-data-tooltip-template="isDebugMode ? 'web.FieldTooltip' : false"
+                                t-att-data-tooltip-info="isDebugMode ? makeTooltip(column) : false"
+                                data-tooltip-delay="1000"
                                 tabindex="-1">
                                 <t t-if="column.hasLabel and column.widget !== 'handle'">
                                 <t t-set="isNumeric" t-value="isNumericColumn(column)"/>
                                     <div t-att-class="{'d-flex': true, 'flex-row-reverse': isNumeric}">
                                         <span class="d-block min-w-0 text-truncate flex-grow-1" t-att-class="isNumeric ? 'text-end' : ''"
                                               t-esc="column.label"/>
-                                        <i t-if="!props.list.isGrouped"
-                                           t-att-class="getSortableIconClass(column)"/>
+                                        <i t-att-class="getSortableIconClass(column)"/>
                                     </div>
                                     <span t-if="!isEmpty"
                                           class="o_resize position-absolute top-0 end-0 bottom-0 ps-1 bg-black-25 opacity-0 opacity-50-hover z-index-1"

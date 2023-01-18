@@ -16043,6 +16043,38 @@ QUnit.module("Views", (hooks) => {
         assert.hasClass(target.querySelectorAll("th[data-name=bar] i"), "fa-angle-up");
     });
 
+    QUnit.test("sort rows in a grouped list view", async function (assert) {
+        await makeView({
+            type: "list",
+            resModel: "foo",
+            serverData,
+            arch: `
+                <list>
+                    <field name="int_field"/>
+                </list>`,
+            groupBy: ["bar"],
+        });
+
+        await click(target.querySelectorAll(".o_group_header")[1]);
+
+        assert.deepEqual(getNodesTextContent(target.querySelectorAll(".o_data_cell")), [
+            "10",
+            "9",
+            "17",
+        ]);
+        assert.hasClass(target.querySelectorAll("th[data-name=int_field]"), "o_column_sortable");
+
+        await click(target, "th[data-name=int_field]");
+
+        assert.deepEqual(getNodesTextContent(target.querySelectorAll(".o_data_cell")), [
+            "9",
+            "10",
+            "17",
+        ]);
+        assert.hasClass(target.querySelectorAll("th[data-name=int_field]"), "o_column_sortable");
+        assert.hasClass(target.querySelectorAll("th[data-name=int_field] i"), "fa-angle-up");
+    });
+
     QUnit.test(
         "have some records, then go to next page in pager then group by some field: at least one group should be visible",
         async function (assert) {
