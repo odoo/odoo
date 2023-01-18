@@ -225,8 +225,6 @@ class SaleOrder(models.Model):
             if not line.reward_id and line.product_id in reward.all_discount_product_ids:
                 lines_to_discount |= line
             elif line.reward_id.reward_type == 'discount':
-                if line.reward_id == reward:
-                    continue
                 discount_lines[line.reward_identifier_code] |= line
 
         order_lines -= self.order_line.filtered("reward_id")
