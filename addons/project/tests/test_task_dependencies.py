@@ -103,10 +103,15 @@ class TestTaskDependencies(TestProjectCommon):
             'depend_on_ids': [Command.link(self.task_2.id)]
         })
         self.cr.precommit.clear()
+        # Check that adding a dependency changes the stage then logs a message in task_1
+        self.flush_tracking()
+        self.assertEqual(len(self.task_1.message_ids), 1,
+            'Adding task 2 as a dependencie should have logged a message in task 1.')
+
         # Check that changing a dependency tracked field in task_2 logs a message in task_1.
         self.task_2.write({'date_deadline': date(1983, 3, 1)}) # + 1 message in task_1 and task_2
         self.flush_tracking()
-        self.assertEqual(len(self.task_1.message_ids), 1,
+        self.assertEqual(len(self.task_1.message_ids), 2,
             'Changing the deadline on task 2 should have logged a message in task 1.')
 
         # Check that changing a dependency tracked field in task_1 does not log a message in task_2.
@@ -118,16 +123,16 @@ class TestTaskDependencies(TestProjectCommon):
         # Check that changing a field that is not tracked at all on task 2 does not impact task 1.
         self.task_2.color = 100 # no new message
         self.flush_tracking()
-        self.assertEqual(len(self.task_1.message_ids), 2,
+        self.assertEqual(len(self.task_1.message_ids), 3,
             'Changing the color on task 2 should not have logged a message in task 1 since it is not tracked.')
 
         # Check that changing multiple fields does not log more than one message.
         self.task_2.write({
             'date_deadline': date(2020, 1, 1),
-            'kanban_state': 'blocked',
+            'state': '02_changes_requested',
         }) # + 1 message in task_1 and task_2
         self.flush_tracking()
-        self.assertEqual(len(self.task_1.message_ids), 3,
+        self.assertEqual(len(self.task_1.message_ids), 4,
             'Changing multiple fields on task 2 should only log one message in task 1.')
 
     def test_task_dependencies_settings_change(self):

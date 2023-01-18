@@ -271,7 +271,7 @@ class ProjectCustomerPortal(CustomerPortal):
             'project': {'label': _('Project'), 'order': 'project_id, stage_id', 'sequence': 3},
             'users': {'label': _('Assignees'), 'order': 'user_ids', 'sequence': 4},
             'stage': {'label': _('Stage'), 'order': 'stage_id, project_id', 'sequence': 5},
-            'status': {'label': _('Status'), 'order': 'kanban_state', 'sequence': 6},
+            'status': {'label': _('Status'), 'order': 'state', 'sequence': 6},
             'priority': {'label': _('Priority'), 'order': 'priority desc', 'sequence': 8},
             'date_deadline': {'label': _('Deadline'), 'order': 'date_deadline asc', 'sequence': 9},
             'update': {'label': _('Last Stage Update'), 'order': 'date_last_stage_update desc', 'sequence': 11},
@@ -300,7 +300,7 @@ class ProjectCustomerPortal(CustomerPortal):
             'customer': 'partner_id',
             'milestone': 'milestone_id',
             'priority': 'priority',
-            'status': 'kanban_state',
+            'status': 'state',
         }
 
     def _task_get_order(self, order, groupby):
@@ -350,9 +350,8 @@ class ProjectCustomerPortal(CustomerPortal):
         if search_in in ('priority', 'all'):
             search_domain.append([('priority', 'ilike', search == 'normal' and '0' or '1')])
         if search_in in ('status', 'all'):
-            search_domain.append([
-                ('kanban_state', 'ilike', 'normal' if search == 'In Progress' else 'done' if search == 'Ready' else 'blocked' if search == 'Blocked' else search)
-            ])
+            state_dict = dict(map(reversed, request.env['project.task']._fields['state']._description_selection(request.env)))
+            search_domain.append([('state', 'ilike', state_dict.get(search, search))])
         return OR(search_domain)
 
     def _prepare_tasks_values(self, page, date_begin, date_end, sortby, search, search_in, groupby, url="/my/tasks", domain=None, su=False):
@@ -420,12 +419,13 @@ class ProjectCustomerPortal(CustomerPortal):
             else:
                 grouped_tasks = [tasks]
 
-            task_states = dict(Task_sudo._fields['kanban_state']._description_selection(request.env))
+
+            task_states = dict(Task_sudo._fields['state']._description_selection(request.env))
             if sortby == 'status':
                 if groupby == 'none' and grouped_tasks:
-                    grouped_tasks[0] = grouped_tasks[0].sorted(lambda tasks: task_states.get(tasks.kanban_state))
+                    grouped_tasks[0] = grouped_tasks[0].sorted(lambda tasks: task_states.get(tasks.state))
                 else:
-                    grouped_tasks.sort(key=lambda tasks: task_states.get(tasks[0].kanban_state))
+                    grouped_tasks.sort(key=lambda tasks: task_states.get(tasks[0].state))
             return grouped_tasks
 
         values.update({

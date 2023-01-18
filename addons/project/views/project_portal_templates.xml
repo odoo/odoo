@@ -37,7 +37,10 @@
     </template>
 
     <template id="portal_my_tasks_state_widget_template" name="Status Widget Template">
-        <span t-att-title="task.kanban_state_label" t-attf-class="o_status rounded-circle #{'bg-success' if task.kanban_state == 'done' else 'bg-danger' if task.kanban_state == 'blocked' else ''}"/>
+        <span
+            t-att-title="dict(task.fields_get(allfields=['state'])['state']['selection'])[task.state]"
+            t-attf-class="o_status rounded-circle #{'bg-success' if task.state == '1_done' else 'bg-danger' if task.state == '1_canceled' else 'bg-warning' if task.state == '02_changes_requested' else 'bg-success' if task.state == '03_approved' else ''}"
+        />
     </template>
 
     <template id="portal_my_home" name="Show Projects / Tasks" customize_show="True" inherit_id="portal.portal_my_home" priority="40">
@@ -144,7 +147,7 @@
                             <th t-if="groupby == 'priority'" t-attf-colspan="{{grouped_tasks_colspan}}">
                                 <span class="text-truncate" t-field="tasks[0].sudo().priority"/></th>
                             <th t-if="groupby == 'status'" t-attf-colspan="{{grouped_tasks_colspan}}">
-                                <span class="text-truncate" t-field="tasks[0].sudo().kanban_state"/></th>
+                                <span class="text-truncate" t-field="tasks[0].sudo().state"/></th>
                             <th t-if="groupby == 'customer'" t-attf-colspan="{{grouped_tasks_colspan}}">
                                 <span class="text-truncate" t-field="tasks[0].sudo().partner_id.name"/></th>
                         </tr>

@@ -1088,7 +1088,7 @@
             <field name="name">Furniture Delivery</field>
             <field name="project_id" search="[('sale_order_id', '=', ref('sale_timesheet.sale_order_1'))]"/>
             <field name="stage_id" ref="project.project_stage_1"/>
-            <field name="kanban_state">done</field>
+            <field name="state">1_done</field>
             <field name="sale_line_id" ref="sale_timesheet.sale_line_13"/>
             <field name="sale_order_id" ref="sale_timesheet.sale_order_1"/>
             <field name="partner_id" ref="base.res_partner_2"/>
@@ -1103,7 +1103,7 @@
             <field name="sale_order_id" ref="sale_timesheet.sale_order_2"/>
             <field name="project_id" search="[('sale_order_id', '=', ref('sale_timesheet.sale_order_2'))]"/>
             <field name="stage_id" ref="project.project_stage_1"/>
-            <field name="kanban_state">done</field>
+            <field name="state">1_done</field>
             <field name="partner_id" ref="base.res_partner_4"/>
             <field name="user_ids" eval="[Command.link(ref('base.user_admin'))]"/>
         </record>
@@ -1141,7 +1141,7 @@
             <field name="name">Carpet fitting</field>
             <field name="project_id" search="[('sale_order_id', '=', ref('sale_timesheet.sale_order_2'))]"/>
             <field name="stage_id" ref="project.project_stage_0"/>
-            <field name="kanban_state">blocked</field>
+            <field name="state">02_changes_requested</field>
             <field name="sale_line_id" ref="sale_timesheet.sale_line_22"/>
             <field name="sale_order_id" ref="sale_timesheet.sale_order_2"/>
             <field name="partner_id" ref="base.res_partner_4"/>
@@ -1217,7 +1217,7 @@
             <field name="name">Ceiling fan</field>
             <field name="project_id" search="[('sale_order_id', '=', ref('sale_timesheet.sale_order_2'))]"/>
             <field name="stage_id" ref="project.project_stage_0"/>
-            <field name="kanban_state">blocked</field>
+            <field name="state">02_changes_requested</field>
             <field name="sale_line_id" ref="sale_timesheet.sale_line_22"/>
             <field name="sale_order_id" ref="sale_timesheet.sale_order_2"/>
             <field name="partner_id" ref="base.res_partner_4"/>
@@ -1228,7 +1228,7 @@
             <field name="name">Plumbing</field>
             <field name="project_id" search="[('sale_order_id', '=', ref('sale_timesheet.sale_order_2'))]"/>
             <field name="stage_id" ref="project.project_stage_0"/>
-            <field name="kanban_state">blocked</field>
+            <field name="state">02_changes_requested</field>
             <field name="sale_line_id" ref="sale_timesheet.sale_line_22"/>
             <field name="sale_order_id" ref="sale_timesheet.sale_order_2"/>
             <field name="partner_id" ref="base.res_partner_4"/>

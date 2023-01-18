@@ -34,11 +34,15 @@ class ReportProjectTaskUser(models.Model):
         ('0', 'Low'),
         ('1', 'High')
         ], readonly=True, string="Priority")
-    kanban_state = fields.Selection([
-            ('normal', 'In Progress'),
-            ('blocked', 'Blocked'),
-            ('done', 'Ready for Next Stage')
-        ], string='Kanban State', readonly=True)
+
+    state = fields.Selection([
+        ('01_in_progress', 'In Progress'),
+        ('1_done', 'Done'),
+        ('04_waiting_normal', 'Waiting'),
+        ('03_approved', 'Approved'),
+        ('1_canceled', 'Canceled'),
+        ('02_changes_requested', 'Changes Requested'),
+    ], string='Status', readonly=True)
     company_id = fields.Many2one('res.company', string='Company', readonly=True)
     partner_id = fields.Many2one('res.partner', string='Customer', readonly=True)
     stage_id = fields.Many2one('project.task.type', string='Stage', readonly=True)
@@ -56,7 +60,6 @@ class ReportProjectTaskUser(models.Model):
         string="Personal Stage", readonly=True)
     milestone_id = fields.Many2one('project.milestone', readonly=True)
     message_is_follower = fields.Boolean(related='task_id.message_is_follower')
-    is_blocked = fields.Boolean('Is Blocked', readonly=True)
     dependent_ids = fields.Many2many('project.task', relation='task_dependencies_rel', column1='depends_on_id',
         column2='task_id', string='Block', readonly=True,
         domain="[('allow_task_dependencies', '=', True), ('id', '!=', id)]")
@@ -88,10 +91,9 @@ class ReportProjectTaskUser(models.Model):
                 t.parent_id,
                 t.stage_id,
                 t.is_closed,
-                t.kanban_state,
+                t.state,
                 t.milestone_id,
                 CASE WHEN pm.id IS NOT NULL THEN true ELSE false END as has_late_and_unreached_milestone,
-                t.is_blocked,
                 t.description,
                 NULLIF(t.rating_last_value, 0) as rating_last_value,
                 AVG(rt.rating) as rating_avg,
@@ -121,7 +123,7 @@ class ReportProjectTaskUser(models.Model):
                 t.parent_id,
                 t.stage_id,
                 t.is_closed,
-                t.kanban_state,
+                t.state,
                 t.rating_last_value,
                 t.working_days_close,
                 t.working_days_open,
