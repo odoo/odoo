@@ -234,7 +234,7 @@ def html_sanitize(src, silent=True, sanitize_tags=True, sanitize_attributes=Fals
         cleaned = cleaned.replace(u'&lt;%', u'<%')
         cleaned = cleaned.replace(u'%&gt;', u'%>')
         # html considerations so real html content match database value
-        cleaned.replace(u'\xa0', u'&nbsp;')
+        cleaned = cleaned.replace(u'\xa0', u'&nbsp;')
     except etree.ParserError as e:
         if 'empty' in str(e):
             return u""
