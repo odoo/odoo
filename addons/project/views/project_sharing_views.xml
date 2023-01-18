@@ -40,12 +40,10 @@
                 <field name="active"/>
                 <field name="allow_subtasks"/>
                 <field name="child_text"/>
-                <field name="legend_blocked" invisible="1"/>
-                <field name="legend_normal" invisible="1"/>
-                <field name="legend_done" invisible="1"/>
+                <field name="is_closed"/>
                 <field name="allow_milestones" />
                 <field name="has_late_and_unreached_milestone"/>
-                <progressbar field="kanban_state" colors='{"done": "success", "blocked": "danger", "normal": "200"}'/>
+                <progressbar field="state" colors='{"1_done": "success", "03_approved": "success", "02_changes_requested": "warning", "1_canceled": "danger", "04_waiting_normal": "200", "01_in_progress": "200"}'/>
                 <templates>
                 <t t-name="kanban-menu" t-if="!selection_mode">
                     <a t-if="widget.editable" role="menuitem" type="edit" class="dropdown-item">Edit</a>
@@ -91,7 +89,7 @@
                                         <t t-if="user_count > 1"><t t-out="user_count"/> assignees</t>
                                         <t t-else="" t-out="record.portal_user_names.raw_value"/>
                                     </span>
-                                    <field name="kanban_state" widget="state_selection"/>
+                                    <field name="state" widget="project_task_state_selection" options="{'is_toggle_mode': false}"/>
                                 </div>
                             </div>
                         </div>
@@ -153,10 +151,7 @@
                         <h1 class="d-flex flex-row justify-content-between">
                             <field name="priority" widget="priority" class="me-3"/>
                             <field name="name" class="o_task_name text-truncate" placeholder="Task Title..."/>
-                            <field name="kanban_state" widget="state_selection" class="ms-auto"/>
-                            <field name="legend_blocked" invisible="1"/>
-                            <field name="legend_normal" invisible="1"/>
-                            <field name="legend_done" invisible="1"/>
+                            <field name="state" widget="project_task_state_selection" options="{'is_toggle_mode': false}"/>
                         </h1>
                     </div>
                     <group>
@@ -211,7 +206,6 @@
                                     <field name="portal_user_names" string="Assignees" optional="show"/>
                                     <field name="date_deadline" attrs="{'invisible': [('is_closed', '=', True)]}" optional="show"/>
                                     <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color'}" optional="hide"/>
-                                    <field name="kanban_state" widget="state_selection" options="{'hide_label': True}" nolabel="1" optional="show"/>
                                     <field name="stage_id" optional="show"/>
                                     <button name="action_open_task" type="object" title="View Task" string="View Task" class="btn btn-link float-end"
                                             context="{'form_view_ref': 'project.project_sharing_project_task_view_form'}"

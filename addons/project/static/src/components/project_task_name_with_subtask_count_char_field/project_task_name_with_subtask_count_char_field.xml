@@ -2,6 +2,12 @@
 <templates xml:space="preserve">
 
     <t t-name="project.ProjectTaskNameWithSubtaskCountCharField" t-inherit="web.CharField" t-inherit-mode="primary" owl="1">
+        <xpath expr="//span[@t-esc='formattedValue']" position="before">
+            <s t-if="['1_done', '1_canceled'].includes(this.props.record.data.state) and ['kanban', 'list'].includes(this.props.record.activeFields[this.props.name].viewType)" t-esc="formattedValue"/>
+        </xpath>
+        <xpath expr="//span[@t-esc='formattedValue']" position="attributes">
+            <attribute name="t-else">""</attribute>
+        </xpath>
         <xpath expr="//span[@t-esc='formattedValue']" position="after">
             <span
                 class="text-muted ms-2"

@@ -24,10 +24,10 @@ QUnit.module('Subtask Kanban List tests', {
             { name: "User One", login: 'one', password: 'one' },
         ]);
         pyEnv['project.task'].create([
-            { name: 'task one', project_id: projectId, subtask_count: 2, child_ids: [2, 3], kanban_state: 'normal', user_ids: [userId] },
-            { name: 'task two', subtask_count: 0, child_ids: [], kanban_state: 'done' },
-            { name: 'task three', subtask_count: 0, child_ids: [], kanban_state: 'blocked' },
-            { name: 'task four', project_id: projectId, subtask_count: 0, child_ids: [], kanban_state: 'normal' },
+            { name: 'task one', project_id: projectId, subtask_count: 2, child_ids: [2, 3], state: '01_in_progress', user_ids: [userId] },
+            { name: 'task two', subtask_count: 0, child_ids: [], state: '03_approved' },
+            { name: 'task three', subtask_count: 0, child_ids: [], state: '02_changes_requested' },
+            { name: 'task four', project_id: projectId, subtask_count: 0, child_ids: [], state: '01_in_progress' },
         ]);
         this.views = {
             "project.task,false,kanban":
@@ -38,7 +38,7 @@ QUnit.module('Subtask Kanban List tests', {
                             <div>
                                 <field name="name" widget="name_with_subtask_count"/>
                                 <field name="user_ids" invisible="1"/>
-                                <field name="kanban_state" invisible="1"/>
+                                <field name="state" invisible="1"/>
                                 <a t-if="record.subtask_count.raw_value" class="subtask_list_button" title="See Subtasks" style="width: 29px;"/>
                             </div>
                             <div class="kanban_bottom_subtasks_section"/>

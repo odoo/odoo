@@ -24,34 +24,29 @@ PROJECT_TASK_READABLE_FIELDS = {
     'id',
     'active',
     'priority',
-    'kanban_state_label',
     'project_id',
     'display_project_id',
     'color',
     'commercial_partner_id',
     'allow_subtasks',
     'subtask_count',
+    'is_private',
     'child_text',
-    'is_closed',
+    'email_from',
     'create_date',
     'write_date',
     'company_id',
     'displayed_image_id',
     'display_name',
     'portal_user_names',
-    'legend_normal',
-    'legend_blocked',
-    'legend_done',
     'user_ids',
     'display_parent_task_button',
     'allow_milestones',
     'milestone_id',
     'has_late_and_unreached_milestone',
     'company_id',
-    'date_last_stage_update',
     'date_assign',
     'dependent_ids',
-    'is_blocked',
     'message_is_follower',
     'recurring_task',
     'recurrence_template_id',
@@ -62,13 +57,20 @@ PROJECT_TASK_WRITABLE_FIELDS = {
     'description',
     'partner_id',
     'date_deadline',
+    'date_last_stage_update',
     'tag_ids',
     'sequence',
+    'is_closed',
     'stage_id',
-    'kanban_state',
     'child_ids',
     'parent_id',
     'priority',
+    'state',
+}
+
+CLOSED_STATES = {
+    '1_done': 'Done',
+    '1_canceled': 'Canceled',
 }
 
 class ProjectTaskType(models.Model):
@@ -88,12 +90,6 @@ class ProjectTaskType(models.Model):
         default=_get_default_project_ids,
         help="Projects in which this stage is present. If you follow a similar workflow in several projects,"
             " you can share this stage among them and get consolidated information this way.")
-    legend_blocked = fields.Char(
-        'Red Kanban Label', default=lambda s: _('Blocked'), translate=True, required=True)
-    legend_done = fields.Char(
-        'Green Kanban Label', default=lambda s: _('Ready'), translate=True, required=True)
-    legend_normal = fields.Char(
-        'Grey Kanban Label', default=lambda s: _('In Progress'), translate=True, required=True)
     mail_template_id = fields.Many2one(
         'mail.template',
         string='Email Template',
@@ -108,10 +104,10 @@ class ProjectTaskType(models.Model):
         help="If set, a rating request will automatically be sent by email to the customer when the task reaches this stage. \n"
              "Alternatively, it will be sent at a regular interval as long as the task remains in this stage, depending on the configuration of your project. \n"
              "To use this feature make sure that the 'Customer Ratings' option is enabled on your project.")
-    auto_validation_kanban_state = fields.Boolean('Automatic Kanban Status', default=False,
-        help="Automatically modify the kanban state when the customer replies to the feedback for this stage.\n"
-            " * Good feedback from the customer will update the kanban state to 'ready for the new stage' (green bullet).\n"
-            " * Neutral or bad feedback will set the kanban state to 'blocked' (red bullet).\n")
+    auto_validation_state = fields.Boolean('Automatic Kanban Status', default=False,
+        help="Automatically modify the state when the customer replies to the feedback for this stage.\n"
+            " * Good feedback from the customer will update the state to 'Approved' (green bullet).\n"
+            " * Neutral or bad feedback will set the kanban state to 'Changes Requested' (orange bullet).\n")
     disabled_rating_warning = fields.Text(compute='_compute_disabled_rating_warning')
 
     user_id = fields.Many2one('res.users', 'Stage Owner', index=True)
@@ -566,6 +562,7 @@ class Project(models.Model):
         return {
             'stage_id': task.stage_id.id,
             'name': task.name,
+            'state': task.state,
             'company_id': project.company_id.id,
         }
 
@@ -642,6 +639,9 @@ class Project(models.Model):
 
         if 'allow_recurring_tasks' in vals and not vals.get('allow_recurring_tasks'):
             self.env['project.task'].search([('project_id', 'in', self.ids), ('recurring_task', '=', True)]).write({'recurring_task': False})
+
+        if 'allow_task_dependencies' in vals and not vals.get('allow_task_dependencies'):
+            self.env['project.task'].search([('project_id', 'in', self.ids), ('state', '=', '04_waiting_normal')]).write({'state': '01_in_progress'})
 
         if 'active' in vals:
             # archiving/unarchiving a project does it on its tasks, too
@@ -747,8 +747,10 @@ class Project(models.Model):
         res = super()._mail_get_message_subtypes()
         if len(self) == 1:
             dependency_subtype = self.env.ref('project.mt_project_task_dependency_change')
+            waiting_subtype = self.env.ref('project.mt_project_task_waiting')
             if not self.allow_task_dependencies and dependency_subtype in res:
                 res -= dependency_subtype
+                res -= waiting_subtype
         return res
 
     # ---------------------------------------------------
@@ -1126,12 +1128,15 @@ class Task(models.Model):
         domain="[('project_ids', '=', project_id)]", copy=False, task_dependency_tracking=True)
     tag_ids = fields.Many2many('project.tags', string='Tags',
         help="You can only see tags that are already present in your project. If you try creating a tag that is already existing in other projects, it won't generate any duplicates.")
-    kanban_state = fields.Selection([
-        ('normal', 'In Progress'),
-        ('done', 'Ready'),
-        ('blocked', 'Blocked')], string='Status',
-        copy=False, default='normal', required=True, compute='_compute_kanban_state', readonly=False, store=True)
-    kanban_state_label = fields.Char(compute='_compute_kanban_state_label', string='Kanban State Label', tracking=True, task_dependency_tracking=True)
+
+    state = fields.Selection([
+        ('01_in_progress', 'In Progress'),
+        ('02_changes_requested', 'Changes Requested'),
+        ('03_approved', 'Approved'),
+        *CLOSED_STATES.items(),
+        ('04_waiting_normal', 'Waiting'),
+    ], string='Status', copy=False, default='01_in_progress', required=True, compute='_compute_state', readonly=False, store=True, recursive=True, task_dependency_tracking=True, tracking=True)
+
     create_date = fields.Datetime("Created On", readonly=True)
     write_date = fields.Datetime("Last Updated On", readonly=True)
     date_end = fields.Datetime(string='Ending Date', index=True, copy=False)
@@ -1143,8 +1148,9 @@ class Task(models.Model):
         index=True,
         copy=False,
         readonly=True,
-        help="Date on which the stage of your task has last been modified.\n"
-            "Based on this information you can identify tasks that are stalling and get statistics on the time it usually takes to move tasks from one stage to another.")
+        help="Date on which the state of your task has last been modified.\n"
+            "Based on this information you can identify tasks that are stalling and get statistics on the time it usually takes to move tasks from one stage/state to another.")
+
     project_id = fields.Many2one('project.project', string='Project', recursive=True,
         compute='_compute_project_id', store=True, readonly=False, precompute=True,
         index=True, tracking=True, check_company=True, change_default=True)
@@ -1196,10 +1202,8 @@ class Task(models.Model):
         help="Attachments that don't come from a message.")
     # In the domain of displayed_image_id, we couln't use attachment_ids because a one2many is represented as a list of commands so we used res_model & res_id
     displayed_image_id = fields.Many2one('ir.attachment', domain="[('res_model', '=', 'project.task'), ('res_id', '=', id), ('mimetype', 'ilike', 'image')]", string='Cover Image')
-    legend_blocked = fields.Char(related='stage_id.legend_blocked', string='Kanban Blocked Explanation', readonly=True)
-    legend_done = fields.Char(related='stage_id.legend_done', string='Kanban Valid Explanation', readonly=True)
-    legend_normal = fields.Char(related='stage_id.legend_normal', string='Kanban Ongoing Explanation', readonly=True)
-    is_closed = fields.Boolean(related="stage_id.fold", string="Closing Stage", store=True, index=True, help="Folded in Kanban stages are closing stages.")
+
+    is_closed = fields.Boolean(compute='_compute_is_closed', string="Closed State", store=True, index=True)
     parent_id = fields.Many2one('project.task', string='Parent Task', index=True)
     child_ids = fields.One2many('project.task', 'parent_id', string="Sub-tasks", domain="[('recurring_task', '=', False)]")
     child_text = fields.Char(compute="_compute_child_text")
@@ -1242,7 +1246,6 @@ class Task(models.Model):
                                      column2="task_id", string="Block", copy=False,
                                      domain="[('project_id', '!=', False), ('id', '!=', id)]")
     dependent_tasks_count = fields.Integer(string="Dependent Tasks", compute='_compute_dependent_tasks_count')
-    is_blocked = fields.Boolean(compute='_compute_is_blocked', store=True, recursive=True)
 
     # Project sharing fields
     display_parent_task_button = fields.Boolean(compute='_compute_display_parent_task_button', compute_sudo=True)
@@ -1379,9 +1382,38 @@ class Task(models.Model):
         else:
             return [('project_id', '!=', False)]
 
-    @api.depends('stage_id', 'project_id')
-    def _compute_kanban_state(self):
-        self.kanban_state = 'normal'
+    @api.depends('depend_on_ids.state', 'project_id.allow_task_dependencies')
+    def _compute_state(self):
+        for task in self:
+            dependent_open_tasks = []
+            if task.allow_task_dependencies:
+                dependent_open_tasks = [dependent_task for dependent_task in task.depend_on_ids if dependent_task.state not in CLOSED_STATES]
+            # if one of the blocking task is in a blocking state
+            if dependent_open_tasks:
+                # here we check that the blocked task is not already in a closed state (if the task is already done we don't put it in waiting state)
+                if task.state not in CLOSED_STATES:
+                    task.state = '04_waiting_normal'
+            # if the task as no blocking dependencies and is in waiting_normal, the task goes back to in progress
+            elif task.state == '04_waiting_normal':
+                task.state = '01_in_progress'
+
+    @api.onchange('stage_id')
+    def _onchange_stage_id(self):
+        if self.state != '04_waiting_normal' and self.state not in CLOSED_STATES:
+            self.state = '01_in_progress'
+
+    @api.onchange('project_id')
+    def _onchange_project_id(self):
+        if self.state != '04_waiting_normal':
+            self.state = '01_in_progress'
+
+    @api.depends('state')
+    def _compute_is_closed(self):
+        for task in self:
+            task.is_closed = task.state in CLOSED_STATES
+
+    def is_blocked_by_dependences(self):
+        return any(blocking_task.state not in CLOSED_STATES for blocking_task in self.depend_on_ids)
 
     @api.depends_context('uid')
     @api.depends('user_ids')
@@ -1558,11 +1590,6 @@ class Task(models.Model):
             for task in tasks_with_dependency:
                 task.dependent_tasks_count = dependent_tasks_count_dict.get(task.id, 0)
 
-    @api.depends('depend_on_ids.is_closed', 'depend_on_ids.is_blocked')
-    def _compute_is_blocked(self):
-        for task in self:
-            task.is_blocked = any(not blocking_task.is_closed or blocking_task.is_blocked for blocking_task in task.depend_on_ids)
-
     @api.depends('partner_id.phone')
     def _compute_partner_phone(self):
         for task in self:
@@ -1617,16 +1644,6 @@ class Task(models.Model):
 
         (self - task_linked_to_calendar).update(dict.fromkeys(
             ['working_hours_open', 'working_hours_close', 'working_days_open', 'working_days_close'], 0.0))
-
-    @api.depends('stage_id', 'kanban_state')
-    def _compute_kanban_state_label(self):
-        for task in self:
-            if task.kanban_state == 'normal':
-                task.kanban_state_label = task.legend_normal
-            elif task.kanban_state == 'blocked':
-                task.kanban_state_label = task.legend_blocked
-            else:
-                task.kanban_state_label = task.legend_done
 
     def _compute_access_url(self):
         super(Task, self)._compute_access_url()
@@ -2187,6 +2204,15 @@ class Task(models.Model):
                 # We must make the display_project_id follow the project_id if no parent_id set
                 task.display_project_id = task.project_id
 
+        if 'state' in vals:
+            # specific use case: when the blocked task goes from 'forced' done state to a not closed state, we fix the state back to waiting
+            for task in self:
+                if task.allow_task_dependencies:
+                    if task.is_blocked_by_dependences() and vals['state'] not in CLOSED_STATES and vals['state'] != '04_waiting_normal':
+                        task.state = '04_waiting_normal'
+            if vals['state'] in CLOSED_STATES:
+                task.date_last_stage_update = now
+
         self._task_message_auto_subscribe_notify({task: task.user_ids - old_user_ids[task] - self.env.user for task in self})
         for recurrence, task in task_for_recurrence.items():
             recurrence._create_task(task_from=task)
@@ -2225,8 +2251,6 @@ class Task(models.Model):
 
     @api.depends('parent_id.project_id', 'display_project_id')
     def _compute_project_id(self):
-        # Avoid recomputing kanban_state
-        self.env.remove_to_compute(self._fields['kanban_state'], self)
         for task in self:
             if task.parent_id:
                 task.project_id = task.display_project_id or task.parent_id.project_id
@@ -2389,25 +2413,31 @@ class Task(models.Model):
 
     def _track_subtype(self, init_values):
         self.ensure_one()
-        mail_message_subtype_per_kanban_state = {
-            'blocked': 'project.mt_task_blocked',
-            'done': 'project.mt_task_ready',
-            'normal': 'project.mt_task_progress',
+        mail_message_subtype_per_state = {
+            '1_done': 'project.mt_task_done',
+            '1_canceled': 'project.mt_task_canceled',
+            '01_in_progress': 'project.mt_task_in_progress',
+            '03_approved': 'project.mt_task_approved',
+            '02_changes_requested': 'project.mt_task_changes_requested',
+            '04_waiting_normal': 'project.mt_task_waiting',
         }
+
         if 'stage_id' in init_values:
             return self.env.ref('project.mt_task_stage')
-        elif 'kanban_state_label' in init_values and self.kanban_state in mail_message_subtype_per_kanban_state:
-            return self.env.ref(mail_message_subtype_per_kanban_state[self.kanban_state])
+        elif 'state' in init_values and self.state in mail_message_subtype_per_state:
+            return self.env.ref(mail_message_subtype_per_state[self.state])
         return super(Task, self)._track_subtype(init_values)
 
     def _mail_get_message_subtypes(self):
         res = super()._mail_get_message_subtypes()
         if len(self) == 1:
             dependency_subtype = self.env.ref('project.mt_task_dependency_change')
+            waiting_subtype = self.env.ref('project.mt_task_waiting')
             if ((self.project_id and not self.project_id.allow_task_dependencies)\
                 or (not self.project_id and not self.user_has_groups('project.group_project_task_dependencies')))\
                 and dependency_subtype in res:
                 res -= dependency_subtype
+                res -= waiting_subtype
         return res
 
     def _notify_get_recipients_groups(self, msg_vals=None):
@@ -2686,9 +2716,9 @@ class Task(models.Model):
         rating = super(Task, self).rating_apply(
             rate, token=token, rating=rating, feedback=feedback,
             subtype_xmlid=subtype_xmlid, notify_delay_send=notify_delay_send)
-        if self.stage_id and self.stage_id.auto_validation_kanban_state:
-            kanban_state = 'done' if rating.rating >= rating_data.RATING_LIMIT_OK else 'blocked'
-            self.write({'kanban_state': kanban_state})
+        if self.stage_id and self.stage_id.auto_validation_state:
+            state = '03_approved' if rating.rating >= rating_data.RATING_LIMIT_SATISFIED else '02_changes_requested'
+            self.write({'state': state})
         return rating
 
     def _rating_apply_get_default_subtype_id(self):
