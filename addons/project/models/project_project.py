@@ -767,6 +767,9 @@ class Project(models.Model):
     #  Business Methods
     # ---------------------------------------------------
 
+    def _get_hide_partner(self):
+        return False
+
     @api.model
     def _create_analytic_account_from_values(self, values):
         company = self.env['res.company'].browse(values.get('company_id')) if values.get('company_id') else self.env.company
