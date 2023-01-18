@@ -108,7 +108,8 @@ class MailComposer(models.TransientModel):
         if 'force_send' in fields_list and 'force_send' not in result:
             result['force_send'] = (
                 result.get('composition_mode') != 'comment' or
-                len(self._parse_res_ids(result.get('res_ids') or [])) <= 1
+                (not result.get('res_domain') and
+                len(self._parse_res_ids(result.get('res_ids') or [])) <= 1)
             )
 
         return {
@@ -263,11 +264,17 @@ class MailComposer(models.TransientModel):
     @api.onchange('template_id')
     def _onchange_template_id_wrapper(self):
         self.ensure_one()
-        values = self._onchange_template_id(self.template_id.id, self.composition_mode, self.model, self._evaluate_res_ids())['value']
+        values = self._onchange_template_id(
+            self.template_id.id,
+            self.composition_mode,
+            self.model,
+            self._evaluate_res_ids(),
+            self.res_domain,
+        )['value']
         for fname, value in values.items():
             setattr(self, fname, value)
 
-    def _onchange_template_id(self, template_id, composition_mode, model, res_ids):
+    def _onchange_template_id(self, template_id, composition_mode, model, res_ids, res_domain=None):
         """ Perform the onchange.
 
           * mass_mailing or comment in batch: we cannot render, so return the
@@ -275,7 +282,7 @@ class MailComposer(models.TransientModel):
           * normal mode: return rendered values
             -> for x2many field, this onchange return command instead of ids
         """
-        if template_id and (composition_mode == 'mass_mail' or len(res_ids) > 1):
+        if template_id and (composition_mode == 'mass_mail' or res_domain or len(res_ids) > 1):
             # copy raw template values (not rendered due to mass mode)
             template = self.env['mail.template'].browse(template_id)
             values = dict(
