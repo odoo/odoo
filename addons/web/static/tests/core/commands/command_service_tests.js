@@ -245,6 +245,27 @@ QUnit.test("global command with hotkey", async (assert) => {
     assert.verifySteps([globalHotkey]);
 });
 
+QUnit.test("command with hotkey and isAvailable", async (assert) => {
+    assert.expect(3);
+
+    const hotkey = "a";
+    let isAvailable = false;
+    env.services.command.add("test", () => assert.step(hotkey), {
+        hotkey,
+        isAvailable: () => isAvailable,
+    });
+    await nextTick();
+
+    triggerHotkey("a");
+    await nextTick();
+    assert.verifySteps([]);
+
+    isAvailable = true;
+    triggerHotkey("a");
+    await nextTick();
+    assert.verifySteps([hotkey]);
+});
+
 QUnit.test("open command palette with command config", async (assert) => {
     const hotkey = "alt+a";
     const action = () => {};
