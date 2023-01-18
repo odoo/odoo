@@ -156,6 +156,10 @@ class SaleOrder(models.Model):
         # This allow manual overwrite of taxes for promotion.
         if program.discount_line_product_id.taxes_id:
             line_taxes = self.fiscal_position_id.map_tax(program.discount_line_product_id.taxes_id) if self.fiscal_position_id else program.discount_line_product_id.taxes_id
+            lines = self._get_base_order_lines(program)
+            discount_amount = min(
+                sum(lines.mapped(lambda l: l.price_reduce * l.product_uom_qty)), discount_amount
+            )
             return [{
                 'name': _("Discount: %s", program.name),
                 'product_id': program.discount_line_product_id.id,
