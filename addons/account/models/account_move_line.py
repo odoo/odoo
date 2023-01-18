@@ -1567,7 +1567,8 @@ class AccountMoveLine(models.Model):
             SELECT account.root_id
               FROM account_account account,
                    LATERAL ({query_str}) line
-        """, query_param)
+             WHERE account.company_id IN %s
+        """, query_param + [tuple(self.env.companies.ids)])
         return {
             root.id: {'id': root.id, 'display_name': root.display_name}
             for root in self.env['account.root'].browse(id for [id] in self.env.cr.fetchall())
