@@ -1,6 +1,7 @@
 /** @odoo-module **/
 
 import { busService } from "@bus/services/bus_service";
+import { busParametersService } from "@bus/bus_parameters_service";
 import { imStatusService } from "@bus/im_status_service";
 import { multiTabService } from "@bus/multi_tab_service";
 import { makeMultiTabToLegacyEnv } from "@bus/services/legacy/make_multi_tab_to_legacy_env";
@@ -96,6 +97,7 @@ function setupMessagingServiceRegistries({
 
     services = {
         bus_service: busService,
+        "bus.parameters": busParametersService,
         im_status: imStatusService,
         messaging: messagingService,
         messagingValues,
