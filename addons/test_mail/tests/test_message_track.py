@@ -222,14 +222,14 @@ class TestTracking(TestMailCommon):
             if 'name' in init_values and init_values['name'] == magic_code:
                 return 'mail.mt_name_changed'
             return False
-        self.registry('mail.test.container')._patch_method('_track_subtype', _track_subtype)
+        self.patch(self.registry('mail.test.container'), '_track_subtype', _track_subtype)
 
         def _track_template(self, changes):
             res = {}
             if 'name' in changes:
                 res['name'] = (mail_template, {'composition_mode': 'mass_mail'})
             return res
-        self.registry('mail.test.container')._patch_method('_track_template', _track_template)
+        self.patch(self.registry('mail.test.container'), '_track_template', _track_template)
 
         cls = type(self.env['mail.test.container'])
         self.assertFalse(hasattr(getattr(cls, 'name'), 'track_visibility'))
