@@ -14,12 +14,11 @@ class UtmCampaign(models.Model):
         self.use_leads = self.env.user.has_group('crm.group_use_lead')
 
     def _compute_crm_lead_count(self):
-        lead_data = self.env['crm.lead'].with_context(active_test=False)._read_group([
-            ('campaign_id', 'in', self.ids)],
-            ['campaign_id'], ['campaign_id'])
-        mapped_data = {datum['campaign_id'][0]: datum['campaign_id_count'] for datum in lead_data}
+        lead_data = self.env['crm.lead'].with_context(active_test=False)._aggregate(
+            [('campaign_id', 'in', self.ids)],
+            ['*:count'], ['campaign_id'])
         for campaign in self:
-            campaign.crm_lead_count = mapped_data.get(campaign.id, 0)
+            campaign.crm_lead_count = lead_data.get_agg(campaign, '*:count', 0)
 
     def action_redirect_to_leads_opportunities(self):
         view = 'crm.crm_lead_all_leads' if self.use_leads else 'crm.crm_lead_opportunities'

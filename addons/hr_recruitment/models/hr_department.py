@@ -15,21 +15,18 @@ class HrDepartment(models.Model):
 
     def _compute_new_applicant_count(self):
         if self.env.user.has_group('hr_recruitment.group_hr_recruitment_interviewer'):
-            applicant_data = self.env['hr.applicant']._read_group(
+            result = self.env['hr.applicant']._aggregate(
                 [('department_id', 'in', self.ids), ('stage_id.sequence', '<=', '1')],
-                ['department_id'], ['department_id'])
-            result = dict((data['department_id'][0], data['department_id_count']) for data in applicant_data)
+                ['*:count'], ['department_id'])
             for department in self:
-                department.new_applicant_count = result.get(department.id, 0)
+                department.new_applicant_count = result.get_agg(department.id, '*:count', 0)
         else:
             self.new_applicant_count = 0
 
     def _compute_recruitment_stats(self):
-        job_data = self.env['hr.job']._read_group(
+        job_data = self.env['hr.job']._aggregate(
             [('department_id', 'in', self.ids)],
-            ['no_of_hired_employee', 'no_of_recruitment', 'department_id'], ['department_id'])
-        new_emp = dict((data['department_id'][0], data['no_of_hired_employee']) for data in job_data)
-        expected_emp = dict((data['department_id'][0], data['no_of_recruitment']) for data in job_data)
+            ['no_of_hired_employee:sum', 'no_of_recruitment:sum'], ['department_id'])
         for department in self:
-            department.new_hired_employee = new_emp.get(department.id, 0)
-            department.expected_employee = expected_emp.get(department.id, 0)
+            department.new_hired_employee = job_data.get_agg(department.id, 'no_of_hired_employee:sum', 0)
+            department.expected_employee = job_data.get_agg(department.id, 'no_of_recruitment:sum', 0)

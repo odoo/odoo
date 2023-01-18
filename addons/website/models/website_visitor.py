@@ -120,16 +120,16 @@ class WebsiteVisitor(models.Model):
 
     @api.depends('website_track_ids')
     def _compute_page_statistics(self):
-        results = self.env['website.track']._read_group(
-            [('visitor_id', 'in', self.ids), ('url', '!=', False)], ['visitor_id', 'page_id', 'url'], ['visitor_id', 'page_id', 'url'], lazy=False)
+        results = self.env['website.track']._aggregate(
+            [('visitor_id', 'in', self.ids), ('url', '!=', False)], ['*:count'], ['visitor_id', 'page_id', 'url'])
         mapped_data = {}
-        for result in results:
-            visitor_info = mapped_data.get(result['visitor_id'][0], {'page_count': 0, 'visitor_page_count': 0, 'page_ids': set()})
-            visitor_info['visitor_page_count'] += result['__count']
+        for [visitor_id, page_id, _url], [count] in results.items():
+            visitor_info = mapped_data.get(visitor_id, {'page_count': 0, 'visitor_page_count': 0, 'page_ids': set()})
+            visitor_info['visitor_page_count'] += count
             visitor_info['page_count'] += 1
-            if result['page_id']:
-                visitor_info['page_ids'].add(result['page_id'][0])
-            mapped_data[result['visitor_id'][0]] = visitor_info
+            if page_id:
+                visitor_info['page_ids'].add(page_id)
+            mapped_data[visitor_id] = visitor_info
 
         for visitor in self:
             visitor_info = mapped_data.get(visitor.id, {'page_count': 0, 'visitor_page_count': 0, 'page_ids': set()})
@@ -144,13 +144,14 @@ class WebsiteVisitor(models.Model):
 
     @api.depends('website_track_ids.page_id')
     def _compute_last_visited_page_id(self):
-        results = self.env['website.track']._read_group(
-            [('visitor_id', 'in', self.ids)],
-            ['visitor_id', 'page_id', 'visit_datetime:max'],
-            ['visitor_id', 'page_id'], lazy=False)
-        mapped_data = {result['visitor_id'][0]: result['page_id'][0] for result in results if result['page_id']}
-        for visitor in self:
-            visitor.last_visited_page_id = mapped_data.get(visitor.id, False)
+        results = self.env['website.track']._aggregate(
+            [('visitor_id', 'in', self.ids), ('page_id', '!=', False)],
+            ['visit_datetime:max'],
+            ['visitor_id', 'page_id'], order="visit_datetime:max, page_id, visitor_id")
+        self.last_visited_page_id = False
+        # Because of order = `visit_datetime:max`, the last assignation will be the last page visited
+        for [visitor, page] in results.keys(as_records=True):
+            visitor.last_visited_page_id = page
 
     @api.depends('last_connection_datetime')
     def _compute_time_statistics(self):

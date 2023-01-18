@@ -18,23 +18,18 @@ class ResPartner(models.Model):
         return []
 
     def _compute_sale_order_count(self):
-        # retrieve all children partners and prefetch 'parent_id' on them
-        all_partners = self.with_context(active_test=False).search([('id', 'child_of', self.ids)])
-        all_partners.read(['parent_id'])
+        all_partners_subquery = self.with_context(active_test=False)._search([('id', 'child_of', self.ids)])
 
-        sale_order_groups = self.env['sale.order']._read_group(
-            domain=expression.AND([self._get_sale_order_domain_count(), [('partner_id', 'in', all_partners.ids)]]),
-            fields=['partner_id'], groupby=['partner_id']
+        sale_order_groups = self.env['sale.order']._aggregate(
+            domain=expression.AND([self._get_sale_order_domain_count(), [('partner_id', 'in', all_partners_subquery)]]),
+            aggregates=['*:count'], groupby=['partner_id']
         )
-        partners = self.browse()
-        for group in sale_order_groups:
-            partner = self.browse(group['partner_id'][0])
+        self.sale_order_count = 0
+        for [partner], [count] in sale_order_groups.items(as_records=True):
             while partner:
                 if partner in self:
-                    partner.sale_order_count += group['partner_id_count']
-                    partners |= partner
-                partner = partner.parent_id
-        (self - partners).sale_order_count = 0
+                    partner.sale_order_count += count
+                partner = partner.with_context(prefetch_fields=False).parent_id
 
     def can_edit_vat(self):
         ''' Can't edit `vat` if there is (non draft) issued SO. '''

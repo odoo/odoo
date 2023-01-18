@@ -93,12 +93,11 @@ class MrpRoutingWorkcenter(models.Model):
                 operation.time_cycle = operation.time_cycle_manual
 
     def _compute_workorder_count(self):
-        data = self.env['mrp.workorder']._read_group([
+        data = self.env['mrp.workorder']._aggregate([
             ('operation_id', 'in', self.ids),
-            ('state', '=', 'done')], ['operation_id'], ['operation_id'])
-        count_data = dict((item['operation_id'][0], item['operation_id_count']) for item in data)
+            ('state', '=', 'done')], ['*:count'], ['operation_id'])
         for operation in self:
-            operation.workorder_count = count_data.get(operation.id, 0)
+            operation.workorder_count = data.get_agg(operation, '*:count', 0)
 
     @api.constrains('blocked_by_operation_ids')
     def _check_no_cyclic_dependencies(self):

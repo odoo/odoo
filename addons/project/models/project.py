@@ -119,8 +119,8 @@ class ProjectTaskType(models.Model):
         self = self.with_context(active_test=False)
         # retrieves all the projects with a least 1 task in that stage
         # a task can be in a stage even if the project is not assigned to the stage
-        readgroup = self.with_context(active_test=False).env['project.task']._read_group([('stage_id', 'in', self.ids)], ['project_id'], ['project_id'])
-        project_ids = list(set([project['project_id'][0] for project in readgroup] + self.project_ids.ids))
+        aggregate_res = self.with_context(active_test=False).env['project.task']._aggregate([('stage_id', 'in', self.ids), ('project_id', 'not in', self.project_ids.ids)], groupby=['project_id'])
+        project_ids = [project_id for [project_id] in aggregate_res.keys()] + self.project_ids.ids
 
         wizard = self.with_context(project_ids=project_ids).env['project.task.type.delete.wizard'].create({
             'project_ids': project_ids,
@@ -254,25 +254,23 @@ class Project(models.Model):
             project.doc_count = docs_count.get(project.id, 0)
 
     def _compute_task_count(self):
-        domain = [('project_id', 'in', self.ids), ('is_closed', '=', False)]
-        fields = ['project_id', 'display_project_id:count']
-        groupby = ['project_id']
-        task_data = self.env['project.task']._read_group(domain, fields, groupby)
-        result_wo_subtask = defaultdict(int)
-        result_with_subtasks = defaultdict(int)
-        for data in task_data:
-            result_wo_subtask[data['project_id'][0]] += data['display_project_id']
-            result_with_subtasks[data['project_id'][0]] += data['project_id_count']
-        task_all_data = self.env['project.task'].with_context(active_test=False)._read_group(domain, fields, groupby)
-        all_tasks_wo_subtasks = defaultdict(int)
-        for data in task_all_data:
-            all_tasks_wo_subtasks[data['project_id'][0]] += data['display_project_id']
+        task_data = self.env['project.task']._aggregate(
+            [('project_id', 'in', self.ids), ('is_closed', '=', False)],
+            ['*:count', 'display_project_id:count'],
+            ['project_id']
+        )
+        unactive_task_data = self.env['project.task'].with_context(active_test=False)._aggregate(
+            [('project_id', 'in', self.filtered(lambda p: not p.active).ids), ('is_closed', '=', False)],
+            ['*:count'],
+            ['project_id']
+        )
 
         for project in self:
-            project.task_count = result_wo_subtask[project.id]
-            project.task_count_with_subtasks = result_with_subtasks[project.id]
+            project.task_count_with_subtasks = task_data.get_agg(project, '*:count', 0)
             if not project.active:
-                project.task_count = all_tasks_wo_subtasks[project.id]
+                project.task_count = unactive_task_data.get_agg(project, '*:count', 0)
+            else:
+                project.task_count = task_data.get_agg(project, 'display_project_id:count', 0)
 
     def _default_stage_id(self):
         # Since project stages are order by sequence first, this should fetch the one with the lowest sequence number.
@@ -497,32 +495,29 @@ class Project(models.Model):
 
     @api.depends('milestone_ids')
     def _compute_milestone_count(self):
-        read_group = self.env['project.milestone']._read_group([('project_id', 'in', self.ids)], ['project_id'], ['project_id'])
-        mapped_count = {group['project_id'][0]: group['project_id_count'] for group in read_group}
+        aggregate = self.env['project.milestone']._aggregate([('project_id', 'in', self.ids)], ['*:count'], ['project_id'])
         for project in self:
-            project.milestone_count = mapped_count.get(project.id, 0)
+            project.milestone_count = aggregate.get_agg(project, '*:count', 0)
 
     @api.depends('milestone_ids.is_reached')
     def _compute_milestone_reached_count(self):
-        read_group = self.env['project.milestone']._read_group(
+        aggregate = self.env['project.milestone']._aggregate(
             [('project_id', 'in', self.ids), ('is_reached', '=', True)],
-            ['project_id'],
+            ['*:count'],
             ['project_id'],
         )
-        mapped_count = {group['project_id'][0]: group['project_id_count'] for group in read_group}
         for project in self:
-            project.milestone_count_reached = mapped_count.get(project.id, 0)
+            project.milestone_count_reached = aggregate.get_agg(project, '*:count', 0)
 
     @api.depends('milestone_ids', 'milestone_ids.is_reached', 'milestone_ids.deadline', 'allow_milestones')
     def _compute_is_milestone_exceeded(self):
         today = fields.Date.context_today(self)
-        read_group = self.env['project.milestone']._read_group([
+        aggregate = self.env['project.milestone']._aggregate([
             ('project_id', 'in', self.filtered('allow_milestones').ids),
             ('is_reached', '=', False),
-            ('deadline', '<=', today)], ['project_id'], ['project_id'])
-        mapped_count = {group['project_id'][0]: group['project_id_count'] for group in read_group}
+            ('deadline', '<', today)], ['*:count'], ['project_id'])
         for project in self:
-            project.is_milestone_exceeded = bool(mapped_count.get(project.id, 0))
+            project.is_milestone_exceeded = bool(aggregate.get_agg(project, '*:count', 0))
 
     @api.model
     def _search_is_milestone_exceeded(self, operator, value):
@@ -556,14 +551,13 @@ class Project(models.Model):
     @api.depends('collaborator_ids', 'privacy_visibility')
     def _compute_collaborator_count(self):
         project_sharings = self.filtered(lambda project: project.privacy_visibility == 'portal')
-        collaborator_read_group = self.env['project.collaborator']._read_group(
+        collaborator_aggregate = self.env['project.collaborator']._aggregate(
             [('project_id', 'in', project_sharings.ids)],
-            ['project_id'],
+            ['*:count'],
             ['project_id'],
         )
-        collaborator_count_by_project = {res['project_id'][0]: res['project_id_count'] for res in collaborator_read_group}
         for project in self:
-            project.collaborator_count = collaborator_count_by_project.get(project.id, 0)
+            project.collaborator_count = collaborator_aggregate.get_agg(project, '*:count', 0)
 
     @api.depends('privacy_visibility')
     def _compute_privacy_visibility_warning(self):
@@ -674,15 +668,14 @@ class Project(models.Model):
             # archiving/unarchiving a project does it on its tasks, too
             self.with_context(active_test=False).mapped('tasks').write({'active': vals['active']})
         if 'name' in vals and self.analytic_account_id:
-            projects_read_group = self.env['project.project']._read_group(
+            projects_aggregate = self.env['project.project']._aggregate(
                 [('analytic_account_id', 'in', self.analytic_account_id.ids)],
+                ['*:count'],
                 ['analytic_account_id'],
-                ['analytic_account_id']
+                having=[('*:count', '>', 1)]
             )
             analytic_account_to_update = self.env['account.analytic.account'].browse([
-                res['analytic_account_id'][0]
-                for res in projects_read_group
-                if res['analytic_account_id'] and res['analytic_account_id_count'] == 1
+                analytic_account_id for [analytic_account_id] in projects_aggregate.keys()
             ])
             analytic_account_to_update.write({'name': self.name})
         return res
@@ -1544,17 +1537,16 @@ class Task(models.Model):
     def _compute_recurring_count(self):
         self.recurring_count = 0
         recurring_tasks = self.filtered(lambda l: l.recurrence_id)
-        count = self.env['project.task']._read_group([('recurrence_id', 'in', recurring_tasks.recurrence_id.ids)], ['id'], 'recurrence_id')
-        tasks_count = {c.get('recurrence_id')[0]: c.get('recurrence_id_count') for c in count}
+        count = self.env['project.task']._aggregate([('recurrence_id', 'in', recurring_tasks.recurrence_id.ids)], ['*:count'], ['recurrence_id'])
         for task in recurring_tasks:
-            task.recurring_count = tasks_count.get(task.recurrence_id.id, 0)
+            task.recurring_count = count.get_agg(task.recurrence_id, '*:count', 0)
 
     @api.depends('dependent_ids')
     def _compute_dependent_tasks_count(self):
         tasks_with_dependency = self.filtered('allow_task_dependencies')
         (self - tasks_with_dependency).dependent_tasks_count = 0
         if tasks_with_dependency:
-            group_dependent = self.env['project.task']._read_group([
+            group_dependent = self.env['project.task']._aggregate([
                 ('depend_on_ids', 'in', tasks_with_dependency.ids),
             ], ['depend_on_ids'], ['depend_on_ids'])
             dependent_tasks_count_dict = {
@@ -1905,6 +1897,13 @@ class Task(models.Model):
     def read(self, fields=None, load='_classic_read'):
         self._ensure_fields_are_accessible(fields)
         return super(Task, self).read(fields=fields, load=load)
+
+    def _aggregate(self, domain: list, aggregates: "list[str] | tuple[str]" = (), groupby: "list[str] | tuple[str]" = (), having: list = (), offset: int = 0, limit: "int | None" = None, order: "str | None" = None) -> "AggregateResult":
+        fields_list = [agg.split(':')[0] for agg in aggregates if agg != '*:count']
+        fields_list += [group.split(':')[0] for group in groupby]
+        fields_list += [term[0].split('.')[0] for term in domain if isinstance(term, (tuple, list)) and term not in [expression.TRUE_LEAF, expression.FALSE_LEAF]]
+        self._ensure_fields_are_accessible(fields_list)
+        return super()._aggregate(domain, aggregates, groupby, having, offset, limit, order)
 
     @api.model
     def read_group(self, domain, fields, groupby, offset=0, limit=None, orderby=False, lazy=True):

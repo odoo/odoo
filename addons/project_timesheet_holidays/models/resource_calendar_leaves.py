@@ -32,37 +32,23 @@ class ResourceCalendarLeaves(models.Model):
                     }
                 }
         """
-        leaves_read_group = self.env['resource.calendar.leaves']._read_group(
+        leaves_aggregate = self.env['resource.calendar.leaves']._aggregate(
             [('id', 'in', self.ids)],
-            ['calendar_id', 'ids:array_agg(id)', 'resource_ids:array_agg(resource_id)', 'min_date_from:min(date_from)', 'max_date_to:max(date_to)'],
+            ['id:array_agg', 'resource_id:array_agg', 'date_from:min', 'date_to:max'],
             ['calendar_id'],
         )
-        # dict of keys: calendar_id
-        #   and values : { 'date_from': datetime, 'date_to': datetime, resources: self.env['resource.resource'] }
-        cal_attendance_intervals_dict = {
-            res['calendar_id'][0]: {
-                'date_from': utc.localize(res['min_date_from']),
-                'date_to': utc.localize(res['max_date_to']),
-                'resources': self.env['resource.resource'].browse(res['resource_ids'] if res['resource_ids'] and res['resource_ids'][0] else []),
-                'leaves': self.env['resource.calendar.leaves'].browse(res['ids']),
-            } for res in leaves_read_group
-        }
-        # to easily find the calendar with its id.
-        calendars_dict = {calendar.id: calendar for calendar in self.calendar_id}
-
         # dict of keys: leave.id
         #   and values: a dict of keys: date
         #                   and values: number of days
         results = defaultdict(lambda: defaultdict(float))
-        for calendar_id, cal_attendance_intervals_params_entry in cal_attendance_intervals_dict.items():
-            calendar = calendars_dict[calendar_id]
+        for [calendar], [leaves, resources, min_date_from, max_date_to] in leaves_aggregate.items(as_records=True):
             work_hours_intervals = calendar._attendance_intervals_batch(
-                cal_attendance_intervals_params_entry['date_from'],
-                cal_attendance_intervals_params_entry['date_to'],
-                cal_attendance_intervals_params_entry['resources'],
+                utc.localize(min_date_from),
+                utc.localize(max_date_to),
+                resources,
                 tz=timezone(calendar.tz)
             )
-            for leave in cal_attendance_intervals_params_entry['leaves']:
+            for leave in leaves:
                 work_hours_data = work_hours_intervals[leave.resource_id.id]
 
                 for date_from, date_to, dummy in work_hours_data:
@@ -79,16 +65,12 @@ class ResourceCalendarLeaves(models.Model):
             If the employee has already a time off in the same day then no timesheet should be created.
         """
         work_hours_data = self._work_time_per_day()
-        employees_groups = self.env['hr.employee']._read_group(
+        employees_groups = self.env['hr.employee']._aggregate(
             [('resource_calendar_id', 'in', self.calendar_id.ids)],
-            ['resource_calendar_id', 'ids:array_agg(id)'],
+            ['id:array_agg'],
             ['resource_calendar_id'])
-        mapped_employee = {
-            employee['resource_calendar_id'][0]: self.env['hr.employee'].browse(employee['ids'])
-            for employee in employees_groups
-        }
-        employee_ids_set = set()
-        employee_ids_set.update(*[line['ids'] for line in employees_groups])
+
+        employee_ids = [_id for [ids] in employees_groups.values() for _id in ids]
         min_date = max_date = None
         for values in work_hours_data.values():
             for d, dummy in values:
@@ -99,20 +81,20 @@ class ResourceCalendarLeaves(models.Model):
                 elif d > max_date:
                     max_date = d
 
-        holidays_read_group = self.env['hr.leave']._read_group([
-            ('employee_id', 'in', list(employee_ids_set)),
+        holidays_aggregate = self.env['hr.leave']._aggregate([
+            ('employee_id', 'in', employee_ids),
             ('date_from', '<=', max_date),
             ('date_to', '>=', min_date),
             ('state', 'not in', ('cancel', 'refuse')),
-        ], ['date_from_list:array_agg(date_from)', 'date_to_list:array_agg(date_to)', 'employee_id'], ['employee_id'])
+        ], ['date_from:array_agg', 'date_to:array_agg'], ['employee_id'])
         holidays_by_employee = {
-            line['employee_id'][0]: [
-                (date_from.date(), date_to.date()) for date_from, date_to in zip(line['date_from_list'], line['date_to_list'])
-            ] for line in holidays_read_group
+            employee_id: [
+                (date_from.date(), date_to.date()) for date_from, date_to in zip(date_from_list, date_to_list)
+            ] for [employee_id], [date_from_list, date_to_list] in holidays_aggregate.items()
         }
         vals_list = []
         for leave in self:
-            for employee in mapped_employee.get(leave.calendar_id.id, self.env['hr.employee']):
+            for employee in employees_groups.get_agg(leave.calendar_id, 'id:array_agg', as_record=True):
                 holidays = holidays_by_employee.get(employee.id)
                 work_hours_list = work_hours_data[leave.id]
                 for index, (day_date, work_hours_count) in enumerate(work_hours_list):

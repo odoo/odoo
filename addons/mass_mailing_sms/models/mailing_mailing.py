@@ -70,23 +70,14 @@ class Mailing(models.Model):
 
     @api.depends('mailing_trace_ids.failure_type')
     def _compute_sms_has_iap_failure(self):
-        failures = ['sms_acc', 'sms_credit'] 
-        if not self.ids:
-            self.sms_has_insufficient_credit = self.sms_has_unregistered_account = False
-        else:
-            traces = self.env['mailing.trace'].sudo().read_group([
-                        ('mass_mailing_id', 'in', self.ids),
-                        ('trace_type', '=', 'sms'),
-                        ('failure_type', 'in', failures)
-            ], ['mass_mailing_id', 'failure_type'], ['mass_mailing_id', 'failure_type'], lazy=False)
-
-            trace_dict = dict.fromkeys(self.ids, {key: False for key in failures})
-            for t in traces:
-                trace_dict[t['mass_mailing_id'][0]][t['failure_type']] = bool(t['__count'])
-
-            for mail in self:
-                mail.sms_has_insufficient_credit = trace_dict[mail.id]['sms_credit']
-                mail.sms_has_unregistered_account = trace_dict[mail.id]['sms_acc']
+        traces = self.env['mailing.trace'].sudo()._aggregate([
+                    ('mass_mailing_id', 'in', self.ids),
+                    ('trace_type', '=', 'sms'),
+                    ('failure_type', 'in', ['sms_acc', 'sms_credit'])
+        ], ['*:count'], ['mass_mailing_id', 'failure_type'])
+        for mail in self:
+            mail.sms_has_insufficient_credit = traces.get_agg((mail.id, 'sms_credit'), '*:count', 0)
+            mail.sms_has_unregistered_account = traces.get_agg((mail.id, 'sms_acc'), '*:count', 0)
 
     # --------------------------------------------------
     # ORM OVERRIDES

@@ -25,15 +25,14 @@ class AccountBankStatement(models.Model):
         """
         rand = populate.Random('account_bank_statement+Populate')
 
-        read_group_res = self.env['account.bank.statement.line'].read_group(
+        aggregate_res = self.env['account.bank.statement.line'].aggregate(
             [('statement_id', '=', False)],
-            ['ids:array_agg(id)'],
+            ['id:array_agg'],
             ['journal_id'],
         )
 
         bank_statement_vals_list = []
-        for res in read_group_res:
-            available_ids = res['ids']
+        for [journal_id], [available_ids] in aggregate_res.items():
             nb_ids = len(available_ids)
             while nb_ids > 0:
                 batch_size = min(rand.randint(1, 19), nb_ids)
@@ -46,8 +45,8 @@ class AccountBankStatement(models.Model):
 
                 bank_statement_vals_list.append({
                     'name': f"statement_{len(bank_statement_vals_list) + 1}",
-                    'journal_id': res['journal_id'][0],
-                    'line_ids': [Command.set(res['ids'])],
+                    'journal_id': journal_id,
+                    'line_ids': [Command.set(available_ids)],
                 })
 
         return self.env['account.bank.statement'].create(bank_statement_vals_list)

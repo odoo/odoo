@@ -90,20 +90,23 @@ class PosSession(models.Model):
         # Map partner_id to its loyalty cards from all loyalty programs.
         loyalty_programs = self.config_id._get_program_ids().filtered(lambda p: p.program_type == 'loyalty')
         loyalty_card_fields = ['points', 'code', 'program_id']
-        partner_id_to_loyalty_card = {}
-        for group in self.env['loyalty.card'].read_group(
+        aggregate_result = self.env['loyalty.card']._aggregate(
             domain=[('partner_id', 'in', [p['id'] for p in partners]), ('program_id', 'in', loyalty_programs.ids)],
-            fields=[f"{field_name}:array_agg" for field_name in loyalty_card_fields] + ["ids:array_agg(id)"],
+            aggregates=[f"{field_name}:array_agg" for field_name in loyalty_card_fields] + ["id:array_agg"],
             groupby=['partner_id']
-        ):
-            loyalty_cards = {}
-            for i in range(group['partner_id_count']):
-                loyalty_cards[group['ids'][i]] = {field_name: group[field_name][i] for field_name in loyalty_card_fields}
-            partner_id_to_loyalty_card[group['partner_id'][0]] = loyalty_cards
+        )
 
         # Assign loyalty cards to each partner to load.
         for partner in partners:
-            partner['loyalty_cards'] = partner_id_to_loyalty_card.get(partner['id'], {})
+            if partner['id'] not in aggregate_result:
+                partner['loyalty_cards'] = {}
+                continue
+
+            aggregate_dict = aggregate_result[partner['id']]
+            loyalty_cards = {}
+            for i, _id in enumerate(aggregate_dict['id:array_agg']):
+                loyalty_cards[_id] = {field_name: aggregate_dict[f"{field_name}:array_agg"][i] for field_name in loyalty_card_fields}
+            partner['loyalty_cards'] = loyalty_cards
 
         return partners
 

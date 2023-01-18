@@ -10,43 +10,33 @@ class res_partner(models.Model):
     _inherit = 'res.partner'
 
     def _compute_purchase_order_count(self):
-        # retrieve all children partners and prefetch 'parent_id' on them
-        all_partners = self.with_context(active_test=False).search([('id', 'child_of', self.ids)])
-        all_partners.read(['parent_id'])
+        all_partners_subquery = self.with_context(active_test=False)._search([('id', 'child_of', self.ids)])
 
-        purchase_order_groups = self.env['purchase.order']._read_group(
-            domain=[('partner_id', 'in', all_partners.ids)],
-            fields=['partner_id'], groupby=['partner_id']
+        purchase_order_groups = self.env['purchase.order']._aggregate(
+            domain=[('partner_id', 'in', all_partners_subquery)],
+            aggregates=['*:count'], groupby=['partner_id']
         )
-        partners = self.browse()
-        for group in purchase_order_groups:
-            partner = self.browse(group['partner_id'][0])
+        self.purchase_order_count = 0
+        for [partner], [count] in purchase_order_groups.items(as_records=True):
             while partner:
                 if partner in self:
-                    partner.purchase_order_count += group['partner_id_count']
-                    partners |= partner
-                partner = partner.parent_id
-        (self - partners).purchase_order_count = 0
+                    partner.purchase_order_count += count
+                partner = partner.with_context(prefetch_fields=False).parent_id
 
     def _compute_supplier_invoice_count(self):
-        # retrieve all children partners and prefetch 'parent_id' on them
-        all_partners = self.with_context(active_test=False).search([('id', 'child_of', self.ids)])
-        all_partners.read(['parent_id'])
+        all_partners_subquery = self.with_context(active_test=False)._search([('id', 'child_of', self.ids)])
 
-        supplier_invoice_groups = self.env['account.move']._read_group(
-            domain=[('partner_id', 'in', all_partners.ids),
+        supplier_invoice_groups = self.env['account.move']._aggregate(
+            domain=[('partner_id', 'in', all_partners_subquery),
                     ('move_type', 'in', ('in_invoice', 'in_refund'))],
-            fields=['partner_id'], groupby=['partner_id']
+            aggregates=['*:count'], groupby=['partner_id']
         )
-        partners = self.browse()
-        for group in supplier_invoice_groups:
-            partner = self.browse(group['partner_id'][0])
+        self.supplier_invoice_count = 0
+        for [partner], [count] in supplier_invoice_groups.items(as_records=True):
             while partner:
                 if partner in self:
-                    partner.supplier_invoice_count += group['partner_id_count']
-                    partners |= partner
-                partner = partner.parent_id
-        (self - partners).supplier_invoice_count = 0
+                    partner.supplier_invoice_count += count
+                partner = partner.with_context(prefetch_fields=False).parent_id
 
     @api.model
     def _commercial_fields(self):

@@ -23,11 +23,11 @@ class ResUsers(models.Model):
         interviewer_group = self.env.ref('hr_recruitment.group_hr_recruitment_interviewer')
         recruitment_group = self.env.ref('hr_recruitment.group_hr_recruitment_user')
 
-        job_interviewers = self.env['hr.job']._read_group([('interviewer_ids', 'in', self.ids)], ['interviewer_ids'], ['interviewer_ids'])
-        user_ids = {j['interviewer_ids'][0] for j in job_interviewers}
+        job_interviewers = self.env['hr.job']._aggregate([('interviewer_ids', 'in', self.ids)], groupby=['interviewer_ids'])
+        user_ids = {interviewer_id for [interviewer_id] in job_interviewers.keys()}
 
-        application_interviewers = self.env['hr.applicant']._read_group([('interviewer_ids', 'in', self.ids)], ['interviewer_ids'], ['interviewer_ids'])
-        user_ids |= {a['interviewer_ids'][0] for a in application_interviewers}
+        application_interviewers = self.env['hr.applicant']._aggregate([('interviewer_ids', 'in', self.ids)], groupby=['interviewer_ids'])
+        user_ids |= {interviewer_id for [interviewer_id] in application_interviewers.keys()}
 
         # Remove users that are no longer interviewers on at least a job or an application
         users_to_remove = set(self.ids) - (user_ids | set(recruitment_group.users.ids))

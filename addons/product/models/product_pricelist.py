@@ -258,13 +258,12 @@ class Pricelist(models.Model):
                 Pricelist.search(pl_domain, limit=1)
             )
             # group partners by country, and find a pricelist for each country
-            domain = [('id', 'in', remaining_partner_ids)]
-            groups = Partner.read_group(domain, ['country_id'], ['country_id'])
-            for group in groups:
-                country_id = group['country_id'] and group['country_id'][0]
-                pl = Pricelist.search(pl_domain + [('country_group_ids.country_ids', '=', country_id)], limit=1)
+            remaining_partners = self.env['res.partner'].browse(remaining_partner_ids)
+            partners_by_contry = remaining_partners.grouped('country_id')
+            for country, partners in partners_by_contry.items():
+                pl = Pricelist.search(pl_domain + [('country_group_ids.country_ids', '=', country.id if country else False)], limit=1)
                 pl = pl or pl_fallback
-                for pid in Partner.search(group['__domain']).ids:
+                for pid in partners.ids:
                     result[pid] = pl
 
         return result

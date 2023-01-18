@@ -21,23 +21,20 @@ class SaleOrder(models.Model):
     timesheet_total_duration = fields.Integer("Timesheet Total Duration", compute='_compute_timesheet_total_duration', help="Total recorded duration, expressed in the encoding UoM, and rounded to the unit")
 
     def _compute_timesheet_ids(self):
-        timesheet_groups = self.env['account.analytic.line'].sudo().read_group(
-            [('so_line', 'in', self.mapped('order_line').ids), ('project_id', '!=', False)],
-            ['so_line', 'ids:array_agg(id)'],
+        timesheet_groups = self.env['account.analytic.line'].sudo()._aggregate(
+            [('so_line', 'in', self.order_line.filtered('is_service').ids), ('project_id', '!=', False)],
+            ['id:array_agg'],
             ['so_line'])
-        timesheets_per_sol = {group['so_line'][0]: (group['ids'], group['so_line_count']) for group in timesheet_groups}
 
         for order in self:
             timesheet_ids = []
-            timesheet_count = 0
             for sale_line_id in order.order_line.filtered('is_service').ids:
-                list_timesheet_ids, count = timesheets_per_sol.get(sale_line_id, ([], 0))
+                list_timesheet_ids = timesheet_groups.get_agg(sale_line_id, 'id:array_agg', [])
                 timesheet_ids.extend(list_timesheet_ids)
-                timesheet_count += count
 
             order.update({
                 'timesheet_ids': self.env['account.analytic.line'].browse(timesheet_ids),
-                'timesheet_count': timesheet_count,
+                'timesheet_count': len(timesheet_ids),
             })
 
     @api.depends('company_id.project_time_mode_id', 'timesheet_ids', 'company_id.timesheet_encode_uom_id')
@@ -45,13 +42,11 @@ class SaleOrder(models.Model):
         if not self.user_has_groups('hr_timesheet.group_hr_timesheet_user'):
             self.update({'timesheet_total_duration': 0})
             return
-        group_data = self.env['account.analytic.line'].sudo()._read_group([
+        group_data = self.env['account.analytic.line'].sudo()._aggregate([
             ('order_id', 'in', self.ids)
-        ], ['order_id', 'unit_amount'], ['order_id'])
-        timesheet_unit_amount_dict = defaultdict(float)
-        timesheet_unit_amount_dict.update({data['order_id'][0]: data['unit_amount'] for data in group_data})
+        ], ['unit_amount:sum'], ['order_id'])
         for sale_order in self:
-            total_time = sale_order.company_id.project_time_mode_id._compute_quantity(timesheet_unit_amount_dict[sale_order.id], sale_order.timesheet_encode_uom_id)
+            total_time = sale_order.company_id.project_time_mode_id._compute_quantity(group_data.get_agg(sale_order, default=0), sale_order.timesheet_encode_uom_id)
             sale_order.timesheet_total_duration = round(total_time)
 
     def _compute_field_value(self, field):
@@ -317,12 +312,13 @@ class SaleOrderLine(models.Model):
         """
         action_per_sol = super()._get_action_per_item()
         timesheet_action = self.env.ref('sale_timesheet.timesheet_action_from_sales_order_item').id
-        timesheet_ids_per_sol = {}
-        if self.user_has_groups('hr_timesheet.group_hr_timesheet_user'):
-            timesheet_read_group = self.env['account.analytic.line']._read_group([('so_line', 'in', self.ids), ('project_id', '!=', False)], ['so_line', 'ids:array_agg(id)'], ['so_line'])
-            timesheet_ids_per_sol = {res['so_line'][0]: res['ids'] for res in timesheet_read_group}
+
+        if not self.user_has_groups('hr_timesheet.group_hr_timesheet_user'):
+            return action_per_sol
+
+        timesheet_aggregate = self.env['account.analytic.line']._aggregate([('so_line', 'in', self.ids), ('project_id', '!=', False)], ['id:array_agg'], ['so_line'])
         for sol in self:
-            timesheet_ids = timesheet_ids_per_sol.get(sol.id, [])
+            timesheet_ids = timesheet_aggregate.get_agg(sol.id, 'id:array_agg', [])
             if sol.is_service and len(timesheet_ids) > 0:
                 action_per_sol[sol.id] = timesheet_action, timesheet_ids[0] if len(timesheet_ids) == 1 else False
         return action_per_sol

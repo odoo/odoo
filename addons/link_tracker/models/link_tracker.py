@@ -58,17 +58,13 @@ class LinkTracker(models.Model):
 
     @api.depends('link_click_ids.link_id')
     def _compute_count(self):
-        if self.ids:
-            clicks_data = self.env['link.tracker.click']._read_group(
-                [('link_id', 'in', self.ids)],
-                ['link_id'],
-                ['link_id']
-            )
-            mapped_data = {m['link_id'][0]: m['link_id_count'] for m in clicks_data}
-        else:
-            mapped_data = dict()
+        clicks_data = self.env['link.tracker.click']._aggregate(
+            [('link_id', 'in', self.ids)],
+            ['*:count'],
+            ['link_id']
+        )
         for tracker in self:
-            tracker.count = mapped_data.get(tracker.id, 0)
+            tracker.count = clicks_data.get_agg(tracker, '*:count', 0)
 
     @api.depends('code')
     def _compute_short_url(self):

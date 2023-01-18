@@ -505,6 +505,18 @@ class IrAttachment(models.Model):
     def _read_group_allowed_fields(self):
         return ['type', 'company_id', 'res_id', 'create_date', 'create_uid', 'name', 'mimetype', 'id', 'url', 'res_field', 'res_model']
 
+    def _aggregate(self, domain: 'list', aggregates: 'list[str] | tuple[str]' = (), groupby: 'list[str] | tuple[str]' = (), having: 'list' = (), offset: 'int' = 0, limit: 'int | None' = None, order: 'str | None' = None) -> 'AggregateResult':
+        if not aggregates:
+            raise AccessError(_("Sorry, you must provide fields to read on attachments"))
+        groupby = [groupby] if isinstance(groupby, str) else groupby
+        if not any(item[0] in ('id', 'res_field') for item in domain):
+            domain.insert(0, ('res_field', '=', False))
+        allowed_fields = self._read_group_allowed_fields() + ['*']
+        fields_set = set(field.split(':')[0] for field in aggregates + groupby)
+        if not self.env.is_system() and fields_set.difference(allowed_fields):
+            raise AccessError(_("Sorry, you are not allowed to access these fields on attachments."))
+        return super()._aggregate(domain, aggregates, groupby, having, offset, limit, order)
+
     @api.model
     def read_group(self, domain, fields, groupby, offset=0, limit=None, orderby=False, lazy=True):
         """Override read_group to add res_field=False in domain if not present."""

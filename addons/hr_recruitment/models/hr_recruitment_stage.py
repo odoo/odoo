@@ -42,10 +42,9 @@ class RecruitmentStage(models.Model):
 
     @api.depends('hired_stage')
     def _compute_is_warning_visible(self):
-        applicant_data = self.env['hr.applicant']._read_group([('stage_id', 'in', self.ids)], ['stage_id'], 'stage_id')
-        applicants = dict((data['stage_id'][0], data['stage_id_count']) for data in applicant_data)
+        applicant_data = self.env['hr.applicant']._aggregate([('stage_id', 'in', self.ids)], ['*:count'], ['stage_id'])
         for stage in self:
-            if stage._origin.hired_stage and not stage.hired_stage and applicants.get(stage._origin.id):
+            if stage._origin.hired_stage and not stage.hired_stage and applicant_data.get(stage._origin, '*:count', 0):
                 stage.is_warning_visible = True
             else:
                 stage.is_warning_visible = False

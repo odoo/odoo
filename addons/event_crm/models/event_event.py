@@ -16,10 +16,9 @@ class EventEvent(models.Model):
 
     @api.depends('lead_ids')
     def _compute_lead_count(self):
-        lead_data = self.env['crm.lead']._read_group(
+        lead_data = self.env['crm.lead']._aggregate(
             [('event_id', 'in', self.ids)],
-            ['event_id'], ['event_id']
+            ['*:count'], ['event_id']
         )
-        mapped_data = {item['event_id'][0]: item['event_id_count'] for item in lead_data}
         for event in self:
-            event.lead_count = mapped_data.get(event.id, 0)
+            event.lead_count = lead_data.get_agg(event, '*:count', 0)

@@ -94,15 +94,23 @@ class Base(models.AbstractModel):
         if not groups:
             length = 0
         elif limit and len(groups) == limit:
-            # We need to fetch all groups to know the total number
-            # this cannot be done all at once to avoid MemoryError
-            length = limit
-            chunk_size = 100000
-            while True:
-                more = len(self.read_group(domain, ['display_name'], groupby, offset=length, limit=chunk_size, lazy=True))
-                length += more
-                if more < chunk_size:
-                    break
+            res_count = self._aggregate(
+                domain,
+                aggregates=[
+                    f'{groupby[0]}:count_distinct',
+                    f'{groupby[0]}:count',
+                    '*:count',
+                ],
+            )[None]
+            length = res_count[f'{groupby[0]}:count_distinct']
+            # Because `{groupby[0]}:count_distinct` doens't count null values
+            # We need to add 1 to the length if `*:count` is bigger than `{groupby[0]}:count` to correct the value
+            if res_count['*:count'] > res_count[f'{groupby[0]}:count']:
+                length += 1
+            # OR
+            # length = len(self._aggregate(domain, aggregates=[f'{groupby[0]}:array_agg_distinct'])[None].get('array_agg_distinct') or [])
+            # OR
+            # TODO: aggregates as a method returning array_length(array_agg_distinct, 1)
         else:
             length = len(groups) + offset
         return {
@@ -119,11 +127,14 @@ class Base(models.AbstractModel):
 
         :returns: array of groups
         """
+        # TODO: with the new web_read_group ?
         groups = self.read_group(domain, fields, groupby, offset=offset, limit=limit,
                                  orderby=orderby, lazy=lazy)
 
         if expand and len(groupby) == 1:
             for group in groups:
+                # TODO: Not very efficient, web_search_read make a extra count that we already have (__count of group)
+                # + search_read don't batch between groups :/
                 group['__data'] = self.web_search_read(domain=group['__domain'], fields=fields,
                                                        offset=0, limit=expand_limit,
                                                        order=expand_orderby)
@@ -277,7 +288,7 @@ class Base(models.AbstractModel):
         field = self._fields[field_name]
         if field.type == 'many2one':
             def group_id_name(value):
-                return value
+                return value.name_get()[0]
 
         else:
             # field type is selection: see doc above
@@ -291,18 +302,18 @@ class Base(models.AbstractModel):
             domain,
             [(field_name, '!=', False)],
         ])
-        groups = self.read_group(domain, [field_name], [field_name], limit=limit)
+        groups = self.aggregate(domain, ['*:count'], [field_name], limit=limit)
 
         domain_image = {}
-        for group in groups:
-            id, display_name = group_id_name(group[field_name])
+        for [value_group], [count] in groups.items(as_records=True):
+            _id, display_name = group_id_name(value_group)
             values = {
-                'id': id,
+                'id': _id,
                 'display_name': display_name,
             }
             if set_count:
-                values['__count'] = group[field_name + '_count']
-            domain_image[id] = values
+                values['__count'] = count
+            domain_image[_id] = values
 
         return domain_image
 

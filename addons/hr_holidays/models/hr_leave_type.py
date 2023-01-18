@@ -483,14 +483,13 @@ class HolidaysType(models.Model):
             ('state', 'in', ('confirm', 'validate')),
         ]
 
-        grouped_res = self.env['hr.leave.allocation']._read_group(
+        grouped_res = self.env['hr.leave.allocation']._aggregate(
             domain,
-            ['holiday_status_id'],
+            ['*:count'],
             ['holiday_status_id'],
         )
-        grouped_dict = dict((data['holiday_status_id'][0], data['holiday_status_id_count']) for data in grouped_res)
         for allocation in self:
-            allocation.allocation_count = grouped_dict.get(allocation.id, 0)
+            allocation.allocation_count = grouped_res.get_agg(allocation, '*:count', 0)
 
     def _compute_group_days_leave(self):
         min_datetime = fields.Datetime.to_string(datetime.datetime.now().replace(month=1, day=1, hour=0, minute=0, second=0, microsecond=0))
@@ -501,20 +500,18 @@ class HolidaysType(models.Model):
             ('date_from', '<=', max_datetime),
             ('state', 'in', ('validate', 'validate1', 'confirm')),
         ]
-        grouped_res = self.env['hr.leave']._read_group(
+        grouped_res = self.env['hr.leave']._aggregate(
             domain,
-            ['holiday_status_id'],
+            ['*:count'],
             ['holiday_status_id'],
         )
-        grouped_dict = dict((data['holiday_status_id'][0], data['holiday_status_id_count']) for data in grouped_res)
         for allocation in self:
-            allocation.group_days_leave = grouped_dict.get(allocation.id, 0)
+            allocation.group_days_leave = grouped_res.get_agg(allocation, '*:count', 0)
 
     def _compute_accrual_count(self):
-        accrual_allocations = self.env['hr.leave.accrual.plan']._read_group([('time_off_type_id', 'in', self.ids)], ['time_off_type_id'], ['time_off_type_id'])
-        mapped_data = dict((data['time_off_type_id'][0], data['time_off_type_id_count']) for data in accrual_allocations)
+        accrual_allocations = self.env['hr.leave.accrual.plan']._aggregate([('time_off_type_id', 'in', self.ids)], ['*:count'], ['time_off_type_id'])
         for leave_type in self:
-            leave_type.accrual_count = mapped_data.get(leave_type.id, 0)
+            leave_type.accrual_count = accrual_allocations.get_agg(leave_type, '*:count', 0)
 
     @api.depends('employee_requests')
     def _compute_allocation_validation_type(self):

@@ -19,11 +19,10 @@ class SaleOrder(models.Model):
 
     @api.depends('procurement_group_id.stock_move_ids.created_production_id.procurement_group_id.mrp_production_ids')
     def _compute_mrp_production_ids(self):
-        data = self.env['procurement.group'].read_group([('sale_id', 'in', self.ids)], ['ids:array_agg(id)'], ['sale_id'])
+        data = self.env['procurement.group']._aggregate([('sale_id', 'in', self.ids)], ['id:array_agg'], ['sale_id'])
         mrp_productions = dict()
-        for item in data:
-            procurement_groups = self.env['procurement.group'].browse(item['ids'])
-            mrp_productions[item['sale_id'][0]] = procurement_groups.stock_move_ids.created_production_id.procurement_group_id.mrp_production_ids | procurement_groups.mrp_production_ids
+        for [sale], [procurement_groups] in data.items(as_records=True):
+            mrp_productions[sale.id] = procurement_groups.stock_move_ids.created_production_id.procurement_group_id.mrp_production_ids | procurement_groups.mrp_production_ids
         for sale in self:
             mrp_production_ids = mrp_productions.get(sale.id, self.env['mrp.production'])
             sale.mrp_production_count = len(mrp_production_ids)

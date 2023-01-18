@@ -308,14 +308,11 @@ class HolidaysAllocation(models.Model):
     @api.depends('holiday_status_id', 'allocation_type', 'number_of_hours_display', 'number_of_days_display', 'date_to')
     def _compute_from_holiday_status_id(self):
         accrual_allocations = self.filtered(lambda alloc: alloc.allocation_type == 'accrual' and not alloc.accrual_plan_id and alloc.holiday_status_id)
-        accruals_dict = {}
-        if accrual_allocations:
-            accruals_read_group = self.env['hr.leave.accrual.plan'].read_group(
-                [('time_off_type_id', 'in', accrual_allocations.holiday_status_id.ids)],
-                ['time_off_type_id', 'ids:array_agg(id)'],
-                ['time_off_type_id'],
-            )
-            accruals_dict = {res['time_off_type_id'][0]: res['ids'] for res in accruals_read_group}
+        accruals_aggregate = self.env['hr.leave.accrual.plan']._aggregate(
+            [('time_off_type_id', 'in', accrual_allocations.holiday_status_id.ids)],
+            ['id:array_agg'],
+            ['time_off_type_id'],
+        )
         for allocation in self:
             allocation.number_of_days = allocation.number_of_days_display
             if allocation.type_request_unit == 'hour':
@@ -324,7 +321,7 @@ class HolidaysAllocation(models.Model):
                 allocation.accrual_plan_id = False
             if allocation.allocation_type == 'accrual' and not allocation.accrual_plan_id:
                 if allocation.holiday_status_id:
-                    allocation.accrual_plan_id = accruals_dict.get(allocation.holiday_status_id.id, [False])[0]
+                    allocation.accrual_plan_id = accruals_aggregate.get_agg(allocation.holiday_status_id, 'id:array_agg', [False])[0]
 
     def _end_of_year_accrual(self):
         # to override in payroll

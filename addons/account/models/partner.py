@@ -397,9 +397,9 @@ class ResPartner(models.Model):
             ('state', 'not in', ['draft', 'cancel']),
             ('move_type', 'in', ('out_invoice', 'out_refund')),
         ]
-        price_totals = self.env['account.invoice.report'].read_group(domain, ['price_subtotal'], ['partner_id'])
+        price_totals = self.env['account.invoice.report']._aggregate(domain, ['price_subtotal:sum'], ['partner_id'])
         for partner, child_ids in all_partners_and_children.items():
-            partner.total_invoiced = sum(price['price_subtotal'] for price in price_totals if price['partner_id'][0] in child_ids)
+            partner.total_invoiced = sum(price_totals.get_agg(child_id, 'price_subtotal:sum', 0) for child_id in child_ids)
 
     def _compute_journal_item_count(self):
         AccountMoveLine = self.env['account.move.line']
@@ -525,10 +525,9 @@ class ResPartner(models.Model):
     )
 
     def _compute_bank_count(self):
-        bank_data = self.env['res.partner.bank']._read_group([('partner_id', 'in', self.ids)], ['partner_id'], ['partner_id'])
-        mapped_data = dict([(bank['partner_id'][0], bank['partner_id_count']) for bank in bank_data])
+        bank_data = self.env['res.partner.bank']._aggregate([('partner_id', 'in', self.ids)], ['*:count'], ['partner_id'])
         for partner in self:
-            partner.bank_account_count = mapped_data.get(partner.id, 0)
+            partner.bank_account_count = bank_data.get_agg(partner, '*:count', 0)
 
     def _get_duplicated_bank_accounts(self):
         self.ensure_one()

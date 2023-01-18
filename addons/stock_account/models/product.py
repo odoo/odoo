@@ -124,14 +124,14 @@ class ProductProduct(models.Model):
         if self.env.context.get('to_date'):
             to_date = fields.Datetime.to_datetime(self.env.context['to_date'])
             domain.append(('create_date', '<=', to_date))
-        groups = self.env['stock.valuation.layer']._read_group(domain, ['value:sum', 'quantity:sum'], ['product_id'])
+        groups = self.env['stock.valuation.layer']._aggregate(domain, ['value:sum', 'quantity:sum'], ['product_id'])
         products = self.browse()
-        for group in groups:
-            product = self.browse(group['product_id'][0])
-            value_svl = company_id.currency_id.round(group['value'])
-            avg_cost = value_svl / group['quantity'] if group['quantity'] else 0
+        for [product], [value_sum, quantity_sum] in groups.items(as_records=True):
+            quantity_sum = quantity_sum or 0
+            value_svl = company_id.currency_id.round(value_sum or 0)
+            avg_cost = value_svl / quantity_sum if quantity_sum else 0
             product.value_svl = value_svl
-            product.quantity_svl = group['quantity']
+            product.quantity_svl = quantity_sum
             product.avg_cost = avg_cost
             product.total_value = avg_cost * product.sudo(False).qty_available
             products |= product

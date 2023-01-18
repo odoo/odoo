@@ -676,6 +676,12 @@ class Message(models.Model):
 
         return super(Message, self).unlink()
 
+    def _aggregate(self, domain: list, aggregates: "list[str] | tuple[str]" = (), groupby: "list[str] | tuple[str]" = (), having: list = (), offset: int = 0, limit: "int | None" = None, order: "str | None" = None) -> "AggregateResult":
+        if not self.env.is_admin():
+            raise AccessError(_("Only administrators are allowed to use grouped read on message model"))
+
+        return super()._aggregate(domain, aggregates, groupby, having, offset, limit, order)
+
     @api.model
     def _read_group_raw(self, domain, fields, groupby, offset=0, limit=None, orderby=False, lazy=True):
         if not self.env.is_admin():

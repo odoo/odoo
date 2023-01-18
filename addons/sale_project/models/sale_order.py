@@ -23,14 +23,13 @@ class SaleOrder(models.Model):
     is_product_milestone = fields.Boolean(compute='_compute_is_product_milestone')
 
     def _compute_milestone_count(self):
-        read_group = self.env['project.milestone']._read_group(
+        aggregate = self.env['project.milestone']._aggregate(
             [('sale_line_id', 'in', self.order_line.ids)],
-            ['sale_line_id'],
+            ['*:count'],
             ['sale_line_id'],
         )
-        line_data = {res['sale_line_id'][0]: res['sale_line_id_count'] for res in read_group}
         for order in self:
-            order.milestone_count = sum(line_data.get(line.id, 0) for line in order.order_line)
+            order.milestone_count = sum(aggregate.get_agg(line, '*:count', 0) for line in order.order_line)
 
     def _compute_is_product_milestone(self):
         for order in self:

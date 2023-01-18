@@ -153,27 +153,17 @@ class Forum(models.Model):
 
     @api.depends('post_ids.state', 'post_ids.views', 'post_ids.child_count', 'post_ids.favourite_count')
     def _compute_forum_statistics(self):
-        default_stats = {'total_posts': 0, 'total_views': 0, 'total_answers': 0, 'total_favorites': 0}
-
-        if not self.ids:
-            self.update(default_stats)
-            return
-
-        result = {cid: dict(default_stats) for cid in self.ids}
-        read_group_res = self.env['forum.post']._read_group(
+        aggregate_res = self.env['forum.post']._aggregate(
             [('forum_id', 'in', self.ids), ('state', 'in', ('active', 'close')), ('parent_id', '=', False)],
-            ['forum_id', 'views', 'child_count', 'favourite_count'],
+            ['*:count', 'views:sum', 'child_count:sum', 'favourite_count:sum'],
             groupby=['forum_id'],
-            lazy=False)
-        for res_group in read_group_res:
-            cid = res_group['forum_id'][0]
-            result[cid]['total_posts'] += res_group.get('__count', 0)
-            result[cid]['total_views'] += res_group.get('views', 0)
-            result[cid]['total_answers'] += res_group.get('child_count', 0)
-            result[cid]['total_favorites'] += 1 if res_group.get('favourite_count', 0) else 0
+        )
 
         for record in self:
-            record.update(result[record.id])
+            record.total_posts = aggregate_res.get_agg(record, '*:count', 0)
+            record.total_views = aggregate_res.get_agg(record, 'views:sum', 0)
+            record.total_answers = aggregate_res.get_agg(record, 'child_count:sum', 0)
+            record.total_favorites = 1 if aggregate_res.get_agg(record, 'favourite_count:sum', 0) else 0
 
     def _compute_count_posts_waiting_validation(self):
         for forum in self:
@@ -432,12 +422,10 @@ class Post(models.Model):
 
     @api.depends('vote_ids.vote')
     def _get_vote_count(self):
-        read_group_res = self.env['forum.post.vote']._read_group([('post_id', 'in', self._ids)], ['post_id', 'vote'], ['post_id', 'vote'], lazy=False)
-        result = dict.fromkeys(self._ids, 0)
-        for data in read_group_res:
-            result[data['post_id'][0]] += data['__count'] * int(data['vote'])
-        for post in self:
-            post.vote_count = result[post.id]
+        self.vote_count = 0
+        aggregate_res = self.env['forum.post.vote']._aggregate([('post_id', 'in', self.ids)], ['*:count'], ['post_id', 'vote'])
+        for [post, vote], [count] in aggregate_res.items(as_records=True):
+            post.vote_count += int(vote) * count
 
     def _get_user_favourite(self):
         for post in self:

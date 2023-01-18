@@ -2,6 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from collections import defaultdict
+import itertools
 
 from odoo import api, Command, fields, models, _
 from odoo.tools import format_amount
@@ -46,15 +47,14 @@ class SaleOrderLine(models.Model):
         if not lines_by_milestones:
             return
 
-        project_milestone_read_group = self.env['project.milestone'].read_group(
+        project_milestone_aggregate = self.env['project.milestone']._aggregate(
             [('sale_line_id', 'in', lines_by_milestones.ids), ('is_reached', '=', True)],
-            ['sale_line_id', 'quantity_percentage'],
+            ['quantity_percentage:sum'],
             ['sale_line_id'],
         )
-        reached_milestones_per_sol = {res['sale_line_id'][0]: res['quantity_percentage'] for res in project_milestone_read_group}
         for line in lines_by_milestones:
-            sol_id = line.id or line._origin.id
-            line.qty_delivered = reached_milestones_per_sol.get(sol_id, 0.0) * line.product_uom_qty
+            sol_id = line.id or line._origin.id  # TODO should be on the Aggregate object ?
+            line.qty_delivered = project_milestone_aggregate.get_agg(sol_id, 'quantity_percentage:sum', 0.0) * line.product_uom_qty
 
     @api.model_create_multi
     def create(self, vals_list):
@@ -289,19 +289,19 @@ class SaleOrderLine(models.Model):
             elif self.project_id.analytic_account_id:
                 values['analytic_distribution'] = {self.project_id.analytic_account_id.id: 100}
             elif self.is_service and not self.is_expense:
-                task_analytic_account_id = self.env['project.task'].read_group([
+                task_analytic_account_id = self.env['project.task']._aggregate([
                     ('sale_line_id', '=', self.id),
                     ('analytic_account_id', '!=', False),
-                ], ['analytic_account_id'], ['analytic_account_id'])
-                project_analytic_account_id = self.env['project.project'].read_group([
+                ], [], ['analytic_account_id'])
+                project_analytic_account_id = self.env['project.project']._aggregate([
                     ('analytic_account_id', '!=', False),
                     '|',
                         ('sale_line_id', '=', self.id),
                         '&',
                             ('tasks.sale_line_id', '=', self.id),
                             ('tasks.analytic_account_id', '=', False)
-                ], ['analytic_account_id'], ['analytic_account_id'])
-                analytic_account_ids = {rec['analytic_account_id'][0] for rec in (task_analytic_account_id + project_analytic_account_id)}
+                ], [], ['analytic_account_id'])
+                analytic_account_ids = {analytic_account_id for [analytic_account_id] in itertools.chain(task_analytic_account_id.keys(), project_analytic_account_id.keys())}
                 if len(analytic_account_ids) == 1:
                     values['analytic_distribution'] = {analytic_account_ids.pop(): 100}
         return values

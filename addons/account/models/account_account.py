@@ -24,15 +24,14 @@ class AccountAccount(models.Model):
 
     @api.constrains('account_type')
     def _check_account_type_unique_current_year_earning(self):
-        result = self._read_group(
+        result = self._aggregate(
             domain=[('account_type', '=', 'equity_unaffected')],
-            fields=['company_id', 'ids:array_agg(id)'],
+            aggregates=['*:count', 'id:array_agg'],
             groupby=['company_id'],
+            having=[('*:count', '>', 1)]
         )
-        for res in result:
-            if res.get('company_id_count', 0) >= 2:
-                account_unaffected_earnings = self.browse(res['ids'])
-                raise ValidationError(_('You cannot have more than one account with "Current Year Earnings" as type. (accounts: %s)', [a.code for a in account_unaffected_earnings]))
+        for [__, account_unaffected_earnings] in result.values(as_records=True):
+            raise ValidationError(_('You cannot have more than one account with "Current Year Earnings" as type. (accounts: %s)', [a.code for a in account_unaffected_earnings]))
 
     name = fields.Char(string="Account Name", required=True, index='trigram', tracking=True)
     currency_id = fields.Many2one('res.currency', string='Account Currency', tracking=True,
@@ -350,16 +349,13 @@ class AccountAccount(models.Model):
         raise UserError(_('Cannot generate an unused account code.'))
 
     def _compute_current_balance(self):
-        balances = {
-            read['account_id'][0]: read['balance']
-            for read in self.env['account.move.line']._read_group(
-                domain=[('account_id', 'in', self.ids), ('parent_state', '=', 'posted')],
-                fields=['balance', 'account_id'],
-                groupby=['account_id'],
-            )
-        }
+        balances = self.env['account.move.line']._aggregate(
+            domain=[('account_id', 'in', self.ids), ('parent_state', '=', 'posted')],
+            aggregates=['balance:sum'],
+            groupby=['account_id'],
+        )
         for record in self:
-            record.current_balance = balances.get(record.id, 0)
+            record.current_balance = balances.get_agg(record, 'balance:sum', 0.0)
 
     def _compute_related_taxes_amount(self):
         for record in self:

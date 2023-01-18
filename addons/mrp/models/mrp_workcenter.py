@@ -85,29 +85,23 @@ class MrpWorkcenter(models.Model):
     @api.depends('order_ids.duration_expected', 'order_ids.workcenter_id', 'order_ids.state', 'order_ids.date_planned_start')
     def _compute_workorder_count(self):
         MrpWorkorder = self.env['mrp.workorder']
-        result = {wid: {} for wid in self._ids}
-        result_duration_expected = {wid: 0 for wid in self._ids}
         # Count Late Workorder
-        data = MrpWorkorder._read_group(
+        counts_late = MrpWorkorder._aggregate(
             [('workcenter_id', 'in', self.ids), ('state', 'in', ('pending', 'waiting', 'ready')), ('date_planned_start', '<', datetime.now().strftime('%Y-%m-%d'))],
-            ['workcenter_id'], ['workcenter_id'])
-        count_data = dict((item['workcenter_id'][0], item['workcenter_id_count']) for item in data)
+            ['*:count'], ['workcenter_id'])
         # Count All, Pending, Ready, Progress Workorder
-        res = MrpWorkorder._read_group(
+        res = MrpWorkorder._aggregate(
             [('workcenter_id', 'in', self.ids)],
-            ['workcenter_id', 'state', 'duration_expected'], ['workcenter_id', 'state'],
-            lazy=False)
-        for res_group in res:
-            result[res_group['workcenter_id'][0]][res_group['state']] = res_group['__count']
-            if res_group['state'] in ('pending', 'waiting', 'ready', 'progress'):
-                result_duration_expected[res_group['workcenter_id'][0]] += res_group['duration_expected']
+            ['*:count', 'duration_expected:sum'], ['workcenter_id', 'state'],
+        )
+        running_states = ('pending', 'waiting', 'ready', 'progress')
         for workcenter in self:
-            workcenter.workorder_count = sum(count for state, count in result[workcenter.id].items() if state not in ('done', 'cancel'))
-            workcenter.workorder_pending_count = result[workcenter.id].get('pending', 0)
-            workcenter.workcenter_load = result_duration_expected[workcenter.id]
-            workcenter.workorder_ready_count = result[workcenter.id].get('ready', 0)
-            workcenter.workorder_progress_count = result[workcenter.id].get('progress', 0)
-            workcenter.workorder_late_count = count_data.get(workcenter.id, 0)
+            workcenter.workcenter_load = sum(res.get_agg((workcenter, state), 'duration_expected:sum', 0) for state in running_states)
+            workcenter.workorder_count = sum(res.get_agg((workcenter, state), '*:count', 0) for state in running_states)
+            workcenter.workorder_pending_count = res.get_agg((workcenter, 'pending'), '*:count', 0)
+            workcenter.workorder_ready_count = res.get_agg((workcenter, 'ready'), '*:count', 0)
+            workcenter.workorder_progress_count = res.get_agg((workcenter, 'progress'), '*:count', 0)
+            workcenter.workorder_late_count = counts_late.get_agg(workcenter, '*:count', 0)
 
     @api.depends('time_ids', 'time_ids.date_end', 'time_ids.loss_type')
     def _compute_working_state(self):
@@ -131,27 +125,25 @@ class MrpWorkcenter(models.Model):
 
     def _compute_blocked_time(self):
         # TDE FIXME: productivity loss type should be only losses, probably count other time logs differently ??
-        data = self.env['mrp.workcenter.productivity']._read_group([
+        data = self.env['mrp.workcenter.productivity']._aggregate([
             ('date_start', '>=', fields.Datetime.to_string(datetime.now() - relativedelta.relativedelta(months=1))),
             ('workcenter_id', 'in', self.ids),
             ('date_end', '!=', False),
             ('loss_type', '!=', 'productive')],
-            ['duration', 'workcenter_id'], ['workcenter_id'], lazy=False)
-        count_data = dict((item['workcenter_id'][0], item['duration']) for item in data)
+            ['duration:sum'], ['workcenter_id'])
         for workcenter in self:
-            workcenter.blocked_time = count_data.get(workcenter.id, 0.0) / 60.0
+            workcenter.blocked_time = data.get_agg(workcenter, 'duration:sum', 0.0) / 60.0
 
     def _compute_productive_time(self):
         # TDE FIXME: productivity loss type should be only losses, probably count other time logs differently
-        data = self.env['mrp.workcenter.productivity']._read_group([
+        data = self.env['mrp.workcenter.productivity']._aggregate([
             ('date_start', '>=', fields.Datetime.to_string(datetime.now() - relativedelta.relativedelta(months=1))),
             ('workcenter_id', 'in', self.ids),
             ('date_end', '!=', False),
             ('loss_type', '=', 'productive')],
-            ['duration', 'workcenter_id'], ['workcenter_id'], lazy=False)
-        count_data = dict((item['workcenter_id'][0], item['duration']) for item in data)
+            ['duration:sum'], ['workcenter_id'])
         for workcenter in self:
-            workcenter.productive_time = count_data.get(workcenter.id, 0.0) / 60.0
+            workcenter.productive_time = data.get_agg(workcenter, 'duration:sum', 0.0) / 60.0
 
     @api.depends('blocked_time', 'productive_time')
     def _compute_oee(self):
@@ -162,15 +154,13 @@ class MrpWorkcenter(models.Model):
                 order.oee = 0.0
 
     def _compute_performance(self):
-        wo_data = self.env['mrp.workorder']._read_group([
+        wo_data = self.env['mrp.workorder']._aggregate([
             ('date_start', '>=', fields.Datetime.to_string(datetime.now() - relativedelta.relativedelta(months=1))),
             ('workcenter_id', 'in', self.ids),
-            ('state', '=', 'done')], ['duration_expected', 'workcenter_id', 'duration'], ['workcenter_id'], lazy=False)
-        duration_expected = dict((data['workcenter_id'][0], data['duration_expected']) for data in wo_data)
-        duration = dict((data['workcenter_id'][0], data['duration']) for data in wo_data)
+            ('state', '=', 'done')], ['duration_expected:sum', 'duration:sum'], ['workcenter_id'])
         for workcenter in self:
-            if duration.get(workcenter.id):
-                workcenter.performance = 100 * duration_expected.get(workcenter.id, 0.0) / duration[workcenter.id]
+            if workcenter in wo_data and wo_data.get_agg(workcenter, 'duration:sum', 0) != 0:
+                workcenter.performance = 100 * wo_data.get_agg(workcenter, 'duration_expected:sum', 0.0) / wo_data.get_agg(workcenter, 'duration:sum')
             else:
                 workcenter.performance = 0.0
 
@@ -422,8 +412,10 @@ class MrpWorkcenterProductivity(models.Model):
     @api.constrains('workorder_id')
     def _check_open_time_ids(self):
         for workorder in self.workorder_id:
-            open_time_ids_by_user = self.env["mrp.workcenter.productivity"].read_group([("id", "in", workorder.time_ids.ids), ("date_end", "=", False)], ["user_id", "open_time_ids_count:count(id)"], ["user_id"])
-            if any(data["open_time_ids_count"] > 1 for data in open_time_ids_by_user):
+            open_time_ids_by_user = self.env["mrp.workcenter.productivity"]._aggregate(
+                [("id", "in", workorder.time_ids.ids), ("date_end", "=", False)], ["*:count"], ["user_id"],
+                having=[('*:count', '>', 1)])
+            if open_time_ids_by_user:
                 raise ValidationError(_('The Workorder (%s) cannot be started twice!', workorder.display_name))
 
     def button_block(self):

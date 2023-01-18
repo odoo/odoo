@@ -29,13 +29,12 @@ class ResourceCalendar(models.Model):
         })
 
     def _compute_contracts_count(self):
-        count_data = self.env['hr.contract']._read_group(
+        count_data = self.env['hr.contract']._aggregate(
             [('resource_calendar_id', 'in', self.ids)],
-            ['resource_calendar_id'],
+            ['*:count'],
             ['resource_calendar_id'])
-        mapped_counts = {cd['resource_calendar_id'][0]: cd['resource_calendar_id_count'] for cd in count_data}
         for calendar in self:
-            calendar.contracts_count = mapped_counts.get(calendar.id, 0)
+            calendar.contracts_count = count_data.get_agg(calendar, '*:count', 0)
 
     def action_open_contracts(self):
         self.ensure_one()

@@ -4,9 +4,12 @@
 from json import dumps
 from datetime import datetime, time
 
+import babel.dates
+
 from odoo import api, fields, models, SUPERUSER_ID, _
 from odoo.osv.expression import AND
 from odoo.tools import get_month, subtract, format_date
+from odoo.tools.misc import get_lang
 
 
 class StockReplenishmentInfo(models.TransientModel):
@@ -56,6 +59,8 @@ class StockReplenishmentInfo(models.TransientModel):
 
     @api.depends('orderpoint_id')
     def _compute_json_replenishment_history(self):
+
+        locale = get_lang(self.env).code
         for replenishment_report in self:
             replenishment_history = []
             today = fields.Datetime.now()
@@ -69,19 +74,17 @@ class StockReplenishmentInfo(models.TransientModel):
                 ('state', '=', 'done'),
                 ('company_id', '=', replenishment_report.orderpoint_id.company_id.id)
             ]
-            quantity_by_month_out = self.env['stock.move'].read_group(
+            quantity_by_month_out = self.env['stock.move'].aggregate(
                 AND([domain, [('location_dest_id.usage', '=', 'customer')]]),
-                ['date', 'product_qty'], ['date:month'])
-            quantity_by_month_returned = self.env['stock.move'].read_group(
+                ['product_qty:sum'], ['date:month'])
+            quantity_by_month_returned = self.env['stock.move'].aggregate(
                 AND([domain, [('location_id.usage', '=', 'customer')]]),
-                ['date', 'product_qty'], ['date:month'])
-            quantity_by_month_returned = {
-                g['date:month']: g['product_qty'] for g in quantity_by_month_returned}
-            for group in quantity_by_month_out:
-                month = group['date:month']
+                ['product_qty:sum'], ['date:month'])
+
+            for [date_month], [product_qty_sum] in quantity_by_month_out.items():
                 replenishment_history.append({
-                    'name': month,
-                    'quantity': group['product_qty'] - quantity_by_month_returned.get(month, 0),
+                    'name': babel.dates.format_datetime(date_month, format=models.READ_GROUP_DISPLAY_FORMAT['month'], locale=locale),
+                    'quantity': product_qty_sum - quantity_by_month_returned.get_agg(date_month, 'product_qty:sum', 0),
                     'uom_name': replenishment_report.product_id.uom_id.display_name,
                 })
             replenishment_report.json_replenishment_history = dumps({

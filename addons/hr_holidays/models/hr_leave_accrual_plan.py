@@ -34,25 +34,23 @@ class AccrualPlan(models.Model):
 
     @api.depends('level_ids')
     def _compute_level_count(self):
-        level_read_group = self.env['hr.leave.accrual.level']._read_group(
+        level_aggregate = self.env['hr.leave.accrual.level']._aggregate(
             [('accrual_plan_id', 'in', self.ids)],
-            fields=['accrual_plan_id'],
+            aggregates=['*:count'],
             groupby=['accrual_plan_id'],
         )
-        mapped_count = {group['accrual_plan_id'][0]: group['accrual_plan_id_count'] for group in level_read_group}
         for plan in self:
-            plan.level_count = mapped_count.get(plan.id, 0)
+            plan.level_count = level_aggregate.get_agg(plan, '*:count', 0)
 
     @api.depends('allocation_ids')
     def _compute_employee_count(self):
-        allocations_read_group = self.env['hr.leave.allocation']._read_group(
+        allocations_aggregate = self.env['hr.leave.allocation']._aggregate(
             [('accrual_plan_id', 'in', self.ids)],
-            ['accrual_plan_id', 'employee_count:count_distinct(employee_id)'],
+            ['employee_id:count_distinct'],
             ['accrual_plan_id'],
         )
-        allocations_dict = {res['accrual_plan_id'][0]: res['employee_count'] for res in allocations_read_group}
         for plan in self:
-            plan.employees_count = allocations_dict.get(plan.id, 0)
+            plan.employees_count = allocations_aggregate.get_agg(plan, 'employee_id:count_distinct', 0)
 
     def action_open_accrual_plan_employees(self):
         self.ensure_one()

@@ -327,15 +327,14 @@ class Track(models.Model):
 
     @api.depends('event_track_visitor_ids.visitor_id', 'event_track_visitor_ids.is_wishlisted')
     def _compute_wishlist_visitor_ids(self):
-        results = self.env['event.track.visitor']._read_group(
+        results = self.env['event.track.visitor']._aggregate(
             [('track_id', 'in', self.ids), ('is_wishlisted', '=', True)],
-            ['track_id', 'visitor_id:array_agg'],
+            ['visitor_id:array_agg'],
             ['track_id']
         )
-        visitor_ids_map = {result['track_id'][0]: result['visitor_id'] for result in results}
         for track in self:
-            track.wishlist_visitor_ids = visitor_ids_map.get(track.id, [])
-            track.wishlist_visitor_count = len(visitor_ids_map.get(track.id, []))
+            track.wishlist_visitor_ids = results.get_agg(track, default=[])
+            track.wishlist_visitor_count = len(results.get_agg(track, default=[]))
 
     def _search_wishlist_visitor_ids(self, operator, operand):
         if operator == "not in":

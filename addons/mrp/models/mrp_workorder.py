@@ -404,10 +404,9 @@ class MrpWorkorder(models.Model):
                 order.is_user_working = False
 
     def _compute_scrap_move_count(self):
-        data = self.env['stock.scrap']._read_group([('workorder_id', 'in', self.ids)], ['workorder_id'], ['workorder_id'])
-        count_data = dict((item['workorder_id'][0], item['workorder_id_count']) for item in data)
+        data = self.env['stock.scrap']._aggregate([('workorder_id', 'in', self.ids)], ['*:count'], ['workorder_id'])
         for workorder in self:
-            workorder.scrap_count = count_data.get(workorder.id, 0)
+            workorder.scrap_count = data.get_agg(workorder, '*:count', 0)
 
     @api.onchange('operation_id')
     def _onchange_operation_id(self):

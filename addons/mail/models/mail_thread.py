@@ -231,13 +231,12 @@ class MailThread(models.AbstractModel):
         return [('message_ids', 'in', message_ids)]
 
     def _compute_message_attachment_count(self):
-        read_group_var = self.env['ir.attachment']._read_group([('res_id', 'in', self.ids), ('res_model', '=', self._name)],
-                                                              fields=['res_id'],
-                                                              groupby=['res_id'])
+        aggregate_var = self.env['ir.attachment']._aggregate([('res_id', 'in', self.ids), ('res_model', '=', self._name)],
+                                                            aggregates=['*:count'],
+                                                            groupby=['res_id'])
 
-        attachment_count_dict = dict((d['res_id'], d['res_id_count']) for d in read_group_var)
         for record in self:
-            record.message_attachment_count = attachment_count_dict.get(record.id, 0)
+            record.message_attachment_count = aggregate_var.get_agg(record, '*:count', 0)
 
     # ------------------------------------------------------------
     # CRUD

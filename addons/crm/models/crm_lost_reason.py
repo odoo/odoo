@@ -13,14 +13,13 @@ class LostReason(models.Model):
     leads_count = fields.Integer('Leads Count', compute='_compute_leads_count')
 
     def _compute_leads_count(self):
-        lead_data = self.env['crm.lead'].with_context(active_test=False)._read_group(
+        lead_data = self.env['crm.lead'].with_context(active_test=False)._aggregate(
             [('lost_reason_id', 'in', self.ids)],
+            ['*:count'], 
             ['lost_reason_id'],
-            ['lost_reason_id']
         )
-        mapped_data = dict((data['lost_reason_id'][0], data['lost_reason_id_count']) for data in lead_data)
         for reason in self:
-            reason.leads_count = mapped_data.get(reason.id, 0)
+            reason.leads_count = lead_data.get_agg(reason, '*:count', 0)
 
     def action_lost_leads(self):
         return {

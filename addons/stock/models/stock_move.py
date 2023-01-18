@@ -353,22 +353,14 @@ class StockMove(models.Model):
             for move in self:
                 move_lines_ids |= set(move._get_move_lines().ids)
 
-            data = self.env['stock.move.line']._read_group(
+            data = self.env['stock.move.line']._aggregate(
                 [('id', 'in', list(move_lines_ids))],
-                ['move_id', 'product_uom_id', 'qty_done'], ['move_id', 'product_uom_id'],
-                lazy=False
+                ['qty_done:sum'], ['move_id', 'product_uom_id'],
             )
 
-            rec = defaultdict(list)
-            for d in data:
-                rec[d['move_id'][0]] += [(d['product_uom_id'][0], d['qty_done'])]
-
-            for move in self:
-                uom = move.product_uom
-                move.quantity_done = sum(
-                    self.env['uom.uom'].browse(line_uom_id)._compute_quantity(qty, uom, round=False)
-                     for line_uom_id, qty in rec.get(move.ids[0] if move.ids else move.id, [])
-                )
+            self.quantity_done = 0
+            for [move, product_uom], [qty_done_sum] in data.items(as_records=True):
+                move.quantity_done += product_uom._compute_quantity(qty_done_sum, move.product_uom, round=False)
 
     def _quantity_done_set(self):
         def _process_decrease(move, quantity):
@@ -455,11 +447,10 @@ Please change the quantity done or the rounding precision of your unit of measur
                     reserved_availability, move.product_uom, rounding_method='HALF-UP')
         else:
             # compute
-            result = {data['move_id'][0]: data['reserved_qty'] for data in
-                      self.env['stock.move.line']._read_group([('move_id', 'in', self.ids)], ['move_id', 'reserved_qty'], ['move_id'])}
+            result = self.env['stock.move.line']._aggregate([('move_id', 'in', self.ids)], ['reserved_qty:sum'], ['move_id'])
             for move in self:
                 move.reserved_availability = move.product_id.uom_id._compute_quantity(
-                    result.get(move.id, 0.0), move.product_uom, rounding_method='HALF-UP')
+                    result.get_agg(move, 'reserved_qty:sum', 0.0), move.product_uom, rounding_method='HALF-UP')
 
     @api.depends('state', 'product_id', 'product_qty', 'location_id')
     def _compute_product_availability(self):
@@ -554,17 +545,17 @@ Please change the quantity done or the rounding precision of your unit of measur
 
     @api.depends('move_line_ids', 'move_line_ids.lot_id', 'move_line_ids.qty_done')
     def _compute_lot_ids(self):
-        domain_nosuggest = [('move_id', 'in', self.ids), ('lot_id', '!=', False), '|', ('qty_done', '!=', 0.0), ('reserved_qty', '=', 0.0)]
-        domain_suggest = [('move_id', 'in', self.ids), ('lot_id', '!=', False), ('qty_done', '!=', 0.0)]
-        lots_by_move_id_list = []
-        for domain in [domain_nosuggest, domain_suggest]:
-            lots_by_move_id = self.env['stock.move.line']._read_group(
+        self_nosuggest = self.filtered(lambda m: m.picking_type_id.show_reserved)
+        self_suggest = self - self_nosuggest
+        domain_nosuggest = [('move_id', 'in', self_nosuggest.ids), ('lot_id', '!=', False), '|', ('qty_done', '!=', 0.0), ('reserved_qty', '=', 0.0)]
+        domain_suggest = [('move_id', 'in', self_suggest.ids), ('lot_id', '!=', False), ('qty_done', '!=', 0.0)]
+        for self_partial, domain in zip([self_nosuggest, self_suggest], [domain_nosuggest, domain_suggest]):
+            lots_by_move_id = self.env['stock.move.line']._aggregate(
                 domain,
-                ['move_id', 'lot_ids:array_agg(lot_id)'], ['move_id'],
+                ['lot_id:array_agg'], ['move_id'],
             )
-            lots_by_move_id_list.append({by_move['move_id'][0]: by_move['lot_ids'] for by_move in lots_by_move_id})
-        for move in self:
-            move.lot_ids = lots_by_move_id_list[0 if move.picking_type_id.show_reserved else 1].get(move._origin.id, [])
+            for move in self_partial:
+                move.lot_ids = lots_by_move_id.get_agg(move._origin, 'lot_id:array_agg')
 
     def _set_lot_ids(self):
         for move in self:

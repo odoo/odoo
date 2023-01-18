@@ -10,14 +10,13 @@ class Task(models.Model):
     is_timeoff_task = fields.Boolean("Is Time off Task", compute="_compute_is_timeoff_task", search="_search_is_timeoff_task")
 
     def _compute_leave_types_count(self):
-        time_off_type_read_group = self.env['hr.leave.type']._read_group(
+        time_off_type_aggregate = self.env['hr.leave.type']._aggregate(
             [('timesheet_task_id', 'in', self.ids)],
-            ['timesheet_task_id'],
+            ['*:count'],
             ['timesheet_task_id'],
         )
-        time_off_type_count_per_task = {res['timesheet_task_id'][0]: res['timesheet_task_id_count'] for res in time_off_type_read_group}
         for task in self:
-            task.leave_types_count = time_off_type_count_per_task.get(task.id, 0)
+            task.leave_types_count = time_off_type_aggregate.get_agg(task, '*:count', 0)
 
     def _compute_is_timeoff_task(self):
         timeoff_tasks = self.filtered(lambda task: task.leave_types_count or task.company_id.leave_timesheet_task_id == task)
@@ -27,12 +26,11 @@ class Task(models.Model):
     def _search_is_timeoff_task(self, operator, value):
         if operator not in ['=', '!='] or not isinstance(value, bool):
             raise NotImplementedError(_('Operation not supported'))
-        leave_type_read_group = self.env['hr.leave.type']._read_group(
+        leave_type_aggregate = self.env['hr.leave.type']._aggregate(
             [('timesheet_task_id', '!=', False)],
-            ['timesheet_task_ids:array_agg(timesheet_task_id)'],
-            [],
+            groupby=['timesheet_task_id'],
         )
-        timeoff_task_ids = leave_type_read_group[0]['timesheet_task_ids'] if leave_type_read_group[0]['timesheet_task_ids'] else []
+        timeoff_task_ids = [timesheet_task_id for [timesheet_task_id] in leave_type_aggregate.keys()]
         if self.env.company.leave_timesheet_task_id:
             timeoff_task_ids.append(self.env.company.leave_timesheet_task_id.id)
         if operator == '!=':

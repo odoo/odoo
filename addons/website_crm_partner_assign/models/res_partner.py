@@ -42,18 +42,14 @@ class ResPartner(models.Model):
 
     @api.depends('implemented_partner_ids.is_published', 'implemented_partner_ids.active')
     def _compute_implemented_partner_count(self):
-        if not self.ids:
-            self.implemented_partner_count = 0
-            return
-        rg_result = self.env['res.partner']._read_group(
+        rg_result = self.env['res.partner']._aggregate(
             [('assigned_partner_id', 'in', self.ids),
              ('is_published', '=', True)],
-            ['assigned_partner_id'],
+            ['*:count'],
             ['assigned_partner_id']
         )
-        rg_data = {rg_item['assigned_partner_id'][0]: rg_item['assigned_partner_id_count'] for rg_item in rg_result}
         for partner in self:
-            partner.implemented_partner_count = rg_data.get(partner.id, 0)
+            partner.implemented_partner_count = rg_result.get_agg(partner, '*:count', 0)
 
     @api.depends('grade_id.partner_weight')
     def _compute_partner_weight(self):
@@ -62,15 +58,12 @@ class ResPartner(models.Model):
 
     def _compute_opportunity_count(self):
         super()._compute_opportunity_count()
-        assign_counts = {}
-        if self.ids:
-            opportunity_data = self.env['crm.lead'].with_context(active_test=False)._read_group(
-                [('partner_assigned_id', 'in', self.ids)],
-                ['partner_assigned_id'], ['partner_assigned_id']
-            )
-            assign_counts = {datum['partner_assigned_id'][0]: datum['partner_assigned_id_count'] for datum in opportunity_data}
+        opportunity_data = self.env['crm.lead'].with_context(active_test=False)._aggregate(
+            [('partner_assigned_id', 'in', self.ids)],
+            ['*:count'], ['partner_assigned_id']
+        )
         for partner in self:
-            partner.opportunity_count += assign_counts.get(partner.id, 0)
+            partner.opportunity_count += opportunity_data.get_agg(partner, default=0)
 
     def action_view_opportunity(self):
         self.ensure_one()  # especially here as we are doing an id, in, IDS domain

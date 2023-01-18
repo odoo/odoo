@@ -16,13 +16,12 @@ class MassMailing(models.Model):
         self.use_leads = self.env.user.has_group('crm.group_use_lead')
 
     def _compute_crm_lead_count(self):
-        lead_data = self.env['crm.lead'].with_context(active_test=False).sudo()._read_group(
+        lead_data = self.env['crm.lead'].with_context(active_test=False).sudo()._aggregate(
             [('source_id', 'in', self.source_id.ids)],
-            ['source_id'], ['source_id'],
+            ['*:count'], ['source_id'],
         )
-        mapped_data = {datum['source_id'][0]: datum['source_id_count'] for datum in lead_data}
         for mass_mailing in self:
-            mass_mailing.crm_lead_count = mapped_data.get(mass_mailing.source_id.id, 0)
+            mass_mailing.crm_lead_count = lead_data.get_agg(mass_mailing.source_id, '*:count', 0)
 
     def action_redirect_to_leads_and_opportunities(self):
         text = _("Leads") if self.use_leads else _("Opportunities")

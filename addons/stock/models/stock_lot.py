@@ -76,14 +76,13 @@ class StockLot(models.Model):
         domain = [('product_id', 'in', self.product_id.ids),
                   ('company_id', 'in', self.company_id.ids),
                   ('name', 'in', self.mapped('name'))]
-        fields = ['company_id', 'product_id', 'name']
+        aggregates = ['*:count']
         groupby = ['company_id', 'product_id', 'name']
-        records = self._read_group(domain, fields, groupby, lazy=False)
+        having = [('*:count', '>', 1)]
+        records = self._aggregate(domain, aggregates, groupby, having)
         error_message_lines = []
-        for rec in records:
-            if rec['__count'] != 1:
-                product_name = self.env['product.product'].browse(rec['product_id'][0]).display_name
-                error_message_lines.append(_(" - Product: %s, Serial Number: %s", product_name, rec['name']))
+        for [_company_id, product, name] in records.keys(as_records=True):
+            error_message_lines.append(_(" - Product: %s, Serial Number: %s", product.display_name, name))
         if error_message_lines:
             raise ValidationError(_('The combination of serial number and product must be unique across a company.\nFollowing combination contains duplicates:\n') + '\n'.join(error_message_lines))
 

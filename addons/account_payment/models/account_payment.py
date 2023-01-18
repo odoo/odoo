@@ -87,17 +87,16 @@ class AccountPayment(models.Model):
             payment.use_electronic_payment_method = payment.payment_method_code in codes
 
     def _compute_refunds_count(self):
-        rg_data = self.env['account.payment']._read_group(
+        rg_data = self.env['account.payment']._aggregate(
             domain=[
                 ('source_payment_id', 'in', self.ids),
                 ('payment_transaction_id.operation', '=', 'refund')
             ],
-            fields=['source_payment_id'],
-            groupby=['source_payment_id']
+            aggregates=['*:count'],
+            groupby=['source_payment_id'],
         )
-        data = {x['source_payment_id'][0]: x['source_payment_id_count'] for x in rg_data}
         for payment in self:
-            payment.refunds_count = data.get(payment.id, 0)
+            payment.refunds_count = rg_data.get_agg(payment, '*:count', 0)
 
     #=== ONCHANGE METHODS ===#
 

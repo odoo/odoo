@@ -26,10 +26,9 @@ class KarmaRank(models.Model):
 
     @api.depends('user_ids')
     def _compute_rank_users_count(self):
-        requests_data = self.env['res.users']._read_group([('rank_id', '!=', False)], ['rank_id'], ['rank_id'])
-        requests_mapped_data = dict((data['rank_id'][0], data['rank_id_count']) for data in requests_data)
+        requests_data = self.env['res.users']._aggregate([('rank_id', '!=', False)], ['*:count'], ['rank_id'])
         for rank in self:
-            rank.rank_users_count = requests_mapped_data.get(rank.id, 0)
+            rank.rank_users_count = requests_data.get_agg(rank, '*:count', 0)
 
     @api.model_create_multi
     def create(self, values_list):

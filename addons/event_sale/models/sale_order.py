@@ -41,18 +41,13 @@ class SaleOrder(models.Model):
         return action
 
     def _compute_attendee_count(self):
-        sale_orders_data = self.env['event.registration']._read_group(
+        sale_orders_data = self.env['event.registration']._aggregate(
             [('sale_order_id', 'in', self.ids),
              ('state', '!=', 'cancel')],
-            ['sale_order_id'], ['sale_order_id']
+            ['*:count'], ['sale_order_id'],
         )
-        attendee_count_data = {
-            sale_order_data['sale_order_id'][0]:
-            sale_order_data['sale_order_id_count']
-            for sale_order_data in sale_orders_data
-        }
         for sale_order in self:
-            sale_order.attendee_count = attendee_count_data.get(sale_order.id, 0)
+            sale_order.attendee_count = sale_orders_data.get_agg(sale_order, '*:count', 0)
 
     def unlink(self):
         self.order_line._unlink_associated_registrations()

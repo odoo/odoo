@@ -12,16 +12,12 @@ class SaleOrder(models.Model):
 
     @api.depends('event_booth_ids')
     def _compute_event_booth_count(self):
-        if self.ids:
-            slot_data = self.env['event.booth']._read_group(
-                [('sale_order_id', 'in', self.ids)],
-                ['sale_order_id'], ['sale_order_id']
-            )
-            slot_mapped = dict((data['sale_order_id'][0], data['sale_order_id_count']) for data in slot_data)
-        else:
-            slot_mapped = dict()
+        slot_data = self.env['event.booth']._aggregate(
+            [('sale_order_id', 'in', self.ids)],
+            ['*:count'], ['sale_order_id'],
+        )
         for so in self:
-            so.event_booth_count = slot_mapped.get(so.id, 0)
+            so.event_booth_count = slot_data.get_agg(so, '*:count', 0)
 
     def action_confirm(self):
         res = super(SaleOrder, self).action_confirm()

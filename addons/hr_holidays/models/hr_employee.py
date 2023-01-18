@@ -81,7 +81,7 @@ class HrEmployeeBase(models.AbstractModel):
     def _compute_allocation_count(self):
         # Don't get allocations that are expired
         current_date = datetime.date.today()
-        data = self.env['hr.leave.allocation']._read_group([
+        data = self.env['hr.leave.allocation']._aggregate([
             ('employee_id', 'in', self.ids),
             ('holiday_status_id.active', '=', True),
             ('holiday_status_id.requires_allocation', '=', 'yes'),
@@ -89,13 +89,11 @@ class HrEmployeeBase(models.AbstractModel):
             '|',
             ('date_to', '=', False),
             ('date_to', '>=', current_date),
-        ], ['number_of_days:sum', 'employee_id'], ['employee_id'])
-        rg_results = dict((d['employee_id'][0], {"employee_id_count": d['employee_id_count'], "number_of_days": d['number_of_days']}) for d in data)
+        ], ['number_of_days:sum', '*:count'], ['employee_id'])
         for employee in self:
-            result = rg_results.get(employee.id)
-            employee.allocation_count = float_round(result['number_of_days'], precision_digits=2) if result else 0.0
+            employee.allocation_count = float_round(data.get_agg(employee, 'number_of_days:sum', 0.0), precision_digits=2)
             employee.allocation_display = "%g" % employee.allocation_count
-            employee.allocations_count = result['employee_id_count'] if result else 0.0
+            employee.allocations_count = data.get_agg(employee, '*:count', 0.0)
 
     def _compute_allocation_remaining_display(self):
         allocations = self.env['hr.leave.allocation'].search([('employee_id', 'in', self.ids)])

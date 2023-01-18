@@ -12,13 +12,13 @@ class SaleOrderLine(models.Model):
         )
         super(SaleOrderLine, self - timesheet_sols)._compute_purchase_price()
         if timesheet_sols:
-            group_amount = self.env['account.analytic.line'].read_group(
+            group_amount = self.env['account.analytic.line']._aggregate(
                 [('so_line', 'in', timesheet_sols.ids), ('project_id', '!=', False)],
-                ['so_line', 'amount:sum', 'unit_amount:sum'],
+                ['amount:sum', 'unit_amount:sum'],
                 ['so_line'])
             mapped_sol_timesheet_amount = {
-                amount['so_line'][0]: -amount['amount'] / amount['unit_amount'] if amount['unit_amount'] else 0.0
-                for amount in group_amount
+                so_line_id: -amount_sum / unit_amount_sum if unit_amount_sum else 0.0
+                for [so_line_id], [amount_sum, unit_amount_sum] in group_amount.items()
             }
             for line in timesheet_sols:
                 line = line.with_company(line.company_id)

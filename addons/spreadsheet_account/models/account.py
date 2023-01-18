@@ -138,10 +138,9 @@ class AccountMove(models.Model):
 
     @api.model
     def get_account_group(self, account_types):
-        data = self._read_group(
+        data = self._aggregate(
             [("account_type", "in", account_types), ("company_id", "=", self.env.company.id)],
             ["code:array_agg"],
             ["account_type"],
         )
-        mapped = {group["account_type"]: group["code"] for group in data}
-        return [mapped.get(account_type, []) for account_type in account_types]
+        return [data.get_agg(account_type, 'code:array_agg', []) for account_type in account_types]

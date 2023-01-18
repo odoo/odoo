@@ -374,12 +374,11 @@ class MassMailing(models.Model):
 
     @api.depends('mailing_model_id', 'mailing_domain')
     def _compute_mailing_filter_count(self):
-        filter_data = self.env['mailing.filter']._read_group([
+        filter_data = self.env['mailing.filter']._aggregate([
             ('mailing_model_id', 'in', self.mailing_model_id.ids)
-        ], ['mailing_model_id'], ['mailing_model_id'])
-        mapped_data = {data['mailing_model_id'][0]: data['mailing_model_id_count'] for data in filter_data}
+        ], ['*:count'], ['mailing_model_id'])
         for mailing in self:
-            mailing.mailing_filter_count = mapped_data.get(mailing.mailing_model_id.id, 0)
+            mailing.mailing_filter_count = filter_data.get_agg(mailing.mailing_model_id, '*:count', 0)
 
     @api.depends('mailing_model_id')
     def _compute_mailing_model_real(self):

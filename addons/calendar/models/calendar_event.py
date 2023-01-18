@@ -610,6 +610,7 @@ class Meeting(models.Model):
 
     @api.model
     def read_group(self, domain, fields, groupby, offset=0, limit=None, orderby=False, lazy=True):
+        # TODO: same for aggregate
         groupby = [groupby] if isinstance(groupby, str) else groupby
         grouped_fields = set(group_field.split(':')[0] for group_field in groupby)
         private_fields = grouped_fields - self._get_public_fields()

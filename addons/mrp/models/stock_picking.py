@@ -28,28 +28,17 @@ class StockPickingType(models.Model):
 
     def _get_mo_count(self):
         mrp_picking_types = self.filtered(lambda picking: picking.code == 'mrp_operation')
-        if not mrp_picking_types:
-            self.count_mo_waiting = False
-            self.count_mo_todo = False
-            self.count_mo_late = False
-            return
         domains = {
             'count_mo_waiting': [('reservation_state', '=', 'waiting')],
             'count_mo_todo': ['|', ('state', 'in', ('confirmed', 'draft', 'progress', 'to_close')), ('is_planned', '=', True)],
             'count_mo_late': [('date_planned_start', '<', fields.Date.today()), ('state', '=', 'confirmed')],
         }
-        for field in domains:
-            data = self.env['mrp.production']._read_group(domains[field] +
-                [('state', 'not in', ('done', 'cancel')), ('picking_type_id', 'in', self.ids)],
-                ['picking_type_id'], ['picking_type_id'])
-            count = {x['picking_type_id'] and x['picking_type_id'][0]: x['picking_type_id_count'] for x in data}
-            for record in mrp_picking_types:
-                record[field] = count.get(record.id, 0)
-        remaining = (self - mrp_picking_types)
-        if remaining:
-            remaining.count_mo_waiting = False
-            remaining.count_mo_todo = False
-            remaining.count_mo_late = False
+        for field, domain in domains.items():
+            data = self.env['mrp.production']._aggregate(domain +
+                [('state', 'not in', ('done', 'cancel')), ('picking_type_id', 'in', mrp_picking_types.ids)],
+                ['*:count'], ['picking_type_id'])
+            for record in self:
+                record[field] = data.get_agg(record.id, '*:count', 0)
 
     def get_mrp_stock_picking_action_picking_type(self):
         action = self.env["ir.actions.actions"]._for_xml_id('mrp.mrp_production_action_picking_deshboard')

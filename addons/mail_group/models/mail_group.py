@@ -96,53 +96,34 @@ class MailGroup(models.Model):
     @api.depends('mail_group_message_ids.create_date', 'mail_group_message_ids.moderation_status')
     def _compute_mail_group_message_last_month_count(self):
         month_date = datetime.today() - relativedelta.relativedelta(months=1)
-        messages_data = self.env['mail.group.message']._read_group([
+        messages_data = self.env['mail.group.message']._aggregate([
             ('mail_group_id', 'in', self.ids),
             ('create_date', '>=', fields.Datetime.to_string(month_date)),
             ('moderation_status', '=', 'accepted'),
-        ], ['mail_group_id'], ['mail_group_id'])
-
-        # { mail_discusison_id: number_of_mail_group_message_last_month_count }
-        messages_data = {
-            message['mail_group_id'][0]: message['mail_group_id_count']
-            for message in messages_data
-        }
+        ], ['*:count'], ['mail_group_id'])
 
         for group in self:
-            group.mail_group_message_last_month_count = messages_data.get(group.id, 0)
+            group.mail_group_message_last_month_count = messages_data.get_agg(group, '*:count', 0)
 
     @api.depends('mail_group_message_ids')
     def _compute_mail_group_message_count(self):
-        if not self:
-            self.mail_group_message_count = 0
-            return
-
-        results = self.env['mail.group.message']._read_group(
+        results = self.env['mail.group.message']._aggregate(
             [('mail_group_id', 'in', self.ids)],
-            ['mail_group_id'],
+            ['*:count'],
             ['mail_group_id'],
         )
-        result_per_group = {
-            result['mail_group_id'][0]: result['mail_group_id_count']
-            for result in results
-        }
         for group in self:
-            group.mail_group_message_count = result_per_group.get(group.id, 0)
+            group.mail_group_message_count = results.get_agg(group, '*:count', 0)
 
     @api.depends('mail_group_message_ids.moderation_status')
     def _compute_mail_group_message_moderation_count(self):
-        results = self.env['mail.group.message']._read_group(
+        results = self.env['mail.group.message']._aggregate(
             [('mail_group_id', 'in', self.ids), ('moderation_status', '=', 'pending_moderation')],
-            ['mail_group_id'],
+            ['*:count'],
             ['mail_group_id'],
         )
-        result_per_group = {
-            result['mail_group_id'][0]: result['mail_group_id_count']
-            for result in results
-        }
-
         for group in self:
-            group.mail_group_message_moderation_count = result_per_group.get(group.id, 0)
+            group.mail_group_message_moderation_count = results.get_agg(group, '*:count', 0)
 
     @api.depends('member_ids')
     def _compute_member_count(self):
@@ -486,14 +467,12 @@ class MailGroup(models.Model):
             _logger.warning('Template "mail_group.mail_group_notify_moderation" was not found. Cannot send reminder notifications.')
             return
 
-        results = self.env['mail.group.message'].read_group(
+        results = self.env['mail.group.message'].aggregate(
             [('mail_group_id', 'in', self.ids), ('moderation_status', '=', 'pending_moderation')],
-            ['mail_group_id'],
-            ['mail_group_id'],
+            groupby=['mail_group_id'],
         )
-        groups = self.browse([result['mail_group_id'][0] for result in results])
 
-        for group in groups:
+        for [group] in results.keys(as_records=True):
             moderators_to_notify = group.moderator_ids
             MailThread = self.env['mail.thread'].with_context(mail_notify_author=True)
             for moderator in moderators_to_notify:

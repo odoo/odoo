@@ -229,7 +229,7 @@ ORDER BY "test_read_group_aggregate"."key" ASC, "test_read_group_aggregate"."par
             [(2,), (4,), (3,)]
         )
 
-        for [partner_id], [count] in res.items():
+        for [_partner_id], [_count] in res.items():
             ...
 
         # ----------- usage 4 % (random stat): SEVERAL aggregate, ONE group key
@@ -239,7 +239,7 @@ ORDER BY "test_read_group_aggregate"."key" ASC, "test_read_group_aggregate"."par
         self.assertEqual(res[(1,)].get('value:sum', 0), 6)
         self.assertEqual(res.get_agg(-8, '*:count', 'default'), 'default')
         # Or iter usage:
-        for [key], [count, value_sum] in res.items():
+        for [_key], [_count, _value_sum] in res.items():
             ...
 
         # ----------- usage 4 % (random stat): ONE aggregate, SEVERAL group keys
@@ -248,7 +248,7 @@ ORDER BY "test_read_group_aggregate"."key" ASC, "test_read_group_aggregate"."par
         self.assertEqual(res[(1, partner_1.id)].get('*:count', 0), 2)
         self.assertEqual(res.get_agg((8, partner_1), '*:count', 'default'), 'default')
         # Or iter usage:
-        for [key, partner_id], [count] in res.items():
+        for [_key, _partner_id], [_count] in res.items():
             pass
         # ----------- usage 4 % (random stat): ONE/SEVERAL aggregate, NO group key
         res = Model._aggregate([], ['*:count', 'value:sum'])
@@ -264,7 +264,7 @@ ORDER BY "test_read_group_aggregate"."key" ASC, "test_read_group_aggregate"."par
         self.assertEqual(res.get_agg((8, partner_1), '*:count', 0), 0)
         self.assertEqual(res.get_agg((8, partner_1), 'value:sum', 0), 0)
         # Or iter usage:
-        for [key, partner_id], [count, value_sum] in res.items():
+        for [_key, _partner_id], [_count, _value_sum] in res.items():
             pass
 
         # ----------- usage 1/2 % (random stat): NO aggregate, SEVERAL groups keys
@@ -738,7 +738,7 @@ ORDER BY "test_read_group_aggregate"."key" ASC
                 [('id', 'in', tasks.ids)],
                 ['name:array_agg'],
                 ['user_ids'],
-            ).to_list(), 
+            ).to_list(),
             [
                 {   # tasks of Mario
                     'user_ids': users[0].id,

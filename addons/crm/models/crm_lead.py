@@ -521,15 +521,10 @@ class Lead(models.Model):
             lead.recurring_revenue_prorated = (lead.recurring_revenue or 0.0) * (lead.probability or 0) / 100.0
 
     def _compute_calendar_event_count(self):
-        if self.ids:
-            meeting_data = self.env['calendar.event'].sudo()._read_group([
-                ('opportunity_id', 'in', self.ids)
-            ], ['opportunity_id'], ['opportunity_id'])
-            mapped_data = {m['opportunity_id'][0]: m['opportunity_id_count'] for m in meeting_data}
-        else:
-            mapped_data = dict()
+        meeting_data = self.env['calendar.event'].sudo()._aggregate(
+            [('opportunity_id', 'in', self.ids)], ['*:count'], ['opportunity_id'])
         for lead in self:
-            lead.calendar_event_count = mapped_data.get(lead.id, 0)
+            lead.calendar_event_count = meeting_data.get_agg(lead, '*:count', 0)
 
     @api.depends('email_from', 'partner_id', 'contact_name', 'partner_name')
     def _compute_potential_lead_duplicates(self):
@@ -808,25 +803,24 @@ class Lead(models.Model):
             return super(Lead, self).search(domain, offset=offset, limit=limit, order=order, count=count)
         order_items = [order_item.strip().lower() for order_item in (order or self._order).split(',')]
 
-        # Perform a read_group on my activities to get a mapping lead_id / deadline
+        # Perform a aggregate on my activities to get a mapping lead_id / deadline
         # Remember date_deadline is required, we always have a value for it. Only
         # the earliest deadline per lead is kept.
         activity_asc = any('my_activity_date_deadline asc' in item for item in order_items)
-        my_lead_activities = self.env['mail.activity']._read_group(
+        my_lead_activities = self.env['mail.activity']._aggregate(
             [('res_model', '=', self._name), ('user_id', '=', self.env.uid)],
-            ['res_id', 'date_deadline:min'],
+            ['date_deadline:min'],
             ['res_id'],
-            orderby='date_deadline ASC'
+            order='date_deadline:min ASC, res_id ASC',
         )
-        my_lead_mapping = dict((item['res_id'], item['date_deadline']) for item in my_lead_activities)
-        my_lead_ids = list(my_lead_mapping.keys())
+        my_lead_ids = [res_id for [res_id] in my_lead_activities.keys()]
         my_lead_domain = expression.AND([[('id', 'in', my_lead_ids)], domain])
         my_lead_order = ', '.join(item for item in order_items if 'my_activity_date_deadline' not in item)
 
         # Search leads linked to those activities and order them. See docstring
         # of this method for more details.
-        search_res = super(Lead, self).search(my_lead_domain, offset=0, limit=None, order=my_lead_order, count=count)
-        my_lead_ids_ordered = sorted(search_res.ids, key=lambda lead_id: my_lead_mapping[lead_id], reverse=not activity_asc)
+        search_res = super(Lead, self).search(my_lead_domain, order=my_lead_order)
+        my_lead_ids_ordered = sorted(search_res.ids, key=lambda lead_id: my_lead_activities[lead_id]['date_deadline:min'], reverse=not activity_asc)
         # keep only requested window (offset + limit, or offset+)
         my_lead_ids_keep = my_lead_ids_ordered[offset:(offset + limit)] if limit else my_lead_ids_ordered[offset:]
         # keep list of already skipped lead ids to exclude them from future search

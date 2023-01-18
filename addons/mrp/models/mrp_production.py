@@ -397,10 +397,9 @@ class MrpProduction(models.Model):
 
     @api.depends('move_raw_ids.delay_alert_date')
     def _compute_delay_alert_date(self):
-        delay_alert_date_data = self.env['stock.move']._read_group([('id', 'in', self.move_raw_ids.ids), ('delay_alert_date', '!=', False)], ['delay_alert_date:max'], 'raw_material_production_id')
-        delay_alert_date_data = {data['raw_material_production_id'][0]: data['delay_alert_date'] for data in delay_alert_date_data}
+        delay_alert_date_data = self.env['stock.move']._aggregate([('id', 'in', self.move_raw_ids.ids), ('delay_alert_date', '!=', False)], ['delay_alert_date:max'], ['raw_material_production_id'])
         for production in self:
-            production.delay_alert_date = delay_alert_date_data.get(production.id, False)
+            production.delay_alert_date = delay_alert_date_data.get_agg(production, 'delay_alert_date:max', False)
 
     def _compute_json_popover(self):
         production_no_alert = self.filtered(lambda m: m.state in ('done', 'cancel') or not m.delay_alert_date)
@@ -422,20 +421,19 @@ class MrpProduction(models.Model):
         """ If the manufacturing order contains some done move (via an intermediate
         post inventory), the user has to confirm the cancellation.
         """
-        domain = [
-            ('state', '=', 'done'),
-            '|',
-                ('production_id', 'in', self.ids),
-                ('raw_material_production_id', 'in', self.ids)
-        ]
-        res = self.env['stock.move'].read_group(domain, ['state', 'production_id', 'raw_material_production_id'], ['production_id', 'raw_material_production_id'], lazy=False)
-        productions_with_done_move = {}
-        for rec in res:
-            production_record = rec['production_id'] or rec['raw_material_production_id']
-            if production_record:
-                productions_with_done_move[production_record[0]] = True
-        for production in self:
-            production.confirm_cancel = productions_with_done_move.get(production.id, False)
+        res = self.env['stock.move']._aggregate(
+            [
+                ('state', '=', 'done'),
+                '|',
+                    ('production_id', 'in', self.ids),
+                    ('raw_material_production_id', 'in', self.ids)
+            ],
+            aggregates=(),
+            groupby=['production_id', 'raw_material_production_id'],
+        )
+        self.confirm_cancel = False
+        for [production, raw_material_production] in res.keys(as_records=True):
+            (production or raw_material_production).confirm_cancel = True
 
     @api.depends('procurement_group_id', 'procurement_group_id.stock_move_ids.group_id')
     def _compute_picking_ids(self):
@@ -455,18 +453,17 @@ class MrpProduction(models.Model):
 
     @api.depends('product_id', 'company_id')
     def _compute_production_location(self):
-        if not self.company_id:
-            return
-        location_by_company = self.env['stock.location']._read_group([
-            ('company_id', 'in', self.company_id.ids),
+        location_by_company = self.env['stock.location']._aggregate([
+            ('company_id', 'in', self.filtered(lambda mo: not mo.product_id).company_id.ids),
             ('usage', '=', 'production')
-        ], ['company_id', 'ids:array_agg(id)'], ['company_id'])
-        location_by_company = {lbc['company_id'][0]: lbc['ids'] for lbc in location_by_company}
+        ], ['id:array_agg'], ['company_id'])
         for production in self:
+            if not production.company_id:
+                continue
             if production.product_id:
                 production.production_location_id = production.product_id.with_company(production.company_id).property_stock_production
             else:
-                production.production_location_id = location_by_company.get(production.company_id.id)[0]
+                production.production_location_id = location_by_company.get_agg(production.company_id, 'id:array_agg', [False])[0]
 
     @api.depends('product_id.tracking')
     def _compute_show_lots(self):
@@ -594,10 +591,9 @@ class MrpProduction(models.Model):
         return True
 
     def _compute_scrap_move_count(self):
-        data = self.env['stock.scrap']._read_group([('production_id', 'in', self.ids)], ['production_id'], ['production_id'])
-        count_data = dict((item['production_id'][0], item['production_id_count']) for item in data)
+        data = self.env['stock.scrap']._aggregate([('production_id', 'in', self.ids)], ['*:count'], ['production_id'])
         for production in self:
-            production.scrap_count = count_data.get(production.id, 0)
+            production.scrap_count = data.get_agg(production, '*:count', 0)
 
     @api.depends('unbuild_ids')
     def _compute_unbuild_count(self):

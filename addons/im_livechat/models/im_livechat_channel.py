@@ -60,11 +60,10 @@ class ImLivechatChannel(models.Model):
 
     @api.depends('rule_ids.chatbot_script_id')
     def _compute_chatbot_script_count(self):
-        data = self.env['im_livechat.channel.rule'].read_group(
+        data = self.env['im_livechat.channel.rule']._aggregate(
             [('channel_id', 'in', self.ids)], ['chatbot_script_id:count_distinct'], ['channel_id'])
-        mapped_data = {rule['channel_id'][0]: rule['chatbot_script_id'] for rule in data}
         for channel in self:
-            channel.chatbot_script_count = mapped_data.get(channel.id, 0)
+            channel.chatbot_script_count = data.get_agg(channel, 'chatbot_script_id:count_distinct', 0)
 
     def _compute_script_external(self):
         values = {
@@ -81,12 +80,11 @@ class ImLivechatChannel(models.Model):
 
     @api.depends('channel_ids')
     def _compute_nbr_channel(self):
-        data = self.env['mail.channel']._read_group([
+        data = self.env['mail.channel']._aggregate([
             ('livechat_channel_id', 'in', self._ids),
-            ('has_message', '=', True)], ['__count'], ['livechat_channel_id'], lazy=False)
-        channel_count = {x['livechat_channel_id'][0]: x['__count'] for x in data}
+            ('has_message', '=', True)], ['*:count'], ['livechat_channel_id'])
         for record in self:
-            record.nbr_channel = channel_count.get(record.id, 0)
+            record.nbr_channel = data.get_agg(record, '*:count', 0)
 
     # --------------------------
     # Action Methods

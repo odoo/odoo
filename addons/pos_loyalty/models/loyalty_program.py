@@ -52,11 +52,11 @@ class LoyaltyProgram(models.Model):
                 program.pos_config_ids = False
 
     def _compute_pos_order_count(self):
-        read_group_res = self.env['pos.order.line']._read_group(
+        aggregate_res = self.env['pos.order.line']._aggregate(
             [('reward_id', 'in', self.reward_ids.ids)], ['reward_id:array_agg'], ['order_id'])
         for program in self:
             program_reward_ids = program.reward_ids.ids
-            program.pos_order_count = sum(1 if any(id in group['reward_id'] for id in program_reward_ids) else 0 for group in read_group_res)
+            program.pos_order_count = sum(1 for [reward_ids] in aggregate_res.values() if any(_id in reward_ids for _id in program_reward_ids))
 
     def _compute_total_order_count(self):
         super()._compute_total_order_count()

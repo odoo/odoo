@@ -12,13 +12,12 @@ class ResPartner(models.Model):
 
     @api.depends('is_company')
     def _compute_certifications_count(self):
-        read_group_res = self.env['survey.user_input'].sudo()._read_group(
+        aggregate_res = self.env['survey.user_input'].sudo()._aggregate(
             [('partner_id', 'in', self.ids), ('scoring_success', '=', True)],
-            ['partner_id'], 'partner_id'
+            ['*:count'], ['partner_id']
         )
-        data = dict((res['partner_id'][0], res['partner_id_count']) for res in read_group_res)
         for partner in self:
-            partner.certifications_count = data.get(partner.id, 0)
+            partner.certifications_count = aggregate_res.get_agg(partner, '*:count', 0)
 
     @api.depends('is_company', 'child_ids.certifications_count')
     def _compute_certifications_company_count(self):

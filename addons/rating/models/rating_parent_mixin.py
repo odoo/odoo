@@ -35,17 +35,16 @@ class RatingParentMixin(models.AbstractModel):
         domain = [('parent_res_model', '=', self._name), ('parent_res_id', 'in', self.ids), ('rating', '>=', rating_data.RATING_LIMIT_MIN), ('consumed', '=', True)]
         if self._rating_satisfaction_days:
             domain += [('write_date', '>=', fields.Datetime.to_string(fields.datetime.now() - timedelta(days=self._rating_satisfaction_days)))]
-        data = self.env['rating.rating'].read_group(domain, ['parent_res_id', 'rating'], ['parent_res_id', 'rating'], lazy=False)
+        data = self.env['rating.rating']._aggregate(domain, ['*:count'], ['parent_res_id', 'rating'])
 
         # get repartition of grades per parent id
         default_grades = {'great': 0, 'okay': 0, 'bad': 0}
         grades_per_parent = dict((parent_id, dict(default_grades)) for parent_id in self.ids)  # map: {parent_id: {'great': 0, 'bad': 0, 'ok': 0}}
         rating_scores_per_parent = defaultdict(int)  # contains the total of the rating values per record
-        for item in data:
-            parent_id = item['parent_res_id']
-            grade = rating_data._rating_to_grade(item['rating'])
-            grades_per_parent[parent_id][grade] += item['__count']
-            rating_scores_per_parent[parent_id] += item['rating'] * item['__count']
+        for [parent_id, rating], [count] in data.items():
+            grade = rating_data._rating_to_grade(rating)
+            grades_per_parent[parent_id][grade] += count
+            rating_scores_per_parent[parent_id] += rating * count
 
         # compute percentage per parent
         for record in self:
@@ -63,10 +62,10 @@ class RatingParentMixin(models.AbstractModel):
         if self._rating_satisfaction_days:
             min_date = fields.datetime.now() - timedelta(days=self._rating_satisfaction_days)
             domain = expression.AND([domain, [('write_date', '>=', fields.Datetime.to_string(min_date))]])
-        rating_read_group = self.env['rating.rating'].sudo().read_group(domain, ['parent_res_id', 'rating_avg:avg(rating)'], ['parent_res_id'])
+        rating_aggregate = self.env['rating.rating'].sudo()._aggregate(domain, ['rating:avg'], ['parent_res_id'])
         parent_res_ids = [
-            res['parent_res_id']
-            for res in rating_read_group
-            if rating_data.OPERATOR_MAPPING[operator](float_compare(res['rating_avg'], value, 2), 0)
+            parent_res_id
+            for [parent_res_id], [rating_avg] in rating_aggregate.items()
+            if rating_data.OPERATOR_MAPPING[operator](float_compare(rating_avg, value, 2), 0)
         ]
         return [('id', 'in', parent_res_ids)]

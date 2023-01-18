@@ -65,11 +65,10 @@ class User(models.Model):
         approver_group = self.env.ref('hr_holidays.group_hr_holidays_responsible', raise_if_not_found=False)
         if not self or not approver_group:
             return
-        res = self.env['hr.employee'].read_group(
+        res = self.env['hr.employee']._aggregate(
             [('leave_manager_id', 'in', self.ids)],
-            ['leave_manager_id'],
-            ['leave_manager_id'])
-        responsibles_to_remove_ids = set(self.ids) - {x['leave_manager_id'][0] for x in res}
+            groupby=['leave_manager_id'])
+        responsibles_to_remove_ids = set(self.ids) - {leave_manager_id for [leave_manager_id] in res.keys()}
         approver_group.write({
             'users': [(3, manager_id) for manager_id in responsibles_to_remove_ids]})
 

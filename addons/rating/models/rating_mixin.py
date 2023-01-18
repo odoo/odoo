@@ -53,22 +53,21 @@ class RatingMixin(models.AbstractModel):
     def _compute_rating_stats(self):
         """ Compute avg and count in one query, as thoses fields will be used together most of the time. """
         domain = expression.AND([self._rating_domain(), [('rating', '>=', rating_data.RATING_LIMIT_MIN)]])
-        read_group_res = self.env['rating.rating'].read_group(domain, ['rating:avg'], groupby=['res_id'], lazy=False)  # force average on rating column
-        mapping = {item['res_id']: {'rating_count': item['__count'], 'rating_avg': item['rating']} for item in read_group_res}
+        aggregate_res = self.env['rating.rating']._aggregate(domain, ['rating:avg', '*:count'], groupby=['res_id'])  # force average on rating column
         for record in self:
-            record.rating_count = mapping.get(record.id, {}).get('rating_count', 0)
-            record.rating_avg = mapping.get(record.id, {}).get('rating_avg', 0)
+            record.rating_count = aggregate_res.get_agg(record, '*:count', 0)
+            record.rating_avg = aggregate_res.get_agg(record, 'rating:avg', 0)
 
     def _search_rating_avg(self, operator, value):
         if operator not in rating_data.OPERATOR_MAPPING:
             raise NotImplementedError('This operator %s is not supported in this search method.' % operator)
-        rating_read_group = self.env['rating.rating'].sudo().read_group(
+        rating_read_group = self.env['rating.rating'].sudo()._aggregate(
             [('res_model', '=', self._name), ('consumed', '=', True), ('rating', '>=', rating_data.RATING_LIMIT_MIN)],
-            ['res_id', 'rating_avg:avg(rating)'], ['res_id'])
+            ['rating:avg'], ['res_id'])
         res_ids = [
-            res['res_id']
-            for res in rating_read_group
-            if rating_data.OPERATOR_MAPPING[operator](float_compare(res['rating_avg'], value, 2), 0)
+            res_id
+            for [res_id], [rating_avg] in rating_read_group.items()
+            if rating_data.OPERATOR_MAPPING[operator](float_compare(rating_avg, value, 2), 0)
         ]
         return [('id', 'in', res_ids)]
 
@@ -83,14 +82,13 @@ class RatingMixin(models.AbstractModel):
             since the query is different, to avoid computing if it is not necessary"""
         domain = expression.AND([self._rating_domain(), [('rating', '>=', rating_data.RATING_LIMIT_MIN)]])
         # See `_compute_rating_percentage_satisfaction` above
-        read_group_res = self.env['rating.rating']._read_group(domain, ['res_id', 'rating'], groupby=['res_id', 'rating'], lazy=False)
+        aggregate_res = self.env['rating.rating']._aggregate(domain, ['*:count'], groupby=['res_id', 'rating'])
         default_grades = {'great': 0, 'okay': 0, 'bad': 0}
         grades_per_record = {record_id: default_grades.copy() for record_id in self.ids}
 
-        for group in read_group_res:
-            record_id = group['res_id']
-            grade = rating_data._rating_to_grade(group['rating'])
-            grades_per_record[record_id][grade] += group['__count']
+        for [res_id, rating], [count] in aggregate_res.items():
+            grade = rating_data._rating_to_grade(rating)
+            grades_per_record[res_id][grade] += count
 
         for record in self:
             grade_repartition = grades_per_record.get(record.id, default_grades)
@@ -271,19 +269,19 @@ class RatingMixin(models.AbstractModel):
         base_domain = expression.AND([self._rating_domain(), [('rating', '>=', 1)]])
         if domain:
             base_domain += domain
-        rg_data = self.env['rating.rating'].read_group(base_domain, ['rating'], ['rating', 'res_id'])
+        rg_data = self.env['rating.rating']._aggregate(base_domain, ['*:count'], ['rating'])
         # init dict with all posible rate value, except 0 (no value for the rating)
         values = dict.fromkeys(range(1, 6), 0)
-        for rating_rg in rg_data:
-            rating_val_round = float_round(rating_rg['rating'], precision_digits=1)
-            values[rating_val_round] = values.get(rating_val_round, 0) + rating_rg['rating_count']
+        for [rating], [count] in rg_data.items():
+            rating_val_round = float_round(rating, precision_digits=1)
+            values[rating_val_round] = values.get(rating_val_round, 0) + count
         # add other stats
         if add_stats:
             rating_number = sum(values.values())
             result = {
                 'repartition': values,
                 'avg': sum(float(key * values[key]) for key in values) / rating_number if rating_number > 0 else 0,
-                'total': sum(it['rating_count'] for it in rg_data),
+                'total': sum(count for [count] in rg_data.values()),
             }
             return result
         return values

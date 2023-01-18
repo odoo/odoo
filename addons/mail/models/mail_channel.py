@@ -188,10 +188,9 @@ class Channel(models.Model):
 
     @api.depends('channel_member_ids')
     def _compute_member_count(self):
-        read_group_res = self.env['mail.channel.member']._read_group(domain=[('channel_id', 'in', self.ids)], fields=['channel_id'], groupby=['channel_id'])
-        member_count_by_channel_id = {item['channel_id'][0]: item['channel_id_count'] for item in read_group_res}
+        aggregate_res = self.env['mail.channel.member']._aggregate(domain=[('channel_id', 'in', self.ids)], aggregates=['*:count'], groupby=['channel_id'])
         for channel in self:
-            channel.member_count = member_count_by_channel_id.get(channel.id, 0)
+            channel.member_count = aggregate_res.get_agg(channel, '*:count', 0)
 
     @api.depends('channel_type')
     def _compute_group_public_id(self):

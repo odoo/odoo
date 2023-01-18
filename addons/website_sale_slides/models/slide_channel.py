@@ -32,12 +32,9 @@ class Channel(models.Model):
             ('state', 'in', self.env['sale.report']._get_done_states()),
             ('product_id', 'in', self.product_id.ids),
         ]
-        rg_data = dict(
-            (item['product_id'][0], item['price_total'])
-            for item in self.env['sale.report']._read_group(domain, ['product_id', 'price_total'], ['product_id'])
-        )
+        aggregate_res = self.env['sale.report']._aggregate(domain, ['price_total:sum'], ['product_id'])
         for channel in self:
-            channel.product_sale_revenues = rg_data.get(channel.product_id.id, 0)
+            channel.product_sale_revenues = aggregate_res.get_agg(channel.product_id, 'price_total:sum', 0)
 
     @api.model_create_multi
     def create(self, vals_list):
@@ -61,12 +58,12 @@ class Channel(models.Model):
         self.filtered(lambda channel: channel.is_published and not channel.product_id.is_published).sudo().product_id.write({'is_published': True})
 
         unpublished_channel_products = self.filtered(lambda channel: not channel.is_published).product_id
-        group_data = self.read_group(
+        group_data = self._aggregate(
             [('is_published', '=', True), ('product_id', 'in', unpublished_channel_products.ids)],
-            ['product_id'],
+            [],
             ['product_id'],
         )
-        used_product_ids = [product['product_id'][0] for product in group_data if product['product_id_count'] > 0]
+        used_product_ids = set(product_id for [product_id] in group_data.keys())
         product_to_unpublish = unpublished_channel_products.filtered(lambda product: product.id not in used_product_ids)
         if product_to_unpublish:
             product_to_unpublish.sudo().write({'is_published': False})

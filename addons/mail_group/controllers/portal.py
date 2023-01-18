@@ -3,12 +3,16 @@
 
 import werkzeug
 
+import babel.dates
+
 from odoo import http, fields, tools
 from odoo.addons.http_routing.models.ir_http import slug
 from odoo.addons.portal.controllers.portal import pager as portal_pager
 from odoo.exceptions import AccessError
 from odoo.http import request
+from odoo.models import TIME_GRANULARITY_AGGREGATION
 from odoo.osv import expression
+from odoo.tools.misc import get_lang
 
 
 class PortalMailGroup(http.Controller):
@@ -23,22 +27,21 @@ class PortalMailGroup(http.Controller):
     def _get_archives(self, group_id):
         """Return the different date range and message count for the group messages."""
         domain = expression.AND([self._get_website_domain(), [('mail_group_id', '=', group_id)]])
-        results = request.env['mail.group.message']._read_group_raw(
+        results = request.env['mail.group.message']._aggregate(
             domain,
-            ['subject', 'create_date'],
-            groupby=['create_date'], orderby='create_date')
+            ['*:count'],
+            groupby=['create_date:month'], orderby='create_date:month')
 
         date_groups = []
 
-        for result in results:
-            (dates_range, label) = result['create_date']
-            start, end = dates_range.split('/')
-
+        for [create_date_month], [count] in results.items():
+            start, end = create_date_month, create_date_month + TIME_GRANULARITY_AGGREGATION['month']
+            label = babel.dates.format_datetime(start, format='MMMM yyyy', tzinfo=None, locale=get_lang(self.env).code)
             date_groups.append({
                 'date': label,
                 'date_begin': fields.Date.to_string(fields.Date.to_date(start)),
                 'date_end': fields.Date.to_string(fields.Date.to_date(end)),
-                'messages_count': result['create_date_count'],
+                'messages_count': count,
             })
 
         thread_domain = expression.AND([domain, [('group_message_parent_id', '=', False)]])

@@ -33,12 +33,11 @@ class ProductCategory(models.Model):
                 category.complete_name = category.name
 
     def _compute_product_count(self):
-        read_group_res = self.env['product.template'].read_group([('categ_id', 'child_of', self.ids)], ['categ_id'], ['categ_id'])
-        group_data = dict((data['categ_id'][0], data['categ_id_count']) for data in read_group_res)
+        aggregate_res = self.env['product.template']._aggregate([('categ_id', 'child_of', self.ids)], ['*:count'], ['categ_id'])
         for categ in self:
             product_count = 0
             for sub_categ_id in categ.search([('id', 'child_of', categ.ids)]).ids:
-                product_count += group_data.get(sub_categ_id, 0)
+                product_count += aggregate_res.get_agg(sub_categ_id, '*:count', 0)
             categ.product_count = product_count
 
     @api.constrains('parent_id')

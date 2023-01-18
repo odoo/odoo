@@ -56,16 +56,14 @@ class Department(models.Model):
             department.master_department_id = int(parent_path_values[department.id].split('/')[0])
 
     def _compute_total_employee(self):
-        emp_data = self.env['hr.employee']._read_group([('department_id', 'in', self.ids)], ['department_id'], ['department_id'])
-        result = dict((data['department_id'][0], data['department_id_count']) for data in emp_data)
+        emp_data = self.env['hr.employee']._aggregate([('department_id', 'in', self.ids)], ['*:count'], ['department_id'])
         for department in self:
-            department.total_employee = result.get(department.id, 0)
+            department.total_employee = emp_data.get_agg(department, '*:count', 0)
 
     def _compute_plan_count(self):
-        plans_data = self.env['hr.plan']._read_group([('department_id', 'in', self.ids)], ['department_id'], ['department_id'])
-        plans_count = {x['department_id'][0]: x['department_id_count'] for x in plans_data}
+        plans_data = self.env['hr.plan']._aggregate([('department_id', 'in', self.ids)], ['*:count'], ['department_id'])
         for department in self:
-            department.plans_count = plans_count.get(department.id, 0)
+            department.plans_count = plans_data.get_agg(department, '*:count', 0)
 
     @api.constrains('parent_id')
     def _check_parent_id(self):

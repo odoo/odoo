@@ -25,27 +25,23 @@ class Department(models.Model):
         today_start = fields.Datetime.to_string(today_date)  # get the midnight of the current utc day
         today_end = fields.Datetime.to_string(today_date + relativedelta(hours=23, minutes=59, seconds=59))
 
-        leave_data = Requests._read_group(
+        leave_data = Requests._aggregate(
             [('department_id', 'in', self.ids),
              ('state', '=', 'confirm')],
-            ['department_id'], ['department_id'])
-        allocation_data = Allocations._read_group(
+            ['*:count'], ['department_id'])
+        allocation_data = Allocations._aggregate(
             [('department_id', 'in', self.ids),
              ('state', '=', 'confirm')],
-            ['department_id'], ['department_id'])
-        absence_data = Requests._read_group(
+            ['*:count'], ['department_id'])
+        absence_data = Requests._aggregate(
             [('department_id', 'in', self.ids), ('state', 'not in', ['cancel', 'refuse']),
              ('date_from', '<=', today_end), ('date_to', '>=', today_start)],
-            ['department_id'], ['department_id'])
-
-        res_leave = dict((data['department_id'][0], data['department_id_count']) for data in leave_data)
-        res_allocation = dict((data['department_id'][0], data['department_id_count']) for data in allocation_data)
-        res_absence = dict((data['department_id'][0], data['department_id_count']) for data in absence_data)
+            ['*:count'], ['department_id'])
 
         for department in self:
-            department.leave_to_approve_count = res_leave.get(department.id, 0)
-            department.allocation_to_approve_count = res_allocation.get(department.id, 0)
-            department.absence_of_today = res_absence.get(department.id, 0)
+            department.leave_to_approve_count = leave_data.get_agg(department.id, '*:count', 0)
+            department.allocation_to_approve_count = allocation_data.get_agg(department.id, '*:count', 0)
+            department.absence_of_today = absence_data.get_agg(department.id, '*:count', 0)
 
     def _get_action_context(self):
         return {

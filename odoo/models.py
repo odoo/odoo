@@ -83,6 +83,24 @@ TIME_GRANULARITY_AGGREGATION = {
     'year': dateutil.relativedelta.relativedelta(years=1)
 }
 
+READ_GROUP_DISPLAY_FORMAT = {
+    # Careful with week/year formats:
+    #  - yyyy (lower) must always be used, *except* for week+year formats
+    #  - YYYY (upper) must always be used for week+year format
+    #         e.g. 2006-01-01 is W52 2005 in some locales (de_DE),
+    #                         and W1 2006 for others
+    #
+    # Mixing both formats, e.g. 'MMM YYYY' would yield wrong results,
+    # such as 2006-01-01 being formatted as "January 2005" in some locales.
+    # Cfr: http://babel.pocoo.org/en/latest/dates.html#date-fields
+    'hour': 'hh:00 dd MMM',
+    'day': 'dd MMM yyyy', # yyyy = normal year
+    'week': "'W'w YYYY",  # w YYYY = ISO week-year
+    'month': 'MMMM yyyy',
+    'quarter': 'QQQ yyyy',
+    'year': 'yyyy',
+}
+
 AUTOINIT_RECALCULATE_STORED_FIELDS = 1000
 
 INSERT_BATCH_SIZE = 100
@@ -2049,6 +2067,8 @@ class BaseModel(metaclass=MetaModel):
         """
         self.check_access_rights('read')
 
+        # TODO: has smart default value
+
         if expression.is_false(self, domain):
             fake_res = []
             if not groupby:  # If there is no group postgresql always return a row
@@ -2429,23 +2449,6 @@ class BaseModel(metaclass=MetaModel):
         tz_convert = field_type == 'datetime' and self._context.get('tz') in pytz.all_timezones
         qualified_field = self._inherits_join_calc(self._table, split[0], query)
         if temporal:
-            display_formats = {
-                # Careful with week/year formats:
-                #  - yyyy (lower) must always be used, *except* for week+year formats
-                #  - YYYY (upper) must always be used for week+year format
-                #         e.g. 2006-01-01 is W52 2005 in some locales (de_DE),
-                #                         and W1 2006 for others
-                #
-                # Mixing both formats, e.g. 'MMM YYYY' would yield wrong results,
-                # such as 2006-01-01 being formatted as "January 2005" in some locales.
-                # Cfr: http://babel.pocoo.org/en/latest/dates.html#date-fields
-                'hour': 'hh:00 dd MMM',
-                'day': 'dd MMM yyyy', # yyyy = normal year
-                'week': "'W'w YYYY",  # w YYYY = ISO week-year
-                'month': 'MMMM yyyy',
-                'quarter': 'QQQ yyyy',
-                'year': 'yyyy',
-            }
             if tz_convert:
                 qualified_field = "timezone('%s', timezone('UTC',%s))" % (self._context.get('tz', 'UTC'), qualified_field)
             qualified_field = "date_trunc('%s', %s::timestamp)" % (gb_function or 'month', qualified_field)
@@ -2455,7 +2458,7 @@ class BaseModel(metaclass=MetaModel):
             'field': split[0],
             'groupby': gb,
             'type': field_type,
-            'display_format': display_formats[gb_function or 'month'] if temporal else None,
+            'display_format': READ_GROUP_DISPLAY_FORMAT[gb_function or 'month'] if temporal else None,
             'interval': TIME_GRANULARITY_AGGREGATION[gb_function or 'month'] if temporal else None,
             'granularity': gb_function or 'month' if temporal else None,
             'tz_convert': tz_convert,

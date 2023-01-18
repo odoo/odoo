@@ -24,14 +24,13 @@ class WebsiteVisitor(models.Model):
 
     @api.depends('event_track_visitor_ids.track_id', 'event_track_visitor_ids.is_wishlisted')
     def _compute_event_track_wishlisted_ids(self):
-        results = self.env['event.track.visitor']._read_group(
+        results = self.env['event.track.visitor']._aggregate(
             [('visitor_id', 'in', self.ids), ('is_wishlisted', '=', True)],
-            ['visitor_id', 'track_id:array_agg'],
+            ['track_id:array_agg'],
             ['visitor_id']
         )
-        track_ids_map = {result['visitor_id'][0]: result['track_id'] for result in results}
         for visitor in self:
-            visitor.event_track_wishlisted_ids = track_ids_map.get(visitor.id, [])
+            visitor.event_track_wishlisted_ids = results.get_agg(visitor.id, default=[])
             visitor.event_track_wishlisted_count = len(visitor.event_track_wishlisted_ids)
 
     def _search_event_track_wishlisted_ids(self, operator, operand):

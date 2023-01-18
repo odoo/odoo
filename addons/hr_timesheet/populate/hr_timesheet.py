@@ -13,40 +13,36 @@ class AccountAnalyticLine(models.Model):
 
 
     def _populate_factories(self):
-        projects_groups = self.env['project.project']._read_group(
+        projects_groups = self.env['project.project']._aggregate(
             domain=[('id', 'in', self.env.registry.populated_models["project.project"])],
-            fields=['company_id', 'ids:array_agg(id)'],
+            aggregates=['id:array_agg'],
             groupby=['company_id'],
         )
         project_ids = []
         projects_per_company = defaultdict(list)
-        for group in projects_groups:
-            project_ids += group['ids']
-            projects_per_company[group['company_id'][0]] = group['ids']
+        for [company_id], [ids] in projects_groups.items():
+            project_ids += ids
+            projects_per_company[company_id] = ids
 
-        tasks_per_project = {
-            group['project_id'][0]: group['ids']
-            for group in self.env['project.task']._read_group(
-                domain=[
-                    ('id', 'in', self.env.registry.populated_models["project.task"]),
-                    ('project_id', 'in', project_ids),
-                ],
-                fields=['project_id', 'ids:array_agg(id)'],
-                groupby=['project_id'],
-            )
-        }
-        employees_per_company = {
-            group['company_id'][0]: group['ids']
-            for group in self.env['hr.employee']._read_group(
-                domain=[('id', 'in', self.env.registry.populated_models["hr.employee"])],
-                fields=['company_id', 'ids:array_agg(id)'],
-                groupby=['company_id'],
-            )
-        }
+        tasks_aggregate = self.env['project.task']._aggregate(
+            domain=[
+                ('id', 'in', self.env.registry.populated_models["project.task"]),
+                ('project_id', 'in', project_ids),
+            ],
+            aggregates=['id:array_agg'],
+            groupby=['project_id'],
+        )
+        
+        employees_aggregate = self.env['hr.employee']._aggregate(
+            domain=[('id', 'in', self.env.registry.populated_models["hr.employee"])],
+            aggregates=['id:array_agg'],
+            groupby=['company_id'],
+        )
+        
         # Companies with projects and employees only
         company_ids = list(
             set(self.env.registry.populated_models["res.company"])\
-          & set(employees_per_company.keys())\
+          & set(company_id for [company_id] in employees_aggregate.keys())\
           & set(projects_per_company.keys())
         )
 
@@ -57,11 +53,11 @@ class AccountAnalyticLine(models.Model):
             return random.choice(projects_per_company[kwargs['values']['company_id']])
 
         def get_task_id(random, **kwargs):
-            task_ids = tasks_per_project[kwargs['values']['project_id']]
+            task_ids = tasks_aggregate.get_agg(kwargs['values']['project_id'])
             return random.choice(task_ids + [False] * (len(task_ids) // 3))
 
         def get_employee_id(random, **kwargs):
-            return random.choice(employees_per_company[kwargs['values']['company_id']])
+            return random.choice(employees_aggregate.get_agg(kwargs['values']['company_id']))
 
         return [
             ("date", populate.randdatetime(relative_before=relativedelta(months=-3), relative_after=relativedelta(months=3))),

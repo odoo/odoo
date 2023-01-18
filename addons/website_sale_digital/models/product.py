@@ -10,10 +10,9 @@ class ProductTemplate(models.Model):
     attachment_count = fields.Integer(compute='_compute_attachment_count', string="File")
 
     def _compute_attachment_count(self):
-        attachment_data = self.env['ir.attachment']._read_group([('res_model', '=', self._name), ('res_id', 'in', self.ids), ('product_downloadable', '=', True)], ['res_id'], ['res_id'])
-        mapped_data = dict([(data['res_id'], data['res_id_count']) for data in attachment_data])
+        attachment_data = self.env['ir.attachment']._aggregate([('res_model', '=', self._name), ('res_id', 'in', self.ids), ('product_downloadable', '=', True)], ['*:count'], ['res_id'])
         for product_template in self:
-            product_template.attachment_count = mapped_data.get(product_template.id, 0)
+            product_template.attachment_count = attachment_data.get_agg(product_template, '*:count', 0)
 
     def action_open_attachments(self):
         self.ensure_one()

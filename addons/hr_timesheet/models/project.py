@@ -96,14 +96,13 @@ class Project(models.Model):
 
     @api.depends('allow_timesheets', 'timesheet_ids')
     def _compute_remaining_hours(self):
-        timesheets_read_group = self.env['account.analytic.line']._read_group(
+        timesheets_aggregate = self.env['account.analytic.line']._aggregate(
             [('project_id', 'in', self.ids)],
-            ['project_id', 'unit_amount'],
+            ['unit_amount:sum'],
             ['project_id'],
-            lazy=False)
-        timesheet_time_dict = {res['project_id'][0]: res['unit_amount'] for res in timesheets_read_group}
+        )
         for project in self:
-            project.remaining_hours = project.allocated_hours - timesheet_time_dict.get(project.id, 0)
+            project.remaining_hours = project.allocated_hours - timesheets_aggregate.get_agg(project, 'unit_amount:sum', 0)
             project.is_project_overtime = project.remaining_hours < 0
 
     @api.model
@@ -135,43 +134,28 @@ class Project(models.Model):
 
     @api.depends('timesheet_ids')
     def _compute_total_timesheet_time(self):
-        timesheets_read_group = self.env['account.analytic.line'].read_group(
+        timesheets_aggregate = self.env['account.analytic.line']._aggregate(
             [('project_id', 'in', self.ids)],
-            ['project_id', 'unit_amount', 'product_uom_id'],
+            ['unit_amount:sum'],
             ['project_id', 'product_uom_id'],
-            lazy=False)
-        timesheet_time_dict = defaultdict(list)
-        uom_ids = set(self.timesheet_encode_uom_id.ids)
-
-        for result in timesheets_read_group:
-            uom_id = result['product_uom_id'] and result['product_uom_id'][0]
-            if uom_id:
-                uom_ids.add(uom_id)
-            timesheet_time_dict[result['project_id'][0]].append((uom_id, result['unit_amount']))
-
-        uoms_dict = {uom.id: uom for uom in self.env['uom.uom'].browse(uom_ids)}
+        )
+        total_time_by_project = defaultdict(float)
+        for [project, product_uom], [unit_amount_sum] in timesheets_aggregate.items(as_records=True):
+            total_time_by_project[project.id] += project.timesheet_encode_uom_id._compute_quantity(
+                qty=unit_amount_sum, to_unit=product_uom, round=False
+            )
         for project in self:
-            # Timesheets may be stored in a different unit of measure, so first
-            # we convert all of them to the reference unit
-            # if the timesheet has no product_uom_id then we take the one of the project
-            total_time = sum([
-                unit_amount * uoms_dict.get(product_uom_id, project.timesheet_encode_uom_id).factor_inv
-                for product_uom_id, unit_amount in timesheet_time_dict[project.id]
-            ], 0.0)
-            # Now convert to the proper unit of measure set in the settings
-            total_time *= project.timesheet_encode_uom_id.factor
-            project.total_timesheet_time = int(round(total_time))
+            project.total_timesheet_time = int(round(total_time_by_project.get(project.id, 0)))
 
     @api.depends('timesheet_ids')
     def _compute_timesheet_count(self):
-        timesheet_read_group = self.env['account.analytic.line']._read_group(
+        timesheet_aggregate = self.env['account.analytic.line']._aggregate(
             [('project_id', 'in', self.ids)],
-            ['project_id'],
+            ['*:count'],
             ['project_id']
         )
-        timesheet_project_map = {project_info['project_id'][0]: project_info['project_id_count'] for project_info in timesheet_read_group}
         for project in self:
-            project.timesheet_count = timesheet_project_map.get(project.id, 0)
+            project.timesheet_count = timesheet_aggregate.get_agg(project, '*:count', 0)
 
     @api.model_create_multi
     def create(self, vals_list):
@@ -273,10 +257,9 @@ class Task(models.Model):
             for task in self:
                 task.effective_hours = round(sum(task.timesheet_ids.mapped('unit_amount')), 2)
             return
-        timesheet_read_group = self.env['account.analytic.line'].read_group([('task_id', 'in', self.ids)], ['unit_amount', 'task_id'], ['task_id'])
-        timesheets_per_task = {res['task_id'][0]: res['unit_amount'] for res in timesheet_read_group}
+        timesheet_aggregate = self.env['account.analytic.line']._aggregate([('task_id', 'in', self.ids)], ['unit_amount:sum'], ['task_id'])
         for task in self:
-            task.effective_hours = round(timesheets_per_task.get(task.id, 0.0), 2)
+            task.effective_hours = round(timesheet_aggregate.get_agg(task, 'unit_amount:sum', 0.0), 2)
 
     @api.depends('effective_hours', 'subtask_effective_hours', 'planned_hours')
     def _compute_progress_hours(self):
@@ -409,12 +392,11 @@ class Task(models.Model):
         In this case, a warning message is displayed through a RedirectWarning
         and allows the user to see timesheets entries to unlink.
         """
-        timesheet_data = self.env['account.analytic.line'].sudo()._read_group(
+        timesheet_data = self.env['account.analytic.line'].sudo()._aggregate(
             [('task_id', 'in', self.ids)],
-            ['task_id'],
-            ['task_id'],
+            groupby=['task_id'],
         )
-        task_with_timesheets_ids = [res['task_id'][0] for res in timesheet_data]
+        task_with_timesheets_ids = [task_id for [task_id] in timesheet_data.keys()]
         if task_with_timesheets_ids:
             if len(task_with_timesheets_ids) > 1:
                 warning_msg = _("These tasks have some timesheet entries referencing them. Before removing these tasks, you have to remove these timesheet entries.")

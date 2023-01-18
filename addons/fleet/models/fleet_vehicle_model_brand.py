@@ -16,13 +16,11 @@ class FleetVehicleModelBrand(models.Model):
 
     @api.depends('model_ids')
     def _compute_model_count(self):
-        model_data = self.env['fleet.vehicle.model']._read_group([
+        model_data = self.env['fleet.vehicle.model']._aggregate([
             ('brand_id', 'in', self.ids),
-        ], ['brand_id'], ['brand_id'])
-        models_brand = {x['brand_id'][0]: x['brand_id_count'] for x in model_data}
-
+        ], ['*:count'], ['brand_id'])
         for record in self:
-            record.model_count = models_brand.get(record.id, 0)
+            record.model_count = model_data.get_agg(record, '*:count', 0)
 
     def action_brand_model(self):
         self.ensure_one()

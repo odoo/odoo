@@ -285,16 +285,16 @@ class Warehouse(models.Model):
         return res
 
     def _check_multiwarehouse_group(self):
-        cnt_by_company = self.env['stock.warehouse'].sudo()._read_group([('active', '=', True)], ['company_id'], groupby=['company_id'])
+        cnt_by_company = self.env['stock.warehouse'].sudo()._aggregate([('active', '=', True)], ['*:count'], ['company_id'])
         if cnt_by_company:
-            max_cnt = max(cnt_by_company, key=lambda k: k['company_id_count'])
+            max_cnt = max(count for [count] in cnt_by_company.values())
             group_user = self.env.ref('base.group_user')
             group_stock_multi_warehouses = self.env.ref('stock.group_stock_multi_warehouses')
             group_stock_multi_locations = self.env.ref('stock.group_stock_multi_locations')
-            if max_cnt['company_id_count'] <= 1 and group_stock_multi_warehouses in group_user.implied_ids:
+            if max_cnt <= 1 and group_stock_multi_warehouses in group_user.implied_ids:
                 group_user.write({'implied_ids': [(3, group_stock_multi_warehouses.id)]})
                 group_stock_multi_warehouses.write({'users': [(3, user.id) for user in group_user.users]})
-            if max_cnt['company_id_count'] > 1 and group_stock_multi_warehouses not in group_user.implied_ids:
+            if max_cnt > 1 and group_stock_multi_warehouses not in group_user.implied_ids:
                 if group_stock_multi_locations not in group_user.implied_ids:
                     self.env['res.config.settings'].create({
                         'group_stock_multi_locations': True,

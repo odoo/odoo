@@ -92,13 +92,11 @@ class DataRecycleModel(models.Model):
             model.name = model.res_model_id.name if model.res_model_id else ''
 
     def _compute_records_to_recycle_count(self):
-        count_data = self.env['data_recycle.record']._read_group(
+        count_data = self.env['data_recycle.record']._aggregate(
             [('recycle_model_id', 'in', self.ids)],
-            ['recycle_model_id'],
-            ['recycle_model_id'])
-        counts = {cd['recycle_model_id'][0]: cd['recycle_model_id_count'] for cd in count_data}
+            groupby=['recycle_model_id'])
         for model in self:
-            model.records_to_recycle_count = counts[model.id] if model.id in counts else 0
+            model.records_to_recycle_count = count_data[model].get('*:count', 0)
 
     def _cron_recycle_records(self):
         self.sudo().search([])._recycle_records(batch_commits=True)

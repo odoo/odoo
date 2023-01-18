@@ -51,17 +51,16 @@ class WebsiteSaleBackend(WebsiteBackend):
             ('date', '>=', datetime_from),
             ('date', '<=', fields.Datetime.now())
         ]
-        report_product_lines = request.env['sale.report'].read_group(
+        report_product_lines = request.env['sale.report'].aggregate(
             domain=sale_report_domain,
-            fields=['product_tmpl_id', 'product_uom_qty', 'price_subtotal'],
-            groupby='product_tmpl_id', orderby='product_uom_qty desc', limit=5)
-        for product_line in report_product_lines:
-            product_tmpl_id = request.env['product.template'].browse(product_line['product_tmpl_id'][0])
+            aggregates=['product_uom_qty:sum', 'price_subtotal:sum'],
+            groupby=['product_tmpl_id'], orderby='product_uom_qty:sum desc, product_tmpl_id', limit=5)
+        for [product_tmpl], [product_uom_qty, price_subtotal] in report_product_lines.items(as_records=True):
             sales_values['best_sellers'].append({
-                'id': product_tmpl_id.id,
-                'name': product_tmpl_id.name,
-                'qty': product_line['product_uom_qty'],
-                'sales': product_line['price_subtotal'],
+                'id': product_tmpl.id,
+                'name': product_tmpl.name,
+                'qty': product_uom_qty,
+                'sales': price_subtotal,
             })
 
         # Sale-based results computation
@@ -69,22 +68,21 @@ class WebsiteSaleBackend(WebsiteBackend):
             ('website_id', '=', current_website.id),
             ('date_order', '>=', fields.Datetime.to_string(datetime_from)),
             ('date_order', '<=', fields.Datetime.to_string(datetime_to))]
-        so_group_data = request.env['sale.order'].read_group(sale_order_domain, fields=['state'], groupby='state')
-        for res in so_group_data:
-            if res.get('state') == 'sent':
-                sales_values['summary']['order_unpaid_count'] += res['state_count']
-            elif res.get('state') in ['sale', 'done']:
-                sales_values['summary']['order_count'] += res['state_count']
-            sales_values['summary']['order_carts_count'] += res['state_count']
+        so_group_data = request.env['sale.order']._aggregate(sale_order_domain, aggregates=['*:count'], groupby=['state'])
+        for [state], [count] in so_group_data.items():
+            if state == 'sent':
+                sales_values['summary']['order_unpaid_count'] += count
+            elif state in ['sale', 'done']:
+                sales_values['summary']['order_count'] += count
+            sales_values['summary']['order_carts_count'] += count
 
-        report_price_lines = request.env['sale.report'].read_group(
+        report_price_lines = request.env['sale.report'].aggregate(
             domain=[
                 ('website_id', '=', current_website.id),
                 ('state', 'in', ['sale', 'done']),
                 ('date', '>=', datetime_from),
                 ('date', '<=', datetime_to)],
-            fields=['team_id', 'price_subtotal'],
-            groupby=['team_id'],
+            aggregates=['price_subtotal:sum'],
         )
         sales_values['summary'].update(
             order_to_invoice_count=request.env['sale.order'].search_count(sale_order_domain + [
@@ -102,7 +100,7 @@ class WebsiteSaleBackend(WebsiteBackend):
                 # that part perform a search on sale.order in order to comply with access rights as tx do not have any
                 ('sale_order_ids', 'in', request.env['sale.order'].search(sale_order_domain + [('state', '!=', 'cancel')]).ids),
             ]),
-            total_sold=sum(price_line['price_subtotal'] for price_line in report_price_lines)
+            total_sold=report_price_lines.get_agg(default=0)
         )
 
         # Ratio computation
@@ -136,20 +134,20 @@ class WebsiteSaleBackend(WebsiteBackend):
             ('date_order', '<=', date_to)
         ]
 
-        orders_data_groupby_campaign_id = request.env['sale.order']._read_group(
+        orders_data_groupby_campaign_id = request.env['sale.order']._aggregate(
             domain=sale_utm_domain + [('campaign_id', '!=', False)],
-            fields=['amount_total', 'id', 'campaign_id'],
-            groupby='campaign_id')
+            aggregate=['amount_total:sum'],
+            groupby=['campaign_id'])
 
-        orders_data_groupby_medium_id = request.env['sale.order']._read_group(
+        orders_data_groupby_medium_id = request.env['sale.order']._aggregate(
             domain=sale_utm_domain + [('medium_id', '!=', False)],
-            fields=['amount_total', 'id', 'medium_id'],
-            groupby='medium_id')
+            aggregate=['amount_total:sum'],
+            groupby=['medium_id'])
 
-        orders_data_groupby_source_id = request.env['sale.order']._read_group(
+        orders_data_groupby_source_id = request.env['sale.order']._aggregate(
             domain=sale_utm_domain + [('source_id', '!=', False)],
-            fields=['amount_total', 'id', 'source_id'],
-            groupby='source_id')
+            aggregate=['amount_total:sum'],
+            groupby=['source_id'])
 
         return {
             'campaign_id': self.compute_utm_graph_data('campaign_id', orders_data_groupby_campaign_id),
@@ -159,25 +157,22 @@ class WebsiteSaleBackend(WebsiteBackend):
 
     def compute_utm_graph_data(self, utm_type, utm_graph_data):
         return [{
-            'utm_type': data[utm_type][1],
-            'amount_total': data['amount_total']
-        } for data in utm_graph_data]
+            'utm_type': utm_type.name_get()[0][1],
+            'amount_total': amount_total
+        } for [utm_type], [amount_total] in utm_graph_data.items(as_records=True)]
 
     def _compute_sale_graph(self, date_from, date_to, sales_domain, previous=False):
         days_between = (date_to - date_from).days
         date_list = [(date_from + timedelta(days=x)) for x in range(0, days_between + 1)]
 
-        daily_sales = request.env['sale.report'].read_group(
+        daily_sales = request.env['sale.report']._aggregate(
             domain=sales_domain,
-            fields=['date', 'price_subtotal'],
+            aggregates=['price_subtotal:sum'],
             groupby='date:day')
-
-        daily_sales_dict = {p['date:day']: p['price_subtotal'] for p in daily_sales}
 
         sales_graph = [{
             '0': fields.Date.to_string(d) if not previous else fields.Date.to_string(d + timedelta(days=days_between)),
-            # Respect read_group format in models.py
-            '1': daily_sales_dict.get(babel.dates.format_date(d, format='dd MMM yyyy', locale=get_lang(request.env).code), 0)
+            '1': daily_sales.get_agg(d, 'price_subtotal:sum', 0)
         } for d in date_list]
 
         return sales_graph

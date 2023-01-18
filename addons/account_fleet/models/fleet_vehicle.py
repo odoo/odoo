@@ -16,18 +16,17 @@ class FleetVehicle(models.Model):
             self.bill_count = 0
             return
 
-        moves = self.env['account.move.line']._read_group(
+        moves = self.env['account.move.line']._aggregate(
             domain=[
                 ('vehicle_id', 'in', self.ids),
                 ('move_id.state', '!=', 'cancel'),
                 ('move_id.move_type', 'in', self.env['account.move'].get_purchase_types())
             ],
-            fields=['vehicle_id', 'move_id:array_agg'],
+            aggregates=['move_id:array_agg_distinct'],
             groupby=['vehicle_id'],
         )
-        vehicle_move_mapping = {move['vehicle_id'][0]: set(move['move_id']) for move in moves}
         for vehicle in self:
-            vehicle.account_move_ids = [Command.set(vehicle_move_mapping.get(vehicle.id, []))]
+            vehicle.account_move_ids = [Command.set(moves.get_agg(vehicle.id, 'move_id:array_agg_distinct', []))]
             vehicle.bill_count = len(vehicle.account_move_ids)
 
     def action_view_bills(self):

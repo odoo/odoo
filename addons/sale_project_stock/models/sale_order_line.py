@@ -13,12 +13,12 @@ class SaleOrderLine(models.Model):
         """
         action_per_sol = super()._get_action_per_item()
         stock_move_action = self.env.ref('sale_project_stock.stock_move_per_sale_order_line_action').id
-        stock_move_ids_per_sol = {}
-        if self.user_has_groups('stock.group_stock_user'):
-            stock_move_read_group = self.env['stock.move']._read_group([('sale_line_id', 'in', self.ids)], ['sale_line_id', 'ids:array_agg(id)'], ['sale_line_id'])
-            stock_move_ids_per_sol = {res['sale_line_id'][0]: res['ids'] for res in stock_move_read_group}
+        if not self.user_has_groups('stock.group_stock_user'):
+            return action_per_sol
+
+        stock_move_aggregate = self.env['stock.move']._aggregate([('sale_line_id', 'in', self.ids)], ['id:array_agg'], ['sale_line_id'])
         for sol in self:
-            stock_move_ids = stock_move_ids_per_sol.get(sol.id, [])
+            stock_move_ids = stock_move_aggregate.get_agg(sol.id, 'id:array_agg', [])
             if not sol.is_service and stock_move_ids:
                 action_per_sol[sol.id] = stock_move_action, stock_move_ids[0] if len(stock_move_ids) == 1 else False
         return action_per_sol

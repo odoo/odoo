@@ -72,14 +72,13 @@ class Team(models.Model):
         self.assignment_auto_enabled = auto_assign_enabled
 
     def _compute_lead_unassigned_count(self):
-        leads_data = self.env['crm.lead']._read_group([
+        leads_data = self.env['crm.lead']._aggregate([
             ('team_id', 'in', self.ids),
             ('type', '=', 'lead'),
             ('user_id', '=', False),
-        ], ['team_id'], ['team_id'])
-        counts = {datum['team_id'][0]: datum['team_id_count'] for datum in leads_data}
+        ], ['*:count'], ['team_id'])
         for team in self:
-            team.lead_unassigned_count = counts.get(team.id, 0)
+            team.lead_unassigned_count = leads_data.get_agg(team, '*:count', 0)
 
     @api.depends('crm_team_member_ids.lead_month_count')
     def _compute_lead_all_assigned_month_count(self):
@@ -87,29 +86,25 @@ class Team(models.Model):
             team.lead_all_assigned_month_count = sum(member.lead_month_count for member in team.crm_team_member_ids)
 
     def _compute_opportunities_data(self):
-        opportunity_data = self.env['crm.lead']._read_group([
+        opportunity_data = self.env['crm.lead']._aggregate([
             ('team_id', 'in', self.ids),
             ('probability', '<', 100),
             ('type', '=', 'opportunity'),
-        ], ['expected_revenue:sum', 'team_id'], ['team_id'])
-        counts = {datum['team_id'][0]: datum['team_id_count'] for datum in opportunity_data}
-        amounts = {datum['team_id'][0]: datum['expected_revenue'] for datum in opportunity_data}
+        ], ['expected_revenue:sum', '*:count'], ['team_id'])
         for team in self:
-            team.opportunities_count = counts.get(team.id, 0)
-            team.opportunities_amount = amounts.get(team.id, 0)
+            team.opportunities_count = opportunity_data.get_agg(team, '*:count', 0)
+            team.opportunities_amount = opportunity_data.get_agg(team, 'expected_revenue:sum', 0)
 
     def _compute_opportunities_overdue_data(self):
-        opportunity_data = self.env['crm.lead']._read_group([
+        opportunity_data = self.env['crm.lead']._aggregate([
             ('team_id', 'in', self.ids),
             ('probability', '<', 100),
             ('type', '=', 'opportunity'),
             ('date_deadline', '<', fields.Date.to_string(fields.Datetime.now()))
-        ], ['expected_revenue', 'team_id'], ['team_id'])
-        counts = {datum['team_id'][0]: datum['team_id_count'] for datum in opportunity_data}
-        amounts = {datum['team_id'][0]: (datum['expected_revenue']) for datum in opportunity_data}
+        ], ['expected_revenue:sum', '*:count'], ['team_id'])
         for team in self:
-            team.opportunities_overdue_count = counts.get(team.id, 0)
-            team.opportunities_overdue_amount = amounts.get(team.id, 0)
+            team.opportunities_overdue_count = opportunity_data.get_agg(team, '*:count', 0)
+            team.opportunities_overdue_amount = opportunity_data.get_agg(team, 'expected_revenue:sum', 0)
 
     @api.onchange('use_leads', 'use_opportunities')
     def _onchange_use_leads_opportunities(self):

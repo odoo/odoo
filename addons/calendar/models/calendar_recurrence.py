@@ -164,13 +164,9 @@ class RecurrenceRule(models.Model):
 
     @api.depends('calendar_event_ids.start')
     def _compute_dtstart(self):
-        groups = self.env['calendar.event'].read_group([('recurrence_id', 'in', self.ids)], ['start:min'], ['recurrence_id'])
-        start_mapping = {
-            group['recurrence_id'][0]: group['start']
-            for group in groups
-        }
+        groups = self.env['calendar.event']._aggregate([('recurrence_id', 'in', self.ids)], ['start:min'], ['recurrence_id'])
         for recurrence in self:
-            recurrence.dtstart = start_mapping.get(recurrence.id)
+            recurrence.dtstart = groups.get_agg(recurrence, 'start:min')
 
     @api.depends(
         'byday', 'until', 'rrule_type', 'month_by', 'interval', 'count', 'end_type',

@@ -128,22 +128,20 @@ class Job(models.Model):
             job.documents_count = len(job.document_ids)
 
     def _compute_all_application_count(self):
-        read_group_result = self.env['hr.applicant'].with_context(active_test=False)._read_group([
+        result = self.env['hr.applicant'].with_context(active_test=False)._aggregate([
             ('job_id', 'in', self.ids),
             '|',
                 ('active', '=', True),
                 '&',
                 ('active', '=', False), ('refuse_reason_id', '!=', False),
-        ], ['job_id'], ['job_id'])
-        result = dict((data['job_id'][0], data['job_id_count']) for data in read_group_result)
+        ], ['*:count'], ['job_id'])
         for job in self:
-            job.all_application_count = result.get(job.id, 0)
+            job.all_application_count = result.get_agg(job, '*:count', 0)
 
     def _compute_application_count(self):
-        read_group_result = self.env['hr.applicant']._read_group([('job_id', 'in', self.ids)], ['job_id'], ['job_id'])
-        result = dict((data['job_id'][0], data['job_id_count']) for data in read_group_result)
+        result = self.env['hr.applicant']._aggregate([('job_id', 'in', self.ids)], ['*:count'], ['job_id'])
         for job in self:
-            job.application_count = result.get(job.id, 0)
+            job.application_count = result.get_agg(job, '*:count', 0)
 
     def _get_first_stage(self):
         self.ensure_one()
@@ -185,14 +183,12 @@ class Job(models.Model):
             job.new_application_count = new_applicant_count.get(job.id, 0)
 
     def _compute_applicant_hired(self):
-        hired_stages = self.env['hr.recruitment.stage'].search([('hired_stage', '=', True)])
-        hired_data = self.env['hr.applicant']._read_group([
+        hired_data = self.env['hr.applicant']._aggregate([
             ('job_id', 'in', self.ids),
-            ('stage_id', 'in', hired_stages.ids),
-        ], ['job_id'], ['job_id'])
-        job_hires = {data['job_id'][0]: data['job_id_count'] for data in hired_data}
+            ('stage_id', 'in', self.env['hr.recruitment.stage']._search([('hired_stage', '=', True)])),
+        ], ['*:count'], ['job_id'])
         for job in self:
-            job.applicant_hired = job_hires.get(job.id, 0)
+            job.applicant_hired = hired_data.get_agg(job, '*:count', 0)
 
     @api.depends('application_count', 'new_application_count')
     def _compute_old_application_count(self):

@@ -55,13 +55,9 @@ class ProductProduct(models.Model):
             ('product_id', 'in', self.ids),
             ('order_id.date_approve', '>=', date_from)
         ]
-        order_lines = self.env['purchase.order.line']._read_group(domain, ['product_id', 'product_uom_qty'], ['product_id'])
-        purchased_data = dict([(data['product_id'][0], data['product_uom_qty']) for data in order_lines])
+        order_lines = self.env['purchase.order.line']._aggregate(domain, ['product_uom_qty:sum'], ['product_id'])
         for product in self:
-            if not product.id:
-                product.purchased_product_qty = 0.0
-                continue
-            product.purchased_product_qty = float_round(purchased_data.get(product.id, 0), precision_rounding=product.uom_id.rounding)
+            product.purchased_product_qty = float_round(order_lines.get_agg(product, default=0), precision_rounding=product.uom_id.rounding)
 
     def action_view_po(self):
         action = self.env["ir.actions.actions"]._for_xml_id("purchase.action_purchase_history")

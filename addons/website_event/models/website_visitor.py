@@ -33,17 +33,11 @@ class WebsiteVisitor(models.Model):
 
     @api.depends('event_registration_ids')
     def _compute_event_registration_count(self):
-        if self.ids:
-            read_group_res = self.env['event.registration']._read_group(
-                [('visitor_id', 'in', self.ids)],
-                ['visitor_id'], ['visitor_id'])
-            visitor_mapping = dict(
-                (item['visitor_id'][0], item['visitor_id_count'])
-                for item in read_group_res)
-        else:
-            visitor_mapping = dict()
+        aggregate_res = self.env['event.registration']._aggregate(
+            [('visitor_id', 'in', self.ids)],
+            ['*:count'], ['visitor_id'])
         for visitor in self:
-            visitor.event_registration_count = visitor_mapping.get(visitor.id) or 0
+            visitor.event_registration_count = aggregate_res.get_agg(visitor, default=0)
 
     @api.depends('event_registration_ids.email', 'event_registration_ids.mobile', 'event_registration_ids.phone')
     def _compute_email_phone(self):

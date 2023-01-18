@@ -1681,13 +1681,13 @@ class HolidaysRequest(models.Model):
     def _get_attendances(self, employee, request_date_from, request_date_to):
         resource_calendar_id = employee.resource_calendar_id or self.env.company.resource_calendar_id
         domain = [('calendar_id', '=', resource_calendar_id.id), ('display_type', '=', False)]
-        attendances = self.env['resource.calendar.attendance'].read_group(domain,
-            ['ids:array_agg(id)', 'hour_from:min(hour_from)', 'hour_to:max(hour_to)',
-             'week_type', 'dayofweek', 'day_period'],
-            ['week_type', 'dayofweek', 'day_period'], lazy=False)
+        attendances = self.env['resource.calendar.attendance'].aggregate(domain,
+            ['hour_from:min', 'hour_to:max'],
+            ['dayofweek', 'day_period', 'week_type'],
+            # Must be sorted by dayofweek ASC and day_period DESC
+            order="dayofweek ASC, day_period DESC, week_type ASC")
 
-        # Must be sorted by dayofweek ASC and day_period DESC
-        attendances = sorted([DummyAttendance(group['hour_from'], group['hour_to'], group['dayofweek'], group['day_period'], group['week_type']) for group in attendances], key=lambda att: (att.dayofweek, att.day_period != 'morning'))
+        attendances = [DummyAttendance(hour_from, hour_to, dayofweek, day_period, week_type) for [dayofweek, day_period, week_type], [hour_from, hour_to] in attendances.items()]
 
         default_value = DummyAttendance(0, 0, 0, 'morning', False)
 

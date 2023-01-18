@@ -284,10 +284,9 @@ class AccountReconcileModel(models.Model):
         return action
 
     def _compute_number_entries(self):
-        data = self.env['account.move.line']._read_group([('reconcile_model_id', 'in', self.ids)], ['reconcile_model_id'], 'reconcile_model_id')
-        mapped_data = dict([(d['reconcile_model_id'][0], d['reconcile_model_id_count']) for d in data])
+        data = self.env['account.move.line']._aggregate([('reconcile_model_id', 'in', self.ids)], ['*:count'], ['reconcile_model_id'])
         for model in self:
-            model.number_entries = mapped_data.get(model.id, 0)
+            model.number_entries = data.get_agg(model, '*:count', 0)
 
     @api.depends('line_ids.amount_type')
     def _compute_show_decimal_separator(self):

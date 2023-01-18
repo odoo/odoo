@@ -382,14 +382,15 @@ class PosOrder(models.Model):
         It is intended as a helper method , not as a business one
         Practical to be used for migrations
         """
+        # TODO: Not used, to remove ?
         amounts = {order_id: {'paid': 0, 'return': 0, 'taxed': 0, 'taxes': 0} for order_id in self.ids}
-        for order in self.env['pos.payment'].read_group([('pos_order_id', 'in', self.ids)], ['pos_order_id', 'amount'], ['pos_order_id']):
-            amounts[order['pos_order_id'][0]]['paid'] = order['amount']
-        for order in self.env['pos.payment'].read_group(['&', ('pos_order_id', 'in', self.ids), ('amount', '<', 0)], ['pos_order_id', 'amount'], ['pos_order_id']):
-            amounts[order['pos_order_id'][0]]['return'] = order['amount']
-        for order in self.env['pos.order.line'].read_group([('order_id', 'in', self.ids)], ['order_id', 'price_subtotal', 'price_subtotal_incl'], ['order_id']):
-            amounts[order['order_id'][0]]['taxed'] = order['price_subtotal_incl']
-            amounts[order['order_id'][0]]['taxes'] = order['price_subtotal_incl'] - order['price_subtotal']
+        for [pos_order_id], [amount_sum] in self.env['pos.payment']._aggregate([('pos_order_id', 'in', self.ids)], ['amount:sum'], ['pos_order_id']).items():
+            amounts[pos_order_id]['paid'] = amount_sum
+        for [pos_order_id], [amount_sum] in self.env['pos.payment']._aggregate(['&', ('pos_order_id', 'in', self.ids), ('amount', '<', 0)], ['amount:sum'], ['pos_order_id']).items():
+            amounts[pos_order_id]['return'] = amount_sum
+        for [order_id], [price_subtotal_sum, price_subtotal_incl_sum] in self.env['pos.order.line']._aggregate([('order_id', 'in', self.ids)], ['price_subtotal:sum', 'price_subtotal_incl:sum'], ['order_id']).items():
+            amounts[order_id]['taxed'] = price_subtotal_incl_sum
+            amounts[order_id]['taxes'] = price_subtotal_incl_sum - price_subtotal_sum
 
         for order in self:
             currency = order.pricelist_id.currency_id

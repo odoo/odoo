@@ -136,16 +136,10 @@ class TimesheetCustomerPortal(CustomerPortal):
             orderby = '%s, %s' % (field, order) if field else order
             timesheets = Timesheet_sudo.search(domain, order=orderby, limit=_items_per_page, offset=pager['offset'])
             if field:
-                if groupby == 'date':
-                    raw_timesheets_group = Timesheet_sudo.read_group(
-                        domain, ["unit_amount:sum", "ids:array_agg(id)"], ["date:day"]
-                    )
-                    grouped_timesheets = [(Timesheet_sudo.browse(group["ids"]), group["unit_amount"]) for group in raw_timesheets_group]
-
-                else:
-                    time_data = Timesheet_sudo.read_group(domain, [field, 'unit_amount:sum'], [field])
-                    mapped_time = dict([(m[field][0] if m[field] else False, m['unit_amount']) for m in time_data])
-                    grouped_timesheets = [(Timesheet_sudo.concat(*g), mapped_time[k.id]) for k, g in groupbyelem(timesheets, itemgetter(field))]
+                group_spec = field if groupby != 'date' else 'date:day'
+                key = itemgetter(field) if groupby != 'date' else lambda time_s: time_s.date.date()
+                time_data = Timesheet_sudo._aggregate(domain, ['unit_amount:sum'], [group_spec])
+                grouped_timesheets = [(Timesheet_sudo.concat(*g), time_data.get_agg(k.id, 'unit_amount:sum', 0)) for k, g in groupbyelem(timesheets, key)]
                 return timesheets, grouped_timesheets
 
             grouped_timesheets = [(

@@ -17,10 +17,9 @@ class SaleOrderLine(models.Model):
 
     @api.depends('purchase_line_ids')
     def _compute_purchase_count(self):
-        database_data = self.env['purchase.order.line'].sudo().read_group([('sale_line_id', 'in', self.ids)], ['sale_line_id'], ['sale_line_id'])
-        mapped_data = dict([(db['sale_line_id'][0], db['sale_line_id_count']) for db in database_data])
+        database_data = self.env['purchase.order.line'].sudo()._aggregate([('sale_line_id', 'in', self.ids)], ['*:count'], ['sale_line_id'])
         for line in self:
-            line.purchase_line_count = mapped_data.get(line.id, 0)
+            line.purchase_line_count = database_data.get_agg(line, '*:count', 0)
 
     @api.onchange('product_uom_qty')
     def _onchange_service_product_uom_qty(self):

@@ -15,13 +15,12 @@ class MassMailing(models.Model):
 
     @api.depends('mailing_domain')
     def _compute_sale_quotation_count(self):
-        quotation_data = self.env['sale.order'].sudo()._read_group(
+        quotation_data = self.env['sale.order'].sudo()._aggregate(
             [('source_id', 'in', self.source_id.ids)],
-            ['source_id'], ['source_id'],
+            ['*:count'], ['source_id'],
         )
-        mapped_data = {datum['source_id'][0]: datum['source_id_count'] for datum in quotation_data}
         for mass_mailing in self:
-            mass_mailing.sale_quotation_count = mapped_data.get(mass_mailing.source_id.id, 0)
+            mass_mailing.sale_quotation_count = quotation_data.get_agg(mass_mailing.source_id, '*:count', 0)
 
     @api.depends('mailing_domain')
     def _compute_sale_invoiced_amount(self):
@@ -29,12 +28,11 @@ class MassMailing(models.Model):
             [('source_id', 'in', self.source_id.ids)],
             [('state', 'not in', ['draft', 'cancel'])]
         ])
-        moves_data = self.env['account.move'].sudo()._read_group(
-            domain, ['source_id', 'amount_untaxed_signed'], ['source_id'],
+        moves_data = self.env['account.move'].sudo()._aggregate(
+            domain, ['amount_untaxed_signed:sum'], ['source_id'],
         )
-        mapped_data = {datum['source_id'][0]: datum['amount_untaxed_signed'] for datum in moves_data}
         for mass_mailing in self:
-            mass_mailing.sale_invoiced_amount = mapped_data.get(mass_mailing.source_id.id, 0)
+            mass_mailing.sale_invoiced_amount = moves_data.get_agg(mass_mailing.source_id, 'amount_untaxed_signed:sum', 0)
 
     def action_redirect_to_quotations(self):
         helper_header = _("No Quotations yet!")

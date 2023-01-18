@@ -16,12 +16,12 @@ class Digest(models.Model):
             raise AccessError(_("Do not have access, skip this data for user's digest email"))
         for record in self:
             start, end, company = record._get_kpi_compute_parameters()
-            all_channels_sales = self.env['sale.report']._read_group([
+            all_channels_sales = self.env['sale.report']._aggregate([
                 ('date', '>=', start),
                 ('date', '<', end),
                 ('state', 'not in', ['draft', 'cancel', 'sent']),
-                ('company_id', '=', company.id)], ['price_total'], ['company_id'])
-            record.kpi_all_sale_total_value = sum([channel_sale['price_total'] for channel_sale in all_channels_sales])
+                ('company_id', '=', company.id)], ['price_total:sum'])
+            record.kpi_all_sale_total_value = all_channels_sales.get_agg(aggregate='price_total:sum', default=0)
 
     def _compute_kpis_actions(self, company, user):
         res = super(Digest, self)._compute_kpis_actions(company, user)

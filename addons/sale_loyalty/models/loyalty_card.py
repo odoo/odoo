@@ -24,11 +24,10 @@ class LoyaltyCard(models.Model):
 
     def _compute_use_count(self):
         super()._compute_use_count()
-        read_group_res = self.env['sale.order.line']._read_group(
-            [('coupon_id', 'in', self.ids)], ['id'], ['coupon_id'])
-        count_per_coupon = {r['coupon_id'][0]: r['coupon_id_count'] for r in read_group_res}
+        count_per_coupon = self.env['sale.order.line']._aggregate(
+            [('coupon_id', 'in', self.ids)], ['*:count'], ['coupon_id'])
         for card in self:
-            card.use_count += count_per_coupon.get(card.id, 0)
+            card.use_count += count_per_coupon.get_agg(card, '*:count', 0)
 
     def _has_source_order(self):
         return super()._has_source_order() or bool(self.order_id)

@@ -131,20 +131,16 @@ Contracts:
             # 2. Fetch overlapping work entries, grouped by employees
             start = min(self.mapped('date_from'), default=False)
             stop = max(self.mapped('date_to'), default=False)
-            work_entry_groups = self.env['hr.work.entry']._read_group([
+            work_entry_groups = self.env['hr.work.entry']._aggregate([
                 ('date_start', '<', stop),
                 ('date_stop', '>', start),
                 ('employee_id', 'in', self.employee_id.ids),
-            ], ['work_entry_ids:array_agg(id)', 'employee_id'], ['employee_id', 'date_start', 'date_stop'], lazy=False)
-            work_entries_by_employee = defaultdict(lambda: self.env['hr.work.entry'])
-            for group in work_entry_groups:
-                employee_id = group.get('employee_id')[0]
-                work_entries_by_employee[employee_id] |= self.env['hr.work.entry'].browse(group.get('work_entry_ids'))
+            ], ['id:array_agg'], ['employee_id'])
 
             # 3. Archive work entries included in leaves
             included = self.env['hr.work.entry']
             overlappping = self.env['hr.work.entry']
-            for work_entries in work_entries_by_employee.values():
+            for [work_entries] in work_entry_groups.values(as_records=True):
                 # Work entries for this employee
                 new_employee_work_entries = work_entries & new_leave_work_entries
                 previous_employee_work_entries = work_entries - new_leave_work_entries

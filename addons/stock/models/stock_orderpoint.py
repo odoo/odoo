@@ -289,16 +289,15 @@ class StockWarehouseOrderpoint(models.Model):
         orderpoints generated when openning the replenish report.
         """
         self = self.filtered(lambda o: not o.route_id)
-        rules_groups = self.env['stock.rule']._read_group([
+        rules_groups = self.env['stock.rule']._aggregate([
+            ('route_id', '!=', False),
             ('route_id.product_selectable', '!=', False),
             ('location_dest_id', 'in', self.location_id.ids),
             ('action', 'in', ['pull_push', 'pull'])
-        ], ['location_dest_id', 'route_id'], ['location_dest_id', 'route_id'], lazy=False)
-        for g in rules_groups:
-            if not g.get('route_id'):
-                continue
-            orderpoints = self.filtered(lambda o: o.location_id.id == g['location_dest_id'][0])
-            orderpoints.route_id = g['route_id']
+        ], [], ['location_dest_id', 'route_id'])
+        for [location_dest_id, route_id] in rules_groups.keys():
+            orderpoints = self.filtered(lambda o: o.location_id.id == location_dest_id)
+            orderpoints.route_id = route_id
 
     def _get_lead_days_values(self):
         self.ensure_one()
@@ -372,17 +371,13 @@ class StockWarehouseOrderpoint(models.Model):
         qty_by_product_loc, dummy = self.env['product.product'].browse(product_ids)._get_quantity_in_progress(location_ids=location_ids)
         rounding = self.env['decimal.precision'].precision_get('Product Unit of Measure')
         # Group orderpoint by product-location
-        orderpoint_by_product_location = self.env['stock.warehouse.orderpoint']._read_group(
+        orderpoint_by_product_location = self.env['stock.warehouse.orderpoint']._aggregate(
             [('id', 'in', orderpoints.ids)],
-            ['product_id', 'location_id', 'qty_to_order:sum'],
-            ['product_id', 'location_id'], lazy=False)
-        orderpoint_by_product_location = {
-            (record.get('product_id')[0], record.get('location_id')[0]): record.get('qty_to_order')
-            for record in orderpoint_by_product_location
-        }
+            ['qty_to_order:sum'],
+            ['product_id', 'location_id'])
         for (product, location), product_qty in to_refill.items():
             qty_in_progress = qty_by_product_loc.get((product, location)) or 0.0
-            qty_in_progress += orderpoint_by_product_location.get((product, location), 0.0)
+            qty_in_progress += orderpoint_by_product_location.get_agg((product, location), 'qty_to_order:sum', 0.0)
             # Add qty to order for other orderpoint under this location.
             if not qty_in_progress:
                 continue
@@ -391,20 +386,16 @@ class StockWarehouseOrderpoint(models.Model):
             v, 0.0, precision_digits=rounding) < 0.0}
 
         # With archived ones to avoid `product_location_check` SQL constraints
-        orderpoint_by_product_location = self.env['stock.warehouse.orderpoint'].with_context(active_test=False)._read_group(
+        orderpoint_by_product_location = self.env['stock.warehouse.orderpoint'].with_context(active_test=False)._aggregate(
             [('id', 'in', orderpoints.ids)],
-            ['product_id', 'location_id', 'ids:array_agg(id)'],
-            ['product_id', 'location_id'], lazy=False)
-        orderpoint_by_product_location = {
-            (record.get('product_id')[0], record.get('location_id')[0]): record.get('ids')[0]
-            for record in orderpoint_by_product_location
-        }
+            ['id:min'],
+            ['product_id', 'location_id'])
 
         orderpoint_values_list = []
         for (product, location_id), product_qty in to_refill.items():
-            orderpoint_id = orderpoint_by_product_location.get((product, location_id))
-            if orderpoint_id:
-                self.env['stock.warehouse.orderpoint'].browse(orderpoint_id).qty_forecast += product_qty
+            orderpoint = orderpoint_by_product_location.get_agg((product, location_id), 'id:min', as_record=True)
+            if orderpoint:
+                orderpoint.qty_forecast += product_qty
             else:
                 orderpoint_values = self.env['stock.warehouse.orderpoint']._get_orderpoint_values(product, location_id)
                 warehouse_id = self.env['stock.location'].browse(location_id).warehouse_id

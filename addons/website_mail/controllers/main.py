@@ -64,14 +64,12 @@ class WebsiteMail(http.Controller):
         res = {}
         if partner:
             for model in records:
-                mail_followers_ids = request.env['mail.followers'].sudo().read_group([
+                mail_followers_ids = request.env['mail.followers'].sudo().aggregate([
                     ('res_model', '=', model),
                     ('res_id', 'in', records[model]),
                     ('partner_id', '=', partner.id)
-                ], ['res_id', 'follow_count:count(id)'], ['res_id'])
-                # `read_group` will filter out the ones without count result
-                for m in mail_followers_ids:
-                    res.setdefault(model, []).append(m['res_id'])
+                ], [], ['res_id'])
+                res[model] = [res_id for [res_id] in mail_followers_ids.keys()]
 
         return [{
             'is_user': user != public_user,

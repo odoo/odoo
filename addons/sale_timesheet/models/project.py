@@ -122,10 +122,10 @@ class Project(models.Model):
 
     @api.depends('analytic_account_id', 'timesheet_ids')
     def _compute_billable_percentage(self):
-        timesheets_read_group = self.env['account.analytic.line']._read_group([('project_id', 'in', self.ids)], ['project_id', 'so_line', 'unit_amount'], ['project_id', 'so_line'], lazy=False)
+        timesheets_aggregate = self.env['account.analytic.line']._aggregate([('project_id', 'in', self.ids)], ['unit_amount:sum'], ['project_id', 'so_line'])
         timesheets_by_project = defaultdict(list)
-        for res in timesheets_read_group:
-            timesheets_by_project[res['project_id'][0]].append((res['unit_amount'], bool(res['so_line'])))
+        for [project_id, so_line], [unit_amount_sum] in timesheets_aggregate.items():
+            timesheets_by_project[project_id].append((unit_amount_sum, bool(so_line)))
         for project in self:
             timesheet_total = timesheet_billable = 0.0
             for unit_amount, is_billable_timesheet in timesheets_by_project[project.id]:
@@ -152,12 +152,10 @@ class Project(models.Model):
     @api.depends('pricing_type', 'allow_timesheets', 'allow_billable', 'sale_line_employee_ids', 'sale_line_employee_ids.employee_id')
     def _compute_warning_employee_rate(self):
         projects = self.filtered(lambda p: p.allow_billable and p.allow_timesheets and p.pricing_type == 'employee_rate')
-        employees = self.env['account.analytic.line']._read_group([('task_id', 'in', projects.task_ids.ids)], ['employee_id', 'project_id'], ['employee_id', 'project_id'], ['employee_id', 'project_id'], lazy=False)
-        dict_project_employee = defaultdict(list)
-        for line in employees:
-            dict_project_employee[line['project_id'][0]] += [line['employee_id'][0]] if line['employee_id'] else []
+        employees = self.env['account.analytic.line']._aggregate([('task_id', 'in', projects.task_ids.ids)], ['employee_id:array_agg_distinct'], ['project_id'])
         for project in projects:
-            project.warning_employee_rate = any(x not in project.sale_line_employee_ids.employee_id.ids for x in dict_project_employee[project.id])
+            project_employee_ids = set(project.sale_line_employee_ids.employee_id.ids)
+            project.warning_employee_rate = any(x not in project_employee_ids for x in employees.get_agg(project.id, 'employee_id:array_agg_distinct', []))
 
         (self - projects).warning_employee_rate = False
 
@@ -394,19 +392,17 @@ class Project(models.Model):
                 'total': {'to_invoice': total_to_invoice, 'invoiced': total_invoiced},
             }
             return profitability_items
-        aa_line_read_group = self.env['account.analytic.line'].sudo()._read_group(
+        aa_line_aggregate = self.env['account.analytic.line'].sudo()._aggregate(
             self.sudo()._get_profitability_aal_domain(),
-            ['timesheet_invoice_type', 'timesheet_invoice_id', 'unit_amount', 'amount', 'ids:array_agg(id)'],
-            ['timesheet_invoice_type', 'timesheet_invoice_id'],
-            lazy=False)
+            ['amount:sum', 'id:array_agg'],
+            ['timesheet_invoice_type'],
+        )
         can_see_timesheets = with_action and len(self) == 1 and self.user_has_groups('hr_timesheet.group_hr_timesheet_approver')
         revenues_dict = {}
         costs_dict = {}
         total_revenues = {'invoiced': 0.0, 'to_invoice': 0.0}
         total_costs = {'billed': 0.0, 'to_bill': 0.0}
-        for res in aa_line_read_group:
-            amount = res['amount']
-            invoice_type = res['timesheet_invoice_type']
+        for [invoice_type], [amount, ids] in aa_line_aggregate.items():
             cost = costs_dict.setdefault(invoice_type, {'billed': 0.0, 'to_bill': 0.0})
             revenue = revenues_dict.setdefault(invoice_type, {'invoiced': 0.0, 'to_invoice': 0.0})
             if amount < 0:  # cost
@@ -416,8 +412,8 @@ class Project(models.Model):
                 revenue['invoiced'] += amount
                 total_revenues['invoiced'] += amount
             if can_see_timesheets and invoice_type not in ['other_costs', 'other_revenues']:
-                cost.setdefault('record_ids', []).extend(res['ids'])
-                revenue.setdefault('record_ids', []).extend(res['ids'])
+                cost.setdefault('record_ids', []).extend(ids)
+                revenue.setdefault('record_ids', []).extend(ids)
 
         action_name = None
         if can_see_timesheets:

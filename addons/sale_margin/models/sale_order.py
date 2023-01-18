@@ -21,11 +21,10 @@ class SaleOrder(models.Model):
             # with a single read_group query for better performance.
             # This isn't done in an onchange environment because (part of) the data
             # may not be stored in database (new records or unsaved modifications).
-            grouped_order_lines_data = self.env['sale.order.line'].read_group(
+            mapped_data = self.env['sale.order.line']._aggregate(
                 [
                     ('order_id', 'in', self.ids),
-                ], ['margin', 'order_id'], ['order_id'])
-            mapped_data = {m['order_id'][0]: m['margin'] for m in grouped_order_lines_data}
+                ], ['margin:sum'], ['order_id'])
             for order in self:
-                order.margin = mapped_data.get(order.id, 0.0)
+                order.margin = mapped_data.get_agg(order, 'margin:sum', 0.0)
                 order.margin_percent = order.amount_untaxed and order.margin/order.amount_untaxed

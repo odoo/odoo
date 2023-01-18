@@ -49,25 +49,15 @@ class UtmCampaign(models.Model):
 
     @api.depends('mailing_mail_ids')
     def _compute_mailing_mail_count(self):
-        if self.ids:
-            mailing_data = self.env['mailing.mailing']._read_group(
-                [('campaign_id', 'in', self.ids), ('mailing_type', '=', 'mail')],
-                ['campaign_id', 'ab_testing_enabled'],
-                ['campaign_id', 'ab_testing_enabled'],
-                lazy=False,
-            )
-            ab_testing_mapped_data = {}
-            mapped_data = {}
-            for data in mailing_data:
-                if data['ab_testing_enabled']:
-                    ab_testing_mapped_data.setdefault(data['campaign_id'][0], []).append(data['__count'])
-                mapped_data.setdefault(data['campaign_id'][0], []).append(data['__count'])
-        else:
-            mapped_data = dict()
-            ab_testing_mapped_data = dict()
+        mailing_data = self.env['mailing.mailing']._aggregate(
+            [('campaign_id', 'in', self.ids), ('mailing_type', '=', 'mail')],
+            ['*:count'],
+            ['campaign_id', 'ab_testing_enabled'],
+        )
         for campaign in self:
-            campaign.mailing_mail_count = sum(mapped_data.get(campaign._origin.id or campaign.id, []))
-            campaign.ab_testing_mailings_count = sum(ab_testing_mapped_data.get(campaign._origin.id or campaign.id, []))
+            real_campaign = campaign._origin or campaign
+            campaign.ab_testing_mailings_count = mailing_data.get_agg((real_campaign, True), '*:count', 0)
+            campaign.mailing_mail_count = mailing_data.get_agg((real_campaign, False), '*:count', 0) + mailing_data.get_agg((real_campaign, True), '*:count', 0)
 
     @api.constrains('ab_testing_total_pc', 'ab_testing_completed')
     def _check_ab_testing_total_pc(self):

@@ -29,12 +29,11 @@ class PosConfig(models.Model):
         tables = self.env['restaurant.table'].search([('floor_id.pos_config_id', 'in', self.ids)])
         domain = [('state', '=', 'draft'), ('table_id', 'in', tables.ids)]
 
-        order_stats = self.env['pos.order'].read_group(domain, ['table_id'], 'table_id')
-        orders_map = dict((s['table_id'][0], s['table_id_count']) for s in order_stats)
+        order_stats = self.env['pos.order']._aggregate(domain, ['*:count'], ['table_id'])
 
         result = []
         for table in tables:
-            result.append({'id': table.id, 'orders': orders_map.get(table.id, 0)})
+            result.append({'id': table.id, 'orders': order_stats.get_agg(table, '*:count', 0)})
         return result
 
     def _get_forbidden_change_fields(self):

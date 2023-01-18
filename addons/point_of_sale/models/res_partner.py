@@ -16,21 +16,19 @@ class ResPartner(models.Model):
 
     def _compute_pos_order(self):
         # retrieve all children partners and prefetch 'parent_id' on them
-        all_partners = self.with_context(active_test=False).search([('id', 'child_of', self.ids)])
-        all_partners.read(['parent_id'])
+        all_partners_subquery = self.with_context(active_test=False)._search([('id', 'child_of', self.ids)])
 
-        pos_order_data = self.env['pos.order']._read_group(
-            domain=[('partner_id', 'in', all_partners.ids)],
-            fields=['partner_id'], groupby=['partner_id']
+        pos_order_data = self.env['pos.order']._aggregate(
+            domain=[('partner_id', 'in', all_partners_subquery)],
+            aggregates=['*:count'], groupby=['partner_id']
         )
 
         self.pos_order_count = 0
-        for group in pos_order_data:
-            partner = self.browse(group['partner_id'][0])
+        for [partner], [count] in pos_order_data.items(as_records=True):
             while partner:
                 if partner in self:
-                    partner.pos_order_count += group['partner_id_count']
-                partner = partner.parent_id
+                    partner.pos_order_count += count
+                partner = partner.with_context(prefetch_fields=False).parent_id
 
     def action_view_pos_order(self):
         '''

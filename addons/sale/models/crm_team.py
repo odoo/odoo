@@ -60,13 +60,12 @@ class CrmTeam(models.Model):
         remaining.quotations_count = 0
 
     def _compute_sales_to_invoice(self):
-        sale_order_data = self.env['sale.order']._read_group([
+        sale_order_data = self.env['sale.order']._aggregate([
             ('team_id', 'in', self.ids),
             ('invoice_status','=','to invoice'),
-        ], ['team_id'], ['team_id'])
-        data_map = {datum['team_id'][0]: datum['team_id_count'] for datum in sale_order_data}
+        ], ['*:count'], ['team_id'])
         for team in self:
-            team.sales_to_invoice_count = data_map.get(team.id,0.0)
+            team.sales_to_invoice_count = sale_order_data.get_agg(team, '*:count', 0.0)
 
     def _compute_invoiced(self):
         if not self:
@@ -93,15 +92,12 @@ class CrmTeam(models.Model):
             team.invoiced = data_map.get(team.id, 0.0)
 
     def _compute_sale_order_count(self):
-        data_map = {}
-        if self.ids:
-            sale_order_data = self.env['sale.order']._read_group([
-                ('team_id', 'in', self.ids),
-                ('state', '!=', 'cancel'),
-            ], ['team_id'], ['team_id'])
-            data_map = {datum['team_id'][0]: datum['team_id_count'] for datum in sale_order_data}
+        sale_order_data = self.env['sale.order']._aggregate([
+            ('team_id', 'in', self.ids),
+            ('state', '!=', 'cancel'),
+        ], ['*:count'], ['team_id'])
         for team in self:
-            team.sale_order_count = data_map.get(team.id, 0)
+            team.sale_order_count = sale_order_data.get_agg(team, '*:count', 0)
 
     def _in_sale_scope(self):
         return self.env.context.get('in_sales_app')

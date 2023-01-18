@@ -181,13 +181,9 @@ class ProductProduct(models.Model):
         date_from = fields.Datetime.to_string(fields.datetime.now() - timedelta(days=365))
         #TODO: state = done?
         domain = [('state', '=', 'done'), ('product_id', 'in', self.ids), ('date_planned_start', '>', date_from)]
-        read_group_res = self.env['mrp.production']._read_group(domain, ['product_id', 'product_uom_qty'], ['product_id'])
-        mapped_data = dict([(data['product_id'][0], data['product_uom_qty']) for data in read_group_res])
+        aggregate_res = self.env['mrp.production']._aggregate(domain, ['product_uom_qty:sum'], ['product_id'])
         for product in self:
-            if not product.id:
-                product.mrp_product_qty = 0.0
-                continue
-            product.mrp_product_qty = float_round(mapped_data.get(product.id, 0), precision_rounding=product.uom_id.rounding)
+            product.mrp_product_qty = float_round(aggregate_res.get_agg(product, 'product_uom_qty:sum', 0), precision_rounding=product.uom_id.rounding)
 
     def _compute_quantities_dict(self, lot_id, owner_id, package_id, from_date=False, to_date=False):
         """ When the product is a kit, this override computes the fields :

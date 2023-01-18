@@ -30,8 +30,6 @@ class MaintenanceEquipmentCategory(models.Model):
 
     @api.depends('equipment_ids')
     def _compute_fold(self):
-        # fix mutual dependency: 'fold' depends on 'equipment_count', which is
-        # computed with a read_group(), which retrieves 'fold'!
         self.fold = False
         for category in self:
             category.fold = False if category.equipment_count else True
@@ -53,16 +51,14 @@ class MaintenanceEquipmentCategory(models.Model):
     fold = fields.Boolean(string='Folded in Maintenance Pipe', compute='_compute_fold', store=True)
 
     def _compute_equipment_count(self):
-        equipment_data = self.env['maintenance.equipment']._read_group([('category_id', 'in', self.ids)], ['category_id'], ['category_id'])
-        mapped_data = dict([(m['category_id'][0], m['category_id_count']) for m in equipment_data])
+        equipment_data = self.env['maintenance.equipment']._aggregate([('category_id', 'in', self.ids)], ['*:count'], ['category_id'])
         for category in self:
-            category.equipment_count = mapped_data.get(category.id, 0)
+            category.equipment_count = equipment_data.get_agg(category, '*:count', 0)
 
     def _compute_maintenance_count(self):
-        maintenance_data = self.env['maintenance.request']._read_group([('category_id', 'in', self.ids)], ['category_id'], ['category_id'])
-        mapped_data = dict([(m['category_id'][0], m['category_id_count']) for m in maintenance_data])
+        maintenance_data = self.env['maintenance.request']._aggregate([('category_id', 'in', self.ids)], ['*:count'], ['category_id'])
         for category in self:
-            category.maintenance_count = mapped_data.get(category.id, 0)
+            category.maintenance_count = maintenance_data.get_agg(category, '*:count', 0)
 
     @api.ondelete(at_uninstall=False)
     def _unlink_except_contains_maintenance_requests(self):

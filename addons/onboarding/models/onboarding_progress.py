@@ -30,14 +30,13 @@ class OnboardingProgress(models.Model):
 
     @api.depends('onboarding_id.step_ids', 'progress_step_ids', 'progress_step_ids.step_state')
     def _compute_onboarding_state(self):
-        progress_steps_data = self.env['onboarding.progress.step'].read_group(
+        progress_steps_data = self.env['onboarding.progress.step']._aggregate(
             [('progress_id', 'in', self.ids), ('step_state', 'in', ['just_done', 'done'])],
-            ['progress_id'], ['progress_id']
+            ['*:count'], ['progress_id']
         )
-        result = dict((data['progress_id'][0], data['progress_id_count']) for data in progress_steps_data)
         for progress in self:
             progress.onboarding_state = (
-                'not_done' if result.get(progress.id, 0) != len(progress.onboarding_id.step_ids)
+                'not_done' if progress_steps_data.get_agg(progress.id, '*:count', 0) != len(progress.onboarding_id.step_ids)
                 else 'done')
 
     def action_close(self):

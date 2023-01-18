@@ -38,13 +38,12 @@ class ResPartner(models.Model):
 
     @api.depends('is_company')
     def _compute_slide_channel_count(self):
-        read_group_res = self.env['slide.channel.partner'].sudo()._read_group(
+        aggregate_res = self.env['slide.channel.partner'].sudo()._aggregate(
             [('partner_id', 'in', self.ids)],
-            ['partner_id'], 'partner_id'
+            ['*:count'], ['partner_id']
         )
-        data = dict((res['partner_id'][0], res['partner_id_count']) for res in read_group_res)
         for partner in self:
-            partner.slide_channel_count = data.get(partner.id, 0)
+            partner.slide_channel_count = aggregate_res.get_agg(partner, '*:count', 0)
 
     @api.depends('is_company', 'child_ids.slide_channel_count')
     def _compute_slide_channel_company_count(self):

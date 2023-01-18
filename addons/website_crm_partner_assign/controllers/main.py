@@ -188,9 +188,9 @@ class WebsiteCrmPartnerAssign(WebsitePartnerPage):
         partners_dom = [('is_company', '=', True), ('grade_id', '!=', False), ('website_published', '=', True),
                         ('grade_id.website_published', '=', True), ('country_id', '!=', False)]
         dom += sitemap_qs2dom(qs=qs, route='/partners/country/')
-        countries = env['res.partner'].sudo().read_group(partners_dom, fields=['id', 'country_id'], groupby='country_id')
-        for country in countries:
-            loc = '/partners/country/%s' % slug(country['country_id'])
+        countries = env['res.partner'].sudo().aggregate(partners_dom, aggregates=[], groupby=['country_id'])
+        for [country] in countries.keys(as_records=True):
+            loc = '/partners/country/%s' % slug(country)
             if not qs or qs.lower() in loc:
                 yield {'loc': loc}
 

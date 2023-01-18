@@ -289,38 +289,37 @@ class Location(models.Model):
             qty_by_location = defaultdict(lambda: 0)
             if locations.storage_category_id:
                 if package and package.package_type_id:
-                    move_line_data = self.env['stock.move.line']._read_group([
+                    move_line_data = self.env['stock.move.line']._aggregate([
                         ('id', 'not in', self._context.get('exclude_sml_ids', [])),
                         ('result_package_id.package_type_id', '=', package_type.id),
-                        ('state', 'not in', ['draft', 'cancel', 'done']),
+                        ('state', 'in', ['confirmed', 'partially_available', 'assigned']),
                     ], ['result_package_id:count_distinct'], ['location_dest_id'])
-                    quant_data = self.env['stock.quant']._read_group([
+                    quant_data = self.env['stock.quant']._aggregate([
                         ('package_id.package_type_id', '=', package_type.id),
                         ('location_id', 'in', locations.ids),
                     ], ['package_id:count_distinct'], ['location_id'])
-                    for values in move_line_data:
-                        qty_by_location[values['location_dest_id'][0]] = values['result_package_id']
-                    for values in quant_data:
-                        qty_by_location[values['location_id'][0]] += values['package_id']
+                    for [location_dest_id], [result_package_id_count] in move_line_data.items():
+                        qty_by_location[location_dest_id] = result_package_id_count
+                    for [location_id], [package_id_count] in quant_data.items():
+                        qty_by_location[location_id] += package_id_count
                 else:
-                    move_line_data = self.env['stock.move.line']._read_group([
+                    move_line_data = self.env['stock.move.line']._aggregate([
                         ('id', 'not in', self._context.get('exclude_sml_ids', [])),
                         ('product_id', '=', product.id),
                         ('location_dest_id', 'in', locations.ids),
-                        ('state', 'not in', ['draft', 'done', 'cancel'])
-                    ], ['location_dest_id', 'product_id', 'reserved_qty:array_agg', 'qty_done:array_agg', 'product_uom_id:array_agg'], ['location_dest_id'])
-                    quant_data = self.env['stock.quant']._read_group([
+                        ('state', 'in', ['confirmed', 'partially_available', 'assigned']),
+                    ], ['reserved_qty:array_agg', 'qty_done:array_agg', 'product_uom_id:array_agg'], ['location_dest_id'])
+                    quant_data = self.env['stock.quant']._aggregate([
                         ('product_id', '=', product.id),
                         ('location_id', 'in', locations.ids),
-                    ], ['location_id', 'product_id', 'quantity:sum'], ['location_id'])
+                    ], ['quantity:sum'], ['location_id'])
 
-                    for values in move_line_data:
-                        uoms = self.env['uom.uom'].browse(values['product_uom_id'])
+                    for [location_dest], [reserved_qty_list, qty_done_list, uoms], in move_line_data.items(as_records=True):
                         qty_done = sum(max(ml_uom._compute_quantity(float(qty), product.uom_id), float(qty_reserved))
-                                    for qty_reserved, qty, ml_uom in zip(values['reserved_qty'], values['qty_done'], list(uoms)))
-                        qty_by_location[values['location_dest_id'][0]] = qty_done
-                    for values in quant_data:
-                        qty_by_location[values['location_id'][0]] += values['quantity']
+                                    for qty_reserved, qty, ml_uom in zip(reserved_qty_list, qty_done_list, uoms))
+                        qty_by_location[location_dest.id] = qty_done
+                    for [location_dest_id], [quantity_sum] in quant_data.items():
+                        qty_by_location[location_dest_id] += quantity_sum
             if additional_qty:
                 for location_id, qty in additional_qty.items():
                     qty_by_location[location_id] += qty

@@ -45,21 +45,19 @@ class Partner(models.Model):
 
     def _compute_opportunity_count(self):
         # retrieve all children partners and prefetch 'parent_id' on them
-        all_partners = self.with_context(active_test=False).search([('id', 'child_of', self.ids)])
-        all_partners.read(['parent_id'])
+        all_partners_subquery = self.with_context(active_test=False)._search([('id', 'child_of', self.ids)])
 
-        opportunity_data = self.env['crm.lead'].with_context(active_test=False)._read_group(
-            domain=[('partner_id', 'in', all_partners.ids)],
-            fields=['partner_id'], groupby=['partner_id']
+        opportunity_data = self.env['crm.lead'].with_context(active_test=False)._aggregate(
+            domain=[('partner_id', 'in', all_partners_subquery)],
+            aggregates=['*:count'], groupby=['partner_id'],
         )
 
         self.opportunity_count = 0
-        for group in opportunity_data:
-            partner = self.browse(group['partner_id'][0])
+        for [partner], [count] in opportunity_data.items(as_records=True):
             while partner:
                 if partner in self:
-                    partner.opportunity_count += group['partner_id_count']
-                partner = partner.parent_id
+                    partner.opportunity_count += count
+                partner = partner.with_context(prefetch_fields=False).parent_id
 
     def action_view_opportunity(self):
         '''

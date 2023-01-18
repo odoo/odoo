@@ -41,12 +41,11 @@ class Employee(models.Model):
         return [('id', 'in', employees.ids)]
 
     def _compute_employee_cars_count(self):
-        rg = self.env['fleet.vehicle.assignation.log']._read_group([
+        result_agg = self.env['fleet.vehicle.assignation.log']._aggregate([
             ('driver_employee_id', 'in', self.ids),
-        ], ['driver_employee_id'], ['driver_employee_id'])
-        cars_count = {r['driver_employee_id'][0]: r['driver_employee_id_count'] for r in rg}
+        ], ['*:count'], ['driver_employee_id'])
         for employee in self:
-            employee.employee_cars_count = cars_count.get(employee.id, 0)
+            employee.employee_cars_count = result_agg.get_agg(employee, '*:count', 0)
 
     @api.constrains('address_home_id')
     def _check_address_home_id(self):

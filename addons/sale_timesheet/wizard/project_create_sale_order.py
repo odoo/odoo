@@ -59,8 +59,8 @@ class ProjectCreateSalesOrder(models.TransientModel):
     def _compute_info_invoice(self):
         for line in self:
             domain = self.env['sale.order.line']._timesheet_compute_delivered_quantity_domain()
-            timesheet = self.env['account.analytic.line'].read_group(domain + [('task_id', 'in', line.project_id.tasks.ids), ('so_line', '=', False), ('timesheet_invoice_id', '=', False)], ['unit_amount'], ['task_id'])
-            unit_amount = round(sum(t.get('unit_amount', 0) for t in timesheet), 2) if timesheet else 0
+            timesheet = self.env['account.analytic.line']._aggregate(domain + [('task_id', 'in', line.project_id.tasks.ids), ('so_line', '=', False), ('timesheet_invoice_id', '=', False)], ['unit_amount:sum'])
+            unit_amount = round(timesheet.get_agg(aggregate='unit_amount:sum', default=0), 2)
             if not unit_amount:
                 line.info_invoice = False
                 continue

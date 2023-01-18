@@ -67,13 +67,12 @@ class CRMRevealRule(models.Model):
     ]
 
     def _compute_lead_count(self):
-        leads = self.env['crm.lead']._read_group([
+        leads = self.env['crm.lead']._aggregate([
             ('reveal_rule_id', 'in', self.ids)
-        ], fields=['reveal_rule_id', 'type'], groupby=['reveal_rule_id', 'type'], lazy=False)
-        mapping = {(lead['reveal_rule_id'][0], lead['type']): lead['__count'] for lead in leads}
+        ], aggregates=['*:count'], groupby=['reveal_rule_id', 'type'])
         for rule in self:
-            rule.lead_count = mapping.get((rule.id, 'lead'), 0)
-            rule.opportunity_count = mapping.get((rule.id, 'opportunity'), 0)
+            rule.lead_count = leads.get_agg((rule.id, 'lead'), default=0)
+            rule.opportunity_count = leads.get_agg((rule.id, 'opportunity'), default=0)
 
     @api.constrains('regex_url')
     def _check_regex_url(self):

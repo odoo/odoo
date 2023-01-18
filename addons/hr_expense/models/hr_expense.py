@@ -215,10 +215,9 @@ class HrExpense(models.Model):
             expense.label_convert_rate = rate_txt
 
     def _compute_attachment_number(self):
-        attachment_data = self.env['ir.attachment']._read_group([('res_model', '=', 'hr.expense'), ('res_id', 'in', self.ids)], ['res_id'], ['res_id'])
-        attachment = dict((data['res_id'], data['res_id_count']) for data in attachment_data)
+        attachment_data = self.env['ir.attachment']._aggregate([('res_model', '=', 'hr.expense'), ('res_id', 'in', self.ids)], ['*:count'], ['res_id'])
         for expense in self:
-            expense.attachment_number = attachment.get(expense._origin.id, 0)
+            expense.attachment_number = attachment_data.get_agg(expense._origin.id, '*:count', 0)
 
     @api.depends('employee_id')
     def _compute_is_editable(self):
@@ -665,17 +664,16 @@ class HrExpense(models.Model):
         if not self.env.user.employee_ids:
             return expense_state
         target_currency = self.env.company.currency_id
-        expenses = self.read_group(
+        expenses = self._aggregate(
             [
                 ('employee_id', 'in', self.env.user.employee_ids.ids),
                 ('payment_mode', '=', 'own_account'),
                 ('state', 'in', ['draft', 'reported', 'approved'])
-            ], ['total_amount', 'currency_id', 'state'], ['state', 'currency_id'], lazy=False)
-        for expense in expenses:
-            state = expense['state']
-            currency = self.env['res.currency'].browse(expense['currency_id'][0]) if expense['currency_id'] else target_currency
+            ], ['total_amount:sum'], ['state', 'currency_id'])
+        for [state, currency], [total_amount_sum] in expenses.items(as_records=True):
+            currency = currency or target_currency
             amount = currency._convert(
-                    expense['total_amount'], target_currency, self.env.company, fields.Date.today())
+                total_amount_sum or 0.0, target_currency, self.env.company, fields.Date.today())
             expense_state[state]['amount'] += amount
         return expense_state
 
@@ -954,10 +952,9 @@ class HrExpenseSheet(models.Model):
 
     @api.depends('expense_line_ids')
     def _compute_expense_number(self):
-        read_group_result = self.env['hr.expense']._read_group([('sheet_id', 'in', self.ids)], ['sheet_id'], ['sheet_id'])
-        result = dict((data['sheet_id'][0], data['sheet_id_count']) for data in read_group_result)
+        result = self.env['hr.expense']._aggregate([('sheet_id', 'in', self.ids)], ['*:count'], ['sheet_id'])
         for sheet in self:
-            sheet.expense_number = result.get(sheet.id, 0)
+            sheet.expense_number = result.get_agg(sheet, '*:count', 0)
 
     @api.depends('employee_id', 'employee_id.department_id')
     def _compute_from_employee_id(self):

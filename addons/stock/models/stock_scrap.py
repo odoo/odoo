@@ -60,28 +60,20 @@ class StockScrap(models.Model):
 
     @api.depends('company_id', 'picking_id')
     def _compute_location_id(self):
-        groups = self.env['stock.warehouse']._read_group(
-            [('company_id', 'in', self.company_id.ids)], ['min_id:min(id)'], ['company_id'])
-        locations_per_company = {
-            group['company_id'][0]: self.env['stock.warehouse'].browse(group['min_id']).lot_stock_id
-            for group in groups
-        }
+        groups = self.env['stock.warehouse']._aggregate(
+            [('company_id', 'in', self.filtered(lambda r: not r.picking_id).company_id.ids)], ['id:min'], ['company_id'])
         for scrap in self:
             if scrap.picking_id:
                 scrap.location_id = scrap.picking_id.location_dest_id if scrap.picking_id.state == 'done' else scrap.picking_id.location_id
             else:
-                scrap.location_id = locations_per_company[scrap.company_id.id]
+                scrap.location_id = groups.get_agg(scrap.company_id, 'id:min', as_record=True).lot_stock_id
 
     @api.depends('company_id')
     def _compute_scrap_location_id(self):
-        groups = self.env['stock.location']._read_group(
-            [('company_id', 'in', self.company_id.ids), ('scrap_location', '=', True)], ['min_id:min(id)'], ['company_id'])
-        locations_per_company = {
-            group['company_id'][0]: self.env['stock.location'].browse(group['min_id'])
-            for group in groups
-        }
+        groups = self.env['stock.location']._aggregate(
+            [('company_id', 'in', self.company_id.ids), ('scrap_location', '=', True)], ['id:min'], ['company_id'])
         for scrap in self:
-            scrap.scrap_location_id = locations_per_company[scrap.company_id.id]
+            scrap.scrap_location_id = groups.get_agg(scrap.company_id, 'id:min', as_record=True)
 
     @api.depends('move_id', 'move_id.move_line_ids.qty_done', 'product_id')
     def _compute_scrap_qty(self):

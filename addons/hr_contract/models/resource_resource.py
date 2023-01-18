@@ -17,16 +17,16 @@ class ResourceResource(models.Model):
         calendars_within_period_per_resource = defaultdict(lambda: defaultdict(Intervals))  # keys are [resource id:integer][calendar:self.env['resource.calendar']]
         # Employees that have ever had an active contract
         employee_ids_with_active_contracts = {
-            contract['employee_id'][0] for contract in
-            self.env['hr.contract']._read_group(
+            employee_id for [employee_id] in
+            self.env['hr.contract']._aggregate(
                 domain=[
                     ('employee_id', 'in', self.employee_id.ids),
                     '|', ('state', '=', 'open'),
                     '|', ('state', '=', 'close'),
                          '&', ('state', '=', 'draft'), ('kanban_state', '=', 'done')
                 ],
-                fields=['employee_id'], groupby=['employee_id']
-            )
+                aggregates=[], groupby=['employee_id']
+            ).keys()
         }
         resource_without_contract = self.filtered(
             lambda r: not r.employee_id\

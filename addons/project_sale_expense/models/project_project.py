@@ -32,23 +32,22 @@ class Project(models.Model):
             if can_see_expense:
                 expense_ids.extend(res['ids'])
             amount_billed += res['untaxed_amount']
-        sol_read_group = self.env['sale.order.line'].sudo()._read_group(
+        sol_aggregate = self.env['sale.order.line'].sudo()._aggregate(
             [
                 ('order_id', 'in', list(expenses_per_so_id.keys())),
                 ('is_expense', '=', True),
                 ('state', 'in', ['sale', 'done']),
             ],
-            ['order_id', 'product_id', 'untaxed_amount_to_invoice', 'untaxed_amount_invoiced'],
+            ['untaxed_amount_to_invoice:sum', 'untaxed_amount_invoiced:sum'],
             ['order_id', 'product_id'],
-            lazy=False)
+        )
         total_amount_expense_invoiced = total_amount_expense_to_invoice = 0.0
         reinvoice_expense_ids = []
-        for res in sol_read_group:
-            expense_data_per_product_id = expenses_per_so_id[res['order_id'][0]]
-            product_id = res['product_id'][0]
+        for [order_id, product_id], [untaxed_amount_to_invoice_sum, untaxed_amount_invoiced_sum] in sol_aggregate.items():
+            expense_data_per_product_id = expenses_per_so_id[order_id]
             if product_id in expense_data_per_product_id:
-                total_amount_expense_to_invoice += res['untaxed_amount_to_invoice']
-                total_amount_expense_invoiced += res['untaxed_amount_invoiced']
+                total_amount_expense_to_invoice += untaxed_amount_to_invoice_sum
+                total_amount_expense_invoiced += untaxed_amount_invoiced_sum
                 reinvoice_expense_ids += expense_data_per_product_id[product_id]
         section_id = 'expenses'
         sequence = self._get_profitability_sequence_per_invoice_type()[section_id]
