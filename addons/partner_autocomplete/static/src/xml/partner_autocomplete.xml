@@ -5,6 +5,7 @@
             <t t-elif="props.record.resModel !== 'res.partner' || props.record.data.company_type === 'company'">
                 <AutoComplete
                     value="props.value || ''"
+                    placeholder="props.placeholder || ''"
                     sources="sources"
                     onSelect.bind="onSelect"
                     input="inputRef"

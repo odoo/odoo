@@ -121,7 +121,7 @@ QUnit.module('partner_autocomplete', {
         arch:
             `<form>
                 <field name="company_type"/>
-                <field name="name" widget="field_partner_autocomplete"/>
+                <field name="name" widget="field_partner_autocomplete" placeholder="test placeholder"/>
                 <field name="parent_id" widget="res_partner_many2one"/>
                 <field name="website"/>
                 <field name="image_1920" widget="image"/>
@@ -243,13 +243,15 @@ QUnit.module('partner_autocomplete', {
     });
 
     QUnit.test("Partner autocomplete : Company type = Company / Name search", async function (assert) {
-        assert.expect(12);
+        assert.expect(13);
         await makeView(makeViewParams);
 
         // Set company type to Company
         await editSelect(target, "[name='company_type'] > select", '"company"');
 
         const input = target.querySelector("[name='name'] .dropdown input");
+
+        assert.equal(input.placeholder,'test placeholder','placeholder should be visible in the view');
 
         await click(input, null);
         assert.containsNone(
