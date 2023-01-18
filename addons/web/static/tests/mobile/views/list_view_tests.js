@@ -92,7 +92,7 @@ QUnit.module("Mobile Views", ({ beforeEach }) => {
         );
 
         // unselect all
-        await click(fixture, ".o_discard_selection");
+        await click(fixture, ".o_list_unselect_all");
         assert.containsNone(fixture, ".o_list_selection_box");
         assert.containsOnce(fixture, ".o_control_panel .o_cp_bottom_right");
     });
