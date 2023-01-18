@@ -3,16 +3,16 @@
 import { Component, useState } from "@odoo/owl";
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { useMessaging, useStore } from "../core/messaging_hook";
+import { browser } from "@web/core/browser/browser";
 import { PartnerImStatus } from "@mail/new/discuss/partner_im_status";
 import { NotificationItem } from "./notification_item";
-import { browser } from "@web/core/browser/browser";
 import { _t } from "@web/core/l10n/translation";
 import { useService } from "@web/core/utils/hooks";
 import { createLocalId } from "../utils/misc";
 
 export class MessagingMenu extends Component {
     static components = { Dropdown, NotificationItem, PartnerImStatus };
-    static props = [];
+    static props = ["inDiscuss?"];
     static template = "mail.messaging_menu";
 
     setup() {
@@ -22,7 +22,7 @@ export class MessagingMenu extends Component {
         this.threadService = useState(useService("mail.thread"));
         this.action = useService("action");
         this.state = useState({
-            tab: "all", // can be 'all', 'channels' or 'chats'
+            tab: this.props.inDiscuss ? "mailbox" : "all", // can be 'mailbox', 'all', 'channels' or 'chats'
         });
     }
 
@@ -55,23 +55,43 @@ export class MessagingMenu extends Component {
      * @type {{ id: string, icon: string, label: string }[]}
      */
     get tabs() {
-        return [
-            {
-                id: "all",
-                icon: "fa fa-user",
-                label: _t("All"),
-            },
-            {
-                id: "chats",
-                icon: "fa fa-user",
-                label: _t("Chats"),
-            },
-            {
-                id: "channels",
-                icon: "fa fa-users",
-                label: _t("Channels"),
-            },
-        ];
+        if (this.props.inDiscuss) {
+            return [
+                {
+                    icon: "fa fa-inbox",
+                    id: "mailbox",
+                    label: _t("Mailboxes"),
+                },
+                {
+                    icon: "fa fa-user",
+                    id: "chat",
+                    label: _t("Chat"),
+                },
+                {
+                    icon: "fa fa-users",
+                    id: "channel",
+                    label: _t("Channel"),
+                },
+            ];
+        } else {
+            return [
+                {
+                    icon: "fa fa-envelope",
+                    id: "all",
+                    label: _t("All"),
+                },
+                {
+                    icon: "fa fa-user",
+                    id: "chat",
+                    label: _t("Chat"),
+                },
+                {
+                    icon: "fa fa-users",
+                    id: "channel",
+                    label: _t("Channel"),
+                },
+            ];
+        }
     }
 
     openDiscussion(thread) {
@@ -148,6 +168,30 @@ export class MessagingMenu extends Component {
         // hack: click on window to close dropdown, because we use a dropdown
         // without dropdownitem...
         document.body.click();
+    }
+
+    onClickNavTab(tabId) {
+        if (this.props.inDiscuss) {
+            if (this.store.discuss.activeTab === tabId) {
+                return;
+            }
+            this.store.discuss.activeTab = tabId;
+            this.state.tab = tabId;
+            if (
+                this.store.discuss.activeTab === "mailbox" &&
+                (!this.store.discuss.threadLocalId ||
+                    this.store.threads[this.store.discuss.threadLocalId].type !== "mailbox")
+            ) {
+                this.threadService.setDiscussThread(
+                    Object.values(this.store.threads).find((thread) => thread.id === "inbox")
+                );
+            }
+            if (this.store.discuss.activeTab !== "mailbox") {
+                this.store.discuss.threadLocalId = null;
+            }
+        } else {
+            this.state.tab = tabId;
+        }
     }
 
     get counter() {

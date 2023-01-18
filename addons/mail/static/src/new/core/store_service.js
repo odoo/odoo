@@ -52,6 +52,7 @@ export class Store {
 
     // discuss app
     discuss = {
+        activeTab: "mailbox",
         isActive: false,
         threadLocalId: null,
         channels: {

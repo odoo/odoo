@@ -2,78 +2,85 @@
 <templates xml:space="preserve">
 
 <t t-name="mail.messaging_menu" owl="1">
-    <t t-set="failures" t-value="store.notificationGroups"/>
-    <Dropdown beforeOpen.bind="() => messaging.fetchPreviews()" position="'bottom-end'" menuClass="`p-0 ${ store.isSmall ? 'start-0 w-100 mh-100 bottom-0 d-flex flex-column' : ''}`">
+    <Dropdown t-if="!props.inDiscuss" beforeOpen.bind="() => messaging.fetchPreviews()" position="'bottom-end'" menuClass="`p-0 ${ store.isSmall ? 'start-0 w-100 mh-100 bottom-0 d-flex flex-column' : ''}`">
         <t t-set-slot="toggler">
             <i class="fa fa-lg fa-comments" role="img" aria-label="Messages"></i>
             <span class="o-mail-messaging-menu-counter badge"><t t-esc="counter"/></span>
         </t>
         <t t-set-slot="default">
-            <div class="o-mail-messaging-menu flex-grow-1" t-att-class="{ 'w-auto mh-100': store.isSmall }">
-                <div class="o-mail-messaging-menu-topbar border-bottom d-flex flex-shrink-0 p-2" t-att-class="{
-                    'flex-row-reverse text-uppercase': store.isSmall,
-                }">
-                    <t t-if="!store.isSmall">
-                        <button class="btn btn-link" t-att-class="state.tab === 'all' ? 'fw-bolder' : 'text-500'" type="button" role="tab" t-on-click="() => this.state.tab = 'all'">All</button>
-                        <button class="btn btn-link" t-att-class="state.tab === 'chats' ? 'fw-bolder' : 'text-500'" type="button" role="tab" t-on-click="() => this.state.tab = 'chats'">Chats</button>
-                        <button class="btn btn-link" t-att-class="state.tab === 'channels' ? 'fw-bolder' : 'text-500'" type="button" role="tab" t-on-click="() => this.state.tab = 'channels'">Channels</button>
-                    </t>
-                    <div class="flex-grow-1"></div>
-                    <button t-if="!store.discuss.isActive or store.isSmall" class="btn btn-link o-mail-messaging-menu-new-message" t-att-class="{ 'text-uppercase': store.isSmall }" type="button" t-on-click.stop="onClickNewMessage">New Message</button>
-                </div>
-                <div class="d-flex flex-column overflow-auto flex-grow-1">
-                    <div class="d-flex justify-content-center py-4 px-2 text-muted" t-if="displayedPreviews.length === 0 and (failures.length === 0 or state.tab !== 'all')">
-                        No conversation yet...
-                    </div>
-                    <t t-foreach="displayedPreviews" t-as="preview" t-key="preview.id">
-                        <NotificationItem
-                            body="preview.mostRecentMsg?.inlineBody"
-                            dateTime="preview.mostRecentMsg?.dateTime"
-                            displayName="preview.displayName"
-                            iconSrc="preview.imgUrl"
-                            hasMarkAsReadButton="preview.isUnread"
-                            isLast="preview_last and failures.length === 0"
-                            onClick="(isMarkAsRead) => isMarkAsRead ? threadService.markAsRead(preview) : this.openDiscussion(preview)"
-                        >
-                            <t t-set-slot="icon">
-                                <PartnerImStatus t-if="preview.type === 'chat'" className="'position-absolute bottom-0 end-0'" partner="store.personas[createLocalId('partner', preview.chatPartnerId)]"/>
-                            </t>
-                            <t t-if="preview.mostRecentMsg" t-set-slot="body-icon">
-                                <t t-if="preview.mostRecentMsg.isSelfAuthored">
-                                    <i class="fa fa-mail-reply me-1"/>You
-                                 </t>
-                                 <t t-else="">
-                                    <t t-esc="preview.mostRecentMsg.author.name"/>
-                                 </t>:
-                            </t>
-                        </NotificationItem>
-                    </t>
-                    <t t-if="state.tab === 'all'">
-                        <NotificationItem
-                            t-foreach="failures" t-as="failure" t-key="failure.id"
-                            body="failure.body"
-                            count="failure.notifications.length"
-                            dateTime="failure.dateTime"
-                            displayName="failure.modelName"
-                            iconSrc="failure.iconSrc"
-                            isLast="failure_last"
-                            hasMarkAsReadButton="true"
-                            onClick="(isMarkAsRead) => isMarkAsRead ? this.cancelNotifications(failure) : this.onClickFailure(failure)"
-                        />
-                    </t>
-                </div>
-            </div>
-            <div t-if="store.isSmall" class="o-mail-messaging-menu-navbar d-flex border-top bg-view shadow-lg">
-                <div t-foreach="tabs" t-key="tab.id" t-as="tab" class="d-flex flex-column align-items-center flex-grow-1 p-2" t-att-class="{
-                    'text-primary fw-bolder': state.tab === tab.tab,
-                    'border-end': !tab_last,
-                }" t-on-click="() => this.state.tab = tab.id">
-                    <span t-attf-class="fs-4 {{ tab.icon }}"/>
-                    <span class="small" t-esc="tab.label"/>
-                </div>
-            </div>
+            <t t-call="mail.messaging_menu.content"/>
         </t>
     </Dropdown>
+    <t t-else="" t-call="mail.messaging_menu.content"/>
+</t>
+
+<t t-name="mail.messaging_menu.content" owl="1">
+    <t t-set="failures" t-value="store.notificationGroups"/>
+    <div class="o-mail-messaging-menu flex-grow-1" t-att-class="{ 'w-100 mh-100': store.isSmall }">
+        <div class="o-mail-messaging-menu-topbar border-bottom d-flex flex-shrink-0 p-2" t-att-class="{
+            'flex-row-reverse text-uppercase': store.isSmall,
+        }">
+            <t t-if="!store.isSmall">
+                <button class="btn btn-link" t-att-class="state.tab === 'all' ? 'fw-bolder' : 'text-500'" type="button" role="tab" t-on-click="() => this.state.tab = 'all'">All</button>
+                <button class="btn btn-link" t-att-class="state.tab === 'chats' ? 'fw-bolder' : 'text-500'" type="button" role="tab" t-on-click="() => this.state.tab = 'chats'">Chats</button>
+                <button class="btn btn-link" t-att-class="state.tab === 'channels' ? 'fw-bolder' : 'text-500'" type="button" role="tab" t-on-click="() => this.state.tab = 'channels'">Channels</button>
+            </t>
+            <div class="flex-grow-1"></div>
+            <button t-if="!props.inDiscuss and (!store.discuss.isActive or store.isSmall and state.tab !== 'mailbox')" class="btn btn-link o-mail-messaging-menu-new-message" t-att-class="{ 'text-uppercase': store.isSmall }" type="button" t-on-click.stop="onClickNewMessage">New Message</button>
+        </div>
+        <div t-if="state.tab !== 'mailbox'" class="d-flex flex-column overflow-auto flex-grow-1">
+            <div class="d-flex justify-content-center py-4 px-2 text-muted" t-if="displayedPreviews.length === 0 and (failures.length === 0 or state.tab !== 'all')">
+                No conversation yet...
+            </div>
+            <t t-if="state.tab !== 'mailbox'">
+                <t t-foreach="displayedPreviews" t-as="preview" t-key="preview.id">
+                    <NotificationItem
+                        body="preview.mostRecentMsg?.inlineBody"
+                        dateTime="preview.mostRecentMsg?.dateTime"
+                        displayName="preview.displayName"
+                        iconSrc="preview.imgUrl"
+                        hasMarkAsReadButton="preview.isUnread"
+                        isLast="preview_last and failures.length === 0"
+                        onClick="(isMarkAsRead) => isMarkAsRead ? threadService.markAsRead(preview) : this.openDiscussion(preview)"
+                    >
+                        <t t-set-slot="icon">
+                            <PartnerImStatus t-if="preview.type === 'chat'" className="'position-absolute bottom-0 end-0'" partner="store.personas[createLocalId('partner', preview.chatPartnerId)]"/>
+                        </t>
+                        <t t-if="preview.mostRecentMsg" t-set-slot="body-icon">
+                            <t t-if="preview.mostRecentMsg.isSelfAuthored">
+                                <i class="fa fa-mail-reply me-1"/>You
+                                </t>
+                                <t t-else="">
+                                <t t-esc="preview.mostRecentMsg.author.name"/>
+                                </t>:
+                        </t>
+                    </NotificationItem>
+                </t>
+                <t t-if="state.tab === 'all'">
+                <NotificationItem
+                    t-foreach="failures" t-as="failure" t-key="failure.id"
+                    body="failure.body"
+                    count="failure.notifications.length"
+                    dateTime="failure.dateTime"
+                    displayName="failure.modelName"
+                    iconSrc="failure.iconSrc"
+                    isLast="failure_last"
+                    hasMarkAsReadButton="true"
+                    onClick="(isMarkAsRead) => isMarkAsRead ? this.cancelNotifications(failure) : this.onClickFailure(failure)"
+                />
+            </t>
+        </t>
+        </div>
+    </div>
+    <div t-if="store.isSmall" class="o-mail-messaging-menu-navbar d-flex border-top bg-view shadow-lg w-100">
+        <div t-foreach="tabs" t-key="tab.id" t-as="tab" class="d-flex flex-column align-items-center flex-grow-1 flex-basis-0 p-2" t-att-class="{
+            'text-primary fw-bolder': state.tab === tab.tab,
+            'border-end': !tab_last,
+        }" t-on-click="() => this.onClickNavTab(tab.id)">
+            <span t-attf-class="o-mail-messaging-menu-mobile-tab-icon fs-4 {{ tab.icon }}"/>
+            <span class="small" t-esc="tab.label"/>
+        </div>
+    </div>
 </t>
 
 </templates>

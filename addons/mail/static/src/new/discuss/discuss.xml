@@ -2,9 +2,9 @@
 <templates xml:space="preserve">
 
 <t t-name="mail.discuss" owl="1">
-    <div class="d-flex h-100 flex-grow-1" t-att-class="{ 'o-mail-device-is-small flex-column align-items-center bg-view': env.isSmall }">
-        <Sidebar t-if="!props.public and !env.isSmall"/>
-        <div t-if="env.isSmall" class="o-mail-discuss-mobile-top-bar w-100 border-bottom" t-call="mail.discuss_mobile_top_bar"/>
+    <div class="d-flex h-100 flex-grow-1" t-att-class="{ 'o-mail-device-is-small flex-column align-items-center bg-view': store.isSmall }">
+        <Sidebar t-if="!props.public and !store.isSmall"/>
+        <div t-if="store.isSmall and store.discuss.activeTab === 'mailbox'" class="o-mail-discuss-mobile-top-bar w-100 border-bottom" t-call="mail.discuss_mobile_top_bar"/>
         <div t-if="thread" class="o-mail-discuss-content d-flex flex-column h-100 w-100 bg-view overflow-auto" t-att-class="{'o-mail-with-composer': thread.type !== 'mailbox'}" t-ref="content">
             <div class="px-3 bg-100 border-bottom d-flex flex-shrink-0" style="height:42px;">
                 <ThreadIcon className="'o-mail-discuss-thread-icon me-2 align-self-center'" thread="thread"/>
@@ -41,7 +41,7 @@
                     <button t-if="thread.type !== 'mailbox'" class="btn" t-ref="settings" title="Show Call Settings" t-on-click="toggleSettings">
                         <i class="fa fa-lg fa-gear text-700"/>
                     </button>
-                    <div t-if="props.public and !env.isSmall" class="d-flex align-items-center">
+                    <div t-if="props.public and !store.isSmall" class="d-flex align-items-center">
                         <img class="o-mail-discuss-self-avatar mx-1 rounded-circle o_object_fit_cover flex-shrink-0" alt="Avatar" t-att-src="store.self.avatarUrl"/>
                         <div class="lead fw-bold flex-shrink-1 text-dark">
                             <t t-if="store.user" t-esc="store.user.name"/>
@@ -64,22 +64,31 @@
                 <ChannelMemberList t-if="hasMemberListFeature and state.activeMode === 'member-list'" thread="thread" className="'o-mail-discuss-channel-member-list flex-shrink-0 border-start'"/>
             </div>
         </div>
-        <div t-if="!thread" class="o-mail-discuss-no-thread d-flex flex-grow-1 align-items-center justify-content-center w-100 bg-view">
+        <div t-if="!thread and (!store.isSmall or store.discuss.activeTab === 'mailbox')" class="o-mail-discuss-no-thread d-flex flex-grow-1 align-items-center justify-content-center w-100 bg-view">
             <h4 class="text-muted"><b><i>No conversation selected.</i></b></h4>
         </div>
+        <t t-if="store.isSmall and ['chat', 'channel'].includes(store.discuss.activeTab)">
+            <button t-if="store.discuss.activeTab === 'chat'" class="w-100 p-2 btn btn-secondary border-bottom bg-light">
+                Start a conversation
+            </button>
+            <button t-if="store.discuss.activeTab === 'channel'" class="w-100 p-2 btn btn-secondary border-bottom bg-light">
+                New Channel
+            </button>
+        </t>
+        <MessagingMenu t-if="store.isSmall" inDiscuss="true"/>
     </div>
 </t>
 
 <t t-name="mail.discuss_mobile_top_bar" owl="1">
     <div class="d-flex w-100 ">
         <t t-call="mail.discuss_mobile_mailbox" >
-            <t t-set="mailbox" t-value="store.discuss.inbox" />
+            <t t-set="mailbox" t-value="store.discuss.inbox"/>
         </t>
         <t t-call="mail.discuss_mobile_mailbox">
-            <t t-set="mailbox" t-value="store.discuss.starred" />
+            <t t-set="mailbox" t-value="store.discuss.starred"/>
         </t>
         <t t-call="mail.discuss_mobile_mailbox">
-            <t t-set="mailbox" t-value="store.discuss.history" />
+            <t t-set="mailbox" t-value="store.discuss.history"/>
         </t>
     </div>
 </t>

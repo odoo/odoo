@@ -10,6 +10,7 @@ import { useMessageEdition, useMessageHighlight, useMessageToReplyTo } from "@ma
 import { Composer } from "../composer/composer";
 import { Call } from "../rtc/call";
 import { ChannelMemberList } from "./channel_member_list";
+import { MessagingMenu } from "../messaging_menu/messaging_menu";
 import {
     Component,
     onWillStart,
@@ -36,6 +37,7 @@ export class Discuss extends Component {
         Call,
         CallSettings,
         ChannelMemberList,
+        MessagingMenu,
     };
     static props = {
         public: { type: Boolean, optional: true },
