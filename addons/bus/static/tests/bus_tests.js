@@ -3,6 +3,7 @@ odoo.define('web.bus_tests', function (require) {
 
 var { busService } = require('@bus/services/bus_service');
 const { presenceService } = require('@bus/services/presence_service');
+const { busParametersService } = require('@bus/bus_parameters_service');
 const { multiTabService } = require('@bus/multi_tab_service');
 const { WEBSOCKET_CLOSE_CODES } = require("@bus/workers/websocket_worker");
 const { startServer } = require('@bus/../tests/helpers/mock_python_environment');
@@ -13,7 +14,6 @@ const { registry } = require("@web/core/registry");
 const { session } = require('@web/session');
 const { makeDeferred, nextTick, patchWithCleanup } = require("@web/../tests/helpers/utils");
 const { makeTestEnv } = require('@web/../tests/helpers/mock_env');
-const legacySession = require('web.session');
 
 QUnit.module('Bus', {
     beforeEach: function () {
@@ -26,6 +26,7 @@ QUnit.module('Bus', {
                 return originalMultiTabService;
             },
         };
+        registry.category('services').add('bus.parameters', busParametersService);
         registry.category('services').add('bus_service', busService);
         registry.category('services').add('presence', presenceService);
         registry.category('services').add('multi_tab', customMultiTabService);
@@ -463,11 +464,16 @@ QUnit.module('Bus', {
         ]);
     });
 
-    QUnit.test("WebSocket connects with URL corresponding to session prefix", async function (assert) {
+    QUnit.test("WebSocket connects with URL corresponding to given serverURL", async function (assert) {
         patchWebsocketWorkerWithCleanup();
-        const origin = "http://random-website.com";
-        patchWithCleanup(legacySession, {
-            prefix: origin,
+        const serverURL = "http://random-website.com";
+        patchWithCleanup(busParametersService, {
+            start() {
+                return {
+                    ...this._super(...arguments),
+                    serverURL,
+                };
+            },
         });
         const websocketCreatedDeferred = makeDeferred();
         patchWithCleanup(window, {
@@ -480,7 +486,7 @@ QUnit.module('Bus', {
         const env = await makeTestEnv();
         env.services["bus_service"].start();
         await websocketCreatedDeferred;
-        assert.verifySteps([`${origin.replace("http", "ws")}/websocket`]);
+        assert.verifySteps([`${serverURL.replace("http", "ws")}/websocket`]);
     });
 });
 });

@@ -184,6 +184,7 @@ Help your customers with this chat, and analyse their feedback.
             'web/static/src/legacy/js/services/ajax_service.js',
             'web/static/src/legacy/js/services/local_storage_service.js',
             # Bus, Mail, Livechat
+            'bus/static/src/bus_parameters_service.js',
             'bus/static/src/im_status_service.js',
             'bus/static/src/multi_tab_service.js',
             'bus/static/src/services/bus_service.js',
