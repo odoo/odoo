@@ -354,6 +354,9 @@ export class HtmlField extends Component {
     }
     async commitChanges({ urgent } = {}) {
         if (this._isDirty() || urgent) {
+            if (urgent) {
+                await this.updateValue();
+            }
             if (this.wysiwyg) {
                 // Avoid listening to changes made during the _toInline process.
                 this.wysiwyg.odooEditor.observerUnactive('commitChanges');
@@ -532,7 +535,7 @@ export class HtmlField extends Component {
         }]));
     }
     _onWysiwygBlur() {
-        this.commitChanges({ urgent: true });
+        this.commitChanges();
     }
     async _onReadonlyClickChecklist(ev) {
         if (ev.offsetX > 0) {
