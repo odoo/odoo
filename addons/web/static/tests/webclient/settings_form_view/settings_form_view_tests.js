@@ -17,6 +17,7 @@ import { SettingsFormCompiler } from "@web/webclient/settings_form_view/settings
 import { registerCleanup } from "../../helpers/cleanup";
 import { makeFakeLocalizationService } from "@web/../tests/helpers/mock_services";
 import { session } from "@web/session";
+import { pick } from "@web/core/utils/objects";
 
 let target;
 let serverData;
@@ -1078,7 +1079,7 @@ QUnit.module("SettingsFormView", (hooks) => {
         assert.verifySteps([
             "create",
             "read",
-            'action executed {"name":"execute","type":"object","resModel":"res.config.settings","resIds":[1],"context":{"lang":"en","uid":7,"tz":"taht"},"buttonContext":{}}',
+            'action executed {"name":"execute","type":"object","resModel":"res.config.settings","resId":1,"resIds":[1],"context":{"lang":"en","uid":7,"tz":"taht"},"buttonContext":{}}',
         ]);
     });
 
@@ -1117,7 +1118,7 @@ QUnit.module("SettingsFormView", (hooks) => {
         assert.verifySteps([
             "create",
             "read",
-            'action executed {"context":{"lang":"en","uid":7,"tz":"taht"},"type":"object","name":"mymethod","resModel":"res.config.settings","resIds":[1],"buttonContext":{}}',
+            'action executed {"context":{"lang":"en","uid":7,"tz":"taht"},"type":"object","name":"mymethod","resModel":"res.config.settings","resId":1,"resIds":[1],"buttonContext":{}}',
         ]);
     });
 
@@ -1844,5 +1845,53 @@ QUnit.module("SettingsFormView", (hooks) => {
 
         await click(target.querySelector(".settings_tab [data-key='otherapp']"));
         assert.strictEqual(scrollingEl.scrollTop, scrollTop);
+    });
+
+    QUnit.test("server actions are called with the correct context", async (assert) => {
+        serverData.actions = {
+            1: {
+                id: 1,
+                name: "Settings view",
+                res_model: "res.config.settings",
+                type: "ir.actions.act_window",
+                views: [[1, "form"]],
+            },
+            2: {
+                model_name: "partner",
+                name: "Action partner",
+                type: "ir.actions.server",
+                usage: "ir_actions_server",
+            },
+        };
+
+        serverData.views = {
+            "res.config.settings,1,form": `
+             <form string="Settings" js_class="base_settings">
+                <div class="settings">
+                    <div class="app_settings_block">
+                        <button name="2" type="action"/>
+                    </div>
+                </div>
+             </form>
+            `,
+            "res.config.settings,false,search": "<search></search>",
+        };
+
+        const mockRPC = (route, args) => {
+            if (route === "/web/action/run") {
+                assert.step(route);
+                assert.deepEqual(pick(args.context, "active_id", "active_ids", "active_model"), {
+                    active_id: 1,
+                    active_ids: [1],
+                    active_model: "res.config.settings",
+                });
+                return new Promise(() => {});
+            }
+        };
+
+        const webClient = await createWebClient({ serverData, mockRPC });
+        await doAction(webClient, 1);
+        await click(target.querySelector("button[name='2']"));
+        assert.verifySteps(["/web/action/run"]);
     });
 });
