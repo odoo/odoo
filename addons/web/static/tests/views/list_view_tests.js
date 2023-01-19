@@ -7365,8 +7365,8 @@ QUnit.module("Views", (hooks) => {
         );
         assert.strictEqual(
             target.querySelector(".o_list_button button").disabled,
-            true,
-            "buttons should be disabled while the record is not yet created"
+            false,
+            "buttons should not be disabled while the record is not yet created"
         );
 
         await clickSave(target);
@@ -7394,6 +7394,14 @@ QUnit.module("Views", (hooks) => {
                     <field name="foo"/>
                     <button string="abc" icon="fa-phone" type="object" name="schedule_another_phonecall"/>
                 </tree>`,
+            mockRPC(route, { method }) {
+                if (method === "create") {
+                    assert.step("create");
+                } else if (route === "/web/dataset/call_button") {
+                    assert.step("call_button");
+                    return true;
+                }
+            },
         });
 
         await click(target.querySelector(".o_list_button_add"));
@@ -7402,6 +7410,16 @@ QUnit.module("Views", (hooks) => {
             target,
             "table button i.o_button_icon.fa-phone",
             "should have rendered a button"
+        );
+        assert.notOk(
+            target.querySelector("table button").disabled,
+            "button should not be disabled when creating the record"
+        );
+
+        await click(target, "table button");
+        assert.verifySteps(
+            ["create", "call_button"],
+            "clicking the button should save the record and then execute the action"
         );
     });
 
