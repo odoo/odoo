@@ -1773,9 +1773,16 @@ export class ListRenderer extends Component {
         const table = this.tableRef.el;
         const headers = [...table.querySelectorAll("thead th")];
         const cells = [...element.querySelectorAll("td")];
-        for (const [index, header] of Object.entries(headers)) {
-            const style = getComputedStyle(header);
-            cells[index].style.width = style.width;
+        let headerIndex = 0;
+        for (const cell of cells) {
+            let width = 0;
+            for (let i = 0; i < cell.colSpan; i++) {
+                const header = headers[headerIndex + i];
+                const style = getComputedStyle(header);
+                width += parseFloat(style.width);
+            }
+            cell.style.width = `${width}px`;
+            headerIndex += cell.colSpan;
         }
     }
 
