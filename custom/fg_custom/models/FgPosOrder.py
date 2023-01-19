@@ -200,11 +200,10 @@ class PosOrder(models.Model):
 
 class PosOrderLineInherit(models.Model):
     _inherit = "pos.order.line"
-    _description = "Sale Order / Refund Order Lines Report"
+    _description = "Daily Sales Report"
 
     date_order = fields.Datetime(related="order_id.date_order", string='Order Date', store=True)
     si_reference_number = fields.Char(related='order_id.pos_si_trans_reference', string='SI Reference Number', store=True)
-    refund_reference_number = fields.Char(related='order_id.pos_refund_si_reference', string='Refund Reference Number', store=True)
     discount_amount = fields.Float(compute='_compute_discount_amount', string='Discount Amount')
     tax_amount = fields.Float(compute='_compute_tax_amount', string='Tax Amount')
 

@@ -71,6 +71,32 @@
         <field name="arch" type="xml">
             <tree edit="0" create="0" delete="0">
                 <field name="si_reference_number" string="SI Reference Number"/>
+                <field name="full_product_name"/>
+                <field name="qty"/>
+                <field name="product_uom_id" string="UoM" groups="uom.group_uom"/>
+                <field name="price_unit" widget="monetary"/>
+                <field name="is_total_cost_computed" invisible="1"/>
+                <field name="total_cost" attrs="{'invisible': [('is_total_cost_computed','=', False)]}" optional="hide" widget="monetary"/>
+                <field name="margin" attrs="{'invisible': [('is_total_cost_computed','=', False)]}" optional="hide" widget="monetary"/>
+                <field name="margin_percent" attrs="{'invisible': [('is_total_cost_computed','=', False)]}" optional="hide" widget="percentage"/>
+                <field name="discount" string="Disc.%"/>
+                <field name="discount_amount" string="Disc Amount" widget="monetary"/>
+                <field name="tax_ids_after_fiscal_position" widget="many2many_tags" string="Taxes"/>
+                <field name="tax_ids" widget="many2many_tags" invisible="1"/>
+                <field name="price_subtotal" widget="monetary" force_save="1"/>
+                <field name="tax_amount" widget="monetary"/>
+                <field name="price_subtotal_incl" widget="monetary" force_save="1"/>
+                <field name="currency_id" invisible="1"/>
+                <field name="refunded_qty" optional="hide" />
+            </tree>
+        </field>
+    </record>
+
+    <record id="fg_pos_refund_order_line_refund_lines_tree" model="ir.ui.view">
+        <field name="name">pos.refund.order.line.tree.fg</field>
+        <field name="model">pos.order.line</field>
+        <field name="arch" type="xml">
+            <tree edit="0" create="0" delete="0" export_xlsx="0">
                 <field name="refund_reference_number" string="Refund Reference Number"/>
                 <field name="full_product_name"/>
                 <field name="qty"/>
@@ -99,23 +125,43 @@
         <field name="arch" type="xml">
             <search>
                 <field name="si_reference_number"/>
-                <field name="refund_reference_number"/>
                 <separator/>
-                <filter string="Refunds Today" name="refunds_today_ref" domain="[('create_date', '&gt;=', datetime.datetime.now().strftime('%Y-%m-%d 00:00:00')),('create_date', '&lt;=', datetime.datetime.now().strftime('%Y-%m-%d 23:59:59')),('refund_reference_number', '!=', '')]"/>
                 <filter string="Sales Today" name="sales_today_ref" domain="[('create_date', '&gt;=', datetime.datetime.now().strftime('%Y-%m-%d 00:00:00')),('create_date', '&lt;=', datetime.datetime.now().strftime('%Y-%m-%d 23:59:59')),('si_reference_number', '!=', '')]"/>
             </search>
         </field>
     </record>
 
+    <record id="fg_pos_refund_order_line_refund_lines_search" model="ir.ui.view">
+        <field name="name">pos.order.refund.line.search.fg</field>
+        <field name="model">pos.order.line</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="refund_reference_number"/>
+                <separator/>
+                <filter string="Refunds Today" name="refunds_today_ref" domain="[('create_date', '&gt;=', datetime.datetime.now().strftime('%Y-%m-%d 00:00:00')),('create_date', '&lt;=', datetime.datetime.now().strftime('%Y-%m-%d 23:59:59')),('refund_reference_number', '!=', '')]"/>
+            </search>
+        </field>
+    </record>
+
     <record id="fg_pos_order_line_action" model="ir.actions.act_window">
-        <field name="name">All Sales/Refund lines</field>
+        <field name="name">Sales Report</field>
         <field name="type">ir.actions.act_window</field>
         <field name="res_model">pos.order.line</field>
         <field name="view_id" ref="fg_pos_order_line_tree" />
         <field name="search_view_id" ref="fg_pos_order_line_search"/>
-        <field name="context">{"search_default_today_ref":1}</field>
+         <field name="context">{"search_default_sales_today_ref":1}</field>
+    </record>
+
+    <record id="fg_pos_refund_order_line_action" model="ir.actions.act_window">
+        <field name="name">Refund Report</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">pos.order.line</field>
+        <field name="view_id" ref="fg_pos_refund_order_line_refund_lines_tree" />
+        <field name="search_view_id" ref="fg_pos_refund_order_line_refund_lines_search"/>
+        <field name="context">{"search_default_refunds_today_ref":1}</field>
     </record>
 
     <menuitem id="menu_fg_pos_order_line" parent="point_of_sale.menu_point_of_sale" action="fg_pos_order_line_action" sequence="3" groups="point_of_sale.group_pos_manager,point_of_sale.group_pos_user"/>
+    <menuitem id="menu_fg_pos_refund_order_line" parent="point_of_sale.menu_point_of_sale" action="fg_pos_refund_order_line_action" sequence="4" groups="point_of_sale.group_pos_manager,point_of_sale.group_pos_user"/>
 
 </odoo>
