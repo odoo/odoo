@@ -324,3 +324,12 @@ class StockRule(models.Model):
         res = super(StockRule, self)._push_prepare_move_copy_values(move_to_copy, new_date)
         res['purchase_line_id'] = None
         return res
+
+    def _get_stock_move_values(self, product_id, product_qty, product_uom, location_id, name, origin, company_id, values):
+        move_values = super()._get_stock_move_values(product_id, product_qty, product_uom, location_id, name, origin, company_id, values)
+        if values.get('supplierinfo_name'):
+            move_values['restrict_partner_id'] = values['supplierinfo_name'].id
+        elif values.get('supplierinfo_id'):
+            partner = values['supplierinfo_id'].name
+            move_values['restrict_partner_id'] = partner.id
+        return move_values
