@@ -250,10 +250,14 @@ class TestAr(AccountTestInvoicingCommon):
             'default_code': 'NOGRAVADO',
             'taxes_id': [(6, 0, cls.tax_no_gravado.ids)],
         })
-        cls.product_iva_105_perc = cls.product_iva_105.copy({
+        cls.product_iva_105_perc = cls.env['product.product'].create({
             # product.product_product_25
             "name": "Laptop E5023 (VAT 10,5)",
+            'uom_id': uom_unit.id,
+            'uom_po_id': uom_unit.id,
             "standard_price": 3280.0,
+            'type': 'consu',
+            'default_code': '10,5',
             # agregamos percecipn aplicada y sufrida tambien
             'taxes_id': [(6, 0, [cls.tax_10_5.id, cls.tax_perc_iibb.id])],
         })
