@@ -3266,7 +3266,9 @@ export class OdooEditor extends EventTarget {
 
     _onClipboardCut(clipboardEvent) {
         this._onClipboardCopy(clipboardEvent);
+        this._recordHistorySelection();
         this.deleteRange();
+        this.historyStep();
     }
     _onClipboardCopy(clipboardEvent) {
         if (!this.isSelectionInEditable()) {
