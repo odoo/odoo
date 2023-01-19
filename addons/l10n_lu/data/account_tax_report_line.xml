@@ -1213,6 +1213,7 @@
     <record id="account_tax_report_line_3a_total_input_tax" model="account.tax.report.line">
       <field name="name">093 - Total input tax</field>
       <field name="sequence">1</field>
+      <field name="code">LUTAX_093</field>
       <field name="report_id" ref="tax_report"/>
       <field name="parent_id" ref="account_tax_report_line_3_assessment_deducible_tax"/>
     </record>
@@ -1220,6 +1221,7 @@
     <record id="account_tax_report_line_3b_total_input_tax_nd" model="account.tax.report.line">
       <field name="name">097 - Total input tax non-deductible</field>
       <field name="sequence">2</field>
+      <field name="code">LUTAX_097</field>
       <field name="report_id" ref="tax_report"/>
       <field name="parent_id" ref="account_tax_report_line_3_assessment_deducible_tax"/>
     </record>
@@ -1257,7 +1259,7 @@
       <field name="sequence">3</field>
       <field name="parent_id" ref="account_tax_report_line_3_assessment_deducible_tax"/>
       <field name="code">LUTAX_102</field>
-      <field name="formula">LUTAX_458+LUTAX_459+LUTAX_460+LUTAX_090+LUTAX_461+LUTAX_092+LUTAX_228+LUTAX_094+LUTAX_095</field>
+      <field name="formula">LUTAX_093-LUTAX_097</field>
       <field name="report_id" ref="tax_report"/>
     </record>
 
