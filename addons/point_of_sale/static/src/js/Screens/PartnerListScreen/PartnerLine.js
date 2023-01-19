@@ -10,7 +10,7 @@ odoo.define('point_of_sale.PartnerLine', function(require) {
         }
         get shortAddress() {
             const { partner } = this.props;
-            return [partner.zip, partner.city, partner.state_id[1]].filter(field => field).join(', ');
+            return partner.address;
         }
         get _isPartnerSelected() {
             return this.props.partner === this.props.selectedPartner;

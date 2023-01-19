@@ -36,6 +36,14 @@ var ActivityController = BasicController.extend({
         this.searchViewId = params.searchViewId;
     },
 
+    /**
+     * @override
+     */
+    async start() {
+        await this._super(...arguments);
+        this.el.classList.toggle("o_action_delegate_scroll", Component.env.isSmall);
+    },
+
     //--------------------------------------------------------------------------
     // Private
     //--------------------------------------------------------------------------
