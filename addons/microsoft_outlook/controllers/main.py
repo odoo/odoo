@@ -33,6 +33,7 @@ class MicrosoftOutlookController(http.Controller):
             model_name = state['model']
             rec_id = state['id']
             csrf_token = state['csrf_token']
+            email = state['email']
         except Exception:
             _logger.error('Microsoft Outlook: Wrong state value %r.', state)
             raise Forbidden()
@@ -58,8 +59,10 @@ class MicrosoftOutlookController(http.Controller):
             _logger.error('Microsoft Outlook: Wrong CSRF token during Outlook authentication.')
             raise Forbidden()
 
+        OutlookToken = request.env['microsoft.outlook.token']
+
         try:
-            refresh_token, access_token, expiration = record._fetch_outlook_refresh_token(code)
+            refresh_token, access_token, expiration = OutlookToken._fetch_outlook_refresh_token(code)
         except UserError as e:
             return request.render('microsoft_outlook.microsoft_outlook_oauth_error', {
                 'error': str(e),
@@ -67,7 +70,8 @@ class MicrosoftOutlookController(http.Controller):
                 'rec_id': rec_id,
             })
 
-        record.write({
+        # update existing token or create a new one
+        OutlookToken._search_or_create(email, {
             'microsoft_outlook_refresh_token': refresh_token,
             'microsoft_outlook_access_token': access_token,
             'microsoft_outlook_access_token_expiration': expiration,
