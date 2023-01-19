@@ -2110,8 +2110,8 @@
                                         </div>
                                     </td>
                                 </t>
-                                <td class='td-qty'>
-                                    <div t-esc="line.product_uom_qty" />
+                                <td class='text-center td-qty'>
+                                    <div t-esc="int(line.product_uom_qty)"/>
                                     <t t-if='line._get_shop_warning(clear=False)'>
                                         <i class='fa fa-warning text-warning' t-att-title="line._get_shop_warning()" role="img" aria-label="Warning"/>
                                     </t>
