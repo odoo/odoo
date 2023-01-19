@@ -11766,6 +11766,35 @@ QUnit.module("Views", (hooks) => {
     });
 
     QUnit.test(
+        "Auto save: save on closing tab/browser (not dirty but trailing spaces)",
+        async function (assert) {
+            serverData.models.partner.fields.foo.trim = true;
+            serverData.models.partner.records[0].foo = "name with trailing spaces   ";
+
+            await makeView({
+                type: "form",
+                resModel: "partner",
+                serverData,
+                arch: `<form><field name="foo"/></form>`,
+                resId: 1,
+                mockRPC(route, { args, method, model }) {
+                    if (method === "write" && model === "partner") {
+                        throw new Error("no write should be done");
+                    }
+                },
+            });
+
+            assert.strictEqual(
+                target.querySelector(".o_field_widget[name=foo] input").value,
+                "name with trailing spaces   "
+            );
+
+            window.dispatchEvent(new Event("beforeunload"));
+            await nextTick();
+        }
+    );
+
+    QUnit.test(
         "Auto save: save on closing tab/browser (not dirty) with text field",
         async function (assert) {
             serverData.models.partner.fields.bloup = {
