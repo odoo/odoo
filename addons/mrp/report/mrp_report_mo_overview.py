@@ -92,7 +92,7 @@ class ReportMoOverview(models.AbstractModel):
             'quantity_free': product.uom_id._compute_quantity(product.free_qty, production.product_uom_id) if product.type == 'product' else False,
             'quantity_on_hand': product.uom_id._compute_quantity(product.qty_available, production.product_uom_id) if product.type == 'product' else False,
             'quantity_reserved': 0.0,
-            'receipt': self._check_planned_start(production.date_planned_start, self._get_replenishment_receipt(production, components)),
+            'receipt': self._check_planned_start(production.date_start, self._get_replenishment_receipt(production, components)),
             'mo_cost': company.currency_id.round(mo_cost + operations.get('summary', {}).get('mo_cost', 0.0)),
             'product_cost': company.currency_id.round(product.standard_price * production.product_uom_qty),
             'currency_id': company.currency_id.id,
@@ -202,7 +202,7 @@ class ReportMoOverview(models.AbstractModel):
             'quantity_free': product.uom_id._compute_quantity(product.free_qty, move_raw.product_uom) if product.type == 'product' else False,
             'quantity_on_hand': product.uom_id._compute_quantity(product.qty_available, move_raw.product_uom) if product.type == 'product' else False,
             'quantity_reserved': self._get_reserved_qty(move_raw, production.warehouse_id, replenish_data),
-            'receipt': self._check_planned_start(production.date_planned_start, self._get_component_receipt(product, move_raw, production.warehouse_id, replenishments, replenish_data)),
+            'receipt': self._check_planned_start(production.date_start, self._get_component_receipt(product, move_raw, production.warehouse_id, replenishments, replenish_data)),
             'mo_cost': company.currency_id.round(mo_cost if replenishments else product_cost),
             'product_cost': company.currency_id.round(product_cost),
             'currency_id': company.currency_id.id,
@@ -281,7 +281,7 @@ class ReportMoOverview(models.AbstractModel):
                 replenishment['components'] = self._get_components_data(doc_in, replenish_data, level + 2, replenishment_index)
                 replenishment['operations'] = self._get_operations_data(doc_in, level + 2, replenishment_index)
                 replenishment['summary']['mo_cost'] = currency.round(sum(component.get('summary', {}).get('mo_cost', 0.0) for component in replenishment['components']) + replenishment['operations'].get('summary', {}).get('mo_cost', 0.0))
-            replenishment['summary']['receipt'] = self._check_planned_start(production.date_planned_start, self._get_replenishment_receipt(doc_in, replenishment.get('components', [])))
+            replenishment['summary']['receipt'] = self._check_planned_start(production.date_start, self._get_replenishment_receipt(doc_in, replenishment.get('components', [])))
             replenishments.append(replenishment)
             total_ordered += replenishment['summary']['quantity']
 
@@ -295,7 +295,7 @@ class ReportMoOverview(models.AbstractModel):
             rules_delay = sum(rule.delay for rule in resupply_rules)
             resupply_data = self._get_resupply_data(resupply_rules, rules_delay, missing_quantity, move_raw.product_uom, product, production.warehouse_id)
             if resupply_data:
-                receipt = self._check_planned_start(production.date_planned_start, self._format_receipt_date('estimated', fields.datetime.today() + timedelta(days=resupply_data['delay'])))
+                receipt = self._check_planned_start(production.date_start, self._format_receipt_date('estimated', fields.datetime.today() + timedelta(days=resupply_data['delay'])))
             else:
                 receipt = self._format_receipt_date('unavailable')
 
@@ -317,7 +317,7 @@ class ReportMoOverview(models.AbstractModel):
             }}
             if resupply_data:
                 to_order_line['mo_cost'] = currency.round(resupply_data['cost'] * move_raw.product_uom._compute_quantity(missing_quantity, product.uom_id))
-                to_order_line['receipt'] = self._check_planned_start(production.date_planned_start, self._format_receipt_date('estimated', fields.datetime.today() + timedelta(days=resupply_data['delay']))),
+                to_order_line['receipt'] = self._check_planned_start(production.date_start, self._format_receipt_date('estimated', fields.datetime.today() + timedelta(days=resupply_data['delay']))),
             else:
                 to_order_line['mo_cost'] = currency.round(product.standard_price * move_raw.product_uom._compute_quantity(missing_quantity, product.uom_id))
                 to_order_line['receipt'] = self._format_receipt_date('unavailable')
@@ -330,7 +330,7 @@ class ReportMoOverview(models.AbstractModel):
 
     def _get_replenishment_receipt(self, doc_in, components):
         if doc_in._name == 'mrp.production':
-            max_date_start = doc_in.date_planned_start
+            max_date_start = doc_in.date_start
             all_available = True
             some_unavailable = False
             some_estimated = False
@@ -344,7 +344,7 @@ class ReportMoOverview(models.AbstractModel):
             if some_unavailable:
                 return self._format_receipt_date('unavailable')
             if all_available:
-                return self._format_receipt_date('expected', doc_in.date_planned_finished)
+                return self._format_receipt_date('expected', doc_in.date_finished)
 
             new_date = max_date_start + timedelta(days=doc_in.product_id.produce_delay)
             receipt_state = 'estimated' if some_estimated else 'expected'

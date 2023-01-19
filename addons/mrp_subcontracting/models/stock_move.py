@@ -79,8 +79,8 @@ class StockMove(models.Model):
                 if move.state in ('done', 'cancel') or not move.is_subcontract:
                     continue
                 move.move_orig_ids.production_id.filtered(lambda p: p.state not in ('done', 'cancel')).write({
-                    'date_planned_finished': move.date,
-                    'date_planned_start': move.date,
+                    'date_start': move.date,
+                    'date_finished': move.date,
                 })
         return res
 

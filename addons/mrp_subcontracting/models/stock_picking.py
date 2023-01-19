@@ -139,7 +139,7 @@ class StockPicking(models.Model):
             'location_dest_id': subcontract_move.picking_id.partner_id.with_company(subcontract_move.company_id).property_stock_subcontractor.id,
             'product_qty': subcontract_move.product_uom_qty,
             'picking_type_id': warehouse.subcontracting_type_id.id,
-            'date_planned_start': subcontract_move.date - relativedelta(days=bom.produce_delay)
+            'date_start': subcontract_move.date - relativedelta(days=bom.produce_delay)
         }
         return vals
 
@@ -155,7 +155,7 @@ class StockPicking(models.Model):
             mo = self.env['mrp.production'].with_company(move.company_id).create(self._prepare_subcontract_mo_vals(move, bom))
             self.env['stock.move'].create(mo._get_moves_raw_values())
             self.env['stock.move'].create(mo._get_moves_finished_values())
-            mo.date_planned_finished = move.date  # Avoid to have the picking late depending of the MO
+            mo.date_finished = move.date  # Avoid to have the picking late depending of the MO
             mo.action_confirm()
 
             # Link the finished to the receipt move.

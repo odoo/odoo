@@ -285,7 +285,7 @@ class StockMove(models.Model):
                     continue
                 # produced products + byproducts
                 values['location_id'] = mo.production_location_id.id
-                values['date'] = mo._get_date_planned_finished()
+                values['date'] = mo.date_finished
                 values['date_deadline'] = mo.date_deadline
                 if not values.get('location_dest_id'):
                     values['location_dest_id'] = mo.location_dest_id.id

@@ -9,7 +9,7 @@
         <field name="location_dest_id" ref="stock.stock_location_stock"/>
         <field name="bom_id" ref="mrp.mrp_bom_drawer"/>
         <field name="create_date" eval="(datetime.now() - relativedelta(weeks=2)).strftime('%Y-%m-%d %H:%M:%S')"/>
-        <field name="date_planned_start" eval="(datetime.now() - relativedelta(weeks=2)).strftime('%Y-%m-%d %H:%M:%S')"/>
+        <field name="date_start" eval="(datetime.now() - relativedelta(weeks=2)).strftime('%Y-%m-%d %H:%M:%S')"/>
     </record>
 
     <record id="mrp_production_drawer_3" model="mrp.production">
@@ -20,7 +20,7 @@
         <field name="location_dest_id" ref="stock.stock_location_stock"/>
         <field name="bom_id" ref="mrp.mrp_bom_drawer"/>
         <field name="create_date" eval="(datetime.now() - relativedelta(weeks=1)).strftime('%Y-%m-%d %H:%M:%S')"/>
-        <field name="date_planned_start" eval="(datetime.now() - relativedelta(weeks=1)).strftime('%Y-%m-%d %H:%M:%S')"/>
+        <field name="date_start" eval="(datetime.now() - relativedelta(weeks=1)).strftime('%Y-%m-%d %H:%M:%S')"/>
     </record>
 
     <function model="mrp.production" name="action_confirm" eval="[[

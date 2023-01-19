@@ -57,14 +57,14 @@ class TestMrpOrder(TestMrpCommon):
             'inventory_quantity': 500
         }).action_apply_inventory()
 
-        test_date_planned = fields.Datetime.now() - timedelta(days=1)
+        date_start = fields.Datetime.now() - timedelta(days=1)
         test_quantity = 3.0
         man_order_form = Form(self.env['mrp.production'].with_user(self.user_mrp_user))
         man_order_form.product_id = self.product_4
         man_order_form.bom_id = self.bom_1
         man_order_form.product_uom_id = self.product_4.uom_id
         man_order_form.product_qty = test_quantity
-        man_order_form.date_planned_start = test_date_planned
+        man_order_form.date_start = date_start
         man_order_form.location_src_id = self.location_1
         man_order_form.location_dest_id = self.warehouse_1.wh_output_stock_loc_id
         man_order = man_order_form.save()
@@ -75,7 +75,7 @@ class TestMrpOrder(TestMrpCommon):
 
         # check production move
         production_move = man_order.move_finished_ids
-        self.assertAlmostEqual(production_move.date, test_date_planned + timedelta(hours=1), delta=timedelta(seconds=10))
+        self.assertAlmostEqual(production_move.date, date_start + timedelta(hours=1), delta=timedelta(seconds=10))
         self.assertEqual(production_move.product_id, self.product_4)
         self.assertEqual(production_move.product_uom, man_order.product_uom_id)
         self.assertEqual(production_move.product_qty, man_order.product_qty)
@@ -84,7 +84,7 @@ class TestMrpOrder(TestMrpCommon):
 
         # check consumption moves
         for move in man_order.move_raw_ids:
-            self.assertEqual(move.date, test_date_planned)
+            self.assertEqual(move.date, date_start)
         first_move = man_order.move_raw_ids.filtered(lambda move: move.product_id == self.product_2)
         self.assertEqual(first_move.product_qty, test_quantity / self.bom_1.product_qty * self.product_4.uom_id.factor_inv * 2)
         first_move = man_order.move_raw_ids.filtered(lambda move: move.product_id == self.product_1)
@@ -485,17 +485,17 @@ class TestMrpOrder(TestMrpCommon):
 
     def test_update_plan_date(self):
         """Editing the scheduled date after planning the MO should unplan the MO, and adjust the date on the stock moves"""
-        planned_date = datetime(2023, 5, 15, 9, 0)
+        date_start = datetime(2023, 5, 15, 9, 0)
         mo_form = Form(self.env['mrp.production'])
         mo_form.product_id = self.product_4
         mo_form.bom_id = self.bom_1
         mo_form.product_qty = 1
-        mo_form.date_planned_start = planned_date
+        mo_form.date_start = date_start
         mo = mo_form.save()
         self.assertEqual(mo.move_finished_ids[0].date, datetime(2023, 5, 15, 10, 0))
         mo.action_confirm()
         mo.button_plan()
-        mo.date_planned_start = datetime(2024, 5, 15, 9, 0)
+        mo.date_start = datetime(2024, 5, 15, 9, 0)
         self.assertEqual(mo.move_finished_ids[0].date, datetime(2024, 5, 15, 10, 0))
 
     def test_rounding(self):
@@ -1346,7 +1346,7 @@ class TestMrpOrder(TestMrpCommon):
         self.assertEqual(move.propagate_cancel, mo.propagate_cancel)
         self.assertFalse(move.raw_material_production_id)
         self.assertEqual(move.location_id, mo.production_location_id)
-        self.assertEqual(move.date, mo._get_date_planned_finished())
+        self.assertEqual(move.date, mo.date_finished)
         self.assertEqual(move.date_deadline, mo.date_deadline)
 
         mo.move_raw_ids |= move
@@ -1580,7 +1580,7 @@ class TestMrpOrder(TestMrpCommon):
         now = fields.Datetime.now()
         mo_form = Form(self.env['mrp.production'])
         mo_form.bom_id = self.bom_3  # product_5 (2), product_4 (8), product_2 (12)
-        mo_form.date_planned_start = now
+        mo_form.date_start = now
         mo = mo_form.save()
         self.assertEqual(mo.components_availability, False)  # no compute for draft
         mo.action_confirm()
@@ -1607,7 +1607,7 @@ class TestMrpOrder(TestMrpCommon):
         self.assertEqual(mo.components_availability, f'Exp {format_date(self.env, tommorrow)}')
         self.assertEqual(mo.components_availability_state, 'late')
 
-        mo.date_planned_start = after_tommorrow
+        mo.date_start = after_tommorrow
 
         self.assertEqual(mo.components_availability, f'Exp {format_date(self.env, tommorrow)}')
         self.assertEqual(mo.components_availability_state, 'expected')
@@ -1959,10 +1959,10 @@ class TestMrpOrder(TestMrpCommon):
         })
 
         # Next Monday at 6:00 am UTC
-        date_planned = (fields.Datetime.now() + timedelta(days=7 - fields.Datetime.now().weekday())).replace(hour=6, minute=0, second=0)
+        date_start = (fields.Datetime.now() + timedelta(days=7 - fields.Datetime.now().weekday())).replace(hour=6, minute=0, second=0)
         mo_form = Form(self.env['mrp.production'])
         mo_form.bom_id = bom
-        mo_form.date_planned_start = date_planned
+        mo_form.date_start = date_start
         mo = mo_form.save()
 
         mo.workorder_ids[0].duration_expected = 240
@@ -1974,11 +1974,11 @@ class TestMrpOrder(TestMrpCommon):
         # Asia/Bangkok is UTC+7 and the start date is on Monday at 06:00 UTC (i.e., 13:00 UTC+7).
         # So, in Bangkok, the first workorder uses the entire Monday afternoon slot 13:00 - 17:00 UTC+7 (i.e., 06:00 - 10:00 UTC)
         # The second job uses the beginning of the Tuesday morning slot: 08:00 - 09:00 UTC+7 (i.e., 01:00 - 02:00 UTC)
-        self.assertEqual(mo.workorder_ids[0].date_planned_start, date_planned)
-        self.assertEqual(mo.workorder_ids[0].date_planned_finished, date_planned + timedelta(hours=4))
-        tuesday = date_planned + timedelta(days=1)
-        self.assertEqual(mo.workorder_ids[1].date_planned_start, tuesday.replace(hour=1))
-        self.assertEqual(mo.workorder_ids[1].date_planned_finished, tuesday.replace(hour=2))
+        self.assertEqual(mo.workorder_ids[0].date_start, date_start)
+        self.assertEqual(mo.workorder_ids[0].date_finished, date_start + timedelta(hours=4))
+        tuesday = date_start + timedelta(days=1)
+        self.assertEqual(mo.workorder_ids[1].date_start, tuesday.replace(hour=1))
+        self.assertEqual(mo.workorder_ids[1].date_finished, tuesday.replace(hour=2))
 
     def test_backorder_with_overconsumption(self):
         """ Check that the components of the backorder have the correct quantities
@@ -2838,7 +2838,7 @@ class TestMrpOrder(TestMrpCommon):
             mo_form = Form(self.env['mrp.production'])
             mo_form.bom_id = self.bom_4
             with mo_form.workorder_ids.edit(0) as wo_line:
-                wo_line.date_planned_start = datetime.now()
+                wo_line.date_start = datetime.now()
             mos += mo_form.save()
         mos.action_confirm()
 
@@ -2853,7 +2853,7 @@ class TestMrpOrder(TestMrpCommon):
 
         self.assertFalse(wo_01.show_json_popover)
         self.assertFalse(wo_02.show_json_popover)
-        self.assertEqual(wo_01.date_planned_finished, wo_02.date_planned_start)
+        self.assertEqual(wo_01.date_finished, wo_02.date_start)
 
     @freeze_time('2022-06-28 08:00')
     def test_replan_workorders02(self):
@@ -2876,7 +2876,7 @@ class TestMrpOrder(TestMrpCommon):
         for mo in mos:
             with Form(mo) as mo_form:
                 with mo_form.workorder_ids.edit(0) as wo_line:
-                    wo_line.date_planned_start = datetime.now()
+                    wo_line.date_start = datetime.now()
 
         wo_01 = mo_01.workorder_ids
         wo_02 = mo_02.workorder_ids
@@ -2887,7 +2887,7 @@ class TestMrpOrder(TestMrpCommon):
 
         self.assertFalse(wo_01.show_json_popover)
         self.assertFalse(wo_02.show_json_popover)
-        self.assertEqual(wo_01.date_planned_finished, wo_02.date_planned_start)
+        self.assertEqual(wo_01.date_finished, wo_02.date_start)
 
     @freeze_time('2022-10-05 12:00')
     def test_replan_mo_without_bom(self):
@@ -2930,27 +2930,27 @@ class TestMrpOrder(TestMrpCommon):
             with mo_01_form.workorder_ids.new() as workorder:
                 workorder.name = "OP2"
                 workorder.workcenter_id = self.workcenter_3
-                workorder.date_planned_start = datetime(2022, 10, 23, 12)
+                workorder.date_start = datetime(2022, 10, 23, 12)
             mo_01 = mo_01_form.save()
         mo_01.action_confirm()
 
         op_1, op_2 = mo_01.workorder_ids
-        self.assertEqual(op_2.date_planned_start, datetime(2022, 10, 23, 12))
+        self.assertEqual(op_2.date_start, datetime(2022, 10, 23, 12))
 
         with Form(mo_01) as mo_01_form:
             with mo_01_form.workorder_ids.edit(0) as workorder:
-                workorder.date_planned_start = datetime(2022, 10, 18, 12)
+                workorder.date_start = datetime(2022, 10, 18, 12)
             mo_01 = mo_01_form.save()
 
-        self.assertEqual(op_1.date_planned_start, datetime(2022, 10, 18, 12))
-        self.assertEqual(op_1.date_planned_finished, op_2.date_planned_start)
+        self.assertEqual(op_1.date_start, datetime(2022, 10, 18, 12))
+        self.assertEqual(op_1.date_finished, op_2.date_start)
 
         #Second MO
         with Form(mo_02) as mo_02_form:
             with mo_02_form.workorder_ids.new() as workorder:
                 workorder.name = "OP1"
                 workorder.workcenter_id = self.workcenter_2
-                workorder.date_planned_start = datetime(2022, 10, 20, 12)
+                workorder.date_start = datetime(2022, 10, 20, 12)
             mo_02 = mo_02_form.save()
         mo_02.action_confirm()
 
@@ -2958,11 +2958,11 @@ class TestMrpOrder(TestMrpCommon):
             with mo_02_form.workorder_ids.new() as workorder:
                 workorder.name = "OP2"
                 workorder.workcenter_id = self.workcenter_3
-                workorder.date_planned_start = datetime(2022, 10, 18, 12)
+                workorder.date_start = datetime(2022, 10, 18, 12)
             mo_02 = mo_02_form.save()
 
         op_1, op_2 = mo_02.workorder_ids
-        self.assertEqual(op_1.date_planned_start, datetime(2022, 10, 20, 12))
+        self.assertEqual(op_1.date_start, datetime(2022, 10, 20, 12))
         self.assertTrue(op_2.show_json_popover)
 
     @freeze_time('2023-03-01 12:00')
@@ -3014,9 +3014,9 @@ class TestMrpOrder(TestMrpCommon):
         mo = mo_form.save()
         mo.action_confirm()
         mo.button_plan()
-        self.assertEqual(mo.workorder_ids[0].date_planned_start, datetime(2023, 3, 1, 12, 0))
-        self.assertEqual(mo.workorder_ids[1].date_planned_start, datetime(2023, 3, 1, 13, 15))
-        self.assertEqual(mo.workorder_ids[2].date_planned_start, datetime(2023, 3, 1, 14, 30))
+        self.assertEqual(mo.workorder_ids[0].date_start, datetime(2023, 3, 1, 12, 0))
+        self.assertEqual(mo.workorder_ids[1].date_start, datetime(2023, 3, 1, 13, 15))
+        self.assertEqual(mo.workorder_ids[2].date_start, datetime(2023, 3, 1, 14, 30))
 
         # wo_1 completely finished
         mo_form = Form(mo)
@@ -3041,9 +3041,9 @@ class TestMrpOrder(TestMrpCommon):
         self.assertEqual(mo_backorder.workorder_ids[0].state, 'cancel')
         self.assertEqual(mo_backorder.workorder_ids[1].state, 'waiting')
         self.assertEqual(mo_backorder.workorder_ids[2].state, 'pending')
-        self.assertFalse(mo_backorder.workorder_ids[0].date_planned_start)
-        self.assertEqual(mo_backorder.workorder_ids[1].date_planned_start, datetime(2023, 3, 1, 12, 0))
-        self.assertEqual(mo_backorder.workorder_ids[2].date_planned_start, datetime(2023, 3, 1, 12, 45))
+        self.assertFalse(mo_backorder.workorder_ids[0].date_start)
+        self.assertEqual(mo_backorder.workorder_ids[1].date_start, datetime(2023, 3, 1, 12, 0))
+        self.assertEqual(mo_backorder.workorder_ids[2].date_start, datetime(2023, 3, 1, 12, 45))
 
     def test_compute_product_id(self):
         """

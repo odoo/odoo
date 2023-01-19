@@ -391,13 +391,13 @@ class TestMrpProductionBackorder(TestMrpCommon):
         The MO and the backorder should be assigned according to the reservation method
         defined in the default manufacturing operation type
         """
-        def create_mo(date_planned_start=False):
+        def create_mo(date_start=False):
             mo_form = Form(self.env['mrp.production'])
             mo_form.product_id = self.bom_1.product_id
             mo_form.bom_id = self.bom_1
             mo_form.product_qty = 2
-            if date_planned_start:
-                mo_form.date_planned_start = date_planned_start
+            if date_start:
+                mo_form.date_start = date_start
             mo = mo_form.save()
             mo.action_confirm()
             return mo
