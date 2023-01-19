@@ -142,6 +142,20 @@
             <field name="website">https://www.odoo.com/app/quality?utm_source=db&amp;utm_medium=module</field>
         </record>
 
+        <record model="ir.module.module" id="base.module_sale_amazon">
+            <field name="name">sale_amazon</field>
+            <field name="shortdesc">Amazon Connector</field>
+            <field name="sequence">320</field>
+            <field name="category_id" ref="base.module_category_sales_sales"/>
+            <field name="application" eval="True"/>
+            <field name="summary">Import Amazon orders and sync deliveries</field>
+            <field name="license">OEEL-1</field>
+            <field name="author">Odoo S.A.</field>
+            <field name="to_buy" eval="True"/>
+            <field name="icon">/base/static/img/icons/sale_amazon.png</field>
+            <field name="website">https://www.odoo.com/app/amazon-connector?utm_source=db&amp;utm_medium=module</field>
+        </record>
+
         <record model="ir.module.module" id="base.module_sale_ebay">
             <field name="name">sale_ebay</field>
             <field name="shortdesc">eBay Connector</field>
