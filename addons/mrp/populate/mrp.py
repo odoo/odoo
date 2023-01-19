@@ -332,7 +332,7 @@ class MrpProduction(models.Model):
             picking_type = self.env['stock.picking.type'].browse(values['picking_type_id'])
             return picking_type.default_location_dest_id.id
 
-        def get_date_planned_start(values, counter, random):
+        def get_date_start(values, counter, random):
             # 95.45 % of picking scheduled between (-10, 30) days and follow a gauss distribution (only +-15% picking is late)
             delta = random.gauss(10, 10)
             return now + timedelta(days=delta)
@@ -345,7 +345,7 @@ class MrpProduction(models.Model):
             ('product_uom_id', populate.compute(get_product_uom_id)),
             ('product_qty', populate.randint(1, 10)),
             ('picking_type_id', populate.compute(get_picking_type_id)),
-            ('date_planned_start', populate.compute(get_date_planned_start)),
+            ('date_start', populate.compute(get_date_start)),
             ('location_src_id', populate.compute(get_location_src_id)),
             ('location_dest_id', populate.compute(get_location_dest_id)),
             ('priority', populate.iterate(['0', '1'], [0.95, 0.05])),
@@ -399,7 +399,7 @@ class StockMove(models.Model):
                     values['location_dest_id'] = production.production_location_id.id
                     values['picking_type_id'] = production.picking_type_id.id
                     values['name'] = production.name
-                    values['date'] = production.date_planned_start
+                    values['date'] = production.date_start
                     values['company_id'] = production.company_id.id
                 yield values
 
