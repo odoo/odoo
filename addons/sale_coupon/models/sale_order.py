@@ -44,7 +44,9 @@ class SaleOrder(models.Model):
         return order
 
     def action_confirm(self):
-        self.generated_coupon_ids.write({'state': 'new'})
+        valid_coupon_ids = self.generated_coupon_ids.filtered(lambda coupon: coupon.state not in ['expired', 'cancel'])
+        valid_coupon_ids.write({'state': 'new', 'partner_id': self.partner_id})
+        (self.generated_coupon_ids - valid_coupon_ids).write({'state': 'cancel', 'partner_id': self.partner_id})
         self.applied_coupon_ids.write({'state': 'used'})
         self._send_reward_coupon_mail()
         return super(SaleOrder, self).action_confirm()
@@ -288,10 +290,15 @@ class SaleOrder(models.Model):
         self.ensure_one()
         self = self.with_context(lang=self.partner_id.lang)
         program = program.with_context(lang=self.partner_id.lang)
+        values = []
         if program.reward_type == 'discount':
-            return self._get_reward_values_discount(program)
+            values = self._get_reward_values_discount(program)
         elif program.reward_type == 'product':
-            return [self._get_reward_values_product(program)]
+            values = [self._get_reward_values_product(program)]
+        seq = max(self.order_line.mapped('sequence'), default=10) + 1
+        for value in values:
+            value['sequence'] = seq
+        return values
 
     def _create_reward_line(self, program):
         self.write({'order_line': [(0, False, value) for value in self._get_reward_line_values(program)]})
@@ -322,7 +329,7 @@ class SaleOrder(models.Model):
         template = self.env.ref('coupon.mail_template_sale_coupon', raise_if_not_found=False)
         if template:
             for order in self:
-                for coupon in order.generated_coupon_ids:
+                for coupon in order.generated_coupon_ids.filtered(lambda coupon: coupon.state == 'new'):
                     order.message_post_with_template(
                         template.id, composition_mode='comment',
                         model='coupon.coupon', res_id=coupon.id,
