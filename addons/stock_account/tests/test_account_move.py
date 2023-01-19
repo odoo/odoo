@@ -151,6 +151,9 @@ class TestAccountMove(TestAccountMoveStockCommon):
         ''' Test manually editing tax amount, cogs creation should not reset tax amount '''
         move_form = Form(self.env["account.move"].with_context(default_move_type="out_invoice"))
         move_form.partner_id = self.partner_a
+        self.company_data["default_account_revenue"].write({
+            'tax_ids': [(6, 0, [self.env.company.account_sale_tax_id.id])]
+        })
         with move_form.invoice_line_ids.new() as line_form:
             line_form.product_id = self.product_A
         invoice = move_form.save()
