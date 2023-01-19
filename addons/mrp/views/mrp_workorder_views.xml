@@ -343,8 +343,8 @@
                         <div class="row g-0">
                             <div class="col">
                                 <ul class="ps-1 mb-0 list-unstyled">
-                                    <li><strong>Start Date: </strong> <t t-out="userTimezoneStartDate.format('L LTS')"/></li>
-                                    <li><strong>Stop Date: </strong> <t t-out="userTimezoneStopDate.format('L LTS')"/></li>
+                                    <li><strong>Start Date: </strong> <t t-out="date_planned_start.toFormat('F')"/></li>
+                                    <li><strong>Stop Date: </strong> <t t-out="date_planned_finished.toFormat('F')"/></li>
                                     <li><strong>Workcenter: </strong> <t t-out="workcenter_id[1]"/></li>
                                 </ul>
                             </div>
@@ -383,6 +383,10 @@
                         <div class="row g-0">
                             <div class="col">
                                 <ul class="ps-1 mb-0 list-unstyled">
+                                    <!-- TODO WOWL CONVERSION
+                                    <li><strong>Start Date: </strong><t t-out="date_planned_start.toFormat('F')"/></li>
+                                    <li><strong>Stop Date: </strong><t t-out="date_planned_finished.toFormat('F')"/></li>
+                                    -->
                                     <li><strong>Start Date: </strong> <t t-out="userTimezoneStartDate.format('L LTS')"/></li>
                                     <li><strong>Stop Date: </strong> <t t-out="userTimezoneStopDate.format('L LTS')"/></li>
                                     <li><strong>Workcenter: </strong> <t t-out="workcenter_id[1]"/></li>
