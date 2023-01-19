@@ -33,7 +33,7 @@ class ReceptionReport(models.AbstractModel):
 
     def _get_formatted_scheduled_date(self, source):
         if source._name == 'mrp.production':
-            return format_date(self.env, source.date_planned_start)
+            return format_date(self.env, source.date_start)
         return super()._get_formatted_scheduled_date(source)
 
     def _action_assign(self, in_move, out_move):

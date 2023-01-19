@@ -13,7 +13,7 @@
                 <filter string="Pending" name="pending" domain="[('state','=','pending')]"/>
                 <filter string="In Progress" name="progress" domain="[('state','=','progress')]"/>
                 <filter string="Done" name="done" domain="[('state','=', 'done')]"/>
-                <filter string="Late" name="late" domain="[('date_planned_start','&lt;=',time.strftime('%Y-%m-%d'))]"/>
+                <filter string="Late" name="late" domain="[('date_start','&lt;=',time.strftime('%Y-%m-%d'))]"/>
                 <separator/>
                 <filter string="Start Date" name="date_start_filter" date="date_start"/>
                 <group expand="0" string="Group By...">
@@ -80,10 +80,8 @@
                 <field name="product_id" optional="show"/>
                 <field name="qty_remaining" optional="show" string="Quantity"/>
                 <field name="finished_lot_id" optional="hide" string="Lot/Serial"/>
-                <field name="date_planned_start" optional="show"/>
-                <field name="date_planned_finished" optional="hide"/>
-                <field name="date_start" optional="hide" readonly="1"/>
-                <field name="date_finished" optional="hide" readonly="1"/>
+                <field name="date_start" optional="show" attrs="{'readonly': [('state', 'in', ['progress', 'done', 'cancel'])]}"/>
+                <field name="date_finished" optional="hide" attrs="{'readonly': [('state', 'in', ['progress', 'done', 'cancel'])]}"/>
                 <field name="duration_expected" widget="float_time" sum="expected duration"/>
                 <field name="duration" widget="mrp_timer"
                   attrs="{'invisible': [('production_state','=', 'draft')], 'readonly': [('is_user_working', '=', True)]}" sum="real duration"/>
@@ -154,13 +152,14 @@
                 <field name="product_id" invisible="1"/>
                 <field name="finished_lot_id" invisible="1"/>
                 <group>
-                    <group attrs="{'invisible': [('date_planned_start', '=', False)]}">
-                        <label for="date_planned_start" string="Planned Date"/>
+                    <group attrs="{'invisible': [('date_start', '=', False)]}">
+                        <label for="date_start" string="Scheduled Date" attrs="{'invisible': [('state', 'in', ['progress', 'done', 'cancel'])]}"/>
+                        <label for="date_start" string="Start Date" attrs="{'invisible': [('state', 'not in', ['progress', 'done', 'cancel'])]}"/>
                         <div class="oe_inline">
                             <field name="is_planned" invisible="1"/>
-                            <field name="date_planned_start" class="mr8 oe_inline" attrs="{'required': [('is_planned', '=', True)]}"/>
+                            <field name="date_start" class="mr8 oe_inline" attrs="{'required': [('is_planned', '=', True)]}"/>
                             <strong class="mr8 oe_inline">to</strong>
-                            <field name="date_planned_finished" class="oe_inline" attrs="{'required': [('is_planned', '=', True)]}"/>
+                            <field name="date_finished" class="oe_inline" attrs="{'required': [('is_planned', '=', True)]}"/>
                             <field name="show_json_popover" invisible="1"/>
                             <field name="json_popover" widget="mrp_workorder_popover" class="oe_inline mx-2" attrs="{'invisible': [('show_json_popover', '=', False)]}"/>
                         </div>
@@ -232,8 +231,8 @@
                             <field name="name" string="Operation"/>
                             <field name="company_id" optional="hide" groups="base.group_multi_company"/>
                             <field name="workcenter_id"/>
-                            <field name="date_planned_start" readonly="1"/>
-                            <field name="date_planned_finished" readonly="1"/>
+                            <field name="date_start" readonly="1"/>
+                            <field name="date_finished" readonly="1"/>
                             <field name="duration_expected" widget="float_time" sum="expected duration"/>
                             <field name="production_state" invisible="1"/>
                             <field name="state" widget="badge" decoration-warning="state == 'progress'" decoration-success="state == 'done'" decoration-info="state not in ('progress', 'done', 'cancel')"
@@ -264,13 +263,13 @@
                 <filter string="Draft" name="draft" domain="[('state', '=', 'pending'), ('production_state', '=', 'draft')]"/>
                 <filter string="Finished" name="finish" domain="[('state', '=', 'done')]"/>
                 <separator/>
-                <filter string="Late" name="late" domain="['&amp;', ('date_planned_start', '&lt;', current_date), ('state', '=', 'ready')]"
+                <filter string="Late" name="late" domain="['&amp;', ('date_start', '&lt;', current_date), ('state', '=', 'ready')]"
                     help="Production started late"/>
                 <group expand="0" string="Group By">
                     <filter string="Work Center" name="work_center" domain="[]" context="{'group_by': 'workcenter_id'}"/>
                     <filter string="Manufacturing Order" name="production" domain="[]" context="{'group_by': 'production_id'}"/>
                     <filter string="Status" name="status" domain="[]" context="{'group_by': 'state'}"/>
-                    <filter string="Scheduled Date" name="scheduled_month" domain="[]" context="{'group_by': 'date_planned_start'}"/>
+                    <filter string="Date" name="scheduled_month" domain="[]" context="{'group_by': 'date_start'}"/>
                 </group>
              </search>
         </field>
@@ -280,7 +279,7 @@
         <field name="name">mrp.production.work.order.calendar</field>
         <field name="model">mrp.workorder</field>
         <field name="arch" type="xml">
-            <calendar date_stop="date_planned_finished" date_start="date_planned_start" string="Operations" color="workcenter_id" event_limit="5" delete="0" create="0">
+            <calendar date_stop="date_finished" date_start="date_start" string="Operations" color="workcenter_id" event_limit="5" delete="0" create="0">
                 <field name="workcenter_id" filters="1"/>
                 <field name="production_id"/>
                 <field name="state"/>
@@ -319,7 +318,7 @@
         <field name="name">mrp.production.work.order.gantt.production</field>
         <field name="model">mrp.workorder</field>
         <field name="arch" type="xml">
-            <gantt class="o_mrp_workorder_gantt" date_stop="date_planned_finished" date_start="date_planned_start" string="Operations" default_group_by="production_id" create="0" delete="0"
+            <gantt class="o_mrp_workorder_gantt" date_stop="date_finished" date_start="date_start" string="Operations" default_group_by="production_id" create="0" delete="0"
                 progress="progress" plan="0"
                 decoration-danger="json_popover and 'text-danger' in json_popover"
                 decoration-success="state == 'done'"
@@ -333,7 +332,7 @@
                 sample="1"
                 form_view_id="%(mrp_production_workorder_form_view_inherit)d">
 
-                <field name="date_planned_start"/>
+                <field name="date_start"/>
                 <field name="state"/>
                 <field name="workcenter_id"/>
                 <field name="json_popover"/>
@@ -343,8 +342,8 @@
                         <div class="row g-0">
                             <div class="col">
                                 <ul class="ps-1 mb-0 list-unstyled">
-                                    <li><strong>Start Date: </strong> <t t-esc="date_planned_start.toFormat('F')"/></li>
-                                    <li><strong>Stop Date: </strong> <t t-esc="date_planned_finished.toFormat('F')"/></li>
+                                    <li><strong>Start Date: </strong> <t t-esc="date_start.toFormat('F')"/></li>
+                                    <li><strong>Stop Date: </strong> <t t-esc="date_finished.toFormat('F')"/></li>
                                     <li><strong>Workcenter: </strong> <t t-esc="workcenter_id[1]"/></li>
                                 </ul>
                             </div>
@@ -359,7 +358,7 @@
         <field name="name">mrp.workorder.view.gantt</field>
         <field name="model">mrp.workorder</field>
         <field name="arch" type="xml">
-            <gantt class="o_mrp_workorder_gantt" date_stop="date_planned_finished" date_start="date_planned_start" string="Operations" default_group_by="workcenter_id" create="0"
+            <gantt class="o_mrp_workorder_gantt" date_stop="date_finished" date_start="date_start" string="Operations" default_group_by="workcenter_id" create="0"
                 delete="0" sample="1"
                 progress="progress" plan="0"
                 decoration-danger="json_popover and 'text-danger' in json_popover"
@@ -373,7 +372,7 @@
                 precision="{'day': 'hour:full', 'week': 'day:full', 'month': 'day:full', 'year': 'day:full'}"
                 form_view_id="mrp_production_workorder_form_view_inherit">
 
-                <field name="date_planned_start"/>
+                <field name="date_start"/>
                 <field name="state"/>
                 <field name="workcenter_id"/>
                 <field name="json_popover"/>
@@ -383,8 +382,8 @@
                         <div class="row g-0">
                             <div class="col">
                                 <ul class="ps-1 mb-0 list-unstyled">
-                                    <li><strong>Start Date: </strong><t t-esc="date_planned_start.toFormat('F')"/></li>
-                                    <li><strong>Stop Date: </strong><t t-esc="date_planned_finished.toFormat('F')"/></li>
+                                    <li><strong>Start Date: </strong><t t-esc="date_start.toFormat('F')"/></li>
+                                    <li><strong>Stop Date: </strong><t t-esc="date_finished.toFormat('F')"/></li>
                                     <li><strong>Workcenter: </strong> <t t-esc="workcenter_id[1]"/></li>
                                 </ul>
                             </div>
@@ -411,7 +410,7 @@
                 <field name="product_id"/>
                 <field name="qty_remaining"/>
                 <field name="qty_production"/>
-                <field name="date_planned_start"/>
+                <field name="date_start"/>
                 <field name="production_date"/>
                 <field name="product_uom_id" force_save="1"/>
                 <field name="operation_id"/>
@@ -425,7 +424,7 @@
                                     </h4>
                                 </div>
                                 <div class="o_kanban_workorder_date">
-                                    <h5><span class="d-flex" t-esc="record.date_planned_start.value or record.production_date.value"/></h5>
+                                    <h5><span class="d-flex" t-esc="record.date_start.value or record.production_date.value"/></h5>
                                 </div>
                                 <div>
                                     <h2 class="ml8">
