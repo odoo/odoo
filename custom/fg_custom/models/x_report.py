@@ -47,7 +47,7 @@ class FgXReport(models.AbstractModel):
             refund_start_order_id = self.env['pos.order'].search([('session_id', '=', session_id.id),('pos_refund_si_reference', '!=', False)], limit=1, order='pos_refund_si_reference asc')
             refund_end_order_id = self.env['pos.order'].search([('session_id', '=', session_id.id),('pos_refund_si_reference', '!=', False)], limit=1, order='pos_refund_si_reference desc')
 
-            return_order_ids |= session_id.order_ids.filtered(lambda x: x.pos_refund_si_reference)
+            return_order_ids = session_id.order_ids.filtered(lambda x: x.pos_refund_si_reference)
             if trans_end_order_id.pos_trans_reference and trans_start_order_id.pos_trans_reference: #trans
                 start_end_order_list.append(trans_start_order_id.pos_trans_reference + ' - ' + trans_end_order_id.pos_trans_reference)
 
@@ -89,6 +89,10 @@ class FgXReport(models.AbstractModel):
                             str_non_zero_vat = i.is_non_zero_vat
                         if str_non_zero_vat == 'is_vat':
                             total_product_v += line.price_subtotal
+                        elif str_non_zero_vat == 'is_zero_vat':
+                            total_product_z += line.price_subtotal
+                        else:
+                            total_product_e += line.price_subtotal
                         if line.is_program_reward:
                             total_discount_coupon_minus += abs(line.price_unit)
                         else:
@@ -97,6 +101,34 @@ class FgXReport(models.AbstractModel):
                     total_discount_qty += 1
                 if is_total_vat_qty:
                     total_vat_qty += 1
+                # if order.x_ext_source:
+                #     if order.x_ext_source in transactions_history:
+                #         count = transactions_history[order.x_ext_source].get('count') + 1
+                #         total = transactions_history[order.x_ext_source].get('total') + order.amount_total
+                #         transactions_history[order.x_ext_source].update({'count': count, 'total': total})
+                #     else:
+                #         transactions_history[order.x_ext_source] = {'count': 1, 'total': order.amount_total}
+                # else:
+                #     if 'Retail' in transactions_history:
+                #         count = transactions_history['Retail'].get('count') + 1
+                #         total = transactions_history['Retail'].get('total') + order.amount_total
+                #         transactions_history['Retail'].update({'count': count, 'total': total})
+                #     else:
+                #         transactions_history['Retail'] = {'count': 1, 'total': order.amount_total}
+                if order.amount_return:
+                    changes_order_count += len(order)
+                    changes_order_total += order.amount_return
+
+            # for order in session_id.order_ids.filtered(lambda x: not x.is_refunded and x.amount_total > 0):
+            for order in session_id.order_ids:
+                if order.payment_ids:
+                    for pay in order.payment_ids:
+                        if pay.payment_method_id.name in tender_history:
+                            count = tender_history[pay.payment_method_id.name].get('count') + 1
+                            total = tender_history[pay.payment_method_id.name].get('total') + pay.amount
+                            tender_history[pay.payment_method_id.name].update({'count': count, 'total': total})
+                        else:
+                            tender_history[pay.payment_method_id.name] = {'count': 1, 'total': pay.amount}
                 if order.x_ext_source:
                     if order.x_ext_source in transactions_history:
                         count = transactions_history[order.x_ext_source].get('count') + 1
@@ -111,19 +143,20 @@ class FgXReport(models.AbstractModel):
                         transactions_history['Retail'].update({'count': count, 'total': total})
                     else:
                         transactions_history['Retail'] = {'count': 1, 'total': order.amount_total}
-                if order.amount_return:
-                    changes_order_count += len(order)
-                    changes_order_total += order.amount_return
 
-            for order in session_id.order_ids.filtered(lambda x: not x.is_refunded and x.amount_total > 0):
-                if order.payment_ids:
-                    for pay in order.payment_ids:
-                        if pay.payment_method_id.name in tender_history:
-                            count = tender_history[pay.payment_method_id.name].get('count') + 1
-                            total = tender_history[pay.payment_method_id.name].get('total') + pay.amount
-                            tender_history[pay.payment_method_id.name].update({'count': count, 'total': total})
-                        else:
-                            tender_history[pay.payment_method_id.name] = {'count': 1, 'total': pay.amount}
+            # deduct refund in vat breakdown
+            for order in return_order_ids:
+                for line in order.lines:
+                    for i in line.tax_ids_after_fiscal_position:
+                        str_non_zero_vat = i.is_non_zero_vat
+                    if str_non_zero_vat == 'is_vat':
+                        total_product_v += line.price_subtotal
+                    elif str_non_zero_vat == 'is_zero_vat':
+                        total_product_z += line.price_subtotal
+                    else:
+                        total_product_e += line.price_subtotal
+                    current_total_vat = line.price_subtotal_incl - line.price_subtotal
+                    total_vat += current_total_vat
 
             for i in session_id.statement_ids:
                 for j in i.line_ids:
