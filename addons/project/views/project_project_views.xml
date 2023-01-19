@@ -406,7 +406,7 @@
                                         <div role="menuitem" class="o_kanban_card_manage_title" groups="project.group_project_user">
                                             <span>Reporting</span>
                                         </div>
-                                        <div role="menuitem" groups="project.group_project_user">
+                                        <div role="menuitem" groups="project.group_project_user" class="o_kanban_task_analysis">
                                             <a name="action_view_tasks_analysis" type="object">Tasks Analysis</a>
                                         </div>
                                         <div role="menuitem" name="project_burndown_menu" groups="project.group_project_user">
@@ -672,7 +672,7 @@
                 <xpath expr="/kanban" position="inside">
                     <field name="id"/>
                 </xpath>
-                <xpath expr="//div[hasclass('o_kanban_manage_view')]" position="inside">
+                <xpath expr="//div[hasclass('o_kanban_task_analysis')]" position="before">
                     <div role="menuitem" groups="project.group_project_user">
                         <a name="project_update_all_action" type="object" t-attf-context="{'active_id': #{record.id.raw_value} }">Project Updates</a>
                     </div>
