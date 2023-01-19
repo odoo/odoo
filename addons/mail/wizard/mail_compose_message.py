@@ -498,6 +498,8 @@ class MailComposer(models.TransientModel):
         messages = self.env['mail.message']
         for res_id, post_values in post_values_all.items():
             if ActiveModel._name == 'mail.thread':
+                post_values.pop('message_type')  # forced to user_notification
+                post_values.pop('parent_id', False)  # not supported in notify
                 if self.model:
                     post_values['model'] = self.model
                     post_values['res_id'] = res_id

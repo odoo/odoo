@@ -1072,7 +1072,7 @@ class MailCommon(common.TransactionCase, MailCase):
         return cls.user_portal
 
     @classmethod
-    def _create_records_for_batch(cls, model, count, additional_values=None, prefix=None):
+    def _create_records_for_batch(cls, model, count, additional_values=None, prefix=''):
         additional_values = additional_values or {}
         records = cls.env[model]
         partners = cls.env['res.partner']
