@@ -2269,8 +2269,8 @@ class MailThread(models.AbstractModel):
                     record.ids,
                 )['value']
                 composer.write(update_values)
-                _mails_as_sudo, messages_as_sudo = composer._action_send_mail()
-                messages += messages_as_sudo
+                _mails_as_sudo, messages = composer._action_send_mail()
+                messages += messages
             else:
                 messages += record.message_post(
                     body=bodies[record.id],
@@ -2286,6 +2286,7 @@ class MailThread(models.AbstractModel):
                        author_id=None, email_from=None,
                        model=False, res_id=False,
                        subtype_xmlid=None, subtype_id=False, partner_ids=False,
+                       attachments=None, attachment_ids=None,
                        **kwargs):
         """ Shortcut allowing to notify partners of messages that should not be
         displayed on a document. It pushes notifications on inbox or by email
@@ -2311,7 +2312,13 @@ class MailThread(models.AbstractModel):
         :param int subtype_id: subtype_id of the message, used mainly for followers
           notification mechanism;
         :param list(int) partner_ids: partner_ids to notify in addition to partners
-          computed based on subtype / followers matching;
+            computed based on subtype / followers matching;
+        :param list(tuple(str,str), tuple(str,str, dict)) attachments : list of attachment
+            tuples in the form ``(name,content)`` or ``(name,content, info)`` where content
+            is NOT base64 encoded;
+        :param list attachment_ids: list of existing attachments to link to this message
+            Should not be a list of commands. Attachment records attached to mail
+            composer will be attached to the related document.
 
         Extra keyword arguments will be used either
           * as default column values for the new mail.message record if they match
@@ -2331,6 +2338,23 @@ class MailThread(models.AbstractModel):
             set(kwargs.keys()),
             forbidden_names={'message_id', 'message_type', 'parent_id'}
         )
+        if attachments:
+            # attachments should be a list (or tuples) of 3-elements list (or tuple)
+            format_error = not tools.is_list_of(attachments, list) and not tools.is_list_of(attachments, tuple)
+            if not format_error:
+                format_error = not all(len(attachment) in {2, 3} for attachment in attachments)
+            if format_error:
+                raise ValueError(
+                    _('Notification should receive attachments as a list of list or tuples (received %(aids)s)',
+                      aids=repr(attachment_ids),
+                     )
+                )
+        if attachment_ids and not tools.is_list_of(attachment_ids, int):
+            raise ValueError(
+                _('Notification should receive attachments records as a list of IDs (received %(aids)s)',
+                  aids=repr(attachment_ids),
+                 )
+            )
         if not tools.is_list_of(partner_ids, int):
             raise ValueError(
                 _('Notification should receive partners given as a list of IDs (received %(pids)s)',
@@ -2378,6 +2402,10 @@ class MailThread(models.AbstractModel):
         # add default-like values afterwards, to avoid useless queries
         if 'reply_to' not in msg_values:
             msg_values['reply_to'] = self._notify_get_reply_to(default=email_from)[self.id if self else False]
+
+        msg_values.update(
+            self._process_attachments_for_post(attachments, attachment_ids, msg_values)
+        )  # attachement_ids, body
 
         new_message = self._message_create([msg_values])
         self._fallback_lang()._notify_thread(new_message, msg_values, **notif_kwargs)
