@@ -54,12 +54,6 @@
         <field name="groups_id" eval="[(4,ref('project.group_project_manager'))]"/>
     </record>
 
-    <record model="ir.rule" id="project_comp_rule">
-        <field name="name">Project: multi-company</field>
-        <field name="model_id" ref="model_project_project"/>
-        <field name="domain_force">[('company_id', 'in', company_ids)]</field>
-    </record>
-
     <record model="ir.rule" id="project_project_manager_rule">
         <field name="name">Project: project manager: see all</field>
         <field name="model_id" ref="model_project_project"/>
@@ -75,12 +69,6 @@
                                         ('message_partner_ids', 'in', [user.partner_id.id])
                                     ]</field>
         <field name="groups" eval="[(4, ref('base.group_user'))]"/>
-    </record>
-
-    <record model="ir.rule" id="task_comp_rule">
-        <field name="name">Project/Task: multi-company</field>
-        <field name="model_id" ref="model_project_task"/>
-        <field name="domain_force">[('company_id', 'in', company_ids)]</field>
     </record>
 
     <record model="ir.rule" id="task_visibility_rule">
@@ -133,12 +121,6 @@
         <field name="perm_create" eval="True"/>
         <field name="perm_unlink" eval="True"/>
         <field name="groups" eval="[(4,ref('project.group_project_user'))]"/>
-    </record>
-
-    <record model="ir.rule" id="report_project_task_user_report_comp_rule">
-        <field name="name">Task Analysis multi-company</field>
-        <field name="model_id" ref="model_report_project_task_user"/>
-        <field name="domain_force">[('company_id', 'in', company_ids)]</field>
     </record>
 
     <record id="ir_rule_project_personal_stage_my" model="ir.rule">
@@ -217,12 +199,6 @@
         <field name="perm_unlink" eval="False"/>
     </record>
 
-    <record model="ir.rule" id="update_comp_rule">
-        <field name="name">Project/Updates: multi-company</field>
-        <field name="model_id" ref="model_project_update"/>
-        <field name="domain_force">[('project_id.company_id', 'in', company_ids)]</field>
-    </record>
-
     <record model="ir.rule" id="update_visibility_rule">
         <field name="name">Project/Update: employees: follow required for follower-only projects</field>
         <field name="model_id" ref="model_project_update"/>
@@ -285,12 +261,6 @@
         <field name="model_id" ref="model_project_task_burndown_chart_report"/>
         <field name="domain_force">[(1, '=', 1)]</field>
         <field name="groups" eval="[(4,ref('project.group_project_manager'))]"/>
-    </record>
-
-    <record model="ir.rule" id="milestone_comp_rule">
-        <field name="name">Project/Milestone: multi-company</field>
-        <field name="model_id" ref="model_project_milestone"/>
-        <field name="domain_force">[('project_id.company_id', 'in', company_ids)]</field>
     </record>
 
     <record model="ir.rule" id="milestone_visibility_rule">

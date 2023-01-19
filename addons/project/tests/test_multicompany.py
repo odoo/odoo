@@ -314,3 +314,19 @@ class TestMultiCompanyProject(TestMultiCompanyCommon):
             with self.assertRaises(AccessError):
                 with Form(task) as task_form:
                     task_form.name = "Testing changing name in a company I can not read/write"
+
+    def test_multi_company_no_access_rules(self):
+        """ this test ensures that users from different companies have access and are able to modify projects/tasks even if the company of the projects/tasks is not in their
+        allowed_companies """
+        # employee with company B has access to projects and tasks in company B
+        with self.sudo('employee-b'):
+            self.project_company_b.name = "test name project update again"
+            self.assertEqual(self.project_company_b.name, "test name project update again")
+            self.task_2.name = "test name task update again"
+            self.assertEqual(self.task_2.name, "test name task update again")
+        # employee with company A has access to projects and tasks in company B
+        with self.sudo('employee-a'):
+            self.project_company_b.name = "test name project update"
+            self.assertEqual(self.project_company_b.name, "test name project update")
+            self.task_2.name = "test name task update"
+            self.assertEqual(self.task_2.name, "test name task update")
