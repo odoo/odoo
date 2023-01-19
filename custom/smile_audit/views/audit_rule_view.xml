@@ -1,0 +1,54 @@
+<?xml version="1.0"?>
+<odoo>
+    <data>
+
+		<menuitem id="menu_audit" parent="base.menu_administration" name="Audit" sequence="100"/>
+
+        <record model="ir.ui.view" id="view_audit_rule_tree">
+            <field name="name">audit.rule.tree</field>
+            <field name="model">audit.rule</field>
+            <field name="type">tree</field>
+            <field name="arch" type="xml">
+                <tree string="Audit Rules" editable="top">
+                    <field name="name"/>
+                    <field name="model_id"/>
+                    <field name="log_create"/>
+                    <field name="log_write"/>
+                    <field name="log_unlink"/>
+                    <field name="group_id"/>
+                    <field name="active"/>
+                    <field name="state" invisible="1"/>
+                </tree>
+            </field>
+        </record>
+
+       <record id="view_audit_rule_search" model="ir.ui.view">
+            <field name="name">audit.rule.search</field>
+            <field name="model">audit.rule</field>
+            <field name="type">search</field>
+            <field name="arch" type="xml">
+                <search string="Audit Rules">
+                    <filter name="active" string="Active Rules" domain="[('active','=',True)]"/>
+                    <separator/>
+                    <filter name="log_create" string="Log Creation" domain="[('log_create','=',True)]"/>
+                    <filter name="log_write" string="Log Update" domain="[('log_write','=',True)]"/>
+                    <filter name="log_unlink" string="Log Deletion" domain="[('log_unlink','=',True)]"/>
+                    <field name="name"/>
+                    <field name="model_id"/>
+                </search>
+            </field>
+        </record>
+
+        <record model="ir.actions.act_window" id="action_audit_rule_tree">
+            <field name="name">Rules</field>
+            <field name="res_model">audit.rule</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="view_mode">tree</field>
+            <field name="search_view_id" ref="view_audit_rule_search"/>
+            <field name="context">{'search_default_active': True, 'active_test': False}</field>
+        </record>
+
+        <menuitem id="menu_action_audit_rule_tree" action="action_audit_rule_tree" parent="menu_audit" />
+
+    </data>
+</odoo>

@@ -1,0 +1,92 @@
+<?xml version="1.0"?>
+<odoo>
+    <data>
+
+        <record model="ir.ui.view" id="view_audit_log_form">
+            <field name="name">audit.log.form</field>
+            <field name="model">audit.log</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="Audit Log" create="false" edit="false">
+                	<sheet>
+                        <div class="oe_button_box" name="button_box">
+                            <button name="display_history_revision" type="object" class="oe_stat_button" icon="fa-history">
+								<div class="o_form_field o_stat_info">
+									<span class="o_stat_text">History<br/>revision</span>
+								</div>
+                            </button>
+                        </div>
+                        <div class="oe_title" colspan="4">
+                            <h1>
+                                <field name="name"/>
+                            </h1>
+                            <div groups="base.group_no_one">
+                                <field name="model_id" class="oe_inline"/>,<field name="res_id"/>
+                            </div>
+    		                <group>
+                                <field name="create_date"/>
+                                <field name="user_id"/>
+                                <field name="method" groups="base.group_no_one"/>
+    		                </group>
+                        </div>
+                        <notebook>
+                            <page string="Changes">
+                                <field name="data_html" colspan="4" nolabel="1"/>
+                            </page>
+                        </notebook>
+	                </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record model="ir.ui.view" id="view_audit_log_tree">
+            <field name="name">audit.log.tree</field>
+            <field name="model">audit.log</field>
+            <field name="type">tree</field>
+            <field name="arch" type="xml">
+                <tree string="Audit Logs" create="false">
+                    <field name="create_date"/>
+                    <field name="name"/>
+                    <field name="model_id" groups="base.group_no_one"/>
+                    <field name="res_id" groups="base.group_no_one"/>
+                    <field name="method" groups="base.group_no_one"/>
+                    <field name="user_id"/>
+                    <button name="display_history_revision" type="object" string="Display history revision"
+                      icon="fa-history"/>
+                </tree>
+            </field>
+        </record>
+
+       <record id="view_audit_log_search" model="ir.ui.view">
+            <field name="name">audit.log.search</field>
+            <field name="model">audit.log</field>
+            <field name="type">search</field>
+            <field name="arch" type="xml">
+                <search string="Audit Logs">
+                    <filter name="log_create" string="Creation" icon="terp-tools" domain="[('method','=','create')]"/>
+                    <filter name="log_write" string="Update" icon="terp-tools" domain="[('method','=','write')]"/>
+                    <filter name="log_unlink" string="Deletion" icon="terp-tools" domain="[('method','=','unlink')]"/>
+                    <field name="name"/>
+                    <field name="model_id"/>
+                    <field name="user_id"/>
+	                <newline/>
+    	            <group expand="0" string="Group By...">
+                    	<filter name="group_by_user_id" string="User" context="{'group_by':'user_id'}"/>
+                    	<filter name="group_by_model_id" string="Model" context="{'group_by':'model_id'}"/>
+						<filter name="group_by_create_date" string="Date" context="{'group_by':'create_date'}"/>
+                	</group>
+                </search>
+            </field>
+        </record>
+
+        <record model="ir.actions.act_window" id="action_audit_log_tree">
+            <field name="name">Logs</field>
+            <field name="res_model">audit.log</field>
+            <field name="search_view_id" ref="view_audit_log_search"/>
+            <field name="view_id" ref="view_audit_log_tree"/>
+        </record>
+
+        <menuitem id="menu_action_audit_log_tree" action="action_audit_log_tree" parent="menu_audit"/>
+
+    </data>
+</odoo>
