@@ -176,12 +176,12 @@
                     <field name="ref" optional="hide" readonly="False"/>
                     <field name="product_id" readonly="1" optional="hide"/>
                     <field name="name" optional="show"/>
-                    <field name="tax_ids" widget="many2many_tags" width="0.5" optional="hide" readonly="1"/>
+                    <field name="tax_ids" widget="many2many_tags" optional="hide" readonly="1"/>
                     <field name="amount_currency" groups="base.group_multi_currency" optional="show" readonly="1" attrs="{'invisible':[('is_same_currency', '=', True)]}"/>
                     <field name="currency_id" readonly="1" groups="base.group_multi_currency" optional="hide" string="Currency" attrs="{'invisible':[('is_same_currency', '=', True)]}"/>
                     <field name="debit" sum="Total Debit" readonly="1"/>
                     <field name="credit" sum="Total Credit" readonly="1"/>
-                    <field name="tax_tag_ids" string="Tax Grids" widget="many2many_tags" width="0.5" optional="hide"/>
+                    <field name="tax_tag_ids" string="Tax Grids" widget="many2many_tags" optional="hide"/>
                     <field name="discount_date" string="Discount Date" optional="hide" />
                     <field name="discount_amount_currency" string="Discount Amount" optional="hide" />
                     <field name="tax_line_id" string="Originator Tax" optional="hide" readonly="1"/>

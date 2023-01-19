@@ -299,11 +299,10 @@
                                         context="{'default_company_id': company_id, 'default_product_id': product_id, 'active_picking_id': parent.id}"
                                         domain="[('product_id','=',product_id)]"
                                     />
-                                    <button name="action_show_details" type="object" icon="fa-list" width="0.1" title="Details"
+                                    <button name="action_show_details" type="object" icon="fa-list" title="Details"
                                             attrs="{'invisible': [('show_details_visible', '=', False)]}" options='{"warn": true}'/>
                                     <button name="action_assign_serial" type="object"
                                             icon="fa-plus-square"
-                                            width="0.1"
                                             role="img" title="Assign Serial Numbers"
                                             attrs="{'invisible': ['|', ('display_assign_serial', '=', False), ('show_operations', '=', False)]}"/>
                                 </tree>
