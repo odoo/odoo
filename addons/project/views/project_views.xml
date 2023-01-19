@@ -1278,9 +1278,9 @@
                                 </tree>
                             </field>
                         </page>
-                        <page name="recurrence" string="Recurrent"  groups="project.group_project_recurring_tasks">
+                        <page name="recurrence" string="Recurrent" groups="project.group_project_recurring_tasks">
                             <label for="recurring_task" />
-                            <field name="recurring_task" attrs="{'invisible': ['|', ('allow_recurring_tasks', '=', False), ('active', '=', False)]}"/>
+                            <field name="recurring_task" class="ms-5" attrs="{'invisible': ['|', ('allow_recurring_tasks', '=', False), ('active', '=', False)]}"/>
                             <group attrs="{'invisible': [('recurring_task', '=', False)]}">
                                 <group>
                                     <label for="repeat_interval" />
