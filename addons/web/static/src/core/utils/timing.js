@@ -8,6 +8,7 @@ import { onWillUnmount, useComponent } from "@odoo/owl";
  * Creates a version of the function where only the last call between two
  * animation frames is executed before the browser's next repaint. This
  * effectively throttles the function to the display's refresh rate.
+ * NB: The first call is always called immediately (leading edge).
  *
  * @template {Function} T
  * @param {T} func the function to throttle
@@ -15,21 +16,38 @@ import { onWillUnmount, useComponent } from "@odoo/owl";
  */
 export function throttleForAnimation(func) {
     let handle = null;
+    const calls = new Set();
     const funcName = func.name ? `${func.name} (throttleForAnimation)` : "throttleForAnimation";
+    const pending = () => {
+        if (calls.size) {
+            handle = browser.requestAnimationFrame(pending);
+            const { args, resolve } = [...calls].pop();
+            calls.clear();
+            Promise.resolve(func.apply(this, args)).then(resolve);
+        } else {
+            handle = null;
+        }
+    };
     return Object.assign(
         {
             /** @type {any} */
             [funcName](...args) {
-                browser.cancelAnimationFrame(handle);
-                handle = browser.requestAnimationFrame(() => {
-                    handle = null;
-                    func.call(this, ...args);
+                return new Promise((resolve) => {
+                    const isNew = handle === null;
+                    if (isNew) {
+                        handle = browser.requestAnimationFrame(pending);
+                        Promise.resolve(func.apply(this, args)).then(resolve);
+                    } else {
+                        calls.add({ args, resolve });
+                    }
                 });
             },
         }[funcName],
         {
             cancel() {
                 browser.cancelAnimationFrame(handle);
+                calls.clear();
+                handle = null;
             },
         }
     );

@@ -129,7 +129,7 @@ QUnit.test("can change the popper reference name", async (assert) => {
 });
 
 QUnit.test("has no effect when component is destroyed", async (assert) => {
-    const execRegisteredCallbacks = mockAnimationFrame();
+    mockAnimationFrame();
     const TestComp = getTestComponent({
         onPositioned: () => {
             assert.step("onPositioned called");
@@ -138,16 +138,12 @@ QUnit.test("has no effect when component is destroyed", async (assert) => {
     const comp = await mount(TestComp, container);
     assert.verifySteps(["onPositioned called"], "onPositioned called when component mounted");
 
-    triggerEvent(document, null, "scroll");
-    await nextTick();
-    assert.verifySteps([]);
-    execRegisteredCallbacks();
+    await triggerEvent(document, null, "scroll");
     assert.verifySteps(["onPositioned called"], "onPositioned called when document scrolled");
 
     triggerEvent(document, null, "scroll");
-    await nextTick();
     destroy(comp);
-    execRegisteredCallbacks();
+    await nextTick();
     assert.verifySteps(
         [],
         "onPositioned not called even if scroll happened right before the component destroys"
@@ -841,30 +837,26 @@ function getFittingTest(position, styleAttribute) {
         const TestComp = getTestComponent({ position });
         await mount(TestComp, container);
         assert.strictEqual(container.querySelector("#popper").style[styleAttribute], "50px");
-    }
+    };
 }
 
 QUnit.test(
-    "reposition from bottom-fit to top-fit", getRepositionTest("bottom-fit", "top-fit", "bottom")
+    "reposition from bottom-fit to top-fit",
+    getRepositionTest("bottom-fit", "top-fit", "bottom")
 );
 QUnit.test(
-    "reposition from top-fit to bottom-fit", getRepositionTest("top-fit", "bottom-fit", "top")
+    "reposition from top-fit to bottom-fit",
+    getRepositionTest("top-fit", "bottom-fit", "top")
 );
 QUnit.test(
-    "reposition from right-fit to left-fit", getRepositionTest("right-fit", "left-fit", "right")
+    "reposition from right-fit to left-fit",
+    getRepositionTest("right-fit", "left-fit", "right")
 );
 QUnit.test(
-    "reposition from left-fit to right-fit", getRepositionTest("left-fit", "right-fit", "left")
+    "reposition from left-fit to right-fit",
+    getRepositionTest("left-fit", "right-fit", "left")
 );
-QUnit.test(
-    "bottom-fit has the same width as the reference", getFittingTest("bottom-fit", "width")
-);
-QUnit.test(
-    "top-fit has the same width as the reference", getFittingTest("top-fit", "width")
-);
-QUnit.test(
-    "left-fit has the same height as the reference", getFittingTest("left-fit", "height")
-);
-QUnit.test(
-    "right-fit has the same height as the reference", getFittingTest("right-fit", "height")
-);
+QUnit.test("bottom-fit has the same width as the reference", getFittingTest("bottom-fit", "width"));
+QUnit.test("top-fit has the same width as the reference", getFittingTest("top-fit", "width"));
+QUnit.test("left-fit has the same height as the reference", getFittingTest("left-fit", "height"));
+QUnit.test("right-fit has the same height as the reference", getFittingTest("right-fit", "height"));

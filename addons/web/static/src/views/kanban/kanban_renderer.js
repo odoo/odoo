@@ -50,7 +50,11 @@ export class KanbanRenderer extends Component {
 
     setup() {
         this.dialogClose = [];
+        /**
+         * @type {{ processedIds: string[], columnQuickCreateIsFolded: boolean }}
+         */
         this.state = useState({
+            processedIds: [],
             columnQuickCreateIsFolded:
                 !this.props.list.isGrouped || this.props.list.groups.length > 0,
         });
@@ -272,9 +276,14 @@ export class KanbanRenderer extends Component {
         return !this.env.isSmall && isFolded ? `${name} (${count})` : name;
     }
 
-    getGroupClasses(group) {
+    /**
+     * @param {RelationalGroup} group
+     * @param {boolean} isGroupProcessing
+     * @returns {string}
+     */
+    getGroupClasses(group, isGroupProcessing) {
         const classes = [];
-        if (this.canResequenceGroups && group.value) {
+        if (!isGroupProcessing && this.canResequenceGroups && group.value) {
             classes.push("o_group_draggable");
         }
         if (!group.count) {
@@ -324,6 +333,14 @@ export class KanbanRenderer extends Component {
             name: colName,
             cards: new Array(Math.floor(Math.random() * 4) + 2),
         }));
+    }
+
+    /**
+     * @param {string} id
+     * @returns {boolean}
+     */
+    isProcessing(id) {
+        return this.state.processedIds.includes(id);
     }
 
     // ------------------------------------------------------------------------
@@ -470,6 +487,20 @@ export class KanbanRenderer extends Component {
         return this.rootRef.el.querySelector(`.o_kanban_group[data-id="${groupId}"]`);
     }
 
+    /**
+     * @param {string} id
+     * @param {boolean} isProcessing
+     */
+    toggleProcessing(id, isProcessing) {
+        if (isProcessing) {
+            this.state.processedIds = [...this.state.processedIds, id];
+        } else {
+            this.state.processedIds = this.state.processedIds.filter(
+                (processedId) => processedId !== id
+            );
+        }
+    }
+
     // ------------------------------------------------------------------------
     // Handlers
     // ------------------------------------------------------------------------
@@ -490,11 +521,13 @@ export class KanbanRenderer extends Component {
      * @param {HTMLElement} [params.parent]
      * @param {HTMLElement} [params.previous]
      */
-    async sortGroupDrop(dataGroupId, { element, previous }) {
-        element.classList.remove("o_group_draggable");
+    async sortGroupDrop(dataGroupId, { previous }) {
+        this.toggleProcessing(dataGroupId, true);
+
         const refId = previous ? previous.dataset.id : null;
         await this.props.list.resequence(dataGroupId, refId);
-        element.classList.add("o_group_draggable");
+
+        this.toggleProcessing(dataGroupId, false);
     }
 
     /**
@@ -508,21 +541,23 @@ export class KanbanRenderer extends Component {
      * @param {HTMLElement} [params.previous]
      */
     async sortRecordDrop(dataRecordId, dataGroupId, { element, parent, previous }) {
-        element.classList.remove("o_record_draggable");
         if (
             !this.props.list.isGrouped ||
             parent.classList.contains("o_kanban_hover") ||
             parent.dataset.id === element.parentElement.dataset.id
         ) {
-            parent && parent.classList && parent.classList.remove("o_kanban_hover");
+            this.toggleProcessing(dataRecordId, true);
+
+            parent?.classList.remove("o_kanban_hover");
             while (previous && !previous.dataset.id) {
                 previous = previous.previousElementSibling;
             }
             const refId = previous ? previous.dataset.id : null;
-            const targetGroupId = parent && parent.dataset.id;
+            const targetGroupId = parent?.dataset.id;
             await this.props.list.moveRecord(dataRecordId, dataGroupId, refId, targetGroupId);
+
+            this.toggleProcessing(dataRecordId, false);
         }
-        element.classList.add("o_record_draggable");
     }
 
     /**

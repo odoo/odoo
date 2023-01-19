@@ -1,78 +1,84 @@
 /** @odoo-module **/
 
+import { onWillUnmount, reactive, useEffect, useExternalListener } from "@odoo/owl";
 import { clamp } from "@web/core/utils/numbers";
-import { debounce, setRecurringAnimationFrame } from "@web/core/utils/timing";
+import { throttleForAnimation, setRecurringAnimationFrame } from "@web/core/utils/timing";
 
 /**
- * @typedef Position
- * @property {number} x
- * @property {number} y
- */
-
-/**
- * @typedef EdgeScrollingOptions
- * @property {boolean} [enabled=true]
- * @property {number} [speed=10]
- * @property {number} [threshold=20]
- */
-
-/**
- * @typedef DraggableBuilderParams
+ * @typedef CleanupManager
+ * @property {(cleanupFn: Function) => void} add
+ * @property {() => void} cleanup
  *
+ * @typedef DOMHelpers
+ * @property {(el: HTMLElement, ...classNames: string[]) => void} addClass
+ * @property {(el: EventTarget, event: string, callback: (...args: any[]) => any, options?: boolean | Record<string, boolean>) => void} addListener
+ * @property {(el: HTMLElement, style: Record<string, string | number>) => void} addStyle
+ * @property {(el: HTMLElement, options?: { adjust?: boolean }) => DOMRect} getRect
+ * @property {(el: HTMLElement, ...classNames: string[]) => void} removeClass
+ * @property {(el: HTMLElement, properties: string[]) => void} removeStyle
+ *
+ * @typedef DraggableBuilderParams
  * Hook params
  * @property {string} [name="useAnonymousDraggable"]
  * @property {EdgeScrollingOptions} [edgeScrolling]
  * @property {Record<string, string[]>} [acceptedParams]
  * @property {Record<string, any>} [defaultParams]
+ * Build hooks
+ * @property {(params: DraggableBuildHandlerParams) => any} onComputeParams
+ * Runtime hooks
+ * @property {(params: DraggableBuildHandlerParams) => any} onDragStart
+ * @property {(params: DraggableBuildHandlerParams) => any} onDrag
+ * @property {(params: DraggableBuildHandlerParams) => any} onDragEnd
+ * @property {(params: DraggableBuildHandlerParams) => any} onDrop
+ * @property {(params: DraggableBuildHandlerParams) => any} onWillStartDrag
  *
- * Build handlers
- * @property {(params: DraggableBuilderHookParams) => any} onComputeParams
- *
- * Runtime handlers
- * @property {(params: DraggableBuilderHookParams) => any} onWillStartDrag
- * @property {(params: DraggableBuilderHookParams) => any} onDragStart
- * @property {(params: DraggableBuilderHookParams) => any} onDrag
- * @property {(params: DraggableBuilderHookParams) => any} onDragEnd
- * @property {(params: DraggableBuilderHookParams) => any} onDrop
- * @property {(params: DraggableBuilderHookParams) => any} onCleanup
- */
-
-/**
- * @typedef DraggableHookRunningContext
+ * @typedef DraggableHookContext
  * @property {{ el: HTMLElement | null }} ref
  * @property {string | null} [elementSelector=null]
  * @property {string | null} [ignoreSelector=null]
  * @property {string | null} [fullSelector=null]
+ * @property {boolean} [followCursor=true]
  * @property {string | null} [cursor=null]
- * @property {HTMLElement | null} [currentContainer=null]
- * @property {HTMLElement | null} [currentElement=null]
- * @property {DOMRect | null} [currentElementRect=null]
- * @property {HTMLElement | null} [scrollParent=null]
- * @property {boolean} [enabled=false]
+ * @property {() => boolean} [enable=() => false]
  * @property {Position} [mouse={ x: 0, y: 0 }]
- * @property {Position} [offset={ x: 0, y: 0 }]
  * @property {EdgeScrollingOptions} [edgeScrolling]
+ * @property {DraggableHookCurrentContext} current
+ *
+ * @typedef DraggableHookCurrentContext
+ * @property {HTMLElement} [current.container]
+ * @property {DOMRect} [current.containerRect]
+ * @property {HTMLElement} [current.element]
+ * @property {DOMRect} [current.elementRect]
+ * @property {HTMLElement} [scrollParent]
+ * @property {Position} [offset={ x: 0, y: 0 }]
+ *
+ * @typedef EdgeScrollingOptions
+ * @property {boolean} [enabled=true]
+ * @property {number} [speed=10]
+ * @property {number} [threshold=20]
+ *
+ * @typedef Position
+ * @property {number} x
+ * @property {number} y
+ *
+ * @typedef {DOMHelpers & {
+ *  ctx: DraggableHookContext,
+ *  addCleanup(cleanupFn: () => any): void,
+ *  addEffectCleanup(cleanupFn: () => any): void,
+ *  callHandler(handlerName: string, arg: Record<any, any>): void,
+ * }} DraggableBuildHandlerParams
+ *
+ * @typedef {DOMHelpers & Position & { element: HTMLElement }} DraggableHandlerParams
  */
-
-/**
- * @typedef DraggableBuilderHookParams
- * @property {DraggableHookRunningContext} ctx
- * @property {Object} helpers
- * @property {Function} helpers.addListener
- * @property {Function} helpers.addStyle
- * @property {Function} helpers.execHandler
- */
-
-import { useEffect, useEnv, useExternalListener, onWillUnmount, reactive } from "@odoo/owl";
 
 const DEFAULT_ACCEPTED_PARAMS = {
-    enable: ["boolean", "function"],
-    ref: ["object"],
-    elements: ["string"],
-    handle: ["string", "function"],
-    ignore: ["string", "function"],
-    cursor: ["string"],
-    edgeScrolling: ["object", "function"],
+    enable: [Boolean, Function],
+    ref: [Object],
+    elements: [String],
+    handle: [String, Function],
+    ignore: [String, Function],
+    cursor: [String],
+    edgeScrolling: [Object, Function],
 };
 const DEFAULT_DEFAULT_PARAMS = {
     enable: true,
@@ -84,42 +90,39 @@ const DEFAULT_DEFAULT_PARAMS = {
 const DRAGGED_CLASS = "o_dragged";
 const LEFT_CLICK = 0;
 const MANDATORY_PARAMS = ["ref", "elements"];
+const WHITE_LISTED_KEYS = ["Alt", "Control", "Meta", "Shift"];
 
 /**
- * Cancels the default behavior and propagation of a given event.
- * @param {Event} ev
+ * Cache containing the elements in which an attribute has been modified by a hook.
+ * It is global since multiple draggable hooks can interact with the same elements.
+ * @type {Record<string, Set<HTMLElement>>}
  */
-function cancelEvent(ev) {
-    ev.stopPropagation();
-    ev.stopImmediatePropagation();
-    ev.preventDefault();
+const elCache = {};
+
+/**
+ * Transforms a camelCased string to return its kebab-cased version.
+ * Typically used to generate CSS properties from JS objects.
+ *
+ * @param {string} str
+ * @returns {string}
+ */
+function camelToKebab(str) {
+    return str.replaceAll(
+        /(?<=.)[A-Z]|[A-Z]/g,
+        (match, prev) => `${prev ? "-" : ""}${match.toLowerCase()}`
+    );
 }
 
 /**
- * Returns the bounding rect of the given element. If the `adjust` option is set
- * to true, the rect will be reduced by the padding of the element.
- * @param {HTMLElement} el
- * @param {Object} [options={}]
- * @param {boolean} [options.adjust=false]
- * @returns {DOMRect}
+ * @template T
+ * @param {T | () => T} valueOrFn
+ * @returns {T}
  */
-function getRect(el, options = {}) {
-    const rect = el.getBoundingClientRect();
-    if (options.adjust) {
-        const style = getComputedStyle(el);
-        const [pl, pr, pt, pb] = [
-            "padding-left",
-            "padding-right",
-            "padding-top",
-            "padding-bottom",
-        ].map((prop) => pixelValueToNumber(style.getPropertyValue(prop)));
-
-        rect.x += pl;
-        rect.y += pt;
-        rect.width -= pl + pr;
-        rect.height -= pt + pb;
+function getReturnValue(valueOrFn) {
+    if (typeof valueOrFn === "function") {
+        return valueOrFn();
     }
-    return rect;
+    return valueOrFn;
 }
 
 /**
@@ -150,6 +153,150 @@ function getScrollParent(el) {
 }
 
 /**
+ * @param {Function} [defaultCleanupFn]
+ * @returns {CleanupManager}
+ */
+function makeCleanupManager(defaultCleanupFn) {
+    /**
+     * Registers the given cleanup function to be called when cleaning up hooks.
+     * @param {Function} [cleanupFn]
+     */
+    const add = (cleanupFn) => typeof cleanupFn === "function" && cleanups.push(cleanupFn);
+
+    /**
+     * Runs all cleanup functions while clearing the cleanups list.
+     */
+    const cleanup = () => {
+        while (cleanups.length) {
+            cleanups.pop()();
+        }
+        add(defaultCleanupFn);
+    };
+
+    const cleanups = [];
+
+    add(defaultCleanupFn);
+
+    return { add, cleanup };
+}
+
+/**
+ * @param {CleanupManager} cleanup
+ * @returns {DOMHelpers}
+ */
+function makeDOMHelpers(cleanup) {
+    /**
+     * @param {HTMLElement} el
+     * @param  {...string} classNames
+     */
+    const addClass = (el, ...classNames) => {
+        if (!el || !classNames.length) {
+            return;
+        }
+        cleanup.add(saveAttribute(el, "class"));
+        el.classList.add(...classNames);
+    };
+
+    /**
+     * Adds an event listener to be cleaned up after the next drag sequence
+     * has stopped. An additionnal `timeout` param allows the handler to be
+     * delayed after a timeout.
+     * @param {EventTarget} el
+     * @param {string} event
+     * @param {(...args: any[]) => any} callback
+     * @param {boolean | Record<string, boolean>} [options]
+     */
+    const addListener = (el, event, callback, options) => {
+        if (!el || !event || !callback) {
+            return;
+        }
+        el.addEventListener(event, callback, options);
+        if (/pointer|mouse/.test(event)) {
+            // Restore pointer events on elements listening on mouse/pointer events.
+            addStyle(el, { pointerEvents: "auto" });
+        }
+        cleanup.add(() => el.removeEventListener(event, callback, options));
+    };
+
+    /**
+     * Adds style to an element to be cleaned up after the next drag sequence has
+     * stopped.
+     * @param {HTMLElement} el
+     * @param {Record<string, string | number>} style
+     */
+    const addStyle = (el, style) => {
+        if (!el || !style || !Object.keys(style).length) {
+            return;
+        }
+        cleanup.add(saveAttribute(el, "style"));
+        for (const key in style) {
+            const [value, priority] = String(style[key]).split(/\s*!\s*/);
+            el.style.setProperty(camelToKebab(key), value, priority);
+        }
+    };
+
+    /**
+     * Returns the bounding rect of the given element. If the `adjust` option is set
+     * to true, the rect will be reduced by the padding of the element.
+     * @param {HTMLElement} el
+     * @param {Object} [options={}]
+     * @param {boolean} [options.adjust=false]
+     * @returns {DOMRect}
+     */
+    const getRect = (el, options = {}) => {
+        if (!el) {
+            return {};
+        }
+        const rect = el.getBoundingClientRect();
+        if (options.adjust) {
+            const style = getComputedStyle(el);
+            const [pl, pr, pt, pb] = [
+                "padding-left",
+                "padding-right",
+                "padding-top",
+                "padding-bottom",
+            ].map((prop) => pixelValueToNumber(style.getPropertyValue(prop)));
+
+            rect.x += pl;
+            rect.y += pt;
+            rect.width -= pl + pr;
+            rect.height -= pt + pb;
+        }
+        return rect;
+    };
+
+    /**
+     * @param {HTMLElement} el
+     * @param  {...string} classNames
+     */
+    const removeClass = (el, ...classNames) => {
+        if (!el || !classNames) {
+            return;
+        }
+        cleanup.add(saveAttribute(el, "class"));
+        el.classList.remove(...classNames);
+    };
+
+    /**
+     * Adds style to an element to be cleaned up after the next drag sequence has
+     * stopped.
+     * @param {HTMLElement} el
+     * @param {...string} properties
+     */
+    const removeStyle = (el, ...properties) => {
+        if (!el || !properties?.length) {
+            return;
+        }
+        cleanup.add(saveAttribute(el, "style"));
+        for (const key of properties) {
+            el.style.removeProperty(camelToKebab(key));
+        }
+    };
+
+    return { addClass, addListener, addStyle, getRect, removeClass, removeStyle };
+}
+
+/**
  * Converts a CSS pixel value to a number, removing the 'px' part.
  * @param {string} val
  * @returns {number}
@@ -158,26 +305,69 @@ function pixelValueToNumber(val) {
     return Number(val.endsWith("px") ? val.slice(0, -2) : val);
 }
 
+function saveAttribute(el, attribute) {
+    const restoreAttribute = () => {
+        cache.delete(el);
+        if (originalValue) {
+            el.setAttribute(attribute, originalValue);
+        } else {
+            el.removeAttribute(attribute);
+        }
+    };
+
+    if (!(attribute in elCache)) {
+        elCache[attribute] = new Set();
+    }
+    const cache = elCache[attribute];
+
+    if (cache.has(el)) {
+        return;
+    }
+
+    cache.add(el);
+    const originalValue = el.getAttribute(attribute);
+
+    return restoreAttribute;
+}
+
+/**
+ * @template T
+ * @param {T | () => T} value
+ * @returns {() => T}
+ */
+function toFunction(value) {
+    return typeof value === "function" ? value : () => value;
+}
+
 /**
  * @param {DraggableBuilderParams} hookParams
  * @returns {(params: Record<any, any>) => { dragging: boolean }}
  */
-export function makeDraggableHook(hookParams = {}) {
+export function makeDraggableHook(hookParams) {
+    hookParams = getReturnValue(hookParams);
+
     const hookName = hookParams.name || "useAnonymousDraggable";
     const allAcceptedParams = { ...DEFAULT_ACCEPTED_PARAMS, ...hookParams.acceptedParams };
     const defaultParams = { ...DEFAULT_DEFAULT_PARAMS, ...hookParams.defaultParams };
 
     /**
+     * Computes the current params and converts the params definition
      * @param {SortableParams} params
      * @returns {[string, string | boolean][]}
      */
     const computeParams = (params) => {
-        const computedParams = { enable: true };
+        const computedParams = { enable: () => true };
         for (const prop in allAcceptedParams) {
             if (prop in params) {
-                computedParams[prop] = params[prop];
-                if (typeof params[prop] === "function") {
-                    computedParams[prop] = computedParams[prop]();
+                if (prop === "enable") {
+                    computedParams[prop] = toFunction(params[prop]);
+                } else if (
+                    allAcceptedParams[prop].length === 1 &&
+                    allAcceptedParams[prop][0] === Function
+                ) {
+                    computedParams[prop] = params[prop];
+                } else {
+                    computedParams[prop] = getReturnValue(params[prop]);
                 }
             }
         }
@@ -194,34 +384,35 @@ export function makeDraggableHook(hookParams = {}) {
     return {
         [hookName](params) {
             /**
-             * Adds an event listener to be cleaned up after the next drag sequence
-             * has stopped. An additionnal `timeout` param allows the handler to be
-             * delayed after a timeout.
-             * @param {EventTarget} el
-             * @param {string} event
-             * @param {(...args: any[]) => any} callback
-             * @param {boolean | Record<string, boolean>} [options]
+             * Executes a handler from the `hookParams`.
+             * @param {string} hookHandlerName
+             * @param {Record<any, any>} arg
              */
-            const addListener = (el, event, callback, options) => {
-                el.addEventListener(event, callback, options);
-                cleanups.push(() => el.removeEventListener(event, callback, options));
+            const callBuildHandler = (hookHandlerName, arg) => {
+                if (typeof hookParams[hookHandlerName] !== "function") {
+                    return;
+                }
+                const returnValue = hookParams[hookHandlerName]({ ctx, ...helpers, ...arg });
+                if (returnValue) {
+                    callHandler(hookHandlerName, returnValue);
+                }
             };
 
             /**
-             * Adds style to an element to be cleaned up after the next drag sequence has
-             * stopped.
-             * @param {HTMLElement} el
-             * @param {Record<string, string | number>} style
+             * Safely executes a handler from the `params`, so that the drag sequence can
+             * be interrupted if an error occurs.
+             * @param {string} handlerName
+             * @param {Record<any, any>} arg
              */
-            const addStyle = (el, style) => {
-                const originalStyle = el.getAttribute("style");
-                cleanups.push(() =>
-                    originalStyle
-                        ? el.setAttribute("style", originalStyle)
-                        : el.removeAttribute("style")
-                );
-                for (const key in style) {
-                    el.style[key] = style[key];
+            const callHandler = (handlerName, arg) => {
+                if (typeof params[handlerName] !== "function") {
+                    return;
+                }
+                try {
+                    params[handlerName]({ ...dom, ...ctx.mouse, ...arg });
+                } catch (err) {
+                    dragEnd(null, true);
+                    throw err;
                 }
             };
 
@@ -232,109 +423,64 @@ export function makeDraggableHook(hookParams = {}) {
                 state.dragging = true;
 
                 // Compute scrollable parent
-                ctx.scrollParent = getScrollParent(ctx.currentContainer);
+                ctx.current.scrollParent = getScrollParent(ctx.current.container);
 
-                const [eRect] = updateRects();
-
-                // Binds handlers on eligible elements
-                for (const siblingEl of ctx.ref.el.querySelectorAll(ctx.elementSelector)) {
-                    if (siblingEl !== ctx.currentElement) {
-                        addStyle(siblingEl, { "pointer-events": "auto" });
-                    }
-                }
+                updateRects();
+                const { x, y, width, height } = ctx.current.elementRect;
 
                 // Adjusts the offset
-                ctx.offset.x -= eRect.x;
-                ctx.offset.y -= eRect.y;
+                ctx.current.offset.x -= x;
+                ctx.current.offset.y -= y;
 
-                addStyle(ctx.currentElement, {
-                    width: `${eRect.width}px`,
-                    height: `${eRect.height}px`,
-                    left: `${eRect.x}px`,
-                    top: `${eRect.y}px`,
+                if (ctx.followCursor) {
+                    dom.addStyle(ctx.current.element, {
+                        width: `${width}px`,
+                        height: `${height}px`,
+                        position: "fixed !important",
+                    });
+
+                    // First adjustment
+                    updateElementPosition();
+                }
+
+                dom.addStyle(document.body, {
+                    pointerEvents: "none",
+                    userSelect: "none",
                 });
-
-                const bodyStyle = {
-                    "pointer-events": "none",
-                    "user-select": "none",
-                };
                 if (ctx.cursor) {
-                    bodyStyle.cursor = ctx.cursor;
+                    dom.addStyle(document.body, { cursor: ctx.cursor });
                 }
 
-                addStyle(document.body, bodyStyle);
-
-                if (ctx.scrollParent && ctx.edgeScrolling.enabled) {
+                if (ctx.current.scrollParent && ctx.edgeScrolling.enabled) {
                     const cleanupFn = setRecurringAnimationFrame(handleEdgeScrolling);
-                    cleanups.push(cleanupFn);
+                    cleanup.add(cleanupFn);
                 }
 
-                ctx.currentElement.classList.add(DRAGGED_CLASS);
-                cleanups.push(() => ctx.currentElement.classList.remove(DRAGGED_CLASS));
+                dom.addClass(ctx.current.element, DRAGGED_CLASS);
 
-                execBuildHandler("onDragStart");
+                callBuildHandler("onDragStart");
             };
 
             /**
              * Main exit function to stop a drag sequence. Note that it can be called
              * even if a drag sequence did not start yet to perform a cleanup of all
              * current context variables.
-             * @param {boolean} cancelled
+             * @param {HTMLElement | null} target
              * @param {boolean} [inErrorState] can be set to true when an error
              *  occurred to avoid falling into an infinite loop if the error
              *  originated from one of the handlers.
              */
-            const dragEnd = (cancelled, inErrorState) => {
+            const dragEnd = (target, inErrorState) => {
                 if (state.dragging) {
                     if (!inErrorState) {
-                        execBuildHandler("onDragEnd");
-                        if (!cancelled) {
-                            execBuildHandler("onDrop");
+                        if (target) {
+                            callBuildHandler("onDrop", { target });
                         }
+                        callBuildHandler("onDragEnd");
                     }
                 }
 
-                execBuildHandler("onCleanup");
-
-                // Performs all registered clean-ups.
-                while (cleanups.length) {
-                    cleanups.pop()();
-                }
-
-                ctx.currentContainer = null;
-                ctx.currentElement = null;
-                ctx.currentElementRect = null;
-                ctx.scrollParent = null;
-
-                state.dragging = false;
-            };
-
-            /**
-             * Executes a handler from the `hookParams`.
-             * @param {string} fnName
-             * @param {Record<any, any>} arg
-             */
-            const execBuildHandler = (fnName, arg) => {
-                if (typeof hookParams[fnName] === "function") {
-                    hookParams[fnName]({ ctx, helpers: buildHelpers, ...arg });
-                }
-            };
-
-            /**
-             * Safely executes a handler from the `params`, so that the drag sequence can
-             * be interrupted if an error occurs.
-             * @param {string} callbackName
-             * @param {Record<any, any>} arg
-             */
-            const execHandler = (callbackName, arg) => {
-                if (typeof params[callbackName] === "function") {
-                    try {
-                        params[callbackName]({ ...ctx.mouse, ...arg });
-                    } catch (err) {
-                        dragEnd(true, true);
-                        throw err;
-                    }
-                }
+                cleanup.cleanup();
             };
 
             /**
@@ -342,7 +488,9 @@ export function makeDraggableHook(hookParams = {}) {
              * the edge of the container.
              */
             const handleEdgeScrolling = (deltaTime) => {
-                const [eRect, cRect] = updateRects();
+                updateRects();
+                const eRect = ctx.current.elementRect;
+                const cRect = ctx.current.containerRect;
 
                 const { speed, threshold } = ctx.edgeScrolling;
                 const correctedSpeed = (speed / 16) * deltaTime;
@@ -362,6 +510,13 @@ export function makeDraggableHook(hookParams = {}) {
                     diff.y = [maxHeight - eRect.y - eRect.height, 1];
                 }
 
+                if (diff.x && !diff.x[0]) {
+                    delete diff.x;
+                }
+                if (diff.y && !diff.y[0]) {
+                    delete diff.y;
+                }
+
                 if (diff.x || diff.y) {
                     const diffToScroll = ([delta, sign]) =>
                         (1 - clamp(delta, 0, threshold) / threshold) * correctedSpeed * sign;
@@ -372,7 +527,7 @@ export function makeDraggableHook(hookParams = {}) {
                     if (diff.y) {
                         scrollParams.top = diffToScroll(diff.y);
                     }
-                    ctx.scrollParent.scrollBy(scrollParams);
+                    ctx.current.scrollParent.scrollBy(scrollParams);
                 }
             };
 
@@ -380,16 +535,16 @@ export function makeDraggableHook(hookParams = {}) {
              * Window "keydown" event handler.
              * @param {KeyboardEvent} ev
              */
-            const onKeydown = (ev) => {
-                if (!ctx.enabled || !state.dragging) {
+            const onKeyDown = (ev) => {
+                if (!state.dragging || !ctx.enable()) {
                     return;
                 }
-                switch (ev.key) {
-                    case "Escape":
-                    case "Tab": {
-                        cancelEvent(ev);
-                        dragEnd(true);
-                    }
+                if (!WHITE_LISTED_KEYS.includes(ev.key)) {
+                    ev.stopImmediatePropagation();
+                    ev.preventDefault();
+
+                    // Cancels drag sequences on every non-whitelisted key down event.
+                    dragEnd(null);
                 }
             };
 
@@ -397,16 +552,16 @@ export function makeDraggableHook(hookParams = {}) {
              * Global (= ref) "mousedown" event handler.
              * @param {MouseEvent} ev
              */
-            const onMousedown = (ev) => {
+            const onMouseDown = (ev) => {
                 updateMousePosition(ev);
 
                 // A drag sequence can still be in progress if the mouseup occurred
                 // outside of the window.
-                dragEnd(true);
+                dragEnd(null);
 
                 if (
                     ev.button !== LEFT_CLICK ||
-                    !ctx.enabled ||
+                    !ctx.enable() ||
                     !ev.target.closest(ctx.fullSelector) ||
                     (ctx.ignoreSelector && ev.target.closest(ctx.ignoreSelector))
                 ) {
@@ -421,53 +576,62 @@ export function makeDraggableHook(hookParams = {}) {
                 // https://bugzilla.mozilla.org/show_bug.cgi?id=339293
                 ev.preventDefault();
 
-                ctx.currentContainer = ctx.ref.el;
-                ctx.currentElement = ev.target.closest(ctx.elementSelector);
+                ctx.current.element = ev.target.closest(ctx.elementSelector);
+                ctx.current.container = ctx.ref.el;
+                ctx.current.offset = { ...ctx.mouse };
 
-                Object.assign(ctx.offset, ctx.mouse);
+                cleanup.add(() => (ctx.current = {}));
 
-                execBuildHandler("onWillStartDrag");
+                callBuildHandler("onWillStartDrag");
             };
 
             /**
              * Window "mousemove" event handler.
              * @param {MouseEvent} ev
              */
-            const onMousemove = (ev) => {
+            const onMouseMove = (ev) => {
                 updateMousePosition(ev);
 
-                if (!ctx.enabled || !ctx.currentElement) {
+                if (!ctx.current.element || !ctx.enable()) {
                     return;
                 }
+
+                ev.preventDefault();
+
                 if (!state.dragging) {
                     dragStart();
                 }
-                if (state.dragging) {
-                    const [eRect, cRect] = updateRects();
 
-                    // Updates the position of the dragged element.
-                    ctx.currentElement.style.left = `${clamp(
-                        ctx.mouse.x - ctx.offset.x,
-                        cRect.x,
-                        cRect.x + cRect.width - eRect.width
-                    )}px`;
-                    ctx.currentElement.style.top = `${clamp(
-                        ctx.mouse.y - ctx.offset.y,
-                        cRect.y,
-                        cRect.y + cRect.height - eRect.height
-                    )}px`;
-
-                    execBuildHandler("onDrag");
+                if (ctx.followCursor) {
+                    updateElementPosition();
                 }
+
+                callBuildHandler("onDrag");
             };
 
             /**
              * Window "mouseup" event handler.
              * @param {MouseEvent} ev
              */
-            const onMouseup = (ev) => {
+            const onMouseUp = (ev) => {
                 updateMousePosition(ev);
-                dragEnd(false);
+                dragEnd(ev.target);
+            };
+
+            /**
+             * Updates the position of the current dragged element according to
+             * the current mouse position.
+             */
+            const updateElementPosition = () => {
+                const { containerRect, element, elementRect, offset } = ctx.current;
+                const { width: ew, height: eh } = elementRect;
+                const { x: cx, y: cy, width: cw, height: ch } = containerRect;
+
+                // Updates the position of the dragged element.
+                dom.addStyle(element, {
+                    left: `${clamp(ctx.mouse.x - offset.x, cx, cx + cw - ew)}px`,
+                    top: `${clamp(ctx.mouse.y - offset.y, cy, cy + ch - eh)}px`,
+                });
             };
 
             /**
@@ -479,70 +643,89 @@ export function makeDraggableHook(hookParams = {}) {
                 ctx.mouse.y = ev.clientY;
             };
 
-            /**
-             * @returns {DOMRect[]}
-             */
             const updateRects = () => {
+                const { current } = ctx;
+                const { container, element, scrollParent } = current;
                 // Container rect
-                const containerRect = getRect(ctx.currentContainer, { adjust: true });
-                if (ctx.scrollParent) {
+                current.containerRect = dom.getRect(container, { adjust: true });
+                if (scrollParent) {
                     // Adjust container rect according to scrollparent
-                    const parentRect = getRect(ctx.scrollParent, { adjust: true });
-                    containerRect.x = Math.max(containerRect.x, parentRect.x);
-                    containerRect.y = Math.max(containerRect.y, parentRect.y);
-                    containerRect.width = Math.min(containerRect.width, parentRect.width);
-                    containerRect.height = Math.min(containerRect.height, parentRect.height);
+                    const parentRect = dom.getRect(scrollParent, { adjust: true });
+                    current.containerRect.x = Math.max(current.containerRect.x, parentRect.x);
+                    current.containerRect.y = Math.max(current.containerRect.y, parentRect.y);
+                    current.containerRect.width = Math.min(
+                        current.containerRect.width,
+                        parentRect.width
+                    );
+                    current.containerRect.height = Math.min(
+                        current.containerRect.height,
+                        parentRect.height
+                    );
                 }
 
                 // Element rect
-                ctx.currentElementRect = getRect(ctx.currentElement);
+                ctx.current.elementRect = dom.getRect(element);
+            };
 
-                return [ctx.currentElementRect, containerRect];
+            // Initialize helpers
+            const cleanup = makeCleanupManager(() => (state.dragging = false));
+            const effectCleanup = makeCleanupManager();
+            const dom = makeDOMHelpers(cleanup);
+
+            const helpers = {
+                ...dom,
+                addCleanup: cleanup.add,
+                addEffectCleanup: effectCleanup.add,
+                callHandler,
             };
 
             // Component infos
-            const env = useEnv();
             const state = reactive({ dragging: false });
 
             // Basic error handling asserting that the parameters are valid.
             for (const prop in allAcceptedParams) {
-                if (params[prop] && !allAcceptedParams[prop].includes(typeof params[prop])) {
-                    throw makeError(`invalid type for property "${prop}" in parameters`);
-                } else if (!params[prop] && MANDATORY_PARAMS.includes(prop)) {
+                const type = typeof params[prop];
+                const acceptedTypes = allAcceptedParams[prop].map((t) => t.name.toLowerCase());
+                if (params[prop]) {
+                    if (!acceptedTypes.includes(type)) {
+                        throw makeError(
+                            `invalid type for property "${prop}" in parameters: expected { ${acceptedTypes.join(
+                                ", "
+                            )} } and got ${type}`
+                        );
+                    }
+                } else if (MANDATORY_PARAMS.includes(prop)) {
                     throw makeError(`missing required property "${prop}" in parameters`);
                 }
             }
 
-            // Build helpers
-            const buildHelpers = { addListener, addStyle, execHandler };
-
-            /** @type {(() => any)[]} */
-            const cleanups = [];
-
-            /** @type {DraggableHookRunningContext} */
+            /** @type {DraggableHookContext} */
             const ctx = {
+                enable: () => false,
                 ref: params.ref,
                 ignoreSelector: null,
                 fullSelector: null,
+                followCursor: true,
                 cursor: null,
-                currentContainer: null,
-                currentElement: null,
-                currentElementRect: null,
-                scrollParent: null,
-                enabled: false,
                 mouse: { x: 0, y: 0 },
-                offset: { x: 0, y: 0 },
                 edgeScrolling: { enabled: true },
+                get dragging() {
+                    return state.dragging;
+                },
+                // Current context
+                current: {},
             };
 
             // Effect depending on the params to update them.
             useEffect(
                 (...deps) => {
                     const actualParams = { ...defaultParams, ...Object.fromEntries(deps) };
-                    ctx.enabled = Boolean(ctx.ref.el && !env.isSmall && actualParams.enable);
-                    if (!ctx.enabled) {
+                    if (!ctx.ref.el) {
                         return;
                     }
+
+                    // Enable getter
+                    ctx.enable = actualParams.enable;
 
                     // Selectors
                     ctx.elementSelector = actualParams.elements;
@@ -561,9 +744,13 @@ export function makeDraggableHook(hookParams = {}) {
                     }
                     ctx.fullSelector = allSelectors.join(" ");
 
+                    // Edge scrolling
                     Object.assign(ctx.edgeScrolling, actualParams.edgeScrolling);
 
-                    execBuildHandler("onComputeParams", { params: actualParams });
+                    callBuildHandler("onComputeParams", { params: actualParams });
+
+                    // Calls effect cleanup functions when preparing to re-render.
+                    return effectCleanup.cleanup;
                 },
                 () => computeParams(params)
             );
@@ -571,18 +758,18 @@ export function makeDraggableHook(hookParams = {}) {
             useEffect(
                 (el) => {
                     if (el) {
-                        el.addEventListener("mousedown", onMousedown);
-                        return () => el.removeEventListener("mousedown", onMousedown);
+                        el.addEventListener("mousedown", onMouseDown);
+                        return () => el.removeEventListener("mousedown", onMouseDown);
                     }
                 },
                 () => [ctx.ref.el]
             );
-            // Other global mouse event listeners.
-            const debouncedOnMouseMove = debounce(onMousemove, "animationFrame", true);
-            useExternalListener(window, "mousemove", debouncedOnMouseMove);
-            useExternalListener(window, "mouseup", onMouseup);
-            useExternalListener(window, "keydown", onKeydown, true);
-            onWillUnmount(() => dragEnd(true));
+            // Other global event listeners.
+            const throttledOnMouseMove = throttleForAnimation(onMouseMove);
+            useExternalListener(window, "mousemove", throttledOnMouseMove);
+            useExternalListener(window, "mouseup", onMouseUp);
+            useExternalListener(window, "keydown", onKeyDown, true);
+            onWillUnmount(() => dragEnd(null));
 
             return state;
         },

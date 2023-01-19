@@ -15099,11 +15099,10 @@ QUnit.module("Views", (hooks) => {
         assert.strictEqual(widthsAfterResize[1], widthsAfterReorder[1]);
 
         // 3. Resize again, this time check sizes while dragging and after drop.
-        const drop = drag(resizeHandle, th3);
+        const { drop } = await drag(resizeHandle, th3);
         assertAlmostEqual(th2.offsetWidth, widthsAfterReorder[1] + widthsAfterReorder[2] / 2);
 
-        drop();
-        await nextTick();
+        await drop();
         assertAlmostEqual(th2.offsetWidth, widthsAfterReorder[1] + widthsAfterReorder[2] / 2);
     });
 
