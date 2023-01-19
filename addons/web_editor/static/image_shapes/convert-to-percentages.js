@@ -123,7 +123,7 @@ submitButton.addEventListener('click', async (ev) => {
 
         const svgPreviewEl = svg.createElementNS('http://www.w3.org/2000/svg', 'svg');
         svgPreviewEl.setAttributeNS('http://www.w3.org/2000/svg', 'viewBox', '0 0 1 1');
-        svgPreviewEl.setAttribute('width', '800');
+        svgPreviewEl.setAttribute('width', '600');
         svgPreviewEl.setAttribute('height', '600');
         svgPreviewEl.setAttribute('id', 'preview');
         svgPreviewEl.setAttributeNS('http://www.w3.org/2000/svg', 'preserveAspectRatio', 'none');
@@ -137,7 +137,7 @@ submitButton.addEventListener('click', async (ev) => {
         imageEl.setAttribute('clip-path', 'url(#clip-path)');
         svgDocumentElement.appendChild(imageEl);
         // Give a default size to the SVGs for an easier preview on disk
-        svgDocumentElement.setAttribute('width', '800');
+        svgDocumentElement.setAttribute('width', '600');
         svgDocumentElement.setAttribute('height', '600');
 
         const outFile = new File([svgDocumentElement.outerHTML], filePicker.files[0].name, { type: 'image/svg+xml' });

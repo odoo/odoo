@@ -15,6 +15,7 @@ Design gorgeous mails
         'mass_mailing',
     ],
     'data': [
+        'data/ir_attachment_data.xml',
         'views/mass_mailing_themes_templates.xml'
     ],
     'installable': True,
