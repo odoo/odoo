@@ -273,6 +273,84 @@
                                 <field name="project_ids" widget="many2many_tags" options="{'color_field': 'color'}"/>
                             </group>
                         </group>
+<<<<<<< HEAD
+||||||| parent of 652f2da3021 (temp)
+                        <group string="Stage Description and Tooltips">
+                            <group>
+                                <p class="text-muted" colspan="2">
+                                    At each stage, employees can block tasks or mark them as ready for the next step.
+                                    You can customize here the labels for each state.
+                                </p>
+                                <div class="row g-0 ms-1" colspan="2">
+                                    <label for="legend_normal" string=" " class="o_status mt4"
+                                        title="Task in progress. Click to block or set as done."
+                                        aria-label="Task in progress. Click to block or set as done." role="img"/>
+                                    <div class="col-11 ps-0">
+                                        <field name="legend_normal"/>
+                                    </div>
+                                </div>
+                                <div class="row g-0 ms-1" colspan="2">
+                                    <label for="legend_blocked" string=" " class="o_status o_status_red mt4"
+                                        title="Task is blocked. Click to unblock or set as done."
+                                        aria-label="Task is blocked. Click to unblock or set as done." role="img"/>
+                                    <div class="col-11 ps-0">
+                                        <field name="legend_blocked"/>
+                                    </div>
+                                </div>
+                                <div class="row g-0 ms-1" colspan="2">
+                                    <label for="legend_done" string=" " class="o_status o_status_green mt4"
+                                        title="This step is done. Click to block or set in progress."
+                                        aria-label="This step is done. Click to block or set in progress." role="img"/>
+                                    <div class="col-11 ps-0">
+                                        <field name="legend_done"/>
+                                    </div>
+                                </div>
+
+                                <p class="text-muted mt-2" colspan="2">
+                                    You can also add a description to help your coworkers understand the meaning and purpose of the stage.
+                                </p>
+                                <field name="description" placeholder="Add a description..." nolabel="1" colspan="2"/>
+                            </group>
+                        </group>
+=======
+                        <group string="Stage Description and Tooltips">
+                            <group>
+                                <p class="text-muted" colspan="2">
+                                    At each stage, employees can block tasks or mark them as ready for the next step.
+                                    You can customize here the labels for each state.
+                                </p>
+                                <div class="row g-0 ms-1" colspan="2">
+                                    <label for="legend_normal" string=" " class="o_status mt4"
+                                        title="Task in progress. Click to block or set as done."
+                                        aria-label="Task in progress. Click to block or set as done." role="img"/>
+                                    <div class="col-11 ps-2">
+                                        <field name="legend_normal"/>
+                                    </div>
+                                </div>
+                                <div class="row g-0 ms-1" colspan="2">
+                                    <label for="legend_blocked" string=" " class="o_status o_status_red mt4"
+                                        title="Task is blocked. Click to unblock or set as done."
+                                        aria-label="Task is blocked. Click to unblock or set as done." role="img"/>
+                                    <div class="col-11 ps-2">
+                                        <field name="legend_blocked"/>
+                                    </div>
+                                </div>
+                                <div class="row g-0 ms-1" colspan="2">
+                                    <label for="legend_done" string=" " class="o_status o_status_green mt4"
+                                        title="This step is done. Click to block or set in progress."
+                                        aria-label="This step is done. Click to block or set in progress." role="img"/>
+                                    <div class="col-11 ps-2">
+                                        <field name="legend_done"/>
+                                    </div>
+                                </div>
+
+                                <p class="text-muted mt-2" colspan="2">
+                                    You can also add a description to help your coworkers understand the meaning and purpose of the stage.
+                                </p>
+                                <field name="description" placeholder="Add a description..." nolabel="1" colspan="2"/>
+                            </group>
+                        </group>
+>>>>>>> 652f2da3021 (temp)
                     </sheet>
                 </form>
             </field>
