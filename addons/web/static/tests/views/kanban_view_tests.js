@@ -10,6 +10,7 @@ import {
     getFixture,
     getNodesTextContent,
     makeDeferred,
+    mockAnimationFrame,
     nextTick,
     patchWithCleanup,
     selectDropdownItem,
@@ -4675,12 +4676,13 @@ QUnit.module("Views", (hooks) => {
         assert.containsN(target, ".o_kanban_group:nth-child(2) .o_kanban_record", 2);
 
         // first record of first column moved to the bottom of second column
-        const drop = drag(
-            ".o_kanban_group:first-child .o_kanban_record",
-            ".o_kanban_group:nth-child(2)"
-        );
+        const { drop, moveTo } = await drag(".o_kanban_group:first-child .o_kanban_record");
+        await moveTo(".o_kanban_group:nth-child(2)");
+
         assert.hasClass(target.querySelector(".o_kanban_group:nth-child(2)"), "o_kanban_hover");
+
         await drop();
+
         assert.containsNone(target, ".o_kanban_group:nth-child(2).o_kanban_hover");
     });
 
@@ -12304,24 +12306,7 @@ QUnit.module("Views", (hooks) => {
     });
 
     QUnit.test("drag & drop: content scrolls when reaching the edges", async (assert) => {
-        const nextAnimationFrame = async (timeDelta) => {
-            timeStamp += timeDelta;
-            animationFrameDef.resolve();
-            animationFrameDef = makeDeferred();
-            await Promise.resolve();
-        };
-
-        let animationFrameDef = makeDeferred();
-        let timeStamp = 0;
-
-        patchWithCleanup(browser, {
-            async requestAnimationFrame(handler) {
-                await animationFrameDef;
-                handler(timeStamp);
-            },
-            performance: { now: () => timeStamp },
-        });
-
+        const { advanceFrame } = mockAnimationFrame();
         await makeView({
             type: "kanban",
             resModel: "partner",
@@ -12346,19 +12331,19 @@ QUnit.module("Views", (hooks) => {
         assert.containsNone(target, ".o_kanban_record.o_dragged");
 
         // Drag first record of first group to the right
-        await drag(".o_kanban_record", ".o_kanban_group:nth-child(3) .o_kanban_record");
-
+        let dragActions = await drag(".o_kanban_record");
+        await dragActions.moveTo(".o_kanban_group:nth-child(3) .o_kanban_record");
         assert.strictEqual(content.scrollLeft, 0);
 
-        // next frame (normal time delta)
-        await nextAnimationFrame(16);
+        // next frame
+        await advanceFrame();
 
         // Default kanban speed is 20px per tick
         assert.strictEqual(content.scrollLeft, 20);
         assert.containsOnce(target, ".o_kanban_record.o_dragged");
 
-        // next frame (time delta x20)
-        await nextAnimationFrame(16 * 20);
+        // next 20 frames
+        await advanceFrame(20);
 
         // Should be at the end of the content
         assert.strictEqual(content.clientWidth + content.scrollLeft, content.scrollWidth);
@@ -12370,15 +12355,16 @@ QUnit.module("Views", (hooks) => {
         assert.containsNone(target, ".o_kanban_record.o_dragged");
 
         // Drag first record of last group to the left
-        await drag(".o_kanban_group:nth-child(3) .o_kanban_record", ".o_kanban_record");
+        dragActions = await drag(".o_kanban_group:nth-child(3) .o_kanban_record");
+        await dragActions.moveTo(".o_kanban_record");
 
-        // next frame (normal time delta)
-        await nextAnimationFrame(16);
+        // next frame
+        await advanceFrame();
 
         assert.containsOnce(target, ".o_kanban_record.o_dragged");
 
-        // next frame (time delta x20)
-        await nextAnimationFrame(16 * 20);
+        // next 20 frames
+        await advanceFrame(20);
 
         assert.strictEqual(content.scrollLeft, 0);
 
