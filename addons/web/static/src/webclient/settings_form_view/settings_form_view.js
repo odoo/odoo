@@ -9,18 +9,10 @@ import { SettingsFormCompiler } from "./settings_form_compiler";
 import BasicModel from "web.BasicModel";
 
 const BaseSettingsModel = BasicModel.extend({
-    save(recordID, options) {
-        const savePoint = options && options.savePoint;
-        return this._super.apply(this, arguments).then((result) => {
-            if (!savePoint && this.localData[recordID].model === "res.config.settings") {
-                // we remove here the res_id, because the record should still be
-                // considered new.  We want the web client to always perform a
-                // onchange to fetch the settings data.
-                this.localData[recordID].res_ids = [this.localData[recordID].res_id];
-                delete this.localData[recordID].res_id;
-            }
-            return result;
-        });
+    isNew(id) {
+        return this.localData[id].model === "res.config.settings"
+            ? true
+            : this._super.apply(this, arguments);
     },
 });
 
