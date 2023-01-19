@@ -119,7 +119,8 @@ class AccountMoveLine(models.Model):
         if so_line:
             is_line_reversing = bool(self.move_id.reversed_entry_id)
             qty_to_invoice = self.product_uom_id._compute_quantity(self.quantity, self.product_id.uom_id)
-            posted_cogs = so_line.invoice_lines.move_id.line_ids.filtered(lambda l: l.is_anglo_saxon_line and l.product_id == self.product_id and l.balance > 0)
+            account_moves = so_line.invoice_lines.move_id.filtered(lambda m: m.state == 'posted' and bool(m.reversed_entry_id) == is_line_reversing)
+            posted_cogs = account_moves.line_ids.filtered(lambda l: l.is_anglo_saxon_line and l.product_id == self.product_id and l.balance > 0)
             qty_invoiced = sum([line.product_uom_id._compute_quantity(line.quantity, line.product_id.uom_id) for line in posted_cogs])
             value_invoiced = sum(posted_cogs.mapped('balance'))
 
