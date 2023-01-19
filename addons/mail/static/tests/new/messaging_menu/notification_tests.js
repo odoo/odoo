@@ -13,21 +13,21 @@ QUnit.module("notification", {
 
 QUnit.test("basic layout", async function (assert) {
     const pyEnv = await startServer();
-    const mailChannelId1 = pyEnv["mail.channel"].create({});
-    const mailMessageId1 = pyEnv["mail.message"].create({
+    const channelId = pyEnv["mail.channel"].create({});
+    const messageId = pyEnv["mail.message"].create({
         message_type: "email",
         model: "mail.channel",
-        res_id: mailChannelId1,
+        res_id: channelId,
         res_model_name: "Channel",
     });
     pyEnv["mail.notification"].create([
         {
-            mail_message_id: mailMessageId1,
+            mail_message_id: messageId,
             notification_status: "exception",
             notification_type: "email",
         },
         {
-            mail_message_id: mailMessageId1,
+            mail_message_id: messageId,
             notification_status: "exception",
             notification_type: "email",
         },
@@ -50,15 +50,15 @@ QUnit.test("basic layout", async function (assert) {
 
 QUnit.test("mark as read", async function (assert) {
     const pyEnv = await startServer();
-    const mailChannelId1 = pyEnv["mail.channel"].create({});
-    const mailMessageId1 = pyEnv["mail.message"].create({
+    const channelId = pyEnv["mail.channel"].create({});
+    const messageId = pyEnv["mail.message"].create({
         message_type: "email",
         model: "mail.channel",
-        res_id: mailChannelId1,
+        res_id: channelId,
         res_model_name: "Channel",
     });
     pyEnv["mail.notification"].create({
-        mail_message_id: mailMessageId1,
+        mail_message_id: messageId,
         notification_status: "exception",
         notification_type: "email",
     });
@@ -86,7 +86,7 @@ QUnit.test("mark as read", async function (assert) {
 
 QUnit.test("open non-channel failure", async function (assert) {
     const pyEnv = await startServer();
-    const [mailMessageId1, mailMessageId2] = pyEnv["mail.message"].create([
+    const [messageId_1, messageId_2] = pyEnv["mail.message"].create([
         {
             message_type: "email",
             model: "res.partner",
@@ -102,12 +102,12 @@ QUnit.test("open non-channel failure", async function (assert) {
     ]);
     pyEnv["mail.notification"].create([
         {
-            mail_message_id: mailMessageId1,
+            mail_message_id: messageId_1,
             notification_status: "exception",
             notification_type: "email",
         },
         {
-            mail_message_id: mailMessageId2,
+            mail_message_id: messageId_2,
             notification_status: "bounce",
             notification_type: "email",
         },
@@ -143,42 +143,42 @@ QUnit.test("open non-channel failure", async function (assert) {
 
 QUnit.test("different mail.channel are not grouped", async function (assert) {
     const pyEnv = await startServer();
-    const [mailChannelId1, mailChannelId2] = pyEnv["mail.channel"].create([
+    const [channelId_1, channelId_2] = pyEnv["mail.channel"].create([
         { name: "mailChannel1" },
         { name: "mailChannel2" },
     ]);
-    const [mailMessageId1, mailMessageId2] = pyEnv["mail.message"].create([
+    const [messageId_1, messageId_2] = pyEnv["mail.message"].create([
         {
             message_type: "email",
             model: "mail.channel",
-            res_id: mailChannelId1,
+            res_id: channelId_1,
             res_model_name: "Channel",
         },
         {
             message_type: "email",
             model: "mail.channel",
-            res_id: mailChannelId2,
+            res_id: channelId_2,
             res_model_name: "Channel",
         },
     ]);
     pyEnv["mail.notification"].create([
         {
-            mail_message_id: mailMessageId1,
+            mail_message_id: messageId_1,
             notification_status: "exception",
             notification_type: "email",
         },
         {
-            mail_message_id: mailMessageId1,
+            mail_message_id: messageId_1,
             notification_status: "exception",
             notification_type: "email",
         },
         {
-            mail_message_id: mailMessageId2,
+            mail_message_id: messageId_2,
             notification_status: "bounce",
             notification_type: "email",
         },
         {
-            mail_message_id: mailMessageId2,
+            mail_message_id: messageId_2,
             notification_status: "bounce",
             notification_type: "email",
         },
@@ -194,7 +194,7 @@ QUnit.test("different mail.channel are not grouped", async function (assert) {
 
 QUnit.test("multiple grouped notifications by model", async function (assert) {
     const pyEnv = await startServer();
-    const [mailMessageId1, mailMessageId2] = pyEnv["mail.message"].create([
+    const [messageId_1, messageId_2] = pyEnv["mail.message"].create([
         {
             message_type: "email",
             model: "res.partner",
@@ -210,22 +210,22 @@ QUnit.test("multiple grouped notifications by model", async function (assert) {
     ]);
     pyEnv["mail.notification"].create([
         {
-            mail_message_id: mailMessageId1,
+            mail_message_id: messageId_1,
             notification_status: "exception",
             notification_type: "email",
         },
         {
-            mail_message_id: mailMessageId1,
+            mail_message_id: messageId_1,
             notification_status: "exception",
             notification_type: "email",
         },
         {
-            mail_message_id: mailMessageId2,
+            mail_message_id: messageId_2,
             notification_status: "bounce",
             notification_type: "email",
         },
         {
-            mail_message_id: mailMessageId2,
+            mail_message_id: messageId_2,
             notification_status: "bounce",
             notification_type: "email",
         },
@@ -238,14 +238,14 @@ QUnit.test("multiple grouped notifications by model", async function (assert) {
 
 QUnit.test("non-failure notifications are ignored", async function (assert) {
     const pyEnv = await startServer();
-    const resPartnerId1 = pyEnv["res.partner"].create({});
-    const mailMessageId1 = pyEnv["mail.message"].create({
+    const partnerId = pyEnv["res.partner"].create({});
+    const messageId = pyEnv["mail.message"].create({
         message_type: "email",
         model: "res.partner",
-        res_id: resPartnerId1,
+        res_id: partnerId,
     });
     pyEnv["mail.notification"].create({
-        mail_message_id: mailMessageId1,
+        mail_message_id: messageId,
         notification_status: "ready",
         notification_type: "email",
     });

@@ -13,10 +13,10 @@ QUnit.module("chatter topbar", {
 
 QUnit.test("base rendering", async function (assert) {
     const pyEnv = await startServer();
-    const resPartnerId1 = pyEnv["res.partner"].create({});
+    const partnerId = pyEnv["res.partner"].create({});
     const { openView } = await start();
     await openView({
-        res_id: resPartnerId1,
+        res_id: partnerId,
         res_model: "res.partner",
         views: [[false, "form"]],
     });
@@ -44,26 +44,26 @@ QUnit.test("base disabled rendering", async function (assert) {
 
 QUnit.test("rendering with multiple partner followers", async function (assert) {
     const pyEnv = await startServer();
-    const [resPartnerId1, resPartnerId2, resPartnerId3] = pyEnv["res.partner"].create([
+    const [partnerId_1, partnerId_2, partnerId_3] = pyEnv["res.partner"].create([
         { name: "Eden Hazard" },
         { name: "Jean Michang" },
         { message_follower_ids: [1, 2] },
     ]);
     pyEnv["mail.followers"].create([
         {
-            partner_id: resPartnerId2,
-            res_id: resPartnerId3,
+            partner_id: partnerId_2,
+            res_id: partnerId_3,
             res_model: "res.partner",
         },
         {
-            partner_id: resPartnerId1,
-            res_id: resPartnerId3,
+            partner_id: partnerId_1,
+            res_id: partnerId_3,
             res_model: "res.partner",
         },
     ]);
     const { openView } = await start();
     await openView({
-        res_id: resPartnerId3,
+        res_id: partnerId_3,
         res_model: "res.partner",
         views: [[false, "form"]],
     });
@@ -90,10 +90,10 @@ QUnit.test("rendering with multiple partner followers", async function (assert) 
 
 QUnit.test("log note toggling", async function (assert) {
     const pyEnv = await startServer();
-    const resPartnerId1 = pyEnv["res.partner"].create({});
-    const { click, openView } = await start();
+    const partnerId = pyEnv["res.partner"].create({});
+    const { openView } = await start();
     await openView({
-        res_id: resPartnerId1,
+        res_id: partnerId,
         res_model: "res.partner",
         views: [[false, "form"]],
     });
@@ -115,10 +115,10 @@ QUnit.test("log note toggling", async function (assert) {
 
 QUnit.test("send message toggling", async function (assert) {
     const pyEnv = await startServer();
-    const resPartnerId1 = pyEnv["res.partner"].create({});
-    const { click, openView } = await start();
+    const partnerId = pyEnv["res.partner"].create({});
+    const { openView } = await start();
     await openView({
-        res_id: resPartnerId1,
+        res_id: partnerId,
         res_model: "res.partner",
         views: [[false, "form"]],
     });
@@ -130,7 +130,7 @@ QUnit.test("send message toggling", async function (assert) {
     assert.hasClass($(target).find("button:contains(Send message)"), "o-active");
     assert.containsOnce(
         target,
-        ".o-mail-composer .o-mail-composer-textarea[placeholder='Send a message to followers...']"
+        ".o-mail-composer-textarea[placeholder='Send a message to followers...']"
     );
 
     await click("button:contains(Send message)");
@@ -140,10 +140,10 @@ QUnit.test("send message toggling", async function (assert) {
 
 QUnit.test("log note/send message switching", async function (assert) {
     const pyEnv = await startServer();
-    const resPartnerId1 = pyEnv["res.partner"].create({});
-    const { click, openView } = await start();
+    const partnerId = pyEnv["res.partner"].create({});
+    const { openView } = await start();
     await openView({
-        res_id: resPartnerId1,
+        res_id: partnerId,
         res_model: "res.partner",
         views: [[false, "form"]],
     });
@@ -158,24 +158,21 @@ QUnit.test("log note/send message switching", async function (assert) {
     assert.doesNotHaveClass($(target).find("button:contains(Log note)"), "o-active");
     assert.containsOnce(
         target,
-        ".o-mail-composer .o-mail-composer-textarea[placeholder='Send a message to followers...']"
+        ".o-mail-composer-textarea[placeholder='Send a message to followers...']"
     );
 
     await click("button:contains(Log note)");
     assert.doesNotHaveClass($(target).find("button:contains(Send message)"), "o-active");
     assert.hasClass($(target).find("button:contains(Log note)"), "o-active");
-    assert.containsOnce(
-        target,
-        ".o-mail-composer .o-mail-composer-textarea[placeholder='Log an internal note...']"
-    );
+    assert.containsOnce(target, ".o-mail-composer-textarea[placeholder='Log an internal note...']");
 });
 
 QUnit.test("attachment counter without attachments", async function (assert) {
     const pyEnv = await startServer();
-    const resPartnerId = pyEnv["res.partner"].create({});
+    const partnerId = pyEnv["res.partner"].create({});
     const { openView } = await start();
     await openView({
-        res_id: resPartnerId,
+        res_id: partnerId,
         res_model: "res.partner",
         views: [[false, "form"]],
     });
@@ -185,24 +182,24 @@ QUnit.test("attachment counter without attachments", async function (assert) {
 
 QUnit.test("attachment counter with attachments", async function (assert) {
     const pyEnv = await startServer();
-    const resPartnerId = pyEnv["res.partner"].create({});
+    const partnerId = pyEnv["res.partner"].create({});
     pyEnv["ir.attachment"].create([
         {
             mimetype: "text/plain",
             name: "Blah.txt",
-            res_id: resPartnerId,
+            res_id: partnerId,
             res_model: "res.partner",
         },
         {
             mimetype: "text/plain",
             name: "Blu.txt",
-            res_id: resPartnerId,
+            res_id: partnerId,
             res_model: "res.partner",
         },
     ]);
     const { openView } = await start();
     await openView({
-        res_id: resPartnerId,
+        res_id: partnerId,
         res_model: "res.partner",
         views: [[false, "form"]],
     });
@@ -211,7 +208,7 @@ QUnit.test("attachment counter with attachments", async function (assert) {
 
 QUnit.test("attachment counter while loading attachments", async function (assert) {
     const pyEnv = await startServer();
-    const resPartnerId1 = pyEnv["res.partner"].create({});
+    const partnerId = pyEnv["res.partner"].create({});
     const { openView } = await start({
         async mockRPC(route) {
             if (route.includes("/mail/thread/data")) {
@@ -220,7 +217,7 @@ QUnit.test("attachment counter while loading attachments", async function (asser
         },
     });
     await openView({
-        res_id: resPartnerId1,
+        res_id: partnerId,
         res_model: "res.partner",
         views: [[false, "form"]],
     });
@@ -230,23 +227,23 @@ QUnit.test("attachment counter while loading attachments", async function (asser
 
 QUnit.test("attachment counter transition when attachments become loaded", async function (assert) {
     const pyEnv = await startServer();
-    const resPartnerId1 = pyEnv["res.partner"].create({});
-    const attachmentPromise = makeDeferred();
+    const partnerId = pyEnv["res.partner"].create({});
+    const deferred = makeDeferred();
     const { openView } = await start({
         async mockRPC(route) {
             if (route.includes("/mail/thread/data")) {
-                await attachmentPromise;
+                await deferred;
             }
         },
     });
     await openView({
-        res_id: resPartnerId1,
+        res_id: partnerId,
         res_model: "res.partner",
         views: [[false, "form"]],
     });
     assert.containsOnce(target, "button[aria-label='Attach files'] .fa-spin");
 
-    await afterNextRender(() => attachmentPromise.resolve());
+    await afterNextRender(() => deferred.resolve());
     assert.containsNone(target, "button[aria-label='Attach files'] .fa-spin");
 });
 

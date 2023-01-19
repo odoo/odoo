@@ -37,7 +37,7 @@ QUnit.test("base rendering not editable", async function (assert) {
 
 QUnit.test("base rendering editable", async function (assert) {
     const pyEnv = await startServer();
-    const resPartnerId1 = pyEnv["res.partner"].create({});
+    const partnerId = pyEnv["res.partner"].create({});
     const { openView } = await start({
         async mockRPC(route, args, performRPC) {
             if (route === "/mail/thread/data") {
@@ -49,7 +49,7 @@ QUnit.test("base rendering editable", async function (assert) {
         },
     });
     await openView({
-        res_id: resPartnerId1,
+        res_id: partnerId,
         res_model: "res.partner",
         views: [[false, "form"]],
     });
@@ -64,16 +64,16 @@ QUnit.test("base rendering editable", async function (assert) {
 
 QUnit.test('click on "add followers" button', async function (assert) {
     const pyEnv = await startServer();
-    const [resPartnerId1, resPartnerId2, resPartnerId3] = pyEnv["res.partner"].create([
+    const [partnerId_1, partnerId_2, partnerId_3] = pyEnv["res.partner"].create([
         { name: "resPartner1" },
         { name: "François Perusse" },
         { name: "resPartner3" },
     ]);
     pyEnv["mail.followers"].create({
-        partner_id: resPartnerId2,
+        partner_id: partnerId_2,
         email: "bla@bla.bla",
         is_active: true,
-        res_id: resPartnerId1,
+        res_id: partnerId_1,
         res_model: "res.partner",
     });
 
@@ -88,7 +88,7 @@ QUnit.test('click on "add followers" button', async function (assert) {
         },
     });
     await openView({
-        res_id: resPartnerId1,
+        res_id: partnerId_1,
         res_model: "res.partner",
         views: [[false, "form"]],
     });
@@ -96,15 +96,15 @@ QUnit.test('click on "add followers" button', async function (assert) {
         doAction(action, options) {
             assert.step("action:open_view");
             assert.strictEqual(action.context.default_res_model, "res.partner");
-            assert.strictEqual(action.context.default_res_id, resPartnerId1);
+            assert.strictEqual(action.context.default_res_id, partnerId_1);
             assert.strictEqual(action.res_model, "mail.wizard.invite");
             assert.strictEqual(action.type, "ir.actions.act_window");
             pyEnv["mail.followers"].create({
-                partner_id: resPartnerId3,
+                partner_id: partnerId_3,
                 email: "bla@bla.bla",
                 is_active: true,
                 name: "Wololo",
-                res_id: resPartnerId1,
+                res_id: partnerId_1,
                 res_model: "res.partner",
             });
             options.onClose();
@@ -140,16 +140,16 @@ QUnit.test('click on "add followers" button', async function (assert) {
 
 QUnit.test("click on remove follower", async function (assert) {
     const pyEnv = await startServer();
-    const [resPartnerId1, resPartnerId2] = pyEnv["res.partner"].create([
+    const [partnerId_1, partnerId_2] = pyEnv["res.partner"].create([
         { name: "resPartner1" },
         { name: "resPartner2" },
     ]);
     pyEnv["mail.followers"].create({
-        partner_id: resPartnerId2,
+        partner_id: partnerId_2,
         email: "bla@bla.bla",
         is_active: true,
         name: "Wololo",
-        res_id: resPartnerId1,
+        res_id: partnerId_1,
         res_model: "res.partner",
     });
     const { openView } = await start({
@@ -162,12 +162,12 @@ QUnit.test("click on remove follower", async function (assert) {
             }
             if (route.includes("message_unsubscribe")) {
                 assert.step("message_unsubscribe");
-                assert.deepEqual(args.args, [[resPartnerId1], [resPartnerId2]]);
+                assert.deepEqual(args.args, [[partnerId_1], [partnerId_2]]);
             }
         },
     });
     await openView({
-        res_id: resPartnerId1,
+        res_id: partnerId_1,
         res_model: "res.partner",
         views: [[false, "form"]],
     });
@@ -185,7 +185,7 @@ QUnit.test(
     'Hide "Add follower" and subtypes edition/removal buttons except own user on read only record',
     async function (assert) {
         const pyEnv = await startServer();
-        const [resPartnerId1, resPartnerId2] = pyEnv["res.partner"].create([
+        const [partnerId_1, partnerId_2] = pyEnv["res.partner"].create([
             { name: "resPartner1" },
             { name: "resPartner2" },
         ]);
@@ -193,13 +193,13 @@ QUnit.test(
             {
                 is_active: true,
                 partner_id: pyEnv.currentPartnerId,
-                res_id: resPartnerId1,
+                res_id: partnerId_1,
                 res_model: "res.partner",
             },
             {
                 is_active: true,
-                partner_id: resPartnerId2,
-                res_id: resPartnerId1,
+                partner_id: partnerId_2,
+                res_id: partnerId_1,
                 res_model: "res.partner",
             },
         ]);
@@ -214,7 +214,7 @@ QUnit.test(
             },
         });
         await openView({
-            res_id: resPartnerId1,
+            res_id: partnerId_1,
             res_model: "res.partner",
             views: [[false, "form"]],
         });
@@ -226,13 +226,11 @@ QUnit.test(
         );
         assert.containsOnce(
             followersList[0],
-            ".o-mail-chatter-topbar-follower-list-follower-edit-button",
-            "should display edit button for a follower related to current user"
+            ".o-mail-chatter-topbar-follower-list-follower-edit-button"
         );
         assert.containsOnce(
             followersList[0],
-            ".o-mail-chatter-topbar-follower-list-follower-remove-button",
-            "should display remove button for a follower related to current user"
+            ".o-mail-chatter-topbar-follower-list-follower-remove-button"
         );
         assert.containsNone(
             followersList[1],
@@ -249,7 +247,7 @@ QUnit.test(
     'Show "Add follower" and subtypes edition/removal buttons on all followers if user has write access',
     async function (assert) {
         const pyEnv = await startServer();
-        const [resPartnerId1, resPartnerId2] = pyEnv["res.partner"].create([
+        const [partnerId_1, partnerId_2] = pyEnv["res.partner"].create([
             { name: "resPartner1" },
             { name: "resPartner2" },
         ]);
@@ -257,13 +255,13 @@ QUnit.test(
             {
                 is_active: true,
                 partner_id: pyEnv.currentPartnerId,
-                res_id: resPartnerId1,
+                res_id: partnerId_1,
                 res_model: "res.partner",
             },
             {
                 is_active: true,
-                partner_id: resPartnerId2,
-                res_id: resPartnerId1,
+                partner_id: partnerId_2,
+                res_id: partnerId_1,
                 res_model: "res.partner",
             },
         ]);
@@ -278,7 +276,7 @@ QUnit.test(
             },
         });
         await openView({
-            res_id: resPartnerId1,
+            res_id: partnerId_1,
             res_model: "res.partner",
             views: [[false, "form"]],
         });
@@ -311,7 +309,7 @@ QUnit.test(
     'Show "No Followers" dropdown-item if there are no followers and user does not have write access',
     async function (assert) {
         const pyEnv = await startServer();
-        const resPartnerId1 = pyEnv["res.partner"].create({});
+        const partnerId = pyEnv["res.partner"].create({});
         const { openView } = await start({
             async mockRPC(route, args, performRPC) {
                 if (route === "/mail/thread/data") {
@@ -323,16 +321,12 @@ QUnit.test(
             },
         });
         await openView({
-            res_id: resPartnerId1,
+            res_id: partnerId,
             res_model: "res.partner",
             views: [[false, "form"]],
         });
 
         await click(".o-mail-chatter-topbar-follower-list-button");
-        assert.containsOnce(
-            target,
-            "div:contains(No Followers).disabled",
-            "should display 'No Followers' dropdown-item"
-        );
+        assert.containsOnce(target, "div:contains(No Followers).disabled");
     }
 );

@@ -81,33 +81,19 @@ QUnit.test(
     'open chat from "new message" chat window should open chat in place of this "new message" chat window',
     async function (assert) {
         const pyEnv = await startServer();
-        const resPartnerId1 = pyEnv["res.partner"].create({ name: "Partner 131" });
-        pyEnv["res.users"].create({ partner_id: resPartnerId1 });
+        const partnerId = pyEnv["res.partner"].create({ name: "Partner 131" });
+        pyEnv["res.users"].create({ partner_id: partnerId });
         pyEnv["mail.channel"].create([
             {
                 name: "channel-1",
                 channel_member_ids: [
-                    [
-                        0,
-                        0,
-                        {
-                            is_minimized: true,
-                            partner_id: pyEnv.currentPartnerId,
-                        },
-                    ],
+                    [0, 0, { is_minimized: true, partner_id: pyEnv.currentPartnerId }],
                 ],
             },
             {
                 name: "channel-2",
                 channel_member_ids: [
-                    [
-                        0,
-                        0,
-                        {
-                            is_minimized: false,
-                            partner_id: pyEnv.currentPartnerId,
-                        },
-                    ],
+                    [0, 0, { is_minimized: false, partner_id: pyEnv.currentPartnerId }],
                 ],
             },
         ]);
@@ -127,18 +113,12 @@ QUnit.test(
                 }
             },
         });
-        assert.containsNone(
-            target,
-            ".o-mail-chat-window .o-mail-chat-window-header:contains(New message)"
-        );
+        assert.containsNone(target, ".o-mail-chat-window-header:contains(New message)");
 
         // open "new message" chat window
         await click(".o_menu_systray i[aria-label='Messages']");
         await click(".o-mail-messaging-menu-new-message");
-        assert.containsOnce(
-            target,
-            ".o-mail-chat-window .o-mail-chat-window-header:contains(New message)"
-        );
+        assert.containsOnce(target, ".o-mail-chat-window-header:contains(New message)");
         assert.containsN(target, ".o-mail-chat-window", 2);
         assert.containsOnce(target, ".o-mail-chat-window .o-mail-channel-selector");
         assert.ok(
@@ -151,7 +131,6 @@ QUnit.test(
         await click(".o_menu_systray i[aria-label='Messages']");
         await click(".o-mail-notification-item:nth-child(2)");
         assert.containsN(target, ".o-mail-chat-window", 3);
-
         assert.ok(
             Array.from(target.querySelectorAll(".o-mail-chat-window"))[1].textContent.includes(
                 "New message"
@@ -163,21 +142,14 @@ QUnit.test(
             await insertText(".o-mail-channel-selector-input", "131");
             await imSearchDef;
         });
-        assert.containsOnce(
-            target,
-            ".o-mail-channel-selector-suggestion a",
-            "should have autocomplete suggestion after typing on 'new message' input"
-        );
+        assert.containsOnce(target, ".o-mail-channel-selector-suggestion a");
         const $link = $(target).find(".o-mail-channel-selector-suggestion a");
         assert.strictEqual($link.text(), "Partner 131");
 
         await click($link);
-        assert.containsNone(
-            target,
-            ".o-mail-chat-window .o-mail-chat-window-header:contains(New message)"
-        );
+        assert.containsNone(target, ".o-mail-chat-window-header:contains(New message)");
         assert.strictEqual(
-            $(target).find(".o-mail-chat-window .o-mail-chat-window-header-name:eq(1)").text(),
+            $(target).find(".o-mail-chat-window-header-name:eq(1)").text(),
             "Partner 131"
         );
     }
@@ -187,8 +159,8 @@ QUnit.test(
     "new message chat window should close on selecting the user if chat with the user is already open",
     async function (assert) {
         const pyEnv = await startServer();
-        const resPartnerId1 = pyEnv["res.partner"].create({ name: "Partner 131" });
-        pyEnv["res.users"].create({ partner_id: resPartnerId1 });
+        const partnerId = pyEnv["res.partner"].create({ name: "Partner 131" });
+        pyEnv["res.users"].create({ partner_id: partnerId });
         pyEnv["mail.channel"].create({
             channel_member_ids: [
                 [
@@ -200,7 +172,7 @@ QUnit.test(
                         partner_id: pyEnv.currentPartnerId,
                     },
                 ],
-                [0, 0, { partner_id: resPartnerId1 }],
+                [0, 0, { partner_id: partnerId }],
             ],
             channel_type: "chat",
             name: "Partner 131",
@@ -210,10 +182,7 @@ QUnit.test(
         await click(".o-mail-messaging-menu-new-message");
         await insertText(".o-mail-channel-selector", "131");
         await click(".o-mail-channel-selector-suggestion a");
-        assert.containsNone(
-            target,
-            ".o-mail-chat-window .o-mail-chat-window-header:contains(New message)"
-        );
+        assert.containsNone(target, ".o-mail-chat-window-header:contains(New message)");
         assert.containsOnce(target, ".o-mail-chat-window");
     }
 );
@@ -222,8 +191,8 @@ QUnit.test(
     "new message autocomplete should automatically select first result",
     async function (assert) {
         const pyEnv = await startServer();
-        const resPartnerId1 = pyEnv["res.partner"].create({ name: "Partner 131" });
-        pyEnv["res.users"].create({ partner_id: resPartnerId1 });
+        const partnerId = pyEnv["res.partner"].create({ name: "Partner 131" });
+        pyEnv["res.users"].create({ partner_id: partnerId });
         const imSearchDef = makeDeferred();
         await start({
             mockRPC(route, args) {

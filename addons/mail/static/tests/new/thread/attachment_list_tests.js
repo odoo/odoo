@@ -17,12 +17,12 @@ QUnit.test("simplest layout", async function (assert) {
         channel_type: "channel",
         name: "channel1",
     });
-    const messageAttachmentId = pyEnv["ir.attachment"].create({
+    const attachmentId = pyEnv["ir.attachment"].create({
         name: "test.txt",
         mimetype: "text/plain",
     });
     pyEnv["mail.message"].create({
-        attachment_ids: [messageAttachmentId],
+        attachment_ids: [attachmentId],
         body: "<p>Test</p>",
         model: "mail.channel",
         res_id: channelId,
@@ -46,12 +46,12 @@ QUnit.test("layout with card details and filename and extension", async function
         channel_type: "channel",
         name: "channel1",
     });
-    const messageAttachmentId = pyEnv["ir.attachment"].create({
+    const attachmentId = pyEnv["ir.attachment"].create({
         name: "test.txt",
         mimetype: "text/plain",
     });
     pyEnv["mail.message"].create({
-        attachment_ids: [messageAttachmentId],
+        attachment_ids: [attachmentId],
         body: "<p>Test</p>",
         model: "mail.channel",
         res_id: channelId,
@@ -71,12 +71,12 @@ QUnit.test(
             channel_type: "channel",
             name: "channel1",
         });
-        const messageAttachmentId = pyEnv["ir.attachment"].create({
+        const attachmentId = pyEnv["ir.attachment"].create({
             name: "test.txt",
             mimetype: "text/plain",
         });
         pyEnv["mail.message"].create({
-            attachment_ids: [messageAttachmentId],
+            attachment_ids: [attachmentId],
             body: "<p>Test</p>",
             model: "mail.channel",
             res_id: channelId,
@@ -106,12 +106,12 @@ QUnit.test("view attachment", async function (assert) {
         channel_type: "channel",
         name: "channel1",
     });
-    const messageAttachmentId = pyEnv["ir.attachment"].create({
+    const attachmentId = pyEnv["ir.attachment"].create({
         name: "test.png",
         mimetype: "image/png",
     });
     pyEnv["mail.message"].create({
-        attachment_ids: [messageAttachmentId],
+        attachment_ids: [attachmentId],
         body: "<p>Test</p>",
         model: "mail.channel",
         res_id: channelId,
@@ -130,12 +130,12 @@ QUnit.test("close attachment viewer", async function (assert) {
         channel_type: "channel",
         name: "channel1",
     });
-    const messageAttachmentId = pyEnv["ir.attachment"].create({
+    const attachmentId = pyEnv["ir.attachment"].create({
         name: "test.png",
         mimetype: "image/png",
     });
     pyEnv["mail.message"].create({
-        attachment_ids: [messageAttachmentId],
+        attachment_ids: [attachmentId],
         body: "<p>Test</p>",
         model: "mail.channel",
         res_id: channelId,
@@ -169,12 +169,12 @@ QUnit.test(
             channel_type: "channel",
             name: "channel1",
         });
-        const messageAttachmentId = pyEnv["ir.attachment"].create({
+        const attachmentId = pyEnv["ir.attachment"].create({
             name: "test.png",
             mimetype: "image/png",
         });
         pyEnv["mail.message"].create({
-            attachment_ids: [messageAttachmentId],
+            attachment_ids: [attachmentId],
             body: "<p>Test</p>",
             model: "mail.channel",
             res_id: channelId,
@@ -204,12 +204,12 @@ QUnit.test("plain text file is viewable", async function (assert) {
         channel_type: "channel",
         name: "channel1",
     });
-    const messageAttachmentId = pyEnv["ir.attachment"].create({
+    const attachmentId = pyEnv["ir.attachment"].create({
         name: "test.txt",
         mimetype: "text/plain",
     });
     pyEnv["mail.message"].create({
-        attachment_ids: [messageAttachmentId],
+        attachment_ids: [attachmentId],
         body: "<p>Test</p>",
         model: "mail.channel",
         res_id: channelId,
@@ -226,12 +226,12 @@ QUnit.test("HTML file is viewable", async function (assert) {
         channel_type: "channel",
         name: "channel1",
     });
-    const messageAttachmentId = pyEnv["ir.attachment"].create({
+    const attachmentId = pyEnv["ir.attachment"].create({
         name: "test.html",
         mimetype: "text/html",
     });
     pyEnv["mail.message"].create({
-        attachment_ids: [messageAttachmentId],
+        attachment_ids: [attachmentId],
         body: "<p>Test</p>",
         model: "mail.channel",
         res_id: channelId,
@@ -248,12 +248,12 @@ QUnit.test("ODT file is not viewable", async function (assert) {
         channel_type: "channel",
         name: "channel1",
     });
-    const messageAttachmentId = pyEnv["ir.attachment"].create({
+    const attachmentId = pyEnv["ir.attachment"].create({
         name: "test.odt",
         mimetype: "application/vnd.oasis.opendocument.text",
     });
     pyEnv["mail.message"].create({
-        attachment_ids: [messageAttachmentId],
+        attachment_ids: [attachmentId],
         body: "<p>Test</p>",
         model: "mail.channel",
         res_id: channelId,
@@ -270,12 +270,12 @@ QUnit.test("DOCX file is not viewable", async function (assert) {
         channel_type: "channel",
         name: "channel1",
     });
-    const messageAttachmentId = pyEnv["ir.attachment"].create({
+    const attachmentId = pyEnv["ir.attachment"].create({
         name: "test.docx",
         mimetype: "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
     });
     pyEnv["mail.message"].create({
-        attachment_ids: [messageAttachmentId],
+        attachment_ids: [attachmentId],
         body: "<p>Test</p>",
         model: "mail.channel",
         res_id: channelId,
@@ -294,7 +294,7 @@ QUnit.test(
             channel_type: "channel",
             name: "channel1",
         });
-        const [messageAttachmentId1, messageAttachmentId2] = pyEnv["ir.attachment"].create([
+        const [attachmentId_1, attachmentId_2] = pyEnv["ir.attachment"].create([
             {
                 name: "test.png",
                 mimetype: "image/png",
@@ -305,7 +305,7 @@ QUnit.test(
             },
         ]);
         pyEnv["mail.message"].create({
-            attachment_ids: [messageAttachmentId1, messageAttachmentId2],
+            attachment_ids: [attachmentId_1, attachmentId_2],
             body: "<p>Test</p>",
             model: "mail.channel",
             res_id: channelId,
@@ -339,14 +339,14 @@ QUnit.test("img file has proper src in mail.channel", async function (assert) {
         channel_type: "channel",
         name: "channel1",
     });
-    const messageAttachmentId = pyEnv["ir.attachment"].create({
+    const attachmentId = pyEnv["ir.attachment"].create({
         name: "test.png",
         mimetype: "image/png",
         res_id: channelId,
         res_model: "mail.channel",
     });
     pyEnv["mail.message"].create({
-        attachment_ids: [messageAttachmentId],
+        attachment_ids: [attachmentId],
         body: "<p>Test</p>",
         model: "mail.channel",
         res_id: channelId,

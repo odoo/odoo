@@ -15,9 +15,9 @@ QUnit.test("should update activities when opening the activity menu", async (ass
     const pyEnv = await startServer();
     await start();
     assert.strictEqual($(target).find(".o-mail-activity-menu-counter").text(), "");
-    const resPartnerId1 = pyEnv["res.partner"].create({});
+    const partnerId = pyEnv["res.partner"].create({});
     pyEnv["mail.activity"].create({
-        res_id: resPartnerId1,
+        res_id: partnerId,
         res_model: "res.partner",
     });
     await click(".o_menu_systray .dropdown-toggle:has(i[aria-label='Activities'])");

@@ -23,9 +23,7 @@ QUnit.test("simplest layout of a followed subtype", async function (assert) {
         res_id: pyEnv.currentPartnerId,
         subtype_ids: [subtypeId],
     });
-    pyEnv["res.partner"].write([pyEnv.currentPartnerId], {
-        message_follower_ids: [followerId],
-    });
+    pyEnv["res.partner"].write([pyEnv.currentPartnerId], { message_follower_ids: [followerId] });
     const { openView } = await start({
         // FIXME: should adapt mock server code to provide "hasWriteAccess"
         async mockRPC(route, args, performRPC) {
@@ -78,9 +76,7 @@ QUnit.test("simplest layout of a not followed subtype", async function (assert) 
         res_model: "res.partner",
         res_id: pyEnv.currentPartnerId,
     });
-    pyEnv["res.partner"].write([pyEnv.currentPartnerId], {
-        message_follower_ids: [followerId],
-    });
+    pyEnv["res.partner"].write([pyEnv.currentPartnerId], { message_follower_ids: [followerId] });
     const { openView } = await start({
         // FIXME: should adapt mock server code to provide "hasWriteAccess"
         async mockRPC(route, args, performRPC) {
@@ -119,9 +115,7 @@ QUnit.test("toggle follower subtype checkbox", async function (assert) {
         res_model: "res.partner",
         res_id: pyEnv.currentPartnerId,
     });
-    pyEnv["res.partner"].write([pyEnv.currentPartnerId], {
-        message_follower_ids: [followerId],
-    });
+    pyEnv["res.partner"].write([pyEnv.currentPartnerId], { message_follower_ids: [followerId] });
     const { openView } = await start({
         // FIXME: should adapt mock server code to provide "hasWriteAccess"
         async mockRPC(route, args, performRPC) {

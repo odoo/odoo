@@ -29,7 +29,7 @@ QUnit.module("message", {
 
 QUnit.test("Start edition on click edit", async (assert) => {
     const pyEnv = await startServer();
-    const mailChannelId = pyEnv["mail.channel"].create({
+    const channelId = pyEnv["mail.channel"].create({
         name: "general",
         channel_type: "channel",
     });
@@ -37,11 +37,11 @@ QUnit.test("Start edition on click edit", async (assert) => {
         author_id: pyEnv.currentPartnerId,
         body: "Hello world",
         model: "mail.channel",
-        res_id: mailChannelId,
+        res_id: channelId,
         message_type: "comment",
     });
     const { openDiscuss } = await start();
-    await openDiscuss(mailChannelId);
+    await openDiscuss(channelId);
     await click(".o-mail-message-actions i[aria-label='Edit']");
     assert.containsOnce(target, ".o-mail-message-editable-content .o-mail-composer");
     assert.strictEqual(
@@ -65,15 +65,15 @@ QUnit.test("Cursor is at end of composer input on edit", async (assert) => {
     const { openDiscuss } = await start();
     await openDiscuss(channelId);
     await click("i[aria-label='Edit']");
-    const composerTextarea = target.querySelector(".o-mail-composer-textarea");
-    const contentLength = composerTextarea.value.length;
-    assert.strictEqual(composerTextarea.selectionStart, contentLength);
-    assert.strictEqual(composerTextarea.selectionEnd, contentLength);
+    const textarea = target.querySelector(".o-mail-composer-textarea");
+    const contentLength = textarea.value.length;
+    assert.strictEqual(textarea.selectionStart, contentLength);
+    assert.strictEqual(textarea.selectionEnd, contentLength);
 });
 
 QUnit.test("Stop edition on click cancel", async (assert) => {
     const pyEnv = await startServer();
-    const mailChannelId = pyEnv["mail.channel"].create({
+    const channelId = pyEnv["mail.channel"].create({
         name: "general",
         channel_type: "channel",
     });
@@ -81,11 +81,11 @@ QUnit.test("Stop edition on click cancel", async (assert) => {
         author_id: pyEnv.currentPartnerId,
         body: "Hello world",
         model: "mail.channel",
-        res_id: mailChannelId,
+        res_id: channelId,
         message_type: "comment",
     });
     const { openDiscuss } = await start();
-    await openDiscuss(mailChannelId);
+    await openDiscuss(channelId);
     await click(".o-mail-message-actions i[aria-label='Edit']");
     await click(".o-mail-message a:contains('cancel')");
     assert.containsNone(target, ".o-mail-message-editable-content .o-mail-composer");
@@ -93,7 +93,7 @@ QUnit.test("Stop edition on click cancel", async (assert) => {
 
 QUnit.test("Stop edition on press escape", async (assert) => {
     const pyEnv = await startServer();
-    const mailChannelId = pyEnv["mail.channel"].create({
+    const channelId = pyEnv["mail.channel"].create({
         name: "general",
         channel_type: "channel",
     });
@@ -101,11 +101,11 @@ QUnit.test("Stop edition on press escape", async (assert) => {
         author_id: pyEnv.currentPartnerId,
         body: "Hello world",
         model: "mail.channel",
-        res_id: mailChannelId,
+        res_id: channelId,
         message_type: "comment",
     });
     const { openDiscuss } = await start();
-    await openDiscuss(mailChannelId);
+    await openDiscuss(channelId);
     await click(".o-mail-message-actions i[aria-label='Edit']");
     await afterNextRender(() => triggerHotkey("Escape", false));
     assert.containsNone(target, ".o-mail-message-editable-content .o-mail-composer");
@@ -113,7 +113,7 @@ QUnit.test("Stop edition on press escape", async (assert) => {
 
 QUnit.test("Stop edition on click save", async (assert) => {
     const pyEnv = await startServer();
-    const mailChannelId = pyEnv["mail.channel"].create({
+    const channelId = pyEnv["mail.channel"].create({
         name: "general",
         channel_type: "channel",
     });
@@ -121,11 +121,11 @@ QUnit.test("Stop edition on click save", async (assert) => {
         author_id: pyEnv.currentPartnerId,
         body: "Hello world",
         model: "mail.channel",
-        res_id: mailChannelId,
+        res_id: channelId,
         message_type: "comment",
     });
     const { openDiscuss } = await start();
-    await openDiscuss(mailChannelId);
+    await openDiscuss(channelId);
     await click(".o-mail-message-actions i[aria-label='Edit']");
     await click(".o-mail-message a:contains('save')");
     assert.containsNone(target, ".o-mail-message-editable-content .o-mail-composer");
@@ -133,7 +133,7 @@ QUnit.test("Stop edition on click save", async (assert) => {
 
 QUnit.test("Stop edition on press enter", async (assert) => {
     const pyEnv = await startServer();
-    const mailChannelId = pyEnv["mail.channel"].create({
+    const channelId = pyEnv["mail.channel"].create({
         name: "general",
         channel_type: "channel",
     });
@@ -141,11 +141,11 @@ QUnit.test("Stop edition on press enter", async (assert) => {
         author_id: pyEnv.currentPartnerId,
         body: "Hello world",
         model: "mail.channel",
-        res_id: mailChannelId,
+        res_id: channelId,
         message_type: "comment",
     });
     const { openDiscuss } = await start();
-    await openDiscuss(mailChannelId);
+    await openDiscuss(channelId);
     await click(".o-mail-message-actions i[aria-label='Edit']");
     await afterNextRender(() => triggerHotkey("Enter", false));
     assert.containsNone(target, ".o-mail-message-editable-content .o-mail-composer");
@@ -153,7 +153,7 @@ QUnit.test("Stop edition on press enter", async (assert) => {
 
 QUnit.test("Stop edition on click away", async (assert) => {
     const pyEnv = await startServer();
-    const mailChannelId = pyEnv["mail.channel"].create({
+    const channelId = pyEnv["mail.channel"].create({
         name: "general",
         channel_type: "channel",
     });
@@ -161,11 +161,11 @@ QUnit.test("Stop edition on click away", async (assert) => {
         author_id: pyEnv.currentPartnerId,
         body: "Hello world",
         model: "mail.channel",
-        res_id: mailChannelId,
+        res_id: channelId,
         message_type: "comment",
     });
     const { openDiscuss } = await start();
-    await openDiscuss(mailChannelId);
+    await openDiscuss(channelId);
     await click(".o-mail-message-actions i[aria-label='Edit']");
     await afterNextRender(() => triggerEvent(target, ".o-mail-discuss-sidebar", "click"));
     assert.containsNone(target, ".o-mail-message-editable-content .o-mail-composer");
@@ -173,7 +173,7 @@ QUnit.test("Stop edition on click away", async (assert) => {
 
 QUnit.test("Do not stop edition on click away when clicking on emoji", async (assert) => {
     const pyEnv = await startServer();
-    const mailChannelId = pyEnv["mail.channel"].create({
+    const channelId = pyEnv["mail.channel"].create({
         name: "general",
         channel_type: "channel",
     });
@@ -181,11 +181,11 @@ QUnit.test("Do not stop edition on click away when clicking on emoji", async (as
         author_id: pyEnv.currentPartnerId,
         body: "Hello world",
         model: "mail.channel",
-        res_id: mailChannelId,
+        res_id: channelId,
         message_type: "comment",
     });
     const { openDiscuss } = await start();
-    await openDiscuss(mailChannelId);
+    await openDiscuss(channelId);
     await click(".o-mail-message-actions i[aria-label='Edit']");
     await click(".o-mail-composer i[aria-label='Emojis']");
     await click(".o-mail-emoji-picker-content .o-emoji");
@@ -194,7 +194,7 @@ QUnit.test("Do not stop edition on click away when clicking on emoji", async (as
 
 QUnit.test("Edit and click save", async (assert) => {
     const pyEnv = await startServer();
-    const mailChannelId = pyEnv["mail.channel"].create({
+    const channelId = pyEnv["mail.channel"].create({
         name: "general",
         channel_type: "channel",
     });
@@ -202,11 +202,11 @@ QUnit.test("Edit and click save", async (assert) => {
         author_id: pyEnv.currentPartnerId,
         body: "Hello world",
         model: "mail.channel",
-        res_id: mailChannelId,
+        res_id: channelId,
         message_type: "comment",
     });
     const { openDiscuss } = await start();
-    await openDiscuss(mailChannelId);
+    await openDiscuss(channelId);
     await click(".o-mail-message-actions i[aria-label='Edit']");
     await editInput(target, ".o-mail-message textarea", "Goodbye World");
     await click(".o-mail-message a:contains('save')");
@@ -215,7 +215,7 @@ QUnit.test("Edit and click save", async (assert) => {
 
 QUnit.test("Do not call server on save if no changes", async (assert) => {
     const pyEnv = await startServer();
-    const mailChannelId = pyEnv["mail.channel"].create({
+    const channelId = pyEnv["mail.channel"].create({
         name: "general",
         channel_type: "channel",
     });
@@ -223,7 +223,7 @@ QUnit.test("Do not call server on save if no changes", async (assert) => {
         author_id: pyEnv.currentPartnerId,
         body: "Hello world",
         model: "mail.channel",
-        res_id: mailChannelId,
+        res_id: channelId,
         message_type: "comment",
     });
     const { openDiscuss } = await start({
@@ -233,7 +233,7 @@ QUnit.test("Do not call server on save if no changes", async (assert) => {
             }
         },
     });
-    await openDiscuss(mailChannelId);
+    await openDiscuss(channelId);
     await click(".o-mail-message-actions i[aria-label='Edit']");
     await click(".o-mail-message a:contains('save')");
     assert.verifySteps([]);
@@ -241,7 +241,7 @@ QUnit.test("Do not call server on save if no changes", async (assert) => {
 
 QUnit.test("Scroll bar to the top when edit starts", async (assert) => {
     const pyEnv = await startServer();
-    const mailChannelId = pyEnv["mail.channel"].create({
+    const channelId = pyEnv["mail.channel"].create({
         name: "general",
         channel_type: "channel",
     });
@@ -249,11 +249,11 @@ QUnit.test("Scroll bar to the top when edit starts", async (assert) => {
         author_id: pyEnv.currentPartnerId,
         body: "Hello world!".repeat(1000),
         model: "mail.channel",
-        res_id: mailChannelId,
+        res_id: channelId,
         message_type: "comment",
     });
     const { openDiscuss } = await start();
-    await openDiscuss(mailChannelId);
+    await openDiscuss(channelId);
     await click(".o-mail-message-actions i[aria-label='Edit']");
     const $textarea = $(target).find(".o-mail-composer-textarea");
     assert.ok($textarea[0].scrollHeight > $textarea[0].clientHeight);
@@ -266,20 +266,20 @@ QUnit.test("Other messages are grayed out when replying to another one", async f
         channel_type: "channel",
         name: "channel1",
     });
-    const [firstMessageId, secondMessageId] = pyEnv["mail.message"].create([
+    const [messageId_1, messageId_2] = pyEnv["mail.message"].create([
         { body: "Hello world", res_id: channelId, model: "mail.channel" },
         { body: "Goodbye world", res_id: channelId, model: "mail.channel" },
     ]);
     const { openDiscuss } = await start();
     await openDiscuss(channelId);
     assert.containsN(target, ".o-mail-message", 2);
-    await click(`.o-mail-message[data-message-id='${firstMessageId}'] i[aria-label='Reply']`);
+    await click(`.o-mail-message[data-message-id='${messageId_1}'] i[aria-label='Reply']`);
     assert.doesNotHaveClass(
-        target.querySelector(`.o-mail-message[data-message-id='${firstMessageId}']`),
+        target.querySelector(`.o-mail-message[data-message-id='${messageId_1}']`),
         "opacity-50"
     );
     assert.hasClass(
-        target.querySelector(`.o-mail-message[data-message-id='${secondMessageId}']`),
+        target.querySelector(`.o-mail-message[data-message-id='${messageId_2}']`),
         "opacity-50"
     );
 });
@@ -510,25 +510,25 @@ QUnit.test("Add the same reaction twice from the emoji picker", async (assert) =
 
 QUnit.test("basic rendering of message", async function (assert) {
     const pyEnv = await startServer();
-    const mailChannelId1 = pyEnv["mail.channel"].create({ name: "general" });
-    const resPartnerId1 = pyEnv["res.partner"].create({ name: "Demo" });
-    const mailMessageId1 = pyEnv["mail.message"].create({
-        author_id: resPartnerId1,
+    const channelId = pyEnv["mail.channel"].create({ name: "general" });
+    const partnerId = pyEnv["res.partner"].create({ name: "Demo" });
+    const messageId = pyEnv["mail.message"].create({
+        author_id: partnerId,
         body: "<p>body</p>",
         date: "2019-04-20 10:00:00",
         model: "mail.channel",
-        res_id: mailChannelId1,
+        res_id: channelId,
     });
     const { openDiscuss } = await start();
-    await openDiscuss(mailChannelId1);
-    assert.containsOnce(target, `.o-mail-message[data-message-id=${mailMessageId1}]`);
-    const $message = $(target).find(`.o-mail-message[data-message-id=${mailMessageId1}]`);
+    await openDiscuss(channelId);
+    assert.containsOnce(target, `.o-mail-message[data-message-id=${messageId}]`);
+    const $message = $(target).find(`.o-mail-message[data-message-id=${messageId}]`);
     assert.containsOnce($message, ".o-mail-message-sidebar");
     assert.containsOnce($message, ".o-mail-message-sidebar .o-mail-avatar-container img");
     assert.hasAttrValue(
         $message.find(".o-mail-message-sidebar .o-mail-avatar-container img"),
         "data-src",
-        `/mail/channel/${mailChannelId1}/partner/${resPartnerId1}/avatar_128`
+        `/mail/channel/${channelId}/partner/${partnerId}/avatar_128`
     );
     assert.containsOnce($message, ".o-mail-msg-header");
     assert.containsOnce($message, ".o-mail-msg-header .o-mail-own-name:contains(Demo)");
@@ -540,22 +540,22 @@ QUnit.test("basic rendering of message", async function (assert) {
     );
     assert.containsOnce($message, ".o-mail-message-actions");
     assert.containsN($message, ".o-mail-message-actions i", 3);
-    assert.containsOnce($message, ".o-mail-message-actions i[aria-label='Add a Reaction']");
-    assert.containsOnce($message, ".o-mail-message-actions i[aria-label='Mark as Todo']");
-    assert.containsOnce($message, ".o-mail-message-actions i[aria-label='Reply']");
+    assert.containsOnce($message, "i[aria-label='Add a Reaction']");
+    assert.containsOnce($message, "i[aria-label='Mark as Todo']");
+    assert.containsOnce($message, "i[aria-label='Reply']");
     assert.containsOnce($message, ".o-mail-message-content");
     assert.strictEqual($message.find(".o-mail-message-content").text(), "body");
 });
 
 QUnit.test("should not be able to reply to temporary/transient messages", async function (assert) {
     const pyEnv = await startServer();
-    const mailChannelId1 = pyEnv["mail.channel"].create({ name: "general" });
+    const channelId = pyEnv["mail.channel"].create({ name: "general" });
     const { openDiscuss } = await start();
-    await openDiscuss(mailChannelId1);
+    await openDiscuss(channelId);
     // these user interactions is to forge a transient message response from channel command "/who"
     await insertText(".o-mail-composer-textarea", "/who");
     await click(".o-mail-composer-send-button");
-    assert.containsNone(target, ".o-mail-message .o-mail-message-actions i[aria-label='Reply']");
+    assert.containsNone(target, ".o-mail-message i[aria-label='Reply']");
 });
 
 QUnit.test(
@@ -565,33 +565,33 @@ QUnit.test(
         // from messages of same author and same thread. Note that this should
         // be working in non-mailboxes
         const pyEnv = await startServer();
-        const mailChannelId1 = pyEnv["mail.channel"].create({ name: "general" });
-        const resPartnerId1 = pyEnv["res.partner"].create({ name: "Demo" });
-        const [mailMessageId1, mailMessageId2] = pyEnv["mail.message"].create([
+        const channelId = pyEnv["mail.channel"].create({ name: "general" });
+        const partnerId = pyEnv["res.partner"].create({ name: "Demo" });
+        const [messageId_1, messageId_2] = pyEnv["mail.message"].create([
             {
-                author_id: resPartnerId1,
+                author_id: partnerId,
                 body: "<p>body1</p>",
                 date: "2019-04-20 10:00:00",
                 message_type: "comment",
                 model: "mail.channel",
-                res_id: mailChannelId1,
+                res_id: channelId,
             },
             {
-                author_id: resPartnerId1,
+                author_id: partnerId,
                 body: "<p>body2</p>",
                 date: "2019-04-20 10:00:30",
                 message_type: "comment",
                 model: "mail.channel",
-                res_id: mailChannelId1,
+                res_id: channelId,
             },
         ]);
         const { openDiscuss } = await start();
-        await openDiscuss(mailChannelId1);
+        await openDiscuss(channelId);
         assert.containsN(target, ".o-mail-message", 2);
-        assert.containsOnce(target, `.o-mail-message[data-message-id=${mailMessageId1}]`);
-        assert.containsOnce(target, `.o-mail-message[data-message-id=${mailMessageId2}]`);
-        const $message1 = $(target).find(`.o-mail-message[data-message-id=${mailMessageId1}]`);
-        const $message2 = $(target).find(`.o-mail-message[data-message-id=${mailMessageId2}]`);
+        assert.containsOnce(target, `.o-mail-message[data-message-id=${messageId_1}]`);
+        assert.containsOnce(target, `.o-mail-message[data-message-id=${messageId_2}]`);
+        const $message1 = $(target).find(`.o-mail-message[data-message-id=${messageId_1}]`);
+        const $message2 = $(target).find(`.o-mail-message[data-message-id=${messageId_2}]`);
         assert.containsOnce($message1, ".o-mail-msg-header");
         assert.containsNone($message2, ".o-mail-msg-header");
         assert.containsNone($message1, ".o-mail-message-sidebar .o-mail-message-date");
@@ -603,26 +603,26 @@ QUnit.test(
 
 QUnit.test("redirect to author (open chat)", async function (assert) {
     const pyEnv = await startServer();
-    const resPartnerId1 = pyEnv["res.partner"].create({ name: "Demo" });
-    pyEnv["res.users"].create({ partner_id: resPartnerId1 });
-    const [mailChannelId1] = pyEnv["mail.channel"].create([
+    const partnerId = pyEnv["res.partner"].create({ name: "Demo" });
+    pyEnv["res.users"].create({ partner_id: partnerId });
+    const [channelId_1] = pyEnv["mail.channel"].create([
         { name: "General" },
         {
             channel_member_ids: [
                 [0, 0, { partner_id: pyEnv.currentPartnerId }],
-                [0, 0, { partner_id: resPartnerId1 }],
+                [0, 0, { partner_id: partnerId }],
             ],
             channel_type: "chat",
         },
     ]);
     pyEnv["mail.message"].create({
-        author_id: resPartnerId1,
+        author_id: partnerId,
         body: "not empty",
         model: "mail.channel",
-        res_id: mailChannelId1,
+        res_id: channelId_1,
     });
     const { openDiscuss } = await start();
-    await openDiscuss(mailChannelId1);
+    await openDiscuss(channelId_1);
     assert.containsOnce(target, ".o-mail-category-item.o-active:contains(General)");
     assert.containsOnce(
         target,
@@ -635,25 +635,21 @@ QUnit.test("redirect to author (open chat)", async function (assert) {
 
 QUnit.test("toggle_star message", async function (assert) {
     const pyEnv = await startServer();
-    const mailChannelId1 = pyEnv["mail.channel"].create({ name: "general" });
-    const mailMessageId1 = pyEnv["mail.message"].create({
+    const channelId = pyEnv["mail.channel"].create({ name: "general" });
+    const messageId = pyEnv["mail.message"].create({
         body: "not empty",
         model: "mail.channel",
-        res_id: mailChannelId1,
+        res_id: channelId,
     });
     const { openDiscuss } = await start({
         async mockRPC(route, args) {
             if (args.method === "toggle_message_starred") {
                 assert.step("rpc:toggle_message_starred");
-                assert.strictEqual(
-                    args.args[0][0],
-                    mailMessageId1,
-                    "should have message Id in args"
-                );
+                assert.strictEqual(args.args[0][0], messageId, "should have message Id in args");
             }
         },
     });
-    await openDiscuss(mailChannelId1);
+    await openDiscuss(channelId);
     assert.containsNone(target, 'button[data-mailbox="starred"] .badge');
     assert.containsOnce(target, ".o-mail-message");
     let $message = $(target).find(".o-mail-message");
@@ -679,21 +675,19 @@ QUnit.test(
     "Name of message author is only displayed in chat window for partners others than the current user",
     async function (assert) {
         const pyEnv = await startServer();
-        const mailChannelId1 = pyEnv["mail.channel"].create({
-            channel_type: "channel",
-        });
+        const channelId = pyEnv["mail.channel"].create({ channel_type: "channel" });
         const resPartnerId1 = pyEnv["res.partner"].create({ name: "Not the current user" });
         pyEnv["mail.message"].create([
             {
                 body: "not empty",
                 model: "mail.channel",
-                res_id: mailChannelId1,
+                res_id: channelId,
             },
             {
                 author_id: resPartnerId1,
                 body: "not empty",
                 model: "mail.channel",
-                res_id: mailChannelId1,
+                res_id: channelId,
             },
         ]);
         await start();
@@ -708,21 +702,19 @@ QUnit.test(
     "Name of message author is not displayed in chat window for channel of type chat",
     async function (assert) {
         const pyEnv = await startServer();
-        const mailChannelId1 = pyEnv["mail.channel"].create({
-            channel_type: "chat",
-        });
+        const channelId = pyEnv["mail.channel"].create({ channel_type: "chat" });
         const resPartnerId1 = pyEnv["res.partner"].create({ name: "A" });
         pyEnv["mail.message"].create([
             {
                 body: "not empty",
                 model: "mail.channel",
-                res_id: mailChannelId1,
+                res_id: channelId,
             },
             {
                 author_id: resPartnerId1,
                 body: "not empty",
                 model: "mail.channel",
-                res_id: mailChannelId1,
+                res_id: channelId,
             },
         ]);
         await start();
@@ -734,38 +726,38 @@ QUnit.test(
 
 QUnit.test("click on message edit button should open edit composer", async function (assert) {
     const pyEnv = await startServer();
-    const mailChannelId1 = pyEnv["mail.channel"].create({ name: "General" });
+    const channelId = pyEnv["mail.channel"].create({ name: "General" });
     pyEnv["mail.message"].create({
         body: "not empty",
         message_type: "comment",
         model: "mail.channel",
-        res_id: mailChannelId1,
+        res_id: channelId,
     });
     const { openDiscuss } = await start();
-    await openDiscuss(mailChannelId1);
+    await openDiscuss(channelId);
     await click(".o-mail-message-actions i[aria-label='Edit']");
     assert.containsOnce(target, ".o-mail-message .o-mail-composer");
 });
 
 QUnit.test("Notification Sent", async function (assert) {
     const pyEnv = await startServer();
-    const [threadId, resPartnerId] = pyEnv["res.partner"].create([
+    const [threadId, partnerId] = pyEnv["res.partner"].create([
         {},
         { name: "Someone", partner_share: true },
     ]);
-    const mailMessageId = pyEnv["mail.message"].create({
+    const messageId = pyEnv["mail.message"].create({
         body: "not empty",
         message_type: "email",
         model: "res.partner",
         res_id: threadId,
     });
     pyEnv["mail.notification"].create({
-        mail_message_id: mailMessageId,
+        mail_message_id: messageId,
         notification_status: "sent",
         notification_type: "email",
-        res_partner_id: resPartnerId,
+        res_partner_id: partnerId,
     });
-    const { click, openView } = await start();
+    const { openView } = await start();
     await openView({
         res_id: threadId,
         res_model: "res.partner",
@@ -791,21 +783,21 @@ QUnit.test("Notification Sent", async function (assert) {
 
 QUnit.test("Notification Error", async function (assert) {
     const pyEnv = await startServer();
-    const [threadId, resPartnerId] = pyEnv["res.partner"].create([
+    const [threadId, partnerId] = pyEnv["res.partner"].create([
         {},
         { name: "Someone", partner_share: true },
     ]);
-    const mailMessageId = pyEnv["mail.message"].create({
+    const messageId = pyEnv["mail.message"].create({
         body: "not empty",
         message_type: "email",
         model: "res.partner",
         res_id: threadId,
     });
     pyEnv["mail.notification"].create({
-        mail_message_id: mailMessageId,
+        mail_message_id: messageId,
         notification_status: "exception",
         notification_type: "email",
-        res_partner_id: resPartnerId,
+        res_partner_id: partnerId,
     });
     const openResendActionDef = makeDeferred();
     const { env, openView } = await start();
@@ -818,7 +810,7 @@ QUnit.test("Notification Error", async function (assert) {
         doAction(action, options) {
             assert.step("do_action");
             assert.strictEqual(action, "mail.mail_resend_message_action");
-            assert.strictEqual(options.additionalContext.mail_message_to_resend, mailMessageId);
+            assert.strictEqual(options.additionalContext.mail_message_to_resend, messageId);
             openResendActionDef.resolve();
         },
     });
@@ -835,7 +827,7 @@ QUnit.test(
     'Quick edit (edit from Composer with ArrowUp) ignores empty ("deleted") messages.',
     async function (assert) {
         const pyEnv = await startServer();
-        const mailChannelId = pyEnv["mail.channel"].create({
+        const channelId = pyEnv["mail.channel"].create({
             name: "general",
             channel_type: "channel",
         });
@@ -843,18 +835,18 @@ QUnit.test(
             author_id: pyEnv.currentPartnerId,
             body: "not empty",
             model: "mail.channel",
-            res_id: mailChannelId,
+            res_id: channelId,
             message_type: "comment",
         });
         pyEnv["mail.message"].create({
             author_id: pyEnv.currentPartnerId,
             body: "", // empty body
             model: "mail.channel",
-            res_id: mailChannelId,
+            res_id: channelId,
             message_type: "comment",
         });
         const { openDiscuss } = await start();
-        await openDiscuss(mailChannelId);
+        await openDiscuss(channelId);
         await afterNextRender(() => triggerHotkey("ArrowUp"));
         assert.containsOnce(target, ".o-mail-message .o-mail-message-editable-content");
         assert.strictEqual(
@@ -868,7 +860,7 @@ QUnit.test(
     "Editing a message to clear its composer opens message delete dialog.",
     async function (assert) {
         const pyEnv = await startServer();
-        const mailChannelId = pyEnv["mail.channel"].create({
+        const channelId = pyEnv["mail.channel"].create({
             name: "general",
             channel_type: "channel",
         });
@@ -876,11 +868,11 @@ QUnit.test(
             author_id: pyEnv.currentPartnerId,
             body: "not empty",
             model: "mail.channel",
-            res_id: mailChannelId,
+            res_id: channelId,
             message_type: "comment",
         });
         const { openDiscuss } = await start();
-        await openDiscuss(mailChannelId);
+        await openDiscuss(channelId);
         await click(".o-mail-message-actions i[aria-label='Edit']");
         await editInput(target, ".o-mail-message-editable-content .o-mail-composer-textarea", "");
         await afterNextRender(() => triggerHotkey("Enter"));
@@ -922,23 +914,21 @@ QUnit.test(
     "highlight the message mentioning the current user inside the channel",
     async function (assert) {
         const pyEnv = await startServer();
-        const resPartnerId1 = pyEnv["res.partner"].create({
-            display_name: "Test Partner",
-        });
-        pyEnv["res.users"].create({ partner_id: resPartnerId1 });
-        const mailChannelId1 = pyEnv["mail.channel"].create({
+        const partnerId = pyEnv["res.partner"].create({ display_name: "Test Partner" });
+        pyEnv["res.users"].create({ partner_id: partnerId });
+        const channelId = pyEnv["mail.channel"].create({
             channel_type: "channel",
             name: "General",
         });
         pyEnv["mail.message"].create({
-            author_id: resPartnerId1,
+            author_id: partnerId,
             body: "hello @Admin",
             model: "mail.channel",
             partner_ids: [pyEnv.currentPartnerId],
-            res_id: mailChannelId1,
+            res_id: channelId,
         });
         const { openDiscuss } = await start();
-        await openDiscuss(mailChannelId1);
+        await openDiscuss(channelId);
         assert.hasClass(
             target.querySelector(`.o-mail-message`),
             "o-mail-message-highlighted-from-mention"
@@ -951,13 +941,13 @@ QUnit.test(
     async function (assert) {
         const pyEnv = await startServer();
         const threadId = pyEnv["res.partner"].create({});
-        const mailMessageId = pyEnv["mail.message"].create({
+        const messageId = pyEnv["mail.message"].create({
             body: "not empty",
             model: "res.partner",
             res_id: threadId,
         });
         pyEnv["mail.notification"].create({
-            mail_message_id: mailMessageId,
+            mail_message_id: messageId,
             notification_status: "exception",
             notification_type: "email",
         });
@@ -985,12 +975,12 @@ QUnit.test(
     "not highlighting the message if not mentioning the current user inside the channel",
     async function (assert) {
         const pyEnv = await startServer();
-        const resPartnerId1 = pyEnv["res.partner"].create({
+        const partnerId = pyEnv["res.partner"].create({
             display_name: "testPartner",
             email: "testPartner@odoo.com",
         });
-        pyEnv["res.users"].create({ partner_id: resPartnerId1 });
-        const mailChannelId1 = pyEnv["mail.channel"].create({
+        pyEnv["res.users"].create({ partner_id: partnerId });
+        const channelId = pyEnv["mail.channel"].create({
             channel_type: "channel",
             name: "General",
         });
@@ -998,11 +988,11 @@ QUnit.test(
             author_id: pyEnv.currentPartnerId,
             body: "hello @testPartner",
             model: "mail.channel",
-            partner_ids: [resPartnerId1],
-            res_id: mailChannelId1,
+            partner_ids: [partnerId],
+            res_id: channelId,
         });
         const { openDiscuss } = await start();
-        await openDiscuss(mailChannelId1);
+        await openDiscuss(channelId);
         assert.doesNotHaveClass(
             target.querySelector(`.o-mail-message`),
             "o-mail-message-highlighted-from-mention"
@@ -1012,7 +1002,7 @@ QUnit.test(
 
 QUnit.test("allow attachment delete on authored message", async function (assert) {
     const pyEnv = await startServer();
-    const mailChannelId = pyEnv["mail.channel"].create({ name: "test" });
+    const channelId = pyEnv["mail.channel"].create({ name: "test" });
     pyEnv["mail.message"].create({
         attachment_ids: [
             [
@@ -1021,7 +1011,7 @@ QUnit.test("allow attachment delete on authored message", async function (assert
                 {
                     mimetype: "image/jpeg",
                     name: "BLAH",
-                    res_id: mailChannelId,
+                    res_id: channelId,
                     res_model: "mail.channel",
                 },
             ],
@@ -1029,11 +1019,11 @@ QUnit.test("allow attachment delete on authored message", async function (assert
         author_id: pyEnv.currentPartnerId,
         body: "<p>Test</p>",
         model: "mail.channel",
-        res_id: mailChannelId,
+        res_id: channelId,
         message_type: "comment",
     });
     const { openDiscuss } = await start();
-    await openDiscuss(mailChannelId);
+    await openDiscuss(channelId);
     assert.containsOnce(target, ".o-mail-attachment-image");
     assert.containsOnce(target, ".o-mail-attachment-unlink");
 
@@ -1053,7 +1043,7 @@ QUnit.test(
     async function (assert) {
         const pyEnv = await startServer();
         const partnerId = pyEnv["res.partner"].create({});
-        const mailChannelId = pyEnv["mail.channel"].create({ name: "test" });
+        const channelId = pyEnv["mail.channel"].create({ name: "test" });
         pyEnv["mail.message"].create({
             attachment_ids: [
                 [
@@ -1062,7 +1052,7 @@ QUnit.test(
                     {
                         mimetype: "image/jpeg",
                         name: "BLAH",
-                        res_id: mailChannelId,
+                        res_id: channelId,
                         res_model: "mail.channel",
                     },
                 ],
@@ -1070,10 +1060,10 @@ QUnit.test(
             author_id: partnerId,
             body: "<p>Test</p>",
             model: "mail.channel",
-            res_id: mailChannelId,
+            res_id: channelId,
         });
         const { openDiscuss } = await start();
-        await openDiscuss(mailChannelId);
+        await openDiscuss(channelId);
         assert.containsOnce(target, ".o-mail-attachment-image");
         assert.containsNone(target, ".o-mail-attachment-unlink");
     }
@@ -1081,7 +1071,7 @@ QUnit.test(
 
 QUnit.test("Toggle star should update starred counter on all tabs", async function (assert) {
     const pyEnv = await startServer();
-    const mailChannelId = pyEnv["mail.channel"].create({
+    const channelId = pyEnv["mail.channel"].create({
         name: "general",
         channel_type: "channel",
     });
@@ -1089,12 +1079,12 @@ QUnit.test("Toggle star should update starred counter on all tabs", async functi
         author_id: pyEnv.currentPartnerId,
         body: "Hello world",
         model: "mail.channel",
-        res_id: mailChannelId,
+        res_id: channelId,
         message_type: "comment",
     });
     const tab1 = await start({ asTab: true });
     const tab2 = await start({ asTab: true });
-    await tab1.openDiscuss(mailChannelId);
+    await tab1.openDiscuss(channelId);
     await tab2.openDiscuss();
     await tab1.click(".o-mail-message-action-toggle-star");
     assert.strictEqual(tab2.target.querySelector(".o-starred-box .badge").textContent, "1");
@@ -1177,9 +1167,7 @@ QUnit.test(
             model: "res.partner",
             res_id: threadId,
         });
-        const { advanceTime, openFormView } = await start({
-            hasTimeControl: true,
-        });
+        const { advanceTime, openFormView } = await start({ hasTimeControl: true });
         await openFormView("res.partner", threadId);
         await afterNextRender(() => advanceTime(50 * 1000)); // next fetch of im_status
         assert.containsOnce(target, ".o-mail-partner-im-status");

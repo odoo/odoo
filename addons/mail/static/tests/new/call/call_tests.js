@@ -81,12 +81,8 @@ QUnit.test("should disconnect when closing page while in call", async function (
 
 QUnit.test("no default rtc after joining a chat conversation", async (assert) => {
     const pyEnv = await startServer();
-    const resPartnerId = pyEnv["res.partner"].create({
-        name: "Mario",
-    });
-    pyEnv["res.users"].create({
-        partner_id: resPartnerId,
-    });
+    const partnerId = pyEnv["res.partner"].create({ name: "Mario" });
+    pyEnv["res.users"].create({ partner_id: partnerId });
     const { openDiscuss } = await start();
     await openDiscuss();
     assert.containsNone(target, ".o-mail-category-item");
@@ -104,20 +100,11 @@ QUnit.test("no default rtc after joining a chat conversation", async (assert) =>
 
 QUnit.test("no default rtc after joining a group conversation", async (assert) => {
     const pyEnv = await startServer();
-    const [resPartnerId1, resPartnerId2] = pyEnv["res.partner"].create([
-        {
-            name: "Mario",
-        },
+    const [partnerId_1, partnerId_2] = pyEnv["res.partner"].create([
+        { name: "Mario" },
         { name: "Luigi" },
     ]);
-    pyEnv["res.users"].create([
-        {
-            partner_id: resPartnerId1,
-        },
-        {
-            partner_id: resPartnerId2,
-        },
-    ]);
+    pyEnv["res.users"].create([{ partner_id: partnerId_1 }, { partner_id: partnerId_2 }]);
     const { openDiscuss } = await start();
     await openDiscuss();
     assert.containsNone(target, ".o-mail-category-item");

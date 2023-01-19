@@ -39,38 +39,35 @@ QUnit.test("list activity widget with no activity", async function (assert) {
         res_model: "res.users",
         views: [[false, "list"]],
     });
-
     assert.containsOnce(target, ".o-activity-button-icon.text-muted");
     assert.strictEqual(document.querySelector(".o-list-activity-summary").innerText, "");
-
     assert.verifySteps(["/web/dataset/call_kw/res.users/web_search_read"]);
 });
 
 QUnit.test("list activity widget with activities", async function (assert) {
     const pyEnv = await startServer();
-    const [mailActivityId1, mailActivityId2] = pyEnv["mail.activity"].create([{}, {}]);
-    const [mailActivityTypeId1, mailActivityTypeId2] = pyEnv["mail.activity.type"].create([
+    const [activityId_1, activityId_2] = pyEnv["mail.activity"].create([{}, {}]);
+    const [activityTypeId_1, activityTypeId_2] = pyEnv["mail.activity.type"].create([
         { name: "Type 1" },
         { name: "Type 2" },
     ]);
     pyEnv["res.users"].write([pyEnv.currentUserId], {
-        activity_ids: [mailActivityId1, mailActivityId2],
+        activity_ids: [activityId_1, activityId_2],
         activity_state: "today",
         activity_summary: "Call with Al",
-        activity_type_id: mailActivityTypeId1,
+        activity_type_id: activityTypeId_1,
         activity_type_icon: "fa-phone",
     });
 
     pyEnv["res.users"].create({
-        activity_ids: [mailActivityId2],
+        activity_ids: [activityId_2],
         activity_state: "planned",
         activity_summary: false,
-        activity_type_id: mailActivityTypeId2,
+        activity_type_id: activityTypeId_2,
     });
     const views = {
         "res.users,false,list": '<list><field name="activity_ids" widget="list_activity"/></list>',
     };
-
     const { openView } = await start({
         mockRPC: function (route, args) {
             if (
@@ -91,34 +88,27 @@ QUnit.test("list activity widget with activities", async function (assert) {
         res_model: "res.users",
         views: [[false, "list"]],
     });
-
-    const firstRow = document.querySelector(".o_data_row");
-    assert.containsOnce(firstRow, ".o-activity-button-icon.text-warning.fa-phone");
-    assert.strictEqual(
-        firstRow.querySelector(".o-list-activity-summary").innerText,
-        "Call with Al"
-    );
-
-    const secondRow = document.querySelectorAll(".o_data_row")[1];
-    assert.containsOnce(secondRow, ".o-activity-button-icon.text-success.fa-clock-o");
-    assert.strictEqual(secondRow.querySelector(".o-list-activity-summary").innerText, "Type 2");
-
+    const row_1 = document.querySelector(".o_data_row");
+    assert.containsOnce(row_1, ".o-activity-button-icon.text-warning.fa-phone");
+    assert.strictEqual(row_1.querySelector(".o-list-activity-summary").innerText, "Call with Al");
+    const row_2 = document.querySelectorAll(".o_data_row")[1];
+    assert.containsOnce(row_2, ".o-activity-button-icon.text-success.fa-clock-o");
+    assert.strictEqual(row_2.querySelector(".o-list-activity-summary").innerText, "Type 2");
     assert.verifySteps(["/web/dataset/call_kw/res.users/web_search_read"]);
 });
 
 QUnit.test("list activity widget with exception", async function (assert) {
     const pyEnv = await startServer();
-    const mailActivityId1 = pyEnv["mail.activity"].create({});
-    const mailActivityTypeId1 = pyEnv["mail.activity.type"].create({});
+    const activityId = pyEnv["mail.activity"].create({});
+    const activityTypeId = pyEnv["mail.activity.type"].create({});
     pyEnv["res.users"].write([pyEnv.currentUserId], {
-        activity_ids: [mailActivityId1],
+        activity_ids: [activityId],
         activity_state: "today",
         activity_summary: "Call with Al",
-        activity_type_id: mailActivityTypeId1,
+        activity_type_id: activityTypeId,
         activity_exception_decoration: "warning",
         activity_exception_icon: "fa-warning",
     });
-
     const views = {
         "res.users,false,list": '<list><field name="activity_ids" widget="list_activity"/></list>',
     };
@@ -142,17 +132,15 @@ QUnit.test("list activity widget with exception", async function (assert) {
         res_model: "res.users",
         views: [[false, "list"]],
     });
-
     assert.containsOnce(target, ".o-activity-button-icon.text-warning.fa-warning");
     assert.strictEqual(document.querySelector(".o-list-activity-summary").innerText, "Warning");
-
     assert.verifySteps(["/web/dataset/call_kw/res.users/web_search_read"]);
 });
 
 QUnit.test("list activity widget: open dropdown", async function (assert) {
     const pyEnv = await startServer();
-    const [mailActivityTypeId1, mailActivityTypeId2] = pyEnv["mail.activity.type"].create([{}, {}]);
-    const [mailActivityId1, mailActivityId2] = pyEnv["mail.activity"].create([
+    const [activityTypeId_1, activityTypeId_2] = pyEnv["mail.activity.type"].create([{}, {}]);
+    const [activityId_1, activityId_2] = pyEnv["mail.activity"].create([
         {
             display_name: "Call with Al",
             date_deadline: moment().format("YYYY-MM-DD"), // now
@@ -160,7 +148,7 @@ QUnit.test("list activity widget: open dropdown", async function (assert) {
             state: "today",
             user_id: pyEnv.currentUserId,
             create_uid: pyEnv.currentUserId,
-            activity_type_id: mailActivityTypeId1,
+            activity_type_id: activityTypeId_1,
         },
         {
             display_name: "Meet FP",
@@ -169,16 +157,15 @@ QUnit.test("list activity widget: open dropdown", async function (assert) {
             state: "planned",
             user_id: pyEnv.currentUserId,
             create_uid: pyEnv.currentUserId,
-            activity_type_id: mailActivityTypeId2,
+            activity_type_id: activityTypeId_2,
         },
     ]);
     pyEnv["res.users"].write([pyEnv.currentUserId], {
-        activity_ids: [mailActivityId1, mailActivityId2],
+        activity_ids: [activityId_1, activityId_2],
         activity_state: "today",
         activity_summary: "Call with Al",
-        activity_type_id: mailActivityTypeId2,
+        activity_type_id: activityTypeId_2,
     });
-
     const views = {
         "res.users,false,list": '<list><field name="activity_ids" widget="list_activity"/></list>',
     };
@@ -197,10 +184,10 @@ QUnit.test("list activity widget: open dropdown", async function (assert) {
             }
             if (args.method === "action_feedback") {
                 pyEnv["res.users"].write([pyEnv.currentUserId], {
-                    activity_ids: [mailActivityId2],
+                    activity_ids: [activityId_2],
                     activity_state: "planned",
                     activity_summary: "Meet FP",
-                    activity_type_id: mailActivityTypeId1,
+                    activity_type_id: activityTypeId_1,
                 });
                 // random value returned in order for the mock server to know that this route is implemented.
                 return true;
@@ -208,7 +195,6 @@ QUnit.test("list activity widget: open dropdown", async function (assert) {
         },
         serverData: { views },
     });
-
     patchWithCleanup(ListController.prototype, {
         setup() {
             this._super();
@@ -219,7 +205,6 @@ QUnit.test("list activity widget: open dropdown", async function (assert) {
             };
         },
     });
-
     await openView({
         res_model: "res.users",
         views: [[false, "list"]],
@@ -243,8 +228,8 @@ QUnit.test("list activity widget: open dropdown", async function (assert) {
 
 QUnit.test("list activity exception widget with activity", async function (assert) {
     const pyEnv = await startServer();
-    const [mailActivityTypeId1, mailActivityTypeId2] = pyEnv["mail.activity.type"].create([{}, {}]);
-    const [mailActivityId1, mailActivityId2] = pyEnv["mail.activity"].create([
+    const [activityTypeId_1, activityTypeId_2] = pyEnv["mail.activity.type"].create([{}, {}]);
+    const [activityId_1, activityId_2] = pyEnv["mail.activity"].create([
         {
             display_name: "An activity",
             date_deadline: moment().format("YYYY-MM-DD"), // now
@@ -252,7 +237,7 @@ QUnit.test("list activity exception widget with activity", async function (asser
             state: "today",
             user_id: pyEnv.currentUserId,
             create_uid: pyEnv.currentUserId,
-            activity_type_id: mailActivityTypeId1,
+            activity_type_id: activityTypeId_1,
         },
         {
             display_name: "An exception activity",
@@ -261,17 +246,17 @@ QUnit.test("list activity exception widget with activity", async function (asser
             state: "today",
             user_id: pyEnv.currentUserId,
             create_uid: pyEnv.currentUserId,
-            activity_type_id: mailActivityTypeId2,
+            activity_type_id: activityTypeId_2,
         },
     ]);
 
-    pyEnv["res.users"].write([pyEnv.currentUserId], { activity_ids: [mailActivityId1] });
+    pyEnv["res.users"].write([pyEnv.currentUserId], { activity_ids: [activityId_1] });
     pyEnv["res.users"].create({
         message_attachment_count: 3,
         display_name: "second partner",
         message_follower_ids: [],
         message_ids: [],
-        activity_ids: [mailActivityId2],
+        activity_ids: [activityId_2],
         activity_exception_decoration: "warning",
         activity_exception_icon: "fa-warning",
     });
@@ -289,7 +274,6 @@ QUnit.test("list activity exception widget with activity", async function (asser
         res_model: "res.users",
         views: [[false, "list"]],
     });
-
     assert.containsN(target, ".o_data_row", 2);
     assert.containsNone(
         document.querySelectorAll(".o_data_row .o_activity_exception_cell")[0],

@@ -21,25 +21,25 @@ QUnit.module("suggestion", {
 
 QUnit.test('display partner mention suggestions on typing "@"', async function (assert) {
     const pyEnv = await startServer();
-    const resPartnerId1 = pyEnv["res.partner"].create({
+    const partnerId_1 = pyEnv["res.partner"].create({
         email: "testpartner@odoo.com",
         name: "TestPartner",
     });
-    const resPartnerId2 = pyEnv["res.partner"].create({
+    const partnerId_2 = pyEnv["res.partner"].create({
         email: "testpartner2@odoo.com",
         name: "TestPartner2",
     });
-    pyEnv["res.users"].create({ partner_id: resPartnerId1 });
-    const mailChannelId1 = pyEnv["mail.channel"].create({
+    pyEnv["res.users"].create({ partner_id: partnerId_1 });
+    const channelId = pyEnv["mail.channel"].create({
         name: "general",
         channel_member_ids: [
             [0, 0, { partner_id: pyEnv.currentPartnerId }],
-            [0, 0, { partner_id: resPartnerId1 }],
-            [0, 0, { partner_id: resPartnerId2 }],
+            [0, 0, { partner_id: partnerId_1 }],
+            [0, 0, { partner_id: partnerId_2 }],
         ],
     });
     const { openDiscuss } = await start();
-    await openDiscuss(mailChannelId1);
+    await openDiscuss(channelId);
     assert.containsNone(target, ".o-composer-suggestion");
 
     await insertText(".o-mail-composer-textarea", "@");
@@ -58,38 +58,38 @@ QUnit.test('display partner mention suggestions on typing "@" in chatter', async
 
 QUnit.test("show other channel member in @ mention", async function (assert) {
     const pyEnv = await startServer();
-    const resPartnerId = pyEnv["res.partner"].create({
+    const partnerId = pyEnv["res.partner"].create({
         email: "testpartner@odoo.com",
         name: "TestPartner",
     });
-    const mailChannelId1 = pyEnv["mail.channel"].create({
+    const channelId = pyEnv["mail.channel"].create({
         name: "general",
         channel_member_ids: [
             [0, 0, { partner_id: pyEnv.currentPartnerId }],
-            [0, 0, { partner_id: resPartnerId }],
+            [0, 0, { partner_id: partnerId }],
         ],
     });
     const { openDiscuss } = await start();
-    await openDiscuss(mailChannelId1);
+    await openDiscuss(channelId);
     await insertText(".o-mail-composer-textarea", "@");
     assert.containsOnce(target, ".o-composer-suggestion:contains(TestPartner)");
 });
 
 QUnit.test("select @ mention insert mention text in composer", async function (assert) {
     const pyEnv = await startServer();
-    const resPartnerId = pyEnv["res.partner"].create({
+    const partnerId = pyEnv["res.partner"].create({
         email: "testpartner@odoo.com",
         name: "TestPartner",
     });
-    const mailChannelId1 = pyEnv["mail.channel"].create({
+    const channelId = pyEnv["mail.channel"].create({
         name: "general",
         channel_member_ids: [
             [0, 0, { partner_id: pyEnv.currentPartnerId }],
-            [0, 0, { partner_id: resPartnerId }],
+            [0, 0, { partner_id: partnerId }],
         ],
     });
     const { openDiscuss } = await start();
-    await openDiscuss(mailChannelId1);
+    await openDiscuss(channelId);
     await insertText(".o-mail-composer-textarea", "@");
     await click(".o-composer-suggestion:contains(TestPartner)");
     assert.strictEqual($(target).find(".o-mail-composer-textarea").val().trim(), "@TestPartner");
@@ -97,12 +97,12 @@ QUnit.test("select @ mention insert mention text in composer", async function (a
 
 QUnit.test('display command suggestions on typing "/"', async function (assert) {
     const pyEnv = await startServer();
-    const mailChannelId1 = pyEnv["mail.channel"].create({
+    const channelId = pyEnv["mail.channel"].create({
         name: "General",
         channel_type: "channel",
     });
     const { openDiscuss } = await start();
-    await openDiscuss(mailChannelId1);
+    await openDiscuss(channelId);
     assert.containsNone(target, ".o-composer-suggestion-list .o-open");
     await insertText(".o-mail-composer-textarea", "/");
     assert.containsOnce(target, ".o-composer-suggestion-list .o-open");
@@ -110,9 +110,9 @@ QUnit.test('display command suggestions on typing "/"', async function (assert) 
 
 QUnit.test("use a command for a specific channel type", async function (assert) {
     const pyEnv = await startServer();
-    const mailChannelId1 = pyEnv["mail.channel"].create({ channel_type: "chat" });
+    const channelId = pyEnv["mail.channel"].create({ channel_type: "chat" });
     const { openDiscuss } = await start();
-    await openDiscuss(mailChannelId1);
+    await openDiscuss(channelId);
     assert.containsNone(target, ".o-composer-suggestion-list .o-open");
     assert.strictEqual(document.querySelector(".o-mail-composer-textarea").value, "");
     await insertText(".o-mail-composer-textarea", "/");
@@ -128,12 +128,12 @@ QUnit.test(
     "command suggestion should only open if command is the first character",
     async function (assert) {
         const pyEnv = await startServer();
-        const mailChannelId1 = pyEnv["mail.channel"].create({
+        const channelId = pyEnv["mail.channel"].create({
             name: "General",
             channel_type: "channel",
         });
         const { openDiscuss } = await start();
-        await openDiscuss(mailChannelId1);
+        await openDiscuss(channelId);
         assert.containsNone(target, ".o-composer-suggestion-list .o-open");
         assert.strictEqual(document.querySelector(".o-mail-composer-textarea").value, "");
         await insertText(".o-mail-composer-textarea", "bluhbluh ");
@@ -145,15 +145,13 @@ QUnit.test(
 
 QUnit.test('display canned response suggestions on typing ":"', async function (assert) {
     const pyEnv = await startServer();
-    const mailChannelId1 = pyEnv["mail.channel"].create({
-        name: "Mario Party",
-    });
+    const channelId = pyEnv["mail.channel"].create({ name: "Mario Party" });
     pyEnv["mail.shortcode"].create({
         source: "hello",
         substitution: "Hello! How are you?",
     });
     const { openDiscuss } = await start();
-    await openDiscuss(mailChannelId1);
+    await openDiscuss(channelId);
     assert.containsNone(target, ".o-composer-suggestion-list .o-open");
     await insertText(".o-mail-composer-textarea", ":");
     assert.containsOnce(target, ".o-composer-suggestion-list .o-open");
@@ -161,15 +159,13 @@ QUnit.test('display canned response suggestions on typing ":"', async function (
 
 QUnit.test("use a canned response", async function (assert) {
     const pyEnv = await startServer();
-    const mailChannelId1 = pyEnv["mail.channel"].create({
-        name: "Mario Party",
-    });
+    const channelId = pyEnv["mail.channel"].create({ name: "Mario Party" });
     pyEnv["mail.shortcode"].create({
         source: "hello",
         substitution: "Hello! How are you?",
     });
     const { openDiscuss } = await start();
-    await openDiscuss(mailChannelId1);
+    await openDiscuss(channelId);
     assert.containsNone(target, ".o-composer-suggestion-list .o-open");
     assert.strictEqual(target.querySelector(".o-mail-composer-textarea").value, "");
     await insertText(".o-mail-composer-textarea", ":");
@@ -184,15 +180,13 @@ QUnit.test("use a canned response", async function (assert) {
 
 QUnit.test("use a canned response some text", async function (assert) {
     const pyEnv = await startServer();
-    const mailChannelId1 = pyEnv["mail.channel"].create({
-        name: "Mario Party",
-    });
+    const channelId = pyEnv["mail.channel"].create({ name: "Mario Party" });
     pyEnv["mail.shortcode"].create({
         source: "hello",
         substitution: "Hello! How are you?",
     });
     const { openDiscuss } = await start();
-    await openDiscuss(mailChannelId1);
+    await openDiscuss(channelId);
     assert.containsNone(target, ".o-composer-suggestion");
     assert.strictEqual(document.querySelector(".o-mail-composer-textarea").value, "");
     await insertText(".o-mail-composer-textarea", "bluhbluh ");
@@ -209,12 +203,12 @@ QUnit.test("use a canned response some text", async function (assert) {
 
 QUnit.test('display channel mention suggestions on typing "#"', async function (assert) {
     const pyEnv = await startServer();
-    const mailChannelId1 = pyEnv["mail.channel"].create({
+    const channelId = pyEnv["mail.channel"].create({
         name: "General",
         channel_type: "channel",
     });
     const { openDiscuss } = await start();
-    await openDiscuss(mailChannelId1);
+    await openDiscuss(channelId);
     assert.containsNone(target, ".o-composer-suggestion-list .o-open");
     await insertText(".o-mail-composer-textarea", "#");
     assert.containsOnce(target, ".o-composer-suggestion-list .o-open");
@@ -222,12 +216,12 @@ QUnit.test('display channel mention suggestions on typing "#"', async function (
 
 QUnit.test("mention a channel", async function (assert) {
     const pyEnv = await startServer();
-    const mailChannelId1 = pyEnv["mail.channel"].create({
+    const channelId = pyEnv["mail.channel"].create({
         name: "General",
         channel_type: "channel",
     });
     const { openDiscuss } = await start();
-    await openDiscuss(mailChannelId1);
+    await openDiscuss(channelId);
     assert.containsNone(target, ".o-composer-suggestion-list .o-open");
     assert.strictEqual(target.querySelector(".o-mail-composer-textarea").value, "");
     await insertText(".o-mail-composer-textarea", "#");
@@ -242,25 +236,25 @@ QUnit.test("mention a channel", async function (assert) {
 
 QUnit.test("Channel suggestions do not crash after rpc returns", async function (assert) {
     const pyEnv = await startServer();
-    const mailChannelId1 = pyEnv["mail.channel"].create({ name: "general" });
-    const getSuggestionsDeferred = makeDeferred();
+    const channelId = pyEnv["mail.channel"].create({ name: "general" });
+    const deferred = makeDeferred();
     const { openDiscuss } = await start({
         async mockRPC(args, params, originalFn) {
             if (params.method === "get_mention_suggestions") {
                 const res = await originalFn(args, params);
                 assert.step("get_mention_suggestions");
                 assert.strictEqual(res.length, 1, "Should return a thread");
-                getSuggestionsDeferred.resolve();
+                deferred.resolve();
                 return res;
             }
             return originalFn(args, params);
         },
     });
-    await openDiscuss(mailChannelId1);
+    await openDiscuss(channelId);
     pyEnv["mail.channel"].create({ name: "foo" });
     insertText(".o-mail-composer-textarea", "#");
     await nextTick();
     insertText(".o-mail-composer-textarea", "f");
-    await getSuggestionsDeferred;
+    await deferred;
     assert.verifySteps(["get_mention_suggestions"]);
 });

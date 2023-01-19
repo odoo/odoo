@@ -12,7 +12,7 @@ QUnit.module("attachment box", {
 
 QUnit.test("base empty rendering", async function (assert) {
     const pyEnv = await startServer();
-    const resPartnerId1 = pyEnv["res.partner"].create({});
+    const partnerId = pyEnv["res.partner"].create({});
     const views = {
         "res.partner,false,form": `
             <form>
@@ -24,7 +24,7 @@ QUnit.test("base empty rendering", async function (assert) {
     };
     const { openView } = await start({ serverData: { views } });
     await openView({
-        res_id: resPartnerId1,
+        res_id: partnerId,
         res_model: "res.partner",
         views: [[false, "form"]],
     });
@@ -35,18 +35,18 @@ QUnit.test("base empty rendering", async function (assert) {
 
 QUnit.test("base non-empty rendering", async function (assert) {
     const pyEnv = await startServer();
-    const resPartnerId1 = pyEnv["res.partner"].create({});
+    const partnerId = pyEnv["res.partner"].create({});
     pyEnv["ir.attachment"].create([
         {
             mimetype: "text/plain",
             name: "Blah.txt",
-            res_id: resPartnerId1,
+            res_id: partnerId,
             res_model: "res.partner",
         },
         {
             mimetype: "text/plain",
             name: "Blu.txt",
-            res_id: resPartnerId1,
+            res_id: partnerId,
             res_model: "res.partner",
         },
     ]);
@@ -61,7 +61,7 @@ QUnit.test("base non-empty rendering", async function (assert) {
     };
     const { openView } = await start({ serverData: { views } });
     await openView({
-        res_id: resPartnerId1,
+        res_id: partnerId,
         res_model: "res.partner",
         views: [[false, "form"]],
     });
@@ -73,11 +73,11 @@ QUnit.test("base non-empty rendering", async function (assert) {
 
 QUnit.test("remove attachment should ask for confirmation", async function (assert) {
     const pyEnv = await startServer();
-    const resPartnerId1 = pyEnv["res.partner"].create({});
+    const partnerId = pyEnv["res.partner"].create({});
     pyEnv["ir.attachment"].create({
         mimetype: "text/plain",
         name: "Blah.txt",
-        res_id: resPartnerId1,
+        res_id: partnerId,
         res_model: "res.partner",
     });
     const views = {
@@ -91,7 +91,7 @@ QUnit.test("remove attachment should ask for confirmation", async function (asse
     };
     const { openView } = await start({ serverData: { views } });
     await openView({
-        res_id: resPartnerId1,
+        res_id: partnerId,
         res_model: "res.partner",
         views: [[false, "form"]],
     });
@@ -111,18 +111,18 @@ QUnit.test("remove attachment should ask for confirmation", async function (asse
 
 QUnit.test("view attachments", async function (assert) {
     const pyEnv = await startServer();
-    const resPartnerId1 = pyEnv["res.partner"].create({});
+    const partnerId = pyEnv["res.partner"].create({});
     pyEnv["ir.attachment"].create([
         {
             mimetype: "text/plain",
             name: "Blah.txt",
-            res_id: resPartnerId1,
+            res_id: partnerId,
             res_model: "res.partner",
         },
         {
             mimetype: "text/plain",
             name: "Blu.txt",
-            res_id: resPartnerId1,
+            res_id: partnerId,
             res_model: "res.partner",
         },
     ]);
@@ -135,7 +135,7 @@ QUnit.test("view attachments", async function (assert) {
     };
     const { openView } = await start({ serverData: { views } });
     await openView({
-        res_id: resPartnerId1,
+        res_id: partnerId,
         res_model: "res.partner",
         views: [[false, "form"]],
     });

@@ -43,8 +43,7 @@ QUnit.test("hover following button", async function (assert) {
     assert.containsOnce(target, ".fa-check + span:contains(Following)");
 
     await afterNextRender(() => {
-        $("button:contains(Following)")[0]
-            .dispatchEvent(new window.MouseEvent("mouseenter"));
+        $("button:contains(Following)")[0].dispatchEvent(new window.MouseEvent("mouseenter"));
     });
     assert.containsOnce(target, "button:contains(Unfollow)");
     assert.containsOnce(target, ".fa-times + span:contains(Unfollow)");

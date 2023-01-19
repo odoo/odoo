@@ -50,9 +50,7 @@ QUnit.test(
         const fakeId = pyEnv["res.fake"].create({
             partner_ids: [partnerId_1, partnerId_2, partnerId_3, partnerId_4],
         });
-        const { openFormView } = await start({
-            serverData: { views },
-        });
+        const { openFormView } = await start({ serverData: { views } });
         await openFormView("res.fake", fakeId);
         await click("button:contains(Send message)");
         assert.containsOnce(target, "button:contains(Show more)");
@@ -72,9 +70,7 @@ QUnit.test(
         const fakeId = pyEnv["res.fake"].create({
             partner_ids: [partnerId_1, partnerId_2, partnerId_3, partnerId_4],
         });
-        const { openFormView } = await start({
-            serverData: { views },
-        });
+        const { openFormView } = await start({ serverData: { views } });
         await openFormView("res.fake", fakeId);
         await click("button:contains(Send message)");
         await click("button:contains(Show more)");
@@ -95,9 +91,7 @@ QUnit.test(
         const fakeId = pyEnv["res.fake"].create({
             partner_ids: [partnerId_1, partnerId_2, partnerId_3, partnerId_4],
         });
-        const { openFormView } = await start({
-            serverData: { views },
-        });
+        const { openFormView } = await start({ serverData: { views } });
         await openFormView("res.fake", fakeId);
         await click("button:contains(Send message)");
         await click("button:contains(Show more)");
@@ -118,9 +112,7 @@ QUnit.test(
         const fakeId = pyEnv["res.fake"].create({
             partner_ids: [partnerId_1, partnerId_2, partnerId_3, partnerId_4],
         });
-        const { openFormView } = await start({
-            serverData: { views },
-        });
+        const { openFormView } = await start({ serverData: { views } });
         await openFormView("res.fake", fakeId);
         await click("button:contains(Send message)");
         await click("button:contains(Show more)");
@@ -140,9 +132,7 @@ QUnit.test("suggest recipient on 'Send message' composer", async function (asser
         email_cc: "john@test.be",
         partner_ids: [partnerId],
     });
-    const { openFormView } = await start({
-        serverData: { views },
-    });
+    const { openFormView } = await start({ serverData: { views } });
     await openFormView("res.fake", fakeId);
     await click("button:contains(Send message)");
     assert.containsOnce(target, ".o-mail-suggested-recipient input:checked");
@@ -155,9 +145,7 @@ QUnit.test("display reason for suggested recipient on mouse over", async functio
         email: "john@jane.be",
     });
     const fakeId = pyEnv["res.fake"].create({ partner_ids: [partnerId] });
-    const { openFormView } = await start({
-        serverData: { views },
-    });
+    const { openFormView } = await start({ serverData: { views } });
     await openFormView("res.fake", fakeId);
     await click("button:contains(Send message)");
     const partnerTitle = target
@@ -169,9 +157,7 @@ QUnit.test("display reason for suggested recipient on mouse over", async functio
 QUnit.test("suggested recipient without partner are unchecked by default", async function (assert) {
     const pyEnv = await startServer();
     const fakeId = pyEnv["res.fake"].create({ email_cc: "john@test.be" });
-    const { openFormView } = await start({
-        serverData: { views },
-    });
+    const { openFormView } = await start({ serverData: { views } });
     await openFormView("res.fake", fakeId);
     await click("button:contains(Send message)");
     const checkboxUnchecked = target.querySelector(
@@ -187,9 +173,7 @@ QUnit.test("suggested recipient with partner are checked by default", async func
         email: "john@jane.be",
     });
     const fakeId = pyEnv["res.fake"].create({ partner_ids: [partnerId] });
-    const { openFormView } = await start({
-        serverData: { views },
-    });
+    const { openFormView } = await start({ serverData: { views } });
     await openFormView("res.fake", fakeId);
     await click("button:contains(Send message)");
     const checkboxChecked = document.querySelector(
@@ -211,11 +195,7 @@ QUnit.test(
             serverData: { views },
             async mockRPC(route, args) {
                 if (route === "/mail/message/post") {
-                    assert.strictEqual(
-                        args.post_data.partner_ids.length,
-                        0,
-                        "post data should not contain suggested recipients when posting an internal note"
-                    );
+                    assert.strictEqual(args.post_data.partner_ids.length, 0);
                 }
             },
         });

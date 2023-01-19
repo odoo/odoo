@@ -14,17 +14,17 @@ QUnit.module("activity mark as done popover", {
 
 QUnit.test("activity mark done popover simplest layout", async function (assert) {
     const pyEnv = await startServer();
-    const resPartnerId1 = pyEnv["res.partner"].create({});
+    const partnerId = pyEnv["res.partner"].create({});
     pyEnv["mail.activity"].create({
         activity_category: "not_upload_file",
         can_write: true,
-        res_id: resPartnerId1,
+        res_id: partnerId,
         res_model: "res.partner",
     });
     const { openView } = await start();
     await openView({
         res_model: "res.partner",
-        res_id: resPartnerId1,
+        res_id: partnerId,
         views: [[false, "form"]],
     });
     await click(".btn:contains('Mark Done')");
@@ -38,18 +38,18 @@ QUnit.test("activity mark done popover simplest layout", async function (assert)
 
 QUnit.test("activity with force next mark done popover simplest layout", async function (assert) {
     const pyEnv = await startServer();
-    const resPartnerId1 = pyEnv["res.partner"].create({});
+    const partnerId = pyEnv["res.partner"].create({});
     pyEnv["mail.activity"].create({
         activity_category: "not_upload_file",
         can_write: true,
         chaining_type: "trigger",
-        res_id: resPartnerId1,
+        res_id: partnerId,
         res_model: "res.partner",
     });
     const { openView } = await start();
     await openView({
         res_model: "res.partner",
-        res_id: resPartnerId1,
+        res_id: partnerId,
         views: [[false, "form"]],
     });
     await click(".btn:contains('Mark Done')");
@@ -63,11 +63,11 @@ QUnit.test("activity with force next mark done popover simplest layout", async f
 
 QUnit.test("activity mark done popover mark done without feedback", async function (assert) {
     const pyEnv = await startServer();
-    const resPartnerId1 = pyEnv["res.partner"].create({});
-    const mailActivityId1 = pyEnv["mail.activity"].create({
+    const partnerId = pyEnv["res.partner"].create({});
+    const activityId = pyEnv["mail.activity"].create({
         activity_category: "not_upload_file",
         can_write: true,
-        res_id: resPartnerId1,
+        res_id: partnerId,
         res_model: "res.partner",
     });
     const { openView } = await start({
@@ -76,7 +76,7 @@ QUnit.test("activity mark done popover mark done without feedback", async functi
                 assert.step("action_feedback");
                 assert.strictEqual(args.args.length, 1);
                 assert.strictEqual(args.args[0].length, 1);
-                assert.strictEqual(args.args[0][0], mailActivityId1);
+                assert.strictEqual(args.args[0][0], activityId);
                 assert.strictEqual(args.kwargs.attachment_ids.length, 0);
                 assert.notOk(args.kwargs.feedback);
                 // random value returned in order for the mock server to know that this route is implemented.
@@ -92,7 +92,7 @@ QUnit.test("activity mark done popover mark done without feedback", async functi
     });
     await openView({
         res_model: "res.partner",
-        res_id: resPartnerId1,
+        res_id: partnerId,
         views: [[false, "form"]],
     });
     await click(".btn:contains('Mark Done')");
@@ -102,11 +102,11 @@ QUnit.test("activity mark done popover mark done without feedback", async functi
 
 QUnit.test("activity mark done popover mark done with feedback", async function (assert) {
     const pyEnv = await startServer();
-    const resPartnerId1 = pyEnv["res.partner"].create({});
-    const mailActivityId1 = pyEnv["mail.activity"].create({
+    const partnerId = pyEnv["res.partner"].create({});
+    const activityId = pyEnv["mail.activity"].create({
         activity_category: "not_upload_file",
         can_write: true,
-        res_id: resPartnerId1,
+        res_id: partnerId,
         res_model: "res.partner",
     });
     const { openView } = await start({
@@ -115,7 +115,7 @@ QUnit.test("activity mark done popover mark done with feedback", async function 
                 assert.step("action_feedback");
                 assert.strictEqual(args.args.length, 1);
                 assert.strictEqual(args.args[0].length, 1);
-                assert.strictEqual(args.args[0][0], mailActivityId1);
+                assert.strictEqual(args.args[0][0], activityId);
                 assert.strictEqual(args.kwargs.attachment_ids.length, 0);
                 assert.strictEqual(args.kwargs.feedback, "This task is done");
                 // random value returned in order for the mock server to know that this route is implemented.
@@ -131,7 +131,7 @@ QUnit.test("activity mark done popover mark done with feedback", async function 
     });
     await openView({
         res_model: "res.partner",
-        res_id: resPartnerId1,
+        res_id: partnerId,
         views: [[false, "form"]],
     });
     await click(".btn:contains('Mark Done')");
@@ -143,11 +143,11 @@ QUnit.test("activity mark done popover mark done with feedback", async function 
 
 QUnit.test("activity mark done popover mark done and schedule next", async function (assert) {
     const pyEnv = await startServer();
-    const resPartnerId1 = pyEnv["res.partner"].create({});
-    const mailActivityId1 = pyEnv["mail.activity"].create({
+    const partnerId = pyEnv["res.partner"].create({});
+    const activityId = pyEnv["mail.activity"].create({
         activity_category: "not_upload_file",
         can_write: true,
-        res_id: resPartnerId1,
+        res_id: partnerId,
         res_model: "res.partner",
     });
     const { env, openView } = await start({
@@ -156,7 +156,7 @@ QUnit.test("activity mark done popover mark done and schedule next", async funct
                 assert.step("action_feedback_schedule_next");
                 assert.strictEqual(args.args.length, 1);
                 assert.strictEqual(args.args[0].length, 1);
-                assert.strictEqual(args.args[0][0], mailActivityId1);
+                assert.strictEqual(args.args[0][0], activityId);
                 assert.strictEqual(args.kwargs.feedback, "This task is done");
                 return false;
             }
@@ -170,7 +170,7 @@ QUnit.test("activity mark done popover mark done and schedule next", async funct
     });
     await openView({
         res_model: "res.partner",
-        res_id: resPartnerId1,
+        res_id: partnerId,
         views: [[false, "form"]],
     });
     patchWithCleanup(env.services.action, {
@@ -192,11 +192,11 @@ QUnit.test(
     "[technical] activity mark done & schedule next with new action",
     async function (assert) {
         const pyEnv = await startServer();
-        const resPartnerId1 = pyEnv["res.partner"].create({});
+        const partnerId = pyEnv["res.partner"].create({});
         pyEnv["mail.activity"].create({
             activity_category: "not_upload_file",
             can_write: true,
-            res_id: resPartnerId1,
+            res_id: partnerId,
             res_model: "res.partner",
         });
         const { env, openView } = await start({
@@ -208,7 +208,7 @@ QUnit.test(
         });
         await openView({
             res_model: "res.partner",
-            res_id: resPartnerId1,
+            res_id: partnerId,
             views: [[false, "form"]],
         });
         patchWithCleanup(env.services.action, {

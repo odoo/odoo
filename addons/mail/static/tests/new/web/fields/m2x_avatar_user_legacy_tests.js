@@ -32,12 +32,12 @@ QUnit.test(
     'many2one_avatar_user widget edited by the smart action "Assign to..."',
     async function (assert) {
         const pyEnv = await startServer();
-        const [resUsersId1] = pyEnv["res.users"].create([
+        const [userId_1] = pyEnv["res.users"].create([
             { name: "Mario" },
             { name: "Luigi" },
             { name: "Yoshi" },
         ]);
-        const m2xAvatarUserId1 = pyEnv["m2x.avatar.user"].create({ user_id: resUsersId1 });
+        const m2xAvatarUserId1 = pyEnv["m2x.avatar.user"].create({ user_id: userId_1 });
         const legacyEnv = makeTestEnvironment({ bus: core.bus });
         const serviceRegistry = registry.category("services");
         serviceRegistry.add("legacy_command", makeLegacyCommandService(legacyEnv));
@@ -80,23 +80,22 @@ QUnit.test(
     'many2one_avatar_user widget edited by the smart action "Assign to me"',
     async function (assert) {
         const pyEnv = await startServer();
-        const [resUsersId1, resUsersId2] = pyEnv["res.users"].create([
+        const [userId_1, userId_2] = pyEnv["res.users"].create([
             { name: "Mario" },
             { name: "Luigi" },
         ]);
-        const m2xAvatarUserId1 = pyEnv["m2x.avatar.user"].create({ user_id: resUsersId1 });
-        patchWithCleanup(session, { user_id: [resUsersId2] });
+        const avatarUserId_1 = pyEnv["m2x.avatar.user"].create({ user_id: userId_1 });
+        patchWithCleanup(session, { user_id: [userId_2] });
         const legacyEnv = makeTestEnvironment({ bus: core.bus });
         const serviceRegistry = registry.category("services");
         serviceRegistry.add("legacy_command", makeLegacyCommandService(legacyEnv));
-
         const views = {
             "m2x.avatar.user,false,form":
                 '<form js_class="legacy_form"><field name="user_id" widget="many2one_avatar_user"/></form>',
         };
         const { openView } = await start({ serverData: { views } });
         await openView({
-            res_id: m2xAvatarUserId1,
+            res_id: avatarUserId_1,
             type: "ir.actions.act_window",
             target: "current",
             res_model: "m2x.avatar.user",
@@ -129,25 +128,24 @@ QUnit.test(
     'many2many_avatar_user widget edited by the smart action "Assign to..."',
     async function (assert) {
         const pyEnv = await startServer();
-        const [resUsersId1, resUsersId2] = pyEnv["res.users"].create([
+        const [userId_1, userId_2] = pyEnv["res.users"].create([
             { name: "Mario" },
             { name: "Yoshi" },
             { name: "Luigi" },
         ]);
-        const m2xAvatarUserId1 = pyEnv["m2x.avatar.user"].create({
-            user_ids: [resUsersId1, resUsersId2],
+        const avatarUserId = pyEnv["m2x.avatar.user"].create({
+            user_ids: [userId_1, userId_2],
         });
         const legacyEnv = makeTestEnvironment({ bus: core.bus });
         const serviceRegistry = registry.category("services");
         serviceRegistry.add("legacy_command", makeLegacyCommandService(legacyEnv));
-
         const views = {
             "m2x.avatar.user,false,form":
                 '<form js_class="legacy_form"><field name="user_ids" widget="many2many_avatar_user"/></form>',
         };
         const { openView } = await start({ serverData: { views } });
         await openView({
-            res_id: m2xAvatarUserId1,
+            res_id: avatarUserId,
             type: "ir.actions.act_window",
             target: "current",
             res_model: "m2x.avatar.user",
@@ -184,26 +182,25 @@ QUnit.test(
     'many2many_avatar_user widget edited by the smart action "Assign to me"',
     async function (assert) {
         const pyEnv = await startServer();
-        const [resUsersId1, resUsersId2, resUsersId3] = pyEnv["res.users"].create([
+        const [userId_1, userId_2, userId_3] = pyEnv["res.users"].create([
             { name: "Mario" },
             { name: "Luigi" },
             { name: "Yoshi" },
         ]);
-        const m2xAvatarUserId1 = pyEnv["m2x.avatar.user"].create({
-            user_ids: [resUsersId1, resUsersId3],
+        const avatarUserId = pyEnv["m2x.avatar.user"].create({
+            user_ids: [userId_1, userId_3],
         });
-        patchWithCleanup(session, { user_id: [resUsersId2] });
+        patchWithCleanup(session, { user_id: [userId_2] });
         const legacyEnv = makeTestEnvironment({ bus: core.bus });
         const serviceRegistry = registry.category("services");
         serviceRegistry.add("legacy_command", makeLegacyCommandService(legacyEnv));
-
         const views = {
             "m2x.avatar.user,false,form":
                 '<form js_class="legacy_form"><field name="user_ids" widget="many2many_avatar_user"/></form>',
         };
         const { openView } = await start({ serverData: { views } });
         await openView({
-            res_id: m2xAvatarUserId1,
+            res_id: avatarUserId,
             type: "ir.actions.act_window",
             target: "current",
             res_model: "m2x.avatar.user",
@@ -242,25 +239,23 @@ QUnit.test(
     "avatar_user widget displays the appropriate user image in form view",
     async function (assert) {
         const pyEnv = await startServer();
-        const resUsersId1 = pyEnv["res.users"].create({ name: "Mario" });
-        const m2xAvatarUserId1 = pyEnv["m2x.avatar.user"].create({ user_ids: [resUsersId1] });
+        const userId = pyEnv["res.users"].create({ name: "Mario" });
+        const avatarUserId = pyEnv["m2x.avatar.user"].create({ user_ids: [userId] });
         const views = {
             "m2x.avatar.user,false,form":
                 '<form js_class="legacy_form"><field name="user_ids" widget="many2many_avatar_user"/></form>',
         };
-        const { openView } = await start({
-            serverData: { views },
-        });
+        const { openView } = await start({ serverData: { views } });
         await openView({
             res_model: "m2x.avatar.user",
-            res_id: m2xAvatarUserId1,
+            res_id: avatarUserId,
             views: [[false, "form"]],
         });
         assert.strictEqual(
             target
                 .querySelector(".o_field_many2manytags.avatar.o_field_widget .badge img")
                 .getAttribute("data-src"),
-            `/web/image/res.users/${resUsersId1}/avatar_128`
+            `/web/image/res.users/${userId}/avatar_128`
         );
     }
 );
@@ -274,9 +269,7 @@ QUnit.test("many2many_avatar_user widget in form view", async function (assert) 
         "m2x.avatar.user,false,form":
             '<form js_class="legacy_form"><field name="user_ids" widget="many2many_avatar_user"/></form>',
     };
-    const { openView } = await start({
-        serverData: { views },
-    });
+    const { openView } = await start({ serverData: { views } });
     await openView({
         res_model: "m2x.avatar.user",
         res_id: avatarUserId,

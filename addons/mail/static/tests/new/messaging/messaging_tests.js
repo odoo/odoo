@@ -14,29 +14,24 @@ QUnit.test(
     "Posting a message to a partner out of discuss should open a chat window",
     async function (assert) {
         const { env, pyEnv } = await start();
-        const resPartnerId = pyEnv["res.partner"].create({ name: "Dumbledore" });
-        const resUserId = pyEnv["res.users"].create({ partner_id: resPartnerId });
-        const mailChannelId = pyEnv["mail.channel"].create({
+        const partnerId = pyEnv["res.partner"].create({ name: "Dumbledore" });
+        const userId = pyEnv["res.users"].create({ partner_id: partnerId });
+        const channelId = pyEnv["mail.channel"].create({
             channel_member_ids: [
                 [0, 0, { partner_id: pyEnv.currentPartnerId }],
-                [0, 0, { partner_id: resPartnerId }],
+                [0, 0, { partner_id: partnerId }],
             ],
             channel_type: "chat",
         });
-        const [channel] = pyEnv["mail.channel"].searchRead([["id", "=", mailChannelId]]);
+        const [channel] = pyEnv["mail.channel"].searchRead([["id", "=", channelId]]);
         await afterNextRender(() =>
             env.services.rpc("/mail/chat_post", {
-                context: {
-                    mockedUserId: resUserId,
-                },
+                context: { mockedUserId: userId },
                 message_content: "new message",
                 uuid: channel.uuid,
             })
         );
-        assert.containsOnce(
-            target,
-            ".o-mail-chat-window .o-mail-chat-window-header:contains(Dumbledore)"
-        );
+        assert.containsOnce(target, ".o-mail-chat-window-header:contains(Dumbledore)");
     }
 );
 
@@ -45,28 +40,23 @@ QUnit.test(
     async function (assert) {
         const { env, openDiscuss, openFormView, pyEnv } = await start();
         await openDiscuss();
-        const resPartnerId = pyEnv["res.partner"].create({ name: "Dumbledore" });
-        const resUserId = pyEnv["res.users"].create({ partner_id: resPartnerId });
-        const mailChannelId = pyEnv["mail.channel"].create({
+        const partnerId = pyEnv["res.partner"].create({ name: "Dumbledore" });
+        const userId = pyEnv["res.users"].create({ partner_id: partnerId });
+        const channelId = pyEnv["mail.channel"].create({
             channel_member_ids: [
                 [0, 0, { partner_id: pyEnv.currentPartnerId }],
-                [0, 0, { partner_id: resPartnerId }],
+                [0, 0, { partner_id: partnerId }],
             ],
             channel_type: "chat",
         });
-        const [channel] = pyEnv["mail.channel"].searchRead([["id", "=", mailChannelId]]);
+        const [channel] = pyEnv["mail.channel"].searchRead([["id", "=", channelId]]);
         env.services.rpc("/mail/chat_post", {
-            context: {
-                mockedUserId: resUserId,
-            },
+            context: { mockedUserId: userId },
             message_content: "new message",
             uuid: channel.uuid,
         });
         // leaving discuss.
-        await openFormView("res.partner", resPartnerId);
-        assert.containsOnce(
-            target,
-            ".o-mail-chat-window .o-mail-chat-window-header:contains(Dumbledore)"
-        );
+        await openFormView("res.partner", partnerId);
+        assert.containsOnce(target, ".o-mail-chat-window-header:contains(Dumbledore)");
     }
 );

@@ -28,18 +28,12 @@ QUnit.test("toggling category button hide category items", async (assert) => {
 
 QUnit.test("toggling category button does not hide active category items", async (assert) => {
     const pyEnv = await startServer();
-    const [mailChannelId] = pyEnv["mail.channel"].create([
-        {
-            name: "abc",
-            channel_type: "channel",
-        },
-        {
-            name: "def",
-            channel_type: "channel",
-        },
+    const [channelId] = pyEnv["mail.channel"].create([
+        { name: "abc", channel_type: "channel" },
+        { name: "def", channel_type: "channel" },
     ]);
     const { openDiscuss } = await start();
-    await openDiscuss(mailChannelId);
+    await openDiscuss(channelId);
     assert.containsN(target, ".o-mail-category-item", 2);
     assert.containsOnce(target, ".o-mail-category-item.o-active");
 
@@ -98,10 +92,7 @@ QUnit.test(
     async function (assert) {
         const { openDiscuss } = await start();
         await openDiscuss();
-        assert.containsOnce(
-            document.body,
-            ".o-mail-category-channel i[title='View or join channels']"
-        );
+        assert.containsOnce(target, "i[title='View or join channels']");
     }
 );
 
@@ -116,10 +107,7 @@ QUnit.test(
         const { openDiscuss } = await start();
         await openDiscuss();
         await click(".o-mail-category-channel span:contains(Channels)");
-        assert.containsOnce(
-            document.body,
-            ".o-mail-category-channel i[title='View or join channels']"
-        );
+        assert.containsOnce(target, "i[title='View or join channels']");
     }
 );
 
@@ -128,18 +116,13 @@ QUnit.test(
     async function (assert) {
         const { openDiscuss } = await start();
         await openDiscuss();
-        assert.containsOnce(
-            document.body,
-            ".o-mail-category-channel i[title='Add or join a channel']"
-        );
+        assert.containsOnce(target, "i[title='Add or join a channel']");
     }
 );
 
 QUnit.test(
     "channel - command: should not have add command when category is folded",
     async function (assert) {
-        assert.expect(1);
-
         const pyEnv = await startServer();
         pyEnv["res.users.settings"].create({
             user_id: pyEnv.currentUserId,
@@ -147,10 +130,7 @@ QUnit.test(
         });
         const { openDiscuss } = await start();
         await openDiscuss();
-        assert.containsNone(
-            document.body,
-            ".o-mail-category-channel i[title='Add or join a channel']"
-        );
+        assert.containsNone(target, "i[title='Add or join a channel']");
     }
 );
 
@@ -163,9 +143,9 @@ QUnit.test("channel - states: close manually by clicking the title", async funct
     });
     const { openDiscuss } = await start();
     await openDiscuss();
-    assert.containsOnce(document.body, ".o-mail-category-item:contains(general)");
+    assert.containsOnce(target, ".o-mail-category-item:contains(general)");
     await click(".o-mail-category-channel span:contains(Channels)");
-    assert.containsNone(document.body, ".o-mail-category-item:contains(general)");
+    assert.containsNone(target, ".o-mail-category-item:contains(general)");
 });
 
 QUnit.test("channel - states: open manually by clicking the title", async function (assert) {
@@ -177,9 +157,9 @@ QUnit.test("channel - states: open manually by clicking the title", async functi
     });
     const { openDiscuss } = await start();
     await openDiscuss();
-    assert.containsNone(document.body, ".o-mail-category-item:contains(general)");
+    assert.containsNone(target, ".o-mail-category-item:contains(general)");
     await click(".o-mail-category-channel span:contains(Channels)");
-    assert.containsOnce(document.body, ".o-mail-category-item:contains(general)");
+    assert.containsOnce(target, ".o-mail-category-item:contains(general)");
 });
 
 QUnit.test("sidebar: inbox with counter", async function (assert) {
@@ -195,21 +175,17 @@ QUnit.test("sidebar: inbox with counter", async function (assert) {
 
 QUnit.test("default thread rendering", async function (assert) {
     const pyEnv = await startServer();
-    const mailChannelId1 = pyEnv["mail.channel"].create({ name: "" });
+    const channelId = pyEnv["mail.channel"].create({ name: "" });
     const { openDiscuss } = await start();
     await openDiscuss();
     assert.containsOnce(target, 'button[data-mailbox="inbox"]');
     assert.containsOnce(target, 'button[data-mailbox="starred"]');
     assert.containsOnce(target, 'button[data-mailbox="history"]');
-    assert.containsOnce(target, `.o-mail-category-item[data-channel-id="${mailChannelId1}"]`);
+    assert.containsOnce(target, `.o-mail-category-item[data-channel-id="${channelId}"]`);
     assert.hasClass($(target).find('button[data-mailbox="inbox"]'), "o-active");
-    assert.containsOnce(
-        target,
-        '.o-mail-discuss-content [data-empty-thread=""]',
-        "should have empty thread in inbox"
-    );
+    assert.containsOnce(target, '[data-empty-thread=""]');
     assert.strictEqual(
-        $(target).find('.o-mail-discuss-content [data-empty-thread=""]').text().trim(),
+        $(target).find('[data-empty-thread=""]').text().trim(),
         "Congratulations, your inbox is empty  New messages appear here."
     );
 
@@ -217,29 +193,26 @@ QUnit.test("default thread rendering", async function (assert) {
     assert.hasClass($(target).find('button[data-mailbox="starred"]'), "o-active");
     assert.containsOnce(target, '.o-mail-discuss-content [data-empty-thread=""]');
     assert.strictEqual(
-        $(target).find('.o-mail-discuss-content [data-empty-thread=""]').text().trim(),
+        $(target).find('[data-empty-thread=""]').text().trim(),
         "No starred messages  You can mark any message as 'starred', and it shows up in this mailbox."
     );
 
     await click('button[data-mailbox="history"]');
     assert.hasClass($(target).find('button[data-mailbox="history"]'), "o-active");
-    assert.containsOnce(target, '.o-mail-discuss-content [data-empty-thread=""]');
+    assert.containsOnce(target, '[data-empty-thread=""]');
     assert.strictEqual(
-        $(target)
-            .find('.o-mail-discuss-content .o-mail-thread [data-empty-thread=""]')
-            .text()
-            .trim(),
+        $(target).find('[data-empty-thread=""]').text().trim(),
         "No history messages  Messages marked as read will appear in the history."
     );
 
-    await click(`.o-mail-category-item[data-channel-id="${mailChannelId1}"]`);
+    await click(`.o-mail-category-item[data-channel-id="${channelId}"]`);
     assert.hasClass(
-        $(target).find(`.o-mail-category-item[data-channel-id="${mailChannelId1}"]`),
+        $(target).find(`.o-mail-category-item[data-channel-id="${channelId}"]`),
         "o-active"
     );
-    assert.containsOnce(target, '.o-mail-discuss-content [data-empty-thread=""]');
+    assert.containsOnce(target, '[data-empty-thread=""]');
     assert.strictEqual(
-        $(target).find('.o-mail-discuss-content [data-empty-thread=""]').text().trim(),
+        $(target).find('[data-empty-thread=""]').text().trim(),
         "There are no messages in this conversation."
     );
 });
@@ -251,49 +224,34 @@ QUnit.test("sidebar quick search at 20 or more pinned channels", async function 
     }
     const { openDiscuss } = await start();
     await openDiscuss();
-    assert.containsN(document.body, ".o-mail-category-item", 20);
-    assert.containsOnce(
-        document.body,
-        ".o-mail-discuss-sidebar input[placeholder='Quick search...']"
-    );
+    assert.containsN(target, ".o-mail-category-item", 20);
+    assert.containsOnce(target, ".o-mail-discuss-sidebar input[placeholder='Quick search...']");
 
-    await editInput(
-        document.body,
-        ".o-mail-discuss-sidebar input[placeholder='Quick search...']",
-        "1"
-    );
+    await editInput(target, ".o-mail-discuss-sidebar input[placeholder='Quick search...']", "1");
     assert.containsN(document.body, ".o-mail-category-item", 11);
 
-    await editInput(
-        document.body,
-        ".o-mail-discuss-sidebar input[placeholder='Quick search...']",
-        "12"
-    );
+    await editInput(target, ".o-mail-discuss-sidebar input[placeholder='Quick search...']", "12");
     assert.containsOnce(document.body, ".o-mail-category-item");
     assert.containsOnce(document.body, ".o-mail-category-item:contains(channel12)");
 
-    await editInput(
-        document.body,
-        ".o-mail-discuss-sidebar input[placeholder='Quick search...']",
-        "123"
-    );
+    await editInput(target, ".o-mail-discuss-sidebar input[placeholder='Quick search...']", "123");
     assert.containsNone(document.body, ".o-mail-category-item");
 });
 
 QUnit.test("sidebar: basic chat rendering", async function (assert) {
     const pyEnv = await startServer();
-    const resPartnerId1 = pyEnv["res.partner"].create({ name: "Demo" });
-    const mailChannelId1 = pyEnv["mail.channel"].create({
+    const partnerId = pyEnv["res.partner"].create({ name: "Demo" });
+    const channelId = pyEnv["mail.channel"].create({
         channel_member_ids: [
             [0, 0, { partner_id: pyEnv.currentPartnerId }],
-            [0, 0, { partner_id: resPartnerId1 }],
+            [0, 0, { partner_id: partnerId }],
         ],
         channel_type: "chat",
     });
     const { openDiscuss } = await start();
     await openDiscuss();
-    assert.containsOnce(target, `.o-mail-category-item[data-channel-id="${mailChannelId1}"]`);
-    const $chat = $(target).find(`.o-mail-category-item[data-channel-id="${mailChannelId1}"]`);
+    assert.containsOnce(target, `.o-mail-category-item[data-channel-id="${channelId}"]`);
+    const $chat = $(target).find(`.o-mail-category-item[data-channel-id="${channelId}"]`);
     assert.containsOnce($chat, "img[data-alt='Thread Image']");
     assert.containsOnce($chat, "span:contains(Demo)");
     assert.containsOnce($chat, ".o-mail-commands");
@@ -316,33 +274,22 @@ QUnit.test("sidebar: open pinned channel", async function (assert) {
     await openDiscuss();
     await click(".o-mail-category-item:contains(General)");
     assert.strictEqual($(target).find(".o-mail-discuss-thread-name").val(), "General");
-    assert.containsOnce(
-        target,
-        ".o-mail-discuss-content .o-mail-composer-textarea[placeholder='Message #General…']"
-    );
+    assert.containsOnce(target, ".o-mail-composer-textarea[placeholder='Message #General…']");
 });
 
 QUnit.test("sidebar: open channel and leave it", async function (assert) {
     const pyEnv = await startServer();
-    const mailChannelId1 = pyEnv["mail.channel"].create({
+    const channelId = pyEnv["mail.channel"].create({
         name: "General",
         channel_member_ids: [
-            [
-                0,
-                0,
-                {
-                    fold_state: "open",
-                    is_minimized: true,
-                    partner_id: pyEnv.currentPartnerId,
-                },
-            ],
+            [0, 0, { fold_state: "open", is_minimized: true, partner_id: pyEnv.currentPartnerId }],
         ],
     });
     const { openDiscuss } = await start({
         async mockRPC(route, args) {
             if (args.method === "action_unfollow") {
                 assert.step("action_unfollow");
-                assert.deepEqual(args.args[0], mailChannelId1);
+                assert.deepEqual(args.args[0], channelId);
             }
         },
     });
@@ -350,9 +297,7 @@ QUnit.test("sidebar: open channel and leave it", async function (assert) {
     await click(".o-mail-category-item:contains(General)");
     assert.verifySteps([]);
 
-    await click(
-        ".o-mail-category-item:contains(General) .o-mail-commands .btn[title='Leave this channel']"
-    );
+    await click(".o-mail-category-item:contains(General) .btn[title='Leave this channel']");
     assert.verifySteps(["action_unfollow"]);
     assert.containsNone(target, ".o-mail-category-item:contains(General)");
     assert.notOk($(target).find(".o-mail-discuss-thread-name")?.val() === "General");
@@ -360,7 +305,7 @@ QUnit.test("sidebar: open channel and leave it", async function (assert) {
 
 QUnit.test("sidebar: unpin channel from bus", async function (assert) {
     const pyEnv = await startServer();
-    const mailChannelId = pyEnv["mail.channel"].create({ name: "General" });
+    const channelId = pyEnv["mail.channel"].create({ name: "General" });
     const { openDiscuss } = await start();
     await openDiscuss();
     assert.containsOnce(target, ".o-mail-category-item:contains(General)");
@@ -371,9 +316,7 @@ QUnit.test("sidebar: unpin channel from bus", async function (assert) {
     // Simulate receiving a leave channel notification
     // (e.g. from user interaction from another device or browser tab)
     await afterNextRender(() => {
-        pyEnv["bus.bus"]._sendone(pyEnv.currentPartner, "mail.channel/unpin", {
-            id: mailChannelId,
-        });
+        pyEnv["bus.bus"]._sendone(pyEnv.currentPartner, "mail.channel/unpin", { id: channelId });
     });
     assert.containsNone(target, ".o-mail-category-item:contains(General)");
     assert.notOk($(target).find(".o-mail-discuss-thread-name")?.val() === "General");
@@ -381,63 +324,56 @@ QUnit.test("sidebar: unpin channel from bus", async function (assert) {
 
 QUnit.test("chat - channel should count unread message", async function (assert) {
     const pyEnv = await startServer();
-    const resPartnerId1 = pyEnv["res.partner"].create({
+    const partnerId = pyEnv["res.partner"].create({
         name: "Demo",
         im_status: "offline",
     });
-    const mailChannelId1 = pyEnv["mail.channel"].create({
+    const channelId = pyEnv["mail.channel"].create({
         channel_member_ids: [
             [0, 0, { message_unread_counter: 1, partner_id: pyEnv.currentPartnerId }],
-            [0, 0, { partner_id: resPartnerId1 }],
+            [0, 0, { partner_id: partnerId }],
         ],
         channel_type: "chat",
     });
     pyEnv["mail.message"].create({
-        author_id: resPartnerId1,
+        author_id: partnerId,
         body: "<p>Test</p>",
         model: "mail.channel",
-        res_id: mailChannelId1,
+        res_id: channelId,
     });
     const { openDiscuss } = await start();
     await openDiscuss();
     assert.containsOnce(target, ".o-mail-discuss-sidebar-counter");
     assert.strictEqual(target.querySelector(".o-mail-discuss-sidebar-counter").textContent, "1");
 
-    await click(`.o-mail-category-item[data-channel-id="${mailChannelId1}"]`);
+    await click(`.o-mail-category-item[data-channel-id="${channelId}"]`);
     assert.containsNone(target, ".o-mail-discuss-sidebar-counter");
 });
 
 QUnit.test("mark channel as seen on last message visible", async function (assert) {
     const pyEnv = await startServer();
-    const mailChannelId1 = pyEnv["mail.channel"].create({
+    const channelId = pyEnv["mail.channel"].create({
         name: "test",
         channel_member_ids: [
-            [
-                0,
-                0,
-                {
-                    message_unread_counter: 1,
-                    partner_id: pyEnv.currentPartnerId,
-                },
-            ],
+            [0, 0, { message_unread_counter: 1, partner_id: pyEnv.currentPartnerId }],
         ],
     });
     pyEnv["mail.message"].create({
         body: "not empty",
         model: "mail.channel",
-        res_id: mailChannelId1,
+        res_id: channelId,
     });
     const { openDiscuss } = await start();
     await openDiscuss();
-    assert.containsOnce(target, `.o-mail-category-item[data-channel-id="${mailChannelId1}"]`);
+    assert.containsOnce(target, `.o-mail-category-item[data-channel-id="${channelId}"]`);
     assert.hasClass(
-        target.querySelector(`.o-mail-category-item[data-channel-id="${mailChannelId1}"]`),
+        target.querySelector(`.o-mail-category-item[data-channel-id="${channelId}"]`),
         "o-unread"
     );
 
-    await click(`.o-mail-category-item[data-channel-id="${mailChannelId1}"]`);
+    await click(`.o-mail-category-item[data-channel-id="${channelId}"]`);
     assert.doesNotHaveClass(
-        target.querySelector(`.o-mail-category-item[data-channel-id="${mailChannelId1}"]`),
+        target.querySelector(`.o-mail-category-item[data-channel-id="${channelId}"]`),
         "o-unread"
     );
 });
@@ -566,14 +502,7 @@ QUnit.test(
         });
         pyEnv["mail.channel"].create({
             channel_member_ids: [
-                [
-                    0,
-                    0,
-                    {
-                        message_unread_counter: 0,
-                        partner_id: pyEnv.currentPartnerId,
-                    },
-                ],
+                [0, 0, { message_unread_counter: 0, partner_id: pyEnv.currentPartnerId }],
             ],
             channel_type: "chat",
         });
@@ -593,14 +522,7 @@ QUnit.test(
         });
         pyEnv["mail.channel"].create({
             channel_member_ids: [
-                [
-                    0,
-                    0,
-                    {
-                        message_unread_counter: 10,
-                        partner_id: pyEnv.currentPartnerId,
-                    },
-                ],
+                [0, 0, { message_unread_counter: 10, partner_id: pyEnv.currentPartnerId }],
             ],
             channel_type: "chat",
         });
@@ -620,14 +542,7 @@ QUnit.test(
         });
         pyEnv["mail.channel"].create({
             channel_member_ids: [
-                [
-                    0,
-                    0,
-                    {
-                        message_unread_counter: 0,
-                        partner_id: pyEnv.currentPartnerId,
-                    },
-                ],
+                [0, 0, { message_unread_counter: 0, partner_id: pyEnv.currentPartnerId }],
             ],
             channel_type: "chat",
         });
@@ -648,27 +563,13 @@ QUnit.test(
         pyEnv["mail.channel"].create([
             {
                 channel_member_ids: [
-                    [
-                        0,
-                        0,
-                        {
-                            message_unread_counter: 10,
-                            partner_id: pyEnv.currentPartnerId,
-                        },
-                    ],
+                    [0, 0, { message_unread_counter: 10, partner_id: pyEnv.currentPartnerId }],
                 ],
                 channel_type: "chat",
             },
             {
                 channel_member_ids: [
-                    [
-                        0,
-                        0,
-                        {
-                            message_unread_counter: 20,
-                            partner_id: pyEnv.currentPartnerId,
-                        },
-                    ],
+                    [0, 0, { message_unread_counter: 20, partner_id: pyEnv.currentPartnerId }],
                 ],
                 channel_type: "chat",
             },

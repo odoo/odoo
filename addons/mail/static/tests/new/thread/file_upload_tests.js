@@ -15,7 +15,7 @@ QUnit.module("file upload", {
 
 QUnit.test("no conflicts between file uploads", async function (assert) {
     const pyEnv = await startServer();
-    const resPartnerId1 = pyEnv["res.partner"].create({});
+    const partnerId = pyEnv["res.partner"].create({});
     const channelId = pyEnv["mail.channel"].create({});
     pyEnv["mail.message"].create({
         body: "not empty",
@@ -25,7 +25,7 @@ QUnit.test("no conflicts between file uploads", async function (assert) {
     const { openView } = await start();
     // Uploading file in the first thread: res.partner chatter.
     await openView({
-        res_id: resPartnerId1,
+        res_id: partnerId,
         res_model: "res.partner",
         views: [[false, "form"]],
     });
@@ -35,7 +35,9 @@ QUnit.test("no conflicts between file uploads", async function (assert) {
         content: "hello, world",
         contentType: "text/plain",
     });
-    await afterNextRender(() => editInput(target, ".o-mail-chatter .o-mail-composer input[type=file]", file1));
+    await afterNextRender(() =>
+        editInput(target, ".o-mail-chatter .o-mail-composer input[type=file]", file1)
+    );
     // Uploading file in the second thread: mail.channel in chatWindow.
     await click("i[aria-label='Messages']");
     await click(".o-mail-notification-item");

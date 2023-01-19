@@ -23,20 +23,20 @@ QUnit.module("thread", {
 
 QUnit.test("dragover files on thread with composer", async function (assert) {
     const pyEnv = await startServer();
-    const mailChannelId1 = pyEnv["mail.channel"].create({
+    const channelId = pyEnv["mail.channel"].create({
         channel_type: "channel",
         group_public_id: false,
         name: "General",
     });
     const { openDiscuss } = await start();
-    await openDiscuss(mailChannelId1);
+    await openDiscuss(channelId);
     await afterNextRender(() => dragenterFiles(target.querySelector(".o-mail-thread")));
     assert.containsOnce(target, ".o-dropzone");
 });
 
 QUnit.test("load more messages from channel (auto-load on scroll)", async function (assert) {
     const pyEnv = await startServer();
-    const mailChannelId1 = pyEnv["mail.channel"].create({
+    const channelId = pyEnv["mail.channel"].create({
         channel_type: "channel",
         group_public_id: false,
         name: "General",
@@ -45,22 +45,22 @@ QUnit.test("load more messages from channel (auto-load on scroll)", async functi
         pyEnv["mail.message"].create({
             body: "not empty",
             model: "mail.channel",
-            res_id: mailChannelId1,
+            res_id: channelId,
         });
     }
     const { openDiscuss } = await start();
-    await openDiscuss(mailChannelId1);
-    assert.containsN(target, ".o-mail-thread button:contains(Load More) ~ .o-mail-message", 30);
+    await openDiscuss(channelId);
+    assert.containsN(target, "button:contains(Load More) ~ .o-mail-message", 30);
 
     await afterNextRender(() => (target.querySelector(".o-mail-thread").scrollTop = 0));
-    assert.containsN(target, ".o-mail-thread .o-mail-message", 60);
+    assert.containsN(target, ".o-mail-message", 60);
 });
 
 QUnit.test(
     "show message subject when subject is not the same as the thread name",
     async function (assert) {
         const pyEnv = await startServer();
-        const mailChannelId1 = pyEnv["mail.channel"].create({
+        const channelId = pyEnv["mail.channel"].create({
             channel_type: "channel",
             group_public_id: false,
             name: "General",
@@ -68,11 +68,11 @@ QUnit.test(
         pyEnv["mail.message"].create({
             body: "not empty",
             model: "mail.channel",
-            res_id: mailChannelId1,
+            res_id: channelId,
             subject: "Salutations, voyageur",
         });
         const { openDiscuss } = await start();
-        await openDiscuss(mailChannelId1);
+        await openDiscuss(channelId);
         assert.containsOnce(target, ".o-mail-message");
         assert.containsOnce(target, ".o-mail-message-subject");
         assert.strictEqual(
@@ -86,7 +86,7 @@ QUnit.test(
     "do not show message subject when subject is the same as the thread name",
     async function (assert) {
         const pyEnv = await startServer();
-        const mailChannelId1 = pyEnv["mail.channel"].create({
+        const channelId = pyEnv["mail.channel"].create({
             channel_type: "channel",
             group_public_id: false,
             name: "Salutations, voyageur",
@@ -94,27 +94,27 @@ QUnit.test(
         pyEnv["mail.message"].create({
             body: "not empty",
             model: "mail.channel",
-            res_id: mailChannelId1,
+            res_id: channelId,
             subject: "Salutations, voyageur",
         });
         const { openDiscuss } = await start();
-        await openDiscuss(mailChannelId1);
+        await openDiscuss(channelId);
         assert.containsNone(target, ".o-mail-message-subject");
     }
 );
 
 QUnit.test("auto-scroll to bottom of thread on load", async function (assert) {
     const pyEnv = await startServer();
-    const mailChannelId1 = pyEnv["mail.channel"].create({ name: "general" });
+    const channelId = pyEnv["mail.channel"].create({ name: "general" });
     for (let i = 1; i <= 25; i++) {
         pyEnv["mail.message"].create({
             body: "not empty",
             model: "mail.channel",
-            res_id: mailChannelId1,
+            res_id: channelId,
         });
     }
     const { openDiscuss } = await start();
-    await openDiscuss(mailChannelId1);
+    await openDiscuss(channelId);
     assert.containsN(target, ".o-mail-message", 25);
     const $thread = $(target).find(".o-mail-thread");
     assert.strictEqual($thread[0].scrollTop, $thread[0].scrollHeight - $thread[0].clientHeight); // FIXME UI scaling might mess with this assertion
@@ -122,21 +122,21 @@ QUnit.test("auto-scroll to bottom of thread on load", async function (assert) {
 
 QUnit.test("display day separator before first message of the day", async function (assert) {
     const pyEnv = await startServer();
-    const mailChannelId1 = pyEnv["mail.channel"].create({ name: "" });
+    const channelId = pyEnv["mail.channel"].create({ name: "" });
     pyEnv["mail.message"].create([
         {
             body: "not empty",
             model: "mail.channel",
-            res_id: mailChannelId1,
+            res_id: channelId,
         },
         {
             body: "not empty",
             model: "mail.channel",
-            res_id: mailChannelId1,
+            res_id: channelId,
         },
     ]);
     const { openDiscuss } = await start();
-    await openDiscuss(mailChannelId1);
+    await openDiscuss(channelId);
     assert.containsOnce(target, ".o-mail-thread-date-separator");
 });
 
@@ -144,14 +144,14 @@ QUnit.test(
     "do not display day separator if all messages of the day are empty",
     async function (assert) {
         const pyEnv = await startServer();
-        const mailChannelId1 = pyEnv["mail.channel"].create({ name: "" });
+        const channelId = pyEnv["mail.channel"].create({ name: "" });
         pyEnv["mail.message"].create({
             body: "",
             model: "mail.channel",
-            res_id: mailChannelId1,
+            res_id: channelId,
         });
         const { openDiscuss } = await start();
-        await openDiscuss(mailChannelId1);
+        await openDiscuss(channelId);
         assert.containsNone(target, ".o-mail-thread-date-separator");
     }
 );
@@ -214,9 +214,7 @@ QUnit.test("thread is still scrolling after scrolling up then to bottom", async 
 
 QUnit.test("mention a channel with space in the name", async function (assert) {
     const pyEnv = await startServer();
-    const channelId = pyEnv["mail.channel"].create({
-        name: "General good boy",
-    });
+    const channelId = pyEnv["mail.channel"].create({ name: "General good boy" });
     const { openDiscuss } = await start();
     await openDiscuss(channelId);
     await insertText(".o-mail-composer-textarea", "#");
@@ -231,9 +229,7 @@ QUnit.test("mention a channel with space in the name", async function (assert) {
 
 QUnit.test('mention a channel with "&" in the name', async function (assert) {
     const pyEnv = await startServer();
-    const channelId = pyEnv["mail.channel"].create({
-        name: "General & good",
-    });
+    const channelId = pyEnv["mail.channel"].create({ name: "General & good" });
     const { openDiscuss } = await start();
     await openDiscuss(channelId);
     await insertText(".o-mail-composer-textarea", "#");

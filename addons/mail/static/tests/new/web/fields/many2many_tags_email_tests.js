@@ -14,27 +14,25 @@ QUnit.module("FieldMany2ManyTagsEmail", {
 
 QUnit.test("fieldmany2many tags email (edition)", async function (assert) {
     const pyEnv = await startServer();
-    const [resPartnerId1, resPartnerId2] = pyEnv["res.partner"].create([
+    const [partnerId_1, partnerId_2] = pyEnv["res.partner"].create([
         { name: "gold", email: "coucou@petite.perruche" },
         { name: "silver", email: "" },
     ]);
-    const mailMessageId1 = pyEnv["mail.message"].create({
-        partner_ids: [resPartnerId1],
-    });
+    const messageId = pyEnv["mail.message"].create({ partner_ids: [partnerId_1] });
     const views = {
-        "mail.message,false,form":
-            '<form string="Partners">' +
-            "<sheet>" +
-            '<field name="body"/>' +
-            '<field name="partner_ids" widget="many2many_tags_email"/>' +
-            "</sheet>" +
-            "</form>",
+        "mail.message,false,form": `
+            <form string="Partners">
+                <sheet>
+                    <field name="body"/>
+                    <field name="partner_ids" widget="many2many_tags_email"/>
+                </sheet>
+            </form>`,
         "res.partner,false,form":
             '<form string="Types"><field name="name"/><field name="email"/></form>',
     };
     const { openView } = await start({
         serverData: { views },
-        mockRPC: function (route, args) {
+        mockRPC(route, args) {
             if (args.method === "read" && args.model === "res.partner") {
                 assert.step(JSON.stringify(args.args[0]));
                 assert.ok(args.args[1].includes("email"));
@@ -45,16 +43,14 @@ QUnit.test("fieldmany2many tags email (edition)", async function (assert) {
     });
     await openView(
         {
-            res_id: mailMessageId1,
+            res_id: messageId,
             res_model: "mail.message",
             views: [[false, "form"]],
         },
-        {
-            mode: "edit",
-        }
+        { mode: "edit" }
     );
 
-    assert.verifySteps([`[${resPartnerId1}]`]);
+    assert.verifySteps([`[${partnerId_1}]`]);
     assert.containsOnce(
         target,
         '.o_field_many2many_tags_email[name="partner_ids"] .badge.o_tag_color_0'
@@ -62,7 +58,6 @@ QUnit.test("fieldmany2many tags email (edition)", async function (assert) {
 
     // add an other existing tag
     await selectDropdownItem(target, "partner_ids", "silver");
-
     assert.containsOnce(
         target,
         ".modal-content .o_form_view",
@@ -81,7 +76,6 @@ QUnit.test("fieldmany2many tags email (edition)", async function (assert) {
         "coucou@petite.perruche"
     );
     await testUtils.dom.click($(".modal-content .o_form_button_save"));
-
     assert.containsN(
         target,
         '.o_field_many2many_tags_email[name="partner_ids"] .badge.o_tag_color_0',
@@ -98,25 +92,21 @@ QUnit.test("fieldmany2many tags email (edition)", async function (assert) {
     assert.hasAttrValue(firstTag.querySelector(".o_badge_text"), "title", "coucou@petite.perruche");
     // should have read resPartnerId2 three times: when opening the dropdown, when opening the modal, and
     // after the save
-    assert.verifySteps([`[${resPartnerId2}]`, `[${resPartnerId2}]`, `[${resPartnerId2}]`]);
+    assert.verifySteps([`[${partnerId_2}]`, `[${partnerId_2}]`, `[${partnerId_2}]`]);
 });
 
 QUnit.test("many2many_tags_email widget can load more than 40 records", async function (assert) {
     const pyEnv = await startServer();
-    const messagePartnerIds = [];
+    const partnerIds = [];
     for (let i = 100; i < 200; i++) {
-        messagePartnerIds.push(pyEnv["res.partner"].create({ display_name: `partner${i}` }));
+        partnerIds.push(pyEnv["res.partner"].create({ display_name: `partner${i}` }));
     }
-    const mailMessageId1 = pyEnv["mail.message"].create({
-        partner_ids: messagePartnerIds,
-    });
+    const mailMessageId1 = pyEnv["mail.message"].create({ partner_ids: partnerIds });
     const views = {
         "mail.message,false,form":
             '<form><field name="partner_ids" widget="many2many_tags"/></form>',
     };
-    const { openView } = await start({
-        serverData: { views },
-    });
+    const { openView } = await start({ serverData: { views } });
     await openView({
         res_id: mailMessageId1,
         res_model: "mail.message",

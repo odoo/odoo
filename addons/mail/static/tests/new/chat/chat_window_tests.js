@@ -27,16 +27,16 @@ QUnit.test(
     "Mobile: chat window shouldn't open automatically after receiving a new message",
     async function (assert) {
         const pyEnv = await startServer();
-        const resPartnerId1 = pyEnv["res.partner"].create({ name: "Demo" });
-        const resUsersId1 = pyEnv["res.users"].create({ partner_id: resPartnerId1 });
+        const partnerId = pyEnv["res.partner"].create({ name: "Demo" });
+        const userId = pyEnv["res.users"].create({ partner_id: partnerId });
         pyEnv["mail.channel"].records = [
             {
                 channel_member_ids: [
                     [0, 0, { partner_id: pyEnv.currentPartnerId }],
-                    [0, 0, { partner_id: resPartnerId1 }],
+                    [0, 0, { partner_id: partnerId }],
                 ],
                 channel_type: "chat",
-                id: resPartnerId1,
+                id: partnerId,
                 uuid: "channel-10-uuid",
             },
         ];
@@ -45,9 +45,7 @@ QUnit.test(
 
         // simulate receiving a message
         env.services.rpc("/mail/chat_post", {
-            context: {
-                mockedUserId: resUsersId1,
-            },
+            context: { mockedUserId: userId },
             message_content: "hu",
             uuid: "channel-10-uuid",
         });
@@ -62,14 +60,7 @@ QUnit.test(
         const pyEnv = await startServer();
         pyEnv["mail.channel"].create({
             channel_member_ids: [
-                [
-                    0,
-                    0,
-                    {
-                        is_minimized: true,
-                        partner_id: pyEnv.currentPartnerId,
-                    },
-                ],
+                [0, 0, { is_minimized: true, partner_id: pyEnv.currentPartnerId }],
             ],
         });
         patchUiSize({ size: SIZES.SM });
@@ -84,7 +75,7 @@ QUnit.test(
 
 QUnit.test("load messages from opening chat window from messaging menu", async function (assert) {
     const pyEnv = await startServer();
-    const mailChannelId1 = pyEnv["mail.channel"].create({
+    const channelId = pyEnv["mail.channel"].create({
         channel_type: "channel",
         group_public_id: false,
         name: "General",
@@ -93,7 +84,7 @@ QUnit.test("load messages from opening chat window from messaging menu", async f
         pyEnv["mail.message"].create({
             body: "not empty",
             model: "mail.channel",
-            res_id: mailChannelId1,
+            res_id: channelId,
         });
     }
     await start();
@@ -129,16 +120,9 @@ QUnit.test(
     "Mobile: opening a chat window should not update channel state on the server",
     async function (assert) {
         const pyEnv = await startServer();
-        const mailChannelId1 = pyEnv["mail.channel"].create({
+        const channelId = pyEnv["mail.channel"].create({
             channel_member_ids: [
-                [
-                    0,
-                    0,
-                    {
-                        fold_state: "closed",
-                        partner_id: pyEnv.currentPartnerId,
-                    },
-                ],
+                [0, 0, { fold_state: "closed", partner_id: pyEnv.currentPartnerId }],
             ],
         });
         patchUiSize({ size: SIZES.SM });
@@ -146,7 +130,7 @@ QUnit.test(
         await click(".o_menu_systray i[aria-label='Messages']");
         await click(".o-mail-messaging-menu .o-mail-notification-item");
         const [member] = pyEnv["mail.channel.member"].searchRead([
-            ["channel_id", "=", mailChannelId1],
+            ["channel_id", "=", channelId],
             ["partner_id", "=", pyEnv.currentPartnerId],
         ]);
         assert.strictEqual(member.fold_state, "closed");
@@ -212,16 +196,9 @@ QUnit.test(
     "Mobile: closing a chat window should not update channel state on the server",
     async function (assert) {
         const pyEnv = await startServer();
-        const mailChannelId1 = pyEnv["mail.channel"].create({
+        const channelId = pyEnv["mail.channel"].create({
             channel_member_ids: [
-                [
-                    0,
-                    0,
-                    {
-                        fold_state: "open",
-                        partner_id: pyEnv.currentPartnerId,
-                    },
-                ],
+                [0, 0, { fold_state: "open", partner_id: pyEnv.currentPartnerId }],
             ],
         });
         patchUiSize({ size: SIZES.SM });
@@ -233,7 +210,7 @@ QUnit.test(
         await click(".o-mail-command[title='Close chat window']");
         assert.containsNone(target, ".o-mail-chat-window");
         const [member] = pyEnv["mail.channel.member"].searchRead([
-            ["channel_id", "=", mailChannelId1],
+            ["channel_id", "=", channelId],
             ["partner_id", "=", pyEnv.currentPartnerId],
         ]);
         assert.strictEqual(member.fold_state, "open");
@@ -243,16 +220,7 @@ QUnit.test(
 QUnit.test("chat window: close on ESCAPE", async function (assert) {
     const pyEnv = await startServer();
     pyEnv["mail.channel"].create({
-        channel_member_ids: [
-            [
-                0,
-                0,
-                {
-                    is_minimized: true,
-                    partner_id: pyEnv.currentPartnerId,
-                },
-            ],
-        ],
+        channel_member_ids: [[0, 0, { is_minimized: true, partner_id: pyEnv.currentPartnerId }]],
     });
     await start({
         mockRPC(route, args) {
@@ -272,16 +240,16 @@ QUnit.test(
     "Close composer suggestions in chat window with ESCAPE does not also close the chat window",
     async function (assert) {
         const pyEnv = await startServer();
-        const resPartnerId1 = pyEnv["res.partner"].create({
+        const partnerId = pyEnv["res.partner"].create({
             email: "testpartner@odoo.com",
             name: "TestPartner",
         });
-        pyEnv["res.users"].create({ partner_id: resPartnerId1 });
+        pyEnv["res.users"].create({ partner_id: partnerId });
         pyEnv["mail.channel"].create({
             name: "general",
             channel_member_ids: [
                 [0, 0, { partner_id: pyEnv.currentPartnerId, is_minimized: true }],
-                [0, 0, { partner_id: resPartnerId1 }],
+                [0, 0, { partner_id: partnerId }],
             ],
         });
         await start();
@@ -324,14 +292,11 @@ QUnit.test(
         await click("button i[aria-label='Messages']");
         await click(".o-mail-notification-item:contains(mailChannel1)");
         assert.containsOnce(target, ".o-mail-chat-window");
-        assert.containsOnce(
-            target,
-            ".o-mail-chat-window .o-mail-chat-window-header:contains(mailChannel1)"
-        );
+        assert.containsOnce(target, ".o-mail-chat-window-header:contains(mailChannel1)");
         assert.strictEqual(
             document.activeElement,
             $(target)
-                .find(".o-mail-chat-window .o-mail-chat-window-header:contains(mailChannel1)")
+                .find(".o-mail-chat-window-header:contains(mailChannel1)")
                 .closest(".o-mail-chat-window")
                 .find(".o-mail-composer-textarea")[0]
         );
@@ -339,18 +304,12 @@ QUnit.test(
         await click("button i[aria-label='Messages']");
         await click(".o-mail-notification-item:contains(mailChannel2)");
         assert.containsN(target, ".o-mail-chat-window", 2);
-        assert.containsOnce(
-            target,
-            ".o-mail-chat-window .o-mail-chat-window-header:contains(mailChannel2)"
-        );
-        assert.containsOnce(
-            target,
-            ".o-mail-chat-window .o-mail-chat-window-header:contains(mailChannel1)"
-        );
+        assert.containsOnce(target, ".o-mail-chat-window-header:contains(mailChannel2)");
+        assert.containsOnce(target, ".o-mail-chat-window-header:contains(mailChannel1)");
         assert.strictEqual(
             document.activeElement,
             $(target)
-                .find(".o-mail-chat-window .o-mail-chat-window-header:contains(mailChannel2)")
+                .find(".o-mail-chat-window-header:contains(mailChannel2)")
                 .closest(".o-mail-chat-window")
                 .find(".o-mail-composer-textarea")[0]
         );
@@ -391,18 +350,12 @@ QUnit.test("open 3 different chat windows: not enough screen width", async funct
     await click(".o-mail-notification-item:contains(mailChannel3)");
     assert.containsN(target, ".o-mail-chat-window", 2);
     assert.containsOnce(target, ".o-mail-chat-window-hidden-menu");
-    assert.containsOnce(
-        target,
-        ".o-mail-chat-window .o-mail-chat-window-header:contains(mailChannel1)"
-    );
-    assert.containsOnce(
-        target,
-        ".o-mail-chat-window .o-mail-chat-window-header:contains(mailChannel3)"
-    );
+    assert.containsOnce(target, ".o-mail-chat-window-header:contains(mailChannel1)");
+    assert.containsOnce(target, ".o-mail-chat-window-header:contains(mailChannel3)");
     assert.strictEqual(
         document.activeElement,
         $(target)
-            .find(".o-mail-chat-window .o-mail-chat-window-header:contains(mailChannel3)")
+            .find(".o-mail-chat-window-header:contains(mailChannel3)")
             .closest(".o-mail-chat-window")
             .find(".o-mail-composer-textarea")[0]
     );
@@ -620,10 +573,10 @@ QUnit.test(
     "new message separator is shown in a chat window of a chat on receiving new message if there is a history of conversation",
     async function (assert) {
         const pyEnv = await startServer();
-        const resPartnerId = pyEnv["res.partner"].create({ name: "Demo" });
-        const resUsersId = pyEnv["res.users"].create({
+        const partnerId = pyEnv["res.partner"].create({ name: "Demo" });
+        const userId = pyEnv["res.users"].create({
             name: "Foreigner user",
-            partner_id: resPartnerId,
+            partner_id: partnerId,
         });
         const mailChannelId = pyEnv["mail.channel"].create({
             channel_member_ids: [
@@ -636,7 +589,7 @@ QUnit.test(
                         partner_id: pyEnv.currentPartnerId,
                     },
                 ],
-                [0, 0, { partner_id: resPartnerId }],
+                [0, 0, { partner_id: partnerId }],
             ],
             channel_type: "chat",
             uuid: "channel-10-uuid",
@@ -657,9 +610,7 @@ QUnit.test(
         // simulate receiving a message
         await afterNextRender(async () =>
             env.services.rpc("/mail/chat_post", {
-                context: {
-                    mockedUserId: resUsersId,
-                },
+                context: { mockedUserId: userId },
                 message_content: "hu",
                 uuid: "channel-10-uuid",
             })
@@ -674,15 +625,15 @@ QUnit.test(
     "new message separator is not shown in a chat window of a chat on receiving new message if there is no history of conversation",
     async function (assert) {
         const pyEnv = await startServer();
-        const resPartnerId = pyEnv["res.partner"].create({ name: "Demo" });
-        const resUsersId = pyEnv["res.users"].create({
+        const partnerId = pyEnv["res.partner"].create({ name: "Demo" });
+        const userId = pyEnv["res.users"].create({
             name: "Foreigner user",
-            partner_id: resPartnerId,
+            partner_id: partnerId,
         });
         pyEnv["mail.channel"].create({
             channel_member_ids: [
                 [0, 0, { partner_id: pyEnv.currentPartnerId }],
-                [0, 0, { partner_id: resPartnerId }],
+                [0, 0, { partner_id: partnerId }],
             ],
             channel_type: "chat",
             uuid: "channel-10-uuid",
@@ -691,9 +642,7 @@ QUnit.test(
         // simulate receiving a message
         await afterNextRender(async () =>
             env.services.rpc("/mail/chat_post", {
-                context: {
-                    mockedUserId: resUsersId,
-                },
+                context: { mockedUserId: userId },
                 message_content: "hu",
                 uuid: "channel-10-uuid",
             })
@@ -708,14 +657,7 @@ QUnit.test("chat window should open when receiving a new DM", async function (as
     const userId = pyEnv["res.users"].create({ partner_id: partnerId });
     pyEnv["mail.channel"].create({
         channel_member_ids: [
-            [
-                0,
-                0,
-                {
-                    is_pinned: false,
-                    partner_id: pyEnv.currentPartnerId,
-                },
-            ],
+            [0, 0, { is_pinned: false, partner_id: pyEnv.currentPartnerId }],
             [0, 0, { partner_id: partnerId }],
         ],
         channel_type: "chat",

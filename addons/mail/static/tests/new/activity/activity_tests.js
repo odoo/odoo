@@ -19,20 +19,20 @@ QUnit.module("activity", {
 
 QUnit.test("activity upload document is available", async function (assert) {
     const pyEnv = await startServer();
-    const resPartnerId1 = pyEnv["res.partner"].create({});
-    const uploadActivityTypeId = pyEnv["mail.activity.type"].search([
+    const partnerId = pyEnv["res.partner"].create({});
+    const activityTypeId = pyEnv["mail.activity.type"].search([
         ["name", "=", "Upload Document"],
     ])[0];
     pyEnv["mail.activity"].create({
         activity_category: "upload_file",
-        activity_type_id: uploadActivityTypeId,
+        activity_type_id: activityTypeId,
         can_write: true,
-        res_id: resPartnerId1,
+        res_id: partnerId,
         res_model: "res.partner",
     });
     const { openView } = await start();
     await openView({
-        res_id: resPartnerId1,
+        res_id: partnerId,
         res_model: "res.partner",
         views: [[false, "form"]],
     });
@@ -43,15 +43,15 @@ QUnit.test("activity upload document is available", async function (assert) {
 
 QUnit.test("activity simplest layout", async function (assert) {
     const pyEnv = await startServer();
-    const resPartnerId1 = pyEnv["res.partner"].create({});
+    const partnerId = pyEnv["res.partner"].create({});
     pyEnv["mail.activity"].create({
-        res_id: resPartnerId1,
+        res_id: partnerId,
         res_model: "res.partner",
     });
     const { openView } = await start();
     await openView({
         res_model: "res.partner",
-        res_id: resPartnerId1,
+        res_id: partnerId,
         views: [[false, "form"]],
     });
     assert.containsOnce(target, ".o-mail-activity");
@@ -69,16 +69,16 @@ QUnit.test("activity simplest layout", async function (assert) {
 
 QUnit.test("activity with note layout", async function (assert) {
     const pyEnv = await startServer();
-    const resPartnerId1 = pyEnv["res.partner"].create({});
+    const partnerId = pyEnv["res.partner"].create({});
     pyEnv["mail.activity"].create({
         note: "<p>There is no good or bad note</p>",
-        res_id: resPartnerId1,
+        res_id: partnerId,
         res_model: "res.partner",
     });
     const { openView } = await start();
     await openView({
         res_model: "res.partner",
-        res_id: resPartnerId1,
+        res_id: partnerId,
         views: [[false, "form"]],
     });
     assert.containsOnce(target, ".o-mail-activity");
@@ -92,17 +92,17 @@ QUnit.test("activity info layout when planned after tomorrow", async function (a
     const fiveDaysFromNow = new Date();
     fiveDaysFromNow.setDate(today.getDate() + 5);
     const pyEnv = await startServer();
-    const resPartnerId1 = pyEnv["res.partner"].create({});
+    const partnerId = pyEnv["res.partner"].create({});
     pyEnv["mail.activity"].create({
         date_deadline: date_to_str(fiveDaysFromNow),
-        res_id: resPartnerId1,
+        res_id: partnerId,
         res_model: "res.partner",
         state: "planned",
     });
     const { openView } = await start();
     await openView({
         res_model: "res.partner",
-        res_id: resPartnerId1,
+        res_id: partnerId,
         views: [[false, "form"]],
     });
     assert.containsOnce(target, ".o-mail-activity");
@@ -117,17 +117,17 @@ QUnit.test("activity info layout when planned tomorrow", async function (assert)
     const tomorrow = new Date();
     tomorrow.setDate(today.getDate() + 1);
     const pyEnv = await startServer();
-    const resPartnerId1 = pyEnv["res.partner"].create({});
+    const partnerId = pyEnv["res.partner"].create({});
     pyEnv["mail.activity"].create({
         date_deadline: date_to_str(tomorrow),
-        res_id: resPartnerId1,
+        res_id: partnerId,
         res_model: "res.partner",
         state: "planned",
     });
     const { openView } = await start();
     await openView({
         res_model: "res.partner",
-        res_id: resPartnerId1,
+        res_id: partnerId,
         views: [[false, "form"]],
     });
     assert.containsOnce(target, ".o-mail-activity");
@@ -139,17 +139,17 @@ QUnit.test("activity info layout when planned tomorrow", async function (assert)
 QUnit.test("activity info layout when planned today", async function (assert) {
     patchDate(2023, 0, 11, 12, 0, 0);
     const pyEnv = await startServer();
-    const resPartnerId1 = pyEnv["res.partner"].create({});
+    const partnerId = pyEnv["res.partner"].create({});
     pyEnv["mail.activity"].create({
         date_deadline: date_to_str(new Date()),
-        res_id: resPartnerId1,
+        res_id: partnerId,
         res_model: "res.partner",
         state: "today",
     });
     const { openView } = await start();
     await openView({
         res_model: "res.partner",
-        res_id: resPartnerId1,
+        res_id: partnerId,
         views: [[false, "form"]],
     });
     assert.containsOnce(target, ".o-mail-activity");
@@ -164,17 +164,17 @@ QUnit.test("activity info layout when planned yesterday", async function (assert
     const yesterday = new Date();
     yesterday.setDate(today.getDate() - 1);
     const pyEnv = await startServer();
-    const resPartnerId1 = pyEnv["res.partner"].create({});
+    const partnerId = pyEnv["res.partner"].create({});
     pyEnv["mail.activity"].create({
         date_deadline: date_to_str(yesterday),
-        res_id: resPartnerId1,
+        res_id: partnerId,
         res_model: "res.partner",
         state: "overdue",
     });
     const { openView } = await start();
     await openView({
         res_model: "res.partner",
-        res_id: resPartnerId1,
+        res_id: partnerId,
         views: [[false, "form"]],
     });
     assert.containsOnce(target, ".o-mail-activity");
@@ -189,17 +189,17 @@ QUnit.test("activity info layout when planned before yesterday", async function 
     const fiveDaysBeforeNow = new Date();
     fiveDaysBeforeNow.setDate(today.getDate() - 5);
     const pyEnv = await startServer();
-    const resPartnerId1 = pyEnv["res.partner"].create({});
+    const partnerId = pyEnv["res.partner"].create({});
     pyEnv["mail.activity"].create({
         date_deadline: date_to_str(fiveDaysBeforeNow),
-        res_id: resPartnerId1,
+        res_id: partnerId,
         res_model: "res.partner",
         state: "overdue",
     });
     const { openView } = await start();
     await openView({
         res_model: "res.partner",
-        res_id: resPartnerId1,
+        res_id: partnerId,
         views: [[false, "form"]],
     });
     assert.containsOnce(target, ".o-mail-activity");
@@ -210,16 +210,16 @@ QUnit.test("activity info layout when planned before yesterday", async function 
 
 QUnit.test("activity with a summary layout", async function (assert) {
     const pyEnv = await startServer();
-    const resPartnerId1 = pyEnv["res.partner"].create({});
+    const partnerId = pyEnv["res.partner"].create({});
     pyEnv["mail.activity"].create({
-        res_id: resPartnerId1,
+        res_id: partnerId,
         res_model: "res.partner",
         summary: "test summary",
     });
     const { openView } = await start();
     await openView({
         res_model: "res.partner",
-        res_id: resPartnerId1,
+        res_id: partnerId,
         views: [[false, "form"]],
     });
     assert.containsOnce(target, ".o-mail-activity-name");
@@ -228,16 +228,16 @@ QUnit.test("activity with a summary layout", async function (assert) {
 
 QUnit.test("activity without summary layout", async function (assert) {
     const pyEnv = await startServer();
-    const resPartnerId1 = pyEnv["res.partner"].create({});
+    const partnerId = pyEnv["res.partner"].create({});
     pyEnv["mail.activity"].create({
         activity_type_id: 1,
-        res_id: resPartnerId1,
+        res_id: partnerId,
         res_model: "res.partner",
     });
     const { openView } = await start();
     await openView({
         res_model: "res.partner",
-        res_id: resPartnerId1,
+        res_id: partnerId,
         views: [[false, "form"]],
     });
     assert.containsOnce(target, ".o-mail-activity-name");
@@ -250,19 +250,19 @@ QUnit.test("activity details toggle", async function (assert) {
     const tomorrow = new Date();
     tomorrow.setDate(today.getDate() + 1);
     const pyEnv = await startServer();
-    const resPartnerId1 = pyEnv["res.partner"].create({});
-    const resUsersId1 = pyEnv["res.users"].create({ partner_id: resPartnerId1 });
+    const partnerId = pyEnv["res.partner"].create({});
+    const userId = pyEnv["res.users"].create({ partner_id: partnerId });
     pyEnv["mail.activity"].create({
         create_date: date_to_str(today),
-        create_uid: resUsersId1,
+        create_uid: userId,
         date_deadline: date_to_str(tomorrow),
-        res_id: resPartnerId1,
+        res_id: partnerId,
         res_model: "res.partner",
     });
     const { openView } = await start();
     await openView({
         res_model: "res.partner",
-        res_id: resPartnerId1,
+        res_id: partnerId,
         views: [[false, "form"]],
     });
     assert.containsOnce(target, ".o-mail-activity");
@@ -278,19 +278,19 @@ QUnit.test("activity details toggle", async function (assert) {
 
 QUnit.test("activity with mail template layout", async function (assert) {
     const pyEnv = await startServer();
-    const resPartnerId1 = pyEnv["res.partner"].create({});
-    const mailTemplateId1 = pyEnv["mail.template"].create({ name: "Dummy mail template" });
-    const emailActivityTypeId = pyEnv["mail.activity.type"].search([["name", "=", "Email"]])[0];
+    const partnerId = pyEnv["res.partner"].create({});
+    const mailTemplateId = pyEnv["mail.template"].create({ name: "Dummy mail template" });
+    const activityTypeId = pyEnv["mail.activity.type"].search([["name", "=", "Email"]])[0];
     pyEnv["mail.activity"].create({
-        activity_type_id: emailActivityTypeId,
-        mail_template_ids: [mailTemplateId1],
-        res_id: resPartnerId1,
+        activity_type_id: activityTypeId,
+        mail_template_ids: [mailTemplateId],
+        res_id: partnerId,
         res_model: "res.partner",
     });
     const { openView } = await start();
     await openView({
         res_model: "res.partner",
-        res_id: resPartnerId1,
+        res_id: partnerId,
         views: [[false, "form"]],
     });
     assert.containsOnce(target, ".o-mail-activity");
@@ -307,61 +307,33 @@ QUnit.test("activity with mail template layout", async function (assert) {
 
 QUnit.test("activity with mail template: preview mail", async function (assert) {
     const pyEnv = await startServer();
-    const resPartnerId1 = pyEnv["res.partner"].create({});
-    const mailTemplateId1 = pyEnv["mail.template"].create({ name: "Dummy mail template" });
-    const emailActivityTypeId = pyEnv["mail.activity.type"].search([["name", "=", "Email"]])[0];
+    const partnerId = pyEnv["res.partner"].create({});
+    const mailTemplateId = pyEnv["mail.template"].create({ name: "Dummy mail template" });
+    const activityTypeId = pyEnv["mail.activity.type"].search([["name", "=", "Email"]])[0];
     pyEnv["mail.activity"].create({
-        activity_type_id: emailActivityTypeId,
-        mail_template_ids: [mailTemplateId1],
-        res_id: resPartnerId1,
+        activity_type_id: activityTypeId,
+        mail_template_ids: [mailTemplateId],
+        res_id: partnerId,
         res_model: "res.partner",
     });
     const { env, openView } = await start();
     await openView({
         res_model: "res.partner",
-        res_id: resPartnerId1,
+        res_id: partnerId,
         views: [[false, "form"]],
     });
     patchWithCleanup(env.services.action, {
         doAction(action) {
             assert.step("do_action");
-            assert.deepEqual(
-                action.context.default_res_ids,
-                [resPartnerId1],
-                "Action should have the activity res id as default res ids in context"
-            );
-            assert.strictEqual(
-                action.context.default_model,
-                "res.partner",
-                "Action should have the activity res model as default model in context"
-            );
-            assert.strictEqual(
-                action.context.default_template_id,
-                mailTemplateId1,
-                "Action should have the selected mail template id as default template id in context"
-            );
-            assert.strictEqual(
-                action.type,
-                "ir.actions.act_window",
-                'Action should be of type "ir.actions.act_window"'
-            );
-            assert.strictEqual(
-                action.res_model,
-                "mail.compose.message",
-                'Action should have "mail.compose.message" as res_model'
-            );
+            assert.deepEqual(action.context.default_res_ids, [partnerId]);
+            assert.strictEqual(action.context.default_model, "res.partner");
+            assert.strictEqual(action.context.default_template_id, mailTemplateId);
+            assert.strictEqual(action.type, "ir.actions.act_window");
+            assert.strictEqual(action.res_model, "mail.compose.message");
         },
     });
-    assert.strictEqual(
-        document.querySelectorAll(".o-mail-activity").length,
-        1,
-        "should have activity component"
-    );
-    assert.strictEqual(
-        document.querySelectorAll(".o-mail-activity-mail-template-preview").length,
-        1,
-        "should have activity mail template name preview button"
-    );
+    assert.containsOnce(target, ".o-mail-activity");
+    assert.containsOnce(target, ".o-mail-activity-mail-template-preview");
 
     document.querySelector(".o-mail-activity-mail-template-preview").click();
     assert.verifySteps(["do_action"], "should have called 'compose email' action correctly");
@@ -369,13 +341,13 @@ QUnit.test("activity with mail template: preview mail", async function (assert) 
 
 QUnit.test("activity with mail template: send mail", async function (assert) {
     const pyEnv = await startServer();
-    const resPartnerId1 = pyEnv["res.partner"].create({});
-    const mailTemplateId1 = pyEnv["mail.template"].create({ name: "Dummy mail template" });
-    const emailActivityTypeId = pyEnv["mail.activity.type"].search([["name", "=", "Email"]])[0];
+    const partnerId = pyEnv["res.partner"].create({});
+    const mailTemplateId = pyEnv["mail.template"].create({ name: "Dummy mail template" });
+    const activityTypeId = pyEnv["mail.activity.type"].search([["name", "=", "Email"]])[0];
     pyEnv["mail.activity"].create({
-        activity_type_id: emailActivityTypeId,
-        mail_template_ids: [mailTemplateId1],
-        res_id: resPartnerId1,
+        activity_type_id: activityTypeId,
+        mail_template_ids: [mailTemplateId],
+        res_id: partnerId,
         res_model: "res.partner",
     });
     const { openView } = await start({
@@ -383,8 +355,8 @@ QUnit.test("activity with mail template: send mail", async function (assert) {
             if (args.method === "activity_send_mail") {
                 assert.step("activity_send_mail");
                 assert.strictEqual(args.args[0].length, 1);
-                assert.strictEqual(args.args[0][0], resPartnerId1);
-                assert.strictEqual(args.args[1], mailTemplateId1);
+                assert.strictEqual(args.args[0][0], partnerId);
+                assert.strictEqual(args.args[1], mailTemplateId);
                 // random value returned in order for the mock server to know that this route is implemented.
                 return true;
             }
@@ -392,7 +364,7 @@ QUnit.test("activity with mail template: send mail", async function (assert) {
     });
     await openView({
         res_model: "res.partner",
-        res_id: resPartnerId1,
+        res_id: partnerId,
         views: [[false, "form"]],
     });
     assert.containsOnce(target, ".o-mail-activity");
@@ -404,18 +376,18 @@ QUnit.test("activity with mail template: send mail", async function (assert) {
 
 QUnit.test("activity click on mark as done", async function (assert) {
     const pyEnv = await startServer();
-    const resPartnerId1 = pyEnv["res.partner"].create({});
-    const emailActivityTypeId = pyEnv["mail.activity.type"].search([["name", "=", "Email"]])[0];
+    const partnerId = pyEnv["res.partner"].create({});
+    const activityTypeId = pyEnv["mail.activity.type"].search([["name", "=", "Email"]])[0];
     pyEnv["mail.activity"].create({
         activity_category: "default",
-        activity_type_id: emailActivityTypeId,
+        activity_type_id: activityTypeId,
         can_write: true,
-        res_id: resPartnerId1,
+        res_id: partnerId,
         res_model: "res.partner",
     });
     const { openView } = await start();
     await openView({
-        res_id: resPartnerId1,
+        res_id: partnerId,
         res_model: "res.partner",
         views: [[false, "form"]],
     });
@@ -433,18 +405,18 @@ QUnit.test(
     "activity mark as done popover should focus feedback input on open [REQUIRE FOCUS]",
     async function (assert) {
         const pyEnv = await startServer();
-        const resPartnerId1 = pyEnv["res.partner"].create({});
-        const emailActivityTypeId = pyEnv["mail.activity.type"].search([["name", "=", "Email"]])[0];
+        const partnerId = pyEnv["res.partner"].create({});
+        const activityTypeId = pyEnv["mail.activity.type"].search([["name", "=", "Email"]])[0];
         pyEnv["mail.activity"].create({
             activity_category: "default",
-            activity_type_id: emailActivityTypeId,
+            activity_type_id: activityTypeId,
             can_write: true,
-            res_id: resPartnerId1,
+            res_id: partnerId,
             res_model: "res.partner",
         });
         const { openView } = await start();
         await openView({
-            res_id: resPartnerId1,
+            res_id: partnerId,
             res_model: "res.partner",
             views: [[false, "form"]],
         });
@@ -461,30 +433,30 @@ QUnit.test(
 
 QUnit.test("activity click on edit", async function (assert) {
     const pyEnv = await startServer();
-    const resPartnerId1 = pyEnv["res.partner"].create({});
-    const mailTemplateId1 = pyEnv["mail.template"].create({ name: "Dummy mail template" });
-    const emailActivityTypeId = pyEnv["mail.activity.type"].search([["name", "=", "Email"]])[0];
-    const mailActivityId1 = pyEnv["mail.activity"].create({
-        activity_type_id: emailActivityTypeId,
+    const partnerId = pyEnv["res.partner"].create({});
+    const mailTemplateId = pyEnv["mail.template"].create({ name: "Dummy mail template" });
+    const activityTypeId = pyEnv["mail.activity.type"].search([["name", "=", "Email"]])[0];
+    const activityId = pyEnv["mail.activity"].create({
+        activity_type_id: activityTypeId,
         can_write: true,
-        mail_template_ids: [mailTemplateId1],
-        res_id: resPartnerId1,
+        mail_template_ids: [mailTemplateId],
+        res_id: partnerId,
         res_model: "res.partner",
     });
     const { env, openView } = await start();
     await openView({
-        res_id: resPartnerId1,
+        res_id: partnerId,
         res_model: "res.partner",
         views: [[false, "form"]],
     });
     patchWithCleanup(env.services.action, {
         doAction(action) {
             assert.step("do_action");
-            assert.strictEqual(action.context.default_res_id, resPartnerId1);
+            assert.strictEqual(action.context.default_res_id, partnerId);
             assert.strictEqual(action.context.default_res_model, "res.partner");
             assert.strictEqual(action.type, "ir.actions.act_window");
             assert.strictEqual(action.res_model, "mail.activity");
-            assert.strictEqual(action.res_id, mailActivityId1);
+            assert.strictEqual(action.res_id, activityId);
             return this._super(...arguments);
         },
     });
@@ -497,12 +469,12 @@ QUnit.test("activity click on edit", async function (assert) {
 
 QUnit.test("activity click on cancel", async function (assert) {
     const pyEnv = await startServer();
-    const resPartnerId1 = pyEnv["res.partner"].create({});
-    const emailActivityTypeId = pyEnv["mail.activity.type"].search([["name", "=", "Email"]])[0];
-    const mailActivityId1 = pyEnv["mail.activity"].create({
-        activity_type_id: emailActivityTypeId,
+    const partnerId = pyEnv["res.partner"].create({});
+    const activityTypeId = pyEnv["mail.activity.type"].search([["name", "=", "Email"]])[0];
+    const activityId = pyEnv["mail.activity"].create({
+        activity_type_id: activityTypeId,
         can_write: true,
-        res_id: resPartnerId1,
+        res_id: partnerId,
         res_model: "res.partner",
     });
     const { openView } = await start({
@@ -510,12 +482,12 @@ QUnit.test("activity click on cancel", async function (assert) {
             if (route === "/web/dataset/call_kw/mail.activity/unlink") {
                 assert.step("unlink");
                 assert.strictEqual(args.args[0].length, 1);
-                assert.strictEqual(args.args[0][0], mailActivityId1);
+                assert.strictEqual(args.args[0][0], activityId);
             }
         },
     });
     await openView({
-        res_id: resPartnerId1,
+        res_id: partnerId,
         res_model: "res.partner",
         views: [[false, "form"]],
     });
@@ -529,18 +501,18 @@ QUnit.test("activity click on cancel", async function (assert) {
 
 QUnit.test("activity mark done popover close on ESCAPE", async function (assert) {
     const pyEnv = await startServer();
-    const resPartnerId1 = pyEnv["res.partner"].create({});
-    const emailActivityTypeId = pyEnv["mail.activity.type"].search([["name", "=", "Email"]])[0];
+    const partnerId = pyEnv["res.partner"].create({});
+    const activityTypeId = pyEnv["mail.activity.type"].search([["name", "=", "Email"]])[0];
     pyEnv["mail.activity"].create({
         activity_category: "default",
-        activity_type_id: emailActivityTypeId,
+        activity_type_id: activityTypeId,
         can_write: true,
-        res_id: resPartnerId1,
+        res_id: partnerId,
         res_model: "res.partner",
     });
     const { openView } = await start();
     await openView({
-        res_id: resPartnerId1,
+        res_id: partnerId,
         res_model: "res.partner",
         views: [[false, "form"]],
     });
@@ -554,18 +526,18 @@ QUnit.test("activity mark done popover close on ESCAPE", async function (assert)
 
 QUnit.test("activity mark done popover click on discard", async function (assert) {
     const pyEnv = await startServer();
-    const resPartnerId1 = pyEnv["res.partner"].create({});
-    const emailActivityTypeId = pyEnv["mail.activity.type"].search([["name", "=", "Email"]])[0];
+    const partnerId = pyEnv["res.partner"].create({});
+    const activityTypeId = pyEnv["mail.activity.type"].search([["name", "=", "Email"]])[0];
     pyEnv["mail.activity"].create({
         activity_category: "default",
-        activity_type_id: emailActivityTypeId,
+        activity_type_id: activityTypeId,
         can_write: true,
-        res_id: resPartnerId1,
+        res_id: partnerId,
         res_model: "res.partner",
     });
     const { openView } = await start();
     await openView({
-        res_id: resPartnerId1,
+        res_id: partnerId,
         res_model: "res.partner",
         views: [[false, "form"]],
     });
