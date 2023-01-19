@@ -102,7 +102,7 @@
                         title="Open Work Order"
                     context="{'default_workcenter_id': workcenter_id}"/>
                 <field name="show_json_popover" invisible="1"/>
-                <field name="json_popover" widget="mrp_workorder_popover" string=" " width="0.1" attrs="{'invisible': [('show_json_popover', '=', False)]}"/>
+                <field name="json_popover" widget="mrp_workorder_popover" string=" " attrs="{'invisible': [('show_json_popover', '=', False)]}"/>
             </tree>
         </field>
     </record>

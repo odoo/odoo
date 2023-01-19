@@ -207,7 +207,7 @@
             <tree string="Working Time" editable="top">
                 <field name="sequence" widget="handle"/>
                 <field name="display_type" invisible="1"/>
-                <field name="display_name" width="1" string=" " attrs="{'invisible': [('display_type', '!=', 'line_section')]}"/>
+                <field name="display_name" string=" " attrs="{'invisible': [('display_type', '!=', 'line_section')]}"/>
                 <field name="name" attrs="{'invisible': [('display_type', '=', 'line_section')]}"/>
                 <field name="dayofweek"/>
                 <field name="day_period"/>
