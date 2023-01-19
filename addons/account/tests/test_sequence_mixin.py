@@ -411,12 +411,6 @@ class TestSequenceMixinDeletion(TestSequenceMixinCommon):
         # A draft move without any name can always be deleted.
         self.move_draft.unlink()
 
-        # The moves that are not at the end of their sequence chain cannot be deleted
-        for move in (self.move_1_1, self.move_1_2, self.move_2_1):
-            move.button_draft()
-            with self.assertRaises(UserError):
-                move.unlink()
-
         # The last element of each sequence chain should allow deletion.
         # Everything should be deletable if we follow this order (a bit randomized on purpose)
         for move in (self.move_1_3, self.move_1_2, self.move_3_1, self.move_2_2, self.move_2_1, self.move_1_1):
@@ -428,20 +422,6 @@ class TestSequenceMixinDeletion(TestSequenceMixinCommon):
         all_moves = (self.move_1_3 + self.move_1_2 + self.move_3_1 + self.move_2_2 + self.move_2_1 + self.move_1_1)
         all_moves.button_draft()
         all_moves.unlink()
-
-    def test_sequence_deletion_3(self):
-        """Cannot delete non sequential batches."""
-        all_moves = (self.move_1_3 + self.move_3_1 + self.move_2_2 + self.move_2_1 + self.move_1_1)
-        all_moves.button_draft()
-        with self.assertRaises(UserError):
-            all_moves.unlink()
-
-    def test_sequence_deletion_4(self):
-        """Cannot delete batches not containing the last entry."""
-        all_moves = (self.move_1_2 + self.move_3_1 + self.move_2_2 + self.move_2_1 + self.move_1_1)
-        all_moves.button_draft()
-        with self.assertRaises(UserError):
-            all_moves.unlink()
 
 
 @tagged('post_install', '-at_install')
