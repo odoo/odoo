@@ -280,10 +280,11 @@ odoo.define('pos_coupon.pos', function (require) {
             this._updateRewards();
         }
         _getRegularOrderlines() {
-            const orderlines = this.get_orderlines();
-            const discount_product = this.pos.config.discount_product_id;
-            const gift_card_product = this.pos.config.gift_card_product_id;
-            return orderlines.filter((line) => !line.is_program_reward && !line.refunded_orderline_id && (!discount_product || line.product.id !== discount_product[0]) && (!gift_card_product || line.product.id !== gift_card_product[0]));
+            const orderlines = super.get_orderlines(...arguments);
+            const is_discount_product = (line) => this.pos.config.discount_product_id && line.product.id === this.pos.config.discount_product_id[0];
+            const is_gift_card_product = (line) => this.pos.config.gift_card_product_id && line.product.id === this.pos.config.gift_card_product_id[0];
+            const is_tips_product = (line) => this.pos.config.tip_product_id && line.product.id === this.pos.config.tip_product_id[0];
+            return orderlines.filter((line) => !line.is_program_reward && !line.refunded_orderline_id && !is_discount_product(line) && !is_gift_card_product(line) && !is_tips_product(line));
         }
         _getRewardLines() {
             const orderlines = this.get_orderlines();
