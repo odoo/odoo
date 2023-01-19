@@ -67,24 +67,6 @@ export class SectionAndNoteListRenderer extends ListRenderer {
             }
         });
     }
-
-    sortStart({ element }) {
-        element.classList.add("o_dragged");
-        const table = this.tableRef.el;
-        const headers = [...table.querySelectorAll("thead th")];
-        const cells = [...element.querySelectorAll("td")];
-        let headerIndex = 0;
-        for (const cell of cells) {
-            let width = 0;
-            for (let i = 0; i < cell.colSpan; i++) {
-                const header = headers[headerIndex + i];
-                const style = getComputedStyle(header);
-                width += parseFloat(style.width);
-            }
-            cell.style.width = `${width}px`;
-            headerIndex += cell.colSpan;
-        }
-    }
 }
 SectionAndNoteListRenderer.template = "account.sectionAndNoteListRenderer";
 
