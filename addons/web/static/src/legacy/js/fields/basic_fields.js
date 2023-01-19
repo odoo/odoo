@@ -783,16 +783,7 @@ var FieldDateRange = InputField.extend({
     _renderEdit: function () {
         this._super.apply(this, arguments);
         var self = this;
-        var startDate;
-        var endDate;
-        if (this.relatedEndDate) {
-            startDate = this._formatValue(this.value);
-            endDate = this._formatValue(this.recordData[this.relatedEndDate]);
-        }
-        if (this.relatedStartDate) {
-            startDate = this._formatValue(this.recordData[this.relatedStartDate]);
-            endDate = this._formatValue(this.value);
-        }
+        const [startDate, endDate] = this._getDateRangeFromInputField();
         this.dateRangePickerOptions.startDate = startDate || moment();
         this.dateRangePickerOptions.endDate = endDate || moment();
 
@@ -843,16 +834,39 @@ var FieldDateRange = InputField.extend({
     },
     /**
      * Bind the scroll event handle when the daterangepicker is open.
+     * Update the begin and end date with the dates from the input values
      *
      * @private
      */
     _onDateRangePickerShow() {
+        const daterangepicker = this.$el.data('daterangepicker');
         this._onScroll = ev => {
             if (!config.device.isMobile && !this.$pickerContainer.get(0).contains(ev.target)) {
-                this.$el.data('daterangepicker').hide();
+                daterangepicker.hide();
             }
         };
         window.addEventListener('scroll', this._onScroll, true);
+        const [startDate, endDate] = this._getDateRangeFromInputField();
+        daterangepicker.setStartDate(startDate? startDate.utcOffset(session.getTZOffset(startDate)): moment());
+        daterangepicker.setEndDate(endDate? endDate.utcOffset(session.getTZOffset(endDate)): moment());
+        daterangepicker.updateView();
+    },
+    /**
+     * Get the startDate and endDate of the daterangepicker from the input fields
+     * @returns [Date (moment object), Date (moment object)]
+     * @private
+     */
+    _getDateRangeFromInputField() {
+        let startDate, endDate;
+        if (this.relatedEndDate) {
+            startDate = this.value;
+            endDate = this.recordData[this.relatedEndDate];
+        }
+        if (this.relatedStartDate) {
+            startDate = this.recordData[this.relatedStartDate];
+            endDate = this.value;
+        }
+        return [startDate, endDate];
     },
 });
 
