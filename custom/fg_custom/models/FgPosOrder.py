@@ -200,6 +200,27 @@ class PosOrder(models.Model):
 
 class PosOrderLineInherit(models.Model):
     _inherit = "pos.order.line"
-    _description = "inherit Point of Sale Order Lines"
+    _description = "Sale Order / Refund Order Lines Report"
 
     date_order = fields.Datetime(related="order_id.date_order", string='Order Date', store=True)
+    si_reference_number = fields.Char(related='order_id.pos_si_trans_reference', string='SI Reference Number', store=True)
+    refund_reference_number = fields.Char(related='order_id.pos_refund_si_reference', string='Refund Reference Number', store=True)
+    discount_amount = fields.Float(compute='_compute_discount_amount', string='Discount Amount')
+    tax_amount = fields.Float(compute='_compute_tax_amount', string='Tax Amount')
+
+    def _compute_discount_amount(self):
+        for record in self:
+            record.discount_amount = (record.discount * 0.01) * (record.qty * record.price_unit)
+
+    def _compute_tax_amount(self):
+        for record in self:
+            record.tax_amount = record.price_subtotal_incl - record.qty * record.price_subtotal
+
+    @api.model
+    def fields_get(self, allfields=None, attributes=None):
+        fields_to_hide = ['full_product_name', 'price_unit', 'refund_reference_number', 'si_reference_number', 'total_cost', 'discount', 'generated_gift_card_ids']
+        res = super(PosOrderLineInherit, self).fields_get(allfields, attributes=attributes)
+        for field in fields_to_hide:
+            if res.get(field):
+                res.get(field)['searchable'] = False
+        return res
