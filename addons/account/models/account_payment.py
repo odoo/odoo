@@ -13,6 +13,20 @@ class AccountPayment(models.Model):
     _order = "date desc, name desc"
     _check_company_auto = True
 
+    @api.model
+    def read_group(self, domain, fields, groupby, offset=0, limit=None, orderby=False, lazy=True):
+        """
+            Override read_group to calculate the sum of the non-stored amount_company_currency_signed field
+        """
+        res = super(AccountPayment, self).read_group(domain, fields, groupby, offset=offset, limit=limit, orderby=orderby, lazy=lazy)
+        payments = self.env['account.payment']
+        for line in res:
+            if '__domain' in line:
+                payments = self.search(line['__domain'])
+            if 'amount_company_currency_signed' in fields:
+                line['amount_company_currency_signed'] = sum(payments.mapped('amount_company_currency_signed'))
+        return res
+
     def _get_default_journal(self):
         ''' Retrieve the default journal for the account.payment.
         /!\ This method will not override the method in 'account.move' because the ORM
