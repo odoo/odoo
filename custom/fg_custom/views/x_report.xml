@@ -251,7 +251,7 @@
                                 <div class="right_content" style="text-align: right;font-size: 15px;">
                                     <p>
                                         <t t-set="m_t_d" t-value="total_discount_percentage + total_discount_global_minus + total_discount_coupon_minus"/>
-                                        <t t-set="subtotal" t-value="total_amt - m_t_d"/>
+                                        <t t-set="subtotal" t-value="total_amt - m_t_d - return_order_total"/>
                                         <span t-esc="subtotal" t-options='{"widget": "float", "precision": 2}'/>
                                         <t t-esc="company.currency_id.name"/>
                                     </p>
@@ -874,7 +874,7 @@
                                 <div class="right_content" style="text-align: right;font-size: 15px;">
                                     <p>
                                         <t t-set="m_t_d" t-value="total_discount_percentage + total_discount_global_minus + total_discount_coupon_minus"/>
-                                        <t t-set="subtotal" t-value="total_amt - m_t_d"/>
+                                        <t t-set="subtotal" t-value="total_amt - m_t_d - return_order_total"/>
                                         <span t-esc="subtotal" t-options='{"widget": "float", "precision": 2}'/>
                                         <t t-esc="company.currency_id.name"/>
                                     </p>
