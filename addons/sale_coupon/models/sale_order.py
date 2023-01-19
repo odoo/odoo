@@ -44,7 +44,9 @@ class SaleOrder(models.Model):
         return order
 
     def action_confirm(self):
-        self.generated_coupon_ids.write({'state': 'new', 'partner_id': self.partner_id})
+        valid_coupon_ids = self.generated_coupon_ids.filtered(lambda coupon: coupon.state not in ['expired', 'cancel'])
+        valid_coupon_ids.write({'state': 'new', 'partner_id': self.partner_id})
+        (self.generated_coupon_ids - valid_coupon_ids).write({'state': 'cancel', 'partner_id': self.partner_id})
         self.applied_coupon_ids.write({'state': 'used'})
         self._send_reward_coupon_mail()
         return super(SaleOrder, self).action_confirm()
@@ -322,7 +324,7 @@ class SaleOrder(models.Model):
         template = self.env.ref('sale_coupon.mail_template_sale_coupon', raise_if_not_found=False)
         if template:
             for order in self:
-                for coupon in order.generated_coupon_ids:
+                for coupon in order.generated_coupon_ids.filtered(lambda coupon: coupon.state == 'new'):
                     order.message_post_with_template(
                         template.id, composition_mode='comment',
                         model='coupon.coupon', res_id=coupon.id,
