@@ -89,6 +89,7 @@ odoo.define('fg_custom.FgPosReceipt', function (require) {
             receipt.pos_refunded_id= this.pos_refunded_id;
 
             var val = {};
+            var total_disc_amt = 0;
             _.each(receipt.orderlines, function(line){
                 if(line.program_id && line.is_program_reward){
                     if(val[line.program_id]){
@@ -96,8 +97,14 @@ odoo.define('fg_custom.FgPosReceipt', function (require) {
                     }else{
                         val[line.program_id] = [line.product_name , Math.abs(line.price_with_tax)]
                     }
+                }else{
+                    if(line.price < 0 ){ // to display discount in the pos reprinting
+                        total_disc_amt = total_disc_amt + Math.abs(line.price_with_tax);
+                        val[line.program_id] = [line.product_name , total_disc_amt]
+                    }
                 }
             });
+
             receipt.program_reward_lines = val;
             return receipt;
         },
