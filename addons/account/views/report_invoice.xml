@@ -249,10 +249,15 @@
                     </p>
                     <div id="qrcode" t-if="o.display_qr_code and o.amount_residual > 0">
                         <t t-set="qr_code_url" t-value="o._generate_qr_code()"/>
-                        <p t-if="qr_code_url">
-                            <strong class="text-center">Scan me with your banking app.</strong><br/><br/>
-                            <img class="border border-dark rounded" t-att-src="qr_code_url"/>
-                        </p>
+                        <div t-if="qr_code_url" class="col-6">
+                            <div class="float-start">
+                                <strong class="text-center">Scan me with your banking app.</strong>
+                                <div id="qr_info"/>
+                            </div>
+                            <div class="float-end">
+                                <img class="border border-dark rounded" t-att-src="qr_code_url"/>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </t>

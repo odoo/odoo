@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="l10n_in_upi_report_invoice_document_inherit" inherit_id="account.report_invoice_document">
+        <div id='qr_info' position="inside">
+            <t t-if="o.company_id.account_fiscal_country_id.code == 'IN'">
+                <strong>UPI ID: </strong>
+                <p t-field="o.company_id.l10n_in_upi_id"/>
+            </t>
+            <t t-if="o.company_id.account_fiscal_country_id.code == 'IN'">
+                <img src="/l10n_in_upi/static/img/upi_logo.png" style="max-width: 260px; max-height: 30px;"/>
+            </t>
+        </div>
+    </template>
+</odoo>
