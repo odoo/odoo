@@ -98,11 +98,11 @@
         <field name="model">pos.order.line</field>
         <field name="arch" type="xml">
             <search>
-                <field name="name"/>
-                <field name="date_order"/>
-                <filter string="Order Date" name="order_date" date="date_order"/>
+                <field name="si_reference_number"/>
+                <field name="refund_reference_number"/>
                 <separator/>
-                <filter string="Today" name="today_ref" domain="[('create_date', '&gt;=', datetime.datetime.now().strftime('%Y-%m-%d 00:00:00')),('create_date', '&lt;=', datetime.datetime.now().strftime('%Y-%m-%d 23:59:59'))]"/>
+                <filter string="Refunds Today" name="refunds_today_ref" domain="[('create_date', '&gt;=', datetime.datetime.now().strftime('%Y-%m-%d 00:00:00')),('create_date', '&lt;=', datetime.datetime.now().strftime('%Y-%m-%d 23:59:59')),('refund_reference_number', '!=', '')]"/>
+                <filter string="Sales Today" name="sales_today_ref" domain="[('create_date', '&gt;=', datetime.datetime.now().strftime('%Y-%m-%d 00:00:00')),('create_date', '&lt;=', datetime.datetime.now().strftime('%Y-%m-%d 23:59:59')),('si_reference_number', '!=', '')]"/>
             </search>
         </field>
     </record>
