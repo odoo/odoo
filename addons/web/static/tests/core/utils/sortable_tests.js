@@ -6,13 +6,13 @@ import { useSortable } from "@web/core/utils/sortable";
 import { Component, reactive, useRef, useState, xml } from "@odoo/owl";
 
 let target;
-QUnit.module("UI", ({ beforeEach }) => {
+QUnit.module("Draggable", ({ beforeEach }) => {
     beforeEach(() => (target = getFixture()));
 
     QUnit.module("Sortable hook");
 
     QUnit.test("Parameters error handling", async (assert) => {
-        assert.expect(8);
+        assert.expect(6);
 
         const mountListAndAssert = async (setupList, shouldThrow) => {
             class List extends Component {
@@ -55,18 +55,6 @@ QUnit.module("UI", ({ beforeEach }) => {
             useSortable({
                 elements: ".item",
                 groups: ".list",
-            });
-        }, true);
-        await mountListAndAssert(() => {
-            useSortable({
-                ref: useRef("root"),
-                setup: () => ({ elements: ".item" }),
-            });
-        }, true);
-        await mountListAndAssert(() => {
-            useSortable({
-                ref: useRef("root"),
-                elements: () => ".item",
             });
         }, true);
 
@@ -136,7 +124,8 @@ QUnit.module("UI", ({ beforeEach }) => {
         assert.verifySteps([]);
 
         // First item after 2nd item
-        const drop = await drag(".item:first-child", ".item:nth-child(2)");
+        const { drop, moveTo } = await drag(".item:first-child");
+        await moveTo(".item:nth-child(2)");
 
         assert.hasClass(target.querySelector(".item"), "o_dragged");
 
@@ -247,38 +236,6 @@ QUnit.module("UI", ({ beforeEach }) => {
 
         // Drag shouldn't have occurred
         assert.verifySteps([]);
-    });
-
-    QUnit.test("Disabled in small environment", async (assert) => {
-        assert.expect(2);
-
-        class List extends Component {
-            setup() {
-                useSortable({
-                    ref: useRef("root"),
-                    elements: ".item",
-                    onDragStart() {
-                        throw new Error("Shouldn't start the sortable feature.");
-                    },
-                });
-            }
-        }
-
-        List.template = xml`
-            <div t-ref="root" class="root">
-                <ul class="list">
-                    <li t-foreach="[1, 2, 3]" t-as="i" t-key="i" t-esc="i" class="item" />
-                </ul>
-            </div>`;
-
-        await mount(List, target, { env: { isSmall: true } });
-
-        assert.containsN(target, ".item", 3);
-
-        // First item after 2nd item
-        await dragAndDrop(".item:first-child", ".item:nth-child(2)");
-
-        assert.ok(true, "No drag sequence should have been initiated");
     });
 
     QUnit.test("Ignore specified elements", async (assert) => {

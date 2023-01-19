@@ -50,7 +50,9 @@ export class KanbanRenderer extends Component {
 
     setup() {
         this.dialogClose = [];
+        /** @type {{ processing: string[], columnQuickCreateIsFolded: boolean }} */
         this.state = useState({
+            processing: [],
             columnQuickCreateIsFolded:
                 !this.props.list.isGrouped || this.props.list.groups.length > 0,
         });
@@ -274,7 +276,7 @@ export class KanbanRenderer extends Component {
 
     getGroupClasses(group) {
         const classes = [];
-        if (this.canResequenceGroups && group.value) {
+        if (this.canResequenceGroups && group.value && !this.state.processing.includes(group.id)) {
             classes.push("o_group_draggable");
         }
         if (!group.count) {
@@ -494,11 +496,13 @@ export class KanbanRenderer extends Component {
      * @param {HTMLElement} [params.parent]
      * @param {HTMLElement} [params.previous]
      */
-    async sortGroupDrop(dataGroupId, { element, previous }) {
-        element.classList.remove("o_group_draggable");
+    async sortGroupDrop(dataGroupId, { previous }) {
+        this.state.processing = [...this.state.processing, dataGroupId];
+
         const refId = previous ? previous.dataset.id : null;
         await this.props.list.resequence(dataGroupId, refId);
-        element.classList.add("o_group_draggable");
+
+        this.state.processing = this.state.processing.filter((id) => id !== dataGroupId);
     }
 
     /**
@@ -512,21 +516,23 @@ export class KanbanRenderer extends Component {
      * @param {HTMLElement} [params.previous]
      */
     async sortRecordDrop(dataRecordId, dataGroupId, { element, parent, previous }) {
-        element.classList.remove("o_record_draggable");
         if (
             !this.props.list.isGrouped ||
             parent.classList.contains("o_kanban_hover") ||
             parent.dataset.id === element.parentElement.dataset.id
         ) {
-            parent && parent.classList && parent.classList.remove("o_kanban_hover");
+            this.state.processing = [...this.state.processing, dataRecordId];
+
+            parent?.classList.remove("o_kanban_hover");
             while (previous && !previous.dataset.id) {
                 previous = previous.previousElementSibling;
             }
             const refId = previous ? previous.dataset.id : null;
-            const targetGroupId = parent && parent.dataset.id;
+            const targetGroupId = parent?.dataset.id;
             await this.props.list.moveRecord(dataRecordId, dataGroupId, refId, targetGroupId);
+
+            this.state.processing = this.state.processing.filter((id) => id !== dataRecordId);
         }
-        element.classList.add("o_record_draggable");
     }
 
     /**

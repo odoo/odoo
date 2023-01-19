@@ -3,6 +3,20 @@
 export const nbsp = "\u00a0";
 
 /**
+ * Transforms a camelCased string to return its kebab-cased version.
+ * Typically used to generate CSS properties from JS objects.
+ *
+ * @param {string} str
+ * @returns {string}
+ */
+export function camelToKebab(str) {
+    return str.replaceAll(
+        /(?<=.)[A-Z]|[A-Z]/g,
+        (match, prev) => `${prev ? "-" : ""}${match.toLowerCase()}`
+    );
+}
+
+/**
  * Escapes a string for HTML.
  * Note that it doesn't work for escaping node attributes.
  *
