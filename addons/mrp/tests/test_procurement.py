@@ -294,7 +294,7 @@ class TestProcurement(TestMrpCommon):
         mo.move_raw_ids[0]._action_cancel()
         self.assertEqual(mo.state, 'cancel', 'Manufacturing order should be cancelled.')
         self.assertEqual(mo.move_finished_ids[0].state, 'cancel', 'Finished move should be cancelled if mo is cancelled.')
-        self.assertEqual(mo.move_dest_ids[0].state, 'waiting', 'Destination move should not be cancelled if prapogation cancel is False on manufacturing rule.')
+        self.assertEqual(mo.move_dest_ids[0].state, 'confirmed', 'Destination move should not be cancelled if prapogation cancel is False on manufacturing rule.')
 
     def test_procurement_with_empty_bom(self):
         """Ensure that a procurement request using a product with an empty BoM

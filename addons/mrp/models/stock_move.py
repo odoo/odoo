@@ -240,18 +240,19 @@ class StockMove(models.Model):
     @api.model
     def default_get(self, fields_list):
         defaults = super(StockMove, self).default_get(fields_list)
-        if self.env.context.get('default_raw_material_production_id') or self.env.context.get('default_production_id'):
-            production_id = self.env['mrp.production'].browse(self.env.context.get('default_raw_material_production_id') or self.env.context.get('default_production_id'))
-            if production_id.state not in ('draft', 'cancel'):
-                if production_id.state != 'done':
-                    defaults['state'] = 'draft'
-                else:
-                    defaults['state'] = 'done'
-                    defaults['additional'] = True
-                defaults['product_uom_qty'] = 0.0
-            elif production_id.state == 'draft':
-                defaults['group_id'] = production_id.procurement_group_id.id
-                defaults['reference'] = production_id.name
+        if not self.env.context.get('default_raw_material_production_id') and not self.env.context.get('default_production_id'):
+            return defaults
+        production_id = self.env['mrp.production'].browse(self.env.context.get('default_raw_material_production_id') or self.env.context.get('default_production_id'))
+        if production_id.state not in ('draft', 'cancel'):
+            if production_id.state != 'done':
+                defaults['state'] = 'draft'
+            else:
+                defaults['state'] = 'done'
+            defaults['additional'] = True
+            defaults['product_uom_qty'] = 0.0
+        elif production_id.state == 'draft':
+            defaults['group_id'] = production_id.procurement_group_id.id
+            defaults['reference'] = production_id.name
         return defaults
 
     @api.model_create_multi
@@ -343,6 +344,7 @@ class StockMove(models.Model):
 
     def _action_confirm(self, merge=True, merge_into=False):
         moves = self.action_explode()
+        moves.filtered(lambda m: m.raw_material_production_id or m.production_id)._adjust_procure_method()
         # we go further with the list of ids potentially changed by action_explode
         return super(StockMove, moves)._action_confirm(merge=merge, merge_into=merge_into)
 
@@ -430,8 +432,6 @@ class StockMove(models.Model):
         vals = []
         if bom_line.product_id.type in ['product', 'consu']:
             vals = self.copy_data(default=self._prepare_phantom_move_values(bom_line, product_qty, quantity_done))
-            if self.state == 'assigned':
-                vals['state'] = 'assigned'
         return vals
 
     def _is_consuming(self):

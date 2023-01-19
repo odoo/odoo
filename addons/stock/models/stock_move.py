@@ -396,12 +396,6 @@ class StockMove(models.Model):
                     qty_to_unreserve -= qty_unreserved
 
         def _process_increase(move, quantity):
-            moves = move
-            if move.picking_id.immediate_transfer:
-                moves = move._action_confirm(merge=False)
-            # Kits, already handle in action_explode, should be clean in master
-            if len(moves) > 1:
-                return
             if move.reserved_availability < move.quantity_done and move.state not in ['done', 'cancel']:
                 move._action_assign(force_qty=move.quantity_done)
             move._set_quantity_done(quantity)
@@ -631,10 +625,8 @@ Please change the quantity done or the rounding precision of your unit of measur
                 defaults['product_uom_qty'] = 0.0
                 defaults['additional'] = True
             elif picking_id.state not in ['cancel', 'draft', 'done']:
-                if picking_id.immediate_transfer:
-                    defaults['state'] = 'assigned'
                 defaults['product_uom_qty'] = 0.0
-                defaults['additional'] = True  # to trigger `_autoconfirm_picking`
+                defaults['additional'] = True
         return defaults
 
     def name_get(self):
@@ -651,7 +643,13 @@ Please change the quantity done or the rounding precision of your unit of measur
         for vals in vals_list:
             if vals.get('quantity_done') and 'lot_ids' in vals:
                 vals.pop('lot_ids')
-        return super().create(vals_list)
+        moves = super().create(vals_list)
+        moves_to_confirm = moves.filtered(lambda m: m.picking_id.immediate_transfer or m.additional)
+        if moves_to_confirm:
+            moves |= moves_to_confirm._action_confirm()
+            moves = moves.exists()
+            moves._trigger_scheduler()
+        return moves
 
     def write(self, vals):
         # Handle the write on the initial demand by updating the reserved quantity and logging
@@ -888,7 +886,7 @@ Please change the quantity done or the rounding precision of your unit of measur
             'package_level_id', 'propagate_cancel', 'description_picking', 'date_deadline',
             'product_packaging_id',
         ]
-        if self.env['ir.config_parameter'].sudo().get_param('stock.merge_only_same_date'):
+        if not self.env['ir.config_parameter'].sudo().get_param('stock.merge_different_date'):
             fields.append('date')
         return fields
 
@@ -1683,8 +1681,10 @@ Please change the quantity done or the rounding precision of your unit of measur
                     move.move_dest_ids.filtered(lambda m: m.state != 'done')._action_cancel()
             else:
                 if all(state in ('done', 'cancel') for state in siblings_states):
-                    move.move_dest_ids.write({'procure_method': 'make_to_stock'})
-                    move.move_dest_ids.write({'move_orig_ids': [(3, move.id, 0)]})
+                    moves_dest = move.move_dest_ids
+                    moves_dest.write({'procure_method': 'make_to_stock'})
+                    moves_dest.write({'move_orig_ids': [(3, move.id, 0)]})
+                    moves_dest._recompute_state()
         moves_to_cancel.write({
             'state': 'cancel',
             'move_orig_ids': [(5, 0, 0)],
@@ -1803,10 +1803,11 @@ Please change the quantity done or the rounding precision of your unit of measur
 
     @api.ondelete(at_uninstall=False)
     def _unlink_if_draft_or_cancel(self):
-        if any(move.state not in ('draft', 'cancel') for move in self):
-            raise UserError(_('You can only delete draft moves.'))
+        if any(move.state == 'done' for move in self):
+            raise UserError(_('You can not delete done moves.'))
 
     def unlink(self):
+        self.filtered(lambda m: m.state not in ['cancel', 'draft'])._action_cancel()
         # With the non plannified picking, draft moves could have some move lines.
         self.with_context(prefetch_fields=False).mapped('move_line_ids').unlink()
         return super(StockMove, self).unlink()
