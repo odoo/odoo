@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_recurring_payment_form" model="ir.ui.view">
+        <field name="name">recurring.payment.form</field>
+        <field name="model">recurring.payment</field>
+        <field name="arch" type="xml">
+            <form string="Recurring Payment">
+                <header>
+                    <button name="action_done" states="draft" string="Done" type="object"
+                            class="oe_highlight"/>
+                    <button name="action_draft" states="done" string="Set To Draft"
+                            type="object"/>
+                    <field name="state" widget="statusbar"/>
+                </header>
+                <sheet>
+                    <group>
+                        <group>
+                            <h1>
+                                <field name="name" attrs="{'invisible': [('name','=', False)]}"/>
+                            </h1>
+                        </group>
+                    </group>
+                    <group>
+                        <group>
+                            <field name="template_id"/>
+                            <field name="partner_id"/>
+                            <field name="payment_type"/>
+                            <field name="amount" widget="monetary"/>
+                            <field name="journal_id" domain="[('type', 'in', ('bank', 'cash'))]"/>
+                        </group>
+                        <group>
+                            <field name="date_begin" widget="daterange"
+                                   options="{'related_end_date': 'date_end'}"/>
+                            <field name="date_end" widget="daterange"
+                                   options="{'related_start_date': 'date_begin'}"/>
+                            <field name="recurring_period"/>
+                            <field name="recurring_interval"/>
+                            <field name="journal_state"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Recurring Entries">
+                            <field name="line_ids">
+                                <tree create="0" delete="0" edit="0" decoration-success="state == 'done'">
+                                    <field name="date"/>
+                                    <field name="amount"/>
+                                    <field name="journal_id" domain="[('type', 'in', ('bank', 'cash'))]"/>
+                                    <field name="currency_id" groups="base.group_multi_company"/>
+                                    <field name="state" widget="badge"/>
+                                    <button name="action_create_payment" type="object"
+                                            string="Create Payment"
+                                            attrs="{'invisible': [('state', '=', 'done')]}"/>
+                                </tree>
+                                <form string="Recurring Payment Line" edit="0">
+                                    <group>
+                                        <group>
+                                            <field name="date"/>
+                                            <field name="amount"/>
+                                        </group>
+                                        <group>
+                                            <field name="journal_id"
+                                                   domain="[('type', 'in', ('bank', 'cash'))]"/>
+                                            <field name="currency_id" groups="base.group_multi_company"/>
+                                        </group>
+                                    </group>
+                                </form>
+                            </field>
+                        </page>
+                    </notebook>
+                    <group>
+                        <field name="description" placeholder="Description..." nolabel="1" colspan="4"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_account_recurring_payment_tree" model="ir.ui.view">
+        <field name="name">recurring.payment.tree</field>
+        <field name="model">recurring.payment</field>
+        <field name="arch" type="xml">
+            <tree string="Recurring Payments">
+                <field name="name"/>
+                <field name="partner_id"/>
+                <field name="journal_id"/>
+                <field name="state"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="action_account_recurring_payment" model="ir.actions.act_window">
+        <field name="name">Recurring Payment</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">recurring.payment</field>
+        <field name="view_mode">tree,form</field>
+        <field name="view_id" ref="view_account_recurring_payment_tree"/>
+    </record>
+
+    <menuitem id="menu_recurring_payment"
+              name="Recurring Payment"
+              sequence="10"
+              action="action_account_recurring_payment"
+              groups="account.group_account_user,account.group_account_manager"
+              parent="menu_recurring_payments"/>
+
+</odoo>

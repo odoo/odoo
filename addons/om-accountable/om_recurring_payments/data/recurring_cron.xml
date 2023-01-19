@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <record id="action_generate_recurring_payment" model="ir.cron">
+            <field name="name">Generate Recurring Payments</field>
+            <field name="model_id" ref="model_recurring_payment"/>
+            <field name="state">code</field>
+            <field name="active" eval="True"/>
+            <field name="code">model.action_generate_payment()</field>
+            <field name='interval_number'>1</field>
+            <field name='interval_type'>days</field>
+            <field name="numbercall">-1</field>
+        </record>
+
+    </data>
+</odoo>
