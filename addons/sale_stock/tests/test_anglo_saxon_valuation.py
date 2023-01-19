@@ -1357,6 +1357,20 @@ class TestAngloSaxonValuation(ValuationReconciliationTestCommon):
         invoice = so._create_invoices()
         invoice.action_post()
 
+        # Receive one @100
+        in_moves = self.env['stock.move'].create({
+            'name': 'IN move @100',
+            'product_id': self.product.id,
+            'location_id': self.env.ref('stock.stock_location_suppliers').id,
+            'location_dest_id': self.company_data['default_warehouse'].lot_stock_id.id,
+            'product_uom': self.product.uom_id.id,
+            'product_uom_qty': 1,
+            'price_unit': 100,
+        })
+        in_moves._action_confirm()
+        in_moves.quantity_done = 1
+        in_moves._action_done()
+
         # Return the second picking (i.e. 1@20)
         ctx = {'active_id': pickings[1].id, 'active_model': 'stock.picking'}
         return_wizard = Form(self.env['stock.return.picking'].with_context(ctx)).save()
