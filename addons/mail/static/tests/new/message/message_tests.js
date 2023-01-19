@@ -1131,10 +1131,7 @@ QUnit.test(
             res_id: threadId,
         });
         const { openFormView } = await start();
-        await openFormView({
-            res_id: threadId,
-            res_model: "res.partner",
-        });
+        await openFormView("res.partner", threadId);
         assert.containsOnce(document.body, ".o-mail-message-author-avatar");
         assert.hasClass(document.querySelector(".o-mail-message-author-avatar"), "o_redirect");
         await click(".o-mail-message-author-avatar");
@@ -1156,10 +1153,7 @@ QUnit.test(
             res_id: partnerId,
         });
         const { openFormView } = await start();
-        await openFormView({
-            res_model: "res.partner",
-            res_id: partnerId,
-        });
+        await openFormView("res.partner", partnerId);
         assert.containsOnce(target, ".o-mail-message span:contains(Demo User)");
 
         await click(".o-mail-message span:contains(Demo User)");
@@ -1186,10 +1180,7 @@ QUnit.test(
         const { advanceTime, openFormView } = await start({
             hasTimeControl: true,
         });
-        await openFormView({
-            res_id: threadId,
-            res_model: "res.partner",
-        });
+        await openFormView("res.partner", threadId);
         await afterNextRender(() => advanceTime(50 * 1000)); // next fetch of im_status
         assert.containsOnce(target, ".o-mail-partner-im-status");
         assert.hasClass(target.querySelector(".o-mail-partner-im-status"), "cursor-pointer");
@@ -1213,10 +1204,7 @@ QUnit.test(
             subtype_id: subtypeId,
         });
         const { openFormView } = await start();
-        await openFormView({
-            res_id: threadId,
-            res_model: "res.partner",
-        });
+        await openFormView("res.partner", threadId);
         assert.strictEqual($(target).find(".o-mail-message-body").text(), "HelloBonjour");
     }
 );
@@ -1234,10 +1222,7 @@ QUnit.test(
             subtype_id: subtypeId,
         });
         const { openFormView } = await start();
-        await openFormView({
-            res_id: threadId,
-            res_model: "res.partner",
-        });
+        await openFormView("res.partner", threadId);
         assert.strictEqual($(target).find(".o-mail-message-body").text(), "Hello");
     }
 );

@@ -42,15 +42,9 @@ QUnit.module("tracking value", {
             const { openFormView, ...remainder } = await start({
                 serverData: { views },
             });
-            await openFormView(
-                {
-                    res_model: "mail.test.track.all",
-                    res_id,
-                },
-                {
-                    props: { mode: "edit" },
-                }
-            );
+            await openFormView("mail.test.track.all", res_id, {
+                props: { mode: "edit" },
+            });
             return remainder;
         };
 

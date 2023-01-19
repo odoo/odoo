@@ -278,19 +278,24 @@ export function waitFormViewLoaded(
 
 function getOpenFormView(openView) {
     return async function openFormView(
-        action,
+        res_model,
+        res_id,
         {
             props,
-            waitUntilDataLoaded = Boolean(action.res_id),
-            waitUntilMessagesLoaded = Boolean(action.res_id),
+            waitUntilDataLoaded = Boolean(res_id),
+            waitUntilMessagesLoaded = Boolean(res_id),
         } = {}
     ) {
-        action["views"] = [[false, "form"]];
+        const action = {
+            res_model,
+            res_id,
+            views: [[false, "form"]],
+        };
         const func = () => openView(action, props);
         if (waitUntilDataLoaded || waitUntilMessagesLoaded) {
             return waitFormViewLoaded(func, {
-                resId: action.res_id,
-                resModel: action.res_model,
+                resId: res_id,
+                resModel: res_model,
                 waitUntilDataLoaded,
                 waitUntilMessagesLoaded,
             });

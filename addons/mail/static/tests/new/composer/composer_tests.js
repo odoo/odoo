@@ -36,10 +36,7 @@ QUnit.module("composer", {
 QUnit.test("composer text input: basic rendering when posting a message", async function (assert) {
     const pyEnv = await startServer();
     const { openFormView } = await start();
-    await openFormView({
-        res_id: pyEnv.currentPartnerId,
-        res_model: "res.partner",
-    });
+    await openFormView("res.partner", pyEnv.currentPartnerId);
     await click("button:contains(Send message)");
     assert.containsOnce(target, ".o-mail-composer");
     assert.containsOnce(target, "textarea.o-mail-composer-textarea");
@@ -53,10 +50,7 @@ QUnit.test("composer text input: basic rendering when posting a message", async 
 QUnit.test("composer text input: basic rendering when logging note", async function (assert) {
     const pyEnv = await startServer();
     const { openFormView } = await start();
-    await openFormView({
-        res_id: pyEnv.currentPartnerId,
-        res_model: "res.partner",
-    });
+    await openFormView("res.partner", pyEnv.currentPartnerId);
     await click("button:contains(Log note)");
     assert.containsOnce(target, ".o-mail-composer");
     assert.containsOnce(target, "textarea.o-mail-composer-textarea");

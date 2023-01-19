@@ -338,10 +338,7 @@ QUnit.test("Click on avatar opens its partner chat window", async (assert) => {
         res_id: testPartnerId,
     });
     const { openFormView } = await start();
-    await openFormView({
-        res_id: testPartnerId,
-        res_model: "res.partner",
-    });
+    await openFormView("res.partner", testPartnerId);
     assert.containsOnce(target, ".o-mail-message-sidebar .o-mail-avatar-container img");
     await click(".o-mail-message-sidebar .o-mail-avatar-container img");
     assert.containsOnce(target, ".o-mail-chat-window-header-name");

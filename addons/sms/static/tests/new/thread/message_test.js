@@ -28,11 +28,7 @@ QUnit.test("Notification Sent", async function (assert) {
         res_partner_id: resPartnerId1,
     });
     const { openFormView } = await start();
-    await openFormView({
-        res_id: resPartnerId1,
-        res_model: "res.partner",
-    });
-
+    await openFormView("res.partner", resPartnerId1);
     assert.containsOnce(target, ".o-mail-message");
     assert.containsOnce(target, ".o-mail-message-notification-icon-clickable");
     assert.containsOnce(target, ".o-mail-message-notification-icon");
@@ -68,10 +64,7 @@ QUnit.test("Notification Error", async function (assert) {
         res_partner_id: resPartnerId1,
     });
     const { env, openFormView } = await start();
-    await openFormView({
-        res_id: resPartnerId1,
-        res_model: "res.partner",
-    });
+    await openFormView("res.partner", resPartnerId1);
     patchWithCleanup(env.services.action, {
         doAction(action, options) {
             assert.step("do_action");

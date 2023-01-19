@@ -33,11 +33,7 @@ QUnit.skipRefactoring('Sent', async function (assert) {
         res_partner_id: resPartnerId1,
     });
     const { openFormView } = await start();
-    await openFormView({
-        res_id: resPartnerId1,
-        res_model: 'res.partner',
-    });
-
+    await openFormView('res.partner', resPartnerId1);
     assert.containsOnce(
         document.body,
         '.o-mail-message',
@@ -105,11 +101,7 @@ QUnit.skipRefactoring('Canceled', async function (assert) {
         res_partner_id: resPartnerId1,
     });
     const { openFormView } = await start();
-    await openFormView({
-        res_id: resPartnerId1,
-        res_model: 'res.partner',
-    });
-
+    await openFormView('res.partner', resPartnerId1);
     assert.containsOnce(
         document.body,
         '.o-mail-message',
@@ -177,11 +169,7 @@ QUnit.skipRefactoring('Pending', async function (assert) {
         res_partner_id: resPartnerId1,
     });
     const { openFormView } = await start();
-    await openFormView({
-        res_id: resPartnerId1,
-        res_model: 'res.partner',
-    });
-
+    await openFormView('res.partner', resPartnerId1);
     assert.containsOnce(
         document.body,
         '.o-mail-message',
@@ -256,10 +244,7 @@ QUnit.skipRefactoring('No Price Available', async function (assert) {
             }
         },
     });
-    await openFormView({
-        res_id: resPartnerId1,
-        res_model: 'res.partner',
-    });
+    await openFormView('res.partner', resPartnerId1);
     assert.containsOnce(
         document.body,
         '.o-mail-message',
@@ -342,11 +327,7 @@ QUnit.skipRefactoring('Credit Error', async function (assert) {
             }
         },
     });
-    await openFormView({
-        res_id: resPartnerId1,
-        res_model: 'res.partner',
-    });
-
+    await openFormView('res.partner', resPartnerId1);
     assert.containsOnce(
         document.body,
         '.o-mail-message',
@@ -434,11 +415,7 @@ QUnit.skipRefactoring('Trial Error', async function (assert) {
             }
         },
     });
-    await openFormView({
-        res_id: resPartnerId1,
-        res_model: 'res.partner',
-    });
-
+    await openFormView('res.partner', resPartnerId1);
     assert.containsOnce(
         document.body,
         '.o-mail-message',
@@ -520,10 +497,7 @@ QUnit.skipRefactoring('Format Error', async function (assert) {
         res_partner_id: resPartnerId1,
     });
     const { env, openFormView } = await start();
-    await openFormView({
-        res_id: resPartnerId1,
-        res_model: 'res.partner',
-    });
+    await openFormView('res.partner', resPartnerId1);
     patchWithCleanup(env.services.action, {
         doAction(action, options) {
             assert.step('do_action');
@@ -592,10 +566,7 @@ QUnit.skipRefactoring('Missing Required Fields', async function (assert) {
     });
 
     const { env, openFormView } = await start();
-    await openFormView({
-        res_id: resPartnerId1,
-        res_model: 'res.partner',
-    });
+    await openFormView('res.partner', resPartnerId1);
     patchWithCleanup(env.services.action, {
         doAction(action, options) {
             assert.step('do_action');

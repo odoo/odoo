@@ -49,10 +49,7 @@ QUnit.test('display partner mention suggestions on typing "@"', async function (
 QUnit.test('display partner mention suggestions on typing "@" in chatter', async function (assert) {
     const pyEnv = await startServer();
     const { openFormView } = await start();
-    await openFormView({
-        res_id: pyEnv.currentPartnerId,
-        res_model: "res.partner",
-    });
+    await openFormView("res.partner", pyEnv.currentPartnerId);
     await click("button:contains(Send message)");
     assert.containsNone(target, ".o-composer-suggestion");
     await insertText(".o-mail-composer-textarea", "@");

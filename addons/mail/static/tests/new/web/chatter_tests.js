@@ -35,10 +35,7 @@ QUnit.test("simple chatter on a record", async (assert) => {
         },
     });
     const partnerId = pyEnv["res.partner"].create({ name: "John Doe" });
-    await openFormView({
-        res_model: "res.partner",
-        res_id: partnerId,
-    });
+    await openFormView("res.partner", partnerId);
     assert.containsOnce(target, ".o-mail-chatter-topbar");
     assert.containsOnce(target, ".o-mail-thread");
     assert.verifySteps([
@@ -53,10 +50,7 @@ QUnit.test("simple chatter on a record", async (assert) => {
 QUnit.test("displayname is used when sending a message", async (assert) => {
     const { openFormView, pyEnv } = await start();
     const partnerId = pyEnv["res.partner"].create({ name: "John Doe" });
-    await openFormView({
-        res_model: "res.partner",
-        res_id: partnerId,
-    });
+    await openFormView("res.partner", partnerId);
     await click("button:contains(Send message)");
     assert.containsOnce(target, 'small:contains(To followers of: "John Doe")');
 });
@@ -83,10 +77,7 @@ QUnit.test("can post a message on a record thread", async (assert) => {
             }
         },
     });
-    await openFormView({
-        res_model: "res.partner",
-        res_id: partnerId,
-    });
+    await openFormView("res.partner", partnerId);
     assert.containsNone(target, ".o-mail-composer");
 
     await click("button:contains(Send message)");
@@ -122,10 +113,7 @@ QUnit.test("can post a note on a record thread", async (assert) => {
             }
         },
     });
-    await openFormView({
-        res_model: "res.partner",
-        res_id: partnerId,
-    });
+    await openFormView("res.partner", partnerId);
     assert.containsNone(target, ".o-mail-composer");
 
     await click("button:contains(Log note)");
@@ -141,9 +129,7 @@ QUnit.test("can post a note on a record thread", async (assert) => {
 
 QUnit.test("No attachment loading spinner when creating records", async (assert) => {
     const { openFormView } = await start();
-    await openFormView({
-        res_model: "res.partner",
-    });
+    await openFormView("res.partner");
     assert.containsOnce(target, "button[aria-label='Attach files']");
     assert.containsNone(target, "button[aria-label='Attach files'] .fa-spin");
 });
@@ -159,13 +145,7 @@ QUnit.test(
             },
         });
         const partnerId = pyEnv["res.partner"].create({ name: "John" });
-        await openFormView(
-            {
-                res_model: "res.partner",
-                res_id: partnerId,
-            },
-            { waitUntilDataLoaded: false }
-        );
+        await openFormView("res.partner", partnerId, { waitUntilDataLoaded: false });
         assert.containsOnce(target, "button[aria-label='Attach files'] .fa-spin");
         await click(".o_form_button_create");
         assert.containsNone(target, "button[aria-label='Attach files'] .fa-spin");
@@ -178,10 +158,7 @@ QUnit.test(
         patchUiSize({ size: SIZES.XXL });
         const { openFormView, pyEnv } = await start();
         const partnerId = pyEnv["res.partner"].create({ name: "John Doe" });
-        await openFormView({
-            res_model: "res.partner",
-            res_id: partnerId,
-        });
+        await openFormView("res.partner", partnerId);
         await click("button:contains(Send message)");
         patchUiSize({ size: SIZES.LG });
         await waitFormViewLoaded(() => window.dispatchEvent(new Event("resize")), {
@@ -196,10 +173,7 @@ QUnit.test("Textarea content is kept when switching from aside to bottom", async
     patchUiSize({ size: SIZES.XXL });
     const { openFormView, pyEnv } = await start();
     const partnerId = pyEnv["res.partner"].create({ name: "John Doe" });
-    await openFormView({
-        res_model: "res.partner",
-        res_id: partnerId,
-    });
+    await openFormView("res.partner", partnerId);
     await click("button:contains(Send message)");
     await editInput(target, ".o-mail-composer-textarea", "Hello world !");
     patchUiSize({ size: SIZES.LG });
@@ -214,10 +188,7 @@ QUnit.test("Composer type is kept when switching from aside to bottom", async fu
     patchUiSize({ size: SIZES.XXL });
     const { openFormView, pyEnv } = await start();
     const partnerId = pyEnv["res.partner"].create({ name: "John Doe" });
-    await openFormView({
-        res_model: "res.partner",
-        res_id: partnerId,
-    });
+    await openFormView("res.partner", partnerId);
     await click("button:contains(Log note)");
     patchUiSize({ size: SIZES.LG });
     await waitFormViewLoaded(() => window.dispatchEvent(new Event("resize")), {
@@ -537,28 +508,16 @@ QUnit.test(
                 }))
         );
         const { openFormView } = await start();
-        await openFormView({
-            res_model: "res.partner",
-            res_id: partnerId_1,
-        });
+        await openFormView("res.partner", partnerId_1);
         const scrolltop_1 = target.querySelector(".o-mail-chatter-scrollable").scrollHeight / 2;
         target.querySelector(".o-mail-chatter-scrollable").scrollTo({ top: scrolltop_1 });
-        await openFormView({
-            res_model: "res.partner",
-            res_id: partnerId_2,
-        });
+        await openFormView("res.partner", partnerId_2);
         const scrolltop_2 = target.querySelector(".o-mail-chatter-scrollable").scrollHeight / 3;
         target.querySelector(".o-mail-chatter-scrollable").scrollTo({ top: scrolltop_2 });
-        await openFormView({
-            res_model: "res.partner",
-            res_id: partnerId_1,
-        });
+        await openFormView("res.partner", partnerId_1);
         assert.ok(isScrolledTo(target.querySelector(".o-mail-chatter-scrollable"), scrolltop_1));
 
-        await openFormView({
-            res_model: "res.partner",
-            res_id: partnerId_2,
-        });
+        await openFormView("res.partner", partnerId_2);
         assert.ok(isScrolledTo(target.querySelector(".o-mail-chatter-scrollable"), scrolltop_2));
     }
 );

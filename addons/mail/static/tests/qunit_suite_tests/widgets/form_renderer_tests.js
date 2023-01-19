@@ -462,17 +462,11 @@ QUnit.module("mail", {}, function () {
             const { afterEvent, openFormView } = await start({
                 serverData: { views },
             });
-            await openFormView(
-                {
-                    res_model: "res.partner",
-                    res_id: resPartnerId1,
+            await openFormView("res.partner", resPartnerId1, {
+                props: {
+                    resIds: [resPartnerId1, resPartnerId2],
                 },
-                {
-                    props: {
-                        resIds: [resPartnerId1, resPartnerId2],
-                    },
-                }
-            );
+            });
             await afterNextRender(() =>
                 afterEvent({
                     eventName: "o-thread-view-hint-processed",

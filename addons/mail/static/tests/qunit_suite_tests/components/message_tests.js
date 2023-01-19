@@ -123,11 +123,7 @@ QUnit.module("mail", {}, function () {
                 });
                 pyEnv["res.users"].create({ partner_id: resPartnerId });
                 const { click, insertText, openFormView } = await start();
-                await openFormView({
-                    res_model: "res.partner",
-                    res_id: resPartnerId,
-                });
-
+                await openFormView("res.partner", resPartnerId);
                 await click("button:contains(Send message)");
                 await insertText(".o-mail-composer-textarea", "@Te");
                 await click(".o_ComposerSuggestionView");
@@ -155,11 +151,7 @@ QUnit.module("mail", {}, function () {
                 const resPartnerId = pyEnv["res.partner"].create({});
                 pyEnv["mail.channel"].create({ name: "my-channel" });
                 const { click, insertText, openFormView } = await start();
-                await openFormView({
-                    res_model: "res.partner",
-                    res_id: resPartnerId,
-                });
-
+                await openFormView("res.partner", resPartnerId);
                 await click("button:contains(Send message)");
                 await insertText(".o-mail-composer-textarea", "#my-channel");
                 await click(".o_ComposerSuggestionView");

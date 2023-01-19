@@ -63,10 +63,7 @@ QUnit.test(
             uuid: channel.uuid,
         });
         // leaving discuss.
-        await openFormView({
-            res_id: resPartnerId,
-            res_model: "res.partner",
-        });
+        await openFormView("res.partner", resPartnerId);
         assert.containsOnce(
             target,
             ".o-mail-chat-window .o-mail-chat-window-header:contains(Dumbledore)"
