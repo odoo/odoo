@@ -1,6 +1,12 @@
 /** @odoo-module **/
 
-import { afterNextRender, click, start, startServer } from "@mail/../tests/helpers/test_utils";
+import {
+    afterNextRender,
+    click,
+    start,
+    startServer,
+    nextAnimationFrame,
+} from "@mail/../tests/helpers/test_utils";
 import { makeDeferred } from "@mail/utils/deferred";
 import { getFixture } from "@web/../tests/helpers/utils";
 
@@ -285,5 +291,28 @@ QUnit.test(
         assert.containsNone(target, ".o-mail-chatter-file-uploader");
         await click("button[aria-label='Attach files']");
         assert.containsOnce(target, ".o-mail-attachment-box");
+    }
+);
+
+QUnit.test(
+    "composer state conserved when clicking on another topbar button",
+    async function (assert) {
+        const pyEnv = await startServer();
+        const partnerId = pyEnv["res.partner"].create({});
+        const { openFormView } = await start();
+        await openFormView("res.partner", partnerId);
+        assert.containsOnce(target, ".o-mail-chatter-topbar");
+        assert.containsOnce(target, "button:contains(Send message)");
+        assert.containsOnce(target, "button:contains(Log note)");
+        assert.containsOnce(target, "button[aria-label='Attach files']");
+
+        await click("button:contains(Log note)");
+        assert.containsOnce(target, "button:contains(Log note).o-active");
+        assert.containsNone(target, "button:contains(Send message).o-active");
+
+        $(`button[aria-label='Attach files']`)[0].click();
+        await nextAnimationFrame();
+        assert.containsOnce(target, "button:contains(Log note).o-active");
+        assert.containsNone(target, "button:contains(Send message).o-active");
     }
 );
