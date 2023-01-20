@@ -45,7 +45,7 @@ export class AccountMoveFormCompiler extends FormCompiler {
         for (const attr of originalNoteBook.attributes) {
             noteBook.setAttribute(attr.name, attr.value);
         }
-        noteBook.setAttribute("onBeforeTabSwitch", "() => this.saveBeforeTabChange()");
+        noteBook.setAttribute("onBeforeTabSwitch", "() => __comp__.saveBeforeTabChange()");
         const slots = originalNoteBook.childNodes;
         append(noteBook, [...slots]);
         return noteBook;
