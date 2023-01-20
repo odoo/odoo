@@ -3,11 +3,11 @@
 import { Component, useState } from "@odoo/owl";
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { useMessaging, useStore } from "../core/messaging_hook";
-import { browser } from "@web/core/browser/browser";
 import { PartnerImStatus } from "@mail/new/discuss/partner_im_status";
 import { NotificationItem } from "./notification_item";
 import { _t } from "@web/core/l10n/translation";
 import { useService } from "@web/core/utils/hooks";
+import { sprintf } from "@web/core/utils/strings";
 import { createLocalId } from "../utils/misc";
 
 export class MessagingMenu extends Component {
@@ -18,6 +18,7 @@ export class MessagingMenu extends Component {
     setup() {
         this.messaging = useMessaging();
         this.store = useStore();
+        this.notification = useState(useService("mail.notification.permission"));
         this.chatWindowService = useState(useService("mail.chat_window"));
         this.threadService = useState(useService("mail.thread"));
         this.action = useService("action");
@@ -36,6 +37,26 @@ export class MessagingMenu extends Component {
      */
     tabToThreadType(tab) {
         return tab === "chats" ? ["chat", "group"] : tab;
+    }
+
+    get hasPreviews() {
+        return (
+            this.displayedPreviews.length > 0 ||
+            (this.store.notificationGroups.length > 0 && this.state.tab === "all") ||
+            this.notification.permission === "prompt"
+        );
+    }
+
+    get notificationRequest() {
+        return {
+            body: _t("Enable desktop notifications to chat"),
+            displayName: sprintf(_t("%s has a request"), this.store.partnerRoot.name),
+            iconSrc: this.store.partnerRoot.avatarUrl,
+            partner: this.store.partnerRoot,
+            isLast:
+                this.displayedPreviews.length === 0 && this.store.notificationGroups.length === 0,
+            isShown: this.state.tab === "all" && this.notification.permission === "prompt",
+        };
     }
 
     get displayedPreviews() {
@@ -204,7 +225,7 @@ export class MessagingMenu extends Component {
                 (acc, ng) => acc + parseInt(Object.values(ng.notifications).length),
                 0
             );
-        if (browser.Notification?.permission === "default") {
+        if (this.notification.permission === "prompt") {
             value++;
         }
         return value;

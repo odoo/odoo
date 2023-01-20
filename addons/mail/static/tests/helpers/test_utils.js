@@ -5,6 +5,7 @@ import { getPyEnv, startServer } from "@bus/../tests/helpers/mock_python_environ
 import { loadEmoji } from "@mail/new/emoji_picker/emoji_picker";
 import { nextTick } from "@mail/utils/utils";
 import { getAdvanceTime } from "@mail/../tests/helpers/time_control";
+import { patchNotificationAPI } from "@mail/../tests/helpers/patch_notifications";
 import { getWebClientReady } from "@mail/../tests/helpers/webclient_setup";
 
 import { registry } from "@web/core/registry";
@@ -434,6 +435,9 @@ async function start(param0 = {}) {
         uid: pyEnv.currentUserId,
         partner_id: pyEnv.currentPartnerId,
     });
+    if (browser.Notification && !browser.Notification.isPatched) {
+        patchNotificationAPI("denied");
+    }
     param0.serverData = param0.serverData || getActionManagerServerData();
     param0.serverData.models = { ...pyEnv.getData(), ...param0.serverData.models };
     param0.serverData.views = { ...pyEnv.getViews(), ...param0.serverData.views };

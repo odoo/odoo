@@ -1,8 +1,9 @@
 /** @odoo-module **/
 
 import { click, start, startServer } from "@mail/../tests/helpers/test_utils";
+import { makeFakeNotificationService } from "@web/../tests/helpers/mock_services";
 import { getFixture, patchWithCleanup } from "@web/../tests/helpers/utils";
-import { browser } from "@web/core/browser/browser";
+import { patchBrowserNotification } from "@mail/../tests/helpers/patch_notifications";
 
 let target;
 
@@ -37,12 +38,7 @@ QUnit.test("messaging menu should have topbar buttons", async function (assert) 
 });
 
 QUnit.test("counter is taking into account failure notification", async function (assert) {
-    patchWithCleanup(browser, {
-        Notification: {
-            ...browser.Notification,
-            permission: "denied",
-        },
-    });
+    patchBrowserNotification("denied");
     const pyEnv = await startServer();
     const channelId = pyEnv["mail.channel"].create({});
     const messageId = pyEnv["mail.message"].create({
@@ -67,31 +63,49 @@ QUnit.test("counter is taking into account failure notification", async function
 });
 
 QUnit.test("rendering with OdooBot has a request (default)", async function (assert) {
-    patchWithCleanup(browser, {
-        Notification: {
-            ...browser.Notification,
-            permission: "default",
-        },
-    });
+    patchBrowserNotification("default");
     await start();
     assert.containsOnce(target, ".o-mail-messaging-menu-counter");
     assert.strictEqual($(target).find(".o-mail-messaging-menu-counter").text(), "1");
+    await click(".o_menu_systray i[aria-label='Messages']");
+    assert.containsOnce(target, ".o-mail-notification-item");
+    assert.strictEqual(
+        target.querySelector(".o-mail-notification-item-name").textContent.trim(),
+        "OdooBot has a request"
+    );
 });
 
 QUnit.test("rendering without OdooBot has a request (denied)", async function (assert) {
-    patchWithCleanup(browser, {
-        Notification: { permission: "denied" },
-    });
+    patchBrowserNotification("denied");
     await start();
     assert.strictEqual($(target).find(".o-mail-messaging-menu-counter").text(), "0");
+    await click(".o_menu_systray i[aria-label='Messages']");
+    assert.containsNone(target, ".o-mail-notification-item");
 });
 
 QUnit.test("rendering without OdooBot has a request (accepted)", async function (assert) {
-    patchWithCleanup(browser, {
-        Notification: { permission: "granted" },
-    });
+    patchBrowserNotification("granted");
     await start();
     assert.strictEqual($(target).find(".o-mail-messaging-menu-counter").text(), "0");
+    await click(".o_menu_systray i[aria-label='Messages']");
+    assert.containsNone(target, ".o-mail-notification-item");
+});
+
+QUnit.test("respond to notification prompt (denied)", async function (assert) {
+    patchBrowserNotification("default", "denied");
+    await start({
+        services: {
+            notification: makeFakeNotificationService(() => {
+                assert.step("confirmation_denied_toast");
+            }),
+        },
+    });
+    await click(".o_menu_systray i[aria-label='Messages']");
+    await click(".o-mail-notification-item");
+    assert.verifySteps(["confirmation_denied_toast"]);
+    assert.strictEqual($(target).find(".o-mail-messaging-menu-counter").text(), "0");
+    await click(".o_menu_systray i[aria-label='Messages']");
+    assert.containsNone(target, ".o-mail-notification-item");
 });
 
 QUnit.test("Is closed after clicking on new message", async function (assert) {
@@ -319,7 +333,7 @@ QUnit.test("mark unread channel as read", async function (assert) {
 
 QUnit.test("mark failure as read", async function (assert) {
     const pyEnv = await startServer();
-    const messageId  = pyEnv["mail.message"].create({
+    const messageId = pyEnv["mail.message"].create({
         message_type: "email",
         res_model_name: "Channel",
     });

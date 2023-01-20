@@ -29,9 +29,20 @@
             <button t-if="!props.inDiscuss and (!store.discuss.isActive or store.isSmall and state.tab !== 'mailbox')" class="btn btn-link o-mail-messaging-menu-new-message" t-att-class="{ 'text-uppercase': store.isSmall }" type="button" t-on-click.stop="onClickNewMessage">New Message</button>
         </div>
         <div t-if="state.tab !== 'mailbox'" class="d-flex flex-column overflow-auto flex-grow-1">
-            <div class="d-flex justify-content-center py-4 px-2 text-muted" t-if="displayedPreviews.length === 0 and (failures.length === 0 or state.tab !== 'all')">
+            <div class="d-flex justify-content-center py-4 px-2 text-muted" t-if="!hasPreviews">
                 No conversation yet...
             </div>
+                <NotificationItem t-if="notificationRequest.isShown"
+                    body="notificationRequest.body"
+                    displayName="notificationRequest.displayName"
+                    iconSrc="notificationRequest.iconSrc"
+                    isLast="notificationRequest.isLast"
+                    onClick="() => notification.requestPermission()"
+                >
+                    <t t-set-slot="icon">
+                        <PartnerImStatus className="'position-absolute bottom-0 end-0'" partner="notificationRequest.partner"/>
+                    </t>
+                </NotificationItem>
             <t t-if="state.tab !== 'mailbox'">
                 <t t-foreach="displayedPreviews" t-as="preview" t-key="preview.id">
                     <NotificationItem

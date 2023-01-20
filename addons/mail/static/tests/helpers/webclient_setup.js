@@ -34,6 +34,7 @@ import { chatterService } from "@mail/new/web/chatter_service";
 import { DiscussClientAction } from "@mail/new/discuss/discuss_client_action";
 import { personaService } from "@mail/new/core/persona_service";
 import { attachmentService } from "@mail/new/attachments/attachment_service";
+import { notificationPermissionService } from "@mail/new/core/notification_permission_service";
 
 const ROUTES_TO_IGNORE = [
     "/web/webclient/load_menus",
@@ -101,6 +102,7 @@ function setupMessagingServiceRegistries({ loadingBaseDelayDuration = 0, messagi
         "bus.parameters": busParametersService,
         im_status: imStatusService,
         effect: effectService,
+        "mail.notification.permission": notificationPermissionService,
         "mail.suggestion": suggestionService,
         "mail.store": storeService,
         "mail.activity": activityService,
