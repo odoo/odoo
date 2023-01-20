@@ -56,6 +56,9 @@ Model({
          */
         onClickButtonToggleAttachments() {
             this.update({ hasAttachmentBox: this.hasAttachmentBox ? clear() : true });
+            if (this.hasAttachmentBox) {
+                this.scrollPanelRef.el.scrollTop = 0;
+            }
         },
         /**
          * Handles click on top bar close button.
@@ -196,7 +199,10 @@ Model({
          */
         async reloadParentView({ fieldNames } = {}) {
             if (this.webRecord) {
-                await this.webRecord.model.root.load({ resId: this.threadId }, { keepChanges: true });
+                await this.webRecord.model.root.load(
+                    { resId: this.threadId },
+                    { keepChanges: true }
+                );
                 this.webRecord.model.notify();
                 return;
             }
