@@ -42,12 +42,19 @@ def update_taxes_from_templates(cr, chart_template_xmlid):
             module, name = xml_id.split(".", 1)
             env['ir.model.data'].search([('module', '=', module), ('name', '=', name)]).unlink()
 
+        def _avoid_name_conflict():
+            conflict_tax = env['account.tax'].search([('name', '=', template.name), ('company_id', '=', company.id),
+                                                      ('type_tax_use', '=', template.type_tax_use), ('tax_scope', '=', template.tax_scope)])
+            if conflict_tax:
+                conflict_tax.name = "[old] " + conflict_tax.name
+
         template_vals = template._get_tax_vals_complete(company)
         chart_template = env["account.chart.template"].with_context(default_company_id=company.id)
         if old_tax:
             xml_id = old_tax.get_external_id().get(old_tax.id)
             if xml_id:
                 _remove_xml_id(xml_id)
+        _avoid_name_conflict()
         chart_template.create_record_with_xmlid(company, template, "account.tax", template_vals)
 
     def _update_tax_from_template(template, tax):
