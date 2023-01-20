@@ -18,23 +18,6 @@ QUnit.module("mail", {}, function () {
     QUnit.module("components", {}, function () {
         QUnit.module("discuss_tests.js");
 
-        QUnit.skipRefactoring("messaging not created", async function (assert) {
-            assert.expect(1);
-
-            const messagingBeforeCreationDeferred = makeTestPromise();
-            const { openDiscuss } = await start({
-                messagingBeforeCreationDeferred,
-                waitUntilMessagingCondition: "none",
-            });
-            await openDiscuss(null, { waitUntilMessagesLoaded: false });
-            assert.containsOnce(
-                document.body,
-                ".o_DiscussContainer_spinner",
-                "should display messaging not initialized"
-            );
-            messagingBeforeCreationDeferred.resolve();
-        });
-
         QUnit.skipRefactoring(
             "discuss should be marked as opened if the component is already rendered and messaging becomes created afterwards",
             async function (assert) {
@@ -71,55 +54,6 @@ QUnit.module("mail", {}, function () {
                 );
             }
         );
-
-        QUnit.skipRefactoring("messaging not initialized", async function (assert) {
-            assert.expect(1);
-
-            const messaginginitializedDeferred = makeTestPromise();
-            const { openDiscuss } = await start({
-                async mockRPC(route) {
-                    if (route === "/mail/init_messaging") {
-                        await messaginginitializedDeferred; // simulate messaging never initialized
-                    }
-                },
-                waitUntilMessagingCondition: "created",
-            });
-            await openDiscuss(null, { waitUntilMessagesLoaded: false });
-            assert.strictEqual(
-                document.querySelectorAll(".o_DiscussContainer_spinner").length,
-                1,
-                "should display messaging not initialized"
-            );
-            messaginginitializedDeferred.resolve(); // ensure proper teardown
-        });
-
-        QUnit.skipRefactoring("messaging becomes initialized", async function (assert) {
-            assert.expect(2);
-
-            const messagingInitializedProm = makeTestPromise();
-
-            const { openDiscuss } = await start({
-                async mockRPC(route) {
-                    if (route === "/mail/init_messaging") {
-                        await messagingInitializedProm;
-                    }
-                },
-                waitUntilMessagingCondition: "created",
-            });
-            await openDiscuss(null, { waitUntilMessagesLoaded: false });
-            assert.strictEqual(
-                document.querySelectorAll(".o_DiscussContainer_spinner").length,
-                1,
-                "should display messaging not initialized"
-            );
-
-            await afterNextRender(() => messagingInitializedProm.resolve());
-            assert.strictEqual(
-                document.querySelectorAll(".o_DiscussContainer_spinner").length,
-                0,
-                "should no longer display messaging not initialized"
-            );
-        });
 
         QUnit.skipRefactoring("sidebar: public channel rendering", async function (assert) {
             assert.expect(3);

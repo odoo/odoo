@@ -926,10 +926,7 @@ QUnit.test(
         });
         const { openDiscuss } = await start();
         await openDiscuss(channelId);
-        assert.hasClass(
-            target.querySelector(".o-mail-message"),
-            "o-highlighted-from-mention"
-        );
+        assert.hasClass(target.querySelector(".o-mail-message"), "o-highlighted-from-mention");
     }
 );
 

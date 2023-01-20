@@ -1,106 +1,13 @@
 /** @odoo-module **/
 
-import { afterNextRender, start, startServer } from "@mail/../tests/helpers/test_utils";
+import { start, startServer } from "@mail/../tests/helpers/test_utils";
 
 import { browser } from "@web/core/browser/browser";
 import { patchWithCleanup } from "@web/../tests/helpers/utils";
 
-import { makeTestPromise } from "web.test_utils";
-
 QUnit.module("mail", (hooks) => {
     QUnit.module("components", {}, function () {
         QUnit.module("messaging_menu_tests.js");
-
-        QUnit.skipRefactoring(
-            "[technical] messaging not created then becomes created",
-            async function (assert) {
-                /**
-                 * Creation of messaging in env is async due to generation of models being
-                 * async. Generation of models is async because it requires parsing of all
-                 * JS modules that contain pieces of model definitions.
-                 *
-                 * Time of having no messaging is very short, almost imperceptible by user
-                 * on UI, but the display should not crash during this critical time period.
-                 */
-                assert.expect(2);
-
-                const messagingBeforeCreationDeferred = makeTestPromise();
-                await start({
-                    messagingBeforeCreationDeferred,
-                    waitUntilMessagingCondition: "none",
-                });
-                assert.containsOnce(
-                    document.body,
-                    ".o_MessagingMenuContainer_spinner",
-                    "messaging menu container should have spinner when messaging is not yet created"
-                );
-
-                // simulate messaging becoming created
-                await afterNextRender(() => messagingBeforeCreationDeferred.resolve());
-                assert.containsOnce(
-                    document.body,
-                    ".o_MessagingMenu",
-                    "messaging menu container should contain messaging menu after messaging has been created"
-                );
-            }
-        );
-
-        QUnit.skipRefactoring("messaging not initialized", async function (assert) {
-            assert.expect(2);
-
-            const messaginginitializedDeferred = makeTestPromise();
-            const { click } = await start({
-                async mockRPC(route) {
-                    if (route === "/mail/init_messaging") {
-                        await messaginginitializedDeferred; // simulate messaging never initialized
-                    }
-                },
-                waitUntilMessagingCondition: "created",
-            });
-            assert.strictEqual(
-                document.querySelectorAll(".o_MessagingMenu_loading").length,
-                1,
-                "should display loading icon on messaging menu when messaging not yet initialized"
-            );
-
-            await click(".o_menu_systray .dropdown-toggle:has(i[aria-label='Messages'])");
-            assert.strictEqual(
-                document.querySelector(".o_MessagingMenu_dropdownMenu").textContent,
-                "Please wait...",
-                "should prompt loading when opening messaging menu"
-            );
-            messaginginitializedDeferred.resolve(); // ensure proper teardown
-        });
-
-        QUnit.skipRefactoring("messaging becomes initialized", async function (assert) {
-            assert.expect(2);
-
-            const messagingInitializedProm = makeTestPromise();
-
-            const { click } = await start({
-                async mockRPC(route) {
-                    if (route === "/mail/init_messaging") {
-                        await messagingInitializedProm;
-                    }
-                },
-                waitUntilMessagingCondition: "created",
-            });
-            await click(".o_menu_systray .dropdown-toggle:has(i[aria-label='Messages'])");
-
-            // simulate messaging becomes initialized
-            await afterNextRender(() => messagingInitializedProm.resolve());
-            assert.strictEqual(
-                document.querySelectorAll(".o_MessagingMenu_loading").length,
-                0,
-                "should no longer display loading icon on messaging menu when messaging becomes initialized"
-            );
-            assert.notOk(
-                document
-                    .querySelector(".o_MessagingMenu_dropdownMenu")
-                    .textContent.includes("Please wait..."),
-                "should no longer prompt loading when opening messaging menu when messaging becomes initialized"
-            );
-        });
 
         QUnit.skipRefactoring("basic rendering", async function (assert) {
             assert.expect(21);
