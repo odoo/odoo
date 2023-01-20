@@ -316,7 +316,7 @@ class ResCompany(models.Model):
                 error_msg = _('There are still unposted entries in the period you want to lock. You should either post or delete them.')
                 action_error = {
                     'view_mode': 'tree',
-                    'name': 'Unposted Entries',
+                    'name': _('Unposted Entries'),
                     'res_model': 'account.move',
                     'type': 'ir.actions.act_window',
                     'domain': [('id', 'in', draft_entries.ids)],
