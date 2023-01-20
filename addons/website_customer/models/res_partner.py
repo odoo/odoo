@@ -22,12 +22,12 @@ class Tags(models.Model):
 
     @api.model
     def get_selection_class(self):
-        classname = ['default', 'primary', 'success', 'warning', 'danger']
+        classname = ['light', 'primary', 'success', 'warning', 'danger']
         return [(x, str.title(x)) for x in classname]
 
     name = fields.Char('Category Name', required=True, translate=True)
     partner_ids = fields.Many2many('res.partner', 'res_partner_res_partner_tag_rel', 'tag_id', 'partner_id', string='Partners')
-    classname = fields.Selection('get_selection_class', 'Class', default='default', help="Bootstrap class to customize the color", required=True)
+    classname = fields.Selection('get_selection_class', 'Class', default='light', help="Bootstrap class to customize the color", required=True)
     active = fields.Boolean('Active', default=True)
 
     def _default_is_published(self):
