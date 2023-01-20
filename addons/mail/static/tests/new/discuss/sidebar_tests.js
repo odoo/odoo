@@ -611,3 +611,17 @@ QUnit.test(
         );
     }
 );
+
+QUnit.test("chat - states: close manually by clicking the title", async function (assert) {
+    const pyEnv = await startServer();
+    pyEnv["mail.channel"].create({ channel_type: "chat" });
+    pyEnv["res.users.settings"].create({
+        user_id: pyEnv.currentUserId,
+        is_discuss_sidebar_category_chat_open: true,
+    });
+    const { openDiscuss } = await start();
+    await openDiscuss();
+    assert.containsOnce(target, ".o-mail-category-item");
+    await click(".o-mail-category:contains(Direct messages) div");
+    assert.containsNone(target, ".o-mail-category-item");
+});

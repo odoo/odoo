@@ -180,30 +180,6 @@ QUnit.module("mail", {}, function () {
         );
 
         QUnit.skipRefactoring(
-            "chat - states: close manually by clicking the title",
-            async function (assert) {
-                assert.expect(1);
-
-                const pyEnv = await startServer();
-                const mailChannelId1 = pyEnv["mail.channel"].create({
-                    channel_type: "chat",
-                });
-                pyEnv["res.users.settings"].create({
-                    user_id: pyEnv.currentUserId,
-                    is_discuss_sidebar_category_chat_open: true,
-                });
-                const { click, openDiscuss } = await start();
-                await openDiscuss();
-                await click(`.o-mail-category-chat .o_DiscussSidebarCategory_title`);
-                assert.containsNone(
-                    document.body,
-                    `.o_DiscussSidebarCategory_item[data-channel-id="${mailChannelId1}"]`,
-                    "Category chat should be closed and the content should be invisible"
-                );
-            }
-        );
-
-        QUnit.skipRefactoring(
             "chat - states: open manually by clicking the title",
             async function (assert) {
                 assert.expect(1);
