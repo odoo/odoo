@@ -1185,7 +1185,7 @@
                         <page name="sub_tasks_page" string="Sub-tasks" attrs="{'invisible': [('allow_subtasks', '=', False)]}">
                             <field name="child_ids"
                                    context="{'search_view_ref' : 'project.view_task_search_form', 'default_project_id': project_id if not parent_id or not display_project_id else display_project_id, 'default_user_ids': user_ids, 'default_parent_id': id,
-                                    'default_partner_id': partner_id, 'default_milestone_id': allow_milestones and milestone_id, 'search_default_display_project_id': project_id}"
+                                    'default_partner_id': partner_id, 'default_milestone_id': allow_milestones and milestone_id, 'search_default_display_project_id': project_id, 'tree_view_ref': 'project.open_view_all_tasks_list_view'}"
                                    widget="many2many"
                                    domain="['!', ('id', 'parent_of', id)]">
                                 <tree editable="bottom" decoration-muted="is_closed == True">
@@ -1226,7 +1226,7 @@
                         </page>
                         <page name="task_dependencies" string="Blocked By" attrs="{'invisible': [('allow_task_dependencies', '=', False)]}" groups="project.group_project_task_dependencies">
                             <field name="depend_on_ids" nolabel="1"
-                                   context="{'default_project_id' : project_id, 'search_view_ref' : 'project.view_task_search_form', 'search_default_display_project_id': project_id}">
+                                   context="{'default_project_id' : project_id, 'search_view_ref' : 'project.view_task_search_form', 'search_default_display_project_id': project_id, 'tree_view_ref': 'project.open_view_all_tasks_list_view'}">
                                 <tree editable="bottom" decoration-muted="is_closed == True">
                                     <field name="allow_milestones" invisible="1"/>
                                     <field name="parent_id" invisible="1" />
@@ -1700,6 +1700,9 @@
                 <tree position="attributes">
                     <attribute name="default_group_by">project_id</attribute>
                 </tree>
+                <field name="project_id" position="attributes">
+                    <attribute name="invisible">0</attribute>
+                </field>
                 <field name="stage_id" position="replace">
                     <field name="stage_display" optional="show" string="Stage"/>
                 </field>
