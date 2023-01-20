@@ -10,6 +10,11 @@ disableInDir () {
     rm package.json
     rm package-lock.json
     rm -r node_modules
+
+    # to support old versions
+    rm -f .prettierignore
+    rm -r .prettierrc.json
+
     cd - &> /dev/null
 }
 
