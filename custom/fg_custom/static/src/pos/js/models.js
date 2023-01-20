@@ -19,4 +19,23 @@ odoo.define("fg_custom.is_non_zero_vat", function (require) {
             return result;
         },
      });
+
+     var _super_order = models.Order;
+      models.Order = models.Order.extend({
+        set_pricelist: function (pricelist) {
+                var self = this;
+                this.pricelist = pricelist;
+
+                var lines_to_recompute = _.filter(this.get_orderlines(), function (line) {
+                    return ! line.price_manually_set;
+                });
+                _.each(lines_to_recompute, function (line) {
+                    if(!line.is_program_reward){
+                        line.set_unit_price(line.product.get_price(self.pricelist, line.get_quantity(), line.get_price_extra()));
+                        self.fix_tax_included_price(line);
+                    }
+                });
+                this.trigger('change');
+            },
+     });
 });
