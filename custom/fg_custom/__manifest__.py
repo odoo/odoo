@@ -7,9 +7,10 @@
     'description': """
     Pilmico custom addons
         """,
-    'depends': ['product', 'account', 'point_of_sale', 'base', 'pos_coupon'],
+    'depends': ['product', 'account', 'point_of_sale', 'base', 'sale', 'pos_coupon','pos_sale', 'pos_discount'],
     'data': [
         'security/groups.xml',
+        'views/res_config_settings_views.xml',
         'views/FgOrderDetails.xml',
         'views/FgImportOrders.xml',
         'views/FgMessageWizard.xml',
@@ -23,6 +24,7 @@
         'views/FgPosReport.xml',
         'views/x_report.xml',
         'views/menuitem.xml',
+        'views/transaction_log.xml',
         'security/ir.model.access.csv'
     ],
     'author': "1FG",

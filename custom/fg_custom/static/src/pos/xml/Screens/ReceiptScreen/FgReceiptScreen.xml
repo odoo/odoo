@@ -8,5 +8,9 @@
                 <OrderReceipt order="currentOrder" t-ref="order-receipt" />
             </div>
         </xpath>
+
+<!--        hide email receipt option in receipt-->
+        <xpath expr="//div[@class='input-email']" position="replace"></xpath>
+
     </t>
 </templates>

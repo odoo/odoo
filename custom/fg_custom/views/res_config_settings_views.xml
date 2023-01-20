@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="res_config_settings_view_form_fg" model="ir.ui.view">
+        <field name="name">res.config.settings.view.form.fg</field>
+        <field name="model">res.config.settings</field>
+        <field name="priority" eval="95"/>
+        <field name="inherit_id" ref="point_of_sale.res_config_settings_view_form" />
+        <field name="arch" type="xml">
+            <div data-key="point_of_sale" position="inside">
+                <h2>Z Report</h2>
+                <div class="row mt16 o_settings_container" id="z_report_config">
+                    <div class="col-12 col-lg-6 o_setting_box">
+                        <div class="o_setting_left_pane">
+                            <field name="is_reset_open_reading"/>
+                        </div>
+                        <div class="o_setting_right_pane">
+                            <label for="is_reset_open_reading"/>
+                            <div class="text-muted">
+                                Allow Reset OPEN READING amount on z report.
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-12 col-lg-6 o_setting_box" attrs="{'invisible': [('is_reset_open_reading', '=', False)]}">
+                        <div class="o_setting_left_pane"/>
+                        <div class="o_setting_right_pane">
+                            <div class="content-group">
+                                <div class="row">
+                                    <label string="Reset Open Reading Amount" for="reset_open_reading_amount" class="col-lg-4 o_light_label"/>
+                                    <field name="reset_open_reading_amount"/>
+                                </div>
+                                <div class="row">
+                                    <label string="Reset Counter" for="reset_counter" class="col-lg-4 o_light_label"/>
+                                    <field name="reset_counter"/>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </field>
+    </record>
+</odoo>

@@ -38,6 +38,19 @@ class FgZReport(models.AbstractModel):
         refund_start_end_order_list = [] #refund si
         total_entry_encoding = 0
 
+        company_id = self.env.company
+        company_id.z_counter = company_id.z_counter + 1
+        if company_id.is_reset_open_reading:
+            CLOSE_session_ids = self.env['pos.session'].search([('id', 'not in', session_ids.ids), ('is_reset_zreport', '=', False), ('state', '=', 'closed')])
+        else:
+            CLOSE_session_ids = self.env['pos.session'].search([('id', 'not in', session_ids.ids), ('state', '=', 'closed')])
+        OPEN_READING = sum(CLOSE_session_ids.mapped('total_payments_amount'))
+        if company_id.is_reset_open_reading and company_id.reset_open_reading_amount > 0 and OPEN_READING >= company_id.reset_open_reading_amount:
+            OPEN_READING = 0
+            company_id.reset_counter = company_id.reset_counter + 1
+            CLOSE_session_ids.is_reset_zreport = True
+        CLOSE_READING = sum(session_ids.mapped('total_payments_amount'))
+
         asc_start_end_order_id = self.env['pos.order'].search([('session_id', 'in', session_ids.ids),('pos_trans_reference', '!=', False)], limit=1, order='pos_trans_reference asc')
         desc_start_end_order_id = self.env['pos.order'].search([('session_id', 'in', session_ids.ids),('pos_trans_reference', '!=', False)], limit=1, order='pos_trans_reference desc')
 
@@ -90,6 +103,10 @@ class FgZReport(models.AbstractModel):
                             str_non_zero_vat = i.is_non_zero_vat
                         if str_non_zero_vat == 'is_vat':
                             total_product_v += line.price_subtotal
+                        elif str_non_zero_vat == 'is_zero_vat':
+                            total_product_z += line.price_subtotal
+                        else:
+                            total_product_e += line.price_subtotal
                         if line.is_program_reward:
                             total_discount_coupon_minus += abs(line.price_unit)
                         else:
@@ -98,6 +115,34 @@ class FgZReport(models.AbstractModel):
                     total_discount_qty += 1
                 if is_total_vat_qty:
                     total_vat_qty += 1
+                # if order.x_ext_source:
+                #     if order.x_ext_source in transactions_history:
+                #         count = transactions_history[order.x_ext_source].get('count') + 1
+                #         total = transactions_history[order.x_ext_source].get('total') + order.amount_total
+                #         transactions_history[order.x_ext_source].update({'count': count, 'total': total})
+                #     else:
+                #         transactions_history[order.x_ext_source] = {'count': 1, 'total': order.amount_total}
+                # else:
+                #     if 'Retail' in transactions_history:
+                #         count = transactions_history['Retail'].get('count') + 1
+                #         total = transactions_history['Retail'].get('total') + order.amount_total
+                #         transactions_history['Retail'].update({'count': count, 'total': total})
+                #     else:
+                #         transactions_history['Retail'] = {'count': 1, 'total': order.amount_total}
+                if order.amount_return:
+                    changes_order_count += len(order)
+                    changes_order_total += order.amount_return
+
+            # for order in session_id.order_ids.filtered(lambda x: not x.is_refunded and x.amount_total > 0):
+            for order in session_id.order_ids:
+                if order.payment_ids:
+                    for pay in order.payment_ids:
+                        if pay.payment_method_id.name in tender_history:
+                            count = tender_history[pay.payment_method_id.name].get('count') + 1
+                            total = tender_history[pay.payment_method_id.name].get('total') + pay.amount
+                            tender_history[pay.payment_method_id.name].update({'count': count, 'total': total})
+                        else:
+                            tender_history[pay.payment_method_id.name] = {'count': 1, 'total': pay.amount}
                 if order.x_ext_source:
                     if order.x_ext_source in transactions_history:
                         count = transactions_history[order.x_ext_source].get('count') + 1
@@ -112,19 +157,20 @@ class FgZReport(models.AbstractModel):
                         transactions_history['Retail'].update({'count': count, 'total': total})
                     else:
                         transactions_history['Retail'] = {'count': 1, 'total': order.amount_total}
-                if order.amount_return:
-                    changes_order_count += len(order)
-                    changes_order_total += order.amount_return
 
-            for order in session_id.order_ids.filtered(lambda x: not x.is_refunded and x.amount_total > 0):
-                if order.payment_ids:
-                    for pay in order.payment_ids:
-                        if pay.payment_method_id.name in tender_history:
-                            count = tender_history[pay.payment_method_id.name].get('count') + 1
-                            total = tender_history[pay.payment_method_id.name].get('total') + pay.amount
-                            tender_history[pay.payment_method_id.name].update({'count': count, 'total': total})
-                        else:
-                            tender_history[pay.payment_method_id.name] = {'count': 1, 'total': pay.amount}
+            # deduct refund in vat breakdown
+            for order in return_order_ids:
+                for line in order.lines:
+                    for i in line.tax_ids_after_fiscal_position:
+                        str_non_zero_vat = i.is_non_zero_vat
+                    if str_non_zero_vat == 'is_vat':
+                        total_product_v += line.price_subtotal
+                    elif str_non_zero_vat == 'is_zero_vat':
+                        total_product_z += line.price_subtotal
+                    else:
+                        total_product_e += line.price_subtotal
+                    current_total_vat = line.price_subtotal_incl - line.price_subtotal
+                    total_vat += current_total_vat
 
             for i in session_id.statement_ids:
                 for j in i.line_ids:
@@ -176,6 +222,8 @@ class FgZReport(models.AbstractModel):
                 'refund_start_end_order_list': refund_start_end_order_list,
                 'cash_register_balance_start': cash_register_balance_start,
                 'cash_register_balance_end_real': cash_register_balance_end_real,
+                'OPEN_READING': OPEN_READING,
+                'CLOSE_READING': CLOSE_READING,
                 'stop_at': localized_dt.strftime('%m/%d/%Y'), 'stop_time': localized_dt.strftime('%H:%M:%S'),
                 'total_amt': total_amt,
                 'total_qty': int(total_qty),
@@ -196,6 +244,8 @@ class FgZReport(models.AbstractModel):
                 'changes_order_count': int(changes_order_count),
                 'changes_order_total': changes_order_total,
                 }
+        if session_ids:
+            self.env['transaction.log'].sudo().create_transaction_log('zreport_generation', 'pos.session', session_ids[0].id)
         return data
 
     @api.model
