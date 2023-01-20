@@ -94,4 +94,25 @@
         border-color: #DEE2E6;
         font-weight: bold;
     }
+    table {
+        font-size: 1rem;
+        &.o_survey_results_table_indexed {
+            td:first-child {
+                width: 7%;
+            }
+        }
+    }
+}
+
+.o_survey_no_answers::before {
+    width: 120px;
+    height: 80px;
+    background: transparent url(/web/static/img/empty_folder.svg) no-repeat center;
+    content: "";
+    display: block;
+    margin-top: 50px;
+    margin-bottom: 20px;
+    margin-left: auto;
+    margin-right: auto;
+    z-index: 1;
 }
