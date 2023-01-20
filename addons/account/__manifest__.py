@@ -108,6 +108,7 @@ You could use this simplified accounting in case you work with an (external) acc
             'account/static/tests/tours/**/*',
         ],
         'web.qunit_suite_tests': [
+            'account/static/tests/helpers/*.js',
             'account/static/tests/*.js',
         ],
     },
