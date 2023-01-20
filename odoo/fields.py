@@ -1015,6 +1015,13 @@ class Field(MetaField('DummyField', (object,), {})):
             return
         if column['udt_name'] == self.column_type[0]:
             return
+        if  column['udt_name'] == 'jsonb':
+            # Never convert jsonb field back to char.
+            # 1. If translate=True was removed, then migration scripts must be used instead
+            # 2. If the field temporary lost its translate attribute during the
+            #    loading phase, converting to char and then back to jsonb
+            #    removes all translations made by user
+            return
         if column['is_nullable'] == 'NO':
             sql.drop_not_null(model._cr, model._table, self.name)
         self._convert_db_column(model, column)
