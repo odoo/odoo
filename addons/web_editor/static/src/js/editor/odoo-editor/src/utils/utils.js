@@ -1166,20 +1166,16 @@ export function isBlock(node) {
         // block.
         return false;
     }
-    // The node might not be in the DOM, in which case it has no CSS values.
-    if (window.document !== node.ownerDocument) {
-        return blockTagNames.includes(tagName);
-    }
     // We won't call `getComputedStyle` more than once per node.
     let style = computedStyles.get(node);
     if (!style) {
         style = window.getComputedStyle(node);
         computedStyles.set(node, style);
     }
-    if (style.display) {
-        return !style.display.includes('inline') && style.display !== 'contents';
-    }
-    return blockTagNames.includes(tagName);
+    return style.display
+        ? !style.display.includes("inline") && style.display !== "contents"
+        // The node might not be in the DOM, in which case it has no CSS values.
+        : blockTagNames.includes(tagName);
 }
 
 /**
