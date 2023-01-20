@@ -39,6 +39,8 @@ import {
     makeContentsInline,
     formatSelection,
     getDeepestPosition,
+    fillEmpty,
+    isEmptyBlock,
 } from '../utils/utils.js';
 
 const TEXT_CLASSES_REGEX = /\btext-[^\s]*\b/g;
@@ -550,6 +552,9 @@ export const editorCommands = {
         const restoreCursor = preserveCursor(editor.document);
         // Get the <font> nodes to color
         const selectedNodes = getSelectedNodes(editor.editable);
+        if (isEmptyBlock(range.endContainer)) {
+            selectedNodes.push(range.endContainer, ...descendants(range.endContainer));
+        }
         const fonts = selectedNodes.flatMap(node => {
             let font = closestElement(node, 'font') || closestElement(node, 'span');
             const children = font && descendants(font);
@@ -562,6 +567,7 @@ export const editorCommands = {
                     font = [];
                 }
             } else if ((node.nodeType === Node.TEXT_NODE && isVisibleStr(node))
+                    || node.nodeName === "BR"
                     || (node.nodeType === Node.ELEMENT_NODE &&
                         ['inline', 'inline-block'].includes(getComputedStyle(node).display) &&
                         isVisibleStr(node.textContent) &&
@@ -585,9 +591,13 @@ export const editorCommands = {
                 } else {
                     // No <font> found: insert a new one.
                     font = document.createElement('font');
-                    node.parentNode.insertBefore(font, node);
+                    node.after(font);
                 }
-                font.appendChild(node);
+                if (node.textContent) {
+                    font.appendChild(node);
+                } else {
+                    fillEmpty(font);
+                }
             } else {
                 font = []; // Ignore non-text or invisible text nodes.
             }
