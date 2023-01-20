@@ -213,3 +213,14 @@ class TestChartTemplate(TransactionCase):
 
         # if only the fiscal position mapping has been removed, it won't be recreated
         self.assertEqual(len(fiscal_position.tax_ids), 0)
+
+    def test_update_taxes_conflict_name(self):
+        chart_template_xml_id = self.chart_template.get_external_id()[self.chart_template.id]
+        template_vals = self.tax_1_template._get_tax_vals_complete(self.company_1)
+        template_vals['amount'] = 20
+        self.chart_template.create_record_with_xmlid(self.company_1, self.tax_1_template, "account.tax", template_vals)
+        update_taxes_from_templates(self.env.cr, chart_template_xml_id)
+        tax_1_old = self.env['account.tax'].search([('company_id', '=', self.company_1.id), ('name', '=', "[old] " + self.tax_1_template.name)])
+        tax_1_new = self.env['account.tax'].search([('company_id', '=', self.company_1.id), ('name', '=', self.tax_1_template.name)])
+        self.assertEqual(len(tax_1_old), 1, "Old tax still exists but with a different name.")
+        self.assertEqual(len(tax_1_new), 1, "New tax have been created with the original name.")
