@@ -692,6 +692,36 @@
                         <tr>
                             <td style="width:28%">
                                 <div class="left_content" style="text-align: left;font-size: 15px;">
+                                    <p>SALES TODAY:</p>
+                                </div>
+                            </td>
+                            <td style="width:40%">
+                                <p>
+                                    <span t-esc="total_amt" t-options='{"widget": "float", "precision": 2}'/>
+                                    <t t-esc="company.currency_id.name"/>
+                                </p>
+                            </td>
+                            <td>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style="width:28%">
+                                <div class="left_content" style="text-align: left;font-size: 15px;">
+                                    <p>REFUND TODAY</p>
+                                </div>
+                            </td>
+                            <td style="width:40%">
+                                <p>
+                                    <span t-esc="return_order_total" t-options='{"widget": "float", "precision": 2}'/>
+                                    <t t-esc="company.currency_id.name"/>
+                                </p>
+                            </td>
+                            <td>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style="width:28%">
+                                <div class="left_content" style="text-align: left;font-size: 15px;">
                                     <p>GRAND ACCUMULATED:</p>
                                 </div>
                             </td>
