@@ -180,29 +180,6 @@ QUnit.module("mail", {}, function () {
         );
 
         QUnit.skipRefactoring(
-            "chat - command: should not have add command when category is folded",
-            async function (assert) {
-                assert.expect(1);
-
-                const pyEnv = await startServer();
-                pyEnv["res.users.settings"].create({
-                    user_id: pyEnv.currentUserId,
-                    is_discuss_sidebar_category_chat_open: false,
-                });
-                const { openDiscuss } = await start();
-                await openDiscuss();
-
-                assert.strictEqual(
-                    document.querySelectorAll(
-                        `.o-mail-category-chat .o_DiscussSidebarCategory_header .o-mail-category-add-button`
-                    ).length,
-                    0,
-                    "should not have add command when chat category is closed"
-                );
-            }
-        );
-
-        QUnit.skipRefactoring(
             "chat - states: close manually by clicking the title",
             async function (assert) {
                 assert.expect(1);

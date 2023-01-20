@@ -594,3 +594,20 @@ QUnit.test(
         );
     }
 );
+
+QUnit.test(
+    "chat - command: should not have add command when category is folded",
+    async function (assert) {
+        const pyEnv = await startServer();
+        pyEnv["res.users.settings"].create({
+            user_id: pyEnv.currentUserId,
+            is_discuss_sidebar_category_chat_open: false,
+        });
+        const { openDiscuss } = await start();
+        await openDiscuss();
+        assert.containsNone(
+            target,
+            ".o-mail-category:contains(Direct messages) i[title='Start a conversation']"
+        );
+    }
+);
