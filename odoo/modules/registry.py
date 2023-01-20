@@ -113,6 +113,7 @@ class Registry(Mapping):
         self.models = {}    # model name/model instance mapping
         self._sql_constraints = set()
         self._init = True
+        self._database_translated_fields = ()  # names of translated fields in database
         self._assertion_report = odoo.tests.runner.OdooTestResult()
         self._fields_by_model = None
         self._ordinary_tables = None
