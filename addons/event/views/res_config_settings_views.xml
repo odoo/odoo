@@ -52,6 +52,25 @@
                         </block>
                     </app>
                 </xpath>
+
+                <xpath expr="//setting[@id='email-outlook-setting']" position="after">
+                    <setting string="Google Maps" help="Insert dynamic Google Maps in your email templates"
+                             documentation="https://developers.google.com/maps/documentation/maps-static/get-api-key">
+                        <field name="use_google_maps_static_api"/>
+                        <div attrs="{'invisible': [('use_google_maps_static_api', '=', False)]}">
+                            <div class="content-group mt16">
+                                <label for="google_maps_static_api_key" class="o_form_label col-lg-3 o_light_label"/>
+                                <field name="google_maps_static_api_key" string="Key"
+                                       attrs="{'required': [('use_google_maps_static_api','=',True)]}"/>
+                            </div>
+                            <div class="content-group">
+                                <label for="google_maps_static_api_secret" class="o_form_label col-lg-3 o_light_label"/>
+                                <field name="google_maps_static_api_secret" string="Secret"
+                                       attrs="{'required': [('use_google_maps_static_api','=',True)]}"/>
+                            </div>
+                        </div>
+                    </setting>
+                </xpath>
             </field>
         </record>
 
