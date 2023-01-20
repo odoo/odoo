@@ -112,9 +112,6 @@ class PosGlobalState extends PosModel {
 
         this.numpadMode = 'quantity';
 
-        this.isEveryPartnerLoaded = false;
-        this.isEveryProductLoaded = false;
-
         // Record<orderlineId, { 'qty': number, 'orderline': { qty: number, refundedQty: number, orderUid: string }, 'destinationOrderUid': string }>
         this.toRefundLines = {};
         this.TICKET_SCREEN_STATE = {
@@ -350,24 +347,6 @@ class PosGlobalState extends PosModel {
                 }
             }, function (type, err) { reject(); });
         });
-    }
-
-    async updateIsEveryPartnerLoaded() {
-        let partnersCount = await this.env.services.rpc({
-            model: 'res.partner',
-            method: 'search_count',
-            args: [[]],
-        });
-        this.isEveryPartnerLoaded = partnersCount === this.db.partner_sorted.length;
-    }
-
-    async updateIsEveryProductLoaded() {
-        let productsCount = await this.env.services.rpc({
-            model: 'product.product',
-            method: 'search_count',
-            args: [[['available_in_pos', '=', true]]],
-        });
-        this.isEveryProductLoaded = productsCount === this.db.get_product_by_category(this.db.root_category_id).length;
     }
 
     setSelectedCategoryId(categoryId) {
@@ -696,7 +675,7 @@ class PosGlobalState extends PosModel {
         if (order) {
             order.get_orderlines().forEach(function (orderline) {
                 var product = orderline.product;
-                var image_url = `/web/image?model=product.product&field=image_128&id=${product.id}&unique=${product.write_date}`;
+                var image_url = `/web/image?model=product.product&field=image_128&id=${product.id}&unique=${product.__last_update}`;
 
                 // only download and convert image if we haven't done it before
                 if (!(product.id in PRODUCT_ID_TO_IMAGE_CACHE)) {
