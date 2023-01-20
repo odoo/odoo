@@ -5,6 +5,7 @@ import {
     afterNextRender,
     click,
     insertText,
+    isScrolledToBottom,
     nextAnimationFrame,
     start,
     startServer,
@@ -14,7 +15,7 @@ import {
     CHAT_WINDOW_INBETWEEN_WIDTH,
     CHAT_WINDOW_WIDTH,
 } from "@mail/new/chat/chat_window_service";
-import { getFixture, triggerHotkey } from "@web/../tests/helpers/utils";
+import { getFixture, triggerEvent, triggerHotkey } from "@web/../tests/helpers/utils";
 
 let target;
 QUnit.module("chat window", {
@@ -676,3 +677,34 @@ QUnit.test("chat window should open when receiving a new DM", async function (as
     );
     assert.containsOnce(target, ".o-mail-chat-window");
 });
+
+QUnit.test(
+    "chat window should scroll to the newly posted message just after posting it",
+    async function (assert) {
+        const pyEnv = await startServer();
+        const channelId = pyEnv["mail.channel"].create({
+            channel_member_ids: [
+                [
+                    0,
+                    0,
+                    { fold_state: "open", is_minimized: true, partner_id: pyEnv.currentPartnerId },
+                ],
+            ],
+        });
+        for (let i = 0; i < 10; i++) {
+            pyEnv["mail.message"].create({
+                body: "not empty",
+                model: "mail.channel",
+                res_id: channelId,
+            });
+        }
+        await start();
+        await insertText(".o-mail-composer-textarea", "WOLOLO");
+        await afterNextRender(() =>
+            triggerEvent(target.querySelector(".o-mail-composer-textarea"), "keydown", {
+                key: "Enter",
+            })
+        );
+        assert.ok(isScrolledToBottom(target.querySelector(".o-mail-thread")));
+    }
+);

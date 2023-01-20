@@ -9,9 +9,8 @@ import {
     startServer,
 } from "@mail/../tests/helpers/test_utils";
 
-import { file, dom } from "web.test_utils";
+import { file } from "web.test_utils";
 const { createFile, inputFiles } = file;
-const { triggerEvent } = dom;
 
 QUnit.module("mail", {}, function () {
     QUnit.module("components", {}, function () {
@@ -295,52 +294,6 @@ QUnit.module("mail", {}, function () {
                     document.querySelector(`.o-mail-thread`).scrollTop,
                     142,
                     "chat window scrollTop should still be the same when chat window is unfolded"
-                );
-            }
-        );
-
-        QUnit.skipRefactoring(
-            "chat window should scroll to the newly posted message just after posting it",
-            async function (assert) {
-                assert.expect(1);
-
-                const pyEnv = await startServer();
-                const mailChannelId1 = pyEnv["mail.channel"].create({
-                    channel_member_ids: [
-                        [
-                            0,
-                            0,
-                            {
-                                fold_state: "open",
-                                is_minimized: true,
-                                partner_id: pyEnv.currentPartnerId,
-                            },
-                        ],
-                    ],
-                });
-                for (let i = 0; i < 10; i++) {
-                    pyEnv["mail.message"].create({
-                        body: "not empty",
-                        model: "mail.channel",
-                        res_id: mailChannelId1,
-                    });
-                }
-                const { insertText } = await start();
-
-                // Set content of the composer of the chat window
-                await insertText(".o-mail-composer-textarea", "WOLOLO");
-                // Send a new message in the chatwindow to trigger the scroll
-                await afterNextRender(() =>
-                    triggerEvent(
-                        document.querySelector(".o-mail-chat-window .o-mail-composer-textarea"),
-                        "keydown",
-                        { key: "Enter" }
-                    )
-                );
-                const messageList = document.querySelector(".o_MessageListView");
-                assert.ok(
-                    isScrolledToBottom(messageList),
-                    "chat window should scroll to the newly posted message just after posting it"
                 );
             }
         );
