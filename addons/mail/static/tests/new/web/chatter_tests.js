@@ -592,3 +592,37 @@ QUnit.test(
         assert.containsOnce(target, ".o-mail-message-body:contains(Creating a new record...)");
     }
 );
+
+QUnit.test(
+    "should not display subject when subject is the same as the default subject",
+    async function (assert) {
+        const pyEnv = await startServer();
+        const fakeId = pyEnv["res.fake"].create({ name: "Salutations, voyageur" });
+        pyEnv["mail.message"].create({
+            body: "not empty",
+            model: "res.fake",
+            res_id: fakeId,
+            subject: "Custom Default Subject", // default subject for res.fake, set on the model
+        });
+        const { openFormView } = await start();
+        await openFormView("res.fake", fakeId);
+        assert.containsNone(target, ".o-mail-message:contains(Custom Default Subject)");
+    }
+);
+
+QUnit.test(
+    "should not display subject when subject is the same as the thread name with custom default subject",
+    async function (assert) {
+        const pyEnv = await startServer();
+        const fakeId = pyEnv["res.fake"].create({ name: "Salutations, voyageur" });
+        pyEnv["mail.message"].create({
+            body: "not empty",
+            model: "res.fake",
+            res_id: fakeId,
+            subject: "Salutations, voyageur",
+        });
+        const { openFormView } = await start();
+        await openFormView("res.fake", fakeId);
+        assert.containsNone(target, ".o-mail-message:contains(Custom Default Subject)");
+    }
+);

@@ -205,6 +205,7 @@ export class MessageService {
     _update(message, data, fromFetch = false) {
         const {
             attachment_ids: attachments = message.attachments,
+            default_subject: defaultSubject = message.defaultSubject,
             is_discussion: isDiscussion = message.isDiscussion,
             is_note: isNote = message.isNote,
             is_transient: isTransient = message.isTransient,
@@ -218,6 +219,7 @@ export class MessageService {
         assignDefined(message, remainingData);
         assignDefined(message, {
             attachments: attachments.map((attachment) => this.attachment.insert(attachment)),
+            defaultSubject,
             isDiscussion,
             isNote,
             isStarred: message.starred_partner_ids.includes(this.store.self.id),

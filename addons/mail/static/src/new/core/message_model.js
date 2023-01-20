@@ -18,6 +18,8 @@ export class Message {
     author;
     /** @type {string} */
     body;
+    /** @type {string} */
+    defaultSubject;
     /** @type {number|string} */
     id;
     /** @type {boolean} */
@@ -149,6 +151,13 @@ export class Message {
         // match any prefix as many times as possible
         const isSequenceOfPrefixes = new RegExp(`^((${prefixList.join("|")}):\\s*)+$`);
         return isSequenceOfPrefixes.test(subjectWithoutThreadName);
+    }
+
+    get isSubjectDefault() {
+        const threadName = this.originThread.name?.trim().toLowerCase();
+        const defaultSubject = this.defaultSubject?.toLowerCase();
+        const candidates = new Set([defaultSubject, threadName]);
+        return candidates.has(this.subject?.toLowerCase());
     }
 
     get originThread() {
