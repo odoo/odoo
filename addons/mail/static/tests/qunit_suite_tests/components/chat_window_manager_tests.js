@@ -543,63 +543,6 @@ QUnit.module("mail", {}, function () {
         );
 
         QUnit.skipRefactoring(
-            "chat window should remain folded when new message is received",
-            async function (assert) {
-                assert.expect(1);
-
-                const pyEnv = await startServer();
-                const resPartnerId1 = pyEnv["res.partner"].create({ name: "Demo" });
-                const resUsersId1 = pyEnv["res.users"].create({
-                    name: "Foreigner user",
-                    partner_id: resPartnerId1,
-                });
-                pyEnv["mail.channel"].create({
-                    channel_member_ids: [
-                        [
-                            0,
-                            0,
-                            {
-                                fold_state: "folded",
-                                is_minimized: true,
-                                is_pinned: false,
-                                partner_id: pyEnv.currentPartnerId,
-                            },
-                        ],
-                        [
-                            0,
-                            0,
-                            {
-                                partner_id: resPartnerId1,
-                            },
-                        ],
-                    ],
-                    channel_type: "chat",
-                    uuid: "channel-10-uuid",
-                });
-
-                const { messaging } = await start();
-                // simulate receiving a new message
-                await afterNextRender(async () =>
-                    messaging.rpc({
-                        route: "/mail/chat_post",
-                        params: {
-                            context: {
-                                mockedUserId: resUsersId1,
-                            },
-                            message_content: "New Message 2",
-                            uuid: "channel-10-uuid",
-                        },
-                    })
-                );
-                assert.hasClass(
-                    document.querySelector(`.o-mail-chat-window`),
-                    "o-folded",
-                    "chat window should remain folded"
-                );
-            }
-        );
-
-        QUnit.skipRefactoring(
             "should not have chat window hidden menu in mobile (transition from 3 chat windows in desktop to mobile)",
             async function (assert) {
                 /**

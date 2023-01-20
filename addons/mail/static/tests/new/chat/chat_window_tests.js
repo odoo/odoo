@@ -15,7 +15,7 @@ import {
     CHAT_WINDOW_INBETWEEN_WIDTH,
     CHAT_WINDOW_WIDTH,
 } from "@mail/new/chat/chat_window_service";
-import { getFixture, triggerEvent, triggerHotkey } from "@web/../tests/helpers/utils";
+import { getFixture, nextTick, triggerEvent, triggerHotkey } from "@web/../tests/helpers/utils";
 
 let target;
 QUnit.module("chat window", {
@@ -706,5 +706,43 @@ QUnit.test(
             })
         );
         assert.ok(isScrolledToBottom(target.querySelector(".o-mail-thread")));
+    }
+);
+
+QUnit.test(
+    "chat window should remain folded when new message is received",
+    async function (assert) {
+        const pyEnv = await startServer();
+        const partnerId = pyEnv["res.partner"].create({ name: "Demo" });
+        const userId = pyEnv["res.users"].create({
+            name: "Foreigner user",
+            partner_id: partnerId,
+        });
+        pyEnv["mail.channel"].create({
+            channel_member_ids: [
+                [
+                    0,
+                    0,
+                    {
+                        fold_state: "folded",
+                        is_minimized: true,
+                        partner_id: pyEnv.currentPartnerId,
+                    },
+                ],
+                [0, 0, { partner_id: partnerId }],
+            ],
+            channel_type: "chat",
+            uuid: "channel-uuid",
+        });
+        const { env } = await start();
+        assert.hasClass(document.querySelector(".o-mail-chat-window"), "o-folded");
+
+        env.services.rpc("/mail/chat_post", {
+            context: { mockedUserId: userId },
+            message_content: "New Message",
+            uuid: "channel-uuid",
+        });
+        await nextTick();
+        assert.hasClass(document.querySelector(".o-mail-chat-window"), "o-folded");
     }
 );
