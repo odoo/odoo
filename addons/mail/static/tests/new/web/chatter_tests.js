@@ -514,3 +514,32 @@ QUnit.test(
         assert.ok(isScrolledTo(target.querySelector(".o-mail-chatter-scrollable"), scrolltop_2));
     }
 );
+
+QUnit.test("basic chatter rendering without activities", async function (assert) {
+    const pyEnv = await startServer();
+    const partnerId = pyEnv["res.partner"].create({ display_name: "second partner" });
+    const views = {
+        "res.partner,false,form": `
+            <form string="Partners">
+                <sheet>
+                    <field name="name"/>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids"/>
+                    <field name="message_ids"/>
+                </div>
+            </form>`,
+    };
+    const { openView } = await start({ serverData: { views } });
+    await openView({
+        res_model: "res.partner",
+        res_id: partnerId,
+        views: [[false, "form"]],
+    });
+    assert.containsOnce(target, ".o-mail-chatter");
+    assert.containsOnce(target, ".o-mail-chatter-topbar");
+    assert.containsOnce(target, "button[aria-label='Attach files']");
+    assert.containsNone(target, "button:contains(Activities)");
+    assert.containsOnce(target, ".o-mail-chatter-topbar-follower-list");
+    assert.containsOnce(target, ".o-mail-thread");
+});

@@ -99,63 +99,6 @@ QUnit.module("mail", {}, function () {
             );
         });
 
-        QUnit.skipRefactoring(
-            "basic chatter rendering without activities",
-            async function (assert) {
-                assert.expect(6);
-
-                const pyEnv = await startServer();
-                const resPartnerId1 = pyEnv["res.partner"].create({
-                    display_name: "second partner",
-                });
-                const views = {
-                    "res.partner,false,form": `<form string="Partners">
-                <sheet>
-                    <field name="name"/>
-                </sheet>
-                <div class="oe_chatter">
-                    <field name="message_follower_ids"/>
-                    <field name="message_ids"/>
-                </div>
-            </form>`,
-                };
-                const { openView } = await start({
-                    serverData: { views },
-                });
-                await openView({
-                    res_model: "res.partner",
-                    res_id: resPartnerId1,
-                    views: [[false, "form"]],
-                });
-                assert.containsOnce(document.body, ".o-mail-chatter", "there should be a chatter");
-                assert.containsOnce(
-                    document.body,
-                    ".o-mail-chatter-topbar",
-                    "there should be a chatter topbar"
-                );
-                assert.containsOnce(
-                    document.body,
-                    "button[aria-label='Attach files']",
-                    "there should be an attachment button"
-                );
-                assert.containsNone(
-                    document.body,
-                    "button:contains(Activities)",
-                    "there should be no schedule activity button because the 'activity_ids' field is not present in 'oe_chatter'"
-                );
-                assert.containsOnce(
-                    document.body,
-                    ".o-mail-chatter-topbar-follower-list",
-                    "there should be a followers menu"
-                );
-                assert.containsOnce(
-                    document.body,
-                    ".o-mail-chatter .o-mail-thread",
-                    "there should be a thread"
-                );
-            }
-        );
-
         QUnit.skipRefactoring("basic chatter rendering without messages", async function (assert) {
             assert.expect(6);
 
