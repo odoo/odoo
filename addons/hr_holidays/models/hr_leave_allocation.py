@@ -563,10 +563,8 @@ class HolidaysAllocation(models.Model):
             holiday.message_subscribe(partner_ids=tuple(partners_to_subscribe))
             if not self._context.get('import_file'):
                 holiday.activity_update()
-            if holiday.validation_type == 'no':
-                if holiday.state == 'draft':
-                    holiday.action_confirm()
-                    holiday.action_validate()
+            if holiday.validation_type == 'no' and holiday.state == 'draft':
+                holiday.action_confirm()
         return holidays
 
     def write(self, values):
@@ -630,9 +628,10 @@ class HolidaysAllocation(models.Model):
     def action_confirm(self):
         if self.filtered(lambda holiday: holiday.state != 'draft' and holiday.validation_type != 'no'):
             raise UserError(_('Allocation request must be in Draft state ("To Submit") in order to confirm it.'))
-        res = self.write({'state': 'confirm'})
+        validated_holidays = self.filtered(lambda holiday: holiday.state == 'validate')
+        res = (self - validated_holidays).write({'state': 'confirm'})
         self.activity_update()
-        self.filtered(lambda holiday: holiday.validation_type == 'no').action_validate()
+        self.filtered(lambda holiday: holiday.validation_type == 'no' and holiday.state != 'validate').action_validate()
         return res
 
     def action_validate(self):
