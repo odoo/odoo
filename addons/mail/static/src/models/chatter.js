@@ -45,6 +45,9 @@ registerModel({
          */
         onClickButtonToggleAttachments() {
             this.update({ attachmentBoxView: this.attachmentBoxView ? clear() : {} });
+            if (this.attachmentBoxView) {
+                this.scrollPanelRef.el.scrollTop = 0;
+            }
         },
         /**
          * Handles click on top bar close button.
