@@ -287,17 +287,19 @@
 
     // Statusbar
     .o_form_statusbar {
-        padding-left: $o-horizontal-padding;
+        @include media-breakpoint-up(md) {
+            padding-left: $o-horizontal-padding;
+        }
         background-color: $o-view-background-color;
 
         > .o_statusbar_status {
             display: flex;
             align-items: center;
             align-content: space-around;
-            
+
             > .o_arrow_button {
                 font-weight: $font-weight-bold;
-    
+
                 // Last element at the right should respect overall padding
                 &:first-of-type {
                     padding-right: $o-horizontal-padding;
