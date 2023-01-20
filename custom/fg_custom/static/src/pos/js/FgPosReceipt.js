@@ -99,12 +99,13 @@ odoo.define('fg_custom.FgPosReceipt', function (require) {
                     }
                 }else{
                     if(line.price < 0 ){ // to display discount in the pos reprinting
+                        line.is_program_reward = true; // set field to true for discount/promo items
                         total_disc_amt = total_disc_amt + Math.abs(line.price_with_tax);
                         val[line.program_id] = [line.product_name , total_disc_amt]
                     }
                 }
             });
-
+//            console.log('Receipt', receipt);
             receipt.program_reward_lines = val;
             return receipt;
         },
