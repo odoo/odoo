@@ -60,6 +60,25 @@ QUnit.module("Error Service", {
     },
 });
 
+QUnit.test("can handle rejected promise errors with a string as reason", async (assert) => {
+    assert.expect(1);
+
+    errorHandlerRegistry.add(
+        "__test_handler__",
+        (env, err, originalError) => {
+            assert.strictEqual(originalError, "-- something went wrong --");
+        },
+        { sequence: 0 }
+    );
+    await makeTestEnv();
+    const errorEvent = new PromiseRejectionEvent("error", {
+        reason: "-- something went wrong --",
+        promise: null,
+        cancelable: true,
+    });
+    unhandledRejectionCb(errorEvent);
+});
+
 QUnit.test("handle RPC_ERROR of type='server' and no associated dialog class", async (assert) => {
     assert.expect(2);
     const error = new RPCError();
