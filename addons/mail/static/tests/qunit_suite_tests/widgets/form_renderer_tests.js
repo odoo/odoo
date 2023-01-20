@@ -540,46 +540,6 @@ QUnit.module("mail", {}, function () {
         );
 
         QUnit.skipRefactoring(
-            'chatter just contains "creating a new record" message during the creation of a new record after having displayed a chatter for an existing record',
-            async function (assert) {
-                assert.expect(2);
-
-                const pyEnv = await startServer();
-                const resPartnerId1 = pyEnv["res.partner"].create({});
-                const views = {
-                    "res.partner,false,form": `<form string="Partners">
-                <sheet>
-                    <field name="name"/>
-                </sheet>
-                <div class="oe_chatter">
-                    <field name="message_ids"/>
-                </div>
-            </form>`,
-                };
-                const { click, openView } = await start({
-                    serverData: { views },
-                });
-                await openView({
-                    res_model: "res.partner",
-                    res_id: resPartnerId1,
-                    views: [[false, "form"]],
-                });
-
-                await click(".o_form_button_create");
-                assert.containsOnce(
-                    document.body,
-                    ".o-mail-message",
-                    "Should have a single message when creating a new record"
-                );
-                assert.strictEqual(
-                    document.querySelector(".o-mail-message-body").textContent,
-                    "Creating a new record...",
-                    "the message content should be in accord to the creation of this record"
-                );
-            }
-        );
-
-        QUnit.skipRefactoring(
             "[TECHNICAL] unfolded read more/less links should not fold on message click besides those button links",
             async function (assert) {
                 // message click triggers a re-render. Before writing of this test, the

@@ -564,3 +564,31 @@ QUnit.test("basic chatter rendering without activities", async function (assert)
     assert.containsOnce(target, ".o-mail-chatter-topbar-follower-list");
     assert.containsOnce(target, ".o-mail-thread");
 });
+
+QUnit.test(
+    'chatter just contains "creating a new record" message during the creation of a new record after having displayed a chatter for an existing record',
+    async function (assert) {
+        const pyEnv = await startServer();
+        const partnerId = pyEnv["res.partner"].create({});
+        const views = {
+            "res.partner,false,form": `
+                <form string="Partners">
+                    <sheet>
+                        <field name="name"/>
+                    </sheet>
+                    <div class="oe_chatter">
+                        <field name="message_ids"/>
+                    </div>
+                </form>`,
+        };
+        const { openView } = await start({ serverData: { views } });
+        await openView({
+            res_model: "res.partner",
+            res_id: partnerId,
+            views: [[false, "form"]],
+        });
+        await click(".o_form_button_create");
+        assert.containsOnce(target, ".o-mail-message");
+        assert.containsOnce(target, ".o-mail-message-body:contains(Creating a new record...)");
+    }
+);
