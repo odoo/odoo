@@ -114,7 +114,7 @@ class StockMoveLine(models.Model):
             if not line.location_id:
                 line.location_id = line.move_id.location_id or line.picking_id.location_id
             if not line.location_dest_id:
-                line.location_dest_id = line.move_id.location_dest_id or line.picking_id.location_id
+                line.location_dest_id = line.move_id.location_dest_id or line.picking_id.location_dest_id
 
     def _search_picking_type_id(self, operator, value):
         return [('picking_id.picking_type_id', operator, value)]

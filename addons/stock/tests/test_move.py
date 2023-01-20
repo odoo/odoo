@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from odoo import Command
 from odoo.exceptions import UserError
 from odoo.tests import Form
 from odoo.tests.common import TransactionCase
@@ -5930,15 +5931,38 @@ class StockMove(TransactionCase):
         self.assertEqual(move.move_line_ids.product_uom_id, self.product.uom_id)
 
     def test_move_line_compute_locations(self):
+        stock_location = self.env['stock.location'].create({
+            'name': 'test-stock',
+            'usage': 'internal',
+        })
+        shelf_location = self.env['stock.location'].create({
+            'name': 'shelf1',
+            'usage': 'internal',
+            'location_id': stock_location.id,
+        })
         move = self.env['stock.move'].create({
             'name': 'foo',
             'product_id': self.product.id,
-            'location_id': self.stock_location.id,
-            'location_dest_id': self.customer_location.id,
+            'location_id': stock_location.id,
+            'location_dest_id': shelf_location.id,
             'move_line_ids': [(0, 0, {})]
         })
-        self.assertEqual(move.move_line_ids.location_id, self.stock_location)
-        self.assertEqual(move.move_line_ids.location_dest_id, self.customer_location)
+        self.assertEqual(move.move_line_ids.location_id, stock_location)
+        self.assertEqual(move.move_line_ids.location_dest_id, shelf_location)
+
+        # directly created mls should default to picking's src/dest locations
+        internal_transfer = self.env.ref('stock.picking_type_internal')
+        picking = self.env['stock.picking'].create({
+            'picking_type_id': internal_transfer.id,
+            'location_id': stock_location.id,
+            'location_dest_id': shelf_location.id,
+            'move_line_nosuggest_ids': [Command.create({
+                'product_id': self.product.id,
+                'qty_done': 1.0
+            })]
+        })
+        self.assertEqual(picking.move_line_ids.location_id.id, stock_location.id)
+        self.assertEqual(picking.move_line_ids.location_dest_id.id, shelf_location.id)
 
     def test_receive_more_and_in_child_location(self):
         """
